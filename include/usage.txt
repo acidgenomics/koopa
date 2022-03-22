@@ -10,7 +10,7 @@ commands:
   update
         Update koopa installation to latest version.
   variable
-        Get internal koopa::variable.
+        Get internal koopa_variable.
         For example, get recommended 'vim' version.
 
 optional arguments:

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::linux_java_update_alternatives() { # {{{1
+koopa_linux_java_update_alternatives() { # {{{1
     # """
     # Update Java alternatives.
     # @note Updated 2021-11-16.
@@ -10,18 +10,18 @@ koopa::linux_java_update_alternatives() { # {{{1
     # """
     local app dict
     local prefix priority
-    koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_admin
+    koopa_assert_has_args_eq "$#" 1
+    koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa::locate_sudo)"
-        [update_alternatives]="$(koopa::linux_locate_update_alternatives)"
+        [sudo]="$(koopa_locate_sudo)"
+        [update_alternatives]="$(koopa_linux_locate_update_alternatives)"
     )
     declare -A dict=(
         [alt_prefix]='/var/lib/alternatives'
-        [prefix]="$(koopa::realpath "${1:?}")"
+        [prefix]="$(koopa_realpath "${1:?}")"
         [priority]=100
     )
-    koopa::rm --sudo \
+    koopa_rm --sudo \
         "${dict[alt_prefix]}/java" \
         "${dict[alt_prefix]}/javac" \
         "${dict[alt_prefix]}/jar"

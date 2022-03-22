@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa:::install_julia_packages() { # {{{1
+install_julia_packages() { # {{{1
     # """
     # Install Julia packages.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-03-01.
     #
     # @seealso
     # - 'JULIA_DEPOT_PATH' in shell.
@@ -19,16 +19,16 @@ koopa:::install_julia_packages() { # {{{1
     # - https://juliaobserver.com/packages
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::activate_julia
+    koopa_assert_has_no_args "$#"
+    koopa_activate_julia
     declare -A app=(
-        [julia]="$(koopa::locate_julia)"
+        [julia]="$(koopa_locate_julia)"
     )
     declare -A dict=(
-        [script_prefix]="$(koopa::julia_script_prefix)"
+        [script_prefix]="$(koopa_julia_script_prefix)"
     )
     dict[script]="${dict[script_prefix]}/install-packages.jl"
-    koopa::assert_is_file "${dict[script]}"
-    "${app[julia]}" "${app[script]}"
+    koopa_assert_is_file "${dict[script]}"
+    "${app[julia]}" "${dict[script]}"
     return 0
 }

@@ -3,104 +3,99 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-koopa::test_roff() { # {{{1
+main() { # {{{1
     # """
     # Check that all scripts support '--help' flag.
-    # Updated 2020-12-31.
+    # Updated 2022-02-24.
     # """
     local app dict
     local bin_dir bin_dirs bin_file bin_files
     local man_dir man_dirs man_file man_files
     declare -A app=(
-        [find]="$(koopa::locate_find)"
-        [head]="$(koopa::locate_head)"
-        [sort]="$(koopa::locate_sort)"
+        [head]="$(koopa_locate_head)"
     )
     declare -A dict=(
-        [app_prefix]="$(koopa::app_prefix)"
-        [dotfiles_prefix]="$(koopa::dotfiles_prefix)"
-        [koopa_prefix]="$(koopa::koopa_prefix)"
-        [opt_prefix]="$(koopa::opt_prefix)"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
         [status]=0
     )
-    koopa::h1 "Running manual file '--help' flag checks."
+    koopa_h1 "Running manual file '--help' flag checks."
     # man dirs {{{2
     # --------------------------------------------------------------------------
     # Put all 'man/' dirs into an array and loop.
-    # FIXME Rework using 'koopa::find' here.
-    # FIXME Need to improve exclusion support in 'koopa::find'.
     readarray -t man_dirs <<< "$( \
-        "${app[find]}" "${dict[koopa_prefix]}" \
-            -mindepth 1 \
-            -type 'd' \
-            -name 'man' \
-            -not -path "${dict[app_prefix]}/*" \
-            -not -path "${dict[dotfiles_prefix]}/*" \
-            -not -path "${dict[koopa_prefix]}/.git/*" \
-            -not -path "${dict[koopa_prefix]}/shunit2-*" \
-            -not -path "${dict[opt_prefix]}/*" \
-            -print \
-        | "${app[sort]}" \
+        koopa_find \
+            --exclude='.git/**' \
+            --exclude='app/**' \
+            --exclude='opt/**' \
+            --min-depth=1 \
+            --pattern='man' \
+            --prefix="${dict[koopa_prefix]}" \
+            --sort \
+            --type='d' \
     )"
+    if koopa_is_array_empty "${man_dirs[@]}"
+    then
+        koopa_stop 'Failed to locate any man dirs.'
+    fi
     for man_dir in "${man_dirs[@]}"
     do
-        koopa::add_to_manpath_start "$man_dir"
+        koopa_add_to_manpath_start "$man_dir"
     done
     # man file formatting {{{2
     # --------------------------------------------------------------------------
-    koopa::h2 'Checking troff man file formatting.'
+    koopa_h2 'Checking troff man file formatting.'
     for man_dir in "${man_dirs[@]}"
     do
-        koopa::h3 "$man_dir"
-        # FIXME Confirm that this works here.
+        koopa_h3 "$man_dir"
         readarray -t man_files <<< "$( \
-            koopa::find \
+            koopa_find \
                 --max-depth=2 \
                 --min-depth=2 \
                 --prefix="$man_dir" \
                 --sort \
                 --type 'f' \
         )"
-        if koopa::is_array_empty "${man_files[@]:-}"
+        if koopa_is_array_empty "${man_files[@]:-}"
         then
-            koopa::stop "No files: '${man_dir}'."
+            koopa_stop "No files: '${man_dir}'."
         fi
         for man_file in "${man_files[@]}"
         do
-            if ! koopa::str_detect_regex \
-                "$("${app[head]}" -n 1 "$man_file")" '^\.TH '
+            if ! koopa_str_detect_regex \
+                --string="$("${app[head]}" --lines=1 "$man_file")" \
+                --pattern='^\.TH '
             then
-                koopa::alert_note "ERROR: '${man_file}'."
+                koopa_alert_note "ERROR: '${man_file}'."
                 dict[status]=1
             fi
         done
     done
     # '--help' flag support {{{2
     # --------------------------------------------------------------------------
-    koopa::h2 "Running exported script '--help' flag checks."
-    # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
-    # FIXME Rework using 'koopa::find' here.
-    # FIXME Need to improve exclusion support here.
+    koopa_h2 "Running exported script '--help' flag checks."
     readarray -t bin_dirs <<< "$( \
-        "${app[find]}" "${dict[koopa_prefix]}" \
-            -mindepth 1 \
-            -type 'd' \
-            \( -name 'bin' -o -name 'sbin' \) \
-            -not -path "${dict[app_prefix]}/*" \
-            -not -path "${dict[dotfiles_prefix]}/*" \
-            -not -path "${dict[koopa_prefix]}/shunit2-*" \
-            -not -path "${dict[opt_prefix]}/*" \
-            -print \
-        | "${app[sort]}" \
+        koopa_find \
+            --exclude='.git/**' \
+            --exclude='app/**' \
+            --exclude='opt/**' \
+            --min-depth=1 \
+            --pattern='{bin,sbin}' \
+            --prefix="${dict[koopa_prefix]}" \
+            --sort \
+            --type='d' \
     )"
+    if koopa_is_array_empty "${bin_dirs[@]}"
+    then
+        koopa_stop 'Failed to locate any bin dirs.'
+    fi
     for bin_dir in "${bin_dirs[@]}"
     do
-        koopa::h3 "$bin_dir"
-        # FIXME Need to confirm that this works.
+        koopa_h3 "$bin_dir"
         readarray -t bin_files <<< "$( \
-            "${app[find]}" "$bin_dir" \
+            koopa_find \
                 --max-depth=1 \
                 --min-depth=1 \
+                --prefix="$bin_dir" \
                 --sort \
                 --type='f' \
         )"
@@ -108,7 +103,7 @@ koopa::test_roff() { # {{{1
         do
             if ! "$bin_file" --help &>/dev/null
             then
-                koopa::alert_note "ERROR: '${bin_file}'."
+                koopa_alert_note "ERROR: '${bin_file}'."
                 dict[status]=1
             fi
         done
@@ -116,4 +111,4 @@ koopa::test_roff() { # {{{1
     return "${dict[status]}"
 }
 
-koopa::test_roff "$@"
+main "$@"

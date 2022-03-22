@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_haskell_stack() { # {{{1
+install_haskell_stack() { # {{{1
     # """
     # Install Haskell Stack.
     # @note Updated 2021-11-30.
@@ -8,18 +8,18 @@ koopa:::install_haskell_stack() { # {{{1
     # - https://docs.haskellstack.org/en/stable/install_and_upgrade/
     # """
     local dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
     )
-    dict[xdg_bin_dir]="$(koopa::xdg_local_home)/bin"
-    koopa::mkdir "${dict[xdg_bin_dir]}"
-    koopa::add_to_path_start "${dict[xdg_bin_dir]}"
+    dict[xdg_bin_dir]="$(koopa_xdg_local_home)/bin"
+    koopa_mkdir "${dict[xdg_bin_dir]}"
+    koopa_add_to_path_start "${dict[xdg_bin_dir]}"
     dict[file]='stack.sh'
     dict[url]='https://get.haskellstack.org/'
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::chmod 'u+x' "${dict[file]}"
-    koopa::mkdir "${dict[prefix]}/bin"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_chmod 'u+x' "${dict[file]}"
+    koopa_mkdir "${dict[prefix]}/bin"
     ./"${dict[file]}" -f -d "${dict[prefix]}/bin"
     return 0
 }

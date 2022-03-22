@@ -1,110 +1,307 @@
 #!/usr/bin/env bash
 
-koopa::macos_list_launch_agents() { # {{{1
-    koopa::assert_has_no_args "$#"
-    koopa::h1 'Listing launch agents and daemons.'
-    ls \
+koopa_macos_disable_crashplan() { # {{{1
+    # """
+    # Disable CrashPlan.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_disable_plist_file \
+        "${HOME:?}/Library/LaunchAgents/com.crashplan.engine.plist" \
+        '/Library/LaunchDaemons/com.crashplan.engine.plist'
+    return 0
+}
+
+koopa_macos_disable_google_keystone() { # {{{1
+    # """
+    # Disable Google Keystone.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_disable_plist_file \
+        '/Library/LaunchAgents/com.google.keystone.agent.plist' \
+        '/Library/LaunchAgents/com.google.keystone.xpcservice.plist' \
+        '/Library/LaunchDaemons/com.google.keystone.daemon.plist'
+    return 0
+}
+
+koopa_macos_disable_gpg_updater() { # {{{1
+    # """
+    # Disable GPG tools updater.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_disable_plist_file \
+        '/Library/LaunchAgents/org.gpgtools.updater.plist'
+}
+
+koopa_macos_disable_microsoft_teams_updater() { # {[[1
+    # """
+    # Disable Microsoft Teams updater.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_disable_plist_file \
+        '/Library/LaunchDaemons/com.microsoft.teams.TeamsUpdaterDaemon.plist'
+    return 0
+}
+
+koopa_macos_disable_plist_file() { # {{{1
+    # """
+    # Disable a plist file correponding to a launch agent or daemon.
+    # @note Updated 2022-02-16.
+    # """
+    local app file
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [launchctl]="$(koopa_macos_locate_launchctl)"
+        [sudo]="$(koopa_locate_sudo)"
+    )
+    koopa_assert_is_file "$@"
+    for file in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [daemon]=0
+            [enabled_file]="$file"
+            [sudo]=1
+        )
+        dict[disabled_file]="$(koopa_dirname "${dict[enabled_file]}")/\
+disabled/$(koopa_basename "${dict[enabled_file]}")"
+        koopa_alert "Disabling '${dict[enabled_file]}'."
+        if koopa_str_detect_fixed \
+            --string="${dict[enabled_file]}" \
+            --pattern='/LaunchDaemons/'
+        then
+            dict[daemon]=1
+        fi
+        if koopa_str_detect_regex \
+            --string="${dict[enabled_file]}" \
+            --pattern="^${HOME:?}"
+        then
+            dict[sudo]=0
+        fi
+        case "${dict[sudo]}" in
+            '0')
+                if [[ "${dict[daemon]}" -eq 1 ]]
+                then
+                    "${app[launchctl]}" \
+                        unload "${dict[enabled_file]}"
+                fi
+                koopa_mv \
+                    "${dict[enabled_file]}" \
+                    "${dict[disabled_file]}"
+                ;;
+            '1')
+                if [[ "${dict[daemon]}" -eq 1 ]]
+                then
+                    "${app[sudo]}" "${app[launchctl]}" \
+                        unload "${dict[enabled_file]}"
+                fi
+                koopa_mv --sudo \
+                    "${dict[enabled_file]}" \
+                    "${dict[disabled_file]}"
+                ;;
+        esac
+    done
+    return 0
+}
+
+koopa_macos_disable_privileged_helper_tool() { # {{{1
+    # """
+    # Disable a privileged helper tool.
+    # @note Updated 2022-02-16.
+    # """
+    local bn dict
+    koopa_assert_has_args "$#"
+    koopa_assert_is_admin
+    for bn in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [enabled_file]="/Library/PrivilegedHelperTools/${bn}"
+        )
+        dict[disabled_file]="$(koopa_dirname "${dict[enabled_file]}")/\
+disabled/$(koopa_basename "${dict[enabled_file]}")"
+        koopa_assert_is_file "${dict[enabled_file]}"
+        koopa_assert_is_not_file "${dict[disabled_file]}"
+        koopa_alert "Disabling '${dict[disabled_file]}'."
+        koopa_mv --sudo "${dict[enabled_file]}" "${dict[disabled_file]}"
+    done
+    return 0
+}
+
+koopa_macos_disable_zoom_daemon() { # {{{1
+    # """
+    # Disable Zoom daemon.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_disable_plist_file \
+        '/Library/LaunchDaemons/us.zoom.ZoomDaemon.plist'
+    koopa_macos_disable_privileged_helper_tool \
+        'us.zoom.ZoomDaemon'
+}
+
+koopa_macos_enable_crashplan() {  # {{{1
+    # """
+    # Enable CrashPlan.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_enable_plist_file \
+        "${HOME:?}/Library/LaunchAgents/com.crashplan.engine.plist" \
+        '/Library/LaunchDaemons/com.crashplan.engine.plist'
+    return 0
+}
+
+koopa_macos_enable_google_keystone() { # {{{1
+    # """
+    # Enable Google Keystone.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_enable_plist_file \
+        '/Library/LaunchAgents/com.google.keystone.agent.plist' \
+        '/Library/LaunchAgents/com.google.keystone.xpcservice.plist' \
+        '/Library/LaunchDaemons/com.google.keystone.daemon.plist'
+    return 0
+}
+
+koopa_macos_enable_gpg_updater() { # {{{1
+    # """
+    # Enable GPG tools updater.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_enable_plist_file \
+        '/Library/LaunchAgents/org.gpgtools.updater.plist'
+}
+
+koopa_macos_enable_microsoft_teams_updater() { # {[[1
+    # """
+    # Enable Microsoft Teams updater.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_enable_plist_file \
+        '/Library/LaunchDaemons/com.microsoft.teams.TeamsUpdaterDaemon.plist'
+    return 0
+}
+
+koopa_macos_enable_plist_file() { # {{{1
+    # """
+    # Enable a disabled plist file correponding to a launch agent or daemon.
+    # @note Updated 2022-02-16.
+    # """
+    local app file
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [launchctl]="$(koopa_macos_locate_launchctl)"
+        [sudo]="$(koopa_locate_sudo)"
+    )
+    koopa_assert_is_not_file "$@"
+    for file in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [daemon]=0
+            [enabled_file]="$file"
+            [sudo]=1
+        )
+        dict[disabled_file]="$(koopa_dirname "${dict[enabled_file]}")/\
+disabled/$(koopa_basename "${dict[enabled_file]}")"
+        koopa_alert "Enabling '${dict[enabled_file]}'."
+        if koopa_str_detect_fixed \
+            --string="${dict[enabled_file]}" \
+            --pattern='/LaunchDaemons/'
+        then
+            dict[daemon]=1
+        fi
+        if koopa_str_detect_regex \
+            --string="${dict[enabled_file]}" \
+            --pattern="^${HOME:?}"
+        then
+            dict[sudo]=0
+        fi
+        case "${dict[sudo]}" in
+            '0')
+                koopa_mv \
+                    "${dict[disabled_file]}" \
+                    "${dict[enabled_file]}"
+                if [[ "${dict[daemon]}" -eq 1 ]]
+                then
+                    "${app[launchctl]}" \
+                        load "${dict[enabled_file]}"
+                fi
+                ;;
+            '1')
+                koopa_mv --sudo \
+                    "${dict[disabled_file]}" \
+                    "${dict[enabled_file]}"
+                if [[ "${dict[daemon]}" -eq 1 ]]
+                then
+                    "${app[sudo]}" "${app[launchctl]}" \
+                        load "${dict[enabled_file]}"
+                fi
+                ;;
+        esac
+    done
+    return 0
+}
+
+koopa_macos_enable_privileged_helper_tool() { # {{{1
+    # """
+    # Enable a privileged helper tool.
+    # @note Updated 2022-02-16.
+    # """
+    local bn dict
+    koopa_assert_has_args "$#"
+    koopa_assert_is_admin
+    for bn in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [enabled_file]="/Library/PrivilegedHelperTools/${bn}"
+        )
+        dict[disabled_file]="$(koopa_dirname "${dict[enabled_file]}")/\
+disabled/$(koopa_basename "${dict[enabled_file]}")"
+        koopa_assert_is_not_file "${dict[enabled_file]}"
+        koopa_assert_is_file "${dict[disabled_file]}"
+        koopa_alert "Enabling '${dict[disabled_file]}'."
+        koopa_mv --sudo "${dict[disabled_file]}" "${dict[enabled_file]}"
+    done
+    return 0
+}
+
+koopa_macos_enable_zoom_daemon() { # {{{1
+    # """
+    # Enable Zoom daemon.
+    # @note Updated 2022-02-16.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_macos_enable_plist_file \
+        '/Library/LaunchDaemons/us.zoom.ZoomDaemon.plist'
+    koopa_macos_enable_privileged_helper_tool \
+        'us.zoom.ZoomDaemon'
+}
+
+koopa_macos_list_launch_agents() { # {{{1
+    # """
+    # List launch agents.
+    # @note Updated 2022-02-16.
+    # """
+    local app
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [ls]="$(koopa_locate_ls)"
+    )
+    koopa_alert 'Listing launch agents and daemons.'
+    "${app[ls]}" \
+        --ignore='disabled' \
         "${HOME}/Library/LaunchAgents" \
         '/Library/LaunchAgents' \
         '/Library/LaunchDaemons' \
         '/Library/PrivilegedHelperTools'
-    return 0
-}
-
-# FIXME Need to standardize these disabler/enabler functions for macOS.
-
-koopa::macos_disable_crashplan() { # {{{1
-    # """
-    # Disable CrashPlan.
-    # @note Updated 2021-11-16.
-    # """
-    local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    declare -A app=(
-        [launchctl]="$(koopa::macos_locate_launchctl)"
-        [sudo]="$(koopa::locate_sudo)"
-    )
-    declare -A dict=(
-        [system_plist]='/Library/LaunchDaemons/com.crashplan.engine.plist'
-        [user_plist]="${HOME:?}/Library/LaunchAgents/com.crashplan.engine.plist"
-    )
-    if [[ -f "${dict[system_plist]}" ]]
-    then
-        # > "${app[sudo]}" "${app[launchctl]}" stop 'com.crashplan.engine'
-        "${app[sudo]}" "${app[launchctl]}" unload "${dict[system_plist]}"
-        koopa::mv --sudo \
-            "${dict[system_plist]}" \
-            "${dict[system_plist]}.disabled"
-    fi
-    if [[ -f "${dict[user_plist]}" ]]
-    then
-        "${app[launchctl]}" unload "${dict[user_plist]}"
-        koopa::mv \
-            "${dict[user_plist]}" \
-            "${dict[user_plist]}.disabled"
-    fi
-    return 0
-}
-
-# FIXME Need to support this in koopa autocompletion.
-koopa::macos_disable_microsoft_teams_updater() { # {[[1
-    # """
-    # Disable the Microsoft Teams updater that runs in the background.
-    # @note Updated 2021-10-29.
-    # """
-    local name_fancy plist_file prefix
-    koopa::assert_has_no_args "$#"
-    name_fancy='Microsoft Teams'
-    prefix='/Library/LaunchDaemons'
-    plist_file="${prefix}/com.microsoft.teams.TeamsUpdaterDaemon.plist"
-    if [[ ! -f "$plist_file" ]]
-    then
-        koopa::stop "${name_fancy} is not enabled at '${plist_file}'."
-    fi
-    koopa::alert "Disabling ${name_fancy} updater."
-    koopa::mv --sudo --target-directory="${prefix}/disabled" "$plist_file"
-    return 0
-}
-
-# FIXME Need to add corresponding enabler function for Microsoft Teams.
-
-koopa::macos_enable_crashplan() {  # {{{1
-    # """
-    # Enable CrashPlan.
-    # @note Updated 2021-11-16.
-    # """
-    local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    declare -A app=(
-        [launchctl]="$(koopa::macos_locate_launchctl)"
-        [sudo]="$(koopa::locate_sudo)"
-    )
-    declare -A dict=(
-        [system_plist]='/Library/LaunchDaemons/com.crashplan.engine.plist'
-        [user_plist]="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
-    )
-    if [[ -f "${dict[system_plist]}.disabled" ]]
-    then
-        koopa::mv --sudo \
-            "${dict[system_plist]}.disabled" \
-            "${dict[system_plist]}"
-    fi
-    if [[ -f "${dict[system_plist]}" ]]
-    then
-        "${app[sudo]}" "${app[launchctl]}" load "$system_plist"
-        # > "${app[sudo]}" "${app[launchctl]}" start 'com.crashplan.engine'
-    fi
-    if [[ -f "${dict[user_plist]}.disabled" ]]
-    then
-        koopa::mv \
-            "${dict[user_plist]}.disabled" \
-            "${dict[user_plist]}"
-    fi
-    if [[ -f "${dict[user_plist]}" ]]
-    then
-        "${app[launchctl]}" load "${dict[user_plist]}"
-    fi
     return 0
 }

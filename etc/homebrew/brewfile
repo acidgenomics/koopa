@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2022-02-07.
+# Updated 2022-03-21.
 #
 # @section ilmbase deprecation (due to neofetch):
 #
@@ -17,7 +17,7 @@ tap "homebrew/core"
 # Brews {{{1
 # ==============================================================================
 
-brew "nghttp2", link: false  # libnghttp2 / curl
+# > brew "nghttp2", link: false  # libnghttp2 / curl
 # NOTE Python 3.9 currently required for Google Cloud SDK.
 brew "python@3.9", link: false
 brew "python@3.10", link: false
@@ -45,7 +45,7 @@ brew "ccache"
 brew "cheat"
 brew "checkbashisms"
 brew "choose-rust"
-brew "circleci"
+# > brew "circleci"
 brew "cmake"
 brew "cmus"
 brew "convmv"
@@ -56,6 +56,7 @@ brew "dog"  # rust
 brew "duf"
 brew "dust"  # rust
 brew "editorconfig"
+brew "emacs"
 brew "exa"  # rust
 brew "exiftool"
 brew "expect"  # installs unbuffer
@@ -83,16 +84,16 @@ brew "gpg"
 brew "grep"
 brew "groff"
 brew "gsl"
+brew "gtop"  # node
 brew "gzip"
 brew "hadolint"
 brew "hdf5"
 brew "htop"
-brew "httpd"
+# > brew "httpd"
 brew "httpie"
 brew "hub"
 brew "hyperfine"
 brew "igraph"
-brew "ilmbase"  # neofetch
 brew "imagemagick"
 brew "jq"
 brew "kakoune"
@@ -120,6 +121,7 @@ brew "luarocks"
 brew "make"
 brew "man-db"
 brew "mariadb-connector-c"
+brew "mcfly"
 brew "neofetch"
 brew "neovim"
 brew "nim"
@@ -136,11 +138,11 @@ brew "p7zip"
 brew "pandoc"
 brew "pandoc-crossref"
 brew "parallel"
-brew "pass"
 brew "pcre"
 # > brew "php"
 brew "pipenv"  # python
 brew "pkg-config"
+brew "podman"
 brew "podofo"
 brew "poetry"
 brew "prettier"  # node
@@ -186,21 +188,3 @@ brew "xsv"  # rust
 brew "zlib"
 brew "zoxide"  # rust
 brew "zsh"
-
-# External brews {{{1
-# ==============================================================================
-
-tap "cantino/mcfly"
-brew "cantino/mcfly/mcfly"
-
-# Currently warning:
-# Warning: Calling bottle :unneeded is deprecated!
-# https://github.com/mongodb/homebrew-brew
-# > tap "mongodb/brew"
-# > brew "mongodb/brew/mongodb-community@5.0"
-
-# Currently warning:
-# Warning: Calling bottle :unneeded is deprecated!
-# https://github.com/rs/homebrew-tap/
-# > tap "rs/tap"
-# > brew "rs/tap/curlie"

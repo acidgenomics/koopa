@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_homebrew_bundle() { # {{{1
+install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
     # @note Updated 2022-01-31.
@@ -14,22 +14,22 @@ koopa:::install_homebrew_bundle() { # {{{1
     # - vim
     # """
     local app brewfile brewfiles dict install_args
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [brew]="$(koopa::locate_brew)"
+        [brew]="$(koopa_locate_brew)"
     )
     declare -A dict=(
-        [koopa_prefix]="$(koopa::koopa_prefix)"
-        [local_brewfile]="$(koopa::xdg_config_home)/homebrew/brewfile"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+        [local_brewfile]="$(koopa_xdg_config_home)/homebrew/brewfile"
     )
     brewfiles=()
-    if koopa::is_linux
+    if koopa_is_linux
     then
         brewfiles+=(
             "${dict[koopa_prefix]}/os/linux/common/etc/homebrew/brewfile"
         )
-    elif koopa::is_macos
+    elif koopa_is_macos
     then
         brewfiles+=(
             "${dict[koopa_prefix]}/os/macos/etc/homebrew/brewfile"
@@ -54,8 +54,8 @@ koopa:::install_homebrew_bundle() { # {{{1
     )
     for brewfile in "${brewfiles[@]}"
     do
-        koopa::assert_is_file "$brewfile"
-        koopa::dl 'Brewfile' "$brewfile"
+        koopa_assert_is_file "$brewfile"
+        koopa_dl 'Brewfile' "$brewfile"
         "${app[brew]}" bundle install \
             "${install_args[@]}" \
             --file="${brewfile}"

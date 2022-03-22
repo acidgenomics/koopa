@@ -1,48 +1,50 @@
 #!/usr/bin/env bash
 
-koopa::linux_find_app_symlinks() { # {{{1
+koopa_linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-27.
     # """
     local app dict symlink symlinks
-    koopa::assert_has_args_le "$#" 2
+    koopa_assert_has_args_le "$#" 2
     declare -A app=(
-        [find]="$(koopa::locate_find)"
-        [grep]="$(koopa::locate_grep)"
-        [realpath]="$(koopa::locate_realpath)"
-        [sort]="$(koopa::locate_sort)"
-        [tail]="$(koopa::locate_tail)"
-        [xargs]="$(koopa::locate_xargs)"
+        [grep]="$(koopa_locate_grep)"
+        [realpath]="$(koopa_locate_realpath)"
+        [sort]="$(koopa_locate_sort)"
+        [tail]="$(koopa_locate_tail)"
+        [xargs]="$(koopa_locate_xargs)"
     )
     declare -A dict=(
-        [koopa_prefix]="$(koopa::koopa_prefix)"
-        [make_prefix]="$(koopa::make_prefix)"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+        [make_prefix]="$(koopa_make_prefix)"
         [name]="${1:?}"
         [version]="${2:-}"
     )
     # Automatically detect version, if left unset.
-    dict[app_prefix]="$(koopa::app_prefix)/${dict[name]}"
-    koopa::assert_is_dir "${dict[app_prefix]}"
+    dict[app_prefix]="$(koopa_app_prefix)/${dict[name]}"
+    koopa_assert_is_dir "${dict[app_prefix]}"
     if [[ -n "${dict[version]}" ]]
     then
         dict[app_prefix]="${dict[app_prefix]}/${dict[version]}"
     else
         dict[app_prefix]="$( \
-            koopa::find \
+            koopa_find \
                 --max-depth=1 \
                 --prefix="${dict[app_prefix]}" \
                 --sort \
                 --type='d' \
-            | "${app[tail]}" -n 1 \
+            | "${app[tail]}" --lines=1 \
         )"
     fi
-    koopa::assert_is_dir "${dict[app_prefix]}"
+    koopa_assert_is_dir "${dict[app_prefix]}"
     readarray -t -d '' symlinks < <(
-        "${app[find]}" -L "${dict[make_prefix]}" \
-            -xtype 'l' \
-            -print0 \
-        | "${app[xargs]}" --no-run-if-empty --null \
+        koopa_find \
+            --prefix="${dict[make_prefix]}" \
+            --print0 \
+            --type='l' \
+        | "${app[xargs]}" \
+            --no-run-if-empty \
+            --null \
             "${app[realpath]}" --zero \
         | "${app[grep]}" \
             --extended-regexp \
@@ -51,13 +53,13 @@ koopa::linux_find_app_symlinks() { # {{{1
             "^${dict[app_prefix]}/" \
         | "${app[sort]}" --zero-terminated \
     )
-    if koopa::is_array_empty "${symlinks[@]}"
+    if koopa_is_array_empty "${symlinks[@]}"
     then
-        koopa::stop "Failed to find symlinks for '${dict[name]}'."
+        koopa_stop "Failed to find symlinks for '${dict[name]}'."
     fi
     for symlink in "${symlinks[@]}"
     do
-        koopa::print "${symlink//${dict[app_prefix]}/${dict[make_prefix]}}"
+        koopa_print "${symlink//${dict[app_prefix]}/${dict[make_prefix]}}"
     done
     return 0
 }

@@ -5,12 +5,12 @@
 # FIXME Ensure naming conventions here match salmon runners.
 # FIXME Need to add improved input checks, similar to salmon functions.
 # FIXME Rename 'fasta-file' to 'transcriptome-fasta-file'.
-# FIXME Rework using 'koopa::locate_kallisto'.
+# FIXME Rework using 'koopa_locate_kallisto'.
 # FIXME Need to improve consistency of 'fastq' prefix in variable names.
-# FIXME Check for unnecessary '--print' calls in 'koopa::find' across package.
+# FIXME Check for unnecessary '--print' calls in 'koopa_find' across package.
 
 # Main functions ===============================================================
-koopa::run_kallisto_paired_end() { # {{{1
+koopa_run_kallisto_paired_end() { # {{{1
     # """
     # Run kallisto on multiple samples.
     # @note Updated 2022-02-11.
@@ -19,7 +19,7 @@ koopa::run_kallisto_paired_end() { # {{{1
     # """
     local dict
     local fastq_r1_files fastq_r1 fastq_r2
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A dict=(
         [bootstraps]=30
         [fastq_dir]='fastq'
@@ -115,23 +115,23 @@ koopa::run_kallisto_paired_end() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::h1 'Running kallisto (paired-end mode).'
+    koopa_h1 'Running kallisto (paired-end mode).'
     # FIXME Can we generate this file dynamically from the genome input?
-    dict[chromosomes_file]="$(koopa::realpath "${dict[chromosomes_file]}")"
-    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
-    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
-    dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
-    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
+    dict[chromosomes_file]="$(koopa_realpath "${dict[chromosomes_file]}")"
+    dict[fasta_file]="$(koopa_realpath "${dict[fasta_file]}")"
+    dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
+    dict[gff_file]="$(koopa_realpath "${dict[gff_file]}")"
+    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     dict[samples_dir]="${dict[output_dir]}/samples"
     if [[ -z "${dict[index_dir]}" ]]
     then
         dict[index_dir]="${dict[output_dir]}/index"
     fi
-    koopa::dl \
+    koopa_dl \
         'Bootstraps' "${dict[bootstraps]}" \
         'Chromosomes file' "${dict[chromosomes_file]}" \
         'FASTA file' "${dict[fasta_file]}" \
@@ -145,10 +145,10 @@ koopa::run_kallisto_paired_end() { # {{{1
     # --------------------------------------------------------------------------
     # Create a per-sample array from the R1 FASTQ files.
     readarray -t fastq_r1_files <<< "$( \
-        koopa::find \
-            --glob="*${dict[r1_tail]}" \
-            --maxdepth 1 \
-            --mindepth 1 \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --pattern="*${dict[r1_tail]}" \
             --prefix="${dict[fastq_dir]}" \
             --sort \
             --type 'f' \
@@ -156,10 +156,10 @@ koopa::run_kallisto_paired_end() { # {{{1
     # Error on FASTQ match failure.
     if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
+        koopa_stop "No FASTQ files in '${dict[fastq_dir]}' ending \
 with '${dict[r1_tail]}'."
     fi
-    koopa::alert_info "$(koopa::ngettext \
+    koopa_alert_info "$(koopa_ngettext \
         --num="${#fastq_r1_files[@]}" \
         --msg1='sample' \
         --msg2='samples' \
@@ -167,20 +167,21 @@ with '${dict[r1_tail]}'."
     )"
     # Index {{{2
     # --------------------------------------------------------------------------
+    # FIXME Don't allow dynamic indexing here, need to rethink.
     if [[ ! -d "${dict[index_dir]}" ]]
     then
-        koopa::kallisto_index \
+        koopa_kallisto_index \
             --fasta-file="${dict[fasta_file]}" \
             --output-dir="${dict[index_dir]}"
     fi
-    koopa::assert_is_dir "${dict[index_dir]}"
+    koopa_assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify.
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
-        koopa::kallisto_quant_paired_end \
+        koopa_kallisto_quant_paired_end \
             --bootstraps="${dict[bootstraps]}" \
             --chromosomes-file="${dict[chromosomes_file]}" \
             --fastq-r1="$fastq_r1" \
@@ -192,23 +193,18 @@ with '${dict[r1_tail]}'."
             --r1-tail="${dict[r1_tail]}" \
             --r2-tail="${dict[r2_tail]}"
     done
-    koopa::alert_success "kallisto run at '${dict[output_dir]}' \
+    koopa_alert_success "kallisto run at '${dict[output_dir]}' \
 completed successfully."
     return 0
 }
 
-koopa::run_kallisto_single_end() { # {{{1
+koopa_run_kallisto_single_end() { # {{{1
     # """
     # Run kallisto on multiple single-end FASTQ files.
     # @note Updated 2022-02-11.
     # """
-    local app dict
-    local fastq_files fastq
-    koopa::assert_has_args "$#"
-    declare -A app=(
-        [find]="$(koopa::locate_find)"
-        [sort]="$(koopa::locate_sort)"
-    )
+    local dict fastq_files fastq
+    koopa_assert_has_args "$#"
     declare -A dict=(
         [bootstraps]=30
         [fastq_dir]='fastq'
@@ -305,22 +301,22 @@ koopa::run_kallisto_single_end() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::h1 'Running kallisto (single-end mode).'
-    dict[chromosomes_file]="$(koopa::realpath "${dict[chromosomes_file]}")"
-    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
-    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
-    dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
-    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
+    koopa_h1 'Running kallisto (single-end mode).'
+    dict[chromosomes_file]="$(koopa_realpath "${dict[chromosomes_file]}")"
+    dict[fasta_file]="$(koopa_realpath "${dict[fasta_file]}")"
+    dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
+    dict[gff_file]="$(koopa_realpath "${dict[gff_file]}")"
+    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     dict[samples_dir]="${dict[output_dir]}/samples"
     if [[ -z "${dict[index_dir]}" ]]
     then
         dict[index_dir]="${dict[output_dir]}/index"
     fi
-    koopa::dl \
+    koopa_dl \
         'Bootstraps' "${dict[bootstraps]}" \
         'Chromosomes file' "${dict[chromosomes_file]}" \
         'FASTA file' "${dict[fasta_file]}" \
@@ -334,10 +330,10 @@ koopa::run_kallisto_single_end() { # {{{1
     # Create a per-sample array from the FASTQ files.
     # FIXME Need to confirm that this works.
     readarray -t fastq_files <<< "$( \
-        koopa::find \
-            --glob="*${dict[tail]}" \
+        koopa_find \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern="*${dict[tail]}" \
             --prefix="${dict[fastq_dir]}" \
             --sort \
             --type='f' \
@@ -345,10 +341,10 @@ koopa::run_kallisto_single_end() { # {{{1
     # Error on FASTQ match failure.
     if [[ "${#fastq_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
+        koopa_stop "No FASTQ files in '${dict[fastq_dir]}' ending \
 with '${dict[tail]}'."
     fi
-    koopa::alert_info "$(koopa::ngettext \
+    koopa_alert_info "$(koopa_ngettext \
         --num="${#fastq_files[@]}" \
         --msg1='sample' \
         --msg2='sampes' \
@@ -358,17 +354,17 @@ with '${dict[tail]}'."
     # --------------------------------------------------------------------------
     if [[ ! -d "${dict[index_dir]}" ]]
     then
-        koopa::kallisto_index \
+        koopa_kallisto_index \
             --fasta-file="${dict[fasta_file]}" \
             --output-dir="${dict[index_dir]}"
     fi
-    koopa::assert_is_dir "${dict[index_dir]}"
+    koopa_assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
     for fastq in "${fastq_files[@]}"
     do
-        koopa::kallisto_quant_single_end \
+        koopa_kallisto_quant_single_end \
             --bootstraps="${dict[bootstraps]}" \
             --chromosomes-file="${dict[chromosomes_file]}" \
             --fastq="$fastq" \
@@ -379,22 +375,22 @@ with '${dict[tail]}'."
             --sd="${dict[sd]}" \
             --tail="${dict[tail]}"
     done
-    koopa::alert_success "kallisto run at '${dict[output_dir]}' \
+    koopa_alert_success "kallisto run at '${dict[output_dir]}' \
 completed successfully."
     return 0
 }
 
 # Individual runners ===========================================================
-koopa::kallisto_index() { # {{{1
+koopa_kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
     # @note Updated 2021-09-23.
     # """
     local app dict index_args
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [kallisto]="$(koopa::locate_kallisto)"
-        [tee]="$(koopa::locate_tee)"
+        [kallisto]="$(koopa_locate_kallisto)"
+        [tee]="$(koopa_locate_tee)"
     )
     declare -A dict=(
         [output_dir]='kallisto/index'
@@ -421,37 +417,37 @@ koopa::kallisto_index() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_is_file "${dict[fasta_file]}"
+    koopa_assert_is_file "${dict[fasta_file]}"
     if [[ -d "${dict[output_dir]}" ]]
     then
-        koopa::alert_note \
+        koopa_alert_note \
             "Kallisto transcriptome index exists at '${dict[output_dir]}'." \
             "Skipping on-the-fly indexing of '${dict[fasta_file]}'."
         return 0
     fi
-    koopa::h2 "Generating kallisto index at '${dict[output_dir]}'."
-    koopa::mkdir "${dict[output_dir]}"
+    koopa_h2 "Generating kallisto index at '${dict[output_dir]}'."
+    koopa_mkdir "${dict[output_dir]}"
     dict[index_file]="${dict[output_dir]}/kallisto.idx"
-    dict[log_file]="${dict[output_dir]}/index.log"
+    dict[log_file]="${dict[output_dir]}/koopa-index.log"
     index_args=(
         "--index=${dict[index_file]}"
         '--kmer-size=31'
         '--make-unique'
         "${dict[fasta_file]}"
     )
-    koopa::dl 'Index args' "${index_args[*]}"
+    koopa_dl 'Index args' "${index_args[*]}"
     "${app[kallisto]}" index "${index_args[@]}" \
         2>&1 | "${app[tee]}" "${dict[log_file]}"
-    koopa::alert_success "Indexing of '${dict[fasta_file]}' at \
+    koopa_alert_success "Indexing of '${dict[fasta_file]}' at \
 '${dict[index_file]}' was successful."
     return 0
 }
 
-koopa::kallisto_quant_paired_end() { # {{{1
+koopa_kallisto_quant_paired_end() { # {{{1
     # """
     # Run kallisto quant (per paired-end sample).
     # @note Updated 2022-02-11.
@@ -473,13 +469,13 @@ koopa::kallisto_quant_paired_end() { # {{{1
     # - https://salmon.readthedocs.io/en/latest/library_type.html
     # """
     local app dict quant_args
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [kallisto]="$(koopa::locate_kallisto)"
-        [tee]="$(koopa::locate_tee)"
+        [kallisto]="$(koopa_locate_kallisto)"
+        [tee]="$(koopa_locate_tee)"
     )
     declare -A dict=(
-        [threads]="$(koopa::cpu_count)"
+        [threads]="$(koopa_cpu_count)"
     )
     while (("$#"))
     do
@@ -567,41 +563,43 @@ koopa::kallisto_quant_paired_end() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
     dict[index_file]="${dict[index_dir]}/kallisto.idx"
-    koopa::assert_is_file \
+    koopa_assert_is_file \
         "${dict[fastq_r1]}" \
         "${dict[fastq_r2]}" \
         "${dict[gff_file]}" \
         "${dict[index_file]}"
-    dict[fastq_r1_bn]="$(koopa::basename "${dict[fastq_r1]}")"
+    dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1]}")"
     dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[r1_tail]}/}"
-    dict[fastq_r2_bn]="$(koopa::basename "${dict[fastq_r2]}")"
+    dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2]}")"
     dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[r2_tail]}/}"
-    koopa::assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
+    koopa_assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
     dict[id]="${dict[fastq_r1_bn]}"
     dict[output_dir]="${dict[output_dir]}/${dict[id]}"
     if [[ -d "${dict[output_dir]}" ]]
     then
-        koopa::alert_note "Skipping '${dict[id]}'."
+        koopa_alert_note "Skipping '${dict[id]}'."
         return 0
     fi
-    koopa::h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
-    koopa::mkdir "${dict[output_dir]}"
-    dict[log_file]="${dict[output_dir]}/quant.log"
+    koopa_h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
+    koopa_mkdir "${dict[output_dir]}"
+    dict[log_file]="${dict[output_dir]}/koopa-quant.log"
+
     quant_args=(
-        '--bias'
+        # Consider enabling these:
+        # > '--genomebam'
+        # > '--pseudobam'
         "--bootstrap-samples=${dict[bootstraps]}"
         "--chromosomes=${dict[chromosomes_file]}"
-        '--genomebam'
         "--gtf=${dict[gff_file]}"
         "--index=${dict[index_file]}"
         "--output-dir=${dict[output_dir]}"
-        '--pseudobam'
         "--threads=${dict[threads]}"
+        '--bias'
         '--verbose'
     )
     # Run kallisto in stranded mode, depending on the library type. Using salmon
@@ -618,17 +616,17 @@ koopa::kallisto_quant_paired_end() { # {{{1
             quant_args+=('--rf-stranded')
             ;;
         *)
-            koopa::invalid_arg "${dict[lib_type]}"
+            koopa_invalid_arg "${dict[lib_type]}"
             ;;
     esac
     quant_args+=("${dict[fastq_r1]}" "${dict[fastq_r2]}")
-    koopa::dl 'Quant args' "${quant_args[*]}"
+    koopa_dl 'Quant args' "${quant_args[*]}"
     "${app[kallisto]}" quant "${quant_args[@]}" \
         2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
 
-koopa::kallisto_quant_single_end() { # {{{1
+koopa_kallisto_quant_single_end() { # {{{1
     # """
     # Run kallisto quant (per single-end sample).
     # @note Updated 2022-02-11.
@@ -652,8 +650,8 @@ koopa::kallisto_quant_single_end() { # {{{1
     # """
     local app dict quant_args
     declare -A app=(
-        [kallisto]="$(koopa::locate_kallisto)"
-        [tee]="$(koopa::locate_tee)"
+        [kallisto]="$(koopa_locate_kallisto)"
+        [tee]="$(koopa_locate_tee)"
     )
     declare -A dict
     while (("$#"))
@@ -735,26 +733,26 @@ koopa::kallisto_quant_single_end() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
     dict[index_file]="${dict[index_dir]}/kallisto.idx"
-    koopa::assert_is_file \
+    koopa_assert_is_file \
         "${dict[fastq]}" \
         "${dict[index_file]}"
-    dict[fastq_bn]="$(koopa::basename "${dict[fastq]}")"
+    dict[fastq_bn]="$(koopa_basename "${dict[fastq]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
     dict[id]="${dict[fastq_bn]}"
     dict[output_dir]="${dict[output_dir]}/${dict[id]}"
     if [[ -d "${dict[output_dir]}" ]]
     then
-        koopa::alert_note "Skipping '${dict[id]}'."
+        koopa_alert_note "Skipping '${dict[id]}'."
         return 0
     fi
-    koopa::h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
-    koopa::mkdir "${dict[output_dir]}"
-    dict[log_file]="${dict[output_dir]}/quant.log"
+    koopa_h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
+    koopa_mkdir "${dict[output_dir]}"
+    dict[log_file]="${dict[output_dir]}/koopa-quant.log"
     quant_args=(
         "--bootstrap-samples=${dict[bootstraps]}"
         "--chromosomes=${dict[chromosomes_file]}"
@@ -768,7 +766,7 @@ koopa::kallisto_quant_single_end() { # {{{1
         '--verbose'
     )
     quant_args+=("$fastq")
-    koopa::dl 'Quant args' "${quant_args[*]}"
+    koopa_dl 'Quant args' "${quant_args[*]}"
     "${app[kallisto]}" quant "${quant_args[@]}" \
         2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0

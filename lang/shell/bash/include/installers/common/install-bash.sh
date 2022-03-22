@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_bash() { # {{{1
+install_bash() { # {{{1
     # """
     # Install Bash.
     # @note Updated 2022-02-11.
@@ -14,39 +14,39 @@ koopa:::install_bash() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [curl]="$(koopa::locate_curl)"
-        [cut]="$(koopa::locate_cut)"
-        [make]="$(koopa::locate_make)"
-        [patch]="$(koopa::locate_patch)"
-        [tr]="$(koopa::locate_tr)"
+        [curl]="$(koopa_locate_curl)"
+        [cut]="$(koopa_locate_cut)"
+        [make]="$(koopa_locate_make)"
+        [patch]="$(koopa_locate_patch)"
+        [tr]="$(koopa_locate_tr)"
     )
     declare -A dict=(
-        [gnu_mirror]="$(koopa::gnu_mirror_url)"
-        [jobs]="$(koopa::cpu_count)"
+        [gnu_mirror]="$(koopa_gnu_mirror_url)"
+        [jobs]="$(koopa_cpu_count)"
         [link_app]="${INSTALL_LINK_APP:?}"
         [name]='bash'
         [patch_prefix]='patches'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_ver]="$(koopa::major_minor_version "${dict[version]}")"
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[patch_base_url]="https://ftp.gnu.org/gnu/${dict[name]}/\
 ${dict[name]}-${dict[maj_min_ver]}-patches"
     dict[n_patches]="$( \
-        koopa::major_minor_patch_version "${dict[version]}" \
-        | "${app[cut]}" -d '.' -f 3 \
+        koopa_major_minor_patch_version "${dict[version]}" \
+        | "${app[cut]}" --delimiter='.' --fields='3' \
     )"
     dict[file]="${dict[name]}-${dict[maj_min_ver]}.tar.gz"
     dict[url]="${dict[gnu_mirror]}/${dict[name]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[maj_min_ver]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[maj_min_ver]}"
     # Apply patches, if necessary.
     if [[ "${dict[n_patches]}" -gt 0 ]]
     then
-        koopa::alert "$(koopa::ngettext \
+        koopa_alert "$(koopa_ngettext \
             --prefix='Applying ' \
             --num="${dict[n_patches]}" \
             --msg1='patch' \
@@ -55,17 +55,17 @@ ${dict[name]}-${dict[maj_min_ver]}-patches"
         )"
         # mmv_tr: trimmed major minor version.
         dict[mmv_tr]="$( \
-            koopa::print "${dict[maj_min_ver]}" \
-            | "${app[tr]}" -d '.' \
+            koopa_print "${dict[maj_min_ver]}" \
+            | "${app[tr]}" --delete '.' \
         )"
         dict[patch_range]="$(printf '%03d-%03d' '1' "${dict[n_patches]}")"
         dict[patch_request_urls]="${dict[patch_base_url]}/\
 ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
-        koopa::mkdir "${dict[patch_prefix]}"
+        koopa_mkdir "${dict[patch_prefix]}"
         (
-            koopa::cd "${dict[patch_prefix]}"
+            koopa_cd "${dict[patch_prefix]}"
             "${app[curl]}" "${dict[patch_request_urls]}" -O
-            koopa::cd ..
+            koopa_cd ..
             for file in "${dict[patch_prefix]}/"*
             do
                 "${app[patch]}" -p0 --ignore-whitespace --input="$file"
@@ -73,13 +73,13 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
         )
     fi
     conf_args=("--prefix=${dict[prefix]}")
-    if koopa::is_alpine
+    if koopa_is_alpine
     then
         # musl does not implement brk/sbrk (they simply return -ENOMEM).
         # Otherwise will see this error:
         # xmalloc: locale.c:81: cannot allocate 18 bytes (0 bytes allocated)
         conf_args+=('--without-bash-malloc')
-    elif koopa::is_macos
+    elif koopa_is_macos
     then
         cflags=(
             # When built with 'SSH_SOURCE_BASHRC', bash will source '~/.bashrc'
@@ -102,7 +102,7 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
     "${app[make]}" install
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
-        koopa::enable_shell_for_all_users "${dict[name]}"
+        koopa_enable_shell_for_all_users "${dict[name]}"
     fi
     return 0
 }

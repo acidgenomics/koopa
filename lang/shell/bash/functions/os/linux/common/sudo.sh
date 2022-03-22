@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::linux_fix_sudo_setrlimit_error() { # {{{1
+koopa_linux_fix_sudo_setrlimit_error() { # {{{1
     # """
     # Fix bug in recent version of sudo.
-    # @note Updated 2021-03-24.
+    # @note Updated 2022-03-01.
     #
     # This is popping up on Docker builds:
     # sudo: setrlimit(RLIMIT_CORE): Operation not permitted
@@ -13,10 +13,14 @@ koopa::linux_fix_sudo_setrlimit_error() { # {{{1
     #       sudo-setrlimit-rlimit-core-operation-not-permitted/4223
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1773148
     # """
-    local file
-    koopa::assert_has_no_args "$#"
-    string='Set disable_coredump false'
-    file='/etc/sudo.conf'
-    koopa::sudo_append_string "$string" "$file"
+    local dict
+    koopa_assert_has_no_args "$#"
+    declare -A dict=(
+        [file]='/etc/sudo.conf'
+        [string]='Set disable_coredump false'
+    )
+    koopa_sudo_append_string \
+        --file="${dict[file]}" \
+        --string="${dict[string]}"
     return 0
 }

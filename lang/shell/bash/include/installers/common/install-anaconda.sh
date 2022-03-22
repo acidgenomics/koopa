@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-koopa:::install_anaconda() { # {{{1
+install_anaconda() { # {{{1
     # """
     # Install full Anaconda distribution.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-03-16.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [bash]="$(koopa::locate_bash)"
+        [bash]="$(koopa_locate_bash)"
     )
     declare -A dict=(
-        [arch]="$(koopa::arch)"
-        [koopa_prefix]="$(koopa::koopa_prefix)"
-        [os_type]="$(koopa::os_type)"
+        [arch]="$(koopa_arch)"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+        [os_type]="$(koopa_os_type)"
         [prefix]="${INSTALL_PREFIX:?}"
         [py_maj_ver]='3'
         [version]="${INSTALL_VERSION:?}"
@@ -26,15 +26,16 @@ koopa:::install_anaconda() { # {{{1
             dict[os_type]='Linux'
             ;;
         *)
-            koopa::stop "'${dict[os_type]}' is not supported."
+            koopa_stop "'${dict[os_type]}' is not supported."
             ;;
     esac
     dict[file]="Anaconda${dict[py_maj_ver]}-${dict[version]}-\
 ${dict[os_type]}-${dict[arch]}.sh"
     dict[url]="https://repo.anaconda.com/archive/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    unset -v PYTHONHOME PYTHONPATH
     "${app[bash]}" "${dict[file]}" -bf -p "${dict[prefix]}"
-    koopa::ln \
+    koopa_ln \
         "${dict[koopa_prefix]}/etc/conda/condarc" \
         "${dict[prefix]}/.condarc"
     return 0

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_gcc() { # {{{1
+install_gcc() { # {{{1
     # """
     # Install GCC.
     # @note Updated 2021-11-24.
@@ -54,14 +54,14 @@ koopa:::install_gcc() { # {{{1
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
     # """
     local app conf_args dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [arch]="$(koopa::arch)"
-        [gnu_mirror]="$(koopa::gnu_mirror_url)"
-        [jobs]="$(koopa::cpu_count)"
+        [arch]="$(koopa_arch)"
+        [gnu_mirror]="$(koopa_gnu_mirror_url)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='gcc'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -69,11 +69,11 @@ koopa:::install_gcc() { # {{{1
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="${dict[gnu_mirror]}/${dict[name]}/\
 ${dict[name]}-${dict[version]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
     # Need to build outside of source code directory.
-    koopa::mkdir 'build'
-    koopa::cd 'build'
+    koopa_mkdir 'build'
+    koopa_cd 'build'
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-multilib'
@@ -81,10 +81,10 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
         '--enable-checking=release'
         '-v'
     )
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        dict[mac_ver]="$(koopa::macos_os_version)"
-        dict[mac_maj_min_ver]="$(koopa::major_minor_version "${dict[mac_ver]}")"
+        dict[mac_ver]="$(koopa_macos_os_version)"
+        dict[mac_maj_min_ver]="$(koopa_major_minor_version "${dict[mac_ver]}")"
         dict[sdk_prefix]='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
         conf_args+=(
             "--build=${dict[arch]}-apple-darwin${dict[mac_maj_min_ver]}"

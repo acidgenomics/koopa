@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::linux_configure_system() { # {{{1
+koopa_linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2021-12-09.
+    # @note Updated 2022-02-23.
     #
     # Intended primarily for virtual machine and Docker image builds.
     #
@@ -20,17 +20,17 @@ koopa::linux_configure_system() { # {{{1
     #   skips all program installation.
     # """
     local dict prefixes
-    koopa::assert_has_no_envs
+    koopa_assert_has_no_envs
     declare -A dict=(
-        [app_prefix]="$(koopa::app_prefix)"
+        [app_prefix]="$(koopa_app_prefix)"
         [delete_cache]=0
         [delete_skel]=1
         [docker]="$(
-            if koopa::is_docker
+            if koopa_is_docker
             then
-                koopa::print 1
+                koopa_print 1
             else
-                koopa::print 0
+                koopa_print 0
             fi
         )"
         [install_aspera_connect]=0
@@ -113,14 +113,14 @@ koopa::linux_configure_system() { # {{{1
         [install_vim]=0
         [install_wget]=0
         [install_zsh]=0
-        [make_prefix]="$(koopa::make_prefix)"
+        [make_prefix]="$(koopa_make_prefix)"
         [mode]='default'
-        [opt_prefix]="$(koopa::opt_prefix)"
+        [opt_prefix]="$(koopa_opt_prefix)"
         [passwordless_sudo]=0
-        [python_version]="$(koopa::variable 'python')"
-        [r_version]="$(koopa::variable 'r')"
+        [python_version]="$(koopa_variable 'python')"
+        [r_version]="$(koopa_variable 'r')"
         [ssh_key]=1
-        [which_conda]='miniconda'
+        [which_conda]='conda'
     )
     while (("$#"))
     do
@@ -179,7 +179,7 @@ koopa::linux_configure_system() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
@@ -283,7 +283,7 @@ koopa::linux_configure_system() { # {{{1
             dict[install_vim]=1
             ;;
         *)
-            koopa::stop 'Invalid mode.'
+            koopa_stop 'Invalid mode.'
             ;;
     esac
     if [[ "${dict[docker]}" -eq 1 ]]
@@ -292,13 +292,13 @@ koopa::linux_configure_system() { # {{{1
         dict[ssh_key]=0
     fi
     # NOTE Building Python from source can break dnf on Fedora 32+.
-    if koopa::is_fedora
+    if koopa_is_fedora
     then
         dict[install_python]=0
     fi
     # Initial configuration {{{2
     # --------------------------------------------------------------------------
-    koopa::h1 'Configuring system.'
+    koopa_h1 'Configuring system.'
     # Enable useful global variables that make configuration easier.
     # > export GPG_TTY=/dev/null
     export FORCE_UNSAFE_CONFIGURE=1
@@ -308,8 +308,8 @@ koopa::linux_configure_system() { # {{{1
     # --------------------------------------------------------------------------
     if [[ "${dict[passwordless_sudo]}" -eq 1 ]]
     then
-        koopa::enable_passwordless_sudo
-        koopa::linux_fix_sudo_setrlimit_error
+        koopa_enable_passwordless_sudo
+        koopa_linux_fix_sudo_setrlimit_error
     fi
     # Delete skeleton files {{{3
     # --------------------------------------------------------------------------
@@ -318,19 +318,19 @@ koopa::linux_configure_system() { # {{{1
     # Ubuntu, which sets a lot of config in bashrc.
     if [[ "${dict[delete_skel]}" -eq 1 ]]
     then
-        koopa::rm --sudo '/etc/skel'
+        koopa_rm --sudo '/etc/skel'
     fi
     # Early return in minimal mode {{{3
     # --------------------------------------------------------------------------
     if [[ "${dict[mode]}" == 'minimal' ]]
     then
-        koopa::alert_success 'Minimal configuration was successful.'
+        koopa_alert_success 'Minimal configuration was successful.'
         return 0
     fi
     # Disk configuration {{{3
     # --------------------------------------------------------------------------
     # Show available disk space.
-    koopa::alert 'Checking available local disk space.'
+    koopa_alert 'Checking available local disk space.'
     df -h '/'
     # Ensure essential target prefixes exist.
     prefixes=(
@@ -338,15 +338,15 @@ koopa::linux_configure_system() { # {{{1
         "${dict[make_prefix]}"
         "${dict[opt_prefix]}"
     )
-    koopa::sys_mkdir "${prefixes[@]}"
-    koopa::sys_set_permissions --recursive "${prefixes[@]}"
+    koopa_sys_mkdir "${prefixes[@]}"
+    koopa_sys_set_permissions --recursive "${prefixes[@]}"
     # Base system {{{2
     # --------------------------------------------------------------------------
-    koopa::alert 'Installing base system.'
-    koopa::linux_update_etc_profile_d
+    koopa_alert 'Installing base system.'
+    koopa_linux_update_etc_profile_d
     koopa install base-system "${dict[install_base_system_args]}"
     # Consider requiring: gfortran, xml2-config.
-    koopa::assert_is_installed \
+    koopa_assert_is_installed \
         'autoconf' \
         'bc' \
         'bzip2' \
@@ -359,8 +359,8 @@ koopa::linux_configure_system() { # {{{1
         'tar' \
         'unzip' \
         'xz'
-    koopa::assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
-    koopa::linux_update_ldconfig
+    koopa_assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
+    koopa_linux_update_ldconfig
     # Programs {{{2
     # --------------------------------------------------------------------------
     [[ "${dict[install_dotfiles]}" -eq 1 ]] && \
@@ -505,13 +505,13 @@ koopa::linux_configure_system() { # {{{1
             # Currently only supported for Debian.
             koopa install r-devel
         else
-            if koopa::is_debian
+            if koopa_is_debian
             then
                 koopa install r-cran-binary --version="${dict[r_version]}"
-            elif koopa::is_fedora
+            elif koopa_is_fedora
             then
-                koopa::assert_is_installed R
-                koopa::configure_r
+                koopa_assert_is_installed R
+                koopa_configure_r
             else
                 koopa install r --version="${dict[r_version]}"
             fi
@@ -524,8 +524,8 @@ koopa::linux_configure_system() { # {{{1
         koopa install shiny-server
     # Ensure shared library configuration is current.
     [[ "${dict[install_lmod]}" -eq 1 ]] && \
-        koopa::configure_lmod
-    koopa::linux_update_ldconfig
+        koopa_configure_lmod
+    koopa_linux_update_ldconfig
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------
     [[ "${dict[install_python_packages]}" -eq 1 ]] && \
@@ -548,19 +548,19 @@ koopa::linux_configure_system() { # {{{1
     # --------------------------------------------------------------------------
     # Generate an SSH key.
     [[ "${dict[ssh_key]}" -eq 1 ]] && \
-        koopa::ssh_generate_key
+        koopa_ssh_generate_key
     # Clean up and fix permissions {{{3
     # --------------------------------------------------------------------------
-    koopa::sys_set_permissions --recursive "${prefixes[@]}"
-    koopa::delete_broken_symlinks "${prefixes[@]}"
-    # > koopa::delete_empty_dirs "${prefixes[@]}"
-    # > koopa::fix_pyenv_permissions
-    # > koopa::fix_rbenv_permissions
-    koopa::fix_zsh_permissions
+    koopa_sys_set_permissions --recursive "${prefixes[@]}"
+    koopa_delete_broken_symlinks "${prefixes[@]}"
+    # > koopa_delete_empty_dirs "${prefixes[@]}"
+    # > koopa_fix_pyenv_permissions
+    # > koopa_fix_rbenv_permissions
+    koopa_fix_zsh_permissions
     if [[ "${dict[delete_cache]}" -eq 1 ]]
     then
-        koopa::linux_delete_cache
+        koopa_linux_delete_cache
     fi
-    koopa::alert_success 'Configuration completed successfully.'
+    koopa_alert_success 'Configuration completed successfully.'
     return 0
 }

@@ -101,7 +101,6 @@ PATH="${KOOPA_OPT_PREFIX}/rust-packages/bin:${PATH}"
 # Python.
 PATH="${KOOPA_OPT_PREFIX}/python/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/python-packages/bin:${PATH}"
-# > PATH="${KOOPA_OPT_PREFIX}/virtualenvs/r-reticulate/bin:${PATH}"
 
 # Conda.
 PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
@@ -201,7 +200,7 @@ R_REMOTES_STANDALONE="true"
 
 # The reticulate package allows you to run Python code inside of R.
 
-# Ensure the default location of miniconda is standardized.
+# Ensure the default location of Miniconda is standardized.
 # > RETICULATE_MINICONDA_PATH="${KOOPA_OPT_PREFIX}/conda"
 
 # Default path to virtual environments.

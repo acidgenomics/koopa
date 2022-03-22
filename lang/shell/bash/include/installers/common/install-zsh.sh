@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_zsh() { # {{{1
+install_zsh() { # {{{1
     # """
     # Install Zsh.
     # @note Updated 2022-02-03.
@@ -27,12 +27,12 @@ koopa:::install_zsh() { # {{{1
     # - https://github.com/TACC/Lmod/issues/434
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [link_app]="${INSTALL_LINK_APP:?}"
         [name]='zsh'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -42,9 +42,9 @@ koopa:::install_zsh() { # {{{1
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="https://downloads.sourceforge.net/project/\
 ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     ./configure \
         --prefix="${dict[prefix]}" \
         --enable-etcdir="${dict[etc_dir]}" \
@@ -53,17 +53,17 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
     # > "${app[make]}" check
     # > "${app[make]}" test
     "${app[make]}" install
-    if koopa::is_debian_like
+    if koopa_is_debian_like
     then
-        koopa::alert "Linking shared config scripts into '${dict[etc_dir]}'."
-        dict[distro_prefix]="$(koopa::distro_prefix)"
-        koopa::ln \
+        koopa_alert "Linking shared config scripts into '${dict[etc_dir]}'."
+        dict[distro_prefix]="$(koopa_distro_prefix)"
+        koopa_ln \
             -t "${dict[etc_dir]}" \
             "${dict[distro_prefix]}/etc/zsh/"*
     fi
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
-        koopa::enable_shell_for_all_users "${dict[name]}"
+        koopa_enable_shell_for_all_users "${dict[name]}"
     fi
     return 0
 }

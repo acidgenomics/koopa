@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_nim_packages() { # {{{1
+install_nim_packages() { # {{{1
     # """
     # Install Nim packages using nimble.
     # @note Updated 2022-02-10.
@@ -9,10 +9,10 @@ koopa:::install_nim_packages() { # {{{1
     # - https://github.com/nim-lang/nimble/issues/734
     # """
     local app i pkgs
-    koopa::assert_has_no_args "$#"
-    koopa::activate_nim
+    koopa_assert_has_no_args "$#"
+    koopa_activate_nim
     declare -A app=(
-        [nimble]="$(koopa::locate_nimble)"
+        [nimble]="$(koopa_locate_nimble)"
     )
     pkgs=(
         'markdown'
@@ -21,8 +21,8 @@ koopa:::install_nim_packages() { # {{{1
     do
         local pkg pkg_lower version
         pkg="${pkgs[$i]}"
-        pkg_lower="$(koopa::lowercase "$pkg")"
-        version="$(koopa::variable "nim-${pkg_lower}")"
+        pkg_lower="$(koopa_lowercase "$pkg")"
+        version="$(koopa_variable "nim-${pkg_lower}")"
         pkgs[$i]="${pkg}@${version}"
     done
     "${app[nimble]}" install "${pkgs[@]}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::alpine_install_glibc() { # {{{1
+alpine_install_glibc() { # {{{1
     # """
     # Install glibc.
     # @note Updated 2021-11-02.
@@ -29,12 +29,12 @@ koopa:::alpine_install_glibc() { # {{{1
     # Error relocating /usr/glibc-compat/lib/...
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [apk]="$(koopa::alpine_locate_apk)"
-        [localedef]="$(koopa::alpine_locate_localedef)"
-        [sudo]="$(koopa::locate_sudo)"
+        [apk]="$(koopa_alpine_locate_apk)"
+        [localedef]="$(koopa_alpine_locate_localedef)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     declare -A dict=(
         [version]="${INSTALL_VERSION:?}"
@@ -47,17 +47,17 @@ releases/download/${dict[version]}"
         [apk_main_url]="${dict[base_url]}/glibc-${dict[version]}.apk"
         [pub_key_url]='https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub'
     )
-    dict[apk_bin_file]="$(koopa::basename "${dict[apk_bin_url]}")"
-    dict[apk_dev_file]="$(koopa::basename "${dict[apk_dev_url]}")"
-    dict[apk_i18n_file]="$(koopa::basename "${dict[apk_i18n_url]}")"
-    dict[apk_main_file]="$(koopa::basename "${dict[apk_main_url]}")"
-    dict[pub_key_file]="$(koopa::basename "${dict[pub_key_url]}")"
-    koopa::download "${dict[apk_bin_url]}" "${dict[apk_bin_file]}"
-    koopa::download "${dict[apk_dev_url]}" "${dict[apk_dev_file]}"
-    koopa::download "${dict[apk_i18n_url]}" "${dict[apk_i18n_file]}"
-    koopa::download "${dict[apk_main_url]}" "${dict[apk_main_file]}"
-    koopa::download "${dict[pub_key_url]}" "${dict[pub_key_file]}"
-    koopa::cp --sudo \
+    dict[apk_bin_file]="$(koopa_basename "${dict[apk_bin_url]}")"
+    dict[apk_dev_file]="$(koopa_basename "${dict[apk_dev_url]}")"
+    dict[apk_i18n_file]="$(koopa_basename "${dict[apk_i18n_url]}")"
+    dict[apk_main_file]="$(koopa_basename "${dict[apk_main_url]}")"
+    dict[pub_key_file]="$(koopa_basename "${dict[pub_key_url]}")"
+    koopa_download "${dict[apk_bin_url]}" "${dict[apk_bin_file]}"
+    koopa_download "${dict[apk_dev_url]}" "${dict[apk_dev_file]}"
+    koopa_download "${dict[apk_i18n_url]}" "${dict[apk_i18n_file]}"
+    koopa_download "${dict[apk_main_url]}" "${dict[apk_main_file]}"
+    koopa_download "${dict[pub_key_url]}" "${dict[pub_key_file]}"
+    koopa_cp --sudo \
         "${dict[pub_key_file]}" \
         "${dict[apk_key_prefix]}/${dict[pub_key_file]}"
     "${app[sudo]}" "${app[apk]}" add \

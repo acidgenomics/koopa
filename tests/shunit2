@@ -3,52 +3,58 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-koopa::test_shunit2() {
+main() { # {{{1
     # """
     # Run shUnit2 tests.
-    # @note Updated 2020-07-23.
+    # @note Updated 2022-03-18.
+    #
     # @seealso
     # - https://github.com/kward/shunit2
     # """
-    local extra koopa_prefix shunit2_dir
-    koopa::assert_is_installed shunit2
-    extra=0
+    local app dict
+    declare -A app=(
+        [cut]="$(koopa_locate_cut)"
+        [shunit2]="$(koopa_locate_shunit2)"
+        [sort]="$(koopa_locate_sort)"
+    )
+    declare -A dict=(
+        [extra]=0
+        [shunit2_dir]="$(koopa_koopa_prefix)/tests/shunit2.d"
+    )
     while (("$#"))
     do
         case "$1" in
             --extra)
-                extra=1
+                dict[extra]=1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::h1 'Running unit tests with shUnit2.'
+    koopa_alert 'Running unit tests with shUnit2.'
     # Don't exit on errors, which are handled by shunit2.
     set +o errexit
-    koopa_prefix="$(koopa::koopa_prefix)"
-    shunit2_dir="${koopa_prefix}/tests/shunit2.d"
-    suite() { # {{{1
-        koopa::source_dir "$shunit2_dir"
-        if [[ "$extra" -eq 1 ]]
+    suite() {
+        koopa_source_dir "${dict[shunit2_dir]}"
+        if [[ "${dict[extra]}" -eq 1 ]]
         then
-            koopa::source_dir "${shunit2_dir}/extra"
+            koopa_source_dir "${dict[shunit2_dir]}/extra"
         fi
         readarray -t tests <<< "$( \
             declare -F \
-                | cut -d ' ' -f 3 \
-                | grep -E '^test_' \
-                | sort \
+                | "${app[cut]}" --delimiter=' ' --fields='3' \
+                | koopa_grep --pattern='^test_' --regex \
+                | "${app[sort]}" \
         )"
         for test in "${tests[@]}"
         do
             suite_addTest "$test"
         done
     }
-    . shunit2
+    source "${app[shunit2]}"
     return 0
 }
 
-koopa::test_shunit2 "$@"
+main "$@"

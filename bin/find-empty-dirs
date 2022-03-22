@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-koopa::find_empty_dirs "$@"
+koopa_find_empty_dirs "$@"

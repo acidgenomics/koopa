@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2207
 
-_koopa_complete() { # {{{1
+__koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-02-11.
+    # Updated 2022-03-17.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -35,7 +35,6 @@ _koopa_complete() { # {{{1
                 'list'
                 'reinstall'
                 'system'
-                'test'
                 'uninstall'
                 'update'
             )
@@ -50,14 +49,16 @@ _koopa_complete() { # {{{1
                         'ftp'
                         'git'
                         'gpg'
+                        'kallisto'
                         'list'
                         'python'
                         'r'
+                        'salmon'
                         'sra'
                         'ssh'
                         'wget'
                     )
-                    if _koopa_is_linux
+                    if koopa_is_linux
                     then
                         args+=(
                             'clean'
@@ -126,6 +127,7 @@ _koopa_complete() { # {{{1
                         'homebrew'
                         'homebrew-bundle'
                         'htop'
+                        'imagemagick'
                         'julia'
                         'julia-packages'
                         'lesspipe'
@@ -184,7 +186,7 @@ _koopa_complete() { # {{{1
                         'wget'
                         'zsh'
                     )
-                    if _koopa_is_linux
+                    if koopa_is_linux
                     then
                         args+=(
                             'aspera-connect'
@@ -206,7 +208,7 @@ _koopa_complete() { # {{{1
                             'shiny-server'
                             'wine'
                         )
-                        if _koopa_is_debian_like
+                        if koopa_is_debian_like
                         then
                             args+=(
                                 'bcbio-nextgen-vm'
@@ -215,14 +217,14 @@ _koopa_complete() { # {{{1
                                 'r-cran-binary'
                                 'r-devel'
                             )
-                        elif _koopa_is_fedora_like
+                        elif koopa_is_fedora_like
                         then
                             args+=(
                                 'oracle-instant-client'
                             )
                         fi
                     fi
-                    if _koopa_is_macos
+                    if koopa_is_macos
                     then
                         args+=(
                             'adobe-creative-cloud'
@@ -275,24 +277,28 @@ _koopa_complete() { # {{{1
                         'info'
                         'log'
                         'os-string'
-                        'path'
                         'prefix'
                         'reload-shell'
                         'roff'
                         'set-permissions'
                         'switch-to-develop'
-                        'variable'
+                        'test'
                         'variables'
                         'version'
                         'which'
                     )
-                    if _koopa_is_macos
+                    if koopa_is_macos
                     then
                         args+=(
+                            'clean-launch-services'
                             'disable-touch-id-sudo'
                             'enable-touch-id-sudo'
+                            'flush-dns'
                             'homebrew-cask-version'
+                            'ifactive'
+                            'list-launch-agents'
                             'macos-app-version'
+                            'reload-autofs'
                         )
                     fi
                     ;;
@@ -323,15 +329,16 @@ _koopa_complete() { # {{{1
                         'spacevim'
                         'tex-packages'
                     )
-                    if _koopa_is_linux
+                    if koopa_is_linux
                     then
                         args+=(
                             'google-cloud-sdk'
                         )
-                    elif _koopa_is_macos
+                    elif koopa_is_macos
                     then
                         args+=(
                             'defaults'
+                            'microsoft-office'
                         )
                     fi
                     ;;
@@ -346,6 +353,7 @@ _koopa_complete() { # {{{1
                         'aws')
                             args=(
                                 'batch'
+                                'ec2'
                                 's3'
                             )
                             ;;
@@ -402,6 +410,13 @@ _koopa_complete() { # {{{1
                                 'serve'
                             )
                             ;;
+                        'kallisto' | \
+                        'salmon')
+                            args=(
+                                'index'
+                                'quant'
+                            )
+                            ;;
                         'md5sum')
                             args=(
                                 'check-to-new-md5-file'
@@ -409,9 +424,8 @@ _koopa_complete() { # {{{1
                             ;;
                         'python')
                             args=(
+                                'create-venv'
                                 'pip-outdated'
-                                'venv-create'
-                                'venv-create-r-reticulate'
                             )
                             ;;
                         'r')
@@ -455,6 +469,13 @@ _koopa_complete() { # {{{1
                                         'list-jobs'
                                     )
                                     ;;
+                                'ec2')
+                                    args=(
+                                        'instance-id'
+                                        'suspend'
+                                        # > 'terminate'
+                                    )
+                                    ;;
                                 's3')
                                     args=(
                                         'find'
@@ -462,6 +483,17 @@ _koopa_complete() { # {{{1
                                         'ls'
                                         'mv-to-parent'
                                         'sync'
+                                    )
+                                    ;;
+                            esac
+                            ;;
+                        'kallisto' | \
+                        'salmon')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'quant')
+                                    args=(
+                                        'paired-end'
+                                        'single-end'
                                     )
                                     ;;
                             esac
@@ -476,4 +508,4 @@ _koopa_complete() { # {{{1
     return 0
 }
 
-complete -F _koopa_complete koopa
+complete -F __koopa_complete koopa

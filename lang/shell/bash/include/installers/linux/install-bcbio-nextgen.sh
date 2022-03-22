@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::linux_install_bcbio_nextgen() { # {{{1
+linux_install_bcbio_nextgen() { # {{{1
     # """
     # Install bcbio-nextgen.
     # @note Updated 2022-01-31.
@@ -9,9 +9,9 @@ koopa:::linux_install_bcbio_nextgen() { # {{{1
     # to speed up the installation.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [python]="$(koopa::locate_python)"
+        [python]="$(koopa_locate_python)"
     )
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
@@ -30,9 +30,9 @@ koopa:::linux_install_bcbio_nextgen() { # {{{1
     dict[file]='bcbio_nextgen_install.py'
     dict[url]="https://raw.github.com/bcbio/bcbio-nextgen/master/\
 scripts/${dict[file]}"
-    koopa::alert_coffee_time
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::mkdir "${dict[prefix]}"
+    koopa_alert_coffee_time
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_mkdir "${dict[prefix]}"
     "${app[python]}" \
         "${dict[file]}" \
         "${dict[install_dir]}" \
@@ -43,11 +43,11 @@ scripts/${dict[file]}"
         --tooldir="${dict[tools_dir]}" \
         --upgrade="${dict[upgrade]}"
     # Clean up conda packages inside Docker image.
-    if koopa::is_docker
+    if koopa_is_docker
     then
         # > app[conda]="${dict[install_dir]}/anaconda/bin/conda"
         app[conda]="${dict[tools_dir]}/bin/bcbio_conda"
-        koopa::assert_is_installed "${app[conda]}"
+        koopa_assert_is_installed "${app[conda]}"
         "${app[conda]}" clean --yes --tarballs
     fi
     return 0

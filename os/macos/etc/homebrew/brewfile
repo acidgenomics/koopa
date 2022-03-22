@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-01-26.
+# Updated 2022-03-21.
 # """
 
 # Taps {{{1
@@ -16,7 +16,6 @@ tap "homebrew/core"
 # Priority brews {{{1
 # ==============================================================================
 
-brew "emacs", link: false
 brew "git"
 brew "subversion"
 
@@ -93,13 +92,14 @@ cask "font-source-serif"
 cask "font-victor-mono"
 cask "font-victor-mono-nerd-font"
 cask "github"
+cask "gitkraken"
 cask "google-cloud-sdk", greedy: true
 cask "google-drive"
 cask "gpg-suite-no-mail"  # no-binaries
 cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
-cask "iterm2"
+cask "iterm2-beta"  # Use until dark/light mode support is stable.
 cask "julia"
 cask "keka"
 cask "libreoffice"
@@ -107,6 +107,7 @@ cask "little-snitch"
 cask "macvim"  # no-binaries
 cask "museeks"
 cask "netnewswire"
+cask "nightfall"
 cask "omnidisksweeper"
 cask "pacifist"
 cask "pycharm-ce"
@@ -150,6 +151,9 @@ brew "yt-dlp"  # youtube-dl alternative
 
 # External brews {{{1
 # ==============================================================================
+
+tap "saulpw/vd"
+brew "saulpw/vd/visidata"
 
 tap "vitorgalvao/tiny-scripts"
 brew "vitorgalvao/tiny-scripts/cask-repair"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_gnu_app() { # {{{1
+install_gnu_app() { # {{{1
     # """
     # Build and install a GNU package from source.
     # @note Updated 2022-02-01.
@@ -9,11 +9,11 @@ koopa:::install_gnu_app() { # {{{1
     # """
     local app conf_args dict
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [gnu_mirror]="$(koopa::gnu_mirror_url)"
-        [jobs]="$(koopa::cpu_count)"
+        [gnu_mirror]="$(koopa_gnu_mirror_url)"
+        [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -38,9 +38,9 @@ koopa:::install_gnu_app() { # {{{1
     esac
     dict[file]="${dict[name]}-${dict[version]}.tar.${dict[suffix]}"
     dict[url]="${dict[gnu_mirror]}/${dict[name]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check

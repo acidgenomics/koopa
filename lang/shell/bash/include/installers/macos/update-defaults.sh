@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::macos_update_defaults() { # {{{1
+macos_update_defaults() { # {{{1
     # """
     # Update macOS defaults.
     # @note Updated 2022-01-27.
@@ -34,18 +34,18 @@ koopa:::macos_update_defaults() { # {{{1
     #       main/macos-config.sh
     # """
     local app app_name dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [chflags]="$(koopa::locate_chflags)"
-        [defaults]="$(koopa::macos_locate_defaults)"
-        [kill_all]="$(koopa::macos_locate_kill_all)"
-        [lsregister]="$(koopa::macos_locate_lsregister)"
-        [nvram]="$(koopa::macos_locate_nvram)"
-        [plistbuddy]="$(koopa::macos_locate_plistbuddy)"
-        [pmset]="$(koopa::macos_locate_pmset)"
-        [scutil]="$(koopa::macos_locate_scutil)"
-        [sudo]="$(koopa::locate_sudo)"
+        [chflags]="$(koopa_locate_chflags)"
+        [defaults]="$(koopa_macos_locate_defaults)"
+        [kill_all]="$(koopa_macos_locate_kill_all)"
+        [lsregister]="$(koopa_macos_locate_lsregister)"
+        [nvram]="$(koopa_macos_locate_nvram)"
+        [plistbuddy]="$(koopa_macos_locate_plistbuddy)"
+        [pmset]="$(koopa_macos_locate_pmset)"
+        [scutil]="$(koopa_macos_locate_scutil)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     declare -A dict=(
         [screenshots_dir]="${HOME}/Documents/screenshots"
@@ -758,7 +758,7 @@ koopa:::macos_update_defaults() { # {{{1
         'disable-shadow' \
         -bool true
     # Save screenshots into Documents, instead of Desktop.
-    koopa::mkdir "${dict[screenshots_dir]}"
+    koopa_mkdir "${dict[screenshots_dir]}"
     "${app[defaults]}" write \
         'com.apple.screencapture' \
         'location' \
@@ -1061,7 +1061,7 @@ koopa:::macos_update_defaults() { # {{{1
     # Spotlight {{{2
     # --------------------------------------------------------------------------
     # Hide Spotlight tray-icon (and subsequent helper).
-    # > koopa::chmod --sudo '0600' \
+    # > koopa_chmod --sudo '0600' \
     # >     '/System/Library/CoreServices/Search.bundle/Contents/MacOS/Search'
     # Disable Spotlight indexing for any volume that gets mounted and has not
     # yet been indexed before. Use 'sudo mdutil -i off /Volumes/foo' to stop
@@ -1467,6 +1467,6 @@ WebKit2AllowsInlineMediaPlayback" \
     do
         "${app[kill_all]}" "${app_name}" &>/dev/null || true
     done
-    koopa::alert_note 'Some of these changes require logout to take effect.'
+    koopa_alert_note 'Some of these changes require logout to take effect.'
     return 0
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_julia() { # {{{1
+install_julia() { # {{{1
     # """
     # Install Julia (from source).
     # @note Updated 2021-12-01.
@@ -12,12 +12,12 @@ koopa:::install_julia() { # {{{1
     # - https://github.com/JuliaLang/julia/blob/master/Make.inc
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='julia'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -28,13 +28,13 @@ koopa:::install_julia() { # {{{1
     dict[file]="${dict[name]}-${dict[version]}-full.tar.gz"
     dict[url]="https://github.com/JuliaLang/${dict[name]}/releases/download/\
 v${dict[version]}/${dict[file]}"
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        koopa::activate_homebrew_opt_prefix 'gcc'
+        koopa_activate_homebrew_opt_prefix 'gcc'
     fi
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     # If set, this will interfere with internal LLVM build required for
     # Julia. See 'build.md' file for LLVM details.
     unset -v LLVM_CONFIG

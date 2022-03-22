@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::alpine_install_base_system() { # {{{1
+alpine_install_base_system() { # {{{1
     # """
     # Install Alpine Linux base system.
     # @note Updated 2021-11-30.
@@ -11,10 +11,10 @@ koopa:::alpine_install_base_system() { # {{{1
     # > apk add --no-cache --virtual .build-dependencies
     # """
     local app dict pkgs
-    koopa::assert_is_admin
+    koopa_assert_is_admin
     declare -A app=(
-        [apk]="$(koopa::alpine_locate_apk)"
-        [sudo]="$(koopa::locate_sudo)"
+        [apk]="$(koopa_alpine_locate_apk)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     declare -A dict=(
         [base]=1
@@ -46,14 +46,14 @@ koopa:::alpine_install_base_system() { # {{{1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
     "${app[sudo]}" "${app[apk]}" --no-cache update
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        koopa::alert 'Upgrading system.'
+        koopa_alert 'Upgrading system.'
         "${app[sudo]}" "${app[apk]}" --no-cache upgrade
     fi
     pkgs=()
@@ -118,4 +118,3 @@ koopa:::alpine_install_base_system() { # {{{1
     "${app[sudo]}" "${app[apk]}" --no-cache add "${pkgs[@]}"
     return 0
 }
-

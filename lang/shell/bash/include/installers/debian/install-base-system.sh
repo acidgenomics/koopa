@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa:::debian_install_base_system() { # {{{1
+debian_install_base_system() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-12-31.
+    # @note Updated 2022-02-13.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -23,13 +23,13 @@ koopa:::debian_install_base_system() { # {{{1
     #   https://serverfault.com/questions/56848
     # """
     local app dict pkgs
-    koopa::assert_is_admin
+    koopa_assert_is_admin
     declare -A app=(
-        [dpkg]="$(koopa::debian_locate_dpkg)"
-        [sudo]="$(koopa::locate_sudo)"
+        [dpkg]="$(koopa_debian_locate_dpkg)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     declare -A dict=(
-        [apt_enabled_repos]="$(koopa::debian_apt_enabled_repos)"
+        [apt_enabled_repos]="$(koopa_debian_apt_enabled_repos)"
         [base]=1
         [dev]=1
         [extra]=0
@@ -59,12 +59,12 @@ koopa:::debian_install_base_system() { # {{{1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
     # Nuke caches before installing packages.
-    koopa::rm --sudo \
+    koopa_rm --sudo \
         '/var/cache/apt/'* \
         '/var/lib/dpkg/available'
     "${app[sudo]}" "${app[dpkg]}" --clear-avail
@@ -73,20 +73,22 @@ koopa:::debian_install_base_system() { # {{{1
     # to break.
     if [[ -L '/usr/local/man' ]]
     then
-        koopa::rm --sudo '/usr/local/man'
+        koopa_rm --sudo '/usr/local/man'
     fi
     # Requiring universe repo to be enabled on Ubuntu.
-    if koopa::is_ubuntu && \
-        ! koopa::str_detect_fixed "${dict[apt_enabled_repos]}" 'universe'
+    if koopa_is_ubuntu && \
+        ! koopa_str_detect_fixed \
+            --string="${dict[apt_enabled_repos]}" \
+            --pattern='universe'
     then
-        koopa::stop \
+        koopa_stop \
             "The Ubuntu 'universe' repo is disabled." \
             "Check '/etc/apt/sources.list'."
     fi
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        koopa::alert "Upgrading system via 'dist-upgrade'."
-        koopa::debian_apt_get 'dist-upgrade'
+        koopa_alert "Upgrading system via 'dist-upgrade'."
+        koopa_debian_apt_get 'dist-upgrade'
     fi
     pkgs=()
     # These packages should be included in the Docker base image.
@@ -142,6 +144,7 @@ koopa:::debian_install_base_system() { # {{{1
             'gfortran'
             'gpg-agent'
             'htop'
+            'jq'
             'libtool'
             'libtool-bin'
             'nano'
@@ -159,6 +162,7 @@ koopa:::debian_install_base_system() { # {{{1
             'tree'
             'udunits-bin'
             'vim'
+            'visidata'
             'zip'
             'zsh'
         )
@@ -270,7 +274,6 @@ koopa:::debian_install_base_system() { # {{{1
             'gtk-doc-tools'
             'imagemagick'
             'jags'
-            'jq'
             'keyboard-configuration'
             'mpi-default-bin'
             'nim'
@@ -287,14 +290,14 @@ koopa:::debian_install_base_system() { # {{{1
             'xfonts-75dpi'
             'xorg'
         )
-        if koopa::is_ubuntu
+        if koopa_is_ubuntu
         then
             pkgs+=('firefox')
         fi
     fi
-    koopa::debian_apt_install "${pkgs[@]}"
-    koopa::debian_apt_configure_sources
-    koopa::debian_apt_clean
-    koopa::debian_set_locale
+    koopa_debian_apt_install "${pkgs[@]}"
+    koopa_debian_apt_configure_sources
+    koopa_debian_apt_clean
+    koopa_debian_set_locale
     return 0
 }

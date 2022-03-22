@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # NOTE This currently requires user interaction, and may error inside of the
-# subshell approach currently used in 'koopa::install_app' handoff.
+# subshell approach currently used in 'koopa_install_app' handoff.
 
-koopa:::macos_install_xcode_clt() { # {{{1
+macos_install_xcode_clt() { # {{{1
     # """
     # Install Xcode CLT.
     # @note Updated 2021-10-30.
@@ -20,20 +20,20 @@ koopa:::macos_install_xcode_clt() { # {{{1
     #     878b5a18b89ff73f2f221392ecaabd03c1e69c3f/install#L297
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa::locate_sudo)"
-        [xcode_select]="$(koopa::macos_locate_xcode_select)"
-        [xcodebuild]="$(koopa::macos_locate_xcodebuild)"
+        [sudo]="$(koopa_locate_sudo)"
+        [xcode_select]="$(koopa_macos_locate_xcode_select)"
+        [xcodebuild]="$(koopa_macos_locate_xcodebuild)"
     )
     declare -A dict=(
         [prefix]="$("${app[xcode_select]}" -p 2>/dev/null || true)"
     )
     if [[ -d "${dict[prefix]}" ]]
     then
-        koopa::alert "Removing previous install at '${dict[prefix]}'."
-        koopa::rm --sudo "${dict[prefix]}"
+        koopa_alert "Removing previous install at '${dict[prefix]}'."
+        koopa_rm --sudo "${dict[prefix]}"
     fi
     # This step will prompt interactively, which is annoying. See above for
     # alternative workarounds that are more complicated, but may improve this.
@@ -41,6 +41,6 @@ koopa:::macos_install_xcode_clt() { # {{{1
     "${app[sudo]}" "${app[xcodebuild]}" -license 'accept'
     "${app[sudo]}" "${app[xcode_select]}" -r
     prefix="$("${app[xcode_select]}" -p)"
-    koopa::assert_is_dir "${dict[prefix]}"
+    koopa_assert_is_dir "${dict[prefix]}"
     return 0
 }

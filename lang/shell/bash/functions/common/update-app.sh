@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 
-koopa::update_app() { # {{{1
+koopa_update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-02-25.
     # """
     local clean_path_arr dict homebrew_opt_arr opt_arr pos
-    koopa::assert_has_args "$#"
-    koopa::assert_has_no_envs
+    koopa_assert_has_args "$#"
+    koopa_assert_has_no_envs
     declare -A dict=(
         [homebrew_opt]=''
-        [installers_prefix]="$(koopa::installers_prefix)"
-        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [installers_prefix]="$(koopa_installers_prefix)"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
         [name_fancy]=''
         [opt]=''
-        [opt_prefix]="$(koopa::opt_prefix)"
+        [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
         [quiet]=0
         [shared]=0
         [system]=0
-        [tmp_dir]="$(koopa::tmp_dir)"
+        [tmp_dir]="$(koopa_tmp_dir)"
         [updater]=''
         [version]=''
     )
@@ -119,16 +119,23 @@ koopa::update_app() { # {{{1
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
-        koopa::assert_is_dir "${dict[prefix]}"
-        dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
-        if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
+        if [[ ! -d "${dict[prefix]}" ]]
+        then
+            koopa_warn "${dict[name_fancy]} is not installed \
+at '${dict[prefix]}'."
+            return 1
+        fi
+        dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
+        if koopa_str_detect_regex \
+            --string="${dict[prefix]}" \
+            --pattern="^${dict[koopa_prefix]}"
         then
             dict[shared]=1
         else
             dict[shared]=0
         fi
     else
-        if koopa::is_shared_install
+        if koopa_is_shared_install
         then
             dict[shared]=1
         else
@@ -141,85 +148,90 @@ koopa::update_app() { # {{{1
     fi
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
     then
-        koopa::assert_is_admin
+        koopa_assert_is_admin
     fi
     [[ -z "${dict[updater]}" ]] && dict[updater]="${dict[name]}"
-    dict[updater]="$(koopa::snake_case_simple "update_${dict[updater]}")"
-    dict[updater_file]="$(koopa::kebab_case_simple "${dict[updater]}")"
+    dict[updater]="$(koopa_snake_case_simple "update_${dict[updater]}")"
+    dict[updater_file]="$(koopa_kebab_case_simple "${dict[updater]}")"
     dict[updater_file]="${dict[installers_prefix]}/\
 ${dict[platform]}/${dict[updater_file]}.sh"
-    koopa::assert_is_file "${dict[updater_file]}"
+    koopa_assert_is_file "${dict[updater_file]}"
     # shellcheck source=/dev/null
     source "${dict[updater_file]}"
-    dict[function]="$(koopa::snake_case_simple "${dict[updater]}")"
+    dict[function]="$(koopa_snake_case_simple "${dict[updater]}")"
     if [[ "${dict[platform]}" != 'common' ]]
     then
         dict[function]="${dict[platform]}_${dict[function]}"
     fi
-    dict[function]="koopa:::${dict[function]}"
-    koopa::assert_is_function "${dict[function]}"
+    dict[function]="${dict[function]}"
+    koopa_assert_is_function "${dict[function]}"
     if [[ -z "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]
     then
         dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
     fi
     if [[ -n "${dict[prefix]}" ]]
     then
-        koopa::assert_is_dir "${dict[prefix]}"
-        dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
-        koopa::alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
+        if [[ ! -d "${dict[prefix]}" ]]
+        then
+            koopa_warn "${dict[name_fancy]} is not installed \
+at '${dict[prefix]}'."
+            return 1
+        fi
+        dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
+        koopa_alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
     else
-        koopa::alert_update_start "${dict[name_fancy]}"
+        koopa_alert_update_start "${dict[name_fancy]}"
     fi
-    if koopa::is_linux && \
+    if koopa_is_linux && \
         { [[ "${dict[shared]}" -eq 1 ]] || \
             [[ "${dict[system]}" -eq 1 ]]; }
     then
-        koopa::linux_update_ldconfig
+        koopa_linux_update_ldconfig
     fi
     (
-        koopa::cd "${dict[tmp_dir]}"
+        koopa_cd "${dict[tmp_dir]}"
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
-        PATH="$(koopa::paste --sep=':' "${clean_path_arr[@]}")"
+        PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
         if [[ -x '/usr/bin/pkg-config' ]]
         then
-            koopa::add_to_pkg_config_path_start_2 \
+            koopa_add_to_pkg_config_path_start_2 \
                 '/usr/bin/pkg-config'
         fi
         # Activate packages installed in Homebrew 'opt/' directory.
-        if koopa::is_array_non_empty "${homebrew_opt_arr[@]:-}"
+        if koopa_is_array_non_empty "${homebrew_opt_arr[@]:-}"
         then
-            koopa::activate_homebrew_opt_prefix "${homebrew_opt_arr[@]}"
+            koopa_activate_homebrew_opt_prefix "${homebrew_opt_arr[@]}"
         fi
         # Activate packages installed in Koopa 'opt/' directory.
-        if koopa::is_array_non_empty "${opt_arr[@]:-}"
+        if koopa_is_array_non_empty "${opt_arr[@]:-}"
         then
-            koopa::activate_opt_prefix "${opt_arr[@]}"
+            koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
         # shellcheck disable=SC2030
         export UPDATE_PREFIX="${dict[prefix]}"
         "${dict[function]}" "$@"
     )
-    koopa::rm "${dict[tmp_dir]}"
+    koopa_rm "${dict[tmp_dir]}"
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]
     then
         if [[ "${dict[shared]}" -eq 1 ]]
         then
-            koopa::sys_set_permissions --recursive "${dict[prefix]}"
+            koopa_sys_set_permissions --recursive "${dict[prefix]}"
         fi
-        # > koopa::delete_empty_dirs "${dict[prefix]}"
+        # > koopa_delete_empty_dirs "${dict[prefix]}"
     fi
-    if koopa::is_linux && \
+    if koopa_is_linux && \
         { [[ "${dict[shared]}" -eq 1 ]] || \
             [[ "${dict[system]}" -eq 1 ]]; }
     then
-        koopa::linux_update_ldconfig
+        koopa_linux_update_ldconfig
     fi
     if [[ -d "${dict[prefix]}" ]]
     then
-        koopa::alert_update_success "${dict[name_fancy]}" "${dict[prefix]}"
+        koopa_alert_update_success "${dict[name_fancy]}" "${dict[prefix]}"
     else
-        koopa::alert_update_success "${dict[name_fancy]}"
+        koopa_alert_update_success "${dict[name_fancy]}"
     fi
     return 0
 }

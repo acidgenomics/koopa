@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_doom_emacs() { # {{{1
+install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
     # @note Updated 2022-02-01.
@@ -21,27 +21,27 @@ koopa:::install_doom_emacs() { # {{{1
     # - weathericons.ttf
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [emacs]="$(koopa::locate_emacs)"
+        [emacs]="$(koopa_locate_emacs)"
     )
     declare -A dict=(
         [branch]='master'
-        [opt_prefix]="$(koopa::opt_prefix)"
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [url]='https://github.com/hlissner/doom-emacs.git'
     )
     if [[ ! -d "${dict[opt_prefix]}/chemacs" ]]
     then
-        koopa::stop 'Install chemacs first.'
+        koopa_stop 'Install chemacs first.'
     fi
-    koopa::add_to_path_start "$(koopa::dirname "${app[emacs]}")"
-    koopa::git_clone \
+    koopa_add_to_path_start "$(koopa_dirname "${app[emacs]}")"
+    koopa_git_clone \
         --branch="${dict[branch]}" \
         "${dict[url]}" \
         "${dict[prefix]}"
     app[doom]="${dict[prefix]}/bin/doom"
-    koopa::assert_is_installed "${app[doom]}"
+    koopa_assert_is_installed "${app[doom]}"
     install_args=(
         # > '--no-config'
         # > '--no-install'

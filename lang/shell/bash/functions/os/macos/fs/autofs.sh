@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-koopa::macos_reload_autofs() { # {{{1
+koopa_macos_reload_autofs() { # {{{1
     # """
     # Reload autofs configuration defined in '/etc/auto_master'.
     # @note Updated 2021-10-27.
     # """
     local app
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [automount]="$(koopa::macos_locate_automount)"
-        [sudo]="$(koopa::locate_sudo)"
+        [automount]="$(koopa_macos_locate_automount)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     "${app[sudo]}" "${app[automount]}" -vc
     return 0

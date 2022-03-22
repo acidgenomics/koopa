@@ -154,7 +154,7 @@ library, with the intent to improve standardization of app configuration.
   which can be overly strict. This check currently fails on Debian/Ubuntu
   CRAN binaries for R 4.1.0.
 - Simplified conda environment handling in `activate_conda_env` function.
-- Initial commit of `koopa::find` internal function, which attempts to use
+- Initial commit of `koopa_find` internal function, which attempts to use
   Rust `fd` instead of GNU `find` when possible.
 - Improved support for multiple Emacs configurations (e.g. Spacemacs,
   Doom Emacs, etc.) using chemacs2 approach.
@@ -179,7 +179,7 @@ library, with the intent to improve standardization of app configuration.
   during activation. This now should consistently return the full path to the
   current shell application, including in subshells.
 - Improved consistency of Miniconda (default) and Anaconda installs.
-- The `koopa::downloader` function now calls `wget` instead of `curl` when
+- The `koopa_downloader` function now calls `wget` instead of `curl` when
   under qemu emulation (e.g. ARM Docker image running on x86 Intel machine).
   This is not common but helps avoid edge case issues with curl currently
   crashing with a segfault for some HTTPS URLs that fail specifically when
@@ -212,16 +212,16 @@ library, with the intent to improve standardization of app configuration.
 ### Major changes
 
 - This release introduces a overhaul to the internal app install engine defined
-  in the `koopa::install_app` function. Primarily this helps improve app
+  in the `koopa_install_app` function. Primarily this helps improve app
   installation consistency into `app/<version>/<name>` with subsequent
   unversioned links in `opt/<name>`, similar to the current approach used in
   the Homebrew package manager.
 - Migrated all app installer code from `include/install` into the main Bash
-  function library. These get defined internally (as `koopa:::install_bash`,
-  for example). Then they are called from `koopa::install_bash`, which
-  subsequently hand off to `koopa::install_app` for improved linkage and
+  function library. These get defined internally (as `__koopa_install_bash`,
+  for example). Then they are called from `koopa_install_bash`, which
+  subsequently hand off to `koopa_install_app` for improved linkage and
   permission consistency.
-- The main `koopa::install_app` installer function now hardens `PATH`,
+- The main `koopa_install_app` installer function now hardens `PATH`,
   `PKG_CONFIG_PATH` and other variables for improved installation handling.
 - App installs now rely on koopa opt (e.g. `/opt/koopa/opt/<name>`) and
   Homebrew opt (e.g. `/usr/local/opt/<name>`) for app installs. This really
@@ -252,7 +252,7 @@ library, with the intent to improve standardization of app configuration.
 - Improved architecture support (i.e. x86, ARM) in some install scripts.
 - GDAL installer no longer attempts to install Python code, which links into
   system site library, no matter the Python configuration.
-- Hardened internal downloader function (`koopa::download`) to ignore manual
+- Hardened internal downloader function (`koopa_download`) to ignore manual
   user cURL configuration defined in `~/.curlrc`.
 
 ## koopa 0.9.4 (2021-04-09)
@@ -284,7 +284,7 @@ library, with the intent to improve standardization of app configuration.
 ### Major changes
 
 - Improved support for 64-bit ARM (AArch) in addition to x86. Installers and
-  other platform-specific scripts now use `koopa::arch` function internally
+  other platform-specific scripts now use `koopa_arch` function internally
   when applicable. Note that ARM is still not well supported in some
   bioinformatic workflows, RStudio installers, and conda.
 
@@ -455,8 +455,8 @@ overhaluled and improved.
     saved in `man/man1/`. These are accessible per program via the `--help`
     flag, which now spawns `man` internally. Python scripts still use the
     argparser help format.
-- Renamed all internal shell functions with `koopa::` prefix instead of previous
-  `koopa::` prefix. Note that we always want to use an internal prefix, so we
+- Renamed all internal shell functions with `koopa_` prefix instead of previous
+  `koopa_` prefix. Note that we always want to use an internal prefix, so we
   don't accidentally mask any system functions defined for bash and/or zsh
   loaded by other program scripts. For example, be careful not to mask
   `deactivate` for Python venv.
@@ -576,7 +576,7 @@ This release improves prompt consistency between zsh and bash.
   instead of Pure prompt. This prompt is visually identical to our bash PS1.
 - Reduced the number of available string returns from main `koopa` function.
   Instead, these are now called more consistently using internal prefixes.
-  (e.g. `koopa::cellar_prefix` instead of `koopa cellar-prefix)`.
+  (e.g. `koopa_cellar_prefix` instead of `koopa cellar-prefix)`.
 
 ## koopa 0.5.1 (2019-08-15)
 

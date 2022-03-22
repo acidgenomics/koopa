@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
 
-koopa::cd() { # {{{1
+koopa_cd() { # {{{1
     # """
     # Change directory quietly.
     # @note Updated 2021-05-26.
     # """
     local prefix
-    koopa::assert_has_args_eq "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     prefix="${1:?}"
     cd "$prefix" >/dev/null 2>&1 || return 1
     return 0
 }
 
-koopa::chgrp() { # {{{1
+koopa_chgrp() { # {{{1
     # """
     # Hardened version of coreutils chgrp (change user group).
     # @note Updated 2021-10-29.
     # """
     local app chgrp dict pos
     declare -A app=(
-        [chgrp]="$(koopa::locate_chgrp)"
+        [chgrp]="$(koopa_locate_chgrp)"
     )
     declare -A dict=(
         [sudo]=0
@@ -36,7 +36,7 @@ koopa::chgrp() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -45,10 +45,10 @@ koopa::chgrp() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        app[sudo]="$(koopa::locate_sudo)"
+        app[sudo]="$(koopa_locate_sudo)"
         chgrp=("${app[sudo]}" "${app[chgrp]}")
     else
         chgrp=("${app[chgrp]}")
@@ -57,14 +57,14 @@ koopa::chgrp() { # {{{1
     return 0
 }
 
-koopa::chmod() { # {{{1
+koopa_chmod() { # {{{1
     # """
     # Hardened version of coreutils chmod (change file mode bits).
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-17.
     # """
     local app chmod dict pos
     declare -A app=(
-        [chmod]="$(koopa::locate_chmod)"
+        [chmod]="$(koopa_locate_chmod)"
     )
     declare -A dict=(
         [recursive]=0
@@ -87,7 +87,7 @@ koopa::chmod() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -96,10 +96,10 @@ koopa::chmod() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        app[sudo]="$(koopa::locate_sudo)"
+        app[sudo]="$(koopa_locate_sudo)"
         chmod=("${app[sudo]}" "${app[chmod]}")
     else
         chmod=("${app[chmod]}")
@@ -112,14 +112,14 @@ koopa::chmod() { # {{{1
     return 0
 }
 
-koopa::chown() { # {{{1
+koopa_chown() { # {{{1
     # """
     # Hardened version of coreutils chown (change ownership).
     # @note Updated 2021-10-29.
     # """
     local app chown dict pos
     declare -A app=(
-        [chown]="$(koopa::locate_chown)"
+        [chown]="$(koopa_locate_chown)"
     )
     declare -A dict=(
         [dereference]=1
@@ -153,7 +153,7 @@ koopa::chown() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -162,10 +162,10 @@ koopa::chown() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        app[sudo]="$(koopa::locate_sudo)"
+        app[sudo]="$(koopa_locate_sudo)"
         chown=("${app[sudo]}" "${app[chown]}")
     else
         chown=("${app[chown]}")
@@ -182,7 +182,7 @@ koopa::chown() { # {{{1
     return 0
 }
 
-koopa::cp() { # {{{1
+koopa_cp() { # {{{1
     # """
     # Hardened version of coreutils cp (copy).
     # @note Updated 2022-01-19.
@@ -200,9 +200,9 @@ koopa::cp() { # {{{1
     # """
     local app cp cp_args dict mkdir pos rm
     declare -A app=(
-        [cp]="$(koopa::locate_cp)"
-        [mkdir]='koopa::mkdir'
-        [rm]='koopa::rm'
+        [cp]="$(koopa_locate_cp)"
+        [mkdir]='koopa_mkdir'
+        [rm]='koopa_rm'
     )
     declare -A dict=(
         [sudo]=0
@@ -237,7 +237,7 @@ koopa::cp() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -246,10 +246,10 @@ koopa::cp() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        app[sudo]="$(koopa::locate_sudo)"
+        app[sudo]="$(koopa_locate_sudo)"
         cp=("${app[sudo]}" "${app[cp]}")
         mkdir=("${app[mkdir]}" '--sudo')
         rm=("${app[rm]}" '--sudo')
@@ -263,23 +263,23 @@ koopa::cp() { # {{{1
     cp_args+=("$@")
     if [[ -n "${dict[target_dir]}" ]]
     then
-        koopa::assert_is_existing "$@"
-        dict[target_dir]="$(koopa::strip_trailing_slash "${dict[target_dir]}")"
+        koopa_assert_is_existing "$@"
+        dict[target_dir]="$(koopa_strip_trailing_slash "${dict[target_dir]}")"
         if [[ ! -d "${dict[target_dir]}" ]]
         then
             "${mkdir[@]}" "${dict[target_dir]}"
         fi
         cp_args+=("${dict[target_dir]}")
     else
-        koopa::assert_has_args_eq "$#" 2
+        koopa_assert_has_args_eq "$#" 2
         dict[source_file]="${1:?}"
-        koopa::assert_is_existing "${dict[source_file]}"
+        koopa_assert_is_existing "${dict[source_file]}"
         dict[target_file]="${2:?}"
         if [[ -e "${dict[target_file]}" ]]
         then
             "${rm[@]}" "${dict[target_file]}"
         fi
-        dict[target_parent]="$(koopa::dirname "${dict[target_file]}")"
+        dict[target_parent]="$(koopa_dirname "${dict[target_file]}")"
         if [[ ! -d "${dict[target_parent]}" ]]
         then
             "${mkdir[@]}" "${dict[target_parent]}"
@@ -289,14 +289,14 @@ koopa::cp() { # {{{1
     return 0
 }
 
-koopa::df() { # {{{1
+koopa_df() { # {{{1
     # """
     # Human friendly version of GNU df.
     # @note Updated 2021-10-29.
     # """
     local app
     declare -A app=(
-        [df]="$(koopa::locate_df)"
+        [df]="$(koopa_locate_df)"
     )
     "${app[df]}" \
         --portability \
@@ -306,7 +306,7 @@ koopa::df() { # {{{1
     return 0
 }
 
-koopa::init_dir() { # {{{1
+koopa_init_dir() { # {{{1
     # """
     # Initialize (create) a directory and return the real path on disk.
     # @note Updated 2021-11-04.
@@ -327,7 +327,7 @@ koopa::init_dir() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -336,24 +336,31 @@ koopa::init_dir() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args_eq "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     dict[dir]="${1:?}"
-    if koopa::str_detect_regex "${dict[dir]}" '^~'
+    if koopa_str_detect_regex \
+        --string="${dict[dir]}" \
+        --pattern='^~'
     then
-        dict[dir]="$(koopa::sub '^~' "${HOME:?}" "${dict[dir]}")"
+        dict[dir]="$( \
+            koopa_sub \
+                --pattern='^~' \
+                --replacement="${HOME:?}" \
+                "${dict[dir]}" \
+        )"
     fi
-    mkdir=('koopa::mkdir')
+    mkdir=('koopa_mkdir')
     [[ "${dict[sudo]}" -eq 1 ]] && mkdir+=('--sudo')
     if [[ ! -d "${dict[dir]}" ]]
     then
         "${mkdir[@]}" "${dict[dir]}"
     fi
-    dict[realdir]="$(koopa::realpath "${dict[dir]}")"
-    koopa::print "${dict[realdir]}"
+    dict[realdir]="$(koopa_realpath "${dict[dir]}")"
+    koopa_print "${dict[realdir]}"
     return 0
 }
 
-koopa::ln() { # {{{1
+koopa_ln() { # {{{1
     # """
     # Hardened version of coreutils ln (symbolic link generator).
     # @note Updated 2021-10-29.
@@ -361,9 +368,9 @@ koopa::ln() { # {{{1
     # """
     local app dict ln ln_args mkdir pos rm
     declare -A app=(
-        [ln]="$(koopa::locate_ln)"
-        [mkdir]='koopa::mkdir'
-        [rm]='koopa::rm'
+        [ln]="$(koopa_locate_ln)"
+        [mkdir]='koopa_mkdir'
+        [rm]='koopa_rm'
     )
     declare -A dict=(
         [sudo]=0
@@ -391,7 +398,7 @@ koopa::ln() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -400,10 +407,10 @@ koopa::ln() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        app[sudo]="$(koopa::locate_sudo)"
+        app[sudo]="$(koopa_locate_sudo)"
         ln=("${app[sudo]}" "${app[ln]}")
         mkdir=("${app[mkdir]}" '--sudo')
         rm=("${app[rm]}" '--sudo')
@@ -416,23 +423,23 @@ koopa::ln() { # {{{1
     ln_args+=("$@")
     if [[ -n "${dict[target_dir]}" ]]
     then
-        koopa::assert_is_existing "$@"
-        dict[target_dir]="$(koopa::strip_trailing_slash "${dict[target_dir]}")"
+        koopa_assert_is_existing "$@"
+        dict[target_dir]="$(koopa_strip_trailing_slash "${dict[target_dir]}")"
         if [[ ! -d "${dict[target_dir]}" ]]
         then
             "${mkdir[@]}" "${dict[target_dir]}"
         fi
         ln_args+=("${dict[target_dir]}")
     else
-        koopa::assert_has_args_eq "$#" 2
+        koopa_assert_has_args_eq "$#" 2
         dict[source_file]="${1:?}"
-        koopa::assert_is_existing "${dict[source_file]}"
+        koopa_assert_is_existing "${dict[source_file]}"
         dict[target_file]="${2:?}"
         if [[ -e "${dict[target_file]}" ]]
         then
             "${rm[@]}" "${dict[target_file]}"
         fi
-        dict[target_parent]="$(koopa::dirname "${dict[target_file]}")"
+        dict[target_parent]="$(koopa_dirname "${dict[target_file]}")"
         if [[ ! -d "${dict[target_parent]}" ]]
         then
             "${mkdir[@]}" "${dict[target_parent]}"
@@ -442,14 +449,14 @@ koopa::ln() { # {{{1
     return 0
 }
 
-koopa::mkdir() { # {{{1
+koopa_mkdir() { # {{{1
     # """
     # Create directories with parents automatically.
     # @note Updated 2021-10-29.
     # """
     local app dict mkdir mkdir_args pos
     declare -A app=(
-        [mkdir]="$(koopa::locate_mkdir)"
+        [mkdir]="$(koopa_locate_mkdir)"
     )
     declare -A dict=(
         [sudo]=0
@@ -466,7 +473,7 @@ koopa::mkdir() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -475,11 +482,11 @@ koopa::mkdir() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     mkdir_args=('-p')
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        app[sudo]="$(koopa::locate_sudo)"
+        app[sudo]="$(koopa_locate_sudo)"
         mkdir=("${app[sudo]}" "${app[mkdir]}")
     else
         mkdir=("${app[mkdir]}")
@@ -488,7 +495,7 @@ koopa::mkdir() { # {{{1
     return 0
 }
 
-koopa::mv() { # {{{1
+koopa_mv() { # {{{1
     # """
     # Move a file or directory with GNU mv.
     # @note Updated 2021-10-29.
@@ -503,9 +510,9 @@ koopa::mv() { # {{{1
     # """
     local app dict mkdir mv mv_args pos rm
     declare -A app=(
-        [mkdir]='koopa::mkdir'
-        [mv]="$(koopa::locate_mv)"
-        [rm]='koopa::rm'
+        [mkdir]='koopa_mkdir'
+        [mv]="$(koopa_locate_mv)"
+        [rm]='koopa_rm'
     )
     declare -A dict=(
         [sudo]=0
@@ -533,7 +540,7 @@ koopa::mv() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -542,10 +549,10 @@ koopa::mv() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        app[sudo]="$(koopa::locate_sudo)"
+        app[sudo]="$(koopa_locate_sudo)"
         mkdir=("${app[mkdir]}" '--sudo')
         mv=("${app[sudo]}" "${app[mv]}")
         rm=("${app[rm]}" '--sudo')
@@ -558,23 +565,23 @@ koopa::mv() { # {{{1
     mv_args+=("$@")
     if [[ -n "${dict[target_dir]}" ]]
     then
-        koopa::assert_is_existing "$@"
-        dict[target_dir]="$(koopa::strip_trailing_slash "${dict[target_dir]}")"
+        koopa_assert_is_existing "$@"
+        dict[target_dir]="$(koopa_strip_trailing_slash "${dict[target_dir]}")"
         if [[ ! -d "${dict[target_dir]}" ]]
         then
             "${mkdir[@]}" "${dict[target_dir]}"
         fi
         mv_args+=("${dict[target_dir]}")
     else
-        koopa::assert_has_args_eq "$#" 2
-        dict[source_file]="$(koopa::strip_trailing_slash "${1:?}")"
-        koopa::assert_is_existing "${dict[source_file]}"
-        dict[target_file]="$(koopa::strip_trailing_slash "${2:?}")"
+        koopa_assert_has_args_eq "$#" 2
+        dict[source_file]="$(koopa_strip_trailing_slash "${1:?}")"
+        koopa_assert_is_existing "${dict[source_file]}"
+        dict[target_file]="$(koopa_strip_trailing_slash "${2:?}")"
         if [[ -e "${dict[target_file]}" ]]
         then
             "${rm[@]}" "${dict[target_file]}"
         fi
-        dict[target_parent]="$(koopa::dirname "${dict[target_file]}")"
+        dict[target_parent]="$(koopa_dirname "${dict[target_file]}")"
         if [[ ! -d "${dict[target_parent]}" ]]
         then
             "${mkdir[@]}" "${dict[target_parent]}"
@@ -584,7 +591,7 @@ koopa::mv() { # {{{1
     return 0
 }
 
-koopa::parent_dir() { # {{{1
+koopa_parent_dir() { # {{{1
     # """
     # Get the parent directory path.
     # @note Updated 2021-09-21.
@@ -593,7 +600,7 @@ koopa::parent_dir() { # {{{1
     # """
     local app dict file parent pos
     declare -A app=(
-        [sed]="$(koopa::locate_sed)"
+        [sed]="$(koopa_locate_sed)"
     )
     declare -A dict=(
         [cd_tail]=''
@@ -615,7 +622,7 @@ koopa::parent_dir() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -624,7 +631,7 @@ koopa::parent_dir() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     [[ "${dict[n]}" -ge 1 ]] || dict[n]=1
     if [[ "${dict[n]}" -ge 2 ]]
     then
@@ -637,23 +644,23 @@ koopa::parent_dir() { # {{{1
     for file in "$@"
     do
         [[ -e "$file" ]] || return 1
-        parent="$(koopa::dirname "$file")"
+        parent="$(koopa_dirname "$file")"
         parent="${parent}${dict[cd_tail]}"
-        parent="$(koopa::cd "$parent" && pwd -P)"
-        koopa::print "$parent"
+        parent="$(koopa_cd "$parent" && pwd -P)"
+        koopa_print "$parent"
     done
     return 0
 }
 
-koopa::relink() { # {{{1
+koopa_relink() { # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
     # @note Updated 2020-10-29.
     # """
     local app dict ln pos rm sudo
     declare -A app=(
-        [ln]='koopa::ln'
-        [rm]='koopa::rm'
+        [ln]='koopa_ln'
+        [rm]='koopa_rm'
     )
     declare -A dict=(
         [sudo]=0
@@ -670,7 +677,7 @@ koopa::relink() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -679,9 +686,9 @@ koopa::relink() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args_eq "$#" 2
-    ln=('koopa::ln')
-    rm=('koopa::rm')
+    koopa_assert_has_args_eq "$#" 2
+    ln=('koopa_ln')
+    rm=('koopa_rm')
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         ln+=('--sudo')
@@ -697,14 +704,14 @@ koopa::relink() { # {{{1
     return 0
 }
 
-koopa::rm() { # {{{1
+koopa_rm() { # {{{1
     # """
     # Remove files/directories quietly with GNU rm.
     # @note Updated 2021-09-21.
     # """
     local app dict pos rm rm_args
     declare -A app=(
-        [rm]="$(koopa::locate_rm)"
+        [rm]="$(koopa_locate_rm)"
     )
     declare -A dict=(
         [sudo]=0
@@ -721,7 +728,7 @@ koopa::rm() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -730,11 +737,11 @@ koopa::rm() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     rm_args=('-fr')
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        app[sudo]="$(koopa::locate_sudo)"
+        app[sudo]="$(koopa_locate_sudo)"
         rm+=("${app[sudo]}" "${app[rm]}")
     else
         rm=("${app[rm]}")
@@ -743,15 +750,15 @@ koopa::rm() { # {{{1
     return 0
 }
 
-koopa::touch() { # {{{1
+koopa_touch() { # {{{1
     # """
     # Touch (create) a file on disk.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-16.
     # """
-    local app pos touch
-    koopa::assert_has_args "$#"
+    local app mkdir pos touch
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [touch]="$(koopa::locate_touch)"
+        [touch]="$(koopa_locate_touch)"
     )
     declare -A dict=(
         [sudo]=0
@@ -768,7 +775,7 @@ koopa::touch() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -777,59 +784,71 @@ koopa::touch() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
+    mkdir=('koopa_mkdir')
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        app[sudo]="$(koopa::locate_sudo)"
+        app[sudo]="$(koopa_locate_sudo)"
+        mkdir+=('--sudo')
         touch=("${app[sudo]}" "${app[touch]}")
     else
         touch=("${app[touch]}")
     fi
     for file in "$@"
     do
+        local dn
         if [[ -e "$file" ]]
         then
-            koopa::assert_is_not_dir "$file"
-            koopa::assert_is_not_symlink "$file"
+            koopa_assert_is_not_dir "$file"
+            koopa_assert_is_not_symlink "$file"
+        fi
+        # Automatically create parent directory, if necessary.
+        dn="$(koopa_dirname "$file")"
+        if [[ ! -d "$dn" ]] && \
+            koopa_str_detect_fixed \
+                --string="$dn" \
+                --pattern='/'
+        then
+            "${mkdir[@]}" "$dn"
         fi
         "${touch[@]}" "$file"
     done
     return 0
 }
 
-koopa::which() { # {{{1
+koopa_which() { # {{{1
     # """
     # Locate which program.
     # @note Updated 2021-05-26.
     #
     # Example:
-    # koopa::which bash
+    # koopa_which bash
     # """
     local cmd
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for cmd in "$@"
     do
-        if koopa::is_alias "$cmd"
+        if koopa_is_alias "$cmd"
         then
             unalias "$cmd"
-        elif koopa::is_function "$cmd"
+        elif koopa_is_function "$cmd"
         then
             unset -f "$cmd"
         fi
         cmd="$(command -v "$cmd")"
         [[ -x "$cmd" ]] || return 1
-        koopa::print "$cmd"
+        koopa_print "$cmd"
     done
     return 0
 }
 
-koopa::which_realpath() { # {{{1
+koopa_which_realpath() { # {{{1
     # """
     # Locate the realpath of a program.
     # @note Updated 2021-06-03.
     #
     # This resolves symlinks automatically.
-    # For 'which' style return, use 'koopa::which' instead.
+    # For 'which' style return, use 'koopa_which' instead.
     #
     # @seealso
     # - https://stackoverflow.com/questions/7665
@@ -838,17 +857,17 @@ koopa::which_realpath() { # {{{1
     # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
     #
     # @examples
-    # koopa::which_realpath bash vim
+    # > koopa_which_realpath 'bash' 'vim'
     # """
     local cmd
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for cmd in "$@"
     do
-        cmd="$(koopa::which "$cmd")"
+        cmd="$(koopa_which "$cmd")"
         [[ -n "$cmd" ]] || return 1
-        cmd="$(koopa::realpath "$cmd")"
+        cmd="$(koopa_realpath "$cmd")"
         [[ -x "$cmd" ]] || return 1
-        koopa::print "$cmd"
+        koopa_print "$cmd"
     done
     return 0
 }

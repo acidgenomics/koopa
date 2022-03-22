@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-koopa:::update_homebrew() { # {{{1
+update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-11-22.
+    # @note Updated 2022-02-28.
     #
     # @seealso
+    # - brew linkage --test
     # - Refer to useful discussion regarding '--greedy' flag.
     # - https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
     # - https://github.com/Homebrew/brew/issues/9139
@@ -13,9 +14,9 @@ koopa:::update_homebrew() { # {{{1
     #       macos/updating-a-homebrew-formula/
     # """
     local app dict
-    koopa::assert_is_admin
+    koopa_assert_is_admin
     declare -A app=(
-        [brew]="$(koopa::locate_brew)"
+        [brew]="$(koopa_locate_brew)"
     )
     declare -A dict=(
         [reset]=0
@@ -32,31 +33,31 @@ koopa:::update_homebrew() { # {{{1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_xcode_clt_installed
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_xcode_clt_installed
     then
-        koopa::stop 'Need to reinstall Xcode CLT.'
+        koopa_stop 'Need to reinstall Xcode CLT.'
     fi
     if [[ "${dict[reset]}" -eq 1 ]]
     then
-        koopa::brew_reset_permissions
-        koopa::brew_reset_core_repo
+        koopa_brew_reset_permissions
+        koopa_brew_reset_core_repo
     fi
     "${app[brew]}" analytics off
     "${app[brew]}" update &>/dev/null
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        koopa::macos_brew_upgrade_casks
+        koopa_macos_brew_upgrade_casks
     fi
-    koopa::brew_upgrade_brews
-    koopa::brew_cleanup
+    koopa_brew_upgrade_brews
+    koopa_brew_cleanup
     if [[ "${dict[reset]}" -eq 1 ]]
     then
-        koopa::brew_reset_permissions
+        koopa_brew_reset_permissions
     fi
     return 0
 }

@@ -1,9 +1,9 @@
 # """
 # Conda configuration.
-# Updated 2022-01-21.
+# @note Updated 2022-03-16.
 #
-# See also:
-# - 'conda config --set'
+# @seealso
+# - 'conda config --json --show' and 'conda config --json --show-sources'.
 # - https://bioconda.github.io/#set-up-channels
 # - https://conda.io/projects/conda/en/latest/user-guide/configuration/
 #       use-condarc.html
@@ -13,11 +13,14 @@
 #       manage-conda.html
 # """
 
-add_pip_as_python_dependency: True
+# > add_pip_as_python_dependency: True
 
 allow_other_channels: False
 
-# always_yes: True
+# > allow_softlinks: True
+
+# Don't ever prompt the user.
+# > always_yes: True
 
 auto_activate_base: False
 
@@ -30,11 +33,14 @@ channels:
   - bioconda
   - defaults
 
+# Configure number of threads to use.
+# This applies to 'repodata_threads', 'verify_threads', and 'execute_threads'.
+# > default_threads: 4
+
 # Disallow installation of specific packages.
-# > disallow:
-# >   - anaconda
-# >   - conda
-# >   - mamba
+disallow:
+  - anaconda
+  - conda
 
 # Change default environment directory path.
 # > envs_dirs:
@@ -42,8 +48,20 @@ channels:
 
 notify_outdated_conda: False
 
+# > offline: False
+
+# Change default package directory path.
+# > pkgs_dirs:
+# >   - /opt/koopa/opt/conda/pkgs
+
 report_errors: True
 
 show_channel_urls: True
 
+ssl_verify: True
+
 update_dependencies: False
+
+# > use_only_tar_bz2: False
+
+# > use_pip: True
