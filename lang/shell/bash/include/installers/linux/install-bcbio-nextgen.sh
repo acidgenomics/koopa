@@ -14,7 +14,7 @@ linux_install_bcbio_nextgen() { # {{{1
     # - https://bcbio-nextgen.readthedocs.io/en/latest/contents/
     #     installation.html
     # """
-    local app dict
+    local app dict install_args
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [python]="$(koopa_locate_python)"
@@ -39,16 +39,17 @@ scripts/${dict[file]}"
     koopa_alert_coffee_time
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_mkdir "${dict[prefix]}"
-    "${app[python]}" \
-        "${dict[file]}" \
-        "${dict[install_dir]}" \
-        --datatarget='rnaseq' \
-        --datatarget='variation' \
+    install_args=(
+        "${dict[install_dir]}"
+        --datatarget 'rnaseq'
+        # > --datatarget 'variation'
         --isolate \
         --mamba \
         --nodata \
-        --tooldir="${dict[tools_dir]}" \
-        --upgrade="${dict[upgrade]}"
+        --tooldir "${dict[tools_dir]}"
+        # > --upgrade "${dict[upgrade]}"
+    )
+    "${app[python]}" "${dict[file]}" "${install_args[@]}"
     # Clean up conda packages inside Docker image.
     if koopa_is_docker
     then
