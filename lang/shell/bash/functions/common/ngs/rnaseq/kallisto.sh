@@ -183,7 +183,7 @@ koopa_quant_kallisto_paired_end() { # {{{1
     do
         fastq_r2_file="${fastq_r1_file/\
 ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
-        koopa_kallisto_quant_paired_end \
+        koopa_kallisto_quant_paired_end_per_sample \
             --fastq-r1-file="$fastq_r1_file" \
             --fastq-r1-tail="${dict[fastq_r1_tail]}" \
             --fastq-r2-file="$fastq_r2_file" \
