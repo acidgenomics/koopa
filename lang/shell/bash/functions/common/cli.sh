@@ -3,7 +3,7 @@
 koopa_cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-22.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -227,6 +227,10 @@ koopa_cli_app() { # {{{1
                     koopa_invalid_arg "$*"
                     ;;
             esac
+            ;;
+        'rnaeditingindexer')
+            key="${1:?}"
+            shift 1
             ;;
         'sra')
             case "${2:-}" in
