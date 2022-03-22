@@ -15,6 +15,7 @@ linux_install_bcbio_nextgen() { # {{{1
     # - https://bcbio-nextgen.readthedocs.io/en/latest/contents/
     #     installation.html
     # - samtools install issue (libcrypto.so.1.0.0):
+    #   - https://github.com/bcbio/bcbio-nextgen/issues/3632
     #   - https://github.com/bcbio/bcbio-nextgen/issues/3557
     #   - https://github.com/bcbio/bcbio-nextgen/issues/3318
     #   - https://github.com/PacificBiosciences/pbbioconda/issues/85
