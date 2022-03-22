@@ -13,7 +13,7 @@ koopa_salmon_index() { # {{{1
     # @seealso
     # - salmon index --help
     # """
-    local app dict
+    local app dict index_args
     koopa_assert_has_args "$#"
     declare -A app=(
         [salmon]="$(koopa_locate_salmon)"
