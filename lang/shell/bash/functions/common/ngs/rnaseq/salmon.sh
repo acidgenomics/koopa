@@ -82,7 +82,6 @@ koopa_salmon_index() { # {{{1
     koopa_assert_is_set \
         '--genome-fasta-file' "${dict[genome_fasta_file]}" \
         '--output-dir' "${dict[output_dir]}" \
-        '--threads' "${dict[threads]}" \
         '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
     koopa_assert_is_file \
         "${dict[genome_fasta_file]}" \
