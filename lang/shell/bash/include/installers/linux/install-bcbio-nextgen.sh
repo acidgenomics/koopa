@@ -8,8 +8,6 @@ linux_install_bcbio_nextgen() { # {{{1
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
     #
-    # Consider using '--revision REVISION' for a pinned version install.
-    #
     # @seealso
     # - bcbio_nextgen.py upgrade --help
     # - https://bcbio-nextgen.readthedocs.io/en/latest/contents/
@@ -28,7 +26,6 @@ linux_install_bcbio_nextgen() { # {{{1
     )
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
     )
     dict[install_dir]="${dict[prefix]}/install"
     dict[tools_dir]="${dict[prefix]}/tools"
@@ -40,17 +37,15 @@ scripts/${dict[file]}"
     koopa_mkdir "${dict[prefix]}"
     install_args=(
         "${dict[install_dir]}"
-        # > '--datatarget' 'variation'
         '--datatarget' 'rnaseq'
         '--isolate'
-        # > '--mamba'
+        '--mamba'
         '--nodata'
-        '--revision' "v${dict[version]}"
         '--tooldir' "${dict[tools_dir]}"
+        '--upgrade' 'stable'
     )
     koopa_dl 'Install args' "${install_args[*]}"
     "${app[python]}" "${dict[file]}" "${install_args[@]}"
-    # Clean up conda packages inside Docker image.
     if koopa_is_docker
     then
         app[conda]="${dict[install_dir]}/anaconda/bin/conda"
