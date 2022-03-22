@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_python() { # {{{1
+install_python() { # {{{1
     # """
     # Install Python.
     # @note Updated 2021-12-07.
@@ -22,31 +22,31 @@ koopa:::install_python() { # {{{1
     # - https://stackoverflow.com/questions/43333207
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='python'
         [name2]='Python'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_ver]="$(koopa::major_minor_version "${dict[version]}")"
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[file]="${dict[name2]}-${dict[version]}.tar.xz"
     dict[url]="https://www.python.org/ftp/${dict[name]}/${dict[version]}/\
 ${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name2]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name2]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-optimizations'
         '--enable-shared'
     )
     # Setting 'LDFLAGS' here doesn't work on macOS.
-    if koopa::is_linux
+    if koopa_is_linux
     then
         conf_args+=("LDFLAGS=-Wl,-rpath=${dict[prefix]}/lib")
     fi
@@ -56,7 +56,7 @@ ${dict[file]}"
     # Use 'altinstall' here instead?
     "${app[make]}" install
     app[python]="${dict[prefix]}/bin/${dict[name]}${dict[maj_min_ver]}"
-    koopa::assert_is_installed "${app[python]}"
-    koopa::configure_python "${app[python]}"
+    koopa_assert_is_installed "${app[python]}"
+    koopa_configure_python "${app[python]}"
     return 0
 }

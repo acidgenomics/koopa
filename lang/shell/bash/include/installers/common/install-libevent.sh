@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_libevent() { # {{{1
+install_libevent() { # {{{1
     # """
     # Install libevent.
     # @note Updated 2022-01-19.
@@ -10,12 +10,12 @@ koopa:::install_libevent() { # {{{1
     #       Formula/libevent.rb
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='libevent'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -23,13 +23,13 @@ koopa:::install_libevent() { # {{{1
     dict[file]="${dict[name]}-${dict[version]}-stable.tar.gz"
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/releases/\
 download/release-${dict[version]}-stable/${dict[file]}"
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        koopa::activate_homebrew_opt_prefix 'openssl@1.1'
+        koopa_activate_homebrew_opt_prefix 'openssl@1.1'
     fi
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}-stable"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}-stable"
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check

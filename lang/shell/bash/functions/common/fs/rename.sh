@@ -3,44 +3,51 @@
 koopa_rename_from_csv() { # {{{1
     # """
     # Rename files from CSV template.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-02-17.
+    #
+    # @usage koopa_rename_from_csv CSV_FILE
     # """
-    local file
-    koopa::assert_has_args "$#"
+    local file line
+    koopa_assert_has_args "$#"
     file="${1:?}"
-    koopa::assert_is_file_type "$file" 'csv'
+    koopa_assert_is_file_type --ext='csv' "$file"
     while read -r line
     do
+        local from to
         from="${line%,*}"
         to="${line#*,}"
-        koopa::mv "$from" "$to"
+        koopa_mv "$from" "$to"
     done < "$file"
     return 0
 }
 
-# FIXME Rework using app/dict approach.
-koopa::rename_lowercase() { # {{{1
+koopa_rename_lowercase() { # {{{1
     # """
     # Rename files to lowercase.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-02-24.
+    #
+    # @usage koopa_rename_lowercase FILE...
     # """
-    local dir find pos recursive rename sort xargs
-    koopa::assert_has_args "$#"
-    find="$(koopa::locate_find)"
-    rename="$(koopa::locate_rename)"
-    sort="$(koopa::locate_sort)"
-    xargs="$(koopa::locate_xargs)"
-    recursive=0
+    local app dict pos
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [rename]="$(koopa_locate_rename)"
+        [xargs]="$(koopa_locate_xargs)"
+    )
+    declare -A dict=(
+        [pattern]='y/A-Z/a-z/'
+        [recursive]=0
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
             '--recursive')
-                recursive=1
+                dict[recursive]=1
                 shift 1
                 ;;
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -49,33 +56,52 @@ koopa::rename_lowercase() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$recursive" -eq 1 ]]
+    if [[ "${dict[recursive]}" -eq 1 ]]
     then
-        dir="${1:-.}"
+        koopa_assert_has_args_le "$#" 1
+        dict[prefix]="${1:-.}"
+        koopa_assert_is_dir "${dict[prefix]}"
         # Rename files.
-        # FIXME Rework using 'koopa::find'.
-        "$find" "$dir" \
-            -mindepth 1 \
-            -type 'f' \
-            -name '*[A-Z]*' \
-            -not -name '.*' \
-            -print0 \
-            | "$sort" --zero-terminated \
-            | "$xargs" -0 -I {} \
-                "$rename" --force --verbose 'y/A-Z/a-z/' {}
+        koopa_find \
+            --exclude='.*' \
+            --min-depth=1 \
+            --pattern='*[A-Z]*' \
+            --prefix="${dict[prefix]}" \
+            --print0 \
+            --sort \
+            --type='f' \
+        | "${app[xargs]}" \
+            --no-run-if-empty \
+            --null \
+            -I {} \
+            "${app[rename]}" \
+                --force \
+                --verbose \
+                "${dict[pattern]}" \
+                {}
         # Rename directories.
-        # FIXME Rework using 'koopa::find'.
-        "$find" "$dir" \
-            -mindepth 1 \
-            -type d \
-            -name '*[A-Z]*' \
-            -not -name '.*' \
-            -print0 \
-            | "$sort" --reverse --zero-terminated \
-            | "$xargs" -0 -I {} \
-                "$rename" --force --verbose 'y/A-Z/a-z/' {}
+        koopa_find \
+            --exclude='.*' \
+            --min-depth=1 \
+            --pattern='*[A-Z]*' \
+            --prefix="${dict[prefix]}" \
+            --print0 \
+            --type='d' \
+        | "${app[xargs]}" \
+            --no-run-if-empty \
+            --null \
+            -I {} \
+            "${app[rename]}" \
+                --force \
+                --verbose \
+                "${dict[pattern]}" \
+                {}
     else
-        "$rename" --force --verbose 'y/A-Z/a-z/' "$@"
+        "${app[rename]}" \
+            --force \
+            --verbose \
+            "${dict[pattern]}" \
+            "$@"
     fi
     return 0
 }

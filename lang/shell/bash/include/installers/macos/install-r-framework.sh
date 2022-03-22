@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::macos_install_r_framework() { # {{{1
+macos_install_r_framework() { # {{{1
     # """
     # Install R framework.
     # @note Updated 2021-11-04.
@@ -25,20 +25,20 @@ koopa:::macos_install_r_framework() { # {{{1
     # - https://mac.r-project.org/tools/
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [installer]="$(koopa::macos_locate_installer)"
-        [sudo]="$(koopa::locate_sudo)"
+        [installer]="$(koopa_macos_locate_installer)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     declare -A dict=(
-        [arch]="$(koopa::arch)"
+        [arch]="$(koopa_arch)"
         [framework_prefix]='/Library/Frameworks/R.framework'
-        [os]="$(koopa::kebab_case_simple "$(koopa::os_codename)")"
+        [os]="$(koopa_kebab_case_simple "$(koopa_os_codename)")"
         [url_stem]='https://cran.r-project.org/bin/macosx'
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_version]="$(koopa::major_minor_version "${dict[version]}")"
+    dict[maj_min_version]="$(koopa_major_minor_version "${dict[version]}")"
     dict[prefix]="${dict[framework_prefix]}/Versions/${dict[maj_min_version]}"
     case "${dict[arch]}" in
         'aarch64')
@@ -52,11 +52,11 @@ base/${dict[pkg_file]}"
             dict[url]="${dict[url_stem]}/base/${dict[pkg_file]}"
             ;;
         *)
-            koopa::stop "Unsupported architecture: '${dict[arch]}'."
+            koopa_stop "Unsupported architecture: '${dict[arch]}'."
             ;;
     esac
-    koopa::download "${dict[url]}"
+    koopa_download "${dict[url]}"
     "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
-    koopa::assert_is_dir "${dict[prefix]}"
+    koopa_assert_is_dir "${dict[prefix]}"
     return 0
 }

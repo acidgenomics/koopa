@@ -3,7 +3,7 @@
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-02-25.
     #
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
@@ -11,13 +11,13 @@ __koopa_bash_source_dir() { # {{{1
     local fun_script fun_scripts fun_scripts_arr koopa_prefix prefix
     [[ "$#" -eq 1 ]] || return 1
     [[ $(type -t readarray) == 'builtin' ]] || return 1
-    koopa_prefix="$(_koopa_koopa_prefix)"
+    koopa_prefix="$(koopa_koopa_prefix)"
     prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
     fun_scripts="$( \
         find -L "$prefix" \
             -mindepth 1 \
-            -type f \
+            -type 'f' \
             -name '*.sh' \
             -print \
     )"
@@ -49,7 +49,6 @@ __koopa_is_macos() { # {{{1
     # Is the operating system macOS?
     # @note Updated 2021-06-04.
     # """
-    [[ "$#" -eq 0 ]] || return 1
     [[ "$(uname -s)" == 'Darwin' ]]
 }
 
@@ -103,13 +102,22 @@ __koopa_warn() { # {{{1
     return 0
 }
 
-
-
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-09-16.
+    # @note Updated 2022-02-25.
+    #
+    # @seealso
+    # - shopt
+    #   https://www.gnu.org/software/bash/manual/
+    #     html_node/The-Shopt-Builtin.html
     # """
+    # Check for Bash 4+.
+    case "${BASH_VERSION:-}" in
+        '1.'* | '2.'* | '3.'*)
+            return 1
+            ;;
+    esac
     local dict
     declare -A dict=(
         [activate]=0
@@ -131,47 +139,117 @@ __koopa_bash_header() { # {{{1
     then
         dict[checks]=0
     fi
-    if [[ "${dict[activate]}" -eq 0 ]] || [[ "${dict[dev]}" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 0 ]]
     then
-        unalias -a
-    fi
-    if [[ "${dict[verbose]}" -eq 1 ]]
-    then
-        set -o xtrace  # -x
-    fi
-    if [[ "${dict[checks]}" -eq 1 ]]
-    then
-        # > set -o noglob  # -f
-        set -o errexit  # -e
-        set -o errtrace  # -E
-        set -o nounset  # -u
-        set -o pipefail
-        # This setting helps protect our conda alias defined in the interactive
-        # login shell from messing with 'koopa::activate_conda_env'.
-        shopt -u expand_aliases
-        dict[major_version]="$( \
-            printf '%s\n' "${BASH_VERSION}" \
-            | cut -d '.' -f 1 \
-        )"
-        if [[ ! "${dict[major_version]}" -ge 4 ]]
-        then
-            __koopa_warn \
-                'Koopa requires Bash >= 4.' \
-                "Current Bash version: '${BASH_VERSION}'."
-            if [[ "$(uname -s)" == 'Darwin' ]]
-            then
-                __koopa_warn \
-                    'On macOS, we recommend installing Homebrew.' \
-                    'Refer to "https://brew.sh" for instructions.' \
-                    'Then install Bash with "brew install bash".'
-            fi
-            return 1
-        fi
-        [[ $(type -t readarray) == 'builtin' ]] || return 1
+        [[ -z "${KOOPA_PROCESS_ID:-}" ]] && export KOOPA_PROCESS_ID="${$}"
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
         [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
+    fi
+    if [[ "${dict[activate]}" -eq 0 ]] || [[ "${dict[dev]}" -eq 1 ]]
+    then
+        unalias -a
+    fi
+    if [[ "${dict[checks]}" -eq 1 ]]
+    then
+        # Compare with current values defined in '~/.bashrc'.
+        # Check all values with 'set +o'.
+        # Note that '+o' here means disable, '-o' means enable.
+        set +o allexport  # -a
+        set -o braceexpand  # -B
+        set -o errexit  # -e
+        set -o errtrace  # -E
+        set -o functrace  # -T
+        set -o hashall  # -h
+        set -o histexpand  # -H
+        set -o history
+        set +o ignoreeof
+        set -o interactive-comments
+        set +o keyword  # -k
+        set -o monitor  # -m
+        set +o noclobber  # -C
+        set +o noexec  # -n
+        set +o noglob  # -f
+        set +o notify  # -b
+        set -o nounset  # -u
+        set +o onecmd  # -t
+        set -o pipefail
+        set +o posix
+        set +o physical  # -P
+        set +o verbose  # -v
+        set +o xtrace  # -x
+        # Check all values with 'shopt'.
+        shopt -s autocd
+        shopt -u cdable_vars
+        shopt -s cdspell
+        shopt -u checkhash
+        shopt -u checkjobs
+        shopt -s checkwinsize
+        shopt -s cmdhist
+        shopt -s complete_fullquote
+        shopt -u direxpand
+        shopt -u dirspell
+        shopt -u dotglob
+        shopt -u execfail
+        shopt -u expand_aliases
+        shopt -u extdebug
+        shopt -s extglob
+        shopt -s extquote
+        shopt -u failglob
+        shopt -s force_fignore
+        shopt -s globasciiranges
+        shopt -s globstar
+        shopt -s gnu_errfmt
+        shopt -s histappend
+        shopt -s histreedit
+        shopt -u histverify
+        shopt -s hostcomplete
+        shopt -u huponexit
+        shopt -s inherit_errexit
+        shopt -s interactive_comments
+        shopt -u lastpipe
+        shopt -u lithist
+        shopt -u mailwarn
+        shopt -s no_empty_cmd_completion
+        shopt -s nocaseglob
+        shopt -u nocasematch
+        shopt -u nullglob
+        shopt -s progcomp
+        shopt -s promptvars
+        shopt -s shift_verbose
+        shopt -s sourcepath
+        shopt -u xpg_echo
+        case "${BASH_VERSION:-}" in
+            '1.'* | '2.'* | '3.'* | '4.'*)
+                ;;
+            *)
+                # Bash 5+ supported options.
+                shopt -u assoc_expand_once
+                shopt -u localvar_inherit
+                shopt -u localvar_unset
+                shopt -u progcomp_alias
+                ;;
+        esac
+    fi
+    if [[ "${dict[verbose]}" -eq 1 ]]
+    then
+        set -o verbose  # -v
+        set -o xtrace  # -x
+        koopa_alert_info 'Shell options'
+        set +o
+        shopt
+        koopa_alert_info 'Shell variables'
+        koopa_dl \
+            '$' "${$}" \
+            '-' "${-}" \
+            'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
+            'SHELL' "${SHELL:-}"
+        if koopa_is_installed 'locale'
+        then
+            koopa_alert_info 'Locale'
+            locale
+        fi
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
@@ -191,7 +269,7 @@ __koopa_bash_header() { # {{{1
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     if [[ "${dict[test]}" -eq 1 ]]
     then
-        _koopa_duration_start || return 1
+        koopa_duration_start || return 1
     fi
     if [[ "${dict[activate]}" -eq 1 ]]
     then
@@ -199,27 +277,27 @@ __koopa_bash_header() { # {{{1
         source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
         if [[ "${dict[minimal]}" -eq 0 ]]
         then
-            _koopa_activate_bash_extras
+            koopa_activate_bash_extras
         fi
     fi
     if [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
     then
         __koopa_bash_source_dir 'common'
-        dict[os_id]="$(koopa::os_id)"
-        if koopa::is_linux
+        dict[os_id]="$(koopa_os_id)"
+        if koopa_is_linux
         then
             dict[linux_prefix]='os/linux'
             __koopa_bash_source_dir "${dict[linux_prefix]}/common"
-            if koopa::is_debian_like
+            if koopa_is_debian_like
             then
                 __koopa_bash_source_dir "${dict[linux_prefix]}/debian"
-                koopa::is_ubuntu_like && \
+                koopa_is_ubuntu_like && \
                     __koopa_bash_source_dir "${dict[linux_prefix]}/ubuntu"
-            elif koopa::is_fedora_like
+            elif koopa_is_fedora_like
             then
                 __koopa_bash_source_dir "${dict[linux_prefix]}/fedora"
-                koopa::is_rhel_like && \
+                koopa_is_rhel_like && \
                     __koopa_bash_source_dir "${dict[linux_prefix]}/rhel"
             fi
             __koopa_bash_source_dir "${dict[linux_prefix]}/${dict[os_id]}"
@@ -227,10 +305,15 @@ __koopa_bash_header() { # {{{1
             __koopa_bash_source_dir "os/${dict[os_id]}"
         fi
         # Check if user is requesting help documentation.
-        koopa::help "$@"
+        case "${1:-}" in
+            '--help' | \
+            '-h')
+                koopa_help_2
+                ;;
+        esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
         then
-            if koopa::is_shared_install && koopa::is_admin
+            if koopa_is_shared_install && koopa_is_admin
             then
                 export KOOPA_ADMIN=1
             else
@@ -238,18 +321,27 @@ __koopa_bash_header() { # {{{1
             fi
         fi
         # Require admin account to run 'sbin/' scripts.
-        if koopa::str_detect_fixed "$0" '/sbin'
+        if koopa_str_detect_fixed --string="$0" --pattern='/sbin'
         then
-            koopa::assert_is_admin
+            koopa_assert_is_admin
         fi
         # Disable user-defined aliases.
         unalias -a
     fi
     if [[ "${dict[test]}" -eq 1 ]]
     then
-        _koopa_duration_stop 'bash' || return 1
+        koopa_duration_stop 'bash' || return 1
     fi
     return 0
 }
 
 __koopa_bash_header "$@"
+
+unset -f \
+    __koopa_bash_header \
+    __koopa_bash_source_dir \
+    __koopa_is_installed \
+    __koopa_is_macos \
+    __koopa_print \
+    __koopa_realpath \
+    __koopa_warn

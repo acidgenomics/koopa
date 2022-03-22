@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_sqlite() { # {{{1
+install_sqlite() { # {{{1
     # """
     # Install SQLite.
     # @note Updated 2022-01-06.
@@ -17,13 +17,13 @@ koopa:::install_sqlite() { # {{{1
     # https://askubuntu.com/questions/443379
     # """
     local app conf_args dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
-        [sed]="$(koopa::locate_sed)"
+        [make]="$(koopa_locate_make)"
+        [sed]="$(koopa_locate_sed)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='sqlite'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -47,19 +47,21 @@ koopa:::install_sqlite() { # {{{1
             dict[year]='2020'
             ;;
         *)
-            koopa::stop "Unsupported version: '${dict[version]}'."
+            koopa_stop "Unsupported version: '${dict[version]}'."
             ;;
     esac
     # e.g. '3.32.3' to '3320300'.
     dict[file_version]="$( \
-        koopa::print "${dict[version]}" \
-        | "${app[sed]}" -E 's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
+        koopa_print "${dict[version]}" \
+        | "${app[sed]}" \
+            --regexp-extended \
+            's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
     )"
     dict[file]="${dict[name]}-autoconf-${dict[file_version]}.tar.gz"
     dict[url]="https://www.sqlite.org/${dict[year]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-autoconf-${dict[file_version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-autoconf-${dict[file_version]}"
     conf_args=(
         # > '--disable-dynamic-extensions'
         # > '--disable-shared'
@@ -69,6 +71,6 @@ koopa:::install_sqlite() { # {{{1
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
-    koopa::alert_note 'Reinstall PROJ and GDAL, if built from source.'
+    koopa_alert_note 'Reinstall PROJ and GDAL, if built from source.'
     return 0
 }

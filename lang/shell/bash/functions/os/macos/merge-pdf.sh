@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_merge_pdf() { # {{{1
+koopa_macos_merge_pdf() { # {{{1
     # """
     # Merge PDF files, preserving hyperlinks
     # @note Updated 2020-07-16.
@@ -10,9 +10,9 @@ koopa::macos_merge_pdf() { # {{{1
     # Modified version of:
     # https://github.com/mathiasbynens/dotfiles/blob/main/.aliases
     # """
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'gs'
-    koopa::assert_is_file "$@"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_installed 'gs'
+    koopa_assert_is_file "$@"
     gs \
         -dBATCH \
         -dNOPAUSE \

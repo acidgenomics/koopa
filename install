@@ -1,26 +1,22 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # """
 # koopa shell
 # https://koopa.acidgenomics.com/
 # Refer to 'LICENSE' file for terms of usage.
-#
-# Note that ancient versions of Bash (e.g. < 4; macOS) don't support the '-i'
-# flag for 'read', so we're handling that case here. Alternatively, can use
-# '-n 1' for single letter 'y/n' prompt.
-#
-# Note that we can use 'cp -T' on Linux to avoid subdirectory creation, but this
-# doesn't work on macOS because the coreutils are ancient. So instead, we're
-# removing the directory right before creation.
 # """
 
-install_koopa_usage() { # {{{1
+set -o errexit  # -e
+set -o errtrace  # -E
+set -o nounset  # -u
+set -o pipefail
+
+usage() { # {{{1
     # """
     # Help usage for koopa installer.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-25.
     # """
-cat << END
+    cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
@@ -56,6 +52,7 @@ Non-interactive configuration arguments:
         Install for all users, if current user has administrator (sudo)
         permissions. Otherwise, install for current user only.
 END
+    exit 0
 }
 
 stop() { # {{{1
@@ -71,23 +68,17 @@ stop() { # {{{1
     exit 1
 }
 
-install_koopa() { # {{{1
+main() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2022-01-18.
+    # @note Updated 2022-03-01.
     # """
-    local bash_cutoff bash_maj_ver bash_version dict
-    # Associative arrays ('dict') require Bash 4+.
-    bash_cutoff='4'
-    bash_version="${BASH_VERSION:?}"
-    bash_maj_ver="$( \
-        printf '%s\n' "$bash_version" \
-        | cut -d '.' -f 1 \
-    )"
-    if [[ ! "$bash_maj_ver" -ge "$bash_cutoff" ]]
-    then
-        stop "Bash ${bash_cutoff}+ is required (active: ${bash_version})."
-    fi
+    case "${BASH_VERSION:-}" in
+        [1-3].*)
+            stop 'Bash 4+ is required.'
+            ;;
+    esac
+    local dict
     declare -A dict=(
         [dotfiles]=1
         [interactive]=1
@@ -121,8 +112,7 @@ install_koopa() { # {{{1
                 ;;
             '--help' | \
             '-h')
-                install_koopa_usage
-                return 0
+                usage
                 ;;
             '--interactive')
                 dict[interactive]=1
@@ -188,25 +178,25 @@ install_koopa() { # {{{1
     then
         stop "Installer failed to set 'KOOPA_PREFIX'."
     fi
-    koopa::assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
+    koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'rm' 'sed' 'tar' 'unzip'
     # Configuration {{{2
     # ==========================================================================
-    dict[config_prefix]="$(koopa::config_prefix)"
-    dict[user_profile]="$(koopa::find_user_profile)"
+    dict[config_prefix]="$(koopa_config_prefix)"
+    dict[user_profile]="$(koopa_find_user_profile)"
     dict[xdg_data_home]="${XDG_DATA_HOME:-${HOME:?}/.local/share}"
     dict[koopa_prefix_user]="${dict[xdg_data_home]}/koopa"
     dict[koopa_prefix_system]='/opt/koopa'
-    koopa::is_admin && dict[shared]=1
+    koopa_is_admin && dict[shared]=1
     if [[ "${dict[interactive]}" -eq 1 ]]
     then
         # Install for all users? {{{3
         # ----------------------------------------------------------------------
-        if koopa::is_admin && \
+        if koopa_is_admin && \
             [[ -z "${dict[koopa_prefix]}" ]]
         then
             dict[shared]="$( \
-                koopa::read_yn \
+                koopa_read_yn \
                     'Install for all users' \
                     "${dict[shared]}" \
             )"
@@ -223,11 +213,13 @@ install_koopa() { # {{{1
             fi
         fi
         dict[koopa_prefix]="$( \
-            koopa::read \
+            koopa_read \
                 'Install prefix' \
                 "${dict[koopa_prefix]}" \
         )"
-        if koopa::str_detect_regex "${dict[koopa_prefix]}" "^${HOME:?}"
+        if koopa_str_detect_regex \
+            --string="${dict[koopa_prefix]}" \
+            --pattern="^${HOME:?}"
         then
             dict[shared]=0
         else
@@ -238,7 +230,7 @@ install_koopa() { # {{{1
         if [[ "${dict[shared]}" -eq 1 ]]
         then
             dict[passwordless]="$( \
-                koopa::read_yn \
+                koopa_read_yn \
                     'Enable passwordless sudo' \
                     "${dict[passwordless]}" \
             )"
@@ -247,24 +239,24 @@ install_koopa() { # {{{1
         # ----------------------------------------------------------------------
         if [[ -e "${dict[user_profile]}" ]]
         then
-            koopa::alert_note \
+            koopa_alert_note \
                 "User profile exists: '${dict[user_profile]}'." \
                 'This will be overwritten if dotfiles are linked.'
         fi
         dict[dotfiles]="$( \
-            koopa::read_yn \
+            koopa_read_yn \
                 'Install and link dotfiles' \
                 "${dict[dotfiles]}" \
         )"
         # Modify user profile? {{{3
         # ----------------------------------------------------------------------
         if [[ "${dict[dotfiles]}" -eq 0 ]] && \
-            ! koopa::is_defined_in_user_profile && \
+            ! koopa_is_defined_in_user_profile && \
             [[ ! -L "${dict[user_profile]}" ]]
         then
-            koopa::alert_note 'Koopa activation missing in user profile.'
+            koopa_alert_note 'Koopa activation missing in user profile.'
             dict[modify_user_profile]="$( \
-                koopa::read_yn \
+                koopa_read_yn \
                     "Modify '${dict[user_profile]}'" \
                     "${dict[modify_user_profile]}" \
             )"
@@ -283,36 +275,36 @@ install_koopa() { # {{{1
     # Perform installation {{{2
     # ==========================================================================
     # Ensure existing user configuration gets removed.
-    koopa::rm "${dict[config_prefix]}"
+    koopa_rm "${dict[config_prefix]}"
     # Copy files from temporary directory {{{3
     # --------------------------------------------------------------------------
     # Alternatively, can consider using rsync here instead of cp.
-    koopa::alert_install_start "${dict[name_fancy]}" "${dict[koopa_prefix]}"
+    koopa_alert_install_start "${dict[name_fancy]}" "${dict[koopa_prefix]}"
     if [[ "${dict[shared]}" -eq 1 ]]
     then
-        koopa::alert_info 'Shared installation detected.'
-        koopa::alert_note 'Admin (sudo) permissions are required.'
-        koopa::assert_is_admin
+        koopa_alert_info 'Shared installation detected.'
+        koopa_alert_note 'Admin (sudo) permissions are required.'
+        koopa_assert_is_admin
         if [[ "${dict[koopa_prefix]}" != "${dict[prefix]}" ]]
         then
-            koopa::rm --sudo "${dict[koopa_prefix]}"
-            koopa::cp --sudo "${dict[prefix]}" "${dict[koopa_prefix]}"
+            koopa_rm --sudo "${dict[koopa_prefix]}"
+            koopa_cp --sudo "${dict[prefix]}" "${dict[koopa_prefix]}"
         fi
-        koopa::sys_set_permissions --recursive "${dict[koopa_prefix]}"
-        koopa::add_make_prefix_link "${dict[koopa_prefix]}"
+        koopa_sys_set_permissions --recursive "${dict[koopa_prefix]}"
+        koopa_add_make_prefix_link "${dict[koopa_prefix]}"
     else
         if [[ "${dict[koopa_prefix]}" != "${dict[prefix]}" ]]
         then
-            koopa::cp "${dict[prefix]}" "${dict[koopa_prefix]}"
+            koopa_cp "${dict[prefix]}" "${dict[koopa_prefix]}"
         fi
     fi
     # Activate koopa {{{2
     # ==========================================================================
-    koopa::alert "Activating ${dict[name_fancy]} at '${dict[koopa_prefix]}'."
-    set +u
+    koopa_alert "Activating ${dict[name_fancy]} at '${dict[koopa_prefix]}'."
+    set +o nounset
     # shellcheck source=/dev/null
     . "${dict[koopa_prefix]}/activate" || return 1
-    set -u
+    set -o nounset
     # Check that 'KOOPA_PREFIX' is set correctly by activation script.
     if [[ "${dict[koopa_prefix]}" != "${KOOPA_PREFIX:-}" ]]
     then
@@ -326,7 +318,7 @@ END
         return 1
     fi
     # Check that activation puts koopa into 'PATH', as expected.
-    if ! koopa::is_installed koopa
+    if ! koopa_is_installed koopa
     then
         >&2 cat << END
 ERROR: Installer failed to set 'PATH' correctly.
@@ -339,27 +331,27 @@ END
     # --------------------------------------------------------------------------
     if [[ "${dict[passwordless]}" -eq 1 ]]
     then
-        koopa::enable_passwordless_sudo
+        koopa_enable_passwordless_sudo
     fi
     if [[ "${dict[dotfiles]}" -eq 1 ]]
     then
-        koopa::install_dotfiles
+        koopa_install_dotfiles
     fi
     if [[ "${dict[modify_user_profile]}" -eq 1 ]]
     then
-        koopa::add_to_user_profile
+        koopa_add_to_user_profile
     fi
     # Final cleanup {{{3
     # --------------------------------------------------------------------------
-    koopa::delete_broken_symlinks "${dict[koopa_prefix]}"
-    if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
+    koopa_delete_broken_symlinks "${dict[koopa_prefix]}"
+    if [[ "${dict[shared]}" -eq 1 ]] && koopa_is_linux
     then
-        koopa::linux_update_etc_profile_d
+        koopa_linux_update_etc_profile_d
     fi
-    koopa::fix_zsh_permissions
-    koopa::alert_install_success "${dict[name_fancy]}" "${dict[koopa_prefix]}"
-    koopa::alert_restart
+    koopa_fix_zsh_permissions
+    koopa_alert_install_success "${dict[name_fancy]}" "${dict[koopa_prefix]}"
+    koopa_alert_restart
     return 0
 }
 
-install_koopa "$@"
+main "$@"

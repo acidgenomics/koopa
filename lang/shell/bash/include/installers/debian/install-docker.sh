@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::debian_install_docker() { # {{{1
+debian_install_docker() { # {{{1
     # """
     # Install Docker.
     # @note Updated 2021-12-09.
@@ -14,15 +14,15 @@ koopa:::debian_install_docker() { # {{{1
     # Configures at '/var/lib/docker/'.
     # """
     local pkgs
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    koopa::debian_apt_add_docker_repo
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    koopa_debian_apt_add_docker_repo
     pkgs=(
         'docker-ce'
         'docker-ce-cli'
         'containerd.io'
     )
-    koopa::debian_apt_install "${pkgs[@]}"
-    koopa::linux_add_user_to_group 'docker'
+    koopa_debian_apt_install "${pkgs[@]}"
+    koopa_linux_add_user_to_group 'docker'
     return 0
 }

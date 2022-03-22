@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-koopa::tar_multiple_dirs() { # {{{1
+koopa_tar_multiple_dirs() { # {{{1
     # """
     # Compress (tar) multiple directories in a single call.
     # @note Updated 2022-02-04.
     # """
     local app dict dir dirs pos
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [tar]="$(koopa::locate_tar)"
+        [tar]="$(koopa_locate_tar)"
     )
     declare -A dict=(
         [delete]=0
@@ -29,7 +29,7 @@ koopa::tar_multiple_dirs() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -38,17 +38,17 @@ koopa::tar_multiple_dirs() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_is_dir "$@"
-    readarray -t dirs <<< "$(koopa::realpath "$@")"
+    koopa_assert_is_dir "$@"
+    readarray -t dirs <<< "$(koopa_realpath "$@")"
     (
         for dir in "${dirs[@]}"
         do
             local bn
-            bn="$(koopa::basename "$dir")"
-            koopa::alert "Compressing '${dir}'."
-            koopa::cd "$(koopa::dirname "$dir")"
+            bn="$(koopa_basename "$dir")"
+            koopa_alert "Compressing '${dir}'."
+            koopa_cd "$(koopa_dirname "$dir")"
             "${app[tar]}" -czf "${bn}.tar.gz" "${bn}/"
-            [[ "${dict[delete]}" -eq 1 ]] && koopa::rm "$dir"
+            [[ "${dict[delete]}" -eq 1 ]] && koopa_rm "$dir"
         done
     )
     return 0

@@ -1,2 +1,0 @@
-Don't use 'path', 'fpath', or 'manpath' variables internally inside functions,
-as this can mess up Zsh configuration.

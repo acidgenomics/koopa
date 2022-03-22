@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_the_silver_searcher() { # {{{1
+install_the_silver_searcher() { # {{{1
     # """
     # Install the silver searcher.
     # @note Updated 2022-01-03.
@@ -30,17 +30,17 @@ koopa:::install_the_silver_searcher() { # {{{1
     # https://github.com/ggreer/the_silver_searcher/issues/341
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='the-silver-searcher'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[name2]="$(koopa::snake_case_simple "${dict[name]}")"
+    dict[name2]="$(koopa_snake_case_simple "${dict[name]}")"
     # Temporary fix for installation of current version, which has bug fixes
     # that aren't yet available in tagged release, especially for GCC 10.
     dict[url_stem]="https://github.com/ggreer/${dict[name2]}/archive"
@@ -54,14 +54,14 @@ koopa:::install_the_silver_searcher() { # {{{1
     esac
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="${dict[url_stem]}/${dict[file]}"
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        koopa::activate_homebrew_opt_prefix 'pcre' 'pkg-config'
+        koopa_activate_homebrew_opt_prefix 'pcre' 'pkg-config'
     fi
-    koopa::assert_is_installed 'pcre-config' 'pkg-config'
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name2]}-${dict[version]}"
+    koopa_assert_is_installed 'pcre-config' 'pkg-config'
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name2]}-${dict[version]}"
     # Refer to 'build.sh' script for details.
     ./autogen.sh
     ./configure --prefix="${dict[prefix]}"

@@ -1,7 +1,8 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2022-01-31.
+#'
+#' @note Updated 2022-03-14.
 #'
 #' @section Restarting R:
 #'
@@ -35,12 +36,10 @@
 #' - Debian example config file by Dirk Eddelbuettel.
 #'
 #' @seealso
+#' - https://cran.r-project.org/doc/manuals/r-devel/NEWS.html
 #' - `help(topic = "Rprofile")`
 #' - `help(topic = "Startup")`
 #' - `.libPaths()`
-#' - https://cran.r-project.org/doc/manuals/r-devel/NEWS.html
-
-
 
 ## Initialization at start of an R session {{{1
 ## =============================================================================
@@ -49,8 +48,31 @@ local({  # nolint
     Sys.setenv("KOOPA_RPROFILE_SITE" = 1L)
     stopifnot(requireNamespace("utils", quietly = TRUE))
 
+    ## Create our named dictionary and boolean flag lists.
+    dict <- list(
+        "osVersion" = utils::osVersion,
+        "secretsFile" = file.path("~", ".Rsecrets"),
+        "seed" = 1123581321L,  # Fibonacci sequence.
+        "sysname" = Sys.info()[["sysname"]]
+    )
+    flag <- list(
+        "conda" = isTRUE(as.integer(Sys.getenv("CONDA_SHLVL")) > 0L),
+        "interactive" = isTRUE(interactive()),
+        "linux" = identical(dict[["sysname"]], "Linux"),
+        "macos" = identical(dict[["sysname"]], "Darwin"),
+        "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))
+    )
+
+    ## Secrets {{{2
+    ## -------------------------------------------------------------------------
+
+    ## Load per-user secrets that we don't want to save in a shared Renviron.
+    if (isTRUE(file.exists(dict[["secretsFile"]]))) {
+        source(dict[["secretsFile"]])
+    }
+
     ## Functions {{{2
-    ## ---------------------------------------------------------------------
+    ## -------------------------------------------------------------------------
 
     isInstalled <- function(pkg) {
         stopifnot(requireNamespace("utils", quietly = TRUE))
@@ -58,58 +80,36 @@ local({  # nolint
     }
 
     ## Seed value {{{2
-    ## ---------------------------------------------------------------------
+    ## -------------------------------------------------------------------------
 
-    ## Set seed for reproducibility. Using Fibonacci sequence.
-    set.seed(1123581321L)
+    ## Set seed for reproducibility.
+    set.seed(dict[["seed"]])
 
-    ## Platform {{{3
-    ## ---------------------------------------------------------------------
-
-    ## Linux and macOS (but not Windows) are currently supported.
-    os <- R.Version()[["os"]]
-    sysname <- Sys.info()[["sysname"]]
-    linux <- identical(sysname, "Linux")
-    macos <- identical(sysname, "Darwin")
-
-    ## R version strings {{{3
-    ## ---------------------------------------------------------------------
+    ## R version strings {{{2
+    ## -------------------------------------------------------------------------
 
     ## Get the full R version, including patch (e.g. 3.6.1).
-    rVersionFull <- numeric_version(paste(
-        R.version[["major"]],
-        R.version[["minor"]],
-        sep = "."
-    ))
+    dict[["rVersionFull"]] <-
+        numeric_version(paste(
+            R.version[["major"]],
+            R.version[["minor"]],
+            sep = "."
+        ))
 
     ## Get the short R version without patch (e.g. 3.6).
     ## Use "devel" instead for development release.
-    if (identical(R.version[["status"]], "Under development (unstable)")) {
-        rVersionShort <- "devel"
+    if (identical(
+        x = R.version[["status"]],
+        y = "Under development (unstable)"
+    )) {
+        dict[["rVersionShort"]] <- "devel"
     } else {
-        rVersionShort <- numeric_version(paste(
-            R.version[["major"]],
-            substr(x = R.version[["minor"]], start = 1L, stop = 1L),
-            sep = "."
-        ))
-    }
-
-    ## Conda {{{3
-    ## ---------------------------------------------------------------------
-
-    if (isTRUE(as.integer(Sys.getenv("CONDA_SHLVL")) > 0L)) {
-        conda <- TRUE
-    } else {
-        conda <- FALSE
-    }
-
-    ## RStudio {{{3
-    ## ---------------------------------------------------------------------
-
-    if (isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))) {
-        rstudio <- TRUE
-    } else {
-        rstudio <- FALSE
+        dict[["rVersionShort"]] <-
+            numeric_version(paste(
+                R.version[["major"]],
+                substr(x = R.version[["minor"]], start = 1L, stop = 1L),
+                sep = "."
+            ))
     }
 
     ## Compiler settings {{{2
@@ -118,7 +118,10 @@ local({  # nolint
     ## Warn on active conda environment.
     ## Conda can cause compilation issues due to GCC version mismatch.
 
-    if (isTRUE(interactive()) && isTRUE(conda)) {
+    if (
+        isTRUE(flag[["conda"]]) &&
+        isTRUE(flag[["interactive"]])
+    ) {
         message(sprintf(
             fmt = paste(
                 "conda '%s' environment detected.",
@@ -137,8 +140,8 @@ local({  # nolint
     ## Instead, install specific Clang and GNU Fortran binaries:
     ## https://cran.r-project.org/bin/macosx/tools/
 
-    if (!isTRUE(conda)) {
-        if (isTRUE(macos)) {
+    if (isFALSE(flag[["conda"]])) {
+        if (isTRUE(flag[["macos"]])) {
             ## Check that Xcode command line tools (CLT) are installed.
             if (!isTRUE(dir.exists(file.path(
                 "/",
@@ -155,37 +158,11 @@ local({  # nolint
                     sep = "\n"
                 ))
             }
-        } else if (isTRUE(linux)) {
+        } else if (isTRUE(flag[["linux"]])) {
             stopifnot(all(nzchar(Sys.which(c(
                 "g++", "gcc", "gfortran"
             )))))
         }
-    }
-
-    ## RStudio {{{2
-    ## -------------------------------------------------------------------------
-
-    ## Fix file permissions. RStudio doesn't pick up the system umask.
-    ## Note that we're allowing group write here by default.
-    ## > if (isTRUE(rstudio)) {
-    ## >     Sys.umask("0002")
-    ## > }
-
-    ## Inform user that session is running inside of RStudio.
-    ## > if (isTRUE(rstudio) && isTRUE(interactive())) {
-    ## >     message("RStudio detected.")
-    ## > }
-
-    ## Secrets {{{2
-    ## -------------------------------------------------------------------------
-
-    ## Load per-user secrets that we don't want to save in a shared Renviron.
-    secretsFile <- file.path("~", ".Rsecrets")
-    if (file.exists(secretsFile)) {
-        source(secretsFile)
-        ## > if (isTRUE(interactive())) {
-        ## >     message(sprintf("Loaded '%s' file.", secretsFile))
-        ## > }
     }
 
     ## Package installation {{{2
@@ -220,14 +197,14 @@ local({  # nolint
     ##   https://packagemanager.rstudio.com/cran/2020-04-30
 
     repos <- getOption("repos")
-    if (isTRUE(linux)) {
+    if (isTRUE(flag[["linux"]])) {
         ## Configure the RSPM CRAN snapshot.
-        snapshot <- "2022-01-31"
+        snapshot <- "2022-03-01"
         cran <- "https://packagemanager.rstudio.com/cran"
         ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
         if (isTRUE(grepl(
             pattern = "Ubuntu 20.04",
-            x = utils::osVersion,
+            x = dict[["osVersion"]],
             fixed = TRUE
         ))) {
             distro <- "focal"
@@ -259,7 +236,7 @@ local({  # nolint
     ## https://r-universe.dev/organizations/
     ## > repos[["carpentries"]] <- "https://carpentries.r-universe.dev"
     ## Yihui Xie's repo has some extra binary builds for macOS.
-    ## > if (isTRUE(macos)) {
+    ## > if (isTRUE(flag[["macos"]])) {
     ## >    repos[["CRANextra"]] <-
     ## >        "https://macos.rbind.io"
     ## > }
@@ -272,7 +249,7 @@ local({  # nolint
     ## Allow binary install on macOS for CRAN R.
     ## Otherwise default to installing from source.
     if (
-        isTRUE(macos) &&
+        isTRUE(flag[["macos"]]) &&
         isTRUE(grepl(
             pattern = "^/Library/Frameworks/R.framework/Resources",
             x = Sys.getenv("R_HOME")
@@ -349,17 +326,16 @@ local({  # nolint
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
 
-    ## Attach BiocManager automatically.
-    ## > if (interactive()) {
-    ## >     if (isInstalled("BiocManager")) {
-    ## >         options(
-    ## >             defaultPackages = c(
-    ## >                 getOption("defaultPackages"),
-    ## >                 "BiocManager"
-    ## >             )
-    ## >         )
-    ## >     }
-    ## > }
+    if (isTRUE(flag[["interactive"]])) {
+        if (isInstalled("AcidDevTools")) {
+            options(
+                "defaultPackages" = c(
+                    getOption("defaultPackages"),
+                    "AcidDevTools"
+                )
+            )
+        }
+    }
 
     ## Console and interface {{{2
     ## -------------------------------------------------------------------------
@@ -375,12 +351,12 @@ local({  # nolint
         "width" = 80L
     )
 
-    if (!isTRUE(rstudio)) {
+    if (isFALSE(flag[["rstudio"]])) {
         options("prompt" = "> ")
     }
 
-    ## Turn on auto-completion of installed package names.
-    if (isTRUE(interactive())) {
+    if (isTRUE(flag[["interactive"]])) {
+        ## Turn on auto-completion of installed package names.
         utils::rc.settings(ipck = TRUE)
     }
 
@@ -496,6 +472,19 @@ local({  # nolint
     ## >     options("datatable.quiet" = TRUE)
     ## > }
 
+    if (isInstalled("formatR")) {
+        options(
+            "formatR.args.newline" = FALSE,
+            "formatR.arrow" = TRUE,
+            "formatR.blank" = TRUE,
+            "formatR.brace.newline" = FALSE,
+            "formatR.comment" = TRUE,
+            "formatR.indent" = 4L,
+            "formatR.width" = I(80L),
+            "formatR.wrap" = TRUE
+        )
+    }
+
     if (isInstalled("future")) {
         ## If we have a large dataset, then we might need to adjust the limit
         ## for allowable object sizes within R.
@@ -536,6 +525,22 @@ local({  # nolint
         )
     }
 
+    if (isInstalled("pipette")) {
+        ## Ensure we load and save RDS files from a nested dated directory
+        ## by default.
+        options(
+            "acid.save.ext" = "rds"
+        )
+        options(
+            "acid.save.dir" = file.path(
+                getOption("acid.save.ext"), Sys.Date()
+            )
+        )
+        options(
+            "acid.load.dir" = getOption("acid.save.dir")
+        )
+    }
+
     if (isInstalled("readr")) {
         options(
             "readr.num_columns" = 0L,
@@ -544,7 +549,7 @@ local({  # nolint
     }
 
     if (isInstalled("reticulate")) {
-        ## Ensure that miniconda is used by default.
+        ## Ensure that Miniconda is used by default.
         options(
             "reticulate.conda_binary" =
                 file.path(
@@ -553,6 +558,15 @@ local({  # nolint
                 )
         )
     }
+
+    ## > if (isInstalled("styler")) {
+    ## >     ## https://styler.r-lib.org/reference/styler_addins.html
+    ## >     options(
+    ## >         "styler.addins_style_transformer" =
+    ## >             "AcidDevTools::acid_style()",
+    ## >         "styler.save_after_styling" = TRUE
+    ## >     )
+    ## > }
 
     if (isInstalled("testthat")) {
         ## Stop on the first check failure.
@@ -564,13 +578,72 @@ local({  # nolint
         options("tidyverse.quiet" = TRUE)
     }
 
+    ## RStudio {{{2
+    ## -------------------------------------------------------------------------
+
+    ## Fix file permissions. RStudio doesn't pick up the system umask.
+    ## Note that we're allowing group write here by default.
+    ## > if (isTRUE(flag[["rstudio"]])) {
+    ## >     Sys.umask("0002")
+    ## > }
+
+    ## Automatic dark/light theme handling (Experimental) {{{3
+    ## -------------------------------------------------------------------------
+
+    ## See also:
+    ## - https://github.com/gadenbuie/rsthemes
+    ## - https://github.com/gadenbuie/rsthemes/issues/6
+
+    ## These values are currently defined in secrets file.
+    dict[["theme_dark"]] <- Sys.getenv("RSTUDIO_THEME_DARK")
+    dict[["theme_light"]] <- Sys.getenv("RSTUDIO_THEME_LIGHT")
+
+    if (
+        isTRUE(flag[["interactive"]]) &&
+        isTRUE(flag[["rstudio"]]) &&
+        isTRUE(flag[["macos"]]) &&
+        isTRUE(nzchar(dict[["theme_dark"]])) &&
+        isTRUE(nzchar(dict[["theme_light"]])) &&
+        all(isInstalled(c("later", "rstudioapi")))
+    ) {
+        autoDark <- function() {
+            themes <- c(
+                "dark" = dict[["theme_dark"]],
+                "light" = dict[["theme_light"]]
+            )
+            ## This returns "Dark" for Dark Mode; errors for Light Mode.
+            colorMode <- try({
+                suppressWarnings({
+                    system2(
+                        command = "defaults",
+                        args = c(
+                            "read",
+                            "NSGlobalDomain",
+                            "AppleInterfaceStyle"
+                        ),
+                        stdout = TRUE,
+                        stderr = FALSE
+                    )
+                })
+            })
+            colorMode <- ifelse(
+                test = identical(colorMode, "Dark"),
+                yes = "dark",
+                no = "light"
+            )
+            rstudioapi::applyTheme(themes[[colorMode]])
+            invisible(colorMode)
+        }
+        later::later(func = autoDark, delay = 1L)
+    }
+
     ## Session info {{{2
     ## -------------------------------------------------------------------------
 
     ## Only display session information when R is running interactively
     ## and not in quiet mode.
     if (
-        isTRUE(interactive()) &&
+        isTRUE(flag[["interactive"]]) &&
         isFALSE(length(intersect(
             x = commandArgs(),
             y = c("-q", "--quiet", "--silent")

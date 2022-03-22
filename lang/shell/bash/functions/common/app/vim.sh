@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-koopa::detab() { # {{{1
+koopa_detab() { # {{{1
     # """
     # Detab files.
     # @note Updated 2020-07-13.
     # """
     local file
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'vim'
-    koopa::assert_is_file "$@"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_installed 'vim'
+    koopa_assert_is_file "$@"
     for file in "$@"
     do
         vim \
@@ -20,15 +20,15 @@ koopa::detab() { # {{{1
     return 0
 }
 
-koopa::entab() { # {{{1
+koopa_entab() { # {{{1
     # """
     # Entab files.
     # @note Updated 2020-07-13.
     # """
     local file
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'vim'
-    koopa::assert_is_file "$@"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_installed 'vim'
+    koopa_assert_is_file "$@"
     for file in "$@"
     do
         vim \
@@ -40,15 +40,15 @@ koopa::entab() { # {{{1
     return 0
 }
 
-koopa::sort_lines() { # {{{1
+koopa_sort_lines() { # {{{1
     # """
     # Sort lines.
     # @note Updated 2020-07-13.
     # """
     local file
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'vim'
-    koopa::assert_is_file "$@"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_installed 'vim'
+    koopa_assert_is_file "$@"
     for file in "$@"
     do
         vim \

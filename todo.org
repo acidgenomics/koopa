@@ -1,7 +1,18 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Improve consistency of AWS functions.
+    - Ensure that all input consistently requires 's3://' as prefix input.
+    - Ensure that this is consistent for CLI parser to JSON...bucket API one
+** TODO Improve 'uninstall_app' to support removal of specific previous versions.
+    - Need to support removal of older app versions.
+    - In the case where it's not current link in opt, don't remove the opt link.
+** TODO Need to ensure 0775 permissions on coc packages:
+    /opt/koopa/app/dotfiles/rolling/app/coc/extensions/node_modules
+** TODO Add improved stack trace of error messages.
+** TODO Before pushing changes, ensure sed with '--quiet' change is non breaking.
 ** TODO Syntactic naming functions need an option to also convert the extension to lowercase.
+** TODO Update of Bash via Homebrew will cause current session to exit.
 ** TODO Shared install isn't setting user permissions recursively correctly.
     Need to ensure that '/opt/koopa' isn't owned by current user after install.
     We're seeing this currently on AWS EC2 instances.
@@ -30,8 +41,6 @@
     merging develop branch.
 ** TODO Consider reworking our conda-based NGS utilites by locating the programs
     directly, rather than by activating conda inside a function.
-** TODO Consider creating a koopa::grep function, that calls ripgrep rg
-    internally if installed (for speed).
 ** TODO conda base environment has been seen to stay active inside of RStudio
     terminal on some AWS AMI EC2 instances.
 * Development (medium priority)

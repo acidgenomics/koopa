@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::fedora_install_base_system() { # {{{1
+fedora_install_base_system() { # {{{1
     # """
     # Install Fedora base system.
     # @note Updated 2021-11-30.
@@ -10,7 +10,7 @@ koopa:::fedora_install_base_system() { # {{{1
     # Refer to Debian install base script for more details on supported args.
     # """
     local dict pkgs
-    koopa::assert_is_admin
+    koopa_assert_is_admin
     declare -A dict=(
         [base]=1
         [dev]=1
@@ -45,18 +45,18 @@ koopa:::fedora_install_base_system() { # {{{1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    if [[ "${dict[recommended]}" -eq 1 ]] && koopa::is_rhel_ubi
+    if [[ "${dict[recommended]}" -eq 1 ]] && koopa_is_rhel_ubi
     then
-        koopa::stop 'Recommended configuration not yet supported for RHEL UBI.'
+        koopa_stop 'Recommended configuration not yet supported for RHEL UBI.'
     fi
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        koopa::alert 'Upgrading all installed packages.'
-        koopa::fedora_dnf update
+        koopa_alert 'Upgrading all installed packages.'
+        koopa_fedora_dnf update
     fi
     pkgs=()
     if [[ "${dict[base]}" -eq 1 ]]
@@ -107,6 +107,7 @@ koopa:::fedora_install_base_system() { # {{{1
             'gcc-gfortran'                                        # |        ? |
             'gnupg2'                                              # |      YES |
             'gnutls'                                              # |      YES |
+            'jq'
             'libtool'                                             # |      YES |
             'lua'                                                 # |      YES |
             'openssl'                                             # |      YES |
@@ -127,7 +128,7 @@ koopa:::fedora_install_base_system() { # {{{1
             'zip'                                                 # |      YES |
             'zsh'                                                 # |       NO |
         )
-        if koopa::is_fedora
+        if koopa_is_fedora
         then
             pkgs+=(
             #                                                       | RHEL UBI |
@@ -138,8 +139,8 @@ koopa:::fedora_install_base_system() { # {{{1
     fi
     if [[ "${dict[dev]}" -eq 1 ]]
     then
-        koopa::alert 'Installing developer libraries.'
-        koopa::fedora_dnf groupinstall 'Development Tools'
+        koopa_alert 'Installing developer libraries.'
+        koopa_fedora_dnf groupinstall 'Development Tools'
         pkgs+=(
             #                                                       | RHEL UBI |
             # ------------------------------------------------------|----------|
@@ -203,7 +204,6 @@ koopa:::fedora_install_base_system() { # {{{1
         pkgs+=(
             # > emacs
             # > golang
-            'jq'
             'llvm'
             'nim'
             'texlive'
@@ -232,8 +232,8 @@ koopa:::fedora_install_base_system() { # {{{1
             'texlive-xstring'
         )
     fi
-    koopa::fedora_dnf_install "${pkgs[@]}"
-    koopa::fedora_dnf clean all
-    koopa::fedora_set_locale
+    koopa_fedora_dnf_install "${pkgs[@]}"
+    koopa_fedora_dnf clean all
+    koopa_fedora_set_locale
     return 0
 }

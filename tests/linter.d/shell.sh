@@ -4,7 +4,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
-test() { # {{{1
+main() { # {{{1
     # """
     # Shell script checks.
     # Updated 2020-07-20.
@@ -19,9 +19,9 @@ test() { # {{{1
 
 test_all() { # {{{1
     local files
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     readarray -t files <<< \
-        "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh|zsh)$')"
+        "$(koopa_test_find_files_by_shebang '^#!/.+\b(bash|sh|zsh)$')"
     test_all_quoting "${files[@]}"
     test_all_illegal_strings "${files[@]}"
     return 0
@@ -29,7 +29,7 @@ test_all() { # {{{1
 
 test_all_illegal_strings() { # {{{1
     local array pattern
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     # shellcheck disable=SC2016,SC1112
     array=(
         # "=''"             # now allowed, for arrays.
@@ -47,8 +47,8 @@ test_all_illegal_strings() { # {{{1
         '^path='            # can mess up Zsh PATH
         '_exe\b'
     )
-    pattern="$(koopa::paste --sep='|' "${array[@]}")"
-    koopa::test_grep \
+    pattern="$(koopa_paste --sep='|' "${array[@]}")"
+    koopa_test_grep \
         --ignore='illegal-strings' \
         --name='shell | all | illegal-strings' \
         --pattern="$pattern" \
@@ -58,7 +58,7 @@ test_all_illegal_strings() { # {{{1
 
 test_all_quoting() { # {{{1
     local array pattern
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     array=(
         "'\$.+'"
         ":-['\"]"
@@ -71,7 +71,7 @@ test_all_quoting() { # {{{1
     # > )
     for pattern in "${array[@]}"
     do
-        koopa::test_grep \
+        koopa_test_grep \
             --ignore='quoting' \
             --name="shell | all | quoting | ${pattern}" \
             --pattern="$pattern" \
@@ -86,16 +86,16 @@ test_bash() { # {{{1
     # @note Updated 2020-07-08.
     # """
     local files
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     readarray -t files <<< \
-       "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash)$')"
+       "$(koopa_test_find_files_by_shebang '^#!/.+\b(bash)$')"
     test_bash_illegal_strings "${files[@]}"
     return 0
 }
 
 test_bash_illegal_strings() { # {{{1
     local array pattern
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     array=(
         ' \[ '
         ' \] '
@@ -103,8 +103,8 @@ test_bash_illegal_strings() { # {{{1
         '\[\[ ([^\]]+) = ([^\]]+) \]\]'
         '^\[ '
     )
-    pattern="$(koopa::paste --sep='|' "${array[@]}")"
-    koopa::test_grep \
+    pattern="$(koopa_paste --sep='|' "${array[@]}")"
+    koopa_test_grep \
         --ignore='illegal-strings' \
         --name='shell | bash | illegal-strings' \
         --pattern="$pattern" \
@@ -118,16 +118,16 @@ test_posix() { # {{{1
     # @note Updated 2020-07-08.
     # """
     local files
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     readarray -t files <<< \
-        "$(koopa::test_find_files_by_shebang '^#!/bin/sh$')"
+        "$(koopa_test_find_files_by_shebang '^#!/bin/sh$')"
     test_posix_illegal_strings "${files[@]}"
     return 0
 }
 
 test_posix_illegal_strings() { # {{{1
     local array pattern
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     array=(
         ' == '
         ' \[\[ '
@@ -137,8 +137,8 @@ test_posix_illegal_strings() { # {{{1
         '\bexit\b'
         '^\[\[ '
     )
-    pattern="$(koopa::paste --sep='|' "${array[@]}")"
-    koopa::test_grep \
+    pattern="$(koopa_paste --sep='|' "${array[@]}")"
+    koopa_test_grep \
         --ignore='illegal-strings' \
         --name='shell | posix | illegal-strings' \
         --pattern="$pattern" \
@@ -152,16 +152,16 @@ test_zsh() { # {{{1
     # @note Updated 2020-07-08.
     # """
     local files
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     readarray -t files <<< \
-        "$(koopa::test_find_files_by_shebang '^#!/.+\b(zsh)$')"
+        "$(koopa_test_find_files_by_shebang '^#!/.+\b(zsh)$')"
     test_zsh_illegal_strings "${files[@]}"
     return 0
 }
 
 test_zsh_illegal_strings() { # {{{1
     local array pattern
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     array=(
         ' \[ '
         ' \] '
@@ -169,8 +169,8 @@ test_zsh_illegal_strings() { # {{{1
         '\[\[ ([^\]]+) = ([^\]]+) \]\]'
         '^\[ '
     )
-    pattern="$(koopa::paste --sep='|' "${array[@]}")"
-    koopa::test_grep \
+    pattern="$(koopa_paste --sep='|' "${array[@]}")"
+    koopa_test_grep \
         --ignore='illegal-strings' \
         --name='shell | zsh | illegal-strings' \
         --pattern="$pattern" \
@@ -181,19 +181,23 @@ test_zsh_illegal_strings() { # {{{1
 test_shellcheck() { # {{{1
     # """
     # Run ShellCheck.
-    # @note Updated 2021-04-22.
+    # @note Updated 2022-02-23.
+    #
     # Only Bash and POSIX (but not Zsh) are supported.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed shellcheck
+    local app
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [shellcheck]="$(koopa_locate_shellcheck)"
+    )
     readarray -t files <<< \
-        "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh)$')"
-    shellcheck \
-        --exclude='SC2119,SC2120,SC3043' \
+        "$(koopa_test_find_files_by_shebang '^#!/.+\b(bash|sh)$')"
+    "${app[shellcheck]}" \
+        --exclude='SC2119,SC2120,SC3040,SC3043' \
         --external-sources \
         "${files[@]}"
-    koopa::status_ok "shell | shellcheck [${#files[@]}]"
+    koopa_status_ok "shell | shellcheck [${#files[@]}]"
     return 0
 }
 
-test "$@"
+main "$@"

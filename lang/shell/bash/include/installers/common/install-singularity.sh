@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_singularity() { # {{{1
+install_singularity() { # {{{1
     # """
     # Install Singularity.
     # @note Updated 2022-01-19.
@@ -11,9 +11,9 @@ koopa:::install_singularity() { # {{{1
     # - https://issueexplorer.com/issue/hpcng/singularity/6225
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [name]='singularity'
@@ -24,21 +24,21 @@ koopa:::install_singularity() { # {{{1
     dict[file]="v${dict[version]}.tar.gz"
     dict[url]="https://github.com/apptainer/${dict[name]}/archive/refs/\
 tags/${dict[file]}"
-    if koopa::is_linux
+    if koopa_is_linux
     then
-        koopa::activate_opt_prefix 'go'
-    elif koopa::is_macos
+        koopa_activate_opt_prefix 'go'
+    elif koopa_is_macos
     then
-        koopa::activate_homebrew_opt_prefix 'go'
+        koopa_activate_homebrew_opt_prefix 'go'
     fi
-    koopa::assert_is_installed 'go'
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_assert_is_installed 'go'
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     # This step is needed to avoid an error when not cloned from git repo.
     if [[ ! -f "${dict[version_file]}" ]]
     then
-        koopa::print "${dict[version]}" > "${dict[version_file]}"
+        koopa_print "${dict[version]}" > "${dict[version_file]}"
     fi
     ./mconfig --prefix="${dict[prefix]}"
     "${app[make]}" -C builddir

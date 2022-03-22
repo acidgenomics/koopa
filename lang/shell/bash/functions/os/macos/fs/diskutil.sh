@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_force_eject() { # {{{1
+koopa_macos_force_eject() { # {{{1
     # """
     # Force eject a volume.
     # @note Updated 2021-11-16.
@@ -10,14 +10,14 @@ koopa::macos_force_eject() { # {{{1
     # anyway.
     # """
     local app mount name
-    koopa::assert_has_args_eq "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [diskutil]="$(koopa::macos_locate_diskutil)"
-        [sudo]="$(koopa::locate_sudo)"
+        [diskutil]="$(koopa_macos_locate_diskutil)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     name="${1:?}"
     mount="/Volumes/${name}"
-    koopa::assert_is_dir "$mount"
+    koopa_assert_is_dir "$mount"
     "${app[sudo]}" "${app[diskutil]}" unmount force "$mount"
     return 0
 }

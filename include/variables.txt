@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-02-11"
+koopa-date="2022-03-22"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -44,10 +44,10 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.18"
+aws-cli="2.4.27"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.33.0"
+azure-cli="2.34.1"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
@@ -70,7 +70,7 @@ bfg="1.14.0"
 binutils="2.37"
 
 # https://www.boost.org/
-boost="1.76.0"
+boost="1.78.0"
 
 # https://cairographics.org/
 cairo="1.16.0"
@@ -86,12 +86,10 @@ cellranger="6.1.2"  # 2021-10-25
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.22.2"
+cmake="3.22.3"
 
-# https://docs.conda.io/
-# https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
-# https://docs.conda.io/projects/conda/en/latest/user-guide/install/
-conda="4.10.3"  # 2021-07-21
+# https://repo.anaconda.com/miniconda/
+conda="4.11.0"  # 2022-02-15
 
 # https://www.gnu.org/software/coreutils/
 coreutils="9.0"
@@ -100,10 +98,10 @@ coreutils="9.0"
 cpufetch="0.97"
 
 # https://curl.haxx.se/
-curl="7.81.0"
+curl="7.82.0"
 
 # https://docs.docker.com/install/
-docker="20.10.8"
+docker="20.10.13"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
@@ -120,7 +118,7 @@ findutils="4.9.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
-fish="3.3.1"
+fish="3.4.0"
 
 # https://github.com/junegunn/fzf
 fzf="0.29.0"
@@ -131,9 +129,8 @@ gawk="5.1.1"
 # https://ftp.gnu.org/gnu/gcc/
 gcc="11.2.0"
 
-# https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.4.1"
+gdal="3.4.2"
 
 # https://github.com/libgeos/geos/releases
 geos="3.10.2"
@@ -146,10 +143,10 @@ git="2.35.1"
 gnupg="2.3.4"
 
 # https://golang.org/dl/
-go="1.17.6"
+go="1.18"
 
 # https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="372.0.0"
+google-cloud-sdk="377.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.7"
@@ -160,25 +157,25 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.7.1"
 
-hadolint="2.8.0"
+hadolint="2.9.2"
 
-harfbuzz="3.3.2"
+harfbuzz="4.0.1"
 
 # https://www.hdfgroup.org/downloads/hdf5/
-hdf5="1.12.1"
+hdf5="1.13.0"
 
 # https://brew.sh/
-homebrew="3.3.14"
+homebrew="3.4.3"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
 htop="3.1.2"
 
 # http://site.icu-project.org/
-icu="69.1"
+icu="70.1"
 
 # https://imagemagick.org/
-imagemagick="7.1.0"
+imagemagick="7.1.0-28"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -187,7 +184,7 @@ jq="1.6"
 julia="1.7.2"
 
 # https://github.com/wofr06/lesspipe/
-lesspipe="2.02"
+lesspipe="2.04"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
@@ -215,7 +212,7 @@ luarocks="3.8.0"
 make="4.3"
 
 # https://github.com/mamba-org/mamba/tags/
-mamba="0.21.0"
+mamba="0.21.1"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
@@ -227,10 +224,10 @@ neofetch="7.1.0"
 neovim="0.6.1"
 
 # https://nim-lang.org/
-nim="1.4.8"
+nim="1.6.4"
 
 # https://nodejs.org/
-node="17.5.0"
+node="17.7.2"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -238,10 +235,10 @@ node="17.5.0"
 openjdk="17.0.2"
 
 # https://www.openssh.com/portable.html
-openssh="8.8p1"
+openssh="8.9p1"
 
 # https://www.openssl.org/source/
-openssl="3.0.1"
+openssl="3.0.2"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
@@ -251,7 +248,7 @@ oracle-instant-client="21.5.0.0.0-1"
 pandoc="2.17.1.1"
 
 # https://www.gnu.org/software/parallel/
-parallel="20220122"
+parallel="20220222"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
@@ -282,18 +279,17 @@ pkg-config="0.29.2"
 poetry="1.1.13"
 
 # https://proj.org/
-proj="8.2.1"
+proj="9.0.0"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.2.4"
+pyenv="2.2.5"
 
 # https://www.python.org/downloads/
-# > python="3.9.10"
-python="3.10.2"
+python="3.10.3"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
-r="4.1.2"
+r="4.1.3"
 
 # https://mac.r-project.org/
 # This release matches current R version.
@@ -311,18 +307,17 @@ rbenv="1.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2021.09.2+382"
+rstudio-server="2022.02.0+443"
 
 # https://www.rstudio.com/products/rstudio/download-commercial/
 # https://docs.rstudio.com/rsw/installation/
-rstudio-workbench="2021.09.2-382.pro1"
+rstudio-workbench="2022.02.0+443.pro2"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="3.1.0p0"
+ruby="3.1.1p18"
 
 # https://www.rust-lang.org/
-# Use 'koopa update rust' to resolve.
-rust="1.58.1"
+rust="1.59.0"
 
 # https://rustup.rs/
 rustup="1.24.3"
@@ -387,119 +382,110 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4300"
+vim="8.2.4600"
 
 # https://www.gnu.org/software/wget/
-wget="1.21.2"
+wget="1.21.3"
 
 # http://zsh.sourceforge.net/Arc/source.html
-zsh="5.8"
+zsh="5.8.1"
 
 # Conda environments {{{1
 # ==============================================================================
-# Updated 2022-01-14.
+# Updated 2022-03-15.
 #
 # Use 'conda search --info <name>' to retrieve timestamp and dependency info.
 # Consider removing very old packages from our workflows.
-#
-# NOTE umap-learn 0.5.0 currently has issues with ParametricUMAP not being
-# available in R via reticulate. This requires tensorflow, which isn't included
-# in the recipe because v2.2+ isn't available yet, and is required for
-# Python 3.8. The 0.4.6 release is confirmed to work with Seurat in R. It looks
-# like this issue is persisting in the 0.5.1 recipe update...
-# https://github.com/conda-forge/umap-learn-feedstock/issues/29
-#
-# NOTE Need to add celltypist here (need to create recipe first).
 
-conda-arriba="2.2.0"            # 2022-01-17 bioconda                [variation]
+# Linux only (not supported on macOS):
+conda-biobambam="2.0.182"       # 2021-04-21 bioconda linux       [file formats]
+conda-bwa-mem2="2.2.1"          # 2021-03-17 bioconda linux           [aligners]
+conda-merfishtools="1.5.0"      # 2018-10-24 bioconda linux            [spatial]
+conda-ribotaper="1.3.1"         # 2020-07-13 bioconda linux            [riboseq]
+
+# Cross platform (Linux and macOS):
+conda-alevin-fry="0.5.0"        # 2022-02-21 bioconda               [singlecell]
+conda-arriba="2.2.1"            # 2022-01-23 bioconda                [variation]
 conda-atropos="1.1.31"          # 2021-07-07 bioconda                 [trimming]
-conda-bamtools="2.5.1"          # 2018-07-04 bioconda             [file formats]
-conda-bcftools="1.14"           # 2021-10-22 bioconda             [file formats]
+conda-bamtools="2.5.2"          # 2022-03-14 bioconda             [file formats]
+conda-bcftools="1.15"           # 2022-03-02 bioconda             [file formats]
 conda-bedtools="2.30.0"         # 2021-08-12 bioconda             [file formats]
 conda-bioawk="1.0"              # 2019-10-26 bioconda             [file formats]
-conda-biobambam="2.0.182"       # 2021-04-21 bioconda linux       [file formats]
 conda-bismark="0.23.1"          # 2021-07-26 bioconda              [methylation]
-# NOTE 2.4.5 has been released, but not on bioconda yet.
-conda-bowtie2="2.4.4"           # 2021-05-24 bioconda                 [aligners]
+conda-bowtie2="2.4.5"           # 2022-02-08 bioconda                 [aligners]
 conda-bustools="0.41.0"         # 2021-06-25 bioconda               [singlecell]
-conda-bwa-mem2="2.2.1"          # 2021-03-17 bioconda linux           [aligners]
 conda-bwa="0.7.17"              # 2019-12-19 bioconda                 [aligners]
-conda-cellrank="1.5.0"          # 2021-09-13 bioconda               [singlecell]
-conda-celltypist="0.1.4"        # 2021-08-13 bioconda               [singlecell]
+conda-cellrank="1.5.1"          # 2022-01-14 bioconda               [singlecell]
+conda-celltypist="0.2.0"        # 2022-02-14 bioconda               [singlecell]
 conda-chromhmm="1.23"           # 2021-09-03 bioconda                  [chipseq]
-conda-cromwell="73"             # 2022-01-10 conda-forge             [workflows]
+conda-cromwell="76"             # 2022-02-15 conda-forge             [workflows]
 conda-deeptools="3.5.1"         # 2021-03-17 bioconda                  [chipseq]
 conda-entrez-direct="16.2"      # 2021-11-04 bioconda              [data mining]
 conda-ericscript="0.5.5"        # 2021-03-26 bioconda                [variation]
 conda-fastqc="0.11.9"           # 2021-03-25 bioconda                       [qc]
-conda-fgbio="1.5.0"             # 2022-01-11 bioconda                [workflows]
-conda-gatk4="4.2.4.1"           # 2022-01-05 bioconda                [workflows]
+conda-fgbio="1.5.1"             # 2022-02-15 bioconda                [workflows]
+conda-gatk4="4.2.5.0"           # 2022-02-05 bioconda                [workflows]
 conda-genrich="0.6.1"           # 2021-03-17 bioconda                  [chipseq]
 conda-gffread="0.12.7"          # 2021-09-24 bioconda             [file formats]
 conda-gffutils="0.10.1"         # 2020-07-26 bioconda             [file formats]
-conda-gseapy="0.10.7"           # 2021-11-17 bioconda               [enrichment]
+conda-gseapy="0.10.8"           # 2022-02-10 bioconda               [enrichment]
 conda-hisat2="2.2.1"            # 2020-07-24 bioconda                 [aligners]
 conda-homer="4.11"              # 2020-04-29 bioconda                  [chipseq]
-conda-htslib="1.14"             # 2022-01-14 bioconda             [file formats]
 conda-igvtools="2.5.3"          # 2021-03-25 bioconda            [visualization]
-conda-jupyterlab="3.2.8"        # 2022-01-03 conda-forge             [workflows]
+conda-jupyterlab="3.3.2"        # 2022-03-14 conda-forge             [workflows]
 conda-kallisto="0.48.0"         # 2022-01-17 bioconda                   [rnaseq]
 conda-kraken2="2.1.2"           # 2021-05-10 bioconda                       [qc]
 conda-luigi="3.0.3"             # 2021-04-16 conda-forge             [workflows]
 conda-macs2="2.2.7.1"           # 2021-09-22 bioconda                  [chipseq]
 conda-mashmap="2.0"             # 2022-01-14 bioconda                   [rnaseq]
 conda-meme="5.4.1"              # 2022-01-02 bioconda               [enrichment]
-conda-merfishtools="1.5.0"      # 2018-10-24 bioconda linux            [spatial]
-conda-miniwdl="1.4.3"           # 2021-12-28 conda-forge             [workflows]
+conda-miniwdl="1.5.0"           # 2022-02-19 conda-forge             [workflows]
 conda-minimap2="2.24"           # 2021-12-27 bioconda                 [aligners]
 conda-mirdeep2="2.0.1.3"        # 2021-07-15 bioconda                 [smallrna]
 conda-mirtop="0.4.24"           # 2021-11-12 bioconda                 [smallrna]
-conda-multiqc="1.11"            # 2021-07-05 bioconda                       [qc]
-conda-nextflow="21.10.0"        # 2021-11-17 bioconda                [workflows]
+conda-multiqc="1.12"            # 2022-02-08 bioconda                       [qc]
+conda-nextflow="21.10.6"        # 2022-01-24 bioconda                [workflows]
 conda-novoalign="3.09.00"       # 2018-09-02 bioconda                 [aligners]
-conda-numpy="1.22.0"            # 2021-08-16 conda-forge          [data science]
+conda-numpy="1.22.3"            # 2022-03-08 conda-forge          [data science]
 conda-oncofuse="1.1.1"          # 2021-03-27 bioconda                [variation]
-conda-pandas="1.3.5"            # 2022-01-06 conda-forge          [data science]
+conda-pandas="1.4.1"            # 2022-02-16 conda-forge          [data science]
 conda-peddy="0.4.8"             # 2021-06-02 bioconda                [variation]
 conda-picard="2.26.10"          # 2022-01-04 bioconda                [workflows]
 conda-pizzly="0.37.3"           # 2019-01-17 bioconda                [variation]
 conda-qualimap="2.2.2d"         # 2021-03-28 bioconda                       [qc]
-conda-r-acidgsea="0.6.4"        # 2022-01-17 bioconda               [enrichment]
-conda-r-bcbiornaseq="0.3.44"    # 2021-12-14 bioconda                   [rnaseq]
-conda-r-deseqanalysis="0.4.4"   # 2021-08-02 bioconda                   [rnaseq]
 conda-r-monocle3="1.0.0"        # 2021-06-02 bioconda               [singlecell]
 conda-r-seurat="4.1.0"          # 2022-01-15 conda-forge            [singlecell]
 conda-r-tailfindr="1.3"         # 2021-08-24 bioconda         [rna modification]
-conda-ribocode="1.2.13"         # 2021-12-30 bioconda                  [riboseq]
+conda-ribocode="1.2.14"         # 2022-03-07 bioconda                  [riboseq]
 conda-ribodiff="0.2.2"          # 2019-10-27 bioconda                  [riboseq]
-conda-ribotaper="1.3.1"         # 2020-07-13 bioconda linux            [riboseq]
-conda-rsem="1.3.3"              # 2020-07-26 bioconda                 [aligners]
-conda-salmon="1.6.0"            # 2021-11-23 bioconda                   [rnaseq]
+conda-rsem="1.3.3"              # 2022-02-25 bioconda                 [aligners]
+conda-salmon="1.8.0"            # 2022-03-12 bioconda                   [rnaseq]
 conda-sambamba="0.8.0"          # 2021-01-02 bioconda             [file formats]
 conda-samblaster="0.1.26"       # 2021-03-26 bioconda             [file formats]
-conda-samtools="1.14"           # 2021-10-22 bioconda             [file formats]
+conda-samtools="1.15"           # 2022-02-22 bioconda             [file formats]
 conda-scanpy="1.8.2"            # 2021-11-04 bioconda               [singlecell]
 conda-scikit-learn="1.0.2"      # 2021-12-25 conda-forge                    [ml]
 conda-scrublet="0.2.3"          # 2021-04-12 bioconda               [singlecell]
 conda-seqbuster="3.5"           # 2021-03-26 bioconda                 [smallrna]
 conda-seqcluster="1.2.8"        # 2021-06-22 bioconda                 [smallrna]
-conda-seqkit="2.1.0"            # 2021-11-15 bioconda             [file formats]
+conda-seqkit="2.2.0"            # 2022-03-14 bioconda             [file formats]
 conda-seqtk="1.3"               # 2019-07-31 bioconda             [file formats]
 conda-sicer2="1.0.3"            # 2021-03-26 bioconda                  [chipseq]
-conda-snakemake="6.14.0"        # 2022-01-26 bioconda                [workflows]
+conda-snakemake="7.2.1"         # 2022-03-14 bioconda                [workflows]
 conda-squid="1.5"               # 2021-03-27 bioconda                [variation]
-conda-stringtie="2.2.0"         # 2022-01-02 bioconda                   [rnaseq]
+conda-stringtie="2.2.1"         # 2022-02-23 bioconda                   [rnaseq]
 conda-sra-tools="2.11.0"        # 2021-11-10 bioconda              [data mining]
 conda-star-fusion="1.10.0"      # 2021-04-15 bioconda                [variation]
-conda-star="2.7.9a"             # 2021-05-11 bioconda                 [aligners]
+conda-star="2.7.10a"            # 2022-01-15 bioconda                 [aligners]
 conda-trimmomatic="0.39"        # 2021-03-27 bioconda                 [trimming]
 conda-umap-learn="0.5.2"        # 2021-11-03 bioconda               [singlecell]
-conda-vardict="2019.06.04"      # 2019-06-05 bioconda                  [vardict]
+conda-vardict="2019.06.04"      # 2019-06-05 bioconda                [variation]
+conda-visidata="2.8"            # 2022-01-13 conda-forge          [file formats]
 
 # Homebrew cask versions {{{1
 # ==============================================================================
 
-homebrew-cask-gpg-suite="2021.3"
+homebrew-cask-gpg-suite="2022.1"
 
 # Nim (Nimble) packages {{{1
 # ==============================================================================
@@ -510,85 +496,71 @@ nim-markdown="0.8.5"
 
 # Node (NPM) packages {{{1
 # ==============================================================================
-# Updated 2021-11-03 from https://www.npmjs.com/
+# Updated 2022-03-18 from https://www.npmjs.com/
 
-node-npm="8.2.0"                    # 2021-12-02
+node-npm="8.5.5"                    # 2022-03-17
 
 node-bash-language-server="2.0.0"   # 2021-08-11
-node-gtop="1.1.2"                   # 2021-11-12
-node-prettier="2.5.1"               # 2021-12-04
+node-gtop="1.1.3"                   # 2022-01-12
+node-prettier="2.6.0"               # 2022-03-16
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2022-02-10 from https://pypi.org/.
+# Updated 2022-03-21 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
 # Otherwise, for heavy libraries, consider using a conda environment instead.
 
-python-pip="22.0.2"             # default
-python-setuptools="60.6.0"      # default
-python-wheel="0.37.1"           # default
+# Potentially useful:
+# - pip2p
+# - pipx
 
-python-black="22.1.0"           # recommended
-python-bpytop="1.0.68"          # recommended
-python-flake8="4.0.1"           # recommended
-python-glances="3.2.4.2"        # recommended
-python-pip2pi="0.8.2"           # recommended
-python-pipx="1.0.0"             # recommended
-python-pyflakes="2.4.0"         # recommended
-python-pylint="2.12.2"          # recommended
-python-pynvim="0.4.3"           # recommended
-python-pytaglib="1.5.0"         # recommended
-python-pytest="6.2.5"           # recommended
-python-ranger-fm="1.9.3"        # recommended
+python-pip="22.0.4"             # default; system
+python-setuptools="60.10.0"     # default; system
+python-wheel="0.37.1"           # default; system
 
-python-numpy="1.22.1"           # r-reticulate
-python-pandas="1.3.5"           # r-reticulate
-python-scikit-learn="1.0.2"     # r-reticulate
-python-scipy="1.7.3"            # r-reticulate
+python-pipx="1.0.0"             # system
+
+python-black="22.1.0"           # homebrew
+python-bpytop="1.0.68"          # homebrew
+python-flake8="4.0.1"           # homebrew
+python-glances="3.2.4.2"        # homebrew
+python-pyflakes="2.4.0"         # homebrew
+python-pylint="2.12.2"          # homebrew
+python-pytest="6.2.5"           # homebrew
+python-ranger-fm="1.9.3"        # homebrew
 
 # Ruby packages (gems) {{{1
 # ==============================================================================
-# Updated 2022-02-09.
+# Updated 2022-02-24.
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.6"            # 2022-01-12
+ruby-bundler="2.3.8"            # system
 
-ruby-bashcov="1.8.2"            # 2018-03-27
-ruby-ronn="0.7.3"               # 2010-06-24
+ruby-bashcov="1.8.2"            # recommended
+ruby-ronn="0.7.3"               # recommended
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2022-01-19 from https://crates.io/.
+# Updated 2022-03-15 from https://crates.io/.
 
-# Packages with binaries {{{2
-# ------------------------------------------------------------------------------
+rust-cargo-outdated="0.11.0"    # system
+rust-cargo-update="8.1.2"       # system
 
-rust-bat="0.19.0"               # homebrew
-rust-broot="1.9.2"              # homebrew; br
-rust-cargo-update="8.1.2"
-rust-cargo-outdated="0.10.2"    # homebrew
+rust-bat="0.20.0"               # homebrew
+rust-broot="1.9.4"              # homebrew; br
 rust-dog="0.1.0"                # homebrew
-rust-du-dust="0.7.0"            # homebrew; dust
+rust-du-dust="0.8.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
-rust-fd-find="8.3.1"            # homebrew; fd
-rust-hyperfine="1.12.0"         # homebrew
-rust-mcfly="0.5.13"                  # github only
+rust-fd-find="8.3.2"            # homebrew; fd
+rust-hyperfine="1.13.0"         # homebrew
+rust-mcfly="0.5.13"             # homebrew
 rust-procs="0.12.1"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
-rust-starship="1.3.0"           # homebrew
+rust-starship="1.4.2"           # homebrew
 rust-tealdeer="1.5.0"           # homebrew; tldr
 rust-tokei="12.1.2"             # homebrew
 rust-xsv="0.13.0"               # homebrew
 rust-zoxide="0.8.0"             # homebrew; z
-
-# Libraries without binaries {{{2
-# ------------------------------------------------------------------------------
-
-# Consider (for package development):
-# - crossbeam
-# - hyper
-# - rayon
-# - tide

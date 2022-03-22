@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_lua() { # {{{1
+install_lua() { # {{{1
     # """
     # Install Lua.
     # @note Updated 2021-12-09.
@@ -9,9 +9,9 @@ koopa:::install_lua() { # {{{1
     # - http://www.lua.org/manual/5.3/readme.html
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [name]='lua'
@@ -20,16 +20,16 @@ koopa:::install_lua() { # {{{1
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="http://www.lua.org/ftp/${dict[file]}"
-    if koopa::is_macos
+    if koopa_is_macos
     then
         dict[platform]='macosx'
-    elif koopa::is_linux
+    elif koopa_is_linux
     then
         dict[platform]='linux'
     fi
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     "${app[make]}" "${dict[platform]}"
     "${app[make]}" test
     "${app[make]}" install INSTALL_TOP="${dict[prefix]}"

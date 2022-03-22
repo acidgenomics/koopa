@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 
-koopa:::install_openssl() { # {{{1
+install_openssl() { # {{{1
     # """
     # Install OpenSSL.
     # @note Updated 2022-01-03.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='openssl'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://www.openssl.org/source/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     ./config \
         --prefix="${dict[prefix]}" \
         --openssldir="${dict[prefix]}" \
