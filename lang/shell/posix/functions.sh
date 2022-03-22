@@ -300,19 +300,24 @@ koopa_activate_bat() { # {{{1
 koopa_activate_bcbio_nextgen() { # {{{1
     # """
     # Activate bcbio-nextgen tool binaries.
-    # @note Updated 2022-03-16.
+    # @note Updated 2022-03-22.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
     # Exporting at the end of PATH so we don't mask gcc or R.
     # This is particularly important to avoid unexpected compilation issues
     # due to compilers in conda masking the system versions.
+    #
+    # @seealso
+    # - https://bcbio-nextgen.readthedocs.io/en/latest/contents/
+    #     installation.html
     # """
     local prefix
-    prefix="$(koopa_bcbio_nextgen_tools_prefix)"
+    prefix="$(koopa_bcbio_nextgen_prefix)"
     [ -d "$prefix" ] || return 0
-    koopa_add_to_path_end "${prefix}/bin"
-    # > unset -v PYTHONHOME PYTHONPATH
+    koopa_add_to_path_end \
+        "${prefix}/anaconda/bin" \
+        "${prefix}/tools/bin"
     return 0
 }
 
@@ -2140,12 +2145,12 @@ koopa_aspera_connect_prefix() { # {{{1
     return 0
 }
 
-koopa_bcbio_nextgen_tools_prefix() { # {{{1
+koopa_bcbio_nextgen_prefix() { # {{{1
     # """
     # bcbio-nextgen tools prefix.
-    # @note Updated 2021-06-11.
+    # @note Updated 2022-03-22.
     # """
-    koopa_print "$(koopa_opt_prefix)/bcbio-nextgen/tools"
+    koopa_print "$(koopa_opt_prefix)/bcbio-nextgen"
     return 0
 }
 
