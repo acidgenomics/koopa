@@ -196,7 +196,8 @@ koopa_aws_ec2_suspend() { # {{{1
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict[profile]:-}"
     "${app[aws]}" --profile="${dict[profile]}" \
-        ec2 stop-instances --instance-id "${dict[id]}"
+        ec2 stop-instances --instance-id "${dict[id]}" \
+        >/dev/null
     return 0
 }
 
@@ -234,7 +235,8 @@ koopa_aws_ec2_terminate() { # {{{1
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict[profile]:-}"
     "${app[aws]}" --profile="${dict[profile]}" \
-        ec2 terminate-instances --instance-id "${dict[id]}"
+        ec2 terminate-instances --instance-id "${dict[id]}" \
+        >/dev/null
     return 0
 }
 

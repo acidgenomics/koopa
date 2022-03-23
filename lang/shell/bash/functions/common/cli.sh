@@ -32,10 +32,9 @@ koopa_cli_app() { # {{{1
                     ;;
                 'ec2')
                     case "${3:-}" in
-                        'create-instance' | \
                         'instance-id' | \
-                        'suspend-instance' | \
-                        'terminate-instance')
+                        'suspend' | \
+                        'terminate')
                             key="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;

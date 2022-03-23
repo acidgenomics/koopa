@@ -54,6 +54,7 @@ bash="5.1.16"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
+# 1.2.9 has issues with bcftools and samtools
 bcbio-nextgen="1.2.9"
 
 # https://github.com/bcbio/bcbio-nextgen-vm/releases
@@ -227,7 +228,7 @@ neovim="0.6.1"
 nim="1.6.4"
 
 # https://nodejs.org/
-node="17.7.2"
+node="17.8.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -248,7 +249,7 @@ oracle-instant-client="21.5.0.0.0-1"
 pandoc="2.17.1.1"
 
 # https://www.gnu.org/software/parallel/
-parallel="20220222"
+parallel="20220322"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
