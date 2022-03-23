@@ -24,6 +24,8 @@ koopa_star_index() { # {{{1
         [threads]="$(koopa_cpu_count)"
         [tmp_dir]="$(koopa_tmp_dir)"
     )
+    dict[tmp_genome_fasta_file]="${dict[tmp_dir]}/genome.fa"
+    dict[tmp_gtf_file]="${dict[tmp_dir]}/annotation.gtf"
     index_args=()
     while (("$#"))
     do
@@ -67,12 +69,13 @@ koopa_star_index() { # {{{1
         "${dict[genome_fasta_file]}" \
         "${dict[gtf_file]}"
     koopa_alert "Generating STAR index at '${dict[output_dir]}'."
-    dict[tmp_genome_fasta_file]="$(\
-        koopa_decompress "${dict[genome_fasta_file]}" \
-    )"
-    dict[tmp_gtf_file]="$(\
-        koopa_decompress "${dict[gtf_file]}" \
-    )"
+    koopa_alert "Decompressing FASTA and GTF files in '${dict[tmp_dir]}'."
+    koopa_decompress \
+        "${dict[genome_fasta_file]}" \
+        "${dict[tmp_genome_fasta_file]}"
+    koopa_decompress \
+        "${dict[gtf_file]}" \
+        "${dict[tmp_gtf_file]}"
     index_args+=(
         '--runMode' 'genomeGenerate'
         '--genomeDir' "${dict[output_dir]}/"
