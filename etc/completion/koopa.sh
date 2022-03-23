@@ -58,6 +58,7 @@ __koopa_complete() { # {{{1
                         'salmon'
                         'sra'
                         'ssh'
+                        'star'
                         'wget'
                     )
                     if koopa_is_linux
@@ -359,7 +360,8 @@ __koopa_complete() { # {{{1
                                 's3'
                             )
                             ;;
-                        'bowtie2')
+                        'bowtie2' | \
+                        'star')
                             args=(
                                 'align'
                                 'index'
