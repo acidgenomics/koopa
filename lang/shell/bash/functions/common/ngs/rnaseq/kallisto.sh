@@ -15,6 +15,8 @@ koopa_kallisto_index() { # {{{1
     )
     declare -A dict=(
         [kmer_size]=31
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
         [output_dir]='' # 'kallisto-index'
         [transcriptome_fasta_file]=''
     )
@@ -48,6 +50,10 @@ koopa_kallisto_index() { # {{{1
     koopa_assert_is_set \
         '--output-dir' "${dict[output_dir]}" \
         '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "kallisto index requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
     koopa_assert_is_file "${dict[transcriptome_fasta_file]}"
     koopa_assert_is_not_dir "${dict[output_dir]}"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
@@ -242,6 +248,8 @@ koopa_kallisto_quant_paired_end_per_sample() { # {{{1
         [fastq_r1_tail]='' # '_R1_001.fastq.gz'
         [fastq_r2_file]=''
         [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
         [threads]="$(koopa_cpu_count)"
     )
     quant_args=()
@@ -319,6 +327,10 @@ koopa_kallisto_quant_paired_end_per_sample() { # {{{1
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "kallisto quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
     koopa_assert_is_dir "${dict[index_dir]}"
     dict[index_file]="${dict[index_dir]}/kallisto.idx"
     koopa_assert_is_file \
@@ -502,6 +514,8 @@ koopa_kallisto_quant_single_end_per_sample() { # {{{1
         [fastq_tail]='' # '.fastq.gz'
         [fragment_length]=200
         [index_dir]=''
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
         [output_dir]=''
         [sd]=30
     )
@@ -553,6 +567,10 @@ koopa_kallisto_quant_single_end_per_sample() { # {{{1
         '--fastq-tail' "${dict[fastq_tail]}" \
         '--index-dir' "${dict[index_dir]}" \
         '--output-dir' "${dict[output_dir]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "kallisto quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
     koopa_assert_is_dir "${dict[output_dir]}"
     dict[index_file]="${dict[index_dir]}/kallisto.idx"
     koopa_assert_is_file "${dict[fastq_file]}" "${dict[index_file]}"
