@@ -651,7 +651,7 @@ koopa_locate_ssh_keygen() { # {{{1
 }
 
 koopa_locate_star() { # {{{1
-    koopa_locate_conda_app 'star'
+    koopa_locate_conda_app 'STAR'
 }
 
 koopa_locate_stat() { # {{{1
