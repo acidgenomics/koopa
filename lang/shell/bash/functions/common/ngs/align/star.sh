@@ -84,7 +84,6 @@ koopa_star_index() { # {{{1
         '--sjdbGTFfile' "${dict[tmp_gtf_file]}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    koopa_mkdir "${dict[output_dir]}"
     (
         koopa_cd "${dict[tmp_dir]}"
         "${app[star]}" "${index_args[@]}"
