@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Ensure 'Log.out' is maintained with index directory.
+# Seeing this warning: Could not move Log.out file
 
 koopa_star_index() { # {{{1
     # """
