@@ -270,7 +270,7 @@ koopa_star_index() { # {{{1
         [genome_fasta_file]=''
         [gtf_file]=''
         [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=64
+        [mem_gb_cutoff]=62
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
         [tmp_dir]="$(koopa_tmp_dir)"
