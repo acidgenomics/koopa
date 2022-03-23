@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure 'Log.out' is maintained with index directory.
+
 koopa_star_index() { # {{{1
     # """
     # Create a genome index for STAR aligner.
@@ -84,6 +86,7 @@ koopa_star_index() { # {{{1
         '--sjdbGTFfile' "${dict[tmp_gtf_file]}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
+    koopa_mkdir "${dict[output_dir]}"
     (
         koopa_cd "${dict[tmp_dir]}"
         "${app[star]}" "${index_args[@]}"
