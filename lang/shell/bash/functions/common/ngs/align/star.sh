@@ -143,7 +143,7 @@ koopa_star_align_paired_end_per_sample() { # {{{1
         [fastq_r2_tail]='' # '_R2_001.fastq.gz'
         [index_dir]=''
         [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=16
+        [mem_gb_cutoff]=14
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
