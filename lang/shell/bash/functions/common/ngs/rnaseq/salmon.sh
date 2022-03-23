@@ -3,7 +3,7 @@
 koopa_salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-23.
     #
     # @section GENCODE:
     #
@@ -26,6 +26,8 @@ koopa_salmon_index() { # {{{1
         [gencode]=0
         [genome_fasta_file]=''
         [kmer_length]=31
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
         [output_dir]='' # 'salmon-index'
         [threads]="$(koopa_cpu_count)"
         [transcriptome_fasta_file]=''
@@ -83,6 +85,10 @@ koopa_salmon_index() { # {{{1
         '--genome-fasta-file' "${dict[genome_fasta_file]}" \
         '--output-dir' "${dict[output_dir]}" \
         '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "salmon index requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
     koopa_assert_is_file \
         "${dict[genome_fasta_file]}" \
         "${dict[transcriptome_fasta_file]}"
@@ -340,6 +346,8 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         [fastq_r2_tail]='' # '_R2_001.fastq.gz'
         [index_dir]=''
         [lib_type]='A'
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
@@ -418,6 +426,10 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
     koopa_assert_is_dir "${dict[index_dir]}"
     koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
     dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
@@ -588,6 +600,8 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
         [fastq_tail]='' # '.fastq.gz'
         [index_dir]=''
         [lib_type]='A'
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
@@ -648,6 +662,10 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
     koopa_assert_is_dir "${dict[index_dir]}"
     koopa_assert_is_file "${dict[fastq_file]}"
     dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
