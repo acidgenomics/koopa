@@ -82,7 +82,6 @@ koopa_salmon_index() { # {{{1
     koopa_assert_is_set \
         '--genome-fasta-file' "${dict[genome_fasta_file]}" \
         '--output-dir' "${dict[output_dir]}" \
-        '--threads' "${dict[threads]}" \
         '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
     koopa_assert_is_file \
         "${dict[genome_fasta_file]}" \
@@ -145,7 +144,7 @@ koopa_salmon_index() { # {{{1
 koopa_salmon_quant_paired_end() { # {{{1
     # """
     # Run salmon quant on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-22.
     # """
     local dict fastq_r1_files fastq_r1_file fastq_r2_file
     koopa_assert_has_args "$#"
@@ -153,7 +152,6 @@ koopa_salmon_quant_paired_end() { # {{{1
         [fastq_dir]=''
         [fastq_r1_tail]='' # '_R1_001.fastq.gz'
         [fastq_r2_tail]='' # '_R2_001.fastq.gz'
-        [gtf_file]=''
         [index_dir]=''
         [lib_type]='A' # automatic strandedness detection
         [output_dir]=''
@@ -184,14 +182,6 @@ koopa_salmon_quant_paired_end() { # {{{1
                 ;;
             '--fastq-r2-tail')
                 dict[fastq_r2_tail]="${2:?}"
-                shift 2
-                ;;
-            '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
-                shift 1
-                ;;
-            '--gtf-file')
-                dict[gtf_file]="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -228,14 +218,11 @@ koopa_salmon_quant_paired_end() { # {{{1
         '--fastq-dir' "${dict[fastq_dir]}" \
         '--fastq-r1-tail' "${dict[fastq_r1_tail]}" \
         '--fastq-r2-tail' "${dict[fastq_r1_tail]}" \
-        '--gtf-file' "${dict[gtf_file]}" \
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
     koopa_assert_is_dir "${dict[fastq_dir]}" "${dict[index_dir]}"
-    koopa_assert_is_file "${dict[gtf_file]}"
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
-    dict[gtf_file]="$(koopa_realpath "${dict[gtf_file]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_h1 'Running salmon quant (paired-end mode).'
@@ -243,7 +230,6 @@ koopa_salmon_quant_paired_end() { # {{{1
         'FASTQ R1 tail' "${dict[fastq_r1_tail]}" \
         'FASTQ R2 tail' "${dict[fastq_r2_tail]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
-        'GTF file' "${dict[gtf_file]}" \
         'Index dir' "${dict[index_dir]}" \
         'Mode' 'paired-end' \
         'Output dir' "${dict[output_dir]}"
@@ -275,7 +261,6 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
             --fastq-r1-tail="${dict[fastq_r1_tail]}" \
             --fastq-r2-file="$fastq_r2_file" \
             --fastq-r2-tail="${dict[fastq_r2_tail]}" \
-            --gtf-file="${dict[gtf_file]}" \
             --index-dir="${dict[index_dir]}" \
             --lib-type="${dict[lib_type]}" \
             --output-dir="${dict[output_dir]}"
@@ -287,7 +272,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
 koopa_salmon_quant_paired_end_per_sample() { # {{{1
     # """
     # Run salmon quant on a paired-end sample.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-22.
     #
     # Attempting to detect library type (strandedness) automatically by default.
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
@@ -353,7 +338,6 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         [fastq_r1_tail]='' # '_R1_001.fastq.gz'
         [fastq_r2_file]=''
         [fastq_r2_tail]='' # '_R2_001.fastq.gz'
-        [gtf_file]=''
         [index_dir]=''
         [lib_type]='A'
         [output_dir]=''
@@ -396,14 +380,6 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
                 dict[fastq_r2_tail]="${2:?}"
                 shift 2
                 ;;
-            '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
-                shift 1
-                ;;
-            '--gtf-file')
-                dict[gtf_file]="${2:?}"
-                shift 2
-                ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
@@ -439,15 +415,11 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         '--fastq-r1-tail' "${dict[fastq_r1_tail]}" \
         '--fastq-r2-file' "${dict[fastq_r2_file]}" \
         '--fastq-r2-tail' "${dict[fastq_r2_tail]}" \
-        '--gtf-file' "${dict[gtf_file]}" \
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
     koopa_assert_is_dir "${dict[index_dir]}"
-    koopa_assert_is_file \
-        "${dict[fastq_r1_file]}" \
-        "${dict[fastq_r2_file]}" \
-        "${dict[gtf_file]}"
+    koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
     dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
     dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
@@ -464,7 +436,6 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
     quant_args+=(
         '--gcBias' # Recommended for DESeq2.
-        "--geneMap=${dict[gtf_file]}"
         "--index=${dict[index_dir]}"
         "--libType=${dict[lib_type]}"
         "--mates1=${dict[fastq_r1_file]}"
@@ -476,11 +447,6 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         "--threads=${dict[threads]}"
         '--useVBOpt'
     )
-    # Writing mappings to SAM file blows up disk space.
-    # > dict[sam_file]="${dict[output_dir]}/output.sam"
-    # > quant_args+=(
-    # >     "--writeMappings=${dict[sam_file]}"
-    # > )
     koopa_dl 'Quant args' "${quant_args[*]}"
     "${app[salmon]}" quant "${quant_args[@]}"
     return 0
@@ -489,14 +455,13 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
 koopa_salmon_quant_single_end() { # {{{1
     # """
     # Run salmon quant on multiple single-end FASTQs in a directory.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-22.
     # """
     local dict fastq_file fastq_files
     koopa_assert_has_args "$#"
     declare -A dict=(
         [fastq_dir]=''
         [fastq_tail]='' # '.fastq.gz'
-        [gtf_file]=''
         [index_dir]=''
         [lib_type]='A'
         [output_dir]=''
@@ -519,14 +484,6 @@ koopa_salmon_quant_single_end() { # {{{1
                 ;;
             '--fastq-tail')
                 dict[fastq_tail]="${2:?}"
-                shift 2
-                ;;
-            '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
-                shift 1
-                ;;
-            '--gtf-file')
-                dict[gtf_file]="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -562,21 +519,17 @@ koopa_salmon_quant_single_end() { # {{{1
     koopa_assert_is_set \
         '--fastq-dir' "${dict[fastq_dir]}" \
         '--fastq-tail' "${dict[fastq_tail]}" \
-        '--gtf-file' "${dict[gtf_file]}" \
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
     koopa_assert_is_dir "${dict[fastq_dir]}" "${dict[index_dir]}"
-    koopa_assert_is_file "${dict[gtf_file]}"
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
-    dict[gtf_file]="$(koopa_realpath "${dict[gtf_file]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_h1 'Running salmon quant (single-end mode).'
     koopa_dl \
         'FASTQ dir' "${dict[fastq_dir]}" \
         'FASTQ tail' "${dict[fastq_tail]}" \
-        'GTF file' "${dict[gtf_file]}" \
         'Index dir' "${dict[index_dir]}" \
         'Mode' 'single-end' \
         'Output dir' "${dict[output_dir]}"
@@ -604,7 +557,6 @@ koopa_salmon_quant_single_end() { # {{{1
         koopa_salmon_quant_single_end_per_sample \
             --fastq-file="$fastq_file" \
             --fastq-tail="${dict[fastq_tail]}" \
-            --gtf-file="${dict[gtf_file]}" \
             --index-dir="${dict[index_dir]}" \
             --lib-type="${dict[lib_type]}" \
             --output-dir="${dict[output_dir]}"
@@ -634,7 +586,6 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
         [bootstraps]=30
         [fastq_file]=''
         [fastq_tail]='' # '.fastq.gz'
-        [gtf_file]=''
         [index_dir]=''
         [lib_type]='A'
         [output_dir]=''
@@ -659,14 +610,6 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
                 ;;
             '--fastq-tail')
                 dict[fastq_tail]="${2:?}"
-                shift 2
-                ;;
-            '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
-                shift 1
-                ;;
-            '--gtf-file')
-                dict[gtf_file]="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -702,12 +645,11 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
     koopa_assert_is_set \
         '--fastq-file' "${dict[fastq_file]}" \
         '--fastq-tail' "${dict[fastq_tail]}" \
-        '--gtf-file' "${dict[gtf_file]}" \
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
     koopa_assert_is_dir "${dict[index_dir]}"
-    koopa_assert_is_file "${dict[fastq_file]}" "${dict[gtf_file]}"
+    koopa_assert_is_file "${dict[fastq_file]}"
     dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
     dict[id]="${dict[fastq_bn]}"
@@ -720,7 +662,6 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
     quant_args+=(
-        "--geneMap=${dict[gtf_file]}"
         "--index=${dict[index_dir]}"
         "--libType=${dict[lib_type]}"
         "--numBootstraps=${dict[bootstraps]}"
@@ -731,11 +672,6 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
         "--unmatedReads=${dict[fastq]}"
         '--useVBOpt'
     )
-    # Writing mappings to SAM file blows up disk space.
-    # > dict[sam_file]="${dict[output_dir]}/output.sam"
-    # > quant_args+=(
-    # >     "--writeMappings=${dict[sam_file]}"
-    # > )
     koopa_dl 'Quant args' "${quant_args[*]}"
     "${app[salmon]}" quant "${quant_args[@]}"
     return 0
