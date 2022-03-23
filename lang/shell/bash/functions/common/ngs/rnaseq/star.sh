@@ -3,7 +3,7 @@
 koopa_star_index() { # {{{1
     # """
     # Create a genome index for STAR aligner.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-23.
     #
     # Doesn't currently support compressed files as input.
     #
