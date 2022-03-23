@@ -18,7 +18,7 @@ koopa_star_index() { # {{{1
         [star]="$(koopa_locate_star)"
     )
     declare -A dict=(
-        [genome_fastq_file]=''
+        [genome_fasta_file]=''
         [gtf_file]=''
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
