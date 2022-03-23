@@ -63,8 +63,7 @@ koopa_cli_app() { # {{{1
                     ;;
             esac
             ;;
-        'bowtie2' | \
-        'star')
+        'bowtie2')
             case "${2:-}" in
                 'align' | \
                 'index')
@@ -261,6 +260,29 @@ koopa_cli_app() { # {{{1
         'ssh')
             case "${2:-}" in
                 'generate-key')
+                    key="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                *)
+                    koopa_invalid_arg "$*"
+                    ;;
+            esac
+            ;;
+        'star')
+            case "${2:-}" in
+                'align')
+                    case "${3:-}" in
+                        'paired-end' | \
+                        'single-end')
+                            key="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_invalid_arg "$*"
+                        ;;
+                    esac
+                    ;;
+                'index')
                     key="${1:?}-${2:?}"
                     shift 2
                     ;;
