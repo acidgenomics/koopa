@@ -3,10 +3,13 @@
 linux_install_bcbio_nextgen() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-23.
     #
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
+    #
+    # STAR isn't working reliably in 1.2.9 due to stdin handoff to samtools
+    # sort. HISAT2 does not have this problem.
     #
     # @seealso
     # - bcbio_nextgen.py upgrade --help
@@ -26,6 +29,7 @@ linux_install_bcbio_nextgen() { # {{{1
     )
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
     )
     dict[install_dir]="${dict[prefix]}/install"
     dict[tools_dir]="${dict[prefix]}/tools"
@@ -46,6 +50,31 @@ scripts/${dict[file]}"
     )
     koopa_dl 'Install args' "${install_args[*]}"
     "${app[python]}" "${dict[file]}" "${install_args[@]}"
+    # Version-specific hotfixes.
+    case "${dict[version]}" in
+        '1.2.9')
+            koopa_alert_info 'Fixing bcftools and samtools.'
+            app[mamba]="${dict[install_dir]}/anaconda/bin/mamba"
+            "${app[mamba]}" install --yes \
+                --name 'base' \
+                'bcftools==1.15' \
+                'samtools==1.15'
+            # bcftools / samtools (htslib) are also currently messed up
+            # in these other conda environments:
+            # > "${app[mamba]}" install --yes \
+            # >     --name 'bwakit' \
+            # >     'samtools==1.15'
+            # > "${app[mamba]}" install --yes \
+            # >     --name 'htslib1.12_py3.9' \
+            # >     'samtools==1.15'
+            # > "${app[mamba]}" install --yes \
+            # >     --name 'python2' \
+            # >     'bcftools==1.15' 'samtools==1.15'
+            # > "${app[mamba]}" install --yes \
+            # >     --name 'python3.6' \
+            # >     'samtools==1.15'
+            ;;
+    esac
     if koopa_is_docker
     then
         app[conda]="${dict[install_dir]}/anaconda/bin/conda"
