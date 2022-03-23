@@ -508,6 +508,16 @@ __koopa_complete() { # {{{1
                                     ;;
                             esac
                             ;;
+                        'star')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'align')
+                                    args=(
+                                        'paired-end'
+                                        'single-end'
+                                    )
+                                    ;;
+                            esac
+                            ;;
                     esac
                     ;;
             esac
