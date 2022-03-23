@@ -140,9 +140,9 @@ koopa_linux_uninstall_aws_cli() { # {{{1
 koopa_linux_uninstall_bcbio_nextgen() { # {{{1
     # """
     # Uninstall bcbio-nextgen.
-    # @note Updated 2021-11-16.
+    # @note Updated 2022-03-22.
     # """
-    koopa_install_app \
+    koopa_uninstall_app \
         --name='bcbio-nextgen' \
         --no-link \
         "$@"
