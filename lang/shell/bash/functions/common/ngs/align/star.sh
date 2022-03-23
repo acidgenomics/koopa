@@ -80,6 +80,7 @@ koopa_star_align_paired_end() { # {{{1
         'FASTQ R2 tail' "${dict[fastq_r2_tail]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
         'Index dir' "${dict[index_dir]}" \
+        'Mode' 'paired-end' \
         'Output dir' "${dict[output_dir]}"
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
@@ -116,10 +117,9 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
     return 0
 }
 
-
 koopa_star_align_paired_end_per_sample() { # {{{1
     # """
-    # Align multiple paired-end FASTQs in a directory.
+    # Run STAR aligner on a paired-end sample.
     # @note Updated 2022-03-23.
     #
     # @seealso
@@ -132,7 +132,7 @@ koopa_star_align_paired_end_per_sample() { # {{{1
     # - https://github.com/nf-core/rnaseq/blob/master/subworkflows/local/
     #     align_star.nf
     # """
-    local app dict
+    local align_args app dict
     declare -A app=(
         [app]="$(koopa_locate_star)"
     )
@@ -240,6 +240,205 @@ of RAM."
         '--outFileNamePrefix' "${dict[output_dir]}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate' # and/or 'Unsorted'
         '--readFilesIn' "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
+        '--runThreadN' "${dict[threads]}"
+    )
+    koopa_dl 'Align args' "${align_args[*]}"
+    "${app[star]}" "${align_args[@]}"
+    return 0
+}
+
+koopa_star_align_single_end() { # {{{1
+    # """
+    # Run STAR aligner on multiple single-end FASTQs in a directory.
+    # @note Updated 2022-03-23.
+    # """
+    local dict fastq_file fastq_files
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        [fastq_dir]=''
+        [fastq_tail]='' # '.fastq.gz'
+        [index_dir]=''
+        [output_dir]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--fastq-dir='*)
+                dict[fastq_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-dir')
+                dict[fastq_dir]="${2:?}"
+                shift 2
+                ;;
+            '--fastq-tail='*)
+                dict[fastq_tail]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-tail')
+                dict[fastq_tail]="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict[index_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict[output_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--fastq-dir' "${dict[fastq_dir]}" \
+        '--fastq-tail' "${dict[fastq_tail]}" \
+        '--index-dir' "${dict[index_dir]}" \
+        '--output-dir' "${dict[output_dir]}"
+    koopa_assert_is_dir "${dict[fastq_dir]}" "${dict[index_dir]}"
+    dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
+    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
+    koopa_h1 'Running STAR aligner (single-end mode).'
+    koopa_dl \
+        'FASTQ dir' "${dict[fastq_dir]}" \
+        'FASTQ tail' "${dict[fastq_tail]}" \
+        'Index dir' "${dict[index_dir]}" \
+        'Mode' 'single-end' \
+        'Output dir' "${dict[output_dir]}"
+    readarray -t fastq_files <<< "$( \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --pattern="*${dict[fastq_tail]}" \
+            --prefix="${dict[fastq_dir]}" \
+            --sort \
+            --type='f' \
+    )"
+    if koopa_is_array_empty "${fastq_files[@]:-}"
+    then
+        koopa_stop "No FASTQs ending with '${dict[fastq_tail]}'."
+    fi
+    koopa_alert_info "$(koopa_ngettext \
+        --num="${#fastq_files[@]}" \
+        --msg1='sample' \
+        --msg2='samples' \
+        --suffix=' detected.' \
+    )"
+    for fastq_file in "${fastq_files[@]}"
+    do
+        koopa_star_align_single_end_per_sample \
+            --fastq-file="$fastq_file" \
+            --fastq-tail="${dict[fastq_tail]}" \
+            --index-dir="${dict[index_dir]}" \
+            --output-dir="${dict[output_dir]}"
+    done
+    koopa_alert_success 'STAR alignment was successful.'
+    return 0
+}
+
+koopa_star_align_single_end_per_sample() { # {{{1
+    # """
+    # Run STAR aligner on a single-end sample.
+    # @note Updated 2022-03-23.
+    # """
+    local align_args app dict
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [star]="$(koopa_locate_star)"
+    )
+    declare -A dict=(
+        [fastq_file]=''
+        [fastq_tail]='' # '.fastq.gz'
+        [index_dir]=''
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
+        [output_dir]=''
+        [threads]="$(koopa_cpu_count)"
+    )
+    align_args=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--fastq-file='*)
+                dict[fastq_file]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-file')
+                dict[fastq_file]="${2:?}"
+                shift 2
+                ;;
+            '--fastq-tail='*)
+                dict[fastq_tail]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-tail')
+                dict[fastq_tail]="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict[index_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict[output_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--fastq-file' "${dict[fastq_file]}" \
+        '--fastq-tail' "${dict[fastq_tail]}" \
+        '--index-dir' "${dict[index_dir]}" \
+        '--output-dir' "${dict[output_dir]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
+    koopa_assert_is_dir "${dict[index_dir]}"
+    koopa_assert_is_file "${dict[fastq_file]}"
+    dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
+    dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
+    dict[id]="${dict[fastq_bn]}"
+    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
+    if [[ -d "${dict[output_dir]}" ]]
+    then
+        koopa_alert_note "Skipping '${dict[id]}'."
+        return 0
+    fi
+    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
+    koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
+    align_args+=(
+        '--runMode' 'alignReads'
+        '--genomeDir' "${dict[index_dir]}"
+        '--outFileNamePrefix' "${dict[output_dir]}/"
+        '--outSAMtype' 'BAM' 'SortedByCoordinate' # and/or 'Unsorted'
+        '--readFilesIn' "${dict[fastq_file]}"
         '--runThreadN' "${dict[threads]}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
