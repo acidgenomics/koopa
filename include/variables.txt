@@ -196,7 +196,7 @@ libtool="2.4.6"
 
 # LLVM
 # https://releases.llvm.org/
-llvm="13.0.1"
+llvm="14.0.0"
 
 # https://lmod.readthedocs.io/
 # https://github.com/TACC/Lmod
