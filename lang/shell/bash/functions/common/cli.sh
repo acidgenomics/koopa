@@ -63,7 +63,8 @@ koopa_cli_app() { # {{{1
                     ;;
             esac
             ;;
-        'bowtie2')
+        'bowtie2' | \
+        'star')
             case "${2:-}" in
                 'align' | \
                 'index')
