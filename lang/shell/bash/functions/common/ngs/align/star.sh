@@ -142,6 +142,8 @@ koopa_star_align_paired_end_per_sample() { # {{{1
         [fastq_r2_file]=''
         [fastq_r2_tail]='' # '_R2_001.fastq.gz'
         [index_dir]=''
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=16
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
@@ -211,6 +213,11 @@ koopa_star_align_paired_end_per_sample() { # {{{1
         '--fastq-r2-tail' "${dict[fastq_r2_tail]}" \
         '--index-dir' "${dict[index_dir]}" \
         '--output-dir' "${dict[output_dir]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "STAR 'alignReads' mode requires ${dict[mem_gb_cutoff]} GB \
+of RAM."
+    fi
     koopa_assert_is_dir "${dict[index_dir]}"
     koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
     dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
@@ -247,6 +254,8 @@ koopa_star_index() { # {{{1
     #
     # Doesn't currently support compressed files as input.
     #
+    # Try using 'r5a.2xlarge' on AWS EC2.
+    #
     # @seealso
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
     #     ngsalign/star.py
@@ -260,6 +269,8 @@ koopa_star_index() { # {{{1
     declare -A dict=(
         [genome_fasta_file]=''
         [gtf_file]=''
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=64
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
         [tmp_dir]="$(koopa_tmp_dir)"
@@ -305,6 +316,11 @@ koopa_star_index() { # {{{1
         '--genome-fasta-file' "${dict[genome_fasta_file]}" \
         '--gtf-file' "${dict[gtf_file]}" \
         '--output-dir' "${dict[output_dir]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "STAR 'genomeGenerate' mode requires ${dict[mem_gb_cutoff]} \
+GB of RAM."
+    fi
     koopa_assert_is_file \
         "${dict[genome_fasta_file]}" \
         "${dict[gtf_file]}"
