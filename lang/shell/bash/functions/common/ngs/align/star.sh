@@ -84,7 +84,11 @@ koopa_star_index() { # {{{1
         '--sjdbGTFfile' "${dict[tmp_gtf_file]}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    "${app[star]}" "${index_args[@]}"
+    (
+        koopa_cd "${dict[tmp_dir]}"
+        "${app[star]}" "${index_args[@]}"
+    )
+    koopa_rm "${dict[tmp_dir]}"
     koopa_alert_success "STAR index created at '${dict[output_dir]}'."
     return 0
 }
