@@ -3,7 +3,7 @@
 koopa_extract() { # {{{1
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2022-01-11.
+    # @note Updated 2022-03-24.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -19,21 +19,29 @@ koopa_extract() { # {{{1
         koopa_alert "Extracting '${file}'."
         case "$file" in
             # Two extensions (must come first).
-            *'.tar.bz2')
-                cmd="$(koopa_locate_tar)"
-                cmd_args=(-xj -f "$file")
-                ;;
-            *'.tar.gz')
-                cmd="$(koopa_locate_tar)"
-                cmd_args=(-xz -f "$file")
-                ;;
+            *'.tar.bz2' | \
+            *'.tar.gz' | \
             *'.tar.xz')
-                if koopa_is_macos
-                then
-                    koopa_activate_homebrew_opt_prefix 'xz'
-                fi
                 cmd="$(koopa_locate_tar)"
-                cmd_args=(-xJ -f "$file")
+                cmd_args=(
+                    '--extract' # '-x'
+                    '--file' "$file" # '-f'
+                )
+                case "$file" in
+                    *'.bz2')
+                        cmd_args+=('--bzip2') # '-j'
+                        ;;
+                    *'.gz')
+                        cmd_args+=('--gzip') # '-z'
+                        ;;
+                    *'.xz')
+                        if koopa_is_macos
+                        then
+                            koopa_activate_homebrew_opt_prefix 'xz'
+                        fi
+                        cmd_args=('--xz') # '-J'
+                        ;;
+                esac
                 ;;
             # Single extension.
             *'.bz2')
@@ -41,28 +49,42 @@ koopa_extract() { # {{{1
                 cmd_args=("$file")
                 ;;
             *'.gz')
-                cmd="$(koopa_locate_gunzip)"
-                cmd_args=("$file")
+                cmd="$(koopa_locate_gzip)"
+                cmd_args=(
+                    '--decompress' # '-d'
+                    "$file"
+                )
                 ;;
             *'.tar')
                 cmd="$(koopa_locate_tar)"
-                cmd_args=(-x -f "$file")
+                cmd_args=(
+                    '--extract' # '-x'
+                    '--file' "$file" # '-f'
+                )
                 ;;
             *'.tbz2')
                 cmd="$(koopa_locate_tar)"
-                cmd_args=(-xj -f "$file")
+                cmd_args=(
+                    '--extract' # '-x'
+                    '--bzip2' # '-j'
+                    '--file' "$file" # '-f'
+                )
                 ;;
             *'.tgz')
                 cmd="$(koopa_locate_tar)"
-                cmd_args=(-xz -f "$file")
+                cmd_args=(
+                    '--extract' # '-x'
+                    '--gzip' # '-z'
+                    '--file' "$file" # '-f'
+                )
                 ;;
             *'.xz')
                 cmd="$(koopa_locate_xz)"
-                cmd_args=(--decompress "$file")
+                cmd_args=('--decompress' "$file")
                 ;;
             *'.zip')
                 cmd="$(koopa_locate_unzip)"
-                cmd_args=(-qq "$file")
+                cmd_args=('-qq' "$file")
                 ;;
             *'.Z')
                 cmd="$(koopa_locate_uncompress)"
@@ -70,13 +92,12 @@ koopa_extract() { # {{{1
                 ;;
             *'.7z')
                 cmd="$(koopa_locate_7z)"
-                cmd_args=(-x "$file")
+                cmd_args=('-x' "$file")
                 ;;
             *)
                 koopa_stop "Unsupported extension: '${file}'."
                 ;;
         esac
-        koopa_assert_is_installed "$cmd"
         "$cmd" "${cmd_args[@]}"
     done
     return 0
