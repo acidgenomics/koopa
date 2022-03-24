@@ -120,7 +120,15 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
 koopa_star_align_paired_end_per_sample() { # {{{1
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2022-03-23.
+    # @note Updated 2022-03-24.
+    #
+    # @section How to handle compressed FASTQ files:
+    #
+    # Define a program to handle file reading:
+    # > --readFilesCommand 'zcat'
+    #
+    # Process substitution (used by bcbio):
+    # > --readFilesIn <(gunzip -c 'sample.fastq.gz')
     #
     # @seealso
     # - https://hbctraining.github.io/Intro-to-rnaseq-hpc-O2/lessons/
@@ -131,10 +139,11 @@ koopa_star_align_paired_end_per_sample() { # {{{1
     #     star_align.nf
     # - https://github.com/nf-core/rnaseq/blob/master/subworkflows/local/
     #     align_star.nf
+    # - https://www.biostars.org/p/243683/
     # """
     local align_args app dict
     declare -A app=(
-        [app]="$(koopa_locate_star)"
+        [star]="$(koopa_locate_star)"
     )
     declare -A dict=(
         [fastq_r1_file]=''
@@ -146,6 +155,7 @@ koopa_star_align_paired_end_per_sample() { # {{{1
         [mem_gb_cutoff]=14
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
+        [tmp_dir]="$(koopa_tmp_dir)"
     )
     align_args=()
     while (("$#"))
@@ -215,8 +225,8 @@ koopa_star_align_paired_end_per_sample() { # {{{1
         '--output-dir' "${dict[output_dir]}"
     if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
     then
-        koopa_stop "STAR 'alignReads' mode requires ${dict[mem_gb_cutoff]} GB \
-of RAM."
+        koopa_stop "STAR 'alignReads' mode requires ${dict[mem_gb_cutoff]} \
+GB of RAM."
     fi
     koopa_assert_is_dir "${dict[index_dir]}"
     koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
@@ -234,16 +244,27 @@ of RAM."
     fi
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
+    dict[tmp_fastq_r1_file]="${dict[tmp_dir]}/${id}-R1.fastq"
+    dict[tmp_fastq_r2_file]="${dict[tmp_dir]}/${id}-R2.fastq"
+    koopa_alert "Decompressing '${dict[fastq_r1_file]}' to \
+'${dict[tmp_fastq_r1_file]}'."
+    koopa_decompress "${dict[fastq_r1_file]}" "${dict[tmp_fastq_r1_file]}"
+    koopa_alert "Decompressing '${dict[fastq_r2_file]}' to \
+'${dict[tmp_fastq_r2_file]}'."
+    koopa_decompress "${dict[fastq_r2_file]}" "${dict[tmp_fastq_r2_file]}"
     align_args+=(
         '--runMode' 'alignReads'
         '--genomeDir' "${dict[index_dir]}"
         '--outFileNamePrefix' "${dict[output_dir]}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate' # and/or 'Unsorted'
-        '--readFilesIn' "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
+        '--readFilesIn'
+            "${dict[tmp_fastq_r1_file]}"
+            "${dict[tmp_fastq_r2_file]}"
         '--runThreadN' "${dict[threads]}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app[star]}" "${align_args[@]}"
+    koopa_rm "${dict[tmp_dir]}"
     return 0
 }
 
@@ -352,7 +373,7 @@ koopa_star_align_single_end() { # {{{1
 koopa_star_align_single_end_per_sample() { # {{{1
     # """
     # Run STAR aligner on a single-end sample.
-    # @note Updated 2022-03-23.
+    # @note Updated 2022-03-24.
     # """
     local align_args app dict
     koopa_assert_has_args "$#"
@@ -367,6 +388,7 @@ koopa_star_align_single_end_per_sample() { # {{{1
         [mem_gb_cutoff]=14
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
+        [tmp_dir]="$(koopa_tmp_dir)"
     )
     align_args=()
     while (("$#"))
@@ -418,7 +440,8 @@ koopa_star_align_single_end_per_sample() { # {{{1
         '--output-dir' "${dict[output_dir]}"
     if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
     then
-        koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "STAR 'alignReads' mode requires ${dict[mem_gb_cutoff]} \
+GB of RAM."
     fi
     koopa_assert_is_dir "${dict[index_dir]}"
     koopa_assert_is_file "${dict[fastq_file]}"
@@ -433,16 +456,21 @@ koopa_star_align_single_end_per_sample() { # {{{1
     fi
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
+    dict[tmp_fastq_file]="${dict[tmp_dir]}/${id}.fastq"
+    koopa_alert "Decompressing '${dict[fastq_file]}' to \
+'${dict[tmp_fastq_file]}'."
+    koopa_decompress "${dict[fastq_file]}" "${dict[tmp_fastq_file]}"
     align_args+=(
         '--runMode' 'alignReads'
         '--genomeDir' "${dict[index_dir]}"
         '--outFileNamePrefix' "${dict[output_dir]}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate' # and/or 'Unsorted'
-        '--readFilesIn' "${dict[fastq_file]}"
+        '--readFilesIn' "${dict[tmp_fastq_file]}"
         '--runThreadN' "${dict[threads]}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app[star]}" "${align_args[@]}"
+    koopa_rm "${dict[tmp_dir]}"
     return 0
 }
 
@@ -466,7 +494,9 @@ koopa_star_index() { # {{{1
         [star]="$(koopa_locate_star)"
     )
     declare -A dict=(
+        # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         [genome_fasta_file]=''
+        # e.g. 'gencode.v39.annotation.gtf.gz'
         [gtf_file]=''
         [mem_gb]="$(koopa_mem_gb)"
         [mem_gb_cutoff]=62
@@ -523,6 +553,13 @@ GB of RAM."
     koopa_assert_is_file \
         "${dict[genome_fasta_file]}" \
         "${dict[gtf_file]}"
+    koopa_assert_is_matching_regex \
+        --pattern='\.fa\.gz$' \
+        --string="${dict[genome_fasta_file]}"
+    koopa_assert_is_matching_regex \
+        --pattern='\.gtf\.gz$' \
+        --string="${dict[gtf_file]}"
+    koopa_assert_is_not_dir "${dict[output_dir]}"
     koopa_alert "Generating STAR index at '${dict[output_dir]}'."
     koopa_alert "Decompressing FASTA and GTF files in '${dict[tmp_dir]}'."
     koopa_decompress \
