@@ -8,9 +8,23 @@ koopa_decompress() { # {{{1
     # This function currently allows uncompressed files to pass through.
     #
     # @examples
+    # # Default usage decompresses the file, but keeps the compressed original.
+    # > koopa_decompress 'sample.fastq.gz'
+    # # Creates 'sample.fastq' file.
+    #
+    # # Alternatively, can specify the path of the decompressed file.
+    # > koopa_decompress 'sample.fastq.gz' '/tmp/sample.fastq'
+    #
+    # # If file is uncompressed, it will simply be copied.
+    # > koopa_decompress 'sample.fastq' '/tmp/sample.fastq'
+    #
     # # How to make a program "gzip aware", by redirecting via process
     # # substitution. Particularly useful for some NGS tools like STAR.
     # > head -n 1 <(koopa_decompress --stdout 'sample.fastq.gz')
+    # # @A01587:114:GW2203131905th:2:1101:5791:1031 1:N:0:CGATCAGT+TTAGAGAG
+    #
+    # # Passthrough of uncompressed file is supported.
+    # # head -n 1 <(koopa_decompress --stdout 'sample.fastq')
     # # @A01587:114:GW2203131905th:2:1101:5791:1031 1:N:0:CGATCAGT+TTAGAGAG
     # """
     local cmd cmd_args dict pos
