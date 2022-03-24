@@ -26,7 +26,7 @@ koopa_cli_app() { # {{{1
                             shift 3
                             ;;
                         *)
-                            koopa_invalid_arg "$*"
+                            koopa_cli_invalid_arg "$@"
                         ;;
                     esac
                     ;;
@@ -39,7 +39,7 @@ koopa_cli_app() { # {{{1
                             shift 3
                             ;;
                         *)
-                            koopa_invalid_arg "$*"
+                            koopa_cli_invalid_arg "$@"
                         ;;
                     esac
                     ;;
@@ -54,12 +54,12 @@ koopa_cli_app() { # {{{1
                             shift 3
                             ;;
                         *)
-                            koopa_invalid_arg "$*"
+                            koopa_cli_invalid_arg "$@"
                         ;;
                     esac
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -71,7 +71,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -83,7 +83,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -104,7 +104,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -115,7 +115,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -136,7 +136,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -149,7 +149,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -160,7 +160,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -179,12 +179,12 @@ koopa_cli_app() { # {{{1
                             shift 3
                             ;;
                         *)
-                            koopa_invalid_arg "$*"
+                            koopa_cli_invalid_arg "$@"
                         ;;
                     esac
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -199,7 +199,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -222,7 +222,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -235,7 +235,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -253,7 +253,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -264,7 +264,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -278,7 +278,7 @@ koopa_cli_app() { # {{{1
                             shift 3
                             ;;
                         *)
-                            koopa_invalid_arg "$*"
+                            koopa_cli_invalid_arg "$@"
                         ;;
                     esac
                     ;;
@@ -287,7 +287,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -298,7 +298,7 @@ koopa_cli_app() { # {{{1
                     shift 2
                     ;;
                 *)
-                    koopa_invalid_arg "$*"
+                    koopa_cli_invalid_arg "$@"
                     ;;
             esac
             ;;
@@ -324,7 +324,7 @@ koopa_cli_app() { # {{{1
             koopa_stop "Missing argument: 'koopa app <ARG>...'."
             ;;
         *)
-            koopa_invalid_arg "$*"
+            koopa_cli_invalid_arg "$@"
             ;;
     esac
     koopa_print "$key" "$@"
@@ -351,6 +351,21 @@ koopa_cli_install() { # {{{1
     # > koopa_cli_install 'python'
     # """
     koopa_cli_nested_runner 'install' "$@"
+}
+
+koopa_cli_invalid_arg() { # {{{1
+    # """
+    # CLI invalid argument error message.
+    # @note Updated 2022-03-24.
+    # """
+    if [[ "$#" -eq 0 ]]
+    then
+        koopa_stop "Missing required argument. \
+Check autocompletion of supported arguments with <TAB>."
+    else
+        koopa_stop "Invalid and/or incomplete argument: '${*}'. \
+Check autocompletion of supported arguments with <TAB>."
+    fi
 }
 
 koopa_cli_list() { # {{{1
@@ -386,7 +401,7 @@ koopa_cli_nested_runner() { # {{{1
             koopa_help "$(koopa_man_prefix)/man/man1/${dict[runner]}.1"
             ;;
         '-'*)
-            koopa_invalid_arg "$*"
+            koopa_cli_invalid_arg "$@"
             ;;
         *)
             shift 2
@@ -510,7 +525,7 @@ koopa_cli_system() { # {{{1
             esac
         fi
     fi
-    [[ -z "$key" ]] && koopa_invalid_arg "$*"
+    [[ -z "$key" ]] && koopa_cli_invalid_arg "$@"
     koopa_print "$key" "$@"
     return 0
 }
@@ -661,7 +676,7 @@ koopa_koopa() { # {{{1
             koopa_defunct 'koopa system which'
             ;;
         *)
-            koopa_invalid_arg "$*"
+            koopa_cli_invalid_arg "$@"
             ;;
     esac
     # Evaluate nested CLI runner function and reset positional arguments.
