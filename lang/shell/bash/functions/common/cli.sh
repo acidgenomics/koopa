@@ -3,7 +3,7 @@
 koopa_cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-24.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -320,9 +320,6 @@ koopa_cli_app() { # {{{1
             shift 1
             ;;
         # Invalid --------------------------------------------------------------
-        '')
-            koopa_stop "Missing argument: 'koopa app <ARG>...'."
-            ;;
         *)
             koopa_cli_invalid_arg "$@"
             ;;
@@ -394,7 +391,7 @@ koopa_cli_nested_runner() { # {{{1
     )
     case "${dict[key]}" in
         '')
-            koopa_stop "Missing argument: 'koopa ${dict[runner]} <ARG>...'."
+            koopa_cli_invalid_arg
             ;;
         '--help' | \
         '-h')
@@ -420,9 +417,6 @@ koopa_cli_system() { # {{{1
     key=''
     # Platform independent.
     case "${1:-}" in
-        '')
-            koopa_stop "Missing argument: 'koopa system <ARG>...'."
-            ;;
         '--help' | \
         '-h')
             koopa_help "$(koopa_man_prefix)/man1/system.1"
