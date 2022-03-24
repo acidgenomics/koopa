@@ -1,11 +1,7 @@
-# """
-# Koopa internal variables.
-# """
-
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-03-22"
+koopa-date="2022-03-24"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
