@@ -1,6 +1,6 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2021-12-16.
+# Updated 2022-03-25.
 #
 # Refer to corresponding 'Makeconf' file for current system defaults.
 #
@@ -12,8 +12,6 @@
 # - https://cran.r-project.org/doc/manuals/r-devel/
 #     R-exts.html#Using-Makevars
 # """
-
-
 
 # Compiler settings {{{1
 # ==============================================================================
@@ -86,8 +84,6 @@ FC = $(LOC)/bin/gfortran
 FCFLAGS = -O3 -Wall -g $(LTO_FC)
 FLIBS = -L$(LOC)/lib/gcc/x86_64-apple-darwin18/8.2.0 -L$(LOC)/lib -lgfortran -lquadmath -lm
 LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib -L/usr/local/lib
-
-
 
 # OpenMP {{{1
 # ==============================================================================
