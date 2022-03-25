@@ -211,6 +211,8 @@ make="4.3"
 # https://github.com/mamba-org/mamba/tags/
 mamba="0.21.1"
 
+man-db="2.10.2"
+
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
 
