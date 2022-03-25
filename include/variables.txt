@@ -1,11 +1,7 @@
-# """
-# Koopa internal variables.
-# """
-
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-03-21"
+koopa-date="2022-03-24"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -44,7 +40,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.27"
+aws-cli="2.4.28"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.34.1"
@@ -54,6 +50,7 @@ bash="5.1.16"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
+# 1.2.9 has issues with bcftools and samtools
 bcbio-nextgen="1.2.9"
 
 # https://github.com/bcbio/bcbio-nextgen-vm/releases
@@ -195,7 +192,7 @@ libtool="2.4.6"
 
 # LLVM
 # https://releases.llvm.org/
-llvm="13.0.1"
+llvm="14.0.0"
 
 # https://lmod.readthedocs.io/
 # https://github.com/TACC/Lmod
@@ -227,7 +224,7 @@ neovim="0.6.1"
 nim="1.6.4"
 
 # https://nodejs.org/
-node="17.7.2"
+node="17.8.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -248,7 +245,7 @@ oracle-instant-client="21.5.0.0.0-1"
 pandoc="2.17.1.1"
 
 # https://www.gnu.org/software/parallel/
-parallel="20220222"
+parallel="20220322"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
@@ -555,7 +552,7 @@ rust-du-dust="0.8.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
 rust-fd-find="8.3.2"            # homebrew; fd
 rust-hyperfine="1.13.0"         # homebrew
-rust-mcfly="0.5.13"             # homebrew
+rust-mcfly="0.6.0"              # homebrew
 rust-procs="0.12.1"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg

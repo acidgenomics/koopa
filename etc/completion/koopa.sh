@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-03-17.
+    # Updated 2022-03-22.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -44,6 +44,7 @@ __koopa_complete() { # {{{1
                 'app')
                     args=(
                         'aws'
+                        'bowtie2'
                         'conda'
                         'docker'
                         'ftp'
@@ -53,9 +54,11 @@ __koopa_complete() { # {{{1
                         'list'
                         'python'
                         'r'
+                        'rnaeditingindexer'
                         'salmon'
                         'sra'
                         'ssh'
+                        'star'
                         'wget'
                     )
                     if koopa_is_linux
@@ -357,6 +360,13 @@ __koopa_complete() { # {{{1
                                 's3'
                             )
                             ;;
+                        'bowtie2' | \
+                        'star')
+                            args=(
+                                'align'
+                                'index'
+                            )
+                            ;;
                         'conda')
                             args=(
                                 'create-env'
@@ -413,8 +423,8 @@ __koopa_complete() { # {{{1
                         'kallisto' | \
                         'salmon')
                             args=(
-                                'index'  # FIXME Need to update support for kallisto.
-                                'quant'  # FIXME Need to add support -- work on dirs.
+                                'index'
+                                'quant'
                             )
                             ;;
                         'md5sum')
@@ -471,10 +481,9 @@ __koopa_complete() { # {{{1
                                     ;;
                                 'ec2')
                                     args=(
-                                        'create-instance'
                                         'instance-id'
-                                        'suspend-instance'
-                                        'terminate-instance'
+                                        'suspend'
+                                        # > 'terminate'
                                     )
                                     ;;
                                 's3')
@@ -491,8 +500,17 @@ __koopa_complete() { # {{{1
                         'kallisto' | \
                         'salmon')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
-                                # FIXME Need to ensure that this works.
                                 'quant')
+                                    args=(
+                                        'paired-end'
+                                        'single-end'
+                                    )
+                                    ;;
+                            esac
+                            ;;
+                        'star')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'align')
                                     args=(
                                         'paired-end'
                                         'single-end'

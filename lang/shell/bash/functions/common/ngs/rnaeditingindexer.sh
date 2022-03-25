@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rename this and move to 'koopa app rnaeditingindexer'.
-
-koopa_run_rnaeditingindexer() { # {{{1
+koopa_rnaeditingindexer() { # {{{1
     # """
     # Run dockerized RNAEditingIndexer pipeline.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-22.
     #
     # Genome must be indexed by BEDGenomeIndexer.
     # Note that '--verbose' flag includes more output in summary CSV.
