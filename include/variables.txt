@@ -156,7 +156,7 @@ gsl="2.7.1"
 
 hadolint="2.9.3"
 
-harfbuzz="4.0.1"
+harfbuzz="4.1.0"
 
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.13.0"
@@ -524,7 +524,7 @@ python-bpytop="1.0.68"          # homebrew
 python-flake8="4.0.1"           # homebrew
 python-glances="3.2.4.2"        # homebrew
 python-pyflakes="2.4.0"         # homebrew
-python-pylint="2.12.2"          # homebrew
+python-pylint="2.13.0"          # homebrew
 python-pytest="6.2.5"           # homebrew
 python-ranger-fm="1.9.3"        # homebrew
 
