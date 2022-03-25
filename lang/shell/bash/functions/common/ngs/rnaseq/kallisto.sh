@@ -1,12 +1,58 @@
 #!/usr/bin/env bash
 
+koopa_kallisto_fastq_library_type() { # {{{1
+    # """
+    # Convert salmon FASTQ library type to kallisto conventions.
+    # @note Updated 2022-03-25.
+    #
+    # @seealso
+    # - https://salmon.readthedocs.io/en/latest/library_type.html
+    # - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/
+    #     kallisto.py
+    #
+    # @examples
+    # > koopa_kallisto_fastq_library_type 'ISF'
+    # # --fr-stranded
+    # > koopa_kallisto_fastq_library_type 'ISR'
+    # # --rf-stranded
+    # """
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'A' | 'IU' | 'U')
+            # fr-unstranded.
+            return 0
+            ;;
+        'ISF')
+            # fr-secondstrand (ligation).
+            to='--fr-stranded'
+            ;;
+        'ISR')
+            # fr-firststrand (dUTP).
+            to='--rf-stranded'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
 koopa_kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-25.
     #
     # @seealso
     # - kallisto index --help
+    #
+    # @examples
+    # > koopa_kallisto_index \
+    # >     --output-dir='salmon-index' \
+    # >     --transcriptome-fasta-file='gencode.v39.transcripts.fa.gz'
     # """
     local app dict index_args
     koopa_assert_has_args "$#"
@@ -17,7 +63,9 @@ koopa_kallisto_index() { # {{{1
         [kmer_size]=31
         [mem_gb]="$(koopa_mem_gb)"
         [mem_gb_cutoff]=14
-        [output_dir]='' # 'kallisto-index'
+        # e.g. 'kallisto-index'.
+        [output_dir]=''
+        # e.g. 'gencode.v39.transcripts.fa.gz'.
         [transcriptome_fasta_file]=''
     )
     index_args=()
@@ -55,11 +103,14 @@ koopa_kallisto_index() { # {{{1
         koopa_stop "kallisto index requires ${dict[mem_gb_cutoff]} GB of RAM."
     fi
     koopa_assert_is_file "${dict[transcriptome_fasta_file]}"
-    koopa_assert_is_not_dir "${dict[output_dir]}"
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     dict[transcriptome_fasta_file]="$( \
         koopa_realpath "${dict[transcriptome_fasta_file]}" \
     )"
+    koopa_assert_is_matching_regex \
+        --pattern='\.fa(sta)?' \
+        --string="${dict[transcriptome_fasta_file]}"
+    koopa_assert_is_not_dir "${dict[output_dir]}"
+    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     dict[index_file]="${dict[output_dir]}/kallisto.idx"
     koopa_alert "Generating kallisto index at '${dict[output_dir]}'."
     index_args+=(
@@ -77,16 +128,30 @@ koopa_kallisto_index() { # {{{1
 koopa_quant_kallisto_paired_end() { # {{{1
     # """
     # Run kallisto quant on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-25.
+    #
+    # @examples
+    # > koopa_kallisto_quant_paired_end \
+    # >     --fastq-dir='fastq' \
+    # >     --fastq-r1-tail='_R1_001.fastq.gz' \
+    # >     --fastq-r2-tail='_R2_001.fastq.gz' \
+    # >     --output-dir='kallisto'
     # """
     local dict fastq_r1_files fastq_r1_file fastq_r2_file
     koopa_assert_has_args "$#"
     declare -A dict=(
+        # e.g. 'fastq'.
         [fastq_dir]=''
-        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
-        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        # e.g. '_R1_001.fastq.gz'.
+        [fastq_r1_tail]=''
+        # e.g. "_R2_001.fastq.gz'
+        [fastq_r2_tail]=''
+        # e.g. 'kallisto-index'.
         [index_dir]=''
-        [lib_type]='A' # using salmon libtype conventions.
+        # Using salmon fragment library type conventions here.
+        [lib_type]='A'
+        [mode]='paired-end'
+        # e.g. 'kallisto'.
         [output_dir]=''
     )
     while (("$#"))
@@ -158,13 +223,13 @@ koopa_quant_kallisto_paired_end() { # {{{1
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_h1 'Running kallisto quant (paired-end mode).'
+    koopa_h1 'Running kallisto quant.'
     koopa_dl \
-        'FASTQ R1 tail' "${dict[fastq_r1_tail]}" \
-        'FASTQ R2 tail' "${dict[fastq_r2_tail]}"
-        'FASTQ dir' "${dict[fastq_dir]}" \
+        'Mode' "${dict[mode]}" \
         'Index dir' "${dict[index_dir]}" \
-        'Mode' 'paired-end' \
+        'FASTQ dir' "${dict[fastq_dir]}" \
+        'FASTQ R1 tail' "${dict[fastq_r1_tail]}" \
+        'FASTQ R2 tail' "${dict[fastq_r2_tail]}" \
         'Output dir' "${dict[output_dir]}"
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
@@ -205,7 +270,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
 koopa_kallisto_quant_paired_end_per_sample() { # {{{1
     # """
     # Run kallisto quant on a paired-end sample.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-25.
     #
     # Consider adding support for '--genomebam' and '--pseudobam' output,
     # which requires GTF file input ('--gtf') and chromosome names
@@ -236,6 +301,15 @@ koopa_kallisto_quant_paired_end_per_sample() { # {{{1
     # - https://pachterlab.github.io/kallisto/manual
     # - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
     # - https://salmon.readthedocs.io/en/latest/library_type.html
+    #
+    # @examples
+    # > koopa_kallisto_quant_paired_end_per_sample \
+    # >     --fastq-r1-file='fastq/sample1_R1_001.fastq.gz' \
+    # >     --fastq-r1-tail='_R1_001.fastq.gz' \
+    # >     --fastq-r2-file='fastq/sample1_R2_001.fastq.gz' \
+    # >     --fastq-r2-tail="_R2_001.fastq.gz' \
+    # >     --index-dir='kallisto-index' \
+    # >     --output-dir='kallisto'
     # """
     local app dict quant_args
     koopa_assert_has_args "$#"
@@ -243,11 +317,16 @@ koopa_kallisto_quant_paired_end_per_sample() { # {{{1
         [kallisto]="$(koopa_locate_kallisto)"
     )
     declare -A dict=(
+        # Current recommendation in bcbio-nextgen.
         [bootstraps]=30
+        # e.g. 'sample1_R1_001.fastq.gz'
         [fastq_r1_file]=''
-        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
+        # e.g. '_R1_001.fastq.gz'.
+        [fastq_r1_tail]=''
+        # e.g. 'sample1_R2_001.fastq.gz'.
         [fastq_r2_file]=''
-        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        # e.g. '_R2_001.fastq.gz'.
+        [fastq_r2_tail]=''
         [mem_gb]="$(koopa_mem_gb)"
         [mem_gb_cutoff]=14
         [threads]="$(koopa_cpu_count)"
@@ -332,13 +411,16 @@ koopa_kallisto_quant_paired_end_per_sample() { # {{{1
         koopa_stop "kallisto quant requires ${dict[mem_gb_cutoff]} GB of RAM."
     fi
     koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[index_file]="${dict[index_dir]}/kallisto.idx"
     koopa_assert_is_file \
         "${dict[fastq_r1_file]}" \
         "${dict[fastq_r2_file]}" \
         "${dict[index_file]}"
+    dict[fastq_r1_file]="$(koopa_realpath "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
+    dict[fastq_r2_file]="$(koopa_realpath "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[fastq_r2_tail]}/}"
     koopa_assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
@@ -359,19 +441,11 @@ koopa_kallisto_quant_paired_end_per_sample() { # {{{1
         '--bias'
         '--verbose'
     )
-    case "${dict[lib_type]}" in
-        'A')
-            ;;
-        'ISF')
-            quant_args+=('--fr-stranded')
-            ;;
-        'ISR')
-            quant_args+=('--rf-stranded')
-            ;;
-        *)
-            koopa_invalid_arg "${dict[lib_type]}"
-            ;;
-    esac
+    dict[lib_type]="$(koopa_kallisto_fastq_library_type "${dict[lib_type]}")"
+    if [[ -n "${dict[lib_type]}" ]]
+    then
+        quant_args+=("${dict[lib_type]}")
+    fi
     quant_args+=("${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}")
     koopa_dl 'Quant args' "${quant_args[*]}"
     "${app[kallisto]}" quant "${quant_args[@]}"
@@ -381,14 +455,25 @@ koopa_kallisto_quant_paired_end_per_sample() { # {{{1
 koopa_kallisto_quant_single_end() { # {{{1
     # """
     # Run kallisto on multiple single-end FASTQ files.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-25.
+    #
+    # @examples
+    # > koopa_kallisto_quant_single_end \
+    # >     --fastq-dir='fastq' \
+    # >     --fastq-tail='_001.fastq.gz' \
+    # >     --output-dir='kallisto'
     # """
     local dict fastq_file fastq_files
     koopa_assert_has_args "$#"
     declare -A dict=(
+        # e.g. 'fastq'
         [fastq_dir]=''
-        [fastq_tail]='' # '.fastq.gz'
+        # e.g. "_001.fastq.gz'.
+        [fastq_tail]=''
+        # e.g. 'kallisto-index'.
         [index_dir]=''
+        [mode]='single-end'
+        # e.g. 'kallisto'.
         [output_dir]=''
     )
     while (("$#"))
@@ -442,12 +527,12 @@ koopa_kallisto_quant_single_end() { # {{{1
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_h1 'Running kallisto quant (single-end mode).'
+    koopa_h1 'Running kallisto quant.'
     koopa_dl \
+        'Mode' "${dict[mode]}" \
+        'Index dir' "${dict[index_dir]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
         'FASTQ tail' "${dict[fastq_tail]}" \
-        'Index dir' "${dict[index_dir]}" \
-        'Mode' 'single-end' \
         'Output dir' "${dict[output_dir]}"
     readarray -t fastq_files <<< "$( \
         koopa_find \
@@ -483,7 +568,7 @@ koopa_kallisto_quant_single_end() { # {{{1
 koopa_kallisto_quant_single_end_per_sample() { # {{{1
     # """
     # Run kallisto quant (per single-end sample).
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-25.
     #
     # Consider adding support for '--genomebam' and '--pseudobam' output,
     # which requires GTF file input ('--gtf') and chromosome names
@@ -503,21 +588,35 @@ koopa_kallisto_quant_single_end_per_sample() { # {{{1
     #
     # @seealso
     # - https://www.biostars.org/p/252823/
+    #
+    # @examples
+    # > koopa_kallisto_quant_single_end_per_sample \
+    # >     --fastq-file='fastq/sample1_001.fastq.gz' \
+    # >     --fastq-tail='_001.fastq.gz' \
+    # >     --index-dir='kallisto-index' \
+    # >     --output-dir='kallisto'
     # """
     local app dict quant_args
     declare -A app=(
         [kallisto]="$(koopa_locate_kallisto)"
     )
     declare -A dict=(
+        # Current recommendation in bcbio-nextgen.
         [bootstraps]=30
+        # e.g. 'sample1_001.fastq.gz'.
         [fastq_file]=''
-        [fastq_tail]='' # '.fastq.gz'
+        # e.g. '_001.fastq.gz'.
+        [fastq_tail]=''
+        # Current recommendation in bcbio-nextgen.
         [fragment_length]=200
+        # e.g. 'kallisto-index'.
         [index_dir]=''
         [mem_gb]="$(koopa_mem_gb)"
         [mem_gb_cutoff]=14
+        # e.g. 'kallisto'.
         [output_dir]=''
-        [sd]=30
+        # Current recommendation in bcbio-nextgen.
+        [sd]=25
     )
     quant_args=()
     while (("$#"))
@@ -538,6 +637,14 @@ koopa_kallisto_quant_single_end_per_sample() { # {{{1
                 ;;
             '--fastq-tail')
                 dict[fastq_tail]="${2:?}"
+                shift 2
+                ;;
+            '--fragment-length='*)
+                dict[fragment_length]="${1#*=}"
+                shift 1
+                ;;
+            '--fragment-length')
+                dict[fragment_length]="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -565,15 +672,18 @@ koopa_kallisto_quant_single_end_per_sample() { # {{{1
     koopa_assert_is_set \
         '--fastq-file' "${dict[fastq_file]}" \
         '--fastq-tail' "${dict[fastq_tail]}" \
+        '--fragment-length' "${dict[fragment_length]}" \
         '--index-dir' "${dict[index_dir]}" \
         '--output-dir' "${dict[output_dir]}"
     if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
     then
         koopa_stop "kallisto quant requires ${dict[mem_gb_cutoff]} GB of RAM."
     fi
-    koopa_assert_is_dir "${dict[output_dir]}"
+    koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[index_file]="${dict[index_dir]}/kallisto.idx"
     koopa_assert_is_file "${dict[fastq_file]}" "${dict[index_file]}"
+    dict[fastq_file]="$(koopa_realpath "${dict[fastq_file]}")"
     dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[fastq_tail]}/}"
     dict[id]="${dict[fastq_bn]}"
