@@ -1,6 +1,14 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Add support for easily extracting multiple tarballs in a directory.
+    `for f in *.tar.gz; do tar -xzvf "$f"; done`
+** TODO Improve consistency of AWS functions.
+    - Ensure that all input consistently requires 's3://' as prefix input.
+    - Ensure that this is consistent for CLI parser to JSON...bucket API one
+** TODO Improve 'uninstall_app' to support removal of specific previous versions.
+    - Need to support removal of older app versions.
+    - In the case where it's not current link in opt, don't remove the opt link.
 ** TODO Need to ensure 0775 permissions on coc packages:
     /opt/koopa/app/dotfiles/rolling/app/coc/extensions/node_modules
 ** TODO Add improved stack trace of error messages.

@@ -140,7 +140,7 @@ brew "pandoc-crossref"
 brew "parallel"
 brew "pcre"
 # > brew "php"
-brew "pipenv"  # python
+# > brew "pipenv"  # python
 brew "pkg-config"
 brew "podman"
 brew "podofo"
