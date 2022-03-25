@@ -10,9 +10,9 @@ koopa_test() { # {{{1
     prefix="$(koopa_tests_prefix)"
     (
         koopa_cd "$prefix"
-        ./check-bin-man-consistency
         ./linter
         ./shunit2
+        ./check-bin-man-consistency
         # > ./roff
     )
     return 0
