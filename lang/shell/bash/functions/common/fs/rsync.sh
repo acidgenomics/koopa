@@ -37,7 +37,7 @@ koopa_clone() { # {{{1
 koopa_rsync() { # {{{1
     # """
     # GNU rsync wrapper.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-03-23.
     #
     # Useful arguments:
     #     --delete-before         receiver deletes before xfer, not during
@@ -118,11 +118,11 @@ koopa_rsync() { # {{{1
     koopa_assert_has_no_flags "$@"
     dict[source_dir]="${1:?}"
     dict[target_dir]="${2:?}"
-    if [[ -d "${source_dir]}" ]]
+    if [[ -d "${dict[source_dir]}" ]]
     then
         dict[source_dir]="$(koopa_realpath "${dict[source_dir]}")"
     fi
-    if [[ -d "${target_dir]}" ]]
+    if [[ -d "${dict[target_dir]}" ]]
     then
         dict[target_dir]="$(koopa_realpath "${dict[target_dir]}")"
     fi
