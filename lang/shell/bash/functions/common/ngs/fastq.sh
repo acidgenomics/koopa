@@ -93,14 +93,13 @@ koopa_fastq_detect_quality_score() { # {{{1
     # @note Updated 2022-03-25.
     #
     # @seealso
-    # - Regarding phred33 / phred64 / solexa detection:
-    #   https://github.com/brentp/bio-playground/blob/master/reads-utils/
-    #     guess-encoding.py
     # - https://onetipperday.blogspot.com/2012/10/
     #     code-snip-to-decide-phred-encoding-of.html
     # - https://bioinformaticsworkbook.org/introduction/
     #     fastqquality-score-encoding.html
     # - https://stackoverflow.com/questions/8151380/
+    #   https://github.com/brentp/bio-playground/blob/master/reads-utils/
+    #     guess-encoding.py
     #
     # @examples
     # > koopa_fastq_detect_quality_score 'sample_R1.fastq.gz'
