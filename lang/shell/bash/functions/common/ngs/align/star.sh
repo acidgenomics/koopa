@@ -3,15 +3,29 @@
 koopa_star_align_paired_end() { # {{{1
     # """
     # Run STAR aligner on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-03-23.
+    # @note Updated 2022-03-25.
+    #
+    # @examples
+    # > koopa_star_align_paired_end \
+    # >     --fastq-dir='fastq' \
+    # >     --fastq-r1-tail='_R1_001.fastq.gz' \
+    # >     --fastq-r2-tail='_R2_001.fastq.gz' \
+    # >     --index-dir='star-index' \
+    # >     --output-dir='star'
     # """
     local dict fastq_r1_files fastq_r1_file fastq_r2_file
     koopa_assert_has_args "$#"
     declare -A dict=(
+        # e.g. 'fastq'.
         [fastq_dir]=''
-        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
-        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        # e.g. '_R1_001.fastq.gz'.
+        [fastq_r1_tail]=''
+        # e.g. '_R2_001.fastq.gz'.
+        [fastq_r2_tail]=''
+        # e.g. 'star-index'.
         [index_dir]=''
+        [mode]='paired-end'
+        # e.g. 'star'.
         [output_dir]=''
     )
     while (("$#"))
@@ -74,13 +88,13 @@ koopa_star_align_paired_end() { # {{{1
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_h1 'Running STAR aligner (paired-end mode).'
+    koopa_h1 'Running STAR aligner.'
     koopa_dl \
+        'Mode' "${dict[mode]}" \
+        'Index dir' "${dict[index_dir]}" \
+        'FASTQ dir' "${dict[fastq_dir]}" \
         'FASTQ R1 tail' "${dict[fastq_r1_tail]}" \
         'FASTQ R2 tail' "${dict[fastq_r2_tail]}" \
-        'FASTQ dir' "${dict[fastq_dir]}" \
-        'Index dir' "${dict[index_dir]}" \
-        'Mode' 'paired-end' \
         'Output dir' "${dict[output_dir]}"
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
@@ -120,15 +134,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
 koopa_star_align_paired_end_per_sample() { # {{{1
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2022-03-24.
-    #
-    # @section How to handle compressed FASTQ files:
-    #
-    # Define a program to handle file reading:
-    # > --readFilesCommand 'zcat'
-    #
-    # Process substitution (used by bcbio):
-    # > --readFilesIn <(gunzip -c 'sample.fastq.gz')
+    # @note Updated 2022-03-25.
     #
     # @seealso
     # - https://hbctraining.github.io/Intro-to-rnaseq-hpc-O2/lessons/
@@ -140,20 +146,34 @@ koopa_star_align_paired_end_per_sample() { # {{{1
     # - https://github.com/nf-core/rnaseq/blob/master/subworkflows/local/
     #     align_star.nf
     # - https://www.biostars.org/p/243683/
+    #
+    # @examples
+    # > koopa_star_align_paired_end_per_sample \
+    # >     --fastq-r1-file='fastq/sample1_R1_001.fastq.gz' \
+    # >     --fastq-r1-tail='_R1_001.fastq.gz' \
+    # >     --fastq-r2-file='fastq/sample1_R2_001.fastq.gz' \
+    # >     --fastq-r2-tail="_R2_001.fastq.gz' \
+    # >     --index-dir='star-index' \
+    # >     --output-dir='star'
     # """
     local align_args app dict
     declare -A app=(
         [star]="$(koopa_locate_star)"
-        [zcat]="$(koopa_locate_zcat)"
     )
     declare -A dict=(
+        # e.g. 'sample1_R1_001.fastq.gz'.
         [fastq_r1_file]=''
-        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
+        # e.g. '_R1_001.fastq.gz'.
+        [fastq_r1_tail]=''
+        # e.g. 'sample1_R2_001.fastq.gz'.
         [fastq_r2_file]=''
-        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        # e.g. '_R2_001.fastq.gz'.
+        [fastq_r2_tail]=''
+        # e.g. 'star-index'.
         [index_dir]=''
         [mem_gb]="$(koopa_mem_gb)"
         [mem_gb_cutoff]=14
+        # e.g. 'star'.
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
@@ -229,15 +249,12 @@ koopa_star_align_paired_end_per_sample() { # {{{1
 GB of RAM."
     fi
     koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
-    koopa_assert_is_matching_regex \
-        --pattern='\.gz$' \
-        --string="${dict[fastq_r1_file]}"
-    koopa_assert_is_matching_regex \
-        --pattern='\.gz$' \
-        --string="${dict[fastq_r2_file]}"
+    dict[fastq_r1_file]="$(koopa_realpath "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
+    dict[fastq_r2_file]="$(koopa_realpath "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[fastq_r2_tail]}/}"
     koopa_assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
@@ -251,30 +268,43 @@ GB of RAM."
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
     align_args+=(
-        '--runMode' 'alignReads'
         '--genomeDir' "${dict[index_dir]}"
         '--outFileNamePrefix' "${dict[output_dir]}/"
-        '--outSAMtype' 'BAM' 'SortedByCoordinate' # and/or 'Unsorted'
-        '--readFilesCommand' "${app[zcat]}"
-        '--readFilesIn' "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
+        '--outSAMtype' 'BAM' 'SortedByCoordinate'
+        '--runMode' 'alignReads'
         '--runThreadN' "${dict[threads]}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app[star]}" "${align_args[@]}"
+    "${app[star]}" "${align_args[@]}" \
+        --readFilesIn \
+            <(koopa_decompress --stdout "${dict[fastq_r1_file]}") \
+            <(koopa_decompress --stdout "${dict[fastq_r2_file]}")
     return 0
 }
 
 koopa_star_align_single_end() { # {{{1
     # """
     # Run STAR aligner on multiple single-end FASTQs in a directory.
-    # @note Updated 2022-03-23.
+    # @note Updated 2022-03-25.
+    #
+    # @examples
+    # > koopa_star_align_single_end \
+    # >     --fastq-dir='fastq' \
+    # >     --fastq-tail='_001.fastq.gz' \
+    # >     --index-dir='star-index' \
+    # >     --output-dir='star'
     # """
     local dict fastq_file fastq_files
     koopa_assert_has_args "$#"
     declare -A dict=(
+        # e.g. 'fastq'.
         [fastq_dir]=''
-        [fastq_tail]='' # '.fastq.gz'
+        # e.g. '_001.fastq.gz'.
+        [fastq_tail]=''
+        # e.g. 'star-index'.
         [index_dir]=''
+        [mode]='single-end'
+        # e.g. 'star'.
         [output_dir]=''
     )
     while (("$#"))
@@ -328,12 +358,12 @@ koopa_star_align_single_end() { # {{{1
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_h1 'Running STAR aligner (single-end mode).'
+    koopa_h1 'Running STAR aligner.'
     koopa_dl \
+        'Mode' "${dict[mode]}" \
+        'Index dir' "${dict[index_dir]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
         'FASTQ tail' "${dict[fastq_tail]}" \
-        'Index dir' "${dict[index_dir]}" \
-        'Mode' 'single-end' \
         'Output dir' "${dict[output_dir]}"
     readarray -t fastq_files <<< "$( \
         koopa_find \
@@ -369,23 +399,32 @@ koopa_star_align_single_end() { # {{{1
 koopa_star_align_single_end_per_sample() { # {{{1
     # """
     # Run STAR aligner on a single-end sample.
-    # @note Updated 2022-03-24.
+    # @note Updated 2022-03-25.
+    #
+    # @examples
+    # > koopa_star_align_single_end_per_sample \
+    # >     --fastq-file='fastq/sample1_001.fastq.gz' \
+    # >     --fastq-tail='_001.fastq.gz' \
+    # >     --index-dir='star-index' \
+    # >     --output-dir='star'
     # """
     local align_args app dict
     koopa_assert_has_args "$#"
     declare -A app=(
         [star]="$(koopa_locate_star)"
-        [zcat]="$(koopa_locate_zcat)"
     )
     declare -A dict=(
+        # e.g. 'fastq'.
         [fastq_file]=''
-        [fastq_tail]='' # '.fastq.gz'
+        # e.g. '_001.fastq.gz'.
+        [fastq_tail]=''
+        # e.g. 'star-index'.
         [index_dir]=''
         [mem_gb]="$(koopa_mem_gb)"
         [mem_gb_cutoff]=14
+        # e.g. 'star'.
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
-        [tmp_dir]="$(koopa_tmp_dir)"
     )
     align_args=()
     while (("$#"))
@@ -441,10 +480,9 @@ koopa_star_align_single_end_per_sample() { # {{{1
 GB of RAM."
     fi
     koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     koopa_assert_is_file "${dict[fastq_file]}"
-    koopa_assert_is_matching_regex \
-        --pattern='\.gz$' \
-        --string="${dict[fastq_file]}"
+    dict[fastq_file]="$(koopa_realpath "${dict[fastq_file]}")"
     dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
     dict[id]="${dict[fastq_bn]}"
@@ -457,24 +495,23 @@ GB of RAM."
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
     align_args+=(
-        '--runMode' 'alignReads'
         '--genomeDir' "${dict[index_dir]}"
         '--outFileNamePrefix' "${dict[output_dir]}/"
-        '--outSAMtype' 'BAM' 'SortedByCoordinate' # and/or 'Unsorted'
-        '--readFilesCommand' "${app[zcat]}"
-        '--readFilesIn' "${dict[fastq_file]}"
+        '--outSAMtype' 'BAM' 'SortedByCoordinate'
+        '--runMode' 'alignReads'
         '--runThreadN' "${dict[threads]}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app[star]}" "${align_args[@]}"
-    koopa_rm "${dict[tmp_dir]}"
+    "${app[star]}" "${align_args[@]}" \
+        --readFilesIn \
+            <(koopa_decompress --stdout "${dict[fastq_file]}")
     return 0
 }
 
 koopa_star_index() { # {{{1
     # """
     # Create a genome index for STAR aligner.
-    # @note Updated 2022-03-23.
+    # @note Updated 2022-03-25.
     #
     # Doesn't currently support compressed files as input.
     #
@@ -485,6 +522,12 @@ koopa_star_index() { # {{{1
     #     ngsalign/star.py
     # - https://github.com/nf-core/rnaseq/blob/master/modules/local/
     #     star_genomegenerate.nf
+    #
+    # @examples
+    # > koopa_star_index \
+    # >     --genome-fasta-file='GRCh38.primary_assembly.genome.fa.gz' \
+    # >     --gtf-file='gencode.v39.annotation.gtf.gz' \
+    # >     --output-dir='star-index'
     # """
     local app dict index_args
     declare -A app=(
@@ -497,12 +540,11 @@ koopa_star_index() { # {{{1
         [gtf_file]=''
         [mem_gb]="$(koopa_mem_gb)"
         [mem_gb_cutoff]=62
+        # e.g. 'star-index'.
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
         [tmp_dir]="$(koopa_tmp_dir)"
     )
-    dict[tmp_genome_fasta_file]="${dict[tmp_dir]}/genome.fa"
-    dict[tmp_gtf_file]="${dict[tmp_dir]}/annotation.gtf"
     index_args=()
     while (("$#"))
     do
@@ -550,32 +592,21 @@ GB of RAM."
     koopa_assert_is_file \
         "${dict[genome_fasta_file]}" \
         "${dict[gtf_file]}"
-    koopa_assert_is_matching_regex \
-        --pattern='\.fa\.gz$' \
-        --string="${dict[genome_fasta_file]}"
-    koopa_assert_is_matching_regex \
-        --pattern='\.gtf\.gz$' \
-        --string="${dict[gtf_file]}"
     koopa_assert_is_not_dir "${dict[output_dir]}"
     koopa_alert "Generating STAR index at '${dict[output_dir]}'."
-    koopa_alert "Decompressing FASTA and GTF files in '${dict[tmp_dir]}'."
-    koopa_decompress \
-        "${dict[genome_fasta_file]}" \
-        "${dict[tmp_genome_fasta_file]}"
-    koopa_decompress \
-        "${dict[gtf_file]}" \
-        "${dict[tmp_gtf_file]}"
     index_args+=(
-        '--runMode' 'genomeGenerate'
         '--genomeDir' "${dict[output_dir]}/"
-        '--genomeFastaFiles' "${dict[tmp_genome_fasta_file]}"
+        '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict[threads]}"
-        '--sjdbGTFfile' "${dict[tmp_gtf_file]}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
         koopa_cd "${dict[tmp_dir]}"
-        "${app[star]}" "${index_args[@]}"
+        "${app[star]}" "${index_args[@]}" \
+            --genomeFastaFiles \
+                <(koopa_decompress --stdout "${dict[genome_fasta_file]}") \
+            --sjdbGTFfile \
+                <(koopa_decompress --stdout "${dict[gtf_file]}")
     )
     koopa_rm "${dict[tmp_dir]}"
     koopa_alert_success "STAR index created at '${dict[output_dir]}'."
