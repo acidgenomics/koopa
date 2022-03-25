@@ -3,7 +3,7 @@
 koopa_convert_fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-25.
     #
     # Files must be decompressed.
     #
@@ -30,8 +30,8 @@ koopa_convert_fastq_to_fasta() { # {{{1
         [tr]="$(koopa_locate_tr)"
     )
     declare -A dict=(
-        [source_dir]="${PWD:?}"
-        [target_dir]="${PWD:?}"
+        [source_dir]=''
+        [target_dir]=''
     )
     while (("$#"))
     do
@@ -59,6 +59,9 @@ koopa_convert_fastq_to_fasta() { # {{{1
                 ;;
         esac
     done
+    koopa_assert_is_set \
+        '--source-dir' "${dict[source_dir]}" \
+        '--target-dir' "${dict[target_dir]}"
     koopa_assert_is_dir "${dict[source_dir]}"
     dict[source_dir]="$(koopa_realpath "${dict[source_dir]}")"
     readarray -t fastq_files <<< "$( \
@@ -105,7 +108,7 @@ koopa_fastq_detect_quality_score() { # {{{1
     # > koopa_fastq_detect_quality_score 'sample_R1.fastq.gz'
     # # Phred+33
     # """
-    local app file str
+    local app file
     koopa_assert_has_args "$#"
     declare -A app=(
         [awk]="$(koopa_locate_awk)"
@@ -115,6 +118,7 @@ koopa_fastq_detect_quality_score() { # {{{1
     koopa_assert_is_file "$@"
     for file in "$@"
     do
+        local str
         # shellcheck disable=SC2016
         str="$( \
             "${app[head]}" -n 1000 \
@@ -145,13 +149,12 @@ koopa_fastq_detect_quality_score() { # {{{1
 koopa_fastq_lanepool() { # {{{1
     # """
     # Pool lane-split FASTQ files.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-25.
     #
     # @examples
     # > koopa_fastq_lanepool --source-dir='fastq/'
     # """
-    local app dict
-    local basenames head i out tail
+    local app basenames dict fastq_files head i out tail
     declare -A app=(
         [cat]="$(koopa_locate_cat)"
     )
