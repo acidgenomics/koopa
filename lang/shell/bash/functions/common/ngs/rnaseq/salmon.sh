@@ -105,14 +105,14 @@ koopa_salmon_index() { # {{{1
         koopa_stop "salmon index requires ${dict[mem_gb_cutoff]} GB of RAM."
     fi
     koopa_assert_is_file "${dict[transcriptome_fasta_file]}"
+    dict[transcriptome_fasta_file]="$( \
+        koopa_realpath "${dict[transcriptome_fasta_file]}" \
+    )"
     koopa_assert_is_matching_regex \
         --pattern='\.fa(sta)?' \
         --string="${dict[transcriptome_fasta_file]}"
     koopa_assert_is_not_dir "${dict[output_dir]}"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    dict[transcriptome_fasta_file]="$( \
-        koopa_realpath "${dict[transcriptome_fasta_file]}" \
-    )"
     koopa_alert "Generating salmon index at '${dict[output_dir]}'."
     if [[ "${dict[gencode]}" -eq 0 ]] && \
         koopa_str_detect_regex \
@@ -132,13 +132,13 @@ koopa_salmon_index() { # {{{1
         koopa_assert_is_set \
             '--genome-fasta-file' "${dict[genome_fasta_file]}"
         koopa_assert_is_file "${dict[genome_fasta_file]}"
+        dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
         koopa_assert_is_matching_regex \
             --pattern='\.fa(sta)?\.gz$' \
             --string="${dict[genome_fasta_file]}"
         koopa_assert_is_matching_regex \
             --pattern='\.fa(sta)?\.gz$' \
             --string="${dict[transcriptome_fasta_file]}"
-        dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
         dict[tmp_dir]="$(koopa_tmp_dir)"
         dict[decoys_file]="${dict[tmp_dir]}/decoys.txt"
         dict[gentrome_fasta_file]="${dict[tmp_dir]}/gentrome.fa.gz"
@@ -488,9 +488,12 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
     fi
     koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
+    dict[fastq_r1_file]="$(koopa_realpath "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
+    dict[fastq_r2_file]="$(koopa_realpath "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[fastq_r2_tail]}/}"
     koopa_assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
@@ -748,7 +751,9 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
         koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
     fi
     koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     koopa_assert_is_file "${dict[fastq_file]}"
+    dict[fastq_file]="$(koopa_realpath "${dict[fastq_file]}")"
     dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
     dict[id]="${dict[fastq_bn]}"
