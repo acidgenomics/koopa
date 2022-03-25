@@ -98,7 +98,7 @@ cpufetch="0.97"
 curl="7.82.0"
 
 # https://docs.docker.com/install/
-docker="20.10.13"
+docker="20.10.14"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
