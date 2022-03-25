@@ -62,10 +62,8 @@ koopa_locate_bundle() { # {{{1
         --koopa-opt='ruby-packages'
 }
 
-koopa_locate_bunzip2() { # {{{1
-    koopa_locate_app \
-        --app-name='bunzip2' \
-        --opt='bzip2'
+koopa_locate_bzip2() { # {{{1
+    koopa_locate_app 'bzip2'
 }
 
 koopa_locate_cargo() { # {{{1
@@ -274,12 +272,6 @@ koopa_locate_groups() { # {{{1
     koopa_locate_gnu_coreutils_app 'groups'
 }
 
-koopa_locate_gunzip() { # {{{1
-    koopa_locate_app \
-        --app-name='gunzip' \
-        --opt='gzip'
-}
-
 koopa_locate_gzip() { # {{{1
     koopa_locate_app 'gzip'
 }
@@ -468,6 +460,10 @@ koopa_locate_npm() { # {{{1
         --app-name='npm' \
         --brew-opt='node' \
         --koopa-opt='node-packages'
+}
+
+koopa_locate_od() { # {{{1
+    koopa_locate_gnu_coreutils_app 'od'
 }
 
 koopa_locate_openssl() { # {{{1
