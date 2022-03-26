@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Node installer on Ubuntu conflicts with 'koopa install base-system'.
+    Rerunning our 'base-system' install script will remove current Node.
+    Need to debug this further in Docker.
 ** TODO Add support for easily extracting multiple tarballs in a directory.
     `for f in *.tar.gz; do tar -xzvf "$f"; done`
 ** TODO Improve consistency of AWS functions.
