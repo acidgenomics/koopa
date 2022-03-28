@@ -51,10 +51,6 @@ install_node() { # {{{1
     fi
     conf_args=(
         "--prefix=${dict[prefix]}"
-        '--shared-brotli'
-        '--shared-nghttp2'
-        '--shared-openssl'
-        '--shared-zlib'
         '--with-intl=system-icu'
         '--without-corepack'
         '--without-npm'
@@ -62,8 +58,12 @@ install_node() { # {{{1
     if koopa_is_installed "${app[brew]}"
     then
         conf_args+=(
+            '--shared-brotli'
             '--shared-cares'
             '--shared-libuv'
+            '--shared-nghttp2'
+            '--shared-openssl'
+            '--shared-zlib'
         )
     fi
     ./configure "${conf_args[@]}"
