@@ -258,7 +258,7 @@ patch="2.7.6"
 pcre2="10.39"
 
 # https://www.perl.org/get.html
-perl="5.34.0"
+perl="5.34.1"
 
 # https://perlbrew.pl/
 perlbrew="0.92"
