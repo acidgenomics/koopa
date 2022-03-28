@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This make line is currently problematic on Linux:
-# > /usr/bin/mkdir -p -m 0755 /var/empty
-
-# FIXME Now seeing this:
-# configure: WARNING: you should use --build, --host, --target
-
 install_openssh() { # {{{1
     # """
     # Install OpenSSH.
@@ -42,11 +36,6 @@ portable/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
-        # > '--disable-etc-default-login'
-        # > '--sysconfdir=/etc/ssh'
-        # > '--with-default-path=/usr/bin'
-        # > '--with-pid-dir=/run'
-        # > '--with-superuser-path=/usr/sbin:/usr/bin'
         "--prefix=${dict[prefix]}"
         '--with-kerberos5'
         '--with-ldns'
