@@ -43,3 +43,22 @@ koopa_debian_set_locale() { # {{{1
     koopa_alert_success "Locale is defined as '${dict[lang_string]}'."
     return 0
 }
+
+koopa_debian_set_timezone() { # {{{1
+    # """
+    # Set local timezone.
+    # @note Updated 2022-03-28.
+    # """
+    local app dict
+    koopa_assert_has_args_le "$#" 1
+    declare -A app=(
+        [sudo]="$(koopa_locate_sudo)"
+        [timedatectl]="$(koopa_debian_locate_timedatectl)"
+    )
+    declare -A dict=(
+        [tz]="${1:-}"
+    )
+    [[ -z "${dict[tz]}" ]] && dict[tz]='America/New_York'
+    "${app[sudo]}" "${app[timedatectl]}" set-timezone "${dict[tz]}"
+    return 0
+}
