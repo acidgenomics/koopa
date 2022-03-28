@@ -1,16 +1,12 @@
 #+TITLE: koopa
 #+STARTUP: content
-* Development (high priority)
-** TODO Add support for installing Adoptium Temurin OpenJDK 17.0.2 LTS on Linux.
-** TODO Node installer on Ubuntu conflicts with 'koopa install base-system'.
-    Rerunning our 'base-system' install script will remove current Node.
-    Need to debug this further in Docker.
-** TODO Add support for easily extracting multiple tarballs in a directory.
-    `for f in *.tar.gz; do tar -xzvf "$f"; done`
+* High priority
+** TODO Rework our conda-based NGS utilites by locating the programs directly, rather than by activating conda inside a function.
 ** TODO Improve consistency of AWS functions.
     - Ensure that all input consistently requires 's3://' as prefix input.
     - Ensure that this is consistent for CLI parser to JSON...bucket API one
-** TODO Improve 'uninstall_app' to support removal of specific previous versions.
+** TODO Improve 'koopa uninstall app' to support removal of specific previous versions.
+    - Pass this in with '--version' argument.
     - Need to support removal of older app versions.
     - In the case where it's not current link in opt, don't remove the opt link.
 ** TODO Need to ensure 0775 permissions on coc packages:
@@ -18,7 +14,6 @@
 ** TODO Add improved stack trace of error messages.
 ** TODO Before pushing changes, ensure sed with '--quiet' change is non breaking.
 ** TODO Syntactic naming functions need an option to also convert the extension to lowercase.
-** TODO Update of Bash via Homebrew will cause current session to exit.
 ** TODO Shared install isn't setting user permissions recursively correctly.
     Need to ensure that '/opt/koopa' isn't owned by current user after install.
     We're seeing this currently on AWS EC2 instances.
@@ -45,11 +40,8 @@
 ** TODO Ensure that no dict arrays contain '$dict' variable usage inside the
     initial array call. This doesn't work in Bash. Double check this before
     merging develop branch.
-** TODO Consider reworking our conda-based NGS utilites by locating the programs
-    directly, rather than by activating conda inside a function.
-** TODO conda base environment has been seen to stay active inside of RStudio
-    terminal on some AWS AMI EC2 instances.
-* Development (medium priority)
+* Medium priority
+** TODO Add support for installing Adoptium Temurin OpenJDK 17.0.2 LTS.
 ** TODO Consider installing latest stable release by default for Docker images.
 ** TODO Consider linking '/etc/shells' on Linux, to enable easier configuration
     of Linuxbrew Zsh and/or Bash.
@@ -59,15 +51,12 @@
 ** TODO Today bucket activation needs to relink if link is broken.
 ** TODO Consider removing non-symlinked programs in /usr/local/bin on macOS.
 ** TODO Consider prefixing with "command XXX" instead of using "unalias XXX".
-* Development (low priority)
-** TODO Add support for fish shell.
-** TODO Add support for nushell.
-** TODO Improve support for Void Linux.
-    Detect admin group.
-    Add support for configure-system.
-** TODO Need to run bfg to make dotfiles more compact?
+* Low priority
+** TODO Consider putting pipx installs under versioned subdirectory.
+** TODO Update of Bash via Homebrew will cause current session to exit.
+** TODO Add support for fish shell. This involves a lot of work.
+** TODO Add support for nushell. This involves a lot of work.
+** TODO Run BFG to make dotfiles and koopa repos more compact?
 * Documentation
 ** TODO Need to systematically check all exported scripts for documentation.
-** TODO Need to explain which programs are automatically supported and get
-    activated by default more clearly.
-** TODO Improve completion support for all exported scripts.
+** TODO Need to explain which programs are automatically supported and get activated by default more clearly.
