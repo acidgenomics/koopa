@@ -145,6 +145,7 @@ __koopa_complete() { # {{{1
                         'neovim'
                         'nim'
                         'nim-packages'
+                        'node'
                         'node-packages'
                         'openjdk'
                         'openssh'
@@ -215,7 +216,6 @@ __koopa_complete() { # {{{1
                         then
                             args+=(
                                 'bcbio-nextgen-vm'
-                                'node'
                                 'pandoc'
                                 'r-cran-binary'
                                 'r-devel'
