@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Installer isn't currently working:
+# Returning 'Array is empty' error.
+# FIXME Need to debug this install stack...
+
 linux_install_docker_credential_pass() { # {{{1
     # """
     # Install docker-credential-pass.
