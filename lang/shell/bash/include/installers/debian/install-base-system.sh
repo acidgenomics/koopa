@@ -151,7 +151,7 @@ debian_install_base_system() { # {{{1
             'libtool'
             'libtool-bin'
             'nano'
-            'pandoc' # R Markdown and URL checks.
+            'pandoc' # nodejs
             'parallel'
             'pkg-config'
             'procps' # ps
