@@ -14,6 +14,7 @@ install_node() { # {{{1
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
+        [jobs]="$(koopa_cpu_count)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -24,7 +25,7 @@ install_node() { # {{{1
     koopa_cd "node-${dict[version]}"
     koopa_alert_coffee_time
     ./configure --prefix="${dict[prefix]}"
-    "${app[make]}"
+    "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
     return 0
