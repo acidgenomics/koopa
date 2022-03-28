@@ -604,12 +604,12 @@ koopa_push_app_build() { # {{{1
         [tar]="$(koopa_locate_tar)"
     )
     declare -A dict=(
-        [s3_profile]='acidgenomics'
-        [s3_bucket]='s3://koopa.acidgenomics.com/app'
-        [app_prefix]="$(koopa_app_prefix)"
         [app_name]=''
+        [app_prefix]="$(koopa_app_prefix)"
         [app_version]=''
         [os_string]="$(koopa_os_string)"
+        [s3_prefix]='s3://koopa.acidgenomics.com/app'
+        [s3_profile]='acidgenomics'
         [tmp_dir]="$(koopa_tmp_dir)"
     )
     while (("$#"))
