@@ -107,7 +107,7 @@ koopa_r_link_files_into_etc() { # {{{1
         dict[r_etc_target]="${dict[r_prefix]}/etc"
     fi
     files=(
-        'Makevars.site'  # macOS
+        'Makevars.site' # macOS
         'Renviron.site'
         'Rprofile.site'
         'repositories'

@@ -8,7 +8,7 @@ install_go() { # {{{1
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa_arch2)"  # e.g. "amd64".
+        [arch]="$(koopa_arch2)" # e.g. "amd64".
         [name]='go'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"

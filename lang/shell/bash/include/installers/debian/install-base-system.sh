@@ -110,7 +110,7 @@ debian_install_base_system() { # {{{1
             'git'
             'gnupg'
             'less'
-            'libncurses-dev'  # zsh
+            'libncurses-dev' # zsh
             'locales'
             'lsb-release'
             'man-db'
@@ -136,7 +136,7 @@ debian_install_base_system() { # {{{1
             'default-jdk'
             'diffutils'
             'dirmngr'
-            'expect-dev'  # installs unbuffer
+            'expect-dev' # Installs unbuffer.
             'file'
             'fortran77-compiler'
             'gdb'
@@ -148,16 +148,16 @@ debian_install_base_system() { # {{{1
             'libtool'
             'libtool-bin'
             'nano'
-            'pandoc'  # R Markdown and URL checks
+            'pandoc' # R Markdown and URL checks.
             'parallel'
             'pkg-config'
-            'procps'  # ps
-            'psmisc'  # RStudio Server
+            'procps' # ps
+            'psmisc' # RStudio Server
             'rsync'
-            'ruby'  # Homebrew
+            'ruby' # Homebrew
             'software-properties-common'
             'subversion'
-            'texinfo'  # makeinfo
+            'texinfo' # makeinfo
             'tmux'
             'tree'
             'udunits-bin'
@@ -171,38 +171,38 @@ debian_install_base_system() { # {{{1
     then
         pkgs+=(
             # > 'libmariadb-dev'
-            # > 'libmysqlclient-dev'  # Conflicts with libmariadb-dev (Ubuntu)
+            # > 'libmysqlclient-dev' # Conflicts with libmariadb-dev (Ubuntu).
             # > 'proj-bin'
             'libacl1-dev'
             'libapparmor-dev'
-            'libapr1-dev'  # subversion
-            'libaprutil1-dev'  # subversion
+            'libapr1-dev' # subversion
+            'libaprutil1-dev' # subversion
             'libbison-dev'
-            'libboost-chrono-dev'  # bcl2fastq
-            'libboost-date-time-dev'  # bcl2fastq
-            'libboost-dev'  # bcl2fastq
-            'libboost-filesystem-dev'  # bcl2fastq
-            'libboost-iostreams-dev'  # bcl2fastq
-            'libboost-program-options-dev'  # bcl2fastq
-            'libboost-thread-dev'  # bcl2fastq
-            'libboost-timer-dev'  # bcl2fastq
+            'libboost-chrono-dev' # bcl2fastq
+            'libboost-date-time-dev' # bcl2fastq
+            'libboost-dev' # bcl2fastq
+            'libboost-filesystem-dev' # bcl2fastq
+            'libboost-iostreams-dev' # bcl2fastq
+            'libboost-program-options-dev' # bcl2fastq
+            'libboost-thread-dev' # bcl2fastq
+            'libboost-timer-dev' # bcl2fastq
             'libbz2-dev'
-            'libcairo2-dev'
-            'libclang-dev'  # rstudio-server
+            'libcairo2-dev' # harfbuzz
+            'libclang-dev' # rstudio-server
             'libcurl4-gnutls-dev'
             'libevent-dev'
             'libffi-dev'
             'libfftw3-dev'
             'libfontconfig1-dev'
-            'libfreetype6-dev'
+            'libfreetype6-dev' # harfbuzz
             'libfribidi-dev'
             'libgdal-dev'
             'libgeos-dev'
-            'libgfortran5'  # R nlme
+            'libgfortran5' # R nlme
             'libgif-dev'
             'libgit2-dev'
             'libgl1-mesa-dev'
-            'libglib2.0-dev'  # ag
+            'libglib2.0-dev' # ag, harfbuzz
             'libglu1-mesa-dev'
             'libgmp-dev'
             'libgnutls28-dev'
@@ -216,7 +216,7 @@ debian_install_base_system() { # {{{1
             'libhdf5-dev'
             'libjpeg-dev'
             'liblapack-dev'
-            'liblz4-dev'  # rsync
+            'liblz4-dev' # rsync
             'liblzma-dev'
             'libmagick++-dev'
             'libmodule-build-perl'
@@ -227,10 +227,10 @@ debian_install_base_system() { # {{{1
             'libopenbabel-dev'
             'libopenblas-base'
             'libopenblas-dev'
-            'libopenjp2-7-dev'  # GDAL
+            'libopenjp2-7-dev' # GDAL
             'libopenmpi-dev'
-            'libpcre2-dev'  # rJava
-            'libpcre3-dev'  # ag
+            'libpcre2-dev' # rJava
+            'libpcre3-dev' # ag
             'libperl-dev'
             'libpng-dev'
             'libpoppler-cpp-dev'
@@ -253,9 +253,9 @@ debian_install_base_system() { # {{{1
             'libxml2-dev'
             'libxpm-dev'
             'libxt-dev'
-            'libxxhash-dev'  # rsync; not available on Ubuntu 18
+            'libxxhash-dev' # rsync; not available on Ubuntu 18
             'libz-dev'
-            'libzstd-dev'  # rsync
+            'libzstd-dev' # rsync
             'python3-dev'
             'sqlite3'
             'tcl-dev'

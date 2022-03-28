@@ -74,14 +74,14 @@ alpine_install_base_system() { # {{{1
             'curl'
             'findutils'
             'gcc'
-            'gettext'  # msgfmt
+            'gettext' # msgfmt
             'git'
             'gnupg'
             'man-db'
-            'ncurses-dev'  # zsh
+            'ncurses-dev' # zsh
             'openssl'
             'patch'
-            'procps'  # ps
+            'procps' # ps
             'shadow'
             'sudo'
             'tar'

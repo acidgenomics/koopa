@@ -76,7 +76,7 @@ arch_install_base_system() { # {{{1
             'bc'
             'git'
             'man'
-            'procps'  # ps
+            'procps' # ps
             'unzip'
             'xz'
         )

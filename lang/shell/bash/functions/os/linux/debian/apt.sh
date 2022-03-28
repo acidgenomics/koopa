@@ -160,7 +160,7 @@ koopa_debian_apt_add_repo() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A dict=(
-        [arch]="$(koopa_arch2)"  # e.g. 'amd64'.
+        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
         [key_prefix]="$(koopa_debian_apt_key_prefix)"
         [prefix]="$(koopa_debian_apt_sources_prefix)"
     )

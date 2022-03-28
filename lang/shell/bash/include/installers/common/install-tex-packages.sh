@@ -20,7 +20,7 @@ install_tex_packages() { # {{{1
         'collection-fontsrecommended'
         'collection-latexrecommended'
         # Alphabetical ---
-        'bera'  # beramono
+        'bera' # beramono
         'biblatex'
         'caption'
         'changepage'
@@ -41,7 +41,7 @@ install_tex_packages() { # {{{1
         'parnotes'
         'parskip'
         'placeins'
-        'preprint'  # authblk
+        'preprint' # authblk
         'sectsty'
         'soul'
         'titlesec'

@@ -871,10 +871,10 @@ koopa_activate_mcfly() { #{{{1
     esac
     export MCFLY_FUZZY=2
     export MCFLY_HISTORY_LIMIT=10000
-    export MCFLY_INTERFACE_VIEW='TOP'  # or 'BOTTOM'
+    export MCFLY_INTERFACE_VIEW='TOP' # or 'BOTTOM'
     export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
-    export MCFLY_RESULTS_SORT='RANK'  # or 'LAST_RUN'
+    export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
     if koopa_is_macos
     then
         if koopa_macos_is_light_mode

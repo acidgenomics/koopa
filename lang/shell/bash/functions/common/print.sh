@@ -415,7 +415,7 @@ koopa_stop() { # {{{1
     # """
     unset kill
     __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
-    [[ -n "${!:-}" ]] && kill -SIGKILL "${!}"  # subprocess
-    [[ -n "${$:-}" ]] && kill -SIGKILL "${$}"  # parent
+    [[ -n "${!:-}" ]] && kill -SIGKILL "${!}" # subprocess.
+    [[ -n "${$:-}" ]] && kill -SIGKILL "${$}" # parent.
     exit 1
 }
