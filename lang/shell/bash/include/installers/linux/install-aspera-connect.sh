@@ -3,7 +3,7 @@
 linux_install_aspera_connect() { # {{{1
     # """
     # Install Aspera Connect.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-03-28.
     #
     # Script install target is currently hard-coded in IBM's install script.
     #
@@ -22,7 +22,7 @@ linux_install_aspera_connect() { # {{{1
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
     dict[file]="${dict[name]}_${dict[version]}_${dict[platform]}.tar.gz"
     dict[url]="https://d3gcli72yxqn2z.cloudfront.net/connect_latest/\
-v${dict[maj_ver]]}/bin/${dict[file]}"
+v${dict[maj_ver]}/bin/${dict[file]}"
     dict[script]="${dict[file]//.tar.gz/.sh}"
     dict[script_target]="${dict[aspera_user_prefix]}/connect"
     koopa_download "${dict[url]}" "${dict[file]}"
