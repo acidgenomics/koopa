@@ -26,7 +26,7 @@ install_icu4c() { # {{{1
 release-${dict[kebab_version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_cd "icu4c-v${dict[version]}"
+    koopa_cd 'icu'
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-samples'
