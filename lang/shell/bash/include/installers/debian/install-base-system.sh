@@ -194,6 +194,7 @@ debian_install_base_system() { # {{{1
             'libevent-dev'
             'libffi-dev'
             'libfftw3-dev'
+            'libfido2-dev' # openssh
             'libfontconfig1-dev'
             'libfreetype6-dev' # harfbuzz
             'libfribidi-dev'
