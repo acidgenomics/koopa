@@ -282,6 +282,7 @@ __koopa_complete() { # {{{1
                         'log'
                         'os-string'
                         'prefix'
+                        'push-app-build'
                         'reload-shell'
                         'roff'
                         'set-permissions'
