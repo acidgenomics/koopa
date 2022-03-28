@@ -33,7 +33,7 @@ koopa_grep() { # {{{1
         [file]=''
         [invert_match]=0
         [only_matching]=0
-        [mode]='fixed'  # or 'regex'
+        [mode]='fixed' # or 'regex'.
         [pattern]=''
         [stdin]=1
         [string]=''

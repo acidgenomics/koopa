@@ -52,12 +52,12 @@ cask "bbedit"
 cask "bibdesk"
 # > cask "bluejeans"
 cask "boop"
-cask "brave-browser"  # Avoid Keystone bloat from Google Chrome.
+cask "brave-browser" # Avoid Keystone bloat from Google Chrome.
 cask "carbon-copy-cloner"
 cask "coconutbattery"
 cask "docker"
 cask "easyfind"
-cask "emacs"  # no-binaries
+cask "emacs" # no-binaries
 cask "firefox"
 cask "font-cascadia-code"
 cask "font-cascadia-mono"
@@ -95,16 +95,16 @@ cask "github"
 cask "gitkraken"
 cask "google-cloud-sdk", greedy: true
 cask "google-drive"
-cask "gpg-suite-no-mail"  # no-binaries
+cask "gpg-suite-no-mail" # no-binaries
 cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
-cask "iterm2-beta"  # Use until dark/light mode support is stable.
+cask "iterm2-beta" # Use until dark/light mode support is stable.
 cask "julia"
 cask "keka"
 cask "libreoffice"
 cask "little-snitch"
-cask "macvim"  # no-binaries
+cask "macvim" # no-binaries
 cask "museeks"
 cask "netnewswire"
 cask "nightfall"
@@ -118,7 +118,7 @@ cask "rstudio"
 cask "skype"
 cask "sublime-text"
 cask "superduper"
-# > cask "temurin"  # Using 'openjdk' brew instead.
+# > cask "temurin" # Using 'openjdk' brew instead.
 cask "textmate"
 cask "transmit"
 cask "tunnelblick"
@@ -147,7 +147,7 @@ brew "ncmpcpp"
 brew "osx-cpu-temp"
 brew "pinentry-mac"
 brew "taglib"
-brew "yt-dlp"  # youtube-dl alternative
+brew "yt-dlp" # youtube-dl alternative
 
 # External brews {{{1
 # ==============================================================================

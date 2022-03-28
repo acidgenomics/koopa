@@ -31,15 +31,15 @@ brew "awscli"
 brew "azure-cli"
 brew "bash"
 brew "bash-completion"
-brew "bat"  # rust
+brew "bat" # rust
 brew "bc"
 brew "bfg"
-brew "bind"  # installs dig
+brew "bind" # installs dig
 brew "binutils"
-brew "black"  # python
+brew "black" # python
 brew "bottom"
-brew "bpytop"  # python
-brew "broot"  # rust
+brew "bpytop" # python
+brew "broot" # rust
 brew "bzip2"
 brew "ccache"
 brew "cheat"
@@ -52,19 +52,19 @@ brew "convmv"
 brew "coreutils"
 brew "curl"
 brew "dash"
-brew "dog"  # rust
+brew "dog" # rust
 brew "duf"
-brew "dust"  # rust
+brew "dust" # rust
 brew "editorconfig"
 brew "emacs"
-brew "exa"  # rust
+brew "exa" # rust
 brew "exiftool"
-brew "expect"  # installs unbuffer
-brew "fd"  # rust
+brew "expect" # installs unbuffer
+brew "fd" # rust
 brew "ffmpeg"
 brew "findutils"
 brew "fish"
-brew "flake8"  # python
+brew "flake8" # python
 brew "fzf"
 brew "gawk"
 brew "gcc"
@@ -84,7 +84,7 @@ brew "gpg"
 brew "grep"
 brew "groff"
 brew "gsl"
-brew "gtop"  # node
+brew "gtop" # node
 brew "gzip"
 brew "hadolint"
 brew "hdf5"
@@ -103,17 +103,17 @@ brew "leiningen"
 brew "lesspipe"
 brew "libarchive"
 brew "libgit2"
-brew "libidn2"  # wget
-brew "libnghttp2"  # curl
+brew "libidn2" # wget
+brew "libnghttp2" # curl
 brew "libomp"
-brew "libpsl"  # wget
+brew "libpsl" # wget
 brew "libressl"
 brew "librsvg"
 brew "libssh2"
 brew "libtool"
 brew "libxml2"
 brew "libxslt"
-brew "libxt"  # R Cairo
+brew "libxt" # R Cairo
 brew "llvm"
 brew "lsd"
 brew "lua"
@@ -132,7 +132,7 @@ brew "onefetch"
 brew "open-mpi"
 brew "openblas"
 brew "openjdk"
-brew "openjdk@8"  # for nextflow
+brew "openjdk@8" # for nextflow
 brew "openssh"
 brew "p7zip"
 brew "pandoc"
@@ -140,22 +140,22 @@ brew "pandoc-crossref"
 brew "parallel"
 brew "pcre"
 # > brew "php"
-# > brew "pipenv"  # python
+# > brew "pipenv" # python
 brew "pkg-config"
 brew "podman"
 brew "podofo"
 brew "poetry"
-brew "prettier"  # node
-brew "procs"  # rust
+brew "prettier" # node
+brew "procs" # rust
 brew "proj"
 brew "protobuf"
 brew "pyenv"
 brew "pygments"
-brew "pylint"  # python
-brew "ranger"  # python
+brew "pylint" # python
+brew "ranger" # python
 brew "rename"
-brew "ripgrep"  # rust
-brew "ripgrep-all"  # rust
+brew "ripgrep" # rust
+brew "ripgrep-all" # rust
 brew "rsync"
 brew "ruby"
 brew "rust"
@@ -168,7 +168,7 @@ brew "shunit2"
 brew "sox"
 brew "sqlite"
 brew "sratoolkit"
-brew "starship"  # rust
+brew "starship" # rust
 brew "stow"
 brew "tcl-tk"
 brew "tcsh"
@@ -177,14 +177,14 @@ brew "tesseract"
 brew "texinfo"
 brew "the_silver_searcher"
 brew "tmux"
-brew "tokei"  # rust
+brew "tokei" # rust
 brew "udunits"
 brew "unzip"
 brew "v8"
 brew "vim"
 brew "wget"
 brew "xh"
-brew "xsv"  # rust
+brew "xsv" # rust
 brew "zlib"
-brew "zoxide"  # rust
+brew "zoxide" # rust
 brew "zsh"
