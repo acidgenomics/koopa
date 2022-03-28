@@ -3,7 +3,7 @@
 install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-03-28.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -31,7 +31,7 @@ install_perl_packages() { # {{{1
     for module in "${modules[@]}"
     do
         koopa_alert "${module}"
-        "${app[cpanm]}" "$module" &>/dev/null
+        "${app[cpanm]}" "$module"
     done
     return 0
 }
