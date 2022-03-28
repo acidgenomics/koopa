@@ -313,6 +313,13 @@ koopa_install_htop() { # {{{1
         "$@"
 }
 
+koopa_install_icu4c() { # {{{1
+    koopa_install_app \
+        --name-fancy='ICU4C' \
+        --name='icu4c' \
+        "$@"
+}
+
 koopa_install_imagemagick() { # {{{1
     koopa_install_app \
         --name-fancy='ImageMagick' \
@@ -1011,6 +1018,13 @@ koopa_uninstall_homebrew() { # {{{1
 koopa_uninstall_htop() { # {{{1
     koopa_uninstall_app \
         --name='htop' \
+        "$@"
+}
+
+koopa_uninstall_icu4c() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='ICU4C' \
+        --name='icu4c' \
         "$@"
 }
 
