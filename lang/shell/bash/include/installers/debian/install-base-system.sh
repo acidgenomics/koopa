@@ -5,6 +5,9 @@ debian_install_base_system() { # {{{1
     # Install Debian base system.
     # @note Updated 2022-03-28.
     #
+    # @section Look up reverse dependencies:
+    # > sudo apt-cache rdepends --installed 'libnode-dev'
+    #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
     #
