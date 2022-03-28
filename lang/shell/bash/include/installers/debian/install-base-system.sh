@@ -217,6 +217,7 @@ debian_install_base_system() { # {{{1
             'libharfbuzz-dev'
             'libhdf5-dev'
             'libjpeg-dev'
+            'libkrb5-dev' # openssh
             'liblapack-dev'
             'libldns-dev' # openssh
             'liblz4-dev' # rsync
