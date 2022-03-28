@@ -22,6 +22,7 @@ install_node() { # {{{1
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "node-${dict[version]}"
+    koopa_alert_coffee_time
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}"
     # > "${app[make]}" test
