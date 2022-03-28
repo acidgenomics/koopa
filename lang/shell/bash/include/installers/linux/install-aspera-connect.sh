@@ -34,6 +34,7 @@ v${dict[maj_ver]}/bin/${dict[file]}"
         koopa_cp "${dict[script_target]}" "${dict[prefix]}"
         koopa_rm "${dict[script_target]}" "${dict[aspera_user_prefix]}"
     fi
+    koopa_chmod 0775 "${dict[prefix]}/var/log"
     koopa_assert_is_installed "${dict[prefix]}/bin/ascp"
     return 0
 }
