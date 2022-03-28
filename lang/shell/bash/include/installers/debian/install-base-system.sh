@@ -190,6 +190,7 @@ debian_install_base_system() { # {{{1
             'libcairo2-dev' # harfbuzz
             'libclang-dev' # rstudio-server
             'libcurl4-gnutls-dev'
+            'libedit-dev' # openssh
             'libevent-dev'
             'libffi-dev'
             'libfftw3-dev'
