@@ -649,6 +649,7 @@ ${dict[app_name]}/${dict[app_version]}.tar.gz"
     "${app[tar]}" -Pczf "${dict[local_tarball]}" "${dict[prefix]}/"
     "${app[aws]}" --profile="${dict[s3_profile]}" \
         s3 cp "${dict[local_tarball]}" "${dict[remote_tarball]}"
+    koopa_rm "${dict[tmp_dir]}"
     return 0
 }
 
