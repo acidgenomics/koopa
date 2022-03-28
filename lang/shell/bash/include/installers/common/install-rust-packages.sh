@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Need to support on Linux
+# - dog
+# - ripgrep-all
+# - tealdeer
+
 install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-03-28.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -42,11 +47,10 @@ install_rust_packages() { # {{{1
     if [[ ! -x "${app[brew]}" ]]
     then
         pkgs+=(
-            # Currently failing to build due to cachedir constraint.
-            # https://github.com/phiresky/ripgrep-all/issues/88
-            # > 'ripgrep-all'
+            'ripgrep-all'
             'bat'
             'broot'
+            'dog'
             'du-dust'
             'exa'
             'fd-find'
@@ -54,7 +58,9 @@ install_rust_packages() { # {{{1
             'mcfly'
             'procs'
             'ripgrep'
+            'ripgrep-all'
             'starship'
+            'tealdeer'
             'tokei'
             'xsv'
             'zoxide'
@@ -81,25 +87,38 @@ install_rust_packages() { # {{{1
                 ;;
         esac
         case "$pkg" in
+            'dog')
+                args+=(
+                    '--git' 'https://github.com/ogham/dog.git'
+                    '--tag' "v${version}"
+                )
+                ;;
             'du-dust')
                 # Currently outdated on crates.io.
                 args+=(
-                    --git 'https://github.com/bootandy/dust.git'
-                    --tag "v${version}"
+                    '--git' 'https://github.com/bootandy/dust.git'
+                    '--tag' "v${version}"
                 )
                 ;;
             'fd-find')
                 # Currently outdated on crates.io.
                 args+=(
-                    --git 'https://github.com/sharkdp/fd.git'
-                    --tag "v${version}"
+                    '--git' 'https://github.com/sharkdp/fd.git'
+                    '--tag' "v${version}"
                 )
                 ;;
             'mcfly')
                 # Currently only available on GitHub.
                 args+=(
-                    --git 'https://github.com/cantino/mcfly.git'
-                    --tag "v${version}"
+                    '--git' 'https://github.com/cantino/mcfly.git'
+                    '--tag' "v${version}"
+                )
+                ;;
+            'ripgrep_all')
+                # Current v0.9.6 stable doesn't build on Linux.
+                # https://github.com/phiresky/ripgrep-all/issues/88
+                args+=(
+                    '--git' 'https://github.com/phiresky/ripgrep-all'
                 )
                 ;;
             *)
