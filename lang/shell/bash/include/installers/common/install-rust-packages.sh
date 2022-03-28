@@ -80,6 +80,7 @@ install_rust_packages() { # {{{1
                 pkg='ripgrep_all'
                 ;;
         esac
+        args+=("$pkg")
         case "$pkg" in
             'dog')
                 args+=(
@@ -117,10 +118,7 @@ install_rust_packages() { # {{{1
                 ;;
             *)
                 # Packages available on crates.io.
-                args+=(
-                    "$pkg"
-                    '--version' "${version}"
-                )
+                args+=('--version' "${version}")
                 case "$pkg" in
                     'ripgrep')
                         args+=('--features' 'pcre2')
