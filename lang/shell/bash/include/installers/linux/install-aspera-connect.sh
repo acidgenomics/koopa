@@ -27,7 +27,7 @@ v${dict[maj_ver]}/bin/${dict[file]}"
     dict[script_target]="${dict[aspera_user_prefix]}/connect"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    "./${dict[script]}"
+    "./${dict[script]}" &>/dev/null
     koopa_assert_is_dir "${dict[script_target]}"
     if [[ "${dict[prefix]}" != "${dict[script_target]}" ]]
     then
