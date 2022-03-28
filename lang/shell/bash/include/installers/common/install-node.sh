@@ -28,6 +28,10 @@ install_node() { # {{{1
     koopa_alert_coffee_time
     if koopa_is_installed "${app[brew]}"
     then
+        dict[python_version]="$(koopa_variable 'python')"
+        dict[python_maj_min_ver]="$( \
+            koopa_major_minor_version "${dict[python_version]}" \
+        )"
         koopa_activate_homebrew_opt_prefix \
             'brotli' \
             'c-ares' \
@@ -36,7 +40,7 @@ install_node() { # {{{1
             'libuv' \
             'openssl@1.1' \
             'pkg-config' \
-            'python@3.10'
+            "python@${dict[python_maj_min_ver]}"
     else
         koopa_activate_opt_prefix 'python'
     fi
