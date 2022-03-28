@@ -14,6 +14,7 @@ koopa_salmon_index() { # {{{1
     # - salmon index --help
     # - https://combine-lab.github.io/alevin-tutorial/2019/selective-alignment/
     # - https://salmon.readthedocs.io/en/latest/salmon.html
+    # - https://www.biostars.org/p/456231/
     # - https://github.com/refgenie/refgenieserver/issues/63
     #
     # @examples
