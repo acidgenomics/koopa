@@ -43,11 +43,11 @@ portable/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         # > '--disable-etc-default-login'
+        # > '--sysconfdir=/etc/ssh'
         # > '--with-default-path=/usr/bin'
         # > '--with-pid-dir=/run'
         # > '--with-superuser-path=/usr/sbin:/usr/bin'
         "--prefix=${dict[prefix]}"
-        '--sysconfdir=/etc/ssh'
         '--with-kerberos5'
         '--with-ldns'
         '--with-libedit'
