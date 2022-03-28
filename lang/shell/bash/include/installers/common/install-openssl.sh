@@ -10,6 +10,7 @@ install_openssl() { # {{{1
     # @note Updated 2022-01-03.
     #
     # @seealso
+    # - https://wiki.openssl.org/index.php/Compilation_and_Installation
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/openssl@3.rb
     # """
     local app dict
@@ -31,7 +32,7 @@ install_openssl() { # {{{1
     ./config \
         --prefix="${dict[prefix]}" \
         --openssldir="${dict[prefix]}" \
-        shared
+        no-shared
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
