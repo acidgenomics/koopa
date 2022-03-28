@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Add support for installing Adoptium Temurin OpenJDK 17.0.2 LTS on Linux.
 ** TODO Node installer on Ubuntu conflicts with 'koopa install base-system'.
     Rerunning our 'base-system' install script will remove current Node.
     Need to debug this further in Docker.
