@@ -3,7 +3,7 @@
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-27.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
@@ -14,14 +14,10 @@ koopa_locate_app() { # {{{1
     #
     # Resolving the full executable path can cause BusyBox coreutils to error.
     # """
-    # Fast return for direct executable input.
-    if [[ "$#" -eq 1 ]]
+    if [[ "$#" -eq 1 ]] && [[ -x "${1:?}" ]] && [[ ! -d "${1:?}" ]]
     then
-        if [[ -x "${1:?}" ]]
-        then
-            koopa_print "${1:?}"
-            return 0
-        fi
+        koopa_print "${1:?}"
+        return 0
     fi
     local app dict pos
     declare -A dict=(
@@ -137,7 +133,7 @@ bin/${dict[app_name]}"
     if [[ -x "${dict[macos_app]}" ]] && koopa_is_macos
     then
         app="${dict[macos_app]}"
-    elif [[ -x "${dict[app_name]}" ]]
+    elif [[ -x "${dict[app_name]}" ]] && [[ ! -d "${dict[app_name]}" ]]
     then
         app="${dict[app_name]}"
     elif [[ "${dict[brew_prefix]}" != "${dict[make_prefix]}" ]] && \
