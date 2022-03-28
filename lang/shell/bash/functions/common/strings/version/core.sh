@@ -190,8 +190,6 @@ koopa_extract_version() { # {{{1
     return 0
 }
 
-# FIXME This is now failing to return correctly for zsh...
-
 koopa_get_version() { # {{{1
     # """
     # Get the version of an installed program.
