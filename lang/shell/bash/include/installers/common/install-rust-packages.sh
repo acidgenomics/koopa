@@ -42,7 +42,6 @@ install_rust_packages() { # {{{1
     if [[ ! -x "${app[brew]}" ]]
     then
         pkgs+=(
-            'ripgrep-all'
             'bat'
             'broot'
             'dog'
