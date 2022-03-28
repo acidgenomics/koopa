@@ -7,8 +7,9 @@ install_node() { # {{{1
     #
     # @seealso
     # - https://github.com/nodejs/node
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/node.rb
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa_locate_make)"
@@ -18,13 +19,25 @@ install_node() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict[version]}.tar.gz"
-    dict[url]="https://github.com/nodejs/node/archive/refs/tags/${dict[file]}"
+    dict[file]="node-v${dict[version]}.tar.xz"
+    dict[url]="https://nodejs.org/dist/v${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_cd "node-${dict[version]}"
+    koopa_cd "node-v${dict[version]}"
     koopa_alert_coffee_time
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--shared-brotli'
+        '--shared-cares'
+        '--shared-libuv'
+        '--shared-nghttp2'
+        '--shared-openssl'
+        '--shared-zlib'
+        '--with-intl=system-icu'
+        '--without-corepack'
+        '--without-npm'
+    )
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
