@@ -71,6 +71,7 @@ __koopa_posix_header() { # {{{1
             koopa_export_gnupg || return 1
             koopa_export_history || return 1
             koopa_export_pager || return 1
+            koopa_activate_color_mode || return 1
             koopa_activate_aspera_connect || return 1
             koopa_activate_bat || return 1
             koopa_activate_dircolors || return 1
@@ -83,7 +84,6 @@ __koopa_posix_header() { # {{{1
             if koopa_is_macos
             then
                 koopa_macos_activate_cli_colors || return 1
-                koopa_macos_activate_color_mode || return 1
                 koopa_macos_activate_visual_studio_code || return 1
             fi
             shell="$(koopa_shell_name)"
