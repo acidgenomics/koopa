@@ -172,7 +172,7 @@ htop="3.1.2"
 icu="70.1"
 
 # https://imagemagick.org/
-imagemagick="7.1.0-28"
+imagemagick="7.1.0-29"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -346,7 +346,7 @@ shunit2="2.1.7"
 singularity="3.8.5"
 
 # https://www.sqlite.org/download.html
-sqlite="3.37.2"
+sqlite="3.38.2"
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
