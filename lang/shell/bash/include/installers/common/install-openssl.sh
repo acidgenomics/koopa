@@ -8,6 +8,9 @@ install_openssl() { # {{{1
     # """
     # Install OpenSSL.
     # @note Updated 2022-01-03.
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/openssl@3.rb
     # """
     local app dict
     koopa_assert_has_no_args "$#"
