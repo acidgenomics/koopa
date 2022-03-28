@@ -52,7 +52,6 @@ install_node() { # {{{1
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--shared-brotli'
-        '--shared-libuv'
         '--shared-nghttp2'
         '--shared-openssl'
         '--shared-zlib'
@@ -62,7 +61,10 @@ install_node() { # {{{1
     )
     if koopa_is_installed "${app[brew]}"
     then
-        conf_args+=('--shared-cares')
+        conf_args+=(
+            '--shared-cares'
+            '--shared-libuv'
+        )
     fi
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
