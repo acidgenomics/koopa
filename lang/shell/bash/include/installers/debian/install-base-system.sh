@@ -232,7 +232,7 @@ debian_install_base_system() { # {{{1
             'libopenblas-dev'
             'libopenjp2-7-dev' # GDAL
             'libopenmpi-dev'
-            'libpam-ssh' # openssh
+            'libpam0g-dev' # openssh
             'libpcre2-dev' # rJava
             'libpcre3-dev' # ag
             'libperl-dev'
