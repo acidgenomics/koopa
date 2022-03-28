@@ -42,12 +42,12 @@ portable/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
-        # > '--sysconfdir' '/etc/ssh'
-        # > '--with-default-path' '/usr/bin'
-        # > '--with-pid-dir' '/run'
-        # > '--with-superuser-path' '/usr/sbin:/usr/bin'
+        # > '--sysconfdir=/etc/ssh'
+        # > '--with-default-path=/usr/bin'
+        # > '--with-pid-dir=/run'
+        # > '--with-superuser-path=/usr/sbin:/usr/bin'
+        "--prefix=${dict[prefix]}"
         '--disable-etc-default-login'
-        '--prefix' "${dict[prefix]}"
         '--with-kerberos5'
         '--with-ldns'
         '--with-libedit'
