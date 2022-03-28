@@ -434,7 +434,6 @@ koopa_install_node() { # {{{1
     koopa_install_app \
         --name-fancy='Node.js' \
         --name='node' \
-        --system \
         "$@"
 }
 
