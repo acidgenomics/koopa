@@ -130,6 +130,7 @@ __koopa_complete() { # {{{1
                         'homebrew'
                         'homebrew-bundle'
                         'htop'
+                        'icu4c'
                         'imagemagick'
                         'julia'
                         'julia-packages'
