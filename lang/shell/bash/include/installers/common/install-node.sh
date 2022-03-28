@@ -24,7 +24,7 @@ install_node() { # {{{1
     koopa_cd "node-${dict[version]}"
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}"
-    "${app[make]}" test
+    # > "${app[make]}" test
     "${app[make]}" install
     return 0
 }
