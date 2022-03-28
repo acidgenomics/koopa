@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to support on Linux
-# - dog
-# - ripgrep-all
-# - tealdeer
-
 install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
@@ -58,7 +53,7 @@ install_rust_packages() { # {{{1
             'mcfly'
             'procs'
             'ripgrep'
-            'ripgrep-all'
+            # > 'ripgrep-all'
             'starship'
             'tealdeer'
             'tokei'
