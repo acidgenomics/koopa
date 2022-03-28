@@ -57,7 +57,7 @@ portable/${dict[file]}"
     if koopa_is_linux
     then
         conf_args+=(
-            '--with-privsep-path' '/var/lib/sshd'
+            '--with-privsep-path=/var/lib/sshd'
         )
     fi
     ./configure "${conf_args[@]}"
