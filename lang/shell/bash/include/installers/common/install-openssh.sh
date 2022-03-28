@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
 
+# FIXME This make line is currently problematic on Linux:
+# > /usr/bin/mkdir -p -m 0755 /var/empty
+
 install_openssh() { # {{{1
     # """
     # Install OpenSSH.
-    # @note Updated 2022-01-19.
+    # @note Updated 2022-03-28.
+    #
+    # @seealso
+    # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/openssh.html
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
+    #     openssh.rb
+    # - https://forums.gentoo.org/viewtopic-t-1085536-start-0.html
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa_locate_make)"
@@ -22,7 +31,25 @@ portable/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=(
+        '--prefix' "${dict[prefix]}"
+        '--sysconfdir' '/etc/ssh'
+        '--with-default-path' '/usr/bin'
+        '--with-kerberos5'
+        '--with-ldns'
+        '--with-libedit'
+        '--with-pam'
+        '--with-pid-dir' '/run'
+        '--with-security-key-builtin'
+        '--with-superuser-path' '/usr/sbin:/usr/bin'
+    )
+    if koopa_is_linux
+    then
+        conf_args+=(
+            '--with-privsep-path' '/var/lib/sshd'
+        )
+    fi
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
