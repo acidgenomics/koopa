@@ -534,7 +534,7 @@ python-ranger-fm="1.9.3"        # homebrew
 # ==============================================================================
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.9"            # system
+ruby-bundler="2.3.10"            # system
 
 ruby-bashcov="1.8.2"            # recommended
 ruby-ronn="0.7.3"               # recommended
