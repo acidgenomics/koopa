@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing this with install on Debian:
+# ./openssl: error while loading shared libraries: libssl.so.3: cannot open
+# shared object file: No such file or directory
+
 install_openssl() { # {{{1
     # """
     # Install OpenSSL.
