@@ -169,7 +169,7 @@ homebrew="3.4.3"
 htop="3.1.2"
 
 # http://site.icu-project.org/
-icu="70.1"
+icu4c="70.1"
 
 # https://imagemagick.org/
 imagemagick="7.1.0-29"
