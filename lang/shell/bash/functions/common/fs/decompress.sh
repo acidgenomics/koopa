@@ -3,7 +3,7 @@
 koopa_decompress() { # {{{1
     # """
     # Decompress a compressed file.
-    # @note Updated 2022-03-24.
+    # @note Updated 2022-03-28.
     #
     # This function currently allows uncompressed files to pass through.
     #
@@ -91,10 +91,10 @@ koopa_decompress() { # {{{1
                     ;;
             esac
             cmd_args=(
-                '--decompress' # '-d'
-                '--force' # '-f'
-                '--keep' # '-k'
-                '--stdout' # '-c'
+                '-c' # '--stdout'.
+                '-d' # '--decompress'.
+                '-f' # '--force'.
+                '-k' # '--keep'.
                 "${dict[source_file]}"
             )
             case "${dict[stdout]}" in
