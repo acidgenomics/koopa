@@ -53,15 +53,6 @@ koopa_debian_install_llvm() { # {{{1
         "$@"
 }
 
-koopa_debian_install_node() { # {{{1
-    koopa_install_app \
-        --name-fancy='Node.js' \
-        --name='node' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
 koopa_debian_install_pandoc() { # {{{1
     koopa_install_app \
         --name-fancy='Pandoc' \
