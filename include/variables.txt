@@ -231,7 +231,7 @@ node="17.8.0"
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="17.0.2"
+openjdk="18"
 
 # https://www.openssh.com/portable.html
 openssh="8.9p1"
