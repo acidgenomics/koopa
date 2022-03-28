@@ -3,7 +3,7 @@
 install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
-    # @note Updated 2021-12-14.
+    # @note Updated 2022-03-28.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -39,6 +39,13 @@ install_openjdk() { # {{{1
             dict[arch2]="${dict[arch]}"
     esac
     case "${dict[version]}" in
+        '18')
+            dict[unique]='43f95e8614114aeaa8e8a5fcf20a682d/36'
+            ;;
+        '17.0.2')
+            # Current LTS.
+            dict[unique]='dfd4a8d0985749f896bed50d7138ee7f/8'
+            ;;
         '17.0.1')
             dict[unique]='2a2082e5a09d4267845be086888add4f/12'
             ;;
