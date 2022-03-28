@@ -14,7 +14,9 @@ koopa_locate_app() { # {{{1
     #
     # Resolving the full executable path can cause BusyBox coreutils to error.
     # """
-    if [[ "$#" -eq 1 ]] && [[ -x "${1:?}" ]] && [[ ! -d "${1:?}" ]]
+    if [[ "$#" -eq 1 ]] && \
+        [[ -x "${1:?}" ]] && \
+        koopa_is_installed "${1:?}"
     then
         koopa_print "${1:?}"
         return 0
@@ -103,7 +105,6 @@ koopa_locate_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 1
-    # Allow simple input using a single positional argument for name.
     if [[ -z "${dict[app_name]}" ]]
     then
         koopa_assert_has_args_eq "$#" 1
@@ -117,7 +118,6 @@ koopa_locate_app() { # {{{1
     then
         dict[koopa_opt_name]="${dict[app_name]}"
     fi
-    # Prepare paths where to look for app.
     dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
     dict[koopa_app]="${dict[koopa_opt_prefix]}/${dict[koopa_opt_name]}/\
 bin/${dict[app_name]}"
@@ -129,13 +129,9 @@ libexec/gnubin/${dict[app_name]}"
         dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
 bin/${dict[app_name]}"
     fi
-    # Ready to locate the application by priority.
     if [[ -x "${dict[macos_app]}" ]] && koopa_is_macos
     then
         app="${dict[macos_app]}"
-    elif [[ -x "${dict[app_name]}" ]] && [[ ! -d "${dict[app_name]}" ]]
-    then
-        app="${dict[app_name]}"
     elif [[ "${dict[brew_prefix]}" != "${dict[make_prefix]}" ]] && \
         [[ -x "${dict[make_app]}" ]]
     then
@@ -151,7 +147,6 @@ bin/${dict[app_name]}"
     then
         app="${dict[brew_app]}"
     else
-        # Using 'realpath' here causes issues with Alpine BusyBox coreutils.
         app="$(koopa_which "${dict[app_name]}" || true)"
     fi
     if [[ -z "$app" ]]
@@ -159,9 +154,13 @@ bin/${dict[app_name]}"
         koopa_warn "Failed to locate '${dict[app_name]}'."
         return 1
     fi
-    if [[ ! -x "$app" ]]
+    if ! { \
+        [[ -x "$app" ]] && \
+        [[ ! -d "$app" ]] && \
+        koopa_is_installed "$app"; \
+    }
     then
-        koopa_warn "Not executable: '${app}'."
+        koopa_warn "Not installed: '${app}'."
         return 1
     fi
     koopa_print "$app"
