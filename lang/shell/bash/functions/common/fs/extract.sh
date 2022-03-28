@@ -107,6 +107,7 @@ koopa_extract() { # {{{1
                 koopa_stop "Unsupported extension: '${file}'."
                 ;;
         esac
+        koopa_warn "FIXME $cmd ${cmd_args[*]}"
         "$cmd" "${cmd_args[@]}"
     done
     return 0
