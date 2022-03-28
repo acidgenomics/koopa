@@ -12,6 +12,7 @@ install_node() { # {{{1
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
+        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
@@ -25,6 +26,20 @@ install_node() { # {{{1
     koopa_extract "${dict[file]}"
     koopa_cd "node-v${dict[version]}"
     koopa_alert_coffee_time
+    if koopa_is_installed "${app[brew]}"
+    then
+        koopa_activate_homebrew_opt_prefix \
+            'brotli' \
+            'c-ares' \
+            'icu4c' \
+            'libnghttp2' \
+            'libuv' \
+            'openssl@1.1' \
+            'pkg-config' \
+            'python@3.10'
+    else
+        koopa_activate_opt_prefix 'python'
+    fi
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--shared-brotli'
