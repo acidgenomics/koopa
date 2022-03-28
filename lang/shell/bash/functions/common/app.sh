@@ -294,7 +294,7 @@ koopa_install_app() { # {{{1
                 shift 1
                 ;;
             '--verbose')
-                set -x
+                set -o xtrace
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
