@@ -35,8 +35,8 @@ __koopa_get_version_arg() { # {{{1
 __koopa_get_version_name() { # {{{1
     # """
     # Match a desired program name to corresponding to dependency to
-    # run with a version argument (e.g. '--version').
-    # @note Updated 2022-03-18.
+    # run with a version argument.
+    # @note Updated 2022-03-25.
     # """
     local name
     koopa_assert_has_args_eq "$#" 1
@@ -93,6 +93,9 @@ __koopa_get_version_name() { # {{{1
             ;;
         'llvm')
             name='llvm-config'
+            ;;
+        'man-db')
+            name='man'
             ;;
         'ncurses')
             name='ncurses6-config'
@@ -190,7 +193,7 @@ koopa_extract_version() { # {{{1
 koopa_get_version() { # {{{1
     # """
     # Get the version of an installed program.
-    # @note Updated 2022-03-21.
+    # @note Updated 2022-03-27.
     #
     # @examples
     # > koopa system version 'R' 'conda' 'coreutils' 'python' 'salmon'
@@ -214,9 +217,13 @@ koopa_get_version() { # {{{1
         dict[version_arg]="$(__koopa_get_version_arg "${dict[bn]}")"
         dict[locate_fun]="koopa_locate_${dict[bn_snake]}"
         dict[version_fun]="koopa_${dict[bn_snake]}_version"
+        if koopa_is_installed "${dict[cmd]}"
+        then
+            dict[cmd]="$(koopa_realpath "${dict[cmd]}")"
+        fi
         if koopa_is_function "${dict[version_fun]}"
         then
-            if [[ -x "${dict[cmd]}" ]]
+            if koopa_is_installed "${dict[cmd]}"
             then
                 dict[str]="$("${dict[version_fun]}" "${dict[cmd]}")"
             else
@@ -226,7 +233,7 @@ koopa_get_version() { # {{{1
             koopa_print "${dict[str]}"
             continue
         fi
-        if [[ ! -x "${dict[cmd]}" ]]
+        if ! koopa_is_installed "${dict[cmd]}"
         then
             if koopa_is_function "${dict[locate_fun]}"
             then
