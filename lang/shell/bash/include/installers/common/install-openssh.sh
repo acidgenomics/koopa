@@ -32,16 +32,16 @@ portable/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
+        # > '--with-default-path' '/usr/bin'
+        # > '--with-pid-dir' '/run'
+        # > '--with-superuser-path' '/usr/sbin:/usr/bin'
         '--prefix' "${dict[prefix]}"
         '--sysconfdir' '/etc/ssh'
-        '--with-default-path' '/usr/bin'
         '--with-kerberos5'
         '--with-ldns'
         '--with-libedit'
         '--with-pam'
-        '--with-pid-dir' '/run'
         '--with-security-key-builtin'
-        '--with-superuser-path' '/usr/sbin:/usr/bin'
     )
     if koopa_is_linux
     then
