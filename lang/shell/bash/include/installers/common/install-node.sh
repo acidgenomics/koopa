@@ -51,7 +51,6 @@ install_node() { # {{{1
     fi
     conf_args=(
         "--prefix=${dict[prefix]}"
-        '--with-intl=system-icu'
         '--without-corepack'
         '--without-npm'
     )
@@ -64,6 +63,7 @@ install_node() { # {{{1
             '--shared-nghttp2'
             '--shared-openssl'
             '--shared-zlib'
+            '--with-intl=system-icu'
         )
     fi
     ./configure "${conf_args[@]}"
