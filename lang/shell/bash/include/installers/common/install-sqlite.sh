@@ -3,7 +3,7 @@
 install_sqlite() { # {{{1
     # """
     # Install SQLite.
-    # @note Updated 2022-01-06.
+    # @note Updated 2022-03-28.
     #
     # Use autoconf instead of amalgamation.
     #
@@ -29,6 +29,7 @@ install_sqlite() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     case "${dict[version]}" in
+        '3.38.2' | \
         '3.37.2')
             dict[year]='2022'
             ;;
