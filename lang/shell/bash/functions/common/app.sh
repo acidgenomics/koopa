@@ -589,6 +589,69 @@ koopa_install_app_packages() { # {{{1
     return 0
 }
 
+koopa_push_app_build() { # {{{1
+    # """
+    # Create a tarball of app build, and push to S3 bucket.
+    # @note Updated 2022-03-28.
+    #
+    # @examples
+    # > koopa_push_app_build --app-name='node' --app-version='17.8.0'
+    # """
+    local app dict
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [aws]="$(koopa_locate_aws)"
+        [tar]="$(koopa_locate_tar)"
+    )
+    declare -A dict=(
+        [s3_profile]='acidgenomics'
+        [s3_bucket]='s3://koopa.acidgenomics.com/app'
+        [app_prefix]="$(koopa_app_prefix)"
+        [app_name]=''
+        [app_version]=''
+        [os_string]="$(koopa_os_string)"
+        [tmp_dir]="$(koopa_tmp_dir)"
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--app-name='*)
+                dict[app_name]="${1#*=}"
+                shift 1
+                ;;
+            '--app-name')
+                dict[app_name]="${2:?}"
+                shift 2
+                ;;
+            '--app-version='*)
+                dict[app_version]="${1#*=}"
+                shift 1
+                ;;
+            '--app-version')
+                dict[app_version]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--app-name' "${dict[app_name]}" \
+        '--app-version' "${dict[app_version]}"
+    dict[prefix]="${dict[app_prefix]}/${dict[app_name]}/${dict[app_version]}"
+    dict[local_tarball]="${dict[tmp_dir]}/${dict[app_version]}.tar.gz"
+    dict[s3_tarball]="${dict[s3_prefix]}/${dict[os_string]}/${dict[app_name]}/\
+${dict[app_version]}.tar.gz"
+    koopa_alert "Pushing '${dict[local_tarball]}' to ${dict[remote_tarball]}'."
+    "${app[tar]}" -czvf "${dict[tarball_file]}" "${dict[prefix]}/"
+    "${app[aws]}" --profile="${dict[profile]}" \
+        s3 cp "${dict[local_tarball]}" "${dict[s3_tarball]}"
+    return 0
+}
+
 koopa_reinstall_app() { # {{{1
     # """
     # Reinstall an application (alias).
