@@ -3,7 +3,7 @@
 install_gnu_app() { # {{{1
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-03-29.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -34,6 +34,11 @@ install_gnu_app() { # {{{1
             ;;
         *)
             dict[suffix]='xz'
+            ;;
+    esac
+    case "${dict[name]}" in
+        'ncurses')
+            dict[version]="$(koopa_major_minor_version "${dict[version]}")"
             ;;
     esac
     dict[file]="${dict[name]}-${dict[version]}.tar.${dict[suffix]}"
