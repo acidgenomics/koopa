@@ -589,6 +589,7 @@ koopa_install_app_packages() { # {{{1
     return 0
 }
 
+# FIXME Allow the user to use positional arguments here.
 koopa_push_app_build() { # {{{1
     # """
     # Create a tarball of app build, and push to S3 bucket.
@@ -597,7 +598,7 @@ koopa_push_app_build() { # {{{1
     # @examples
     # > koopa_push_app_build --app-name='node' --app-version='17.8.0'
     # """
-    local app dict
+    local app dict pos
     koopa_assert_has_args "$#"
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
@@ -612,6 +613,7 @@ koopa_push_app_build() { # {{{1
         [s3_profile]='acidgenomics'
         [tmp_dir]="$(koopa_tmp_dir)"
     )
+    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -633,11 +635,22 @@ koopa_push_app_build() { # {{{1
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
-            *)
+            '-'*)
                 koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -gt 0 ]]
+    then
+        koopa_assert_has_args_eq "$#" 2
+        dict[app_name]="${1:?}"
+        dict[app_version]="${2:?}"
+    fi
     koopa_assert_is_set \
         '--app-name' "${dict[app_name]}" \
         '--app-version' "${dict[app_version]}"
