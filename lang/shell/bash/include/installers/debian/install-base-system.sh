@@ -3,7 +3,7 @@
 debian_install_base_system() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2022-02-13.
+    # @note Updated 2022-03-28.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -216,6 +216,7 @@ debian_install_base_system() { # {{{1
             'libhdf5-dev'
             'libjpeg-dev'
             'liblapack-dev'
+            'libldns-dev' # openssh
             'liblz4-dev' # rsync
             'liblzma-dev'
             'libmagick++-dev'
