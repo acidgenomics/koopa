@@ -190,13 +190,15 @@ koopa_extract_version() { # {{{1
     return 0
 }
 
+# FIXME This is now failing to return correctly for zsh...
+
 koopa_get_version() { # {{{1
     # """
     # Get the version of an installed program.
-    # @note Updated 2022-03-27.
+    # @note Updated 2022-03-28.
     #
     # @examples
-    # > koopa system version 'R' 'conda' 'coreutils' 'python' 'salmon'
+    # > koopa system version 'R' 'conda' 'coreutils' 'python' 'salmon' 'zsh'
     # """
     local cmd
     koopa_assert_has_args "$#"
@@ -217,13 +219,17 @@ koopa_get_version() { # {{{1
         dict[version_arg]="$(__koopa_get_version_arg "${dict[bn]}")"
         dict[locate_fun]="koopa_locate_${dict[bn_snake]}"
         dict[version_fun]="koopa_${dict[bn_snake]}_version"
-        if koopa_is_installed "${dict[cmd]}"
+        if [[ -x "${dict[cmd]}" ]] && \
+            [[ ! -d "${dict[cmd]}" ]] && \
+            koopa_is_installed "${dict[cmd]}"
         then
             dict[cmd]="$(koopa_realpath "${dict[cmd]}")"
         fi
         if koopa_is_function "${dict[version_fun]}"
         then
-            if koopa_is_installed "${dict[cmd]}"
+            if [[ -x "${dict[cmd]}" ]] && \
+                [[ ! -d "${dict[cmd]}" ]] && \
+                koopa_is_installed "${dict[cmd]}"
             then
                 dict[str]="$("${dict[version_fun]}" "${dict[cmd]}")"
             else
@@ -233,7 +239,11 @@ koopa_get_version() { # {{{1
             koopa_print "${dict[str]}"
             continue
         fi
-        if ! koopa_is_installed "${dict[cmd]}"
+        if ! { \
+            [[ -x "${dict[cmd]}" ]] && \
+            [[ ! -d "${dict[cmd]}" ]] && \
+            koopa_is_installed "${dict[cmd]}"; \
+        }
         then
             if koopa_is_function "${dict[locate_fun]}"
             then
@@ -241,8 +251,9 @@ koopa_get_version() { # {{{1
             else
                 dict[cmd]="$(koopa_which_realpath "${dict[cmd]}")"
             fi
-            [[ -x "${dict[cmd]}" ]] || return 1
         fi
+        koopa_is_installed "${dict[cmd]}" || return 1
+        [[ -x "${dict[cmd]}" ]] || return 1
         dict[str]="$("${dict[cmd]}" "${dict[version_arg]}" 2>&1 || true)"
         [[ -n "${dict[str]}" ]] || return 1
         dict[str]="$(koopa_extract_version "${dict[str]}")"
