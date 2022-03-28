@@ -22,6 +22,7 @@ install_perl_packages() { # {{{1
     then
         koopa_alert_install_start 'CPAN Minus'
         "${app[cpan]}" -i 'App::cpanminus' &>/dev/null
+        app[cpanm]="$(koopa_locate_cpanm)"
     fi
     modules=(
         'App::Ack'
