@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Installer isn't currently working:
-# Returning 'Array is empty' error.
-# FIXME Need to debug this install stack...
-
 linux_install_docker_credential_pass() { # {{{1
     # """
     # Install docker-credential-pass.
-    # @note Updated 2022-01-29.
+    # @note Updated 2022-03-28.
     # """
     local dict
     koopa_assert_has_no_args "$#"
@@ -33,6 +29,6 @@ download/v${dict[version]}/${dict[file]}"
     koopa_chmod '0775' "${dict[name]}"
     koopa_mkdir "${dict[prefix]}/bin"
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
-    koopa_cp "${dict[name]}" "${dict[prefix]}/bin"
+    koopa_cp --target-directory="${dict[prefix]}/bin" "${dict[name]}"
     return 0
 }
