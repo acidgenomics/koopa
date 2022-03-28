@@ -79,7 +79,7 @@ opensuse_install_base_system() { # {{{1
             'gzip'
             'make'
             'man'
-            'procps'  # ps
+            'procps' # ps
             'sudo'
             'tar'
             'unzip'

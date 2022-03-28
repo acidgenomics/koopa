@@ -16,5 +16,5 @@ tap "homebrew/core"
 brew "util-linux", link: false
 
 brew "docker"
-brew "docker-credential-helper"  # docker-credential-pass
+brew "docker-credential-helper" # docker-credential-pass
 brew "pass"

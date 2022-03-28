@@ -25,7 +25,7 @@ koopa_extract() { # {{{1
                 cmd="$(koopa_locate_tar)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
-                    '-x' # '-x'  # '--extract'.
+                    '-x' # '--extract'.
                 )
                 case "$file" in
                     *'.bz2')

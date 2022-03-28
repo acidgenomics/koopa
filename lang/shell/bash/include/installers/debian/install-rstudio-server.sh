@@ -17,7 +17,7 @@ debian_install_rstudio_server() { # {{{1
         [sudo]="$(koopa_locate_sudo)"
     )
     declare -A dict=(
-        [arch]="$(koopa_arch2)"  # e.g. 'amd64'.
+        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
         [os_codename]='bionic'
     )
     # shellcheck source=/dev/null

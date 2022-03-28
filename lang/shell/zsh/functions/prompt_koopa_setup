@@ -51,7 +51,7 @@ koopa_zsh_prompt_string() { # {{{1
         [git]="\$(_koopa_prompt_git)"
         [git_color]="${fg[green]}"
         [newline]=$'\n'
-        [prompt]='❯'  # default is '%%'.
+        [prompt]='❯' # default is '%%'.
         [prompt_color]="${fg[magenta]}"
         [user]="$(_koopa_user)@$(_koopa_hostname)"
         [user_color]="${fg[cyan]}"

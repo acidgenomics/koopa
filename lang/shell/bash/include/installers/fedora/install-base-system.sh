@@ -77,9 +77,9 @@ fedora_install_base_system() { # {{{1
             'less'
             'make'
             'man-db'
-            'ncurses-devel'  # zsh
-            'patch'  # bash
-            'procps'  # ps
+            'ncurses-devel' # zsh
+            'patch' # bash
+            'procps' # ps
             'sudo'
             'tar'
             'unzip'
@@ -102,7 +102,7 @@ fedora_install_base_system() { # {{{1
             'cryptsetup'                                          # |       NO |
             'curl'                                                # |      YES |
             'diffutils'                                           # |      YES |
-            'expect'  # installs unbuffer                         # |        ? |
+            'expect' # Installs unbuffer.                         # |        ? |
             'file'                                                # |        ? |
             'gcc-gfortran'                                        # |        ? |
             'gnupg2'                                              # |      YES |
@@ -111,7 +111,7 @@ fedora_install_base_system() { # {{{1
             'libtool'                                             # |      YES |
             'lua'                                                 # |      YES |
             'openssl'                                             # |      YES |
-            'pkgconfig'  # This is now pkgconf wrapped.           # |      YES |
+            'pkgconfig' # This is now 'pkgconf' wrapped.          # |      YES |
             'qpdf'                                                # |       NO |
             'readline'                                            # |      YES |
             'ruby'                                                # |        ? |
@@ -133,7 +133,7 @@ fedora_install_base_system() { # {{{1
             pkgs+=(
             #                                                       | RHEL UBI |
             # ------------------------------------------------------|----------|
-                'libxcrypt-compat'  # Homebrew                    # |        ? |
+                'libxcrypt-compat' # Homebrew                     # |        ? |
             )
         fi
     fi
@@ -144,57 +144,57 @@ fedora_install_base_system() { # {{{1
         pkgs+=(
             #                                                       | RHEL UBI |
             # ------------------------------------------------------|----------|
-            'apr-devel'  # subversion                             # |      YES |
-            'apr-util-devel'  # subversion                        # |      YES |
+            'apr-devel' # subversion                              # |      YES |
+            'apr-util-devel' # subversion                         # |      YES |
             'bison-devel'                                         # |       NO |
             'bzip2-devel'                                         # |      YES |
             'cairo-devel'                                         # |       NO |
-            'expat-devel'  # udunits                              # |      YES |
+            'expat-devel' # udunits                               # |      YES |
             'flex-devel'                                          # |       NO |
             'fontconfig-devel'                                    # |      YES |
-            'freetype-devel'  # freetype / ragg                   # |      YES |
-            'fribidi-devel'  # textshaping                        # |       NO |
+            'freetype-devel' # freetype / ragg                    # |      YES |
+            'fribidi-devel' # textshaping                         # |       NO |
             'gdal-devel'                                          # |       NO |
             'geos-devel'                                          # |      YES |
-            'glib2-devel'  # ag                                   # |      YES |
+            'glib2-devel' # ag                                    # |      YES |
             'gmp-devel'                                           # |       NO |
             'gnutls-devel'                                        # |       NO |
             'gsl-devel'                                           # |       NO |
-            'harfbuzz-devel'  # textshaping                       # |       NO |
+            'harfbuzz-devel' # textshaping                        # |       NO |
             'hdf5-devel'                                          # |       NO |
             'libcurl-devel'                                       # |      YES |
-            'libevent-devel'  # tmux                              # |       NO |
+            'libevent-devel' # tmux                               # |       NO |
             'libffi-devel'                                        # |      YES |
             'libgit2-devel'                                       # |       NO |
-            'libicu-devel'  # rJava                               # |      YES |
-            'libjpeg-turbo-devel'  # freetype / ragg              # |      YES |
+            'libicu-devel' # rJava                                # |      YES |
+            'libjpeg-turbo-devel' # freetype / ragg               # |      YES |
             'libmpc-devel'                                        # |       NO |
-            'libpng-devel'  # freetype / ragg                     # |      YES |
+            'libpng-devel' # freetype / ragg                      # |      YES |
             'libseccomp-devel'                                    # |      YES |
             'libssh2-devel'                                       # |      YES |
             'libtiff-devel'                                       # |      YES |
             'libuuid-devel'                                       # |      YES |
             'libxml2-devel'                                       # |      YES |
-            'libzstd-devel'  # rsync                              # |       NO |
+            'libzstd-devel' # rsync                               # |       NO |
             'llvm-devel'                                          # |       NO |
-            'lz4-devel'  # rsync                                  # |      YES |
+            'lz4-devel' # rsync                                   # |      YES |
             'mariadb-devel'                                       # |       NO |
             'mpfr-devel'                                          # |       NO |
             'ncurses-devel'                                       # |      YES |
             'openblas-devel'                                      # |       NO |
-            'openjpeg2-devel'  # GDAL                             # |       NO |
+            'openjpeg2-devel' # GDAL                              # |       NO |
             'openssl-devel'                                       # |      YES |
-            'pcre-devel'  # ag                                    # |      YES |
-            'pcre2-devel'  # rJava                                # |      YES |
+            'pcre-devel' # ag                                     # |      YES |
+            'pcre2-devel' # rJava                                 # |      YES |
             'postgresql-devel'                                    # |      YES |
             'proj-devel'                                          # |       NO |
             'python3-devel'                                       # |       NO |
-            'readline-devel'  # R                                 # |       NO |
+            'readline-devel' # R                                  # |       NO |
             'sqlite-devel'                                        # |      YES |
             'taglib-devel'                                        # |       NO |
             'udunits2-devel'                                      # |      YES |
             'unixODBC-devel'                                      # |      YES |
-            'xxhash-devel'  # rsync                               # |      YES |
+            'xxhash-devel' # rsync                                # |      YES |
             'xz-devel'                                            # |      YES |
             'zlib-devel'                                          # |      YES |
         )

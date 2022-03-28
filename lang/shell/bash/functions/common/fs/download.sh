@@ -53,7 +53,7 @@ koopa_download() { # {{{1
     case "${dict[engine]}" in
         'curl')
             download_args+=(
-                '--disable'  # Ignore '~/.curlrc'. Must come first.
+                '--disable' # Ignore '~/.curlrc'. Must come first.
                 '--create-dirs'
                 '--fail'
                 '--location'
@@ -244,7 +244,7 @@ koopa_parse_url() { # {{{1
         [curl]="$(koopa_locate_curl)"
     )
     curl_args=(
-        '--disable'  # Ignore '~/.curlrc'. Must come first.
+        '--disable' # Ignore '~/.curlrc'. Must come first.
         '--fail'
         '--location'
         '--retry' 5
