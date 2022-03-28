@@ -39,7 +39,7 @@ koopa_extract() { # {{{1
                         then
                             koopa_activate_homebrew_opt_prefix 'xz'
                         fi
-                        cmd_args=('-J') # '--xz'.
+                        cmd_args+=('-J') # '--xz'.
                         ;;
                 esac
                 ;;
@@ -107,7 +107,6 @@ koopa_extract() { # {{{1
                 koopa_stop "Unsupported extension: '${file}'."
                 ;;
         esac
-        koopa_warn "FIXME $cmd ${cmd_args[*]}"
         "$cmd" "${cmd_args[@]}"
     done
     return 0
