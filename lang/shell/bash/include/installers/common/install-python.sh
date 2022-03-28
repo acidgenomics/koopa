@@ -3,7 +3,7 @@
 install_python() { # {{{1
     # """
     # Install Python.
-    # @note Updated 2021-12-07.
+    # @note Updated 2022-03-28.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -42,7 +42,8 @@ ${dict[file]}"
     koopa_cd "${dict[name2]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
-        '--enable-optimizations'
+        # This slows down the installer a lot.
+        # > '--enable-optimizations'
         '--enable-shared'
     )
     # Setting 'LDFLAGS' here doesn't work on macOS.
