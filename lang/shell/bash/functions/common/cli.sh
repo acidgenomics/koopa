@@ -467,11 +467,13 @@ koopa_cli_system() { # {{{1
         'os-string' | \
         'reload-shell' | \
         'roff' | \
+        'push-app-build' | \
         'set-permissions' | \
         'switch-to-develop' | \
         'test' | \
         'variable' | \
         'variables')
+            # FIXME This isn't passing arguments for 'push-app-build' correctly.
             key="${1:?}"
             shift 1
             ;;
