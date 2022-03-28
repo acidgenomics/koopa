@@ -647,7 +647,7 @@ koopa_push_app_build() { # {{{1
 ${dict[app_name]}/${dict[app_version]}.tar.gz"
     koopa_alert "Pushing '${dict[local_tarball]}' to ${dict[remote_tarball]}'."
     "${app[tar]}" -czvf "${dict[local_tarball]}" "${dict[prefix]}/"
-    "${app[aws]}" --profile="${dict[profile]}" \
+    "${app[aws]}" --profile="${dict[s3_profile]}" \
         s3 cp "${dict[local_tarball]}" "${dict[remote_tarball]}"
     return 0
 }
