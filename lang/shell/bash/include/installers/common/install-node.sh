@@ -42,7 +42,9 @@ install_node() { # {{{1
             'pkg-config' \
             "python@${dict[python_maj_min_ver]}"
     else
-        koopa_activate_opt_prefix 'python'
+        koopa_activate_opt_prefix \
+            'icu4c' \
+            'python'
     fi
     conf_args=(
         "--prefix=${dict[prefix]}"
