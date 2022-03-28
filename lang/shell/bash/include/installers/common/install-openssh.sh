@@ -62,7 +62,6 @@ portable/${dict[file]}"
     fi
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" test
     "${app[make]}" install
     return 0
 }
