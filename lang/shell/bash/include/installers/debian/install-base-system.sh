@@ -310,5 +310,7 @@ debian_install_base_system() { # {{{1
     koopa_debian_apt_configure_sources
     koopa_debian_apt_clean
     koopa_debian_set_locale
+    koopa_debian_set_timezone
+    koopa_linux_update_sshd_config
     return 0
 }
