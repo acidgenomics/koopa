@@ -133,9 +133,6 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Rethink multiple app support...if not, improve the error message.
-# > koopa install vim python
-
 koopa_install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
