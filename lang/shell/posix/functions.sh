@@ -277,21 +277,19 @@ koopa_activate_aspera_connect() { # {{{1
 koopa_activate_bat() { # {{{1
     # """
     # Activate bat configuration.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-03-28.
     # """
     local conf_file dotfiles_prefix
     dotfiles_prefix="$(koopa_dotfiles_prefix)"
     conf_file="${dotfiles_prefix}/app/bat/config"
-    if koopa_is_macos
-    then
-        if koopa_macos_is_dark_mode
-        then
+    case "$(koopa_color_mode)" in
+        'dark')
             conf_file="${conf_file}-dark"
-        elif koopa_macos_is_light_mode
-        then
+            ;;
+        'light')
             conf_file="${conf_file}-light"
-        fi
-    fi
+            ;;
+    esac
     [ -f "$conf_file" ] || return 0
     export BAT_CONFIG_PATH="$conf_file"
     return 0
@@ -358,6 +356,21 @@ koopa_activate_broot() { # {{{1
     # shellcheck source=/dev/null
     . "$script"
     [ "$nounset" -eq 1 ] && set -o nounset
+    return 0
+}
+
+koopa_activate_color_mode() { # {{{1
+    # """
+    # Activate dark / light color mode.
+    # @note Updated 2022-03-28.
+    # """
+    KOOPA_COLOR_MODE="$(koopa_color_mode)"
+    if [ -n "${KOOPA_COLOR_MODE:-}" ]
+    then
+        export KOOPA_COLOR_MODE
+    else
+        unset -v KOOPA_COLOR_MODE
+    fi
     return 0
 }
 
@@ -472,7 +485,7 @@ koopa_activate_coreutils_aliases() { # {{{1
 koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-03-28.
     #
     # This will set the 'LS_COLORS' environment variable.
     # """
@@ -498,16 +511,14 @@ koopa_activate_dircolors() { # {{{1
     koopa_is_installed "$dircolors" || return 0
     dotfiles_prefix="$(koopa_dotfiles_prefix)"
     dircolors_file="${dotfiles_prefix}/app/coreutils/dircolors"
-    if koopa_is_macos
-    then
-        if koopa_macos_is_dark_mode
-        then
+    case "$(koopa_color_mode)" in
+        'dark')
             dircolors_file="${dircolors_file}-dark"
-        elif koopa_macos_is_light_mode
-        then
+            ;;
+        'light')
             dircolors_file="${dircolors_file}-light"
-        fi
-    fi
+            ;;
+    esac
     if [ -f "$dircolors_file" ]
     then
         eval "$("$dircolors" "$dircolors_file")"
@@ -2175,6 +2186,29 @@ koopa_boolean_nounset() { # {{{1
     return 0
 }
 
+koopa_color_mode() { # {{{1
+    # """
+    # macOS color mode (dark/light) value.
+    # @note Updated 2022-03-28.
+    # """
+    local str
+    str="${KOOPA_COLOR_MODE:-}"
+    if [ -z "$str" ]
+    then
+        if koopa_is_macos
+        then
+            if koopa_macos_is_dark_mode
+            then
+                str='dark'
+            else
+                str='light'
+            fi
+        fi
+    fi
+    [ -n "$str" ] || return 0
+    koopa_print "$str"
+}
+
 koopa_conda_env_name() { # {{{1
     # """
     # Conda environment name.
@@ -3415,16 +3449,6 @@ koopa_macos_activate_cli_colors() { # {{{1
     return 0
 }
 
-koopa_macos_activate_color_mode() { # {{{1
-    # """
-    # Activate macOS color mode.
-    # @note Updated 2021-05-07.
-    # """
-    KOOPA_COLOR_MODE="$(koopa_macos_color_mode)"
-    export KOOPA_COLOR_MODE
-    return 0
-}
-
 koopa_macos_activate_google_cloud_sdk() { # {{{1
     # """
     # Activate macOS Google Cloud SDK Homebrew cask.
@@ -3484,25 +3508,6 @@ koopa_macos_activate_visual_studio_code() { # {{{1
     x='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
     koopa_add_to_path_start "$x"
     return 0
-}
-
-koopa_macos_color_mode() { # {{{1
-    # """
-    # macOS color mode (dark/light) value.
-    # @note Updated 2022-03-01.
-    # """
-    local str
-    str="${KOOPA_COLOR_MODE:-}"
-    if [ -z "$str" ]
-    then
-        if koopa_macos_is_dark_mode
-        then
-            str='dark'
-        else
-            str='light'
-        fi
-    fi
-    koopa_print "$str"
 }
 
 koopa_macos_gfortran_prefix() { # {{{1
