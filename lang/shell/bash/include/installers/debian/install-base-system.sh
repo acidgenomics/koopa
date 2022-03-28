@@ -189,7 +189,9 @@ debian_install_base_system() { # {{{1
             'libboost-program-options-dev' # bcl2fastq
             'libboost-thread-dev' # bcl2fastq
             'libboost-timer-dev' # bcl2fastq
+            'libbrotli-dev' # node.js
             'libbz2-dev'
+            'libc-ares-dev' # node.js
             'libcairo2-dev' # harfbuzz
             'libclang-dev' # rstudio-server
             'libcurl4-gnutls-dev'
@@ -231,6 +233,7 @@ debian_install_base_system() { # {{{1
             'libmpfr-dev'
             'libncurses-dev'
             'libnetcdf-dev'
+            'libnghttp2-dev' # node.js
             'libopenbabel-dev'
             'libopenblas-base'
             'libopenblas-dev'
