@@ -143,41 +143,17 @@ install_gnupg() { # {{{1
     esac
     if koopa_is_installed "${app[gpg_agent]}"
     then
-        # Current releases are signed by one or more of these keys:
-        #
-        # FIXME Improve the comment here.
-        # gpg: Good signature from "Werner Koch (dist signing 2020)" [unknown]
-        # gpg: WARNING: This key is not certified with a trusted signature!
-        # gpg:          There is no indication that the signature belongs to the owner.
-        # Primary key fingerprint: 6DAA 6E64 A76D 2840 571B  4902 5288 97B8 2640 3ADA
-        #
-        # pub   rsa2048 2011-01-12 [expires: 2021-12-31]
-        #       D869 2123 C406 5DEA 5E0F  3AB5 249B 39D2 4F25 E3B6
-        # uid   Werner Koch (dist sig)
-        #
-        # pub   rsa2048 2014-10-29 [expires: 2020-10-30]
-        #       031E C253 6E58 0D8E A286  A9F2 2071 B08A 33BD 3F06
-        # uid   NIIBE Yutaka (GnuPG Release Key) <gniibe 'at' fsij.org>
-        #
-        # pub   rsa3072 2017-03-17 [expires: 2027-03-15]
-        #       5B80 C575 4298 F0CB 55D8  ED6A BCEF 7E29 4B09 2E28
-        # uid   Andre Heinecke (Release Signing Key)
-        #
-        # pub   ed25519 2020-08-24 [expires: 2030-06-30]
-        #       6DAA 6E64 A76D 2840 571B  4902 5288 97B8 2640 3ADA
-        # uid   Werner Koch (dist signing 2020)
-        #
         # Can use the last 4 elements per key in the '--rev-keys' call.
         gpg_keys=(
-            # 2021-12-21.
-            'AC8E115BF73E2D8D47FA9908E98E9B2D19C6C8BD' # 2021-12-21
-            # Older keys.
-            'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6'
-            '031EC2536E580D8EA286A9F22071B08A33BD3F06'
-            '5B80C5754298F0CB55D8ED6ABCEF7E294B092E28'
-            '6DAA6E64A76D2840571B4902528897B826403ADA'
+            # Expired legacy keys:
+            # > '031EC2536E580D8EA286A9F22071B08A33BD3F06' # expired
+            # > 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' # expired
             # Extra key needed for pinentry 1.1.1.
-            '80CC1B8D04C262DDFEE1980C6F7F0F91D138FC7B'
+            # > '80CC1B8D04C262DDFEE1980C6F7F0F91D138FC7B'
+            # Current keys:
+            '5B80C5754298F0CB55D8ED6ABCEF7E294B092E28' # 2027-03-15
+            '6DAA6E64A76D2840571B4902528897B826403ADA' # 2030-06-30
+            'AC8E115BF73E2D8D47FA9908E98E9B2D19C6C8BD' # 2027-04-04
         )
         "${app[gpg]}" \
             --keyserver 'hkp://keyserver.ubuntu.com:80' \
