@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+
+# FIXME Draft update to these version locators.
+koopa_locate_proj() { # {{{1
+    koopa_locate_app 'proj'
+}
+
+
+koopa_locate_gdal_config() { # {{{1
+    koopa_locate_app \
+        --app-name='gdal-config' \
+        --opt='gdal'
+}
+
+koopa_locate_geos_config() { # {{{1
+    koopa_locate_app \
+        --app-name='geos-config' \
+        --opt='geos'
+}
+
+
+
+
+
+
 koopa_locate_7z() { # {{{1
     koopa_locate_app \
         --app-name='7z' \

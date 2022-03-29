@@ -190,6 +190,8 @@ koopa_extract_version() { # {{{1
     return 0
 }
 
+# FIXME This isn't handling gdal, geos, proj correctly on Ubuntu.
+
 koopa_get_version() { # {{{1
     # """
     # Get the version of an installed program.
@@ -277,7 +279,6 @@ koopa_get_version_from_pkg_config() { # {{{1
     koopa_print "$str"
     return 0
 }
-
 
 koopa_sanitize_version() { # {{{1
     # """
