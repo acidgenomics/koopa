@@ -3,7 +3,7 @@
 install_gnupg() { # {{{1
     # """
     # Install GnuPG.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-03-29.
     #
     # @seealso
     # - https://gnupg.org/download/index.html
@@ -17,13 +17,14 @@ install_gnupg() { # {{{1
         [gpg_agent]='/usr/bin/gpg-agent'
     )
     declare -A dict=(
+        [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     case "${dict[version]}" in
         '2.3.4')
-            # 2021-12-20.
+            # 2022-03-29.
             dict[libgpg_error_version]='1.44'     # 2022-01-27
-            dict[libgcrypt_version]='1.9.4'       # 2021-08-22
+            dict[libgcrypt_version]='1.10.1'      # 2022-03-28
             dict[libksba_version]='1.6.0'         # 2021-06-10
             dict[libassuan_version]='2.5.5'       # 2021-03-22
             dict[npth_version]='1.6'              # 2018-07-16
@@ -159,35 +160,39 @@ install_gnupg() { # {{{1
             --recv-keys "${gpg_keys[@]}"
         "${app[gpg]}" --list-keys
     fi
-    # Install dependencies.
+    install_args=(
+        '--installer=gnupg-gcrypt'
+        '--no-prefix-check'
+        "--prefix=${dict[prefix]}"
+    )
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgpg-error' \
         --version="${dict[libgpg_error_version]}" \
-        "$@"
+        "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgcrypt' \
         --opt='libgpg-error' \
         --version="${dict[libgcrypt_version]}" \
-        "$@"
+        "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libassuan' \
         --opt='libgpg-error' \
         --version="${dict[libassuan_version]}" \
-        "$@"
+        "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libksba' \
         --opt='libgpg-error' \
         --version="${dict[libksba_version]}" \
-        "$@"
+        "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='npth' \
         --version="${dict[npth_version]}" \
-        "$@"
+        "${install_args[@]}"
     if koopa_is_macos
     then
         koopa_alert_note 'Skipping installation of pinentry on macOS.'
@@ -196,14 +201,8 @@ install_gnupg() { # {{{1
             --installer='gnupg-pinentry' \
             --name='pinentry' \
             --version="${dict[pinentry_version]}" \
-            "$@"
+            "${install_args[@]}"
     fi
-    install_args=(
-        "--version=${dict[version]}"
-        '--installer=gnupg-gcrypt'
-        '--name=gnupg'
-        '--no-prefix-check'
-    )
     opt_arr=(
         'libgpg-error'
         'libgcrypt'
@@ -219,96 +218,10 @@ install_gnupg() { # {{{1
     do
         install_args+=("--opt=${opt}")
     done
-    koopa_install_app "${install_args[@]}" "$@"
-    return 0
-}
-
-install_gnupg_gcrypt() { # {{{1
-    # """
-    # Install GnuPG gcrypt library.
-    # @note Updated 2021-11-30.
-    # """
-    local app dict
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [gpg]='/usr/bin/gpg'
-        [gpg_agent]='/usr/bin/gpg-agent'
-        [make]="$(koopa_locate_make)"
-    )
-    declare -A dict=(
-        [gcrypt_url]="$(koopa_gcrypt_url)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
-    )
-    dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
-    dict[tar_file]="${dict[name]}-${dict[version]}.tar.bz2"
-    dict[tar_url]="${dict[base_url]}/${dict[tar_file]}"
-    koopa_download "${dict[tar_url]}" "${dict[tar_file]}"
-    if koopa_is_installed "${app[gpg_agent]}"
-    then
-        dict[sig_file]="${dict[tar_file]}.sig"
-        dict[sig_url]="${dict[base_url]}/${dict[sig_file]}"
-        koopa_download "${dict[sig_url]}" "${dict[sig_file]}"
-        "${app[gpg]}" --verify "${dict[sig_file]}" || return 1
-    fi
-    koopa_extract "${dict[tar_file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
-    ./configure --prefix="${dict[prefix]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
-    return 0
-}
-
-install_gnupg_pinentry() { # {{{1
-    # """
-    # Install GnuPG pinentry library.
-    # @note Updated 2021-11-30.
-    # """
-    local app conf_args dict
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [gpg]='/usr/bin/gpg'
-        [gpg_agent]='/usr/bin/gpg-agent'
-        [make]="$(koopa_locate_make)"
-    )
-    declare -A dict=(
-        [gcrypt_url]="$(koopa_gcrypt_url)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
-    )
-    dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
-    dict[tar_file]="${dict[name]}-${dict[version]}.tar.bz2"
-    dict[tar_url]="${dict[base_url]}/${dict[tar_file]}"
-    koopa_download "${dict[tar_url]}" "${dict[tar_file]}"
-    if koopa_is_installed "${app[gpg_agent]}"
-    then
-        dict[sig_file]="${dict[tar_file]}.sig"
-        dict[sig_url]="${dict[base_url]}/${dict[sig_file]}"
-        koopa_download "${dict[sig_url]}" "${dict[sig_file]}"
-        "${app[gpg]}" --verify "${dict[sig_file]}" || return 1
-    fi
-    koopa_extract "${dict[tar_file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
-    conf_args=("--prefix=${dict[prefix]}")
-    if koopa_is_opensuse
-    then
-        # Build with ncurses is currently failing on openSUSE, due to
-        # hard-coded link to '/usr/include/ncursesw' that isn't easy to resolve.
-        # Falling back to using 'pinentry-tty' instead in this case.
-        conf_args+=(
-            '--disable-fallback-curses'
-            '--disable-pinentry-curses'
-            '--enable-pinentry-tty'
-        )
-    else
-        conf_args+=('--enable-pinentry-curses')
-    fi
-    ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    koopa_install_app \
+        --installer='gnupg-gcrypt' \
+        --name='gnupg' \
+        --version="${dict[version]}" \
+        "${install_args[@]}"
     return 0
 }
