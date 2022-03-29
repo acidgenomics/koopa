@@ -673,6 +673,7 @@ koopa_install_sqlite() { # {{{1
 koopa_install_stow() { # {{{1
     koopa_install_gnu_app \
         --name='stow' \
+        --opt='perl' \
         "$@"
 }
 
