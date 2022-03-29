@@ -3,7 +3,7 @@
 koopa_configure_perl() { # {{{1
     # """
     # Configure Perl.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-03-29.
     #
     # Ignore these unit test errors:
     # > Failed test 'fish: activate PATH'
@@ -14,21 +14,20 @@ koopa_configure_perl() { # {{{1
     #   some_perl_modules_doesnt_work_after_update/fzn80k4/
     # """
     local app dict
-    koopa_assert_has_no_args "$#"
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [perl]="$(koopa_locate_perl)"
+        [perl]="${1:-}"
         [yes]="$(koopa_locate_yes)"
     )
+    [[ -z "${app[perl]}" ]] && app[perl]="$(koopa_locate_perl)"
     declare -A dict=(
         [prefix]="$(koopa_perl_packages_prefix)"
     )
     koopa_configure_app_packages \
-        --name='perl' \
+        --app="${app[perl]}" \
         --name-fancy='Perl' \
-        --which-app="${app[perl]}"
+        --name='perl'
     koopa_assert_is_dir "${dict[prefix]}"
-    # Ensure we start with a clean CPAN and CPAN Minus configuration.
-    koopa_rm "${HOME}/.cpan" "${HOME}/.cpanm"
     koopa_alert "Setting up 'local::lib' at '${dict[prefix]}' using CPAN."
     koopa_add_to_path_start "$(koopa_dirname "${app[perl]}")"
     app[cpan]="$(koopa_locate_cpan)"
