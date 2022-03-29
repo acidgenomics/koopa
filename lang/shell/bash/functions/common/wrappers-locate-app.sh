@@ -1,29 +1,5 @@
 #!/usr/bin/env bash
 
-
-# FIXME Draft update to these version locators.
-koopa_locate_proj() { # {{{1
-    koopa_locate_app 'proj'
-}
-
-
-koopa_locate_gdal_config() { # {{{1
-    koopa_locate_app \
-        --app-name='gdal-config' \
-        --opt='gdal'
-}
-
-koopa_locate_geos_config() { # {{{1
-    koopa_locate_app \
-        --app-name='geos-config' \
-        --opt='geos'
-}
-
-
-
-
-
-
 koopa_locate_7z() { # {{{1
     koopa_locate_app \
         --app-name='7z' \
@@ -251,10 +227,22 @@ koopa_locate_gcloud() { # {{{1
     koopa_locate_app 'gcloud'
 }
 
+koopa_locate_gdal_config() { # {{{1
+    koopa_locate_app \
+        --app-name='gdal-config' \
+        --opt='gdal'
+}
+
 koopa_locate_gem() { # {{{1
     koopa_locate_app \
         --app-name='gem' \
         --opt='ruby'
+}
+
+koopa_locate_geos_config() { # {{{1
+    koopa_locate_app \
+        --app-name='geos-config' \
+        --opt='geos'
 }
 
 koopa_locate_git() { # {{{1
@@ -542,6 +530,14 @@ koopa_locate_prefetch() { # {{{1
         --opt='sratoolkit'
 }
 
+koopa_locate_proj() { # {{{1
+    koopa_locate_app 'proj'
+}
+
+koopa_locate_pyenv() { # {{{1
+    koopa_locate_app 'pyenv'
+}
+
 koopa_locate_python() { # {{{1
     local app dict
     declare -A app
@@ -561,6 +557,10 @@ koopa_locate_r() { # {{{1
     koopa_locate_app \
         --app-name='R' \
         --macos-app="$(koopa_macos_r_prefix)/bin/R"
+}
+
+koopa_locate_rbenv() { # {{{1
+    koopa_locate_app 'rbenv'
 }
 
 koopa_locate_rscript() { # {{{1
