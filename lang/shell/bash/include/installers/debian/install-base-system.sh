@@ -3,7 +3,7 @@
 debian_install_base_system() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-03-29.
     #
     # @section Look up reverse dependencies:
     # > sudo apt-cache rdepends --installed 'libnode-dev'
@@ -252,6 +252,7 @@ debian_install_base_system() { # {{{1
             'librdf0-dev'
             'libreadline-dev'
             'libsasl2-dev'
+            'libserf-dev' # subversion (for HTTPS)
             'libsodium-dev'
             'libssh2-1-dev'
             'libssl-dev'
