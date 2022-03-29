@@ -28,6 +28,8 @@ install_perl_packages() { # {{{1
         'App::Ack'
         'File::Rename'
         'Log::Log4perl'
+        'Test::More'  # For GNU stow.
+        'Test::Output' # For GNU stow.
     )
     for module in "${modules[@]}"
     do
