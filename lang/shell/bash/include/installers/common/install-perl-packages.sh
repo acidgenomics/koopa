@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to remove ~/.cpan ~/.cpanm on reinstall.
-
 install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
