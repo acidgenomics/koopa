@@ -17,17 +17,27 @@ install_proj() { # {{{1
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [arch]="$(koopa_arch)"
         [jobs]="$(koopa_cpu_count)"
         [make_prefix]="$(koopa_make_prefix)"
         [name]='proj'
-        [os]='linux-gnu'
         [prefix]="${INSTALL_PREFIX:?}"
+        [python_version]="$(koopa_variable 'python')"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[python_min_maj_ver]="$( \
+        koopa_major_minor_version "${dict[python_version]}" \
+    )"
     if koopa_is_installed "${app[brew]}"
     then
-        koopa_activate_homebrew_opt_prefix 'pkg-config' 'libtiff' 'sqlite3'
+        koopa_activate_homebrew_opt_prefix \
+            'libtiff' \
+            'pkg-config' \
+            "python@${dict[python_min_maj_ver]}" \
+            'sqlite3'
+    else
+        koopa_activate_opt_prefix \
+            'python' \
+            'sqlite'
     fi
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://github.com/OSGeo/PROJ/releases/download/\
