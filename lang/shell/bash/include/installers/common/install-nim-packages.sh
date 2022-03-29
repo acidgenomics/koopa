@@ -12,6 +12,7 @@ install_nim_packages() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_activate_nim
     declare -A app=(
+        [nim]="$(koopa_locate_nim)"
         [nimble]="$(koopa_locate_nimble)"
     )
     pkgs=(
@@ -25,6 +26,9 @@ install_nim_packages() { # {{{1
         version="$(koopa_variable "nim-${pkg_lower}")"
         pkgs[$i]="${pkg}@${version}"
     done
-    "${app[nimble]}" --accept install "${pkgs[@]}"
+    "${app[nimble]}" \
+        --accept \
+        --nim:"${app[nim]}" \
+        install "${pkgs[@]}"
     return 0
 }
