@@ -3,7 +3,7 @@
 install_gnupg_pinentry() { # {{{1
     # """
     # Install GnuPG pinentry library.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-03-29.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -46,7 +46,9 @@ install_gnupg_pinentry() { # {{{1
     else
         conf_args+=('--enable-pinentry-curses')
     fi
-    ./configure "${conf_args[@]}"
+    # FIXME Does this help?
+    LDFLAGS="-Wl,-rpath,${dict[prefix]}/lib/" \
+        ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
