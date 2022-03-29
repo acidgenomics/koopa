@@ -596,6 +596,7 @@ koopa_push_app_build() { # {{{1
     #
     # @examples
     # > koopa_push_app_build --app-name='node' --app-version='17.8.0'
+    # # s3://koopa.acidgenomics.com/app/ubuntu-20/amd64/node/17.8.0.tar.gz
     # """
     local app dict pos
     koopa_assert_has_args "$#"
