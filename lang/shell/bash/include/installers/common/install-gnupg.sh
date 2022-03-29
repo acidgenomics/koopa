@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+# FIXME Signing key is now failing for final gnupg step.
+
+#100   238  100   238    0     0    603      0 --:--:-- --:--:-- --:--:--   602
+#gpg: assuming signed data in 'gnupg-2.3.4.tar.bz2'
+#gpg: Signature made Mon 20 Dec 2021 04:52:45 PM EST
+#gpg:                using EDDSA key 6DAA6E64A76D2840571B4902528897B826403ADA
+#gpg: Good signature from "Werner Koch (dist signing 2020)" [unknown]
+#gpg: WARNING: This key is not certified with a trusted signature!
+#gpg:          There is no indication that the signature belongs to the owner.
+#Primary key fingerprint: 6DAA 6E64 A76D 2840 571B  4902 5288 97B8 2640 3ADA
+#gpg: Signature made Tue 21 Dec 2021 01:20:39 AM EST
+#gpg:                using EDDSA key AC8E115BF73E2D8D47FA9908E98E9B2D19C6C8BD
+#gpg: Can't check signature: No public key
+
+
 install_gnupg() { # {{{1
     # """
     # Install GnuPG.
@@ -130,6 +145,12 @@ install_gnupg() { # {{{1
     then
         # Current releases are signed by one or more of these keys:
         #
+        # FIXME Improve the comment here.
+        # gpg: Good signature from "Werner Koch (dist signing 2020)" [unknown]
+        # gpg: WARNING: This key is not certified with a trusted signature!
+        # gpg:          There is no indication that the signature belongs to the owner.
+        # Primary key fingerprint: 6DAA 6E64 A76D 2840 571B  4902 5288 97B8 2640 3ADA
+        #
         # pub   rsa2048 2011-01-12 [expires: 2021-12-31]
         #       D869 2123 C406 5DEA 5E0F  3AB5 249B 39D2 4F25 E3B6
         # uid   Werner Koch (dist sig)
@@ -148,6 +169,9 @@ install_gnupg() { # {{{1
         #
         # Can use the last 4 elements per key in the '--rev-keys' call.
         gpg_keys=(
+            # 2021-12-21.
+            'AC8E115BF73E2D8D47FA9908E98E9B2D19C6C8BD' # 2021-12-21
+            # Older keys.
             'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6'
             '031EC2536E580D8EA286A9F22071B08A33BD3F06'
             '5B80C5754298F0CB55D8ED6ABCEF7E294B092E28'
