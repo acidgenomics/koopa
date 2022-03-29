@@ -19,7 +19,8 @@ koopa_configure_app_packages() { # {{{1
     # >     --name='python' \
     # >     --prefix='/opt/koopa/app/python-packages/3.10'
     # """
-    local dict
+    local dict pos
+    koopa_assert_has_args "$#"
     declare -A dict=(
         [link_app]=1
         [name]=''
@@ -27,6 +28,7 @@ koopa_configure_app_packages() { # {{{1
         [prefix]=''
         [version]=''
     )
+    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -81,11 +83,21 @@ koopa_configure_app_packages() { # {{{1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
-            *)
+            '-'*)
                 koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -gt 0 ]]
+    then
+        koopa_assert_has_args_eq "$#" 1
+        dict[app]="${1:?}"
+    fi
     koopa_assert_is_set '--name' "${dict[name]}"
     if [[ -z "${dict[name_fancy]}" ]]
     then
