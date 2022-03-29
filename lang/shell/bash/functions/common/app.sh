@@ -3,7 +3,21 @@
 koopa_configure_app_packages() { # {{{1
     # """
     # Configure language application.
-    # @note Updated 2022-02-09.
+    # @note Updated 2022-03-29.
+    #
+    # @examples
+    # > koopa_configure_app_packages \
+    # >     --app='/opt/koopa/app/python/3.10.3/bin/python3'
+    # >     --name-fancy='Python' \
+    # >     --name='python'
+    # > koopa_configure_app_packages \
+    # >     --name-fancy='Python' \
+    # >     --name='python' \
+    # >     --version='3.10.3'
+    # > koopa_configure_app_packages \
+    # >     --name-fancy='Python3' \
+    # >     --name='python' \
+    # >     --prefix='/opt/koopa/app/python-packages/3.10'
     # """
     local dict
     declare -A dict=(
@@ -12,12 +26,19 @@ koopa_configure_app_packages() { # {{{1
         [name_fancy]=''
         [prefix]=''
         [version]=''
-        [which_app]=''
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--app='*)
+                dict[app]="${1#*=}"
+                shift 1
+                ;;
+            '--app')
+                dict[app]="${2:?}"
+                shift 2
+                ;;
             '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
@@ -50,14 +71,6 @@ koopa_configure_app_packages() { # {{{1
                 dict[version]="${2:?}"
                 shift 2
                 ;;
-            '--which-app='*)
-                dict[which_app]="${1#*=}"
-                shift 1
-                ;;
-            '--which-app')
-                dict[which_app]="${2:?}"
-                shift 2
-                ;;
             # Flags ------------------------------------------------------------
             '--link')
                 dict[link_app]=1
@@ -73,6 +86,7 @@ koopa_configure_app_packages() { # {{{1
                 ;;
         esac
     done
+    koopa_assert_is_set '--name' "${dict[name]}"
     if [[ -z "${dict[name_fancy]}" ]]
     then
         dict[name_fancy]="${dict[name]}"
@@ -83,7 +97,7 @@ koopa_configure_app_packages() { # {{{1
     then
         if [[ -z "${dict[version]}" ]]
         then
-            dict[version]="$(koopa_get_version "${dict[which_app]}")"
+            dict[version]="$(koopa_get_version "${dict[app]}")"
         fi
         dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
     fi
