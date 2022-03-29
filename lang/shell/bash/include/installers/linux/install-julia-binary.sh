@@ -3,13 +3,14 @@
 linux_install_julia_binary() { # {{{1
     # """
     # Install Julia (from glibc binary).
-    # @note Updated 2021-12-01.
+    # @note Updated 2022-03-29.
     # @seealso
     # - https://julialang.org/downloads/
     # - https://julialang.org/downloads/platform/
     # """
-    local dict
+    local app dict
     koopa_assert_has_no_args "$#"
+    declare -A app
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [name]='julia'
@@ -35,5 +36,8 @@ ${dict[subdir]}/${dict[maj_min_ver]}/${dict[file]}"
     koopa_rm 'LICENSE.md'
     koopa_mkdir "${dict[prefix]}"
     koopa_cp . "${dict[prefix]}"
+    app[julia]="${dict[prefix]}/bin/julia"
+    koopa_assert_is_installed "${app[julia]}"
+    koopa_configure_julia "${app[julia]}"
     return 0
 }
