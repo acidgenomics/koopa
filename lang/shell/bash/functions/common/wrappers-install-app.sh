@@ -926,20 +926,10 @@ koopa_uninstall_git() { # {{{1
 }
 
 koopa_uninstall_gnupg() { # {{{1
-    local dict
-    koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        [name_fancy]='GnuPG suite'
-    )
-    koopa_alert_uninstall_start "${dict[name_fancy]}"
-    koopa_uninstall_app --name='gnupg'
-    koopa_uninstall_app --name='libassuan'
-    koopa_uninstall_app --name='libgcrypt'
-    koopa_uninstall_app --name='libgpg-error'
-    koopa_uninstall_app --name='libksba'
-    koopa_uninstall_app --name='npth'
-    koopa_alert_uninstall_success "${dict[name_fancy]}"
-    return 0
+    koopa_uninstall_app \
+        --name-fancy='GnuPG suite' \
+        --name='gnupg' \
+        "$@"
 }
 
 koopa_uninstall_go() { # {{{1
