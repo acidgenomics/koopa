@@ -3,11 +3,17 @@
 install_proj() { # {{{1
     # """
     # Install PROJ.
-    # @note Updated 2021-12-07.
+    # @note Updated 2022-03-29.
+    #
+    # @seealso
+    # - https://proj.org/install.html#compilation-and-installation-from-
+    #     source-code
     # """
-    local app conf_args dict
+    local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
+        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
@@ -19,8 +25,7 @@ install_proj() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    conf_args=("--prefix=${dict[prefix]}")
-    if koopa_is_macos
+    if koopa_is_installed "${app[brew]}"
     then
         koopa_activate_homebrew_opt_prefix 'pkg-config' 'libtiff' 'sqlite3'
     fi
@@ -29,8 +34,11 @@ install_proj() { # {{{1
 ${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
-    ./configure "${conf_args[@]}"
+    koopa_mkdir 'build'
+    koopa_cd 'build'
+    "${app[cmake]}" \
+        ../"${dict[name]}-${dict[version]}" \
+        -DCMAKE_INSTALL_PREFIX="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
