@@ -1213,6 +1213,8 @@ koopa_uninstall_perl_packages() { # {{{1
         --name-fancy='Perl packages' \
         --name='perl-packages' \
         "$@"
+    koopa_rm "${HOME:?}/.cpan" "${HOME:?}/.cpanm"
+    return 0
 }
 
 koopa_uninstall_perlbrew() { # {{{1
