@@ -52,7 +52,10 @@ install_subversion() { # {{{1
             "--with-apr-util=${dict[brew_apr_util]}"
         )
     fi
-    koopa_activate_opt_prefix 'perl' 'ruby'
+    koopa_activate_opt_prefix \
+        'perl' \
+        'python' \
+        'ruby'
     dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
     dict[url]="https://mirrors.ocf.berkeley.edu/apache/\
 ${dict[name]}/${dict[file]}"
