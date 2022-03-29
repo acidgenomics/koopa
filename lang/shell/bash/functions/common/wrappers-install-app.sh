@@ -422,9 +422,9 @@ koopa_install_neovim() { # {{{1
 
 koopa_install_nim() { # {{{1
     koopa_install_app \
-        --name='nim' \
+        --link-include='bin' \
         --name-fancy='Nim' \
-        --link-include-dirs='bin' \
+        --name='nim' \
         "$@"
     koopa_configure_nim
     return 0
