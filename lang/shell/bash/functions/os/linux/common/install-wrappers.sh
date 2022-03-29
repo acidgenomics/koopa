@@ -78,6 +78,15 @@ koopa_linux_install_docker_credential_pass() { # {{{1
         "$@"
 }
 
+koopa_linux_install_julia_binary() { # {{{1
+    koopa_install_app \
+        --installer="julia-binary" \
+        --name-fancy='Julia binary' \
+        --name='julia' \
+        --platform='linux' \
+        "$@"
+}
+
 koopa_linux_install_lmod() { # {{{1
     koopa_install_app \
         --name-fancy='Lmod' \
