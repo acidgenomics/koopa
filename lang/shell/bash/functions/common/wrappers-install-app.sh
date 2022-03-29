@@ -246,6 +246,7 @@ koopa_install_gnupg() { # {{{1
         "$@"
 }
 
+# FIXME Configure in the main installer.
 koopa_install_go() { # {{{1
     koopa_install_app \
         --name-fancy='Go' \
@@ -327,6 +328,7 @@ koopa_install_imagemagick() { # {{{1
         "$@"
 }
 
+# FIXME Configure in the main installer.
 koopa_install_julia() { # {{{1
     if koopa_is_linux
     then
@@ -420,6 +422,8 @@ koopa_install_neovim() { # {{{1
         "$@"
 }
 
+# FIXME Configure in the main installer, not the wrapper.
+# FIXME Point to the specific nim to configure.
 koopa_install_nim() { # {{{1
     koopa_install_app \
         --link-include='bin' \
@@ -493,6 +497,7 @@ koopa_install_patch() { # {{{1
         "$@"
 }
 
+# FIXME Configure in the main installer.
 koopa_install_perl() { # {{{1
     koopa_install_app \
         --name-fancy='Perl' \
@@ -612,6 +617,7 @@ koopa_install_rsync() { # {{{1
         "$@"
 }
 
+# FIXME Configure in the main installer.
 koopa_install_ruby() { # {{{1
     koopa_install_app \
         --name-fancy='Ruby' \
