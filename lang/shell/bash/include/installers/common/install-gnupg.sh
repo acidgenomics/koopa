@@ -10,7 +10,7 @@ install_gnupg() { # {{{1
     # - https://gnupg.org/signature_key.html
     # - https://gnupg.org/download/integrity_check.html
     # """
-    local app dict gpg_keys install_args opt opt_arr
+    local app dict gpg_keys install_args
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [gpg]='/usr/bin/gpg'
@@ -164,6 +164,7 @@ install_gnupg() { # {{{1
         '--installer=gnupg-gcrypt'
         '--no-prefix-check'
         "--prefix=${dict[prefix]}"
+        '--quiet'
     )
     koopa_install_app \
         --installer='gnupg-gcrypt' \
@@ -173,19 +174,19 @@ install_gnupg() { # {{{1
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgcrypt' \
-        --opt='libgpg-error' \
+        --opt='gnupg' \
         --version="${dict[libgcrypt_version]}" \
         "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libassuan' \
-        --opt='libgpg-error' \
+        --opt='gnupg' \
         --version="${dict[libassuan_version]}" \
         "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libksba' \
-        --opt='libgpg-error' \
+        --opt='gnupg' \
         --version="${dict[libksba_version]}" \
         "${install_args[@]}"
     koopa_install_app \
@@ -203,24 +204,10 @@ install_gnupg() { # {{{1
             --version="${dict[pinentry_version]}" \
             "${install_args[@]}"
     fi
-    opt_arr=(
-        'libgpg-error'
-        'libgcrypt'
-        'libassuan'
-        'libksba'
-        'npth'
-    )
-    if ! koopa_is_macos
-    then
-        opt_arr+=('pinentry')
-    fi
-    for opt in "${opt_arr[@]}"
-    do
-        install_args+=("--opt=${opt}")
-    done
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='gnupg' \
+        --opt='gnupg' \
         --version="${dict[version]}" \
         "${install_args[@]}"
     return 0
