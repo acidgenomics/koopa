@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME This removed all symlinks in /usr/local...need to recheck.
+# FIXME Seeing this issue with or without linkage applied on Ubuntu:
+# gpg: symbol lookup error: gpg: undefined symbol: gpgrt_set_confdir, version GPG_ERROR_1.0
 
 install_gnupg() { # {{{1
     # """
@@ -11,6 +12,8 @@ install_gnupg() { # {{{1
     # - https://gnupg.org/download/index.html
     # - https://gnupg.org/signature_key.html
     # - https://gnupg.org/download/integrity_check.html
+    # - gpgrt_set_confdir issue during build:
+    #   https://zenn.dev/zunda/scraps/70c2bfb4494510
     # """
     local app dict gpg_keys install_args
     koopa_assert_has_no_args "$#"
@@ -149,8 +152,8 @@ install_gnupg() { # {{{1
         # > "${app[gpg]}" --list-keys
     fi
     install_args=(
-        # > '--no-link'
         '--installer=gnupg-gcrypt'
+        '--no-link'
         '--no-prefix-check'
         "--prefix=${dict[prefix]}"
         '--quiet'
@@ -163,19 +166,16 @@ install_gnupg() { # {{{1
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgcrypt' \
-        --opt='gnupg' \
         --version="${dict[libgcrypt_version]}" \
         "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libassuan' \
-        --opt='gnupg' \
         --version="${dict[libassuan_version]}" \
         "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libksba' \
-        --opt='gnupg' \
         --version="${dict[libksba_version]}" \
         "${install_args[@]}"
     koopa_install_app \
@@ -196,7 +196,6 @@ install_gnupg() { # {{{1
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='gnupg' \
-        --opt='gnupg' \
         --version="${dict[version]}" \
         "${install_args[@]}"
     return 0
