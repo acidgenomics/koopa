@@ -97,6 +97,13 @@ koopa_configure_app_packages() { # {{{1
     then
         if [[ -z "${dict[version]}" ]]
         then
+            if [[ -z "${dict[app]}" ]]
+            then
+                dict[locate_app_fun]="koopa_locate_${name}"
+                koopa_assert_is_function "${dict[locate_app_fun]}"
+                dict[app]="$("${dict[locate_app_fun]}")"
+            fi
+            koopa_assert_is_installed "${dict[app]}"
             dict[version]="$(koopa_get_version "${dict[app]}")"
         fi
         dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
