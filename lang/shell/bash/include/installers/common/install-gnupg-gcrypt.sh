@@ -3,9 +3,9 @@
 install_gnupg_gcrypt() { # {{{1
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-03-29.
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [gpg]='/usr/bin/gpg'
@@ -32,7 +32,31 @@ install_gnupg_gcrypt() { # {{{1
     fi
     koopa_extract "${dict[tar_file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=(
+        '--enable-maintainer-mode'
+        "--prefix=${dict[prefix]}"
+    )
+    case "${dict[name]}" in
+        'libgcrypt' | \
+        'libksba')
+            conf_args+=(
+                --with-libgpg-error-prefix="${dict[prefix]}"
+            )
+            ;;
+        'gnupg')
+            conf_args+=(
+                "--with-ksba-prefix=${dict[prefix]}"
+                "--with-libassuan-prefix=${dict[prefix]}"
+                "--with-libgcrypt-prefix=${dict[prefix]}"
+                "--with-libgpg-error-prefix=${dict[prefix]}"
+                "--with-libgpg-error-prefix=${dict[prefix]}"
+                "--with-libksba-prefix=${dict[prefix]}"
+                "--with-npth-prefix=${dict[prefix]}"
+                # > '--disable-doc'
+            )
+            ;;
+    esac
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
