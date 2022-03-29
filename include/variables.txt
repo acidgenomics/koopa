@@ -159,7 +159,7 @@ hadolint="2.9.3"
 harfbuzz="4.1.0"
 
 # https://www.hdfgroup.org/downloads/hdf5/
-hdf5="1.13.0"
+hdf5="1.13.1"
 
 # https://brew.sh/
 homebrew="3.4.3"
