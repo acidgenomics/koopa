@@ -3,7 +3,7 @@
 install_subversion() { # {{{1
     # """
     # Install Subversion.
-    # @note Updated 2022-01-06.
+    # @note Updated 2022-03-28.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -52,6 +52,7 @@ install_subversion() { # {{{1
             "--with-apr-util=${dict[brew_apr_util]}"
         )
     fi
+    koopa_activate_opt_prefix 'perl' 'ruby'
     dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
     dict[url]="https://mirrors.ocf.berkeley.edu/apache/\
 ${dict[name]}/${dict[file]}"
