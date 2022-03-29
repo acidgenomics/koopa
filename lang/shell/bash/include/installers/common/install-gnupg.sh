@@ -169,29 +169,34 @@ install_gnupg() { # {{{1
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgpg-error' \
+        --no-link \
         --version="${dict[libgpg_error_version]}" \
         "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgcrypt' \
+        --no-link \
         --opt='gnupg' \
         --version="${dict[libgcrypt_version]}" \
         "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libassuan' \
+        --no-link \
         --opt='gnupg' \
         --version="${dict[libassuan_version]}" \
         "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libksba' \
+        --no-link \
         --opt='gnupg' \
         --version="${dict[libksba_version]}" \
         "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='npth' \
+        --no-link \
         --version="${dict[npth_version]}" \
         "${install_args[@]}"
     if koopa_is_macos
@@ -201,6 +206,7 @@ install_gnupg() { # {{{1
         koopa_install_app \
             --installer='gnupg-pinentry' \
             --name='pinentry' \
+            --no-link \
             --version="${dict[pinentry_version]}" \
             "${install_args[@]}"
     fi
