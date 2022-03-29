@@ -37,6 +37,7 @@ install_gnupg_gcrypt() { # {{{1
         "--prefix=${dict[prefix]}"
     )
     case "${dict[name]}" in
+        'libassuan' | \
         'libgcrypt' | \
         'libksba')
             conf_args+=(
@@ -49,7 +50,6 @@ install_gnupg_gcrypt() { # {{{1
                 "--with-ksba-prefix=${dict[prefix]}"
                 "--with-libassuan-prefix=${dict[prefix]}"
                 "--with-libgcrypt-prefix=${dict[prefix]}"
-                "--with-libgpg-error-prefix=${dict[prefix]}"
                 "--with-libgpg-error-prefix=${dict[prefix]}"
                 "--with-libksba-prefix=${dict[prefix]}"
                 "--with-npth-prefix=${dict[prefix]}"
