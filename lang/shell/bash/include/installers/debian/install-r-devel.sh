@@ -14,7 +14,6 @@ debian_install_r_devel() { # {{{1
     # - https://cran.r-project.org/bin/linux/debian/
     # """
     local app conf_args dict
-    set -x   #FIXME
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     koopa_debian_apt_install \
