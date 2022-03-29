@@ -112,7 +112,7 @@ koopa_configure_app_packages() { # {{{1
         then
             if [[ -z "${dict[app]}" ]]
             then
-                dict[locate_app_fun]="koopa_locate_${name}"
+                dict[locate_app_fun]="koopa_locate_${dict[name]}"
                 koopa_assert_is_function "${dict[locate_app_fun]}"
                 dict[app]="$("${dict[locate_app_fun]}")"
             fi
