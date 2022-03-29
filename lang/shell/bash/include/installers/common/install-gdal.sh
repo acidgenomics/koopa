@@ -3,7 +3,7 @@
 install_gdal() { # {{{1
     # """
     # Install GDAL.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-03-29.
     #
     # Use 'configure --help' for build options.
     #
@@ -58,7 +58,6 @@ install_gdal() { # {{{1
         '--without-podofo'
         '--without-python'
         '--without-rasdaman'
-        '--without-sde'
         '--without-sosi'
     )
     opt_pkgs=('geos' 'proj')
