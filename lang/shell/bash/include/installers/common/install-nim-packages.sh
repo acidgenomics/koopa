@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is getting stuck at initial install.
-#   Warning: Using the environment variable: NIMBLE_DIR='/opt/koopa/opt/nim-packages'
-#    Prompt: No local packages.json found, download it from internet? [y/N]
-#    Answer:
-# FIXME How to pass through without prompt?
-
 install_nim_packages() { # {{{1
     # """
     # Install Nim packages using nimble.
