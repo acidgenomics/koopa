@@ -219,7 +219,7 @@ __koopa_complete() { # {{{1
                             args+=(
                                 'bcbio-nextgen-vm'
                                 'pandoc'
-                                'r-cran-binary'
+                                'r-binary'
                                 'r-devel'
                             )
                         elif koopa_is_fedora_like

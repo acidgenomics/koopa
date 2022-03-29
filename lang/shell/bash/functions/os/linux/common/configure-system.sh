@@ -507,7 +507,7 @@ koopa_linux_configure_system() { # {{{1
         else
             if koopa_is_debian
             then
-                koopa install r-cran-binary --version="${dict[r_version]}"
+                koopa install r-binary --version="${dict[r_version]}"
             elif koopa_is_fedora
             then
                 koopa_assert_is_installed R

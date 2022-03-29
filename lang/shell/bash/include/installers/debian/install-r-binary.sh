@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-debian_install_r_cran_binary() { # {{{1
+debian_install_r_binary() { # {{{1
     # """
     # Install latest version of R from CRAN.
     # @note Updated 2022-03-15.

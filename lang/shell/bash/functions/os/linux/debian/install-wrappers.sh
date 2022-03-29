@@ -62,10 +62,10 @@ koopa_debian_install_pandoc() { # {{{1
         "$@"
 }
 
-koopa_debian_install_r_cran_binary() { # {{{1
+koopa_debian_install_r_binary() { # {{{1
     koopa_install_app \
         --name-fancy='R CRAN binary' \
-        --name='r-cran-binary' \
+        --name='r-binary' \
         --platform='debian' \
         --system \
         --version-key='r' \
@@ -161,10 +161,10 @@ koopa_debian_uninstall_pandoc() { # {{{1
         "$@"
 }
 
-koopa_debian_uninstall_r_cran_binary() { # {{{1
+koopa_debian_uninstall_r_binary() { # {{{1
     koopa_uninstall_app \
         --name-fancy='R CRAN binary' \
-        --name='r-cran-binary' \
+        --name='r-binary' \
         --platform='debian' \
         --system \
         "$@"

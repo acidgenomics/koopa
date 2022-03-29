@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-debian_uninstall_r_cran_binary() { # {{{1
+debian_uninstall_r_binary() { # {{{1
     # """
     # Uninstall R CRAN binary.
     # @note Updated 2022-01-28.
