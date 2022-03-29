@@ -201,6 +201,7 @@ debian_install_base_system() { # {{{1
             'libapparmor-dev'
             'libapr1-dev' # subversion
             'libaprutil1-dev' # subversion
+            'libatlas-base-dev' # armadillo
             'libbison-dev'
             'libblas-dev'
             'libboost-chrono-dev' # bcl2fastq
