@@ -151,8 +151,7 @@ bin/${dict[app_name]}"
     fi
     if [[ -z "$app" ]]
     then
-        koopa_warn "Failed to locate '${dict[app_name]}'."
-        return 1
+        koopa_stop "Failed to locate '${dict[app_name]}'."
     fi
     if ! { \
         [[ -x "$app" ]] && \
@@ -160,8 +159,7 @@ bin/${dict[app_name]}"
         koopa_is_installed "$app"; \
     }
     then
-        koopa_warn "Not installed: '${app}'."
-        return 1
+        koopa_stop "Not installed: '${app}'."
     fi
     koopa_print "$app"
     return 0

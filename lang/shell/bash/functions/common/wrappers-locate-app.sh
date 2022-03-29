@@ -414,8 +414,7 @@ koopa_locate_mamba_or_conda() { # {{{1
     fi
     if [[ ! -x "$str" ]]
     then
-        koopa_warn 'Failed to locate mamba or conda.'
-        return 1
+        koopa_stop 'Failed to locate mamba or conda.'
     fi
     koopa_print "$str"
     return 0
