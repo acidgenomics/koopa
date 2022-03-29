@@ -451,6 +451,12 @@ koopa_locate_nim() { # {{{1
     koopa_locate_app 'nim'
 }
 
+koopa_locate_nimble() { # {{{1
+    koopa_locate_app \
+        --app-name='nimble' \
+        --opt='nim'
+}
+
 koopa_locate_node() { # {{{1
     koopa_locate_app 'node'
 }
