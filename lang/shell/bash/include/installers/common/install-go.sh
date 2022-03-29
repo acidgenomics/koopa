@@ -3,10 +3,11 @@
 install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-03-29.
     # """
-    local dict
+    local app dict
     koopa_assert_has_no_args "$#"
+    declare -A app
     declare -A dict=(
         [arch]="$(koopa_arch2)" # e.g. "amd64".
         [name]='go'
@@ -25,5 +26,8 @@ ${dict[arch]}.tar.gz"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cp --target-directory="${dict[prefix]}" "${dict[name]}/"*
+    app[go]="${dict[prefix]}/bin/go"
+    koopa_assert_is_installed "${app[go]}"
+    koopa_configure_go "${app[go]}"
     return 0
 }
