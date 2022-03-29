@@ -3,15 +3,31 @@
 koopa_hisat2_align_paired_end() { # {{{1
     # """
     # Run HISAT2 aligner on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-03-24.
+    # @note Updated 2022-03-25.
+    #
+    # @examples
+    # > koopa_hisat2_align_paired_end \
+    # >     --fastq-dir='fastq' \
+    # >     --fastq-r1-tail='_R1_001.fastq.gz' \
+    # >     --fastq-r2-tail='_R2_001.fastq.gz' \
+    # >     --index-dir='hisat2-index' \
+    # >     --output-dir='hisat2'
     # """
     local dict fastq_r1_files fastq_r1_file fastq_r2_file
     koopa_assert_has_args "$#"
     declare -A dict=(
+        # e.g. 'fastq'.
         [fastq_dir]=''
-        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
-        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        # e.g. '_R1_001.fastq.gz'.
+        [fastq_r1_tail]=''
+        # e.g. '_R2_001.fastq.gz'.
+        [fastq_r2_tail]=''
+        # e.g. 'hisat2-index'.
         [index_dir]=''
+        # Using salmon fragment library type conventions here.
+        [lib_type]='A'
+        [mode]='paired-end'
+        # e.g. 'hisat2'.
         [output_dir]=''
     )
     while (("$#"))
@@ -50,6 +66,14 @@ koopa_hisat2_align_paired_end() { # {{{1
                 dict[index_dir]="${2:?}"
                 shift 2
                 ;;
+            '--lib-type='*)
+                dict[lib_type]="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
@@ -69,18 +93,19 @@ koopa_hisat2_align_paired_end() { # {{{1
         '--fastq-r1-tail' "${dict[fastq_r1_tail]}" \
         '--fastq-r2-tail' "${dict[fastq_r1_tail]}" \
         '--index-dir' "${dict[index_dir]}" \
+        '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
     koopa_assert_is_dir "${dict[fastq_dir]}" "${dict[index_dir]}"
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_h1 'Running HISAT2 aligner (paired-end mode).'
+    koopa_h1 'Running HISAT2 aligner.'
     koopa_dl \
+        'Mode' "${dict[mode]}" \
+        'Index dir' "${dict[index_dir]}" \
+        'FASTQ dir' "${dict[fastq_dir]}" \
         'FASTQ R1 tail' "${dict[fastq_r1_tail]}" \
         'FASTQ R2 tail' "${dict[fastq_r2_tail]}" \
-        'FASTQ dir' "${dict[fastq_dir]}" \
-        'Index dir' "${dict[index_dir]}" \
-        'Mode' 'paired-end' \
         'Output dir' "${dict[output_dir]}"
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
@@ -111,6 +136,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
             --fastq-r2-file="$fastq_r2_file" \
             --fastq-r2-tail="${dict[fastq_r2_tail]}" \
             --index-dir="${dict[index_dir]}" \
+            --lib-type="${dict[lib_type]}" \
             --output-dir="${dict[output_dir]}"
     done
     koopa_alert_success 'HISAT2 alignment was successful.'
@@ -120,28 +146,44 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
 koopa_hisat2_align_paired_end_per_sample() { # {{{1
     # """
     # Run HISAT2 aligner on a paired-end sample.
-    # @note Updated 2022-03-24.
+    # @note Updated 2022-03-25.
     #
     # @seealso
     # - hisat2 --help
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/ngsalign/
     #     hisat2.py
     # - https://daehwankimlab.github.io/hisat2/manual/
+    #
+    # @examples
+    # > koopa_hisat2_align_paired_end_per_sample \
+    # >     --fastq-r1-file='fastq/sample1_R1_001.fastq.gz' \
+    # >     --fastq-r1-tail='_R1_001.fastq.gz' \
+    # >     --fastq-r2-file='fastq/sample1_R2_001.fastq.gz' \
+    # >     --fastq-r2-tail='_R2_001.fastq.gz'
+    # >     --index-dir='hisat2-index' \
+    # >     --output-dir='hisat2'
     # """
     local align_args app dict
     declare -A app=(
         [hisat2]="$(koopa_locate_hisat2)"
     )
     declare -A dict=(
+        # e.g. 'sample1_R1_001.fastq.gz'.
         [fastq_r1_file]=''
-        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
+        # e.g. '_R1_001.fastq.gz'.
+        [fastq_r1_tail]=''
+        # e.g. 'sample1_R2_001.fastq.gz'.
         [fastq_r2_file]=''
-        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        # e.g. '_R2_001.fastq.gz'.
+        [fastq_r2_tail]=''
+        # e.g. 'hisat2-index'.
         [index_dir]=''
+        # Using salmon fragment library type conventions here.
+        [lib_type]='A'
         [mem_gb]="$(koopa_mem_gb)"
         [mem_gb_cutoff]=14
+        # e.g. 'hisat2'.
         [output_dir]=''
-        [quality_format]='phred33'
         [threads]="$(koopa_cpu_count)"
     )
     align_args=()
@@ -189,6 +231,14 @@ koopa_hisat2_align_paired_end_per_sample() { # {{{1
                 dict[index_dir]="${2:?}"
                 shift 2
                 ;;
+            '--lib-type='*)
+                dict[lib_type]="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
@@ -209,15 +259,19 @@ koopa_hisat2_align_paired_end_per_sample() { # {{{1
         '--fastq-r2-file' "${dict[fastq_r2_file]}" \
         '--fastq-r2-tail' "${dict[fastq_r2_tail]}" \
         '--index-dir' "${dict[index_dir]}" \
+        '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
     if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
     then
         koopa_stop "HISAT2 align requires ${dict[mem_gb_cutoff]} GB of RAM."
     fi
     koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
+    dict[fastq_r1_file]="$(koopa_realpath "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
+    dict[fastq_r2_file]="$(koopa_realpath "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[fastq_r2_tail]}/}"
     koopa_assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
@@ -230,70 +284,59 @@ koopa_hisat2_align_paired_end_per_sample() { # {{{1
     fi
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
-
-
     dict[hisat2_idx]="${dict[index_dir]}/index"
     dict[sam_file]="${dict[output_dir]}/${dict[id]}.sam"
-
-    dict[quality_format_r1]="$( \
-        koopa_fastq_detect_quality_format "${dict[fastq_r1_file]}" \
-    )"
-    dict[quality_format_r2]="$( \
-        koopa_fastq_detect_quality_format "${dict[fastq_r2_file]}" \
-    )"
-    koopa_assert_are_identical \
-        "${dict[quality_format_r1]}" \
-        "${dict[quality_format_r2]}"
-    case "${dict[quality_format_r1]}" in
-        'phread33')
-            dict[quality_flag]='--phred33'
-            ;;
-        'phread64')
-            dict[quality_flag]='--phred64'
-            ;;
-        *)
-            koopa_stop 'Unsupported quality format.'
-            ;;
-    esac
-
-    # FIXME Need to handle strandedness here.
-    # FIXME What is '--new-summary' flag?
-    # FIXME Check if FASTQ is phread64, otherwise assume phred33 by default.
-
-    # FIXME Need to support this:
-    # --rna-strandness <string>          specify strand-specific information (unstranded)
-
-
-# FIXME Need to add lib-type here, defaulting to 'A'
-# FIXME Need to add support for unstranded.
-# FIXME Set '--rna-strandedness from this.
-
     align_args+=(
-        '--new-summary'
-        "${dict[quality_flag]}"
-        '--threads' "${dict[threads]}"
         '-1' "${dict[fastq_r1_file]}"
         '-2' "${dict[fastq_r2_file]}"
         '-S' "${dict[sam_file]}"
         '-q'
         '-x' "${dict[hisat2_idx]}"
+        '--new-summary'
+        '--threads' "${dict[threads]}"
     )
+    dict[lib_type]="$(koopa_hisat2_fastq_library_type "${dict[lib_type]}")"
+    if [[ -n "${dict[lib_type]}" ]]
+    then
+        align_args+=('--rna-strandedness' "${dict[lib_type]}")
+    fi
+    dict[quality_flag]="$( \
+        koopa_hisat2_fastq_quality_format "${dict[fastq_r1_file]}" \
+    )"
+    if [[ -n "${dict[quality_flag]}" ]]
+    then
+        align_args+=("${dict[quality_flag]}")
+    fi
     koopa_dl 'Align args' "${align_args[*]}"
     "${app[star]}" "${align_args[@]}"
+    # FIXME Convert the SAM file to BAM file here.
     return 0
 }
 
 koopa_hisat2_align_single_end() { # {{{1
     # """
     # Run HISAT2 aligner on multiple single-end FASTQs in a directory.
-    # @note Updated 2022-03-24.
+    # @note Updated 2022-03-25.
+    #
+    # > koopa_hisat2_align_single_end \
+    # >     --fastq-dir='fastq' \
+    # >     --fastq-tail='.fastq.gz' \
+    # >     --index-dir='hisat2-index' \
+    # >     --output-dir='hisat2'
     # """
     local dict fastq_file fastq_files
     koopa_assert_has_args "$#"
     declare -A dict=(
+        # e.g. 'fastq'
         [fastq_dir]=''
-        [fastq_tail]='' # '.fastq.gz'
+        # e.g. '.fastq.gz'
+        [fastq_tail]=''
+        # e.g. 'hisat2-index'.
         [index_dir]=''
+        # Using salmon fragment library type conventions here.
+        [lib_type]='A'
+        [mode]='single-end'
+        # e.g. 'hisat2'.
         [output_dir]=''
     )
     while (("$#"))
@@ -324,6 +367,14 @@ koopa_hisat2_align_single_end() { # {{{1
                 dict[index_dir]="${2:?}"
                 shift 2
                 ;;
+            '--lib-type='*)
+                dict[lib_type]="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
@@ -342,17 +393,18 @@ koopa_hisat2_align_single_end() { # {{{1
         '--fastq-dir' "${dict[fastq_dir]}" \
         '--fastq-tail' "${dict[fastq_tail]}" \
         '--index-dir' "${dict[index_dir]}" \
+        '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
     koopa_assert_is_dir "${dict[fastq_dir]}" "${dict[index_dir]}"
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_h1 'Running HISAT2 aligner (single-end mode).'
+    koopa_h1 'Running HISAT2 aligner.'
     koopa_dl \
+        'Mode' "${dict[mode]}" \
+        'Index dir' "${dict[index_dir]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
         'FASTQ tail' "${dict[fastq_tail]}" \
-        'Index dir' "${dict[index_dir]}" \
-        'Mode' 'single-end' \
         'Output dir' "${dict[output_dir]}"
     readarray -t fastq_files <<< "$( \
         koopa_find \
@@ -379,6 +431,7 @@ koopa_hisat2_align_single_end() { # {{{1
             --fastq-file="$fastq_file" \
             --fastq-tail="${dict[fastq_tail]}" \
             --index-dir="${dict[index_dir]}" \
+            --lib-type="${dict[lib_type]}" \
             --output-dir="${dict[output_dir]}"
     done
     koopa_alert_success 'HISAT2 alignment was successful.'
@@ -392,11 +445,17 @@ koopa_hisat2_align_single_end() { # {{{1
 # FIXME Need to add support for unstranded.
 # FIXME Set '--rna-strandedness from this.
 
-# FIXME Can we pass in gzipped files or we do we need to decompress?
 koopa_hisat2_align_single_end_per_sample() { # {{{1
     # """
     # Run HISAT2 aligner on a single-end sample.
-    # @note Updated 2022-03-24.
+    # @note Updated 2022-03-25.
+    #
+    # @examples
+    # > koopa_hisat2_align_single_end_per_sample \
+    # >     --fastq-file='fastq/sample1_001.fastq.gz' \
+    # >     --fastq-tail='_001.fastq.gz' \
+    # >     --index-dir='hisat2-index' \
+    # >     --output-dir='hisat2'
     # """
     local align_args app dict
     koopa_assert_has_args "$#"
@@ -404,11 +463,17 @@ koopa_hisat2_align_single_end_per_sample() { # {{{1
         [hisat2]="$(koopa_locate_hisat2)"
     )
     declare -A dict=(
+        # e.g. 'sample1_001.fastq.gz'.
         [fastq_file]=''
-        [fastq_tail]='' # '.fastq.gz'
+        # e.g. '_001.fastq.gz'.
+        [fastq_tail]=''
+        # e.g. 'hisat2-index'.
         [index_dir]=''
+        # Using salmon fragment library type conventions here.
+        [lib_type]='A'
         [mem_gb]="$(koopa_mem_gb)"
         [mem_gb_cutoff]=14
+        # e.g. 'hisat2'.
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
@@ -441,6 +506,14 @@ koopa_hisat2_align_single_end_per_sample() { # {{{1
                 dict[index_dir]="${2:?}"
                 shift 2
                 ;;
+            '--lib-type='*)
+                dict[lib_type]="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
@@ -459,13 +532,16 @@ koopa_hisat2_align_single_end_per_sample() { # {{{1
         '--fastq-file' "${dict[fastq_file]}" \
         '--fastq-tail' "${dict[fastq_tail]}" \
         '--index-dir' "${dict[index_dir]}" \
+        '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
     if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
     then
         koopa_stop "HISAT2 align requires ${dict[mem_gb_cutoff]} GB of RAM."
     fi
     koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     koopa_assert_is_file "${dict[fastq_file]}"
+    dict[fastq_file]="$(koopa_realpath "${dict[fastq_file]}")"
     dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
     dict[id]="${dict[fastq_bn]}"
@@ -477,28 +553,41 @@ koopa_hisat2_align_single_end_per_sample() { # {{{1
     fi
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
-
     dict[hisat2_idx]="${dict[index_dir]}/index"
     dict[sam_file]="${dict[output_dir]}/${dict[id]}.sam"
-
     align_args+=(
         '-S' "${dict[sam_file]}"
         '-U' "${dict[fastq_file]}"
         '-q'
         '-x' "${dict[hisat2_idx]}"
+        '--new-summary'
+        '--threads' "${dict[threads]}"
     )
+    dict[lib_type]="$(koopa_hisat2_fastq_library_type "${dict[lib_type]}")"
+    if [[ -n "${dict[lib_type]}" ]]
+    then
+        align_args+=('--rna-strandedness' "${dict[lib_type]}")
+    fi
+    dict[quality_flag]="$( \
+        koopa_hisat2_fastq_quality_format "${dict[fastq_r1_file]}" \
+    )"
+    if [[ -n "${dict[quality_flag]}" ]]
+    then
+        align_args+=("${dict[quality_flag]}")
+    fi
     koopa_dl 'Align args' "${align_args[*]}"
     "${app[star]}" "${align_args[@]}"
+    # FIXME Convert the SAM file to BAM file here.
     return 0
 }
 
-# HISAT2 includes 'hisat2_extract_exons.py' that does this.
-# HISAT2 includes 'hisat2_extract_splice_sites.py' which does this.
+# FIXME HISAT2 includes 'hisat2_extract_exons.py' that does this.
+# FIXME HISAT2 includes 'hisat2_extract_splice_sites.py' which does this.
 
 koopa_hisat2_index() { # {{{1
     # """
     # Create a genome index for HISAT2 aligner.
-    # @note Updated 2022-03-24.
+    # @note Updated 2022-03-25.
     #
     # Doesn't currently support compressed files as input.
     #
@@ -588,21 +677,31 @@ koopa_hisat2_index() { # {{{1
     return 0
 }
 
-koopa_hisat2_library_strandedness() { # {{{1
+koopa_hisat2_fastq_library_type() { # {{{1
     # """
-    # Convert salmon library type to HISAT2 strandedness.
-    # @note Updated 2022-03-24.
+    # Convert salmon FASTQ library type to HISAT2 strandedness.
+    # @note Updated 2022-03-25.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/library_type.html
     # - https://rnabio.org/module-09-appendix/0009/12/01/StrandSettings/
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
     #     ngsalign/hisat2.py
+    #
+    # @examples
+    # > koopa_hisat2_fastq_library_type 'ISF'
+    # # FR
+    # > koopa_hisat2_fastq_library_type 'ISR'
+    # # RF
     # """
     local from to
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
+        'A' | 'IU' | 'U')
+            # fr-unstranded.
+            return 0
+            ;;
         'ISF')
             # fr-secondstrand (ligation).
             to='FR'
@@ -620,10 +719,39 @@ koopa_hisat2_library_strandedness() { # {{{1
             to='R'
             ;;
         *)
-            # -fr-unstranded; samon IU, U.
-            return 1
+            koopa_stop "Invalid library type: '${1:?}'."
             ;;
     esac
     koopa_print "$to"
     return 0
 }
+
+koopa_hisat2_fastq_quality_format() {
+    # """
+    # Determine whether we should set FASTQ quality score (Phred) flag.
+    # @note Updated 2022-03-25.
+    #
+    # Consider adding support for Solexa sequencing here.
+    # """
+    local dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict=(
+        [fastq_file]="${1:?}"
+    )
+    koopa_assert_is_file "${dict[fastq_file]}"
+    dict[format]="$(koopa_fastq_detect_quality_format "${dict[fastq_file]}")"
+    case "${dict[format]}" in
+        'Phread+33')
+            dict[flag]='--phred33'
+            ;;
+        'Phread+64')
+            dict[flag]='--phred64'
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    koopa_print "${dict[flag]}"
+    return 0
+}
+
