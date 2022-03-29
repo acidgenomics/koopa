@@ -19,10 +19,14 @@ install_geos() { # {{{1
     # > ./configure --prefix="${dict[prefix]}"
     # > "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
+    #
+    # @seealso
+    # - https://github.com/libgeos/geos/blob/main/INSTALL.md
     # """
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
+        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )
@@ -32,7 +36,7 @@ install_geos() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa_is_macos
+    if koopa_is_installed "${app[brew]}"
     then
         koopa_activate_homebrew_opt_prefix 'cmake'
     fi
@@ -47,6 +51,7 @@ archive/${dict[file]}"
     # > '-DGEOS_ENABLE_TESTS='OFF'
     "${app[cmake]}" \
         ../"${dict[name]}-${dict[version]}" \
+        -DCMAKE_BUILD_TYPE='Release' \
         -DCMAKE_INSTALL_PREFIX="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
