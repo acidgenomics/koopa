@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Can we build using multiple cores?
+
 install_nim() { # {{{1
     # """
     # Install Nim.
     # @note Updated 2022-03-29.
     #
     # @seealso
+    # - https://nim-lang.org/docs/koch.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/nim.rb
     # """
     local app dict
@@ -23,7 +26,7 @@ install_nim() { # {{{1
     koopa_cd "${dict[name]}-${dict[version]}"
     ./build.sh
     bin/nim c -d:release koch
-    ./koch boot -d:release -d:useLinenoise
+    ./koch boot -d:release -d:nimUseLinenoise
     ./koch tools
     koopa_cp "${PWD:?}" "${dict[prefix]}"
     app[nim]="${dict[prefix]}/bin/nim"
