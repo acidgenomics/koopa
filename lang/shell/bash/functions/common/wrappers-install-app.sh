@@ -670,6 +670,12 @@ koopa_install_sqlite() { # {{{1
         "$@"
 }
 
+koopa_install_stow() { # {{{1
+    koopa_install_gnu_app \
+        --name='stow' \
+        "$@"
+}
+
 koopa_install_subversion() { # {{{1
     koopa_install_app \
         --name='subversion' \
@@ -1353,6 +1359,12 @@ koopa_uninstall_sqlite() { # {{{1
     koopa_uninstall_app \
         --name-fancy='SQLite' \
         --name='sqlite' \
+        "$@"
+}
+
+koopa_uninstall_stow() { # {{{1
+    koopa_uninstall_app \
+        --name='stow' \
         "$@"
 }
 
