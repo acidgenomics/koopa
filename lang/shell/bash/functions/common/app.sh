@@ -511,8 +511,8 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         then
             koopa_delete_broken_symlinks "${dict[make_prefix]}"
             link_args=(
+                "--app-prefix=${dict[prefix]}"
                 "--name=${dict[name]}"
-                "--prefix=${dict[prefix]}"
                 # > "--version=${dict[version]}"
             )
             if koopa_is_array_non_empty "${link_include_arr[@]:-}"
