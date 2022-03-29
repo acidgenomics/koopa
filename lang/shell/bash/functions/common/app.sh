@@ -592,7 +592,7 @@ koopa_install_app_packages() { # {{{1
 koopa_push_app_build() { # {{{1
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-03-29.
     #
     # @examples
     # > koopa_push_app_build --app-name='node' --app-version='17.8.0'
@@ -607,6 +607,7 @@ koopa_push_app_build() { # {{{1
         [app_name]=''
         [app_prefix]="$(koopa_app_prefix)"
         [app_version]=''
+        [arch]="$(koopa_arch2)"
         [os_string]="$(koopa_os_string)"
         [s3_prefix]='s3://koopa.acidgenomics.com/app'
         [s3_profile]='acidgenomics'
@@ -655,7 +656,7 @@ koopa_push_app_build() { # {{{1
         '--app-version' "${dict[app_version]}"
     dict[prefix]="${dict[app_prefix]}/${dict[app_name]}/${dict[app_version]}"
     dict[local_tarball]="${dict[tmp_dir]}/${dict[app_version]}.tar.gz"
-    dict[remote_tarball]="${dict[s3_prefix]}/${dict[os_string]}/\
+    dict[remote_tarball]="${dict[s3_prefix]}/${dict[os_string]}/${dict[arch]}/\
 ${dict[app_name]}/${dict[app_version]}.tar.gz"
     koopa_alert "Pushing '${dict[prefix]}' to '${dict[remote_tarball]}'."
     "${app[tar]}" -Pczf "${dict[local_tarball]}" "${dict[prefix]}/"
