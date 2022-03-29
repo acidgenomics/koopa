@@ -40,7 +40,6 @@ koopa_debian_set_locale() { # {{{1
         'locales'
     "${app[sudo]}" "${app[update_locale]}" LANG="${dict[lang_string]}"
     "${app[locale]}" -a
-    koopa_alert_success "Locale is defined as '${dict[lang_string]}'."
     return 0
 }
 
