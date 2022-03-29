@@ -5,6 +5,9 @@ install_proj() { # {{{1
     # Install PROJ.
     # @note Updated 2022-03-29.
     #
+    # Alternative approach for SQLite3 dependency:
+    # > -DCMAKE_PREFIX_PATH='/opt/koopa/opt/sqlite'
+    #
     # @seealso
     # - https://proj.org/install.html#compilation-and-installation-from-
     #     source-code
