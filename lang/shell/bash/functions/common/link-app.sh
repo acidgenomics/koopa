@@ -78,6 +78,36 @@ koopa_link_app() { # {{{1
     then
         dict[name]="${1:?}"
     fi
+    case "${dict[name]}" in
+        *'-packages' | \
+        'anaconda' | \
+        'aspera-connect' | \
+        'bcbio-nextgen' | \
+        'bcbio-nextgen-vm' | \
+        'cellranger' | \
+        'cloudbiolinux' | \
+        'conda' | \
+        'dotfiles' | \
+        'ensembl-perl-api' | \
+        'gcc' | \
+        'gdal' | \
+        'geos' | \
+        'go' | \
+        'haskell-stack' | \
+        'lmod' | \
+        'openjdk' | \
+        'openssh' | \
+        'openssl' | \
+        'perlbrew' | \
+        'proj' | \
+        'pyenv' | \
+        'r-cmd-check' | \
+        'r-devel' | \
+        'rbenv' | \
+        'rust')
+            koopa_stop "Linking of '${dict[name]}' is not supported."
+            ;;
+    esac
     if [[ -z "${dict[version]}" ]]
     then
         dict[version]="$(koopa_find_app_version "${dict[name]}")"
