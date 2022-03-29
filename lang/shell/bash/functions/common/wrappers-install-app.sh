@@ -1,53 +1,17 @@
 #!/usr/bin/env bash
 
-koopa_configure_go() { # {{{1
-    koopa_configure_app_packages \
-        --name-fancy='Go' \
-        --name='go' \
-        "$@"
-}
-
-koopa_configure_julia() { # {{{1
-    koopa_configure_app_packages \
-        --name-fancy='Julia' \
-        --name='julia' \
-        "$@"
-}
-
-koopa_configure_nim() { # {{{1
-    koopa_configure_app_packages \
-        --name-fancy='Nim' \
-        --name='nim' \
-        "$@"
-}
-
-koopa_configure_node() { # {{{1
-    koopa_configure_app_packages \
-        --name-fancy='Node.js' \
-        --name='node' \
-        "$@"
-}
-
-koopa_configure_ruby() { # {{{1
-    koopa_configure_app_packages \
-        --name-fancy='Ruby' \
-        --name='ruby' \
-        "$@"
-}
-
-koopa_configure_rust() { # {{{1
-    koopa_configure_app_packages \
-        --name-fancy='Rust' \
-        --name='rust' \
-        --version='rolling' \
-        "$@"
-}
-
 koopa_install_anaconda() { # {{{1
     koopa_install_app \
         --name-fancy='Anaconda' \
         --name='anaconda' \
         --no-link \
+        "$@"
+}
+
+koopa_install_armadillo() { # {{{1
+    koopa_install_app \
+        --name-fancy='Armadillo' \
+        --name='armadillo' \
         "$@"
 }
 
@@ -79,6 +43,13 @@ koopa_install_bash() { # {{{1
 koopa_install_binutils() { # {{{1
     koopa_install_gnu_app \
         --name='binutils' \
+        "$@"
+}
+
+koopa_install_boost() { # {{{1
+    koopa_install_app \
+        --name-fancy='Boost' \
+        --name='boost' \
         "$@"
 }
 
@@ -268,6 +239,19 @@ koopa_install_gsl() { # {{{1
         "$@"
 }
 
+koopa_install_hadolint() { # {{{1
+    koopa_install_app \
+        --name='hadolint' \
+        "$@"
+}
+
+koopa_install_harfbuzz() { # {{{1
+    koopa_install_app \
+        --name-fancy='Harfbuzz' \
+        --name='harfbuzz' \
+        "$@"
+}
+
 koopa_install_haskell_stack() { # {{{1
     koopa_install_app \
         --name-fancy='Haskell Stack' \
@@ -379,6 +363,12 @@ koopa_install_mamba() { # {{{1
         "$@"
 }
 
+koopa_install_man_db() { # {{{1
+    koopa_install_app \
+        --name='man-db' \
+        "$@"
+}
+
 koopa_install_miniconda() { # {{{1
     koopa_install_conda "$@"
 }
@@ -469,6 +459,13 @@ koopa_install_password_store() { # {{{1
 koopa_install_patch() { # {{{1
     koopa_install_gnu_app \
         --name='patch' \
+        "$@"
+}
+
+koopa_install_pcre2() { # {{{1
+    koopa_install_app \
+        --name-fancy='PCRE2' \
+        --name='pcre2' \
         "$@"
 }
 
@@ -762,6 +759,13 @@ koopa_uninstall_anaconda() { # {{{1
         "$@"
 }
 
+koopa_uninstall_armadillo() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Armadillo' \
+        --name='armadillo' \
+        "$@"
+}
+
 koopa_uninstall_autoconf() { # {{{1
     koopa_uninstall_app \
         --name='autoconf' \
@@ -784,6 +788,13 @@ koopa_uninstall_bash() { # {{{1
 koopa_uninstall_binutils() { # {{{1
     koopa_uninstall_app \
         --name='binutils' \
+        "$@"
+}
+
+koopa_uninstall_boost() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Boost' \
+        --name='boost' \
         "$@"
 }
 
@@ -968,6 +979,19 @@ koopa_uninstall_gsl() { # {{{1
         "$@"
 }
 
+koopa_uninstall_hadolint() { # {{{1
+    koopa_uninstall_app \
+        --name='hadolint' \
+        "$@"
+}
+
+koopa_uninstall_harfbuzz() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Harfbuzz' \
+        --name='harfbuzz' \
+        "$@"
+}
+
 koopa_uninstall_haskell_stack() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Haskell Stack' \
@@ -1069,6 +1093,12 @@ koopa_uninstall_luarocks() { # {{{1
 koopa_uninstall_make() { # {{{1
     koopa_uninstall_app \
         --name='make' \
+        "$@"
+}
+
+koopa_uninstall_man_db() { # {{{1
+    koopa_uninstall_app \
+        --name='man-db' \
         "$@"
 }
 
@@ -1174,6 +1204,13 @@ koopa_uninstall_password_store() { # {{{1
 koopa_uninstall_patch() { # {{{1
     koopa_uninstall_app \
         --name='patch' \
+        "$@"
+}
+
+koopa_uninstall_pcre2() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='PCRE2' \
+        --name='pcre2' \
         "$@"
 }
 

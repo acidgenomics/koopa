@@ -91,6 +91,83 @@ END
     return 0
 }
 
+koopa_configure_chemacs() { # {{{1
+    # """
+    # Configure chemacs.
+    # @note Updated 2022-02-03.
+    # """
+    koopa_link_dotfile --opt --overwrite 'chemacs' 'emacs.d'
+    return 0
+}
+
+koopa_configure_dotfiles() { # {{{1
+    # """
+    # Configure dotfiles.
+    # @note Updated 2022-01-19.
+    # """
+    local app dict
+    koopa_assert_has_args_le "$#" 1
+    declare -A app=(
+        [bash]="$(koopa_locate_bash)"
+    )
+    declare -A dict=(
+        [name]='dotfiles'
+        [prefix]="${1:-}"
+    )
+    [[ -z "${dict[prefix]}" ]] && dict[prefix]="$(koopa_dotfiles_prefix)"
+    koopa_assert_is_dir "${dict[prefix]}"
+    dict[script]="${dict[prefix]}/install"
+    koopa_assert_is_file "${dict[script]}"
+    koopa_add_koopa_config_link "${dict[prefix]}" "${dict[name]}"
+    koopa_add_to_path_start "$(koopa_dirname "${app[bash]}")"
+    "${app[bash]}" "${dict[script]}"
+    return 0
+}
+
+koopa_configure_go() { # {{{1
+    koopa_configure_app_packages \
+        --name-fancy='Go' \
+        --name='go' \
+        "$@"
+}
+
+koopa_configure_julia() { # {{{1
+    koopa_configure_app_packages \
+        --name-fancy='Julia' \
+        --name='julia' \
+        "$@"
+}
+
+koopa_configure_nim() { # {{{1
+    koopa_configure_app_packages \
+        --name-fancy='Nim' \
+        --name='nim' \
+        "$@"
+}
+
+koopa_configure_node() { # {{{1
+    koopa_configure_app_packages \
+        --name-fancy='Node.js' \
+        --name='node' \
+        "$@"
+}
+
+koopa_configure_ruby() { # {{{1
+    koopa_configure_app_packages \
+        --name-fancy='Ruby' \
+        --name='ruby' \
+        "$@"
+}
+
+koopa_configure_rust() { # {{{1
+    koopa_configure_app_packages \
+        --name-fancy='Rust' \
+        --name='rust' \
+        --version='rolling' \
+        "$@"
+}
+
+
 koopa_delete_dotfile() { # {{{1
     # """
     # Delete a dot file.
