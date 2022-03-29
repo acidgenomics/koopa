@@ -3,7 +3,7 @@
 debian_install_r_devel() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-03-29.
     #
     # @seealso
     # - https://hub.docker.com/r/rocker/r-devel/dockerfile
@@ -16,27 +16,6 @@ debian_install_r_devel() { # {{{1
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
-        [make]="$(koopa_locate_make)"
-        [svn]="$(koopa_locate_svn)"
-    )
-    declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='r-devel'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [revision]="${INSTALL_VERSION:?}"
-        [svn_url]='https://svn.r-project.org/R/trunk'
-        [rtop]="$(koopa_init_dir 'svn/r')"
-    )
-    conf_args=(
-        "--prefix=${dict[prefix]}"
-        '--enable-R-shlib'
-        '--program-suffix=dev'
-        '--with-readline'
-        '--without-blas'
-        '--without-lapack'
-        '--without-recommended-packages'
-    )
     koopa_debian_apt_install \
         'bash-completion' \
         'bison' \
@@ -80,6 +59,27 @@ debian_install_r_devel() { # {{{1
         'xfonts-base' \
         'xvfb' \
         'zlib1g-dev'
+    declare -A app=(
+        [make]="$(koopa_locate_make)"
+        [svn]="$(koopa_locate_svn)"
+    )
+    declare -A dict=(
+        [jobs]="$(koopa_cpu_count)"
+        [name]='r-devel'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [revision]="${INSTALL_VERSION:?}"
+        [svn_url]='https://svn.r-project.org/R/trunk'
+        [rtop]="$(koopa_init_dir 'svn/r')"
+    )
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--enable-R-shlib'
+        '--program-suffix=dev'
+        '--with-readline'
+        '--without-blas'
+        '--without-lapack'
+        '--without-recommended-packages'
+    )
     "${app[svn]}" checkout \
         --revision="${dict[revision]}" \
         "${dict[svn_url]}" \
