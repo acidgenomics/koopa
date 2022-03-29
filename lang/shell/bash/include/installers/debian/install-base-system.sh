@@ -134,22 +134,28 @@ debian_install_base_system() { # {{{1
             'apt-transport-https'
             'apt-utils'
             'automake'
+            'bash-completion'
+            'bison' # r-devel
             'byacc'
             'cmake'
+            'debhelper' # r-devel
             'default-jdk'
             'diffutils'
             'dirmngr'
             'expect-dev' # Installs unbuffer.
             'file'
             'fortran77-compiler'
-            'gdb'
+            'gdb' # r-devel
             'gdebi-core'
             'gfortran'
             'gpg-agent'
+            'groff-base' # r-devel
             'htop'
+            'imagemagick'
             'jq'
             'libtool'
             'libtool-bin'
+            'mpack' # r-devel
             'nano'
             'pandoc' # nodejs
             'parallel'
@@ -159,13 +165,28 @@ debian_install_base_system() { # {{{1
             'rsync'
             'ruby' # Homebrew
             'software-properties-common'
-            'subversion'
+            'sqlite3'
+            'subversion' # r-devel
             'texinfo' # makeinfo
+            'texlive'
+            'texlive-base' # r-devel
+            'texlive-extra-utils' # r-devel
+            'texlive-fonts-extra' # r-devel
+            'texlive-fonts-recommended' # r-devel
+            'texlive-latex-base' # r-devel
+            'texlive-latex-extra' # r-devel
+            'texlive-latex-recommended' # r-devel
             'tmux'
             'tree'
             'udunits-bin'
             'vim'
             'visidata'
+            'xauth' # r-devel
+            'xdg-utils' # r-devel
+            'xfonts-100dpi'
+            'xfonts-75dpi'
+            'xfonts-base' # r-devel
+            'xvfb' # r-devel
             'zip'
             'zsh'
         )
@@ -173,14 +194,15 @@ debian_install_base_system() { # {{{1
     if [[ "${dict[dev]}" -eq 1 ]]
     then
         pkgs+=(
+            # > 'proj-bin'
             # > 'libmariadb-dev'
             # > 'libmysqlclient-dev' # Conflicts with libmariadb-dev (Ubuntu).
-            # > 'proj-bin'
             'libacl1-dev'
             'libapparmor-dev'
             'libapr1-dev' # subversion
             'libaprutil1-dev' # subversion
             'libbison-dev'
+            'libblas-dev'
             'libboost-chrono-dev' # bcl2fastq
             'libboost-date-time-dev' # bcl2fastq
             'libboost-dev' # bcl2fastq
@@ -194,7 +216,7 @@ debian_install_base_system() { # {{{1
             'libc-ares-dev' # node.js
             'libcairo2-dev' # harfbuzz
             'libclang-dev' # rstudio-server
-            'libcurl4-gnutls-dev'
+            'libcurl4-openssl-dev' # or 'libcurl4-gnutls-dev'; r-devel
             'libedit-dev' # openssh
             'libevent-dev'
             'libffi-dev'
@@ -232,6 +254,7 @@ debian_install_base_system() { # {{{1
             'libmpc-dev'
             'libmpfr-dev'
             'libncurses-dev'
+            'libncurses5-dev' # r-devel
             'libnetcdf-dev'
             'libnghttp2-dev' # node.js
             'libopenbabel-dev'
@@ -240,8 +263,9 @@ debian_install_base_system() { # {{{1
             'libopenjp2-7-dev' # GDAL
             'libopenmpi-dev'
             'libpam0g-dev' # openssh
+            'libpango1.0-dev' # r-devel
             'libpcre2-dev' # rJava
-            'libpcre3-dev' # ag
+            'libpcre3-dev' # ag; r-devel
             'libperl-dev'
             'libpng-dev'
             'libpoppler-cpp-dev'
@@ -269,10 +293,12 @@ debian_install_base_system() { # {{{1
             'libz-dev'
             'libzstd-dev' # rsync
             'python3-dev'
-            'sqlite3'
             'tcl-dev'
+            'tcl8.6-dev' # r-devel
             'tk-dev'
-            'zlib1g-dev'
+            'tk8.6-dev' # r-devel
+            'x11proto-core-dev' # r-devel
+            'zlib1g-dev' # r-devel
         )
     fi
     if [[ "${dict[extra]}" -eq 1 ]]
@@ -284,7 +310,6 @@ debian_install_base_system() { # {{{1
             'gnutls-bin'
             'graphviz'
             'gtk-doc-tools'
-            'imagemagick'
             'jags'
             'keyboard-configuration'
             'mpi-default-bin'
@@ -296,10 +321,7 @@ debian_install_base_system() { # {{{1
             'protobuf-compiler'
             'systemd'
             'tabix'
-            'texlive'
             'unattended-upgrades'
-            'xfonts-100dpi'
-            'xfonts-75dpi'
             'xorg'
         )
         if koopa_is_ubuntu
