@@ -56,7 +56,6 @@ install_gnupg_gcrypt() { # {{{1
             )
             ;;
     esac
-    # FIXME Does this help?
     LDFLAGS="-Wl,-rpath,${dict[prefix]}/lib/" \
         ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"

@@ -46,7 +46,6 @@ install_gnupg_pinentry() { # {{{1
     else
         conf_args+=('--enable-pinentry-curses')
     fi
-    # FIXME Does this help?
     LDFLAGS="-Wl,-rpath,${dict[prefix]}/lib/" \
         ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
