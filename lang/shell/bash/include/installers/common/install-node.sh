@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# Hitting 'ares_nameser.h' issue on Ubuntu ('--shared-cares' flag).
-# https://github.com/nodejs/node/issues/39747
-
 install_node() { # {{{1
     # """
     # Install Node.js.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-03-29.
     #
     # @seealso
     # - https://github.com/nodejs/node
@@ -51,8 +48,8 @@ install_node() { # {{{1
     fi
     conf_args=(
         "--prefix=${dict[prefix]}"
-        '--without-corepack'
-        '--without-npm'
+        # > '--without-corepack'
+        # > '--without-npm'
     )
     if koopa_is_installed "${app[brew]}"
     then
