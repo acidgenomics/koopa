@@ -25,6 +25,7 @@ install_gnu_app() { # {{{1
         'make' | \
         'ncurses' | \
         'patch' | \
+        'stow' | \
         'tar' | \
         'wget')
             dict[suffix]='gz'
