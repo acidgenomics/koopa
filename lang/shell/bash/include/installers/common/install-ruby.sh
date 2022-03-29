@@ -3,7 +3,7 @@
 install_ruby() { # {{{1
     # """
     # Install Ruby.
-    # @note Updated 2022-01-24.
+    # @note Updated 2022-03-29.
     #
     # @seealso
     # - https://www.ruby-lang.org/en/downloads/
@@ -35,5 +35,8 @@ ${dict[maj_min_ver]}/${dict[file]}"
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
+    app[ruby]="${dict[prefix]}/bin/ruby"
+    koopa_assert_is_installed "${app[ruby]}"
+    koopa_configure_ruby "${app[ruby]}"
     return 0
 }
