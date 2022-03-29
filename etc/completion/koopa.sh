@@ -180,6 +180,7 @@ __koopa_complete() { # {{{1
                         'spacemacs'
                         'spacevim'
                         'sqlite'
+                        'stow'
                         'subversion'
                         'taglib'
                         'tar'
