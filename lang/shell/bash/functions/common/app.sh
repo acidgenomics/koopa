@@ -167,8 +167,6 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Consider creating a '.nolink' file when '--no-link' is passed.
-
 koopa_install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
