@@ -136,7 +136,7 @@ koopa_find_app_version() { # {{{1
 koopa_install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-29.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
     local link_include_arr opt_arr pos
@@ -158,6 +158,8 @@ koopa_install_app() { # {{{1
         [prefix]=''
         # This override is useful for app packages configuration.
         [prefix_check]=1
+        # Push completed build to Acid Genomics S3 bucket.
+        [push]=0
         # This is useful for avoiding duplicate alert messages inside of
         # nested install calls (e.g. Emacs installer handoff to GNU app).
         [quiet]=0
@@ -276,6 +278,10 @@ koopa_install_app() { # {{{1
                 ;;
             '--prefix-check')
                 dict[prefix_check]=1
+                shift 1
+                ;;
+            '--push')
+                dict[push]=1
                 shift 1
                 ;;
             '--quiet')
@@ -490,6 +496,15 @@ ${dict[platform]}/${dict[installer_file]}.sh"
             [[ "${dict[system]}" -eq 1 ]]; }
     then
         koopa_linux_update_ldconfig
+    fi
+    if [[ "${dict[push]}" -eq 1 ]]
+    then
+        koopa_assert_is_set \
+            '--name' "${dict[name]}" \
+            '--version' "${dict[version]}"
+        koopa_push_app_build \
+            --app-name="${dict[name]}" \
+            --app-version="${dict[version]}"
     fi
     if [[ "${dict[quiet]}" -eq 0 ]]
     then
