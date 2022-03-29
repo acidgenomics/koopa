@@ -273,7 +273,7 @@ debian_install_base_system() { # {{{1
             'libproj-dev'
             'libprotobuf-dev'
             'libprotoc-dev'
-            'librdf0-dev'
+            # > 'librdf0-dev' problematic on 2022-03-29
             'libreadline-dev'
             'libsasl2-dev'
             'libserf-dev' # subversion (for HTTPS)
