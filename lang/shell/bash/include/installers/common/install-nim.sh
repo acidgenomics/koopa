@@ -3,10 +3,14 @@
 install_nim() { # {{{1
     # """
     # Install Nim.
-    # @note Updated 2021-11-16.
+    # @note Updated 2022-03-29.
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/nim.rb
     # """
-    local dict
+    local app dict
     koopa_assert_has_no_args "$#"
+    declare -A app
     declare -A dict=(
         [name]='nim'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -18,9 +22,12 @@ install_nim() { # {{{1
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     ./build.sh
-    bin/nim c koch
-    ./koch boot -d:release
+    bin/nim c -d:release koch
+    ./koch boot -d:release -d:useLinenoise
     ./koch tools
     koopa_cp "${PWD:?}" "${dict[prefix]}"
+    app[nim]="${dict[prefix]}/bin/nim"
+    koopa_assert_is_installed "${app[nim]}"
+    koopa_configure_nim "${app[nim]}"
     return 0
 }
