@@ -3,7 +3,7 @@
 koopa_link_app() { # {{{1
     # """
     # Symlink application into make directory.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-03-29.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -29,6 +29,8 @@ koopa_link_app() { # {{{1
     koopa_assert_is_linux
     koopa_assert_has_no_envs
     declare -A dict=(
+        [app_prefix]=''
+        [name]=''
         [make_prefix]="$(koopa_make_prefix)"
         [version]=''
     )
@@ -38,6 +40,14 @@ koopa_link_app() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--app-prefix='*)
+                dict[app_prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--app-prefix')
+                dict[app_prefix]="${2:?}"
+                shift 2
+                ;;
             '--include='*)
                 include+=("${1#*=}")
                 shift 1
@@ -73,11 +83,12 @@ koopa_link_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_le "$#" 1
-    if [[ -n "${1:-}" ]]
+    if [[ "$#" -gt 0 ]]
     then
+        koopa_assert_has_args "$#" 1
         dict[name]="${1:?}"
     fi
+    koopa_assert_is_set '--name' "${dict[name]}"
     case "${dict[name]}" in
         *'-packages' | \
         'anaconda' | \
@@ -108,11 +119,14 @@ koopa_link_app() { # {{{1
             koopa_stop "Linking of '${dict[name]}' is not supported."
             ;;
     esac
-    if [[ -z "${dict[version]}" ]]
+    if [[ -z "${dict[app_prefix]}" ]]
     then
-        dict[version]="$(koopa_find_app_version "${dict[name]}")"
+        if [[ -z "${dict[version]}" ]]
+        then
+            dict[version]="$(koopa_find_app_version "${dict[name]}")"
+        fi
+        dict[app_prefix]="$(koopa_app_prefix)/${dict[name]}/${dict[version]}"
     fi
-    dict[app_prefix]="$(koopa_app_prefix)/${dict[name]}/${dict[version]}"
     koopa_assert_is_dir "${dict[app_prefix]}" "${dict[make_prefix]}"
     koopa_alert "Linking '${dict[app_prefix]}' in '${dict[make_prefix]}'."
     koopa_sys_set_permissions --recursive "${dict[app_prefix]}"
