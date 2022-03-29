@@ -501,6 +501,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     then
         koopa_assert_is_set \
             '--name' "${dict[name]}" \
+            '--prefix' "${dict[prefix]}" \
             '--version' "${dict[version]}"
         koopa_push_app_build \
             --app-name="${dict[name]}" \
