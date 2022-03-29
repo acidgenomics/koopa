@@ -47,7 +47,7 @@ koopa_debian_set_locale() { # {{{1
 koopa_debian_set_timezone() { # {{{1
     # """
     # Set local timezone.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-03-29.
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -59,6 +59,7 @@ koopa_debian_set_timezone() { # {{{1
         [tz]="${1:-}"
     )
     [[ -z "${dict[tz]}" ]] && dict[tz]='America/New_York'
+    koopa_alert "Setting local timezone to '${dict[tz]}'."
     "${app[sudo]}" "${app[timedatectl]}" set-timezone "${dict[tz]}"
     return 0
 }
