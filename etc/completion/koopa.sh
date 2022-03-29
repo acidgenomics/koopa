@@ -206,6 +206,7 @@ __koopa_complete() { # {{{1
                             'google-cloud-sdk'
                             'julia-binary'
                             'lmod'
+                            # FIXME Add back 'node-binary' here.
                             'pihole'
                             'pivpn'
                             'rstudio-server'
