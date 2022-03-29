@@ -22,6 +22,7 @@ koopa_configure_app_packages() { # {{{1
     local dict pos
     koopa_assert_has_args "$#"
     declare -A dict=(
+        [app]=''
         [link_app]=1
         [name]=''
         [name_fancy]=''
