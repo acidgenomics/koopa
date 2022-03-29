@@ -3,7 +3,7 @@
 install_julia() { # {{{1
     # """
     # Install Julia (from source).
-    # @note Updated 2021-12-01.
+    # @note Updated 2022-03-29.
     # @seealso
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/linux.md
@@ -51,5 +51,8 @@ END
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
+    app[julia]="${dict[prefix]}/bin/julia"
+    koopa_assert_is_installed "${app[julia]}"
+    koopa_configure_julia "${app[julia]}"
     return 0
 }
