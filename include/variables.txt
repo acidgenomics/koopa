@@ -526,7 +526,7 @@ python-bpytop="1.0.68"          # homebrew
 python-flake8="4.0.1"           # homebrew
 python-glances="3.2.4.2"        # homebrew
 python-pyflakes="2.4.0"         # homebrew
-python-pylint="2.13.2"          # homebrew
+python-pylint="2.13.3"          # homebrew
 python-pytest="6.2.5"           # homebrew
 python-ranger-fm="1.9.3"        # homebrew
 
