@@ -33,7 +33,7 @@ install_gnupg_gcrypt() { # {{{1
     koopa_extract "${dict[tar_file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
-        '--enable-maintainer-mode'
+        # > '--enable-maintainer-mode'
         "--prefix=${dict[prefix]}"
     )
     case "${dict[name]}" in
@@ -45,6 +45,7 @@ install_gnupg_gcrypt() { # {{{1
             ;;
         'gnupg')
             conf_args+=(
+                # > '--disable-doc'
                 "--with-ksba-prefix=${dict[prefix]}"
                 "--with-libassuan-prefix=${dict[prefix]}"
                 "--with-libgcrypt-prefix=${dict[prefix]}"
@@ -52,7 +53,6 @@ install_gnupg_gcrypt() { # {{{1
                 "--with-libgpg-error-prefix=${dict[prefix]}"
                 "--with-libksba-prefix=${dict[prefix]}"
                 "--with-npth-prefix=${dict[prefix]}"
-                # > '--disable-doc'
             )
             ;;
     esac
