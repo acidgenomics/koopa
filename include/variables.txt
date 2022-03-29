@@ -296,8 +296,10 @@ r-cran-gfortran="8.2"
 
 # https://svn.r-project.org/R/
 # https://stat.ethz.ch/R/daily/
+# - https://cran.r-project.org/bin/windows/base/rtest.html
 # This is the SVN revision number.
-r-devel="82022" # 2022-03-29; 4.3
+r-devel="82012" # 2022-03-28; 4.2
+# > r-devel="82022" # 2022-03-29; 4.3
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
