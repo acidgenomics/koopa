@@ -6,7 +6,7 @@
 install_fzf() { # {{{1
     # """
     # Install fzf.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-03-30.
     # @seealso
     # - https://github.com/junegunn/fzf/blob/master/BUILD.md
     # """
@@ -21,8 +21,8 @@ install_fzf() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    koopa_activate_opt_prefix 'go'
     koopa_activate_go
-    koopa_assert_is_installed 'go'
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/junegunn/${dict[name]}/archive/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
