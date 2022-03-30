@@ -167,6 +167,7 @@ koopa_python_create_venv() { # {{{1
     fi
     koopa_assert_is_not_dir "${dict[prefix]}"
     koopa_sys_mkdir "${dict[prefix]}"
+    unset -v PYTHONPATH
     "${app[python]}" -m venv --system-site-packages "${dict[prefix]}"
     app[venv_python]="${dict[prefix]}/bin/python${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
@@ -352,6 +353,7 @@ koopa_python_pip_install() { # {{{1
         dl_args+=('Target' "${dict[prefix]}")
     fi
     koopa_dl "${dl_args[@]}"
+    unset -v PYTHONPATH
     export PIP_REQUIRE_VIRTUALENV='false'
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
     "${app[python]}" -m pip --isolated \
