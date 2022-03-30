@@ -245,7 +245,7 @@ __koopa_complete() { # {{{1
                             'cisco-webex'
                             'microsoft-onedrive'
                             'oracle-java'
-                            'python-framework'
+                            'python-binary'
                             'r-cran-gfortran'
                             'r-framework'
                             'ringcentral'
