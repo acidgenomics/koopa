@@ -1281,6 +1281,13 @@ koopa_uninstall_python_packages() { # {{{1
         "$@"
 }
 
+koopa_uninstall_python_virtualenvs() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Python virtualenvs' \
+        --name='python-virtualenvs' \
+        "$@"
+}
+
 koopa_uninstall_r() { # {{{1
     koopa_uninstall_app \
         --name-fancy='R' \

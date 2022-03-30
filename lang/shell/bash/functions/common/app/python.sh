@@ -48,7 +48,7 @@ koopa_configure_python() { #{{{1
 koopa_python_activate_venv() { # {{{1
     # """
     # Activate Python virtual environment.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-30.
     #
     # Note that we're using this instead of conda as our default interactive
     # Python environment, so we can easily use pip.
@@ -72,7 +72,7 @@ koopa_python_activate_venv() { # {{{1
         [active_env]="${VIRTUAL_ENV:-}"
         [name]="${1:?}"
         [nounset]="$(koopa_boolean_nounset)"
-        [prefix]="$(koopa_python_venv_prefix)"
+        [prefix]="$(koopa_python_virtualenvs_prefix)"
     )
     dict[script]="${dict[prefix]}/${dict[name]}/bin/activate"
     koopa_assert_is_readable "${dict[script]}"
@@ -86,9 +86,6 @@ koopa_python_activate_venv() { # {{{1
     [[ "${dict[nounset]}" -eq 1 ]] && set -o nounset
     return 0
 }
-
-# FIXME Rework this to create a versioned subdirectory (by Python) and then
-# linking that into opt, when prefix is not set...
 
 koopa_python_create_venv() { # {{{1
     # """
@@ -162,12 +159,20 @@ koopa_python_create_venv() { # {{{1
     if [[ -z "${dict[prefix]}" ]]
     then
         koopa_assert_is_set --name "${dict[name]}"
-        dict[prefix]="$(koopa_python_venv_prefix)/${dict[name]}"
+        dict[venv_prefix]="$(koopa_python_virtualenvs_prefix)"
+        dict[prefix]="${dict[venv_prefix]}/${dict[name]}"
+        dict[app_bn]="$(koopa_basename "${dict[venv_prefix]}")"
+        dict[app_prefix]="$(koopa_app_prefix)/${dict[app_bn]}/\
+${dict[py_maj_min_ver]}"
+        if [[ ! -d "${dict[app_prefix]}" ]]
+        then
+            koopa_alert "Configuring venv prefix at '${dict[app_prefix]}'."
+            koopa_sys_mkdir "${dict[app_prefix]}"
+            koopa_sys_set_permissions "$(koopa_dirname "${dict[app_prefix]}")"
+        fi
+        koopa_link_app_into_opt "${dict[app_prefix]}" "${dict[app_bn]}"
     fi
-    if [[ -d "${dict[prefix]}" ]]
-    then
-        koopa_sys_rm "${dict[prefix]}"
-    fi
+    [[ -d "${dict[prefix]}" ]] && koopa_sys_rm "${dict[prefix]}"
     koopa_assert_is_not_dir "${dict[prefix]}"
     koopa_sys_mkdir "${dict[prefix]}"
     unset -v PYTHONPATH

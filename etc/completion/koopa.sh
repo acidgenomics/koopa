@@ -164,6 +164,7 @@ __koopa_complete() { # {{{1
                         'pyenv'
                         'python'
                         'python-packages'
+                        'python-virtualenvs'
                         'r'
                         'r-cmd-check'
                         'r-packages'
