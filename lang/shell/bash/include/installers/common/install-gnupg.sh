@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Seeing this issue with or without linkage applied on Ubuntu:
-# gpg: symbol lookup error: gpg: undefined symbol: gpgrt_set_confdir,
-# version GPG_ERROR_1.0
-
 install_gnupg() { # {{{1
     # """
     # Install GnuPG.
