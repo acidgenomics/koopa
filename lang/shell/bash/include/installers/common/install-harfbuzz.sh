@@ -25,7 +25,8 @@ install_harfbuzz() { # {{{1
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/\
 archive/${dict[file]}"
-    koopa_extract "${dict[url]}" "${dict[file]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     # depends_on "meson" => :build
     # depends_on "ninja" => :build
