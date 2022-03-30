@@ -13,6 +13,7 @@ install_harfbuzz() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     harfbuzz.rb
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/harfbuzz.html
+    # - https://github.com/harfbuzz/harfbuzz/blob/main/.circleci/config.yml
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -21,6 +22,7 @@ install_harfbuzz() { # {{{1
         [ninja]="$(koopa_locate_ninja)"
     )
     declare -A dict=(
+        [jobs]="$(koopa_cpu_count)"
         [name]='harfbuzz'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -54,9 +56,9 @@ archive/${dict[file]}"
         '--buildtype=release'
     )
     "${app[meson]}" "${meson_args[@]}" build
-    # > "${app[meson]}" test -Cbuild
-    # > meson compile -C build
-    "${app[ninja]}"
+    # > "${app[meson]}" compile -C build
+    # > "${app[meson]}" test -C build
+    "${app[ninja]}" -j "${dict[jobs]}" -C build
     # > "${app[ninja]}" test
     "${app[ninja]}" install
     return 0
