@@ -292,13 +292,12 @@ koopa_python_pip_install() { # {{{1
     # - https://github.com/pypa/pip/issues/3828
     # - https://github.com/pypa/pip/issues/8063
     # """
-    local app dict pkgs pos
+    local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
     declare -A app=(
         [python]="$(koopa_locate_python)"
     )
     declare -A dict=(
-        [config]=''
         [prefix]=''
     )
     pos=()
@@ -322,15 +321,6 @@ koopa_python_pip_install() { # {{{1
                 app[python]="${2:?}"
                 shift 2
                 ;;
-            # Flags ------------------------------------------------------------
-            '--config')
-                dict[config]=1
-                shift 1
-                ;;
-            '--no-config')
-                dict[config]=0
-                shift 1
-                ;;
             # Other ------------------------------------------------------------
             '-'*)
                 koopa_invalid_arg "$1"
@@ -344,35 +334,24 @@ koopa_python_pip_install() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     pkgs=("$@")
-    if [[ -z "${dict[config]}" ]]
-    then
-        if [[ -z "${dict[prefix]}" ]]
-        then
-            dict[config]=1
-        else
-            dict[config]=0
-        fi
-    fi
-    if [[ "${dict[config]}" -eq 1 ]]
-    then
-        koopa_configure_python "${app[python]}"
-    fi
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
         '--disable-pip-version-check'
         '--no-warn-script-location'
     )
-    koopa_dl \
-        'Python' "${app[python]}" \
+    dl_args=(
+        'Python' "${app[python]}"
         'Packages' "$(koopa_to_string "${pkgs[*]}")"
+    )
     if [[ -n "${dict[prefix]}" ]]
     then
         install_args+=(
             "--target=${dict[prefix]}"
             '--upgrade'
         )
-        koopa_dl 'Target' "${dict[prefix]}"
+        dl_args+=('Target' "${dict[prefix]}")
     fi
+    koopa_dl "${dl_args[@]}"
     export PIP_REQUIRE_VIRTUALENV='false'
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
     "${app[python]}" -m pip --isolated \

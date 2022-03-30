@@ -5,11 +5,15 @@ install_python_packages() { # {{{1
     # Install Python packages.
     # @note Updated 2022-03-30.
     # """
-    local dict pkgs
+    local app dict pkgs
     koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [python]="$(koopa_locate_python)"
+    )
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
     )
+    koopa_configure_python "${app[python]}"
     pkgs=(
         'pip'
         'setuptools'
