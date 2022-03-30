@@ -1,8 +1,22 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for this.
-
 install_meson() { # {{{
-    # FIXME Use pip to install.
+    # """
+    # Install Meson.
+    # @note Updated 2022-03-30.
+    #
+    # @seealso
+    # - https://github.com/mesonbuild/meson
+    # """
+    local dict
+    koopa_assert_has_no_args "$#"
+    declare -A dict=(
+        [name]='meson'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    koopa_python_pip_install \
+        --prefix="${dict[prefix]}" \
+        "${dict[name]}==${dict[version]}"
     return 0
 }

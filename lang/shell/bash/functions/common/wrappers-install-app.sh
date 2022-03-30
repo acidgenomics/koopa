@@ -372,6 +372,7 @@ koopa_install_meson() { # {{{1
     koopa_install_app \
         --name-fancy='Meson' \
         --name='meson' \
+        --no-link \
         "$@"
 }
 
@@ -416,6 +417,7 @@ koopa_install_ninja() { # {{{1
     koopa_install_app \
         --name-fancy='Ninja' \
         --name='ninja' \
+        --no-link \
         "$@"
 }
 
@@ -1118,6 +1120,7 @@ koopa_uninstall_meson() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Meson' \
         --name='meson' \
+        --no-link \
         "$@"
 }
 
@@ -1162,6 +1165,7 @@ koopa_uninstall_ninja() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Ninja' \
         --name='ninja' \
+        --no-link \
         "$@"
 }
 

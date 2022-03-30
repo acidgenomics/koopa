@@ -3,7 +3,7 @@
 koopa_link_app() { # {{{1
     # """
     # Symlink application into make directory.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-03-30.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -105,6 +105,8 @@ koopa_link_app() { # {{{1
         'geos' | \
         'go' | \
         'lmod' | \
+        'meson' | \
+        'ninja' | \
         'openjdk' | \
         'openssh' | \
         'openssl' | \
