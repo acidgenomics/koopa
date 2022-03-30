@@ -93,20 +93,19 @@ koopa_python_create_venv() { # {{{1
     # @note Updated 2022-02-30.
     #
     # @examples
-    # > koopa_python_create_venv --name='base'
+    # > koopa_python_create_venv --name='pandas' 'pandas'
     # """
-    local app default_pkgs dict pos
+    local app dict pkgs pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
         [python]="$(koopa_locate_python)"
     )
     declare -A dict=(
+        [minimal]=0
         [name]=''
-        [name_fancy]='Python virtual environment'
         [prefix]=''
     )
-    default_pkgs=('pip' 'setuptools' 'wheel')
     pos=()
     while (("$#"))
     do
@@ -136,6 +135,11 @@ koopa_python_create_venv() { # {{{1
                 app[python]="${2:?}"
                 shift 2
                 ;;
+            # Flags ------------------------------------------------------------
+            '--minimal')
+                dict[minimal]=1
+                shift 1
+                ;;
             # Other ------------------------------------------------------------
             '-'*)
                 koopa_invalid_arg "$1"
@@ -147,32 +151,44 @@ koopa_python_create_venv() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_is_set \
-        --name "${dict[name]}" \
-        --python "${app[python]}"
+    koopa_assert_has_args "$#"
+    pkgs=("$@")
+    koopa_assert_is_set --python "${app[python]}"
     koopa_assert_is_installed "${app[python]}"
     if [[ -z "${dict[prefix]}" ]]
     then
+        koopa_assert_is_set --name "${dict[name]}"
         dict[prefix]="$(koopa_python_venv_prefix)/${dict[name]}"
     fi
     if [[ -d "${dict[prefix]}" ]]
     then
         koopa_sys_rm "${dict[prefix]}"
     fi
-    koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
     koopa_assert_is_not_dir "${dict[prefix]}"
     koopa_sys_mkdir "${dict[prefix]}"
     "${app[python]}" -m venv "${dict[prefix]}"
     app[venv_python]="${dict[prefix]}/bin/python3"
     koopa_assert_is_installed "${app[venv_python]}"
-    "${app[venv_python]}" -m pip install --upgrade "${default_pkgs[@]}"
-    if [[ "$#" -gt 0 ]]
-    then
-        "${app[venv_python]}" -m pip install --upgrade "$@"
-    fi
+    koopa_python_pip_install \
+        --prefix="${dict[prefix]}" \
+        --python="${app[venv_python]}" \
+        "${pkgs[@]}"
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     "${app[venv_python]}" -m pip list
-    koopa_alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
+    dict[py_version]="$(koopa_get_version "${app[venv_python]}")"
+    dict[py_maj_ver]="$(koopa_major_version "${dict[py_version]}")"
+    dict[py_maj_min_ver]="$(koopa_major_minor_version "${dict[py_version]}")"
+    if [[ "${dict[minimal]}" -eq 1 ]]
+    then
+        koopa_rm \
+            "${dict[prefix]}/bin/Activate.ps1" \
+            "${dict[prefix]}/bin/activate" \
+            "${dict[prefix]}/bin/activate.csh" \
+            "${dict[prefix]}/bin/activate.fish" \
+            "${dict[prefix]}/bin/python" \
+            "${dict[prefix]}/bin/python${dict[py_maj_min_ver]}" \
+            "${dict[prefix]}/bin/python${dict[py_maj_ver]}"
+    fi
     return 0
 }
 
@@ -307,6 +323,7 @@ koopa_python_pip_install() { # {{{1
         [python]="$(koopa_locate_python)"
     )
     declare -A dict=(
+        [config]=''
         [reinstall]=0
         [prefix]=''
     )
@@ -332,6 +349,14 @@ koopa_python_pip_install() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--config')
+                dict[config]=1
+                shift 1
+                ;;
+            '--no-config')
+                dict[config]=0
+                shift 1
+                ;;
             '--reinstall')
                 dict[reinstall]=1
                 shift 1
@@ -349,9 +374,21 @@ koopa_python_pip_install() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     pkgs=("$@")
-    if [[ -z "${dict[prefix]}" ]]
+    if [[ -z "${dict[config]}" ]]
+    then
+        if [[ -z "${dict[prefix]}" ]]
+        then
+            dict[config]=1
+        else
+            dict[config]=0
+        fi
+    fi
+    if [[ "${dict[config]}" -eq 1 ]]
     then
         koopa_configure_python "${app[python]}"
+    fi
+    if [[ -z "${dict[prefix]}" ]]
+    then
         dict[version]="$(koopa_get_version "${app[python]}")"
         dict[prefix]="$(koopa_python_packages_prefix "${dict[version]}")"
     fi
@@ -375,7 +412,8 @@ koopa_python_pip_install() { # {{{1
     fi
     export PIP_REQUIRE_VIRTUALENV='false'
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
-    "${app[python]}" -m pip --isolated install "${install_args[@]}" "${pkgs[@]}"
+    "${app[python]}" -m pip --isolated \
+        install "${install_args[@]}" "${pkgs[@]}"
     return 0
 }
 
