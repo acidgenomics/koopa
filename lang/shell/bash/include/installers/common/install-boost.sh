@@ -16,13 +16,14 @@ install_boost() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
+        [name]='boost'
         [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[icu4c_prefix]="${dict[opt_prefix]}/icu4c"
     dict[snake_version]="$(koopa_snake_case_simple "${dict[version]}")"
-    dict[file]="boost_${dict[snake_version]}.tar.bz2"
+    dict[file]="${dict[name]}_${dict[snake_version]}.tar.bz2"
     dict[url]="https://boostorg.jfrog.io/artifactory/main/release/\
 ${dict[version]}/source/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
