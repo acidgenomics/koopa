@@ -246,8 +246,8 @@ __koopa_complete() { # {{{1
                             'microsoft-onedrive'
                             'oracle-java'
                             'python-binary'
+                            'r-binary'
                             'r-cran-gfortran'
-                            'r-framework'
                             'ringcentral'
                             'xcode-clt'
                         )
