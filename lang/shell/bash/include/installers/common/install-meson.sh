@@ -15,7 +15,8 @@ install_meson() { # {{{
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    koopa_python_pip_install \
+    koopa_python_create_venv \
+        --name="${dict[name]}" \
         --prefix="${dict[prefix]}" \
         "${dict[name]}==${dict[version]}"
     return 0

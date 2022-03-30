@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to install as virtualenv instead.
+
 install_ninja() { # {{{
     # """
     # Install Ninja.
