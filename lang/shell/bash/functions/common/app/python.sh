@@ -174,21 +174,6 @@ koopa_python_create_venv() { # {{{1
         --python="${app[venv_python]}" \
         "${pkgs[@]}"
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
-    "${app[venv_python]}" -m pip list
-    dict[py_version]="$(koopa_get_version "${app[venv_python]}")"
-    dict[py_maj_ver]="$(koopa_major_version "${dict[py_version]}")"
-    dict[py_maj_min_ver]="$(koopa_major_minor_version "${dict[py_version]}")"
-    if [[ "${dict[minimal]}" -eq 1 ]]
-    then
-        koopa_rm \
-            "${dict[prefix]}/bin/Activate.ps1" \
-            "${dict[prefix]}/bin/activate" \
-            "${dict[prefix]}/bin/activate.csh" \
-            "${dict[prefix]}/bin/activate.fish" \
-            "${dict[prefix]}/bin/python" \
-            "${dict[prefix]}/bin/python${dict[py_maj_min_ver]}" \
-            "${dict[prefix]}/bin/python${dict[py_maj_ver]}"
-    fi
     return 0
 }
 

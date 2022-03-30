@@ -122,10 +122,12 @@ brew "luarocks"
 brew "make"
 brew "man-db"
 brew "mariadb-connector-c"
+brew "mason" # python
 brew "mcfly"
 brew "neofetch"
 brew "neovim"
 brew "nim"
+brew "ninja" # python
 brew "nmap"
 brew "node"
 brew "oil"
