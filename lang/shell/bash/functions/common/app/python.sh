@@ -87,6 +87,9 @@ koopa_python_activate_venv() { # {{{1
     return 0
 }
 
+# FIXME Rework this to create a versioned subdirectory (by Python) and then
+# linking that into opt, when prefix is not set...
+
 koopa_python_create_venv() { # {{{1
     # """
     # Create Python virtual environment.

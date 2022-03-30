@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add 'koopa_configure_pipx' script here, for configuring
+# pipx versioned into opt.
+
 koopa_add_make_prefix_link() { # {{{1
     # """
     # Ensure 'koopa' is linked inside make prefix.
