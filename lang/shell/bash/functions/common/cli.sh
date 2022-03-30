@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+# FIXME Need to nest our macOS-specific functions under 'koopa os XXX'.
+# - create-dmg
+# - finder-hide
+# - finder-unhide
+# - flush-dns
+# - force-eject
+# - merge-pdf
+# - reload-autofs
+# - spotlight-find
+
+# FIXME Need to add support for OS-specific link functions.
+
 koopa_cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
@@ -303,15 +315,14 @@ koopa_cli_app() { # {{{1
             esac
             ;;
         # Linux-specifc --------------------------------------------------------
-        'clean')
-            key='delete-broken-app-symlinks'
-            shift 1
-            ;;
+        # FIXME Make these not Linux specific.
+        # These need to migrate out of app into top level.
         'link')
             key='link-app'
             shift 1
             ;;
         'prune')
+            # FIXME Consider moving this under system.
             key='prune-apps'
             shift 1
             ;;
