@@ -3,7 +3,7 @@
 install_haskell_stack() { # {{{1
     # """
     # Install Haskell Stack.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-03-29.
     # @seealso
     # - https://docs.haskellstack.org/en/stable/install_and_upgrade/
     # """
@@ -21,5 +21,6 @@ install_haskell_stack() { # {{{1
     koopa_chmod 'u+x' "${dict[file]}"
     koopa_mkdir "${dict[prefix]}/bin"
     ./"${dict[file]}" -f -d "${dict[prefix]}/bin"
+    koopa_rm "${HOME:?}/.stack"
     return 0
 }
