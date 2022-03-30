@@ -33,6 +33,7 @@ __koopa_complete() { # {{{1
                 'header'
                 'install'
                 'link'
+                'list'
                 'reinstall'
                 'system'
                 'uninstall'
@@ -52,8 +53,6 @@ __koopa_complete() { # {{{1
                         'git'
                         'gpg'
                         'kallisto'
-                        # Rework this.
-                        # > 'list'
                         'python'
                         'r'
                         'rnaeditingindexer'
@@ -63,15 +62,6 @@ __koopa_complete() { # {{{1
                         'star'
                         'wget'
                     )
-                    # FIXME Rethink the organization of these.
-                    # FIXME Put these under system.
-                    # > if koopa_is_linux
-                    # > then
-                    # >     args+=(
-                    # >         'clean'
-                    # >         'unlink'
-                    #   )
-                    # > fi
                     ;;
                 'configure')
                     args=(
@@ -87,14 +77,6 @@ __koopa_complete() { # {{{1
                         'ruby'
                         'rust'
                     )
-                    if koopa_is_macos
-                    then
-                        args+=(
-                            'bbedit'
-                            'google-cloud-sdk'
-                            'visual-studio-code'
-                        )
-                    fi
                     ;;
                 'header')
                     args=(
@@ -226,7 +208,7 @@ __koopa_complete() { # {{{1
                             'google-cloud-sdk'
                             'julia-binary'
                             'lmod'
-                            # FIXME Add back 'node-binary' here.
+                            'node-binary'
                             'pihole'
                             'pivpn'
                             'rstudio-server'
@@ -279,6 +261,16 @@ __koopa_complete() { # {{{1
                             ;;
                     esac
                     ;;
+                'link')
+                    if koopa_is_macos
+                    then
+                        args+=(
+                            'bbedit'
+                            'google-cloud-sdk'
+                            'visual-studio-code'
+                        )
+                    fi
+                    ;;
                 'list')
                     args=(
                         'app-versions'
@@ -317,14 +309,17 @@ __koopa_complete() { # {{{1
                     then
                         args+=(
                             'clean-launch-services'
+                            'create-dmg'
                             'disable-touch-id-sudo'
                             'enable-touch-id-sudo'
                             'flush-dns'
+                            'force-eject'
                             'homebrew-cask-version'
                             'ifactive'
                             'list-launch-agents'
                             'macos-app-version'
                             'reload-autofs'
+                            'spotlight'
                         )
                     fi
                     ;;
