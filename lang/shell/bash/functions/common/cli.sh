@@ -1,16 +1,34 @@
 #!/usr/bin/env bash
 
 # FIXME Need to nest our macOS-specific functions under 'koopa os XXX'.
-# - create-dmg
-# - finder-hide
-# - finder-unhide
-# - flush-dns
-# - force-eject
-# - merge-pdf
-# - reload-autofs
-# - spotlight-find
 
 # FIXME Need to add support for OS-specific link functions.
+
+# FIXME 'koopa app list' shouldn't work any more...
+
+# FIXME Need to rework these, formerly defined in 'koopa_cli_app':
+
+#        # Linux-specifc --------------------------------------------------------
+#        # FIXME Make these not Linux specific.
+#        # These need to migrate out of app into top level.
+#        'link')
+#            key='link-app'
+#            shift 1
+#            ;;
+#        'prune')
+#            # FIXME Consider moving this under system.
+#            key='prune-apps'
+#            shift 1
+#            ;;
+#        # FIXME Need to move this to top level.
+#        'unlink')
+#            key='unlink-app'
+#            shift 1
+#            ;;
+
+
+
+
 
 koopa_cli_app() { # {{{1
     # """
@@ -200,10 +218,6 @@ koopa_cli_app() { # {{{1
                     ;;
             esac
             ;;
-        'list')
-            key='list-app-versions'
-            shift 1
-            ;;
         'md5sum')
             case "${2:-}" in
                 'check-to-new-md5-file')
@@ -313,22 +327,6 @@ koopa_cli_app() { # {{{1
                     koopa_cli_invalid_arg "$@"
                     ;;
             esac
-            ;;
-        # Linux-specifc --------------------------------------------------------
-        # FIXME Make these not Linux specific.
-        # These need to migrate out of app into top level.
-        'link')
-            key='link-app'
-            shift 1
-            ;;
-        'prune')
-            # FIXME Consider moving this under system.
-            key='prune-apps'
-            shift 1
-            ;;
-        'unlink')
-            key='unlink-app'
-            shift 1
             ;;
         # Invalid --------------------------------------------------------------
         *)
@@ -519,10 +517,16 @@ koopa_cli_system() { # {{{1
                     key='get-macos-app-version'
                     shift 1
                     ;;
+                'spotlight')
+                    key='spotlight-find'
+                    shift 1
+                    ;;
                 'clean-launch-services' | \
+                'create-dmg' | \
                 'disable-touch-id-sudo' | \
                 'enable-touch-id-sudo' | \
                 'flush-dns' | \
+                'force-eject' | \
                 'ifactive' | \
                 'list-launch-agents' | \
                 'reload-autofs')

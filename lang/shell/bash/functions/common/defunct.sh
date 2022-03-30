@@ -140,13 +140,6 @@ koopa_is_matching_regex() {  #{{{1
     koopa_defunct 'koopa_str_detect_regex'
 }
 
-koopa_link_cellar() { # {{{1
-    # """
-    # @note Updated 2020-11-23.
-    # """
-    koopa_defunct 'koopa_link_app'
-}
-
 koopa_linux_delete_broken_cellar_symlinks() { # {{{1
     # """
     # @note Updated 2020-11-23.
