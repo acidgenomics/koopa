@@ -1,7 +1,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-03-28"
+koopa-date="2022-03-30"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -213,6 +213,9 @@ mamba="0.21.1"
 
 man-db="2.10.2"
 
+# https://github.com/mesonbuild/meson/tags
+meson="0.61.4"
+
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
 
@@ -224,6 +227,9 @@ neovim="0.6.1"
 
 # https://nim-lang.org/
 nim="1.6.4"
+
+# https://github.com/ninja-build/ninja/tags
+ninja="1.10.2"
 
 # https://nodejs.org/
 node="17.8.0"
