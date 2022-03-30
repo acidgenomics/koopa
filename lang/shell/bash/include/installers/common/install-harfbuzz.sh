@@ -36,7 +36,10 @@ archive/${dict[file]}"
     # depends_on "glib"
     # depends_on "gobject-introspection"
     # depends_on "graphite2"
-    koopa_activate_opt_prefix 'icu4c'
+    koopa_activate_opt_prefix \
+        'icu4c' \
+        'meson' \
+        'ninja'
     meson_args=(
         # > '--default-library=both'
         # > '-Dcairo=enabled'
