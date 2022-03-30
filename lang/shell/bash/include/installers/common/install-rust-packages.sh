@@ -3,7 +3,7 @@
 install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-03-30.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -38,6 +38,7 @@ install_rust_packages() { # {{{1
     pkgs=(
         'cargo-outdated'
         'cargo-update'
+        'difftastic'
     )
     if [[ ! -x "${app[brew]}" ]]
     then
