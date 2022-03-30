@@ -436,6 +436,10 @@ koopa_locate_md5sum() { # {{{1
     koopa_locate_gnu_coreutils_app 'md5sum'
 }
 
+koopa_locate_meson() { # {{{1
+    koopa_locate_app 'meson'
+}
+
 koopa_locate_mkdir() { # {{{1
     koopa_locate_gnu_coreutils_app 'mkdir'
 }
@@ -467,6 +471,10 @@ koopa_locate_nimble() { # {{{1
     koopa_locate_app \
         --app-name='nimble' \
         --opt='nim'
+}
+
+koopa_locate_ninja() { # {{{1
+    koopa_locate_app 'ninja'
 }
 
 koopa_locate_node() { # {{{1
