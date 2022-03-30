@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Running into compile issue:
+# Plan construction failed.
+
 install_hadolint() { # {{{1
     # """
     # Install hadolint.
@@ -32,6 +35,7 @@ archive/${dict[file]}"
         '--skip-ghc-check'
         '--system-ghc'
     )
+    koopa_rm "${HOME:?}/.stack"
     "${app[stack]}" config set system-ghc --global true
     "${app[stack]}" "${stack_args[@]}" build
     "${app[stack]}" "${stack_args[@]}" \
