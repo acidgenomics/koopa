@@ -83,7 +83,7 @@ cellranger="6.1.2" # 2021-10-25
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.22.3"
+cmake="3.23.0"
 
 # https://repo.anaconda.com/miniconda/
 conda="4.11.0" # 2022-02-15
