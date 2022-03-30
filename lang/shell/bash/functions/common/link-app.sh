@@ -104,7 +104,6 @@ koopa_link_app() { # {{{1
         'gdal' | \
         'geos' | \
         'go' | \
-        'haskell-stack' | \
         'lmod' | \
         'openjdk' | \
         'openssh' | \
