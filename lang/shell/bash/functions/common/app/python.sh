@@ -168,7 +168,10 @@ koopa_python_create_venv() { # {{{1
     koopa_assert_is_not_dir "${dict[prefix]}"
     koopa_sys_mkdir "${dict[prefix]}"
     unset -v PYTHONPATH
-    "${app[python]}" -m venv --system-site-packages "${dict[prefix]}"
+    "${app[python]}" -m venv \
+        --system-site-packages \
+        --without-pip \
+        "${dict[prefix]}"
     app[venv_python]="${dict[prefix]}/bin/python${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
     koopa_python_pip_install --python="${app[venv_python]}" "${pkgs[@]}"
