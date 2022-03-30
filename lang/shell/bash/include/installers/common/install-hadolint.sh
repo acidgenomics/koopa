@@ -31,12 +31,12 @@ archive/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     stack_args=(
         "--jobs=${dict[jobs]}"
-        '--no-install-ghc'
-        '--skip-ghc-check'
-        '--system-ghc'
+        # > '--no-install-ghc'
+        # > '--skip-ghc-check'
+        # > '--system-ghc'
     )
-    koopa_rm "${HOME:?}/.stack"
-    "${app[stack]}" config set system-ghc --global true
+    # > koopa_rm "${HOME:?}/.stack"
+    # > "${app[stack]}" config set system-ghc --global true
     "${app[stack]}" "${stack_args[@]}" build
     "${app[stack]}" "${stack_args[@]}" \
         --local-bin-path="${dict[prefix]}/bin" \
