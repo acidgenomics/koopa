@@ -10,7 +10,7 @@ install_hadolint() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     hadolint.rb
     # """
-    local app dict ghc_args
+    local app dict stack_args
     declare -A app=(
         [stack]="$(koopa_locate_stack)"
     )
@@ -26,19 +26,14 @@ archive/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    ghc_args=(
+    stack_args=(
         '--no-install-ghc'
         '--skip-ghc-check'
         '--system-ghc'
     )
-    "${app[stack]}" \
-        --jobs="${dict[jobs]}" \
-        build \
-        "${ghc_args[@]}"
-    "${app[stack]}" \
-        --jobs="${dict[jobs]}" \
+    "${app[stack]}" "${stack_args[@]}" build
+    "${app[stack]}" "${stack_args[@]}" \
         --local-bin-path="${dict[prefix]}/bin" \
-        install \
-        "${ghc_args[@]}"
+        install
     return 0
 }
