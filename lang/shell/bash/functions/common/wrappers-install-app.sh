@@ -976,6 +976,14 @@ koopa_uninstall_go() { # {{{1
         "$@"
 }
 
+koopa_uninstall_go_packages() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Go packages' \
+        --name='go-packages' \
+        --no-link \
+        "$@"
+}
+
 koopa_uninstall_grep() { # {{{1
     koopa_uninstall_app \
         --name='grep' \

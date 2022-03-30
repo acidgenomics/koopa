@@ -46,17 +46,20 @@ __koopa_posix_header() { # {{{1
             "$(koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
         koopa_activate_homebrew || return 1
+        # FIXME Symlink into '/opt/koopa/bin' instead.
         koopa_activate_openjdk || return 1
+        # > koopa_activate_go || return 1
+        # > koopa_activate_nim || return 1
         koopa_activate_ruby || return 1
         koopa_activate_node || return 1
-        koopa_activate_nim || return 1
-        koopa_activate_go || return 1
         koopa_activate_julia || return 1
+        # FIXME Symlink into '/opt/koopa/bin' instead.
         koopa_activate_perl || return 1
+        # FIXME Symlink into '/opt/koopa/bin' instead.
         koopa_activate_python || return 1
+        # FIXME Symlink into '/opt/koopa/bin' instead.
         koopa_activate_pipx || return 1
         koopa_activate_rust || return 1
-        koopa_activate_nextflow || return 1
         if koopa_is_linux
         then
             koopa_activate_bcbio_nextgen || return 1
@@ -72,10 +75,8 @@ __koopa_posix_header() { # {{{1
             koopa_export_history || return 1
             koopa_export_pager || return 1
             koopa_activate_color_mode || return 1
-            koopa_activate_aspera_connect || return 1
             koopa_activate_bat || return 1
             koopa_activate_dircolors || return 1
-            koopa_activate_doom_emacs || return 1
             koopa_activate_gcc_colors || return 1
             koopa_activate_lesspipe || return 1
             koopa_activate_secrets || return 1
@@ -84,7 +85,6 @@ __koopa_posix_header() { # {{{1
             if koopa_is_macos
             then
                 koopa_macos_activate_cli_colors || return 1
-                koopa_macos_activate_visual_studio_code || return 1
             fi
             shell="$(koopa_shell_name)"
             case "$shell" in
