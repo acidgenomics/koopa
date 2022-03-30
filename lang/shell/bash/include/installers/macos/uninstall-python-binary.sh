@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-macos_uninstall_python_framework() { # {{{1
+macos_uninstall_python_binary() { # {{{1
     # """
-    # Uninstall Python framework.
-    # @note Updated 2021-11-02.
+    # Uninstall Python framework binary.
+    # @note Updated 2022-03-30.
     # """
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin

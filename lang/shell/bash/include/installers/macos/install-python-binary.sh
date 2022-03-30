@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-macos_install_python_framework() { # {{{1
+macos_install_python_binary() { # {{{1
     # """
-    # Install Python framework.
-    # @note Updated 2022-02-10.
+    # Install Python framework binary.
+    # @note Updated 2022-03-30.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
