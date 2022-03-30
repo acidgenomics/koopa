@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Can we build using multiple cores?
-
 install_nim() { # {{{1
     # """
     # Install Nim.
     # @note Updated 2022-03-29.
+    #
+    # Build script currently is not optimized for multiple cores.
     #
     # @seealso
     # - https://nim-lang.org/docs/koch.html
