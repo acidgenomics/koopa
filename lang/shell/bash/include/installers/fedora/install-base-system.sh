@@ -3,7 +3,7 @@
 fedora_install_base_system() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-03-30.
     #
     # Use '<pkg>-<version>' to pin package versions.
     #
@@ -107,9 +107,11 @@ fedora_install_base_system() { # {{{1
             'gcc-gfortran'                                        # |        ? |
             'gnupg2'                                              # |      YES |
             'gnutls'                                              # |      YES |
+            'gtk-doc' # harfbuzz
             'jq'
             'libtool'                                             # |      YES |
             'lua'                                                 # |      YES |
+            'meson' # harfbuzz
             'openssl'                                             # |      YES |
             'pkgconfig' # This is now 'pkgconf' wrapped.          # |      YES |
             'qpdf'                                                # |       NO |
@@ -118,6 +120,30 @@ fedora_install_base_system() { # {{{1
             'squashfs-tools'                                      # |       NO |
             'systemd'                                             # |      YES |
             'texinfo'                                             # |       NO |
+            'texlive'
+            'texlive-bera'
+            'texlive-caption'
+            'texlive-changepage'
+            'texlive-collection-fontsrecommended'
+            'texlive-collection-latexrecommended'
+            'texlive-enumitem'
+            'texlive-etoolbox'
+            'texlive-fancyhdr'
+            'texlive-footmisc'
+            'texlive-framed'
+            'texlive-geometry'
+            'texlive-hyperref'
+            'texlive-latex-fonts'
+            'texlive-natbib'
+            'texlive-parskip'
+            'texlive-pdftex'
+            'texlive-placeins'
+            'texlive-preprint'
+            'texlive-sectsty'
+            'texlive-soul'
+            'texlive-titlesec'
+            'texlive-titling'
+            'texlive-xstring'
             'tmux'                                                # |       NO |
             'tree'                                                # |       NO |
             'util-linux'                                          # |      YES |
@@ -148,15 +174,15 @@ fedora_install_base_system() { # {{{1
             'apr-util-devel' # subversion                         # |      YES |
             'bison-devel'                                         # |       NO |
             'bzip2-devel'                                         # |      YES |
-            'cairo-devel'                                         # |       NO |
+            'cairo-devel' # harfbuzz                              # |       NO |
             'expat-devel' # udunits                               # |      YES |
             'flex-devel'                                          # |       NO |
             'fontconfig-devel'                                    # |      YES |
-            'freetype-devel' # freetype / ragg                    # |      YES |
+            'freetype-devel' # freetype, harfbuzz, ragg           # |      YES |
             'fribidi-devel' # textshaping                         # |       NO |
             'gdal-devel'                                          # |       NO |
             'geos-devel'                                          # |      YES |
-            'glib2-devel' # ag                                    # |      YES |
+            'glib2-devel' # ag, harfbuzz                          # |      YES |
             'gmp-devel'                                           # |       NO |
             'gnutls-devel'                                        # |       NO |
             'gsl-devel'                                           # |       NO |
@@ -206,30 +232,6 @@ fedora_install_base_system() { # {{{1
             # > golang
             'llvm'
             'nim'
-            'texlive'
-            'texlive-bera'
-            'texlive-caption'
-            'texlive-changepage'
-            'texlive-collection-fontsrecommended'
-            'texlive-collection-latexrecommended'
-            'texlive-enumitem'
-            'texlive-etoolbox'
-            'texlive-fancyhdr'
-            'texlive-footmisc'
-            'texlive-framed'
-            'texlive-geometry'
-            'texlive-hyperref'
-            'texlive-latex-fonts'
-            'texlive-natbib'
-            'texlive-parskip'
-            'texlive-pdftex'
-            'texlive-placeins'
-            'texlive-preprint'
-            'texlive-sectsty'
-            'texlive-soul'
-            'texlive-titlesec'
-            'texlive-titling'
-            'texlive-xstring'
         )
     fi
     koopa_fedora_dnf_install "${pkgs[@]}"
