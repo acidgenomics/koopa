@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework so that '/opt/koopa/bin' takes priority.
+
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.

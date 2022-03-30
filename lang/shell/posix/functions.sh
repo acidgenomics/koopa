@@ -3440,19 +3440,12 @@ koopa_macos_activate_cli_colors() { # {{{1
 koopa_macos_activate_google_cloud_sdk() { # {{{1
     # """
     # Activate macOS Google Cloud SDK Homebrew cask.
-    # @note Updated 2022-01-26.
+    # @note Updated 2022-03-30.
     #
-    # @seealso
-    # - https://cloud.google.com/sdk/docs/install#mac
-    # """
-    local brew_prefix prefix python
-    brew_prefix="$(koopa_homebrew_prefix)"
-    prefix="${brew_prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
-    koopa_activate_prefix "$prefix"
-    python="${brew_prefix}/opt/python@3.9/bin/python3.9"
-    export CLOUDSDK_PYTHON="$python"
     # Alternate (slower) approach that enables autocompletion.
-    # > local shell
+    # > local prefix shell
+    # > prefix="${brew_prefix}/Caskroom/google-cloud-sdk/\
+    # > latest/google-cloud-sdk"
     # > [ -d "$prefix" ] || return 0
     # > shell="$(koopa_shell_name)"
     # > # shellcheck source=/dev/null
@@ -3461,29 +3454,12 @@ koopa_macos_activate_google_cloud_sdk() { # {{{1
     # > # shellcheck source=/dev/null
     # > [ -f "${prefix}/completion.${shell}.inc" ] && \
     # >     . "${prefix}/completion.${shell}.inc"
-    return 0
-}
-
-koopa_macos_activate_gpg_suite() { # {{{1
-    # """
-    # Activate MacGPG (gpg-suite) on macOS.
-    # @note Updated 2021-06-14.
     #
-    # This code shouldn't be necessary to run at startup, since MacGPG2
-    # should be configured at '/private/etc/paths.d/MacGPG2' automatically.
+    # @seealso
+    # - https://cloud.google.com/sdk/docs/install#mac
     # """
-    koopa_activate_prefix '/usr/local/MacGPG2'
-    return 0
-}
-
-koopa_macos_activate_r() { # {{{1
-    # """
-    # Activate R on macOS.
-    # @note Updated 2021-06-14.
-    # """
-    local prefix
-    prefix="$(koopa_macos_r_prefix)"
-    koopa_activate_prefix "$prefix"
+    CLOUDSDK_PYTHON="$(koopa_homebrew_prefix)/opt/python@3.9/bin/python3.9"
+    export CLOUDSDK_PYTHON
     return 0
 }
 
@@ -3627,6 +3603,7 @@ koopa_macos_os_version() { # {{{1
     return 0
 }
 
+# FIXME Rework this as a symlink instead.
 koopa_macos_python_prefix() { # {{{1
     # """
     # macOS Python installation prefix.

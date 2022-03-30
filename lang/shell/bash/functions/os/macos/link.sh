@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_macos_configure_bbedit() { # {{{1
+koopa_macos_link_bbedit() { # {{{1
     # """
-    # Configure BBEdit.
+    # Link BBEdit.
     # @note Updated 2022-03-30.
     # """
     koopa_assert_has_no_args "$#"
@@ -12,9 +12,22 @@ koopa_macos_configure_bbedit() { # {{{1
     return 0
 }
 
-koopa_macos_configure_visual_studio_code() { # {{{1
+koopa_macos_link_google_cloud_sdk() { # {{{1
     # """
-    # Configure Visual Studio Code.
+    # Link Google Cloud SDK.
+    # @note Updated 2022-03-30.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_sys_ln \
+        "$(koopa_homebrew_prefix)/Caskroom/google-cloud-sdk/latest/\
+google-cloud-sdk/bin/gcloud" \
+        "$(koopa_koopa_prefix)/bin/gcloud"
+    return 0
+}
+
+koopa_macos_link_visual_studio_code() { # {{{1
+    # """
+    # Link Visual Studio Code.
     # @note Updated 2022-03-30.
     # """
     koopa_assert_has_no_args "$#"
