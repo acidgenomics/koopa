@@ -412,6 +412,13 @@ koopa_install_nim_packages() { # {{{1
         "$@"
 }
 
+koopa_install_ninja() { # {{{1
+    koopa_install_app \
+        --name-fancy='Ninja' \
+        --name='ninja' \
+        "$@"
+}
+
 koopa_install_node() { # {{{1
     koopa_install_app \
         --name-fancy='Node.js' \
@@ -1148,6 +1155,13 @@ koopa_uninstall_nim_packages() { # {{{1
         --name='nim-packages' \
         --name-fancy='Nim packages' \
         --no-link \
+        "$@"
+}
+
+koopa_uninstall_ninja() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Ninja' \
+        --name='ninja' \
         "$@"
 }
 

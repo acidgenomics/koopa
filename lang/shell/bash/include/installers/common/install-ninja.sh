@@ -2,7 +2,7 @@
 
 # FIXME Need to add support for this.
 
-install_meson() { # {{{
+install_ninja() { # {{{
     # FIXME Use pip to install.
     return 0
 }
