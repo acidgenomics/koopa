@@ -4,7 +4,6 @@ koopa_install_anaconda() { # {{{1
     koopa_install_app \
         --name-fancy='Anaconda' \
         --name='anaconda' \
-        --no-link \
         "$@"
 }
 
@@ -72,7 +71,6 @@ koopa_install_conda() { # {{{1
     koopa_install_app \
         --name-fancy='Miniconda' \
         --name='conda' \
-        --no-link \
         "$@"
 }
 
@@ -108,7 +106,6 @@ koopa_install_dotfiles() { # {{{1
     koopa_install_app \
         --name-fancy='Dotfiles' \
         --name='dotfiles' \
-        --no-link \
         --version='rolling' \
         "$@"
 }
@@ -124,7 +121,6 @@ koopa_install_ensembl_perl_api() { # {{{1
     koopa_install_app \
         --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
-        --no-link \
         --version='rolling' \
         "$@"
 }
@@ -171,7 +167,6 @@ koopa_install_gcc() { # {{{1
     koopa_install_app \
         --name-fancy='GCC' \
         --name='gcc' \
-        --no-link \
         "$@"
 }
 
@@ -179,7 +174,6 @@ koopa_install_gdal() { # {{{1
     koopa_install_app \
         --name-fancy='GDAL' \
         --name='gdal' \
-        --no-link \
         "$@"
 }
 
@@ -187,7 +181,6 @@ koopa_install_geos() { # {{{1
     koopa_install_app \
         --name-fancy='GEOS' \
         --name='geos' \
-        --no-link \
         "$@"
 }
 
@@ -215,7 +208,6 @@ koopa_install_go() { # {{{1
     koopa_install_app \
         --name-fancy='Go' \
         --name='go' \
-        --no-link \
         "$@"
     return 0
 }
@@ -372,7 +364,6 @@ koopa_install_meson() { # {{{1
     koopa_install_app \
         --name-fancy='Meson' \
         --name='meson' \
-        --no-link \
         "$@"
 }
 
@@ -417,7 +408,6 @@ koopa_install_ninja() { # {{{1
     koopa_install_app \
         --name-fancy='Ninja' \
         --name='ninja' \
-        --no-link \
         "$@"
 }
 
@@ -439,7 +429,6 @@ koopa_install_openjdk() { # {{{1
     koopa_install_app \
         --name-fancy='OpenJDK' \
         --name='openjdk' \
-        --no-link \
         "$@"
 }
 
@@ -447,7 +436,6 @@ koopa_install_openssh() { # {{{1
     koopa_install_app \
         --name-fancy='OpenSSH' \
         --name='openssh' \
-        --no-link \
         "$@"
 }
 
@@ -455,7 +443,6 @@ koopa_install_openssl() { # {{{1
     koopa_install_app \
         --name-fancy='OpenSSL' \
         --name='openssl' \
-        --no-link \
         "$@"
 }
 
@@ -502,7 +489,6 @@ koopa_install_perlbrew() { # {{{1
     koopa_install_app \
         --name-fancy='Perlbrew' \
         --name='perlbrew' \
-        --no-link \
         --version='rolling' \
         "$@"
 }
@@ -526,14 +512,12 @@ koopa_install_proj() { # {{{1
     koopa_install_app \
         --name-fancy='PROJ' \
         --name='proj' \
-        --no-link \
         "$@"
 }
 
 koopa_install_pyenv() { # {{{1
     koopa_install_app \
         --name='pyenv' \
-        --no-link \
         --version='rolling' \
         "$@"
 }
@@ -563,7 +547,6 @@ koopa_install_r_cmd_check() { # {{{1
     koopa_install_app \
         --name-fancy='R CMD check' \
         --name='r-cmd-check' \
-        --no-link \
         --version='rolling' \
         "$@"
 }
@@ -584,7 +567,6 @@ koopa_install_r_packages() { # {{{1
 koopa_install_rbenv() { # {{{1
     koopa_install_app \
         --name='rbenv' \
-        --no-link \
         --version='rolling' \
         "$@"
 }
@@ -619,7 +601,6 @@ koopa_install_rust() { # {{{1
     koopa_install_app \
         --name-fancy='Rust' \
         --name='rust' \
-        --no-link \
         --version='rolling' \
         "$@"
 }
@@ -770,7 +751,6 @@ koopa_uninstall_anaconda() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Anaconda' \
         --name='anaconda' \
-        --no-link \
         "$@"
 }
 
@@ -832,7 +812,6 @@ koopa_uninstall_conda() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Miniconda' \
         --name='conda' \
-        --no-link \
         "$@"
 }
 
@@ -900,7 +879,6 @@ koopa_uninstall_ensembl_perl_api() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
-        --no-link \
         "$@"
 }
 
@@ -934,7 +912,6 @@ koopa_uninstall_gcc() { # {{{1
     koopa_uninstall_app \
         --name-fancy='GCC' \
         --name='gcc' \
-        --no-link \
         "$@"
 }
 
@@ -942,7 +919,6 @@ koopa_uninstall_gdal() { # {{{1
     koopa_uninstall_app \
         --name-fancy='GDAL' \
         --name='gdal' \
-        --no-link \
         "$@"
 }
 
@@ -950,7 +926,6 @@ koopa_uninstall_geos() { # {{{1
     koopa_uninstall_app \
         --name-fancy='GEOS' \
         --name='geos' \
-        --no-link \
         "$@"
 }
 
@@ -972,7 +947,6 @@ koopa_uninstall_go() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Go' \
         --name='go' \
-        --no-link \
         "$@"
 }
 
@@ -980,7 +954,6 @@ koopa_uninstall_go_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Go packages' \
         --name='go-packages' \
-        --no-link \
         "$@"
 }
 
@@ -1068,7 +1041,6 @@ koopa_uninstall_julia_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Julia packages' \
         --name='julia-packages' \
-        --no-link \
         "$@"
 }
 
@@ -1128,7 +1100,6 @@ koopa_uninstall_meson() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Meson' \
         --name='meson' \
-        --no-link \
         "$@"
 }
 
@@ -1165,7 +1136,6 @@ koopa_uninstall_nim_packages() { # {{{1
     koopa_uninstall_app \
         --name='nim-packages' \
         --name-fancy='Nim packages' \
-        --no-link \
         "$@"
 }
 
@@ -1173,7 +1143,6 @@ koopa_uninstall_ninja() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Ninja' \
         --name='ninja' \
-        --no-link \
         "$@"
 }
 
@@ -1188,7 +1157,6 @@ koopa_uninstall_node_packages() { # {{{1
     koopa_uninstall_app \
         --name='node-packages' \
         --name-fancy='Node.js packages' \
-        --no-link \
         "$@"
 }
 
@@ -1198,7 +1166,6 @@ koopa_uninstall_openjdk() { # {{{1
     koopa_uninstall_app \
         --name-fancy='OpenJDK' \
         --name='openjdk' \
-        --no-link \
         "$@"
     if koopa_is_linux
     then
@@ -1215,7 +1182,6 @@ koopa_uninstall_openssh() { # {{{1
     koopa_uninstall_app \
         --name-fancy='OpenSSH' \
         --name='openssh' \
-        --no-link \
         "$@"
 }
 
@@ -1223,7 +1189,6 @@ koopa_uninstall_openssl() { # {{{1
     koopa_uninstall_app \
         --name-fancy='OpenSSL' \
         --name='openssl' \
-        --no-link \
         "$@"
 }
 
@@ -1272,7 +1237,6 @@ koopa_uninstall_perlbrew() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Perlbrew' \
         --name='perlbrew' \
-        --no-link \
         "$@"
 }
 
@@ -1294,14 +1258,12 @@ koopa_uninstall_proj() { # {{{1
     koopa_uninstall_app \
         --name-fancy='PROJ' \
         --name='proj' \
-        --no-link \
         "$@"
 }
 
 koopa_uninstall_pyenv() { # {{{1
     koopa_uninstall_app \
         --name='pyenv' \
-        --no-link \
         "$@"
 }
 
@@ -1316,7 +1278,6 @@ koopa_uninstall_python_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Python packages' \
         --name='python-packages' \
-        --no-link \
         "$@"
 }
 
@@ -1330,7 +1291,6 @@ koopa_uninstall_r() { # {{{1
 koopa_uninstall_r_cmd_check() { # {{{1
     koopa_uninstall_app \
         --name='r-cmd-check' \
-        --no-link \
         "$@"
 }
 
@@ -1338,14 +1298,12 @@ koopa_uninstall_r_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='R packages' \
         --name='r-packages' \
-        --no-link \
         "$@"
 }
 
 koopa_uninstall_rbenv() { # {{{1
     koopa_uninstall_app \
         --name='rbenv' \
-        --no-link \
         "$@"
 }
 
@@ -1372,7 +1330,6 @@ koopa_uninstall_ruby_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Ruby packages' \
         --name='ruby-packages' \
-        --no-link \
         "$@"
 }
 
@@ -1380,7 +1337,6 @@ koopa_uninstall_rust() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Rust' \
         --name='rust' \
-        --no-link \
         "$@"
 }
 
@@ -1388,7 +1344,6 @@ koopa_uninstall_rust_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Rust packages' \
         --name='rust-packages' \
-        --no-link \
         "$@"
 }
 
