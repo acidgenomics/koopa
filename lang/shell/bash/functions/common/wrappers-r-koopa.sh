@@ -163,6 +163,9 @@ koopa_snake_case() { # {{{1
     koopa_r_koopa 'cliSnakeCase' "$@"
 }
 
+# FIXME Can we rework this in shell?
+# FIXME Consider only unlinking in koopa bin by default.
+
 koopa_unlink_app() { # {{{1
     # """
     # Unlink an application.
