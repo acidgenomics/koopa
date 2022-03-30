@@ -277,7 +277,7 @@ koopa_eigen_version() { # {{{1
 
 koopa_harfbuzz_version() { # {{{1
     # """
-    # Harfbuzz (libharfbuzz) version.
+    # HarfBuzz (libharfbuzz) version.
     # @note Updated 2021-03-01.
     # """
     koopa_assert_has_no_args "$#"
