@@ -31,8 +31,6 @@ archive/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    # depends_on "meson" => :build
-    # depends_on "ninja" => :build
     # depends_on "cairo"
     # depends_on "freetype"
     # depends_on "glib"
@@ -40,17 +38,17 @@ archive/${dict[file]}"
     # depends_on "graphite2"
     koopa_activate_opt_prefix 'icu4c'
     meson_args=(
-        '--buildtype=release'
-        '--default-library=both'
+        # > '--default-library=both'
+        # > '-Dcairo=enabled'
+        # > '-Dcoretext=enabled'
+        # > '-Dfreetype=enabled'
+        # > '-Dglib=enabled'
+        # > '-Dgobject=enabled'
+        # > '-Dgraphite=enabled'
+        # > '-Dicu=enabled'
+        # > '-Dintrospection=enabled'
         "--prefix=${dict[prefix]}"
-        '-Dcairo=enabled'
-        '-Dcoretext=enabled'
-        '-Dfreetype=enabled'
-        '-Dglib=enabled'
-        '-Dgobject=enabled'
-        '-Dgraphite=enabled'
-        '-Dicu=enabled'
-        '-Dintrospection=enabled'
+        '--buildtype=release'
     )
     "${app[meson]}" "${meson_args[@]}" build
     # > "${app[meson]}" test -Cbuild
