@@ -27,8 +27,8 @@ archive/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     stack_args=(
-        # > '--no-install-ghc'
         # > '--skip-ghc-check'
+        '--no-install-ghc'
         "--jobs=${dict[jobs]}"
         '--system-ghc'
     )
