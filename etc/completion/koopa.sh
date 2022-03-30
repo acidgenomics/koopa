@@ -84,6 +84,13 @@ __koopa_complete() { # {{{1
                         'ruby'
                         'rust'
                     )
+                    if koopa_is_macos
+                    then
+                        args+=(
+                            'bbedit'
+                            'visual-studio-code'
+                        )
+                    fi
                     ;;
                 'header')
                     args=(
