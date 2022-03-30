@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Consider only linking into '/bin' by default?
 # FIXME This needs to automatically exclude 'libexec' subdirectory, such as
 # for meson and ninja installers.
 # FIXME Link this into '/opt/koopa/bin' instead of '/usr/local'...then we can

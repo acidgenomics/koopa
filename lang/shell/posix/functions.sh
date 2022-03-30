@@ -258,22 +258,6 @@ koopa_activate_aliases() { # {{{1
     return 0
 }
 
-koopa_activate_anaconda() { # {{{1
-    # """
-    # Activate Anaconda.
-    # @note Updated 2021-10-26.
-    # """
-    koopa_activate_conda "$(koopa_anaconda_prefix)"
-}
-
-koopa_activate_aspera_connect() { # {{{1
-    # """
-    # Include Aspera Connect binaries in PATH, if defined.
-    # @note Updated 2022-01-27.
-    # """
-    koopa_activate_prefix "$(koopa_aspera_connect_prefix)"
-}
-
 koopa_activate_bat() { # {{{1
     # """
     # Activate bat configuration.
@@ -540,14 +524,6 @@ koopa_activate_dircolors() { # {{{1
     return 0
 }
 
-koopa_activate_doom_emacs() { # {{{1
-    # """
-    # Activate Doom Emacs.
-    # @note Updated 2022-01-26.
-    # """
-    koopa_activate_prefix "$(koopa_doom_emacs_prefix)"
-}
-
 koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
@@ -611,12 +587,11 @@ quote=01:warning=01;35"
 koopa_activate_go() { # {{{1
     # """
     # Activate Go.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-03-30.
     # """
     local prefix
-    prefix="$(koopa_go_prefix)"
-    [ -d "$prefix" ] && koopa_activate_prefix "$prefix"
-    koopa_is_installed go || return 0
+    prefix="$(koopa_go_packages_prefix)"
+    [ -d "$prefix" ] || return 0
     GOPATH="$(koopa_go_packages_prefix)"
     export GOPATH
     return 0
@@ -915,12 +890,13 @@ koopa_activate_nextflow() { # {{{1
 koopa_activate_nim() { # {{{1
     # """
     # Activate Nim.
-    # @note Updated 2021-09-29.
+    # @note Updated 2022-03-30.
     # """
     local prefix
     prefix="$(koopa_nim_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    koopa_activate_prefix "$prefix"
+    # FIXME Symlink into '/opt/koopa/bin' instead.
+    # > koopa_activate_prefix "$prefix"
     export NIMBLE_DIR="$prefix"
     return 0
 }
@@ -1045,10 +1021,13 @@ koopa_activate_perlbrew() { # {{{1
     return 0
 }
 
+# FIXME We need to configure pipx into a versioned subdirectory.
+# FIXME Create a configure pipx function.
+
 koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-03-30.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
@@ -1059,7 +1038,8 @@ koopa_activate_pipx() { # {{{1
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
     export PIPX_HOME PIPX_BIN_DIR
-    koopa_add_to_path_start "$PIPX_BIN_DIR"
+    # FIXME Symlink 'pipx' into '/opt/koopa/bin' instead.
+    # > koopa_add_to_path_start "$PIPX_BIN_DIR"
     return 0
 }
 
@@ -1122,10 +1102,11 @@ koopa_activate_prefix() { # {{{1
     return 0
 }
 
+# FIXME Need to symlink pyenv instead.
 koopa_activate_pyenv() { # {{{1
     # """
     # Activate Python version manager (pyenv).
-    # @note Updated 2020-06-30.
+    # @note Updated 2022-03-30.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
@@ -1137,7 +1118,8 @@ koopa_activate_pyenv() { # {{{1
     script="${prefix}/bin/pyenv"
     [ -r "$script" ] || return 0
     export PYENV_ROOT="$prefix"
-    koopa_activate_prefix "$prefix"
+    # FIXME Just symlink this instead.
+    # > koopa_activate_prefix "$prefix"
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
@@ -1145,10 +1127,11 @@ koopa_activate_pyenv() { # {{{1
     return 0
 }
 
+# FIXME Just ensure Python is symlinked instead.
 koopa_activate_python() { # {{{1
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-30.
     #
     # Configures:
     # - Site packages library.
@@ -1173,6 +1156,7 @@ koopa_activate_python() { # {{{1
     if koopa_is_macos
     then
         prefix="$(koopa_macos_python_prefix)"
+        # FIXME Symlink this instead.
         koopa_activate_prefix "$prefix"
     fi
     prefix="$(koopa_python_packages_prefix)"
@@ -1198,10 +1182,11 @@ koopa_activate_python() { # {{{1
     return 0
 }
 
+# FIXME Symlink this instead.
 koopa_activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
-    # @note Updated 2020-06-30.
+    # @note Updated 2022-03-30.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
@@ -1218,7 +1203,8 @@ koopa_activate_rbenv() { # {{{1
     script="${prefix}/bin/rbenv"
     [ -r "$script" ] || return 0
     export RBENV_ROOT="$prefix"
-    koopa_activate_prefix "$prefix"
+    # FIXME Symlink this instead.
+    # > koopa_activate_prefix "$prefix"
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
@@ -1229,10 +1215,11 @@ koopa_activate_rbenv() { # {{{1
 koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2021-05-04.
+    # @note Updated 2022-03-30.
     # """
     local prefix
     prefix="$(koopa_ruby_packages_prefix)"
+    [ -d "$prefix" ] || return 0
     koopa_activate_prefix "$prefix"
     export GEM_HOME="$prefix"
     return 0
@@ -1241,7 +1228,7 @@ koopa_activate_ruby() { # {{{1
 koopa_activate_rust() { # {{{1
     # """
     # Activate Rust programming language.
-    # @note Updated 2021-09-20.
+    # @note Updated 2022-03-30.
     #
     # Attempt to locate cargo home and source the 'env' script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
@@ -1253,7 +1240,8 @@ koopa_activate_rust() { # {{{1
     rustup_prefix="$(koopa_rust_prefix)"
     if [ -d "$cargo_prefix" ]
     then
-        koopa_add_to_path_start "${cargo_prefix}/bin"
+        # FIXME Consider symlinking into '/opt/koopa/opt'.
+        # > koopa_add_to_path_start "${cargo_prefix}/bin"
         export CARGO_HOME="$cargo_prefix"
     fi
     if [ -d "$rustup_prefix" ]
@@ -3496,17 +3484,6 @@ koopa_macos_activate_r() { # {{{1
     local prefix
     prefix="$(koopa_macos_r_prefix)"
     koopa_activate_prefix "$prefix"
-    return 0
-}
-
-koopa_macos_activate_visual_studio_code() { # {{{1
-    # """
-    # Activate Visual Studio Code.
-    # @note Updated 2021-06-14.
-    # """
-    local x
-    x='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
-    koopa_add_to_path_start "$x"
     return 0
 }
 
