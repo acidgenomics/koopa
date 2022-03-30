@@ -60,13 +60,7 @@ __koopa_posix_header() { # {{{1
         # FIXME Symlink into '/opt/koopa/bin' instead.
         koopa_activate_pipx || return 1
         koopa_activate_rust || return 1
-        if koopa_is_linux
-        then
-            koopa_activate_bcbio_nextgen || return 1
-        elif koopa_is_macos
-        then
-            koopa_macos_activate_r || return 1
-        fi
+        koopa_activate_bcbio_nextgen || return 1
         if [ "${KOOPA_ACTIVATE:-0}" -eq 1 ]
         then
             koopa_export_editor || return 1
@@ -103,7 +97,8 @@ __koopa_posix_header() { # {{{1
             fi
         fi
     fi
-    koopa_activate_koopa_paths || return 1
+    # FIXME Rework this.
+    koopa_add_to_path_start "$(koopa_koopa_prefix)/bin"
     koopa_activate_local_paths || return 1
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then

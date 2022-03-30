@@ -32,10 +32,11 @@ __koopa_complete() { # {{{1
                 'configure'
                 'header'
                 'install'
-                'list'
+                'link'
                 'reinstall'
                 'system'
                 'uninstall'
+                'unlink'
                 'update'
             )
             ;;
@@ -51,7 +52,8 @@ __koopa_complete() { # {{{1
                         'git'
                         'gpg'
                         'kallisto'
-                        'list'
+                        # Rework this.
+                        # > 'list'
                         'python'
                         'r'
                         'rnaeditingindexer'
@@ -61,14 +63,15 @@ __koopa_complete() { # {{{1
                         'star'
                         'wget'
                     )
-                    if koopa_is_linux
-                    then
-                        args+=(
-                            'clean'
-                            'link'
-                            'unlink'
-                        )
-                    fi
+                    # FIXME Rethink the organization of these.
+                    # FIXME Put these under system.
+                    # > if koopa_is_linux
+                    # > then
+                    # >     args+=(
+                    # >         'clean'
+                    # >         'unlink'
+                    #   )
+                    # > fi
                     ;;
                 'configure')
                     args=(
@@ -88,6 +91,7 @@ __koopa_complete() { # {{{1
                     then
                         args+=(
                             'bbedit'
+                            'google-cloud-sdk'
                             'visual-studio-code'
                         )
                     fi

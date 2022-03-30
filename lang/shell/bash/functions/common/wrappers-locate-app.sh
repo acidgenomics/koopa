@@ -284,6 +284,12 @@ koopa_locate_groups() { # {{{1
     koopa_locate_gnu_coreutils_app 'groups'
 }
 
+koopa_locate_gs() { # {{{1
+    koopa_locate_app \
+        --app-name='gs' \
+        --opt='ghostscript'
+}
+
 koopa_locate_gzip() { # {{{1
     koopa_locate_app 'gzip'
 }
