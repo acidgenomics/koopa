@@ -42,6 +42,7 @@ ${dict[version]}/source/${dict[file]}"
         'link=static'
         'threading=multi'
     )
+    koopa_alert_coffee_time
     ./bootstrap.sh "${bootstrap_args[@]}"
     ./b2 headers
     ./b2 "${b2_args[@]}"
