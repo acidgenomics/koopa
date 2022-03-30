@@ -256,7 +256,6 @@ koopa_install_haskell_stack() { # {{{1
     koopa_install_app \
         --name-fancy='Haskell Stack' \
         --name='haskell-stack' \
-        --no-link \
         --version='rolling' \
         "$@"
 }
@@ -996,7 +995,6 @@ koopa_uninstall_haskell_stack() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Haskell Stack' \
         --name='haskell-stack' \
-        --no-link \
         "$@"
 }
 

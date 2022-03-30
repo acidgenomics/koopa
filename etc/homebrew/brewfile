@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2022-03-21.
+# Updated 2022-03-29.
 #
 # @section ilmbase deprecation (due to neofetch):
 #
@@ -87,6 +87,7 @@ brew "gsl"
 brew "gtop" # node
 brew "gzip"
 brew "hadolint"
+brew "haskell-stack"
 brew "hdf5"
 brew "htop"
 # > brew "httpd"
