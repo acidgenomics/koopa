@@ -50,16 +50,18 @@ archive/${dict[file]}"
         # > '-Dglib=enabled'
         # > '-Dgobject=enabled'
         # > '-Dgraphite=enabled'
-        # > '-Dicu=enabled'
         # > '-Dintrospection=enabled'
         "--prefix=${dict[prefix]}"
         '--buildtype=release'
+        '-Dicu=enabled'
     )
     "${app[meson]}" "${meson_args[@]}" build
+    # Alternate build approach using mason.
     # > "${app[meson]}" compile -C build
     # > "${app[meson]}" test -C build
-    "${app[ninja]}" -j "${dict[jobs]}" -C build
+    # Using ninja instead, as it's faster.
+    "${app[ninja]}" -j "${dict[jobs]}" -C 'build'
     # > "${app[ninja]}" test
-    "${app[ninja]}" install
+    "${app[ninja]}" -C 'build' install
     return 0
 }
