@@ -2,6 +2,8 @@
 
 # FIXME This needs to automatically exclude 'libexec' subdirectory, such as
 # for meson and ninja installers.
+# FIXME Link this into '/opt/koopa/bin' instead of '/usr/local'...then we can
+# have links that work on macOS too.
 
 koopa_link_app() { # {{{1
     # """
