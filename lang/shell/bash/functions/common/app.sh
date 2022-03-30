@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rethink the 'link_app' handling here.
+
 koopa_configure_app_packages() { # {{{1
     # """
     # Configure language application.
@@ -166,6 +168,8 @@ koopa_find_app_version() { # {{{1
     koopa_print "${dict[hit_bn]}"
     return 0
 }
+
+# FIXME Need to rethink the '--link-app' handling here.
 
 koopa_install_app() { # {{{1
     # """
@@ -506,7 +510,8 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         else
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
         fi
-        # > koopa_delete_empty_dirs "${dict[prefix]}"
+        # FIXME Need to rework this approach, looking for a corresponding
+        # link function instead.
         if [[ "${dict[link_app]}" -eq 1 ]]
         then
             koopa_delete_broken_symlinks "${dict[make_prefix]}"
@@ -523,7 +528,9 @@ ${dict[platform]}/${dict[installer_file]}.sh"
                 done
             fi
             # Including the 'true' catch here to avoid 'cp' issues on Arch.
-            koopa_link_app "${link_args[@]}" || true
+            # FIXME Need to rethink this approach, only linking into
+            # '/opt/koopa/bin' instead!
+            # > koopa_link_app "${link_args[@]}" || true
         fi
     fi
     if koopa_is_linux && \
@@ -558,7 +565,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
 koopa_install_app_packages() { # {{{1
     # """
     # Install application packages.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-03-30.
     # """
     local name name_fancy pos
     koopa_assert_has_args "$#"

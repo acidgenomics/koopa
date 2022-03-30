@@ -150,7 +150,6 @@ install_gnupg() { # {{{1
     fi
     install_args=(
         '--installer=gnupg-gcrypt'
-        '--no-link'
         '--no-prefix-check'
         "--prefix=${dict[prefix]}"
         '--quiet'
