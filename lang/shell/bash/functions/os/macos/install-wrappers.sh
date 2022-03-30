@@ -1,10 +1,20 @@
 #!/usr/bin/env bash
 
-koopa_macos_install_python_framework() { # {{{1
+koopa_macos_install_python_binary() { # {{{1
     koopa_install_app \
-        --installer='python-framework' \
-        --name-fancy='Python framework' \
+        --installer='python-binary' \
+        --name-fancy='Python binary' \
         --name='python' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa_macos_install_r_binary() { # {{{1
+    koopa_install_app \
+        --installer='r-binary' \
+        --name-fancy='R binary' \
+        --name='r' \
         --platform='macos' \
         --system \
         "$@"
@@ -16,16 +26,6 @@ koopa_macos_install_r_cran_gfortran() { # {{{1
         --name='r-cran-gfortran' \
         --platform='macos' \
         --prefix="$(koopa_macos_gfortran_prefix)" \
-        --system \
-        "$@"
-}
-
-koopa_macos_install_r_framework() { # {{{1
-    koopa_install_app \
-        --installer='r-framework' \
-        --name-fancy='R framework' \
-        --name='r' \
-        --platform='macos' \
         --system \
         "$@"
 }
@@ -75,13 +75,23 @@ koopa_macos_uninstall_oracle_java() { # {{{
         "$@"
 }
 
-koopa_macos_uninstall_python_framework() { # {{{1
+koopa_macos_uninstall_python_binary() { # {{{1
     koopa_uninstall_app \
-        --name-fancy='Python framework' \
+        --name-fancy='Python binary' \
         --name='python' \
         --platform='macos' \
         --system \
-        --uninstaller='python-framework' \
+        --uninstaller='python-binary' \
+        "$@"
+}
+
+koopa_macos_uninstall_r_binary() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='R binary' \
+        --name='r' \
+        --platform='macos' \
+        --system \
+        --uninstaller='r-binary' \
         "$@"
 }
 
@@ -92,16 +102,6 @@ koopa_macos_uninstall_r_cran_gfortran() { # {{{1
         --platform='macos' \
         --prefix="$(koopa_macos_gfortran_prefix)" \
         --system \
-        "$@"
-}
-
-koopa_macos_uninstall_r_framework() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='R framework' \
-        --name='r' \
-        --platform='macos' \
-        --system \
-        --uninstaller='r-framework' \
         "$@"
 }
 

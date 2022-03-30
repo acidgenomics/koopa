@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-macos_install_r_framework() { # {{{1
+macos_install_r_binary() { # {{{1
     # """
-    # Install R framework.
-    # @note Updated 2021-11-04.
+    # Install R framework binary.
+    # @note Updated 2022-03-30.
     #
     # @section Intel:
     #
