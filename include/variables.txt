@@ -229,7 +229,7 @@ neovim="0.6.1"
 nim="1.6.4"
 
 # https://github.com/ninja-build/ninja/tags
-ninja="1.10.2"
+ninja="1.10.2.3"
 
 # https://nodejs.org/
 node="17.8.0"

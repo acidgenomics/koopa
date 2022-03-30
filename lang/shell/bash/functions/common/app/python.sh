@@ -279,7 +279,7 @@ koopa_python_get_pkg_versions() {
 koopa_python_pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-03-30.
     #
     # Usage of '--target' with '--upgrade' will remove existing bin files from
     # other packages that are not updated. This is annoying, but there's no
@@ -302,12 +302,21 @@ koopa_python_pip_install() { # {{{1
     )
     declare -A dict=(
         [reinstall]=0
+        [prefix]=''
     )
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
             '--python='*)
                 app[python]="${1#*=}"
                 shift 1
@@ -334,16 +343,19 @@ koopa_python_pip_install() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     pkgs=("$@")
-    koopa_configure_python "${app[python]}"
-    dict[version]="$(koopa_get_version "${app[python]}")"
-    dict[target]="$(koopa_python_packages_prefix "${dict[version]}")"
+    if [[ -z "${dict[prefix]}" ]]
+    then
+        koopa_configure_python "${app[python]}"
+        dict[version]="$(koopa_get_version "${app[python]}")"
+        dict[prefix]="$(koopa_python_packages_prefix "${dict[version]}")"
+    fi
     koopa_dl \
         'Python' "${app[python]}" \
         'Packages' "$(koopa_to_string "${pkgs[*]}")" \
-        'Target' "${dict[target]}"
+        'Target' "${dict[prefix]}"
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
-        "--target=${dict[target]}"
+        "--target=${dict[prefix]}"
         '--disable-pip-version-check'
         '--no-warn-script-location'
         '--upgrade'
