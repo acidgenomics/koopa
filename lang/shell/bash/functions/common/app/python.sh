@@ -353,7 +353,7 @@ koopa_python_pip_install() { # {{{1
         dl_args+=('Target' "${dict[prefix]}")
     fi
     koopa_dl "${dl_args[@]}"
-    unset -v PYTHONPATH
+    # > unset -v PYTHONPATH
     export PIP_REQUIRE_VIRTUALENV='false'
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
     "${app[python]}" -m pip --isolated \
