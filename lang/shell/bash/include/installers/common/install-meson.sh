@@ -15,9 +15,12 @@ install_meson() { # {{{
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[libexec]="${dict[prefix]}/libexec"
     koopa_python_create_venv \
-        --minimal \
-        --prefix="${dict[prefix]}" \
+        --prefix="${dict[libexec]}" \
         "${dict[name]}==${dict[version]}"
+    koopa_ln \
+        "${dict[libexec]}/bin/${dict[name]}" \
+        "${dict[prefix]}/bin/${dict[name]}"
     return 0
 }

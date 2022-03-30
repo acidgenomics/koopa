@@ -5,8 +5,11 @@ install_python_packages() { # {{{1
     # Install Python packages.
     # @note Updated 2022-03-30.
     # """
-    local pkgs
+    local dict pkgs
     koopa_assert_has_no_args "$#"
+    declare -A dict=(
+        [prefix]="${INSTALL_PREFIX:?}"
+    )
     pkgs=(
         'pip'
         'setuptools'
@@ -28,6 +31,6 @@ install_python_packages() { # {{{1
     # >     )
     # > fi
     readarray -t pkgs <<< "$(koopa_python_get_pkg_versions "${pkgs[@]}")"
-    koopa_python_pip_install "${pkgs[@]}"
+    koopa_python_pip_install --prefix="${dict[prefix]}" "${pkgs[@]}"
     return 0
 }

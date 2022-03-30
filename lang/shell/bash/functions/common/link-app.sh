@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to automatically exclude 'libexec' subdirectory, such as
+# for meson and ninja installers.
+
 koopa_link_app() { # {{{1
     # """
     # Symlink application into make directory.

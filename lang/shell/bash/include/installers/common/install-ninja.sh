@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to install as virtualenv instead.
-
 install_ninja() { # {{{
     # """
     # Install Ninja.
@@ -17,8 +15,12 @@ install_ninja() { # {{{
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    koopa_python_pip_install \
-        --prefix="${dict[prefix]}" \
+    dict[libexec]="${dict[prefix]}/libexec"
+    koopa_python_create_venv \
+        --prefix="${dict[libexec]}" \
         "${dict[name]}==${dict[version]}"
+    koopa_ln \
+        "${dict[libexec]}/bin/${dict[name]}" \
+        "${dict[prefix]}/bin/${dict[name]}"
     return 0
 }

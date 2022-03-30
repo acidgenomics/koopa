@@ -90,7 +90,12 @@ koopa_python_activate_venv() { # {{{1
 koopa_python_create_venv() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2022-02-30.
+    # @note Updated 2022-03-30.
+    #
+    # @seealso
+    # - https://docs.python.org/3/library/venv.html
+    # - https://github.com/Homebrew/brew/blob/master/docs/
+    #     Python-for-Formula-Authors.md
     #
     # @examples
     # > koopa_python_create_venv --name='pandas' 'pandas'
@@ -102,7 +107,6 @@ koopa_python_create_venv() { # {{{1
         [python]="$(koopa_locate_python)"
     )
     declare -A dict=(
-        [minimal]=0
         [name]=''
         [prefix]=''
     )
@@ -135,11 +139,6 @@ koopa_python_create_venv() { # {{{1
                 app[python]="${2:?}"
                 shift 2
                 ;;
-            # Flags ------------------------------------------------------------
-            '--minimal')
-                dict[minimal]=1
-                shift 1
-                ;;
             # Other ------------------------------------------------------------
             '-'*)
                 koopa_invalid_arg "$1"
@@ -155,6 +154,8 @@ koopa_python_create_venv() { # {{{1
     pkgs=("$@")
     koopa_assert_is_set --python "${app[python]}"
     koopa_assert_is_installed "${app[python]}"
+    dict[py_version]="$(koopa_get_version "${app[python]}")"
+    dict[py_maj_min_ver]="$(koopa_major_minor_version "${dict[py_version]}")"
     if [[ -z "${dict[prefix]}" ]]
     then
         koopa_assert_is_set --name "${dict[name]}"
@@ -166,13 +167,10 @@ koopa_python_create_venv() { # {{{1
     fi
     koopa_assert_is_not_dir "${dict[prefix]}"
     koopa_sys_mkdir "${dict[prefix]}"
-    "${app[python]}" -m venv "${dict[prefix]}"
-    app[venv_python]="${dict[prefix]}/bin/python3"
+    "${app[python]}" -m venv --system-site-packages "${dict[prefix]}"
+    app[venv_python]="${dict[prefix]}/bin/python${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
-    koopa_python_pip_install \
-        --prefix="${dict[prefix]}" \
-        --python="${app[venv_python]}" \
-        "${pkgs[@]}"
+    koopa_python_pip_install --python="${app[venv_python]}" "${pkgs[@]}"
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     return 0
 }
@@ -288,14 +286,6 @@ koopa_python_pip_install() { # {{{1
     # Internal pip install command.
     # @note Updated 2022-03-30.
     #
-    # Usage of '--target' with '--upgrade' will remove existing bin files from
-    # other packages that are not updated. This is annoying, but there's no
-    # current workaround except to not use '--upgrade'.
-    #
-    # If you disable '--upgrade', then these warning messages will pop up:
-    # > WARNING: Target directory XXX already exists.
-    # > Specify --upgrade to force replacement.
-    #
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
     # - https://docs.python-guide.org/dev/pip-virtualenv/
@@ -309,7 +299,6 @@ koopa_python_pip_install() { # {{{1
     )
     declare -A dict=(
         [config]=''
-        [reinstall]=0
         [prefix]=''
     )
     pos=()
@@ -342,10 +331,6 @@ koopa_python_pip_install() { # {{{1
                 dict[config]=0
                 shift 1
                 ;;
-            '--reinstall')
-                dict[reinstall]=1
-                shift 1
-                ;;
             # Other ------------------------------------------------------------
             '-'*)
                 koopa_invalid_arg "$1"
@@ -372,28 +357,21 @@ koopa_python_pip_install() { # {{{1
     then
         koopa_configure_python "${app[python]}"
     fi
-    if [[ -z "${dict[prefix]}" ]]
-    then
-        dict[version]="$(koopa_get_version "${app[python]}")"
-        dict[prefix]="$(koopa_python_packages_prefix "${dict[version]}")"
-    fi
-    koopa_dl \
-        'Python' "${app[python]}" \
-        'Packages' "$(koopa_to_string "${pkgs[*]}")" \
-        'Target' "${dict[prefix]}"
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
-        "--target=${dict[prefix]}"
         '--disable-pip-version-check'
         '--no-warn-script-location'
-        '--upgrade'
     )
-    if [[ "${dict[reinstall]}" -eq 1 ]]
+    koopa_dl \
+        'Python' "${app[python]}" \
+        'Packages' "$(koopa_to_string "${pkgs[*]}")"
+    if [[ -n "${dict[prefix]}" ]]
     then
-        pip_flags+=(
-            '--force-reinstall'
-            '--ignore-installed'
+        install_args+=(
+            "--target=${dict[prefix]}"
+            '--upgrade'
         )
+        koopa_dl 'Target' "${dict[prefix]}"
     fi
     export PIP_REQUIRE_VIRTUALENV='false'
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
