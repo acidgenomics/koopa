@@ -368,6 +368,13 @@ koopa_install_man_db() { # {{{1
         "$@"
 }
 
+koopa_install_meson() { # {{{1
+    koopa_install_app \
+        --name-fancy='Meson' \
+        --name='meson' \
+        "$@"
+}
+
 koopa_install_miniconda() { # {{{1
     koopa_install_conda "$@"
 }
@@ -1097,6 +1104,13 @@ koopa_uninstall_make() { # {{{1
 koopa_uninstall_man_db() { # {{{1
     koopa_uninstall_app \
         --name='man-db' \
+        "$@"
+}
+
+koopa_uninstall_meson() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Meson' \
+        --name='meson' \
         "$@"
 }
 
