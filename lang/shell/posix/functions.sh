@@ -4084,12 +4084,12 @@ koopa_python_venv_name() { # {{{1
     return 0
 }
 
-koopa_python_venv_prefix() { # {{{1
+koopa_python_virtualenvs_prefix() { # {{{1
     # """
     # Python virtual environment prefix.
-    # @note Updated 2021-06-14.
+    # @note Updated 2022-03-30.
     # """
-    koopa_print "$(koopa_opt_prefix)/virtualenvs"
+    koopa_print "$(koopa_opt_prefix)/python-virtualenvs"
     return 0
 }
 
