@@ -36,3 +36,13 @@ koopa_macos_link_visual_studio_code() { # {{{1
         "$(koopa_koopa_prefix)/bin/code"
     return 0
 }
+
+koopa_macos_unlink_bbedit() { # {{{1
+    # """
+    # Unlink BBEdit.
+    # @note Updated 2022-03-30.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_rm "$(koopa_koopa_prefix)/bin/bbedit"
+    return 0
+}

@@ -4,7 +4,6 @@ koopa_linux_install_aspera_connect() { # {{{1
     koopa_install_app \
         --name-fancy='Aspera Connect' \
         --name='aspera-connect' \
-        --no-link \
         --platform='linux' \
         "$@"
 }
@@ -22,7 +21,6 @@ koopa_linux_install_aws_cli() { # {{{1
 koopa_linux_install_bcbio_nextgen() { # {{{1
     koopa_install_app \
         --name='bcbio-nextgen' \
-        --no-link \
         --platform='linux' \
         --version="$(koopa_current_bcbio_nextgen_version)" \
         "$@"
@@ -65,7 +63,6 @@ koopa_linux_install_cloudbiolinux() { # {{{1
     koopa_install_app \
         --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
-        --no-link \
         --platform='linux' \
         --version='rolling' \
         "$@"
@@ -91,7 +88,6 @@ koopa_linux_install_lmod() { # {{{1
     koopa_install_app \
         --name-fancy='Lmod' \
         --name='lmod' \
-        --no-link \
         --platform='linux' \
         "$@"
 }
@@ -131,7 +127,6 @@ koopa_linux_uninstall_aspera_connect() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Aspera Connect' \
         --name='aspera-connect' \
-        --no-link \
         "$@"
 }
 
@@ -153,7 +148,6 @@ koopa_linux_uninstall_bcbio_nextgen() { # {{{1
     # """
     koopa_uninstall_app \
         --name='bcbio-nextgen' \
-        --no-link \
         "$@"
 }
 
@@ -175,7 +169,6 @@ koopa_linux_uninstall_cellranger() { # {{{1
     koopa_uninstall_app \
         --name='cellranger' \
         --name-fancy='Cell Ranger' \
-        --no-link \
         "$@"
 }
 
@@ -187,7 +180,6 @@ koopa_linux_uninstall_cloudbiolinux() { # {{{1
     koopa_uninstall_app \
         --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
-        --no-link \
         "$@"
 }
 
@@ -209,7 +201,6 @@ koopa_linux_uninstall_lmod() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Lmod' \
         --name='lmod' \
-        --no-link \
         "$@"
     koopa_rm --sudo \
         '/etc/profile.d/z00_lmod.csh' \

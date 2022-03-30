@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Need to move this into main app.sh file.
+
+# FIXME Need to rethink '--link-app' handling here.
+# FIXME Always look for unlinker function.
+# FIXME We don't need to remove opt link only in shared, right? Rethink...
+
 koopa_uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-03-30.
     # """
     local app dict pos
     declare -A app
@@ -67,14 +73,6 @@ koopa_uninstall_app() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
-            '--link')
-                dict[link_app]=1
-                shift 1
-                ;;
-            '--no-link')
-                dict[link_app]=0
-                shift 1
-                ;;
             '--quiet')
                 dict[quiet]=1
                 shift 1
@@ -128,10 +126,6 @@ at '${dict[prefix]}'."
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
     then
         koopa_assert_is_admin
-    fi
-    if [[ "${dict[shared]}" -eq 0 ]] || koopa_is_macos
-    then
-        dict[link_app]=0
     fi
     if [[ "${dict[system]}" -eq 1 ]]
     then
@@ -196,10 +190,7 @@ at '${dict[prefix]}'."
         then
             "${app[rm]}" "${dict[opt_prefix]}/${dict[name]}"
         fi
-        if [[ "${dict[link_app]}" -eq 1 ]]
-        then
-            koopa_delete_broken_symlinks "${dict[make_prefix]}"
-        fi
+        # FIXME Look for unlink function and always remove here.
         if [[ "${dict[quiet]}" -eq 0 ]]
         then
             koopa_alert_uninstall_success \

@@ -6,7 +6,7 @@
 # FIXME Link this into '/opt/koopa/bin' instead of '/usr/local'...then we can
 # have links that work on macOS too.
 
-koopa_link_app() { # {{{1
+koopa_link_app_into_make() { # {{{1
     # """
     # Symlink application into make directory.
     # @note Updated 2022-03-30.
@@ -26,7 +26,7 @@ koopa_link_app() { # {{{1
     # * -s, --symbolic-link
     #
     # @examples
-    # > koopa_link_app 'emacs' '26.3'
+    # > koopa_link_app_into_make --name='emacs' --version='26.3'
     # """
     local cp_args cp_source cp_target dict i include pos
     koopa_assert_has_args "$#"

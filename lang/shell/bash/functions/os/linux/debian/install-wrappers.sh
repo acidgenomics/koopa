@@ -21,7 +21,6 @@ koopa_debian_install_base_system() { # {{{1
 koopa_debian_install_bcbio_nextgen_vm() { # {{{1
     koopa_install_app \
         --name='bcbio-nextgen-vm' \
-        --no-link \
         --platform='debian' \
         "$@"
 }
@@ -76,7 +75,6 @@ koopa_debian_install_r_devel() { # {{{1
     koopa_install_app \
         --name-fancy='R-devel' \
         --name='r-devel' \
-        --no-link \
         --platform='debian' \
         "$@"
 }
@@ -121,7 +119,6 @@ koopa_debian_uninstall_azure_cli() { # {{{1
 koopa_debian_uninstall_bcbio_nextgen_vm() { # {{{1
     koopa_uninstall_app \
         --name='bcbio-nextgen-vm' \
-        --no-link \
         "$@"
 }
 
@@ -174,7 +171,6 @@ koopa_debian_uninstall_r_devel() { # {{{1
     koopa_uninstall_app \
         --name-fancy='R-devel' \
         --name='r-devel' \
-        --no-link \
         --platform='debian' \
         "$@"
 }

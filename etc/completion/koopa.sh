@@ -261,13 +261,14 @@ __koopa_complete() { # {{{1
                             ;;
                     esac
                     ;;
-                'link')
+                'link' | \
+                'unlink')
                     if koopa_is_macos
                     then
                         args+=(
-                            'bbedit'
-                            'google-cloud-sdk'
-                            'visual-studio-code'
+                            'bbedit' # FIXME Needs unlinker.
+                            'google-cloud-sdk' # FIXME Needs unlinker.
+                            'visual-studio-code' # FIXME Needs unlinker.
                         )
                     fi
                     ;;
