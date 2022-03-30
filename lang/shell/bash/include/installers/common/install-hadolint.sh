@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Running into compile issue:
-# Plan construction failed.
+# FIXME Consider installing from binary instead:
+# https://github.com/hadolint/hadolint/releases/tag/v2.9.3
 
 install_hadolint() { # {{{1
     # """
