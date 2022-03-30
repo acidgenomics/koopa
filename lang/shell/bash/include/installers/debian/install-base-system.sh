@@ -160,6 +160,7 @@ debian_install_base_system() { # {{{1
             'meson' # harfbuzz
             'mpack' # r-devel
             'nano'
+            'ninja-build' # harfbuzz
             'pandoc' # nodejs
             'parallel'
             'pkg-config'

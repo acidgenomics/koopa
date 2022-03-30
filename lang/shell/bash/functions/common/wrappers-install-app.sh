@@ -247,7 +247,7 @@ koopa_install_hadolint() { # {{{1
 
 koopa_install_harfbuzz() { # {{{1
     koopa_install_app \
-        --name-fancy='Harfbuzz' \
+        --name-fancy='HarfBuzz' \
         --name='harfbuzz' \
         "$@"
 }
@@ -986,7 +986,7 @@ koopa_uninstall_hadolint() { # {{{1
 
 koopa_uninstall_harfbuzz() { # {{{1
     koopa_uninstall_app \
-        --name-fancy='Harfbuzz' \
+        --name-fancy='HarfBuzz' \
         --name='harfbuzz' \
         "$@"
 }
