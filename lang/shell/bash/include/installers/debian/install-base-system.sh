@@ -148,6 +148,7 @@ debian_install_base_system() { # {{{1
             'gdb' # r-devel
             'gdebi-core'
             'gfortran'
+            'ghc' # haskell-stack
             'gpg-agent'
             'groff-base' # r-devel
             'htop'
