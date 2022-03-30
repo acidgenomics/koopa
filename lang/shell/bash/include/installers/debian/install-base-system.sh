@@ -3,7 +3,7 @@
 debian_install_base_system() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-03-30.
     #
     # @section Look up reverse dependencies:
     # > sudo apt-cache rdepends --installed 'libnode-dev'
@@ -130,6 +130,7 @@ debian_install_base_system() { # {{{1
     if [[ "${dict[recommended]}" -eq 1 ]]
     then
         pkgs+=(
+            # > 'ghc' # haskell-stack
             'apt-listchanges'
             'apt-transport-https'
             'apt-utils'
@@ -148,14 +149,15 @@ debian_install_base_system() { # {{{1
             'gdb' # r-devel
             'gdebi-core'
             'gfortran'
-            # > 'ghc' # haskell-stack
             'gpg-agent'
             'groff-base' # r-devel
+            'gtk-doc-tools' # harfbuzz
             'htop'
             'imagemagick'
             'jq'
             'libtool'
             'libtool-bin'
+            'meson' # harfbuzz
             'mpack' # r-devel
             'nano'
             'pandoc' # nodejs
@@ -311,7 +313,6 @@ debian_install_base_system() { # {{{1
             'ggobi'
             'gnutls-bin'
             'graphviz'
-            'gtk-doc-tools'
             'jags'
             'keyboard-configuration'
             'mpi-default-bin'
