@@ -39,8 +39,8 @@ ${dict[version]}/source/${dict[file]}"
         '-d2'
         "-j${dict[jobs]}"
         'install'
-        'threading=multi,single'
-        'link=shared,static'
+        'link=static'
+        'threading=multi'
     )
     ./bootstrap.sh "${bootstrap_args[@]}"
     ./b2 headers
