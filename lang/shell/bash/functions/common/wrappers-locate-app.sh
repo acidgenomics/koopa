@@ -676,6 +676,12 @@ koopa_locate_ssh_keygen() { # {{{1
         --opt='openssh'
 }
 
+koopa_locate_stack() { # {{{1
+    koopa_locate_app \
+        --app-name='stack' \
+        --opt='haskell-stack'
+}
+
 koopa_locate_star() { # {{{1
     koopa_locate_conda_app \
         --app-name='STAR' \
