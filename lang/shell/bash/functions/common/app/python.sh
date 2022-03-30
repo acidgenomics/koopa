@@ -90,7 +90,7 @@ koopa_python_activate_venv() { # {{{1
 koopa_python_create_venv() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-02-30.
     #
     # @examples
     # > koopa_python_create_venv --name='base'
@@ -104,7 +104,7 @@ koopa_python_create_venv() { # {{{1
     declare -A dict=(
         [name]=''
         [name_fancy]='Python virtual environment'
-        [reinstall]=0
+        [prefix]=''
     )
     default_pkgs=('pip' 'setuptools' 'wheel')
     pos=()
@@ -120,6 +120,14 @@ koopa_python_create_venv() { # {{{1
                 dict[name]="${2:?}"
                 shift 2
                 ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
             '--python='*)
                 app[python]="${1#*=}"
                 shift 1
@@ -127,11 +135,6 @@ koopa_python_create_venv() { # {{{1
             '--python')
                 app[python]="${2:?}"
                 shift 2
-                ;;
-            # Flags ------------------------------------------------------------
-            '--reinstall')
-                dict[reinstall]=1
-                shift 1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
@@ -148,8 +151,11 @@ koopa_python_create_venv() { # {{{1
         --name "${dict[name]}" \
         --python "${app[python]}"
     koopa_assert_is_installed "${app[python]}"
-    dict[prefix]="$(koopa_python_venv_prefix)/${dict[name]}"
-    if [[ "${dict[reinstall]}" -eq 1 ]]
+    if [[ -z "${dict[prefix]}" ]]
+    then
+        dict[prefix]="$(koopa_python_venv_prefix)/${dict[name]}"
+    fi
+    if [[ -d "${dict[prefix]}" ]]
     then
         koopa_sys_rm "${dict[prefix]}"
     fi
