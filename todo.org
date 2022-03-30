@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Boost version detection isn't working on Ubuntu.
 ** TODO Need to rethink our link approach, putting useful tools in top level bin.
     This mimics the approach of Homebrew, without linking into /usr/local.
     Should we not put ANY tools linked into /usr/local?
