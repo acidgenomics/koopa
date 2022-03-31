@@ -46,8 +46,6 @@ __koopa_posix_header() { # {{{1
             "$(koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
         koopa_activate_homebrew || return 1
-        # FIXME Symlink into '/opt/koopa/bin' instead.
-        koopa_activate_openjdk || return 1
         # > koopa_activate_go || return 1
         # > koopa_activate_nim || return 1
         koopa_activate_ruby || return 1
