@@ -234,7 +234,6 @@ koopa_activate_aliases() { # {{{1
     alias nvim-fzf='koopa_alias_nvim_fzf'
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
     alias perlbrew='koopa_alias_perlbrew'
-    alias pipx='koopa_alias_pipx'
     alias prelude-emacs='koopa_alias_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
     alias rbenv='koopa_alias_rbenv'
@@ -717,14 +716,9 @@ koopa_activate_homebrew_opt_prefix() { # {{{1
 koopa_activate_julia() { # {{{1
     # """
     # Activate Julia.
-    # @note Updated 2021-06-14.
+    # @note Updated 2022-03-31.
     # """
     local prefix
-    if koopa_is_macos
-    then
-        prefix="$(koopa_macos_julia_prefix)"
-        koopa_activate_prefix "$prefix"
-    fi
     prefix="$(koopa_julia_packages_prefix)"
     if [ -d "$prefix" ]
     then
@@ -914,21 +908,6 @@ koopa_activate_node() { # {{{1
     return 0
 }
 
-koopa_activate_openjdk() { # {{{1
-    # """
-    # Activate OpenJDK.
-    # @note Updated 2021-09-14.
-    #
-    # Use Homebrew instead to manage on macOS.
-    #
-    # We're using a symlink approach here to manage versions.
-    # """
-    local prefix
-    prefix="$(koopa_java_prefix || true)"
-    [ -d "$prefix" ] && koopa_activate_prefix "$prefix"
-    return 0
-}
-
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
@@ -1021,9 +1000,6 @@ koopa_activate_perlbrew() { # {{{1
     return 0
 }
 
-# FIXME We need to configure pipx into a versioned subdirectory.
-# FIXME Create a configure pipx function.
-
 koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
@@ -1038,8 +1014,6 @@ koopa_activate_pipx() { # {{{1
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
     export PIPX_HOME PIPX_BIN_DIR
-    # FIXME Symlink 'pipx' into '/opt/koopa/bin' instead.
-    # > koopa_add_to_path_start "$PIPX_BIN_DIR"
     return 0
 }
 
@@ -1102,7 +1076,7 @@ koopa_activate_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to symlink pyenv instead.
+# FIXME Rework this, assuming we have a symlink in '/opt/koopa/bin'.
 koopa_activate_pyenv() { # {{{1
     # """
     # Activate Python version manager (pyenv).
@@ -1118,8 +1092,6 @@ koopa_activate_pyenv() { # {{{1
     script="${prefix}/bin/pyenv"
     [ -r "$script" ] || return 0
     export PYENV_ROOT="$prefix"
-    # FIXME Just symlink this instead.
-    # > koopa_activate_prefix "$prefix"
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
@@ -1127,11 +1099,10 @@ koopa_activate_pyenv() { # {{{1
     return 0
 }
 
-# FIXME Just ensure Python is symlinked instead.
 koopa_activate_python() { # {{{1
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-03-31.
     #
     # Configures:
     # - Site packages library.
@@ -1153,12 +1124,6 @@ koopa_activate_python() { # {{{1
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # """
     local prefix prefix_real startup_file
-    if koopa_is_macos
-    then
-        prefix="$(koopa_macos_python_prefix)"
-        # FIXME Symlink this instead.
-        koopa_activate_prefix "$prefix"
-    fi
     prefix="$(koopa_python_packages_prefix)"
     if [ -d "$prefix" ]
     then
@@ -1182,7 +1147,7 @@ koopa_activate_python() { # {{{1
     return 0
 }
 
-# FIXME Symlink this instead.
+# FIXME Rework this, assuming we have a symlink in '/opt/koopa/bin'.
 koopa_activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
@@ -1203,8 +1168,6 @@ koopa_activate_rbenv() { # {{{1
     script="${prefix}/bin/rbenv"
     [ -r "$script" ] || return 0
     export RBENV_ROOT="$prefix"
-    # FIXME Symlink this instead.
-    # > koopa_activate_prefix "$prefix"
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
@@ -1215,12 +1178,11 @@ koopa_activate_rbenv() { # {{{1
 koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-03-31.
     # """
     local prefix
     prefix="$(koopa_ruby_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    koopa_activate_prefix "$prefix"
     export GEM_HOME="$prefix"
     return 0
 }
@@ -1869,16 +1831,6 @@ koopa_alias_perlbrew() { # {{{1
     koopa_is_alias 'perlbrew' && unalias 'perlbrew'
     koopa_activate_perlbrew
     perlbrew "$@"
-}
-
-koopa_alias_pipx() { # {{{1
-    # """
-    # pipx alias.
-    # @note Updated 2021-05-26.
-    # """
-    koopa_is_alias 'pipx' && unalias 'pipx'
-    koopa_activate_pipx
-    pipx "$@"
 }
 
 koopa_alias_prelude_emacs() { # {{{1

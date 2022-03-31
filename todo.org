@@ -1,6 +1,11 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Work on caching Bash functions into a single file.
+    - Strip comments, for speed (minify).
+    - Ensure shellcheck is disabled on this file.
+    - Need to incude shebang at the top. How to prepend a file in Bash?
+** TODO Can we rework system permissions to only use admin group but not root user?
 ** TODO Boost version detection isn't working on Ubuntu.
 ** TODO Need to rethink our link approach, putting useful tools in top level bin.
     This mimics the approach of Homebrew, without linking into /usr/local.
