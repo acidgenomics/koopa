@@ -91,7 +91,7 @@ ${dict[name2]}-${dict[maj_ver]}/${dict[file]}"
     koopa_cd "${dict[name2]}-${dict[version]}"
     export TZ='America/New_York'
     unset -v R_HOME
-    koopa_activate_openjdk
+    koopa_activate_opt_prefix 'openjdk'
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check

@@ -3,7 +3,7 @@
 debian_install_r_devel() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-03-31.
     #
     # @seealso
     # - https://hub.docker.com/r/rocker/r-devel/dockerfile
@@ -87,7 +87,7 @@ debian_install_r_devel() { # {{{1
     koopa_cd "${dict[rtop]}"
     export TZ='America/New_York'
     unset -v R_HOME
-    koopa_activate_openjdk
+    koopa_activate_opt_prefix 'openjdk'
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check

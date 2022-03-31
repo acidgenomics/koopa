@@ -27,6 +27,12 @@ google-cloud-sdk/bin/gcloud" \
     return 0
 }
 
+koopa_macos_link_julia() { # {{{1
+    koopa_stop 'FIXME Need to add this'
+    # /Applications/Julia-1.7.app/Contents/Resources/julia/bin
+    return 0
+}
+
 koopa_macos_link_python() { # {{{1
     # """
     # Link Python.
