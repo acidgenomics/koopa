@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for caching of all functions in a single flat file,
+# with comments removed.
+
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
