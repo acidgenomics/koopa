@@ -1,32 +1,32 @@
 #!/usr/bin/env bash
 
-# FIXME Rework 'koopa_sys_link' as 'koopa_link_into_bin' instead.
-
 koopa_macos_link_bbedit() { # {{{1
     # """
     # Link BBEdit.
     # @note Updated 2022-03-30.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_sys_ln \
+    koopa_link_app_into_bin \
         '/Applications/BBEdit.app/Contents/Helpers/bbedit_tool' \
-        "$(koopa_koopa_prefix)/bin/bbedit"
+        'bbedit'
     return 0
 }
 
+# FIXME Need to add corresponding unlink function.
 koopa_macos_link_google_cloud_sdk() { # {{{1
     # """
     # Link Google Cloud SDK.
     # @note Updated 2022-03-30.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_sys_ln \
+    koopa_link_app_into_bin \
         "$(koopa_homebrew_prefix)/Caskroom/google-cloud-sdk/latest/\
 google-cloud-sdk/bin/gcloud" \
-        "$(koopa_koopa_prefix)/bin/gcloud"
+        'gcloud'
     return 0
 }
 
+# FIXME Need to add corresponding unlink function.
 koopa_macos_link_julia() { # {{{1
     # """
     # Link Julia.
@@ -38,12 +38,13 @@ koopa_macos_link_julia() { # {{{1
         [julia_prefix]="$(koopa_macos_julia_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
     )
-    koopa_sys_ln \
+    koopa_link_app_into_bin \
         "${dict[julia_prefix]}/bin/julia" \
-        "${dict[koopa_prefix]}/bin/julia"
+        'julia'
     return 0
 }
 
+# FIXME Need to add corresponding unlink function.
 koopa_macos_link_python() { # {{{1
     # """
     # Link Python.
@@ -70,15 +71,13 @@ koopa_macos_link_python() { # {{{1
     dict[version]="$(koopa_get_version "${app[python]}")"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
-    koopa_sys_ln \
-        "${app[python]}" \
-        "${dict[koopa_prefix]}/bin/python${dict[maj_min_ver]}"
-    koopa_sys_ln \
-        "${app[python]}" \
-        "${dict[koopa_prefix]}/bin/python${dict[maj_ver]}"
+    koopa_koopa_link_app_into_bin \
+        "${app[python]}" "python${dict[maj_min_ver]}" \
+        "${app[python]}" "python${dict[maj_ver]}"
     return 0
 }
 
+# FIXME Need to add corresponding unlink function.
 koopa_macos_link_r() { # {{{1
     # """
     # Link R.
@@ -90,30 +89,31 @@ koopa_macos_link_r() { # {{{1
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [r_prefix]="$(koopa_macos_r_prefix)"
     )
-    koopa_sys_ln \
-        "${dict[r_prefix]}/bin/R" \
-        "${dict[koopa_prefix]}/bin/R"
+    koopa_link_app_into_bin \
+        "${dict[r_prefix]}/bin/R" 'R' \
+        "${dict[r_prefix]}/bin/Rscript" 'Rscript'
     return 0
 }
 
+# FIXME Need to add corresponding unlink function.
 koopa_macos_link_visual_studio_code() { # {{{1
     # """
     # Link Visual Studio Code.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-03-31.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_sys_ln \
+    koopa_link_app_into_bin \
         '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' \
-        "$(koopa_koopa_prefix)/bin/code"
+        'code'
     return 0
 }
 
 koopa_macos_unlink_bbedit() { # {{{1
     # """
     # Unlink BBEdit.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-03-31.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_rm "$(koopa_koopa_prefix)/bin/bbedit"
+    koopa_unlink_app_in_bin 'bbedit'
     return 0
 }
