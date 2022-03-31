@@ -1,10 +1,43 @@
 #!/usr/bin/env bash
 
-# FIXME Consider only linking into '/bin' by default?
+# FIXME Can we avoid using 'koopa_sys' (sudo) calls here?
+# FIXME Consider only linking into '/bin' by default.
 # FIXME This needs to automatically exclude 'libexec' subdirectory, such as
 # for meson and ninja installers.
 # FIXME Link this into '/opt/koopa/bin' instead of '/usr/local'...then we can
 # have links that work on macOS too.
+
+
+
+koopa_link_app_into_bin() { # {{{1
+    # """
+    # Link a program into koopa 'bin/' directory.
+    # @note Updated 2022-03-31.
+    #
+    # @usage koopa_link_app_into_bin SOURCE_FILE TARGET_NAME ...
+    #
+    # @examples
+    # > koopa_link_app_into_bin \
+    # >     '/usr/local/bin/emacs' 'emacs' \
+    # >     '/usr/local/bin/vim' 'vim'
+    # """
+    local dict
+    koopa_assert_has_args_ge "$#" 2
+    while [[ "$#" -ge 2 ]]
+    do
+        declare -A dict=(
+            [koopa_prefix]="$(koopa_koopa_prefix)"
+            [source_file]="${1:?}"
+            [target_name]="${2:?}"
+        )
+        dict[target_file]="${dict[koopa_prefix]}/bin/${dict[target_name]}"
+        koopa_alert "Linking '${dict[source_file]}' at '${dict[target_file]}'."
+        koopa_assert_is_file "${dict[source_file]}"
+        koopa_sys_ln "${dict[source_file]}" "${dict[target_file]}"
+        shift 2
+    done
+    return 0
+}
 
 koopa_link_app_into_make() { # {{{1
     # """
@@ -183,5 +216,29 @@ koopa_link_app_into_opt() { # {{{1
     [[ ! -d "${dict[source_dir]}" ]] && koopa_sys_mkdir "${dict[source_dir]}"
     [[ -d "${dict[target_dir]}" ]] && koopa_sys_rm "${dict[target_dir]}"
     koopa_sys_ln "${dict[source_dir]}" "${dict[target_dir]}"
+    return 0
+}
+
+koopa_unlink_app_in_bin() { # {{{1
+    # """
+    # Unlink a program symlinked into koopa 'bin/ directory.
+    # @note Updated 2022-03-31.
+    #
+    # @examples
+    # > koopa_unlink_app_in_bin 'R' 'Rscript'
+    # """
+    local dict files i names
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+    )
+    names=("$@")
+    files=()
+    for i in "${!names[@]}"
+    do
+        files+=("${dict[koopa_prefix]}/bin/${names[$i]}")
+    done
+    koopa_assert_is_file "${files[@]}"
+    koopa_rm "${files[@]}"
     return 0
 }
