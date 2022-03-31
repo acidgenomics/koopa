@@ -28,8 +28,19 @@ google-cloud-sdk/bin/gcloud" \
 }
 
 koopa_macos_link_julia() { # {{{1
-    koopa_stop 'FIXME Need to add this'
-    # /Applications/Julia-1.7.app/Contents/Resources/julia/bin
+    # """
+    # Link Julia.
+    # @note Updated 2022-03-31.
+    # """
+    local dict
+    koopa_assert_has_no_args "$#"
+    declare -A dict=(
+        [julia_prefix]="$(koopa_macos_julia_prefix)"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+    )
+    koopa_sys_ln \
+        "${dict[julia_prefix]}/bin/julia" \
+        "${dict[koopa_prefix]}/bin/julia"
     return 0
 }
 
@@ -65,6 +76,23 @@ koopa_macos_link_python() { # {{{1
     koopa_sys_ln \
         "${app[python]}" \
         "${dict[koopa_prefix]}/bin/python${dict[maj_ver]}"
+    return 0
+}
+
+koopa_macos_link_r() { # {{{1
+    # """
+    # Link R.
+    # @note Updated 2022-03-31.
+    # """
+    local dict
+    koopa_assert_has_no_args "$#"
+    declare -A dict=(
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+        [r_prefix]="$(koopa_macos_r_prefix)"
+    )
+    koopa_sys_ln \
+        "${dict[r_prefix]}/bin/R" \
+        "${dict[koopa_prefix]}/bin/R"
     return 0
 }
 
