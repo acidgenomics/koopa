@@ -87,6 +87,9 @@ koopa_python_activate_venv() { # {{{1
     return 0
 }
 
+# FIXME Consider adding support for linkage of useful programs directly into
+# '/opt/koopa/bin' from here.
+
 koopa_python_create_venv() { # {{{1
     # """
     # Create Python virtual environment.

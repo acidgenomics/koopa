@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider adding support for linkage of useful programs directly into
+# '/opt/koopa/bin' from here.
+
 koopa_conda_activate_env() { # {{{1
     # """
     # Activate a conda environment.
