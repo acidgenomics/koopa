@@ -154,7 +154,7 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.7.1"
 
-hadolint="2.9.3"
+hadolint="2.10.0"
 
 harfbuzz="4.2.0"
 
