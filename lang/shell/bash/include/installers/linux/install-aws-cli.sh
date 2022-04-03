@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME We need to version pin here.
+
 linux_install_aws_cli() { # {{{1
     # """
     # Install AWS CLI.
