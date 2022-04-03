@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME We need to version pin here.
+# https://github.com/commercialhaskell/stack
+# Current release is 2.7.5.
+
 install_haskell_stack() { # {{{1
     # """
     # Install Haskell Stack.
