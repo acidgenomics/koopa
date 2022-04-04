@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework so that '/opt/koopa/bin' takes priority.
-# FIXME Consider reworking 'brew' to 'homebrew'.
-# FIXME Consider only supporting '--opt-name' instead of '--koopa-opt-name'.
-# FIXME Rename '--opt' to '--opt-name'
-# FIXME Rename '--koopa-opt' to '--koopa-opt-name'
-# FIXME Rename '--homebrew-opt' to '--homebrew-opt-name'
-
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -28,7 +21,7 @@ koopa_locate_app() { # {{{1
         koopa_print "${1:?}"
         return 0
     fi
-    local app dict pos
+    local dict pos
     declare -A dict=(
         [app_name]=''
         [brew_app]=''
@@ -36,9 +29,9 @@ koopa_locate_app() { # {{{1
         [brew_prefix]="$(koopa_homebrew_prefix)"
         [homebrew_gnubin]=0
         [koopa_app]=''
+        [koopa_bin_prefix]="$(koopa_bin_prefix)"
         [koopa_opt_name]=''
         [koopa_opt_prefix]="$(koopa_opt_prefix)"
-        [macos_app]=''
         [make_prefix]="$(koopa_make_prefix)"
     )
     pos=()
@@ -70,14 +63,6 @@ koopa_locate_app() { # {{{1
                 dict[koopa_opt_name]="${2:?}"
                 shift 2
                 ;;
-            '--macos-app='*)
-                dict[macos_app]="${1#*=}"
-                shift 1
-                ;;
-            '--macos-app')
-                dict[macos_app]="${2:?}"
-                shift 2
-                ;;
             '--opt-name='*)
                 dict[brew_opt_name]="${1#*=}"
                 dict[koopa_opt_name]="${1#*=}"
@@ -105,66 +90,55 @@ koopa_locate_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 1
-    if [[ -z "${dict[app_name]}" ]]
+    [[ -z "${dict[app_name]}" ]] && dict[app_name]="${1:?}"
+    dict[koopa_bin_app]="${dict[koopa_bin_prefix]}/${dict[app_name]}"
+    if [[ -x "${dict[koopa_bin_app]}" ]]
     then
-        koopa_assert_has_args_eq "$#" 1
-        dict[app_name]="${1:?}"
+        koopa_print "${dict[koopa_bin_app]}"
+        return 0
     fi
-    if [[ -z "${dict[brew_opt_name]}" ]]
-    then
-        dict[brew_opt_name]="${dict[app_name]}"
-    fi
-    if [[ -z "${dict[koopa_opt_name]}" ]]
-    then
+    [[ -z "${dict[koopa_opt_name]}" ]] && \
         dict[koopa_opt_name]="${dict[app_name]}"
-    fi
-    dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
-    dict[koopa_app]="${dict[koopa_opt_prefix]}/${dict[koopa_opt_name]}/\
+    dict[koopa_opt_app]="${dict[koopa_opt_prefix]}/${dict[koopa_opt_name]}/\
 bin/${dict[app_name]}"
+    if [[ -x "${dict[koopa_opt_app]}" ]]
+    then
+        koopa_print "${dict[koopa_opt_app]}"
+        return 0
+    fi
+    [[ -z "${dict[brew_opt_name]}" ]] && \
+        dict[brew_opt_name]="${dict[app_name]}"
     if [[ "${dict[homebrew_gnubin]}" -eq 1 ]]
     then
-        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
+        dict[brew_opt_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
 libexec/gnubin/${dict[app_name]}"
     else
-        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
+        dict[brew_opt_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
 bin/${dict[app_name]}"
     fi
-    if [[ -x "${dict[macos_app]}" ]] && koopa_is_macos
+    if [[ -x "${dict[brew_opt_app]}" ]]
     then
-        app="${dict[macos_app]}"
-    elif [[ "${dict[brew_prefix]}" != "${dict[make_prefix]}" ]] && \
-        [[ -x "${dict[make_app]}" ]]
-    then
-        app="${dict[make_app]}"
-    elif [[ -x "${dict[koopa_app]}" ]]
-    then
-        app="${dict[koopa_app]}"
-    elif [[ "${dict[brew_prefix]}" == "${dict[make_prefix]}" ]] && \
-        [[ -x "${dict[make_app]}" ]]
-    then
-        app="${dict[make_app]}"
-    elif [[ -x "${dict[brew_app]}" ]]
-    then
-        app="${dict[brew_app]}"
-    else
-        app="$(koopa_which "${dict[app_name]}" || true)"
+        koopa_print "${dict[brew_opt_app]}"
+        return 0
     fi
-    if [[ -z "$app" ]]
+    dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
+    if [[ -x "${dict[make_app]}" ]]
     then
-        koopa_warn "Failed to locate '${dict[app_name]}'."
-        return 1
+        koopa_print "${dict[make_app]}"
+        return 0
     fi
-    if ! { \
-        [[ -x "$app" ]] && \
-        [[ ! -d "$app" ]] && \
-        koopa_is_installed "$app"; \
+    dict[app]="$(koopa_which "${dict[app_name]}" || true)"
+    if { \
+        [[ -n "${dict[app]}" ]] && \
+        [[ -x "${dict[app]}" ]] && \
+        [[ ! -d "${dict[app]}" ]] && \
+        koopa_is_installed "${dict[app]}"; \
     }
     then
-        koopa_warn "Not installed: '${app}'."
-        return 1
+        koopa_print "${dict[app]}"
     fi
-    koopa_print "$app"
-    return 0
+    koopa_warn "Failed to locate '${dict[app_name]}'."
+    return 1
 }
 
 koopa_locate_conda_app() { # {{{1
