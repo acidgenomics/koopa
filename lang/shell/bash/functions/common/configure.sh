@@ -97,9 +97,9 @@ END
 koopa_configure_chemacs() { # {{{1
     # """
     # Configure chemacs.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-04-04.
     # """
-    koopa_link_dotfile --opt --overwrite 'chemacs' 'emacs.d'
+    koopa_link_dotfile --from-opt --overwrite 'chemacs' 'emacs.d'
     return 0
 }
 
@@ -406,19 +406,22 @@ koopa_fix_zsh_permissions() { # {{{1
     return 0
 }
 
+# FIXME Rename '--opt' to '--from-opt'.
+# FIXME Rename '--config' to '--into-xdg-config-home'.
+
 koopa_link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2022-03-18.
+    # @note Updated 2022-04-04.
     # """
     local dict pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [config]=0
         [dotfiles_config_link]="$(koopa_dotfiles_config_link)"
         [dotfiles_prefix]="$(koopa_dotfiles_prefix)"
         [dotfiles_private_prefix]="$(koopa_dotfiles_private_prefix)"
-        [opt]=0
+        [from_opt]=0
+        [into_xdg_config_home]=0
         [opt_prefix]="$(koopa_opt_prefix)"
         [overwrite]=0
         [private]=0
@@ -428,12 +431,12 @@ koopa_link_dotfile() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            '--config')
-                dict[config]=1
+            '--from-opt')
+                dict[from_opt]=1
                 shift 1
                 ;;
-            '--opt')
-                dict[opt]=1
+            '--into-xdg-config-home')
+                dict[into_xdg_config_home]=1
                 shift 1
                 ;;
             '--overwrite')
@@ -461,7 +464,7 @@ koopa_link_dotfile() { # {{{1
     then
         dict[symlink_basename]="$(koopa_basename "${dict[source_subdir]}")"
     fi
-    if [[ "${dict[opt]}" -eq 1 ]]
+    if [[ "${dict[from_opt]}" -eq 1 ]]
     then
         dict[source_prefix]="${dict[opt_prefix]}"
     elif [[ "${dict[private]}" -eq 1 ]]
@@ -475,13 +478,13 @@ koopa_link_dotfile() { # {{{1
         fi
     fi
     dict[source_path]="${dict[source_prefix]}/${dict[source_subdir]}"
-    if [[ "${dict[opt]}" -eq 1 ]] && [[ ! -e "${dict[source_path]}" ]]
+    if [[ "${dict[from_opt]}" -eq 1 ]] && [[ ! -e "${dict[source_path]}" ]]
     then
         koopa_warn "Does not exist: '${dict[source_path]}'."
         return 0
     fi
     koopa_assert_is_existing "${dict[source_path]}"
-    if [[ "${dict[config]}" -eq 1 ]]
+    if [[ "${dict[into_xdg_config_home]}" -eq 1 ]]
     then
         dict[symlink_prefix]="${dict[xdg_config_home]}"
     else
