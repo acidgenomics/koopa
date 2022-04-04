@@ -3,7 +3,7 @@
 koopa_locate_7z() { # {{{1
     koopa_locate_app \
         --app-name='7z' \
-        --opt='p7zip'
+        --opt-name='p7zip'
 }
 
 koopa_locate_anaconda() { # {{{1
@@ -15,14 +15,14 @@ koopa_locate_ascp() { # {{{1
         --app-name='ascp' \
         --macos-app="${HOME}/Applications/Aspera Connect.app/\
 Contents/Resources/ascp" \
-        --opt='aspera-connect'
+        --opt-name='aspera-connect'
 }
 
 koopa_locate_awk() { # {{{1
     koopa_locate_app \
         --app-name='awk' \
-        --gnubin \
-        --opt='gawk'
+        --homebrew-gnubin \
+        --opt-name='gawk'
 }
 
 koopa_locate_aws() { # {{{1
@@ -48,7 +48,7 @@ koopa_locate_bedtools() { # {{{1
 koopa_locate_bpytop() { # {{{1
     koopa_locate_app \
         --app-name='bpytop' \
-        --koopa-opt='python-packages'
+        --koopa-opt-name='python-packages'
 }
 
 koopa_locate_brew() { # {{{1
@@ -58,8 +58,8 @@ koopa_locate_brew() { # {{{1
 koopa_locate_bundle() { # {{{1
     koopa_locate_app \
         --app-name='bundle' \
-        --brew-opt='ruby' \
-        --koopa-opt='ruby-packages'
+        --homebrew-opt-name='ruby' \
+        --koopa-opt-name='ruby-packages'
 }
 
 koopa_locate_bzip2() { # {{{1
@@ -69,8 +69,8 @@ koopa_locate_bzip2() { # {{{1
 koopa_locate_cargo() { # {{{1
     koopa_locate_app \
         --app-name='cargo' \
-        --brew-opt='rust' \
-        --koopa-opt='rust-packages'
+        --homebrew-opt-name='rust' \
+        --koopa-opt-name='rust-packages'
 }
 
 koopa_locate_cat() { # {{{1
@@ -122,7 +122,7 @@ koopa_locate_cpan() { # {{{1
 koopa_locate_cpanm() { # {{{1
     koopa_locate_app \
         --app-name='cpanm' \
-        --koopa-opt='perl-packages'
+        --koopa-opt-name='perl-packages'
 }
 
 koopa_locate_curl() { # {{{1
@@ -144,7 +144,7 @@ koopa_locate_df() { # {{{1
 koopa_locate_dig() { # {{{1
     koopa_locate_app \
         --app-name='dig' \
-        --opt='bind'
+        --opt-name='bind'
 }
 
 koopa_locate_dirname() { # {{{1
@@ -186,14 +186,14 @@ koopa_locate_exiftool() { # {{{1
 koopa_locate_fasterq_dump() { # {{{1
     koopa_locate_app \
         --app-name='fasterq-dump' \
-        --opt='sratoolkit'
+        --opt-name='sratoolkit'
 }
 
 koopa_locate_fd() { # {{{1
     koopa_locate_app \
         --app-name='fd' \
-        --brew-opt='fd' \
-        --koopa-opt='rust-packages'
+        --homebrew-opt-name='fd' \
+        --koopa-opt-name='rust-packages'
 }
 
 koopa_locate_ffmpeg() { # {{{1
@@ -203,8 +203,8 @@ koopa_locate_ffmpeg() { # {{{1
 koopa_locate_find() { # {{{1
     koopa_locate_app \
         --app-name='find' \
-        --gnubin \
-        --opt='findutils'
+        --homebrew-gnubin \
+        --opt-name='findutils'
 }
 
 koopa_locate_fish() { # {{{1
@@ -220,7 +220,7 @@ koopa_locate_gcc() { # {{{1
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
     koopa_locate_app \
         --app-name="${dict[name]}-${dict[maj_ver]}" \
-        --opt="${dict[name]}@${dict[maj_ver]}"
+        --opt-name="${dict[name]}@${dict[maj_ver]}"
 }
 
 koopa_locate_gcloud() { # {{{1
@@ -230,19 +230,19 @@ koopa_locate_gcloud() { # {{{1
 koopa_locate_gdal_config() { # {{{1
     koopa_locate_app \
         --app-name='gdal-config' \
-        --opt='gdal'
+        --opt-name='gdal'
 }
 
 koopa_locate_gem() { # {{{1
     koopa_locate_app \
         --app-name='gem' \
-        --opt='ruby'
+        --opt-name='ruby'
 }
 
 koopa_locate_geos_config() { # {{{1
     koopa_locate_app \
         --app-name='geos-config' \
-        --opt='geos'
+        --opt-name='geos'
 }
 
 koopa_locate_git() { # {{{1
@@ -257,27 +257,27 @@ koopa_locate_gpg() { # {{{1
     koopa_locate_app \
         --app-name='gpg' \
         --macos-app='/usr/local/MacGPG2/bin/gpg' \
-        --opt='gnupg'
+        --opt-name='gnupg'
 }
 
 koopa_locate_gpg_agent() { # {{{1
     koopa_locate_app \
         --app-name='gpg-agent' \
         --macos-app='/usr/local/MacGPG2/bin/gpg-agent' \
-        --opt='gnupg'
+        --opt-name='gnupg'
 }
 
 koopa_locate_gpgconf() { # {{{1
     koopa_locate_app \
         --app-name='gpgconf' \
         --macos-app='/usr/local/MacGPG2/bin/gpgconf' \
-        --opt='gnupg'
+        --opt-name='gnupg'
 }
 
 koopa_locate_grep() { # {{{1
     koopa_locate_app \
         --app-name='grep' \
-        --gnubin
+        --homebrew-gnubin
 }
 
 koopa_locate_groups() { # {{{1
@@ -287,7 +287,7 @@ koopa_locate_groups() { # {{{1
 koopa_locate_gs() { # {{{1
     koopa_locate_app \
         --app-name='gs' \
-        --opt='ghostscript'
+        --opt-name='ghostscript'
 }
 
 koopa_locate_gzip() { # {{{1
@@ -297,7 +297,7 @@ koopa_locate_gzip() { # {{{1
 koopa_locate_h5cc() { # {{{1
     koopa_locate_app \
         --app-name='h5cc' \
-        --opt='hdf5'
+        --opt-name='hdf5'
 }
 
 koopa_locate_head() { # {{{1
@@ -315,7 +315,7 @@ koopa_locate_id() { # {{{1
 koopa_locate_java() { # {{{1
     koopa_locate_app \
         --app-name='java' \
-        --opt='openjdk'
+        --opt-name='openjdk'
 }
 
 koopa_locate_jq() { # {{{1
@@ -339,7 +339,7 @@ koopa_locate_less() { # {{{1
 koopa_locate_lesspipe() { # {{{1
     koopa_locate_app \
         --app-name='lesspipe.sh' \
-        --opt='lesspipe'
+        --opt-name='lesspipe'
 }
 
 koopa_locate_lua() { # {{{1
@@ -371,7 +371,7 @@ koopa_locate_llvm_config() { # {{{1
     [[ ! -x "${app[llvm_config]}" ]] && app[llvm_config]='llvm-config'
     koopa_locate_app \
         --app-name="${app[llvm_config]}" \
-        --opt='llvm'
+        --opt-name='llvm'
 }
 
 koopa_locate_ln() { # {{{1
@@ -398,13 +398,13 @@ koopa_locate_ls() { # {{{1
 koopa_locate_magick_core_config() { # {{{1
     koopa_locate_app \
         --app-name='MagickCore-config' \
-        --opt='imagemagick'
+        --opt-name='imagemagick'
 }
 
 koopa_locate_make() { # {{{1
     koopa_locate_app \
         --app-name='make' \
-        --gnubin
+        --homebrew-gnubin
 }
 
 koopa_locate_mamba() { # {{{1
@@ -430,8 +430,8 @@ koopa_locate_mamba_or_conda() { # {{{1
 koopa_locate_man() { # {{{1
     koopa_locate_app \
         --app-name='man' \
-        --gnubin \
-        --opt='man-db'
+        --homebrew-gnubin \
+        --opt-name='man-db'
 }
 
 koopa_locate_mashmap() { # {{{1
@@ -476,7 +476,7 @@ koopa_locate_nim() { # {{{1
 koopa_locate_nimble() { # {{{1
     koopa_locate_app \
         --app-name='nimble' \
-        --opt='nim'
+        --opt-name='nim'
 }
 
 koopa_locate_ninja() { # {{{1
@@ -490,8 +490,8 @@ koopa_locate_node() { # {{{1
 koopa_locate_npm() { # {{{1
     koopa_locate_app \
         --app-name='npm' \
-        --brew-opt='node' \
-        --koopa-opt='node-packages'
+        --homebrew-opt-name='node' \
+        --koopa-opt-name='node-packages'
 }
 
 koopa_locate_od() { # {{{1
@@ -517,13 +517,13 @@ koopa_locate_paste() { # {{{1
 koopa_locate_patch() { # {{{1
     koopa_locate_app \
         --app-name='patch' \
-        --opt='gpatch'
+        --opt-name='gpatch'
 }
 
 koopa_locate_pcregrep() { # {{{1
     koopa_locate_app \
         --app-name='pcregrep' \
-        --opt='pcre'
+        --opt-name='pcre'
 }
 
 koopa_locate_perl() { # {{{1
@@ -541,7 +541,7 @@ koopa_locate_pkg_config() { # {{{1
 koopa_locate_prefetch() { # {{{1
     koopa_locate_app \
         --app-name='prefetch' \
-        --opt='sratoolkit'
+        --opt-name='sratoolkit'
 }
 
 koopa_locate_proj() { # {{{1
@@ -601,7 +601,7 @@ koopa_locate_rename() { # {{{1
 koopa_locate_rg() { # {{{1
     koopa_locate_app \
         --app-name='rg' \
-        --opt='ripgrep'
+        --opt-name='ripgrep'
 }
 
 koopa_locate_rm() { # {{{1
@@ -619,15 +619,15 @@ koopa_locate_ruby() { # {{{1
 koopa_locate_rustc() { # {{{1
     koopa_locate_app \
         --app-name='rustc' \
-        --brew-opt='rust' \
-        --koopa-opt='rust-packages'
+        --homebrew-opt-name='rust' \
+        --koopa-opt-name='rust-packages'
 }
 
 koopa_locate_rustup() { # {{{1
     koopa_locate_app \
         --app-name='rustup' \
-        --brew-opt='rustup' \
-        --koopa-opt='rust-packages'
+        --homebrew-opt-name='rustup' \
+        --koopa-opt-name='rust-packages'
 }
 
 koopa_locate_salmon() { # {{{1
@@ -637,14 +637,14 @@ koopa_locate_salmon() { # {{{1
 koopa_locate_scp() { # {{{1
     koopa_locate_app \
         --app-name='scp' \
-        --opt='openssh'
+        --opt-name='openssh'
 }
 
 koopa_locate_sed() { # {{{1
     koopa_locate_app \
         --app-name='sed' \
-        --gnubin \
-        --opt='gnu-sed'
+        --homebrew-gnubin \
+        --opt-name='gnu-sed'
 }
 
 koopa_locate_shellcheck() { # {{{1
@@ -674,26 +674,26 @@ koopa_locate_sqlplus() { # {{{1
 koopa_locate_ssh() { # {{{1
     koopa_locate_app \
         --app-name='ssh' \
-        --opt='openssh'
+        --opt-name='openssh'
 }
 
 koopa_locate_ssh_add() { # {{{1
     koopa_locate_app \
         --app-name='ssh-add' \
         --macos-app='/usr/bin/ssh-add' \
-        --opt='openssh'
+        --opt-name='openssh'
 }
 
 koopa_locate_ssh_keygen() { # {{{1
     koopa_locate_app \
         --app-name='ssh-keygen' \
-        --opt='openssh'
+        --opt-name='openssh'
 }
 
 koopa_locate_stack() { # {{{1
     koopa_locate_app \
         --app-name='stack' \
-        --opt='haskell-stack'
+        --opt-name='haskell-stack'
 }
 
 koopa_locate_star() { # {{{1
@@ -725,8 +725,8 @@ koopa_locate_tail() { # {{{1
 koopa_locate_tar() { # {{{1
     koopa_locate_app \
         --app-name='tar' \
-        --gnubin \
-        --opt='gnu-tar'
+        --homebrew-gnubin \
+        --opt-name='gnu-tar'
 }
 
 koopa_locate_tee() { # {{{1
@@ -756,8 +756,8 @@ koopa_locate_tr() { # {{{1
 koopa_locate_uncompress() { # {{{1
     koopa_locate_app \
         --app-name='uncompress' \
-        --gnubin \
-        --opt='gzip'
+        --homebrew-gnubin \
+        --opt-name='gzip'
 }
 
 koopa_locate_uname() { # {{{1
@@ -791,8 +791,8 @@ koopa_locate_whoami() { # {{{1
 koopa_locate_xargs() { # {{{1
     koopa_locate_app \
         --app-name='xargs' \
-        --gnubin \
-        --opt='findutils'
+        --homebrew-gnubin \
+        --opt-name='findutils'
 }
 
 koopa_locate_yes() { # {{{1
@@ -802,5 +802,5 @@ koopa_locate_yes() { # {{{1
 koopa_locate_zcat() { # {{{1
     koopa_locate_app \
         --app-name='zcat' \
-        --opt='gzip'
+        --opt-name='gzip'
 }
