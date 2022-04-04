@@ -52,10 +52,10 @@ koopa_debian_install_llvm() { # {{{1
         "$@"
 }
 
-koopa_debian_install_pandoc() { # {{{1
+koopa_debian_install_pandoc_binary() { # {{{1
     koopa_install_app \
         --name-fancy='Pandoc' \
-        --name='pandoc' \
+        --name='pandoc-binary' \
         --platform='debian' \
         --system \
         "$@"
@@ -149,10 +149,10 @@ koopa_debian_uninstall_llvm() { # {{{1
         "$@"
 }
 
-koopa_debian_uninstall_pandoc() { # {{{1
+koopa_debian_uninstall_pandoc_binary() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Pandoc' \
-        --name='pandoc' \
+        --name='pandoc-binary' \
         --platform='debian' \
         --system \
         "$@"

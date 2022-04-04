@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider just running this for macOS too...not platform specific.
+
 linux_update_google_cloud_sdk() { # {{{1
     # """
     # Update Google Cloud SDK.

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 debian_install_wine() { # {{{1
     # """
     # Install Wine.

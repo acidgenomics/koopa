@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 fedora_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.

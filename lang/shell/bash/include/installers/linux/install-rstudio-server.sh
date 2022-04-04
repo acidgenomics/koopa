@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to denote that this is a binary install.
+
 linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.

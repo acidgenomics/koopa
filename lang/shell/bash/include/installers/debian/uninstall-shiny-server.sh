@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 debian_uninstall_shiny_server() { # {{{1
     # """
     # Uninstall Shiny Server.

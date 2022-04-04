@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 debian_install_docker() { # {{{1
     # """
     # Install Docker.

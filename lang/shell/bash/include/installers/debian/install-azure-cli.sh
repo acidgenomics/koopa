@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 debian_install_azure_cli() { # {{{1
     # """
     # Install Azure CLI.

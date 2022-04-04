@@ -250,7 +250,7 @@ openssl="3.0.2"
 oracle-instant-client="21.5.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.17.1.1"
+pandoc="2.18"
 
 # https://www.gnu.org/software/parallel/
 parallel="20220322"

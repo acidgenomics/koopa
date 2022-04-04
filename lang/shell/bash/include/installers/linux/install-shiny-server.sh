@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to denote that this is a binary install.
+
 linux_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Linux.

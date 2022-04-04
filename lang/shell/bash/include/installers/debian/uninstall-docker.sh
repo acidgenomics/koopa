@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 debian_uninstall_docker() { # {{{1
     # """
     # Uninstall Docker.

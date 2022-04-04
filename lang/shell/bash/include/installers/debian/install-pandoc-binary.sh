@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-debian_install_pandoc() { # {{{1
+debian_install_pandoc_binary() { # {{{1
     # """
     # Install Pandoc.
-    # @note Updated 2021-11-02.
+    # @note Updated 2022-04-04.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
