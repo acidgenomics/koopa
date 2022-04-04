@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO libtool version check is now failing.
 ** TODO Work on caching Bash functions into a single file.
     - Strip comments, for speed (minify).
     - Ensure shellcheck is disabled on this file.
