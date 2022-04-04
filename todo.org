@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Add install support for new diff tools:
+    https://github.com/Wilfred/difftastic
+    https://github.com/darrenburns/dunk
 ** TODO libtool version check is now failing.
 ** TODO Work on caching Bash functions into a single file.
     - Strip comments, for speed (minify).
