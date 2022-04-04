@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 alpine_install_glibc() { # {{{1
     # """
     # Install glibc.

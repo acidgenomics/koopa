@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-debian_uninstall_pandoc() { # {{{1
+debian_uninstall_pandoc_binary() { # {{{1
     # """
     # Uninstall Pandoc.
-    # @note Updated 2021-11-02.
+    # @note Updated 2022-04-04.
+    #
     # May not need (or want) to install 'pandoc-data' here.
     # """
     koopa_assert_has_no_args "$#"

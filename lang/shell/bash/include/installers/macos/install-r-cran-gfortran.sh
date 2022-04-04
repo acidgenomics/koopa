@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.

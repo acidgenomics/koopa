@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 fedora_uninstall_rstudio_server() { # {{{1
     # """
     # Uninstall RStudio Server.
