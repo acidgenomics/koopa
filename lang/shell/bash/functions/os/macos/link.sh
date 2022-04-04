@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
 koopa_macos_link_bbedit() { # {{{1
-    # """
-    # Link BBEdit.
-    # @note Updated 2022-03-30.
-    # """
     koopa_assert_has_no_args "$#"
     koopa_link_app_into_bin \
         '/Applications/BBEdit.app/Contents/Helpers/bbedit_tool' \
@@ -12,12 +8,7 @@ koopa_macos_link_bbedit() { # {{{1
     return 0
 }
 
-# FIXME Need to add corresponding unlink function.
 koopa_macos_link_google_cloud_sdk() { # {{{1
-    # """
-    # Link Google Cloud SDK.
-    # @note Updated 2022-03-30.
-    # """
     koopa_assert_has_no_args "$#"
     koopa_link_app_into_bin \
         "$(koopa_homebrew_prefix)/Caskroom/google-cloud-sdk/latest/\
@@ -26,12 +17,7 @@ google-cloud-sdk/bin/gcloud" \
     return 0
 }
 
-# FIXME Need to add corresponding unlink function.
 koopa_macos_link_julia() { # {{{1
-    # """
-    # Link Julia.
-    # @note Updated 2022-03-31.
-    # """
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
@@ -44,12 +30,7 @@ koopa_macos_link_julia() { # {{{1
     return 0
 }
 
-# FIXME Need to add corresponding unlink function.
 koopa_macos_link_python() { # {{{1
-    # """
-    # Link Python.
-    # @note Updated 2022-03-30.
-    # """
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
@@ -77,12 +58,7 @@ koopa_macos_link_python() { # {{{1
     return 0
 }
 
-# FIXME Need to add corresponding unlink function.
 koopa_macos_link_r() { # {{{1
-    # """
-    # Link R.
-    # @note Updated 2022-03-31.
-    # """
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
@@ -95,12 +71,7 @@ koopa_macos_link_r() { # {{{1
     return 0
 }
 
-# FIXME Need to add corresponding unlink function.
 koopa_macos_link_visual_studio_code() { # {{{1
-    # """
-    # Link Visual Studio Code.
-    # @note Updated 2022-03-31.
-    # """
     koopa_assert_has_no_args "$#"
     koopa_link_app_into_bin \
         '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' \
@@ -109,10 +80,6 @@ koopa_macos_link_visual_studio_code() { # {{{1
 }
 
 koopa_macos_unlink_bbedit() { # {{{1
-    # """
-    # Unlink BBEdit.
-    # @note Updated 2022-03-31.
-    # """
     koopa_assert_has_no_args "$#"
     koopa_unlink_app_in_bin 'bbedit'
     return 0
