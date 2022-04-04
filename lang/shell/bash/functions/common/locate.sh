@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
 # FIXME Rework so that '/opt/koopa/bin' takes priority.
+# FIXME Consider reworking 'brew' to 'homebrew'.
+# FIXME Consider only supporting '--opt-name' instead of '--koopa-opt-name'.
+# FIXME Rename '--opt' to '--opt-name'
+# FIXME Rename '--koopa-opt' to '--koopa-opt-name'
+# FIXME Rename '--homebrew-opt' to '--homebrew-opt-name'
 
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-03-27.
+    # @note Updated 2022-04-04.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
@@ -29,7 +34,7 @@ koopa_locate_app() { # {{{1
         [brew_app]=''
         [brew_opt_name]=''
         [brew_prefix]="$(koopa_homebrew_prefix)"
-        [gnubin]=0
+        [homebrew_gnubin]=0
         [koopa_app]=''
         [koopa_opt_name]=''
         [koopa_opt_prefix]="$(koopa_opt_prefix)"
@@ -40,13 +45,6 @@ koopa_locate_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            # Defunct key-value pairs ------------------------------------------
-            '--name='*)
-                koopa_stop "Use '--app-name' instead of '--name'."
-                ;;
-            '--name')
-                koopa_stop "Use '--app-name' instead of '--name'."
-                ;;
             # Key-value pairs --------------------------------------------------
             '--app-name='*)
                 dict[app_name]="${1#*=}"
@@ -56,19 +54,19 @@ koopa_locate_app() { # {{{1
                 dict[app_name]="${2:?}"
                 shift 2
                 ;;
-            '--brew-opt='*)
+            '--homebrew-opt-name='*)
                 dict[brew_opt_name]="${1#*=}"
                 shift 1
                 ;;
-            '--brew-opt')
+            '--homebrew-opt-name')
                 dict[brew_opt_name]="${2:?}"
                 shift 2
                 ;;
-            '--koopa-opt='*)
+            '--koopa-opt-name='*)
                 dict[koopa_opt_name]="${1#*=}"
                 shift 1
                 ;;
-            '--koopa-opt')
+            '--koopa-opt-name')
                 dict[koopa_opt_name]="${2:?}"
                 shift 2
                 ;;
@@ -80,19 +78,19 @@ koopa_locate_app() { # {{{1
                 dict[macos_app]="${2:?}"
                 shift 2
                 ;;
-            '--opt='*)
+            '--opt-name='*)
                 dict[brew_opt_name]="${1#*=}"
                 dict[koopa_opt_name]="${1#*=}"
                 shift 1
                 ;;
-            '--opt')
+            '--opt-name')
                 dict[brew_opt_name]="${2:?}"
                 dict[koopa_opt_name]="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
-            '--gnubin')
-                dict[gnubin]=1
+            '--homebrew-gnubin')
+                dict[homebrew_gnubin]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -123,7 +121,7 @@ koopa_locate_app() { # {{{1
     dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
     dict[koopa_app]="${dict[koopa_opt_prefix]}/${dict[koopa_opt_name]}/\
 bin/${dict[app_name]}"
-    if [[ "${dict[gnubin]}" -eq 1 ]]
+    if [[ "${dict[homebrew_gnubin]}" -eq 1 ]]
     then
         dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
 libexec/gnubin/${dict[app_name]}"
@@ -264,9 +262,9 @@ ${dict[env_name]}@${dict[env_version]}/bin/${dict[app_name]}"
 koopa_locate_gnu_coreutils_app() { # {{{1
     # """
     # Locate a GNU coreutils app.
-    # @note Updated 2022-01-10.
+    # @note Updated 2022-04-04.
     koopa_locate_app \
         --app-name="${1:?}" \
-        --gnubin \
-        --opt='coreutils'
+        --homebrew-gnubin \
+        --opt-name='coreutils'
 }
