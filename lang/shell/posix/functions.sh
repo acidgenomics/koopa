@@ -218,7 +218,7 @@ __koopa_remove_from_path_string() { # {{{1
 koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-04-01.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -240,11 +240,11 @@ koopa_activate_aliases() { # {{{1
     alias sha256='koopa_alias_sha256'
     alias spacemacs='koopa_alias_spacemacs'
     alias spacevim='koopa_alias_spacevim'
-    alias tar-c='koopa_alias_tar_c'
-    alias tar-x='koopa_alias_tar_x'
+    # FIXME Consider moving this to koopa system.
     alias today='koopa_alias_today'
     alias vim-fzf='koopa_alias_vim_fzf'
     alias vim-vanilla='koopa_alias_vim_vanilla'
+    # FIXME Consider moving this to koopa system.
     alias week='koopa_alias_week'
     alias z='koopa_alias_zoxide'
     # Keep these at the end to allow the user to override our defaults.
@@ -1175,14 +1175,16 @@ koopa_activate_rbenv() { # {{{1
     return 0
 }
 
+# FIXME Consider just linking packages such as ronn into koopa bin.
 koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2022-03-31.
+    # @note Updated 2022-04-01.
     # """
     local prefix
     prefix="$(koopa_ruby_packages_prefix)"
     [ -d "$prefix" ] || return 0
+    koopa_activate_prefix "$prefix"
     export GEM_HOME="$prefix"
     return 0
 }
@@ -1921,24 +1923,7 @@ koopa_alias_spacevim() { # {{{1
     "$vim" -u "$vimrc" "$@"
 }
 
-koopa_alias_tar_c() { # {{{1
-    # """
-    # Compress with tar alias.
-    # @note Updated 2021-06-08.
-    # """
-    koopa_is_installed 'tar' || return 1
-    tar -czvf "$@"
-}
-
-koopa_alias_tar_x() { # {{{1
-    # """
-    # Compress with tar alias.
-    # @note Updated 2021-06-08.
-    # """
-    koopa_is_installed 'tar' || return 1
-    tar -xzvf "$@"
-}
-
+# FIXME Consider making this accessible in koopa system instead.
 koopa_alias_today() { # {{{1
     # """
     # Today alias.
@@ -1966,6 +1951,7 @@ koopa_alias_vim_vanilla() { # {{{1
     vim -i 'NONE' -u 'NONE' -U 'NONE' "$@"
 }
 
+# FIXME Consider making this accessible in koopa system instead.
 koopa_alias_week() { # {{{1
     # """
     # Numerical week alias.
