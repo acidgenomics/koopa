@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 fedora_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Fedora / RHEL / CentOS.

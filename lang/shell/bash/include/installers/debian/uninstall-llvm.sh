@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 debian_uninstall_llvm() { # {{{1
     # """
     # Uninstall LLVM.

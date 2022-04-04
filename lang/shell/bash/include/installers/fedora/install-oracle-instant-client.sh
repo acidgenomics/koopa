@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 fedora_install_oracle_instant_client() { # {{{1
     # """
     # Install Oracle Instant Client.

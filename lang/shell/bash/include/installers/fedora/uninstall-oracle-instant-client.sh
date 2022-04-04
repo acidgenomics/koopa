@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 fedora_uninstall_oracle_instant_client() { # {{{1
     # """
     # Uninstall Oracle Instant Client.

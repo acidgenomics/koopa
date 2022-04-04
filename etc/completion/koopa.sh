@@ -222,7 +222,7 @@ __koopa_complete() { # {{{1
                         then
                             args+=(
                                 'bcbio-nextgen-vm'
-                                'pandoc'
+                                'pandoc-binary'
                                 'r-binary'
                                 'r-devel'
                             )
@@ -236,14 +236,9 @@ __koopa_complete() { # {{{1
                     if koopa_is_macos
                     then
                         args+=(
-                            'adobe-creative-cloud'
-                            'cisco-webex'
-                            'microsoft-onedrive'
-                            'oracle-java'
                             'python-binary'
                             'r-binary'
                             'r-cran-gfortran'
-                            'ringcentral'
                             'xcode-clt'
                         )
                     fi

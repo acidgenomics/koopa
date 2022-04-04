@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate that this is a binary install.
+
 fedora_uninstall_wine() { # {{{1
     # """
     # Uninstall Wine.
