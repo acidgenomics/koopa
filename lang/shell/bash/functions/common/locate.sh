@@ -136,6 +136,7 @@ bin/${dict[app_name]}"
     }
     then
         koopa_print "${dict[app]}"
+        return 0
     fi
     koopa_warn "Failed to locate '${dict[app_name]}'."
     return 1
