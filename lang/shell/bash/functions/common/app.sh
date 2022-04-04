@@ -131,7 +131,7 @@ koopa_configure_app_packages() { # {{{1
     fi
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
-        koopa_link_app_in_opt "${dict[prefix]}" "${dict[name]}-packages"
+        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}-packages"
     fi
     koopa_alert_configure_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
@@ -461,7 +461,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         [[ "${dict[shared]}" -eq 1 ]] && \
         [[ "${dict[system]}" -eq 0 ]]
     then
-        koopa_link_app_in_opt "${dict[prefix]}" "${dict[name]}"
+        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
