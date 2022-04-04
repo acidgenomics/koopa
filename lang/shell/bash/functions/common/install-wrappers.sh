@@ -27,8 +27,8 @@ koopa_install_autoconf() { # {{{1
 
 koopa_install_automake() { # {{{1
     koopa_install_gnu_app \
+        --activate-opt='autoconf' \
         --name='automake' \
-        --opt='autoconf' \
         "$@"
 }
 
@@ -671,8 +671,8 @@ koopa_install_stow() { # {{{1
     # Install script uses 'Test::Output' Perl package.
     # """
     koopa_install_gnu_app \
+        --activate-opt='perl' \
         --name='stow' \
-        --opt='perl' \
         "$@"
 }
 
