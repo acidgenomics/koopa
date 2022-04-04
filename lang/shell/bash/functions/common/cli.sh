@@ -374,6 +374,7 @@ Check autocompletion of supported arguments with <TAB>."
     fi
 }
 
+# FIXME Rework this, nesting under system instead.
 koopa_cli_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
@@ -420,7 +421,7 @@ koopa_cli_nested_runner() { # {{{1
 koopa_cli_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-31.
     # """
     local key
     key=''
@@ -437,6 +438,10 @@ koopa_cli_system() { # {{{1
         'info')
             key='system-info'
             shift 1
+            ;;
+        'list')
+            # FIXME Need to add support for this.
+            # 'launch-agents' on macOS.
             ;;
         'log')
             key='view-latest-tmp-log-file'
