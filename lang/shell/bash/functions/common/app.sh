@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rethink the 'link_app' handling here.
-
 koopa_configure_app_packages() { # {{{1
     # """
     # Configure language application.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-04.
     #
     # @examples
     # > koopa_configure_app_packages \
@@ -25,7 +23,7 @@ koopa_configure_app_packages() { # {{{1
     koopa_assert_has_args "$#"
     declare -A dict=(
         [app]=''
-        [link_app]=1
+        [link_in_opt]=1
         [name]=''
         [name_fancy]=''
         [prefix]=''
@@ -77,12 +75,12 @@ koopa_configure_app_packages() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
-            '--link')
-                dict[link_app]=1
+            '--link-in-opt')
+                dict[link_in_opt]=1
                 shift 1
                 ;;
-            '--no-link')
-                dict[link_app]=0
+            '--no-link-in-opt')
+                dict[link_in_opt]=0
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -129,7 +127,7 @@ koopa_configure_app_packages() { # {{{1
         koopa_sys_mkdir "${dict[prefix]}"
         koopa_sys_set_permissions "$(koopa_dirname "${dict[prefix]}")"
     fi
-    if [[ "${dict[link_app]}" -eq 1 ]]
+    if [[ "${dict[link_in_opt]}" -eq 1 ]]
     then
         koopa_link_in_opt "${dict[prefix]}" "${dict[name]}-packages"
     fi
@@ -189,6 +187,7 @@ koopa_install_app() { # {{{1
         [installer]=''
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
+        # FIXME Disable support for this, or rename as 'link_in_make'.
         [link_app]=1
         [link_opt]=1
         [make_prefix]="$(koopa_make_prefix)"
