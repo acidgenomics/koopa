@@ -131,7 +131,7 @@ koopa_configure_app_packages() { # {{{1
     fi
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
-        koopa_link_app_into_opt "${dict[prefix]}" "${dict[name]}-packages"
+        koopa_link_app_in_opt "${dict[prefix]}" "${dict[name]}-packages"
     fi
     koopa_alert_configure_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
@@ -170,12 +170,12 @@ koopa_find_app_version() { # {{{1
 }
 
 # FIXME Need to rethink the '--link-app' handling here.
-# FIXME Consider adding '--link-app-into-bin' flag supporting parameterized
+# FIXME Consider adding '--link-app-in-bin' flag supporting parameterized
 # arguments here.
 
 koopa_install_app() { # {{{1
     # """
-    # Install application into a versioned directory structure.
+    # Install application in a versioned directory structure.
     # @note Updated 2022-04-01.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
@@ -461,7 +461,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         [[ "${dict[shared]}" -eq 1 ]] && \
         [[ "${dict[system]}" -eq 0 ]]
     then
-        koopa_link_app_into_opt "${dict[prefix]}" "${dict[name]}"
+        koopa_link_app_in_opt "${dict[prefix]}" "${dict[name]}"
     fi
     (
         koopa_cd "${dict[tmp_dir]}"

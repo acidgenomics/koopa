@@ -9,15 +9,15 @@
 
 
 
-koopa_link_app_into_bin() { # {{{1
+koopa_link_app_in_bin() { # {{{1
     # """
-    # Link a program into koopa 'bin/' directory.
+    # Link a program in koopa 'bin/' directory.
     # @note Updated 2022-03-31.
     #
-    # @usage koopa_link_app_into_bin SOURCE_FILE TARGET_NAME ...
+    # @usage koopa_link_app_in_bin SOURCE_FILE TARGET_NAME ...
     #
     # @examples
-    # > koopa_link_app_into_bin \
+    # > koopa_link_app_in_bin \
     # >     '/usr/local/bin/emacs' 'emacs' \
     # >     '/usr/local/bin/vim' 'vim'
     # """
@@ -39,7 +39,7 @@ koopa_link_app_into_bin() { # {{{1
     return 0
 }
 
-koopa_link_app_into_make() { # {{{1
+koopa_link_app_in_make() { # {{{1
     # """
     # Symlink application into make directory.
     # @note Updated 2022-03-30.
@@ -59,7 +59,7 @@ koopa_link_app_into_make() { # {{{1
     # * -s, --symbolic-link
     #
     # @examples
-    # > koopa_link_app_into_make --name='emacs' --version='26.3'
+    # > koopa_link_app_in_make --name='emacs' --version='26.3'
     # """
     local cp_args cp_source cp_target dict i include pos
     koopa_assert_has_args "$#"
@@ -199,10 +199,10 @@ koopa_link_app_into_make() { # {{{1
     return 0
 }
 
-koopa_link_app_into_opt() { # {{{1
+koopa_link_app_in_opt() { # {{{1
     # """
-    # Link an application into koopa opt prefix.
-    # @note Updated 2022-02-03.
+    # Link an application in koopa 'opt/' directory.
+    # @note Updated 2022-04-01.
     # """
     local dict
     koopa_assert_has_args_eq "$#" 2
@@ -221,7 +221,7 @@ koopa_link_app_into_opt() { # {{{1
 
 koopa_unlink_app_in_bin() { # {{{1
     # """
-    # Unlink a program symlinked into koopa 'bin/ directory.
+    # Unlink a program symlinked in koopa 'bin/ directory.
     # @note Updated 2022-03-31.
     #
     # @examples

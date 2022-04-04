@@ -36,7 +36,7 @@ koopa_configure_r() { # {{{1
     else
         koopa_sys_set_permissions --recursive "${dict[r_prefix]}/library"
     fi
-    koopa_r_link_files_into_etc "${dict[r]}"
+    koopa_r_link_files_in_etc "${dict[r]}"
     koopa_r_link_site_library "${dict[r]}"
     koopa_r_javareconf "${dict[r]}"
     koopa_r_rebuild_docs "${dict[r]}"
@@ -115,7 +115,7 @@ koopa_r_javareconf() { # {{{1
     return 0
 }
 
-koopa_r_link_files_into_etc() { # {{{1
+koopa_r_link_files_in_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
     # @note Updated 2022-01-25.
