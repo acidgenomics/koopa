@@ -9,7 +9,7 @@
 
 
 
-koopa_link_app_in_bin() { # {{{1
+koopa_link_in_bin() { # {{{1
     # """
     # Link a program in koopa 'bin/' directory.
     # @note Updated 2022-03-31.
@@ -39,10 +39,10 @@ koopa_link_app_in_bin() { # {{{1
     return 0
 }
 
-koopa_link_app_in_make() { # {{{1
+koopa_link_in_make() { # {{{1
     # """
     # Symlink application into make directory.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-04.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -199,7 +199,7 @@ koopa_link_app_in_make() { # {{{1
     return 0
 }
 
-koopa_link_app_in_opt() { # {{{1
+koopa_link_in_opt() { # {{{1
     # """
     # Link an application in koopa 'opt/' directory.
     # @note Updated 2022-04-01.
@@ -219,7 +219,7 @@ koopa_link_app_in_opt() { # {{{1
     return 0
 }
 
-koopa_unlink_app_in_bin() { # {{{1
+koopa_unlink_in_bin() { # {{{1
     # """
     # Unlink a program symlinked in koopa 'bin/ directory.
     # @note Updated 2022-03-31.
