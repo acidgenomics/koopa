@@ -170,7 +170,7 @@ koopa_r_link_files_in_etc() { # {{{1
 koopa_r_link_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-04.
     #
     # R on Fedora won't pick up site library in '--vanilla' mode unless we
     # symlink the site-library into '/usr/local/lib/R' as well.
@@ -207,7 +207,7 @@ koopa_r_link_site_library() { # {{{1
     )
     if [[ "${dict[version]}" == 'devel' ]]
     then
-        conf_args+=('--no-link')
+        conf_args+=('--no-link-in-opt')
     fi
     koopa_configure_app_packages "${conf_args[@]}"
     if koopa_is_fedora && [[ -d '/usr/lib64/R' ]]
