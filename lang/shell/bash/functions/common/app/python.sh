@@ -173,7 +173,7 @@ ${dict[py_maj_min_ver]}"
             koopa_sys_mkdir "${dict[app_prefix]}"
             koopa_sys_set_permissions "$(koopa_dirname "${dict[app_prefix]}")"
         fi
-        koopa_link_app_into_opt "${dict[app_prefix]}" "${dict[app_bn]}"
+        koopa_link_app_in_opt "${dict[app_prefix]}" "${dict[app_bn]}"
     fi
     [[ -d "${dict[prefix]}" ]] && koopa_sys_rm "${dict[prefix]}"
     koopa_assert_is_not_dir "${dict[prefix]}"

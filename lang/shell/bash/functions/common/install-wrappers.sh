@@ -32,8 +32,11 @@ koopa_install_automake() { # {{{1
         "$@"
 }
 
+# FIXME Rename 'into' to simply 'in' for consistency.
+# FIXME Ensure bash gets linked.
 koopa_install_bash() { # {{{1
     koopa_install_app \
+        --link-app-into-bin='bash' \
         --name-fancy='Bash' \
         --name='bash' \
         "$@"
@@ -773,10 +776,12 @@ koopa_uninstall_automake() { # {{{1
         "$@"
 }
 
+# FIXME Need to test this
 koopa_uninstall_bash() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Bash' \
         --name='bash' \
+        --unlink-app-in-bin='bash' \
         "$@"
 }
 
