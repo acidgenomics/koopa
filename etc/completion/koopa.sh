@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-03-30.
+    # Updated 2022-03-31.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -33,7 +33,6 @@ __koopa_complete() { # {{{1
                 'header'
                 'install'
                 'link'
-                'list'
                 'reinstall'
                 'system'
                 'uninstall'
@@ -110,6 +109,7 @@ __koopa_complete() { # {{{1
                         'findutils'
                         'fish'
                         'fzf'
+                        'fzf-binary' # FIXME Need to add support for this.
                         'gawk'
                         'gcc'
                         'gdal'
@@ -121,6 +121,7 @@ __koopa_complete() { # {{{1
                         'groff'
                         'gsl'
                         'hadolint'
+                        'hadolint-binary' # FIXME Need to support this.
                         'harfbuzz'
                         'haskell-stack'
                         'hdf5'
@@ -267,24 +268,19 @@ __koopa_complete() { # {{{1
                     if koopa_is_macos
                     then
                         args+=(
-                            'bbedit' # FIXME Needs unlinker.
-                            'google-cloud-sdk' # FIXME Needs unlinker.
-                            'visual-studio-code' # FIXME Needs unlinker.
+                            'bbedit'
+                            'google-cloud-sdk'
+                            'python'
+                            'r'
+                            'visual-studio-code'
                         )
                     fi
-                    ;;
-                'list')
-                    args=(
-                        'app-versions'
-                        'dotfiles'
-                        'path-priority'
-                        'programs'
-                    )
                     ;;
                 'system')
                     args=(
                         'brew-dump-brewfile'
                         'brew-outdated'
+                        'cache-bash-functions' # FIXME Add support for this.
                         'check'
                         'delete-cache'
                         'disable-passwordless-sudo'
@@ -294,6 +290,7 @@ __koopa_complete() { # {{{1
                         'fix-zsh-permissions'
                         'host-id'
                         'info'
+                        'list'
                         'log'
                         'os-string'
                         'prefix'
@@ -318,7 +315,6 @@ __koopa_complete() { # {{{1
                             'force-eject'
                             'homebrew-cask-version'
                             'ifactive'
-                            'list-launch-agents'
                             'macos-app-version'
                             'reload-autofs'
                             'spotlight'
@@ -371,6 +367,22 @@ __koopa_complete() { # {{{1
             ;;
         '3')
             case "${COMP_WORDS[COMP_CWORD-2]}" in
+                'system')
+                    case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    'list')
+                        args=(
+                            'app-versions'
+                            'dotfiles'
+                            'path-priority'
+                            'programs'
+                        )
+                        if koopa_is_macos
+                        then
+                            args+=('launch-agents') # FIXME Support this.
+                        fi
+                        ;;
+                    esac
+                    ;;
                 'app')
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'aws')
