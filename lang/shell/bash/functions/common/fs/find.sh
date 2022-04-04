@@ -723,3 +723,75 @@ koopa_find_non_symlinked_make_files() { # {{{1
     koopa_print "${dict[out]}"
     return 0
 }
+
+koopa_find_symlinks() { # {{{1
+    # """
+    # Find symlinks matching a specified source prefix.
+    # @note Updated 2022-04-01.
+    #
+    # @examples
+    # > koopa_find_symlinks \
+    # >     --source-prefix="$(koopa_app_prefix)/python" \
+    # >     --target-prefix="$(koopa_make_prefix)"
+    # > koopa_find_symlinks \
+    # >     --source-prefix="$(koopa_macos_r_prefix)" \
+    # >     --target-prefix="$(koopa_koopa_prefix)/bin"
+    # """
+    local dict hits symlink symlinks
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        [source_prefix]=''
+        [target_prefix]=''
+    )
+    hits=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--source-prefix='*)
+                dict[source_prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--source-prefix')
+                dict[source_prefix]="${2:?}"
+                shift 2
+                ;;
+            '--target-prefix='*)
+                dict[target_prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--target-prefix')
+                dict[target_prefix]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--source-prefix' "${dict[source_prefix]}" \
+        '--target-prefix' "${dict[target_prefix]}"
+    koopa_assert_is_dir "${dict[source_prefix]}" "${dict[target_prefix]}"
+    dict[source_prefix]="$(koopa_realpath "${dict[source_prefix]}")"
+    dict[target_prefix]="$(koopa_realpath "${dict[target_prefix]}")"
+    readarray -t symlinks <<< "$(
+        koopa_find \
+            --prefix="${dict[target_prefix]}" \
+            --sort \
+            --type='l' \
+    )"
+    for symlink in "${symlinks[@]}"
+    do
+        if koopa_str_detect_regex \
+            --pattern="^${dict[source_prefix]}/" \
+            --string="$(koopa_realpath "$symlink")"
+        then
+            hits+=("$symlink")
+        fi
+    done
+    koopa_is_array_empty "${hits[@]}" && return 1
+    koopa_print "${hits[@]}"
+    return 0
+}
