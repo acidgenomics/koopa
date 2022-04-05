@@ -426,6 +426,7 @@ koopa_sys_rm() { # {{{1
     return 0
 }
 
+# FIXME Rework to use current user instead of root.
 koopa_sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
@@ -519,17 +520,12 @@ koopa_sys_set_permissions() { # {{{1
 koopa_sys_user() { # {{{1
     # """
     # Set the koopa installation system user.
-    # @note Updated 2020-07-06.
+    # @note Updated 2022-04-05.
+    #
+    # Previously this set user as 'root' for shared installs, until 2022-04-05.
     # """
-    local user
     koopa_assert_has_no_args "$#"
-    if koopa_is_shared_install
-    then
-        user='root'
-    else
-        user="$(koopa_user)"
-    fi
-    koopa_print "$user"
+    koopa_print "$(koopa_user)"
     return 0
 }
 
