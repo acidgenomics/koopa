@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Consider linking some koopa tools into /opt/koopa/sbin instead of bin.
 ** TODO Add install support for new diff tools:
     https://github.com/Wilfred/difftastic
     https://github.com/darrenburns/dunk
