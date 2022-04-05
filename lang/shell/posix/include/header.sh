@@ -3,7 +3,7 @@
 __koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-04-05.
     # """
     local shell
     [ "$#" -eq 0 ] || return 1
@@ -46,19 +46,20 @@ __koopa_posix_header() { # {{{1
             "$(koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
         koopa_activate_homebrew || return 1
-        # > koopa_activate_go || return 1
-        # > koopa_activate_nim || return 1
+        koopa_activate_go || return 1
+        koopa_activate_nim || return 1
         koopa_activate_ruby || return 1
         koopa_activate_node || return 1
         koopa_activate_julia || return 1
-        # FIXME Symlink into '/opt/koopa/bin' instead.
         koopa_activate_perl || return 1
-        # FIXME Symlink into '/opt/koopa/bin' instead.
         koopa_activate_python || return 1
-        # FIXME Symlink into '/opt/koopa/bin' instead.
         koopa_activate_pipx || return 1
         koopa_activate_rust || return 1
         koopa_activate_bcbio_nextgen || return 1
+        if koopa_is_macos
+        then
+            koopa_macos_activate_google_cloud_sdk
+        fi
         if [ "${KOOPA_ACTIVATE:-0}" -eq 1 ]
         then
             koopa_export_editor || return 1
@@ -95,9 +96,7 @@ __koopa_posix_header() { # {{{1
             fi
         fi
     fi
-    # FIXME Rework this.
-    koopa_add_to_path_start "$(koopa_koopa_prefix)/bin"
-    koopa_activate_local_paths || return 1
+    koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         koopa_duration_stop 'posix' || return 1

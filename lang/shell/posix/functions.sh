@@ -240,11 +240,9 @@ koopa_activate_aliases() { # {{{1
     alias sha256='koopa_alias_sha256'
     alias spacemacs='koopa_alias_spacemacs'
     alias spacevim='koopa_alias_spacevim'
-    # FIXME Consider moving this to koopa system.
     alias today='koopa_alias_today'
     alias vim-fzf='koopa_alias_vim_fzf'
     alias vim-vanilla='koopa_alias_vim_vanilla'
-    # FIXME Consider moving this to koopa system.
     alias week='koopa_alias_week'
     alias z='koopa_alias_zoxide'
     # Keep these at the end to allow the user to override our defaults.
@@ -413,6 +411,7 @@ koopa_activate_conda() { # {{{1
     return 0
 }
 
+# FIXME Rethink this approach on macOS. Link into '/opt/koopa/bin' instead.
 koopa_activate_coreutils_aliases() { # {{{1
     # """
     # Activate GNU/BSD coreutils aliases.
@@ -465,6 +464,7 @@ koopa_activate_coreutils_aliases() { # {{{1
     return 0
 }
 
+# FIXME Rethink this approach on macOS. Link into '/opt/koopa/bin' instead.
 koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
@@ -523,6 +523,7 @@ koopa_activate_dircolors() { # {{{1
     return 0
 }
 
+# FIXME Link fzf into '/opt/koopa/bin' instead.
 koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
@@ -537,7 +538,6 @@ koopa_activate_fzf() { # {{{1
     [ -f "$fzfrc" ] && . "$fzfrc"
     prefix="$(koopa_fzf_prefix)"
     [ -d "$prefix" ] || return 0
-    koopa_activate_prefix "$prefix"
     nounset="$(koopa_boolean_nounset)"
     shell="$(koopa_shell_name)"
     # Relax hardened shell temporarily, if necessary.
@@ -599,14 +599,14 @@ koopa_activate_go() { # {{{1
 koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2022-02-28.
+    # @note Updated 2022-04-05.
     #
     # Don't activate 'binutils' here. Can mess up R package compilation.
     # """
     local prefix
     prefix="$(koopa_homebrew_prefix)"
+    [ -d "$prefix" ] || return 0
     koopa_activate_prefix "$prefix"
-    koopa_is_installed 'brew' || return 0
     export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
@@ -615,26 +615,6 @@ koopa_activate_homebrew() { # {{{1
     export HOMEBREW_PREFIX="$prefix"
     if koopa_is_macos
     then
-        koopa_activate_homebrew_opt_prefix \
-            'bc' \
-            'curl' \
-            'gnu-getopt' \
-            'icu4c' \
-            'ncurses' \
-            'openssl@3' \
-            'ruby' \
-            'texinfo'
-        koopa_activate_homebrew_opt_libexec_prefix \
-            'man-db'
-        koopa_activate_homebrew_opt_gnu_prefix \
-            'coreutils' \
-            'findutils' \
-            'gnu-sed' \
-            'gnu-tar' \
-            'gnu-which' \
-            'grep' \
-            'make'
-        koopa_macos_activate_google_cloud_sdk
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
     fi
     return 0
@@ -643,7 +623,7 @@ koopa_activate_homebrew() { # {{{1
 koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix for a GNU program.
-    # @note Updated 2021-09-14.
+    # @note Updated 2022-04-04.
     #
     # Linked using 'g' prefix by default.
     #
@@ -652,11 +632,11 @@ koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     # @examples
     # > koopa_activate_homebrew_opt_gnu_prefix 'binutils' 'coreutils'
     # """
-    local homebrew_prefix name prefix
-    homebrew_prefix="$(koopa_homebrew_prefix)"
+    local name opt_prefix prefix
+    opt_prefix="$(koopa_homebrew_opt_prefix)"
     for name in "$@"
     do
-        prefix="${homebrew_prefix}/opt/${name}/libexec"
+        prefix="${opt_prefix}/${name}/libexec"
         if [ ! -d "$prefix" ]
         then
             koopa_warn "Not installed: '${prefix}'."
@@ -676,13 +656,13 @@ koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
 koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
     # """
     # Activate Homebrew opt libexec prefix.
-    # @note Updated 2021-09-20.
+    # @note Updated 2022-04-04.
     # """
-    local homebrew_prefix name prefix
-    homebrew_prefix="$(koopa_homebrew_prefix)"
+    local name opt_prefix prefix
+    opt_prefix="$(koopa_homebrew_opt_prefix)"
     for name in "$@"
     do
-        prefix="${homebrew_prefix}/opt/${name}/libexec"
+        prefix="${opt_prefix}/${name}/libexec"
         if [ ! -d "$prefix" ]
         then
             koopa_warn "Not installed: '${prefix}'."
@@ -696,13 +676,13 @@ koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
 koopa_activate_homebrew_opt_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix.
-    # @note Updated 2021-09-15.
+    # @note Updated 2022-04-04.
     # """
-    local homebrew_prefix name prefix
-    homebrew_prefix="$(koopa_homebrew_prefix)"
+    local name opt_prefix prefix
+    opt_prefix="$(koopa_homebrew_opt_prefix)"
     for name in "$@"
     do
-        prefix="${homebrew_prefix}/opt/${name}"
+        prefix="${opt_prefix}/${name}"
         if [ ! -d "$prefix" ]
         then
             koopa_warn "Not installed: '${prefix}'."
@@ -889,7 +869,7 @@ koopa_activate_nim() { # {{{1
     local prefix
     prefix="$(koopa_nim_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    # FIXME Symlink into '/opt/koopa/bin' instead.
+    # FIXME Symlink packages into '/opt/koopa/bin' instead.
     # > koopa_activate_prefix "$prefix"
     export NIMBLE_DIR="$prefix"
     return 0
@@ -903,7 +883,8 @@ koopa_activate_node() { # {{{1
     local prefix
     prefix="$(koopa_node_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    koopa_activate_prefix "$prefix"
+    # FIXME Symlink packages into '/opt/koopa/bin' instead.
+    # > koopa_activate_prefix "$prefix"
     export NPM_CONFIG_PREFIX="$prefix"
     return 0
 }
@@ -911,7 +892,7 @@ koopa_activate_node() { # {{{1
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-04-04.
     #
     # @examples
     # > koopa_activate_opt_prefix 'geos' 'proj' 'gdal'
@@ -931,10 +912,11 @@ koopa_activate_opt_prefix() { # {{{1
     return 0
 }
 
+# FIXME Link Perl packages into '/opt/koopa/bin' instead.
 koopa_activate_perl() { # {{{1
     # """
     # Activate Perl, adding local library to 'PATH'.
-    # @note Updated 2021-09-17.
+    # @note Updated 2022-04-04.
     #
     # No longer querying Perl directly here, to speed up shell activation
     # (see commented legacy approach below).
@@ -948,14 +930,6 @@ koopa_activate_perl() { # {{{1
     local prefix
     prefix="$(koopa_perl_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    # Legacy approach that doesn't propagate in subshells correctly:
-    # > koopa_is_installed perl || return 0
-    # > eval "$( \
-    # >     perl \
-    # >         "-I${prefix}/lib/perl5" \
-    # >         "-Mlocal::lib=${prefix}" \
-    # > )"
-    koopa_activate_prefix "$prefix"
     export PERL5LIB="${prefix}/lib/perl5"
     export PERL_LOCAL_LIB_ROOT="$prefix"
     export PERL_MB_OPT="--install_base '${prefix}'"
@@ -967,7 +941,7 @@ koopa_activate_perl() { # {{{1
 koopa_activate_perlbrew() { # {{{1
     # """
     # Activate Perlbrew.
-    # @note Updated 2020-06-30.
+    # @note Updated 2022-04-04.
     #
     # Only attempt to autoload for bash or zsh.
     # Delete '~/.perlbrew' directory if you see errors at login.
@@ -977,7 +951,6 @@ koopa_activate_perlbrew() { # {{{1
     # """
     local nounset prefix script shell
     [ -n "${PERLBREW_ROOT:-}" ] && return 0
-    ! koopa_is_installed perlbrew || return 0
     shell="$(koopa_shell_name)"
     case "$shell" in
         'bash' | \
@@ -1019,8 +992,8 @@ koopa_activate_pipx() { # {{{1
 
 koopa_activate_pkg_config() { # {{{1
     # """
-    # Configure PKG_CONFIG_PATH.
-    # @note Updated 2021-09-14.
+    # Configure 'PKG_CONFIG_PATH'.
+    # @note Updated 2022-04-04.
     #
     # Typical priorities (e.g. on Debian):
     # - /usr/local/lib/x86_64-linux-gnu/pkgconfig
@@ -1038,18 +1011,15 @@ koopa_activate_pkg_config() { # {{{1
     # @seealso
     # - https://askubuntu.com/questions/210210/
     # """
-    local homebrew_prefix make_prefix
-    homebrew_prefix="$(koopa_homebrew_prefix)"
+    local brew_prefix make_prefix
+    brew_prefix="$(koopa_homebrew_prefix)"
     make_prefix="$(koopa_make_prefix)"
-    koopa_add_to_pkg_config_path_start_2 \
-        '/usr/bin/pkg-config'
-    if [ "$homebrew_prefix" != "$make_prefix" ]
+    koopa_add_to_pkg_config_path_start_2 '/usr/bin/pkg-config'
+    if [ "$brew_prefix" != "$make_prefix" ]
     then
-        koopa_add_to_pkg_config_path_start_2 \
-            "${homebrew_prefix}/bin/pkg-config"
+        koopa_add_to_pkg_config_path_start_2 "${brew_prefix}/bin/pkg-config"
     fi
-    koopa_add_to_pkg_config_path_start_2 \
-        "${make_prefix}/bin/pkg-config"
+    koopa_add_to_pkg_config_path_start_2 "${make_prefix}/bin/pkg-config"
     return 0
 }
 
@@ -1080,12 +1050,11 @@ koopa_activate_prefix() { # {{{1
 koopa_activate_pyenv() { # {{{1
     # """
     # Activate Python version manager (pyenv).
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-04.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
     local nounset prefix script
-    koopa_is_installed 'pyenv' && return 0
     [ -n "${PYENV_ROOT:-}" ] && return 0
     prefix="$(koopa_pyenv_prefix)"
     [ -d "$prefix" ] || return 0
@@ -1099,10 +1068,11 @@ koopa_activate_pyenv() { # {{{1
     return 0
 }
 
+# FIXME Work on linking into  '/opt/koopa/bin' instead.
 koopa_activate_python() { # {{{1
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2022-03-31.
+    # @note Updated 2022-04-04.
     #
     # Configures:
     # - Site packages library.
@@ -1127,7 +1097,6 @@ koopa_activate_python() { # {{{1
     prefix="$(koopa_python_packages_prefix)"
     if [ -d "$prefix" ]
     then
-        koopa_activate_prefix "$prefix"
         prefix_real="$(koopa_realpath "$prefix")"
         koopa_add_to_pythonpath_start "$prefix_real"
     fi
@@ -1151,17 +1120,12 @@ koopa_activate_python() { # {{{1
 koopa_activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-04.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
     # """
     local nounset prefix script
-    if koopa_is_installed 'rbenv'
-    then
-        eval "$(rbenv init -)"
-        return 0
-    fi
     [ -n "${RBENV_ROOT:-}" ] && return 0
     prefix="$(koopa_rbenv_prefix)"
     [ -d "$prefix" ] || return 0
@@ -1179,12 +1143,11 @@ koopa_activate_rbenv() { # {{{1
 koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2022-04-01.
+    # @note Updated 2022-04-04.
     # """
     local prefix
     prefix="$(koopa_ruby_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    koopa_activate_prefix "$prefix"
     export GEM_HOME="$prefix"
     return 0
 }
@@ -1192,7 +1155,7 @@ koopa_activate_ruby() { # {{{1
 koopa_activate_rust() { # {{{1
     # """
     # Activate Rust programming language.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-04.
     #
     # Attempt to locate cargo home and source the 'env' script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
@@ -1204,8 +1167,6 @@ koopa_activate_rust() { # {{{1
     rustup_prefix="$(koopa_rust_prefix)"
     if [ -d "$cargo_prefix" ]
     then
-        # FIXME Consider symlinking into '/opt/koopa/opt'.
-        # > koopa_add_to_path_start "${cargo_prefix}/bin"
         export CARGO_HOME="$cargo_prefix"
     fi
     if [ -d "$rustup_prefix" ]
@@ -1261,7 +1222,7 @@ koopa_activate_ssh_key() { # {{{1
 koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
-    # @note Updated 2021-07-28.
+    # @note Updated 2022-04-04.
     #
     # Note that 'starship.bash' script has unbound PREEXEC_READY.
     # https://github.com/starship/starship/blob/master/src/init/starship.bash
@@ -1270,7 +1231,6 @@ koopa_activate_starship() { # {{{1
     # https://starship.rs/
     # """
     local nounset shell
-    koopa_is_installed 'starship' || return 0
     shell="$(koopa_shell_name)"
     case "$shell" in
         'bash' | \
@@ -1280,6 +1240,7 @@ koopa_activate_starship() { # {{{1
             return 0
             ;;
     esac
+    koopa_is_installed 'starship' || return 0
     unset -v STARSHIP_SESSION_KEY STARSHIP_SHELL
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && return 0
@@ -1334,7 +1295,7 @@ koopa_activate_tmux_sessions() { # {{{1
 koopa_activate_today_bucket() { # {{{1
     # """
     # Create a dated file today bucket.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-04-04.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -1350,7 +1311,8 @@ koopa_activate_today_bucket() { # {{{1
     # -s, --symbolic
     #        make symbolic links instead of hard links
     # """
-    local brew_prefix bucket_dir date ln mkdir readlink today_bucket today_link
+    local bucket_dir coreutils_bin_prefix today_bucket today_link
+    local date ln mkdir readlink
     bucket_dir="${KOOPA_BUCKET:-}"
     [ -z "$bucket_dir" ] && bucket_dir="${HOME:?}/bucket"
     # Early return if there's no bucket directory on the system.
@@ -1361,17 +1323,19 @@ koopa_activate_today_bucket() { # {{{1
     readlink='readlink'
     if koopa_is_macos
     then
-        brew_prefix="$(koopa_homebrew_prefix)"
-        [ -d "$brew_prefix" ] || return 0
-        date="${brew_prefix}/opt/coreutils/bin/gdate"
-        ln="${brew_prefix}/opt/coreutils/bin/gln"
-        mkdir="${brew_prefix}/opt/coreutils/bin/gmkdir"
-        readlink="${brew_prefix}/opt/coreutils/bin/greadlink"
+        coreutils_bin_prefix="$(koopa_homebrew_opt_prefix)/coreutils/bin"
+        [ -d "$coreutils_bin_prefix" ] || return 0
+        date="${coreutils_bin_prefix}/gdate"
+        ln="${coreutils_bin_prefix}/gln"
+        mkdir="${coreutils_bin_prefix}/gmkdir"
+        readlink="${coreutils_bin_prefix}/greadlink"
     fi
     today_bucket="$("$date" '+%Y/%m/%d')"
     today_link="${HOME:?}/today"
     # Early return if we've already updated the symlink.
-    if koopa_str_detect_posix "$("$readlink" "$today_link")" "$today_bucket"
+    if koopa_str_detect_posix \
+        "$("$readlink" "$today_link")" \
+        "$today_bucket"
     then
         return 0
     fi
@@ -1383,7 +1347,7 @@ koopa_activate_today_bucket() { # {{{1
 koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-04-04.
     #
     # @seealso
     # - https://developer.gnome.org/basedir-spec/
@@ -1392,36 +1356,28 @@ koopa_activate_xdg() { # {{{1
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
     # - https://unix.stackexchange.com/questions/476963/
     # """
-    # XDG_CACHE_HOME.
     if [ -z "${XDG_CACHE_HOME:-}" ]
     then
         XDG_CACHE_HOME="$(koopa_xdg_cache_home)"
     fi
-    export XDG_CACHE_HOME
-    # XDG_CONFIG_DIRS.
     if [ -z "${XDG_CONFIG_DIRS:-}" ]
     then
         XDG_CONFIG_DIRS="$(koopa_xdg_config_dirs)"
     fi
-    export XDG_CONFIG_DIRS
-    # XDG_CONFIG_HOME.
     if [ -z "${XDG_CONFIG_HOME:-}" ]
     then
         XDG_CONFIG_HOME="$(koopa_xdg_config_home)"
     fi
-    export XDG_CONFIG_HOME
-    # XDG_DATA_DIRS.
     if [ -z "${XDG_DATA_DIRS:-}" ]
     then
         XDG_DATA_DIRS="$(koopa_xdg_data_dirs)"
     fi
-    export XDG_DATA_DIRS
-    # XDG_DATA_HOME.
     if [ -z "${XDG_DATA_HOME:-}" ]
     then
         XDG_DATA_HOME="$(koopa_xdg_data_home)"
     fi
-    export XDG_DATA_HOME
+    export XDG_CACHE_HOME XDG_CONFIG_DIRS XDG_CONFIG_HOME \
+        XDG_DATA_DIRS XDG_DATA_HOME
     return 0
 }
 
@@ -1448,7 +1404,7 @@ koopa_activate_zoxide() { # {{{1
             return 0
             ;;
     esac
-    koopa_is_installed zoxide || return 0
+    koopa_is_installed 'zoxide' || return 0
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$(zoxide init "$shell")"
@@ -1467,6 +1423,7 @@ koopa_add_koopa_config_link() { # {{{1
     rm='rm'
     if koopa_is_macos
     then
+        # FIXME Use opt prefix here instead.
         brew_prefix="$(koopa_homebrew_prefix)"
         [ -d "$brew_prefix" ] || return 0
         ln="${brew_prefix}/opt/coreutils/bin/gln"
@@ -2091,6 +2048,15 @@ koopa_bcbio_nextgen_prefix() { # {{{1
     return 0
 }
 
+koopa_bin_prefix() { # {{{1
+    # """
+    # Koopa binary prefix.
+    # @note Updated 2022-04-04.
+    # """
+    koopa_print "$(koopa_koopa_prefix)/bin"
+    return 0
+}
+
 koopa_boolean_nounset() { # {{{1
     # """
     # Return 0 (false) / 1 (true) boolean whether nounset mode is enabled.
@@ -2272,6 +2238,7 @@ koopa_duration_start() { # {{{1
     date='date'
     if koopa_is_macos
     then
+        # FIXME Use opt prefix here instead.
         brew_prefix="$(koopa_homebrew_prefix)"
         date="${brew_prefix}/opt/coreutils/bin/gdate"
     fi
@@ -2298,6 +2265,7 @@ koopa_duration_stop() { # {{{1
     date='date'
     if koopa_is_macos
     then
+        # FIXME Use opt prefix here instead.
         brew_prefix="$(koopa_homebrew_prefix)"
         bc="${brew_prefix}/opt/bc/bin/bc"
         date="${brew_prefix}/opt/coreutils/bin/gdate"
@@ -2606,6 +2574,15 @@ koopa_homebrew_cellar_prefix() { # {{{1
     return 0
 }
 
+koopa_homebrew_cask_prefix() { # {{{1
+    # """
+    # Homebrew cask prefix.
+    # @note Updated 2022-04-04.
+    # """
+    koopa_print "$(koopa_homebrew_prefix)/Caskroom"
+    return 0
+}
+
 koopa_homebrew_prefix() { # {{{1
     # """
     # Homebrew prefix.
@@ -2638,6 +2615,15 @@ koopa_homebrew_prefix() { # {{{1
     fi
     [ -d "$x" ] || return 1
     koopa_print "$x"
+    return 0
+}
+
+koopa_homebrew_opt_prefix() { # {{{1
+    # """
+    # Homebrew opt prefix.
+    # @note Updated 2022-04-04.
+    # """
+    koopa_print "$(koopa_homebrew_prefix)/opt"
     return 0
 }
 
@@ -3202,6 +3188,7 @@ koopa_is_x86_64() { # {{{1
     [ "$(koopa_arch)" = 'x86_64' ]
 }
 
+# FIXME Rework using early returns here instead.
 koopa_java_prefix() { # {{{1
     # """
     # Java prefix.
@@ -3226,9 +3213,9 @@ koopa_java_prefix() { # {{{1
     # > then
     # >     # Handle macOS config with temurin cask.
     # >     prefix="$('/usr/libexec/java_home')"
-    elif [ -d "$(koopa_homebrew_prefix)/opt/openjdk" ]
+    elif [ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]
     then
-        prefix="$(koopa_homebrew_prefix)/opt/openjdk"
+        prefix="$(koopa_homebrew_opt_prefix)/openjdk"
     else
         return 1
     fi
@@ -3378,11 +3365,11 @@ koopa_macos_activate_cli_colors() { # {{{1
 koopa_macos_activate_google_cloud_sdk() { # {{{1
     # """
     # Activate macOS Google Cloud SDK Homebrew cask.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-04.
     #
     # Alternate (slower) approach that enables autocompletion.
     # > local prefix shell
-    # > prefix="${brew_prefix}/Caskroom/google-cloud-sdk/\
+    # > prefix="$(koopa_homebrew_cask_prefix)/google-cloud-sdk/\
     # > latest/google-cloud-sdk"
     # > [ -d "$prefix" ] || return 0
     # > shell="$(koopa_shell_name)"
@@ -3396,7 +3383,7 @@ koopa_macos_activate_google_cloud_sdk() { # {{{1
     # @seealso
     # - https://cloud.google.com/sdk/docs/install#mac
     # """
-    CLOUDSDK_PYTHON="$(koopa_homebrew_prefix)/opt/python@3.9/bin/python3.9"
+    CLOUDSDK_PYTHON="$(koopa_homebrew_opt_prefix)/python@3.9/bin/python3.9"
     export CLOUDSDK_PYTHON
     return 0
 }
@@ -4072,6 +4059,7 @@ koopa_realpath() { # {{{1
     readlink='readlink'
     if koopa_is_macos
     then
+        # FIXME Use opt prefix here instead.
         brew_prefix="$(koopa_homebrew_prefix)"
         [ -d "$brew_prefix" ] || return 1
         readlink="${brew_prefix}/opt/coreutils/bin/greadlink"
