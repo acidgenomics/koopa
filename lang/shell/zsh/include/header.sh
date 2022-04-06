@@ -131,6 +131,7 @@ __koopa_zsh_header() { # {{{1
         source "${KOOPA_PREFIX:?}/lang/shell/zsh/functions/activate.sh"
         koopa_activate_zsh_extras
     fi
+    typeset -U MANPATH PATH
     if [[ "${dict[test]}" -eq 1 ]]
     then
         koopa_duration_stop 'zsh' || return 1
