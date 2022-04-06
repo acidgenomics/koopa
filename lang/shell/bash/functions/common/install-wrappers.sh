@@ -834,6 +834,7 @@ koopa_install_the_silver_searcher() { # {{{1
 
 koopa_install_tmux() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/tmux' \
         --name='tmux' \
         "$@"
 }
