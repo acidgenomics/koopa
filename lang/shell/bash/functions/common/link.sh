@@ -294,11 +294,13 @@ koopa_unlink_in_bin() { # {{{1
     __koopa_unlink_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }
 
-# FIXME Need to add 'koopa_unlink_in_make' utility.
 koopa_unlink_in_make() { # {{{1
     # """
     # Unlink a program symlinked in koopa 'make/' directory.
     # @note Updated 2022-04-06.
+    #
+    # @examples
+    # > koopa_unlink_in_make --prefix='/opt/koopa/app/python'
     # """
     local dict hits rm_args
     koopa_assert_has_args "$#"
