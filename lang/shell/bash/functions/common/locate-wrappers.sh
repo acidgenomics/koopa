@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider enforcing that all of these are linked in '/opt/koopa/bin'.
+
 koopa_locate_7z() { # {{{1
     koopa_locate_app \
         --app-name='7z' \
@@ -7,9 +9,12 @@ koopa_locate_7z() { # {{{1
 }
 
 koopa_locate_anaconda() { # {{{1
-    koopa_locate_app "$(koopa_anaconda_prefix)/bin/conda"
+    koopa_locate_app \
+        --app-name='conda' \
+        --koopa-opt-name='anaconda'
 }
 
+# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_ascp() { # {{{1
     koopa_locate_app \
         --app-name='ascp' \
@@ -18,6 +23,7 @@ Contents/Resources/ascp" \
         --opt-name='aspera-connect'
 }
 
+# FIXME Just link this...
 koopa_locate_awk() { # {{{1
     koopa_locate_app \
         --app-name='awk' \
@@ -253,6 +259,7 @@ koopa_locate_go() { # {{{1
     koopa_locate_app 'go'
 }
 
+# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_gpg() { # {{{1
     koopa_locate_app \
         --app-name='gpg' \
@@ -260,6 +267,7 @@ koopa_locate_gpg() { # {{{1
         --opt-name='gnupg'
 }
 
+# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_gpg_agent() { # {{{1
     koopa_locate_app \
         --app-name='gpg-agent' \
@@ -267,6 +275,7 @@ koopa_locate_gpg_agent() { # {{{1
         --opt-name='gnupg'
 }
 
+# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_gpgconf() { # {{{1
     koopa_locate_app \
         --app-name='gpgconf' \
@@ -323,9 +332,7 @@ koopa_locate_jq() { # {{{1
 }
 
 koopa_locate_julia() { # {{{1
-    koopa_locate_app \
-        --app-name='julia' \
-        --macos-app="$(koopa_macos_julia_prefix)/bin/julia"
+    koopa_locate_app 'julia'
 }
 
 koopa_locate_kallisto() { # {{{1
@@ -553,24 +560,18 @@ koopa_locate_pyenv() { # {{{1
 }
 
 koopa_locate_python() { # {{{1
-    local app dict
-    declare -A app
+    local dict
     declare -A dict=(
-        [macos_python_prefix]="$(koopa_macos_python_prefix)"
         [name]='python'
     )
     dict[version]="$(koopa_variable "${dict[name]}")"
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
     app[python]="${dict[name]}${dict[maj_ver]}"
-    koopa_locate_app \
-        --app-name="${app[python]}" \
-        --macos-app="${dict[macos_python_prefix]}/bin/${app[python]}"
+    koopa_locate_app "${app[python]}"
 }
 
 koopa_locate_r() { # {{{1
-    koopa_locate_app \
-        --app-name='R' \
-        --macos-app="$(koopa_macos_r_prefix)/bin/R"
+    koopa_locate_app 'R'
 }
 
 koopa_locate_rbenv() { # {{{1
@@ -595,7 +596,9 @@ koopa_locate_realpath() { # {{{1
 }
 
 koopa_locate_rename() { # {{{1
-    koopa_locate_app "$(koopa_perl_packages_prefix)/bin/rename"
+    koopa_locate_app \
+        --app-name='rename' \
+        --koopa-opt-name='perl-packages'
 }
 
 koopa_locate_rg() { # {{{1
@@ -680,7 +683,6 @@ koopa_locate_ssh() { # {{{1
 koopa_locate_ssh_add() { # {{{1
     koopa_locate_app \
         --app-name='ssh-add' \
-        --macos-app='/usr/bin/ssh-add' \
         --opt-name='openssh'
 }
 
@@ -734,11 +736,10 @@ koopa_locate_tee() { # {{{1
 }
 
 koopa_locate_tex() { # {{{1
-    koopa_locate_app \
-        --app-name='tex' \
-        --macos-app='/Library/TeX/texbin/tex'
+    koopa_locate_app 'tex'
 }
 
+# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_tlmgr() { # {{{1
     koopa_locate_app \
         --app-name='tlmgr' \
