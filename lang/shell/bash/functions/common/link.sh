@@ -307,6 +307,9 @@ koopa_unlink_in_make() { # {{{1
     #
     # @examples
     # > koopa_unlink_in_make --prefix='/opt/koopa/app/autoconf'
+    #
+    # Unlink all koopa apps with:
+    # > koopa_unlink_in_make --prefix='/opt/koopa/app'
     # """
     local dict files rm_args
     koopa_assert_has_args "$#"
