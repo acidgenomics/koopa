@@ -1499,6 +1499,14 @@ koopa_update_dotfiles() { # {{{1
         "$@"
 }
 
+koopa_update_google_cloud_sdk() { # {{{1
+    koopa_update_app \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        --system \
+        "$@"
+}
+
 koopa_update_homebrew() { # {{{1
     koopa_update_app \
         --name='homebrew' \
