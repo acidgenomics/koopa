@@ -1,18 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Add back support for 'prune'.
 # FIXME Need to nest our macOS-specific functions under 'koopa os XXX'.
 # FIXME Need to add support for OS-specific link functions.
 # FIXME 'koopa app list' shouldn't work any more...
 # FIXME Need to rework these, formerly defined in 'koopa_cli_app':
-#
-# FIXME Need to rework these to also work on macOS:
-# These need to migrate out of app into top level.
-# - 'link')
-# - 'prune')
-# - 'unlink')
-# ;;
-
-
 
 koopa_cli_app() { # {{{1
     # """
@@ -587,7 +579,6 @@ koopa_koopa() { # {{{1
         'app' | \
         'configure' | \
         'install' | \
-        'link' | \
         'list' | \
         'system' | \
         'uninstall' | \
