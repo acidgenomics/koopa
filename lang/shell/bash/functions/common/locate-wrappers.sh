@@ -583,14 +583,10 @@ koopa_locate_python() { # {{{1
     declare -A dict=(
         [name]='python'
     )
-    koopa_warn "FIXME AAA"
     dict[version]="$(koopa_variable "${dict[name]}")"
-    koopa_warn "FIXME BBB"
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
-    koopa_warn "FIXME CCC"
-    app[python]="${dict[name]}${dict[maj_ver]}"
-    koopa_warn "FIXME ${app[python]}"
-    koopa_locate_app "${app[python]}"
+    dict[python]="${dict[name]}${dict[maj_ver]}"
+    koopa_locate_app "${dict[python]}"
 }
 
 koopa_locate_r() { # {{{1
