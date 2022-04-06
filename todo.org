@@ -1,7 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
-** TODO Consider clean up of '/etc/paths.d' on macOS for Homebrew casks.
+** TODO Consider clean up of '/etc/paths.d' and '/etc/manpaths.d' on macOS for Homebrew casks.
 ** TODO Consider linking some koopa tools into /opt/koopa/sbin instead of bin.
 ** TODO Add install support for new diff tools:
     https://github.com/Wilfred/difftastic
