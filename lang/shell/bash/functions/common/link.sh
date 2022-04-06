@@ -51,12 +51,13 @@ __koopa_link_in_dir() { # {{{1
     koopa_assert_has_args_ge "$#" 2
     while [[ "$#" -ge 2 ]]
     do
-        declare -A dict=(
+        local dict2
+        declare -A dict2=(
             [source_file]="${1:?}"
             [target_name]="${2:?}"
         )
-        dict[target_file]="${dict[prefix]}/${dict[target_name]}"
-        koopa_sys_ln "${dict[source_file]}" "${dict[target_file]}"
+        dict2[target_file]="${dict[prefix]}/${dict2[target_name]}"
+        koopa_sys_ln "${dict2[source_file]}" "${dict2[target_file]}"
         shift 2
     done
     return 0
