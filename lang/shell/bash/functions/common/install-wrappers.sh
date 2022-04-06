@@ -859,7 +859,7 @@ koopa_install_wget() { # {{{1
 
 koopa_install_zsh() { # {{{1
     koopa_install_app \
-        --link-in-bin='/bin/zsh' \
+        --link-in-bin='bin/zsh' \
         --name-fancy='Zsh' \
         --name='zsh' \
         "$@"
