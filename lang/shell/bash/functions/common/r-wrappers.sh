@@ -162,24 +162,3 @@ koopa_snake_case() { # {{{1
     koopa_assert_has_args "$#"
     koopa_r_koopa 'cliSnakeCase' "$@"
 }
-
-# FIXME Can we rework this in shell?
-# FIXME Consider only unlinking in koopa bin by default.
-
-koopa_unlink_app() { # {{{1
-    # """
-    # Unlink an application.
-    # @note Updated 2021-08-14.
-    # """
-    local make_prefix
-    koopa_assert_has_args "$#"
-    make_prefix="$(koopa_make_prefix)"
-    if koopa_is_macos
-    then
-        koopa_alert_note "Linking into '${make_prefix}' is not \
-supported on macOS."
-        return 0
-    fi
-    koopa_r_koopa 'cliUnlinkApp' "$@"
-    return 0
-}
