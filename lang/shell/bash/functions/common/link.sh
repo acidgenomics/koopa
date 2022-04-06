@@ -303,7 +303,7 @@ koopa_unlink_in_make() { # {{{1
     # @examples
     # > koopa_unlink_in_make --prefix='/opt/koopa/app/python'
     # """
-    local dict hits rm_args
+    local dict files rm_args
     koopa_assert_has_args "$#"
     declare -A dict=(
         [homebrew_prefix]="$(koopa_homebrew_prefix)"
@@ -334,15 +334,26 @@ koopa_unlink_in_make() { # {{{1
     done
     koopa_assert_is_set '--prefix' "${dict[app_prefix]}"
     koopa_assert_is_dir "${dict[app_prefix]}" "${dict[make_prefix]}"
-    readarray -t hits <<< "$( \
+    readarray -t files <<< "$( \
         koopa_find_symlinks \
             --source-prefix="${dict[app_prefix]}" \
             --target-prefix="${dict[make_prefix]}" \
     )"
+
+    if koopa_is_array_empty "${files[@]:-}"
+    then
+        koopa_stop "No files from '${dict[app_prefix]}' detected \
+in '${dict[make_prefix]}'."
+    fi
+    koopa_alert "$(koopa_ngettext \
+        --prefix='Unlinking ' \
+        --num="${#files[@]}" \
+        --msg1='file' \
+        --msg2='files' \
+        --suffix=" from '${dict[app_prefix]}' in '${dict[make_prefix]}'." \
+    )"
     koopa_is_shared_install && rm_args+=('--sudo')
-    rm_args+=("${hits[@]}")
-    koopa_print "${rm_args[@]}"
-    return 0  # FIXME Disable when we confirm this works.
+    rm_args+=("${files[@]}")
     koopa_rm "${rm_args[@]}"
     return 0
 }
