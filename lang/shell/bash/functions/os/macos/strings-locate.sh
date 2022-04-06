@@ -45,10 +45,6 @@ koopa_macos_locate_lsregister() { # {{{1
 /Frameworks/LaunchServices.framework/Support/lsregister"
 }
 
-koopa_macos_locate_mas() { # {{{1
-    koopa_locate_app 'mas'
-}
-
 koopa_macos_locate_mount_nfs() { # {{{1
     koopa_locate_app '/sbin/mount_nfs'
 }
