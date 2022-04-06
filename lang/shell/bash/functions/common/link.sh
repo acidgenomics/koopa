@@ -1,36 +1,50 @@
 #!/usr/bin/env bash
 
-# FIXME Can we avoid using 'koopa_sys' (sudo) calls here?
-# FIXME Consider only linking into '/bin' by default.
-# FIXME This needs to automatically exclude 'libexec' subdirectory, such as
-# for meson and ninja installers.
-# FIXME Link this into '/opt/koopa/bin' instead of '/usr/local'...then we can
-# have links that work on macOS too.
-
-
-
 koopa_link_in_bin() { # {{{1
     # """
     # Link a program in koopa 'bin/' directory.
-    # @note Updated 2022-03-31.
+    # @note Updated 2022-04-05.
     #
     # @usage koopa_link_app_in_bin SOURCE_FILE TARGET_NAME ...
     #
     # @examples
-    # > koopa_link_app_in_bin \
+    # > koopa_link_in_bin \
     # >     '/usr/local/bin/emacs' 'emacs' \
     # >     '/usr/local/bin/vim' 'vim'
     # """
-    local dict
+    local dict pos
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        [bin_prefix]="$(koopa_bin_prefix)"
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--sbin')
+                dict[bin_prefix]="$(koopa_sbin_prefix)"
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_ge "$#" 2
     while [[ "$#" -ge 2 ]]
     do
         declare -A dict=(
-            [koopa_prefix]="$(koopa_koopa_prefix)"
             [source_file]="${1:?}"
             [target_name]="${2:?}"
         )
-        dict[target_file]="${dict[koopa_prefix]}/bin/${dict[target_name]}"
+        dict[target_file]="${dict[bin_prefix]}/${dict[target_name]}"
         koopa_alert "Linking '${dict[source_file]}' at '${dict[target_file]}'."
         koopa_assert_is_file "${dict[source_file]}"
         koopa_sys_ln "${dict[source_file]}" "${dict[target_file]}"
@@ -39,6 +53,8 @@ koopa_link_in_bin() { # {{{1
     return 0
 }
 
+# FIXME Simplify this, requiring direct prefix input.
+# FIXME This needs to automatically execlude libexec.
 koopa_link_in_make() { # {{{1
     # """
     # Symlink application into make directory.
@@ -59,7 +75,7 @@ koopa_link_in_make() { # {{{1
     # * -s, --symbolic-link
     #
     # @examples
-    # > koopa_link_app_in_make --name='emacs' --version='26.3'
+    # > koopa_link_in_make --name='emacs' --version='26.3'
     # """
     local cp_args cp_source cp_target dict i include pos
     koopa_assert_has_args "$#"
@@ -219,26 +235,79 @@ koopa_link_in_opt() { # {{{1
     return 0
 }
 
+koopa_link_in_sbin() { # {{{1
+    # """
+    # Link a program in koopa 'sbin/ directory.
+    # @note Updated 2022-04-05.
+    # 
+    # @usage koopa_link_app_in_sbin SOURCE_FILE TARGET_NAME ...
+    #
+    # @examples
+    # > koopa_link_app_in_sbin '/Library/TeX/texbin/tlmgr' 'tlmgr'
+    # """
+    koopa_assert_has_args "$#"
+    koopa_link_in_bin --sbin "$@"
+    return 0
+}
+
+# FIXME Support '--sbin' argument.
 koopa_unlink_in_bin() { # {{{1
     # """
     # Unlink a program symlinked in koopa 'bin/ directory.
-    # @note Updated 2022-03-31.
+    # @note Updated 2022-04-05.
     #
     # @examples
-    # > koopa_unlink_app_in_bin 'R' 'Rscript'
+    # > koopa_unlink_in_bin 'R' 'Rscript'
     # """
-    local dict files i names
+    local dict files i names pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
+        [bin_prefix]="$(koopa_bin_prefix)"
     )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--sbin')
+                dict[bin_prefix]="$(koopa_sbin_prefix)"
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
     names=("$@")
     files=()
     for i in "${!names[@]}"
     do
-        files+=("${dict[koopa_prefix]}/bin/${names[$i]}")
+        files+=("${dict[bin_prefix]}/${names[$i]}")
     done
     koopa_assert_is_file "${files[@]}"
     koopa_rm "${files[@]}"
+    return 0
+}
+
+# FIXME Need to add 'koopa_unlink_in_opt' utility.
+
+# FIXME Need to add 'koopa_unlink_in_make' utility.
+# FIXME This version needs to resolve symlinks and then delete them. Is this
+# already defined in r-koopa? If so, rethink as Bash-native code instead.
+
+koopa_unlink_in_sbin() { # {{{1
+    # """
+    # Unlink a program symlinked in koopa 'sbin/' directory.
+    # @note Updated 2022-04-05.
+    # """
+    koopa_assert_has_args "$#"
+    koopa_unlink_in_bin --sbin "$@"
     return 0
 }
