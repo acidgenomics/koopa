@@ -8,9 +8,9 @@ koopa_linux_install_aspera_connect() { # {{{1
         "$@"
 }
 
+# FIXME Rework this: --link-in-make-include='bin/aws' \
 koopa_linux_install_aws_cli() { # {{{1
     koopa_install_app \
-        --link-include='bin/aws' \
         --name-fancy='AWS CLI' \
         --name='aws-cli' \
         --platform='linux' \
@@ -50,9 +50,9 @@ koopa_linux_install_bcl2fastq() { # {{{1
     return 0
 }
 
+# FIXME Rework this: --link-in-make-include='bin/cellranger' \
 koopa_linux_install_cellranger() { # {{{1
     koopa_install_app \
-        --link-include='bin/cellranger' \
         --name-fancy='Cell Ranger' \
         --name='cellranger' \
         --platform='linux' \

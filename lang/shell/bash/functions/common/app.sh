@@ -3,7 +3,7 @@
 koopa_configure_app_packages() { # {{{1
     # """
     # Configure language application.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-06.
     #
     # @examples
     # > koopa_configure_app_packages \
@@ -167,17 +167,15 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Need to rethink the '--link-app' handling here.
-# FIXME Consider adding '--link-app-in-bin' flag supporting parameterized
-# arguments here.
+# FIXME Need to support parameterized '--link-in-bin' here.
+# FIXME Need to update '--activate-opt' support here.
 
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-06.
     # """
-    local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
-    local link_include_arr opt_arr pos
+    local bin_arr brew_opt_arr clean_path_arr dict i init_dir opt_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A dict=(
@@ -187,9 +185,11 @@ koopa_install_app() { # {{{1
         [installer]=''
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        # FIXME Disable support for this, or rename as 'link_in_make'.
-        [link_app]=1
-        [link_opt]=1
+        # When enabled, this will symlink all files into make prefix,
+        # typically '/usr/local'.
+        [link_in_make]=0
+        # Create an unversioned symlink in koopa 'opt/' directory.
+        [link_in_opt]=1
         [make_prefix]="$(koopa_make_prefix)"
         [name]=''
         [name_fancy]=''
@@ -206,25 +206,34 @@ koopa_install_app() { # {{{1
         [shared]=0
         [system]=0
         [tmp_dir]="$(koopa_tmp_dir)"
+        [update_ldconfig]=0
+        [verbose]=0
         [version]=''
         [version_key]=''
     )
+    bin_arr=()
+    brew_opt_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    homebrew_opt_arr=()
-    link_include_arr=()
     opt_arr=()
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            # FIXME Consider adding 'activate' as a prefix here.
-            '--homebrew-opt='*)
-                homebrew_opt_arr+=("${1#*=}")
+            '--activate-homebrew-opt='*)
+                brew_opt_arr+=("${1#*=}")
                 shift 1
                 ;;
-            '--homebrew-opt')
-                homebrew_opt_arr+=("${2:?}")
+            '--activate-homebrew-opt')
+                brew_opt_arr+=("${2:?}")
+                shift 2
+                ;;
+            '--activate-opt='*)
+                opt_arr+=("${1#*=}")
+                shift 1
+                ;;
+            '--activate-opt')
+                opt_arr+=("${2:?}")
                 shift 2
                 ;;
             '--installer='*)
@@ -235,12 +244,12 @@ koopa_install_app() { # {{{1
                 dict[installer]="${2:?}"
                 shift 2
                 ;;
-            '--link-include='*)
-                link_include_arr+=("${1#*=}")
+            '--link-in-bin='*)
+                bin_arr+=("${1#*=}")
                 shift 1
                 ;;
-            '--link-include')
-                link_include_arr+=("${2:?}")
+            '--link-in-bin')
+                bin_arr+=("${2:?}")
                 shift 2
                 ;;
             '--name='*)
@@ -257,15 +266,6 @@ koopa_install_app() { # {{{1
                 ;;
             '--name-fancy')
                 dict[name_fancy]="${2:?}"
-                shift 2
-                ;;
-            # FIXME Consider adding 'activate' as a prefix here.
-            '--opt='*)
-                opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--opt')
-                opt_arr+=("${2:?}")
                 shift 2
                 ;;
             '--platform='*)
@@ -301,16 +301,20 @@ koopa_install_app() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
-            '--link')
-                dict[link_app]=1
+            '--link-in-make')
+                dict[link_in_make]=1
                 shift 1
                 ;;
-            '--no-link')
-                dict[link_app]=0
+            '--link-in-opt')
+                dict[link_in_opt]=1
                 shift 1
                 ;;
-            '--no-link-opt')
-                dict[link_opt]=0
+            '--no-link-in-make')
+                dict[link_in_make]=0
+                shift 1
+                ;;
+            '--no-link-in-opt')
+                dict[link_in_opt]=0
                 shift 1
                 ;;
             '--no-prefix-check')
@@ -338,7 +342,7 @@ koopa_install_app() { # {{{1
                 shift 1
                 ;;
             '--verbose')
-                set -o xtrace
+                dict[verbose]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -350,6 +354,7 @@ koopa_install_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
+    [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
@@ -387,7 +392,7 @@ koopa_install_app() { # {{{1
     fi
     if [[ "${dict[shared]}" -eq 0 ]] || koopa_is_macos
     then
-        dict[link_app]=0
+        dict[link_in_make]=0
     fi
     [[ -z "${dict[installer]}" ]] && dict[installer]="${dict[name]}"
     dict[installer]="$(koopa_snake_case_simple "install_${dict[installer]}")"
@@ -456,13 +461,26 @@ ${dict[platform]}/${dict[installer_file]}.sh"
             koopa_alert_install_start "${dict[name_fancy]}"
         fi
     fi
-    if [[ -d "${dict[prefix]}" ]] && \
-        [[ "${dict[link_opt]}" -eq 1 ]] && \
-        [[ "${dict[auto_prefix]}" -eq 1 ]] && \
-        [[ "${dict[shared]}" -eq 1 ]] && \
-        [[ "${dict[system]}" -eq 0 ]]
+    if [[ ! -d "${dict[prefix]}" ]] || \
+        [[ "${dict[auto_prefix]}" -eq 1 ]] || \
+        [[ "${dict[shared]}" -eq 0 ]] || \
+        [[ "${dict[system]}" -eq 1 ]]
+    then
+        dict[link_in_opt]=0
+    fi
+    if [[ "${dict[link_in_opt]}" -eq 1 ]]
     then
         koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
+    fi
+    if koopa_is_linux && \
+        { [[ "${dict[shared]}" -eq 1 ]] || \
+            [[ "${dict[system]}" -eq 1 ]]; }
+    then
+        dict[update_ldconfig]=1
+    fi
+    if [[ "${dict[shared]}" -eq 0 ]] || [[ "${dict[system]}" -eq 1 ]]
+    then
+        dict[link_in_make]=0
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
@@ -475,23 +493,21 @@ ${dict[platform]}/${dict[installer_file]}.sh"
                 '/usr/bin/pkg-config'
         fi
         # Activate packages installed in Homebrew 'opt/' directory.
-        if koopa_is_array_non_empty "${homebrew_opt_arr[@]:-}"
+        if koopa_is_array_non_empty "${brew_opt_arr[@]:-}"
         then
-            koopa_activate_homebrew_opt_prefix "${homebrew_opt_arr[@]}"
+            koopa_activate_homebrew_opt_prefix "${brew_opt_arr[@]}"
         fi
         # Activate packages installed in Koopa 'opt/' directory.
         if koopa_is_array_non_empty "${opt_arr[@]:-}"
         then
             koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
-        if koopa_is_linux && \
-            { [[ "${dict[shared]}" -eq 1 ]] || \
-                [[ "${dict[system]}" -eq 1 ]]; }
+        if [[ "${dict[update_ldconfig]}" -eq 1 ]]
         then
             koopa_linux_update_ldconfig
         fi
         # shellcheck disable=SC2030
-        export INSTALL_LINK_APP="${dict[link_app]}"
+        export INSTALL_LINK_IN_MAKE="${dict[link_in_make]}"
         # shellcheck disable=SC2030
         export INSTALL_NAME="${dict[name]}"
         # shellcheck disable=SC2030
@@ -513,34 +529,23 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         else
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
         fi
-        # FIXME Need to rework this approach, looking for a corresponding
-        # link function instead.
-        if [[ "${dict[link_app]}" -eq 1 ]]
-        then
-            koopa_delete_broken_symlinks "${dict[make_prefix]}"
-            link_args=(
-                "--app-prefix=${dict[prefix]}"
-                "--name=${dict[name]}"
-                # > "--version=${dict[version]}"
-            )
-            if koopa_is_array_non_empty "${link_include_arr[@]:-}"
-            then
-                for link_include in "${link_include_arr[@]}"
-                do
-                    link_args+=("--include=${link_include}")
-                done
-            fi
-            # Including the 'true' catch here to avoid 'cp' issues on Arch.
-            # FIXME Need to rethink this approach, only linking into
-            # '/opt/koopa/bin' instead!
-            # > koopa_link_app "${link_args[@]}" || true
-        fi
     fi
-    if koopa_is_linux && \
-        { [[ "${dict[shared]}" -eq 1 ]] || \
-            [[ "${dict[system]}" -eq 1 ]]; }
+    if [[ "${dict[link_in_make]}" -eq 1 ]]
+    then
+        koopa_link_in_make --prefix="${dict[prefix]}"
+    fi
+    if [[ "${dict[update_ldconfig]}" -eq 1 ]]
     then
         koopa_linux_update_ldconfig
+    fi
+    if koopa_is_array_non_empty "${bin_arr[@]:-}"
+    then
+        for i in "${!bin_arr[@]}"
+        do
+            koopa_link_in_bin \
+                "${dict[prefix]}/${bin_arr[i]}" \
+                "$(koopa_basename "${bin_arr[i]}")"
+        done
     fi
     if [[ "${dict[push]}" -eq 1 ]]
     then
@@ -565,6 +570,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     return 0
 }
 
+# FIXME Need to support parameterized '--link-in-bin' here.
 koopa_install_app_packages() { # {{{1
     # """
     # Install application packages.
@@ -737,9 +743,8 @@ koopa_reinstall_app() { # {{{1
     koopa_koopa install "$@" --reinstall
 }
 
-# FIXME Need to move this into main app.sh file.
-# FIXME Need to rethink '--link-app' handling here.
-# FIXME Always look for unlinker function.
+# FIXME Need to support parameterized '--unlink-app-in-bin' here.
+# FIXME Consider adding support for unlinker function.
 # FIXME We don't need to remove opt link only in shared, right? Rethink...
 # FIXME Consider adding '--unlink-app-from-bin' parameterized option here.
 
@@ -756,7 +761,7 @@ koopa_uninstall_app() { # {{{1
         [app_prefix]="$(koopa_app_prefix)"
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [link_app]=1
+        [link_in_make]=1  # FIXME Need to rethink this.
         [make_prefix]="$(koopa_make_prefix)"
         [name_fancy]=''
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -925,10 +930,11 @@ at '${dict[prefix]}'."
                 "${dict[name_fancy]}" "${dict[prefix]}"
         fi
         "${app[rm]}" "${dict[prefix]}"
-        # FIXME Rework this as 'koopa_unlink_in_opt' instead.
-        if [[ "${dict[shared]}" -eq 1 ]]
+
+        # FIXME Only do this if shared.
+        if [[ "${dict[unlink_in_opt]}" -eq 1 ]]
         then
-            "${app[rm]}" "${dict[opt_prefix]}/${dict[name]}"
+            koopa_unlink_in_opt "${dict[name]}"
         fi
         # FIXME Look for unlink function and always remove here.
         if [[ "${dict[quiet]}" -eq 0 ]]
