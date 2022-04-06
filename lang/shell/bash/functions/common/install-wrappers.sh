@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Update these wrappers to link specific programs.
+
 koopa_install_anaconda() { # {{{1
     koopa_install_app \
         --name-fancy='Anaconda' \
@@ -20,7 +22,7 @@ koopa_install_autoconf() { # {{{1
     # m4 is required for automake to build.
     if koopa_is_macos
     then
-        install_args+=('--homebrew-opt=m4')
+        install_args+=('--activate-homebrew-opt=m4')
     fi
     koopa_install_gnu_app "${install_args[@]}" "$@"
 }
@@ -32,11 +34,9 @@ koopa_install_automake() { # {{{1
         "$@"
 }
 
-# FIXME Rename 'into' to simply 'in' for consistency.
-# FIXME Ensure bash gets linked.
 koopa_install_bash() { # {{{1
     koopa_install_app \
-        --link-app-into-bin='bash' \
+        --link-in-bin='bin/bash' \
         --name-fancy='Bash' \
         --name='bash' \
         "$@"
@@ -72,11 +72,13 @@ koopa_install_cmake() { # {{{1
 
 koopa_install_conda() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/conda' \
         --name-fancy='Miniconda' \
         --name='conda' \
         "$@"
 }
 
+# FIXME Need to link specific tools here.
 koopa_install_coreutils() { # {{{1
     koopa_install_gnu_app \
         --name='coreutils' \
@@ -91,6 +93,7 @@ koopa_install_cpufetch() { # {{{1
 
 koopa_install_curl() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/curl' \
         --name-fancy='cURL' \
         --name='curl' \
         "$@"
@@ -115,6 +118,7 @@ koopa_install_dotfiles() { # {{{1
 
 koopa_install_emacs() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/emacs' \
         --name-fancy='Emacs' \
         --name='emacs' \
         "$@"
@@ -142,12 +146,14 @@ koopa_install_findutils() { # {{{1
         export CFLAGS='-D__nonnull\(params\)='
     fi
     koopa_install_gnu_app \
+        --link-in-bin='bin/find' \
         --name='findutils' \
         "$@"
 }
 
 koopa_install_fish() { # {{{1
     koopa_install_app \
+        --link-in-bin='fish' \
         --name-fancy='Fish' \
         --name='fish' \
         "$@"
@@ -155,11 +161,13 @@ koopa_install_fish() { # {{{1
 
 koopa_install_fzf() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/fzf' \
         --name-fancy='FZF' \
         --name='fzf' \
         "$@"
 }
 
+# FIXME Need to link awk.
 koopa_install_gawk() { # {{{1
     koopa_install_gnu_app \
         --name='gawk' \
@@ -187,6 +195,7 @@ koopa_install_geos() { # {{{1
         "$@"
 }
 
+# FIXME Need to link git.
 koopa_install_git() { # {{{1
     koopa_install_app \
         --name-fancy='Git' \
@@ -392,9 +401,9 @@ koopa_install_neovim() { # {{{1
         "$@"
 }
 
+# FIXME Rework this: --link-in-make-include='bin' \
 koopa_install_nim() { # {{{1
     koopa_install_app \
-        --link-include='bin' \
         --name-fancy='Nim' \
         --name='nim' \
         "$@"
