@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Consider managing elements in '/etc/paths.d'.
+# FIXME Also ensure documentation is located in '/etc/manpaths.d'.
 
 update_homebrew() { # {{{1
     # """
