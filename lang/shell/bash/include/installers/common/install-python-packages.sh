@@ -5,12 +5,12 @@
 install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-06.
     # """
     local app dict pkgs
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [brew]="$(koopa_locate_brew --allow-missing)"
         [python]="$(koopa_locate_python)"
     )
     declare -A dict=(

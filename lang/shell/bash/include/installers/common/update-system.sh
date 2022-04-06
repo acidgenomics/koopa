@@ -8,7 +8,7 @@ update_system() { # {{{1
     local app dict
     koopa_assert_is_admin
     declare -A app=(
-        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [brew]="$(koopa_locate_brew --allow-missing)"
     )
     declare -A dict=(
         [config_prefix]="$(koopa_config_prefix)"

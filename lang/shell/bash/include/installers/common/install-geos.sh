@@ -3,7 +3,7 @@
 install_geos() { # {{{1
     # """
     # Install GEOS.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-04-06.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.
@@ -26,7 +26,7 @@ install_geos() { # {{{1
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [brew]="$(koopa_locate_brew --allow-missing)"
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )

@@ -3,7 +3,7 @@
 install_proj() { # {{{1
     # """
     # Install PROJ.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-06.
     #
     # Alternative approach for SQLite3 dependency:
     # > -DCMAKE_PREFIX_PATH='/opt/koopa/opt/sqlite'
@@ -15,7 +15,7 @@ install_proj() { # {{{1
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [brew]="$(koopa_locate_brew --allow-missing)"
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )

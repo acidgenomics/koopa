@@ -8,7 +8,7 @@
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-06.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
@@ -28,6 +28,7 @@ koopa_locate_app() { # {{{1
     fi
     local dict pos
     declare -A dict=(
+        [allow_missing]=0
         [app_name]=''
         [brew_app]=''
         [brew_opt_name]=''
@@ -79,6 +80,10 @@ koopa_locate_app() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--allow-missing')
+                dict[allow_missing]=1
+                shift 1
+                ;;
             '--homebrew-gnubin')
                 dict[homebrew_gnubin]=1
                 shift 1
@@ -143,8 +148,12 @@ bin/${dict[app_name]}"
         koopa_print "${dict[app]}"
         return 0
     fi
-    koopa_warn "Failed to locate '${dict[app_name]}'."
-    return 1
+    if [[ "${dict[allow_missing]}" -eq 1 ]]
+    then
+        return 0
+    else
+        koopa_stop "Failed to locate '${dict[app_name]}'."
+    fi
 }
 
 koopa_locate_conda_app() { # {{{1
@@ -242,9 +251,11 @@ ${dict[env_name]}@${dict[env_version]}/bin/${dict[app_name]}"
 koopa_locate_gnu_coreutils_app() { # {{{1
     # """
     # Locate a GNU coreutils app.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-06.
+    # """
     koopa_locate_app \
         --app-name="${1:?}" \
         --homebrew-gnubin \
-        --opt-name='coreutils'
+        --opt-name='coreutils' \
+        "$@"
 }

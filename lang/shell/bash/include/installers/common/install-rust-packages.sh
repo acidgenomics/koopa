@@ -6,7 +6,7 @@
 install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-06.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -30,7 +30,7 @@ install_rust_packages() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_activate_rust
     declare -A app=(
-        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [brew]="$(koopa_locate_brew --allow-missing)"
         [cargo]="$(koopa_locate_cargo)"
         [rustc]="$(koopa_locate_rustc)"
     )

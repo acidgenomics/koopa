@@ -3,7 +3,7 @@
 install_subversion() { # {{{1
     # """
     # Install Subversion.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-06.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -17,7 +17,7 @@ install_subversion() { # {{{1
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [brew]="$(koopa_locate_brew --allow-missing)"
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(

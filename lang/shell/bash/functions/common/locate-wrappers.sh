@@ -58,7 +58,10 @@ koopa_locate_bpytop() { # {{{1
 }
 
 koopa_locate_brew() { # {{{1
-    koopa_locate_app 'brew'
+    # """
+    # Allowing passthrough of '--allow-missing' here.
+    # """
+    koopa_locate_app 'brew' "$@"
 }
 
 koopa_locate_bundle() { # {{{1
@@ -110,7 +113,10 @@ koopa_locate_cmake() { # {{{1
 }
 
 koopa_locate_conda() { # {{{1
-    koopa_locate_app "$(koopa_conda_prefix)/bin/conda"
+    # """
+    # Allowing passthrough of '--allow-missing' here.
+    # """
+    koopa_locate_app "$(koopa_conda_prefix)/bin/conda" "$@"
 }
 
 koopa_locate_convmv() { # {{{1
@@ -126,9 +132,13 @@ koopa_locate_cpan() { # {{{1
 }
 
 koopa_locate_cpanm() { # {{{1
+    # """
+    # Allowing passthrough of '--allow-missing' here.
+    # """
     koopa_locate_app \
         --app-name='cpanm' \
-        --koopa-opt-name='perl-packages'
+        --koopa-opt-name='perl-packages' \
+        "$@"
 }
 
 koopa_locate_curl() { # {{{1
@@ -148,9 +158,13 @@ koopa_locate_df() { # {{{1
 }
 
 koopa_locate_dig() { # {{{1
+    # """
+    # Allowing passthrough of '--allow-missing' here.
+    # """
     koopa_locate_app \
         --app-name='dig' \
-        --opt-name='bind'
+        --opt-name='bind' \
+        "$@"
 }
 
 koopa_locate_dirname() { # {{{1
@@ -360,7 +374,7 @@ koopa_locate_luarocks() { # {{{1
 koopa_locate_llvm_config() { # {{{1
     local app dict
     declare -A app=(
-        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [brew]="$(koopa_locate_brew --allow-missing)"
         [llvm_config]="${LLVM_CONFIG:-}"
     )
     if [[ ! -x "${app[llvm_config]}" ]] && \
@@ -415,23 +429,21 @@ koopa_locate_make() { # {{{1
 }
 
 koopa_locate_mamba() { # {{{1
-    koopa_locate_app "$(koopa_conda_prefix)/bin/mamba"
+    # """
+    # Allowing passthrough of '--allow-missing' here.
+    # """
+    koopa_locate_app "$(koopa_conda_prefix)/bin/mamba" "$@"
 }
 
 koopa_locate_mamba_or_conda() { # {{{1
     local str
-    str="$(koopa_locate_mamba 2>/dev/null || true)"
-    if [[ ! -x "$str" ]]
+    str="$(koopa_locate_mamba --allow-missing)"
+    if [[ -x "$str" ]]
     then
-        str="$(koopa_locate_conda 2>/dev/null || true)"
+        koopa_print "$str"
+        return 0
     fi
-    if [[ ! -x "$str" ]]
-    then
-        koopa_warn 'Failed to locate mamba or conda.'
-        return 1
-    fi
-    koopa_print "$str"
-    return 0
+    koopa_locate_conda --allow-missing
 }
 
 koopa_locate_man() { # {{{1
@@ -499,6 +511,13 @@ koopa_locate_npm() { # {{{1
         --app-name='npm' \
         --homebrew-opt-name='node' \
         --koopa-opt-name='node-packages'
+}
+
+koopa_locate_nproc() { # {{{1
+    # """
+    # Allowing passthrough of '--allow-missing' here.
+    # """
+    koopa_locate_gnu_coreutils_app 'nproc' "$@"
 }
 
 koopa_locate_od() { # {{{1
@@ -602,9 +621,13 @@ koopa_locate_rename() { # {{{1
 }
 
 koopa_locate_rg() { # {{{1
+    # """
+    # Allowing passthrough of '--allow-missing' here.
+    # """
     koopa_locate_app \
         --app-name='rg' \
-        --opt-name='ripgrep'
+        --opt-name='ripgrep' \
+        "$@"
 }
 
 koopa_locate_rm() { # {{{1
