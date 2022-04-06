@@ -78,12 +78,12 @@ koopa_compress_ext_pattern() { # {{{1
 koopa_cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
-    # @note Updated 2022-02-09.
+    # @note Updated 2022-04-06.
     # """
     local app num
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [nproc]="$(koopa_locate_nproc 2>/dev/null || true)"
+        [nproc]="$(koopa_locate_nproc --allow-missing)"
     )
     if koopa_is_installed "${app[nproc]}"
     then
@@ -359,7 +359,7 @@ koopa_os_type() { # {{{1
 koopa_public_ip_address() { # {{{1
     # """
     # Public (remote) IP address.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-04-06.
     #
     # @section BIND's Domain Information Groper (dig) tool:
     #
@@ -377,7 +377,7 @@ koopa_public_ip_address() { # {{{1
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [dig]="$(koopa_locate_dig 2>/dev/null || true)"
+        [dig]="$(koopa_locate_dig --allow-missing)"
     )
     if koopa_is_installed "${app[dig]}"
     then

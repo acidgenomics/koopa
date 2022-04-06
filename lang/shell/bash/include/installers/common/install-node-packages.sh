@@ -3,7 +3,7 @@
 install_node_packages() { # {{{1
     # """
     # Install Node.js packages using npm.
-    # @note Updated 2022-03-21.
+    # @note Updated 2022-04-06.
     #
     # Node 'tldr' conflicts with Rust 'tealdeer'.
     #
@@ -16,7 +16,7 @@ install_node_packages() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_activate_node
     declare -A app=(
-        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [brew]="$(koopa_locate_brew --allow-missing)"
         [node]="$(koopa_locate_node)"
         [npm1]="$(koopa_locate_npm)"
     )
