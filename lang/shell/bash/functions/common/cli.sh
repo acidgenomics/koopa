@@ -1,32 +1,16 @@
 #!/usr/bin/env bash
 
 # FIXME Need to nest our macOS-specific functions under 'koopa os XXX'.
-
 # FIXME Need to add support for OS-specific link functions.
-
 # FIXME 'koopa app list' shouldn't work any more...
-
 # FIXME Need to rework these, formerly defined in 'koopa_cli_app':
-
-#        # Linux-specifc --------------------------------------------------------
-#        # FIXME Make these not Linux specific.
-#        # These need to migrate out of app into top level.
-#        'link')
-#            key='link-app'
-#            shift 1
-#            ;;
-#        'prune')
-#            # FIXME Consider moving this under system.
-#            key='prune-apps'
-#            shift 1
-#            ;;
-#        # FIXME Need to move this to top level.
-#        'unlink')
-#            key='unlink-app'
-#            shift 1
-#            ;;
-
-
+#
+# FIXME Need to rework these to also work on macOS:
+# These need to migrate out of app into top level.
+# - 'link')
+# - 'prune')
+# - 'unlink')
+# ;;
 
 
 
