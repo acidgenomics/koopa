@@ -65,8 +65,9 @@ koopa_install_chemacs() { # {{{1
 
 koopa_install_cmake() { # {{{1
     koopa_install_app \
-        --name='cmake' \
+        --link-in-bin='bin/cmake' \
         --name-fancy='CMake' \
+        --name='cmake' \
         "$@"
 }
 
