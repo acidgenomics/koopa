@@ -41,7 +41,8 @@ v${dict[version]}/${dict[file]}"
         --parallel="${dict[jobs]}" \
         --prefix="${dict[prefix]}" \
         -- \
-        -DCMAKE_USE_OPENSSL="${dict[opt_prefix]}/openssl"
+        -DCMAKE_BUILD_TYPE='RELEASE' \
+        -DCMAKE_PREFIX_PATH="${dict[opt_prefix]}/openssl"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
