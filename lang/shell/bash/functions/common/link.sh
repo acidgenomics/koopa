@@ -300,6 +300,9 @@ koopa_unlink_in_bin() { # {{{1
     __koopa_unlink_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }
 
+# FIXME This is currently too slow, I think due to path resolution.
+# FIXME Need to rework this function.
+
 koopa_unlink_in_make() { # {{{1
     # """
     # Unlink a program symlinked in koopa 'make/' directory.
