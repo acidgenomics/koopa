@@ -375,13 +375,10 @@ koopa_fix_rbenv_permissions() { # {{{1
 koopa_fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-04-06.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [zsh]="$(koopa_locate_zsh 2>/dev/null || true)"
-    )
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
@@ -390,29 +387,18 @@ koopa_fix_zsh_permissions() { # {{{1
     koopa_sys_chmod 'g-w' \
         "${dict[koopa_prefix]}/lang/shell/zsh" \
         "${dict[koopa_prefix]}/lang/shell/zsh/functions"
-    koopa_is_installed "${app[zsh]}" || return 0
-    if [[ -d "${dict[make_prefix]}/share/zsh/site-functions" ]]
+    if [[ -d "${dict[make_prefix]}/share/zsh" ]]
     then
-        if koopa_str_detect_regex \
-            --string="${app[zsh]}" \
-            --pattern="^${dict[make_prefix]}"
-        then
-            koopa_sys_chmod 'g-w' \
-                "${dict[make_prefix]}/share/zsh" \
-                "${dict[make_prefix]}/share/zsh/site-functions"
-        fi
+        koopa_sys_chmod 'g-w' \
+            "${dict[make_prefix]}/share/zsh" \
+            "${dict[make_prefix]}/share/zsh/site-functions"
     fi
-    if [[ -d "${dict[app_prefix]}" ]]
+    if [[ -d "${dict[app_prefix]}/zsh" ]]
     then
-        if koopa_str_detect_regex \
-            --string="$(koopa_realpath "${app[zsh]}")" \
-            --pattern="^${dict[app_prefix]}"
-        then
-            koopa_sys_chmod 'g-w' \
-                "${dict[app_prefix]}/zsh/"*'/share/zsh' \
-                "${dict[app_prefix]}/zsh/"*'/share/zsh/'* \
-                "${dict[app_prefix]}/zsh/"*'/share/zsh/'*'/functions'
-        fi
+        koopa_sys_chmod 'g-w' \
+            "${dict[app_prefix]}/zsh/"*'/share/zsh' \
+            "${dict[app_prefix]}/zsh/"*'/share/zsh/'* \
+            "${dict[app_prefix]}/zsh/"*'/share/zsh/'*'/functions'
     fi
     return 0
 }
