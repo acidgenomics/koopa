@@ -586,6 +586,7 @@ koopa_locate_python() { # {{{1
     dict[version]="$(koopa_variable "${dict[name]}")"
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
     app[python]="${dict[name]}${dict[maj_ver]}"
+    koopa_warn "FIXME ${app[python]}"
     koopa_locate_app "${app[python]}"
 }
 
