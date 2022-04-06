@@ -153,10 +153,10 @@ koopa_link_in_make() { # {{{1
     # * -s, --symbolic-link
     #
     # @examples
-    # > koopa_link_in_make --prefix='/opt/koopa/app/emacs/26.3'
+    # > koopa_link_in_make --prefix='/opt/koopa/app/autoconf/2.71'
     # > koopa_link_in_make \
-    # >     --prefix='/opt/koopa/app/conda/4.11.0' \
-    # >     --include='bin/conda'
+    # >     --include='bin/conda' \
+    # >     --prefix='/opt/koopa/app/conda/4.11.0'
     # """
     local cp_args dict exclude_arr files_arr find_args i include_arr
     koopa_assert_has_args "$#"
@@ -306,7 +306,7 @@ koopa_unlink_in_make() { # {{{1
     # @note Updated 2022-04-06.
     #
     # @examples
-    # > koopa_unlink_in_make --prefix='/opt/koopa/app/python'
+    # > koopa_unlink_in_make --prefix='/opt/koopa/app/autoconf'
     # """
     local dict files rm_args
     koopa_assert_has_args "$#"
