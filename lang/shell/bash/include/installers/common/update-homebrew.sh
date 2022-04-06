@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider managing elements in '/etc/paths.d'.
+
 update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
