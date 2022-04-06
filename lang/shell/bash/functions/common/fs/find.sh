@@ -724,6 +724,7 @@ koopa_find_non_symlinked_make_files() { # {{{1
     return 0
 }
 
+# FIXME Is there a way to speed this up using GNU find or something?
 koopa_find_symlinks() { # {{{1
     # """
     # Find symlinks matching a specified source prefix.
@@ -776,18 +777,21 @@ koopa_find_symlinks() { # {{{1
     koopa_assert_is_dir "${dict[source_prefix]}" "${dict[target_prefix]}"
     dict[source_prefix]="$(koopa_realpath "${dict[source_prefix]}")"
     dict[target_prefix]="$(koopa_realpath "${dict[target_prefix]}")"
+    koopa_warn 'FIXME AAA'
     readarray -t symlinks <<< "$(
         koopa_find \
             --prefix="${dict[target_prefix]}" \
             --sort \
             --type='l' \
     )"
+    koopa_warn 'FIXME BBB'
     for symlink in "${symlinks[@]}"
     do
         if koopa_str_detect_regex \
             --pattern="^${dict[source_prefix]}/" \
             --string="$(koopa_realpath "$symlink")"
         then
+            koopa_warn "FIXME ${symlink}"
             hits+=("$symlink")
         fi
     done
