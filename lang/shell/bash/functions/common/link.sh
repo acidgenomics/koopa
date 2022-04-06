@@ -1,30 +1,40 @@
 #!/usr/bin/env bash
 
-koopa_link_in_bin() { # {{{1
+__koopa_link_in_dir() { # {{{1
     # """
-    # Link a program in koopa 'bin/' directory.
-    # @note Updated 2022-04-05.
+    # Symlink multiple programs in a directory.
+    # @note Updated 2022-04-06.
     #
-    # @usage koopa_link_app_in_bin SOURCE_FILE TARGET_NAME ...
+    # @usage
+    # > __koopa_link_in_dir \
+    # >     --prefix=PREFIX \
+    # >     SOURCE_FILE_1 TARGET_NAME_1 \
+    # >     SOURCE_FILE_2 TARGET_NAME_2 \
+    # >     ...
     #
     # @examples
-    # > koopa_link_in_bin \
+    # > __koopa_link_in_dir \
+    # >     --prefix="$(koopa_bin_prefix) \
     # >     '/usr/local/bin/emacs' 'emacs' \
     # >     '/usr/local/bin/vim' 'vim'
     # """
     local dict pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [bin_prefix]="$(koopa_bin_prefix)"
+        [prefix]=''
     )
     pos=()
     while (("$#"))
     do
         case "$1" in
-            # Flags ------------------------------------------------------------
-            '--sbin')
-                dict[bin_prefix]="$(koopa_sbin_prefix)"
+            # Key-value pairs --------------------------------------------------
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
                 shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
@@ -36,6 +46,7 @@ koopa_link_in_bin() { # {{{1
                 ;;
         esac
     done
+    koopa_assert_is_set '--prefix' "${dict[prefix]}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_ge "$#" 2
     while [[ "$#" -ge 2 ]]
@@ -44,21 +55,83 @@ koopa_link_in_bin() { # {{{1
             [source_file]="${1:?}"
             [target_name]="${2:?}"
         )
-        dict[target_file]="${dict[bin_prefix]}/${dict[target_name]}"
-        koopa_alert "Linking '${dict[source_file]}' at '${dict[target_file]}'."
-        koopa_assert_is_file "${dict[source_file]}"
+        dict[target_file]="${dict[prefix]}/${dict[target_name]}"
         koopa_sys_ln "${dict[source_file]}" "${dict[target_file]}"
         shift 2
     done
     return 0
 }
 
-# FIXME Simplify this, requiring direct prefix input.
-# FIXME This needs to automatically execlude libexec.
+__koopa_unlink_in_dir() { # {{{1
+    # """
+    # Unlink multiple symlinks in a directory.
+    # @note Updated 2022-04-06.
+    # """
+    local dict pos
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        [prefix]=''
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--prefix' "${dict[prefix]}"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    names=("$@")
+    files=()
+    for i in "${!names[@]}"
+    do
+        files+=("${dict[prefix]}/${names[$i]}")
+    done
+    koopa_assert_is_file "${files[@]}"
+    koopa_rm "${files[@]}"
+    return 0
+}
+
+koopa_link_in_bin() { # {{{1
+    # """
+    # Link a program in koopa 'bin/' directory.
+    # @note Updated 2022-04-06.
+    #
+    # @usage
+    # > koopa_link_in_bin \
+    # >     SOURCE_FILE_1 TARGET_NAME_1 \
+    # >     SOURCE_FILE_2 TARGET_NAME_2 \
+    # >     ...
+    #
+    # @examples
+    # > koopa_link_in_bin \
+    # >     '/usr/local/bin/emacs' 'emacs' \
+    # >     '/usr/local/bin/vim' 'vim'
+    # """
+    __koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
+}
+
 koopa_link_in_make() { # {{{1
     # """
     # Symlink application into make directory.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-06.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -75,239 +148,224 @@ koopa_link_in_make() { # {{{1
     # * -s, --symbolic-link
     #
     # @examples
-    # > koopa_link_in_make --name='emacs' --version='26.3'
+    # > koopa_link_in_make --prefix='/opt/koopa/app/emacs/26.3'
+    # > koopa_link_in_make \
+    # >     --prefix='/opt/koopa/app/conda/4.11.0' \
+    # >     --include='bin/conda'
     # """
-    local cp_args cp_source cp_target dict i include pos
+    local cp_args dict exclude_arr files_arr find_args i include_arr
     koopa_assert_has_args "$#"
-    # NOTE Remove this assert once we have an ARM MacBook with Homebrew
-    # configured to install into '/opt/homebrew' instead of '/usr/local'.
-    koopa_assert_is_linux
-    koopa_assert_has_no_envs
     declare -A dict=(
         [app_prefix]=''
-        [name]=''
+        [homebrew_prefix]="$(koopa_homebrew_prefix)"
         [make_prefix]="$(koopa_make_prefix)"
-        [version]=''
     )
-    include=()
-    pos=()
+    if [[ "${dict[homebrew_prefix]}" == "${dict[make_prefix]}" ]]
+    then
+        koopa_stop "Homebrew is configured in '${dict[make_prefix]}'."
+    fi
+    exclude_arr=('libexec')
+    include_arr=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--app-prefix='*)
-                dict[app_prefix]="${1#*=}"
+            '--exclude='*)
+                exclude_arr+=("${1#*=}")
                 shift 1
                 ;;
-            '--app-prefix')
-                dict[app_prefix]="${2:?}"
+            '--exclude')
+                exclude_arr+=("${2:?}")
                 shift 2
                 ;;
             '--include='*)
-                include+=("${1#*=}")
+                include_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--include')
-                include+=("${2:?}")
+                include_arr+=("${2:?}")
                 shift 2
                 ;;
-            '--name='*)
-                dict[name]="${1#*=}"
+            '--prefix='*)
+                dict[app_prefix]="${1#*=}"
                 shift 1
                 ;;
-            '--name')
-                dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--version='*)
-                dict[version]="${1#*=}"
-                shift 1
-                ;;
-            '--version')
-                dict[version]="${2:?}"
+            '--prefix')
+                dict[app_prefix]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -gt 0 ]]
-    then
-        koopa_assert_has_args "$#" 1
-        dict[name]="${1:?}"
-    fi
-    koopa_assert_is_set '--name' "${dict[name]}"
-    case "${dict[name]}" in
-        *'-packages' | \
-        'anaconda' | \
-        'aspera-connect' | \
-        'bcbio-nextgen' | \
-        'bcbio-nextgen-vm' | \
-        'cellranger' | \
-        'cloudbiolinux' | \
-        'conda' | \
-        'dotfiles' | \
-        'ensembl-perl-api' | \
-        'gcc' | \
-        'gdal' | \
-        'geos' | \
-        'go' | \
-        'lmod' | \
-        'meson' | \
-        'ninja' | \
-        'openjdk' | \
-        'openssh' | \
-        'openssl' | \
-        'perlbrew' | \
-        'proj' | \
-        'pyenv' | \
-        'r-cmd-check' | \
-        'r-devel' | \
-        'rbenv' | \
-        'rust')
-            koopa_stop "Linking of '${dict[name]}' is not supported."
-            ;;
-    esac
-    if [[ -z "${dict[app_prefix]}" ]]
-    then
-        if [[ -z "${dict[version]}" ]]
-        then
-            dict[version]="$(koopa_find_app_version "${dict[name]}")"
-        fi
-        dict[app_prefix]="$(koopa_app_prefix)/${dict[name]}/${dict[version]}"
-    fi
+    koopa_assert_is_set '--prefix' "${dict[app_prefix]}"
     koopa_assert_is_dir "${dict[app_prefix]}" "${dict[make_prefix]}"
+    if koopa_is_array_non_empty "${include_arr[@]:-}"
+    then
+        for i in "${!include_arr[@]}"
+        do
+            files_arr[i]="${dict[app_prefix]}/${include_arr[i]}"
+        done
+    else
+        find_args=(
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict[app_prefix]}" \
+            --sort \
+            --type='d' \
+        )
+        if koopa_is_array_non_empty "${exclude_arr[@]:-}"
+        then
+            for i in "${!exclude_arr[@]}"
+            do
+                find_args+=("--exclude=${exclude_arr[i]}")
+            done
+        fi
+        readarray -t files_arr <<< "$(koopa_find "${find_args[@]}")"
+    fi
+    if koopa_is_array_empty "${files_arr[@]:-}"
+    then
+        koopa_stop "No files from '${dict[app_prefix]}' to link \
+into '${dict[make_prefix]}'."
+    fi
+    koopa_assert_is_existing "${files_arr[@]}"
     koopa_alert "Linking '${dict[app_prefix]}' in '${dict[make_prefix]}'."
     koopa_sys_set_permissions --recursive "${dict[app_prefix]}"
     koopa_delete_broken_symlinks "${dict[app_prefix]}" "${dict[make_prefix]}"
     cp_args=('--symbolic-link')
     koopa_is_shared_install && cp_args+=('--sudo')
-    if koopa_is_array_non_empty "${include[@]:-}"
-    then
-        # Ensure we are using relative paths in following commands.
-        include=("${include[@]/^/${dict[app_prefix]}}")
-        for i in "${!include[@]}"
-        do
-            cp_source="${dict[app_prefix]}/${include[$i]}"
-            cp_target="${dict[make_prefix]}/${include[$i]}"
-            koopa_cp "${cp_args[@]}" "$cp_source" "$cp_target"
-        done
-    else
-        readarray -t include <<< "$( \
-            koopa_find \
-                --max-depth=1 \
-                --min-depth=1 \
-                --prefix="${dict[app_prefix]}" \
-                --sort \
-                --type='d' \
-        )"
-        koopa_assert_is_array_non_empty "${include[@]:-}"
-        cp_args+=("--target-directory=${dict[make_prefix]}")
-        koopa_cp "${cp_args[@]}" "${include[@]}"
-    fi
+    cp_args+=(
+        "--target-directory=${dict[make_prefix]}"
+        "${files_arr[@]}"
+    )
+    koopa_cp "${cp_args[@]}"
     return 0
 }
 
 koopa_link_in_opt() { # {{{1
     # """
     # Link an application in koopa 'opt/' directory.
-    # @note Updated 2022-04-01.
+    # @note Updated 2022-04-06.
+    #
+    # @usage
+    # > koopa_link_in_opt \
+    # >     SOURCE_DIR_1 TARGET_NAME_1 \
+    # >     SOURCE_DIR_2 TARGET_NAME_2 \
+    # >     ...
+    #
+    # @examples
+    # > koopa_link_in_opt \
+    # >     '/opt/koopa/app/python/3.10.0' 'python' \
+    # >     '/opt/koopa/app/r/3.4.0' 'r'
     # """
-    local dict
-    koopa_assert_has_args_eq "$#" 2
-    declare -A dict=(
-        [opt_prefix]="$(koopa_opt_prefix)"
-        [source_dir]="${1:?}"
-    )
-    dict[target_dir]="${dict[opt_prefix]}/${2:?}"
-    [[ ! -d "${dict[opt_prefix]}" ]] && koopa_sys_mkdir "${dict[opt_prefix]}"
-    [[ "${dict[source_dir]}" == "${dict[target_dir]}" ]] && return 0
-    [[ ! -d "${dict[source_dir]}" ]] && koopa_sys_mkdir "${dict[source_dir]}"
-    [[ -d "${dict[target_dir]}" ]] && koopa_sys_rm "${dict[target_dir]}"
-    koopa_sys_ln "${dict[source_dir]}" "${dict[target_dir]}"
-    return 0
+    __koopa_link_in_dir --prefix="$(koopa_opt_prefix)" "$@"
 }
 
 koopa_link_in_sbin() { # {{{1
     # """
     # Link a program in koopa 'sbin/ directory.
-    # @note Updated 2022-04-05.
+    # @note Updated 2022-04-06.
     # 
-    # @usage koopa_link_app_in_sbin SOURCE_FILE TARGET_NAME ...
+    # @usage
+    # > koopa_link_in_sbin \
+    # >     SOURCE_FILE_1 TARGET_NAME_1 \
+    # >     SOURCE_FILE_2 TARGET_NAME_2 \
+    # >     ...
     #
     # @examples
-    # > koopa_link_app_in_sbin '/Library/TeX/texbin/tlmgr' 'tlmgr'
+    # > koopa_link_in_sbin \
+    # >     '/Library/TeX/texbin/tlmgr' 'tlmgr'
     # """
-    koopa_assert_has_args "$#"
-    koopa_link_in_bin --sbin "$@"
-    return 0
+    __koopa_link_in_dir --prefix="$(koopa_sbin_prefix)" "$@"
 }
 
-# FIXME Support '--sbin' argument.
 koopa_unlink_in_bin() { # {{{1
     # """
     # Unlink a program symlinked in koopa 'bin/ directory.
-    # @note Updated 2022-04-05.
+    # @note Updated 2022-04-06.
+    #
+    # @usage koopa_unlink_in_bin NAME...
     #
     # @examples
     # > koopa_unlink_in_bin 'R' 'Rscript'
     # """
-    local dict files i names pos
+    __koopa_unlink_in_dir --prefix="$(koopa_bin_prefix)" "$@"
+}
+
+# FIXME Need to add 'koopa_unlink_in_make' utility.
+koopa_unlink_in_make() { # {{{1
+    # """
+    # Unlink a program symlinked in koopa 'make/' directory.
+    # @note Updated 2022-04-06.
+    # """
+    local dict hits rm_args
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [bin_prefix]="$(koopa_bin_prefix)"
+        [homebrew_prefix]="$(koopa_homebrew_prefix)"
+        [make_prefix]="$(koopa_make_prefix)"
+        [prefix]=''
     )
-    pos=()
+    if [[ "${dict[homebrew_prefix]}" == "${dict[make_prefix]}" ]]
+    then
+        koopa_stop "Homebrew is configured in '${dict[make_prefix]}'."
+    fi
     while (("$#"))
     do
         case "$1" in
-            # Flags ------------------------------------------------------------
-            '--sbin')
-                dict[bin_prefix]="$(koopa_sbin_prefix)"
+            # Key-value pairs --------------------------------------------------
+            '--prefix='*)
+                dict[app_prefix]="${1#*=}"
                 shift 1
+                ;;
+            '--prefix')
+                dict[app_prefix]="${2:?}"
+                shift 2
                 ;;
             # Other ------------------------------------------------------------
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    names=("$@")
-    files=()
-    for i in "${!names[@]}"
-    do
-        files+=("${dict[bin_prefix]}/${names[$i]}")
-    done
-    koopa_assert_is_file "${files[@]}"
-    koopa_rm "${files[@]}"
+    koopa_assert_is_set '--prefix' "${dict[app_prefix]}"
+    koopa_assert_is_dir "${dict[app_prefix]}" "${dict[make_prefix]}"
+    readarray -t hits <<< "$( \
+        koopa_find_symlinks \
+            --source-prefix="${dict[app_prefix]}" \
+            --target-prefix="${dict[make_prefix]}" \
+    )"
+    koopa_is_shared_install && rm_args+=('--sudo')
+    rm_args+=("${hits[@]}")
+    koopa_print "${rm_args[@]}"
+    return 0  # FIXME Disable when we confirm this works.
+    koopa_rm "${rm_args[@]}"
     return 0
 }
 
-# FIXME Need to add 'koopa_unlink_in_opt' utility.
-
-# FIXME Need to add 'koopa_unlink_in_make' utility.
-# FIXME This version needs to resolve symlinks and then delete them. Is this
-# already defined in r-koopa? If so, rethink as Bash-native code instead.
+koopa_unlink_in_opt() { # {{{1
+    # """
+    # Unlink a program symlinked in koopa 'opt/' directory.
+    # @note Updated 2022-04-06.
+    #
+    # @usage koopa_unlink_in_opt NAME...
+    #
+    # @examples
+    # > koopa_unlink_in_opt 'python' 'r'
+    # """
+    __koopa_unlink_in_dir --prefix="$(koopa_opt_prefix)" "$@"
+}
 
 koopa_unlink_in_sbin() { # {{{1
     # """
     # Unlink a program symlinked in koopa 'sbin/' directory.
-    # @note Updated 2022-04-05.
+    # @note Updated 2022-04-06.
+    #
+    # @usage koopa_unlink_in_sbin NAME...
+    #
+    # @examples
+    # > koopa_unlink_in_sbin 'tlmgr'
     # """
-    koopa_assert_has_args "$#"
-    koopa_unlink_in_bin --sbin "$@"
-    return 0
+    __koopa_unlink_in_dir --prefix="$(koopa_sbin_prefix)" "$@"
 }
