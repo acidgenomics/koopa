@@ -202,7 +202,7 @@ debian_install_base_system() { # {{{1
             # > 'proj-bin'
             # > 'libmariadb-dev'
             # > 'libmysqlclient-dev' # Conflicts with libmariadb-dev (Ubuntu).
-            'libacl1-dev'
+            'libacl1-dev' # coreutils
             'libapparmor-dev'
             'libapr1-dev' # subversion
             'libaprutil1-dev' # subversion
@@ -222,6 +222,7 @@ debian_install_base_system() { # {{{1
             'libbz2-dev'
             'libc-ares-dev' # node.js
             'libcairo2-dev' # harfbuzz
+            'libcap-dev' # coreutils
             'libclang-dev' # rstudio-server
             'libcurl4-openssl-dev' # or 'libcurl4-gnutls-dev'; r-devel
             'libedit-dev' # openssh
