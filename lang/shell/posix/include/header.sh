@@ -92,7 +92,7 @@ __koopa_posix_header() { # {{{1
             if ! koopa_is_subshell
             then
                 koopa_activate_today_bucket || return 1
-                koopa_activate_tmux_sessions || return 1
+                # > koopa_activate_tmux_sessions || return 1
             fi
         fi
     fi
