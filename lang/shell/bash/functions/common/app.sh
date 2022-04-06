@@ -743,6 +743,8 @@ koopa_reinstall_app() { # {{{1
 # FIXME We don't need to remove opt link only in shared, right? Rethink...
 # FIXME Consider adding '--unlink-app-from-bin' parameterized option here.
 
+# FIXME Rework to use 'koopa_unlink_in_opt'.
+
 koopa_uninstall_app() { # {{{1
     # """
     # Uninstall an application.
@@ -923,6 +925,7 @@ at '${dict[prefix]}'."
                 "${dict[name_fancy]}" "${dict[prefix]}"
         fi
         "${app[rm]}" "${dict[prefix]}"
+        # FIXME Rework this as 'koopa_unlink_in_opt' instead.
         if [[ "${dict[shared]}" -eq 1 ]]
         then
             "${app[rm]}" "${dict[opt_prefix]}/${dict[name]}"
