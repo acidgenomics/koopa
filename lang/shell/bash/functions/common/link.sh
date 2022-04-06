@@ -211,11 +211,11 @@ koopa_link_in_make() { # {{{1
         done
     else
         find_args=(
-            --max-depth=1 \
-            --min-depth=1 \
-            --prefix="${dict[app_prefix]}" \
-            --sort \
-            --type='d' \
+            '--max-depth=1'
+            '--min-depth=1'
+            "--prefix=${dict[app_prefix]}"
+            '--sort'
+            '--type=d'
         )
         if koopa_is_array_non_empty "${exclude_arr[@]:-}"
         then
