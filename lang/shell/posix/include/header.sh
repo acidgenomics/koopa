@@ -97,7 +97,7 @@ __koopa_posix_header() { # {{{1
         fi
     fi
     koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
-    koopa_add_to_path_start "$(koopa_scripts_private_prefix)" || return 1
+    koopa_add_to_path_start "$(koopa_scripts_private_prefix)/bin" || return 1
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         koopa_duration_stop 'posix' || return 1
