@@ -46,9 +46,11 @@ __koopa_link_in_dir() { # {{{1
                 ;;
         esac
     done
-    koopa_assert_is_set '--prefix' "${dict[prefix]}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_ge "$#" 2
+    koopa_assert_is_set '--prefix' "${dict[prefix]}"
+    koopa_assert_is_dir "${dict[prefix]}"
+    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     while [[ "$#" -ge 2 ]]
     do
         local dict2
@@ -96,9 +98,11 @@ __koopa_unlink_in_dir() { # {{{1
                 ;;
         esac
     done
-    koopa_assert_is_set '--prefix' "${dict[prefix]}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    koopa_assert_is_set '--prefix' "${dict[prefix]}"
+    koopa_assert_is_dir "${dict[prefix]}"
+    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     names=("$@")
     files=()
     for i in "${!names[@]}"
@@ -203,6 +207,7 @@ koopa_link_in_make() { # {{{1
     done
     koopa_assert_is_set '--prefix' "${dict[app_prefix]}"
     koopa_assert_is_dir "${dict[app_prefix]}" "${dict[make_prefix]}"
+    dict[app_prefix]="$(koopa_realpath "${dict[app_prefix]}")"
     if koopa_is_array_non_empty "${include_arr[@]:-}"
     then
         for i in "${!include_arr[@]}"
@@ -306,9 +311,9 @@ koopa_unlink_in_make() { # {{{1
     local dict files rm_args
     koopa_assert_has_args "$#"
     declare -A dict=(
+        [app_prefix]=''
         [homebrew_prefix]="$(koopa_homebrew_prefix)"
         [make_prefix]="$(koopa_make_prefix)"
-        [prefix]=''
     )
     if [[ "${dict[homebrew_prefix]}" == "${dict[make_prefix]}" ]]
     then
@@ -334,12 +339,12 @@ koopa_unlink_in_make() { # {{{1
     done
     koopa_assert_is_set '--prefix' "${dict[app_prefix]}"
     koopa_assert_is_dir "${dict[app_prefix]}" "${dict[make_prefix]}"
+    dict[app_prefix]="$(koopa_realpath "${dict[app_prefix]}")"
     readarray -t files <<< "$( \
         koopa_find_symlinks \
             --source-prefix="${dict[app_prefix]}" \
             --target-prefix="${dict[make_prefix]}" \
     )"
-
     if koopa_is_array_empty "${files[@]:-}"
     then
         koopa_stop "No files from '${dict[app_prefix]}' detected \
