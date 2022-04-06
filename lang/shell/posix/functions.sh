@@ -4113,6 +4113,15 @@ koopa_rust_prefix() { # {{{1
     return 0
 }
 
+koopa_sbin_prefix() { # {{{1
+    # """
+    # Koopa super user binary prefix.
+    # @note Updated 2022-04-05.
+    # """
+    koopa_print "$(koopa_koopa_prefix)/sbin"
+    return 0
+}
+
 koopa_scripts_private_prefix() { # {{{1
     # """
     # Private scripts prefix.
