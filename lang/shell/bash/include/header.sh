@@ -339,12 +339,3 @@ __koopa_bash_header() { # {{{1
 }
 
 __koopa_bash_header "$@"
-
-unset -f \
-    __koopa_bash_header \
-    __koopa_bash_source_dir \
-    __koopa_is_installed \
-    __koopa_is_macos \
-    __koopa_print \
-    __koopa_realpath \
-    __koopa_warn

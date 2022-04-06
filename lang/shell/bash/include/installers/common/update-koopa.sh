@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to check if top level is not set to current user, and
+# adjust accordingly. Previously this was root for shared installs.
+
 update_koopa() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-04-05.
     #
     # Update of pinned stable releases is intentionally not supported.
     #
