@@ -40,6 +40,7 @@ v${dict[version]}/${dict[file]}"
     ./bootstrap \
         --parallel="${dict[jobs]}" \
         --prefix="${dict[prefix]}" \
+        -- \
         -DCMAKE_USE_OPENSSL="${dict[opt_prefix]}/openssl"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
