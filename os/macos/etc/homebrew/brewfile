@@ -99,7 +99,7 @@ cask "gpg-suite-no-mail" # no-binaries
 cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
-cask "iterm2-beta" # Use until dark/light mode support is stable.
+cask "iterm2-nightly" # Use until dark/light mode support is stable.
 cask "julia"
 cask "keka"
 cask "libreoffice"
