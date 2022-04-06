@@ -46,16 +46,16 @@ koopa_zsh_prompt_string() { # {{{1
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        [conda]="\$(_koopa_prompt_conda)"
+        [conda]="\$(koopa_prompt_conda)"
         [conda_color]="${fg[yellow]}"
-        [git]="\$(_koopa_prompt_git)"
+        [git]="\$(koopa_prompt_git)"
         [git_color]="${fg[green]}"
         [newline]=$'\n'
         [prompt]='❯' # default is '%%'.
         [prompt_color]="${fg[magenta]}"
-        [user]="$(_koopa_user)@$(_koopa_hostname)"
+        [user]="$(koopa_user)@$(koopa_hostname)"
         [user_color]="${fg[cyan]}"
-        [venv]="\$(_koopa_prompt_python_venv)"
+        [venv]="\$(koopa_prompt_python_venv)"
         [venv_color]="${fg[yellow]}"
         [wd]='%~'
         [wd_color]="${fg[blue]}"
