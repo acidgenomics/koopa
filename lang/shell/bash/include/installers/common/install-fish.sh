@@ -20,12 +20,7 @@ install_fish() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa_is_macos
-    then
-        koopa_activate_homebrew_opt_prefix \
-            'ncurses' \
-            'pcre2'
-    fi
+    koopa_activate_opt_prefix 'cmake' 'ncurses' 'pcre2'
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="https://github.com/${dict[name]}-shell/${dict[name]}-shell/\
 releases/download/${dict[version]}/${dict[file]}"
