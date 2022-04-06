@@ -79,15 +79,121 @@ koopa_install_conda() { # {{{1
         "$@"
 }
 
-# FIXME Need to link specific tools here.
 koopa_install_coreutils() { # {{{1
     koopa_install_gnu_app \
+        --link-in-bin='bin/[' \
+        --link-in-bin='bin/b2sum' \
+        --link-in-bin='bin/base32' \
+        --link-in-bin='bin/base64' \
+        --link-in-bin='bin/basename' \
+        --link-in-bin='bin/basenc' \
+        --link-in-bin='bin/cat' \
+        --link-in-bin='bin/chcon' \
+        --link-in-bin='bin/chgrp' \
+        --link-in-bin='bin/chmod' \
+        --link-in-bin='bin/chown' \
+        --link-in-bin='bin/chroot' \
+        --link-in-bin='bin/cksum' \
+        --link-in-bin='bin/comm' \
+        --link-in-bin='bin/cp' \
+        --link-in-bin='bin/csplit' \
+        --link-in-bin='bin/cut' \
+        --link-in-bin='bin/date' \
+        --link-in-bin='bin/dd' \
+        --link-in-bin='bin/df' \
+        --link-in-bin='bin/dir' \
+        --link-in-bin='bin/dircolors' \
+        --link-in-bin='bin/dirname' \
+        --link-in-bin='bin/du' \
+        --link-in-bin='bin/echo' \
+        --link-in-bin='bin/env' \
+        --link-in-bin='bin/expand' \
+        --link-in-bin='bin/expr' \
+        --link-in-bin='bin/factor' \
+        --link-in-bin='bin/false' \
+        --link-in-bin='bin/fmt' \
+        --link-in-bin='bin/fold' \
+        --link-in-bin='bin/groups' \
+        --link-in-bin='bin/head' \
+        --link-in-bin='bin/hostid' \
+        --link-in-bin='bin/id' \
+        --link-in-bin='bin/install' \
+        --link-in-bin='bin/join' \
+        --link-in-bin='bin/kill' \
+        --link-in-bin='bin/link' \
+        --link-in-bin='bin/ln' \
+        --link-in-bin='bin/logname' \
+        --link-in-bin='bin/ls' \
+        --link-in-bin='bin/md5sum' \
+        --link-in-bin='bin/mkdir' \
+        --link-in-bin='bin/mkfifo' \
+        --link-in-bin='bin/mknod' \
+        --link-in-bin='bin/mktemp' \
+        --link-in-bin='bin/mv' \
+        --link-in-bin='bin/nice' \
+        --link-in-bin='bin/nl' \
+        --link-in-bin='bin/nohup' \
+        --link-in-bin='bin/nproc' \
+        --link-in-bin='bin/numfmt' \
+        --link-in-bin='bin/od' \
+        --link-in-bin='bin/paste' \
+        --link-in-bin='bin/pathchk' \
+        --link-in-bin='bin/pinky' \
+        --link-in-bin='bin/pr' \
+        --link-in-bin='bin/printenv' \
+        --link-in-bin='bin/printf' \
+        --link-in-bin='bin/ptx' \
+        --link-in-bin='bin/pwd' \
+        --link-in-bin='bin/readlink' \
+        --link-in-bin='bin/realpath' \
+        --link-in-bin='bin/rm' \
+        --link-in-bin='bin/rmdir' \
+        --link-in-bin='bin/runcon' \
+        --link-in-bin='bin/seq' \
+        --link-in-bin='bin/sha1sum' \
+        --link-in-bin='bin/sha224sum' \
+        --link-in-bin='bin/sha256sum' \
+        --link-in-bin='bin/sha384sum' \
+        --link-in-bin='bin/sha512sum' \
+        --link-in-bin='bin/shred' \
+        --link-in-bin='bin/shuf' \
+        --link-in-bin='bin/sleep' \
+        --link-in-bin='bin/sort' \
+        --link-in-bin='bin/split' \
+        --link-in-bin='bin/stat' \
+        --link-in-bin='bin/stdbuf' \
+        --link-in-bin='bin/stty' \
+        --link-in-bin='bin/sum' \
+        --link-in-bin='bin/sync' \
+        --link-in-bin='bin/tac' \
+        --link-in-bin='bin/tail' \
+        --link-in-bin='bin/tee' \
+        --link-in-bin='bin/test' \
+        --link-in-bin='bin/timeout' \
+        --link-in-bin='bin/touch' \
+        --link-in-bin='bin/tr' \
+        --link-in-bin='bin/true' \
+        --link-in-bin='bin/truncate' \
+        --link-in-bin='bin/tsort' \
+        --link-in-bin='bin/tty' \
+        --link-in-bin='bin/uname' \
+        --link-in-bin='bin/unexpand' \
+        --link-in-bin='bin/uniq' \
+        --link-in-bin='bin/unlink' \
+        --link-in-bin='bin/uptime' \
+        --link-in-bin='bin/users' \
+        --link-in-bin='bin/vdir' \
+        --link-in-bin='bin/wc' \
+        --link-in-bin='bin/who' \
+        --link-in-bin='bin/whoami' \
+        --link-in-bin='bin/yes' \
         --name='coreutils' \
         "$@"
 }
 
 koopa_install_cpufetch() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/cpufetch' \
         --name='cpufetch' \
         "$@"
 }
