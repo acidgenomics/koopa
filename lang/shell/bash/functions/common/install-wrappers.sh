@@ -260,7 +260,7 @@ koopa_install_findutils() { # {{{1
 
 koopa_install_fish() { # {{{1
     koopa_install_app \
-        --link-in-bin='fish' \
+        --link-in-bin='bin/fish' \
         --name-fancy='Fish' \
         --name='fish' \
         "$@"
