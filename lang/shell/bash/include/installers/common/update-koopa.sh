@@ -3,6 +3,9 @@
 # FIXME This needs to check if top level is not set to current user, and
 # adjust accordingly. Previously this was root for shared installs.
 
+# FIXME Consider not updating permissions on programs inside of 'app/',
+# for improved speed.
+
 update_koopa() { # {{{1
     # """
     # Update koopa installation.
