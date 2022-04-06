@@ -2822,15 +2822,12 @@ koopa_is_docker() { # {{{1
     # """
     # Is the current session running inside Docker?
     # @note Updated 2022-01-21.
+    #
     # @seealso
-    # - https://stackoverflow.com/questions/23513045
+    # - https://stackoverflow.com/questions/23513045/
+    # - https://stackoverflow.com/questions/20010199/
     # """
-    local file grep pattern
-    file='/proc/1/cgroup'
-    grep='grep'
-    pattern=':/docker/'
-    [ -f "$file" ] || return 1
-    "$grep" -q "$pattern" "$file"
+    [ -f '/.dockerenv' ]
 }
 
 koopa_is_fedora() { # {{{1
