@@ -296,7 +296,8 @@ koopa_enable_shell_for_all_users() { # {{{1
         [user]="$(koopa_user)"
     )
     apps=("$@")
-    koopa_assert_is_executable "${apps[@]}"
+    # Intentionally not checking to see whether file exists here.
+    # > koopa_assert_is_executable "${apps[@]}"
     for app in "${apps[@]}"
     do
         if ! koopa_file_detect_fixed \
