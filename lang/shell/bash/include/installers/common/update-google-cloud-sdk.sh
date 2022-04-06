@@ -3,13 +3,16 @@
 update_google_cloud_sdk() { # {{{1
     # """
     # Update Google Cloud SDK.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-06.
+    #
+    # @seealso
+    # - https://cloud.google.com/sdk/docs/components
     # """
     local app
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [gcloud]="$(koopa_locate_gcloud)"
     )
-    "${app[gcloud]}" components update
+    "${app[gcloud]}" --quiet components update
     return 0
 }
