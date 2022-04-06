@@ -123,15 +123,6 @@ koopa_macos_uninstall_xcode_clt() { # {{{1
         "$@"
 }
 
-koopa_macos_update_google_cloud_sdk() { # {{{1
-    koopa_update_app \
-        --name-fancy='Google Cloud SDK' \
-        --name='google-cloud-sdk' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa_macos_update_defaults() { # {{{1
     koopa_update_app \
         --name-fancy='macOS defaults' \
