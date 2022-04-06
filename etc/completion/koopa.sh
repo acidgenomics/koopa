@@ -260,6 +260,9 @@ __koopa_complete() { # {{{1
                     ;;
                 'link' | \
                 'unlink')
+                    # FIXME Consider reworking with install / uninstall above
+                    # for consistency. Put install / uninstall system auto-
+                    # completion functions in a separate line.
                     if koopa_is_macos
                     then
                         args+=(
