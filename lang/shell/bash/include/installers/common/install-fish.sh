@@ -3,7 +3,7 @@
 install_fish() { # {{{1
     # """
     # Install Fish shell.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-04-06.
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
     # """
@@ -14,7 +14,7 @@ install_fish() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
-        [link_app]="${INSTALL_LINK_APP:?}"
+        [link_in_make]="${INSTALL_LINK_IN_MAKE:?}"
         [name]='fish'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -39,7 +39,7 @@ releases/download/${dict[version]}/${dict[file]}"
         --build 'build' \
         --parallel "${dict[jobs]}"
     "${app[cmake]}" --install 'build'
-    if [[ "${dict[link_app]}" -eq 1 ]]
+    if [[ "${dict[link_in_make]}" -eq 1 ]]
     then
         koopa_enable_shell_for_all_users "${dict[name]}"
     fi

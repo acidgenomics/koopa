@@ -3,7 +3,7 @@
 install_bash() { # {{{1
     # """
     # Install Bash.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-04-06.
     #
     # @section Applying patches:
     #
@@ -25,7 +25,7 @@ install_bash() { # {{{1
     declare -A dict=(
         [gnu_mirror]="$(koopa_gnu_mirror_url)"
         [jobs]="$(koopa_cpu_count)"
-        [link_app]="${INSTALL_LINK_APP:?}"
+        [link_in_make]="${INSTALL_LINK_IN_MAKE:?}"
         [name]='bash'
         [patch_prefix]='patches'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -100,7 +100,7 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
-    if [[ "${dict[link_app]}" -eq 1 ]]
+    if [[ "${dict[link_in_make]}" -eq 1 ]]
     then
         koopa_enable_shell_for_all_users "${dict[name]}"
     fi
