@@ -2,6 +2,8 @@
 
 # FIXME Make this stricter, requiring link into '/opt/koopa/bin', unless
 # the call passes in an executable directly instead.
+# FIXME Need to make this strict by default (exit)
+# FIXME Need to allow relaxed mode, such as brew lookup...
 
 koopa_locate_app() { # {{{1
     # """
