@@ -953,13 +953,12 @@ at '${dict[prefix]}'."
     return 0
 }
 
-# FIXME Rework '--opt' input as '--activate-opt'.
 koopa_update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-04-06.
     # """
-    local clean_path_arr dict homebrew_opt_arr opt_arr pos
+    local brew_opt_arr clean_path_arr dict opt_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A dict=(
@@ -975,23 +974,32 @@ koopa_update_app() { # {{{1
         [shared]=0
         [system]=0
         [tmp_dir]="$(koopa_tmp_dir)"
+        [update_ldconfig]=0
         [updater]=''
+        [verbose]=0
         [version]=''
     )
+    brew_opt_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    homebrew_opt_arr=()
     opt_arr=()
     pos=()
     while (("$#"))
     do
         case "$1" in
-            # FIXME Rework this as '--activate-homebrew-opt'.
-            '--homebrew-opt='*)
-                homebrew_opt_arr+=("${1#*=}")
+            '--activate-homebrew-opt='*)
+                brew_opt_arr+=("${1#*=}")
                 shift 1
                 ;;
-            '--homebrew-opt')
-                homebrew_opt_arr+=("${2:?}")
+            '--activate-homebrew-opt')
+                brew_opt_arr+=("${2:?}")
+                shift 2
+                ;;
+            '--activate-opt='*)
+                opt_arr+=("${1#*=}")
+                shift 1
+                ;;
+            '--activate-opt')
+                opt_arr+=("${2:?}")
                 shift 2
                 ;;
             '--name='*)
@@ -1008,15 +1016,6 @@ koopa_update_app() { # {{{1
                 ;;
             '--name-fancy')
                 dict[name_fancy]="${2:?}"
-                shift 2
-                ;;
-            # FIXME Rework this as '--activate-homebrew-opt'.
-            '--opt='*)
-                opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--opt')
-                opt_arr+=("${2:?}")
                 shift 2
                 ;;
             '--platform='*)
@@ -1061,7 +1060,7 @@ koopa_update_app() { # {{{1
                 shift 1
                 ;;
             '--verbose')
-                set -o xtrace
+                dict[verbose]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -1072,6 +1071,7 @@ koopa_update_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
@@ -1142,7 +1142,7 @@ at '${dict[prefix]}'."
         { [[ "${dict[shared]}" -eq 1 ]] || \
             [[ "${dict[system]}" -eq 1 ]]; }
     then
-        koopa_linux_update_ldconfig
+        dict[update_ldconfig]=1
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
@@ -1155,14 +1155,18 @@ at '${dict[prefix]}'."
                 '/usr/bin/pkg-config'
         fi
         # Activate packages installed in Homebrew 'opt/' directory.
-        if koopa_is_array_non_empty "${homebrew_opt_arr[@]:-}"
+        if koopa_is_array_non_empty "${brew_opt_arr[@]:-}"
         then
-            koopa_activate_homebrew_opt_prefix "${homebrew_opt_arr[@]}"
+            koopa_activate_homebrew_opt_prefix "${brew_opt_arr[@]}"
         fi
         # Activate packages installed in Koopa 'opt/' directory.
         if koopa_is_array_non_empty "${opt_arr[@]:-}"
         then
             koopa_activate_opt_prefix "${opt_arr[@]}"
+        fi
+        if [[ "${dict[update_ldconfig]}" -eq 1 ]]
+        then
+            koopa_linux_update_ldconfig
         fi
         # shellcheck disable=SC2030
         export UPDATE_PREFIX="${dict[prefix]}"
@@ -1175,11 +1179,8 @@ at '${dict[prefix]}'."
         then
             koopa_sys_set_permissions --recursive "${dict[prefix]}"
         fi
-        # > koopa_delete_empty_dirs "${dict[prefix]}"
     fi
-    if koopa_is_linux && \
-        { [[ "${dict[shared]}" -eq 1 ]] || \
-            [[ "${dict[system]}" -eq 1 ]]; }
+    if [[ "${dict[update_ldconfig]}" -eq 1 ]]
     then
         koopa_linux_update_ldconfig
     fi
