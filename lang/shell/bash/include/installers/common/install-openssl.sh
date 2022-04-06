@@ -3,7 +3,7 @@
 install_openssl() { # {{{1
     # """
     # Install OpenSSL.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-06.
     #
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
@@ -16,6 +16,7 @@ install_openssl() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
+        [link_in_make]="${INSTALL_LINK_IN_MAKE:?}"
         [name]='openssl'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -29,7 +30,7 @@ install_openssl() { # {{{1
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
     )
-    case "${INSTALL_LINK_APP:-0}" in
+    case "${dict[link_in_make]}" in
         '0')
             conf_args+=('no-shared')
             ;;
