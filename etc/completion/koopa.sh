@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-03-31.
+    # Updated 2022-04-06.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -32,11 +32,9 @@ __koopa_complete() { # {{{1
                 'configure'
                 'header'
                 'install'
-                'link'
                 'reinstall'
                 'system'
                 'uninstall'
-                'unlink'
                 'update'
             )
             ;;
@@ -257,22 +255,6 @@ __koopa_complete() { # {{{1
                             )
                             ;;
                     esac
-                    ;;
-                'link' | \
-                'unlink')
-                    # FIXME Consider reworking with install / uninstall above
-                    # for consistency. Put install / uninstall system auto-
-                    # completion functions in a separate line.
-                    if koopa_is_macos
-                    then
-                        args+=(
-                            'bbedit'
-                            'google-cloud-sdk'
-                            'python'
-                            'r'
-                            'visual-studio-code'
-                        )
-                    fi
                     ;;
                 'system')
                     args=(
