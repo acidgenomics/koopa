@@ -207,12 +207,3 @@ koopa_linux_uninstall_lmod() { # {{{1
         '/etc/profile.d/z00_lmod.sh'
     return 0
 }
-
-koopa_linux_update_google_cloud_sdk() { # {{{1
-    koopa_update_app \
-        --name-fancy='Google Cloud SDK' \
-        --name='google-cloud-sdk' \
-        --platform='linux' \
-        --system \
-        "$@"
-}
