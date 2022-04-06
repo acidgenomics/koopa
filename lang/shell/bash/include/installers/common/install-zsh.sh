@@ -3,7 +3,7 @@
 install_zsh() { # {{{1
     # """
     # Install Zsh.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-04-06.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -33,7 +33,7 @@ install_zsh() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
-        [link_app]="${INSTALL_LINK_APP:?}"
+        [link_in_make]="${INSTALL_LINK_IN_MAKE:?}"
         [name]='zsh'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -61,7 +61,7 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
             -t "${dict[etc_dir]}" \
             "${dict[distro_prefix]}/etc/zsh/"*
     fi
-    if [[ "${dict[link_app]}" -eq 1 ]]
+    if [[ "${dict[link_in_make]}" -eq 1 ]]
     then
         koopa_enable_shell_for_all_users "${dict[name]}"
     fi
