@@ -167,9 +167,6 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Need to support parameterized '--link-in-bin' here.
-# FIXME Need to update '--activate-opt' support here.
-
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
@@ -185,6 +182,8 @@ koopa_install_app() { # {{{1
         [installer]=''
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
+        # Will any individual programs be linked into koopa 'bin/'?
+        [link_in_bin]=0
         # When enabled, this will symlink all files into make prefix,
         # typically '/usr/local'.
         [link_in_make]=0
@@ -482,6 +481,10 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     then
         dict[link_in_make]=0
     fi
+    if koopa_is_array_non_empty "${bin_arr[@]:-}"
+    then
+        dict[link_in_bin]=1
+    fi
     (
         koopa_cd "${dict[tmp_dir]}"
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
@@ -506,6 +509,8 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         then
             koopa_linux_update_ldconfig
         fi
+        # shellcheck disable=SC2030
+        export INSTALL_LINK_IN_BIN="${dict[link_in_bin]}"
         # shellcheck disable=SC2030
         export INSTALL_LINK_IN_MAKE="${dict[link_in_make]}"
         # shellcheck disable=SC2030
@@ -538,7 +543,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     then
         koopa_linux_update_ldconfig
     fi
-    if koopa_is_array_non_empty "${bin_arr[@]:-}"
+    if [[ "${dict[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
         do
