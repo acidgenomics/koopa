@@ -167,6 +167,8 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
+# FIXME Our opt linker isn't working any more...what's up with that?
+
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
@@ -461,7 +463,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         fi
     fi
     if [[ ! -d "${dict[prefix]}" ]] || \
-        [[ "${dict[auto_prefix]}" -eq 1 ]] || \
+        [[ "${dict[auto_prefix]}" -eq 0 ]] || \
         [[ "${dict[shared]}" -eq 0 ]] || \
         [[ "${dict[system]}" -eq 1 ]]
     then
