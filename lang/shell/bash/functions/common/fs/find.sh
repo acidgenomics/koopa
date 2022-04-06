@@ -171,7 +171,7 @@ koopa_find() { # {{{1
     dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     if [[ -z "${dict[engine]}" ]]
     then
-        app[find]="$(koopa_locate_fd 2>/dev/null || true)"
+        app[find]="$(koopa_locate_fd --allow-missing)"
         [[ ! -x "${app[find]}" ]] && app[find]="$(koopa_locate_find)"
         dict[engine]="$(koopa_basename "${app[find]}")"
     else

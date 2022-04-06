@@ -5,7 +5,7 @@
 install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-06.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -18,7 +18,7 @@ install_perl_packages() { # {{{1
     koopa_activate_perl
     declare -A app=(
         [cpan]="$(koopa_locate_cpan)"
-        [cpanm]="$(koopa_locate_cpanm 2>/dev/null || true)"
+        [cpanm]="$(koopa_locate_cpanm --allow-missing)"
     )
     if ! koopa_is_installed "${app[cpanm]}"
     then

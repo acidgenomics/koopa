@@ -3,7 +3,7 @@
 install_node() { # {{{1
     # """
     # Install Node.js.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-06.
     #
     # @seealso
     # - https://github.com/nodejs/node
@@ -12,7 +12,7 @@ install_node() { # {{{1
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
+        [brew]="$(koopa_locate_brew --allow-missing)"
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(

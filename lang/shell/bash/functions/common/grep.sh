@@ -129,7 +129,7 @@ koopa_grep() { # {{{1
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
     if [[ -z "${dict[engine]}" ]]
     then
-        app[grep]="$(koopa_locate_rg 2>/dev/null || true)"
+        app[grep]="$(koopa_locate_rg --allow-missing)"
         [[ ! -x "${app[grep]}" ]] && app[grep]="$(koopa_locate_grep)"
         dict[engine]="$(koopa_basename "${app[grep]}")"
     else
