@@ -3,7 +3,7 @@
 debian_install_base_system() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-06.
     #
     # @section Look up reverse dependencies:
     # > sudo apt-cache rdepends --installed 'libnode-dev'
@@ -134,6 +134,7 @@ debian_install_base_system() { # {{{1
             'apt-listchanges'
             'apt-transport-https'
             'apt-utils'
+            'attr' # coreutils
             'automake'
             'bash-completion'
             'bison' # r-devel
@@ -206,6 +207,7 @@ debian_install_base_system() { # {{{1
             'libapr1-dev' # subversion
             'libaprutil1-dev' # subversion
             'libatlas-base-dev' # armadillo
+            'libattr1-dev' # coreutils
             'libbison-dev'
             'libblas-dev'
             'libboost-chrono-dev' # bcl2fastq
