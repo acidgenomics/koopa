@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Make this stricter, requiring link into '/opt/koopa/bin', unless
+# the call passes in an executable directly instead.
+
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
