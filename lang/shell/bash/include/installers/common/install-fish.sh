@@ -13,8 +13,9 @@ install_fish() { # {{{1
         [cmake]="$(koopa_locate_cmake)"
     )
     declare -A dict=(
+        [bin_prefix]="$(koopa_bin_prefix)"
         [jobs]="$(koopa_cpu_count)"
-        [link_in_make]="${INSTALL_LINK_IN_MAKE:?}"
+        [link_in_bin]="${INSTALL_LINK_IN_BIN:?}"
         [name]='fish'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -39,9 +40,9 @@ releases/download/${dict[version]}/${dict[file]}"
         --build 'build' \
         --parallel "${dict[jobs]}"
     "${app[cmake]}" --install 'build'
-    if [[ "${dict[link_in_make]}" -eq 1 ]]
+    if [[ "${dict[link_in_bin]}" -eq 1 ]]
     then
-        koopa_enable_shell_for_all_users "${dict[name]}"
+        koopa_enable_shell_for_all_users "${dict[bin_prefix]}/${dict[name]}"
     fi
     return 0
 }

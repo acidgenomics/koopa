@@ -278,34 +278,44 @@ at '${file}'."
 koopa_enable_shell_for_all_users() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2022-02-27.
+    # @note Updated 2022-04-06.
+    #
+    # @usage
+    # > koopa_enable_shell_for_all_users APP...
+    #
+    # @examples
+    # > koopa_enable_shell_for_all_users \
+    # >     '/opt/koopa/bin/bash' \
+    # >     /opt/koopa/bin/zsh'
     # """
-    local dict
+    local app apps dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A dict=(
-        [cmd_name]="${1:?}"
         [etc_file]='/etc/shells'
-        [make_prefix]="$(koopa_make_prefix)"
         [user]="$(koopa_user)"
     )
-    dict[cmd_path]="${dict[make_prefix]}/bin/${dict[cmd_name]}"
-    koopa_assert_is_file "${dict[etc_file]}"
-    if ! koopa_file_detect_fixed \
-        --file="${dict[etc_file]}" \
-        --pattern="${dict[cmd_path]}"
-    then
-        koopa_alert "Updating '${dict[etc_file]}' to \
-include '${dict[cmd_path]}'."
-        koopa_sudo_append_string \
+    apps=("$@")
+    koopa_assert_is_exectuable "${apps[@]}"
+    for app in "${apps[@]}"
+    do
+        if ! koopa_file_detect_fixed \
             --file="${dict[etc_file]}" \
-            --string="${dict[cmd_path]}"
-    else
-        koopa_alert_note "'${dict[cmd_path]}' already defined \
-in '${dict[etc_file]}'."
+            --pattern="$app"
+        then
+            koopa_alert "Updating '${dict[etc_file]}' to include '${app}'."
+            koopa_sudo_append_string \
+                --file="${dict[etc_file]}" \
+                --string="$app"
+        else
+            koopa_alert_note "'$app' already defined in '${dict[etc_file]}'."
+        fi
+    done
+    if [[ "$#" -eq 1 ]]
+    then
+        koopa_alert_info "Run 'chsh -s ${apps[0]} ${dict[user]}' to change \
+the default shell."
     fi
-    koopa_alert_info "Run 'chsh -s ${dict[cmd_path]} ${dict[user]}' to \
-change the default shell."
     return 0
 }
 

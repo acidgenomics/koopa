@@ -23,9 +23,10 @@ install_bash() { # {{{1
         [tr]="$(koopa_locate_tr)"
     )
     declare -A dict=(
+        [bin_prefix]="$(koopa_bin_prefix)"
         [gnu_mirror]="$(koopa_gnu_mirror_url)"
         [jobs]="$(koopa_cpu_count)"
-        [link_in_make]="${INSTALL_LINK_IN_MAKE:?}"
+        [link_in_bin]="${INSTALL_LINK_IN_BIN:?}"
         [name]='bash'
         [patch_prefix]='patches'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -100,9 +101,9 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
-    if [[ "${dict[link_in_make]}" -eq 1 ]]
+    if [[ "${dict[link_in_bin]}" -eq 1 ]]
     then
-        koopa_enable_shell_for_all_users "${dict[name]}"
+        koopa_enable_shell_for_all_users "${dict[bin_prefix]}/${dict[name]}"
     fi
     return 0
 }
