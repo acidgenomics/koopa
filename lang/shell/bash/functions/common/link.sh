@@ -300,9 +300,6 @@ koopa_unlink_in_bin() { # {{{1
     __koopa_unlink_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }
 
-# FIXME This is currently too slow, I think due to path resolution.
-# FIXME Need to rework this function.
-
 koopa_unlink_in_make() { # {{{1
     # """
     # Unlink a program symlinked in koopa 'make/' directory.
@@ -314,7 +311,7 @@ koopa_unlink_in_make() { # {{{1
     # Unlink all koopa apps with:
     # > koopa_unlink_in_make --prefix='/opt/koopa/app'
     # """
-    local dict files rm_args
+    local dict files
     koopa_assert_has_args "$#"
     declare -A dict=(
         [app_prefix]=''
@@ -350,6 +347,7 @@ koopa_unlink_in_make() { # {{{1
         koopa_find_symlinks \
             --source-prefix="${dict[app_prefix]}" \
             --target-prefix="${dict[make_prefix]}" \
+            --verbose \
     )"
     if koopa_is_array_empty "${files[@]:-}"
     then
@@ -363,9 +361,10 @@ in '${dict[make_prefix]}'."
         --msg2='files' \
         --suffix=" from '${dict[app_prefix]}' in '${dict[make_prefix]}'." \
     )"
-    koopa_is_shared_install && rm_args+=('--sudo')
-    rm_args+=("${files[@]}")
-    koopa_rm "${rm_args[@]}"
+    for file in "${files[@]}"
+    do
+        koopa_rm "$file"
+    done
     return 0
 }
 

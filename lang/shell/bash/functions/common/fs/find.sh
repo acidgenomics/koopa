@@ -743,6 +743,7 @@ koopa_find_symlinks() { # {{{1
     declare -A dict=(
         [source_prefix]=''
         [target_prefix]=''
+        [verbose]=0
     )
     hits=()
     while (("$#"))
@@ -765,6 +766,11 @@ koopa_find_symlinks() { # {{{1
                 dict[target_prefix]="${2:?}"
                 shift 2
                 ;;
+            # Flags ------------------------------------------------------------
+            '--verbose')
+                dict[verbose]=1
+                shift 1
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -777,14 +783,12 @@ koopa_find_symlinks() { # {{{1
     koopa_assert_is_dir "${dict[source_prefix]}" "${dict[target_prefix]}"
     dict[source_prefix]="$(koopa_realpath "${dict[source_prefix]}")"
     dict[target_prefix]="$(koopa_realpath "${dict[target_prefix]}")"
-    koopa_warn 'FIXME AAA'
     readarray -t symlinks <<< "$(
         koopa_find \
             --prefix="${dict[target_prefix]}" \
             --sort \
             --type='l' \
     )"
-    koopa_warn 'FIXME BBB'
     for symlink in "${symlinks[@]}"
     do
         local symlink_real
@@ -793,7 +797,10 @@ koopa_find_symlinks() { # {{{1
             --pattern="^${dict[source_prefix]}/" \
             --string="$symlink_real"
         then
-            koopa_warn "${symlink} -> ${symlink_real}" # FIXME
+            if [[ "${dict[verbose]}" -eq 1 ]]
+            then
+                koopa_warn "${symlink} -> ${symlink_real}"
+            fi
             hits+=("$symlink")
         fi
     done
