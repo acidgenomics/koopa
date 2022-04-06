@@ -897,6 +897,7 @@ koopa_install_udunits() { # {{{1
 koopa_install_vim() { # {{{1
     koopa_install_app \
         --link-in-bin='bin/vim' \
+        --link-in-bin='bin/vimdiff' \
         --name-fancy='Vim' \
         --name='vim' \
         "$@"
