@@ -30,7 +30,7 @@ v${dict[version]}/${dict[file]}"
         export CC="${app[cc]}"
         export CXX="${app[cxx]}"
     fi
-    koopa_activate_opt_prefix 'openssl'
+    # > koopa_activate_opt_prefix 'openssl'
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
