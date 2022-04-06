@@ -787,11 +787,13 @@ koopa_find_symlinks() { # {{{1
     koopa_warn 'FIXME BBB'
     for symlink in "${symlinks[@]}"
     do
+        local symlink_real
+        symlink_real="$(koopa_realpath "$symlink")"
         if koopa_str_detect_regex \
             --pattern="^${dict[source_prefix]}/" \
-            --string="$(koopa_realpath "$symlink")"
+            --string="$symlink_real"
         then
-            koopa_warn "FIXME ${symlink}"
+            koopa_warn "${symlink} -> ${symlink_real}" # FIXME
             hits+=("$symlink")
         fi
     done
