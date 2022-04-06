@@ -2,6 +2,8 @@
 #+STARTUP: content
 * High priority
 ** TODO Consider clean up of '/etc/paths.d' and '/etc/manpaths.d' on macOS for Homebrew casks.
+    Ubuntu uses '/etc/environment' for paths configuration.
+    https://towardsdatascience.com/my-path-variable-is-a-mess-e52f22bfa520
 ** TODO Consider linking some koopa tools into /opt/koopa/sbin instead of bin.
 ** TODO Add install support for new diff tools:
     https://github.com/Wilfred/difftastic

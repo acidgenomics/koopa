@@ -139,11 +139,3 @@ __koopa_zsh_header() { # {{{1
 }
 
 __koopa_zsh_header "$@"
-
-unset -f \
-    __koopa_is_installed \
-    __koopa_is_macos \
-    __koopa_print \
-    __koopa_realpath \
-    __koopa_warn \
-    __koopa_zsh_header
