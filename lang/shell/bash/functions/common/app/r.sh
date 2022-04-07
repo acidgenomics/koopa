@@ -3,7 +3,7 @@
 koopa_configure_r() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-04-07.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -27,11 +27,11 @@ koopa_configure_r() { # {{{1
         dict[etc_prefix2]="${dict[make_prefix]}/lib64/R/etc"
         if [[ -d "${dict[etc_prefix1]}" ]] && [[ ! -L "${dict[etc_prefix1]}" ]]
         then
-            koopa_sys_rm "${dict[etc_prefix1]}"
+            koopa_rm --sudo "${dict[etc_prefix1]}"
         fi
         if [[ -d "${dict[etc_prefix2]}" ]] && [[ ! -L "${dict[etc_prefix2]}" ]]
         then
-            koopa_sys_rm "${dict[etc_prefix2]}"
+            koopa_rm --sudo "${dict[etc_prefix2]}"
         fi
     else
         koopa_sys_set_permissions --recursive "${dict[r_prefix]}/library"
