@@ -618,8 +618,6 @@ koopa_install_app_packages() { # {{{1
             '--prefix' | \
             '--version='* | \
             '--version' | \
-            '--link' | \
-            '--no-link' | \
             '--no-prefix-check' | \
             '--prefix-check')
                 koopa_invalid_arg "$1"
@@ -652,7 +650,6 @@ koopa_install_app_packages() { # {{{1
     koopa_install_app \
         --name-fancy="${dict[name_fancy]} packages" \
         --name="${dict[name]}-packages" \
-        --no-link \
         --no-prefix-check \
         --prefix="${dict[prefix]}" \
         --version='rolling' \
