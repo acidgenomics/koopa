@@ -122,7 +122,7 @@ brew "luarocks"
 brew "make"
 brew "man-db"
 brew "mariadb-connector-c"
-brew "mason" # python
+brew "meson" # python
 brew "mcfly"
 brew "neofetch"
 brew "neovim"
