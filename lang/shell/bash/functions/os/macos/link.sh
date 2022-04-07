@@ -80,17 +80,6 @@ koopa_macos_link_r() { # {{{1
     return 0
 }
 
-# FIXME Need to add a corresponding unlinker here.
-koopa_macos_link_tex() { # {{{1
-    local prefix
-    koopa_assert_has_no_args "$#"
-    prefix='/Library/TeX'
-    koopa_link_in_bin \
-        "${prefix}/texbin/tex" 'tex' \
-        "${prefix}/texbin/tlmgr" 'tlmgr'
-    return 0
-}
-
 koopa_macos_link_visual_studio_code() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_link_in_bin \
