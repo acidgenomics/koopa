@@ -1877,7 +1877,6 @@ koopa_update_homebrew() { # {{{1
     koopa_update_app \
         --name-fancy='Homebrew' \
         --name='homebrew' \
-        --prefix="$(koopa_homebrew_prefix)" \
         --system \
         "$@"
 }
