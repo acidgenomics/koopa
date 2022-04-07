@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2022-03-29.
+# Updated 2022-04-07.
 #
 # @section ilmbase deprecation (due to neofetch):
 #
@@ -21,6 +21,7 @@ tap "homebrew/core"
 # NOTE Python 3.9 currently required for Google Cloud SDK.
 brew "python@3.9", link: false
 brew "python@3.10", link: false
+brew "ruby", link: false
 
 brew "ack"
 brew "armadillo"
@@ -159,7 +160,6 @@ brew "rename"
 brew "ripgrep" # rust
 brew "ripgrep-all" # rust
 brew "rsync"
-brew "ruby"
 brew "rust"
 brew "rustup-init"
 brew "screen"
