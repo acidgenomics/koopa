@@ -436,9 +436,6 @@ ${dict[platform]}/${dict[installer_file]}.sh"
                 if [[ "${dict[system]}" -eq 1 ]]
                 then
                     koopa_rm --sudo "${dict[prefix]}"
-                elif [[ "${dict[shared]}" -eq 1 ]]
-                then
-                    koopa_sys_rm "${dict[prefix]}"
                 else
                     koopa_rm "${dict[prefix]}"
                 fi
@@ -650,7 +647,7 @@ koopa_install_app_packages() { # {{{1
     fi
     if [[ "${dict[reinstall]}" -eq 1 ]]
     then
-        koopa_sys_rm "${dict[prefix]}"
+        koopa_rm "${dict[prefix]}"
     fi
     koopa_install_app \
         --name-fancy="${dict[name_fancy]} packages" \
@@ -928,19 +925,12 @@ ${dict[platform]}/${dict[uninstaller_file]}.sh"
 at '${dict[prefix]}'."
             return 1
         fi
-        if [[ "${dict[shared]}" -eq 1 ]]
-        then
-            app[rm]='koopa_sys_rm'
-        else
-            app[rm]='koopa_rm'
-        fi
         if [[ "${dict[quiet]}" -eq 0 ]]
         then
             koopa_alert_uninstall_start \
                 "${dict[name_fancy]}" "${dict[prefix]}"
         fi
-        "${app[rm]}" "${dict[prefix]}"
-
+        koopa_rm "${dict[prefix]}"
         # FIXME Only do this if shared.
         if [[ "${dict[unlink_in_opt]}" -eq 1 ]]
         then
