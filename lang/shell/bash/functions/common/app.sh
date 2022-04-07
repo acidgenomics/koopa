@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rethink the '--shared' configuration. Consider reworking with '--user'.
-# instead.
-
 koopa_configure_app_packages() { # {{{1
     # """
     # Configure language application.
@@ -183,8 +180,8 @@ koopa_install_app() { # {{{1
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
         [auto_prefix]=1
-        [install_function]='main'
         [installer_bn]=''
+        [installer_fun]='main'
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         # Will any individual programs be linked into koopa 'bin/'?
@@ -350,23 +347,19 @@ koopa_install_app() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
-    koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[link_in_bin]=1
     case "${dict[mode]}" in
         'system')
             koopa_assert_is_admin
             dict[link_in_make]=0
             dict[link_in_opt]=0
-            if koopa_is_linux
-            then
-                dict[update_ldconfig]=1
-            fi
+            koopa_is_linux && dict[update_ldconfig]=1
             ;;
         'user')
-            dict[link_in_bin]=0
             dict[link_in_make]=0
             dict[link_in_opt]=0
             ;;
     esac
+    koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[link_in_bin]=1
     [[ -n "${dict[prefix]}" ]] && dict[auto_prefix]=0
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
@@ -382,16 +375,21 @@ koopa_install_app() { # {{{1
     fi
     [[ -d "${dict[prefix]}" ]] && \
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
-    [[ -z "${dict[installer]}" ]] && dict[installer]="${dict[name]}"
+    [[ -z "${dict[installer_bn]}" ]] && dict[installer_bn]="${dict[name]}"
     dict[installer_file]="${dict[installers_prefix]}/${dict[platform]}/\
 ${dict[mode]}/install-${dict[installer_bn]}.sh"
     koopa_assert_is_file "${dict[installer_file]}"
     # shellcheck source=/dev/null
     source "${dict[installer_file]}"
-    koopa_assert_is_function "${dict[install_function]}"
+    koopa_assert_is_function "${dict[installer_fun]}"
     if [[ "${dict[quiet]}" -eq 0 ]]
     then
-        koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
+        if [[ -n "${dict[prefix]}" ]]
+        then
+            koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
+        else
+            koopa_alert_install_start "${dict[name_fancy]}"
+        fi
     fi
     if [[ -n "${dict[prefix]}" ]]
     then
@@ -466,7 +464,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         export INSTALL_PREFIX="${dict[prefix]}"
         # shellcheck disable=SC2030
         export INSTALL_VERSION="${dict[version]}"
-        "${dict[function]}" "$@"
+        "${dict[installer_fun]}" "$@"
     )
     koopa_rm "${dict[tmp_dir]}"
     case "${dict[mode]}" in
@@ -510,7 +508,12 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     fi
     if [[ "${dict[quiet]}" -eq 0 ]]
     then
-        koopa_alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
+        if [[ -n "${dict[prefix]}" ]]
+        then
+            koopa_alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
+        else
+            koopa_alert_install_success "${dict[name_fancy]}"
+        fi
     fi
     return 0
 }
@@ -682,40 +685,32 @@ koopa_reinstall_app() { # {{{1
     koopa_koopa install "$@" --reinstall
 }
 
-# FIXME Rethink '--system' approach specifically for Lmod.
-# FIXME Need to support parameterized '--unlink-app-in-bin' here.
-# FIXME Consider adding support for unlinker function.
-# FIXME We don't need to remove opt link only in shared, right? Rethink...
-# FIXME Consider adding '--unlink-app-from-bin' parameterized option here.
-# FIXME Rework to use 'koopa_unlink_in_opt'.
-# FIXME Consider rethinking the uninstaller approach for something like
-# Lmod...remove the app prefix but also run the additional script?
-
 koopa_uninstall_app() { # {{{1
     # """
     # Uninstall an application.
     # @note Updated 2022-04-07.
     # """
-    local app dict pos
+    local app bin_arr dict pos
     declare -A app
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [make_prefix]="$(koopa_make_prefix)"
+        [mode]='shared'
         [name_fancy]=''
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
         [quiet]=0
-        [shared]=0
-        [system]=0
-        [unlink_in_bin]=0 # FIXME Need to add support for this.
-        [unlink_in_make]=0  # FIXME Need to rethink this.
-        [unlink_in_opt]=1 # FIXME Disable this if not shared app (e.g. in XDG HOME).
-        [uninstaller]=''
+        [uninstaller_bn]=''
+        [uninstaller_fun]='main'
+        [unlink_in_bin]=0
+        [unlink_in_make]=0
+        [unlink_in_opt]=1
         [verbose]=0
     )
+    bin_arr=()
     pos=()
     while (("$#"))
     do
@@ -760,11 +755,15 @@ koopa_uninstall_app() { # {{{1
                 dict[uninstaller]="${2:?}"
                 shift 2
                 ;;
-            # Flags ------------------------------------------------------------
-            '--no-unlink-in-make')
-                dict[unlink_in_make]=0
+            '--unlink-in-bin='*)
+                bin_arr+=("${1#*=}")
                 shift 1
                 ;;
+            '--unlink-in-bin')
+                bin_arr+=("${2:?}")
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
             '--no-unlink-in-opt')
                 dict[unlink_in_opt]=0
                 shift 1
@@ -774,15 +773,15 @@ koopa_uninstall_app() { # {{{1
                 shift 1
                 ;;
             '--system')
-                dict[system]=1
+                dict[mode]='system'
                 shift 1
                 ;;
             '--unlink-in-make')
                 dict[unlink_in_make]=1
                 shift 1
                 ;;
-            '--unlink-in-opt')
-                dict[unlink_in_opt]=1
+            '--user')
+                dict[mode]='user'
                 shift 1
                 ;;
             '--verbose')
@@ -798,9 +797,24 @@ koopa_uninstall_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
-    [[ "${dict[system]}" -eq 1 ]] && koopa_assert_is_admin
+    case "${dict[mode]}" in
+        'shared')
+            dict[unlink_in_opt]=1
+            if [[ -d "${dict[prefix]}" ]]
+            then
+                dict[prefix]="${dict[app_prefix]}/${dict[name]}"
+            fi
+            ;;
+        'system')
+            koopa_assert_is_admin
+            dict[unlink_in_opt]=0
+            ;;
+        'user')
+            dict[unlink_in_opt]=0
+            ;;
+    esac
+    koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[unlink_in_bin]=1
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
-    [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
@@ -810,29 +824,7 @@ at '${dict[prefix]}'."
             return 1
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
-        if koopa_str_detect_regex \
-            --string="${dict[prefix]}" \
-            --pattern="^${dict[koopa_prefix]}"
-        then
-            dict[shared]=1
-        else
-            dict[shared]=0
-        fi
-    else
-        if koopa_is_shared_install
-        then
-            dict[shared]=1
-        else
-            dict[shared]=0
-        fi
     fi
-    [[ "${dict[shared]}" -eq 0 ]] && dict[unlink_in_opt]=0
-
-
-
-
-
-
     if [[ "${dict[quiet]}" -eq 0 ]]
     then
         if [[ -n "${dict[prefix]}" ]]
@@ -842,80 +834,39 @@ at '${dict[prefix]}'."
             koopa_alert_uninstall_start "${dict[name_fancy]}"
         fi
     fi
-
-
-
-
-
-
-
-    if [[ "${dict[system]}" -eq 1 ]]
+    [[ -z "${dict[uninstaller_bn]}" ]] && dict[uninstaller_bn]="${dict[name]}"
+    dict[uninstaller_file]="${dict[installers_prefix]}/${dict[platform]}/\
+${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
+    if [[ -f "${dict[uninstaller_file]}" ]]
     then
-        if [[ -n "${dict[prefix]}" ]]
-        then
-            koopa_rm --sudo "${dict[prefix]}"
-        fi
-        [[ -z "${dict[uninstaller]}" ]] && dict[uninstaller]="${dict[name]}"
-        dict[uninstaller]="$( \
-            koopa_snake_case_simple "uninstall_${dict[uninstaller]}" \
-        )"
-        dict[uninstaller_file]="$( \
-            koopa_kebab_case_simple "${dict[uninstaller]}" \
-        )"
-        dict[uninstaller_file]="${dict[installers_prefix]}/\
-${dict[platform]}/${dict[uninstaller_file]}.sh"
-        if [[ -f "${dict[uninstaller_file]}" ]]
-        then
-            # shellcheck source=/dev/null
-            source "${dict[uninstaller_file]}"
-            dict[function]="$(koopa_snake_case_simple "${dict[uninstaller]}")"
-            if [[ "${dict[platform]}" != 'common' ]]
-            then
-                dict[function]="${dict[platform]}_${dict[function]}"
-            fi
-            dict[function]="${dict[function]}"
-            koopa_assert_is_function "${dict[function]}"
-            "${dict[function]}" "$@"
-        fi
-        if [[ "${dict[quiet]}" -eq 0 ]]
-        then
-            koopa_alert_uninstall_success "${dict[name_fancy]}"
-        fi
-    else
-        koopa_assert_has_no_args "$#"
-        if [[ -z "${dict[prefix]}" ]]
-        then
-            dict[prefix]="${dict[app_prefix]}/${dict[name]}"
-        fi
-        if [[ ! -d "${dict[prefix]}" ]]
-        then
-            koopa_warn "${dict[name_fancy]} is not installed \
-at '${dict[prefix]}'."
-            return 1
-        fi
-        if [[ "${dict[quiet]}" -eq 0 ]]
-        then
-            koopa_alert_uninstall_start \
-                "${dict[name_fancy]}" "${dict[prefix]}"
-        fi
-        koopa_rm "${dict[prefix]}"
+        # shellcheck source=/dev/null
+        source "${dict[uninstaller_file]}"
+        koopa_assert_is_function "${dict[uninstaller_fun]}"
+        "${dict[uninstaller_fun]}" "$@"
     fi
-
-
-
-
-
-    # FIXME Set this variable...
+    if [[ -d "${dict[prefix]}" ]]
+    then
+        case "${dict[mode]}" in
+            'system')
+                koopa_rm --sudo "${dict[prefix]}"
+                ;;
+            *)
+                koopa_rm "${dict[prefix]}"
+                ;;
+        esac
+    fi
+    if [[ "${dict[unlink_in_bin]}" -eq 1 ]]
+    then
+        koopa_unlink_in_bin "${bin_arr[@]}"
+    fi
     if [[ "${dict[unlink_in_opt]}" -eq 1 ]]
     then
         koopa_unlink_in_opt "${dict[name]}"
     fi
-
-
-    # FIXME Need to add support for 'unlink_in_make' (disabled by default).
-
-
-
+    if [[ "${dict[unlink_in_make]}" -eq 1 ]]
+    then
+        koopa_unlink_in_make "${dict[prefix]}"
+    fi
     if [[ "${dict[quiet]}" -eq 0 ]]
     then
         if [[ -n "${dict[prefix]}" ]]
@@ -932,26 +883,24 @@ at '${dict[prefix]}'."
 koopa_update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-07.
     # """
     local brew_opt_arr clean_path_arr dict opt_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A dict=(
-        [homebrew_opt]=''
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
+        [mode]='shared'
         [name_fancy]=''
-        [opt]=''
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
         [quiet]=0
-        [shared]=0
-        [system]=0
         [tmp_dir]="$(koopa_tmp_dir)"
         [update_ldconfig]=0
-        [updater]=''
+        [updater_bn]=''
+        [updater_fun]='main'
         [verbose]=0
         [version]=''
     )
@@ -1011,11 +960,11 @@ koopa_update_app() { # {{{1
                 shift 2
                 ;;
             '--updater='*)
-                dict[updater]="${1#*=}"
+                dict[updater_bn]="${1#*=}"
                 shift 1
                 ;;
             '--updater')
-                dict[updater]="${2:?}"
+                dict[updater_bn]="${2:?}"
                 shift 2
                 ;;
             '--version='*)
@@ -1032,7 +981,11 @@ koopa_update_app() { # {{{1
                 shift 1
                 ;;
             '--system')
-                dict[system]=1
+                dict[mode]='system'
+                shift 1
+                ;;
+            '--user')
+                dict[mode]='user'
                 shift 1
                 ;;
             '--verbose')
@@ -1048,6 +1001,18 @@ koopa_update_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    case "${dict[mode]}" in
+        'shared')
+            if [[ -z "${dict[prefix]}" ]]
+            then
+                dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
+            fi
+            ;;
+        'system')
+            koopa_assert_is_admin
+            koopa_is_linux && dict[update_ldconfig]=1
+            ;;
+    esac
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
@@ -1058,64 +1023,22 @@ at '${dict[prefix]}'."
             return 1
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
-        if koopa_str_detect_regex \
-            --string="${dict[prefix]}" \
-            --pattern="^${dict[koopa_prefix]}"
-        then
-            dict[shared]=1
-        else
-            dict[shared]=0
-        fi
-    else
-        if koopa_is_shared_install
-        then
-            dict[shared]=1
-        else
-            dict[shared]=0
-        fi
     fi
-    [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
-    if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
-    then
-        koopa_assert_is_admin
-    fi
-    [[ -z "${dict[updater]}" ]] && dict[updater]="${dict[name]}"
-    dict[updater]="$(koopa_snake_case_simple "update_${dict[updater]}")"
-    dict[updater_file]="$(koopa_kebab_case_simple "${dict[updater]}")"
-    dict[updater_file]="${dict[installers_prefix]}/\
-${dict[platform]}/${dict[updater_file]}.sh"
+    [[ -z "${dict[updater_bn]}" ]] && dict[updater_bn]="${dict[name]}"
+    dict[updater_file]="${dict[installers_prefix]}/${dict[platform]}/\
+${dict[mode]}/update-${dict[updater_bn]}.sh"
     koopa_assert_is_file "${dict[updater_file]}"
     # shellcheck source=/dev/null
     source "${dict[updater_file]}"
-    dict[function]="$(koopa_snake_case_simple "${dict[updater]}")"
-    if [[ "${dict[platform]}" != 'common' ]]
+    koopa_assert_is_function "${dict[updater_fun]}"
+    if [[ "${dict[quiet]}" -eq 0 ]]
     then
-        dict[function]="${dict[platform]}_${dict[function]}"
-    fi
-    dict[function]="${dict[function]}"
-    koopa_assert_is_function "${dict[function]}"
-    if [[ -z "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]
-    then
-        dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
-    fi
-    if [[ -n "${dict[prefix]}" ]]
-    then
-        if [[ ! -d "${dict[prefix]}" ]]
+        if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_warn "${dict[name_fancy]} is not installed \
-at '${dict[prefix]}'."
-            return 1
+            koopa_alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
+        else
+            koopa_alert_update_start "${dict[name_fancy]}"
         fi
-        dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
-        koopa_alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
-    else
-        koopa_alert_update_start "${dict[name_fancy]}"
-    fi
-    if koopa_is_linux && \
-        { [[ "${dict[shared]}" -eq 1 ]] || \
-            [[ "${dict[system]}" -eq 1 ]]; }
-    then
-        dict[update_ldconfig]=1
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
@@ -1143,25 +1066,32 @@ at '${dict[prefix]}'."
         fi
         # shellcheck disable=SC2030
         export UPDATE_PREFIX="${dict[prefix]}"
-        "${dict[function]}" "$@"
+        "${dict[updater_fun]}" "$@"
     )
     koopa_rm "${dict[tmp_dir]}"
-    if [[ -d "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]
+    if [[ -d "${dict[prefix]}" ]]
     then
-        if [[ "${dict[shared]}" -eq 1 ]]
-        then
-            koopa_sys_set_permissions --recursive "${dict[prefix]}"
-        fi
+        case "${dict[mode]}" in
+            'shared')
+                koopa_sys_set_permissions --recursive "${dict[prefix]}"
+                ;;
+            'user')
+                koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
+                ;;
+        esac
     fi
     if [[ "${dict[update_ldconfig]}" -eq 1 ]]
     then
         koopa_linux_update_ldconfig
     fi
-    if [[ -d "${dict[prefix]}" ]]
+    if [[ "${dict[quiet]}" -eq 0 ]]
     then
-        koopa_alert_update_success "${dict[name_fancy]}" "${dict[prefix]}"
-    else
-        koopa_alert_update_success "${dict[name_fancy]}"
+        if [[ -n "${dict[prefix]}" ]]
+        then
+            koopa_alert_update_success "${dict[name_fancy]}" "${dict[prefix]}"
+        else
+            koopa_alert_update_success "${dict[name_fancy]}"
+        fi
     fi
     return 0
 }
