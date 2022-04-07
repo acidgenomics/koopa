@@ -180,6 +180,9 @@ koopa_install_app() { # {{{1
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
         [auto_prefix]=0
+        # Download pre-built binary from our S3 bucket. Inspired by the
+        # Homebrew bottle approach.
+        [binary]=0
         [installer_bn]=''
         [installer_fun]='main'
         [installers_prefix]="$(koopa_installers_prefix)"
@@ -301,6 +304,10 @@ koopa_install_app() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--binary')
+                dict[binary]=1
+                shift 1
+                ;;
             '--link-in-make')
                 dict[link_in_make]=1
                 shift 1
@@ -435,6 +442,28 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
+        if [[ "${dict[binary]}" -eq 1 ]]
+        then
+            local app2 dict2
+            declare -A app2=(
+                [tar]="$(koopa_locate_tar)"
+            )
+            declare -A dict2=(
+                [arch]="$(koopa_arch2)"
+                [os_string]="$(koopa_os_string)"
+                [url_stem]='https://koopa.acidgenomics.com/app'
+            )
+            dict2[tarball_file]="${dict[name]}-${dict[version]}.tar.gz"
+            dict2[tarball_url]="${dict2[url_stem]}/${dict2[os_string]}/\
+${dict2[arch]}/${dict[name]}/${dict[version]}.tar.gz"
+            if ! koopa_is_url_active "${dict2[tarball_url]}"
+            then
+                koopa_stop "No package binary at '${dict2[tarball_url]}'."
+            fi
+            koopa_download "${dict2[tarball_url]}" "${dict2[tarball_file]}"
+            "${app2[tar]}" -Pxzvf "${dict2[tarball_file]}"
+            return 0
+        fi
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
