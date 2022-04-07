@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install R.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-04-07.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.

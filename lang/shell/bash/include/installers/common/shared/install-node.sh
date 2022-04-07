@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Node.js.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-07.
     #
     # @seealso
     # - https://github.com/nodejs/node
@@ -11,8 +11,24 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    if koopa_is_macos
+    then
+        koopa_activate_homebrew_opt_prefix \
+            'brotli' \
+            'c-ares' \
+            'icu4c' \
+            'libnghttp2' \
+            'libuv' \
+            'openssl@1.1' \
+            'pkg-config' \
+            'python@3'
+    else
+        koopa_activate_opt_prefix \
+            'icu4c' \
+            'pkg-config' \
+            'python'
+    fi
     declare -A app=(
-        [brew]="$(koopa_locate_brew --allow-missing)"
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
@@ -26,32 +42,12 @@ main() { # {{{1
     koopa_extract "${dict[file]}"
     koopa_cd "node-v${dict[version]}"
     koopa_alert_coffee_time
-    if koopa_is_installed "${app[brew]}"
-    then
-        dict[python_version]="$(koopa_variable 'python')"
-        dict[python_maj_min_ver]="$( \
-            koopa_major_minor_version "${dict[python_version]}" \
-        )"
-        koopa_activate_homebrew_opt_prefix \
-            'brotli' \
-            'c-ares' \
-            'icu4c' \
-            'libnghttp2' \
-            'libuv' \
-            'openssl@1.1' \
-            'pkg-config' \
-            "python@${dict[python_maj_min_ver]}"
-    else
-        koopa_activate_opt_prefix \
-            'icu4c' \
-            'python'
-    fi
     conf_args=(
         "--prefix=${dict[prefix]}"
         # > '--without-corepack'
         # > '--without-npm'
     )
-    if koopa_is_installed "${app[brew]}"
+    if koopa_is_macos
     then
         conf_args+=(
             '--shared-brotli'

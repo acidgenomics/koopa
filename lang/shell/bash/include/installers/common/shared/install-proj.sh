@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install PROJ.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-07.
     #
     # Alternative approach for SQLite3 dependency:
     # > -DCMAKE_PREFIX_PATH='/opt/koopa/opt/sqlite'
@@ -14,8 +14,12 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'pkg-config' 'python' 'sqlite'
+    if koopa_is_macos
+    then
+        koopa_activate_homebrew_opt_prefix 'libtiff'
+    fi
     declare -A app=(
-        [brew]="$(koopa_locate_brew --allow-missing)"
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )
@@ -30,18 +34,6 @@ main() { # {{{1
     dict[python_min_maj_ver]="$( \
         koopa_major_minor_version "${dict[python_version]}" \
     )"
-    if koopa_is_installed "${app[brew]}"
-    then
-        koopa_activate_homebrew_opt_prefix \
-            'libtiff' \
-            'pkg-config' \
-            "python@${dict[python_min_maj_ver]}" \
-            'sqlite3'
-    else
-        koopa_activate_opt_prefix \
-            'python' \
-            'sqlite'
-    fi
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://github.com/OSGeo/PROJ/releases/download/\
 ${dict[version]}/${dict[file]}"

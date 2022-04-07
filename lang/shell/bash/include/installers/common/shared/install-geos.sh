@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GEOS.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-07.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.
@@ -25,8 +25,8 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'cmake'
     declare -A app=(
-        [brew]="$(koopa_locate_brew --allow-missing)"
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )
@@ -36,10 +36,6 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa_is_installed "${app[brew]}"
-    then
-        koopa_activate_homebrew_opt_prefix 'cmake'
-    fi
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/lib${dict[name]}/${dict[name]}/\
 archive/${dict[file]}"
