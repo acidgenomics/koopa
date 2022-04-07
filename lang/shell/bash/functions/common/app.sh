@@ -172,7 +172,7 @@ koopa_find_app_version() { # {{{1
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-07.
     # """
     local bin_arr brew_opt_arr clean_path_arr dict i init_dir opt_arr pos
     koopa_assert_has_args "$#"
