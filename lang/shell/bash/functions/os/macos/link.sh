@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for (see common/locate-wrappers.sh for details):
-# - gnupg (gpg, gpg_agent, gpgconf)
-
 # FIXME Need to link components from:
-#        koopa_activate_homebrew_opt_prefix 'curl'
-#        koopa_activate_homebrew_opt_libexec_prefix 'man-db'
-#        koopa_activate_homebrew_opt_gnu_prefix \
-#            'coreutils' \
-#            'findutils' \
-#            'gnu-sed' \
-#            'gnu-tar' \
-#            'gnu-which' \
-#            'grep'
+# - curl (curl)
+# - curl-config (curl)
+# - grep (grep)
+# - man (man-db)
+# - sed (gnu-sed)
+# - tar (gnu-tar)
 
 koopa_macos_link_homebrew_opt() { # {{{1
     local dict
@@ -21,6 +15,7 @@ koopa_macos_link_homebrew_opt() { # {{{1
         [brew_opt]="$(koopa_homebrew_opt_prefix)"
     )
     dict[coreutils]="${dict[brew_opt]}/coreutils/libexec/gnubin"
+    dict[curl]="${dict[brew_opt]}/curl/bin"
     dict[findutils]="${dict[brew_opt]}/findutils/libexec/gnubin"
     koopa_link_in_bin \
         "${dict[coreutils]}/[" '[' \
@@ -129,10 +124,13 @@ koopa_macos_link_homebrew_opt() { # {{{1
         "${dict[coreutils]}/who" 'who' \
         "${dict[coreutils]}/whoami" 'whoami' \
         "${dict[coreutils]}/yes" 'yes' \
+        "${dict[curl]}/curl" 'curl' \
+        "${dict[curl]}/curl-config" 'curl-config' \
         "${dict[findutils]}/find" 'find' \
         "${dict[findutils]}/locate" 'locate' \
         "${dict[findutils]}/updatedb" 'updatedb' \
         "${dict[findutils]}/xargs" 'xargs'
+
 }
 
 koopa_macos_link_bbedit() { # {{{1
