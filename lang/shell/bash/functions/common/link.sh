@@ -3,7 +3,7 @@
 __koopa_link_in_dir() { # {{{1
     # """
     # Symlink multiple programs in a directory.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-07.
     #
     # @usage
     # > __koopa_link_in_dir \
@@ -58,6 +58,8 @@ __koopa_link_in_dir() { # {{{1
             [source_file]="${1:?}"
             [target_name]="${2:?}"
         )
+        koopa_assert_is_file "${dict2[source_file]}"
+        dict2[source_file]="$(koopa_realpath "${dict2[source_file]}")"
         dict2[target_file]="${dict[prefix]}/${dict2[target_name]}"
         koopa_sys_ln "${dict2[source_file]}" "${dict2[target_file]}"
         shift 2
