@@ -7,6 +7,7 @@ koopa_macos_install_python_binary() { # {{{1
         --name-fancy='Python binary' \
         --name='python' \
         --platform='macos' \
+        --prefix="$(koopa_macos_python_prefix)" \
         --system \
         "$@"
 }
