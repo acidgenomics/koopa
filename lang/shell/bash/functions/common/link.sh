@@ -315,7 +315,7 @@ koopa_unlink_in_make() { # {{{1
     # > koopa_unlink_in_make '/opt/koopa/app'
     # """
     local app_prefix dict files
-    koopa_assert_has_args "$#" 1
+    koopa_assert_has_args "$#"
     declare -A dict=(
         [app_prefix]=''
         [homebrew_prefix]="$(koopa_homebrew_prefix)"
