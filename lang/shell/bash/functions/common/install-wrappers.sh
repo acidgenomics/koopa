@@ -386,6 +386,7 @@ koopa_install_hdf5() { # {{{1
 # FIXME Can we support '--link-in-bin=bin/brew' here?
 koopa_install_homebrew() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/brew' \
         --name-fancy='Homebrew' \
         --name='homebrew' \
         --system \
