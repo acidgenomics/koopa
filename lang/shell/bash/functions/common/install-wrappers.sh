@@ -1,6 +1,36 @@
 #!/usr/bin/env bash
 
-# FIXME Need to ensure that unlinkers match.
+# Core helpers =================================================================
+
+koopa_install_gnu_app() { # {{{1
+    koopa_install_app \
+        --installer='gnu-app' \
+        "$@"
+}
+
+# Koopa-specific ===============================================================
+
+koopa_uninstall_koopa() { # {{{1
+    local app
+    declare -A app=(
+        [bash]="$(koopa_locate_bash)"
+    )
+    "${app[bash]}" "$(koopa_koopa_prefix)/uninstall" "$@"
+    return 0
+}
+
+# FIXME Rethink the use of '--system' here.
+# FIXME Can we not set the prefix here?
+
+koopa_update_koopa() { # {{{1
+    koopa_update_app \
+        --name='koopa' \
+        --prefix="$(koopa_koopa_prefix)" \
+        --system \
+        "$@"
+}
+
+# Shared (default) =============================================================
 
 koopa_install_anaconda() { # {{{1
     koopa_install_app \
@@ -207,15 +237,6 @@ koopa_install_curl() { # {{{1
         "$@"
 }
 
-koopa_install_doom_emacs() { # {{{1
-    koopa_install_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        --version='rolling' \
-        "$@"
-}
-
 koopa_install_dotfiles() { # {{{1
     koopa_install_app \
         --name-fancy='Dotfiles' \
@@ -314,12 +335,6 @@ koopa_install_git() { # {{{1
         "$@"
 }
 
-koopa_install_gnu_app() { # {{{1
-    koopa_install_app \
-        --installer='gnu-app' \
-        "$@"
-}
-
 # FIXME Need to add links here.
 koopa_install_gnupg() { # {{{1
     koopa_install_app \
@@ -359,9 +374,9 @@ koopa_install_gsl() { # {{{1
         "$@"
 }
 
-# FIXME Need to add link here?
 koopa_install_hadolint() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/hadolint' \
         --name='hadolint' \
         "$@"
 }
@@ -373,7 +388,6 @@ koopa_install_harfbuzz() { # {{{1
         "$@"
 }
 
-# FIXME Need to add link here?
 koopa_install_haskell_stack() { # {{{1
     koopa_install_app \
         --link-in-bin='bin/stack' \
@@ -387,24 +401,6 @@ koopa_install_hdf5() { # {{{1
     koopa_install_app \
         --name-fancy='HDF5' \
         --name='hdf5' \
-        "$@"
-}
-
-koopa_install_homebrew() { # {{{1
-    koopa_install_app \
-        --link-in-bin='Homebrew/bin/brew' \
-        --name-fancy='Homebrew' \
-        --name='homebrew' \
-        --prefix="$(koopa_homebrew_prefix)" \
-        --system \
-        "$@"
-}
-
-koopa_install_homebrew_bundle() { # {{{1
-    koopa_install_app \
-        --name-fancy='Homebrew bundle' \
-        --name='homebrew-bundle' \
-        --system \
         "$@"
 }
 
@@ -487,9 +483,10 @@ koopa_install_make() { # {{{1
 
 koopa_install_mamba() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/mamba' \
         --name-fancy='Mamba' \
         --name='mamba' \
-        --system \
+        --no-prefix-check \
         "$@"
 }
 
@@ -505,10 +502,6 @@ koopa_install_meson() { # {{{1
         --name-fancy='Meson' \
         --name='meson' \
         "$@"
-}
-
-koopa_install_miniconda() { # {{{1
-    koopa_install_conda "$@"
 }
 
 koopa_install_ncurses() { # {{{1
@@ -653,15 +646,6 @@ koopa_install_perlbrew() { # {{{1
 koopa_install_pkg_config() { # {{{1
     koopa_install_app \
         --name='pkg-config' \
-        "$@"
-}
-
-koopa_install_prelude_emacs() { # {{{1
-    koopa_install_app \
-        --name-fancy='Prelude Emacs' \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
-        --version='rolling' \
         "$@"
 }
 
@@ -814,24 +798,6 @@ koopa_install_shunit2() { # {{{1
 koopa_install_singularity() { # {{{1
     koopa_install_app \
         --name='singularity' \
-        "$@"
-}
-
-koopa_install_spacemacs() { # {{{1
-    koopa_install_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
-        --version='rolling' \
-        "$@"
-}
-
-koopa_install_spacevim() { # {{{1
-    koopa_install_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
-        --version='rolling' \
         "$@"
 }
 
@@ -1120,6 +1086,7 @@ koopa_uninstall_coreutils() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_cpufetch() { # {{{1
     koopa_uninstall_app \
         --name='cpufetch' \
@@ -1132,14 +1099,6 @@ koopa_uninstall_curl() { # {{{1
         --name='curl' \
         --unlink-in-bin='curl' \
         --unlink-in-bin='curl-config' \
-        "$@"
-}
-
-koopa_uninstall_doom_emacs() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
         "$@"
 }
 
@@ -1169,6 +1128,7 @@ koopa_uninstall_dotfiles() { # {{{1
     return 0
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_emacs() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Emacs' \
@@ -1193,6 +1153,7 @@ koopa_uninstall_findutils() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_fish() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Fish' \
@@ -1200,6 +1161,7 @@ koopa_uninstall_fish() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_fzf() { # {{{1
     koopa_uninstall_app \
         --name-fancy='FZF' \
@@ -1207,6 +1169,7 @@ koopa_uninstall_fzf() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_gawk() { # {{{1
     koopa_uninstall_app \
         --name='gawk' \
@@ -1234,6 +1197,7 @@ koopa_uninstall_geos() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_git() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Git' \
@@ -1248,6 +1212,7 @@ koopa_uninstall_gnupg() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_go() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Go' \
@@ -1271,6 +1236,7 @@ koopa_uninstall_grep() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_groff() { # {{{1
     koopa_uninstall_app \
         --name='groff' \
@@ -1312,15 +1278,7 @@ koopa_uninstall_hdf5() { # {{{1
         "$@"
 }
 
-koopa_uninstall_homebrew() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='Homebrew' \
-        --name='homebrew' \
-        --system \
-        --unlink-in-bin='brew' \
-        "$@"
-}
-
+# FIXME Need to unlink in bin here.
 koopa_uninstall_htop() { # {{{1
     koopa_uninstall_app \
         --name='htop' \
@@ -1356,15 +1314,7 @@ koopa_uninstall_julia_packages() { # {{{1
         "$@"
 }
 
-koopa_uninstall_koopa() { # {{{1
-    local app
-    declare -A app=(
-        [bash]="$(koopa_locate_bash)"
-    )
-    "${app[bash]}" "$(koopa_koopa_prefix)/uninstall" "$@"
-    return 0
-}
-
+# FIXME Need to unlink in bin here.
 koopa_uninstall_lesspipe() { # {{{1
     koopa_uninstall_app \
         --name='lesspipe' \
@@ -1383,6 +1333,7 @@ koopa_uninstall_libtool() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_lua() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Lua' \
@@ -1390,6 +1341,7 @@ koopa_uninstall_lua() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_luarocks() { # {{{1
     koopa_uninstall_app \
         --name='luarocks' \
@@ -1399,7 +1351,6 @@ koopa_uninstall_luarocks() { # {{{1
 koopa_uninstall_make() { # {{{1
     koopa_uninstall_app \
         --name='make' \
-        --unlink-in-bin='make' \
         "$@"
 }
 
@@ -1417,28 +1368,27 @@ koopa_uninstall_meson() { # {{{1
         "$@"
 }
 
-koopa_uninstall_miniconda() { # {{{1
-    koopa_uninstall_conda "$@"
-}
-
 koopa_uninstall_ncurses() { # {{{1
     koopa_uninstall_app \
         --name='ncurses' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_neofetch() { # {{{1
     koopa_uninstall_app \
         --name='neofetch' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_neovim() { # {{{1
     koopa_uninstall_app \
         --name='neovim' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_nim() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Nim' \
@@ -1446,6 +1396,7 @@ koopa_uninstall_nim() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_nim_packages() { # {{{1
     koopa_uninstall_app \
         --name='nim-packages' \
@@ -1453,6 +1404,7 @@ koopa_uninstall_nim_packages() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_ninja() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Ninja' \
@@ -1460,6 +1412,7 @@ koopa_uninstall_ninja() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_node() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Node.js' \
@@ -1467,12 +1420,17 @@ koopa_uninstall_node() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_node_packages() { # {{{1
     koopa_uninstall_app \
         --name='node-packages' \
         --name-fancy='Node.js packages' \
         "$@"
 }
+
+# FIXME Need to pass this out to an uninstall script...
+# FIXME Need to make a Linux-specific wrapper.
+# FIXME Need to unlink in bin here.
 
 koopa_uninstall_openjdk() { # {{{1
     local dict
@@ -1506,18 +1464,21 @@ koopa_uninstall_openssl() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_parallel() { # {{{1
     koopa_uninstall_app \
         --name='parallel' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_password_store() { # {{{1
     koopa_uninstall_app \
         --name='password-store' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_patch() { # {{{1
     koopa_uninstall_app \
         --name='patch' \
@@ -1531,6 +1492,7 @@ koopa_uninstall_pcre2() { # {{{1
         "$@"
 }
 
+# FIXME Need to include unlinks.
 koopa_uninstall_perl() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Perl' \
@@ -1538,6 +1500,8 @@ koopa_uninstall_perl() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
+# FIXME Need to include an uninstall script.
 koopa_uninstall_perl_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Perl packages' \
@@ -1551,20 +1515,13 @@ koopa_uninstall_perlbrew() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Perlbrew' \
         --name='perlbrew' \
+        --unlink-in-bin='perlbrew' \
         "$@"
 }
 
 koopa_uninstall_pkg_config() { # {{{1
     koopa_uninstall_app \
         --name='pkg-config' \
-        "$@"
-}
-
-koopa_uninstall_prelude_emacs() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='Prelude Emacs' \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
         "$@"
 }
 
@@ -1575,12 +1532,14 @@ koopa_uninstall_proj() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_pyenv() { # {{{1
     koopa_uninstall_app \
         --name='pyenv' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_python() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Python' \
@@ -1588,6 +1547,7 @@ koopa_uninstall_python() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_python_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Python packages' \
@@ -1602,6 +1562,7 @@ koopa_uninstall_python_virtualenvs() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_r() { # {{{1
     koopa_uninstall_app \
         --name-fancy='R' \
@@ -1622,24 +1583,28 @@ koopa_uninstall_r_packages() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_rbenv() { # {{{1
     koopa_uninstall_app \
         --name='rbenv' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_rmate() { # {{{1
     koopa_uninstall_app \
         --name='rmate' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_rsync() { # {{{1
     koopa_uninstall_app \
         --name='rsync' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_ruby() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Ruby' \
@@ -1647,6 +1612,7 @@ koopa_uninstall_ruby() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_ruby_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Ruby packages' \
@@ -1654,6 +1620,7 @@ koopa_uninstall_ruby_packages() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_rust() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Rust' \
@@ -1661,6 +1628,7 @@ koopa_uninstall_rust() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_rust_packages() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Rust packages' \
@@ -1671,9 +1639,11 @@ koopa_uninstall_rust_packages() { # {{{1
 koopa_uninstall_sed() { # {{{1
     koopa_uninstall_app \
         --name='sed' \
+        --unlink-in-bin='sed' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_shellcheck() { # {{{1
     koopa_uninstall_app \
         --name-fancy='ShellCheck' \
@@ -1681,6 +1651,7 @@ koopa_uninstall_shellcheck() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_shunit2() { # {{{1
     koopa_uninstall_app \
         --name-fancy='shUnit2' \
@@ -1688,25 +1659,10 @@ koopa_uninstall_shunit2() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_singularity() { # {{{1
     koopa_uninstall_app \
         --name='singularity' \
-        "$@"
-}
-
-koopa_uninstall_spacemacs() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
-        "$@"
-}
-
-koopa_uninstall_spacevim() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
         "$@"
 }
 
@@ -1720,15 +1676,18 @@ koopa_uninstall_sqlite() { # {{{1
 koopa_uninstall_stow() { # {{{1
     koopa_uninstall_app \
         --name='stow' \
+        --unlink-in-bin='stow' \
         "$@"
 }
 
 koopa_uninstall_subversion() { # {{{1
     koopa_uninstall_app \
         --name='subversion' \
+        --unlink-in-bin='svn' \
         "$@"
 }
 
+# FIXME We need to unlink in bin.
 koopa_uninstall_taglib() { # {{{1
     koopa_uninstall_app \
         --name-fancy='TagLib' \
@@ -1736,6 +1695,7 @@ koopa_uninstall_taglib() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_tar() { # {{{1
     koopa_uninstall_app \
         --name='tar' \
@@ -1748,12 +1708,14 @@ koopa_uninstall_texinfo() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_the_silver_searcher() { # {{{1
     koopa_uninstall_app \
         --name='the-silver-searcher' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_tmux() { # {{{1
     koopa_uninstall_app \
         --name='tmux' \
@@ -1766,6 +1728,7 @@ koopa_uninstall_udunits() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_vim() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Vim' \
@@ -1773,12 +1736,14 @@ koopa_uninstall_vim() { # {{{1
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_wget() { # {{{1
     koopa_uninstall_app \
         --name='wget' \
         "$@"
 }
 
+# FIXME Need to unlink in bin here.
 koopa_uninstall_zsh() { # {{{1
     koopa_uninstall_app \
         --name-fancy="Zsh" \
@@ -1793,14 +1758,6 @@ koopa_update_chemacs() { # {{{1
         "$@"
 }
 
-koopa_update_doom_emacs() { # {{{1
-    koopa_update_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        "$@"
-}
-
 koopa_update_dotfiles() { # {{{1
     koopa_update_app \
         --name='dotfiles' \
@@ -1808,33 +1765,8 @@ koopa_update_dotfiles() { # {{{1
         "$@"
 }
 
-koopa_update_google_cloud_sdk() { # {{{1
-    koopa_update_app \
-        --name-fancy='Google Cloud SDK' \
-        --name='google-cloud-sdk' \
-        --system \
-        "$@"
-}
-
-koopa_update_homebrew() { # {{{1
-    koopa_update_app \
-        --name-fancy='Homebrew' \
-        --name='homebrew' \
-        --prefix="$(koopa_homebrew_prefix)" \
-        --system \
-        "$@"
-}
-
 koopa_update_julia_packages() { # {{{1
     koopa_install_julia_packages "$@"
-}
-
-koopa_update_koopa() { # {{{1
-    koopa_update_app \
-        --name='koopa' \
-        --prefix="$(koopa_koopa_prefix)" \
-        --system \
-        "$@"
 }
 
 koopa_update_mamba() { # {{{1
@@ -1857,14 +1789,6 @@ koopa_update_perlbrew() { # {{{1
     koopa_update_app \
         --name='perlbrew' \
         --name-fancy='Perlbrew' \
-        "$@"
-}
-
-koopa_update_prelude_emacs() { # {{{1
-    koopa_update_app \
-        --name-fancy='Prelude Emacs' \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
         "$@"
 }
 
@@ -1912,19 +1836,50 @@ koopa_update_rust_packages() { # {{{1
         "$@"
 }
 
-koopa_update_spacemacs() { # {{{1
-    koopa_update_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
+# System =======================================================================
+
+koopa_install_homebrew() { # {{{1
+    koopa_install_app \
+        --link-in-bin='Homebrew/bin/brew' \
+        --name-fancy='Homebrew' \
+        --name='homebrew' \
+        --system \
         "$@"
 }
 
-koopa_update_spacevim() { # {{{1
+# FIXME Consider linking into bin for macOS.
+
+koopa_install_homebrew_bundle() { # {{{1
+    koopa_install_app \
+        --name-fancy='Homebrew bundle' \
+        --name='homebrew-bundle' \
+        --system \
+        "$@"
+}
+
+koopa_uninstall_homebrew() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Homebrew' \
+        --name='homebrew' \
+        --system \
+        --unlink-in-bin='brew' \
+        "$@"
+}
+
+koopa_update_google_cloud_sdk() { # {{{1
     koopa_update_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        --system \
+        "$@"
+}
+
+koopa_update_homebrew() { # {{{1
+    koopa_update_app \
+        --name-fancy='Homebrew' \
+        --name='homebrew' \
+        --prefix="$(koopa_homebrew_prefix)" \
+        --system \
         "$@"
 }
 
@@ -1940,5 +1895,121 @@ koopa_update_tex_packages() { # {{{1
         --name-fancy='TeX packages' \
         --name='tex-packages' \
         --system \
+        "$@"
+}
+
+# User-specific ================================================================
+
+# FIXME Can we rework to not have to pass in the prefix here?
+
+koopa_install_doom_emacs() { # {{{1
+    koopa_install_app \
+        --name-fancy='Doom Emacs' \
+        --name='doom-emacs' \
+        --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
+        --version='rolling' \
+        "$@"
+}
+
+koopa_install_prelude_emacs() { # {{{1
+    koopa_install_app \
+        --name-fancy='Prelude Emacs' \
+        --name='prelude-emacs' \
+        --prefix="$(koopa_prelude_emacs_prefix)" \
+        --user \
+        --version='rolling' \
+        "$@"
+}
+
+koopa_install_spacemacs() { # {{{1
+    koopa_install_app \
+        --name-fancy='Spacemacs' \
+        --name='spacemacs' \
+        --prefix="$(koopa_spacemacs_prefix)" \
+        --user \
+        --version='rolling' \
+        "$@"
+}
+
+koopa_install_spacevim() { # {{{1
+    koopa_install_app \
+        --name-fancy='SpaceVim' \
+        --name='spacevim' \
+        --prefix="$(koopa_spacevim_prefix)" \
+        --user \
+        --version='rolling' \
+        "$@"
+}
+
+koopa_uninstall_doom_emacs() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Doom Emacs' \
+        --name='doom-emacs' \
+        --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_uninstall_prelude_emacs() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Prelude Emacs' \
+        --name='prelude-emacs' \
+        --prefix="$(koopa_prelude_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_uninstall_spacemacs() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='Spacemacs' \
+        --name='spacemacs' \
+        --prefix="$(koopa_spacemacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_uninstall_spacevim() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='SpaceVim' \
+        --name='spacevim' \
+        --prefix="$(koopa_spacevim_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_update_doom_emacs() { # {{{1
+    koopa_update_app \
+        --name-fancy='Doom Emacs' \
+        --name='doom-emacs' \
+        --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_update_prelude_emacs() { # {{{1
+    koopa_update_app \
+        --name-fancy='Prelude Emacs' \
+        --name='prelude-emacs' \
+        --prefix="$(koopa_prelude_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_update_spacemacs() { # {{{1
+    koopa_update_app \
+        --name-fancy='Spacemacs' \
+        --name='spacemacs' \
+        --prefix="$(koopa_spacemacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_update_spacevim() { # {{{1
+    koopa_update_app \
+        --name-fancy='SpaceVim' \
+        --name='spacevim' \
+        --prefix="$(koopa_spacevim_prefix)" \
+        --user \
         "$@"
 }
