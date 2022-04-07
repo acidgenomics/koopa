@@ -41,7 +41,7 @@ ${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "Python-${dict[version]}"
     conf_args=("--prefix=${dict[prefix]}")
-    if [[ "${KOOPA_LINK_IN_MAKE:?}" -eq 1 ]]
+    if [[ "${INSTALL_LINK_IN_MAKE:?}" -eq 1 ]]
     then
         conf_args+=(
             # > '--enable-optimizations'
