@@ -800,7 +800,7 @@ koopa_uninstall_app() { # {{{1
     case "${dict[mode]}" in
         'shared')
             dict[unlink_in_opt]=1
-            if [[ -d "${dict[prefix]}" ]]
+            if [[ -z "${dict[prefix]}" ]]
             then
                 dict[prefix]="${dict[app_prefix]}/${dict[name]}"
             fi
