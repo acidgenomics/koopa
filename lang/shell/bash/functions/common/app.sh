@@ -179,7 +179,7 @@ koopa_install_app() { # {{{1
         [app_prefix]="$(koopa_app_prefix)"
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
-        [auto_prefix]=1
+        [auto_prefix]=0
         [installer_bn]=''
         [installer_fun]='main'
         [installers_prefix]="$(koopa_installers_prefix)"
@@ -347,7 +347,22 @@ koopa_install_app() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
+    if [[ -z "${dict[version]}" ]]
+    then
+        dict[version]="$(\
+            koopa_variable "${dict[version_key]}" 2>/dev/null || true \
+        )"
+    fi
     case "${dict[mode]}" in
+        'shared')
+            if [[ -z "${dict[prefix]}" ]]
+            then
+                dict[auto_prefix]=1
+                dict[prefix]="${dict[app_prefix]}/${dict[name]}/\
+${dict[version]}"
+            fi
+            ;;
         'system')
             koopa_assert_is_admin
             dict[link_in_make]=0
@@ -360,19 +375,7 @@ koopa_install_app() { # {{{1
             ;;
     esac
     koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[link_in_bin]=1
-    [[ -n "${dict[prefix]}" ]] && dict[auto_prefix]=0
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
-    [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
-    if [[ -z "${dict[version]}" ]]
-    then
-        dict[version]="$(\
-            koopa_variable "${dict[version_key]}" 2>/dev/null || true \
-        )"
-    fi
-    if [[ -z "${dict[prefix]}" ]] && [[ "${dict[auto_prefix]}" -eq 1 ]]
-    then
-        dict[prefix]="${dict[app_prefix]}/${dict[name]}/${dict[version]}"
-    fi
     [[ -d "${dict[prefix]}" ]] && \
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     [[ -z "${dict[installer_bn]}" ]] && dict[installer_bn]="${dict[name]}"
