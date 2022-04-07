@@ -26,7 +26,6 @@ koopa_update_koopa() { # {{{1
     koopa_update_app \
         --name='koopa' \
         --prefix="$(koopa_koopa_prefix)" \
-        --system \
         "$@"
 }
 
