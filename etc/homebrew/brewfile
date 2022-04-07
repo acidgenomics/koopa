@@ -56,7 +56,6 @@ brew "dog" # rust
 brew "duf"
 brew "dust" # rust
 brew "editorconfig"
-brew "emacs"
 brew "exa" # rust
 brew "exiftool"
 brew "expect" # installs unbuffer
