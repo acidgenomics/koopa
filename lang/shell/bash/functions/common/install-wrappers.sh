@@ -201,6 +201,7 @@ koopa_install_cpufetch() { # {{{1
 koopa_install_curl() { # {{{1
     koopa_install_app \
         --link-in-bin='bin/curl' \
+        --link-in-bin='bin/curl-config' \
         --name-fancy='cURL' \
         --name='curl' \
         "$@"
@@ -254,6 +255,9 @@ koopa_install_findutils() { # {{{1
     fi
     koopa_install_gnu_app \
         --link-in-bin='bin/find' \
+        --link-in-bin='bin/locate' \
+        --link-in-bin='bin/updatedb' \
+        --link-in-bin='bin/xargs' \
         --name='findutils' \
         "$@"
 }
@@ -1002,6 +1006,7 @@ koopa_uninstall_conda() { # {{{1
         "$@"
 }
 
+# FIXME Need to match our installer above.
 koopa_uninstall_coreutils() { # {{{1
     koopa_uninstall_app \
         --name='coreutils' \
@@ -1018,6 +1023,8 @@ koopa_uninstall_curl() { # {{{1
     koopa_uninstall_app \
         --name-fancy='cURL' \
         --name='curl' \
+        --unlink-in-bin='curl' \
+        --unlink-in-bin='curl-config' \
         "$@"
 }
 
@@ -1072,6 +1079,10 @@ koopa_uninstall_ensembl_perl_api() { # {{{1
 koopa_uninstall_findutils() { # {{{1
     koopa_uninstall_app \
         --name='findutils' \
+        --unlink-in-bin='find' \
+        --unlink-in-bin='locate' \
+        --unlink-in-bin='updatedb' \
+        --unlink-in-bin='xargs' \
         "$@"
 }
 
