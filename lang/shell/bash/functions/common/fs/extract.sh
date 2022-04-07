@@ -3,7 +3,7 @@
 koopa_extract() { # {{{1
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-07.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -29,16 +29,21 @@ koopa_extract() { # {{{1
                 )
                 case "$file" in
                     *'.bz2')
+                        local cmd2
+                        cmd2="$(koopa_locate_bzip2)"
+                        koopa_add_to_path_start "$(koopa_dirname "$cmd2")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
                     *'.gz')
+                        local cmd2
+                        cmd2="$(koopa_locate_gzip)"
+                        koopa_add_to_path_start "$(koopa_dirname "$cmd2")"
                         cmd_args+=('-z') # '--gzip'.
                         ;;
                     *'.xz')
-                        if koopa_is_macos
-                        then
-                            koopa_activate_homebrew_opt_prefix 'xz'
-                        fi
+                        local cmd2
+                        cmd2="$(koopa_locate_xz)"
+                        koopa_add_to_path_start "$(koopa_dirname "$cmd2")"
                         cmd_args+=('-J') # '--xz'.
                         ;;
                 esac
