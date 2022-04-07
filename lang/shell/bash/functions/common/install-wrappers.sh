@@ -385,9 +385,10 @@ koopa_install_hdf5() { # {{{1
 
 # FIXME Can we support '--link-in-bin=bin/brew' here?
 # FIXME Do we need to run this without changing permissions?
+# FIXME Ensure that brew symlink points to '/home/linuxbrew/.linuxbrew/Homebrew/bin/brew'.
 koopa_install_homebrew() { # {{{1
     koopa_install_app \
-        --link-in-bin='bin/brew' \
+        --link-in-bin='Homebrew/bin/brew' \
         --name-fancy='Homebrew' \
         --name='homebrew' \
         --prefix="$(koopa_homebrew_prefix)" \
