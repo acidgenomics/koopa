@@ -844,6 +844,17 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
         koopa_assert_is_function "${dict[uninstaller_fun]}"
         "${dict[uninstaller_fun]}" "$@"
     fi
+    if [[ -d "${dict[prefix]}" ]]
+    then
+        case "${dict[mode]}" in
+            'system')
+                koopa_rm --sudo "${dict[prefix]}"
+                ;;
+            *)
+                koopa_rm "${dict[prefix]}"
+                ;;
+        esac
+    fi
     if [[ "${dict[unlink_in_bin]}" -eq 1 ]]
     then
         koopa_unlink_in_bin "${bin_arr[@]}"
@@ -855,17 +866,6 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
     if [[ "${dict[unlink_in_make]}" -eq 1 ]]
     then
         koopa_unlink_in_make "${dict[prefix]}"
-    fi
-    if [[ -d "${dict[prefix]}" ]]
-    then
-        case "${dict[mode]}" in
-            'system')
-                koopa_rm --sudo "${dict[prefix]}"
-                ;;
-            *)
-                koopa_rm "${dict[prefix]}"
-                ;;
-        esac
     fi
     if [[ "${dict[quiet]}" -eq 0 ]]
     then
