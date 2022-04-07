@@ -56,7 +56,7 @@ archive/${dict[file]}"
         '-Dicu=enabled'
     )
     "${app[meson]}" "${meson_args[@]}" build
-    # Alternate build approach using mason.
+    # Alternate build approach using meson.
     # > "${app[meson]}" compile -C build
     # > "${app[meson]}" test -C build
     # Using ninja instead, as it's faster.
