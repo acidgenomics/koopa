@@ -170,7 +170,6 @@ koopa_configure_rust() { # {{{1
         "$@"
 }
 
-
 koopa_delete_dotfile() { # {{{1
     # """
     # Delete a dot file.
