@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_perlbrew() { # {{{1
+main() { # {{{1
     # """
     # Update Perlbrew.
     # @note Updated 2022-01-24.

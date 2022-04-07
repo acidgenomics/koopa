@@ -8,7 +8,6 @@ main() { # {{{1
     # @note Updated 2022-01-27.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     koopa_debian_apt_remove 'google-cloud-sdk'
     return 0
 }

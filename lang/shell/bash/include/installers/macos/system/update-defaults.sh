@@ -35,7 +35,6 @@ main() { # {{{1
     # """
     local app app_name dict
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A app=(
         [chflags]="$(koopa_locate_chflags)"
         [defaults]="$(koopa_macos_locate_defaults)"

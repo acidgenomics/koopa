@@ -11,7 +11,6 @@ main() { # {{{1
     # - https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-yum
     # """
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     koopa_fedora_import_azure_cli_key
     koopa_fedora_add_azure_cli_repo
     koopa_fedora_dnf_install 'azure-cli'

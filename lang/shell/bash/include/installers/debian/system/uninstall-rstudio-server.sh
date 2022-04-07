@@ -10,7 +10,6 @@ main() { # {{{1
     # Consider deleting 'rstudio-server' user.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     koopa_debian_apt_remove 'rstudio-server'
     return 0
 }

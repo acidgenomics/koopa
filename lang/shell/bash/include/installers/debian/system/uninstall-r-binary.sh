@@ -6,7 +6,6 @@ main() { # {{{1
     # @note Updated 2022-01-28.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     koopa_rm --sudo \
         '/etc/R' \
         '/usr/lib/R/etc'

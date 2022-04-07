@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_rbenv() { # {{{1
+main() { # {{{1
     # """
     # Update rbenv.
     # @note Updated 2021-11-24.

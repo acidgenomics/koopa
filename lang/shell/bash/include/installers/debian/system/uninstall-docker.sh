@@ -9,7 +9,6 @@ main() { # {{{1
     # """
     local pkgs
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     pkgs=(
         'containerd.io'
         'docker-ce'

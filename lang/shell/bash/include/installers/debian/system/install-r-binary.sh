@@ -18,7 +18,6 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A app=(
         [r]='/usr/bin/R'
     )

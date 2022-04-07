@@ -26,7 +26,6 @@ main() { # {{{1
     #   https://serverfault.com/questions/56848
     # """
     local app dict pkgs
-    koopa_assert_is_admin
     declare -A app=(
         [dpkg]="$(koopa_debian_locate_dpkg)"
         [sudo]="$(koopa_locate_sudo)"

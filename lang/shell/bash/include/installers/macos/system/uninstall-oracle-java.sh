@@ -8,7 +8,6 @@ main() { # {{{1
     # - https://www.java.com/en/download/help/mac_uninstall_java.xml
     # """
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     koopa_rm --sudo \
         '/Library/Internet Plug-Ins/JavaAppletPlugin.plugin' \
         '/Library/LaunchAgents/com.oracle.java.Java-Updater.plist' \

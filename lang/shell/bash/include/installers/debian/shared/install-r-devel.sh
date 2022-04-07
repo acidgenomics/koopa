@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
-    # @note Updated 2022-03-31.
+    # @note Updated 2022-04-07.
     #
     # @seealso
     # - https://hub.docker.com/r/rocker/r-devel/dockerfile
@@ -15,50 +15,52 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
-    koopa_debian_apt_install \
-        'bash-completion' \
-        'bison' \
-        'debhelper' \
-        'default-jdk' \
-        'g++' \
-        'gcc' \
-        'gdb' \
-        'gfortran' \
-        'groff-base' \
-        'libblas-dev' \
-        'libbz2-dev' \
-        'libcairo2-dev' \
-        'libcurl4-openssl-dev' \
-        'libjpeg-dev' \
-        'liblapack-dev' \
-        'liblzma-dev' \
-        'libncurses5-dev' \
-        'libpango1.0-dev' \
-        'libpcre3-dev' \
-        'libpng-dev' \
-        'libreadline-dev' \
-        'libtiff5-dev' \
-        'libx11-dev' \
-        'libxt-dev' \
-        'mpack' \
-        'subversion' \
-        'tcl8.6-dev' \
-        'texinfo' \
-        'texlive-base' \
-        'texlive-extra-utils' \
-        'texlive-fonts-extra' \
-        'texlive-fonts-recommended' \
-        'texlive-latex-base' \
-        'texlive-latex-extra' \
-        'texlive-latex-recommended' \
-        'tk8.6-dev' \
-        'x11proto-core-dev' \
-        'xauth' \
-        'xdg-utils' \
-        'xfonts-base' \
-        'xvfb' \
-        'zlib1g-dev'
+    if koopa_is_admin
+    then
+        koopa_debian_apt_install \
+            'bash-completion' \
+            'bison' \
+            'debhelper' \
+            'default-jdk' \
+            'g++' \
+            'gcc' \
+            'gdb' \
+            'gfortran' \
+            'groff-base' \
+            'libblas-dev' \
+            'libbz2-dev' \
+            'libcairo2-dev' \
+            'libcurl4-openssl-dev' \
+            'libjpeg-dev' \
+            'liblapack-dev' \
+            'liblzma-dev' \
+            'libncurses5-dev' \
+            'libpango1.0-dev' \
+            'libpcre3-dev' \
+            'libpng-dev' \
+            'libreadline-dev' \
+            'libtiff5-dev' \
+            'libx11-dev' \
+            'libxt-dev' \
+            'mpack' \
+            'subversion' \
+            'tcl8.6-dev' \
+            'texinfo' \
+            'texlive-base' \
+            'texlive-extra-utils' \
+            'texlive-fonts-extra' \
+            'texlive-fonts-recommended' \
+            'texlive-latex-base' \
+            'texlive-latex-extra' \
+            'texlive-latex-recommended' \
+            'tk8.6-dev' \
+            'x11proto-core-dev' \
+            'xauth' \
+            'xdg-utils' \
+            'xfonts-base' \
+            'xvfb' \
+            'zlib1g-dev'
+    fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
         [svn]="$(koopa_locate_svn)"

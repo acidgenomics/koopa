@@ -21,7 +21,6 @@ main() { # {{{1
     # This is due to configuration in '/etc/profile'.
     # """
     local app dict pkgs
-    koopa_assert_is_admin
     declare -A app=(
         [pacman]="$(koopa_arch_locate_pacman)"
         [pacman_db_upgrade]="$(koopa_arch_locate_pacman_db_upgrade)"

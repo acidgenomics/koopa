@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_chemacs() { # {{{1
+main() { # {{{1
     # """
     # Update Chemacs2.
     # @note Updated 2021-11-22.

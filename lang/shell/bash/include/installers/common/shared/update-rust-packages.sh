@@ -2,7 +2,7 @@
 
 # NOTE We should early return here when no packages need updating.
 
-update_rust_packages() { # {{{1
+main() { # {{{1
     # """
     # Update Rust packages.
     # @note Updated 2022-02-10.

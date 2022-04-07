@@ -7,7 +7,6 @@ main() { # {{{1
     # """
     local app
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A app=(
         [softwareupdate]="$(koopa_macos_locate_softwareupdate)"
         [sudo]="$(koopa_locate_sudo)"

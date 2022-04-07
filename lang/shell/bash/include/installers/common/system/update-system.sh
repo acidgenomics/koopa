@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-update_system() { # {{{1
+main() { # {{{1
     # """
     # Update system.
     # @note Updated 2022-01-31.
     # """
     local app dict
-    koopa_assert_is_admin
     declare -A app=(
         [brew]="$(koopa_locate_brew --allow-missing)"
     )

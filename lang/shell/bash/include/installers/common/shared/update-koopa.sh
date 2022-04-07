@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_koopa() { # {{{1
+main() { # {{{1
     # """
     # Update koopa installation.
     # @note Updated 2022-04-05.

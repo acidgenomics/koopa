@@ -10,7 +10,6 @@ main() { # {{{
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [installers_url]="$(koopa_koopa_installers_url)"

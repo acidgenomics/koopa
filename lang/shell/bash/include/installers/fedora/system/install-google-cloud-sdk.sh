@@ -11,7 +11,6 @@ main() { # {{{1
     # - https://cloud.google.com/sdk/docs/downloads-yum
     # """
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     koopa_fedora_add_google_cloud_sdk_repo
     koopa_fedora_dnf_install 'google-cloud-sdk'
     return 0
