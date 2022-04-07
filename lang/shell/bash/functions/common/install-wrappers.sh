@@ -390,6 +390,7 @@ koopa_install_homebrew() { # {{{1
         --link-in-bin='bin/brew' \
         --name-fancy='Homebrew' \
         --name='homebrew' \
+        --prefix="$(koopa_homebrew_prefix)" \
         --system \
         "$@"
 }
