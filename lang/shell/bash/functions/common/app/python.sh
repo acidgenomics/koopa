@@ -175,7 +175,7 @@ ${dict[py_maj_min_ver]}"
         fi
         koopa_link_in_opt "${dict[app_prefix]}" "${dict[app_bn]}"
     fi
-    [[ -d "${dict[prefix]}" ]] && koopa_sys_rm "${dict[prefix]}"
+    [[ -d "${dict[prefix]}" ]] && koopa_rm "${dict[prefix]}"
     koopa_assert_is_not_dir "${dict[prefix]}"
     koopa_sys_mkdir "${dict[prefix]}"
     unset -v PYTHONPATH
