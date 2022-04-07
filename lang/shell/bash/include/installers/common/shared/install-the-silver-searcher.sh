@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_the_silver_searcher() { # {{{1
+main() { # {{{1
     # """
     # Install the silver searcher.
     # @note Updated 2022-01-03.

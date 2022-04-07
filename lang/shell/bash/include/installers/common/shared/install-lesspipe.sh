@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_lesspipe() { # {{{1
+main() { # {{{1
     # """
     # Install lesspipe.
     # @note Updated 2022-01-19.

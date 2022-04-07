@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_cpufetch() { # {{{1
+main() { # {{{1
     # """
     # Install cpufetch.
     # @note Updated 2021-12-01.

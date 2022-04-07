@@ -4,7 +4,7 @@
 # https://github.com/commercialhaskell/stack
 # Current release is 2.7.5.
 
-install_haskell_stack() { # {{{1
+main() { # {{{1
     # """
     # Install Haskell Stack.
     # @note Updated 2022-03-29.

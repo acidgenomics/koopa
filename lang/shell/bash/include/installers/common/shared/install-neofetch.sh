@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_neofetch() { # {{{1
+main() { # {{{1
     # """
     # Install neofetch.
     # @note Updated 2021-12-14.

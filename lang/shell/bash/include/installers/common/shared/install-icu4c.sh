@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_icu4c() { # {{{1
+main() { # {{{1
     # """
     # Install ICU4C.
     # @note Updated 2022-03-28.

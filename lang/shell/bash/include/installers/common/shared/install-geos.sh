@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_geos() { # {{{1
+main() { # {{{1
     # """
     # Install GEOS.
     # @note Updated 2022-04-06.

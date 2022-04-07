@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_r() { # {{{1
+main() { # {{{1
     # """
     # Install R.
     # @note Updated 2022-01-25.

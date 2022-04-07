@@ -2,7 +2,7 @@
 
 # NOTE Consider splitting out useful packages into virtualenvs instead.
 
-install_python_packages() { # {{{1
+main() { # {{{1
     # """
     # Install Python packages.
     # @note Updated 2022-04-06.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_go() { # {{{1
+main() { # {{{1
     # """
     # Install Go.
     # @note Updated 2022-03-29.

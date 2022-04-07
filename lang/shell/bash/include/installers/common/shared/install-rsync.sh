@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_rsync() { # {{{1
+main() { # {{{1
     # """
     # Install rsync.
     # @note Updated 2022-01-06.

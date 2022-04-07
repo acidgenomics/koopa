@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_cmake() { # {{{1
+main() { # {{{1
     # """
     # Install CMake.
     # @note Updated 2022-04-06.

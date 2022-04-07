@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_udunits() { # {{{1
+main() { # {{{1
     # """
     # Install udunits.
     # @note Updated 2022-01-03.

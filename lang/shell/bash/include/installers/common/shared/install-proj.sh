@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_proj() { # {{{1
+main() { # {{{1
     # """
     # Install PROJ.
     # @note Updated 2022-04-06.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_zsh() { # {{{1
+main() { # {{{1
     # """
     # Install Zsh.
     # @note Updated 2022-04-06.

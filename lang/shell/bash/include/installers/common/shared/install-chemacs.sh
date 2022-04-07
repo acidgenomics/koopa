@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_chemacs() { # {{{1
+main() { # {{{1
     # """
     # Install Chemacs2.
     # @note Updated 2022-02-02.

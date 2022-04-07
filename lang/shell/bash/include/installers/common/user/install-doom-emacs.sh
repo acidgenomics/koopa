@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_doom_emacs() { # {{{1
+main() { # {{{1
     # """
     # Install Doom Emacs.
     # @note Updated 2022-02-01.

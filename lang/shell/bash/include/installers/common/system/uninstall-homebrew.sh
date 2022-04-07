@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-uninstall_homebrew() { # {{{1
+main() { # {{{1
     # """
     # Uninstall Homebrew.
     # @note Updated 2021-11-22.

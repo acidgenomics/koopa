@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_taglib() { # {{{1
+main() { # {{{1
     # """
     # Install TagLib.
     # @note Updated 2022-01-03.

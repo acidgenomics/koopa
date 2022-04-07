@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_ensembl_perl_api() { # {{{1
+main() { # {{{1
     # """
     # Install Ensembl Perl API.
     # @note Updated 2021-11-23.

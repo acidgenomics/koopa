@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_shellcheck() { # {{{1
+main() { # {{{1
     # """
     # Install ShellCheck.
     # @note Updated 2022-01-19.

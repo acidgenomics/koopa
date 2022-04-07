@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_gcc() { # {{{1
+main() { # {{{1
     # """
     # Install GCC.
     # @note Updated 2021-11-24.

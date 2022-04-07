@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_nim_packages() { # {{{1
+main() { # {{{1
     # """
     # Install Nim packages using nimble.
     # @note Updated 2022-03-29.

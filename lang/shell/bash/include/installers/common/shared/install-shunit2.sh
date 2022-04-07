@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_shunit2() { # {{{1
+main() { # {{{1
     # """
     # Install shUnit2.
     # @note Updated 2022-01-06.

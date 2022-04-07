@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_r_packages() { # {{{1
+main() { # {{{1
     # """
     # Install R packages.
     # @note Updated 2022-02-10.

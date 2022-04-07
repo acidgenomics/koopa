@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_boost() { # {{{1
+main() { # {{{1
     # """
     # Install Boost library.
     # @note Updated 2022-03-29.
