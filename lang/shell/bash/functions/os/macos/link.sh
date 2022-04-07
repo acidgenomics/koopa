@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME Need to link components from:
-# - curl (curl)
-# - curl-config (curl)
 # - grep (grep)
 # - man (man-db)
 # - sed (gnu-sed)
@@ -17,6 +15,7 @@ koopa_macos_link_homebrew_opt() { # {{{1
     dict[coreutils]="${dict[brew_opt]}/coreutils/libexec/gnubin"
     dict[curl]="${dict[brew_opt]}/curl/bin"
     dict[findutils]="${dict[brew_opt]}/findutils/libexec/gnubin"
+    dict[grep]="${dict[brew_opt]}/grep/libexec/gnubin"
     koopa_link_in_bin \
         "${dict[coreutils]}/[" '[' \
         "${dict[coreutils]}/b2sum" 'b2sum' \
@@ -129,8 +128,10 @@ koopa_macos_link_homebrew_opt() { # {{{1
         "${dict[findutils]}/find" 'find' \
         "${dict[findutils]}/locate" 'locate' \
         "${dict[findutils]}/updatedb" 'updatedb' \
-        "${dict[findutils]}/xargs" 'xargs'
-
+        "${dict[findutils]}/xargs" 'xargs' \
+        "${dict[grep]}/egrep" 'egrep' \
+        "${dict[grep]}/fgrep" 'fgrep' \
+        "${dict[grep]}/grep" 'grep'
 }
 
 koopa_macos_link_bbedit() { # {{{1
@@ -217,6 +218,8 @@ koopa_macos_unlink_homebrew_opt() { # {{{1
         'comm' \
         'cp' \
         'csplit' \
+        'curl' \
+        'curl-config' \
         'cut' \
         'date' \
         'dd' \
@@ -226,14 +229,17 @@ koopa_macos_unlink_homebrew_opt() { # {{{1
         'dirname' \
         'du' \
         'echo' \
+        'egrep' \
         'env' \
         'expand' \
         'expr' \
         'factor' \
         'false' \
+        'fgrep' \
         'find' \
         'fmt' \
         'fold' \
+        'grep' \
         'groups' \
         'head' \
         'hostid' \

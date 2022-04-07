@@ -339,6 +339,8 @@ koopa_install_go() { # {{{1
 
 koopa_install_grep() { # {{{1
     koopa_install_gnu_app \
+        --link-in-bin='bin/egrep' \
+        --link-in-bin='bin/fgrep' \
         --link-in-bin='bin/grep' \
         --name='grep' \
         "$@"
@@ -374,6 +376,7 @@ koopa_install_harfbuzz() { # {{{1
 # FIXME Need to add link here?
 koopa_install_haskell_stack() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/stack' \
         --name-fancy='Haskell Stack' \
         --name='haskell-stack' \
         --version='rolling' \
@@ -1003,13 +1006,119 @@ koopa_uninstall_conda() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Miniconda' \
         --name='conda' \
+        --unlink-in-bin='conda' \
         "$@"
 }
 
-# FIXME Need to match our installer above.
 koopa_uninstall_coreutils() { # {{{1
     koopa_uninstall_app \
         --name='coreutils' \
+        --unlink-in-bin='[' \
+        --unlink-in-bin='b2sum' \
+        --unlink-in-bin='base32' \
+        --unlink-in-bin='base64' \
+        --unlink-in-bin='basename' \
+        --unlink-in-bin='basenc' \
+        --unlink-in-bin='cat' \
+        --unlink-in-bin='chcon' \
+        --unlink-in-bin='chgrp' \
+        --unlink-in-bin='chmod' \
+        --unlink-in-bin='chown' \
+        --unlink-in-bin='chroot' \
+        --unlink-in-bin='cksum' \
+        --unlink-in-bin='comm' \
+        --unlink-in-bin='cp' \
+        --unlink-in-bin='csplit' \
+        --unlink-in-bin='cut' \
+        --unlink-in-bin='date' \
+        --unlink-in-bin='dd' \
+        --unlink-in-bin='df' \
+        --unlink-in-bin='dir' \
+        --unlink-in-bin='dircolors' \
+        --unlink-in-bin='dirname' \
+        --unlink-in-bin='du' \
+        --unlink-in-bin='echo' \
+        --unlink-in-bin='env' \
+        --unlink-in-bin='expand' \
+        --unlink-in-bin='expr' \
+        --unlink-in-bin='factor' \
+        --unlink-in-bin='false' \
+        --unlink-in-bin='fmt' \
+        --unlink-in-bin='fold' \
+        --unlink-in-bin='groups' \
+        --unlink-in-bin='head' \
+        --unlink-in-bin='hostid' \
+        --unlink-in-bin='id' \
+        --unlink-in-bin='install' \
+        --unlink-in-bin='join' \
+        --unlink-in-bin='kill' \
+        --unlink-in-bin='link' \
+        --unlink-in-bin='ln' \
+        --unlink-in-bin='logname' \
+        --unlink-in-bin='ls' \
+        --unlink-in-bin='md5sum' \
+        --unlink-in-bin='mkdir' \
+        --unlink-in-bin='mkfifo' \
+        --unlink-in-bin='mknod' \
+        --unlink-in-bin='mktemp' \
+        --unlink-in-bin='mv' \
+        --unlink-in-bin='nice' \
+        --unlink-in-bin='nl' \
+        --unlink-in-bin='nohup' \
+        --unlink-in-bin='nproc' \
+        --unlink-in-bin='numfmt' \
+        --unlink-in-bin='od' \
+        --unlink-in-bin='paste' \
+        --unlink-in-bin='pathchk' \
+        --unlink-in-bin='pinky' \
+        --unlink-in-bin='pr' \
+        --unlink-in-bin='printenv' \
+        --unlink-in-bin='printf' \
+        --unlink-in-bin='ptx' \
+        --unlink-in-bin='pwd' \
+        --unlink-in-bin='readlink' \
+        --unlink-in-bin='realpath' \
+        --unlink-in-bin='rm' \
+        --unlink-in-bin='rmdir' \
+        --unlink-in-bin='runcon' \
+        --unlink-in-bin='seq' \
+        --unlink-in-bin='sha1sum' \
+        --unlink-in-bin='sha224sum' \
+        --unlink-in-bin='sha256sum' \
+        --unlink-in-bin='sha384sum' \
+        --unlink-in-bin='sha512sum' \
+        --unlink-in-bin='shred' \
+        --unlink-in-bin='shuf' \
+        --unlink-in-bin='sleep' \
+        --unlink-in-bin='sort' \
+        --unlink-in-bin='split' \
+        --unlink-in-bin='stat' \
+        --unlink-in-bin='stdbuf' \
+        --unlink-in-bin='stty' \
+        --unlink-in-bin='sum' \
+        --unlink-in-bin='sync' \
+        --unlink-in-bin='tac' \
+        --unlink-in-bin='tail' \
+        --unlink-in-bin='tee' \
+        --unlink-in-bin='test' \
+        --unlink-in-bin='timeout' \
+        --unlink-in-bin='touch' \
+        --unlink-in-bin='tr' \
+        --unlink-in-bin='true' \
+        --unlink-in-bin='truncate' \
+        --unlink-in-bin='tsort' \
+        --unlink-in-bin='tty' \
+        --unlink-in-bin='uname' \
+        --unlink-in-bin='unexpand' \
+        --unlink-in-bin='uniq' \
+        --unlink-in-bin='unlink' \
+        --unlink-in-bin='uptime' \
+        --unlink-in-bin='users' \
+        --unlink-in-bin='vdir' \
+        --unlink-in-bin='wc' \
+        --unlink-in-bin='who' \
+        --unlink-in-bin='whoami' \
+        --unlink-in-bin='yes' \
         "$@"
 }
 
@@ -1158,6 +1267,9 @@ koopa_uninstall_go_packages() { # {{{1
 koopa_uninstall_grep() { # {{{1
     koopa_uninstall_app \
         --name='grep' \
+        --unlink-in-bin='egrep' \
+        --unlink-in-bin='fgrep' \
+        --unlink-in-bin='grep' \
         "$@"
 }
 
@@ -1176,6 +1288,7 @@ koopa_uninstall_gsl() { # {{{1
 koopa_uninstall_hadolint() { # {{{1
     koopa_uninstall_app \
         --name='hadolint' \
+        --unlink-in-bin='hadolint' \
         "$@"
 }
 
@@ -1190,6 +1303,7 @@ koopa_uninstall_haskell_stack() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Haskell Stack' \
         --name='haskell-stack' \
+        --unlink-in-bin='stack' \
         "$@"
 }
 
@@ -1205,6 +1319,7 @@ koopa_uninstall_homebrew() { # {{{1
         --name-fancy='Homebrew' \
         --name='homebrew' \
         --system \
+        --unlink-in-bin='brew' \
         "$@"
 }
 
@@ -1232,6 +1347,7 @@ koopa_uninstall_julia() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Julia' \
         --name='julia' \
+        --unlink-in-bin='julia' \
         "$@"
 }
 
@@ -1285,12 +1401,14 @@ koopa_uninstall_luarocks() { # {{{1
 koopa_uninstall_make() { # {{{1
     koopa_uninstall_app \
         --name='make' \
+        --unlink-in-bin='make' \
         "$@"
 }
 
 koopa_uninstall_man_db() { # {{{1
     koopa_uninstall_app \
         --name='man-db' \
+        --unlink-in-bin='man' \
         "$@"
 }
 
