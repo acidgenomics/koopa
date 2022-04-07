@@ -353,6 +353,13 @@ koopa_install_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
+    if [[ "${dict[binary]}" -eq 1 ]] && \
+        [[ "${dict[koopa_prefix]}" != '/opt/koopa' ]]
+    then
+        koopa_stop "Binary package installation not supported for koopa \
+install located at '${dict[koopa_prefix]}'. Koopa must be installed at \
+default '/opt/koopa' location."
+    fi
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
     if [[ -z "${dict[version]}" ]]
