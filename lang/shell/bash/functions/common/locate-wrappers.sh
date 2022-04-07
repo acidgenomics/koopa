@@ -824,6 +824,10 @@ koopa_locate_xargs() { # {{{1
         --opt-name='findutils'
 }
 
+koopa_locate_xz() { # {{{1
+    koopa_locate_app 'xz'
+}
+
 koopa_locate_yes() { # {{{1
     koopa_locate_gnu_coreutils_app 'yes'
 }
