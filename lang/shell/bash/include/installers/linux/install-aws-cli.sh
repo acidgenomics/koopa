@@ -50,6 +50,6 @@ linux_install_aws_cli() { # {{{1
     then
         koopa_stop 'Failed to detect version.'
     fi
-    koopa_sys_cp "${dict[version_subdir]}" "${dict[prefix]}"
+    koopa_cp "${dict[version_subdir]}" "${dict[prefix]}"
     return 0
 }
