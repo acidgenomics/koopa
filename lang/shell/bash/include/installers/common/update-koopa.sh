@@ -3,6 +3,8 @@
 # FIXME This needs to check if top level is not set to current user, and
 # adjust accordingly. Previously this was root for shared installs.
 
+# FIXME Yeah only set as 'mike:admin' on macOS if necessary.
+
 # FIXME Consider not updating permissions on programs inside of 'app/',
 # for improved speed.
 
