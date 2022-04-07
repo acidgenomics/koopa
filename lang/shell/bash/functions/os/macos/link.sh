@@ -18,9 +18,10 @@ koopa_macos_link_homebrew_opt() { # {{{1
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [brew_opt_prefix]="$(koopa_homebrew_opt_prefix)"
+        [brew_opt]="$(koopa_homebrew_opt_prefix)"
     )
-    dict[coreutils]="${dict[brew_opt_prefix}/coreutils/libexec/gnubin"
+    dict[coreutils]="${dict[brew_opt]}/coreutils/libexec/gnubin"
+    dict[findutils]="${dict[brew_opt]}/findutils/libexec/gnubin"
     koopa_link_in_bin \
         "${dict[coreutils]}/[" '[' \
         "${dict[coreutils]}/b2sum" 'b2sum' \
@@ -127,9 +128,11 @@ koopa_macos_link_homebrew_opt() { # {{{1
         "${dict[coreutils]}/wc" 'wc' \
         "${dict[coreutils]}/who" 'who' \
         "${dict[coreutils]}/whoami" 'whoami' \
-        "${dict[coreutils]}/yes" 'yes'
-    # findutils:
-    # - find
+        "${dict[coreutils]}/yes" 'yes' \
+        "${dict[findutils]}/find" 'find' \
+        "${dict[findutils]}/locate" 'locate' \
+        "${dict[findutils]}/updatedb" 'updatedb' \
+        "${dict[findutils]}/xargs" 'xargs'
 }
 
 koopa_macos_link_bbedit() { # {{{1
@@ -194,5 +197,121 @@ koopa_macos_link_visual_studio_code() { # {{{1
 koopa_macos_unlink_bbedit() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_unlink_in_bin 'bbedit'
+    return 0
+}
+
+koopa_macos_unlink_homebrew_opt() { # {{{1
+    koopa_assert_has_no_args "$#"
+    koopa_unlink_in_bin \
+        '['
+        'b2sum' \
+        'base32' \
+        'base64' \
+        'basename' \
+        'basenc' \
+        'cat' \
+        'chcon' \
+        'chgrp' \
+        'chmod' \
+        'chown' \
+        'chroot' \
+        'cksum' \
+        'comm' \
+        'cp' \
+        'csplit' \
+        'cut' \
+        'date' \
+        'dd' \
+        'df' \
+        'dir' \
+        'dircolors' \
+        'dirname' \
+        'du' \
+        'echo' \
+        'env' \
+        'expand' \
+        'expr' \
+        'factor' \
+        'false' \
+        'find' \
+        'fmt' \
+        'fold' \
+        'groups' \
+        'head' \
+        'hostid' \
+        'id' \
+        'install' \
+        'join' \
+        'kill' \
+        'link' \
+        'ln' \
+        'locate' \
+        'logname' \
+        'ls' \
+        'md5sum' \
+        'mkdir' \
+        'mkfifo' \
+        'mknod' \
+        'mktemp' \
+        'mv' \
+        'nice' \
+        'nl' \
+        'nohup' \
+        'nproc' \
+        'numfmt' \
+        'od' \
+        'paste' \
+        'pathchk' \
+        'pinky' \
+        'pr' \
+        'printenv' \
+        'printf' \
+        'ptx' \
+        'pwd' \
+        'readlink' \
+        'realpath' \
+        'rm' \
+        'rmdir' \
+        'runcon' \
+        'seq' \
+        'sha1sum' \
+        'sha224sum' \
+        'sha256sum' \
+        'sha384sum' \
+        'sha512sum' \
+        'shred' \
+        'shuf' \
+        'sleep' \
+        'sort' \
+        'split' \
+        'stat' \
+        'stdbuf' \
+        'stty' \
+        'sum' \
+        'sync' \
+        'tac' \
+        'tail' \
+        'tee' \
+        'test' \
+        'timeout' \
+        'touch' \
+        'tr' \
+        'true' \
+        'truncate' \
+        'tsort' \
+        'tty' \
+        'uname' \
+        'unexpand' \
+        'uniq' \
+        'unlink' \
+        'updatedb' \
+        'uptime' \
+        'users' \
+        'vdir' \
+        'wc' \
+        'who' \
+        'whoami' \
+        'xargs' \
+        'yes'
     return 0
 }
