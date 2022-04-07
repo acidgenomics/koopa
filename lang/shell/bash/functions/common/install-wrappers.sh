@@ -1846,8 +1846,6 @@ koopa_install_homebrew() { # {{{1
         "$@"
 }
 
-# FIXME Consider linking into bin for macOS.
-
 koopa_install_homebrew_bundle() { # {{{1
     koopa_install_app \
         --name-fancy='Homebrew bundle' \
