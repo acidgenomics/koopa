@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider installing from binary instead:
-# https://github.com/hadolint/hadolint/releases/tag/v2.9.3
-
 main() { # {{{1
     # """
     # Install hadolint.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-07.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
