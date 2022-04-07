@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_password_store() { # {{{1
+main() { # {{{1
     # """
     # Install Password Store.
     # @note Updated 2021-12-21.

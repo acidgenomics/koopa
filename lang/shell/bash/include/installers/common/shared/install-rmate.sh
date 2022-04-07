@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_rmate() { # {{{1
+main() { # {{{1
     # """
     # Install rmate.
     # @note Updated 2022-01-24.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_python() { # {{{1
+main() { # {{{1
     # """
     # Install Python.
     # @note Updated 2022-03-28.

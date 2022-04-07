@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_neovim() { # {{{1
+main() { # {{{1
     # """
     # Install Neovim.
     # @note Updated 2021-12-07.

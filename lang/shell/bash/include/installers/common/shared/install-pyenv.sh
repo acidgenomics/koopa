@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_pyenv() { # {{{1
+main() { # {{{1
     # """
     # Install pyenv.
     # @note Updated 2021-11-24.

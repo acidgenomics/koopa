@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_nim() { # {{{1
+main() { # {{{1
     # """
     # Install Nim.
     # @note Updated 2022-03-29.

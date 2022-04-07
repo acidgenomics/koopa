@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_node() { # {{{1
+main() { # {{{1
     # """
     # Install Node.js.
     # @note Updated 2022-04-06.

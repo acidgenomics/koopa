@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_luarocks() { # {{{1
+main() { # {{{1
     # """
     # Install Luarocks.
     # @note Updated 2022-01-31.

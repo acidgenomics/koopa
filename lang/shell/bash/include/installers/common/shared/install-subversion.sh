@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_subversion() { # {{{1
+main() { # {{{1
     # """
     # Install Subversion.
     # @note Updated 2022-04-06.

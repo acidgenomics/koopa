@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-linux_install_docker_credential_pass() { # {{{1
+main() { # {{{1
     # """
     # Install docker-credential-pass.
     # @note Updated 2022-03-28.

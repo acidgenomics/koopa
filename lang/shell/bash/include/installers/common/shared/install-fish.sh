@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_fish() { # {{{1
+main() { # {{{1
     # """
     # Install Fish shell.
     # @note Updated 2022-04-06.

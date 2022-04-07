@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_sqlite() { # {{{1
+main() { # {{{1
     # """
     # Install SQLite.
     # @note Updated 2022-03-28.

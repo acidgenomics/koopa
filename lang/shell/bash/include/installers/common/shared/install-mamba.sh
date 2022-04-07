@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_mamba() { # {{{1
+main() { # {{{1
     # """
     # Update mamba.
     # @note Updated 2022-01-25.

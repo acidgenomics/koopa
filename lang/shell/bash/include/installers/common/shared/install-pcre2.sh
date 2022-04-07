@@ -2,7 +2,7 @@
 
 # FIXME Need to add support for this. Test on Ubuntu instance.
 
-install_pcre2() { # {{{1
+main() { # {{{1
     # """
     # Install PCRE2.
     # @note Updated 2022-03-30.

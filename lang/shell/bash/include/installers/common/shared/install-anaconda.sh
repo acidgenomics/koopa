@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_anaconda() { # {{{1
+main() { # {{{1
     # """
     # Install full Anaconda distribution.
     # @note Updated 2022-03-16.

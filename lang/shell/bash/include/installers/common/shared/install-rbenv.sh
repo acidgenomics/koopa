@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_rbenv() { # {{{1
+main() { # {{{1
     # """
     # Install rbenv.
     # @note Updated 2021-11-24.

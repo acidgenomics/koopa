@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_pkg_config() { # {{{1
+main() { # {{{1
     # """
     # Install pkg-config.
     # @note Updated 2022-01-24.

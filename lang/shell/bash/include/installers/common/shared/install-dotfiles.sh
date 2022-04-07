@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_dotfiles() { # {{{1
+main() { # {{{1
     # """
     # Install dotfiles.
     # @note Updated 2022-01-18.

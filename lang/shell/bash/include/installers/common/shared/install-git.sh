@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_git() { # {{{1
+main() { # {{{1
     # """
     # Install Git.
     # @note Updated 2021-11-23.

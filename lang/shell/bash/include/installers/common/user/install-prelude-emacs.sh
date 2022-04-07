@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_prelude_emacs() { # {{{1
+main() { # {{{1
     # """
     # Install Prelude Emacs.
     # @note Updated 2021-11-23.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_openssl() { # {{{1
+main() { # {{{1
     # """
     # Install OpenSSL.
     # @note Updated 2022-04-06.

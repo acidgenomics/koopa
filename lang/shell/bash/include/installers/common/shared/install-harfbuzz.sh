@@ -3,7 +3,7 @@
 # FIXME Need to add support for installation of meson.
 # Meson version is 0.53.2 but project requires >= 0.55.0
 
-install_harfbuzz() { # {{{1
+main() { # {{{1
     # """
     # Install HarfBuzz.
     # @note Updated 2022-03-30.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_vim() { # {{{1
+main() { # {{{1
     # """
     # Install Vim.
     # @note Updated 2021-12-01.

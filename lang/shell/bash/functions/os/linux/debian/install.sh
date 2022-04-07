@@ -1,5 +1,39 @@
 #!/usr/bin/env bash
 
+# Shared =======================================================================
+
+koopa_debian_install_bcbio_nextgen_vm() { # {{{1
+    koopa_install_app \
+        --name='bcbio-nextgen-vm' \
+        --platform='debian' \
+        "$@"
+}
+
+koopa_debian_install_r_devel() { # {{{1
+    koopa_install_app \
+        --name-fancy='R-devel' \
+        --name='r-devel' \
+        --platform='debian' \
+        "$@"
+}
+
+koopa_debian_uninstall_bcbio_nextgen_vm() { # {{{1
+    koopa_uninstall_app \
+        --name='bcbio-nextgen-vm' \
+        "$@"
+}
+
+koopa_debian_uninstall_r_devel() { # {{{1
+    koopa_uninstall_app \
+        --name-fancy='R-devel' \
+        --name='r-devel' \
+        --platform='debian' \
+        "$@"
+}
+
+# System =======================================================================
+
+# FIXME Rename to include binary.
 koopa_debian_install_azure_cli() { # {{{1
     koopa_install_app \
         --name-fancy='Azure CLI' \
@@ -18,13 +52,7 @@ koopa_debian_install_base_system() { # {{{1
         "$@"
 }
 
-koopa_debian_install_bcbio_nextgen_vm() { # {{{1
-    koopa_install_app \
-        --name='bcbio-nextgen-vm' \
-        --platform='debian' \
-        "$@"
-}
-
+# FIXME Rename to include binary.
 koopa_debian_install_docker() { # {{{1
     koopa_install_app \
         --name-fancy='Docker' \
@@ -34,6 +62,7 @@ koopa_debian_install_docker() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_install_google_cloud_sdk() { # {{{1
     koopa_install_app \
         --name-fancy='Google Cloud SDK' \
@@ -43,10 +72,20 @@ koopa_debian_install_google_cloud_sdk() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_install_llvm() { # {{{1
     koopa_install_app \
         --name-fancy='LLVM' \
         --name='llvm' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_install_node_binary() { # {{{1
+    koopa_install_app \
+        --name-fancy='Node.js (binary)' \
+        --name='node-binary' \
         --platform='debian' \
         --system \
         "$@"
@@ -71,14 +110,7 @@ koopa_debian_install_r_binary() { # {{{1
         "$@"
 }
 
-koopa_debian_install_r_devel() { # {{{1
-    koopa_install_app \
-        --name-fancy='R-devel' \
-        --name='r-devel' \
-        --platform='debian' \
-        "$@"
-}
-
+# FIXME Rename to include binary.
 koopa_debian_install_rstudio_server() { # {{{1
     koopa_install_app \
         --name-fancy='RStudio Server' \
@@ -88,6 +120,7 @@ koopa_debian_install_rstudio_server() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_install_rstudio_workbench() { # {{{1
     koopa_install_app \
         --installer='rstudio-server' \
@@ -98,6 +131,7 @@ koopa_debian_install_rstudio_workbench() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_install_wine() { # {{{1
     koopa_install_app \
         --name-fancy='Wine' \
@@ -107,6 +141,7 @@ koopa_debian_install_wine() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_uninstall_azure_cli() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Azure CLI' \
@@ -116,12 +151,7 @@ koopa_debian_uninstall_azure_cli() { # {{{1
         "$@"
 }
 
-koopa_debian_uninstall_bcbio_nextgen_vm() { # {{{1
-    koopa_uninstall_app \
-        --name='bcbio-nextgen-vm' \
-        "$@"
-}
-
+# FIXME Rename to include binary.
 koopa_debian_uninstall_docker() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Docker' \
@@ -131,6 +161,7 @@ koopa_debian_uninstall_docker() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_uninstall_google_cloud_sdk() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Google Cloud SDK' \
@@ -140,6 +171,7 @@ koopa_debian_uninstall_google_cloud_sdk() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_uninstall_llvm() { # {{{1
     koopa_uninstall_app \
         --name-fancy='LLVM' \
@@ -148,6 +180,8 @@ koopa_debian_uninstall_llvm() { # {{{1
         --system \
         "$@"
 }
+
+# FIXME Need to add Node binary uninstaller.
 
 koopa_debian_uninstall_pandoc_binary() { # {{{1
     koopa_uninstall_app \
@@ -167,14 +201,7 @@ koopa_debian_uninstall_r_binary() { # {{{1
         "$@"
 }
 
-koopa_debian_uninstall_r_devel() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='R-devel' \
-        --name='r-devel' \
-        --platform='debian' \
-        "$@"
-}
-
+# FIXME Rename to include binary.
 koopa_debian_uninstall_rstudio_server() { # {{{1
     koopa_uninstall_app \
         --name-fancy='RStudio Server' \
@@ -184,6 +211,7 @@ koopa_debian_uninstall_rstudio_server() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_uninstall_rstudio_workbench() { # {{{1
     koopa_uninstall_app \
         --name-fancy='RStudio Workbench' \
@@ -194,6 +222,7 @@ koopa_debian_uninstall_rstudio_workbench() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_uninstall_shiny_server() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Shiny Server' \
@@ -203,6 +232,7 @@ koopa_debian_uninstall_shiny_server() { # {{{1
         "$@"
 }
 
+# FIXME Rename to include binary.
 koopa_debian_uninstall_wine() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Wine' \

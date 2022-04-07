@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_htop() { # {{{1
+main() { # {{{1
     # """
     # Install htop.
     # @note Updated 2021-12-07.

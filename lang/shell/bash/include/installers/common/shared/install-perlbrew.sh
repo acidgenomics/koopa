@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_perlbrew() { # {{{1
+main() { # {{{1
     # """
     # Install Perlbrew.
     # @note Updated 2022-01-24.
