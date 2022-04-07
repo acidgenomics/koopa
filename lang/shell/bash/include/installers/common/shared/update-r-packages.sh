@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_r_packages() { # {{{1
+main() { # {{{1
     # """
     # Update R packages.
     # @note Updated 2022-02-10.

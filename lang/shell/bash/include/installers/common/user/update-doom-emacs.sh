@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_doom_emacs() { # {{{1
+main() { # {{{1
     # """
     # Update Doom Emacs.
     # @note Updated 2022-01-26.

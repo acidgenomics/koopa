@@ -11,7 +11,6 @@ main() { # {{{1
     # > apk add --no-cache --virtual .build-dependencies
     # """
     local app dict pkgs
-    koopa_assert_is_admin
     declare -A app=(
         [apk]="$(koopa_alpine_locate_apk)"
         [sudo]="$(koopa_locate_sudo)"

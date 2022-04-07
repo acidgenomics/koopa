@@ -18,7 +18,6 @@ main() { # {{{1
     # """
     local dict pkgs
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A dict=(
         [version]="${INSTALL_VERSION:?}"
     )

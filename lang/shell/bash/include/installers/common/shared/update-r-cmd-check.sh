@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_r_cmd_check() { # {{{1
+main() { # {{{1
     # """
     # Update r-cmd-check scripts.
     # @note Updated 2021-11-22.

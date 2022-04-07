@@ -27,7 +27,6 @@ main() { # {{{1
     # """
     local app
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A app=(
         [dpkg]="$(koopa_debian_locate_dpkg)"
         [sudo]="$(koopa_locate_sudo)"

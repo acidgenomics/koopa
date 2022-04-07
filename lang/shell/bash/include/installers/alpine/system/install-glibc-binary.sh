@@ -30,7 +30,6 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A app=(
         [apk]="$(koopa_alpine_locate_apk)"
         [localedef]="$(koopa_alpine_locate_localedef)"

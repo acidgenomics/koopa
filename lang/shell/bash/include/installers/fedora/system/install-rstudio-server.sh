@@ -9,7 +9,6 @@ main() { # {{{1
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A dict=(
         [arch]="$(koopa_arch)" # e.g. 'x86_64'.
         [init_dir]='/etc/init.d'

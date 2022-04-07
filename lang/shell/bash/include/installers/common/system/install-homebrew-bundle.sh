@@ -17,7 +17,6 @@ main() { # {{{1
     # """
     local app brewfile brewfiles dict install_args
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )

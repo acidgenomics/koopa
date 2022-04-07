@@ -19,7 +19,6 @@ main() { # {{{1
     #       How-Do-I-Uninstall-Webex-Software-on-a-Mac
     # """
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     koopa_rm --sudo \
         '/Applications/Cisco Webex Meetings.app'
     koopa_rm \

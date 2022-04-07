@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_prelude_emacs() { # {{{1
+main() { # {{{1
     # """
     # Update spacemacs non-interatively.
     # @note Updated 2021-11-23.

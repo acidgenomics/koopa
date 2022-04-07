@@ -7,7 +7,6 @@ main() { # {{{1
     # """
     local app package packages
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A app=(
         [gpg]="$(koopa_locate_gpg)"
         [sudo]="$(koopa_locate_sudo)"

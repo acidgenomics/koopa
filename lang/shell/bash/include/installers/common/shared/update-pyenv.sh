@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_pyenv() { # {{{1
+main() { # {{{1
     # """
     # Update pyenv.
     # @note Updated 2021-11-24.
