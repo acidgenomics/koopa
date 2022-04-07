@@ -21,7 +21,6 @@ main() { # {{{1
     # > curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
     # """
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     koopa_debian_apt_add_azure_cli_repo
     koopa_debian_apt_install 'azure-cli'
     return 0

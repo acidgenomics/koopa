@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_rust() { # {{{1
+main() { # {{{1
     # """
     # Install Rust.
     # @note Updated 2021-11-22.

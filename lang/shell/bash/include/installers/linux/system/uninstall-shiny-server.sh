@@ -11,7 +11,6 @@ main() { # {{{1
     # Consider deleting 'shiny' user.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     # FIXME Need to add support for Fedora here.
     # FIXME Error for unsupported distro.
     koopa_debian_apt_remove 'shiny-server'

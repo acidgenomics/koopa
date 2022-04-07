@@ -3,7 +3,7 @@
 # FIXME Consider managing elements in '/etc/paths.d'.
 # FIXME Also ensure documentation is located in '/etc/manpaths.d'.
 
-update_homebrew() { # {{{1
+main() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
     # @note Updated 2022-02-28.
@@ -17,7 +17,6 @@ update_homebrew() { # {{{1
     #       macos/updating-a-homebrew-formula/
     # """
     local app dict
-    koopa_assert_is_admin
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )

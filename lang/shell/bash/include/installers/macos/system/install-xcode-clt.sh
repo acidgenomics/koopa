@@ -21,7 +21,6 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A app=(
         [sudo]="$(koopa_locate_sudo)"
         [xcode_select]="$(koopa_macos_locate_xcode_select)"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-update_spacemacs() { # {{{1
+main() { # {{{1
     # """
     # Update Spacemacs.
     # @note Updated 2021-11-23.

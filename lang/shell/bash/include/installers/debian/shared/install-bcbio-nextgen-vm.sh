@@ -17,7 +17,6 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     declare -A app=(
         [bash]="$(koopa_locate_bash)"
         [gpasswd]="$(koopa_locate_gpasswd)"
@@ -56,14 +55,18 @@ main() { # {{{1
         --channel='conda-forge' \
         --override-channels \
         "bcbio-nextgen-vm=${dict[version]}"
-    if ! koopa_str_detect_fixed \
-        --string="${dict[groups]}" \
-        --pattern='docker'
+    if koopa_is_admin
     then
-        "${app[sudo]}" "${app[groupadd]}" 'docker'
-        "${app[sudo]}" "${app[service]}" docker restart
-        "${app[sudo]}" "${app[gpasswd]}" -a "${dict[whoami]}" 'docker'
-        "${app[newgrp]}" 'docker'
+        if ! koopa_str_detect_fixed \
+            --string="${dict[groups]}" \
+            --pattern='docker'
+        then
+            "${app[sudo]}" "${app[groupadd]}" 'docker'
+            "${app[sudo]}" "${app[service]}" docker restart
+            "${app[sudo]}" "${app[gpasswd]}" -a "${dict[whoami]}" 'docker'
+            "${app[newgrp]}" 'docker'
+        fi
+
     fi
     return 0
 }
