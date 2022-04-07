@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_ruby() { # {{{1
+main() { # {{{1
     # """
     # Install Ruby.
     # @note Updated 2022-04-07.

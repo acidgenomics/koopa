@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_spacemacs() { # {{{1
+main() { # {{{1
     # """
     # Install Spacemacs.
     # @note Updated 2022-02-01.

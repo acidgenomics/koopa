@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_libevent() { # {{{1
+main() { # {{{1
     # """
     # Install libevent.
     # @note Updated 2022-01-19.

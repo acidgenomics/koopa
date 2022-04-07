@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_imagemagick() { # {{{1
+main() { # {{{1
     # """
     # Install ImageMagick.
     # @note Updated 2022-02-15.

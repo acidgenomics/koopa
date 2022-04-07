@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_meson() { # {{{
+main() { # {{{
     # """
     # Install Meson.
     # @note Updated 2022-03-30.

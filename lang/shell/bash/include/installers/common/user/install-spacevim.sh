@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_spacevim() { # {{{1
+main() { # {{{1
     # """
     # Install SpaceVim.
     # @note Updated 2021-11-23.

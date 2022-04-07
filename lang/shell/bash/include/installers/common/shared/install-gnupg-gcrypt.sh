@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_gnupg_gcrypt() { # {{{1
+main() { # {{{1
     # """
     # Install GnuPG gcrypt library.
     # @note Updated 2022-03-29.

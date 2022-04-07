@@ -2,7 +2,7 @@
 
 # FIXME We need to version pin here.
 
-linux_install_aws_cli() { # {{{1
+main() { # {{{1
     # """
     # Install AWS CLI.
     # @note Updated 2021-11-16.

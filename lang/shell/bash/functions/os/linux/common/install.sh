@@ -119,10 +119,10 @@ koopa_linux_install_pivpn() { # {{{1
         "$@"
 }
 
-koopa_linux_install_shiny_server() { # {{{1
+koopa_linux_install_shiny_server_binary() { # {{{1
     koopa_install_app \
-        --name-fancy='Shiny Server' \
-        --name='shiny-server' \
+        --name-fancy='Shiny Server (binary)' \
+        --name='shiny-server-binary' \
         --platform='linux' \
         --system \
         "$@"

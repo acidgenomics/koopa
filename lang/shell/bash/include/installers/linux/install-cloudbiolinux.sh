@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-linux_install_cloudbiolinux() { # {{{1
+main() { # {{{1
     # """
     # Install CloudBioLinux.
     # @note Updated 2021-11-16.

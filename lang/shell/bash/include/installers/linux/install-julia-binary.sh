@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-linux_install_julia_binary() { # {{{1
+main() { # {{{1
     # """
     # Install Julia (from glibc binary).
     # @note Updated 2022-03-29.

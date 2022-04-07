@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_conda() { # {{{1
+main() { # {{{1
     # """
     # Install Miniconda.
     # @note Updated 2022-03-16.

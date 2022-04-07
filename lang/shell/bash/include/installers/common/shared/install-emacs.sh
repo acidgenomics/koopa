@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_emacs() { # {{{1
+main() { # {{{1
     # """
     # Install Emacs.
     # @note Updated 2022-02-01.

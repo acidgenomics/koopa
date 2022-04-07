@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_ninja() { # {{{
+main() { # {{{
     # """
     # Install Ninja.
     # @note Updated 2022-03-30.

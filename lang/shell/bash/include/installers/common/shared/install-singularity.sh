@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_singularity() { # {{{1
+main() { # {{{1
     # """
     # Install Singularity.
     # @note Updated 2022-01-19.

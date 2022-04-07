@@ -3,7 +3,7 @@
 # FIXME Consider installing from binary instead:
 # https://github.com/hadolint/hadolint/releases/tag/v2.9.3
 
-install_hadolint() { # {{{1
+main() { # {{{1
     # """
     # Install hadolint.
     # @note Updated 2022-03-29.

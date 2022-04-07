@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_armadillo() { # {{{1
+main() { # {{{1
     # """
     # Install Armadillo.
     # @note Updated 2022-03-29.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-linux_install_cellranger() { # {{{1
+main() { # {{{1
     # """
     # Install Cell Ranger.
     # @note Updated 2022-04-07.

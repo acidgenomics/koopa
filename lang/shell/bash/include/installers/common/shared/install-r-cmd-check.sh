@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_r_cmd_check() { # {{{1
+main() { # {{{1
     # """
     # Install r-cmd-check scripts for CI.
     # @note Updated 2021-11-22.

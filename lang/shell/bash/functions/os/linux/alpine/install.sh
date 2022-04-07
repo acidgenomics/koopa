@@ -9,10 +9,12 @@ koopa_alpine_install_base_system() { # {{{1
         "$@"
 }
 
-koopa_alpine_install_glibc() { # {{{1
+koopa_alpine_install_glibc_binary() { # {{{1
     koopa_install_app \
-        --name='glibc' \
+        --name-fancy='glibc (binary)' \
+        --name='glibc-binary' \
         --platform='alpine' \
         --system \
-        --version='2.30-r0'
+        --version='2.30-r0' \
+        "$@"
 }

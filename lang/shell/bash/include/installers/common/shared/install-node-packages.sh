@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_node_packages() { # {{{1
+main() { # {{{1
     # """
     # Install Node.js packages using npm.
     # @note Updated 2022-04-06.

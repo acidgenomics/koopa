@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_hdf5() { # {{{1
+main() { # {{{1
     # """
     # Install HDF5.
     # @note Updated 2021-12-07.

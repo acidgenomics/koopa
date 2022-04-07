@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_bash() { # {{{1
+main() { # {{{1
     # """
     # Install Bash.
     # @note Updated 2022-04-06.

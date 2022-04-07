@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-linux_uninstall_lmod() { # {{{1
+# FIXME We may need to remove the prefix here.
+
+main() { # {{{1
+    # """
+    # Uninstall Lmod.
+    # @note Updated 2022-04-07.
+    # """
     koopa_rm --sudo \
         '/etc/profile.d/z00_lmod.csh' \
         '/etc/profile.d/z00_lmod.sh'

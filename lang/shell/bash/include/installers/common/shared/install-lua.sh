@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_lua() { # {{{1
+main() { # {{{1
     # """
     # Install Lua.
     # @note Updated 2021-12-09.

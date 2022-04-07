@@ -3,7 +3,7 @@
 # FIXME Consider a more modular approach for this, installing each tool
 # into its own versioned directory instead?
 
-install_rust_packages() { # {{{1
+main() { # {{{1
     # """
     # Install Rust packages.
     # @note Updated 2022-04-06.

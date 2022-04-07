@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_gnupg_pinentry() { # {{{1
+main() { # {{{1
     # """
     # Install GnuPG pinentry library.
     # @note Updated 2022-03-29.

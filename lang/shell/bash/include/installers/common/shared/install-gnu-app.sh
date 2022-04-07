@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_gnu_app() { # {{{1
+main() { # {{{1
     # """
     # Build and install a GNU package from source.
     # @note Updated 2022-03-29.

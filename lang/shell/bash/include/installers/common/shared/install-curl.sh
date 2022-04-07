@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_curl() { # {{{1
+main() { # {{{1
     # """
     # Install cURL.
     # @note Updated 2022-01-19.

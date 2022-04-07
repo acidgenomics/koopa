@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_ruby_packages() { # {{{1
+main() { # {{{1
     # """
     # Install Ruby packages (gems).
     # @note Updated 2022-02-10.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_wget() { # {{{1
+main() { # {{{1
     # """
     # Install wget.
     # @note Updated 2021-11-30.

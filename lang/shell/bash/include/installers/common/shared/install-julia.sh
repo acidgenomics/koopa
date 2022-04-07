@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_julia() { # {{{1
+main() { # {{{1
     # """
     # Install Julia (from source).
     # @note Updated 2022-03-29.

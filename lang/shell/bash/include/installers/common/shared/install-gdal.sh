@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_gdal() { # {{{1
+main() { # {{{1
     # """
     # Install GDAL.
     # @note Updated 2022-03-29.

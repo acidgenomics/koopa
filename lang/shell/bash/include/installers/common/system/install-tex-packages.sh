@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_tex_packages() { # {{{1
+main() { # {{{1
     # """
     # Install TeX packages.
     # @note Updated 2022-01-26.

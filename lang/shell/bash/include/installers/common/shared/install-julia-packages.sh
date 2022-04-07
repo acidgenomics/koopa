@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_julia_packages() { # {{{1
+main() { # {{{1
     # """
     # Install Julia packages.
     # @note Updated 2022-03-01.

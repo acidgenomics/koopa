@@ -2,7 +2,7 @@
 
 # FIXME We need to version pin here.
 
-install_rust() { # {{{1
+main() { # {{{1
     # """
     # Install Rust (via rustup).
     # @note Updated 2022-01-24.

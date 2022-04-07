@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_openssh() { # {{{1
+main() { # {{{1
     # """
     # Install OpenSSH.
     # @note Updated 2022-03-28.

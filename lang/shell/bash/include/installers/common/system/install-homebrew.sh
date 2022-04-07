@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_homebrew() { # {{{1
+main() { # {{{1
     # """
     # Install Homebrew.
     # @note Updated 2021-11-22.

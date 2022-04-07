@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-linux_install_aspera_connect() { # {{{1
+main() { # {{{1
     # """
     # Install Aspera Connect.
     # @note Updated 2022-03-28.

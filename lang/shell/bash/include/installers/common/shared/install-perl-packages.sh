@@ -2,7 +2,7 @@
 
 # FIXME This should link 'rename' and 'ack' into our main koopa 'bin'.
 
-install_perl_packages() { # {{{1
+main() { # {{{1
     # """
     # Install Perl packages.
     # @note Updated 2022-04-06.

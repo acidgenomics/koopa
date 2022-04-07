@@ -2,7 +2,7 @@
 
 # FIXME Add binary support for macOS and Linux here.
 
-install_hadolint_binary() { # {{{1
+main() { # {{{1
     # """
     # Install hadolint binary.
     # @note Updated 2022-03-31.

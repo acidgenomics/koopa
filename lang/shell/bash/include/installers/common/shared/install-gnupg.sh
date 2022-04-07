@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-install_gnupg() { # {{{1
+main() { # {{{1
     # """
     # Install GnuPG.
     # @note Updated 2022-03-29.
