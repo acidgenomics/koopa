@@ -419,10 +419,10 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         fi
         case "${dict[mode]}" in
             'system')
-                koopa_init_dir --sudo "${dict[prefix]}"
+                dict[prefix]="$(koopa_init_dir --sudo "${dict[prefix]}")"
                 ;;
             *)
-                koopa_init_dir "${dict[prefix]}"
+                dict[prefix]="$(koopa_init_dir "${dict[prefix]}")"
                 ;;
         esac
     fi
