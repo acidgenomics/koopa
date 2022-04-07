@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rethink the '--shared' configuration. Consider reworking with '--user'.
+# instead.
+
 koopa_configure_app_packages() { # {{{1
     # """
     # Configure language application.
@@ -167,7 +170,7 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Our opt linker isn't working any more...what's up with that?
+# FIXME Need to rethink '--system' handling specifically for lmod installer.
 
 koopa_install_app() { # {{{1
     # """
@@ -356,6 +359,7 @@ koopa_install_app() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    [[ "${dict[system]}" -eq 1 ]] && koopa_assert_is_admin
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
@@ -386,10 +390,6 @@ koopa_install_app() { # {{{1
     then
         dict[auto_prefix]=0
         dict[shared]=0
-    fi
-    if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
-    then
-        koopa_assert_is_admin
     fi
     if [[ "${dict[shared]}" -eq 0 ]] || koopa_is_macos
     then
@@ -574,11 +574,10 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     return 0
 }
 
-# FIXME Need to support parameterized '--link-in-bin' here.
 koopa_install_app_packages() { # {{{1
     # """
     # Install application packages.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-07.
     # """
     local name name_fancy pos
     koopa_assert_has_args "$#"
@@ -614,10 +613,8 @@ koopa_install_app_packages() { # {{{1
                 shift 1
                 ;;
             # Internally defined arguments -------------------------------------
-            '--prefix='* | \
-            '--prefix' | \
-            '--version='* | \
-            '--version' | \
+            '--prefix='* | '--prefix' | \
+            '--version='* | '--version' | \
             '--no-prefix-check' | \
             '--prefix-check')
                 koopa_invalid_arg "$1"
@@ -744,11 +741,14 @@ koopa_reinstall_app() { # {{{1
     koopa_koopa install "$@" --reinstall
 }
 
+# FIXME Rethink '--system' approach specifically for Lmod.
 # FIXME Need to support parameterized '--unlink-app-in-bin' here.
 # FIXME Consider adding support for unlinker function.
 # FIXME We don't need to remove opt link only in shared, right? Rethink...
 # FIXME Consider adding '--unlink-app-from-bin' parameterized option here.
 # FIXME Rework to use 'koopa_unlink_in_opt'.
+# FIXME Consider rethinking the uninstaller approach for something like
+# Lmod...remove the app prefix but also run the additional script?
 
 koopa_uninstall_app() { # {{{1
     # """
@@ -770,9 +770,10 @@ koopa_uninstall_app() { # {{{1
         [shared]=0
         [system]=0
         [unlink_in_bin]=0 # FIXME Need to add support for this.
-        [unlink_in_opt]=1 # FIXME Disable this if not shared app (e.g. in XDG HOME).
         [unlink_in_make]=0  # FIXME Need to rethink this.
+        [unlink_in_opt]=1 # FIXME Disable this if not shared app (e.g. in XDG HOME).
         [uninstaller]=''
+        [verbose]=0
     )
     pos=()
     while (("$#"))
@@ -819,8 +820,14 @@ koopa_uninstall_app() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
-            # FIXME Need to add overrides here, to similar to installer.
-
+            '--no-unlink-in-make')
+                dict[unlink_in_make]=0
+                shift 1
+                ;;
+            '--no-unlink-in-opt')
+                dict[unlink_in_opt]=0
+                shift 1
+                ;;
             '--quiet')
                 dict[quiet]=1
                 shift 1
@@ -829,8 +836,16 @@ koopa_uninstall_app() { # {{{1
                 dict[system]=1
                 shift 1
                 ;;
+            '--unlink-in-make')
+                dict[unlink_in_make]=1
+                shift 1
+                ;;
+            '--unlink-in-opt')
+                dict[unlink_in_opt]=1
+                shift 1
+                ;;
             '--verbose')
-                set -o xtrace
+                dict[verbose]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -841,7 +856,10 @@ koopa_uninstall_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    [[ "${dict[system]}" -eq 1 ]] && koopa_assert_is_admin
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
+    [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
@@ -867,34 +885,46 @@ at '${dict[prefix]}'."
             dict[shared]=0
         fi
     fi
-    if [[ "${dict[system]}" -eq 1 ]]
+    [[ "${dict[shared]}" -eq 0 ]] && dict[unlink_in_opt]=0
+
+
+
+
+
+
+    if [[ "${dict[quiet]}" -eq 0 ]]
     then
-        dict[shared]=0
-    fi
-    if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
-    then
-        koopa_assert_is_admin
-    fi
-    if [[ "${dict[system]}" -eq 1 ]]
-    then
-        if [[ "${dict[quiet]}" -eq 0 ]]
+        if [[ -n "${dict[prefix]}" ]]
         then
+            koopa_alert_uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
+        else
             koopa_alert_uninstall_start "${dict[name_fancy]}"
         fi
+    fi
+
+
+
+
+
+
+
+    if [[ "${dict[system]}" -eq 1 ]]
+    then
         if [[ -n "${dict[prefix]}" ]]
         then
             koopa_rm --sudo "${dict[prefix]}"
-        else
-            [[ -z "${dict[uninstaller]}" ]] && dict[uninstaller]="${dict[name]}"
-            dict[uninstaller]="$( \
-                koopa_snake_case_simple "uninstall_${dict[uninstaller]}" \
-            )"
-            dict[uninstaller_file]="$( \
-                koopa_kebab_case_simple "${dict[uninstaller]}" \
-            )"
-            dict[uninstaller_file]="${dict[installers_prefix]}/\
+        fi
+        [[ -z "${dict[uninstaller]}" ]] && dict[uninstaller]="${dict[name]}"
+        dict[uninstaller]="$( \
+            koopa_snake_case_simple "uninstall_${dict[uninstaller]}" \
+        )"
+        dict[uninstaller_file]="$( \
+            koopa_kebab_case_simple "${dict[uninstaller]}" \
+        )"
+        dict[uninstaller_file]="${dict[installers_prefix]}/\
 ${dict[platform]}/${dict[uninstaller_file]}.sh"
-            koopa_assert_is_file "${dict[uninstaller_file]}"
+        if [[ -f "${dict[uninstaller_file]}" ]]
+        then
             # shellcheck source=/dev/null
             source "${dict[uninstaller_file]}"
             dict[function]="$(koopa_snake_case_simple "${dict[uninstaller]}")"
@@ -928,16 +958,31 @@ at '${dict[prefix]}'."
                 "${dict[name_fancy]}" "${dict[prefix]}"
         fi
         koopa_rm "${dict[prefix]}"
-        # FIXME Only do this if shared.
-        if [[ "${dict[unlink_in_opt]}" -eq 1 ]]
-        then
-            koopa_unlink_in_opt "${dict[name]}"
-        fi
-        # FIXME Look for unlink function and always remove here.
-        if [[ "${dict[quiet]}" -eq 0 ]]
+    fi
+
+
+
+
+
+    # FIXME Set this variable...
+    if [[ "${dict[unlink_in_opt]}" -eq 1 ]]
+    then
+        koopa_unlink_in_opt "${dict[name]}"
+    fi
+
+
+    # FIXME Need to add support for 'unlink_in_make' (disabled by default).
+
+
+
+    if [[ "${dict[quiet]}" -eq 0 ]]
+    then
+        if [[ -n "${dict[prefix]}" ]]
         then
             koopa_alert_uninstall_success \
                 "${dict[name_fancy]}" "${dict[prefix]}"
+        else
+            koopa_alert_uninstall_success "${dict[name_fancy]}"
         fi
     fi
     return 0
@@ -1088,10 +1133,7 @@ at '${dict[prefix]}'."
             dict[shared]=0
         fi
     fi
-    if [[ "${dict[system]}" -eq 1 ]]
-    then
-        dict[shared]=0
-    fi
+    [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
     then
         koopa_assert_is_admin

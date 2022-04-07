@@ -91,11 +91,13 @@ koopa_linux_install_julia_binary() { # {{{1
         "$@"
 }
 
+# FIXME Double check the '--system' usage here.
 koopa_linux_install_lmod() { # {{{1
     koopa_install_app \
         --name-fancy='Lmod' \
         --name='lmod' \
         --platform='linux' \
+        --system \
         "$@"
 }
 
@@ -179,16 +181,14 @@ koopa_linux_uninstall_docker_credential_pass() { # {{{1
 }
 
 # FIXME Need a Julia binary uninstaller.
-
 # FIXME Consider reworking here to source an additional uninstall script.
+# FIXME Ensure that this cleans up profile.d
+
 koopa_linux_uninstall_lmod() { # {{{1
     koopa_uninstall_app \
         --name-fancy='Lmod' \
         --name='lmod' \
+        --system \
         "$@"
-    # FIXME Consider moving this to a separate uninstall script.
-    koopa_rm --sudo \
-        '/etc/profile.d/z00_lmod.csh' \
-        '/etc/profile.d/z00_lmod.sh'
     return 0
 }
