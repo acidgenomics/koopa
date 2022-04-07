@@ -481,7 +481,6 @@ koopa_install_luarocks() { # {{{1
 
 koopa_install_make() { # {{{1
     koopa_install_gnu_app \
-        --link-in-bin='bin/make' \
         --name='make' \
         "$@"
 }
@@ -653,7 +652,6 @@ koopa_install_perlbrew() { # {{{1
 
 koopa_install_pkg_config() { # {{{1
     koopa_install_app \
-        --link-in-bin='bin/pkg-config' \
         --name='pkg-config' \
         "$@"
 }
