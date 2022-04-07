@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME Need to add support for (see common/locate-wrappers.sh for details):
-# - aspera_connect (ascp)
 # - gnupg (gpg, gpg_agent, gpgconf)
 
 # FIXME Need to link components from:
