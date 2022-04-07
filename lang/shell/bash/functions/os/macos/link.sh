@@ -1,33 +1,19 @@
 #!/usr/bin/env bash
 
-# FIXME These links currently don't have group write permissions.
-# Need to rethink our linker here.
-
 # FIXME Need to add support for (see common/locate-wrappers.sh for details):
 # - aspera_connect (ascp)
 # - gnupg (gpg, gpg_agent, gpgconf)
 
-# FIXME Consider putting '/Library/TeX/texbin/tlmgr' in sbin.
-
-# FIXME Add support for: /Applications/Little Snitch.app/Contents/Components/littlesnitch
-
 # FIXME Need to link components from:
-#        koopa_activate_homebrew_opt_prefix \
-#            'bc' \
-#            'curl' \
-#            'gnu-getopt' \
-#            'ruby' \
-#            'texinfo'
-#        koopa_activate_homebrew_opt_libexec_prefix \
-#            'man-db'
+#        koopa_activate_homebrew_opt_prefix 'curl'
+#        koopa_activate_homebrew_opt_libexec_prefix 'man-db'
 #        koopa_activate_homebrew_opt_gnu_prefix \
 #            'coreutils' \
 #            'findutils' \
 #            'gnu-sed' \
 #            'gnu-tar' \
 #            'gnu-which' \
-#            'grep' \
-#            'make'
+#            'grep'
 
 koopa_macos_link_bbedit() { # {{{1
     koopa_assert_has_no_args "$#"
