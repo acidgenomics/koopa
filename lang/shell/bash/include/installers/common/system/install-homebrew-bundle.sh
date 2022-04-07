@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to link emacs cask into /opt/koopa/bin.
-
 main() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
@@ -63,7 +61,7 @@ main() { # {{{1
     done
     if koopa_is_macos
     then
-        koopa_macos_link_homebrew_opt
+        koopa_macos_link_homebrew
     fi
     return 0
 }

@@ -6,16 +6,15 @@
 # - sed (gnu-sed)
 # - tar (gnu-tar)
 
-koopa_macos_link_homebrew_opt() { # {{{1
+koopa_macos_link_homebrew() { # {{{1
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         [brew_opt]="$(koopa_homebrew_opt_prefix)"
+        [cask]="$(koopa_homebrew_cask_prefix)"
     )
+    # coreutils.
     dict[coreutils]="${dict[brew_opt]}/coreutils/libexec/gnubin"
-    dict[curl]="${dict[brew_opt]}/curl/bin"
-    dict[findutils]="${dict[brew_opt]}/findutils/libexec/gnubin"
-    dict[grep]="${dict[brew_opt]}/grep/libexec/gnubin"
     koopa_link_in_bin \
         "${dict[coreutils]}/[" '[' \
         "${dict[coreutils]}/b2sum" 'b2sum' \
@@ -122,85 +121,56 @@ koopa_macos_link_homebrew_opt() { # {{{1
         "${dict[coreutils]}/wc" 'wc' \
         "${dict[coreutils]}/who" 'who' \
         "${dict[coreutils]}/whoami" 'whoami' \
-        "${dict[coreutils]}/yes" 'yes' \
+        "${dict[coreutils]}/yes" 'yes'
+    # cURL.
+    dict[curl]="${dict[brew_opt]}/curl/bin"
+    koopa_link_in_bin \
         "${dict[curl]}/curl" 'curl' \
-        "${dict[curl]}/curl-config" 'curl-config' \
+        "${dict[curl]}/curl-config" 'curl-config'
+    # findutils.
+    dict[findutils]="${dict[brew_opt]}/findutils/libexec/gnubin"
+    koopa_link_in_bin \
         "${dict[findutils]}/find" 'find' \
         "${dict[findutils]}/locate" 'locate' \
         "${dict[findutils]}/updatedb" 'updatedb' \
-        "${dict[findutils]}/xargs" 'xargs' \
+        "${dict[findutils]}/xargs" 'xargs'
+    # grep.
+    dict[grep]="${dict[brew_opt]}/grep/libexec/gnubin"
+    koopa_link_in_bin \
         "${dict[grep]}/egrep" 'egrep' \
         "${dict[grep]}/fgrep" 'fgrep' \
         "${dict[grep]}/grep" 'grep'
-}
-
-koopa_macos_link_bbedit() { # {{{1
-    koopa_assert_has_no_args "$#"
+    # BBEdit cask.
     koopa_link_in_bin \
         '/Applications/BBEdit.app/Contents/Helpers/bbedit_tool' \
         'bbedit'
-    return 0
-}
-
-koopa_macos_link_emacs() { # {{{1
-    koopa_assert_has_no_args "$#"
+    # Emacs cask.
     koopa_link_in_bin \
         '/Applications/Emacs.app/Contents/MacOS/Emacs' \
         'emacs'
-    return 0
-}
-
-koopa_macos_link_google_cloud_sdk() { # {{{1
-    koopa_assert_has_no_args "$#"
+    # Google Cloud SDK cask.
     koopa_link_in_bin \
-        "$(koopa_homebrew_prefix)/Caskroom/google-cloud-sdk/latest/\
-google-cloud-sdk/bin/gcloud" \
+        "${dict[cask]}/google-cloud-sdk/latest/google-cloud-sdk/bin/gcloud" \
         'gcloud'
-    return 0
-}
-
-koopa_macos_link_julia() { # {{{1
-    local dict
-    koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        [julia_prefix]="$(koopa_macos_julia_prefix)"
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-    )
+    # Julia cask.
+    dict[julia]="$(koopa_macos_julia_prefix)"
     koopa_link_in_bin \
-        "${dict[julia_prefix]}/bin/julia" \
+        "${dict[julia]}/bin/julia" \
         'julia'
-    return 0
-}
-
-koopa_macos_link_r() { # {{{1
-    local dict
-    koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [r_prefix]="$(koopa_macos_r_prefix)"
-    )
+    # R cask.
+    dict[r]="$(koopa_macos_julia_prefix)"
     koopa_link_in_bin \
-        "${dict[r_prefix]}/bin/R" 'R' \
-        "${dict[r_prefix]}/bin/Rscript" 'Rscript'
-    return 0
-}
-
-koopa_macos_link_visual_studio_code() { # {{{1
-    koopa_assert_has_no_args "$#"
+        "${dict[r]}/bin/R" 'R' \
+        "${dict[r]}/bin/Rscript" 'Rscript'
+    # Visual Studio Code cask.
     koopa_link_in_bin \
         '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' \
         'code'
-    return 0
 }
 
-koopa_macos_unlink_bbedit() { # {{{1
+koopa_macos_unlink_homebrew() { # {{{1
     koopa_assert_has_no_args "$#"
-    koopa_unlink_in_bin 'bbedit'
-    return 0
-}
-
-koopa_macos_unlink_homebrew_opt() { # {{{1
-    koopa_assert_has_no_args "$#"
+    # coreutils.
     koopa_unlink_in_bin \
         '['
         'b2sum' \
@@ -218,8 +188,6 @@ koopa_macos_unlink_homebrew_opt() { # {{{1
         'comm' \
         'cp' \
         'csplit' \
-        'curl' \
-        'curl-config' \
         'cut' \
         'date' \
         'dd' \
@@ -229,17 +197,13 @@ koopa_macos_unlink_homebrew_opt() { # {{{1
         'dirname' \
         'du' \
         'echo' \
-        'egrep' \
         'env' \
         'expand' \
         'expr' \
         'factor' \
         'false' \
-        'fgrep' \
-        'find' \
         'fmt' \
         'fold' \
-        'grep' \
         'groups' \
         'head' \
         'hostid' \
@@ -249,7 +213,6 @@ koopa_macos_unlink_homebrew_opt() { # {{{1
         'kill' \
         'link' \
         'ln' \
-        'locate' \
         'logname' \
         'ls' \
         'md5sum' \
@@ -308,14 +271,36 @@ koopa_macos_unlink_homebrew_opt() { # {{{1
         'unexpand' \
         'uniq' \
         'unlink' \
-        'updatedb' \
         'uptime' \
         'users' \
         'vdir' \
         'wc' \
         'who' \
         'whoami' \
-        'xargs' \
         'yes'
+    # cURL.
+    koopa_unlink_in_bin \
+        'curl' \
+        'curl-config'
+    # findutils.
+    koopa_unlink_in_bin \
+        'find' \
+        'locate' \
+        'updatedb' \
+        'xargs'
+    # grep.
+    koopa_unlink_in_bin \
+        'egrep' \
+        'fgrep' \
+        'grep'
+    # Casks.
+    koopa_unlink_in_bin \
+        'R' \
+        'Rscript' \
+        'bbedit' \
+        'code' \
+        'emacs' \
+        'gcloud' \
+        'julia'
     return 0
 }

@@ -29,5 +29,9 @@ master/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_chmod 'u+x' "${dict[file]}"
     "${app[yes]}" | "./${dict[file]}" || true
+    if koopa_is_macos
+    then
+        koopa_macos_unlink_homebrew
+    fi
     return 0
 }

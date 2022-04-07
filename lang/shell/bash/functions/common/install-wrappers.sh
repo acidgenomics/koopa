@@ -663,14 +663,20 @@ koopa_install_pyenv() { # {{{1
         "$@"
 }
 
-# FIXME Consider moving the linker into the main Python installer script,
-# so we can detect the version...
 koopa_install_python() { # {{{1
-    koopa_install_app \
-        --link-in-bin='bin/python3' \
-        --name-fancy='Python' \
-        --name='python' \
-        "$@"
+    local install_args
+    install_args=(
+        '--name-fancy=Python'
+        '--name=python'
+    )
+    # Assume we're using 'python-binary' by default.
+    if ! koopa_is_macos
+    then
+        install_args+=(
+            '--link-in-bin=bin/python3'
+        )
+    fi
+    koopa_install_app "${install_args[@]}" "$@"
 }
 
 # FIXME Need to include links here.
