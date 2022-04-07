@@ -754,13 +754,12 @@ koopa_reinstall_app() { # {{{1
 # FIXME Consider adding support for unlinker function.
 # FIXME We don't need to remove opt link only in shared, right? Rethink...
 # FIXME Consider adding '--unlink-app-from-bin' parameterized option here.
-
 # FIXME Rework to use 'koopa_unlink_in_opt'.
 
 koopa_uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-07.
     # """
     local app dict pos
     declare -A app
@@ -768,7 +767,6 @@ koopa_uninstall_app() { # {{{1
         [app_prefix]="$(koopa_app_prefix)"
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [link_in_make]=1  # FIXME Need to rethink this.
         [make_prefix]="$(koopa_make_prefix)"
         [name_fancy]=''
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -777,6 +775,9 @@ koopa_uninstall_app() { # {{{1
         [quiet]=0
         [shared]=0
         [system]=0
+        [unlink_in_bin]=0 # FIXME Need to add support for this.
+        [unlink_in_opt]=1 # FIXME Disable this if not shared app (e.g. in XDG HOME).
+        [unlink_in_make]=0  # FIXME Need to rethink this.
         [uninstaller]=''
     )
     pos=()
@@ -824,6 +825,8 @@ koopa_uninstall_app() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            # FIXME Need to add overrides here, to similar to installer.
+
             '--quiet')
                 dict[quiet]=1
                 shift 1
