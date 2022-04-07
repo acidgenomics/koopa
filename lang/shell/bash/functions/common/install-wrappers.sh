@@ -534,9 +534,9 @@ koopa_install_nim() { # {{{1
         "$@"
 }
 
-# FIXME Specify which packages to link.
 koopa_install_nim_packages() { # {{{1
     koopa_install_app_packages \
+        --link-in-bin='bin/markdown' \
         --name-fancy='Nim' \
         --name='nim' \
         "$@"
