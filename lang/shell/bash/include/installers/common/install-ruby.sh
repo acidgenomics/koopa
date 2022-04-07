@@ -3,13 +3,14 @@
 install_ruby() { # {{{1
     # """
     # Install Ruby.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-07.
     #
     # @seealso
     # - https://www.ruby-lang.org/en/downloads/
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -31,7 +32,7 @@ ${dict[maj_min_ver]}/${dict[file]}"
     # This will fail on Ubuntu 18 otherwise:
     # - https://github.com/rbenv/ruby-build/issues/156
     # - https://github.com/rbenv/ruby-build/issues/729
-    export RUBY_CONFIGURE_OPTS='--disable-install-doc'
+    # > export RUBY_CONFIGURE_OPTS='--disable-install-doc'
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
