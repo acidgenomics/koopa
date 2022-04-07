@@ -58,7 +58,7 @@ __koopa_link_in_dir() { # {{{1
             [source_file]="${1:?}"
             [target_name]="${2:?}"
         )
-        koopa_assert_is_file "${dict2[source_file]}"
+        koopa_assert_is_existing "${dict2[source_file]}"
         dict2[source_file]="$(koopa_realpath "${dict2[source_file]}")"
         dict2[target_file]="${dict[prefix]}/${dict2[target_name]}"
         koopa_sys_ln "${dict2[source_file]}" "${dict2[target_file]}"
