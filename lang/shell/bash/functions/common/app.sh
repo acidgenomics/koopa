@@ -487,6 +487,9 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     then
         dict[link_in_bin]=1
     fi
+
+    koopa_stop "FIXME ${dict[prefix]}"
+
     (
         koopa_cd "${dict[tmp_dir]}"
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH

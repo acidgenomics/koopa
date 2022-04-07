@@ -2586,7 +2586,7 @@ koopa_homebrew_cask_prefix() { # {{{1
 koopa_homebrew_prefix() { # {{{1
     # """
     # Homebrew prefix.
-    # @note Updated 2021-04-30.
+    # @note Updated 2022-04-07.
     #
     # @seealso https://brew.sh/
     # """
