@@ -741,8 +741,10 @@ koopa_install_rsync() { # {{{1
         "$@"
 }
 
+# FIXME Also link bundle here?
 koopa_install_ruby() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/gem' \
         --link-in-bin='bin/ruby' \
         --name-fancy='Ruby' \
         --name='ruby' \
