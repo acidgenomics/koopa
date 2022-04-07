@@ -265,57 +265,6 @@ koopa_switch_to_develop() {  # {{{1
     return 0
 }
 
-# FIXME Can we take this out?
-koopa_sys_chmod() { # {{{1
-    # """
-    # chmod with dynamic sudo handling.
-    # @note Updated 2021-09-20.
-    # """
-    local chmod
-    koopa_assert_has_args "$#"
-    chmod=('koopa_chmod')
-    if koopa_is_shared_install
-    then
-        chmod+=('--sudo')
-    fi
-    "${chmod[@]}" "$@"
-    return 0
-}
-
-# FIXME Can we take this out?
-koopa_sys_chown() { # {{{1
-    # """
-    # chown with dynamic sudo handling.
-    # @note Updated 2022-04-07.
-    # """
-    local chown
-    koopa_assert_has_args "$#"
-    chown=('koopa_chown')
-    if koopa_is_shared_install
-    then
-        chown+=('--sudo')
-    fi
-    "${chown[@]}" "$@"
-    return 0
-}
-
-# FIXME Can we take this out?
-koopa_sys_cp() { # {{{1
-    # """
-    # Koopa copy.
-    # @note Updated 2021-09-20.
-    # """
-    local cp
-    koopa_assert_has_args "$#"
-    cp=('koopa_cp')
-    if koopa_is_shared_install
-    then
-        cp+=('--sudo')
-    fi
-    "${cp[@]}" "$@"
-    return 0
-}
-
 koopa_sys_group() { # {{{1
     # """
     # Return the appropriate group to use with koopa installation.
@@ -341,7 +290,7 @@ koopa_sys_group() { # {{{1
 koopa_sys_ln() { # {{{1
     # """
     # Create a symlink quietly.
-    # @note Updated 2021-09-20.
+    # @note Updated 2022-04-07.
     #
     # Don't need to set 'g+rw' for symbolic link here.
     # Symlink permissions are ignored on most systems, including Linux.
@@ -349,70 +298,28 @@ koopa_sys_ln() { # {{{1
     # On macOS, you can override using BSD ln:
     # > /bin/ln -h g+rw <file>
     # """
-    local ln source target
+    local dict
     koopa_assert_has_args_eq "$#" 2
-    source="${1:?}"
-    target="${2:?}"
-    ln=('koopa_ln')
-    if koopa_is_shared_install
-    then
-        ln+=('--sudo')
-    fi
-    "${ln[@]}" "$source" "$target"
-    koopa_sys_set_permissions --no-dereference "$target"
+    declare -A dict=(
+        [source]="${1:?}"
+        [target]="${2:?}"
+    )
+    koopa_ln "${dict[source]}" "${dict[target]}"
+    koopa_sys_set_permissions --no-dereference "${dict[target]}"
     return 0
 }
 
 koopa_sys_mkdir() { # {{{1
     # """
     # mkdir with dynamic sudo handling.
-    # @note Updated 2021-09-20.
+    # @note Updated 2022-04-07.
     # """
-    local mkdir
     koopa_assert_has_args "$#"
-    mkdir=('koopa_mkdir')
-    if koopa_is_shared_install
-    then
-        mkdir+=('--sudo')
-    fi
-    "${mkdir[@]}" "$@"
+    koopa_mkdir "$@"
     koopa_sys_set_permissions "$@"
     return 0
 }
 
-koopa_sys_mv() { # {{{1
-    # """
-    # Move a file or directory.
-    # @note Updated 2021-09-20.
-    # """
-    local mv
-    koopa_assert_has_args "$#"
-    mv=('koopa_mv')
-    if koopa_is_shared_install
-    then
-        mv+=('--sudo')
-    fi
-    "${mv[@]}" "$@"
-    return 0
-}
-
-koopa_sys_rm() { # {{{1
-    # """
-    # Remove files/directories quietly.
-    # @note Updated 2021-09-20.
-    # """
-    local rm
-    koopa_assert_has_args "$#"
-    rm=('koopa_rm')
-    if koopa_is_shared_install
-    then
-        rm+=('--sudo')
-    fi
-    "${rm[@]}" "$@"
-    return 0
-}
-
-# FIXME Simplify chmod and chown handling.
 koopa_sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
@@ -422,12 +329,14 @@ koopa_sys_set_permissions() { # {{{1
     # e.g. 'app/julia-packages/1.6/registries/General'.
     # """
     koopa_assert_has_args "$#"
-    local arg chmod chown dict group pos user
+    local arg chmod_args chown_args dict pos
     declare -A dict=(
         [dereference]=1
         [recursive]=0
-        [user]=0
+        [shared]=1
     )
+    chmod_args=()
+    chown_args=()
     pos=()
     while (("$#"))
     do
@@ -450,7 +359,7 @@ koopa_sys_set_permissions() { # {{{1
                 ;;
             '--user' | \
             '-u')
-                dict[user]=1
+                dict[shared]=0
                 shift 1
                 ;;
             '-'*)
@@ -464,41 +373,39 @@ koopa_sys_set_permissions() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    case "${dict[user]}" in
+    case "${dict[shared]}" in
         '0')
-            chmod=('koopa_sys_chmod')
-            chown=('koopa_sys_chown')
-            group="$(koopa_sys_group)"
-            user="$(koopa_sys_user)"
+            dict[group]="$(koopa_group)"
+            dict[user]="$(koopa_user)"
             ;;
         '1')
-            chmod=('koopa_chmod')
-            chown=('koopa_chown')
-            group="$(koopa_group)"
-            user="$(koopa_user)"
+            dict[group]="$(koopa_sys_group)"
+            dict[user]="$(koopa_sys_user)"
             ;;
     esac
-    chown+=('--no-dereference')
+    chown_args+=('--no-dereference')
     if [[ "${dict[recursive]}" -eq 1 ]]
     then
-        chmod+=('--recursive')
-        chown+=('--recursive')
+        chmod_args+=('--recursive')
+        chown_args+=('--recursive')
     fi
     if koopa_is_shared_install
     then
-        chmod+=('u+rw,g+rw,o+r,o-w')
+        chmod_args+=('u+rw,g+rw,o+r,o-w')
     else
-        chmod+=('u+rw,g+r,g-w,o+r,o-w')
+        chmod_args+=('u+rw,g+r,g-w,o+r,o-w')
     fi
-    chown+=("${user}:${group}")
+    chown_args+=("${dict[user]}:${dict[group]}")
     for arg in "$@"
     do
         if [[ "${dict[dereference]}" -eq 1 ]] && [[ -L "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"
         fi
-        "${chmod[@]}" "$arg"
-        "${chown[@]}" "$arg"
+        chmod_args+=("$arg")
+        chown_args+=("$arg")
+        koopa_chmod "${chmod_args[@]}"
+        koopa_chown "${chown_args[@]}"
     done
     return 0
 }
