@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Python.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-07.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -23,29 +23,31 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='python'
-        [name2]='Python'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
-    dict[file]="${dict[name2]}-${dict[version]}.tar.xz"
+    dict[file]="Python-${dict[version]}.tar.xz"
     dict[url]="https://www.python.org/ftp/${dict[name]}/${dict[version]}/\
 ${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name2]}-${dict[version]}"
-    conf_args=(
-        "--prefix=${dict[prefix]}"
-        # This slows down the installer a lot.
-        # > '--enable-optimizations'
-        '--enable-shared'
-    )
+    koopa_cd "Python-${dict[version]}"
+    conf_args=("--prefix=${dict[prefix]}")
+    if [[ "${KOOPA_LINK_IN_MAKE:?}" -eq 1 ]]
+    then
+        conf_args+=(
+            # > '--enable-optimizations'
+            '--enable-shared'
+        )
+    fi
     # Setting 'LDFLAGS' here doesn't work on macOS.
     if koopa_is_linux
     then
