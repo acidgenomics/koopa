@@ -104,7 +104,7 @@ cask "julia"
 cask "keka"
 cask "libreoffice"
 cask "little-snitch"
-cask "macvim" # no-binaries
+# > cask "macvim" # no-binaries
 cask "museeks"
 cask "netnewswire"
 cask "nightfall"
