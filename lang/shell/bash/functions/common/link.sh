@@ -71,7 +71,7 @@ __koopa_link_in_dir() { # {{{1
 __koopa_unlink_in_dir() { # {{{1
     # """
     # Unlink multiple symlinks in a directory.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-07.
     # """
     local dict pos
     koopa_assert_has_args "$#"
@@ -112,7 +112,7 @@ __koopa_unlink_in_dir() { # {{{1
     do
         files+=("${dict[prefix]}/${names[$i]}")
     done
-    koopa_assert_is_file "${files[@]}"
+    koopa_assert_is_existing "${files[@]}"
     koopa_rm "${files[@]}"
     return 0
 }
