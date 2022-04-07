@@ -1684,8 +1684,9 @@ koopa_update_google_cloud_sdk() { # {{{1
 
 koopa_update_homebrew() { # {{{1
     koopa_update_app \
-        --name='homebrew' \
         --name-fancy='Homebrew' \
+        --name='homebrew' \
+        --prefix="$(koopa_homebrew_prefix)" \
         --system \
         "$@"
 }
