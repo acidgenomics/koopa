@@ -67,34 +67,6 @@ koopa_macos_link_julia() { # {{{1
     return 0
 }
 
-koopa_macos_link_python() { # {{{1
-    local app dict
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [find]="$(koopa_locate_find)"
-    )
-    declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [python_prefix]="$(koopa_macos_python_prefix)"
-    )
-    app[python]="$( \
-        "${app[find]}" \
-            "${dict[python_prefix]}/bin" \
-            -type 'f' \
-            -executable \
-            -name 'python*' \
-            -not -name '*-*' \
-    )"
-    koopa_assert_is_executable "${app[python]}"
-    dict[version]="$(koopa_get_version "${app[python]}")"
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
-    dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
-    koopa_link_in_bin \
-        "${app[python]}" "python${dict[maj_min_ver]}" \
-        "${app[python]}" "python${dict[maj_ver]}"
-    return 0
-}
-
 koopa_macos_link_r() { # {{{1
     local dict
     koopa_assert_has_no_args "$#"
