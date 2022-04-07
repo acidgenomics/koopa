@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GDAL.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-07.
     #
     # Use 'configure --help' for build options.
     #
@@ -17,8 +17,9 @@ main() { # {{{1
     # - https://github.com/OSGeo/gdal/issues/2402
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
-    local app brew_opt_pkgs conf_args dict opt_pkgs
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'geos' 'proj' 'sqlite'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -60,21 +61,6 @@ main() { # {{{1
         '--without-rasdaman'
         '--without-sosi'
     )
-    opt_pkgs=('geos' 'proj')
-    if koopa_is_linux
-    then
-        opt_pkgs+=('sqlite')
-        conf_args+=(
-            "CFLAGS=-I${dict[make_prefix]}/include"
-            "CPPFLAGS=-I${dict[make_prefix]}/include"
-            "LDFLAGS=-L${dict[make_prefix]}/lib"
-        )
-    elif koopa_is_macos
-    then
-        brew_opt_pkgs=('sqlite')
-        koopa_activate_homebrew_opt_prefix "${brew_opt_pkgs[@]}"
-    fi
-    koopa_activate_opt_prefix "${opt_pkgs[@]}"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://github.com/OSGeo/${dict[name]}/releases/download/\
 v${dict[version]}/${dict[file]}"

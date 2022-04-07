@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-04-07.
     #
     # @seealso
     # - 'gem pristine --all'
@@ -13,6 +13,10 @@ main() { # {{{1
     # """
     local app dict gem gems
     koopa_assert_has_no_args "$#"
+    if koopa_is_macos
+    then
+        koopa_activate_homebrew_opt_prefix 'libffi'
+    fi
     koopa_activate_ruby
     declare -A app=(
         [gem]="$(koopa_locate_gem)"
@@ -29,10 +33,6 @@ main() { # {{{1
     koopa_dl \
         'Target' "${dict[gemdir]}" \
         'Gems' "$(koopa_to_string "${gems[@]}")"
-    if koopa_is_macos
-    then
-        koopa_activate_homebrew_opt_prefix 'libffi'
-    fi
     "${app[gem]}" cleanup
     for gem in "${gems[@]}"
     do

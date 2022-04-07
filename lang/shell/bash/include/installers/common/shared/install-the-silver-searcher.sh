@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install the silver searcher.
-    # @note Updated 2022-01-03.
+    # @note Updated 2022-04-07.
     #
     # Ag has been renamed to The Silver Searcher.
     #
@@ -31,6 +31,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'pcre2' 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -54,11 +55,6 @@ main() { # {{{1
     esac
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="${dict[url_stem]}/${dict[file]}"
-    if koopa_is_macos
-    then
-        koopa_activate_homebrew_opt_prefix 'pcre' 'pkg-config'
-    fi
-    koopa_assert_is_installed 'pcre-config' 'pkg-config'
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name2]}-${dict[version]}"
