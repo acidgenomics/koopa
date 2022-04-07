@@ -3,7 +3,7 @@
 linux_install_cellranger() { # {{{1
     # """
     # Install Cell Ranger.
-    # @note Updated 2022-01-06.
+    # @note Updated 2022-04-07.
     #
     # Refdata is accessible here:
     # https://support.10xgenomics.com/single-cell-gene-expression/
@@ -21,6 +21,6 @@ linux_install_cellranger() { # {{{1
     dict[url]="${dict[installers_url]}/cellranger/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_sys_mv "${dict[name]}-${dict[version]}" "${dict[prefix]}"
+    koopa_mv "${dict[name]}-${dict[version]}" "${dict[prefix]}"
     return 0
 }
