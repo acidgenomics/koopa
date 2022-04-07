@@ -37,6 +37,14 @@ koopa_macos_link_bbedit() { # {{{1
     return 0
 }
 
+koopa_macos_link_emacs() { # {{{1
+    koopa_assert_has_no_args "$#"
+    koopa_link_in_bin \
+        '/Applications/Emacs.app/Contents/MacOS/Emacs' \
+        'emacs'
+    return 0
+}
+
 koopa_macos_link_google_cloud_sdk() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_link_in_bin \
