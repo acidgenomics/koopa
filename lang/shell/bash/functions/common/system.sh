@@ -265,23 +265,7 @@ koopa_switch_to_develop() {  # {{{1
     return 0
 }
 
-koopa_sys_chgrp() { # {{{1
-    # """
-    # chgrp with dynamic sudo handling.
-    # @note Updated 2021-09-20.
-    # """
-    local chgrp group
-    koopa_assert_has_args "$#"
-    group="$(koopa_sys_group)"
-    chgrp=('koopa_chgrp')
-    if koopa_is_shared_install
-    then
-        chgrp+=('--sudo')
-    fi
-    "${chgrp[@]}" "$group" "$@"
-    return 0
-}
-
+# FIXME Can we take this out?
 koopa_sys_chmod() { # {{{1
     # """
     # chmod with dynamic sudo handling.
@@ -298,10 +282,11 @@ koopa_sys_chmod() { # {{{1
     return 0
 }
 
+# FIXME Can we take this out?
 koopa_sys_chown() { # {{{1
     # """
     # chown with dynamic sudo handling.
-    # @note Updated 2021-09-20.
+    # @note Updated 2022-04-07.
     # """
     local chown
     koopa_assert_has_args "$#"
@@ -314,6 +299,7 @@ koopa_sys_chown() { # {{{1
     return 0
 }
 
+# FIXME Can we take this out?
 koopa_sys_cp() { # {{{1
     # """
     # Koopa copy.
@@ -426,11 +412,11 @@ koopa_sys_rm() { # {{{1
     return 0
 }
 
-# FIXME Rework to use current user instead of root.
+# FIXME Simplify chmod and chown handling.
 koopa_sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-04-07.
     #
     # Consider ensuring that nested directories are also executable.
     # e.g. 'app/julia-packages/1.6/registries/General'.

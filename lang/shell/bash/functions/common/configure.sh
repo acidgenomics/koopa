@@ -349,33 +349,33 @@ koopa_find_user_profile() { # {{{1
 koopa_fix_pyenv_permissions() { # {{{1
     # """
     # Ensure Python pyenv shims have correct permissions.
-    # @note Updated 2020-07-30.
+    # @note Updated 2022-04-07.
     # """
     local pyenv_prefix
     koopa_assert_has_no_args "$#"
     pyenv_prefix="$(koopa_pyenv_prefix)"
     [[ -d "${pyenv_prefix}/shims" ]] || return 0
-    koopa_sys_chmod '0777' "${pyenv_prefix}/shims"
+    koopa_chmod '0777' "${pyenv_prefix}/shims"
     return 0
 }
 
 koopa_fix_rbenv_permissions() { # {{{1
     # """
     # Ensure Ruby rbenv shims have correct permissions.
-    # @note Updated 2020-07-30.
+    # @note Updated 2022-04-07.
     # """
     local rbenv_prefix
     koopa_assert_has_no_args "$#"
     rbenv_prefix="$(koopa_rbenv_prefix)"
     [[ -d "${rbenv_prefix}/shims" ]] || return 0
-    koopa_sys_chmod '0777' "${rbenv_prefix}/shims"
+    koopa_chmod '0777' "${rbenv_prefix}/shims"
     return 0
 }
 
 koopa_fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-07.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -384,18 +384,18 @@ koopa_fix_zsh_permissions() { # {{{1
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [make_prefix]="$(koopa_make_prefix)"
     )
-    koopa_sys_chmod 'g-w' \
+    koopa_chmod 'g-w' \
         "${dict[koopa_prefix]}/lang/shell/zsh" \
         "${dict[koopa_prefix]}/lang/shell/zsh/functions"
     if [[ -d "${dict[make_prefix]}/share/zsh" ]]
     then
-        koopa_sys_chmod 'g-w' \
+        koopa_chmod 'g-w' \
             "${dict[make_prefix]}/share/zsh" \
             "${dict[make_prefix]}/share/zsh/site-functions"
     fi
     if [[ -d "${dict[app_prefix]}/zsh" ]]
     then
-        koopa_sys_chmod 'g-w' \
+        koopa_chmod 'g-w' \
             "${dict[app_prefix]}/zsh/"*'/share/zsh' \
             "${dict[app_prefix]}/zsh/"*'/share/zsh/'* \
             "${dict[app_prefix]}/zsh/"*'/share/zsh/'*'/functions'

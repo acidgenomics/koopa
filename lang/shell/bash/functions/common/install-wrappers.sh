@@ -395,7 +395,6 @@ koopa_install_homebrew() { # {{{1
 
 koopa_install_homebrew_bundle() { # {{{1
     koopa_install_app \
-        --link-in-bin='opt/ruby/bin/ruby' \
         --name-fancy='Homebrew bundle' \
         --name='homebrew-bundle' \
         --system \
