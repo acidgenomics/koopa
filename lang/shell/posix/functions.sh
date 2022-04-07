@@ -1690,49 +1690,44 @@ koopa_alias_conda() { # {{{1
 koopa_alias_doom_emacs() { # {{{1
     # """
     # Doom Emacs.
-    # @note Updated 2021-09-23.
+    # @note Updated 2022-04-07.
     # """
-    local emacs prefix
-    emacs="$(koopa_locate_emacs)"
+    local prefix
     prefix="$(koopa_doom_emacs_prefix)"
     if [ ! -d "$prefix" ]
     then
         koopa_alert_is_not_installed 'Doom Emacs' "$prefix"
         return 1
     fi
-    "$emacs" --with-profile 'doom' "$@"
+    emacs --with-profile 'doom' "$@"
 }
 
 koopa_alias_emacs() { # {{{1
     # """
     # Emacs alias that provides 24-bit color support.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-04-07.
     # """
-    local emacs prefix
+    local prefix
     prefix="${HOME:?}/.emacs.d"
     if [ ! -f "${prefix}/chemacs.el" ]
     then
         koopa_alert_is_not_installed 'Chemacs' "$prefix"
         return 1
     fi
-    emacs="$(koopa_locate_emacs)"
     if [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] && koopa_is_macos
     then
-        TERM='xterm-24bit' \
-            "$emacs" --no-window-system "$@"
+        TERM='xterm-24bit' emacs --no-window-system "$@"
     else
-        "$emacs" --no-window-system "$@"
+        emacs --no-window-system "$@"
     fi
 }
 
 koopa_alias_emacs_vanilla() { # {{{1
     # """
     # Vanilla Emacs alias.
-    # @note Updated 2021-06-08.
+    # @note Updated 2022-04-07.
     # """
-    local emacs
-    emacs="$(koopa_locate_emacs)"
-    "$emacs" --no-init-file --no-window-system "$@"
+    emacs --no-init-file --no-window-system "$@"
 }
 
 koopa_alias_fzf() { # {{{1
@@ -1795,17 +1790,16 @@ koopa_alias_perlbrew() { # {{{1
 koopa_alias_prelude_emacs() { # {{{1
     # """
     # Prelude Emacs.
-    # @note Updated 2021-09-23.
+    # @note Updated 2022-04-07.
     # """
-    local emacs prefix
+    local prefix
     prefix="$(koopa_prelude_emacs_prefix)"
     if [ ! -d "$prefix" ]
     then
         koopa_alert_is_not_installed 'Prelude Emacs' "$prefix"
         return 1
     fi
-    emacs="$(koopa_locate_emacs)"
-    "$emacs" --with-profile 'prelude' "$@"
+    emacs --with-profile 'prelude' "$@"
 }
 
 koopa_alias_pyenv() { # {{{1
@@ -1842,15 +1836,14 @@ koopa_alias_spacemacs() { # {{{1
     # Spacemacs.
     # @note Updated 2021-06-08.
     # """
-    local emacs prefix
+    local prefix
     prefix="$(koopa_spacemacs_prefix)"
     if [ ! -d "$prefix" ]
     then
         koopa_alert_is_not_installed 'Spacemacs' "$prefix"
         return 1
     fi
-    emacs="$(koopa_locate_emacs)"
-    "$emacs" --with-profile 'spacemacs' "$@"
+    emacs --with-profile 'spacemacs' "$@"
 }
 
 koopa_alias_spacevim() { # {{{1
@@ -3260,21 +3253,6 @@ koopa_local_data_prefix() { # {{{1
     # """
     koopa_print "$(koopa_xdg_data_home)"
     return 0
-}
-
-koopa_locate_emacs() { # {{{1
-    # """
-    # Emacs binary for alias functions.
-    # @note Updated 2022-01-20.
-    # """
-    local app
-    app='emacs'
-    if koopa_is_macos
-    then
-        app='/Applications/Emacs.app/Contents/MacOS/Emacs'
-    fi
-    koopa_is_installed "$app" || return 1
-    koopa_print "$app"
 }
 
 koopa_locate_shell() { # {{{1
