@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Neovim.
-    # @note Updated 2021-12-07.
+    # @note Updated 2022-04-07.
     #
     # @seealso
     # - https://github.com/neovim/neovim/wiki/Building-Neovim
@@ -12,6 +12,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'cmake' 'luarocks' 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -31,10 +32,6 @@ main() { # {{{1
     esac
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/archive/\
 refs/tags/${dict[file]}"
-    if koopa_is_macos
-    then
-        koopa_activate_homebrew_opt_prefix 'cmake' 'luarocks' 'pkg-config'
-    fi
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"

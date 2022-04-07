@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Singularity.
-    # @note Updated 2022-01-19.
+    # @note Updated 2022-04-07.
     #
     # NOTE This is splitting into apptainer and singularity-ce in 2022.
     #
@@ -12,6 +12,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'go'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -24,14 +25,6 @@ main() { # {{{1
     dict[file]="v${dict[version]}.tar.gz"
     dict[url]="https://github.com/apptainer/${dict[name]}/archive/refs/\
 tags/${dict[file]}"
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'go'
-    elif koopa_is_macos
-    then
-        koopa_activate_homebrew_opt_prefix 'go'
-    fi
-    koopa_assert_is_installed 'go'
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"

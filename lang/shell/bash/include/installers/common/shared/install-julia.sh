@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Julia (from source).
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-07.
     # @seealso
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/linux.md
@@ -13,6 +13,10 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    if koopa_is_macos
+    then
+        koopa_activate_homebrew_opt_prefix 'gcc'
+    fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -28,10 +32,6 @@ main() { # {{{1
     dict[file]="${dict[name]}-${dict[version]}-full.tar.gz"
     dict[url]="https://github.com/JuliaLang/${dict[name]}/releases/download/\
 v${dict[version]}/${dict[file]}"
-    if koopa_is_macos
-    then
-        koopa_activate_homebrew_opt_prefix 'gcc'
-    fi
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
