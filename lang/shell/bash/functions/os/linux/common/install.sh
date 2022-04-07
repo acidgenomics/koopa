@@ -75,6 +75,7 @@ koopa_linux_install_cloudbiolinux() { # {{{1
 
 koopa_linux_install_docker_credential_pass() { # {{{1
     koopa_install_app \
+        --link-in-bin='bin/docker-credential-pass' \
         --name='docker-credential-pass' \
         --platform='linux' \
         "$@"
@@ -126,10 +127,6 @@ koopa_linux_install_shiny_server() { # {{{1
 }
 
 koopa_linux_uninstall_aspera_connect() { # {{{1
-    # """
-    # Uninstall Aspera Connect.
-    # @note Updated 2021-06-11.
-    # """
     koopa_uninstall_app \
         --name-fancy='Aspera Connect' \
         --name='aspera-connect' \
@@ -138,10 +135,6 @@ koopa_linux_uninstall_aspera_connect() { # {{{1
 }
 
 koopa_linux_uninstall_aws_cli() { # {{{1
-    # """
-    # Uninstall AWS CLI.
-    # @note Updated 2021-06-11.
-    # """
     koopa_uninstall_app \
         --name-fancy='AWS CLI' \
         --name='aws-cli' \
@@ -150,10 +143,6 @@ koopa_linux_uninstall_aws_cli() { # {{{1
 }
 
 koopa_linux_uninstall_bcbio_nextgen() { # {{{1
-    # """
-    # Uninstall bcbio-nextgen.
-    # @note Updated 2022-04-06.
-    # """
     koopa_uninstall_app \
         --name='bcbio-nextgen' \
         --unlink-in-bin='bcbio_nextgen.py' \
@@ -161,10 +150,6 @@ koopa_linux_uninstall_bcbio_nextgen() { # {{{1
 }
 
 koopa_linux_uninstall_bcl2fastq() { # {{{1
-    # """
-    # Uninstall bcl2fastq.
-    # @note Updated 2021-06-11.
-    # """
     koopa_uninstall_app \
         --name='bcl2fastq' \
         --unlink-in-bin='bcl2fastq' \
@@ -172,10 +157,6 @@ koopa_linux_uninstall_bcl2fastq() { # {{{1
 }
 
 koopa_linux_uninstall_cellranger() { # {{{1
-    # """
-    # Uninstall Cell Ranger.
-    # @note Updated 2021-06-11.
-    # """
     koopa_uninstall_app \
         --name='cellranger' \
         --name-fancy='Cell Ranger' \
@@ -184,10 +165,6 @@ koopa_linux_uninstall_cellranger() { # {{{1
 }
 
 koopa_linux_uninstall_cloudbiolinux() { # {{{1
-    # """
-    # Uninstall CloudBioLinux.
-    # @note Updated 2021-06-11.
-    # """
     koopa_uninstall_app \
         --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
@@ -195,24 +172,21 @@ koopa_linux_uninstall_cloudbiolinux() { # {{{1
 }
 
 koopa_linux_uninstall_docker_credential_pass() { # {{{1
-    # """
-    # Uninstall docker-credential-pass.
-    # @note Updated 2021-06-11.
-    # """
     koopa_uninstall_app \
         --name='docker-credential-pass' \
+        --unlink-in-bin='bin/docker-credential-pass' \
         "$@"
 }
 
+# FIXME Need a Julia binary uninstaller.
+
+# FIXME Consider reworking here to source an additional uninstall script.
 koopa_linux_uninstall_lmod() { # {{{1
-    # """
-    # Uninstall Lmod.
-    # @note Updated 2021-06-14.
-    # """
     koopa_uninstall_app \
         --name-fancy='Lmod' \
         --name='lmod' \
         "$@"
+    # FIXME Consider moving this to a separate uninstall script.
     koopa_rm --sudo \
         '/etc/profile.d/z00_lmod.csh' \
         '/etc/profile.d/z00_lmod.sh'
