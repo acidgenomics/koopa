@@ -3,6 +3,7 @@
 koopa_macos_install_python_binary() { # {{{1
     koopa_install_app \
         --installer='python-binary' \
+        --link-in-bin='bin/python3' \
         --name-fancy='Python binary' \
         --name='python' \
         --platform='macos' \
@@ -13,6 +14,8 @@ koopa_macos_install_python_binary() { # {{{1
 koopa_macos_install_r_binary() { # {{{1
     koopa_install_app \
         --installer='r-binary' \
+        --link-in-bin='bin/R' \
+        --link-in-bin='bin/Rscript' \
         --name-fancy='R binary' \
         --name='r' \
         --platform='macos' \
