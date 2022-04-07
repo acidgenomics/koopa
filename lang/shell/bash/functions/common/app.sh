@@ -170,21 +170,21 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Need to rethink '--system' handling specifically for lmod installer.
-
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
     # @note Updated 2022-04-07.
     # """
-    local bin_arr brew_opt_arr clean_path_arr dict i init_dir opt_arr pos
+    local bin_arr brew_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A dict=(
+        [app_prefix]="$(koopa_app_prefix)"
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
         [auto_prefix]=1
-        [installer]=''
+        [install_function]='main'
+        [installer_bn]=''
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         # Will any individual programs be linked into koopa 'bin/'?
@@ -195,20 +195,19 @@ koopa_install_app() { # {{{1
         # Create an unversioned symlink in koopa 'opt/' directory.
         [link_in_opt]=1
         [make_prefix]="$(koopa_make_prefix)"
+        [mode]='shared'
         [name]=''
         [name_fancy]=''
         [platform]='common'
         [prefix]=''
         # This override is useful for app packages configuration.
         [prefix_check]=1
-        # Push completed build to Acid Genomics S3 bucket.
+        # Push completed build to AWS S3 bucket.
         [push]=0
         # This is useful for avoiding duplicate alert messages inside of
         # nested install calls (e.g. Emacs installer handoff to GNU app).
         [quiet]=0
         [reinstall]=0
-        [shared]=0
-        [system]=0
         [tmp_dir]="$(koopa_tmp_dir)"
         [update_ldconfig]=0
         [verbose]=0
@@ -241,11 +240,11 @@ koopa_install_app() { # {{{1
                 shift 2
                 ;;
             '--installer='*)
-                dict[installer]="${1#*=}"
+                dict[installer_bn]="${1#*=}"
                 shift 1
                 ;;
             '--installer')
-                dict[installer]="${2:?}"
+                dict[installer_bn]="${2:?}"
                 shift 2
                 ;;
             '--link-in-bin='*)
@@ -309,24 +308,12 @@ koopa_install_app() { # {{{1
                 dict[link_in_make]=1
                 shift 1
                 ;;
-            '--link-in-opt')
-                dict[link_in_opt]=1
-                shift 1
-                ;;
-            '--no-link-in-make')
-                dict[link_in_make]=0
-                shift 1
-                ;;
             '--no-link-in-opt')
                 dict[link_in_opt]=0
                 shift 1
                 ;;
             '--no-prefix-check')
                 dict[prefix_check]=0
-                shift 1
-                ;;
-            '--prefix-check')
-                dict[prefix_check]=1
                 shift 1
                 ;;
             '--push')
@@ -342,7 +329,11 @@ koopa_install_app() { # {{{1
                 shift 1
                 ;;
             '--system')
-                dict[system]=1
+                dict[mode]='system'
+                shift 1
+                ;;
+            '--user')
+                dict[mode]='user'
                 shift 1
                 ;;
             '--verbose')
@@ -359,86 +350,64 @@ koopa_install_app() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
-    [[ "${dict[system]}" -eq 1 ]] && koopa_assert_is_admin
+    koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[link_in_bin]=1
+    case "${dict[mode]}" in
+        'system')
+            koopa_assert_is_admin
+            dict[link_in_make]=0
+            dict[link_in_opt]=0
+            if koopa_is_linux
+            then
+                dict[update_ldconfig]=1
+            fi
+            ;;
+        'user')
+            dict[link_in_bin]=0
+            dict[link_in_make]=0
+            dict[link_in_opt]=0
+            ;;
+    esac
+    [[ -n "${dict[prefix]}" ]] && dict[auto_prefix]=0
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
-    if [[ -n "${dict[prefix]}" ]]
-    then
-        dict[auto_prefix]=0
-        if [[ -d "${dict[prefix]}" ]]
-        then
-            dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
-        fi
-        if koopa_str_detect_regex \
-            --string="${dict[prefix]}" \
-            --pattern="^${dict[koopa_prefix]}"
-        then
-            dict[shared]=1
-        else
-            dict[shared]=0
-        fi
-    else
-        dict[auto_prefix]=1
-        if koopa_is_shared_install
-        then
-            dict[shared]=1
-        else
-            dict[shared]=0
-        fi
-    fi
-    if [[ "${dict[system]}" -eq 1 ]]
-    then
-        dict[auto_prefix]=0
-        dict[shared]=0
-    fi
-    if [[ "${dict[shared]}" -eq 0 ]] || koopa_is_macos
-    then
-        dict[link_in_make]=0
-    fi
-    [[ -z "${dict[installer]}" ]] && dict[installer]="${dict[name]}"
-    dict[installer]="$(koopa_snake_case_simple "install_${dict[installer]}")"
-    dict[installer_file]="$(koopa_kebab_case_simple "${dict[installer]}")"
-    dict[installer_file]="${dict[installers_prefix]}/\
-${dict[platform]}/${dict[installer_file]}.sh"
-    koopa_assert_is_file "${dict[installer_file]}"
-    # shellcheck source=/dev/null
-    source "${dict[installer_file]}"
-    dict[function]="$(koopa_snake_case_simple "${dict[installer]}")"
-    if [[ "${dict[platform]}" != 'common' ]]
-    then
-        dict[function]="${dict[platform]}_${dict[function]}"
-    fi
-    dict[function]="${dict[function]}"
-    koopa_assert_is_function "${dict[function]}"
     if [[ -z "${dict[version]}" ]]
     then
         dict[version]="$(\
-            koopa_variable "${dict[version_key]}" \
-                2>/dev/null \
-                || true \
+            koopa_variable "${dict[version_key]}" 2>/dev/null || true \
         )"
     fi
     if [[ -z "${dict[prefix]}" ]] && [[ "${dict[auto_prefix]}" -eq 1 ]]
     then
-        dict[prefix]="$(koopa_app_prefix)/${dict[name]}/${dict[version]}"
+        dict[prefix]="${dict[app_prefix]}/${dict[name]}/${dict[version]}"
+    fi
+    [[ -d "${dict[prefix]}" ]] && \
+        dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
+    [[ -z "${dict[installer]}" ]] && dict[installer]="${dict[name]}"
+    dict[installer_file]="${dict[installers_prefix]}/${dict[platform]}/\
+${dict[mode]}/install-${dict[installer_bn]}.sh"
+    koopa_assert_is_file "${dict[installer_file]}"
+    # shellcheck source=/dev/null
+    source "${dict[installer_file]}"
+    koopa_assert_is_function "${dict[install_function]}"
+    if [[ "${dict[quiet]}" -eq 0 ]]
+    then
+        koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
     fi
     if [[ -n "${dict[prefix]}" ]]
     then
-        if [[ "${dict[quiet]}" -eq 0 ]]
-        then
-            koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
-        fi
         if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
         then
             if [[ "${dict[reinstall]}" -eq 1 ]] || \
                 koopa_is_empty_dir "${dict[prefix]}"
             then
-                if [[ "${dict[system]}" -eq 1 ]]
-                then
-                    koopa_rm --sudo "${dict[prefix]}"
-                else
-                    koopa_rm "${dict[prefix]}"
-                fi
+                case "${dict[mode]}" in
+                    'system')
+                        koopa_rm --sudo "${dict[prefix]}"
+                        ;;
+                    *)
+                        koopa_rm "${dict[prefix]}"
+                        ;;
+                esac
             fi
             if [[ -d "${dict[prefix]}" ]]
             then
@@ -450,39 +419,18 @@ ${dict[platform]}/${dict[installer_file]}.sh"
                 return 0
             fi
         fi
-        init_dir=('koopa_init_dir')
-        [[ "${dict[system]}" -eq 1 ]] && init_dir+=('--sudo')
-        dict[prefix]="$("${init_dir[@]}" "${dict[prefix]}")"
-    else
-        if [[ "${dict[quiet]}" -eq 0 ]]
-        then
-            koopa_alert_install_start "${dict[name_fancy]}"
-        fi
-    fi
-    if [[ ! -d "${dict[prefix]}" ]] || \
-        [[ "${dict[auto_prefix]}" -eq 0 ]] || \
-        [[ "${dict[shared]}" -eq 0 ]] || \
-        [[ "${dict[system]}" -eq 1 ]]
-    then
-        dict[link_in_opt]=0
+        case "${dict[mode]}" in
+            'system')
+                koopa_init_dir --sudo "${dict[prefix]}"
+                ;;
+            *)
+                koopa_init_dir "${dict[prefix]}"
+                ;;
+        esac
     fi
     if [[ "${dict[link_in_opt]}" -eq 1 ]]
     then
         koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
-    fi
-    if koopa_is_linux && \
-        { [[ "${dict[shared]}" -eq 1 ]] || \
-            [[ "${dict[system]}" -eq 1 ]]; }
-    then
-        dict[update_ldconfig]=1
-    fi
-    if [[ "${dict[shared]}" -eq 0 ]] || [[ "${dict[system]}" -eq 1 ]]
-    then
-        dict[link_in_make]=0
-    fi
-    if koopa_is_array_non_empty "${bin_arr[@]:-}"
-    then
-        dict[link_in_bin]=1
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
@@ -521,23 +469,18 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         "${dict[function]}" "$@"
     )
     koopa_rm "${dict[tmp_dir]}"
-    if [[ "${dict[system]}" -eq 0 ]]
-    then
-        if [[ "${dict[shared]}" -eq 1 ]]
-        then
+    case "${dict[mode]}" in
+        'shared')
             if [[ "${dict[auto_prefix]}" -eq 1 ]]
             then
                 koopa_sys_set_permissions "$(koopa_dirname "${dict[prefix]}")"
             fi
             koopa_sys_set_permissions --recursive "${dict[prefix]}"
-        else
+            ;;
+        'user')
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
-        fi
-    fi
-    if [[ "${dict[link_in_make]}" -eq 1 ]]
-    then
-        koopa_link_in_make --prefix="${dict[prefix]}"
-    fi
+            ;;
+    esac
     if [[ "${dict[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
@@ -546,6 +489,10 @@ ${dict[platform]}/${dict[installer_file]}.sh"
                 "${dict[prefix]}/${bin_arr[i]}" \
                 "$(koopa_basename "${bin_arr[i]}")"
         done
+    fi
+    if [[ "${dict[link_in_make]}" -eq 1 ]]
+    then
+        koopa_link_in_make --prefix="${dict[prefix]}"
     fi
     if [[ "${dict[update_ldconfig]}" -eq 1 ]]
     then
@@ -563,13 +510,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     fi
     if [[ "${dict[quiet]}" -eq 0 ]]
     then
-        if [[ -d "${dict[prefix]}" ]]
-        then
-            koopa_alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
-        else
-            koopa_alert_install_success "${dict[name_fancy]}"
-        fi
-
+        koopa_alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
     fi
     return 0
 }
