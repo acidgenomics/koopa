@@ -1076,11 +1076,13 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     then
         case "${dict[mode]}" in
             'shared')
-                koopa_sys_set_permissions --recursive "${dict[prefix]}"
+                koopa_sys_set_permissions \
+                    --recursive "${dict[prefix]}"
                 ;;
-            'user')
-                koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
-                ;;
+            # > 'user')
+            # >     koopa_sys_set_permissions \
+            # >         --recursive --user "${dict[prefix]}"
+            # >     ;;
         esac
     fi
     if [[ "${dict[update_ldconfig]}" -eq 1 ]]
