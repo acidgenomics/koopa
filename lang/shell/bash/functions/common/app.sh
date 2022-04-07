@@ -487,9 +487,6 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     then
         dict[link_in_bin]=1
     fi
-
-    koopa_stop "FIXME ${dict[prefix]}"
-
     (
         koopa_cd "${dict[tmp_dir]}"
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
@@ -544,10 +541,6 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     then
         koopa_link_in_make --prefix="${dict[prefix]}"
     fi
-    if [[ "${dict[update_ldconfig]}" -eq 1 ]]
-    then
-        koopa_linux_update_ldconfig
-    fi
     if [[ "${dict[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
@@ -556,6 +549,10 @@ ${dict[platform]}/${dict[installer_file]}.sh"
                 "${dict[prefix]}/${bin_arr[i]}" \
                 "$(koopa_basename "${bin_arr[i]}")"
         done
+    fi
+    if [[ "${dict[update_ldconfig]}" -eq 1 ]]
+    then
+        koopa_linux_update_ldconfig
     fi
     if [[ "${dict[push]}" -eq 1 ]]
     then
