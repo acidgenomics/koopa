@@ -353,13 +353,6 @@ koopa_install_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
-    if [[ "${dict[binary]}" -eq 1 ]] && \
-        [[ "${dict[koopa_prefix]}" != '/opt/koopa' ]]
-    then
-        koopa_stop "Binary package installation not supported for koopa \
-install located at '${dict[koopa_prefix]}'. Koopa must be installed at \
-default '/opt/koopa' location."
-    fi
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
     if [[ -z "${dict[version]}" ]]
@@ -451,24 +444,9 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         koopa_cd "${dict[tmp_dir]}"
         if [[ "${dict[binary]}" -eq 1 ]]
         then
-            local app2 dict2
-            declare -A app2=(
-                [tar]="$(koopa_locate_tar)"
-            )
-            declare -A dict2=(
-                [arch]="$(koopa_arch2)"
-                [os_string]="$(koopa_os_string)"
-                [url_stem]='https://koopa.acidgenomics.com/app'
-            )
-            dict2[tarball_file]="${dict[name]}-${dict[version]}.tar.gz"
-            dict2[tarball_url]="${dict2[url_stem]}/${dict2[os_string]}/\
-${dict2[arch]}/${dict[name]}/${dict[version]}.tar.gz"
-            if ! koopa_is_url_active "${dict2[tarball_url]}"
-            then
-                koopa_stop "No package binary at '${dict2[tarball_url]}'."
-            fi
-            koopa_download "${dict2[tarball_url]}" "${dict2[tarball_file]}"
-            "${app2[tar]}" -Pxzvf "${dict2[tarball_file]}"
+            koopa_install_app_from_binary_package \
+                --name="${dict[name]}" \
+                --version="${dict[version]}"
             return 0
         fi
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
@@ -554,6 +532,72 @@ ${dict2[arch]}/${dict[name]}/${dict[version]}.tar.gz"
             koopa_alert_install_success "${dict[name_fancy]}"
         fi
     fi
+    return 0
+}
+
+koopa_install_app_from_binary_package() { # {{{1
+    # """
+    # Install app from pre-built binary package.
+    # @note Updated 2022-04-07.
+    # """
+    local app dict
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [tar]="$(koopa_locate_tar)"
+    )
+    declare -A dict=(
+        [arch]="$(koopa_arch2)"
+        [binary_prefix]='/opt/koopa'
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+        [name]=''
+        [os_string]="$(koopa_os_string)"
+        [url_stem]='https://koopa.acidgenomics.com/app'
+        [version]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--name='*)
+                dict[name]="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
+                ;;
+            '--version='*)
+                dict[version]="${1#*=}"
+                shift 1
+                ;;
+            '--version')
+                dict[version]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--name' "${dict[name]}" \
+        '--version' "${dict[version]}"
+    if [[ "${dict[koopa_prefix]}" != "${dict[binary_prefix]}" ]]
+    then
+        koopa_stop "Binary package installation not supported for koopa \
+install located at '${dict[koopa_prefix]}'. Koopa must be installed at \
+default '${dict[binary_prefix]}' location."
+    fi
+    dict[tarball_file]="${dict[name]}-${dict[version]}.tar.gz"
+    dict[tarball_url]="${dict[url_stem]}/${dict[os_string]}/${dict[arch]}/\
+${dict[name]}/${dict[version]}.tar.gz"
+    if ! koopa_is_url_active "${dict[tarball_url]}"
+    then
+        koopa_stop "No package at '${dict[tarball_url]}'."
+    fi
+    koopa_download "${dict[tarball_url]}" "${dict[tarball_file]}"
+    "${app[tar]}" -Pxzvf "${dict[tarball_file]}"
     return 0
 }
 
