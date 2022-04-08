@@ -180,6 +180,7 @@ main() { # {{{1
     fi
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'rm' 'sed' 'tar' 'unzip'
+    # FIXME Once we get here, we can simply call 'koopa_install_koopa'.
     # Configuration {{{2
     # ==========================================================================
     dict[config_prefix]="$(koopa_config_prefix)"
