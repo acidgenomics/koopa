@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Improve color and formatting of alert messages, using an r-cli style approach (e.g. '{.var XXX}' rather than just using single quotes.
 ** TODO Consider clean up of '/etc/paths.d' and '/etc/manpaths.d' on macOS for Homebrew casks.
     Ubuntu uses '/etc/environment' for paths configuration.
     https://towardsdatascience.com/my-path-variable-is-a-mess-e52f22bfa520
