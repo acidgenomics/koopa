@@ -1022,17 +1022,6 @@ koopa_install_tar() { # {{{3
         "$@"
 }
 
-# tex-packages ------------------------------------------------------------ {{{2
-
-koopa_install_tex_packages() { # {{{3
-    koopa_install_app \
-        --name-fancy='TeX packages' \
-        --name='tex-packages' \
-        --system \
-        --version='rolling' \
-        "$@"
-}
-
 # texinfo ----------------------------------------------------------------- {{{2
 
 # FIXME Need to include a link here?
@@ -2040,19 +2029,23 @@ koopa_update_rust_packages() { # {{{3
 
 # System ================================================================== {{{1
 
+# google-cloud-sdk -------------------------------------------------------- {{{2
+
+koopa_update_google_cloud_sdk() { # {{{3
+    koopa_update_app \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        --system \
+        "$@"
+}
+
+# homebrew ---------------------------------------------------------------- {{{2
+
 koopa_install_homebrew() { # {{{3
     koopa_install_app \
         --link-in-bin='Homebrew/bin/brew' \
         --name-fancy='Homebrew' \
         --name='homebrew' \
-        --system \
-        "$@"
-}
-
-koopa_install_homebrew_bundle() { # {{{3
-    koopa_install_app \
-        --name-fancy='Homebrew bundle' \
-        --name='homebrew-bundle' \
         --system \
         "$@"
 }
@@ -2066,14 +2059,6 @@ koopa_uninstall_homebrew() { # {{{3
         "$@"
 }
 
-koopa_update_google_cloud_sdk() { # {{{3
-    koopa_update_app \
-        --name-fancy='Google Cloud SDK' \
-        --name='google-cloud-sdk' \
-        --system \
-        "$@"
-}
-
 koopa_update_homebrew() { # {{{3
     koopa_update_app \
         --name-fancy='Homebrew' \
@@ -2082,10 +2067,33 @@ koopa_update_homebrew() { # {{{3
         "$@"
 }
 
+# homebrew-bundle --------------------------------------------------------- {{{2
+
+koopa_install_homebrew_bundle() { # {{{3
+    koopa_install_app \
+        --name-fancy='Homebrew bundle' \
+        --name='homebrew-bundle' \
+        --system \
+        "$@"
+}
+
+# system ------------------------------------------------------------------ {{{2
+
 koopa_update_system() { # {{{3
     koopa_update_app \
         --name='system' \
         --system \
+        "$@"
+}
+
+# tex-packages ------------------------------------------------------------ {{{2
+
+koopa_install_tex_packages() { # {{{3
+    koopa_install_app \
+        --name-fancy='TeX packages' \
+        --name='tex-packages' \
+        --system \
+        --version='rolling' \
         "$@"
 }
 
