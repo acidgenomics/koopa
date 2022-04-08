@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to denote that this is a binary install.
-
 main() { # {{{1
     # """
     # Install RStudio Server.
-    # @note Updated 2022-01-28.
+    # @note Updated 2022-04-07.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
     #

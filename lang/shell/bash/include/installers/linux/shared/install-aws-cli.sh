@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME We need to version pin here.
-
 main() { # {{{1
     # """
-    # Install AWS CLI.
-    # @note Updated 2021-11-16.
+    # Install AWS CLI binary.
+    # @note Updated 2022-04-07.
     #
     # Note that the AWS bundled installer isn't versioned in the file name.
     #
