@@ -354,12 +354,12 @@ koopa_alert_is_installed() { # {{{1
 koopa_alert_is_not_installed() { # {{{1
     # """
     # Alert the user that a program is not installed.
-    # @note Updated 2021-06-03.
+    # @note Updated 2022-04-08.
     # """
     local name prefix
     name="${1:?}"
     prefix="${2:-}"
-    x="${name} is not installed"
+    x="'${name}' not installed"
     if [ -n "$prefix" ]
     then
         x="${x} at '${prefix}'"
