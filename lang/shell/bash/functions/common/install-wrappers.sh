@@ -610,6 +610,7 @@ koopa_uninstall_fish() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Fish' \
         --name='fish' \
+        --unlink-in-bin='fish' \
         "$@"
 }
 
