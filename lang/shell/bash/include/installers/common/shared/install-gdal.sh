@@ -63,7 +63,7 @@ main() { # {{{1
     )
     if [[ "${INSTALL_LINK_IN_MAKE:?}" -eq 0 ]]
     then
-        conf_args=(
+        conf_args+=(
             '--disable-shared'
             '--enable-static'
             '--without-ld-shared'
