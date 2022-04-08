@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This should link 'rename' and 'ack' into our main koopa 'bin'.
-
 main() { # {{{1
     # """
     # Install Perl packages.
