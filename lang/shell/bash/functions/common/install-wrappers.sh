@@ -1492,7 +1492,7 @@ koopa_install_python() { # {{{3
         '--name-fancy=Python'
         '--name=python'
     )
-    # Assume we're using 'python-binary' by default.
+    # Assume we're using 'python-binary' by default on macOS.
     if ! koopa_is_macos
     then
         install_args+=('--link-in-bin=bin/python3')
@@ -1500,13 +1500,18 @@ koopa_install_python() { # {{{3
     koopa_install_app "${install_args[@]}" "$@"
 }
 
-# FIXME Need to deal with python3 unlink here.
-# FIXME Need to unlink in bin here.
 koopa_uninstall_python() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Python' \
-        --name='python' \
-        "$@"
+    local uninstall_args
+    uninstall_args=(
+        '--name-fancy=Python'
+        '--name=python'
+    )
+    # Assume we're using 'python-binary' by default on macOS.
+    if ! koopa_is_macos
+    then
+        uninstall_args+=('--unlink-in-bin=python3')
+    fi
+    koopa_uninstall_app "${uninstall_args[@]}" "$@"
 }
 
 # python-packages --------------------------------------------------------- {{{2
@@ -1538,23 +1543,38 @@ koopa_uninstall_python_virtualenvs() { # {{{3
 
 # r ----------------------------------------------------------------------- {{{2
 
-# FIXME Don't link these on macOS.
 koopa_install_r() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/R' \
-        --link-in-bin='bin/Rscript' \
-        --name-fancy='R' \
-        --name='r' \
-        "$@"
+    local install_args
+    install_args=(
+        '--name-fancy=R'
+        '--name=r'
+    )
+    # Assume we're using 'r-binary' by default on macOS.
+    if ! koopa_is_macos
+    then
+        install_args+=(
+            '--link-in-bin=bin/R'
+            '--link-in-bin=bin/Rscript'
+        )
+    fi
+    koopa_install_app "${install_args[@]}" "$@"
 }
 
-# FIXME Need to unlink in bin here.
-# FIXME Don't unlink these on macOS.
 koopa_uninstall_r() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='R' \
-        --name='r' \
-        "$@"
+    local uninstall_args
+    uninstall_args=(
+        '--name-fancy=R'
+        '--name=r'
+    )
+    # Assume we're using 'r-binary' by default on macOS.
+    if ! koopa_is_macos
+    then
+        uninstall_args+=(
+            '--unlink-in-bin=R'
+            '--unlink-in-bin=Rscript'
+        )
+    fi
+    koopa_uninstall_app "${uninstall_args[@]}" "$@"
 }
 
 # r-cmd-check ------------------------------------------------------------- {{{2
