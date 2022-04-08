@@ -3,7 +3,7 @@
 koopa_linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-04-08.
     #
     # Intended primarily for virtual machine and Docker image builds.
     #
@@ -22,7 +22,6 @@ koopa_linux_configure_system() { # {{{1
     local dict prefixes
     koopa_assert_has_no_envs
     declare -A dict=(
-        [app_prefix]="$(koopa_app_prefix)"
         [delete_cache]=0
         [delete_skel]=1
         [docker]="$(
@@ -113,9 +112,7 @@ koopa_linux_configure_system() { # {{{1
         [install_vim]=0
         [install_wget]=0
         [install_zsh]=0
-        [make_prefix]="$(koopa_make_prefix)"
         [mode]='default'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [passwordless_sudo]=0
         [python_version]="$(koopa_variable 'python')"
         [r_version]="$(koopa_variable 'r')"
@@ -327,19 +324,6 @@ koopa_linux_configure_system() { # {{{1
         koopa_alert_success 'Minimal configuration was successful.'
         return 0
     fi
-    # Disk configuration {{{3
-    # --------------------------------------------------------------------------
-    # Show available disk space.
-    koopa_alert 'Checking available local disk space.'
-    df -h '/'
-    # Ensure essential target prefixes exist.
-    prefixes=(
-        "${dict[app_prefix]}"
-        "${dict[make_prefix]}"
-        "${dict[opt_prefix]}"
-    )
-    koopa_sys_mkdir "${prefixes[@]}"
-    koopa_sys_set_permissions --recursive "${prefixes[@]}"
     # Base system {{{2
     # --------------------------------------------------------------------------
     koopa_alert 'Installing base system.'
