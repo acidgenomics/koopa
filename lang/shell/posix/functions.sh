@@ -44,78 +44,6 @@ __koopa_add_to_path_string_start() { # {{{1
     return 0
 }
 
-__koopa_ansi_escape() { # {{{1
-    # """
-    # ANSI escape codes.
-    # @note Updated 2020-07-05.
-    # """
-    local escape
-    case "${1:?}" in
-        'nocolor')
-            escape='0'
-            ;;
-        'default')
-            escape='0;39'
-            ;;
-        'default-bold')
-            escape='1;39'
-            ;;
-        'black')
-            escape='0;30'
-            ;;
-        'black-bold')
-            escape='1;30'
-            ;;
-        'blue')
-            escape='0;34'
-            ;;
-        'blue-bold')
-            escape='1;34'
-            ;;
-        'cyan')
-            escape='0;36'
-            ;;
-        'cyan-bold')
-            escape='1;36'
-            ;;
-        'green')
-            escape='0;32'
-            ;;
-        'green-bold')
-            escape='1;32'
-            ;;
-        'magenta')
-            escape='0;35'
-            ;;
-        'magenta-bold')
-            escape='1;35'
-            ;;
-        'red')
-            escape='0;31'
-            ;;
-        'red-bold')
-            escape='1;31'
-            ;;
-        'yellow')
-            escape='0;33'
-            ;;
-        'yellow-bold')
-            escape='1;33'
-            ;;
-        'white')
-            escape='0;97'
-            ;;
-        'white-bold')
-            escape='1;97'
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-    printf '\033[%sm' "$escape"
-    return 0
-}
-
 __koopa_id() { # {{{1
     # """
     # Return ID string.
@@ -125,24 +53,6 @@ __koopa_id() { # {{{1
     str="$(id "$@")"
     [ -n "$str" ] || return 1
     koopa_print "$str"
-    return 0
-}
-
-__koopa_msg() { # {{{1
-    # """
-    # Standard message generator.
-    # @note Updated 2022-02-25.
-    # """
-    local c1 c2 nc prefix str
-    c1="$(__koopa_ansi_escape "${1:?}")"
-    c2="$(__koopa_ansi_escape "${2:?}")"
-    nc="$(__koopa_ansi_escape 'nocolor')"
-    prefix="${3:?}"
-    shift 3
-    for str in "$@"
-    do
-        koopa_print "${c1}${prefix}${nc} ${c2}${str}${nc}"
-    done
     return 0
 }
 
@@ -164,42 +74,6 @@ __koopa_packages_prefix() { # {{{1
         str="$(koopa_opt_prefix)/${name}"
     fi
     koopa_print "$str"
-    return 0
-}
-
-__koopa_print_ansi() { # {{{1
-    # """
-    # Print a colored line in console.
-    # @note Updated 2022-02-25.
-    #
-    # Currently using ANSI escape codes.
-    # This is the classic 8 color terminal approach.
-    #
-    # - '0;': normal
-    # - '1;': bright or bold
-    #
-    # (taken from Travis CI config)
-    # - clear=\033[0K
-    # - nocolor=\033[0m
-    #
-    # Alternative approach (non-POSIX):
-    # echo command requires '-e' flag to allow backslash escapes.
-    #
-    # See also:
-    # - https://en.wikipedia.org/wiki/ANSI_escape_code
-    # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
-    # - https://stackoverflow.com/questions/5947742
-    # - https://stackoverflow.com/questions/15736223
-    # - https://bixense.com/clicolors/
-    # """
-    local color nocolor str
-    color="$(__koopa_ansi_escape "${1:?}")"
-    nocolor="$(__koopa_ansi_escape 'nocolor')"
-    shift 1
-    for str in "$@"
-    do
-        printf '%s%b%s\n' "$color" "$str" "$nocolor"
-    done
     return 0
 }
 
@@ -415,7 +289,7 @@ koopa_activate_conda() { # {{{1
 koopa_activate_coreutils_aliases() { # {{{1
     # """
     # Activate GNU/BSD coreutils aliases.
-    # @note Updated 2021-10-22.
+    # @note Updated 2022-04-08.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -468,7 +342,7 @@ koopa_activate_coreutils_aliases() { # {{{1
 koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-08.
     #
     # This will set the 'LS_COLORS' environment variable.
     # """
@@ -778,7 +652,7 @@ koopa_activate_local_paths() { # {{{1
 koopa_activate_make_paths() { # {{{1
     # """
     # Activate standard Makefile paths.
-    # @note Updated 2021-09-14.
+    # @note Updated 2022-04-08.
     #
     # Note that here we're making sure local binaries are included.
     # Inspect '/etc/profile' if system PATH appears misconfigured.
@@ -790,17 +664,29 @@ koopa_activate_make_paths() { # {{{1
     # @seealso
     # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
     # """
-    local make_prefix
-    make_prefix="$(koopa_make_prefix)"
-    koopa_add_to_path_start \
-        "${make_prefix}/bin" \
-        "${make_prefix}/sbin"
-    koopa_add_to_manpath_start \
-        "${make_prefix}/man" \
-        "${make_prefix}/share/man"
+    local make_prefix_1 make_prefix_2
+    make_prefix_1='/usr/local'
+    make_prefix_2="$(koopa_make_prefix)"
+    if [ -d "$make_prefix_1" ]
+    then
+        koopa_add_to_path_start \
+            "${make_prefix_1}/bin" \
+            "${make_prefix_1}/sbin"
+        koopa_add_to_manpath_start \
+            "${make_prefix_1}/man" \
+            "${make_prefix_1}/share/man"
+    fi
+    if [ "$make_prefix_2" != "$make_prefix_1" ] && [ -d "$make_prefix_2" ]
+    then
+        koopa_add_to_path_start \
+            "${make_prefix_2}/bin" \
+            "${make_prefix_2}/sbin"
+        koopa_add_to_manpath_start \
+            "${make_prefix_2}/man" \
+            "${make_prefix_2}/share/man"
+    fi
     return 0
 }
-
 
 koopa_activate_mcfly() { #{{{1
     # """
@@ -864,13 +750,11 @@ koopa_activate_nextflow() { # {{{1
 koopa_activate_nim() { # {{{1
     # """
     # Activate Nim.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-08.
     # """
     local prefix
     prefix="$(koopa_nim_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    # FIXME Symlink packages into '/opt/koopa/bin' instead.
-    # > koopa_activate_prefix "$prefix"
     export NIMBLE_DIR="$prefix"
     return 0
 }
@@ -878,13 +762,11 @@ koopa_activate_nim() { # {{{1
 koopa_activate_node() { # {{{1
     # """
     # Activate Node.js (and NPM).
-    # @note Updated 2021-05-25.
+    # @note Updated 2022-04-08.
     # """
     local prefix
     prefix="$(koopa_node_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    # FIXME Symlink packages into '/opt/koopa/bin' instead.
-    # > koopa_activate_prefix "$prefix"
     export NPM_CONFIG_PREFIX="$prefix"
     return 0
 }
@@ -912,11 +794,10 @@ koopa_activate_opt_prefix() { # {{{1
     return 0
 }
 
-# FIXME Link Perl packages into '/opt/koopa/bin' instead.
 koopa_activate_perl() { # {{{1
     # """
     # Activate Perl, adding local library to 'PATH'.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-08.
     #
     # No longer querying Perl directly here, to speed up shell activation
     # (see commented legacy approach below).
@@ -993,7 +874,7 @@ koopa_activate_pipx() { # {{{1
 koopa_activate_pkg_config() { # {{{1
     # """
     # Configure 'PKG_CONFIG_PATH'.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-08.
     #
     # Typical priorities (e.g. on Debian):
     # - /usr/local/lib/x86_64-linux-gnu/pkgconfig
@@ -1011,15 +892,30 @@ koopa_activate_pkg_config() { # {{{1
     # @seealso
     # - https://askubuntu.com/questions/210210/
     # """
-    local brew_prefix make_prefix
+    local brew_prefix make_prefix_1 make_prefix_2 pkg_bin usr_prefix
     brew_prefix="$(koopa_homebrew_prefix)"
-    make_prefix="$(koopa_make_prefix)"
-    koopa_add_to_pkg_config_path_start_2 '/usr/bin/pkg-config'
-    if [ "$brew_prefix" != "$make_prefix" ]
+    make_prefix_1='/usr/local'
+    make_prefix_2="$(koopa_make_prefix)"
+    pkg_bin='bin/pkg-config'
+    usr_prefix='/usr'
+    if [ -f "${usr_prefix}/${pkg_bin}" ]
     then
-        koopa_add_to_pkg_config_path_start_2 "${brew_prefix}/bin/pkg-config"
+        koopa_add_to_pkg_config_path_start_2 "${usr_prefix}/${pkg_bin}"
     fi
-    koopa_add_to_pkg_config_path_start_2 "${make_prefix}/bin/pkg-config"
+    if [ "$brew_prefix" != "$make_prefix_1" ] && \
+        [ -f "${brew_prefix}/${pkg_bin}" ]
+    then
+        koopa_add_to_pkg_config_path_start_2 "${brew_prefix}/${pkg_bin}"
+    fi
+    if [ -f "${make_prefix_1}/${pkg_bin}" ]
+    then
+        koopa_add_to_pkg_config_path_start_2 "${make_prefix_1}/${pkg_bin}"
+    fi
+    if [ "$make_prefix_2" != "$make_prefix_1" ] && \
+        [ -f "${make_prefix_2}/${pkg_bin}" ]
+    then
+        koopa_add_to_pkg_config_path_start_2 "${make_prefix_2}/${pkg_bin}"
+    fi
     return 0
 }
 
@@ -1046,11 +942,10 @@ koopa_activate_prefix() { # {{{1
     return 0
 }
 
-# FIXME Rework this, assuming we have a symlink in '/opt/koopa/bin'.
 koopa_activate_pyenv() { # {{{1
     # """
     # Activate Python version manager (pyenv).
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-08.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
@@ -1068,11 +963,10 @@ koopa_activate_pyenv() { # {{{1
     return 0
 }
 
-# FIXME Work on linking into  '/opt/koopa/bin' instead.
 koopa_activate_python() { # {{{1
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-08.
     #
     # Configures:
     # - Site packages library.
@@ -1116,11 +1010,10 @@ koopa_activate_python() { # {{{1
     return 0
 }
 
-# FIXME Rework this, assuming we have a symlink in '/opt/koopa/bin'.
 koopa_activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-08.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
@@ -1139,7 +1032,6 @@ koopa_activate_rbenv() { # {{{1
     return 0
 }
 
-# FIXME Consider just linking packages such as ronn into koopa bin.
 koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
@@ -1276,6 +1168,9 @@ koopa_activate_tmux_sessions() { # {{{1
     # """
     # Show active tmux sessions.
     # @note Updated 2022-02-25.
+    #
+    # This can cause a login shell to hang when tmux is uninstalled with
+    # sessions still active.
     # """
     local str
     koopa_is_installed 'tmux' || return 0
@@ -1292,6 +1187,7 @@ koopa_activate_tmux_sessions() { # {{{1
     return 0
 }
 
+# FIXME Rethink the coreutils handling here.
 koopa_activate_today_bucket() { # {{{1
     # """
     # Create a dated file today bucket.
@@ -1412,6 +1308,7 @@ koopa_activate_zoxide() { # {{{1
     return 0
 }
 
+# FIXME Rethink the coreutils handling here.
 koopa_add_koopa_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
@@ -1690,30 +1587,22 @@ koopa_alias_conda() { # {{{1
 koopa_alias_doom_emacs() { # {{{1
     # """
     # Doom Emacs.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-08.
     # """
     local prefix
     prefix="$(koopa_doom_emacs_prefix)"
-    if [ ! -d "$prefix" ]
-    then
-        koopa_alert_is_not_installed 'Doom Emacs' "$prefix"
-        return 1
-    fi
+    [ -d "$prefix" ] || return 1
     emacs --with-profile 'doom' "$@"
 }
 
 koopa_alias_emacs() { # {{{1
     # """
     # Emacs alias that provides 24-bit color support.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-08.
     # """
     local prefix
     prefix="${HOME:?}/.emacs.d"
-    if [ ! -f "${prefix}/chemacs.el" ]
-    then
-        koopa_alert_is_not_installed 'Chemacs' "$prefix"
-        return 1
-    fi
+    [ -f "${prefix}/chemacs.el" ] || return 1
     if [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] && koopa_is_macos
     then
         TERM='xterm-24bit' emacs --no-window-system "$@"
@@ -1762,18 +1651,16 @@ koopa_alias_mamba() { # {{{1
 koopa_alias_nvim_fzf() { # {{{1
     # """
     # Pipe FZF output to Neovim.
-    # @note Updated 2021-06-08.
+    # @note Updated 2022-04-08.
     # """
-    koopa_is_installed 'fzf' 'nvim' || return 1
     nvim "$(fzf)"
 }
 
 koopa_alias_nvim_vanilla() { # {{{1
     # """
     # Vanilla Neovim.
-    # @note Updated 2021-06-08.
+    # @note Updated 2022-04-08.
     # """
-    koopa_is_installed 'nvim' || return 1
     nvim -u 'NONE' "$@"
 }
 
@@ -1790,15 +1677,11 @@ koopa_alias_perlbrew() { # {{{1
 koopa_alias_prelude_emacs() { # {{{1
     # """
     # Prelude Emacs.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-08.
     # """
     local prefix
     prefix="$(koopa_prelude_emacs_prefix)"
-    if [ ! -d "$prefix" ]
-    then
-        koopa_alert_is_not_installed 'Prelude Emacs' "$prefix"
-        return 1
-    fi
+    [ -d "$prefix" ] || return 1
     emacs --with-profile 'prelude' "$@"
 }
 
@@ -1834,22 +1717,18 @@ koopa_alias_sha256() { # {{{1
 koopa_alias_spacemacs() { # {{{1
     # """
     # Spacemacs.
-    # @note Updated 2021-06-08.
+    # @note Updated 2022-04-08.
     # """
     local prefix
     prefix="$(koopa_spacemacs_prefix)"
-    if [ ! -d "$prefix" ]
-    then
-        koopa_alert_is_not_installed 'Spacemacs' "$prefix"
-        return 1
-    fi
+    [ -d "$prefix" ] || return 1
     emacs --with-profile 'spacemacs' "$@"
 }
 
 koopa_alias_spacevim() { # {{{1
     # """
     # SpaceVim alias.
-    # @note Updated 2021-06-08.
+    # @note Updated 2022-04-08.
     # """
     local gvim prefix vim vimrc
     vim='vim'
@@ -1863,23 +1742,16 @@ koopa_alias_spacevim() { # {{{1
     fi
     prefix="$(koopa_spacevim_prefix)"
     vimrc="${prefix}/vimrc"
-    if [ ! -f "$vimrc" ]
-    then
-        koopa_alert_is_not_installed 'SpaceVim' "$vimrc"
-        return 1
-    fi
-    koopa_is_installed 'vim' || return 1
+    [ -f "$vimrc" ] || return 1
     koopa_is_alias 'vim' && unalias 'vim'
     "$vim" -u "$vimrc" "$@"
 }
 
-# FIXME Consider making this accessible in koopa system instead.
 koopa_alias_today() { # {{{1
     # """
     # Today alias.
     # @note Updated 2021-06-08.
     # """
-    koopa_is_installed 'date' || return 1
     date '+%Y-%m-%d'
 }
 
@@ -1888,26 +1760,22 @@ koopa_alias_vim_fzf() { # {{{1
     # Pipe FZF output to Vim.
     # @note Updated 2021-06-08.
     # """
-    koopa_is_installed 'fzf' 'vim' || return 1
     vim "$(fzf)"
 }
 
 koopa_alias_vim_vanilla() { # {{{1
     # """
     # Vanilla Vim.
-    # @note Updated 2021-06-08.
+    # @note Updated 2022-04-08.
     # """
-    koopa_is_installed 'vim' || return 1
     vim -i 'NONE' -u 'NONE' -U 'NONE' "$@"
 }
 
-# FIXME Consider making this accessible in koopa system instead.
 koopa_alias_week() { # {{{1
     # """
     # Numerical week alias.
     # @note Updated 2021-06-08.
     # """
-    koopa_is_installed 'date' || return 1
     date '+%V'
 }
 
@@ -1919,76 +1787,6 @@ koopa_alias_zoxide() { # {{{1
     koopa_is_alias 'z' && unalias 'z'
     koopa_activate_zoxide
     z "$@"
-}
-
-koopa_alert() { # {{{1
-    # """
-    # Alert message.
-    # @note Updated 2021-03-31.
-    # """
-    __koopa_msg 'default' 'default' '→' "$@"
-    return 0
-}
-
-koopa_alert_info() { # {{{1
-    # """
-    # Alert info message.
-    # @note Updated 2021-03-30.
-    # """
-    __koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
-    return 0
-}
-
-koopa_alert_is_installed() { # {{{1
-    # """
-    # Alert the user that a program is installed.
-    # @note Updated 2021-06-03.
-    # """
-    local name prefix
-    name="${1:?}"
-    prefix="${2:-}"
-    x="${name} is installed"
-    if [ -n "$prefix" ]
-    then
-        x="${x} at '${prefix}'"
-    fi
-    x="${x}."
-    koopa_alert_note "$x"
-    return 0
-}
-
-koopa_alert_is_not_installed() { # {{{1
-    # """
-    # Alert the user that a program is not installed.
-    # @note Updated 2021-06-03.
-    # """
-    local name prefix
-    name="${1:?}"
-    prefix="${2:-}"
-    x="${name} is not installed"
-    if [ -n "$prefix" ]
-    then
-        x="${x} at '${prefix}'"
-    fi
-    x="${x}."
-    koopa_alert_note "$x"
-    return 0
-}
-
-koopa_alert_note() { # {{{1
-    # """
-    # General note.
-    # @note Updated 2020-07-01.
-    # """
-    __koopa_msg 'yellow' 'default' '**' "$@"
-}
-
-koopa_alert_success() { # {{{1
-    # """
-    # Alert success message.
-    # @note Updated 2021-03-31.
-    # """
-    __koopa_msg 'green-bold' 'green' '✓' "$@"
 }
 
 koopa_anaconda_prefix() { # {{{1
@@ -2222,6 +2020,7 @@ koopa_dotfiles_private_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rethink the coreutils handling here.
 koopa_duration_start() { # {{{1
     # """
     # Start activation duration timer.
@@ -2241,6 +2040,7 @@ koopa_duration_start() { # {{{1
     return 0
 }
 
+# FIXME Rethink the coreutils handling here.
 koopa_duration_stop() { # {{{1
     # """
     # Stop activation duration timer.
@@ -2327,7 +2127,7 @@ koopa_export_git() { # {{{1
 koopa_export_gnupg() { # {{{1
     # """
     # Export GnuPG settings.
-    # @note Updated 2021-05-07.
+    # @note Updated 2022-04-08.
     #
     # Enable passphrase prompting in terminal.
     # Useful for getting Docker credential store to work.
@@ -2336,6 +2136,7 @@ koopa_export_gnupg() { # {{{1
     [ -z "${GPG_TTY:-}" ] || return 0
     koopa_is_tty || return 0
     GPG_TTY="$(tty || true)"
+    [ -n "$GPG_TTY" ] || return 0
     export GPG_TTY
     return 0
 }
@@ -3178,11 +2979,10 @@ koopa_is_x86_64() { # {{{1
     [ "$(koopa_arch)" = 'x86_64' ]
 }
 
-# FIXME Rework using early returns here instead.
 koopa_java_prefix() { # {{{1
     # """
     # Java prefix.
-    # @note Updated 2021-09-20.
+    # @note Updated 2022-04-08.
     #
     # See also:
     # - https://www.mkyong.com/java/
@@ -3192,25 +2992,27 @@ koopa_java_prefix() { # {{{1
     local prefix
     if [ -n "${JAVA_HOME:-}" ]
     then
-        # Allow user to override default.
-        prefix="$JAVA_HOME"
-    elif [ -d "$(koopa_openjdk_prefix)" ]
-    then
-        # Otherwise assume latest OpenJDK.
-        # This works on Linux installs, including Docker images.
-        prefix="$(koopa_openjdk_prefix)"
-    # > elif [ -x '/usr/libexec/java_home' ]
-    # > then
-    # >     # Handle macOS config with temurin cask.
-    # >     prefix="$('/usr/libexec/java_home')"
-    elif [ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]
-    then
-        prefix="$(koopa_homebrew_opt_prefix)/openjdk"
-    else
-        return 1
+        koopa_print "$JAVA_HOME"
+        return 0
     fi
-    koopa_print "$prefix"
-    return 0
+    if [ -d "$(koopa_openjdk_prefix)" ]
+    then
+        koopa_print "$(koopa_openjdk_prefix)"
+        return 0
+    fi
+    if [ -x '/usr/libexec/java_home' ]
+    then
+        prefix="$('/usr/libexec/java_home' || true)"
+        [ -n "$prefix" ] || return 1
+        koopa_print "$prefix"
+        return 0
+    fi
+    if [ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]
+    then
+        koopa_print "$(koopa_homebrew_opt_prefix)/openjdk"
+        return 0
+    fi
+    return 1
 }
 
 koopa_julia_packages_prefix() { # {{{1
@@ -3366,10 +3168,9 @@ koopa_macos_activate_google_cloud_sdk() { # {{{1
 koopa_macos_gfortran_prefix() { # {{{1
     # """
     # macOS gfortran prefix.
-    # @note Updated 2021-10-30.
+    # @note Updated 2022-04-08.
     # """
-    koopa_is_macos || return 1
-    koopa_print "$(koopa_make_prefix)/gfortran"
+    koopa_print '/usr/local/gfortran'
     return 0
 }
 
@@ -3397,7 +3198,6 @@ koopa_macos_julia_prefix() { # {{{1
     # @note Updated 2021-12-01.
     # """
     local x
-    koopa_is_macos || return 1
     x="$( \
         find '/Applications' \
             -mindepth 1 \
@@ -3492,38 +3292,29 @@ koopa_macos_os_codename() { # {{{1
 koopa_macos_os_version() { # {{{1
     # """
     # macOS version.
-    # @note Updated 2021-12-07.
+    # @note Updated 2022-04-08.
     # """
-    local sw_vers x
-    koopa_is_macos || return 1
-    sw_vers='/usr/bin/sw_vers'
-    x="$("$sw_vers" -productVersion)"
+    local x
+    x="$(sw_vers -productVersion)"
     [ -n "$x" ] || return 1
     koopa_print "$x"
     return 0
 }
 
-# FIXME Rework this as a symlink instead.
 koopa_macos_python_prefix() { # {{{1
     # """
     # macOS Python installation prefix.
-    # @note Updated 2021-06-14.
+    # @note Updated 2022-04-08.
     # """
-    local x
-    koopa_is_macos || return 1
-    x='/Library/Frameworks/Python.framework/Versions/Current'
-    koopa_print "$x"
+    koopa_print '/Library/Frameworks/Python.framework/Versions/Current'
 }
 
 koopa_macos_r_prefix() { # {{{1
     # """
     # macOS R installation prefix.
-    # @note Updated 2021-06-14.
+    # @note Updated 2022-04-08.
     # """
-    local x
-    koopa_is_macos || return 1
-    x='/Library/Frameworks/R.framework/Versions/Current/Resources'
-    koopa_print "$x"
+    koopa_print '/Library/Frameworks/R.framework/Versions/Current/Resources'
 }
 
 koopa_major_version() { # {{{1
@@ -3585,7 +3376,7 @@ koopa_major_minor_patch_version() { # {{{1
 koopa_make_prefix() { # {{{1
     # """
     # Return the installation prefix to use.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-04-08.
     # """
     local prefix
     if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
@@ -3806,96 +3597,6 @@ koopa_print() { # {{{1
     do
         printf '%b\n' "$string"
     done
-    return 0
-}
-
-koopa_print_black() { # {{{1
-    __koopa_print_ansi 'black' "$@"
-    return 0
-}
-
-koopa_print_black_bold() { # {{{1
-    __koopa_print_ansi 'black-bold' "$@"
-    return 0
-}
-
-koopa_print_blue() { # {{{1
-    __koopa_print_ansi 'blue' "$@"
-    return 0
-}
-
-koopa_print_blue_bold() { # {{{1
-    __koopa_print_ansi 'blue-bold' "$@"
-    return 0
-}
-
-koopa_print_cyan() { # {{{1
-    __koopa_print_ansi 'cyan' "$@"
-    return 0
-}
-
-koopa_print_cyan_bold() { # {{{1
-    __koopa_print_ansi 'cyan-bold' "$@"
-    return 0
-}
-
-koopa_print_default() { # {{{1
-    __koopa_print_ansi 'default' "$@"
-    return 0
-}
-
-koopa_print_default_bold() { # {{{1
-    __koopa_print_ansi 'default-bold' "$@"
-    return 0
-}
-
-koopa_print_green() { # {{{1
-    __koopa_print_ansi 'green' "$@"
-    return 0
-}
-
-koopa_print_green_bold() { # {{{1
-    __koopa_print_ansi 'green-bold' "$@"
-    return 0
-}
-
-koopa_print_magenta() { # {{{1
-    __koopa_print_ansi 'magenta' "$@"
-    return 0
-}
-
-koopa_print_magenta_bold() { # {{{1
-    __koopa_print_ansi 'magenta-bold' "$@"
-    return 0
-}
-
-koopa_print_red() { # {{{1
-    __koopa_print_ansi 'red' "$@"
-    return 0
-}
-
-koopa_print_red_bold() { # {{{1
-    __koopa_print_ansi 'red-bold' "$@"
-    return 0
-}
-
-koopa_print_yellow() { # {{{1
-    __koopa_print_ansi 'yellow' "$@"
-    return 0
-}
-
-koopa_print_yellow_bold() { # {{{1
-    __koopa_print_ansi 'yellow-bold' "$@"
-    return 0
-}
-
-koopa_print_white() { # {{{1
-    __koopa_print_ansi 'white' "$@"
-    return 0
-}
-
-koopa_print_white_bold() { # {{{1
-    __koopa_print_ansi 'white-bold' "$@"
     return 0
 }
 
@@ -4270,14 +3971,13 @@ koopa_xdg_config_home() { # {{{1
 koopa_xdg_data_dirs() { # {{{1
     # """
     # XDG data dirs.
-    # @note Updated 2021-05-20.
+    # @note Updated 2022-04-08.
     # """
-    local make_prefix x
+    local x
     x="${XDG_DATA_DIRS:-}"
     if [ -z "$x" ]
     then
-        make_prefix="$(koopa_make_prefix)"
-        x="${make_prefix}/share:/usr/share"
+        x='/usr/local/share:/usr/share'
     fi
     koopa_print "$x"
     return 0
