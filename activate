@@ -96,7 +96,7 @@ __koopa_check_zsh() { # {{{1
     # - https://stackoverflow.com/a/23259585/3911732
     [ -n "${ZSH_VERSION:-}" ] || return 0
     case "$0" in
-        _src_etc_profile*)
+        '_src_etc_profile'*)
             return 1
             ;;
     esac
@@ -175,22 +175,6 @@ __koopa_is_interactive() { # {{{1
     # @note Updated 2021-10-25.
     # """
     __koopa_str_detect_posix "$-" 'i'
-}
-
-__koopa_is_linux() { # {{{1
-    # """
-    # Is the operating system Linux?
-    # @note Updated 2021-05-07.
-    # """
-    [ "$(uname -s)" = 'Linux' ]
-}
-
-__koopa_is_macos() { # {{{1
-    # """
-    # Is the operating system macOS?
-    # @note Updated 2021-05-07.
-    # """
-    [ "$(uname -s)" = 'Darwin' ]
 }
 
 __koopa_posix_source() { # {{{1
