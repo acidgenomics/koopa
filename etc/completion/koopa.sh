@@ -128,6 +128,7 @@ __koopa_complete() { # {{{1
                         'imagemagick'
                         'julia'
                         'julia-packages'
+                        'koopa'
                         'lesspipe'
                         'libevent'
                         'libtool'
@@ -306,15 +307,12 @@ __koopa_complete() { # {{{1
                     ;;
                 'update')
                     args=(
-                        # koopa:
-                        'koopa'
-                        'system'
-                        # packages:
                         'chemacs'
                         'doom-emacs'
                         'dotfiles'
                         'google-cloud-sdk'
                         'homebrew'
+                        'koopa'
                         'mamba'
                         'nim-packages'
                         'node-packages'
@@ -329,6 +327,7 @@ __koopa_complete() { # {{{1
                         'rust-packages'
                         'spacemacs'
                         'spacevim'
+                        'system'
                         'tex-packages'
                     )
                     if koopa_is_linux
