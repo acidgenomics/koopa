@@ -17,7 +17,11 @@ __koopa_bash_source_dir() { # {{{1
     # """
     local fun_script fun_scripts prefix
     prefix="$(koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
-    [[ -d "$prefix" ]] || return 1
+    if [[ ! -d "$prefix" ]]
+    then
+        __koopa_warn "No functions defined in '${prefix}'."
+        return 0
+    fi
     readarray -t fun_scripts <<< "$( \
         find -L "$prefix" \
             -mindepth 1 \
