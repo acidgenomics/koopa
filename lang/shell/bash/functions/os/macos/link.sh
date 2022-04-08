@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to link components from:
-# - grep (grep)
-# - man (man-db)
-# - sed (gnu-sed)
-# - tar (gnu-tar)
-
 koopa_macos_link_homebrew() { # {{{1
     local dict
     koopa_assert_has_no_args "$#"
@@ -134,12 +128,21 @@ koopa_macos_link_homebrew() { # {{{1
         "${dict[findutils]}/locate" 'locate' \
         "${dict[findutils]}/updatedb" 'updatedb' \
         "${dict[findutils]}/xargs" 'xargs'
+    # gnu-sed.
+    dict[gnu_sed]="${dict[brew_opt]}/gnu-sed/libexec/gnubin"
+    koopa_link_in_bin "${dict[gnu_sed]}/sed" 'sed'
+    # gnu-tar.
+    dict[gnu_tar]="${dict[brew_opt]}/gnu-tar/libexec/gnubin"
+    koopa_link_in_bin "${dict[gnu_tar]}/tar" 'tar'
     # grep.
     dict[grep]="${dict[brew_opt]}/grep/libexec/gnubin"
     koopa_link_in_bin \
         "${dict[grep]}/egrep" 'egrep' \
         "${dict[grep]}/fgrep" 'fgrep' \
         "${dict[grep]}/grep" 'grep'
+    # man-db.
+    dict[man_db]="${dict[brew_opt]}/man-db/libexec/bin"
+    koopa_link_in_bin "${dict[man_db]}/man" 'man'
     # BBEdit cask.
     koopa_link_in_bin \
         '/Applications/BBEdit.app/Contents/Helpers/bbedit_tool' \
@@ -158,7 +161,7 @@ koopa_macos_link_homebrew() { # {{{1
         "${dict[julia]}/bin/julia" \
         'julia'
     # R cask.
-    dict[r]="$(koopa_macos_julia_prefix)"
+    dict[r]="$(koopa_macos_r_prefix)"
     koopa_link_in_bin \
         "${dict[r]}/bin/R" 'R' \
         "${dict[r]}/bin/Rscript" 'Rscript'
