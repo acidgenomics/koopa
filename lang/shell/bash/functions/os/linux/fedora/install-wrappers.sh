@@ -115,3 +115,23 @@ koopa_fedora_uninstall_rstudio_workbench() { # {{{3
         --uninstaller='rstudio-server' \
         "$@"
 }
+
+# shiny-server ------------------------------------------------------------ {{{2
+
+koopa_fedora_install_shiny_server() { # {{{3
+    koopa_install_app \
+        --name-fancy='Shiny Server' \
+        --name='shiny-server' \
+        --platform='fedora' \
+        --system \
+        "$@"
+}
+
+koopa_fedora_uninstall_shiny_server() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Shiny Server' \
+        --name='shiny-server' \
+        --platform='fedora' \
+        --system \
+        "$@"
+}

@@ -227,6 +227,26 @@ koopa_debian_uninstall_rstudio_workbench() { # {{{3
         "$@"
 }
 
+# shiny-server ------------------------------------------------------------ {{{2
+
+koopa_debian_install_shiny_server() { # {{{3
+    koopa_install_app \
+        --name-fancy='Shiny Server' \
+        --name='shiny-server' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_uninstall_shiny_server() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Shiny Server' \
+        --name='shiny-server' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
 # wine -------------------------------------------------------------------- {{{2
 
 koopa_debian_install_wine() { # {{{3
