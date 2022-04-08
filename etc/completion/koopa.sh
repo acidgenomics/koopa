@@ -107,7 +107,6 @@ __koopa_complete() { # {{{1
                         'findutils'
                         'fish'
                         'fzf'
-                        'fzf-binary' # FIXME Need to add support for this.
                         'gawk'
                         'gcc'
                         'gdal'
@@ -119,7 +118,6 @@ __koopa_complete() { # {{{1
                         'groff'
                         'gsl'
                         'hadolint'
-                        'hadolint-binary' # FIXME Need to support this.
                         'harfbuzz'
                         'haskell-stack'
                         'hdf5'
