@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install cpufetch.
-    # @note Updated 2021-12-01.
+    # @note Updated 2022-04-08.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -24,6 +24,9 @@ tags/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     # Installer doesn't currently support 'configure' script.
     PREFIX="${dict[prefix]}" "${app[make]}" --jobs="${dict[jobs]}"
-    PREFIX="${dict[prefix]}" "${app[make]}" install
+    # The 'make install' step is currently problematic on macOS.
+    # > PREFIX="${dict[prefix]}" "${app[make]}" install
+    koopa_cp --target-directory="${dict[prefix]}/bin" 'cpufetch'
+    koopa_cp --target-directory="${dict[prefix]}/man/man1" 'cpufetch.1'
     return 0
 }
