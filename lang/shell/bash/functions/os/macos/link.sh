@@ -158,7 +158,7 @@ koopa_macos_link_homebrew() { # {{{1
         "${dict[julia]}/bin/julia" \
         'julia'
     # R cask.
-    dict[r]="$(koopa_macos_julia_prefix)"
+    dict[r]="$(koopa_macos_r_prefix)"
     koopa_link_in_bin \
         "${dict[r]}/bin/R" 'R' \
         "${dict[r]}/bin/Rscript" 'Rscript'
