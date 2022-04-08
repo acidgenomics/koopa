@@ -467,7 +467,6 @@ koopa_uninstall_cpufetch() { # {{{3
 koopa_install_curl() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/curl' \
-        --link-in-bin='bin/curl-config' \
         --name-fancy='cURL' \
         --name='curl' \
         "$@"
@@ -478,7 +477,6 @@ koopa_uninstall_curl() { # {{{3
         --name-fancy='cURL' \
         --name='curl' \
         --unlink-in-bin='curl' \
-        --unlink-in-bin='curl-config' \
         "$@"
 }
 
