@@ -46,7 +46,7 @@ __koopa_h() { # {{{1
 __koopa_alert_process_start() { # {{{1
     # """
     # Inform the user about the start of a process.
-    # @note Updated 2022-03-09.
+    # @note Updated 2022-04-08.
     # """
     local dict
     declare -A dict
@@ -74,7 +74,7 @@ at '${dict[prefix]}'."
     else
         dict[out]="${dict[word]} '${dict[name]}'."
     fi
-    koopa_h1 "${dict[out]}"
+    koopa_alert "${dict[out]}"
     return 0
 }
 
