@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-# Shared =======================================================================
+# Shared ================================================================== {{{1
 
-koopa_linux_install_aspera_connect() { # {{{1
+# aspera-connect ---------------------------------------------------------- {{{2
+
+koopa_linux_install_aspera_connect() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/ascp' \
         --name-fancy='Aspera Connect' \
@@ -11,7 +13,7 @@ koopa_linux_install_aspera_connect() { # {{{1
         "$@"
 }
 
-koopa_linux_uninstall_aspera_connect() { # {{{1
+koopa_linux_uninstall_aspera_connect() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Aspera Connect' \
         --name='aspera-connect' \
@@ -20,9 +22,9 @@ koopa_linux_uninstall_aspera_connect() { # {{{1
         "$@"
 }
 
+# aws-cli ----------------------------------------------------------------- {{{2
 
-
-koopa_linux_install_aws_cli() { # {{{1
+koopa_linux_install_aws_cli() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/aws' \
         --name-fancy='AWS CLI' \
@@ -32,7 +34,7 @@ koopa_linux_install_aws_cli() { # {{{1
         "$@"
 }
 
-koopa_linux_uninstall_aws_cli() { # {{{1
+koopa_linux_uninstall_aws_cli() { # {{{3
     koopa_uninstall_app \
         --name-fancy='AWS CLI' \
         --name='aws-cli' \
@@ -41,9 +43,9 @@ koopa_linux_uninstall_aws_cli() { # {{{1
         "$@"
 }
 
+# bcbio-nextgen ----------------------------------------------------------- {{{2
 
-
-koopa_linux_install_bcbio_nextgen() { # {{{1
+koopa_linux_install_bcbio_nextgen() { # {{{3
     koopa_install_app \
         --link-in-bin='tools/bin/bcbio_nextgen.py' \
         --name='bcbio-nextgen' \
@@ -52,7 +54,7 @@ koopa_linux_install_bcbio_nextgen() { # {{{1
         "$@"
 }
 
-koopa_linux_uninstall_bcbio_nextgen() { # {{{1
+koopa_linux_uninstall_bcbio_nextgen() { # {{{3
     koopa_uninstall_app \
         --name='bcbio-nextgen' \
         --platform='linux' \
@@ -60,10 +62,10 @@ koopa_linux_uninstall_bcbio_nextgen() { # {{{1
         "$@"
 }
 
-
+# bcl2fastq --------------------------------------------------------------- {{{2
 
 # FIXME Split this out as separate binary function...
-koopa_linux_install_bcl2fastq() { # {{{1
+koopa_linux_install_bcl2fastq() { # {{{3
     # """
     # Install bcl2fastq.
     # @note Updated 2021-05-06.
@@ -89,7 +91,7 @@ koopa_linux_install_bcl2fastq() { # {{{1
     return 0
 }
 
-koopa_linux_uninstall_bcl2fastq() { # {{{1
+koopa_linux_uninstall_bcl2fastq() { # {{{3
     koopa_uninstall_app \
         --name='bcl2fastq' \
         --platform='linux' \
@@ -97,9 +99,9 @@ koopa_linux_uninstall_bcl2fastq() { # {{{1
         "$@"
 }
 
+# cellranger -------------------------------------------------------------- {{{2
 
-
-koopa_linux_install_cellranger() { # {{{1
+koopa_linux_install_cellranger() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/cellranger' \
         --name-fancy='Cell Ranger' \
@@ -108,7 +110,7 @@ koopa_linux_install_cellranger() { # {{{1
         "$@"
 }
 
-koopa_linux_uninstall_cellranger() { # {{{1
+koopa_linux_uninstall_cellranger() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Cell Ranger' \
         --name='cellranger' \
@@ -117,9 +119,9 @@ koopa_linux_uninstall_cellranger() { # {{{1
         "$@"
 }
 
+# cloudbiolinux ----------------------------------------------------------- {{{2
 
-
-koopa_linux_install_cloudbiolinux() { # {{{1
+koopa_linux_install_cloudbiolinux() { # {{{3
     koopa_install_app \
         --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
@@ -128,7 +130,7 @@ koopa_linux_install_cloudbiolinux() { # {{{1
         "$@"
 }
 
-koopa_linux_uninstall_cloudbiolinux() { # {{{1
+koopa_linux_uninstall_cloudbiolinux() { # {{{3
     koopa_uninstall_app \
         --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
@@ -136,9 +138,9 @@ koopa_linux_uninstall_cloudbiolinux() { # {{{1
         "$@"
 }
 
+# docker-credential-pass -------------------------------------------------- {{{2
 
-
-koopa_linux_install_docker_credential_pass() { # {{{1
+koopa_linux_install_docker_credential_pass() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/docker-credential-pass' \
         --name='docker-credential-pass' \
@@ -146,7 +148,7 @@ koopa_linux_install_docker_credential_pass() { # {{{1
         "$@"
 }
 
-koopa_linux_uninstall_docker_credential_pass() { # {{{1
+koopa_linux_uninstall_docker_credential_pass() { # {{{3
     koopa_uninstall_app \
         --name='docker-credential-pass' \
         --platform='linux' \
@@ -154,9 +156,9 @@ koopa_linux_uninstall_docker_credential_pass() { # {{{1
         "$@"
 }
 
+# julia-binary ------------------------------------------------------------ {{{2
 
-
-koopa_linux_install_julia_binary() { # {{{1
+koopa_linux_install_julia_binary() { # {{{3
     koopa_install_app \
         --installer="julia-binary" \
         --link-in-bin='bin/julia' \
@@ -166,10 +168,9 @@ koopa_linux_install_julia_binary() { # {{{1
         "$@"
 }
 
+# lmod -------------------------------------------------------------------- {{{2
 
-
-# FIXME Double check the '--system' usage here.
-koopa_linux_install_lmod() { # {{{1
+koopa_linux_install_lmod() { # {{{3
     koopa_install_app \
         --name-fancy='Lmod' \
         --name='lmod' \
@@ -178,7 +179,7 @@ koopa_linux_install_lmod() { # {{{1
 }
 
 # FIXME Ensure that this cleans up 'etc/profile.d'
-koopa_linux_uninstall_lmod() { # {{{1
+koopa_linux_uninstall_lmod() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Lmod' \
         --name='lmod' \
@@ -187,11 +188,11 @@ koopa_linux_uninstall_lmod() { # {{{1
     return 0
 }
 
+# System ================================================================== {{{1
 
+# pihole ------------------------------------------------------------------ {{{2
 
-# System =======================================================================
-
-koopa_linux_install_pihole() { # {{{1
+koopa_linux_install_pihole() { # {{{3
     koopa_update_app \
         --name-fancy='Pi-hole' \
         --name='pihole' \
@@ -202,9 +203,9 @@ koopa_linux_install_pihole() { # {{{1
 
 # FIXME Need to include a pihole uninstaller.
 
+# pivpn ------------------------------------------------------------------- {{{2
 
-
-koopa_linux_install_pivpn() { # {{{1
+koopa_linux_install_pivpn() { # {{{3
     koopa_update_app \
         --name-fancy='PiVPN' \
         --name='pivpn' \
@@ -215,9 +216,9 @@ koopa_linux_install_pivpn() { # {{{1
 
 # FIXME Need to include a pihole uninstaller.
 
+# shiny-server ------------------------------------------------------------ {{{2
 
-
-koopa_linux_install_shiny_server() { # {{{1
+koopa_linux_install_shiny_server() { # {{{3
     koopa_install_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
@@ -226,7 +227,7 @@ koopa_linux_install_shiny_server() { # {{{1
         "$@"
 }
 
-koopa_linux_uninstall_shiny_server() { # {{{1
+koopa_linux_uninstall_shiny_server() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
