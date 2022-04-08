@@ -39,10 +39,24 @@ koopa_install_anaconda() { # {{{3
         "$@"
 }
 
+koopa_uninstall_anaconda() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Anaconda' \
+        --name='anaconda' \
+        "$@"
+}
+
 # armadillo --------------------------------------------------------------- {{{2
 
 koopa_install_armadillo() { # {{{3
     koopa_install_app \
+        --name-fancy='Armadillo' \
+        --name='armadillo' \
+        "$@"
+}
+
+koopa_uninstall_armadillo() { # {{{3
+    koopa_uninstall_app \
         --name-fancy='Armadillo' \
         --name='armadillo' \
         "$@"
@@ -61,11 +75,23 @@ koopa_install_autoconf() { # {{{3
     koopa_install_gnu_app "${install_args[@]}" "$@"
 }
 
+koopa_uninstall_autoconf() { # {{{3
+    koopa_uninstall_app \
+        --name='autoconf' \
+        "$@"
+}
+
 # automake ---------------------------------------------------------------- {{{2
 
 koopa_install_automake() { # {{{3
     koopa_install_gnu_app \
         --activate-opt='autoconf' \
+        --name='automake' \
+        "$@"
+}
+
+koopa_uninstall_automake() { # {{{3
+    koopa_uninstall_app \
         --name='automake' \
         "$@"
 }
@@ -80,6 +106,15 @@ koopa_install_bash() { # {{{3
         "$@"
 }
 
+# FIXME Need to test this.
+koopa_uninstall_bash() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Bash' \
+        --name='bash' \
+        --unlink-app-in-bin='bash' \
+        "$@"
+}
+
 # binutils ---------------------------------------------------------------- {{{2
 
 koopa_install_binutils() { # {{{3
@@ -88,10 +123,23 @@ koopa_install_binutils() { # {{{3
         "$@"
 }
 
+koopa_uninstall_binutils() { # {{{3
+    koopa_uninstall_app \
+        --name='binutils' \
+        "$@"
+}
+
 # boost ------------------------------------------------------------------- {{{2
 
 koopa_install_boost() { # {{{3
     koopa_install_app \
+        --name-fancy='Boost' \
+        --name='boost' \
+        "$@"
+}
+
+koopa_uninstall_boost() { # {{{3
+    koopa_uninstall_app \
         --name-fancy='Boost' \
         --name='boost' \
         "$@"
@@ -107,6 +155,20 @@ koopa_install_chemacs() { # {{{3
         "$@"
 }
 
+koopa_uninstall_chemacs() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Chemacs' \
+        --name='chemacs' \
+        "$@"
+}
+
+koopa_update_chemacs() { # {{{3
+    koopa_update_app \
+        --name='chemacs' \
+        --name-fancy='Chemacs' \
+        "$@"
+}
+
 # cmake ------------------------------------------------------------------- {{{2
 
 koopa_install_cmake() { # {{{3
@@ -117,6 +179,14 @@ koopa_install_cmake() { # {{{3
         "$@"
 }
 
+koopa_uninstall_cmake() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='CMake' \
+        --name='cmake' \
+        "$@"
+    return 0
+}
+
 # conda ------------------------------------------------------------------- {{{2
 
 koopa_install_conda() { # {{{3
@@ -124,6 +194,14 @@ koopa_install_conda() { # {{{3
         --link-in-bin='bin/conda' \
         --name-fancy='Miniconda' \
         --name='conda' \
+        "$@"
+}
+
+koopa_uninstall_conda() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Miniconda' \
+        --name='conda' \
+        --unlink-in-bin='conda' \
         "$@"
 }
 
@@ -241,930 +319,6 @@ koopa_install_coreutils() { # {{{3
         "$@"
 }
 
-# cpufetch ---------------------------------------------------------------- {{{2
-
-koopa_install_cpufetch() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/cpufetch' \
-        --name='cpufetch' \
-        "$@"
-}
-
-# curl -------------------------------------------------------------------- {{{2
-
-koopa_install_curl() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/curl' \
-        --link-in-bin='bin/curl-config' \
-        --name-fancy='cURL' \
-        --name='curl' \
-        "$@"
-}
-
-# dotfiles ---------------------------------------------------------------- {{{2
-
-koopa_install_dotfiles() { # {{{3
-    koopa_install_app \
-        --name-fancy='Dotfiles' \
-        --name='dotfiles' \
-        --version='rolling' \
-        "$@"
-}
-
-# emacs ------------------------------------------------------------------- {{{2
-
-koopa_install_emacs() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/emacs' \
-        --name-fancy='Emacs' \
-        --name='emacs' \
-        "$@"
-}
-
-# ensembl-perl-api -------------------------------------------------------- {{{2
-
-koopa_install_ensembl_perl_api() { # {{{3
-    koopa_install_app \
-        --name-fancy='Ensembl Perl API' \
-        --name='ensembl-perl-api' \
-        --version='rolling' \
-        "$@"
-}
-
-# findutils --------------------------------------------------------------- {{{2
-
-koopa_install_findutils() { # {{{3
-    if koopa_is_macos
-    then
-        # Workaround for build failures in 4.8.0.
-        # See also:
-        # - https://github.com/Homebrew/homebrew-core/blob/master/
-        #     Formula/findutils.rb
-        # - https://lists.gnu.org/archive/html/bug-findutils/2021-01/
-        #     msg00050.html
-        # - https://lists.gnu.org/archive/html/bug-findutils/2021-01/
-        #     msg00051.html
-        export CFLAGS='-D__nonnull\(params\)='
-    fi
-    koopa_install_gnu_app \
-        --link-in-bin='bin/find' \
-        --link-in-bin='bin/locate' \
-        --link-in-bin='bin/updatedb' \
-        --link-in-bin='bin/xargs' \
-        --name='findutils' \
-        "$@"
-}
-
-# fish -------------------------------------------------------------------- {{{2
-
-koopa_install_fish() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/fish' \
-        --name-fancy='Fish' \
-        --name='fish' \
-        "$@"
-}
-
-# fzf --------------------------------------------------------------------- {{{2
-
-koopa_install_fzf() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/fzf' \
-        --name-fancy='FZF' \
-        --name='fzf' \
-        "$@"
-}
-
-# gawk -------------------------------------------------------------------- {{{2
-
-# FIXME Need to add links here.
-koopa_install_gawk() { # {{{3
-    koopa_install_gnu_app \
-        --name='gawk' \
-        "$@"
-}
-
-# gcc --------------------------------------------------------------------- {{{2
-
-koopa_install_gcc() { # {{{3
-    koopa_install_app \
-        --name-fancy='GCC' \
-        --name='gcc' \
-        "$@"
-}
-
-# gdal -------------------------------------------------------------------- {{{2
-
-koopa_install_gdal() { # {{{3
-    koopa_install_app \
-        --name-fancy='GDAL' \
-        --name='gdal' \
-        "$@"
-}
-
-# geos -------------------------------------------------------------------- {{{2
-
-koopa_install_geos() { # {{{3
-    koopa_install_app \
-        --name-fancy='GEOS' \
-        --name='geos' \
-        "$@"
-}
-
-# git --------------------------------------------------------------------- {{{2
-
-koopa_install_git() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/git' \
-        --name-fancy='Git' \
-        --name='git' \
-        "$@"
-}
-
-# gnupg ------------------------------------------------------------------- {{{2
-
-# FIXME Need to add links here.
-koopa_install_gnupg() { # {{{3
-    koopa_install_app \
-        --name-fancy='GnuPG suite' \
-        --name='gnupg' \
-        "$@"
-}
-
-# go ---------------------------------------------------------------------- {{{2
-
-koopa_install_go() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/go' \
-        --name-fancy='Go' \
-        --name='go' \
-        "$@"
-    return 0
-}
-
-# grep -------------------------------------------------------------------- {{{2
-
-koopa_install_grep() { # {{{3
-    koopa_install_gnu_app \
-        --link-in-bin='bin/egrep' \
-        --link-in-bin='bin/fgrep' \
-        --link-in-bin='bin/grep' \
-        --name='grep' \
-        "$@"
-}
-
-# groff ------------------------------------------------------------------- {{{2
-
-koopa_install_groff() { # {{{3
-    koopa_install_gnu_app \
-        --name='groff' \
-        "$@"
-}
-
-# gsl --------------------------------------------------------------------- {{{2
-
-koopa_install_gsl() { # {{{3
-    koopa_install_gnu_app \
-        --name='gsl' \
-        --name-fancy='GSL' \
-        "$@"
-}
-
-# hadolint ---------------------------------------------------------------- {{{2
-
-koopa_install_hadolint() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/hadolint' \
-        --name='hadolint' \
-        "$@"
-}
-
-# harfbuzz ---------------------------------------------------------------- {{{2
-
-koopa_install_harfbuzz() { # {{{3
-    koopa_install_app \
-        --name-fancy='HarfBuzz' \
-        --name='harfbuzz' \
-        "$@"
-}
-
-# haskell-stack ----------------------------------------------------------- {{{2
-
-koopa_install_haskell_stack() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/stack' \
-        --name-fancy='Haskell Stack' \
-        --name='haskell-stack' \
-        --version='rolling' \
-        "$@"
-}
-
-# hdf5 -------------------------------------------------------------------- {{{2
-
-koopa_install_hdf5() { # {{{3
-    koopa_install_app \
-        --name-fancy='HDF5' \
-        --name='hdf5' \
-        "$@"
-}
-
-# htop -------------------------------------------------------------------- {{{2
-
-koopa_install_htop() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/htop' \
-        --name='htop' \
-        "$@"
-}
-
-# icu4c ------------------------------------------------------------------- {{{2
-
-koopa_install_icu4c() { # {{{3
-    koopa_install_app \
-        --name-fancy='ICU4C' \
-        --name='icu4c' \
-        "$@"
-}
-
-# imagemagick ------------------------------------------------------------- {{{2
-
-koopa_install_imagemagick() { # {{{3
-    koopa_install_app \
-        --name-fancy='ImageMagick' \
-        --name='imagemagick' \
-        "$@"
-}
-
-# juila ------------------------------------------------------------------- {{{2
-
-koopa_install_julia() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/julia' \
-        --name-fancy='Julia' \
-        --name='julia' \
-        "$@"
-}
-
-# julia-packages ---------------------------------------------------------- {{{2
-
-# FIXME Specify which packages to link.
-koopa_install_julia_packages() { # {{{3
-    koopa_install_app_packages \
-        --name-fancy='Julia' \
-        --name='julia' \
-        "$@"
-}
-
-# lesspipe ---------------------------------------------------------------- {{{2
-
-koopa_install_lesspipe() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/lesspipe.sh' \
-        --name='lesspipe' \
-        "$@"
-}
-
-# libevent ---------------------------------------------------------------- {{{2
-
-koopa_install_libevent() { # {{{3
-    koopa_install_app \
-        --name='libevent' \
-        "$@"
-}
-
-# libtool ----------------------------------------------------------------- {{{2
-
-koopa_install_libtool() { # {{{3
-    koopa_install_gnu_app \
-        --name='libtool' \
-        "$@"
-}
-
-# lua --------------------------------------------------------------------- {{{2
-
-# FIXME Need to add link here?
-koopa_install_lua() { # {{{3
-    koopa_install_app \
-        --name-fancy='Lua' \
-        --name='lua' \
-        "$@"
-}
-
-# luarocks ---------------------------------------------------------------- {{{2
-
-# FIXME Need to add link here?
-koopa_install_luarocks() { # {{{3
-    koopa_install_app \
-        --name='luarocks' \
-        "$@"
-}
-
-# make -------------------------------------------------------------------- {{{2
-
-koopa_install_make() { # {{{3
-    koopa_install_gnu_app \
-        --name='make' \
-        "$@"
-}
-
-# mamba ------------------------------------------------------------------- {{{2
-
-koopa_install_mamba() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/mamba' \
-        --name-fancy='Mamba' \
-        --name='mamba' \
-        --no-prefix-check \
-        "$@"
-}
-
-# man-db ------------------------------------------------------------------ {{{2
-
-koopa_install_man_db() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/man' \
-        --name='man-db' \
-        "$@"
-}
-
-# meson ------------------------------------------------------------------- {{{2
-
-koopa_install_meson() { # {{{3
-    koopa_install_app \
-        --name-fancy='Meson' \
-        --name='meson' \
-        "$@"
-}
-
-# ncurses ----------------------------------------------------------------- {{{2
-
-koopa_install_ncurses() { # {{{3
-    koopa_install_gnu_app \
-        --name='ncurses' \
-        "$@"
-}
-
-# neofetch ---------------------------------------------------------------- {{{2
-
-koopa_install_neofetch() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/neofetch' \
-        --name='neofetch' \
-        "$@"
-}
-
-# neovim ------------------------------------------------------------------ {{{2
-
-koopa_install_neovim() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/nvim' \
-        --name='neovim' \
-        "$@"
-}
-
-# nim --------------------------------------------------------------------- {{{2
-
-koopa_install_nim() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/nim' \
-        --name-fancy='Nim' \
-        --name='nim' \
-        "$@"
-}
-
-# nim-packages ------------------------------------------------------------ {{{2
-
-koopa_install_nim_packages() { # {{{3
-    koopa_install_app_packages \
-        --link-in-bin='bin/markdown' \
-        --name-fancy='Nim' \
-        --name='nim' \
-        "$@"
-}
-
-# ninja ------------------------------------------------------------------- {{{2
-
-koopa_install_ninja() { # {{{3
-    koopa_install_app \
-        --name-fancy='Ninja' \
-        --name='ninja' \
-        "$@"
-}
-
-# node -------------------------------------------------------------------- {{{2
-
-koopa_install_node() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/node' \
-        --name-fancy='Node.js' \
-        --name='node' \
-        "$@"
-}
-
-# node-packages ----------------------------------------------------------- {{{2
-
-koopa_install_node_packages() { # {{{3
-    koopa_install_app_packages \
-        --link-in-bin='bin/bash-language-server' \
-        --link-in-bin='bin/gtop' \
-        --link-in-bin='bin/npm' \
-        --link-in-bin='bin/prettier' \
-        --name-fancy='Node' \
-        --name='node' \
-        "$@"
-}
-
-# openjdk ----------------------------------------------------------------- {{{2
-
-# FIXME Need to add link here?
-koopa_install_openjdk() { # {{{3
-    koopa_install_app \
-        --name-fancy='OpenJDK' \
-        --name='openjdk' \
-        "$@"
-}
-
-# openssh ----------------------------------------------------------------- {{{2
-
-koopa_install_openssh() { # {{{3
-    koopa_install_app \
-        --name-fancy='OpenSSH' \
-        --name='openssh' \
-        "$@"
-}
-
-# openssl ----------------------------------------------------------------- {{{2
-
-koopa_install_openssl() { # {{{3
-    koopa_install_app \
-        --name-fancy='OpenSSL' \
-        --name='openssl' \
-        "$@"
-}
-
-# parallel ---------------------------------------------------------------- {{{2
-
-koopa_install_parallel() { # {{{3
-    koopa_install_gnu_app \
-        --link-in-bin='bin/parallel' \
-        --name='parallel' \
-        "$@"
-}
-
-# password-store ---------------------------------------------------------- {{{2
-
-koopa_install_password_store() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/pass' \
-        --name='password-store' \
-        "$@"
-}
-
-# patch ------------------------------------------------------------------- {{{2
-
-koopa_install_patch() { # {{{3
-    koopa_install_gnu_app \
-        --name='patch' \
-        "$@"
-}
-
-# pcre2 ------------------------------------------------------------------- {{{2
-
-koopa_install_pcre2() { # {{{3
-    koopa_install_app \
-        --name-fancy='PCRE2' \
-        --name='pcre2' \
-        "$@"
-}
-
-# perl -------------------------------------------------------------------- {{{2
-
-koopa_install_perl() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/perl' \
-        --name-fancy='Perl' \
-        --name='perl' \
-        "$@"
-}
-
-# perl-packages ----------------------------------------------------------- {{{2
-
-koopa_install_perl_packages() { # {{{3
-    koopa_install_app_packages \
-        --link-in-bin='bin/ack' \
-        --link-in-bin='bin/cpanm' \
-        --link-in-bin='bin/rename' \
-        --name-fancy='Perl' \
-        --name='perl' \
-        "$@"
-}
-
-# perlbrew ---------------------------------------------------------------- {{{2
-
-koopa_install_perlbrew() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/perlbrew' \
-        --name-fancy='Perlbrew' \
-        --name='perlbrew' \
-        --version='rolling' \
-        "$@"
-}
-
-# pkg-config -------------------------------------------------------------- {{{2
-
-koopa_install_pkg_config() { # {{{3
-    koopa_install_app \
-        --name='pkg-config' \
-        "$@"
-}
-
-# proj -------------------------------------------------------------------- {{{2
-
-koopa_install_proj() { # {{{3
-    koopa_install_app \
-        --name-fancy='PROJ' \
-        --name='proj' \
-        "$@"
-}
-
-# pyenv ------------------------------------------------------------------- {{{2
-
-koopa_install_pyenv() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/pyenv' \
-        --name='pyenv' \
-        --version='rolling' \
-        "$@"
-}
-
-# python ------------------------------------------------------------------ {{{2
-
-koopa_install_python() { # {{{3
-    local install_args
-    install_args=(
-        '--name-fancy=Python'
-        '--name=python'
-    )
-    # Assume we're using 'python-binary' by default.
-    if ! koopa_is_macos
-    then
-        install_args+=('--link-in-bin=bin/python3')
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
-}
-
-# python-packages --------------------------------------------------------- {{{2
-
-# FIXME Need to include links here.
-koopa_install_python_packages() { # {{{3
-    koopa_install_app_packages \
-        --name-fancy='Python' \
-        --name='python' \
-        "$@"
-}
-
-# r ----------------------------------------------------------------------- {{{2
-
-koopa_install_r() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/R' \
-        --link-in-bin='bin/Rscript' \
-        --name-fancy='R' \
-        --name='r' \
-        "$@"
-}
-
-# r-cmd-check ------------------------------------------------------------- {{{2
-
-koopa_install_r_cmd_check() { # {{{3
-    koopa_install_app \
-        --name-fancy='R CMD check' \
-        --name='r-cmd-check' \
-        --version='rolling' \
-        "$@"
-}
-
-# r-koopa ----------------------------------------------------------------- {{{2
-
-koopa_install_r_koopa() { # {{{3
-    koopa_assert_has_no_args "$#"
-    koopa_r_koopa 'header'
-    return 0
-}
-
-# r-packages -------------------------------------------------------------- {{{2
-
-koopa_install_r_packages() { # {{{3
-    koopa_install_app_packages \
-        --name-fancy='R' \
-        --name='r' \
-        "$@"
-}
-
-# rbenv ------------------------------------------------------------------- {{{2
-
-koopa_install_rbenv() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/rbenv' \
-        --name='rbenv' \
-        --version='rolling' \
-        "$@"
-}
-
-# rmate ------------------------------------------------------------------- {{{2
-
-koopa_install_rmate() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/rmate' \
-        --name='rmate' \
-        "$@"
-}
-
-# rsync ------------------------------------------------------------------- {{{2
-
-koopa_install_rsync() { # {{{3
-    koopa_install_app \
-        --link-in-bin='rsync' \
-        --name='rsync' \
-        "$@"
-}
-
-# ruby -------------------------------------------------------------------- {{{2
-
-koopa_install_ruby() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/gem' \
-        --link-in-bin='bin/ruby' \
-        --name-fancy='Ruby' \
-        --name='ruby' \
-        "$@"
-}
-
-# ruby-packages ----------------------------------------------------------- {{{2
-
-koopa_install_ruby_packages() { # {{{3
-    koopa_install_app_packages \
-        --link-in-bin='bin/bashcov' \
-        --link-in-bin='bin/bundle' \
-        --link-in-bin='bin/bundler' \
-        --link-in-bin='bin/ronn' \
-        --name-fancy='Ruby' \
-        --name='ruby' \
-        "$@"
-}
-
-# rust -------------------------------------------------------------------- {{{2
-
-koopa_install_rust() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/rustc' \
-        --name-fancy='Rust' \
-        --name='rust' \
-        --version='rolling' \
-        "$@"
-}
-
-# rust-packages ----------------------------------------------------------- {{{2
-
-# FIXME Need to include links here.
-koopa_install_rust_packages() { # {{{3
-    koopa_install_app_packages \
-        --name-fancy='Rust' \
-        --name='rust' \
-        "$@"
-}
-
-# sed --------------------------------------------------------------------- {{{2
-
-koopa_install_sed() { # {{{3
-    koopa_install_gnu_app \
-        --link-in-bin='bin/sed' \
-        --name='sed' \
-        "$@"
-}
-
-# [shellcheck] ------------------------------------------------------------ {{{2
-
-koopa_install_shellcheck() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/shellcheck' \
-        --name-fancy='ShellCheck' \
-        --name='shellcheck' \
-        "$@"
-}
-
-# shunit2 ----------------------------------------------------------------- {{{2
-
-# FIXME Need to include link here?
-koopa_install_shunit2() { # {{{3
-    koopa_install_app \
-        --name-fancy='shUnit2' \
-        --name='shunit2' \
-        "$@"
-}
-
-# singularity ------------------------------------------------------------- {{{2
-
-# FIXME Need to include link here?
-koopa_install_singularity() { # {{{3
-    koopa_install_app \
-        --name='singularity' \
-        "$@"
-}
-
-# sqlite ------------------------------------------------------------------ {{{2
-
-koopa_install_sqlite() { # {{{3
-    koopa_install_app \
-        --name-fancy='SQLite' \
-        --name='sqlite' \
-        "$@"
-}
-
-# stow -------------------------------------------------------------------- {{{2
-
-koopa_install_stow() { # {{{3
-    # """
-    # Install script uses 'Test::Output' Perl package.
-    # """
-    koopa_install_gnu_app \
-        --activate-opt='perl' \
-        --link-in-bin='bin/stow' \
-        --name='stow' \
-        "$@"
-}
-
-# subversion -------------------------------------------------------------- {{{2
-
-koopa_install_subversion() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/svn' \
-        --name='subversion' \
-        "$@"
-}
-
-# taglib ------------------------------------------------------------------ {{{2
-
-# FIXME Rework this as a Python virtualenv.
-koopa_install_taglib() { # {{{3
-    koopa_install_app \
-        --name-fancy='TagLib' \
-        --name='taglib' \
-        "$@"
-}
-
-# tar --------------------------------------------------------------------- {{{2
-
-koopa_install_tar() { # {{{3
-    koopa_install_gnu_app \
-        --link-in-bin='bin/tar' \
-        --name='tar' \
-        "$@"
-}
-
-# texinfo ----------------------------------------------------------------- {{{2
-
-# FIXME Need to include a link here?
-koopa_install_texinfo() { # {{{3
-    koopa_install_gnu_app \
-        --name='texinfo' \
-        "$@"
-}
-
-# the-silver-searcher ----------------------------------------------------- {{{2
-
-koopa_install_the_silver_searcher() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/ag' \
-        --name='the-silver-searcher' \
-        "$@"
-}
-
-# tmux -------------------------------------------------------------------- {{{2
-
-koopa_install_tmux() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/tmux' \
-        --name='tmux' \
-        "$@"
-}
-
-# udunits ----------------------------------------------------------------- {{{2
-
-koopa_install_udunits() { # {{{3
-    koopa_install_app \
-        --name='udunits' \
-        "$@"
-}
-
-# vim --------------------------------------------------------------------- {{{2
-
-koopa_install_vim() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/vim' \
-        --link-in-bin='bin/vimdiff' \
-        --name-fancy='Vim' \
-        --name='vim' \
-        "$@"
-}
-
-# wget -------------------------------------------------------------------- {{{2
-
-koopa_install_wget() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/wget' \
-        --name='wget' \
-        "$@"
-}
-
-# zsh --------------------------------------------------------------------- {{{2
-
-koopa_install_zsh() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/zsh' \
-        --name-fancy='Zsh' \
-        --name='zsh' \
-        "$@"
-    koopa_fix_zsh_permissions
-    return 0
-}
-
-
-
-
-
-
-koopa_uninstall_anaconda() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Anaconda' \
-        --name='anaconda' \
-        "$@"
-}
-
-koopa_uninstall_armadillo() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Armadillo' \
-        --name='armadillo' \
-        "$@"
-}
-
-koopa_uninstall_autoconf() { # {{{3
-    koopa_uninstall_app \
-        --name='autoconf' \
-        "$@"
-}
-
-koopa_uninstall_automake() { # {{{3
-    koopa_uninstall_app \
-        --name='automake' \
-        "$@"
-}
-
-# FIXME Need to test this.
-koopa_uninstall_bash() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Bash' \
-        --name='bash' \
-        --unlink-app-in-bin='bash' \
-        "$@"
-}
-
-koopa_uninstall_binutils() { # {{{3
-    koopa_uninstall_app \
-        --name='binutils' \
-        "$@"
-}
-
-koopa_uninstall_boost() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Boost' \
-        --name='boost' \
-        "$@"
-}
-
-koopa_uninstall_chemacs() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Chemacs' \
-        --name='chemacs' \
-        "$@"
-}
-
-koopa_uninstall_cmake() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='CMake' \
-        --name='cmake' \
-        "$@"
-    return 0
-}
-
-koopa_uninstall_conda() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Miniconda' \
-        --name='conda' \
-        --unlink-in-bin='conda' \
-        "$@"
-}
-
 koopa_uninstall_coreutils() { # {{{3
     koopa_uninstall_app \
         --name='coreutils' \
@@ -1277,10 +431,30 @@ koopa_uninstall_coreutils() { # {{{3
         "$@"
 }
 
+# cpufetch ---------------------------------------------------------------- {{{2
+
+koopa_install_cpufetch() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/cpufetch' \
+        --name='cpufetch' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_cpufetch() { # {{{3
     koopa_uninstall_app \
         --name='cpufetch' \
+        "$@"
+}
+
+# curl -------------------------------------------------------------------- {{{2
+
+koopa_install_curl() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/curl' \
+        --link-in-bin='bin/curl-config' \
+        --name-fancy='cURL' \
+        --name='curl' \
         "$@"
 }
 
@@ -1290,6 +464,16 @@ koopa_uninstall_curl() { # {{{3
         --name='curl' \
         --unlink-in-bin='curl' \
         --unlink-in-bin='curl-config' \
+        "$@"
+}
+
+# dotfiles ---------------------------------------------------------------- {{{2
+
+koopa_install_dotfiles() { # {{{3
+    koopa_install_app \
+        --name-fancy='Dotfiles' \
+        --name='dotfiles' \
+        --version='rolling' \
         "$@"
 }
 
@@ -1319,6 +503,23 @@ koopa_uninstall_dotfiles() { # {{{3
     return 0
 }
 
+koopa_update_dotfiles() { # {{{3
+    koopa_update_app \
+        --name='dotfiles' \
+        --name-fancy='Dotfiles' \
+        "$@"
+}
+
+# emacs ------------------------------------------------------------------- {{{2
+
+koopa_install_emacs() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/emacs' \
+        --name-fancy='Emacs' \
+        --name='emacs' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_emacs() { # {{{3
     koopa_uninstall_app \
@@ -1327,10 +528,44 @@ koopa_uninstall_emacs() { # {{{3
         "$@"
 }
 
+# ensembl-perl-api -------------------------------------------------------- {{{2
+
+koopa_install_ensembl_perl_api() { # {{{3
+    koopa_install_app \
+        --name-fancy='Ensembl Perl API' \
+        --name='ensembl-perl-api' \
+        --version='rolling' \
+        "$@"
+}
+
 koopa_uninstall_ensembl_perl_api() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
+        "$@"
+}
+
+# findutils --------------------------------------------------------------- {{{2
+
+koopa_install_findutils() { # {{{3
+    if koopa_is_macos
+    then
+        # Workaround for build failures in 4.8.0.
+        # See also:
+        # - https://github.com/Homebrew/homebrew-core/blob/master/
+        #     Formula/findutils.rb
+        # - https://lists.gnu.org/archive/html/bug-findutils/2021-01/
+        #     msg00050.html
+        # - https://lists.gnu.org/archive/html/bug-findutils/2021-01/
+        #     msg00051.html
+        export CFLAGS='-D__nonnull\(params\)='
+    fi
+    koopa_install_gnu_app \
+        --link-in-bin='bin/find' \
+        --link-in-bin='bin/locate' \
+        --link-in-bin='bin/updatedb' \
+        --link-in-bin='bin/xargs' \
+        --name='findutils' \
         "$@"
 }
 
@@ -1344,11 +579,31 @@ koopa_uninstall_findutils() { # {{{3
         "$@"
 }
 
+# fish -------------------------------------------------------------------- {{{2
+
+koopa_install_fish() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/fish' \
+        --name-fancy='Fish' \
+        --name='fish' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_fish() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Fish' \
         --name='fish' \
+        "$@"
+}
+
+# fzf --------------------------------------------------------------------- {{{2
+
+koopa_install_fzf() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/fzf' \
+        --name-fancy='FZF' \
+        --name='fzf' \
         "$@"
 }
 
@@ -1360,10 +615,28 @@ koopa_uninstall_fzf() { # {{{3
         "$@"
 }
 
+# gawk -------------------------------------------------------------------- {{{2
+
+# FIXME Need to add links here.
+koopa_install_gawk() { # {{{3
+    koopa_install_gnu_app \
+        --name='gawk' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_gawk() { # {{{3
     koopa_uninstall_app \
         --name='gawk' \
+        "$@"
+}
+
+# gcc --------------------------------------------------------------------- {{{2
+
+koopa_install_gcc() { # {{{3
+    koopa_install_app \
+        --name-fancy='GCC' \
+        --name='gcc' \
         "$@"
 }
 
@@ -1374,6 +647,15 @@ koopa_uninstall_gcc() { # {{{3
         "$@"
 }
 
+# gdal -------------------------------------------------------------------- {{{2
+
+koopa_install_gdal() { # {{{3
+    koopa_install_app \
+        --name-fancy='GDAL' \
+        --name='gdal' \
+        "$@"
+}
+
 koopa_uninstall_gdal() { # {{{3
     koopa_uninstall_app \
         --name-fancy='GDAL' \
@@ -1381,10 +663,29 @@ koopa_uninstall_gdal() { # {{{3
         "$@"
 }
 
+# geos -------------------------------------------------------------------- {{{2
+
+koopa_install_geos() { # {{{3
+    koopa_install_app \
+        --name-fancy='GEOS' \
+        --name='geos' \
+        "$@"
+}
+
 koopa_uninstall_geos() { # {{{3
     koopa_uninstall_app \
         --name-fancy='GEOS' \
         --name='geos' \
+        "$@"
+}
+
+# git --------------------------------------------------------------------- {{{2
+
+koopa_install_git() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/git' \
+        --name-fancy='Git' \
+        --name='git' \
         "$@"
 }
 
@@ -1396,11 +697,32 @@ koopa_uninstall_git() { # {{{3
         "$@"
 }
 
+# gnupg ------------------------------------------------------------------- {{{2
+
+# FIXME Need to add links here.
+koopa_install_gnupg() { # {{{3
+    koopa_install_app \
+        --name-fancy='GnuPG suite' \
+        --name='gnupg' \
+        "$@"
+}
+
 koopa_uninstall_gnupg() { # {{{3
     koopa_uninstall_app \
         --name-fancy='GnuPG suite' \
         --name='gnupg' \
         "$@"
+}
+
+# go ---------------------------------------------------------------------- {{{2
+
+koopa_install_go() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/go' \
+        --name-fancy='Go' \
+        --name='go' \
+        "$@"
+    return 0
 }
 
 # FIXME Need to unlink in bin here.
@@ -1411,10 +733,23 @@ koopa_uninstall_go() { # {{{3
         "$@"
 }
 
+# go-packages ------------------------------------------------------------- {{{2
+
 koopa_uninstall_go_packages() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Go packages' \
         --name='go-packages' \
+        "$@"
+}
+
+# grep -------------------------------------------------------------------- {{{2
+
+koopa_install_grep() { # {{{3
+    koopa_install_gnu_app \
+        --link-in-bin='bin/egrep' \
+        --link-in-bin='bin/fgrep' \
+        --link-in-bin='bin/grep' \
+        --name='grep' \
         "$@"
 }
 
@@ -1427,6 +762,14 @@ koopa_uninstall_grep() { # {{{3
         "$@"
 }
 
+# groff ------------------------------------------------------------------- {{{2
+
+koopa_install_groff() { # {{{3
+    koopa_install_gnu_app \
+        --name='groff' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_groff() { # {{{3
     koopa_uninstall_app \
@@ -1434,9 +777,27 @@ koopa_uninstall_groff() { # {{{3
         "$@"
 }
 
+# gsl --------------------------------------------------------------------- {{{2
+
+koopa_install_gsl() { # {{{3
+    koopa_install_gnu_app \
+        --name='gsl' \
+        --name-fancy='GSL' \
+        "$@"
+}
+
 koopa_uninstall_gsl() { # {{{3
     koopa_uninstall_app \
         --name='gsl' \
+        "$@"
+}
+
+# hadolint ---------------------------------------------------------------- {{{2
+
+koopa_install_hadolint() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/hadolint' \
+        --name='hadolint' \
         "$@"
 }
 
@@ -1447,10 +808,30 @@ koopa_uninstall_hadolint() { # {{{3
         "$@"
 }
 
+# harfbuzz ---------------------------------------------------------------- {{{2
+
+koopa_install_harfbuzz() { # {{{3
+    koopa_install_app \
+        --name-fancy='HarfBuzz' \
+        --name='harfbuzz' \
+        "$@"
+}
+
 koopa_uninstall_harfbuzz() { # {{{3
     koopa_uninstall_app \
         --name-fancy='HarfBuzz' \
         --name='harfbuzz' \
+        "$@"
+}
+
+# haskell-stack ----------------------------------------------------------- {{{2
+
+koopa_install_haskell_stack() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/stack' \
+        --name-fancy='Haskell Stack' \
+        --name='haskell-stack' \
+        --version='rolling' \
         "$@"
 }
 
@@ -1462,10 +843,28 @@ koopa_uninstall_haskell_stack() { # {{{3
         "$@"
 }
 
+# hdf5 -------------------------------------------------------------------- {{{2
+
+koopa_install_hdf5() { # {{{3
+    koopa_install_app \
+        --name-fancy='HDF5' \
+        --name='hdf5' \
+        "$@"
+}
+
 koopa_uninstall_hdf5() { # {{{3
     koopa_uninstall_app \
         --name-fancy='HDF5' \
         --name='hdf5' \
+        "$@"
+}
+
+# htop -------------------------------------------------------------------- {{{2
+
+koopa_install_htop() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/htop' \
+        --name='htop' \
         "$@"
 }
 
@@ -1476,6 +875,15 @@ koopa_uninstall_htop() { # {{{3
         "$@"
 }
 
+# icu4c ------------------------------------------------------------------- {{{2
+
+koopa_install_icu4c() { # {{{3
+    koopa_install_app \
+        --name-fancy='ICU4C' \
+        --name='icu4c' \
+        "$@"
+}
+
 koopa_uninstall_icu4c() { # {{{3
     koopa_uninstall_app \
         --name-fancy='ICU4C' \
@@ -1483,10 +891,29 @@ koopa_uninstall_icu4c() { # {{{3
         "$@"
 }
 
+# imagemagick ------------------------------------------------------------- {{{2
+
+koopa_install_imagemagick() { # {{{3
+    koopa_install_app \
+        --name-fancy='ImageMagick' \
+        --name='imagemagick' \
+        "$@"
+}
+
 koopa_uninstall_imagemagick() { # {{{3
     koopa_uninstall_app \
         --name-fancy='ImageMagick' \
         --name='imagemagick' \
+        "$@"
+}
+
+# juila ------------------------------------------------------------------- {{{2
+
+koopa_install_julia() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/julia' \
+        --name-fancy='Julia' \
+        --name='julia' \
         "$@"
 }
 
@@ -1498,10 +925,34 @@ koopa_uninstall_julia() { # {{{3
         "$@"
 }
 
+# julia-packages ---------------------------------------------------------- {{{2
+
+# FIXME Specify which packages to link.
+koopa_install_julia_packages() { # {{{3
+    koopa_install_app_packages \
+        --name-fancy='Julia' \
+        --name='julia' \
+        "$@"
+}
+
+# FIXME Specify which packages to unlink.
 koopa_uninstall_julia_packages() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Julia packages' \
         --name='julia-packages' \
+        "$@"
+}
+
+koopa_update_julia_packages() { # {{{3
+    koopa_install_julia_packages "$@"
+}
+
+# lesspipe ---------------------------------------------------------------- {{{2
+
+koopa_install_lesspipe() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/lesspipe.sh' \
+        --name='lesspipe' \
         "$@"
 }
 
@@ -1512,15 +963,41 @@ koopa_uninstall_lesspipe() { # {{{3
         "$@"
 }
 
+# libevent ---------------------------------------------------------------- {{{2
+
+koopa_install_libevent() { # {{{3
+    koopa_install_app \
+        --name='libevent' \
+        "$@"
+}
+
 koopa_uninstall_libevent() { # {{{3
     koopa_uninstall_app \
         --name='libevent' \
         "$@"
 }
 
+# libtool ----------------------------------------------------------------- {{{2
+
+koopa_install_libtool() { # {{{3
+    koopa_install_gnu_app \
+        --name='libtool' \
+        "$@"
+}
+
 koopa_uninstall_libtool() { # {{{3
     koopa_uninstall_app \
         --name='libtool' \
+        "$@"
+}
+
+# lua --------------------------------------------------------------------- {{{2
+
+# FIXME Need to add link here?
+koopa_install_lua() { # {{{3
+    koopa_install_app \
+        --name-fancy='Lua' \
+        --name='lua' \
         "$@"
 }
 
@@ -1532,6 +1009,15 @@ koopa_uninstall_lua() { # {{{3
         "$@"
 }
 
+# luarocks ---------------------------------------------------------------- {{{2
+
+# FIXME Need to add link here?
+koopa_install_luarocks() { # {{{3
+    koopa_install_app \
+        --name='luarocks' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_luarocks() { # {{{3
     koopa_uninstall_app \
@@ -1539,9 +1025,41 @@ koopa_uninstall_luarocks() { # {{{3
         "$@"
 }
 
+# make -------------------------------------------------------------------- {{{2
+
+koopa_install_make() { # {{{3
+    koopa_install_gnu_app \
+        --name='make' \
+        "$@"
+}
+
 koopa_uninstall_make() { # {{{3
     koopa_uninstall_app \
         --name='make' \
+        "$@"
+}
+
+# mamba ------------------------------------------------------------------- {{{2
+
+koopa_install_mamba() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/mamba' \
+        --name-fancy='Mamba' \
+        --name='mamba' \
+        --no-prefix-check \
+        "$@"
+}
+
+koopa_update_mamba() { # {{{3
+    koopa_install_mamba "$@"
+}
+
+# man-db ------------------------------------------------------------------ {{{2
+
+koopa_install_man_db() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/man' \
+        --name='man-db' \
         "$@"
 }
 
@@ -1552,6 +1070,15 @@ koopa_uninstall_man_db() { # {{{3
         "$@"
 }
 
+# meson ------------------------------------------------------------------- {{{2
+
+koopa_install_meson() { # {{{3
+    koopa_install_app \
+        --name-fancy='Meson' \
+        --name='meson' \
+        "$@"
+}
+
 koopa_uninstall_meson() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Meson' \
@@ -1559,9 +1086,26 @@ koopa_uninstall_meson() { # {{{3
         "$@"
 }
 
+# ncurses ----------------------------------------------------------------- {{{2
+
+koopa_install_ncurses() { # {{{3
+    koopa_install_gnu_app \
+        --name='ncurses' \
+        "$@"
+}
+
 koopa_uninstall_ncurses() { # {{{3
     koopa_uninstall_app \
         --name='ncurses' \
+        "$@"
+}
+
+# neofetch ---------------------------------------------------------------- {{{2
+
+koopa_install_neofetch() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/neofetch' \
+        --name='neofetch' \
         "$@"
 }
 
@@ -1572,6 +1116,15 @@ koopa_uninstall_neofetch() { # {{{3
         "$@"
 }
 
+# neovim ------------------------------------------------------------------ {{{2
+
+koopa_install_neovim() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/nvim' \
+        --name='neovim' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_neovim() { # {{{3
     koopa_uninstall_app \
@@ -1579,9 +1132,29 @@ koopa_uninstall_neovim() { # {{{3
         "$@"
 }
 
+# nim --------------------------------------------------------------------- {{{2
+
+koopa_install_nim() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/nim' \
+        --name-fancy='Nim' \
+        --name='nim' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_nim() { # {{{3
     koopa_uninstall_app \
+        --name-fancy='Nim' \
+        --name='nim' \
+        "$@"
+}
+
+# nim-packages ------------------------------------------------------------ {{{2
+
+koopa_install_nim_packages() { # {{{3
+    koopa_install_app_packages \
+        --link-in-bin='bin/markdown' \
         --name-fancy='Nim' \
         --name='nim' \
         "$@"
@@ -1595,11 +1168,34 @@ koopa_uninstall_nim_packages() { # {{{3
         "$@"
 }
 
+koopa_update_nim_packages() { # {{{3
+    koopa_install_nim_packages "$@"
+}
+
+# ninja ------------------------------------------------------------------- {{{2
+
+koopa_install_ninja() { # {{{3
+    koopa_install_app \
+        --name-fancy='Ninja' \
+        --name='ninja' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_ninja() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Ninja' \
         --name='ninja' \
+        "$@"
+}
+
+# node -------------------------------------------------------------------- {{{2
+
+koopa_install_node() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/node' \
+        --name-fancy='Node.js' \
+        --name='node' \
         "$@"
 }
 
@@ -1611,11 +1207,38 @@ koopa_uninstall_node() { # {{{3
         "$@"
 }
 
+# node-packages ----------------------------------------------------------- {{{2
+
+koopa_install_node_packages() { # {{{3
+    koopa_install_app_packages \
+        --link-in-bin='bin/bash-language-server' \
+        --link-in-bin='bin/gtop' \
+        --link-in-bin='bin/npm' \
+        --link-in-bin='bin/prettier' \
+        --name-fancy='Node' \
+        --name='node' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_node_packages() { # {{{3
     koopa_uninstall_app \
         --name='node-packages' \
         --name-fancy='Node.js packages' \
+        "$@"
+}
+
+koopa_update_node_packages() { # {{{3
+    koopa_install_node_packages "$@"
+}
+
+# openjdk ----------------------------------------------------------------- {{{2
+
+# FIXME Need to add link here?
+koopa_install_openjdk() { # {{{3
+    koopa_install_app \
+        --name-fancy='OpenJDK' \
+        --name='openjdk' \
         "$@"
 }
 
@@ -1641,10 +1264,28 @@ koopa_uninstall_openjdk() { # {{{3
     return 0
 }
 
+# openssh ----------------------------------------------------------------- {{{2
+
+koopa_install_openssh() { # {{{3
+    koopa_install_app \
+        --name-fancy='OpenSSH' \
+        --name='openssh' \
+        "$@"
+}
+
 koopa_uninstall_openssh() { # {{{3
     koopa_uninstall_app \
         --name-fancy='OpenSSH' \
         --name='openssh' \
+        "$@"
+}
+
+# openssl ----------------------------------------------------------------- {{{2
+
+koopa_install_openssl() { # {{{3
+    koopa_install_app \
+        --name-fancy='OpenSSL' \
+        --name='openssl' \
         "$@"
 }
 
@@ -1655,10 +1296,28 @@ koopa_uninstall_openssl() { # {{{3
         "$@"
 }
 
+# parallel ---------------------------------------------------------------- {{{2
+
+koopa_install_parallel() { # {{{3
+    koopa_install_gnu_app \
+        --link-in-bin='bin/parallel' \
+        --name='parallel' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_parallel() { # {{{3
     koopa_uninstall_app \
         --name='parallel' \
+        "$@"
+}
+
+# password-store ---------------------------------------------------------- {{{2
+
+koopa_install_password_store() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/pass' \
+        --name='password-store' \
         "$@"
 }
 
@@ -1669,10 +1328,27 @@ koopa_uninstall_password_store() { # {{{3
         "$@"
 }
 
+# patch ------------------------------------------------------------------- {{{2
+
+koopa_install_patch() { # {{{3
+    koopa_install_gnu_app \
+        --name='patch' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_patch() { # {{{3
     koopa_uninstall_app \
         --name='patch' \
+        "$@"
+}
+
+# pcre2 ------------------------------------------------------------------- {{{2
+
+koopa_install_pcre2() { # {{{3
+    koopa_install_app \
+        --name-fancy='PCRE2' \
+        --name='pcre2' \
         "$@"
 }
 
@@ -1683,9 +1359,31 @@ koopa_uninstall_pcre2() { # {{{3
         "$@"
 }
 
-# FIXME Need to include unlinks.
+# perl -------------------------------------------------------------------- {{{2
+
+koopa_install_perl() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/perl' \
+        --name-fancy='Perl' \
+        --name='perl' \
+        "$@"
+}
+
 koopa_uninstall_perl() { # {{{3
     koopa_uninstall_app \
+        --name-fancy='Perl' \
+        --name='perl' \
+        --unlink-in-bin='perl' \
+        "$@"
+}
+
+# perl-packages ----------------------------------------------------------- {{{2
+
+koopa_install_perl_packages() { # {{{3
+    koopa_install_app_packages \
+        --link-in-bin='bin/ack' \
+        --link-in-bin='bin/cpanm' \
+        --link-in-bin='bin/rename' \
         --name-fancy='Perl' \
         --name='perl' \
         "$@"
@@ -1702,6 +1400,21 @@ koopa_uninstall_perl_packages() { # {{{3
     return 0
 }
 
+koopa_update_perl_packages() { # {{{3
+    koopa_install_perl_packages "$@"
+}
+
+# perlbrew ---------------------------------------------------------------- {{{2
+
+koopa_install_perlbrew() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/perlbrew' \
+        --name-fancy='Perlbrew' \
+        --name='perlbrew' \
+        --version='rolling' \
+        "$@"
+}
+
 koopa_uninstall_perlbrew() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Perlbrew' \
@@ -1710,9 +1423,33 @@ koopa_uninstall_perlbrew() { # {{{3
         "$@"
 }
 
+koopa_update_perlbrew() { # {{{3
+    koopa_update_app \
+        --name='perlbrew' \
+        --name-fancy='Perlbrew' \
+        "$@"
+}
+
+# pkg-config -------------------------------------------------------------- {{{2
+
+koopa_install_pkg_config() { # {{{3
+    koopa_install_app \
+        --name='pkg-config' \
+        "$@"
+}
+
 koopa_uninstall_pkg_config() { # {{{3
     koopa_uninstall_app \
         --name='pkg-config' \
+        "$@"
+}
+
+# proj -------------------------------------------------------------------- {{{2
+
+koopa_install_proj() { # {{{3
+    koopa_install_app \
+        --name-fancy='PROJ' \
+        --name='proj' \
         "$@"
 }
 
@@ -1723,16 +1460,60 @@ koopa_uninstall_proj() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
-koopa_uninstall_pyenv() { # {{{3
-    koopa_uninstall_app \
+# pyenv ------------------------------------------------------------------- {{{2
+
+koopa_install_pyenv() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/pyenv' \
         --name='pyenv' \
+        --version='rolling' \
         "$@"
 }
 
 # FIXME Need to unlink in bin here.
+koopa_uninstall_pyenv() { # {{{3
+    koopa_uninstall_app \
+        --name='pyenv' \
+        --unlink-in-bin='pyenv' \
+        "$@"
+}
+
+koopa_update_pyenv() { # {{{3
+    koopa_update_app \
+        --name='pyenv' \
+        "$@"
+}
+
+# python ------------------------------------------------------------------ {{{2
+
+koopa_install_python() { # {{{3
+    local install_args
+    install_args=(
+        '--name-fancy=Python'
+        '--name=python'
+    )
+    # Assume we're using 'python-binary' by default.
+    if ! koopa_is_macos
+    then
+        install_args+=('--link-in-bin=bin/python3')
+    fi
+    koopa_install_app "${install_args[@]}" "$@"
+}
+
+# FIXME Need to deal with python3 unlink here.
+# FIXME Need to unlink in bin here.
 koopa_uninstall_python() { # {{{3
     koopa_uninstall_app \
+        --name-fancy='Python' \
+        --name='python' \
+        "$@"
+}
+
+# python-packages --------------------------------------------------------- {{{2
+
+# FIXME Need to include links here.
+koopa_install_python_packages() { # {{{3
+    koopa_install_app_packages \
         --name-fancy='Python' \
         --name='python' \
         "$@"
@@ -1746,6 +1527,8 @@ koopa_uninstall_python_packages() { # {{{3
         "$@"
 }
 
+# python-virtualenvs ------------------------------------------------------ {{{2
+
 koopa_uninstall_python_virtualenvs() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Python virtualenvs' \
@@ -1753,7 +1536,20 @@ koopa_uninstall_python_virtualenvs() { # {{{3
         "$@"
 }
 
+# r ----------------------------------------------------------------------- {{{2
+
+# FIXME Don't link these on macOS.
+koopa_install_r() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/R' \
+        --link-in-bin='bin/Rscript' \
+        --name-fancy='R' \
+        --name='r' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
+# FIXME Don't unlink these on macOS.
 koopa_uninstall_r() { # {{{3
     koopa_uninstall_app \
         --name-fancy='R' \
@@ -1761,9 +1557,43 @@ koopa_uninstall_r() { # {{{3
         "$@"
 }
 
+# r-cmd-check ------------------------------------------------------------- {{{2
+
+koopa_install_r_cmd_check() { # {{{3
+    koopa_install_app \
+        --name-fancy='R CMD check' \
+        --name='r-cmd-check' \
+        --version='rolling' \
+        "$@"
+}
+
 koopa_uninstall_r_cmd_check() { # {{{3
     koopa_uninstall_app \
         --name='r-cmd-check' \
+        "$@"
+}
+
+koopa_update_r_cmd_check() { # {{{3
+    koopa_update_app \
+        --name='r-cmd-check' \
+        --name-fancy='R CMD check' \
+        "$@"
+}
+
+# r-koopa ----------------------------------------------------------------- {{{2
+
+koopa_install_r_koopa() { # {{{3
+    koopa_assert_has_no_args "$#"
+    koopa_r_koopa 'header'
+    return 0
+}
+
+# r-packages -------------------------------------------------------------- {{{2
+
+koopa_install_r_packages() { # {{{3
+    koopa_install_app_packages \
+        --name-fancy='R' \
+        --name='r' \
         "$@"
 }
 
@@ -1774,30 +1604,95 @@ koopa_uninstall_r_packages() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
+koopa_update_r_packages() { # {{{3
+    koopa_update_app \
+        --name-fancy='R packages' \
+        --name='r-packages' \
+        "$@"
+}
+
+# rbenv ------------------------------------------------------------------- {{{2
+
+koopa_install_rbenv() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/rbenv' \
+        --name='rbenv' \
+        --version='rolling' \
+        "$@"
+}
+
 koopa_uninstall_rbenv() { # {{{3
     koopa_uninstall_app \
+        --name='rbenv' \
+        --unlink-in-bin='rbenv' \
+        "$@"
+}
+
+koopa_update_rbenv() { # {{{3
+    koopa_update_app \
         --name='rbenv' \
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
-koopa_uninstall_rmate() { # {{{3
-    koopa_uninstall_app \
+# rmate ------------------------------------------------------------------- {{{2
+
+koopa_install_rmate() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/rmate' \
         --name='rmate' \
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
+koopa_uninstall_rmate() { # {{{3
+    koopa_uninstall_app \
+        --name='rmate' \
+        --unlink-in-bin='rmate' \
+        "$@"
+}
+
+# rsync ------------------------------------------------------------------- {{{2
+
+koopa_install_rsync() { # {{{3
+    koopa_install_app \
+        --link-in-bin='rsync' \
+        --name='rsync' \
+        "$@"
+}
+
 koopa_uninstall_rsync() { # {{{3
     koopa_uninstall_app \
         --name='rsync' \
+        --unlink-in-bin='rsync' \
+        "$@"
+}
+
+# ruby -------------------------------------------------------------------- {{{2
+
+koopa_install_ruby() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/gem' \
+        --link-in-bin='bin/ruby' \
+        --name-fancy='Ruby' \
+        --name='ruby' \
         "$@"
 }
 
 # FIXME Need to unlink in bin here.
 koopa_uninstall_ruby() { # {{{3
     koopa_uninstall_app \
+        --name-fancy='Ruby' \
+        --name='ruby' \
+        "$@"
+}
+
+# ruby-packages ----------------------------------------------------------- {{{2
+
+koopa_install_ruby_packages() { # {{{3
+    koopa_install_app_packages \
+        --link-in-bin='bin/bashcov' \
+        --link-in-bin='bin/bundle' \
+        --link-in-bin='bin/bundler' \
+        --link-in-bin='bin/ronn' \
         --name-fancy='Ruby' \
         --name='ruby' \
         "$@"
@@ -1811,9 +1706,41 @@ koopa_uninstall_ruby_packages() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
+koopa_update_ruby_packages() {  # {{{3
+    koopa_install_ruby_packages "$@"
+}
+
+# rust -------------------------------------------------------------------- {{{2
+
+koopa_install_rust() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/rustc' \
+        --name-fancy='Rust' \
+        --name='rust' \
+        --version='rolling' \
+        "$@"
+}
+
 koopa_uninstall_rust() { # {{{3
     koopa_uninstall_app \
+        --name-fancy='Rust' \
+        --name='rust' \
+        --unlink-in-bin='rustc' \
+        "$@"
+}
+
+koopa_update_rust() { # {{{3
+    koopa_update_app \
+        --name-fancy='Rust' \
+        --name='rust' \
+        "$@"
+}
+
+# rust-packages ----------------------------------------------------------- {{{2
+
+# FIXME Need to include links here.
+koopa_install_rust_packages() { # {{{3
+    koopa_install_app_packages \
         --name-fancy='Rust' \
         --name='rust' \
         "$@"
@@ -1827,6 +1754,22 @@ koopa_uninstall_rust_packages() { # {{{3
         "$@"
 }
 
+koopa_update_rust_packages() { # {{{3
+    koopa_update_app \
+        --name-fancy='Rust packages' \
+        --name='rust-packages' \
+        "$@"
+}
+
+# sed --------------------------------------------------------------------- {{{2
+
+koopa_install_sed() { # {{{3
+    koopa_install_gnu_app \
+        --link-in-bin='bin/sed' \
+        --name='sed' \
+        "$@"
+}
+
 koopa_uninstall_sed() { # {{{3
     koopa_uninstall_app \
         --name='sed' \
@@ -1834,11 +1777,31 @@ koopa_uninstall_sed() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
+# [shellcheck] ------------------------------------------------------------ {{{2
+
+koopa_install_shellcheck() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/shellcheck' \
+        --name-fancy='ShellCheck' \
+        --name='shellcheck' \
+        "$@"
+}
+
 koopa_uninstall_shellcheck() { # {{{3
     koopa_uninstall_app \
         --name-fancy='ShellCheck' \
         --name='shellcheck' \
+        --unlink-in-bin='shellcheck' \
+        "$@"
+}
+
+# shunit2 ----------------------------------------------------------------- {{{2
+
+# FIXME Need to include link here?
+koopa_install_shunit2() { # {{{3
+    koopa_install_app \
+        --name-fancy='shUnit2' \
+        --name='shunit2' \
         "$@"
 }
 
@@ -1850,10 +1813,28 @@ koopa_uninstall_shunit2() { # {{{3
         "$@"
 }
 
+# singularity ------------------------------------------------------------- {{{2
+
+# FIXME Need to include link here?
+koopa_install_singularity() { # {{{3
+    koopa_install_app \
+        --name='singularity' \
+        "$@"
+}
+
 # FIXME Need to unlink in bin here.
 koopa_uninstall_singularity() { # {{{3
     koopa_uninstall_app \
         --name='singularity' \
+        "$@"
+}
+
+# sqlite ------------------------------------------------------------------ {{{2
+
+koopa_install_sqlite() { # {{{3
+    koopa_install_app \
+        --name-fancy='SQLite' \
+        --name='sqlite' \
         "$@"
 }
 
@@ -1864,6 +1845,19 @@ koopa_uninstall_sqlite() { # {{{3
         "$@"
 }
 
+# stow -------------------------------------------------------------------- {{{2
+
+koopa_install_stow() { # {{{3
+    # """
+    # Install script uses 'Test::Output' Perl package.
+    # """
+    koopa_install_gnu_app \
+        --activate-opt='perl' \
+        --link-in-bin='bin/stow' \
+        --name='stow' \
+        "$@"
+}
+
 koopa_uninstall_stow() { # {{{3
     koopa_uninstall_app \
         --name='stow' \
@@ -1871,10 +1865,29 @@ koopa_uninstall_stow() { # {{{3
         "$@"
 }
 
+# subversion -------------------------------------------------------------- {{{2
+
+koopa_install_subversion() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/svn' \
+        --name='subversion' \
+        "$@"
+}
+
 koopa_uninstall_subversion() { # {{{3
     koopa_uninstall_app \
         --name='subversion' \
         --unlink-in-bin='svn' \
+        "$@"
+}
+
+# taglib ------------------------------------------------------------------ {{{2
+
+# FIXME Rework this as a Python virtualenv.
+koopa_install_taglib() { # {{{3
+    koopa_install_app \
+        --name-fancy='TagLib' \
+        --name='taglib' \
         "$@"
 }
 
@@ -1886,10 +1899,27 @@ koopa_uninstall_taglib() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
+# tar --------------------------------------------------------------------- {{{2
+
+koopa_install_tar() { # {{{3
+    koopa_install_gnu_app \
+        --link-in-bin='bin/tar' \
+        --name='tar' \
+        "$@"
+}
+
 koopa_uninstall_tar() { # {{{3
     koopa_uninstall_app \
         --name='tar' \
+        --unlink-in-bin='tar' \
+        "$@"
+}
+
+# texinfo ----------------------------------------------------------------- {{{2
+
+koopa_install_texinfo() { # {{{3
+    koopa_install_gnu_app \
+        --name='texinfo' \
         "$@"
 }
 
@@ -1899,17 +1929,43 @@ koopa_uninstall_texinfo() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
-koopa_uninstall_the_silver_searcher() { # {{{3
-    koopa_uninstall_app \
+# the-silver-searcher ----------------------------------------------------- {{{2
+
+koopa_install_the_silver_searcher() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/ag' \
         --name='the-silver-searcher' \
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
+koopa_uninstall_the_silver_searcher() { # {{{3
+    koopa_uninstall_app \
+        --name='the-silver-searcher' \
+        --unlink-in-bin='ag' \
+        "$@"
+}
+
+# tmux -------------------------------------------------------------------- {{{2
+
+koopa_install_tmux() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/tmux' \
+        --name='tmux' \
+        "$@"
+}
+
 koopa_uninstall_tmux() { # {{{3
     koopa_uninstall_app \
         --name='tmux' \
+        --unlink-in-bin='tmux' \
+        "$@"
+}
+
+# udunits ----------------------------------------------------------------- {{{2
+
+koopa_install_udunits() { # {{{3
+    koopa_install_app \
+        --name='udunits' \
         "$@"
 }
 
@@ -1919,111 +1975,59 @@ koopa_uninstall_udunits() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
-koopa_uninstall_vim() { # {{{3
-    koopa_uninstall_app \
+# vim --------------------------------------------------------------------- {{{2
+
+koopa_install_vim() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/vim' \
+        --link-in-bin='bin/vimdiff' \
         --name-fancy='Vim' \
         --name='vim' \
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
-koopa_uninstall_wget() { # {{{3
+koopa_uninstall_vim() { # {{{3
     koopa_uninstall_app \
+        --name-fancy='Vim' \
+        --name='vim' \
+        --unlink-in-bin='vim' \
+        --unlink-in-bin='vimdiff' \
+        "$@"
+}
+
+# wget -------------------------------------------------------------------- {{{2
+
+koopa_install_wget() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/wget' \
         --name='wget' \
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
+koopa_uninstall_wget() { # {{{3
+    koopa_uninstall_app \
+        --name='wget' \
+        --unlink-in-bin='wget' \
+        "$@"
+}
+
+# zsh --------------------------------------------------------------------- {{{2
+
+koopa_install_zsh() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/zsh' \
+        --name-fancy='Zsh' \
+        --name='zsh' \
+        "$@"
+    koopa_fix_zsh_permissions
+    return 0
+}
+
 koopa_uninstall_zsh() { # {{{3
     koopa_uninstall_app \
         --name-fancy="Zsh" \
         --name='zsh' \
-        "$@"
-}
-
-koopa_update_chemacs() { # {{{3
-    koopa_update_app \
-        --name='chemacs' \
-        --name-fancy='Chemacs' \
-        "$@"
-}
-
-koopa_update_dotfiles() { # {{{3
-    koopa_update_app \
-        --name='dotfiles' \
-        --name-fancy='Dotfiles' \
-        "$@"
-}
-
-koopa_update_julia_packages() { # {{{3
-    koopa_install_julia_packages "$@"
-}
-
-koopa_update_mamba() { # {{{3
-    koopa_install_mamba "$@"
-}
-
-koopa_update_nim_packages() { # {{{3
-    koopa_install_nim_packages "$@"
-}
-
-koopa_update_node_packages() { # {{{3
-    koopa_install_node_packages "$@"
-}
-
-koopa_update_perl_packages() { # {{{3
-    koopa_install_perl_packages "$@"
-}
-
-koopa_update_perlbrew() { # {{{3
-    koopa_update_app \
-        --name='perlbrew' \
-        --name-fancy='Perlbrew' \
-        "$@"
-}
-
-koopa_update_pyenv() { # {{{3
-    koopa_update_app \
-        --name='pyenv' \
-        "$@"
-}
-
-koopa_update_r_cmd_check() { # {{{3
-    koopa_update_app \
-        --name='r-cmd-check' \
-        --name-fancy='R CMD check' \
-        "$@"
-}
-
-koopa_update_r_packages() { # {{{3
-    koopa_update_app \
-        --name-fancy='R packages' \
-        --name='r-packages' \
-        "$@"
-}
-
-koopa_update_rbenv() { # {{{3
-    koopa_update_app \
-        --name='rbenv' \
-        "$@"
-}
-
-koopa_update_ruby_packages() {  # {{{3
-    koopa_install_ruby_packages "$@"
-}
-
-koopa_update_rust() { # {{{3
-    koopa_update_app \
-        --name-fancy='Rust' \
-        --name='rust' \
-        "$@"
-}
-
-koopa_update_rust_packages() { # {{{3
-    koopa_update_app \
-        --name-fancy='Rust packages' \
-        --name='rust-packages' \
+        --unlink-in-bin='zsh' \
         "$@"
 }
 
