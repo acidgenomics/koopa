@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Indicate that this is a binary install.
-# FIXME Rename this function, and just use the binary...simpler.
-
 main() { # {{{
     # """
-    # Install bcl2fastq from Fedora/RHEL RPM file.
-    # @note Updated 2022-01-07.
+    # Install bcl2fastq binary from Fedora/RHEL RPM file.
+    # @note Updated 2022-04-08.
     # """
     local dict
     koopa_assert_has_no_args "$#"

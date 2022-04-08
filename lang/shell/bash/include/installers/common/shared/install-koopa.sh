@@ -1,83 +1,10 @@
 #!/usr/bin/env bash
 
-# """
-# koopa shell
-# https://koopa.acidgenomics.com/
-# Refer to 'LICENSE' file for terms of usage.
-# """
-
-set -o errexit  # -e
-set -o errtrace  # -E
-set -o nounset  # -u
-set -o pipefail
-
-usage() { # {{{1
-    # """
-    # Help usage for koopa installer.
-    # @note Updated 2022-02-25.
-    # """
-    cat << END
-usage: install [--help|-h] [--non-interactive] [--test]
-
-Install koopa.
-
-Optional arguments:
-    --help, -h
-        Show this help message and exit.
-    --non-interactive
-        Don't prompt about configuration variables.
-    --prefix=PREFIX
-        Set the installation path prefix.
-        Defaults to '/opt/koopa' for shared installs,
-        and '\${XDG_DATA_HOME}/koopa' when installing for current user only.
-        Note that attempting to install into /opt' or '/usr/local' requires
-        administrator (sudo) permissions.
-    --verbose; or --test
-        Verbose (test) mode.
-        Recommended for Travis CI checks and building Docker images.
-
-Non-interactive configuration arguments:
-    --dotfiles (default); --no-dotfiles
-        Install dot files from https://github.com/acidgenomics/dotfiles?
-    --passwordless-sudo; --no-passwordless-sudo (default)
-        Enable passwordless sudo. Can be a potential security risk.
-    --profile (default); --no-profile
-        Automatically add koopa activation to shell configuration file. Note
-        that if configuration file is a symlink, this will skip.
-        Config file per shell:
-        - Bash: ~/.bashrc
-        - Dash: ~/.profile
-        - Zsh: ~/.zshrc
-    --shared (default); --no-shared
-        Install for all users, if current user has administrator (sudo)
-        permissions. Otherwise, install for current user only.
-END
-    exit 0
-}
-
-stop() { # {{{1
-    # """
-    # Print error messages to the console and abort.
-    # @note Updated 2021-05-14.
-    # """
-    local arg
-    for arg in "$@"
-    do
-        printf 'ERROR: %s\n' "$arg" >&2
-    done
-    exit 1
-}
-
 main() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-04-08.
     # """
-    case "${BASH_VERSION:-}" in
-        [1-3].*)
-            stop 'Bash 4+ is required.'
-            ;;
-    esac
     local dict
     declare -A dict=(
         [dotfiles]=1
@@ -162,7 +89,7 @@ main() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                stop "Invalid arg: '${1:?}'."
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
@@ -173,16 +100,10 @@ main() { # {{{1
     KOOPA_TEST="${dict[test]}"
     export KOOPA_FORCE KOOPA_TEST
     # shellcheck source=/dev/null
-    . "${dict[prefix]}/lang/shell/bash/include/header.sh" || return 1
-    if [[ -z "${KOOPA_PREFIX:-}" ]]
-    then
-        stop "Installer failed to set 'KOOPA_PREFIX'."
-    fi
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'rm' 'sed' 'tar' 'unzip'
-    # FIXME Once we get here, we can simply call 'koopa_install_koopa'.
-    # FIXME Alternatively, should we call this 'koopa configure koopa'?
-    # FIXME This should cache functions.
+
+
     # Configuration {{{2
     # ==========================================================================
     dict[config_prefix]="$(koopa_config_prefix)"
