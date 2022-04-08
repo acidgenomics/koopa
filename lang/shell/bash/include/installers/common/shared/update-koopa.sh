@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to re-cache functions in a single file.
+
 main() { # {{{1
     # """
     # Update koopa installation.
