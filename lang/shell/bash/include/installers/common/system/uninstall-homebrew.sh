@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Uninstall Homebrew.
-    # @note Updated 2021-11-22.
+    # @note Updated 2022-04-08.
     #
     # macOS Catalina now uses Zsh instead of Bash by default.
     #
@@ -21,11 +21,15 @@ main() { # {{{1
     dict[file]='uninstall.sh'
     dict[url]="https://raw.githubusercontent.com/Homebrew/install/\
 master/${dict[file]}"
-    if koopa_is_macos
-    then
-        koopa_alert 'Changing default shell to system Zsh.'
-        chsh -s '/bin/zsh' "${dict[user]}"
-    fi
+    # Important! Homebrew uninstaller will currently attempt to delete the
+    # parent directory containing 'brew', so make sure we remove our symlink
+    # in koopa first.
+    koopa_unlink_in_bin 'brew'
+    # > if koopa_is_macos
+    # > then
+    # >     koopa_alert 'Changing default shell to system Zsh.'
+    # >     chsh -s '/bin/zsh' "${dict[user]}"
+    # > fi
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_chmod 'u+x' "${dict[file]}"
     "${app[yes]}" | "./${dict[file]}" || true
