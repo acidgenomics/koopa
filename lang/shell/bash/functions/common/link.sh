@@ -135,7 +135,7 @@ koopa_link_in_bin() { # {{{1
 koopa_link_in_make() { # {{{1
     # """
     # Symlink application into make directory.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-08.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -161,13 +161,8 @@ koopa_link_in_make() { # {{{1
     koopa_assert_has_args "$#"
     declare -A dict=(
         [app_prefix]=''
-        [homebrew_prefix]="$(koopa_homebrew_prefix)"
         [make_prefix]="$(koopa_make_prefix)"
     )
-    if [[ "${dict[homebrew_prefix]}" == "${dict[make_prefix]}" ]]
-    then
-        koopa_stop "Homebrew is configured in '${dict[make_prefix]}'."
-    fi
     exclude_arr=('libexec')
     include_arr=()
     while (("$#"))
@@ -314,13 +309,8 @@ koopa_unlink_in_make() { # {{{1
     koopa_assert_has_args "$#"
     declare -A dict=(
         [app_prefix]=''
-        [homebrew_prefix]="$(koopa_homebrew_prefix)"
         [make_prefix]="$(koopa_make_prefix)"
     )
-    if [[ "${dict[homebrew_prefix]}" == "${dict[make_prefix]}" ]]
-    then
-        koopa_stop "Homebrew is configured in '${dict[make_prefix]}'."
-    fi
     koopa_assert_is_dir "${dict[make_prefix]}"
     for app_prefix in "$@"
     do
