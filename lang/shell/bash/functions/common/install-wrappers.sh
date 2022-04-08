@@ -1775,16 +1775,18 @@ koopa_update_rust() { # {{{3
 # FIXME Need to include links here.
 koopa_install_rust_packages() { # {{{3
     koopa_install_app_packages \
+        --link-in-bin='bin/difft' \
         --name-fancy='Rust' \
         --name='rust' \
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
+# FIXME Need to include links here.
 koopa_uninstall_rust_packages() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Rust packages' \
         --name='rust-packages' \
+        --unlink-in-bin='difft' \
         "$@"
 }
 
