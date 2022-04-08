@@ -310,7 +310,7 @@ koopa_r_rebuild_docs() { # {{{1
     fi
     if [[ ! -f "${dict[pkg_index]}" ]]
     then
-        koopa_touch --sudo "${dict[pkg_index]}"
+        koopa_touch "${dict[pkg_index]}"
     fi
     if [[ ! -f "${dict[r_css]}" ]]
     then
