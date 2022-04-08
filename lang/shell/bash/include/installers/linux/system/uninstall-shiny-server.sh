@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Indicate that this is a binary install.
 # FIXME Need to add support for Fedora.
 
 main() { # {{{1
