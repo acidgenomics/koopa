@@ -3,7 +3,7 @@
 __koopa_link_in_dir() { # {{{1
     # """
     # Symlink multiple programs in a directory.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-08.
     #
     # @usage
     # > __koopa_link_in_dir \
@@ -21,7 +21,9 @@ __koopa_link_in_dir() { # {{{1
     local dict pos
     koopa_assert_has_args "$#"
     declare -A dict=(
+        [allow_missing]=0
         [prefix]=''
+        [quiet]=0
     )
     pos=()
     while (("$#"))
@@ -35,6 +37,15 @@ __koopa_link_in_dir() { # {{{1
             '--prefix')
                 dict[prefix]="${2:?}"
                 shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--allow-missing')
+                dict[allow_missing]=1
+                shift 1
+                ;;
+            '--quiet')
+                dict[quiet]=1
+                shift 1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
@@ -59,6 +70,20 @@ __koopa_link_in_dir() { # {{{1
             [target_name]="${2:?}"
         )
         dict2[target_file]="${dict[prefix]}/${dict2[target_name]}"
+        if [[ ! -e "${dict2[source_file]}" ]] && \
+            [[ "${dict[allow_missing]}" -eq 0 ]]
+        then
+            if [[ "${dict[quiet]}" -eq 0 ]]
+            then
+                koopa_alert_note "Skipping link of '${dict2[source_file]}'."
+            fi
+            return 0
+        fi
+        if [[ "${dict[quiet]}" -eq 0 ]]
+        then
+            koopa_alert "Linking '${dict2[source_file]}' -> \
+'${dict2[target_file]}'."
+        fi
         koopa_sys_ln "${dict2[source_file]}" "${dict2[target_file]}"
         shift 2
     done
@@ -247,7 +272,7 @@ into '${dict[make_prefix]}'."
 koopa_link_in_opt() { # {{{1
     # """
     # Link an application in koopa 'opt/' directory.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-08.
     #
     # @usage
     # > koopa_link_in_opt \
