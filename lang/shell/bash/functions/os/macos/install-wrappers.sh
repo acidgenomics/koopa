@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-koopa_macos_uninstall_adobe_creative_cloud() { # {{{1
+# System ================================================================== {{{1
+
+# adobe-creative-cloud ---------------------------------------------------- {{{2
+
+koopa_macos_uninstall_adobe_creative_cloud() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Adobe Creative Cloud' \
         --name='adobe-creative-cloud' \
@@ -9,9 +13,9 @@ koopa_macos_uninstall_adobe_creative_cloud() { # {{{1
         "$@"
 }
 
+# cisco-webex ------------------------------------------------------------- {{{2
 
-
-koopa_macos_uninstall_cisco_webex() { # {{{1
+koopa_macos_uninstall_cisco_webex() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Cisco WebEx' \
         --name='cisco-webex' \
@@ -20,9 +24,9 @@ koopa_macos_uninstall_cisco_webex() { # {{{1
         "$@"
 }
 
+# defaults ---------------------------------------------------------------- {{{2
 
-
-koopa_macos_update_defaults() { # {{{1
+koopa_macos_update_defaults() { # {{{3
     koopa_update_app \
         --name-fancy='macOS defaults' \
         --name='defaults' \
@@ -31,9 +35,9 @@ koopa_macos_update_defaults() { # {{{1
         "$@"
 }
 
+# microsoft-onedrive ------------------------------------------------------ {{{2
 
-
-koopa_macos_uninstall_microsoft_onedrive() { # {{{1
+koopa_macos_uninstall_microsoft_onedrive() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Microsoft OneDrive' \
         --name='microsoft-onedrive' \
@@ -42,9 +46,9 @@ koopa_macos_uninstall_microsoft_onedrive() { # {{{1
         "$@"
 }
 
+# oracle-java ------------------------------------------------------------- {{{2
 
-
-koopa_macos_uninstall_oracle_java() { # {{{
+koopa_macos_uninstall_oracle_java() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Oracle Java' \
         --name='oracle-java' \
@@ -53,9 +57,9 @@ koopa_macos_uninstall_oracle_java() { # {{{
         "$@"
 }
 
+# python-binary ----------------------------------------------------------- {{{2
 
-
-koopa_macos_install_python_binary() { # {{{1
+koopa_macos_install_python_binary() { # {{{3
     koopa_install_app \
         --installer='python-binary' \
         --link-in-bin='bin/python3' \
@@ -67,7 +71,7 @@ koopa_macos_install_python_binary() { # {{{1
         "$@"
 }
 
-koopa_macos_uninstall_python_binary() { # {{{1
+koopa_macos_uninstall_python_binary() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Python' \
         --name='python' \
@@ -78,9 +82,9 @@ koopa_macos_uninstall_python_binary() { # {{{1
         "$@"
 }
 
+# r-binary ---------------------------------------------------------------- {{{2
 
-
-koopa_macos_install_r_binary() { # {{{1
+koopa_macos_install_r_binary() { # {{{3
     koopa_install_app \
         --installer='r-binary' \
         --link-in-bin='bin/R' \
@@ -93,7 +97,7 @@ koopa_macos_install_r_binary() { # {{{1
         "$@"
 }
 
-koopa_macos_uninstall_r_binary() { # {{{1
+koopa_macos_uninstall_r_binary() { # {{{3
     koopa_uninstall_app \
         --name-fancy='R' \
         --name='r' \
@@ -106,9 +110,9 @@ koopa_macos_uninstall_r_binary() { # {{{1
         "$@"
 }
 
+# r-cran-gfortran --------------------------------------------------------- {{{2
 
-
-koopa_macos_install_r_cran_gfortran() { # {{{1
+koopa_macos_install_r_cran_gfortran() { # {{{3
     koopa_install_app \
         --name-fancy='R CRAN gfortran' \
         --name='r-cran-gfortran' \
@@ -118,7 +122,7 @@ koopa_macos_install_r_cran_gfortran() { # {{{1
         "$@"
 }
 
-koopa_macos_uninstall_r_cran_gfortran() { # {{{1
+koopa_macos_uninstall_r_cran_gfortran() { # {{{3
     koopa_uninstall_app \
         --name-fancy='R CRAN gfortran' \
         --name='r-cran-gfortran' \
@@ -128,9 +132,9 @@ koopa_macos_uninstall_r_cran_gfortran() { # {{{1
         "$@"
 }
 
+# ringcentral ------------------------------------------------------------- {{{2
 
-
-koopa_macos_uninstall_ringcentral() { # {{{1
+koopa_macos_uninstall_ringcentral() { # {{{3
     koopa_uninstall_app \
         --name-fancy='RingCentral' \
         --name='ringcentral' \
@@ -139,9 +143,9 @@ koopa_macos_uninstall_ringcentral() { # {{{1
         "$@"
 }
 
+# system ------------------------------------------------------------------ {{{2
 
-
-koopa_macos_update_system() { # {{{1
+koopa_macos_update_system() { # {{{3
     koopa_update_app \
         --name-fancy='macOS system' \
         --name='system' \
@@ -150,9 +154,9 @@ koopa_macos_update_system() { # {{{1
         "$@"
 }
 
+# xcode-clt --------------------------------------------------------------- {{{2
 
-
-koopa_macos_install_xcode_clt() { # {{{1
+koopa_macos_install_xcode_clt() { # {{{3
     koopa_install_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
@@ -161,7 +165,7 @@ koopa_macos_install_xcode_clt() { # {{{1
         "$@"
 }
 
-koopa_macos_uninstall_xcode_clt() { # {{{1
+koopa_macos_uninstall_xcode_clt() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
