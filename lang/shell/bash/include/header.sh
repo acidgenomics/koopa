@@ -15,11 +15,7 @@ __koopa_bash_source_dir() { # {{{1
     # """
     local fun_script fun_scripts prefix
     prefix="$(koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
-    if [[ ! -d "$prefix" ]]
-    then
-        __koopa_warn "No functions defined in '${prefix}'."
-        return 0
-    fi
+    [[ -d "$prefix" ]] || return 0
     readarray -t fun_scripts <<< "$( \
         find -L "$prefix" \
             -mindepth 1 \
@@ -295,8 +291,8 @@ __koopa_bash_header() { # {{{1
             if koopa_is_debian_like
             then
                 __koopa_bash_source_dir "${dict[linux_prefix]}/debian"
-                koopa_is_ubuntu_like && \
-                    __koopa_bash_source_dir "${dict[linux_prefix]}/ubuntu"
+                # > koopa_is_ubuntu_like && \
+                # >     __koopa_bash_source_dir "${dict[linux_prefix]}/ubuntu"
             elif koopa_is_fedora_like
             then
                 __koopa_bash_source_dir "${dict[linux_prefix]}/fedora"
