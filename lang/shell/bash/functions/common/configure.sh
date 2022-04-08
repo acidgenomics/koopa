@@ -278,7 +278,7 @@ at '${file}'."
 koopa_enable_shell_for_all_users() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-08.
     #
     # @usage
     # > koopa_enable_shell_for_all_users APP...
@@ -290,7 +290,7 @@ koopa_enable_shell_for_all_users() { # {{{1
     # """
     local app apps dict
     koopa_assert_has_args "$#"
-    koopa_assert_is_admin
+    koopa_is_admin || return 0
     declare -A dict=(
         [etc_file]='/etc/shells'
         [user]="$(koopa_user)"

@@ -3716,7 +3716,7 @@ koopa_rbenv_prefix() { # {{{1
 koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-04-08.
     #
     # Note that 'readlink -f' only works with GNU coreutils but not BSD
     # (i.e. macOS) variant.
@@ -3731,14 +3731,23 @@ koopa_realpath() { # {{{1
     # - https://stackoverflow.com/questions/3572030/
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
-    local brew_prefix readlink x
+    local readlink x
     readlink='readlink'
-    if koopa_is_macos
+    if ! koopa_is_installed "$readlink"
     then
-        # FIXME Use opt prefix here instead.
-        brew_prefix="$(koopa_homebrew_prefix)"
-        [ -d "$brew_prefix" ] || return 1
-        readlink="${brew_prefix}/opt/coreutils/bin/greadlink"
+        local brew_readlink koopa_readlink
+        koopa_readlink="$(koopa_koopa_prefix)/bin/readlink"
+        brew_readlink="$(koopa_homebrew_prefix)/opt/coreutils/libexec/\
+gnubin/readlink"
+        if [ -x "$koopa_readlink" ]
+        then
+            readlink="$koopa_readlink"
+        elif [ -x "$brew_readlink" ]
+        then
+            readlink="$brew_readlink"
+        else
+            return 1
+        fi
     fi
     x="$("$readlink" -f "$@")"
     [ -n "$x" ] || return 1
