@@ -182,6 +182,7 @@ main() { # {{{1
         'mktemp' 'mv' 'rm' 'sed' 'tar' 'unzip'
     # FIXME Once we get here, we can simply call 'koopa_install_koopa'.
     # FIXME Alternatively, should we call this 'koopa configure koopa'?
+    # FIXME This should cache functions.
     # Configuration {{{2
     # ==========================================================================
     dict[config_prefix]="$(koopa_config_prefix)"
