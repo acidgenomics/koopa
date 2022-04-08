@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for macOS.
 #
-# @note Updated 2022-02-09.
+# @note Updated 2022-04-08.
 #
 # @seealso
 # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
@@ -14,12 +14,6 @@
 
 # Global variables {{{1
 # ==============================================================================
-
-# NOTE This has changed to '/opt/homebrew' by default for Apple Silicon (ARM)
-# Macs, instead of '/usr/local' for Intel x86 Macs. This configuration should
-# work for both platforms currently, as long as variable is set in shell.
-HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/usr/local}"
-HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
 
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
@@ -41,64 +35,8 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/bin:/bin"
 
-# Homebrew-managed programs.
-#
-# Refer to koopa for consistency:
-# 'shell/posix/functions/activate-noninteractive.sh'
-#
-# Don't put binutils in PATH, as this will cause compilation issues for
-# r-openssl, due to incompatible 'ar' that causes issues with Xcode linker.
-# See related:
-# - https://github.com/jeroen/openssl/issues/67
-# - https://github.com/jeroen/openssl/issues/90
-PATH="${HOMEBREW_PREFIX}/bin:${PATH}"
-# opt:
-PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/icu4c/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/openssl@3/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/texinfo/bin:${PATH}"
-# libexec/bin:
-PATH="${HOMEBREW_OPT_PREFIX}/man-db/libexec/bin:${PATH}"
-# libexec/gnubin:
-PATH="${HOMEBREW_OPT_PREFIX}/coreutils/libexec/gnubin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/findutils/libexec/gnubin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/gnu-sed/libexec/gnubin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/gnu-tar/libexec/gnubin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/gnu-which/libexec/gnubin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/grep/libexec/gnubin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/make/libexec/gnubin:${PATH}"
-
-# Make.
-PATH="/usr/local/bin:${PATH}"
-
-# Ruby.
-PATH="${KOOPA_OPT_PREFIX}/ruby-packages/bin:${PATH}"
-
-# Perl.
-PATH="${KOOPA_OPT_PREFIX}/perl-packages/bin:${PATH}"
-
-# Rust.
-PATH="${KOOPA_OPT_PREFIX}/rust-packages/bin:${PATH}"
-
-# Python.
-PATH="/Library/Frameworks/Python.framework/Versions/Current/bin:${PATH}"
-PATH="${KOOPA_OPT_PREFIX}/python-packages/bin:${PATH}"
-
-# Conda.
-PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
-
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
-
-# GnuPG.
-PATH="/usr/local/MacGPG2/bin:${PATH}"
-
-# TeX (e.g. pdflatex).
-PATH="/Library/TeX/texbin:${PATH}"
 
 # Pandoc. Use RStudio bundled version of pandoc when possible,
 # for improved R Markdown stability.
@@ -110,11 +48,12 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@3/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# FIXME Need to add install support for lapack and openblas in koopa.
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
@@ -139,7 +78,8 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # libxml2 {{{2
 # ------------------------------------------------------------------------------
 
-XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
+# FIXME Need to add support for libxml2 install in koopa.
+XML_CONFIG="${KOOPA_OPT_PREFIX}/libxml2/bin/xml2-config"
 
 # remotes {{{2
 # ------------------------------------------------------------------------------
@@ -195,5 +135,5 @@ R_USER_DATA_DIR="${XDG_DATA_HOME:-~/.local/share}"
 # The units package requires udunits to be installed.
 # Use homebrew: 'brew install udunits'.
 
-UDUNITS2_INCLUDE="${HOMEBREW_OPT_PREFIX}/udunits/include"
-UDUNITS2_LIBS="${HOMEBREW_OPT_PREFIX}/udunits/lib"
+UDUNITS2_INCLUDE="${KOOPA_OPT_PREFIX}/udunits/include"
+UDUNITS2_LIBS="${KOOPA_OPT_PREFIX}/udunits/lib"

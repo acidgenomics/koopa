@@ -12,8 +12,11 @@ koopa_install_gnu_app() { # {{{3
 
 # koopa ------------------------------------------------------------------- {{{2
 
-# FIXME Should we define main 'koopa_install_koopa' installer?
-# FIXME See 'install' file for thoughts on this.
+koopa_install_koopa() { # {{{3
+    # FIXME Should we define main 'koopa_install_koopa' installer?
+    # FIXME See 'install' file for thoughts on this.
+    koopa_stop 'FIXME Need to add support for this'.
+}
 
 koopa_uninstall_koopa() { # {{{3
     koopa_uninstall_app \
@@ -572,7 +575,19 @@ koopa_uninstall_ensembl_perl_api() { # {{{3
 # findutils --------------------------------------------------------------- {{{2
 
 koopa_install_findutils() { # {{{3
-    if koopa_is_macos
+    local install_args
+    install_args=(
+        '--name=findutils'
+    )
+    if koopa_is_linux
+    then
+        install_args+=(
+            '--link-in-bin=bin/find'
+            '--link-in-bin=bin/locate'
+            '--link-in-bin=bin/updatedb'
+            '--link-in-bin=bin/xargs'
+        )
+    elif koopa_is_macos
     then
         # Workaround for build failures in 4.8.0.
         # See also:
@@ -584,23 +599,20 @@ koopa_install_findutils() { # {{{3
         #     msg00051.html
         export CFLAGS='-D__nonnull\(params\)='
     fi
-    koopa_install_gnu_app \
-        --link-in-bin='bin/find' \
-        --link-in-bin='bin/locate' \
-        --link-in-bin='bin/updatedb' \
-        --link-in-bin='bin/xargs' \
-        --name='findutils' \
-        "$@"
+    koopa_install_gnu_app "${install_args[@]}" "$@"
 }
 
 koopa_uninstall_findutils() { # {{{3
-    koopa_uninstall_app \
-        --name='findutils' \
-        --unlink-in-bin='find' \
-        --unlink-in-bin='locate' \
-        --unlink-in-bin='updatedb' \
-        --unlink-in-bin='xargs' \
-        "$@"
+    local uninstall_args
+    uninstall_args=('--name=findutils')
+    if koopa_is_linux
+    then
+        '--unlink-in-bin=find'
+        '--unlink-in-bin=locate'
+        '--unlink-in-bin=updatedb'
+        '--unlink-in-bin=xargs'
+    fi
+    koopa_uninstall_app "${uninstall_args[@]}" "$@"
 }
 
 # fish -------------------------------------------------------------------- {{{2
@@ -613,7 +625,6 @@ koopa_install_fish() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_fish() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Fish' \
@@ -632,11 +643,11 @@ koopa_install_fzf() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_fzf() { # {{{3
     koopa_uninstall_app \
         --name-fancy='FZF' \
         --name='fzf' \
+        --unlink-in-bin='fzf' \
         "$@"
 }
 
@@ -1784,6 +1795,7 @@ koopa_update_rust() { # {{{3
 
 # rust-packages ----------------------------------------------------------- {{{2
 
+# FIXME This is now erroring out after linkage on Ubuntu...what's up?
 # FIXME Need to include links here.
 koopa_install_rust_packages() { # {{{3
     koopa_install_app_packages \

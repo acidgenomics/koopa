@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for Linux.
 #
-# @note Updated 2021-12-02.
+# @note Updated 2022-04-08.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -85,25 +85,6 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # Restrict path, so we don't mask compiler binaries with virtual environment.
 # This also greatly improves consistency when running inside RStudio Server.
 PATH="/usr/bin:/bin"
-
-# Make.
-PATH="/usr/local/bin:${PATH}"
-
-# Ruby.
-PATH="${KOOPA_OPT_PREFIX}/ruby-packages/bin:${PATH}"
-
-# Perl.
-PATH="${KOOPA_OPT_PREFIX}/perl-packages/bin:${PATH}"
-
-# Rust.
-PATH="${KOOPA_OPT_PREFIX}/rust-packages/bin:${PATH}"
-
-# Python.
-PATH="${KOOPA_OPT_PREFIX}/python/bin:${PATH}"
-PATH="${KOOPA_OPT_PREFIX}/python-packages/bin:${PATH}"
-
-# Conda.
-PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
