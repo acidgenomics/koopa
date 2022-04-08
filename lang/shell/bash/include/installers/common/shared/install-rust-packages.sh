@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider a more modular approach for this, installing each tool
-# into its own versioned directory instead?
-# FIXME Add a step to link these automatically.
-
 main() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-08.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -132,16 +128,6 @@ main() { # {{{1
                 ;;
         esac
         "${app[cargo]}" install "${args[@]}"
-    done
-    # FIXME Need to improve linkage support for other packages built from
-    # source not managed by Homebrew.
-    for pkg in "${pkgs[@]}"
-    do
-        case "$pkg" in
-            'difftastic')
-                koopa_link_in_bin "${dict[root]}/bin/difft" 'difft'
-            ;;
-        esac
     done
     return 0
 }
