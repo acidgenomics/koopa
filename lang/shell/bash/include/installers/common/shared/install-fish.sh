@@ -3,12 +3,14 @@
 main() { # {{{1
     # """
     # Install Fish shell.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-08.
+    #
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'cmake' 'ncurses' 'pcre2'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
@@ -20,7 +22,6 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    koopa_activate_opt_prefix 'cmake' 'ncurses' 'pcre2'
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="https://github.com/${dict[name]}-shell/${dict[name]}-shell/\
 releases/download/${dict[version]}/${dict[file]}"
