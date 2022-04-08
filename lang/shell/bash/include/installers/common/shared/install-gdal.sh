@@ -61,6 +61,14 @@ main() { # {{{1
         '--without-rasdaman'
         '--without-sosi'
     )
+    if [[ "${INSTALL_LINK_IN_MAKE:?}" -eq 0 ]]
+    then
+        conf_args=(
+            '--disable-shared'
+            '--enable-static'
+            '--without-ld-shared'
+        )
+    fi
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://github.com/OSGeo/${dict[name]}/releases/download/\
 v${dict[version]}/${dict[file]}"
