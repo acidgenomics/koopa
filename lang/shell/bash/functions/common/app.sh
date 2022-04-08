@@ -904,8 +904,7 @@ koopa_uninstall_app() { # {{{1
     then
         if [[ ! -d "${dict[prefix]}" ]]
         then
-            koopa_warn "${dict[name_fancy]} is not installed \
-at '${dict[prefix]}'."
+            koopa_alert_is_not_installed "${dict[name_fancy]}" "${dict[prefix]}"
             return 1
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
@@ -1103,8 +1102,7 @@ koopa_update_app() { # {{{1
     then
         if [[ ! -d "${dict[prefix]}" ]]
         then
-            koopa_warn "${dict[name_fancy]} is not installed \
-at '${dict[prefix]}'."
+            koopa_alert_is_not_installed "${dict[name_fancy]}" "${dict[prefix]}"
             return 1
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
