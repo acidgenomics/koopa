@@ -12,6 +12,10 @@ koopa_install_gnu_app() { # {{{3
 
 # koopa ------------------------------------------------------------------- {{{2
 
+# FIXME Should we define main 'koopa_install_koopa' installer?
+# FIXME See 'install' file for thoughts on this.
+
+# FIXME Rework this, handing off to external script.
 koopa_uninstall_koopa() { # {{{3
     local app
     declare -A app=(
@@ -106,7 +110,6 @@ koopa_install_bash() { # {{{3
         "$@"
 }
 
-# FIXME Need to test this.
 koopa_uninstall_bash() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Bash' \
@@ -183,6 +186,7 @@ koopa_uninstall_cmake() { # {{{3
     koopa_uninstall_app \
         --name-fancy='CMake' \
         --name='cmake' \
+        --unlink-in-bin='cmake' \
         "$@"
     return 0
 }
@@ -440,10 +444,10 @@ koopa_install_cpufetch() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_cpufetch() { # {{{3
     koopa_uninstall_app \
         --name='cpufetch' \
+        --unlink-in-bin='cpufetch' \
         "$@"
 }
 
@@ -1041,6 +1045,7 @@ koopa_uninstall_luarocks() { # {{{3
 
 koopa_install_make() { # {{{3
     koopa_install_gnu_app \
+        --link-in-bin='bin/make' \
         --name='make' \
         "$@"
 }
@@ -1048,6 +1053,7 @@ koopa_install_make() { # {{{3
 koopa_uninstall_make() { # {{{3
     koopa_uninstall_app \
         --name='make' \
+        --unlink-in-bin='make' \
         "$@"
 }
 
@@ -1211,11 +1217,11 @@ koopa_install_node() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_node() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Node.js' \
         --name='node' \
+        --unlink-in-bin='node' \
         "$@"
 }
 
@@ -1232,11 +1238,14 @@ koopa_install_node_packages() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_node_packages() { # {{{3
     koopa_uninstall_app \
         --name='node-packages' \
         --name-fancy='Node.js packages' \
+        --unlink-in-bin='bash-language-server' \
+        --unlink-in-bin='gtop' \
+        --unlink-in-bin='npm' \
+        --unlink-in-bin='prettier' \
         "$@"
 }
 
