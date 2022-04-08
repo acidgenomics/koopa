@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-04-06.
+    # Updated 2022-04-08.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -211,25 +211,30 @@ __koopa_complete() { # {{{1
                             'node-binary'
                             'pihole'
                             'pivpn'
-                            'rstudio-server'
-                            'rstudio-workbench'
-                            'shiny-server'
                             'wine'
                         )
-                        if koopa_is_debian_like
+                        if koopa_is_debian_like || koopa_is_fedora_like
                         then
                             args+=(
-                                'bcbio-nextgen-vm'
-                                'pandoc-binary'
-                                'r-binary'
-                                'r-devel'
+                                'rstudio-server'
+                                'rstudio-workbench'
+                                'shiny-server'
                             )
-                        elif koopa_is_fedora_like
-                        then
-                            args+=(
-                                'oracle-instant-client'
-                            )
-                        fi
+                            if koopa_is_debian_like
+                            then
+                                args+=(
+                                    'bcbio-nextgen-vm'
+                                    'pandoc-binary'
+                                    'r-binary'
+                                    'r-devel'
+                                )
+                            elif koopa_is_fedora_like
+                            then
+                                args+=(
+                                    'oracle-instant-client'
+                                )
+                            fi
+                        fi 
                     fi
                     if koopa_is_macos
                     then
