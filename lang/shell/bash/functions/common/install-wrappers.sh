@@ -769,6 +769,7 @@ koopa_uninstall_go_packages() { # {{{3
 
 # grep -------------------------------------------------------------------- {{{2
 
+# FIXME Only link on Linux.
 koopa_install_grep() { # {{{3
     koopa_install_gnu_app \
         --link-in-bin='bin/egrep' \
@@ -778,6 +779,7 @@ koopa_install_grep() { # {{{3
         "$@"
 }
 
+# FIXME Only link on Linux.
 koopa_uninstall_grep() { # {{{3
     koopa_uninstall_app \
         --name='grep' \
@@ -1083,6 +1085,7 @@ koopa_update_mamba() { # {{{3
 
 # man-db ------------------------------------------------------------------ {{{2
 
+# FIXME Only link on Linux.
 koopa_install_man_db() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/man' \
@@ -1090,6 +1093,7 @@ koopa_install_man_db() { # {{{3
         "$@"
 }
 
+# FIXME Only link on Linux.
 koopa_uninstall_man_db() { # {{{3
     koopa_uninstall_app \
         --name='man-db' \
@@ -1807,6 +1811,7 @@ koopa_update_rust_packages() { # {{{3
 
 # sed --------------------------------------------------------------------- {{{2
 
+# FIXME Only link on Linux.
 koopa_install_sed() { # {{{3
     koopa_install_gnu_app \
         --link-in-bin='bin/sed' \
@@ -1814,6 +1819,7 @@ koopa_install_sed() { # {{{3
         "$@"
 }
 
+# FIXME Only link on Linux.
 koopa_uninstall_sed() { # {{{3
     koopa_uninstall_app \
         --name='sed' \
@@ -1945,6 +1951,7 @@ koopa_uninstall_taglib() { # {{{3
 
 # tar --------------------------------------------------------------------- {{{2
 
+# FIXME Only link on Linux.
 koopa_install_tar() { # {{{3
     koopa_install_gnu_app \
         --link-in-bin='bin/tar' \
@@ -1952,6 +1959,7 @@ koopa_install_tar() { # {{{3
         "$@"
 }
 
+# FIXME Only link on Linux.
 koopa_uninstall_tar() { # {{{3
     koopa_uninstall_app \
         --name='tar' \
