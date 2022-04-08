@@ -233,7 +233,7 @@ koopa_debian_install_shiny_server() { # {{{3
     koopa_install_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
-        --platform='linux' \
+        --platform='debian' \
         --system \
         "$@"
 }

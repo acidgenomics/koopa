@@ -122,7 +122,7 @@ koopa_fedora_install_shiny_server() { # {{{3
     koopa_install_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
-        --platform='linux' \
+        --platform='fedora' \
         --system \
         "$@"
 }
