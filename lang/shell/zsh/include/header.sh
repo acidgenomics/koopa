@@ -40,7 +40,7 @@ __koopa_realpath() { # {{{1
         local make_readlink_1 make_readlink_2
         brew_readlink_1='/opt/homebrew/opt/coreutils/libexec/bin/readlink'
         brew_readlink_2='/usr/local/opt/coreutils/libexec/bin/readlink'
-        koopa_readlink='/opt/koopa/bin/readlink'
+        koopa_readlink='/opt/koopa/opt/coreutils/bin/readlink'
         make_readlink_1='/usr/local/bin/readlink'
         make_readlink_2='/usr/local/bin/greadlink'
         if [[ -x "$koopa_readlink" ]]
