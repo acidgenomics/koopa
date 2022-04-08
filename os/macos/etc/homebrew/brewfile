@@ -118,7 +118,7 @@ cask "rstudio"
 cask "skype"
 cask "sublime-text"
 cask "superduper"
-# > cask "temurin" # Using 'openjdk' brew instead.
+cask "temurin17"
 cask "textmate"
 cask "transmit"
 cask "tunnelblick"
