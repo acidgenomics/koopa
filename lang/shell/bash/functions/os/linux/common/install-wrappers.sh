@@ -215,23 +215,3 @@ koopa_linux_install_pivpn() { # {{{3
 }
 
 # FIXME Need to include a pihole uninstaller.
-
-# shiny-server ------------------------------------------------------------ {{{2
-
-koopa_linux_install_shiny_server() { # {{{3
-    koopa_install_app \
-        --name-fancy='Shiny Server' \
-        --name='shiny-server' \
-        --platform='linux' \
-        --system \
-        "$@"
-}
-
-koopa_linux_uninstall_shiny_server() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Shiny Server' \
-        --name='shiny-server' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
