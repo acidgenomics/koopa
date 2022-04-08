@@ -5,8 +5,6 @@
 # with comments removed.
 # FIXME Cache file generator should return sorted though...
 
-set -x  # FIXME
-
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
@@ -195,8 +193,8 @@ __koopa_bash_header() { # {{{1
         set -o pipefail
         set +o posix
         set +o physical  # -P
-        # > set +o verbose  # -v  # FIXME re-enable
-        # > set +o xtrace  # -x   # FIXME re-enable
+        set +o verbose  # -v
+        set +o xtrace  # -x
         # Check all values with 'shopt'.
         shopt -s autocd
         shopt -u cdable_vars
