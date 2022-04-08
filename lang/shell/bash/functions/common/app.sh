@@ -545,13 +545,14 @@ koopa_install_app_from_binary_package() { # {{{1
     declare -A app=(
         [tar]="$(koopa_locate_tar)"
     )
+    # FIXME Rework koopa_koopa_app_binary_url here.
     declare -A dict=(
         [arch]="$(koopa_arch2)"
         [binary_prefix]='/opt/koopa'
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [name]=''
         [os_string]="$(koopa_os_string)"
-        [url_stem]='https://koopa.acidgenomics.com/app'
+        [url_stem]="$(koopa_koopa_app_binary_url)"
         [version]=''
     )
     while (("$#"))
@@ -676,12 +677,13 @@ koopa_install_app_packages() { # {{{1
         --name="${dict[name]}-packages" \
         --no-prefix-check \
         --prefix="${dict[prefix]}" \
-        --version='rolling' \
+        --version='rolling' \'
         "$@"
     return 0
 }
 
 # FIXME This needs to also invalidate cloud cache.
+# FIXME Rework using koopa_koopa_app_binary with 's3://' instead of 'https://'
 
 koopa_push_app_build() { # {{{1
     # """
