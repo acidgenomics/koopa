@@ -513,19 +513,31 @@ koopa_update_dotfiles() { # {{{3
 # emacs ------------------------------------------------------------------- {{{2
 
 koopa_install_emacs() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/emacs' \
-        --name-fancy='Emacs' \
-        --name='emacs' \
-        "$@"
+    local install_args
+    install_args=(
+        '--name-fancy=Emacs'
+        '--name=emacs'
+    )
+    # Assume we're using Emacs cask by default on macOS.
+    if ! koopa_is_macos
+    then
+        install_args+=('--link-in-bin=bin/emacs')
+    fi
+    koopa_install_app "${install_args[@]}" "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_emacs() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Emacs' \
-        --name='emacs' \
-        "$@"
+    local uninstall_args
+    uninstall_args=(
+        '--name-fancy=Emacs'
+        '--name=emacs'
+    )
+    # Assume we're using Emacs cask by default on macOS.
+    if ! koopa_is_macos
+    then
+        uninstall_args+=('--unlink-in-bin=emacs')
+    fi
+    koopa_uninstall_app "${uninstall_args[@]}" "$@"
 }
 
 # ensembl-perl-api -------------------------------------------------------- {{{2
