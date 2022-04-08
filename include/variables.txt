@@ -556,8 +556,8 @@ rust-cargo-outdated="0.11.0"    # system
 rust-cargo-update="8.1.2"       # system
 
 rust-bat="0.20.0"               # homebrew
-rust-broot="1.10.0"             # homebrew; br
-rust-difftastic="0.24.0"
+rust-broot="1.11.1"             # homebrew; br
+rust-difftastic="0.25.0"        # homebrew; difft
 rust-dog="0.1.0"                # homebrew
 rust-du-dust="0.8.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
