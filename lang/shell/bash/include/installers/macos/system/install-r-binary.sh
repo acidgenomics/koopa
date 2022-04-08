@@ -47,7 +47,7 @@ main() { # {{{1
 base/${dict[pkg_file]}"
             ;;
         'x86_64')
-            dict[pkg_file]="R-${version}.pkg"
+            dict[pkg_file]="R-${dict[version]}.pkg"
             dict[url]="${dict[url_stem]}/base/${dict[pkg_file]}"
             ;;
         *)
@@ -57,5 +57,8 @@ base/${dict[pkg_file]}"
     koopa_download "${dict[url]}"
     "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
     koopa_assert_is_dir "${dict[prefix]}"
+    app[r]="${dict[prefix]}/bin/R"
+    koopa_assert_is_installed "${app[r]}"
+    koopa_configure_r "${app[r]}"
     return 0
 }
