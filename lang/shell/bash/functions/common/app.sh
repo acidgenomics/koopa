@@ -831,11 +831,11 @@ koopa_uninstall_app() { # {{{1
                 shift 2
                 ;;
             '--uninstaller='*)
-                dict[uninstaller]="${1#*=}"
+                dict[uninstaller_bn]="${1#*=}"
                 shift 1
                 ;;
             '--uninstaller')
-                dict[uninstaller]="${2:?}"
+                dict[uninstaller_bn]="${2:?}"
                 shift 2
                 ;;
             '--unlink-in-bin='*)
