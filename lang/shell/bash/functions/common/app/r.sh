@@ -1,45 +1,31 @@
 #!/usr/bin/env bash
 
+# FIXME Relage the usage of '--sudo' here when installed from source.
+
 koopa_configure_r() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-08.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
-    local dict
+    local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A dict=(
-        [name_fancy]='R'
+    declare -A app=(
         [r]="${1:-}"
     )
-    [[ -z "${dict[r]}" ]] && dict[r]="$(koopa_locate_r)"
-    koopa_assert_is_installed "${dict[r]}"
-    dict[r_prefix]="$(koopa_r_prefix "${dict[r]}")"
+    declare -A dict=(
+        [name_fancy]='R'
+    )
+    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    koopa_assert_is_installed "${app[r]}"
+    dict[r_prefix]="$(koopa_r_prefix "${app[r]}")"
     koopa_alert_configure_start "${dict[name_fancy]}" "${dict[r_prefix]}"
     koopa_assert_is_dir "${dict[r_prefix]}"
-    if koopa_is_koopa_app "${dict[r]}"
-    then
-        koopa_sys_set_permissions --recursive "${dict[r_prefix]}"
-        # Ensure that (Debian) system 'etc' directories are removed.
-        dict[make_prefix]="$(koopa_make_prefix)"
-        dict[etc_prefix1]="${dict[make_prefix]}/lib/R/etc"
-        dict[etc_prefix2]="${dict[make_prefix]}/lib64/R/etc"
-        if [[ -d "${dict[etc_prefix1]}" ]] && [[ ! -L "${dict[etc_prefix1]}" ]]
-        then
-            koopa_rm --sudo "${dict[etc_prefix1]}"
-        fi
-        if [[ -d "${dict[etc_prefix2]}" ]] && [[ ! -L "${dict[etc_prefix2]}" ]]
-        then
-            koopa_rm --sudo "${dict[etc_prefix2]}"
-        fi
-    else
-        koopa_sys_set_permissions --recursive "${dict[r_prefix]}/library"
-    fi
-    koopa_r_link_files_in_etc "${dict[r]}"
-    koopa_r_link_site_library "${dict[r]}"
-    koopa_r_javareconf "${dict[r]}"
-    koopa_r_rebuild_docs "${dict[r]}"
+    koopa_r_link_files_in_etc "${app[r]}"
+    koopa_r_link_site_library "${app[r]}"
+    koopa_r_javareconf "${app[r]}"
+    koopa_r_rebuild_docs "${app[r]}"
     koopa_sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
     koopa_alert_configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
     return 0
@@ -290,7 +276,7 @@ koopa_r_paste_to_vector() { # {{{1
 koopa_r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-04-08.
     #
     # 1. Ensure HTML package index is writable.
     # 2. Touch an empty 'R.css' file to eliminate additional package warnings.
@@ -309,6 +295,7 @@ koopa_r_rebuild_docs() { # {{{1
     [[ -z "${app[r]:-}" ]] && app[r]="$(koopa_locate_r)"
     app[rscript]="${app[r]}script"
     koopa_assert_is_installed "${app[rscript]}"
+    koopa_is_koopa_app "${app[rscript]}" || return 0
     rscript_args=('--vanilla')
     koopa_alert 'Updating HTML package index.'
     dict[doc_dir]="$( \
@@ -319,17 +306,15 @@ koopa_r_rebuild_docs() { # {{{1
     dict[r_css]="${dict[html_dir]}/R.css"
     if [[ ! -d "${dict[html_dir]}" ]]
     then
-        koopa_mkdir --sudo "${dict[html_dir]}"
+        koopa_mkdir "${dict[html_dir]}"
     fi
     if [[ ! -f "${dict[pkg_index]}" ]]
     then
-        koopa_assert_is_admin
         koopa_touch --sudo "${dict[pkg_index]}"
     fi
     if [[ ! -f "${dict[r_css]}" ]]
     then
-        koopa_assert_is_admin
-        koopa_touch --sudo "${dict[r_css]}"
+        koopa_touch "${dict[r_css]}"
     fi
     koopa_sys_set_permissions "${dict[pkg_index]}"
     "${app[rscript]}" "${rscript_args[@]}" -e 'utils::make.packages.html()'
