@@ -346,7 +346,6 @@ END
     fi
     # Final cleanup {{{3
     # --------------------------------------------------------------------------
-    koopa_delete_broken_symlinks "${dict[koopa_prefix]}"
     if [[ "${dict[shared]}" -eq 1 ]] && koopa_is_linux
     then
         koopa_linux_update_etc_profile_d
