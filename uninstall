@@ -3,6 +3,8 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/shell/bash/include/header.sh"
 
+# FIXME Consider moving this and having the user simply call 'koopa uninstall koopa'.
+
 main() { # {{{1
     # """
     # Uninstall koopa.
