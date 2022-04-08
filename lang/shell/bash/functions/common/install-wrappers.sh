@@ -15,14 +15,10 @@ koopa_install_gnu_app() { # {{{3
 # FIXME Should we define main 'koopa_install_koopa' installer?
 # FIXME See 'install' file for thoughts on this.
 
-# FIXME Rework this, handing off to external script.
 koopa_uninstall_koopa() { # {{{3
-    local app
-    declare -A app=(
-        [bash]="$(koopa_locate_bash)"
-    )
-    "${app[bash]}" "$(koopa_koopa_prefix)/uninstall" "$@"
-    return 0
+    koopa_uninstall_app \
+        --name='koopa' \
+        "$@"
 }
 
 koopa_update_koopa() { # {{{3

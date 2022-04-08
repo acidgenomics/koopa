@@ -1,22 +1,15 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
-source "$(dirname "${BASH_SOURCE[0]}")/shell/bash/include/header.sh"
-
-# FIXME Consider moving this and having the user simply call 'koopa uninstall koopa'.
-
 main() { # {{{1
     # """
     # Uninstall koopa.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-04-08.
     # """
     local dict
     declare -A dict=(
         [config_prefix]="$(koopa_config_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [name_fancy]='koopa'
     )
-    koopa_alert_uninstall_start "${dict[name_fancy]}" "${dict[koopa_prefix]}"
     if koopa_is_linux && koopa_is_shared_install
     then
         koopa_rm --sudo '/etc/profile.d/zzz-koopa.sh'
@@ -25,9 +18,5 @@ main() { # {{{1
     koopa_rm \
         "${dict[config_prefix]}" \
         "${dict[koopa_prefix]}"
-    koopa_alert_uninstall_success "${dict[name_fancy]}" "${dict[koopa_prefix]}"
-    koopa_alert_note 'Restart the shell.'
     return 0
 }
-
-main "$@"
