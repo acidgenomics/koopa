@@ -1,5 +1,102 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these to use r-cli style inline markup syntax:
+# https://cli.r-lib.org/reference/inline-markup.html
+#
+# The default theme defines the following inline classes:
+#
+# - 'arg' for a function argument.
+# - 'cls' for an S3, S4, R6 or other class name.
+# - 'code' for a piece of code.
+# - 'dd' is used for the descriptions in a definition list (cli_dl()).
+# - 'dt' is used for the terms in a definition list (cli_dl()).
+# - 'email' for an email address.
+# - 'emph' for emphasized text.
+# - 'envvar' for the name of an environment variable.
+# - 'field' for a generic field, e.g. in a named list.
+# - 'file' for a file name.
+# - 'fun' for a function name.
+# - 'key' for a keyboard key.
+# - 'path' for a path (essentially the same as file).
+# - 'pkg' for a package name.
+# - 'strong' for strong importance.
+# - 'url' for a URL.
+# - 'val' for a generic "value".
+# - 'var' for a variable name.
+
+# FIXME Move this to Bash.
+__koopa_ansi_escape() { # {{{1
+    # """
+    # ANSI escape codes.
+    # @note Updated 2020-07-05.
+    # """
+    local escape
+    case "${1:?}" in
+        'nocolor')
+            escape='0'
+            ;;
+        'default')
+            escape='0;39'
+            ;;
+        'default-bold')
+            escape='1;39'
+            ;;
+        'black')
+            escape='0;30'
+            ;;
+        'black-bold')
+            escape='1;30'
+            ;;
+        'blue')
+            escape='0;34'
+            ;;
+        'blue-bold')
+            escape='1;34'
+            ;;
+        'cyan')
+            escape='0;36'
+            ;;
+        'cyan-bold')
+            escape='1;36'
+            ;;
+        'green')
+            escape='0;32'
+            ;;
+        'green-bold')
+            escape='1;32'
+            ;;
+        'magenta')
+            escape='0;35'
+            ;;
+        'magenta-bold')
+            escape='1;35'
+            ;;
+        'red')
+            escape='0;31'
+            ;;
+        'red-bold')
+            escape='1;31'
+            ;;
+        'yellow')
+            escape='0;33'
+            ;;
+        'yellow-bold')
+            escape='1;33'
+            ;;
+        'white')
+            escape='0;97'
+            ;;
+        'white-bold')
+            escape='1;97'
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+    printf '\033[%sm' "$escape"
+    return 0
+}
+
 __koopa_h() { # {{{1
     # """
     # Header message generator.
@@ -42,6 +139,77 @@ __koopa_h() { # {{{1
     __koopa_msg 'magenta' 'default' "${dict[emoji]} ${dict[prefix]}" "$@"
     return 0
 }
+
+# FIXME Consider moving this to Bash, so we can do more fun things with the
+# formatter.
+__koopa_msg() { # {{{1
+    # """
+    # Standard message generator.
+    # @note Updated 2022-02-25.
+    # """
+    local c1 c2 nc prefix str
+    c1="$(__koopa_ansi_escape "${1:?}")"
+    c2="$(__koopa_ansi_escape "${2:?}")"
+    nc="$(__koopa_ansi_escape 'nocolor')"
+    prefix="${3:?}"
+    shift 3
+    for str in "$@"
+    do
+        koopa_print "${c1}${prefix}${nc} ${c2}${str}${nc}"
+    done
+    return 0
+}
+
+__koopa_print_ansi() { # {{{1
+    # """
+    # Print a colored line in console.
+    # @note Updated 2022-02-25.
+    #
+    # Currently using ANSI escape codes.
+    # This is the classic 8 color terminal approach.
+    #
+    # - '0;': normal
+    # - '1;': bright or bold
+    #
+    # (taken from Travis CI config)
+    # - clear=\033[0K
+    # - nocolor=\033[0m
+    #
+    # Alternative approach (non-POSIX):
+    # echo command requires '-e' flag to allow backslash escapes.
+    #
+    # See also:
+    # - https://en.wikipedia.org/wiki/ANSI_escape_code
+    # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
+    # - https://stackoverflow.com/questions/5947742
+    # - https://stackoverflow.com/questions/15736223
+    # - https://bixense.com/clicolors/
+    # """
+    local color nocolor str
+    color="$(__koopa_ansi_escape "${1:?}")"
+    nocolor="$(__koopa_ansi_escape 'nocolor')"
+    shift 1
+    for str in "$@"
+    do
+        printf '%s%b%s\n' "$color" "$str" "$nocolor"
+    done
+    return 0
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 __koopa_alert_process_start() { # {{{1
     # """
@@ -132,6 +300,102 @@ koopa_acid_emoji() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_print '🧪'
 }
+
+
+
+
+
+
+
+
+
+
+
+# FIXME Move this to Bash library.
+koopa_alert() { # {{{1
+    # """
+    # Alert message.
+    # @note Updated 2021-03-31.
+    # """
+    __koopa_msg 'default' 'default' '→' "$@"
+    return 0
+}
+
+# FIXME Move this to Bash library.
+koopa_alert_info() { # {{{1
+    # """
+    # Alert info message.
+    # @note Updated 2021-03-30.
+    # """
+    __koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
+    return 0
+}
+
+# FIXME Move this to Bash library.
+koopa_alert_is_installed() { # {{{1
+    # """
+    # Alert the user that a program is installed.
+    # @note Updated 2021-06-03.
+    # """
+    local name prefix
+    name="${1:?}"
+    prefix="${2:-}"
+    x="${name} is installed"
+    if [ -n "$prefix" ]
+    then
+        x="${x} at '${prefix}'"
+    fi
+    x="${x}."
+    koopa_alert_note "$x"
+    return 0
+}
+
+# FIXME Move this to Bash library.
+koopa_alert_is_not_installed() { # {{{1
+    # """
+    # Alert the user that a program is not installed.
+    # @note Updated 2021-06-03.
+    # """
+    local name prefix
+    name="${1:?}"
+    prefix="${2:-}"
+    x="${name} is not installed"
+    if [ -n "$prefix" ]
+    then
+        x="${x} at '${prefix}'"
+    fi
+    x="${x}."
+    koopa_alert_note "$x"
+    return 0
+}
+
+# FIXME Move this to Bash library.
+koopa_alert_note() { # {{{1
+    # """
+    # General note.
+    # @note Updated 2020-07-01.
+    # """
+    __koopa_msg 'yellow' 'default' '**' "$@"
+}
+
+# FIXME Move this to Bash library.
+koopa_alert_success() { # {{{1
+    # """
+    # Alert success message.
+    # @note Updated 2021-03-31.
+    # """
+    __koopa_msg 'green-bold' 'green' '✓' "$@"
+}
+
+
+
+
+
+
+
+
+
+
 
 koopa_alert_coffee_time() { # {{{1
     # """
@@ -370,6 +634,105 @@ ${dict[msg]}${dict[suffix]}"
     koopa_print "${dict[str]}"
     return 0
 }
+
+
+
+
+
+
+koopa_print_black() { # {{{1
+    __koopa_print_ansi 'black' "$@"
+    return 0
+}
+
+koopa_print_black_bold() { # {{{1
+    __koopa_print_ansi 'black-bold' "$@"
+    return 0
+}
+
+koopa_print_blue() { # {{{1
+    __koopa_print_ansi 'blue' "$@"
+    return 0
+}
+
+koopa_print_blue_bold() { # {{{1
+    __koopa_print_ansi 'blue-bold' "$@"
+    return 0
+}
+
+koopa_print_cyan() { # {{{1
+    __koopa_print_ansi 'cyan' "$@"
+    return 0
+}
+
+koopa_print_cyan_bold() { # {{{1
+    __koopa_print_ansi 'cyan-bold' "$@"
+    return 0
+}
+
+koopa_print_default() { # {{{1
+    __koopa_print_ansi 'default' "$@"
+    return 0
+}
+
+koopa_print_default_bold() { # {{{1
+    __koopa_print_ansi 'default-bold' "$@"
+    return 0
+}
+
+koopa_print_green() { # {{{1
+    __koopa_print_ansi 'green' "$@"
+    return 0
+}
+
+koopa_print_green_bold() { # {{{1
+    __koopa_print_ansi 'green-bold' "$@"
+    return 0
+}
+
+koopa_print_magenta() { # {{{1
+    __koopa_print_ansi 'magenta' "$@"
+    return 0
+}
+
+koopa_print_magenta_bold() { # {{{1
+    __koopa_print_ansi 'magenta-bold' "$@"
+    return 0
+}
+
+koopa_print_red() { # {{{1
+    __koopa_print_ansi 'red' "$@"
+    return 0
+}
+
+koopa_print_red_bold() { # {{{1
+    __koopa_print_ansi 'red-bold' "$@"
+    return 0
+}
+
+koopa_print_yellow() { # {{{1
+    __koopa_print_ansi 'yellow' "$@"
+    return 0
+}
+
+koopa_print_yellow_bold() { # {{{1
+    __koopa_print_ansi 'yellow-bold' "$@"
+    return 0
+}
+
+koopa_print_white() { # {{{1
+    __koopa_print_ansi 'white' "$@"
+    return 0
+}
+
+koopa_print_white_bold() { # {{{1
+    __koopa_print_ansi 'white-bold' "$@"
+    return 0
+}
+
+
+
+
 
 koopa_status_fail() { # {{{1
     # """
