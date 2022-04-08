@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GEOS.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-08.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.

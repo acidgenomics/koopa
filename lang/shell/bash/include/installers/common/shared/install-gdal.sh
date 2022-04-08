@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GDAL.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-08.
     #
     # Use 'configure --help' for build options.
     #
