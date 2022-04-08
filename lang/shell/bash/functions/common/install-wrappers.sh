@@ -1246,7 +1246,6 @@ koopa_update_node_packages() { # {{{3
 
 # openjdk ----------------------------------------------------------------- {{{2
 
-# FIXME Need to add link here?
 koopa_install_openjdk() { # {{{3
     koopa_install_app \
         --name-fancy='OpenJDK' \
@@ -1254,25 +1253,18 @@ koopa_install_openjdk() { # {{{3
         "$@"
 }
 
-# FIXME Need to pass this out to an uninstall script...
-# FIXME Need to make a Linux-specific wrapper.
-# FIXME Need to unlink in bin here.
-
 koopa_uninstall_openjdk() { # {{{3
-    local dict
-    declare -A dict
-    koopa_uninstall_app \
-        --name-fancy='OpenJDK' \
-        --name='openjdk' \
-        "$@"
+    local uninstall_args
+    uninstall_args=(
+        '--name-fancy=OpenJDK'
+        '--name=openjdk'
+    )
+    # Reset 'default-java' on Linux, when possible.
     if koopa_is_linux
     then
-        dict[default_java]='/usr/lib/jvm/default-java'
-        if [[ -d "${dict[default_java]}" ]]
-        then
-            koopa_linux_java_update_alternatives "${dict[default_java]}"
-        fi
+        uninstall_args+=('--platform=linux')
     fi
+    koopa_uninstall_app "${uninstall_args[@]}" "$@"
     return 0
 }
 
