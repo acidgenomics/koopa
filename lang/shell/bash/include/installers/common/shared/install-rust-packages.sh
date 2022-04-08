@@ -2,6 +2,7 @@
 
 # FIXME Consider a more modular approach for this, installing each tool
 # into its own versioned directory instead?
+# FIXME Add a step to link these automatically.
 
 main() { # {{{1
     # """
@@ -41,13 +42,13 @@ main() { # {{{1
     pkgs=(
         'cargo-outdated'
         'cargo-update'
-        'difftastic'
     )
     if [[ ! -x "${app[brew]}" ]]
     then
         pkgs+=(
             'bat'
             'broot'
+            'difftastic'
             'dog'
             'du-dust'
             'exa'
@@ -131,6 +132,16 @@ main() { # {{{1
                 ;;
         esac
         "${app[cargo]}" install "${args[@]}"
+    done
+    # FIXME Need to improve linkage support for other packages built from
+    # source not managed by Homebrew.
+    for pkg in "${pkgs[@]}"
+    do
+        case "$pkg" in
+            'difftastic')
+                koopa_link_in_bin "${dict[root]}/bin/difft" 'difft'
+            ;;
+        esac
     done
     return 0
 }
