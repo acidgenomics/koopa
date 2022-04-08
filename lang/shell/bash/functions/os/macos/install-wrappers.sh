@@ -102,7 +102,6 @@ koopa_macos_uninstall_r_binary() { # {{{3
         --name-fancy='R' \
         --name='r' \
         --platform='macos' \
-        --prefix="$(koopa_macos_r_prefix)" \
         --system \
         --uninstaller='r-binary' \
         --unlink-in-bin='bin/R' \
