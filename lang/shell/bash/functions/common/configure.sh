@@ -6,7 +6,7 @@
 koopa_add_make_prefix_link() { # {{{1
     # """
     # Ensure 'koopa' is linked inside make prefix.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-04-08.
     #
     # This is particularly useful for external scripts that source koopa header.
     # This approach works nicely inside a hardened R environment.
@@ -14,9 +14,10 @@ koopa_add_make_prefix_link() { # {{{1
     local dict
     koopa_assert_has_args_le "$#" 1
     koopa_is_shared_install || return 0
+    koopa_assert_is_admin
     declare -A dict=(
         [koopa_prefix]="${1:-}"
-        [make_prefix]="$(koopa_make_prefix)"
+        [make_prefix]='/usr/local'
     )
     if [[ -z "${dict[koopa_prefix]}" ]]
     then
@@ -27,7 +28,7 @@ koopa_add_make_prefix_link() { # {{{1
     [[ -d "${dict[make_prefix]}" ]] || return 0
     [[ -L "${dict[target_link]}" ]] && return 0
     koopa_alert "Adding 'koopa' link inside '${dict[make_prefix]}'."
-    koopa_sys_ln "${dict[source_link]}" "${dict[target_link]}"
+    koopa_ln --sudo "${dict[source_link]}" "${dict[target_link]}"
     return 0
 }
 
@@ -374,24 +375,17 @@ koopa_fix_rbenv_permissions() { # {{{1
 koopa_fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-08.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [make_prefix]="$(koopa_make_prefix)"
     )
     koopa_chmod 'g-w' \
         "${dict[koopa_prefix]}/lang/shell/zsh" \
         "${dict[koopa_prefix]}/lang/shell/zsh/functions"
-    if [[ -d "${dict[make_prefix]}/share/zsh" ]]
-    then
-        koopa_chmod 'g-w' \
-            "${dict[make_prefix]}/share/zsh" \
-            "${dict[make_prefix]}/share/zsh/site-functions"
-    fi
     if [[ -d "${dict[app_prefix]}/zsh" ]]
     then
         koopa_chmod 'g-w' \
