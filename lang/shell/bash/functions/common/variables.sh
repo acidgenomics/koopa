@@ -208,6 +208,16 @@ koopa_koopa_github_url() { # {{{1
     return 0
 }
 
+# FIXME Return the platform and architecture here automatically.
+koopa_koopa_app_binary_url() { # {{{2
+    # """
+    # Koopa app binary URL.
+    # @note Updated 2022-04-08.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_print "$(koopa_koopa_url)/app"
+}
+
 koopa_koopa_installers_url() { # {{{1
     # """
     # Koopa installers URL.

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME We need to version pin here.
-
 main() { # {{{1
     # """
     # Install Rust (via rustup).
