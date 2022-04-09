@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME We may need to add build support for 'libtiff' here.
+
 main() { # {{{1
     # """
     # Install PROJ.
@@ -15,10 +17,6 @@ main() { # {{{1
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'pkg-config' 'python' 'sqlite'
-    if koopa_is_macos
-    then
-        koopa_activate_homebrew_opt_prefix 'libtiff'
-    fi
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
