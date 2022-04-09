@@ -21,7 +21,6 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[openssl_prefix]="${dict[opt_prefix]}/openssl"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://download.samba.org/pub/${dict[name]}/src/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
