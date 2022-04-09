@@ -17,7 +17,7 @@ koopa_activate_opt_prefix() { # {{{1
         prefix="${opt_prefix}/${name}"
         koopa_assert_is_dir "$prefix"
         koopa_activate_prefix "$prefix"
-        cppflags='-I${prefix}/include'
+        cppflags="-I${prefix}/include"
         if [[ -n "${CPPFLAGS:-}" ]]
         then
             CPPFLAGS="${cppflags} ${CPPFLAGS}"
@@ -25,7 +25,7 @@ koopa_activate_opt_prefix() { # {{{1
             CPPFLAGS="$cppflags"
         fi
         export CPPFLAGS
-        ldflags='-L${prefix}/lib'
+        ldflags="-L${prefix}/lib"
         # This setting may only work with GCC on Linux:
         # > ldflags="-Wl,-rpath=${prefix}/lib"
         if [[ -n "${LDFLAGS:-}" ]]
