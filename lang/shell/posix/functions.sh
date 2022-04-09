@@ -397,7 +397,6 @@ koopa_activate_dircolors() { # {{{1
     return 0
 }
 
-# FIXME Link fzf into '/opt/koopa/bin' instead.
 koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
@@ -491,79 +490,6 @@ koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
     fi
-    return 0
-}
-
-koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
-    # """
-    # Activate Homebrew opt prefix for a GNU program.
-    # @note Updated 2022-04-04.
-    #
-    # Linked using 'g' prefix by default.
-    #
-    # Note that libtool is always prefixed with 'g', even in 'opt/'.
-    #
-    # @examples
-    # > koopa_activate_homebrew_opt_gnu_prefix 'binutils' 'coreutils'
-    # """
-    local name opt_prefix prefix
-    opt_prefix="$(koopa_homebrew_opt_prefix)"
-    for name in "$@"
-    do
-        prefix="${opt_prefix}/${name}/libexec"
-        if [ ! -d "$prefix" ]
-        then
-            koopa_warn "Not installed: '${prefix}'."
-            return 1
-        fi
-        koopa_add_to_path_start \
-            "${prefix}/gnubin"
-        koopa_add_to_manpath_start \
-            "${prefix}/gnuman"
-        koopa_add_to_pkg_config_path_start \
-            "${prefix}/lib/pkgconfig" \
-            "${prefix}/share/pkgconfig"
-    done
-    return 0
-}
-
-koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
-    # """
-    # Activate Homebrew opt libexec prefix.
-    # @note Updated 2022-04-04.
-    # """
-    local name opt_prefix prefix
-    opt_prefix="$(koopa_homebrew_opt_prefix)"
-    for name in "$@"
-    do
-        prefix="${opt_prefix}/${name}/libexec"
-        if [ ! -d "$prefix" ]
-        then
-            koopa_warn "Not installed: '${prefix}'."
-            return 1
-        fi
-        koopa_activate_prefix "$prefix"
-    done
-    return 0
-}
-
-koopa_activate_homebrew_opt_prefix() { # {{{1
-    # """
-    # Activate Homebrew opt prefix.
-    # @note Updated 2022-04-04.
-    # """
-    local name opt_prefix prefix
-    opt_prefix="$(koopa_homebrew_opt_prefix)"
-    for name in "$@"
-    do
-        prefix="${opt_prefix}/${name}"
-        if [ ! -d "$prefix" ]
-        then
-            koopa_warn "Not installed: '${prefix}'."
-            return 1
-        fi
-        koopa_activate_prefix "$prefix"
-    done
     return 0
 }
 
@@ -771,31 +697,6 @@ koopa_activate_node() { # {{{1
     return 0
 }
 
-# FIXME Set CPPFLAGS and LDFLAGS here.
-
-koopa_activate_opt_prefix() { # {{{1
-    # """
-    # Activate koopa opt prefix.
-    # @note Updated 2022-04-04.
-    #
-    # @examples
-    # > koopa_activate_opt_prefix 'geos' 'proj' 'gdal'
-    # """
-    local name opt_prefix prefix
-    opt_prefix="$(koopa_opt_prefix)"
-    for name in "$@"
-    do
-        prefix="${opt_prefix}/${name}"
-        if [ ! -d "$prefix" ]
-        then
-            koopa_warn "Not installed: '${prefix}'."
-            return 1
-        fi
-        koopa_activate_prefix "$prefix"
-    done
-    return 0
-}
-
 koopa_activate_perl() { # {{{1
     # """
     # Activate Perl, adding local library to 'PATH'.
@@ -870,55 +771,6 @@ koopa_activate_pipx() { # {{{1
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
     export PIPX_HOME PIPX_BIN_DIR
-    return 0
-}
-
-# FIXME Disable this in activation.
-koopa_activate_pkg_config() { # {{{1
-    # """
-    # Configure 'PKG_CONFIG_PATH'.
-    # @note Updated 2022-04-08.
-    #
-    # Typical priorities (e.g. on Debian):
-    # - /usr/local/lib/x86_64-linux-gnu/pkgconfig
-    # - /usr/local/lib/pkgconfig
-    # - /usr/local/share/pkgconfig
-    # - /usr/lib/x86_64-linux-gnu/pkgconfig
-    # - /usr/lib/pkgconfig
-    # - /usr/share/pkgconfig
-    #
-    # These are defined primarily for R environment. In particular these make
-    # building tricky pages from source, such as rgdal, sf and others  easier.
-    #
-    # This is necessary for rgdal, sf packages to install clean.
-    #
-    # @seealso
-    # - https://askubuntu.com/questions/210210/
-    # """
-    local brew_prefix make_prefix_1 make_prefix_2 pkg_bin usr_prefix
-    brew_prefix="$(koopa_homebrew_prefix)"
-    make_prefix_1='/usr/local'
-    make_prefix_2="$(koopa_make_prefix)"
-    pkg_bin='bin/pkg-config'
-    usr_prefix='/usr'
-    if [ -f "${usr_prefix}/${pkg_bin}" ]
-    then
-        koopa_add_to_pkg_config_path_start_2 "${usr_prefix}/${pkg_bin}"
-    fi
-    if [ "$brew_prefix" != "$make_prefix_1" ] && \
-        [ -f "${brew_prefix}/${pkg_bin}" ]
-    then
-        koopa_add_to_pkg_config_path_start_2 "${brew_prefix}/${pkg_bin}"
-    fi
-    if [ -f "${make_prefix_1}/${pkg_bin}" ]
-    then
-        koopa_add_to_pkg_config_path_start_2 "${make_prefix_1}/${pkg_bin}"
-    fi
-    if [ "$make_prefix_2" != "$make_prefix_1" ] && \
-        [ -f "${make_prefix_2}/${pkg_bin}" ]
-    then
-        koopa_add_to_pkg_config_path_start_2 "${make_prefix_2}/${pkg_bin}"
-    fi
     return 0
 }
 
