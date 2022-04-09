@@ -170,7 +170,7 @@ koopa_find_app_version() { # {{{1
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-09.
     # """
     local bin_arr brew_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -449,7 +449,11 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 --version="${dict[version]}"
             return 0
         fi
-        unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
+        unset -v \
+            CPPFLAGS \
+            LDFLAGS \
+            LD_LIBRARY_PATH \
+            PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
         if [[ -x '/usr/bin/pkg-config' ]]
