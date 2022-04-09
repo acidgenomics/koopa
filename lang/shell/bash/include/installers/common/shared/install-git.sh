@@ -50,7 +50,9 @@ main() { # {{{1
         (
             koopa_cd 'contrib/credential/osxkeychain'
             "${app[make]}" --jobs="${dict[jobs]}"
-            "${app[make]}" install
+            koopa_cp \
+                --target-directory="${dict[prefix]}/bin" \
+                'git-credential-osxkeychain'
         )
     fi
     return 0
