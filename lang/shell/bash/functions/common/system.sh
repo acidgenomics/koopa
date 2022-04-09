@@ -1,5 +1,42 @@
 #!/usr/bin/env bash
 
+koopa_activate_opt_prefix() { # {{{1
+    # """
+    # Activate koopa opt prefix.
+    # @note Updated 2022-04-09.
+    #
+    # @examples
+    # > koopa_activate_opt_prefix 'geos' 'proj' 'gdal'
+    # """
+    local name opt_prefix
+    koopa_assert_has_args "$#"
+    opt_prefix="$(koopa_opt_prefix)"
+    for name in "$@"
+    do
+        local cppflags ldflags prefix
+        prefix="${opt_prefix}/${name}"
+        koopa_assert_is_dir "$prefix"
+        koopa_activate_prefix "$prefix"
+        cppflags='-I${prefix}/include'
+        if [[ -n "${CPPFLAGS:-}" ]]
+        then
+            CPPFLAGS="${cppflags} ${CPPFLAGS}"
+        else
+            CPPFLAGS="$cppflags"
+        fi
+        export CPPFLAGS
+        ldflags='-L${prefix}/lib'
+        if [[ -n "${LDFLAGS:-}" ]]
+        then
+            LDFLAGS="${ldflags} ${LDFLAGS}"
+        else
+            LDFLAGS="$ldflags"
+        fi
+        export LDFLAGS
+    done
+    return 0
+}
+
 koopa_exec_dir() { # {{{1
     # """
     # Execute multiple shell scripts in a directory.

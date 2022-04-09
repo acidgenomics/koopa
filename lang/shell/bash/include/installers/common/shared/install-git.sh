@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME If we set CPPFLAGS and LDFLAGS in opt_prefix, this should improve
+# the install stack better...
+
 main() { # {{{1
     # """
     # Install Git.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-04-09.
     #
     # If system doesn't have gettext (msgfmt) installed:
     # Note that this doesn't work on Ubuntu 18 LTS.
@@ -12,13 +15,13 @@ main() { # {{{1
     # Git source code releases on GitHub:
     # > file="v${version}.tar.gz"
     # > url="https://github.com/git/${name}/archive/${file}"
+    #
+    # @seealso
+    # https://github.com/Homebrew/homebrew-core/blob/master/Formula/git.rb
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    if koopa_is_macos
-    then
-        koopa_activate_opt_prefix 'autoconf'
-    fi
+    koopa_activate_opt_prefix 'autoconf' 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
         [openssl]="$(koopa_locate_openssl)"
@@ -41,5 +44,16 @@ main() { # {{{1
         --with-openssl="${app[openssl]}"
     "${app[make]}" --jobs="${dict[jobs]}" V=1
     "${app[make]}" install
+    # Install the macOS keychain credential helper.
+    if koopa_is_macos
+    then
+        # FIXME Need to work on configuring this.
+        koopa_cd 'contrib/credential/osxkeychain'
+        "${app[make]}" --jobs="${dict[jobs]}"
+        "${app[make]}" install
+      end
+    end
+    fi
+
     return 0
 }

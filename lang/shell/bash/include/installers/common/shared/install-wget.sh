@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework this.
+
 main() { # {{{1
     # """
     # Install wget.
