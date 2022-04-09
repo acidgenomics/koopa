@@ -703,19 +703,35 @@ koopa_uninstall_geos() { # {{{3
 # git --------------------------------------------------------------------- {{{2
 
 koopa_install_git() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/git' \
-        --name-fancy='Git' \
-        --name='git' \
-        "$@"
+    local install_args
+    install_args=(
+        '--link-in-bin=bin/git'
+        '--name-fancy=Git'
+        '--name=git'
+    )
+    if koopa_is_macos
+    then
+        install_args+=(
+            '--link-in-bin=bin/git-credential-osxkeychain'
+        )
+    fi
+    koopa_install_app "${install_args[@]}" "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_git() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Git' \
-        --name='git' \
-        "$@"
+    local uninstall_args
+    uninstall_args=(
+        '--name-fancy=Git'
+        '--name=git'
+        '--unlink-in-bin=git'
+    )
+    if koopa_is_macos
+    then
+        uninstall_args+=(
+            '--unlink-in-bin=git-credential-osxkeychain'
+        )
+    fi
+    koopa_uninstall_app "${uninstall_args[@]}" "$@"
 }
 
 # gnupg ------------------------------------------------------------------- {{{2
