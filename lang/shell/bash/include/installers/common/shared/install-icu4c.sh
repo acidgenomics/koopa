@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install ICU4C.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-09.
     #
     # @seealso
     # - https://github.com/unicode-org/icu/
@@ -16,12 +16,13 @@ main() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
+        [name]='icu4c'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[kebab_version]="$(koopa_kebab_case_simple "${dict[version]}")"
     dict[snake_version]="$(koopa_snake_case_simple "${dict[version]}")"
-    dict[file]="icu4c-${dict[snake_version]}-src.tgz"
+    dict[file]="${dict[name]}-${dict[snake_version]}-src.tgz"
     dict[url]="https://github.com/unicode-org/icu/releases/download/\
 release-${dict[kebab_version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
