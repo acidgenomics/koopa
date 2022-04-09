@@ -26,6 +26,8 @@ koopa_activate_opt_prefix() { # {{{1
         fi
         export CPPFLAGS
         ldflags='-L${prefix}/lib'
+        # This setting may only work with GCC on Linux:
+        # > ldflags="-Wl,-rpath=${prefix}/lib"
         if [[ -n "${LDFLAGS:-}" ]]
         then
             LDFLAGS="${ldflags} ${LDFLAGS}"
