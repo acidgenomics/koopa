@@ -17,7 +17,8 @@ main() { # {{{1
     # > url="https://github.com/git/${name}/archive/${file}"
     #
     # @seealso
-    # https://github.com/Homebrew/homebrew-core/blob/master/Formula/git.rb
+    # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/git.rb
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -28,7 +29,7 @@ main() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
-        [mirror_url]='https://mirrors.edge.kernel.org/pub/software/scm/'
+        [mirror_url]='https://mirrors.edge.kernel.org/pub/software/scm'
         [name]='git'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -39,21 +40,18 @@ main() { # {{{1
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     "${app[make]}" configure
-    ./configure \
-        --prefix="${dict[prefix]}" \
-        --with-openssl="${app[openssl]}"
-    "${app[make]}" --jobs="${dict[jobs]}" V=1
-    "${app[make]}" install
+    ./configure --prefix="${dict[prefix]}"
+    # Additional features here require 'asciidoc' to be installed.
+    "${app[make]}" --jobs="${dict[jobs]}" # 'all' 'doc' 'info'
+    "${app[make]}" install # 'install-doc' 'install-html' 'install-info'
     # Install the macOS keychain credential helper.
     if koopa_is_macos
     then
-        # FIXME Need to work on configuring this.
-        koopa_cd 'contrib/credential/osxkeychain'
-        "${app[make]}" --jobs="${dict[jobs]}"
-        "${app[make]}" install
-      end
-    end
+        (
+            koopa_cd 'contrib/credential/osxkeychain'
+            "${app[make]}" --jobs="${dict[jobs]}"
+            "${app[make]}" install
+        )
     fi
-
     return 0
 }
