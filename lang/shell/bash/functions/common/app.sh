@@ -605,7 +605,7 @@ ${dict[name]}/${dict[version]}.tar.gz"
 koopa_install_app_packages() { # {{{1
     # """
     # Install application packages.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-09.
     # """
     local name name_fancy pos
     koopa_assert_has_args "$#"
@@ -677,7 +677,7 @@ koopa_install_app_packages() { # {{{1
         --name="${dict[name]}-packages" \
         --no-prefix-check \
         --prefix="${dict[prefix]}" \
-        --version='rolling' \'
+        --version='rolling' \
         "$@"
     return 0
 }
@@ -925,10 +925,15 @@ koopa_uninstall_app() { # {{{1
 ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
     if [[ -f "${dict[uninstaller_file]}" ]]
     then
-        # shellcheck source=/dev/null
-        source "${dict[uninstaller_file]}"
-        koopa_assert_is_function "${dict[uninstaller_fun]}"
-        "${dict[uninstaller_fun]}" "$@"
+        dict[tmp_dir]="$(koopa_tmp_dir)"
+        (
+            koopa_cd "${dict[tmp_dir]}"
+            # shellcheck source=/dev/null
+            source "${dict[uninstaller_file]}"
+            koopa_assert_is_function "${dict[uninstaller_fun]}"
+            "${dict[uninstaller_fun]}" "$@"
+        )
+        koopa_rm "${dict[tmp_dir]}"
     fi
     if [[ -d "${dict[prefix]}" ]]
     then

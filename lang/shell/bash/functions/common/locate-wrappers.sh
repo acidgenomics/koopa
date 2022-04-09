@@ -78,8 +78,7 @@ koopa_locate_bzip2() { # {{{1
 koopa_locate_cargo() { # {{{1
     koopa_locate_app \
         --app-name='cargo' \
-        --homebrew-opt-name='rust' \
-        --koopa-opt-name='rust-packages'
+        --opt-name='rust'
 }
 
 koopa_locate_cat() { # {{{1
@@ -210,10 +209,14 @@ koopa_locate_fasterq_dump() { # {{{1
 }
 
 koopa_locate_fd() { # {{{1
+    # """
+    # Allowing passthrough of '--allow-missing' here.
+    # """
     koopa_locate_app \
         --app-name='fd' \
         --homebrew-opt-name='fd' \
-        --koopa-opt-name='rust-packages'
+        --koopa-opt-name='rust-packages' \
+        "$@"
 }
 
 koopa_locate_ffmpeg() { # {{{1
@@ -645,8 +648,7 @@ koopa_locate_ruby() { # {{{1
 koopa_locate_rustc() { # {{{1
     koopa_locate_app \
         --app-name='rustc' \
-        --homebrew-opt-name='rust' \
-        --koopa-opt-name='rust-packages'
+        --opt-name='rust'
 }
 
 koopa_locate_rustup() { # {{{1

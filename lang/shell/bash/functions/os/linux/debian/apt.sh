@@ -894,9 +894,7 @@ koopa_debian_apt_disable_deb_src() { # {{{1
         koopa_alert_note "No lines to comment in '${dict[file]}'."
         return 0
     fi
-    "${app[sudo]}" "${app[sed]}" \
-        --in-place \
-        --regexp-extended \
+    "${app[sudo]}" "${app[sed]}" -E -i \
         's/^deb-src /# deb-src /' \
         "${dict[file]}"
     "${app[sudo]}" "${app[apt_get]}" update
@@ -929,9 +927,7 @@ koopa_debian_apt_enable_deb_src() { # {{{1
         koopa_alert_note "No lines to uncomment in '${dict[file]}'."
         return 0
     fi
-    "${app[sudo]}" "${app[sed]}" \
-        --in-place \
-        --regexp-extended \
+    "${app[sudo]}" "${app[sed]}" -E -i \
         's/^# deb-src /deb-src /' \
         "${dict[file]}"
     "${app[sudo]}" "${app[apt_get]}" update
@@ -1020,8 +1016,7 @@ koopa_debian_apt_is_key_imported() { # {{{1
     dict[key_pattern]="$( \
         koopa_print "${dict[key]}" \
         | "${app[sed]}" 's/ //g' \
-        | "${app[sed]}" \
-            --regexp-extended \
+        | "${app[sed]}" -E \
             "s/^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\
 (.{4})(.{4})(.{4})\$/\1 \2 \3 \4 \5  \6 \7 \8 \9/" \
     )"

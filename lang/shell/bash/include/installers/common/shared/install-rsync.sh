@@ -3,43 +3,41 @@
 main() { # {{{1
     # """
     # Install rsync.
-    # @note Updated 2022-01-06.
+    # @note Updated 2022-04-09.
     #
     # @seealso
     # - https://github.com/WayneD/rsync/blob/master/INSTALL.md
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='rsync'
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[openssl_prefix]="${dict[opt_prefix]}/openssl"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://download.samba.org/pub/${dict[name]}/src/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    conf_args=("--prefix=${dict[prefix]}")
-    if koopa_is_macos
-    then
-        # Even though Homebrew provides OpenSSL, hard to link.
-        conf_args+=('--disable-openssl')
-    elif koopa_is_linux
-    then
-        conf_args+=(
-            # > '--without-included-zlib'
-            '--disable-zstd'
-        )
-        if koopa_is_rhel_like
-        then
-            conf_args+=('--disable-xxhash')
-        fi
-    fi
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--disable-lz4'
+        '--disable-xxhash'
+        '--disable-zstd'
+        '--enable-openssl'
+    )
+    # FIXME Rework so that these are set automatically during
+    # 'koopa_activate_opt_prefix' call above.
+    export CPPFLAGS="-I${dict[openssl_prefix]}/include";
+    export LDFLAGS="-L${dict[openssl_prefix]}/lib";
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

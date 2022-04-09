@@ -771,6 +771,8 @@ koopa_activate_node() { # {{{1
     return 0
 }
 
+# FIXME Set CPPFLAGS and LDFLAGS here.
+
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
@@ -871,6 +873,7 @@ koopa_activate_pipx() { # {{{1
     return 0
 }
 
+# FIXME Disable this in activation.
 koopa_activate_pkg_config() { # {{{1
     # """
     # Configure 'PKG_CONFIG_PATH'.
@@ -1041,30 +1044,6 @@ koopa_activate_ruby() { # {{{1
     prefix="$(koopa_ruby_packages_prefix)"
     [ -d "$prefix" ] || return 0
     export GEM_HOME="$prefix"
-    return 0
-}
-
-koopa_activate_rust() { # {{{1
-    # """
-    # Activate Rust programming language.
-    # @note Updated 2022-04-04.
-    #
-    # Attempt to locate cargo home and source the 'env' script.
-    # This will put the rust cargo programs defined in 'bin/' in the PATH.
-    #
-    # Alternatively, can just add '${cargo_home}/bin' to PATH.
-    # """
-    local cargo_prefix rustup_prefix
-    cargo_prefix="$(koopa_rust_packages_prefix)"
-    rustup_prefix="$(koopa_rust_prefix)"
-    if [ -d "$cargo_prefix" ]
-    then
-        export CARGO_HOME="$cargo_prefix"
-    fi
-    if [ -d "$rustup_prefix" ]
-    then
-        export RUSTUP_HOME="$rustup_prefix"
-    fi
     return 0
 }
 
@@ -1308,25 +1287,12 @@ koopa_activate_zoxide() { # {{{1
     return 0
 }
 
-# FIXME Rethink the coreutils handling here.
 koopa_add_koopa_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-04-08
     # """
-    local brew_prefix config_prefix dest_file dest_name ln mkdir rm source_file
-    ln='ln'
-    mkdir='mkdir'
-    rm='rm'
-    if koopa_is_macos
-    then
-        # FIXME Use opt prefix here instead.
-        brew_prefix="$(koopa_homebrew_prefix)"
-        [ -d "$brew_prefix" ] || return 0
-        ln="${brew_prefix}/opt/coreutils/bin/gln"
-        mkdir="${brew_prefix}/opt/coreutils/bin/gmkdir"
-        rm="${brew_prefix}/opt/coreutils/bin/grm"
-    fi
+    local brew_prefix config_prefix dest_file dest_name source_file
     config_prefix="$(koopa_config_prefix)"
     while [ "$#" -ge 2 ]
     do
@@ -1338,9 +1304,9 @@ koopa_add_koopa_config_link() { # {{{1
         then
             continue
         fi
-        "$mkdir" -p "$config_prefix"
-        "$rm" -fr "$dest_file"
-        "$ln" -fns "$source_file" "$dest_file"
+        mkdir -p "$config_prefix"
+        rm -fr "$dest_file"
+        ln -s "$source_file" "$dest_file"
     done
     return 0
 }
@@ -3774,21 +3740,6 @@ koopa_ruby_packages_prefix() { # {{{1
     __koopa_packages_prefix 'ruby' "$@"
 }
 
-koopa_rust_packages_prefix() { # {{{1
-    # """
-    # Rust packages (cargo) install prefix.
-    # @note Updated 2021-05-25.
-
-    # @usage koopa_rust_packages_prefix [VERSION]
-    #
-    # @seealso:
-    # - https://github.com/rust-lang/rustup#environment-variables
-    # - CARGO_HOME
-    # - RUSTUP_HOME
-    # """
-    __koopa_packages_prefix 'rust' "$@"
-}
-
 koopa_rust_prefix() { # {{{1
     # """
     # Rust (rustup) install prefix.
@@ -3796,6 +3747,16 @@ koopa_rust_prefix() { # {{{1
     # """
     koopa_print "$(koopa_opt_prefix)/rust"
     return 0
+}
+
+koopa_rust_packages_prefix() { # {{{1
+    # """
+    # Rust packags prefix.
+    # @note Updated 2022-04-09.
+    #
+    # @usage koopa_rust_packages_prefix [VERSION]
+    # """
+    __koopa_packages_prefix 'rust' "$@"
 }
 
 koopa_sbin_prefix() { # {{{1
