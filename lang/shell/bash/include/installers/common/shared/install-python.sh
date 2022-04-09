@@ -40,18 +40,15 @@ ${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "Python-${dict[version]}"
-    conf_args=("--prefix=${dict[prefix]}")
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+    )
     if [[ "${INSTALL_LINK_IN_MAKE:?}" -eq 1 ]]
     then
         conf_args+=(
             # > '--enable-optimizations'
             '--enable-shared'
         )
-    fi
-    # Setting 'LDFLAGS' here doesn't work on macOS.
-    if koopa_is_linux
-    then
-        conf_args+=("LDFLAGS=-Wl,-rpath=${dict[prefix]}/lib")
     fi
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
