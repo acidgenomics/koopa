@@ -11,7 +11,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'openssl' 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

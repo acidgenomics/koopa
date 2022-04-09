@@ -190,13 +190,14 @@ __koopa_complete() { # {{{1
                         'udunits'
                         'vim'
                         'wget'
+                        'xz'
                         'zsh'
                     )
                     if koopa_is_linux
                     then
                         args+=(
                             'aspera-connect'
-                            'aws-cli'
+                            'aws-cli'  # FIXME Need to support macOS.
                             'azure-cli'
                             'base-system'
                             'bcbio-nextgen'

@@ -179,16 +179,11 @@ main() { # {{{1
         --name='npth' \
         --version="${dict[npth_version]}" \
         "${install_args[@]}"
-    if koopa_is_macos
-    then
-        koopa_alert_note 'Skipping installation of pinentry on macOS.'
-    else
-        koopa_install_app \
-            --installer='gnupg-pinentry' \
-            --name='pinentry' \
-            --version="${dict[pinentry_version]}" \
-            "${install_args[@]}"
-    fi
+    koopa_install_app \
+        --installer='gnupg-pinentry' \
+        --name='pinentry' \
+        --version="${dict[pinentry_version]}" \
+        "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='gnupg' \

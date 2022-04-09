@@ -84,8 +84,7 @@ koopa_sub() { # {{{1
         dict[pattern]="${dict[pattern]//|/\\|}"
         dict[replacement]="${dict[replacement]//|/\\|}"
         koopa_print "$str" \
-            | "${app[sed]}" \
-                --regexp-extended \
+            | "${app[sed]}" -E \
                 "s|${dict[pattern]}|${dict[replacement]}|${dict[sed_tail]}"
     done
     return 0

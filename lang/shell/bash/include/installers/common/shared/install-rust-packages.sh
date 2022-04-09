@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-09.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -25,42 +25,46 @@ main() { # {{{1
     # """
     local app dict pkg pkgs pkg_args
     koopa_assert_has_no_args "$#"
-    koopa_activate_rust
-    declare -A app=(
-        [brew]="$(koopa_locate_brew --allow-missing)"
-        [cargo]="$(koopa_locate_cargo)"
-        [rustc]="$(koopa_locate_rustc)"
-    )
+    koopa_activate_opt_prefix 'openssl' 'rust'
+    declare -A app
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
+        [opt_prefix]="$(koopa_opt_prefix)"
         [root]="${INSTALL_PREFIX:?}"
     )
+    dict[rust_prefix]="${dict[opt_prefix]}/rust"
+    dict[cargo_home]="${dict[rust_prefix]}"
+    dict[rustup_home]="${dict[rust_prefix]}/rustup"
+    app[cargo]="${dict[cargo_home]}/bin/cargo"
+    app[rustc]="${dict[cargo_home]}/bin/rustc"
+    koopa_mkdir "${dict[root]}/bin"
+    koopa_add_to_path_start "${dict[root]}/bin"
+    CARGO_HOME="${dict[cargo_home]}"
+    RUSTUP_HOME="${dict[rustup_home]}"
+    export CARGO_HOME RUSTUP_HOME
+    export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
+    export RUST_BACKTRACE=1
     pkgs=(
+        # > 'ripgrep-all'
+        'bat'
+        'broot'
         'cargo-outdated'
         'cargo-update'
+        'difftastic'
+        'dog'
+        'du-dust'
+        'exa'
+        'fd-find'
+        'hyperfine'
+        'mcfly'
+        'procs'
+        'ripgrep'
+        'starship'
+        'tealdeer'
+        'tokei'
+        'xsv'
+        'zoxide'
     )
-    if [[ ! -x "${app[brew]}" ]]
-    then
-        pkgs+=(
-            'bat'
-            'broot'
-            'difftastic'
-            'dog'
-            'du-dust'
-            'exa'
-            'fd-find'
-            'hyperfine'
-            'mcfly'
-            'procs'
-            'ripgrep'
-            # > 'ripgrep-all'
-            'starship'
-            'tealdeer'
-            'tokei'
-            'xsv'
-            'zoxide'
-        )
-    fi
     koopa_dl 'Packages' "$(koopa_to_string "${pkgs[@]}")"
     # Can use '--force' flag here to force reinstall.
     pkg_args=(
@@ -68,8 +72,6 @@ main() { # {{{1
         '--root' "${dict[root]}"
         '--verbose'
     )
-    koopa_add_to_path_start "$(koopa_dirname "${app[rustc]}")"
-    export RUST_BACKTRACE=1
     for pkg in "${pkgs[@]}"
     do
         local args version

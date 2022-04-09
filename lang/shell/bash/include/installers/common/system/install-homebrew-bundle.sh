@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-04-08.
     #
     # Custom brewfile is supported using a positional argument.
     #
@@ -53,7 +53,7 @@ main() { # {{{1
     )
     for brewfile in "${brewfiles[@]}"
     do
-        koopa_assert_is_file "$brewfile"
+        [[ -f "$brewfile" ]] || continue
         koopa_dl 'Brewfile' "$brewfile"
         "${app[brew]}" bundle install \
             "${install_args[@]}" \

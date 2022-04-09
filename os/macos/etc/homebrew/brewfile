@@ -1,63 +1,63 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-03-21.
+# Updated 2022-04-09.
+#
+# @section Cask reinstallation:
+#
+# Previously installed applications not managed by Homebrew intentionally error
+# here, and there's no supported method in 'brew bundle install' to force
+# an overwrite. Instead, per app run this command manually:
+# > brew install --cask --force APP_NAME
+#
+# See also:
+# - https://github.com/Homebrew/homebrew-bundle/issues/446
 # """
 
 # Taps {{{1
 # ==============================================================================
 
-tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-drivers"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
-tap "homebrew/core"
 
-# Priority brews {{{1
+# Disabled casks {{{1
 # ==============================================================================
 
-brew "git"
-brew "subversion"
+# > cask "adobe-acrobat-reader"
+# > cask "bettertouchtool"
+# > cask "bluejeans"
+# > cask "eloston-chromium"
+# Consider re-enabling, but using AWS primarily at the moment.
+# This also currently requires 'python' brew to be installed.
+# > cask "google-cloud-sdk", greedy: true
+# Required for sshfs, but is insecure.
+# > cask "osxfuse"
+# > cask "ringcentral"
+# > cask "safari-technology-preview"
+# Virtualbox is useful but installs a lot of garbage into the system.
+# > cask "virtualbox"
+# > cask "webex"
 
 # Casks {{{1
 # ==============================================================================
-
-# Previously installed applications not managed by Homebrew intentionally error
-# here, and there's no supported method in 'brew bundle install' to force
-# an overwrite. Instead, per app run this command manually:
-# > brew install --cask --force XXX
-# https://github.com/Homebrew/homebrew-bundle/issues/446
-
-# Consider re-enabling, but using AWS primarily at the moment.
-# > cask "google-cloud-sdk"
-
-# Required for sshfs, but is insecure.
-# > cask "osxfuse"
-
-# Virtualbox is useful but installs a lot of garbage into the system.
-# > cask "virtualbox"
-
-# > cask "adobe-acrobat-reader"
-# > cask "eloston-chromium"
 
 cask "1password"
 cask "airfoil"
 cask "alacritty"
 cask "alfred"
 cask "audio-hijack"
-# > cask "bartender"
+cask "bartender"
 cask "basictex"
 cask "bbedit"
-# > cask "bettertouchtool"
 cask "bibdesk"
-# > cask "bluejeans"
 cask "boop"
-cask "brave-browser" # Avoid Keystone bloat from Google Chrome.
+cask "brave-browser"
 cask "carbon-copy-cloner"
 cask "coconutbattery"
 cask "docker"
 cask "easyfind"
-cask "emacs" # no-binaries
+cask "emacs"
 cask "firefox"
 cask "font-cascadia-code"
 cask "font-cascadia-mono"
@@ -76,35 +76,34 @@ cask "font-hack"
 cask "font-hack-nerd-font"
 cask "font-ia-writer-duospace"
 cask "font-ibm-plex"
-cask "font-ibm-plex-mono"
-cask "font-ibm-plex-sans"
+cask "font-ibm-plex-mono" # requires svn
+cask "font-ibm-plex-sans" # requires svn
 cask "font-inconsolata"
 cask "font-input"
 cask "font-inter"
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
-cask "font-open-sans"
-cask "font-roboto"
-cask "font-roboto-mono"
+cask "font-open-sans" # requires svn
+cask "font-roboto" # requires svn
+cask "font-roboto-mono" # requires svn
 cask "font-source-code-pro"
 cask "font-source-sans-pro"
-cask "font-source-serif"
+cask "font-source-serif-pro"
 cask "font-victor-mono"
 cask "font-victor-mono-nerd-font"
 cask "github"
 cask "gitkraken"
-cask "google-cloud-sdk", greedy: true
 cask "google-drive"
-cask "gpg-suite-no-mail" # no-binaries
+cask "gpg-suite-no-mail"
 cask "hazel"
-# > cask "ibm-aspera-connect"
+cask "ibm-aspera-connect"
 cask "igv"
-cask "iterm2-nightly" # Use until dark/light mode support is stable.
+cask "iterm2-nightly"
 cask "julia"
 cask "keka"
 cask "libreoffice"
 cask "little-snitch"
-# > cask "macvim" # no-binaries
+cask "macvim"
 cask "museeks"
 cask "netnewswire"
 cask "nightfall"
@@ -112,9 +111,7 @@ cask "omnidisksweeper"
 cask "pacifist"
 cask "pycharm-ce"
 cask "r"
-# > cask "ringcentral"
 cask "rstudio"
-# > cask "safari-technology-preview"
 cask "skype"
 cask "sublime-text"
 cask "superduper"
@@ -125,58 +122,6 @@ cask "tunnelblick"
 cask "vanilla"
 cask "visual-studio-code"
 cask "vlc"
-# > cask "webex"
 cask "xld"
 cask "xquartz"
 cask "zoom"
-
-# Brews {{{1
-# ==============================================================================
-
-# These recipes don't need to be installed on cloud Linux instances.
-brew "bandcamp-dl"
-brew "flac"
-brew "lame"
-brew "libiconv"
-brew "mas"
-brew "mkvtoolnix"
-brew "mp4v2"
-brew "mpc"
-brew "mpd"
-brew "ncmpcpp"
-brew "osx-cpu-temp"
-brew "pinentry-mac"
-brew "taglib"
-brew "yt-dlp" # youtube-dl alternative
-
-# External brews {{{1
-# ==============================================================================
-
-tap "saulpw/vd"
-brew "saulpw/vd/visidata"
-
-tap "vitorgalvao/tiny-scripts"
-brew "vitorgalvao/tiny-scripts/cask-repair"
-
-# App Store {{{1
-# ==============================================================================
-
-# > mas "AdGuard for Safari", id: 1440147259
-# > mas "Keynote", id: 409183694
-# > mas "Numbers", id: 409203825
-# > mas "Pages", id: 409201541
-
-# NOTE [2022-01-03]: These are currently failing. Disabled for the moment.
-
-# > mas "Calca", id: 635758264
-# > mas "Disk Speed Test", id: 425264550
-# > mas "Gapplin", id: 768053424
-# > mas "Internet Access Policy Viewer", id: 1482630322
-# > mas "Name Mangler", id: 603637384
-# > mas "Pastebot", id: 1179623856
-# > mas "Reeder", id: 880001334
-# > mas "Soulver", id: 413965349
-# > mas "Table Tool", id: 1122008420
-# > mas "The Unarchiver", id: 425424353
-# > mas "Tweetbot", id: 1384080005
-# > mas "iA Writer", id: 775737590

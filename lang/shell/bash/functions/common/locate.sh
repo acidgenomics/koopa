@@ -8,7 +8,7 @@
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-08.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
@@ -151,9 +151,8 @@ bin/${dict[app_name]}"
     if [[ "${dict[allow_missing]}" -eq 1 ]]
     then
         return 0
-    else
-        koopa_stop "Failed to locate '${dict[app_name]}'."
     fi
+    koopa_stop "Failed to locate '${dict[app_name]}'."
 }
 
 koopa_locate_conda_app() { # {{{1

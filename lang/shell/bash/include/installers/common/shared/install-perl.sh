@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Perl.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-09.
     #
     # @seealso
     # - https://www.cpan.org/src/
@@ -34,9 +34,9 @@ main() { # {{{1
     # The installer will warn when you skip this step.
     # > "${app[make]}" test
     "${app[make]}" install
-    koopa_rm "${HOME}/.cpan" "${HOME}/.cpanm"
     app[perl]="${dict[prefix]}/bin/perl"
     koopa_assert_is_installed "${app[perl]}"
+    koopa_rm "${HOME}/.cpan" "${HOME}/.cpanm"
     koopa_configure_perl "${app[perl]}"
     return 0
 }

@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Don't rely on Homebrew packages anywhere in our build scripts or R configuration.
 ** TODO Improve color and formatting of alert messages, using an r-cli style approach (e.g. '{.var XXX}' rather than just using single quotes.
 ** TODO Consider clean up of '/etc/paths.d' and '/etc/manpaths.d' on macOS for Homebrew casks.
     Ubuntu uses '/etc/environment' for paths configuration.

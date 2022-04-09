@@ -300,7 +300,7 @@ koopa_hdf5_version() { # {{{1
     str="$( \
         "${app[h5cc]}" -showconfig \
             | koopa_grep --pattern='HDF5 Version:' \
-            | "${app[sed]}" --regexp-extended 's/^(.+): //' \
+            | "${app[sed]}" -E 's/^(.+): //' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

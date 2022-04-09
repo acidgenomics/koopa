@@ -485,6 +485,8 @@ koopa_find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
     # @note Updated 2022-02-17.
+    #
+    # Currently requires GNU findutils to be installed.
     # """
     local prefix str
     koopa_assert_has_args "$#"

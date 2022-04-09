@@ -54,9 +54,7 @@ main() { # {{{1
     # e.g. '3.32.3' to '3320300'.
     dict[file_version]="$( \
         koopa_print "${dict[version]}" \
-        | "${app[sed]}" \
-            --regexp-extended \
-            's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
+        | "${app[sed]}" -E 's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
     )"
     dict[file]="${dict[name]}-autoconf-${dict[file_version]}.tar.gz"
     dict[url]="https://www.sqlite.org/${dict[year]}/${dict[file]}"

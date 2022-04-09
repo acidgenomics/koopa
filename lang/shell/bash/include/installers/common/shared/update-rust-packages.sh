@@ -1,23 +1,32 @@
 #!/usr/bin/env bash
 
-# NOTE We should early return here when no packages need updating.
-
 main() { # {{{1
     # """
     # Update Rust packages.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-04-09.
+    #
     # @seealso
     # - https://crates.io/crates/cargo-update
     # - https://github.com/nabijaczleweli/cargo-update
     # """
-    local app
+    local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_rust
-    declare -A app=(
-        [cargo]="$(koopa_locate_cargo)"
+    koopa_activate_opt_prefix 'openssl' 'rust'
+    declare -A app
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+        [pkgs_prefix]="$(koopa_rust_packages_prefix)"
     )
+    dict[rust_prefix]="${dict[opt_prefix]}/rust"
+    dict[cargo_home]="${dict[rust_prefix]}"
+    dict[rustup_home]="${dict[rust_prefix]}/rustup"
+    app[cargo]="${dict[cargo_home]}/bin/cargo"
+    koopa_add_to_path_start "${dict[pkgs_prefix]}/bin"
+    CARGO_HOME="${dict[cargo_home]}"
+    RUSTUP_HOME="${dict[rustup_home]}"
+    export CARGO_HOME RUSTUP_HOME
+    export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
     export RUST_BACKTRACE=1
-    koopa_add_to_path_start "$(koopa_dirname "${app[cargo]}")"
     "${app[cargo]}" install-update -a
     return 0
 }

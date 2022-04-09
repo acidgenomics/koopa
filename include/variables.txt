@@ -169,7 +169,7 @@ homebrew="3.4.4"
 htop="3.1.2"
 
 # http://site.icu-project.org/
-icu4c="70.1"
+icu4c="71.1"
 
 # https://imagemagick.org/
 imagemagick="7.1.0-29"
@@ -325,7 +325,7 @@ rstudio-workbench="2022.02.1+441.pro1"
 ruby="3.1.1p18"
 
 # https://www.rust-lang.org/
-rust="1.59.0"
+rust="1.60.0"
 
 # https://rustup.rs/
 rustup="1.24.3"
@@ -394,6 +394,9 @@ vim="8.2.4700"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.3"
+
+# https://tukaani.org/xz/
+xz="5.2.5"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8.1"
