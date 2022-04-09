@@ -281,7 +281,7 @@ koopa_conda_env_prefix() { # {{{1
             --regex \
             --string="${dict[env_list]}" \
         | "${app[tail]}" --lines=1 \
-        | "${app[sed]}" --regexp-extended 's/^.*"(.+)".*$/\1/' \
+        | "${app[sed]}" -E 's/^.*"(.+)".*$/\1/' \
     )"
     [[ -d "${dict[env_prefix]}" ]] || return 1
     koopa_print "${dict[env_prefix]}"

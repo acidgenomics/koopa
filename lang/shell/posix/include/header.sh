@@ -32,7 +32,7 @@ __koopa_posix_header() { # {{{1
     fi
     koopa_add_to_manpath_end '/usr/share/man'
     koopa_activate_make_paths || return 1
-    koopa_activate_pkg_config || return 1
+    # > koopa_activate_pkg_config || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # > koopa_umask || return 1
@@ -45,6 +45,7 @@ __koopa_posix_header() { # {{{1
             "$(koopa_koopa_prefix)/activate" 'activate' \
             "$(koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
+        # FIXME Consider rethinking this...
         koopa_activate_homebrew || return 1
         koopa_activate_go || return 1
         koopa_activate_nim || return 1
@@ -54,7 +55,6 @@ __koopa_posix_header() { # {{{1
         koopa_activate_perl || return 1
         koopa_activate_python || return 1
         koopa_activate_pipx || return 1
-        koopa_activate_rust || return 1
         koopa_activate_bcbio_nextgen || return 1
         if koopa_is_macos
         then

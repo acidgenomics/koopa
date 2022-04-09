@@ -52,3 +52,24 @@ koopa_get_homebrew_cask_version() { # {{{1
     done
     return 0
 }
+
+koopa_macos_xcode_clt_version() { # {{{1
+    # """
+    # Xcode CLT version.
+    # @note Updated 2022-04-09.
+    # """
+    local app str
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [cut]="$(koopa_locate_cut)"
+        [pkgutil]="$(koopa_macos_locate_pkgutil)"
+    )
+    str="$( \
+        "${app[pkgutil]}" --pkg-info='com.apple.pkg.CLTools_Executables' \
+        | koopa_grep --pattern='^version:\s' --regex \
+        | "${app[cut]}" --delim=' ' --fields='2' \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}

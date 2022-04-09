@@ -13,6 +13,7 @@ main() { # {{{1
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
+        [sudo]="$(koopa_locate_sudo)"
         [yes]="$(koopa_locate_yes)"
     )
     declare -A dict=(
@@ -32,6 +33,7 @@ master/${dict[file]}"
     # > fi
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_chmod 'u+x' "${dict[file]}"
+    "${app[sudo]}" -v
     "${app[yes]}" | "./${dict[file]}" || true
     if koopa_is_linux
     then

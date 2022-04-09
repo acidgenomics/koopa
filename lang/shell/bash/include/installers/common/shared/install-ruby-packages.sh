@@ -13,26 +13,21 @@ main() { # {{{1
     # """
     local app dict gem gems
     koopa_assert_has_no_args "$#"
-    if koopa_is_macos
-    then
-        koopa_activate_homebrew_opt_prefix 'libffi'
-    fi
     koopa_activate_ruby
     declare -A app=(
         [gem]="$(koopa_locate_gem)"
     )
     declare -A dict=(
-        [gemdir]="$("${app[gem]}" environment 'gemdir')"
+        [prefix]="${INSTALL_PREFIX:?}"
     )
+    GEM_HOME="${dict[prefix]}"
+    export GEM_HOME
     gems=(
         # > 'neovim'
         'bundler'
         'bashcov'
         'ronn'
     )
-    koopa_dl \
-        'Target' "${dict[gemdir]}" \
-        'Gems' "$(koopa_to_string "${gems[@]}")"
     "${app[gem]}" cleanup
     for gem in "${gems[@]}"
     do
