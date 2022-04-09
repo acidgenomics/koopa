@@ -32,12 +32,7 @@ main() { # {{{1
         '--disable-lz4'
         '--disable-xxhash'
         '--disable-zstd'
-        '--enable-openssl'
     )
-    # FIXME Rework so that these are set automatically during
-    # 'koopa_activate_opt_prefix' call above.
-    export CPPFLAGS="-I${dict[openssl_prefix]}/include";
-    export LDFLAGS="-L${dict[openssl_prefix]}/lib";
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

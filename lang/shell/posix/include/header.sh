@@ -32,7 +32,6 @@ __koopa_posix_header() { # {{{1
     fi
     koopa_add_to_manpath_end '/usr/share/man'
     koopa_activate_make_paths || return 1
-    # > koopa_activate_pkg_config || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # > koopa_umask || return 1
