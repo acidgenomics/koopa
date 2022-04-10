@@ -66,7 +66,8 @@ __koopa_realpath() { # {{{1
     readlink='readlink'
     if ! __koopa_is_installed "$readlink"
     then
-        local brew_readlink_1 brew_readlink_2 koopa_readlink
+        local brew_readlink_1 brew_readlink_2
+        local koopa_readlink
         local make_readlink_1 make_readlink_2
         brew_readlink_1='/opt/homebrew/opt/coreutils/libexec/bin/readlink'
         brew_readlink_2='/usr/local/opt/coreutils/libexec/bin/readlink'

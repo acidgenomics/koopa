@@ -48,11 +48,10 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
-# Consider adding install support for lapack and openblas in koopa.
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
@@ -78,7 +77,6 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # libxml2 {{{2
 # ------------------------------------------------------------------------------
 
-# FIXME Need to add support for libxml2 install in koopa.
 XML_CONFIG="${KOOPA_OPT_PREFIX}/libxml2/bin/xml2-config"
 
 # remotes {{{2
@@ -107,7 +105,7 @@ R_REMOTES_STANDALONE="true"
 # If left unset, defaults to '~/.virtualenvs'.
 # Check with 'virtualenv_list()'.
 # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-# > WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
+# > WORKON_HOME="${KOOPA_OPT_PREFIX}/python-virtualenvs"
 
 # stringi {{{2
 # ------------------------------------------------------------------------------

@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework this and test inside Docker images.
+
 main() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-10.
     # """
     local dict
     declare -A dict=(
@@ -101,9 +103,7 @@ main() { # {{{1
     export KOOPA_FORCE KOOPA_TEST
     # shellcheck source=/dev/null
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
-        'mktemp' 'mv' 'rm' 'sed' 'tar' 'unzip'
-
-
+        'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
     # Configuration {{{2
     # ==========================================================================
     dict[config_prefix]="$(koopa_config_prefix)"

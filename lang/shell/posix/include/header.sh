@@ -3,7 +3,7 @@
 __koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2022-04-05.
+    # @note Updated 2022-04-10.
     # """
     local shell
     [ "$#" -eq 0 ] || return 1
@@ -30,8 +30,8 @@ __koopa_posix_header() { # {{{1
     then
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
-    koopa_add_to_manpath_end '/usr/share/man'
     koopa_activate_make_paths || return 1
+    koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # > koopa_umask || return 1
@@ -44,7 +44,7 @@ __koopa_posix_header() { # {{{1
             "$(koopa_koopa_prefix)/activate" 'activate' \
             "$(koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
-        # FIXME Consider rethinking this...
+        koopa_add_to_manpath_end '/usr/share/man'
         koopa_activate_homebrew || return 1
         koopa_activate_go || return 1
         koopa_activate_nim || return 1
@@ -87,16 +87,15 @@ __koopa_posix_header() { # {{{1
                     koopa_activate_conda || return 1
                     ;;
             esac
+            koopa_activate_prefix "$(koopa_xdg_local_home)" || return 1
+            koopa_activate_prefix "$(koopa_scripts_private_prefix)" || return 1
             koopa_activate_aliases || return 1
             if ! koopa_is_subshell
             then
                 koopa_activate_today_bucket || return 1
-                # > koopa_activate_tmux_sessions || return 1
             fi
         fi
     fi
-    koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
-    koopa_add_to_path_start "$(koopa_scripts_private_prefix)/bin" || return 1
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         koopa_duration_stop 'posix' || return 1
