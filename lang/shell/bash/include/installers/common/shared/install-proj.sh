@@ -40,6 +40,7 @@ ${dict[version]}/${dict[file]}"
         ../"${dict[name]}-${dict[version]}" \
         -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
         -DENABLE_TIFF='OFF'
+        # Can detect libtiff with:
         # > -DTIFF_INCLUDE_DIR="${dict[opt_prefix]}/libtiff/include" \
         # > -DTIFF_LIBRARY_RELEASE="${dict[opt_prefix]}/libtiff/lib"
     "${app[make]}" --jobs="${dict[jobs]}"
