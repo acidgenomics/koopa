@@ -50,7 +50,6 @@ __koopa_complete() { # {{{1
                         'git'
                         'gpg'
                         'kallisto'
-                        'python'
                         'r'
                         'rnaeditingindexer'
                         'salmon'
@@ -445,12 +444,6 @@ __koopa_complete() { # {{{1
                         'md5sum')
                             args=(
                                 'check-to-new-md5-file'
-                            )
-                            ;;
-                        'python')
-                            args=(
-                                'create-venv'
-                                'pip-outdated'
                             )
                             ;;
                         'r')
