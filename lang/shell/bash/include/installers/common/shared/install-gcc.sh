@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Need to build these dependencies on macOS:
+# configure: error: Building GCC requires GMP 4.2+, MPFR 3.1.0+ and MPC 0.8.0+.
+# Try the --with-gmp, --with-mpfr and/or --with-mpc options to specify
+# their locations.  Source code for these libraries can be found at
+# their respective hosting sites as well as at
+# https://gcc.gnu.org/pub/gcc/infrastructure/.  See also
+# http://gcc.gnu.org/install/prerequisites.html for additional info.
+
 main() { # {{{1
     # """
     # Install GCC.
