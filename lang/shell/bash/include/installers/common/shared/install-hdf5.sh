@@ -18,9 +18,10 @@ main() { # {{{1
     )
     if koopa_is_macos
     then
+        # Using R CRAN gfortran here.
         dict[gfortran_prefix]='/usr/local/gfortran'
         koopa_assert_is_dir "${dict[gfortran_prefix]}"
-        koopa_add_to_path_start "${dict[gfortran_prefix]}/bin"
+        koopa_activate_prefix "${dict[gfortran_prefix]}"
     fi
     koopa_assert_is_installed 'gfortran'
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
