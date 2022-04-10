@@ -2156,6 +2156,22 @@ koopa_uninstall_tmux() { # {{{3
         "$@"
 }
 
+# tree -------------------------------------------------------------------- {{{2
+
+koopa_install_tree() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/tree' \
+        --name='tree' \
+        "$@"
+}
+
+koopa_uninstall_tree() { # {{{3
+    koopa_uninstall_app \
+        --name='tree' \
+        --unlink-in-bin='tree' \
+        "$@"
+}
+
 # udunits ----------------------------------------------------------------- {{{2
 
 koopa_install_udunits() { # {{{3

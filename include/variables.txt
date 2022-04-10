@@ -406,6 +406,8 @@ the-silver-searcher="2.2.0"
 # https://github.com/tmux/tmux/releases
 tmux="3.2a"
 
+tree="2.0.2"
+
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
 udunits="2.2.28"
