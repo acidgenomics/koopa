@@ -14,13 +14,16 @@ main() { # {{{1
     # - https://subversion.apache.org/source-code.html
     # - Need to use serf to support HTTPS URLs.
     #   https://serverfault.com/questions/522646/
+    # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix \
         'apr' \
+        'apr-util' \
         'perl' \
         'python' \
         'ruby' \
+        'serf' \
         'sqlite'
     declare -A app=(
         [make]="$(koopa_locate_make)"
