@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 # Consider requiring: liblzma, zstd, and xz?.
 
 main() { # {{{
@@ -18,7 +17,8 @@ main() { # {{{
         'cmake' \
         'openssl' \
         'perl' \
-        'pkg-config'
+        'pkg-config' \
+        'zstd'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
