@@ -4,6 +4,9 @@
 # WARNING: pip is configured with locations that require TLS/SSL, however the
 # ssl module in Python is not available.
 
+# FIXME May need to add lzma support:
+# Failed to build these modules: _lzma
+
 main() { # {{{1
     # """
     # Install Python.
