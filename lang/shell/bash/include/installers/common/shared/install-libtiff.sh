@@ -13,10 +13,11 @@ main() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libtiff.rb
     # - https://gitlab.com/libtiff/libtiff/-/commit/
     #     b25618f6fcaf5b39f0a5b6be3ab2fb288cf7a75b
+    # - https://www.linuxfromscratch.org/blfs/view/svn/general/libtiff.html
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'autoconf' 'automake' 'jpeg' 'libtool'
+    koopa_activate_opt_prefix 'jpeg'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -31,15 +32,14 @@ main() { # {{{1
     koopa_extract "${dict[file]}"
     koopa_cd "tiff-${dict[version]}"
     conf_args=(
-        --prefix="${dict[prefix]}"
-        --disable-dependency-tracking
-        --disable-lzma
-        --disable-webp
-        --disable-zstd
-        # FIXME Need to add support for this.
-        # > --with-jpeg-include-dir=#{Formula["jpeg"].opt_include}
-        # > --with-jpeg-lib-dir=#{Formula["jpeg"].opt_lib}
-        --without-x
+        "--prefix=${dict[prefix]}"
+        '--disable-dependency-tracking'
+        '--disable-lzma'
+        '--disable-shared'
+        '--disable-webp'
+        '--disable-zstd'
+        '--enable-static'
+        '--without-x'
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
