@@ -160,37 +160,42 @@ main() { # {{{1
         '--quiet'
     )
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='libgpg-error' \
         --version="${dict[libgpg_error_version]}" \
         "${install_args[@]}"
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='libgcrypt' \
         --version="${dict[libgcrypt_version]}" \
         "${install_args[@]}"
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='libassuan' \
         --version="${dict[libassuan_version]}" \
         "${install_args[@]}"
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='libksba' \
         --version="${dict[libksba_version]}" \
         "${install_args[@]}"
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='npth' \
         --version="${dict[npth_version]}" \
         "${install_args[@]}"
+    # Additional pinentry configuration options:
+    # > '--disable-pinentry-fltk'
+    # > '--disable-pinentry-gnome3'
+    # > '--disable-pinentry-gtk2'
+    # > '--disable-pinentry-qt'
+    # > '--disable-pinentry-qt5'
+    # > '--disable-pinentry-tqt'
+    # > '--disable-silent-rules'
+    # > '--enable-pinentry-curses'
+    # > '--enable-pinentry-tty'
     koopa_install_app \
-        --installer='gnupg-pinentry' \
+        --activate-opt='fltk' \
+        --activate-opt='ncurses' \
         --name='pinentry' \
         --version="${dict[pinentry_version]}" \
         "${install_args[@]}"
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='gnupg' \
         --version="${dict[version]}" \
         "${install_args[@]}"
