@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Now having issues with this:
+# --disable-openssl
+# --disable-zstd
+
 main() { # {{{1
     # """
     # Install rsync.
