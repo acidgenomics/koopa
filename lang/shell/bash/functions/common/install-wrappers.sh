@@ -1099,6 +1099,20 @@ koopa_uninstall_libxml2() { # {{{3
         "$@"
 }
 
+# libzip ------------------------------------------------------------------ {{{2
+
+koopa_install_libzip() { # {{{3
+    koopa_install_app \
+        --name='libzip' \
+        "$@"
+}
+
+koopa_uninstall_libzip() { # {{{3
+    koopa_uninstall_app \
+        --name='libzip' \
+        "$@"
+}
+
 # lua --------------------------------------------------------------------- {{{2
 
 koopa_install_lua() { # {{{3

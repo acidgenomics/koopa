@@ -137,6 +137,7 @@ __koopa_complete() { # {{{1
                         'libtiff'
                         'libtool'
                         'libxml2'
+                        'libzip'
                         'lua'
                         'luarocks'
                         'make'
