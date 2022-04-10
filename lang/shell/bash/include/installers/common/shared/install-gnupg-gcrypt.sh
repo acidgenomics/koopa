@@ -6,7 +6,6 @@ main() { # {{{1
     # @note Updated 2022-04-10.
     # """
     local app conf_args dict
-    koopa_assert_has_no_args "$#"
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'
@@ -43,6 +42,7 @@ main() { # {{{1
     conf_args=(
         # > '--enable-maintainer-mode'
         "--prefix=${dict[prefix]}"
+        "$@"
     )
     case "${dict[name]}" in
         'libassuan' | \
