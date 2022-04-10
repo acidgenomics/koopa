@@ -35,10 +35,8 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         '--disable-dependency-tracking'
         '--disable-lzma'
-        '--disable-shared'
         '--disable-webp'
         '--disable-zstd'
-        '--enable-static'
         '--without-x'
     )
     ./configure "${conf_args[@]}"

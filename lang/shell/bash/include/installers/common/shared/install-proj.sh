@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to resolve this:
-#CMake Error at /opt/koopa/app/cmake/3.23.0/share/cmake-3.23/Modules/FindPackageHandleStandardArgs.cmake:230 (message):
-#  Could NOT find TIFF (missing: TIFF_LIBRARY TIFF_INCLUDE_DIR)
-#Call Stack (most recent call first):
-#  /opt/koopa/app/cmake/3.23.0/share/cmake-3.23/Modules/FindPackageHandleStandardArgs.cmake:594 (_FPHSA_FAILURE_MESSAGE)
-#  /opt/koopa/app/cmake/3.23.0/share/cmake-3.23/Modules/FindTIFF.cmake:124 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)
-#  CMakeLists.txt:193 (find_package)
-
 main() { # {{{1
     # """
     # Install PROJ.
@@ -18,8 +10,6 @@ main() { # {{{1
     #
     # @seealso
     # - https://proj.org/install.html
-    # - https://proj.org/install.html#compilation-and-installation-from-
-    #     source-code
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -46,8 +36,8 @@ ${dict[version]}/${dict[file]}"
     "${app[cmake]}" \
         ../"${dict[name]}-${dict[version]}" \
         -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
-        -DTIFF_INCLUDE_DIR="${dict[opt_prefix]}/libtiff"
-        # FIXME Add this: -DTIFF_LIBRARY_RELEASE
+        -DTIFF_INCLUDE_DIR="${dict[opt_prefix]}/libtiff/include" \
+        -DTIFF_LIBRARY_RELEASE="${dict[opt_prefix]}/libtiff/lib"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
