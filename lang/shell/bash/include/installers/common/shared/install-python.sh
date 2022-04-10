@@ -46,6 +46,8 @@ main() { # {{{1
     dict[file]="Python-${dict[version]}.tar.xz"
     dict[url]="https://www.python.org/ftp/${dict[name]}/${dict[version]}/\
 ${dict[file]}"
+    koopa_mkdir "${dict[prefix]}/bin"
+    koopa_add_to_path_start "${dict[prefix]}/bin"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "Python-${dict[version]}"
