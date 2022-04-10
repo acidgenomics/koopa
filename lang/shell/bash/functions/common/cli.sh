@@ -205,29 +205,6 @@ koopa_cli_app() { # {{{1
                     ;;
             esac
             ;;
-        'python')
-            case "${2:-}" in
-                'create-venv')
-                    case "${3:-}" in
-                        'r-reticulate')
-                            key="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            key="${1:?}-${2:?}"
-                            shift 2
-                            ;;
-                    esac
-                    ;;
-                'pip-outdated')
-                    key="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
         'r')
             case "${2:-}" in
                 'drat' | \
