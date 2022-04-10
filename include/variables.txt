@@ -138,9 +138,15 @@ gdal="3.4.2"
 # https://github.com/libgeos/geos/releases
 geos="3.10.2"
 
+# https://www.gnu.org/software/gettext/
+gettext="0.21"
+
 # https://git-scm.com/
 # https://github.com/git/git/releases
 git="2.35.1"
+
+# https://gmplib.org/
+gmp="6.2.1"
 
 # https://gnupg.org/download/index.html
 gnupg="2.3.4"
@@ -244,6 +250,9 @@ neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
 neovim="0.6.1"
+
+# https://ftp.gnu.org/gnu/nettle/
+nettle="3.7.3"
 
 # https://nim-lang.org/
 nim="1.6.4"

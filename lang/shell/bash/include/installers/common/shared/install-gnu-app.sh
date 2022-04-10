@@ -3,11 +3,12 @@
 main() { # {{{1
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-10.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
     local app conf_args dict
+    koopa_activate_opt_prefix 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -24,6 +25,7 @@ main() { # {{{1
         'gsl' | \
         'make' | \
         'ncurses' | \
+        'nettle' | \
         'patch' | \
         'stow' | \
         'tar' | \
@@ -47,9 +49,14 @@ main() { # {{{1
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    koopa_dl \
+        'configure args' "${conf_args[*]}" \
+        'CPPFLAGS' "${CPPFLAGS:-}" \
+        'LDFLAGS' "${LDFLAGS:-}" \
+        'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" check
+    "${app[make]}" check || true
     "${app[make]}" install
     return 0
 }
