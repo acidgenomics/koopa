@@ -47,8 +47,7 @@ main() { # {{{1
     else
         conf_args+=('--enable-pinentry-curses')
     fi
-    LDFLAGS="-Wl,-rpath,${dict[prefix]}/lib/" \
-        ./configure "${conf_args[@]}"
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
