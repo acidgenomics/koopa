@@ -202,6 +202,7 @@ __koopa_complete() { # {{{1
                         'xz'
                         'zlib'
                         'zsh'
+                        'zstd'
                     )
                     if koopa_is_linux
                     then

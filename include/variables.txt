@@ -432,6 +432,9 @@ zlib="1.2.12"
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8.1"
 
+# https://facebook.github.io/zstd/
+zstd="1.5.2"
+
 # Conda environments {{{1
 # ==============================================================================
 # Updated 2022-03-15.

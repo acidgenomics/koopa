@@ -10,7 +10,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'openssl' 'zstd'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -30,7 +30,6 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         '--disable-lz4'
         '--disable-xxhash'
-        '--disable-zstd'
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
