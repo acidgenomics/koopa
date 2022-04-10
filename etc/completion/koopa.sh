@@ -88,6 +88,7 @@ __koopa_complete() { # {{{1
                     args=(
                         'anaconda'
                         'apr'
+                        'apr-util'
                         'armadillo'
                         'autoconf'
                         'automake'
