@@ -14,7 +14,7 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'jpeg'
+    koopa_activate_opt_prefix 'jpeg' 'zstd'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -33,7 +33,6 @@ main() { # {{{1
         '--disable-dependency-tracking'
         '--disable-lzma'
         '--disable-webp'
-        '--disable-zstd'
         '--without-x'
     )
     ./configure "${conf_args[@]}"
