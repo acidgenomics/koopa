@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add fix for gnutls version:
+# https://gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.4.tar.xz
+
+# FIXME Now trying:
+# https://gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.4.tar.bz2
+
 main() { # {{{1
     # """
     # Install GnuPG.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-10.
     #
     # @seealso
     # - https://gnupg.org/download/index.html
     # - https://gnupg.org/signature_key.html
     # - https://gnupg.org/download/integrity_check.html
+    # - https://www.gnutls.org/
     # - gpgrt_set_confdir issue during build:
     #   https://zenn.dev/zunda/scraps/70c2bfb4494510
     # """
@@ -25,10 +32,11 @@ main() { # {{{1
     case "${dict[version]}" in
         '2.3.4')
             # 2022-03-29.
-            dict[libgpg_error_version]='1.44'     # 2022-01-27
-            dict[libgcrypt_version]='1.10.1'      # 2022-03-28
-            dict[libksba_version]='1.6.0'         # 2021-06-10
+            dict[gnutls_version]='3.7.4'          # 2022-03-17
             dict[libassuan_version]='2.5.5'       # 2021-03-22
+            dict[libgcrypt_version]='1.10.1'      # 2022-03-28
+            dict[libgpg_error_version]='1.44'     # 2022-01-27
+            dict[libksba_version]='1.6.0'         # 2021-06-10
             dict[npth_version]='1.6'              # 2018-07-16
             dict[pinentry_version]='1.2.0'        # 2021-08-25
             ;;
@@ -149,11 +157,20 @@ main() { # {{{1
         # > "${app[gpg]}" --list-keys
     fi
     install_args=(
+        '--activate-opt=pkg-config'
         '--installer=gnupg-gcrypt'
+        '--no-link-in-opt'
         '--no-prefix-check'
         "--prefix=${dict[prefix]}"
         '--quiet'
     )
+    koopa_install_app \
+        --activate-opt='gmp' \
+        --activate-opt='nettle' \
+        --installer='gnupg-gcrypt' \
+        --name='gnutls' \
+        --version="${dict[gnutls_version]}" \
+        "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgpg-error' \
