@@ -10,10 +10,13 @@ main() { # {{{1
     #
     # @seealso
     # - https://proj.org/install.html
+    # - https://github.com/OSGeo/PROJ/issues/2084
+    # - https://github.com/tesseract-ocr/tesseract/issues/786
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'libtiff' 'pkg-config' 'python' 'sqlite'
+    # Consider adding 'libtiff' back in a future update.
+    koopa_activate_opt_prefix 'pkg-config' 'python' 'sqlite'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
@@ -22,7 +25,7 @@ main() { # {{{1
         [jobs]="$(koopa_cpu_count)"
         [make_prefix]="$(koopa_make_prefix)"
         [name]='proj'
-        [opt_prefix]="$(koopa_opt_prefix)"
+        # > [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -36,8 +39,9 @@ ${dict[version]}/${dict[file]}"
     "${app[cmake]}" \
         ../"${dict[name]}-${dict[version]}" \
         -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
-        -DTIFF_INCLUDE_DIR="${dict[opt_prefix]}/libtiff/include" \
-        -DTIFF_LIBRARY_RELEASE="${dict[opt_prefix]}/libtiff/lib"
+        -DENABLE_TIFF='OFF'
+        # > -DTIFF_INCLUDE_DIR="${dict[opt_prefix]}/libtiff/include" \
+        # > -DTIFF_LIBRARY_RELEASE="${dict[opt_prefix]}/libtiff/lib"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
