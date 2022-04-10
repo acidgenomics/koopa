@@ -2,6 +2,12 @@
 
 # FIXME Consider installing GNU patch to resolve here, without prompting.
 
+# FIXME Still hitting these issues on macOS:
+# ./include/apr.h:561:2: error: Can not determine the proper size for pid_t
+# ./include/apr_want.h:94:8: error: redefinition of 'iovec'
+
+# FIXME Consider switching to GNU GCC here to build...
+
 main() { #{{{1
     # """
     # Install Apache Portable Runtime (APR) library.
