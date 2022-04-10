@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to be able to install APR from source here.
-
 main() { # {{{1
     # """
     # Install Subversion.
@@ -18,8 +16,8 @@ main() { # {{{1
     #   https://serverfault.com/questions/522646/
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    # Also requires 'apr', which is provided by macOS CLT.
     koopa_activate_opt_prefix \
+        'apr' \
         'perl' \
         'python' \
         'ruby' \

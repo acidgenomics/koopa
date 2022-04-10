@@ -87,6 +87,7 @@ __koopa_complete() { # {{{1
                 'uninstall')
                     args=(
                         'anaconda'
+                        'apr'
                         'armadillo'
                         'autoconf'
                         'automake'
