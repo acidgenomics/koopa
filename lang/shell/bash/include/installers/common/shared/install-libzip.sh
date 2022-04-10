@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+
+# Consider requiring: liblzma, zstd, and xz?.
+
 main() { # {{{
     # """
     # Install libzip.
@@ -11,9 +14,14 @@ main() { # {{{
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'cmake'
+    koopa_activate_opt_prefix \
+        'cmake' \
+        'openssl' \
+        'perl' \
+        'pkg-config'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
@@ -25,7 +33,7 @@ main() { # {{{
     dict[url]="https://libzip.org/download/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     "${app[cmake]}" .. \
