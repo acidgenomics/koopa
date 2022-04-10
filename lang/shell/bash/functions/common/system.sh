@@ -13,44 +13,42 @@ koopa_activate_opt_prefix() { # {{{1
     opt_prefix="$(koopa_opt_prefix)"
     for name in "$@"
     do
-        local cflags cppflags ldflags prefix
+        local cflags cppflags include ldflags prefix
         prefix="${opt_prefix}/${name}"
         koopa_assert_is_dir "$prefix"
         koopa_activate_prefix "$prefix"
         if [[ -d "${prefix}/include" ]]
         then
+            include="-I${prefix}/include"
             cflags="${CFLAGS:-}"
             if [[ -n "$cflags" ]]
             then
-                cflags="${cflags} -I${prefix}/include"
+                cflags="${cflags} ${include}"
             else
-                cflags="-I${prefix}/include"
+                cflags="$include"
             fi
             CFLAGS="$cflags"
             export CFLAGS
             cppflags="${CPPFLAGS:-}"
             if [[ -n "$cppflags" ]]
             then
-                cppflags="${cppflags} -I${prefix}/include"
+                cppflags="${cppflags} $include"
             else
-                cppflags="-I${prefix}/include"
+                cppflags="$include"
             fi
             CPPFLAGS="$cppflags"
             export CPPFLAGS
         fi
         if [[ -d "${prefix}/lib" ]]
         then
+            include="-L${prefix}/lib -Wl,-rpath,${prefix}/lib"
             ldflags="${LDFLAGS:-}"
-            # '-Wl,-rpath' approach.
-            [[ -z "$ldflags" ]] && ldflags='-Wl'
-            ldflags="${ldflags},-rpath,${prefix}/lib"
-            # '-L' approach.
-            # > if [[ -n "$ldflags" ]]
-            # > then
-            # >     ldflags="${ldflags} -L${prefix}/lib"
-            # > else
-            # >     ldflags="-L${prefix}/lib"
-            # > fi
+            if [[ -n "$ldflags" ]]
+            then
+                ldflags="${ldflags} ${include}"
+            else
+                ldflags="$include"
+            fi
             LDFLAGS="$ldflags"
             export LDFLAGS
         fi
