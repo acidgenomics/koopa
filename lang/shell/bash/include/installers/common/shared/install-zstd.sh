@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Is our rpath definition here correct?
+
 main() { # {{{
     # """
     # Install zstd.
@@ -28,9 +30,10 @@ main() { # {{{
     "${app[cmake]}" \
         -S 'build/cmake' \
         -B 'builddir' \
-        -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
-        -DZSTD_BUILD_CONTRIB='ON' \
-        -DZSTD_LEGACY_SUPPORT='ON'
+        -DCMAKE_INSTALL_PREFIX="${dict[prefix]}"
+        #-DCMAKE_INSTALL_RPATH="${dict[prefix]}/lib" \
+        #-DZSTD_BUILD_CONTRIB='ON' \
+        #-DZSTD_LEGACY_SUPPORT='ON'
     "${app[cmake]}" --build 'builddir'
     "${app[cmake]}" --install 'builddir'
     return 0
