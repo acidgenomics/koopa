@@ -1,20 +1,17 @@
 #!/usr/bin/env bash
 
-# FIXME Now having issues with this:
-# --disable-openssl
-# --disable-zstd
-
 main() { # {{{1
     # """
     # Install rsync.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-10.
     #
     # @seealso
     # - https://github.com/WayneD/rsync/blob/master/INSTALL.md
+     # - https://bugs.gentoo.org/729186
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'openssl' 'zstd'
+    # > koopa_activate_opt_prefix 'openssl' 'zstd'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -33,7 +30,9 @@ main() { # {{{1
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-lz4'
+        '--disable-openssl' # FIXME
         '--disable-xxhash'
+        '--disable-zstd' # FIXME
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
