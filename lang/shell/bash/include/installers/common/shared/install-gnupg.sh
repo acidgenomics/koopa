@@ -150,9 +150,6 @@ main() { # {{{1
         # > "${app[gpg]}" --list-keys
     fi
     install_args=(
-        '--activate-opt=autoconf'
-        '--activate-opt=automake'
-        '--activate-opt=pkg-config'
         '--installer=gnupg-gcrypt'
         '--no-link-in-opt'
         '--no-prefix-check'
@@ -179,22 +176,16 @@ main() { # {{{1
         --name='npth' \
         --version="${dict[npth_version]}" \
         "${install_args[@]}"
-    # Additional pinentry configuration options:
-    # > '--disable-pinentry-fltk'
-    # > '--disable-pinentry-gnome3'
-    # > '--disable-pinentry-gtk2'
-    # > '--disable-pinentry-qt'
-    # > '--disable-pinentry-qt5'
-    # > '--disable-pinentry-tqt'
-    # > '--disable-silent-rules'
-    # > '--enable-pinentry-curses'
-    # > '--enable-pinentry-tty'
-    koopa_install_app \
-        --activate-opt='fltk' \
-        --activate-opt='ncurses' \
-        --name='pinentry' \
-        --version="${dict[pinentry_version]}" \
-        "${install_args[@]}"
+    if ! koopa_is_macos
+    then
+        # This is currently failing on macOS due to 'unqualified-id' error.
+        koopa_install_app \
+            --activate-opt='fltk' \
+            --activate-opt='ncurses' \
+            --name='pinentry' \
+            --version="${dict[pinentry_version]}" \
+            "${install_args[@]}"
+    fi
     koopa_install_app \
         --name='gnupg' \
         --version="${dict[version]}" \

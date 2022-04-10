@@ -260,7 +260,8 @@ neofetch="7.1.0"
 neovim="0.6.1"
 
 # https://ftp.gnu.org/gnu/nettle/
-nettle="3.7.3"
+# > nettle="3.7.3"
+nettle="3.6"
 
 # https://nim-lang.org/
 nim="1.6.4"
