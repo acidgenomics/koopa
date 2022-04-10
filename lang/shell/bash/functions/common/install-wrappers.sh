@@ -988,6 +988,20 @@ koopa_uninstall_imagemagick() { # {{{3
         "$@"
 }
 
+# jpeg -------------------------------------------------------------------- {{{2
+
+koopa_install_jpeg() { # {{{3
+    koopa_install_app \
+        --name='jpeg' \
+        "$@"
+}
+
+koopa_uninstall_jpeg() { # {{{3
+    koopa_uninstall_app \
+        --name='jpeg' \
+        "$@"
+}
+
 # juila ------------------------------------------------------------------- {{{2
 
 koopa_install_julia() { # {{{3

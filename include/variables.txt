@@ -183,6 +183,9 @@ imagemagick="7.1.0-29"
 # https://github.com/stedolan/jq/releases
 jq="1.6"
 
+# https://www.ijg.org/
+jpeg="9e"
+
 # https://github.com/JuliaLang/julia/releases
 julia="1.7.2"
 
@@ -195,7 +198,8 @@ libevent="2.1.12"
 
 # https://download.osgeo.org/libtiff/
 # https://libtiff.gitlab.io/libtiff/
-libtiff="4.3.0"
+# 4.3.0 currently has build issues on macOS.
+libtiff="4.2.0"
 
 # https://ftp.gnu.org/gnu/libtool/
 libtool="2.4.6"
