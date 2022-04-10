@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# """
+# Bootstrap core dependencies on macOS.
+# @note Updated 2022-04-10.
+# """
+
 set -Eeuo pipefail
 
 cores=8

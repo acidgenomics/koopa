@@ -229,13 +229,14 @@ __koopa_print() { # {{{1
 __koopa_realpath() { # {{{1
     # """
     # Resolve file path.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-10.
     # """
     local readlink x
     readlink='readlink'
     if ! __koopa_is_installed "$readlink"
     then
-        local brew_readlink_1 brew_readlink_2 koopa_readlink
+        local brew_readlink_1 brew_readlink_2
+        local koopa_readlink
         local make_readlink_1 make_readlink_2
         brew_readlink_1='/opt/homebrew/opt/coreutils/libexec/bin/readlink'
         brew_readlink_2='/usr/local/opt/coreutils/libexec/bin/readlink'
@@ -258,9 +259,7 @@ __koopa_realpath() { # {{{1
         then
             readlink="$brew_readlink_2"
         else
-            __koopa_warn \
-                "Not installed: '${readlink}'." \
-                'Install GNU coreutils to resolve.'
+            __koopa_warn 'GNU coreutils is required.'
             return 1
         fi
     fi
