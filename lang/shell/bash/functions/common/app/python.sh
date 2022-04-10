@@ -90,6 +90,11 @@ koopa_python_activate_venv() { # {{{1
 # FIXME Consider adding support for linkage of useful programs directly into
 # '/opt/koopa/bin' from here.
 
+# FIXME Try using this to install aws-cli.
+# https://github.com/aws/aws-cli
+
+# FIXME Add support for creating a blank environment, so we can link aws-cli.
+
 koopa_python_create_venv() { # {{{1
     # """
     # Create Python virtual environment.
@@ -153,7 +158,6 @@ koopa_python_create_venv() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
     pkgs=("$@")
     koopa_assert_is_set --python "${app[python]}"
     koopa_assert_is_installed "${app[python]}"
@@ -185,7 +189,10 @@ ${dict[py_maj_min_ver]}"
         "${dict[prefix]}"
     app[venv_python]="${dict[prefix]}/bin/python${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
-    koopa_python_pip_install --python="${app[venv_python]}" "${pkgs[@]}"
+    if koopa_is_array_non_empty "${pkgs[@]:-}"
+    then
+        koopa_python_pip_install --python="${app[venv_python]}" "${pkgs[@]}"
+    fi
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     return 0
 }

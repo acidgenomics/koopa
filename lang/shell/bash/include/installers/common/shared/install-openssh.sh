@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Need to resolve this on macOS:
+# checking for ldns-config... no
+# checking for ldns support... no
+# configure: error: ** Incomplete or missing ldns libraries.
+
 main() { # {{{1
     # """
     # Install OpenSSH.

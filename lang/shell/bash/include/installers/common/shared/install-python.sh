@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting this issue with koopa python:
+# WARNING: pip is configured with locations that require TLS/SSL, however the
+# ssl module in Python is not available.
+
 main() { # {{{1
     # """
     # Install Python.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-09.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -30,9 +34,11 @@ main() { # {{{1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='python'
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[openssl_prefix]="${dict[opt_prefix]}/openssl"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[file]="Python-${dict[version]}.tar.xz"
     dict[url]="https://www.python.org/ftp/${dict[name]}/${dict[version]}/\
@@ -42,11 +48,12 @@ ${dict[file]}"
     koopa_cd "Python-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--enable-optimizations'
+        "--with-openssl=${dict[openssl_prefix]}"
     )
     if [[ "${INSTALL_LINK_IN_MAKE:?}" -eq 1 ]]
     then
         conf_args+=(
-            # > '--enable-optimizations'
             '--enable-shared'
         )
     fi
