@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME This also requires 'fltk' library.
+
 main() { # {{{1
     # """
     # Install GnuPG pinentry library.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-10.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'gnupg' 'ncurses'
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'

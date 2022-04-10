@@ -3,7 +3,7 @@
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-10.
     #
     # @examples
     # > koopa_activate_opt_prefix 'geos' 'proj' 'gdal'
@@ -13,12 +13,21 @@ koopa_activate_opt_prefix() { # {{{1
     opt_prefix="$(koopa_opt_prefix)"
     for name in "$@"
     do
-        local cppflags cppflags_sep ldflags ldflags_prefix ldflags_sep prefix
+        local cflags cppflags ldflags prefix
         prefix="${opt_prefix}/${name}"
         koopa_assert_is_dir "$prefix"
         koopa_activate_prefix "$prefix"
         if [[ -d "${prefix}/include" ]]
         then
+            cflags="${CFLAGS:-}"
+            if [[ -n "$cflags" ]]
+            then
+                cflags="${cflags} -I${prefix}/include"
+            else
+                cflags="-I${prefix}/include"
+            fi
+            CFLAGS="$cflags"
+            export CFLAGS
             cppflags="${CPPFLAGS:-}"
             if [[ -n "$cppflags" ]]
             then
