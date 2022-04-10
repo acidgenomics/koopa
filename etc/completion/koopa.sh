@@ -128,6 +128,7 @@ __koopa_complete() { # {{{1
                         'htop'
                         'icu4c'
                         'imagemagick'
+                        'jpeg'
                         'julia'
                         'julia-packages'
                         'koopa'
