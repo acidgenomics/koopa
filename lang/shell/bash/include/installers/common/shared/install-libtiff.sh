@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for 'jpeg'.
-# FIXME This is currently breaking on macOS.
-# FIXME See patch currently applied in Homebrew recipe.
-
 main() { # {{{1
     # """
     # Install libtiff.
@@ -14,6 +10,7 @@ main() { # {{{1
     # - https://gitlab.com/libtiff/libtiff/-/commit/
     #     b25618f6fcaf5b39f0a5b6be3ab2fb288cf7a75b
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libtiff.html
+    # - https://github.com/opentoonz/opentoonz/issues/1566
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
