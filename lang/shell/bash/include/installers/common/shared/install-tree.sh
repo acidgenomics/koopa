@@ -7,6 +7,7 @@ main() { # {{{1
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/tree.html
+    # - https://gist.github.com/fscm/9eee2784f101f21515d66321180aef0f
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -27,7 +28,7 @@ ${dict[file]}"
     "${app[make]}"
     "${app[make]}" \
         PREFIX="${dict[prefix]}" \
-        MANDIR="${dict[prefix]}/man" \
+        MANDIR="${dict[prefix]}/share/man" \
         install
     return 0
 }
