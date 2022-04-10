@@ -831,6 +831,8 @@ koopa_uninstall_gnupg() { # {{{3
 
 # gnutls ------------------------------------------------------------------ {{{2
 
+# FIXME For some reason, this isn't detecting nettle even though it's installed...
+
 koopa_install_gnutls() { # {{{1
     # """
     # @seealso
