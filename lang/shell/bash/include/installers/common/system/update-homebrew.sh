@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider managing elements in '/etc/paths.d'.
-# FIXME Also ensure documentation is located in '/etc/manpaths.d'.
-
 main() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.

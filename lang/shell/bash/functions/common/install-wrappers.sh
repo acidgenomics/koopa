@@ -496,7 +496,6 @@ koopa_uninstall_cpufetch() { # {{{3
 koopa_install_curl() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/curl' \
-        --link-in-bin='bin/curl-config' \
         --name-fancy='cURL' \
         --name='curl' \
         "$@"
@@ -507,7 +506,6 @@ koopa_uninstall_curl() { # {{{3
         --name-fancy='cURL' \
         --name='curl' \
         --unlink-in-bin='curl' \
-        --unlink-in-bin='curl-config' \
         "$@"
 }
 
@@ -606,17 +604,13 @@ koopa_uninstall_ensembl_perl_api() { # {{{3
 koopa_install_findutils() { # {{{3
     local install_args
     install_args=(
+        '--link-in-bin=bin/find'
+        '--link-in-bin=bin/locate'
+        '--link-in-bin=bin/updatedb'
+        '--link-in-bin=bin/xargs'
         '--name=findutils'
     )
-    if koopa_is_linux
-    then
-        install_args+=(
-            '--link-in-bin=bin/find'
-            '--link-in-bin=bin/locate'
-            '--link-in-bin=bin/updatedb'
-            '--link-in-bin=bin/xargs'
-        )
-    elif koopa_is_macos
+    if koopa_is_macos
     then
         # Workaround for build failures in 4.8.0.
         # See also:
@@ -633,14 +627,13 @@ koopa_install_findutils() { # {{{3
 
 koopa_uninstall_findutils() { # {{{3
     local uninstall_args
-    uninstall_args=('--name=findutils')
-    if koopa_is_linux
-    then
+    uninstall_args=(
+        '--name=findutils'
         '--unlink-in-bin=find'
         '--unlink-in-bin=locate'
         '--unlink-in-bin=updatedb'
         '--unlink-in-bin=xargs'
-    fi
+    )
     koopa_uninstall_app "${uninstall_args[@]}" "$@"
 }
 
@@ -825,7 +818,6 @@ koopa_uninstall_go_packages() { # {{{3
 
 # grep -------------------------------------------------------------------- {{{2
 
-# FIXME Only link on Linux.
 koopa_install_grep() { # {{{3
     koopa_install_gnu_app \
         --link-in-bin='bin/egrep' \
@@ -835,7 +827,6 @@ koopa_install_grep() { # {{{3
         "$@"
 }
 
-# FIXME Only link on Linux.
 koopa_uninstall_grep() { # {{{3
     koopa_uninstall_app \
         --name='grep' \
@@ -1099,6 +1090,20 @@ koopa_install_libtool() { # {{{3
 koopa_uninstall_libtool() { # {{{3
     koopa_uninstall_app \
         --name='libtool' \
+        "$@"
+}
+
+# libxml2 ----------------------------------------------------------------- {{{2
+
+koopa_install_libxml2() { # {{{3
+    koopa_install_app \
+        --name='libxml2' \
+        "$@"
+}
+
+koopa_uninstall_libxml2() { # {{{3
+    koopa_uninstall_app \
+        --name='libxml2' \
         "$@"
 }
 
