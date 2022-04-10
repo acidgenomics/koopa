@@ -194,6 +194,7 @@ __koopa_complete() { # {{{1
                         'texinfo'
                         'the-silver-searcher'
                         'tmux'
+                        'tree'
                         'udunits'
                         'vim'
                         'wget'
