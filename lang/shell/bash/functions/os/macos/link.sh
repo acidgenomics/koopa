@@ -38,11 +38,7 @@ koopa_macos_homebrew_uninstall_brewfile_casks() { # {{{1
 }
 
 koopa_macos_link_homebrew() { # {{{1
-    local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        [cask]="$(koopa_homebrew_cask_prefix)"
-    )
     # BBEdit cask.
     koopa_link_in_bin \
         '/Applications/BBEdit.app/Contents/Helpers/bbedit_tool' \
@@ -51,15 +47,6 @@ koopa_macos_link_homebrew() { # {{{1
     koopa_link_in_bin \
         '/Applications/Emacs.app/Contents/MacOS/Emacs' \
         'emacs'
-    # Google Cloud SDK cask.
-    koopa_link_in_bin \
-        "${dict[cask]}/google-cloud-sdk/latest/google-cloud-sdk/bin/gcloud" \
-        'gcloud'
-    # Julia cask.
-    dict[julia]="$(koopa_macos_julia_prefix)"
-    koopa_link_in_bin \
-        "${dict[julia]}/bin/julia" \
-        'julia'
     # R cask.
     dict[r]="$(koopa_macos_r_prefix)"
     koopa_link_in_bin \
