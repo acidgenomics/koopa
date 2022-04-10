@@ -1,7 +1,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-04-09"
+koopa-date="2022-04-10"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -206,6 +206,9 @@ libtool="2.4.6"
 
 # https://gitlab.gnome.org/GNOME/libxml2/-/releases
 libxml2="2.9.13"
+
+# https://libzip.org/download/
+libzip="1.8.0"
 
 # LLVM
 # https://releases.llvm.org/

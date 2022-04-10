@@ -18,11 +18,11 @@ main() { # {{{1
         '--quiet'
     )
     pkgs=(
-        # > 'gettext'
-        # > 'gnutls'
-        # > 'libidn2'
         'autoconf'
         'automake'
+        'gettext'
+        'gnutls'
+        'libidn2'
         'openssl'
         'pcre2'
         'pkg-config'
