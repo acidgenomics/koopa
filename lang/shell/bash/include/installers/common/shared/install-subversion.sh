@@ -31,12 +31,16 @@ main() { # {{{1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='subversion'
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     conf_args=(
         "--prefix=${dict[prefix]}"
-        '--with-serf' # Required for HTTPS URLs.
+        '--with-lz4=internal'
+        # Required for HTTPS URLs.
+        "--with-serf=${dict[opt_prefix]}/serf"
+        '--with-utf8proc=internal'
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
     dict[url]="https://mirrors.ocf.berkeley.edu/apache/\
