@@ -1889,9 +1889,24 @@ koopa_update_rust_packages() { # {{{3
         "$@"
 }
 
+# scons ------------------------------------------------------------------- {{{2
+
+koopa_install_scons() { # {{{3
+    koopa_install_app \
+        --name-fancy='SCONS' \
+        --name='scons' \
+        "$@"
+}
+
+koopa_uninstall_scons() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='SCONS' \
+        --name='scons' \
+        "$@"
+}
+
 # sed --------------------------------------------------------------------- {{{2
 
-# FIXME Only link on Linux.
 koopa_install_sed() { # {{{3
     koopa_install_gnu_app \
         --link-in-bin='bin/sed' \
@@ -1899,7 +1914,6 @@ koopa_install_sed() { # {{{3
         "$@"
 }
 
-# FIXME Only link on Linux.
 koopa_uninstall_sed() { # {{{3
     koopa_uninstall_app \
         --name='sed' \
@@ -1907,7 +1921,23 @@ koopa_uninstall_sed() { # {{{3
         "$@"
 }
 
-# [shellcheck] ------------------------------------------------------------ {{{2
+# serf -------------------------------------------------------------------- {{{2
+
+koopa_install_serf() { # {{{3
+    koopa_install_app \
+        --name-fancy='Apache Serf' \
+        --name='serf' \
+        "$@"
+}
+
+koopa_uninstall_serf() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Apache Serf' \
+        --name='serf' \
+        "$@"
+}
+
+# (shellcheck) ------------------------------------------------------------ {{{2
 
 koopa_install_shellcheck() { # {{{3
     koopa_install_app \
