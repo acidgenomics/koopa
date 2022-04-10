@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Likely need to add 'gettext', 'gnutls', and 'libidn2' support here.
-
 main() { # {{{1
     # """
     # Install wget.
     # @note Updated 2022-04-10.
+    #
+    # Use OpenSSL instead of GnuTLS, which is annoying to compile.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/wget.rb
@@ -22,7 +22,7 @@ main() { # {{{1
         'autoconf'
         'automake'
         'gettext'
-        'libidn2'
+        'libidn'
         'openssl'
         'pcre2'
         'pkg-config'
@@ -33,10 +33,9 @@ main() { # {{{1
     done
     conf_args=(
         '--disable-debug'
+        '--with-ssl=openssl'
         '--without-included-regex'
         '--without-libpsl'
-        # Use OpenSSL instead of GnuTLS, which is annoying to compile.
-        '--with-openssl'
     )
     koopa_install_gnu_app \
         "${install_args[@]}" \
