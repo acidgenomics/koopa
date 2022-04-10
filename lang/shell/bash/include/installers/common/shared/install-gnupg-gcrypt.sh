@@ -42,6 +42,7 @@ main() { # {{{1
     conf_args=(
         # > '--enable-maintainer-mode'
         "--prefix=${dict[prefix]}"
+        '--disable-dependency-tracking'
         "$@"
     )
     case "${dict[name]}" in
