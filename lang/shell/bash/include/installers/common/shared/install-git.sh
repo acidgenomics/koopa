@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME If we set CPPFLAGS and LDFLAGS in opt_prefix, this should improve
-# the install stack better...
-
 main() { # {{{1
     # """
     # Install Git.

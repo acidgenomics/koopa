@@ -518,8 +518,7 @@ koopa_locate_node() { # {{{1
 koopa_locate_npm() { # {{{1
     koopa_locate_app \
         --app-name='npm' \
-        --homebrew-opt-name='node' \
-        --koopa-opt-name='node-packages'
+        --opt-name='node'
 }
 
 koopa_locate_nproc() { # {{{1

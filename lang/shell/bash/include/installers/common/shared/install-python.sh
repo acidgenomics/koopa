@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this issue with koopa python:
-# WARNING: pip is configured with locations that require TLS/SSL, however the
-# ssl module in Python is not available.
-
-# FIXME May need to add lzma support:
-# Failed to build these modules: _lzma
-
 main() { # {{{1
     # """
     # Install Python.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-10.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
