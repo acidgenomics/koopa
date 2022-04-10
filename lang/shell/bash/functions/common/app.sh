@@ -449,11 +449,12 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 --version="${dict[version]}"
             return 0
         fi
-        unset -v \
-            CPPFLAGS \
-            LDFLAGS \
-            LD_LIBRARY_PATH \
-            PKG_CONFIG_PATH
+        # > unset -v \
+        # >     CFLAGS \
+        # >     CPPFLAGS \
+        # >     LDFLAGS \
+        # >     LD_LIBRARY_PATH \
+        # >     PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
         if [[ -x '/usr/bin/pkg-config' ]]
@@ -1146,7 +1147,12 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
-        unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
+        unset -v \
+            CFLAGS \
+            CPPFLAGS \
+            LDFLAGS \
+            LD_LIBRARY_PATH \
+            PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
         if [[ -x '/usr/bin/pkg-config' ]]

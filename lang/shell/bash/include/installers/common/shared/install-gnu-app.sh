@@ -19,10 +19,12 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[name2]="${dict[name]}"
     conf_args=("--prefix=${dict[prefix]}" "$@")
     case "${dict[name]}" in
         'groff' | \
         'gsl' | \
+        'libidn' | \
         'make' | \
         'ncurses' | \
         'nettle' | \
@@ -40,15 +42,18 @@ main() { # {{{1
             ;;
     esac
     case "${dict[name]}" in
+        'libidn')
+            dict[name2]='libidn2'
+            ;;
         'ncurses')
             dict[version]="$(koopa_major_minor_version "${dict[version]}")"
             ;;
     esac
-    dict[file]="${dict[name]}-${dict[version]}.tar.${dict[suffix]}"
+    dict[file]="${dict[name2]}-${dict[version]}.tar.${dict[suffix]}"
     dict[url]="${dict[gnu_mirror]}/${dict[name]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    koopa_cd "${dict[name2]}-${dict[version]}"
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
