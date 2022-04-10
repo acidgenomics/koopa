@@ -30,7 +30,6 @@ koopa_linux_install_aws_cli() { # {{{3
         --name-fancy='AWS CLI' \
         --name='aws-cli' \
         --platform='linux' \
-        --version='rolling' \
         "$@"
 }
 

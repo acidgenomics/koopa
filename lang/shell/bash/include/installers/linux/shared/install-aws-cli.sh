@@ -21,6 +21,8 @@ main() { # {{{1
     #     getting-started-install.html
     # - https://docs.aws.amazon.com/cli/latest/userguide/
     #     install-cliv2-linux.html
+    # - https://github.com/awsdocs/aws-cli-user-guide/blob/main/doc_source/
+    #     install-cliv2-linux.md
     # - https://github.com/aws/aws-cli/tree/v2
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/awscli.rb
     # """
@@ -28,10 +30,11 @@ main() { # {{{1
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
         [tmp_bin_dir]='tmp_bin'
         [tmp_install_dir]='tmp_install'
     )
-    dict[file]="awscli-exe-linux-${dict[arch]}.zip"
+    dict[file]="awscli-exe-linux-${dict[arch]}-${dict[version]}.zip"
     dict[url]="https://awscli.amazonaws.com/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
