@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for Linux.
 #
-# @note Updated 2022-04-08.
+# @note Updated 2022-04-10.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.

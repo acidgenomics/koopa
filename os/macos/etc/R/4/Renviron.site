@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for macOS.
 #
-# @note Updated 2022-04-08.
+# @note Updated 2022-04-10.
 #
 # @seealso
 # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
@@ -48,11 +48,11 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
-# FIXME Need to add install support for lapack and openblas in koopa.
+# Consider adding install support for lapack and openblas in koopa.
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
