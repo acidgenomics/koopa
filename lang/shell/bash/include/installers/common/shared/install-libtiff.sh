@@ -1,12 +1,22 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add support for 'jpeg'.
+# FIXME This is currently breaking on macOS.
+# FIXME See patch currently applied in Homebrew recipe.
+
 main() { # {{{1
     # """
     # Install libtiff.
     # @note Updated 2022-04-10.
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libtiff.rb
+    # - https://gitlab.com/libtiff/libtiff/-/commit/
+    #     b25618f6fcaf5b39f0a5b6be3ab2fb288cf7a75b
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'autoconf' 'automake' 'jpeg' 'libtool'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -20,7 +30,18 @@ main() { # {{{1
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "tiff-${dict[version]}"
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=(
+        --prefix="${dict[prefix]}"
+        --disable-dependency-tracking
+        --disable-lzma
+        --disable-webp
+        --disable-zstd
+        # FIXME Need to add support for this.
+        # > --with-jpeg-include-dir=#{Formula["jpeg"].opt_include}
+        # > --with-jpeg-lib-dir=#{Formula["jpeg"].opt_lib}
+        --without-x
+    )
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
