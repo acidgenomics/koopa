@@ -90,6 +90,7 @@ __koopa_complete() { # {{{1
                         'armadillo'
                         'autoconf'
                         'automake'
+                        'aws-cli'
                         'bash'
                         'binutils'
                         'boost'
@@ -196,7 +197,6 @@ __koopa_complete() { # {{{1
                     then
                         args+=(
                             'aspera-connect'
-                            'aws-cli'  # FIXME Need to support macOS.
                             'azure-cli'
                             'base-system'
                             'bcbio-nextgen'

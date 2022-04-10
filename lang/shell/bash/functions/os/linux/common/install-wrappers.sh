@@ -33,15 +33,6 @@ koopa_linux_install_aws_cli() { # {{{3
         "$@"
 }
 
-koopa_linux_uninstall_aws_cli() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='AWS CLI' \
-        --name='aws-cli' \
-        --platform='linux' \
-        --unlink-in-bin='aws' \
-        "$@"
-}
-
 # bcbio-nextgen ----------------------------------------------------------- {{{2
 
 koopa_linux_install_bcbio_nextgen() { # {{{3
