@@ -2230,6 +2230,20 @@ koopa_uninstall_xz() { # {{{3
         "$@"
 }
 
+# zlib -------------------------------------------------------------------- {{{2
+
+koopa_install_zlib() { # {{{3
+    koopa_install_app \
+        --name='zlib' \
+        "$@"
+}
+
+koopa_uninstall_zlib() { # {{{3
+    koopa_uninstall_app \
+        --name='zlib' \
+        "$@"
+}
+
 # zsh --------------------------------------------------------------------- {{{2
 
 koopa_install_zsh() { # {{{3
