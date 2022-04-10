@@ -65,6 +65,22 @@ koopa_uninstall_apr() { # {{{3
         "$@"
 }
 
+# apr-util ---------------------------------------------------------------- {{{2
+
+koopa_install_apr_util() { # {{{3
+    koopa_install_app \
+        --name-fancy='Apache Portable Runtime (APR) utilities' \
+        --name='apr-util' \
+        "$@"
+}
+
+koopa_uninstall_apr_util() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Apache Portable Runtime (APR) utilities' \
+        --name='apr-util' \
+        "$@"
+}
+
 # armadillo --------------------------------------------------------------- {{{2
 
 koopa_install_armadillo() { # {{{3

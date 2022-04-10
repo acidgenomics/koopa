@@ -23,6 +23,12 @@ Contents/Resources/ascp" \
         --opt-name='aspera-connect'
 }
 
+koopa_locate_autoreconf() { # {{{1
+    koopa_locate_app \
+        --app-name='autoreconf' \
+        --opt-name='autoconf'
+}
+
 # FIXME Just link this...
 koopa_locate_awk() { # {{{1
     koopa_locate_app \
