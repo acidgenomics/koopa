@@ -831,8 +831,6 @@ koopa_uninstall_gnupg() { # {{{3
 
 # gnutls ------------------------------------------------------------------ {{{2
 
-# FIXME checking for LIBTASN1... no
-
 koopa_install_gnutls() { # {{{1
     # """
     # NOTE This is failing to build on macOS due to failure to properly detect
@@ -844,6 +842,7 @@ koopa_install_gnutls() { # {{{1
     # """
     koopa_install_app \
         --activate-opt='gmp' \
+        --activate-opt='libtasn1' \
         --activate-opt='nettle' \
         --installer='gnupg-gcrypt' \
         --name='gnutls' \
