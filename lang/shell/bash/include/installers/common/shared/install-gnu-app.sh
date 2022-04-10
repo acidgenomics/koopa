@@ -49,11 +49,7 @@ main() { # {{{1
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    koopa_dl \
-        'configure args' "${conf_args[*]}" \
-        'CPPFLAGS' "${CPPFLAGS:-}" \
-        'LDFLAGS' "${LDFLAGS:-}" \
-        'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" check || true

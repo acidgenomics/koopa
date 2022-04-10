@@ -7,6 +7,7 @@ main() { # {{{1
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gmp.rb
+    # - https://gmplib.org/manual/Build-Options
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -24,10 +25,14 @@ main() { # {{{1
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    conf_args=("--prefix=${dict[prefix]}")
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--enable-cxx'
+        '--with-pic'
+    )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" check
+    "${app[make]}" check
     "${app[make]}" install
     return 0
 }

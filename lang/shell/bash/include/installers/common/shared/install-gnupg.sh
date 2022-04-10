@@ -157,6 +157,8 @@ main() { # {{{1
         # > "${app[gpg]}" --list-keys
     fi
     install_args=(
+        '--activate-opt=autoconf'
+        '--activate-opt=automake'
         '--activate-opt=pkg-config'
         '--installer=gnupg-gcrypt'
         '--no-link-in-opt'
@@ -164,12 +166,32 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         '--quiet'
     )
+    # FIXME Installing this is super annoying on macOS.
+    # https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gnutls.rb
+    # https://stackoverflow.com/questions/66973381/cant-build-gnutls-undefined-reference-to-gmp
+    # https://gist.github.com/morgant/1753095
+    # > export CFLAGS='-m64'
+    # > export CXXFLAGS='-m64'
     koopa_install_app \
         --activate-opt='gmp' \
         --activate-opt='nettle' \
+        --disable-anon-authentication \
+        --disable-cxx \
+        --disable-doc \
+        --disable-dtls-srtp-support \
+        --disable-heartbeat-support \
+        --disable-openssl-compatibility \
+        --disable-psk-authentication \
+        --disable-srp-authentication \
+        --disable-static \
+        --enable-shared \
         --installer='gnupg-gcrypt' \
         --name='gnutls' \
         --version="${dict[gnutls_version]}" \
+        --with-included-libtasn1 \
+        --with-included-unistring \
+        --without-p11-kit \
+        --without-tpm \
         "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \

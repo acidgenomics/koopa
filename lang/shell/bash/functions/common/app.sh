@@ -170,7 +170,7 @@ koopa_find_app_version() { # {{{1
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-10.
     # """
     local bin_arr brew_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -475,6 +475,14 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         then
             koopa_linux_update_ldconfig
         fi
+        [[ -n "${CFLAGS:-}" ]] && \
+            koopa_dl 'CFLAGS' "${CFLAGS:?}"
+        [[ -n "${CPPFLAGS:-}" ]] && \
+            koopa_dl 'CPPFLAGS' "${CPPFLAGS:?}"
+        [[ -n "${LDFLAGS:-}" ]] && \
+            koopa_dl 'LDFLAGS' "${LDFLAGS:?}"
+        [[ -n "${PKG_CONFIG_PATH:-}" ]] && \
+            koopa_dl 'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:?}"
         # shellcheck disable=SC2030
         export INSTALL_LINK_IN_BIN="${dict[link_in_bin]}"
         # shellcheck disable=SC2030
