@@ -193,6 +193,9 @@ lesspipe="2.04"
 # https://github.com/libevent/libevent/releases
 libevent="2.1.12"
 
+# https://download.osgeo.org/libtiff/
+libtiff="4.3.0"
+
 # https://ftp.gnu.org/gnu/libtool/
 libtool="2.4.6"
 
