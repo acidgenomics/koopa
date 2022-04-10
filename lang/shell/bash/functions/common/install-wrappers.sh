@@ -24,10 +24,10 @@ koopa_uninstall_koopa() { # {{{3
         "$@"
 }
 
+# FIXME Do we need to set the prefix here?
 koopa_update_koopa() { # {{{3
     koopa_update_app \
         --name='koopa' \
-        --prefix="$(koopa_koopa_prefix)" \
         "$@"
 }
 
@@ -496,6 +496,7 @@ koopa_uninstall_cpufetch() { # {{{3
 koopa_install_curl() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/curl' \
+        --link-in-bin='bin/curl-config' \
         --name-fancy='cURL' \
         --name='curl' \
         "$@"
@@ -506,6 +507,7 @@ koopa_uninstall_curl() { # {{{3
         --name-fancy='cURL' \
         --name='curl' \
         --unlink-in-bin='curl' \
+        --unlink-in-bin='curl-config' \
         "$@"
 }
 

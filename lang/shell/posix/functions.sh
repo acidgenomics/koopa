@@ -92,7 +92,7 @@ __koopa_remove_from_path_string() { # {{{1
 koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-04-01.
+    # @note Updated 2022-04-10.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -285,11 +285,10 @@ koopa_activate_conda() { # {{{1
     return 0
 }
 
-# FIXME Rethink this approach on macOS. Link into '/opt/koopa/bin' instead.
 koopa_activate_coreutils_aliases() { # {{{1
     # """
-    # Activate GNU/BSD coreutils aliases.
-    # @note Updated 2022-04-08.
+    # Activate BSD/GNU coreutils aliases.
+    # @note Updated 2022-04-10.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -299,32 +298,31 @@ koopa_activate_coreutils_aliases() { # {{{1
     # macOS ships with BSD coreutils, which don't support all GNU options.
     # gmv on macOS currently has issues on NFS shares.
     # """
-    local cp cp_args ln ln_args mkdir mkdir_args mv mv_args rm rm_args
-    cp='/bin/cp'
-    ln='/bin/ln'
-    mkdir='/bin/mkdir'
-    mv='/bin/mv'
-    rm='/bin/rm'
-    if koopa_is_linux
+    local bin_prefix
+    bin_prefix="$(koopa_bin_prefix)"
+    if [ ! -x "${bin_prefix}/cp" ] || \
+        [ ! -x "${bin_prefix}/cp" ] || \
+        [ ! -x "${bin_prefix}/ln" ] || \
+        [ ! -x "${bin_prefix}/mkdir" ] || \
+        [ ! -x "${bin_prefix}/mv" ] || \
+        [ ! -x "${bin_prefix}/rm" ]
     then
-        # GNU coreutils.
-        cp_args='--interactive'
-        ln_args='--interactive --no-dereference --symbolic'
-        mkdir_args='--parents'
-        mv_args='--interactive'
-        # Problematic on some file systems: '--dir', '--preserve-root'.
-        # Don't enable '--recursive' here by default, to provide against
-        # accidental deletion of an important directory.
-        rm_args='--interactive=once'
-    elif koopa_is_macos
-    then
-        # BSD coreutils.
-        cp_args='-i'
-        ln_args='-ins'
-        mkdir_args='-p'
-        mv_args='-i'
-        rm_args='-i'
+        return 0
     fi
+    local cp cp_args ln ln_args mkdir mkdir_args mv mv_args rm rm_args
+    cp='cp'
+    ln='ln'
+    mkdir='mkdir'
+    mv='mv'
+    rm='rm'
+    cp_args='-i' # '--interactive'.
+    ln_args='-ins' # '--interactive --no-dereference --symbolic'.
+    mkdir_args='-p' # '--parents'.
+    mv_args='-i' # '--interactive'
+    # Problematic on some file systems: '--dir', '--preserve-root'.
+    # Don't enable '--recursive' here by default, to provide against
+    # accidental deletion of an important directory.
+    rm_args='-i' # '--interactive=once'.
     # shellcheck disable=SC2139
     alias cp="${cp} ${cp_args}"
     # shellcheck disable=SC2139
@@ -338,16 +336,18 @@ koopa_activate_coreutils_aliases() { # {{{1
     return 0
 }
 
-# FIXME Rethink this approach on macOS. Link into '/opt/koopa/bin' instead.
 koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-10.
     #
     # This will set the 'LS_COLORS' environment variable.
     # """
-    local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
+    local bin_prefix
     [ -n "${SHELL:-}" ] || return 0
+    bin_prefix="$(koopa_bin_prefix)"
+    [ -x "${bin_prefix}/dircolors" ] || return 0
+    local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
     dir='dir'
     dircolors='dircolors'
     egrep='egrep'
@@ -355,17 +355,6 @@ koopa_activate_dircolors() { # {{{1
     grep='grep'
     ls='ls'
     vdir='vdir'
-    if koopa_is_macos && koopa_is_installed 'gdircolors'
-    then
-        dir='gdir'
-        dircolors='gdircolors'
-        egrep='gegrep'
-        fgrep='gfgrep'
-        grep='ggrep'
-        ls='gls'
-        vdir='gvdir'
-    fi
-    koopa_is_installed "$dircolors" || return 0
     dotfiles_prefix="$(koopa_dotfiles_prefix)"
     dircolors_file="${dotfiles_prefix}/app/coreutils/dircolors"
     case "$(koopa_color_mode)" in
@@ -472,14 +461,13 @@ koopa_activate_go() { # {{{1
 koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2022-04-05.
+    # @note Updated 2022-04-10.
     #
     # Don't activate 'binutils' here. Can mess up R package compilation.
     # """
     local prefix
     prefix="$(koopa_homebrew_prefix)"
     [ -d "$prefix" ] || return 0
-    koopa_activate_prefix "$prefix"
     export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
@@ -507,38 +495,6 @@ koopa_activate_julia() { # {{{1
     return 0
 }
 
-koopa_activate_koopa_paths() { # {{{1
-    # """
-    # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2022-01-27.
-    # """
-    local config_prefix koopa_prefix linux_prefix shell
-    koopa_prefix="$(koopa_koopa_prefix)"
-    config_prefix="$(koopa_config_prefix)"
-    shell="$(koopa_shell_name)"
-    koopa_activate_prefix "$koopa_prefix"
-    koopa_activate_prefix "${koopa_prefix}/lang/shell/${shell}"
-    if koopa_is_linux
-    then
-        linux_prefix="${koopa_prefix}/os/linux"
-        koopa_activate_prefix "${linux_prefix}/common"
-        if koopa_is_debian_like
-        then
-            koopa_activate_prefix "${linux_prefix}/debian"
-            koopa_is_ubuntu_like && \
-                koopa_activate_prefix "${linux_prefix}/ubuntu"
-        elif koopa_is_fedora_like
-        then
-            koopa_activate_prefix "${linux_prefix}/fedora"
-            koopa_is_rhel_like && \
-                koopa_activate_prefix "${linux_prefix}/rhel"
-        fi
-    fi
-    koopa_activate_prefix "$(koopa_distro_prefix)"
-    koopa_activate_prefix "${config_prefix}/scripts-private"
-    return 0
-}
-
 koopa_activate_lesspipe() { # {{{1
     # """
     # Activate lesspipe.
@@ -562,16 +518,6 @@ koopa_activate_lesspipe() { # {{{1
     export LESSQUIET=1
     export LESS_ADVANCED_PREPROCESSOR=1
     [ -z "${LESSCHARSET:-}" ] && export LESSCHARSET='utf-8'
-    return 0
-}
-
-koopa_activate_local_paths() { # {{{1
-    # """
-    # Activate local user paths.
-    # @note Updated 2021-05-20.
-    # """
-    koopa_activate_prefix "$(koopa_xdg_local_home)"
-    koopa_add_to_path_start "${HOME:?}/bin"
     return 0
 }
 
@@ -995,34 +941,10 @@ koopa_activate_tealdeer() { # {{{1
     return 0
 }
 
-koopa_activate_tmux_sessions() { # {{{1
-    # """
-    # Show active tmux sessions.
-    # @note Updated 2022-02-25.
-    #
-    # This can cause a login shell to hang when tmux is uninstalled with
-    # sessions still active.
-    # """
-    local str
-    koopa_is_installed 'tmux' || return 0
-    koopa_is_tmux && return 0
-    # shellcheck disable=SC2033
-    str="$(tmux ls 2>/dev/null || true)"
-    [ -n "$str" ] || return 0
-    str="$( \
-        koopa_print "$str" \
-        | cut -d ':' -f '1' \
-        | tr '\n' ' ' \
-    )"
-    koopa_dl 'tmux' "$str"
-    return 0
-}
-
-# FIXME Rethink the coreutils handling here.
 koopa_activate_today_bucket() { # {{{1
     # """
     # Create a dated file today bucket.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-04-10.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -1038,36 +960,22 @@ koopa_activate_today_bucket() { # {{{1
     # -s, --symbolic
     #        make symbolic links instead of hard links
     # """
-    local bucket_dir coreutils_bin_prefix today_bucket today_link
-    local date ln mkdir readlink
+    local bucket_dir today_bucket today_link
     bucket_dir="${KOOPA_BUCKET:-}"
     [ -z "$bucket_dir" ] && bucket_dir="${HOME:?}/bucket"
     # Early return if there's no bucket directory on the system.
     [ -d "$bucket_dir" ] || return 0
-    date='date'
-    ln='ln'
-    mkdir='mkdir'
-    readlink='readlink'
-    if koopa_is_macos
-    then
-        coreutils_bin_prefix="$(koopa_homebrew_opt_prefix)/coreutils/bin"
-        [ -d "$coreutils_bin_prefix" ] || return 0
-        date="${coreutils_bin_prefix}/gdate"
-        ln="${coreutils_bin_prefix}/gln"
-        mkdir="${coreutils_bin_prefix}/gmkdir"
-        readlink="${coreutils_bin_prefix}/greadlink"
-    fi
-    today_bucket="$("$date" '+%Y/%m/%d')"
+    today_bucket="$(date '+%Y/%m/%d')"
     today_link="${HOME:?}/today"
     # Early return if we've already updated the symlink.
     if koopa_str_detect_posix \
-        "$("$readlink" "$today_link")" \
+        "$(koopa_realpath "$today_link")" \
         "$today_bucket"
     then
         return 0
     fi
-    "$mkdir" -p "${bucket_dir}/${today_bucket}"
-    "$ln" -fns "${bucket_dir}/${today_bucket}" "$today_link"
+    mkdir -p "${bucket_dir}/${today_bucket}"
+    ln -fns "${bucket_dir}/${today_bucket}" "$today_link"
     return 0
 }
 
@@ -1142,9 +1050,9 @@ koopa_activate_zoxide() { # {{{1
 koopa_add_koopa_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
-    # @note Updated 2022-04-08
+    # @note Updated 2022-04-10.
     # """
-    local brew_prefix config_prefix dest_file dest_name source_file
+    local config_prefix dest_file dest_name source_file
     config_prefix="$(koopa_config_prefix)"
     while [ "$#" -ge 2 ]
     do
@@ -1838,33 +1746,32 @@ koopa_dotfiles_private_prefix() { # {{{1
     return 0
 }
 
-# FIXME Rethink the coreutils handling here.
 koopa_duration_start() { # {{{1
     # """
     # Start activation duration timer.
-    # @note Updated 2021-06-17.
+    # @note Updated 2022-04-10.
     # """
-    local brew_prefix date
-    date='date'
-    if koopa_is_macos
-    then
-        # FIXME Use opt prefix here instead.
-        brew_prefix="$(koopa_homebrew_prefix)"
-        date="${brew_prefix}/opt/coreutils/bin/gdate"
-    fi
-    koopa_is_installed "$date" || return 0
-    KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
+    local bin_prefix
+    bin_prefix="$(koopa_bin_prefix)"
+    [ -x "${bin_prefix}/date" ] || return 0
+    KOOPA_DURATION_START="$(date -u '+%s%3N')"
     export KOOPA_DURATION_START
     return 0
 }
 
-# FIXME Rethink the coreutils handling here.
 koopa_duration_stop() { # {{{1
     # """
     # Stop activation duration timer.
-    # @note Updated 2021-06-17.
+    # @note Updated 2022-04-10.
     # """
-    local brew_prefix bc date duration key start stop
+    local bin_prefix
+    bin_prefix="$(koopa_bin_prefix)"
+    if [ ! -x "${bin_prefix}/bc" ] || \
+        [ ! -x "${bin_prefix}/date" ]
+    then
+        return 0
+    fi
+    local duration key start stop
     key="${1:-}"
     if [ -z "$key" ]
     then
@@ -1872,22 +1779,9 @@ koopa_duration_stop() { # {{{1
     else
         key="[${key}] duration"
     fi
-    bc='bc'
-    date='date'
-    if koopa_is_macos
-    then
-        # FIXME Use opt prefix here instead.
-        brew_prefix="$(koopa_homebrew_prefix)"
-        bc="${brew_prefix}/opt/bc/bin/bc"
-        date="${brew_prefix}/opt/coreutils/bin/gdate"
-    fi
-    koopa_is_installed "$bc" "$date" || return 0
     start="${KOOPA_DURATION_START:?}"
-    stop="$("$date" -u '+%s%3N')"
-    duration="$( \
-        koopa_print "${stop}-${start}" \
-        | "$bc" \
-    )"
+    stop="$(date -u '+%s%3N')"
+    duration="$(koopa_print "${stop}-${start}" | bc)"
     [ -n "$duration" ] || return 1
     koopa_dl "$key" "${duration} ms"
     unset -v KOOPA_DURATION_START

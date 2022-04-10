@@ -101,6 +101,9 @@ koopa_r_javareconf() { # {{{1
     return 0
 }
 
+# FIXME Fall back to linking against 'current', if a versioned symlink is
+# not present in the koopa configuration.
+
 koopa_r_link_files_in_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
