@@ -479,6 +479,8 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_dl 'CFLAGS' "${CFLAGS:?}"
         [[ -n "${CPPFLAGS:-}" ]] && \
             koopa_dl 'CPPFLAGS' "${CPPFLAGS:?}"
+        [[ -n "${LD_LIBRARY_PATH:-}" ]] && \
+            koopa_dl 'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:?}"
         [[ -n "${LDFLAGS:-}" ]] && \
             koopa_dl 'LDFLAGS' "${LDFLAGS:?}"
         [[ -n "${PKG_CONFIG_PATH:-}" ]] && \
