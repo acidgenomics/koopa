@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-10.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -13,6 +13,7 @@ main() { # {{{1
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
+        [compress_ext]='bz2'
         [gcrypt_url]="$(koopa_gcrypt_url)"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
@@ -20,7 +21,14 @@ main() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
-    dict[tar_file]="${dict[name]}-${dict[version]}.tar.bz2"
+    case "${dict[name]}" in
+        'gnutls')
+            dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
+            dict[base_url]="${dict[base_url]}/v${dict[maj_min_ver]}"
+            dict[compress_ext]='xz'
+            ;;
+    esac
+    dict[tar_file]="${dict[name]}-${dict[version]}.tar.${dict[compress_ext]}"
     dict[tar_url]="${dict[base_url]}/${dict[tar_file]}"
     koopa_download "${dict[tar_url]}" "${dict[tar_file]}"
     if koopa_is_installed "${app[gpg_agent]}"

@@ -735,6 +735,20 @@ koopa_uninstall_geos() { # {{{3
         "$@"
 }
 
+# gettext ----------------------------------------------------------------- {{{2
+
+koopa_install_gettext() { # {{{3
+    koopa_install_gnu_app \
+        --name='gettext' \
+        "$@"
+}
+
+koopa_uninstall_gettext() { # {{{3
+    koopa_uninstall_app \
+        --name='gettext' \
+        "$@"
+}
+
 # git --------------------------------------------------------------------- {{{2
 
 koopa_install_git() { # {{{3
@@ -767,6 +781,20 @@ koopa_uninstall_git() { # {{{3
         )
     fi
     koopa_uninstall_app "${uninstall_args[@]}" "$@"
+}
+
+# gmp --------------------------------------------------------------------- {{{2
+
+koopa_install_gmp() { # {{{3
+    koopa_install_app \
+        --name='gmp' \
+        "$@"
+}
+
+koopa_uninstall_gmp() { # {{{3
+    koopa_uninstall_app \
+        --name='gmp' \
+        "$@"
 }
 
 # gnupg ------------------------------------------------------------------- {{{2
@@ -1249,6 +1277,32 @@ koopa_uninstall_neovim() { # {{{3
     koopa_uninstall_app \
         --name='neovim' \
         --unlink-in-bin='nvim' \
+        "$@"
+}
+
+# nettle ------------------------------------------------------------------ {{{2
+
+koopa_install_nettle() { # {{{3
+    # """
+    # Need to make sure libhogweed installs.
+    # - https://stackoverflow.com/questions/9508851/how-to-compile-gnutls
+    # - https://noknow.info/it/os/install_nettle_from_source
+    # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/nettle.html
+    # - https://stackoverflow.com/questions/7965990
+    # - https://gist.github.com/morgant/1753095
+    # """
+    koopa_install_gnu_app \
+        --activate-opt='gmp' \
+        --disable-dependency-tracking \
+        --enable-mini-gmp \
+        --enable-shared \
+        --name='nettle' \
+        "$@"
+}
+
+koopa_uninstall_nettle() { # {{{3
+    koopa_uninstall_app \
+        --name='nettle' \
         "$@"
 }
 
