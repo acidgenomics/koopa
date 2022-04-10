@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME May need to configure these on macOS:
-#'brotli' \
-#'c-ares' \
-#'icu4c' \
-#'libnghttp2' \
-#'libuv' \
-#'openssl@1.1' \
-#'pkg-config' \
-#'python@3'
-
 main() { # {{{1
     # """
     # Install Node.js.

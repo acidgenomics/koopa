@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to be stricter, locating from 'opt' unless user allows
+# otherwise, or passes in an executable directly.
+
 # FIXME Make this stricter, requiring link into '/opt/koopa/bin', unless
 # the call passes in an executable directly instead.
 # FIXME Need to make this strict by default (exit)

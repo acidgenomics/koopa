@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Node.js packages using npm.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-10.
     #
     # Node 'tldr' conflicts with Rust 'tealdeer'.
     #
@@ -16,7 +16,6 @@ main() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_activate_node
     declare -A app=(
-        [brew]="$(koopa_locate_brew --allow-missing)"
         [node]="$(koopa_locate_node)"
         [npm1]="$(koopa_locate_npm)"
     )
@@ -32,14 +31,9 @@ main() { # {{{1
     koopa_assert_is_executable "${app[npm2]}"
     pkgs=(
         'bash-language-server'
+        'gtop'
+        'prettier'
     )
-    if [[ ! -x "${app[brew]}" ]]
-    then
-        pkgs+=(
-            'gtop'
-            'prettier'
-        )
-    fi
     for i in "${!pkgs[@]}"
     do
         local pkg pkg_lower version
@@ -49,6 +43,6 @@ main() { # {{{1
         pkgs[$i]="${pkg}@${version}"
     done
     koopa_dl 'Packages' "${pkgs[*]}"
-    "${app[npm2]}" install -g "${pkgs[@]}" &>/dev/null
+    "${app[npm2]}" install -g "${pkgs[@]}" 2>&1
     return 0
 }

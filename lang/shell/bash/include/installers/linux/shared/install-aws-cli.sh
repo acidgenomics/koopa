@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve support for installing pinned version.
-# FIXME Need to add support for macOS install.
-
 main() { # {{{1
     # """
     # Install AWS CLI binary.

@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This needs scons to be installed first.
-
 main() { # {{{1
     # """
     # Install Apache Serf.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-10.
     #
     # Required by subversion for HTTPS connections.
     #
@@ -16,7 +14,7 @@ main() { # {{{1
     # """
     local app dict scons_args
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'apr' 'apr-util' 'openssl'
+    koopa_activate_opt_prefix 'apr' 'apr-util' 'openssl' 'scons'
     declare -A app=(
         [patch]="$(koopa_locate_patch)"
         [scons]="$(koopa_locate_scons)"
