@@ -813,8 +813,6 @@ koopa_uninstall_gnupg() { # {{{3
         "$@"
 }
 
-
-
 # gnutls ------------------------------------------------------------------ {{{2
 
 koopa_install_gnutls() { # {{{1
@@ -823,23 +821,6 @@ koopa_install_gnutls() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gnutls.rb
     # - https://github.com/conda-forge/gnutls-feedstock
     # """
-    # FIXME Installing this is super annoying on macOS.
-    # https://stackoverflow.com/questions/66973381/cant-build-gnutls-undefined-reference-to-gmp
-    # https://gist.github.com/morgant/1753095
-    # > export CFLAGS='-m64'
-    # > export CXXFLAGS='-m64'
-        #--disable-anon-authentication \
-        #--disable-cxx \
-        #--disable-doc \
-        #--disable-dtls-srtp-support \
-        #--disable-heartbeat-support \
-        #--disable-openssl-compatibility \
-        #--disable-psk-authentication \
-        #--disable-srp-authentication \
-        #--with-included-libtasn1 \
-        #--with-included-unistring \
-        #--without-p11-kit \
-        #--without-tpm \
     koopa_install_app \
         --activate-opt='gmp' \
         --activate-opt='nettle' \
