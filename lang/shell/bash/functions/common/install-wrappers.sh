@@ -835,6 +835,9 @@ koopa_uninstall_gnupg() { # {{{3
 
 koopa_install_gnutls() { # {{{1
     # """
+    # NOTE This is failing to build on macOS due to failure to properly detect
+    # gmp (gmp.h file).
+    #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gnutls.rb
     # - https://github.com/conda-forge/gnutls-feedstock
