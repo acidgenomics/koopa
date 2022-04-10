@@ -1058,6 +1058,20 @@ koopa_uninstall_libevent() { # {{{3
         "$@"
 }
 
+# libtiff ----------------------------------------------------------------- {{{2
+
+koopa_install_libtiff() { # {{{3
+    koopa_install_app \
+        --name='libtiff' \
+        "$@"
+}
+
+koopa_uninstall_libtiff() { # {{{3
+    koopa_uninstall_app \
+        --name='libtiff' \
+        "$@"
+}
+
 # libtool ----------------------------------------------------------------- {{{2
 
 koopa_install_libtool() { # {{{3
