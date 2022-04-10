@@ -668,6 +668,10 @@ koopa_locate_salmon() { # {{{1
     koopa_locate_conda_app 'salmon'
 }
 
+koopa_locate_scons() { # {{{1
+    koopa_locate_app 'scons'
+}
+
 koopa_locate_scp() { # {{{1
     koopa_locate_app \
         --app-name='scp' \
