@@ -200,6 +200,7 @@ __koopa_complete() { # {{{1
                         'vim'
                         'wget'
                         'xz'
+                        'zlib'
                         'zsh'
                     )
                     if koopa_is_linux
