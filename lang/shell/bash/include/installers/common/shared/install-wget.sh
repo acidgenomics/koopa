@@ -18,10 +18,10 @@ main() { # {{{1
         '--quiet'
     )
     pkgs=(
+        # > 'gnutls'
         'autoconf'
         'automake'
         'gettext'
-        'gnutls'
         'libidn2'
         'openssl'
         'pcre2'
@@ -35,6 +35,8 @@ main() { # {{{1
         '--disable-debug'
         '--without-included-regex'
         '--without-libpsl'
+        # Use OpenSSL instead of GnuTLS, which is annoying to compile.
+        '--with-openssl'
     )
     koopa_install_gnu_app \
         "${install_args[@]}" \

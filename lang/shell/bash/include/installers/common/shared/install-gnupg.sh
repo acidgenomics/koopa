@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add fix for gnutls version:
-# https://gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.4.tar.xz
-
-# FIXME Now trying:
-# https://gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.4.tar.bz2
-
 main() { # {{{1
     # """
     # Install GnuPG.
@@ -32,7 +26,6 @@ main() { # {{{1
     case "${dict[version]}" in
         '2.3.4')
             # 2022-03-29.
-            dict[gnutls_version]='3.7.4'          # 2022-03-17
             dict[libassuan_version]='2.5.5'       # 2021-03-22
             dict[libgcrypt_version]='1.10.1'      # 2022-03-28
             dict[libgpg_error_version]='1.44'     # 2022-01-27
@@ -166,33 +159,6 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         '--quiet'
     )
-    # FIXME Installing this is super annoying on macOS.
-    # https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gnutls.rb
-    # https://stackoverflow.com/questions/66973381/cant-build-gnutls-undefined-reference-to-gmp
-    # https://gist.github.com/morgant/1753095
-    # > export CFLAGS='-m64'
-    # > export CXXFLAGS='-m64'
-    koopa_install_app \
-        --activate-opt='gmp' \
-        --activate-opt='nettle' \
-        --disable-anon-authentication \
-        --disable-cxx \
-        --disable-doc \
-        --disable-dtls-srtp-support \
-        --disable-heartbeat-support \
-        --disable-openssl-compatibility \
-        --disable-psk-authentication \
-        --disable-srp-authentication \
-        --disable-static \
-        --enable-shared \
-        --installer='gnupg-gcrypt' \
-        --name='gnutls' \
-        --version="${dict[gnutls_version]}" \
-        --with-included-libtasn1 \
-        --with-included-unistring \
-        --without-p11-kit \
-        --without-tpm \
-        "${install_args[@]}"
     koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgpg-error' \
