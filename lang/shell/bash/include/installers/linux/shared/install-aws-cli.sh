@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to improve support for installing pinned version.
+# FIXME Need to add support for macOS install.
+
 main() { # {{{1
     # """
     # Install AWS CLI binary.
@@ -15,8 +18,10 @@ main() { # {{{1
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/userguide/
+    #     getting-started-install.html
+    # - https://docs.aws.amazon.com/cli/latest/userguide/
     #     install-cliv2-linux.html
-    # - https://github.com/aws/aws-cli
+    # - https://github.com/aws/aws-cli/tree/v2
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/awscli.rb
     # """
     local dict
