@@ -653,6 +653,22 @@ koopa_uninstall_fish() { # {{{3
         "$@"
 }
 
+# fltk -------------------------------------------------------------------- {{{2
+
+koopa_install_fltk() { # {{{3
+    koopa_install_app \
+        --name-fancy='FLTK' \
+        --name='fltk' \
+        "$@"
+}
+
+koopa_uninstall_fltk() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='FLTK' \
+        --name='fltk' \
+        "$@"
+}
+
 # fzf --------------------------------------------------------------------- {{{2
 
 koopa_install_fzf() { # {{{3

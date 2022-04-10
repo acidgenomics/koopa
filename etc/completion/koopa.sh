@@ -108,6 +108,7 @@ __koopa_complete() { # {{{1
                         'ensembl-perl-api'
                         'findutils'
                         'fish'
+                        'fltk'
                         'fzf'
                         'gawk'
                         'gcc'
