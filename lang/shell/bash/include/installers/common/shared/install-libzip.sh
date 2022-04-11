@@ -15,6 +15,7 @@ main() { # {{{
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix \
         'cmake' \
+        'nettle' \
         'openssl' \
         'perl' \
         'pkg-config' \

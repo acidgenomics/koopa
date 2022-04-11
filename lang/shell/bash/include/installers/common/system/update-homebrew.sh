@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden / rework this for cask-only macOS install.
+
 main() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
