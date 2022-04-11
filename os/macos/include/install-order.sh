@@ -48,13 +48,12 @@ fish
 perl
 gawk
 sqlite
-
-
-# Ubuntu machine:
 geos
 proj
 gdal
 
+
+# Ubuntu machine:
 rust
 rust-packages
 fltk
@@ -65,10 +64,10 @@ groff
 haskell-stack
 hdf5
 icu4c
+imagemagick
 
 
 # MacBook:
-imagemagick
 jpeg
 julia
 lesspipe
