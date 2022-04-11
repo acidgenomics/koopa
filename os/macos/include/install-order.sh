@@ -11,16 +11,15 @@
 koopa install dotfiles
 
 # We need to install AWS CLI to push builds to S3 bucket.
-koopa install aws-cli
-koopa system push-app-build 'aws-cli' '2.5.4'
+koopa install aws-cli --push
 
 koopa install pkg-config --push --reinstall
 koopa install tar --push --reinstall
 koopa install xz --push --reinstall
 koopa install gettext --push --reinstall
 
-# This is currently problematic on macOS.
-# > koopa install attr --push --reinstall
+# This is currently problematic on macOS but works on Ubuntu.
+koopa install attr --push --reinstall
 
 koopa install coreutils --push --reinstall
 koopa install findutils --push --reinstall
@@ -38,23 +37,26 @@ koopa install bash --push --reinstall
 koopa install python --push --reinstall
 koopa install git --push --reinstall
 koopa install rsync --push --reinstall
-
-# TODO list:
-ncurses
+koopa install ncurses --push --reinstall
+libevent
 tmux
+libtool
 apr
 apr-util
-cpufetch
+zsh
+pcre2
 fish
+
+
+# TODO list:
+cpufetch
 fltk
 gawk
 gdal
 geos
-
 gmp
 gnupg
 go
-go-packages
 groff
 haskell-stack
 hdf5
@@ -64,10 +66,8 @@ jpeg
 julia
 julia-packages
 lesspipe
-libevent
 libidn
 libtiff
-libtool
 libxml2
 libzip
 lua
@@ -81,7 +81,6 @@ nim-packages
 ninja
 node
 node-packages
-pcre2
 perl
 perl-packages
 proj
@@ -99,7 +98,6 @@ vim
 wget
 xz
 zlib
-zsh
 zstd
 
 koopa install chemacs --push --reinstall
