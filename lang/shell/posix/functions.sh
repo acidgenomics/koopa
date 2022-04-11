@@ -92,7 +92,7 @@ __koopa_remove_from_path_string() { # {{{1
 koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-11.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -111,6 +111,7 @@ koopa_activate_aliases() { # {{{1
     alias prelude-emacs='koopa_alias_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
     alias rbenv='koopa_alias_rbenv'
+    alias rg2='grep -E -R'
     alias sha256='koopa_alias_sha256'
     alias spacemacs='koopa_alias_spacemacs'
     alias spacevim='koopa_alias_spacevim'
