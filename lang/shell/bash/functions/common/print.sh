@@ -757,28 +757,3 @@ koopa_status_ok() { # {{{1
     # """
     __koopa_status 'OK' 'green' "$@"
 }
-
-koopa_stop() { # {{{1
-    # """
-    # Stop with an error message, and kill the parent process.
-    # @note Updated 2022-02-16.
-    #
-    # NOTE Using 'exit' here doesn't not reliably stop inside command substition
-    # and subshells, even with errexit and errtrace enabled.
-    #
-    # Defining here rather than in POSIX functions library, since we never want
-    # to stop inside of activation scripts. This can cause unwanted lockout.
-    #
-    # @seealso
-    # - https://unix.stackexchange.com/questions/256873/
-    # - https://stackoverflow.com/questions/28657676/
-    # - https://linuxize.com/post/kill-command-in-linux/
-    # - https://unix.stackexchange.com/questions/478281/
-    # - https://stackoverflow.com/questions/41370092/
-    # """
-    unset kill
-    __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
-    # > [[ -n "${!:-}" ]] && kill -SIGKILL "${!}" # subprocess.
-    # > [[ -n "${$:-}" ]] && kill -SIGKILL "${$}" # parent.
-    exit 1
-}
