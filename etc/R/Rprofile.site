@@ -1,5 +1,7 @@
 #!/usr/bin/env R
 
+## FIXME Consider enabling RSPM for macOS.
+
 #' Shared R profile configuration.
 #'
 #' @note Updated 2022-04-01.
