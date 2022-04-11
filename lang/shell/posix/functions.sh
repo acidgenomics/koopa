@@ -1168,6 +1168,7 @@ koopa_add_to_path_start() { # {{{1
     return 0
 }
 
+# FIXME Move this to bash library.
 koopa_add_to_pkg_config_path_end() { # {{{1
     # """
     # Force add to end of 'PKG_CONFIG_PATH'.
@@ -1186,6 +1187,7 @@ koopa_add_to_pkg_config_path_end() { # {{{1
     return 0
 }
 
+# FIXME Move this to bash library.
 koopa_add_to_pkg_config_path_start() { # {{{1
     # """
     # Force add to start of 'PKG_CONFIG_PATH'.
@@ -1204,6 +1206,7 @@ koopa_add_to_pkg_config_path_start() { # {{{1
     return 0
 }
 
+# FIXME Move this to bash library.
 koopa_add_to_pkg_config_path_end_2() { # {{{1
     # """
     # Force add to end of 'PKG_CONFIG_PATH' using 'pc_path' variable lookup from
@@ -1224,6 +1227,7 @@ koopa_add_to_pkg_config_path_end_2() { # {{{1
     return 0
 }
 
+# FIXME Move this to bash library.
 koopa_add_to_pkg_config_path_start_2() { # {{{1
     # """
     # Force add to start of 'PKG_CONFIG_PATH' using 'pc_path' variable
@@ -1665,19 +1669,6 @@ koopa_debian_os_codename() { # {{{1
     x="$(lsb_release -cs)"
     [ -n "$x" ] || return 1
     koopa_print "$x"
-    return 0
-}
-
-koopa_dl() { # {{{1
-    # """
-    # Definition list.
-    # @note Updated 2021-01-17.
-    # """
-    while [ "$#" -ge 2 ]
-    do
-        __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:-}"
-        shift 2
-    done
     return 0
 }
 
@@ -3625,15 +3616,6 @@ koopa_user_id() { # {{{1
     # @note Updated 2020-04-16.
     # """
     __koopa_id -u
-    return 0
-}
-
-koopa_warn() { # {{{1
-    # """
-    # Warning message.
-    # @note Updated 2022-02-24.
-    # """
-    __koopa_msg 'magenta-bold' 'magenta' '!!' "$@" >&2
     return 0
 }
 
