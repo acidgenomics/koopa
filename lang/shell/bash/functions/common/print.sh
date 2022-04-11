@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Rework these to use r-cli style inline markup syntax:
+# NOTE Rework these to use r-cli style inline markup syntax:
 # https://cli.r-lib.org/reference/inline-markup.html
 #
 # The default theme defines the following inline classes:
@@ -24,7 +24,85 @@
 # - 'val' for a generic "value".
 # - 'var' for a variable name.
 
-# FIXME Move this to Bash.
+__koopa_alert_process_start() { # {{{1
+    # """
+    # Inform the user about the start of a process.
+    # @note Updated 2022-04-08.
+    # """
+    local dict
+    declare -A dict
+    dict[word]="${1:?}"
+    shift 1
+    koopa_assert_has_args_le "$#" 3
+    dict[name]="${1:?}"
+    dict[version]=''
+    dict[prefix]=''
+    if [[ "$#" -eq 2 ]]
+    then
+        dict[prefix]="${2:?}"
+    elif [[ "$#" -eq 3 ]]
+    then
+        dict[version]="${2:?}"
+        dict[prefix]="${3:?}"
+    fi
+    if [[ -n "${dict[prefix]}" ]] && [[ -n "${dict[version]}" ]]
+    then
+        dict[out]="${dict[word]} '${dict[name]}' ${dict[version]} \
+at '${dict[prefix]}'."
+    elif [[ -n "${dict[prefix]}" ]]
+    then
+        dict[out]="${dict[word]} '${dict[name]}' at '${dict[prefix]}'."
+    else
+        dict[out]="${dict[word]} '${dict[name]}'."
+    fi
+    koopa_alert "${dict[out]}"
+    return 0
+}
+
+__koopa_alert_process_success() { # {{{1
+    # """
+    # Inform the user about the successful completion of a process.
+    # @note Updated 2022-03-09.
+    # """
+    local dict
+    declare -A dict
+    dict[word]="${1:?}"
+    shift 1
+    koopa_assert_has_args_le "$#" 2
+    dict[name]="${1:?}"
+    dict[prefix]="${2:-}"
+    if [[ -n "${dict[prefix]}" ]]
+    then
+        dict[out]="${dict[word]} of '${dict[name]}' at '${dict[prefix]}' \
+was successful."
+    else
+        dict[out]="${dict[word]} of '${dict[name]}' was successful."
+    fi
+    koopa_alert_success "${dict[out]}"
+    return 0
+}
+
+__koopa_status() { # {{{1
+    # """
+    # Koopa status.
+    # @note Updated 2021-11-18.
+    # """
+    local dict string
+    koopa_assert_has_args_ge "$#" 3
+    declare -A dict=(
+        [label]="$(printf '%10s\n' "${1:?}")"
+        [color]="$(__koopa_ansi_escape "${2:?}")"
+        [nocolor]="$(__koopa_ansi_escape 'nocolor')"
+    )
+    shift 2
+    for string in "$@"
+    do
+        string="${dict[color]}${dict[label]}${dict[nocolor]} | ${string}"
+        koopa_print "$string"
+    done
+    return 0
+}
+
 __koopa_ansi_escape() { # {{{1
     # """
     # ANSI escape codes.
@@ -140,8 +218,6 @@ __koopa_h() { # {{{1
     return 0
 }
 
-# FIXME Consider moving this to Bash, so we can do more fun things with the
-# formatter.
 __koopa_msg() { # {{{1
     # """
     # Standard message generator.
@@ -196,100 +272,6 @@ __koopa_print_ansi() { # {{{1
     return 0
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-__koopa_alert_process_start() { # {{{1
-    # """
-    # Inform the user about the start of a process.
-    # @note Updated 2022-04-08.
-    # """
-    local dict
-    declare -A dict
-    dict[word]="${1:?}"
-    shift 1
-    koopa_assert_has_args_le "$#" 3
-    dict[name]="${1:?}"
-    dict[version]=''
-    dict[prefix]=''
-    if [[ "$#" -eq 2 ]]
-    then
-        dict[prefix]="${2:?}"
-    elif [[ "$#" -eq 3 ]]
-    then
-        dict[version]="${2:?}"
-        dict[prefix]="${3:?}"
-    fi
-    if [[ -n "${dict[prefix]}" ]] && [[ -n "${dict[version]}" ]]
-    then
-        dict[out]="${dict[word]} '${dict[name]}' ${dict[version]} \
-at '${dict[prefix]}'."
-    elif [[ -n "${dict[prefix]}" ]]
-    then
-        dict[out]="${dict[word]} '${dict[name]}' at '${dict[prefix]}'."
-    else
-        dict[out]="${dict[word]} '${dict[name]}'."
-    fi
-    koopa_alert "${dict[out]}"
-    return 0
-}
-
-__koopa_alert_process_success() { # {{{1
-    # """
-    # Inform the user about the successful completion of a process.
-    # @note Updated 2022-03-09.
-    # """
-    local dict
-    declare -A dict
-    dict[word]="${1:?}"
-    shift 1
-    koopa_assert_has_args_le "$#" 2
-    dict[name]="${1:?}"
-    dict[prefix]="${2:-}"
-    if [[ -n "${dict[prefix]}" ]]
-    then
-        dict[out]="${dict[word]} of '${dict[name]}' at '${dict[prefix]}' \
-was successful."
-    else
-        dict[out]="${dict[word]} of '${dict[name]}' was successful."
-    fi
-    koopa_alert_success "${dict[out]}"
-    return 0
-}
-
-__koopa_status() { # {{{1
-    # """
-    # Koopa status.
-    # @note Updated 2021-11-18.
-    # """
-    local dict string
-    koopa_assert_has_args_ge "$#" 3
-    declare -A dict=(
-        [label]="$(printf '%10s\n' "${1:?}")"
-        [color]="$(__koopa_ansi_escape "${2:?}")"
-        [nocolor]="$(__koopa_ansi_escape 'nocolor')"
-    )
-    shift 2
-    for string in "$@"
-    do
-        string="${dict[color]}${dict[label]}${dict[nocolor]} | ${string}"
-        koopa_print "$string"
-    done
-    return 0
-}
-
 koopa_acid_emoji() { # {{{1
     # """
     # Acid Genomics test tube emoji.
@@ -297,21 +279,9 @@ koopa_acid_emoji() { # {{{1
     #
     # Previous versions defaulted to using the '🐢' turtle.
     # """
-    koopa_assert_has_no_args "$#"
     koopa_print '🧪'
 }
 
-
-
-
-
-
-
-
-
-
-
-# FIXME Move this to Bash library.
 koopa_alert() { # {{{1
     # """
     # Alert message.
@@ -321,87 +291,7 @@ koopa_alert() { # {{{1
     return 0
 }
 
-# FIXME Move this to Bash library.
-koopa_alert_info() { # {{{1
-    # """
-    # Alert info message.
-    # @note Updated 2021-03-30.
-    # """
-    __koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
-    return 0
-}
-
-# FIXME Move this to Bash library.
-koopa_alert_is_installed() { # {{{1
-    # """
-    # Alert the user that a program is installed.
-    # @note Updated 2021-06-03.
-    # """
-    local name prefix
-    name="${1:?}"
-    prefix="${2:-}"
-    x="${name} is installed"
-    if [ -n "$prefix" ]
-    then
-        x="${x} at '${prefix}'"
-    fi
-    x="${x}."
-    koopa_alert_note "$x"
-    return 0
-}
-
-# FIXME Move this to Bash library.
-koopa_alert_is_not_installed() { # {{{1
-    # """
-    # Alert the user that a program is not installed.
-    # @note Updated 2022-04-08.
-    # """
-    local name prefix
-    name="${1:?}"
-    prefix="${2:-}"
-    x="'${name}' not installed"
-    if [ -n "$prefix" ]
-    then
-        x="${x} at '${prefix}'"
-    fi
-    x="${x}."
-    koopa_alert_note "$x"
-    return 0
-}
-
-# FIXME Move this to Bash library.
-koopa_alert_note() { # {{{1
-    # """
-    # General note.
-    # @note Updated 2020-07-01.
-    # """
-    __koopa_msg 'yellow' 'default' '**' "$@"
-}
-
-# FIXME Move this to Bash library.
-koopa_alert_success() { # {{{1
-    # """
-    # Alert success message.
-    # @note Updated 2021-03-31.
-    # """
-    __koopa_msg 'green-bold' 'green' '✓' "$@"
-}
-
-
-
-
-
-
-
-
-
-
-
 koopa_alert_coffee_time() { # {{{1
-    # """
-    # Alert that it's coffee time.
-    # @note Updated 2021-03-31.
-    # """
     koopa_alert_note 'This step takes a while. Time for a coffee break! ☕'
 }
 
@@ -413,6 +303,15 @@ koopa_alert_configure_success() { # {{{1
     __koopa_alert_process_success 'Configuration' "$@"
 }
 
+koopa_alert_info() { # {{{1
+    # """
+    # Alert info message.
+    # @note Updated 2021-03-30.
+    # """
+    __koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
+    return 0
+}
+
 koopa_alert_install_start() { # {{{1
     __koopa_alert_process_start 'Installing' "$@"
 }
@@ -421,12 +320,64 @@ koopa_alert_install_success() { # {{{1
     __koopa_alert_process_success 'Installation' "$@"
 }
 
+koopa_alert_is_installed() { # {{{1
+    # """
+    # Alert the user that a program is installed.
+    # @note Updated 2022-04-11.
+    # """
+    local name prefix
+    name="${1:?}"
+    prefix="${2:-}"
+    x="${name} is installed"
+    if [[ -n "$prefix" ]]
+    then
+        x="${x} at '${prefix}'"
+    fi
+    x="${x}."
+    koopa_alert_note "$x"
+    return 0
+}
+
+koopa_alert_is_not_installed() { # {{{1
+    # """
+    # Alert the user that a program is not installed.
+    # @note Updated 2022-04-08.
+    # """
+    local name prefix
+    name="${1:?}"
+    prefix="${2:-}"
+    x="'${name}' not installed"
+    if [[ -n "$prefix" ]]
+    then
+        x="${x} at '${prefix}'"
+    fi
+    x="${x}."
+    koopa_alert_note "$x"
+    return 0
+}
+
+koopa_alert_note() { # {{{1
+    # """
+    # General note.
+    # @note Updated 2020-07-01.
+    # """
+    __koopa_msg 'yellow' 'default' '**' "$@"
+}
+
 koopa_alert_restart() { # {{{1
     # """
     # Alert the user that they should restart shell.
     # @note Updated 2021-06-02.
     # """
     koopa_alert_note 'Restart the shell.'
+}
+
+koopa_alert_success() { # {{{1
+    # """
+    # Alert success message.
+    # @note Updated 2021-03-31.
+    # """
+    __koopa_msg 'green-bold' 'green' '✓' "$@"
 }
 
 koopa_alert_uninstall_start() { # {{{1
@@ -443,6 +394,20 @@ koopa_alert_update_start() { # {{{1
 
 koopa_alert_update_success() { # {{{1
     __koopa_alert_process_success 'Update' "$@"
+}
+
+koopa_dl() { # {{{1
+    # """
+    # Definition list.
+    # @note Updated 2022-04-01.
+    # """
+    koopa_assert_has_args_ge "$#" 2
+    while [[ "$#" -ge 2 ]]
+    do
+        __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:-}"
+        shift 2
+    done
+    return 0
 }
 
 koopa_h1() { # {{{1
@@ -635,11 +600,6 @@ ${dict[msg]}${dict[suffix]}"
     return 0
 }
 
-
-
-
-
-
 koopa_print_black() { # {{{1
     __koopa_print_ansi 'black' "$@"
     return 0
@@ -730,10 +690,6 @@ koopa_print_white_bold() { # {{{1
     return 0
 }
 
-
-
-
-
 koopa_status_fail() { # {{{1
     # """
     # 'FAIL' status.
@@ -756,4 +712,22 @@ koopa_status_ok() { # {{{1
     # @note Updated 2021-06-03.
     # """
     __koopa_status 'OK' 'green' "$@"
+}
+
+koopa_stop() { # {{{1
+    # """
+    # Stop with an error message.
+    # @note Updated 2022-04-11.
+    # """
+    __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
+    exit 1
+}
+
+koopa_warn() { # {{{1
+    # """
+    # Warning message.
+    # @note Updated 2022-02-24.
+    # """
+    __koopa_msg 'magenta-bold' 'magenta' '!!' "$@" >&2
+    return 0
 }
