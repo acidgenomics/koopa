@@ -8,6 +8,7 @@ main() { # {{{1
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
     # - https://www.openssl.org/docs/man3.0/man7/migration_guide.html
+    # - https://stackoverflow.com/questions/2537271/
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/openssl@3.rb
     # """
     local app conf_args dict
@@ -30,21 +31,13 @@ main() { # {{{1
     koopa_cd "${dict[name]}-${dict[version]}"
     # https://wiki.openssl.org/index.php/
     #   Compilation_and_Installation#Configure_Options
+    # Check supported platforms with:
+    # > ./Configure LIST
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
-        'shared' # or 'no-shared'
+        '-fPIC' '-shared'
     )
-    # > case "${dict[link_in_make]}" in
-    # >     '0')
-    # >         conf_args+=('no-shared')
-    # >         ;;
-    # >     '1')
-    # >         conf_args+=('shared')
-    # >         ;;
-    # > esac
-    # Check supported platforms with:
-    # > ./Configure LIST
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" test
