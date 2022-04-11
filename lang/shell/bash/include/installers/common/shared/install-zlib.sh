@@ -28,7 +28,7 @@ main() { # {{{
         "--prefix=${dict[prefix]}"
         '--static'
     )
-    ./configure ${conf_args[@]}"
+    ./configure "${conf_args[@]}"
     "${app[make]}" install
     return 0
 }
