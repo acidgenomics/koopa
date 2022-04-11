@@ -105,7 +105,7 @@ koopa_test_find_files_by_shebang() { # {{{1
         # Avoid 'command substitution: ignored null byte in input' warning.
         shebang="$( \
             "${app[tr]}" --delete '\0' < "$file" \
-                | "${app[head]}" --lines=1 \
+                | "${app[head]}" -n 1 \
         )"
         [[ -n "$shebang" ]] || continue
         if koopa_str_detect_regex \

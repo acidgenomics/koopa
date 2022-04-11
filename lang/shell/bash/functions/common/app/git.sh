@@ -302,7 +302,7 @@ koopa_git_last_commit_remote() { # {{{1
         # shellcheck disable=SC2016
         x="$( \
             "${app[git]}" ls-remote --quiet "$url" "${dict[ref]}" \
-            | "${app[head]}" --lines=1 \
+            | "${app[head]}" -n 1 \
             | "${app[awk]}" '{ print $1 }' \
         )"
         [[ -n "$x" ]] || return 1

@@ -22,7 +22,7 @@ main() { # {{{1
         koopa_grep \
             --file='/etc/os-release' \
             --pattern='VERSION_ID=' \
-        | "${app[cut]}" --delimiter='=' --fields='2' \
+        | "${app[cut]}" -d '=' -f '2' \
     )"
     dict[repo_url]="https://dl.winehq.org/wine-builds/fedora/\
 ${dict[version]}/winehq.repo"

@@ -67,7 +67,7 @@ koopa_macos_xcode_clt_version() { # {{{1
     str="$( \
         "${app[pkgutil]}" --pkg-info='com.apple.pkg.CLTools_Executables' \
         | koopa_grep --pattern='^version:\s' --regex \
-        | "${app[cut]}" --delim=' ' --fields='2' \
+        | "${app[cut]}" -d ' ' -f '2' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

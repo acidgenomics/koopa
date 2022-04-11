@@ -28,7 +28,7 @@ koopa_macos_homebrew_uninstall_brewfile_casks() { # {{{1
             --file="${dict[brewfile]}" \
             --pattern='^cask\s"' \
             --regex \
-        | "${app[cut]}" --delimiter='"' --fields='2' \
+        | "${app[cut]}" -d '"' -f '2' \
     )"
     for cask in "${casks[@]}"
     do

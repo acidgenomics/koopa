@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Seeing these warnings on macOS, may need to reconfig:
+# libtool: warning: '/opt/koopa/opt/libtool/lib/libltdl.la' seems to be moved
+
 main() { # {{{1
     # """
     # Install ImageMagick.

@@ -338,7 +338,7 @@ koopa_is_file_system_case_sensitive() { # {{{1
             -maxdepth 1 \
             -mindepth 1 \
             -name "${dict[file1]}" \
-        | "${app[wc]}" --lines \
+        | "${app[wc]}" -l \
     )"
     koopa_rm "${dict[tmp_stem]}"*
     [[ "${dict[count]}" -eq 2 ]]

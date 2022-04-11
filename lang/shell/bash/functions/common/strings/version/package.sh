@@ -23,7 +23,7 @@ koopa_github_latest_release() { # {{{1
         dict[str]="$( \
             koopa_parse_url "${dict[url]}" \
                 | koopa_grep --pattern='"tag_name":' \
-                | "${app[cut]}" --delimiter='"' --fields='4' \
+                | "${app[cut]}" -d '"' -f '4' \
                 | "${app[sed]}" 's/^v//' \
         )"
         [[ -n "${dict[str]}" ]] || return 1
@@ -125,7 +125,7 @@ koopa_python_package_version() { # {{{1
         dict[str]="$( \
             "${app[python]}" -m pip show "${dict[pkg]}" \
             | koopa_grep --pattern='^Version:' --regex \
-            | "${app[cut]}" --delimiter=' ' --fields='2' \
+            | "${app[cut]}" -d ' ' -f '2' \
         )"
         [[ -n "${dict[str]}" ]] || return 1
         koopa_print "${dict[str]}"

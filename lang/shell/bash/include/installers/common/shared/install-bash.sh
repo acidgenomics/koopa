@@ -37,7 +37,7 @@ main() { # {{{1
 ${dict[name]}-${dict[maj_min_ver]}-patches"
     dict[n_patches]="$( \
         koopa_major_minor_patch_version "${dict[version]}" \
-        | "${app[cut]}" --delimiter='.' --fields='3' \
+        | "${app[cut]}" -d '.' -f '3' \
     )"
     dict[file]="${dict[name]}-${dict[maj_min_ver]}.tar.gz"
     dict[url]="${dict[gnu_mirror]}/${dict[name]}/${dict[file]}"

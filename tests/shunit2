@@ -44,7 +44,7 @@ main() { # {{{1
         fi
         readarray -t tests <<< "$( \
             declare -F \
-                | "${app[cut]}" --delimiter=' ' --fields='3' \
+                | "${app[cut]}" -d ' ' -f '3' \
                 | koopa_grep --pattern='^test_' --regex \
                 | "${app[sort]}" \
         )"

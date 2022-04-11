@@ -182,7 +182,7 @@ koopa_extract_version() { # {{{1
                 --pattern="${dict[pattern]}" \
                 --regex \
                 --string="$arg" \
-            | "${app[head]}" --lines=1 \
+            | "${app[head]}" -n 1 \
         )"
         [[ -n "$str" ]] || return 1
         koopa_print "$str"

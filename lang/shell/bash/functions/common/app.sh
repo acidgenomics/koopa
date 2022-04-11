@@ -159,7 +159,7 @@ koopa_find_app_version() { # {{{1
             --prefix="${dict[prefix]}" \
             --type='d' \
         | "${app[sort]}" \
-        | "${app[tail]}" --lines=1 \
+        | "${app[tail]}" -n 1 \
     )"
     [[ -d "${dict[hit]}" ]] || return 1
     dict[hit_bn]="$(koopa_basename "${dict[hit]}")"

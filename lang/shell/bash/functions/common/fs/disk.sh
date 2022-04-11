@@ -19,14 +19,14 @@ koopa_disk_gb_free() { # {{{1
     )
     str="$( \
         "${app[df]}" --block-size='G' "$disk" \
-            | "${app[head]}" --lines=2 \
-            | "${app[sed]}" --quiet '2p' \
+            | "${app[head]}" -n 2 \
+            | "${app[sed]}" -n '2p' \
             | koopa_grep \
                 --only-matching \
                 --pattern='(\b[.0-9]+G\b)' \
                 --regex \
-            | "${app[head]}" --lines=3 \
-            | "${app[sed]}" --quiet '3p' \
+            | "${app[head]}" -n 3 \
+            | "${app[sed]}" -n '3p' \
             | "${app[sed]}" 's/G$//' \
     )"
     [[ -n "$str" ]] || return 1
@@ -50,13 +50,13 @@ koopa_disk_gb_total() { # {{{1
     )
     str="$( \
         "${app[df]}" --block-size='G' "$disk" \
-            | "${app[head]}" --lines=2 \
-            | "${app[sed]}" --quiet '2p' \
+            | "${app[head]}" -n 2 \
+            | "${app[sed]}" -n '2p' \
             | koopa_grep \
                 --only-matching \
                 --pattern='(\b[.0-9]+G\b)' \
                 --regex \
-            | "${app[head]}" --lines=1 \
+            | "${app[head]}" -n 1 \
             | "${app[sed]}" 's/G$//' \
     )"
     [[ -n "$str" ]] || return 1
@@ -80,14 +80,14 @@ koopa_disk_gb_used() { # {{{1
     )
     str="$( \
         "${app[df]}" --block-size='G' "$disk" \
-            | "${app[head]}" --lines=2 \
-            | "${app[sed]}" --quiet '2p' \
+            | "${app[head]}" -n 2 \
+            | "${app[sed]}" -n '2p' \
             | koopa_grep \
                 --only-matching \
                 --pattern='(\b[.0-9]+G\b)' \
                 --regex \
-            | "${app[head]}" --lines=2 \
-            | "${app[sed]}" --quiet '2p' \
+            | "${app[head]}" -n 2 \
+            | "${app[sed]}" -n '2p' \
             | "${app[sed]}" 's/G$//' \
     )"
     [[ -n "$str" ]] || return 1
@@ -126,13 +126,13 @@ koopa_disk_pct_used() { # {{{1
     )
     str="$( \
         "${app[df]}" "$disk" \
-            | "${app[head]}" --lines=2 \
-            | "${app[sed]}" --quiet '2p' \
+            | "${app[head]}" -n 2 \
+            | "${app[sed]}" -n '2p' \
             | koopa_grep \
                 --only-matching \
                 --pattern='([.0-9]+%)' \
                 --regex \
-            | "${app[head]}" --lines=1 \
+            | "${app[head]}" -n 1 \
             | "${app[sed]}" 's/%$//' \
     )"
     [[ -n "$str" ]] || return 1

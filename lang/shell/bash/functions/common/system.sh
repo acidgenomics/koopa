@@ -69,7 +69,7 @@ koopa_help() { # {{{1
         [man_file]="${1:?}"
     )
     koopa_assert_is_file "${dict[man_file]}"
-    "${app[head]}" --lines=10 "${dict[man_file]}" \
+    "${app[head]}" -n 10 "${dict[man_file]}" \
         | koopa_str_detect_fixed --pattern='.TH ' \
         || return 1
     "${app[man]}" "${dict[man_file]}"
@@ -587,7 +587,7 @@ koopa_view_latest_tmp_log_file() { # {{{1
             --prefix="${dict[tmp_dir]}" \
             --sort \
             --type='f' \
-        | "${app[tail]}" --lines=1 \
+        | "${app[tail]}" -n 1 \
     )"
     if [[ ! -f "${dict[log_file]}" ]]
     then
