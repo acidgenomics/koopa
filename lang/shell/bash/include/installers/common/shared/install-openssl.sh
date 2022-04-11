@@ -38,6 +38,7 @@ main() { # {{{1
     # >         conf_args+=('shared')
     # >         ;;
     # > esac
+    unset -v OPENSSL_LOCAL_CONFIG_DIR
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
