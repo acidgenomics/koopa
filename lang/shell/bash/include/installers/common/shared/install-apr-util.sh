@@ -11,8 +11,7 @@ main() { #{{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'apr'
-    koopa_is_macos && koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'apr' 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -32,12 +31,9 @@ main() { #{{{1
         "--prefix=${dict[prefix]}"
         "--with-apr=${dict[opt_prefix]}/apr/bin/apr-1-config"
         '--with-crypto'
+        "--with-openssl=${dict[opt_prefix]}/openssl"
         '--without-pgsql'
     )
-    if koopa_is_macos
-    then
-        "--with-openssl=${dict[opt_prefix]}/openssl"
-    fi
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

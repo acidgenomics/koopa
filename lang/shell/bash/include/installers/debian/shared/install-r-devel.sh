@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-11.
     #
     # @seealso
     # - https://hub.docker.com/r/rocker/r-devel/dockerfile
@@ -15,6 +15,7 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'openjdk'
     if koopa_is_admin
     then
         koopa_debian_apt_install \
@@ -89,7 +90,6 @@ main() { # {{{1
     koopa_cd "${dict[rtop]}"
     export TZ='America/New_York'
     unset -v R_HOME
-    koopa_activate_opt_prefix 'openjdk'
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
