@@ -1749,19 +1749,35 @@ koopa_uninstall_python() { # {{{3
 
 # python-packages --------------------------------------------------------- {{{2
 
-# FIXME Need to include links here.
 koopa_install_python_packages() { # {{{3
     koopa_install_app_packages \
+        --link-in-bin='bin/black' \
+        --link-in-bin='bin/bpytop' \
+        --link-in-bin='bin/flake8' \
+        --link-in-bin='bin/glances' \
+        --link-in-bin='bin/pipx' \
+        --link-in-bin='bin/pyflakes' \
+        --link-in-bin='bin/pylint' \
+        --link-in-bin='bin/pytest' \
+        --link-in-bin='bin/ranger' \
         --name-fancy='Python' \
         --name='python' \
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_python_packages() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Python packages' \
         --name='python-packages' \
+        --unlink-in-bin='black' \
+        --unlink-in-bin='bpytop' \
+        --unlink-in-bin='flake8' \
+        --unlink-in-bin='glances' \
+        --unlink-in-bin='pipx' \
+        --unlink-in-bin='pyflakes' \
+        --unlink-in-bin='pylint' \
+        --unlink-in-bin='pytest' \
+        --unlink-in-bin='ranger' \
         "$@"
 }
 
