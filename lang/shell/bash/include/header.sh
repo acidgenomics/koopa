@@ -26,6 +26,24 @@ __koopa_bash_source_dir() { # {{{1
     return 0
 }
 
+__koopa_cleanup() {
+    # """
+    # Kill all processes whose parent is this process.
+    # @note Updated 2022-04-11.
+    #
+    # @seealso
+    # - https://linuxize.com/post/kill-command-in-linux/
+    # - https://stackoverflow.com/questions/28657676/
+    # - https://stackoverflow.com/questions/41370092/
+    # - https://unix.stackexchange.com/questions/222307/
+    # - https://unix.stackexchange.com/questions/240723/
+    # - https://unix.stackexchange.com/questions/256873/
+    # - https://unix.stackexchange.com/questions/478281/
+    # - https://www.networkworld.com/article/3174440/
+    # """
+    pkill -P "${$}"
+}
+
 __koopa_is_installed() { # {{{1
     # """
     # Are all of the requested programs installed?
@@ -149,31 +167,14 @@ __koopa_bash_header() { # {{{1
     fi
     if [[ "${dict[activate]}" -eq 0 ]]
     then
-        # Kill child jobs on script exit.
-        #
-        # @seealso
-        # - https://unix.stackexchange.com/questions/256873/
-        # - https://stackoverflow.com/questions/28657676/
-        # - https://linuxize.com/post/kill-command-in-linux/
-        # - https://unix.stackexchange.com/questions/478281/
-        # - https://stackoverflow.com/questions/41370092/
-        # - https://unix.stackexchange.com/questions/222307
-        # - https://www.networkworld.com/article/3174440/
-        koopa_cleanup() {
-            # """
-            # Kill all processes whose parent is this process.
-            # @note Updated 2022-04-11.
-            # """
-            pkill -P "${$}"
-        }
         for sig in INT QUIT HUP TERM
         do
             trap "
-                koopa_cleanup
-                trap - $sig EXIT
-                kill -s $sig "'"$$"' "$sig"
+                __koopa_cleanup
+                trap - ${sig} EXIT
+                kill -s ${sig} "'"$$"' "${sig}"
         done
-        trap koopa_cleanup EXIT
+        trap __koopa_cleanup EXIT
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
