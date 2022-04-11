@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Relage the usage of '--sudo' here when installed from source.
+# FIXME Need to configure corresponding Bioconductor version here automatically.
+# FIXME Need to create a mapping of supported versions here.
 
 koopa_configure_r() { # {{{1
     # """
