@@ -69,9 +69,6 @@ ${dict[file]}"
         app[otool]="$(koopa_macos_locate_otool)"
         "${app[otool]}" -L "${app[python]}"
     fi
-    # Ensure that 'RPATH' is configured correctly.
-    "${app[python]}" -m sysconfig \
-        | koopa_grep --pattern='RPATH'
     koopa_configure_python "${app[python]}"
     return 0
 }
