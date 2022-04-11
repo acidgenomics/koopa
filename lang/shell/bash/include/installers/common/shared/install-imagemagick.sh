@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install ImageMagick.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-04-11.
     #
     # @seealso
     # - https://imagemagick.org/script/install-source.php
@@ -12,6 +12,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'libtool'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
