@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Do we need to include lib64 here?
+# FIXME Also need to locate 'lib64/pkgconfig'.
+# FIXME Rethink the assignment here.
+
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-11.
     #
     # @examples
     # > koopa_activate_opt_prefix 'geos' 'proj' 'gdal'
@@ -21,33 +25,51 @@ koopa_activate_opt_prefix() { # {{{1
             koopa_stop "'${dict[prefix]}' is empty."
         fi
         koopa_activate_prefix "$prefix"
+        # CPPFLAGS.
+        cppflags="${CPPFLAGS:-}"
         if [[ -d "${prefix}/include" ]]
         then
             include="-I${prefix}/include"
-            cppflags="${CPPFLAGS:-}"
             if [[ -n "$cppflags" ]]
             then
                 cppflags="${cppflags} $include"
             else
                 cppflags="$include"
             fi
-            CPPFLAGS="$cppflags"
-            export CPPFLAGS
         fi
+        # LDFLAGS.
+        ldflags="${LDFLAGS:-}"
         if [[ -d "${prefix}/lib" ]]
         then
             include="-L${prefix}/lib -Wl,-rpath,${prefix}/lib"
-            ldflags="${LDFLAGS:-}"
             if [[ -n "$ldflags" ]]
             then
                 ldflags="${ldflags} ${include}"
             else
                 ldflags="$include"
             fi
-            LDFLAGS="$ldflags"
-            export LDFLAGS
+        fi
+        if [[ -d "${prefix}/lib64" ]]
+        then
+            include="-L${prefix}/lib64 -Wl,-rpath,${prefix}/lib64"
+            if [[ -n "$ldflags" ]]
+            then
+                ldflags="${ldflags} ${include}"
+            else
+                ldflags="$include"
+            fi
         fi
     done
+    if [[ -n "$cppflags" ]]
+    then
+        CPPFLAGS="$cppflags"
+        export CPPFLAGS
+    fi
+    if [[ -n "$ldflags" ]]
+    then
+        LDFLAGS="$ldflags"
+        export LDFLAGS
+    fi
     return 0
 }
 
