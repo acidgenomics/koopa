@@ -3,13 +3,12 @@
 main() { # {{{1
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-11.
     # """
     local app conf_args dict
     koopa_activate_opt_prefix \
         'autoconf' \
         'automake' \
-        'gnupg' \
         'pkg-config'
     declare -A app=(
         [gpg]='/usr/bin/gpg'
@@ -21,9 +20,15 @@ main() { # {{{1
         [gcrypt_url]="$(koopa_gcrypt_url)"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    if [[ -d "${dict[opt_prefix]}/gnupg" ]] &&
+        ! koopa_is_empty_dir "${dict[opt_prefix]}/gnupg" ]]
+    then
+        koopa_activate_opt_prefix 'gnupg'
+    fi
     dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
     case "${dict[name]}" in
         'gnutls')
