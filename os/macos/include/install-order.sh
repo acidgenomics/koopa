@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Last updated 2022-04-10.
+# Last updated 2022-04-11.
 
 # Recipes that we need to install:
 # - libtasn1
@@ -9,18 +9,14 @@
 
 # First configure the shell to load koopa.
 koopa install dotfiles
-
 # We need to install AWS CLI to push builds to S3 bucket.
 koopa install aws-cli --push
-
 koopa install pkg-config --push --reinstall
 koopa install tar --push --reinstall
 koopa install xz --push --reinstall
 koopa install gettext --push --reinstall
-
 # This is currently problematic on macOS but works on Ubuntu.
 koopa install attr --push --reinstall
-
 koopa install coreutils --push --reinstall
 koopa install findutils --push --reinstall
 koopa install autoconf --push --reinstall
@@ -30,11 +26,13 @@ koopa install openssl --push --reinstall
 koopa install cmake --push --reinstall
 koopa install grep --push --reinstall
 koopa install curl --push --reinstall
-
 # Ensure we switch back to system shell before installing.
 koopa install bash --push --reinstall
-
 koopa install zsh --push --reinstall
+
+
+
+# Ubuntu is here:
 koopa install python --push --reinstall
 koopa install git --push --reinstall
 koopa install rsync --push --reinstall
