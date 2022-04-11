@@ -24,7 +24,6 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    # FIXME Need to create directory or set '--allow-missing' here.
     dict[vim_rpath]="${dict[prefix]}/lib"
     dict[python_rpath]="${dict[opt_prefix]}/python/lib"
     koopa_assert_is_dir "${dict[python_rpath]}"
@@ -60,7 +59,7 @@ archive/${dict[file]}"
         )
     fi
     koopa_add_to_ldflags_start \
-        --allow-missing \
+        --rpath-only \
         "${dict[python_rpath]}" \
         "${dict[vim_rpath]}"
     ./configure "${conf_args[@]}"
