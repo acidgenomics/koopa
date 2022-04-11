@@ -44,10 +44,11 @@ __koopa_exit_trap() {
     # """
     if [[ "${?}" -gt 0 ]]
     then
-        if __koopa_is_installed 'ps'
-        then
-            ps -p "${$}"
-        fi
+        # Useful for debugging.
+        # > if __koopa_is_installed 'ps'
+        # > then
+        # >     ps -p "${$}"
+        # > fi
         pkill -P "${$}"
     fi
     return 0
