@@ -69,19 +69,21 @@ imagemagick
 jpeg
 julia
 lesspipe
-
-
-# MacBook:
 libidn
 libtiff
 libxml2
-libzip
+
+
+# MacBook:
+nettle
+gnutls (libtasn1)
+libzip (maybe require gnutls here)
+
 lua
 luarocks
 meson
 neofetch
 neovim
-nettle
 nim
 ninja
 node
@@ -104,7 +106,6 @@ perl-packages
 
 koopa install chemacs --push --reinstall
 
-
 # Don't push these:
 conda
 anaconda
@@ -113,6 +114,5 @@ python-packages
 r-packages
 ruby-packages
 
+# > openssh (requires ldns)
 # > gcc
-# > gnutls
-# > openssh
