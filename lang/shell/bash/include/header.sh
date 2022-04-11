@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this in favor of using function cache.
-# FIXME Add support for caching of all functions in a single flat file,
-# with comments removed.
-# FIXME Cache file generator should return sorted though...
-
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
