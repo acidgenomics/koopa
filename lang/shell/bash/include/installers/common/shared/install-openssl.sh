@@ -33,15 +33,16 @@ main() { # {{{1
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
+        'shared' # or 'no-shared'
     )
-    case "${dict[link_in_make]}" in
-        '0')
-            conf_args+=('no-shared')
-            ;;
-        '1')
-            conf_args+=('shared')
-            ;;
-    esac
+    # > case "${dict[link_in_make]}" in
+    # >     '0')
+    # >         conf_args+=('no-shared')
+    # >         ;;
+    # >     '1')
+    # >         conf_args+=('shared')
+    # >         ;;
+    # > esac
     # Check supported platforms with:
     # > ./Configure LIST
     ./config "${conf_args[@]}"
