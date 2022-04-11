@@ -288,6 +288,44 @@ koopa_source_dir() { # {{{1
     return 0
 }
 
+koopa_stop() { # {{{1
+    # """
+    # Stop with an error message, and kill the parent process.
+    # @note Updated 2022-04-11.
+    #
+    # NOTE Using 'exit' here doesn't not reliably stop inside command substition
+    # and subshells, even with errexit and errtrace enabled.
+    #
+    # Defining here rather than in POSIX functions library, since we never want
+    # to stop inside of activation scripts. This can cause unwanted lockout.
+    #
+    # @seealso
+    # - https://unix.stackexchange.com/questions/256873/
+    # - https://stackoverflow.com/questions/28657676/
+    # - https://linuxize.com/post/kill-command-in-linux/
+    # - https://unix.stackexchange.com/questions/478281/
+    # - https://stackoverflow.com/questions/41370092/
+    # """
+    unset kill
+    __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
+    # Kill the current subprocess, when applicable.
+    if [[ -n "${!:-}" ]]
+    then
+        kill -SIGKILL "${!}"
+    fi
+    # Kill the parent process.
+    if [[ -n "${$:-}" ]]
+    then
+        kill -SIGKILL "${$}"
+    fi
+    # Kill the parent koopa process.
+    if [[ -n "${KOOPA_PROCESS_ID:-}" ]]
+    then
+        kill -SIGKILL "${KOOPA_PROCESS_ID:?}"
+    fi
+    exit 1
+}
+
 koopa_switch_to_develop() {  # {{{1
     # """
     # Switch koopa install to development version.
