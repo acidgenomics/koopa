@@ -50,7 +50,7 @@ __koopa_exit_trap() {
         fi
         pkill -P "${$}"
     fi
-    return 1
+    return 0
 }
 
 __koopa_is_installed() { # {{{1
