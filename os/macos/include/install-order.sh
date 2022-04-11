@@ -53,10 +53,11 @@ sqlite
 geos
 proj
 gdal
-
-# TODO list:
 rust
 rust-packages
+
+
+# TODO list:
 gmp
 gnupg
 go
