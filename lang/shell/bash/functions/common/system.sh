@@ -321,35 +321,10 @@ koopa_source_dir() { # {{{1
 
 koopa_stop() { # {{{1
     # """
-    # Stop with an error message, and kill the parent process.
+    # Stop with an error message.
     # @note Updated 2022-04-11.
-    #
-    # NOTE Using 'exit' here doesn't not reliably stop inside command substition
-    # and subshells, even with errexit and errtrace enabled.
-    #
-    # Defining here rather than in POSIX functions library, since we never want
-    # to stop inside of activation scripts. This can cause unwanted lockout.
-    #
-    # @seealso
-    # - https://unix.stackexchange.com/questions/256873/
-    # - https://stackoverflow.com/questions/28657676/
-    # - https://linuxize.com/post/kill-command-in-linux/
-    # - https://unix.stackexchange.com/questions/478281/
-    # - https://stackoverflow.com/questions/41370092/
-    # - https://unix.stackexchange.com/questions/222307
-    # - https://www.networkworld.com/article/3174440/
     # """
-    unset msg kill
-    msgs=("$@")
-    [[ -n "${!:-}" ]] && \
-        msgs+=("Subprocess: ${!}")
-    [[ -n "${$:-}" ]] && \
-        msgs+=("Parent process: ${$}")
-    __koopa_msg 'red-bold' 'red' '!! Error:' "${msgs[@]}" >&2
-    # Kill the current subprocess, when applicable.
-    [[ -n "${!:-}" ]] && kill -SIGHUP "${!}"
-    # Kill the parent process.
-    [[ -n "${$:-}" ]] && kill -SIGHUP "${$}"
+    __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
     exit 1
 }
 
