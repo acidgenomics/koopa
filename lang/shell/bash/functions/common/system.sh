@@ -341,25 +341,15 @@ koopa_stop() { # {{{1
     # """
     unset msg kill
     msgs=("$@")
-    [[ -n "${!:-}" ]] && msgs+=("${!}")
-    [[ -n "${$:-}" ]] && msgs+=("${$}")
-    [[ -n "${KOOPA_PROCESS_ID:-}" ]] && msgs+=("$KOOPA_PROCESS_ID")
+    [[ -n "${!:-}" ]] && \
+        msgs+=("Subprocess: ${!}")
+    [[ -n "${$:-}" ]] && \
+        msgs+=("Parent process: ${$}")
     __koopa_msg 'red-bold' 'red' '!! Error:' "${msgs[@]}" >&2
     # Kill the current subprocess, when applicable.
-    if [[ -n "${!:-}" ]]
-    then
-        kill -SIGINT "${!}"
-    fi
+    [[ -n "${!:-}" ]] && kill -SIGHUP "${!}"
     # Kill the parent process.
-    if [[ -n "${$:-}" ]]
-    then
-        kill -SIGINT "${$}"
-    fi
-    # Kill the parent koopa process.
-    if [[ -n "${KOOPA_PROCESS_ID:-}" ]]
-    then
-        kill -SIGINT "${KOOPA_PROCESS_ID:?}"
-    fi
+    [[ -n "${$:-}" ]] && kill -SIGHUP "${$}"
     exit 1
 }
 
