@@ -21,8 +21,10 @@ koopa install coreutils --push --reinstall
 koopa install findutils --push --reinstall
 koopa install autoconf --push --reinstall
 koopa install automake --push --reinstall
-koopa install make --push --reinstall
+koopa install zlib --push --reinstall
+# NOTE Consider skipping this on Linux.
 koopa install openssl --push --reinstall
+koopa install make --push --reinstall
 koopa install cmake --push --reinstall
 koopa install grep --push --reinstall
 koopa install curl --push --reinstall
