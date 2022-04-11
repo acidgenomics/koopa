@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to resolve this on macOS:
-# checking for ldns-config... no
-# checking for ldns support... no
-# configure: error: ** Incomplete or missing ldns libraries.
-
 main() { # {{{1
     # """
     # Install OpenSSH.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-11.
     #
     # @section Privilege separation:
     #
@@ -25,6 +20,7 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'ldns' # FIXME Need to add support.
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
