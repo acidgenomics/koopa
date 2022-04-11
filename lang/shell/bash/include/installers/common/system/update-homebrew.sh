@@ -47,7 +47,7 @@ main() { # {{{1
         koopa_brew_reset_core_repo
     fi
     "${app[brew]}" analytics off
-    "${app[brew]}" update || true
+    "${app[brew]}" update
     if koopa_is_macos
     then
         koopa_macos_brew_upgrade_casks
