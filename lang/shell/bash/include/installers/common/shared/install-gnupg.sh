@@ -176,12 +176,15 @@ main() { # {{{1
         --name='npth' \
         --version="${dict[npth_version]}" \
         "${install_args[@]}"
-    koopa_install_app \
-        --activate-opt='fltk' \
-        --activate-opt='ncurses' \
-        --name='pinentry' \
-        --version="${dict[pinentry_version]}" \
-        "${install_args[@]}"
+    if ! koopa_is_macos
+    then
+        koopa_install_app \
+            --activate-opt='fltk' \
+            --activate-opt='ncurses' \
+            --name='pinentry' \
+            --version="${dict[pinentry_version]}" \
+            "${install_args[@]}"
+    fi
     koopa_install_app \
         --name='gnupg' \
         --version="${dict[version]}" \
