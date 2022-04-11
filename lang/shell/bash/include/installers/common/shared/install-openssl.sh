@@ -40,7 +40,7 @@ main() { # {{{1
         "--openssldir=${dict[prefix]}"
         'no-shared'
     )
-    export CPPFLAGS="-fPIC ${CPPFLAGS:-}"
+    export CPPFLAGS="${CPPFLAGS:-} -fPIC"
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" test
