@@ -339,8 +339,12 @@ koopa_stop() { # {{{1
     # - https://unix.stackexchange.com/questions/222307
     # - https://www.networkworld.com/article/3174440/
     # """
-    unset kill
-    __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
+    unset msg kill
+    msgs=("$@")
+    [[ -n "${!:-}" ]] && msgs+=("${!}")
+    [[ -n "${$:-}" ]] && msgs+=("${$}")
+    [[ -n "${KOOPA_PROCESS_ID:-}" ]] && msgs+=("$KOOPA_PROCESS_ID")
+    __koopa_msg 'red-bold' 'red' '!! Error:' "${msgs[@]}" >&2
     # Kill the current subprocess, when applicable.
     if [[ -n "${!:-}" ]]
     then
