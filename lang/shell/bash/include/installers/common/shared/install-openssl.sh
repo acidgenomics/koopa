@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install OpenSSL.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-10.
     #
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
@@ -30,14 +30,16 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
     )
-    case "${dict[link_in_make]}" in
-        '0')
-            conf_args+=('no-shared')
-            ;;
-        '1')
-            conf_args+=('shared')
-            ;;
-    esac
+    # This step may be necessary on macOS. Current binary was built with these
+    # settings enabled. But it appears to be problematic on Linux.
+    # > case "${dict[link_in_make]}" in
+    # >     '0')
+    # >         conf_args+=('no-shared')
+    # >         ;;
+    # >     '1')
+    # >         conf_args+=('shared')
+    # >         ;;
+    # > esac
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
