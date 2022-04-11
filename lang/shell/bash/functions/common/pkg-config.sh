@@ -80,6 +80,7 @@ koopa_add_to_ldflags_start() { # {{{1
     for dir in "$@"
     do
         local str
+        [[ -d "$dir" ]] || continue
         str="-L${dir} -Wl,-rpath,${dir}"
         if [[ -n "$LDFLAGS" ]]
         then
