@@ -34,6 +34,7 @@ koopa install curl --push --reinstall
 # Ensure we switch back to system shell before installing.
 koopa install bash --push --reinstall
 
+koopa install zsh --push --reinstall
 koopa install python --push --reinstall
 koopa install git --push --reinstall
 koopa install rsync --push --reinstall
@@ -43,17 +44,19 @@ tmux
 libtool
 apr
 apr-util
-zsh
 pcre2
 fish
 perl
 fltk
 gawk
+sqlite
+geos
 
 # TODO list:
-geos
 proj
 gdal
+rust
+rust-packages
 gmp
 gnupg
 go
@@ -81,11 +84,9 @@ ninja
 node
 rsync
 ruby
-rust
 scons
 sed
 serf
-sqlite
 subversion
 tree
 udunits
@@ -103,7 +104,7 @@ koopa install chemacs --push --reinstall
 
 python-packages
 ruby-packages
-rust-packages
+
 
 # Don't push these:
 conda
