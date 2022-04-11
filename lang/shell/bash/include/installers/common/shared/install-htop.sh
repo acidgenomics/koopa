@@ -3,13 +3,11 @@
 main() { # {{{1
     # """
     # Install htop.
-    # @note Updated 2021-12-07.
-    #
-    # Repo transferred from https://github.com/hishamhm/htop to
-    # https://github.com/htop-dev/htop in 2020-08.
+    # @note Updated 2022-04-11.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'autoconf' 'automake' 'python'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -22,13 +20,6 @@ main() { # {{{1
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/${dict[name]}-dev/${dict[name]}/\
 archive/${dict[file]}"
-    if koopa_is_macos
-    then
-        koopa_activate_opt_prefix 'autoconf' 'automake'
-        koopa_macos_activate_python
-    else
-        koopa_activate_opt_prefix 'python'
-    fi
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
