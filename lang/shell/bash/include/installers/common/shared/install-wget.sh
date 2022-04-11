@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install wget.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-11.
     #
     # Use OpenSSL instead of GnuTLS, which is annoying to compile.
     #
@@ -23,10 +23,10 @@ main() { # {{{1
         'automake'
         'gettext'
         'libidn'
-        'openssl'
         'pcre2'
         'pkg-config'
     )
+    koopa_is_macos && pkgs+=('openssl')
     for pkg in "${pkgs[@]}"
     do
         install_args+=("--activate-opt=${pkg}")

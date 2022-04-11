@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Git.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-11.
     #
     # If system doesn't have gettext (msgfmt) installed:
     # Note that this doesn't work on Ubuntu 18 LTS.
@@ -19,7 +19,8 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'autoconf' 'openssl'
+    koopa_activate_opt_prefix 'autoconf'
+    koopa_is_macos && koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
         [openssl]="$(koopa_locate_openssl)"
