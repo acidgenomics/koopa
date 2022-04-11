@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This is causing interactive shell to close...
+# FIXME There's something about stop that is running wrong pkill here...
+
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
