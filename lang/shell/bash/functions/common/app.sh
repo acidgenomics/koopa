@@ -457,7 +457,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         # >     PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
-        if [[ -x '/usr/bin/pkg-config' ]]
+        if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
         then
             koopa_add_to_pkg_config_path_start_2 \
                 '/usr/bin/pkg-config'
@@ -1155,7 +1155,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
             PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
-        if [[ -x '/usr/bin/pkg-config' ]]
+        if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
         then
             koopa_add_to_pkg_config_path_start_2 \
                 '/usr/bin/pkg-config'
