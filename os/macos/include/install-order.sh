@@ -46,14 +46,14 @@ apr-util
 zsh
 pcre2
 fish
-
-
-# TODO list:
-cpufetch
+perl
 fltk
 gawk
-gdal
+
+# TODO list:
 geos
+proj
+gdal
 gmp
 gnupg
 go
@@ -77,13 +77,8 @@ neofetch
 neovim
 nettle
 nim
-nim-packages
 ninja
 node
-node-packages
-perl
-perl-packages
-proj
 rsync
 ruby
 rust
@@ -96,9 +91,13 @@ tree
 udunits
 vim
 wget
-xz
 zlib
 zstd
+cpufetch
+
+nim-packages
+node-packages
+perl-packages
 
 koopa install chemacs --push --reinstall
 
