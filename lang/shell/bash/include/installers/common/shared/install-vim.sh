@@ -27,7 +27,7 @@ main() { # {{{1
     dict[vim_rpath]="${dict[prefix]}/lib"
     dict[python_rpath]="${dict[opt_prefix]}/python/lib"
     koopa_assert_is_dir "${dict[python_rpath]}"
-    app[python]="${dict[opt_prefix]}/python/python3"
+    app[python]="${dict[opt_prefix]}/python/bin/python3"
     app[python_config]="${app[python]}-config"
     koopa_assert_is_installed "${app[python]}" "${app[python_config]}"
     dict[python_config_dir]="$("${app[python_config]}" --configdir)"
