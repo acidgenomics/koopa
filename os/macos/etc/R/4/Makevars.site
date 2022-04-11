@@ -1,6 +1,6 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2022-03-25.
+# Updated 2022-04-11.
 #
 # Refer to corresponding 'Makeconf' file for current system defaults.
 #
@@ -22,9 +22,7 @@
 # Using CRAN-recommended fxcoudert GNU Fortran build for compilation.
 #
 # '-O3' should be faster than '-O2' (default) level optimization.
-#
 # 'LTO' refers to link time optimization.
-#
 # 'CXXFLAGS' do not automagically promote to 'CXX11FLAGS' etc.
 #
 # See also:
@@ -62,14 +60,12 @@
 # GNU compiler (GCC / Fortran) {{{2
 # ------------------------------------------------------------------------------
 
-# NOTE These settings currently don't work for httpuv package.
-
 LOC = /usr/local/gfortran
 SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
 
 CC = $(LOC)/bin/gcc
 CFLAGS = -O3 -Wall -g -pedantic -pipe -mtune=native -std=gnu99 $(LTO)
-CPPFLAGS = -I$(LOC)/include -I$(SDK_LOC)/include -I/usr/local/include
+CPPFLAGS = -I$(LOC)/include -I$(SDK_LOC)/include
 CXX = $(LOC)/bin/g++
 CXXFLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
 CXX11 = $(LOC)/bin/g++
@@ -83,7 +79,7 @@ CXX20FLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
 FC = $(LOC)/bin/gfortran
 FCFLAGS = -O3 -Wall -g $(LTO_FC)
 FLIBS = -L$(LOC)/lib/gcc/x86_64-apple-darwin18/8.2.0 -L$(LOC)/lib -lgfortran -lquadmath -lm
-LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib -L/usr/local/lib
+LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 
 # OpenMP {{{1
 # ==============================================================================
