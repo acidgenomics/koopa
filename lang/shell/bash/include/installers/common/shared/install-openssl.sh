@@ -30,8 +30,6 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
     )
-    # This step may be necessary on macOS. Current binary was built with these
-    # settings enabled. But it appears to be problematic on Linux.
     # > case "${dict[link_in_make]}" in
     # >     '0')
     # >         conf_args+=('no-shared')
