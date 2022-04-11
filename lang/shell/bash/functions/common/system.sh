@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Do we need to include lib64 here?
-# FIXME Also need to locate 'lib64/pkgconfig'.
-# FIXME Rethink the assignment here.
-
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
@@ -12,62 +8,74 @@ koopa_activate_opt_prefix() { # {{{1
     # @examples
     # > koopa_activate_opt_prefix 'geos' 'proj' 'gdal'
     # """
-    local name opt_prefix
+    local dict name
     koopa_assert_has_args "$#"
-    opt_prefix="$(koopa_opt_prefix)"
+    declare -A dict=(
+        [cppflags]="${CPPFLAGS:-}"
+        [ldflags]="${LDFLAGS:-}"
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
     for name in "$@"
     do
-        local cflags cppflags include ldflags prefix
-        prefix="${opt_prefix}/${name}"
-        koopa_assert_is_dir "$prefix"
-        if koopa_is_empty_dir "$prefix"
+        local dict2 str
+        declare -A dict2
+        dict2[prefix]="${dict[opt_prefix]}/${name}"
+        koopa_assert_is_dir "${dict2[prefix]}"
+        if koopa_is_empty_dir "${dict2[prefix]}"
         then
-            koopa_stop "'${dict[prefix]}' is empty."
+            koopa_stop "'${dict2[prefix]}' is empty."
         fi
-        koopa_activate_prefix "$prefix"
+        dict2[include]="${dict2[prefix]}/include"
+        dict2[lib64]="${dict2[prefix]}/lib64"
+        dict2[lib]="${dict2[prefix]}/lib"
+        # PATH.
+        koopa_activate_prefix "${dict2[prefix]}"
+        # PKG_CONFIG_PATH.
+        koopa_add_to_pkg_config_path_start \
+            "${dict2[prefix]}/lib/pkgconfig" \
+            "${dict2[prefix]}/lib64/pkgconfig" \
+            "${dict2[prefix]}/share/pkgconfig"
         # CPPFLAGS.
-        cppflags="${CPPFLAGS:-}"
-        if [[ -d "${prefix}/include" ]]
+        if [[ -d "${dict2[include]}" ]]
         then
-            include="-I${prefix}/include"
-            if [[ -n "$cppflags" ]]
+            str="-I${dict2[include]}"
+            if [[ -n "${dict[cppflags]}" ]]
             then
-                cppflags="${cppflags} $include"
+                dict[cppflags]="${dict[cppflags]} ${str}"
             else
-                cppflags="$include"
+                dict[cppflags]="$str"
             fi
         fi
         # LDFLAGS.
-        ldflags="${LDFLAGS:-}"
-        if [[ -d "${prefix}/lib" ]]
+        if [[ -d "${dict2[lib]}" ]]
         then
-            include="-L${prefix}/lib -Wl,-rpath,${prefix}/lib"
-            if [[ -n "$ldflags" ]]
+            str="-L${dict2[lib]} -Wl,-rpath,${dict2[lib]}"
+            if [[ -n "${dict[ldflags]}" ]]
             then
-                ldflags="${ldflags} ${include}"
+                dict[ldflags]="${dict[ldflags]} ${str}"
             else
-                ldflags="$include"
+                dict[ldflags]="$str"
             fi
         fi
-        if [[ -d "${prefix}/lib64" ]]
+        if [[ -d "${dict2[lib64]}" ]]
         then
-            include="-L${prefix}/lib64 -Wl,-rpath,${prefix}/lib64"
-            if [[ -n "$ldflags" ]]
+            str="-L${dict2[lib64]} -Wl,-rpath,${dict2[lib64]}"
+            if [[ -n "${dict[ldflags]}" ]]
             then
-                ldflags="${ldflags} ${include}"
+                dict[ldflags]="${dict[ldflags]} ${str}"
             else
-                ldflags="$include"
+                dict[ldflags]="$str"
             fi
         fi
     done
-    if [[ -n "$cppflags" ]]
+    if [[ -n "${dict[cppflags]}" ]]
     then
-        CPPFLAGS="$cppflags"
+        CPPFLAGS="${dict[cppflags]}"
         export CPPFLAGS
     fi
-    if [[ -n "$ldflags" ]]
+    if [[ -n "${dict[ldflags]}" ]]
     then
-        LDFLAGS="$ldflags"
+        LDFLAGS="${dict[ldflags]}"
         export LDFLAGS
     fi
     return 0
