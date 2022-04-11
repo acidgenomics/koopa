@@ -3,13 +3,14 @@
 main() { # {{{1
     # """
     # Install CMake.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-11.
     #
     # @seealso
     # - https://github.com/Kitware/CMake
     # """
-    local app dict
+    local app bootstrap_args dict
     koopa_assert_has_no_args "$#"
+    koopa_is_macos && koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -31,18 +32,24 @@ v${dict[version]}/${dict[file]}"
         export CC="${app[cc]}"
         export CXX="${app[cxx]}"
     fi
-    koopa_activate_opt_prefix 'openssl'
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     # Note that the './configure' script is just a wrapper for './bootstrap'.
     # > ./bootstrap --help
-    ./bootstrap \
-        --parallel="${dict[jobs]}" \
-        --prefix="${dict[prefix]}" \
-        -- \
-        -DCMAKE_BUILD_TYPE='RELEASE' \
-        -DCMAKE_PREFIX_PATH="${dict[opt_prefix]}/openssl"
+    bootstrap_args=(
+        "--parallel=${dict[jobs]}"
+        "--prefix=${dict[prefix]}"
+        '--'
+        '-DCMAKE_BUILD_TYPE=RELEASE'
+    )
+    if koopa_is_macos
+    then
+        bootstrap_args+=(
+            "-DCMAKE_PREFIX_PATH=${dict[opt_prefix]}/openssl"
+        )
+    fi
+    ./bootstrap "${bootstrap_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0

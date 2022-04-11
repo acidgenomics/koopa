@@ -27,21 +27,7 @@ main() { # {{{1
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-v${dict[version]}"
     koopa_alert_coffee_time
-    conf_args=(
-        "--prefix=${dict[prefix]}"
-    )
-    # > if koopa_is_macos
-    # > then
-    # >     conf_args+=(
-    # >         '--shared-brotli'
-    # >         '--shared-cares'
-    # >         '--shared-libuv'
-    # >         '--shared-nghttp2'
-    # >         '--shared-openssl'
-    # >         '--shared-zlib'
-    # >         '--with-intl=system-icu'
-    # >     )
-    # > fi
+    conf_args=("--prefix=${dict[prefix]}")
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test

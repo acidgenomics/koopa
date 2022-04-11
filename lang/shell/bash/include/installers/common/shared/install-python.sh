@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Python.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-11.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -47,12 +47,12 @@ ${dict[file]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-optimizations'
-        "--with-openssl=${dict[openssl_prefix]}"
+        '--enable-shared'
     )
-    if [[ "${INSTALL_LINK_IN_MAKE:?}" -eq 1 ]]
+    if koopa_is_macos
     then
         conf_args+=(
-            '--enable-shared'
+            "--with-openssl=${dict[openssl_prefix]}"
         )
     fi
     ./configure "${conf_args[@]}"
