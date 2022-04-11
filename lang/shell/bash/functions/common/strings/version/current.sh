@@ -83,7 +83,7 @@ koopa_current_bcbio_nextgen_version() { # {{{1
         koopa_parse_url "https://raw.githubusercontent.com/bcbio/\
 bcbio-nextgen/master/requirements-conda.txt" \
             | koopa_grep --pattern='bcbio-nextgen=' \
-            | "${app[cut]}" --delimiter='=' --fields='2' \
+            | "${app[cut]}" -d '=' -f '2' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
@@ -124,8 +124,8 @@ koopa_current_ensembl_version() { # {{{1
     )
     str="$( \
         koopa_parse_url 'ftp://ftp.ensembl.org/pub/current_README' \
-        | "${app[sed]}" --quiet '3p' \
-        | "${app[cut]}" --delimiter=' ' --fields='3' \
+        | "${app[sed]}" -n '3p' \
+        | "${app[cut]}" -d ' ' -f '3' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
@@ -151,7 +151,7 @@ koopa_current_flybase_version() { # {{{1
     str="$( \
         koopa_parse_url --list-only "ftp://ftp.flybase.net/releases/" \
         | koopa_grep --pattern='^FB[0-9]{4}_[0-9]{2}$' --regex \
-        | "${app[tail]}" --lines=1 \
+        | "${app[tail]}" -n 1 \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
@@ -202,8 +202,8 @@ koopa_current_gencode_version() { # {{{1
             --only-matching \
             --pattern="${dict[pattern]}" \
             --regex \
-        | "${app[head]}" --lines=1 \
-        | "${app[cut]}" --delimiter=' ' --fields='2' \
+        | "${app[head]}" -n 1 \
+        | "${app[cut]}" -d ' ' -f '2' \
     )"
     [[ -n "${dict[str]}" ]] || return 1
     koopa_print "${dict[str]}"
@@ -250,7 +250,7 @@ releases/current-production-release"
                 --only-matching \
                 --pattern='letter.WS[0-9]+' \
                 --regex \
-            | "${app[cut]}" --delimiter='.' --fields='2' \
+            | "${app[cut]}" -d '.' -f '2' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
@@ -333,7 +333,7 @@ koopa_imagemagick_version() { # {{{1
     koopa_assert_has_no_args "$#"
     str="$( \
         "${app[magick_core_config]}" --version \
-            | "${app[cut]}" --delimiter=' ' --fields=1 \
+            | "${app[cut]}" -d ' ' -f 1 \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

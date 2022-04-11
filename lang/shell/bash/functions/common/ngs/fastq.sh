@@ -83,7 +83,7 @@ koopa_convert_fastq_to_fasta() { # {{{1
         local fasta_file
         fasta_file="${fastq_file%.fastq}.fasta"
         "${app[paste]}" - - - - < "$fastq_file" \
-            | "${app[cut]}" --fields='1,2' \
+            | "${app[cut]}" -f '1,2' \
             | "${app[sed]}" 's/^@/>/' \
             | "${app[tr]}" '\t' '\n' > "$fasta_file"
     done

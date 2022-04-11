@@ -262,7 +262,7 @@ koopa_local_ip_address() { # {{{1
             | koopa_grep --pattern='inet ' \
             | koopa_grep --pattern='broadcast' \
             | "${app[awk]}" '{print $2}' \
-            | "${app[tail]}" --lines=1 \
+            | "${app[tail]}" -n 1 \
         )"
     else
         app[hostname]="$(koopa_locate_hostname)"
@@ -270,7 +270,7 @@ koopa_local_ip_address() { # {{{1
         str="$( \
             "${app[hostname]}" -I \
             | "${app[awk]}" '{print $1}' \
-            | "${app[head]}" --lines=1 \
+            | "${app[head]}" -n 1 \
         )"
     fi
     [[ -n "$str" ]] || return 1
@@ -422,8 +422,8 @@ koopa_script_name() { # {{{1
     declare -A dict
     dict[file]="$( \
         caller \
-        | "${app[head]}" --lines=1 \
-        | "${app[cut]}" --delimiter=' ' --fields='2' \
+        | "${app[head]}" -n 1 \
+        | "${app[cut]}" -d ' ' -f '2' \
     )"
     dict[bn]="$(koopa_basename "${dict[file]}")"
     [[ -n "${dict[bn]}" ]] || return 0
@@ -460,8 +460,8 @@ koopa_variable() { # {{{1
     [[ -n "${dict[str]}" ]] || return 1
     dict[str]="$( \
         koopa_print "${dict[str]}" \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter='"' --fields='2' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d '"' -f '2' \
     )"
     [[ -n "${dict[str]}" ]] || return 1
     koopa_print "${dict[str]}"

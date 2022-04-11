@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Need to rework this and test inside Docker images.
+# FIXME Rework this to not install user dotfiles by default.
 
 main() { # {{{1
     # """
