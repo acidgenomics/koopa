@@ -90,6 +90,7 @@ __koopa_complete() { # {{{1
                         'apr'
                         'apr-util'
                         'armadillo'
+                        'attr'
                         'autoconf'
                         'automake'
                         'aws-cli'

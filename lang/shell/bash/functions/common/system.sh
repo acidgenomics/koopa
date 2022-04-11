@@ -16,6 +16,10 @@ koopa_activate_opt_prefix() { # {{{1
         local cflags cppflags include ldflags prefix
         prefix="${opt_prefix}/${name}"
         koopa_assert_is_dir "$prefix"
+        if koopa_is_empty_dir "$prefix"
+        then
+            koopa_stop "'${dict[prefix]}' is empty."
+        fi
         koopa_activate_prefix "$prefix"
         if [[ -d "${prefix}/include" ]]
         then
