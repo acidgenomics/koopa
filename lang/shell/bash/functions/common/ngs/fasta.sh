@@ -53,11 +53,11 @@ koopa_fasta_generate_chromosomes_file() { # {{{1
 '${dict[genome_fasta_file]}'."
     "${app[grep]}" '^>' \
         <(koopa_decompress --stdout "${dict[genome_fasta_file]}") \
-        | "${app[cut]}" --delimiter=' ' --fields='1' \
+        | "${app[cut]}" -d ' ' -f '1' \
         > "${dict[output_file]}"
     "${app[sed]}" \
-        --expression='s/>//g' \
-        --in-place \
+        -i.bak \
+        's/>//g' \
         "${dict[output_file]}"
     koopa_assert_is_file "${dict[output_file]}"
     return 0

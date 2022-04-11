@@ -39,11 +39,11 @@ main() { # {{{1
 serf-1.3.9-openssl3_fixes-1.patch"
         "${app[patch]}" -Np1 -i 'serf-1.3.9-openssl3_fixes-1.patch'
         # These steps require GNU sed.
-        "${app[sed]}" -i "/Append/s:RPATH=libdir,::" 'SConstruct'
-        "${app[sed]}" -i "/Default/s:lib_static,::"  'SConstruct'
-        "${app[sed]}" -i "/Alias/s:install_static,::" 'SConstruct'
-        "${app[sed]}" -i "/  print/{s/print/print(/; s/$/)/}" 'SConstruct'
-        "${app[sed]}" -i "/get_contents()/s/,/.decode()&/" 'SConstruct'
+        "${app[sed]}" -i.bak "/Append/s:RPATH=libdir,::" 'SConstruct'
+        "${app[sed]}" -i.bak "/Default/s:lib_static,::"  'SConstruct'
+        "${app[sed]}" -i.bak "/Alias/s:install_static,::" 'SConstruct'
+        "${app[sed]}" -i.bak "/  print/{s/print/print(/; s/$/)/}" 'SConstruct'
+        "${app[sed]}" -i.bak "/get_contents()/s/,/.decode()&/" 'SConstruct'
     fi
     scons_args=(
         "APR=${dict[opt_prefix]}/apr"

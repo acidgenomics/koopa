@@ -137,7 +137,7 @@ koopa_conda_create_env() { # {{{1
         # Ensure we handle edge case of '<NAME>=<VERSION>=<BUILD>' here.
         dict[env_name]="$( \
             koopa_print "${dict[env_string]//=/@}" \
-            | "${app[cut]}" --delimiter='@' --fields='1-2' \
+            | "${app[cut]}" -d '@' -f '1-2' \
         )"
         dict[env_prefix]="${dict[conda_prefix]}/envs/${dict[env_name]}"
         if [[ -d "${dict[env_prefix]}" ]]
@@ -205,7 +205,7 @@ koopa_conda_env_latest_version() { # {{{1
     # shellcheck disable=SC2016
     str="$( \
         "${app[conda]}" search --quiet "${dict[env_name]}" \
-            | "${app[tail]}" --lines=1 \
+            | "${app[tail]}" -n 1 \
             | "${app[awk]}" '{print $2}'
     )"
     [[ -n "$str" ]] || return 1
@@ -280,7 +280,7 @@ koopa_conda_env_prefix() { # {{{1
             --pattern="/${dict[env_name]}(@[.0-9]+)?\"" \
             --regex \
             --string="${dict[env_list]}" \
-        | "${app[tail]}" --lines=1 \
+        | "${app[tail]}" -n 1 \
         | "${app[sed]}" -E 's/^.*"(.+)".*$/\1/' \
     )"
     [[ -d "${dict[env_prefix]}" ]] || return 1

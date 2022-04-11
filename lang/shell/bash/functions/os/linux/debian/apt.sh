@@ -789,8 +789,8 @@ koopa_debian_apt_configure_sources() { # {{{1
             | koopa_grep \
                 --fixed \
                 --pattern=" ${codenames[main]} main" \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter=' ' --fields='2' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f '2' \
         )"
         [security]="$( \
             koopa_grep \
@@ -800,8 +800,8 @@ koopa_debian_apt_configure_sources() { # {{{1
             | koopa_grep \
                 --fixed \
                 --pattern=" ${codenames[security]} main" \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter=' ' --fields='2' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f '2' \
         )"
     )
     if [[ -z "${urls[main]}" ]]
@@ -894,7 +894,9 @@ koopa_debian_apt_disable_deb_src() { # {{{1
         koopa_alert_note "No lines to comment in '${dict[file]}'."
         return 0
     fi
-    "${app[sudo]}" "${app[sed]}" -E -i \
+    "${app[sudo]}" "${app[sed]}" \
+        -E \
+        -i.bak \
         's/^deb-src /# deb-src /' \
         "${dict[file]}"
     "${app[sudo]}" "${app[apt_get]}" update
@@ -927,7 +929,9 @@ koopa_debian_apt_enable_deb_src() { # {{{1
         koopa_alert_note "No lines to uncomment in '${dict[file]}'."
         return 0
     fi
-    "${app[sudo]}" "${app[sed]}" -E -i \
+    "${app[sudo]}" "${app[sed]}" \
+        -E \
+        -i.bak \
         's/^# deb-src /deb-src /' \
         "${dict[file]}"
     "${app[sudo]}" "${app[apt_get]}" update
@@ -954,7 +958,7 @@ koopa_debian_apt_enabled_repos() { # {{{1
             --file="${dict[file]}" \
             --pattern="${dict[pattern]}" \
             --regex \
-        | "${app[cut]}" --delimiter=' ' --fields='4-' \
+        | "${app[cut]}" -d ' ' -f '4-' \
     )"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"
@@ -1111,7 +1115,7 @@ koopa_debian_apt_space_used_by_grep() { # {{{1
             --assume-no \
             autoremove "$@" \
         | koopa_grep --pattern='freed' \
-        | "${app[cut]}" --delimiter=' ' --fields='4-5' \
+        | "${app[cut]}" -d ' ' -f '4-5' \
     )"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"

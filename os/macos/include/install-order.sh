@@ -54,6 +54,7 @@ gdal
 
 
 # Ubuntu machine:
+sed
 rust
 rust-packages
 fltk
@@ -65,12 +66,12 @@ haskell-stack
 hdf5
 icu4c
 imagemagick
-
-
-# MacBook:
 jpeg
 julia
 lesspipe
+
+
+# MacBook:
 libidn
 libtiff
 libxml2
@@ -87,7 +88,6 @@ node
 rsync
 ruby
 scons
-sed
 serf
 subversion
 tree

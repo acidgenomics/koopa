@@ -421,7 +421,7 @@ koopa_find() { # {{{1
 koopa_find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-04-11.
     #
     # Parameterized, supporting multiple files.
     #
@@ -473,8 +473,9 @@ koopa_find_and_replace_in_files() { # {{{1
     for file in "$@"
     do
         koopa_alert "$file"
+        # Using '-i.bak' here improves portability between BSD and Linux.
         "${app[sed]}" \
-            --in-place \
+            -i.bak \
             "s/${dict[from]}/${dict[to]}/g" \
             "$file"
     done
@@ -537,11 +538,7 @@ koopa_find_dotfiles() { # {{{1
             --print0 \
             --sort \
             --type="${dict[type]}" \
-        | "${app[xargs]}" \
-            --max-args=1 \
-            --no-run-if-empty \
-            --null \
-            "${app[basename]}" \
+        | "${app[xargs]}" -0 -n 1 "${app[basename]}" \
         | "${app[awk]}" '{print "    -",$0}' \
     )"
     [[ -n "${dict[str]}" ]] || return 1
@@ -635,7 +632,7 @@ koopa_find_large_dirs() { # {{{1
                 "${prefix}"/* \
                 2>/dev/null \
             | "${app[sort]}" --numeric-sort \
-            | "${app[tail]}" --lines=50 \
+            | "${app[tail]}" -n 50 \
             || true \
         )"
         [[ -n "$str" ]] || continue
@@ -672,7 +669,7 @@ koopa_find_large_files() { # {{{1
                 --size='+100000000c' \
                 --sort \
                 --type='f' \
-            | "${app[head]}" --lines=50 \
+            | "${app[head]}" -n 50 \
         )"
         [[ -n "$str" ]] || continue
         koopa_print "$str"
