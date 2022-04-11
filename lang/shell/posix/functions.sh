@@ -725,7 +725,7 @@ koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure 'PATH', 'PKG_CONFIG_PATH' and 'MANPATH' for a
     # specified prefix.
-    # @note Updated 2021-09-14.
+    # @note Updated 2022-04-11.
     # """
     local prefix
     for prefix in "$@"
@@ -738,6 +738,7 @@ koopa_activate_prefix() { # {{{1
             "${prefix}/man" \
             "${prefix}/share/man"
         koopa_add_to_pkg_config_path_start \
+            "${prefix}/lib64/pkgconfig" \
             "${prefix}/lib/pkgconfig" \
             "${prefix}/share/pkgconfig"
     done
