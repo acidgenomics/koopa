@@ -27,15 +27,6 @@ koopa_activate_opt_prefix() { # {{{1
         if [[ -d "${prefix}/include" ]]
         then
             include="-I${prefix}/include"
-            cflags="${CFLAGS:-}"
-            if [[ -n "$cflags" ]]
-            then
-                cflags="${cflags} ${include}"
-            else
-                cflags="$include"
-            fi
-            CFLAGS="$cflags"
-            export CFLAGS
             cppflags="${CPPFLAGS:-}"
             if [[ -n "$cppflags" ]]
             then
