@@ -75,6 +75,10 @@ bfg="1.14.0"
 # https://ftp.gnu.org/gnu/binutils/
 binutils="2.37"
 
+# FIXME Need to ensure we're pinning about 3.14 specifically.
+# https://bioconductor.org/
+bioconductor="3.14"
+
 # https://www.boost.org/
 boost="1.78.0"
 
