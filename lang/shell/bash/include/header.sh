@@ -149,11 +149,7 @@ __koopa_bash_header() { # {{{1
     fi
     if [[ "${dict[activate]}" -eq 0 ]]
     then
-        # NOTE Using 'exit' here doesn't not reliably stop inside command substition
-        # and subshells, even with errexit and errtrace enabled.
-        #
-        # Defining here rather than in POSIX functions library, since we never want
-        # to stop inside of activation scripts. This can cause unwanted lockout.
+        # Kill child jobs on script exit.
         #
         # @seealso
         # - https://unix.stackexchange.com/questions/256873/
@@ -163,23 +159,21 @@ __koopa_bash_header() { # {{{1
         # - https://stackoverflow.com/questions/41370092/
         # - https://unix.stackexchange.com/questions/222307
         # - https://www.networkworld.com/article/3174440/
-        #
-        # FIXME Rework these using koopa function conventions.
-        cleanup() {
+        koopa_cleanup() {
             # """
             # Kill all processes whose parent is this process.
             # @note Updated 2022-04-11.
             # """
             pkill -P "${$}"
         }
-        for sig in INT QUIT HUP TERM; do
-          trap "
-            cleanup
-            trap - $sig EXIT
-            kill -s $sig "'"$$"' "$sig"
+        for sig in INT QUIT HUP TERM
+        do
+            trap "
+                koopa_cleanup
+                trap - $sig EXIT
+                kill -s $sig "'"$$"' "$sig"
         done
-        trap cleanup EXIT
-        [[ -z "${KOOPA_PROCESS_ID:-}" ]] && export KOOPA_PROCESS_ID="${$}"
+        trap koopa_cleanup EXIT
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
