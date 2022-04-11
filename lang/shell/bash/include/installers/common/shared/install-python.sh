@@ -49,6 +49,7 @@ ${dict[file]}"
         '--enable-optimizations'
         '--enable-shared'
         "--with-openssl=${dict[openssl_prefix]}"
+        "-Wl,-rpath,${dict[prefix]}/lib"
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
@@ -57,6 +58,15 @@ ${dict[file]}"
     "${app[make]}" install
     app[python]="${dict[prefix]}/bin/${dict[name]}${dict[maj_min_ver]}"
     koopa_assert_is_installed "${app[python]}"
+    if koopa_is_linux
+    then
+        app[ldd]="$(koopa_locate_ldd)"
+        "${app[ldd]}" "${app[python]}"
+    elif koopa_is_macos
+    then
+        app[otool]="$(koopa_macos_locate_otool)"
+        "${app[otool]}" -L "${app[python]}"
+    fi
     koopa_configure_python "${app[python]}"
     return 0
 }

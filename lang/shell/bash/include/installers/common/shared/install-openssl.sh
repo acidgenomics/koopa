@@ -53,14 +53,14 @@ main() { # {{{1
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" test
     "${app[make]}" install
-    if koopa_is_macos
-    then
-        app[otool]="$(koopa_macos_locate_otool)"
-        "${app[otool]}" -L "${dict[prefix]}/bin/openssl"
-    elif koopa_is_linux
+    if koopa_is_linux
     then
         app[ldd]="$(koopa_locate_ldd)"
         "${app[ldd]}" "${dict[prefix]}/bin/openssl"
+    elif koopa_is_macos
+    then
+        app[otool]="$(koopa_macos_locate_otool)"
+        "${app[otool]}" -L "${dict[prefix]}/bin/openssl"
     fi
     return 0
 }
