@@ -48,10 +48,10 @@ koopa_macos_link_homebrew() { # {{{1
         '/Applications/Emacs.app/Contents/MacOS/Emacs' \
         'emacs'
     # R cask.
-    dict[r]="$(koopa_macos_r_prefix)"
-    koopa_link_in_bin \
-        "${dict[r]}/bin/R" 'R' \
-        "${dict[r]}/bin/Rscript" 'Rscript'
+    # > dict[r]="$(koopa_macos_r_prefix)"
+    # > koopa_link_in_bin \
+    # >     "${dict[r]}/bin/R" 'R' \
+    # >     "${dict[r]}/bin/Rscript" 'Rscript'
     # Visual Studio Code cask.
     koopa_link_in_bin \
         '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' \
@@ -59,10 +59,13 @@ koopa_macos_link_homebrew() { # {{{1
 }
 
 koopa_macos_unlink_homebrew() { # {{{1
+    # """
+    # Previously unlinked:
+    # - 'R'
+    # - 'Rscript'
+    # """
     koopa_assert_has_no_args "$#"
     koopa_unlink_in_bin \
-        'R' \
-        'Rscript' \
         'bbedit' \
         'code' \
         'emacs' \

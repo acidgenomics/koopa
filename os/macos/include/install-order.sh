@@ -51,10 +51,10 @@ fltk
 gawk
 sqlite
 geos
-
-# TODO list:
 proj
 gdal
+
+# TODO list:
 rust
 rust-packages
 gmp
