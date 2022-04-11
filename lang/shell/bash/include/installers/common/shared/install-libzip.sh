@@ -15,10 +15,10 @@ main() { # {{{
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix \
         'cmake' \
+        'openssl' \
         'perl' \
         'pkg-config' \
         'zstd'
-    koopa_is_macos && koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"

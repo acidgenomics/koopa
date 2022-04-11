@@ -10,7 +10,7 @@ main() { # {{{1
     # """
     local app bootstrap_args dict
     koopa_assert_has_no_args "$#"
-    koopa_is_macos && koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -42,13 +42,8 @@ v${dict[version]}/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--'
         '-DCMAKE_BUILD_TYPE=RELEASE'
+        "-DCMAKE_PREFIX_PATH=${dict[opt_prefix]}/openssl"
     )
-    if koopa_is_macos
-    then
-        bootstrap_args+=(
-            "-DCMAKE_PREFIX_PATH=${dict[opt_prefix]}/openssl"
-        )
-    fi
     ./bootstrap "${bootstrap_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

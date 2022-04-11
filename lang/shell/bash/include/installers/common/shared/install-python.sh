@@ -23,7 +23,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_is_macos && koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -48,13 +48,8 @@ ${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--enable-optimizations'
         '--enable-shared'
+        "--with-openssl=${dict[openssl_prefix]}"
     )
-    if koopa_is_macos
-    then
-        conf_args+=(
-            "--with-openssl=${dict[openssl_prefix]}"
-        )
-    fi
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
