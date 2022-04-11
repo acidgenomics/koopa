@@ -22,20 +22,17 @@ main() { # {{{1
         'setuptools'
         'wheel'
     )
-    pkgs+=('pipx')
-    if [[ ! -x "${app[brew]}" ]]
-    then
-        pkgs+=(
-            'black'
-            'bpytop'
-            'flake8'
-            'glances'
-            'pyflakes'
-            'pylint'
-            'pytest'
-            'ranger-fm'
-        )
-    fi
+    pkgs+=(
+        'black'
+        'bpytop'
+        'flake8'
+        'glances'
+        'pipx'
+        'pyflakes'
+        'pylint'
+        'pytest'
+        'ranger-fm'
+    )
     readarray -t pkgs <<< "$(koopa_python_get_pkg_versions "${pkgs[@]}")"
     koopa_python_pip_install --prefix="${dict[prefix]}" "${pkgs[@]}"
     return 0
