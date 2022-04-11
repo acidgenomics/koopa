@@ -71,17 +71,50 @@ koopa_add_to_ldflags_start() { # {{{1
     # Append an 'LDFLAGS' string.
     # @note Updated 2022-04-11.
     #
+    # Use '--rpath-only' to set the rpath when necessary (e.g. openssl,
+    # python, vim config).
+    #
     # Use '-rpath,${dir}' here not, '-rpath=${dir}'. This works on both
     # BSD/Unix (macOS) and Linux systems.
     # """
-    local dir
+    local dict dir pos
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        [rpath_only]=0
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--rpath-only')
+                dict[rpath_only]=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     LDFLAGS="${LDFLAGS:-}"
     for dir in "$@"
     do
         local str
-        [[ -d "$dir" ]] || continue
-        str="-L${dir} -Wl,-rpath,${dir}"
+        if [[ "${dict[rpath_only]}" -eq 1 ]]
+        then
+            # Don't require the directory to exist for this option.
+            str="-Wl,-rpath,${dir}"
+        else
+            [[ -d "$dir" ]] || continue
+            str="-L${dir} -Wl,-rpath,${dir}"
+        fi
         if [[ -n "$LDFLAGS" ]]
         then
             LDFLAGS="${str} ${LDFLAGS}"
