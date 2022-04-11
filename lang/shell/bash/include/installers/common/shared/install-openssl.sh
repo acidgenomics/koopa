@@ -38,9 +38,9 @@ main() { # {{{1
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
-        # > '-fPIC'
         'no-shared'
     )
+    export CPPFLAGS="-fPIC ${CPPFLAGS:-}"
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" test
