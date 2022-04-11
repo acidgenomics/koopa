@@ -38,9 +38,11 @@ main() { # {{{1
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
-        'no-shared'
-        # > 'zlib'
+        'no-shared' # or 'shared', which will make '*.so files'.
+        'zlib'
     )
+    # The '-fPIC' flag is required for non-prefixed configuration arguments,
+    # such as 'no-shared' or 'shared' to be detected correctly.
     export CPPFLAGS="${CPPFLAGS:-} -fPIC"
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
