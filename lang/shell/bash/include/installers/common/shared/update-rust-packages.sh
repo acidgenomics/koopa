@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Update Rust packages.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-11.
     #
     # @seealso
     # - https://crates.io/crates/cargo-update
@@ -11,7 +11,8 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'openssl' 'rust'
+    koopa_activate_opt_prefix 'rust'
+    koopa_is_macos && koopa_activate_opt_prefix 'openssl'
     declare -A app
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -25,7 +26,10 @@ main() { # {{{1
     CARGO_HOME="${dict[cargo_home]}"
     RUSTUP_HOME="${dict[rustup_home]}"
     export CARGO_HOME RUSTUP_HOME
-    export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
+    if koopa_is_macos
+    then
+        export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
+    fi
     export RUST_BACKTRACE=1
     "${app[cargo]}" install-update -a
     return 0
