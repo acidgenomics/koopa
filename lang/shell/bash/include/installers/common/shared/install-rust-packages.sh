@@ -25,8 +25,7 @@ main() { # {{{1
     # """
     local app dict pkg pkgs pkg_args
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'rust'
-    koopa_is_macos && koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'openssl' 'rust'
     declare -A app
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
@@ -43,10 +42,7 @@ main() { # {{{1
     CARGO_HOME="${dict[cargo_home]}"
     RUSTUP_HOME="${dict[rustup_home]}"
     export CARGO_HOME RUSTUP_HOME
-    if koopa_is_macos
-    then
-        export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
-    fi
+    export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
     export RUST_BACKTRACE=1
     pkgs=(
         # > 'ripgrep-all'
