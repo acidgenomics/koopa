@@ -10,9 +10,11 @@ main() { # {{{1
     # - https://www.openssl.org/docs/man3.0/man7/migration_guide.html
     # - https://stackoverflow.com/questions/2537271/
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/openssl@3.rb
+    # - https://gist.github.com/fumiyas/b4aaee83e113e061d1ee8ab95b35608b
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'zlib'
     unset -v OPENSSL_LOCAL_CONFIG_DIR
     declare -A app=(
         [make]="$(koopa_locate_make)"
@@ -36,7 +38,8 @@ main() { # {{{1
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
-        '-fPIC' 'shared'
+        # > '-fPIC'
+        'no-shared'
     )
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
