@@ -49,8 +49,9 @@ ${dict[file]}"
         '--enable-optimizations'
         '--enable-shared'
         "--with-openssl=${dict[openssl_prefix]}"
-        "-Wl,-rpath,${dict[prefix]}/lib"
     )
+    LDFLAGS="${LDFLAGS:-} -Wl,-rpath,${dict[prefix]}/lib"
+    export LDFLAGS
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
