@@ -39,6 +39,7 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
         'no-shared'
+        # > 'zlib'
     )
     export CPPFLAGS="${CPPFLAGS:-} -fPIC"
     ./config "${conf_args[@]}"
