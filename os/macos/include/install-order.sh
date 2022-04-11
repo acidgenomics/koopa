@@ -32,13 +32,12 @@ koopa install curl --push --reinstall
 koopa install bash --push --reinstall
 koopa install zsh --push --reinstall
 
-
-
 # Ubuntu is here:
 koopa install python --push --reinstall
 koopa install git --push --reinstall
 koopa install rsync --push --reinstall
 koopa install ncurses --push --reinstall
+
 libevent
 tmux
 libtool
@@ -47,28 +46,31 @@ apr-util
 pcre2
 fish
 perl
-fltk
 gawk
 sqlite
+
+
+# Ubuntu machine:
 geos
 proj
 gdal
+
 rust
 rust-packages
-
-
-# TODO list:
-gmp
+fltk
 gnupg
+gmp
 go
 groff
 haskell-stack
 hdf5
 icu4c
+
+
+# MacBook:
 imagemagick
 jpeg
 julia
-julia-packages
 lesspipe
 libidn
 libtiff
@@ -103,13 +105,14 @@ perl-packages
 
 koopa install chemacs --push --reinstall
 
-python-packages
-ruby-packages
 
 # Don't push these:
 conda
 anaconda
+julia-packages
+python-packages
 r-packages
+ruby-packages
 
 # > gcc
 # > gnutls
