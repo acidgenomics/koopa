@@ -20,6 +20,7 @@ main() { # {{{1
     # See also:
     # - https://docs.python.org/3/using/unix.html
     # - https://stackoverflow.com/questions/43333207
+    # - https://bugs.python.org/issue36659
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -68,6 +69,9 @@ ${dict[file]}"
         app[otool]="$(koopa_macos_locate_otool)"
         "${app[otool]}" -L "${app[python]}"
     fi
+    # Ensure that 'RPATH' is configured correctly.
+    "${app[python]}" -m sysconfig \
+        | koopa_grep --pattern='RPATH'
     koopa_configure_python "${app[python]}"
     return 0
 }
