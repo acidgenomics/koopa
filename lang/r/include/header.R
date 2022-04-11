@@ -7,7 +7,7 @@ local({
     #'
     #' Display help if `--help` flag is defined.
     #'
-    #' @note Updated 2021-05-11.
+    #' @note Updated 2022-04-11.
     #' @noRd
     getHelpIfNecessary <- function() {
         args <- commandArgs()
@@ -62,7 +62,7 @@ local({
                 "r.acidgenomics.com",
                 BiocManager::repositories()
             ),
-            dependencies = TRUE
+            dependencies = NA
         )
         stopifnot(packageVersion("koopa") >= minVersion)
         invisible(TRUE)
