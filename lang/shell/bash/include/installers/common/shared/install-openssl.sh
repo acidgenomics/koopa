@@ -36,7 +36,7 @@ main() { # {{{1
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
-        '-fPIC' '-shared'
+        '-fPIC' 'shared'
     )
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
