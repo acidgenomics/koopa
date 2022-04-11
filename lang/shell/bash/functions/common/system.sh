@@ -25,6 +25,7 @@ koopa_activate_opt_prefix() { # {{{1
         then
             koopa_stop "'${dict2[prefix]}' is empty."
         fi
+        koopa_alert "Activating '${dict2[prefix]}'."
         dict2[include]="${dict2[prefix]}/include"
         dict2[lib64]="${dict2[prefix]}/lib64"
         dict2[lib]="${dict2[prefix]}/lib"
