@@ -457,11 +457,11 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         # >     PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
-        ## > if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
-        ## > then
-        ## >     koopa_add_to_pkg_config_path_start_2 \
-        ## >         '/usr/bin/pkg-config'
-        ## > fi
+        if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
+        then
+            koopa_add_to_pkg_config_path_start_2 \
+                '/usr/bin/pkg-config'
+        fi
         # Activate packages installed in Homebrew 'opt/' directory.
         if koopa_is_array_non_empty "${brew_opt_arr[@]:-}"
         then
@@ -1155,11 +1155,11 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
             PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
-        ## > if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
-        ## > then
-        ## >     koopa_add_to_pkg_config_path_start_2 \
-        ## >         '/usr/bin/pkg-config'
-        ## > fi
+        if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
+        then
+            koopa_add_to_pkg_config_path_start_2 \
+                '/usr/bin/pkg-config'
+        fi
         # Activate packages installed in Homebrew 'opt/' directory.
         if koopa_is_array_non_empty "${brew_opt_arr[@]:-}"
         then
