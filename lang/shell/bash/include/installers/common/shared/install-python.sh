@@ -51,8 +51,7 @@ ${dict[file]}"
         '--enable-shared'
         "--with-openssl=${dict[openssl_prefix]}"
     )
-    LDFLAGS="${LDFLAGS:-} -Wl,-rpath,${dict[prefix]}/lib"
-    export LDFLAGS
+    koopa_add_to_ldflags_start "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
