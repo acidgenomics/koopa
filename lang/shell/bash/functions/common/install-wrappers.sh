@@ -97,6 +97,20 @@ koopa_uninstall_armadillo() { # {{{3
         "$@"
 }
 
+# attr ---------------------------------------------------------------- {{{2
+
+koopa_install_attr() { # {{{3
+    koopa_install_app \
+        --name='attr' \
+        "$@"
+}
+
+koopa_uninstall_attr() { # {{{3
+    koopa_uninstall_app \
+        --name='attr' \
+        "$@"
+}
+
 # autoconf ---------------------------------------------------------------- {{{2
 
 koopa_install_autoconf() { # {{{3
@@ -248,6 +262,7 @@ koopa_uninstall_conda() { # {{{3
 koopa_install_coreutils() { # {{{3
     local install_args
     install_args=(
+        # > '--activate-opt=attr'
         '--name=coreutils'
         '--link-in-bin=bin/['
         '--link-in-bin=bin/b2sum'
