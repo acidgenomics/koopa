@@ -38,7 +38,7 @@ main() { # {{{1
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
-        'no-shared' # or 'shared', which will make '*.so files'.
+        'shared' # or 'no-shared'
         'zlib'
     )
     # The '-fPIC' flag is required for non-prefixed configuration arguments,
