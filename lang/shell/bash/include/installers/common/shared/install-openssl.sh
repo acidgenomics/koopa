@@ -33,9 +33,6 @@ main() { # {{{1
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
-        'no-comp'
-        'no-ssl2'
-        'no-ssl3'
     )
     case "${dict[link_in_make]}" in
         '0')
