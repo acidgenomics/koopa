@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Is our rpath definition here correct?
-
 main() { # {{{
     # """
     # Install zstd.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-11.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zstd.rb
     # """
-    local app dict
+    local app cmake_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'cmake' 'zlib'
     declare -A app=(
@@ -27,13 +25,15 @@ main() { # {{{
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    "${app[cmake]}" \
-        -S 'build/cmake' \
-        -B 'builddir' \
-        -DCMAKE_INSTALL_PREFIX="${dict[prefix]}"
-        #-DCMAKE_INSTALL_RPATH="${dict[prefix]}/lib" \
-        #-DZSTD_BUILD_CONTRIB='ON' \
-        #-DZSTD_LEGACY_SUPPORT='ON'
+    cmake_args=(
+        '-S' 'build/cmake'
+        '-B' 'builddir'
+        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+        # > "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        # > '-DZSTD_BUILD_CONTRIB=ON'
+        # > '-DZSTD_LEGACY_SUPPORT=ON'
+    )
+    "${app[cmake]}" "${cmake_args[@]}"
     "${app[cmake]}" --build 'builddir'
     "${app[cmake]}" --install 'builddir'
     return 0
