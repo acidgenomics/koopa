@@ -39,10 +39,13 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         "--openssldir=${dict[prefix]}"
         "-Wl,-rpath,${dict[prefix]}/lib64"
-        '-Wl,--enable-new-dtags'
         'shared' # or 'no-shared'
         'zlib'
     )
+    if koopa_is_linux
+    then
+        conf_args+=('-Wl,--enable-new-dtags')
+    fi
     # The '-fPIC' flag is required for non-prefixed configuration arguments,
     # such as 'no-shared' or 'shared' to be detected correctly.
     export CPPFLAGS="${CPPFLAGS:-} -fPIC"
