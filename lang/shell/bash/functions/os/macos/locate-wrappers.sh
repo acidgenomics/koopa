@@ -61,6 +61,10 @@ koopa_macos_locate_open() { # {{{1
     koopa_locate_app '/usr/bin/open'
 }
 
+koopa_macos_locate_otool() { # {{{1
+    koopa_locate_app '/usr/bin/otool'
+}
+
 koopa_macos_locate_pkgutil() { # {{{1
     koopa_locate_app '/usr/sbin/pkgutil'
 }

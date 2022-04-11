@@ -362,6 +362,10 @@ koopa_locate_kallisto() { # {{{1
     koopa_locate_conda_app 'kallisto'
 }
 
+koopa_locate_ldd() { # {{{1
+    koopa_locate_app 'ldd'
+}
+
 koopa_locate_less() { # {{{1
     koopa_locate_app 'less'
 }
