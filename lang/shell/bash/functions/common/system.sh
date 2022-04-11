@@ -336,23 +336,25 @@ koopa_stop() { # {{{1
     # - https://linuxize.com/post/kill-command-in-linux/
     # - https://unix.stackexchange.com/questions/478281/
     # - https://stackoverflow.com/questions/41370092/
+    # - https://unix.stackexchange.com/questions/222307
+    # - https://www.networkworld.com/article/3174440/
     # """
     unset kill
     __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
     # Kill the current subprocess, when applicable.
     if [[ -n "${!:-}" ]]
     then
-        kill -SIGKILL "${!}"
+        kill -SIGINT "${!}"
     fi
     # Kill the parent process.
     if [[ -n "${$:-}" ]]
     then
-        kill -SIGKILL "${$}"
+        kill -SIGINT "${$}"
     fi
     # Kill the parent koopa process.
     if [[ -n "${KOOPA_PROCESS_ID:-}" ]]
     then
-        kill -SIGKILL "${KOOPA_PROCESS_ID:?}"
+        kill -SIGINT "${KOOPA_PROCESS_ID:?}"
     fi
     exit 1
 }
