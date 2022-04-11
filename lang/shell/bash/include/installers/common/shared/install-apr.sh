@@ -12,12 +12,18 @@ main() { #{{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'autoconf' 'automake' 'libtool'
+    if koopa_is_macos
+    then
+        koopa_activate_opt_prefix 'autoconf' 'automake' 'libtool'
+    fi
     declare -A app=(
-        [autoreconf]="$(koopa_locate_autoreconf)"
         [make]="$(koopa_locate_make)"
-        [patch]="$(koopa_locate_patch)"
     )
+    if koopa_is_macos
+    then
+        app[autoreconf]="$(koopa_locate_autoreconf)"
+        app[patch]="$(koopa_locate_patch)"
+    fi
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='apr'
