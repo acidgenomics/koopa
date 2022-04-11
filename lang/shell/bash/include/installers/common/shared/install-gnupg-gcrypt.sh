@@ -25,7 +25,7 @@ main() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     if [[ -d "${dict[opt_prefix]}/gnupg" ]] &&
-        ! koopa_is_empty_dir "${dict[opt_prefix]}/gnupg" ]]
+        ! koopa_is_empty_dir "${dict[opt_prefix]}/gnupg"
     then
         koopa_activate_opt_prefix 'gnupg'
     fi
