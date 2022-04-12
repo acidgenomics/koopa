@@ -3,6 +3,7 @@
 # Last updated 2022-04-12.
 
 # Recipes that we need to install:
+# - libintl (for neovim)
 # - gzip
 # - lapack
 # - ldns (for openssh)
