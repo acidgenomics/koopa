@@ -44,26 +44,23 @@ ${dict[version]}/${dict[file]}"
     koopa_cd 'build'
     cmake_args=(
         ../"${dict[name]}-${dict[version]}" \
+        '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
         '-DBUILD_APPS=ON'
         '-DBUILD_SHARED_LIBS=ON'
         '-DBUILD_TESTING=OFF'
-        '-DCMAKE_BUILD_TYPE=Release'
-
+        "-DEXE_SQLITE3=${dict[opt_prefix]}/sqlite/bin/sqlite3"
+        "-DSQLITE3_INCLUDE_DIR=${dict[opt_prefix]}/sqlite/include"
+        "-DSQLITE3_LIBRARY=${dict[opt_prefix]}/sqlite/lib"
+        '-DENABLE_CURL=ON'
+        "-DCURL_INCLUDE_DIR=${dict[opt_prefix]}/curl/include"
+        "-DCURL_LIBRARY=${dict[opt_prefix]}/curl/lib"
         '-DENABLE_TIFF=ON'
         "-DTIFF_INCLUDE_DIR=${dict[opt_prefix]}/libtiff/include"
         "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib"
-
-        '-DCURL_LIBRARY="${dict[opt_prefix]}/curl/lib'
-
-        "-DSQLITE3_LIBRARY=${dict[opt_prefix]}/sqlite/lib"
-
-        EXE_SQLITE3
-        SQLITE3_INCLUDE_DIR
-        SQLITE3_LIBRARY
     )
-    koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
+    # > koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     "${app[cmake]}" "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

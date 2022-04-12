@@ -43,7 +43,6 @@ archive/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    # > koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     cmake_args=(
         ../"${dict[name]}-${dict[version]}"
         '-DBUILD_SHARED_LIBS=ON'
@@ -52,6 +51,7 @@ archive/${dict[file]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
         '-DGEOS_ENABLE_TESTS=OFF'
     )
+    # > koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     "${app[cmake]}" "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
