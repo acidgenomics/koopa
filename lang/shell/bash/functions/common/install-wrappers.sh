@@ -21,13 +21,14 @@ koopa_install_koopa() { # {{{3
 koopa_uninstall_koopa() { # {{{3
     koopa_uninstall_app \
         --name='koopa' \
+        --prefix="$(koopa_koopa_prefix)" \
         "$@"
 }
 
-# FIXME Do we need to set the prefix here?
 koopa_update_koopa() { # {{{3
     koopa_update_app \
         --name='koopa' \
+        --prefix="$(koopa_koopa_prefix)" \
         "$@"
 }
 

@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME This is currently failing on macOS.
+
 main() { # {{{1
     # """
     # Install Neovim.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-11.
     #
     # @seealso
     # - https://github.com/neovim/neovim/wiki/Building-Neovim
@@ -12,7 +14,11 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'cmake' 'luarocks' 'pkg-config'
+    koopa_activate_opt_prefix \
+        'cmake' \
+        'lua' \
+        'luarocks' \
+        'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
