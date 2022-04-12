@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to improve shared linkage.
+
 main() { # {{{1
     # """
     # Install GDAL.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-12.
     #
     # Use 'configure --help' for build options.
     #
@@ -42,6 +44,8 @@ v${dict[version]}/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--enable-static'
+        '--enable-shared'
         '--with-armadillo=no'
         '--with-openjpeg'
         "--with-proj=${dict[opt_prefix]}/proj"
@@ -72,14 +76,7 @@ v${dict[version]}/${dict[file]}"
         '--without-rasdaman'
         '--without-sosi'
     )
-    if [[ "${INSTALL_LINK_IN_MAKE:?}" -eq 0 ]]
-    then
-        conf_args+=(
-            '--disable-shared'
-            '--enable-static'
-            '--without-ld-shared'
-        )
-    fi
+    koopa_add_to_ldflags --rpath-only "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.
     "${app[make]}" --jobs="${dict[jobs]}"

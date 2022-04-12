@@ -37,7 +37,11 @@ PATH="/usr/bin:/bin"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/gdal/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/geos/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/proj/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/subversion/bin:${PATH}"
 
 # Pandoc. Use RStudio bundled version of pandoc when possible,
 # for improved R Markdown stability.
@@ -49,12 +53,15 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/gdal/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/geos/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/pcre2/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/proj/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
