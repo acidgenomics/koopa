@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for macOS.
 #
-# @note Updated 2022-04-10.
+# @note Updated 2022-04-12.
 #
 # @seealso
 # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
@@ -36,7 +36,8 @@ R_LIBS_USER="${R_LIBS_SITE}"
 PATH="/usr/bin:/bin"
 
 # Koopa.
-PATH="${KOOPA_PREFIX}/bin:${PATH}"
+# > PATH="${KOOPA_PREFIX}/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"
 
 # Pandoc. Use RStudio bundled version of pandoc when possible,
 # for improved R Markdown stability.
@@ -50,8 +51,8 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
