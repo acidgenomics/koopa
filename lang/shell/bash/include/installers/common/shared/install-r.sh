@@ -26,19 +26,20 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    # Consider requiring:
+    # - 'lapack'
+    # - 'libffi'
+    # - 'libpng'
+    # - 'openblas'
+    # - 'readline'
+    # - 'tcl-tk'
     koopa_activate_opt_prefix \
         'curl' \
         'gettext' \
         'icu4c' \
         'jpeg' \
-        'lapack' \
-        'libffi'
-        'libpng' \
-        'openblas' \
         'pcre2' \
         'pkg-config' \
-        'readline' \
-        'tcl-tk' \
         'texinfo' \
         'xz'
     if koopa_is_linux
@@ -71,13 +72,13 @@ ${dict[name2]}-${dict[maj_ver]}/${dict[file]}"
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-memory-profiling'
-        '--with-blas'
-        '--with-cairo'
+        #'--with-blas'
+        #'--with-cairo'
         '--with-jpeglib'
-        '--with-lapack'
-        '--with-readline'
+        #'--with-lapack'
+        #'--with-readline'
         '--with-recommended-packages'
-        '--with-tcltk'
+        #'--with-tcltk'
         '--with-x=no'
     )
     if koopa_is_linux
