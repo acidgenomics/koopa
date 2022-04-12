@@ -51,14 +51,16 @@ main() { # {{{1
 refs/tags/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    # Need to create a 'glibtool' symlink and put it in path, otherwise this
-    # will fail to install on macOS.
+    # Need to create g-prefixed libtools symlinks, otherwise the build will
+    # fail on macOS.
     dict[opt_prefix]="$(koopa_opt_prefix)"
     dict[bin_extra]="$(koopa_init_dir 'bin-extra')"
-    app[glibtool]="${dict[bin_extra]}/glibtool"
     koopa_ln \
         "${dict[opt_prefix]}/libtool/bin/libtool" \
-        "${app[glibtool]}"
+        "${dict[bin_extra]}/glibtool"
+    koopa_ln \
+        "${dict[opt_prefix]}/libtool/bin/libtoolize" \
+        "${dict[bin_extra]}/glibtoolize"
     koopa_add_to_path_start "${dict[bin_extra]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     "${app[make]}" distclean
