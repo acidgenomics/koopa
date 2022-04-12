@@ -21,7 +21,6 @@ main() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
-        [link_in_make]="${INSTALL_LINK_IN_MAKE:?}"
         [name]='openssl'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
