@@ -76,7 +76,7 @@ v${dict[version]}/${dict[file]}"
         '--without-rasdaman'
         '--without-sosi'
     )
-    koopa_add_to_ldflags --rpath-only "${dict[prefix]}/lib"
+    koopa_add_to_ldflags_start --rpath-only "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.
     "${app[make]}" --jobs="${dict[jobs]}"
