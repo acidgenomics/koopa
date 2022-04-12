@@ -25,7 +25,6 @@ main() { # {{{1
         'libidn'
         'openssl'
         'pcre2'
-        'pkg-config'
     )
     for pkg in "${pkgs[@]}"
     do
