@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider enforcing that all of these are linked in '/opt/koopa/bin'.
-
 koopa_locate_7z() { # {{{1
     koopa_locate_app \
         --app-name='7z' \
@@ -11,15 +9,12 @@ koopa_locate_7z() { # {{{1
 koopa_locate_anaconda() { # {{{1
     koopa_locate_app \
         --app-name='conda' \
-        --koopa-opt-name='anaconda'
+        --opt-name='anaconda'
 }
 
-# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_ascp() { # {{{1
     koopa_locate_app \
         --app-name='ascp' \
-        --macos-app="${HOME}/Applications/Aspera Connect.app/\
-Contents/Resources/ascp" \
         --opt-name='aspera-connect'
 }
 
@@ -29,28 +24,36 @@ koopa_locate_autoreconf() { # {{{1
         --opt-name='autoconf'
 }
 
-# FIXME Just link this...
 koopa_locate_awk() { # {{{1
     koopa_locate_app \
         --app-name='awk' \
-        --homebrew-gnubin \
         --opt-name='gawk'
 }
 
 koopa_locate_aws() { # {{{1
-    koopa_locate_app 'aws'
+    koopa_locate_app \
+        --app-name='aws' \
+        --opt-name='aws-cli'
 }
 
 koopa_locate_basename() { # {{{1
-    koopa_locate_gnu_coreutils_app 'basename'
+    koopa_locate_app \
+        --app-name='basename' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_bash() { # {{{1
-    koopa_locate_app 'bash'
+    koopa_locate_app \
+        --app-name='bash' \
+        --opt-name='bash'
 }
 
+# FIXME Rework this to require GNU bc.
 koopa_locate_bc() { # {{{1
-    koopa_locate_app 'bc'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='bc' \
+        --opt-name='bc'
 }
 
 koopa_locate_bedtools() { # {{{1
@@ -60,25 +63,30 @@ koopa_locate_bedtools() { # {{{1
 koopa_locate_bpytop() { # {{{1
     koopa_locate_app \
         --app-name='bpytop' \
-        --koopa-opt-name='python-packages'
+        --opt-name='python-packages'
 }
 
 koopa_locate_brew() { # {{{1
     # """
     # Allowing passthrough of '--allow-missing' here.
     # """
-    koopa_locate_app 'brew' "$@"
+    koopa_locate_app \
+        --app-name='brew' \
+        "$@"
 }
 
 koopa_locate_bundle() { # {{{1
     koopa_locate_app \
         --app-name='bundle' \
-        --homebrew-opt-name='ruby' \
-        --koopa-opt-name='ruby-packages'
+        --opt-name='ruby-packages'
 }
 
+# FIXME Consider building and requiring this.
 koopa_locate_bzip2() { # {{{1
-    koopa_locate_app 'bzip2'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='bzip2' \
+        --opt-name='bzip2'
 }
 
 koopa_locate_cargo() { # {{{1
@@ -88,7 +96,9 @@ koopa_locate_cargo() { # {{{1
 }
 
 koopa_locate_cat() { # {{{1
-    koopa_locate_gnu_coreutils_app 'cat'
+    koopa_locate_app \
+        --app-name='cat' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_chgrp() { # {{{1
@@ -114,14 +124,19 @@ koopa_locate_chown() { # {{{1
 }
 
 koopa_locate_cmake() { # {{{1
-    koopa_locate_app 'cmake'
+    koopa_locate_app \
+        --app-name='cmake' \
+        --opt-name='cmake'
 }
 
 koopa_locate_conda() { # {{{1
     # """
     # Allowing passthrough of '--allow-missing' here.
     # """
-    koopa_locate_app "$(koopa_conda_prefix)/bin/conda" "$@"
+    koopa_locate_app \
+        --app-name='conda' \
+        --opt-name='conda' \
+        "$@"
 }
 
 koopa_locate_convmv() { # {{{1
@@ -129,11 +144,16 @@ koopa_locate_convmv() { # {{{1
 }
 
 koopa_locate_cp() { # {{{1
-    koopa_locate_app '/bin/cp'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='cp' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_cpan() { # {{{1
-    koopa_locate_app 'cpan'
+    koopa_locate_app \
+        --app-name='cpan' \
+        --opt-name='perl'
 }
 
 koopa_locate_cpanm() { # {{{1
@@ -142,24 +162,33 @@ koopa_locate_cpanm() { # {{{1
     # """
     koopa_locate_app \
         --app-name='cpanm' \
-        --koopa-opt-name='perl-packages' \
+        --opt-name='perl-packages' \
         "$@"
 }
 
 koopa_locate_curl() { # {{{1
-    koopa_locate_app 'curl'
+    koopa_locate_app \
+        --app-name='curl' \
+        --opt-name='curl'
 }
 
 koopa_locate_cut() { # {{{1
-    koopa_locate_gnu_coreutils_app 'cut'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='cut' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_date() { # {{{1
-    koopa_locate_gnu_coreutils_app 'date'
+    koopa_locate_app \
+        --app-name='date' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_df() { # {{{1
-    koopa_locate_gnu_coreutils_app 'df'
+    koopa_locate_app \
+        --app-name='df' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_dig() { # {{{1
@@ -177,7 +206,9 @@ koopa_locate_dirname() { # {{{1
 }
 
 koopa_locate_docker() { # {{{1
-    koopa_locate_app 'docker'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='docker'
 }
 
 koopa_locate_doom() { # {{{1
@@ -185,7 +216,9 @@ koopa_locate_doom() { # {{{1
 }
 
 koopa_locate_du() { # {{{1
-    koopa_locate_gnu_coreutils_app 'du'
+    koopa_locate_app \
+        --app-name='du' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_efetch() { # {{{1
@@ -201,13 +234,19 @@ koopa_locate_esearch() { # {{{1
 }
 
 koopa_locate_emacs() { # {{{1
-    koopa_locate_app 'emacs'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='emacs'
 }
 
+# FIXME Need to add recipe support for this.
 koopa_locate_exiftool() { # {{{1
-    koopa_locate_app 'exiftool'
+    koopa_locate_app \
+        --app-name='exiftool' \
+        --opt-name='exiftool'
 }
 
+# FIXME Need to add recipe support for this, or switch to conda.
 koopa_locate_fasterq_dump() { # {{{1
     koopa_locate_app \
         --app-name='fasterq-dump' \
@@ -220,24 +259,27 @@ koopa_locate_fd() { # {{{1
     # """
     koopa_locate_app \
         --app-name='fd' \
-        --homebrew-opt-name='fd' \
-        --koopa-opt-name='rust-packages' \
+        --opt-name='rust-packages' \
         "$@"
 }
 
+# FIXME Need to add recipe support for this.
 koopa_locate_ffmpeg() { # {{{1
-    koopa_locate_app 'ffmpeg'
+    koopa_locate_app \
+        --app-name='ffmpeg' \
+        --opt-name='ffmpeg'
 }
 
 koopa_locate_find() { # {{{1
     koopa_locate_app \
         --app-name='find' \
-        --homebrew-gnubin \
         --opt-name='findutils'
 }
 
 koopa_locate_fish() { # {{{1
-    koopa_locate_app 'fish'
+    koopa_locate_app \
+        --app-name='fish' \
+        --opt-name='fish'
 }
 
 koopa_locate_gcc() { # {{{1
@@ -248,12 +290,15 @@ koopa_locate_gcc() { # {{{1
     dict[version]="$(koopa_variable "${dict[name]}")"
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
     koopa_locate_app \
+        --allow-in-path \
         --app-name="${dict[name]}-${dict[maj_ver]}" \
         --opt-name="${dict[name]}@${dict[maj_ver]}"
 }
 
 koopa_locate_gcloud() { # {{{1
-    koopa_locate_app 'gcloud'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='gcloud'
 }
 
 koopa_locate_gdal_config() { # {{{1
@@ -275,55 +320,61 @@ koopa_locate_geos_config() { # {{{1
 }
 
 koopa_locate_git() { # {{{1
-    koopa_locate_app 'git'
+    koopa_locate_app \
+        --app-name='git' \
+        --opt-name='git'
 }
 
 koopa_locate_go() { # {{{1
-    koopa_locate_app 'go'
+    koopa_locate_app \
+        --app-name='go' \
+        --opt-name='go'
 }
 
-# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_gpg() { # {{{1
     koopa_locate_app \
         --app-name='gpg' \
-        --macos-app='/usr/local/MacGPG2/bin/gpg' \
         --opt-name='gnupg'
 }
 
-# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_gpg_agent() { # {{{1
     koopa_locate_app \
         --app-name='gpg-agent' \
-        --macos-app='/usr/local/MacGPG2/bin/gpg-agent' \
         --opt-name='gnupg'
 }
 
-# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_gpgconf() { # {{{1
     koopa_locate_app \
         --app-name='gpgconf' \
-        --macos-app='/usr/local/MacGPG2/bin/gpgconf' \
         --opt-name='gnupg'
 }
 
 koopa_locate_grep() { # {{{1
     koopa_locate_app \
         --app-name='grep' \
-        --homebrew-gnubin
+        --opt-name='grep'
 }
 
 koopa_locate_groups() { # {{{1
-    koopa_locate_gnu_coreutils_app 'groups'
+    koopa_locate_app \
+        --app-name='groups' \
+        --opt-name='coreutils'
 }
 
+# FIXME Need to add recipe support for this.
 koopa_locate_gs() { # {{{1
     koopa_locate_app \
         --app-name='gs' \
         --opt-name='ghostscript'
 }
 
+# FIXME Need to add updated recipe support for this.
+# https://www.gnu.org/software/gzip/
 koopa_locate_gzip() { # {{{1
-    koopa_locate_app 'gzip'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='gzip' \
+        --opt-name='gzip'
 }
 
 koopa_locate_h5cc() { # {{{1
@@ -333,7 +384,10 @@ koopa_locate_h5cc() { # {{{1
 }
 
 koopa_locate_head() { # {{{1
-    koopa_locate_gnu_coreutils_app 'head'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='head' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_hostname() {
@@ -341,21 +395,38 @@ koopa_locate_hostname() {
 }
 
 koopa_locate_id() { # {{{1
-    koopa_locate_gnu_coreutils_app 'id'
+    koopa_locate_app \
+        --app-name='id' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_java() { # {{{1
-    koopa_locate_app \
-        --app-name='java' \
-        --opt-name='openjdk'
+    if koopa_is_macos
+    then
+        # Using Adoptium Temurin LTS here.
+        local java_home
+        java_home='/usr/libexec/java_home'
+        koopa_assert_is_installed "$java_home"
+        java_home="$("$java_home")"
+        koopa_locate_app "${java_home}/bin/java"
+    else
+        koopa_locate_app \
+            --app-name='java' \
+            --opt-name='openjdk'
+    fi
 }
 
+# FIXME Need to add recipe support for this.
 koopa_locate_jq() { # {{{1
-    koopa_locate_app 'jq'
+    koopa_locate_app \
+        --app-name='jq' \
+        --opt-name='jq'
 }
 
 koopa_locate_julia() { # {{{1
-    koopa_locate_app 'julia'
+    koopa_locate_app \
+        --app-name='julia' \
+        --opt-name='julia'
 }
 
 koopa_locate_kallisto() { # {{{1
@@ -363,11 +434,16 @@ koopa_locate_kallisto() { # {{{1
 }
 
 koopa_locate_ldd() { # {{{1
-    koopa_locate_app 'ldd'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='ldd'
 }
 
+# FIXME Consider adding recipe support for this.
 koopa_locate_less() { # {{{1
-    koopa_locate_app 'less'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='less'
 }
 
 koopa_locate_lesspipe() { # {{{1
@@ -377,39 +453,22 @@ koopa_locate_lesspipe() { # {{{1
 }
 
 koopa_locate_lua() { # {{{1
-    koopa_locate_app 'lua'
+    koopa_locate_app \
+        --app-name='lua' \
+        --opt-name='lua'
 }
 
 koopa_locate_luarocks() { # {{{1
-    koopa_locate_app 'luarocks'
-}
-
-koopa_locate_llvm_config() { # {{{1
-    local app dict
-    declare -A app=(
-        [brew]="$(koopa_locate_brew --allow-missing)"
-        [llvm_config]="${LLVM_CONFIG:-}"
-    )
-    if [[ ! -x "${app[llvm_config]}" ]] && \
-        [[ ! -x "${app[brew]}" ]]
-    then
-        app[tail]="$(koopa_locate_tail)"
-        app[llvm_config]="$( \
-            koopa_find \
-                --pattern='llvm-config-*' \
-                --prefix='/usr/bin' \
-                --sort \
-            | "${app[tail]}" -n 1 \
-        )"
-    fi
-    [[ ! -x "${app[llvm_config]}" ]] && app[llvm_config]='llvm-config'
     koopa_locate_app \
-        --app-name="${app[llvm_config]}" \
-        --opt-name='llvm'
+        --app-name='luarocks' \
+        --opt-name='luarocks'
 }
 
 koopa_locate_ln() { # {{{1
-    koopa_locate_app '/bin/ln'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='ln' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_locale() { # {{{1
@@ -426,7 +485,9 @@ koopa_locate_localedef() { # {{{1
 }
 
 koopa_locate_ls() { # {{{1
-    koopa_locate_gnu_coreutils_app 'ls'
+    koopa_locate_app \
+        --app-name='ls' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_magick_core_config() { # {{{1
@@ -437,15 +498,18 @@ koopa_locate_magick_core_config() { # {{{1
 
 koopa_locate_make() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='make' \
-        --homebrew-gnubin
+        --opt-name='make'
 }
 
 koopa_locate_mamba() { # {{{1
     # """
     # Allowing passthrough of '--allow-missing' here.
     # """
-    koopa_locate_app "$(koopa_conda_prefix)/bin/mamba" "$@"
+    koopa_locate_app \
+        --app-name='mamba' \
+        --opt-name='conda'
 }
 
 koopa_locate_mamba_or_conda() { # {{{1
@@ -459,10 +523,11 @@ koopa_locate_mamba_or_conda() { # {{{1
     koopa_locate_conda --allow-missing
 }
 
+# FIXME Need to add recipe support for this.
 koopa_locate_man() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='man' \
-        --homebrew-gnubin \
         --opt-name='man-db'
 }
 
@@ -471,30 +536,50 @@ koopa_locate_mashmap() { # {{{1
 }
 
 koopa_locate_md5sum() { # {{{1
-    koopa_locate_gnu_coreutils_app 'md5sum'
+    koopa_locate_app \
+        --app-name='md5sum' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_meson() { # {{{1
-    koopa_locate_app 'meson'
+    koopa_locate_app \
+        --app-name='meson' \
+        --opt-name='meson'
 }
 
 koopa_locate_mkdir() { # {{{1
-    koopa_locate_gnu_coreutils_app 'mkdir'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='mkdir' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_mktemp() { # {{{1
-    koopa_locate_app 'mktemp'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='mktemp' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_mv() { # {{{1
     # """
     # @note macOS gmv currently has issues on NFS shares.
     # """
-    koopa_locate_app '/bin/mv'
+    if koopa_is_macos
+    then
+        koopa_locate_app '/bin/mv'
+    else
+        koopa_locate_app \
+            --allow-in-path \
+            --app-name='mv' \
+            --opt-name='coreutils'
+    fi
 }
 
 koopa_locate_neofetch() { # {{{1
-    koopa_locate_app 'neofetch'
+    koopa_locate_app \
+        --app-name='neofetch' \
+        --opt-name='neofetch'
 }
 
 koopa_locate_newgrp() { # {{{1
@@ -502,7 +587,9 @@ koopa_locate_newgrp() { # {{{1
 }
 
 koopa_locate_nim() { # {{{1
-    koopa_locate_app 'nim'
+    koopa_locate_app \
+        --app-name='nim' \
+        --opt-name='nim'
 }
 
 koopa_locate_nimble() { # {{{1
@@ -512,11 +599,15 @@ koopa_locate_nimble() { # {{{1
 }
 
 koopa_locate_ninja() { # {{{1
-    koopa_locate_app 'ninja'
+    koopa_locate_app \
+        --app-name='ninja' \
+        --opt-name='ninja'
 }
 
 koopa_locate_node() { # {{{1
-    koopa_locate_app 'node'
+    koopa_locate_app \
+        --app-name='node' \
+        --opt-name='node'
 }
 
 koopa_locate_npm() { # {{{1
@@ -529,19 +620,28 @@ koopa_locate_nproc() { # {{{1
     # """
     # Allowing passthrough of '--allow-missing' here.
     # """
-    koopa_locate_gnu_coreutils_app 'nproc' "$@"
+    koopa_locate_app \
+        --app-name='nproc' \
+        --opt-name='coreutils' \
+        "$@"
 }
 
 koopa_locate_od() { # {{{1
-    koopa_locate_gnu_coreutils_app 'od'
+    koopa_locate_app \
+        --app-name='od' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_openssl() { # {{{1
-    koopa_locate_app 'openssl'
+    koopa_locate_app \
+        --app-name='openssl' \
+        --opt-name='openssl'
 }
 
 koopa_locate_parallel() { # {{{1
-    koopa_locate_app 'parallel'
+    koopa_locate_app \
+        --app-name='parallel' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_passwd() { # {{{1
@@ -549,31 +649,41 @@ koopa_locate_passwd() { # {{{1
 }
 
 koopa_locate_paste() { # {{{1
-    koopa_locate_gnu_coreutils_app 'paste'
+    koopa_locate_app \
+        --app-name='paste' \
+        --opt-name='coreutils'
 }
 
+# FIXME Need to add recipe support for this.
 koopa_locate_patch() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='patch' \
-        --opt-name='gpatch'
+        --opt-name='patch'
 }
 
 koopa_locate_pcregrep() { # {{{1
     koopa_locate_app \
-        --app-name='pcregrep' \
-        --opt-name='pcre'
+        --app-name='pcre2grep' \
+        --opt-name='pcre2'
 }
 
 koopa_locate_perl() { # {{{1
-    koopa_locate_app 'perl'
+    koopa_locate_app \
+        --app-name='perl' \
+        --opt-name='perl'
 }
 
 koopa_locate_perlbrew() { # {{{1
-    koopa_locate_app 'perlbrew'
+    koopa_locate_app \
+        --app-name='perlbrew' \
+        --opt-name='perlbrew'
 }
 
 koopa_locate_pkg_config() { # {{{1
-    koopa_locate_app 'pkg-config'
+    koopa_locate_app \
+        --app-name='pkg-config' \
+        --opt-name='pkg-config'
 }
 
 koopa_locate_prefetch() { # {{{1
@@ -583,11 +693,15 @@ koopa_locate_prefetch() { # {{{1
 }
 
 koopa_locate_proj() { # {{{1
-    koopa_locate_app 'proj'
+    koopa_locate_app \
+        --app-name='proj' \
+        --opt-name='proj'
 }
 
 koopa_locate_pyenv() { # {{{1
-    koopa_locate_app 'pyenv'
+    koopa_locate_app \
+        --app-name='pyenv' \
+        --opt-name='pyenv'
 }
 
 koopa_locate_python() { # {{{1
@@ -598,11 +712,16 @@ koopa_locate_python() { # {{{1
     dict[version]="$(koopa_variable "${dict[name]}")"
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
     dict[python]="${dict[name]}${dict[maj_ver]}"
-    koopa_locate_app "${dict[python]}"
+    koopa_locate_app \
+        --app-name="${dict[python]}" \
+        --opt-name='python'
 }
 
 koopa_locate_r() { # {{{1
-    koopa_locate_app 'R'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='R' \
+        --opt-name='r'
 }
 
 koopa_locate_rbenv() { # {{{1
@@ -618,6 +737,7 @@ koopa_locate_rscript() { # {{{1
     koopa_locate_app "${app[rscript]}"
 }
 
+# FIXME Need to set '--allow-in-path' here.
 koopa_locate_readlink() { # {{{1
     koopa_locate_gnu_coreutils_app 'readlink'
 }
@@ -643,15 +763,22 @@ koopa_locate_rg() { # {{{1
 }
 
 koopa_locate_rm() { # {{{1
-    koopa_locate_app '/bin/rm'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='rm' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_rsync() { # {{{1
-    koopa_locate_app 'rsync'
+    koopa_locate_app \
+        --app-name='rsync' \
+        --opt-name='rsync'
 }
 
 koopa_locate_ruby() { # {{{1
-    koopa_locate_app 'ruby'
+    koopa_locate_app \
+        --app-name='ruby' \
+        --opt-name='ruby'
 }
 
 koopa_locate_rustc() { # {{{1
@@ -663,8 +790,7 @@ koopa_locate_rustc() { # {{{1
 koopa_locate_rustup() { # {{{1
     koopa_locate_app \
         --app-name='rustup' \
-        --homebrew-opt-name='rustup' \
-        --koopa-opt-name='rust-packages'
+        --opt-name='rust'
 }
 
 koopa_locate_salmon() { # {{{1
@@ -672,7 +798,9 @@ koopa_locate_salmon() { # {{{1
 }
 
 koopa_locate_scons() { # {{{1
-    koopa_locate_app 'scons'
+    koopa_locate_app \
+        --app-name='scons' \
+        --opt-name='scons'
 }
 
 koopa_locate_scp() { # {{{1
@@ -681,35 +809,49 @@ koopa_locate_scp() { # {{{1
         --opt-name='openssh'
 }
 
+# FIXME Rework the '-i.bak' internal calls after this change.
 koopa_locate_sed() { # {{{1
     koopa_locate_app \
         --app-name='sed' \
-        --homebrew-gnubin \
-        --opt-name='gnu-sed'
+        --opt-name='sed'
 }
 
 koopa_locate_shellcheck() { # {{{1
-    koopa_locate_app 'shellcheck'
+    koopa_locate_app \
+        --app-name='shellcheck' \
+        --opt-name='shellcheck'
 }
 
 koopa_locate_shunit2() { # {{{1
-    koopa_locate_app 'shunit2'
+    koopa_locate_app \
+        --app-name='shunit2' \
+        --opt-name='shunit2'
 }
 
 koopa_locate_sshfs() { # {{{1
-    koopa_locate_app 'sshfs'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='sshfs'
 }
 
 koopa_locate_sort() { # {{{1
-    koopa_locate_gnu_coreutils_app 'sort'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='sort' \
+        --opt-name='coreutils'
 }
 
+# FIXME Need to add recipe support for this.
 koopa_locate_sox() { # {{{1
-    koopa_locate_app 'sox'
+    koopa_locate_app \
+        --app-name='sox' \
+        --opt-name='sox'
 }
 
 koopa_locate_sqlplus() { # {{{1
-    koopa_locate_app 'sqlplus'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='sqlplus'
 }
 
 koopa_locate_ssh() { # {{{1
@@ -748,7 +890,10 @@ koopa_locate_star() { # {{{1
 }
 
 koopa_locate_stat() { # {{{1
-    koopa_locate_gnu_coreutils_app 'stat'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='stat' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_sudo() { # {{{1
@@ -756,95 +901,135 @@ koopa_locate_sudo() { # {{{1
 }
 
 koopa_locate_svn() { # {{{1
-    koopa_locate_app 'svn'
+    koopa_locate_app \
+        --app-name='svn' \
+        --opt-name='subversion'
 }
 
 koopa_locate_tac() { # {{{1
-    koopa_locate_gnu_coreutils_app 'tac'
+    koopa_locate_app \
+        --app-name='tac' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_tail() { # {{{1
-    koopa_locate_gnu_coreutils_app 'tail'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='tail' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_tar() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='tar' \
-        --homebrew-gnubin \
-        --opt-name='gnu-tar'
+        --opt-name='tar'
 }
 
 koopa_locate_tee() { # {{{1
-    koopa_locate_gnu_coreutils_app 'tee'
+    koopa_locate_app \
+        --app-name='tee' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_tex() { # {{{1
-    koopa_locate_app 'tex'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name'tex'
 }
 
-# FIXME We need to link this into '/opt/koopa/bin' instead.
 koopa_locate_tlmgr() { # {{{1
     koopa_locate_app \
-        --app-name='tlmgr' \
-        --macos-app='/Library/TeX/texbin/tlmgr'
+        --allow-in-path \
+        --app-name='tlmgr'
 }
 
 koopa_locate_touch() { # {{{1
-    koopa_locate_gnu_coreutils_app 'touch'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='touch' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_tr() { # {{{1
-    koopa_locate_gnu_coreutils_app 'tr'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='tr' \
+        --opt-name='coreutils'
 }
 
+# FIXME Need to add recipe support for this.
 koopa_locate_uncompress() { # {{{1
     koopa_locate_app \
         --app-name='uncompress' \
-        --homebrew-gnubin \
         --opt-name='gzip'
 }
 
 koopa_locate_uname() { # {{{1
-    koopa_locate_gnu_coreutils_app 'uname'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='uname' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_uniq() { # {{{1
-    koopa_locate_gnu_coreutils_app 'uniq'
+    koopa_locate_app \
+        --app-name='uniq' \
+        --opt-name='coreutils'
 }
 
+# FIXME Need to add recipe support for this.
 koopa_locate_unzip() { # {{{1
-    koopa_locate_app 'unzip'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='unzip'
 }
 
 koopa_locate_vim() { # {{{1
-    koopa_locate_app 'vim'
+    koopa_locate_app \
+        --app-name='vim' \
+        --opt-name='vim'
 }
 
 koopa_locate_wc() { # {{{1
-    koopa_locate_gnu_coreutils_app 'wc'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='wc' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_wget() { # {{{1
-    koopa_locate_app 'wget'
+    koopa_locate_app \
+        --app-name='wget' \
+        --opt-name='wget'
 }
 
 koopa_locate_whoami() { # {{{1
-    koopa_locate_gnu_coreutils_app 'whoami'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='whoami' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_xargs() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='xargs' \
-        --homebrew-gnubin \
         --opt-name='findutils'
 }
 
 koopa_locate_xz() { # {{{1
-    koopa_locate_app 'xz'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='xz' \
+        --opt-name='xz'
 }
 
 koopa_locate_yes() { # {{{1
-    koopa_locate_gnu_coreutils_app 'yes'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='yes' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_zcat() { # {{{1

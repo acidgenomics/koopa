@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve configuration when using system R.
-# FIXME Relage the usage of '--sudo' here when installed from source.
 # FIXME Need to configure corresponding Bioconductor version here automatically.
-# FIXME Need to create a mapping of supported versions here.
 
 koopa_configure_r() { # {{{1
     # """
@@ -119,7 +116,6 @@ koopa_r_link_files_in_etc() { # {{{1
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [r]="${1:-}"
-        [sudo]=0
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     koopa_assert_is_installed "${app[r]}"
@@ -127,6 +123,7 @@ koopa_r_link_files_in_etc() { # {{{1
     declare -A dict=(
         [distro_prefix]="$(koopa_distro_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
+        [sudo]=0
         [version]="$(koopa_r_version "${app[r]}")"
     )
     koopa_assert_is_dir "${dict[r_prefix]}"
@@ -161,7 +158,7 @@ koopa_r_link_files_in_etc() { # {{{1
                 "${dict[r_etc_source]}/${file}" \
                 "${dict[r_etc_target]}/${file}"
         else
-            koopa_sys_ln
+            koopa_sys_ln \
                 "${dict[r_etc_source]}/${file}" \
                 "${dict[r_etc_target]}/${file}"
         fi
