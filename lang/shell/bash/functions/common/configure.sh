@@ -375,7 +375,7 @@ koopa_fix_rbenv_permissions() { # {{{1
 koopa_fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-12.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
