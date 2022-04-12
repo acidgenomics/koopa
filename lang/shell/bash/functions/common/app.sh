@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Don't allow configuration flag passthrough here by default, so we
+# can harden against unsupported arguments.
+
 koopa_configure_app_packages() { # {{{1
     # """
     # Configure language application.
@@ -166,6 +169,9 @@ koopa_find_app_version() { # {{{1
     koopa_print "${dict[hit_bn]}"
     return 0
 }
+
+# FIXME Don't allow configuration flag passthrough here by default, so we
+# can harden against unsupported arguments.
 
 koopa_install_app() { # {{{1
     # """
@@ -604,6 +610,9 @@ ${dict[name]}/${dict[version]}.tar.gz"
     return 0
 }
 
+# FIXME Don't allow configuration flag passthrough here by default, so we
+# can harden against unsupported arguments.
+
 koopa_install_app_packages() { # {{{1
     # """
     # Install application packages.
@@ -773,6 +782,9 @@ koopa_reinstall_app() { # {{{1
     koopa_assert_has_args "$#"
     koopa_koopa install "$@" --reinstall
 }
+
+# FIXME Don't allow configuration flag passthrough here by default, so we
+# can harden against unsupported arguments.
 
 koopa_uninstall_app() { # {{{1
     # """
@@ -972,6 +984,9 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
     fi
     return 0
 }
+
+# FIXME Don't allow configuration flag passthrough here by default, so we
+# can harden against unsupported arguments.
 
 koopa_update_app() { # {{{1
     # """
