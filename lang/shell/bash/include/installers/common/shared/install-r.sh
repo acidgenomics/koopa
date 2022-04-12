@@ -66,9 +66,6 @@ main() { # {{{1
     dict[url]="https://cloud.r-project.org/src/base/\
 ${dict[name2]}-${dict[maj_ver]}/${dict[file]}"
     conf_args=(
-        # > "--with-blas=-L${dict[opt_prefix]}/openblas/lib -lopenblas"
-        # > "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
-        # > "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
         "--prefix=${dict[prefix]}"
         '--disable-nls'
         '--enable-R-profiling'
