@@ -9,10 +9,10 @@ main() { # {{{1
     # See 'INSTALL' file for details.
     # The cmake approach seems to build more reliably inside Docker images.
     #
-    # - autotools:
-    #   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithAutotools
     # - cmake:
     #   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithCMake
+    # - autotools:
+    #   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithAutotools
     #
     # Alternate autotools approach:
     # > ./autogen.sh
@@ -43,14 +43,14 @@ archive/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    koopa_add_to_ldflags_start --rpath-only "${dict[prefix]}/lib"
+    # > koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     cmake_args=(
         ../"${dict[name]}-${dict[version]}"
+        '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
-        # Can disable tests with:
-        # > '-DGEOS_ENABLE_TESTS=OFF'
+        '-DGEOS_ENABLE_TESTS=OFF'
     )
     "${app[cmake]}" "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
