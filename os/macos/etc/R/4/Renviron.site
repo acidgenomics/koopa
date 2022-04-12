@@ -36,7 +36,7 @@ R_LIBS_USER="${R_LIBS_SITE}"
 PATH="/usr/bin:/bin"
 
 # Koopa.
-# > PATH="${KOOPA_PREFIX}/bin:${PATH}"
+PATH="${KOOPA_PREFIX}/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"
 
 # Pandoc. Use RStudio bundled version of pandoc when possible,
@@ -54,6 +54,7 @@ PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/pcre2/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================

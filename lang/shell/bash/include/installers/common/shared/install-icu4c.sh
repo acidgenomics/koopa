@@ -42,8 +42,9 @@ release-${dict[kebab_version]}/${dict[file]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
-    app[icuinfo]="${dict[prefix]}/bin/icuinfo"
-    koopa_assert_is_installed "${app[icuinfo]}"
-    "${app[icuinfo]}"
+    # Can check configuration success with:
+    # > app[icuinfo]="${dict[prefix]}/bin/icuinfo"
+    # > koopa_assert_is_installed "${app[icuinfo]}"
+    # > "${app[icuinfo]}"
     return 0
 }
