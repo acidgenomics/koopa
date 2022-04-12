@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to build this with 'ca-certificates' support.
-# Otherwise we hit warnings about using '--no-check-certificate' instead.
-
 main() { # {{{1
     # """
     # Install wget.

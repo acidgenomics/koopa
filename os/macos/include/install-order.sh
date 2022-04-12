@@ -4,15 +4,16 @@
 
 # Recipes that we need to install:
 # - gzip
-# - unzip
 # - lapack
+# - ldns (for openssh)
 # - libffi
 # - libpng
 # - openblas
 # - readline
 # - tcl-tk
-
-# -ldns (for openssh)
+# - unzip
+# - man-db
+# - neovim
 
 # First configure the shell to load koopa.
 koopa install dotfiles

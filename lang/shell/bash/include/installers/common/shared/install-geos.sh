@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GEOS.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-12.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.
@@ -23,7 +23,7 @@ main() { # {{{1
     # @seealso
     # - https://github.com/libgeos/geos/blob/main/INSTALL.md
     # """
-    local app dict
+    local app cmake_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'cmake'
     declare -A app=(
@@ -43,12 +43,16 @@ archive/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    # Can disable tests with:
-    # > '-DGEOS_ENABLE_TESTS='OFF'
-    "${app[cmake]}" \
-        ../"${dict[name]}-${dict[version]}" \
-        -DCMAKE_BUILD_TYPE='Release' \
-        -DCMAKE_INSTALL_PREFIX="${dict[prefix]}"
+    koopa_add_to_ldflags_start --rpath-only "${dict[prefix]}/lib"
+    cmake_args=(
+        ../"${dict[name]}-${dict[version]}"
+        '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        # Can disable tests with:
+        # > '-DGEOS_ENABLE_TESTS=OFF'
+    )
+    "${app[cmake]}" "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install

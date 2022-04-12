@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve shared linkage.
-
 main() { # {{{1
     # """
     # Install GDAL.
