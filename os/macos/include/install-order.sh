@@ -72,22 +72,19 @@ lesspipe
 libidn
 libtiff
 libxml2
-
-
-# MacBook:
 nettle
-gnutls (libtasn1)
 libzip (maybe require gnutls here)
-
 lua
 luarocks
 meson
 neofetch
-neovim
 nim
 ninja
 node
-rsync
+
+
+# MacBook:
+neovim  # FIXME Failing on macOS.
 ruby
 scons
 serf
@@ -114,5 +111,6 @@ python-packages
 r-packages
 ruby-packages
 
+# gnutls (libtasn1)
 # > openssh (requires ldns)
 # > gcc
