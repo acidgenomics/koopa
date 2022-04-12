@@ -26,6 +26,7 @@ main() { # {{{1
         'gsl' | \
         'libidn' | \
         'libtasn1' | \
+        'libunistring' | \
         'make' | \
         'ncurses' | \
         'nettle' | \
@@ -55,7 +56,7 @@ main() { # {{{1
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name2]}-${dict[version]}"
-    koopa_dl 'configure args' "${conf_args[*]}"
+    # > koopa_dl 'configure args' "${conf_args[*]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check || true
