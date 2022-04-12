@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-12.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -25,6 +25,7 @@ main() { # {{{1
         'groff' | \
         'gsl' | \
         'libidn' | \
+        'libtasn1' | \
         'make' | \
         'ncurses' | \
         'nettle' | \
