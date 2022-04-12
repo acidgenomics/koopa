@@ -865,6 +865,7 @@ koopa_install_gnutls() { # {{{1
     koopa_install_app \
         --activate-opt='gmp' \
         --activate-opt='libtasn1' \
+        --activate-opt='libunistring' \
         --activate-opt='nettle' \
         --installer='gnupg-gcrypt' \
         --name='gnutls' \
@@ -1203,6 +1204,20 @@ koopa_install_libtool() { # {{{3
 koopa_uninstall_libtool() { # {{{3
     koopa_uninstall_app \
         --name='libtool' \
+        "$@"
+}
+
+# libunistring ------------------------------------------------------------ {{{2
+
+koopa_install_libunistring() { # {{{3
+    koopa_install_gnu_app \
+        --name='libunistring' \
+        "$@"
+}
+
+koopa_uninstall_libunistring() { # {{{3
+    koopa_uninstall_app \
+        --name='libunistring' \
         "$@"
 }
 
