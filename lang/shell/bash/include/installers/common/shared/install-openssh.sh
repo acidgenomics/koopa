@@ -20,7 +20,7 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'ldns' # FIXME Need to add support.
+    koopa_activate_opt_prefix 'ldns'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
