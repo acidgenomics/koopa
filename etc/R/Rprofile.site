@@ -211,6 +211,7 @@ local({  # nolint
     ## Configure the RSPM CRAN snapshot.
     snapshot <- "2022-04-01"
     cran <- "https://packagemanager.rstudio.com/cran"
+    options("pkgType" = "source")
 
     if (isTRUE(flag[["linux"]])) {
         ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
@@ -219,10 +220,25 @@ local({  # nolint
             x = dict[["osVersion"]],
             fixed = TRUE
         ))) {
+            options("pkgType" = "both")
             distro <- "focal"
             cran <- paste(cran, "__linux__", distro, sep = "/")
         }
     }
+
+    ## Allow binary install on macOS for CRAN R.
+    ## Otherwise default to installing from source.
+    ## Note that RSPM doesn't currently support binaries for macOS.
+    ## > if (
+    ## >     isTRUE(flag[["macos"]]) &&
+    ## >     isTRUE(grepl(
+    ## >         pattern = "^/Library/Frameworks/R.framework/Resources",
+    ## >         x = Sys.getenv("R_HOME")
+    ## >     ))
+    ## > ) {
+    ## >     options("pkgType" = "both")
+    ## > }
+
     cran <- paste(cran, snapshot, sep = "/")
     repos[["CRAN"]] <- cran
 
@@ -253,20 +269,6 @@ local({  # nolint
     ## Note that this will warn when enabled, which causes
     ## `AcidDevTools::install` to error, since warnings are converted to errors.
     ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
-
-    options("pkgType" = "source")
-
-    ## Allow binary install on macOS for CRAN R.
-    ## Otherwise default to installing from source.
-    ## > if (
-    ## >     isTRUE(flag[["macos"]]) &&
-    ## >     isTRUE(grepl(
-    ## >         pattern = "^/Library/Frameworks/R.framework/Resources",
-    ## >         x = Sys.getenv("R_HOME")
-    ## >     ))
-    ## > ) {
-    ## >     options("pkgType" = "both")
-    ## > }
 
     ## Stop nagging about whether to compile in an interactive session.
     ## https://stackoverflow.com/a/51530225
