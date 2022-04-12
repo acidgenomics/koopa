@@ -42,6 +42,13 @@ ${dict[version]}/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
+    if koopa_is_linux
+    then
+        dict[shared_ext]='so'
+    elif koopa_is_macos
+    then
+        dict[shared_ext]='dylib'
+    fi
     cmake_args=(
         ../"${dict[name]}-${dict[version]}" \
         '-DCMAKE_BUILD_TYPE=Release'
@@ -52,13 +59,16 @@ ${dict[version]}/${dict[file]}"
         '-DBUILD_TESTING=OFF'
         "-DEXE_SQLITE3=${dict[opt_prefix]}/sqlite/bin/sqlite3"
         "-DSQLITE3_INCLUDE_DIR=${dict[opt_prefix]}/sqlite/include"
-        "-DSQLITE3_LIBRARY=${dict[opt_prefix]}/sqlite/lib"
+        "-DSQLITE3_LIBRARY=${dict[opt_prefix]}/sqlite/lib/\
+libsqlite3.${dict[shared_ext]}"
         '-DENABLE_CURL=ON'
         "-DCURL_INCLUDE_DIR=${dict[opt_prefix]}/curl/include"
-        "-DCURL_LIBRARY=${dict[opt_prefix]}/curl/lib"
+        "-DCURL_LIBRARY=${dict[opt_prefix]}/curl/lib/\
+libcurl.${dict[shared_ext]}"
         '-DENABLE_TIFF=ON'
         "-DTIFF_INCLUDE_DIR=${dict[opt_prefix]}/libtiff/include"
-        "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib"
+        "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib/\
+libtiff.${dict[shared_ext]}"
     )
     # > koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     "${app[cmake]}" "${cmake_args[@]}"
