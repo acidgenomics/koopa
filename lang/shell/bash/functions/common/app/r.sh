@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to improve configuration when using system R.
 # FIXME Relage the usage of '--sudo' here when installed from source.
 # FIXME Need to configure corresponding Bioconductor version here automatically.
 # FIXME Need to create a mapping of supported versions here.
@@ -7,7 +8,7 @@
 koopa_configure_r() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-12.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -103,13 +104,14 @@ koopa_r_javareconf() { # {{{1
     return 0
 }
 
+# FIXME Need to call sudo here when managing outside of koopa.
 # FIXME Fall back to linking against 'current', if a versioned symlink is
 # not present in the koopa configuration.
 
 koopa_r_link_files_in_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-04-12.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -117,10 +119,11 @@ koopa_r_link_files_in_etc() { # {{{1
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [r]="${1:-}"
+        [sudo]=0
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     koopa_assert_is_installed "${app[r]}"
-    app[r]="$(koopa_which_realpath "${app[r]}")"
+    app[r]="$(koopa_realpath "${app[r]}")"
     declare -A dict=(
         [distro_prefix]="$(koopa_distro_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
@@ -139,6 +142,7 @@ koopa_r_link_files_in_etc() { # {{{1
     then
         # This applies to Debian/Ubuntu CRAN binary installs.
         dict[r_etc_target]='/etc/R'
+        dict[sudo]=1
     else
         dict[r_etc_target]="${dict[r_prefix]}/etc"
     fi
@@ -151,9 +155,16 @@ koopa_r_link_files_in_etc() { # {{{1
     for file in "${files[@]}"
     do
         [[ -f "${dict[r_etc_source]}/${file}" ]] || continue
-        koopa_sys_ln \
-            "${dict[r_etc_source]}/${file}" \
-            "${dict[r_etc_target]}/${file}"
+        if [[ "${dict[sudo]}" -eq 1 ]]
+        then
+            koopa_ln --sudo \
+                "${dict[r_etc_source]}/${file}" \
+                "${dict[r_etc_target]}/${file}"
+        else
+            koopa_sys_ln
+                "${dict[r_etc_source]}/${file}" \
+                "${dict[r_etc_target]}/${file}"
+        fi
     done
     return 0
 }
