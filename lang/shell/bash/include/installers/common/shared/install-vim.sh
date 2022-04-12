@@ -59,7 +59,7 @@ archive/${dict[file]}"
         )
     fi
     koopa_add_to_ldflags_start \
-        --rpath-only \
+        --allow-missing \
         "${dict[python_rpath]}" \
         "${dict[vim_rpath]}"
     ./configure "${conf_args[@]}"

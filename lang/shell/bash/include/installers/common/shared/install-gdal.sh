@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Do we need to set '--without-ld-shared'?
+
 main() { # {{{1
     # """
     # Install GDAL.
@@ -13,14 +15,21 @@ main() { # {{{1
     # @seealso
     # - https://gdal.org/build_hints.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gdal.rb
+    # - https://trac.osgeo.org/gdal/wiki/BuildingOnUnix
     # - https://trac.osgeo.org/gdal/wiki/BuildingOnUnixGDAL25dev
     # - https://github.com/OSGeo/gdal/issues/1259
     # - https://github.com/OSGeo/gdal/issues/2402
     # - https://github.com/OSGeo/gdal/issues/1708
+    # - https://stackoverflow.com/questions/53511533/
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'cmake' 'geos' 'pkg-config' 'proj' 'sqlite'
+    koopa_activate_opt_prefix \
+        'cmake' \
+        'geos' \
+        'pkg-config' \
+        'proj' \
+        'sqlite'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
@@ -74,7 +83,7 @@ v${dict[version]}/${dict[file]}"
         '--without-rasdaman'
         '--without-sosi'
     )
-    koopa_add_to_ldflags_start --rpath-only "${dict[prefix]}/lib"
+    koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.
     "${app[make]}" --jobs="${dict[jobs]}"

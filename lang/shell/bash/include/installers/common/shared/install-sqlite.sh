@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install SQLite.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-12.
     #
     # Use autoconf instead of amalgamation.
     #
@@ -15,6 +15,9 @@ main() { # {{{1
     # > sqlite3 --version
     # ## SQLite header and source version mismatch
     # https://askubuntu.com/questions/443379
+    #
+    # @seealso
+    # - https://www.linuxfromscratch.org/blfs/view/svn/server/sqlite.html
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -62,14 +65,15 @@ main() { # {{{1
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-autoconf-${dict[file_version]}"
     conf_args=(
+        "--prefix=${dict[prefix]}"
         # > '--disable-dynamic-extensions'
         # > '--disable-shared'
-        "--prefix=${dict[prefix]}"
         '--enable-static'
+        '--enable-shared'
     )
+    koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
-    koopa_alert_note 'Reinstall PROJ and GDAL, if built from source.'
     return 0
 }
