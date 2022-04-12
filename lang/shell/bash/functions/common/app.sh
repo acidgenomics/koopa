@@ -990,7 +990,7 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
 koopa_update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-12.
     # """
     local brew_opt_arr clean_path_arr dict opt_arr pos
     koopa_assert_has_args "$#"
@@ -1004,6 +1004,7 @@ koopa_update_app() { # {{{1
         [platform]='common'
         [prefix]=''
         [quiet]=0
+        [set_permissions]=1
         [tmp_dir]="$(koopa_tmp_dir)"
         [update_ldconfig]=0
         [updater_bn]=''
@@ -1083,6 +1084,10 @@ koopa_update_app() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--no-set-permissions')
+                dict[set_permissions]=0
+                shift 1
+                ;;
             '--quiet')
                 dict[quiet]=1
                 shift 1
@@ -1181,7 +1186,8 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
         "${dict[updater_fun]}" "$@"
     )
     koopa_rm "${dict[tmp_dir]}"
-    if [[ -d "${dict[prefix]}" ]]
+    if [[ -d "${dict[prefix]}" ]] && \
+        [[ "${dict[set_permissions]}" -eq 1 ]]
     then
         case "${dict[mode]}" in
             'shared')

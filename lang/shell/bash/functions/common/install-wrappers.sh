@@ -26,8 +26,13 @@ koopa_uninstall_koopa() { # {{{3
 }
 
 koopa_update_koopa() { # {{{3
+    # """
+    # We are using '--no-set-permissions' here, because these are managed in
+    # the updater script, to avoid ZSH compaudit warnings.
+    # """
     koopa_update_app \
         --name='koopa' \
+        --no-set-permissions \
         --prefix="$(koopa_koopa_prefix)" \
         "$@"
 }
