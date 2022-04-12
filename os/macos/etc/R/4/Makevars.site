@@ -83,8 +83,8 @@ FLIBS = -L$(LOC)/lib/gcc/x86_64-apple-darwin18/8.2.0 -L$(LOC)/lib -lgfortran -lq
 LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 
 # Additional app-specific configuration.
-CPPFLAGS += -I$(OPT_LOC)/icu4c/include
-LDFLAGS += -L$(OPT_LOC)/icu4c/lib -Wl,-rpath,$(OPT_LOC)/icu4c/lib
+# > CPPFLAGS += -I$(OPT_LOC)/icu4c/include
+# > LDFLAGS += -L$(OPT_LOC)/icu4c/lib -Wl,-rpath,$(OPT_LOC)/icu4c/lib
 
 # OpenMP {{{1
 # ==============================================================================
