@@ -1,21 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME On macOS, we need to add build support for:
-# 'gettext' \
-# 'jpeg' \
-# 'libpng' \
-# 'openblas' \
-# 'pcre2' \
-# 'pkg-config' \
-# 'readline' \
-# 'tcl-tk' \
-# 'texinfo' \
-# 'xz'
-
 main() { # {{{1
     # """
     # Install R.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-12.
     #
     # @section gfortran configuration on macOS:
     #
@@ -38,7 +26,31 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'openjdk'
+    koopa_activate_opt_prefix \
+        'curl' \
+        'gettext' \
+        'icu4c' \
+        'jpeg' \
+        'lapack' \
+        'libffi'
+        'libpng' \
+        'openblas' \
+        'pcre2' \
+        'pkg-config' \
+        'readline' \
+        'tcl-tk' \
+        'texinfo' \
+        'xz'
+    if koopa_is_linux
+    then
+        # Consider migrating to Adoptium Temuring LTS in the future.
+        koopa_activate_opt_prefix 'openjdk'
+    elif koopa_is_macos
+    then
+        # We're using Adoptium Temurin LTS on macOS.
+        koopa_activate_prefix '/usr/local/gfortran'
+        koopa_add_to_path_start '/Library/TeX/texbin'
+    fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -54,6 +66,9 @@ main() { # {{{1
     dict[url]="https://cloud.r-project.org/src/base/\
 ${dict[name2]}-${dict[maj_ver]}/${dict[file]}"
     conf_args=(
+        # > "--with-blas=-L${dict[opt_prefix]}/openblas/lib -lopenblas"
+        # > "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
+        # > "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
         "--prefix=${dict[prefix]}"
         '--disable-nls'
         '--enable-R-profiling'
@@ -77,14 +92,7 @@ ${dict[name2]}-${dict[maj_ver]}/${dict[file]}"
         fi
     elif koopa_is_macos
     then
-        koopa_activate_prefix '/usr/local/gfortran'
-        koopa_add_to_path_start '/Library/TeX/texbin'
-        conf_args+=(
-            # > "--with-blas=-L${dict[opt_prefix]}/openblas/lib -lopenblas"
-            # > "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
-            # > "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
-            '--without-aqua'
-        )
+        conf_args+=('--without-aqua')
         export CFLAGS='-Wno-error=implicit-function-declaration'
     fi
     koopa_download "${dict[url]}" "${dict[file]}"

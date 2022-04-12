@@ -201,6 +201,7 @@ koopa_aws_ec2_suspend() { # {{{1
     return 0
 }
 
+# FIXME If interactive, prompt the user about this.
 koopa_aws_ec2_terminate() { # {{{1
     # """
     # Terminate current AWS EC2 instance.

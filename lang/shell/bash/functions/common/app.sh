@@ -170,9 +170,9 @@ koopa_find_app_version() { # {{{1
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-12.
     # """
-    local bin_arr brew_opt_arr clean_path_arr dict i opt_arr pos
+    local bin_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A dict=(
@@ -215,7 +215,6 @@ koopa_install_app() { # {{{1
         [version_key]=''
     )
     bin_arr=()
-    brew_opt_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     opt_arr=()
     pos=()
@@ -223,14 +222,6 @@ koopa_install_app() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--activate-homebrew-opt='*)
-                brew_opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-homebrew-opt')
-                brew_opt_arr+=("${2:?}")
-                shift 2
-                ;;
             '--activate-opt='*)
                 opt_arr+=("${1#*=}")
                 shift 1
@@ -463,12 +454,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_add_to_pkg_config_path_start_2 \
                 '/usr/bin/pkg-config'
         fi
-        # Activate packages installed in Homebrew 'opt/' directory.
-        if koopa_is_array_non_empty "${brew_opt_arr[@]:-}"
-        then
-            koopa_activate_homebrew_opt_prefix "${brew_opt_arr[@]}"
-        fi
-        # Activate packages installed in Koopa 'opt/' directory.
+        # Activate packages installed in koopa 'opt/' directory.
         if koopa_is_array_non_empty "${opt_arr[@]:-}"
         then
             koopa_activate_opt_prefix "${opt_arr[@]}"
@@ -992,7 +978,7 @@ koopa_update_app() { # {{{1
     # Update application.
     # @note Updated 2022-04-12.
     # """
-    local brew_opt_arr clean_path_arr dict opt_arr pos
+    local clean_path_arr dict opt_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A dict=(
@@ -1012,21 +998,12 @@ koopa_update_app() { # {{{1
         [verbose]=0
         [version]=''
     )
-    brew_opt_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     opt_arr=()
     pos=()
     while (("$#"))
     do
         case "$1" in
-            '--activate-homebrew-opt='*)
-                brew_opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-homebrew-opt')
-                brew_opt_arr+=("${2:?}")
-                shift 2
-                ;;
             '--activate-opt='*)
                 opt_arr+=("${1#*=}")
                 shift 1
@@ -1167,12 +1144,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
             koopa_add_to_pkg_config_path_start_2 \
                 '/usr/bin/pkg-config'
         fi
-        # Activate packages installed in Homebrew 'opt/' directory.
-        if koopa_is_array_non_empty "${brew_opt_arr[@]:-}"
-        then
-            koopa_activate_homebrew_opt_prefix "${brew_opt_arr[@]}"
-        fi
-        # Activate packages installed in Koopa 'opt/' directory.
+        # Activate packages installed in koopa 'opt/' directory.
         if koopa_is_array_non_empty "${opt_arr[@]:-}"
         then
             koopa_activate_opt_prefix "${opt_arr[@]}"

@@ -869,6 +869,7 @@ koopa_install_gnutls() { # {{{1
         --activate-opt='nettle' \
         --installer='gnupg-gcrypt' \
         --name='gnutls' \
+        --without-p11-kit \
         "$@"
 }
 
