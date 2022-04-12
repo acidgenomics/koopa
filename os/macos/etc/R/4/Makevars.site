@@ -84,7 +84,9 @@ LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 
 # Additional app-specific configuration.
 # > CPPFLAGS += -I$(OPT_LOC)/icu4c/include
+# > CPPFLAGS += -I$(OPT_LOC)/pcre2/include
 # > LDFLAGS += -L$(OPT_LOC)/icu4c/lib -Wl,-rpath,$(OPT_LOC)/icu4c/lib
+# > LDFLAGS += -L$(OPT_LOC)/pcre2/lib -Wl,-rpath,$(OPT_LOC)/pcre2/lib
 
 # OpenMP {{{1
 # ==============================================================================
