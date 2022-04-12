@@ -401,19 +401,7 @@ koopa_locate_id() { # {{{1
 }
 
 koopa_locate_java() { # {{{1
-    if koopa_is_macos
-    then
-        # Using Adoptium Temurin LTS here.
-        local java_home
-        java_home='/usr/libexec/java_home'
-        koopa_assert_is_installed "$java_home"
-        java_home="$("$java_home")"
-        koopa_locate_app "${java_home}/bin/java"
-    else
-        koopa_locate_app \
-            --app-name='java' \
-            --opt-name='openjdk'
-    fi
+    koopa_locate_app "$(koopa_java_prefix)/bin/java"
 }
 
 # FIXME Need to add recipe support for this.
