@@ -141,6 +141,7 @@ __koopa_complete() { # {{{1
                         'libtasn1'
                         'libtiff'
                         'libtool'
+                        'libunistring'
                         'libxml2'
                         'libzip'
                         'lua'

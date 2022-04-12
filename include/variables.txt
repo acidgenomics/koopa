@@ -228,6 +228,9 @@ libtiff="4.2.0"
 # https://ftp.gnu.org/gnu/libtool/
 libtool="2.4.6"
 
+# https://www.gnu.org/software/libunistring/
+libunistring="1.0"
+
 # https://gitlab.gnome.org/GNOME/libxml2/-/releases
 libxml2="2.9.13"
 
