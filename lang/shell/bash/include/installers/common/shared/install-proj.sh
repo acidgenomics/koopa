@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Do we need to link this in '/usr/local'?
+
 main() { # {{{1
     # """
     # Install PROJ.
@@ -9,14 +11,18 @@ main() { # {{{1
     # > -DCMAKE_PREFIX_PATH='/opt/koopa/opt/sqlite'
     #
     # @seealso
-    # - https://proj.org/install.html
+    # - https://proj.org/install.html#cmake-configure-options
     # - https://github.com/OSGeo/PROJ/issues/2084
     # - https://github.com/tesseract-ocr/tesseract/issues/786
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    # Consider adding 'libtiff' back in a future update.
-    koopa_activate_opt_prefix 'pkg-config' 'python' 'sqlite'
+    koopa_activate_opt_prefix \
+        'curl' \
+        'libtiff' \
+        'pkg-config' \
+        'python' \
+        'sqlite'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
@@ -25,7 +31,7 @@ main() { # {{{1
         [jobs]="$(koopa_cpu_count)"
         [make_prefix]="$(koopa_make_prefix)"
         [name]='proj'
-        # > [opt_prefix]="$(koopa_opt_prefix)"
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -36,17 +42,28 @@ ${dict[version]}/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    koopa_add_to_ldflags_start --rpath-only "${dict[prefix]}/lib"
     cmake_args=(
         ../"${dict[name]}-${dict[version]}" \
-        '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
-        '-DENABLE_TIFF=OFF'
-        # Can detect libtiff with:
-        # > "-DTIFF_INCLUDE_DIR=${dict[opt_prefix]}/libtiff/include"
-        # > "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib"
+        '-DBUILD_APPS=ON'
+        '-DBUILD_SHARED_LIBS=ON'
+        '-DBUILD_TESTING=OFF'
+        '-DCMAKE_BUILD_TYPE=Release'
+
+        '-DENABLE_TIFF=ON'
+        "-DTIFF_INCLUDE_DIR=${dict[opt_prefix]}/libtiff/include"
+        "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib"
+
+        '-DCURL_LIBRARY="${dict[opt_prefix]}/curl/lib'
+
+        "-DSQLITE3_LIBRARY=${dict[opt_prefix]}/sqlite/lib"
+
+        EXE_SQLITE3
+        SQLITE3_INCLUDE_DIR
+        SQLITE3_LIBRARY
     )
+    koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     "${app[cmake]}" "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
