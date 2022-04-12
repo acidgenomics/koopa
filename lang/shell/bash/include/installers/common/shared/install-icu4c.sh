@@ -3,9 +3,10 @@
 main() { # {{{1
     # """
     # Install ICU4C.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-12.
     #
     # @seealso
+    # - https://unicode-org.github.io/icu/userguide/icu4c/build.html
     # - https://github.com/unicode-org/icu/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/icu4c.rb
     # """
@@ -32,11 +33,17 @@ release-${dict[kebab_version]}/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--disable-samples'
         '--disable-tests'
+        '--enable-rpath'
+        '--enable-shared'
         '--enable-static'
         '--with-library-bits=64'
     )
+    koopa_add_to_ldflags_start --rpath-only "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
+    app[icuinfo]="${dict[prefix]}/bin/icuinfo"
+    koopa_assert_is_installed "${app[icuinfo]}"
+    "${app[icuinfo]}"
     return 0
 }
