@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
-# Last updated 2022-04-11.
+# Last updated 2022-04-12.
 
 # Recipes that we need to install:
-# - libtasn1
 # - lapack
+# - libffi
+# - libpng
 # - openblas
+# - readline
+# - tcl-tk
+
+# -ldns (for openssh)
 
 # First configure the shell to load koopa.
 koopa install dotfiles
@@ -33,6 +38,7 @@ koopa install bash --push --reinstall
 koopa install zsh --push --reinstall
 
 # Ubuntu is here:
+koopa install gnutls --push --reinstall
 koopa install python --push --reinstall
 koopa install git --push --reinstall
 koopa install rsync --push --reinstall
@@ -73,7 +79,7 @@ libidn
 libtiff
 libxml2
 nettle
-libzip (maybe require gnutls here)
+libzip # maybe require gnutls here
 lua
 luarocks
 meson
@@ -111,6 +117,6 @@ python-packages
 r-packages
 ruby-packages
 
-# gnutls (libtasn1)
-# > openssh (requires ldns)
+# > koopa install ldns --push --reinstall
+# > koopa install openssh --push --reinstall
 # > gcc
