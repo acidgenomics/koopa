@@ -9,6 +9,7 @@ koopa_configure_r() { # {{{1
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
+    set x
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
