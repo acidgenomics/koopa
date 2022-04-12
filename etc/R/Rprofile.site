@@ -220,7 +220,6 @@ local({  # nolint
             x = dict[["osVersion"]],
             fixed = TRUE
         ))) {
-            options("pkgType" = "both")
             distro <- "focal"
             cran <- paste(cran, "__linux__", distro, sep = "/")
         }
