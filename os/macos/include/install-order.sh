@@ -3,6 +3,8 @@
 # Last updated 2022-04-12.
 
 # Recipes that we need to install:
+# - gzip
+# - unzip
 # - lapack
 # - libffi
 # - libpng
