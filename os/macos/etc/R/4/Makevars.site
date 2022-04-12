@@ -80,13 +80,7 @@ CXXFLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
 FC = $(LOC)/bin/gfortran
 FCFLAGS = -O3 -Wall -g $(LTO_FC)
 FLIBS = -L$(LOC)/lib/gcc/x86_64-apple-darwin18/8.2.0 -L$(LOC)/lib -lgfortran -lquadmath -lm
-LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
-
-# Additional app-specific configuration.
-# > CPPFLAGS += -I$(OPT_LOC)/icu4c/include
-# > CPPFLAGS += -I$(OPT_LOC)/pcre2/include
-# > LDFLAGS += -L$(OPT_LOC)/icu4c/lib -Wl,-rpath,$(OPT_LOC)/icu4c/lib
-# > LDFLAGS += -L$(OPT_LOC)/pcre2/lib -Wl,-rpath,$(OPT_LOC)/pcre2/lib
+LDFLAGS=-L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 
 # OpenMP {{{1
 # ==============================================================================

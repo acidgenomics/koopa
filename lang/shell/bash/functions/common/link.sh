@@ -258,7 +258,7 @@ into '${dict[make_prefix]}'."
     koopa_assert_is_existing "${files_arr[@]}"
     koopa_alert "Linking '${dict[app_prefix]}' in '${dict[make_prefix]}'."
     koopa_sys_set_permissions --recursive "${dict[app_prefix]}"
-    koopa_delete_broken_symlinks "${dict[app_prefix]}" "${dict[make_prefix]}"
+    koopa_delete_broken_symlinks "${dict[app_prefix]}"
     cp_args=('--symbolic-link')
     koopa_is_shared_install && cp_args+=('--sudo')
     cp_args+=(
