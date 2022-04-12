@@ -53,7 +53,7 @@ local({
             stop("R packages should not be installed in '--vanilla' mode.")
         }
         message("Installing koopa R package.")
-        if (!isTRUE(isInstalled("BiocManager"))) {
+        if (isFALSE(isInstalled("BiocManager"))) {
             utils::install.packages("BiocManager")
         }
         utils::install.packages(

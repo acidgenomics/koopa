@@ -221,8 +221,8 @@ local({  # nolint
             distro <- "focal"
             cran <- paste(cran, "__linux__", distro, sep = "/")
         }
-        cran <- paste(cran, snapshot, sep = "/")
     }
+    cran <- paste(cran, snapshot, sep = "/")
     repos[["CRAN"]] <- cran
 
     ## Configure the RSPM Bioconductor mirror repo.
