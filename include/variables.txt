@@ -1,7 +1,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-04-10"
+koopa-date="2022-04-12"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -216,6 +216,9 @@ libevent="2.1.12"
 
 # https://www.gnu.org/software/libidn/
 libidn="2.3.2"
+
+# https://www.gnu.org/software/libtasn1/
+libtasn1="4.18.0"
 
 # https://download.osgeo.org/libtiff/
 # https://libtiff.gitlab.io/libtiff/

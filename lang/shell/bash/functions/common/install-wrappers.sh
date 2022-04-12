@@ -1164,6 +1164,20 @@ koopa_uninstall_libidn() { # {{{3
         "$@"
 }
 
+# libtasn1 ---------------------------------------------------------------- {{{2
+
+koopa_install_libtasn1() { # {{{3
+    koopa_install_gnu_app \
+        --name='libtasn1' \
+        "$@"
+}
+
+koopa_uninstall_libtasn1() { # {{{3
+    koopa_uninstall_app \
+        --name='libtasn1' \
+        "$@"
+}
+
 # libtiff ----------------------------------------------------------------- {{{2
 
 koopa_install_libtiff() { # {{{3
