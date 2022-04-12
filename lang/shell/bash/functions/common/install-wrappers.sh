@@ -1830,37 +1830,21 @@ koopa_uninstall_python_virtualenvs() { # {{{3
 # r ----------------------------------------------------------------------- {{{2
 
 koopa_install_r() { # {{{3
-    local install_args
-    install_args=(
-        '--name-fancy=R'
-        '--name=r'
-    )
-    # Assume we're using 'r-binary' by default on macOS.
-    if ! koopa_is_macos
-    then
-        install_args+=(
-            '--link-in-bin=bin/R'
-            '--link-in-bin=bin/Rscript'
-        )
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --link-in-bin='bin/R' \
+        --link-in-bin='bin/Rscript' \
+        --name-fancy='R' \
+        --name='r' \
+        "$@"
 }
 
 koopa_uninstall_r() { # {{{3
-    local uninstall_args
-    uninstall_args=(
-        '--name-fancy=R'
-        '--name=r'
-    )
-    # Assume we're using 'r-binary' by default on macOS.
-    if ! koopa_is_macos
-    then
-        uninstall_args+=(
-            '--unlink-in-bin=R'
-            '--unlink-in-bin=Rscript'
-        )
-    fi
-    koopa_uninstall_app "${uninstall_args[@]}" "$@"
+    koopa_uninstall_app \
+        --name-fancy='R'
+        --name='r'
+        --unlink-in-bin='R'
+        --unlink-in-bin='Rscript'
+        "$@"
 }
 
 # r-cmd-check ------------------------------------------------------------- {{{2
