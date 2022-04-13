@@ -218,7 +218,7 @@ koopa_activate_broot() { # {{{1
 koopa_activate_color_mode() { # {{{1
     # """
     # Activate dark / light color mode.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-13.
     # """
     KOOPA_COLOR_MODE="$(koopa_color_mode)"
     if [ -n "${KOOPA_COLOR_MODE:-}" ]
@@ -316,7 +316,7 @@ koopa_activate_coreutils_aliases() { # {{{1
     mkdir='mkdir'
     mv='mv'
     rm='rm'
-    cp_args='-i' # '--interactive'.
+    cp_args='-R -i' # '--interactive --recursive'.
     ln_args='-ins' # '--interactive --no-dereference --symbolic'.
     mkdir_args='-p' # '--parents'.
     mv_args='-i' # '--interactive'
