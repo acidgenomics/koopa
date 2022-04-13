@@ -1104,6 +1104,20 @@ koopa_uninstall_jpeg() { # {{{3
         "$@"
 }
 
+# jq ---------------------------------------------------------------------- {{{2
+
+koopa_install_jq() { # {{{3
+    koopa_install_app \
+        --name='jq' \
+        "$@"
+}
+
+koopa_uninstall_jq() { # {{{3
+    koopa_uninstall_app \
+        --name='jq' \
+        "$@"
+}
+
 # juila ------------------------------------------------------------------- {{{2
 
 koopa_install_julia() { # {{{3
@@ -1567,6 +1581,20 @@ koopa_update_node_packages() { # {{{3
     koopa_install_node_packages "$@"
 }
 
+# oniguruma --------------------------------------------------------------- {{{2
+
+koopa_install_oniguruma() { # {{{3
+    koopa_install_app \
+        --name='oniguruma' \
+        "$@"
+}
+
+koopa_uninstall_oniguruma() { # {{{3
+    koopa_uninstall_app \
+        --name='oniguruma' \
+        "$@"
+}
+
 # openjdk ----------------------------------------------------------------- {{{2
 
 koopa_install_openjdk() { # {{{3
@@ -1659,6 +1687,7 @@ koopa_uninstall_password_store() { # {{{3
 
 koopa_install_patch() { # {{{3
     koopa_install_gnu_app \
+        --link-in-bin='bin/patch' \
         --name='patch' \
         "$@"
 }
@@ -1666,6 +1695,7 @@ koopa_install_patch() { # {{{3
 koopa_uninstall_patch() { # {{{3
     koopa_uninstall_app \
         --name='patch' \
+        --unlink-in-bin='patch' \
         "$@"
 }
 
@@ -2317,6 +2347,12 @@ koopa_uninstall_tar() { # {{{3
 
 koopa_install_texinfo() { # {{{3
     koopa_install_gnu_app \
+        --link-in-bin='bin/pdftexi2dvi' \
+        --link-in-bin='bin/pod2texi' \
+        --link-in-bin='bin/texi2any' \
+        --link-in-bin='bin/texi2dvi' \
+        --link-in-bin='bin/texi2pdf' \
+        --link-in-bin='bin/texindex' \
         --name='texinfo' \
         "$@"
 }
@@ -2324,6 +2360,12 @@ koopa_install_texinfo() { # {{{3
 koopa_uninstall_texinfo() { # {{{3
     koopa_uninstall_app \
         --name='texinfo' \
+        --unlink-in-bin='pdftexi2dvi' \
+        --unlink-in-bin='pod2texi' \
+        --unlink-in-bin='texi2any' \
+        --unlink-in-bin='texi2dvi' \
+        --unlink-in-bin='texi2pdf' \
+        --unlink-in-bin='texindex' \
         "$@"
 }
 
@@ -2431,6 +2473,7 @@ koopa_uninstall_wget() { # {{{3
 
 koopa_install_which() { # {{{3
     koopa_install_gnu_app \
+        --link-in-bin='bin/which' \
         --name='which' \
         "$@"
 }
@@ -2438,6 +2481,7 @@ koopa_install_which() { # {{{3
 koopa_uninstall_which() { # {{{3
     koopa_uninstall_app \
         --name='which' \
+        --unlink-in-bin='which' \
         "$@"
 }
 
