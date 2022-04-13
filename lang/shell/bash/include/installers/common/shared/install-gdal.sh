@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add libgeotiff support.
+# NOTE This install recipe is currently problematic on Linux and macOS.
 
 main() { # {{{1
     # """
