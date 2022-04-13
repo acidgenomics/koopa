@@ -645,10 +645,8 @@ koopa_locate_paste() { # {{{1
         --opt-name='coreutils'
 }
 
-# FIXME Need to add recipe support for this.
 koopa_locate_patch() { # {{{1
     koopa_locate_app \
-        --allow-in-path \
         --app-name='patch' \
         --opt-name='patch'
 }
@@ -944,7 +942,6 @@ koopa_locate_touch() { # {{{1
 
 koopa_locate_tr() { # {{{1
     koopa_locate_app \
-        --allow-in-path \
         --app-name='tr' \
         --opt-name='coreutils'
 }

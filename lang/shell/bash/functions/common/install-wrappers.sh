@@ -159,6 +159,7 @@ koopa_uninstall_aws_cli() { # {{{3
 
 # bash -------------------------------------------------------------------- {{{2
 
+# NOTE This can cause shell to error when reinstalling current linked version.
 koopa_install_bash() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/bash' \
@@ -167,6 +168,7 @@ koopa_install_bash() { # {{{3
         "$@"
 }
 
+# NOTE This can cause shell to error when uninstalling current linked version.
 koopa_uninstall_bash() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Bash' \

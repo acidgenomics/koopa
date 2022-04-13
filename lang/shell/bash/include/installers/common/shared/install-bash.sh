@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Bash.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-13.
     #
     # @section Applying patches:
     #
@@ -15,6 +15,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'patch'
     declare -A app=(
         [curl]="$(koopa_locate_curl)"
         [cut]="$(koopa_locate_cut)"
@@ -52,7 +53,7 @@ ${dict[name]}-${dict[maj_min_ver]}-patches"
             --num="${dict[n_patches]}" \
             --msg1='patch' \
             --msg2='patches' \
-            --suffix="from '${dict[patch_base_url]}'." \
+            --suffix=" from '${dict[patch_base_url]}'." \
         )"
         # mmv_tr: trimmed major minor version.
         dict[mmv_tr]="$( \
