@@ -1699,6 +1699,22 @@ koopa_uninstall_patch() { # {{{3
         "$@"
 }
 
+# pcre -------------------------------------------------------------------- {{{2
+
+koopa_install_pcre() { # {{{3
+    koopa_install_app \
+        --name-fancy='PCRE' \
+        --name='pcre' \
+        "$@"
+}
+
+koopa_uninstall_pcre() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='PCRE' \
+        --name='pcre' \
+        "$@"
+}
+
 # pcre2 ------------------------------------------------------------------- {{{2
 
 koopa_install_pcre2() { # {{{3
@@ -2371,19 +2387,19 @@ koopa_uninstall_texinfo() { # {{{3
 
 # the-silver-searcher ----------------------------------------------------- {{{2
 
-koopa_install_the_silver_searcher() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/ag' \
-        --name='the-silver-searcher' \
-        "$@"
-}
+# > koopa_install_the_silver_searcher() { # {{{3
+# >     koopa_install_app \
+# >         --link-in-bin='bin/ag' \
+# >         --name='the-silver-searcher' \
+# >         "$@"
+# > }
 
-koopa_uninstall_the_silver_searcher() { # {{{3
-    koopa_uninstall_app \
-        --name='the-silver-searcher' \
-        --unlink-in-bin='ag' \
-        "$@"
-}
+# > koopa_uninstall_the_silver_searcher() { # {{{3
+# >     koopa_uninstall_app \
+# >         --name='the-silver-searcher' \
+# >         --unlink-in-bin='ag' \
+# >         "$@"
+# > }
 
 # tmux -------------------------------------------------------------------- {{{2
 

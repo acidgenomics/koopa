@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# NOTE This is currently failing to build on macOS.
+
 main() { # {{{1
     # """
     # Install the silver searcher.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-13.
     #
     # Ag has been renamed to The Silver Searcher.
     #
@@ -18,21 +20,21 @@ main() { # {{{1
     # Tagged GitHub release.
     # > file="${version}.tar.gz"
     # > url="https://github.com/ggreer/${name2}/archive/${file}"
-    #
-    # Note that Fedora has changed pkg-config to pkgconf, which is causing
-    # issues with ag building from source. Install the regular pkg-config from
-    # source to fix this build issue.
-    # https://fedoraproject.org/wiki/Changes/
-    #     pkgconf_as_system_pkg-config_implementation
-    # In this case, you'll see this error:
-    # # ./configure: [...] syntax error near unexpected token `PCRE,'
-    # # ./configure: [...] `PKG_CHECK_MODULES(PCRE, libpcre)'
-    # https://github.com/ggreer/the_silver_searcher/issues/341
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'pcre2' 'pkg-config'
+    # Use 'PCRE' not 'PCRE2' here.
+    koopa_activate_opt_prefix \
+        'autoconf' \
+        'automake' \
+        'gettext' \
+        'libtool' \
+        'pcre' \
+        'pkg-config' \
+        'zlib'
     declare -A app=(
+        [autoreconf]="$(koopa_locate_autoreconf)"
+        [libtoolize]="$(koopa_locate_libtoolize)"
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
@@ -42,25 +44,40 @@ main() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     dict[name2]="$(koopa_snake_case_simple "${dict[name]}")"
-    # Temporary fix for installation of current version, which has bug fixes
-    # that aren't yet available in tagged release, especially for GCC 10.
-    dict[url_stem]="https://github.com/ggreer/${dict[name2]}/archive"
+    dict[url_stem]="https://github.com/ggreer/${dict[name2]}"
     case "${dict[version]}" in
         '2.2.0')
-            dict[version]='master'
+            dict[commit]='a61f1780b64266587e7bc30f0f5f71c6cca97c0f'
+            dict[file]="${dict[commit]}.tar.gz"
+            dict[url]="${dict[url_stem]}/archive/${dict[file]}"
+            dict[dirname]="${dict[name2]}-${dict[commit]}"
             ;;
         *)
-            dict[url_stem]="${dict[url_stem]}/refs/tags"
+            dict[file]="${dict[version]}.tar.gz"
+            dict[url]="${dict[url_stem]}/archive/refs/tags/${dict[file]}"
+            dict[dirname]="${dict[name2]}-${dict[version]}"
             ;;
     esac
-    dict[file]="${dict[version]}.tar.gz"
-    dict[url]="${dict[url_stem]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name2]}-${dict[version]}"
-    # Refer to 'build.sh' script for details.
-    ./autogen.sh
-    ./configure --prefix="${dict[prefix]}"
+    koopa_cd "${dict[dirname]}"
+    "${app[libtoolize]}"
+    "${app[autoreconf]}" -iv
+    # Refer to 'build.sh' and 'autogen.sh' scripts for details.
+    # From the 'autogen.sh' script:
+    # > if [ -d "/usr/local/share/aclocal" ]
+    # > then
+    # >     AC_SEARCH_OPTS="-I /usr/local/share/aclocal"
+    # > fi
+    # > aclocal # $AC_SEARCH_OPTS
+    # > autoconf
+    # > autoheader
+    # > automake --add-missing
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--disable-dependency-tracking'
+    )
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
