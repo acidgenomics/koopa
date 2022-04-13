@@ -1854,9 +1854,9 @@ koopa_install_r() { # {{{3
 
 koopa_uninstall_r() { # {{{3
     koopa_uninstall_app \
-        --name-fancy='R'
-        --name='r'
-        --unlink-in-bin='R'
+        --name-fancy='R' \
+        --name='r' \
+        --unlink-in-bin='R' \
         --unlink-in-bin='Rscript'
         "$@"
 }
