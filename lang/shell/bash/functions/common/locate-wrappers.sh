@@ -933,9 +933,14 @@ koopa_locate_tex() { # {{{1
 }
 
 koopa_locate_tlmgr() { # {{{1
-    koopa_locate_app \
-        --allow-in-path \
-        --app-name='tlmgr'
+    if koopa_is_macos
+    then
+        koopa_locate_app '/Library/TeX/texbin/tlmgr'
+    else
+        koopa_locate_app \
+            --allow-in-path \
+            --app-name='tlmgr'
+    fi
 }
 
 koopa_locate_touch() { # {{{1
