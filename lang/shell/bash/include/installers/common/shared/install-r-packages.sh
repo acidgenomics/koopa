@@ -3,8 +3,17 @@
 main() { # {{{1
     # """
     # Install R packages.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-04-13.
     # """
-    koopa_r_koopa 'cliInstallRPackages' "$@"
+    local app
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [rscript]="$(koopa_locate_rscript)"
+    )
+    "${app[rscript]}" -e " \
+        install.packages('AcidDevTools'); \
+        AcidDevTools::installRecommendedPackages(); \
+        install.packages('koopa', dependencies = TRUE); \
+    "
     return 0
 }

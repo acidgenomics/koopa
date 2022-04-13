@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+## FIXME Need to rethink the '--help' handoff to man files.
+
 local({
     ## Wrapping in a local call here, so functions don't persist downstream.
 
@@ -35,7 +37,7 @@ local({
     #'
     #' @note Updated 2021-08-17.
     #' @noRd
-    installIfNecessary <- function() {
+    installKoopaIfNecessary <- function() {
         ## Minimum version of koopa R package.
         ## Ensure that this also gets updated in `koopa system variables`.
         minVersion <- "0.2.0"
@@ -56,8 +58,6 @@ local({
         if (isFALSE(isInstalled("BiocManager"))) {
             utils::install.packages("BiocManager")
         }
-        ## FIXME Don't install koopa in the 'install r-packages' call.
-        ## FIXME Simply install AcidDevTools instead.
         utils::install.packages(
             pkgs = "koopa",
             repos = c(
@@ -100,7 +100,7 @@ local({
             options("verbose" = TRUE)
         }
         getHelpIfNecessary()
-        installIfNecessary()
+        installKoopaIfNecessary()
         invisible(TRUE)
     }
 

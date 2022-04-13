@@ -17,18 +17,18 @@
 # ==============================================================================
 
 tap "homebrew/bundle"
-tap "homebrew/core"
 tap "homebrew/cask"
 tap "homebrew/cask-drivers"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
+tap "homebrew/core"
 
 # Bootstrap brews {{{1
 # ==============================================================================
 
-brew "bash"
-brew "coreutils"
-brew "gdal"
+# > brew "bash"
+# > brew "coreutils"
+# > brew "gdal"
 
 # Disabled casks {{{1
 # ==============================================================================
