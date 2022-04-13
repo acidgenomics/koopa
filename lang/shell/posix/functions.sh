@@ -135,7 +135,7 @@ koopa_activate_aliases() { # {{{1
     alias python='python3'
     alias q='exit'
     alias rbenv='koopa_alias_rbenv'
-    alias rg='rg --case-sensitive --no-ignore'
+    alias rg='rg --case-sensitive' # '--no-ignore'
     alias ronn='ronn --roff'
     alias sha256='koopa_alias_sha256'
     alias spacemacs='koopa_alias_spacemacs'
