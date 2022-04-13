@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# Here's how to remove all brew formula:
+# https://apple.stackexchange.com/questions/198623/
+# > while [[ "$(brew list | wc -l)" -ne 0 ]]
+# > do
+# >     for brew in "$(brew list)"
+# >     do
+# >         brew uninstall --force --ignore-dependencies "$brew"
+# >     done
+# > done
+
 main() { # {{{1
     # """
     # Uninstall Homebrew.
