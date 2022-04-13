@@ -11,9 +11,9 @@ main() { # {{{1
         [rscript]="$(koopa_locate_rscript)"
     )
     "${app[rscript]}" -e " \
-        install.packages('AcidDevTools'); \
+        install.packages(pkgs = 'AcidDevTools'); \
         AcidDevTools::installRecommendedPackages(); \
-        install.packages('koopa', dependencies = TRUE); \
+        install.packages(pkgs = 'koopa', dependencies = TRUE); \
     "
     return 0
 }
