@@ -56,6 +56,8 @@ local({
         if (isFALSE(isInstalled("BiocManager"))) {
             utils::install.packages("BiocManager")
         }
+        ## FIXME Don't install koopa in the 'install r-packages' call.
+        ## FIXME Simply install AcidDevTools instead.
         utils::install.packages(
             pkgs = "koopa",
             repos = c(
