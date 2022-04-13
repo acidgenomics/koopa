@@ -207,13 +207,13 @@ local({  # nolint
     ## >     "https://repo.miserver.it.umich.edu/cran"
 
     repos <- getOption("repos")
-
-    ## Configure the RSPM CRAN snapshot.
-    snapshot <- "2022-04-12"
-    cran <- "https://packagemanager.rstudio.com/cran"
+    cran <- "https://repo.miserver.it.umich.edu/cran"
     options("pkgType" = "source")
 
     if (isTRUE(flag[["linux"]])) {
+        ## Configure the RSPM CRAN snapshot.
+        snapshot <- "2022-04-12"
+        cran <- "https://packagemanager.rstudio.com/cran"
         ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
         if (isTRUE(grepl(
             pattern = "Ubuntu 20.04",
@@ -223,22 +223,21 @@ local({  # nolint
             distro <- "focal"
             cran <- paste(cran, "__linux__", distro, sep = "/")
         }
+        cran <- paste(cran, snapshot, sep = "/")
     }
 
-    ## Allow binary install on macOS for CRAN R.
-    ## Otherwise default to installing from source.
-    ## Note that RSPM doesn't currently support binaries for macOS.
-    ## > if (
-    ## >     isTRUE(flag[["macos"]]) &&
-    ## >     isTRUE(grepl(
-    ## >         pattern = "^/Library/Frameworks/R.framework/Resources",
-    ## >         x = Sys.getenv("R_HOME")
-    ## >     ))
-    ## > ) {
-    ## >     options("pkgType" = "both")
-    ## > }
+    ## Allow binary install on macOS for CRAN R. Otherwise default to installing
+    ## from source. Note that RSPM doesn't currently support macOS binaries.
+    if (
+        isTRUE(flag[["macos"]]) &&
+        isTRUE(grepl(
+            pattern = "^/Library/Frameworks/R.framework/Resources",
+            x = Sys.getenv("R_HOME")
+        ))
+    ) {
+        options("pkgType" = "both")
+    }
 
-    cran <- paste(cran, snapshot, sep = "/")
     repos[["CRAN"]] <- cran
 
     ## Configure the RSPM Bioconductor mirror repo.
