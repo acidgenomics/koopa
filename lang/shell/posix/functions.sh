@@ -92,30 +92,59 @@ __koopa_remove_from_path_string() { # {{{1
 koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-13.
     # """
     local file
     koopa_activate_coreutils_aliases
+    alias ......='cd ../../../../../'
+    alias .....='cd ../../../../'
+    alias ....='cd ../../../'
+    alias ...='cd ../../'
+    alias ..='cd ..'
+    alias :q='exit'
+    alias R='R --no-restore --no-save --quiet'
+    alias black='black --line-length=79'
+    alias br-size='br --sort-by-size'
     alias br='koopa_alias_broot'
     alias bucket='koopa_alias_bucket'
+    alias c='clear'
+    alias d='clear; cd -; l'
     alias doom-emacs='koopa_alias_doom_emacs'
+    alias e='exit'
     alias emacs-vanilla='koopa_alias_emacs_vanilla'
     alias emacs='koopa_alias_emacs'
+    alias fd='fd --case-sensitive --no-ignore'
+    alias fvim='vim "$(fzf)"'
     alias fzf='koopa_alias_fzf'
+    alias h='history'
     alias j='z'
     alias k='koopa_alias_k'
+    alias l.='l -d .*'
+    alias l1='ls -1'
+    alias l='koopa_alias_l'
+    alias la='l -a'
+    alias lh='l | head'
+    alias ll='la -l'
+    alias lt='l | tail'
     alias mamba='koopa_alias_mamba'
     alias nvim-fzf='koopa_alias_nvim_fzf'
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
     alias perlbrew='koopa_alias_perlbrew'
     alias prelude-emacs='koopa_alias_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
+    alias python='python3'
+    alias q='exit'
     alias rbenv='koopa_alias_rbenv'
-    alias rg2='grep -E -R'
+    alias rg='rg --case-sensitive --no-ignore'
+    alias ronn='ronn --roff'
     alias sha256='koopa_alias_sha256'
     alias spacemacs='koopa_alias_spacemacs'
     alias spacevim='koopa_alias_spacevim'
+    alias tmux-vanilla='koopa_alias_tmux_vanilla'
     alias today='koopa_alias_today'
+    alias u='clear; cd ../; pwd; l'
+    alias variable-bodies='typeset -p'
+    alias variable-names='compgen -A variable | sort'
     alias vim-fzf='koopa_alias_vim_fzf'
     alias vim-vanilla='koopa_alias_vim_vanilla'
     alias week='koopa_alias_week'
@@ -134,6 +163,8 @@ koopa_activate_bat() { # {{{1
     # """
     # Activate bat configuration.
     # @note Updated 2022-03-28.
+    #
+    # Ensure this follows 'koopa_activate_color_mode'.
     # """
     local conf_file dotfiles_prefix
     dotfiles_prefix="$(koopa_dotfiles_prefix)"
@@ -220,7 +251,10 @@ koopa_activate_color_mode() { # {{{1
     # Activate dark / light color mode.
     # @note Updated 2022-04-13.
     # """
-    KOOPA_COLOR_MODE="$(koopa_color_mode)"
+    if [ -z "${KOOPA_COLOR_MODE:-}" ]
+    then
+        KOOPA_COLOR_MODE="$(koopa_color_mode)"
+    fi
     if [ -n "${KOOPA_COLOR_MODE:-}" ]
     then
         export KOOPA_COLOR_MODE
@@ -340,9 +374,11 @@ koopa_activate_coreutils_aliases() { # {{{1
 koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-13.
     #
     # This will set the 'LS_COLORS' environment variable.
+    #
+    # Ensure this follows 'koopa_activate_color_mode'.
     # """
     local bin_prefix
     [ -n "${SHELL:-}" ] || return 0
@@ -1296,6 +1332,51 @@ koopa_alias_k() { # {{{1
     cd "$(koopa_koopa_prefix)" || return 1
 }
 
+koopa_alias_l() { # {{{
+    # """
+    # List files alias that uses 'exa' instead of 'ls', when possible.
+    # @note Updated 2022-04-13.
+    #
+    # Use exa instead of ls, when possible.
+    # https://the.exa.website/docs/command-line-options
+    #
+    # @secton Useful exa flags:
+    # * -F, --classify
+    #         Displays file type indicators by file names.
+    # * -a, --all
+    #         Shows hidden and ‘dot’ files.
+    #         Use this twice to also show the . and .. directories.
+    # * -g, --group
+    #         Lists each file’s group.
+    # * -l, --long
+    #         Displays files in a table along with their metadata.
+    # * -s, --sort=SORT_FIELD
+    #         Configures which field to sort by.
+    # *     --git-ignore
+    #         Ignores files mentioned in .gitignore.
+    # *     --group-directories-first
+    #         Lists directories before other files when sorting.
+    # @section Useful ls flags:
+    # * -B, --ignore-backups
+    #         do not list implied entries ending with ~
+    # * -F, --classify
+    #         append indicator (one of */=>@|) to entries
+    # * -h, --human-readable
+    #         with -l and -s, print sizes like 1K 234M 2G etc.
+    # """
+    if koopa_is_installed 'exa'
+    then
+        exa \
+            --classify \
+            --group \
+            --group-directories-first \
+            --sort='Name' \
+            "$@"
+    else
+        ls -BFh "$@"
+    fi
+}
+
 koopa_alias_mamba() { # {{{1
     # """
     # Mamba alias.
@@ -1404,6 +1485,14 @@ koopa_alias_spacevim() { # {{{1
     [ -f "$vimrc" ] || return 1
     koopa_is_alias 'vim' && unalias 'vim'
     "$vim" -u "$vimrc" "$@"
+}
+
+koopa_alias_tmux_vanilla() { # {{{1
+    # """
+    # Vanilla tmux.
+    # @note Updated 2022-04-13.
+    # """
+    tmux -f '/dev/null'
 }
 
 koopa_alias_today() { # {{{1
@@ -1531,10 +1620,15 @@ koopa_boolean_nounset() { # {{{1
 koopa_color_mode() { # {{{1
     # """
     # macOS color mode (dark/light) value.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-13.
     # """
     local str
     str="${KOOPA_COLOR_MODE:-}"
+    if [ -n "$str" ]
+    then
+        koopa_print "$str"
+        return 0
+    fi
     if [ -z "$str" ]
     then
         if koopa_is_macos
@@ -1548,7 +1642,12 @@ koopa_color_mode() { # {{{1
         fi
     fi
     [ -n "$str" ] || return 0
+    # Optionally, here's how to write the config to a file:
+    # > local conf_file
+    # > conf_file="$(koopa_config_prefix)/color-mode"
+    # > koopa_print "$str" > "$conf_file"
     koopa_print "$str"
+    return 0
 }
 
 koopa_conda_env_name() { # {{{1

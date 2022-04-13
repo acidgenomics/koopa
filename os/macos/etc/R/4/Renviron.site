@@ -57,6 +57,9 @@ PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 # GNU Fortran from fxcoudert, recommended by CRAN.
 PATH="/usr/local/gfortran/bin:${PATH}"
 
+# pdflatex is required for PDF manual generation.
+PATH="${PATH}:/Library/TeX/texbin"
+
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
