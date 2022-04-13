@@ -208,6 +208,7 @@ __koopa_complete() { # {{{1
                         'udunits'
                         'vim'
                         'wget'
+                        'which'
                         'xz'
                         'zlib'
                         'zsh'
