@@ -39,7 +39,7 @@ R_LIBS_USER="${R_LIBS_SITE}"
 PATH="/usr/bin:/bin"
 
 # Homebrew.
-PATH="${PATH}:${HOMEBREW_PREFIX}/bin"
+# > PATH="${PATH}:${HOMEBREW_PREFIX}/bin"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
@@ -60,11 +60,11 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@3/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/gdal/lib/pkgconfig:${PKG_CONFIG_PATH}"
 # > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/geos/lib/pkgconfig:${PKG_CONFIG_PATH}"
