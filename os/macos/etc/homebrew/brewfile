@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-04-09.
+# Updated 2022-04-13.
 #
 # @section Cask reinstallation:
 #
@@ -16,12 +16,12 @@
 # Taps {{{1
 # ==============================================================================
 
+tap "homebrew/core"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-drivers"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
-tap "homebrew/core"
 
 # Bootstrap brews {{{1
 # ==============================================================================
