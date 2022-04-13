@@ -89,7 +89,7 @@ koopa_locate_app() { # {{{1
             [[ "${dict[allow_in_path]}" -eq 0 ]] && \
             [[ "${dict[allow_missing]}" -eq 0 ]]
         then
-            koopa_stop "Need to install '${dict[opt_name]}'."
+            koopa_stop "Need to install '${dict[opt_name]}' for '${dict[app]}'."
         fi
     fi
     dict[app]="${dict[bin_prefix]}/${dict[app_name]}"

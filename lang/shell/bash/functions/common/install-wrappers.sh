@@ -175,6 +175,20 @@ koopa_uninstall_bash() { # {{{3
         "$@"
 }
 
+# bc ---------------------------------------------------------------------- {{{2
+
+koopa_install_bc() { # {{{3
+    koopa_install_gnu_app \
+        --name='bc' \
+        "$@"
+}
+
+koopa_uninstall_autoconf() { # {{{3
+    koopa_uninstall_app \
+        --name='bc' \
+        "$@"
+}
+
 # binutils ---------------------------------------------------------------- {{{2
 
 koopa_install_binutils() { # {{{3
