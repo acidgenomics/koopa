@@ -112,7 +112,7 @@ __koopa_complete() { # {{{1
                         'fltk'
                         'fzf'
                         'gawk'
-                        'gcc'
+                        # > 'gcc'
                         # > 'gdal'
                         # > 'geos'
                         'gettext'

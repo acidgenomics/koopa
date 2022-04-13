@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2022-04-07.
+# Updated 2022-04-13.
 #
 # @section ilmbase deprecation (due to neofetch):
 #
@@ -11,8 +11,8 @@
 # Taps {{{1
 # ==============================================================================
 
-tap "homebrew/bundle"
 tap "homebrew/core"
+tap "homebrew/bundle"
 
 # Brews {{{1
 # ==============================================================================

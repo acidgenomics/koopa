@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently failing on macOS.
-
-# FIXME Need to provide a link to glibtool, otherwise this will error.
+# NOTE This is currently failing on macOS, but works on Linux.
 
 main() { # {{{1
     # """
