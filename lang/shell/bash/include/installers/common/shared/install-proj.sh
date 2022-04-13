@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Do we need to link this in '/usr/local'?
-
 main() { # {{{1
     # """
     # Install PROJ.
