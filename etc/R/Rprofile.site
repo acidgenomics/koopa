@@ -208,7 +208,7 @@ local({  # nolint
 
     repos <- getOption("repos")
     cran <- "https://repo.miserver.it.umich.edu/cran"
-    options("pkgType" = "source")
+    options("install.packages.compile.from.source" = "always")
 
     if (isTRUE(flag[["linux"]])) {
         ## Configure the RSPM CRAN snapshot.
@@ -224,6 +224,7 @@ local({  # nolint
             cran <- paste(cran, "__linux__", distro, sep = "/")
         }
         cran <- paste(cran, snapshot, sep = "/")
+        options("install.packages.compile.from.source" = "never")
     }
 
     ## Allow binary install on macOS for CRAN R. Otherwise default to installing
@@ -235,7 +236,10 @@ local({  # nolint
             x = Sys.getenv("R_HOME")
         ))
     ) {
-        options("pkgType" = "both")
+        options(
+            "pkgType" = "both",
+            "install.packages.compile.from.source" = "never"
+        )
     }
 
     repos[["CRAN"]] <- cran
@@ -267,10 +271,6 @@ local({  # nolint
     ## Note that this will warn when enabled, which causes
     ## `AcidDevTools::install` to error, since warnings are converted to errors.
     ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
-
-    ## Stop nagging about whether to compile in an interactive session.
-    ## https://stackoverflow.com/a/51530225
-    options("install.packages.compile.from.source" = "always")
 
     ## How to set binary-only package mode, which doesn't work on Linux.
     ## > options(

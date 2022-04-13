@@ -65,6 +65,7 @@ PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zlib/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/gdal/lib/pkgconfig:${PKG_CONFIG_PATH}"
 # > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/geos/lib/pkgconfig:${PKG_CONFIG_PATH}"
