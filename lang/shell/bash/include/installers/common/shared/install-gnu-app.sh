@@ -25,6 +25,7 @@ main() { # {{{1
         'bc' | \
         'groff' | \
         'gsl' | \
+        'less' | \
         'libidn' | \
         'libtasn1' | \
         'libunistring' | \
@@ -34,7 +35,8 @@ main() { # {{{1
         'patch' | \
         'stow' | \
         'tar' | \
-        'wget')
+        'wget' | \
+        'which')
             dict[suffix]='gz'
             ;;
         'parallel')

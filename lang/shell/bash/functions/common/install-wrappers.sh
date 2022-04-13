@@ -181,6 +181,7 @@ koopa_uninstall_bash() { # {{{3
 
 koopa_install_bc() { # {{{3
     koopa_install_gnu_app \
+        --link-in-bin='bin/bc' \
         --name='bc' \
         "$@"
 }
@@ -188,6 +189,7 @@ koopa_install_bc() { # {{{3
 koopa_uninstall_autoconf() { # {{{3
     koopa_uninstall_app \
         --name='bc' \
+        --unlink-in-bin='bc' \
         "$@"
 }
 
@@ -948,6 +950,7 @@ koopa_uninstall_grep() { # {{{3
 
 koopa_install_groff() { # {{{3
     koopa_install_gnu_app \
+        --link-in-bin='bin/groff' \
         --name='groff' \
         "$@"
 }
@@ -955,6 +958,7 @@ koopa_install_groff() { # {{{3
 koopa_uninstall_groff() { # {{{3
     koopa_uninstall_app \
         --name='groff' \
+        --unlink-in-bin='groff' \
         "$@"
 }
 
@@ -1136,6 +1140,24 @@ koopa_uninstall_julia_packages() { # {{{3
 
 koopa_update_julia_packages() { # {{{3
     koopa_install_julia_packages "$@"
+}
+
+# less -------------------------------------------------------------------- {{{2
+
+koopa_install_less() { # {{{3
+    koopa_install_gnu_app \
+        --activate-opt='ncurses' \
+        --activate-opt='pcre2' \
+        --link-in-bin='bin/less' \
+        --name='less' \
+        "$@"
+}
+
+koopa_uninstall_less() { # {{{3
+    koopa_uninstall_app \
+        --name='autoconf' \
+        --unlink-in-bin='less' \
+        "$@"
 }
 
 # lesspipe ---------------------------------------------------------------- {{{2
@@ -2357,6 +2379,7 @@ koopa_uninstall_tree() { # {{{3
 
 koopa_install_udunits() { # {{{3
     koopa_install_app \
+        --link-in-bin='bin/udunits2' \
         --name='udunits' \
         "$@"
 }
@@ -2364,6 +2387,7 @@ koopa_install_udunits() { # {{{3
 koopa_uninstall_udunits() { # {{{3
     koopa_uninstall_app \
         --name='udunits' \
+        --unlink-in-bin='udunits2' \
         "$@"
 }
 
@@ -2400,6 +2424,20 @@ koopa_uninstall_wget() { # {{{3
     koopa_uninstall_app \
         --name='wget' \
         --unlink-in-bin='wget' \
+        "$@"
+}
+
+# which ------------------------------------------------------------------- {{{2
+
+koopa_install_which() { # {{{3
+    koopa_install_gnu_app \
+        --name='which' \
+        "$@"
+}
+
+koopa_uninstall_which() { # {{{3
+    koopa_uninstall_app \
+        --name='which' \
         "$@"
 }
 
