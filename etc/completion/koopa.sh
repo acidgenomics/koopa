@@ -113,8 +113,8 @@ __koopa_complete() { # {{{1
                         'fzf'
                         'gawk'
                         'gcc'
-                        'gdal'
-                        'geos'
+                        # > 'gdal'
+                        # > 'geos'
                         'gettext'
                         'git'
                         'gmp'
@@ -172,7 +172,7 @@ __koopa_complete() { # {{{1
                         'perlbrew'
                         'pkg-config'
                         'prelude-emacs'
-                        'proj'
+                        # > 'proj'
                         'pyenv'
                         'python'
                         'python-packages'
@@ -257,9 +257,11 @@ __koopa_complete() { # {{{1
                     if koopa_is_macos
                     then
                         args+=(
+                            'neovim-binary'
                             'python-binary'
                             'r-binary'
-                            'r-cran-gfortran'
+                            'r-gfortran'
+                            'r-openmp'
                             'xcode-clt'
                         )
                     fi
