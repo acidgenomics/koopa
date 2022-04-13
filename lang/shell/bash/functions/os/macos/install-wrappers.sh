@@ -13,6 +13,18 @@ koopa_macos_install_aws_cli() { # {{{3
         "$@"
 }
 
+# neovim-binary ----------------------------------------------------------- {{{2
+
+koopa_macos_install_neovim_binary() { # {{{3
+    koopa_install_app \
+        --installer='neovim-binary' \
+        --link-in-bin='bin/nvim' \
+        --name-fancy='Neovim' \
+        --name='neovim' \
+        --platform='macos' \
+        "$@"
+}
+
 # System ================================================================== {{{1
 
 # adobe-creative-cloud ---------------------------------------------------- {{{2
@@ -123,24 +135,44 @@ koopa_macos_uninstall_r_binary() { # {{{3
         "$@"
 }
 
-# r-cran-gfortran --------------------------------------------------------- {{{2
+# r-gfortran -------------------------------------------------------------- {{{2
 
-koopa_macos_install_r_cran_gfortran() { # {{{3
+koopa_macos_install_r_gfortran() { # {{{3
     koopa_install_app \
-        --name-fancy='R CRAN gfortran' \
-        --name='r-cran-gfortran' \
+        --name-fancy='R gfortran' \
+        --name='r-gfortran' \
         --platform='macos' \
         --prefix="$(koopa_macos_gfortran_prefix)" \
         --system \
         "$@"
 }
 
-koopa_macos_uninstall_r_cran_gfortran() { # {{{3
+koopa_macos_uninstall_r_gfortran() { # {{{3
     koopa_uninstall_app \
-        --name-fancy='R CRAN gfortran' \
-        --name='r-cran-gfortran' \
+        --name-fancy='R gfortran' \
+        --name='r-gfortran' \
         --platform='macos' \
         --prefix="$(koopa_macos_gfortran_prefix)" \
+        --system \
+        "$@"
+}
+
+# r-openmp ---------------------------------------------------------------- {{{2
+
+koopa_macos_install_r_openmp() { # {{{3
+    koopa_install_app \
+        --name-fancy='R OpenMP' \
+        --name='r-openmp' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa_macos_uninstall_r_gfortran() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='R OpenMP' \
+        --name='r-openmp' \
+        --platform='macos' \
         --system \
         "$@"
 }

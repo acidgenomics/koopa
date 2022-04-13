@@ -743,35 +743,35 @@ koopa_uninstall_gcc() { # {{{3
 
 # gdal -------------------------------------------------------------------- {{{2
 
-koopa_install_gdal() { # {{{3
-    koopa_install_app \
-        --name-fancy='GDAL' \
-        --name='gdal' \
-        "$@"
-}
+# > koopa_install_gdal() { # {{{3
+# >     koopa_install_app \
+# >         --name-fancy='GDAL' \
+# >         --name='gdal' \
+# >         "$@"
+# > }
 
-koopa_uninstall_gdal() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='GDAL' \
-        --name='gdal' \
-        "$@"
-}
+# > koopa_uninstall_gdal() { # {{{3
+# >     koopa_uninstall_app \
+# >         --name-fancy='GDAL' \
+# >         --name='gdal' \
+# >         "$@"
+# > }
 
 # geos -------------------------------------------------------------------- {{{2
 
-koopa_install_geos() { # {{{3
-    koopa_install_app \
-        --name-fancy='GEOS' \
-        --name='geos' \
-        "$@"
-}
+# > koopa_install_geos() { # {{{3
+# >     koopa_install_app \
+# >         --name-fancy='GEOS' \
+# >         --name='geos' \
+# >         "$@"
+# > }
 
-koopa_uninstall_geos() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='GEOS' \
-        --name='geos' \
-        "$@"
-}
+# > koopa_uninstall_geos() { # {{{3
+# >     koopa_uninstall_app \
+# >         --name-fancy='GEOS' \
+# >         --name='geos' \
+# >         "$@"
+# > }
 
 # gettext ----------------------------------------------------------------- {{{2
 
@@ -1325,7 +1325,6 @@ koopa_update_mamba() { # {{{3
 
 # man-db ------------------------------------------------------------------ {{{2
 
-# FIXME Only link on Linux.
 koopa_install_man_db() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/man' \
@@ -1333,7 +1332,6 @@ koopa_install_man_db() { # {{{3
         "$@"
 }
 
-# FIXME Only link on Linux.
 koopa_uninstall_man_db() { # {{{3
     koopa_uninstall_app \
         --name='man-db' \
@@ -1478,7 +1476,6 @@ koopa_install_ninja() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_ninja() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Ninja' \
@@ -1597,10 +1594,10 @@ koopa_install_parallel() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_parallel() { # {{{3
     koopa_uninstall_app \
         --name='parallel' \
+        --unlink-in-bin='parallel' \
         "$@"
 }
 
@@ -1688,8 +1685,6 @@ koopa_uninstall_perl_packages() { # {{{3
         --unlink-in-bin='cpanm' \
         --unlink-in-bin='rename' \
         "$@"
-    # FIXME Move this to a cleanup uninstall script.
-    koopa_rm "${HOME:?}/.cpan" "${HOME:?}/.cpanm"
     return 0
 }
 
@@ -1739,19 +1734,19 @@ koopa_uninstall_pkg_config() { # {{{3
 
 # proj -------------------------------------------------------------------- {{{2
 
-koopa_install_proj() { # {{{3
-    koopa_install_app \
-        --name-fancy='PROJ' \
-        --name='proj' \
-        "$@"
-}
+# > koopa_install_proj() { # {{{3
+# >     koopa_install_app \
+# >         --name-fancy='PROJ' \
+# >         --name='proj' \
+# >         "$@"
+# > }
 
-koopa_uninstall_proj() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='PROJ' \
-        --name='proj' \
-        "$@"
-}
+# > koopa_uninstall_proj() { # {{{3
+# >     koopa_uninstall_app \
+# >         --name-fancy='PROJ' \
+# >         --name='proj' \
+# >         "$@"
+# > }
 
 # pyenv ------------------------------------------------------------------- {{{2
 
@@ -1779,23 +1774,19 @@ koopa_update_pyenv() { # {{{3
 # python ------------------------------------------------------------------ {{{2
 
 koopa_install_python() { # {{{3
-    local install_args
-    install_args=(
-        '--link-in-bin=bin/python3'
-        '--name-fancy=Python'
-        '--name=python'
-    )
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --link-in-bin='bin/python3' \
+        --name-fancy='Python' \
+        --name='python' \
+        "$@"
 }
 
 koopa_uninstall_python() { # {{{3
-    local uninstall_args
-    uninstall_args=(
-        '--name-fancy=Python'
-        '--name=python'
-        '--unlink-in-bin=python3'
-    )
-    koopa_uninstall_app "${uninstall_args[@]}" "$@"
+    koopa_uninstall_app \
+        --name-fancy='Python' \
+        --name='python' \
+        --unlink-in-bin='python3' \
+        "$@"
 }
 
 # python-packages --------------------------------------------------------- {{{2
@@ -1981,11 +1972,12 @@ koopa_install_ruby() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_ruby() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Ruby' \
         --name='ruby' \
+        --unlink-in-bin='gem' \
+        --unlink-in-bin='ruby' \
         "$@"
 }
 
@@ -2002,11 +1994,14 @@ koopa_install_ruby_packages() { # {{{3
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_ruby_packages() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Ruby packages' \
         --name='ruby-packages' \
+        --unlink-in-bin='bashcov' \
+        --unlink-in-bin='bundle' \
+        --unlink-in-bin='bundler' \
+        --unlink-in-bin='ronn' \
         "$@"
 }
 
@@ -2161,35 +2156,35 @@ koopa_uninstall_shellcheck() { # {{{3
 
 # shunit2 ----------------------------------------------------------------- {{{2
 
-# FIXME Need to include link here?
 koopa_install_shunit2() { # {{{3
     koopa_install_app \
+        --link-in-bin='bin/shunit2' \
         --name-fancy='shUnit2' \
         --name='shunit2' \
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_shunit2() { # {{{3
     koopa_uninstall_app \
         --name-fancy='shUnit2' \
         --name='shunit2' \
+        --unlink-in-bin='shunit2' \
         "$@"
 }
 
 # singularity ------------------------------------------------------------- {{{2
 
-# FIXME Need to include link here?
 koopa_install_singularity() { # {{{3
     koopa_install_app \
+        --link-in-bin='bin/singularity' \
         --name='singularity' \
         "$@"
 }
 
-# FIXME Need to unlink in bin here.
 koopa_uninstall_singularity() { # {{{3
     koopa_uninstall_app \
         --name='singularity' \
+        --unlink-in-bin='singularity' \
         "$@"
 }
 
@@ -2248,6 +2243,7 @@ koopa_uninstall_subversion() { # {{{3
 # taglib ------------------------------------------------------------------ {{{2
 
 # FIXME Rework this as a Python virtualenv.
+# FIXME Need to link the 'pytagsXXX' binary here...
 koopa_install_taglib() { # {{{3
     koopa_install_app \
         --name-fancy='TagLib' \
