@@ -33,7 +33,7 @@ R_LIBS_USER="${R_LIBS_SITE}"
 
 # Restrict path, so we don't mask compiler binaries with virtual environment.
 # This also greatly improves path consistency when running inside RStudio.
-PATH="/usr/local/bin:/usr/bin:/bin"
+PATH="/usr/bin:/bin"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
