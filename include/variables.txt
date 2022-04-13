@@ -120,7 +120,7 @@ docker="20.10.14"
 docker-credential-pass="0.6.4"
 
 # https://www.gnu.org/software/emacs/
-emacs="27.2"
+emacs="28.1"
 
 # Latest version compatible with Ensembl Perl API.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
@@ -294,10 +294,14 @@ ninja="1.10.2.3"
 # https://nodejs.org/
 node="17.8.0"
 
+# https://github.com/kkos/oniguruma/
+# https://github.com/kkos/oniguruma/
+oniguruma="6.9.7.1"
+
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="18"
+openjdk="17.0.2"
 
 # https://www.openssh.com/portable.html
 openssh="8.9p1"
@@ -627,7 +631,7 @@ python-ranger-fm="1.9.3"        # homebrew
 # ==============================================================================
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.10"            # system
+ruby-bundler="2.3.11"           # system
 
 ruby-bashcov="1.8.2"            # recommended
 ruby-ronn="0.7.3"               # recommended

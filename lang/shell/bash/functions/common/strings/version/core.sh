@@ -190,12 +190,10 @@ koopa_extract_version() { # {{{1
     return 0
 }
 
-# FIXME This isn't handling gdal, geos, proj correctly on Ubuntu.
-
 koopa_get_version() { # {{{1
     # """
     # Get the version of an installed program.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-04-13.
     #
     # @examples
     # > koopa system version 'R' 'conda' 'coreutils' 'python' 'salmon' 'zsh'
@@ -247,7 +245,7 @@ koopa_get_version() { # {{{1
         then
             if koopa_is_function "${dict[locate_fun]}"
             then
-                dict[cmd]="$("${dict[locate_fun]}" "${dict[cmd]}")"
+                dict[cmd]="$("${dict[locate_fun]}")"
             else
                 dict[cmd]="$(koopa_which_realpath "${dict[cmd]}")"
             fi

@@ -747,7 +747,7 @@ koopa_locate_rg() { # {{{1
     # """
     koopa_locate_app \
         --app-name='rg' \
-        --opt-name='ripgrep' \
+        --opt-name='rust-packages' \
         "$@"
 }
 
