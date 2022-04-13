@@ -181,6 +181,7 @@ koopa_locate_cut() { # {{{1
 
 koopa_locate_date() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='date' \
         --opt-name='coreutils'
 }
@@ -357,6 +358,7 @@ koopa_locate_grep() { # {{{1
 
 koopa_locate_groups() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='groups' \
         --opt-name='coreutils'
 }
