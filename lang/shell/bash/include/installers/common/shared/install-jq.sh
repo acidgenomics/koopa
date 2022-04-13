@@ -41,18 +41,18 @@ main() { #{{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[url_stem]="https://github.com/stedolan/${dict[name]}"
     case "${dict[version]}" in
         '1.6')
             # The current 1.6 release installer fails to compile on macOS.
             dict[commit]='f9afa950e26f5d548d955f92e83e6b8e10cc8438'
             dict[file]="${dict[commit]}.tar.gz"
-            dict[url]="https://github.com/stedolan/${dict[name]}/\
-archive/${dict[file]}"
+            dict[url]="${dict[url_stem]}/archive/${dict[file]}"
             dict[dirname]="${dict[name]}-${dict[commit]}"
             ;;
         *)
             dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-        dict[url]="https://github.com/stedolan/${dict[name]}/releases/\
+        dict[url]="${dict[url_stem]}/releases/\
 download/${dict[name]}-${dict[version]}/${dict[file]}"
             dict[dirname]="${dict[name]}-${dict[version]}"
             ;;

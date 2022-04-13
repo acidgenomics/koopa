@@ -325,6 +325,10 @@ password-store="1.7.4"
 # ftp://ftp.gnu.org/gnu/patch
 patch="2.7.6"
 
+# https://sourceforge.net/projects/pcre/
+pcre="8.45"
+
+# https://www.pcre.org/
 pcre2="10.39"
 
 # https://www.perl.org/get.html

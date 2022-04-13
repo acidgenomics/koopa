@@ -3,7 +3,7 @@
 koopa_linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-13.
     #
     # Intended primarily for virtual machine and Docker image builds.
     #
@@ -55,8 +55,8 @@ koopa_linux_configure_system() { # {{{1
         [install_fzf]=0
         [install_gawk]=0
         [install_gcc]=0
-        [install_gdal]=0
-        [install_geos]=0
+        # > [install_gdal]=0
+        # > [install_geos]=0
         [install_git]=0
         [install_gnupg]=0
         [install_go]=0
@@ -87,7 +87,7 @@ koopa_linux_configure_system() { # {{{1
         [install_perl]=0
         [install_perl_packages]=0
         [install_pkg_config]=0
-        [install_proj]=0
+        # > [install_proj]=0
         [install_python]=0
         [install_python_packages]=0
         [install_r]=0
@@ -106,7 +106,7 @@ koopa_linux_configure_system() { # {{{1
         [install_subversion]=0
         [install_taglib]=0
         [install_texinfo]=0
-        [install_the_silver_searcher]=0
+        # > [install_the_silver_searcher]=0
         [install_tmux]=0
         [install_udunits]=0
         [install_vim]=0
@@ -215,8 +215,8 @@ koopa_linux_configure_system() { # {{{1
             dict[install_fish]=1
             dict[install_fzf]=1
             dict[install_gawk]=1
-            dict[install_gdal]=1
-            dict[install_geos]=1
+            # > dict[install_gdal]=1
+            # > dict[install_geos]=1
             dict[install_git]=1
             dict[install_gnupg]=1
             dict[install_go]=1
@@ -244,7 +244,7 @@ koopa_linux_configure_system() { # {{{1
             dict[install_perl]=1
             dict[install_perl_packages]=1
             dict[install_pkg_config]=1
-            dict[install_proj]=1
+            # > dict[install_proj]=1
             dict[install_python_packages]=1
             dict[install_r_packages]=1
             dict[install_rstudio_server]=1
@@ -419,14 +419,14 @@ koopa_linux_configure_system() { # {{{1
        koopa install openssh
     [[ "${dict[install_perl]}" -eq 1 ]] && \
        koopa install perl
-    [[ "${dict[install_geos]}" -eq 1 ]] && \
-       koopa install geos
+    # > [[ "${dict[install_geos]}" -eq 1 ]] && \
+    # >    koopa install geos
     [[ "${dict[install_sqlite]}" -eq 1 ]] && \
        koopa install sqlite
-    [[ "${dict[install_proj]}" -eq 1 ]] && \
-       koopa install proj
-    [[ "${dict[install_gdal]}" -eq 1 ]] && \
-       koopa install gdal
+    # > [[ "${dict[install_proj]}" -eq 1 ]] && \
+    # >    koopa install proj
+    # > [[ "${dict[install_gdal]}" -eq 1 ]] && \
+    # >    koopa install gdal
     [[ "${dict[install_hdf5]}" -eq 1 ]] && \
        koopa install hdf5
     [[ "${dict[install_gsl]}" -eq 1 ]] && \
@@ -445,8 +445,8 @@ koopa_linux_configure_system() { # {{{1
        koopa install neofetch
     [[ "${dict[install_fzf]}" -eq 1 ]] && \
        koopa install fzf
-    [[ "${dict[install_the_silver_searcher]}" -eq 1 ]] && \
-       koopa install the-silver-searcher
+    # > [[ "${dict[install_the_silver_searcher]}" -eq 1 ]] && \
+    # >    koopa install the-silver-searcher
     [[ "${dict[install_tmux]}" -eq 1 ]] && \
        koopa install tmux
     [[ "${dict[install_vim]}" -eq 1 ]] && \
