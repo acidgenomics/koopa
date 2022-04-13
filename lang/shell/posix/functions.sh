@@ -644,6 +644,17 @@ koopa_activate_node() { # {{{1
     return 0
 }
 
+koopa_activate_path_helper() { # {{{1
+    # """
+    # Activate 'path_helper'.
+    # @note Updated 2022-04-13.
+    #
+    # This will source '/etc/paths.d' on supported platforms (e.g. BSD/macOS).
+    [ -x '/usr/libexec/path_helper' ] || return 0
+    eval "$('/usr/libexec/path_helper' -s)"
+    return 0
+}
+
 koopa_activate_perl() { # {{{1
     # """
     # Activate Perl, adding local library to 'PATH'.
