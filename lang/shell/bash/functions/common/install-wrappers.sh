@@ -1152,6 +1152,20 @@ koopa_uninstall_libevent() { # {{{3
         "$@"
 }
 
+# libgeotiff -------------------------------------------------------------- {{{2
+
+koopa_install_libgeotiff() { # {{{3
+    koopa_install_app \
+        --name='libgeotiff' \
+        "$@"
+}
+
+koopa_uninstall_libgeotiff() { # {{{3
+    koopa_uninstall_app \
+        --name='libgeotiff' \
+        "$@"
+}
+
 # libidn ---------------------------------------------------------------- {{{2
 
 koopa_install_libidn() { # {{{3

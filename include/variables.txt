@@ -214,6 +214,9 @@ lesspipe="2.04"
 # https://github.com/libevent/libevent/releases
 libevent="2.1.12"
 
+# https://github.com/OSGeo/libgeotiff
+libgeotiff="1.7.1"
+
 # https://www.gnu.org/software/libidn/
 libidn="2.3.2"
 
@@ -501,6 +504,7 @@ conda-ericscript="0.5.5"        # 2021-03-26 bioconda                [variation]
 conda-fastqc="0.11.9"           # 2021-03-25 bioconda                       [qc]
 conda-fgbio="1.5.1"             # 2022-02-15 bioconda                [workflows]
 conda-gatk4="4.2.5.0"           # 2022-02-05 bioconda                [workflows]
+conda-gdal="3.4.2"              # YYYY-MM-DD conda-forge         [visualization]
 conda-genrich="0.6.1"           # 2021-03-17 bioconda                  [chipseq]
 conda-gffread="0.12.7"          # 2021-09-24 bioconda             [file formats]
 conda-gffutils="0.10.1"         # 2020-07-26 bioconda             [file formats]

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Do we need to set '--without-ld-shared'?
+# FIXME Need to add libgeotiff support.
 
 main() { # {{{1
     # """
@@ -24,12 +24,23 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    # Consider adding:
+    # - libpng (for '--with-png')
     koopa_activate_opt_prefix \
         'cmake' \
         'geos' \
+        'hdf5' \
+        'jpeg' \
+        'libgeotiff' \
+        'libtiff' \
+        'libtool' \
+        'libxml2' \
+        'pcre2' \
         'pkg-config' \
         'proj' \
-        'sqlite'
+        'sqlite' \
+        'xz' \
+        'zstd'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
@@ -50,39 +61,85 @@ v${dict[version]}/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
+        # Base configuration.
         "--prefix=${dict[prefix]}"
-        '--enable-static'
         '--enable-shared'
-        '--with-armadillo=no'
-        '--with-openjpeg'
+        # > '--enable-static'
+        '--disable-debug'
+        '--with-libtool'
+        "--with-local=${dict[prefix]}"
+        '--with-threads'
+        # GDAL native backends.
+        '--with-libjson-c=internal'
+        '--with-pam'
+        '--with-pcidsk=internal'
+        '--with-pcraster=internal'
+        # Koopa opt backends.
+        "--with-curl=${dict[opt_prefix]}/curl/bin/curl-config"
+        "--with-geos=${dict[opt_prefix]}/geos/bin/geos-config"
+        "--with-geotiff=${dict[opt_prefix]}/libgeotiff"
+        "--with-hdf5=${dict[opt_prefix]}/hdf5"
+        "--with-jpeg=${dict[opt_prefix]}/jpeg"
+        "--with-libtiff=${dict[opt_prefix]}/libtiff"
+        "--with-pcre2=${dict[opt_prefix]}/pcre2"
         "--with-proj=${dict[opt_prefix]}/proj"
+        "--with-sqlite3=${dict[opt_prefix]}/sqlite"
+        "--with-zstd=${dict[opt_prefix]}/zstd"
+        # Features that are supported in Homebrew, but which we don't currently
+        # have recipe support in Koopa.
+        '--with-cfitsio=no'
+        '--with-dods-root=no'
+        # > '--with-epsilon=no'
+        '--with-expat=no'
+        '--with-freexl=no'
+        '--with-gif=no'
+        '--with-liblzma=no'
+        '--with-netcdf=no'
+        '--with-odbc=no'
+        '--with-openjpeg=no'
+        '--with-pg=no'
+        '--with-png=no'
+        '--with-poppler=no'
+        '--with-spatialite=no'
+        '--with-webp=no'
+        '--with-xerces=no'
+        # Explicitly disable some features.
+        '--with-armadillo=no'
         '--with-qhull=no'
-        '--without-ecw'
         '--without-exr'
+        '--without-grass'
+        '--without-jasper'
+        '--without-jpeg12'
+        '--without-libgrass'
+        '--without-mysql'
+        '--without-perl'
+        '--without-python'
+        # Unsupported backends are either proprietary or have no compatible
+        # version in Koopa. Podofo is disabled because Poppler provides the same
+        # functionality and then some.
+        '--without-ecw'
         '--without-fgdb'
         '--without-fme'
-        '--without-grass'
         '--without-gta'
         '--without-hdf4'
         '--without-idb'
         '--without-ingres'
-        '--without-jasper'
         '--without-jp2mrsid'
-        '--without-jpeg12'
         '--without-kakadu'
-        '--without-libgrass'
         '--without-mrsid'
         '--without-mrsid_lidar'
         '--without-msg'
-        '--without-mysql'
         '--without-oci'
         '--without-ogdi'
-        '--without-perl'
         '--without-podofo'
-        '--without-python'
         '--without-rasdaman'
+        # > '--without-sde'
         '--without-sosi'
     )
+    if koopa_is_macos
+    then
+        conf_args+=('--with-opencl')
+    fi
     koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.

@@ -497,7 +497,8 @@ koopa_locate_mamba() { # {{{1
     # """
     koopa_locate_app \
         --app-name='mamba' \
-        --opt-name='conda'
+        --opt-name='conda' \
+        "$@"
 }
 
 koopa_locate_mamba_or_conda() { # {{{1
