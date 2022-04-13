@@ -30,6 +30,7 @@ __koopa_posix_header() { # {{{1
     then
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
+    koopa_activate_path_helper || return 1
     koopa_activate_make_paths || return 1
     koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
