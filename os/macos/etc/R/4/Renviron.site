@@ -15,6 +15,9 @@
 # Global variables {{{1
 # ==============================================================================
 
+HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/usr/local}"
+HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
+
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
 
@@ -35,6 +38,9 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/bin:/bin"
 
+# Homebrew.
+PATH="${PATH}:${HOMEBREW_PREFIX}/bin"
+
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"
@@ -53,6 +59,12 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
+
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@3/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/gdal/lib/pkgconfig:${PKG_CONFIG_PATH}"
 # > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/geos/lib/pkgconfig:${PKG_CONFIG_PATH}"

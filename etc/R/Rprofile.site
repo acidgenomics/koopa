@@ -209,7 +209,7 @@ local({  # nolint
     repos <- getOption("repos")
 
     ## Configure the RSPM CRAN snapshot.
-    snapshot <- "2022-04-01"
+    snapshot <- "2022-04-12"
     cran <- "https://packagemanager.rstudio.com/cran"
     options("pkgType" = "source")
 

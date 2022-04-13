@@ -66,7 +66,7 @@ SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
 
 CC = $(LOC)/bin/gcc
 CFLAGS = -O3 -Wall -g -pedantic -pipe -mtune=native -std=gnu99 $(LTO)
-CPPFLAGS = -I$(LOC)/include -I$(SDK_LOC)/include
+CPPFLAGS = -I$(LOC)/include -I$(SDK_LOC)/include -I/usr/local/include
 CXX = $(LOC)/bin/g++
 CXX11 = $(LOC)/bin/g++
 CXX11FLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
@@ -80,7 +80,7 @@ CXXFLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
 FC = $(LOC)/bin/gfortran
 FCFLAGS = -O3 -Wall -g $(LTO_FC)
 FLIBS = -L$(LOC)/lib/gcc/x86_64-apple-darwin18/8.2.0 -L$(LOC)/lib -lgfortran -lquadmath -lm
-LDFLAGS=-L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
+LDFLAGS=-L$(LOC)/lib -Wl,-rpath,$(LOC)/lib -L/usr/local/lib
 
 # OpenMP {{{1
 # ==============================================================================
