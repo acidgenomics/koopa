@@ -57,6 +57,9 @@ azure-cli="2.34.1"
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
 
+# https://ftp.gnu.org/gnu/bc/
+bc="1.07"
+
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
 # 1.2.9 has issues with bcftools and samtools
@@ -206,6 +209,9 @@ jpeg="9e"
 
 # https://github.com/JuliaLang/julia/releases
 julia="1.7.2"
+
+# https://ftp.gnu.org/gnu/less/
+less="590"
 
 # https://github.com/wofr06/lesspipe/
 lesspipe="2.04"
@@ -459,6 +465,9 @@ vim="8.2.4700"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.3"
+
+# https://ftp.gnu.org/gnu/which/
+which="2.21"
 
 # https://tukaani.org/xz/
 xz="5.2.5"
