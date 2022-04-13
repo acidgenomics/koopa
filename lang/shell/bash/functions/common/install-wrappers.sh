@@ -727,19 +727,19 @@ koopa_uninstall_gawk() { # {{{3
 
 # gcc --------------------------------------------------------------------- {{{2
 
-koopa_install_gcc() { # {{{3
-    koopa_install_app \
-        --name-fancy='GCC' \
-        --name='gcc' \
-        "$@"
-}
+# > koopa_install_gcc() { # {{{3
+# >     koopa_install_app \
+# >         --name-fancy='GCC' \
+# >         --name='gcc' \
+# >         "$@"
+# > }
 
-koopa_uninstall_gcc() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='GCC' \
-        --name='gcc' \
-        "$@"
-}
+# > koopa_uninstall_gcc() { # {{{3
+# >     koopa_uninstall_app \
+# >         --name-fancy='GCC' \
+# >         --name='gcc' \
+# >         "$@"
+# > }
 
 # gdal -------------------------------------------------------------------- {{{2
 

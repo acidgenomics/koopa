@@ -23,7 +23,7 @@ main() { # {{{1
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     koopa_git_pull "${dict[prefix]}"
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
-    # FIXME Add support for caching Bash functions here.
+    # FIXME Add support for caching Bash function library here.
     koopa_fix_zsh_permissions
     return 0
 }

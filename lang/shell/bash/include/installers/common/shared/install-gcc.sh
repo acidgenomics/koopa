@@ -1,17 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to build these dependencies on macOS:
-# configure: error: Building GCC requires GMP 4.2+, MPFR 3.1.0+ and MPC 0.8.0+.
-# Try the --with-gmp, --with-mpfr and/or --with-mpc options to specify
-# their locations.  Source code for these libraries can be found at
-# their respective hosting sites as well as at
-# https://gcc.gnu.org/pub/gcc/infrastructure/.  See also
-# http://gcc.gnu.org/install/prerequisites.html for additional info.
-
 main() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-04-13.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -63,6 +55,11 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    # NOTE Need to add recipe support for these.
+    koopa_activate_opt_prefix \
+        'gmp' \
+        'mpc' \
+        'mpfr'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
