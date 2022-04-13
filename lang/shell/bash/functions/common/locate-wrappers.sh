@@ -429,11 +429,16 @@ koopa_locate_ldd() { # {{{1
         --app-name='ldd'
 }
 
-# FIXME Consider adding recipe support for this.
+koopa_locate_libtoolize() { # {{{1
+    koopa_locate_app \
+        --app-name='libtoolize' \
+        --opt-name='libtool'
+}
+
 koopa_locate_less() { # {{{1
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='less'
+        --app-name='less' \
+        --opt-name='less'
 }
 
 koopa_locate_lesspipe() { # {{{1

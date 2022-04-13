@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Seeing this compile error on macOS:
+# implicit declaration of function 'lgamma_r' is invalid in C99
+
+# FIXME Need to apply this patch:
+# Applying the already present patch from patch-src-builtin.c eliminates the error and jq complies successfully. 
+
+# FIXME This is still failing on macOS argh...
+
 main() { #{{{1
     # """
     # Install jq.
@@ -7,11 +15,24 @@ main() { #{{{1
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/jq.rb
+    # - https://trac.macports.org/ticket/61354
+    # - https://github.com/macports/macports-ports/pull/8870
+    # - https://github.com/macports/macports-ports/blob/master/sysutils/
+    #     jq/Portfile
+    # - https://github.com/stedolan/jq/pull/2196
+    # - https://stackoverflow.com/questions/18978252/
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'libtool' 'oniguruma'
+    koopa_activate_opt_prefix \
+        'autoconf' \
+        'automake' \
+        'gettext' \
+        'libtool' \
+        'oniguruma'
     declare -A app=(
+        [autoreconf]="$(koopa_locate_autoreconf)"
+        [libtoolize]="$(koopa_locate_libtoolize)"
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
@@ -20,18 +41,34 @@ main() { #{{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://github.com/stedolan/${dict[name]}/releases/\
+    case "${dict[version]}" in
+        '1.6')
+            # The current 1.6 release installer fails to compile on macOS.
+            dict[commit]='f9afa950e26f5d548d955f92e83e6b8e10cc8438'
+            dict[file]="${dict[commit]}.tar.gz"
+            dict[url]="https://github.com/stedolan/${dict[name]}/\
+archive/${dict[file]}"
+            dict[dirname]="${dict[name]}-${dict[commit]}"
+            ;;
+        *)
+            dict[file]="${dict[name]}-${dict[version]}.tar.gz"
+        dict[url]="https://github.com/stedolan/${dict[name]}/releases/\
 download/${dict[name]}-${dict[version]}/${dict[file]}"
+            dict[dirname]="${dict[name]}-${dict[version]}"
+            ;;
+    esac
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    koopa_cd "${dict[dirname]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-dependency-tracking'
-        '--disable-silent-rules'
+        '--disable-docs'
         '--disable-maintainer-mode'
+        '--disable-silent-rules'
     )
+    "${app[libtoolize]}"
+    "${app[autoreconf]}" -iv
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
