@@ -28,5 +28,8 @@ download/${dict[version]}/${dict[file]}"
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
+    app[tmux]="${dict[prefix]}/bin/tmux"
+    koopa_assert_is_installed "${app[tmux]}"
+    "${app[tmux]}" kill-server
     return 0
 }

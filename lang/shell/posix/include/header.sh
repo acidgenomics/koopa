@@ -22,10 +22,6 @@ __koopa_posix_header() { # {{{1
     then
         export KOOPA_DEFAULT_SYSTEM_PATH="${PATH:-}"
     fi
-    if [ -z "${KOOPA_DEFAULT_SYSTEM_PKG_CONFIG_PATH:-}" ]
-    then
-        export KOOPA_DEFAULT_SYSTEM_PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
-    fi
     if [ "${KOOPA_ACTIVATE:-0}" -eq 0 ]
     then
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
