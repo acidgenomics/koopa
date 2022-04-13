@@ -799,6 +799,7 @@ koopa_uninstall_app() { # {{{1
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [make_prefix]="$(koopa_make_prefix)"
         [mode]='shared'
+        [name]=''
         [name_fancy]=''
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
@@ -896,6 +897,7 @@ koopa_uninstall_app() { # {{{1
                 ;;
         esac
     done
+    koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     case "${dict[mode]}" in
