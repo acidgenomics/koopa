@@ -805,6 +805,22 @@ koopa_uninstall_gettext() { # {{{3
         "$@"
 }
 
+# ghc --------------------------------------------------------------------- {{{2
+
+koopa_install_ghc() { # {{{3
+    koopa_install_app \
+        --name-fancy='GHC' \
+        --name='ghc' \
+        "$@"
+}
+
+koopa_uninstall_ghc() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='GHC' \
+        --name='ghc' \
+        "$@"
+}
+
 # git --------------------------------------------------------------------- {{{2
 
 koopa_install_git() { # {{{3
@@ -1078,6 +1094,7 @@ koopa_uninstall_icu4c() { # {{{3
 
 koopa_install_imagemagick() { # {{{3
     koopa_install_app \
+        --link-in-bin='bin/magick' \
         --name-fancy='ImageMagick' \
         --name='imagemagick' \
         "$@"
@@ -1087,6 +1104,7 @@ koopa_uninstall_imagemagick() { # {{{3
     koopa_uninstall_app \
         --name-fancy='ImageMagick' \
         --name='imagemagick' \
+        --link-in-bin='magick' \
         "$@"
 }
 
@@ -1648,6 +1666,25 @@ koopa_uninstall_openssl() { # {{{3
     koopa_uninstall_app \
         --name-fancy='OpenSSL' \
         --name='openssl' \
+        "$@"
+}
+
+# pandoc ------------------------------------------------------------------ {{{2
+
+koopa_install_pandoc() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/pandoc' \
+        --name-fancy='Pandoc' \
+        --name='pandoc' \
+        "$@"
+    return 0
+}
+
+koopa_uninstall_pandoc() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Pandoc' \
+        --name='pandoc' \
+        --unlink-in-bin='pandoc' \
         "$@"
 }
 
