@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-04-13.
+    # Updated 2022-04-14.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -166,6 +166,7 @@ __koopa_complete() { # {{{1
                         'openjdk'
                         'openssh'
                         'openssl'
+                        'pandoc'
                         'parallel'
                         'password-store'
                         'patch'

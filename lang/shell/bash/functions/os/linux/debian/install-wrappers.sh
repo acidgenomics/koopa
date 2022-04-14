@@ -144,8 +144,9 @@ koopa_debian_install_node_binary() { # {{{3
 
 # pandoc ------------------------------------------------------------------ {{{2
 
-koopa_debian_install_pandoc() { # {{{3
+koopa_debian_install_pandoc_binary() { # {{{3
     koopa_install_app \
+        --installer='pandoc-binary' \
         --name-fancy='Pandoc' \
         --name='pandoc' \
         --platform='debian' \
@@ -153,12 +154,13 @@ koopa_debian_install_pandoc() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_pandoc() { # {{{3
+koopa_debian_uninstall_pandoc_binary() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Pandoc' \
         --name='pandoc' \
         --platform='debian' \
         --system \
+        --uninstaller='pandoc-binary' \
         "$@"
 }
 

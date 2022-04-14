@@ -2,8 +2,8 @@
 
 main() { # {{{1
     # """
-    # Install Pandoc.
-    # @note Updated 2022-04-04.
+    # Install Pandoc binary.
+    # @note Updated 2022-05-14.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
