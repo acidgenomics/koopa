@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Do we need to install 'cabal-install' here?
+# FIXME Consider making the root just 'libexec', not 'libexec/root'
 # FIXME Is there a way to install a specific version of stack?
-# FIXME Should we install ghc-8.10.7 here for pandoc?
 
 main() { # {{{1
     # """
@@ -31,7 +30,7 @@ main() { # {{{1
         [jobs]="$(koopa_cpu_count)"
         [prefix]="${INSTALL_PREFIX:?}"
     )
-    dict[root]="${dict[prefix]}/libexec/root"
+    dict[root]="${dict[prefix]}/libexec"
     dict[xdg_bin_dir]="$(koopa_xdg_local_home)/bin"
     koopa_mkdir "${dict[xdg_bin_dir]}"
     koopa_add_to_path_start "${dict[xdg_bin_dir]}"

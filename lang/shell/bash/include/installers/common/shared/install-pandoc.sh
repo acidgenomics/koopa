@@ -27,7 +27,7 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[stack_root]="${dict[opt_prefix]}/haskell-stack/libexec/root"
+    dict[stack_root]="${dict[opt_prefix]}/haskell-stack/libexec"
     koopa_assert_is_dir "${dict[stack_root]}"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://hackage.haskell.org/package/\
