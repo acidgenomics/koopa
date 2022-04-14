@@ -121,7 +121,7 @@ koopa_activate_aliases() { # {{{1
     alias j='z'
     alias k='koopa_alias_k'
     alias l.='l -d .*'
-    alias l1='ls -1'
+    alias l1='l -1'
     alias l='koopa_alias_l'
     alias la='l -a'
     alias lh='l | head'
