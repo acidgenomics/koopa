@@ -685,12 +685,13 @@ koopa_install_app_packages() { # {{{1
     then
         koopa_rm "${dict[prefix]}"
     fi
+    dict[version]="$(koopa_get_version "${dict[name]}")"
     koopa_install_app \
         --name-fancy="${dict[name_fancy]} packages" \
         --name="${dict[name]}-packages" \
         --no-prefix-check \
         --prefix="${dict[prefix]}" \
-        --version='rolling' \
+        --version="${dict[version]}" \
         "$@"
     return 0
 }
