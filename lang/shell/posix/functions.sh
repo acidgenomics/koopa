@@ -108,6 +108,7 @@ koopa_activate_aliases() { # {{{1
     alias br='koopa_alias_broot'
     alias bucket='koopa_alias_bucket'
     alias c='clear'
+    alias cls='koopa_alias_colorls'
     alias d='clear; cd -; l'
     alias doom-emacs='koopa_alias_doom_emacs'
     alias e='exit'
@@ -1269,6 +1270,30 @@ koopa_alias_bucket() { # {{{1
     ls
 }
 
+koopa_alias_colorls() { # {{{1
+    # """
+    # colorls alias.
+    # @note Updated 2022-04-14.
+    #
+    # Use of '--git-status' is slow for large directories / monorepos.
+    # """
+    local color_flag color_mode
+    color_mode="$(koopa_color_mode)"
+    case "$color_mode" in
+        'dark')
+            color_flag='--dark'
+            ;;
+        'light')
+            color_flag='--light'
+            ;;
+    esac
+    colorls \
+        "$color_flag" \
+        --group-directories-first \
+            "$@"
+    return 0
+}
+
 koopa_alias_conda() { # {{{1
     # """
     # Conda alias.
@@ -1332,7 +1357,7 @@ koopa_alias_k() { # {{{1
     cd "$(koopa_koopa_prefix)" || return 1
 }
 
-koopa_alias_l() { # {{{
+koopa_alias_l() { # {{{1
     # """
     # List files alias that uses 'exa' instead of 'ls', when possible.
     # @note Updated 2022-04-14.
@@ -1364,12 +1389,7 @@ koopa_alias_l() { # {{{
     # * -h, --human-readable
     #         with -l and -s, print sizes like 1K 234M 2G etc.
     # """
-    if koopa_is_installed 'colorls'
-    then
-        colorls \
-            --group-directories-first \
-            "$@"
-    elif koopa_is_installed 'exa'
+    if koopa_is_installed 'exa'
     then
         exa \
             --classify \
