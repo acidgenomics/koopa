@@ -106,12 +106,12 @@ __koopa_check_zsh() { # {{{1
 __koopa_export_koopa_prefix() { # {{{1
     # """
     # Export 'KOOPA_PREFIX' variable.
-    # @note Updated 2021-05-25.
+    # @note Updated 2022-04-14.
     # """
     local prefix script shell
     shell="$(__koopa_shell_name)"
     script="$("__koopa_${shell}_source")"
-    if [ ! -x "$script" ]
+    if [ ! -e "$script" ]
     then
         __koopa_warn 'Failed to locate koopa activate script.'
         return 1
