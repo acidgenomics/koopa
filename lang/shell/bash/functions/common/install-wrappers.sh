@@ -2072,6 +2072,7 @@ koopa_install_ruby_packages() { # {{{3
         --link-in-bin='bin/bashcov' \
         --link-in-bin='bin/bundle' \
         --link-in-bin='bin/bundler' \
+        --link-in-bin='bin/colorls' \
         --link-in-bin='bin/ronn' \
         --name-fancy='Ruby' \
         --name='ruby' \
@@ -2085,6 +2086,7 @@ koopa_uninstall_ruby_packages() { # {{{3
         --unlink-in-bin='bashcov' \
         --unlink-in-bin='bundle' \
         --unlink-in-bin='bundler' \
+        --unlink-in-bin='colorls' \
         --unlink-in-bin='ronn' \
         "$@"
 }
