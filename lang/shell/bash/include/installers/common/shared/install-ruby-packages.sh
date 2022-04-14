@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-14.
     #
     # @seealso
     # - 'gem pristine --all'
@@ -26,6 +26,7 @@ main() { # {{{1
         # > 'neovim'
         'bundler'
         'bashcov'
+        'colorls'
         'ronn'
     )
     "${app[gem]}" cleanup
