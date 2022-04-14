@@ -1335,7 +1335,7 @@ koopa_alias_k() { # {{{1
 koopa_alias_l() { # {{{
     # """
     # List files alias that uses 'exa' instead of 'ls', when possible.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-04-14.
     #
     # Use exa instead of ls, when possible.
     # https://the.exa.website/docs/command-line-options
@@ -1364,7 +1364,12 @@ koopa_alias_l() { # {{{
     # * -h, --human-readable
     #         with -l and -s, print sizes like 1K 234M 2G etc.
     # """
-    if koopa_is_installed 'exa'
+    if koopa_is_installed 'colorls'
+    then
+        colorls \
+            --group-directories-first \
+            "$@"
+    elif koopa_is_installed 'exa'
     then
         exa \
             --classify \
