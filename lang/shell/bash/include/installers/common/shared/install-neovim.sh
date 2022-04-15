@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# NOTE This is currently failing on macOS, but works on Linux.
-
 main() { # {{{1
     # """
     # Install Neovim.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-15.
+    #
+    # Homebrew is currently required for this to build on macOS.
     #
     # @seealso
     # - https://github.com/neovim/neovim/wiki/Building-Neovim
@@ -13,6 +13,8 @@ main() { # {{{1
     # - https://github.com/neovim/neovim/issues/11192
     # - https://carlosahs.medium.com/how-to-install-neovim-from-source-on-
     #     ubuntu-20-04-lts-524b3a91b4c4
+    # - https://github.com/neovim/neovim/blob/master/cmake/FindLibIntl.cmake
+    # - https://github.com/facebook/hhvm/blob/master/CMake/FindLibIntl.cmake
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -61,6 +63,20 @@ refs/tags/${dict[file]}"
         "${dict[bin_extra]}/glibtoolize"
     koopa_add_to_path_start "${dict[bin_extra]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    if koopa_is_macos
+    then
+        app[brew]="$(koopa_locate_brew)"
+        brews=(
+            'automake'
+            'cmake'
+            'curl'
+            'gettext'
+            'libtool'
+            'ninja'
+            'pkg-config'
+        )
+        "${app[brew]}" install "${brews[@]}"
+    fi
     "${app[make]}" distclean
     # Alternatively, can use:
     # CMAKE_BUILD_TYPE='RelWithDebInfo'
@@ -69,5 +85,9 @@ refs/tags/${dict[file]}"
         CMAKE_BUILD_TYPE='Release' \
         CMAKE_INSTALL_PREFIX="${dict[prefix]}"
     "${app[make]}" install
+    if koopa_is_macos
+    then
+        "${app[brew]}" uninstall "${brews[@]}"
+    fi
     return 0
 }
