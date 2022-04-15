@@ -63,19 +63,18 @@ refs/tags/${dict[file]}"
         "${dict[bin_extra]}/glibtoolize"
     koopa_add_to_path_start "${dict[bin_extra]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    # Temporary fix for neovim installer hard-coded to Homebrew path.
     if koopa_is_macos
     then
-        app[brew]="$(koopa_locate_brew)"
-        brews=(
-            'automake'
-            'cmake'
-            'curl'
-            'gettext'
-            'libtool'
-            'ninja'
-            'pkg-config'
-        )
-        "${app[brew]}" install "${brews[@]}"
+        dict[link_gettext]=0
+        dict[opt_prefix]="$(koopa_opt_prefix)"
+        if [[ ! -d '/usr/local/opt/gettext' ]]
+        then
+            dict[link_gettext]=1
+            koopa_ln \
+                "${dict[opt_prefix]}/gettext" \
+                '/usr/local/opt/gettext'
+        fi
     fi
     "${app[make]}" distclean
     # Alternatively, can use:
@@ -85,9 +84,9 @@ refs/tags/${dict[file]}"
         CMAKE_BUILD_TYPE='Release' \
         CMAKE_INSTALL_PREFIX="${dict[prefix]}"
     "${app[make]}" install
-    if koopa_is_macos
+    if koopa_is_macos && [[ "${dict[link_gettext]}" -eq 1 ]]
     then
-        "${app[brew]}" uninstall "${brews[@]}"
+        koopa_rm '/usr/local/opt/gettext'
     fi
     return 0
 }
