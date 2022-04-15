@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install R packages.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-04-15.
     # """
     local app
     koopa_assert_has_no_args "$#"
@@ -11,7 +11,7 @@ main() { # {{{1
         [rscript]="$(koopa_locate_rscript)"
     )
     "${app[rscript]}" -e " \
-        install.packages(pkgs = 'AcidDevTools'); \
+        install.packages(pkgs = 'AcidDevTools', dependencies = NA); \
         AcidDevTools::installRecommendedPackages(); \
         install.packages(pkgs = 'koopa', dependencies = TRUE); \
     "
