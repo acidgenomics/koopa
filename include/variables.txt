@@ -279,7 +279,7 @@ ncurses="6.3.20211021"
 neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
-neovim="0.6.1"
+neovim="0.7.0"
 
 # https://ftp.gnu.org/gnu/nettle/
 # > nettle="3.7.3"
