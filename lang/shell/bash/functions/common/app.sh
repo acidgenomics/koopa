@@ -612,13 +612,12 @@ ${dict[name]}/${dict[version]}.tar.gz"
 
 # FIXME Don't allow configuration flag passthrough here by default, so we
 # can harden against unsupported arguments.
-
 # FIXME Need to better support '--push' for versioned package library uploads.
 
 koopa_install_app_packages() { # {{{1
     # """
     # Install application packages.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-15.
     # """
     local name name_fancy pos
     koopa_assert_has_args "$#"
