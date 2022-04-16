@@ -260,7 +260,7 @@ koopa_locate_fd() { # {{{1
     # """
     koopa_locate_app \
         --app-name='fd' \
-        --opt-name='rust-packages' \
+        --opt-name='fd-find' \
         "$@"
 }
 
@@ -731,13 +731,18 @@ koopa_locate_rscript() { # {{{1
     koopa_locate_app "${app[rscript]}"
 }
 
-# FIXME Need to set '--allow-in-path' here.
 koopa_locate_readlink() { # {{{1
-    koopa_locate_gnu_coreutils_app 'readlink'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='readlink' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_realpath() { # {{{1
-    koopa_locate_gnu_coreutils_app 'realpath'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='realpath' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_rename() { # {{{1
@@ -752,7 +757,7 @@ koopa_locate_rg() { # {{{1
     # """
     koopa_locate_app \
         --app-name='rg' \
-        --opt-name='rust-packages' \
+        --opt-name='ripgrep' \
         "$@"
 }
 
