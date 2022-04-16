@@ -57,6 +57,8 @@ azure-cli="2.34.1"
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
 
+bat="0.20.0" # rust
+
 # https://ftp.gnu.org/gnu/bc/
 bc="1.07"
 
@@ -125,6 +127,8 @@ emacs="28.1"
 # Latest version compatible with Ensembl Perl API.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl-perl="5.26.3"
+
+fd-find="8.3.2" # rust
 
 # https://www.gnu.org/software/findutils/
 findutils="4.9.0"
@@ -382,6 +386,8 @@ r-devel="81975" # 2022-03-24; R 4.2
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
 
+ripgrep="13.0.0" # rust
+
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"
 
@@ -433,6 +439,9 @@ singularity="3.8.7"
 
 # https://www.sqlite.org/download.html
 sqlite="3.38.2"
+
+# https://starship.rs/
+starship="1.6.2" # rust
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
@@ -644,23 +653,16 @@ ruby-ronn="0.7.3"               # ronn
 # ==============================================================================
 # Updated 2022-03-15 from https://crates.io/.
 
-rust-cargo-outdated="0.11.0"    # system
-rust-cargo-update="8.1.2"       # system
-
-rust-bat="0.20.0"               # bat
-rust-broot="1.11.1"             # br
-rust-difftastic="0.25.0"        # difft
-rust-dog="0.1.0"                # dog
-rust-du-dust="0.8.0"            # dust
-rust-exa="0.10.1"               # exa
-rust-fd-find="8.3.2"            # fd
-rust-hyperfine="1.13.0"         # hyperfine
-rust-mcfly="0.6.0"              # mcfly
-rust-procs="0.12.1"             # procs
-rust-ripgrep-all="0.9.6"        # rga
-rust-ripgrep="13.0.0"           # rg
-rust-starship="1.6.0"           # starship
-rust-tealdeer="1.5.0"           # tldr
-rust-tokei="12.1.2"             # tokei
-rust-xsv="0.13.0"               # xsv
-rust-zoxide="0.8.0"             # z
+broot="1.11.1" # rust (br)
+difftastic="0.25.0" # rust (difft)
+dog="0.1.0" # rust
+du-dust="0.8.0" # rust (dust)
+exa="0.10.1" # rust
+hyperfine="1.13.0" # rust
+mcfly="0.6.0" # rust mcfly
+procs="0.12.1" # rust procs
+ripgrep-all="0.9.6" # rust (rga)
+tealdeer="1.5.0" # rust (tldr)
+tokei="12.1.2" # rust
+xsv="0.13.0" # rust
+zoxide="0.8.0" # rust (z)
