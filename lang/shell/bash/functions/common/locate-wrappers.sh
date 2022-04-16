@@ -203,7 +203,10 @@ koopa_locate_dig() { # {{{1
 }
 
 koopa_locate_dirname() { # {{{1
-    koopa_locate_gnu_coreutils_app 'dirname'
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='dirname' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_docker() { # {{{1
