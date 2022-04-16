@@ -18,24 +18,25 @@ koopa_gsub() { # {{{1
 koopa_sub() { # {{{1
     # """
     # Single substitution.
-    # @note Updated 2022-03-15.
+    # @note Updated 2022-04-15.
     #
     # @usage koopa_sub --pattern=PATTERN --replacement=REPLACEMENT STRING...
     #
     # @examples
-    # > koopa_sub --pattern='a' --replacement='' 'aaa' 'aaa'
-    # # aa
-    # # aa
+    # > koopa_sub --pattern='a' --replacement='' 'aabb' 'bbaa'
+    # # abb
+    # # bba
     # """
-    local app dict pos str
+    local app dict pos
     declare -A app=(
-        [sed]="$(koopa_locate_sed)"
+        [perl]="$(koopa_locate_perl)"
     )
     declare -A dict=(
         [global]=0
         [pattern]=''
+        [perl_tail]=''
+        [regex]=1
         [replacement]=''
-        [sed_tail]=''
     )
     pos=()
     while (("$#"))
@@ -60,8 +61,16 @@ koopa_sub() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--fixed')
+                dict[regex]=0
+                shift 1
+                ;;
             '--global')
                 dict[global]=1
+                shift 1
+                ;;
+            '--regex')
+                dict[regex]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -76,16 +85,10 @@ koopa_sub() { # {{{1
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
     [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
-    [[ "${dict[global]}" -eq 1 ]] && dict[sed_tail]='g'
-    for str in "${pos[@]}"
-    do
-        # Ensure '|' are escaped. Need to use '//' here for global escaping
-        # of multiple vertical pipes.
-        dict[pattern]="${dict[pattern]//|/\\|}"
-        dict[replacement]="${dict[replacement]//|/\\|}"
-        koopa_print "$str" \
-            | "${app[sed]}" -E \
-                "s|${dict[pattern]}|${dict[replacement]}|${dict[sed_tail]}"
-    done
+    [[ "${dict[regex]}" -eq 0 ]] && dict[pattern]="\\Q${dict[pattern]}\\E"
+    [[ "${dict[global]}" -eq 1 ]] && dict[perl_tail]='g'
+    dict[expr]="s/${dict[pattern]}/${dict[replacement]}/${dict[perl_tail]}"
+    koopa_print "${pos[@]}" \
+        | "${app[perl]}" -p -e "${dict[expr]}"
     return 0
 }
