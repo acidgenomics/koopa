@@ -520,8 +520,11 @@ koopa_linux_configure_system() { # {{{1
        koopa install perl-packages
     [[ "${dict[install_ruby_packages]}" -eq 1 ]] && \
        koopa install ruby-packages
-    [[ "${dict[install_rust_packages]}" -eq 1 ]] && \
-       koopa install rust-packages
+    if [[ "${dict[install_rust_packages]}" -eq 1 ]]
+    then
+        # FIXME Add the other Rust packages to install here.
+        koopa install starship
+    fi
     # Bioinformatics tools {{{2
     # --------------------------------------------------------------------------
     [[ "${dict[install_aspera_connect]}" -eq 1 ]] && \
