@@ -177,6 +177,23 @@ koopa_uninstall_bash() { # {{{3
         "$@"
 }
 
+# bat --------------------------------------------------------------------- {{{2
+
+koopa_install_bat() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/bat' \
+        --name='bat' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_bat() { # {{{3
+    koopa_uninstall_app \
+        --name='bat' \
+        --unlink-in-bin='bat' \
+        "$@"
+}
+
 # bc ---------------------------------------------------------------------- {{{2
 
 koopa_install_bc() { # {{{3
@@ -220,6 +237,23 @@ koopa_uninstall_boost() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Boost' \
         --name='boost' \
+        "$@"
+}
+
+# broot ------------------------------------------------------------------- {{{2
+
+koopa_install_broot() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/broot' \
+        --name='broot' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_broot() { # {{{3
+    koopa_uninstall_app \
+        --name='broot' \
+        --unlink-in-bin='broot' \
         "$@"
 }
 
@@ -547,6 +581,57 @@ koopa_uninstall_curl() { # {{{3
         "$@"
 }
 
+# difftastic -------------------------------------------------------------- {{{2
+
+koopa_install_difftastic() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/difft' \
+        --name='difftastic' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_difftastic() { # {{{3
+    koopa_uninstall_app \
+        --name='difftastic' \
+        --unlink-in-bin='difft' \
+        "$@"
+}
+
+# dog --------------------------------------------------------------------- {{{2
+
+koopa_install_dog() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/dog' \
+        --name='dog' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_dog() { # {{{3
+    koopa_uninstall_app \
+        --name='dog' \
+        --unlink-in-bin='dog' \
+        "$@"
+}
+
+# du-dust ----------------------------------------------------------------- {{{2
+
+koopa_install_du_dust() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/dust' \
+        --name='du-dust' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_du_dust() { # {{{3
+    koopa_uninstall_app \
+        --name='du-dust' \
+        --unlink-in-bin='dust' \
+        "$@"
+}
+
 # dotfiles ---------------------------------------------------------------- {{{2
 
 koopa_install_dotfiles() { # {{{3
@@ -634,6 +719,40 @@ koopa_uninstall_ensembl_perl_api() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
+        "$@"
+}
+
+# exa --------------------------------------------------------------------- {{{2
+
+koopa_install_exa() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/exa' \
+        --name='exa' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_exa() { # {{{3
+    koopa_uninstall_app \
+        --name='exa' \
+        --unlink-in-bin='exa' \
+        "$@"
+}
+
+# fd-find ----------------------------------------------------------------- {{{2
+
+koopa_install_fd_find() { # {{{1
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/fd' \
+        --name='fd-find' \
+        "$@"
+}
+
+koopa_uninstall_fd_find() { # {{{1
+    koopa_uninstall_app \
+        --unlink-in-bin='fd' \
+        --name='fd-find' \
         "$@"
 }
 
@@ -1074,6 +1193,23 @@ koopa_uninstall_htop() { # {{{3
         "$@"
 }
 
+# hyperfine --------------------------------------------------------------- {{{2
+
+koopa_install_hyperfine() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/hyperfine' \
+        --name='hyperfine' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_hyperfine() { # {{{3
+    koopa_uninstall_app \
+        --name='hyperfine' \
+        --unlink-in-bin='hyperfine' \
+        "$@"
+}
+
 # icu4c ------------------------------------------------------------------- {{{2
 
 koopa_install_icu4c() { # {{{3
@@ -1406,6 +1542,23 @@ koopa_uninstall_man_db() { # {{{3
     koopa_uninstall_app \
         --name='man-db' \
         --unlink-in-bin='man' \
+        "$@"
+}
+
+# mcfly ------------------------------------------------------------------- {{{2
+
+koopa_install_mcfly() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/mcfly' \
+        --name='mcfly' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_mcfly() { # {{{3
+    koopa_uninstall_app \
+        --name='mcfly' \
+        --unlink-in-bin='mcfly' \
         "$@"
 }
 
@@ -1853,6 +2006,23 @@ koopa_uninstall_pkg_config() { # {{{3
         "$@"
 }
 
+# procs ------------------------------------------------------------------- {{{2
+
+koopa_install_procs() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/procs' \
+        --name='procs' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_procs() { # {{{3
+    koopa_uninstall_app \
+        --name='procs' \
+        --unlink-in-bin='procs' \
+        "$@"
+}
+
 # proj -------------------------------------------------------------------- {{{2
 
 # > koopa_install_proj() { # {{{3
@@ -1883,12 +2053,6 @@ koopa_uninstall_pyenv() { # {{{3
     koopa_uninstall_app \
         --name='pyenv' \
         --unlink-in-bin='pyenv' \
-        "$@"
-}
-
-koopa_update_pyenv() { # {{{3
-    koopa_update_app \
-        --name='pyenv' \
         "$@"
 }
 
@@ -2044,11 +2208,39 @@ koopa_uninstall_rbenv() { # {{{3
         "$@"
 }
 
-koopa_update_rbenv() { # {{{3
-    koopa_update_app \
-        --name='rbenv' \
+# ripgrep ----------------------------------------------------------------- {{{2
+
+koopa_install_ripgrep() { # {{{1
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/rg' \
+        --name='ripgrep' \
         "$@"
 }
+
+koopa_uninstall_ripgrep() { # {{{1
+    koopa_uninstall_app \
+        --unlink-in-bin='rg' \
+        --name='ripgrep' \
+        "$@"
+}
+
+# ripgrep-all ------------------------------------------------------------- {{{2
+
+# > koopa_install_ripgrep_all() { # {{{1
+# >     koopa_install_app \
+# >         --installer='rust-package' \
+# >         --link-in-bin='bin/rga' \
+# >         --name='ripgrep-all' \
+# >         "$@"
+# > }
+
+# > koopa_uninstall_ripgrep_all() { # {{{1
+# >     koopa_uninstall_app \
+# >         --unlink-in-bin='rga' \
+# >         --name='ripgrep-all' \
+# >         "$@"
+# > }
 
 # rmate ------------------------------------------------------------------- {{{2
 
@@ -2138,7 +2330,6 @@ koopa_install_rust() { # {{{3
     koopa_install_app \
         --name-fancy='Rust' \
         --name='rust' \
-        --version='rolling' \
         "$@"
 }
 
@@ -2149,67 +2340,19 @@ koopa_uninstall_rust() { # {{{3
         "$@"
 }
 
-koopa_update_rust() { # {{{3
-    koopa_update_app \
-        --name-fancy='Rust' \
-        --name='rust' \
-        "$@"
-}
-
 # rust-packages ----------------------------------------------------------- {{{2
 
-koopa_install_rust_packages() { # {{{3
-    koopa_install_app_packages \
-        --link-in-bin='bin/bat' \
-        --link-in-bin='bin/broot' \
-        --link-in-bin='bin/difft' \
-        --link-in-bin='bin/dog' \
-        --link-in-bin='bin/dust' \
-        --link-in-bin='bin/exa' \
-        --link-in-bin='bin/fd' \
-        --link-in-bin='bin/hyperfine' \
-        --link-in-bin='bin/mcfly' \
-        --link-in-bin='bin/procs' \
-        --link-in-bin='bin/rg' \
-        --link-in-bin='bin/starship' \
-        --link-in-bin='bin/tldr' \
-        --link-in-bin='bin/tokei' \
-        --link-in-bin='bin/xsv' \
-        --link-in-bin='bin/zoxide' \
-        --name-fancy='Rust' \
-        --name='rust' \
-        "$@"
-}
-
-koopa_uninstall_rust_packages() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Rust packages' \
-        --name='rust-packages' \
-        --unlink-in-bin='bat' \
-        --unlink-in-bin='broot' \
-        --unlink-in-bin='difft' \
-        --unlink-in-bin='dog' \
-        --unlink-in-bin='dust' \
-        --unlink-in-bin='exa' \
-        --unlink-in-bin='fd' \
-        --unlink-in-bin='hyperfine' \
-        --unlink-in-bin='mcfly' \
-        --unlink-in-bin='procs' \
-        --unlink-in-bin='rg' \
-        --unlink-in-bin='starship' \
-        --unlink-in-bin='tldr' \
-        --unlink-in-bin='tokei' \
-        --unlink-in-bin='xsv' \
-        --unlink-in-bin='zoxide' \
-        "$@"
-}
-
-koopa_update_rust_packages() { # {{{3
-    koopa_update_app \
-        --name-fancy='Rust packages' \
-        --name='rust-packages' \
-        "$@"
-}
+#--link-in-bin='bin/difft' \  # difftastic
+#--link-in-bin='bin/dog' \
+#--link-in-bin='bin/dust' \  # du-dust
+#--link-in-bin='bin/exa' \
+#--link-in-bin='bin/hyperfine' \
+#--link-in-bin='bin/mcfly' \
+#--link-in-bin='bin/procs' \
+#--link-in-bin='bin/tldr' \
+#--link-in-bin='bin/tokei' \
+#--link-in-bin='bin/xsv' \
+#--link-in-bin='bin/zoxide' \
 
 # scons ------------------------------------------------------------------- {{{2
 
@@ -2327,6 +2470,23 @@ koopa_uninstall_sqlite() { # {{{3
         "$@"
 }
 
+# starship ---------------------------------------------------------------- {{{2
+
+koopa_install_starship() { # {{{1
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/starship' \
+        --name='starship' \
+        "$@"
+}
+
+koopa_uninstall_starship() { # {{{1
+    koopa_uninstall_app \
+        --unlink-in-bin='starship' \
+        --name='starship' \
+        "$@"
+}
+
 # stow -------------------------------------------------------------------- {{{2
 
 koopa_install_stow() { # {{{3
@@ -2398,6 +2558,23 @@ koopa_uninstall_tar() { # {{{3
         "$@"
 }
 
+# tealdeer ---------------------------------------------------------------- {{{2
+
+koopa_install_tealdeer() { # {{{1
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/tldr' \
+        --name='tealdeer' \
+        "$@"
+}
+
+koopa_uninstall_tealdeer() { # {{{1
+    koopa_uninstall_app \
+        --unlink-in-bin='tldr' \
+        --name='tealdeer' \
+        "$@"
+}
+
 # texinfo ----------------------------------------------------------------- {{{2
 
 koopa_install_texinfo() { # {{{3
@@ -2453,6 +2630,23 @@ koopa_uninstall_tmux() { # {{{3
     koopa_uninstall_app \
         --name='tmux' \
         --unlink-in-bin='tmux' \
+        "$@"
+}
+
+# tokei ------------------------------------------------------------------- {{{2
+
+koopa_install_tokei() { # {{{1
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/tokei' \
+        --name='tokei' \
+        "$@"
+}
+
+koopa_uninstall_tokei() { # {{{1
+    koopa_uninstall_app \
+        --unlink-in-bin='tokei' \
+        --name='tokei' \
         "$@"
 }
 
@@ -2540,6 +2734,23 @@ koopa_uninstall_which() { # {{{3
         "$@"
 }
 
+# xsv ------------------------------------------------------------------- {{{2
+
+koopa_install_xsv() { # {{{1
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/xsv' \
+        --name='xsv' \
+        "$@"
+}
+
+koopa_uninstall_xsv() { # {{{1
+    koopa_uninstall_app \
+        --unlink-in-bin='xsv' \
+        --name='xsv' \
+        "$@"
+}
+
 # xz ---------------------------------------------------------------------- {{{2
 
 koopa_install_xz() { # {{{3
@@ -2567,6 +2778,23 @@ koopa_install_zlib() { # {{{3
 koopa_uninstall_zlib() { # {{{3
     koopa_uninstall_app \
         --name='zlib' \
+        "$@"
+}
+
+# zoxide ------------------------------------------------------------------ {{{2
+
+koopa_install_zoxide() { # {{{1
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/zoxide' \
+        --name='zoxide' \
+        "$@"
+}
+
+koopa_uninstall_zoxide() { # {{{1
+    koopa_uninstall_app \
+        --unlink-in-bin='zoxide' \
+        --name='zoxide' \
         "$@"
 }
 
