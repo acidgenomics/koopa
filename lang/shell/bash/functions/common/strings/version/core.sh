@@ -193,7 +193,7 @@ koopa_extract_version() { # {{{1
 koopa_get_version() { # {{{1
     # """
     # Get the version of an installed program.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-04-15.
     #
     # @examples
     # > koopa system version 'R' 'conda' 'coreutils' 'python' 'salmon' 'zsh'
