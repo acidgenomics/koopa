@@ -418,6 +418,9 @@ koopa_find() { # {{{1
     return 0
 }
 
+# FIXME Switch to using Perl here.
+# e.g. https://stackoverflow.com/questions/59698328/
+
 koopa_find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
