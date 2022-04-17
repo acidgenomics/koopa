@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework this and test inside Docker images.
-# FIXME Rework this to not install user dotfiles by default.
+# FIXME Need to rework this installer and check inside Docker.
 
 main() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-17.
     # """
     local dict
     declare -A dict=(
-        [dotfiles]=1
+        [dotfiles]=0
         [interactive]=1
         [koopa_prefix]=''
         [modify_user_profile]=0
