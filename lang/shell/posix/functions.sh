@@ -3,14 +3,14 @@
 __koopa_add_to_path_string_end() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
-    # @note Updated 2022-03-11.
+    # @note Updated 2022-04-17.
     # """
     local dir str
     str="${1:-}"
     dir="${2:?}"
     if koopa_str_detect_posix "$str" ":${dir}"
     then
-        str="$(__koopa_remove_from_path_string "$str" "$dir")"
+        str="$(__koopa_remove_from_path_string "$str" ":${dir}")"
     fi
     if [ -z "$str" ]
     then
@@ -25,14 +25,14 @@ __koopa_add_to_path_string_end() { # {{{1
 __koopa_add_to_path_string_start() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
-    # @note Updated 2022-03-11.
+    # @note Updated 2022-04-17.
     # """
     local dir str
     str="${1:-}"
     dir="${2:?}"
-    if koopa_str_detect_posix "$str" ":${dir}"
+    if koopa_str_detect_posix "$str" "${dir}:"
     then
-        str="$(__koopa_remove_from_path_string "$str" "$dir")"
+        str="$(__koopa_remove_from_path_string "$str" "${dir}:")"
     fi
     if [ -z "$str" ]
     then
@@ -80,12 +80,12 @@ __koopa_packages_prefix() { # {{{1
 __koopa_remove_from_path_string() { # {{{1
     # """
     # Remove directory from PATH string with POSIX conventions.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-04-17.
     #
     # Alternative non-POSIX approach that works on Bash and Zsh:
     # > PATH="${PATH//:$dir/}"
     # """
-    koopa_print "${1:?}" | sed "s|:${2:?}||g"
+    koopa_print "${1:?}" | sed "s|${2:?}||g"
     return 0
 }
 
