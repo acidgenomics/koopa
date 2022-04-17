@@ -3,7 +3,7 @@
 __koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-17.
     # """
     local shell
     [ "$#" -eq 0 ] || return 1
