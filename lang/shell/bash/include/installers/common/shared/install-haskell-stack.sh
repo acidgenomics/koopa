@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# FIXME Consider making the root just 'libexec', not 'libexec/root'
-# FIXME Is there a way to install a specific version of stack?
 
 main() { # {{{1
     # """
     # Install Haskell Stack.
-    # @note Updated 2022-04-14.
+    # @note Updated 2022-04-17.
     #
     # GHC will be installed at:
     # libexec/root/programs/x86_64-osx/ghc-9.0.2/bin
@@ -22,33 +20,42 @@ main() { # {{{1
     # - stack exec env
     # - stack ghc, stack ghci, stack runghc, or stack exec
     # - https://docs.haskellstack.org/en/stable/install_and_upgrade/
+    # - https://github.com/commercialhaskell/stack/releases
+    # - https://github.com/commercialhaskell/stack/issues/2028
     # """
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app
     declare -A dict=(
+        [arch]="$(koopa_arch)" # e.g. 'x86_64'.
         [jobs]="$(koopa_cpu_count)"
+        [name]='stack'
         [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
     )
+    app[stack]="${dict[prefix]}/bin/stack"
+    if koopa_is_linux
+    then
+        dict[platform]='linux'
+    elif koopa_is_macos
+    then
+        dict[platform]='osx'
+    fi
     dict[root]="${dict[prefix]}/libexec"
-    dict[xdg_bin_dir]="$(koopa_xdg_local_home)/bin"
-    koopa_mkdir "${dict[xdg_bin_dir]}"
-    koopa_add_to_path_start "${dict[xdg_bin_dir]}"
-    dict[file]='stack.sh'
-    dict[url]='https://get.haskellstack.org/'
+    dict[file]="${dict[name]}-${dict[version]}-${dict[platform]}-\
+${dict[arch]}-bin"
+    dict[url]="https://github.com/commercialhaskell/${dict[name]}/releases/\
+download/v${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_chmod 'u+x' "${dict[file]}"
-    koopa_mkdir "${dict[prefix]}/bin"
+    koopa_cp "${dict[file]}" "${app[stack]}"
     unset -v STACK_ROOT
     koopa_rm "${HOME:?}/.stack"
-    ./"${dict[file]}" -f -d "${dict[prefix]}/bin"
-    app[stack]="${dict[prefix]}/bin/stack"
-    koopa_assert_is_installed "${app[stack]}"
     "${app[stack]}" \
         --jobs="${dict[jobs]}" \
         --stack-root="${dict[root]}" \
         setup
-    # NOTE Consider checking that GHC gets installed where we're expecting.
-    # NOTE Is there a way to populate the cabal files index here?
+    # NOTE Can install a specific GHC version here with:
+    # > stack install ghc-9.0.2
     return 0
 }
