@@ -315,28 +315,16 @@ koopa_cli_install() { # {{{1
 koopa_cli_invalid_arg() { # {{{1
     # """
     # CLI invalid argument error message.
-    # @note Updated 2022-03-24.
+    # @note Updated 2022-04-17.
     # """
     if [[ "$#" -eq 0 ]]
     then
         koopa_stop "Missing required argument. \
 Check autocompletion of supported arguments with <TAB>."
     else
-        koopa_stop "Invalid and/or incomplete argument: '${*}'. \
+        koopa_stop "Invalid and/or incomplete argument: '${*}'.\n\
 Check autocompletion of supported arguments with <TAB>."
     fi
-}
-
-# FIXME Rework this, nesting under system instead.
-koopa_cli_list() { # {{{1
-    # """
-    # Parse user input to 'koopa list'.
-    # @note Updated 2022-02-15.
-    #
-    # @examples
-    # > koopa_cli_list 'dotfiles'
-    # """
-    koopa_cli_nested_runner 'list' "$@"
 }
 
 koopa_cli_nested_runner() { # {{{1
@@ -393,8 +381,16 @@ koopa_cli_system() { # {{{1
             shift 1
             ;;
         'list')
-            # FIXME Need to add support for this.
-            # 'launch-agents' on macOS.
+            case "${2:-}" in
+                'app-versions' | \
+                'dotfiles' | \
+                'launch-agents' | \
+                'path-priority' | \
+                'programs')
+                    key="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+            esac
             ;;
         'log')
             key='view-latest-tmp-log-file'
@@ -556,7 +552,6 @@ koopa_koopa() { # {{{1
         'app' | \
         'configure' | \
         'install' | \
-        'list' | \
         'system' | \
         'uninstall' | \
         'update')
