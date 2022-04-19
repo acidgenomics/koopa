@@ -18,24 +18,6 @@ koopa_debian_uninstall_bcbio_nextgen_vm() { # {{{3
         "$@"
 }
 
-# r-devel ----------------------------------------------------------------- {{{2
-
-koopa_debian_install_r_devel() { # {{{3
-    koopa_install_app \
-        --name-fancy='R-devel' \
-        --name='r-devel' \
-        --platform='debian' \
-        "$@"
-}
-
-koopa_debian_uninstall_r_devel() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='R-devel' \
-        --name='r-devel' \
-        --platform='debian' \
-        "$@"
-}
-
 # System ================================================================== {{{1
 
 # azure-cli --------------------------------------------------------------- {{{2
