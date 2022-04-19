@@ -39,6 +39,6 @@ ${dict[version]}/${dict[file]}"
     "${app[sudo]}" "${app[installer]}" -pkg "${dict[file]}" -target /
     app[python]="${dict[prefix]}/bin/${dict[name]}${dict[major_version]}"
     koopa_assert_is_installed "${app[python]}"
-    koopa_configure_python "${app[python]}"
+    # > koopa_configure_python "${app[python]}"
     return 0
 }

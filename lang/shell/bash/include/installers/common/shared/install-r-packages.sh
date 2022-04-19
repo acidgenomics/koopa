@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Configure a pinned version of Bioconductor here.
+
 main() { # {{{1
     # """
     # Install R packages.

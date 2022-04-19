@@ -224,6 +224,23 @@ koopa_uninstall_binutils() { # {{{3
         "$@"
 }
 
+# black ------------------------------------------------------------------- {{{2
+
+koopa_install_black() { # {{{3
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/black' \
+        --name='black' \
+        "$@"
+}
+
+koopa_uninstall_black() { # {{{3
+    koopa_uninstall_app \
+        --name='black' \
+        --unlink-in-bin='black' \
+        "$@"
+}
+
 # boost ------------------------------------------------------------------- {{{2
 
 koopa_install_boost() { # {{{3
@@ -237,6 +254,23 @@ koopa_uninstall_boost() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Boost' \
         --name='boost' \
+        "$@"
+}
+
+# bpytop ------------------------------------------------------------------ {{{2
+
+koopa_install_bpytop() { # {{{3
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/bpytop' \
+        --name='bpytop' \
+        "$@"
+}
+
+koopa_uninstall_bpytop() { # {{{3
+    koopa_uninstall_app \
+        --name='bpytop' \
+        --unlink-in-bin='bpytop' \
         "$@"
 }
 
@@ -259,6 +293,7 @@ koopa_uninstall_broot() { # {{{3
 
 # chemacs ----------------------------------------------------------------- {{{2
 
+# FIXME Need to version pin this.
 koopa_install_chemacs() { # {{{3
     koopa_install_app \
         --name-fancy='Chemacs' \
@@ -636,6 +671,7 @@ koopa_uninstall_du_dust() { # {{{3
 
 # dotfiles ---------------------------------------------------------------- {{{2
 
+# FIXME Need to version pin this.
 koopa_install_dotfiles() { # {{{3
     koopa_install_app \
         --name-fancy='Dotfiles' \
@@ -709,6 +745,7 @@ koopa_uninstall_emacs() { # {{{3
 
 # ensembl-perl-api -------------------------------------------------------- {{{2
 
+# FIXME Need to version pin this.
 koopa_install_ensembl_perl_api() { # {{{3
     koopa_install_app \
         --name-fancy='Ensembl Perl API' \
@@ -811,6 +848,23 @@ koopa_uninstall_fish() { # {{{3
         --name-fancy='Fish' \
         --name='fish' \
         --unlink-in-bin='fish' \
+        "$@"
+}
+
+# flake8 ------------------------------------------------------------------ {{{2
+
+koopa_install_flake8() { # {{{3
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/flake8' \
+        --name='flake8' \
+        "$@"
+}
+
+koopa_uninstall_flake8() { # {{{3
+    koopa_uninstall_app \
+        --name='flake8' \
+        --unlink-in-bin='flake8' \
         "$@"
 }
 
@@ -926,22 +980,6 @@ koopa_uninstall_gettext() { # {{{3
         "$@"
 }
 
-# ghc --------------------------------------------------------------------- {{{2
-
-koopa_install_ghc() { # {{{3
-    koopa_install_app \
-        --name-fancy='GHC' \
-        --name='ghc' \
-        "$@"
-}
-
-koopa_uninstall_ghc() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='GHC' \
-        --name='ghc' \
-        "$@"
-}
-
 # git --------------------------------------------------------------------- {{{2
 
 koopa_install_git() { # {{{3
@@ -974,6 +1012,23 @@ koopa_uninstall_git() { # {{{3
         )
     fi
     koopa_uninstall_app "${uninstall_args[@]}" "$@"
+}
+
+# glances ----------------------------------------------------------------- {{{2
+
+koopa_install_glances() { # {{{3
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/glances' \
+        --name='glances' \
+        "$@"
+}
+
+koopa_uninstall_glances() { # {{{3
+    koopa_uninstall_app \
+        --name='glances' \
+        --unlink-in-bin='glances' \
+        "$@"
 }
 
 # gmp --------------------------------------------------------------------- {{{2
@@ -1559,6 +1614,7 @@ koopa_uninstall_mcfly() { # {{{3
 
 koopa_install_meson() { # {{{3
     koopa_install_app \
+        --installer='python-venv' \
         --name-fancy='Meson' \
         --name='meson' \
         "$@"
@@ -1687,6 +1743,7 @@ koopa_update_nim_packages() { # {{{3
 
 koopa_install_ninja() { # {{{3
     koopa_install_app \
+        --installer='python-venv' \
         --name-fancy='Ninja' \
         --name='ninja' \
         "$@"
@@ -1980,6 +2037,7 @@ koopa_update_perl_packages() { # {{{3
 
 # perlbrew ---------------------------------------------------------------- {{{2
 
+# FIXME Need to version pin this.
 koopa_install_perlbrew() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/perlbrew' \
@@ -2001,6 +2059,23 @@ koopa_update_perlbrew() { # {{{3
     koopa_update_app \
         --name='perlbrew' \
         --name-fancy='Perlbrew' \
+        "$@"
+}
+
+# pipx -------------------------------------------------------------------- {{{2
+
+koopa_install_pipx() { # {{{3
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/pipx' \
+        --name='pipx' \
+        "$@"
+}
+
+koopa_uninstall_pipx() { # {{{3
+    koopa_uninstall_app \
+        --name='pipx' \
+        --unlink-in-bin='pipx' \
         "$@"
 }
 
@@ -2053,6 +2128,7 @@ koopa_uninstall_procs() { # {{{3
 
 # pyenv ------------------------------------------------------------------- {{{2
 
+# FIXME Need to version pin this.
 koopa_install_pyenv() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/pyenv' \
@@ -2065,6 +2141,57 @@ koopa_uninstall_pyenv() { # {{{3
     koopa_uninstall_app \
         --name='pyenv' \
         --unlink-in-bin='pyenv' \
+        "$@"
+}
+
+# pyflakes ---------------------------------------------------------------- {{{2
+
+koopa_install_pyflakes() { # {{{3
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/pyflakes' \
+        --name='pyflakes' \
+        "$@"
+}
+
+koopa_uninstall_pyflakes() { # {{{3
+    koopa_uninstall_app \
+        --name='pyflakes' \
+        --unlink-in-bin='pyflakes' \
+        "$@"
+}
+
+# pylint ------------------------------------------------------------------ {{{2
+
+koopa_install_pylint() { # {{{3
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/pylint' \
+        --name='pylint' \
+        "$@"
+}
+
+koopa_uninstall_pylint() { # {{{3
+    koopa_uninstall_app \
+        --name='pylint' \
+        --unlink-in-bin='pylint' \
+        "$@"
+}
+
+# pytest ------------------------------------------------------------------ {{{2
+
+koopa_install_pytest() { # {{{3
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/pytest' \
+        --name='pytest' \
+        "$@"
+}
+
+koopa_uninstall_pytest() { # {{{3
+    koopa_uninstall_app \
+        --name='pytest' \
+        --unlink-in-bin='pytest' \
         "$@"
 }
 
@@ -2083,49 +2210,6 @@ koopa_uninstall_python() { # {{{3
         --name-fancy='Python' \
         --name='python' \
         --unlink-in-bin='python3' \
-        "$@"
-}
-
-# python-packages --------------------------------------------------------- {{{2
-
-koopa_install_python_packages() { # {{{3
-    koopa_install_app_packages \
-        --link-in-bin='bin/black' \
-        --link-in-bin='bin/bpytop' \
-        --link-in-bin='bin/flake8' \
-        --link-in-bin='bin/glances' \
-        --link-in-bin='bin/pipx' \
-        --link-in-bin='bin/pyflakes' \
-        --link-in-bin='bin/pylint' \
-        --link-in-bin='bin/pytest' \
-        --link-in-bin='bin/ranger' \
-        --name-fancy='Python' \
-        --name='python' \
-        "$@"
-}
-
-koopa_uninstall_python_packages() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Python packages' \
-        --name='python-packages' \
-        --unlink-in-bin='black' \
-        --unlink-in-bin='bpytop' \
-        --unlink-in-bin='flake8' \
-        --unlink-in-bin='glances' \
-        --unlink-in-bin='pipx' \
-        --unlink-in-bin='pyflakes' \
-        --unlink-in-bin='pylint' \
-        --unlink-in-bin='pytest' \
-        --unlink-in-bin='ranger' \
-        "$@"
-}
-
-# python-virtualenvs ------------------------------------------------------ {{{2
-
-koopa_uninstall_python_virtualenvs() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='Python virtualenvs' \
-        --name='python-virtualenvs' \
         "$@"
 }
 
@@ -2149,8 +2233,26 @@ koopa_uninstall_r() { # {{{3
         "$@"
 }
 
+# ranger-fm --------------------------------------------------------------- {{{2
+
+koopa_install_ranger_fm() { # {{{3
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/ranger' \
+        --name='ranger-fm' \
+        "$@"
+}
+
+koopa_uninstall_ranger_fm() { # {{{3
+    koopa_uninstall_app \
+        --name='ranger-fm' \
+        --unlink-in-bin='ranger' \
+        "$@"
+}
+
 # r-cmd-check ------------------------------------------------------------- {{{2
 
+# FIXME Need to version pin this.
 koopa_install_r_cmd_check() { # {{{3
     koopa_install_app \
         --name-fancy='R CMD check' \
@@ -2205,6 +2307,7 @@ koopa_update_r_packages() { # {{{3
 
 # rbenv ------------------------------------------------------------------- {{{2
 
+# FIXME Need to version pin this.
 koopa_install_rbenv() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/rbenv' \
@@ -2370,6 +2473,7 @@ koopa_uninstall_rust() { # {{{3
 
 koopa_install_scons() { # {{{3
     koopa_install_app \
+        --installer='python-venv' \
         --name-fancy='SCONS' \
         --name='scons' \
         "$@"
@@ -2907,6 +3011,7 @@ koopa_update_system() { # {{{3
 
 # tex-packages ------------------------------------------------------------ {{{2
 
+# FIXME Rework without declaring version here.
 koopa_install_tex_packages() { # {{{3
     koopa_install_app \
         --name-fancy='TeX packages' \
@@ -2928,6 +3033,7 @@ koopa_update_tex_packages() { # {{{3
 
 # doom-emacs -------------------------------------------------------------- {{{2
 
+# FIXME Consider renaming version to 'latest' here instead.
 koopa_install_doom_emacs() { # {{{3
     koopa_install_app \
         --name-fancy='Doom Emacs' \
@@ -2958,6 +3064,7 @@ koopa_update_doom_emacs() { # {{{3
 
 # prelude-emacs ----------------------------------------------------------- {{{2
 
+# FIXME Consider renaming version to 'latest' here instead.
 koopa_install_prelude_emacs() { # {{{3
     koopa_install_app \
         --name-fancy='Prelude Emacs' \
@@ -2988,6 +3095,7 @@ koopa_update_prelude_emacs() { # {{{3
 
 # spacemacs --------------------------------------------------------------- {{{2
 
+# FIXME Consider renaming version to 'latest' here instead.
 koopa_install_spacemacs() { # {{{3
     koopa_install_app \
         --name-fancy='Spacemacs' \
@@ -3018,6 +3126,7 @@ koopa_update_spacemacs() { # {{{3
 
 # spacevim ---------------------------------------------------------------- {{{2
 
+# FIXME Consider renaming version to 'latest' here instead.
 koopa_install_spacevim() { # {{{3
     koopa_install_app \
         --name-fancy='SpaceVim' \

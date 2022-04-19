@@ -697,19 +697,19 @@ koopa_assert_is_not_symlink() { # {{{1
     return 0
 }
 
-koopa_assert_is_python_package_installed() { # {{{1
-    # """
-    # Assert that specific Python packages are installed.
-    # @note Updated 2020-07-10.
-    # """
-    koopa_assert_has_args "$#"
-    if ! koopa_is_python_package_installed "$@"
-    then
-        koopa_dl 'Args' "$*"
-        koopa_stop 'Required Python packages missing.'
-    fi
-    return 0
-}
+# > koopa_assert_is_python_package_installed() { # {{{1
+# >     # """
+# >     # Assert that specific Python packages are installed.
+# >     # @note Updated 2020-07-10.
+# >     # """
+# >     koopa_assert_has_args "$#"
+# >     if ! koopa_is_python_package_installed "$@"
+# >     then
+# >         koopa_dl 'Args' "$*"
+# >         koopa_stop 'Required Python packages missing.'
+# >     fi
+# >     return 0
+# > }
 
 koopa_assert_is_python_venv_active() { # {{{1
     # """
