@@ -65,18 +65,18 @@ main() { # {{{1
     dict[url]="https://cloud.r-project.org/src/base/\
 R-${dict[maj_ver]}/${dict[file]}"
     conf_args=(
+        # > '--with-blas'
+        # > '--with-cairo'
+        # > '--with-jpeglib'
+        # > '--with-lapack'
+        # > '--with-readline'
+        # > '--with-tcltk'
         "--prefix=${dict[prefix]}"
         '--disable-nls'
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-memory-profiling'
-        #'--with-blas'
-        #'--with-cairo'
-        '--with-jpeglib'
-        #'--with-lapack'
-        #'--with-readline'
         '--with-recommended-packages'
-        #'--with-tcltk'
         '--with-x=no'
     )
     if koopa_is_linux
