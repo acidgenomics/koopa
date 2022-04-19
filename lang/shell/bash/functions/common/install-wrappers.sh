@@ -2233,6 +2233,23 @@ koopa_uninstall_r() { # {{{3
         "$@"
 }
 
+# r-devel ----------------------------------------------------------------- {{{2
+
+# NOTE Consider linking 'R-devel' into bin.
+koopa_install_r_devel() { # {{{3
+    koopa_install_app \
+        --name-fancy='R-devel' \
+        --name='r-devel' \
+        "$@"
+}
+
+koopa_uninstall_r_devel() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='R-devel' \
+        --name='r-devel' \
+        "$@"
+}
+
 # ranger-fm --------------------------------------------------------------- {{{2
 
 koopa_install_ranger_fm() { # {{{3
