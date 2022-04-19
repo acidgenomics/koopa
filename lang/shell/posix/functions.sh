@@ -835,6 +835,7 @@ koopa_activate_python() { # {{{1
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # """
     local startup_file
+    startup_file="${HOME:?}/.pyrc"
     # > local prefix prefix_real
     # > prefix="$(koopa_python_packages_prefix)"
     # > if [ -d "$prefix" ]
@@ -846,14 +847,17 @@ koopa_activate_python() { # {{{1
     then
         export PIP_REQUIRE_VIRTUALENV='true'
     fi
-    if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
+    if [ -z "${PYTHONDONTWRITEBYTECODE:-}" ]
     then
-        export VIRTUAL_ENV_DISABLE_PROMPT=1
+        export PYTHONDONTWRITEBYTECODE=1
     fi
-    startup_file="${HOME:?}/.pyrc"
     if [ -z "${PYTHONSTARTUP:-}" ] && [ -f "$startup_file" ]
     then
         export PYTHONSTARTUP="$startup_file"
+    fi
+    if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
+    then
+        export VIRTUAL_ENV_DISABLE_PROMPT=1
     fi
     return 0
 }
