@@ -1,17 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to resolve this on macOS:
-# configure: error: "liblzma library and headers are required"
-
-# FIXME Hitting this error on macOS:
-# > make[1]: Entering directory '[...]/svn/r/doc/manual'
-# > creating FAQ
-# > creating RESOURCES
-# > creating doc/html/resources.html
-# > make[1]: Leaving directory '[...]/svn/r/doc/manual'
-# > ERROR: not an svn checkout
-# > make: *** [Makefile:107: svnonly] Error 1
-
 # Related to Makefile issue:
 # > svnonly:
 # > 	@if test ! -f "$(srcdir)/doc/FAQ" || test -f non-tarball ; then \
@@ -24,6 +12,15 @@
 # > 	    $(ECHO) "ERROR: not an svn checkout"; \
 # > 	    exit 1; \
 # > 	  fi; \
+
+# FIXME Now hitting weird Cocoa error stuff on macOS:
+# > qdCocoa.m: In function ‘QuartzCocoa_Locator’:
+# > qdCocoa.m:743:27: error: ‘NSApp’ undeclared (first use in this function)
+# >          NSEvent *event = [NSApp nextEventMatchingMask:NSAnyEventMask
+# >                            ^~~~~
+# > make[5]: *** [../../../../etc/Makeconf:183: qdCocoa.o] Error 1
+# > make[5]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220419-144524-8kpAF3sdpK/svn/r/src/library/grDevices/src'
+# > make[4]: *** [../../../share/make/basepkg.mk:140: mksrc] Error 1
 
 main() { # {{{1
     # """
@@ -124,14 +121,23 @@ main() { # {{{1
         [trust_cert]='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
     )
     conf_args=(
+        # > '--with-readline'
+        # > '--without-blas'
+        # > '--without-lapack'
         "--prefix=${dict[prefix]}"
+        '--disable-nls'
+        '--enable-R-profiling'
         '--enable-R-shlib'
+        '--enable-memory-profiling'
         '--program-suffix=dev'
-        '--with-readline'
-        '--without-blas'
-        '--without-lapack'
+        '--with-x=no'
         '--without-recommended-packages'
     )
+    if koopa_is_macos
+    then
+        conf_args+=('--without-aqua')
+        export CFLAGS='-Wno-error=implicit-function-declaration'
+    fi
     "${app[svn]}" \
         --non-interactive \
         --trust-server-cert-failures="${dict[trust_cert]}" \
@@ -140,6 +146,11 @@ main() { # {{{1
             "${dict[svn_url]}" \
             "${dict[rtop]}"
     koopa_cd "${dict[rtop]}"
+    # Edge case for Makefile:107 issue.
+    if koopa_is_macos
+    then
+        koopa_print "Revision: ${dict[revision]}" > 'SVNINFO'
+    fi
     export TZ='America/New_York'
     unset -v R_HOME
     ./configure "${conf_args[@]}"
