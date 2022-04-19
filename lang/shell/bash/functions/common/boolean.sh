@@ -499,45 +499,45 @@ koopa_is_powerful_machine() { # {{{1
     return 1
 }
 
-koopa_is_python_package_installed() { # {{{1
-    # """
-    # Check if Python package is installed.
-    # @note Updated 2022-02-03.
-    #
-    # Fast mode: checking the 'site-packages' directory.
-    #
-    # Alternate, slow mode:
-    # > local freeze
-    # > freeze="$("$python" -m pip freeze)"
-    # > koopa_str_detect_regex --string="$freeze" --pattern="^${pkg}=="
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/1051254
-    # - https://askubuntu.com/questions/588390
-
-    # @examples
-    # > koopa_is_python_package_installed 'black' 'pytest'
-    # """
-    local app dict pkg
-    koopa_assert_has_args "$#"
-    declare -A app=(
-        [python]="$(koopa_locate_python)"
-    )
-    declare -A dict
-    dict[version]="$(koopa_get_version "${app[python]}")"
-    dict[prefix]="$(koopa_python_packages_prefix "${dict[version]}")"
-    [[ -d "${dict[prefix]}" ]] || return 1
-    for pkg in "$@"
-    do
-        if [[ ! -d "${dict[prefix]}/${pkg}" ]] && \
-            [[ ! -f "${dict[prefix]}/${pkg}.py" ]]
-        then
-            return 1
-        fi
-    done
-
-    return 0
-}
+# > koopa_is_python_package_installed() { # {{{1
+# >     # """
+# >     # Check if Python package is installed.
+# >     # @note Updated 2022-02-03.
+# >     #
+# >     # Fast mode: checking the 'site-packages' directory.
+# >     #
+# >     # Alternate, slow mode:
+# >     # > local freeze
+# >     # > freeze="$("$python" -m pip freeze)"
+# >     # > koopa_str_detect_regex --string="$freeze" --pattern="^${pkg}=="
+# >     #
+# >     # @seealso
+# >     # - https://stackoverflow.com/questions/1051254
+# >     # - https://askubuntu.com/questions/588390
+# >     #
+# >     # @examples
+# >     # > koopa_is_python_package_installed 'black' 'pytest'
+# >     # """
+# >     local app dict pkg
+# >     koopa_assert_has_args "$#"
+# >     declare -A app=(
+# >         [python]="$(koopa_locate_python)"
+# >     )
+# >     declare -A dict
+# >     dict[version]="$(koopa_get_version "${app[python]}")"
+# >     dict[prefix]="$(koopa_python_packages_prefix "${dict[version]}")"
+# >     [[ -d "${dict[prefix]}" ]] || return 1
+# >     for pkg in "$@"
+# >     do
+# >         if [[ ! -d "${dict[prefix]}/${pkg}" ]] && \
+# >             [[ ! -f "${dict[prefix]}/${pkg}.py" ]]
+# >         then
+# >             return 1
+# >         fi
+# >     done
+# >
+# >     return 0
+# > }
 
 koopa_is_r_package_installed() { # {{{1
     # """

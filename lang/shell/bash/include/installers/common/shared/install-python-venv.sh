@@ -13,11 +13,19 @@ main() { # {{{
         [version]="${INSTALL_VERSION:?}"
     )
     dict[libexec]="${dict[prefix]}/libexec"
+    case "${dict[name]}" in
+        'ranger-fm')
+            dict[bin_name]='ranger'
+            ;;
+        *)
+            dict[bin_name]="${dict[name]}"
+            ;;
+    esac
     koopa_python_create_venv \
         --prefix="${dict[libexec]}" \
         "${dict[name]}==${dict[version]}"
     koopa_ln \
-        "${dict[libexec]}/bin/${dict[name]}" \
-        "${dict[prefix]}/bin/${dict[name]}"
+        "${dict[libexec]}/bin/${dict[bin_name]}" \
+        "${dict[prefix]}/bin/${dict[bin_name]}"
     return 0
 }
