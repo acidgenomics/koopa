@@ -1,3 +1,7 @@
+# FIXME Consider adding support for:
+# - openssl@1
+# - openssl@3
+
 # FIXME Need to add versioning of:
 # - chemacs2
 # - dotfiles
@@ -193,7 +197,7 @@ gettext="0.21"
 # https://github.com/git/git/releases
 git="2.35.1"
 
-glances="3.2.4.2" # python
+glances="3.2.5" # python
 
 # https://gmplib.org/
 gmp="6.2.1"
