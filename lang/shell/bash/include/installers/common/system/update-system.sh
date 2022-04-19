@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME How is this different than 'koopa configure system'?
+# FIXME Need to rethink this...
+# FIXME How to make a versioned install of Google Cloud SDK?
+# FIXME Need to update Doom Emacs, Spacemacs, Prelude Emacs, Chemacs2...
+
 main() { # {{{1
     # """
     # Update system.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-04-19.
     # """
-    local app dict
-    declare -A app=(
-        [brew]="$(koopa_locate_brew --allow-missing)"
-    )
+    local dict
     declare -A dict=(
         [config_prefix]="$(koopa_config_prefix)"
         [make_prefix]="$(koopa_make_prefix)"
@@ -24,22 +26,18 @@ main() { # {{{1
     then
         koopa_linux_update_etc_profile_d
         koopa_linux_update_ldconfig
-        koopa_linux_configure_system --no-check
+        koopa_configure_system --no-check
     fi
-    if [[ -x "${app[brew]}" ]]
-    then
-        koopa_update_homebrew
-    else
-        koopa_update_google_cloud_sdk
-        koopa_update_perlbrew
-        koopa_update_pyenv
-        koopa_update_rbenv
-    fi
+    koopa_update_google_cloud_sdk
+    koopa_update_perlbrew
+    koopa_update_pyenv
+    koopa_update_rbenv
     koopa_update_r_packages
     koopa_update_rust
     koopa_update_rust_packages
     if koopa_is_macos
     then
+        koopa_macos_update_defaults
         koopa_macos_update_microsoft_office || true
     fi
     return 0
