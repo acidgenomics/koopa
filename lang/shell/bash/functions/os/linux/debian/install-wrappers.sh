@@ -131,10 +131,10 @@ koopa_debian_uninstall_llvm() { # {{{3
 
 # node-binary ------------------------------------------------------------- {{{2
 
-koopa_debian_install_node_binary() { # {{{3
+koopa_debian_install_nodesource_node_binary() { # {{{3
     koopa_install_app \
-        --name-fancy='Node.js (binary)' \
-        --name='node-binary' \
+        --name-fancy='NodeSource Node.js' \
+        --name='nodesource-node-binary' \
         --platform='debian' \
         --system \
         "$@"
