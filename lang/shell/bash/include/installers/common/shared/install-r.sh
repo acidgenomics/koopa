@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install R.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-19.
     #
     # @section gfortran configuration on macOS:
     #
@@ -57,15 +57,13 @@ main() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
-        [name2]='R'
-        [name]='r'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
-    dict[file]="${dict[name2]}-${dict[version]}.tar.gz"
+    dict[file]="R-${dict[version]}.tar.gz"
     dict[url]="https://cloud.r-project.org/src/base/\
-${dict[name2]}-${dict[maj_ver]}/${dict[file]}"
+R-${dict[maj_ver]}/${dict[file]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-nls'
@@ -95,7 +93,7 @@ ${dict[name2]}-${dict[maj_ver]}/${dict[file]}"
     fi
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name2]}-${dict[version]}"
+    koopa_cd "R-${dict[version]}"
     export TZ='America/New_York'
     unset -v R_HOME
     ./configure "${conf_args[@]}"
