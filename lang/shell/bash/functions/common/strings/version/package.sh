@@ -102,36 +102,36 @@ koopa_perl_package_version() { # {{{1
     return 0
 }
 
-koopa_python_package_version() { # {{{1
-    # """
-    # Python package version.
-    # @note Updated 2022-03-21.
-    #
-    # @examples
-    # > koopa_python_package_version 'pip'
-    # # 22.0.4
-    # """
-    local app pkg
-    koopa_assert_has_args "$#"
-    declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [python]="$(koopa_locate_python)"
-    )
-    for pkg in "$@"
-    do
-        local dict
-        declare -A dict
-        dict[pkg]="$pkg"
-        dict[str]="$( \
-            "${app[python]}" -m pip show "${dict[pkg]}" \
-            | koopa_grep --pattern='^Version:' --regex \
-            | "${app[cut]}" -d ' ' -f '2' \
-        )"
-        [[ -n "${dict[str]}" ]] || return 1
-        koopa_print "${dict[str]}"
-    done
-    return 0
-}
+# > koopa_python_package_version() { # {{{1
+# >     # """
+# >     # Python package version.
+# >     # @note Updated 2022-03-21.
+# >     #
+# >     # @examples
+# >     # > koopa_python_package_version 'pip'
+# >     # # 22.0.4
+# >     # """
+# >     local app pkg
+# >     koopa_assert_has_args "$#"
+# >     declare -A app=(
+# >         [cut]="$(koopa_locate_cut)"
+# >         [python]="$(koopa_locate_python)"
+# >     )
+# >     for pkg in "$@"
+# >     do
+# >         local dict
+# >         declare -A dict
+# >         dict[pkg]="$pkg"
+# >         dict[str]="$( \
+# >             "${app[python]}" -m pip show "${dict[pkg]}" \
+# >             | koopa_grep --pattern='^Version:' --regex \
+# >             | "${app[cut]}" -d ' ' -f '2' \
+# >         )"
+# >         [[ -n "${dict[str]}" ]] || return 1
+# >         koopa_print "${dict[str]}"
+# >     done
+# >     return 0
+# > }
 
 koopa_r_package_version() { # {{{1
     # """

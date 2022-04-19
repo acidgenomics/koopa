@@ -1,3 +1,15 @@
+# FIXME Need to add versioning of:
+# - chemacs2
+# - dotfiles
+# - perlbrew
+# - pyenv
+# - rbenv
+
+# FIXME Denote 'latest' for:
+# - doom-emacs
+# - spacemacs
+# - spacevim
+
 # koopa {{{1
 # ==============================================================================
 
