@@ -319,9 +319,11 @@ koopa_uninstall_conda() { # {{{3
 # coreutils --------------------------------------------------------------- {{{2
 
 koopa_install_coreutils() { # {{{3
+    # """
+    # Consider adding '--activate-opt=attr' here.
+    # """
     local install_args
     install_args=(
-        # > '--activate-opt=attr'
         '--name=coreutils'
         '--link-in-bin=bin/['
         '--link-in-bin=bin/b2sum'
@@ -1007,14 +1009,6 @@ koopa_uninstall_gnupg() { # {{{3
 # gnutls ------------------------------------------------------------------ {{{2
 
 koopa_install_gnutls() { # {{{1
-    # """
-    # NOTE This is failing to build on macOS due to failure to properly detect
-    # gmp (gmp.h file).
-    #
-    # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gnutls.rb
-    # - https://github.com/conda-forge/gnutls-feedstock
-    # """
     koopa_install_app \
         --activate-opt='gmp' \
         --activate-opt='libtasn1' \
@@ -1022,7 +1016,7 @@ koopa_install_gnutls() { # {{{1
         --activate-opt='nettle' \
         --installer='gnupg-gcrypt' \
         --name='gnutls' \
-        --without-p11-kit \
+        -D --without-p11-kit \
         "$@"
 }
 
@@ -1150,7 +1144,6 @@ koopa_install_haskell_stack() { # {{{3
     koopa_install_app \
         --name-fancy='Haskell Stack' \
         --name='haskell-stack' \
-        --version='rolling' \
         "$@"
 }
 
@@ -1717,6 +1710,25 @@ koopa_install_node() { # {{{3
 }
 
 koopa_uninstall_node() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Node.js' \
+        --name='node' \
+        --unlink-in-bin='node' \
+        "$@"
+}
+
+# node-binary ------------------------------------------------------------- {{{2
+
+koopa_install_node_binary() { # {{{3
+    koopa_install_app \
+        --installer='node-binary' \
+        --link-in-bin='bin/node' \
+        --name-fancy='Node.js' \
+        --name='node' \
+        "$@"
+}
+
+koopa_uninstall_node_binary() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Node.js' \
         --name='node' \
