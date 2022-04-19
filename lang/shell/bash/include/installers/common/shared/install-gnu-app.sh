@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-04-19.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -21,6 +21,11 @@ main() { # {{{1
     )
     dict[name2]="${dict[name]}"
     conf_args=("--prefix=${dict[prefix]}" "$@")
+    case "${dict[name]}" in
+        'freetype')
+            dict[gnu_mirror]='https://download.savannah.gnu.org/releases'
+            ;;
+    esac
     case "${dict[name]}" in
         'bc' | \
         'groff' | \
