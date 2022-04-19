@@ -153,6 +153,8 @@ __koopa_complete() { # {{{1
                         'lesspipe'
                         'libevent'
                         'libgeotiff'
+                        'libgit2'
+                        'libssh2'
                         'libtasn1'
                         'libtiff'
                         'libtool'
