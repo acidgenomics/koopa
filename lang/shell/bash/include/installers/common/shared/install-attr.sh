@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE This is currently failing to build on macOS.
+# FIXME Rework this using 'install-gnu-app.sh' installer file.
 
 main() { # {{{1
     # """
