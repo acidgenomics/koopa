@@ -12,11 +12,18 @@
 # > ERROR: not an svn checkout
 # > make: *** [Makefile:107: svnonly] Error 1
 
-# FIXME Trying to activate 'git' here, to see if this resolves:
-# Related to Makefile:108
+# Related to Makefile issue:
 # > svnonly:
 # > 	@if test ! -f "$(srcdir)/doc/FAQ" || test -f non-tarball ; then \
 # > 	  (cd doc/manual && $(MAKE) front-matter html-non-svn) ; \
+# > 	  touch non-tarball ; \
+# > 	  (cd $(srcdir); LC_ALL=C TZ=GMT $(GIT) svn info || cat SVNINFO || $(ECHO) "Revision: -99") 2> /dev/null \
+# > 	    | sed -n -e '/^Revision/p' -e '/^Last Changed Date/'p \
+# > 	    | cut -d' ' -f1,2,3,4 > SVN-REVISION-tmp ; \
+# > 	  if test "`cat SVN-REVISION-tmp`" = "Revision: -99"; then \
+# > 	    $(ECHO) "ERROR: not an svn checkout"; \
+# > 	    exit 1; \
+# > 	  fi; \
 
 main() { # {{{1
     # """
@@ -88,7 +95,6 @@ main() { # {{{1
     koopa_activate_opt_prefix \
         'curl' \
         'gettext' \
-        'git' \
         'icu4c' \
         'jpeg' \
         'pcre2' \
