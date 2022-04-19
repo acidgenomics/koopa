@@ -202,6 +202,7 @@ __koopa_complete() { # {{{1
                         'python-packages'
                         'r'
                         'r-cmd-check'
+                        'r-devel'
                         'r-packages'
                         'ranger-fm'
                         'rbenv'
@@ -275,7 +276,6 @@ __koopa_complete() { # {{{1
                                     'bcbio-nextgen-vm'
                                     'pandoc-binary'
                                     'r-binary'
-                                    'r-devel'
                                 )
                             elif koopa_is_fedora_like
                             then
