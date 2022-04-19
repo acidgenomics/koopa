@@ -813,7 +813,7 @@ koopa_activate_pyenv() { # {{{1
 koopa_activate_python() { # {{{1
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-19.
     #
     # Configures:
     # - Site packages library.
@@ -834,13 +834,14 @@ koopa_activate_python() { # {{{1
     # - https://twitter.com/sadhlife/status/1450459992419622920
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # """
-    local prefix prefix_real startup_file
-    prefix="$(koopa_python_packages_prefix)"
-    if [ -d "$prefix" ]
-    then
-        prefix_real="$(koopa_realpath "$prefix")"
-        koopa_add_to_pythonpath_start "$prefix_real"
-    fi
+    local startup_file
+    # > local prefix prefix_real
+    # > prefix="$(koopa_python_packages_prefix)"
+    # > if [ -d "$prefix" ]
+    # > then
+    # >     prefix_real="$(koopa_realpath "$prefix")"
+    # >     koopa_add_to_pythonpath_start "$prefix_real"
+    # > fi
     if [ -z "${PIP_REQUIRE_VIRTUALENV:-}" ]
     then
         export PIP_REQUIRE_VIRTUALENV='true'
@@ -3413,18 +3414,18 @@ koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
-koopa_python_packages_prefix() { # {{{1
-    # """
-    # Python site packages library prefix.
-    # @note Updated 2021-06-11.
-    #
-    # @usage koopa_python_packages_prefix [VERSION]
-    #
-    # @seealso
-    # > "$python" -m site
-    # """
-    __koopa_packages_prefix 'python' "$@"
-}
+# > koopa_python_packages_prefix() { # {{{1
+# >     # """
+# >     # Python site packages library prefix.
+# >     # @note Updated 2021-06-11.
+# >     #
+# >     # @usage koopa_python_packages_prefix [VERSION]
+# >     #
+# >     # @seealso
+# >     # > "$python" -m site
+# >     # """
+# >     __koopa_packages_prefix 'python' "$@"
+# > }
 
 koopa_python_venv_name() { # {{{1
     # """
