@@ -24,7 +24,7 @@ koopa_bioconda_autobump_recipe() { # {{{1
         "${app[git]}" pull
         # Autobump branch:
         "${app[git]}" checkout \
-            -b "${dict[branch]}" \
+            -B "${dict[branch]}" \
             "origin/bump/${dict[branch]}"
         # Or create a new branch:
         # > "${app[git]}" checkout -B "$branch"
