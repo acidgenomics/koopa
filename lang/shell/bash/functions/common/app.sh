@@ -170,13 +170,10 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Don't allow configuration flag passthrough here by default, so we
-# can harden against unsupported arguments.
-
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-17.
     # """
     local bin_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -341,10 +338,15 @@ koopa_install_app() { # {{{1
                 dict[verbose]=1
                 shift 1
                 ;;
+            # Configuration passthrough support --------------------------------
+            # Inspired by CMake approach using '-D' prefix.
+            '-D')
+            pos+=("${2:?}")
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
@@ -469,16 +471,18 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         then
             koopa_linux_update_ldconfig
         fi
-        # > [[ -n "${CFLAGS:-}" ]] && \
-        # >     koopa_dl 'CFLAGS' "${CFLAGS:?}"
-        # > [[ -n "${CPPFLAGS:-}" ]] && \
-        # >     koopa_dl 'CPPFLAGS' "${CPPFLAGS:?}"
-        # > [[ -n "${LD_LIBRARY_PATH:-}" ]] && \
-        # >     koopa_dl 'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:?}"
-        # > [[ -n "${LDFLAGS:-}" ]] && \
-        # >     koopa_dl 'LDFLAGS' "${LDFLAGS:?}"
-        # > [[ -n "${PKG_CONFIG_PATH:-}" ]] && \
-        # >     koopa_dl 'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:?}"
+        [[ -n "${CFLAGS:-}" ]] && \
+            koopa_dl 'CFLAGS' "${CFLAGS:?}"
+        [[ -n "${CPPFLAGS:-}" ]] && \
+            koopa_dl 'CPPFLAGS' "${CPPFLAGS:?}"
+        [[ -n "${LD_LIBRARY_PATH:-}" ]] && \
+            koopa_dl 'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:?}"
+        [[ -n "${LDFLAGS:-}" ]] && \
+            koopa_dl 'LDFLAGS' "${LDFLAGS:?}"
+        [[ -n "${PKG_CONFIG_PATH:-}" ]] && \
+            koopa_dl 'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:?}"
+        [[ "$#" -gt 0 ]] && \
+            koopa_dl 'configure args' "$*"
         # shellcheck disable=SC2030
         export INSTALL_LINK_IN_BIN="${dict[link_in_bin]}"
         # shellcheck disable=SC2030
