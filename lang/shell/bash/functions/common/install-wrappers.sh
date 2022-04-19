@@ -1420,6 +1420,20 @@ koopa_uninstall_libgeotiff() { # {{{3
         "$@"
 }
 
+# libgit2 ----------------------------------------------------------------- {{{2
+
+koopa_install_libgit2() { # {{{3
+    koopa_install_app \
+        --name='libgit2' \
+        "$@"
+}
+
+koopa_uninstall_libgit2() { # {{{3
+    koopa_uninstall_app \
+        --name='libgit2' \
+        "$@"
+}
+
 # libidn ---------------------------------------------------------------- {{{2
 
 koopa_install_libidn() { # {{{3
@@ -1431,6 +1445,20 @@ koopa_install_libidn() { # {{{3
 koopa_uninstall_libidn() { # {{{3
     koopa_uninstall_app \
         --name='libidn' \
+        "$@"
+}
+
+# libssh2 ----------------------------------------------------------------- {{{2
+
+koopa_install_libssh2() { # {{{3
+    koopa_install_app \
+        --name='libssh2' \
+        "$@"
+}
+
+koopa_uninstall_libssh2() { # {{{3
+    koopa_uninstall_app \
+        --name='libssh2' \
         "$@"
 }
 
