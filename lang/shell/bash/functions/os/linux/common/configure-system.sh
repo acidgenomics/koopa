@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Make this platform agnostic. Move to shared functions.
+
 koopa_linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
@@ -366,97 +368,97 @@ koopa_linux_configure_system() { # {{{1
     [[ "${dict[install_curl]}" -eq 1 ]] && \
         koopa install curl
     [[ "${dict[install_wget]}" -eq 1 ]] && \
-       koopa install wget
+        koopa install wget
     [[ "${dict[install_cmake]}" -eq 1 ]] && \
-       koopa install cmake
+        koopa install cmake
     [[ "${dict[install_make]}" -eq 1 ]] && \
-       koopa install make
+        koopa install make
     [[ "${dict[install_autoconf]}" -eq 1 ]] && \
-       koopa install autoconf
+        koopa install autoconf
     [[ "${dict[install_automake]}" -eq 1 ]] && \
-       koopa install automake
+        koopa install automake
     [[ "${dict[install_libtool]}" -eq 1 ]] && \
-       koopa install libtool
+        koopa install libtool
     [[ "${dict[install_texinfo]}" -eq 1 ]] && \
-       koopa install texinfo
+        koopa install texinfo
     [[ "${dict[install_binutils]}" -eq 1 ]] && \
-       koopa install binutils
+        koopa install binutils
     [[ "${dict[install_coreutils]}" -eq 1 ]] && \
-       koopa install coreutils
+        koopa install coreutils
     [[ "${dict[install_findutils]}" -eq 1 ]] && \
-       koopa install findutils
+        koopa install findutils
     [[ "${dict[install_patch]}" -eq 1 ]] && \
-       koopa install patch
+        koopa install patch
     [[ "${dict[install_pkg_config]}" -eq 1 ]] && \
-       koopa install pkg-config
+        koopa install pkg-config
     [[ "${dict[install_ncurses]}" -eq 1 ]] && \
-       koopa install ncurses
+        koopa install ncurses
     [[ "${dict[install_gnupg]}" -eq 1 ]] && \
-       koopa install gnupg
+        koopa install gnupg
     [[ "${dict[install_grep]}" -eq 1 ]] && \
-       koopa install grep
+        koopa install grep
     [[ "${dict[install_gawk]}" -eq 1 ]] && \
-       koopa install gawk
+        koopa install gawk
     [[ "${dict[install_parallel]}" -eq 1 ]] && \
-       koopa install parallel
+        koopa install parallel
     [[ "${dict[install_rsync]}" -eq 1 ]] && \
-       koopa install rsync
+        koopa install rsync
     [[ "${dict[install_sed]}" -eq 1 ]] && \
-       koopa install sed
+        koopa install sed
     [[ "${dict[install_libevent]}" -eq 1 ]] && \
-       koopa install libevent
+        koopa install libevent
     [[ "${dict[install_taglib]}" -eq 1 ]] && \
-       koopa install taglib
+        koopa install taglib
     [[ "${dict[install_zsh]}" -eq 1 ]] && \
-       koopa install zsh
+        koopa install zsh
     [[ "${dict[install_bash]}" -eq 1 ]] && \
-       koopa install bash
+        koopa install bash
     [[ "${dict[install_fish]}" -eq 1 ]] && \
-       koopa install fish
+        koopa install fish
     [[ "${dict[install_git]}" -eq 1 ]] && \
-       koopa install git
+        koopa install git
     [[ "${dict[install_openssh]}" -eq 1 ]] && \
-       koopa install openssh
+        koopa install openssh
     [[ "${dict[install_perl]}" -eq 1 ]] && \
-       koopa install perl
+        koopa install perl
     # > [[ "${dict[install_geos]}" -eq 1 ]] && \
-    # >    koopa install geos
+    # >     koopa install geos
     [[ "${dict[install_sqlite]}" -eq 1 ]] && \
-       koopa install sqlite
+        koopa install sqlite
     # > [[ "${dict[install_proj]}" -eq 1 ]] && \
-    # >    koopa install proj
+    # >     koopa install proj
     # > [[ "${dict[install_gdal]}" -eq 1 ]] && \
-    # >    koopa install gdal
+    # >     koopa install gdal
     [[ "${dict[install_hdf5]}" -eq 1 ]] && \
-       koopa install hdf5
+        koopa install hdf5
     [[ "${dict[install_gsl]}" -eq 1 ]] && \
-       koopa install gsl
+        koopa install gsl
     [[ "${dict[install_udunits]}" -eq 1 ]] && \
-       koopa install udunits
+        koopa install udunits
     [[ "${dict[install_subversion]}" -eq 1 ]] && \
-       koopa install subversion
+        koopa install subversion
     [[ "${dict[install_go]}" -eq 1 ]] && \
-       koopa install go
+        koopa install go
     [[ "${dict[install_ruby]}" -eq 1 ]] && \
-       koopa install ruby
+        koopa install ruby
     [[ "${dict[install_rust]}" -eq 1 ]] && \
-       koopa install rust
+        koopa install rust
     [[ "${dict[install_neofetch]}" -eq 1 ]] && \
-       koopa install neofetch
+        koopa install neofetch
     [[ "${dict[install_fzf]}" -eq 1 ]] && \
-       koopa install fzf
+        koopa install fzf
     # > [[ "${dict[install_the_silver_searcher]}" -eq 1 ]] && \
     # >    koopa install the-silver-searcher
     [[ "${dict[install_tmux]}" -eq 1 ]] && \
-       koopa install tmux
+        koopa install tmux
     [[ "${dict[install_vim]}" -eq 1 ]] && \
-       koopa install vim
+        koopa install vim
     [[ "${dict[install_shellcheck]}" -eq 1 ]] && \
-       koopa install shellcheck
+        koopa install shellcheck
     [[ "${dict[install_shunit2]}" -eq 1 ]] && \
-       koopa install shunit2
+        koopa install shunit2
     [[ "${dict[install_aws_cli]}" -eq 1 ]] && \
-       koopa install aws-cli
+        koopa install aws-cli
     [[ "${dict[install_azure_cli]}" -eq 1 ]] && \
         koopa install azure-cli
     [[ "${dict[install_docker]}" -eq 1 ]] && \
@@ -466,21 +468,21 @@ koopa_linux_configure_system() { # {{{1
     [[ "${dict[install_password_store]}" -eq 1 ]] && \
         koopa install password-store
     [[ "${dict[install_docker_credential_pass]}" -eq 1 ]] && \
-       koopa install docker-credential-pass
+        koopa install docker-credential-pass
     [[ "${dict[install_neovim]}" -eq 1 ]] && \
-       koopa install neovim
+        koopa install neovim
     [[ "${dict[install_emacs]}" -eq 1 ]] && \
-       koopa install emacs
+        koopa install emacs
     [[ "${dict[install_julia]}" -eq 1 ]] && \
-       koopa install julia
+        koopa install julia
     [[ "${dict[install_lua]}" -eq 1 ]] && \
-       koopa install lua
+        koopa install lua
     [[ "${dict[install_luarocks]}" -eq 1 ]] && \
-       koopa install luarocks
+        koopa install luarocks
     [[ "${dict[install_lmod]}" -eq 1 ]] && \
-       koopa install lmod
+        koopa install lmod
     [[ "${dict[install_htop]}" -eq 1 ]] && \
-       koopa install htop
+        koopa install htop
     # Install R.
     if [[ "${dict[install_r]}" -eq 1 ]]
     then
@@ -512,14 +514,17 @@ koopa_linux_configure_system() { # {{{1
     koopa_linux_update_ldconfig
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------
-    [[ "${dict[install_python_packages]}" -eq 1 ]] && \
-       koopa install python-packages
+    if [[ "${dict[install_python_packages]}" -eq 1 ]]
+    then
+        # FIXME Break this out to individual packages here.
+        koopa install python-packages
+    fi
     [[ "${dict[install_r_packages]}" -eq 1 ]] && \
-       koopa install r-packages
+        koopa install r-packages
     [[ "${dict[install_perl_packages]}" -eq 1 ]] && \
-       koopa install perl-packages
+        koopa install perl-packages
     [[ "${dict[install_ruby_packages]}" -eq 1 ]] && \
-       koopa install ruby-packages
+        koopa install ruby-packages
     if [[ "${dict[install_rust_packages]}" -eq 1 ]]
     then
         # FIXME Add the other Rust packages to install here.
@@ -528,7 +533,7 @@ koopa_linux_configure_system() { # {{{1
     # Bioinformatics tools {{{2
     # --------------------------------------------------------------------------
     [[ "${dict[install_aspera_connect]}" -eq 1 ]] && \
-       koopa install aspera-connect
+        koopa install aspera-connect
     [[ "${dict[install_conda_envs]}" -eq 1 ]] && \
         conda-create-bioinfo-envs
     # Final steps {{{2

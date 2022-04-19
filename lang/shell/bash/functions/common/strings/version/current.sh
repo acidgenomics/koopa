@@ -422,14 +422,14 @@ koopa_perl_file_rename_version() { # {{{1
     koopa_perl_package_version 'File::Rename'
 }
 
-koopa_pip_version() { # {{{1
-    # """
-    # Python pip version.
-    # @note Updated 2022-03-18.
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_python_package_version 'pip'
-}
+# > koopa_pip_version() { # {{{1
+# >     # """
+# >     # Python pip version.
+# >     # @note Updated 2022-03-18.
+# >     # """
+# >     koopa_assert_has_no_args "$#"
+# >     koopa_python_package_version 'pip'
+# > }
 
 # > koopa_prettier_version() { # {{{1
 # >     # """
