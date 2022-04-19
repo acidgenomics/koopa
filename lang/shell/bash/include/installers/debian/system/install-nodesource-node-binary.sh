@@ -2,7 +2,7 @@
 
 main() { # {{{1
     # """
-    # Install Node.js for Debian using NodeSource.
+    # Install NodeSource Node.js binary package for Debian.
     # @note Updated 2022-04-07.
     #
     # This will configure apt at '/etc/apt/sources.list.d/nodesource.list'.
