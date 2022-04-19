@@ -1,7 +1,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-04-17"
+koopa-date="2022-04-19"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -120,7 +120,7 @@ cpufetch="1.01"
 # https://curl.haxx.se/
 curl="7.82.0"
 
-difftastic="0.25.0" # rust (difft)
+difftastic="0.27.0" # rust (difft)
 
 # https://docs.docker.com/install/
 docker="20.10.14"
@@ -201,6 +201,9 @@ gsl="2.7.1"
 hadolint="2.10.0"
 
 harfbuzz="4.2.0"
+
+# https://docs.haskellstack.org/en/stable/install_and_upgrade/
+haskell-stack="2.7.5"
 
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.13.1"
@@ -312,8 +315,8 @@ nim="1.6.4"
 # https://github.com/ninja-build/ninja/tags
 ninja="1.10.2.3"
 
-# https://nodejs.org/
-node="17.8.0"
+# https://nodejs.org/en/download/
+node="16.14.2" # LTS
 
 # https://github.com/kkos/oniguruma/
 # https://github.com/kkos/oniguruma/
