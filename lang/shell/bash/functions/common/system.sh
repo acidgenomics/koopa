@@ -622,7 +622,7 @@ koopa_warn_if_export() { # {{{1
 koopa_which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2022-03-09.
+    # @note Updated 2022-04-17.
     # """
     local dict
     koopa_assert_has_args_eq "$#" 1
