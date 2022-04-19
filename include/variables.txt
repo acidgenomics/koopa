@@ -87,8 +87,12 @@ binutils="2.37"
 # https://bioconductor.org/
 bioconductor="3.14"
 
+black="22.3.0" # python
+
 # https://www.boost.org/
 boost="1.78.0"
+
+bpytop="1.0.68" # python
 
 broot="1.11.1" # rust (br)
 
@@ -146,6 +150,8 @@ fd-find="8.3.2" # rust
 # https://www.gnu.org/software/findutils/
 findutils="4.9.0"
 
+flake8="4.0.1" # python
+
 # https://www.fltk.org/
 fltk="1.3.8"
 
@@ -174,6 +180,8 @@ gettext="0.21"
 # https://git-scm.com/
 # https://github.com/git/git/releases
 git="2.35.1"
+
+glances="3.2.4.2" # python
 
 # https://gmplib.org/
 gmp="6.2.1"
@@ -368,6 +376,8 @@ perl-file-rename="1.30"
 # https://github.com/php/php-src/releases
 php="8.1.2"
 
+pipx="1.0.0" # python
+
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
@@ -382,6 +392,12 @@ proj="9.0.0"
 
 # https://github.com/pyenv/pyenv
 pyenv="2.2.5"
+
+pyflakes="2.4.0" # python
+
+pylint="2.13.4" # python
+
+pytest="6.2.5" # python
 
 # https://www.python.org/downloads/
 python="3.10.3"
@@ -404,6 +420,8 @@ r-gfortran="8.2"
 # https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
 # This is the SVN revision number.
 r-devel="81975" # 2022-03-24; R 4.2
+
+ranger-fm="1.9.3" # python
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
@@ -644,32 +662,6 @@ node-npm="8.7.0"                    # system
 node-bash-language-server="2.1.0"   # bash-language-server
 node-gtop="1.1.3"                   # gtop
 node-prettier="2.6.2"               # prettier
-
-# Python packages {{{1
-# ==============================================================================
-# Updated 2022-03-21 from https://pypi.org/.
-
-# Python pip pinned versions.
-# These are essential Python tools that should always be available.
-# Otherwise, for heavy libraries, consider using a conda environment instead.
-
-# Potentially useful:
-# - pip2p
-# - pipx
-
-python-pip="22.0.4"             # system
-python-setuptools="60.10.0"     # system
-python-wheel="0.37.1"           # system
-
-python-black="22.3.0"           # black
-python-bpytop="1.0.68"          # bpytop
-python-flake8="4.0.1"           # flake8
-python-glances="3.2.4.2"        # glances
-python-pipx="1.0.0"             # pipx
-python-pyflakes="2.4.0"         # pyflakes
-python-pylint="2.13.4"          # pylint
-python-pytest="6.2.5"           # pytest
-python-ranger-fm="1.9.3"        # ranger
 
 # Ruby packages (gems) {{{1
 # ==============================================================================
