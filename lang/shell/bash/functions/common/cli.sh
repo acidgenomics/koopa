@@ -9,7 +9,7 @@
 koopa_cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-03-24.
+    # @note Updated 2022-04-19.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -63,6 +63,17 @@ koopa_cli_app() { # {{{1
                             koopa_cli_invalid_arg "$@"
                         ;;
                     esac
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
+        'bioconda')
+            case "${2:-}" in
+                'autobump-recipe')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa_cli_invalid_arg "$@"
