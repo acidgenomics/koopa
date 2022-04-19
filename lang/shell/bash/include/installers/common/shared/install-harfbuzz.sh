@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for:
+# - cairo
+# - glib
+# - gobject-introspection
+# - graphite2
+
 main() { # {{{1
     # """
     # Install HarfBuzz.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-19.
     #
     # @seealso
     # - https://harfbuzz.github.io/building.html
@@ -14,6 +20,13 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix \
+        'cmake' \
+        'freetype' \
+        'icu4c' \
+        'meson' \
+        'ninja' \
+        'pkg-config'
     declare -A app=(
         [meson]="$(koopa_locate_meson)"
         [ninja]="$(koopa_locate_ninja)"
@@ -30,15 +43,6 @@ archive/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    # depends_on "cairo"
-    # depends_on "freetype"
-    # depends_on "glib"
-    # depends_on "gobject-introspection"
-    # depends_on "graphite2"
-    koopa_activate_opt_prefix \
-        'icu4c' \
-        'meson' \
-        'ninja'
     meson_args=(
         # > '--default-library=both'
         # > '-Dcairo=enabled'
