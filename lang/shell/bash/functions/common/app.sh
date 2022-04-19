@@ -614,14 +614,10 @@ ${dict[name]}/${dict[version]}.tar.gz"
     return 0
 }
 
-# FIXME Don't allow configuration flag passthrough here by default, so we
-# can harden against unsupported arguments.
-# FIXME Need to better support '--push' for versioned package library uploads.
-
 koopa_install_app_packages() { # {{{1
     # """
     # Install application packages.
-    # @note Updated 2022-04-15.
+    # @note Updated 2022-04-19.
     # """
     local name name_fancy pos
     koopa_assert_has_args "$#"
@@ -689,12 +685,13 @@ koopa_install_app_packages() { # {{{1
         koopa_rm "${dict[prefix]}"
     fi
     dict[version]="$(koopa_get_version "${dict[name]}")"
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     koopa_install_app \
         --name-fancy="${dict[name_fancy]} packages" \
         --name="${dict[name]}-packages" \
         --no-prefix-check \
         --prefix="${dict[prefix]}" \
-        --version="${dict[version]}" \
+        --version="${dict[maj_min_ver]}" \
         "$@"
     return 0
 }
