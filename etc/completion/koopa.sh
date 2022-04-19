@@ -43,6 +43,7 @@ __koopa_complete() { # {{{1
                 'app')
                     args=(
                         'aws'
+                        'bioconda'
                         'bowtie2'
                         'conda'
                         'docker'
@@ -420,6 +421,11 @@ __koopa_complete() { # {{{1
                                 'batch'
                                 'ec2'
                                 's3'
+                            )
+                            ;;
+                        'bioconda')
+                            args=(
+                                'autobump-recipe'
                             )
                             ;;
                         'bowtie2' | \
