@@ -367,6 +367,9 @@ koopa_uninstall_conda() { # {{{3
 
 # coreutils --------------------------------------------------------------- {{{2
 
+# FIXME When installing, we now hit this error:
+# /opt/koopa/lang/shell/bash/functions/common/fs/core.sh:448: /opt/koopa/opt/coreutils/bin/ln: No such file or directory
+
 koopa_install_coreutils() { # {{{3
     # """
     # Consider adding '--activate-opt=attr' here.
