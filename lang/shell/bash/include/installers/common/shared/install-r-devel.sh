@@ -76,10 +76,8 @@ main() { # {{{1
         'readline' \
         'texinfo' \
         'xz'
-    # FIXME Need to improve openjdk install consistency.
     if koopa_is_linux
     then
-        # Consider migrating to Adoptium Temuring LTS in the future.
         koopa_activate_opt_prefix 'openjdk'
     elif koopa_is_macos
     then
