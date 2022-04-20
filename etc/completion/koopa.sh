@@ -169,6 +169,7 @@ __koopa_complete() { # {{{1
                         'libzip'
                         'lua'
                         'luarocks'
+                        'lzma'
                         'make'
                         'mamba'
                         'man-db'

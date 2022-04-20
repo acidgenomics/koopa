@@ -2,6 +2,8 @@
 
 # FIXME Consolidate this with main R installer.
 
+# FIXME This needs to create an 'R-devel' symlink in bin.
+
 # Related to Makefile issue:
 # > svnonly:
 # > 	@if test ! -f "$(srcdir)/doc/FAQ" || test -f non-tarball ; then \

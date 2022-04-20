@@ -331,6 +331,9 @@ lua="5.4.4"
 # https://github.com/luarocks/luarocks/releases
 luarocks="3.8.0"
 
+# https://tukaani.org/lzma/
+lzma="4.32.7"
+
 # https://ftp.gnu.org/gnu/make/
 make="4.3"
 
