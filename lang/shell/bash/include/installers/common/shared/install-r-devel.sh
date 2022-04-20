@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consolidate this with main R installer.
+
 # Related to Makefile issue:
 # > svnonly:
 # > 	@if test ! -f "$(srcdir)/doc/FAQ" || test -f non-tarball ; then \
@@ -85,17 +87,17 @@ main() { # {{{1
     # Consider requiring:
     # - 'lapack'
     # - 'libffi'
-    # - 'libpng'
     # - 'openblas'
-    # - 'readline'
     # - 'tcl-tk'
     koopa_activate_opt_prefix \
         'curl' \
         'gettext' \
         'icu4c' \
-        'jpeg' \
+        'libjpeg-turbo' \
+        'libpng' \
         'pcre2' \
         'pkg-config' \
+        'readline' \
         'texinfo' \
         'xz'
     if koopa_is_linux

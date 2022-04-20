@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consolidate this with r-devel installer.
+
 main() { # {{{1
     # """
     # Install R.
@@ -29,17 +31,17 @@ main() { # {{{1
     # Consider requiring:
     # - 'lapack'
     # - 'libffi'
-    # - 'libpng'
     # - 'openblas'
-    # - 'readline'
     # - 'tcl-tk'
     koopa_activate_opt_prefix \
         'curl' \
         'gettext' \
         'icu4c' \
-        'jpeg' \
+        'libjpeg-turbo' \
+        'libpng' \
         'pcre2' \
         'pkg-config' \
+        'readline' \
         'texinfo' \
         'xz'
     if koopa_is_linux
