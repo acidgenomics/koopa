@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-20.
     #
     # @section Look up reverse dependencies:
     # > sudo apt-cache rdepends --installed 'libnode-dev'
@@ -140,7 +140,7 @@ main() { # {{{1
             'byacc'
             'cmake'
             'debhelper' # r-devel
-            'default-jdk'
+            # > 'default-jdk' # FIXME Install alongside Temurin? May need to remove.
             'diffutils'
             'dirmngr'
             'expect-dev' # Installs unbuffer.
@@ -171,6 +171,7 @@ main() { # {{{1
             'software-properties-common'
             'sqlite3'
             'subversion' # r-devel
+            'temurin-17-jdk'
             'texinfo' # makeinfo
             'texlive'
             'texlive-base' # r-devel
