@@ -884,6 +884,36 @@ koopa_uninstall_fltk() { # {{{3
         "$@"
 }
 
+# freetype ---------------------------------------------------------------- {{{2
+
+koopa_install_freetype() { # {{{3
+    koopa_install_gnu_app \
+        --name='freetype' \
+        -D '--enable-freetype-config' \
+        -D '--without-harfbuzz' \
+        "$@"
+}
+
+koopa_uninstall_freetype() { # {{{3
+    koopa_uninstall_app \
+        --name='freetype' \
+        "$@"
+}
+
+# fribidi ----------------------------------------------------------------- {{{2
+
+koopa_install_fribidi() { # {{{3
+    koopa_install_app \
+        --name='fribidi' \
+        "$@"
+}
+
+koopa_uninstall_fribidi() { # {{{3
+    koopa_uninstall_app \
+        --name='fribidi' \
+        "$@"
+}
+
 # fzf --------------------------------------------------------------------- {{{2
 
 koopa_install_fzf() { # {{{3
@@ -1071,7 +1101,7 @@ koopa_install_gnutls() { # {{{1
         --activate-opt='nettle' \
         --installer='gnupg-gcrypt' \
         --name='gnutls' \
-        -D --without-p11-kit \
+        -D '--without-p11-kit' \
         "$@"
 }
 
@@ -1714,10 +1744,10 @@ koopa_install_nettle() { # {{{3
     # """
     koopa_install_gnu_app \
         --activate-opt='gmp' \
-        --disable-dependency-tracking \
-        --enable-mini-gmp \
-        --enable-shared \
         --name='nettle' \
+        -D --disable-dependency-tracking \
+        -D --enable-mini-gmp \
+        -D --enable-shared \
         "$@"
 }
 
@@ -2499,20 +2529,6 @@ koopa_uninstall_rust() { # {{{3
         --name='rust' \
         "$@"
 }
-
-# rust-packages ----------------------------------------------------------- {{{2
-
-#--link-in-bin='bin/difft' \  # difftastic
-#--link-in-bin='bin/dog' \
-#--link-in-bin='bin/dust' \  # du-dust
-#--link-in-bin='bin/exa' \
-#--link-in-bin='bin/hyperfine' \
-#--link-in-bin='bin/mcfly' \
-#--link-in-bin='bin/procs' \
-#--link-in-bin='bin/tldr' \
-#--link-in-bin='bin/tokei' \
-#--link-in-bin='bin/xsv' \
-#--link-in-bin='bin/zoxide' \
 
 # scons ------------------------------------------------------------------- {{{2
 
