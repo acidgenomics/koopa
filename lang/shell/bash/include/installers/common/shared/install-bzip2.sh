@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+main() { # {{{1
+    # """
+    # Install bzip2.
+    # @note Updated 2022-04-20.
+    #
+    # @seealso
+    # - https://www.sourceware.org/bzip2/
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bzip2.rb
+    # """
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [make]="$(koopa_locate_make)"
+    )
+    declare -A dict=(
+        [jobs]="$(koopa_cpu_count)"
+        [name]='bzip2'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
+    dict[url]="https://sourceware.org/pub/${dict[name]}/${dict[file]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
+    "${app[make]}" install "PREFIX=${dict[prefix]}"
+    return 0
+}
