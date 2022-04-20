@@ -130,7 +130,8 @@ main() { # {{{1
         dict[rtop]="$(koopa_init_dir 'svn/r')"
         dict[svn_url]='https://svn.r-project.org/R/trunk'
         dict[trust_cert]='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
-        "${app[svn]}" --version --verbose
+        # Can debug subversion linkage with:
+        # > "${app[svn]}" --version --verbose
         "${app[svn]}" \
             --non-interactive \
             --trust-server-cert-failures="${dict[trust_cert]}" \
