@@ -126,8 +126,7 @@ main() { # {{{1
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
-        # NOTE These are required for subversion to load.
-        koopa_activate_opt_prefix 'sqlite'
+        koopa_activate_opt_prefix 'subversion'
         app[svn]="$(koopa_locate_svn)"
         dict[rtop]="$(koopa_init_dir 'svn/r')"
         dict[svn_url]='https://svn.r-project.org/R/trunk'
