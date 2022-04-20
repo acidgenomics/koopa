@@ -38,6 +38,7 @@ main() { # {{{1
         'ncurses' | \
         'nettle' | \
         'patch' | \
+        'readline' | \
         'stow' | \
         'tar' | \
         'wget' | \
