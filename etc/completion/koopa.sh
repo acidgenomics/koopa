@@ -153,6 +153,7 @@ __koopa_complete() { # {{{1
                         'julia'
                         'julia-packages'
                         'koopa'
+                        'lapack'
                         'lesspipe'
                         'libevent'
                         'libgeotiff'

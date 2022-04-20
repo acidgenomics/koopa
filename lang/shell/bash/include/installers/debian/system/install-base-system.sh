@@ -171,7 +171,6 @@ main() { # {{{1
             'software-properties-common'
             'sqlite3'
             'subversion' # r-devel
-            'temurin-17-jdk'
             'texinfo' # makeinfo
             'texlive'
             'texlive-base' # r-devel
