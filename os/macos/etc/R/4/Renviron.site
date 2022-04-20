@@ -8,7 +8,7 @@
 # """
 # Shared R environment configuration for macOS.
 #
-# @note Updated 2022-04-19.
+# @note Updated 2022-04-20.
 #
 # @seealso
 # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
@@ -47,14 +47,10 @@ PATH="/usr/bin:/bin"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
-PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"
-PATH="${KOOPA_OPT_PREFIX}/subversion/bin:${PATH}"
 # This is required for 'png' package to install.
 PATH="${KOOPA_OPT_PREFIX}/libpng/bin:${PATH}"
-
-# > PATH="${KOOPA_OPT_PREFIX}/gdal/bin:${PATH}"
-# > PATH="${KOOPA_OPT_PREFIX}/geos/bin:${PATH}"
-# > PATH="${KOOPA_OPT_PREFIX}/proj/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/subversion/bin:${PATH}"
 
 # Pandoc. Use RStudio bundled version of pandoc when possible,
 # for improved R Markdown stability.
@@ -82,10 +78,10 @@ PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libpng/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libtiff/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libuv/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/pcre2/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/xz/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zlib/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zstd/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
