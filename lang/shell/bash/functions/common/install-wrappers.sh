@@ -890,6 +890,8 @@ koopa_install_freetype() { # {{{3
     koopa_install_gnu_app \
         --name='freetype' \
         -D '--enable-freetype-config' \
+        -D '--enable-shared=yes' \
+        -D '--enable-static=yes' \
         -D '--without-harfbuzz' \
         "$@"
 }
@@ -1324,6 +1326,8 @@ koopa_uninstall_imagemagick() { # {{{3
 
 # jpeg -------------------------------------------------------------------- {{{2
 
+# NOTE Consider renaming this to 'libjpeg'.
+
 koopa_install_jpeg() { # {{{3
     koopa_install_app \
         --name='jpeg' \
@@ -1475,6 +1479,34 @@ koopa_install_libidn() { # {{{3
 koopa_uninstall_libidn() { # {{{3
     koopa_uninstall_app \
         --name='libidn' \
+        "$@"
+}
+
+# libjpeg-turbo ----------------------------------------------------------- {{{2
+
+koopa_install_libjpeg_turbo() { # {{{3
+    koopa_install_app \
+        --name='libjpeg-turbo' \
+        "$@"
+}
+
+koopa_uninstall_libjpeg_turbo() { # {{{3
+    koopa_uninstall_app \
+        --name='libjpeg-turbo' \
+        "$@"
+}
+
+# libpng ------------------------------------------------------------------ {{{2
+
+koopa_install_libpng() { # {{{3
+    koopa_install_app \
+        --name='libpng' \
+        "$@"
+}
+
+koopa_uninstall_libpng() { # {{{3
+    koopa_uninstall_app \
+        --name='libpng' \
         "$@"
 }
 
