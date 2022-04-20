@@ -168,6 +168,7 @@ koopa_locate_cpanm() { # {{{1
 
 koopa_locate_curl() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='curl' \
         --opt-name='curl'
 }
