@@ -35,7 +35,7 @@ main() { # {{{
         koopa_cd "tcl${dict[version]}/unix"
         ./configure "${conf_args[@]}"
         "${app[make]}" --jobs="${dict[jobs]}"
-        "${app[make]}" test
+        # > "${app[make]}" test
         "${app[make]}" install
         "${app[make]}" install-private-headers
     )
@@ -47,7 +47,7 @@ main() { # {{{
         koopa_cd "tk${dict[version]}/unix"
         ./configure "${conf_args[@]}"
         "${app[make]}" --jobs="${dict[jobs]}"
-        "${app[make]}" test
+        # > "${app[make]}" test
         "${app[make]}" install
         "${app[make]}" install-private-headers
     )
