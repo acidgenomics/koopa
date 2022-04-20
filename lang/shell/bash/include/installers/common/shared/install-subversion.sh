@@ -29,6 +29,8 @@ main() { # {{{1
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
+        # > [mirror]='https://mirrors.ocf.berkeley.edu/apache/'
+        [mirror]='https://archive.apache.org/dist/'
         [jobs]="$(koopa_cpu_count)"
         [name]='subversion'
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -43,8 +45,7 @@ main() { # {{{1
         '--with-utf8proc=internal'
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
-    dict[url]="https://mirrors.ocf.berkeley.edu/apache/\
-${dict[name]}/${dict[file]}"
+    dict[url]="${dict[mirror]}/${dict[name]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
