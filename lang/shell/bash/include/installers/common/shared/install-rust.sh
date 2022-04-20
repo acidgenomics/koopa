@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME What we want to install is this:
-# rust/rustup/toolchains/1.60.0-x86_64-apple-darwin
-
 main() { # {{{1
     # """
     # Install Rust (via rustup).
