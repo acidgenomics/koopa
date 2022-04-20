@@ -2550,6 +2550,8 @@ koopa_install_readline() { # {{{3
     koopa_install_gnu_app \
         --activate-opt='ncurses' \
         --name='readline' \
+        -D '--enable-shared' \
+        -D '--enable-static' \
         -D '--with-curses' \
         "$@"
 }
