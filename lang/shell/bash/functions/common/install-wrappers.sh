@@ -1666,6 +1666,22 @@ koopa_uninstall_luarocks() { # {{{3
         "$@"
 }
 
+# lzma -------------------------------------------------------------------- {{{2
+
+koopa_install_lzma() { # {{{3
+    koopa_install_app \
+        --name-fancy='LZMA' \
+        --name='lzma' \
+        "$@"
+}
+
+koopa_uninstall_lzma() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='LZMA' \
+        --name='lzma' \
+        "$@"
+}
+
 # make -------------------------------------------------------------------- {{{2
 
 koopa_install_make() { # {{{3
