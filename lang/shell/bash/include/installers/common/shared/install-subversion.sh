@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Looks like we need to harden links on Linux:
+# - apr
+# - apr-util
+# - sqlite
+
 main() { # {{{1
     # """
     # Install Subversion.
@@ -39,10 +44,21 @@ main() { # {{{1
     )
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--disable-debug'
+        '--disable-mod-activation'
+        '--disable-plaintext-password-storage'
+        '--enable-optimize'
+        "--with-apr=${dict[opt_prefix]}/apr"
+        "--with-apr-util=${dict[opt_prefix]}/apr-util"
+        '--with-apxs=no'
         '--with-lz4=internal'
-        # Required for HTTPS URLs.
-        "--with-serf=${dict[opt_prefix]}/serf"
+        "--with-serf=${dict[opt_prefix]}/serf" # HTTPS
+        "--with-sqlite=${dict[opt_prefix]}/sqlite"
         '--with-utf8proc=internal'
+        '--without-apache-libexecdir'
+        '--without-berkeley-db'
+        '--without-gpg-agent'
+        '--without-jikes'
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
     dict[url]="${dict[mirror]}/${dict[name]}/${dict[file]}"
