@@ -29,7 +29,6 @@ main() { # {{{1
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     # Consider requiring:
-    # - 'openblas'
     # - 'tcl-tk'
     koopa_activate_opt_prefix \
         'curl' \
@@ -39,6 +38,7 @@ main() { # {{{1
         'libffi' \
         'libjpeg-turbo' \
         'libpng' \
+        'openblas' \
         'pcre2' \
         'pkg-config' \
         'readline' \
@@ -66,12 +66,12 @@ main() { # {{{1
     dict[url]="https://cloud.r-project.org/src/base/\
 R-${dict[maj_ver]}/${dict[file]}"
     conf_args=(
-        # > '--with-blas'
         # > '--with-tcltk'
         "--prefix=${dict[prefix]}"
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-memory-profiling'
+        '--with-blas'
         '--with-jpeglib'
         '--with-lapack'
         '--with-readline'
@@ -104,5 +104,6 @@ R-${dict[maj_ver]}/${dict[file]}"
     app[r]="${dict[prefix]}/bin/R"
     koopa_assert_is_installed "${app[r]}"
     koopa_configure_r "${app[r]}"
+    # FIXME Return 'capabilities()' here.
     return 0
 }
