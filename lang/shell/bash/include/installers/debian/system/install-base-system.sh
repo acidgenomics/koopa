@@ -140,7 +140,7 @@ main() { # {{{1
             'byacc'
             'cmake'
             'debhelper' # r-devel
-            # > 'default-jdk' # FIXME Install alongside Temurin? May need to remove.
+            'default-jdk'
             'diffutils'
             'dirmngr'
             'expect-dev' # Installs unbuffer.
@@ -250,7 +250,8 @@ main() { # {{{1
             'libgtkmm-2.4-dev'
             'libharfbuzz-dev'
             'libhdf5-dev'
-            'libjpeg-dev' # FIXME Switch to libjpeg-turbo?
+            'libjpeg-dev'
+            'libjpeg-turbo8-dev'
             'libkrb5-dev' # openssh
             'liblapack-dev'
             'libldns-dev' # openssh
