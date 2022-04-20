@@ -2841,6 +2841,9 @@ koopa_uninstall_stow() { # {{{3
 
 # subversion -------------------------------------------------------------- {{{2
 
+# FIXME This is having sqlite link issues on Ubuntu.
+# > svn --version --verbose
+
 koopa_install_subversion() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/svn' \
