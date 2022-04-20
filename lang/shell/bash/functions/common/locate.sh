@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Need to handle link error when reinstalling coreutils
+# ❯ koopa install coreutils --reinstall --push
+# → Installing 'coreutils' at '/opt/koopa/app/coreutils/9.1'.
+# → Linking '/opt/koopa/app/coreutils/9.1' -> '/opt/koopa/opt/coreutils'.
+# /opt/koopa/lang/shell/bash/functions/common/fs/core.sh:448: /opt/koopa/opt/coreutils/bin/ln: No such file or directory
+
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-20.
     #
     # App locator prioritization:
     # 1. Allow for direct input of an executable.
