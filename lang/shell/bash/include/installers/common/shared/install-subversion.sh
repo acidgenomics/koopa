@@ -29,8 +29,8 @@ main() { # {{{1
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        # > [mirror]='https://mirrors.ocf.berkeley.edu/apache/'
-        [mirror]='https://archive.apache.org/dist/'
+        # > [mirror]='https://mirrors.ocf.berkeley.edu/apache'
+        [mirror]='https://archive.apache.org/dist'
         [jobs]="$(koopa_cpu_count)"
         [name]='subversion'
         [opt_prefix]="$(koopa_opt_prefix)"
