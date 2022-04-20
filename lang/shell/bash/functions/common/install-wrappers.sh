@@ -1361,6 +1361,7 @@ koopa_uninstall_jpeg() { # {{{3
 
 koopa_install_jq() { # {{{3
     koopa_install_app \
+        --link-in-bin='bin/jq' \
         --name='jq' \
         "$@"
 }
@@ -1368,6 +1369,7 @@ koopa_install_jq() { # {{{3
 koopa_uninstall_jq() { # {{{3
     koopa_uninstall_app \
         --name='jq' \
+        --unlink-in-bin='jq' \
         "$@"
 }
 
