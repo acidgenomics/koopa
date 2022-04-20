@@ -1,6 +1,6 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2022-04-12.
+# Updated 2022-04-19.
 #
 # Refer to corresponding 'Makeconf' file for current system defaults.
 #
@@ -83,6 +83,8 @@ FC = $(LOC)/bin/gfortran
 FCFLAGS = -O3 -Wall -g $(LTO_FC)
 FLIBS = -L$(LOC)/lib/gcc/x86_64-apple-darwin18/8.2.0 -L$(LOC)/lib -lgfortran -lquadmath -lm
 LDFLAGS=-L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
+
+OBJCXX = clang++
 
 # OpenMP {{{1
 # ==============================================================================
