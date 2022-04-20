@@ -1545,6 +1545,20 @@ koopa_uninstall_libjpeg_turbo() { # {{{3
         "$@"
 }
 
+# libpipeline ------------------------------------------------------------- {{{2
+
+koopa_install_libpipeline() { # {{{3
+    koopa_install_gnu_app \
+        --name='libpipeline' \
+        "$@"
+}
+
+koopa_uninstall_libpipeline() { # {{{3
+    koopa_uninstall_app \
+        --name='libpipeline' \
+        "$@"
+}
+
 # libpng ------------------------------------------------------------------ {{{2
 
 koopa_install_libpng() { # {{{3

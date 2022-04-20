@@ -160,6 +160,7 @@ __koopa_complete() { # {{{1
                         'libgeotiff'
                         'libgit2'
                         'libjpeg-turbo'
+                        'libpipeline'
                         'libpng'
                         'libssh2'
                         'libtasn1'
