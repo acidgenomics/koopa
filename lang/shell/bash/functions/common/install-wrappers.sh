@@ -1470,6 +1470,20 @@ koopa_uninstall_libevent() { # {{{3
         "$@"
 }
 
+# libffi ------------------------------------------------------------------ {{{2
+
+koopa_install_libffi() { # {{{3
+    koopa_install_app \
+        --name='libffi' \
+        "$@"
+}
+
+koopa_uninstall_libffi() { # {{{3
+    koopa_uninstall_app \
+        --name='libffi' \
+        "$@"
+}
+
 # libgeotiff -------------------------------------------------------------- {{{2
 
 koopa_install_libgeotiff() { # {{{3

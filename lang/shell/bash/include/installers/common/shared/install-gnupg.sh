@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GnuPG.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-20.
     #
     # @seealso
     # - https://gnupg.org/download/index.html
@@ -13,12 +13,8 @@ main() { # {{{1
     # - gpgrt_set_confdir issue during build:
     #   https://zenn.dev/zunda/scraps/70c2bfb4494510
     # """
-    local app dict gpg_keys install_args
+    local dict install_args
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [gpg]='/usr/bin/gpg'
-        [gpg_agent]='/usr/bin/gpg-agent'
-    )
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -129,26 +125,6 @@ main() { # {{{1
             koopa_stop "Unsupported version: '${dict[version]}'."
             ;;
     esac
-    if koopa_is_installed "${app[gpg_agent]}"
-    then
-        # Can use the last 4 elements per key in the '--rev-keys' call.
-        gpg_keys=(
-            # Expired legacy keys:
-            # > '031EC2536E580D8EA286A9F22071B08A33BD3F06' # expired
-            # > 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' # expired
-            # Extra key needed for pinentry 1.1.1.
-            # > '80CC1B8D04C262DDFEE1980C6F7F0F91D138FC7B'
-            # Current keys:
-            '5B80C5754298F0CB55D8ED6ABCEF7E294B092E28' # 2027-03-15
-            '6DAA6E64A76D2840571B4902528897B826403ADA' # 2030-06-30
-            'AC8E115BF73E2D8D47FA9908E98E9B2D19C6C8BD' # 2027-04-04
-        )
-        "${app[gpg]}" \
-            --keyserver 'hkp://keyserver.ubuntu.com:80' \
-            --recv-keys "${gpg_keys[@]}"
-        # List keys with:
-        # > "${app[gpg]}" --list-keys
-    fi
     install_args=(
         '--installer=gnupg-gcrypt'
         '--no-link-in-opt'

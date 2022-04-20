@@ -156,6 +156,7 @@ __koopa_complete() { # {{{1
                         'lapack'
                         'lesspipe'
                         'libevent'
+                        'libffi'
                         'libgeotiff'
                         'libgit2'
                         'libjpeg-turbo'
