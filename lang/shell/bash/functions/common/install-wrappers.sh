@@ -2542,9 +2542,15 @@ koopa_uninstall_rbenv() { # {{{3
 # readline ---------------------------------------------------------------- {{{2
 
 koopa_install_readline() { # {{{3
+    # """
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
+    #     readline.rb
+    # """
     koopa_install_gnu_app \
         --activate-opt='ncurses' \
         --name='readline' \
+        -D '--with-curses' \
         "$@"
 }
 
