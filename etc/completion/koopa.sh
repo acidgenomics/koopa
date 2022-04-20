@@ -164,6 +164,7 @@ __koopa_complete() { # {{{1
                         'libtiff'
                         'libtool'
                         'libunistring'
+                        'libuv'
                         'libxml2'
                         'libzip'
                         'lua'
