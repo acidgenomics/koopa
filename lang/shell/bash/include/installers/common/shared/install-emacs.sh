@@ -5,24 +5,36 @@ main() { # {{{1
     # Install Emacs.
     # @note Updated 2022-04-20.
     #
-    # Consider defining '--enable-locallisppath' and '--infodir' args.
-    #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # """
+    local install_args
+    install_args=(
+        '--activate-opt=gmp'
+        '--activate-opt=gnutls'
+        '--activate-opt=libtasn1'
+        '--activate-opt=libunistring'
+        '--activate-opt=libxml2'
+        '--activate-opt=nettle'
+        '--activate-opt=pkg-config'
+        '--activate-opt=texinfo'
+    )
+    if koopa_is_macos
+    then
+        install_args+=(
+            '-D' '--with-modules'
+            '-D' '--without-dbus'
+            '-D' '--without-imagemagick'
+            '-D' '--without-ns'
+            '-D' '--without-selinux'
+            '-D' '--without-x'
+        )
+    fi
     koopa_install_gnu_app \
-        --activate-opt='gmp' \
-        --activate-opt='gnutls' \
-        --activate-opt='libtasn1' \
-        --activate-opt='libunistring' \
-        --activate-opt='nettle' \
-        --activate-opt='pkg-config' \
-        --activate-opt='texinfo' \
         --name-fancy='Emacs' \
         --name='emacs' \
         --no-prefix-check \
         --quiet \
+        "${install_args[@]}" \
         "$@"
-    # FIXME Need to assert that Emacs is installed...not actually linking
-    # correctly in the current install script for macOS...
 }

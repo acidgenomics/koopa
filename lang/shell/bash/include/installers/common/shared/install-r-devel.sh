@@ -61,14 +61,14 @@ main() { # {{{1
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     # Consider requiring:
-    # - 'lapack'
-    # - 'libffi'
     # - 'openblas'
     # - 'tcl-tk'
     koopa_activate_opt_prefix \
         'curl' \
         'gettext' \
         'icu4c' \
+        'lapack' \
+        'libffi' \
         'libjpeg-turbo' \
         'libpng' \
         'pcre2' \
@@ -101,13 +101,13 @@ main() { # {{{1
     )
     conf_args=(
         # > '--without-blas'
-        # > '--without-lapack'
         "--prefix=${dict[prefix]}"
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-memory-profiling'
         '--program-suffix=dev'
         '--with-jpeglib'
+        '--with-lapack'
         '--with-readline'
         '--with-x=no'
         '--without-recommended-packages'
