@@ -265,6 +265,9 @@ jpeg="9e"
 # https://github.com/JuliaLang/julia/releases
 julia="1.7.2"
 
+# https://www.netlib.org/lapack/
+lapack="3.10.1"
+
 # https://ftp.gnu.org/gnu/less/
 less="590"
 
