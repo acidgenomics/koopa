@@ -60,7 +60,7 @@ main() { # {{{1
         'libgcrypt' | \
         'libksba')
             conf_args+=(
-                --with-libgpg-error-prefix="${dict[prefix]}"
+                "--with-libgpg-error-prefix=${dict[prefix]}"
             )
             ;;
         'gnupg')
