@@ -23,4 +23,6 @@ main() { # {{{1
         --no-prefix-check \
         --quiet \
         "$@"
+    # FIXME Need to assert that Emacs is installed...not actually linking
+    # correctly in the current install script for macOS...
 }
