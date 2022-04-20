@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
+# NOTE Switch 'jpeg' to 'libjpeg-turbo'?
+
 main() { # {{{1
     # """
-    # @seealso
     # Install libgeotiff.
     # @note Updated 2022-04-12.
     #
