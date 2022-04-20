@@ -105,11 +105,6 @@ R-${dict[maj_ver]}/${dict[file]}"
     app[rscript]="${app[r]}script"
     koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
     koopa_configure_r "${app[r]}"
-    "${app[rscript]}" -e " \
-        capabilities(); \
-        stopifnot( \
-            all(capabilities()[setdiff(names(capabilities()), 'cledit')]) \
-        ) \
-    "
+    "${app[rscript]}" -e 'capabilities()'
     return 0
 }
