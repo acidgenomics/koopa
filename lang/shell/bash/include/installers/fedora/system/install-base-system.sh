@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-20.
     #
     # Use '<pkg>-<version>' to pin package versions.
     #
@@ -118,6 +118,7 @@ main() { # {{{1
             'ruby'                                                # |        ? |
             'squashfs-tools'                                      # |       NO |
             'systemd'                                             # |      YES |
+            'temurin-17-jdk'
             'texinfo'                                             # |       NO |
             'texlive'
             'texlive-bera'

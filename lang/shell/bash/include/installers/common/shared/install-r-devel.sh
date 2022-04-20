@@ -1,37 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Consolidate this with main R installer.
-
-# FIXME This needs to create an 'R-devel' symlink in bin.
-
-# Related to Makefile issue:
-# > svnonly:
-# > 	@if test ! -f "$(srcdir)/doc/FAQ" || test -f non-tarball ; then \
-# > 	  (cd doc/manual && $(MAKE) front-matter html-non-svn) ; \
-# > 	  touch non-tarball ; \
-# > 	  (cd $(srcdir); LC_ALL=C TZ=GMT $(GIT) svn info || cat SVNINFO || $(ECHO) "Revision: -99") 2> /dev/null \
-# > 	    | sed -n -e '/^Revision/p' -e '/^Last Changed Date/'p \
-# > 	    | cut -d' ' -f1,2,3,4 > SVN-REVISION-tmp ; \
-# > 	  if test "`cat SVN-REVISION-tmp`" = "Revision: -99"; then \
-# > 	    $(ECHO) "ERROR: not an svn checkout"; \
-# > 	    exit 1; \
-# > 	  fi; \
-
-# FIXME Now hitting weird Cocoa error stuff on macOS:
-# > qdCocoa.m: In function ‘QuartzCocoa_Locator’:
-# > qdCocoa.m:743:27: error: ‘NSApp’ undeclared (first use in this function)
-# >          NSEvent *event = [NSApp nextEventMatchingMask:NSAnyEventMask
-# >                            ^~~~~
-# > make[5]: *** [../../../../etc/Makeconf:183: qdCocoa.o] Error 1
-# > make[5]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220419-144524-8kpAF3sdpK/svn/r/src/library/grDevices/src'
-# > make[4]: *** [../../../share/make/basepkg.mk:140: mksrc] Error 1
-
 main() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-04-20.
     #
-    # Recommended Debian packages:
+    # Recommended Debian packages (for Dockerfile):
     # - 'bash-completion'
     # - 'bison'
     # - 'debhelper'
@@ -102,6 +76,7 @@ main() { # {{{1
         'readline' \
         'texinfo' \
         'xz'
+    # FIXME Need to improve openjdk install consistency.
     if koopa_is_linux
     then
         # Consider migrating to Adoptium Temuring LTS in the future.
@@ -125,15 +100,15 @@ main() { # {{{1
         [trust_cert]='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
     )
     conf_args=(
-        # > '--with-readline'
         # > '--without-blas'
         # > '--without-lapack'
         "--prefix=${dict[prefix]}"
-        '--disable-nls'
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-memory-profiling'
         '--program-suffix=dev'
+        '--with-jpeglib'
+        '--with-readline'
         '--with-x=no'
         '--without-recommended-packages'
     )
@@ -163,6 +138,7 @@ main() { # {{{1
     "${app[make]}" install
     app[r]="${dict[prefix]}/bin/R"
     koopa_assert_is_installed "${app[r]}"
+    koopa_link_in_bin "${app[r]}" 'R-devel'
     koopa_configure_r "${app[r]}"
     return 0
 }

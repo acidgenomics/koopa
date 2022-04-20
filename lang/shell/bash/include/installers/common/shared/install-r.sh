@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consolidate this with r-devel installer.
-
 main() { # {{{1
     # """
     # Install R.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-04-20.
     #
     # @section gfortran configuration on macOS:
     #
@@ -69,15 +67,14 @@ R-${dict[maj_ver]}/${dict[file]}"
     conf_args=(
         # > '--with-blas'
         # > '--with-cairo'
-        # > '--with-jpeglib'
         # > '--with-lapack'
-        # > '--with-readline'
         # > '--with-tcltk'
         "--prefix=${dict[prefix]}"
-        '--disable-nls'
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-memory-profiling'
+        '--with-jpeglib'
+        '--with-readline'
         '--with-recommended-packages'
         '--with-x=no'
     )
