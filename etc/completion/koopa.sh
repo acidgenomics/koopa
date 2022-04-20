@@ -103,6 +103,7 @@ __koopa_complete() { # {{{1
                         'boost'
                         'bpytop'
                         'broot'
+                        'bzip2'
                         'chemacs'
                         'cmake'
                         'conda'
