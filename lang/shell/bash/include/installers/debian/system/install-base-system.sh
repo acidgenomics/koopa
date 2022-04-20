@@ -250,7 +250,7 @@ main() { # {{{1
             'libgtkmm-2.4-dev'
             'libharfbuzz-dev'
             'libhdf5-dev'
-            'libjpeg-dev'
+            'libjpeg-dev' # FIXME Switch to libjpeg-turbo?
             'libkrb5-dev' # openssh
             'liblapack-dev'
             'libldns-dev' # openssh
