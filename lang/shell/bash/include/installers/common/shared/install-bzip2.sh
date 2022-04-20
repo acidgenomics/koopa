@@ -25,6 +25,12 @@ main() { # {{{1
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    "${app[make]}"
+    # Build 'libbz2.so' shared library on Linux.
+    if koopa_is_linux
+    then
+      "${app[make]}" -f 'Makefile-libbz2_so'
+    fi
     "${app[make]}" install "PREFIX=${dict[prefix]}"
     return 0
 }
