@@ -2444,6 +2444,20 @@ koopa_uninstall_rbenv() { # {{{3
         "$@"
 }
 
+# readline ---------------------------------------------------------------- {{{2
+
+koopa_install_readline() { # {{{3
+    koopa_install_gnu_app \
+        --name='readline' \
+        "$@"
+}
+
+koopa_uninstall_readline() { # {{{3
+    koopa_uninstall_app \
+        --name='readline' \
+        "$@"
+}
+
 # ripgrep ----------------------------------------------------------------- {{{2
 
 koopa_install_ripgrep() { # {{{1

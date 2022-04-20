@@ -213,6 +213,7 @@ __koopa_complete() { # {{{1
                         'r-packages'
                         'ranger-fm'
                         'rbenv'
+                        'readline'
                         'ripgrep'
                         # > 'ripgrep-all'
                         'rmate'

@@ -463,6 +463,9 @@ ranger-fm="1.9.3" # python
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
 
+# https://tiswww.cwru.edu/php/chet/readline/rltop.html
+readline="8.1.2"
+
 ripgrep="13.0.0" # rust
 
 # > ripgrep-all="0.9.6" # rust (rga)
