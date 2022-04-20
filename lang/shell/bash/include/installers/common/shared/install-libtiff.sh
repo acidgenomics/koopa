@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Switch to libjpeg-turbo?
+
 main() { # {{{1
     # """
     # Install libtiff.
@@ -14,7 +16,7 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'jpeg' 'zstd'
+    koopa_activate_opt_prefix 'libjpeg-turbo' 'zstd'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -33,6 +35,8 @@ main() { # {{{1
         '--disable-dependency-tracking'
         '--disable-lzma'
         '--disable-webp'
+        '--enable-shared=yes'
+        '--enable-static=yes'
         '--without-x'
     )
     ./configure "${conf_args[@]}"
