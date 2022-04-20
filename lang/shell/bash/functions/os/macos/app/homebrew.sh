@@ -110,10 +110,10 @@ koopa_macos_brew_upgrade_casks() { # {{{1
             'temurin')
                 koopa_configure_r
                 ;;
-            'emacs')
-                "${app[brew]}" unlink 'emacs'
-                "${app[brew]}" link 'emacs'
-                ;;
+            # > 'emacs')
+            # >     "${app[brew]}" unlink 'emacs'
+            # >     "${app[brew]}" link 'emacs'
+            # >     ;;
             'google-'*)
                 # Currently in 'google-chrome' and 'google-drive' recipes.
                 koopa_macos_disable_google_keystone || true

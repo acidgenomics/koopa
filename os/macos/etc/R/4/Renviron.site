@@ -67,13 +67,14 @@ PATH="${PATH}:/Library/TeX/texbin"
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
+# FIXME Need to improve support for LAPACK and OPENBLAS.
+
 PKG_CONFIG_PATH=""
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/freetype/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/fribidi/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/harfbuzz/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/jpeg/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib/pkgconfig:${PKG_CONFIG_PATH}"
@@ -87,11 +88,14 @@ PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zstd/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 R_LD_LIBRARY_PATH=""
 R_LD_LIBRARY_PATH="/Library/Developer/CommandLineTools/usr/lib:${R_LD_LIBRARY_PATH}"
-R_LD_LIBRARY_PATH="/usr/lib:${R_LD_LIBRARY_PATH}"
+# > R_LD_LIBRARY_PATH="/usr/lib:${R_LD_LIBRARY_PATH}"
+# > R_LD_LIBRARY_PATH="/usr/local/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="/usr/local/gfortran/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${R_HOME}/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="/usr/local/lib:${R_LD_LIBRARY_PATH}"
+# This is required for gert to install.
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib:${R_LD_LIBRARY_PATH}"
+# This is required for ragg to install.
+R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib:${R_LD_LIBRARY_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
