@@ -85,6 +85,10 @@ FLIBS = -L$(LOC)/lib/gcc/x86_64-apple-darwin18/8.2.0 -L$(LOC)/lib -lgfortran -lq
 LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 OBJCXX = clang++
 
+# These are also recommended in Homebrew recipe.
+CPPFLAGS += -I$(OPT_LOC)/gettext/include
+LDFLAGS += -L$(OPT_LOC)/gettext/lib
+
 # Required for 'Rhtslib' to install, which depends on 'lzma.h'.
 CPPFLAGS += -I$(OPT_LOC)/xz/include
 LDFLAGS += -L$(OPT_LOC)/xz/lib

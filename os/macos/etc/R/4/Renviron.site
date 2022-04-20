@@ -81,6 +81,8 @@ PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libtiff/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/pcre2/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# NOTE Consider setting 'readline' only on macOS.
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/readline/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/xz/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zlib/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zstd/lib/pkgconfig:${PKG_CONFIG_PATH}"
