@@ -112,6 +112,9 @@ bpytop="1.0.68" # python
 
 broot="1.11.1" # rust (br)
 
+# https://www.sourceware.org/bzip2/
+bzip2="1.0.8"
+
 # https://cairographics.org/
 cairo="1.16.0"
 
