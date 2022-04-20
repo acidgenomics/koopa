@@ -1,17 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Seeing this compile error on macOS:
-# implicit declaration of function 'lgamma_r' is invalid in C99
-
-# FIXME Need to apply this patch:
-# Applying the already present patch from patch-src-builtin.c eliminates the error and jq complies successfully. 
-
-# FIXME This is still failing on macOS argh...
-
 main() { #{{{1
     # """
     # Install jq.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-04-20.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/jq.rb
