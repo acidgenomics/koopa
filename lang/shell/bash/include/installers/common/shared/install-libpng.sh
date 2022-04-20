@@ -39,6 +39,8 @@ ${dict[name]}${dict[version2]}/${dict[version]}/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--disable-dependency-tracking'
         '--disable-silent-rules'
+        '--enable-shared=yes'
+        '--enable-static=yes'
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
