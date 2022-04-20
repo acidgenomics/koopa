@@ -307,6 +307,9 @@ libtool="2.4.6"
 # https://www.gnu.org/software/libunistring/
 libunistring="1.0"
 
+# https://github.com/libuv/libuv
+libuv="1.44.1"
+
 # https://gitlab.gnome.org/GNOME/libxml2/-/releases
 libxml2="2.9.13"
 
