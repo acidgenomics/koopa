@@ -1594,6 +1594,20 @@ koopa_uninstall_libunistring() { # {{{3
         "$@"
 }
 
+# libuv ------------------------------------------------------------------- {{{2
+
+koopa_install_libuv() { # {{{3
+    koopa_install_app \
+        --name='libuv' \
+        "$@"
+}
+
+koopa_uninstall_libuv() { # {{{3
+    koopa_uninstall_app \
+        --name='libuv' \
+        "$@"
+}
+
 # libxml2 ----------------------------------------------------------------- {{{2
 
 koopa_install_libxml2() { # {{{3
