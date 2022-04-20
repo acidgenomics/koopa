@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-04-19.
+    # Updated 2022-04-20.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -121,6 +121,8 @@ __koopa_complete() { # {{{1
                         'fish'
                         'flake8'
                         'fltk'
+                        'freetype'
+                        'fribidi'
                         'fzf'
                         'gawk'
                         # > 'gcc'
