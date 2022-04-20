@@ -60,9 +60,6 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    # Consider requiring:
-    # - 'openblas'
-    # - 'tcl-tk'
     koopa_activate_opt_prefix \
         'curl' \
         'gettext' \
@@ -71,9 +68,11 @@ main() { # {{{1
         'libffi' \
         'libjpeg-turbo' \
         'libpng' \
+        'openblas' \
         'pcre2' \
         'pkg-config' \
         'readline' \
+        'tcl-tk' \
         'texinfo' \
         'xz'
     if koopa_is_linux
@@ -104,9 +103,11 @@ main() { # {{{1
         '--enable-R-shlib'
         '--enable-memory-profiling'
         '--program-suffix=dev'
+        '--with-blas'
         '--with-jpeglib'
         '--with-lapack'
         '--with-readline'
+        '--with-tcltk'
         '--with-x=no'
         '--without-recommended-packages'
     )
@@ -123,7 +124,7 @@ main() { # {{{1
             "${dict[svn_url]}" \
             "${dict[rtop]}"
     koopa_cd "${dict[rtop]}"
-    # Edge case for Makefile:107 issue.
+    # Edge case for 'Makefile:107' issue.
     if koopa_is_macos
     then
         koopa_print "Revision: ${dict[revision]}" > 'SVNINFO'
@@ -135,8 +136,10 @@ main() { # {{{1
     # > "${app[make]}" check
     "${app[make]}" install
     app[r]="${dict[prefix]}/bin/R"
-    koopa_assert_is_installed "${app[r]}"
+    app[rscript]="${app[r]}script"
+    koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
     koopa_link_in_bin "${app[r]}" 'R-devel'
     koopa_configure_r "${app[r]}"
+    "${app[rscript]}" -e 'capabilities()'
     return 0
 }
