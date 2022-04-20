@@ -2002,6 +2002,22 @@ koopa_uninstall_oniguruma() { # {{{3
         "$@"
 }
 
+# openblas ---------------------------------------------------------------- {{{2
+
+koopa_install_openblas() { # {{{3
+    koopa_install_app \
+        --name-fancy='OpenBLAS' \
+        --name='openblas' \
+        "$@"
+}
+
+koopa_uninstall_openblas() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='OpenBLAS' \
+        --name='openblas' \
+        "$@"
+}
+
 # openjdk ----------------------------------------------------------------- {{{2
 
 koopa_install_openjdk() { # {{{3
@@ -2855,6 +2871,22 @@ koopa_uninstall_tar() { # {{{3
     koopa_uninstall_app \
         --name='tar' \
         --unlink-in-bin='tar' \
+        "$@"
+}
+
+# tcl-tk ------------------------------------------------------------------ {{{2
+
+koopa_install_tcl_tk() { # {{{3
+    koopa_install_app \
+        --name-fancy='Tcl/Tk' \
+        --name='tcl-tk' \
+        "$@"
+}
+
+koopa_uninstall_tcl_tk() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Tcl/Tk' \
+        --name='tcl-tk' \
         "$@"
 }
 

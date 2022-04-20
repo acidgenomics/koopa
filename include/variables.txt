@@ -379,6 +379,9 @@ node="16.14.2" # LTS
 # https://github.com/kkos/oniguruma/
 oniguruma="6.9.7.1"
 
+# https://www.openblas.net/
+openblas="0.3.20"
+
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -548,6 +551,9 @@ taglib="1.12"
 
 # https://www.gnu.org/software/tar/
 tar="1.34"
+
+# https://www.tcl-lang.org
+tcl-tk="8.6.12"
 
 tealdeer="1.5.0" # rust (tldr)
 
