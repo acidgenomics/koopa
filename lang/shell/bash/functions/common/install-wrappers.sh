@@ -2418,9 +2418,9 @@ koopa_uninstall_r() { # {{{3
 
 # r-devel ----------------------------------------------------------------- {{{2
 
-# NOTE Consider linking 'R-devel' into bin.
 koopa_install_r_devel() { # {{{3
     koopa_install_app \
+        --installer='r' \
         --name-fancy='R-devel' \
         --name='r-devel' \
         "$@"
