@@ -118,7 +118,6 @@ main() { # {{{1
             'ruby'                                                # |        ? |
             'squashfs-tools'                                      # |       NO |
             'systemd'                                             # |      YES |
-            'temurin-17-jdk'
             'texinfo'                                             # |       NO |
             'texlive'
             'texlive-bera'

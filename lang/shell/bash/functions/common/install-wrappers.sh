@@ -1406,6 +1406,22 @@ koopa_update_julia_packages() { # {{{3
     koopa_install_julia_packages "$@"
 }
 
+# lapack ------------------------------------------------------------------ {{{2
+
+koopa_install_lapack() { # {{{3
+    koopa_install_app \
+        --name-fancy='LAPACK' \
+        --name='lapack' \
+        "$@"
+}
+
+koopa_uninstall_lapack() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='LAPACK' \
+        --name='lapack' \
+        "$@"
+}
+
 # less -------------------------------------------------------------------- {{{2
 
 koopa_install_less() { # {{{3
