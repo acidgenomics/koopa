@@ -28,8 +28,6 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    # Consider requiring:
-    # - 'tcl-tk'
     koopa_activate_opt_prefix \
         'curl' \
         'gettext' \
@@ -42,6 +40,7 @@ main() { # {{{1
         'pcre2' \
         'pkg-config' \
         'readline' \
+        'tcl-tk' \
         'texinfo' \
         'xz'
     if koopa_is_linux
@@ -66,7 +65,6 @@ main() { # {{{1
     dict[url]="https://cloud.r-project.org/src/base/\
 R-${dict[maj_ver]}/${dict[file]}"
     conf_args=(
-        # > '--with-tcltk'
         "--prefix=${dict[prefix]}"
         '--enable-R-profiling'
         '--enable-R-shlib'
@@ -76,6 +74,7 @@ R-${dict[maj_ver]}/${dict[file]}"
         '--with-lapack'
         '--with-readline'
         '--with-recommended-packages'
+        '--with-tcltk'
         '--with-x=no'
     )
     if koopa_is_linux
