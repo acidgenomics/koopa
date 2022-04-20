@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Do we need to install Cairo from source?
+# FIXME Improve opt consistency with r-devel.
+
 main() { # {{{1
     # """
     # Install R.
@@ -27,14 +30,14 @@ main() { # {{{1
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     # Consider requiring:
-    # - 'lapack'
-    # - 'libffi'
     # - 'openblas'
     # - 'tcl-tk'
     koopa_activate_opt_prefix \
         'curl' \
         'gettext' \
         'icu4c' \
+        'lapack' \
+        'libffi' \
         'libjpeg-turbo' \
         'libpng' \
         'pcre2' \
@@ -67,13 +70,13 @@ R-${dict[maj_ver]}/${dict[file]}"
     conf_args=(
         # > '--with-blas'
         # > '--with-cairo'
-        # > '--with-lapack'
         # > '--with-tcltk'
         "--prefix=${dict[prefix]}"
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-memory-profiling'
         '--with-jpeglib'
+        '--with-lapack'
         '--with-readline'
         '--with-recommended-packages'
         '--with-x=no'

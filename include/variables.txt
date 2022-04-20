@@ -278,6 +278,9 @@ lesspipe="2.04"
 # https://github.com/libevent/libevent/releases
 libevent="2.1.12"
 
+# https://sourceware.org/libffi/
+libffi="3.4.2"
+
 # https://github.com/OSGeo/libgeotiff
 libgeotiff="1.7.1"
 
