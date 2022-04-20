@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for Cairo here.
+# FIXME Failing capabilities: jpeg, png, tiff, libxml, cairo
 
 main() { # {{{1
     # """
@@ -126,6 +126,8 @@ main() { # {{{1
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
+        # NOTE These are required for subversion to load.
+        koopa_activate_opt_prefix 'sqlite'
         app[svn]="$(koopa_locate_svn)"
         dict[rtop]="$(koopa_init_dir 'svn/r')"
         dict[svn_url]='https://svn.r-project.org/R/trunk'
