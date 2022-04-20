@@ -89,8 +89,8 @@ main() { # {{{1
     fi
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        koopa_alert "Upgrading system via 'dist-upgrade'."
-        koopa_debian_apt_get 'dist-upgrade'
+        koopa_alert "Upgrading system via 'apt upgrade'."
+        koopa_debian_apt_get 'upgrade' # or 'dist-upgrade'.
     fi
     pkgs=()
     # These packages should be included in the Docker base image.
