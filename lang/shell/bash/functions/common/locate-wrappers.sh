@@ -903,9 +903,6 @@ koopa_locate_sudo() { # {{{1
     koopa_locate_app '/usr/bin/sudo'
 }
 
-# FIXME Consider locating system 'svn' on Linux, to avoid SQLite collision.
-# But only do this if svn is already installed.
-
 koopa_locate_svn() { # {{{1
     koopa_locate_app \
         --app-name='svn' \
