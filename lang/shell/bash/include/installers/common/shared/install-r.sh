@@ -90,7 +90,6 @@ main() { # {{{1
         'openblas' \
         'pcre2' \
         'pkg-config' \
-        'readline' \
         'tcl-tk' \
         'texinfo' \
         'xz'
@@ -100,6 +99,7 @@ main() { # {{{1
     elif koopa_is_macos
     then
         # We're using Adoptium Temurin LTS on macOS.
+        koopa_activate_opt_prefix 'readline'
         koopa_activate_prefix '/usr/local/gfortran'
         koopa_add_to_path_start '/Library/TeX/texbin'
     fi
