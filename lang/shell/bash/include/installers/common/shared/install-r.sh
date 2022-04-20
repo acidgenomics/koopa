@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Do we need to install Cairo from source?
-# FIXME Improve opt consistency with r-devel.
+# NOTE Consider adding support for Cairo here.
 
 main() { # {{{1
     # """
@@ -47,7 +46,6 @@ main() { # {{{1
         'xz'
     if koopa_is_linux
     then
-        # Consider migrating to Adoptium Temuring LTS in the future.
         koopa_activate_opt_prefix 'openjdk'
     elif koopa_is_macos
     then
@@ -69,7 +67,6 @@ main() { # {{{1
 R-${dict[maj_ver]}/${dict[file]}"
     conf_args=(
         # > '--with-blas'
-        # > '--with-cairo'
         # > '--with-tcltk'
         "--prefix=${dict[prefix]}"
         '--enable-R-profiling'
