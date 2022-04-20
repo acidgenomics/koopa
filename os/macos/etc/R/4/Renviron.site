@@ -70,9 +70,6 @@ PATH="${PATH}:/Library/TeX/texbin"
 # ------------------------------------------------------------------------------
 
 # FIXME Need to improve support for LAPACK and OPENBLAS.
-# FIXME httpuv is currently attempting to build libuv, which is annoying.
-# https://github.com/rstudio/httpuv/issues/132
-# FIXME httpuv requires default clang compiler chain.
 
 PKG_CONFIG_PATH=""
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/freetype/lib/pkgconfig:${PKG_CONFIG_PATH}"
@@ -85,8 +82,7 @@ PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libpng/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libtiff/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# Required for 'httpuv'.
-PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libuv/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libuv/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/pcre2/lib/pkgconfig:${PKG_CONFIG_PATH}"
