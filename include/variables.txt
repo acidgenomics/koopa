@@ -36,6 +36,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 # ==============================================================================
 
 cairo="1.16.0"
+libpthread-stubs="0.4"
 libx11="1.7.2"
 libxau="1.0.9"
 libxcb="1.14"
