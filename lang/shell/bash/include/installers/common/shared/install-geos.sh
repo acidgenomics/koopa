@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Error if existing GEOS install is detected.
-
 main() { # {{{1
     # """
     # Install GEOS.
@@ -27,6 +25,13 @@ main() { # {{{1
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
+    if koopa_is_linux
+    then
+        koopa_assert_is_non_existing \
+            '/usr/bin/geos-config' \
+            '/usr/include/geos' \
+            '/usr/include/geos_c.h'
+    fi
     koopa_activate_opt_prefix 'cmake'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"

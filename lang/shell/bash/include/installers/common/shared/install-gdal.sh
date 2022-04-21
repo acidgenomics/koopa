@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Error if existing GDAL install is detected.
-
 main() { # {{{1
     # """
     # Install GDAL.
@@ -24,6 +22,12 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    if koopa_is_linux
+    then
+        koopa_assert_is_non_existing \
+            '/usr/bin/gdal-config' \
+            '/usr/include/gdal'
+    fi
     # Consider adding:
     # - libpng (for '--with-png')
     koopa_activate_opt_prefix \
