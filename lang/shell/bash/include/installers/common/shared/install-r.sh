@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Need to build with support for Cairo.
+
 # NOTE Failing capabilities: jpeg, png, tiff, libxml, cairo
 # NOTE libxml is returning FALSE on Ubuntu.
-
-# FIXME readline inclusion is failing on Ubuntu.
-# https://stackoverflow.com/questions/35041854/
-# config.status: creating Makeconf gawk: symbol
-# lookup error: /home/user/packages/lib/libreadline.so.6: undefined symbol: UP
-# https://bugs.archlinux.org/task/39731
-# https://bbs.archlinux.org/viewtopic.php?id=179521
-# FIXME readline 6.3-003-1 may be probelmatic?
-
-# FIXME Now seeing this compile error on Linux;
-# /usr/bin/ld: /opt/koopa/opt/zlib/lib/libz.a(deflate.o): relocation R_X86_64_PC32 against symbol `z_errmsg' can not be used when making a shared object; recompile with -fPIC
 
 main() { # {{{1
     # """
