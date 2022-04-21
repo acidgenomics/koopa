@@ -7,6 +7,7 @@ main() { # {{{1
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/xtrans.rb
+    # - https://github.com/maxim-belkin/homebrew-xorg/issues/453
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -33,6 +34,13 @@ main() { # {{{1
         '--disable-silent-rules'
         '--enable-docs=no'
     )
+    # Refer to line 84.
+    # NOTE We want to replace '<sys/stropts.h>' but not '<stropts.h>'.
+    koopa_find_and_replace_in_file \
+        --fixed \
+        --pattern='# include <sys/stropts.h>' \
+        --replacement='# include <sys/ioctl.h>' \
+        'Xtranslcl.c'
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

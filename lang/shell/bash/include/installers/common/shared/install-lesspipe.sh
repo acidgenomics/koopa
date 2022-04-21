@@ -27,11 +27,12 @@ tags/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    # NOTE This currently uses sed internally, so we need to escape '/'.
+    # Refer to line 62.
     # shellcheck disable=SC2016
-    koopa_find_and_replace_in_files \
-        '\\$(DESTDIR)\/etc\/bash_completion.d' \
-        '\\$(DESTDIR)\\$(PREFIX)\/etc\/bash_completion.d' \
+    koopa_find_and_replace_in_file \
+        --fixed \
+        --pattern='\$(DESTDIR)/etc/bash_completion.d' \
+        --replacement='\$(DESTDIR)\$(PREFIX)/etc/bash_completion.d' \
         'configure'
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
