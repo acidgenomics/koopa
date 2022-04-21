@@ -34,6 +34,7 @@ main() { # {{{1
         'bc' | \
         'groff' | \
         'gsl' | \
+        'gzip' | \
         'less' | \
         'libidn' | \
         'libpipeline' | \

@@ -1210,6 +1210,20 @@ koopa_uninstall_gsl() { # {{{3
         "$@"
 }
 
+# gzip -------------------------------------------------------------------- {{{2
+
+koopa_install_gzip() { # {{{3
+    koopa_install_gnu_app \
+        --name='gzip' \
+        "$@"
+}
+
+koopa_uninstall_gzip() { # {{{3
+    koopa_uninstall_app \
+        --name='gzip' \
+        "$@"
+}
+
 # hadolint ---------------------------------------------------------------- {{{2
 
 koopa_install_hadolint() { # {{{3
