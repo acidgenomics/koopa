@@ -14,6 +14,9 @@ koopa_activate_opt_prefix() { # {{{1
     # """
     local dict name
     koopa_assert_has_args "$#"
+    declare -A app=(
+        [uname]="$(koopa_locate_uname)"
+    )
     declare -A dict=(
         [cppflags]="${CPPFLAGS:-}"
         [ldflags]="${LDFLAGS:-}"
@@ -42,6 +45,21 @@ koopa_activate_opt_prefix() { # {{{1
             "${prefix}/lib/pkgconfig" \
             "${prefix}/lib64/pkgconfig" \
             "${prefix}/share/pkgconfig"
+        # Add platform-specific pkg-config (e.g. for glib).
+        if koopa_is_linux && \
+            [[ -e '/usr/share/misc/config.sub' ]]
+        then
+            # e.g. 'x86_64'.
+            dict[arch]="$(koopa_arch)"
+            # e.g. 'linux'.
+            dict[os]="$(koopa_lowercase "$("${app[uname]}" -o)")"
+            # e.g. 'x86_64-linux-gnu'.
+            dict[os2]="$(\
+                '/usr/share/misc/config.sub' "${dict[arch]}-${dict[os]}" \
+            )"
+            koopa_add_to_pkg_config_path \
+                "${prefix}/lib/${dict[os2]}/pkgconfig"
+        fi
     done
     return 0
 }
