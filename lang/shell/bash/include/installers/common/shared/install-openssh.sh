@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for libfido2.
+
 main() { # {{{1
     # """
     # Install OpenSSH.
@@ -12,20 +14,22 @@ main() { # {{{1
     # separation.  See README.privsep for details.
     #
     # @seealso
-    # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/openssh.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     openssh.rb
+    # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/openssh.html
     # - https://forums.gentoo.org/viewtopic-t-1085536-start-0.html
     # - https://stackoverflow.com/questions/11841919/
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'openssl' 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='openssh'
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -36,12 +40,13 @@ portable/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
+        # > '--with-security-key-builtin' # libfido2
         "--prefix=${dict[prefix]}"
         '--with-kerberos5'
+        '--with-libedit'
         '--with-pam'
-        '--with-security-key-builtin'
+        "--with-ssl-dir=${dict[opt_prefix]}/openssl"
         '--without-ldns'
-        '--without-libedit'
     )
     if koopa_is_linux
     then
