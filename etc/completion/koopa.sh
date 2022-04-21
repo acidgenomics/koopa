@@ -104,6 +104,7 @@ __koopa_complete() { # {{{1
                         'bpytop'
                         'broot'
                         'bzip2'
+                        'cairo' # FIXME
                         'chemacs'
                         'cmake'
                         'conda'
@@ -122,6 +123,7 @@ __koopa_complete() { # {{{1
                         'fish'
                         'flake8'
                         'fltk'
+                        'fontconfig' # FIXME (cairo)
                         'freetype'
                         'fribidi'
                         'fzf'
@@ -132,6 +134,7 @@ __koopa_complete() { # {{{1
                         'gettext'
                         'git'
                         'glances'
+                        'glib' # FIXME (cairo)
                         'gmp'
                         'gnupg'
                         'go'
@@ -169,11 +172,16 @@ __koopa_complete() { # {{{1
                         'libtool'
                         'libunistring'
                         'libuv'
+                        'libx11' # FIXME (cairo)
+                        'libxcb' # FIXME (cairo)
+                        'libxext' # FIXME (cairo)
                         'libxml2'
+                        'libxrender' # FIXME (cairo)
                         'libzip'
                         'lua'
                         'luarocks'
                         'lzma'
+                        'lzo' # FIXME (cairo)
                         'make'
                         'mamba'
                         'man-db'
@@ -204,6 +212,7 @@ __koopa_complete() { # {{{1
                         'perl-packages'
                         'perlbrew'
                         'pipx'
+                        'pixman' # FIXME (cairo)
                         'pkg-config'
                         'prelude-emacs'
                         'procs'
