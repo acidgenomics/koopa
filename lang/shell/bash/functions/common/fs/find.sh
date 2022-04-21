@@ -420,11 +420,13 @@ koopa_find() { # {{{1
 
 # FIXME Switch to using Perl here.
 # e.g. https://stackoverflow.com/questions/59698328/
+# FIXME Rework this to require '--pattern' and '--replacement' arguments.
+# FIXME Need to support stdin here.
 
-koopa_find_and_replace_in_files() { # {{{1
+koopa_find_and_replace_in_file() { # {{{1
     # """
     # Find and replace inside files.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-21.
     #
     # Parameterized, supporting multiple files.
     #
@@ -432,56 +434,90 @@ koopa_find_and_replace_in_files() { # {{{1
     # by default on macOS.
     #
     # @seealso
+    # - koopa_sub
     # - https://stackoverflow.com/questions/4247068/
     #
+    # @usage
+    # > koopa_find_and_replace_in_file \
+    # >     [--fixed|--regex] \
+    # >     --pattern=PATTERN \
+    # >     --replacement=REPLACEMENT \
+    # >     FILE...
+    #
     # @examples
-    # > koopa_find_and_replace_in_files 'XXX' 'YYY' 'file1' 'file2' 'file3'
+    # > koopa_find_and_replace_in_file \
+    # >     --fixed \
+    # >     --pattern='XXX' \
+    # >     --replacement='YYY' \
+    # >     'file1' 'file2' 'file3'
     # """
-    local app dict file
-    koopa_assert_has_args_ge "$#" 3
+    local app dict pos
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [sed]="$(koopa_locate_sed)"
+        [perl]="$(koopa_locate_perl)"
     )
     declare -A dict=(
-        [from]="${1:?}"
-        [to]="${2:?}"
+        [pattern]=''
+        [regex]=0
+        [replacement]=''
     )
-    shift 2
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
+            '--replacement='*)
+                dict[replacement]="${1#*=}"
+                shift 1
+                ;;
+            '--replacement')
+                # Allowing empty string passthrough here.
+                dict[replacement]="${2:-}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--fixed')
+                dict[regex]=0
+                shift 1
+                ;;
+            '--regex')
+                dict[regex]=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--pattern' "${dict[pattern]}"
+    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
     koopa_alert "$(koopa_ngettext \
-        --prefix="Replacing '${dict[from]}' with '${dict[to]}' in " \
-        --num="${#}" \
+        --prefix="Replacing '${dict[pattern]}' with \
+'${dict[replacement]}' in " \
+        --num="${#pos[@]}" \
         --msg1='file' \
         --msg2='files' \
         --suffix='.' \
     )"
-    if { \
-        koopa_str_detect_fixed \
-            --string="${dict[from]}" \
-            --pattern='/' && \
-        ! koopa_str_detect_fixed \
-            --string="${dict[from]}" \
-            --pattern='\/'; \
-    } || { \
-        koopa_str_detect_fixed \
-            --string="${dict[to]}" \
-            --pattern='/' && \
-        ! koopa_str_detect_fixed \
-            --string="${dict[to]}" \
-            --pattern='\/'; \
-    }
-    then
-        koopa_stop 'Unescaped slash detected.'
-    fi
-    koopa_assert_is_file "$@"
-    for file in "$@"
-    do
-        koopa_alert "$file"
-        # Using '-i.bak' here improves portability between BSD and Linux.
-        "${app[sed]}" \
-            -i.bak \
-            "s/${dict[from]}/${dict[to]}/g" \
-            "$file"
-    done
+    [[ "${dict[regex]}" -eq 0 ]] && dict[pattern]="\\Q${dict[pattern]}\\E"
+    dict[expr]="s/${dict[pattern]}/${dict[replacement]}/g"
+    "${app[perl]}" -p -e "${dict[expr]}" "$@"
     return 0
 }
 
