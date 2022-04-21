@@ -116,7 +116,7 @@ main() { # {{{1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
-        # > [opt_prefix]="$(koopa_opt_prefix)"
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -159,11 +159,11 @@ main() { # {{{1
                 'libpcre2-32' \
                 'libpcre2-posix' \
         )"
-        "--with-tcltk=$( \
-            "${app[pkg_config]}" --libs 'tcl' 'tk' \
-        )"
-        # > "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
-        # > "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
+        # > "--with-tcltk=$( \
+        # >     "${app[pkg_config]}" --libs 'tcl' 'tk' \
+        # > )"
+        "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
+        "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
         '--without-cairo'
         '--without-x'
     )
