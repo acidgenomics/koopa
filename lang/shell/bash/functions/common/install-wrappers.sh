@@ -3186,6 +3186,20 @@ koopa_uninstall_which() { # {{{3
         "$@"
 }
 
+# xcb-proto --------------------------------------------------------------- {{{2
+
+koopa_install_xcb_proto() { # {{{3
+    koopa_install_app \
+        --name='xcb-proto' \
+        "$@"
+}
+
+koopa_uninstall_xcb_proto() { # {{{3
+    koopa_uninstall_app \
+        --name='xcb-proto' \
+        "$@"
+}
+
 # xorgproto --------------------------------------------------------------- {{{2
 
 koopa_install_xorgproto() { # {{{3
