@@ -43,7 +43,7 @@ libx11="FIXME"
 libxcb="FIXME"
 libxext="FIXME"
 libxrender="FIXME"
-lzo="FIXME"
+lzo="2.10"
 pixman="FIXME"
 
 
