@@ -44,7 +44,7 @@ libxcb="FIXME"
 libxext="FIXME"
 libxrender="FIXME"
 lzo="2.10"
-pixman="FIXME"
+pixman="0.40.0"
 
 
 
