@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Don't allow configuration flag passthrough here by default, so we
-# can harden against unsupported arguments.
-
 koopa_configure_app_packages() { # {{{1
     # """
     # Configure language application.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-04-21.
     #
     # @examples
     # > koopa_configure_app_packages \
@@ -459,7 +456,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         if koopa_is_linux && \
             [[ -x '/usr/bin/pkg-config' ]]
         then
-            koopa_add_to_pkg_config_path_start_2 \
+            koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
         fi
         # Activate packages installed in koopa 'opt/' directory.
@@ -786,13 +783,10 @@ koopa_reinstall_app() { # {{{1
     koopa_koopa install "$@" --reinstall
 }
 
-# FIXME Don't allow configuration flag passthrough here by default, so we
-# can harden against unsupported arguments.
-
 koopa_uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-21.
     # """
     local app bin_arr dict pos
     declare -A app
@@ -895,13 +889,11 @@ koopa_uninstall_app() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
     koopa_assert_is_set '--name' "${dict[name]}"
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     case "${dict[mode]}" in
         'shared')
@@ -950,7 +942,7 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
             # shellcheck source=/dev/null
             source "${dict[uninstaller_file]}"
             koopa_assert_is_function "${dict[uninstaller_fun]}"
-            "${dict[uninstaller_fun]}" "$@"
+            "${dict[uninstaller_fun]}"
         )
         koopa_rm "${dict[tmp_dir]}"
     fi
@@ -990,13 +982,10 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
     return 0
 }
 
-# FIXME Don't allow configuration flag passthrough here by default, so we
-# can harden against unsupported arguments.
-
 koopa_update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-21.
     # """
     local clean_path_arr dict opt_arr pos
     koopa_assert_has_args "$#"
@@ -1103,12 +1092,10 @@ koopa_update_app() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     case "${dict[mode]}" in
         'shared')
@@ -1161,7 +1148,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
         if koopa_is_linux && \
             [[ -x '/usr/bin/pkg-config' ]]
         then
-            koopa_add_to_pkg_config_path_start_2 \
+            koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
         fi
         # Activate packages installed in koopa 'opt/' directory.
@@ -1175,7 +1162,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
         fi
         # shellcheck disable=SC2030
         export UPDATE_PREFIX="${dict[prefix]}"
-        "${dict[updater_fun]}" "$@"
+        "${dict[updater_fun]}"
     )
     koopa_rm "${dict[tmp_dir]}"
     if [[ -d "${dict[prefix]}" ]] && \
