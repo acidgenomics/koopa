@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Failing capabilities: jpeg, png, tiff, libxml, cairo
-# FIXME libxml is returning FALSE on Ubuntu.
+# NOTE Failing capabilities: jpeg, png, tiff, libxml, cairo
+# NOTE libxml is returning FALSE on Ubuntu.
 
 main() { # {{{1
     # """
@@ -91,6 +91,7 @@ main() { # {{{1
         'openblas' \
         'pcre2' \
         'pkg-config' \
+        'readline' \
         'tcl-tk' \
         'texinfo' \
         'xz'
@@ -100,7 +101,6 @@ main() { # {{{1
     elif koopa_is_macos
     then
         # We're using Adoptium Temurin LTS on macOS.
-        koopa_activate_opt_prefix 'readline'
         koopa_activate_prefix '/usr/local/gfortran'
         koopa_add_to_path_start '/Library/TeX/texbin'
     fi
@@ -110,20 +110,35 @@ main() { # {{{1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--enable-BLAS-shlib'
         '--enable-R-profiling'
         '--enable-R-shlib'
+        '--enable-R-static-lib'
+        '--enable-byte-compiled-packages'
+        '--enable-fast-install'
+        '--enable-java'
         '--enable-memory-profiling'
-        '--with-blas'
-        '--with-jpeglib'
-        '--with-lapack'
-        '--with-readline'
-        '--with-tcltk'
-        '--with-x=no'
+        '--enable-shared'
+        '--enable-static'
+        "--with-ICU=${dict[opt_prefix]}/icu4c"
+        "--with-blas=${dict[opt_prefix]}/openblas"
+        "--with-jpeglib=${dict[opt_prefix]}/libjpeg-turbo"
+        "--with-lapack=${dict[opt_prefix]}/lapack"
+        "--with-libpng=${dict[opt_prefix]}/libpng"
+        "--with-libtiff=${dict[opt_prefix]}/libtiff"
+        "--with-pcre2=${dict[opt_prefix]}/pcre2"
+        "--with-readline=${dict[opt_prefix]}/readline"
+        "--with-tcltk=${dict[opt_prefix]}/tcltk"
+        "--with-tcl-config=${dict[opt_prefix]}/tcltk/lib/tclConfig.sh"
+        "--with-tk-config=${dict[opt_prefix]}/tcltk/lib/tkConfig.sh"
+        '--without-cairo'
+        '--without-x'
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
@@ -161,14 +176,7 @@ R-${dict[maj_ver]}/${dict[file]}"
             '--with-recommended-packages'
         )
     fi
-    if koopa_is_linux
-    then
-        # Need to modify BLAS configuration handling specificallly on Debian.
-        if ! koopa_is_debian_like
-        then
-            conf_args+=('--enable-BLAS-shlib')
-        fi
-    elif koopa_is_macos
+    if koopa_is_macos
     then
         conf_args+=('--without-aqua')
         export CFLAGS='-Wno-error=implicit-function-declaration'
