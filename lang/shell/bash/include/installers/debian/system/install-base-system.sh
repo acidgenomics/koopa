@@ -232,8 +232,8 @@ main() { # {{{1
             'libfontconfig1-dev'
             'libfreetype6-dev' # harfbuzz
             'libfribidi-dev'
-            'libgdal-dev'
-            'libgeos-dev'
+            # > 'libgdal-dev' # libspatial
+            # > 'libgeos-dev' # libspatial
             'libgfortran5' # R nlme
             'libgif-dev'
             'libgit2-dev'
@@ -278,7 +278,7 @@ main() { # {{{1
             'libpng-dev'
             'libpoppler-cpp-dev'
             'libpq-dev'
-            'libproj-dev'
+            # > 'libproj-dev' # libspatial
             'libprotobuf-dev'
             'libprotoc-dev'
             # > 'librdf0-dev' problematic on 2022-03-29
