@@ -2571,10 +2571,21 @@ koopa_uninstall_rbenv() { # {{{3
 
 koopa_install_readline() { # {{{3
     # """
+    # Install readline.
+    # @note Updated 2022-04-21.
+    #
+    # Check linkage on Linux with:
+    # ldd -r /opt/koopa/opt/readline/lib/libreadline.so.6.2
+    #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     readline.rb
+    # - https://stackoverflow.com/a/34723695/3911732
+    # - https://github.com/archlinux/svntogit-packages/blob/master/readline/
+    #     repos/core-x86_64/PKGBUILD
     # """
+    export CFLAGS='-fPIC'
+    export SHLIB_LIBS='-lncurses'
     koopa_install_gnu_app \
         --activate-opt='ncurses' \
         --name='readline' \
