@@ -1096,6 +1096,20 @@ koopa_uninstall_glances() { # {{{3
         "$@"
 }
 
+# glib -------------------------------------------------------------------- {{{2
+
+koopa_install_glib() { # {{{3
+    koopa_install_app \
+        --name='glib' \
+        "$@"
+}
+
+koopa_uninstall_glib() { # {{{3
+    koopa_uninstall_app \
+        --name='glib' \
+        "$@"
+}
+
 # gmp --------------------------------------------------------------------- {{{2
 
 koopa_install_gmp() { # {{{3
