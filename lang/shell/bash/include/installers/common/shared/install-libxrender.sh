@@ -2,11 +2,12 @@
 
 main() { # {{{1
     # """
-    # Install libxext.
+    # Install libxrender.
     # @note Updated 2022-04-21.
     #
     # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxext.rb
+    # - https://github.com/Homebrew/homebrew-core/blob/master/
+    #     Formula/libxrender.rb
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -19,12 +20,12 @@ main() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
-        [name]='libXext'
+        [name]='libXrender'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
-    dict[url]="https://www.x.org/archive/individual/lib//${dict[file]}"
+    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
+    dict[url]="https://xcb.freedesktop.org/dist/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
@@ -32,7 +33,6 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         '--disable-dependency-tracking'
         '--disable-silent-rules'
-        '--enable-specs=no'
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
