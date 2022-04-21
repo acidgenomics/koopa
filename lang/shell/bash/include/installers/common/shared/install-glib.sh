@@ -28,9 +28,10 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="https://download.gnome.org/sources/${dict[name]}/\
-${dict[version]}/${dict[file]}"
+${dict[maj_min_ver]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
