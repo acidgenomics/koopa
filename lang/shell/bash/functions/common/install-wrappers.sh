@@ -1701,6 +1701,20 @@ koopa_uninstall_libuv() { # {{{3
         "$@"
 }
 
+# libxau ------------------------------------------------------------------ {{{2
+
+koopa_install_libxau() { # {{{3
+    koopa_install_app \
+        --name='libxau' \
+        "$@"
+}
+
+koopa_uninstall_libxau() { # {{{3
+    koopa_uninstall_app \
+        --name='libxau' \
+        "$@"
+}
+
 # libxdmcp ---------------------------------------------------------------- {{{2
 
 koopa_install_libxdmcp() { # {{{3
