@@ -985,35 +985,35 @@ koopa_uninstall_gawk() { # {{{3
 
 # gdal -------------------------------------------------------------------- {{{2
 
-# > koopa_install_gdal() { # {{{3
-# >     koopa_install_app \
-# >         --name-fancy='GDAL' \
-# >         --name='gdal' \
-# >         "$@"
-# > }
+koopa_install_gdal() { # {{{3
+    koopa_install_app \
+        --name-fancy='GDAL' \
+        --name='gdal' \
+        "$@"
+}
 
-# > koopa_uninstall_gdal() { # {{{3
-# >     koopa_uninstall_app \
-# >         --name-fancy='GDAL' \
-# >         --name='gdal' \
-# >         "$@"
-# > }
+koopa_uninstall_gdal() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='GDAL' \
+        --name='gdal' \
+        "$@"
+}
 
 # geos -------------------------------------------------------------------- {{{2
 
-# > koopa_install_geos() { # {{{3
-# >     koopa_install_app \
-# >         --name-fancy='GEOS' \
-# >         --name='geos' \
-# >         "$@"
-# > }
+koopa_install_geos() { # {{{3
+    koopa_install_app \
+        --name-fancy='GEOS' \
+        --name='geos' \
+        "$@"
+}
 
-# > koopa_uninstall_geos() { # {{{3
-# >     koopa_uninstall_app \
-# >         --name-fancy='GEOS' \
-# >         --name='geos' \
-# >         "$@"
-# > }
+koopa_uninstall_geos() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='GEOS' \
+        --name='geos' \
+        "$@"
+}
 
 # gettext ----------------------------------------------------------------- {{{2
 
@@ -2325,19 +2325,19 @@ koopa_uninstall_procs() { # {{{3
 
 # proj -------------------------------------------------------------------- {{{2
 
-# > koopa_install_proj() { # {{{3
-# >     koopa_install_app \
-# >         --name-fancy='PROJ' \
-# >         --name='proj' \
-# >         "$@"
-# > }
+koopa_install_proj() { # {{{3
+    koopa_install_app \
+        --name-fancy='PROJ' \
+        --name='proj' \
+        "$@"
+}
 
-# > koopa_uninstall_proj() { # {{{3
-# >     koopa_uninstall_app \
-# >         --name-fancy='PROJ' \
-# >         --name='proj' \
-# >         "$@"
-# > }
+koopa_uninstall_proj() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='PROJ' \
+        --name='proj' \
+        "$@"
+}
 
 # pyenv ------------------------------------------------------------------- {{{2
 
