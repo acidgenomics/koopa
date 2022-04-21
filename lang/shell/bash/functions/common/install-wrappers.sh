@@ -903,6 +903,20 @@ koopa_uninstall_fltk() { # {{{3
         "$@"
 }
 
+# fontconfig -------------------------------------------------------------- {{{2
+
+koopa_install_fontconfig() { # {{{3
+    koopa_install_app \
+        --name='fontconfig' \
+        "$@"
+}
+
+koopa_uninstall_fontconfig() { # {{{3
+    koopa_uninstall_app \
+        --name='fontconfig' \
+        "$@"
+}
+
 # freetype ---------------------------------------------------------------- {{{2
 
 koopa_install_freetype() { # {{{3
