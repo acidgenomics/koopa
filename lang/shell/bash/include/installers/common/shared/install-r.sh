@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Need to build with support for Cairo.
-
 # NOTE Failing capabilities: jpeg, png, tiff, libxml, cairo
-# NOTE libxml is returning FALSE on Ubuntu.
 
 main() { # {{{1
     # """
@@ -82,7 +80,9 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    # FIXME How to build/require X11?
     koopa_activate_opt_prefix \
+        'cairo' \
         'curl' \
         'gettext' \
         'icu4c' \
@@ -91,6 +91,7 @@ main() { # {{{1
         'libjpeg-turbo' \
         'libpng' \
         'libtiff' \
+        'libxml2' \
         'openblas' \
         'pcre2' \
         'pkg-config' \
@@ -139,6 +140,8 @@ main() { # {{{1
         "--with-blas=$( \
             "${app[pkg_config]}" --libs 'openblas' \
         )"
+        '--with-cairo'  # FIXME Need to specify pkg-config?
+        '--with-static-cairo=no' # FIXME Check this on macOS?
         "--with-jpeglib=$( \
             "${app[pkg_config]}" --libs 'libjpeg' \
         )"
@@ -168,6 +171,7 @@ main() { # {{{1
         "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
         '--without-cairo'
         '--without-x'
+        '--with-x'  # FIXME Can we build with this ok?
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
