@@ -2,6 +2,9 @@
 
 # FIXME macOS failed on ogr build step...
 
+# FIXME This warning is popping up on Linux:
+# cc1plus: warning: /opt/koopa/app/gdal/3.4.2/include: No such file or directory [-Wmissing-include-dirs]
+
 main() { # {{{1
     # """
     # Install GDAL.
@@ -146,6 +149,7 @@ v${dict[version]}/${dict[file]}"
     then
         conf_args+=('--with-opencl')
     fi
+    koopa_mkdir "${dict[prefix]}/include"
     koopa_add_to_ldflags --allow-missing "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.
