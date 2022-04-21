@@ -3,8 +3,13 @@
 # NOTE Failing capabilities: jpeg, png, tiff, libxml, cairo
 # NOTE libxml is returning FALSE on Ubuntu.
 
-# FIXME Need to rework this:
-# ld: warning: directory not found for option '-L-L/opt/koopa/app/tcl-tk/8.6.12/lib'
+# FIXME readline inclusion is failing on Ubuntu.
+# https://stackoverflow.com/questions/35041854/
+# config.status: creating Makeconf gawk: symbol
+# lookup error: /home/user/packages/lib/libreadline.so.6: undefined symbol: UP
+# https://bugs.archlinux.org/task/39731
+# https://bbs.archlinux.org/viewtopic.php?id=179521
+# FIXME readline 6.3-003-1 may be probelmatic?
 
 main() { # {{{1
     # """
