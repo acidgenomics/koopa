@@ -13,18 +13,24 @@ main() { # {{{1
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix \
-        'fontconfig' \
+        'fontconfig' \ # FIXME
         'freetype' \
-        'glib' \
+        'glib' \ # FIXME
         'libpng' \
-        'libx11' \
-        'libxcb' \
-        'libxext' \
-        'libxrender' \
-        'lzo' \
-        'pixman' \
+        'libx11' \ # FIXME
+        'libxcb' \ # FIXME
+        'libxext' \ # FIXME
+        'libxrender' \ # FIXME
+        'lzo' \ # FIXME
+        'pixman' \ # FIXME
         'pkg-config' \
         'zlib'
-
+    declare -A app=(
+        [make]="$(koopa_locate_make)"
+    )
+    declare -A dict=(
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
     return 0
 }
