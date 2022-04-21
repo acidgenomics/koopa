@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-21.
     # """
     local app conf_args dict
     koopa_activate_opt_prefix \
@@ -18,6 +18,7 @@ main() { # {{{1
     declare -A dict=(
         [compress_ext]='bz2'
         [gcrypt_url]="$(koopa_gcrypt_url)"
+        [import_gpg_keys]="${INSTALL_IMPORT_GPG_KEYS:-1}"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -42,26 +43,29 @@ main() { # {{{1
     koopa_download "${dict[tar_url]}" "${dict[tar_file]}"
     if koopa_is_installed "${app[gpg_agent]}"
     then
-        # Can use the last 4 elements per key in the '--rev-keys' call.
-        gpg_keys=(
-            # Expired legacy keys:
-            # > '031EC2536E580D8EA286A9F22071B08A33BD3F06' # expired
-            # > 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' # expired
-            # Extra key needed for pinentry 1.1.1.
-            # > '80CC1B8D04C262DDFEE1980C6F7F0F91D138FC7B'
-            # Current GnuPG keys:
-            '5B80C5754298F0CB55D8ED6ABCEF7E294B092E28' # 2027-03-15
-            '6DAA6E64A76D2840571B4902528897B826403ADA' # 2030-06-30
-            'AC8E115BF73E2D8D47FA9908E98E9B2D19C6C8BD' # 2027-04-04
-            # Current GnuTLS keys:
-            '5D46CB0F763405A7053556F47A75A648B3F9220C'
-            '462225C3B46F34879FC8496CD605848ED7E69871'
-        )
-        "${app[gpg]}" \
-            --keyserver 'hkp://keyserver.ubuntu.com:80' \
-            --recv-keys "${gpg_keys[@]}"
-        # List keys with:
-        # > "${app[gpg]}" --list-keys
+        if [[ "${dict[import_gpg_keys]}" -eq 1 ]]
+        then
+            # Can use the last 4 elements per key in the '--rev-keys' call.
+            gpg_keys=(
+                # Expired legacy keys:
+                # > '031EC2536E580D8EA286A9F22071B08A33BD3F06' # expired
+                # > 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' # expired
+                # Extra key needed for pinentry 1.1.1.
+                # > '80CC1B8D04C262DDFEE1980C6F7F0F91D138FC7B'
+                # Current GnuPG keys:
+                '5B80C5754298F0CB55D8ED6ABCEF7E294B092E28' # 2027-03-15
+                '6DAA6E64A76D2840571B4902528897B826403ADA' # 2030-06-30
+                'AC8E115BF73E2D8D47FA9908E98E9B2D19C6C8BD' # 2027-04-04
+                # Current GnuTLS keys:
+                '5D46CB0F763405A7053556F47A75A648B3F9220C'
+                '462225C3B46F34879FC8496CD605848ED7E69871'
+            )
+            "${app[gpg]}" \
+                --keyserver 'hkp://keyserver.ubuntu.com:80' \
+                --recv-keys "${gpg_keys[@]}"
+            # List keys with:
+            # > "${app[gpg]}" --list-keys
+        fi
         dict[sig_file]="${dict[tar_file]}.sig"
         dict[sig_url]="${dict[base_url]}/${dict[sig_file]}"
         koopa_download "${dict[sig_url]}" "${dict[sig_file]}"

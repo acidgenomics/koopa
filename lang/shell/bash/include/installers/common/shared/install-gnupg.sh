@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GnuPG.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-04-21.
     #
     # @seealso
     # - https://gnupg.org/download/index.html
@@ -136,6 +136,8 @@ main() { # {{{1
         --name='libgpg-error' \
         --version="${dict[libgpg_error_version]}" \
         "${install_args[@]}"
+    # Avoid repetitive key re-imports.
+    export INSTALL_IMPORT_GPG_KEYS=0
     koopa_install_app \
         --name='libgcrypt' \
         --version="${dict[libgcrypt_version]}" \
