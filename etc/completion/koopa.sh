@@ -174,6 +174,7 @@ __koopa_complete() { # {{{1
                         'libuv'
                         'libx11' # FIXME (cairo)
                         'libxcb' # FIXME (cairo)
+                        'libxdmcp'
                         'libxext' # FIXME (cairo)
                         'libxml2'
                         'libxrender' # FIXME (cairo)
@@ -262,6 +263,7 @@ __koopa_complete() { # {{{1
                         'vim'
                         'wget'
                         'which'
+                        'xorgproto'
                         'xsv'
                         'xz'
                         'zlib'
