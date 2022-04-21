@@ -181,7 +181,7 @@ __koopa_complete() { # {{{1
                         'lua'
                         'luarocks'
                         'lzma'
-                        'lzo' # FIXME (cairo)
+                        'lzo'
                         'make'
                         'mamba'
                         'man-db'
@@ -212,7 +212,7 @@ __koopa_complete() { # {{{1
                         'perl-packages'
                         'perlbrew'
                         'pipx'
-                        'pixman' # FIXME (cairo)
+                        'pixman'
                         'pkg-config'
                         'prelude-emacs'
                         'procs'
