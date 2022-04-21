@@ -119,7 +119,6 @@ main() { # {{{1
         '--enable-BLAS-shlib'
         '--enable-R-profiling'
         '--enable-R-shlib'
-        '--enable-R-static-lib'
         '--enable-byte-compiled-packages'
         '--enable-fast-install'
         '--enable-java'
