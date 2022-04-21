@@ -13,7 +13,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-04-20"
+koopa-date="2022-04-21"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -34,6 +34,22 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 
 # Program versions {{{1
 # ==============================================================================
+
+# These are new dependencies required to build Cairo.
+cairo="FIXME"
+fontconfig="FIXME"
+glib="FIXME"
+libx11="FIXME"
+libxcb="FIXME"
+libxext="FIXME"
+libxrender="FIXME"
+lzo="FIXME"
+pixman="FIXME"
+
+
+
+
+
 
 # https://repo.continuum.io/archive/
 anaconda="2021.11"
