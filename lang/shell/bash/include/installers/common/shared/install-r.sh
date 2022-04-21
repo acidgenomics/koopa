@@ -91,7 +91,6 @@ main() { # {{{1
         'openblas' \
         'pcre2' \
         'pkg-config' \
-        'readline' \
         'tcl-tk' \
         'texinfo' \
         'xz'
@@ -101,6 +100,7 @@ main() { # {{{1
     elif koopa_is_macos
     then
         # We're using Adoptium Temurin LTS on macOS.
+        koopa_activate_opt_prefix 'readline'
         koopa_activate_prefix '/usr/local/gfortran'
         koopa_add_to_path_start '/Library/TeX/texbin'
     fi
@@ -132,7 +132,6 @@ main() { # {{{1
         "--with-libpng=${dict[opt_prefix]}/libpng"
         "--with-libtiff=${dict[opt_prefix]}/libtiff"
         "--with-pcre2=${dict[opt_prefix]}/pcre2"
-        "--with-readline=${dict[opt_prefix]}/readline"
         "--with-tcltk=${dict[opt_prefix]}/tcl-tk"
         "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
         "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
@@ -160,9 +159,7 @@ main() { # {{{1
         then
             koopa_print "Revision: ${dict[version]}" > 'SVNINFO'
         fi
-        conf_args+=(
-            '--without-recommended-packages'
-        )
+        conf_args+=('--without-recommended-packages')
     else
         dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
         dict[file]="R-${dict[version]}.tar.gz"
@@ -171,13 +168,14 @@ R-${dict[maj_ver]}/${dict[file]}"
         koopa_download "${dict[url]}" "${dict[file]}"
         koopa_extract "${dict[file]}"
         koopa_cd "R-${dict[version]}"
-        conf_args+=(
-            '--with-recommended-packages'
-        )
+        conf_args+=('--with-recommended-packages')
     fi
     if koopa_is_macos
     then
-        conf_args+=('--without-aqua')
+        conf_args+=(
+            "--with-readline=${dict[opt_prefix]}/readline"
+            '--without-aqua'
+        )
         export CFLAGS='-Wno-error=implicit-function-declaration'
     fi
     export TZ='America/New_York'
