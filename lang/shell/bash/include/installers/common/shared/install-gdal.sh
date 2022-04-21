@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-# FIXME macOS failed on ogr build step...
-
-# FIXME This warning is popping up on Linux:
-# cc1plus: warning: /opt/koopa/app/gdal/3.4.2/include: No such file or directory [-Wmissing-include-dirs]
-
 # FIXME Should we include openssl here?
+
+# FIXME make is erroring on macOS:
+# Must remake target 'lib'.
+# Successfully remade target file 'lib'.
+# make[1]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220421-101201-CKCJuCU0OD/gdal-3.4.2/ogr'
+# Reaping winning child 0x600000a34000 PID 73531
+# Removing child 0x600000a34000 PID 73531 from chain.
 
 main() { # {{{1
     # """
