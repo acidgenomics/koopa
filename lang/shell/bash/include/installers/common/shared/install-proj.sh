@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Error if existing PROJ install is detected.
+
 main() { # {{{1
     # """
     # Install PROJ.
