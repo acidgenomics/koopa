@@ -169,6 +169,7 @@ koopa_install_bash() { # {{{3
 }
 
 # NOTE This can cause shell to error when uninstalling current linked version.
+# FIXME Reset default shell before uninstalling, if necessary.
 koopa_uninstall_bash() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Bash' \
@@ -860,6 +861,7 @@ koopa_install_fish() { # {{{3
         "$@"
 }
 
+# FIXME Reset default shell before uninstalling, if necessary.
 koopa_uninstall_fish() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Fish' \
@@ -3189,6 +3191,7 @@ koopa_install_zsh() { # {{{3
     return 0
 }
 
+# FIXME Reset default shell before uninstalling, if necessary.
 koopa_uninstall_zsh() { # {{{3
     koopa_uninstall_app \
         --name-fancy="Zsh" \
