@@ -418,11 +418,6 @@ koopa_find() { # {{{1
     return 0
 }
 
-# FIXME Switch to using Perl here.
-# e.g. https://stackoverflow.com/questions/59698328/
-# FIXME Rework this to require '--pattern' and '--replacement' arguments.
-# FIXME Need to support stdin here.
-
 koopa_find_and_replace_in_file() { # {{{1
     # """
     # Find and replace inside files.
@@ -436,6 +431,11 @@ koopa_find_and_replace_in_file() { # {{{1
     # @seealso
     # - koopa_sub
     # - https://stackoverflow.com/questions/4247068/
+    # - https://stackoverflow.com/questions/5720385/
+    # - https://stackoverflow.com/questions/2922618/
+    # - Use '-0' for multiline replacement
+    #   https://stackoverflow.com/questions/1030787/
+    # - https://unix.stackexchange.com/questions/334216/
     #
     # @usage
     # > koopa_find_and_replace_in_file \
@@ -515,9 +515,17 @@ koopa_find_and_replace_in_file() { # {{{1
         --msg2='files' \
         --suffix='.' \
     )"
-    [[ "${dict[regex]}" -eq 0 ]] && dict[pattern]="\\Q${dict[pattern]}\\E"
-    dict[expr]="s/${dict[pattern]}/${dict[replacement]}/g"
-    "${app[perl]}" -p -e "${dict[expr]}" "$@"
+    if [[ "${dict[regex]}" -eq 1 ]]
+    then
+        dict[expr]="s/${dict[pattern]}/${dict[replacement]}/g"
+    else
+        dict[expr]=" \
+            \$pattern = quotemeta '${dict[pattern]}'; \
+            \$replacement = '${dict[replacement]}'; \
+            s/\$pattern/\$replacement/g; \
+        "
+    fi
+    "${app[perl]}" -0 -i -p -e "${dict[expr]}" "$@"
     return 0
 }
 
@@ -762,7 +770,8 @@ koopa_find_non_symlinked_make_files() { # {{{1
     return 0
 }
 
-# FIXME Is there a way to speed this up using GNU find or something?
+# NOTE Is there a way to speed this up using GNU find or something?
+
 koopa_find_symlinks() { # {{{1
     # """
     # Find symlinks matching a specified source prefix.
