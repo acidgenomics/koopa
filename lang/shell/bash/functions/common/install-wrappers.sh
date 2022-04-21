@@ -1826,20 +1826,22 @@ koopa_uninstall_meson() { # {{{3
 
 # ncurses ----------------------------------------------------------------- {{{2
 
-# FIXME This isn't creating libncurses.so file...
-# FIXME Check for libncurses.so file...
-#-D '--enable-pc-files' \
-#-D '--enable-sigwinch' \
-#-D '--enable-symlinks' \
-#-D '--enable-widec' \
-#-D '--with-gpm=no' \
-#-D '--without-ada' \
-
 koopa_install_ncurses() { # {{{3
+    # """
+    # @seealso
+    # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
+    #     repos/core-x86_64/PKGBUILD
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/ncurses.rb
     koopa_install_gnu_app \
         --name='ncurses' \
+        -D '--enable-pc-files' \
+        -D '--enable-widec' \
+        -D '--with-cxx-binding' \
         -D '--with-cxx-shared' \
+        -D '--with-manpage-format=normal' \
         -D '--with-shared' \
+        -D '--with-versioned-syms' \
+        -D '--without-ada' \
         "$@"
 }
 
