@@ -1715,6 +1715,20 @@ koopa_uninstall_libuv() { # {{{3
         "$@"
 }
 
+# libx11 ------------------------------------------------------------------ {{{2
+
+koopa_install_libx11() { # {{{3
+    koopa_install_app \
+        --name='libx11' \
+        "$@"
+}
+
+koopa_uninstall_libx11() { # {{{3
+    koopa_uninstall_app \
+        --name='libx11' \
+        "$@"
+}
+
 # libxau ------------------------------------------------------------------ {{{2
 
 koopa_install_libxau() { # {{{3
