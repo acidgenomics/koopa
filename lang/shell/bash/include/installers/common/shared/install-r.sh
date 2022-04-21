@@ -11,6 +11,9 @@
 # https://bbs.archlinux.org/viewtopic.php?id=179521
 # FIXME readline 6.3-003-1 may be probelmatic?
 
+# FIXME Now seeing this compile error on Linux;
+# /usr/bin/ld: /opt/koopa/opt/zlib/lib/libz.a(deflate.o): relocation R_X86_64_PC32 against symbol `z_errmsg' can not be used when making a shared object; recompile with -fPIC
+
 main() { # {{{1
     # """
     # Install R.

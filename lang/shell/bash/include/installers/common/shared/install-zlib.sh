@@ -3,11 +3,13 @@
 main() { # {{{
     # """
     # Install zlib.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-21.
     #
     # @seealso
     # - https://www.zlib.net/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zlib.rb
+    # - https://github.com/archlinux/svntogit-packages/blob/master/zlib/
+    #     trunk/PKGBUILD
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -25,8 +27,8 @@ main() { # {{{
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
+        # > '--enable-static=no'
         "--prefix=${dict[prefix]}"
-        '--static'
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" install
