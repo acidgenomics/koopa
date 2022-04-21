@@ -2569,41 +2569,10 @@ koopa_uninstall_rbenv() { # {{{3
 
 # readline ---------------------------------------------------------------- {{{2
 
-# FIXME ncurses is missing so file...need to rethink...
-
 koopa_install_readline() { # {{{3
-    # """
-    # Install readline.
-    # @note Updated 2022-04-21.
-    #
-    # Check linkage on Linux with:
-    # ldd -r /opt/koopa/opt/readline/lib/libreadline.so
-    #
-    # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
-    #     readline.rb
-    # - https://stackoverflow.com/a/34723695/3911732
-    # - https://github.com/archlinux/svntogit-packages/blob/master/readline/
-    #     repos/core-x86_64/PKGBUILD
-    # """
-    # FIXME This isn't working, need to rethink...
-    if koopa_is_linux
-    then
-        export CFLAGS='-fPIC'
-        export SHLIB_LIBS='-lncurses'
-        export SHLIB_LIBS='/opt/kopoa/opt/ncurses/lib/libncurses.so'
-    fi
-    koopa_install_gnu_app \
-        --activate-opt='ncurses' \
+    koopa_install_app \
         --name='readline' \
-        -D '--enable-shared' \
-        -D '--enable-static' \
-        -D '--with-curses' \
         "$@"
-    if koopa_is_linux
-    then
-        ldd -r '/opt/koopa/opt/readline/lib/libreadline.so'
-    fi
 }
 
 koopa_uninstall_readline() { # {{{3
