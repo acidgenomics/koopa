@@ -1775,6 +1775,20 @@ koopa_uninstall_lzma() { # {{{3
         "$@"
 }
 
+# lzo --------------------------------------------------------------------- {{{2
+
+koopa_install_lzo() { # {{{3
+    koopa_install_app \
+        --name='lzo' \
+        "$@"
+}
+
+koopa_uninstall_lzo() { # {{{3
+    koopa_uninstall_app \
+        --name='lzo' \
+        "$@"
+}
+
 # make -------------------------------------------------------------------- {{{2
 
 koopa_install_make() { # {{{3
