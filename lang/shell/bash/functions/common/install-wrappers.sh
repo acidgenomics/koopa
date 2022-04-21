@@ -1757,6 +1757,20 @@ koopa_uninstall_libxdmcp() { # {{{3
         "$@"
 }
 
+# libxext ----------------------------------------------------------------- {{{2
+
+koopa_install_libxext() { # {{{3
+    koopa_install_app \
+        --name='libxext' \
+        "$@"
+}
+
+koopa_uninstall_libxext() { # {{{3
+    koopa_uninstall_app \
+        --name='libxext' \
+        "$@"
+}
+
 # libxml2 ----------------------------------------------------------------- {{{2
 
 koopa_install_libxml2() { # {{{3
@@ -3270,6 +3284,20 @@ koopa_uninstall_xsv() { # {{{1
     koopa_uninstall_app \
         --unlink-in-bin='xsv' \
         --name='xsv' \
+        "$@"
+}
+
+# xtrans ------------------------------------------------------------------ {{{2
+
+koopa_install_xtrans() { # {{{3
+    koopa_install_app \
+        --name='xtrans' \
+        "$@"
+}
+
+koopa_uninstall_xtrans() { # {{{3
+    koopa_uninstall_app \
+        --name='xtrans' \
         "$@"
 }
 

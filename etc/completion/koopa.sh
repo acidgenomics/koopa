@@ -177,7 +177,7 @@ __koopa_complete() { # {{{1
                         'libxau'
                         'libxcb'
                         'libxdmcp'
-                        'libxext' # FIXME (cairo)
+                        'libxext'
                         'libxml2'
                         'libxrender' # FIXME (cairo)
                         'libzip'
@@ -268,6 +268,7 @@ __koopa_complete() { # {{{1
                         'xcb-proto'
                         'xorgproto'
                         'xsv'
+                        'xtrans'
                         'xz'
                         'zlib'
                         'zoxide'
