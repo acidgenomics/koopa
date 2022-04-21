@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME macOS failed on ogr build step...
+
 main() { # {{{1
     # """
     # Install GDAL.
@@ -147,7 +149,7 @@ v${dict[version]}/${dict[file]}"
     koopa_add_to_ldflags --allow-missing "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.
-    "${app[make]}" --jobs="${dict[jobs]}"
+    "${app[make]}" V=1 -d --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
 }
