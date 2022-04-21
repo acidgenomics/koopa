@@ -37,7 +37,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 
 # These are new dependencies required to build Cairo.
 cairo="FIXME"
-fontconfig="FIXME"
+fontconfig="2.14.0"
 glib="FIXME"
 libx11="FIXME"
 libxcb="FIXME"
