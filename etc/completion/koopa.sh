@@ -138,6 +138,7 @@ __koopa_complete() { # {{{1
                         'grep'
                         'groff'
                         'gsl'
+                        'gzip'
                         'hadolint'
                         'harfbuzz'
                         'haskell-stack'
