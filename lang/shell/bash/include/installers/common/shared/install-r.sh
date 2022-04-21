@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Failing capabilities: jpeg, png, tiff, libxml, cairo
+# FIXME libxml is returning FALSE on Ubuntu.
 
 main() { # {{{1
     # """
