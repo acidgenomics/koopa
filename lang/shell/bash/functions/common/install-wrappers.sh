@@ -2336,6 +2336,20 @@ koopa_uninstall_pipx() { # {{{3
         "$@"
 }
 
+# pixman ------------------------------------------------------------------ {{{2
+
+koopa_install_pixman() { # {{{3
+    koopa_install_app \
+        --name='pixman' \
+        "$@"
+}
+
+koopa_uninstall_pixman() { # {{{3
+    koopa_uninstall_app \
+        --name='pixman' \
+        "$@"
+}
+
 # pkg-config -------------------------------------------------------------- {{{2
 
 koopa_install_pkg_config() { # {{{3
