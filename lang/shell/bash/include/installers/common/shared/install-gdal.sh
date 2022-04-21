@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE This install recipe is currently problematic on Linux and macOS.
+# FIXME Error if existing GDAL install is detected.
 
 main() { # {{{1
     # """
