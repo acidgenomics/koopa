@@ -3,6 +3,9 @@
 # NOTE Failing capabilities: jpeg, png, tiff, libxml, cairo
 # NOTE libxml is returning FALSE on Ubuntu.
 
+# FIXME Need to rework this:
+# ld: warning: directory not found for option '-L-L/opt/koopa/app/tcl-tk/8.6.12/lib'
+
 main() { # {{{1
     # """
     # Install R.
@@ -113,7 +116,7 @@ main() { # {{{1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
-        [opt_prefix]="$(koopa_opt_prefix)"
+        # > [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -159,8 +162,8 @@ main() { # {{{1
         "--with-tcltk=$( \
             "${app[pkg_config]}" --libs 'tcl' 'tk' \
         )"
-        "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
-        "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
+        # > "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
+        # > "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
         '--without-cairo'
         '--without-x'
     )
