@@ -24,8 +24,8 @@ main() { # {{{1
     if koopa_is_linux
     then
         export CFLAGS='-fPIC'
-        export SHLIB_LIBS='-lncurses'
-        # > export SHLIB_LIBS="${dict[opt_prefix]}/ncurses/lib/libncurses.so"
+        # > export SHLIB_LIBS='-lncurses'
+        export SHLIB_LIBS="${dict[opt_prefix]}/ncurses/lib/libncurses.so"
     fi
     koopa_install_gnu_app \
         --activate-opt='ncurses' \
