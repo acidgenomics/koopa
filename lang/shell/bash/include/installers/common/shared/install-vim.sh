@@ -58,7 +58,7 @@ archive/${dict[file]}"
             '--without-x'
         )
     fi
-    koopa_add_to_ldflags_start \
+    koopa_add_to_ldflags \
         --allow-missing \
         "${dict[python_rpath]}" \
         "${dict[vim_rpath]}"
