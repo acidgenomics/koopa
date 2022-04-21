@@ -1827,21 +1827,8 @@ koopa_uninstall_meson() { # {{{3
 # ncurses ----------------------------------------------------------------- {{{2
 
 koopa_install_ncurses() { # {{{3
-    # """
-    # @seealso
-    # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
-    #     repos/core-x86_64/PKGBUILD
-    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/ncurses.rb
-    koopa_install_gnu_app \
+    koopa_install_app \
         --name='ncurses' \
-        -D '--enable-pc-files' \
-        -D '--enable-widec' \
-        -D '--with-cxx-binding' \
-        -D '--with-cxx-shared' \
-        -D '--with-manpage-format=normal' \
-        -D '--with-shared' \
-        -D '--with-versioned-syms' \
-        -D '--without-ada' \
         "$@"
 }
 
