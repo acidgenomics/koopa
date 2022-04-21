@@ -1826,9 +1826,20 @@ koopa_uninstall_meson() { # {{{3
 
 # ncurses ----------------------------------------------------------------- {{{2
 
+# FIXME This isn't creating libncurses.so file...
+# FIXME Check for libncurses.so file...
+
 koopa_install_ncurses() { # {{{3
     koopa_install_gnu_app \
         --name='ncurses' \
+        -D '--enable-pc-files' \
+        -D '--enable-sigwinch' \
+        -D '--enable-symlinks' \
+        -D '--enable-widec' \
+        -D '--with-cxx-shared' \
+        -D '--with-gpm=no' \
+        -D '--with-shared' \
+        -D '--without-ada' \
         "$@"
 }
 
@@ -2569,13 +2580,15 @@ koopa_uninstall_rbenv() { # {{{3
 
 # readline ---------------------------------------------------------------- {{{2
 
+# FIXME ncurses is missing so file...need to rethink...
+
 koopa_install_readline() { # {{{3
     # """
     # Install readline.
     # @note Updated 2022-04-21.
     #
     # Check linkage on Linux with:
-    # ldd -r /opt/koopa/opt/readline/lib/libreadline.so.6.2
+    # ldd -r /opt/koopa/opt/readline/lib/libreadline.so
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -2584,8 +2597,13 @@ koopa_install_readline() { # {{{3
     # - https://github.com/archlinux/svntogit-packages/blob/master/readline/
     #     repos/core-x86_64/PKGBUILD
     # """
-    export CFLAGS='-fPIC'
-    export SHLIB_LIBS='-lncurses'
+    # FIXME This isn't working, need to rethink...
+    if koopa_is_linux
+    then
+        export CFLAGS='-fPIC'
+        export SHLIB_LIBS='-lncurses'
+        export SHLIB_LIBS='/opt/kopoa/opt/ncurses/lib/libncurses.so'
+    fi
     koopa_install_gnu_app \
         --activate-opt='ncurses' \
         --name='readline' \
@@ -2593,6 +2611,10 @@ koopa_install_readline() { # {{{3
         -D '--enable-static' \
         -D '--with-curses' \
         "$@"
+    if koopa_is_linux
+    then
+        ldd -r '/opt/koopa/opt/readline/lib/libreadline.so'
+    fi
 }
 
 koopa_uninstall_readline() { # {{{3
