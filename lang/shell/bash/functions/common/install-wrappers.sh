@@ -1701,6 +1701,20 @@ koopa_uninstall_libuv() { # {{{3
         "$@"
 }
 
+# libxdmcp ---------------------------------------------------------------- {{{2
+
+koopa_install_libxdmcp() { # {{{3
+    koopa_install_app \
+        --name='libxdmcp' \
+        "$@"
+}
+
+koopa_uninstall_libxdmcp() { # {{{3
+    koopa_uninstall_app \
+        --name='libxdmcp' \
+        "$@"
+}
+
 # libxml2 ----------------------------------------------------------------- {{{2
 
 koopa_install_libxml2() { # {{{3
@@ -3169,6 +3183,20 @@ koopa_uninstall_which() { # {{{3
     koopa_uninstall_app \
         --name='which' \
         --unlink-in-bin='which' \
+        "$@"
+}
+
+# xorgproto --------------------------------------------------------------- {{{2
+
+koopa_install_xorgproto() { # {{{3
+    koopa_install_app \
+        --name='xorgproto' \
+        "$@"
+}
+
+koopa_uninstall_xorgproto() { # {{{3
+    koopa_uninstall_app \
+        --name='xorgproto' \
         "$@"
 }
 

@@ -56,9 +56,6 @@ xtrans="1.4.0"
 # FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libx11.rb
 # FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/cairo.rb
 
-
-
-
 # https://repo.continuum.io/archive/
 anaconda="2021.11"
 
