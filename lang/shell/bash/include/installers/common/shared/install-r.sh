@@ -133,9 +133,9 @@ main() { # {{{1
         "--with-libtiff=${dict[opt_prefix]}/libtiff"
         "--with-pcre2=${dict[opt_prefix]}/pcre2"
         "--with-readline=${dict[opt_prefix]}/readline"
-        "--with-tcltk=${dict[opt_prefix]}/tcltk"
-        "--with-tcl-config=${dict[opt_prefix]}/tcltk/lib/tclConfig.sh"
-        "--with-tk-config=${dict[opt_prefix]}/tcltk/lib/tkConfig.sh"
+        "--with-tcltk=${dict[opt_prefix]}/tcl-tk"
+        "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
+        "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
         '--without-cairo'
         '--without-x'
     )
