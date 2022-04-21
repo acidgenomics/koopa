@@ -123,7 +123,7 @@ __koopa_complete() { # {{{1
                         'fish'
                         'flake8'
                         'fltk'
-                        'fontconfig' # FIXME (cairo)
+                        'fontconfig'
                         'freetype'
                         'fribidi'
                         'fzf'
@@ -134,7 +134,7 @@ __koopa_complete() { # {{{1
                         'gettext'
                         'git'
                         'glances'
-                        'glib' # FIXME (cairo)
+                        'glib'
                         'gmp'
                         'gnupg'
                         'go'
