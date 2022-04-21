@@ -25,7 +25,6 @@ main() { # {{{1
         [gnu_mirror]="$(koopa_gnu_mirror_url)"
         [jobs]="$(koopa_cpu_count)"
         [name]='readline'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -42,7 +41,8 @@ main() { # {{{1
     )
     export CFLAGS='-fPIC'
     ./configure "${conf_args[@]}"
-    # Alternatively:
+    # Alternatively (Linux only):
+    # > dict[opt_prefix]="$(koopa_opt_prefix)"
     # > SHLIB_LIBS="${dict[opt_prefix]}/ncurses/lib/libncurses.so"
     "${app[make]}" \
         --jobs="${dict[jobs]}" \
