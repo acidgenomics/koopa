@@ -38,7 +38,7 @@ release-${dict[kebab_version]}/${dict[file]}"
         '--enable-static'
         '--with-library-bits=64'
     )
-    koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
+    koopa_add_to_ldflags --allow-missing "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

@@ -5,7 +5,7 @@
 main() { # {{{1
     # """
     # Install GDAL.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-21.
     #
     # Use 'configure --help' for build options.
     #
@@ -140,7 +140,7 @@ v${dict[version]}/${dict[file]}"
     then
         conf_args+=('--with-opencl')
     fi
-    koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
+    koopa_add_to_ldflags --allow-missing "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.
     "${app[make]}" --jobs="${dict[jobs]}"

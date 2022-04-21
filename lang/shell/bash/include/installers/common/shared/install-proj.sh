@@ -68,7 +68,6 @@ libcurl.${dict[shared_ext]}"
         "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib/\
 libtiff.${dict[shared_ext]}"
     )
-    # > koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     "${app[cmake]}" "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
+# NOTE Consider using pkg-config to manage CPPFLAGS and LDFLAGS:
+# > pkg-config --libs PKG_CONFIG_NAME...
+# > pkg-config --cflags PKG_CONFIG_NAME...
+
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-21.
     #
     # @examples
-    # > koopa_activate_opt_prefix 'geos' 'proj' 'gdal'
+    # > koopa_activate_opt_prefix 'cmake' 'make'
     # """
     local dict name
     koopa_assert_has_args "$#"
@@ -28,13 +32,13 @@ koopa_activate_opt_prefix() { # {{{1
         # Set 'PATH' variable.
         koopa_activate_prefix "${prefix}"
         # Set 'CPPFLAGS' variable.
-        koopa_add_to_cppflags_start "${prefix}/include"
+        koopa_add_to_cppflags "${prefix}/include"
         # Set 'LDFLAGS' variable.
-        koopa_add_to_ldflags_start \
+        koopa_add_to_ldflags \
             "${prefix}/lib" \
             "${prefix}/lib64"
         # Set 'PKG_CONFIG_PATH' variable.
-        koopa_add_to_pkg_config_path_start \
+        koopa_add_to_pkg_config_path \
             "${prefix}/lib/pkgconfig" \
             "${prefix}/lib64/pkgconfig" \
             "${prefix}/share/pkgconfig"
@@ -42,10 +46,10 @@ koopa_activate_opt_prefix() { # {{{1
     return 0
 }
 
-koopa_add_to_cppflags_start() { # {{{1
+koopa_add_to_cppflags() { # {{{1
     # """
     # Append a 'CPPFLAGS' string.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-21.
     # """
     local dir
     koopa_assert_has_args "$#"
@@ -66,13 +70,15 @@ koopa_add_to_cppflags_start() { # {{{1
     return 0
 }
 
-koopa_add_to_ldflags_start() { # {{{1
+# NOTE Rethink the '--allow-missing' flag as separate 'rpath' function?
+
+koopa_add_to_ldflags() { # {{{1
     # """
     # Append an 'LDFLAGS' string.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-21.
     #
-    # Use '-rpath,${dir}' here not, '-rpath=${dir}'. This works on both
-    # BSD/Unix (macOS) and Linux systems.
+    # Use '-rpath,${dir}' here not, '-rpath=${dir}'. This approach works on
+    # both BSD/Unix (macOS) and Linux systems.
     # """
     local dict dir pos
     koopa_assert_has_args "$#"
@@ -122,10 +128,10 @@ koopa_add_to_ldflags_start() { # {{{1
     return 0
 }
 
-koopa_add_to_pkg_config_path_start() { # {{{1
+koopa_add_to_pkg_config_path() { # {{{1
     # """
     # Force add to start of 'PKG_CONFIG_PATH'.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-21.
     # """
     local dir
     koopa_assert_has_args "$#"
@@ -141,11 +147,11 @@ koopa_add_to_pkg_config_path_start() { # {{{1
     return 0
 }
 
-koopa_add_to_pkg_config_path_start_2() { # {{{1
+koopa_add_to_pkg_config_path_2() { # {{{1
     # """
     # Force add to start of 'PKG_CONFIG_PATH' using 'pc_path' variable
     # lookup from 'pkg-config' program.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-21.
     # """
     local app str
     koopa_assert_has_args "$#"
