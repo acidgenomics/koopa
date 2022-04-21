@@ -88,12 +88,14 @@ main() { # {{{1
         'libffi' \
         'libjpeg-turbo' \
         'libpng' \
+        'libtiff' \
         'openblas' \
         'pcre2' \
         'pkg-config' \
         'tcl-tk' \
         'texinfo' \
-        'xz'
+        'xz' \
+        'zlib'
     if koopa_is_linux
     then
         koopa_activate_opt_prefix 'openjdk'
@@ -106,6 +108,7 @@ main() { # {{{1
     fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
+        [pkg_config]="$(koopa_locate_pkg_config)"
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
@@ -125,20 +128,59 @@ main() { # {{{1
         '--enable-memory-profiling'
         '--enable-shared'
         '--enable-static'
-        # Refer to pkgconfig '*.pc' files for correct lib flags.
-        "--with-ICU=${dict[opt_prefix]}/icu4c"
-        "--with-blas=-L${dict[opt_prefix]}/openblas/lib -lopenblas"
-        "--with-jpeglib=-L${dict[opt_prefix]}/libjpeg-turbo -ljpeg"
-        "--with-lapack=-L${dict[opt_prefix]}/lapack -llapack"
-        "--with-libpng=-L${dict[opt_prefix]}/libpng -lpng16"
-        "--with-libtiff=-L${dict[opt_prefix]}/libtiff -ltiff"
-        "--with-pcre2=-L${dict[opt_prefix]}/pcre2 -lpcre2-8 -lpcre2-16 -lpcre2-32 -lpcre2-posix"
-        # > "--with-tcltk=-L${dict[opt_prefix]}/tcl-tk -ltcl8.6 -ltclstub8.6 -ltk8.6 -ltkstub8.6"
+        "--with-ICU=$( \
+            "${app[pkg_config]}" --libs \
+                'icu-i18n' \
+                'icu-io' \
+                'icu-uc' \
+        )"
+        "--with-blas=$( \
+            "${app[pkg_config]}" --libs 'openblas' \
+        )"
+        "--with-jpeglib=$( \
+            "${app[pkg_config]}" --libs 'libjpeg' \
+        )"
+        "--with-lapack=$( \
+            "${app[pkg_config]}" --libs 'lapack' \
+        )"
+        "--with-libpng=$( \
+            "${app[pkg_config]}" --libs 'libpng' \
+        )"
+        "--with-libtiff=$( \
+            "${app[pkg_config]}" --libs 'libtiff-4' \
+        )"
+        "--with-pcre2=$( \
+            "${app[pkg_config]}" --libs \
+                'libpcre2-8' \
+                'libpcre2-16' \
+                'libpcre2-32' \
+                'libpcre2-posix' \
+        )"
+        "--with-tcltk=$( \
+            "${app[pkg_config]}" --libs 'tcl' 'tk' \
+        )"
         "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
         "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
         '--without-cairo'
         '--without-x'
     )
+    if [[ "${dict[name]}" == 'r-devel' ]]
+    then
+        conf_args+=('--without-recommended-packages')
+    else
+        conf_args+=('--with-recommended-packages')
+    fi
+    if koopa_is_macos
+    then
+        conf_args+=(
+            "--with-readline=$( \
+                "${app[pkg_config]}" --libs 'readline' \
+            )"
+            '--without-aqua'
+        )
+        export CFLAGS='-Wno-error=implicit-function-declaration'
+    fi
+    koopa_dl 'configure args' "${conf_args[*]}"
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
         app[svn]="$(koopa_locate_svn)"
@@ -160,7 +202,6 @@ main() { # {{{1
         then
             koopa_print "Revision: ${dict[version]}" > 'SVNINFO'
         fi
-        conf_args+=('--without-recommended-packages')
     else
         dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
         dict[file]="R-${dict[version]}.tar.gz"
@@ -169,15 +210,6 @@ R-${dict[maj_ver]}/${dict[file]}"
         koopa_download "${dict[url]}" "${dict[file]}"
         koopa_extract "${dict[file]}"
         koopa_cd "R-${dict[version]}"
-        conf_args+=('--with-recommended-packages')
-    fi
-    if koopa_is_macos
-    then
-        conf_args+=(
-            "--with-readline=${dict[opt_prefix]}/readline"
-            '--without-aqua'
-        )
-        export CFLAGS='-Wno-error=implicit-function-declaration'
     fi
     export TZ='America/New_York'
     unset -v R_HOME
