@@ -5,7 +5,6 @@
 # Recipes that we need to install:
 # - gzip
 # - lapack
-# - ldns (for openssh)
 # - libffi
 # - libpng
 # - openblas

@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install OpenSSH.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-20.
     #
     # @section Privilege separation:
     #
@@ -20,7 +20,6 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'ldns'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -39,10 +38,10 @@ portable/${dict[file]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--with-kerberos5'
-        '--with-ldns'
-        '--with-libedit'
         '--with-pam'
         '--with-security-key-builtin'
+        '--without-ldns'
+        '--without-libedit'
     )
     if koopa_is_linux
     then
