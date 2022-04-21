@@ -5,6 +5,8 @@
 # FIXME This warning is popping up on Linux:
 # cc1plus: warning: /opt/koopa/app/gdal/3.4.2/include: No such file or directory [-Wmissing-include-dirs]
 
+# FIXME Should we include openssl here?
+
 main() { # {{{1
     # """
     # Install GDAL.
@@ -41,9 +43,11 @@ main() { # {{{1
         'hdf5' \
         'jpeg' \
         'libgeotiff' \
+        'libpng' \
         'libtiff' \
         'libtool' \
         'libxml2' \
+        'openssl' \
         'pcre2' \
         'pkg-config' \
         'proj' \
@@ -91,6 +95,7 @@ v${dict[version]}/${dict[file]}"
         "--with-jpeg=${dict[opt_prefix]}/jpeg"
         "--with-libtiff=${dict[opt_prefix]}/libtiff"
         "--with-pcre2=${dict[opt_prefix]}/pcre2"
+        "--with-png=${dict[opt_prefix]}/libpng"
         "--with-proj=${dict[opt_prefix]}/proj"
         "--with-sqlite3=${dict[opt_prefix]}/sqlite"
         "--with-zstd=${dict[opt_prefix]}/zstd"
@@ -107,7 +112,6 @@ v${dict[version]}/${dict[file]}"
         '--with-odbc=no'
         '--with-openjpeg=no'
         '--with-pg=no'
-        '--with-png=no'
         '--with-poppler=no'
         '--with-spatialite=no'
         '--with-webp=no'
