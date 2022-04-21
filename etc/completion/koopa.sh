@@ -263,6 +263,7 @@ __koopa_complete() { # {{{1
                         'vim'
                         'wget'
                         'which'
+                        'xcb-proto'
                         'xorgproto'
                         'xsv'
                         'xz'
