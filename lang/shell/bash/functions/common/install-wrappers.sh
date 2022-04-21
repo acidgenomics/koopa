@@ -1617,6 +1617,20 @@ koopa_uninstall_libpng() { # {{{3
         "$@"
 }
 
+# libpthread-stubs -------------------------------------------------------- {{{2
+
+koopa_install_libpthread_stubs() { # {{{3
+    koopa_install_app \
+        --name='libpthread-stubs' \
+        "$@"
+}
+
+koopa_uninstall_libpthread_stubs() { # {{{3
+    koopa_uninstall_app \
+        --name='libpthread-stubs' \
+        "$@"
+}
+
 # libssh2 ----------------------------------------------------------------- {{{2
 
 koopa_install_libssh2() { # {{{3
@@ -1712,6 +1726,20 @@ koopa_install_libxau() { # {{{3
 koopa_uninstall_libxau() { # {{{3
     koopa_uninstall_app \
         --name='libxau' \
+        "$@"
+}
+
+# libxcb ------------------------------------------------------------------ {{{2
+
+koopa_install_libxcb() { # {{{3
+    koopa_install_app \
+        --name='libxcb' \
+        "$@"
+}
+
+koopa_uninstall_libxcb() { # {{{3
+    koopa_uninstall_app \
+        --name='libxcb' \
         "$@"
 }
 

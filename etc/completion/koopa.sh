@@ -166,6 +166,7 @@ __koopa_complete() { # {{{1
                         'libjpeg-turbo'
                         'libpipeline'
                         'libpng'
+                        'libpthread-stubs'
                         'libssh2'
                         'libtasn1'
                         'libtiff'
@@ -174,7 +175,7 @@ __koopa_complete() { # {{{1
                         'libuv'
                         'libx11' # FIXME (cairo)
                         'libxau'
-                        'libxcb' # FIXME (cairo)
+                        'libxcb'
                         'libxdmcp'
                         'libxext' # FIXME (cairo)
                         'libxml2'
