@@ -42,12 +42,10 @@ libxcb="1.14"
 libxdmcp="1.1.3"
 libxext="1.3.4"
 libxrandr="1.5.2"
+xcb-proto="1.14.1"
 xorgproto="2021.5"
 xtrans="1.4.0"
 
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/xorgproto.rb
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxdmcp.rb
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/xcb-proto.rb
 # FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxau.rb
 # FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
 # FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxext.rb
