@@ -18,7 +18,7 @@ koopa_gsub() { # {{{1
 koopa_sub() { # {{{1
     # """
     # Single substitution.
-    # @note Updated 2022-04-15.
+    # @note Updated 2022-04-21.
     #
     # @usage koopa_sub --pattern=PATTERN --replacement=REPLACEMENT STRING...
     #
@@ -85,10 +85,12 @@ koopa_sub() { # {{{1
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
     [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
     [[ "${dict[regex]}" -eq 0 ]] && dict[pattern]="\\Q${dict[pattern]}\\E"
     [[ "${dict[global]}" -eq 1 ]] && dict[perl_tail]='g'
     dict[expr]="s/${dict[pattern]}/${dict[replacement]}/${dict[perl_tail]}"
-    koopa_print "${pos[@]}" \
+    koopa_print "$@" \
         | "${app[perl]}" -p -e "${dict[expr]}"
     return 0
 }
