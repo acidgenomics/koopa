@@ -115,8 +115,8 @@ main() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     conf_args=(
+        # > '--enable-BLAS-shlib'
         "--prefix=${dict[prefix]}"
-        '--enable-BLAS-shlib'
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-byte-compiled-packages'
