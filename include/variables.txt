@@ -35,18 +35,26 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 # Program versions {{{1
 # ==============================================================================
 
-# These are new dependencies required to build Cairo.
-cairo="FIXME"
-fontconfig="2.14.0"
-glib="2.72.0"
-libx11="FIXME"
-libxcb="FIXME"
-libxext="FIXME"
-libxrender="FIXME"
-lzo="2.10"
-pixman="0.40.0"
+cairo="1.16.0"
+libx11="1.7.2"
+libxau="1.0.9"
+libxcb="1.14"
+libxdmcp="1.1.3"
+libxext="1.3.4"
+libxrandr="1.5.2"
+xorgproto="2021.5"
+xtrans="1.4.0"
 
-
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/xorgproto.rb
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxdmcp.rb
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/xcb-proto.rb
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxau.rb
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxext.rb
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxrandr.rb
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/xtrans.rb
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libx11.rb
+# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/cairo.rb
 
 
 
@@ -190,6 +198,8 @@ fltk="1.3.8"
 # https://github.com/fish-shell/fish-shell/releases
 fish="3.4.1"
 
+fontconfig="2.14.0"
+
 # https://www.freetype.org/
 freetype="2.12.0"
 
@@ -219,6 +229,8 @@ gettext="0.21"
 git="2.35.1"
 
 glances="3.2.5" # python
+
+glib="2.72.0"
 
 # https://gmplib.org/
 gmp="6.2.1"
@@ -358,6 +370,8 @@ luarocks="3.8.0"
 # https://tukaani.org/lzma/
 lzma="4.32.7"
 
+lzo="2.10"
+
 # https://ftp.gnu.org/gnu/make/
 make="4.3"
 
@@ -447,6 +461,8 @@ perl-file-rename="1.30"
 php="8.1.2"
 
 pipx="1.0.0" # python
+
+pixman="0.40.0"
 
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
