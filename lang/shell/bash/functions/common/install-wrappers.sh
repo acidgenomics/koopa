@@ -2436,9 +2436,10 @@ koopa_install_r() { # {{{3
         '--name-fancy=R'
         '--name=r'
     )
-    if ! koopa_is_macos
+    if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
     then
-        # Assuming usage of R CRAN binary Homebrew cask.
+        # Assuming usage of R CRAN binary Homebrew cask on macOS.
+        # Also don't link in the case of Debian R CRAN binary.
         install_args+=(
             '--link-in-bin=bin/R'
             '--link-in-bin=bin/Rscript'
