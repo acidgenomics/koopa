@@ -14,7 +14,7 @@
 main() { # {{{1
     # """
     # Install R.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-04-21.
     #
     # @section gfortran configuration on macOS:
     #
@@ -100,6 +100,7 @@ main() { # {{{1
         'openblas' \
         'pcre2' \
         'pkg-config' \
+        'readline' \
         'tcl-tk' \
         'texinfo' \
         'xz' \
@@ -110,7 +111,6 @@ main() { # {{{1
     elif koopa_is_macos
     then
         # We're using Adoptium Temurin LTS on macOS.
-        koopa_activate_opt_prefix 'readline'
         koopa_activate_prefix '/usr/local/gfortran'
         koopa_add_to_path_start '/Library/TeX/texbin'
     fi
@@ -164,6 +164,9 @@ main() { # {{{1
                 'libpcre2-32' \
                 'libpcre2-posix' \
         )"
+        "--with-readline=$( \
+            "${app[pkg_config]}" --libs 'readline' \
+        )"
         # > "--with-tcltk=$( \
         # >     "${app[pkg_config]}" --libs 'tcl' 'tk' \
         # > )"
@@ -180,12 +183,7 @@ main() { # {{{1
     fi
     if koopa_is_macos
     then
-        conf_args+=(
-            "--with-readline=$( \
-                "${app[pkg_config]}" --libs 'readline' \
-            )"
-            '--without-aqua'
-        )
+        conf_args+=('--without-aqua')
         export CFLAGS='-Wno-error=implicit-function-declaration'
     fi
     koopa_dl 'configure args' "${conf_args[*]}"
