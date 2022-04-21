@@ -173,6 +173,7 @@ __koopa_complete() { # {{{1
                         'libunistring'
                         'libuv'
                         'libx11' # FIXME (cairo)
+                        'libxau'
                         'libxcb' # FIXME (cairo)
                         'libxdmcp'
                         'libxext' # FIXME (cairo)

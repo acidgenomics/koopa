@@ -46,14 +46,6 @@ xcb-proto="1.14.1"
 xorgproto="2021.5"
 xtrans="1.4.0"
 
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxau.rb
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxext.rb
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxrandr.rb
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/xtrans.rb
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/libx11.rb
-# FIXME https://github.com/Homebrew/homebrew-core/blob/master/Formula/cairo.rb
-
 # https://repo.continuum.io/archive/
 anaconda="2021.11"
 
