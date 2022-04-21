@@ -1828,18 +1828,18 @@ koopa_uninstall_meson() { # {{{3
 
 # FIXME This isn't creating libncurses.so file...
 # FIXME Check for libncurses.so file...
+#-D '--enable-pc-files' \
+#-D '--enable-sigwinch' \
+#-D '--enable-symlinks' \
+#-D '--enable-widec' \
+#-D '--with-gpm=no' \
+#-D '--without-ada' \
 
 koopa_install_ncurses() { # {{{3
     koopa_install_gnu_app \
         --name='ncurses' \
-        -D '--enable-pc-files' \
-        -D '--enable-sigwinch' \
-        -D '--enable-symlinks' \
-        -D '--enable-widec' \
         -D '--with-cxx-shared' \
-        -D '--with-gpm=no' \
         -D '--with-shared' \
-        -D '--without-ada' \
         "$@"
 }
 
