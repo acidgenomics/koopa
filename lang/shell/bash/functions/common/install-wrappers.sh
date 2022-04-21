@@ -2429,11 +2429,21 @@ koopa_uninstall_python() { # {{{3
 # r ----------------------------------------------------------------------- {{{2
 
 koopa_install_r() { # {{{3
+    local install_args
+    install_args=(
+        '--name-fancy=R'
+        '--name=r'
+    )
+    if ! koopa_is_macos
+    then
+        # Assuming usage of R CRAN binary Homebrew cask.
+        install_args+=(
+            '--link-in-bin=bin/R'
+            '--link-in-bin=bin/Rscript'
+        )
+    fi
     koopa_install_app \
-        --link-in-bin='bin/R' \
-        --link-in-bin='bin/Rscript' \
-        --name-fancy='R' \
-        --name='r' \
+        "${install_args[@]}" \
         "$@"
 }
 
@@ -2449,6 +2459,9 @@ koopa_uninstall_r() { # {{{3
 # r-devel ----------------------------------------------------------------- {{{2
 
 koopa_install_r_devel() { # {{{3
+    # """
+    # The 'R-devel' link is handled inside the installer script.
+    # """
     koopa_install_app \
         --installer='r' \
         --name-fancy='R-devel' \
@@ -2460,6 +2473,7 @@ koopa_uninstall_r_devel() { # {{{3
     koopa_uninstall_app \
         --name-fancy='R-devel' \
         --name='r-devel' \
+        --unlink-in-bin='R-devel' \
         "$@"
 }
 
