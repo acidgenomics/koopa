@@ -126,13 +126,13 @@ main() { # {{{1
         '--enable-shared'
         '--enable-static'
         "--with-ICU=${dict[opt_prefix]}/icu4c"
-        "--with-blas=-L${dict[opt_prefix]}/openblas/lib -lopenblas"
-        "--with-jpeglib=${dict[opt_prefix]}/libjpeg-turbo"
-        "--with-lapack=${dict[opt_prefix]}/lapack"
-        "--with-libpng=${dict[opt_prefix]}/libpng"
-        "--with-libtiff=${dict[opt_prefix]}/libtiff"
-        "--with-pcre2=${dict[opt_prefix]}/pcre2"
-        "--with-tcltk=${dict[opt_prefix]}/tcl-tk"
+        "--with-blas=-L${dict[opt_prefix]}/openblas/lib" # -lopenblas
+        "--with-jpeglib=-L${dict[opt_prefix]}/libjpeg-turbo"
+        "--with-lapack=-L${dict[opt_prefix]}/lapack"
+        "--with-libpng=-L${dict[opt_prefix]}/libpng"
+        "--with-libtiff=-L${dict[opt_prefix]}/libtiff"
+        "--with-pcre2=-L${dict[opt_prefix]}/pcre2"
+        "--with-tcltk=-L${dict[opt_prefix]}/tcl-tk"
         "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
         "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
         '--without-cairo'
