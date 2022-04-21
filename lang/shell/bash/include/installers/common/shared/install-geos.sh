@@ -51,7 +51,6 @@ archive/${dict[file]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
         '-DGEOS_ENABLE_TESTS=OFF'
     )
-    # > koopa_add_to_ldflags_start --allow-missing "${dict[prefix]}/lib"
     "${app[cmake]}" "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
