@@ -126,7 +126,7 @@ main() { # {{{1
         '--enable-shared'
         '--enable-static'
         "--with-ICU=${dict[opt_prefix]}/icu4c"
-        "--with-blas=${dict[opt_prefix]}/openblas"
+        "--with-blas=-L${dict[opt_prefix]}/openblas/lib -lopenblas"
         "--with-jpeglib=${dict[opt_prefix]}/libjpeg-turbo"
         "--with-lapack=${dict[opt_prefix]}/lapack"
         "--with-libpng=${dict[opt_prefix]}/libpng"
