@@ -509,7 +509,7 @@ r-gfortran="8.2"
 # https://developer.r-project.org/SVNtips.html
 # https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
 # This is the SVN revision number.
-r-devel="81975" # 2022-03-24; R 4.2
+r-devel="82232" # 2022-04-22; R 4.3
 
 ranger-fm="1.9.3" # python
 
