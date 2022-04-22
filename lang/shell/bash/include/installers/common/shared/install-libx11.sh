@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting a failure here:
-# /opt/koopa/opt/xtrans/include/X11/Xtrans/Xtranslcl.c:84:11: fatal error: 'sys/stropts.h' file not found
-# https://github.com/maxim-belkin/homebrew-xorg/issues/453
+# NOTE Consider adding support for 'xorg-macros'.
 
 main() { # {{{1
     # """

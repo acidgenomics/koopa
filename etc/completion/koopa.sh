@@ -104,7 +104,7 @@ __koopa_complete() { # {{{1
                         'bpytop'
                         'broot'
                         'bzip2'
-                        'cairo' # FIXME
+                        'cairo'
                         'chemacs'
                         'cmake'
                         'conda'
@@ -173,13 +173,14 @@ __koopa_complete() { # {{{1
                         'libtool'
                         'libunistring'
                         'libuv'
-                        'libx11' # FIXME (cairo)
+                        'libx11'
                         'libxau'
                         'libxcb'
                         'libxdmcp'
                         'libxext'
                         'libxml2'
-                        'libxrender' # FIXME (cairo)
+                        'libxrandr'
+                        'libxrender'
                         'libzip'
                         'lua'
                         'luarocks'
