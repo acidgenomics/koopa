@@ -372,7 +372,6 @@ koopa_configure_system() { # {{{1
     # - findutils
     # - autoconf
     # - automake
-
     # - openssl
 
     # - cmake (requires openssl)
@@ -380,16 +379,13 @@ koopa_configure_system() { # {{{1
     # - grep (requires pcre2)
 
     # - curl  # FIXME Tighten this up (see Homebrew recipe).
-    # Ensure we switch back to system shell before installing.
-    # - koopa install bash --push --reinstall
-    # - koopa install zsh --push --reinstall
+    # - bash
+    # - zsh
 
-    # Ubuntu is here:
-    # - koopa install gnutls --push --reinstall
-    # - koopa install python --push --reinstall
-    # - koopa install git --push --reinstall
-    # - koopa install rsync --push --reinstall
-    # - koopa install ncurses --push --reinstall
+    # - gnutls
+    # - python
+    # - git
+    # - rsync
 
     # - libevent
     # - tmux
