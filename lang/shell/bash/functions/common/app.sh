@@ -167,14 +167,21 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
+# FIXME Consider saving an invisible log file, such as '.koopa-install.log'
+# to the target prefix. Should we go back to wrapping the installer call with
+# tee here?
+
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
     # @note Updated 2022-04-22.
     # """
-    local bin_arr build_opt_arr clean_path_arr dict i opt_arr pos
+    local app bin_arr build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
+    declare -A app=(
+        [tee]="$(koopa_locate_tee)"
+    )
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         # When enabled, this will change permissions on the top level directory
@@ -359,6 +366,7 @@ koopa_install_app() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    dict[log_file]="${dict[prefix]}/.koopa-install.log"
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
     if [[ -z "${dict[version]}" ]]
     then
@@ -504,7 +512,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         # shellcheck disable=SC2030
         export INSTALL_VERSION="${dict[version]}"
         "${dict[installer_fun]}" "$@"
-    )
+    ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
     koopa_rm "${dict[tmp_dir]}"
     case "${dict[mode]}" in
         'shared')
