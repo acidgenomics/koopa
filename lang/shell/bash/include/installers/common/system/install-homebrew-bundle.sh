@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-22.
     #
     # Custom brewfile is supported using a positional argument.
     #
@@ -15,6 +15,7 @@ main() { # {{{1
     # """
     local app brewfile brewfiles dict install_args
     koopa_assert_has_no_args "$#"
+    koopa_link_in_bin "$(koopa_homebrew_prefix)/Homebrew/bin/brew"
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
