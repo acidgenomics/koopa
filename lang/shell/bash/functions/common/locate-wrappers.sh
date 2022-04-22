@@ -71,6 +71,7 @@ koopa_locate_brew() { # {{{1
     # Allowing passthrough of '--allow-missing' here.
     # """
     koopa_locate_app \
+        --allow-in-path \
         --app-name='brew' \
         "$@"
 }
@@ -356,8 +357,10 @@ koopa_locate_gpgconf() { # {{{1
 
 koopa_locate_grep() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='grep' \
-        --opt-name='grep'
+        --opt-name='grep' \
+        "$@"
 }
 
 koopa_locate_groups() { # {{{1
