@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This requires 'termcap.pc'.
-
 main() { # {{{
     # """
     # Install libxml2.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-22.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
@@ -18,7 +16,6 @@ main() { # {{{
     koopa_activate_opt_prefix \
         'icu4c' \
         'readline' \
-        'termcap' \
         'zlib'
     declare -A app=(
         [make]="$(koopa_locate_make)"
