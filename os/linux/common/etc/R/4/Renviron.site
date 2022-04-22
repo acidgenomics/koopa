@@ -97,6 +97,7 @@ PATH="${KOOPA_OPT_PREFIX}/subversion/bin:${PATH}"
 # ------------------------------------------------------------------------------
 
 PKG_CONFIG_PATH=""
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/fontconfig/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/freetype/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/fribidi/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/harfbuzz/lib/pkgconfig:${PKG_CONFIG_PATH}"
