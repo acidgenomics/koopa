@@ -41,10 +41,15 @@ main() { # {{{1
         '--with-curses'
     )
     export CFLAGS='-fPIC'
+    # There is no termcap.pc in the base system, so we have to comment out the
+    # corresponding 'Requires.private' line. Otherwise, pkg-config will consider
+    # the readline module unusable.
+    koopa_find_and_replace_in_file \
+        --regex \
+        --pattern='^(Requires.private: .*)$' \
+        --replacement='# \1' \
+        'readline.pc.in'
     ./configure "${conf_args[@]}"
-    # Alternatively (Linux only):
-    # > dict[opt_prefix]="$(koopa_opt_prefix)"
-    # > SHLIB_LIBS="${dict[opt_prefix]}/ncurses/lib/libncurses.so"
     "${app[make]}" \
         --jobs="${dict[jobs]}" \
         SHLIB_LIBS='-lncurses'

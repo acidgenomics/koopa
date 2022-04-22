@@ -418,13 +418,10 @@ koopa_find() { # {{{1
     return 0
 }
 
-# FIXME Allow for single file entry mode.
-# When this is the case, just show the user in the alert message which file.
-
 koopa_find_and_replace_in_file() { # {{{1
     # """
     # Find and replace inside files.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-04-22.
     #
     # Parameterized, supporting multiple files.
     #
@@ -510,14 +507,6 @@ koopa_find_and_replace_in_file() { # {{{1
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    koopa_alert "$(koopa_ngettext \
-        --prefix="Replacing '${dict[pattern]}' with \
-'${dict[replacement]}' in " \
-        --num="${#pos[@]}" \
-        --msg1='file' \
-        --msg2='files' \
-        --suffix='.' \
-    )"
     if [[ "${dict[regex]}" -eq 1 ]]
     then
         dict[expr]="s/${dict[pattern]}/${dict[replacement]}/g"
@@ -528,7 +517,9 @@ koopa_find_and_replace_in_file() { # {{{1
             s/\$pattern/\$replacement/g; \
         "
     fi
-    "${app[perl]}" -0 -i -p -e "${dict[expr]}" "$@"
+    # Consider using '-0' here for multi-line matching. This makes regular
+    # expression matching with line endings more difficult, so disabled.
+    "${app[perl]}" -i -p -e "${dict[expr]}" "$@"
     return 0
 }
 
