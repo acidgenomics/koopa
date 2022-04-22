@@ -370,13 +370,7 @@ koopa_uninstall_conda() { # {{{3
 
 # coreutils --------------------------------------------------------------- {{{2
 
-# FIXME When installing, we now hit this error:
-# /opt/koopa/lang/shell/bash/functions/common/fs/core.sh:448: /opt/koopa/opt/coreutils/bin/ln: No such file or directory
-
 koopa_install_coreutils() { # {{{3
-    # """
-    # Consider adding '--activate-opt=attr' here.
-    # """
     local install_args
     install_args=(
         '--activate-build-opt=gperf'
@@ -1045,9 +1039,16 @@ koopa_install_gettext() { # {{{3
     # """
     # https://github.com/Homebrew/homebrew-core/blob/master/Formula/gettext.rb
     # """
-    koopa_install_gnu_app \
-        --name='gettext' \
-        "$@"
+    local install_args
+    install_args=('--name=gettext')
+    if koopa_is_linux
+    then
+        install_args+=(
+            '--activate-opt=ncurses'
+            '--activate-opt=libxml2'
+        )
+    fi
+    koopa_install_gnu_app "${install_args[@]}" "$@"
 }
 
 koopa_uninstall_gettext() { # {{{3

@@ -366,17 +366,20 @@ koopa_configure_system() { # {{{1
     # - readline
     # - ncurses
     # - libxml2
-    # - gettext (requires libxml2, ncurses on Linux), move down...
-
-    # - coreutils (fixme require gmp?)
+    # - gettext (requires libxml2, ncurses on Linux)
+    # - gmp
+    # - coreutils
 
     # - findutils
     # - autoconf
     # - automake
     # - openssl
-    # - cmake
-    # - grep
-    # - curl
+
+    # - cmake (requires openssl)
+    # - pcre2 (requires bzip2, zlib)
+    # - grep (requires pcre2)
+
+    # - curl  # FIXME Tighten this up (see Homebrew recipe).
     # Ensure we switch back to system shell before installing.
     # - koopa install bash --push --reinstall
     # - koopa install zsh --push --reinstall
@@ -408,7 +411,6 @@ koopa_configure_system() { # {{{1
     # - rust-packages
     # - fltk
     # - gnupg
-    # - gmp
     # - go
     # - groff
     # - haskell-stack
