@@ -1218,7 +1218,7 @@ koopa_uninstall_gperf() { # {{{3
 
 koopa_install_grep() { # {{{3
     koopa_install_gnu_app \
-        --activate-opt='pcre2' \
+        --activate-opt='pcre' \
         --link-in-bin='bin/egrep' \
         --link-in-bin='bin/fgrep' \
         --link-in-bin='bin/grep' \
