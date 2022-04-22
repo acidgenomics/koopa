@@ -489,6 +489,17 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         then
             koopa_linux_update_ldconfig
         fi
+        # shellcheck disable=SC2030
+        export INSTALL_LINK_IN_BIN="${dict[link_in_bin]}"
+        # shellcheck disable=SC2030
+        export INSTALL_LINK_IN_MAKE="${dict[link_in_make]}"
+        # shellcheck disable=SC2030
+        export INSTALL_NAME="${dict[name]}"
+        # shellcheck disable=SC2030
+        export INSTALL_PREFIX="${dict[prefix]}"
+        # shellcheck disable=SC2030
+        export INSTALL_VERSION="${dict[version]}"
+        "${dict[installer_fun]}" "$@"
         [[ -n "${CFLAGS:-}" ]] && \
             koopa_dl 'CFLAGS' "${CFLAGS:?}"
         [[ -n "${CPPFLAGS:-}" ]] && \
@@ -501,17 +512,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_dl 'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:?}"
         [[ "$#" -gt 0 ]] && \
             koopa_dl 'configure args' "$*"
-        # shellcheck disable=SC2030
-        export INSTALL_LINK_IN_BIN="${dict[link_in_bin]}"
-        # shellcheck disable=SC2030
-        export INSTALL_LINK_IN_MAKE="${dict[link_in_make]}"
-        # shellcheck disable=SC2030
-        export INSTALL_NAME="${dict[name]}"
-        # shellcheck disable=SC2030
-        export INSTALL_PREFIX="${dict[prefix]}"
-        # shellcheck disable=SC2030
-        export INSTALL_VERSION="${dict[version]}"
-        "${dict[installer_fun]}" "$@"
     ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
     koopa_rm "${dict[tmp_dir]}"
     case "${dict[mode]}" in
