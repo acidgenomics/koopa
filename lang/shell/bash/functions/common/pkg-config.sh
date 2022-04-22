@@ -13,12 +13,29 @@ koopa_activate_build_opt_prefix() { # {{{1
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-04-23.
     #
     # Consider using pkg-config to manage CPPFLAGS and LDFLAGS:
     # > pkg-config --libs PKG_CONFIG_NAME...
     # > pkg-config --cflags PKG_CONFIG_NAME...
     #
+    # @section How to configure linker properly:
+    #
+    # - LDFLAGS: Extra flags to give to compilers when they are supposed to
+    #   invoke the linker, 'ld', such as '-L'. Libraries ('-lfoo') should be
+    #   added to the LDLIBS variable instead.
+    # - LDLIBS: Library flags or names given to compilers when they are supposed
+    #   to invoke the linker, 'ld'. LOADLIBES is a deprecated (but still
+    #   supported) alternative to LDLIBS. Non-library linker flags, such as
+    #   '-L', should go in the LDFLAGS variable.
+    #
+    # @seealso
+    # - https://www.gnu.org/software/make/manual/html_node/
+    #     Implicit-Variables.html
+    # - https://stackoverflow.com/a/30482079/3911732/
+    # - https://stackoverflow.com/a/55579265/3911732/
+    # - https://stackoverflow.com/a/60142591/3911732/
+    # - https://stackoverflow.com/questions/41836002/
     #
     # @examples
     # > koopa_activate_opt_prefix 'cmake' 'make'
@@ -55,6 +72,7 @@ koopa_activate_opt_prefix() { # {{{1
     koopa_assert_has_args "$#"
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
+    LDLIBS="${LDLIBS:-}"
     for name in "$@"
     do
         local pkgconfig_dirs prefix
@@ -89,7 +107,7 @@ koopa_activate_opt_prefix() { # {{{1
         [[ "${dict[build_only]}" -eq 1 ]] && continue
         if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
         then
-            local cflags libs pc_files
+            local cflags ldflags ldlibs pc_files
             # Loop across 'pkgconfig' dirs, find '*.pc' files, and ensure we
             # set 'cflags' and 'libs' automatically.
             readarray -t pc_files <<< "$( \
@@ -101,35 +119,25 @@ koopa_activate_opt_prefix() { # {{{1
             )"
             # Set 'CPPFLAGS' variable.
             cflags="$("${app[pkg_config]}" --cflags "${pc_files[@]}")"
-            if [[ -n "$cflags" ]]
-            then
-                CPPFLAGS="${CPPFLAGS:-} ${cflags}"
-            fi
+            [[ -n "$cflags" ]] && CPPFLAGS="${CPPFLAGS:-} ${cflags}"
             # Set 'LDFLAGS' variable.
-            libs="$("${app[pkg_config]}" --libs "${pc_files[@]}")"
-            if [[ -n "$libs" ]]
-            then
-                LDFLAGS="${LDFLAGS:-} ${libs}"
-            fi
+            ldflags="$("${app[pkg_config]}" --libs-only-L "${pc_files[@]}")"
+            [[ -n "$ldflags" ]] && LDFLAGS="${LDFLAGS:-} ${ldflags}"
+            # Set 'LDLIBS' variable. Can use '--libs-only-other' here.
+            ldlibs="$("${app[pkg_config]}" --libs-only-l "${pc_files[@]}")"
+            [[ -n "$ldlibs" ]] && LDLIBS="${LDLIBS:-} ${ldlibs}"
         else
             # Set 'CPPFLAGS' variable.
-            if [[ -d "${prefix}/include" ]]
-            then
+            [[ -d "${prefix}/include" ]] && \
                 CPPFLAGS="${CPPFLAGS:-} -I${prefix}/include"
-            fi
             # Set 'LDFLAGS' variable.
-            if [[ -d "${prefix}/lib" ]]
-            then
+            [[ -d "${prefix}/lib" ]] && \
                 LDFLAGS="${LDFLAGS:-} -L${prefix}/lib"
-            fi
-            if [[ -d "${prefix}/lib64" ]]
-            then
+            [[ -d "${prefix}/lib64" ]] && \
                 LDFLAGS="${LDFLAGS:-} -L${prefix}/lib64"
-            fi
         fi
     done
-    [[ -n "$CPPFLAGS" ]] && export CPPFLAGS
-    [[ -n "$LDFLAGS" ]] && export LDFLAGS
+    export CPPFLAGS LDFLAGS LDLIBS
     return 0
 }
 

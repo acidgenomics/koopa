@@ -374,13 +374,11 @@ koopa_configure_system() { # {{{1
     # - automake
     # - libtool
     # - openssl
-
     # - cmake (requires openssl)
     # - pcre
     # - pcre2 (requires bzip2, zlib)
     # - grep (requires pcre2)
-
-    # - curl  # FIXME Tighten this up (see Homebrew recipe).
+    # - curl
     # - bash
     # - zsh
 
