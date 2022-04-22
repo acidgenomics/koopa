@@ -138,6 +138,7 @@ __koopa_complete() { # {{{1
                         'gmp'
                         'gnupg'
                         'go'
+                        'gperf'
                         'grep'
                         'groff'
                         'gsl'

@@ -29,8 +29,11 @@ gcrypt-url="https://gnupg.org/ftp/gcrypt"
 
 # GNU FTP server mirror.
 # https://www.gnu.org/prep/ftp.en.html
-# > gnu-mirror-url="https://ftpmirror.gnu.org"
-gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
+# - Massachusetts:
+#   https://mirrors.tripadvisor.com/gnu"
+# - New York:
+#   http://mirror.rit.edu/gnu
+gnu-mirror-url="https://ftpmirror.gnu.org"
 
 # Program versions {{{1
 # ==============================================================================
@@ -221,6 +224,9 @@ go="1.18"
 
 # https://cloud.google.com/sdk/docs/install
 google-cloud-sdk="380.0.0"
+
+# https://www.gnu.org/software/gperf
+gperf="3.1"
 
 # https://www.gnu.org/software/grep/
 grep="3.7"
