@@ -1,27 +1,62 @@
 #!/usr/bin/env bash
 
-# NOTE Consider using pkg-config to manage CPPFLAGS and LDFLAGS:
-# > pkg-config --libs PKG_CONFIG_NAME...
-# > pkg-config --cflags PKG_CONFIG_NAME...
+koopa_activate_build_opt_prefix() { # {{{1
+    # """
+    # Activate a build-only opt prefix.
+    # @note Updated 2022-04-22.
+    #
+    # Useful for activation of cmake, make, pkg-config, etc.
+    # """
+    koopa_assert_has_args "$#"
+    koopa_activate_opt_prefix --build-only "$@"
+    return 0
+}
 
 koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-04-22.
+    #
+    # Consider using pkg-config to manage CPPFLAGS and LDFLAGS:
+    # > pkg-config --libs PKG_CONFIG_NAME...
+    # > pkg-config --cflags PKG_CONFIG_NAME...
+    #
     #
     # @examples
     # > koopa_activate_opt_prefix 'cmake' 'make'
     # """
-    local dict name
+    local dict name pos
     koopa_assert_has_args "$#"
     declare -A app=(
         [uname]="$(koopa_locate_uname)"
     )
     declare -A dict=(
+        [build_only]=0
         [cppflags]="${CPPFLAGS:-}"
         [ldflags]="${LDFLAGS:-}"
         [opt_prefix]="$(koopa_opt_prefix)"
     )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--build-only')
+                dict[build_only]=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
     for name in "$@"
     do
         local prefix
@@ -31,15 +66,19 @@ koopa_activate_opt_prefix() { # {{{1
         then
             koopa_stop "'${prefix}' is empty."
         fi
+        prefix="$(koopa_realpath "$prefix")"
         koopa_alert "Activating '${prefix}'."
         # Set 'PATH' variable.
         koopa_activate_prefix "${prefix}"
-        # Set 'CPPFLAGS' variable.
-        koopa_add_to_cppflags "${prefix}/include"
-        # Set 'LDFLAGS' variable.
-        koopa_add_to_ldflags \
-            "${prefix}/lib" \
-            "${prefix}/lib64"
+        if [[ "${dict[build_only]}" -eq 0 ]]
+        then
+            # Set 'CPPFLAGS' variable.
+            koopa_add_to_cppflags "${prefix}/include"
+            # Set 'LDFLAGS' variable.
+            koopa_add_to_ldflags \
+                "${prefix}/lib" \
+                "${prefix}/lib64"
+        fi
         # Set 'PKG_CONFIG_PATH' variable.
         koopa_add_to_pkg_config_path \
             "${prefix}/lib/pkgconfig" \
