@@ -328,6 +328,7 @@ koopa_locate_geos_config() { # {{{1
 
 koopa_locate_git() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='git' \
         --opt-name='git'
 }
