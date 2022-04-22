@@ -418,6 +418,9 @@ koopa_find() { # {{{1
     return 0
 }
 
+# FIXME Allow for single file entry mode.
+# When this is the case, just show the user in the alert message which file.
+
 koopa_find_and_replace_in_file() { # {{{1
     # """
     # Find and replace inside files.

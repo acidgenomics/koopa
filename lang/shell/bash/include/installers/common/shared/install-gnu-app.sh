@@ -32,6 +32,7 @@ main() { # {{{1
     esac
     case "${dict[name]}" in
         'bc' | \
+        'gperf' | \
         'groff' | \
         'gsl' | \
         'gzip' | \

@@ -18,7 +18,10 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'freetype' 'pkg-config'
+    koopa_activate_opt_prefix \
+        'gperf' \
+        'freetype' \
+        'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

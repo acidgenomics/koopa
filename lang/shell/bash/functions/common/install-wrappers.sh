@@ -1207,6 +1207,20 @@ koopa_uninstall_go_packages() { # {{{3
         "$@"
 }
 
+# gperf ------------------------------------------------------------------- {{{2
+
+koopa_install_gperf() { # {{{3
+    koopa_install_gnu_app \
+        --name='gperf' \
+        "$@"
+}
+
+koopa_uninstall_gperf() { # {{{3
+    koopa_uninstall_app \
+        --name='gperf' \
+        "$@"
+}
+
 # grep -------------------------------------------------------------------- {{{2
 
 koopa_install_grep() { # {{{3
