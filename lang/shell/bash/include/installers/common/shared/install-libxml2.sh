@@ -10,7 +10,13 @@ main() { # {{{
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'icu4c' 'python'
+    koopa_activate_build_opt_prefix \
+        'pkg-config' \
+        'python'
+    koopa_activate_opt_prefix \
+        'icu4c' \
+        'readline' \
+        'zlib'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

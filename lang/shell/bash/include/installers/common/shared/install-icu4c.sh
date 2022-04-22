@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install ICU4C.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-22.
     #
     # @seealso
     # - https://unicode-org.github.io/icu/userguide/icu4c/build.html
@@ -12,6 +12,7 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

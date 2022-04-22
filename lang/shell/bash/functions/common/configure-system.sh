@@ -356,12 +356,18 @@ koopa_configure_system() { # {{{1
     # - dotfiles
     # - aws-cli
     # - pkg-config
+    # - make
     # - tar
     # - xz
     # - gperf
     # - attr (Linux only)
+    # - icu4c
+
+    # - readline
+    # - zlib
+
     # - ncurses
-    # - libxml
+    # - libxml2
     # - gettext (requires libxml2, ncurses on Linux), move down...
 
     # - coreutils (fixme require gmp?)
@@ -369,9 +375,7 @@ koopa_configure_system() { # {{{1
     # - findutils
     # - autoconf
     # - automake
-    # - zlib
     # - openssl
-    # - make
     # - cmake
     # - grep
     # - curl
@@ -411,7 +415,6 @@ koopa_configure_system() { # {{{1
     # - groff
     # - haskell-stack
     # - hdf5
-    # - icu4c
     # - imagemagick
     # - jpeg
     # - julia
@@ -460,7 +463,6 @@ koopa_configure_system() { # {{{1
     # - libffi
     # - libpng
     # - openblas
-    # - readline
     # - tcl-tk
     # - unzip
     # - man-db

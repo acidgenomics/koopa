@@ -107,6 +107,8 @@ koopa_sub() { # {{{1
             s/\$pattern/\$replacement/${dict[perl_tail]}; \
         "
     fi
-    koopa_print "$@" | "${app[perl]}" -p -e "${dict[expr]}"
+    # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
+    # matching line break characters.
+    printf '%s' "$@" | "${app[perl]}" -p -e "${dict[expr]}"
     return 0
 }
