@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-04-22.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -51,15 +51,17 @@ main() { # {{{1
     # - https://gcc.gnu.org/wiki/InstallingGCC
     # - https://gcc.gnu.org/wiki/FAQ
     # - https://solarianprogrammer.com/2016/10/07/building-gcc-ubuntu-linux/
+    # - https://solarianprogrammer.com/2019/10/12/compiling-gcc-macos/
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    # NOTE Need to add recipe support for these.
     koopa_activate_opt_prefix \
         'gmp' \
-        'mpc' \
-        'mpfr'
+        'isl' \
+        'libmpc' \
+        'mpfr' \
+        'zstd'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

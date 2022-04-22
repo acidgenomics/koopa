@@ -379,6 +379,8 @@ koopa_install_coreutils() { # {{{3
     # """
     local install_args
     install_args=(
+        '--activate-build-opt=gperf'
+        '--activate-opt=gmp'
         '--name=coreutils'
         '--link-in-bin=bin/['
         '--link-in-bin=bin/b2sum'
@@ -487,6 +489,10 @@ koopa_install_coreutils() { # {{{3
         '--link-in-bin=bin/whoami'
         '--link-in-bin=bin/yes'
     )
+    if koopa_is_linux
+    then
+        install_args+=('--activate-opt=attr')
+    fi
     koopa_install_gnu_app "${install_args[@]}" "$@"
 }
 

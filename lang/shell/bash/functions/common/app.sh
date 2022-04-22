@@ -170,9 +170,9 @@ koopa_find_app_version() { # {{{1
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-04-17.
+    # @note Updated 2022-04-22.
     # """
-    local bin_arr clean_path_arr dict i opt_arr pos
+    local bin_arr build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A dict=(
@@ -215,6 +215,7 @@ koopa_install_app() { # {{{1
         [version_key]=''
     )
     bin_arr=()
+    build_opt_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     opt_arr=()
     pos=()
@@ -222,6 +223,14 @@ koopa_install_app() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--activate-build-opt='*)
+                build_opt_arr+=("${1#*=}")
+                shift 1
+                ;;
+            '--activate-build-opt')
+                build_opt_arr+=("${2:?}")
+                shift 2
+                ;;
             '--activate-opt='*)
                 opt_arr+=("${1#*=}")
                 shift 1
@@ -460,6 +469,10 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 '/usr/bin/pkg-config'
         fi
         # Activate packages installed in koopa 'opt/' directory.
+        if koopa_is_array_non_empty "${build_opt_arr[@]:-}"
+        then
+            koopa_activate_build_opt_prefix "${build_opt_arr[@]}"
+        fi
         if koopa_is_array_non_empty "${opt_arr[@]:-}"
         then
             koopa_activate_opt_prefix "${opt_arr[@]}"
