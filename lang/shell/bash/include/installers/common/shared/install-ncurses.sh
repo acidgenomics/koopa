@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install ncurses.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-04-22.
     #
     # @seealso
     # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
@@ -19,7 +19,6 @@ main() { # {{{1
     dict[pkgconfig_dir]="${dict[prefix]}/lib/pkgconfig"
     koopa_mkdir "${dict[pkgconfig_dir]}"
     koopa_install_gnu_app \
-        --activate-opt='pkg-config' \
         --name='ncurses' \
         --no-prefix-check \
         -D '--enable-pc-files' \

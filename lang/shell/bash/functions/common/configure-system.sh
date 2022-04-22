@@ -358,10 +358,10 @@ koopa_configure_system() { # {{{1
     # - pkg-config
     # - tar
     # - xz
-
     # - gperf
     # - attr (Linux only)
-
+    # - ncurses
+    # - libxml
     # - gettext (requires libxml2, ncurses on Linux), move down...
 
     # - coreutils (fixme require gmp?)
