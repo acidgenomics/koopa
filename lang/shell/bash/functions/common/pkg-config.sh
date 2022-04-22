@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Here, simply add to path and set PKG_CONFIG_PATH.
+
 koopa_activate_build_opt_prefix() { # {{{1
     # """
     # Activate a build-only opt prefix.
@@ -11,6 +13,9 @@ koopa_activate_build_opt_prefix() { # {{{1
     koopa_activate_opt_prefix --build-only "$@"
     return 0
 }
+
+# FIXME Yeah in standard mode, need to actually source PKG_CONFIG PC files
+# and set CPPFLAGS, LDFLAGS from this...
 
 koopa_activate_opt_prefix() { # {{{1
     # """
