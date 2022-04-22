@@ -14,6 +14,8 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix \
+        'pkg-config'
     koopa_activate_opt_prefix \
         'fontconfig' \
         'freetype' \
@@ -28,7 +30,6 @@ main() { # {{{1
         'libxrender' \
         'lzo' \
         'pixman' \
-        'pkg-config' \
         'xcb-proto' \
         'xorgproto' \
         'zlib'

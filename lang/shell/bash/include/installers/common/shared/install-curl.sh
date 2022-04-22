@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# NOTE Consider requiring: 'brotli', 'krb5', 'libidn2', 'libnghttp2', 'libssh2',
+# 'openldap', 'rtmpdump', 'zlib', 'zstd'.
+
 main() { # {{{1
     # """
     # Install cURL.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-22.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -15,7 +18,8 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'openssl' 'pkg-config'
+    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

@@ -369,10 +369,10 @@ koopa_configure_system() { # {{{1
     # - gettext (requires libxml2, ncurses on Linux)
     # - gmp
     # - coreutils
-
     # - findutils
     # - autoconf
     # - automake
+
     # - openssl
 
     # - cmake (requires openssl)
