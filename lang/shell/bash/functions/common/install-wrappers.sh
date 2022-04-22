@@ -306,6 +306,22 @@ koopa_uninstall_bzip2() { # {{{3
         "$@"
 }
 
+# cairo ------------------------------------------------------------------- {{{2
+
+koopa_install_cairo() { # {{{3
+    koopa_install_app \
+        --name-fancy='Cairo' \
+        --name='cairo' \
+        "$@"
+}
+
+koopa_uninstall_cairo() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Cairo' \
+        --name='cairo' \
+        "$@"
+}
+
 # chemacs ----------------------------------------------------------------- {{{2
 
 # FIXME Need to version pin this.
@@ -1796,6 +1812,34 @@ koopa_install_libxml2() { # {{{3
 koopa_uninstall_libxml2() { # {{{3
     koopa_uninstall_app \
         --name='libxml2' \
+        "$@"
+}
+
+# libxrandr --------------------------------------------------------------- {{{2
+
+koopa_install_libxrandr() { # {{{3
+    koopa_install_app \
+        --name='libxrandr' \
+        "$@"
+}
+
+koopa_uninstall_libxrandr() { # {{{3
+    koopa_uninstall_app \
+        --name='libxrandr' \
+        "$@"
+}
+
+# libxrender -------------------------------------------------------------- {{{2
+
+koopa_install_libxrender() { # {{{3
+    koopa_install_app \
+        --name='libxrender' \
+        "$@"
+}
+
+koopa_uninstall_libxrender() { # {{{3
+    koopa_uninstall_app \
+        --name='libxrender' \
         "$@"
 }
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for 'xorg-macros'.
+
 main() { # {{{1
     # """
     # Install libxrender.
@@ -12,7 +14,11 @@ main() { # {{{1
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix \
+        'libpthread-stubs' \
         'libx11' \
+        'libxau' \
+        'libxcb' \
+        'libxdmcp' \
         'pkg-config' \
         'xorgproto'
     declare -A app=(
@@ -24,8 +30,8 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://xcb.freedesktop.org/dist/${dict[file]}"
+    dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
+    dict[url]="https://www.x.org/archive/individual/lib/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for 'xorg-macros'.
+
 main() { # {{{1
     # """
     # Install libxext.
@@ -11,7 +13,11 @@ main() { # {{{1
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix \
+        'libpthread-stubs' \
         'libx11' \
+        'libxau' \
+        'libxcb' \
+        'libxdmcp' \
         'pkg-config' \
         'xorgproto'
     declare -A app=(
