@@ -679,9 +679,13 @@ koopa_locate_perlbrew() { # {{{1
 }
 
 koopa_locate_pkg_config() { # {{{1
+    # """
+    # Allowing passthrough of '--allow-missing' here.
+    # """
     koopa_locate_app \
         --app-name='pkg-config' \
-        --opt-name='pkg-config'
+        --opt-name='pkg-config' \
+        "$@"
 }
 
 koopa_locate_prefetch() { # {{{1
