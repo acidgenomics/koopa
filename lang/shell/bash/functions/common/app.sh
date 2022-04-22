@@ -167,10 +167,6 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Consider saving an invisible log file, such as '.koopa-install.log'
-# to the target prefix. Should we go back to wrapping the installer call with
-# tee here?
-
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
@@ -454,7 +450,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     fi
     if [[ -d "${dict[prefix]}" ]]
     then
-        dict[log_file]="${dict[prefix]}/.koopa-install.log"
+        dict[log_file]="${dict[prefix]}/.install.log"
     else
         dict[log_file]="$(koopa_tmp_log_file)"
     fi
@@ -505,18 +501,15 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         # shellcheck disable=SC2030
         export INSTALL_VERSION="${dict[version]}"
         "${dict[installer_fun]}" "$@"
-        [[ -n "${CFLAGS:-}" ]] && \
-            koopa_dl 'CFLAGS' "${CFLAGS:?}"
-        [[ -n "${CPPFLAGS:-}" ]] && \
-            koopa_dl 'CPPFLAGS' "${CPPFLAGS:?}"
-        [[ -n "${LD_LIBRARY_PATH:-}" ]] && \
-            koopa_dl 'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:?}"
-        [[ -n "${LDFLAGS:-}" ]] && \
-            koopa_dl 'LDFLAGS' "${LDFLAGS:?}"
-        [[ -n "${PKG_CONFIG_PATH:-}" ]] && \
-            koopa_dl 'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:?}"
-        [[ "$#" -gt 0 ]] && \
-            koopa_dl 'configure args' "$*"
+        [[ "$#" -gt 0 ]] && koopa_dl 'configure args' "$*"
+        koopa_dl \
+            'CFLAGS' "${CFLAGS:-}" \
+            'CPPFLAGS' "${CPPFLAGS:-}" \
+            'LDFLAGS' "${LDFLAGS:-}" \
+            'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:-}" \
+            'PATH' "${PATH:-}" \
+            'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
+        return 0
     ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
     koopa_rm "${dict[tmp_dir]}"
     case "${dict[mode]}" in
