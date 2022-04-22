@@ -942,6 +942,7 @@ koopa_locate_tar() { # {{{1
 
 koopa_locate_tee() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='tee' \
         --opt-name='coreutils'
 }
