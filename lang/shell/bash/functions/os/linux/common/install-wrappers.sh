@@ -22,6 +22,22 @@ koopa_linux_uninstall_aspera_connect() { # {{{3
         "$@"
 }
 
+# attr ---------------------------------------------------------------- {{{2
+
+koopa_linux_install_attr() { # {{{3
+    koopa_install_app \
+        --name='attr' \
+        --platform='linux' \
+        "$@"
+}
+
+koopa_linux_uninstall_attr() { # {{{3
+    koopa_uninstall_app \
+        --name='attr' \
+        --platform='linux' \
+        "$@"
+}
+
 # aws-cli ----------------------------------------------------------------- {{{2
 
 koopa_linux_install_aws_cli() { # {{{3
