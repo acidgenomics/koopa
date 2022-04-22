@@ -3,120 +3,11 @@
 # FIXME On macOS, consider running:
 # - 'koopa_macos_update_defaults'.
 # - 'koopa_macos_enable_touch_id_sudo'
-# FIXME Draft install priority:
-
-# Recipes that we need to install:
-# - gcc (Linux only)?
-# - gzip
-# - lapack
-# - libffi
-# - libpng
-# - openblas
-# - readline
-# - tcl-tk
-# - unzip
-# - man-db
-# - neovim
-
-# - dotfiles
-# - aws-cli
-# - pkg-config
-# - tar
-# - xz
-# - gettext
-# - attr # problematic on macOS.
-# - koopa install coreutils --push --reinstall
-# - koopa install findutils --push --reinstall
-# - koopa install autoconf --push --reinstall
-# - koopa install automake --push --reinstall
-# - koopa install zlib --push --reinstall
-# - koopa install openssl --push --reinstall
-# - koopa install make --push --reinstall
-# - koopa install cmake --push --reinstall
-# - koopa install grep --push --reinstall
-# - koopa install curl --push --reinstall
-# Ensure we switch back to system shell before installing.
-# - koopa install bash --push --reinstall
-# - koopa install zsh --push --reinstall
-
-# Ubuntu is here:
-# - koopa install gnutls --push --reinstall
-# - koopa install python --push --reinstall
-# - koopa install git --push --reinstall
-# - koopa install rsync --push --reinstall
-# - koopa install ncurses --push --reinstall
-
-# - libevent
-# - tmux
-# - libtool
-# - apr
-# - apr-util
-# - pcre2
-# - fish
-# - perl
-# - gawk
-# - sqlite
-# - geos
-# - proj
-# - gdal
-
-# Ubuntu machine:
-# - sed
-# - rust
-# - rust-packages
-# - fltk
-# - gnupg
-# - gmp
-# - go
-# - groff
-# - haskell-stack
-# - hdf5
-# - icu4c
-# - imagemagick
-# - jpeg
-# - julia
-# - lesspipe
-# - libidn
-# - libtiff
-# - libxml2
-# - nettle
-# - libzip # maybe require gnutls here
-# - lua
-# - luarocks
-# - meson
-# - neofetch
-# - nim
-# - ninja
-# - node
-# - neovim
-# - ruby
-# - scons
-# - serf
-# - subversion
-# - tree
-# - udunits
-# - vim
-# - wget
-# - zlib
-# - zstd
-# - openssh
-# - cpufetch
-# - nim-packages
-# - node-packages
-# - perl-packages
-# - chemacs
-
-# Don't push these:
-# - conda
-# - anaconda
-# - julia-packages
-# - r-packages
-# - ruby-packages
 
 koopa_configure_system() { # {{{1
     # """
     # Configure system.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-04-22.
     #
     # Intended primarily for virtual machine and Docker image builds.
     #
@@ -460,6 +351,121 @@ koopa_configure_system() { # {{{1
     koopa_linux_update_ldconfig
     # Programs {{{2
     # --------------------------------------------------------------------------
+
+    # Current working order:
+    # - dotfiles
+    # - aws-cli
+    # - pkg-config
+    # - tar
+    # - xz
+
+    # - gperf
+    # - attr (Linux only)
+
+    # - gettext (requires libxml2, ncurses on Linux), move down...
+
+    # - coreutils (fixme require gmp?)
+
+    # - findutils
+    # - autoconf
+    # - automake
+    # - zlib
+    # - openssl
+    # - make
+    # - cmake
+    # - grep
+    # - curl
+    # Ensure we switch back to system shell before installing.
+    # - koopa install bash --push --reinstall
+    # - koopa install zsh --push --reinstall
+
+    # Ubuntu is here:
+    # - koopa install gnutls --push --reinstall
+    # - koopa install python --push --reinstall
+    # - koopa install git --push --reinstall
+    # - koopa install rsync --push --reinstall
+    # - koopa install ncurses --push --reinstall
+
+    # - libevent
+    # - tmux
+    # - libtool
+    # - apr
+    # - apr-util
+    # - pcre2
+    # - fish
+    # - perl
+    # - gawk
+    # - sqlite
+    # - geos
+    # - proj
+    # - gdal
+
+    # Ubuntu machine:
+    # - sed
+    # - rust
+    # - rust-packages
+    # - fltk
+    # - gnupg
+    # - gmp
+    # - go
+    # - groff
+    # - haskell-stack
+    # - hdf5
+    # - icu4c
+    # - imagemagick
+    # - jpeg
+    # - julia
+    # - lesspipe
+    # - libidn
+    # - libtiff
+    # - libxml2
+    # - nettle
+    # - libzip # maybe require gnutls here
+    # - lua
+    # - luarocks
+    # - meson
+    # - neofetch
+    # - nim
+    # - ninja
+    # - node
+    # - neovim
+    # - ruby
+    # - scons
+    # - serf
+    # - subversion
+    # - tree
+    # - udunits
+    # - vim
+    # - wget
+    # - zlib
+    # - zstd
+    # - openssh
+    # - cpufetch
+    # - nim-packages
+    # - node-packages
+    # - perl-packages
+    # - chemacs
+
+    # Don't push these:
+    # - conda
+    # - anaconda
+    # - julia-packages
+    # - r-packages
+    # - ruby-packages
+
+    # Recipes that we need to install and/or move up in priority list:
+    # - gcc (Linux only)?
+    # - gzip
+    # - lapack
+    # - libffi
+    # - libpng
+    # - openblas
+    # - readline
+    # - tcl-tk
+    # - unzip
+    # - man-db
+    # - neovim
+
     [[ "${dict[install_dotfiles]}" -eq 1 ]] && \
         koopa install 'dotfiles'
     [[ "${dict[install_homebrew]}" -eq 1 ]] && \

@@ -156,7 +156,7 @@ v${dict[version]}/${dict[file]}"
         conf_args+=('--with-opencl')
     fi
     koopa_mkdir "${dict[prefix]}/include"
-    koopa_add_to_ldflags --allow-missing "${dict[prefix]}/lib"
+    koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.
     "${app[make]}" V=1 -d --jobs="${dict[jobs]}"

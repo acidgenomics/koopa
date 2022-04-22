@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install xz.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-22.
 
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/xz.rb

@@ -1,21 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME Here, simply add to path and set PKG_CONFIG_PATH.
-
 koopa_activate_build_opt_prefix() { # {{{1
     # """
     # Activate a build-only opt prefix.
     # @note Updated 2022-04-22.
     #
-    # Useful for activation of cmake, make, pkg-config, etc.
+    # Useful for activation of 'cmake', 'make', 'pkg-config', etc.
     # """
-    koopa_assert_has_args "$#"
     koopa_activate_opt_prefix --build-only "$@"
-    return 0
 }
-
-# FIXME Yeah in standard mode, need to actually source PKG_CONFIG PC files
-# and set CPPFLAGS, LDFLAGS from this...
 
 koopa_activate_opt_prefix() { # {{{1
     # """
@@ -30,15 +23,13 @@ koopa_activate_opt_prefix() { # {{{1
     # @examples
     # > koopa_activate_opt_prefix 'cmake' 'make'
     # """
-    local dict name pos
+    local app dict name pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [uname]="$(koopa_locate_uname)"
+        [pkg_config]="$(koopa_locate_pkg_config --allow-missing)"
     )
     declare -A dict=(
         [build_only]=0
-        [cppflags]="${CPPFLAGS:-}"
-        [ldflags]="${LDFLAGS:-}"
         [opt_prefix]="$(koopa_opt_prefix)"
     )
     pos=()
@@ -62,9 +53,11 @@ koopa_activate_opt_prefix() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    CPPFLAGS="${CPPFLAGS:-}"
+    LDFLAGS="${LDFLAGS:-}"
     for name in "$@"
     do
-        local prefix
+        local pkgconfig_dirs prefix
         prefix="${dict[opt_prefix]}/${name}"
         koopa_assert_is_dir "$prefix"
         if koopa_is_empty_dir "$prefix"
@@ -72,119 +65,89 @@ koopa_activate_opt_prefix() { # {{{1
             koopa_stop "'${prefix}' is empty."
         fi
         prefix="$(koopa_realpath "$prefix")"
-        koopa_alert "Activating '${prefix}'."
+        if [[ "${dict[build_only]}" -eq 1 ]]
+        then
+            koopa_alert "Activating '${prefix}' (build only)."
+        else
+            koopa_alert "Activating '${prefix}'."
+        fi
         # Set 'PATH' variable.
         koopa_activate_prefix "${prefix}"
-        if [[ "${dict[build_only]}" -eq 0 ]]
-        then
-            # Set 'CPPFLAGS' variable.
-            koopa_add_to_cppflags "${prefix}/include"
-            # Set 'LDFLAGS' variable.
-            koopa_add_to_ldflags \
-                "${prefix}/lib" \
-                "${prefix}/lib64"
-        fi
         # Set 'PKG_CONFIG_PATH' variable.
-        koopa_add_to_pkg_config_path \
-            "${prefix}/lib/pkgconfig" \
-            "${prefix}/lib64/pkgconfig" \
-            "${prefix}/share/pkgconfig"
-        # Add platform-specific pkg-config (e.g. for glib).
-        if koopa_is_linux && \
-            [[ -e '/usr/share/misc/config.sub' ]]
+        readarray -t pkgconfig_dirs <<< "$( \
+            koopa_find \
+                --pattern='pkgconfig' \
+                --prefix="$prefix" \
+                --sort \
+                --type='d' \
+            || true \
+        )"
+        if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
         then
-            # e.g. 'x86_64'.
-            dict[arch]="$(koopa_arch)"
-            # e.g. 'linux'.
-            dict[os]="$(koopa_lowercase "$("${app[uname]}" -o)")"
-            # e.g. 'x86_64-linux-gnu'.
-            dict[os2]="$(\
-                '/usr/share/misc/config.sub' "${dict[arch]}-${dict[os]}" \
+            koopa_add_to_pkg_config_path "${pkgconfig_dirs[@]}"
+        fi
+        [[ "${dict[build_only]}" -eq 1 ]] && continue
+        if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
+        then
+            local cflags libs pc_files
+            # Loop across 'pkgconfig' dirs, find '*.pc' files, and ensure we
+            # set 'cflags' and 'libs' automatically.
+            readarray -t pc_files <<< "$( \
+                koopa_find \
+                    --prefix="$prefix" \
+                    --type='f' \
+                    --pattern='*.pc' \
+                    --sort \
             )"
-            koopa_add_to_pkg_config_path \
-                "${prefix}/lib/${dict[os2]}/pkgconfig"
-        fi
-    done
-    return 0
-}
-
-koopa_add_to_cppflags() { # {{{1
-    # """
-    # Append a 'CPPFLAGS' string.
-    # @note Updated 2022-04-21.
-    # """
-    local dir
-    koopa_assert_has_args "$#"
-    CPPFLAGS="${CPPFLAGS:-}"
-    for dir in "$@"
-    do
-        local str
-        [[ -d "$dir" ]] || continue
-        str="-I${dir}"
-        if [[ -n "$CPPFLAGS" ]]
-        then
-            CPPFLAGS="${str} ${CPPFLAGS}"
+            koopa_warn "${pc_files[@]}"
+            # Set 'CPPFLAGS' variable.
+            cflags="$("${app[pkg_config]}" --cflags "${pc_files[@]}")"
+            if [[ -n "$cflags" ]]
+            then
+                CPPFLAGS="${CPPFLAGS:-} ${cflags}"
+            fi
+            # Set 'LDFLAGS' variable.
+            libs="$("${app[pkg_config]}" --libs "${pc_files[@]}")"
+            if [[ -n "$libs" ]]
+            then
+                LDFLAGS="${LDFLAGS:-} ${libs}"
+            fi
         else
-            CPPFLAGS="$str"
+            # Set 'CPPFLAGS' variable.
+            if [[ -d "${prefix}/include" ]]
+            then
+                CPPFLAGS="${CPPFLAGS:-} -I${prefix}/include"
+            fi
+            # Set 'LDFLAGS' variable.
+            if [[ -d "${prefix}/lib" ]]
+            then
+                LDFLAGS="${LDFLAGS:-} -L${prefix}/lib"
+            fi
+            if [[ -d "${prefix}/lib64" ]]
+            then
+                LDFLAGS="${LDFLAGS:-} -L${prefix}/lib64"
+            fi
         fi
     done
-    export CPPFLAGS
+    [[ -n "$CPPFLAGS" ]] && export CPPFLAGS
+    [[ -n "$LDFLAGS" ]] && export LDFLAGS
     return 0
 }
 
-# NOTE Rethink the '--allow-missing' flag as separate 'rpath' function?
-
-koopa_add_to_ldflags() { # {{{1
+koopa_add_rpath_to_ldflags() { # {{{1
     # """
-    # Append an 'LDFLAGS' string.
-    # @note Updated 2022-04-21.
+    # Append 'LDFLAGS' string with an rpath.
+    # @note Updated 2022-04-22.
     #
     # Use '-rpath,${dir}' here not, '-rpath=${dir}'. This approach works on
     # both BSD/Unix (macOS) and Linux systems.
     # """
-    local dict dir pos
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        [allow_missing]=0
-    )
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            # Flags ------------------------------------------------------------
-            '--allow-missing')
-                dict[allow_missing]=1
-                shift 1
-                ;;
-            # Other ------------------------------------------------------------
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    local dir
     koopa_assert_has_args "$#"
     LDFLAGS="${LDFLAGS:-}"
     for dir in "$@"
     do
-        local str
-        if [[ ! -d "$dir" ]]
-        then
-            [[ "${dict[allow_missing]}" -eq 0 ]] && continue
-            str="-Wl,-rpath,${dir}"
-        else
-            str="-L${dir} -Wl,-rpath,${dir}"
-        fi
-        if [[ -n "$LDFLAGS" ]]
-        then
-            LDFLAGS="${str} ${LDFLAGS}"
-        else
-            LDFLAGS="$str"
-        fi
+        LDFLAGS="${LDFLAGS} -Wl,-rpath,${dir}"
     done
     export LDFLAGS
     return 0
