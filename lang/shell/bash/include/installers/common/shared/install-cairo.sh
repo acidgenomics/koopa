@@ -64,9 +64,9 @@ main() { # {{{1
         # > '--enable-gobject'
         # > '--enable-svg'
         # > '--enable-tee'
-        # > '--enable-xcb'
-        # > '--enable-xlib'
-        # > '--enable-xlib-xrender'
+        '--enable-xcb'
+        '--enable-xlib'
+        '--enable-xlib-xrender'
     )
     # > if koopa_is_macos
     # > then

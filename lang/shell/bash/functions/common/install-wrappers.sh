@@ -1577,6 +1577,20 @@ koopa_uninstall_libgit2() { # {{{3
         "$@"
 }
 
+# libice ------------------------------------------------------------------ {{{2
+
+koopa_install_libice() { # {{{3
+    koopa_install_app \
+        --name='libice' \
+        "$@"
+}
+
+koopa_uninstall_libice() { # {{{3
+    koopa_uninstall_app \
+        --name='libice' \
+        "$@"
+}
+
 # libidn ---------------------------------------------------------------- {{{2
 
 koopa_install_libidn() { # {{{3
@@ -1644,6 +1658,20 @@ koopa_install_libpthread_stubs() { # {{{3
 koopa_uninstall_libpthread_stubs() { # {{{3
     koopa_uninstall_app \
         --name='libpthread-stubs' \
+        "$@"
+}
+
+# libsm ------------------------------------------------------------------- {{{2
+
+koopa_install_libsm() { # {{{3
+    koopa_install_app \
+        --name='libsm' \
+        "$@"
+}
+
+koopa_uninstall_libsm() { # {{{3
+    koopa_uninstall_app \
+        --name='libsm' \
         "$@"
 }
 
@@ -1840,6 +1868,20 @@ koopa_install_libxrender() { # {{{3
 koopa_uninstall_libxrender() { # {{{3
     koopa_uninstall_app \
         --name='libxrender' \
+        "$@"
+}
+
+# libxt ------------------------------------------------------------------- {{{2
+
+koopa_install_libxt() { # {{{3
+    koopa_install_app \
+        --name='libxt' \
+        "$@"
+}
+
+koopa_uninstall_libxt() { # {{{3
+    koopa_uninstall_app \
+        --name='libxt' \
         "$@"
 }
 
