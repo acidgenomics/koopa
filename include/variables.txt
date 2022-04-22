@@ -100,7 +100,7 @@ binutils="2.37"
 
 # This is used during 'r-packages' install.
 # https://bioconductor.org/
-bioconductor="3.14"
+bioconductor="3.15"
 
 black="22.3.0" # python
 
