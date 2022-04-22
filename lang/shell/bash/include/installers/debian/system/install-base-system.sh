@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-04-22.
     #
     # @section Look up reverse dependencies:
     # > sudo apt-cache rdepends --installed 'libnode-dev'
@@ -149,6 +149,7 @@ main() { # {{{1
             'gdb' # r-devel
             'gdebi-core'
             'gfortran'
+            'gperf'
             'gpg-agent'
             'groff-base' # r-devel
             'gtk-doc-tools' # harfbuzz
