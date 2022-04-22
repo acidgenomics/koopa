@@ -99,7 +99,6 @@ koopa_activate_opt_prefix() { # {{{1
                     --pattern='*.pc' \
                     --sort \
             )"
-            koopa_warn "${pc_files[@]}"
             # Set 'CPPFLAGS' variable.
             cflags="$("${app[pkg_config]}" --cflags "${pc_files[@]}")"
             if [[ -n "$cflags" ]]
