@@ -3185,26 +3185,6 @@ koopa_uninstall_tealdeer() { # {{{1
 
 # texinfo ----------------------------------------------------------------- {{{2
 
-# FIXME This seems to be problematic on macOS:
-# #include "EXTERN.h"         ^~~~~~~~~~1 error generated.make: *** [TestXS.lo] Error 1no fallback module for TestXS
-# unset the TEXINFO_XS and TEXINFO_XS_PARSER environment variables to use the pure Perl modules
-# BEGIN failed--compilation aborted at ../../Texinfo/XS/TestXS.pm line 31.
-# Compilation failed in require at -e line 1.
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(getprogname.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(mbiter.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(mbuiter.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(stat-time.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(threadlib.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(unistd.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(wctype-h.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(getprogname.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(mbiter.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(mbuiter.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(stat-time.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(threadlib.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(unistd.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(wctype-h.o) has no symbols
-
 koopa_install_texinfo() { # {{{3
     local install_args
     install_args=(
