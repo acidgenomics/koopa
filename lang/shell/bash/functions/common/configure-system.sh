@@ -359,6 +359,7 @@ koopa_configure_system() { # {{{1
     # - make
     # - tar
     # - xz
+    # - bzip2
     # - gperf
     # - attr (Linux only)
     # - zlib
@@ -372,9 +373,11 @@ koopa_configure_system() { # {{{1
     # - findutils
     # - autoconf
     # - automake
+    # - libtool
     # - openssl
 
     # - cmake (requires openssl)
+    # - pcre
     # - pcre2 (requires bzip2, zlib)
     # - grep (requires pcre2)
 
@@ -389,10 +392,8 @@ koopa_configure_system() { # {{{1
 
     # - libevent
     # - tmux
-    # - libtool
     # - apr
     # - apr-util
-    # - pcre2
     # - fish
     # - perl
     # - gawk

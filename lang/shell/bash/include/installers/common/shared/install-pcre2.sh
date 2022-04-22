@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install PCRE2.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-22.
     #
     # @seealso
     # - https://www.pcre.org/
@@ -11,7 +11,13 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'autoconf' 'automake' # 'libtool'
+    koopa_activate_build_opt_prefix \
+        'autoconf' \
+        'automake' \
+        'libtool'
+    koopa_activate_opt_prefix \
+        'bzip2' \
+        'zlib'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
