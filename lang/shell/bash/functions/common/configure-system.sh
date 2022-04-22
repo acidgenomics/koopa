@@ -353,7 +353,6 @@ koopa_configure_system() { # {{{1
     # --------------------------------------------------------------------------
 
     # Current working order:
-    # - dotfiles
     # - aws-cli
     # - pkg-config
     # - make
