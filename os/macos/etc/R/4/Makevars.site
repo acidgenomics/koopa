@@ -1,6 +1,6 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2022-04-20.
+# Updated 2022-04-22.
 #
 # Refer to corresponding 'Makeconf' file for current system defaults.
 #
@@ -92,6 +92,10 @@ LDFLAGS += -L$(OPT_LOC)/gettext/lib
 # Required for 'Rhtslib' to install, which depends on 'lzma.h'.
 CPPFLAGS += -I$(OPT_LOC)/xz/include
 LDFLAGS += -L$(OPT_LOC)/xz/lib
+
+# May be requied for 'systemfonts' to install, which depends on 'ft2build.h'
+# from freetype, which is nested in 'include/freetype2' instead of 'include'.
+CPPFLAGS += -I$(OPT_LOC)/freetype/include/freetype2
 
 # OpenMP {{{1
 # ==============================================================================

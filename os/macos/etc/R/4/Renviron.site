@@ -1,14 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2034
 
-# FIXME Now seeing this warning with r-devel:
-# /bin/sh: I/opt/koopa/app/r-devel/81975/lib/R/include: No such file or directory
-# Need to recompile?
-
 # """
 # Shared R environment configuration for macOS.
 #
-# @note Updated 2022-04-20.
+# @note Updated 2022-04-22.
 #
 # @seealso
 # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
