@@ -365,8 +365,6 @@ koopa_configure_system() { # {{{1
     # - icu4c
     # - readline
     # - ncurses
-
-    # - termcap
     # - libxml2
     # - gettext (requires libxml2, ncurses on Linux), move down...
 

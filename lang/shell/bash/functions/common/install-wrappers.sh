@@ -3194,17 +3194,17 @@ koopa_uninstall_tealdeer() { # {{{1
 
 # termcap ----------------------------------------------------------------- {{{2
 
-koopa_install_termcap() { # {{{3
-    koopa_install_gnu_app \
-        --name='termcap' \
-        "$@"
-}
+# > koopa_install_termcap() { # {{{3
+# >     koopa_install_gnu_app \
+# >         --name='termcap' \
+# >         "$@"
+# > }
 
-koopa_uninstall_termcap() { # {{{3
-    koopa_uninstall_app \
-        --name='termcap' \
-        "$@"
-}
+# > koopa_uninstall_termcap() { # {{{3
+# >     koopa_uninstall_app \
+# >         --name='termcap' \
+# >         "$@"
+# > }
 
 # texinfo ----------------------------------------------------------------- {{{2
 
