@@ -366,7 +366,6 @@ koopa_install_app() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
-    dict[log_file]="${dict[prefix]}/.koopa-install.log"
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
     if [[ -z "${dict[version]}" ]]
     then
@@ -452,6 +451,12 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     if [[ "${dict[link_in_opt]}" -eq 1 ]]
     then
         koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
+    fi
+    if [[ -d "${dict[prefix]}" ]]
+    then
+        dict[log_file]="${dict[prefix]}/.koopa-install.log"
+    else
+        dict[log_file]="$(koopa_tmp_log_file)"
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
