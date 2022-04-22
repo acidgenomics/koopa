@@ -134,3 +134,29 @@ koopa_brew_upgrade_brews() { # {{{1
     done
     return 0
 }
+
+koopa_brew_uninstall_all_brews() { # {{{1
+    # """
+    # Uninstall all Homebrew formulae.
+    # @note Updated 2022-04-22.
+    #
+    # @seealso
+    # - https://apple.stackexchange.com/questions/198623
+    # """
+    local app
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [brew]="$(koopa_locate_brew)"
+        [wc]="$(koopa_locate_wc)"
+    )
+    while [[ "$("${app[brew]}" list | "${app[wc]}" -l)" -gt 0 ]]
+    do
+        local brews
+        readarray -t brews <<< "$("${app[brew]}" list)"
+        "${app[brew]}" uninstall \
+            --force \
+            --ignore-dependencies \
+            "${brews[@]}"
+    done
+    return 0
+}
