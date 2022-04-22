@@ -11,13 +11,13 @@ main() { # {{{1
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/glib2.html
     # """
     local app meson_args dict
+    koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
         'gettext' \
         'libffi' \
         'meson' \
         'ninja' \
         'pcre' \
-        'pkg-config' \
         'python'
     declare -A app=(
         [meson]="$(koopa_locate_meson)"

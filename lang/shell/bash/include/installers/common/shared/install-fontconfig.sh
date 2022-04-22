@@ -5,7 +5,7 @@
 main() { # {{{1
     # """
     # Install fontconfig.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-04-22.
     #
     # @seealso
     # - https://www.freedesktop.org/wiki/Software/fontconfig/
@@ -18,10 +18,10 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
         'gperf' \
-        'freetype' \
-        'pkg-config'
+        'freetype'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

@@ -39,8 +39,10 @@ main() { # {{{1
     fi
     # Consider adding:
     # - libpng (for '--with-png')
-    koopa_activate_opt_prefix \
+    koopa_activate_build_opt_prefix \
         'cmake' \
+        'pkg-config'
+    koopa_activate_opt_prefix \
         'geos' \
         'hdf5' \
         'jpeg' \
@@ -51,7 +53,6 @@ main() { # {{{1
         'libxml2' \
         'openssl' \
         'pcre2' \
-        'pkg-config' \
         'proj' \
         'sqlite' \
         'xz' \
