@@ -99,6 +99,7 @@ koopa_locate_cargo() { # {{{1
 
 koopa_locate_cat() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='cat' \
         --opt-name='coreutils'
 }
