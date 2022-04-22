@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-04-20.
+    # Updated 2022-04-22.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -163,10 +163,12 @@ __koopa_complete() { # {{{1
                         'libffi'
                         'libgeotiff'
                         'libgit2'
+                        'libice'
                         'libjpeg-turbo'
                         'libpipeline'
                         'libpng'
                         'libpthread-stubs'
+                        'libsm'
                         'libssh2'
                         'libtasn1'
                         'libtiff'
@@ -181,6 +183,7 @@ __koopa_complete() { # {{{1
                         'libxml2'
                         'libxrandr'
                         'libxrender'
+                        'libxt'
                         'libzip'
                         'lua'
                         'luarocks'
@@ -263,6 +266,7 @@ __koopa_complete() { # {{{1
                         'tokei'
                         'tree'
                         'udunits'
+                        # > 'unzip'
                         'vim'
                         'wget'
                         'which'
@@ -271,6 +275,7 @@ __koopa_complete() { # {{{1
                         'xsv'
                         'xtrans'
                         'xz'
+                        # > 'zip'
                         'zlib'
                         'zoxide'
                         'zsh'

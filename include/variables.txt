@@ -290,6 +290,8 @@ libgeotiff="1.7.1"
 # https://github.com/libgit2/libgit2
 libgit2="1.4.3"
 
+libice="1.0.10" # x11
+
 # https://www.gnu.org/software/libidn/
 libidn="2.3.2"
 
@@ -303,6 +305,8 @@ libpipeline="1.5.5"
 libpng="1.6.37"
 
 libpthread-stubs="0.4" # x11
+
+libsm="1.2.3" # x11
 
 # https://www.libssh2.org/
 libssh2="1.10.0"
@@ -340,6 +344,8 @@ libxml2="2.9.13"
 libxrandr="1.5.2" # x11
 
 libxrender="0.9.10" # x11
+
+libxt="1.2.1" # x11
 
 # https://libzip.org/download/
 libzip="1.8.0"

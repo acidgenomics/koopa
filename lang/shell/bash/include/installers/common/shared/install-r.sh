@@ -1,12 +1,29 @@
 #!/usr/bin/env bash
 
-# FIXME Need to build with support for Cairo.
-# NOTE Failing capabilities: jpeg, png, tiff, libxml, cairo
+# NOTE Consider requiring 'libxmu', 'pango', 'texlive-core', 'unzip', 'zip'
+# May also need to require: bz2, ncurses
+
+# FIXME cairo is still returning false, need to debug.
+# FIXME Need an install recipe for unzip/zip.
+# FIXME tex step is erroring on macOS:
+# I can't find file `texinfo.tex'.
+
+# FIXME Seeing x11 failure now:
+# configure: error: --with-x=yes (default) and X11 headers/libs are not available
+
+# FIXME Need to install libXt?
+# https://github.com/freedesktop/xorg-libXt
+# https://unix.stackexchange.com/questions/215728/with-x-yes-default-and-x11-headers-libs-are-not-available
+# FIXME May need to install xvfb for Linux.
+
+# FIXME This requires libXt...
+# checking for X11/Intrinsic.h... no
+# configure: error: --with-x=yes (default) and X11 headers/libs are not available
 
 main() { # {{{1
     # """
     # Install R.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-04-22.
     #
     # @section gfortran configuration on macOS:
     #
@@ -77,38 +94,64 @@ main() { # {{{1
     #       R-admin.html#Getting-patched-and-development-versions
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://svn.r-project.org/R/trunk/Makefile.in
+    # - https://github.com/archlinux/svntogit-packages/blob/
+    #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
     # """
-    local app conf_args dict
+    local app conf_args deps dict
     koopa_assert_has_no_args "$#"
-    # FIXME How to build/require X11?
-    koopa_activate_opt_prefix \
-        'cairo' \
-        'curl' \
-        'gettext' \
-        'icu4c' \
-        'lapack' \
-        'libffi' \
-        'libjpeg-turbo' \
-        'libpng' \
-        'libtiff' \
-        'libxml2' \
-        'openblas' \
-        'pcre2' \
-        'pkg-config' \
-        'readline' \
-        'tcl-tk' \
-        'texinfo' \
-        'xz' \
+    deps=(
+        # > 'bzip2'
+        # > 'perl'
+        # > 'unzip'
+        # > 'which'
+        # > 'zip'
+        'cairo'
+        'curl'
+        'fontconfig' # cairo
+        'freetype' # cairo
+        'gettext'
+        'glib' # cairo
+        'icu4c'
+        'lapack'
+        'libffi'
+        'libice' # x11
+        'libjpeg-turbo'
+        'libpng'
+        'libpthread-stubs' # x11
+        'libsm' # x11
+        'libtiff'
+        'libx11' # x11
+        'libxau' # x11
+        'libxcb' # x11
+        'libxdmcp' # x11
+        'libxext' # x11
+        'libxml2'
+        'libxrender' # x11
+        'libxt' # x11
+        'libxt' # x11
+        'lzo' # cairo
+        'openblas'
+        'pcre2'
+        'pixman' # cairo
+        'pkg-config'
+        'readline'
+        'tcl-tk'
+        'texinfo'
+        'xcb-proto' # x11
+        'xorgproto' # x11
+        'xz'
         'zlib'
+    )
     if koopa_is_linux
     then
-        koopa_activate_opt_prefix 'openjdk'
+        deps+=('openjdk')
     elif koopa_is_macos
     then
         # We're using Adoptium Temurin LTS on macOS.
         koopa_activate_prefix '/usr/local/gfortran'
         koopa_add_to_path_start '/Library/TeX/texbin'
     fi
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
         [pkg_config]="$(koopa_locate_pkg_config)"
@@ -121,7 +164,7 @@ main() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     conf_args=(
-        # > '--enable-BLAS-shlib'
+        # > '--enable-BLAS-shlib' # Linux only?
         "--prefix=${dict[prefix]}"
         '--enable-R-profiling'
         '--enable-R-shlib'
@@ -140,7 +183,23 @@ main() { # {{{1
         "--with-blas=$( \
             "${app[pkg_config]}" --libs 'openblas' \
         )"
-        '--with-cairo'  # FIXME Need to specify pkg-config?
+        "--with-cairo=$( \
+            "${app[pkg_config]}" --libs \
+                'cairo' \
+                'cairo-fc' \
+                'cairo-ft' \
+                'cairo-pdf' \
+                'cairo-png' \
+                'cairo-ps' \
+                'cairo-quartz' \
+                'cairo-quartz-font' \
+                'cairo-script' \
+                'cairo-svg' \
+                'cairo-xcb' \
+                'cairo-xcb-shm' \
+                'cairo-xlib' \
+                'cairo-xlib-xrender' \
+        )"
         '--with-static-cairo=no' # FIXME Check this on macOS?
         "--with-jpeglib=$( \
             "${app[pkg_config]}" --libs 'libjpeg' \
@@ -164,14 +223,13 @@ main() { # {{{1
         "--with-readline=$( \
             "${app[pkg_config]}" --libs 'readline' \
         )"
+        # For Tcl/Tk, alternatively can use:
         # > "--with-tcltk=$( \
         # >     "${app[pkg_config]}" --libs 'tcl' 'tk' \
         # > )"
         "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
         "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
-        '--without-cairo'
-        '--without-x'
-        '--with-x'  # FIXME Can we build with this ok?
+        '--with-x'
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
@@ -220,8 +278,7 @@ R-${dict[maj_ver]}/${dict[file]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
-    "${app[make]}" pdf
-    "${app[make]}" info
+    "${app[make]}" 'pdf' 'info'
     "${app[make]}" install
     app[r]="${dict[prefix]}/bin/R"
     app[rscript]="${app[r]}script"
