@@ -15,7 +15,7 @@ main() { # {{{1
     # """
     local app brewfile brewfiles dict install_args
     koopa_assert_has_no_args "$#"
-    koopa_link_in_bin "$(koopa_homebrew_prefix)/Homebrew/bin/brew"
+    koopa_link_in_bin "$(koopa_homebrew_prefix)/Homebrew/bin/brew" 'brew'
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
