@@ -467,6 +467,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         # >     CFLAGS \
         # >     CPPFLAGS \
         # >     LDFLAGS \
+        # >     LDLIBS \
         # >     LD_LIBRARY_PATH \
         # >     PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
@@ -506,6 +507,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             'CFLAGS' "${CFLAGS:-}" \
             'CPPFLAGS' "${CPPFLAGS:-}" \
             'LDFLAGS' "${LDFLAGS:-}" \
+            'LDLIBS' "${LDLIBS:-}" \
             'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:-}" \
             'PATH' "${PATH:-}" \
             'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
@@ -1160,6 +1162,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
             CFLAGS \
             CPPFLAGS \
             LDFLAGS \
+            LDLIBS \
             LD_LIBRARY_PATH \
             PKG_CONFIG_PATH
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
