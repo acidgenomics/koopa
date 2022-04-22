@@ -3,14 +3,14 @@
 main() { # {{{1
     # """
     # Install CMake.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-22.
     #
     # @seealso
     # - https://github.com/Kitware/CMake
     # """
     local app bootstrap_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'ncurses' 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

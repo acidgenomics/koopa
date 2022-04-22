@@ -278,6 +278,7 @@ koopa_locate_ffmpeg() { # {{{1
 
 koopa_locate_find() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='find' \
         --opt-name='findutils'
 }
