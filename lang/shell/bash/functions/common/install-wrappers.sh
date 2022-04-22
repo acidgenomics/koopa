@@ -1050,6 +1050,9 @@ koopa_uninstall_geos() { # {{{3
 # gettext ----------------------------------------------------------------- {{{2
 
 koopa_install_gettext() { # {{{3
+    # """
+    # https://github.com/Homebrew/homebrew-core/blob/master/Formula/gettext.rb
+    # """
     koopa_install_gnu_app \
         --name='gettext' \
         "$@"
