@@ -174,6 +174,9 @@ main() { # {{{1
         "--with-blas=$( \
             "${app[pkg_config]}" --libs 'openblas' \
         )"
+        # On macOS only, consider including:
+        # - 'cairo-quartz'
+        # - 'cairo-quartz-font'
         "--with-cairo=$( \
             "${app[pkg_config]}" --libs \
                 'cairo' \
@@ -182,8 +185,6 @@ main() { # {{{1
                 'cairo-pdf' \
                 'cairo-png' \
                 'cairo-ps' \
-                'cairo-quartz' \
-                'cairo-quartz-font' \
                 'cairo-script' \
                 'cairo-svg' \
                 'cairo-xcb' \
