@@ -19,9 +19,6 @@
 # Global variables {{{1
 # ==============================================================================
 
-HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/usr/local}"
-HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
-
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
 
@@ -41,9 +38,6 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # Restrict path, so we don't mask compiler binaries with virtual environment.
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/bin:/bin"
-
-# Homebrew.
-# > PATH="${PATH}:${HOMEBREW_PREFIX}/bin"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
