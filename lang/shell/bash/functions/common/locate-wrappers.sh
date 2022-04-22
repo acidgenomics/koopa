@@ -969,6 +969,7 @@ koopa_locate_touch() { # {{{1
 
 koopa_locate_tr() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='tr' \
         --opt-name='coreutils'
 }
