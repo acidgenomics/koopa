@@ -361,12 +361,12 @@ koopa_configure_system() { # {{{1
     # - xz
     # - gperf
     # - attr (Linux only)
-    # - icu4c
-
-    # - readline
     # - zlib
-
+    # - icu4c
+    # - readline
     # - ncurses
+
+    # - termcap
     # - libxml2
     # - gettext (requires libxml2, ncurses on Linux), move down...
 

@@ -261,6 +261,7 @@ __koopa_complete() { # {{{1
                         'tar'
                         'tcl-tk'
                         'tealdeer'
+                        'termcap'
                         'texinfo'
                         # > 'the-silver-searcher'
                         'tmux'

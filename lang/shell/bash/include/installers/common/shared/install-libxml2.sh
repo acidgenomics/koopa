@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This requires 'termcap.pc'.
+
 main() { # {{{
     # """
     # Install libxml2.
@@ -16,6 +18,7 @@ main() { # {{{
     koopa_activate_opt_prefix \
         'icu4c' \
         'readline' \
+        'termcap' \
         'zlib'
     declare -A app=(
         [make]="$(koopa_locate_make)"
