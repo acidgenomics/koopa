@@ -1,24 +1,15 @@
 #!/usr/bin/env bash
 
-# NOTE Consider requiring 'libxmu', 'pango', 'texlive-core', 'unzip', 'zip'
-# May also need to require: bz2, ncurses
-
-# FIXME cairo is still returning false, need to debug.
-# FIXME Need an install recipe for unzip/zip.
 # FIXME tex step is erroring on macOS:
 # I can't find file `texinfo.tex'.
-
-# FIXME Seeing x11 failure now:
-# configure: error: --with-x=yes (default) and X11 headers/libs are not available
-
-# FIXME Need to install libXt?
-# https://github.com/freedesktop/xorg-libXt
-# https://unix.stackexchange.com/questions/215728/with-x-yes-default-and-x11-headers-libs-are-not-available
-# FIXME May need to install xvfb for Linux.
 
 # FIXME This requires libXt...
 # checking for X11/Intrinsic.h... no
 # configure: error: --with-x=yes (default) and X11 headers/libs are not available
+
+# FIXME PDF rendering issue:
+# /opt/koopa/app/texinfo/6.8/bin/texi2dvi: texinfo.tex appears to be broken.
+# This may be due to the environment variable TEX set to something
 
 main() { # {{{1
     # """
@@ -278,7 +269,8 @@ R-${dict[maj_ver]}/${dict[file]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
-    "${app[make]}" 'pdf' 'info'
+    # > "${app[make]}" 'pdf'
+    "${app[make]}" 'info'
     "${app[make]}" install
     app[r]="${dict[prefix]}/bin/R"
     app[rscript]="${app[r]}script"

@@ -3185,16 +3185,48 @@ koopa_uninstall_tealdeer() { # {{{1
 
 # texinfo ----------------------------------------------------------------- {{{2
 
+# FIXME This seems to be problematic on macOS:
+# #include "EXTERN.h"         ^~~~~~~~~~1 error generated.make: *** [TestXS.lo] Error 1no fallback module for TestXS
+# unset the TEXINFO_XS and TEXINFO_XS_PARSER environment variables to use the pure Perl modules
+# BEGIN failed--compilation aborted at ../../Texinfo/XS/TestXS.pm line 31.
+# Compilation failed in require at -e line 1.
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(getprogname.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(mbiter.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(mbuiter.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(stat-time.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(threadlib.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(unistd.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(wctype-h.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(getprogname.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(mbiter.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(mbuiter.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(stat-time.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(threadlib.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(unistd.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libgnu.a(wctype-h.o) has no symbols
+
 koopa_install_texinfo() { # {{{3
-    koopa_install_gnu_app \
-        --link-in-bin='bin/pdftexi2dvi' \
-        --link-in-bin='bin/pod2texi' \
-        --link-in-bin='bin/texi2any' \
-        --link-in-bin='bin/texi2dvi' \
-        --link-in-bin='bin/texi2pdf' \
-        --link-in-bin='bin/texindex' \
-        --name='texinfo' \
-        "$@"
+    local install_args
+    install_args=(
+        '--link-in-bin=bin/pdftexi2dvi'
+        '--link-in-bin=bin/pod2texi'
+        '--link-in-bin=bin/texi2any'
+        '--link-in-bin=bin/texi2dvi'
+        '--link-in-bin=bin/texi2pdf'
+        '--link-in-bin=bin/texindex'
+        '--name=texinfo'
+        -D '--disable-dependency-tracking'
+        -D '--disable-install-warnings'
+    )
+    if ! koopa_is_macos
+    then
+        install_args+=(
+            '--activate-opt=gettext'
+            '--activate-opt=ncurses'
+            '--activate-opt=perl'
+        )
+    fi
+    koopa_install_gnu_app "${install_args[@]}" "$@"
 }
 
 koopa_uninstall_texinfo() { # {{{3
