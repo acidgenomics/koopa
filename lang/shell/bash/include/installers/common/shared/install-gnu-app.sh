@@ -42,6 +42,7 @@ main() { # {{{1
         'libtasn1' | \
         'libunistring' | \
         'make' | \
+        'mpc' | \
         'ncurses' | \
         'nettle' | \
         'patch' | \
