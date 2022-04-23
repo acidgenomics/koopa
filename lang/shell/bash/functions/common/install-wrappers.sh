@@ -2051,10 +2051,18 @@ koopa_uninstall_meson() { # {{{3
 # mpc --------------------------------------------------------------------- {{{2
 
 koopa_install_mpc() { # {{{3
+    local dict
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
+    dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
+    dict[mpfr]="$(koopa_realpath "${dict[opt_prefix]}/mpfr")"
     koopa_install_gnu_app \
         --activate-opt='gmp' \
         --activate-opt='mpfr' \
         --name='mpc' \
+        -D "--with-gmp=${dict[gmp]}" \
+        -D "--with-mpfr=${dict[mpfr]}" \
         "$@"
 }
 
