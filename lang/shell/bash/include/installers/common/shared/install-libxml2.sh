@@ -10,9 +10,8 @@ main() { # {{{
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix \
-        'pkg-config' \
-        'python'
+    # NOTE May need Python here.
+    koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
         'icu4c' \
         'readline' \

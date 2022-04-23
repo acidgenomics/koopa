@@ -149,10 +149,10 @@ koopa_brew_uninstall_all_brews() { # {{{1
         [brew]="$(koopa_locate_brew)"
         [wc]="$(koopa_locate_wc)"
     )
-    while [[ "$("${app[brew]}" list | "${app[wc]}" -l)" -gt 0 ]]
+    while [[ "$("${app[brew]}" list --formulae | "${app[wc]}" -l)" -gt 0 ]]
     do
         local brews
-        readarray -t brews <<< "$("${app[brew]}" list)"
+        readarray -t brews <<< "$("${app[brew]}" list --formulae)"
         "${app[brew]}" uninstall \
             --force \
             --ignore-dependencies \

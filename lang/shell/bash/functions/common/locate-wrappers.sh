@@ -675,6 +675,7 @@ koopa_locate_pcregrep() { # {{{1
 
 koopa_locate_perl() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='perl' \
         --opt-name='perl'
 }

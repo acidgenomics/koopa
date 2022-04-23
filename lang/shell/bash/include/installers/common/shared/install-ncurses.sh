@@ -20,7 +20,9 @@ main() { # {{{1
     koopa_mkdir "${dict[pkgconfig_dir]}"
     koopa_install_gnu_app \
         --name='ncurses' \
+        --no-link-in-opt \
         --no-prefix-check \
+        --quiet \
         -D '--enable-pc-files' \
         -D '--enable-widec' \
         -D '--with-cxx-binding' \
