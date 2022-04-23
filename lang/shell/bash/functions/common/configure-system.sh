@@ -362,9 +362,11 @@ koopa_configure_system() { # {{{1
     # - gperf
     # - attr (Linux only)
     # - zlib
+    # FIXME May need to install Perl here first, in a minimal environment.
     # - icu4c
-    # - readline
     # - ncurses
+    # - readline
+    # FIXME This requires Python, need to install before...
     # - libxml2
     # - gettext (requires libxml2, ncurses on Linux)
     # - gmp
