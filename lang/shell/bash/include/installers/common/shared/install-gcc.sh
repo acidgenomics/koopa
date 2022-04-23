@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Building GCC requires GMP 4.2+, MPFR 3.1.0+ and MPC 0.8.0+
-
 main() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-04-23.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -60,7 +58,7 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'gmp' 'libmpc' 'mpfr'
+    koopa_activate_opt_prefix 'gmp' 'mpc' 'mpfr'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -69,9 +67,13 @@ main() { # {{{1
         [gnu_mirror]="$(koopa_gnu_mirror_url)"
         [jobs]="$(koopa_cpu_count)"
         [name]='gcc'
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
+    dict[mpc]="$(koopa_realpath "${dict[opt_prefix]}/mpc")"
+    dict[mpfr]="$(koopa_realpath "${dict[opt_prefix]}/mpfr")"
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="${dict[gnu_mirror]}/${dict[name]}/\
 ${dict[name]}-${dict[version]}/${dict[file]}"
@@ -83,8 +85,10 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-checking=release'
-        '--enable-languages=c,c++,fortran,objc,obj-c++'
-        '--with-gmp'
+        '--enable-languages=c,c++,fortran' # also 'objc,obj-c++'
+        "--with-gmp=${dict[gmp]}"
+        "--with-mpc=${dict[mpc]}"
+        "--with-mpfr=${dict[mpfr]}"
         '-v'
     )
     if koopa_is_macos
