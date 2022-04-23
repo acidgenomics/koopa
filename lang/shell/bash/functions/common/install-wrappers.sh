@@ -2048,6 +2048,37 @@ koopa_uninstall_meson() { # {{{3
         "$@"
 }
 
+# mpc --------------------------------------------------------------------- {{{2
+
+koopa_install_mpc() { # {{{3
+    koopa_install_gnu_app \
+        --activate-opt='gmp' \
+        --activate-opt='mpfr' \
+        --name='mpc' \
+        "$@"
+}
+
+koopa_uninstall_mpc() { # {{{3
+    koopa_uninstall_app \
+        --name='mpc' \
+        "$@"
+}
+
+# mpfr -------------------------------------------------------------------- {{{2
+
+koopa_install_mpfr() { # {{{3
+    koopa_install_gnu_app \
+        --activate-opt='gmp' \
+        --name='mpfr' \
+        "$@"
+}
+
+koopa_uninstall_mpfr() { # {{{3
+    koopa_uninstall_app \
+        --name='mpfr' \
+        "$@"
+}
+
 # ncurses ----------------------------------------------------------------- {{{2
 
 koopa_install_ncurses() { # {{{3

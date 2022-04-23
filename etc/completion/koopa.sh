@@ -195,6 +195,8 @@ __koopa_complete() { # {{{1
                         'man-db'
                         'mcfly'
                         'meson'
+                        'mpc'
+                        'mpfr'
                         'ncurses'
                         'neofetch'
                         'neovim'
