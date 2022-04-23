@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Building GCC requires GMP 4.2+, MPFR 3.1.0+ and MPC 0.8.0+
+
 main() { # {{{1
     # """
     # Install GCC.
@@ -58,7 +60,7 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'gmp'
+    koopa_activate_opt_prefix 'gmp' 'libmpc' 'mpfr'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

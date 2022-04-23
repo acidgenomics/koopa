@@ -389,6 +389,12 @@ mcfly="0.6.0" # rust
 # https://github.com/mesonbuild/meson/tags
 meson="0.61.4"
 
+# http://www.multiprecision.org/mpc/
+mpc="1.2.1"
+
+# https://www.mpfr.org/
+mpfr="4.1.0"
+
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
 
