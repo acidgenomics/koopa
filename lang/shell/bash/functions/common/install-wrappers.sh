@@ -160,7 +160,7 @@ koopa_uninstall_bash() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Bash' \
         --name='bash' \
-        --unlink-app-in-bin='bash' \
+        --unlink-in-bin='bash' \
         "$@"
 }
 
