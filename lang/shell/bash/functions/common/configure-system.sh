@@ -355,6 +355,10 @@ koopa_configure_system() { # {{{1
     # Current working order:
     # - aws-cli
     # - pkg-config
+    # - gmp
+    # - mpfr
+    # - mpc
+    # - gcc
     # - make
     # - tar
     # - xz
@@ -369,7 +373,6 @@ koopa_configure_system() { # {{{1
     # FIXME This requires Python, need to install before...
     # - libxml2
     # - gettext (requires libxml2, ncurses on Linux)
-    # - gmp
     # - coreutils
     # - findutils
     # - autoconf
