@@ -128,7 +128,7 @@ __koopa_complete() { # {{{1
                         'fribidi'
                         'fzf'
                         'gawk'
-                        # > 'gcc'
+                        'gcc'
                         'gdal'
                         'geos'
                         'gettext'
