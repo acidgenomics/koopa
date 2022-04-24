@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2022-04-23.
+    # @note Updated 2022-04-24.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -85,7 +85,7 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-checking=release'
-        '--enable-languages=c,c++,fortran' # also 'objc,obj-c++'
+        '--enable-languages=c,c++,fortran,objc,obj-c++'
         "--with-gmp=${dict[gmp]}"
         "--with-mpc=${dict[mpc]}"
         "--with-mpfr=${dict[mpfr]}"
@@ -93,11 +93,13 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
     )
     if koopa_is_macos
     then
-        dict[mac_ver]="$(koopa_macos_os_version)"
-        dict[mac_maj_min_ver]="$(koopa_major_minor_version "${dict[mac_ver]}")"
+        app[uname]="$(koopa_locate_uname)"
+        # e.g. '21.4.0' for macOS 12.3.1.
+        dict[kernel_version]="$("${app[uname]}" -r)"
+        dict[kernel_maj_ver]="$(koopa_major_version "${dict[kernel_version]}")"
         dict[sdk_prefix]='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
         conf_args+=(
-            "--build=${dict[arch]}-apple-darwin${dict[mac_maj_min_ver]}"
+            "--build=${dict[arch]}-apple-darwin${dict[kernel_maj_ver]}"
             '--disable-multilib'
             '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict[sdk_prefix]}"
