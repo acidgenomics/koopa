@@ -1,0 +1,30 @@
+# """
+# Makevars configuration for additional koopa app packages.
+# @note Updated 2022-04-25.
+#
+# Refer to corresponding 'Makeconf' file for current system defaults.
+#
+# @seealso
+# - https://cran.r-project.org/doc/manuals/r-release/
+#     R-admin.html#macOS-packages
+# - https://cran.r-project.org/doc/manuals/r-devel/
+#     R-exts.html#Using-Makevars
+# - https://www.gnu.org/software/make/manual/make.html#Using-Implicit
+# - https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+# - https://github.com/fxcoudert/gfortran-for-macOS/releases/
+# - https://github.com/Rdatatable/data.table/wiki/Installation/
+# - https://mac.r-project.org/
+# """
+
+OPT_LOC = /opt/koopa/opt
+
+# May be requied for 'systemfonts' to install, which depends on 'ft2build.h'
+# from freetype, which is nested in 'include/freetype2' instead of 'include'.
+CPPFLAGS += -I$(OPT_LOC)/freetype/include/freetype2
+
+CPPFLAGS += -I$(OPT_LOC)/gettext/include
+LDFLAGS += -L$(OPT_LOC)/gettext/lib
+
+# Required for 'Rhtslib' to install, which depends on 'lzma.h'.
+CPPFLAGS += -I$(OPT_LOC)/xz/include
+LDFLAGS += -L$(OPT_LOC)/xz/lib
