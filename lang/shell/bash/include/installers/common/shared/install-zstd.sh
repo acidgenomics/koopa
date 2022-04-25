@@ -3,7 +3,7 @@
 main() { # {{{
     # """
     # Install zstd.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
@@ -11,7 +11,8 @@ main() { # {{{
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'cmake' 'zlib'
+    koopa_activate_build_opt_prefix 'cmake'
+    koopa_activate_opt_prefix 'zlib'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
@@ -29,9 +30,9 @@ main() { # {{{
         '-S' 'build/cmake'
         '-B' 'builddir'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        # > "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
-        # > '-DZSTD_BUILD_CONTRIB=ON'
-        # > '-DZSTD_LEGACY_SUPPORT=ON'
+        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        '-DZSTD_BUILD_CONTRIB=ON'
+        '-DZSTD_LEGACY_SUPPORT=ON'
     )
     "${app[cmake]}" "${cmake_args[@]}"
     "${app[cmake]}" --build 'builddir'

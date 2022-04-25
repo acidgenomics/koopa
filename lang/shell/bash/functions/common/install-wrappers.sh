@@ -1939,6 +1939,20 @@ koopa_uninstall_luarocks() { # {{{3
         "$@"
 }
 
+# lz4 --------------------------------------------------------------------- {{{2
+
+koopa_install_lz4() { # {{{3
+    koopa_install_app \
+        --name='lz4' \
+        "$@"
+}
+
+koopa_uninstall_lz4() { # {{{3
+    koopa_uninstall_app \
+        --name='lz4' \
+        "$@"
+}
+
 # lzma -------------------------------------------------------------------- {{{2
 
 koopa_install_lzma() { # {{{3
@@ -2913,7 +2927,7 @@ koopa_uninstall_rmate() { # {{{3
 
 koopa_install_rsync() { # {{{3
     koopa_install_app \
-        --link-in-bin='rsync' \
+        --link-in-bin='bin/rsync' \
         --name='rsync' \
         "$@"
 }
@@ -3473,6 +3487,20 @@ koopa_install_xtrans() { # {{{3
 koopa_uninstall_xtrans() { # {{{3
     koopa_uninstall_app \
         --name='xtrans' \
+        "$@"
+}
+
+# xxhash ------------------------------------------------------------------ {{{2
+
+koopa_install_xxhash() { # {{{3
+    koopa_install_app \
+        --name='xxhash' \
+        "$@"
+}
+
+koopa_uninstall_xxhash() { # {{{3
+    koopa_uninstall_app \
+        --name='xxhash' \
         "$@"
 }
 
