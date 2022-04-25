@@ -3,16 +3,16 @@
 main() { # {{{1
     # """
     # Install libsm.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libsm.rb
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
         'libice' \
-        'pkg-config' \
         'xorgproto' \
         'xtrans'
     declare -A app=(

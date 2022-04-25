@@ -23,14 +23,15 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    # Use 'PCRE' not 'PCRE2' here.
-    koopa_activate_opt_prefix \
+    koopa_activate_build_opt_prefix \
         'autoconf' \
         'automake' \
-        'gettext' \
         'libtool' \
+        'pkg-config'
+    # Use 'PCRE' not 'PCRE2' here.
+    koopa_activate_opt_prefix \
+        'gettext' \
         'pcre' \
-        'pkg-config' \
         'zlib'
     declare -A app=(
         [autoreconf]="$(koopa_locate_autoreconf)"

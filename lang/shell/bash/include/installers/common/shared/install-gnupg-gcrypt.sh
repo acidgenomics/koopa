@@ -6,10 +6,7 @@ main() { # {{{1
     # @note Updated 2022-04-25.
     # """
     local app conf_args dict
-    koopa_activate_build_opt_prefix \
-        'autoconf' \
-        'automake' \
-        'pkg-config'
+    koopa_activate_build_opt_prefix 'autoconf' 'automake' 'pkg-config'
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'

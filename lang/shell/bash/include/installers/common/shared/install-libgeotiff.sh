@@ -5,7 +5,7 @@
 main() { # {{{1
     # """
     # Install libgeotiff.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://github.com/OSGeo/libgeotiff
@@ -14,11 +14,10 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'libtool' 'pkg-config'
     koopa_activate_opt_prefix \
         'jpeg' \
         'libtiff' \
-        'libtool' \
-        'pkg-config' \
         'proj' \
         'zlib'
     declare -A app=(

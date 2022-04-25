@@ -10,12 +10,8 @@ main() { # {{{1
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix \
-        'cmake' \
-        'libssh2' \
-        'openssl' \
-        'pkg-config' \
-        'zlib'
+    koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
+    koopa_activate_opt_prefix 'libssh2' 'openssl' 'zlib'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
