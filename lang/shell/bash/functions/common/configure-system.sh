@@ -394,6 +394,8 @@ koopa_configure_system() { # {{{1
     # - nettle
     # - gnutls
     # - python
+    # - ninja
+    # - meson
     # - git
     # - lz4
     # - xxhash
@@ -403,12 +405,12 @@ koopa_configure_system() { # {{{1
     # - apr
     # - apr-util
     # - fish
-    # - perl # FIXME Move this up...
+    # - perl # FIXME Move this up?
+    # - perl-packages
     # - gawk
     # - sed
     # - sqlite
     # - groff
-
     # - hdf5
     # - imagemagick
     # - jpeg
@@ -425,7 +427,36 @@ koopa_configure_system() { # {{{1
     # - openblas
     # - tcl-tk
     # - man-db
+    # - lua
+    # - luarocks
     # - neovim
+    # - go
+    # - rust
+    # - julia
+    # - julia-packages
+    # - nim
+    # - nim-packages
+    # - node-binary (or node)
+    # - node-packages
+    # - ruby
+    # - ruby-packages
+
+    # - udunits
+    # - scons
+    # - serf
+
+    # - neofetch
+    # - subversion
+    # - tree
+    # - vim
+    # - wget
+    # - openssh
+    # - cpufetch
+    # - chemacs
+
+    # - haskell-stack
+    # - hadolint
+    # - pandoc
 
     # NOTE Consider not installing these by default:
     # - geos
@@ -433,34 +464,9 @@ koopa_configure_system() { # {{{1
     # - libgeotiff
     # - gdal
 
-    # Ubuntu machine:
-    # - rust
-    # - rust-packages
-    # - go
-    # - haskell-stack
-    # - julia
-    # - lua
-    # - luarocks
-    # - meson
-    # - neofetch
-    # - nim
-    # - ninja
-    # - node
-    # - neovim
-    # - ruby
-    # - scons
-    # - serf
-    # - subversion
-    # - tree
-    # - udunits
-    # - vim
-    # - wget
-    # - openssh
-    # - cpufetch
-    # - nim-packages
-    # - node-packages
-    # - perl-packages
-    # - chemacs
+    # - x11 dependencies
+    # - cairo
+    # - r
 
     # Don't push these:
     # - conda
@@ -468,6 +474,11 @@ koopa_configure_system() { # {{{1
     # - julia-packages
     # - r-packages
     # - ruby-packages
+
+    # - doom-emacs
+    # - prelude-emacs
+    # - spacemacs
+    # - spacevim
 
     [[ "${dict[install_dotfiles]}" -eq 1 ]] && \
         koopa install 'dotfiles'
