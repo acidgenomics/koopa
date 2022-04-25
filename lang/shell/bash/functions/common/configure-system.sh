@@ -412,6 +412,7 @@ koopa_configure_system() { # {{{1
     # - hdf5
     # - imagemagick
     # - jpeg
+    # - libjpeg-turbo
     # - lesspipe
     # - libidn
     # - libtiff
@@ -423,7 +424,6 @@ koopa_configure_system() { # {{{1
     # - libpng
     # - openblas
     # - tcl-tk
-    # - unzip
     # - man-db
     # - neovim
 

@@ -3,7 +3,7 @@
 main() { # {{{
     # """
     # Install OpenBLAS.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -13,10 +13,7 @@ main() { # {{{
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    if koopa_is_macos
-    then
-        koopa_activate_prefix '/usr/local/gfortran'
-    fi
+    koopa_activate_opt_prefix 'gcc'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
