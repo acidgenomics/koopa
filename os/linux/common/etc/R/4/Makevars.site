@@ -1,10 +1,1 @@
-# """
-# R for Linux Makevars configuration.
-# @note Updated 2022-04-22.
-# """
-
-OPT_LOC = /opt/koopa/opt
-
-# May be requied for 'systemfonts' to install, which depends on 'ft2build.h'
-# from freetype, which is nested in 'include/freetype2' instead of 'include'.
-CPPFLAGS += -I$(OPT_LOC)/freetype/include/freetype2
+../../../../../../etc/R/Makevars.site

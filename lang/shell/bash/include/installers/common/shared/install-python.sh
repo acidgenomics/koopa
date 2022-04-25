@@ -7,7 +7,7 @@
 main() { # {{{1
     # """
     # Install Python.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-25.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -28,6 +28,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
@@ -39,7 +40,7 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[openssl_prefix]="${dict[opt_prefix]}/openssl"
+    dict[openssl_prefix]="$(koopa_realpath "${dict[opt_prefix]}/openssl")"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[file]="Python-${dict[version]}.tar.xz"
     dict[url]="https://www.python.org/ftp/${dict[name]}/${dict[version]}/\

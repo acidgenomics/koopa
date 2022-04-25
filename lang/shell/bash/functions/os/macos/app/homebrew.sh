@@ -72,7 +72,7 @@ koopa_macos_brew_cask_quarantine_fix() { # {{{1
 koopa_macos_brew_upgrade_casks() { # {{{1
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-04-24.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
@@ -108,7 +108,8 @@ koopa_macos_brew_upgrade_casks() { # {{{1
             'openjdk' | \
             'r' | \
             'temurin')
-                koopa_configure_r
+                app[r]="$(koopa_macos_r_prefix)/bin/R"
+                koopa_configure_r "${app[r]}"
                 ;;
             # > 'emacs')
             # >     "${app[brew]}" unlink 'emacs'
