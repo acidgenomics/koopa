@@ -13,7 +13,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-04-21"
+koopa-date="2022-04-25"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -220,7 +220,7 @@ gnupg="2.3.4"
 gnutls="3.7.4"
 
 # https://golang.org/dl/
-go="1.18"
+go="1.18.1"
 
 # https://cloud.google.com/sdk/docs/install
 google-cloud-sdk="380.0.0"
@@ -369,7 +369,7 @@ lmod="8.6"
 lua="5.4.4"
 
 # https://github.com/luarocks/luarocks/releases
-luarocks="3.8.0"
+luarocks="3.9.0"
 
 # https://lz4.github.io/lz4/
 lz4="1.9.3"
@@ -390,7 +390,7 @@ man-db="2.10.2"
 mcfly="0.6.0" # rust
 
 # https://github.com/mesonbuild/meson/tags
-meson="0.61.4"
+meson="0.62.1"
 
 # http://www.multiprecision.org/mpc/
 mpc="1.2.1"
@@ -543,7 +543,7 @@ rstudio-server="2022.02.1+461"
 rstudio-workbench="2022.02.1+441.pro1"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="3.1.1p18"
+ruby="3.1.2"
 
 # https://www.rust-lang.org/
 rust="1.60.0"
