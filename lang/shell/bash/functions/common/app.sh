@@ -170,7 +170,7 @@ koopa_find_app_version() { # {{{1
 koopa_install_app() { # {{{1
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-04-25.
     # """
     local app bin_arr build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -413,8 +413,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     then
         if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
         then
-            if [[ "${dict[reinstall]}" -eq 1 ]] || \
-                koopa_is_empty_dir "${dict[prefix]}"
+            if [[ "${dict[reinstall]}" -eq 1 ]]
             then
                 case "${dict[mode]}" in
                     'system')
