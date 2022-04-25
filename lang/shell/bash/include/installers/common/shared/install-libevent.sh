@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install libevent.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -11,7 +11,8 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'openssl' 'pkg-config'
+    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
