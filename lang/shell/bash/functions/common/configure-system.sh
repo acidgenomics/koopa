@@ -366,7 +366,6 @@ koopa_configure_system() { # {{{1
     # - gperf
     # - attr (Linux only)
     # - zlib
-    # - zstd
     # FIXME May need to install Perl here first, in a minimal environment.
     # - icu4c
     # - ncurses
@@ -381,6 +380,7 @@ koopa_configure_system() { # {{{1
     # - libtool
     # - openssl
     # - cmake (requires openssl)
+    # - zstd
     # - pcre
     # - pcre2 (requires bzip2, zlib)
     # - grep (requires pcre2)
