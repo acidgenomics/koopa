@@ -482,6 +482,8 @@ koopa_install_coreutils() { # {{{3
         '--link-in-bin=bin/who'
         '--link-in-bin=bin/whoami'
         '--link-in-bin=bin/yes'
+        -D '--with-gmp'
+        -D '--without-selinux'
     )
     if koopa_is_linux
     then
