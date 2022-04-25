@@ -19,7 +19,8 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'autoconf' 'openssl'
+    koopa_activate_build_opt_prefix 'autoconf'
+    koopa_activate_opt_prefix 'openssl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
         [openssl]="$(koopa_locate_openssl)"
