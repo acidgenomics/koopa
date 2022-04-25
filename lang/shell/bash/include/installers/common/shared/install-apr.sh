@@ -14,7 +14,7 @@ main() { #{{{1
     koopa_assert_has_no_args "$#"
     if koopa_is_macos
     then
-        koopa_activate_opt_prefix 'autoconf' 'automake' 'libtool'
+        koopa_activate_build_opt_prefix 'autoconf' 'automake' 'libtool'
     fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
