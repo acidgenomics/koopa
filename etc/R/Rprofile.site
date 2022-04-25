@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-04-21.
+#' @note Updated 2022-04-25.
 #'
 #' @section Restarting R:
 #'
@@ -62,6 +62,18 @@ local({  # nolint
         "macos" = identical(dict[["sysname"]], "Darwin"),
         "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))
     )
+    if (isTRUE(flag[["macos"]])) {
+        flag[["framework"]] <- identical(
+            x = R.home(),
+            y = file.path(
+                "",
+                "Library",
+                "Frameworks",
+                "R.framework",
+                "Resources"
+            )
+        )
+    }
 
     ## Secrets {{{2
     ## -------------------------------------------------------------------------
@@ -118,10 +130,7 @@ local({  # nolint
     ## Warn on active conda environment.
     ## Conda can cause compilation issues due to GCC version mismatch.
 
-    if (
-        isTRUE(flag[["conda"]]) &&
-        isTRUE(flag[["interactive"]])
-    ) {
+    if (isTRUE(flag[["conda"]]) && isTRUE(flag[["interactive"]])) {
         message(sprintf(
             fmt = paste(
                 "conda '%s' environment detected.",
@@ -140,28 +149,43 @@ local({  # nolint
     ## Instead, install specific Clang and GNU Fortran binaries:
     ## https://cran.r-project.org/bin/macosx/tools/
 
-    if (isFALSE(flag[["conda"]])) {
-        if (isTRUE(flag[["macos"]])) {
-            ## Check that Xcode command line tools (CLT) are installed.
-            if (!isTRUE(dir.exists(file.path(
-                "/",
-                "Library",
-                "Developer",
-                "CommandLineTools",
-                "SDKs",
-                "MacOSX.sdk"
-            )))) {
-                stop(paste(
-                    "Failed to detect Xcode CLT.",
-                    "This can happen after a macOS system update.",
-                    "Run 'xcode-select --install' to install.",
-                    sep = "\n"
-                ))
-            }
-        } else if (isTRUE(flag[["linux"]])) {
-            stopifnot(all(nzchar(Sys.which(c(
-                "g++", "gcc", "gfortran"
-            )))))
+    if (isTRUE(flag[["macos"]]) && isTRUE(flag[["framework"]])) {
+        if (isFALSE(dir.exists(file.path(
+            "",
+            "Library",
+            "Developer",
+            "CommandLineTools",
+            "SDKs",
+            "MacOSX.sdk"
+        )))) {
+            stop(paste(
+                "Xcode CLT is not installed.",
+                "Run 'koopa install xcode-clt' to resolve.",
+                sep = "\n"
+            ))
+        }
+        if (isFALSE(dir.exists(file.path("", "usr", "local", "gfortran")))) {
+            stop(paste(
+                "CRAN gfortran is not installed.",
+                "Run 'koopa install r-gfortran' to resolve.",
+                sep = "\n"
+            ))
+        }
+        ## FIXME Check that openmp is installed.
+        if (isFALSE(all(file.exists(file.path(
+            "", "usr", "local",
+            c(
+                file.path("include", "omp-tools.h"),
+                file.path("include", "omp.h"),
+                file.path("include", "ompt.h"),
+                file.path("lib", "libomp.dylib")
+            )
+        ))))) {
+            stop(paste(
+                "OpenMP for Xcode is not installed.",
+                "Run 'koopa install r-openmp' to resolve.",
+                sep = "\n"
+            ))
         }
     }
 
@@ -229,13 +253,7 @@ local({  # nolint
 
     ## Allow binary install on macOS for CRAN R. Otherwise default to installing
     ## from source. Note that RSPM doesn't currently support macOS binaries.
-    if (
-        isTRUE(flag[["macos"]]) &&
-        isTRUE(grepl(
-            pattern = "^/Library/Frameworks/R.framework/Resources",
-            x = Sys.getenv("R_HOME")
-        ))
-    ) {
+    if (isTRUE(flag[["macos"]]) && isTRUE(flag[["framework"]])) {
         options(
             "pkgType" = "both",
             "install.packages.compile.from.source" = "never"
