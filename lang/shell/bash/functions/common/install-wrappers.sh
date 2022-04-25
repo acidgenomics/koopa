@@ -160,7 +160,7 @@ koopa_uninstall_bash() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Bash' \
         --name='bash' \
-        --unlink-app-in-bin='bash' \
+        --unlink-in-bin='bash' \
         "$@"
 }
 
@@ -989,19 +989,19 @@ koopa_uninstall_gawk() { # {{{3
 
 # gcc --------------------------------------------------------------------- {{{2
 
-# > koopa_install_gcc() { # {{{3
-# >     koopa_install_app \
-# >         --name-fancy='GCC' \
-# >         --name='gcc' \
-# >         "$@"
-# > }
+koopa_install_gcc() { # {{{3
+    koopa_install_app \
+        --name-fancy='GCC' \
+        --name='gcc' \
+        "$@"
+}
 
-# > koopa_uninstall_gcc() { # {{{3
-# >     koopa_uninstall_app \
-# >         --name-fancy='GCC' \
-# >         --name='gcc' \
-# >         "$@"
-# > }
+koopa_uninstall_gcc() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='GCC' \
+        --name='gcc' \
+        "$@"
+}
 
 # gdal -------------------------------------------------------------------- {{{2
 
@@ -1941,6 +1941,20 @@ koopa_uninstall_luarocks() { # {{{3
         "$@"
 }
 
+# lz4 --------------------------------------------------------------------- {{{2
+
+koopa_install_lz4() { # {{{3
+    koopa_install_app \
+        --name='lz4' \
+        "$@"
+}
+
+koopa_uninstall_lz4() { # {{{3
+    koopa_uninstall_app \
+        --name='lz4' \
+        "$@"
+}
+
 # lzma -------------------------------------------------------------------- {{{2
 
 koopa_install_lzma() { # {{{3
@@ -2047,6 +2061,45 @@ koopa_uninstall_meson() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Meson' \
         --name='meson' \
+        "$@"
+}
+
+# mpc --------------------------------------------------------------------- {{{2
+
+koopa_install_mpc() { # {{{3
+    local dict
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
+    dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
+    dict[mpfr]="$(koopa_realpath "${dict[opt_prefix]}/mpfr")"
+    koopa_install_gnu_app \
+        --activate-opt='gmp' \
+        --activate-opt='mpfr' \
+        --name='mpc' \
+        -D "--with-gmp=${dict[gmp]}" \
+        -D "--with-mpfr=${dict[mpfr]}" \
+        "$@"
+}
+
+koopa_uninstall_mpc() { # {{{3
+    koopa_uninstall_app \
+        --name='mpc' \
+        "$@"
+}
+
+# mpfr -------------------------------------------------------------------- {{{2
+
+koopa_install_mpfr() { # {{{3
+    koopa_install_gnu_app \
+        --activate-opt='gmp' \
+        --name='mpfr' \
+        "$@"
+}
+
+koopa_uninstall_mpfr() { # {{{3
+    koopa_uninstall_app \
+        --name='mpfr' \
         "$@"
 }
 
@@ -2876,7 +2929,7 @@ koopa_uninstall_rmate() { # {{{3
 
 koopa_install_rsync() { # {{{3
     koopa_install_app \
-        --link-in-bin='rsync' \
+        --link-in-bin='bin/rsync' \
         --name='rsync' \
         "$@"
 }
@@ -3436,6 +3489,20 @@ koopa_install_xtrans() { # {{{3
 koopa_uninstall_xtrans() { # {{{3
     koopa_uninstall_app \
         --name='xtrans' \
+        "$@"
+}
+
+# xxhash ------------------------------------------------------------------ {{{2
+
+koopa_install_xxhash() { # {{{3
+    koopa_install_app \
+        --name='xxhash' \
+        "$@"
+}
+
+koopa_uninstall_xxhash() { # {{{3
+    koopa_uninstall_app \
+        --name='xxhash' \
         "$@"
 }
 

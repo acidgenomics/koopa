@@ -3,8 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-#
-# @note Updated 2022-04-22.
+# @note Updated 2022-04-24.
 #
 # @seealso
 # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
@@ -47,7 +46,7 @@ PATH="${KOOPA_OPT_PREFIX}/subversion/bin:${PATH}"
 PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 
 # GNU Fortran from fxcoudert, recommended by CRAN.
-PATH="/usr/local/gfortran/bin:${PATH}"
+# > PATH="/usr/local/gfortran/bin:${PATH}"
 
 # pdflatex is required for PDF manual generation.
 PATH="${PATH}:/Library/TeX/texbin"

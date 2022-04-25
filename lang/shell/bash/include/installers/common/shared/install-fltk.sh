@@ -3,14 +3,14 @@
 main() {
     # """
     # Install FLTK.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/fltk.rb
     # - https://courses.cs.washington.edu/courses/csep557/14au/tools/
     #     fltk_install.html
     # """
-    local app cmake_args conf_args dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa_locate_make)"
