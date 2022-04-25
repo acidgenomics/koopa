@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install GEOS.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-25.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.
@@ -32,7 +32,7 @@ main() { # {{{1
             '/usr/include/geos' \
             '/usr/include/geos_c.h'
     fi
-    koopa_activate_opt_prefix 'cmake'
+    koopa_activate_build_opt_prefix 'cmake'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
