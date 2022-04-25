@@ -59,7 +59,7 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
         koopa_alert "Linking shared config scripts into '${dict[etc_dir]}'."
         dict[distro_prefix]="$(koopa_distro_prefix)"
         koopa_ln \
-            -t "${dict[etc_dir]}" \
+            --target-directory="${dict[etc_dir]}" \
             "${dict[distro_prefix]}/etc/zsh/"*
     fi
     if [[ "${dict[link_in_bin]}" -eq 1 ]]

@@ -355,6 +355,10 @@ koopa_configure_system() { # {{{1
     # Current working order:
     # - aws-cli
     # - pkg-config
+    # - gmp
+    # - mpfr
+    # - mpc
+    # - gcc
     # - make
     # - tar
     # - xz
@@ -369,7 +373,6 @@ koopa_configure_system() { # {{{1
     # FIXME This requires Python, need to install before...
     # - libxml2
     # - gettext (requires libxml2, ncurses on Linux)
-    # - gmp
     # - coreutils
     # - findutils
     # - autoconf
@@ -383,12 +386,17 @@ koopa_configure_system() { # {{{1
     # - curl
     # - bash
     # - zsh
-
+    # - fltk
+    # - gnupg
+    # - libtasn1
+    # - libunistring
+    # - nettle
     # - gnutls
     # - python
     # - git
+    # - lz4
+    # - xxhash
     # - rsync
-
     # - libevent
     # - tmux
     # - apr
@@ -396,6 +404,7 @@ koopa_configure_system() { # {{{1
     # - fish
     # - perl
     # - gawk
+
     # - sqlite
     # - geos
     # - proj
@@ -405,8 +414,6 @@ koopa_configure_system() { # {{{1
     # - sed
     # - rust
     # - rust-packages
-    # - fltk
-    # - gnupg
     # - go
     # - groff
     # - haskell-stack
