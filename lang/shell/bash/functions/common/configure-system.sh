@@ -446,17 +446,18 @@ koopa_configure_system() { # {{{1
     # - scons
     # - serf
 
-    # - neofetch
     # - subversion
     # - tree
     # - wget
-    # - openssh
-    # - cpufetch
-    # - chemacs
 
     # - haskell-stack
     # - hadolint
     # - pandoc
+
+    # - openssh
+    # - neofetch
+    # - cpufetch
+    # - chemacs
 
     # NOTE Consider not installing these by default:
     # - geos
@@ -471,9 +472,7 @@ koopa_configure_system() { # {{{1
     # Don't push these:
     # - conda
     # - anaconda
-    # - julia-packages
     # - r-packages
-    # - ruby-packages
 
     # - doom-emacs
     # - prelude-emacs
