@@ -281,7 +281,7 @@ koopa_get_version_from_pkg_config() { # {{{1
 koopa_sanitize_version() { # {{{1
     # """
     # Sanitize version.
-    # @note Updated 2022-02-27.
+    # @note Updated 2022-04-25.
     #
     # @examples
     # > koopa_sanitize_version '2.7.1p83'
@@ -298,6 +298,7 @@ koopa_sanitize_version() { # {{{1
         str="$( \
             koopa_sub \
                 --pattern='^([.0-9]+).*$' \
+                --regex \
                 --replacement='\1' \
                 "$str" \
         )"
