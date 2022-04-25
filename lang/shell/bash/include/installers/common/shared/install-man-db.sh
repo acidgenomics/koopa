@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for this. Test on Ubuntu instance.
-# FIXME Need to add support for GNU pipeline.
-
 main() { # {{{1
     # """
     # Install man-db.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://man-db.nongnu.org/development.html
@@ -16,7 +13,6 @@ main() { # {{{1
     install_args=(
         '--activate-opt=groff'
         '--activate-opt=libpipeline'
-        '--activate-opt=pkg-config'
     )
     install_args+=(
         # > -D "--with-config-file=#{etc}/man_db.conf"
@@ -31,6 +27,7 @@ main() { # {{{1
     )
     koopa_install_gnu_app \
         --name='man-db' \
+        --no-link-in-opt \
         --no-prefix-check \
         --quiet \
         "${install_args[@]}" \

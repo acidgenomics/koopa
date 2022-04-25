@@ -3,7 +3,7 @@
 main() { # {{{
     # """
     # Install LAPACK.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
@@ -12,10 +12,7 @@ main() { # {{{
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    if koopa_is_macos
-    then
-        koopa_activate_prefix '/usr/local/gfortran'
-    fi
+    koopa_activate_opt_prefix 'gcc'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
