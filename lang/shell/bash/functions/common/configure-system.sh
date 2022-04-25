@@ -366,6 +366,7 @@ koopa_configure_system() { # {{{1
     # - gperf
     # - attr (Linux only)
     # - zlib
+    # - zstd
     # FIXME May need to install Perl here first, in a minimal environment.
     # - icu4c
     # - ncurses
@@ -404,30 +405,43 @@ koopa_configure_system() { # {{{1
     # - fish
     # - perl # FIXME Move this up...
     # - gawk
-    # - sqlite
-
-    # FIXME Don't install these by default...
-    # - geos
-    # - proj
-    # - gdal
-    # - libgeotiff (needs to go up?)
-
-    # Ubuntu machine:
     # - sed
-    # - rust
-    # - rust-packages
-    # - go
+    # - sqlite
     # - groff
-    # - haskell-stack
+
     # - hdf5
     # - imagemagick
     # - jpeg
-    # - julia
     # - lesspipe
     # - libidn
     # - libtiff
     # - libxml2
     # - libzip # maybe require gnutls here
+    # - gzip
+    # - lapack
+    # - libffi
+    # - libpng
+    # - openblas
+    # - tcl-tk
+    # - unzip
+    # - man-db
+    # - neovim
+
+
+
+
+    # NOTE Consider not installing these by default:
+    # - geos
+    # - proj
+    # - libgeotiff
+    # - gdal
+
+    # Ubuntu machine:
+    # - rust
+    # - rust-packages
+    # - go
+    # - haskell-stack
+    # - julia
     # - lua
     # - luarocks
     # - meson
@@ -444,8 +458,6 @@ koopa_configure_system() { # {{{1
     # - udunits
     # - vim
     # - wget
-    # - zlib  # FIXME Move this up
-    # - zstd  # FIXME Move this up
     # - openssh
     # - cpufetch
     # - nim-packages
@@ -459,18 +471,6 @@ koopa_configure_system() { # {{{1
     # - julia-packages
     # - r-packages
     # - ruby-packages
-
-    # Recipes that we need to install and/or move up in priority list:
-    # - gcc (Linux only)?
-    # - gzip
-    # - lapack
-    # - libffi
-    # - libpng
-    # - openblas
-    # - tcl-tk
-    # - unzip
-    # - man-db
-    # - neovim
 
     [[ "${dict[install_dotfiles]}" -eq 1 ]] && \
         koopa install 'dotfiles'
