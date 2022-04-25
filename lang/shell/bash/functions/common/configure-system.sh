@@ -404,6 +404,7 @@ koopa_configure_system() { # {{{1
     # - fish
     # - perl
     # - gawk
+
     # - sqlite
     # - geos
     # - proj
