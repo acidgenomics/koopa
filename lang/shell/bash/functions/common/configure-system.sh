@@ -386,8 +386,13 @@ koopa_configure_system() { # {{{1
     # - curl
     # - bash
     # - zsh
-
+    # - fltk
+    # - gnupg
+    # - libtasn1
+    # - libunistring
+    # - nettle
     # - gnutls
+
     # - python
     # - git
     # - rsync
@@ -408,8 +413,6 @@ koopa_configure_system() { # {{{1
     # - sed
     # - rust
     # - rust-packages
-    # - fltk
-    # - gnupg
     # - go
     # - groff
     # - haskell-stack
