@@ -90,6 +90,7 @@ main() { # {{{1
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
+    build_deps=('pkg-config')
     deps=(
         # > 'bzip2'
         # > 'perl'
@@ -124,7 +125,6 @@ main() { # {{{1
         'openblas'
         'pcre2'
         'pixman' # cairo
-        'pkg-config'
         'readline'
         'tcl-tk'
         'texinfo'
@@ -138,10 +138,11 @@ main() { # {{{1
         deps+=('openjdk')
     elif koopa_is_macos
     then
-        # We're using Adoptium Temurin LTS on macOS.
-        koopa_activate_prefix '/usr/local/gfortran'
+        # We're using Adoptium Temurin LTS for OpenJDK on macOS.
+        deps+=('gcc')
         koopa_add_to_path_start '/Library/TeX/texbin'
     fi
+    koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
@@ -154,6 +155,7 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    # FIXME Can we rework this to not have to include pkg-config calls here?
     conf_args=(
         # > '--enable-BLAS-shlib' # Linux only?
         "--prefix=${dict[prefix]}"
@@ -192,7 +194,7 @@ main() { # {{{1
                 'cairo-xlib' \
                 'cairo-xlib-xrender' \
         )"
-        '--with-static-cairo=no' # FIXME Check this on macOS?
+        '--with-static-cairo=no'
         "--with-jpeglib=$( \
             "${app[pkg_config]}" --libs 'libjpeg' \
         )"
