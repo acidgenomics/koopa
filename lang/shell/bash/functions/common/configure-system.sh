@@ -396,6 +396,7 @@ koopa_configure_system() { # {{{1
     # - python
     # - ninja
     # - meson
+    # - vim
     # - git
     # - lz4
     # - xxhash
@@ -448,7 +449,6 @@ koopa_configure_system() { # {{{1
     # - neofetch
     # - subversion
     # - tree
-    # - vim
     # - wget
     # - openssh
     # - cpufetch
