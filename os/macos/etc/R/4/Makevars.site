@@ -17,8 +17,12 @@
 # - https://github.com/Rdatatable/data.table/wiki/Installation/
 # """
 
-SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
 OPT_LOC = /opt/koopa/opt
+
+SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
+
+## FIXME Use this in our AcidDevTools lib:
+## > R.version[["arch"]]
 
 # > GCC_LOC = $(OPT_LOC)/gcc
 # > ARCH = x86_64
