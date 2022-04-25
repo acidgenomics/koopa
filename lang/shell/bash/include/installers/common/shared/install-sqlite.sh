@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install SQLite.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-04-25.
     #
     # Use autoconf instead of amalgamation.
     #
@@ -21,6 +21,7 @@ main() { # {{{1
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'readline' 'zlib'
     declare -A app=(
         [make]="$(koopa_locate_make)"
         [sed]="$(koopa_locate_sed)"
