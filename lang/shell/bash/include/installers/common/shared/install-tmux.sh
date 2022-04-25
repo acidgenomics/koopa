@@ -3,13 +3,14 @@
 main() { # {{{1
     # """
     # Install Tmux.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-25.
     #
     # Consider adding tmux to enabled shells in a future update.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'libevent' 'pkg-config'
+    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_opt_prefix 'libevent' 'ncurses'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -30,6 +31,6 @@ download/${dict[version]}/${dict[file]}"
     "${app[make]}" install
     app[tmux]="${dict[prefix]}/bin/tmux"
     koopa_assert_is_installed "${app[tmux]}"
-    "${app[tmux]}" kill-server
+    "${app[tmux]}" kill-server &>/dev/null || true
     return 0
 }
