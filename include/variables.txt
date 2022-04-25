@@ -137,7 +137,7 @@ conda="4.11.0" # 2022-02-15
 coreutils="9.1"
 
 # https://github.com/Dr-Noob/cpufetch/releases
-cpufetch="1.01"
+cpufetch="1.02"
 
 # https://curl.haxx.se/
 curl="7.82.0"
