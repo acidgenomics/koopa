@@ -427,9 +427,6 @@ koopa_configure_system() { # {{{1
     # - man-db
     # - neovim
 
-
-
-
     # NOTE Consider not installing these by default:
     # - geos
     # - proj
