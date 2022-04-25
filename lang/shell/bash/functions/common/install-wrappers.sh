@@ -975,6 +975,9 @@ koopa_uninstall_fzf() { # {{{3
 
 koopa_install_gawk() { # {{{3
     koopa_install_gnu_app \
+        --activate-opt='gettext' \
+        --activate-opt='mpfr' \
+        --activate-opt='readline' \
         --link-in-bin='bin/awk' \
         --name='gawk' \
         "$@"

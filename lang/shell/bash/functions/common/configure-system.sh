@@ -402,13 +402,15 @@ koopa_configure_system() { # {{{1
     # - apr
     # - apr-util
     # - fish
-    # - perl
+    # - perl # FIXME Move this up...
     # - gawk
-
     # - sqlite
+
+    # FIXME Don't install these by default...
     # - geos
     # - proj
     # - gdal
+    # - libgeotiff (needs to go up?)
 
     # Ubuntu machine:
     # - sed
@@ -425,7 +427,6 @@ koopa_configure_system() { # {{{1
     # - libidn
     # - libtiff
     # - libxml2
-    # - nettle
     # - libzip # maybe require gnutls here
     # - lua
     # - luarocks
@@ -443,8 +444,8 @@ koopa_configure_system() { # {{{1
     # - udunits
     # - vim
     # - wget
-    # - zlib
-    # - zstd
+    # - zlib  # FIXME Move this up
+    # - zstd  # FIXME Move this up
     # - openssh
     # - cpufetch
     # - nim-packages
