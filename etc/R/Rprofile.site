@@ -231,7 +231,7 @@ local({  # nolint
     ## >     "https://repo.miserver.it.umich.edu/cran"
 
     repos <- getOption("repos")
-    cran <- "https://repo.miserver.it.umich.edu/cran"
+    cran <- "https://cloud.r-project.org"
     options("install.packages.compile.from.source" = "always")
 
     if (isTRUE(flag[["linux"]])) {
