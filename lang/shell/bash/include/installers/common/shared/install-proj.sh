@@ -24,10 +24,10 @@ main() { # {{{1
             '/usr/include/proj.h' \
             '/usr/lib/x86_64-linux-gnu/pkgconfig/proj.pc'
     fi
+    koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
         'curl' \
         'libtiff' \
-        'pkg-config' \
         'python' \
         'sqlite'
     declare -A app=(

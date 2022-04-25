@@ -13,7 +13,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix \
+    koopa_activate_build_opt_prefix \
         'autoconf' \
         'automake' \
         'libtool' \

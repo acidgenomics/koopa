@@ -20,13 +20,8 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix \
-        'cmake' \
-        'freetype' \
-        'icu4c' \
-        'meson' \
-        'ninja' \
-        'pkg-config'
+    koopa_activate_build_opt_prefix 'cmake' 'meson' 'ninja' 'pkg-config'
+    koopa_activate_opt_prefix 'freetype' 'icu4c'
     declare -A app=(
         [meson]="$(koopa_locate_meson)"
         [ninja]="$(koopa_locate_ninja)"
