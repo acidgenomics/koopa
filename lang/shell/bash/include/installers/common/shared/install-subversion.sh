@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Looks like we need to harden links on Linux:
-# - apr
-# - apr-util
-# - sqlite
-
 main() { # {{{1
     # """
     # Install Subversion.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-04-25.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -25,6 +20,7 @@ main() { # {{{1
     koopa_activate_opt_prefix \
         'apr' \
         'apr-util' \
+        'openssl' \
         'perl' \
         'python' \
         'ruby' \
@@ -42,18 +38,22 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[apr]="$(koopa_realpath "${dict[opt_prefix]}/apr")"
+    dict[apr_util]="$(koopa_realpath "${dict[opt_prefix]}/apr-util")"
+    dict[serf]="$(koopa_realpath "${dict[opt_prefix]}/serf")"
+    dict[sqlite]="$(koopa_realpath "${dict[opt_prefix]}/sqlite")"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-debug'
         '--disable-mod-activation'
         '--disable-plaintext-password-storage'
         '--enable-optimize'
-        "--with-apr=${dict[opt_prefix]}/apr"
-        "--with-apr-util=${dict[opt_prefix]}/apr-util"
+        "--with-apr=${dict[apr]}"
+        "--with-apr-util=${dict[apr_util]}"
         '--with-apxs=no'
         '--with-lz4=internal'
-        "--with-serf=${dict[opt_prefix]}/serf" # HTTPS
-        "--with-sqlite=${dict[opt_prefix]}/sqlite"
+        "--with-serf=${dict[serf]}" # HTTPS
+        "--with-sqlite=${dict[sqlite]}"
         '--with-utf8proc=internal'
         '--without-apache-libexecdir'
         '--without-berkeley-db'
