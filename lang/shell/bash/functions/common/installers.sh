@@ -2,14 +2,6 @@
 
 # Core ==================================================================== {{{1
 
-# GNU --------------------------------------------------------------------- {{{2
-
-koopa_install_gnu_app() { # {{{3
-    koopa_install_app \
-        --installer='gnu-app' \
-        "$@"
-}
-
 # koopa ------------------------------------------------------------------- {{{2
 
 koopa_install_koopa() { # {{{3
@@ -738,10 +730,28 @@ koopa_update_dotfiles() { # {{{3
 # emacs ------------------------------------------------------------------- {{{2
 
 koopa_install_emacs() { # {{{3
+    # """
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
+    # """
     local install_args
     install_args=(
+        '--activate-opt=gmp'
+        '--activate-opt=libtasn1'
+        '--activate-opt=libunistring'
+        '--activate-opt=libxml2'
+        '--activate-opt=nettle'
+        '--activate-opt=texinfo'
+        '--activate-opt=gnutls'
+        '--installer=gnu-app'
         '--name-fancy=Emacs'
         '--name=emacs'
+        '-D' '--with-modules'
+        '-D' '--without-dbus'
+        '-D' '--without-imagemagick'
+        '-D' '--without-ns'
+        '-D' '--without-selinux'
+        '-D' '--without-x'
     )
     # Assume we're using Emacs cask by default on macOS.
     if ! koopa_is_macos
@@ -1046,7 +1056,7 @@ koopa_install_gettext() { # {{{3
     # """
     local install_args
     install_args=('--name=gettext')
-    if koopa_is_linux
+    if ! koopa_is_macos
     then
         install_args+=(
             '--activate-opt=ncurses'
@@ -2020,9 +2030,22 @@ koopa_update_mamba() { # {{{3
 # man-db ------------------------------------------------------------------ {{{2
 
 koopa_install_man_db() { # {{{3
+    # """
+    # @seealso
+    # - https://man-db.nongnu.org/development.html
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/man-db.rb
+    # """
     koopa_install_app \
+        --activate-opt='groff' \
+        --activate-opt='libpipeline' \
+        --installer='gnu-app' \
         --link-in-bin='bin/man' \
         --name='man-db' \
+        -D '--disable-cache-owner' \
+        -D '--disable-dependency-tracking' \
+        -D '--disable-nls' \
+        -D '--disable-setuid' \
+        -D '--disable-silent-rules' \
         "$@"
 }
 
@@ -3407,9 +3430,28 @@ koopa_uninstall_vim() { # {{{3
 # wget -------------------------------------------------------------------- {{{2
 
 koopa_install_wget() { # {{{3
+    # """
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/wget.rb
+    # """
     koopa_install_app \
+        --activate-build-opt='autoconf' \
+        --activate-build-opt='automake' \
+        --activate-opt='gettext' \
+        --activate-opt='libidn' \
+        --activate-opt='libtasn1' \
+        --activate-opt='nettle' \
+        --activate-opt='openssl' \
+        --activate-opt='pcre2' \
+        --activate-opt='gnutls' \
+        --installer='gnu-app' \
+        --name='wget' \
         --link-in-bin='bin/wget' \
         --name='wget' \
+        -D '--disable-debug' \
+        -D '--with-ssl=openssl' \
+        -D '--without-included-regex' \
+        -D '--without-libpsl' \
         "$@"
 }
 
