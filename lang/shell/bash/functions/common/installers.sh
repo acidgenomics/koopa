@@ -99,7 +99,8 @@ koopa_uninstall_armadillo() { # {{{3
 # autoconf ---------------------------------------------------------------- {{{2
 
 koopa_install_autoconf() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='autoconf' \
         "$@"
 }
@@ -113,8 +114,9 @@ koopa_uninstall_autoconf() { # {{{3
 # automake ---------------------------------------------------------------- {{{2
 
 koopa_install_automake() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
         --activate-opt='autoconf' \
+        --installer='gnu-app' \
         --name='automake' \
         "$@"
 }
@@ -176,7 +178,8 @@ koopa_uninstall_bat() { # {{{3
 # bc ---------------------------------------------------------------------- {{{2
 
 koopa_install_bc() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --link-in-bin='bin/bc' \
         --name='bc' \
         "$@"
@@ -192,7 +195,8 @@ koopa_uninstall_autoconf() { # {{{3
 # binutils ---------------------------------------------------------------- {{{2
 
 koopa_install_binutils() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='binutils' \
         "$@"
 }
@@ -367,6 +371,7 @@ koopa_install_coreutils() { # {{{3
     install_args=(
         '--activate-build-opt=gperf'
         '--activate-opt=gmp'
+        '--installer=gnu-app'
         '--name=coreutils'
         '--link-in-bin=bin/['
         '--link-in-bin=bin/b2sum'
@@ -481,7 +486,7 @@ koopa_install_coreutils() { # {{{3
     then
         install_args+=('--activate-opt=attr')
     fi
-    koopa_install_gnu_app "${install_args[@]}" "$@"
+    koopa_install_app "${install_args[@]}" "$@"
 }
 
 koopa_uninstall_coreutils() { # {{{3
@@ -832,6 +837,7 @@ koopa_uninstall_fd_find() { # {{{1
 koopa_install_findutils() { # {{{3
     local install_args
     install_args=(
+        '--installer=gnu-app'
         '--link-in-bin=bin/find'
         '--link-in-bin=bin/locate'
         '--link-in-bin=bin/updatedb'
@@ -850,7 +856,7 @@ koopa_install_findutils() { # {{{3
         #     msg00051.html
         export CFLAGS='-D__nonnull\(params\)='
     fi
-    koopa_install_gnu_app "${install_args[@]}" "$@"
+    koopa_install_app "${install_args[@]}" "$@"
 }
 
 koopa_uninstall_findutils() { # {{{3
@@ -934,7 +940,8 @@ koopa_uninstall_fontconfig() { # {{{3
 # freetype ---------------------------------------------------------------- {{{2
 
 koopa_install_freetype() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='freetype' \
         -D '--enable-freetype-config' \
         -D '--enable-shared=yes' \
@@ -984,7 +991,8 @@ koopa_uninstall_fzf() { # {{{3
 # gawk -------------------------------------------------------------------- {{{2
 
 koopa_install_gawk() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --activate-opt='gettext' \
         --activate-opt='mpfr' \
         --activate-opt='readline' \
@@ -1055,7 +1063,10 @@ koopa_install_gettext() { # {{{3
     # https://github.com/Homebrew/homebrew-core/blob/master/Formula/gettext.rb
     # """
     local install_args
-    install_args=('--name=gettext')
+    install_args=(
+        '--installer=gnu-app'
+        '--name=gettext'
+    )
     if ! koopa_is_macos
     then
         install_args+=(
@@ -1063,7 +1074,7 @@ koopa_install_gettext() { # {{{3
             '--activate-opt=libxml2'
         )
     fi
-    koopa_install_gnu_app "${install_args[@]}" "$@"
+    koopa_install_app "${install_args[@]}" "$@"
 }
 
 koopa_uninstall_gettext() { # {{{3
@@ -1218,7 +1229,8 @@ koopa_uninstall_go_packages() { # {{{3
 # gperf ------------------------------------------------------------------- {{{2
 
 koopa_install_gperf() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='gperf' \
         "$@"
 }
@@ -1232,8 +1244,9 @@ koopa_uninstall_gperf() { # {{{3
 # grep -------------------------------------------------------------------- {{{2
 
 koopa_install_grep() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
         --activate-opt='pcre' \
+        --installer='gnu-app' \
         --link-in-bin='bin/egrep' \
         --link-in-bin='bin/fgrep' \
         --link-in-bin='bin/grep' \
@@ -1253,7 +1266,8 @@ koopa_uninstall_grep() { # {{{3
 # groff ------------------------------------------------------------------- {{{2
 
 koopa_install_groff() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --link-in-bin='bin/groff' \
         --name='groff' \
         "$@"
@@ -1269,7 +1283,8 @@ koopa_uninstall_groff() { # {{{3
 # gsl --------------------------------------------------------------------- {{{2
 
 koopa_install_gsl() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='gsl' \
         --name-fancy='GSL' \
         "$@"
@@ -1284,7 +1299,8 @@ koopa_uninstall_gsl() { # {{{3
 # gzip -------------------------------------------------------------------- {{{2
 
 koopa_install_gzip() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='gzip' \
         "$@"
 }
@@ -1515,9 +1531,10 @@ koopa_uninstall_lapack() { # {{{3
 # less -------------------------------------------------------------------- {{{2
 
 koopa_install_less() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
         --activate-opt='ncurses' \
         --activate-opt='pcre2' \
+        --installer='gnu-app' \
         --link-in-bin='bin/less' \
         --name='less' \
         "$@"
@@ -1619,7 +1636,8 @@ koopa_uninstall_libice() { # {{{3
 # libidn ---------------------------------------------------------------- {{{2
 
 koopa_install_libidn() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='libidn' \
         "$@"
 }
@@ -1647,7 +1665,8 @@ koopa_uninstall_libjpeg_turbo() { # {{{3
 # libpipeline ------------------------------------------------------------- {{{2
 
 koopa_install_libpipeline() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='libpipeline' \
         "$@"
 }
@@ -1717,7 +1736,8 @@ koopa_uninstall_libssh2() { # {{{3
 # libtasn1 ---------------------------------------------------------------- {{{2
 
 koopa_install_libtasn1() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='libtasn1' \
         "$@"
 }
@@ -1745,7 +1765,8 @@ koopa_uninstall_libtiff() { # {{{3
 # libtool ----------------------------------------------------------------- {{{2
 
 koopa_install_libtool() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='libtool' \
         "$@"
 }
@@ -1759,7 +1780,8 @@ koopa_uninstall_libtool() { # {{{3
 # libunistring ------------------------------------------------------------ {{{2
 
 koopa_install_libunistring() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='libunistring' \
         "$@"
 }
@@ -2001,7 +2023,8 @@ koopa_uninstall_lzo() { # {{{3
 # make -------------------------------------------------------------------- {{{2
 
 koopa_install_make() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='make' \
         "$@"
 }
@@ -2099,9 +2122,10 @@ koopa_install_mpc() { # {{{3
     )
     dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
     dict[mpfr]="$(koopa_realpath "${dict[opt_prefix]}/mpfr")"
-    koopa_install_gnu_app \
+    koopa_install_app \
         --activate-opt='gmp' \
         --activate-opt='mpfr' \
+        --installer='gnu-app' \
         --name='mpc' \
         -D "--with-gmp=${dict[gmp]}" \
         -D "--with-mpfr=${dict[mpfr]}" \
@@ -2117,8 +2141,9 @@ koopa_uninstall_mpc() { # {{{3
 # mpfr -------------------------------------------------------------------- {{{2
 
 koopa_install_mpfr() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
         --activate-opt='gmp' \
+        --installer='gnu-app' \
         --name='mpfr' \
         "$@"
 }
@@ -2186,12 +2211,13 @@ koopa_install_nettle() { # {{{3
     # - https://stackoverflow.com/questions/7965990
     # - https://gist.github.com/morgant/1753095
     # """
-    koopa_install_gnu_app \
+    koopa_install_app \
         --activate-opt='gmp' \
+        --installer='gnu-app' \
         --name='nettle' \
-        -D --disable-dependency-tracking \
-        -D --enable-mini-gmp \
-        -D --enable-shared \
+        -D '--disable-dependency-tracking' \
+        -D '--enable-mini-gmp' \
+        -D '--enable-shared' \
         "$@"
 }
 
@@ -2431,7 +2457,8 @@ koopa_uninstall_pandoc() { # {{{3
 # parallel ---------------------------------------------------------------- {{{2
 
 koopa_install_parallel() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --link-in-bin='bin/parallel' \
         --name='parallel' \
         "$@"
@@ -2463,7 +2490,8 @@ koopa_uninstall_password_store() { # {{{3
 # patch ------------------------------------------------------------------- {{{2
 
 koopa_install_patch() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --link-in-bin='bin/patch' \
         --name='patch' \
         "$@"
@@ -3053,7 +3081,8 @@ koopa_uninstall_scons() { # {{{3
 # sed --------------------------------------------------------------------- {{{2
 
 koopa_install_sed() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --link-in-bin='bin/sed' \
         --name='sed' \
         "$@"
@@ -3173,8 +3202,9 @@ koopa_install_stow() { # {{{3
     # """
     # Install script uses 'Test::Output' Perl package.
     # """
-    koopa_install_gnu_app \
+    koopa_install_app \
         --activate-opt='perl' \
+        --installer='gnu-app' \
         --link-in-bin='bin/stow' \
         --name='stow' \
         "$@"
@@ -3228,7 +3258,8 @@ koopa_uninstall_taglib() { # {{{3
 # tar --------------------------------------------------------------------- {{{2
 
 koopa_install_tar() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --link-in-bin='bin/tar' \
         --name='tar' \
         "$@"
@@ -3277,7 +3308,8 @@ koopa_uninstall_tealdeer() { # {{{1
 # termcap ----------------------------------------------------------------- {{{2
 
 # > koopa_install_termcap() { # {{{3
-# >     koopa_install_gnu_app \
+# >     koopa_install_app \
+# >         --installer='gnu-app' \
 # >         --name='termcap' \
 # >         "$@"
 # > }
@@ -3293,6 +3325,7 @@ koopa_uninstall_tealdeer() { # {{{1
 koopa_install_texinfo() { # {{{3
     local install_args
     install_args=(
+        '--installer=gnu-app'
         '--link-in-bin=bin/pdftexi2dvi'
         '--link-in-bin=bin/pod2texi'
         '--link-in-bin=bin/texi2any'
@@ -3311,7 +3344,7 @@ koopa_install_texinfo() { # {{{3
             '--activate-opt=perl'
         )
     fi
-    koopa_install_gnu_app "${install_args[@]}" "$@"
+    koopa_install_app "${install_args[@]}" "$@"
 }
 
 koopa_uninstall_texinfo() { # {{{3
@@ -3465,7 +3498,8 @@ koopa_uninstall_wget() { # {{{3
 # which ------------------------------------------------------------------- {{{2
 
 koopa_install_which() { # {{{3
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --link-in-bin='bin/which' \
         --name='which' \
         "$@"
