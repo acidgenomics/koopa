@@ -3,41 +3,28 @@
 main() { # {{{1
     # """
     # Install wget.
-    # @note Updated 2022-04-11.
-    #
-    # Use OpenSSL instead of GnuTLS, which is annoying to compile.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/wget.rb
     # """
-    local conf_args install_args pkg pkgs
-    install_args=(
-        '--name=wget'
-        '--no-link-in-opt'
-        '--no-prefix-check'
-        '--quiet'
-    )
-    pkgs=(
-        # > 'gnutls'
-        'autoconf'
-        'automake'
-        'gettext'
-        'libidn'
-        'openssl'
-        'pcre2'
-    )
-    for pkg in "${pkgs[@]}"
-    do
-        install_args+=("--activate-opt=${pkg}")
-    done
-    conf_args=(
-        '--disable-debug'
-        '--with-ssl=openssl'
-        '--without-included-regex'
-        '--without-libpsl'
-    )
     koopa_install_gnu_app \
-        "${install_args[@]}" \
-        "${conf_args[@]}" \
+        --activate-build-opt='autoconf' \
+        --activate-build-opt='automake' \
+        --activate-opt='gettext' \
+        --activate-opt='libidn' \
+        --activate-opt='libtasn1' \
+        --activate-opt='nettle' \
+        --activate-opt='openssl' \
+        --activate-opt='pcre2' \
+        --activate-opt='gnutls' \
+        --name='wget' \
+        --no-link-in-opt \
+        --no-prefix-check \
+        --quiet \
+        -D '--disable-debug' \
+        -D '--with-ssl=openssl' \
+        -D '--without-included-regex' \
+        -D '--without-libpsl' \
         "$@"
 }
