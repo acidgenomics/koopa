@@ -25,9 +25,18 @@ koopa_linux_uninstall_aspera_connect() { # {{{3
 # attr ---------------------------------------------------------------- {{{2
 
 koopa_linux_install_attr() { # {{{3
+    # """
+    # @seealso
+    # - https://savannah.nongnu.org/projects/attr
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/attr.rb
+    # """
     koopa_install_app \
+        --installer='gnu-app' \
         --name='attr' \
         --platform='linux' \
+       -D '--disable-debug' \
+       -D '--disable-dependency-tracking' \
+       -D '--disable-silent-rules' \
         "$@"
 }
 

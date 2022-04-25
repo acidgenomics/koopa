@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install ncurses.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-04-25.
     #
     # @seealso
     # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
@@ -18,7 +18,8 @@ main() { # {{{1
     )
     dict[pkgconfig_dir]="${dict[prefix]}/lib/pkgconfig"
     koopa_mkdir "${dict[pkgconfig_dir]}"
-    koopa_install_gnu_app \
+    koopa_install_app \
+        --installer='gnu-app' \
         --name='ncurses' \
         --no-link-in-opt \
         --no-prefix-check \
