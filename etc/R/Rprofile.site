@@ -482,7 +482,7 @@ local({  # nolint
         options("BiocManager.check_repositories" = FALSE)
 
         ## Enable use of historical snapshots ('MRAN' or 'RSPM') via
-        ## `options(BiocManager.snapshots=)` to install CRAN packages for
+        ## `options(BiocManager.snapshot = "RSPM")` to install CRAN packages for
         ## out-of-date Bioconductor versions.
     }
 
