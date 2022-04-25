@@ -392,11 +392,11 @@ koopa_configure_system() { # {{{1
     # - libunistring
     # - nettle
     # - gnutls
-
     # - python
     # - git
+    # - lz4
+    # - xxhash
     # - rsync
-
     # - libevent
     # - tmux
     # - apr
