@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2022-04-24.
+# @note Updated 2022-04-26.
 #
 # @seealso
 # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
@@ -80,9 +80,8 @@ R_LD_LIBRARY_PATH="/Library/Developer/CommandLineTools/usr/lib:${R_LD_LIBRARY_PA
 # > R_LD_LIBRARY_PATH="/usr/local/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="/usr/local/gfortran/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${R_HOME}/lib:${R_LD_LIBRARY_PATH}"
-# Required for 'gert'.
+R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/lapack/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib:${R_LD_LIBRARY_PATH}"
-# Required for 'ragg'.
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib:${R_LD_LIBRARY_PATH}"
 
 # Miscellaneous {{{1
