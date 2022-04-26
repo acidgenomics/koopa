@@ -166,6 +166,8 @@ koopa_debian_uninstall_r_binary() { # {{{3
         --platform='debian' \
         --system \
         --uninstaller='r-binary' \
+        --unlink-in-bin='R' \
+        --unlink-in-bin='Rscript' \
         "$@"
 }
 

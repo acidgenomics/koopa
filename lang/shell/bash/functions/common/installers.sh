@@ -2852,6 +2852,10 @@ koopa_uninstall_python() { # {{{3
 # r ----------------------------------------------------------------------- {{{2
 
 koopa_install_r() { # {{{3
+    # """
+    # Assuming usage of R CRAN binary Homebrew cask on macOS.
+    # Also don't link in the case of Debian R CRAN binary.
+    # """
     local install_args
     install_args=(
         '--name-fancy=R'
@@ -2859,8 +2863,6 @@ koopa_install_r() { # {{{3
     )
     if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
     then
-        # Assuming usage of R CRAN binary Homebrew cask on macOS.
-        # Also don't link in the case of Debian R CRAN binary.
         install_args+=(
             '--link-in-bin=bin/R'
             '--link-in-bin=bin/Rscript'

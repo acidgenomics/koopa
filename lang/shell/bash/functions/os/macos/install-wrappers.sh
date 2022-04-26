@@ -130,8 +130,8 @@ koopa_macos_uninstall_r_binary() { # {{{3
         --platform='macos' \
         --system \
         --uninstaller='r-binary' \
-        --unlink-in-bin='bin/R' \
-        --unlink-in-bin='bin/Rscript' \
+        --unlink-in-bin='R' \
+        --unlink-in-bin='Rscript' \
         "$@"
 }
 
