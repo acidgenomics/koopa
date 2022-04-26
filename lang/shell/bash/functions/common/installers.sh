@@ -379,7 +379,6 @@ koopa_install_bash() { # {{{3
 }
 
 # NOTE This can cause shell to error when uninstalling current linked version.
-# FIXME Reset default shell before uninstalling, if necessary.
 koopa_uninstall_bash() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Bash' \
@@ -536,12 +535,10 @@ koopa_uninstall_cairo() { # {{{3
 
 # chemacs ----------------------------------------------------------------- {{{2
 
-# FIXME Need to version pin this.
 koopa_install_chemacs() { # {{{3
     koopa_install_app \
         --name-fancy='Chemacs' \
         --name='chemacs' \
-        --version='rolling' \
         "$@"
 }
 
@@ -920,12 +917,10 @@ koopa_uninstall_du_dust() { # {{{3
 
 # dotfiles ---------------------------------------------------------------- {{{2
 
-# FIXME Need to version pin this.
 koopa_install_dotfiles() { # {{{3
     koopa_install_app \
         --name-fancy='Dotfiles' \
         --name='dotfiles' \
-        --version='rolling' \
         "$@"
 }
 
@@ -1012,12 +1007,10 @@ koopa_uninstall_emacs() { # {{{3
 
 # ensembl-perl-api -------------------------------------------------------- {{{2
 
-# FIXME Need to version pin this.
 koopa_install_ensembl_perl_api() { # {{{3
     koopa_install_app \
         --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
-        --version='rolling' \
         "$@"
 }
 
@@ -1111,7 +1104,7 @@ koopa_install_fish() { # {{{3
         "$@"
 }
 
-# FIXME Reset default shell before uninstalling, if necessary.
+# NOTE Consider resetting default shell here, if necessary.
 koopa_uninstall_fish() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Fish' \
@@ -2813,13 +2806,11 @@ koopa_update_perl_packages() { # {{{3
 
 # perlbrew ---------------------------------------------------------------- {{{2
 
-# FIXME Need to version pin this.
 koopa_install_perlbrew() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/perlbrew' \
         --name-fancy='Perlbrew' \
         --name='perlbrew' \
-        --version='rolling' \
         "$@"
 }
 
@@ -2828,13 +2819,6 @@ koopa_uninstall_perlbrew() { # {{{3
         --name-fancy='Perlbrew' \
         --name='perlbrew' \
         --unlink-in-bin='perlbrew' \
-        "$@"
-}
-
-koopa_update_perlbrew() { # {{{3
-    koopa_update_app \
-        --name='perlbrew' \
-        --name-fancy='Perlbrew' \
         "$@"
 }
 
@@ -2918,12 +2902,10 @@ koopa_uninstall_proj() { # {{{3
 
 # pyenv ------------------------------------------------------------------- {{{2
 
-# FIXME Need to version pin this.
 koopa_install_pyenv() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/pyenv' \
         --name='pyenv' \
-        --version='rolling' \
         "$@"
 }
 
@@ -2965,6 +2947,24 @@ koopa_uninstall_pylint() { # {{{3
     koopa_uninstall_app \
         --name='pylint' \
         --unlink-in-bin='pylint' \
+        "$@"
+}
+
+# pytaglib ---------------------------------------------------------------- {{{2
+
+koopa_install_pytaglib() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/pyprinttags' \
+        --activate-opt='taglib' \
+        --installer='python-venv' \
+        --name='pytaglib' \
+        "$@"
+}
+
+koopa_uninstall_pytaglib() { # {{{3
+    koopa_uninstall_app \
+        --name='pyprinttags' \
+        --unlink-in-bin
         "$@"
 }
 
@@ -3072,30 +3072,6 @@ koopa_uninstall_ranger_fm() { # {{{3
         "$@"
 }
 
-# r-cmd-check ------------------------------------------------------------- {{{2
-
-# FIXME Need to version pin this.
-koopa_install_r_cmd_check() { # {{{3
-    koopa_install_app \
-        --name-fancy='R CMD check' \
-        --name='r-cmd-check' \
-        --version='rolling' \
-        "$@"
-}
-
-koopa_uninstall_r_cmd_check() { # {{{3
-    koopa_uninstall_app \
-        --name='r-cmd-check' \
-        "$@"
-}
-
-koopa_update_r_cmd_check() { # {{{3
-    koopa_update_app \
-        --name='r-cmd-check' \
-        --name-fancy='R CMD check' \
-        "$@"
-}
-
 # r-koopa ----------------------------------------------------------------- {{{2
 
 koopa_install_r_koopa() { # {{{3
@@ -3129,12 +3105,10 @@ koopa_update_r_packages() { # {{{3
 
 # rbenv ------------------------------------------------------------------- {{{2
 
-# FIXME Need to version pin this.
 koopa_install_rbenv() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/rbenv' \
         --name='rbenv' \
-        --version='rolling' \
         "$@"
 }
 
@@ -3449,9 +3423,6 @@ koopa_uninstall_stow() { # {{{3
 
 # subversion -------------------------------------------------------------- {{{2
 
-# FIXME This is having sqlite link issues on Ubuntu.
-# > svn --version --verbose
-
 koopa_install_subversion() { # {{{3
     koopa_install_app \
         --link-in-bin='bin/svn' \
@@ -3468,8 +3439,6 @@ koopa_uninstall_subversion() { # {{{3
 
 # taglib ------------------------------------------------------------------ {{{2
 
-# FIXME Rework this as a Python virtualenv.
-# FIXME Need to link the 'pytagsXXX' binary here...
 koopa_install_taglib() { # {{{3
     koopa_install_app \
         --name-fancy='TagLib' \
@@ -3477,7 +3446,6 @@ koopa_install_taglib() { # {{{3
         "$@"
 }
 
-# FIXME We need to unlink in bin.
 koopa_uninstall_taglib() { # {{{3
     koopa_uninstall_app \
         --name-fancy='TagLib' \
@@ -3874,7 +3842,7 @@ koopa_install_zsh() { # {{{3
     return 0
 }
 
-# FIXME Reset default shell before uninstalling, if necessary.
+# NOTE Consider resetting default shell here, if necessary.
 koopa_uninstall_zsh() { # {{{3
     koopa_uninstall_app \
         --name-fancy="Zsh" \
@@ -3960,13 +3928,11 @@ koopa_update_system() { # {{{3
 
 # tex-packages ------------------------------------------------------------ {{{2
 
-# FIXME Rework without declaring version here.
 koopa_install_tex_packages() { # {{{3
     koopa_install_app \
         --name-fancy='TeX packages' \
         --name='tex-packages' \
         --system \
-        --version='rolling' \
         "$@"
 }
 
@@ -3982,14 +3948,12 @@ koopa_update_tex_packages() { # {{{3
 
 # doom-emacs -------------------------------------------------------------- {{{2
 
-# FIXME Consider renaming version to 'latest' here instead.
 koopa_install_doom_emacs() { # {{{3
     koopa_install_app \
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
         --prefix="$(koopa_doom_emacs_prefix)" \
         --user \
-        --version='rolling' \
         "$@"
 }
 
@@ -4013,14 +3977,12 @@ koopa_update_doom_emacs() { # {{{3
 
 # prelude-emacs ----------------------------------------------------------- {{{2
 
-# FIXME Consider renaming version to 'latest' here instead.
 koopa_install_prelude_emacs() { # {{{3
     koopa_install_app \
         --name-fancy='Prelude Emacs' \
         --name='prelude-emacs' \
         --prefix="$(koopa_prelude_emacs_prefix)" \
         --user \
-        --version='rolling' \
         "$@"
 }
 
@@ -4044,14 +4006,12 @@ koopa_update_prelude_emacs() { # {{{3
 
 # spacemacs --------------------------------------------------------------- {{{2
 
-# FIXME Consider renaming version to 'latest' here instead.
 koopa_install_spacemacs() { # {{{3
     koopa_install_app \
         --name-fancy='Spacemacs' \
         --name='spacemacs' \
         --prefix="$(koopa_spacemacs_prefix)" \
         --user \
-        --version='rolling' \
         "$@"
 }
 
@@ -4075,14 +4035,12 @@ koopa_update_spacemacs() { # {{{3
 
 # spacevim ---------------------------------------------------------------- {{{2
 
-# FIXME Consider renaming version to 'latest' here instead.
 koopa_install_spacevim() { # {{{3
     koopa_install_app \
         --name-fancy='SpaceVim' \
         --name='spacevim' \
         --prefix="$(koopa_spacevim_prefix)" \
         --user \
-        --version='rolling' \
         "$@"
 }
 
