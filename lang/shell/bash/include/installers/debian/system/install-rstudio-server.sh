@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-linux_install_rstudio_server() { # {{{1
+main() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
     # @note Updated 2022-04-26.
@@ -12,7 +12,6 @@ linux_install_rstudio_server() { # {{{1
     # > sudo rstudio-server status
     # """
     local app dict
-    koopa_warn 'FIXME HELLO THERE'
     declare -A app=(
         [gdebi]="$(koopa_debian_locate_gdebi)"
         [sudo]="$(koopa_locate_sudo)"
