@@ -167,7 +167,6 @@ koopa_configure_rust() { # {{{1
     koopa_configure_app_packages \
         --name-fancy='Rust' \
         --name='rust' \
-        --version='rolling' \
         "$@"
 }
 

@@ -3,16 +3,18 @@
 main() { # {{{1
     # """
     # Install TeX packages.
-    # @note Updated 2022-01-26.
+    # @note Updated 2022-04-26.
+    #
+    # Including both curl and wget here is useful, to avoid SSH certificate
+    # check timeouts and/or other issues.
     # """
     local app package packages
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'curl' 'gnupg' 'wget'
     declare -A app=(
-        [gpg]="$(koopa_locate_gpg)"
         [sudo]="$(koopa_locate_sudo)"
         [tlmgr]="$(koopa_locate_tlmgr)"
     )
-    koopa_add_to_path_start "$(koopa_dirname "${app[gpg]}")"
     "${app[sudo]}" "${app[tlmgr]}" update --self
     packages=(
         # Priority ----
@@ -51,6 +53,7 @@ main() { # {{{1
     )
     for package in "${packages[@]}"
     do
+        koopa_alert "$package"
         "${app[sudo]}" "${app[tlmgr]}" install "$package"
     done
     return 0
