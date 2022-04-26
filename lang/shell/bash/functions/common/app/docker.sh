@@ -115,9 +115,8 @@ koopa_docker_build() { # {{{1
     for image in "$@"
     do
         local build_args dict2 image_ids platforms tag tags
-        declare -A dict2=(
-            [image]="$image"
-        )
+        declare -A dict2
+        dict2[image]="$image"
         build_args=()
         platforms=()
         tags=()
@@ -141,6 +140,8 @@ koopa_docker_build() { # {{{1
                 koopa_print "${dict2[image]}" \
                 | "${app[cut]}" -d ':' -f '1' \
             )"
+        else
+            dict2[tag]="${dict[tag]}"
         fi
         dict2[source_image]="${dict[docker_dir]}/${dict2[image]}/${dict2[tag]}"
         koopa_assert_is_dir "${dict2[source_image]}"
@@ -202,7 +203,7 @@ koopa_docker_build() { # {{{1
         then
             build_args+=('--push')
         fi
-        build_args+=("$source_image")
+        build_args+=("${dict2[source_image]}")
         # Force remove any existing locally tagged images before building.
         if [[ "${dict[delete]}" -eq 1 ]]
         then
