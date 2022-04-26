@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Shiny Server binary.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-26.
     #
     # Currently Debian/Ubuntu and Fedora/RHEL are supported.
     # Currently only "amd64" (x86) architecture is supported here.
@@ -25,7 +25,8 @@ main() { # {{{1
     if koopa_is_debian_like
     then
         app[fun]='koopa_debian_install_from_deb'
-        dict[distro]='ubuntu-14.04'
+        # Changed from 14.04 to 18.04 in 2022-04.
+        dict[distro]='ubuntu-18.04'
         dict[file_ext]='deb'
         case "${dict[arch]}" in
             'x86_64')
