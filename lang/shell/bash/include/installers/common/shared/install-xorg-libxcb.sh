@@ -3,21 +3,20 @@
 main() { # {{{1
     # """
     # Install libxcb.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-04-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_build_opt_prefix 'pkg-config' 'python'
     koopa_activate_opt_prefix \
-        'libpthread-stubs' \
-        'libxau' \
-        'libxdmcp' \
-        'python' \
-        'xcb-proto' \
-        'xorgproto'
+        'xorg-xorgproto' \
+        'xorg-xcb-proto' \
+        'xorg-libpthread-stubs' \
+        'xorg-libxau' \
+        'xorg-libxdmcp'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
