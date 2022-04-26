@@ -209,6 +209,8 @@ koopa_koopa_github_url() { # {{{1
 }
 
 # FIXME Return the platform and architecture here automatically.
+# FIXME Also consider adding support for easy return of S3 bucket path.
+
 koopa_koopa_app_binary_url() { # {{{2
     # """
     # Koopa app binary URL.
