@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install libsm.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-04-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libsm.rb
@@ -12,9 +12,9 @@ main() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
-        'libice' \
-        'xorgproto' \
-        'xtrans'
+        'xorg-xorgproto' \
+        'xorg-xtrans' \
+        'xorg-libice'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
