@@ -1,20 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME tex step is erroring on macOS:
-# I can't find file `texinfo.tex'.
-
-# FIXME This requires libXt...
-# checking for X11/Intrinsic.h... no
-# configure: error: --with-x=yes (default) and X11 headers/libs are not available
-
-# FIXME PDF rendering issue:
-# /opt/koopa/app/texinfo/6.8/bin/texi2dvi: texinfo.tex appears to be broken.
-# This may be due to the environment variable TEX set to something
-
 main() { # {{{1
     # """
     # Install R.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-04-26.
     #
     # @section gfortran configuration on macOS:
     #
@@ -106,21 +95,10 @@ main() { # {{{1
         'icu4c'
         'lapack'
         'libffi'
-        'libice' # x11
         'libjpeg-turbo'
         'libpng'
-        'libpthread-stubs' # x11
-        'libsm' # x11
         'libtiff'
-        'libx11' # x11
-        'libxau' # x11
-        'libxcb' # x11
-        'libxdmcp' # x11
-        'libxext' # x11
         'libxml2'
-        'libxrender' # x11
-        'libxt' # x11
-        'libxt' # x11
         'lzo' # cairo
         'openblas'
         'pcre2'
@@ -128,8 +106,19 @@ main() { # {{{1
         'readline'
         'tcl-tk'
         'texinfo'
-        'xcb-proto' # x11
-        'xorgproto' # x11
+        'xorg-libice' # x11
+        'xorg-libpthread-stubs' # x11
+        'xorg-libsm' # x11
+        'xorg-libx11' # x11
+        'xorg-libxau' # x11
+        'xorg-libxcb' # x11
+        'xorg-libxdmcp' # x11
+        'xorg-libxext' # x11
+        'xorg-libxrender' # x11
+        'xorg-libxt' # x11
+        'xorg-libxt' # x11
+        'xorg-xcb-proto' # x11
+        'xorg-xorgproto' # x11
         'xz'
         'zlib'
     )
@@ -155,7 +144,7 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    # FIXME Can we rework this to not have to include pkg-config calls here?
+    dict[tcl_tk]="$(koopa_realpath "${dict[opt_prefix]}/tcl-tk")"
     conf_args=(
         # > '--enable-BLAS-shlib' # Linux only?
         "--prefix=${dict[prefix]}"
@@ -217,12 +206,8 @@ main() { # {{{1
         "--with-readline=$( \
             "${app[pkg_config]}" --libs 'readline' \
         )"
-        # For Tcl/Tk, alternatively can use:
-        # > "--with-tcltk=$( \
-        # >     "${app[pkg_config]}" --libs 'tcl' 'tk' \
-        # > )"
-        "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
-        "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
+        "--with-tcl-config=${dict[tcl_tk]}/lib/tclConfig.sh"
+        "--with-tk-config=${dict[tcl_tk]}/lib/tkConfig.sh"
         '--with-x'
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
