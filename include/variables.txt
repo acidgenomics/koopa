@@ -645,7 +645,7 @@ xz="5.2.5"
 # https://www.zlib.net/
 zlib="1.2.12"
 
-zoxide="0.8.0" # rust (z)
+zoxide="0.8.1" # rust (z)
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8.1"
