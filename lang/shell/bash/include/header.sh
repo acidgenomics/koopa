@@ -291,6 +291,7 @@ __koopa_bash_header() { # {{{1
         export KOOPA_PREFIX
     fi
     # shellcheck source=/dev/null
+    # FIXME This step is now failing inside of Docker build...
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     if [[ "${dict[test]}" -eq 1 ]]
     then

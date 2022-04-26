@@ -184,13 +184,7 @@ koopa_install_koopa() { # {{{3
     else
         koopa_cp "${dict[source_prefix]}" "${dict[prefix]}"
     fi
-    unset KOOPA_PREFIX
-    KOOPA_FORCE=1
-    KOOPA_TEST="${dict[test]}"
-    export KOOPA_FORCE KOOPA_TEST
-    # shellcheck source=/dev/null
-    source "${dict[prefix]}/lang/shell/bash/include/header.sh" || return 1
-    [[ "${KOOPA_PREFIX:-}" == "${dict[prefix]}" ]] || return 1
+    export KOOPA_PREFIX="${dict[prefix]}"
     if [[ "${dict[passwordless]}" -eq 1 ]]
     then
         koopa_enable_passwordless_sudo
