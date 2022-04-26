@@ -41,7 +41,7 @@ main() { # {{{1
     )
     if koopa_is_debian_like
     then
-        dict[fun]='koopa_debian_gdebi_install'
+        app[fun]='koopa_debian_gdebi_install'
         dict[arch]="$(koopa_arch2)" # e.g 'amd64'.
         dict[distro]='bionic'
         dict[file_ext]='deb'
