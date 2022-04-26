@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting this error with r-devel:
-# Error in solve.default(rgb) : LAPACK routines cannot be loaded
-# Error: unable to load R code in package 'grDevices'
-
 main() { # {{{1
     # """
     # Install R.
@@ -148,6 +144,7 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
     dict[tcl_tk]="$(koopa_realpath "${dict[opt_prefix]}/tcl-tk")"
     conf_args=(
         # > '--enable-BLAS-shlib' # Linux only?
@@ -258,6 +255,8 @@ R-${dict[maj_ver]}/${dict[file]}"
     fi
     export TZ='America/New_York'
     unset -v R_HOME
+    # Need to burn in rpath, otherwise grDevices will fail to build.
+    koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
