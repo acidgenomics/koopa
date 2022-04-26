@@ -1,11 +1,19 @@
-# """
-# Koopa internal variables.
-# """
+# FIXME Need to add versioning of:
+# - chemacs2
+# - dotfiles
+# - perlbrew
+# - pyenv
+# - rbenv
+
+# FIXME Denote 'latest' for:
+# - doom-emacs
+# - spacemacs
+# - spacevim
 
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-03-22"
+koopa-date="2022-04-26"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -21,8 +29,7 @@ gcrypt-url="https://gnupg.org/ftp/gcrypt"
 
 # GNU FTP server mirror.
 # https://www.gnu.org/prep/ftp.en.html
-# > gnu-mirror-url="https://ftpmirror.gnu.org"
-gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
+gnu-mirror-url="https://ftpmirror.gnu.org"
 
 # Program versions {{{1
 # ==============================================================================
@@ -30,11 +37,23 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 # https://repo.continuum.io/archive/
 anaconda="2021.11"
 
+# https://apr.apache.org/
+apr="1.7.0"
+
+# https://apr.apache.org/
+apr-util="1.6.1"
+
 # http://arma.sourceforge.net/download.html
 armadillo="10.8.2"
 
+# https://github.com/asdf-vm/asdf/releases
+asdf="0.10.0"
+
 # https://www.ibm.com/aspera/connect/
-aspera-connect="4.1.1.73"
+aspera-connect="4.1.3.93"
+
+# https://savannah.nongnu.org/projects/attr
+attr="2.5.1"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.71"
@@ -44,13 +63,18 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.27"
+aws-cli="2.5.8"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.34.1"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
+
+bat="0.20.0" # rust
+
+# https://ftp.gnu.org/gnu/bc/
+bc="1.07"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
@@ -70,8 +94,21 @@ bfg="1.14.0"
 # https://ftp.gnu.org/gnu/binutils/
 binutils="2.37"
 
+# This is used during 'r-packages' install.
+# https://bioconductor.org/
+bioconductor="3.15"
+
+black="22.3.0" # python
+
 # https://www.boost.org/
 boost="1.78.0"
+
+bpytop="1.0.68" # python
+
+broot="1.11.1" # rust (br)
+
+# https://www.sourceware.org/bzip2/
+bzip2="1.0.8"
 
 # https://cairographics.org/
 cairo="1.16.0"
@@ -79,7 +116,7 @@ cairo="1.16.0"
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
 #     pipelines/latest/installation
-cellranger="6.1.2"  # 2021-10-25
+cellranger="6.1.2" # 2021-10-25
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
@@ -87,39 +124,62 @@ cellranger="6.1.2"  # 2021-10-25
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.22.3"
+cmake="3.23.0"
 
 # https://repo.anaconda.com/miniconda/
-conda="4.11.0"  # 2022-02-15
+conda="4.11.0" # 2022-02-15
 
 # https://www.gnu.org/software/coreutils/
-coreutils="9.0"
+coreutils="9.1"
 
 # https://github.com/Dr-Noob/cpufetch/releases
-cpufetch="0.97"
+cpufetch="1.02"
 
 # https://curl.haxx.se/
 curl="7.82.0"
 
+difftastic="0.27.0" # rust (difft)
+
 # https://docs.docker.com/install/
-docker="20.10.13"
+docker="20.10.14"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
 
+dog="0.1.0" # rust
+
+du-dust="0.8.0" # rust (dust)
+
 # https://www.gnu.org/software/emacs/
-emacs="27.2"
+emacs="28.1"
 
 # Latest version compatible with Ensembl Perl API.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl-perl="5.26.3"
 
+exa="0.10.1" # rust
+
+fd-find="8.3.2" # rust
+
 # https://www.gnu.org/software/findutils/
 findutils="4.9.0"
 
+flake8="4.0.1" # python
+
+# https://www.fltk.org/
+fltk="1.3.8"
+
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
-fish="3.4.0"
+fish="3.4.1"
+
+fontconfig="2.14.0"
+
+# https://www.freetype.org/
+freetype="2.12.0"
+
+# https://github.com/fribidi/fribidi/
+fribidi="1.0.11"
 
 # https://github.com/junegunn/fzf
 fzf="0.29.0"
@@ -128,7 +188,7 @@ fzf="0.29.0"
 gawk="5.1.1"
 
 # https://ftp.gnu.org/gnu/gcc/
-gcc="11.2.0"
+gcc="11.3.0"
 
 # https://gdal.org/download.html#current-releases
 gdal="3.4.2"
@@ -136,18 +196,33 @@ gdal="3.4.2"
 # https://github.com/libgeos/geos/releases
 geos="3.10.2"
 
+# https://www.gnu.org/software/gettext/
+gettext="0.21"
+
 # https://git-scm.com/
 # https://github.com/git/git/releases
 git="2.35.1"
 
+glances="3.2.5" # python
+
+glib="2.72.0"
+
+# https://gmplib.org/
+gmp="6.2.1"
+
 # https://gnupg.org/download/index.html
 gnupg="2.3.4"
 
+gnutls="3.7.4"
+
 # https://golang.org/dl/
-go="1.18"
+go="1.18.1"
 
 # https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="377.0.0"
+google-cloud-sdk="380.0.0"
+
+# https://www.gnu.org/software/gperf
+gperf="3.1"
 
 # https://www.gnu.org/software/grep/
 grep="3.7"
@@ -158,31 +233,48 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.7.1"
 
-hadolint="2.9.2"
+# https://www.gnu.org/software/gzip/
+gzip="1.12"
 
-harfbuzz="4.0.1"
+hadolint="2.10.0"
+
+harfbuzz="4.2.0"
+
+# https://docs.haskellstack.org/en/stable/install_and_upgrade/
+haskell-stack="2.7.5"
 
 # https://www.hdfgroup.org/downloads/hdf5/
-hdf5="1.13.0"
+hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.4.3"
+homebrew="3.4.6"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
 htop="3.1.2"
 
+hyperfine="1.13.0" # rust
+
 # http://site.icu-project.org/
-icu="70.1"
+icu4c="71.1"
 
 # https://imagemagick.org/
-imagemagick="7.1.0-28"
+imagemagick="7.1.0-29"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
 
+# https://www.ijg.org/
+jpeg="9e"
+
 # https://github.com/JuliaLang/julia/releases
 julia="1.7.2"
+
+# https://www.netlib.org/lapack/
+lapack="3.10.1"
+
+# https://ftp.gnu.org/gnu/less/
+less="590"
 
 # https://github.com/wofr06/lesspipe/
 lesspipe="2.04"
@@ -191,12 +283,78 @@ lesspipe="2.04"
 # https://github.com/libevent/libevent/releases
 libevent="2.1.12"
 
+# https://sourceware.org/libffi/
+libffi="3.4.2"
+
+# https://github.com/OSGeo/libgeotiff
+libgeotiff="1.7.1"
+
+# https://github.com/libgit2/libgit2
+libgit2="1.4.3"
+
+libice="1.0.10" # x11
+
+# https://www.gnu.org/software/libidn/
+libidn="2.3.2"
+
+# https://www.libjpeg-turbo.org/
+libjpeg-turbo="2.1.3"
+
+# https://libpipeline.nongnu.org/
+libpipeline="1.5.5"
+
+# http://www.libpng.org/pub/png/libpng.html
+libpng="1.6.37"
+
+libpthread-stubs="0.4" # x11
+
+libsm="1.2.3" # x11
+
+# https://www.libssh2.org/
+libssh2="1.10.0"
+
+# https://www.gnu.org/software/libtasn1/
+libtasn1="4.18.0"
+
+# https://download.osgeo.org/libtiff/
+# https://libtiff.gitlab.io/libtiff/
+# 4.3.0 currently has build issues on macOS.
+libtiff="4.2.0"
+
 # https://ftp.gnu.org/gnu/libtool/
 libtool="2.4.6"
 
+# https://www.gnu.org/software/libunistring/
+libunistring="1.0"
+
+# https://github.com/libuv/libuv
+libuv="1.44.1"
+
+libx11="1.7.2" # x11
+
+libxau="1.0.9" # x11
+
+libxcb="1.14" # x11
+
+libxdmcp="1.1.3" # x11
+
+libxext="1.3.4" # x11
+
+# https://gitlab.gnome.org/GNOME/libxml2/-/releases
+libxml2="2.9.13"
+
+libxrandr="1.5.2" # x11
+
+libxrender="0.9.10" # x11
+
+libxt="1.2.1" # x11
+
+# https://libzip.org/download/
+libzip="1.8.0"
+
 # LLVM
 # https://releases.llvm.org/
-llvm="13.0.1"
+llvm="14.0.0"
 
 # https://lmod.readthedocs.io/
 # https://github.com/TACC/Lmod
@@ -207,13 +365,34 @@ lmod="8.6"
 lua="5.4.4"
 
 # https://github.com/luarocks/luarocks/releases
-luarocks="3.8.0"
+luarocks="3.9.0"
+
+# https://lz4.github.io/lz4/
+lz4="1.9.3"
+
+# https://tukaani.org/lzma/
+lzma="4.32.7"
+
+lzo="2.10"
 
 # https://ftp.gnu.org/gnu/make/
 make="4.3"
 
 # https://github.com/mamba-org/mamba/tags/
 mamba="0.21.1"
+
+man-db="2.10.2"
+
+mcfly="0.6.0" # rust
+
+# https://github.com/mesonbuild/meson/tags
+meson="0.62.1"
+
+# http://www.multiprecision.org/mpc/
+mpc="1.2.1"
+
+# https://www.mpfr.org/
+mpfr="4.1.0"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
@@ -222,13 +401,27 @@ ncurses="6.3.20211021"
 neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
-neovim="0.6.1"
+neovim="0.7.0"
+
+# https://ftp.gnu.org/gnu/nettle/
+# > nettle="3.7.3"
+nettle="3.6"
 
 # https://nim-lang.org/
 nim="1.6.4"
 
-# https://nodejs.org/
-node="17.8.0"
+# https://github.com/ninja-build/ninja/tags
+ninja="1.10.2.3"
+
+# https://nodejs.org/en/download/
+node="16.14.2" # LTS
+
+# https://github.com/kkos/oniguruma/
+# https://github.com/kkos/oniguruma/
+oniguruma="6.9.7.1"
+
+# https://www.openblas.net/
+openblas="0.3.20"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -246,7 +439,7 @@ openssl="3.0.2"
 oracle-instant-client="21.5.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.17.1.1"
+pandoc="2.18"
 
 # https://www.gnu.org/software/parallel/
 parallel="20220322"
@@ -257,10 +450,14 @@ password-store="1.7.4"
 # ftp://ftp.gnu.org/gnu/patch
 patch="2.7.6"
 
+# https://sourceforge.net/projects/pcre/
+pcre="8.45"
+
+# https://www.pcre.org/
 pcre2="10.39"
 
 # https://www.perl.org/get.html
-perl="5.34.0"
+perl="5.34.1"
 
 # https://perlbrew.pl/
 perlbrew="0.92"
@@ -272,6 +469,10 @@ perl-file-rename="1.30"
 # https://github.com/php/php-src/releases
 php="8.1.2"
 
+pipx="1.0.0" # python
+
+pixman="0.40.0"
+
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
@@ -279,46 +480,69 @@ pkg-config="0.29.2"
 # https://python-poetry.org/
 poetry="1.1.13"
 
+procs="0.12.1" # rust
+
 # https://proj.org/
 proj="9.0.0"
 
 # https://github.com/pyenv/pyenv
 pyenv="2.2.5"
 
+pyflakes="2.4.0" # python
+
+pylint="2.13.4" # python
+
+pytest="6.2.5" # python
+
 # https://www.python.org/downloads/
 python="3.10.3"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
-r="4.1.3"
+r="4.2.0"
+
+# https://mac.r-project.org/openmp/
+r-openmp="13.0.0"
 
 # https://mac.r-project.org/
 # This release matches current R version.
-r-cran-gfortran="8.2"
+r-gfortran="8.2"
 
 # https://svn.r-project.org/R/
 # https://stat.ethz.ch/R/daily/
+# https://github.com/r-devel/r-svn/tree/trunk
+# https://developer.r-project.org/SVNtips.html
+# https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
 # This is the SVN revision number.
-r-devel="81561"  # 2022-01-25
+r-devel="82232" # 2022-04-22; R 4.3
+
+ranger-fm="1.9.3" # python
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
+
+# https://tiswww.cwru.edu/php/chet/readline/rltop.html
+readline="8.1.2"
+
+ripgrep="13.0.0" # rust
+
+# > ripgrep-all="0.9.6" # rust (rga)
 
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2022.02.0+443"
+rstudio-server="2022.02.1+461"
 
 # https://www.rstudio.com/products/rstudio/download-commercial/
 # https://docs.rstudio.com/rsw/installation/
-rstudio-workbench="2022.02.0+443.pro2"
+rstudio-workbench="2022.02.1+441.pro1"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="3.1.1p18"
+ruby="3.1.2"
 
 # https://www.rust-lang.org/
-rust="1.59.0"
+rust="1.60.0"
 
 # https://rustup.rs/
 rustup="1.24.3"
@@ -329,11 +553,17 @@ rsync="3.2.3"
 # http://rtomayko.github.io/ronn/
 ronn="0.7.3"
 
+# https://scons.org/
+scons="4.3.0"
+
 # https://www.gnu.org/software/screen/
 screen="4.8.0"
 
 # https://www.gnu.org/software/sed/
 sed="4.8"
+
+# https://serf.apache.org/download
+serf="1.3.9"
 
 # https://github.com/koalaman/shellcheck/releases
 shellcheck="0.8.0"
@@ -345,10 +575,13 @@ shiny-server="1.5.17.973"
 shunit2="2.1.7"
 
 # https://github.com/apptainer/singularity
-singularity="3.8.5"
+singularity="3.8.7"
 
 # https://www.sqlite.org/download.html
-sqlite="3.37.2"
+sqlite="3.38.2"
+
+# https://starship.rs/
+starship="1.6.2" # rust
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
@@ -361,6 +594,11 @@ taglib="1.12"
 
 # https://www.gnu.org/software/tar/
 tar="1.34"
+
+# https://www.tcl-lang.org
+tcl-tk="8.6.12"
+
+tealdeer="1.5.0" # rust (tldr)
 
 # https://www.latex-project.org/get/
 tex="2021"
@@ -376,6 +614,10 @@ the-silver-searcher="2.2.0"
 # https://github.com/tmux/tmux/releases
 tmux="3.2a"
 
+tokei="12.1.2" # rust
+
+tree="2.0.2"
+
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
 udunits="2.2.28"
@@ -383,13 +625,38 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4600"
+vim="8.2.4800"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.3"
 
+# https://ftp.gnu.org/gnu/which/
+which="2.21"
+
+xcb-proto="1.14.1" # x11
+
+xorgproto="2021.5" # x11
+
+xsv="0.13.0" # rust
+
+xtrans="1.4.0" # x11
+
+# https://github.com/Cyan4973/xxHash
+xxhash="0.8.1"
+
+# https://tukaani.org/xz/
+xz="5.2.5"
+
+# https://www.zlib.net/
+zlib="1.2.12"
+
+zoxide="0.8.0" # rust (z)
+
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8.1"
+
+# https://facebook.github.io/zstd/
+zstd="1.5.2"
 
 # Conda environments {{{1
 # ==============================================================================
@@ -424,8 +691,9 @@ conda-deeptools="3.5.1"         # 2021-03-17 bioconda                  [chipseq]
 conda-entrez-direct="16.2"      # 2021-11-04 bioconda              [data mining]
 conda-ericscript="0.5.5"        # 2021-03-26 bioconda                [variation]
 conda-fastqc="0.11.9"           # 2021-03-25 bioconda                       [qc]
-conda-fgbio="1.5.1"             # 2022-02-15 bioconda                [workflows]
+conda-fgbio="2.0.1"             # 2022-04-18 bioconda                [workflows]
 conda-gatk4="4.2.5.0"           # 2022-02-05 bioconda                [workflows]
+conda-gdal="3.4.2"              # YYYY-MM-DD conda-forge         [visualization]
 conda-genrich="0.6.1"           # 2021-03-17 bioconda                  [chipseq]
 conda-gffread="0.12.7"          # 2021-09-24 bioconda             [file formats]
 conda-gffutils="0.10.1"         # 2020-07-26 bioconda             [file formats]
@@ -445,7 +713,7 @@ conda-minimap2="2.24"           # 2021-12-27 bioconda                 [aligners]
 conda-mirdeep2="2.0.1.3"        # 2021-07-15 bioconda                 [smallrna]
 conda-mirtop="0.4.24"           # 2021-11-12 bioconda                 [smallrna]
 conda-multiqc="1.12"            # 2022-02-08 bioconda                       [qc]
-conda-nextflow="21.10.6"        # 2022-01-24 bioconda                [workflows]
+conda-nextflow="22.04.0"        # 2022-04-23 bioconda                [workflows]
 conda-novoalign="3.09.00"       # 2018-09-02 bioconda                 [aligners]
 conda-numpy="1.22.3"            # 2022-03-08 conda-forge          [data science]
 conda-oncofuse="1.1.1"          # 2021-03-27 bioconda                [variation]
@@ -472,7 +740,7 @@ conda-seqcluster="1.2.8"        # 2021-06-22 bioconda                 [smallrna]
 conda-seqkit="2.2.0"            # 2022-03-14 bioconda             [file formats]
 conda-seqtk="1.3"               # 2019-07-31 bioconda             [file formats]
 conda-sicer2="1.0.3"            # 2021-03-26 bioconda                  [chipseq]
-conda-snakemake="7.2.1"         # 2022-03-14 bioconda                [workflows]
+conda-snakemake="7.3.8"         # 2022-04-06 bioconda                [workflows]
 conda-squid="1.5"               # 2021-03-27 bioconda                [variation]
 conda-stringtie="2.2.1"         # 2022-02-23 bioconda                   [rnaseq]
 conda-sra-tools="2.11.0"        # 2021-11-10 bioconda              [data mining]
@@ -493,75 +761,24 @@ homebrew-cask-gpg-suite="2022.1"
 # Updated 2021-10-05.
 
 # https://github.com/soasme/nim-markdown/tags/
-nim-markdown="0.8.5"
+nim-markdown="0.8.5"                # markdown
 
 # Node (NPM) packages {{{1
 # ==============================================================================
-# Updated 2022-03-18 from https://www.npmjs.com/
+# Updated 2022-04-19 from https://www.npmjs.com/
 
-node-npm="8.5.5"                    # 2022-03-17
+node-npm="8.7.0"                    # system
 
-node-bash-language-server="2.0.0"   # 2021-08-11
-node-gtop="1.1.3"                   # 2022-01-12
-node-prettier="2.6.0"               # 2022-03-16
-
-# Python packages {{{1
-# ==============================================================================
-# Updated 2022-03-21 from https://pypi.org/.
-
-# Python pip pinned versions.
-# These are essential Python tools that should always be available.
-# Otherwise, for heavy libraries, consider using a conda environment instead.
-
-# Potentially useful:
-# - pip2p
-# - pipx
-
-python-pip="22.0.4"             # default; system
-python-setuptools="60.10.0"     # default; system
-python-wheel="0.37.1"           # default; system
-
-python-pipx="1.0.0"             # system
-
-python-black="22.1.0"           # homebrew
-python-bpytop="1.0.68"          # homebrew
-python-flake8="4.0.1"           # homebrew
-python-glances="3.2.4.2"        # homebrew
-python-pyflakes="2.4.0"         # homebrew
-python-pylint="2.12.2"          # homebrew
-python-pytest="6.2.5"           # homebrew
-python-ranger-fm="1.9.3"        # homebrew
+node-bash-language-server="2.1.0"   # bash-language-server
+node-gtop="1.1.3"                   # gtop
+node-prettier="2.6.2"               # prettier
 
 # Ruby packages (gems) {{{1
 # ==============================================================================
-# Updated 2022-02-24.
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.8"            # system
+ruby-bundler="2.3.11"           # system
 
-ruby-bashcov="1.8.2"            # recommended
-ruby-ronn="0.7.3"               # recommended
-
-# Rust packages {{{1
-# ==============================================================================
-# Updated 2022-03-15 from https://crates.io/.
-
-rust-cargo-outdated="0.11.0"    # system
-rust-cargo-update="8.1.2"       # system
-
-rust-bat="0.20.0"               # homebrew
-rust-broot="1.9.4"              # homebrew; br
-rust-dog="0.1.0"                # homebrew
-rust-du-dust="0.8.0"            # homebrew; dust
-rust-exa="0.10.1"               # homebrew
-rust-fd-find="8.3.2"            # homebrew; fd
-rust-hyperfine="1.13.0"         # homebrew
-rust-mcfly="0.5.13"             # homebrew
-rust-procs="0.12.1"             # homebrew
-rust-ripgrep-all="0.9.6"        # homebrew; rga
-rust-ripgrep="13.0.0"           # homebrew; rg
-rust-starship="1.4.2"           # homebrew
-rust-tealdeer="1.5.0"           # homebrew; tldr
-rust-tokei="12.1.2"             # homebrew
-rust-xsv="0.13.0"               # homebrew
-rust-zoxide="0.8.0"             # homebrew; z
+ruby-bashcov="1.8.2"            # bashcov
+ruby-colorls="1.4.6"            # colorls
+ruby-ronn="0.7.3"               # ronn

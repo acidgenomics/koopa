@@ -1,6 +1,28 @@
 #!/usr/bin/env bash
 
-koopa_debian_install_azure_cli() { # {{{1
+# Shared ================================================================== {{{1
+
+# bcbio-nextgen-vm -------------------------------------------------------- {{{2
+
+koopa_debian_install_bcbio_nextgen_vm() { # {{{3
+    koopa_install_app \
+        --name='bcbio-nextgen-vm' \
+        --platform='debian' \
+        "$@"
+}
+
+koopa_debian_uninstall_bcbio_nextgen_vm() { # {{{3
+    koopa_uninstall_app \
+        --name='bcbio-nextgen-vm' \
+        --platform='debian' \
+        "$@"
+}
+
+# System ================================================================== {{{1
+
+# azure-cli --------------------------------------------------------------- {{{2
+
+koopa_debian_install_azure_cli() { # {{{3
     koopa_install_app \
         --name-fancy='Azure CLI' \
         --name='azure-cli' \
@@ -9,7 +31,18 @@ koopa_debian_install_azure_cli() { # {{{1
         "$@"
 }
 
-koopa_debian_install_base_system() { # {{{1
+koopa_debian_uninstall_azure_cli() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+# base-system ------------------------------------------------------------- {{{2
+
+koopa_debian_install_base_system() { # {{{3
     koopa_install_app \
         --name-fancy='Debian base system' \
         --name='base-system' \
@@ -18,15 +51,9 @@ koopa_debian_install_base_system() { # {{{1
         "$@"
 }
 
-koopa_debian_install_bcbio_nextgen_vm() { # {{{1
-    koopa_install_app \
-        --name='bcbio-nextgen-vm' \
-        --no-link \
-        --platform='debian' \
-        "$@"
-}
+# docker ------------------------------------------------------------------ {{{2
 
-koopa_debian_install_docker() { # {{{1
+koopa_debian_install_docker() { # {{{3
     koopa_install_app \
         --name-fancy='Docker' \
         --name='docker' \
@@ -35,7 +62,18 @@ koopa_debian_install_docker() { # {{{1
         "$@"
 }
 
-koopa_debian_install_google_cloud_sdk() { # {{{1
+koopa_debian_uninstall_docker() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Docker' \
+        --name='docker' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+# google-cloud-sdk -------------------------------------------------------- {{{2
+
+koopa_debian_install_google_cloud_sdk() { # {{{3
     koopa_install_app \
         --name-fancy='Google Cloud SDK' \
         --name='google-cloud-sdk' \
@@ -44,7 +82,18 @@ koopa_debian_install_google_cloud_sdk() { # {{{1
         "$@"
 }
 
-koopa_debian_install_llvm() { # {{{1
+koopa_debian_uninstall_google_cloud_sdk() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+# llvm -------------------------------------------------------------------- {{{2
+
+koopa_debian_install_llvm() { # {{{3
     koopa_install_app \
         --name-fancy='LLVM' \
         --name='llvm' \
@@ -53,17 +102,33 @@ koopa_debian_install_llvm() { # {{{1
         "$@"
 }
 
-koopa_debian_install_node() { # {{{1
-    koopa_install_app \
-        --name-fancy='Node.js' \
-        --name='node' \
+koopa_debian_uninstall_llvm() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='LLVM' \
+        --name='llvm' \
         --platform='debian' \
         --system \
         "$@"
 }
 
-koopa_debian_install_pandoc() { # {{{1
+# node-binary ------------------------------------------------------------- {{{2
+
+koopa_debian_install_nodesource_node_binary() { # {{{3
     koopa_install_app \
+        --name-fancy='NodeSource Node.js' \
+        --name='nodesource-node-binary' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+# FIXME Need to add Node binary uninstaller.
+
+# pandoc ------------------------------------------------------------------ {{{2
+
+koopa_debian_install_pandoc_binary() { # {{{3
+    koopa_install_app \
+        --installer='pandoc-binary' \
         --name-fancy='Pandoc' \
         --name='pandoc' \
         --platform='debian' \
@@ -71,26 +136,42 @@ koopa_debian_install_pandoc() { # {{{1
         "$@"
 }
 
-koopa_debian_install_r_cran_binary() { # {{{1
+koopa_debian_uninstall_pandoc_binary() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='Pandoc' \
+        --name='pandoc' \
+        --platform='debian' \
+        --system \
+        --uninstaller='pandoc-binary' \
+        "$@"
+}
+
+# r-binary ---------------------------------------------------------------- {{{2
+
+koopa_debian_install_r_binary() { # {{{3
     koopa_install_app \
+        --installer='r-binary' \
         --name-fancy='R CRAN binary' \
-        --name='r-cran-binary' \
+        --name='r' \
         --platform='debian' \
         --system \
         --version-key='r' \
         "$@"
 }
 
-koopa_debian_install_r_devel() { # {{{1
-    koopa_install_app \
-        --name-fancy='R-devel' \
-        --name='r-devel' \
-        --no-link \
+koopa_debian_uninstall_r_binary() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='R CRAN binary' \
+        --name='r' \
         --platform='debian' \
+        --system \
+        --uninstaller='r-binary' \
         "$@"
 }
 
-koopa_debian_install_rstudio_server() { # {{{1
+# rstudio-server ---------------------------------------------------------- {{{2
+
+koopa_debian_install_rstudio_server() { # {{{3
     koopa_install_app \
         --name-fancy='RStudio Server' \
         --name='rstudio-server' \
@@ -99,7 +180,18 @@ koopa_debian_install_rstudio_server() { # {{{1
         "$@"
 }
 
-koopa_debian_install_rstudio_workbench() { # {{{1
+koopa_debian_uninstall_rstudio_server() { # {{{3
+    koopa_uninstall_app \
+        --name-fancy='RStudio Server' \
+        --name='rstudio-server' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+# rstudio-workbench ------------------------------------------------------- {{{2
+
+koopa_debian_install_rstudio_workbench() { # {{{3
     koopa_install_app \
         --installer='rstudio-server' \
         --name-fancy='RStudio Workbench' \
@@ -109,95 +201,7 @@ koopa_debian_install_rstudio_workbench() { # {{{1
         "$@"
 }
 
-koopa_debian_install_wine() { # {{{1
-    koopa_install_app \
-        --name-fancy='Wine' \
-        --name='wine' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_azure_cli() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='Azure CLI' \
-        --name='azure-cli' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_bcbio_nextgen_vm() { # {{{1
-    koopa_uninstall_app \
-        --name='bcbio-nextgen-vm' \
-        --no-link \
-        "$@"
-}
-
-koopa_debian_uninstall_docker() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='Docker' \
-        --name='docker' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_google_cloud_sdk() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='Google Cloud SDK' \
-        --name='google-cloud-sdk' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_llvm() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='LLVM' \
-        --name='llvm' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_pandoc() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='Pandoc' \
-        --name='pandoc' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_r_cran_binary() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='R CRAN binary' \
-        --name='r-cran-binary' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_r_devel() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='R-devel' \
-        --name='r-devel' \
-        --no-link \
-        --platform='debian' \
-        "$@"
-}
-
-koopa_debian_uninstall_rstudio_server() { # {{{1
-    koopa_uninstall_app \
-        --name-fancy='RStudio Server' \
-        --name='rstudio-server' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_rstudio_workbench() { # {{{1
+koopa_debian_uninstall_rstudio_workbench() { # {{{3
     koopa_uninstall_app \
         --name-fancy='RStudio Workbench' \
         --name='rstudio-workbench' \
@@ -207,7 +211,18 @@ koopa_debian_uninstall_rstudio_workbench() { # {{{1
         "$@"
 }
 
-koopa_debian_uninstall_shiny_server() { # {{{1
+# shiny-server ------------------------------------------------------------ {{{2
+
+koopa_debian_install_shiny_server() { # {{{3
+    koopa_install_app \
+        --name-fancy='Shiny Server' \
+        --name='shiny-server' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_uninstall_shiny_server() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
@@ -216,7 +231,18 @@ koopa_debian_uninstall_shiny_server() { # {{{1
         "$@"
 }
 
-koopa_debian_uninstall_wine() { # {{{1
+# wine -------------------------------------------------------------------- {{{2
+
+koopa_debian_install_wine() { # {{{3
+    koopa_install_app \
+        --name-fancy='Wine' \
+        --name='wine' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_uninstall_wine() { # {{{3
     koopa_uninstall_app \
         --name-fancy='Wine' \
         --name='wine' \

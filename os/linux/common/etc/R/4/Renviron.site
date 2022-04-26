@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for Linux.
 #
-# @note Updated 2021-12-02.
+# @note Updated 2022-04-22.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -86,27 +86,43 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves consistency when running inside RStudio Server.
 PATH="/usr/bin:/bin"
 
-# Make.
-PATH="/usr/local/bin:${PATH}"
-
-# Ruby.
-PATH="${KOOPA_OPT_PREFIX}/ruby-packages/bin:${PATH}"
-
-# Perl.
-PATH="${KOOPA_OPT_PREFIX}/perl-packages/bin:${PATH}"
-
-# Rust.
-PATH="${KOOPA_OPT_PREFIX}/rust-packages/bin:${PATH}"
-
-# Python.
-PATH="${KOOPA_OPT_PREFIX}/python/bin:${PATH}"
-PATH="${KOOPA_OPT_PREFIX}/python-packages/bin:${PATH}"
-
-# Conda.
-PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
-
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
+# This is required for 'png' package to install.
+PATH="${KOOPA_OPT_PREFIX}/libpng/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/subversion/bin:${PATH}"
+
+# Package configuration {{{2
+# ------------------------------------------------------------------------------
+
+PKG_CONFIG_PATH=""
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/fontconfig/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/freetype/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/fribidi/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/harfbuzz/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libpng/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libtiff/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/pcre2/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/readline/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/xz/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zlib/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zstd/lib/pkgconfig:${PKG_CONFIG_PATH}"
+
+R_LD_LIBRARY_PATH=""
+R_LD_LIBRARY_PATH="/usr/lib:${R_LD_LIBRARY_PATH}"
+R_LD_LIBRARY_PATH="${R_HOME}/lib:${R_LD_LIBRARY_PATH}"
+# Required for 'gert'.
+R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib:${R_LD_LIBRARY_PATH}"
+# Required for 'ragg'.
+R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib:${R_LD_LIBRARY_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
@@ -207,7 +223,7 @@ R_REMOTES_STANDALONE="true"
 # If left unset, defaults to `~/.virtualenvs`.
 # Check with `virtualenv_list()`.
 # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-# > WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
+# > WORKON_HOME="${KOOPA_OPT_PREFIX}/python-virtualenvs"
 
 # stringi {{{2
 # ------------------------------------------------------------------------------

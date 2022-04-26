@@ -59,7 +59,7 @@ to '${dict[acc_file]}'."
     "${app[esearch]}" -db 'sra' -query "${dict[srp_id]}" \
         | "${app[efetch]}" -format 'runinfo' \
         | "${app[sed]}" '1d' \
-        | "${app[cut]}" --delimiter=',' --fields='1' \
+        | "${app[cut]}" -d ',' -f '1' \
         > "${dict[acc_file]}"
     return 0
 }

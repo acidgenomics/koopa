@@ -6,20 +6,11 @@ __koopa_is_installed() { # {{{1
     # @note updated 2021-05-07.
     # """
     local cmd
-    [[ "$#" -gt 0 ]] || return 1
     for cmd in "$@"
     do
         command -v "$cmd" >/dev/null || return 1
     done
     return 0
-}
-
-__koopa_is_macos() { # {{{1
-    # """
-    # is the operating system macos?
-    # @note updated 2021-06-04.
-    # """
-    [[ "$(uname -s)" == 'Darwin' ]]
 }
 
 __koopa_print() { # {{{1
@@ -28,7 +19,6 @@ __koopa_print() { # {{{1
     # @note updated 2021-05-07.
     # """
     local string
-    [[ "$#" -gt 0 ]] || return 1
     for string in "$@"
     do
         printf '%b\n' "$string"
@@ -39,18 +29,41 @@ __koopa_print() { # {{{1
 __koopa_realpath() { # {{{1
     # """
     # Resolve file path.
-    # @note Updated 2021-06-04.
+    # @note Updated 2022-04-08.
     # """
     local readlink x
     [[ "$#" -gt 0 ]] || return 1
     readlink='readlink'
-    __koopa_is_macos && readlink='greadlink'
     if ! __koopa_is_installed "$readlink"
     then
-        __koopa_warn "Not installed: '${readlink}'."
-        __koopa_is_macos && \
-            __koopa_warn 'Install Homebrew and GNU coreutils to resolve.'
-        return 1
+        local brew_readlink_1 brew_readlink_2 koopa_readlink
+        local make_readlink_1 make_readlink_2
+        brew_readlink_1='/opt/homebrew/opt/coreutils/libexec/bin/readlink'
+        brew_readlink_2='/usr/local/opt/coreutils/libexec/bin/readlink'
+        koopa_readlink='/opt/koopa/opt/coreutils/bin/readlink'
+        make_readlink_1='/usr/local/bin/readlink'
+        make_readlink_2='/usr/local/bin/greadlink'
+        if [[ -x "$koopa_readlink" ]]
+        then
+            readlink="$koopa_readlink"
+        elif [[ -x "$make_readlink_1" ]]
+        then
+            readlink="$make_readlink_1"
+        elif [[ -x "$make_readlink_2" ]]
+        then
+            readlink="$make_readlink_2"
+        elif [[ -x "$brew_readlink_1" ]]
+        then
+            readlink="$brew_readlink_1"
+        elif [[ -x "$brew_readlink_2" ]]
+        then
+            readlink="$brew_readlink_2"
+        else
+            __koopa_warn \
+                "Not installed: '${readlink}'." \
+                'Install GNU coreutils to resolve.'
+            return 1
+        fi
     fi
     x="$("$readlink" -f "$@")"
     [[ -n "$x" ]] || return 1
@@ -64,7 +77,6 @@ __koopa_warn() { # {{{1
     # @note Updated 2021-05-14.
     # """
     local string
-    [[ "$#" -gt 0 ]] || return 1
     for string in "$@"
     do
         printf '%b\n' "$string" >&2
@@ -139,11 +151,3 @@ __koopa_zsh_header() { # {{{1
 }
 
 __koopa_zsh_header "$@"
-
-unset -f \
-    __koopa_is_installed \
-    __koopa_is_macos \
-    __koopa_print \
-    __koopa_realpath \
-    __koopa_warn \
-    __koopa_zsh_header

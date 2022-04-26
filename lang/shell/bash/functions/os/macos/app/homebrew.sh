@@ -35,14 +35,14 @@ koopa_macos_brew_cask_outdated() { # {{{
         "${app[brew]}" outdated --cask --greedy >/dev/null
     if [[ "$keep_latest" -eq 1 ]]
     then
-        x="$("${app[cut]}" --delimiter=' ' --fields='1' < "$tmp_file")"
+        x="$("${app[cut]}" -d ' ' -f '1' < "$tmp_file")"
     else
         x="$( \
             koopa_grep \
                 --file="$tmp_file" \
                 --invert-match \
                 --pattern='(latest)' \
-            | "${app[cut]}" --delimiter=' ' --fields='1' \
+            | "${app[cut]}" -d ' ' -f '1' \
         )"
     fi
     koopa_rm "$tmp_file"
@@ -72,7 +72,7 @@ koopa_macos_brew_cask_quarantine_fix() { # {{{1
 koopa_macos_brew_upgrade_casks() { # {{{1
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-04-24.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
@@ -108,12 +108,13 @@ koopa_macos_brew_upgrade_casks() { # {{{1
             'openjdk' | \
             'r' | \
             'temurin')
-                koopa_configure_r
+                app[r]="$(koopa_macos_r_prefix)/bin/R"
+                koopa_configure_r "${app[r]}"
                 ;;
-            'emacs')
-                "${app[brew]}" unlink 'emacs'
-                "${app[brew]}" link 'emacs'
-                ;;
+            # > 'emacs')
+            # >     "${app[brew]}" unlink 'emacs'
+            # >     "${app[brew]}" link 'emacs'
+            # >     ;;
             'google-'*)
                 # Currently in 'google-chrome' and 'google-drive' recipes.
                 koopa_macos_disable_google_keystone || true
