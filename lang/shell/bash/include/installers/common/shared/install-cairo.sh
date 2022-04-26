@@ -14,8 +14,11 @@ main() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
-        'fontconfig' \
+        'zlib' \
         'freetype' \
+        'fontconfig' \
+        'libffi' \
+        'pcre' \
         'glib' \
         'libpng' \
         'libpthread-stubs' \
@@ -28,8 +31,7 @@ main() { # {{{1
         'xorg-libxcb' \
         'xorg-libx11' \
         'xorg-libxext' \
-        'xorg-libxrender' \
-        'zlib'
+        'xorg-libxrender'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
