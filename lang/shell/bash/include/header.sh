@@ -26,6 +26,9 @@ __koopa_bash_source_dir() { # {{{1
     return 0
 }
 
+# FIXME This still doesn't seem to be shutting the Bash process down correctly
+# on 'locate_app' failure...
+
 __koopa_exit_trap() {
     # """
     # Kill all processes whose parent is this process.
@@ -163,6 +166,7 @@ __koopa_bash_header() { # {{{1
         [test]=0
         [verbose]=0
     )
+    echo 'FIXME HELLO THERE 1'
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dict[dev]="$KOOPA_DEV"
