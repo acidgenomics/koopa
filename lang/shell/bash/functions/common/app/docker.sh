@@ -141,6 +141,8 @@ koopa_docker_build() { # {{{1
                 koopa_print "${dict2[image]}" \
                 | "${app[cut]}" -d ':' -f '1' \
             )"
+        else
+            dict2[tag]="${dict[tag]}"
         fi
         dict2[source_image]="${dict[docker_dir]}/${dict2[image]}/${dict2[tag]}"
         koopa_assert_is_dir "${dict2[source_image]}"
