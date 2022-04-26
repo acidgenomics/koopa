@@ -86,12 +86,9 @@ main() { # {{{1
         # > 'unzip'
         # > 'which'
         # > 'zip'
-        'cairo'
-        'curl'
-        'fontconfig' # cairo
-        'freetype' # cairo
+        'zlib'
         'gettext'
-        'glib' # cairo
+        'curl'
         'icu4c'
         'lapack'
         'libffi'
@@ -99,28 +96,31 @@ main() { # {{{1
         'libpng'
         'libtiff'
         'libxml2'
-        'lzo' # cairo
         'openblas'
+        'pcre'
         'pcre2'
-        'pixman' # cairo
         'readline'
         'tcl-tk'
         'texinfo'
-        'xorg-libice'
+        'xorg-xorgproto'
+        'xorg-xcb-proto'
         'xorg-libpthread-stubs'
+        'xorg-libice'
         'xorg-libsm'
-        'xorg-libx11'
         'xorg-libxau'
-        'xorg-libxcb'
         'xorg-libxdmcp'
+        'xorg-libxcb'
+        'xorg-libx11'
         'xorg-libxext'
         'xorg-libxrender'
         'xorg-libxt'
-        'xorg-libxt'
-        'xorg-xcb-proto'
-        'xorg-xorgproto'
+        'glib' # cairo
+        'freetype' # cairo
+        'fontconfig' # cairo
+        'lzo' # cairo
+        'pixman' # cairo
+        'cairo'
         'xz'
-        'zlib'
     )
     if koopa_is_linux
     then

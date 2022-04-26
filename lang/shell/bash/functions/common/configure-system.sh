@@ -479,6 +479,7 @@ koopa_configure_system() { # {{{1
     # - xorg-libxext
     # - xorg-libxrender
     # - xorg-libxrandr
+    # - xorg-libxt
 
     # - cairo
     # - r
