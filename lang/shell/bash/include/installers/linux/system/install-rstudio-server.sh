@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-04-26.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
     #
