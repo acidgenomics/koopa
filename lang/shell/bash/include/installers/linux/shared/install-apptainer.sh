@@ -2,22 +2,21 @@
 
 main() { # {{{1
     # """
-    # Install Singularity.
-    # @note Updated 2022-04-07.
-    #
-    # NOTE This is splitting into apptainer and singularity-ce in 2022.
+    # Install Apptainer.
+    # @note Updated 2022-04-26.
     #
     # @seealso
+    # - https://github.com/apptainer/apptainer
     # - https://issueexplorer.com/issue/hpcng/singularity/6225
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'go'
+    koopa_activate_build_opt_prefix 'go' 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [name]='singularity'
+        [name]='apptainer'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
         [version_file]='VERSION'
@@ -33,8 +32,14 @@ tags/${dict[file]}"
     then
         koopa_print "${dict[version]}" > "${dict[version_file]}"
     fi
-    ./mconfig --prefix="${dict[prefix]}"
-    "${app[make]}" -C builddir
-    "${app[make]}" -C builddir install
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--without-suid'
+        '-P' 'release-stripped'
+        '-v'
+    )
+    ./mconfig "${conf_args[@]}"
+    "${app[make]}" -C 'builddir'
+    "${app[make]}" -C 'builddir' install
     return 0
 }
