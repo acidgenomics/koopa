@@ -12,6 +12,7 @@ linux_install_rstudio_server() { # {{{1
     # > sudo rstudio-server status
     # """
     local app dict
+    koopa_stop 'FIXME HELLO THERE'
     declare -A app=(
         [gdebi]="$(koopa_debian_locate_gdebi)"
         [sudo]="$(koopa_locate_sudo)"
