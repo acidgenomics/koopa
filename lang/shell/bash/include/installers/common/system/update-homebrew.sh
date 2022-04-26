@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to harden / rework this for cask-only macOS install.
-
 main() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2022-02-28.
+    # @note Updated 2022-04-26.
     #
     # @seealso
     # - brew linkage --test
