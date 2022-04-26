@@ -106,7 +106,8 @@ ${dict[platform]}/${dict[file]}"
     # Ensure '+' gets converted to '-'.
     dict[url]="$( \
         koopa_gsub \
-            --pattern='\+' \
+            --fixed \
+            --pattern='+' \
             --replacement='-' \
             "${dict[url]}" \
     )"
