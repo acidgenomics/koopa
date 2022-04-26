@@ -3,9 +3,9 @@
 main() { # {{{
     # """
     # Install Python package as a venv.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-04-26.
     # """
-    local dict
+    local bin_name bin_names dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         [name]="${INSTALL_NAME:?}"
@@ -14,18 +14,24 @@ main() { # {{{
     )
     dict[libexec]="${dict[prefix]}/libexec"
     case "${dict[name]}" in
+        'pytaglib')
+            bin_names=('pyprinttags')
+            ;;
         'ranger-fm')
-            dict[bin_name]='ranger'
+            bin_names=('ranger')
             ;;
         *)
-            dict[bin_name]="${dict[name]}"
+            bin_names=("${dict[name]}")
             ;;
     esac
     koopa_python_create_venv \
         --prefix="${dict[libexec]}" \
         "${dict[name]}==${dict[version]}"
-    koopa_ln \
-        "${dict[libexec]}/bin/${dict[bin_name]}" \
-        "${dict[prefix]}/bin/${dict[bin_name]}"
+    for bin_name in "${bin_names[@]}"
+    do
+        koopa_ln \
+            "${dict[libexec]}/bin/${bin_name}" \
+            "${dict[prefix]}/bin/${bin_name}"
+    done
     return 0
 }
