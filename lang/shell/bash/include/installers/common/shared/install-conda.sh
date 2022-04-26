@@ -71,7 +71,8 @@ main() { # {{{1
     dict[py_major_version]="$(koopa_major_version "${dict[py_version]}")"
     dict[py_version2]="$( \
         koopa_gsub \
-            --pattern='\.' \
+            --fixed \
+            --pattern='.' \
             --replacement='' \
             "$(koopa_major_minor_version "${dict[py_version]}")" \
     )"
