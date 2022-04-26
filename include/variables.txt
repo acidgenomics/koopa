@@ -1,10 +1,3 @@
-# FIXME Need to add versioning of:
-# - chemacs2
-# - dotfiles
-# - perlbrew
-# - pyenv
-# - rbenv
-
 # FIXME Denote 'latest' for:
 # - doom-emacs
 # - spacemacs
@@ -118,6 +111,9 @@ cairo="1.16.0"
 #     pipelines/latest/installation
 cellranger="6.1.2" # 2021-10-25
 
+# https://github.com/plexus/chemacs2
+chemacs="latest"
+
 # Apple Xcode version
 # https://developer.apple.com/xcode/
 # https://en.wikipedia.org/wiki/Xcode
@@ -148,14 +144,19 @@ docker-credential-pass="0.6.4"
 
 dog="0.1.0" # rust
 
+# https://github.com/hlissner/doom-emacs
+doom-emacs="latest"
+
+# https://github.com/acidgenomics/dotfiles
+dotfiles="latest"
+
 du-dust="0.8.0" # rust (dust)
 
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
 
-# Latest version compatible with Ensembl Perl API.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
-ensembl-perl="5.26.3"
+ensembl-perl-api="latest"
 
 exa="0.10.1" # rust
 
@@ -460,7 +461,7 @@ pcre2="10.39"
 perl="5.34.1"
 
 # https://perlbrew.pl/
-perlbrew="0.92"
+perlbrew="latest"
 
 # https://metacpan.org/release/File-Rename
 perl-file-rename="1.30"
@@ -480,6 +481,9 @@ pkg-config="0.29.2"
 # https://python-poetry.org/
 poetry="1.1.13"
 
+# https://github.com/bbatsov/prelude
+prelude-emacs="latest"
+
 procs="0.12.1" # rust
 
 # https://proj.org/
@@ -491,6 +495,9 @@ pyenv="2.2.5"
 pyflakes="2.4.0" # python
 
 pylint="2.13.4" # python
+
+# https://github.com/supermihi/pytaglib
+pytaglib="1.5.0"
 
 pytest="6.2.5" # python
 
@@ -519,7 +526,7 @@ r-devel="82232" # 2022-04-22; R 4.3
 ranger-fm="1.9.3" # python
 
 # https://github.com/rbenv/rbenv/releases
-rbenv="1.1.2"
+rbenv="1.2.0"
 
 # https://tiswww.cwru.edu/php/chet/readline/rltop.html
 readline="8.1.2"
@@ -576,6 +583,12 @@ shunit2="2.1.7"
 
 # https://github.com/apptainer/singularity
 singularity="3.8.7"
+
+# https://github.com/syl20bnr/spacemacs
+spacemacs="latest"
+
+# https://github.com/SpaceVim/SpaceVim
+spacevim="latest"
 
 # https://www.sqlite.org/download.html
 sqlite="3.38.2"
