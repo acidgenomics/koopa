@@ -278,7 +278,7 @@ lapack="3.10.1"
 less="590"
 
 # https://github.com/wofr06/lesspipe/
-lesspipe="2.04"
+lesspipe="2.05"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
