@@ -18,7 +18,8 @@ main() { # {{{1
         [r]="$(koopa_locate_r)"
     )
     declare -A dict=(
-        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
+        [arch]="$(koopa_arch)" # e.g. 'x86_64'.
+        [arch2]="$(koopa_arch2)" # e.g. 'amd64'.
         [name]='shiny-server'
         [version]="${INSTALL_VERSION:?}"
     )
@@ -27,21 +28,19 @@ main() { # {{{1
         app[fun]='koopa_debian_install_from_deb'
         # Changed from 14.04 to 18.04 in 2022-04.
         dict[distro]='ubuntu-18.04'
+        dict[file_arch]="${dict[arch2]}"
         dict[file_ext]='deb'
-        case "${dict[arch]}" in
-            'x86_64')
-                dict[arch2]='amd64'
-                ;;
-        esac
     elif koopa_is_fedora_like
     then
         app[fun]='koopa_fedora_install_from_rpm'
         dict[distro]='centos7'
+        dict[file_arch]="${dict[arch]}"
         dict[file_ext]='rpm'
     else
         koopa_stop 'Unsupported Linux distro.'
     fi
-    dict[file]="${dict[name]}-${dict[version]}-${dict[arch]}.${dict[file_ext]}"
+    dict[file]="${dict[name]}-${dict[version]}-\
+${dict[file_arch]}.${dict[file_ext]}"
     dict[url]="https://download3.rstudio.org/${dict[distro]}/\
 ${dict[arch]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
