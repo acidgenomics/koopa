@@ -84,7 +84,7 @@ __koopa_link_in_dir() { # {{{1
             koopa_alert "Linking '${dict2[source_file]}' -> \
 '${dict2[target_file]}'."
         fi
-        koopa_ln "${dict2[source_file]}" "${dict2[target_file]}"
+        koopa_sys_ln "${dict2[source_file]}" "${dict2[target_file]}"
         shift 2
     done
     return 0
