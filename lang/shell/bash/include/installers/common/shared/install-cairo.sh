@@ -15,6 +15,7 @@ main() { # {{{1
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
         'zlib' \
+        'gettext' \
         'freetype' \
         'fontconfig' \
         'libffi' \
