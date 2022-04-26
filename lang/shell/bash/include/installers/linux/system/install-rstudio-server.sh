@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Incorrect:
+# https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2022.02.1-461-.deb
+#
+# Correct:
+# https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2022.02.1-461-amd64.deb
+
 main() { # {{{1
     # """
     # Install RStudio Server binary.
@@ -30,11 +36,7 @@ main() { # {{{1
         [r]="$(koopa_locate_r)"
     )
     declare -A dict=(
-        [file_ext]=''
-        [install]=''
         [name]="${INSTALL_NAME:?}"
-        [os_codename]=''
-        [platform]=''
         [version]="${INSTALL_VERSION:?}"
     )
     if koopa_is_debian_like
@@ -63,7 +65,7 @@ main() { # {{{1
         dict[file_stem]="${dict[file_stem]}-rhel"
     fi
     dict[file]="${dict[file_stem]}-${dict[version]}-\
-${dict[platform]}.${dict[file_ext]}"
+${dict[arch]}.${dict[file_ext]}"
     dict[url]="https://download2.rstudio.org/server/${dict[distro]}/\
 ${dict[arch]}/${dict[file]}"
     # Ensure '+' gets converted to '-'.
