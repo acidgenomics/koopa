@@ -10,6 +10,7 @@ koopa_install_koopa() { # {{{3
     # @note Updated 2022-04-26.
     # """
     local dict
+    koopa_warn 'FIXME HELLO THERE'
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
     declare -A dict=(
