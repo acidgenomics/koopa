@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
     # @note Updated 2022-04-26.
