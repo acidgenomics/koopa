@@ -236,7 +236,6 @@ __koopa_bash_header() { # {{{1
         shopt -s extquote
         shopt -u failglob
         shopt -s force_fignore
-        shopt -s globasciiranges
         shopt -s globstar
         shopt -s gnu_errfmt
         shopt -s histappend
@@ -264,6 +263,7 @@ __koopa_bash_header() { # {{{1
                 # Bash 5+ supported options.
                 shopt -u assoc_expand_once
                 shopt -s complete_fullquote
+                shopt -s globasciiranges
                 shopt -s inherit_errexit
                 shopt -u localvar_inherit
                 shopt -u localvar_unset
