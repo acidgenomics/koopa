@@ -3197,22 +3197,6 @@ koopa_uninstall_shunit2() { # {{{3
         "$@"
 }
 
-# singularity ------------------------------------------------------------- {{{2
-
-koopa_install_singularity() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/singularity' \
-        --name='singularity' \
-        "$@"
-}
-
-koopa_uninstall_singularity() { # {{{3
-    koopa_uninstall_app \
-        --name='singularity' \
-        --unlink-in-bin='singularity' \
-        "$@"
-}
-
 # sqlite ------------------------------------------------------------------ {{{2
 
 koopa_install_sqlite() { # {{{3

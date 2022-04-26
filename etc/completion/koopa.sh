@@ -246,7 +246,6 @@ __koopa_complete() { # {{{1
                         'serf'
                         'shellcheck'
                         'shunit2'
-                        'singularity'
                         'spacemacs'
                         'spacevim'
                         'sqlite'
@@ -290,6 +289,7 @@ __koopa_complete() { # {{{1
                     if koopa_is_linux
                     then
                         args+=(
+                            'apptainer'
                             'aspera-connect'
                             'azure-cli'
                             'base-system'

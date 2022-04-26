@@ -3,17 +3,17 @@
 __koopa_get_version_arg() { # {{{1
     # """
     # Return matching version argument for an input program.
-    # @note Updated 2022-03-18.
+    # @note Updated 2022-04-26.
     # """
     local arg name
     koopa_assert_has_args_eq "$#" 1
     name="$(koopa_basename "${1:?}")"
     case "$name" in
+        'apptainer' | \
         'docker-credential-pass' | \
         'go' | \
         'openssl' | \
-        'rstudio-server' | \
-        'singularity')
+        'rstudio-server')
             arg='version'
             ;;
         'lua')

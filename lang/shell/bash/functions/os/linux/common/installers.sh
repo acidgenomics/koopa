@@ -2,6 +2,21 @@
 
 # Shared ================================================================== {{{1
 
+# apptainer --------------------------------------------------------------- {{{2
+
+koopa_linux_install_apptainer() { # {{{3
+    koopa_install_app \
+        --name='apptainer' \
+        --platform='linux' \
+        "$@"
+}
+
+koopa_linux_uninstall_apptainer() { # {{{3
+    koopa_uninstall_app \
+        --name='apptainer' \
+        "$@"
+}
+
 # aspera-connect ---------------------------------------------------------- {{{2
 
 koopa_linux_install_aspera_connect() { # {{{3
