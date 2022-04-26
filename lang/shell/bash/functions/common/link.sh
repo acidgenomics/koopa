@@ -3,7 +3,7 @@
 __koopa_link_in_dir() { # {{{1
     # """
     # Symlink multiple programs in a directory.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-04-26.
     #
     # @usage
     # > __koopa_link_in_dir \
@@ -60,7 +60,7 @@ __koopa_link_in_dir() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_ge "$#" 2
     koopa_assert_is_set '--prefix' "${dict[prefix]}"
-    koopa_assert_is_dir "${dict[prefix]}"
+    [[ ! -d "${dict[prefix]}" ]] && koopa_mkdir "${dict[prefix]}"
     dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     while [[ "$#" -ge 2 ]]
     do
