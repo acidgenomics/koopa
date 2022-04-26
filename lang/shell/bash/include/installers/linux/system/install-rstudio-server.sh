@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-linux_install_rstudio_server() { # {{{1
+main() { # {{{1
     # """
-    # Install RStudio Server.
+    # Install RStudio Server binary.
     # @note Updated 2022-04-26.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
@@ -24,7 +24,8 @@ linux_install_rstudio_server() { # {{{1
     # - https://hub.docker.com/r/rocker/rstudio/dockerfile
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
-    local app dict install
+    local app dict
+    koopa_assert_has_no_args "$#"
     declare -A app=(
         [r]="$(koopa_locate_r)"
     )
@@ -36,73 +37,35 @@ linux_install_rstudio_server() { # {{{1
         [platform]=''
         [version]="${INSTALL_VERSION:?}"
     )
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--file-ext='*)
-                dict[file_ext]="${1#*=}"
-                shift 1
-                ;;
-            '--file-ext')
-                dict[file_ext]="${2:?}"
-                shift 2
-                ;;
-            '--install='*)
-                dict[install]="${1#*=}"
-                shift 1
-                ;;
-            '--install')
-                dict[install]="${2:?}"
-                shift 2
-                ;;
-            '--os-codename='*)
-                dict[os_codename]="${1#*=}"
-                shift 1
-                ;;
-            '--os-codename')
-                dict[os_codename]="${2:?}"
-                shift 2
-                ;;
-            '--platform='*)
-                dict[platform]="${1#*=}"
-                shift 1
-                ;;
-            '--platform')
-                dict[platform]="${2:?}"
-                shift 2
-                ;;
-            '--version='*)
-                dict[version]="${1#*=}"
-                shift 1
-                ;;
-            '--version')
-                dict[version]="${2:?}"
-                shift 2
-                ;;
-            # Other ------------------------------------------------------------
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_set \
-        '--file-ext' "${dict[file_ext]}" \
-        '--install' "${dict[install]}" \
-        '--name' "${dict[name]}" \
-        '--os-codename' "${dict[os_codename]}" \
-        '--platform' "${dict[platform]}" \
-        '--version' "${dict[version]}"
+    if koopa_is_debian_like
+    then
+        dict[fun]='koopa_debian_gdebi_install'
+        dict[arch]="$(koopa_arch2)" # e.g 'amd64'.
+        dict[distro]='bionic'
+        dict[file_ext]='deb'
+    elif koopa_is_fedora_like
+    then
+        app[fun]='koopa_fedora_dnf_install'
+        dict[arch]="$(koopa_arch)" # e.g. 'x86_64'.
+        dict[distro]='centos8'
+        dict[file_ext]='rpm'
+        dict[init_dir]='/etc/init.d'
+        if [[ ! -d "${dict[init_dir]}" ]]
+        then
+            koopa_mkdir --sudo "${dict[init_dir]}"
+        fi
+    else
+        koopa_stop 'Unsupported Linux distro.'
+    fi
     dict[file_stem]="${dict[name]}"
     if koopa_is_fedora_like
     then
         dict[file_stem]="${dict[file_stem]}-rhel"
     fi
-    koopa_add_to_path_start "$(koopa_dirname "${app[r]}")"
     dict[file]="${dict[file_stem]}-${dict[version]}-\
 ${dict[platform]}.${dict[file_ext]}"
-    dict[url]="https://download2.rstudio.org/server/${dict[os_codename]}/\
-${dict[platform]}/${dict[file]}"
+    dict[url]="https://download2.rstudio.org/server/${dict[distro]}/\
+${dict[arch]}/${dict[file]}"
     # Ensure '+' gets converted to '-'.
     dict[url]="$( \
         koopa_gsub \
@@ -111,8 +74,8 @@ ${dict[platform]}/${dict[file]}"
             --replacement='-' \
             "${dict[url]}" \
     )"
+    koopa_add_to_path_start "$(koopa_dirname "${app[r]}")"
     koopa_download "${dict[url]}" "${dict[file]}"
-    IFS=' ' read -r -a install <<< "${dict[install]}"
-    "${install[@]}" "${dict[file]}"
+    "${app[fun]}" "${dict[file]}"
     return 0
 }
