@@ -106,19 +106,19 @@ main() { # {{{1
         'readline'
         'tcl-tk'
         'texinfo'
-        'xorg-libice' # x11
-        'xorg-libpthread-stubs' # x11
-        'xorg-libsm' # x11
-        'xorg-libx11' # x11
-        'xorg-libxau' # x11
-        'xorg-libxcb' # x11
-        'xorg-libxdmcp' # x11
-        'xorg-libxext' # x11
-        'xorg-libxrender' # x11
-        'xorg-libxt' # x11
-        'xorg-libxt' # x11
-        'xorg-xcb-proto' # x11
-        'xorg-xorgproto' # x11
+        'xorg-libice'
+        'xorg-libpthread-stubs'
+        'xorg-libsm'
+        'xorg-libx11'
+        'xorg-libxau'
+        'xorg-libxcb'
+        'xorg-libxdmcp'
+        'xorg-libxext'
+        'xorg-libxrender'
+        'xorg-libxt'
+        'xorg-libxt'
+        'xorg-xcb-proto'
+        'xorg-xorgproto'
         'xz'
         'zlib'
     )
