@@ -254,6 +254,7 @@ koopa_update_koopa() { # {{{3
     fi
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     koopa_git_pull "${dict[prefix]}"
+    # NOTE Add a step to recache Bash function library here.
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     koopa_fix_zsh_permissions
     return 0
