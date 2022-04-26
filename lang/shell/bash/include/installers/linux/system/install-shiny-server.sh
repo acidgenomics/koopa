@@ -18,7 +18,7 @@ main() { # {{{1
         [r]="$(koopa_locate_r)"
     )
     declare -A dict=(
-        [arch]="$(koopa_arch)"
+        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
         [name]='shiny-server'
         [version]="${INSTALL_VERSION:?}"
     )
