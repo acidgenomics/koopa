@@ -14,7 +14,7 @@ koopa_install_koopa() { # {{{3
         'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
     declare -A dict=(
         [config_prefix]="$(koopa_config_prefix)"
-        [dotfiles]=0
+        [dotfiles]=1
         [interactive]=1
         [modify_user_profile]=0
         [passwordless]=0
@@ -27,6 +27,7 @@ koopa_install_koopa() { # {{{3
     )
     dict[koopa_prefix_system]='/opt/koopa'
     dict[koopa_prefix_user]="${dict[xdg_data_home]}/koopa"
+    koopa_is_admin && dict[shared]=1
     while (("$#"))
     do
         case "$1" in
@@ -96,7 +97,6 @@ koopa_install_koopa() { # {{{3
                 ;;
         esac
     done
-    koopa_is_admin && dict[shared]=1
     if [[ "${dict[interactive]}" -eq 1 ]]
     then
         if koopa_is_admin && [[ -z "${dict[prefix]}" ]]
@@ -210,7 +210,6 @@ koopa_install_koopa() { # {{{3
     koopa_fix_zsh_permissions
     return 0
 }
-
 
 koopa_uninstall_koopa() { # {{{3
     # """
