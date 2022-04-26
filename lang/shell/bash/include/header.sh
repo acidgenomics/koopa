@@ -245,7 +245,6 @@ __koopa_bash_header() { # {{{1
         shopt -u histverify
         shopt -s hostcomplete
         shopt -u huponexit
-        shopt -s inherit_errexit
         shopt -s interactive_comments
         shopt -u lastpipe
         shopt -u lithist
@@ -265,6 +264,7 @@ __koopa_bash_header() { # {{{1
             *)
                 # Bash 5+ supported options.
                 shopt -u assoc_expand_once
+                shopt -s inherit_errexit
                 shopt -u localvar_inherit
                 shopt -u localvar_unset
                 shopt -u progcomp_alias
