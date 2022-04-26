@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install TagLib.
-    # @note Updated 2022-01-03.
+    # @note Updated 2022-04-26.
     #
     # To build a static library, set the following two options with CMake:
     # -DBUILD_SHARED_LIBS=OFF -DENABLE_STATIC_RUNTIME=ON
@@ -24,6 +24,7 @@ main() { # {{{1
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'cmake'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )

@@ -141,7 +141,7 @@ koopa_linux_install_cloudbiolinux() { # {{{3
         --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
         --platform='linux' \
-        --version='rolling' \
+        --version='latest' \
         "$@"
 }
 
