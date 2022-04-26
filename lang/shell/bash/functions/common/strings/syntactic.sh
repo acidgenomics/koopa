@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Consider switching to Perl here, from sed.
 koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
@@ -30,9 +31,7 @@ koopa_camel_case_simple() { # {{{1
         [[ -n "$str" ]] || return 1
         str="$( \
             koopa_print "$str" \
-                | "${app[sed]}" \
-                    --regexp-extended \
-                    's/([ -_])([a-z])/\U\2/g' \
+                | "${app[sed]}" -E 's/([ -_])([a-z])/\U\2/g' \
         )"
         [[ -n "$str" ]] || return 1
         koopa_print "$str"
@@ -99,6 +98,7 @@ koopa_kebab_case_simple() { # {{{1
         str="$(\
             koopa_gsub \
                 --pattern='[^-A-Za-z0-9]' \
+                --regex \
                 --replacement='-' \
                 "$str" \
         )"
@@ -169,6 +169,7 @@ koopa_snake_case_simple() { # {{{1
         str="$( \
             koopa_gsub \
                 --pattern='[^A-Za-z0-9_]' \
+                --regex \
                 --replacement='_' \
                 "$str" \
         )"

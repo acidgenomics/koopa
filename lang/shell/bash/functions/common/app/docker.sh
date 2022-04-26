@@ -135,11 +135,11 @@ koopa_docker_build() { # {{{1
         then
             dict2[tag]="$( \
                 koopa_print "${dict2[image]}" \
-                | "${app[cut]}" --delimiter=':' --fields='2' \
+                | "${app[cut]}" -d ':' -f '2' \
             )"
             dict2[image]="$( \
                 koopa_print "${dict2[image]}" \
-                | "${app[cut]}" --delimiter=':' --fields='1' \
+                | "${app[cut]}" -d ':' -f '1' \
             )"
         fi
         dict2[source_image]="${dict[docker_dir]}/${dict2[image]}/${dict2[tag]}"
@@ -339,11 +339,7 @@ koopa_docker_build_all_images() { # {{{1
                     --print0 \
                     --sort \
                     --type='d' \
-                | "${app[xargs]}" \
-                    --max-args=1 \
-                    --no-run-if-empty \
-                    --null \
-                    "${app[basename]}" \
+                | "${app[xargs]}" -0 -n 1 "${app[basename]}" \
             )"
         fi
         koopa_assert_is_array_non_empty "${images[@]:-}"
@@ -644,10 +640,7 @@ koopa_docker_remove() { # {{{1
         "${app[docker]}" images \
             | koopa_grep --pattern="$pattern" \
             | "${app[awk]}" '{print $3}' \
-            | "${app[xargs]}" \
-                --no-run-if-empty \
-                --verbose \
-                "${app[docker]}" rmi --force
+            | "${app[xargs]}" "${app[docker]}" rmi --force
     done
     return 0
 }

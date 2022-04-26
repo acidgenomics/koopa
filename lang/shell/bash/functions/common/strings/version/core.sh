@@ -35,8 +35,8 @@ __koopa_get_version_arg() { # {{{1
 __koopa_get_version_name() { # {{{1
     # """
     # Match a desired program name to corresponding to dependency to
-    # run with a version argument (e.g. '--version').
-    # @note Updated 2022-03-18.
+    # run with a version argument.
+    # @note Updated 2022-03-25.
     # """
     local name
     koopa_assert_has_args_eq "$#" 1
@@ -93,6 +93,9 @@ __koopa_get_version_name() { # {{{1
             ;;
         'llvm')
             name='llvm-config'
+            ;;
+        'man-db')
+            name='man'
             ;;
         'ncurses')
             name='ncurses6-config'
@@ -179,7 +182,7 @@ koopa_extract_version() { # {{{1
                 --pattern="${dict[pattern]}" \
                 --regex \
                 --string="$arg" \
-            | "${app[head]}" --lines=1 \
+            | "${app[head]}" -n 1 \
         )"
         [[ -n "$str" ]] || return 1
         koopa_print "$str"
@@ -190,10 +193,10 @@ koopa_extract_version() { # {{{1
 koopa_get_version() { # {{{1
     # """
     # Get the version of an installed program.
-    # @note Updated 2022-03-21.
+    # @note Updated 2022-04-15.
     #
     # @examples
-    # > koopa system version 'R' 'conda' 'coreutils' 'python' 'salmon'
+    # > koopa system version 'R' 'conda' 'coreutils' 'python' 'salmon' 'zsh'
     # """
     local cmd
     koopa_assert_has_args "$#"
@@ -214,9 +217,17 @@ koopa_get_version() { # {{{1
         dict[version_arg]="$(__koopa_get_version_arg "${dict[bn]}")"
         dict[locate_fun]="koopa_locate_${dict[bn_snake]}"
         dict[version_fun]="koopa_${dict[bn_snake]}_version"
+        if [[ -x "${dict[cmd]}" ]] && \
+            [[ ! -d "${dict[cmd]}" ]] && \
+            koopa_is_installed "${dict[cmd]}"
+        then
+            dict[cmd]="$(koopa_realpath "${dict[cmd]}")"
+        fi
         if koopa_is_function "${dict[version_fun]}"
         then
-            if [[ -x "${dict[cmd]}" ]]
+            if [[ -x "${dict[cmd]}" ]] && \
+                [[ ! -d "${dict[cmd]}" ]] && \
+                koopa_is_installed "${dict[cmd]}"
             then
                 dict[str]="$("${dict[version_fun]}" "${dict[cmd]}")"
             else
@@ -226,16 +237,21 @@ koopa_get_version() { # {{{1
             koopa_print "${dict[str]}"
             continue
         fi
-        if [[ ! -x "${dict[cmd]}" ]]
+        if ! { \
+            [[ -x "${dict[cmd]}" ]] && \
+            [[ ! -d "${dict[cmd]}" ]] && \
+            koopa_is_installed "${dict[cmd]}"; \
+        }
         then
             if koopa_is_function "${dict[locate_fun]}"
             then
-                dict[cmd]="$("${dict[locate_fun]}" "${dict[cmd]}")"
+                dict[cmd]="$("${dict[locate_fun]}")"
             else
                 dict[cmd]="$(koopa_which_realpath "${dict[cmd]}")"
             fi
-            [[ -x "${dict[cmd]}" ]] || return 1
         fi
+        koopa_is_installed "${dict[cmd]}" || return 1
+        [[ -x "${dict[cmd]}" ]] || return 1
         dict[str]="$("${dict[cmd]}" "${dict[version_arg]}" 2>&1 || true)"
         [[ -n "${dict[str]}" ]] || return 1
         dict[str]="$(koopa_extract_version "${dict[str]}")"
@@ -262,11 +278,10 @@ koopa_get_version_from_pkg_config() { # {{{1
     return 0
 }
 
-
 koopa_sanitize_version() { # {{{1
     # """
     # Sanitize version.
-    # @note Updated 2022-02-27.
+    # @note Updated 2022-04-25.
     #
     # @examples
     # > koopa_sanitize_version '2.7.1p83'
@@ -283,6 +298,7 @@ koopa_sanitize_version() { # {{{1
         str="$( \
             koopa_sub \
                 --pattern='^([.0-9]+).*$' \
+                --regex \
                 --replacement='\1' \
                 "$str" \
         )"
@@ -297,6 +313,6 @@ koopa_version_pattern() { # {{{1
     # @note Updated 2022-02-27.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_print '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?([0-9]+)?'
+    koopa_print '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([+a-z])?([0-9]+)?'
     return 0
 }

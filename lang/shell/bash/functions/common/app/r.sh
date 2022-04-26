@@ -1,5 +1,36 @@
 #!/usr/bin/env bash
 
+# FIXME Need to configure corresponding Bioconductor version here automatically.
+
+koopa_configure_r() { # {{{1
+    # """
+    # Update R configuration.
+    # @note Updated 2022-04-12.
+    #
+    # Add shared R configuration symlinks in '${R_HOME}/etc'.
+    # """
+    local app dict
+    koopa_assert_has_args_le "$#" 1
+    declare -A app=(
+        [r]="${1:-}"
+    )
+    declare -A dict=(
+        [name_fancy]='R'
+    )
+    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    koopa_assert_is_installed "${app[r]}"
+    dict[r_prefix]="$(koopa_r_prefix "${app[r]}")"
+    koopa_alert_configure_start "${dict[name_fancy]}" "${dict[r_prefix]}"
+    koopa_assert_is_dir "${dict[r_prefix]}"
+    koopa_r_link_files_in_etc "${app[r]}"
+    koopa_r_link_site_library "${app[r]}"
+    koopa_r_javareconf "${app[r]}"
+    koopa_r_rebuild_docs "${app[r]}"
+    koopa_sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
+    koopa_alert_configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
+    return 0
+}
+
 koopa_r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
@@ -70,10 +101,14 @@ koopa_r_javareconf() { # {{{1
     return 0
 }
 
-koopa_r_link_files_into_etc() { # {{{1
+# FIXME Need to call sudo here when managing outside of koopa.
+# FIXME Fall back to linking against 'current', if a versioned symlink is
+# not present in the koopa configuration.
+
+koopa_r_link_files_in_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-04-12.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -84,10 +119,11 @@ koopa_r_link_files_into_etc() { # {{{1
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     koopa_assert_is_installed "${app[r]}"
-    app[r]="$(koopa_which_realpath "${app[r]}")"
+    app[r]="$(koopa_realpath "${app[r]}")"
     declare -A dict=(
         [distro_prefix]="$(koopa_distro_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
+        [sudo]=0
         [version]="$(koopa_r_version "${app[r]}")"
     )
     koopa_assert_is_dir "${dict[r_prefix]}"
@@ -103,11 +139,12 @@ koopa_r_link_files_into_etc() { # {{{1
     then
         # This applies to Debian/Ubuntu CRAN binary installs.
         dict[r_etc_target]='/etc/R'
+        dict[sudo]=1
     else
         dict[r_etc_target]="${dict[r_prefix]}/etc"
     fi
     files=(
-        'Makevars.site'  # macOS
+        'Makevars.site' # macOS
         'Renviron.site'
         'Rprofile.site'
         'repositories'
@@ -115,9 +152,16 @@ koopa_r_link_files_into_etc() { # {{{1
     for file in "${files[@]}"
     do
         [[ -f "${dict[r_etc_source]}/${file}" ]] || continue
-        koopa_sys_ln \
-            "${dict[r_etc_source]}/${file}" \
-            "${dict[r_etc_target]}/${file}"
+        if [[ "${dict[sudo]}" -eq 1 ]]
+        then
+            koopa_ln --sudo \
+                "${dict[r_etc_source]}/${file}" \
+                "${dict[r_etc_target]}/${file}"
+        else
+            koopa_sys_ln \
+                "${dict[r_etc_source]}/${file}" \
+                "${dict[r_etc_target]}/${file}"
+        fi
     done
     return 0
 }
@@ -125,7 +169,7 @@ koopa_r_link_files_into_etc() { # {{{1
 koopa_r_link_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-04-04.
     #
     # R on Fedora won't pick up site library in '--vanilla' mode unless we
     # symlink the site-library into '/usr/local/lib/R' as well.
@@ -156,15 +200,13 @@ koopa_r_link_site_library() { # {{{1
         koopa_ln --sudo "${dict[lib_source]}" "${dict[lib_target]}"
     fi
     conf_args=(
-        "--prefix=${dict[lib_source]}"
         '--name-fancy=R'
         '--name=r'
+        "--prefix=${dict[lib_source]}"
     )
     if [[ "${dict[version]}" == 'devel' ]]
     then
-        conf_args+=(
-            '--no-link'
-        )
+        conf_args+=('--no-link-in-opt')
     fi
     koopa_configure_app_packages "${conf_args[@]}"
     if koopa_is_fedora && [[ -d '/usr/lib64/R' ]]
@@ -247,7 +289,7 @@ koopa_r_paste_to_vector() { # {{{1
 koopa_r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-04-08.
     #
     # 1. Ensure HTML package index is writable.
     # 2. Touch an empty 'R.css' file to eliminate additional package warnings.
@@ -266,6 +308,7 @@ koopa_r_rebuild_docs() { # {{{1
     [[ -z "${app[r]:-}" ]] && app[r]="$(koopa_locate_r)"
     app[rscript]="${app[r]}script"
     koopa_assert_is_installed "${app[rscript]}"
+    koopa_is_koopa_app "${app[rscript]}" || return 0
     rscript_args=('--vanilla')
     koopa_alert 'Updating HTML package index.'
     dict[doc_dir]="$( \
@@ -276,17 +319,15 @@ koopa_r_rebuild_docs() { # {{{1
     dict[r_css]="${dict[html_dir]}/R.css"
     if [[ ! -d "${dict[html_dir]}" ]]
     then
-        koopa_mkdir --sudo "${dict[html_dir]}"
+        koopa_mkdir "${dict[html_dir]}"
     fi
     if [[ ! -f "${dict[pkg_index]}" ]]
     then
-        koopa_assert_is_admin
-        koopa_touch --sudo "${dict[pkg_index]}"
+        koopa_touch "${dict[pkg_index]}"
     fi
     if [[ ! -f "${dict[r_css]}" ]]
     then
-        koopa_assert_is_admin
-        koopa_touch --sudo "${dict[r_css]}"
+        koopa_touch "${dict[r_css]}"
     fi
     koopa_sys_set_permissions "${dict[pkg_index]}"
     "${app[rscript]}" "${rscript_args[@]}" -e 'utils::make.packages.html()'

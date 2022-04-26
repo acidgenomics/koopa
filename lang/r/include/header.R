@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+## FIXME Need to rethink the '--help' handoff to man files.
+
 local({
     ## Wrapping in a local call here, so functions don't persist downstream.
 
@@ -7,7 +9,7 @@ local({
     #'
     #' Display help if `--help` flag is defined.
     #'
-    #' @note Updated 2021-05-11.
+    #' @note Updated 2022-04-11.
     #' @noRd
     getHelpIfNecessary <- function() {
         args <- commandArgs()
@@ -31,40 +33,29 @@ local({
         quit()
     }
 
-    #' Install R koopa package, if necessary
+    #' Check if r-koopa package is installed, and meets dependency requirements.
     #'
-    #' @note Updated 2021-08-17.
+    #' @note Updated 2022-04-13.
     #' @noRd
-    installIfNecessary <- function() {
+    checkInstall <- function() {
         ## Minimum version of koopa R package.
         ## Ensure that this also gets updated in `koopa system variables`.
-        minVersion <- "0.2.0"
+        minVersion <- "0.2.3"
         minVersion <- package_version(minVersion)
         stopifnot(requireNamespace("utils", quietly = TRUE))
         isInstalled <- function(pkgs) {
             basename(pkgs) %in% rownames(utils::installed.packages())
         }
-        if (isTRUE(isInstalled("koopa"))) {
-            if (isTRUE(utils::packageVersion("koopa") >= minVersion)) {
-                return(invisible())
-            }
+        if (isFALSE(isInstalled("koopa"))) {
+            stop("koopa R package is not installed.")
         }
-        if (isVanilla()) {
-            stop("R packages should not be installed in '--vanilla' mode.")
+
+        if (isFALSE(utils::packageVersion("koopa") >= minVersion)) {
+            stop(sprintf(
+                "%s %s %s is required.",
+                "koopa", ">=", as.character(minVersion)
+            ))
         }
-        message("Installing koopa R package.")
-        if (!isTRUE(isInstalled("BiocManager"))) {
-            utils::install.packages("BiocManager")
-        }
-        utils::install.packages(
-            pkgs = "koopa",
-            repos = c(
-                "r.acidgenomics.com",
-                BiocManager::repositories()
-            ),
-            dependencies = TRUE
-        )
-        stopifnot(packageVersion("koopa") >= minVersion)
         invisible(TRUE)
     }
 
@@ -98,7 +89,7 @@ local({
             options("verbose" = TRUE)
         }
         getHelpIfNecessary()
-        installIfNecessary()
+        checkInstall()
         invisible(TRUE)
     }
 

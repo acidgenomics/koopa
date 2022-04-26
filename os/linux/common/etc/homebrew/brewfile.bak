@@ -1,0 +1,21 @@
+# """
+# Linux-specific (Linuxbrew) Homebrew Bundle Brewfile.
+# Updated 2022-04-13.
+# """
+
+# Taps {{{1
+# ==============================================================================
+
+tap "homebrew/core"
+tap "homebrew/bundle"
+
+# Brews {{{1
+# ==============================================================================
+
+# This conflicts with "bash-completion" and "rename".
+brew "util-linux", link: false
+
+brew "docker"
+brew "docker-credential-helper" # docker-credential-pass
+brew "emacs"
+brew "pass"

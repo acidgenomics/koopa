@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-03-14.
+#' @note Updated 2022-04-25.
 #'
 #' @section Restarting R:
 #'
@@ -62,6 +62,18 @@ local({  # nolint
         "macos" = identical(dict[["sysname"]], "Darwin"),
         "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))
     )
+    if (isTRUE(flag[["macos"]])) {
+        flag[["framework"]] <- identical(
+            x = R.home(),
+            y = file.path(
+                "",
+                "Library",
+                "Frameworks",
+                "R.framework",
+                "Resources"
+            )
+        )
+    }
 
     ## Secrets {{{2
     ## -------------------------------------------------------------------------
@@ -118,10 +130,7 @@ local({  # nolint
     ## Warn on active conda environment.
     ## Conda can cause compilation issues due to GCC version mismatch.
 
-    if (
-        isTRUE(flag[["conda"]]) &&
-        isTRUE(flag[["interactive"]])
-    ) {
+    if (isTRUE(flag[["conda"]]) && isTRUE(flag[["interactive"]])) {
         message(sprintf(
             fmt = paste(
                 "conda '%s' environment detected.",
@@ -140,28 +149,43 @@ local({  # nolint
     ## Instead, install specific Clang and GNU Fortran binaries:
     ## https://cran.r-project.org/bin/macosx/tools/
 
-    if (isFALSE(flag[["conda"]])) {
-        if (isTRUE(flag[["macos"]])) {
-            ## Check that Xcode command line tools (CLT) are installed.
-            if (!isTRUE(dir.exists(file.path(
-                "/",
-                "Library",
-                "Developer",
-                "CommandLineTools",
-                "SDKs",
-                "MacOSX.sdk"
-            )))) {
-                stop(paste(
-                    "Failed to detect Xcode CLT.",
-                    "This can happen after a macOS system update.",
-                    "Run 'xcode-select --install' to install.",
-                    sep = "\n"
-                ))
-            }
-        } else if (isTRUE(flag[["linux"]])) {
-            stopifnot(all(nzchar(Sys.which(c(
-                "g++", "gcc", "gfortran"
-            )))))
+    if (isTRUE(flag[["macos"]]) && isTRUE(flag[["framework"]])) {
+        if (isFALSE(dir.exists(file.path(
+            "",
+            "Library",
+            "Developer",
+            "CommandLineTools",
+            "SDKs",
+            "MacOSX.sdk"
+        )))) {
+            stop(paste(
+                "Xcode CLT is not installed.",
+                "Run 'koopa install xcode-clt' to resolve.",
+                sep = "\n"
+            ))
+        }
+        if (isFALSE(dir.exists(file.path("", "usr", "local", "gfortran")))) {
+            stop(paste(
+                "CRAN gfortran is not installed.",
+                "Run 'koopa install r-gfortran' to resolve.",
+                sep = "\n"
+            ))
+        }
+        ## FIXME Check that openmp is installed.
+        if (isFALSE(all(file.exists(file.path(
+            "", "usr", "local",
+            c(
+                file.path("include", "omp-tools.h"),
+                file.path("include", "omp.h"),
+                file.path("include", "ompt.h"),
+                file.path("lib", "libomp.dylib")
+            )
+        ))))) {
+            stop(paste(
+                "OpenMP for Xcode is not installed.",
+                "Run 'koopa install r-openmp' to resolve.",
+                sep = "\n"
+            ))
         }
     }
 
@@ -195,11 +219,24 @@ local({  # nolint
     ##   https://packagemanager.rstudio.com/cran/2020-10-28
     ## - Bioconductor 3.11 / R 4.0
     ##   https://packagemanager.rstudio.com/cran/2020-04-30
+    ##
+    ## Alternatively, can use these CRAN latest mirrors:
+    ## > repos[["CRAN"]] <-
+    ## >     "https://cloud.r-project.org"
+    ## > repos[["CRAN"]] <-
+    ## >     "https://cran.rstudio.com"
+    ## > repos[["CRAN"]] <-
+    ## >     "https://packagemanager.rstudio.com/cran/latest"
+    ## > repos[["CRAN"]] <-
+    ## >     "https://repo.miserver.it.umich.edu/cran"
 
     repos <- getOption("repos")
+    cran <- "https://cloud.r-project.org"
+    options("install.packages.compile.from.source" = "always")
+
     if (isTRUE(flag[["linux"]])) {
         ## Configure the RSPM CRAN snapshot.
-        snapshot <- "2022-03-01"
+        snapshot <- "2022-04-21"
         cran <- "https://packagemanager.rstudio.com/cran"
         ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
         if (isTRUE(grepl(
@@ -211,58 +248,47 @@ local({  # nolint
             cran <- paste(cran, "__linux__", distro, sep = "/")
         }
         cran <- paste(cran, snapshot, sep = "/")
-        repos[["CRAN"]] <- cran
-        ## Configure the RSPM Bioconductor mirror repo.
-        ## This is currently warning about new books repo, so disabled.
-        ## > options(
-        ## >    "BioC_mirror" =
-        ## >        "https://packagemanager.rstudio.com/bioconductor"
-        ## > )
-    } else {
-        ## Alternatively, can use:
-        ## > repos[["CRAN"]] <-
-        ## >     "https://cloud.r-project.org"
-        ## > repos[["CRAN"]] <-
-        ## >     "https://cran.rstudio.com"
-        ## > repos[["CRAN"]] <-
-        ## >     "https://packagemanager.rstudio.com/cran/latest"
-        repos[["CRAN"]] <-
-            "https://repo.miserver.it.umich.edu/cran"
+        options("install.packages.compile.from.source" = "never")
     }
+
+    ## Allow binary install on macOS for CRAN R. Otherwise default to installing
+    ## from source. Note that RSPM doesn't currently support macOS binaries.
+    if (isTRUE(flag[["macos"]]) && isTRUE(flag[["framework"]])) {
+        options(
+            "pkgType" = "both",
+            "install.packages.compile.from.source" = "never"
+        )
+    }
+
+    repos[["CRAN"]] <- cran
+
+    ## Configure the RSPM Bioconductor mirror repo.
+    ## This is currently warning about new books repo, so disabled for now.
+    ## > options(
+    ## >    "BioC_mirror" =
+    ## >        "https://packagemanager.rstudio.com/bioconductor"
+    ## > )
+
     ## Always include our Acid Genomics repo.
-    repos[["AcidGenomics"]] <-
-        "https://r.acidgenomics.com"
+    repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
+
     ## Additional repo universies that can be useful:
+    ##
     ## https://r-universe.dev/organizations/
     ## > repos[["carpentries"]] <- "https://carpentries.r-universe.dev"
+    ##
     ## Yihui Xie's repo has some extra binary builds for macOS.
     ## > if (isTRUE(flag[["macos"]])) {
     ## >    repos[["CRANextra"]] <-
     ## >        "https://macos.rbind.io"
     ## > }
+
     options("repos" = repos)
+
     ## Allow Bioconductor to work offline.
     ## Note that this will warn when enabled, which causes
     ## `AcidDevTools::install` to error, since warnings are converted to errors.
     ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
-
-    ## Allow binary install on macOS for CRAN R.
-    ## Otherwise default to installing from source.
-    if (
-        isTRUE(flag[["macos"]]) &&
-        isTRUE(grepl(
-            pattern = "^/Library/Frameworks/R.framework/Resources",
-            x = Sys.getenv("R_HOME")
-        ))
-    ) {
-        options("pkgType" = "both")
-    } else {
-        options("pkgType" = "source")
-    }
-
-    ## Stop nagging about whether to compile in an interactive session.
-    ## https://stackoverflow.com/a/51530225
-    options("install.packages.compile.from.source" = "always")
 
     ## How to set binary-only package mode, which doesn't work on Linux.
     ## > options(
@@ -456,7 +482,7 @@ local({  # nolint
         options("BiocManager.check_repositories" = FALSE)
 
         ## Enable use of historical snapshots ('MRAN' or 'RSPM') via
-        ## `options(BiocManager.snapshots=)` to install CRAN packages for
+        ## `options(BiocManager.snapshot = "RSPM")` to install CRAN packages for
         ## out-of-date Bioconductor versions.
     }
 

@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-03-22.
+    # Updated 2022-04-22.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -32,7 +32,6 @@ __koopa_complete() { # {{{1
                 'configure'
                 'header'
                 'install'
-                'list'
                 'reinstall'
                 'system'
                 'uninstall'
@@ -44,6 +43,7 @@ __koopa_complete() { # {{{1
                 'app')
                     args=(
                         'aws'
+                        'bioconda'
                         'bowtie2'
                         'conda'
                         'docker'
@@ -51,23 +51,14 @@ __koopa_complete() { # {{{1
                         'git'
                         'gpg'
                         'kallisto'
-                        'list'
-                        'python'
                         'r'
                         'rnaeditingindexer'
                         'salmon'
                         'sra'
                         'ssh'
+                        'star'
                         'wget'
                     )
-                    if koopa_is_linux
-                    then
-                        args+=(
-                            'clean'
-                            'link'
-                            'unlink'
-                        )
-                    fi
                     ;;
                 'configure')
                     args=(
@@ -97,102 +88,209 @@ __koopa_complete() { # {{{1
                 'uninstall')
                     args=(
                         'anaconda'
+                        'apr'
+                        'apr-util'
+                        'armadillo'
+                        'attr'
                         'autoconf'
                         'automake'
+                        'aws-cli'
                         'bash'
+                        'bat'
+                        'bc'
                         'binutils'
+                        'black'
+                        'boost'
+                        'bpytop'
+                        'broot'
+                        'bzip2'
+                        'cairo'
                         'chemacs'
                         'cmake'
                         'conda'
                         'coreutils'
                         'cpufetch'
                         'curl'
+                        'difftastic'
                         'doom-emacs'
                         'dotfiles'
+                        'du-dust'
                         'emacs'
                         'ensembl-perl-api'
+                        'exa'
+                        'fd-find'
                         'findutils'
                         'fish'
+                        'flake8'
+                        'fltk'
+                        'fontconfig'
+                        'freetype'
+                        'fribidi'
                         'fzf'
                         'gawk'
                         'gcc'
                         'gdal'
                         'geos'
+                        'gettext'
                         'git'
+                        'glances'
+                        'glib'
+                        'gmp'
                         'gnupg'
                         'go'
+                        'gperf'
                         'grep'
                         'groff'
                         'gsl'
+                        'gzip'
+                        'hadolint'
+                        'harfbuzz'
                         'haskell-stack'
                         'hdf5'
                         'homebrew'
                         'homebrew-bundle'
                         'htop'
+                        'hyperfine'
+                        'icu4c'
                         'imagemagick'
+                        'jpeg'
+                        'jq'
                         'julia'
                         'julia-packages'
+                        'koopa'
+                        'lapack'
                         'lesspipe'
                         'libevent'
+                        'libffi'
+                        'libgeotiff'
+                        'libgit2'
+                        'libice'
+                        'libjpeg-turbo'
+                        'libpipeline'
+                        'libpng'
+                        'libpthread-stubs'
+                        'libsm'
+                        'libssh2'
+                        'libtasn1'
+                        'libtiff'
                         'libtool'
+                        'libunistring'
+                        'libuv'
+                        'libx11'
+                        'libxau'
+                        'libxcb'
+                        'libxdmcp'
+                        'libxext'
+                        'libxml2'
+                        'libxrandr'
+                        'libxrender'
+                        'libxt'
+                        'libzip'
                         'lua'
                         'luarocks'
+                        'lz4'
+                        'lzma'
+                        'lzo'
                         'make'
                         'mamba'
+                        'man-db'
+                        'mcfly'
+                        'meson'
+                        'mpc'
+                        'mpfr'
                         'ncurses'
                         'neofetch'
                         'neovim'
+                        'nettle'
                         'nim'
                         'nim-packages'
+                        'ninja'
+                        'node'
+                        'node-binary'
                         'node-packages'
+                        'oniguruma'
+                        'openblas'
                         'openjdk'
                         'openssh'
                         'openssl'
+                        'pandoc'
                         'parallel'
                         'password-store'
                         'patch'
+                        'pcre'
+                        'pcre2'
                         'perl'
                         'perl-packages'
                         'perlbrew'
+                        'pipx'
+                        'pixman'
                         'pkg-config'
                         'prelude-emacs'
+                        'procs'
                         'proj'
                         'pyenv'
+                        'pyflakes'
+                        'pylint'
+                        'pytest'
                         'python'
                         'python-packages'
                         'r'
                         'r-cmd-check'
+                        'r-devel'
                         'r-packages'
+                        'ranger-fm'
                         'rbenv'
+                        'readline'
+                        'ripgrep'
+                        # > 'ripgrep-all'
                         'rmate'
                         'rsync'
                         'ruby'
                         'ruby-packages'
                         'rust'
-                        'rust-packages'
+                        'scons'
                         'sed'
+                        'serf'
                         'shellcheck'
                         'shunit2'
                         'singularity'
                         'spacemacs'
                         'spacevim'
                         'sqlite'
+                        'starship'
+                        'stow'
                         'subversion'
                         'taglib'
                         'tar'
+                        'tcl-tk'
+                        'tealdeer'
+                        # > 'termcap'
                         'texinfo'
-                        'the-silver-searcher'
+                        # > 'the-silver-searcher'
                         'tmux'
+                        'tokei'
+                        'tree'
                         'udunits'
+                        # > 'unzip'
                         'vim'
                         'wget'
+                        'which'
+                        'xcb-proto'
+                        'xorgproto'
+                        'xsv'
+                        'xtrans'
+                        'xxhash'
+                        'xz'
+                        # > 'zip'
+                        'zlib'
+                        'zoxide'
                         'zsh'
+                        'zstd'
                     )
                     if koopa_is_linux
                     then
                         args+=(
                             'aspera-connect'
-                            'aws-cli'
                             'azure-cli'
                             'base-system'
                             'bcbio-nextgen'
@@ -201,42 +299,43 @@ __koopa_complete() { # {{{1
                             'cloudbiolinux'
                             'docker-credential-pass'
                             'google-cloud-sdk'
-                            'julia'
+                            'julia-binary'
                             'lmod'
+                            'node-binary'
                             'pihole'
                             'pivpn'
-                            'rstudio-server'
-                            'rstudio-workbench'
-                            'shiny-server'
                             'wine'
                         )
-                        if koopa_is_debian_like
+                        if koopa_is_debian_like || koopa_is_fedora_like
                         then
                             args+=(
-                                'bcbio-nextgen-vm'
-                                'node'
-                                'pandoc'
-                                'r-cran-binary'
-                                'r-devel'
+                                'rstudio-server'
+                                'rstudio-workbench'
+                                'shiny-server'
                             )
-                        elif koopa_is_fedora_like
-                        then
-                            args+=(
-                                'oracle-instant-client'
-                            )
-                        fi
+                            if koopa_is_debian_like
+                            then
+                                args+=(
+                                    'bcbio-nextgen-vm'
+                                    'pandoc-binary'
+                                    'r-binary'
+                                )
+                            elif koopa_is_fedora_like
+                            then
+                                args+=(
+                                    'oracle-instant-client'
+                                )
+                            fi
+                        fi 
                     fi
                     if koopa_is_macos
                     then
                         args+=(
-                            'adobe-creative-cloud'
-                            'cisco-webex'
-                            'microsoft-onedrive'
-                            'oracle-java'
-                            'python-framework'
-                            'r-cran-gfortran'
-                            'r-framework'
-                            'ringcentral'
+                            'neovim-binary'
+                            'python-binary'
+                            'r-binary'
+                            'r-gfortran'
+                            'r-openmp'
                             'xcode-clt'
                         )
                     fi
@@ -256,18 +355,11 @@ __koopa_complete() { # {{{1
                             ;;
                     esac
                     ;;
-                'list')
-                    args=(
-                        'app-versions'
-                        'dotfiles'
-                        'path-priority'
-                        'programs'
-                    )
-                    ;;
                 'system')
                     args=(
                         'brew-dump-brewfile'
                         'brew-outdated'
+                        'cache-bash-functions' # FIXME Add support.
                         'check'
                         'delete-cache'
                         'disable-passwordless-sudo'
@@ -277,9 +369,11 @@ __koopa_complete() { # {{{1
                         'fix-zsh-permissions'
                         'host-id'
                         'info'
+                        'list'
                         'log'
                         'os-string'
                         'prefix'
+                        'push-app-build'
                         'reload-shell'
                         'roff'
                         'set-permissions'
@@ -293,42 +387,39 @@ __koopa_complete() { # {{{1
                     then
                         args+=(
                             'clean-launch-services'
+                            'create-dmg'
                             'disable-touch-id-sudo'
                             'enable-touch-id-sudo'
                             'flush-dns'
+                            'force-eject'
                             'homebrew-cask-version'
                             'ifactive'
-                            'list-launch-agents'
                             'macos-app-version'
                             'reload-autofs'
+                            'spotlight'
                         )
                     fi
                     ;;
                 'update')
                     args=(
-                        # koopa:
-                        'koopa'
-                        'system'
-                        # packages:
                         'chemacs'
                         'doom-emacs'
                         'dotfiles'
                         'google-cloud-sdk'
                         'homebrew'
+                        'koopa'
                         'mamba'
                         'nim-packages'
                         'node-packages'
                         'perl-packages'
                         'prelude-emacs'
-                        'pyenv'
                         'python-packages'
                         'r-packages'
-                        'rbenv'
                         'ruby-packages'
-                        'rust'
                         'rust-packages'
                         'spacemacs'
                         'spacevim'
+                        'system'
                         'tex-packages'
                     )
                     if koopa_is_linux
@@ -350,6 +441,22 @@ __koopa_complete() { # {{{1
             ;;
         '3')
             case "${COMP_WORDS[COMP_CWORD-2]}" in
+                'system')
+                    case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    'list')
+                        args=(
+                            'app-versions'
+                            'dotfiles'
+                            'path-priority'
+                            'programs'
+                        )
+                        if koopa_is_macos
+                        then
+                            args+=('launch-agents') # FIXME Support this.
+                        fi
+                        ;;
+                    esac
+                    ;;
                 'app')
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'aws')
@@ -359,7 +466,13 @@ __koopa_complete() { # {{{1
                                 's3'
                             )
                             ;;
-                        'bowtie2')
+                        'bioconda')
+                            args=(
+                                'autobump-recipe'
+                            )
+                            ;;
+                        'bowtie2' | \
+                        'star')
                             args=(
                                 'align'
                                 'index'
@@ -430,12 +543,6 @@ __koopa_complete() { # {{{1
                                 'check-to-new-md5-file'
                             )
                             ;;
-                        'python')
-                            args=(
-                                'create-venv'
-                                'pip-outdated'
-                            )
-                            ;;
                         'r')
                             args=(
                                 'drat'
@@ -499,6 +606,16 @@ __koopa_complete() { # {{{1
                         'salmon')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')
+                                    args=(
+                                        'paired-end'
+                                        'single-end'
+                                    )
+                                    ;;
+                            esac
+                            ;;
+                        'star')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'align')
                                     args=(
                                         'paired-end'
                                         'single-end'

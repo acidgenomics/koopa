@@ -3,30 +3,54 @@
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-04-08.
     #
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
     # """
-    local fun_script fun_scripts fun_scripts_arr koopa_prefix prefix
-    [[ "$#" -eq 1 ]] || return 1
-    [[ $(type -t readarray) == 'builtin' ]] || return 1
-    koopa_prefix="$(koopa_koopa_prefix)"
-    prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
+    local fun_script fun_scripts prefix
+    prefix="$(koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
-    fun_scripts="$( \
+    readarray -t fun_scripts <<< "$( \
         find -L "$prefix" \
             -mindepth 1 \
             -type 'f' \
             -name '*.sh' \
             -print \
     )"
-    readarray -t fun_scripts_arr <<< "$fun_scripts"
-    for fun_script in "${fun_scripts_arr[@]}"
+    for fun_script in "${fun_scripts[@]}"
     do
         # shellcheck source=/dev/null
         source "$fun_script"
     done
+    return 0
+}
+
+__koopa_exit_trap() {
+    # """
+    # Kill all processes whose parent is this process.
+    # @note Updated 2022-04-11.
+    #
+    # @seealso
+    # - https://linuxize.com/post/kill-command-in-linux/
+    # - https://stackoverflow.com/questions/28657676/
+    # - https://stackoverflow.com/questions/41370092/
+    # - https://stackoverflow.com/questions/65420781/
+    # - https://unix.stackexchange.com/questions/222307/
+    # - https://unix.stackexchange.com/questions/240723/
+    # - https://unix.stackexchange.com/questions/256873/
+    # - https://unix.stackexchange.com/questions/478281/
+    # - https://www.networkworld.com/article/3174440/
+    # """
+    if [[ "${?}" -gt 0 ]]
+    then
+        # Useful for debugging.
+        # > if __koopa_is_installed 'ps'
+        # > then
+        # >     ps -p "${$}"
+        # > fi
+        pkill -P "${$}"
+    fi
     return 0
 }
 
@@ -36,20 +60,11 @@ __koopa_is_installed() { # {{{1
     # @note Updated 2021-06-16.
     # """
     local cmd
-    [[ "$#" -gt 0 ]] || return 1
     for cmd in "$@"
     do
         command -v "$cmd" >/dev/null || return 1
     done
     return 0
-}
-
-__koopa_is_macos() { # {{{1
-    # """
-    # Is the operating system macOS?
-    # @note Updated 2021-06-04.
-    # """
-    [[ "$(uname -s)" == 'Darwin' ]]
 }
 
 __koopa_print() { # {{{1
@@ -58,7 +73,6 @@ __koopa_print() { # {{{1
     # @note Updated 2021-05-07.
     # """
     local string
-    [[ "$#" -gt 0 ]] || return 1
     for string in "$@"
     do
         printf '%b\n' "$string"
@@ -69,18 +83,41 @@ __koopa_print() { # {{{1
 __koopa_realpath() { # {{{1
     # """
     # Resolve file path.
-    # @note Updated 2021-06-04.
+    # @note Updated 2022-04-08.
     # """
     local readlink x
-    [[ "$#" -gt 0 ]] || return 1
     readlink='readlink'
-    __koopa_is_macos && readlink='greadlink'
     if ! __koopa_is_installed "$readlink"
     then
-        __koopa_warn "Not installed: '${readlink}'."
-        __koopa_is_macos && \
-            __koopa_warn 'Install Homebrew and GNU coreutils to resolve.'
-        return 1
+        local brew_readlink_1 brew_readlink_2
+        local koopa_readlink
+        local make_readlink_1 make_readlink_2
+        brew_readlink_1='/opt/homebrew/opt/coreutils/libexec/bin/readlink'
+        brew_readlink_2='/usr/local/opt/coreutils/libexec/bin/readlink'
+        koopa_readlink='/opt/koopa/opt/coreutils/bin/readlink'
+        make_readlink_1='/usr/local/bin/readlink'
+        make_readlink_2='/usr/local/bin/greadlink'
+        if [[ -x "$koopa_readlink" ]]
+        then
+            readlink="$koopa_readlink"
+        elif [[ -x "$make_readlink_1" ]]
+        then
+            readlink="$make_readlink_1"
+        elif [[ -x "$make_readlink_2" ]]
+        then
+            readlink="$make_readlink_2"
+        elif [[ -x "$brew_readlink_1" ]]
+        then
+            readlink="$brew_readlink_1"
+        elif [[ -x "$brew_readlink_2" ]]
+        then
+            readlink="$brew_readlink_2"
+        else
+            __koopa_warn \
+                "Not installed: '${readlink}'." \
+                'Install GNU coreutils to resolve.'
+            return 1
+        fi
     fi
     x="$("$readlink" -f "$@")"
     [[ -n "$x" ]] || return 1
@@ -94,7 +131,6 @@ __koopa_warn() { # {{{1
     # @note Updated 2021-05-14.
     # """
     local string
-    [[ "$#" -gt 0 ]] || return 1
     for string in "$@"
     do
         printf '%b\n' "$string" >&2
@@ -141,7 +177,7 @@ __koopa_bash_header() { # {{{1
     fi
     if [[ "${dict[activate]}" -eq 0 ]]
     then
-        [[ -z "${KOOPA_PROCESS_ID:-}" ]] && export KOOPA_PROCESS_ID="${$}"
+        trap __koopa_exit_trap EXIT
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
@@ -236,20 +272,6 @@ __koopa_bash_header() { # {{{1
     then
         set -o verbose  # -v
         set -o xtrace  # -x
-        koopa_alert_info 'Shell options'
-        set +o
-        shopt
-        koopa_alert_info 'Shell variables'
-        koopa_dl \
-            '$' "${$}" \
-            '-' "${-}" \
-            'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
-            'SHELL' "${SHELL:-}"
-        if koopa_is_installed 'locale'
-        then
-            koopa_alert_info 'Locale'
-            locale
-        fi
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
@@ -283,6 +305,7 @@ __koopa_bash_header() { # {{{1
     if [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
     then
+        # FIXME Rework this in favor of a single cache file of functions.
         __koopa_bash_source_dir 'common'
         dict[os_id]="$(koopa_os_id)"
         if koopa_is_linux
@@ -292,8 +315,8 @@ __koopa_bash_header() { # {{{1
             if koopa_is_debian_like
             then
                 __koopa_bash_source_dir "${dict[linux_prefix]}/debian"
-                koopa_is_ubuntu_like && \
-                    __koopa_bash_source_dir "${dict[linux_prefix]}/ubuntu"
+                # > koopa_is_ubuntu_like && \
+                # >     __koopa_bash_source_dir "${dict[linux_prefix]}/ubuntu"
             elif koopa_is_fedora_like
             then
                 __koopa_bash_source_dir "${dict[linux_prefix]}/fedora"
@@ -328,6 +351,23 @@ __koopa_bash_header() { # {{{1
         # Disable user-defined aliases.
         unalias -a
     fi
+    if [[ "${dict[verbose]}" -eq 1 ]]
+    then
+        koopa_alert_info 'Shell options'
+        set +o
+        shopt
+        koopa_alert_info 'Shell variables'
+        koopa_dl \
+            '$' "${$}" \
+            '-' "${-}" \
+            'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
+            'SHELL' "${SHELL:-}"
+        if koopa_is_installed 'locale'
+        then
+            koopa_alert_info 'Locale'
+            locale
+        fi
+    fi
     if [[ "${dict[test]}" -eq 1 ]]
     then
         koopa_duration_stop 'bash' || return 1
@@ -336,12 +376,3 @@ __koopa_bash_header() { # {{{1
 }
 
 __koopa_bash_header "$@"
-
-unset -f \
-    __koopa_bash_header \
-    __koopa_bash_source_dir \
-    __koopa_is_installed \
-    __koopa_is_macos \
-    __koopa_print \
-    __koopa_realpath \
-    __koopa_warn

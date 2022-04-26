@@ -3,7 +3,9 @@
 koopa_convert_fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-25.
+    #
+    # Files must be decompressed.
     #
     # @section Alternate approaches:
     #
@@ -28,8 +30,8 @@ koopa_convert_fastq_to_fasta() { # {{{1
         [tr]="$(koopa_locate_tr)"
     )
     declare -A dict=(
-        [source_dir]="${PWD:?}"
-        [target_dir]="${PWD:?}"
+        [source_dir]=''
+        [target_dir]=''
     )
     while (("$#"))
     do
@@ -57,6 +59,9 @@ koopa_convert_fastq_to_fasta() { # {{{1
                 ;;
         esac
     done
+    koopa_assert_is_set \
+        '--source-dir' "${dict[source_dir]}" \
+        '--target-dir' "${dict[target_dir]}"
     koopa_assert_is_dir "${dict[source_dir]}"
     dict[source_dir]="$(koopa_realpath "${dict[source_dir]}")"
     readarray -t fastq_files <<< "$( \
@@ -78,9 +83,65 @@ koopa_convert_fastq_to_fasta() { # {{{1
         local fasta_file
         fasta_file="${fastq_file%.fastq}.fasta"
         "${app[paste]}" - - - - < "$fastq_file" \
-            | "${app[cut]}" --fields='1,2' \
+            | "${app[cut]}" -f '1,2' \
             | "${app[sed]}" 's/^@/>/' \
             | "${app[tr]}" '\t' '\n' > "$fasta_file"
+    done
+    return 0
+}
+
+koopa_fastq_detect_quality_score() { # {{{1
+    # """
+    # Detect quality score format of a FASTQ file.
+    # @note Updated 2022-03-25.
+    #
+    # @seealso
+    # - https://onetipperday.blogspot.com/2012/10/
+    #     code-snip-to-decide-phred-encoding-of.html
+    # - https://bioinformaticsworkbook.org/introduction/
+    #     fastqquality-score-encoding.html
+    # - https://stackoverflow.com/questions/8151380/
+    #   https://github.com/brentp/bio-playground/blob/master/reads-utils/
+    #     guess-encoding.py
+    #
+    # @examples
+    # > koopa_fastq_detect_quality_score 'sample_R1.fastq.gz'
+    # # Phred+33
+    # """
+    local app file
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [awk]="$(koopa_locate_awk)"
+        [head]="$(koopa_locate_head)"
+        [od]="$(koopa_locate_od)"
+    )
+    koopa_assert_is_file "$@"
+    for file in "$@"
+    do
+        local str
+        # shellcheck disable=SC2016
+        str="$( \
+            "${app[head]}" -n 1000 \
+                <(koopa_decompress --stdout "$file") \
+            | "${app[awk]}" '{if(NR%4==0) printf("%s",$0);}' \
+            | "${app[od]}" \
+                --address-radix='n' \
+                --format='u1' \
+            | "${app[awk]}" 'BEGIN{min=100;max=0;} \
+                {for(i=1;i<=NF;i++) \
+                    {if($i>max) max=$i; \
+                        if($i<min) min=$i;}}END \
+                    {if(max<=74 && min<59) \
+                        print "Phred+33"; \
+                    else if(max>73 && min>=64) \
+                        print "Phred+64"; \
+                    else if(min>=59 && min<64 && max>73) \
+                        print "Solexa+64"; \
+                    else print "Unknown"; \
+                }' \
+        )"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
     done
     return 0
 }
@@ -88,13 +149,12 @@ koopa_convert_fastq_to_fasta() { # {{{1
 koopa_fastq_lanepool() { # {{{1
     # """
     # Pool lane-split FASTQ files.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-25.
     #
     # @examples
     # > koopa_fastq_lanepool --source-dir='fastq/'
     # """
-    local app dict
-    local basenames head i out tail
+    local app basenames dict fastq_files head i out tail
     declare -A app=(
         [cat]="$(koopa_locate_cat)"
     )
@@ -188,29 +248,32 @@ koopa_fastq_lanepool() { # {{{1
     return 0
 }
 
-koopa_fastq_reads_per_file() { # {{{1
+koopa_fastq_number_of_reads() { # {{{1
     # """
-    # Determine the number of reads per FASTQ file.
-    # @note Updated 2022-02-16.
+    # Return the number of reads per FASTQ file.
+    # @note Updated 2022-03-25.
     #
     # @examples
-    # > koopa_fastq_reads_per_file 'fastq/'
+    # > koopa_fastq_number_of_reads 'sample_R1.fastq.gz'
+    # # 27584960
     # """
     local app dict
+    koopa_assert_has_args "$#"
     declare -A app=(
         [awk]="$(koopa_locate_awk)"
         [wc]="$(koopa_locate_wc)"
-        [zcat]="$(koopa_locate_zcat)"
     )
-    declare -A dict=(
-        [prefix]="${1:-}"
-    )
-    [[ -z "${dict[prefix]}" ]] && dict[prefix]="${PWD:?}"
-    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
-    # Divide by 4.
-    # shellcheck disable=SC2016
-    "${app[zcat]}" "${dict[prefix]}/"*'_R1.fastq.gz' \
-        | "${app[wc]}" -l \
-        | "${app[awk]}" '{print $1/4}'
+    koopa_assert_is_file "$@"
+    for file in "$@"
+    do
+        # shellcheck disable=SC2016
+        num="$( \
+            "${app[wc]}" -l \
+                <(koopa_decompress --stdout "$file") \
+            | "${app[awk]}" '{print $1/4}' \
+        )"
+        [[ -n "$num" ]] || return 1
+        koopa_print "$num"
+    done
     return 0
 }

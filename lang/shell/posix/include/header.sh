@@ -3,7 +3,7 @@
 __koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-04-17.
     # """
     local shell
     [ "$#" -eq 0 ] || return 1
@@ -22,17 +22,13 @@ __koopa_posix_header() { # {{{1
     then
         export KOOPA_DEFAULT_SYSTEM_PATH="${PATH:-}"
     fi
-    if [ -z "${KOOPA_DEFAULT_SYSTEM_PKG_CONFIG_PATH:-}" ]
-    then
-        export KOOPA_DEFAULT_SYSTEM_PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
-    fi
     if [ "${KOOPA_ACTIVATE:-0}" -eq 0 ]
     then
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
-    koopa_add_to_manpath_end '/usr/share/man'
+    koopa_activate_path_helper || return 1
     koopa_activate_make_paths || return 1
-    koopa_activate_pkg_config || return 1
+    koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # > koopa_umask || return 1
@@ -45,24 +41,20 @@ __koopa_posix_header() { # {{{1
             "$(koopa_koopa_prefix)/activate" 'activate' \
             "$(koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
+        koopa_add_to_manpath_end '/usr/share/man'
         koopa_activate_homebrew || return 1
-        koopa_activate_openjdk || return 1
+        koopa_activate_go || return 1
+        koopa_activate_nim || return 1
         koopa_activate_ruby || return 1
         koopa_activate_node || return 1
-        koopa_activate_nim || return 1
-        koopa_activate_go || return 1
         koopa_activate_julia || return 1
         koopa_activate_perl || return 1
         koopa_activate_python || return 1
         koopa_activate_pipx || return 1
-        koopa_activate_rust || return 1
-        koopa_activate_nextflow || return 1
-        if koopa_is_linux
+        koopa_activate_bcbio_nextgen || return 1
+        if koopa_is_macos
         then
-            koopa_activate_bcbio_nextgen || return 1
-        elif koopa_is_macos
-        then
-            koopa_macos_activate_r || return 1
+            koopa_macos_activate_google_cloud_sdk
         fi
         if [ "${KOOPA_ACTIVATE:-0}" -eq 1 ]
         then
@@ -71,10 +63,9 @@ __koopa_posix_header() { # {{{1
             koopa_export_gnupg || return 1
             koopa_export_history || return 1
             koopa_export_pager || return 1
-            koopa_activate_aspera_connect || return 1
+            koopa_activate_color_mode || return 1
             koopa_activate_bat || return 1
             koopa_activate_dircolors || return 1
-            koopa_activate_doom_emacs || return 1
             koopa_activate_gcc_colors || return 1
             koopa_activate_lesspipe || return 1
             koopa_activate_secrets || return 1
@@ -83,8 +74,6 @@ __koopa_posix_header() { # {{{1
             if koopa_is_macos
             then
                 koopa_macos_activate_cli_colors || return 1
-                koopa_macos_activate_color_mode || return 1
-                koopa_macos_activate_visual_studio_code || return 1
             fi
             shell="$(koopa_shell_name)"
             case "$shell" in
@@ -95,16 +84,15 @@ __koopa_posix_header() { # {{{1
                     koopa_activate_conda || return 1
                     ;;
             esac
+            koopa_activate_prefix "$(koopa_xdg_local_home)" || return 1
+            koopa_activate_prefix "$(koopa_scripts_private_prefix)" || return 1
             koopa_activate_aliases || return 1
             if ! koopa_is_subshell
             then
                 koopa_activate_today_bucket || return 1
-                koopa_activate_tmux_sessions || return 1
             fi
         fi
     fi
-    koopa_activate_koopa_paths || return 1
-    koopa_activate_local_paths || return 1
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         koopa_duration_stop 'posix' || return 1
@@ -114,5 +102,3 @@ __koopa_posix_header() { # {{{1
 
 # NOTE Don't pass "$@" here, will pass through in Bash header.
 __koopa_posix_header
-
-unset -f __koopa_posix_header

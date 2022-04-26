@@ -83,6 +83,7 @@ main() {
     # Check for Bash 4+.
     case "${BASH_VERSION:-}" in
         '1.'* | '2.'* | '3.'*)
+            __koopa_warn 'Bash 4+ is required.'
             return 1
             ;;
     esac

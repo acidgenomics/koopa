@@ -70,10 +70,7 @@ koopa_rename_lowercase() { # {{{1
             --print0 \
             --sort \
             --type='f' \
-        | "${app[xargs]}" \
-            --no-run-if-empty \
-            --null \
-            -I {} \
+        | "${app[xargs]}" -0 -I {} \
             "${app[rename]}" \
                 --force \
                 --verbose \
@@ -87,10 +84,7 @@ koopa_rename_lowercase() { # {{{1
             --prefix="${dict[prefix]}" \
             --print0 \
             --type='d' \
-        | "${app[xargs]}" \
-            --no-run-if-empty \
-            --null \
-            -I {} \
+        | "${app[xargs]}" -0 -I {} \
             "${app[rename]}" \
                 --force \
                 --verbose \

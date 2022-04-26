@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-koopa_arch_install_base_system() { # {{{1
+# System ================================================================== {{{1
+
+# base-system ------------------------------------------------------------- {{{2
+
+koopa_arch_install_base_system() { # {{{3
     koopa_install_app \
         --name-fancy='Arch base system' \
         --name='base-system' \

@@ -71,7 +71,7 @@ koopa_lesspipe_version() { # {{{1
     [[ -z "${app[lesspipe]}" ]] && app[lesspipe]="$(koopa_locate_lesspipe)"
     str="$( \
         "${app[cat]}" "${app[lesspipe]}" \
-            | "${app[sed]}" --quiet '2p' \
+            | "${app[sed]}" -n '2p' \
             | koopa_extract_version \
     )"
     [[ -n "$str" ]] || return 1
@@ -79,13 +79,38 @@ koopa_lesspipe_version() { # {{{1
     return 0
 }
 
+koopa_man_version() { # {{{1
+    # """
+    # man-db version.
+    # @note Updated 2022-03-27.
+    # """
+    local app str
+    koopa_assert_has_args_le "$#" 1
+    declare -A app=(
+        [grep]="$(koopa_locate_grep)"
+        [man]="${1:-}"
+    )
+    [[ -z "${app[man]}" ]] && app[man]="$(koopa_locate_man)"
+    str="$( \
+        "${app[grep]}" \
+            --extended-regexp \
+            --only-matching \
+            --text \
+            'lib/man-db/libmandb-[.0-9]+\.dylib' \
+            "${app[man]}" \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa_extract_version "$str"
+    return 0
+}
+
 koopa_openjdk_version() { # {{{1
     # """
     # Java (OpenJDK) version.
-    # @note Updated 2022-03-18.
+    # @note Updated 2022-03-25.
     # """
     local app str
-    koopa_assert_has_no_args "$#"
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
         [head]="$(koopa_locate_head)"
@@ -94,8 +119,8 @@ koopa_openjdk_version() { # {{{1
     [[ -z "${app[java]}" ]] && app[java]="$(koopa_locate_java)"
     str="$( \
         "${app[java]}" --version \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter=' ' --fields='2' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f '2' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
@@ -117,8 +142,8 @@ koopa_parallel_version() { # {{{1
     [[ -z "${app[parallel]}" ]] && app[parallel]="$(koopa_locate_parallel)"
     str="$( \
         "${app[parallel]}" --version \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter=' ' --fields='3' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f '3' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
@@ -139,7 +164,7 @@ koopa_r_version() { # {{{1
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     str="$( \
         "${app[r]}" --version 2>/dev/null \
-        | "${app[head]}" --lines=1 \
+        | "${app[head]}" -n 1 \
     )"
     if koopa_str_detect_fixed \
         --string="$str" \
@@ -197,11 +222,11 @@ koopa_tex_version() { # {{{1
     [[ -z "${app[tex]}" ]] && app[tex]="$(koopa_locate_tex)"
     str="$( \
         "${app[tex]}" --version \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter='(' --fields='2' \
-            | "${app[cut]}" --delimiter=')' --fields='1' \
-            | "${app[cut]}" --delimiter=' ' --fields='3' \
-            | "${app[cut]}" --delimiter='/' --fields='1' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d '(' -f '2' \
+            | "${app[cut]}" -d ')' -f '1' \
+            | "${app[cut]}" -d ' ' -f '3' \
+            | "${app[cut]}" -d '/' -f '1' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
@@ -226,8 +251,8 @@ koopa_vim_version() { # {{{1
     )
     dict[maj_min]="$( \
         koopa_print "${dict[str]}" \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter=' ' --fields='5' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f '5' \
     )"
     dict[out]="${dict[maj_min]}"
     if koopa_str_detect_fixed \
@@ -237,8 +262,8 @@ koopa_vim_version() { # {{{1
         dict[patch]="$( \
             koopa_print "${dict[str]}" \
                 | koopa_grep --pattern='Included patches:' \
-                | "${app[cut]}" --delimiter='-' --fields='2' \
-                | "${app[cut]}" --delimiter=',' --fields='1' \
+                | "${app[cut]}" -d '-' -f '2' \
+                | "${app[cut]}" -d ',' -f '1' \
         )"
         dict[out]="${dict[out]}.${dict[patch]}"
     fi

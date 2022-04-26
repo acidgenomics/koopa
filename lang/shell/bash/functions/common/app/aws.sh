@@ -201,6 +201,7 @@ koopa_aws_ec2_suspend() { # {{{1
     return 0
 }
 
+# FIXME If interactive, prompt the user about this.
 koopa_aws_ec2_terminate() { # {{{1
     # """
     # Terminate current AWS EC2 instance.
@@ -572,7 +573,7 @@ koopa_aws_s3_list_large_files() { # {{{1
                 '.Versions[] | "\(.Key)\t \(.Size)"' \
             | "${app[sort]}" --key=2 --numeric-sort \
             | "${app[awk]}" '{ print $1 }' \
-            | "${app[tail]}" --lines="${dict[num]}" \
+            | "${app[tail]}" -n "${dict[num]}" \
     )"
     [[ -n "${dict[str]}" ]] || return 1
     koopa_print "${dict[str]}"

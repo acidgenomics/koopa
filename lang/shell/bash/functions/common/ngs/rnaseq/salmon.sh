@@ -3,7 +3,7 @@
 koopa_salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-25.
     #
     # @section GENCODE:
     #
@@ -14,7 +14,21 @@ koopa_salmon_index() { # {{{1
     # - salmon index --help
     # - https://combine-lab.github.io/alevin-tutorial/2019/selective-alignment/
     # - https://salmon.readthedocs.io/en/latest/salmon.html
+    # - https://www.biostars.org/p/456231/
     # - https://github.com/refgenie/refgenieserver/issues/63
+    #
+    # @examples
+    # # Decoy-aware transcriptome (recommended):
+    # > koopa_salmon_index \
+    # >     --genome-fasta-file='GRCh38.primary_assembly.genome.fa.gz' \
+    # >     --output-dir='salmon-index' \
+    # >     --transcriptome-fasta-file='gencode.v39.transcripts.fa.gz'
+    #
+    # # Decoy-unaware transcriptome (not recommended, but faster and smaller):
+    # > koopa_salmon_index \
+    # >     --no-decoys \
+    # >     --output-dir='salmon-index' \
+    # >     --transcriptome-fasta-file='gencode.v39.transcripts.fa.gz'
     # """
     local app dict index_args
     koopa_assert_has_args "$#"
@@ -24,12 +38,17 @@ koopa_salmon_index() { # {{{1
     declare -A dict=(
         [decoys]=1
         [gencode]=0
+        # e.g. 'GRCh38.primary_assembly.genome.fa.gz'.
         [genome_fasta_file]=''
         [kmer_length]=31
-        [output_dir]='' # 'salmon-index'
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
+        # e.g. 'salmon-index'.
+        [output_dir]=''
         [threads]="$(koopa_cpu_count)"
+        # e.g. 'gencode.v39.transcripts.fa.gz'.
         [transcriptome_fasta_file]=''
-        [type]='puff' # default
+        [type]='puff'
     )
     index_args=()
     while (("$#"))
@@ -80,18 +99,21 @@ koopa_salmon_index() { # {{{1
         esac
     done
     koopa_assert_is_set \
-        '--genome-fasta-file' "${dict[genome_fasta_file]}" \
         '--output-dir' "${dict[output_dir]}" \
         '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
-    koopa_assert_is_file \
-        "${dict[genome_fasta_file]}" \
-        "${dict[transcriptome_fasta_file]}"
-    koopa_assert_is_not_dir "${dict[output_dir]}"
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "salmon index requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
+    koopa_assert_is_file "${dict[transcriptome_fasta_file]}"
     dict[transcriptome_fasta_file]="$( \
         koopa_realpath "${dict[transcriptome_fasta_file]}" \
     )"
+    koopa_assert_is_matching_regex \
+        --pattern='\.fa(sta)?' \
+        --string="${dict[transcriptome_fasta_file]}"
+    koopa_assert_is_not_dir "${dict[output_dir]}"
+    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Generating salmon index at '${dict[output_dir]}'."
     if [[ "${dict[gencode]}" -eq 0 ]] && \
         koopa_str_detect_regex \
@@ -107,6 +129,17 @@ koopa_salmon_index() { # {{{1
     fi
     if [[ "${dict[decoys]}" -eq 1 ]]
     then
+        koopa_alert 'Preparing decoy-aware reference transcriptome.'
+        koopa_assert_is_set \
+            '--genome-fasta-file' "${dict[genome_fasta_file]}"
+        koopa_assert_is_file "${dict[genome_fasta_file]}"
+        dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
+        koopa_assert_is_matching_regex \
+            --pattern='\.fa(sta)?\.gz$' \
+            --string="${dict[genome_fasta_file]}"
+        koopa_assert_is_matching_regex \
+            --pattern='\.fa(sta)?\.gz$' \
+            --string="${dict[transcriptome_fasta_file]}"
         dict[tmp_dir]="$(koopa_tmp_dir)"
         dict[decoys_file]="${dict[tmp_dir]}/decoys.txt"
         dict[gentrome_fasta_file]="${dict[tmp_dir]}/gentrome.fa.gz"
@@ -144,16 +177,30 @@ koopa_salmon_index() { # {{{1
 koopa_salmon_quant_paired_end() { # {{{1
     # """
     # Run salmon quant on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-25.
+    #
+    # @examples
+    # > koopa_salmon_quant_paired_end \
+    # >     --fastq-dir='fastq' \
+    # >     --fastq-r1-tail='_R1_001.fastq.gz' \
+    # >     --fastq-r2-tail='_R2_001.fastq.gz' \
+    # >     --output-dir='salmon'
     # """
     local dict fastq_r1_files fastq_r1_file fastq_r2_file
     koopa_assert_has_args "$#"
     declare -A dict=(
+        # e.g. 'fastq'.
         [fastq_dir]=''
-        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
-        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        # e.g. '_R1_001.fastq.gz'.
+        [fastq_r1_tail]=''
+        # e.g. "_R2_001.fastq.gz'.
+        [fastq_r2_tail]=''
+        # e.g. 'salmon-index'.
         [index_dir]=''
-        [lib_type]='A' # automatic strandedness detection
+        # Detect library fragment type (strandedness) automatically.
+        [lib_type]='A'
+        [mode]='paired-end'
+        # e.g. 'salmon'.
         [output_dir]=''
     )
     while (("$#"))
@@ -225,13 +272,13 @@ koopa_salmon_quant_paired_end() { # {{{1
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_h1 'Running salmon quant (paired-end mode).'
+    koopa_h1 'Running salmon quant.'
     koopa_dl \
+        'Mode' "${dict[mode]}" \
+        'Index dir' "${dict[index_dir]}" \
+        'FASTQ dir' "${dict[fastq_dir]}" \
         'FASTQ R1 tail' "${dict[fastq_r1_tail]}" \
         'FASTQ R2 tail' "${dict[fastq_r2_tail]}" \
-        'FASTQ dir' "${dict[fastq_dir]}" \
-        'Index dir' "${dict[index_dir]}" \
-        'Mode' 'paired-end' \
         'Output dir' "${dict[output_dir]}"
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
@@ -272,7 +319,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
 koopa_salmon_quant_paired_end_per_sample() { # {{{1
     # """
     # Run salmon quant on a paired-end sample.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-25.
     #
     # Attempting to detect library type (strandedness) automatically by default.
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
@@ -326,6 +373,15 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
     #     master/config.yaml
     # - https://github.com/yujijun/BD_projects_bulkseq/blob/master/script/
     #     reference/RNAseq_pipeline/salmon.wdl
+    #
+    # @examples
+    # > koopa_salmon_quant_paired_end_per_sample \
+    # >     --fastq-r1-file='fastq/sample1_R1_001.fastq.gz' \
+    # >     --fastq-r1-tail='_R1_001.fastq.gz' \
+    # >     --fastq-r2-file='fastq/sample1_R2_001.fastq.gz' \
+    # >     --fastq-r2-tail="_R2_001.fastq.gz' \
+    # >     --index-dir='salmon-index' \
+    # >     --output-dir='salmon'
     # """
     local app dict quant_args
     koopa_assert_has_args "$#"
@@ -333,13 +389,23 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         [salmon]="$(koopa_locate_salmon)"
     )
     declare -A dict=(
+        # Current recommendation in bcbio-nextgen.
         [bootstraps]=30
+        # e.g. 'sample1_R1_001.fastq.gz'.
         [fastq_r1_file]=''
-        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
+        # e.g. '_R1_001.fastq.gz'.
+        [fastq_r1_tail]=''
+        # e.g. 'sample1_R2_001.fastq.gz'.
         [fastq_r2_file]=''
-        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        # e.g. '_R2_001.fastq.gz'.
+        [fastq_r2_tail]=''
+        # e.g. 'salmon-index'.
         [index_dir]=''
+        # Detect library fragment type (strandedness) automatically.
         [lib_type]='A'
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
+        # e.g. 'salmon'.
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
@@ -418,10 +484,17 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
     koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
+    dict[fastq_r1_file]="$(koopa_realpath "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
+    dict[fastq_r2_file]="$(koopa_realpath "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
     dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[fastq_r2_tail]}/}"
     koopa_assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
@@ -455,15 +528,27 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
 koopa_salmon_quant_single_end() { # {{{1
     # """
     # Run salmon quant on multiple single-end FASTQs in a directory.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-03-25.
+    #
+    # @examples
+    # > koopa_salmon_quant_single_end \
+    # >     --fastq-dir='fastq' \
+    # >     --fastq-tail='_001.fastq.gz' \
+    # >     --output-dir='salmon'
     # """
     local dict fastq_file fastq_files
     koopa_assert_has_args "$#"
     declare -A dict=(
+        # e.g. 'fastq'.
         [fastq_dir]=''
-        [fastq_tail]='' # '.fastq.gz'
+        # e.g. '.fastq.gz'.
+        [fastq_tail]=''
+        # e.g. 'salmon-index'.
         [index_dir]=''
+        # Detect library fragment type (strandedness) automatically.
         [lib_type]='A'
+        [mode]='single-end'
+        # e.g. 'salmon'.
         [output_dir]=''
     )
     while (("$#"))
@@ -526,12 +611,12 @@ koopa_salmon_quant_single_end() { # {{{1
     dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
     dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_h1 'Running salmon quant (single-end mode).'
+    koopa_h1 'Running salmon quant.'
     koopa_dl \
+        'Mode' "${dict[mode]}" \
+        'Index dir' "${dict[index_dir]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
         'FASTQ tail' "${dict[fastq_tail]}" \
-        'Index dir' "${dict[index_dir]}" \
-        'Mode' 'single-end' \
         'Output dir' "${dict[output_dir]}"
     readarray -t fastq_files <<< "$( \
         koopa_find \
@@ -568,7 +653,7 @@ koopa_salmon_quant_single_end() { # {{{1
 koopa_salmon_quant_single_end_per_sample() { # {{{1
     # """
     # Run salmon quant on a single-end sample.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-25.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -576,6 +661,13 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html
+    #
+    # @examples
+    # > koopa_salmon_quant_single_end_per_sample \
+    # >     --fastq-file='fastq/sample1_001.fastq.gz' \
+    # >     --fastq-tail='_001.fastq.gz' \
+    # >     --index-dir='salmon-index' \
+    # >     --output-dir='salmon'
     # """
     local app dict quant_args
     koopa_assert_has_args "$#"
@@ -584,10 +676,17 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
     )
     declare -A dict=(
         [bootstraps]=30
+        # e.g. 'sample1.fastq.gz'.
         [fastq_file]=''
-        [fastq_tail]='' # '.fastq.gz'
+        # e.g. '.fastq.gz'.
+        [fastq_tail]=''
+        # e.g. 'salmon-index'.
         [index_dir]=''
+        # Detect library fragment type (strandedness) automatically.
         [lib_type]='A'
+        [mem_gb]="$(koopa_mem_gb)"
+        [mem_gb_cutoff]=14
+        # e.g. 'salmon'.
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
@@ -648,8 +747,14 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
+    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    then
+        koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+    fi
     koopa_assert_is_dir "${dict[index_dir]}"
+    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
     koopa_assert_is_file "${dict[fastq_file]}"
+    dict[fastq_file]="$(koopa_realpath "${dict[fastq_file]}")"
     dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
     dict[id]="${dict[fastq_bn]}"
@@ -661,6 +766,7 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
     fi
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
+    # Don't set '--gcBias' here.
     quant_args+=(
         "--index=${dict[index_dir]}"
         "--libType=${dict[lib_type]}"
