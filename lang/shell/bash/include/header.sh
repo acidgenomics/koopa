@@ -226,7 +226,6 @@ __koopa_bash_header() { # {{{1
         shopt -u checkjobs
         shopt -s checkwinsize
         shopt -s cmdhist
-        shopt -s complete_fullquote
         shopt -u direxpand
         shopt -u dirspell
         shopt -u dotglob
@@ -264,6 +263,7 @@ __koopa_bash_header() { # {{{1
             *)
                 # Bash 5+ supported options.
                 shopt -u assoc_expand_once
+                shopt -s complete_fullquote
                 shopt -s inherit_errexit
                 shopt -u localvar_inherit
                 shopt -u localvar_unset
