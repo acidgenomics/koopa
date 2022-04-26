@@ -1842,20 +1842,6 @@ koopa_uninstall_libgit2() { # {{{3
         "$@"
 }
 
-# libice ------------------------------------------------------------------ {{{2
-
-koopa_install_libice() { # {{{3
-    koopa_install_app \
-        --name='libice' \
-        "$@"
-}
-
-koopa_uninstall_libice() { # {{{3
-    koopa_uninstall_app \
-        --name='libice' \
-        "$@"
-}
-
 # libidn ---------------------------------------------------------------- {{{2
 
 koopa_install_libidn() { # {{{3
@@ -3707,6 +3693,20 @@ koopa_uninstall_which() { # {{{3
     koopa_uninstall_app \
         --name='which' \
         --unlink-in-bin='which' \
+        "$@"
+}
+
+# xorg-libice ------------------------------------------------------------- {{{2
+
+koopa_install_xorg_libice() { # {{{3
+    koopa_install_app \
+        --name='xorg-libice' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libice() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libice' \
         "$@"
 }
 
