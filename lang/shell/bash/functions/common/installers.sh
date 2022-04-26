@@ -5,29 +5,259 @@
 # koopa ------------------------------------------------------------------- {{{2
 
 koopa_install_koopa() { # {{{3
-    koopa_install_app \
-        --name='koopa' \
-        --prefix="$(koopa_koopa_prefix)" \
-        "$@"
+    # """
+    # Install koopa.
+    # @note Updated 2022-04-26.
+    # """
+    local dict
+    koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
+        'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
+    declare -A dict=(
+        [config_prefix]="$(koopa_config_prefix)"
+        [dotfiles]=0
+        [interactive]=1
+        [modify_user_profile]=0
+        [passwordless]=0
+        [prefix]=''
+        [shared]=0
+        [source_prefix]="$(koopa_koopa_prefix)"
+        [test]=0
+        [user_profile]="$(koopa_find_user_profile)"
+        [xdg_data_home]="$(koopa_xdg_data_home)"
+    )
+    dict[koopa_prefix_system]='/opt/koopa'
+    dict[koopa_prefix_user]="${dict[xdg_data_home]}/koopa"
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--dotfiles')
+                dict[dotfiles]=1
+                shift 1
+                ;;
+            '--interactive')
+                dict[interactive]=1
+                shift 1
+                ;;
+            '--no-dotfiles')
+                dict[dotfiles]=0
+                shift 1
+                ;;
+            '--no-passwordless-sudo')
+                dict[passwordless]=0
+                shift 1
+                ;;
+            '--no-profile')
+                dict[modify_user_profile]=0
+                shift 1
+                ;;
+            '--no-shared')
+                dict[shared]=0
+                shift 1
+                ;;
+            '--no-test' | \
+            '--no-verbose')
+                dict[test]=0
+                shift 1
+                ;;
+            '--non-interactive')
+                dict[interactive]=0
+                shift 1
+                ;;
+            '--passwordless-sudo')
+                dict[passwordless]=1
+                shift 1
+                ;;
+            '--profile')
+                dict[modify_user_profile]=1
+                shift 1
+                ;;
+            '--shared')
+                dict[shared]=1
+                shift 1
+                ;;
+            '--test' | \
+            '--verbose')
+                dict[test]=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_is_admin && dict[shared]=1
+    if [[ "${dict[interactive]}" -eq 1 ]]
+    then
+        if koopa_is_admin && [[ -z "${dict[prefix]}" ]]
+        then
+            dict[shared]="$( \
+                koopa_read_yn \
+                    'Install for all users' \
+                    "${dict[shared]}" \
+            )"
+        fi
+        if [[ -z "${dict[prefix]}" ]]
+        then
+            if [[ "${dict[shared]}" -eq 1 ]]
+            then
+                dict[prefix]="${dict[koopa_prefix_system]}"
+            else
+                dict[prefix]="${dict[koopa_prefix_user]}"
+            fi
+        fi
+        dict[koopa_prefix]="$( \
+            koopa_read \
+                'Install prefix' \
+                "${dict[prefix]}" \
+        )"
+        if koopa_str_detect_regex \
+            --string="${dict[prefix]}" \
+            --pattern="^${HOME:?}"
+        then
+            dict[shared]=0
+        else
+            dict[shared]=1
+        fi
+        if [[ "${dict[shared]}" -eq 1 ]]
+        then
+            dict[passwordless]="$( \
+                koopa_read_yn \
+                    'Enable passwordless sudo' \
+                    "${dict[passwordless]}" \
+            )"
+        fi
+        if [[ -e "${dict[user_profile]}" ]]
+        then
+            koopa_alert_note \
+                "User profile exists: '${dict[user_profile]}'." \
+                'This will be overwritten if dotfiles are linked.'
+        fi
+        dict[dotfiles]="$( \
+            koopa_read_yn \
+                'Install and link dotfiles' \
+                "${dict[dotfiles]}" \
+        )"
+        if [[ "${dict[dotfiles]}" -eq 0 ]] && \
+            ! koopa_is_defined_in_user_profile && \
+            [[ ! -L "${dict[user_profile]}" ]]
+        then
+            koopa_alert_note 'Koopa activation missing in user profile.'
+            dict[modify_user_profile]="$( \
+                koopa_read_yn \
+                    "Modify '${dict[user_profile]}'" \
+                    "${dict[modify_user_profile]}" \
+            )"
+        fi
+    else
+        if [[ -z "${dict[prefix]}" ]]
+        then
+            if [[ "${dict[shared]}" -eq 1 ]]
+            then
+                dict[prefix]="${dict[koopa_prefix_system]}"
+            else
+                dict[prefix]="${dict[koopa_prefix_user]}"
+            fi
+        fi
+    fi
+    koopa_assert_is_not_dir "${dict[prefix]}"
+    koopa_rm "${dict[config_prefix]}"
+    if [[ "${dict[shared]}" -eq 1 ]]
+    then
+        koopa_alert_info 'Shared installation detected.'
+        koopa_alert_note 'Admin (sudo) permissions are required.'
+        koopa_assert_is_admin
+        koopa_rm --sudo "${dict[prefix]}"
+        koopa_cp --sudo "${dict[source_prefix]}" "${dict[prefix]}"
+        koopa_sys_set_permissions --recursive "${dict[prefix]}"
+        koopa_add_make_prefix_link "${dict[prefix]}"
+    else
+        koopa_cp "${dict[source_prefix]}" "${dict[prefix]}"
+    fi
+    unset KOOPA_PREFIX
+    KOOPA_FORCE=1
+    KOOPA_TEST="${dict[test]}"
+    export KOOPA_FORCE KOOPA_TEST
+    # shellcheck source=/dev/null
+    source "${dict[prefix]}/lang/shell/bash/include/header.sh" || return 1
+    [[ "${KOOPA_PREFIX:-}" == "${dict[prefix]}" ]] || return 1
+    if [[ "${dict[passwordless]}" -eq 1 ]]
+    then
+        koopa_enable_passwordless_sudo
+    fi
+    if [[ "${dict[dotfiles]}" -eq 1 ]]
+    then
+        koopa_install_dotfiles
+    fi
+    if [[ "${dict[modify_user_profile]}" -eq 1 ]]
+    then
+        koopa_add_to_user_profile
+    fi
+    if [[ "${dict[shared]}" -eq 1 ]] && koopa_is_linux
+    then
+        koopa_linux_update_etc_profile_d
+    fi
+    koopa_fix_zsh_permissions
+    return 0
 }
 
+
 koopa_uninstall_koopa() { # {{{3
-    koopa_uninstall_app \
-        --name='koopa' \
-        --prefix="$(koopa_koopa_prefix)" \
-        "$@"
+    # """
+    # Uninstall koopa.
+    # @note Updated 2022-04-08.
+    # """
+    local dict
+    declare -A dict=(
+        [config_prefix]="$(koopa_config_prefix)"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+    )
+    if koopa_is_linux && koopa_is_shared_install
+    then
+        koopa_rm --sudo '/etc/profile.d/zzz-koopa.sh'
+    fi
+    koopa_uninstall_dotfiles
+    koopa_rm \
+        "${dict[config_prefix]}" \
+        "${dict[koopa_prefix]}"
+    return 0
 }
 
 koopa_update_koopa() { # {{{3
     # """
-    # We are using '--no-set-permissions' here, because these are managed in
-    # the updater script, to avoid ZSH compaudit warnings.
+    # Update koopa installation.
+    # @note Updated 2022-04-26.
+    #
+    # Update of pinned stable releases is intentionally not supported.
+    #
+    # This handles updates to Zsh functions that are changed to group
+    # non-writable permissions, so Zsh passes 'compaudit' checks.
     # """
-    koopa_update_app \
-        --name='koopa' \
-        --no-set-permissions \
-        --prefix="$(koopa_koopa_prefix)" \
-        "$@"
+    local dict
+    koopa_assert_has_no_args "$#"
+    declare -A dict=(
+        [prefix]="$(koopa_koopa_prefix)"
+    )
+    if ! koopa_is_git_repo_top_level "${dict[prefix]}"
+    then
+        koopa_alert_note "Pinned release detected at '${dict[prefix]}'."
+        return 1
+    fi
+    koopa_sys_set_permissions --recursive "${dict[prefix]}"
+    koopa_git_pull "${dict[prefix]}"
+    koopa_sys_set_permissions --recursive "${dict[prefix]}"
+    koopa_fix_zsh_permissions
+    return 0
 }
 
 # Shared ================================================================== {{{1
