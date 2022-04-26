@@ -4,6 +4,9 @@
 
 # koopa ------------------------------------------------------------------- {{{2
 
+# FIXME This needs to run the config of activate here...
+# FIXME This is currently defined in activation script.
+
 koopa_install_koopa() { # {{{3
     # """
     # Install koopa.
@@ -202,6 +205,8 @@ koopa_install_koopa() { # {{{3
         koopa_linux_update_etc_profile_d
     fi
     koopa_fix_zsh_permissions
+    koopa_add_koopa_config_link \
+        "$(koopa_koopa_prefix)/activate" 'activate'
     return 0
 }
 
