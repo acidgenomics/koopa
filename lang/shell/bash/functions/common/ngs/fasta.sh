@@ -3,19 +3,20 @@
 koopa_fasta_generate_chromosomes_file() { # {{{1
     # """
     # Generate chromosomes text file from genome FASTA.
-    # @note Updated 2022-03-16.
+    # @note Updated 2022-03-24.
     # """
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
         [grep]="$(koopa_locate_grep)"
-        [gunzip]="$(koopa_locate_gunzip)"
         [sed]="$(koopa_locate_sed)"
     )
     declare -A dict=(
+        # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         [genome_fasta_file]=''
-        [output_file]='' # 'chromosomes.txt'
+        # e.g. 'chromosomes.txt'
+        [output_file]=''
     )
     while (("$#"))
     do
@@ -48,14 +49,15 @@ koopa_fasta_generate_chromosomes_file() { # {{{1
         '--output-file' "${dict[output_file]}"
     koopa_assert_is_not_file "${dict[output_file]}"
     koopa_assert_is_file "${dict[genome_fasta_file]}"
-    koopa_alert "Generating '${dict[output_file]}'."
+    koopa_alert "Generating '${dict[output_file]}' from \
+'${dict[genome_fasta_file]}'."
     "${app[grep]}" '^>' \
-        <("${app[gunzip]}" --stdout "${dict[genome_fasta_file]}") \
-        | "${app[cut]}" --delimiter=' ' --fields='1' \
+        <(koopa_decompress --stdout "${dict[genome_fasta_file]}") \
+        | "${app[cut]}" -d ' ' -f '1' \
         > "${dict[output_file]}"
     "${app[sed]}" \
-        --expression='s/>//g' \
-        --in-place \
+        -i.bak \
+        's/>//g' \
         "${dict[output_file]}"
     koopa_assert_is_file "${dict[output_file]}"
     return 0
@@ -64,7 +66,7 @@ koopa_fasta_generate_chromosomes_file() { # {{{1
 koopa_fasta_generate_decoy_transcriptome_file() { # {{{1
     # """
     # Generate decoy transcriptome "gentrome" (e.g. for salmon index).
-    # @note Updated 2022-03-16.
+    # @note Updated 2022-03-25.
     #
     # This function generates aFASTA file named 'gentrome.fa.gz', containing
     # input from both the genome and transcriptome FASTA files.

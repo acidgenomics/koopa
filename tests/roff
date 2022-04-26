@@ -62,7 +62,7 @@ main() { # {{{1
         for man_file in "${man_files[@]}"
         do
             if ! koopa_str_detect_regex \
-                --string="$("${app[head]}" --lines=1 "$man_file")" \
+                --string="$("${app[head]}" -n 1 "$man_file")" \
                 --pattern='^\.TH '
             then
                 koopa_alert_note "ERROR: '${man_file}'."

@@ -171,7 +171,7 @@ koopa_find() { # {{{1
     dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     if [[ -z "${dict[engine]}" ]]
     then
-        app[find]="$(koopa_locate_fd 2>/dev/null || true)"
+        app[find]="$(koopa_locate_fd --allow-missing)"
         [[ ! -x "${app[find]}" ]] && app[find]="$(koopa_locate_find)"
         dict[engine]="$(koopa_basename "${app[find]}")"
     else
@@ -418,10 +418,10 @@ koopa_find() { # {{{1
     return 0
 }
 
-koopa_find_and_replace_in_files() { # {{{1
+koopa_find_and_replace_in_file() { # {{{1
     # """
     # Find and replace inside files.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-04-22.
     #
     # Parameterized, supporting multiple files.
     #
@@ -429,55 +429,97 @@ koopa_find_and_replace_in_files() { # {{{1
     # by default on macOS.
     #
     # @seealso
+    # - koopa_sub
     # - https://stackoverflow.com/questions/4247068/
+    # - https://stackoverflow.com/questions/5720385/
+    # - https://stackoverflow.com/questions/2922618/
+    # - Use '-0' for multiline replacement
+    #   https://stackoverflow.com/questions/1030787/
+    # - https://unix.stackexchange.com/questions/334216/
+    #
+    # @usage
+    # > koopa_find_and_replace_in_file \
+    # >     [--fixed|--regex] \
+    # >     --pattern=PATTERN \
+    # >     --replacement=REPLACEMENT \
+    # >     FILE...
     #
     # @examples
-    # > koopa_find_and_replace_in_files 'XXX' 'YYY' 'file1' 'file2' 'file3'
+    # > koopa_find_and_replace_in_file \
+    # >     --fixed \
+    # >     --pattern='XXX' \
+    # >     --replacement='YYY' \
+    # >     'file1' 'file2' 'file3'
     # """
-    local app dict file
-    koopa_assert_has_args_ge "$#" 3
+    local app dict pos
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [sed]="$(koopa_locate_sed)"
+        [perl]="$(koopa_locate_perl)"
     )
     declare -A dict=(
-        [from]="${1:?}"
-        [to]="${2:?}"
+        [pattern]=''
+        [regex]=0
+        [replacement]=''
     )
-    shift 2
-    koopa_alert "$(koopa_ngettext \
-        --prefix="Replacing '${dict[from]}' with '${dict[to]}' in " \
-        --num="${#}" \
-        --msg1='file' \
-        --msg2='files' \
-        --suffix='.' \
-    )"
-    if { \
-        koopa_str_detect_fixed \
-            --string="${dict[from]}" \
-            --pattern='/' && \
-        ! koopa_str_detect_fixed \
-            --string="${dict[from]}" \
-            --pattern='\/'; \
-    } || { \
-        koopa_str_detect_fixed \
-            --string="${dict[to]}" \
-            --pattern='/' && \
-        ! koopa_str_detect_fixed \
-            --string="${dict[to]}" \
-            --pattern='\/'; \
-    }
-    then
-        koopa_stop 'Unescaped slash detected.'
-    fi
-    koopa_assert_is_file "$@"
-    for file in "$@"
+    pos=()
+    while (("$#"))
     do
-        koopa_alert "$file"
-        "${app[sed]}" \
-            --in-place \
-            "s/${dict[from]}/${dict[to]}/g" \
-            "$file"
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
+            '--replacement='*)
+                dict[replacement]="${1#*=}"
+                shift 1
+                ;;
+            '--replacement')
+                # Allowing empty string passthrough here.
+                dict[replacement]="${2:-}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--fixed')
+                dict[regex]=0
+                shift 1
+                ;;
+            '--regex')
+                dict[regex]=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
     done
+    koopa_assert_is_set '--pattern' "${dict[pattern]}"
+    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    if [[ "${dict[regex]}" -eq 1 ]]
+    then
+        dict[expr]="s/${dict[pattern]}/${dict[replacement]}/g"
+    else
+        dict[expr]=" \
+            \$pattern = quotemeta '${dict[pattern]}'; \
+            \$replacement = '${dict[replacement]}'; \
+            s/\$pattern/\$replacement/g; \
+        "
+    fi
+    # Consider using '-0' here for multi-line matching. This makes regular
+    # expression matching with line endings more difficult, so disabled.
+    "${app[perl]}" -i -p -e "${dict[expr]}" "$@"
     return 0
 }
 
@@ -485,6 +527,8 @@ koopa_find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
     # @note Updated 2022-02-17.
+    #
+    # Currently requires GNU findutils to be installed.
     # """
     local prefix str
     koopa_assert_has_args "$#"
@@ -535,11 +579,7 @@ koopa_find_dotfiles() { # {{{1
             --print0 \
             --sort \
             --type="${dict[type]}" \
-        | "${app[xargs]}" \
-            --max-args=1 \
-            --no-run-if-empty \
-            --null \
-            "${app[basename]}" \
+        | "${app[xargs]}" -0 -n 1 "${app[basename]}" \
         | "${app[awk]}" '{print "    -",$0}' \
     )"
     [[ -n "${dict[str]}" ]] || return 1
@@ -633,7 +673,7 @@ koopa_find_large_dirs() { # {{{1
                 "${prefix}"/* \
                 2>/dev/null \
             | "${app[sort]}" --numeric-sort \
-            | "${app[tail]}" --lines=50 \
+            | "${app[tail]}" -n 50 \
             || true \
         )"
         [[ -n "$str" ]] || continue
@@ -670,7 +710,7 @@ koopa_find_large_files() { # {{{1
                 --size='+100000000c' \
                 --sort \
                 --type='f' \
-            | "${app[head]}" --lines=50 \
+            | "${app[head]}" -n 50 \
         )"
         [[ -n "$str" ]] || continue
         koopa_print "$str"
@@ -721,5 +761,91 @@ koopa_find_non_symlinked_make_files() { # {{{1
     fi
     dict[out]="$(koopa_find "${find_args[@]}")"
     koopa_print "${dict[out]}"
+    return 0
+}
+
+# NOTE Is there a way to speed this up using GNU find or something?
+
+koopa_find_symlinks() { # {{{1
+    # """
+    # Find symlinks matching a specified source prefix.
+    # @note Updated 2022-04-01.
+    #
+    # @examples
+    # > koopa_find_symlinks \
+    # >     --source-prefix="$(koopa_app_prefix)/python" \
+    # >     --target-prefix="$(koopa_make_prefix)"
+    # > koopa_find_symlinks \
+    # >     --source-prefix="$(koopa_macos_r_prefix)" \
+    # >     --target-prefix="$(koopa_koopa_prefix)/bin"
+    # """
+    local dict hits symlink symlinks
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        [source_prefix]=''
+        [target_prefix]=''
+        [verbose]=0
+    )
+    hits=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--source-prefix='*)
+                dict[source_prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--source-prefix')
+                dict[source_prefix]="${2:?}"
+                shift 2
+                ;;
+            '--target-prefix='*)
+                dict[target_prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--target-prefix')
+                dict[target_prefix]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--verbose')
+                dict[verbose]=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--source-prefix' "${dict[source_prefix]}" \
+        '--target-prefix' "${dict[target_prefix]}"
+    koopa_assert_is_dir "${dict[source_prefix]}" "${dict[target_prefix]}"
+    dict[source_prefix]="$(koopa_realpath "${dict[source_prefix]}")"
+    dict[target_prefix]="$(koopa_realpath "${dict[target_prefix]}")"
+    readarray -t symlinks <<< "$(
+        koopa_find \
+            --prefix="${dict[target_prefix]}" \
+            --sort \
+            --type='l' \
+    )"
+    for symlink in "${symlinks[@]}"
+    do
+        local symlink_real
+        symlink_real="$(koopa_realpath "$symlink")"
+        if koopa_str_detect_regex \
+            --pattern="^${dict[source_prefix]}/" \
+            --string="$symlink_real"
+        then
+            if [[ "${dict[verbose]}" -eq 1 ]]
+            then
+                koopa_warn "${symlink} -> ${symlink_real}"
+            fi
+            hits+=("$symlink")
+        fi
+    done
+    koopa_is_array_empty "${hits[@]}" && return 1
+    koopa_print "${hits[@]}"
     return 0
 }

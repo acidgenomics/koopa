@@ -76,7 +76,7 @@ koopa_move_files_in_batch() { # {{{1
             --prefix="${dict[source_dir]}" \
             --sort \
             --type='f' \
-        | "${app[head]}" --lines="${dict[num]}" \
+        | "${app[head]}" -n "${dict[num]}" \
     )"
     koopa_is_array_non_empty "${files[@]:-}" || return 1
     koopa_mv --target-directory="${dict[target_dir]}" "${files[@]}"

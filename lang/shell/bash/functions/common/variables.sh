@@ -78,12 +78,12 @@ koopa_compress_ext_pattern() { # {{{1
 koopa_cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
-    # @note Updated 2022-02-09.
+    # @note Updated 2022-04-06.
     # """
     local app num
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [nproc]="$(koopa_locate_nproc 2>/dev/null || true)"
+        [nproc]="$(koopa_locate_nproc --allow-missing)"
     )
     if koopa_is_installed "${app[nproc]}"
     then
@@ -208,6 +208,16 @@ koopa_koopa_github_url() { # {{{1
     return 0
 }
 
+# FIXME Return the platform and architecture here automatically.
+koopa_koopa_app_binary_url() { # {{{2
+    # """
+    # Koopa app binary URL.
+    # @note Updated 2022-04-08.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_print "$(koopa_koopa_url)/app"
+}
+
 koopa_koopa_installers_url() { # {{{1
     # """
     # Koopa installers URL.
@@ -252,7 +262,7 @@ koopa_local_ip_address() { # {{{1
             | koopa_grep --pattern='inet ' \
             | koopa_grep --pattern='broadcast' \
             | "${app[awk]}" '{print $2}' \
-            | "${app[tail]}" --lines=1 \
+            | "${app[tail]}" -n 1 \
         )"
     else
         app[hostname]="$(koopa_locate_hostname)"
@@ -260,7 +270,7 @@ koopa_local_ip_address() { # {{{1
         str="$( \
             "${app[hostname]}" -I \
             | "${app[awk]}" '{print $1}' \
-            | "${app[head]}" --lines=1 \
+            | "${app[head]}" -n 1 \
         )"
     fi
     [[ -n "$str" ]] || return 1
@@ -359,7 +369,7 @@ koopa_os_type() { # {{{1
 koopa_public_ip_address() { # {{{1
     # """
     # Public (remote) IP address.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-04-06.
     #
     # @section BIND's Domain Information Groper (dig) tool:
     #
@@ -377,7 +387,7 @@ koopa_public_ip_address() { # {{{1
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [dig]="$(koopa_locate_dig 2>/dev/null || true)"
+        [dig]="$(koopa_locate_dig --allow-missing)"
     )
     if koopa_is_installed "${app[dig]}"
     then
@@ -412,8 +422,8 @@ koopa_script_name() { # {{{1
     declare -A dict
     dict[file]="$( \
         caller \
-        | "${app[head]}" --lines=1 \
-        | "${app[cut]}" --delimiter=' ' --fields='2' \
+        | "${app[head]}" -n 1 \
+        | "${app[cut]}" -d ' ' -f '2' \
     )"
     dict[bn]="$(koopa_basename "${dict[file]}")"
     [[ -n "${dict[bn]}" ]] || return 0
@@ -450,8 +460,8 @@ koopa_variable() { # {{{1
     [[ -n "${dict[str]}" ]] || return 1
     dict[str]="$( \
         koopa_print "${dict[str]}" \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter='"' --fields='2' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d '"' -f '2' \
     )"
     [[ -n "${dict[str]}" ]] || return 1
     koopa_print "${dict[str]}"

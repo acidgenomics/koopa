@@ -160,7 +160,7 @@ koopa_debian_apt_add_repo() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A dict=(
-        [arch]="$(koopa_arch2)"  # e.g. 'amd64'.
+        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
         [key_prefix]="$(koopa_debian_apt_key_prefix)"
         [prefix]="$(koopa_debian_apt_sources_prefix)"
     )
@@ -789,8 +789,8 @@ koopa_debian_apt_configure_sources() { # {{{1
             | koopa_grep \
                 --fixed \
                 --pattern=" ${codenames[main]} main" \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter=' ' --fields='2' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f '2' \
         )"
         [security]="$( \
             koopa_grep \
@@ -800,8 +800,8 @@ koopa_debian_apt_configure_sources() { # {{{1
             | koopa_grep \
                 --fixed \
                 --pattern=" ${codenames[security]} main" \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter=' ' --fields='2' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f '2' \
         )"
     )
     if [[ -z "${urls[main]}" ]]
@@ -895,8 +895,8 @@ koopa_debian_apt_disable_deb_src() { # {{{1
         return 0
     fi
     "${app[sudo]}" "${app[sed]}" \
-        --in-place \
-        --regexp-extended \
+        -E \
+        -i.bak \
         's/^deb-src /# deb-src /' \
         "${dict[file]}"
     "${app[sudo]}" "${app[apt_get]}" update
@@ -930,8 +930,8 @@ koopa_debian_apt_enable_deb_src() { # {{{1
         return 0
     fi
     "${app[sudo]}" "${app[sed]}" \
-        --in-place \
-        --regexp-extended \
+        -E \
+        -i.bak \
         's/^# deb-src /deb-src /' \
         "${dict[file]}"
     "${app[sudo]}" "${app[apt_get]}" update
@@ -958,7 +958,7 @@ koopa_debian_apt_enabled_repos() { # {{{1
             --file="${dict[file]}" \
             --pattern="${dict[pattern]}" \
             --regex \
-        | "${app[cut]}" --delimiter=' ' --fields='4-' \
+        | "${app[cut]}" -d ' ' -f '4-' \
     )"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"
@@ -1020,8 +1020,7 @@ koopa_debian_apt_is_key_imported() { # {{{1
     dict[key_pattern]="$( \
         koopa_print "${dict[key]}" \
         | "${app[sed]}" 's/ //g' \
-        | "${app[sed]}" \
-            --regexp-extended \
+        | "${app[sed]}" -E \
             "s/^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\
 (.{4})(.{4})(.{4})\$/\1 \2 \3 \4 \5  \6 \7 \8 \9/" \
     )"
@@ -1116,7 +1115,7 @@ koopa_debian_apt_space_used_by_grep() { # {{{1
             --assume-no \
             autoremove "$@" \
         | koopa_grep --pattern='freed' \
-        | "${app[cut]}" --delimiter=' ' --fields='4-5' \
+        | "${app[cut]}" -d ' ' -f '4-5' \
     )"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"

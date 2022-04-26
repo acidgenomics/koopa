@@ -135,7 +135,7 @@ koopa_basename_sans_ext2() { # {{{1
         then
             str="$( \
                 koopa_print "$str" \
-                | "${app[cut]}" --delimiter='.' --fields='1' \
+                | "${app[cut]}" -d '.' -f '1' \
             )"
         fi
         koopa_print "$str"
@@ -384,7 +384,7 @@ koopa_file_ext2() { # {{{1
         then
             x="$( \
                 koopa_print "$file" \
-                | "${app[cut]}" --delimiter='.' --fields='2-' \
+                | "${app[cut]}" -d '.' -f '2-' \
             )"
         else
             x=''
@@ -412,8 +412,8 @@ koopa_line_count() { # {{{1
     do
         str="$( \
             "${app[wc]}" --lines "$file" \
-                | "${app[xargs]}" --no-run-if-empty \
-                | "${app[cut]}" --delimiter=' ' --fields='1' \
+                | "${app[xargs]}" \
+                | "${app[cut]}" -d ' ' -f '1' \
         )"
         [[ -n "$str" ]] || return 1
         koopa_print "$str"
@@ -508,20 +508,14 @@ koopa_reset_permissions() { # {{{1
         --prefix="${dict[prefix]}" \
         --print0 \
         --type='d' \
-    | "${app[xargs]}" \
-        --no-run-if-empty \
-        --null \
-        -I {} \
+    | "${app[xargs]}" -0 -I {} \
         "${app[chmod]}" 'u=rwx,g=rwx,o=rx' {}
     # Files.
     koopa_find \
         --prefix="${dict[prefix]}" \
         --print0 \
         --type='f' \
-    | "${app[xargs]}" \
-        --no-run-if-empty \
-        --null \
-        -I {} \
+    | "${app[xargs]}" -0 -I {} \
         "${app[chmod]}" 'u=rw,g=rw,o=r' {}
     # Executable (shell) scripts.
     koopa_find \
@@ -529,10 +523,7 @@ koopa_reset_permissions() { # {{{1
         --prefix="${dict[prefix]}" \
         --print0 \
         --type='f' \
-    | "${app[xargs]}" \
-        --no-run-if-empty \
-        --null \
-        -I {} \
+    | "${app[xargs]}" -0 -I {} \
         "${app[chmod]}" 'u=rwx,g=rwx,o=rx' {}
     return 0
 }

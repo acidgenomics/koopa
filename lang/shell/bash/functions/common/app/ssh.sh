@@ -24,7 +24,7 @@ koopa_ssh_generate_key() { # {{{1
     )
     declare -A dict=(
         [hostname]="$(koopa_hostname)"
-        [key_name]='id_rsa'  # or 'id_ed25519'
+        [key_name]='id_rsa' # or 'id_ed25519'.
         [prefix]="${HOME:?}/.ssh"
         [user]="$(koopa_user)"
     )
