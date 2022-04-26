@@ -5,9 +5,10 @@
 # koopa ------------------------------------------------------------------- {{{2
 
 koopa_install_koopa() { # {{{3
-    # FIXME Should we define main 'koopa_install_koopa' installer?
-    # FIXME See 'install' file for thoughts on this.
-    koopa_stop 'FIXME Need to add support for this'.
+    koopa_install_app \
+        --name='koopa' \
+        --prefix="$(koopa_koopa_prefix)" \
+        "$@"
 }
 
 koopa_uninstall_koopa() { # {{{3
