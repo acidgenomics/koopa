@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# NOTE Consider not modifying PKG_CONFIG_PATH in this case.
 koopa_activate_build_opt_prefix() { # {{{1
     # """
     # Activate a build-only opt prefix.
