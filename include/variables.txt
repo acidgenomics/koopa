@@ -567,7 +567,7 @@ spacevim="latest"
 sqlite="3.38.2"
 
 # https://starship.rs/
-starship="1.6.2" # rust
+starship="1.6.3" # rust
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
