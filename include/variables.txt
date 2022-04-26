@@ -13,7 +13,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-04-25"
+koopa-date="2022-04-26"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -29,10 +29,6 @@ gcrypt-url="https://gnupg.org/ftp/gcrypt"
 
 # GNU FTP server mirror.
 # https://www.gnu.org/prep/ftp.en.html
-# - Massachusetts:
-#   https://mirrors.tripadvisor.com/gnu"
-# - New York:
-#   http://mirror.rit.edu/gnu
 gnu-mirror-url="https://ftpmirror.gnu.org"
 
 # Program versions {{{1
