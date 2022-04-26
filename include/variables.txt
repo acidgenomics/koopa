@@ -1,8 +1,3 @@
-# FIXME Denote 'latest' for:
-# - doom-emacs
-# - spacemacs
-# - spacevim
-
 # koopa {{{1
 # ==============================================================================
 
@@ -293,8 +288,6 @@ libgeotiff="1.7.1"
 # https://github.com/libgit2/libgit2
 libgit2="1.4.3"
 
-libice="1.0.10" # x11
-
 # https://www.gnu.org/software/libidn/
 libidn="2.3.2"
 
@@ -306,10 +299,6 @@ libpipeline="1.5.5"
 
 # http://www.libpng.org/pub/png/libpng.html
 libpng="1.6.37"
-
-libpthread-stubs="0.4" # x11
-
-libsm="1.2.3" # x11
 
 # https://www.libssh2.org/
 libssh2="1.10.0"
@@ -331,24 +320,8 @@ libunistring="1.0"
 # https://github.com/libuv/libuv
 libuv="1.44.1"
 
-libx11="1.7.2" # x11
-
-libxau="1.0.9" # x11
-
-libxcb="1.14" # x11
-
-libxdmcp="1.1.3" # x11
-
-libxext="1.3.4" # x11
-
 # https://gitlab.gnome.org/GNOME/libxml2/-/releases
 libxml2="2.9.13"
-
-libxrandr="1.5.2" # x11
-
-libxrender="0.9.10" # x11
-
-libxt="1.2.1" # x11
 
 # https://libzip.org/download/
 libzip="1.8.0"
@@ -646,13 +619,22 @@ wget="1.21.3"
 # https://ftp.gnu.org/gnu/which/
 which="2.21"
 
-xcb-proto="1.14.1" # x11
-
-xorgproto="2021.5" # x11
+xorg-libice="1.0.10"
+xorg-libpthread-stubs="0.4"
+xorg-libsm="1.2.3"
+xorg-libx11="1.7.2"
+xorg-libxau="1.0.9"
+xorg-libxcb="1.14"
+xorg-libxdmcp="1.1.3"
+xorg-libxext="1.3.4"
+xorg-libxrandr="1.5.2"
+xorg-libxrender="0.9.10"
+xorg-libxt="1.2.1"
+xorg-xcb-proto="1.14.1"
+xorg-xorgproto="2021.5"
+xorg-xtrans="1.4.0"
 
 xsv="0.13.0" # rust
-
-xtrans="1.4.0" # x11
 
 # https://github.com/Cyan4973/xxHash
 xxhash="0.8.1"
