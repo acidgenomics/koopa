@@ -1021,6 +1021,7 @@ koopa_locate_wc() { # {{{1
 
 koopa_locate_wget() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='wget' \
         --opt-name='wget'
 }
