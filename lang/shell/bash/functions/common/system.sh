@@ -307,7 +307,10 @@ koopa_sys_ln() { # {{{1
     # This helps avoid 'locate_ln' issue when reinstalling coreutils.
     koopa_rm "${dict[target]}"
     koopa_ln "${dict[source]}" "${dict[target]}"
-    koopa_sys_set_permissions --dereference "${dict[target]}"
+    if koopa_is_macos
+    then
+        koopa_sys_set_permissions --no-dereference "${dict[target]}"
+    fi
     return 0
 }
 
