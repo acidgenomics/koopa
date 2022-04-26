@@ -171,7 +171,6 @@ local({  # nolint
                 sep = "\n"
             ))
         }
-        ## FIXME Check that openmp is installed.
         if (isFALSE(all(file.exists(file.path(
             "", "usr", "local",
             c(

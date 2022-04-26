@@ -305,7 +305,7 @@ __koopa_bash_header() { # {{{1
     if [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
     then
-        # FIXME Rework this in favor of a single cache file of functions.
+        # NOTE Rework this in favor of a single cache file of functions.
         __koopa_bash_source_dir 'common'
         dict[os_id]="$(koopa_os_id)"
         if koopa_is_linux
