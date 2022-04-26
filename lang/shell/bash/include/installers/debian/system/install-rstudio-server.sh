@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
-    # @note Updated 2022-01-28.
+    # @note Updated 2022-04-26.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -21,7 +21,7 @@ main() { # {{{1
         [os_codename]='bionic'
     )
     # shellcheck source=/dev/null
-    source "$(koopa_installers_prefix)/linux/install-rstudio-server.sh"
+    source "$(koopa_installers_prefix)/linux/system/install-rstudio-server.sh"
     linux_install_rstudio_server \
         --file-ext='deb' \
         --install="${app[sudo]} ${app[gdebi]} --non-interactive" \
