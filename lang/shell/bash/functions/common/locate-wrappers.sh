@@ -728,8 +728,25 @@ koopa_locate_python() { # {{{1
 }
 
 koopa_locate_r() { # {{{1
+    local r
+    if koopa_is_linux
+    then
+        r='/usr/bin/R'
+        if [[ -x "$r" ]]
+        then
+            koopa_locate_app "$r"
+            return 0
+        fi
+    elif koopa_is_macos
+    then
+        r="$(koopa_macos_r_prefix)/bin/R"
+        if [[ -x "$r" ]]
+        then
+            koopa_locate_app "$r"
+            return 0
+        fi
+    fi
     koopa_locate_app \
-        --allow-in-path \
         --app-name='R' \
         --opt-name='r'
 }
