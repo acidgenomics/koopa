@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Now hitting this error with r-devel:
+# Error in solve.default(rgb) : LAPACK routines cannot be loaded
+# Error: unable to load R code in package 'grDevices'
+
 main() { # {{{1
     # """
     # Install R.
