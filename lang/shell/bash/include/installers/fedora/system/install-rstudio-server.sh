@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install RStudio Server on Fedora / RHEL / CentOS.
-    # @note Updated 2022-01-28.
+    # @note Updated 2022-04-26.
     # """
     local dict
     koopa_assert_has_no_args "$#"
@@ -17,7 +17,7 @@ main() { # {{{1
         koopa_mkdir --sudo "${dict[init_dir]}"
     fi
     # shellcheck source=/dev/null
-    source "$(koopa_installers_prefix)/linux/install-rstudio-server.sh"
+    source "$(koopa_installers_prefix)/linux/system/install-rstudio-server.sh"
     linux_install_rstudio_server \
         --file-ext='rpm' \
         --install='koopa_fedora_dnf_install' \
