@@ -465,7 +465,21 @@ koopa_configure_system() { # {{{1
     # - libgeotiff
     # - gdal
 
-    # - x11 dependencies
+    # - x11 dependencies:
+    # - xorg-xorgproto
+    # - xorg-xcb-proto
+    # - xorg-xtrans
+    # - xorg-libpthread-stubs
+    # - xorg-libice
+    # - xorg-libsm
+    # - xorg-libxau
+    # - xorg-libxdmcp
+    # - xorg-libxcb
+    # - xorg-libx11
+    # - xorg-libxext
+    # - xorg-libxrender
+    # - xorg-libxrandr
+
     # - cairo
     # - r
 

@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install libice.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-04-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libice.rb
@@ -12,9 +12,8 @@ main() { # {{{1
     koopa_assert_has_no_args "$#"
     build_deps=('pkg-config')
     deps=(
-        # > 'libx11' # test
-        'xorgproto'
-        'xtrans'
+        'xorg-xorgproto'
+        'xorg-xtrans'
     )
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"

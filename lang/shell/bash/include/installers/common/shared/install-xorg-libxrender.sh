@@ -5,7 +5,7 @@
 main() { # {{{1
     # """
     # Install libxrender.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-04-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -15,12 +15,12 @@ main() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
-        'libpthread-stubs' \
-        'libx11' \
-        'libxau' \
-        'libxcb' \
-        'libxdmcp' \
-        'xorgproto'
+        'xorg-xorgproto' \
+        'xorg-libpthread-stubs' \
+        'xorg-libxau' \
+        'xorg-libxdmcp' \
+        'xorg-libxcb' \
+        'xorg-libx11'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

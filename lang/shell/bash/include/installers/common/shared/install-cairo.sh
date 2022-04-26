@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Should we consider including 'libxrandr' and 'python'?
-
 main() { # {{{1
     # """
     # Install Cairo.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-04-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
@@ -21,16 +19,16 @@ main() { # {{{1
         'glib' \
         'libpng' \
         'libpthread-stubs' \
-        'libx11' \
-        'libxau' \
-        'libxcb' \
-        'libxdmcp' \
-        'libxext' \
-        'libxrender' \
         'lzo' \
         'pixman' \
-        'xcb-proto' \
-        'xorgproto' \
+        'xorg-xorgproto' \
+        'xorg-xcb-proto' \
+        'xorg-libxau' \
+        'xorg-libxdmcp' \
+        'xorg-libxcb' \
+        'xorg-libx11' \
+        'xorg-libxext' \
+        'xorg-libxrender' \
         'zlib'
     declare -A app=(
         [make]="$(koopa_locate_make)"
