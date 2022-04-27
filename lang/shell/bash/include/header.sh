@@ -30,7 +30,7 @@ __koopa_bash_source_dir() { # {{{1
 __koopa_exit_trap() {
     # """
     # Kill all processes whose parent is this process.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-04-27.
     #
     # @seealso
     # - https://linuxize.com/post/kill-command-in-linux/
@@ -47,7 +47,10 @@ __koopa_exit_trap() {
     # """
     if [[ "${?}" -gt 0 ]]
     then
-        ps -p "${PPID:?}" "${$}"
+        if [[ "${KOOPA_VERBOSE:-0}" -eq 1 ]]
+        then
+            ps -p "${PPID:?}" "${$}"
+        fi
         pkill -P "${PPID:?}" "${$}"
     fi
     return 0
