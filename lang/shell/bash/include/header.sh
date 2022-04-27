@@ -26,13 +26,10 @@ __koopa_bash_source_dir() { # {{{1
     return 0
 }
 
-# FIXME This still doesn't seem to be shutting the Bash process down correctly
-# on 'locate_app' failure...
-
 __koopa_exit_trap() {
     # """
     # Kill all processes whose parent is this process.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-04-26.
     #
     # @seealso
     # - https://linuxize.com/post/kill-command-in-linux/
@@ -44,15 +41,13 @@ __koopa_exit_trap() {
     # - https://unix.stackexchange.com/questions/256873/
     # - https://unix.stackexchange.com/questions/478281/
     # - https://www.networkworld.com/article/3174440/
+    # - https://www.baeldung.com/linux/kill-members-process-group
+    # - https://stackoverflow.com/questions/392022/
     # """
     if [[ "${?}" -gt 0 ]]
     then
-        # Useful for debugging.
-        # > if __koopa_is_installed 'ps'
-        # > then
-        # >     ps -p "${$}"
-        # > fi
-        pkill -P "${$}"
+        ps -p "${PPID:?}" "${$}"
+        pkill -P "${PPID:?}" "${$}"
     fi
     return 0
 }
