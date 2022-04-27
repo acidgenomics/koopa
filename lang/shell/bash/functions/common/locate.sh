@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Check in bin_prefix.
-
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.

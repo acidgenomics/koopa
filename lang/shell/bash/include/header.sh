@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework as cached function approach.
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
