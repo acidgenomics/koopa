@@ -3,13 +3,13 @@
 main() { # {{{1
     # """
     # Install HDF5.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-04-28.
     #
     # Using gcc here for gfortran.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'gcc' 'zlib'
+    koopa_activate_opt_prefix 'gcc'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
