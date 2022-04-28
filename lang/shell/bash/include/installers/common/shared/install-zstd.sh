@@ -12,8 +12,6 @@ main() { # {{{
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
-    # FIXME Use system zlib for macOS.
-    # > koopa_activate_opt_prefix 'zlib'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
