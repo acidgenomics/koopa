@@ -16,19 +16,17 @@
 # - https://mac.r-project.org/
 # """
 
-OPT_LOC = /opt/koopa/opt
+# > OPT_LOC = /opt/koopa/opt
 
-CPPFLAGS += -I$(OPT_LOC)/freetype/include/freetype2
-CPPFLAGS += -I$(OPT_LOC)/gettext/include
-CPPFLAGS += -I$(OPT_LOC)/libgit2/include
-CPPFLAGS += -I$(OPT_LOC)/libssh2/include
-CPPFLAGS += -I$(OPT_LOC)/openssl/include
-CPPFLAGS += -I$(OPT_LOC)/xz/include
-CPPFLAGS += -I$(OPT_LOC)/zlib/include
+# > CPPFLAGS += -I$(OPT_LOC)/freetype/include/freetype2
+# > CPPFLAGS += -I$(OPT_LOC)/gettext/include
+# > CPPFLAGS += -I$(OPT_LOC)/libgit2/include
+# > CPPFLAGS += -I$(OPT_LOC)/libssh2/include
+# > CPPFLAGS += -I$(OPT_LOC)/openssl/include
+# > CPPFLAGS += -I$(OPT_LOC)/xz/include
 
-LDFLAGS += -L$(OPT_LOC)/gettext/lib
-LDFLAGS += -L$(OPT_LOC)/libgit2/lib
-LDFLAGS += -L$(OPT_LOC)/libssh2/lib
-LDFLAGS += -L$(OPT_LOC)/openssl/lib
-LDFLAGS += -L$(OPT_LOC)/xz/lib
-LDFLAGS += -L$(OPT_LOC)/zlib/lib
+# > LDFLAGS += -L$(OPT_LOC)/gettext/lib
+# > LDFLAGS += -L$(OPT_LOC)/libgit2/lib
+# > LDFLAGS += -L$(OPT_LOC)/libssh2/lib
+# > LDFLAGS += -L$(OPT_LOC)/openssl/lib
+# > LDFLAGS += -L$(OPT_LOC)/xz/lib

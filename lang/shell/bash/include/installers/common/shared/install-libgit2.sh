@@ -3,15 +3,20 @@
 main() { # {{{1
     # """
     # Install libgit2.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-04-28.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libgit2.rb
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
-    koopa_activate_opt_prefix 'libssh2' 'openssl' 'zlib'
+    koopa_activate_build_opt_prefix \
+        'cmake' \
+        'pkg-config'
+    koopa_activate_opt_prefix \
+        'zlib' \
+        'openssl' \
+        'libssh2'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
