@@ -29,10 +29,10 @@ main() { # {{{1
         'libtool' \
         'pkg-config'
     # Use 'PCRE' not 'PCRE2' here.
+    # Need to add 'zlib' on Linux?
     koopa_activate_opt_prefix \
         'gettext' \
-        'pcre' \
-        'zlib'
+        'pcre'
     declare -A app=(
         [autoreconf]="$(koopa_locate_autoreconf)"
         [libtoolize]="$(koopa_locate_libtoolize)"

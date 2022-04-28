@@ -3867,7 +3867,6 @@ koopa_update_google_cloud_sdk() { # {{{3
 
 koopa_install_homebrew() { # {{{3
     koopa_install_app \
-        --link-in-bin='Homebrew/bin/brew' \
         --name-fancy='Homebrew' \
         --name='homebrew' \
         --no-prefix-check \
@@ -3881,7 +3880,6 @@ koopa_uninstall_homebrew() { # {{{3
         --name-fancy='Homebrew' \
         --name='homebrew' \
         --system \
-        --unlink-in-bin='brew' \
         "$@"
 }
 

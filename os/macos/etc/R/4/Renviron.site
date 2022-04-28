@@ -72,21 +72,22 @@ PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/pcre2/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/readline/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/xz/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zlib/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zlib/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zstd/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 R_LD_LIBRARY_PATH=""
-R_LD_LIBRARY_PATH="/Library/Developer/CommandLineTools/usr/lib:${R_LD_LIBRARY_PATH}"
+# Determine SDK path with 'xcrun --show-sdk-path'.
+R_LD_LIBRARY_PATH="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include:${R_LD_LIBRARY_PATH}"
 # > R_LD_LIBRARY_PATH="/usr/lib:${R_LD_LIBRARY_PATH}"
 # > R_LD_LIBRARY_PATH="/usr/local/lib:${R_LD_LIBRARY_PATH}"
-R_LD_LIBRARY_PATH="/usr/local/gfortran/lib:${R_LD_LIBRARY_PATH}"
+# > R_LD_LIBRARY_PATH="/usr/local/gfortran/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${R_HOME}/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/lapack/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libssh2/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/openssl/lib:${R_LD_LIBRARY_PATH}"
-R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/zlib/lib:${R_LD_LIBRARY_PATH}"
+# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/zlib/lib:${R_LD_LIBRARY_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================

@@ -10,29 +10,31 @@ main() { # {{{1
     # - https://github.com/archlinux/svntogit-packages/blob/master/cairo/
     #     trunk/PKGBUILD
     # """
-    local app conf_args dict
+    local app conf_args deps dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix \
-        'zlib' \
-        'gettext' \
-        'freetype' \
-        'fontconfig' \
-        'libffi' \
-        'pcre' \
-        'glib' \
-        'libpng' \
-        'libpthread-stubs' \
-        'lzo' \
-        'pixman' \
-        'xorg-xorgproto' \
-        'xorg-xcb-proto' \
-        'xorg-libxau' \
-        'xorg-libxdmcp' \
-        'xorg-libxcb' \
-        'xorg-libx11' \
-        'xorg-libxext' \
+    deps=(
+        # > 'zlib' # FIXME Use system zlib for macOS.
+        'gettext'
+        'freetype'
+        'fontconfig'
+        'libffi'
+        'pcre'
+        'glib'
+        'libpng'
+        'libpthread-stubs'
+        'lzo'
+        'pixman'
+        'xorg-xorgproto'
+        'xorg-xcb-proto'
+        'xorg-libxau'
+        'xorg-libxdmcp'
+        'xorg-libxcb'
+        'xorg-libx11'
+        'xorg-libxext'
         'xorg-libxrender'
+    )
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

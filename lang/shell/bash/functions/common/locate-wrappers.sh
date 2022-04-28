@@ -72,8 +72,7 @@ koopa_locate_brew() { # {{{1
     # Allowing passthrough of '--allow-missing' here.
     # """
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='brew' \
+        "$(koopa_homebrew_prefix)/Homebrew/bin/brew" \
         "$@"
 }
 
