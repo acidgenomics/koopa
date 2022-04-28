@@ -7,6 +7,7 @@ main() { # {{{1
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libgit2.rb
+    # - https://github.com/libgit2/libgit2/issues/5079
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
@@ -14,7 +15,6 @@ main() { # {{{1
         'cmake' \
         'pkg-config'
     koopa_activate_opt_prefix \
-        'zlib' \
         'openssl' \
         'libssh2'
     declare -A app=(
