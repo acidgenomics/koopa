@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Use system X11 instead.
+# FIXME Need to modify the tcl package config to not check for zlib on macos.
+
 # FIXME gert package is failing to install from source on macOS:
 #
 # Error: package or namespace load failed for ‘gert’ in dyn.load(file, DLLpath = DLLpath, ...):
@@ -93,14 +96,23 @@ main() { # {{{1
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [make]="$(koopa_locate_make)"
+        [pkg_config]="$(koopa_locate_pkg_config)"
+    )
+    declare -A dict=(
+        [jobs]="$(koopa_cpu_count)"
+        [name]="${INSTALL_NAME:?}"
+        [opt_prefix]="$(koopa_opt_prefix)"
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    if koopa_is_macos
+    then
+        dict[x11_prefix]='/opt/X11'
+    fi
     build_deps=('pkg-config')
     deps=(
-        # > 'bzip2'
-        # > 'perl'
-        # > 'unzip'
-        # > 'which'
-        # > 'zip'
-        'zlib'
         'gettext'
         'curl'
         'icu4c'
@@ -121,46 +133,41 @@ main() { # {{{1
         'fontconfig' # cairo
         'lzo' # cairo
         'pixman' # cairo
-        'xorg-xorgproto'
-        'xorg-xcb-proto'
-        'xorg-libpthread-stubs'
-        'xorg-libice'
-        'xorg-libsm'
-        'xorg-libxau'
-        'xorg-libxdmcp'
-        'xorg-libxcb'
-        'xorg-libx11'
-        'xorg-libxext'
-        'xorg-libxrender'
-        'xorg-libxt'
         'cairo'
         'xz'
     )
+    # Configure X11.
+    if koopa_is_macos
+    then
+        koopa_add_to_pkg_config_path "${dict[x11_prefix]}/lib/pkgconfig"
+    else
+        deps+=(
+            'xorg-xorgproto'
+            'xorg-xcb-proto'
+            'xorg-libpthread-stubs'
+            'xorg-libice'
+            'xorg-libsm'
+            'xorg-libxau'
+            'xorg-libxdmcp'
+            'xorg-libxcb'
+            'xorg-libx11'
+            'xorg-libxext'
+            'xorg-libxrender'
+            'xorg-libxt'
+        )
+    fi
+    deps+=('cairo') # depends on X11.
     if koopa_is_linux
     then
-        deps+=(
-            'openjdk'
-        )
+        deps+=('openjdk')
     elif koopa_is_macos
     then
         # We're using Adoptium Temurin LTS for OpenJDK on macOS.
-        deps+=('gcc')
         koopa_add_to_path_start '/Library/TeX/texbin'
-        # > koopa_add_to_pkg_config_path '/opt/X11/lib/pkgconfig'
+        deps+=('gcc')
     fi
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
-    declare -A app=(
-        [make]="$(koopa_locate_make)"
-        [pkg_config]="$(koopa_locate_pkg_config)"
-    )
-    declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]="${INSTALL_NAME:?}"
-        [opt_prefix]="$(koopa_opt_prefix)"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
-    )
     dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
     dict[tcl_tk]="$(koopa_realpath "${dict[opt_prefix]}/tcl-tk")"
     conf_args=(
@@ -226,7 +233,6 @@ main() { # {{{1
         )"
         "--with-tcl-config=${dict[tcl_tk]}/lib/tclConfig.sh"
         "--with-tk-config=${dict[tcl_tk]}/lib/tkConfig.sh"
-        '--with-x'
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
@@ -246,11 +252,13 @@ main() { # {{{1
             "F77=${app[fc]}"
             "OBJC=${app[cc]}"
             "OBJCXX=${app[cxx]}"
-            # > '--x-includes=/opt/X11/include'
-            # > '--x-libraries=/opt/X11/lib'
+            "--x-includes=${dict[x11_prefix]}/include"
+            "--x-libraries=${dict[x11_prefix]}/lib"
             '--without-aqua'
         )
         export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
+    else
+        conf_args+=('--with-x')
     fi
     koopa_dl 'configure args' "${conf_args[*]}"
     if [[ "${dict[name]}" == 'r-devel' ]]

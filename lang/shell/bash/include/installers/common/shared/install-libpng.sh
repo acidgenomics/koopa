@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install libpng.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-04-28.
     #
     # @seealso
     # - http://www.libpng.org/pub/png/libpng.html
@@ -42,6 +42,14 @@ ${dict[name]}${dict[version2]}/${dict[version]}/${dict[file]}"
         '--enable-shared=yes'
         '--enable-static=yes'
     )
+    if koopa_is_macos
+    then
+        koopa_find_and_replace_in_file \
+            --pattern='^(Requires: zlib)$' \
+            --regex \
+            --replacement='# \1' \
+            'libpng.pc.in'
+    fi
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
