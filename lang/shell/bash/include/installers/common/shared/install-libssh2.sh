@@ -5,11 +5,6 @@ main() { # {{{1
     # Install libssh2.
     # @note Updated 2022-04-28.
     #
-    # Including libz (zlib) with '--with-libz-prefix' runs into pkgconfig
-    # issues with libgit2, since this doesn't link with '-lz' the way we'd
-    # expect, like openssl. Disabled for the moment. Downstream, we run into
-    # build issues in R installing gert, when zlib is included here.
-    #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libssh2.rb
     # """
