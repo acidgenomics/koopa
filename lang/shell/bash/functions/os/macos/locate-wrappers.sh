@@ -112,3 +112,7 @@ koopa_macos_locate_xcode_select() { # {{{1
 koopa_macos_locate_xcodebuild() { # {{{1
     koopa_locate_app '/usr/bin/xcodebuild'
 }
+
+koopa_macos_locate_xcrun() { # {{{1
+    koopa_locate_app '/usr/bin/xcrun'
+}
