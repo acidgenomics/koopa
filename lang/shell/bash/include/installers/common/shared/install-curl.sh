@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Consider requiring: 'brotli', 'krb5', 'libidn2', 'libnghttp2', 'libssh2',
-# 'openldap', 'rtmpdump', 'zlib', 'zstd'.
-
 main() { # {{{1
     # """
     # Install cURL.
