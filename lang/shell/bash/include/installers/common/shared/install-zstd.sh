@@ -3,7 +3,7 @@
 main() { # {{{
     # """
     # Install zstd.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-04-28.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
@@ -12,7 +12,8 @@ main() { # {{{
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
-    koopa_activate_opt_prefix 'zlib'
+    # FIXME Use system zlib for macOS.
+    # > koopa_activate_opt_prefix 'zlib'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )

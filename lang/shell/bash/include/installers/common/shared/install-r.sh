@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+# FIXME gert package is failing to install from source on macOS:
+#
+# Error: package or namespace load failed for ‘gert’ in dyn.load(file, DLLpath = DLLpath, ...):
+#  unable to load shared object '/opt/koopa/app/r-packages/devel/00LOCK-gert/00new/gert/libs/gert.so':
+#   dlopen(/opt/koopa/app/r-packages/devel/00LOCK-gert/00new/gert/libs/gert.so, 0x0006): Symbol not found: _deflate
+#   Referenced from: /opt/koopa/app/libssh2/1.10.0/lib/libssh2.1.dylib
+#   Expected in: /opt/koopa/app/openssl/3.0.2/lib/libcrypto.3.dylib
+# Error: loading failed
+# Execution halted
+# ERROR: loading failed
+# * removing ‘/opt/koopa/app/r-packages/devel/gert’
+# Warning in install.packages("gert") :
+#   installation of package ‘gert’ had non-zero exit status
+
 main() { # {{{1
     # """
     # Install R.
