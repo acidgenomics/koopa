@@ -102,18 +102,6 @@ main() { # {{{1
         'readline'
         'tcl-tk'
         'texinfo'
-        'xorg-xorgproto'
-        'xorg-xcb-proto'
-        'xorg-libpthread-stubs'
-        'xorg-libice'
-        'xorg-libsm'
-        'xorg-libxau'
-        'xorg-libxdmcp'
-        'xorg-libxcb'
-        'xorg-libx11'
-        'xorg-libxext'
-        'xorg-libxrender'
-        'xorg-libxt'
         'glib' # cairo
         'freetype' # cairo
         'fontconfig' # cairo
@@ -124,12 +112,27 @@ main() { # {{{1
     )
     if koopa_is_linux
     then
-        deps+=('openjdk')
+        deps+=(
+            'openjdk'
+            'xorg-xorgproto'
+            'xorg-xcb-proto'
+            'xorg-libpthread-stubs'
+            'xorg-libice'
+            'xorg-libsm'
+            'xorg-libxau'
+            'xorg-libxdmcp'
+            'xorg-libxcb'
+            'xorg-libx11'
+            'xorg-libxext'
+            'xorg-libxrender'
+            'xorg-libxt'
+        )
     elif koopa_is_macos
     then
         # We're using Adoptium Temurin LTS for OpenJDK on macOS.
         deps+=('gcc')
         koopa_add_to_path_start '/Library/TeX/texbin'
+        koopa_add_to_pkg_config_path '/opt/X11/lib/pkgconfig'
     fi
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
@@ -209,7 +212,6 @@ main() { # {{{1
         )"
         "--with-tcl-config=${dict[tcl_tk]}/lib/tclConfig.sh"
         "--with-tk-config=${dict[tcl_tk]}/lib/tkConfig.sh"
-        '--with-x'
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
@@ -219,8 +221,23 @@ main() { # {{{1
     fi
     if koopa_is_macos
     then
-        conf_args+=('--without-aqua')
-        export CFLAGS='-Wno-error=implicit-function-declaration'
+        app[cc]='/usr/bin/clang'
+        app[cxx]='/usr/bin/clang++'
+        app[fc]="$(koopa_realpath "${dict[opt_prefix]}/gcc/bin/gfortran")"
+        conf_args+=(
+            "CC=${app[cc]}"
+            "CXX=${app[cxx]}"
+            "FC=${app[fc]}"
+            "F77=${app[fc]}"
+            "OBJC=${app[cc]}"
+            "OBJCXX=${app[cxx]}"
+            '--x-includes=/opt/X11/include'
+            '--x-libraries=/opt/X11/lib'
+            '--without-aqua'
+        )
+        export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
+    else
+        conf_args+=('--with-x')
     fi
     koopa_dl 'configure args' "${conf_args[*]}"
     if [[ "${dict[name]}" == 'r-devel' ]]
