@@ -1842,20 +1842,6 @@ koopa_uninstall_libgit2() { # {{{3
         "$@"
 }
 
-# libice ------------------------------------------------------------------ {{{2
-
-koopa_install_libice() { # {{{3
-    koopa_install_app \
-        --name='libice' \
-        "$@"
-}
-
-koopa_uninstall_libice() { # {{{3
-    koopa_uninstall_app \
-        --name='libice' \
-        "$@"
-}
-
 # libidn ---------------------------------------------------------------- {{{2
 
 koopa_install_libidn() { # {{{3
@@ -1911,34 +1897,6 @@ koopa_install_libpng() { # {{{3
 koopa_uninstall_libpng() { # {{{3
     koopa_uninstall_app \
         --name='libpng' \
-        "$@"
-}
-
-# libpthread-stubs -------------------------------------------------------- {{{2
-
-koopa_install_libpthread_stubs() { # {{{3
-    koopa_install_app \
-        --name='libpthread-stubs' \
-        "$@"
-}
-
-koopa_uninstall_libpthread_stubs() { # {{{3
-    koopa_uninstall_app \
-        --name='libpthread-stubs' \
-        "$@"
-}
-
-# libsm ------------------------------------------------------------------- {{{2
-
-koopa_install_libsm() { # {{{3
-    koopa_install_app \
-        --name='libsm' \
-        "$@"
-}
-
-koopa_uninstall_libsm() { # {{{3
-    koopa_uninstall_app \
-        --name='libsm' \
         "$@"
 }
 
@@ -2029,76 +1987,6 @@ koopa_uninstall_libuv() { # {{{3
         "$@"
 }
 
-# libx11 ------------------------------------------------------------------ {{{2
-
-koopa_install_libx11() { # {{{3
-    koopa_install_app \
-        --name='libx11' \
-        "$@"
-}
-
-koopa_uninstall_libx11() { # {{{3
-    koopa_uninstall_app \
-        --name='libx11' \
-        "$@"
-}
-
-# libxau ------------------------------------------------------------------ {{{2
-
-koopa_install_libxau() { # {{{3
-    koopa_install_app \
-        --name='libxau' \
-        "$@"
-}
-
-koopa_uninstall_libxau() { # {{{3
-    koopa_uninstall_app \
-        --name='libxau' \
-        "$@"
-}
-
-# libxcb ------------------------------------------------------------------ {{{2
-
-koopa_install_libxcb() { # {{{3
-    koopa_install_app \
-        --name='libxcb' \
-        "$@"
-}
-
-koopa_uninstall_libxcb() { # {{{3
-    koopa_uninstall_app \
-        --name='libxcb' \
-        "$@"
-}
-
-# libxdmcp ---------------------------------------------------------------- {{{2
-
-koopa_install_libxdmcp() { # {{{3
-    koopa_install_app \
-        --name='libxdmcp' \
-        "$@"
-}
-
-koopa_uninstall_libxdmcp() { # {{{3
-    koopa_uninstall_app \
-        --name='libxdmcp' \
-        "$@"
-}
-
-# libxext ----------------------------------------------------------------- {{{2
-
-koopa_install_libxext() { # {{{3
-    koopa_install_app \
-        --name='libxext' \
-        "$@"
-}
-
-koopa_uninstall_libxext() { # {{{3
-    koopa_uninstall_app \
-        --name='libxext' \
-        "$@"
-}
-
 # libxml2 ----------------------------------------------------------------- {{{2
 
 koopa_install_libxml2() { # {{{3
@@ -2110,48 +1998,6 @@ koopa_install_libxml2() { # {{{3
 koopa_uninstall_libxml2() { # {{{3
     koopa_uninstall_app \
         --name='libxml2' \
-        "$@"
-}
-
-# libxrandr --------------------------------------------------------------- {{{2
-
-koopa_install_libxrandr() { # {{{3
-    koopa_install_app \
-        --name='libxrandr' \
-        "$@"
-}
-
-koopa_uninstall_libxrandr() { # {{{3
-    koopa_uninstall_app \
-        --name='libxrandr' \
-        "$@"
-}
-
-# libxrender -------------------------------------------------------------- {{{2
-
-koopa_install_libxrender() { # {{{3
-    koopa_install_app \
-        --name='libxrender' \
-        "$@"
-}
-
-koopa_uninstall_libxrender() { # {{{3
-    koopa_uninstall_app \
-        --name='libxrender' \
-        "$@"
-}
-
-# libxt ------------------------------------------------------------------- {{{2
-
-koopa_install_libxt() { # {{{3
-    koopa_install_app \
-        --name='libxt' \
-        "$@"
-}
-
-koopa_uninstall_libxt() { # {{{3
-    koopa_uninstall_app \
-        --name='libxt' \
         "$@"
 }
 
@@ -3006,6 +2852,10 @@ koopa_uninstall_python() { # {{{3
 # r ----------------------------------------------------------------------- {{{2
 
 koopa_install_r() { # {{{3
+    # """
+    # Assuming usage of R CRAN binary Homebrew cask on macOS.
+    # Also don't link in the case of Debian R CRAN binary.
+    # """
     local install_args
     install_args=(
         '--name-fancy=R'
@@ -3013,8 +2863,6 @@ koopa_install_r() { # {{{3
     )
     if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
     then
-        # Assuming usage of R CRAN binary Homebrew cask on macOS.
-        # Also don't link in the case of Debian R CRAN binary.
         install_args+=(
             '--link-in-bin=bin/R'
             '--link-in-bin=bin/Rscript'
@@ -3026,11 +2874,20 @@ koopa_install_r() { # {{{3
 }
 
 koopa_uninstall_r() { # {{{3
+    local uninstall_args
+    uninstall_args=(
+        '--name-fancy=R'
+        '--name=r'
+    )
+    if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
+    then
+        install_args+=(
+            '--unlink-in-bin=R'
+            '--unlink-in-bin=Rscript'
+        )
+    fi
     koopa_uninstall_app \
-        --name-fancy='R' \
-        --name='r' \
-        --unlink-in-bin='R' \
-        --unlink-in-bin='Rscript'
+        "${uninstall_args[@]}" \
         "$@"
 }
 
@@ -3348,22 +3205,6 @@ koopa_uninstall_shunit2() { # {{{3
         --name-fancy='shUnit2' \
         --name='shunit2' \
         --unlink-in-bin='shunit2' \
-        "$@"
-}
-
-# singularity ------------------------------------------------------------- {{{2
-
-koopa_install_singularity() { # {{{3
-    koopa_install_app \
-        --link-in-bin='bin/singularity' \
-        --name='singularity' \
-        "$@"
-}
-
-koopa_uninstall_singularity() { # {{{3
-    koopa_uninstall_app \
-        --name='singularity' \
-        --unlink-in-bin='singularity' \
         "$@"
 }
 
@@ -3710,31 +3551,199 @@ koopa_uninstall_which() { # {{{3
         "$@"
 }
 
-# xcb-proto --------------------------------------------------------------- {{{2
+# xorg-libice ------------------------------------------------------------- {{{2
 
-koopa_install_xcb_proto() { # {{{3
+koopa_install_xorg_libice() { # {{{3
     koopa_install_app \
-        --name='xcb-proto' \
+        --name='xorg-libice' \
         "$@"
 }
 
-koopa_uninstall_xcb_proto() { # {{{3
+koopa_uninstall_xorg_libice() { # {{{3
     koopa_uninstall_app \
-        --name='xcb-proto' \
+        --name='xorg-libice' \
         "$@"
 }
 
-# xorgproto --------------------------------------------------------------- {{{2
+# xorg-libpthread-stubs --------------------------------------------------- {{{2
 
-koopa_install_xorgproto() { # {{{3
+koopa_install_xorg_libpthread_stubs() { # {{{3
     koopa_install_app \
-        --name='xorgproto' \
+        --name='xorg-libpthread-stubs' \
         "$@"
 }
 
-koopa_uninstall_xorgproto() { # {{{3
+koopa_uninstall_xorg_libpthread_stubs() { # {{{3
     koopa_uninstall_app \
-        --name='xorgproto' \
+        --name='xorg-libpthread-stubs' \
+        "$@"
+}
+
+# xorg-libsm -------------------------------------------------------------- {{{2
+
+koopa_install_xorg_libsm() { # {{{3
+    koopa_install_app \
+        --name='xorg-libsm' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libsm() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libsm' \
+        "$@"
+}
+
+# xorg-libx11 ------------------------------------------------------------- {{{2
+
+koopa_install_xorg_libx11() { # {{{3
+    koopa_install_app \
+        --name='xorg-libx11' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libx11() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libx11' \
+        "$@"
+}
+
+# xorg-libxau ------------------------------------------------------------- {{{2
+
+koopa_install_xorg_libxau() { # {{{3
+    koopa_install_app \
+        --name='xorg-libxau' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libxau() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libxau' \
+        "$@"
+}
+
+# xorg-libxcb ------------------------------------------------------------- {{{2
+
+koopa_install_xorg_libxcb() { # {{{3
+    koopa_install_app \
+        --name='xorg-libxcb' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libxcb() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libxcb' \
+        "$@"
+}
+
+# xorg-libxdmcp ----------------------------------------------------------- {{{2
+
+koopa_install_xorg_libxdmcp() { # {{{3
+    koopa_install_app \
+        --name='xorg-libxdmcp' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libxdmcp() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libxdmcp' \
+        "$@"
+}
+
+# xorg-libxext ------------------------------------------------------------ {{{2
+
+koopa_install_xorg_libxext() { # {{{3
+    koopa_install_app \
+        --name='xorg-libxext' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libxext() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libxext' \
+        "$@"
+}
+
+# xorg-libxrandr ---------------------------------------------------------- {{{2
+
+koopa_install_xorg_libxrandr() { # {{{3
+    koopa_install_app \
+        --name='xorg-libxrandr' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libxrandr() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libxrandr' \
+        "$@"
+}
+
+# xorg-libxrender --------------------------------------------------------- {{{2
+
+koopa_install_xorg_libxrender() { # {{{3
+    koopa_install_app \
+        --name='xorg-libxrender' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libxrender() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libxrender' \
+        "$@"
+}
+
+# xorg-libxt -------------------------------------------------------------- {{{2
+
+koopa_install_xorg_libxt() { # {{{3
+    koopa_install_app \
+        --name='xorg-libxt' \
+        "$@"
+}
+
+koopa_uninstall_xorg_libxt() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-libxt' \
+        "$@"
+}
+
+# xorg-xcb-proto ---------------------------------------------------------- {{{2
+
+koopa_install_xorg_xcb_proto() { # {{{3
+    koopa_install_app \
+        --name='xorg-xcb-proto' \
+        "$@"
+}
+
+koopa_uninstall_xorg-xcb_proto() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-xcb-proto' \
+        "$@"
+}
+
+# xorg-xorgproto ---------------------------------------------------------- {{{2
+
+koopa_install_xorg_xorgproto() { # {{{3
+    koopa_install_app \
+        --name='xorg-xorgproto' \
+        "$@"
+}
+
+koopa_uninstall_xorg_xorgproto() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-xorgproto' \
+        "$@"
+}
+
+# xorg-xtrans ------------------------------------------------------------- {{{2
+
+koopa_install_xorg_xtrans() { # {{{3
+    koopa_install_app \
+        --name='xorg-xtrans' \
+        "$@"
+}
+
+koopa_uninstall_xorg_xtrans() { # {{{3
+    koopa_uninstall_app \
+        --name='xorg-xtrans' \
         "$@"
 }
 
@@ -3752,20 +3761,6 @@ koopa_uninstall_xsv() { # {{{1
     koopa_uninstall_app \
         --unlink-in-bin='xsv' \
         --name='xsv' \
-        "$@"
-}
-
-# xtrans ------------------------------------------------------------------ {{{2
-
-koopa_install_xtrans() { # {{{3
-    koopa_install_app \
-        --name='xtrans' \
-        "$@"
-}
-
-koopa_uninstall_xtrans() { # {{{3
-    koopa_uninstall_app \
-        --name='xtrans' \
         "$@"
 }
 
@@ -3881,7 +3876,6 @@ koopa_update_google_cloud_sdk() { # {{{3
 
 koopa_install_homebrew() { # {{{3
     koopa_install_app \
-        --link-in-bin='Homebrew/bin/brew' \
         --name-fancy='Homebrew' \
         --name='homebrew' \
         --no-prefix-check \
@@ -3895,7 +3889,6 @@ koopa_uninstall_homebrew() { # {{{3
         --name-fancy='Homebrew' \
         --name='homebrew' \
         --system \
-        --unlink-in-bin='brew' \
         "$@"
 }
 

@@ -31,8 +31,7 @@ main() { # {{{1
     # Use 'PCRE' not 'PCRE2' here.
     koopa_activate_opt_prefix \
         'gettext' \
-        'pcre' \
-        'zlib'
+        'pcre'
     declare -A app=(
         [autoreconf]="$(koopa_locate_autoreconf)"
         [libtoolize]="$(koopa_locate_libtoolize)"

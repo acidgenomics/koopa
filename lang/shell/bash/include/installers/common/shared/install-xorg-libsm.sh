@@ -2,28 +2,25 @@
 
 main() { # {{{1
     # """
-    # Install libice.
-    # @note Updated 2022-04-25.
+    # Install libsm.
+    # @note Updated 2022-04-26.
     #
     # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libice.rb
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libsm.rb
     # """
-    local app build_deps conf_args deps dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
-    build_deps=('pkg-config')
-    deps=(
-        # > 'libx11' # test
-        'xorgproto'
-        'xtrans'
-    )
-    koopa_activate_build_opt_prefix "${build_deps[@]}"
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_opt_prefix \
+        'xorg-xorgproto' \
+        'xorg-xtrans' \
+        'xorg-libice'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
-        [name]='libICE'
+        [name]='libSM'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -37,7 +34,6 @@ main() { # {{{1
         '--disable-dependency-tracking'
         '--disable-silent-rules'
         '--enable-docs=no'
-        '--enable-specs=no'
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"

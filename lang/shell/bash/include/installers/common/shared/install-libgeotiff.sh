@@ -18,8 +18,7 @@ main() { # {{{1
     koopa_activate_opt_prefix \
         'jpeg' \
         'libtiff' \
-        'proj' \
-        'zlib'
+        'proj'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

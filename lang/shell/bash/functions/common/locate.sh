@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to handle link error when reinstalling coreutils
-# ❯ koopa install coreutils --reinstall --push
-# → Installing 'coreutils' at '/opt/koopa/app/coreutils/9.1'.
-# → Linking '/opt/koopa/app/coreutils/9.1' -> '/opt/koopa/opt/coreutils'.
-# /opt/koopa/lang/shell/bash/functions/common/fs/core.sh:448: /opt/koopa/opt/coreutils/bin/ln: No such file or directory
-
 koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-04-26.
     #
     # App locator prioritization:
     # 1. Allow for direct input of an executable.
@@ -84,6 +78,12 @@ koopa_locate_app() { # {{{1
         fi
         koopa_stop "Failed to locate '${dict[app]}'."
     fi
+    dict[app]="${dict[bin_prefix]}/${dict[app_name]}"
+    if [[ -x "${dict[app]}" ]]
+    then
+        koopa_print "${dict[app]}"
+        return 0
+    fi
     if [[ -n "${dict[opt_name]}" ]]
     then
         dict[app]="${dict[opt_prefix]}/${dict[opt_name]}/bin/${dict[app_name]}"
@@ -97,12 +97,6 @@ koopa_locate_app() { # {{{1
         then
             koopa_stop "Need to install '${dict[opt_name]}' for '${dict[app]}'."
         fi
-    fi
-    dict[app]="${dict[bin_prefix]}/${dict[app_name]}"
-    if [[ -x "${dict[app]}" ]]
-    then
-        koopa_print "${dict[app]}"
-        return 0
     fi
     if [[ "${dict[allow_in_path]}" -eq 1 ]]
     then

@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider switching to Perl here, from sed.
 koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
-    # @note Updated 2022-03-15.
+    # @note Updated 2022-04-26.
     #
     # @seealso
     # - syntactic R package.
@@ -16,10 +15,7 @@ koopa_camel_case_simple() { # {{{1
     # > koopa_camel_case_simple 'hello world'
     # # helloWorld
     # """
-    local app args str
-    declare -A app=(
-        [sed]="$(koopa_locate_sed)"
-    )
+    local args str
     if [[ "$#" -eq 0 ]]
     then
         args=("$(</dev/stdin)")
@@ -30,8 +26,11 @@ koopa_camel_case_simple() { # {{{1
     do
         [[ -n "$str" ]] || return 1
         str="$( \
-            koopa_print "$str" \
-                | "${app[sed]}" -E 's/([ -_])([a-z])/\U\2/g' \
+            koopa_gsub \
+                --pattern='([ -_])([a-z])' \
+                --regex \
+                --replacement='\U\2' \
+                "$str" \
         )"
         [[ -n "$str" ]] || return 1
         koopa_print "$str"

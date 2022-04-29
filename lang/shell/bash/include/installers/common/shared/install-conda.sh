@@ -3,26 +3,29 @@
 main() { # {{{1
     # """
     # Install Miniconda.
-    # @note Updated 2022-03-16.
-    #
-    # Optionally, can include Mamba in base environment using '--with-mamba'.
+    # @note Updated 2022-04-29.
     # """
     local app dict
     declare -A app=(
         [bash]="$(koopa_locate_bash)"
     )
     declare -A dict=(
-        [arch]="$(koopa_arch)"
+        [arch]="$(koopa_arch)" # e.g. 'x86_64'.
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [mamba]=0
         [os_type]="$(koopa_os_type)"
         [prefix]="${INSTALL_PREFIX:?}"
         [py_version]="$(koopa_variable 'python')"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[arch2]="${dict[arch]}"
     case "${dict[os_type]}" in
         'darwin'*)
             dict[os_type2]='MacOSX'
+            case "${dict[arch]}" in
+                'aarch64')
+                    dict[arch2]='arm64'
+                    ;;
+            esac
             ;;
         'linux'*)
             dict[os_type2]='Linux'
@@ -41,15 +44,6 @@ main() { # {{{1
                 ;;
             '--py-version')
                 dict[py_version]="${2:?}"
-                shift 1
-                ;;
-            # Flags ------------------------------------------------------------
-            '--no-mamba')
-                dict[mamba]=0
-                shift 1
-                ;;
-            '--with-mamba')
-                dict[mamba]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -77,7 +71,7 @@ main() { # {{{1
             "$(koopa_major_minor_version "${dict[py_version]}")" \
     )"
     dict[script]="Miniconda${dict[py_major_version]}-\
-py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch]}.sh"
+py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch2]}.sh"
     dict[url]="https://repo.continuum.io/miniconda/${dict[script]}"
     koopa_download "${dict[url]}" "${dict[script]}"
     unset -v PYTHONHOME PYTHONPATH
@@ -85,10 +79,5 @@ py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch]}.sh"
     koopa_ln \
         "${dict[koopa_prefix]}/etc/conda/condarc" \
         "${dict[prefix]}/.condarc"
-    # Install mamba inside of conda base environment, if desired.
-    if [[ "${dict[mamba]}" -eq 1 ]]
-    then
-        koopa_install_mamba
-    fi
     return 0
 }

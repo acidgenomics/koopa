@@ -3,7 +3,7 @@
 main() { # {{{
     # """
     # Install libxml2.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-04-28.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
@@ -12,7 +12,7 @@ main() { # {{{
     koopa_assert_has_no_args "$#"
     # NOTE May need Python here.
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'icu4c' 'readline' 'zlib'
+    koopa_activate_opt_prefix 'icu4c' 'readline'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

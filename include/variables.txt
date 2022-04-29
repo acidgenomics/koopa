@@ -1,8 +1,3 @@
-# FIXME Denote 'latest' for:
-# - doom-emacs
-# - spacemacs
-# - spacevim
-
 # koopa {{{1
 # ==============================================================================
 
@@ -29,6 +24,9 @@ gnu-mirror-url="https://ftpmirror.gnu.org"
 
 # https://repo.continuum.io/archive/
 anaconda="2021.11"
+
+# https://github.com/apptainer/apptainer
+apptainer="1.0.1"
 
 # https://apr.apache.org/
 apr="1.7.0"
@@ -59,7 +57,7 @@ automake="1.16.5"
 aws-cli="2.5.8"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.34.1"
+azure-cli="2.35.0"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
@@ -183,7 +181,7 @@ freetype="2.12.0"
 fribidi="1.0.11"
 
 # https://github.com/junegunn/fzf
-fzf="0.29.0"
+fzf="0.30.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.1"
@@ -293,8 +291,6 @@ libgeotiff="1.7.1"
 # https://github.com/libgit2/libgit2
 libgit2="1.4.3"
 
-libice="1.0.10" # x11
-
 # https://www.gnu.org/software/libidn/
 libidn="2.3.2"
 
@@ -306,10 +302,6 @@ libpipeline="1.5.5"
 
 # http://www.libpng.org/pub/png/libpng.html
 libpng="1.6.37"
-
-libpthread-stubs="0.4" # x11
-
-libsm="1.2.3" # x11
 
 # https://www.libssh2.org/
 libssh2="1.10.0"
@@ -331,24 +323,8 @@ libunistring="1.0"
 # https://github.com/libuv/libuv
 libuv="1.44.1"
 
-libx11="1.7.2" # x11
-
-libxau="1.0.9" # x11
-
-libxcb="1.14" # x11
-
-libxdmcp="1.1.3" # x11
-
-libxext="1.3.4" # x11
-
 # https://gitlab.gnome.org/GNOME/libxml2/-/releases
 libxml2="2.9.13"
-
-libxrandr="1.5.2" # x11
-
-libxrender="0.9.10" # x11
-
-libxt="1.2.1" # x11
 
 # https://libzip.org/download/
 libzip="1.8.0"
@@ -521,7 +497,7 @@ r-gfortran="8.2"
 # https://developer.r-project.org/SVNtips.html
 # https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
 # This is the SVN revision number.
-r-devel="82232" # 2022-04-22; R 4.3
+r-devel="82272" # 2022-04-28
 
 ranger-fm="1.9.3" # python
 
@@ -576,13 +552,10 @@ serf="1.3.9"
 shellcheck="0.8.0"
 
 # https://www.rstudio.com/products/shiny/download-server/
-shiny-server="1.5.17.973"
+shiny-server="1.5.18.987" # 2022-04-20
 
 # https://github.com/kward/shunit2/releases
 shunit2="2.1.7"
-
-# https://github.com/apptainer/singularity
-singularity="3.8.7"
 
 # https://github.com/syl20bnr/spacemacs
 spacemacs="latest"
@@ -594,7 +567,7 @@ spacevim="latest"
 sqlite="3.38.2"
 
 # https://starship.rs/
-starship="1.6.2" # rust
+starship="1.6.3" # rust
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
@@ -646,13 +619,22 @@ wget="1.21.3"
 # https://ftp.gnu.org/gnu/which/
 which="2.21"
 
-xcb-proto="1.14.1" # x11
-
-xorgproto="2021.5" # x11
+xorg-libice="1.0.10"
+xorg-libpthread-stubs="0.4"
+xorg-libsm="1.2.3"
+xorg-libx11="1.7.2"
+xorg-libxau="1.0.9"
+xorg-libxcb="1.14"
+xorg-libxdmcp="1.1.3"
+xorg-libxext="1.3.4"
+xorg-libxrandr="1.5.2"
+xorg-libxrender="0.9.10"
+xorg-libxt="1.2.1"
+xorg-xcb-proto="1.14.1"
+xorg-xorgproto="2021.5"
+xorg-xtrans="1.4.0"
 
 xsv="0.13.0" # rust
-
-xtrans="1.4.0" # x11
 
 # https://github.com/Cyan4973/xxHash
 xxhash="0.8.1"
@@ -663,7 +645,7 @@ xz="5.2.5"
 # https://www.zlib.net/
 zlib="1.2.12"
 
-zoxide="0.8.0" # rust (z)
+zoxide="0.8.1" # rust (z)
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8.1"

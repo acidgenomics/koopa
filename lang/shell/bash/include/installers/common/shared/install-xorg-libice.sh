@@ -2,23 +2,27 @@
 
 main() { # {{{1
     # """
-    # Install libxdmcp.
-    # @note Updated 2022-04-21.
+    # Install libice.
+    # @note Updated 2022-04-26.
     #
     # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/master/
-    #     Formula/libxdmcp.rb
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libice.rb
     # """
-    local app conf_args dict
+    local app build_deps conf_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'xorgproto'
+    build_deps=('pkg-config')
+    deps=(
+        'xorg-xorgproto'
+        'xorg-xtrans'
+    )
+    koopa_activate_build_opt_prefix "${build_deps[@]}"
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
-        [name]='libXdmcp'
+        [name]='libICE'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -32,6 +36,7 @@ main() { # {{{1
         '--disable-dependency-tracking'
         '--disable-silent-rules'
         '--enable-docs=no'
+        '--enable-specs=no'
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
