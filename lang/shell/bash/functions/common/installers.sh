@@ -2874,11 +2874,20 @@ koopa_install_r() { # {{{3
 }
 
 koopa_uninstall_r() { # {{{3
+    local uninstall_args
+    uninstall_args=(
+        '--name-fancy=R'
+        '--name=r'
+    )
+    if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
+    then
+        install_args+=(
+            '--unlink-in-bin=R'
+            '--unlink-in-bin=Rscript'
+        )
+    fi
     koopa_uninstall_app \
-        --name-fancy='R' \
-        --name='r' \
-        --unlink-in-bin='R' \
-        --unlink-in-bin='Rscript'
+        "${uninstall_args[@]}" \
         "$@"
 }
 
