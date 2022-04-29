@@ -72,8 +72,7 @@ koopa_locate_brew() { # {{{1
     # Allowing passthrough of '--allow-missing' here.
     # """
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='brew' \
+        "$(koopa_homebrew_prefix)/Homebrew/bin/brew" \
         "$@"
 }
 
@@ -83,7 +82,6 @@ koopa_locate_bundle() { # {{{1
         --opt-name='ruby-packages'
 }
 
-# FIXME Consider building and requiring this.
 koopa_locate_bzip2() { # {{{1
     koopa_locate_app \
         --allow-in-path \

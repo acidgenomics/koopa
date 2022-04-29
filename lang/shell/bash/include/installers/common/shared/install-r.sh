@@ -1,20 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME tex step is erroring on macOS:
-# I can't find file `texinfo.tex'.
-
-# FIXME This requires libXt...
-# checking for X11/Intrinsic.h... no
-# configure: error: --with-x=yes (default) and X11 headers/libs are not available
-
-# FIXME PDF rendering issue:
-# /opt/koopa/app/texinfo/6.8/bin/texi2dvi: texinfo.tex appears to be broken.
-# This may be due to the environment variable TEX set to something
-
 main() { # {{{1
     # """
     # Install R.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-04-28.
     #
     # @section gfortran configuration on macOS:
     #
@@ -90,60 +79,6 @@ main() { # {{{1
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
-    build_deps=('pkg-config')
-    deps=(
-        # > 'bzip2'
-        # > 'perl'
-        # > 'unzip'
-        # > 'which'
-        # > 'zip'
-        'cairo'
-        'curl'
-        'fontconfig' # cairo
-        'freetype' # cairo
-        'gettext'
-        'glib' # cairo
-        'icu4c'
-        'lapack'
-        'libffi'
-        'libice' # x11
-        'libjpeg-turbo'
-        'libpng'
-        'libpthread-stubs' # x11
-        'libsm' # x11
-        'libtiff'
-        'libx11' # x11
-        'libxau' # x11
-        'libxcb' # x11
-        'libxdmcp' # x11
-        'libxext' # x11
-        'libxml2'
-        'libxrender' # x11
-        'libxt' # x11
-        'libxt' # x11
-        'lzo' # cairo
-        'openblas'
-        'pcre2'
-        'pixman' # cairo
-        'readline'
-        'tcl-tk'
-        'texinfo'
-        'xcb-proto' # x11
-        'xorgproto' # x11
-        'xz'
-        'zlib'
-    )
-    if koopa_is_linux
-    then
-        deps+=('openjdk')
-    elif koopa_is_macos
-    then
-        # We're using Adoptium Temurin LTS for OpenJDK on macOS.
-        deps+=('gcc')
-        koopa_add_to_path_start '/Library/TeX/texbin'
-    fi
-    koopa_activate_build_opt_prefix "${build_deps[@]}"
-    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
         [pkg_config]="$(koopa_locate_pkg_config)"
@@ -155,7 +90,68 @@ main() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    # FIXME Can we rework this to not have to include pkg-config calls here?
+    if koopa_is_macos
+    then
+        dict[x11_prefix]='/opt/X11'
+    fi
+    build_deps=('pkg-config')
+    deps=(
+        'gettext'
+        'xz'
+        'curl'
+        'icu4c'
+        'lapack'
+        'libffi'
+        'libjpeg-turbo'
+        'libpng'
+        'libtiff'
+        'libxml2'
+        'openblas'
+        'pcre'
+        'pcre2'
+        'readline'
+        'tcl-tk'
+        'texinfo'
+        'glib' # cairo
+        'freetype' # cairo
+        'fontconfig' # cairo
+        'lzo' # cairo
+        'pixman' # cairo
+    )
+    # Configure X11.
+    if koopa_is_macos
+    then
+        koopa_add_to_pkg_config_path "${dict[x11_prefix]}/lib/pkgconfig"
+    else
+        deps+=(
+            'xorg-xorgproto'
+            'xorg-xcb-proto'
+            'xorg-libpthread-stubs'
+            'xorg-libice'
+            'xorg-libsm'
+            'xorg-libxau'
+            'xorg-libxdmcp'
+            'xorg-libxcb'
+            'xorg-libx11'
+            'xorg-libxext'
+            'xorg-libxrender'
+            'xorg-libxt'
+        )
+    fi
+    deps+=('cairo') # depends on X11.
+    if koopa_is_linux
+    then
+        deps+=('openjdk')
+    elif koopa_is_macos
+    then
+        # We're using Adoptium Temurin LTS for OpenJDK on macOS.
+        koopa_add_to_path_start '/Library/TeX/texbin'
+        deps+=('gcc')
+    fi
+    koopa_activate_build_opt_prefix "${build_deps[@]}"
+    koopa_activate_opt_prefix "${deps[@]}"
+    dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
+    dict[tcl_tk]="$(koopa_realpath "${dict[opt_prefix]}/tcl-tk")"
     conf_args=(
         # > '--enable-BLAS-shlib' # Linux only?
         "--prefix=${dict[prefix]}"
@@ -217,13 +213,8 @@ main() { # {{{1
         "--with-readline=$( \
             "${app[pkg_config]}" --libs 'readline' \
         )"
-        # For Tcl/Tk, alternatively can use:
-        # > "--with-tcltk=$( \
-        # >     "${app[pkg_config]}" --libs 'tcl' 'tk' \
-        # > )"
-        "--with-tcl-config=${dict[opt_prefix]}/tcl-tk/lib/tclConfig.sh"
-        "--with-tk-config=${dict[opt_prefix]}/tcl-tk/lib/tkConfig.sh"
-        '--with-x'
+        "--with-tcl-config=${dict[tcl_tk]}/lib/tclConfig.sh"
+        "--with-tk-config=${dict[tcl_tk]}/lib/tkConfig.sh"
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
@@ -233,8 +224,39 @@ main() { # {{{1
     fi
     if koopa_is_macos
     then
-        conf_args+=('--without-aqua')
-        export CFLAGS='-Wno-error=implicit-function-declaration'
+        # NOTE If using clang/clang++ instead for CC and CXX, need to enable
+        # access to OpenMP headers built specifically for clang.
+        # See 'https://mac.r-project.org/openmp/' for details.
+        # > app[cc]='/usr/bin/clang'
+        # > app[cxx]='/usr/bin/clang++'
+        # Will see this in install log:
+        # checking for /usr/bin/clang option to support OpenMP... unsupported
+        dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
+        app[cc]="${dict[gcc_prefix]}/bin/gcc"
+        app[cxx]="${dict[gcc_prefix]}/bin/g++"
+        app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+        app[objc]='/usr/bin/clang'
+        app[objcxx]='/usr/bin/clang++'
+        koopa_assert_is_installed \
+            "${app[cc]}" \
+            "${app[cxx]}" \
+            "${app[fc]}" \
+            "${app[objc]}" \
+            "${app[objcxx]}"
+        conf_args+=(
+            "CC=${app[cc]}"
+            "CXX=${app[cxx]}"
+            "FC=${app[fc]}"
+            "F77=${app[fc]}"
+            "OBJC=${app[cc]}"
+            "OBJCXX=${app[cxx]}"
+            "--x-includes=${dict[x11_prefix]}/include"
+            "--x-libraries=${dict[x11_prefix]}/lib"
+            '--without-aqua'
+        )
+        export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
+    else
+        conf_args+=('--with-x')
     fi
     koopa_dl 'configure args' "${conf_args[*]}"
     if [[ "${dict[name]}" == 'r-devel' ]]
@@ -269,6 +291,8 @@ R-${dict[maj_ver]}/${dict[file]}"
     fi
     export TZ='America/New_York'
     unset -v R_HOME
+    # Need to burn in rpath, otherwise grDevices will fail to build.
+    koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
