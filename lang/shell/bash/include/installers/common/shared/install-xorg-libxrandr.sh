@@ -2,30 +2,31 @@
 
 main() { # {{{1
     # """
-    # Install libxt.
-    # @note Updated 2022-04-22.
+    # Install libxrandr.
+    # @note Updated 2022-04-26.
     #
     # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxt.rb
+    # - https://github.com/Homebrew/homebrew-core/blob/master/
+    #     Formula/libxrandr.rb
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
-        'libice' \
-        'libpthread-stubs' \
-        'libsm' \
-        'libx11' \
-        'libxau' \
-        'libxcb' \
-        'libxdmcp' \
-        'xorgproto'
+        'xorg-xorgproto' \
+        'xorg-libpthread-stubs' \
+        'xorg-libxau' \
+        'xorg-libxdmcp' \
+        'xorg-libxcb' \
+        'xorg-libx11' \
+        'xorg-libxext' \
+        'xorg-libxrender'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
-        [name]='libXt'
+        [name]='libXrandr'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -38,7 +39,6 @@ main() { # {{{1
         "--prefix=${dict[prefix]}"
         '--disable-dependency-tracking'
         '--disable-silent-rules'
-        '--enable-specs=no'
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"

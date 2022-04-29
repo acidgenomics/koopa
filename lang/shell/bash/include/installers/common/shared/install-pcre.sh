@@ -18,8 +18,7 @@ main() { # {{{1
         'automake' \
         'libtool'
     koopa_activate_opt_prefix \
-        'bzip2' \
-        'zlib'
+        'bzip2'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

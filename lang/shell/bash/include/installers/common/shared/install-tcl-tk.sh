@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to modify zlib detection in pkgconfig.
+
 main() { # {{{
     # """
     # Install Tcl/Tk.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-04-28.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
@@ -33,6 +35,14 @@ main() { # {{{
     koopa_extract "${dict[tcl_file]}"
     (
         koopa_cd "tcl${dict[version]}/unix"
+        if koopa_is_macos
+        then
+            koopa_find_and_replace_in_file \
+                --pattern='^(Requires.private: zlib.*)$' \
+                --replacement='# \1' \
+                --regex \
+                'tcl.pc.in'
+        fi
         ./configure "${conf_args[@]}"
         "${app[make]}" --jobs="${dict[jobs]}"
         # > "${app[make]}" test
