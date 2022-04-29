@@ -1,26 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Use system X11 instead.
-# FIXME Need to modify the tcl package config to not check for zlib on macos.
-
-# FIXME gert package is failing to install from source on macOS:
-#
-# Error: package or namespace load failed for ‘gert’ in dyn.load(file, DLLpath = DLLpath, ...):
-#  unable to load shared object '/opt/koopa/app/r-packages/devel/00LOCK-gert/00new/gert/libs/gert.so':
-#   dlopen(/opt/koopa/app/r-packages/devel/00LOCK-gert/00new/gert/libs/gert.so, 0x0006): Symbol not found: _deflate
-#   Referenced from: /opt/koopa/app/libssh2/1.10.0/lib/libssh2.1.dylib
-#   Expected in: /opt/koopa/app/openssl/3.0.2/lib/libcrypto.3.dylib
-# Error: loading failed
-# Execution halted
-# ERROR: loading failed
-# * removing ‘/opt/koopa/app/r-packages/devel/gert’
-# Warning in install.packages("gert") :
-#   installation of package ‘gert’ had non-zero exit status
-
 main() { # {{{1
     # """
     # Install R.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-04-28.
     #
     # @section gfortran configuration on macOS:
     #
@@ -114,6 +97,7 @@ main() { # {{{1
     build_deps=('pkg-config')
     deps=(
         'gettext'
+        'xz'
         'curl'
         'icu4c'
         'lapack'
@@ -133,8 +117,6 @@ main() { # {{{1
         'fontconfig' # cairo
         'lzo' # cairo
         'pixman' # cairo
-        'cairo'
-        'xz'
     )
     # Configure X11.
     if koopa_is_macos
@@ -242,9 +224,25 @@ main() { # {{{1
     fi
     if koopa_is_macos
     then
-        app[cc]='/usr/bin/clang'
-        app[cxx]='/usr/bin/clang++'
-        app[fc]="$(koopa_realpath "${dict[opt_prefix]}/gcc/bin/gfortran")"
+        # NOTE If using clang/clang++ instead for CC and CXX, need to enable
+        # access to OpenMP headers built specifically for clang.
+        # See 'https://mac.r-project.org/openmp/' for details.
+        # > app[cc]='/usr/bin/clang'
+        # > app[cxx]='/usr/bin/clang++'
+        # Will see this in install log:
+        # checking for /usr/bin/clang option to support OpenMP... unsupported
+        dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
+        app[cc]="${dict[gcc_prefix]}/bin/gcc"
+        app[cxx]="${dict[gcc_prefix]}/bin/g++"
+        app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+        app[objc]='/usr/bin/clang'
+        app[objcxx]='/usr/bin/clang++'
+        koopa_assert_is_installed \
+            "${app[cc]}" \
+            "${app[cxx]}" \
+            "${app[fc]}" \
+            "${app[objc]}" \
+            "${app[objcxx]}"
         conf_args+=(
             "CC=${app[cc]}"
             "CXX=${app[cxx]}"
