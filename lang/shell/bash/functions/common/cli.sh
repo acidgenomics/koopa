@@ -6,6 +6,12 @@
 # FIXME 'koopa app list' shouldn't work any more...
 # FIXME Need to rework these, formerly defined in 'koopa_cli_app':
 
+# FIXME Improve the error message handling for this:
+# ❯ koopa app XXX hello
+# !! Error: Invalid and/or incomplete argument: 'XXX hello'.
+# Check autocompletion of supported arguments with <TAB>.
+# !! Error: Unsupported command.
+
 koopa_cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
