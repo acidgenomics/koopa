@@ -49,9 +49,19 @@ __koopa_exit_trap() {
     then
         if [[ "${KOOPA_VERBOSE:-0}" -eq 1 ]]
         then
-            ps -p "${PPID:?}" "${$}"
+            local ps
+            ps='/bin/ps'
+            if [[ -x "$ps" ]]
+            then
+                "$ps" -p "${$}"
+            fi
         fi
-        pkill -P "${PPID:?}" "${$}"
+        local pkill
+        pkill='/usr/bin/pkill'
+        if [[ -x "$pkill" ]]
+        then
+            "$pkill" -P "${$}" # and/or "${PPID:?}"
+        fi
     fi
     return 0
 }
