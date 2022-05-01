@@ -818,6 +818,7 @@ koopa_locate_scons() { # {{{1
 
 koopa_locate_scp() { # {{{1
     koopa_locate_app \
+        --allow-in-path \
         --app-name='scp' \
         --opt-name='openssh'
 }
