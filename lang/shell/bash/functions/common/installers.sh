@@ -2994,6 +2994,7 @@ koopa_uninstall_readline() { # {{{3
 
 koopa_install_ripgrep() { # {{{1
     koopa_install_app \
+        --activate-opt='pcre2' \
         --installer='rust-package' \
         --link-in-bin='bin/rg' \
         --name='ripgrep' \
