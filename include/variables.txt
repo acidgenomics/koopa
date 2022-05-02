@@ -245,9 +245,6 @@ haskell-stack="2.7.5"
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.12.1"
 
-# https://brew.sh/
-homebrew="3.4.6"
-
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
 htop="3.2.0"
