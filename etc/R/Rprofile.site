@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-05-01.
+#' @note Updated 2022-05-02.
 #'
 #' @section Restarting R:
 #'
@@ -429,6 +429,11 @@ local({  # nolint
         options(
             "readr.num_columns" = 0L,
             "readr.show_progress" = FALSE
+        )
+    }
+    if (isInstalled("styler")) {
+        options(
+            "styler.cache_root" = "styler"
         )
     }
     if (isInstalled("reticulate")) {
