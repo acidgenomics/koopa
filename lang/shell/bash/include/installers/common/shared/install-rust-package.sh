@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-05-01.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -20,7 +20,10 @@ main() { # {{{1
     # """
     local app dict install_args
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'openssl' 'rust'
+    koopa_activate_build_opt_prefix \
+        'openssl' \
+        'pkg-config' \
+        'rust'
     declare -A app=(
         [cargo]="$(koopa_locate_cargo)"
     )
