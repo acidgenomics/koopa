@@ -310,7 +310,6 @@ __koopa_complete() { # {{{1
                         then
                             args+=(
                                 'rstudio-server'
-                                'rstudio-workbench'
                                 'shiny-server'
                             )
                             if koopa_is_debian_like
@@ -546,7 +545,6 @@ __koopa_complete() { # {{{1
                         'r')
                             args=(
                                 'drat'
-                                'pkgdown-deploy-to-aws'
                                 'shiny-run-app'
                             )
                             ;;

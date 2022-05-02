@@ -191,28 +191,6 @@ koopa_debian_uninstall_rstudio_server() { # {{{3
         "$@"
 }
 
-# rstudio-workbench ------------------------------------------------------- {{{2
-
-koopa_debian_install_rstudio_workbench() { # {{{3
-    koopa_install_app \
-        --installer='rstudio-server' \
-        --name-fancy='RStudio Workbench' \
-        --name='rstudio-workbench' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_rstudio_workbench() { # {{{3
-    koopa_uninstall_app \
-        --name-fancy='RStudio Workbench' \
-        --name='rstudio-workbench' \
-        --platform='debian' \
-        --system \
-        --uninstaller='rstudio-server' \
-        "$@"
-}
-
 # shiny-server ------------------------------------------------------------ {{{2
 
 koopa_debian_install_shiny_server() { # {{{3
