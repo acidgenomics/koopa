@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to modify zlib detection in pkgconfig.
-
 main() { # {{{
     # """
     # Install Tcl/Tk.
