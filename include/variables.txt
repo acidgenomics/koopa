@@ -517,10 +517,6 @@ rmate="1.0.2"
 # https://www.rstudio.com/products/rstudio/download-server/
 rstudio-server="2022.02.1+461"
 
-# https://www.rstudio.com/products/rstudio/download-commercial/
-# https://docs.rstudio.com/rsw/installation/
-rstudio-workbench="2022.02.1+441.pro1"
-
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.1.2"
 
