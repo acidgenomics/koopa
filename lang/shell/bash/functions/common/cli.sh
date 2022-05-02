@@ -225,7 +225,6 @@ koopa_cli_app() { # {{{1
         'r')
             case "${2:-}" in
                 'drat' | \
-                'pkgdown-deploy-to-aws' | \
                 'shiny-run-app')
                     key="${1:?}-${2:?}"
                     shift 2
