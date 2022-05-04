@@ -627,10 +627,11 @@ koopa_warn_if_export() { # {{{1
 koopa_which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2022-04-17.
+    # @note Updated 2022-04-29.
     # """
     local dict
     koopa_assert_has_args_eq "$#" 1
+    [[ -z "${1:-}" ]] && return 1
     declare -A dict=(
         [input_key]="${1:?}"
     )
