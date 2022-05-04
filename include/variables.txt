@@ -1,7 +1,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-05-02"
+koopa-date="2022-05-04"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -190,7 +190,7 @@ gawk="5.1.1"
 gcc="11.3.0"
 
 # https://gdal.org/download.html#current-releases
-gdal="3.4.2"
+gdal="3.4.3"
 
 # https://github.com/libgeos/geos/releases
 geos="3.10.2"
@@ -246,7 +246,7 @@ haskell-stack="2.7.5"
 hdf5="1.12.1"
 
 # https://hisham.hm/htop/
-# https://github.com/hishamhm/htop/releases
+# https://github.com/htop-dev/htop
 htop="3.2.0"
 
 hyperfine="1.13.0" # rust
