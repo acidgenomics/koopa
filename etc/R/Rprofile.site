@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-04-25.
+#' @note Updated 2022-05-02.
 #'
 #' @section Restarting R:
 #'
@@ -47,7 +47,6 @@
 local({  # nolint
     Sys.setenv("KOOPA_RPROFILE_SITE" = 1L)
     stopifnot(requireNamespace("utils", quietly = TRUE))
-
     ## Create our named dictionary and boolean flag lists.
     dict <- list(
         "osVersion" = utils::osVersion,
@@ -74,32 +73,24 @@ local({  # nolint
             )
         )
     }
-
     ## Secrets {{{2
     ## -------------------------------------------------------------------------
-
     ## Load per-user secrets that we don't want to save in a shared Renviron.
     if (isTRUE(file.exists(dict[["secretsFile"]]))) {
         source(dict[["secretsFile"]])
     }
-
     ## Functions {{{2
     ## -------------------------------------------------------------------------
-
     isInstalled <- function(pkg) {
         stopifnot(requireNamespace("utils", quietly = TRUE))
         pkg %in% rownames(utils::installed.packages())
     }
-
     ## Seed value {{{2
     ## -------------------------------------------------------------------------
-
     ## Set seed for reproducibility.
     set.seed(dict[["seed"]])
-
     ## R version strings {{{2
     ## -------------------------------------------------------------------------
-
     ## Get the full R version, including patch (e.g. 3.6.1).
     dict[["rVersionFull"]] <-
         numeric_version(paste(
@@ -107,7 +98,6 @@ local({  # nolint
             R.version[["minor"]],
             sep = "."
         ))
-
     ## Get the short R version without patch (e.g. 3.6).
     ## Use "devel" instead for development release.
     if (identical(
@@ -123,13 +113,10 @@ local({  # nolint
                 sep = "."
             ))
     }
-
     ## Compiler settings {{{2
     ## -------------------------------------------------------------------------
-
     ## Warn on active conda environment.
     ## Conda can cause compilation issues due to GCC version mismatch.
-
     if (isTRUE(flag[["conda"]]) && isTRUE(flag[["interactive"]])) {
         message(sprintf(
             fmt = paste(
@@ -140,16 +127,8 @@ local({  # nolint
             Sys.getenv("CONDA_DEFAULT_ENV")
         ))
     }
-
-    ## Check that the compiler is expected GCC version on Linux or expected
-    ## Clang version on macOS.
-    ##
-    ## Do not compile packages from source on macOS using Apple LLVM Clang/GCC.
-    ##
-    ## Instead, install specific Clang and GNU Fortran binaries:
-    ## https://cran.r-project.org/bin/macosx/tools/
-
-    if (isTRUE(flag[["macos"]]) && isTRUE(flag[["framework"]])) {
+    ## Check macOS configuration, if applicable.
+    if (isTRUE(flag[["macos"]])) {
         if (isFALSE(dir.exists(file.path(
             "",
             "Library",
@@ -164,33 +143,26 @@ local({  # nolint
                 sep = "\n"
             ))
         }
-        if (isFALSE(dir.exists(file.path("", "usr", "local", "gfortran")))) {
-            stop(paste(
-                "CRAN gfortran is not installed.",
-                "Run 'koopa install r-gfortran' to resolve.",
-                sep = "\n"
-            ))
-        }
-        if (isFALSE(all(file.exists(file.path(
-            "", "usr", "local",
-            c(
-                file.path("include", "omp-tools.h"),
-                file.path("include", "omp.h"),
-                file.path("include", "ompt.h"),
-                file.path("lib", "libomp.dylib")
-            )
-        ))))) {
-            stop(paste(
-                "OpenMP for Xcode is not installed.",
-                "Run 'koopa install r-openmp' to resolve.",
-                sep = "\n"
-            ))
+        if (isTRUE(flag[["framework"]])) {
+            if (isFALSE(all(file.exists(file.path(
+                "", "usr", "local",
+                c(
+                    file.path("include", "omp-tools.h"),
+                    file.path("include", "omp.h"),
+                    file.path("include", "ompt.h"),
+                    file.path("lib", "libomp.dylib")
+                )
+            ))))) {
+                stop(paste(
+                    "OpenMP for Xcode is not installed.",
+                    "Run 'koopa install r-openmp' to resolve.",
+                    sep = "\n"
+                ))
+            }
         }
     }
-
     ## Package installation {{{2
     ## -------------------------------------------------------------------------
-
     ## Using a versioned RStudio Package Manager (RSPM) CRAN snapshot on Linux
     ## for increased reproducibility.
     ##
@@ -228,11 +200,9 @@ local({  # nolint
     ## >     "https://packagemanager.rstudio.com/cran/latest"
     ## > repos[["CRAN"]] <-
     ## >     "https://repo.miserver.it.umich.edu/cran"
-
     repos <- getOption("repos")
     cran <- "https://cloud.r-project.org"
     options("install.packages.compile.from.source" = "always")
-
     if (isTRUE(flag[["linux"]])) {
         ## Configure the RSPM CRAN snapshot.
         snapshot <- "2022-04-21"
@@ -249,7 +219,6 @@ local({  # nolint
         cran <- paste(cran, snapshot, sep = "/")
         options("install.packages.compile.from.source" = "never")
     }
-
     ## Allow binary install on macOS for CRAN R. Otherwise default to installing
     ## from source. Note that RSPM doesn't currently support macOS binaries.
     if (isTRUE(flag[["macos"]]) && isTRUE(flag[["framework"]])) {
@@ -258,99 +227,22 @@ local({  # nolint
             "install.packages.compile.from.source" = "never"
         )
     }
-
     repos[["CRAN"]] <- cran
-
     ## Configure the RSPM Bioconductor mirror repo.
     ## This is currently warning about new books repo, so disabled for now.
     ## > options(
     ## >    "BioC_mirror" =
     ## >        "https://packagemanager.rstudio.com/bioconductor"
     ## > )
-
     ## Always include our Acid Genomics repo.
     repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-
-    ## Additional repo universies that can be useful:
-    ##
-    ## https://r-universe.dev/organizations/
-    ## > repos[["carpentries"]] <- "https://carpentries.r-universe.dev"
-    ##
-    ## Yihui Xie's repo has some extra binary builds for macOS.
-    ## > if (isTRUE(flag[["macos"]])) {
-    ## >    repos[["CRANextra"]] <-
-    ## >        "https://macos.rbind.io"
-    ## > }
-
     options("repos" = repos)
-
-    ## Allow Bioconductor to work offline.
-    ## Note that this will warn when enabled, which causes
-    ## `AcidDevTools::install` to error, since warnings are converted to errors.
+    ## Allow Bioconductor to work offline. Note that this will warn when
+    ## enabled, which causes `AcidDevTools::install` to error, since warnings
+    ## are converted to errors.
     ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
-
-    ## How to set binary-only package mode, which doesn't work on Linux.
-    ## > options(
-    ## >     "install.packages.check.source" = "no",
-    ## >     "install.packages.compile.from.source" = "binary",
-    ## >     "pkgType" = "binary"
-    ## > )
-
-    ## Set custom compiler options.
-    ## > options(
-    ## >     "configure.args" = NULL,
-    ## >     "configure.vars" = NULL
-    ## > )
-
-    ## Specify internal download method.
-    ##
-    ## This gets picked up by `install.packages()` and `BiocManager::install()`.
-    ##
-    ## Use "libcurl" (default), "curl", or "wget" on Linux/macOS; or can use
-    ## "wininet" on Windows only.
-    ##
-    ## See also:
-    ## - https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
-    ##       download.file.html
-    ## - https://github.com/wch/r-source/blob/master/src/library/utils/R/unix/
-    ##       download.file.R
-    ##
-    ## curl mode:
-    ## This is buggy, try to use wget mode instead.
-    ## > if (isTRUE(nzchar(Sys.which("curl")))) {
-    ## >     options(
-    ## >         "download.file.method" = "curl",
-    ## >         "download.file.extra" = c(
-    ## >             "--location",
-    ## >             "--retry", "5"
-    ## >         )
-    ## >     )
-    ## > }
-    ##
-    ## wget mode:
-    ##
-    ## This mode is a bit too verbose and shows HTTP redirect headers.
-    ##
-    ## Also shows this warning:
-    ## "WARNING: timestamping does nothing in combination with -0.
-    ## See the manual for details.
-    ##
-    ## See also:
-    ## - https://github.com/YuLab-SMU/wget/blob/master/R/wget.R
-    ## > if (isTRUE(nzchar(Sys.which("wget")))) {
-    ## >     options(
-    ## >         "download.file.method" = "wget",
-    ## >         "download.file.extra" = c(
-    ## >             "--continue",
-    ## >             "--max-redirect=20",
-    ## >             "--timeout=60"
-    ## >         )
-    ## >     )
-    ## > }
-
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
-
     if (isTRUE(flag[["interactive"]])) {
         if (isInstalled("AcidDevTools")) {
             options(
@@ -361,10 +253,8 @@ local({  # nolint
             )
         }
     }
-
     ## Console and interface {{{2
     ## -------------------------------------------------------------------------
-
     options(
         "browserNLdisabled" = TRUE,
         ## Remove "+" line prefix in output, making code easier to copy.
@@ -375,29 +265,16 @@ local({  # nolint
         "verbose" = FALSE,
         "width" = 80L
     )
-
     if (isFALSE(flag[["rstudio"]])) {
         options("prompt" = "> ")
     }
-
     if (isTRUE(flag[["interactive"]])) {
         ## Turn on auto-completion of installed package names.
         utils::rc.settings(ipck = TRUE)
     }
-
     ## Debugging {{{2
     ## -------------------------------------------------------------------------
-
-    ## warn: sets the handling of warning messages. If warn is negative, all
-    ## warnings are ignored. If warn is 0 (the default), warnings are stored
-    ## until the top–level function returns. If fewer than 10 warnings were
-    ## signalled, they will be printed, otherwise a message saying how many
-    ## (max 50) were signalled. An object called `last.warning` is created, and
-    ## can be printed through the function warnings. If warn is 1, warnings are
-    ## printed as they occur. If warn is 2 or larger, all warnings are turned
-    ## into errors.
     options("warn" = 1L)
-
     ## Improve the verbosity of errors and/or warnings.
     options(
         "deparse.max.lines" = 3L,
@@ -406,17 +283,14 @@ local({  # nolint
         ## Set to maximum supported length.
         "warning.length" = 8170L
     )
-
     ## Note that edgeR and pheatmap currently fail these checks.
     options(
         "warnPartialMatchAttr" = TRUE,
         "warnPartialMatchDollar" = TRUE
     )
-
     ## Timeouts default to 60 seconds (1 minute), which can be too short for
     ## some large file downloads.
     options("timeout" = 10000L)
-
     ## Improve stack traces for error messages.
     ##
     ## Use either:
@@ -433,7 +307,6 @@ local({  # nolint
     ## Related issues:
     ## - https://github.com/rstudio/rstudio/issues/4723
     ## - https://github.com/rstudio/rstudio/pull/4726
-
     if (isInstalled("rlang")) {
         options(
             "error" = quote(rlang::entrace()),
@@ -441,17 +314,14 @@ local({  # nolint
             "rstudio.errors.suppressed" = FALSE
         )
     }
-
     ## Quiet down about registered S3 method collisons.
     ## See also:
     ## - https://svn.r-project.org/R/trunk/src/library/base/R/namespace.R
     ## - https://github.com/wch/r-source/blob/master/src/library/base/R/
     ##       namespace.R
     Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0")
-
     ## Package-specific options {{{2
     ## -------------------------------------------------------------------------
-
     ## > if (isInstalled("AcidPlots")) {
     ## >     ## Use of a function here slows down R session too much.
     ## >     ## Note that wrapping function in `quote()` doesn't work.
@@ -474,29 +344,24 @@ local({  # nolint
     ## >             AcidPlots::scale_fill_synesthesia_d
     ## >     )
     ## > }
-
     if (isInstalled("BiocManager")) {
         ## Overriding the annoying message about manual CRAN configuration.
         ## Check BiocManager repo config with `BiocManager::repositories()`.
         options("BiocManager.check_repositories" = FALSE)
-
         ## Enable use of historical snapshots ('MRAN' or 'RSPM') via
         ## `options(BiocManager.snapshot = "RSPM")` to install CRAN packages for
         ## out-of-date Bioconductor versions.
     }
-
     if (isInstalled("crayon")) {
         options(
             "crayon.enabled" = TRUE,
             "crayon.colors" = 256L
         )
     }
-
     ## > if (isInstalled("data.table")) {
     ## >     ## Suppress annoying data.table startup message.
     ## >     options("datatable.quiet" = TRUE)
     ## > }
-
     if (isInstalled("formatR")) {
         options(
             "formatR.args.newline" = FALSE,
@@ -509,7 +374,6 @@ local({  # nolint
             "formatR.wrap" = TRUE
         )
     }
-
     if (isInstalled("future")) {
         ## If we have a large dataset, then we might need to adjust the limit
         ## for allowable object sizes within R.
@@ -522,17 +386,14 @@ local({  # nolint
         ## Increase default limit to 4 GB.
         options("future.globals.maxSize" = 4000L * (1024L ^ 2L))
     }
-
     if (isInstalled("ggrepel")) {
         options("ggrepel.max.overlaps" = Inf)
     }
-
     if (isInstalled("httr")) {
         ## Enable OAuth token generation using httr on a remote R server.
         ## This is used by googlesheets, for example.
         options("httr_oob_default" = TRUE)
     }
-
     if (isInstalled("parallel")) {
         ## Improve the default multi-core settings.
         ## `BiocParallel::MulticoreParam()` should inherit this setting.
@@ -549,7 +410,6 @@ local({  # nolint
             "mc.cores" = cores
         )
     }
-
     if (isInstalled("pipette")) {
         ## Ensure we load and save RDS files from a nested dated directory
         ## by default.
@@ -565,14 +425,17 @@ local({  # nolint
             "acid.load.dir" = getOption("acid.save.dir")
         )
     }
-
     if (isInstalled("readr")) {
         options(
             "readr.num_columns" = 0L,
             "readr.show_progress" = FALSE
         )
     }
-
+    if (isInstalled("styler")) {
+        options(
+            "styler.cache_root" = "styler"
+        )
+    }
     if (isInstalled("reticulate")) {
         ## Ensure that Miniconda is used by default.
         options(
@@ -583,7 +446,6 @@ local({  # nolint
                 )
         )
     }
-
     ## > if (isInstalled("styler")) {
     ## >     ## https://styler.r-lib.org/reference/styler_addins.html
     ## >     options(
@@ -592,37 +454,29 @@ local({  # nolint
     ## >         "styler.save_after_styling" = TRUE
     ## >     )
     ## > }
-
     if (isInstalled("testthat")) {
         ## Stop on the first check failure.
         options("testthat.progress.max_fails" = 1L)
     }
-
     if (isInstalled("tidyverse")) {
         ## Suppress annoying tidyverse startup message.
         options("tidyverse.quiet" = TRUE)
     }
-
     ## RStudio {{{2
     ## -------------------------------------------------------------------------
-
     ## Fix file permissions. RStudio doesn't pick up the system umask.
     ## Note that we're allowing group write here by default.
     ## > if (isTRUE(flag[["rstudio"]])) {
     ## >     Sys.umask("0002")
     ## > }
-
     ## Automatic dark/light theme handling (Experimental) {{{3
     ## -------------------------------------------------------------------------
-
     ## See also:
     ## - https://github.com/gadenbuie/rsthemes
     ## - https://github.com/gadenbuie/rsthemes/issues/6
-
     ## These values are currently defined in secrets file.
     dict[["theme_dark"]] <- Sys.getenv("RSTUDIO_THEME_DARK")
     dict[["theme_light"]] <- Sys.getenv("RSTUDIO_THEME_LIGHT")
-
     if (
         isTRUE(flag[["interactive"]]) &&
         isTRUE(flag[["rstudio"]]) &&
@@ -661,10 +515,8 @@ local({  # nolint
         }
         later::later(func = autoDark, delay = 1L)
     }
-
     ## Session info {{{2
     ## -------------------------------------------------------------------------
-
     ## Only display session information when R is running interactively
     ## and not in quiet mode.
     if (
