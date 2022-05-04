@@ -145,15 +145,6 @@ koopa_r_drat() { # {{{
     koopa_r_koopa 'cliDrat' "$@"
 }
 
-koopa_r_pkgdown_deploy_to_aws() { # {{{1
-    # """
-    # Deploy a pkgdown website to AWS.
-    # @note Updated 2021-08-14.
-    # """
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliPkgdownDeployToAWS' "$@"
-}
-
 koopa_snake_case() { # {{{1
     # """
     # Snake case.

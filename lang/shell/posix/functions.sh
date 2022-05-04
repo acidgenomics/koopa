@@ -3474,6 +3474,8 @@ koopa_rbenv_prefix() { # {{{1
     return 0
 }
 
+# FIXME Consider using GNU 'realpath' as top priority, if installed.
+
 koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.

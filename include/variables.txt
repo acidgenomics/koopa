@@ -1,7 +1,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-04-26"
+koopa-date="2022-05-04"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -190,7 +190,7 @@ gawk="5.1.1"
 gcc="11.3.0"
 
 # https://gdal.org/download.html#current-releases
-gdal="3.4.2"
+gdal="3.4.3"
 
 # https://github.com/libgeos/geos/releases
 geos="3.10.2"
@@ -245,12 +245,9 @@ haskell-stack="2.7.5"
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.12.1"
 
-# https://brew.sh/
-homebrew="3.4.6"
-
 # https://hisham.hm/htop/
-# https://github.com/hishamhm/htop/releases
-htop="3.1.2"
+# https://github.com/htop-dev/htop
+htop="3.2.0"
 
 hyperfine="1.13.0" # rust
 
@@ -331,7 +328,7 @@ libzip="1.8.0"
 
 # LLVM
 # https://releases.llvm.org/
-llvm="14.0.0"
+llvm="14.0.3"
 
 # https://lmod.readthedocs.io/
 # https://github.com/TACC/Lmod
@@ -516,10 +513,6 @@ rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
 rstudio-server="2022.02.1+461"
-
-# https://www.rstudio.com/products/rstudio/download-commercial/
-# https://docs.rstudio.com/rsw/installation/
-rstudio-workbench="2022.02.1+441.pro1"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.1.2"

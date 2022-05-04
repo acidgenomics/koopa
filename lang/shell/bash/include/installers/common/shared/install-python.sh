@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-# NOTE Consider suppressing this warning on macOS:
+# NOTE FIXME Need to handle this warning on macOS:
 # > argument unused during compilation: '-fno-semantic-interposition'
 # > [-Wunused-command-line-argument]
+# clang: warning: argument unused during compilation:
+# '-fno-semantic-interposition' [-Wunused-command-line-argument]
 
 main() { # {{{1
     # """
