@@ -950,7 +950,7 @@ koopa_locate_tee() { # {{{1
 koopa_locate_tex() { # {{{1
     koopa_locate_app \
         --allow-in-path \
-        --app-name'tex'
+        --app-name='tex'
 }
 
 koopa_locate_tlmgr() { # {{{1
