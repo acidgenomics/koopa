@@ -222,18 +222,6 @@ koopa_cli_app() { # {{{1
                     ;;
             esac
             ;;
-        'r')
-            case "${2:-}" in
-                'drat' | \
-                'shiny-run-app')
-                    key="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
         'rnaeditingindexer')
             key="${1:?}"
             shift 1

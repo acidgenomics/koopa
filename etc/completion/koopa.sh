@@ -51,7 +51,6 @@ __koopa_complete() { # {{{1
                         'git'
                         'gpg'
                         'kallisto'
-                        'r'
                         'rnaeditingindexer'
                         'salmon'
                         'sra'
@@ -540,12 +539,6 @@ __koopa_complete() { # {{{1
                         'md5sum')
                             args=(
                                 'check-to-new-md5-file'
-                            )
-                            ;;
-                        'r')
-                            args=(
-                                'drat'
-                                'shiny-run-app'
                             )
                             ;;
                         'sra')
