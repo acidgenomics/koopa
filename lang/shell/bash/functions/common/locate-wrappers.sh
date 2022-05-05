@@ -44,7 +44,6 @@ koopa_locate_basename() { # {{{1
 
 koopa_locate_bash() { # {{{1
     koopa_locate_app \
-        --allow-in-path \
         --app-name='bash' \
         --opt-name='bash'
 }
