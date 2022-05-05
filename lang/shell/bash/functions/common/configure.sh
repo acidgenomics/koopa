@@ -107,13 +107,14 @@ koopa_configure_chemacs() { # {{{1
 koopa_configure_dotfiles() { # {{{1
     # """
     # Configure dotfiles.
-    # @note Updated 2022-01-19.
+    # @note Updated 2022-05-05.
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [bash]="$(koopa_locate_bash)"
     )
+    [[ -x "${app[bash]}" ]] || return 1
     declare -A dict=(
         [name]='dotfiles'
         [prefix]="${1:-}"
