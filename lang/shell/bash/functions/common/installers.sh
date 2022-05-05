@@ -2227,6 +2227,16 @@ koopa_uninstall_mpfr() { # {{{3
 
 koopa_install_ncurses() { # {{{3
     koopa_install_app \
+        --link-in-bin='bin/captoinfo' \
+        --link-in-bin='bin/clear' \
+        --link-in-bin='bin/infocmp' \
+        --link-in-bin='bin/infotocap' \
+        --link-in-bin='bin/reset' \
+        --link-in-bin='bin/tabs' \
+        --link-in-bin='bin/tic' \
+        --link-in-bin='bin/toe' \
+        --link-in-bin='bin/tput' \
+        --link-in-bin='bin/tset' \
         --name='ncurses' \
         "$@"
 }
@@ -2234,6 +2244,16 @@ koopa_install_ncurses() { # {{{3
 koopa_uninstall_ncurses() { # {{{3
     koopa_uninstall_app \
         --name='ncurses' \
+        --unlink-in-bin='captoinfo' \
+        --unlink-in-bin='clear' \
+        --unlink-in-bin='infocmp' \
+        --unlink-in-bin='infotocap' \
+        --unlink-in-bin='reset' \
+        --unlink-in-bin='tabs' \
+        --unlink-in-bin='tic' \
+        --unlink-in-bin='toe' \
+        --unlink-in-bin='tput' \
+        --unlink-in-bin='tset' \
         "$@"
 }
 
