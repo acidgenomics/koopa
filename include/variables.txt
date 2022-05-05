@@ -580,7 +580,7 @@ tcl-tk="8.6.12"
 tealdeer="1.5.0" # rust (tldr)
 
 # https://www.latex-project.org/get/
-tex="2021"
+tex="2022"
 
 # NOTE There seems to be a Homebrew cask that masks this on macOS.
 # https://ftp.gnu.org/gnu/texinfo/
@@ -766,7 +766,7 @@ node-prettier="2.6.2"               # prettier
 # ==============================================================================
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.11"           # system
+ruby-bundler="2.3.12"           # system
 
 ruby-bashcov="1.8.2"            # bashcov
 ruby-colorls="1.4.6"            # colorls
