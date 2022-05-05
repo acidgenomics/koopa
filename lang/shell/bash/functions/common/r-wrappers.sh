@@ -136,15 +136,6 @@ koopa_prune_apps() { # {{{1
     return 0
 }
 
-koopa_r_drat() { # {{{
-    # """
-    # Add R package to drat repository.
-    # @note Updated 2021-08-14.
-    # """
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliDrat' "$@"
-}
-
 koopa_snake_case() { # {{{1
     # """
     # Snake case.
