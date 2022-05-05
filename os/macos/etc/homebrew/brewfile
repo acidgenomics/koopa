@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-04-13.
+# Updated 2022-05-05.
 #
 # @section Cask reinstallation:
 #
@@ -110,6 +110,7 @@ cask "igv"
 cask "iterm2-nightly"
 # > cask "julia"
 cask "keka"
+cask "kitty"
 cask "libreoffice"
 cask "little-snitch"
 cask "macvim"
