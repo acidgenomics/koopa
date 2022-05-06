@@ -96,7 +96,7 @@ boost="1.78.0"
 
 bpytop="1.0.68" # python
 
-broot="1.11.1" # rust (br)
+broot="1.12.0" # rust (br)
 
 # https://www.sourceware.org/bzip2/
 bzip2="1.0.8"
