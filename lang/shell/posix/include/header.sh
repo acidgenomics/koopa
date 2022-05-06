@@ -64,6 +64,7 @@ __koopa_posix_header() { # {{{1
             koopa_export_history || return 1
             koopa_export_pager || return 1
             koopa_activate_color_mode || return 1
+            koopa_activate_alacritty || return 1
             koopa_activate_bat || return 1
             koopa_activate_dircolors || return 1
             koopa_activate_gcc_colors || return 1

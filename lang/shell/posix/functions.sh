@@ -89,6 +89,31 @@ __koopa_remove_from_path_string() { # {{{1
     return 0
 }
 
+koopa_activate_alacritty() { # {{{1
+    # """
+    # Activate Alacritty terminal client.
+    # @note Updated 2022-05-06.
+    #
+    # This function dynamically updates dark/light color mode.
+    # """
+    local color_mode prefix source_bn source_file target_file target_link_bn
+    koopa_is_alacritty || return 0
+    color_mode="$(koopa_color_mode)"
+    prefix="$(koopa_xdg_config_home)/alacritty"
+    [ -d "$prefix" ] || return 0
+    source_bn="colors-${color_mode}.yml"
+    source_file="${prefix}/${source_bn}"
+    [ -f "$source_file" ] || return 0
+    target_file="${prefix}/colors.yml"
+    if [ -h "$target_file" ] && koopa_is_installed 'readlink'
+    then
+        target_link_bn="$(readlink "$target_file")"
+        [ "$target_link_bn" = "$source_bn" ] && return 0
+    fi
+    ln -fns "$source_file" "$target_file"
+    return 0
+}
+
 koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
@@ -2256,6 +2281,14 @@ koopa_is_aarch64() { # {{{1
     # a.k.a. "arm64" (arch2 return).
     # """
     [ "$(koopa_arch)" = 'aarch64' ]
+}
+
+koopa_is_alacritty() { # {{{1
+    # """
+    # Is Alacritty the current terminal client?
+    # @note Updated 2022-05-06.
+    # """
+    [ -n "${ALACRITTY_SOCKET:-}" ]
 }
 
 koopa_is_alias() { # {{{1
