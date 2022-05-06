@@ -113,7 +113,7 @@ koopa_disk_pct_free() { # {{{1
 koopa_disk_pct_used() { # {{{1
     # """
     # Disk usage percentage (on main drive).
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-05-06.
     # """
     local app disk str
     koopa_assert_has_args_eq "$#" 1
@@ -124,6 +124,9 @@ koopa_disk_pct_used() { # {{{1
         [head]="$(koopa_locate_head)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[df]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     str="$( \
         "${app[df]}" "$disk" \
             | "${app[head]}" -n 2 \
