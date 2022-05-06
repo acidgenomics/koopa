@@ -132,6 +132,9 @@ cpufetch="1.02"
 # https://curl.haxx.se/
 curl="7.82.0"
 
+# https://github.com/dandavison/delta
+delta="0.12.1"
+
 difftastic="0.27.0" # rust (difft)
 
 # https://docs.docker.com/install/
