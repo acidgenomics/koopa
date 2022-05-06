@@ -562,6 +562,34 @@ koopa_activate_julia() { # {{{1
     return 0
 }
 
+koopa_activate_kitty() { # {{{1
+    # """
+    # Activate Kitty terminal client.
+    # @note Updated 2022-05-06.
+    #
+    # This function dynamically updates dark/light color mode.
+    #
+    # @seealso
+    # - https://sw.kovidgoyal.net/kitty/kittens/themes/
+    # """
+    local color_mode prefix source_bn source_file target_file target_link_bn
+    koopa_is_kitty || return 0
+    color_mode="$(koopa_color_mode)"
+    prefix="$(koopa_xdg_config_home)/kitty"
+    [ -d "$prefix" ] || return 0
+    source_bn="theme-${color_mode}.conf"
+    source_file="${prefix}/${source_bn}"
+    [ -f "$source_file" ] || return 0
+    target_file="${prefix}/current-theme.conf"
+    if [ -h "$target_file" ] && koopa_is_installed 'readlink'
+    then
+        target_link_bn="$(readlink "$target_file")"
+        [ "$target_link_bn" = "$source_bn" ] && return 0
+    fi
+    ln -fns "$source_file" "$target_file"
+    return 0
+}
+
 koopa_activate_lesspipe() { # {{{1
     # """
     # Activate lesspipe.
@@ -2509,6 +2537,14 @@ koopa_is_interactive() { # {{{1
     koopa_str_detect_posix "$-" 'i' && return 0
     koopa_is_tty && return 0
     return 1
+}
+
+koopa_is_kitty() { # {{{1
+    # """
+    # Is Kitty the active terminal?
+    # @note Updated 2022-05-06.
+    # """
+    [ -n "${KITTY_PID:-}" ]
 }
 
 koopa_is_linux() { # {{{1

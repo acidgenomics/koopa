@@ -68,6 +68,7 @@ __koopa_posix_header() { # {{{1
             koopa_activate_bat || return 1
             koopa_activate_dircolors || return 1
             koopa_activate_gcc_colors || return 1
+            koopa_activate_kitty || return 1
             koopa_activate_lesspipe || return 1
             koopa_activate_secrets || return 1
             koopa_activate_ssh_key || return 1
