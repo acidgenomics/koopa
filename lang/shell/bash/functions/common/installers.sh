@@ -864,6 +864,23 @@ koopa_uninstall_curl() { # {{{3
         "$@"
 }
 
+# delta ------------------------------------------------------------------- {{{2
+
+koopa_install_delta() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/delta' \
+        --name='delta' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_delta() { # {{{3
+    koopa_uninstall_app \
+        --name='delta' \
+        --unlink-in-bin='delta' \
+        "$@"
+}
+
 # difftastic -------------------------------------------------------------- {{{2
 
 koopa_install_difftastic() { # {{{3
