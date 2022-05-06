@@ -95,6 +95,10 @@ koopa_activate_alacritty() { # {{{1
     # @note Updated 2022-05-06.
     #
     # This function dynamically updates dark/light color mode.
+    #
+    # @seealso
+    # - Live config reload doesn't detect symlink change.
+    #   https://github.com/alacritty/alacritty/issues/2237
     # """
     local color_mode prefix source_bn source_file target_file target_link_bn
     koopa_is_alacritty || return 0
