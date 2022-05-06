@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-05-02.
+#' @note Updated 2022-05-06.
 #'
 #' @section Restarting R:
 #'
@@ -461,6 +461,26 @@ local({  # nolint
     if (isInstalled("tidyverse")) {
         ## Suppress annoying tidyverse startup message.
         options("tidyverse.quiet" = TRUE)
+    }
+    ## Quartz {{{2
+    ## -------------------------------------------------------------------------
+    ## https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/quartz.html
+    if (isTRUE(flag[["macos"]]) && isInstalled("grDevices")) {
+        setHook(
+            hookName = packageEvent("grDevices", "onLoad"),
+            function(...) {
+                grDevices::quartz.options(
+                    width = 10L,
+                    height = 10L,
+                    pointsize = 12L,
+                    family = "Helvetica",
+                    antialias = TRUE,
+                    type = "native",
+                    bg = "transparent",
+                    canvas = "white"
+                )
+            }
+        )
     }
     ## RStudio {{{2
     ## -------------------------------------------------------------------------
