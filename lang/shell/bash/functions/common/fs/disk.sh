@@ -3,7 +3,7 @@
 koopa_disk_gb_free() { # {{{1
     # """
     # Available free disk space in GB.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-05-06.
     #
     # Alternatively, can use '-BG' for 1G-blocks.
     # This is what gets returned by 'df -h'.
@@ -17,6 +17,9 @@ koopa_disk_gb_free() { # {{{1
         [head]="$(koopa_locate_head)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[df]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     str="$( \
         "${app[df]}" --block-size='G' "$disk" \
             | "${app[head]}" -n 2 \
@@ -37,7 +40,7 @@ koopa_disk_gb_free() { # {{{1
 koopa_disk_gb_total() { # {{{1
     # """
     # Total disk space size in GB.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-05-06.
     # """
     local app disk str
     koopa_assert_has_args_eq "$#" 1
@@ -48,6 +51,9 @@ koopa_disk_gb_total() { # {{{1
         [head]="$(koopa_locate_head)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[df]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     str="$( \
         "${app[df]}" --block-size='G' "$disk" \
             | "${app[head]}" -n 2 \
@@ -67,7 +73,7 @@ koopa_disk_gb_total() { # {{{1
 koopa_disk_gb_used() { # {{{1
     # """
     # Used disk space in GB.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-05-06.
     # """
     local app disk str
     koopa_assert_has_args_eq "$#" 1
@@ -78,6 +84,9 @@ koopa_disk_gb_used() { # {{{1
         [head]="$(koopa_locate_head)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[df]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     str="$( \
         "${app[df]}" --block-size='G' "$disk" \
             | "${app[head]}" -n 2 \
