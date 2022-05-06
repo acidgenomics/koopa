@@ -1,7 +1,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-05-04"
+koopa-date="2022-05-06"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -187,7 +187,7 @@ fzf="0.30.0"
 gawk="5.1.1"
 
 # https://ftp.gnu.org/gnu/gcc/
-gcc="11.3.0"
+gcc="12.1.0"
 
 # https://gdal.org/download.html#current-releases
 gdal="3.4.3"
