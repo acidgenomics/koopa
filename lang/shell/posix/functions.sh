@@ -102,9 +102,9 @@ koopa_activate_alacritty() { # {{{1
     # """
     local color_mode prefix source_bn source_file target_file target_link_bn
     koopa_is_alacritty || return 0
-    color_mode="$(koopa_color_mode)"
     prefix="$(koopa_xdg_config_home)/alacritty"
     [ -d "$prefix" ] || return 0
+    color_mode="$(koopa_color_mode)"
     source_bn="colors-${color_mode}.yml"
     source_file="${prefix}/${source_bn}"
     [ -f "$source_file" ] || return 0
@@ -401,6 +401,43 @@ koopa_activate_coreutils_aliases() { # {{{1
     return 0
 }
 
+koopa_activate_delta() { # {{{1
+    # """
+    # Activate delta (git-delta) diff tool.
+    # @note Updated 2022-05-06.
+    #
+    # This function dynamically updates dark/light color mode.
+    # """
+    local color_mode prefix source_bn source_file target_file target_link_bn
+    koopa_is_alacritty || return 0
+    prefix="$(koopa_xdg_config_home)/delta"
+    [ -d "$prefix" ] || return 0
+    color_mode="$(koopa_color_mode)"
+    source_bn="theme-${color_mode}.gitconfig"
+    source_file="${prefix}/${source_bn}"
+    [ -f "$source_file" ] || return 0
+    target_file="${prefix}/theme.gitconfig"
+    if [ -h "$target_file" ] && koopa_is_installed 'readlink'
+    then
+        target_link_bn="$(readlink "$target_file")"
+        [ "$target_link_bn" = "$source_bn" ] && return 0
+    fi
+    ln -fns "$source_file" "$target_file"
+    return 0
+}
+
+koopa_activate_difftastic() { # {{{1
+    # """
+    # Activate difftastic.
+    # @note Updated 2022-05-06.
+    # """
+    local color_mode
+    color_mode="$(koopa_color_mode)"
+    export DFT_BACKGROUND="$color_mode"
+    export DFT_DISPLAY='side-by-side'
+    return 0
+}
+
 koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
@@ -574,9 +611,9 @@ koopa_activate_kitty() { # {{{1
     # """
     local color_mode prefix source_bn source_file target_file target_link_bn
     koopa_is_kitty || return 0
-    color_mode="$(koopa_color_mode)"
     prefix="$(koopa_xdg_config_home)/kitty"
     [ -d "$prefix" ] || return 0
+    color_mode="$(koopa_color_mode)"
     source_bn="theme-${color_mode}.conf"
     source_file="${prefix}/${source_bn}"
     [ -f "$source_file" ] || return 0
