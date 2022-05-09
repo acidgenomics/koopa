@@ -907,7 +907,7 @@ koopa_activate_pyenv() { # {{{1
 koopa_activate_python() { # {{{1
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-05-09.
     #
     # Configures:
     # - Site packages library.
@@ -928,15 +928,6 @@ koopa_activate_python() { # {{{1
     # - https://twitter.com/sadhlife/status/1450459992419622920
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # """
-    local startup_file
-    startup_file="${HOME:?}/.pyrc"
-    # > local prefix prefix_real
-    # > prefix="$(koopa_python_packages_prefix)"
-    # > if [ -d "$prefix" ]
-    # > then
-    # >     prefix_real="$(koopa_realpath "$prefix")"
-    # >     koopa_add_to_pythonpath_start "$prefix_real"
-    # > fi
     if [ -z "${PIP_REQUIRE_VIRTUALENV:-}" ]
     then
         export PIP_REQUIRE_VIRTUALENV='true'
@@ -945,9 +936,19 @@ koopa_activate_python() { # {{{1
     then
         export PYTHONDONTWRITEBYTECODE=1
     fi
-    if [ -z "${PYTHONSTARTUP:-}" ] && [ -f "$startup_file" ]
+    # Added in Python 3.11.
+    if [ -z "${PYTHONSAFEPATH:-}" ]
     then
-        export PYTHONSTARTUP="$startup_file"
+        export PYTHONSAFEPATH=1
+    fi
+    if [ -z "${PYTHONSTARTUP:-}" ]
+    then
+        local startup_file
+        startup_file="${HOME:?}/.pyrc"
+        if [ -f "$startup_file" ]
+        then
+            export PYTHONSTARTUP="$startup_file"
+        fi
     fi
     if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
     then
