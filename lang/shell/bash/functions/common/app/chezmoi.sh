@@ -16,6 +16,7 @@ koopa_configure_chezmoi() { # {{{1
     # @seealso
     # - https://www.chezmoi.io/user-guide/setup/
     # - https://www.chezmoi.io/user-guide/include-files-from-elsewhere/
+    # - https://www.chezmoi.io/reference/configuration-file/variables/
     # - https://blog.lazkani.io/posts/dotfiles-with-chezmoi/
     # """
     local dict
