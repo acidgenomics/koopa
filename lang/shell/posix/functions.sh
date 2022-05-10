@@ -1427,7 +1427,13 @@ koopa_alias_doom_emacs() { # {{{1
 koopa_alias_emacs() { # {{{1
     # """
     # Emacs alias that provides 24-bit color support.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-05-10.
+    #
+    # Check that configuration is correct with 'infocmp xterm-24bit'.
+    #
+    # @seealso
+    # - https://emacs.stackexchange.com/questions/51100/
+    # - https://github.com/kovidgoyal/kitty/issues/1141
     # """
     local prefix
     prefix="${HOME:?}/.emacs.d"
