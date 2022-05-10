@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Rework dotfiles configuration using chezmoi.
 ** TODO Create a 'compress' function that automatically wraps 'tar -czvf XXX.tar.gz XXX/'
 ** TODO Don't rely on Homebrew packages anywhere in our build scripts or R configuration.
 ** TODO Improve color and formatting of alert messages, using an r-cli style approach (e.g. '{.var XXX}' rather than just using single quotes.
