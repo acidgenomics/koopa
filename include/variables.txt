@@ -476,7 +476,7 @@ pytaglib="1.5.0"
 pytest="6.2.5" # python
 
 # https://www.python.org/downloads/
-python="3.10.3"
+python="3.10.4"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
