@@ -110,7 +110,7 @@ koopa_activate_zsh_fpath() { # {{{1
 koopa_activate_zsh_plugins() { # {{{1
     # """
     # Activate Zsh plugins.
-    # Updated 2022-04-05.
+    # Updated 2022-05-10.
     #
     # Debug plugins via:
     # > zsh -df
@@ -122,7 +122,7 @@ koopa_activate_zsh_plugins() { # {{{1
     local dotfiles_prefix plugin plugins zsh_plugins_dir
     [[ "$#" -eq 0 ]] || return 1
     dotfiles_prefix="$(koopa_dotfiles_prefix)"
-    zsh_plugins_dir="${dotfiles_prefix}/shell/zsh/plugins"
+    zsh_plugins_dir="$(koopa_xdg_data_home)/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
     plugins=("${(@f)$( \
         find "$zsh_plugins_dir" \

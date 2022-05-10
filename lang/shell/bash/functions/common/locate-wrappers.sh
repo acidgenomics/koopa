@@ -101,6 +101,12 @@ koopa_locate_cat() { # {{{1
         --opt-name='coreutils'
 }
 
+koopa_locate_chezmoi() { # {{{1
+    koopa_locate_app \
+        --app-name='chezmoi' \
+        --opt-name='chezmoi'
+}
+
 koopa_locate_chgrp() { # {{{1
     koopa_locate_app '/usr/bin/chgrp'
 }
