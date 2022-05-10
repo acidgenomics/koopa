@@ -121,7 +121,7 @@ koopa_activate_alacritty() { # {{{1
 koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-05-10.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -138,6 +138,7 @@ koopa_activate_aliases() { # {{{1
     alias bucket='koopa_alias_bucket'
     alias c='clear'
     alias cls='koopa_alias_colorls'
+    alias cm='chezmoi'
     alias d='clear; cd -; l'
     alias doom-emacs='koopa_alias_doom_emacs'
     alias e='exit'
@@ -145,7 +146,6 @@ koopa_activate_aliases() { # {{{1
     alias emacs='koopa_alias_emacs'
     alias fd='fd --case-sensitive --no-ignore'
     alias fvim='vim "$(fzf)"'
-    alias fzf='koopa_alias_fzf'
     alias h='history'
     alias j='z'
     alias k='koopa_alias_k'
@@ -493,44 +493,53 @@ koopa_activate_dircolors() { # {{{1
 koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2021-06-02.
+    # @note Updated 2022-05-10.
     #
     # Currently Bash and Zsh are supported.
     # Shell lockout has been observed on Ubuntu unless we disable 'set -e'.
     # """
-    local fzfrc nounset prefix script shell
-    fzfrc="$(koopa_dotfiles_prefix)/app/fzf/fzfrc"
-    # shellcheck source=/dev/null
-    [ -f "$fzfrc" ] && . "$fzfrc"
+    local prefix
     prefix="$(koopa_fzf_prefix)"
     [ -d "$prefix" ] || return 0
-    nounset="$(koopa_boolean_nounset)"
-    shell="$(koopa_shell_name)"
-    # Relax hardened shell temporarily, if necessary.
-    if [ "$nounset" -eq 1 ]
+    # > local nounset script shell
+    # > nounset="$(koopa_boolean_nounset)"
+    # > shell="$(koopa_shell_name)"
+    # > # Relax hardened shell temporarily, if necessary.
+    # > if [ "$nounset" -eq 1 ]
+    # > then
+    # >     set +o errexit
+    # >     set +o nounset
+    # > fi
+    # > # Auto-completion.
+    # > script="${prefix}/shell/completion.${shell}"
+    # > if [ -f "$script" ]
+    # > then
+    # >     # shellcheck source=/dev/null
+    # >     . "$script"
+    # > fi
+    # > # Key bindings.
+    # > script="${prefix}/shell/key-bindings.${shell}"
+    # > if [ -f "$script" ]
+    # > then
+    # >     # shellcheck source=/dev/null
+    # >     . "$script"
+    # > fi
+    # > # Reset hardened shell, if necessary.
+    # > if [ "$nounset" -eq 1 ]
+    # > then
+    # >     set -o errexit
+    # >     set -o nounset
+    # > fi
+    # > if [ -z "${FZF_DEFAULT_COMMAND:-}" ]
+    # > then
+    # >     if koopa_is_installed 'rg'
+    # >     then
+    # >         export FZF_DEFAULT_COMMAND='rg --files'
+    # >     fi
+    # > fi
+    if [ -z "${FZF_DEFAULT_OPTS:-}" ]
     then
-        set +o errexit
-        set +o nounset
-    fi
-    # Auto-completion.
-    script="${prefix}/shell/completion.${shell}"
-    if [ -f "$script" ]
-    then
-        # shellcheck source=/dev/null
-        . "$script"
-    fi
-    # Key bindings.
-    script="${prefix}/shell/key-bindings.${shell}"
-    if [ -f "$script" ]
-    then
-        # shellcheck source=/dev/null
-        . "$script"
-    fi
-    # Reset hardened shell, if necessary.
-    if [ "$nounset" -eq 1 ]
-    then
-        set -o errexit
-        set -o nounset
+        export FZF_DEFAULT_OPTS='--border --color bw --multi'
     fi
     return 0
 }
@@ -1437,16 +1446,6 @@ koopa_alias_emacs_vanilla() { # {{{1
     # @note Updated 2022-04-07.
     # """
     emacs --no-init-file --no-window-system "$@"
-}
-
-koopa_alias_fzf() { # {{{1
-    # """
-    # FZF alias.
-    # @note Updated 2021-05-26.
-    # """
-    koopa_is_alias 'fzf' && unalias 'fzf'
-    koopa_activate_fzf
-    fzf "$@"
 }
 
 koopa_alias_k() { # {{{1
