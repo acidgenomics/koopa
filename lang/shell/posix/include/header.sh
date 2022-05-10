@@ -3,7 +3,7 @@
 __koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2022-04-17.
+    # @note Updated 2022-05-10.
     # """
     local shell
     [ "$#" -eq 0 ] || return 1
@@ -69,6 +69,7 @@ __koopa_posix_header() { # {{{1
             koopa_activate_delta || return 1
             koopa_activate_difftastic || return 1
             koopa_activate_dircolors || return 1
+            koopa_activate_fzf || return 0
             koopa_activate_gcc_colors || return 1
             koopa_activate_kitty || return 1
             koopa_activate_lesspipe || return 1
