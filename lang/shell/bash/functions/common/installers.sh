@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Need to also link man files, where applicable.
+
 # Core ==================================================================== {{{1
 
 # koopa ------------------------------------------------------------------- {{{2
 
-# FIXME This needs to run the config of activate here...
-# FIXME This is currently defined in activation script.
-
 koopa_install_koopa() { # {{{3
     # """
     # Install koopa.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-05-10.
     # """
     local dict
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
@@ -205,8 +204,7 @@ koopa_install_koopa() { # {{{3
         koopa_linux_update_etc_profile_d
     fi
     koopa_fix_zsh_permissions
-    koopa_add_koopa_config_link \
-        "$(koopa_koopa_prefix)/activate" 'activate'
+    koopa_add_koopa_config_link "${dict[prefix]}/activate" 'activate'
     return 0
 }
 
@@ -553,6 +551,22 @@ koopa_update_chemacs() { # {{{3
     koopa_update_app \
         --name='chemacs' \
         --name-fancy='Chemacs' \
+        "$@"
+}
+
+# chezmoi ----------------------------------------------------------------- {{{2
+
+koopa_install_chezmoi() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/chezmoi' \
+        --name='chezmoi' \
+        "$@"
+}
+
+koopa_uninstall_chezmoi() { # {{{3
+    koopa_uninstall_app \
+        --name='chezmoi' \
+        --unlink-in-bin='chezmoi' \
         "$@"
 }
 

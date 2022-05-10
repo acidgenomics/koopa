@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-05-06.
+    # Updated 2022-05-10.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -62,6 +62,7 @@ __koopa_complete() { # {{{1
                 'configure')
                     args=(
                         'chemacs'
+                        'chezmoi'
                         'dotfiles'
                         'go'
                         'julia'
@@ -110,6 +111,7 @@ __koopa_complete() { # {{{1
                         'bzip2'
                         'cairo'
                         'chemacs'
+                        'chezmoi'
                         'cmake'
                         'conda'
                         'coreutils'
