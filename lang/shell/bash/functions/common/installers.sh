@@ -2885,18 +2885,35 @@ koopa_uninstall_pytest() { # {{{3
 # python ------------------------------------------------------------------ {{{2
 
 koopa_install_python() { # {{{3
+    # """
+    # Assuming usage of Python binary on macOS.
+    # """
+    local install_args
+    install_args=(
+        '--name-fancy=Python'
+        '--name=python'
+    )
+    if ! koopa_is_macos
+    then
+        install_args+=('--link-in-bin=bin/python3')
+    fi
     koopa_install_app \
-        --link-in-bin='bin/python3' \
-        --name-fancy='Python' \
-        --name='python' \
+        "${install_args[@]}" \
         "$@"
 }
 
 koopa_uninstall_python() { # {{{3
+    local uninstall_args
+    uninstall_args=(
+        '--name-fancy=Python'
+        '--name=python'
+    )
+    if ! koopa_is_macos
+    then
+        uninstall_args+=('--unlink-in-bin=python3')
+    fi
     koopa_uninstall_app \
-        --name-fancy='Python' \
-        --name='python' \
-        --unlink-in-bin='python3' \
+        "${uninstall_args[@]}" \
         "$@"
 }
 
