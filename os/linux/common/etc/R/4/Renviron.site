@@ -194,6 +194,12 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # > TNS_ADMIN="${ORACLE_HOME}/network/admin"
 # > PATH="${PATH}:${ORACLE_HOME}/bin"
 
+# rcmdcheck {{{2
+# ------------------------------------------------------------------------------
+
+# Options: "never", "error", "warning", "note".
+RCMDCHECK_ERROR_ON="note"
+
 # remotes {{{2
 # ------------------------------------------------------------------------------
 

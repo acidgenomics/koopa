@@ -116,6 +116,12 @@ _R_CHECK_SYSTEM_CLOCK_=0
 
 XML_CONFIG="${KOOPA_OPT_PREFIX}/libxml2/bin/xml2-config"
 
+# rcmdcheck {{{2
+# ------------------------------------------------------------------------------
+
+# Options: "never", "error", "warning", "note".
+RCMDCHECK_ERROR_ON="note"
+
 # remotes {{{2
 # ------------------------------------------------------------------------------
 
