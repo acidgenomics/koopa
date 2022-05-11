@@ -1,6 +1,6 @@
 # """
 # Makevars configuration for additional koopa app packages.
-# @note Updated 2022-04-28.
+# @note Updated 2022-05-11.
 #
 # Refer to corresponding 'Makeconf' file for current system defaults.
 #
@@ -16,7 +16,7 @@
 # - https://mac.r-project.org/
 # """
 
-# > OPT_LOC = /opt/koopa/opt
+OPT_LOC = /opt/koopa/opt
 
 # > CPPFLAGS += -I$(OPT_LOC)/freetype/include/freetype2
 # > CPPFLAGS += -I$(OPT_LOC)/gettext/include
@@ -30,3 +30,5 @@
 # > LDFLAGS += -L$(OPT_LOC)/libssh2/lib
 # > LDFLAGS += -L$(OPT_LOC)/openssl/lib
 # > LDFLAGS += -L$(OPT_LOC)/xz/lib
+
+FLIBS = -L$(OPT_LOC)/gcc/lib/gcc/x86_64-apple-darwin21/12.1.0 -L$(OPT_LOC)/gcc/lib -lgfortran -lquadmath -lm
