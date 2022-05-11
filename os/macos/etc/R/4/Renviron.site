@@ -37,7 +37,7 @@ PATH="/usr/bin:/bin"
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
 # For gfortran.
-PATH="${KOOPA_OPT_PREFIX}/gcc/bin:${PATH}"
+# > PATH="${KOOPA_OPT_PREFIX}/gcc/bin:${PATH}"
 # This is required for 'png' package to install.
 PATH="${KOOPA_OPT_PREFIX}/libpng/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"

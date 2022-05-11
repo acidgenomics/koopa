@@ -31,4 +31,5 @@ OPT_LOC = /opt/koopa/opt
 # > LDFLAGS += -L$(OPT_LOC)/openssl/lib
 # > LDFLAGS += -L$(OPT_LOC)/xz/lib
 
+FC = $(OPT_LOC)/gcc/bin/gfortran
 FLIBS = -L$(OPT_LOC)/gcc/lib/gcc/x86_64-apple-darwin21/12.1.0 -L$(OPT_LOC)/gcc/lib -lgfortran -lquadmath -lm
