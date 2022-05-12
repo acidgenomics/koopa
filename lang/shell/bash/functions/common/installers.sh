@@ -2174,6 +2174,23 @@ koopa_uninstall_mcfly() { # {{{3
         "$@"
 }
 
+# mdcat ------------------------------------------------------------------- {{{2
+
+koopa_install_mdcat() { # {{{3
+    koopa_install_app \
+        --link-in-bin='bin/mdcat' \
+        --name='mdcat' \
+        --installer='rust-package' \
+        "$@"
+}
+
+koopa_uninstall_broot() { # {{{3
+    koopa_uninstall_app \
+        --name='mdcat' \
+        --unlink-in-bin='mdcat' \
+        "$@"
+}
+
 # meson ------------------------------------------------------------------- {{{2
 
 koopa_install_meson() { # {{{3
