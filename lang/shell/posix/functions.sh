@@ -192,21 +192,16 @@ koopa_activate_aliases() { # {{{1
 koopa_activate_bat() { # {{{1
     # """
     # Activate bat configuration.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-05-12.
     #
     # Ensure this follows 'koopa_activate_color_mode'.
     # """
-    local conf_file dotfiles_prefix
-    dotfiles_prefix="$(koopa_dotfiles_prefix)"
-    conf_file="${dotfiles_prefix}/app/bat/config"
-    case "$(koopa_color_mode)" in
-        'dark')
-            conf_file="${conf_file}-dark"
-            ;;
-        'light')
-            conf_file="${conf_file}-light"
-            ;;
-    esac
+    local color_mode conf_file prefix
+    [ -x "$(koopa_bin_prefix)/bat" ] || return 0
+    prefix="$(koopa_xdg_config_home)/bat"
+    [ -d "$prefix" ] || return 0
+    color_mode="$(koopa_color_mode)"
+    conf_file="${prefix}/config-${color_mode}"
     [ -f "$conf_file" ] || return 0
     export BAT_CONFIG_PATH="$conf_file"
     return 0
@@ -215,7 +210,7 @@ koopa_activate_bat() { # {{{1
 koopa_activate_bcbio_nextgen() { # {{{1
     # """
     # Activate bcbio-nextgen tool binaries.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-05-12.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
@@ -239,7 +234,7 @@ koopa_activate_bcbio_nextgen() { # {{{1
 koopa_activate_broot() { # {{{1
     # """
     # Activate broot directory tree utility.
-    # @note Updated 2021-06-16.
+    # @note Updated 2022-05-12.
     #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
@@ -254,6 +249,7 @@ koopa_activate_broot() { # {{{1
     # https://github.com/Canop/broot
     # """
     local config_dir nounset script shell
+    [ -x "$(koopa_bin_prefix)/broot" ] || return 0
     shell="$(koopa_shell_name)"
     case "$shell" in
         'bash' | \
@@ -353,7 +349,7 @@ koopa_activate_conda() { # {{{1
 koopa_activate_coreutils_aliases() { # {{{1
     # """
     # Activate BSD/GNU coreutils aliases.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-05-12.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -363,17 +359,7 @@ koopa_activate_coreutils_aliases() { # {{{1
     # macOS ships with BSD coreutils, which don't support all GNU options.
     # gmv on macOS currently has issues on NFS shares.
     # """
-    local bin_prefix
-    bin_prefix="$(koopa_bin_prefix)"
-    if [ ! -x "${bin_prefix}/cp" ] || \
-        [ ! -x "${bin_prefix}/cp" ] || \
-        [ ! -x "${bin_prefix}/ln" ] || \
-        [ ! -x "${bin_prefix}/mkdir" ] || \
-        [ ! -x "${bin_prefix}/mv" ] || \
-        [ ! -x "${bin_prefix}/rm" ]
-    then
-        return 0
-    fi
+    [ -x "$(koopa_bin_prefix)/cp" ] || return 0
     local cp cp_args ln ln_args mkdir mkdir_args mv mv_args rm rm_args
     cp='cp'
     ln='ln'
@@ -404,12 +390,12 @@ koopa_activate_coreutils_aliases() { # {{{1
 koopa_activate_delta() { # {{{1
     # """
     # Activate delta (git-delta) diff tool.
-    # @note Updated 2022-05-06.
+    # @note Updated 2022-05-12.
     #
     # This function dynamically updates dark/light color mode.
     # """
     local color_mode prefix source_bn source_file target_file target_link_bn
-    koopa_is_alacritty || return 0
+    [ -x "$(koopa_bin_prefix)/delta" ] || return 0
     prefix="$(koopa_xdg_config_home)/delta"
     [ -d "$prefix" ] || return 0
     color_mode="$(koopa_color_mode)"
@@ -429,114 +415,49 @@ koopa_activate_delta() { # {{{1
 koopa_activate_difftastic() { # {{{1
     # """
     # Activate difftastic.
-    # @note Updated 2022-05-06.
+    # @note Updated 2022-05-12.
     # """
-    local color_mode
-    color_mode="$(koopa_color_mode)"
-    export DFT_BACKGROUND="$color_mode"
-    export DFT_DISPLAY='side-by-side'
+    [ -x "$(koopa_bin_prefix)/difft" ] || return 0
+    DFT_BACKGROUND="$(koopa_color_mode)"
+    DFT_DISPLAY='side-by-side'
+    export DFT_BACKGROUND DFT_DISPLAY
     return 0
 }
 
 koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-05-12.
     #
     # This will set the 'LS_COLORS' environment variable.
     #
     # Ensure this follows 'koopa_activate_color_mode'.
     # """
-    local bin_prefix
     [ -n "${SHELL:-}" ] || return 0
-    bin_prefix="$(koopa_bin_prefix)"
-    [ -x "${bin_prefix}/dircolors" ] || return 0
-    local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
-    dir='dir'
-    dircolors='dircolors'
-    egrep='egrep'
-    fgrep='fgrep'
-    grep='grep'
-    ls='ls'
-    vdir='vdir'
-    dotfiles_prefix="$(koopa_dotfiles_prefix)"
-    dircolors_file="${dotfiles_prefix}/app/coreutils/dircolors"
-    case "$(koopa_color_mode)" in
-        'dark')
-            dircolors_file="${dircolors_file}-dark"
-            ;;
-        'light')
-            dircolors_file="${dircolors_file}-light"
-            ;;
-    esac
-    if [ -f "$dircolors_file" ]
-    then
-        eval "$("$dircolors" "$dircolors_file")"
-    else
-        eval "$("$dircolors" -b)"
-    fi
-    # shellcheck disable=SC2139
-    alias dir="${dir} --color=auto"
-    # shellcheck disable=SC2139
-    alias egrep="${egrep} --color=auto"
-    # shellcheck disable=SC2139
-    alias fgrep="${fgrep} --color=auto"
-    # shellcheck disable=SC2139
-    alias grep="${grep} --color=auto"
-    # shellcheck disable=SC2032,SC2139
-    alias ls="${ls} --color=auto"
-    # shellcheck disable=SC2139
-    alias vdir="${vdir} --color=auto"
+    local dircolors
+    dircolors="$(koopa_bin_prefix)/dircolors"
+    [ -x "$dircolors" ] || return 0
+    local color_mode config_prefix dircolors_file
+    config_prefix="$(koopa_xdg_config_home)/dircolors"
+    color_mode="$(koopa_color_mode)"
+    dircolors_file="${config_prefix}/dircolors-${color_mode}"
+    [ -f "$dircolors_file" ] || return 0
+    eval "$("$dircolors" "$dircolors_file")"
+    alias dir='dir --color=auto'
+    alias egrep='egrep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias grep='grep --color=auto'
+    alias ls='ls --color=auto'
+    alias vdir='vdir --color=auto'
     return 0
 }
 
 koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2022-05-10.
-    #
-    # Currently Bash and Zsh are supported.
-    # Shell lockout has been observed on Ubuntu unless we disable 'set -e'.
+    # @note Updated 2022-05-12.
     # """
-    local prefix
-    prefix="$(koopa_fzf_prefix)"
-    [ -d "$prefix" ] || return 0
-    # > local nounset script shell
-    # > nounset="$(koopa_boolean_nounset)"
-    # > shell="$(koopa_shell_name)"
-    # > # Relax hardened shell temporarily, if necessary.
-    # > if [ "$nounset" -eq 1 ]
-    # > then
-    # >     set +o errexit
-    # >     set +o nounset
-    # > fi
-    # > # Auto-completion.
-    # > script="${prefix}/shell/completion.${shell}"
-    # > if [ -f "$script" ]
-    # > then
-    # >     # shellcheck source=/dev/null
-    # >     . "$script"
-    # > fi
-    # > # Key bindings.
-    # > script="${prefix}/shell/key-bindings.${shell}"
-    # > if [ -f "$script" ]
-    # > then
-    # >     # shellcheck source=/dev/null
-    # >     . "$script"
-    # > fi
-    # > # Reset hardened shell, if necessary.
-    # > if [ "$nounset" -eq 1 ]
-    # > then
-    # >     set -o errexit
-    # >     set -o nounset
-    # > fi
-    # > if [ -z "${FZF_DEFAULT_COMMAND:-}" ]
-    # > then
-    # >     if koopa_is_installed 'rg'
-    # >     then
-    # >         export FZF_DEFAULT_COMMAND='rg --files'
-    # >     fi
-    # > fi
+    [ -x "$(koopa_bin_prefix)/fzf" ] || return 0
     if [ -z "${FZF_DEFAULT_OPTS:-}" ]
     then
         export FZF_DEFAULT_OPTS='--border --color bw --multi'
@@ -561,9 +482,10 @@ quote=01:warning=01;35"
 koopa_activate_go() { # {{{1
     # """
     # Activate Go.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-05-12.
     # """
     local prefix
+    [ -x "$(koopa_bin_prefix)/go" ] || return 0
     prefix="$(koopa_go_packages_prefix)"
     [ -d "$prefix" ] || return 0
     GOPATH="$(koopa_go_packages_prefix)"
@@ -574,13 +496,14 @@ koopa_activate_go() { # {{{1
 koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-05-12.
     #
     # Don't activate 'binutils' here. Can mess up R package compilation.
     # """
     local prefix
     prefix="$(koopa_homebrew_prefix)"
     [ -d "$prefix" ] || return 0
+    [ -x "${prefix}/bin/brew" ] || return 0
     export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
@@ -597,9 +520,10 @@ koopa_activate_homebrew() { # {{{1
 koopa_activate_julia() { # {{{1
     # """
     # Activate Julia.
-    # @note Updated 2022-03-31.
+    # @note Updated 2022-04-12.
     # """
     local prefix
+    [ -x "$(koopa_bin_prefix)/julia" ] || return 0
     prefix="$(koopa_julia_packages_prefix)"
     if [ -d "$prefix" ]
     then
@@ -639,7 +563,7 @@ koopa_activate_kitty() { # {{{1
 koopa_activate_lesspipe() { # {{{1
     # """
     # Activate lesspipe.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-05-12.
     #
     # Preferentially uses 'bat' when installed.
     #
@@ -652,10 +576,12 @@ koopa_activate_lesspipe() { # {{{1
     # - To list available styles (requires pygments):
     #   'pygmentize -L styles'
     # """
-    koopa_is_installed 'lesspipe.sh' || return 0
+    local lesspipe
+    lesspipe="$(koopa_bin_prefix)/lesspipe.sh"
+    [ -x "$lesspipe" ] || return 0
     export LESS='-R'
     export LESSCOLOR='yes'
-    export LESSOPEN='|lesspipe.sh %s'
+    export LESSOPEN="|${lesspipe} %s"
     export LESSQUIET=1
     export LESS_ADVANCED_PREPROCESSOR=1
     [ -z "${LESSCHARSET:-}" ] && export LESSCHARSET='utf-8'
@@ -704,14 +630,14 @@ koopa_activate_make_paths() { # {{{1
 koopa_activate_mcfly() { #{{{1
     # """
     # Activate mcfly.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-05-12.
     #
     # Use "mcfly search 'query'" to query directly.
     # """
     local nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
+    [ -x "$(koopa_bin_prefix)/mcfly" ] || return 0
     koopa_is_root && return 0
-    koopa_is_installed 'mcfly' || return 1
     shell="$(koopa_shell_name)"
     case "$shell" in
         'bash' | \
@@ -763,9 +689,10 @@ koopa_activate_nextflow() { # {{{1
 koopa_activate_nim() { # {{{1
     # """
     # Activate Nim.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-05-12.
     # """
     local prefix
+    [ -x "$(koopa_bin_prefix)/nim" ] || return 0
     prefix="$(koopa_nim_packages_prefix)"
     [ -d "$prefix" ] || return 0
     export NIMBLE_DIR="$prefix"
@@ -775,9 +702,10 @@ koopa_activate_nim() { # {{{1
 koopa_activate_node() { # {{{1
     # """
     # Activate Node.js (and NPM).
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-05-12.
     # """
     local prefix
+    [ -x "$(koopa_bin_prefix)/node" ] || return 0
     prefix="$(koopa_node_packages_prefix)"
     [ -d "$prefix" ] || return 0
     export NPM_CONFIG_PREFIX="$prefix"
@@ -787,18 +715,21 @@ koopa_activate_node() { # {{{1
 koopa_activate_path_helper() { # {{{1
     # """
     # Activate 'path_helper'.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-05-12.
     #
     # This will source '/etc/paths.d' on supported platforms (e.g. BSD/macOS).
-    [ -x '/usr/libexec/path_helper' ] || return 0
-    eval "$('/usr/libexec/path_helper' -s)"
+    # """
+    local path_helper
+    path_helper='/usr/libexec/path_helper'
+    [ -x "$path_helper" ] || return 0
+    eval "$("$path_helper" -s)"
     return 0
 }
 
 koopa_activate_perl() { # {{{1
     # """
     # Activate Perl, adding local library to 'PATH'.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-05-12.
     #
     # No longer querying Perl directly here, to speed up shell activation
     # (see commented legacy approach below).
@@ -810,6 +741,7 @@ koopa_activate_perl() { # {{{1
     # - brew info perl
     # """
     local prefix
+    [ -x "$(koopa_bin_prefix)/perl" ] || return 0
     prefix="$(koopa_perl_packages_prefix)"
     [ -d "$prefix" ] || return 0
     export PERL5LIB="${prefix}/lib/perl5"
@@ -823,7 +755,7 @@ koopa_activate_perl() { # {{{1
 koopa_activate_perlbrew() { # {{{1
     # """
     # Activate Perlbrew.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-05-12.
     #
     # Only attempt to autoload for bash or zsh.
     # Delete '~/.perlbrew' directory if you see errors at login.
@@ -833,6 +765,7 @@ koopa_activate_perlbrew() { # {{{1
     # """
     local nounset prefix script shell
     [ -n "${PERLBREW_ROOT:-}" ] && return 0
+    [ -x "$(koopa_bin_prefix)/perlbrew" ] || return 0
     shell="$(koopa_shell_name)"
     case "$shell" in
         'bash' | \
@@ -864,6 +797,7 @@ koopa_activate_pipx() { # {{{1
     # https://pipxproject.github.io/pipx/installation/
     # """
     local prefix
+    [ -x "$(koopa_bin_prefix)/pipx" ] || return 0
     prefix="$(koopa_pipx_prefix)"
     [ -d "$prefix" ] || return 0
     PIPX_HOME="$prefix"
@@ -895,12 +829,13 @@ koopa_activate_prefix() { # {{{1
 koopa_activate_pyenv() { # {{{1
     # """
     # Activate Python version manager (pyenv).
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-05-12.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
     local nounset prefix script
     [ -n "${PYENV_ROOT:-}" ] && return 0
+    [ -x "$(koopa_bin_prefix)/pyenv" ] || return 0
     prefix="$(koopa_pyenv_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/pyenv"
@@ -969,13 +904,14 @@ koopa_activate_python() { # {{{1
 koopa_activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-05-12.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
     # """
     local nounset prefix script
     [ -n "${RBENV_ROOT:-}" ] && return 0
+    [ -x "$(koopa_bin_prefix)/rbenv" ] || return 0
     prefix="$(koopa_rbenv_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/rbenv"
@@ -991,9 +927,10 @@ koopa_activate_rbenv() { # {{{1
 koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-05-12.
     # """
     local prefix
+    [ -x "$(koopa_bin_prefix)/ruby" ] || return 0
     prefix="$(koopa_ruby_packages_prefix)"
     [ -d "$prefix" ] || return 0
     export GEM_HOME="$prefix"
@@ -1046,7 +983,7 @@ koopa_activate_ssh_key() { # {{{1
 koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-05-12.
     #
     # Note that 'starship.bash' script has unbound PREEXEC_READY.
     # https://github.com/starship/starship/blob/master/src/init/starship.bash
@@ -1055,6 +992,7 @@ koopa_activate_starship() { # {{{1
     # https://starship.rs/
     # """
     local nounset shell
+    [ -x "$(koopa_bin_prefix)/starship" ] || return 0
     shell="$(koopa_shell_name)"
     case "$shell" in
         'bash' | \
@@ -1064,7 +1002,6 @@ koopa_activate_starship() { # {{{1
             return 0
             ;;
     esac
-    koopa_is_installed 'starship' || return 0
     unset -v STARSHIP_SESSION_KEY STARSHIP_SHELL
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && return 0
@@ -1075,11 +1012,11 @@ koopa_activate_starship() { # {{{1
 koopa_activate_tealdeer() { # {{{1
     # """
     # Activate Rust tealdeer (tldr).
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-05-12.
     #
     # This helps standardization the configuration across Linux and macOS.
     # """
-    koopa_is_installed 'tldr' || return 0
+    [ -x "$(koopa_bin_prefix)/tldr" ] || return 0
     if [ -z "${TEALDEER_CACHE_DIR:-}" ]
     then
         TEALDEER_CACHE_DIR="$(koopa_xdg_cache_home)/tealdeer"
@@ -1184,7 +1121,9 @@ koopa_activate_zoxide() { # {{{1
     # @seealso
     # - https://github.com/ajeetdsouza/zoxide
     # """
-    local nounset shell
+    local nounset shell zoxide
+    zoxide="$(koopa_bin_prefix)/zoxide"
+    [ -x "$zoxide" ] || return 0
     shell="$(koopa_shell_name)"
     case "$shell" in
         'bash' | \
@@ -1194,10 +1133,9 @@ koopa_activate_zoxide() { # {{{1
             return 0
             ;;
     esac
-    koopa_is_installed 'zoxide' || return 0
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
-    eval "$(zoxide init "$shell")"
+    eval "$("$zoxide" init "$shell")"
     [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
@@ -1580,7 +1518,6 @@ koopa_alias_sha256() { # {{{1
     # sha256 alias.
     # @note Updated 2021-06-08.
     # """
-    koopa_is_installed 'shasum' || return 1
     shasum -a 256 "$@"
 }
 
@@ -1958,11 +1895,11 @@ koopa_ensembl_perl_api_prefix() { # {{{1
 koopa_export_editor() { # {{{1
     # """
     # Export 'EDITOR' variable.
-    # @note Updated 2021-05-07.
+    # @note Updated 2022-05-12.
     # """
     if [ -z "${EDITOR:-}" ]
     then
-        EDITOR='vim'
+        EDITOR="$(koopa_bin_prefix)/vim"
     fi
     VISUAL="$EDITOR"
     export EDITOR VISUAL
@@ -2075,17 +2012,17 @@ koopa_export_koopa_shell() { # {{{1
 koopa_export_pager() { # {{{1
     # """
     # Export 'PAGER' variable.
-    # @note Updated 2022-01-18.
+    # @note Updated 2022-05-12.
     #
     # @seealso
     # - 'tldr --pager' (Rust tealdeer) requires the '-R' flag to be set here,
     #   otherwise will return without proper escape code handling.
     # """
+    local less
     [ -n "${PAGER:-}" ] && return 0
-    if koopa_is_installed 'less'
-    then
-        export PAGER='less -R'
-    fi
+    less="$(koopa_bin_prefix)/less"
+    [ -x "$less" ] || return 0
+    export PAGER="${less} -R"
     return 0
 }
 
