@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Need to also link man files, where applicable.
+# FIXME Need to also link (install) and unlink (uninstall) man files,
+# where applicable.
 
 # Core ==================================================================== {{{1
 
@@ -9,27 +10,28 @@
 koopa_install_koopa() { # {{{3
     # """
     # Install koopa.
-    # @note Updated 2022-05-10.
+    # @note Updated 2022-05-12.
     # """
-    local dict
+    local bool dict
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
+    declare -A bool=(
+        [add_to_user_profile]=0
+        [interactive]=1
+        [passwordless_sudo]=0
+        [shared]=0
+        [test]=0
+    )
     declare -A dict=(
         [config_prefix]="$(koopa_config_prefix)"
-        [dotfiles]=1
-        [interactive]=1
-        [modify_user_profile]=0
-        [passwordless]=0
         [prefix]=''
-        [shared]=0
         [source_prefix]="$(koopa_koopa_prefix)"
-        [test]=0
         [user_profile]="$(koopa_find_user_profile)"
         [xdg_data_home]="$(koopa_xdg_data_home)"
     )
     dict[koopa_prefix_system]='/opt/koopa'
     dict[koopa_prefix_user]="${dict[xdg_data_home]}/koopa"
-    koopa_is_admin && dict[shared]=1
+    koopa_is_admin && bool[shared]=1
     while (("$#"))
     do
         case "$1" in
@@ -43,54 +45,46 @@ koopa_install_koopa() { # {{{3
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
-            '--dotfiles')
-                dict[dotfiles]=1
+            '--add-to-user-profile')
+                bool[add_to_user_profile]=0
+                shift 1
+                ;;
+            '--no-add-to-user-profile')
+                bool[add_to_user_profile]=0
                 shift 1
                 ;;
             '--interactive')
-                dict[interactive]=1
-                shift 1
-                ;;
-            '--no-dotfiles')
-                dict[dotfiles]=0
-                shift 1
-                ;;
-            '--no-passwordless-sudo')
-                dict[passwordless]=0
-                shift 1
-                ;;
-            '--no-profile')
-                dict[modify_user_profile]=0
-                shift 1
-                ;;
-            '--no-shared')
-                dict[shared]=0
-                shift 1
-                ;;
-            '--no-test' | \
-            '--no-verbose')
-                dict[test]=0
+                bool[interactive]=1
                 shift 1
                 ;;
             '--non-interactive')
-                dict[interactive]=0
+                bool[interactive]=0
                 shift 1
                 ;;
             '--passwordless-sudo')
-                dict[passwordless]=1
+                bool[passwordless_sudo]=1
                 shift 1
                 ;;
-            '--profile')
-                dict[modify_user_profile]=1
+            '--no-passwordless-sudo')
+                bool[passwordless_sudo]=0
                 shift 1
                 ;;
             '--shared')
-                dict[shared]=1
+                bool[shared]=1
+                shift 1
+                ;;
+            '--no-shared')
+                bool[shared]=0
                 shift 1
                 ;;
             '--test' | \
             '--verbose')
-                dict[test]=1
+                bool[test]=1
+                shift 1
+                ;;
+            '--no-test' | \
+            '--no-verbose')
+                bool[test]=0
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -99,19 +93,19 @@ koopa_install_koopa() { # {{{3
                 ;;
         esac
     done
-    if [[ "${dict[interactive]}" -eq 1 ]]
+    if [[ "${bool[interactive]}" -eq 1 ]]
     then
         if koopa_is_admin && [[ -z "${dict[prefix]}" ]]
         then
-            dict[shared]="$( \
+            bool[shared]="$( \
                 koopa_read_yn \
                     'Install for all users' \
-                    "${dict[shared]}" \
+                    "${bool[shared]}" \
             )"
         fi
         if [[ -z "${dict[prefix]}" ]]
         then
-            if [[ "${dict[shared]}" -eq 1 ]]
+            if [[ "${bool[shared]}" -eq 1 ]]
             then
                 dict[prefix]="${dict[koopa_prefix_system]}"
             else
@@ -127,44 +121,32 @@ koopa_install_koopa() { # {{{3
             --string="${dict[prefix]}" \
             --pattern="^${HOME:?}"
         then
-            dict[shared]=0
+            bool[shared]=0
         else
-            dict[shared]=1
+            bool[shared]=1
         fi
-        if [[ "${dict[shared]}" -eq 1 ]]
+        if [[ "${bool[shared]}" -eq 1 ]]
         then
-            dict[passwordless]="$( \
+            bool[passwordless_sudo]="$( \
                 koopa_read_yn \
                     'Enable passwordless sudo' \
-                    "${dict[passwordless]}" \
+                    "${bool[passwordless_sudo]}" \
             )"
         fi
-        if [[ -e "${dict[user_profile]}" ]]
-        then
-            koopa_alert_note \
-                "User profile exists: '${dict[user_profile]}'." \
-                'This will be overwritten if dotfiles are linked.'
-        fi
-        dict[dotfiles]="$( \
-            koopa_read_yn \
-                'Install and link dotfiles' \
-                "${dict[dotfiles]}" \
-        )"
-        if [[ "${dict[dotfiles]}" -eq 0 ]] && \
-            ! koopa_is_defined_in_user_profile && \
+        if ! koopa_is_defined_in_user_profile && \
             [[ ! -L "${dict[user_profile]}" ]]
         then
             koopa_alert_note 'Koopa activation missing in user profile.'
-            dict[modify_user_profile]="$( \
+            dict[add_to_user_profile]="$( \
                 koopa_read_yn \
                     "Modify '${dict[user_profile]}'" \
-                    "${dict[modify_user_profile]}" \
+                    "${dict[add_to_user_profile]}" \
             )"
         fi
     else
         if [[ -z "${dict[prefix]}" ]]
         then
-            if [[ "${dict[shared]}" -eq 1 ]]
+            if [[ "${bool[shared]}" -eq 1 ]]
             then
                 dict[prefix]="${dict[koopa_prefix_system]}"
             else
@@ -174,7 +156,7 @@ koopa_install_koopa() { # {{{3
     fi
     koopa_assert_is_not_dir "${dict[prefix]}"
     koopa_rm "${dict[config_prefix]}"
-    if [[ "${dict[shared]}" -eq 1 ]]
+    if [[ "${bool[shared]}" -eq 1 ]]
     then
         koopa_alert_info 'Shared installation detected.'
         koopa_alert_note 'Admin (sudo) permissions are required.'
@@ -187,21 +169,17 @@ koopa_install_koopa() { # {{{3
         koopa_cp "${dict[source_prefix]}" "${dict[prefix]}"
     fi
     export KOOPA_PREFIX="${dict[prefix]}"
-    if [[ "${dict[passwordless]}" -eq 1 ]]
+    if [[ "${bool[shared]}" -eq 1 ]]
     then
-        koopa_enable_passwordless_sudo
+        if [[ "${bool[passwordless_sudo]}" -eq 1 ]]
+        then
+            koopa_enable_passwordless_sudo
+        fi
+        koopa_is_linux && koopa_linux_update_etc_profile_d
     fi
-    if [[ "${dict[dotfiles]}" -eq 1 ]]
-    then
-        koopa_install_dotfiles
-    fi
-    if [[ "${dict[modify_user_profile]}" -eq 1 ]]
+    if [[ "${bool[add_to_user_profile]}" -eq 1 ]]
     then
         koopa_add_to_user_profile
-    fi
-    if [[ "${dict[shared]}" -eq 1 ]] && koopa_is_linux
-    then
-        koopa_linux_update_etc_profile_d
     fi
     koopa_fix_zsh_permissions
     koopa_add_koopa_config_link "${dict[prefix]}/activate" 'activate'
