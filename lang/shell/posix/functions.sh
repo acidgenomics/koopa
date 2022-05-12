@@ -584,6 +584,9 @@ koopa_activate_lesspipe() { # {{{1
     export LESSOPEN="|${lesspipe} %s"
     export LESSQUIET=1
     export LESS_ADVANCED_PREPROCESSOR=1
+    # Use extended ANSI codes, for Markdown rendering in iTerm2.
+    # https://github.com/wofr06/lesspipe/issues/48
+    export LESSANSIMIDCHARS="0123456789;[?!\"'#%()*+ SetMark"
     [ -z "${LESSCHARSET:-}" ] && export LESSCHARSET='utf-8'
     return 0
 }
