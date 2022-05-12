@@ -1,6 +1,12 @@
-## koopa 0.12.1 (2021-10-05)
+# koopa 0.13.0 (UNRELEASED)
 
-### Major changes
+## Major changes
+
+- Removed automatic dotfiles installation from main installer.
+
+# koopa 0.12.1 (2021-10-05)
+
+## Major changes
 
 - Improved internal subshell handling, which now avoids the duplicate tmux
   session messages seen on EC2 instances.
@@ -18,7 +24,7 @@
   Ruby, and Rust.
 - Improved Docker install support on Debian 10 and Ubuntu 20.
 
-### Minor changes
+## Minor changes
 
 - Simplified Homebrew activation and R configuration on Linux.
 - Updated RSPM CRAN snapshot to 2021-10-05.
@@ -39,9 +45,9 @@
   of `source` in the call, which is POSIX-compliant.
 - Improved support for Prelude Emacs.
 
-## koopa 0.12.0 (2021-09-21)
+# koopa 0.12.0 (2021-09-21)
 
-### Major changes
+## Major changes
 
 - All functions supporting long flag arguments (e.g. `--argument=VALUE`) now
   also support the `--argument VALUE` positional variant, which are easier to
@@ -61,7 +67,7 @@
   interactive shells. Use of this approach was resulting in weird behavior on
   Debian 11 ARM test AWS AMI image.
 
-### Minor changes
+## Minor changes
 
 - `run-kallisto` is now a symlink to `run-kallisto-paired-end`, and
   `run-salmon` is now a symlink to `run-salmon-paired-end`.
@@ -89,26 +95,26 @@
   functions.
 - Improved handling of Emacs configuration on macOS.
 
-### Removed functions
+## Removed functions
 
 - Removed `indrops-i5-sample-index-counts`, which has been migrated to r-koopa
   package instead.
 
-## koopa 0.11.1 (2021-07-12)
+# koopa 0.11.1 (2021-07-12)
 
-### Minor changes
+## Minor changes
 
 - Updated Python dependencies. Also updated other versions as recommended by
   latest Homebrew update.
 - Updated r-koopa dependency to 0.1.20.
 - Updated RStudio Package Manager (RSPM) to 2021-07-01.
 
-## koopa 0.11.0 (2021-06-28)
+# koopa 0.11.0 (2021-06-28)
 
 This is a significant release that overhauls a number of functions in the Bash
 library, with the intent to improve standardization of app configuration.
 
-### Major changes
+## Major changes
 
 - Overhauled and significantly improved completion support for main `koopa`
   script on Bash and Zsh. Added support for nested completion of `install`
@@ -137,7 +143,7 @@ library, with the intent to improve standardization of app configuration.
   subdirectories consistently, similar to installed apps. The latest version
   is now linked into `opt/`.
 
-### Minor changes
+## Minor changes
 
 - Added support for new Rocky Linux distribution, which aims to replace
   CentOS 8 for HPC configurations.
@@ -162,18 +168,18 @@ library, with the intent to improve standardization of app configuration.
 - Reworked some linter checks that are called by `koopa system test`.
   Some of these checks will migrate to new AcidLinter package in the future.
 
-## koopa 0.10.2 (2021-05-18)
+# koopa 0.10.2 (2021-05-18)
 
-### Minor changes
+## Minor changes
 
 - R configuration updates to provide compatibility with R 4.1. Refer to
   `Renviron.site` files for configuration changes. Note that R configuration
   defined in `etc/` is now versioned to support 4.1 in addition to 4.0, 3.6,
   and devel releases.
 
-## koopa 0.10.1 (2021-05-16)
+# koopa 0.10.1 (2021-05-16)
 
-### Major changes
+## Major changes
 
 - Reworked shell detection and export of `KOOPA_SHELL`, `SHELL` variables
   during activation. This now should consistently return the full path to the
@@ -186,7 +192,7 @@ library, with the intent to improve standardization of app configuration.
   called in qemu emulation environment. This was noted to happen with the
   `repo.anaconda.com` server, for example.
 
-### Minor changes
+## Minor changes
 
 - Updated the dependency versions for recommended conda bioinfo environments.
 - Reworked the `conda_create_bioinfo_envs` function to use a dictionary
@@ -207,9 +213,9 @@ library, with the intent to improve standardization of app configuration.
 - Updated Conda installer to use Python 3.9, which now also provides initial
   support for aarch64 (ARM) platform in addition to x86.
 
-## koopa 0.10.0 (2021-05-11)
+# koopa 0.10.0 (2021-05-11)
 
-### Major changes
+## Major changes
 
 - This release introduces a overhaul to the internal app install engine defined
   in the `koopa_install_app` function. Primarily this helps improve app
@@ -242,7 +248,7 @@ library, with the intent to improve standardization of app configuration.
 - Reworked main activation script.
 - Improved completion handling support for Bash.
 
-### Minor changes
+## Minor changes
 
 - Multiple updates to dependency package versions.
 - Updated r-koopa check to v0.1.18.
@@ -255,9 +261,9 @@ library, with the intent to improve standardization of app configuration.
 - Hardened internal downloader function (`koopa_download`) to ignore manual
   user cURL configuration defined in `~/.curlrc`.
 
-## koopa 0.9.4 (2021-04-09)
+# koopa 0.9.4 (2021-04-09)
 
-### Major changes
+## Major changes
 
 - Reworked activation of GNU coreutils on macOS, significantly speeding up
   the loading time.
@@ -265,38 +271,38 @@ library, with the intent to improve standardization of app configuration.
   (e.g. 'gcp' is aliased to 'cp'). The original BSD variants are consistently
   prefixed with 'bsd' (e.g. 'bsdcp' for 'cp').
 
-### Minor changes
+## Minor changes
 
 - Updated system dependency checks. Now intentionally errors when attempting
   to run inside a Docker image.
 - Shared `Rprofile.site` configuration is now respectful of quiet mode,
   defined with either '--quiet', '-q', or '--silent' flags.
 
-## koopa 0.9.3 (2021-03-31)
+# koopa 0.9.3 (2021-03-31)
 
-### Minor changes
+## Minor changes
 
 - Improved activation speed of Homebrew GNU utilities on macOS.
 - Updated dependency versions.
 
-## koopa 0.9.2 (2021-03-30)
+# koopa 0.9.2 (2021-03-30)
 
-### Major changes
+## Major changes
 
 - Improved support for 64-bit ARM (AArch) in addition to x86. Installers and
   other platform-specific scripts now use `koopa_arch` function internally
   when applicable. Note that ARM is still not well supported in some
   bioinformatic workflows, RStudio installers, and conda.
 
-### Minor changes
+## Minor changes
 
 - Updated package versions supported by installers.
 - Improved shared R profile configuration to suppress messages regarding manual
   CRAN configuration that now pop up with the BiocManager update.
 
-## koopa 0.9.1 (2021-03-01)
+# koopa 0.9.1 (2021-03-01)
 
-### Minor changes
+## Minor changes
 
 - Reorganized some internal Bash functions.
 - Improved and hardened functions that can enable passwordless sudo or sudo
@@ -304,7 +310,7 @@ library, with the intent to improve standardization of app configuration.
 - Updated package version checks to support more libraries, such as cairo,
   harfbuzz, and imagemagick. These checks are defined in the r-koopa package.
 
-## koopa 0.9.0 (2021-02-16)
+# koopa 0.9.0 (2021-02-16)
 
 - Installer now defaults to `/opt/koopa` instead of `/usr/local/koopa`.
 - Reworked organization of "cellar" and "app" prefixes. Removing the usage of
@@ -317,37 +323,37 @@ library, with the intent to improve standardization of app configuration.
 - Offloaded some functionality to koopa R package, which can be installed
   if necessary with `koopa install r-koopa`.
 
-## koopa 0.8.9 (2020-10-09)
+# koopa 0.8.9 (2020-10-09)
 
-### Minor changes
+## Minor changes
 
 - Improved internal code that checks for unstaged changes in current Git repo.
 - Updated r-koopa dependencies.
 - Updated RSPM snapshot to 2020-10-06.
 
-## koopa 0.8.8 (2020-10-06)
+# koopa 0.8.8 (2020-10-06)
 
-### Minor changes
+## Minor changes
 
 - Upgraded Python from 3.8.5 to 3.9.0.
 - Upgraded GDAL from 3.1.2 to 3.1.3.
 
-## koopa 0.8.7 (2020-10-05)
+# koopa 0.8.7 (2020-10-05)
 
-### Minor changes
+## Minor changes
 
 - Updated RSPM to 2020-10-01 snapshot.
 - Updated check against Ruby version.
 
-## koopa 0.8.6 (2020-09-22)
+# koopa 0.8.6 (2020-09-22)
 
-### Minor changes
+## Minor changes
 
 - Updated bcbio-nextgen version to 1.2.4.
 
-## koopa 0.8.5 (2020-09-18)
+# koopa 0.8.5 (2020-09-18)
 
-### Minor changes
+## Minor changes
 
 - `koopa header`: Added support for R. Input is no longer case sensitive.
 - Improved broot activation support on macOS.
@@ -355,9 +361,9 @@ library, with the intent to improve standardization of app configuration.
 - Updated RStudio Package Manager (RSPM) snapshot to 2020-09-16.
 - Updated GDAL, Go, and htop versions.
 
-## koopa 0.8.4 (2020-09-09)
+# koopa 0.8.4 (2020-09-09)
 
-### Minor changes
+## Minor changes
 
 - Improved `install-rust-packages`, pinning to specific Rust versions.
   User can define custom packages to install as positional arguments, following
@@ -366,13 +372,13 @@ library, with the intent to improve standardization of app configuration.
   has changed recently.
 - broot configuration is now under Git in the dotfiles repo.
 
-## koopa 0.8.3 (2020-09-08)
+# koopa 0.8.3 (2020-09-08)
 
-### New software recipes
+## New software recipes
 
 - Added install support for bpytop.
 
-### Minor changes
+## Minor changes
 
 - Updated r-koopa dependency to 0.0.7 from 0.0.4.
 - Updated htop installer to use new
@@ -380,21 +386,21 @@ library, with the intent to improve standardization of app configuration.
 - Updated RStudio Package Manager (RSPM) snapshot to 2020-09-01.
 - Miscellaneous software version updates: Aspera Connect, GDAL, PROJ.
 
-## koopa 0.8.2 (2020-09-02)
+# koopa 0.8.2 (2020-09-02)
 
-### New software recipes
+## New software recipes
 
 - Added taglib cellar recipe. Also added dependency support for Debian,
   Fedora, and RHEL.
 
-### Minor changes
+## Minor changes
 
 - Added support for `koopa fix-zsh-permissions`.
 - Miscellaneous software dependency version updates.
 
-## koopa 0.8.1 (2020-08-25)
+# koopa 0.8.1 (2020-08-25)
 
-### Minor changes
+## Minor changes
 
 - Updated r-koopa dependency from 0.0.1 to 0.0.4.
 - Use single quotes in shell when possilble, to pass lintr checks.
@@ -403,11 +409,11 @@ library, with the intent to improve standardization of app configuration.
 - `drat`: Switched default path to `~/monorepo/drat`.
 - Updated pinned `pip` dependency version.
 
-## koopa 0.8.0 (2020-08-18)
+# koopa 0.8.0 (2020-08-18)
 
 This release migrates all internal Bash code to functions in a shared library.
 
-### Major changes
+## Major changes
 
 - Repackaged all internal Bash code inside exported scripts to function library
 in `shell/bash`. Refer to scripts inside `bin` or `sbin` for examples.
@@ -416,7 +422,7 @@ in `shell/bash`. Refer to scripts inside `bin` or `sbin` for examples.
 - Split out internal R code into new separate R package:
   https://github.com/acidgenomics/koopa/tree/r
 
-### New scripts
+## New scripts
 
 - Now exporting: `convert-utf8-nfd-to-nfc`, `current-bcbio-version`,
 - `delete-adobe-bridge-cache`, `docker-remove`, `docker-run-wine`, `drat`,
@@ -428,14 +434,14 @@ in `shell/bash`. Refer to scripts inside `bin` or `sbin` for examples.
   `install-pytaglib`, `list-launch-agents`, `merge-pdf`.
 - New Raspbian scripts: `install-pihole`, `install-pivpn`.
 
-### Removed scripts
+## Removed scripts
 
 - Removed unnecessary exported scripts: `docker-build-all-batch-images`,
   `emacs-vanilla`, `emacs24`, `install-chrohmm`, `nvim-vanilla`,
   `rename-fq-to-fastq`, `sha256`, `tar-c`, `tar-x`, `update-google-cloud-sdk`,
   `update-python-packages`, `vim-vanilla`.
 
-### Minor changes
+## Minor changes
 
 - Tightened up internal R code used for `koopa check-system` and `koopa list`.
 - Simplified version checks inside R header.
@@ -444,12 +450,12 @@ in `shell/bash`. Refer to scripts inside `bin` or `sbin` for examples.
 - Improved Wine installer on Debian and Fedora.
 - Reorganized and reworked bcbio scripts for Linux.
 
-## koopa 0.7.0 (2020-07-15)
+# koopa 0.7.0 (2020-07-15)
 
 This is a pretty major update, where a lot of the internal functions have been
 overhaluled and improved.
 
-### Major changes
+## Major changes
 
 - Documentation has been migrated into `man`-compatible format, and are now
     saved in `man/man1/`. These are accessible per program via the `--help`
@@ -461,14 +467,14 @@ overhaluled and improved.
   loaded by other program scripts. For example, be careful not to mask
   `deactivate` for Python venv.
 
-### Minor changes
+## Minor changes
 
 - Reorganied bcbio admin scripts previously defined for Azure VMs. Migraged
   these scripts to Linux `sbin/`.
 
-## koopa 0.6.0 (2019-10-14)
+# koopa 0.6.0 (2019-10-14)
 
-### New scripts
+## New scripts
 
 - Added syntactic naming scripts: `camel-case`, `kebab-case`, `snake-case`, and
   `make-names`. These scripts support file renaming via glob matching with the
@@ -485,7 +491,7 @@ overhaluled and improved.
   including bash, bioconductor, clang, condam docker, emacs, etc.
   See `system/include/version` for scripts.
 
-### Major changes
+## Major changes
 
 - Improved prompt string configuration support and colors for git, conda
   environent, and Python virtual environment (venv) names. The internal code
@@ -508,7 +514,7 @@ overhaluled and improved.
 - GNU coreutils are now included in PATH for macOS, when installed via
   [Homebrew][]. Normally they are prefixed with "g*" on macOS instead.
 
-### Minor changes
+## Minor changes
 
 - Added 'download-' prefix to FASTA and GTF download scripts.
 - Improved Emacs `emacs` and `spacemacs` configuration files inside the dotfiles
@@ -520,35 +526,35 @@ overhaluled and improved.
 - Removed some unused scripts: `extract-fastq`, `ffmpeg-*`, `gzip-dir`.
 - Added draft configuration of 24-bit terminal color support with `terminfo`.
 
-## koopa 0.5.6 (2019-09-18)
+# koopa 0.5.6 (2019-09-18)
 
-### New scripts
+## New scripts
 
 - `gencode-fasta` and `gencode-gtf` Python scripts for downloaded GENCODE
   genome annotations. Currently supports *Homo sapiens* and *Mus musculus*.
 - (Azure) `link-msigdb`: Shared MSigDB file annotation utility.
 
-### Minor changes
+## Minor changes
 
 - Improved global activation of general exports, including `EDITOR`, which
   defines the default text editor. "vim" is recommended by default but "emacs"
   is also a good choice.
 
-## koopa 0.5.5 (2019-09-09)
+# koopa 0.5.5 (2019-09-09)
 
-### Major changes
+## Major changes
 
 - Updater now checks for: oh-my-zsh, spacemacs symlinks in config directory.
 
-### Minor changes
+## Minor changes
 
 - Added install support for ChromHMM.
 - Bug fix for directory creation in Python cellar script.
 - ZSH configuration improvements.
 
-## koopa 0.5.4 (2019-09-05)
+# koopa 0.5.4 (2019-09-05)
 
-### Minor changes
+## Minor changes
 
 - Improved alias handling for zsh configuration.
 - Added additional useful aliases and functions from Stephen Turner's oneliners
@@ -556,18 +562,18 @@ overhaluled and improved.
 - Initial configuration support for autojump, currently limited to zsh. Will
   test and add bash support in a future update.
 
-## koopa 0.5.3 (2019-08-28)
+# koopa 0.5.3 (2019-08-28)
 
-### Minor changes
+## Minor changes
 
 - Improved zsh activation and oh-my-zsh configuration handling when koopa is
   active inside `/etc/profile.d/` on Linux (i.e. RHEL 7).
 
-## koopa 0.5.2 (2019-08-18)
+# koopa 0.5.2 (2019-08-18)
 
 This release improves prompt consistency between zsh and bash.
 
-### Minor changes
+## Minor changes
 
 - Reworked prompt string configuration. Now automatically updates correctly
   when either a conda environment or Python virtual environment are loaded.
@@ -578,15 +584,15 @@ This release improves prompt consistency between zsh and bash.
   Instead, these are now called more consistently using internal prefixes.
   (e.g. `koopa_cellar_prefix` instead of `koopa cellar-prefix)`.
 
-## koopa 0.5.1 (2019-08-15)
+# koopa 0.5.1 (2019-08-15)
 
-### Minor changes
+## Minor changes
 
 - Bug fixes for koopa activation inside a subshell (e.g. tmux or slurm queue).
 
-## koopa 0.5.0 (2019-08-14)
+# koopa 0.5.0 (2019-08-14)
 
-### Major changes
+## Major changes
 
 - Koopa now attempts to source user configuration files prior to activation.
   This enables better passthrough of user-defined configuration variables.
@@ -594,30 +600,30 @@ This release improves prompt consistency between zsh and bash.
   `--dotfiles` flag or can use `install-dotfiles` script after installation.
 - Fixed shell configuration when `EDITOR="emacs"`.
 
-## koopa 0.4.6 (2019-08-01)
+# koopa 0.4.6 (2019-08-01)
 
-### New scripts
+## New scripts
 
 - `ftp-mirror`: Script that helps quickly mirror an FTP directory using wget.
 - `install-rcheck`: Utility for quickly checking R packages.
 
-### Minor changes
+## Minor changes
 
 - Reworked the file paths of some dot files related to vim and zsh config.
 - Improved `docker-run-image` workdir configuration.
 - Improved shell checks, following shellcheck 0.7 release updates.
 - Relaxed checks in Debian and Fedora headers when running as sudo user.
 
-## koopa 0.4.5 (2019-07-29)
+# koopa 0.4.5 (2019-07-29)
 
-### Minor changes
+## Minor changes
 
 - Improved detection and handling of unbound variables during installation and
   activation of koopa.
 
-## koopa 0.4.4 (2019-07-28)
+# koopa 0.4.4 (2019-07-28)
 
-### New scripts
+## New scripts
 
 - `ffmepeg-alac-to-flac`, `ffmepeg-flac-to-alac`: Lossless audio conversion.
 - `move-into-dated-dirs-by-filename`: Automatically move files containing a
@@ -627,7 +633,7 @@ This release improves prompt consistency between zsh and bash.
   subdirectory according to its timestamp.
 - `sox-downsample`: Utilty script for easily downsampling high resolution audio.
 
-#### Darwin (macOS)-specific
+### Darwin (macOS)-specific
 
 - `delete-adobe-bridge-cache`: Delete Adobe Bridge cache files.
 - `dotfile-icloud`: Dot file utility for linking from iCloud, instead of our
@@ -635,46 +641,46 @@ This release improves prompt consistency between zsh and bash.
 - `update-defaults`: Utility for setting recommended defaults. Modifies some
   finder settings, screen shots path, etc.
 
-#### Debian-specific
+### Debian-specific
 
 - `install-git-lfs`: Utility script for installing Git LFS.
 
-#### Fedora-specific
+### Fedora-specific
 
 - Added additional packages to install via yum by default.
 - `install-cellar-gdal`: New recipe required to install rgdal R package.
 - `install-cellar-proj`: New recipe required to install rgdal R package.
 
-### Major changes
+## Major changes
 
 - Installation will now clone private scripts and docker recipes. The activation
   script now knows to look for these and will add `bin/` directories to `PATH`.
 
-### Minor changes
+## Minor changes
 
 - Reworked linter engine to check for maximum of 80 characters per line.
 - Improved internal update timestamp consistency across files.
 - Improved shared Renviron and Rprofile site configuration files.
 
-## koopa 0.4.3 (2019-07-25)
+# koopa 0.4.3 (2019-07-25)
 
-### New scripts
+## New scripts
 
 - `docker-run-image`: Useful utility script for booting a Docker image.
 - `patch-bcbio`: Utility for patching bcbio development installation from
   GitHub codebase.
 - `upgrade-bcbio`: Utilty for upgrading bcbio on a virtual machine.
 
-## koopa 0.4.2 (2019-07-12)
+# koopa 0.4.2 (2019-07-12)
 
-### Minor changes
+## Minor changes
 
 - Improved automatic XDG configuration in `~/.config/koopa`. Needed to update
   configuration of R symlink.
 
-## koopa 0.4.1 (2019-07-11)
+# koopa 0.4.1 (2019-07-11)
 
-### Major changes
+## Major changes
 
 - Removed support for ksh. This shell does not support usage of `local`
   variables inside of functions, which are tremendously useful, and prevent
@@ -683,7 +689,7 @@ This release improves prompt consistency between zsh and bash.
 - Improved Fedora install scripts to support RHEL 8. Also updated Docker install
   script to support RHEL 8.
 
-### Minor changes
+## Minor changes
 
 - Harden scripts to pass shellcheck.
 - Switch back to using `-n` instead of `! -z` consistently for POSIX code.
@@ -694,19 +700,19 @@ This release improves prompt consistency between zsh and bash.
 - Updated recommended program versions.
 - Improved version checks inside `check.R` script.
 
-### New programs
+## New programs
 
 - Added `copy-bam-files` utility, which makes it easier to quickly set up an
   IGV session, which requires both `*.bam` and `*.bam.bai` files. Previously,
   this was named `cp-bam-files`.
 
-## koopa 0.4.0 (2019-06-13)
+# koopa 0.4.0 (2019-06-13)
 
 This is the first release supported to work when installed at `/usr/local`.
 This enables shared shell configuratino of all users, via configuration in
 `/etc/profile` (or `/etc/profile.d/`) instead of relying on `.bash_profile`.
 
-### Major changes
+## Major changes
 
 - koopa now checks for root and doesn't attempt to activate.
 - Improved dotfile initialization, and no files are overwritten by default.
@@ -716,16 +722,16 @@ This enables shared shell configuratino of all users, via configuration in
 - Reworked shared script header approach.
 - Improved automatic `/etc/` configuration.
 
-### Minor changes
+## Minor changes
 
 - `KOOPA_PREFIX` path is always expanded, and symlinks are now resolved.
 - Improved Travis CI testing approach.
 - Reorganized workflow scripts.
 - Split out functions into individual scripts.
 
-## koopa 0.3.6 (2019-06-05)
+# koopa 0.3.6 (2019-06-05)
 
-### Major changes
+## Major changes
 
 - Improved update script.
 - Install koopa using simply `install` instead of `INSTALL.sh`.
@@ -733,7 +739,7 @@ This enables shared shell configuratino of all users, via configuration in
 - Improved OS-specific PATH exports.
 - Switched to using `KOOPA_BUILD_PREFIX` and `KOOPA_TMP_DIR` variables for build scripts.
 
-### New programs
+## New programs
 
 - `sudo-install-amzn-base`: Recommended initial setup for Amazon Linux 2.
 - `sudo-install-debian-base`: Recommended initial setup for Debian.
@@ -742,7 +748,7 @@ This enables shared shell configuratino of all users, via configuration in
 - `sudo-install-perl-rename`
 - `sudo-install-shiny-server`
 
-### Minor changes
+## Minor changes
 
 - Removed attempt at automatic bcbio install detection for Azure. Consider
   linking current release as recommended in bcbio install instructions.
@@ -757,18 +763,18 @@ This enables shared shell configuratino of all users, via configuration in
 - Simplified shellcheck installation across distros.
 - Improved conda installation messages.
 
-## koopa 0.3.5 (2019-06-04)
+# koopa 0.3.5 (2019-06-04)
 
 This version introduces a fair number of changes, in preparation for future
 v0.4 release series. They should be breaking changes, so we indicated this as
 a point release instead.
 
-### Major changes
+## Major changes
 
 - koopa now clones Mike's dotfiles repo as a submodule, in `dotfiles/`.
 - Moved install scripts from `install/` into nested inside `bin/` instead.
 
-### Minor changes
+## Minor changes
 
 - Reorganized exported scripts in `bin/` directory.
 - Improved platform checks and related messages.
@@ -780,7 +786,7 @@ a point release instead.
 - Initial setup of sudo scripts for RHEL 7.
 - Improved information shown in `koopa-info` script.
 
-### New programs
+## New programs
 
 - `install-doom-emacs`: Setup script for doom-emacs.
 - `install-genrich`: Install Genrich caller for ChIP/ATAC-seq.
@@ -789,13 +795,13 @@ a point release instead.
 - `install-spacemacs`: Install script for spacemacs (emacs+vim editor).
 - `youtube-mp3`, `youtube-thumbnail`: New `youtube-dl`-related utility scripts.
 
-### Additional files
+## Additional files
 
 - Added support files for fedora `ldconfig` in `etc/ld.so.conf.d/`.
   This are particularly useful for configuring programs installed at
   `/usr/local`, and for R to correctly pick up library dependencies.
 
-## koopa 0.3.4 (2019-05-24)
+# koopa 0.3.4 (2019-05-24)
 
 - Improved version dependency checks.
 - Added new `check-versions` program, for additional version checks.
@@ -804,7 +810,7 @@ a point release instead.
   and zsh.
 - Now using a shared `__init__.sh` script for simpler build dependency checks.
 
-## koopa 0.3.3 (2019-05-08)
+# koopa 0.3.3 (2019-05-08)
 
 - Renamed all exported scripts to no longer use file extensions. This makes
   transitioning any bash scripts to python easier, without breaking names.
@@ -812,7 +818,7 @@ a point release instead.
   relying on the file extension.
 - Rewrote `download-fasta` and `download-gtf` in Python instead of Bash.
 
-## koopa 0.3.2 (2019-04-18)
+# koopa 0.3.2 (2019-04-18)
 
 - Improved build scripts, and hardened some intended for RedHat Linux.
 - Updated genome build information.
@@ -820,7 +826,7 @@ a point release instead.
 - New exported scripts: `ip-address.sh`, `vim-sort.sh`.
 - Added script to build Python from source for RedHat.
 
-## koopa 0.3.1 (2019-03-19)
+# koopa 0.3.1 (2019-03-19)
 
 - Updated to Ensembl release to 95.
 - Updated GENCODE to release human 29 / mouse M20.
@@ -830,7 +836,7 @@ a point release instead.
 - Added bcbio system configuration files (bcbio_system.yaml).
 - Improved default run template for bcbio RNA-seq.
 
-## koopa 0.3.0 (2019-02-20)
+# koopa 0.3.0 (2019-02-20)
 
 This release overhauls the previous activation method. Refer to the README
 for details on how to reconfigure your shell profile.
@@ -847,7 +853,7 @@ for details on how to reconfigure your shell profile.
 - Reorganized installer scripts exported in `bin/` including conda scripts,
   `reset-permissions.sh`, `sudo-yum-update.sh`, etc.
 
-## koopa 0.2.8 (2019-02-12)
+# koopa 0.2.8 (2019-02-12)
 
 - Migrated darwin (macOS)-specific scripts from bash repo to koopa.
 - Migrated Harvard O2 and Harvard Odyssey HPC scripts here from bash repo.
@@ -858,90 +864,90 @@ for details on how to reconfigure your shell profile.
 - Reorganized other scripts accessible via `bin/`.
 - Reorganized activation and system scripts, in preparation for 0.3 release.
 
-## koopa 0.2.7 (2019-02-04)
+# koopa 0.2.7 (2019-02-04)
 
 - Improved shellchecks on workflows.
 - Split out some activation steps into separate scripts.
 
-## koopa 0.2.6 (2019-01-23)
+# koopa 0.2.6 (2019-01-23)
 
 - Added back ".sh" extension for all exported scripts.
 - Updated Travis CI configuration to use shellcheck.
 - Reorganized and improved workflow scripts.
 
-## koopa 0.2.5 (2019-01-07)
+# koopa 0.2.5 (2019-01-07)
 
 - Updated installation instructions to recommend cloning to `~/.koopa`.
 - Conda now will only activate when `CONDA_DEFAULT_ENV` is set in environment.
   This improves handling in situations for user accounts where we don't want
   to activate conda in a shared environemnt (e.g. bioinfo account on Azure).
 
-## koopa 0.2.4 (2019-01-09)
+# koopa 0.2.4 (2019-01-09)
 
-### Major changes
+## Major changes
 
 - Reworked activation script to use POSIX instead of bash conventions. Notably,
   this involves switching to `[` from `[[`.
 - Early return using `return` instead of `exit` when koopa is already active,
   to prevent accidental lockout on a remote SSH connection.
 
-### Minor changes
+## Minor changes
 
 - Improved support for ZSH in activation script.
 - Initial commit of `NEWS` file.
 - Now checking on Travis CI only against master branch.
 
-## koopa 0.2.3 (2019-01-01)
+# koopa 0.2.3 (2019-01-01)
 
-### Minor changes
+## Minor changes
 
 - Improved variable quoting inside `bin/` scripts.
 - Reworked activation steps in main `activate.sh` script.
 - Deleted `reference.txt` file in `system/`.
 - Deleted function scripts inside `functions/`. Rethinking this approach.
 
-### Removed programs
+## Removed programs
 
 - Deleted `sam_to_bam` utility script.
 
-## koopa 0.2.2 (2018-12-19)
+# koopa 0.2.2 (2018-12-19)
 
-### New programs
+## New programs
 
 - Added `trash` utility, which moves files to `~/.Trash`, similar to macOS.
 
-### Removed programs
+## Removed programs
 
 - Removed `sudo_install_git` and `sudo_install_r_cran`. Rethinking this
   approach in a future update.
 - Removed these macOS-specific scripts: `brew_cleanup`, `brew_status`,
   `brew_upgrade`, `install_homebrew`, and `install_openssl`.
 
-### New functions
+## New functions
 
 - Added `path_modifiers.sh` and `quiet_which.sh` utilty functions.
 
-### Minor changes
+## Minor changes
 
 - Improved error message for unsupported shells in `koopa`.
 
-## koopa 0.2.1 (2018-11-24)
+# koopa 0.2.1 (2018-11-24)
 
-### New programs
+## New programs
 
 - Added `git_push_all` and `git_status_all`, corresponding to `git_pull_all`.
 
-### Minor changes
+## Minor changes
 
 - Improved comments regarding HISAT2 for bcbio.
 - Reorganized interactive and non-interactive script handling in `system/`.
 - Hardened shell scripts using `set -Eeuo pipefail`.
 
-## koopa 0.2.0 (2018-09-23)
+# koopa 0.2.0 (2018-09-23)
 
 Now exporting new scripts in `bin/`, accessible in `$PATH`.
 
-### Major changes
+## Major changes
 
 - Reworked `koopa.sh` to be exported in `bin/` as simply `koopa`.
 - Reorganized activation scripts. Split out aliases into `01_aliases.sh`.
@@ -950,18 +956,18 @@ Now exporting new scripts in `bin/`, accessible in `$PATH`.
 - Added new `info.sh` info box utility script.
 - Added `list.sh` program list utility.
 
-### Minor changes
+## Minor changes
 
 - Reorganized activation script for login / non-login and interactive /
   non-interactive shells.
 
-## koopa 0.1.2 (2018-09-05)
+# koopa 0.1.2 (2018-09-05)
 
 - Improved automatic configuration for bcbio on Harvard HPC clusters.
 - Improved GENCODE workflow scripts.
 - Improved automatic conda configuration.
 
-## koopa 0.1.1 (2018-09-05)
+# koopa 0.1.1 (2018-09-05)
 
 - Now exporting `KOOPA_VERSION` and `KOOPA_DATE` global variables.
 - Updated installation instructions.
@@ -979,7 +985,7 @@ Now exporting new scripts in `bin/`, accessible in `$PATH`.
       - rename_from_csv
       - reset_permissions
 
-## koopa 0.1.0 (2018-08-24)
+# koopa 0.1.0 (2018-08-24)
 
 - Initial stable release.
 - Repo was previously named "seqcloud".
