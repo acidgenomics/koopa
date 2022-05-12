@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Add Debian support for Quarto
+    https://quarto.org/docs/get-started/
+    https://github.com/quarto-dev/quarto-cli/releases/download/v0.9.393/quarto-0.9.393-linux-amd64.deb
 ** TODO Rework dotfiles configuration using chezmoi.
 ** TODO Create a 'compress' function that automatically wraps 'tar -czvf XXX.tar.gz XXX/'
 ** TODO Don't rely on Homebrew packages anywhere in our build scripts or R configuration.
