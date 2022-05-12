@@ -360,6 +360,10 @@ man-db="2.10.2"
 
 mcfly="0.6.0" # rust
 
+# Used by lesspipe for Markdown files.
+# https://crates.io/crates/mdcat
+mdcat="0.27.1" # rust
+
 # https://github.com/mesonbuild/meson/tags
 meson="0.62.1"
 
