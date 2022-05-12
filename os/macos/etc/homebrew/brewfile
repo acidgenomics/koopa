@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-05-05.
+# Updated 2022-05-12.
 #
 # @section Cask reinstallation:
 #
@@ -120,6 +120,7 @@ cask "nightfall"
 cask "omnidisksweeper"
 cask "pacifist"
 cask "pycharm-ce"
+cask "quarto"
 cask "r"
 cask "rstudio"
 cask "skype"
