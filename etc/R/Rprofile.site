@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-05-06.
+#' @note Updated 2022-05-13.
 #'
 #' @section Restarting R:
 #'
@@ -351,6 +351,9 @@ local({  # nolint
         ## Enable use of historical snapshots ('MRAN' or 'RSPM') via
         ## `options(BiocManager.snapshot = "RSPM")` to install CRAN packages for
         ## out-of-date Bioconductor versions.
+    }
+    if (isInstalled("cli")) {
+        options("cli.unicode" = TRUE)
     }
     if (isInstalled("crayon")) {
         options(
