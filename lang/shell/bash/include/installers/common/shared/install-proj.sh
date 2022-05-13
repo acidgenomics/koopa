@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Error if existing PROJ install is detected.
-
 main() { # {{{1
     # """
     # Install PROJ.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-05-13.
     #
     # Alternative approach for SQLite3 dependency:
     # > -DCMAKE_PREFIX_PATH='/opt/koopa/opt/sqlite'
@@ -47,6 +45,7 @@ main() { # {{{1
 ${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     if koopa_is_linux
@@ -57,7 +56,6 @@ ${dict[version]}/${dict[file]}"
         dict[shared_ext]='dylib'
     fi
     cmake_args=(
-        ../"${dict[name]}-${dict[version]}" \
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
@@ -77,7 +75,7 @@ libcurl.${dict[shared_ext]}"
         "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib/\
 libtiff.${dict[shared_ext]}"
     )
-    "${app[cmake]}" "${cmake_args[@]}"
+    "${app[cmake]}" .. "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
