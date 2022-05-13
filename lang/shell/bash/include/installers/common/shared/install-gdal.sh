@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework using CMake build approach.
 # FIXME Should we include openssl here?
-
-# FIXME make is erroring on macOS:
-# Must remake target 'lib'.
-# Successfully remade target file 'lib'.
-# make[1]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220421-101201-CKCJuCU0OD/gdal-3.4.2/ogr'
-# Reaping winning child 0x600000a34000 PID 73531
-# Removing child 0x600000a34000 PID 73531 from chain.
 
 main() { # {{{1
     # """
     # Install GDAL.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-05-13.
     #
     # Use 'configure --help' for build options.
     #
@@ -29,7 +23,7 @@ main() { # {{{1
     # - https://github.com/OSGeo/gdal/issues/1708
     # - https://stackoverflow.com/questions/53511533/
     # """
-    local app dict
+    local app cmake_args dict
     koopa_assert_has_no_args "$#"
     if koopa_is_linux
     then
@@ -37,8 +31,6 @@ main() { # {{{1
             '/usr/bin/gdal-config' \
             '/usr/include/gdal'
     fi
-    # Consider adding:
-    # - libpng (for '--with-png')
     koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
     koopa_activate_opt_prefix \
         'geos' \
@@ -74,6 +66,15 @@ v${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    # FIXME Refer to PROJ installer for syntax on specifying shared libraries.
+    cmake_args=(
+        '-DBUILD_SHARED_LIBS=ON'
+        '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        '-DGEOS_ENABLE_TESTS=OFF'
+    )
+    ## FIXME Rework support for these.
     conf_args=(
         # Base configuration.
         "--prefix=${dict[prefix]}"
@@ -155,10 +156,12 @@ v${dict[version]}/${dict[file]}"
         conf_args+=('--with-opencl')
     fi
     koopa_mkdir "${dict[prefix]}/include"
-    koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
-    ./configure "${conf_args[@]}"
-    # Use '-d' flag for more verbose debug mode.
-    "${app[make]}" V=1 -d --jobs="${dict[jobs]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
+    koopa_mkdir 'build'
+    koopa_cd 'build'
+    "${app[cmake]}" .. "${cmake_args[@]}"
+    "${app[make]}" --jobs="${dict[jobs]}"
+    # > "${app[make]}" test
     "${app[make]}" install
     return 0
 }

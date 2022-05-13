@@ -48,17 +48,17 @@ main() { # {{{1
 archive/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     cmake_args=(
-        ../"${dict[name]}-${dict[version]}"
         '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
         '-DGEOS_ENABLE_TESTS=OFF'
     )
-    "${app[cmake]}" "${cmake_args[@]}"
+    "${app[cmake]}" .. "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
