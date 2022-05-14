@@ -3,7 +3,7 @@
 main() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-05-14.
     #
     # @seealso
     # - brew linkage --test
@@ -47,7 +47,7 @@ main() { # {{{1
         koopa_brew_reset_core_repo
     fi
     "${app[brew]}" analytics off
-    "${app[brew]}" update
+    "${app[brew]}" update &>/dev/null
     if koopa_is_macos
     then
         koopa_macos_brew_upgrade_casks
