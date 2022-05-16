@@ -78,7 +78,7 @@ __koopa_warn() { # {{{1
 main() {
     # """
     # Main koopa CLI function.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-05-16.
     # """
     # Check for Bash 4+.
     case "${BASH_VERSION:-}" in
@@ -95,7 +95,7 @@ main() {
     export KOOPA_HELP=0
     # shellcheck source=/dev/null
     source "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
-    koopa_koopa "$@"
+    koopa_cli "$@"
     return 0
 }
 
