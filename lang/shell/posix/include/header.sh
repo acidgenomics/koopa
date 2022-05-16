@@ -48,7 +48,7 @@ __koopa_posix_header() {
         # Edge case for RStudio Server terminal to support dircolors correctly.
         [ -n "${SHELL:-}" ] && export SHELL
         koopa_activate_xdg || return 1
-        koopa_add_koopa_config_link \
+        koopa_add_config_link \
             "$(koopa_koopa_prefix)" 'home' \
             "$(koopa_koopa_prefix)/activate" 'activate' \
             "$(koopa_dotfiles_prefix)" 'dotfiles' \
