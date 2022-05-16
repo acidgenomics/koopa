@@ -135,7 +135,7 @@ koopa_grep() {
     else
         app[grep]="$(koopa_locate_"${dict[engine]}")"
     fi
-    koopa_assert_is_installed "${app[grep]}"
+    [[ -x "${app[grep]}" ]] || return 1
     # Piped input using stdin (string mode).
     if [[ "${dict[stdin]}" -eq 1 ]]
     then
