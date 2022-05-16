@@ -2,6 +2,8 @@
 #+STARTUP: content
 * High priority
 
+# FIXME Need to also link (install) and unlink (uninstall) man files,
+# where applicable.
 # FIXME Add back support for 'prune'.
 # FIXME Need to nest our macOS-specific functions under 'koopa os XXX'.
 # FIXME Need to add support for OS-specific link functions.
