@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to work on adding support for RHEL 9 here.
+
 koopa_fedora_add_azure_cli_repo() {
     # """
     # Add Microsoft Azure CLI repo.
