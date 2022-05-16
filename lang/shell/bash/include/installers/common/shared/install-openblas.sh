@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{
+main() {
     # """
     # Install OpenBLAS.
     # @note Updated 2022-04-25.

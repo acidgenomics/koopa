@@ -551,8 +551,7 @@ koopa_koopa() {
             dict[key]="$1"
             shift 1
             ;;
-        # Nested CLI runners {{{2
-        # ----------------------------------------------------------------------
+        # Nested CLI runners ---------------------------------------------------
         'app' | \
         'configure' | \
         'install' | \
@@ -563,8 +562,7 @@ koopa_koopa() {
             dict[key]="cli-${1}"
             shift 1
             ;;
-        # Defunct args / error catching {{{2
-        # ----------------------------------------------------------------------
+        # Defunct args / error catching ----------------------------------------
         'app-prefix')
             koopa_defunct 'koopa system prefix app'
             ;;
