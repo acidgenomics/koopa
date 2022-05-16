@@ -143,7 +143,7 @@ koopa_macos_disable_zoom_daemon() {
         'us.zoom.ZoomDaemon'
 }
 
-koopa_macos_enable_crashplan() {  # {{{1
+koopa_macos_enable_crashplan() {
     # """
     # Enable CrashPlan.
     # @note Updated 2022-02-16.

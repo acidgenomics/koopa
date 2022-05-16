@@ -63,14 +63,14 @@ koopa_data_disk_link_prefix() {
     koopa_defunct
 }
 
-koopa_file_match_fixed() {  #{{{1
+koopa_file_match_fixed() {
     # """
     # @note Updated 2022-01-10.
     # """
     koopa_defunct 'koopa_file_detect_fixed'
 }
 
-koopa_file_match_regex() {  #{{{1
+koopa_file_match_regex() {
     # """
     # @note Updated 2022-01-10.
     # """
@@ -105,14 +105,14 @@ koopa_is_darwin() {
     koopa_defunct 'koopa_is_macos'
 }
 
-koopa_is_matching_fixed() {  #{{{1
+koopa_is_matching_fixed() {
     # """
     # @note Updated 2022-01-10.
     # """
     koopa_defunct 'koopa_str_detect_fixed'
 }
 
-koopa_is_matching_regex() {  #{{{1
+koopa_is_matching_regex() {
     # """
     # @note Updated 2022-01-10.
     # """
@@ -161,14 +161,14 @@ koopa_restart() {
     koopa_defunct 'koopa_alert_restart'
 }
 
-koopa_str_match_fixed() {  #{{{1
+koopa_str_match_fixed() {
     # """
     # @note Updated 2022-01-10.
     # """
     koopa_defunct 'koopa_str_detect_fixed'
 }
 
-koopa_str_match_regex() {  #{{{1
+koopa_str_match_regex() {
     # """
     # @note Updated 2022-01-10.
     # """

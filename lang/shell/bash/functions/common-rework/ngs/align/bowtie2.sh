@@ -95,15 +95,10 @@ with '${dict[r1_tail]}'."
         --msg2='samples' \
         --suffix=' detected.' \
     )"
-    # Index {{{2
-    # --------------------------------------------------------------------------
     koopa_bowtie2_index \
         --fasta-file="${dict[fasta_file]}" \
         --output-dir="${dict[index_dir]}"
     koopa_assert_is_dir "${dict[index_dir]}"
-    # Alignment {{{2
-    # --------------------------------------------------------------------------
-    # Loop across the per-sample array and align.
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
         local fastq_r2_file

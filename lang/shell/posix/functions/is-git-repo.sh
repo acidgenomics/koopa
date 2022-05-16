@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_is_git_repo() { # {{{1i
+koopa_is_git_repo() {
     # """
     # Is the working directory a git repository?
     # @note Updated 2022-02-23.

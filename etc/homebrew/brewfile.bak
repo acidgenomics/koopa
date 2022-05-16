@@ -8,13 +8,13 @@
 # > brew uninstall --ignore-dependencies ilmbase
 # """
 
-# Taps {{{1
+# Taps
 # ==============================================================================
 
 tap "homebrew/core"
 tap "homebrew/bundle"
 
-# Brews {{{1
+# Brews
 # ==============================================================================
 
 # > brew "nghttp2", link: false  # libnghttp2 / curl

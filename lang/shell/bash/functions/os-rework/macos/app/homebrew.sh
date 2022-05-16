@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_brew_cask_outdated() { # {{{
+koopa_macos_brew_cask_outdated() {
     # """
     # List outdated Homebrew casks.
     # @note Updated 2021-10-27.

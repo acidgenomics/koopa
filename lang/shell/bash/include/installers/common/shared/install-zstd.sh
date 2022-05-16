@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{
+main() {
     # """
     # Install zstd.
     # @note Updated 2022-04-28.

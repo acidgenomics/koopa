@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { #{{{1
+main() {
     # """
     # Companion library to apr, the Apache Portable Runtime library.
     # @note Updated 2022-04-11.

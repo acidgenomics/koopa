@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# > koopa_configure_python() { #{{{1
+# > koopa_configure_python() {
 # >     # """
 # >     # Configure Python.
 # >     # @note Updated 2021-11-30.

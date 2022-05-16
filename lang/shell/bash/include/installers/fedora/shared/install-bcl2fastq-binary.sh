@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{
+main() {
     # """
     # Install bcl2fastq binary from Fedora/RHEL RPM file.
     # @note Updated 2022-04-08.

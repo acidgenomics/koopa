@@ -237,7 +237,7 @@ koopa_source_dir() {
     return 0
 }
 
-koopa_switch_to_develop() {  # {{{1
+koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
     # @note Updated 2022-02-14.
@@ -427,7 +427,7 @@ koopa_sys_user() {
     return 0
 }
 
-koopa_system_info() { # {{{
+koopa_system_info() {
     # """
     # System information.
     # @note Updated 2022-01-25.

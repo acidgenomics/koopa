@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
-main() { # {{{1
+main() {
     # """
     # Python script checks.
     # Updated 2021-02-15.
@@ -18,16 +18,16 @@ main() { # {{{1
     return 0
 }
 
-test_flake8() { # {{{1
-    koopa_assert_is_installed flake8
+test_flake8() {
+    koopa_assert_is_installed 'flake8'
     flake8 --ignore='E402,W503' "$@"
     koopa_status_ok "python-flake8 [${#}]"
     return 0
 }
 
-test_pylint() { # {{{1
+test_pylint() {
     # Note that setting '--jobs=0' flag here enables multicore.
-    koopa_assert_is_installed pylint
+    koopa_assert_is_installed 'pylint'
     pylint --jobs=0 --score='n' "$@"
     koopa_status_ok "python-pylint [${#}]"
     return 0

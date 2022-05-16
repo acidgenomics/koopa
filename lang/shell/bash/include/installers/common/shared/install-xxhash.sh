@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { #{{{1
+main() {
     # """
     # Install xxhash.
     # @note Updated 2022-04-25.
