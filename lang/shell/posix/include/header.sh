@@ -16,8 +16,10 @@ __koopa_posix_header() { # {{{1
     cache_file="${prefix}/functions.sh"
     if [ -f "$cache_file" ]
     then
+        # shellcheck source=/dev/null
         . "$cache_file"
     else
+        # FIXME Need to run file caching at end of header call.
         for file in "${prefix}/functions/"*'.sh'
         do
             # shellcheck source=/dev/null
