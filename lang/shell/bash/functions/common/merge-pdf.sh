@@ -25,4 +25,3 @@ koopa_merge_pdf() {
         "$@"
     return 0
 }
-
