@@ -1,56 +1,5 @@
 #!/usr/bin/env bash
 
-koopa_assert_has_args_ge() {
-    # """
-    # Assert that greater-than-or-equal-to an expected number of arguments have
-    # been passed.
-    # @note Updated 2020-07-03.
-    # """
-    if [[ "$#" -ne 2 ]]
-    then
-        koopa_stop '"koopa_assert_has_args_ge" requires 2 args.'
-    fi
-    if [[ ! "${1:?}" -ge "${2:?}" ]]
-    then
-        koopa_stop 'Invalid number of arguments.'
-    fi
-    return 0
-}
-
-koopa_assert_has_args_le() {
-    # """
-    # Assert that less-than-or-equal-to an expected number of arguments have
-    # been passed.
-    # @note Updated 2020-07-03.
-    # """
-    if [[ "$#" -ne 2 ]]
-    then
-        koopa_stop '"koopa_assert_has_args_le" requires 2 args.'
-    fi
-    if [[ ! "${1:?}" -le "${2:?}" ]]
-    then
-        koopa_stop 'Invalid number of arguments.'
-    fi
-    return 0
-}
-
-koopa_assert_has_file_ext() {
-    # """
-    # Assert that input contains a file extension.
-    # @note Updated 2020-02-16.
-    # """
-    local arg
-    koopa_assert_has_args "$#"
-    for arg in "$@"
-    do
-        if ! koopa_has_file_ext "$arg"
-        then
-            koopa_stop "No file extension: '${arg}'."
-        fi
-    done
-    return 0
-}
-
 koopa_assert_has_monorepo() {
     # """
     # Assert that the user has a git monorepo.
