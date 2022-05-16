@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
-main() { # {{{1
+main() {
     # """
     # Base lint checks.
     # @note Updated 2020-07-08.
@@ -17,7 +17,7 @@ main() { # {{{1
 }
 
 # NOTE This doesn't seem to be picking up FIXMEs.
-test_illegal_strings() { # {{{1
+test_illegal_strings() {
     local array pattern
     koopa_assert_has_args "$#"
     array=(
@@ -35,7 +35,7 @@ test_illegal_strings() { # {{{1
     return 0
 }
 
-test_line_width() { # {{{1
+test_line_width() {
     koopa_assert_has_args "$#"
     koopa_test_grep \
         --ignore='line-width' \

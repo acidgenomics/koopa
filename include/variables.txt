@@ -1,4 +1,4 @@
-# koopa {{{1
+# koopa
 # ==============================================================================
 
 koopa-date="2022-05-13"
@@ -9,7 +9,7 @@ koopa-version="0.13.0a"
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.2.0"
 
-# Globals {{{1
+# Globals
 # ==============================================================================
 
 # GnuPG FTP URL.
@@ -19,7 +19,7 @@ gcrypt-url="https://gnupg.org/ftp/gcrypt"
 # https://www.gnu.org/prep/ftp.en.html
 gnu-mirror-url="https://ftpmirror.gnu.org"
 
-# Program versions {{{1
+# Program versions
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
@@ -651,7 +651,7 @@ zsh="5.8.1"
 # https://facebook.github.io/zstd/
 zstd="1.5.2"
 
-# Conda environments {{{1
+# Conda environments
 # ==============================================================================
 # Updated 2022-03-15.
 #
@@ -745,19 +745,19 @@ conda-umap-learn="0.5.2"        # 2021-11-03 bioconda               [singlecell]
 conda-vardict="2019.06.04"      # 2019-06-05 bioconda                [variation]
 conda-visidata="2.8"            # 2022-01-13 conda-forge          [file formats]
 
-# Homebrew cask versions {{{1
+# Homebrew cask versions
 # ==============================================================================
 
 homebrew-cask-gpg-suite="2022.1"
 
-# Nim (Nimble) packages {{{1
+# Nim (Nimble) packages
 # ==============================================================================
 # Updated 2021-10-05.
 
 # https://github.com/soasme/nim-markdown/tags/
 nim-markdown="0.8.5"                # markdown
 
-# Node (NPM) packages {{{1
+# Node (NPM) packages
 # ==============================================================================
 # Updated 2022-04-19 from https://www.npmjs.com/
 
@@ -767,7 +767,7 @@ node-bash-language-server="2.1.0"   # bash-language-server
 node-gtop="1.1.3"                   # gtop
 node-prettier="2.6.2"               # prettier
 
-# Ruby packages (gems) {{{1
+# Ruby packages (gems)
 # ==============================================================================
 # https://rubygems.org/gems/bundler/versions/
 

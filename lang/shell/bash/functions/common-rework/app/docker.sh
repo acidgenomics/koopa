@@ -399,7 +399,7 @@ koopa_docker_ghcr_login() {
     return 0
 }
 
-koopa_docker_ghcr_push() { # {{{
+koopa_docker_ghcr_push() {
     # """
     # Push an image to GitHub Container Registry.
     # @note Updated 2022-01-20.
@@ -524,7 +524,7 @@ koopa_docker_prune_all_images() {
     return 0
 }
 
-koopa_docker_prune_old_images() { # {{{
+koopa_docker_prune_old_images() {
     # """
     # Prune old Docker images.
     # @note Updated 2022-01-20.

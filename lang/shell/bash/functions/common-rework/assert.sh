@@ -1,83 +1,5 @@
 #!/usr/bin/env bash
 
-koopa_assert_are_identical() {
-    # """
-    # Assert that two strings are identical.
-    # @note Updated 2020-07-07.
-    # """
-    koopa_assert_has_args_eq "$#" 2
-    if [[ "${1:?}" != "${2:?}" ]]
-    then
-        koopa_stop "'${1}' is not identical to '${2}'."
-    fi
-    return 0
-}
-
-koopa_assert_are_not_identical() {
-    # """
-    # Assert that two strings are not identical.
-    # @note Updated 2020-07-03.
-    # """
-    koopa_assert_has_args_eq "$#" 2
-    if [[ "${1:?}" == "${2:?}" ]]
-    then
-        koopa_stop "'${1}' is identical to '${2}'."
-    fi
-    return 0
-}
-
-koopa_assert_has_args() {
-    # """
-    # Assert that non-zero arguments have been passed.
-    # @note Updated 2022-02-15.
-    # Does not check for empty strings.
-    # """
-    if [[ "$#" -ne 1 ]]
-    then
-        koopa_stop \
-            '"koopa_assert_has_args" requires 1 arg.' \
-            'Pass "$#" not "$@" to this function.'
-    fi
-    if [[ "${1:?}" -eq 0 ]]
-    then
-        koopa_stop 'Required arguments missing.'
-    fi
-    return 0
-}
-
-koopa_assert_has_args_eq() {
-    # """
-    # Assert that an expected number of arguments have been passed.
-    # @note Updated 2020-07-03.
-    # """
-    if [[ "$#" -ne 2 ]]
-    then
-        koopa_stop '"koopa_assert_has_args_eq" requires 2 args.'
-    fi
-    if [[ "${1:?}" -ne "${2:?}" ]]
-    then
-        koopa_stop 'Invalid number of arguments.'
-    fi
-    return 0
-}
-
-koopa_assert_has_args_ge() {
-    # """
-    # Assert that greater-than-or-equal-to an expected number of arguments have
-    # been passed.
-    # @note Updated 2020-07-03.
-    # """
-    if [[ "$#" -ne 2 ]]
-    then
-        koopa_stop '"koopa_assert_has_args_ge" requires 2 args.'
-    fi
-    if [[ ! "${1:?}" -ge "${2:?}" ]]
-    then
-        koopa_stop 'Invalid number of arguments.'
-    fi
-    return 0
-}
-
 koopa_assert_has_args_ge() {
     # """
     # Assert that greater-than-or-equal-to an expected number of arguments have
@@ -411,7 +333,7 @@ koopa_assert_is_gitlab_ssh_enabled() {
     return 0
 }
 
-koopa_assert_is_gnu() {  #{{{1
+koopa_assert_is_gnu() {
     # """
     # Assert that GNU version of a program is installed.
     # @note Updated 2021-05-20.

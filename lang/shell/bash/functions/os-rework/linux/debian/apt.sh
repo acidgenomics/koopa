@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_debian_apt_add_key() {  #{{{1
+koopa_debian_apt_add_key() {
     # """
     # Add a GPG key (and/or keyring) for apt.
     # @note Updated 2021-11-09.
@@ -410,7 +410,7 @@ koopa_debian_apt_add_llvm_repo() {
     return 0
 }
 
-koopa_debian_apt_add_microsoft_key() {  #{{{1
+koopa_debian_apt_add_microsoft_key() {
     # """
     # Add the Microsoft GPG key (for Azure CLI).
     # @note Updated 2021-11-09.

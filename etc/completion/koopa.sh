@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2207
 
-__koopa_complete() { # {{{1
+__koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
     # Updated 2022-05-12.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-test_gsub() { # {{{1
+test_gsub() {
     assertEquals \
         "$(\
             koopa_gsub \
@@ -11,25 +11,25 @@ test_gsub() { # {{{1
         'aaa-aaa-ccc-ccc'
 }
 
-test_kebab_case_simple() { # {{{1
+test_kebab_case_simple() {
     assertEquals \
         "$(koopa_kebab_case_simple 'hello world')" \
         'hello-world'
 }
 
-test_sanitize_version() { # {{{1
+test_sanitize_version() {
     assertEquals \
         "$(koopa_sanitize_version '2.7.1p83')" \
         '2.7.1'
 }
 
-test_snake_case_simple() { # {{{1
+test_snake_case_simple() {
     assertEquals \
         "$(koopa_snake_case_simple 'hello world')" \
         'hello_world'
 }
 
-test_strip_left() { # {{{1
+test_strip_left() {
     assertEquals \
         "$( \
             koopa_strip_left \
@@ -39,7 +39,7 @@ test_strip_left() { # {{{1
         'Quick Brown Fox'
 }
 
-test_strip_right() { # {{{1
+test_strip_right() {
     assertEquals \
         "$( \
             koopa_strip_right \
@@ -49,13 +49,13 @@ test_strip_right() { # {{{1
         'The Quick Brown'
 }
 
-_test_strip_trailing_slash() { # {{{1
+_test_strip_trailing_slash() {
     assertEquals \
         "$(koopa_strip_trailing_slash 'https://acidgenomics.com/')" \
         'https://acidgenomics.com'
 }
 
-test_sub() { # {{{1
+test_sub() {
     assertEquals \
         "$( \
             koopa_sub \
@@ -66,7 +66,7 @@ test_sub() { # {{{1
         'aaa-aaa-ccc-bbb'
 }
 
-test_trim_ws() { # {{{1
+test_trim_ws() {
     assertEquals \
         "$(koopa_trim_ws '    Hello,  World    ')" \
         'Hello,  World'

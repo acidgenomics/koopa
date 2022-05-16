@@ -103,7 +103,7 @@ koopa_cpu_count() {
     return 0
 }
 
-koopa_datetime() { # {{{
+koopa_datetime() {
     # """
     # Datetime string.
     # @note Updated 2022-01-20.
@@ -211,7 +211,7 @@ koopa_koopa_github_url() {
 # FIXME Return the platform and architecture here automatically.
 # FIXME Also consider adding support for easy return of S3 bucket path.
 
-koopa_koopa_app_binary_url() { # {{{2
+koopa_koopa_app_binary_url() {
     # """
     # Koopa app binary URL.
     # @note Updated 2022-04-08.
