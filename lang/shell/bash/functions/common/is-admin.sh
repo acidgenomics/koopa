@@ -47,6 +47,7 @@ koopa_is_admin() {
     declare -A app=(
         [groups]="$(koopa_locate_groups)"
     )
+    [[ -x "${app[groups]}" ]] || return 1
     declare -A dict=(
         [groups]="$("${app[groups]}")"
         [pattern]='\b(admin|root|sudo|wheel)\b'
