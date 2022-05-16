@@ -3,7 +3,7 @@
 # NOTE Seeing warnings on macOS from ranlib, regarding no symbols for some
 # GHC 8.10.7 files
 
-main() { # {{{1
+main() {
     # """
     # Install Pandoc.
     # @note Updated 2022-04-14.

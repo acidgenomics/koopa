@@ -10,7 +10,7 @@
 # ./rsync.h:674:8: error: expected ';' at end of declaration list
 #         uint32 node_size;
 
-main() { # {{{1
+main() {
     # """
     # Install rsync.
     # @note Updated 2022-04-25.

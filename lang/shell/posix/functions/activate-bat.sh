@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_bat() { # {{{1
+koopa_activate_bat() {
     # """
     # Activate bat configuration.
     # @note Updated 2022-05-12.

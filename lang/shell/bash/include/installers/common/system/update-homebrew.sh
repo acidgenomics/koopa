@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Updated outdated Homebrew brews and casks.
     # @note Updated 2022-05-14.

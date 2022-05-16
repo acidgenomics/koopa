@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_move_files_in_batch() { # {{{1
+koopa_move_files_in_batch() {
     # """
     # Batch move a limited number of files.
     # @note Updated 2022-02-16.
@@ -83,7 +83,7 @@ koopa_move_files_in_batch() { # {{{1
     return 0
 }
 
-koopa_move_files_up_1_level() { # {{{1
+koopa_move_files_up_1_level() {
     # """
     # Move files up 1 level.
     # @note Updated 2022-02-16.
@@ -115,7 +115,7 @@ koopa_move_files_up_1_level() { # {{{1
     return 0
 }
 
-koopa_move_into_dated_dirs_by_filename() { # {{{1
+koopa_move_into_dated_dirs_by_filename() {
     # """
     # Move into dated directories by filename.
     # @note Updated 2022-02-16.
@@ -153,7 +153,7 @@ koopa_move_into_dated_dirs_by_filename() { # {{{1
     return 0
 }
 
-koopa_move_into_dated_dirs_by_timestamp() { # {{{1
+koopa_move_into_dated_dirs_by_timestamp() {
     # """
     # Move into dated directories by timestamp.
     # @note Updated 2022-02-16.

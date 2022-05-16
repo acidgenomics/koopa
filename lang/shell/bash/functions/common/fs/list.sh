@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_list_path_priority() { # {{{1
+__koopa_list_path_priority() {
     # """
     # Split PATH string by ':' delim into lines.
     # @note Updated 2021-01-20.
@@ -28,7 +28,7 @@ __koopa_list_path_priority() { # {{{1
     return 0
 }
 
-__koopa_list_path_priority_unique() { # {{{1
+__koopa_list_path_priority_unique() {
     # """
     # Split PATH string by ':' delim into lines but only return uniques.
     # @note Updated 2022-02-11.
@@ -50,7 +50,7 @@ __koopa_list_path_priority_unique() { # {{{1
     return 0
 }
 
-koopa_list_app_versions() { # {{{1
+koopa_list_app_versions() {
     # """
     # List installed application versions.
     # @note Updated 2022-02-11.
@@ -78,7 +78,7 @@ koopa_list_app_versions() { # {{{1
     return 0
 }
 
-koopa_list_dotfiles() { # {{{1
+koopa_list_dotfiles() {
     # """
     # List dotfiles.
     # @note Updated 2022-02-17.
@@ -90,7 +90,7 @@ koopa_list_dotfiles() { # {{{1
     koopa_find_dotfiles 'l' 'Symlinks'
 }
 
-koopa_list_path_priority() { # {{{1
+koopa_list_path_priority() {
     # """
     # List path priority.
     # @note Updated 2022-02-11.

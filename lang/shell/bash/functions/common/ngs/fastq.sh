@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_convert_fastq_to_fasta() { # {{{1
+koopa_convert_fastq_to_fasta() {
     # """
     # Convert FASTQ files into FASTA format.
     # @note Updated 2022-03-25.
@@ -90,7 +90,7 @@ koopa_convert_fastq_to_fasta() { # {{{1
     return 0
 }
 
-koopa_fastq_detect_quality_score() { # {{{1
+koopa_fastq_detect_quality_score() {
     # """
     # Detect quality score format of a FASTQ file.
     # @note Updated 2022-03-25.
@@ -146,7 +146,7 @@ koopa_fastq_detect_quality_score() { # {{{1
     return 0
 }
 
-koopa_fastq_lanepool() { # {{{1
+koopa_fastq_lanepool() {
     # """
     # Pool lane-split FASTQ files.
     # @note Updated 2022-03-25.
@@ -248,7 +248,7 @@ koopa_fastq_lanepool() { # {{{1
     return 0
 }
 
-koopa_fastq_number_of_reads() { # {{{1
+koopa_fastq_number_of_reads() {
     # """
     # Return the number of reads per FASTQ file.
     # @note Updated 2022-03-25.

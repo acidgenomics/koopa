@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_camel_case_simple() { # {{{1
+koopa_camel_case_simple() {
     # """
     # Simple camel case function.
     # @note Updated 2022-04-26.
@@ -38,7 +38,7 @@ koopa_camel_case_simple() { # {{{1
     return 0
 }
 
-koopa_capitalize() { # {{{1
+koopa_capitalize() {
     # """
     # Capitalize the first letter (only) of a string.
     # @note Updated 2022-03-01.
@@ -70,7 +70,7 @@ koopa_capitalize() { # {{{1
     return 0
 }
 
-koopa_kebab_case_simple() { # {{{1
+koopa_kebab_case_simple() {
     # """
     # Simple snake case function.
     # @note Updated 2022-03-01.
@@ -107,7 +107,7 @@ koopa_kebab_case_simple() { # {{{1
     return 0
 }
 
-koopa_lowercase() { # {{{1
+koopa_lowercase() {
     # """
     # Transform string to lowercase.
     # @note Updated 2022-03-01.
@@ -141,7 +141,7 @@ koopa_lowercase() { # {{{1
     return 0
 }
 
-koopa_snake_case_simple() { # {{{1
+koopa_snake_case_simple() {
     # """
     # Simple snake case function.
     # @note Updated 2022-03-01.

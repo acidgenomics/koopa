@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_julia_script_prefix() { # {{{1
+koopa_julia_script_prefix() {
     # """
     # Julia script prefix.
     # @note Updated 2021-06-14.
@@ -9,7 +9,7 @@ koopa_julia_script_prefix() { # {{{1
     return 0
 }
 
-koopa_installers_prefix() { # {{{1
+koopa_installers_prefix() {
     # """
     # Koopa installers prefix.
     # @note Updated 2022-01-28.
@@ -18,7 +18,7 @@ koopa_installers_prefix() { # {{{1
     return 0
 }
 
-koopa_man_prefix() { # {{{1
+koopa_man_prefix() {
     # """
     # man documentation file prefix.
     # @note Updated 2022-02-15.
@@ -27,7 +27,7 @@ koopa_man_prefix() { # {{{1
     return 0
 }
 
-koopa_python_system_packages_prefix() { # {{{1
+koopa_python_system_packages_prefix() {
     # """
     # Python system site packages library prefix.
     # @note Updated 2022-01-31.
@@ -48,7 +48,7 @@ koopa_python_system_packages_prefix() { # {{{1
     return 0
 }
 
-koopa_r_prefix() { # {{{1
+koopa_r_prefix() {
     # """
     # R prefix.
     # @note Updated 2022-01-31.
@@ -76,7 +76,7 @@ koopa_r_prefix() { # {{{1
     return 0
 }
 
-koopa_r_library_prefix() { # {{{1
+koopa_r_library_prefix() {
     # """
     # R default library prefix.
     # @note Updated 2022-01-31.
@@ -98,7 +98,7 @@ koopa_r_library_prefix() { # {{{1
     return 0
 }
 
-koopa_r_system_library_prefix() { # {{{1
+koopa_r_system_library_prefix() {
     # """
     # R system library prefix.
     # @note Updated 2022-01-31.
@@ -122,7 +122,7 @@ koopa_r_system_library_prefix() { # {{{1
     return 0
 }
 
-koopa_tests_prefix() { # {{{1
+koopa_tests_prefix() {
     # """
     # Unit tests prefix.
     # @note Updated 2022-02-17.

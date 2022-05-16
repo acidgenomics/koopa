@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_reload_autofs() { # {{{1
+koopa_macos_reload_autofs() {
     # """
     # Reload autofs configuration defined in '/etc/auto_master'.
     # @note Updated 2021-10-27.

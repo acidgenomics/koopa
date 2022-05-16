@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_get_version_arg() { # {{{1
+__koopa_get_version_arg() {
     # """
     # Return matching version argument for an input program.
     # @note Updated 2022-04-26.
@@ -32,7 +32,7 @@ __koopa_get_version_arg() { # {{{1
     return 0
 }
 
-__koopa_get_version_name() { # {{{1
+__koopa_get_version_name() {
     # """
     # Match a desired program name to corresponding to dependency to
     # run with a version argument.
@@ -151,7 +151,7 @@ __koopa_get_version_name() { # {{{1
     return 0
 }
 
-koopa_extract_version() { # {{{1
+koopa_extract_version() {
     # """
     # Extract version number.
     # @note Updated 2022-02-27.
@@ -190,7 +190,7 @@ koopa_extract_version() { # {{{1
     return 0
 }
 
-koopa_get_version() { # {{{1
+koopa_get_version() {
     # """
     # Get the version of an installed program.
     # @note Updated 2022-04-15.
@@ -261,7 +261,7 @@ koopa_get_version() { # {{{1
     return 0
 }
 
-koopa_get_version_from_pkg_config() { # {{{1
+koopa_get_version_from_pkg_config() {
     # """
     # Get a library version via pkg-config.
     # @note Updated 2022-02-27.
@@ -278,7 +278,7 @@ koopa_get_version_from_pkg_config() { # {{{1
     return 0
 }
 
-koopa_sanitize_version() { # {{{1
+koopa_sanitize_version() {
     # """
     # Sanitize version.
     # @note Updated 2022-04-25.
@@ -307,7 +307,7 @@ koopa_sanitize_version() { # {{{1
     return 0
 }
 
-koopa_version_pattern() { # {{{1
+koopa_version_pattern() {
     # """
     # Version pattern.
     # @note Updated 2022-02-27.

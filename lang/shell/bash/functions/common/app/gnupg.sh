@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_gpg_download_key_from_keyserver() { # {{{1
+koopa_gpg_download_key_from_keyserver() {
     # """
     # Download a GPG key from a keyserver to a local file, without importing.
     # @note Updated 2021-11-03.
@@ -82,7 +82,7 @@ koopa_gpg_download_key_from_keyserver() { # {{{1
     return 0
 }
 
-koopa_gpg_prompt() { # {{{1
+koopa_gpg_prompt() {
     # """
     # Force GPG to prompt for password.
     # @note Updated 2020-07-10.
@@ -94,14 +94,14 @@ koopa_gpg_prompt() { # {{{1
     return 0
 }
 
-koopa_gpg_reload() { # {{{1
+koopa_gpg_reload() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_installed 'gpg-connect-agent'
     gpg-connect-agent reloadagent /bye
     return 0
 }
 
-koopa_gpg_restart() { # {{{1
+koopa_gpg_restart() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_installed 'gpgconf'
     gpgconf --kill gpg-agent

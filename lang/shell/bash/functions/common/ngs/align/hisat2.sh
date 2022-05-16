@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_hisat2_align_paired_end() { # {{{1
+koopa_hisat2_align_paired_end() {
     # """
     # Run HISAT2 aligner on multiple paired-end FASTQs in a directory.
     # @note Updated 2022-03-25.
@@ -143,7 +143,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
     return 0
 }
 
-koopa_hisat2_align_paired_end_per_sample() { # {{{1
+koopa_hisat2_align_paired_end_per_sample() {
     # """
     # Run HISAT2 aligner on a paired-end sample.
     # @note Updated 2022-03-25.
@@ -313,7 +313,7 @@ koopa_hisat2_align_paired_end_per_sample() { # {{{1
     return 0
 }
 
-koopa_hisat2_align_single_end() { # {{{1
+koopa_hisat2_align_single_end() {
     # """
     # Run HISAT2 aligner on multiple single-end FASTQs in a directory.
     # @note Updated 2022-03-25.
@@ -445,7 +445,7 @@ koopa_hisat2_align_single_end() { # {{{1
 # FIXME Need to add support for unstranded.
 # FIXME Set '--rna-strandedness from this.
 
-koopa_hisat2_align_single_end_per_sample() { # {{{1
+koopa_hisat2_align_single_end_per_sample() {
     # """
     # Run HISAT2 aligner on a single-end sample.
     # @note Updated 2022-03-25.
@@ -584,7 +584,7 @@ koopa_hisat2_align_single_end_per_sample() { # {{{1
 # FIXME HISAT2 includes 'hisat2_extract_exons.py' that does this.
 # FIXME HISAT2 includes 'hisat2_extract_splice_sites.py' which does this.
 
-koopa_hisat2_index() { # {{{1
+koopa_hisat2_index() {
     # """
     # Create a genome index for HISAT2 aligner.
     # @note Updated 2022-03-25.
@@ -677,7 +677,7 @@ koopa_hisat2_index() { # {{{1
     return 0
 }
 
-koopa_hisat2_fastq_library_type() { # {{{1
+koopa_hisat2_fastq_library_type() {
     # """
     # Convert salmon FASTQ library type to HISAT2 strandedness.
     # @note Updated 2022-03-25.

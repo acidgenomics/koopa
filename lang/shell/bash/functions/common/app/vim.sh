@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_detab() { # {{{1
+koopa_detab() {
     # """
     # Detab files.
     # @note Updated 2020-07-13.
@@ -20,7 +20,7 @@ koopa_detab() { # {{{1
     return 0
 }
 
-koopa_entab() { # {{{1
+koopa_entab() {
     # """
     # Entab files.
     # @note Updated 2020-07-13.
@@ -40,7 +40,7 @@ koopa_entab() { # {{{1
     return 0
 }
 
-koopa_sort_lines() { # {{{1
+koopa_sort_lines() {
     # """
     # Sort lines.
     # @note Updated 2020-07-13.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_exec_dir() { # {{{1
+koopa_exec_dir() {
     # """
     # Execute multiple shell scripts in a directory.
     # @note Updated 2022-01-20.
@@ -21,7 +21,7 @@ koopa_exec_dir() { # {{{1
     return 0
 }
 
-koopa_header() { # {{{1
+koopa_header() {
     # """
     # Shared language-specific header file.
     # @note Updated 2022-02-15.
@@ -54,7 +54,7 @@ koopa_header() { # {{{1
     return 0
 }
 
-koopa_help() { # {{{1
+koopa_help() {
     # """
     # Show usage via '--help' flag.
     # @note Updated 2022-02-24.
@@ -76,7 +76,7 @@ koopa_help() { # {{{1
     exit 0
 }
 
-koopa_help_2() { # {{{1
+koopa_help_2() {
     # """
     # Resolve man file for current script, and call help.
     # @note Updated 2022-02-25.
@@ -95,7 +95,7 @@ man1/${dict[script_name]}.1"
     koopa_help "${dict[man_file]}"
 }
 
-koopa_info_box() { # {{{1
+koopa_info_box() {
     # """
     # Configuration information box.
     # @note Updated 2021-03-30.
@@ -117,7 +117,7 @@ koopa_info_box() { # {{{1
     return 0
 }
 
-koopa_mktemp() { # {{{1
+koopa_mktemp() {
     # """
     # Wrapper function for system 'mktemp'.
     # @note Updated 2022-02-16.
@@ -158,7 +158,7 @@ koopa_mktemp() { # {{{1
     return 0
 }
 
-koopa_pager() { # {{{1
+koopa_pager() {
     # """
     # Run less with support for colors (escape characters).
     # @note Updated 2022-02-15.
@@ -178,7 +178,7 @@ koopa_pager() { # {{{1
     return 0
 }
 
-koopa_roff() { # {{{1
+koopa_roff() {
     # """
     # Convert roff markdown files to ronn man pages.
     # @note Updated 2022-02-17.
@@ -199,7 +199,7 @@ koopa_roff() { # {{{1
     return 0
 }
 
-koopa_run_if_installed() { # {{{1
+koopa_run_if_installed() {
     # """
     # Run program(s) if installed.
     # @note Updated 2020-06-30.
@@ -219,7 +219,7 @@ koopa_run_if_installed() { # {{{1
     return 0
 }
 
-koopa_source_dir() { # {{{1
+koopa_source_dir() {
     # """
     # Source multiple shell scripts in a directory.
     # @note Updated 2022-02-17.
@@ -265,7 +265,7 @@ koopa_switch_to_develop() {  # {{{1
     return 0
 }
 
-koopa_sys_group() { # {{{1
+koopa_sys_group() {
     # """
     # Return the appropriate group to use with koopa installation.
     # @note Updated 2020-07-04.
@@ -287,7 +287,7 @@ koopa_sys_group() { # {{{1
     return 0
 }
 
-koopa_sys_ln() { # {{{1
+koopa_sys_ln() {
     # """
     # Create a symlink quietly.
     # @note Updated 2022-04-26.
@@ -314,7 +314,7 @@ koopa_sys_ln() { # {{{1
     return 0
 }
 
-koopa_sys_mkdir() { # {{{1
+koopa_sys_mkdir() {
     # """
     # mkdir with dynamic sudo handling.
     # @note Updated 2022-04-07.
@@ -325,7 +325,7 @@ koopa_sys_mkdir() { # {{{1
     return 0
 }
 
-koopa_sys_set_permissions() { # {{{1
+koopa_sys_set_permissions() {
     # """
     # Set permissions on target prefix(es).
     # @note Updated 2022-04-07.
@@ -415,7 +415,7 @@ koopa_sys_set_permissions() { # {{{1
     return 0
 }
 
-koopa_sys_user() { # {{{1
+koopa_sys_user() {
     # """
     # Set the koopa installation system user.
     # @note Updated 2022-04-05.
@@ -517,7 +517,7 @@ koopa_system_info() { # {{{
     return 0
 }
 
-koopa_tmp_dir() { # {{{1
+koopa_tmp_dir() {
     # """
     # Create temporary directory.
     # @note Updated 2020-05-06.
@@ -530,7 +530,7 @@ koopa_tmp_dir() { # {{{1
     return 0
 }
 
-koopa_tmp_file() { # {{{1
+koopa_tmp_file() {
     # """
     # Create temporary file.
     # @note Updated 2021-05-06.
@@ -543,7 +543,7 @@ koopa_tmp_file() { # {{{1
     return 0
 }
 
-koopa_tmp_log_file() { # {{{1
+koopa_tmp_log_file() {
     # """
     # Create temporary log file.
     # @note Updated 2020-11-23.
@@ -559,7 +559,7 @@ koopa_tmp_log_file() { # {{{1
     return 0
 }
 
-koopa_variables() { # {{{1
+koopa_variables() {
     # """
     # Edit koopa variables.
     # @note Updated 2020-06-30.
@@ -570,7 +570,7 @@ koopa_variables() { # {{{1
     return 0
 }
 
-koopa_view_latest_tmp_log_file() { # {{{1
+koopa_view_latest_tmp_log_file() {
     # """
     # View the latest temporary log file.
     # @note Updated 2022-01-17.
@@ -604,7 +604,7 @@ koopa_view_latest_tmp_log_file() { # {{{1
     return 0
 }
 
-koopa_warn_if_export() { # {{{1
+koopa_warn_if_export() {
     # """
     # Warn if variable is exported in current shell session.
     # @note Updated 2020-02-20.
@@ -624,7 +624,7 @@ koopa_warn_if_export() { # {{{1
     return 0
 }
 
-koopa_which_function() { # {{{1
+koopa_which_function() {
     # """
     # Locate a koopa function automatically.
     # @note Updated 2022-04-29.

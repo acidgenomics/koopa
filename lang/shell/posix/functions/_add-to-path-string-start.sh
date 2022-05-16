@@ -1,6 +1,6 @@
 #!/bin/sh
 
-__koopa_add_to_path_string_start() { # {{{1
+__koopa_add_to_path_string_start() {
     # """
     # Add a directory to the beginning of a PATH string.
     # @note Updated 2022-04-17.

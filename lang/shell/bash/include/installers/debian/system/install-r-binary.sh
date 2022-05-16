@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install latest version of R from CRAN.
     # @note Updated 2022-04-26.

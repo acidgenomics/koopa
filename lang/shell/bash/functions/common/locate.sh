@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_locate_app() { # {{{1
+koopa_locate_app() {
     # """
     # Locate file system path to an application.
     # @note Updated 2022-04-26.
@@ -116,7 +116,7 @@ koopa_locate_app() { # {{{1
     koopa_stop "Failed to locate '${dict[app_name]}'."
 }
 
-koopa_locate_conda_app() { # {{{1
+koopa_locate_conda_app() {
     # """
     # Locate conda application.
     # @note Updated 2022-01-10.

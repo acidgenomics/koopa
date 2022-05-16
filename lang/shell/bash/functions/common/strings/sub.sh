@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_gsub() { # {{{1
+koopa_gsub() {
     # """
     # Global substitution.
     # @note Updated 2022-04-21.
@@ -18,7 +18,7 @@ koopa_gsub() { # {{{1
     koopa_sub --global "$@"
 }
 
-koopa_sub() { # {{{1
+koopa_sub() {
     # """
     # Single substitution.
     # @note Updated 2022-04-21.

@@ -1049,7 +1049,7 @@ koopa_uninstall_exa() { # {{{3
 
 # fd-find ----------------------------------------------------------------- {{{2
 
-koopa_install_fd_find() { # {{{1
+koopa_install_fd_find() {
     koopa_install_app \
         --installer='rust-package' \
         --link-in-bin='bin/fd' \
@@ -1057,7 +1057,7 @@ koopa_install_fd_find() { # {{{1
         "$@"
 }
 
-koopa_uninstall_fd_find() { # {{{1
+koopa_uninstall_fd_find() {
     koopa_uninstall_app \
         --unlink-in-bin='fd' \
         --name='fd-find' \
@@ -1412,7 +1412,7 @@ koopa_uninstall_gnupg() { # {{{3
 
 # gnutls ------------------------------------------------------------------ {{{2
 
-koopa_install_gnutls() { # {{{1
+koopa_install_gnutls() {
     koopa_install_app \
         --activate-opt='gmp' \
         --activate-opt='libtasn1' \
@@ -3055,7 +3055,7 @@ koopa_uninstall_readline() { # {{{3
 
 # ripgrep ----------------------------------------------------------------- {{{2
 
-koopa_install_ripgrep() { # {{{1
+koopa_install_ripgrep() {
     koopa_install_app \
         --activate-opt='pcre2' \
         --installer='rust-package' \
@@ -3064,7 +3064,7 @@ koopa_install_ripgrep() { # {{{1
         "$@"
 }
 
-koopa_uninstall_ripgrep() { # {{{1
+koopa_uninstall_ripgrep() {
     koopa_uninstall_app \
         --unlink-in-bin='rg' \
         --name='ripgrep' \
@@ -3073,7 +3073,7 @@ koopa_uninstall_ripgrep() { # {{{1
 
 # ripgrep-all ------------------------------------------------------------- {{{2
 
-# > koopa_install_ripgrep_all() { # {{{1
+# > koopa_install_ripgrep_all() {
 # >     koopa_install_app \
 # >         --installer='rust-package' \
 # >         --link-in-bin='bin/rga' \
@@ -3081,7 +3081,7 @@ koopa_uninstall_ripgrep() { # {{{1
 # >         "$@"
 # > }
 
-# > koopa_uninstall_ripgrep_all() { # {{{1
+# > koopa_uninstall_ripgrep_all() {
 # >     koopa_uninstall_app \
 # >         --unlink-in-bin='rga' \
 # >         --name='ripgrep-all' \
@@ -3290,7 +3290,7 @@ koopa_uninstall_sqlite() { # {{{3
 
 # starship ---------------------------------------------------------------- {{{2
 
-koopa_install_starship() { # {{{1
+koopa_install_starship() {
     koopa_install_app \
         --installer='rust-package' \
         --link-in-bin='bin/starship' \
@@ -3298,7 +3298,7 @@ koopa_install_starship() { # {{{1
         "$@"
 }
 
-koopa_uninstall_starship() { # {{{1
+koopa_uninstall_starship() {
     koopa_uninstall_app \
         --unlink-in-bin='starship' \
         --name='starship' \
@@ -3393,7 +3393,7 @@ koopa_uninstall_tcl_tk() { # {{{3
 
 # tealdeer ---------------------------------------------------------------- {{{2
 
-koopa_install_tealdeer() { # {{{1
+koopa_install_tealdeer() {
     koopa_install_app \
         --installer='rust-package' \
         --link-in-bin='bin/tldr' \
@@ -3401,7 +3401,7 @@ koopa_install_tealdeer() { # {{{1
         "$@"
 }
 
-koopa_uninstall_tealdeer() { # {{{1
+koopa_uninstall_tealdeer() {
     koopa_uninstall_app \
         --unlink-in-bin='tldr' \
         --name='tealdeer' \
@@ -3496,7 +3496,7 @@ koopa_uninstall_tmux() { # {{{3
 
 # tokei ------------------------------------------------------------------- {{{2
 
-koopa_install_tokei() { # {{{1
+koopa_install_tokei() {
     koopa_install_app \
         --installer='rust-package' \
         --link-in-bin='bin/tokei' \
@@ -3504,7 +3504,7 @@ koopa_install_tokei() { # {{{1
         "$@"
 }
 
-koopa_uninstall_tokei() { # {{{1
+koopa_uninstall_tokei() {
     koopa_uninstall_app \
         --unlink-in-bin='tokei' \
         --name='tokei' \
@@ -3813,7 +3813,7 @@ koopa_uninstall_xorg_xtrans() { # {{{3
 
 # xsv ------------------------------------------------------------------- {{{2
 
-koopa_install_xsv() { # {{{1
+koopa_install_xsv() {
     koopa_install_app \
         --installer='rust-package' \
         --link-in-bin='bin/xsv' \
@@ -3821,7 +3821,7 @@ koopa_install_xsv() { # {{{1
         "$@"
 }
 
-koopa_uninstall_xsv() { # {{{1
+koopa_uninstall_xsv() {
     koopa_uninstall_app \
         --unlink-in-bin='xsv' \
         --name='xsv' \
@@ -3874,7 +3874,7 @@ koopa_uninstall_zlib() { # {{{3
 
 # zoxide ------------------------------------------------------------------ {{{2
 
-koopa_install_zoxide() { # {{{1
+koopa_install_zoxide() {
     koopa_install_app \
         --installer='rust-package' \
         --link-in-bin='bin/zoxide' \
@@ -3882,7 +3882,7 @@ koopa_install_zoxide() { # {{{1
         "$@"
 }
 
-koopa_uninstall_zoxide() { # {{{1
+koopa_uninstall_zoxide() {
     koopa_uninstall_app \
         --unlink-in-bin='zoxide' \
         --name='zoxide' \

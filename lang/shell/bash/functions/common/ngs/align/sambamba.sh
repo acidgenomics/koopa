@@ -2,7 +2,7 @@
 
 # NOTE Need to migrate these functions to r-koopa.
 
-koopa_sambamba_filter() { # {{{1
+koopa_sambamba_filter() {
     # """
     # Perform filtering on a BAM file with sambamba.
     # @note Updated 2021-09-21.
@@ -82,7 +82,7 @@ koopa_sambamba_filter() { # {{{1
     return 0
 }
 
-koopa_sambamba_filter_duplicates() { # {{{1
+koopa_sambamba_filter_duplicates() {
     # """
     # Remove duplicates from a duplicate marked BAM file.
     # @note Updated 2020-08-12.
@@ -95,7 +95,7 @@ koopa_sambamba_filter_duplicates() { # {{{1
     return 0
 }
 
-koopa_sambamba_filter_multimappers() { # {{{1
+koopa_sambamba_filter_multimappers() {
     # """
     # Filter multi-mapped reads from a BAM file.
     # @note Updated 2020-08-12.
@@ -108,7 +108,7 @@ koopa_sambamba_filter_multimappers() { # {{{1
     return 0
 }
 
-koopa_sambamba_filter_unmapped() { # {{{1
+koopa_sambamba_filter_unmapped() {
     # """
     # Filter unmapped reads from a BAM file.
     # @note Updated 2020-08-12.
@@ -118,7 +118,7 @@ koopa_sambamba_filter_unmapped() { # {{{1
     return 0
 }
 
-koopa_sambamba_index() { # {{{1
+koopa_sambamba_index() {
     # """
     # Index BAM file with sambamba.
     # @note Updated 2020-08-12.
@@ -140,7 +140,7 @@ koopa_sambamba_index() { # {{{1
     return 0
 }
 
-koopa_sambamba_sort() { # {{{1
+koopa_sambamba_sort() {
     # """
     # Sort a BAM file by genomic coordinates.
     # @note Updated 2020-08-12.

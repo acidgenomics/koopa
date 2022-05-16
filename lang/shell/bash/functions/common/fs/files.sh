@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_autopad_zeros() { # {{{1
+koopa_autopad_zeros() {
     # """
     # Autopad zeroes in sample names.
     # @note Updated 2021-09-21.
@@ -65,7 +65,7 @@ koopa_autopad_zeros() { # {{{1
     return 0
 }
 
-koopa_basename() { # {{{1
+koopa_basename() {
     # """
     # Extract the file basename.
     # @note Updated 2021-05-21.
@@ -84,7 +84,7 @@ koopa_basename() { # {{{1
     return 0
 }
 
-koopa_basename_sans_ext() { # {{{1
+koopa_basename_sans_ext() {
     # """
     # Extract the file basename without extension.
     # @note Updated 2020-06-30.
@@ -112,7 +112,7 @@ koopa_basename_sans_ext() { # {{{1
     return 0
 }
 
-koopa_basename_sans_ext2() { # {{{1
+koopa_basename_sans_ext2() {
     # """
     # Extract the file basename prior to any dots in file name.
     # @note Updated 2021-11-04.
@@ -143,7 +143,7 @@ koopa_basename_sans_ext2() { # {{{1
     return 0
 }
 
-koopa_convert_utf8_nfd_to_nfc() { # {{{1
+koopa_convert_utf8_nfd_to_nfc() {
     # """
     # Convert UTF-8 NFD to NFC.
     # @note Updated 2021-11-04.
@@ -164,7 +164,7 @@ koopa_convert_utf8_nfd_to_nfc() { # {{{1
     return 0
 }
 
-koopa_delete_broken_symlinks() { # {{{1
+koopa_delete_broken_symlinks() {
     # """
     # Delete broken symlinks.
     # @note Updated 2020-11-18.
@@ -188,7 +188,7 @@ koopa_delete_broken_symlinks() { # {{{1
     return 0
 }
 
-koopa_delete_empty_dirs() { # {{{1
+koopa_delete_empty_dirs() {
     # """
     # Delete empty directories.
     # @note Updated 2021-06-16.
@@ -225,7 +225,7 @@ koopa_delete_empty_dirs() { # {{{1
     return 0
 }
 
-koopa_delete_named_subdirs() { # {{{1
+koopa_delete_named_subdirs() {
     # """
     # Delete named subdirectories.
     # @note Updated 2021-11-04.
@@ -248,7 +248,7 @@ koopa_delete_named_subdirs() { # {{{1
     return 0
 }
 
-koopa_dirname() { # {{{1
+koopa_dirname() {
     # """
     # Extract the file dirname.
     # @note Updated 2021-05-27.
@@ -271,7 +271,7 @@ koopa_dirname() { # {{{1
     return 0
 }
 
-koopa_ensure_newline_at_end_of_file() { # {{{1
+koopa_ensure_newline_at_end_of_file() {
     # """
     # Ensure output CSV contains trailing line break.
     # @note Updated 2022-02-23.
@@ -298,7 +298,7 @@ koopa_ensure_newline_at_end_of_file() { # {{{1
     return 0
 }
 
-koopa_file_count() { # {{{1
+koopa_file_count() {
     # """
     # Return number of files.
     # @note Updated 2022-02-24.
@@ -331,7 +331,7 @@ koopa_file_count() { # {{{1
     return 0
 }
 
-koopa_file_ext() { # {{{1
+koopa_file_ext() {
     # """
     # Extract the file extension from input.
     # @note Updated 2020-07-20.
@@ -360,7 +360,7 @@ koopa_file_ext() { # {{{1
     return 0
 }
 
-koopa_file_ext2() { # {{{1
+koopa_file_ext2() {
     # """
     # Extract the file extension after any dots in the file name.
     # @note Updated 2021-11-04.
@@ -394,7 +394,7 @@ koopa_file_ext2() { # {{{1
     return 0
 }
 
-koopa_line_count() { # {{{1
+koopa_line_count() {
     # """
     # Return the number of lines in a file.
     # @note Updated 2022-02-16.
@@ -421,7 +421,7 @@ koopa_line_count() { # {{{1
     return 0
 }
 
-koopa_md5sum_check_to_new_md5_file() { # {{{1
+koopa_md5sum_check_to_new_md5_file() {
     # """
     # Perform md5sum check on specified files to a new log file.
     # @note Updated 2021-11-04.
@@ -442,7 +442,7 @@ koopa_md5sum_check_to_new_md5_file() { # {{{1
     return 0
 }
 
-koopa_nfiletypes() { # {{{1
+koopa_nfiletypes() {
     # """
     # Return the number of file types in a specific directory.
     # @note Updated 2022-02-27.
@@ -481,7 +481,7 @@ koopa_nfiletypes() { # {{{1
     return 0
 }
 
-koopa_reset_permissions() { # {{{1
+koopa_reset_permissions() {
     # """
     # Reset default permissions on a specified directory recursively.
     # @note Updated 2022-02-27.
@@ -528,7 +528,7 @@ koopa_reset_permissions() { # {{{1
     return 0
 }
 
-koopa_stat() { # {{{1
+koopa_stat() {
     # """
     # Display file or file system status.
     # @note Updated 2022-02-28.
@@ -552,7 +552,7 @@ koopa_stat() { # {{{1
     return 0
 }
 
-koopa_stat_access_human() { # {{{1
+koopa_stat_access_human() {
     # """
     # Get the current access permissions in human readable form.
     # @note Updated 2021-11-16.
@@ -564,7 +564,7 @@ koopa_stat_access_human() { # {{{1
     koopa_stat '%A' "$@"
 }
 
-koopa_stat_access_octal() { # {{{1
+koopa_stat_access_octal() {
     # """
     # Get the current access permissions in octal form.
     # @note Updated 2021-11-16.
@@ -576,7 +576,7 @@ koopa_stat_access_octal() { # {{{1
     koopa_stat '%a' "$@"
 }
 
-koopa_stat_dereference() { # {{{1
+koopa_stat_dereference() {
     # """
     # Dereference input files.
     # @note Updated 2021-11-16.
@@ -590,7 +590,7 @@ koopa_stat_dereference() { # {{{1
     koopa_stat '%N' "$@"
 }
 
-koopa_stat_group() { # {{{1
+koopa_stat_group() {
     # """
     # Get the current group of a file or directory.
     # @note Updated 2021-11-16.
@@ -602,7 +602,7 @@ koopa_stat_group() { # {{{1
     koopa_stat '%G' "$@"
 }
 
-koopa_stat_modified() { # {{{1
+koopa_stat_modified() {
     # """
     # Get file modification time.
     # @note Updated 2021-11-16.
@@ -635,7 +635,7 @@ koopa_stat_modified() { # {{{1
     return 0
 }
 
-koopa_stat_user() { # {{{1
+koopa_stat_user() {
     # """
     # Get the current user (owner) of a file or directory.
     # @note Updated 2021-11-16.

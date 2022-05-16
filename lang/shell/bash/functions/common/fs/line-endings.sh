@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_convert_line_endings_from_crlf_to_lf() { # {{{1
+koopa_convert_line_endings_from_crlf_to_lf() {
     # """
     # Convert CRLF (Windows) to LF (Unix) line endings.
     # @note Updated 2022-02-13.
@@ -27,7 +27,7 @@ koopa_convert_line_endings_from_crlf_to_lf() { # {{{1
     return 0
 }
 
-koopa_convert_line_endings_from_lf_to_crlf() { # {{{1
+koopa_convert_line_endings_from_lf_to_crlf() {
     # """
     # Convert LF (Unix) to CRLF (Windows) line endings.
     # @note Updated 2022-02-13.

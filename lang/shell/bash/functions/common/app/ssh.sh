@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_ssh_generate_key() { # {{{1
+koopa_ssh_generate_key() {
     # """
     # Generate SSH key.
     # @note Updated 2022-02-11.
@@ -87,7 +87,7 @@ koopa_ssh_generate_key() { # {{{1
     return 0
 }
 
-koopa_ssh_key_info() { # {{{1
+koopa_ssh_key_info() {
     # """
     # Get SSH key information.
     # @note Updated 2022-01-20.

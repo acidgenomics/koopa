@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_admin_group() { # {{{1
+koopa_admin_group() {
     # """
     # Return the administrator group.
     # @note Updated 2022-02-11.
@@ -37,7 +37,7 @@ koopa_admin_group() { # {{{1
     return 0
 }
 
-koopa_arch2() { # {{{1
+koopa_arch2() {
     # """
     # Alternative platform architecture.
     # @note Updated 2022-02-09.
@@ -65,7 +65,7 @@ koopa_arch2() { # {{{1
     return 0
 }
 
-koopa_compress_ext_pattern() { # {{{1
+koopa_compress_ext_pattern() {
     # """
     # Compressed file extension pattern.
     # @note Updated 2022-01-11.
@@ -75,7 +75,7 @@ koopa_compress_ext_pattern() { # {{{1
     return 0
 }
 
-koopa_cpu_count() { # {{{1
+koopa_cpu_count() {
     # """
     # Return a usable number of CPU cores.
     # @note Updated 2022-04-06.
@@ -119,7 +119,7 @@ koopa_datetime() { # {{{
     return 0
 }
 
-koopa_dotfiles_config_link() { # {{{1
+koopa_dotfiles_config_link() {
     # """
     # Dotfiles directory.
     # @note Updated 2019-11-04.
@@ -132,7 +132,7 @@ koopa_dotfiles_config_link() { # {{{1
     return 0
 }
 
-koopa_gcrypt_url() { # {{{1
+koopa_gcrypt_url() {
     # """
     # Get GnuPG FTP URL.
     # @note Updated 2021-04-27.
@@ -142,7 +142,7 @@ koopa_gcrypt_url() { # {{{1
     return 0
 }
 
-koopa_gnu_mirror_url() { # {{{1
+koopa_gnu_mirror_url() {
     # """
     # Get GNU FTP mirror URL.
     # @note Updated 2020-04-16.
@@ -152,7 +152,7 @@ koopa_gnu_mirror_url() { # {{{1
     return 0
 }
 
-koopa_ip_address() { # {{{1
+koopa_ip_address() {
     # """
     # IP address.
     # @note Updated 2022-02-09.
@@ -188,7 +188,7 @@ koopa_ip_address() { # {{{1
     return 0
 }
 
-koopa_koopa_date() { # {{{1
+koopa_koopa_date() {
     # """
     # Koopa date.
     # @note Updated 2021-06-07.
@@ -198,7 +198,7 @@ koopa_koopa_date() { # {{{1
     return 0
 }
 
-koopa_koopa_github_url() { # {{{1
+koopa_koopa_github_url() {
     # """
     # Koopa GitHub URL.
     # @note Updated 2021-06-07.
@@ -220,7 +220,7 @@ koopa_koopa_app_binary_url() { # {{{2
     koopa_print "$(koopa_koopa_url)/app"
 }
 
-koopa_koopa_installers_url() { # {{{1
+koopa_koopa_installers_url() {
     # """
     # Koopa installers URL.
     # @note Updated 2022-01-06.
@@ -229,7 +229,7 @@ koopa_koopa_installers_url() { # {{{1
     koopa_print "$(koopa_koopa_url)/installers"
 }
 
-koopa_koopa_url() { # {{{1
+koopa_koopa_url() {
     # """
     # Koopa URL.
     # @note Updated 2021-06-07.
@@ -239,7 +239,7 @@ koopa_koopa_url() { # {{{1
     return 0
 }
 
-koopa_local_ip_address() { # {{{1
+koopa_local_ip_address() {
     # """
     # Local IP address.
     # @note Updated 2022-02-09.
@@ -280,7 +280,7 @@ koopa_local_ip_address() { # {{{1
     return 0
 }
 
-koopa_make_build_string() { # {{{1
+koopa_make_build_string() {
     # """
     # OS build string for 'make' configuration.
     # @note Updated 2022-02-09.
@@ -305,7 +305,7 @@ koopa_make_build_string() { # {{{1
     return 0
 }
 
-koopa_mem_gb() { # {{{1
+koopa_mem_gb() {
     # """
     # Get total system memory in GB.
     # @note Updated 2022-02-09.
@@ -348,7 +348,7 @@ koopa_mem_gb() { # {{{1
     return 0
 }
 
-koopa_os_type() { # {{{1
+koopa_os_type() {
     # """
     # Operating system type.
     # @note Updated 2022-02-09.
@@ -368,7 +368,7 @@ koopa_os_type() { # {{{1
     return 0
 }
 
-koopa_public_ip_address() { # {{{1
+koopa_public_ip_address() {
     # """
     # Public (remote) IP address.
     # @note Updated 2022-04-06.
@@ -408,7 +408,7 @@ koopa_public_ip_address() { # {{{1
     return 0
 }
 
-koopa_script_name() { # {{{1
+koopa_script_name() {
     # """
     # Get the calling script name.
     # @note Updated 2022-02-09.
@@ -433,7 +433,7 @@ koopa_script_name() { # {{{1
     return 0
 }
 
-koopa_variable() { # {{{1
+koopa_variable() {
     # """
     # Return a variable stored 'variables.txt' include file.
     # @note Updated 2022-03-09.

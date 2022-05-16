@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_linux_bcl2fastq_indrops() { # {{{1
+koopa_linux_bcl2fastq_indrops() {
     # """
     # Run bcl2fastq on inDrops sequencing run.
     # @note Updated 2021-11-16.

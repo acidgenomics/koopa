@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_update_microsoft_office() { # {{{1
+koopa_macos_update_microsoft_office() {
     # """
     # Update Microsoft Office.
     # @note Updated 2020-07-21.

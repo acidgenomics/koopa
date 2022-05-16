@@ -1,6 +1,6 @@
 #!/bin/sh
 
-__koopa_id() { # {{{1
+__koopa_id() {
     # """
     # Return ID string.
     # @note Updated 2022-02-25.

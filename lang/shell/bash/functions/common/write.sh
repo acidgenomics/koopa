@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_append_string() { # {{{1
+koopa_append_string() {
     # """
     # Append a string at end of file.
     # @note Updated 2022-03-01.
@@ -49,7 +49,7 @@ koopa_append_string() { # {{{1
     return 0
 }
 
-koopa_sudo_append_string() { # {{{1
+koopa_sudo_append_string() {
     # """
     # Append a string at end of file as root user.
     # @note Updated 2022-03-01.
@@ -107,7 +107,7 @@ koopa_sudo_append_string() { # {{{1
     return 0
 }
 
-koopa_sudo_write_string() { # {{{1
+koopa_sudo_write_string() {
     # """
     # Write a string to disk using root user.
     # @note Updated 2022-01-31.
@@ -165,7 +165,7 @@ koopa_sudo_write_string() { # {{{1
     return 0
 }
 
-koopa_write_string() { # {{{1
+koopa_write_string() {
     # """
     # Write a string to disk.
     # @note Updated 2022-03-01.

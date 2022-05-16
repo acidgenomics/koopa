@@ -12,7 +12,7 @@
 # Check autocompletion of supported arguments with <TAB>.
 # !! Error: Unsupported command.
 
-koopa_cli_app() { # {{{1
+koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
     # @note Updated 2022-04-19.
@@ -294,7 +294,7 @@ koopa_cli_app() { # {{{1
     return 0
 }
 
-koopa_cli_configure() { # {{{1
+koopa_cli_configure() {
     # """
     # Parse user input to 'koopa configure'.
     # @note Updated 2022-02-15.
@@ -305,7 +305,7 @@ koopa_cli_configure() { # {{{1
     koopa_cli_nested_runner 'configure' "$@"
 }
 
-koopa_cli_install() { # {{{1
+koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
     # @note Updated 2022-02-15.
@@ -316,7 +316,7 @@ koopa_cli_install() { # {{{1
     koopa_cli_nested_runner 'install' "$@"
 }
 
-koopa_cli_invalid_arg() { # {{{1
+koopa_cli_invalid_arg() {
     # """
     # CLI invalid argument error message.
     # @note Updated 2022-04-17.
@@ -331,7 +331,7 @@ Check autocompletion of supported arguments with <TAB>."
     fi
 }
 
-koopa_cli_nested_runner() { # {{{1
+koopa_cli_nested_runner() {
     # """
     # Nested CLI runner function.
     # @note Updated 2022-02-16.
@@ -363,7 +363,7 @@ koopa_cli_nested_runner() { # {{{1
     return 0
 }
 
-koopa_cli_system() { # {{{1
+koopa_cli_system() {
     # """
     # Parse user input to 'koopa system'.
     # @note Updated 2022-03-31.
@@ -499,7 +499,7 @@ koopa_cli_system() { # {{{1
     return 0
 }
 
-koopa_cli_uninstall() { # {{{1
+koopa_cli_uninstall() {
     # """
     # Parse user input to 'koopa uninstall'.
     # @note Updated 2022-02-15.
@@ -510,7 +510,7 @@ koopa_cli_uninstall() { # {{{1
     koopa_cli_nested_runner 'uninstall' "$@"
 }
 
-koopa_cli_update() { # {{{1
+koopa_cli_update() {
     # """
     # Parse user input to 'koopa update'.
     # @note Updated 2022-03-09.
@@ -522,7 +522,7 @@ koopa_cli_update() { # {{{1
     koopa_cli_nested_runner 'update' "$@"
 }
 
-koopa_koopa() { # {{{1
+koopa_koopa() {
     # """
     # Main koopa CLI function, corresponding to 'koopa' binary.
     # @note Updated 2022-02-15.

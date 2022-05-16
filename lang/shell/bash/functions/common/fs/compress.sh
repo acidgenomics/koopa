@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_tar_multiple_dirs() { # {{{1
+koopa_tar_multiple_dirs() {
     # """
     # Compress (tar) multiple directories in a single call.
     # @note Updated 2022-02-04.

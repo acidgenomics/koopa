@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_symlink_dropbox() { # {{{1
+koopa_macos_symlink_dropbox() {
     # """
     # Symlink Dropbox.
     # @note Updated 2021-11-16.

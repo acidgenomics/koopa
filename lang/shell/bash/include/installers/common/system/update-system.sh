@@ -5,7 +5,7 @@
 # FIXME How to make a versioned install of Google Cloud SDK?
 # FIXME Need to update Doom Emacs, Spacemacs, Prelude Emacs, Chemacs2...
 
-main() { # {{{1
+main() {
     # """
     # Update system.
     # @note Updated 2022-04-19.

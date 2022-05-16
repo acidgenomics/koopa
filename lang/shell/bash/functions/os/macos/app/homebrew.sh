@@ -51,7 +51,7 @@ koopa_macos_brew_cask_outdated() { # {{{
     return 0
 }
 
-koopa_macos_brew_cask_quarantine_fix() { # {{{1
+koopa_macos_brew_cask_quarantine_fix() {
     # """
     # Homebrew cask fix for macOS quarantine.
     # @note Updated 2021-10-27.
@@ -69,7 +69,7 @@ koopa_macos_brew_cask_quarantine_fix() { # {{{1
     return 0
 }
 
-koopa_macos_brew_upgrade_casks() { # {{{1
+koopa_macos_brew_upgrade_casks() {
     # """
     # Upgrade Homebrew casks.
     # @note Updated 2022-04-24.

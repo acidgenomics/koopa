@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_force_eject() { # {{{1
+koopa_macos_force_eject() {
     # """
     # Force eject a volume.
     # @note Updated 2021-11-16.

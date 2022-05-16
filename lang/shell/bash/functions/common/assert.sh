@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_assert_are_identical() { # {{{1
+koopa_assert_are_identical() {
     # """
     # Assert that two strings are identical.
     # @note Updated 2020-07-07.
@@ -13,7 +13,7 @@ koopa_assert_are_identical() { # {{{1
     return 0
 }
 
-koopa_assert_are_not_identical() { # {{{1
+koopa_assert_are_not_identical() {
     # """
     # Assert that two strings are not identical.
     # @note Updated 2020-07-03.
@@ -26,7 +26,7 @@ koopa_assert_are_not_identical() { # {{{1
     return 0
 }
 
-koopa_assert_has_args() { # {{{1
+koopa_assert_has_args() {
     # """
     # Assert that non-zero arguments have been passed.
     # @note Updated 2022-02-15.
@@ -45,7 +45,7 @@ koopa_assert_has_args() { # {{{1
     return 0
 }
 
-koopa_assert_has_args_eq() { # {{{1
+koopa_assert_has_args_eq() {
     # """
     # Assert that an expected number of arguments have been passed.
     # @note Updated 2020-07-03.
@@ -61,7 +61,7 @@ koopa_assert_has_args_eq() { # {{{1
     return 0
 }
 
-koopa_assert_has_args_ge() { # {{{1
+koopa_assert_has_args_ge() {
     # """
     # Assert that greater-than-or-equal-to an expected number of arguments have
     # been passed.
@@ -78,7 +78,7 @@ koopa_assert_has_args_ge() { # {{{1
     return 0
 }
 
-koopa_assert_has_args_ge() { # {{{1
+koopa_assert_has_args_ge() {
     # """
     # Assert that greater-than-or-equal-to an expected number of arguments have
     # been passed.
@@ -95,7 +95,7 @@ koopa_assert_has_args_ge() { # {{{1
     return 0
 }
 
-koopa_assert_has_args_le() { # {{{1
+koopa_assert_has_args_le() {
     # """
     # Assert that less-than-or-equal-to an expected number of arguments have
     # been passed.
@@ -112,7 +112,7 @@ koopa_assert_has_args_le() { # {{{1
     return 0
 }
 
-koopa_assert_has_file_ext() { # {{{1
+koopa_assert_has_file_ext() {
     # """
     # Assert that input contains a file extension.
     # @note Updated 2020-02-16.
@@ -129,7 +129,7 @@ koopa_assert_has_file_ext() { # {{{1
     return 0
 }
 
-koopa_assert_has_monorepo() { # {{{1
+koopa_assert_has_monorepo() {
     # """
     # Assert that the user has a git monorepo.
     # @note Updated 2020-07-03.
@@ -142,7 +142,7 @@ koopa_assert_has_monorepo() { # {{{1
     return 0
 }
 
-koopa_assert_has_no_args() { # {{{1
+koopa_assert_has_no_args() {
     # """
     # Assert that the user has not passed any arguments to a script.
     # @note Updated 2022-02-15.
@@ -160,7 +160,7 @@ koopa_assert_has_no_args() { # {{{1
     return 0
 }
 
-koopa_assert_has_no_envs() { # {{{1
+koopa_assert_has_no_envs() {
     # """
     # Assert that conda and Python virtual environments aren't active.
     # @note Updated 2020-07-01.
@@ -181,7 +181,7 @@ Deactivate venv prior to conda, otherwise conda python may be left in PATH."
     return 0
 }
 
-koopa_assert_has_no_flags() { # {{{1
+koopa_assert_has_no_flags() {
     # """
     # Assert that the user input does not contain flags.
     # @note Updated 2021-09-20.
@@ -200,7 +200,7 @@ koopa_assert_has_no_flags() { # {{{1
     return 0
 }
 
-koopa_assert_is_aarch64() { # {{{1
+koopa_assert_is_aarch64() {
     # """
     # Assert that platform is ARM 64-bit.
     # @note Updated 2021-11-02.
@@ -213,7 +213,7 @@ koopa_assert_is_aarch64() { # {{{1
     return 0
 }
 
-koopa_assert_is_admin() { # {{{1
+koopa_assert_is_admin() {
     # """
     # Assert that current user has admin permissions.
     # @note Updated 2021-05-14.
@@ -226,7 +226,7 @@ koopa_assert_is_admin() { # {{{1
     return 0
 }
 
-koopa_assert_is_array_non_empty() { # {{{1
+koopa_assert_is_array_non_empty() {
     # """
     # Assert that array is non-empty.
     # @note Updated 2020-03-06.
@@ -238,7 +238,7 @@ koopa_assert_is_array_non_empty() { # {{{1
     return 0
 }
 
-koopa_assert_is_conda_active() { # {{{1
+koopa_assert_is_conda_active() {
     # """
     # Assert that a Conda environment is active.
     # @note Updated 2020-07-03.
@@ -251,7 +251,7 @@ koopa_assert_is_conda_active() { # {{{1
     return 0
 }
 
-koopa_assert_is_current_version() { # {{{1
+koopa_assert_is_current_version() {
     # """
     # Assert that programs are installed (and current).
     # @note Updated 2020-02-16.
@@ -269,7 +269,7 @@ koopa_assert_is_current_version() { # {{{1
     return 0
 }
 
-koopa_assert_is_dir() { # {{{1
+koopa_assert_is_dir() {
     # """
     # Assert that input is a directory.
     # @note Updated 2020-02-16.
@@ -286,7 +286,7 @@ koopa_assert_is_dir() { # {{{1
     return 0
 }
 
-koopa_assert_is_executable() { # {{{1
+koopa_assert_is_executable() {
     # """
     # Assert that input is executable.
     # @note Updated 2020-02-16.
@@ -303,7 +303,7 @@ koopa_assert_is_executable() { # {{{1
     return 0
 }
 
-koopa_assert_is_existing() { # {{{1
+koopa_assert_is_existing() {
     # """
     # Assert that input exists on disk.
     # @note Updated 2020-02-16.
@@ -322,7 +322,7 @@ koopa_assert_is_existing() { # {{{1
     return 0
 }
 
-koopa_assert_is_file() { # {{{1
+koopa_assert_is_file() {
     # """
     # Assert that input is a file.
     # @note Updated 2020-02-16.
@@ -339,7 +339,7 @@ koopa_assert_is_file() { # {{{1
     return 0
 }
 
-koopa_assert_is_file_type() { # {{{1
+koopa_assert_is_file_type() {
     # """
     # Assert that input matches a specified file type.
     # @note Updated 2022-02-17.
@@ -355,7 +355,7 @@ koopa_assert_is_file_type() { # {{{1
     return 0
 }
 
-koopa_assert_is_function() { # {{{1
+koopa_assert_is_function() {
     # """
     # Assert that variable is a function.
     # @note Updated 2020-02-16.
@@ -372,7 +372,7 @@ koopa_assert_is_function() { # {{{1
     return 0
 }
 
-koopa_assert_is_git_repo() { # {{{1
+koopa_assert_is_git_repo() {
     # """
     # Assert that current directory is a git repo.
     # @note Updated 2021-08-19.
@@ -387,7 +387,7 @@ koopa_assert_is_git_repo() { # {{{1
     return 0
 }
 
-koopa_assert_is_github_ssh_enabled() { # {{{1
+koopa_assert_is_github_ssh_enabled() {
     # """
     # Assert that current user has SSH key access to GitHub.
     # @note Updated 2020-02-11.
@@ -399,7 +399,7 @@ koopa_assert_is_github_ssh_enabled() { # {{{1
     return 0
 }
 
-koopa_assert_is_gitlab_ssh_enabled() { # {{{1
+koopa_assert_is_gitlab_ssh_enabled() {
     # """
     # Assert that current user has SSH key access to GitLab.
     # @note Updated 2020-02-11.
@@ -428,7 +428,7 @@ koopa_assert_is_gnu() {  #{{{1
     return 0
 }
 
-koopa_assert_is_installed() { # {{{1
+koopa_assert_is_installed() {
     # """
     # Assert that programs are installed.
     # @note Updated 2020-02-16.
@@ -445,7 +445,7 @@ koopa_assert_is_installed() { # {{{1
     return 0
 }
 
-koopa_assert_is_koopa_app() { # {{{1
+koopa_assert_is_koopa_app() {
     # """
     # Assert that input is an application installed in koopa app prefix.
     # @note Updated 2021-06-14.
@@ -462,7 +462,7 @@ koopa_assert_is_koopa_app() { # {{{1
     return 0
 }
 
-koopa_assert_is_linux() { # {{{1
+koopa_assert_is_linux() {
     # """
     # Assert that operating system is Linux.
     # @note Updated 2020-11-13.
@@ -474,7 +474,7 @@ koopa_assert_is_linux() { # {{{1
     return 0
 }
 
-koopa_assert_is_macos() { # {{{1
+koopa_assert_is_macos() {
     # """
     # Assert that operating system is macOS.
     # @note Updated 2020-11-13.
@@ -486,7 +486,7 @@ koopa_assert_is_macos() { # {{{1
     return 0
 }
 
-koopa_assert_is_matching_fixed() { # {{{1
+koopa_assert_is_matching_fixed() {
     # """
     # Assert that input matches a fixed pattern.
     # @note Updated 2022-02-27.
@@ -534,7 +534,7 @@ koopa_assert_is_matching_fixed() { # {{{1
     return 0
 }
 
-koopa_assert_is_matching_regex() { # {{{1
+koopa_assert_is_matching_regex() {
     # """
     # Assert that input matches a regular expression pattern.
     # @note Updated 2022-02-27.
@@ -581,7 +581,7 @@ koopa_assert_is_matching_regex() { # {{{1
     return 0
 }
 
-koopa_assert_is_non_existing() { # {{{1
+koopa_assert_is_non_existing() {
     # """
     # Assert that input does not exist on disk.
     # @note Updated 2020-02-16.
@@ -598,7 +598,7 @@ koopa_assert_is_non_existing() { # {{{1
     return 0
 }
 
-koopa_assert_is_nonzero_file() { # {{{1
+koopa_assert_is_nonzero_file() {
     # """
     # Assert that input is a non-zero file.
     # @note Updated 2020-03-06.
@@ -615,7 +615,7 @@ koopa_assert_is_nonzero_file() { # {{{1
     return 0
 }
 
-koopa_assert_is_not_dir() { # {{{1
+koopa_assert_is_not_dir() {
     # """
     # Assert that input is not a directory.
     # @note Updated 2020-02-16.
@@ -632,7 +632,7 @@ koopa_assert_is_not_dir() { # {{{1
     return 0
 }
 
-koopa_assert_is_not_file() { # {{{1
+koopa_assert_is_not_file() {
     # """
     # Assert that input is not a file.
     # @note Updated 2020-02-16.
@@ -649,7 +649,7 @@ koopa_assert_is_not_file() { # {{{1
     return 0
 }
 
-koopa_assert_is_not_installed() { # {{{1
+koopa_assert_is_not_installed() {
     # """
     # Assert that programs are not installed.
     # @note Updated 2020-02-16.
@@ -667,7 +667,7 @@ koopa_assert_is_not_installed() { # {{{1
     return 0
 }
 
-koopa_assert_is_not_root() { # {{{1
+koopa_assert_is_not_root() {
     # """
     # Assert that current user is not root.
     # @note Updated 2019-12-17.
@@ -680,7 +680,7 @@ koopa_assert_is_not_root() { # {{{1
     return 0
 }
 
-koopa_assert_is_not_symlink() { # {{{1
+koopa_assert_is_not_symlink() {
     # """
     # Assert that input is not a symbolic link.
     # @note Updated 2020-02-16.
@@ -697,7 +697,7 @@ koopa_assert_is_not_symlink() { # {{{1
     return 0
 }
 
-# > koopa_assert_is_python_package_installed() { # {{{1
+# > koopa_assert_is_python_package_installed() {
 # >     # """
 # >     # Assert that specific Python packages are installed.
 # >     # @note Updated 2020-07-10.
@@ -711,7 +711,7 @@ koopa_assert_is_not_symlink() { # {{{1
 # >     return 0
 # > }
 
-koopa_assert_is_python_venv_active() { # {{{1
+koopa_assert_is_python_venv_active() {
     # """
     # Assert that a Python virtual environment is active.
     # @note Updated 2021-06-14.
@@ -724,7 +724,7 @@ koopa_assert_is_python_venv_active() { # {{{1
     return 0
 }
 
-koopa_assert_is_r_package_installed() { # {{{1
+koopa_assert_is_r_package_installed() {
     # """
     # Assert that specific R packages are installed.
     # @note Updated 2020-07-10.
@@ -738,7 +738,7 @@ koopa_assert_is_r_package_installed() { # {{{1
     return 0
 }
 
-koopa_assert_is_readable() { # {{{1
+koopa_assert_is_readable() {
     # """
     # Assert that input is readable.
     # @note Updated 2020-02-16.
@@ -755,7 +755,7 @@ koopa_assert_is_readable() { # {{{1
     return 0
 }
 
-koopa_assert_is_root() { # {{{1
+koopa_assert_is_root() {
     # """
     # Assert that the current user is root.
     # @note Updated 2019-12-17.
@@ -768,7 +768,7 @@ koopa_assert_is_root() { # {{{1
     return 0
 }
 
-koopa_assert_is_set() { # {{{1
+koopa_assert_is_set() {
     # """
     # Assert that variables are set (and not unbound).
     # @note Updated 2021-11-05.
@@ -797,7 +797,7 @@ koopa_assert_is_set() { # {{{1
     return 0
 }
 
-koopa_assert_is_set_2() { # {{{1
+koopa_assert_is_set_2() {
     # """
     # Assert that variables are set (and not unbound).
     # @note Updated 2021-11-05.
@@ -823,7 +823,7 @@ koopa_assert_is_set_2() { # {{{1
     return 0
 }
 
-koopa_assert_is_symlink() { # {{{1
+koopa_assert_is_symlink() {
     # """
     # Assert that input is a symbolic link.
     # @note Updated 2020-02-16.
@@ -840,7 +840,7 @@ koopa_assert_is_symlink() { # {{{1
     return 0
 }
 
-koopa_assert_is_writable() { # {{{1
+koopa_assert_is_writable() {
     # """
     # Assert that input is writable.
     # @note Updated 2020-02-16.
@@ -857,7 +857,7 @@ koopa_assert_is_writable() { # {{{1
     return 0
 }
 
-koopa_assert_is_x86_64() { # {{{1
+koopa_assert_is_x86_64() {
     # """
     # Assert that platform is Intel x86 64-bit.
     # @note Updated 2021-11-02.

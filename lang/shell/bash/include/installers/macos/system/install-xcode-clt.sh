@@ -3,7 +3,7 @@
 # NOTE This currently requires user interaction, and may error inside of the
 # subshell approach currently used in 'koopa_install_app' handoff.
 
-main() { # {{{1
+main() {
     # """
     # Install Xcode CLT.
     # @note Updated 2021-10-30.

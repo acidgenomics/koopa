@@ -2,7 +2,7 @@
 
 # NOTE This is currently failing to build on macOS.
 
-main() { # {{{1
+main() {
     # """
     # Install the silver searcher.
     # @note Updated 2022-04-13.

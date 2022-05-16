@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_ifactive() { # {{{1
+koopa_macos_ifactive() {
     # """
     # Display active interfaces.
     # @note Updated 2022-01-20.

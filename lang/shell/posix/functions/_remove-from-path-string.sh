@@ -1,6 +1,6 @@
 #!/bin/sh
 
-__koopa_remove_from_path_string() { # {{{1
+__koopa_remove_from_path_string() {
     # """
     # Remove directory from PATH string with POSIX conventions.
     # @note Updated 2022-04-17.

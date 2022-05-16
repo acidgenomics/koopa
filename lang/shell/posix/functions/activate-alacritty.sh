@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_alacritty() { # {{{1
+koopa_activate_alacritty() {
     # """
     # Activate Alacritty terminal client.
     # @note Updated 2022-05-06.

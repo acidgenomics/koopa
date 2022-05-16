@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Update SpaceVim.
     # @note Updated 2021-11-23.

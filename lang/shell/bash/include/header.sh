@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Rework as cached function approach.
-__koopa_bash_source_dir() { # {{{1
+__koopa_bash_source_dir() {
     # """
     # Source multiple Bash script files inside a directory.
     # @note Updated 2022-04-08.
@@ -66,7 +66,7 @@ __koopa_exit_trap() {
     return 0
 }
 
-__koopa_is_installed() { # {{{1
+__koopa_is_installed() {
     # """
     # Are all of the requested programs installed?
     # @note Updated 2021-06-16.
@@ -79,7 +79,7 @@ __koopa_is_installed() { # {{{1
     return 0
 }
 
-__koopa_print() { # {{{1
+__koopa_print() {
     # """
     # Print a string.
     # @note Updated 2021-05-07.
@@ -92,7 +92,7 @@ __koopa_print() { # {{{1
     return 0
 }
 
-__koopa_realpath() { # {{{1
+__koopa_realpath() {
     # """
     # Resolve file path.
     # @note Updated 2022-04-08.
@@ -137,7 +137,7 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
-__koopa_warn() { # {{{1
+__koopa_warn() {
     # """
     # Print a warning message to the console.
     # @note Updated 2021-05-14.
@@ -150,7 +150,7 @@ __koopa_warn() { # {{{1
     return 0
 }
 
-__koopa_bash_header() { # {{{1
+__koopa_bash_header() {
     # """
     # Bash header.
     # @note Updated 2022-02-25.

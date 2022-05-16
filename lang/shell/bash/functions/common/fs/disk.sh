@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_disk_gb_free() { # {{{1
+koopa_disk_gb_free() {
     # """
     # Available free disk space in GB.
     # @note Updated 2022-05-06.
@@ -37,7 +37,7 @@ koopa_disk_gb_free() { # {{{1
     return 0
 }
 
-koopa_disk_gb_total() { # {{{1
+koopa_disk_gb_total() {
     # """
     # Total disk space size in GB.
     # @note Updated 2022-05-06.
@@ -70,7 +70,7 @@ koopa_disk_gb_total() { # {{{1
     return 0
 }
 
-koopa_disk_gb_used() { # {{{1
+koopa_disk_gb_used() {
     # """
     # Used disk space in GB.
     # @note Updated 2022-05-06.
@@ -104,7 +104,7 @@ koopa_disk_gb_used() { # {{{1
     return 0
 }
 
-koopa_disk_pct_free() { # {{{1
+koopa_disk_pct_free() {
     # """
     # Free disk space percentage (on main drive).
     # @note Updated 2021-10-25.
@@ -119,7 +119,7 @@ koopa_disk_pct_free() { # {{{1
     return 0
 }
 
-koopa_disk_pct_used() { # {{{1
+koopa_disk_pct_used() {
     # """
     # Disk usage percentage (on main drive).
     # @note Updated 2022-05-06.

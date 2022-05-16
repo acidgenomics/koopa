@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Update Google Cloud SDK.
     # @note Updated 2022-04-06.

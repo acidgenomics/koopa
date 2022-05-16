@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_debian_gdebi_install() { # {{{1
+koopa_debian_gdebi_install() {
     # """
     # Install Debian binary using gdebi.
     # @note Updated 2022-04-26.

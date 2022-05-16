@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_clean_launch_services() { # {{{1
+koopa_macos_clean_launch_services() {
     # """
     # Clean launch services.
     # @note Updated 2021-11-16.
@@ -25,7 +25,7 @@ koopa_macos_clean_launch_services() { # {{{1
     return 0
 }
 
-koopa_macos_flush_dns() { # {{{1
+koopa_macos_flush_dns() {
     # """
     # Flush DNS cache.
     # @note Updated 2021-11-16.

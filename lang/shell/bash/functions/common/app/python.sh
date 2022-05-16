@@ -45,7 +45,7 @@
 # >     return 0
 # > }
 
-koopa_python_activate_venv() { # {{{1
+koopa_python_activate_venv() {
     # """
     # Activate Python virtual environment.
     # @note Updated 2022-03-30.
@@ -91,7 +91,7 @@ koopa_python_activate_venv() { # {{{1
 # '/opt/koopa/bin' from here.
 # NOTE Work on adding support for 'requirements.txt' input.
 
-koopa_python_create_venv() { # {{{1
+koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
     # @note Updated 2022-04-11.
@@ -202,7 +202,7 @@ ${dict[py_maj_min_ver]}"
     return 0
 }
 
-koopa_python_deactivate_venv() { # {{{1
+koopa_python_deactivate_venv() {
     # """
     # Deactivate Python virtual environment.
     # @note Updated 2022-02-16.
@@ -239,7 +239,7 @@ koopa_python_get_pkg_versions() {
     return 0
 }
 
-koopa_python_pip_install() { # {{{1
+koopa_python_pip_install() {
     # """
     # Internal pip install command.
     # @note Updated 2022-03-30.
@@ -318,7 +318,7 @@ koopa_python_pip_install() { # {{{1
     return 0
 }
 
-koopa_python_pip_outdated() { # {{{1
+koopa_python_pip_outdated() {
     # """
     # List oudated pip packages.
     # @note Updated 2022-01-20.

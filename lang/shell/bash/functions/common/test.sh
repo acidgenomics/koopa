@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_test() { # {{{1
+koopa_test() {
     # """
     # Run all koopa unit tests.
     # @note Updated 2022-02-17.
@@ -18,7 +18,7 @@ koopa_test() { # {{{1
     return 0
 }
 
-koopa_test_find_files() { # {{{1
+koopa_test_find_files() {
     # """
     # Find relevant files for unit tests.
     # @note Updated 2022-02-24.
@@ -55,7 +55,7 @@ koopa_test_find_files() { # {{{1
     koopa_print "${files[@]}"
 }
 
-koopa_test_find_files_by_ext() { # {{{1
+koopa_test_find_files_by_ext() {
     # """
     # Find relevant test files by extension.
     # @note Updated 2022-01-31.
@@ -82,7 +82,7 @@ koopa_test_find_files_by_ext() { # {{{1
     return 0
 }
 
-koopa_test_find_files_by_shebang() { # {{{1
+koopa_test_find_files_by_shebang() {
     # """
     # Find relevant test files by shebang.
     # @note Updated 2022-01-31.
@@ -119,7 +119,7 @@ koopa_test_find_files_by_shebang() { # {{{1
     return 0
 }
 
-koopa_test_grep() { # {{{1
+koopa_test_grep() {
     # """
     # Grep illegal patterns.
     # @note Updated 2022-01-31.
@@ -219,7 +219,7 @@ koopa_test_grep() { # {{{1
     return 0
 }
 
-koopa_test_true_color() { # {{{1
+koopa_test_true_color() {
     # """
     # Test 24-bit true color support.
     # @note Updated 2022-01-31.

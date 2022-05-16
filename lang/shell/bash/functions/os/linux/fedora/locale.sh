@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_fedora_set_locale() { # {{{1
+koopa_fedora_set_locale() {
     # """
     # Set locale to English US UTF-8.
     # @note Updated 2022-01-28.

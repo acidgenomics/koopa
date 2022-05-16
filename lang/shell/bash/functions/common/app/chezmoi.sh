@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_configure_chezmoi() { # {{{1
+koopa_configure_chezmoi() {
     # """
     # Configure chezmoi to use koopa managed dotfiles repo.
     # @note Updated 2022-05-10.

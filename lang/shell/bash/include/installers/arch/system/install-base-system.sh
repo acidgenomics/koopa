@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install Arch Linux base system.
     # @note Updated 2021-11-30.

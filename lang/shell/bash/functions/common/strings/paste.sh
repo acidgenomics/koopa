@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_paste() { # {{{1
+koopa_paste() {
     # """
     # Paste arguments into a string separated by delimiter.
     # @note Updated 2022-02-24.
@@ -49,7 +49,7 @@ koopa_paste() { # {{{1
     return 0
 }
 
-koopa_paste0() { # {{{1
+koopa_paste0() {
     # """
     # Paste arguments to string without a delimiter.
     # @note Updated 2021-11-30.
@@ -61,7 +61,7 @@ koopa_paste0() { # {{{1
     koopa_paste --sep='' "$@"
 }
 
-koopa_to_string() { # {{{1
+koopa_to_string() {
     # """
     # Paste arguments to a comma separated string.
     # @note Updated 2021-11-30.

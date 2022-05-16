@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_debian_set_locale() { # {{{1
+koopa_debian_set_locale() {
     # """
     # Set locale to English US UTF-8.
     # @note Updated 2022-03-09.
@@ -43,7 +43,7 @@ koopa_debian_set_locale() { # {{{1
     return 0
 }
 
-koopa_debian_set_timezone() { # {{{1
+koopa_debian_set_timezone() {
     # """
     # Set local timezone.
     # @note Updated 2022-04-06.

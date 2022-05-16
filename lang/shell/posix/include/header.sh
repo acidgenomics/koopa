@@ -1,6 +1,6 @@
 #!/bin/sh
 
-__koopa_posix_header() { # {{{1
+__koopa_posix_header() {
     # """
     # POSIX shell header.
     # @note Updated 2022-05-16.
@@ -23,7 +23,7 @@ __koopa_posix_header() { # {{{1
         for file in "${prefix}/functions/"*'.sh'
         do
             # shellcheck source=/dev/null
-            [ -f "$file" ] && . "$file"
+            . "$file"
         done
     fi
     if [ "${KOOPA_TEST:-0}" -eq 1 ]

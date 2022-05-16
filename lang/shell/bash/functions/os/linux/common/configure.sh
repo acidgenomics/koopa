@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_linux_add_user_to_etc_passwd() { # {{{1
+koopa_linux_add_user_to_etc_passwd() {
     # """
     # Any any type of user, including domain user to passwd file.
     # @note Updated 2022-02-17.
@@ -39,7 +39,7 @@ in '${dict[passwd_file]}'."
     return 0
 }
 
-koopa_linux_add_user_to_group() { # {{{1
+koopa_linux_add_user_to_group() {
     # """
     # Add user to group.
     # @note Updated 2021-11-16.
@@ -67,7 +67,7 @@ koopa_linux_add_user_to_group() { # {{{1
     return 0
 }
 
-koopa_linux_remove_user_from_group() { # {{{1
+koopa_linux_remove_user_from_group() {
     # """
     # Remove user from group.
     # @note Updated 2021-11-16.
@@ -91,7 +91,7 @@ koopa_linux_remove_user_from_group() { # {{{1
     return 0
 }
 
-koopa_linux_update_etc_profile_d() { # {{{1
+koopa_linux_update_etc_profile_d() {
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
     # @note Updated 2021-11-16.
@@ -115,7 +115,7 @@ koopa_linux_update_etc_profile_d() { # {{{1
     read -r -d '' "dict[string]" << END || true
 #!/bin/sh
 
-__koopa_activate_shared_profile() { # {{{1
+__koopa_activate_shared_profile() {
     # """
     # Activate koopa shell for all users.
     # @note Updated 2021-11-11.
@@ -134,7 +134,7 @@ END
         --string="${dict[string]}"
 }
 
-koopa_linux_update_ldconfig() { # {{{1
+koopa_linux_update_ldconfig() {
     # """
     # Update dynamic linker (LD) configuration.
     # @note Updated 2022-01-31.
@@ -169,7 +169,7 @@ koopa_linux_update_ldconfig() { # {{{1
     return 0
 }
 
-koopa_linux_update_sshd_config() { # {{{1
+koopa_linux_update_sshd_config() {
     # """
     # Update sshd configuration.
     # @note Updated 2022-03-28.

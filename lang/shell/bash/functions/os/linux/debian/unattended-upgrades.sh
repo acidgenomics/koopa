@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_debian_enable_unattended_upgrades() { # {{{1
+koopa_debian_enable_unattended_upgrades() {
     # """
     # Enable unattended upgrades.
     # @note Updated 2021-11-02.

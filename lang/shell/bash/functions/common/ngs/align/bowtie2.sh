@@ -4,7 +4,7 @@
 # FIXME This needs to call align per sample.
 # FIXME Need to split out the indexer to separate function.
 
-koopa_bowtie2() { # {{{1
+koopa_bowtie2() {
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
     # @note Updated 2022-03-22.
@@ -123,7 +123,7 @@ with '${dict[r1_tail]}'."
 
 # Individual runners ===========================================================
 # FIXME Need to locate bowtie2 directly here, rather than activating conda.
-koopa_bowtie2_align() { # {{{1
+koopa_bowtie2_align() {
     # """
     # Run bowtie2 alignment on multiple paired-end FASTQ files.
     # @note Updated 2021-09-21.
@@ -234,7 +234,7 @@ koopa_bowtie2_align() { # {{{1
     return 0
 }
 
-koopa_bowtie2_index() { # {{{1
+koopa_bowtie2_index() {
     # """
     # Generate bowtie2 index.
     # @note Updated 2021-09-21.

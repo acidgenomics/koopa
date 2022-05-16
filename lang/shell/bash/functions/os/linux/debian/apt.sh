@@ -279,7 +279,7 @@ ${dict[url]} ${dict[distribution]} ${components[*]}"
     return 0
 }
 
-koopa_debian_apt_add_azure_cli_repo() { # {{{1
+koopa_debian_apt_add_azure_cli_repo() {
     # """
     # Add Microsoft Azure CLI apt repo.
     # @note Updated 2021-11-09.
@@ -296,7 +296,7 @@ koopa_debian_apt_add_azure_cli_repo() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_docker_key() { # {{{1
+koopa_debian_apt_add_docker_key() {
     # """
     # Add the Docker key.
     # @note Updated 2021-11-09.
@@ -313,7 +313,7 @@ koopa_debian_apt_add_docker_key() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_docker_repo() { # {{{1
+koopa_debian_apt_add_docker_repo() {
     # """
     # Add Docker apt repo.
     # @note Updated 2021-11-09.
@@ -333,7 +333,7 @@ koopa_debian_apt_add_docker_repo() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_google_cloud_key() { # {{{1
+koopa_debian_apt_add_google_cloud_key() {
     # """
     # Add the Google Cloud key.
     # @note Updated 2021-11-09.
@@ -350,7 +350,7 @@ koopa_debian_apt_add_google_cloud_key() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_google_cloud_sdk_repo() { # {{{1
+koopa_debian_apt_add_google_cloud_sdk_repo() {
     # """
     # Add Google Cloud SDK apt repo.
     # @note Updated 2021-11-09.
@@ -367,7 +367,7 @@ koopa_debian_apt_add_google_cloud_sdk_repo() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_llvm_key() { # {{{1
+koopa_debian_apt_add_llvm_key() {
     # """
     # Add the LLVM key.
     # @note Updated 2021-11-09.
@@ -380,7 +380,7 @@ koopa_debian_apt_add_llvm_key() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_llvm_repo() { # {{{1
+koopa_debian_apt_add_llvm_repo() {
     # """
     # Add LLVM apt repo.
     # @note Updated 2021-11-10.
@@ -423,7 +423,7 @@ koopa_debian_apt_add_microsoft_key() {  #{{{1
     return 0
 }
 
-koopa_debian_apt_add_r_key() { # {{{1
+koopa_debian_apt_add_r_key() {
     # """
     # Add the R key.
     # @note Updated 2022-01-28.
@@ -468,7 +468,7 @@ koopa_debian_apt_add_r_key() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_r_repo() { # {{{1
+koopa_debian_apt_add_r_repo() {
     # """
     # Add R apt repo.
     # @note Updated 2021-11-10.
@@ -517,7 +517,7 @@ koopa_debian_apt_add_r_repo() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_wine_key() { # {{{1
+koopa_debian_apt_add_wine_key() {
     # """
     # Add the WineHQ key.
     # @note Updated 2021-11-09.
@@ -543,7 +543,7 @@ koopa_debian_apt_add_wine_key() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_wine_repo() { # {{{1
+koopa_debian_apt_add_wine_repo() {
     # """
     # Add WineHQ repo.
     # @note Updated 2021-11-10.
@@ -564,7 +564,7 @@ koopa_debian_apt_add_wine_repo() { # {{{1
     return 0
 }
 
-koopa_debian_apt_add_wine_obs_key() { # {{{1
+koopa_debian_apt_add_wine_obs_key() {
     # """
     # Add the Wine OBS openSUSE key.
     # @note Updated 2021-11-10.
@@ -602,7 +602,7 @@ Emulators:/Wine:/Debian/${dict[subdir]}/Release.key"
     return 0
 }
 
-koopa_debian_apt_add_wine_obs_repo() { # {{{1
+koopa_debian_apt_add_wine_obs_repo() {
     # """
     # Add Wine OBS openSUSE repo.
     # @note Updated 2021-11-10.
@@ -650,7 +650,7 @@ Emulators:/Wine:/Debian"
     return 0
 }
 
-koopa_debian_apt_clean() { # {{{1
+koopa_debian_apt_clean() {
     # """
     # Clean up apt after an install/uninstall call.
     # @note Updated 2021-11-02.
@@ -683,7 +683,7 @@ koopa_debian_apt_clean() { # {{{1
     return 0
 }
 
-koopa_debian_apt_configure_sources() { # {{{1
+koopa_debian_apt_configure_sources() {
     # """
     # Configure apt sources.
     # @note Updated 2022-03-09.
@@ -848,7 +848,7 @@ END
     return 0
 }
 
-koopa_debian_apt_delete_repo() { # {{{1
+koopa_debian_apt_delete_repo() {
     # """
     # Delete an apt repo file.
     # @note Updated 2021-11-05.
@@ -868,7 +868,7 @@ koopa_debian_apt_delete_repo() { # {{{1
     return 0
 }
 
-koopa_debian_apt_disable_deb_src() { # {{{1
+koopa_debian_apt_disable_deb_src() {
     # """
     # Disable 'deb-src' source packages.
     # @note Updated 2022-02-17.
@@ -903,7 +903,7 @@ koopa_debian_apt_disable_deb_src() { # {{{1
     return 0
 }
 
-koopa_debian_apt_enable_deb_src() { # {{{1
+koopa_debian_apt_enable_deb_src() {
     # """
     # Enable 'deb-src' source packages.
     # @note Updated 2022-02-17.
@@ -938,7 +938,7 @@ koopa_debian_apt_enable_deb_src() { # {{{1
     return 0
 }
 
-koopa_debian_apt_enabled_repos() { # {{{1
+koopa_debian_apt_enabled_repos() {
     # """
     # Get a list of enabled default apt repos.
     # @note Updated 2021-11-05.
@@ -964,7 +964,7 @@ koopa_debian_apt_enabled_repos() { # {{{1
     koopa_print "$x"
 }
 
-koopa_debian_apt_get() { # {{{1
+koopa_debian_apt_get() {
     # """
     # Non-interactive variant of apt-get, with saner defaults.
     # @note Updated 2021-11-02.
@@ -990,7 +990,7 @@ koopa_debian_apt_get() { # {{{1
     return 0
 }
 
-koopa_debian_apt_install() { # {{{1
+koopa_debian_apt_install() {
     # """
     # Install Debian apt package.
     # @note Updated 2020-06-30.
@@ -999,7 +999,7 @@ koopa_debian_apt_install() { # {{{1
     koopa_debian_apt_get install "$@"
 }
 
-koopa_debian_apt_is_key_imported() { # {{{1
+koopa_debian_apt_is_key_imported() {
     # """
     # Is a GPG key imported for apt?
     # @note Updated 2021-11-02.
@@ -1030,7 +1030,7 @@ koopa_debian_apt_is_key_imported() { # {{{1
         --pattern="${dict[key_pattern]}"
 }
 
-koopa_debian_apt_key_prefix() { # {{{1
+koopa_debian_apt_key_prefix() {
     # """
     # Debian apt key prefix.
     # @note Updated 2021-11-02.
@@ -1041,7 +1041,7 @@ koopa_debian_apt_key_prefix() { # {{{1
     koopa_print '/usr/share/keyrings'
 }
 
-koopa_debian_apt_remove() { # {{{1
+koopa_debian_apt_remove() {
     # """
     # Remove Debian apt package.
     # @note Updated 2021-11-02.
@@ -1058,7 +1058,7 @@ koopa_debian_apt_remove() { # {{{1
     return 0
 }
 
-koopa_debian_apt_sources_file() { # {{{1
+koopa_debian_apt_sources_file() {
     # """
     # Debian apt sources file.
     # @note Updated 2021-11-02.
@@ -1067,7 +1067,7 @@ koopa_debian_apt_sources_file() { # {{{1
     koopa_print '/etc/apt/sources.list'
 }
 
-koopa_debian_apt_sources_prefix() { # {{{1
+koopa_debian_apt_sources_prefix() {
     # """
     # Debian apt sources directory.
     # @note Updated 2021-11-02.
@@ -1076,7 +1076,7 @@ koopa_debian_apt_sources_prefix() { # {{{1
     koopa_print '/etc/apt/sources.list.d'
 }
 
-koopa_debian_apt_space_used_by() { # {{{1
+koopa_debian_apt_space_used_by() {
     # """
     # Check installed apt package size, with dependencies.
     # @note Updated 2021-11-02.
@@ -1094,7 +1094,7 @@ koopa_debian_apt_space_used_by() { # {{{1
     return 0
 }
 
-koopa_debian_apt_space_used_by_grep() { # {{{1
+koopa_debian_apt_space_used_by_grep() {
     # """
     # Check installed apt package size, with dependencies.
     # @note Updated 2021-11-02.
@@ -1122,7 +1122,7 @@ koopa_debian_apt_space_used_by_grep() { # {{{1
     return 0
 }
 
-koopa_debian_apt_space_used_by_no_deps() { # {{{1
+koopa_debian_apt_space_used_by_no_deps() {
     # """
     # Check install apt package size, without dependencies.
     # @note Updated 2021-11-02.
@@ -1143,7 +1143,7 @@ koopa_debian_apt_space_used_by_no_deps() { # {{{1
     return 0
 }
 
-koopa_debian_install_from_deb() { # {{{1
+koopa_debian_install_from_deb() {
     # """
     # Install directly from a '.deb' file.
     # @note Updated 2021-11-02.
