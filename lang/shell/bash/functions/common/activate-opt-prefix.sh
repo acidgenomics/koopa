@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Consider not modifying PKG_CONFIG_PATH in this case.
-koopa_activate_build_opt_prefix() {
-    # """
-    # Activate a build-only opt prefix.
-    # @note Updated 2022-04-22.
-    #
-    # Useful for activation of 'cmake', 'make', 'pkg-config', etc.
-    # """
-    koopa_activate_opt_prefix --build-only "$@"
-}
-
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
@@ -139,64 +128,5 @@ koopa_activate_opt_prefix() {
         fi
     done
     export CPPFLAGS LDFLAGS LDLIBS
-    return 0
-}
-
-koopa_add_rpath_to_ldflags() {
-    # """
-    # Append 'LDFLAGS' string with an rpath.
-    # @note Updated 2022-04-22.
-    #
-    # Use '-rpath,${dir}' here not, '-rpath=${dir}'. This approach works on
-    # both BSD/Unix (macOS) and Linux systems.
-    # """
-    local dir
-    koopa_assert_has_args "$#"
-    LDFLAGS="${LDFLAGS:-}"
-    for dir in "$@"
-    do
-        LDFLAGS="${LDFLAGS} -Wl,-rpath,${dir}"
-    done
-    export LDFLAGS
-    return 0
-}
-
-koopa_add_to_pkg_config_path() {
-    # """
-    # Force add to start of 'PKG_CONFIG_PATH'.
-    # @note Updated 2022-04-21.
-    # """
-    local dir
-    koopa_assert_has_args "$#"
-    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
-    for dir in "$@"
-    do
-        [[ -d "$dir" ]] || continue
-        PKG_CONFIG_PATH="$( \
-            __koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$dir" \
-        )"
-    done
-    export PKG_CONFIG_PATH
-    return 0
-}
-
-koopa_add_to_pkg_config_path_2() {
-    # """
-    # Force add to start of 'PKG_CONFIG_PATH' using 'pc_path' variable
-    # lookup from 'pkg-config' program.
-    # @note Updated 2022-04-21.
-    # """
-    local app str
-    koopa_assert_has_args "$#"
-    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
-    for app in "$@"
-    do
-        [[ -x "$app" ]] || continue
-        str="$("$app" --variable 'pc_path' 'pkg-config')"
-        PKG_CONFIG_PATH="$( \
-            __koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$str" \
-        )"
-    done
-    export PKG_CONFIG_PATH
     return 0
 }
