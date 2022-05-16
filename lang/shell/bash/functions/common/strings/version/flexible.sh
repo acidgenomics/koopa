@@ -2,7 +2,7 @@
 
 # These functions support flexible version lookups.
 
-koopa_anaconda_version() { # {{{1
+koopa_anaconda_version() {
     # """
     # Anaconda verison.
     # @note Updated 2022-03-18.
@@ -33,7 +33,7 @@ koopa_anaconda_version() { # {{{1
     return 0
 }
 
-koopa_bpytop_version() { # {{{1
+koopa_bpytop_version() {
     # """
     # bpytop version.
     # @note Updated 2022-03-18.
@@ -56,7 +56,7 @@ koopa_bpytop_version() { # {{{1
     return 0
 }
 
-koopa_lesspipe_version() { # {{{1
+koopa_lesspipe_version() {
     # """
     # lesspipe.sh version.
     # @note Updated 2022-03-18.
@@ -79,7 +79,7 @@ koopa_lesspipe_version() { # {{{1
     return 0
 }
 
-koopa_man_version() { # {{{1
+koopa_man_version() {
     # """
     # man-db version.
     # @note Updated 2022-03-27.
@@ -104,7 +104,7 @@ koopa_man_version() { # {{{1
     return 0
 }
 
-koopa_openjdk_version() { # {{{1
+koopa_openjdk_version() {
     # """
     # Java (OpenJDK) version.
     # @note Updated 2022-03-25.
@@ -127,7 +127,7 @@ koopa_openjdk_version() { # {{{1
     return 0
 }
 
-koopa_parallel_version() { # {{{1
+koopa_parallel_version() {
     # """
     # GNU parallel version.
     # @note Updated 2022-03-21.
@@ -150,7 +150,7 @@ koopa_parallel_version() { # {{{1
     return 0
 }
 
-koopa_r_version() { # {{{1
+koopa_r_version() {
     # """
     # R version.
     # @note Updated 2022-02-27.
@@ -179,7 +179,7 @@ koopa_r_version() { # {{{1
     return 0
 }
 
-koopa_ruby_api_version() { # {{{1
+koopa_ruby_api_version() {
     # """
     # Ruby API version.
     # @note Updated 2022-03-18.
@@ -201,7 +201,7 @@ koopa_ruby_api_version() { # {{{1
     return 0
 }
 
-koopa_tex_version() { # {{{1
+koopa_tex_version() {
     # """
     # TeX version (release year).
     # @note Updated 2022-03-18.
@@ -233,7 +233,7 @@ koopa_tex_version() { # {{{1
     return 0
 }
 
-koopa_vim_version() { # {{{1
+koopa_vim_version() {
     # """
     # Vim version.
     # @note Updated 2022-03-18.

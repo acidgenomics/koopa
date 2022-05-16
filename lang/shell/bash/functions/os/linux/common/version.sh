@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_linux_os_version() { # {{{1
+koopa_linux_os_version() {
     # """
     # Linux OS version.
     # @note Updated 2021-11-16.

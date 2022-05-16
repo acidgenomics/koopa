@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_grep() { # {{{1
+koopa_grep() {
     # """
     # grep matching: print lines that match patterns in a string or file.
     # @note Updated 2022-02-24.
@@ -227,7 +227,7 @@ koopa_grep() { # {{{1
     fi
 }
 
-__koopa_file_detect() { # {{{1
+__koopa_file_detect() {
     # """
     # Is a pattern defined in a file?
     # @note Updated 2022-02-23.
@@ -315,7 +315,7 @@ __koopa_file_detect() { # {{{1
     koopa_grep "${grep_args[@]}"
 }
 
-__koopa_str_detect() { # {{{1
+__koopa_str_detect() {
     # """
     # Does the input pattern match a string?
     # @note Updated 2022-02-23.
@@ -406,18 +406,18 @@ __koopa_str_detect() { # {{{1
     koopa_grep "${grep_args[@]}"
 }
 
-koopa_file_detect_fixed() { # {{{1
+koopa_file_detect_fixed() {
     __koopa_file_detect --mode='fixed' "$@"
 }
 
-koopa_file_detect_regex() { # {{{1
+koopa_file_detect_regex() {
     __koopa_file_detect --mode='regex' "$@"
 }
 
-koopa_str_detect_fixed() { # {{{1
+koopa_str_detect_fixed() {
     __koopa_str_detect --mode='fixed' "$@"
 }
 
-koopa_str_detect_regex() { # {{{1
+koopa_str_detect_regex() {
     __koopa_str_detect --mode='regex' "$@"
 }

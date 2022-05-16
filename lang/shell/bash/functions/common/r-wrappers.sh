@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_camel_case() { # {{{1
+koopa_camel_case() {
     # """
     # Camel case.
     # @note Updated 2021-08-14.
@@ -9,7 +9,7 @@ koopa_camel_case() { # {{{1
     koopa_r_koopa 'cliCamelCase' "$@"
 }
 
-koopa_check_bin_man_consistency() { # {{{1
+koopa_check_bin_man_consistency() {
     # """
     # Check bin and man consistency.
     # @note Updated 2021-08-14.
@@ -19,7 +19,7 @@ koopa_check_bin_man_consistency() { # {{{1
     return 0
 }
 
-koopa_docker_build_all_tags() { # {{{1
+koopa_docker_build_all_tags() {
     # """
     # Build all Docker tags.
     # @note Updated 2020-08-14.
@@ -29,7 +29,7 @@ koopa_docker_build_all_tags() { # {{{1
     return 0
 }
 
-koopa_docker_prune_all_stale_tags() { # {{{1
+koopa_docker_prune_all_stale_tags() {
     # """
     # Prune (delete) all stale tags on DockerHub for all images.
     # @note Updated 2021-08-14.
@@ -39,7 +39,7 @@ koopa_docker_prune_all_stale_tags() { # {{{1
     return 0
 }
 
-koopa_docker_prune_stale_tags() { # {{{1
+koopa_docker_prune_stale_tags() {
     # """
     # Prune (delete) all stale tags on DockerHub for a specific image.
     # @note Updated 2021-08-14.
@@ -57,7 +57,7 @@ koopa_docker_prune_stale_tags() { # {{{1
     return 0
 }
 
-koopa_download_ensembl_genome() { # {{{1
+koopa_download_ensembl_genome() {
     # """
     # Download Ensembl genome.
     # @note Updated 2021-08-14.
@@ -66,7 +66,7 @@ koopa_download_ensembl_genome() { # {{{1
     koopa_r_koopa 'cliDownloadEnsemblGenome' "$@"
 }
 
-koopa_download_gencode_genome() { # {{{1
+koopa_download_gencode_genome() {
     # """
     # Download GENCODE genome.
     # @note Updated 2021-08-14.
@@ -75,7 +75,7 @@ koopa_download_gencode_genome() { # {{{1
     koopa_r_koopa 'cliDownloadGencodeGenome' "$@"
 }
 
-koopa_download_refseq_genome() { # {{{1
+koopa_download_refseq_genome() {
     # """
     # Download RefSeq genome.
     # @note Updated 2021-08-14.
@@ -84,7 +84,7 @@ koopa_download_refseq_genome() { # {{{1
     koopa_r_koopa 'cliDownloadRefseqGenome' "$@"
 }
 
-koopa_download_ucsc_genome() { # {{{1
+koopa_download_ucsc_genome() {
     # """
     # Download UCSC genome.
     # @note Updated 2021-08-18.
@@ -93,7 +93,7 @@ koopa_download_ucsc_genome() { # {{{1
     koopa_r_koopa 'cliDownloadUCSCGenome' "$@"
 }
 
-koopa_find_and_move_in_sequence() { # {{{1
+koopa_find_and_move_in_sequence() {
     # """
     # Find and move files in sequence.
     # @note Updated 2021-08-14.
@@ -103,7 +103,7 @@ koopa_find_and_move_in_sequence() { # {{{1
     return 0
 }
 
-koopa_kebab_case() { # {{{1
+koopa_kebab_case() {
     # """
     # Kebab case.
     # @note Updated 2021-08-14.
@@ -112,7 +112,7 @@ koopa_kebab_case() { # {{{1
     koopa_r_koopa 'cliKebabCase' "$@"
 }
 
-koopa_list_programs() { # {{{1
+koopa_list_programs() {
     # """
     # List koopa programs available in PATH.
     # @note Updated 2021-08-14.
@@ -122,7 +122,7 @@ koopa_list_programs() { # {{{1
     return 0
 }
 
-koopa_prune_apps() { # {{{1
+koopa_prune_apps() {
     # """
     # Prune applications.
     # @note Updated 2021-08-14.
@@ -136,7 +136,7 @@ koopa_prune_apps() { # {{{1
     return 0
 }
 
-koopa_snake_case() { # {{{1
+koopa_snake_case() {
     # """
     # Snake case.
     # @note Updated 2021-08-14.

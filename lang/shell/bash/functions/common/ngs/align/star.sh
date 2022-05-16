@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_star_align_paired_end() { # {{{1
+koopa_star_align_paired_end() {
     # """
     # Run STAR aligner on multiple paired-end FASTQs in a directory.
     # @note Updated 2022-03-25.
@@ -131,7 +131,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
     return 0
 }
 
-koopa_star_align_paired_end_per_sample() { # {{{1
+koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
     # @note Updated 2022-03-25.
@@ -282,7 +282,7 @@ GB of RAM."
     return 0
 }
 
-koopa_star_align_single_end() { # {{{1
+koopa_star_align_single_end() {
     # """
     # Run STAR aligner on multiple single-end FASTQs in a directory.
     # @note Updated 2022-03-25.
@@ -396,7 +396,7 @@ koopa_star_align_single_end() { # {{{1
     return 0
 }
 
-koopa_star_align_single_end_per_sample() { # {{{1
+koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
     # @note Updated 2022-03-25.
@@ -508,7 +508,7 @@ GB of RAM."
     return 0
 }
 
-koopa_star_index() { # {{{1
+koopa_star_index() {
     # """
     # Create a genome index for STAR aligner.
     # @note Updated 2022-03-25.

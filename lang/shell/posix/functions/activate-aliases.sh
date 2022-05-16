@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_aliases() { # {{{1
+koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
     # @note Updated 2022-05-10.

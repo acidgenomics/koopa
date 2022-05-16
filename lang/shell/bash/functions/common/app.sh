@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_configure_app_packages() { # {{{1
+koopa_configure_app_packages() {
     # """
     # Configure language application.
     # @note Updated 2022-04-21.
@@ -135,7 +135,7 @@ koopa_configure_app_packages() { # {{{1
     return 0
 }
 
-koopa_find_app_version() { # {{{1
+koopa_find_app_version() {
     # """
     # Find the latest application version.
     # @note Updated 2021-11-11.
@@ -167,7 +167,7 @@ koopa_find_app_version() { # {{{1
     return 0
 }
 
-koopa_install_app() { # {{{1
+koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
     # @note Updated 2022-05-10.
@@ -565,7 +565,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     return 0
 }
 
-koopa_install_app_from_binary_package() { # {{{1
+koopa_install_app_from_binary_package() {
     # """
     # Install app from pre-built binary package.
     # @note Updated 2022-04-07.
@@ -632,7 +632,7 @@ ${dict[name]}/${dict[version]}.tar.gz"
     return 0
 }
 
-koopa_install_app_packages() { # {{{1
+koopa_install_app_packages() {
     # """
     # Install application packages.
     # @note Updated 2022-04-19.
@@ -717,7 +717,7 @@ koopa_install_app_packages() { # {{{1
 # FIXME This needs to also invalidate cloud cache.
 # FIXME Rework using koopa_koopa_app_binary with 's3://' instead of 'https://'
 
-koopa_push_app_build() { # {{{1
+koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
     # @note Updated 2022-03-29.
@@ -795,7 +795,7 @@ ${dict[app_name]}/${dict[app_version]}.tar.gz"
     return 0
 }
 
-koopa_reinstall_app() { # {{{1
+koopa_reinstall_app() {
     # """
     # Reinstall an application (alias).
     # @note Updated 2022-01-21.
@@ -804,7 +804,7 @@ koopa_reinstall_app() { # {{{1
     koopa_koopa install "$@" --reinstall
 }
 
-koopa_uninstall_app() { # {{{1
+koopa_uninstall_app() {
     # """
     # Uninstall an application.
     # @note Updated 2022-04-21.
@@ -1003,7 +1003,7 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
     return 0
 }
 
-koopa_update_app() { # {{{1
+koopa_update_app() {
     # """
     # Update application.
     # @note Updated 2022-04-21.

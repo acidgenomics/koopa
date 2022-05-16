@@ -6,7 +6,7 @@
 # FIXME Rename this to 'koopa_filter_bam'?
 # FIXME This also calls sambamba, so we need to improve the name here.
 
-koopa_bam_filter() { # {{{1
+koopa_bam_filter() {
     # """
     # Apply multi-step filtering to BAM files.
     # @note Updated 2021-10-26.
@@ -74,7 +74,7 @@ koopa_bam_filter() { # {{{1
     return 0
 }
 
-koopa_bam_sort() { # {{{1
+koopa_bam_sort() {
     # """
     # Sort multiple BAM files in a directory.
     # @note Updated 2020-08-13.
@@ -112,7 +112,7 @@ koopa_bam_sort() { # {{{1
     return 0
 }
 
-koopa_convert_sam_to_bam() { # {{{1
+koopa_convert_sam_to_bam() {
     # """
     # Convert multiple SAM files in a directory to BAM files.
     # @note Updated 2021-09-20.

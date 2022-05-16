@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_int_to_yn() { # {{{1
+koopa_int_to_yn() {
     # """
     # Convert integer to yes/no choice.
     # @note Updated 2022-02-09.
@@ -22,7 +22,7 @@ koopa_int_to_yn() { # {{{1
     return 0
 }
 
-koopa_read() { # {{{1
+koopa_read() {
     # """
     # Read a string from the user.
     # @note Updated 2022-02-01.
@@ -45,7 +45,7 @@ koopa_read() { # {{{1
     return 0
 }
 
-koopa_read_prompt_yn() { # {{{1
+koopa_read_prompt_yn() {
     # """
     # Show colorful yes/no default choices in prompt.
     # @note Updated 2022-02-01.
@@ -75,7 +75,7 @@ koopa_read_prompt_yn() { # {{{1
     return 0
 }
 
-koopa_read_yn() { # {{{1
+koopa_read_yn() {
     # """
     # Read a yes/no choice from the user.
     # @note Updated 2022-02-01.

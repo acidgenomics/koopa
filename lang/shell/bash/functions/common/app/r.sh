@@ -2,7 +2,7 @@
 
 # FIXME Need to configure corresponding Bioconductor version here automatically.
 
-koopa_configure_r() { # {{{1
+koopa_configure_r() {
     # """
     # Update R configuration.
     # @note Updated 2022-04-12.
@@ -31,7 +31,7 @@ koopa_configure_r() { # {{{1
     return 0
 }
 
-koopa_r_javareconf() { # {{{1
+koopa_r_javareconf() {
     # """
     # Update R Java configuration.
     # @note Updated 2022-01-20.
@@ -105,7 +105,7 @@ koopa_r_javareconf() { # {{{1
 # FIXME Fall back to linking against 'current', if a versioned symlink is
 # not present in the koopa configuration.
 
-koopa_r_link_files_in_etc() { # {{{1
+koopa_r_link_files_in_etc() {
     # """
     # Link R config files inside 'etc/'.
     # @note Updated 2022-04-12.
@@ -166,7 +166,7 @@ koopa_r_link_files_in_etc() { # {{{1
     return 0
 }
 
-koopa_r_link_site_library() { # {{{1
+koopa_r_link_site_library() {
     # """
     # Link R site library.
     # @note Updated 2022-04-04.
@@ -220,7 +220,7 @@ koopa_r_link_site_library() { # {{{1
     return 0
 }
 
-koopa_r_koopa() { # {{{1
+koopa_r_koopa() {
     # """
     # Execute a function in koopa R package.
     # @note Updated 2021-10-29.
@@ -271,7 +271,7 @@ koopa_r_koopa() { # {{{1
     return 0
 }
 
-koopa_r_paste_to_vector() { # {{{1
+koopa_r_paste_to_vector() {
     # """
     # Paste a bash array into an R vector string.
     # @note Updated 2022-02-17.
@@ -286,7 +286,7 @@ koopa_r_paste_to_vector() { # {{{1
     return 0
 }
 
-koopa_r_rebuild_docs() { # {{{1
+koopa_r_rebuild_docs() {
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
     # @note Updated 2022-04-08.
@@ -334,7 +334,7 @@ koopa_r_rebuild_docs() { # {{{1
     return 0
 }
 
-koopa_r_shiny_run_app() { # {{{1
+koopa_r_shiny_run_app() {
     # """
     # Run an R/Shiny application.
     # @note Updated 2022-02-11.

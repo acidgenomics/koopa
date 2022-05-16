@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_configure_perl() { # {{{1
+koopa_configure_perl() {
     # """
     # Configure Perl.
     # @note Updated 2022-03-29.

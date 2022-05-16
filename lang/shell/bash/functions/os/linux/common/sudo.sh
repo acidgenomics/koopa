@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_linux_fix_sudo_setrlimit_error() { # {{{1
+koopa_linux_fix_sudo_setrlimit_error() {
     # """
     # Fix bug in recent version of sudo.
     # @note Updated 2022-03-01.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_get_macos_app_version() { # {{{1
+koopa_get_macos_app_version() {
     # """
     # Extract the version of a macOS application.
     # @note Updated 2021-10-27.
@@ -29,7 +29,7 @@ koopa_get_macos_app_version() { # {{{1
     return 0
 }
 
-koopa_get_homebrew_cask_version() { # {{{1
+koopa_get_homebrew_cask_version() {
     # """
     # Get Homebrew Cask version.
     # @note Updated 2021-10-27.
@@ -53,7 +53,7 @@ koopa_get_homebrew_cask_version() { # {{{1
     return 0
 }
 
-koopa_macos_xcode_clt_version() { # {{{1
+koopa_macos_xcode_clt_version() {
     # """
     # Xcode CLT version.
     # @note Updated 2022-04-09.

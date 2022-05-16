@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_sra_download_accession_list() { # {{{1
+koopa_sra_download_accession_list() {
     # """
     # Download SRA accession list.
     # @note Updated 2022-02-11.
@@ -64,7 +64,7 @@ to '${dict[acc_file]}'."
     return 0
 }
 
-koopa_sra_download_run_info_table() { # {{{1
+koopa_sra_download_run_info_table() {
     # """
     # Download SRA run info table.
     # @note Updated 2022-02-11.
@@ -124,7 +124,7 @@ to '${dict[run_info_file]}'."
     return 0
 }
 
-koopa_sra_fastq_dump() { # {{{1
+koopa_sra_fastq_dump() {
     # """
     # Dump FASTQ files from SRA file list (in parallel).
     # @note Updated 2022-02-10.
@@ -306,7 +306,7 @@ koopa_sra_fastq_dump() { # {{{1
     return 0
 }
 
-koopa_sra_prefetch() { # {{{1
+koopa_sra_prefetch() {
     # """
     # Prefetch files from SRA (in parallel).
     # @note Updated 2022-02-10.

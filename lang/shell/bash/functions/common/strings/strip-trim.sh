@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_strip_left() { # {{{1
+koopa_strip_left() {
     # """
     # Strip pattern from left side (start) of string.
     # @note Updated 2022-03-01.
@@ -51,7 +51,7 @@ koopa_strip_left() { # {{{1
     return 0
 }
 
-koopa_strip_right() { # {{{1
+koopa_strip_right() {
     # """
     # Strip pattern from right side (end) of string.
     # @note Updated 2022-03-01.
@@ -102,7 +102,7 @@ koopa_strip_right() { # {{{1
     return 0
 }
 
-koopa_strip_trailing_slash() { # {{{1
+koopa_strip_trailing_slash() {
     # """
     # Strip trailing slash in file path string.
     # @note Updated 2022-03-01.
@@ -128,7 +128,7 @@ koopa_strip_trailing_slash() { # {{{1
     return 0
 }
 
-koopa_trim_ws() { # {{{1
+koopa_trim_ws() {
     # """
     # Trim leading and trailing white-space from string.
     # @note Updated 2022-03-01.

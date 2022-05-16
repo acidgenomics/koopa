@@ -4,7 +4,7 @@
 # > aws s3api list-buckets --output 'json'
 # > aws s3api list-objects --output 'json' --bucket 'koopa.acidgenomics.com'
 
-koopa_aws_batch_fetch_and_run() { # {{{1
+koopa_aws_batch_fetch_and_run() {
     # """
     # Fetch and run a script on AWS Batch.
     # @note Updated 2022-03-21.
@@ -45,7 +45,7 @@ koopa_aws_batch_fetch_and_run() { # {{{1
     return 0
 }
 
-koopa_aws_batch_list_jobs() { # {{{1
+koopa_aws_batch_list_jobs() {
     # """
     # List AWS Batch jobs.
     # @note Updated 2021-11-05.
@@ -138,7 +138,7 @@ koopa_aws_batch_list_jobs() { # {{{1
     return 0
 }
 
-koopa_aws_ec2_instance_id() { # {{{1
+koopa_aws_ec2_instance_id() {
     # """
     # AWS EC2 instance identifier.
     # @note Updated 2022-03-21.
@@ -162,7 +162,7 @@ koopa_aws_ec2_instance_id() { # {{{1
     return 0
 }
 
-koopa_aws_ec2_suspend() { # {{{1
+koopa_aws_ec2_suspend() {
     # """
     # Suspend current AWS EC2 instance.
     # @note Updated 2022-03-21.
@@ -202,7 +202,7 @@ koopa_aws_ec2_suspend() { # {{{1
 }
 
 # FIXME If interactive, prompt the user about this.
-koopa_aws_ec2_terminate() { # {{{1
+koopa_aws_ec2_terminate() {
     # """
     # Terminate current AWS EC2 instance.
     # @note Updated 2022-03-21.
@@ -241,7 +241,7 @@ koopa_aws_ec2_terminate() { # {{{1
     return 0
 }
 
-koopa_aws_s3_cp_regex() { # {{{1
+koopa_aws_s3_cp_regex() {
     # """
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
@@ -331,7 +331,7 @@ koopa_aws_s3_cp_regex() { # {{{1
     return 0
 }
 
-koopa_aws_s3_find() { # {{{1
+koopa_aws_s3_find() {
     # """
     # Find files in an AWS S3 bucket.
     #
@@ -491,7 +491,7 @@ koopa_aws_s3_find() { # {{{1
     return 0
 }
 
-koopa_aws_s3_list_large_files() { # {{{1
+koopa_aws_s3_list_large_files() {
     # """
     # List large files in an S3 bucket.
     # @note Updated 2022-02-03.
@@ -580,7 +580,7 @@ koopa_aws_s3_list_large_files() { # {{{1
     return 0
 }
 
-koopa_aws_s3_ls() { # {{{1
+koopa_aws_s3_ls() {
     # """
     # List an AWS S3 bucket.
     # @note Updated 2022-03-01.
@@ -782,7 +782,7 @@ koopa_aws_s3_ls() { # {{{1
     return 0
 }
 
-koopa_aws_s3_mv_to_parent() { # {{{1
+koopa_aws_s3_mv_to_parent() {
     # """
     # Move objects in an S3 bucket directory to parent directory.
     #
@@ -878,7 +878,7 @@ koopa_aws_s3_mv_to_parent() { # {{{1
 # FIXME Exclude uses glob matching here, whereas our find pattern uses regex...
 # FIXME Improve this to automatically exclude files under git!
 
-koopa_aws_s3_sync() { # {{{1
+koopa_aws_s3_sync() {
     # """
     # Sync an S3 bucket, but ignore some files automatically.
     # @note Updated 2022-03-01.

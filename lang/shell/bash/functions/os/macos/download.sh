@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_download_macos() { # {{{1
+koopa_macos_download_macos() {
     # """
     # Download a full copy of macOS system installer.
     # @note Updated 2020-11-20.

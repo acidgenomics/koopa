@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_extract() { # {{{1
+koopa_extract() {
     # """
     # Extract files from an archive automatically.
     # @note Updated 2022-04-07.
@@ -117,7 +117,7 @@ koopa_extract() { # {{{1
     return 0
 }
 
-koopa_extract_all() { # {{{1
+koopa_extract_all() {
     # """
     # Extract multiple compressed archives in a single call.
     # @note Updated 2022-03-28.

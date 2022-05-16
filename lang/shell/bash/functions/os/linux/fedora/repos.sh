@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_fedora_add_azure_cli_repo() { # {{{1
+koopa_fedora_add_azure_cli_repo() {
     # """
     # Add Microsoft Azure CLI repo.
     # @note Updated 2021-11-02.
@@ -27,7 +27,7 @@ END
     return 0
 }
 
-koopa_fedora_add_google_cloud_sdk_repo() { # {{{1
+koopa_fedora_add_google_cloud_sdk_repo() {
     # """
     # Add Google Cloud SDK repo.
     # @note Updated 2021-11-02.
@@ -81,7 +81,7 @@ END
     return 0
 }
 
-koopa_fedora_import_azure_cli_key() { # {{{1
+koopa_fedora_import_azure_cli_key() {
     # """
     # Import the Microsoft Azure CLI public key.
     # @note Updated 2021-11-02.

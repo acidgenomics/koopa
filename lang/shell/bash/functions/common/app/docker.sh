@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_docker_build() { # {{{1
+koopa_docker_build() {
     # """
     # Build and push a multi-architecture Docker image using buildx.
     # Updated 2022-01-20.
@@ -241,7 +241,7 @@ koopa_docker_build() { # {{{1
     return 0
 }
 
-koopa_docker_build_all_images() { # {{{1
+koopa_docker_build_all_images() {
     # """
     # Build all Docker images.
     # @note Updated 2022-02-16.
@@ -374,7 +374,7 @@ koopa_docker_build_all_images() { # {{{1
     return 0
 }
 
-koopa_docker_ghcr_login() { # {{{1
+koopa_docker_ghcr_login() {
     # """
     # Log in to GitHub Container Registry.
     # @note Updated 2022-01-20.
@@ -424,7 +424,7 @@ ${dict[image_name]}:${dict[version]}"
     return 0
 }
 
-koopa_docker_is_build_recent() { # {{{1
+koopa_docker_is_build_recent() {
     # """
     # Has the requested Docker image been built recently?
     # @note Updated 2022-01-20.
@@ -503,7 +503,7 @@ koopa_docker_is_build_recent() { # {{{1
     return 0
 }
 
-koopa_docker_prune_all_images() { # {{{1
+koopa_docker_prune_all_images() {
     # """
     # Prune all Docker images.
     # @note Updated 2022-01-20.
@@ -552,7 +552,7 @@ koopa_docker_prune_old_images() { # {{{
     return 0
 }
 
-koopa_docker_push() { # {{{1
+koopa_docker_push() {
     # """
     # Push a local Docker build.
     # Updated 2022-01-20.
@@ -614,7 +614,7 @@ koopa_docker_push() { # {{{1
     return 0
 }
 
-koopa_docker_remove() { # {{{1
+koopa_docker_remove() {
     # """
     # Remove docker images by pattern.
     # Updated 2022-02-25.
@@ -646,7 +646,7 @@ koopa_docker_remove() { # {{{1
     return 0
 }
 
-koopa_docker_run() { # {{{1
+koopa_docker_run() {
     # """
     # Run Docker image.
     # @note Updated 2022-02-17.
@@ -741,7 +741,7 @@ koopa_docker_run() { # {{{1
     return 0
 }
 
-koopa_docker_tag() { # {{{1
+koopa_docker_tag() {
     # """
     # Add Docker tag.
     # Updated 2022-01-20.

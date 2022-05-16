@@ -2,7 +2,7 @@
 
 # NOTE Consider adding support for libfido2.
 
-main() { # {{{1
+main() {
     # """
     # Install OpenSSH.
     # @note Updated 2022-04-20.

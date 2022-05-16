@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_jekyll_deploy_to_aws() { # {{{1
+koopa_jekyll_deploy_to_aws() {
     # """
     # Deploy Jekyll website to AWS S3 and CloudFront.
     # @note Updated 2022-03-11.
@@ -82,7 +82,7 @@ koopa_jekyll_deploy_to_aws() { # {{{1
     return 0
 }
 
-koopa_jekyll_serve() { # {{{1
+koopa_jekyll_serve() {
     # """
     # Render Jekyll website.
     # Updated 2021-12-08.

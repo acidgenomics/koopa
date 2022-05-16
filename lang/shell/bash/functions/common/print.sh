@@ -24,7 +24,7 @@
 # - 'val' for a generic "value".
 # - 'var' for a variable name.
 
-__koopa_alert_process_start() { # {{{1
+__koopa_alert_process_start() {
     # """
     # Inform the user about the start of a process.
     # @note Updated 2022-04-08.
@@ -59,7 +59,7 @@ at '${dict[prefix]}'."
     return 0
 }
 
-__koopa_alert_process_success() { # {{{1
+__koopa_alert_process_success() {
     # """
     # Inform the user about the successful completion of a process.
     # @note Updated 2022-03-09.
@@ -82,7 +82,7 @@ was successful."
     return 0
 }
 
-__koopa_status() { # {{{1
+__koopa_status() {
     # """
     # Koopa status.
     # @note Updated 2021-11-18.
@@ -103,7 +103,7 @@ __koopa_status() { # {{{1
     return 0
 }
 
-__koopa_ansi_escape() { # {{{1
+__koopa_ansi_escape() {
     # """
     # ANSI escape codes.
     # @note Updated 2020-07-05.
@@ -175,7 +175,7 @@ __koopa_ansi_escape() { # {{{1
     return 0
 }
 
-__koopa_h() { # {{{1
+__koopa_h() {
     # """
     # Header message generator.
     # @note Updated 2022-01-20.
@@ -218,7 +218,7 @@ __koopa_h() { # {{{1
     return 0
 }
 
-__koopa_msg() { # {{{1
+__koopa_msg() {
     # """
     # Standard message generator.
     # @note Updated 2022-02-25.
@@ -236,7 +236,7 @@ __koopa_msg() { # {{{1
     return 0
 }
 
-__koopa_print_ansi() { # {{{1
+__koopa_print_ansi() {
     # """
     # Print a colored line in console.
     # @note Updated 2022-02-25.
@@ -272,7 +272,7 @@ __koopa_print_ansi() { # {{{1
     return 0
 }
 
-koopa_acid_emoji() { # {{{1
+koopa_acid_emoji() {
     # """
     # Acid Genomics test tube emoji.
     # @note Updated 2022-01-20.
@@ -282,7 +282,7 @@ koopa_acid_emoji() { # {{{1
     koopa_print '🧪'
 }
 
-koopa_alert() { # {{{1
+koopa_alert() {
     # """
     # Alert message.
     # @note Updated 2021-03-31.
@@ -291,19 +291,19 @@ koopa_alert() { # {{{1
     return 0
 }
 
-koopa_alert_coffee_time() { # {{{1
+koopa_alert_coffee_time() {
     koopa_alert_note 'This step takes a while. Time for a coffee break! ☕'
 }
 
-koopa_alert_configure_start() { # {{{1
+koopa_alert_configure_start() {
     __koopa_alert_process_start 'Configuring' "$@"
 }
 
-koopa_alert_configure_success() { # {{{1
+koopa_alert_configure_success() {
     __koopa_alert_process_success 'Configuration' "$@"
 }
 
-koopa_alert_info() { # {{{1
+koopa_alert_info() {
     # """
     # Alert info message.
     # @note Updated 2021-03-30.
@@ -312,15 +312,15 @@ koopa_alert_info() { # {{{1
     return 0
 }
 
-koopa_alert_install_start() { # {{{1
+koopa_alert_install_start() {
     __koopa_alert_process_start 'Installing' "$@"
 }
 
-koopa_alert_install_success() { # {{{1
+koopa_alert_install_success() {
     __koopa_alert_process_success 'Installation' "$@"
 }
 
-koopa_alert_is_installed() { # {{{1
+koopa_alert_is_installed() {
     # """
     # Alert the user that a program is installed.
     # @note Updated 2022-04-11.
@@ -338,7 +338,7 @@ koopa_alert_is_installed() { # {{{1
     return 0
 }
 
-koopa_alert_is_not_installed() { # {{{1
+koopa_alert_is_not_installed() {
     # """
     # Alert the user that a program is not installed.
     # @note Updated 2022-04-08.
@@ -356,7 +356,7 @@ koopa_alert_is_not_installed() { # {{{1
     return 0
 }
 
-koopa_alert_note() { # {{{1
+koopa_alert_note() {
     # """
     # General note.
     # @note Updated 2020-07-01.
@@ -364,7 +364,7 @@ koopa_alert_note() { # {{{1
     __koopa_msg 'yellow' 'default' '**' "$@"
 }
 
-koopa_alert_restart() { # {{{1
+koopa_alert_restart() {
     # """
     # Alert the user that they should restart shell.
     # @note Updated 2021-06-02.
@@ -372,7 +372,7 @@ koopa_alert_restart() { # {{{1
     koopa_alert_note 'Restart the shell.'
 }
 
-koopa_alert_success() { # {{{1
+koopa_alert_success() {
     # """
     # Alert success message.
     # @note Updated 2021-03-31.
@@ -380,23 +380,23 @@ koopa_alert_success() { # {{{1
     __koopa_msg 'green-bold' 'green' '✓' "$@"
 }
 
-koopa_alert_uninstall_start() { # {{{1
+koopa_alert_uninstall_start() {
     __koopa_alert_process_start 'Uninstalling' "$@"
 }
 
-koopa_alert_uninstall_success() { # {{{1
+koopa_alert_uninstall_success() {
     __koopa_alert_process_success 'Uninstallation' "$@"
 }
 
-koopa_alert_update_start() { # {{{1
+koopa_alert_update_start() {
     __koopa_alert_process_start 'Updating' "$@"
 }
 
-koopa_alert_update_success() { # {{{1
+koopa_alert_update_success() {
     __koopa_alert_process_success 'Update' "$@"
 }
 
-koopa_dl() { # {{{1
+koopa_dl() {
     # """
     # Definition list.
     # @note Updated 2022-04-01.
@@ -410,7 +410,7 @@ koopa_dl() { # {{{1
     return 0
 }
 
-koopa_h1() { # {{{1
+koopa_h1() {
     # """
     # Header level 1.
     # @note Updated 2022-01-20.
@@ -418,7 +418,7 @@ koopa_h1() { # {{{1
     __koopa_h 1 "$@"
 }
 
-koopa_h2() { # {{{1
+koopa_h2() {
     # """
     # Header level 2.
     # @note Updated 2022-01-20.
@@ -426,7 +426,7 @@ koopa_h2() { # {{{1
     __koopa_h 2 "$@"
 }
 
-koopa_h3() { # {{{1
+koopa_h3() {
     # """
     # Header level 3.
     # @note Updated 2022-01-20.
@@ -434,7 +434,7 @@ koopa_h3() { # {{{1
     __koopa_h 3 "$@"
 }
 
-koopa_h4() { # {{{1
+koopa_h4() {
     # """
     # Header level 4.
     # @note Updated 2022-01-20.
@@ -442,7 +442,7 @@ koopa_h4() { # {{{1
     __koopa_h 4 "$@"
 }
 
-koopa_h5() { # {{{1
+koopa_h5() {
     # """
     # Header level 5.
     # @note Updated 2022-01-20.
@@ -450,7 +450,7 @@ koopa_h5() { # {{{1
     __koopa_h 5 "$@"
 }
 
-koopa_h6() { # {{{1
+koopa_h6() {
     # """
     # Header level 6.
     # @note Updated 2022-01-20.
@@ -458,7 +458,7 @@ koopa_h6() { # {{{1
     __koopa_h 6 "$@"
 }
 
-koopa_h7() { # {{{1
+koopa_h7() {
     # """
     # Header level 7.
     # @note Updated 2022-01-20.
@@ -466,7 +466,7 @@ koopa_h7() { # {{{1
     __koopa_h 7 "$@"
 }
 
-koopa_invalid_arg() { # {{{1
+koopa_invalid_arg() {
     # """
     # Error on invalid argument.
     # @note Updated 2022-02-17.
@@ -482,7 +482,7 @@ koopa_invalid_arg() { # {{{1
     koopa_stop "$str"
 }
 
-koopa_missing_arg() { # {{{1
+koopa_missing_arg() {
     # """
     # Error on a missing argument.
     # @note Updated 2021-06-02.
@@ -490,7 +490,7 @@ koopa_missing_arg() { # {{{1
     koopa_stop 'Missing required argument.'
 }
 
-koopa_ngettext() { # {{{1
+koopa_ngettext() {
     # """
     # Translate a text message.
     # @note Updated 2022-02-16.
@@ -600,97 +600,97 @@ ${dict[msg]}${dict[suffix]}"
     return 0
 }
 
-koopa_print_black() { # {{{1
+koopa_print_black() {
     __koopa_print_ansi 'black' "$@"
     return 0
 }
 
-koopa_print_black_bold() { # {{{1
+koopa_print_black_bold() {
     __koopa_print_ansi 'black-bold' "$@"
     return 0
 }
 
-koopa_print_blue() { # {{{1
+koopa_print_blue() {
     __koopa_print_ansi 'blue' "$@"
     return 0
 }
 
-koopa_print_blue_bold() { # {{{1
+koopa_print_blue_bold() {
     __koopa_print_ansi 'blue-bold' "$@"
     return 0
 }
 
-koopa_print_cyan() { # {{{1
+koopa_print_cyan() {
     __koopa_print_ansi 'cyan' "$@"
     return 0
 }
 
-koopa_print_cyan_bold() { # {{{1
+koopa_print_cyan_bold() {
     __koopa_print_ansi 'cyan-bold' "$@"
     return 0
 }
 
-koopa_print_default() { # {{{1
+koopa_print_default() {
     __koopa_print_ansi 'default' "$@"
     return 0
 }
 
-koopa_print_default_bold() { # {{{1
+koopa_print_default_bold() {
     __koopa_print_ansi 'default-bold' "$@"
     return 0
 }
 
-koopa_print_green() { # {{{1
+koopa_print_green() {
     __koopa_print_ansi 'green' "$@"
     return 0
 }
 
-koopa_print_green_bold() { # {{{1
+koopa_print_green_bold() {
     __koopa_print_ansi 'green-bold' "$@"
     return 0
 }
 
-koopa_print_magenta() { # {{{1
+koopa_print_magenta() {
     __koopa_print_ansi 'magenta' "$@"
     return 0
 }
 
-koopa_print_magenta_bold() { # {{{1
+koopa_print_magenta_bold() {
     __koopa_print_ansi 'magenta-bold' "$@"
     return 0
 }
 
-koopa_print_red() { # {{{1
+koopa_print_red() {
     __koopa_print_ansi 'red' "$@"
     return 0
 }
 
-koopa_print_red_bold() { # {{{1
+koopa_print_red_bold() {
     __koopa_print_ansi 'red-bold' "$@"
     return 0
 }
 
-koopa_print_yellow() { # {{{1
+koopa_print_yellow() {
     __koopa_print_ansi 'yellow' "$@"
     return 0
 }
 
-koopa_print_yellow_bold() { # {{{1
+koopa_print_yellow_bold() {
     __koopa_print_ansi 'yellow-bold' "$@"
     return 0
 }
 
-koopa_print_white() { # {{{1
+koopa_print_white() {
     __koopa_print_ansi 'white' "$@"
     return 0
 }
 
-koopa_print_white_bold() { # {{{1
+koopa_print_white_bold() {
     __koopa_print_ansi 'white-bold' "$@"
     return 0
 }
 
-koopa_status_fail() { # {{{1
+koopa_status_fail() {
     # """
     # 'FAIL' status.
     # @note Updated 2021-06-03.
@@ -698,7 +698,7 @@ koopa_status_fail() { # {{{1
     __koopa_status 'FAIL' 'red' "$@" >&2
 }
 
-koopa_status_note() { # {{{1
+koopa_status_note() {
     # """
     # 'NOTE' status.
     # @note Updated 2021-06-03.
@@ -706,7 +706,7 @@ koopa_status_note() { # {{{1
     __koopa_status 'NOTE' 'yellow' "$@"
 }
 
-koopa_status_ok() { # {{{1
+koopa_status_ok() {
     # """
     # 'OK' status.
     # @note Updated 2021-06-03.
@@ -714,7 +714,7 @@ koopa_status_ok() { # {{{1
     __koopa_status 'OK' 'green' "$@"
 }
 
-koopa_stop() { # {{{1
+koopa_stop() {
     # """
     # Stop with an error message.
     # @note Updated 2022-04-11.
@@ -723,7 +723,7 @@ koopa_stop() { # {{{1
     exit 1
 }
 
-koopa_warn() { # {{{1
+koopa_warn() {
     # """
     # Warning message.
     # @note Updated 2022-02-24.

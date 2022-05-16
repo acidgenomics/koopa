@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_linux_delete_cache() { # {{{1
+koopa_linux_delete_cache() {
     # """
     # Delete Linux cache files.
     # @note Updated 2020-11-04.

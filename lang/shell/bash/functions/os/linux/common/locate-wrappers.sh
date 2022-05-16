@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 
-koopa_linux_locate_bcbio() { # {{{1
+koopa_linux_locate_bcbio() {
     koopa_locate_app 'bcbio-nextgen.py'
 }
 
-koopa_linux_locate_bcl2fastq() { # {{{1
+koopa_linux_locate_bcl2fastq() {
     koopa_locate_app 'bcl2fastq'
 }
 
-koopa_linux_locate_getconf() { # {{{1
+koopa_linux_locate_getconf() {
     koopa_locate_app '/usr/bin/getconf'
 }
 
-koopa_linux_locate_groupadd() { # {{{1
+koopa_linux_locate_groupadd() {
     koopa_locate_app '/usr/sbin/groupadd'
 }
 
-koopa_linux_locate_gpasswd() { # {{{1
+koopa_linux_locate_gpasswd() {
     koopa_locate_app '/usr/bin/gpasswd'
 }
 
-koopa_linux_locate_ldconfig() { # {{{1
+koopa_linux_locate_ldconfig() {
     local os_id str
     os_id="$(koopa_os_id)"
     case "$os_id" in
@@ -35,7 +35,7 @@ koopa_linux_locate_ldconfig() { # {{{1
     koopa_locate_app "$str"
 }
 
-koopa_linux_locate_systemctl() { # {{{1
+koopa_linux_locate_systemctl() {
     local os_id str
     os_id="$(koopa_os_id)"
     case "$os_id" in
@@ -49,7 +49,7 @@ koopa_linux_locate_systemctl() { # {{{1
     koopa_locate_app "$str"
 }
 
-koopa_linux_locate_update_alternatives() { # {{{1
+koopa_linux_locate_update_alternatives() {
     local str
     if koopa_is_fedora_like
     then
@@ -60,10 +60,10 @@ koopa_linux_locate_update_alternatives() { # {{{1
     koopa_locate_app "$str"
 }
 
-koopa_linux_locate_useradd() { # {{{1
+koopa_linux_locate_useradd() {
     koopa_locate_app '/usr/sbin/useradd'
 }
 
-koopa_linux_locate_usermod() { # {{{1
+koopa_linux_locate_usermod() {
     koopa_locate_app '/usr/sbin/usermod'
 }

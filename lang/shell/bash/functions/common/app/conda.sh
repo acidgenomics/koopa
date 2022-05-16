@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_conda_activate_env() { # {{{1
+koopa_conda_activate_env() {
     # """
     # Activate a conda environment.
     # @note Updated 2022-03-16.
@@ -55,7 +55,7 @@ environment '${dict[env_name]}'."
 
 # NOTE Consider supporting direct linkage into koopa 'bin/' here.
 
-koopa_conda_create_env() { # {{{1
+koopa_conda_create_env() {
     # """
     # Create a conda environment.
     # @note Updated 2022-03-16.
@@ -164,7 +164,7 @@ exists at '${dict[env_prefix]}'."
     return 0
 }
 
-koopa_conda_deactivate() { # {{{1
+koopa_conda_deactivate() {
     # """
     # Deactivate Conda environment.
     # @note Updated 2022-03-16.
@@ -186,7 +186,7 @@ koopa_conda_deactivate() { # {{{1
     return 0
 }
 
-koopa_conda_env_latest_version() { # {{{1
+koopa_conda_env_latest_version() {
     # """
     # Get the latest version of a conda environment available.
     # @note Updated 2022-01-17.
@@ -212,7 +212,7 @@ koopa_conda_env_latest_version() { # {{{1
     return 0
 }
 
-koopa_conda_env_list() { # {{{1
+koopa_conda_env_list() {
     # """
     # Return a list of conda environments in JSON format.
     # @note Updated 2022-01-17.
@@ -227,7 +227,7 @@ koopa_conda_env_list() { # {{{1
     return 0
 }
 
-koopa_conda_env_prefix() { # {{{1
+koopa_conda_env_prefix() {
     # """
     # Return prefix for a specified conda environment.
     # @note Updated 2022-03-16.
@@ -287,7 +287,7 @@ koopa_conda_env_prefix() { # {{{1
     return 0
 }
 
-koopa_conda_remove_env() { # {{{1
+koopa_conda_remove_env() {
     # """
     # Remove conda environment.
     # @note Updated 2022-01-17.

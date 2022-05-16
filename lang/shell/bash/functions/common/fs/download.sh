@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_download() { # {{{1
+koopa_download() {
     # """
     # Download a file.
     # @note Updated 2022-04-15.
@@ -139,7 +139,7 @@ koopa_download() { # {{{1
     return 0
 }
 
-koopa_download_cran_latest() { # {{{1
+koopa_download_cran_latest() {
     # """
     # Download CRAN latest.
     # @note Updated 2021-10-25.
@@ -166,7 +166,7 @@ koopa_download_cran_latest() { # {{{1
     return 0
 }
 
-koopa_download_github_latest() { # {{{1
+koopa_download_github_latest() {
     # """
     # Download GitHub latest release.
     # @note Updated 2021-10-25.
@@ -192,7 +192,7 @@ koopa_download_github_latest() { # {{{1
     return 0
 }
 
-koopa_download_refdata_scsig() { # {{{1
+koopa_download_refdata_scsig() {
     # """
     # Download MSigDB SCSig reference data (now archived).
     # @note Updated 2021-12-09.
@@ -231,7 +231,7 @@ ${dict[prefix]} was successful."
     return 0
 }
 
-koopa_ftp_mirror() { # {{{1
+koopa_ftp_mirror() {
     # """
     # Mirror contents from an FTP server.
     # @note Updated 2022-02-10.
@@ -296,7 +296,7 @@ koopa_ftp_mirror() { # {{{1
     return 0
 }
 
-koopa_parse_url() { # {{{1
+koopa_parse_url() {
     # """
     # Parse a URL using cURL.
     # @note Updated 2022-02-10.
@@ -343,7 +343,7 @@ koopa_parse_url() { # {{{1
     return 0
 }
 
-koopa_wget_recursive() { # {{{1
+koopa_wget_recursive() {
     # """
     # Download files with wget recursively.
     # @note Updated 2022-02-10.

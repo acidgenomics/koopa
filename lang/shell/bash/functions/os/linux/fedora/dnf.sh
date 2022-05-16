@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_fedora_dnf() { # {{{1
+koopa_fedora_dnf() {
     # """
     # Use 'dnf' to manage packages.
     # @note Updated 2021-11-02.
@@ -16,7 +16,7 @@ koopa_fedora_dnf() { # {{{1
     return 0
 }
 
-koopa_fedora_dnf_delete_repo() { # {{{1
+koopa_fedora_dnf_delete_repo() {
     # """
     # Delete an enabled dnf repo.
     # @note Updated 2021-06-16.
@@ -32,15 +32,15 @@ koopa_fedora_dnf_delete_repo() { # {{{1
     return 0
 }
 
-koopa_fedora_dnf_install() { # {{{1
+koopa_fedora_dnf_install() {
     koopa_fedora_dnf install "$@"
 }
 
-koopa_fedora_dnf_remove() { # {{{1
+koopa_fedora_dnf_remove() {
     koopa_fedora_dnf remove "$@"
 }
 
-koopa_fedora_install_from_rpm() { # {{{1
+koopa_fedora_install_from_rpm() {
     # """
     # Install directly from RPM file.
     # @note Updated 2022-01-28.

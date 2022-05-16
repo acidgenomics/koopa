@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_cd() { # {{{1
+koopa_cd() {
     # """
     # Change directory quietly.
     # @note Updated 2021-05-26.
@@ -12,7 +12,7 @@ koopa_cd() { # {{{1
     return 0
 }
 
-koopa_chgrp() { # {{{1
+koopa_chgrp() {
     # """
     # Hardened version of coreutils chgrp (change user group).
     # @note Updated 2021-10-29.
@@ -57,7 +57,7 @@ koopa_chgrp() { # {{{1
     return 0
 }
 
-koopa_chmod() { # {{{1
+koopa_chmod() {
     # """
     # Hardened version of coreutils chmod (change file mode bits).
     # @note Updated 2022-02-17.
@@ -112,7 +112,7 @@ koopa_chmod() { # {{{1
     return 0
 }
 
-koopa_chown() { # {{{1
+koopa_chown() {
     # """
     # Hardened version of coreutils chown (change ownership).
     # @note Updated 2021-10-29.
@@ -182,7 +182,7 @@ koopa_chown() { # {{{1
     return 0
 }
 
-koopa_cp() { # {{{1
+koopa_cp() {
     # """
     # Hardened version of coreutils cp (copy).
     # @note Updated 2022-01-19.
@@ -289,7 +289,7 @@ koopa_cp() { # {{{1
     return 0
 }
 
-koopa_df() { # {{{1
+koopa_df() {
     # """
     # Human friendly version of GNU df.
     # @note Updated 2021-10-29.
@@ -306,7 +306,7 @@ koopa_df() { # {{{1
     return 0
 }
 
-koopa_init_dir() { # {{{1
+koopa_init_dir() {
     # """
     # Initialize (create) a directory and return the real path on disk.
     # @note Updated 2021-11-04.
@@ -360,7 +360,7 @@ koopa_init_dir() { # {{{1
     return 0
 }
 
-koopa_ln() { # {{{1
+koopa_ln() {
     # """
     # Hardened version of coreutils ln (symbolic link generator).
     # @note Updated 2021-10-29.
@@ -449,7 +449,7 @@ koopa_ln() { # {{{1
     return 0
 }
 
-koopa_mkdir() { # {{{1
+koopa_mkdir() {
     # """
     # Create directories with parents automatically.
     # @note Updated 2021-10-29.
@@ -495,7 +495,7 @@ koopa_mkdir() { # {{{1
     return 0
 }
 
-koopa_mv() { # {{{1
+koopa_mv() {
     # """
     # Move a file or directory with GNU mv.
     # @note Updated 2021-10-29.
@@ -591,7 +591,7 @@ koopa_mv() { # {{{1
     return 0
 }
 
-koopa_parent_dir() { # {{{1
+koopa_parent_dir() {
     # """
     # Get the parent directory path.
     # @note Updated 2021-09-21.
@@ -652,7 +652,7 @@ koopa_parent_dir() { # {{{1
     return 0
 }
 
-koopa_relink() { # {{{1
+koopa_relink() {
     # """
     # Re-create a symbolic link dynamically, if broken.
     # @note Updated 2020-10-29.
@@ -704,7 +704,7 @@ koopa_relink() { # {{{1
     return 0
 }
 
-koopa_rm() { # {{{1
+koopa_rm() {
     # """
     # Remove files/directories quietly with GNU rm.
     # @note Updated 2021-09-21.
@@ -750,7 +750,7 @@ koopa_rm() { # {{{1
     return 0
 }
 
-koopa_touch() { # {{{1
+koopa_touch() {
     # """
     # Touch (create) a file on disk.
     # @note Updated 2022-02-16.
@@ -816,7 +816,7 @@ koopa_touch() { # {{{1
     return 0
 }
 
-koopa_which() { # {{{1
+koopa_which() {
     # """
     # Locate which program.
     # @note Updated 2021-05-26.
@@ -842,7 +842,7 @@ koopa_which() { # {{{1
     return 0
 }
 
-koopa_which_realpath() { # {{{1
+koopa_which_realpath() {
     # """
     # Locate the realpath of a program.
     # @note Updated 2021-06-03.

@@ -2,7 +2,7 @@
 
 # These functions only support current version lookup.
 
-koopa_armadillo_version() { # {{{1
+koopa_armadillo_version() {
     # """
     # Armadillo: C++ library for linear algebra & scientific computing.
     # @note Updated 2021-03-01.
@@ -11,7 +11,7 @@ koopa_armadillo_version() { # {{{1
     koopa_get_version_from_pkg_config 'armadillo'
 }
 
-koopa_boost_version() { # {{{1
+koopa_boost_version() {
     # """
     # Boost (libboost) version.
     # @note Updated 2022-02-25.
@@ -54,7 +54,7 @@ koopa_boost_version() { # {{{1
     return 0
 }
 
-koopa_cairo_version() { # {{{1
+koopa_cairo_version() {
     # """
     # Cairo (libcairo) version.
     # @note Updated 2021-03-01.
@@ -63,7 +63,7 @@ koopa_cairo_version() { # {{{1
     koopa_get_version_from_pkg_config 'cairo'
 }
 
-koopa_current_bcbio_nextgen_version() { # {{{1
+koopa_current_bcbio_nextgen_version() {
     # """
     # Get the latest bcbio-nextgen stable release version.
     # @note Updated 2022-02-25.
@@ -90,7 +90,7 @@ bcbio-nextgen/master/requirements-conda.txt" \
     return 0
 }
 
-koopa_current_bioconductor_version() { # {{{1
+koopa_current_bioconductor_version() {
     # """
     # Current Bioconductor version.
     # @note Updated 2022-02-25.
@@ -107,7 +107,7 @@ koopa_current_bioconductor_version() { # {{{1
     return 0
 }
 
-koopa_current_ensembl_version() { # {{{1
+koopa_current_ensembl_version() {
     # """
     # Current Ensembl version.
     # @note Updated 2022-02-25.
@@ -132,7 +132,7 @@ koopa_current_ensembl_version() { # {{{1
     return 0
 }
 
-koopa_current_flybase_version() { # {{{1
+koopa_current_flybase_version() {
     # """
     # Current FlyBase version.
     # @note Updated 2022-02-25.
@@ -158,7 +158,7 @@ koopa_current_flybase_version() { # {{{1
     return 0
 }
 
-koopa_current_gencode_version() { # {{{1
+koopa_current_gencode_version() {
     # """
     # Current GENCODE version.
     # @note Updated 2022-02-25.
@@ -210,7 +210,7 @@ koopa_current_gencode_version() { # {{{1
     return 0
 }
 
-koopa_current_refseq_version() { # {{{1
+koopa_current_refseq_version() {
     # """
     # Current RefSeq version.
     # @note Updated 2022-02-25.
@@ -228,7 +228,7 @@ koopa_current_refseq_version() { # {{{1
     return 0
 }
 
-koopa_current_wormbase_version() { # {{{1
+koopa_current_wormbase_version() {
     # """
     # Current WormBase version.
     # @note Updated 2022-02-25.
@@ -257,7 +257,7 @@ releases/current-production-release"
     return 0
 }
 
-koopa_eigen_version() { # {{{1
+koopa_eigen_version() {
     # """
     # Eigen (libeigen) version.
     # @note Updated 2021-03-01.
@@ -266,7 +266,7 @@ koopa_eigen_version() { # {{{1
     koopa_get_version_from_pkg_config 'eigen3'
 }
 
-# > koopa_gtop_version() { # {{{1
+# > koopa_gtop_version() {
 # >     # """
 # >     # gtop (Node package) version.
 # >     # @note Updated 2022-03-15.
@@ -275,7 +275,7 @@ koopa_eigen_version() { # {{{1
 # >     koopa_node_package_version 'gtop'
 # > }
 
-koopa_harfbuzz_version() { # {{{1
+koopa_harfbuzz_version() {
     # """
     # HarfBuzz (libharfbuzz) version.
     # @note Updated 2021-03-01.
@@ -284,7 +284,7 @@ koopa_harfbuzz_version() { # {{{1
     koopa_get_version_from_pkg_config 'harfbuzz'
 }
 
-koopa_hdf5_version() { # {{{1
+koopa_hdf5_version() {
     # """
     # HDF5 version.
     # @note Updated 2022-02-27.
@@ -307,7 +307,7 @@ koopa_hdf5_version() { # {{{1
     return 0
 }
 
-koopa_icu4c_version() { # {{{1
+koopa_icu4c_version() {
     # """
     # ICU version.
     # C/C++ and Java libraries for Unicode and globalization.
@@ -317,7 +317,7 @@ koopa_icu4c_version() { # {{{1
     koopa_get_version_from_pkg_config 'icu-uc'
 }
 
-koopa_imagemagick_version() { # {{{1
+koopa_imagemagick_version() {
     # """
     # ImageMagick version.
     # @note Updated 2022-02-23.
@@ -340,7 +340,7 @@ koopa_imagemagick_version() { # {{{1
     return 0
 }
 
-koopa_koopa_version() { # {{{1
+koopa_koopa_version() {
     # """
     # Koopa version.
     # @note Updated 2020-06-29.
@@ -350,7 +350,7 @@ koopa_koopa_version() { # {{{1
     return 0
 }
 
-koopa_lmod_version() { # {{{1
+koopa_lmod_version() {
     # """
     # Lmod version.
     # @note Updated 2022-02-23.
@@ -363,7 +363,7 @@ koopa_lmod_version() { # {{{1
     return 0
 }
 
-koopa_npm_version() { # {{{1
+koopa_npm_version() {
     # """
     # Node package manager (NPM) version.
     # @note Updated 2022-03-21.
@@ -372,7 +372,7 @@ koopa_npm_version() { # {{{1
     koopa_node_package_version 'npm'
 }
 
-koopa_oracle_instantclient_version() { # {{{1
+koopa_oracle_instantclient_version() {
     # """
     # Oracle InstantClient version.
     # @note Updated 2022-02-27.
@@ -392,7 +392,7 @@ koopa_oracle_instantclient_version() { # {{{1
     return 0
 }
 
-koopa_os_version() { # {{{1
+koopa_os_version() {
     # """
     # Operating system version.
     # @note Updated 2022-02-27.
@@ -413,7 +413,7 @@ koopa_os_version() { # {{{1
     return 0
 }
 
-koopa_perl_file_rename_version() { # {{{1
+koopa_perl_file_rename_version() {
     # """
     # Perl 'File::Rename' module version.
     # @note Updated 2022-03-18.
@@ -422,7 +422,7 @@ koopa_perl_file_rename_version() { # {{{1
     koopa_perl_package_version 'File::Rename'
 }
 
-# > koopa_pip_version() { # {{{1
+# > koopa_pip_version() {
 # >     # """
 # >     # Python pip version.
 # >     # @note Updated 2022-03-18.
@@ -431,7 +431,7 @@ koopa_perl_file_rename_version() { # {{{1
 # >     koopa_python_package_version 'pip'
 # > }
 
-# > koopa_prettier_version() { # {{{1
+# > koopa_prettier_version() {
 # >     # """
 # >     # Prettier (Node package) version.
 # >     # @note Updated 2022-03-15.
@@ -440,7 +440,7 @@ koopa_perl_file_rename_version() { # {{{1
 # >     koopa_node_package_version 'prettier'
 # > }
 
-koopa_xcode_clt_version() { # {{{1
+koopa_xcode_clt_version() {
     # """
     # Xcode CLT version.
     # @note Updated 2022-02-27.

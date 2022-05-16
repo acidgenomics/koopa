@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_disable_crashplan() { # {{{1
+koopa_macos_disable_crashplan() {
     # """
     # Disable CrashPlan.
     # @note Updated 2022-02-16.
@@ -12,7 +12,7 @@ koopa_macos_disable_crashplan() { # {{{1
     return 0
 }
 
-koopa_macos_disable_google_keystone() { # {{{1
+koopa_macos_disable_google_keystone() {
     # """
     # Disable Google Keystone.
     # @note Updated 2022-02-16.
@@ -25,7 +25,7 @@ koopa_macos_disable_google_keystone() { # {{{1
     return 0
 }
 
-koopa_macos_disable_gpg_updater() { # {{{1
+koopa_macos_disable_gpg_updater() {
     # """
     # Disable GPG tools updater.
     # @note Updated 2022-02-16.
@@ -46,7 +46,7 @@ koopa_macos_disable_microsoft_teams_updater() { # {[[1
     return 0
 }
 
-koopa_macos_disable_plist_file() { # {{{1
+koopa_macos_disable_plist_file() {
     # """
     # Disable a plist file correponding to a launch agent or daemon.
     # @note Updated 2022-02-16.
@@ -107,7 +107,7 @@ disabled/$(koopa_basename "${dict[enabled_file]}")"
     return 0
 }
 
-koopa_macos_disable_privileged_helper_tool() { # {{{1
+koopa_macos_disable_privileged_helper_tool() {
     # """
     # Disable a privileged helper tool.
     # @note Updated 2022-02-16.
@@ -131,7 +131,7 @@ disabled/$(koopa_basename "${dict[enabled_file]}")"
     return 0
 }
 
-koopa_macos_disable_zoom_daemon() { # {{{1
+koopa_macos_disable_zoom_daemon() {
     # """
     # Disable Zoom daemon.
     # @note Updated 2022-02-16.
@@ -155,7 +155,7 @@ koopa_macos_enable_crashplan() {  # {{{1
     return 0
 }
 
-koopa_macos_enable_google_keystone() { # {{{1
+koopa_macos_enable_google_keystone() {
     # """
     # Enable Google Keystone.
     # @note Updated 2022-02-16.
@@ -168,7 +168,7 @@ koopa_macos_enable_google_keystone() { # {{{1
     return 0
 }
 
-koopa_macos_enable_gpg_updater() { # {{{1
+koopa_macos_enable_gpg_updater() {
     # """
     # Enable GPG tools updater.
     # @note Updated 2022-02-16.
@@ -189,7 +189,7 @@ koopa_macos_enable_microsoft_teams_updater() { # {[[1
     return 0
 }
 
-koopa_macos_enable_plist_file() { # {{{1
+koopa_macos_enable_plist_file() {
     # """
     # Enable a disabled plist file correponding to a launch agent or daemon.
     # @note Updated 2022-02-16.
@@ -250,7 +250,7 @@ disabled/$(koopa_basename "${dict[enabled_file]}")"
     return 0
 }
 
-koopa_macos_enable_privileged_helper_tool() { # {{{1
+koopa_macos_enable_privileged_helper_tool() {
     # """
     # Enable a privileged helper tool.
     # @note Updated 2022-02-16.
@@ -274,7 +274,7 @@ disabled/$(koopa_basename "${dict[enabled_file]}")"
     return 0
 }
 
-koopa_macos_enable_zoom_daemon() { # {{{1
+koopa_macos_enable_zoom_daemon() {
     # """
     # Enable Zoom daemon.
     # @note Updated 2022-02-16.
@@ -286,7 +286,7 @@ koopa_macos_enable_zoom_daemon() { # {{{1
         'us.zoom.ZoomDaemon'
 }
 
-koopa_macos_list_launch_agents() { # {{{1
+koopa_macos_list_launch_agents() {
     # """
     # List launch agents.
     # @note Updated 2022-02-16.

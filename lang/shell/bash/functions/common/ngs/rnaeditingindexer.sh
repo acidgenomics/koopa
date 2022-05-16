@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_rnaeditingindexer() { # {{{1
+koopa_rnaeditingindexer() {
     # """
     # Run dockerized RNAEditingIndexer pipeline.
     # @note Updated 2022-03-22.

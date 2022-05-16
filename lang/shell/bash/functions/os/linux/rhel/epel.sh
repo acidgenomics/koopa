@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_rhel_enable_epel() { # {{{1
+koopa_rhel_enable_epel() {
     # """
     # Enable Extra Packages for Enterprise Linux (EPEL) for Red Hat
     # Enterprise Linux (RHEL).

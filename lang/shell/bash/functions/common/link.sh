@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_link_in_dir() { # {{{1
+__koopa_link_in_dir() {
     # """
     # Symlink multiple programs in a directory.
     # @note Updated 2022-04-26.
@@ -90,7 +90,7 @@ __koopa_link_in_dir() { # {{{1
     return 0
 }
 
-__koopa_unlink_in_dir() { # {{{1
+__koopa_unlink_in_dir() {
     # """
     # Unlink multiple symlinks in a directory.
     # @note Updated 2022-04-07.
@@ -138,7 +138,7 @@ __koopa_unlink_in_dir() { # {{{1
     return 0
 }
 
-koopa_link_in_bin() { # {{{1
+koopa_link_in_bin() {
     # """
     # Link a program in koopa 'bin/' directory.
     # @note Updated 2022-04-06.
@@ -157,7 +157,7 @@ koopa_link_in_bin() { # {{{1
     __koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }
 
-koopa_link_in_make() { # {{{1
+koopa_link_in_make() {
     # """
     # Symlink application into make directory.
     # @note Updated 2022-04-08.
@@ -269,7 +269,7 @@ into '${dict[make_prefix]}'."
     return 0
 }
 
-koopa_link_in_opt() { # {{{1
+koopa_link_in_opt() {
     # """
     # Link an application in koopa 'opt/' directory.
     # @note Updated 2022-04-08.
@@ -288,7 +288,7 @@ koopa_link_in_opt() { # {{{1
     __koopa_link_in_dir --prefix="$(koopa_opt_prefix)" "$@"
 }
 
-koopa_link_in_sbin() { # {{{1
+koopa_link_in_sbin() {
     # """
     # Link a program in koopa 'sbin/ directory.
     # @note Updated 2022-04-06.
@@ -306,7 +306,7 @@ koopa_link_in_sbin() { # {{{1
     __koopa_link_in_dir --prefix="$(koopa_sbin_prefix)" "$@"
 }
 
-koopa_unlink_in_bin() { # {{{1
+koopa_unlink_in_bin() {
     # """
     # Unlink a program symlinked in koopa 'bin/ directory.
     # @note Updated 2022-04-06.
@@ -319,7 +319,7 @@ koopa_unlink_in_bin() { # {{{1
     __koopa_unlink_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }
 
-koopa_unlink_in_make() { # {{{1
+koopa_unlink_in_make() {
     # """
     # Unlink a program symlinked in koopa 'make/' directory.
     # @note Updated 2022-04-07.
@@ -367,7 +367,7 @@ koopa_unlink_in_make() { # {{{1
     return 0
 }
 
-koopa_unlink_in_opt() { # {{{1
+koopa_unlink_in_opt() {
     # """
     # Unlink a program symlinked in koopa 'opt/' directory.
     # @note Updated 2022-04-06.
@@ -380,7 +380,7 @@ koopa_unlink_in_opt() { # {{{1
     __koopa_unlink_in_dir --prefix="$(koopa_opt_prefix)" "$@"
 }
 
-koopa_unlink_in_sbin() { # {{{1
+koopa_unlink_in_sbin() {
     # """
     # Unlink a program symlinked in koopa 'sbin/' directory.
     # @note Updated 2022-04-06.

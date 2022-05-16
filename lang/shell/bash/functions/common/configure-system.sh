@@ -10,7 +10,7 @@
 # - apr-util
 # - subversion
 
-koopa_configure_system() { # {{{1
+koopa_configure_system() {
     # """
     # Configure system.
     # @note Updated 2022-04-22.

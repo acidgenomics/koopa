@@ -4,7 +4,7 @@
 
 # FIXME Rework our location of conda environment tool here instead.
 
-koopa_samtools_convert_sam_to_bam() { # {{{1
+koopa_samtools_convert_sam_to_bam() {
     # """
     # Convert a SAM file to BAM format.
     # @note Updated 2021-09-21.

@@ -3,7 +3,7 @@
 # FIXME Need to add 'koopa_configure_pipx' script here, for configuring
 # pipx versioned into opt.
 
-koopa_add_make_prefix_link() { # {{{1
+koopa_add_make_prefix_link() {
     # """
     # Ensure 'koopa' is linked inside make prefix.
     # @note Updated 2022-04-08.
@@ -32,7 +32,7 @@ koopa_add_make_prefix_link() { # {{{1
     return 0
 }
 
-koopa_add_monorepo_config_link() { # {{{1
+koopa_add_monorepo_config_link() {
     # """
     # Add koopa configuration link from user's git monorepo.
     # @note Updated 2021-11-24.
@@ -52,7 +52,7 @@ koopa_add_monorepo_config_link() { # {{{1
     return 0
 }
 
-koopa_add_to_user_profile() { # {{{1
+koopa_add_to_user_profile() {
     # """
     # Add koopa configuration to user profile.
     # @note Updated 2021-11-11.
@@ -64,7 +64,7 @@ koopa_add_to_user_profile() { # {{{1
     )
     koopa_alert "Adding koopa activation to '${dict[file]}'."
     read -r -d '' "dict[string]" << END || true
-__koopa_activate_user_profile() { # {{{1
+__koopa_activate_user_profile() {
     # """
     # Activate koopa shell for current user.
     # @note Updated 2021-11-11.
@@ -95,7 +95,7 @@ END
     return 0
 }
 
-koopa_configure_chemacs() { # {{{1
+koopa_configure_chemacs() {
     # """
     # Configure chemacs.
     # @note Updated 2022-04-04.
@@ -104,7 +104,7 @@ koopa_configure_chemacs() { # {{{1
     return 0
 }
 
-koopa_configure_dotfiles() { # {{{1
+koopa_configure_dotfiles() {
     # """
     # Configure dotfiles.
     # @note Updated 2022-05-05.
@@ -129,49 +129,49 @@ koopa_configure_dotfiles() { # {{{1
     return 0
 }
 
-koopa_configure_go() { # {{{1
+koopa_configure_go() {
     koopa_configure_app_packages \
         --name-fancy='Go' \
         --name='go' \
         "$@"
 }
 
-koopa_configure_julia() { # {{{1
+koopa_configure_julia() {
     koopa_configure_app_packages \
         --name-fancy='Julia' \
         --name='julia' \
         "$@"
 }
 
-koopa_configure_nim() { # {{{1
+koopa_configure_nim() {
     koopa_configure_app_packages \
         --name-fancy='Nim' \
         --name='nim' \
         "$@"
 }
 
-koopa_configure_node() { # {{{1
+koopa_configure_node() {
     koopa_configure_app_packages \
         --name-fancy='Node.js' \
         --name='node' \
         "$@"
 }
 
-koopa_configure_ruby() { # {{{1
+koopa_configure_ruby() {
     koopa_configure_app_packages \
         --name-fancy='Ruby' \
         --name='ruby' \
         "$@"
 }
 
-koopa_configure_rust() { # {{{1
+koopa_configure_rust() {
     koopa_configure_app_packages \
         --name-fancy='Rust' \
         --name='rust' \
         "$@"
 }
 
-koopa_delete_dotfile() { # {{{1
+koopa_delete_dotfile() {
     # """
     # Delete a dot file.
     # @note Updated 2022-01-31.
@@ -224,7 +224,7 @@ koopa_delete_dotfile() { # {{{1
     return 0
 }
 
-koopa_disable_passwordless_sudo() { # {{{1
+koopa_disable_passwordless_sudo() {
     # """
     # Disable passwordless sudo access for all admin users.
     # @note Updated 2021-03-01.
@@ -242,7 +242,7 @@ koopa_disable_passwordless_sudo() { # {{{1
     return 0
 }
 
-koopa_enable_passwordless_sudo() { # {{{1
+koopa_enable_passwordless_sudo() {
     # """
     # Enable passwordless sudo access for all admin users.
     # @note Updated 2022-02-17.
@@ -275,7 +275,7 @@ at '${file}'."
     return 0
 }
 
-koopa_enable_shell_for_all_users() { # {{{1
+koopa_enable_shell_for_all_users() {
     # """
     # Enable shell.
     # @note Updated 2022-04-08.
@@ -320,7 +320,7 @@ the default shell."
     return 0
 }
 
-koopa_find_user_profile() { # {{{1
+koopa_find_user_profile() {
     # """
     # Find current user's shell profile configuration file.
     # @note Updated 2022-02-03.
@@ -346,7 +346,7 @@ koopa_find_user_profile() { # {{{1
     return 0
 }
 
-koopa_fix_pyenv_permissions() { # {{{1
+koopa_fix_pyenv_permissions() {
     # """
     # Ensure Python pyenv shims have correct permissions.
     # @note Updated 2022-04-07.
@@ -359,7 +359,7 @@ koopa_fix_pyenv_permissions() { # {{{1
     return 0
 }
 
-koopa_fix_rbenv_permissions() { # {{{1
+koopa_fix_rbenv_permissions() {
     # """
     # Ensure Ruby rbenv shims have correct permissions.
     # @note Updated 2022-04-07.
@@ -372,7 +372,7 @@ koopa_fix_rbenv_permissions() { # {{{1
     return 0
 }
 
-koopa_fix_zsh_permissions() { # {{{1
+koopa_fix_zsh_permissions() {
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass.
     # @note Updated 2022-04-12.
@@ -399,7 +399,7 @@ koopa_fix_zsh_permissions() { # {{{1
 # FIXME Rename '--opt' to '--from-opt'.
 # FIXME Rename '--config' to '--into-xdg-config-home'.
 
-koopa_link_dotfile() { # {{{1
+koopa_link_dotfile() {
     # """
     # Link dotfile.
     # @note Updated 2022-04-04.
@@ -505,7 +505,7 @@ to '${dict[symlink_path]}'."
     return 0
 }
 
-koopa_reload_shell() { # {{{1
+koopa_reload_shell() {
     # """
     # Reload the current shell.
     # @note Updated 2022-02-03.

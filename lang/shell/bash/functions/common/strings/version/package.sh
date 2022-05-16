@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_github_latest_release() { # {{{1
+koopa_github_latest_release() {
     # """
     # Get the latest release version from GitHub.
     # @note Updated 2022-03-21.
@@ -32,7 +32,7 @@ koopa_github_latest_release() { # {{{1
     return 0
 }
 
-koopa_node_package_version() { # {{{1
+koopa_node_package_version() {
     # """
     # Node (NPM) package version.
     # @note Updated 2022-03-21.
@@ -66,7 +66,7 @@ koopa_node_package_version() { # {{{1
     return 0
 }
 
-koopa_perl_package_version() { # {{{1
+koopa_perl_package_version() {
     # """
     # Perl package version.
     # @note Updated 2022-03-21.
@@ -102,7 +102,7 @@ koopa_perl_package_version() { # {{{1
     return 0
 }
 
-# > koopa_python_package_version() { # {{{1
+# > koopa_python_package_version() {
 # >     # """
 # >     # Python package version.
 # >     # @note Updated 2022-03-21.
@@ -133,7 +133,7 @@ koopa_perl_package_version() { # {{{1
 # >     return 0
 # > }
 
-koopa_r_package_version() { # {{{1
+koopa_r_package_version() {
     # """
     # R package version.
     # @note Updated 2022-02-27.

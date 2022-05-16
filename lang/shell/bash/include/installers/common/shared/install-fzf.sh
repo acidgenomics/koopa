@@ -3,7 +3,7 @@
 # NOTE Safe to ignore this warning/error:
 # fatal: not a git repository (or any of the parent directories): .git
 
-main() { # {{{1
+main() {
     # """
     # Install fzf.
     # @note Updated 2022-03-30.

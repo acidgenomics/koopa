@@ -2,7 +2,7 @@
 
 # NOTE Add support for NASM compiler, to improve performance.
 
-main() { # {{{1
+main() {
     # """
     # Install libjpeg-turbo.
     # @note Updated 2022-04-20.

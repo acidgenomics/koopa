@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_clone() { # {{{1
+koopa_clone() {
     # """
     # Clone files using rsync (with saner defaults).
     # @note Updated 2022-04-04.
@@ -34,7 +34,7 @@ koopa_clone() { # {{{1
     return 0
 }
 
-koopa_rsync() { # {{{1
+koopa_rsync() {
     # """
     # GNU rsync wrapper.
     # @note Updated 2022-04-04.
@@ -162,7 +162,7 @@ koopa_rsync() { # {{{1
     return 0
 }
 
-koopa_rsync_ignore() { # {{{1
+koopa_rsync_ignore() {
     # """
     # Run rsync with automatic ignore.
     # @note Updated 2022-04-04.
