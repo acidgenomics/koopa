@@ -3,7 +3,7 @@
 koopa_decompress() {
     # """
     # Decompress a compressed file.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-05-16.
     #
     # This function currently allows uncompressed files to pass through.
     #
