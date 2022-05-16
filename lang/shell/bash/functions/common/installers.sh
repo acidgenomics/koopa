@@ -182,7 +182,7 @@ koopa_install_koopa() { # {{{3
         koopa_add_to_user_profile
     fi
     koopa_fix_zsh_permissions
-    koopa_add_koopa_config_link "${dict[prefix]}/activate" 'activate'
+    koopa_add_config_link "${dict[prefix]}/activate" 'activate'
     return 0
 }
 

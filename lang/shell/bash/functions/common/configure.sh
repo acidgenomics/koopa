@@ -45,7 +45,7 @@ koopa_add_monorepo_config_link() {
     )
     for subdir in "$@"
     do
-        koopa_add_koopa_config_link \
+        koopa_add_config_link \
             "${dict[prefix]}/${subdir}" \
             "$subdir"
     done
@@ -107,7 +107,7 @@ koopa_configure_chemacs() {
 koopa_configure_dotfiles() {
     # """
     # Configure dotfiles.
-    # @note Updated 2022-05-05.
+    # @note Updated 2022-05-16.
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -123,7 +123,7 @@ koopa_configure_dotfiles() {
     koopa_assert_is_dir "${dict[prefix]}"
     dict[script]="${dict[prefix]}/install"
     koopa_assert_is_file "${dict[script]}"
-    koopa_add_koopa_config_link "${dict[prefix]}" "${dict[name]}"
+    koopa_add_config_link "${dict[prefix]}" "${dict[name]}"
     koopa_add_to_path_start "$(koopa_dirname "${app[bash]}")"
     "${app[bash]}" "${dict[script]}"
     return 0
