@@ -4,6 +4,12 @@
 # - 'koopa_macos_update_defaults'.
 # - 'koopa_macos_enable_touch_id_sudo'
 
+# FIXME Ensure these are ordered correctly:
+# - sqlite
+# - apr
+# - apr-util
+# - subversion
+
 koopa_configure_system() { # {{{1
     # """
     # Configure system.
