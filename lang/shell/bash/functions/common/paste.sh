@@ -48,29 +48,3 @@ koopa_paste() {
     koopa_print "$str"
     return 0
 }
-
-koopa_paste0() {
-    # """
-    # Paste arguments to string without a delimiter.
-    # @note Updated 2021-11-30.
-    #
-    # @examples
-    # > koopa_paste0 'aaa' 'bbb'
-    # # aaabbb
-    # """
-    koopa_paste --sep='' "$@"
-}
-
-koopa_to_string() {
-    # """
-    # Paste arguments to a comma separated string.
-    # @note Updated 2021-11-30.
-    #
-    # @examples
-    # > koopa_to_string 'aaa' 'bbb'
-    # # aaa, bbb
-    # """
-    koopa_assert_has_args "$#"
-    koopa_paste0 --sep=', ' "$@"
-    return 0
-}
