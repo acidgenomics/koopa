@@ -1,39 +1,5 @@
 #!/usr/bin/env bash
 
-koopa_clone() {
-    # """
-    # Clone files using rsync (with saner defaults).
-    # @note Updated 2022-04-04.
-    # """
-    local dict rsync_args
-    koopa_assert_has_args_eq "$#" 2
-    koopa_assert_has_no_flags "$@"
-    declare -A dict=(
-        [source_dir]="${1:?}"
-        [target_dir]="${2:?}"
-    )
-    koopa_assert_is_dir "${dict[source_dir]}" "${dict[target_dir]}"
-    dict[source_dir]="$( \
-        koopa_realpath "${dict[source_dir]}" \
-        | koopa_strip_trailing_slash \
-    )"
-    dict[target_dir]="$( \
-        koopa_realpath "${dict[target_dir]}" \
-        | koopa_strip_trailing_slash \
-    )"
-    koopa_dl \
-        'Source dir' "${dict[source_dir]}" \
-        'Target dir' "${dict[target_dir]}"
-    rsync_args=(
-        '--archive'
-        '--delete-before'
-        "--source-dir=${dict[source_dir]}"
-        "--target-dir=${dict[target_dir]}"
-    )
-    koopa_rsync "${rsync_args[@]}"
-    return 0
-}
-
 koopa_rsync() {
     # """
     # GNU rsync wrapper.
@@ -159,37 +125,5 @@ koopa_rsync() {
     dict[target_dir]="$(koopa_strip_trailing_slash "${dict[target_dir]}")"
     rsync_args+=("${dict[source_dir]}/" "${dict[target_dir]}/")
     "${app[rsync]}" "${rsync_args[@]}"
-    return 0
-}
-
-koopa_rsync_ignore() {
-    # """
-    # Run rsync with automatic ignore.
-    # @note Updated 2022-04-04.
-    #
-    # @seealso
-    # - https://stackoverflow.com/questions/13713101/
-    # """
-    local dict rsync_args
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        [ignore_local]='.gitignore'
-        [ignore_global]="${HOME}/.gitignore"
-    )
-    rsync_args=(
-        '--archive'
-        '--exclude=.*'
-    )
-    if [[ -f "${dict[ignore_local]}" ]]
-    then
-        rsync_args+=(
-            "--filter=dir-merge,- ${dict[ignore_local]}"
-        )
-    fi
-    if [[ -f "${dict[ignore_global]}" ]]
-    then
-        rsync_args+=("--filter=dir-merge,- ${dict[ignore_global]}")
-    fi
-    koopa_rsync "${rsync_args[@]}" "$@"
     return 0
 }
