@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_add_conda_env_to_path() { # {{{1
+koopa_add_conda_env_to_path() {
     # """
     # Add conda environment(s) to PATH.
     # @note Updated 2020-06-30.

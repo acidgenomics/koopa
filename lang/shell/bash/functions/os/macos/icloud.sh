@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_force_reset_icloud_drive() { # {{{1
+koopa_macos_force_reset_icloud_drive() {
     # """
     # Force reset iCloud Drive.
     # @note Updated 2021-11-16.
@@ -41,7 +41,7 @@ koopa_macos_force_reset_icloud_drive() { # {{{1
     return 0
 }
 
-koopa_macos_symlink_icloud_drive() { # {{{1
+koopa_macos_symlink_icloud_drive() {
     # """
     # Symlink iCloud Drive into user home directory.
     # @note Updated 2021-10-29.

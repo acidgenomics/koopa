@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_activate_bash_aliases() { # {{{1
+koopa_activate_bash_aliases() {
     # """
     # Alias definitions.
     # @note Updated 2022-02-04.
@@ -20,7 +20,7 @@ koopa_activate_bash_aliases() { # {{{1
     return 0
 }
 
-koopa_activate_bash_completion() { # {{{1
+koopa_activate_bash_completion() {
     # """
     # Activate Bash completion.
     # @note Updated 2022-02-04.
@@ -48,7 +48,7 @@ koopa_activate_bash_completion() { # {{{1
     return 0
 }
 
-koopa_activate_bash_extras() { # {{{1
+koopa_activate_bash_extras() {
     # """
     # Activate Bash extras.
     # @note Updated 2021-09-29.
@@ -64,7 +64,7 @@ koopa_activate_bash_extras() { # {{{1
     return 0
 }
 
-koopa_activate_bash_prompt() { # {{{1
+koopa_activate_bash_prompt() {
     # """
     # Activate Bash prompt.
     # @note Updated 2022-01-21.
@@ -85,7 +85,7 @@ koopa_activate_bash_prompt() { # {{{1
     return 0
 }
 
-koopa_activate_bash_readline() { # {{{1
+koopa_activate_bash_readline() {
     # """
     # Readline input options.
     # @note Updated 2022-02-04.
@@ -101,7 +101,7 @@ koopa_activate_bash_readline() { # {{{1
     return 0
 }
 
-koopa_activate_bash_reverse_search() { # {{{1
+koopa_activate_bash_reverse_search() {
     # """
     # Activate reverse search for Bash.
     # @note Updated 2021-06-16.
@@ -113,7 +113,7 @@ koopa_activate_bash_reverse_search() { # {{{1
     return 0
 }
 
-koopa_bash_prompt_string() { # {{{1
+koopa_bash_prompt_string() {
     # """
     # Bash prompt string (PS1).
     # @note Updated 2022-01-21.

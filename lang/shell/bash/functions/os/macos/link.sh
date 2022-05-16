@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_homebrew_uninstall_brewfile_casks() { # {{{1
+koopa_macos_homebrew_uninstall_brewfile_casks() {
     # """
     # Delete macOS applications installed by Homebrew cask.
     # @note 2022-04-09.
@@ -37,7 +37,7 @@ koopa_macos_homebrew_uninstall_brewfile_casks() { # {{{1
     return 0
 }
 
-koopa_macos_link_homebrew() { # {{{1
+koopa_macos_link_homebrew() {
     koopa_assert_has_no_args "$#"
     # BBEdit cask.
     koopa_link_in_bin \
@@ -58,7 +58,7 @@ koopa_macos_link_homebrew() { # {{{1
         'code'
 }
 
-koopa_macos_unlink_homebrew() { # {{{1
+koopa_macos_unlink_homebrew() {
     # """
     # Previously unlinked:
     # - 'R'

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Uninstall NodeSource Node.js binary.
     # @note Updated 2022-04-19.

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_color_mode() { # {{{1
+koopa_activate_color_mode() {
     # """
     # Activate dark / light color mode.
     # @note Updated 2022-04-13.

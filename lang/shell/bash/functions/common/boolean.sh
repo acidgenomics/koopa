@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_is_ssh_enabled() { # {{{1
+__koopa_is_ssh_enabled() {
     # """
     # Is SSH key enabled (e.g. for git)?
     # @note Updated 2022-02-17.
@@ -29,7 +29,7 @@ __koopa_is_ssh_enabled() { # {{{1
         --pattern="${dict[pattern]}"
 }
 
-koopa_contains() { # {{{1
+koopa_contains() {
     # """
     # Does an array contain a specific element?
     # @note Updated 2021-05-07.
@@ -53,7 +53,7 @@ koopa_contains() { # {{{1
     return 1
 }
 
-koopa_has_file_ext() { # {{{1
+koopa_has_file_ext() {
     # """
     # Does the input contain a file extension?
     # @note Updated 2022-02-17.
@@ -73,7 +73,7 @@ koopa_has_file_ext() { # {{{1
     return 0
 }
 
-koopa_has_monorepo() { # {{{1
+koopa_has_monorepo() {
     # """
     # Does the current user have a monorepo?
     # @note Updated 2020-07-03.
@@ -81,7 +81,7 @@ koopa_has_monorepo() { # {{{1
     [[ -d "$(koopa_monorepo_prefix)" ]]
 }
 
-koopa_has_no_environments() { # {{{1
+koopa_has_no_environments() {
     # """
     # Detect activation of virtual environments.
     # @note Updated 2021-06-14.
@@ -92,7 +92,7 @@ koopa_has_no_environments() { # {{{1
     return 0
 }
 
-koopa_has_passwordless_sudo() { # {{{1
+koopa_has_passwordless_sudo() {
     # """
     # Check if sudo is active or doesn't require a password.
     # @note Updated 2021-10-27.
@@ -111,7 +111,7 @@ koopa_has_passwordless_sudo() { # {{{1
     return 1
 }
 
-koopa_is_admin() { # {{{1
+koopa_is_admin() {
     # """
     # Check that current user has administrator permissions.
     # @note Updated 2022-02-17.
@@ -171,7 +171,7 @@ koopa_is_admin() { # {{{1
     return 1
 }
 
-koopa_is_anaconda() { # {{{1
+koopa_is_anaconda() {
     # """
     # Is Anaconda (rather than Miniconda) installed?
     # @note Updated 2022-02-01.
@@ -190,7 +190,7 @@ koopa_is_anaconda() { # {{{1
     return 0
 }
 
-koopa_is_array_empty() { # {{{1
+koopa_is_array_empty() {
     # """
     # Is the array input empty?
     # @note Updated 2020-12-03.
@@ -198,7 +198,7 @@ koopa_is_array_empty() { # {{{1
     ! koopa_is_array_non_empty "$@"
 }
 
-koopa_is_array_non_empty() { # {{{1
+koopa_is_array_non_empty() {
     # """
     # Is the array non-empty?
     # @note Updated 2021-08-31.
@@ -217,7 +217,7 @@ koopa_is_array_non_empty() { # {{{1
     return 0
 }
 
-koopa_is_current_version() { # {{{1
+koopa_is_current_version() {
     # """
     # Is the program version current?
     # @note Updated 2020-07-20.
@@ -233,7 +233,7 @@ koopa_is_current_version() { # {{{1
     return 0
 }
 
-koopa_is_defined_in_user_profile() { # {{{1
+koopa_is_defined_in_user_profile() {
     # """
     # Is koopa defined in current user's shell profile configuration file?
     # @note Updated 2022-02-17.
@@ -244,7 +244,7 @@ koopa_is_defined_in_user_profile() { # {{{1
     koopa_file_detect_fixed --file="$file" --pattern='koopa'
 }
 
-koopa_is_doom_emacs_installed() { # {{{1
+koopa_is_doom_emacs_installed() {
     # """
     # Is Doom Emacs installed?
     # @note Updated 2021-10-25.
@@ -258,7 +258,7 @@ koopa_is_doom_emacs_installed() { # {{{1
     koopa_file_detect_fixed --file="$init_file" --pattern='doom-emacs'
 }
 
-koopa_is_empty_dir() { # {{{1
+koopa_is_empty_dir() {
     # """
     # Is the input an empty directory?
     # @note Updated 2022-02-24.
@@ -288,7 +288,7 @@ koopa_is_empty_dir() { # {{{1
     return 0
 }
 
-koopa_is_export() { # {{{1
+koopa_is_export() {
     # """
     # Is a variable exported in the current shell session?
     # @note Updated 2022-02-17.
@@ -314,7 +314,7 @@ koopa_is_export() { # {{{1
     return 0
 }
 
-koopa_is_file_system_case_sensitive() { # {{{1
+koopa_is_file_system_case_sensitive() {
     # """
     # Is the file system case sensitive?
     # @note Updated 2022-02-24.
@@ -344,7 +344,7 @@ koopa_is_file_system_case_sensitive() { # {{{1
     [[ "${dict[count]}" -eq 2 ]]
 }
 
-koopa_is_file_type() { # {{{1
+koopa_is_file_type() {
     # """
     # Does the input exist and match a file type extension?
     # @note Updated 2022-02-17.
@@ -395,7 +395,7 @@ koopa_is_file_type() { # {{{1
     return 0
 }
 
-koopa_is_function() { # {{{1
+koopa_is_function() {
     # """
     # Check if variable is a function.
     # @note Updated 2021-05-11.
@@ -425,7 +425,7 @@ koopa_is_function() { # {{{1
     return 0
 }
 
-koopa_is_github_ssh_enabled() { # {{{1
+koopa_is_github_ssh_enabled() {
     # """
     # Is SSH key enabled for GitHub access?
     # @note Updated 2020-06-30.
@@ -434,7 +434,7 @@ koopa_is_github_ssh_enabled() { # {{{1
     __koopa_is_ssh_enabled 'git@github.com' 'successfully authenticated'
 }
 
-koopa_is_gitlab_ssh_enabled() { # {{{1
+koopa_is_gitlab_ssh_enabled() {
     # """
     # Is SSH key enabled for GitLab access?
     # @note Updated 2020-06-30.
@@ -443,7 +443,7 @@ koopa_is_gitlab_ssh_enabled() { # {{{1
     __koopa_is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
 }
 
-koopa_is_gnu() { # {{{1
+koopa_is_gnu() {
     # """
     # Is a GNU program installed?
     # @note Updated 2022-01-21.
@@ -459,7 +459,7 @@ koopa_is_gnu() { # {{{1
     return 0
 }
 
-koopa_is_koopa_app() { # {{{1
+koopa_is_koopa_app() {
     # """
     # Is a specific command installed in koopa app prefix?
     # @note Updated 2022-02-17.
@@ -487,7 +487,7 @@ koopa_is_koopa_app() { # {{{1
     return 0
 }
 
-koopa_is_powerful_machine() { # {{{1
+koopa_is_powerful_machine() {
     # """
     # Is the current machine powerful?
     # @note Updated 2021-11-05.
@@ -499,7 +499,7 @@ koopa_is_powerful_machine() { # {{{1
     return 1
 }
 
-# > koopa_is_python_package_installed() { # {{{1
+# > koopa_is_python_package_installed() {
 # >     # """
 # >     # Check if Python package is installed.
 # >     # @note Updated 2022-02-03.
@@ -539,7 +539,7 @@ koopa_is_powerful_machine() { # {{{1
 # >     return 0
 # > }
 
-koopa_is_r_package_installed() { # {{{1
+koopa_is_r_package_installed() {
     # """
     # Is the requested R package installed?
     # @note Updated 2022-02-03.
@@ -562,7 +562,7 @@ koopa_is_r_package_installed() { # {{{1
     return 0
 }
 
-koopa_is_recent() { # {{{1
+koopa_is_recent() {
     # """
     # If the file exists and is more recent than 2 weeks old.
     # @note Updated 2022-02-24.
@@ -606,7 +606,7 @@ koopa_is_recent() { # {{{1
     return 0
 }
 
-koopa_is_spacemacs_installed() { # {{{1
+koopa_is_spacemacs_installed() {
     # """
     # Is Spacemacs installed?
     # @note Updated 2022-02-17.
@@ -620,7 +620,7 @@ koopa_is_spacemacs_installed() { # {{{1
     koopa_file_detect_fixed --file="$init_file" --pattern='Spacemacs'
 }
 
-koopa_is_url_active() { # {{{1
+koopa_is_url_active() {
     # """
     # Check if input is a URL and is active.
     # @note Updated 2022-04-07.
@@ -671,7 +671,7 @@ koopa_is_url_active() { # {{{1
     return 0
 }
 
-koopa_is_variable_defined() { # {{{1
+koopa_is_variable_defined() {
     # """
     # Is the variable defined (and non-empty)?
     # @note Updated 2022-02-04.
@@ -710,7 +710,7 @@ koopa_is_variable_defined() { # {{{1
     return 0
 }
 
-koopa_is_xcode_clt_installed() { # {{{1
+koopa_is_xcode_clt_installed() {
     # """
     # Is Xcode CLT (command line tools) installed?
     # @note Updated 2021-10-26.

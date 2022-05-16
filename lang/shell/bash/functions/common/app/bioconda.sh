@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_bioconda_autobump_recipe() { # {{{1
+koopa_bioconda_autobump_recipe() {
     # """
     # Edit a Bioconda autobump recipe.
     # @note Updated 2022-04-15.

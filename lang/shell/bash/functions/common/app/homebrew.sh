@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_brew_cleanup() { # {{{1
+koopa_brew_cleanup() {
     # """
     # Clean up Homebrew.
     # @note Updated 2022-02-28.
@@ -17,7 +17,7 @@ koopa_brew_cleanup() { # {{{1
     return 0
 }
 
-koopa_brew_dump_brewfile() { # {{{1
+koopa_brew_dump_brewfile() {
     # """
     # Dump a Homebrew Bundle Brewfile.
     # @note Updated 2021-10-27.
@@ -34,7 +34,7 @@ koopa_brew_dump_brewfile() { # {{{1
     return 0
 }
 
-koopa_brew_outdated() { # {{{1
+koopa_brew_outdated() {
     # """
     # Listed outdated Homebrew brews and casks, in a single call.
     # @note Updated 2021-10-27.
@@ -49,7 +49,7 @@ koopa_brew_outdated() { # {{{1
     return 0
 }
 
-koopa_brew_reset_core_repo() { # {{{1
+koopa_brew_reset_core_repo() {
     # """
     # Ensure internal 'homebrew-core' repo is clean.
     # @note Updated 2021-10-27.
@@ -75,7 +75,7 @@ koopa_brew_reset_core_repo() { # {{{1
     return 0
 }
 
-koopa_brew_reset_permissions() { # {{{1
+koopa_brew_reset_permissions() {
     # """
     # Reset permissions on Homebrew installation.
     # @note Updated 2021-10-27.
@@ -96,7 +96,7 @@ koopa_brew_reset_permissions() { # {{{1
     return 0
 }
 
-koopa_brew_upgrade_brews() { # {{{1
+koopa_brew_upgrade_brews() {
     # """
     # Upgrade outdated Homebrew brews.
     # @note Updated 2022-02-16.
@@ -135,7 +135,7 @@ koopa_brew_upgrade_brews() { # {{{1
     return 0
 }
 
-koopa_brew_uninstall_all_brews() { # {{{1
+koopa_brew_uninstall_all_brews() {
     # """
     # Uninstall all Homebrew formulae.
     # @note Updated 2022-04-22.

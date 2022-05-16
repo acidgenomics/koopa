@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_fasta_generate_chromosomes_file() { # {{{1
+koopa_fasta_generate_chromosomes_file() {
     # """
     # Generate chromosomes text file from genome FASTA.
     # @note Updated 2022-03-24.
@@ -63,7 +63,7 @@ koopa_fasta_generate_chromosomes_file() { # {{{1
     return 0
 }
 
-koopa_fasta_generate_decoy_transcriptome_file() { # {{{1
+koopa_fasta_generate_decoy_transcriptome_file() {
     # """
     # Generate decoy transcriptome "gentrome" (e.g. for salmon index).
     # @note Updated 2022-03-25.

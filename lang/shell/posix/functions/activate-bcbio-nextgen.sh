@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_bcbio_nextgen() { # {{{1
+koopa_activate_bcbio_nextgen() {
     # """
     # Activate bcbio-nextgen tool binaries.
     # @note Updated 2022-05-12.

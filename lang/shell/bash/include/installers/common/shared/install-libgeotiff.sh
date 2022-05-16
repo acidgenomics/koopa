@@ -2,7 +2,7 @@
 
 # NOTE Switch 'jpeg' to 'libjpeg-turbo'?
 
-main() { # {{{1
+main() {
     # """
     # Install libgeotiff.
     # @note Updated 2022-04-25.

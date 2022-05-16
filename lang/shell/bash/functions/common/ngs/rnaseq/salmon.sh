@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_salmon_index() { # {{{1
+koopa_salmon_index() {
     # """
     # Generate salmon index.
     # @note Updated 2022-03-25.
@@ -174,7 +174,7 @@ koopa_salmon_index() { # {{{1
     return 0
 }
 
-koopa_salmon_quant_paired_end() { # {{{1
+koopa_salmon_quant_paired_end() {
     # """
     # Run salmon quant on multiple paired-end FASTQs in a directory.
     # @note Updated 2022-03-25.
@@ -316,7 +316,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
     return 0
 }
 
-koopa_salmon_quant_paired_end_per_sample() { # {{{1
+koopa_salmon_quant_paired_end_per_sample() {
     # """
     # Run salmon quant on a paired-end sample.
     # @note Updated 2022-03-25.
@@ -525,7 +525,7 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
     return 0
 }
 
-koopa_salmon_quant_single_end() { # {{{1
+koopa_salmon_quant_single_end() {
     # """
     # Run salmon quant on multiple single-end FASTQs in a directory.
     # @note Updated 2022-03-25.
@@ -650,7 +650,7 @@ koopa_salmon_quant_single_end() { # {{{1
     return 0
 }
 
-koopa_salmon_quant_single_end_per_sample() { # {{{1
+koopa_salmon_quant_single_end_per_sample() {
     # """
     # Run salmon quant on a single-end sample.
     # @note Updated 2022-03-25.

@@ -5,7 +5,7 @@
 # ## CMakeFindDependencyMacro
 # ## Unknown CMake command "find_dependency".
 
-main() { # {{{1
+main() {
     # """
     # Install bcl2fastq from source.
     # @note Updated 2022-01-07.

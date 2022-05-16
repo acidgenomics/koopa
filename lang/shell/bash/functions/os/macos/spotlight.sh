@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_spotlight_find() { # {{{1
+koopa_macos_spotlight_find() {
     # """
     # Find files using Spotlight index.
     # @note Updated 2021-05-20.
@@ -21,7 +21,7 @@ koopa_macos_spotlight_find() { # {{{1
     return 0
 }
 
-koopa_macos_spotlight_usage() { # {{{1
+koopa_macos_spotlight_usage() {
     # """
     # Monitor current spotlight indexing usage.
     # @note Updated 2022-02-28.

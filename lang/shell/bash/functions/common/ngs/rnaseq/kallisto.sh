@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_kallisto_fastq_library_type() { # {{{1
+koopa_kallisto_fastq_library_type() {
     # """
     # Convert salmon FASTQ library type to kallisto conventions.
     # @note Updated 2022-03-25.
@@ -41,7 +41,7 @@ koopa_kallisto_fastq_library_type() { # {{{1
     return 0
 }
 
-koopa_kallisto_index() { # {{{1
+koopa_kallisto_index() {
     # """
     # Generate kallisto index.
     # @note Updated 2022-03-25.
@@ -125,7 +125,7 @@ koopa_kallisto_index() { # {{{1
     return 0
 }
 
-koopa_quant_kallisto_paired_end() { # {{{1
+koopa_quant_kallisto_paired_end() {
     # """
     # Run kallisto quant on multiple paired-end FASTQs in a directory.
     # @note Updated 2022-03-25.
@@ -267,7 +267,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
     return 0
 }
 
-koopa_kallisto_quant_paired_end_per_sample() { # {{{1
+koopa_kallisto_quant_paired_end_per_sample() {
     # """
     # Run kallisto quant on a paired-end sample.
     # @note Updated 2022-03-25.
@@ -452,7 +452,7 @@ koopa_kallisto_quant_paired_end_per_sample() { # {{{1
     return 0
 }
 
-koopa_kallisto_quant_single_end() { # {{{1
+koopa_kallisto_quant_single_end() {
     # """
     # Run kallisto on multiple single-end FASTQ files.
     # @note Updated 2022-03-25.
@@ -565,7 +565,7 @@ koopa_kallisto_quant_single_end() { # {{{1
     return 0
 }
 
-koopa_kallisto_quant_single_end_per_sample() { # {{{1
+koopa_kallisto_quant_single_end_per_sample() {
     # """
     # Run kallisto quant (per single-end sample).
     # @note Updated 2022-03-25.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_linux_java_update_alternatives() { # {{{1
+koopa_linux_java_update_alternatives() {
     # """
     # Update Java alternatives.
     # @note Updated 2021-11-16.

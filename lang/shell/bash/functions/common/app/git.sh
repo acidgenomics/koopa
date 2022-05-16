@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_git_checkout_recursive() { # {{{1
+koopa_git_checkout_recursive() {
     # """
     # Checkout to a different branch on multiple git repos.
     # @note Updated 2021-11-23.
@@ -102,7 +102,7 @@ koopa_git_checkout_recursive() { # {{{1
     return 0
 }
 
-koopa_git_clone() { # {{{1
+koopa_git_clone() {
     # """
     # Quietly clone a git repository.
     # @note Updated 2022-01-18.
@@ -183,7 +183,7 @@ koopa_git_clone() { # {{{1
     return 0
 }
 
-koopa_git_default_branch() { # {{{1
+koopa_git_default_branch() {
     # """
     # Default branch of Git repository.
     # @note Updated 2022-02-23.
@@ -233,7 +233,7 @@ koopa_git_default_branch() { # {{{1
     return 0
 }
 
-koopa_git_last_commit_local() { # {{{1
+koopa_git_last_commit_local() {
     # """
     # Last git commit of local repository.
     # @note Updated 2021-11-23.
@@ -273,7 +273,7 @@ koopa_git_last_commit_local() { # {{{1
     return 0
 }
 
-koopa_git_last_commit_remote() { # {{{1
+koopa_git_last_commit_remote() {
     # """
     # Last git commit of remote repository.
     # @note Updated 2021-11-23.
@@ -311,7 +311,7 @@ koopa_git_last_commit_remote() { # {{{1
     return 0
 }
 
-koopa_git_latest_tag() { # {{{1
+koopa_git_latest_tag() {
     # """
     # Latest tag of a local git repo.
     # @note Updated 2022-02-03.
@@ -345,7 +345,7 @@ koopa_git_latest_tag() { # {{{1
     return 0
 }
 
-koopa_git_pull() { # {{{1
+koopa_git_pull() {
     # """
     # Pull (update) a git repository.
     # @note Updated 2021-11-24.
@@ -381,7 +381,7 @@ koopa_git_pull() { # {{{1
     return 0
 }
 
-koopa_git_pull_recursive() { # {{{1
+koopa_git_pull_recursive() {
     # """
     # Pull multiple Git repositories recursively.
     # @note Updated 2022-02-11.
@@ -433,7 +433,7 @@ koopa_git_pull_recursive() { # {{{1
     return 0
 }
 
-koopa_git_push_recursive() { # {{{1
+koopa_git_push_recursive() {
     # """
     # Push multiple Git repositories recursively.
     # @note Updated 2021-11-23.
@@ -483,7 +483,7 @@ koopa_git_push_recursive() { # {{{1
     return 0
 }
 
-koopa_git_push_submodules() { # {{{1
+koopa_git_push_submodules() {
     # """
     # Push Git submodules.
     # @note Updated 2021-11-23.
@@ -510,7 +510,7 @@ koopa_git_push_submodules() { # {{{1
     return 0
 }
 
-koopa_git_remote_url() { # {{{1
+koopa_git_remote_url() {
     # """
     # Return the Git remote URL for origin.
     # @note Updated 2021-11-23.
@@ -543,7 +543,7 @@ koopa_git_remote_url() { # {{{1
     return 0
 }
 
-koopa_git_rename_master_to_main() { # {{{1
+koopa_git_rename_master_to_main() {
     # """
     # Rename default branch from "master" to "main".
     # @note Updated 2022-03-03.
@@ -611,7 +611,7 @@ koopa_git_rename_master_to_main() { # {{{1
     return 0
 }
 
-koopa_git_reset() { # {{{1
+koopa_git_reset() {
     # """
     # Clean and reset a git repo and its submodules.
     # @note Updated 2021-11-23.
@@ -654,7 +654,7 @@ koopa_git_reset() { # {{{1
     return 0
 }
 
-koopa_git_reset_fork_to_upstream() { # {{{1
+koopa_git_reset_fork_to_upstream() {
     # """
     # Reset Git fork to upstream.
     # @note Updated 2021-11-23.
@@ -689,7 +689,7 @@ koopa_git_reset_fork_to_upstream() { # {{{1
     return 0
 }
 
-koopa_git_rm_submodule() { # {{{1
+koopa_git_rm_submodule() {
     # """
     # Remove a git submodule from current repository.
     # @note Updated 2021-11-18.
@@ -725,7 +725,7 @@ koopa_git_rm_submodule() { # {{{1
     return 0
 }
 
-koopa_git_rm_untracked() { # {{{1
+koopa_git_rm_untracked() {
     # """
     # Remove untracked files from git repo.
     # @note Updated 2021-11-23.
@@ -753,7 +753,7 @@ koopa_git_rm_untracked() { # {{{1
     return 0
 }
 
-koopa_git_set_remote_url() { # {{{1
+koopa_git_set_remote_url() {
     # """
     # Set (or change) the remote URL of a git repo.
     # @note Updated 2021-11-18.
@@ -778,7 +778,7 @@ koopa_git_set_remote_url() { # {{{1
     return 0
 }
 
-koopa_git_status_recursive() { # {{{1
+koopa_git_status_recursive() {
     # """
     # Get the status of multiple Git repos recursively.
     # @note Updated 2021-11-23.
@@ -827,7 +827,7 @@ koopa_git_status_recursive() { # {{{1
     return 0
 }
 
-koopa_git_submodule_init() { # {{{1
+koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
     # @note Updated 2021-11-23.

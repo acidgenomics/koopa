@@ -1,6 +1,6 @@
 #!/bin/sh
 
-__koopa_packages_prefix() { # {{{1
+__koopa_packages_prefix() {
     # """
     # Packages prefix for a specific language.
     # @note Updated 2022-02-25.

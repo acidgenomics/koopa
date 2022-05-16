@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_opensuse_locate_zypper() { # {{{1
+koopa_opensuse_locate_zypper() {
     # """
     # Locate OpenSUSE 'zypper'.
     # @note Updated 2021-11-16.

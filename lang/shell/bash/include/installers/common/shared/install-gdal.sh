@@ -3,7 +3,7 @@
 # FIXME Need to rework using CMake build approach.
 # FIXME Should we include openssl here?
 
-main() { # {{{1
+main() {
     # """
     # Install GDAL.
     # @note Updated 2022-05-13.

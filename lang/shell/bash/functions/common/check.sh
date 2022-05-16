@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_check_access_human() { # {{{1
+koopa_check_access_human() {
     # """
     # Check if file or directory has expected human readable access.
     # @note Updated 2021-01-31.
@@ -26,7 +26,7 @@ is not '${dict[code]}'."
     return 0
 }
 
-koopa_check_access_octal() { # {{{1
+koopa_check_access_octal() {
     # """
     # Check if file or directory has expected octal access.
     # @note Updated 2022-01-31.
@@ -52,7 +52,7 @@ is not '${dict[code]}'."
     return 0
 }
 
-koopa_check_disk() { # {{{1
+koopa_check_disk() {
     # """
     # Check that disk has enough free space.
     # @note Updated 2022-01-21.
@@ -71,7 +71,7 @@ koopa_check_disk() { # {{{1
     return 0
 }
 
-koopa_check_exports() { # {{{1
+koopa_check_exports() {
     # """
     # Check exported environment variables.
     # @note Updated 2020-07-05.
@@ -91,7 +91,7 @@ koopa_check_exports() { # {{{1
     return 0
 }
 
-koopa_check_group() { # {{{1
+koopa_check_group() {
     # """
     # Check if file or directory has an expected group.
     # @note Updated 2022-01-31.
@@ -117,7 +117,7 @@ is not '${dict[code]}'."
     return 0
 }
 
-koopa_check_mount() { # {{{1
+koopa_check_mount() {
     # """
     # Check if a drive is mounted.
     # @note Updated 2022-01-31.
@@ -153,7 +153,7 @@ koopa_check_mount() { # {{{1
     return 0
 }
 
-koopa_check_system() { # {{{1
+koopa_check_system() {
     # """
     # Check system.
     # @note Updated 2022-05-06.
@@ -170,7 +170,7 @@ koopa_check_system() { # {{{1
     return 0
 }
 
-koopa_check_user() { # {{{1
+koopa_check_user() {
     # """
     # Check if file or directory is owned by an expected user.
     # @note Updated 2022-01-31.
@@ -197,7 +197,7 @@ is not '${dict[expected_user]}'."
     return 0
 }
 
-koopa_check_version() { # {{{1
+koopa_check_version() {
     # """
     # Check that program is installed and passes minimum version.
     # @note Updated 2020-06-29.

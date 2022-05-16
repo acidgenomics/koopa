@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_rename_from_csv() { # {{{1
+koopa_rename_from_csv() {
     # """
     # Rename files from CSV template.
     # @note Updated 2022-02-17.
@@ -21,7 +21,7 @@ koopa_rename_from_csv() { # {{{1
     return 0
 }
 
-koopa_rename_lowercase() { # {{{1
+koopa_rename_lowercase() {
     # """
     # Rename files to lowercase.
     # @note Updated 2022-02-24.

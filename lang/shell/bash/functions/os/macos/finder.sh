@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_finder_hide() { # {{{1
+koopa_macos_finder_hide() {
     # """
     # Hide files from view in the Finder.
     # @note Updated 2021-05-08.
@@ -11,7 +11,7 @@ koopa_macos_finder_hide() { # {{{1
     return 0
 }
 
-koopa_macos_finder_unhide() { # {{{1
+koopa_macos_finder_unhide() {
     # """
     # Unhide files from view in the Finder.
     # @note Updated 2021-05-08.

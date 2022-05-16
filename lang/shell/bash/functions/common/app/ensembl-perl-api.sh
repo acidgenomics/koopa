@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_activate_ensembl_perl_api() { # {{{1
+koopa_activate_ensembl_perl_api() {
     # """
     # Activate Ensembl Perl API.
     # @note Updated 2021-11-18.

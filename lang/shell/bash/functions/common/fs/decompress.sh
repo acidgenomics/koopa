@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_decompress() { # {{{1
+koopa_decompress() {
     # """
     # Decompress a compressed file.
     # @note Updated 2022-03-28.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_linux_configure_lmod() { # {{{1
+koopa_linux_configure_lmod() {
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
     # @note Updated 2022-01-28.

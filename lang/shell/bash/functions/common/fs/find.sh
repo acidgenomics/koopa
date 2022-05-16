@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_find() { # {{{1
+koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
     # @note Updated 2022-02-24.
@@ -418,7 +418,7 @@ koopa_find() { # {{{1
     return 0
 }
 
-koopa_find_and_replace_in_file() { # {{{1
+koopa_find_and_replace_in_file() {
     # """
     # Find and replace inside files.
     # @note Updated 2022-04-22.
@@ -523,7 +523,7 @@ koopa_find_and_replace_in_file() { # {{{1
     return 0
 }
 
-koopa_find_broken_symlinks() { # {{{1
+koopa_find_broken_symlinks() {
     # """
     # Find broken symlinks.
     # @note Updated 2022-02-17.
@@ -549,7 +549,7 @@ koopa_find_broken_symlinks() { # {{{1
     return 0
 }
 
-koopa_find_dotfiles() { # {{{1
+koopa_find_dotfiles() {
     # """
     # Find dotfiles by type.
     # @note Updated 2022-02-17.
@@ -588,7 +588,7 @@ koopa_find_dotfiles() { # {{{1
     return 0
 }
 
-koopa_find_empty_dirs() { # {{{1
+koopa_find_empty_dirs() {
     # """
     # Find empty directories.
     # @note Updated 2022-02-24.
@@ -612,7 +612,7 @@ koopa_find_empty_dirs() { # {{{1
     return 0
 }
 
-koopa_find_files_without_line_ending() { # {{{1
+koopa_find_files_without_line_ending() {
     # """
     # Find files without line ending.
     # @note Updated 2022-02-16.
@@ -644,7 +644,7 @@ koopa_find_files_without_line_ending() { # {{{1
     return 0
 }
 
-koopa_find_large_dirs() { # {{{1
+koopa_find_large_dirs() {
     # """
     # Find large directories.
     # @note Updated 2022-02-16.
@@ -682,7 +682,7 @@ koopa_find_large_dirs() { # {{{1
     return 0
 }
 
-koopa_find_large_files() { # {{{1
+koopa_find_large_files() {
     # """
     # Find large files.
     # @note Updated 2022-02-16.
@@ -718,7 +718,7 @@ koopa_find_large_files() { # {{{1
     return 0
 }
 
-koopa_find_non_symlinked_make_files() { # {{{1
+koopa_find_non_symlinked_make_files() {
     # """
     # Find non-symlinked make files.
     # @note Updated 2022-02-24.
@@ -766,7 +766,7 @@ koopa_find_non_symlinked_make_files() { # {{{1
 
 # NOTE Is there a way to speed this up using GNU find or something?
 
-koopa_find_symlinks() { # {{{1
+koopa_find_symlinks() {
     # """
     # Find symlinks matching a specified source prefix.
     # @note Updated 2022-04-01.

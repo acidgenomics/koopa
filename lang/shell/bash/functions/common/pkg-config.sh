@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE Consider not modifying PKG_CONFIG_PATH in this case.
-koopa_activate_build_opt_prefix() { # {{{1
+koopa_activate_build_opt_prefix() {
     # """
     # Activate a build-only opt prefix.
     # @note Updated 2022-04-22.
@@ -11,7 +11,7 @@ koopa_activate_build_opt_prefix() { # {{{1
     koopa_activate_opt_prefix --build-only "$@"
 }
 
-koopa_activate_opt_prefix() { # {{{1
+koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
     # @note Updated 2022-04-23.
@@ -142,7 +142,7 @@ koopa_activate_opt_prefix() { # {{{1
     return 0
 }
 
-koopa_add_rpath_to_ldflags() { # {{{1
+koopa_add_rpath_to_ldflags() {
     # """
     # Append 'LDFLAGS' string with an rpath.
     # @note Updated 2022-04-22.
@@ -161,7 +161,7 @@ koopa_add_rpath_to_ldflags() { # {{{1
     return 0
 }
 
-koopa_add_to_pkg_config_path() { # {{{1
+koopa_add_to_pkg_config_path() {
     # """
     # Force add to start of 'PKG_CONFIG_PATH'.
     # @note Updated 2022-04-21.
@@ -180,7 +180,7 @@ koopa_add_to_pkg_config_path() { # {{{1
     return 0
 }
 
-koopa_add_to_pkg_config_path_2() { # {{{1
+koopa_add_to_pkg_config_path_2() {
     # """
     # Force add to start of 'PKG_CONFIG_PATH' using 'pc_path' variable
     # lookup from 'pkg-config' program.
