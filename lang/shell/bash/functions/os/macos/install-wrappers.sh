@@ -142,7 +142,7 @@ koopa_macos_install_r_gfortran() { # {{{3
         --name-fancy='R gfortran' \
         --name='r-gfortran' \
         --platform='macos' \
-        --prefix="$(koopa_macos_gfortran_prefix)" \
+        --prefix='/usr/local/gfortran' \
         --system \
         "$@"
 }
@@ -152,7 +152,7 @@ koopa_macos_uninstall_r_gfortran() { # {{{3
         --name-fancy='R gfortran' \
         --name='r-gfortran' \
         --platform='macos' \
-        --prefix="$(koopa_macos_gfortran_prefix)" \
+        --prefix='/usr/local/gfortran' \
         --system \
         "$@"
 }
