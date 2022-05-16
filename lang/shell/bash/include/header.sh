@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME We should generate 2-3 cache files here:
+# - activate.sh
+# - common.sh
+# - os.sh
+
 # FIXME Rework as cached function approach.
 __koopa_bash_source_dir() {
     # """
@@ -150,10 +155,11 @@ __koopa_warn() {
     return 0
 }
 
+# FIXME Rework using separate bool and dict arrays.
 __koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-05-16.
     #
     # @seealso
     # - shopt
@@ -308,8 +314,14 @@ __koopa_bash_header() {
     fi
     if [[ "${dict[activate]}" -eq 1 ]]
     then
+        # FIXME Rework this approach using dict for prefixes...
         # shellcheck source=/dev/null
-        source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
+        if [[ -f "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh" ]]
+        then
+            source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
+        else
+            __koopa_bash_source_dir "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate/"
+        fi
         if [[ "${dict[minimal]}" -eq 0 ]]
         then
             koopa_activate_bash_extras
