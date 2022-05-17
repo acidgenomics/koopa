@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Need to harden all 'locate_*' (locate_app) calls.
+    Check using '-x' and add return 1 for all.
 
 # FIXME Need to also link (install) and unlink (uninstall) man files,
 # where applicable.
