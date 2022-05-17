@@ -4,7 +4,7 @@
 
 # aws-cli ----------------------------------------------------------------- {{{2
 
-koopa_macos_install_aws_cli() { # {{{3
+koopa_macos_install_aws_cli() {
     koopa_install_app \
         --link-in-bin='bin/aws' \
         --name-fancy='AWS CLI' \
@@ -15,7 +15,7 @@ koopa_macos_install_aws_cli() { # {{{3
 
 # neovim-binary ----------------------------------------------------------- {{{2
 
-koopa_macos_install_neovim_binary() { # {{{3
+koopa_macos_install_neovim_binary() {
     koopa_install_app \
         --installer='neovim-binary' \
         --link-in-bin='bin/nvim' \
@@ -29,7 +29,7 @@ koopa_macos_install_neovim_binary() { # {{{3
 
 # adobe-creative-cloud ---------------------------------------------------- {{{2
 
-koopa_macos_uninstall_adobe_creative_cloud() { # {{{3
+koopa_macos_uninstall_adobe_creative_cloud() {
     koopa_uninstall_app \
         --name-fancy='Adobe Creative Cloud' \
         --name='adobe-creative-cloud' \
@@ -40,7 +40,7 @@ koopa_macos_uninstall_adobe_creative_cloud() { # {{{3
 
 # cisco-webex ------------------------------------------------------------- {{{2
 
-koopa_macos_uninstall_cisco_webex() { # {{{3
+koopa_macos_uninstall_cisco_webex() {
     koopa_uninstall_app \
         --name-fancy='Cisco WebEx' \
         --name='cisco-webex' \
@@ -51,7 +51,7 @@ koopa_macos_uninstall_cisco_webex() { # {{{3
 
 # defaults ---------------------------------------------------------------- {{{2
 
-koopa_macos_update_defaults() { # {{{3
+koopa_macos_update_defaults() {
     koopa_update_app \
         --name-fancy='macOS defaults' \
         --name='defaults' \
@@ -62,7 +62,7 @@ koopa_macos_update_defaults() { # {{{3
 
 # microsoft-onedrive ------------------------------------------------------ {{{2
 
-koopa_macos_uninstall_microsoft_onedrive() { # {{{3
+koopa_macos_uninstall_microsoft_onedrive() {
     koopa_uninstall_app \
         --name-fancy='Microsoft OneDrive' \
         --name='microsoft-onedrive' \
@@ -73,7 +73,7 @@ koopa_macos_uninstall_microsoft_onedrive() { # {{{3
 
 # oracle-java ------------------------------------------------------------- {{{2
 
-koopa_macos_uninstall_oracle_java() { # {{{3
+koopa_macos_uninstall_oracle_java() {
     koopa_uninstall_app \
         --name-fancy='Oracle Java' \
         --name='oracle-java' \
@@ -84,7 +84,7 @@ koopa_macos_uninstall_oracle_java() { # {{{3
 
 # python-binary ----------------------------------------------------------- {{{2
 
-koopa_macos_install_python_binary() { # {{{3
+koopa_macos_install_python_binary() {
     koopa_install_app \
         --installer='python-binary' \
         --link-in-bin='bin/python3' \
@@ -96,7 +96,7 @@ koopa_macos_install_python_binary() { # {{{3
         "$@"
 }
 
-koopa_macos_uninstall_python_binary() { # {{{3
+koopa_macos_uninstall_python_binary() {
     koopa_uninstall_app \
         --name-fancy='Python' \
         --name='python' \
@@ -110,7 +110,7 @@ koopa_macos_uninstall_python_binary() { # {{{3
 
 # r-binary ---------------------------------------------------------------- {{{2
 
-koopa_macos_install_r_binary() { # {{{3
+koopa_macos_install_r_binary() {
     koopa_install_app \
         --installer='r-binary' \
         --link-in-bin='bin/R' \
@@ -123,7 +123,7 @@ koopa_macos_install_r_binary() { # {{{3
         "$@"
 }
 
-koopa_macos_uninstall_r_binary() { # {{{3
+koopa_macos_uninstall_r_binary() {
     koopa_uninstall_app \
         --name-fancy='R' \
         --name='r' \
@@ -137,7 +137,7 @@ koopa_macos_uninstall_r_binary() { # {{{3
 
 # r-gfortran -------------------------------------------------------------- {{{2
 
-koopa_macos_install_r_gfortran() { # {{{3
+koopa_macos_install_r_gfortran() {
     koopa_install_app \
         --name-fancy='R gfortran' \
         --name='r-gfortran' \
@@ -147,7 +147,7 @@ koopa_macos_install_r_gfortran() { # {{{3
         "$@"
 }
 
-koopa_macos_uninstall_r_gfortran() { # {{{3
+koopa_macos_uninstall_r_gfortran() {
     koopa_uninstall_app \
         --name-fancy='R gfortran' \
         --name='r-gfortran' \
@@ -159,7 +159,7 @@ koopa_macos_uninstall_r_gfortran() { # {{{3
 
 # r-openmp ---------------------------------------------------------------- {{{2
 
-koopa_macos_install_r_openmp() { # {{{3
+koopa_macos_install_r_openmp() {
     koopa_install_app \
         --name-fancy='R OpenMP' \
         --name='r-openmp' \
@@ -168,7 +168,7 @@ koopa_macos_install_r_openmp() { # {{{3
         "$@"
 }
 
-koopa_macos_uninstall_r_gfortran() { # {{{3
+koopa_macos_uninstall_r_gfortran() {
     koopa_uninstall_app \
         --name-fancy='R OpenMP' \
         --name='r-openmp' \
@@ -179,7 +179,7 @@ koopa_macos_uninstall_r_gfortran() { # {{{3
 
 # ringcentral ------------------------------------------------------------- {{{2
 
-koopa_macos_uninstall_ringcentral() { # {{{3
+koopa_macos_uninstall_ringcentral() {
     koopa_uninstall_app \
         --name-fancy='RingCentral' \
         --name='ringcentral' \
@@ -190,7 +190,7 @@ koopa_macos_uninstall_ringcentral() { # {{{3
 
 # system ------------------------------------------------------------------ {{{2
 
-koopa_macos_update_system() { # {{{3
+koopa_macos_update_system() {
     koopa_update_app \
         --name-fancy='macOS system' \
         --name='system' \
@@ -201,7 +201,7 @@ koopa_macos_update_system() { # {{{3
 
 # xcode-clt --------------------------------------------------------------- {{{2
 
-koopa_macos_install_xcode_clt() { # {{{3
+koopa_macos_install_xcode_clt() {
     koopa_install_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
@@ -210,7 +210,7 @@ koopa_macos_install_xcode_clt() { # {{{3
         "$@"
 }
 
-koopa_macos_uninstall_xcode_clt() { # {{{3
+koopa_macos_uninstall_xcode_clt() {
     koopa_uninstall_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
