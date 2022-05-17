@@ -4,7 +4,7 @@
 
 # base-system ------------------------------------------------------------- {{{2
 
-koopa_alpine_install_base_system() { # {{{3
+koopa_alpine_install_base_system() {
     koopa_install_app \
         --name-fancy='Alpine base system' \
         --name='base-system' \
@@ -15,7 +15,7 @@ koopa_alpine_install_base_system() { # {{{3
 
 # glibc ------------------------------------------------------------------- {{{2
 
-koopa_alpine_install_glibc() { # {{{3
+koopa_alpine_install_glibc() {
     koopa_install_app \
         --name='glibc' \
         --platform='alpine' \

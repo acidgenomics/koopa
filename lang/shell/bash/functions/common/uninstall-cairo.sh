@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-koopa_install_cairo() {
-    koopa_install_app \
+koopa_uninstall_cairo() {
+    koopa_uninstall_app \
         --name-fancy='Cairo' \
         --name='cairo' \
         "$@"

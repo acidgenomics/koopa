@@ -4,7 +4,7 @@
 
 # azure-cli --------------------------------------------------------------- {{{2
 
-koopa_fedora_install_azure_cli() { # {{{3
+koopa_fedora_install_azure_cli() {
     koopa_install_app \
         --name-fancy='Azure CLI' \
         --name='azure-cli' \
@@ -13,7 +13,7 @@ koopa_fedora_install_azure_cli() { # {{{3
         "$@"
 }
 
-koopa_fedora_uninstall_azure_cli() { # {{{3
+koopa_fedora_uninstall_azure_cli() {
     koopa_uninstall_app \
         --name-fancy='Azure CLI' \
         --name='azure-cli' \
@@ -24,7 +24,7 @@ koopa_fedora_uninstall_azure_cli() { # {{{3
 
 # base-system ------------------------------------------------------------- {{{2
 
-koopa_fedora_install_base_system() { # {{{3
+koopa_fedora_install_base_system() {
     koopa_install_app \
         --name-fancy='Fedora base system' \
         --name='base-system' \
@@ -35,7 +35,7 @@ koopa_fedora_install_base_system() { # {{{3
 
 # google-cloud-sdk -------------------------------------------------------- {{{2
 
-koopa_fedora_install_google_cloud_sdk() { # {{{3
+koopa_fedora_install_google_cloud_sdk() {
     koopa_install_app \
         --name-fancy='Google Cloud SDK' \
         --name='google-cloud-sdk' \
@@ -44,7 +44,7 @@ koopa_fedora_install_google_cloud_sdk() { # {{{3
         "$@"
 }
 
-koopa_fedora_uninstall_google_cloud_sdk() { # {{{3
+koopa_fedora_uninstall_google_cloud_sdk() {
     koopa_uninstall_app \
         --name-fancy='Google Cloud SDK' \
         --name='google-cloud-sdk' \
@@ -55,7 +55,7 @@ koopa_fedora_uninstall_google_cloud_sdk() { # {{{3
 
 # oracle-instant-client --------------------------------------------------- {{{2
 
-koopa_fedora_install_oracle_instant_client() { # {{{3
+koopa_fedora_install_oracle_instant_client() {
     koopa_install_app \
         --name-fancy='Oracle Instant Client' \
         --name='oracle-instant-client' \
@@ -64,7 +64,7 @@ koopa_fedora_install_oracle_instant_client() { # {{{3
         "$@"
 }
 
-koopa_fedora_uninstall_oracle_instant_client() { # {{{3
+koopa_fedora_uninstall_oracle_instant_client() {
     koopa_uninstall_app \
         --name-fancy='Oracle Instant Client' \
         --name='oracle-instant-client' \
@@ -75,7 +75,7 @@ koopa_fedora_uninstall_oracle_instant_client() { # {{{3
 
 # rstudio-server ---------------------------------------------------------- {{{2
 
-koopa_fedora_install_rstudio_server() { # {{{3
+koopa_fedora_install_rstudio_server() {
     koopa_install_app \
         --name-fancy='RStudio Server' \
         --name='rstudio-server' \
@@ -84,7 +84,7 @@ koopa_fedora_install_rstudio_server() { # {{{3
         "$@"
 }
 
-koopa_fedora_uninstall_rstudio_server() { # {{{3
+koopa_fedora_uninstall_rstudio_server() {
     koopa_uninstall_app \
         --name-fancy='RStudio Server' \
         --name='rstudio-server' \
@@ -95,7 +95,7 @@ koopa_fedora_uninstall_rstudio_server() { # {{{3
 
 # shiny-server ------------------------------------------------------------ {{{2
 
-koopa_fedora_install_shiny_server() { # {{{3
+koopa_fedora_install_shiny_server() {
     koopa_install_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
@@ -104,7 +104,7 @@ koopa_fedora_install_shiny_server() { # {{{3
         "$@"
 }
 
-koopa_fedora_uninstall_shiny_server() { # {{{3
+koopa_fedora_uninstall_shiny_server() {
     koopa_uninstall_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \

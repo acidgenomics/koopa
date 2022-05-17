@@ -4,14 +4,14 @@
 
 # apptainer --------------------------------------------------------------- {{{2
 
-koopa_linux_install_apptainer() { # {{{3
+koopa_linux_install_apptainer() {
     koopa_install_app \
         --name='apptainer' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_apptainer() { # {{{3
+koopa_linux_uninstall_apptainer() {
     koopa_uninstall_app \
         --name='apptainer' \
         "$@"
@@ -19,7 +19,7 @@ koopa_linux_uninstall_apptainer() { # {{{3
 
 # aspera-connect ---------------------------------------------------------- {{{2
 
-koopa_linux_install_aspera_connect() { # {{{3
+koopa_linux_install_aspera_connect() {
     koopa_install_app \
         --link-in-bin='bin/ascp' \
         --name-fancy='Aspera Connect' \
@@ -28,7 +28,7 @@ koopa_linux_install_aspera_connect() { # {{{3
         "$@"
 }
 
-koopa_linux_uninstall_aspera_connect() { # {{{3
+koopa_linux_uninstall_aspera_connect() {
     koopa_uninstall_app \
         --name-fancy='Aspera Connect' \
         --name='aspera-connect' \
@@ -39,7 +39,7 @@ koopa_linux_uninstall_aspera_connect() { # {{{3
 
 # attr ---------------------------------------------------------------- {{{2
 
-koopa_linux_install_attr() { # {{{3
+koopa_linux_install_attr() {
     # """
     # @seealso
     # - https://savannah.nongnu.org/projects/attr
@@ -55,7 +55,7 @@ koopa_linux_install_attr() { # {{{3
         "$@"
 }
 
-koopa_linux_uninstall_attr() { # {{{3
+koopa_linux_uninstall_attr() {
     koopa_uninstall_app \
         --name='attr' \
         --platform='linux' \
@@ -64,7 +64,7 @@ koopa_linux_uninstall_attr() { # {{{3
 
 # aws-cli ----------------------------------------------------------------- {{{2
 
-koopa_linux_install_aws_cli() { # {{{3
+koopa_linux_install_aws_cli() {
     koopa_install_app \
         --link-in-bin='bin/aws' \
         --name-fancy='AWS CLI' \
@@ -75,7 +75,7 @@ koopa_linux_install_aws_cli() { # {{{3
 
 # bcbio-nextgen ----------------------------------------------------------- {{{2
 
-koopa_linux_install_bcbio_nextgen() { # {{{3
+koopa_linux_install_bcbio_nextgen() {
     koopa_install_app \
         --link-in-bin='tools/bin/bcbio_nextgen.py' \
         --name='bcbio-nextgen' \
@@ -84,7 +84,7 @@ koopa_linux_install_bcbio_nextgen() { # {{{3
         "$@"
 }
 
-koopa_linux_uninstall_bcbio_nextgen() { # {{{3
+koopa_linux_uninstall_bcbio_nextgen() {
     koopa_uninstall_app \
         --name='bcbio-nextgen' \
         --platform='linux' \
@@ -95,7 +95,7 @@ koopa_linux_uninstall_bcbio_nextgen() { # {{{3
 # bcl2fastq --------------------------------------------------------------- {{{2
 
 # FIXME Split this out as separate binary function...
-koopa_linux_install_bcl2fastq() { # {{{3
+koopa_linux_install_bcl2fastq() {
     # """
     # Install bcl2fastq.
     # @note Updated 2021-05-06.
@@ -121,7 +121,7 @@ koopa_linux_install_bcl2fastq() { # {{{3
     return 0
 }
 
-koopa_linux_uninstall_bcl2fastq() { # {{{3
+koopa_linux_uninstall_bcl2fastq() {
     koopa_uninstall_app \
         --name='bcl2fastq' \
         --platform='linux' \
@@ -131,7 +131,7 @@ koopa_linux_uninstall_bcl2fastq() { # {{{3
 
 # cellranger -------------------------------------------------------------- {{{2
 
-koopa_linux_install_cellranger() { # {{{3
+koopa_linux_install_cellranger() {
     koopa_install_app \
         --link-in-bin='bin/cellranger' \
         --name-fancy='Cell Ranger' \
@@ -140,7 +140,7 @@ koopa_linux_install_cellranger() { # {{{3
         "$@"
 }
 
-koopa_linux_uninstall_cellranger() { # {{{3
+koopa_linux_uninstall_cellranger() {
     koopa_uninstall_app \
         --name-fancy='Cell Ranger' \
         --name='cellranger' \
@@ -151,7 +151,7 @@ koopa_linux_uninstall_cellranger() { # {{{3
 
 # cloudbiolinux ----------------------------------------------------------- {{{2
 
-koopa_linux_install_cloudbiolinux() { # {{{3
+koopa_linux_install_cloudbiolinux() {
     koopa_install_app \
         --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
@@ -160,7 +160,7 @@ koopa_linux_install_cloudbiolinux() { # {{{3
         "$@"
 }
 
-koopa_linux_uninstall_cloudbiolinux() { # {{{3
+koopa_linux_uninstall_cloudbiolinux() {
     koopa_uninstall_app \
         --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
@@ -170,7 +170,7 @@ koopa_linux_uninstall_cloudbiolinux() { # {{{3
 
 # docker-credential-pass -------------------------------------------------- {{{2
 
-koopa_linux_install_docker_credential_pass() { # {{{3
+koopa_linux_install_docker_credential_pass() {
     koopa_install_app \
         --link-in-bin='bin/docker-credential-pass' \
         --name='docker-credential-pass' \
@@ -178,7 +178,7 @@ koopa_linux_install_docker_credential_pass() { # {{{3
         "$@"
 }
 
-koopa_linux_uninstall_docker_credential_pass() { # {{{3
+koopa_linux_uninstall_docker_credential_pass() {
     koopa_uninstall_app \
         --name='docker-credential-pass' \
         --platform='linux' \
@@ -188,7 +188,7 @@ koopa_linux_uninstall_docker_credential_pass() { # {{{3
 
 # julia-binary ------------------------------------------------------------ {{{2
 
-koopa_linux_install_julia_binary() { # {{{3
+koopa_linux_install_julia_binary() {
     koopa_install_app \
         --installer="julia-binary" \
         --link-in-bin='bin/julia' \
@@ -200,7 +200,7 @@ koopa_linux_install_julia_binary() { # {{{3
 
 # lmod -------------------------------------------------------------------- {{{2
 
-koopa_linux_install_lmod() { # {{{3
+koopa_linux_install_lmod() {
     koopa_install_app \
         --name-fancy='Lmod' \
         --name='lmod' \
@@ -209,7 +209,7 @@ koopa_linux_install_lmod() { # {{{3
 }
 
 # FIXME Ensure that this cleans up 'etc/profile.d'
-koopa_linux_uninstall_lmod() { # {{{3
+koopa_linux_uninstall_lmod() {
     koopa_uninstall_app \
         --name-fancy='Lmod' \
         --name='lmod' \
@@ -222,7 +222,7 @@ koopa_linux_uninstall_lmod() { # {{{3
 
 # pihole ------------------------------------------------------------------ {{{2
 
-koopa_linux_install_pihole() { # {{{3
+koopa_linux_install_pihole() {
     koopa_update_app \
         --name-fancy='Pi-hole' \
         --name='pihole' \
@@ -235,7 +235,7 @@ koopa_linux_install_pihole() { # {{{3
 
 # pivpn ------------------------------------------------------------------- {{{2
 
-koopa_linux_install_pivpn() { # {{{3
+koopa_linux_install_pivpn() {
     koopa_update_app \
         --name-fancy='PiVPN' \
         --name='pivpn' \

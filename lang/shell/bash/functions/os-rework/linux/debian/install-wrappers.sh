@@ -4,14 +4,14 @@
 
 # bcbio-nextgen-vm -------------------------------------------------------- {{{2
 
-koopa_debian_install_bcbio_nextgen_vm() { # {{{3
+koopa_debian_install_bcbio_nextgen_vm() {
     koopa_install_app \
         --name='bcbio-nextgen-vm' \
         --platform='debian' \
         "$@"
 }
 
-koopa_debian_uninstall_bcbio_nextgen_vm() { # {{{3
+koopa_debian_uninstall_bcbio_nextgen_vm() {
     koopa_uninstall_app \
         --name='bcbio-nextgen-vm' \
         --platform='debian' \
@@ -22,7 +22,7 @@ koopa_debian_uninstall_bcbio_nextgen_vm() { # {{{3
 
 # azure-cli --------------------------------------------------------------- {{{2
 
-koopa_debian_install_azure_cli() { # {{{3
+koopa_debian_install_azure_cli() {
     koopa_install_app \
         --name-fancy='Azure CLI' \
         --name='azure-cli' \
@@ -31,7 +31,7 @@ koopa_debian_install_azure_cli() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_azure_cli() { # {{{3
+koopa_debian_uninstall_azure_cli() {
     koopa_uninstall_app \
         --name-fancy='Azure CLI' \
         --name='azure-cli' \
@@ -42,7 +42,7 @@ koopa_debian_uninstall_azure_cli() { # {{{3
 
 # base-system ------------------------------------------------------------- {{{2
 
-koopa_debian_install_base_system() { # {{{3
+koopa_debian_install_base_system() {
     koopa_install_app \
         --name-fancy='Debian base system' \
         --name='base-system' \
@@ -53,7 +53,7 @@ koopa_debian_install_base_system() { # {{{3
 
 # docker ------------------------------------------------------------------ {{{2
 
-koopa_debian_install_docker() { # {{{3
+koopa_debian_install_docker() {
     koopa_install_app \
         --name-fancy='Docker' \
         --name='docker' \
@@ -62,7 +62,7 @@ koopa_debian_install_docker() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_docker() { # {{{3
+koopa_debian_uninstall_docker() {
     koopa_uninstall_app \
         --name-fancy='Docker' \
         --name='docker' \
@@ -73,7 +73,7 @@ koopa_debian_uninstall_docker() { # {{{3
 
 # google-cloud-sdk -------------------------------------------------------- {{{2
 
-koopa_debian_install_google_cloud_sdk() { # {{{3
+koopa_debian_install_google_cloud_sdk() {
     koopa_install_app \
         --name-fancy='Google Cloud SDK' \
         --name='google-cloud-sdk' \
@@ -82,7 +82,7 @@ koopa_debian_install_google_cloud_sdk() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_google_cloud_sdk() { # {{{3
+koopa_debian_uninstall_google_cloud_sdk() {
     koopa_uninstall_app \
         --name-fancy='Google Cloud SDK' \
         --name='google-cloud-sdk' \
@@ -93,7 +93,7 @@ koopa_debian_uninstall_google_cloud_sdk() { # {{{3
 
 # llvm -------------------------------------------------------------------- {{{2
 
-koopa_debian_install_llvm() { # {{{3
+koopa_debian_install_llvm() {
     koopa_install_app \
         --name-fancy='LLVM' \
         --name='llvm' \
@@ -102,7 +102,7 @@ koopa_debian_install_llvm() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_llvm() { # {{{3
+koopa_debian_uninstall_llvm() {
     koopa_uninstall_app \
         --name-fancy='LLVM' \
         --name='llvm' \
@@ -113,7 +113,7 @@ koopa_debian_uninstall_llvm() { # {{{3
 
 # node-binary ------------------------------------------------------------- {{{2
 
-koopa_debian_install_nodesource_node_binary() { # {{{3
+koopa_debian_install_nodesource_node_binary() {
     koopa_install_app \
         --name-fancy='NodeSource Node.js' \
         --name='nodesource-node-binary' \
@@ -126,7 +126,7 @@ koopa_debian_install_nodesource_node_binary() { # {{{3
 
 # pandoc ------------------------------------------------------------------ {{{2
 
-koopa_debian_install_pandoc_binary() { # {{{3
+koopa_debian_install_pandoc_binary() {
     koopa_install_app \
         --installer='pandoc-binary' \
         --name-fancy='Pandoc' \
@@ -136,7 +136,7 @@ koopa_debian_install_pandoc_binary() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_pandoc_binary() { # {{{3
+koopa_debian_uninstall_pandoc_binary() {
     koopa_uninstall_app \
         --name-fancy='Pandoc' \
         --name='pandoc' \
@@ -148,7 +148,7 @@ koopa_debian_uninstall_pandoc_binary() { # {{{3
 
 # r-binary ---------------------------------------------------------------- {{{2
 
-koopa_debian_install_r_binary() { # {{{3
+koopa_debian_install_r_binary() {
     koopa_install_app \
         --installer='r-binary' \
         --name-fancy='R CRAN binary' \
@@ -159,7 +159,7 @@ koopa_debian_install_r_binary() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_r_binary() { # {{{3
+koopa_debian_uninstall_r_binary() {
     koopa_uninstall_app \
         --name-fancy='R CRAN binary' \
         --name='r' \
@@ -173,7 +173,7 @@ koopa_debian_uninstall_r_binary() { # {{{3
 
 # rstudio-server ---------------------------------------------------------- {{{2
 
-koopa_debian_install_rstudio_server() { # {{{3
+koopa_debian_install_rstudio_server() {
     koopa_install_app \
         --name-fancy='RStudio Server' \
         --name='rstudio-server' \
@@ -182,7 +182,7 @@ koopa_debian_install_rstudio_server() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_rstudio_server() { # {{{3
+koopa_debian_uninstall_rstudio_server() {
     koopa_uninstall_app \
         --name-fancy='RStudio Server' \
         --name='rstudio-server' \
@@ -193,7 +193,7 @@ koopa_debian_uninstall_rstudio_server() { # {{{3
 
 # shiny-server ------------------------------------------------------------ {{{2
 
-koopa_debian_install_shiny_server() { # {{{3
+koopa_debian_install_shiny_server() {
     koopa_install_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
@@ -202,7 +202,7 @@ koopa_debian_install_shiny_server() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_shiny_server() { # {{{3
+koopa_debian_uninstall_shiny_server() {
     koopa_uninstall_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
@@ -213,7 +213,7 @@ koopa_debian_uninstall_shiny_server() { # {{{3
 
 # wine -------------------------------------------------------------------- {{{2
 
-koopa_debian_install_wine() { # {{{3
+koopa_debian_install_wine() {
     koopa_install_app \
         --name-fancy='Wine' \
         --name='wine' \
@@ -222,7 +222,7 @@ koopa_debian_install_wine() { # {{{3
         "$@"
 }
 
-koopa_debian_uninstall_wine() { # {{{3
+koopa_debian_uninstall_wine() {
     koopa_uninstall_app \
         --name-fancy='Wine' \
         --name='wine' \

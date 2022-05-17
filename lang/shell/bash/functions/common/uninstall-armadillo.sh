@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-koopa_install_armadillo() {
-    koopa_install_app \
+koopa_uninstall_armadillo() {
+    koopa_uninstall_app \
         --name-fancy='Armadillo' \
         --name='armadillo' \
         "$@"
