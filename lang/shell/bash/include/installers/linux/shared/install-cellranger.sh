@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to inform the user regarding license agreement.
+# https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/
+
 main() {
     # """
     # Install Cell Ranger.
