@@ -3,7 +3,7 @@
 koopa_ssh_generate_key() {
     # """
     # Generate SSH key.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-05-18.
     #
     # This script is called inside our Linux VM configuration function, so
     # don't use assert here.
@@ -22,6 +22,7 @@ koopa_ssh_generate_key() {
     declare -A app=(
         [ssh_keygen]="$(koopa_locate_ssh_keygen)"
     )
+    [[ -x "${app[ssh_keygen]}" ]] || return 1
     declare -A dict=(
         [hostname]="$(koopa_hostname)"
         [key_name]='id_rsa' # or 'id_ed25519'.
@@ -84,29 +85,5 @@ koopa_ssh_generate_key() {
         'args' "${ssh_args[*]}"
     "${app[ssh_keygen]}" "${ssh_args[@]}"
     koopa_alert_success "Generated SSH key at '${dict[file]}'."
-    return 0
-}
-
-koopa_ssh_key_info() {
-    # """
-    # Get SSH key information.
-    # @note Updated 2022-01-20.
-    #
-    # @seealso
-    # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
-    # """
-    local app dict keyfile
-    declare -A app=(
-        [ssh_keygen]="$(koopa_locate_ssh_keygen)"
-        [uniq]="$(koopa_locate_uniq)"
-    )
-    declare -A dict=(
-        [prefix]="${HOME:?}/.ssh"
-        [stem]='id_'
-    )
-    for keyfile in "${dict[prefix]}/${dict[stem]}"*
-    do
-        "${app[ssh_keygen]}" -l -f "$keyfile"
-    done | "${app[uniq]}"
     return 0
 }
