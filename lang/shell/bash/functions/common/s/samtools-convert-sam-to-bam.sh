@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Need to migrate these functions to r-koopa.
-
 # FIXME Rework our location of conda environment tool here instead.
 
 koopa_samtools_convert_sam_to_bam() {
