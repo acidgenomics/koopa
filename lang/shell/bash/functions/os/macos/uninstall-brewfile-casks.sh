@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_macos_homebrew_uninstall_brewfile_casks() {
+koopa_macos_uninstall_brewfile_casks() {
     # """
     # Delete macOS applications installed by Homebrew cask.
-    # @note 2022-04-09.
+    # @note 2022-05-18.
     #
     # This step is useful for reinstalling Homebrew on a system with
     # casks previously installed, which don't get cleaned up currently.
@@ -34,42 +34,5 @@ koopa_macos_homebrew_uninstall_brewfile_casks() {
     do
         "${app[brew]}" uninstall --cask --force "$cask"
     done
-    return 0
-}
-
-koopa_macos_link_homebrew() {
-    koopa_assert_has_no_args "$#"
-    # BBEdit cask.
-    koopa_link_in_bin \
-        '/Applications/BBEdit.app/Contents/Helpers/bbedit_tool' \
-        'bbedit'
-    # Emacs cask.
-    koopa_link_in_bin \
-        '/Applications/Emacs.app/Contents/MacOS/Emacs' \
-        'emacs'
-    # R cask.
-    dict[r]="$(koopa_macos_r_prefix)"
-    koopa_link_in_bin \
-        "${dict[r]}/bin/R" 'R' \
-        "${dict[r]}/bin/Rscript" 'Rscript'
-    # Visual Studio Code cask.
-    koopa_link_in_bin \
-        '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' \
-        'code'
-}
-
-koopa_macos_unlink_homebrew() {
-    # """
-    # Previously unlinked:
-    # - 'R'
-    # - 'Rscript'
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_unlink_in_bin \
-        'bbedit' \
-        'code' \
-        'emacs' \
-        'gcloud' \
-        'julia'
     return 0
 }
