@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-05-12.
+    # Updated 2022-05-18.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -409,6 +409,7 @@ __koopa_complete() {
                         'dotfiles'
                         'google-cloud-sdk'
                         'homebrew'
+                        'julia-packages'
                         'koopa'
                         'mamba'
                         'nim-packages'
