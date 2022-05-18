@@ -116,7 +116,6 @@ koopa_configure_system() {
         [install_subversion]=0
         [install_taglib]=0
         [install_texinfo]=0
-        # > [install_the_silver_searcher]=0
         [install_tmux]=0
         [install_udunits]=0
         [install_vim]=0
@@ -598,8 +597,6 @@ koopa_configure_system() {
         koopa install 'neofetch'
     [[ "${dict[install_fzf]}" -eq 1 ]] && \
         koopa install 'fzf'
-    # > [[ "${dict[install_the_silver_searcher]}" -eq 1 ]] && \
-    # >    koopa install the-silver-searcher
     [[ "${dict[install_tmux]}" -eq 1 ]] && \
         koopa install 'tmux'
     [[ "${dict[install_vim]}" -eq 1 ]] && \

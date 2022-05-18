@@ -178,7 +178,6 @@ brew "tcsh"
 brew "tealdeer"
 brew "tesseract"
 brew "texinfo"
-brew "the_silver_searcher"
 brew "tmux"
 brew "tokei" # rust
 brew "udunits"

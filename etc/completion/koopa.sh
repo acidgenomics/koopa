@@ -88,8 +88,6 @@ __koopa_complete() {
                 'uninstall')
                     args=(
                         # > 'ripgrep-all'
-                        # > 'termcap'
-                        # > 'the-silver-searcher'
                         # > 'unzip'
                         # > 'zip'
                         'anaconda'
