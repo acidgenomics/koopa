@@ -3,7 +3,7 @@
 koopa_help() {
     # """
     # Show usage via '--help' flag.
-    # @note Updated 2022-02-24.
+    # @note Updated 2022-05-18.
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
@@ -14,7 +14,7 @@ koopa_help() {
     declare -A dict=(
         [man_file]="${1:?}"
     )
-    koopa_assert_is_file "${dict[man_file]}"
+    [[ -f "${dict[man_file]}" ]] || return 1
     "${app[head]}" -n 10 "${dict[man_file]}" \
         | koopa_str_detect_fixed --pattern='.TH ' \
         || return 1
