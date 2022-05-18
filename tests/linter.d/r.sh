@@ -13,6 +13,8 @@ main() {
     koopa_assert_is_installed 'R'
     koopa_assert_is_r_package_installed 'lintr'
     # Find scripts by file extension.
+    # FIXME This is currently erroring, need to relax...doesn't seem to be
+    # locating our header.R file?
     readarray -t r_files <<< "$(koopa_test_find_files_by_ext '.R')"
     # Find scripts by shebang.
     readarray -t rscript_files <<< \
