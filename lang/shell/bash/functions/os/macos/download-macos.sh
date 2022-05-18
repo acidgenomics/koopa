@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to locate softwareupdate.
+
 koopa_macos_download_macos() {
     # """
     # Download a full copy of macOS system installer.
-    # @note Updated 2020-11-20.
+    # @note Updated 2022-05-18.
     #
     # Note that you can only download a Catalina installer on Catalina.
     # Attempting to do this on a machine running Big Sur will fail.
@@ -14,7 +16,6 @@ koopa_macos_download_macos() {
     # """
     local version
     version="${1:?}"
-    koopa_assert_is_macos
     softwareupdate \
         --fetch-full-installer \
         --full-installer-version "$version"
