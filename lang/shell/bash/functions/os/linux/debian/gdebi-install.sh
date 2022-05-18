@@ -5,7 +5,7 @@ koopa_debian_gdebi_install() {
     # Install Debian binary using gdebi.
     # @note Updated 2022-04-26.
     # """
-    local app dict
+    local app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
