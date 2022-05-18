@@ -51,7 +51,6 @@ main() {
         'readline' | \
         'stow' | \
         'tar' | \
-        'termcap' | \
         'wget' | \
         'which')
             dict[suffix]='gz'
