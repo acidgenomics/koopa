@@ -105,4 +105,3 @@ bam.AluChr1Only.bam"
             -os "${dict[mnt_output_dir]}/summary"
     return 0
 }
-
