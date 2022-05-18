@@ -3,7 +3,7 @@
 main() {
     # """
     # Install AWS CLI binary.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-05-18.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/userguide/
@@ -16,6 +16,8 @@ main() {
         [cat]="$(koopa_locate_cat)"
         [installer]="$(koopa_macos_locate_installer)"
     )
+    [[ -x "${app[cat]}" ]] || return 1
+    [[ -x "${app[installer]}" ]] || return 1
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -29,7 +31,8 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     "${app[cat]}" > "${dict[xml_file]}" << END
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <array>
    <dict>

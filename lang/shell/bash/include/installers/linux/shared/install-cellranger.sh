@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to inform the user regarding license agreement.
-# https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/
+# NOTE Consider informing user interactively regarding license agreement.
 
 main() {
     # """

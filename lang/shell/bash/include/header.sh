@@ -320,7 +320,8 @@ __koopa_bash_header() {
         then
             source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
         else
-            __koopa_bash_source_dir "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate/"
+            __koopa_bash_source_dir "${KOOPA_PREFIX:?}/lang/shell/bash/\
+functions/activate/"
         fi
         if [[ "${dict[minimal]}" -eq 0 ]]
         then
