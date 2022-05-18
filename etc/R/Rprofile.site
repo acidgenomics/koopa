@@ -458,8 +458,10 @@ local({  # nolint
     ## >     )
     ## > }
     if (isInstalled("testthat")) {
-        ## Stop on the first check failure.
-        options("testthat.progress.max_fails" = 1L)
+        options(
+            "testthat.progress.max_fails" = 1L,
+            "testthat.progress.verbose_skips" = TRUE
+        )
     }
     if (isInstalled("tidyverse")) {
         ## Suppress annoying tidyverse startup message.
