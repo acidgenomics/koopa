@@ -2,17 +2,6 @@
 
 # Shared ================================================================== {{{1
 
-# aws-cli ----------------------------------------------------------------- {{{2
-
-koopa_macos_install_aws_cli() {
-    koopa_install_app \
-        --link-in-bin='bin/aws' \
-        --name-fancy='AWS CLI' \
-        --name='aws-cli' \
-        --platform='macos' \
-        "$@"
-}
-
 # neovim-binary ----------------------------------------------------------- {{{2
 
 koopa_macos_install_neovim_binary() {
