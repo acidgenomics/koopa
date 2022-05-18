@@ -23,9 +23,6 @@ koopa_download() {
     # > wget -O file url
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
-    #
-    # @examples
-    # > koopa_download 'ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE69nnn/GSE69740/suppl/GSE69740%5FRPKM%2Etxt%2Egz'
     # """
     local app dict download_args pos
     koopa_assert_has_args "$#"

@@ -11,7 +11,8 @@ main() {
     # @seealso
     # - stack install --help
     # - https://hackage.haskell.org/package/pandoc-1.16/src/INSTALL
-    # - https://github.com/jgm/pandoc/wiki/Installing-the-development-version-of-pandoc
+    # - https://github.com/jgm/pandoc/wiki/
+    #     Installing-the-development-version-of-pandoc
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/pandoc.rb
     # - https://github.com/commercialhaskell/stack/issues/342
     # """

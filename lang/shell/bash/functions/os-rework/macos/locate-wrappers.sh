@@ -28,10 +28,6 @@ koopa_macos_locate_ifconfig() {
     koopa_locate_app '/sbin/ifconfig'
 }
 
-koopa_macos_locate_installer() {
-    koopa_locate_app '/usr/sbin/installer'
-}
-
 koopa_macos_locate_kill_all() {
     koopa_locate_app '/usr/bin/killAll'
 }
