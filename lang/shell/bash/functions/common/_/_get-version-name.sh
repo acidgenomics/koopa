@@ -111,9 +111,6 @@ __koopa_get_version_name() {
             # TeX Live install can mask this on macOS.
             name='texi2any'
             ;;
-        'the-silver-searcher')
-            name='ag'
-            ;;
     esac
     koopa_print "$name"
     return 0

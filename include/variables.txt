@@ -591,10 +591,6 @@ tex="2022"
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.8"
 
-# aka Ag
-# https://github.com/ggreer/the_silver_searcher
-the-silver-searcher="2.2.0"
-
 # https://github.com/tmux/tmux/releases
 tmux="3.2a"
 
