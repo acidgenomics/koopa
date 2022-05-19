@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# System ================================================================== {{{1
-
-# base-system ------------------------------------------------------------- {{{2
-
 koopa_opensuse_install_base_system() {
     koopa_install_app \
         --name-fancy='openSUSE base system' \
