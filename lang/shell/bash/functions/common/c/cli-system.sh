@@ -3,7 +3,7 @@
 koopa_cli_system() {
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-03-31.
+    # @note Updated 2022-05-20.
     # """
     local key
     key=''
@@ -63,6 +63,7 @@ koopa_cli_system() {
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
+        'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
         'find-non-symlinked-make-files' | \

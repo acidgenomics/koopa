@@ -359,7 +359,7 @@ __koopa_complete() {
                     args=(
                         'brew-dump-brewfile'
                         'brew-outdated'
-                        'cache-bash-functions' # FIXME Add support.
+                        'cache-functions'
                         'check'
                         'delete-cache'
                         'disable-passwordless-sudo'
