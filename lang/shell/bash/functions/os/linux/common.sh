@@ -1,5 +1,6 @@
 #!/bin/sh
 # shellcheck disable=all
+
 koopa_linux_add_user_to_etc_passwd() {
     local dict
     koopa_assert_has_args_le "$#" 1
@@ -26,6 +27,7 @@ in '${dict[passwd_file]}'."
     fi
     return 0
 }
+
 koopa_linux_add_user_to_group() {
     local app dict
     koopa_assert_has_args_le "$#" 2
@@ -43,6 +45,7 @@ koopa_linux_add_user_to_group() {
     "${app[sudo]}" "${app[gpasswd]}" --add "${dict[user]}" "${dict[group]}"
     return 0
 }
+
 koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     local app dict indexes
     koopa_assert_has_args "$#"
@@ -164,6 +167,7 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     koopa_alert_install_success "${dict[bcbio_genome_name]}"
     return 0
 }
+
 koopa_linux_bcbio_nextgen_add_genome() {
     local app bcbio_args dict genome genomes
     koopa_assert_has_args "$#"
@@ -188,6 +192,7 @@ koopa_linux_bcbio_nextgen_add_genome() {
     "${app[bcbio]}" upgrade "${bcbio_args[@]}"
     return 0
 }
+
 koopa_linux_bcbio_nextgen_patch_devel() {
     local app cache_files dict
     koopa_assert_has_no_envs
@@ -277,6 +282,7 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     koopa_alert_success "Patching of ${dict[name_fancy]} was successful."
     return 0
 }
+
 koopa_linux_bcbio_nextgen_run_tests() {
     local dict test tests
     declare -A dict=(
@@ -340,6 +346,7 @@ koopa_linux_bcbio_nextgen_run_tests() {
     koopa_alert_success "Unit tests passed for '${dict[tools_dir]}'."
     return 0
 }
+
 koopa_linux_bcl2fastq_indrops() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -357,6 +364,7 @@ koopa_linux_bcl2fastq_indrops() {
         2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
+
 koopa_linux_configure_lmod() {
     local dict
     koopa_assert_has_args_le "$#" 1
@@ -392,6 +400,7 @@ koopa_linux_configure_lmod() {
     fi
     return 0
 }
+
 koopa_linux_delete_cache() {
     koopa_assert_has_no_args "$#"
     if ! koopa_is_docker
@@ -410,6 +419,7 @@ koopa_linux_delete_cache() {
     fi
     return 0
 }
+
 koopa_linux_fix_sudo_setrlimit_error() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -422,12 +432,14 @@ koopa_linux_fix_sudo_setrlimit_error() {
         --string="${dict[string]}"
     return 0
 }
+
 koopa_linux_install_apptainer() {
     koopa_install_app \
         --name='apptainer' \
         --platform='linux' \
         "$@"
 }
+
 koopa_linux_install_aspera_connect() {
     koopa_install_app \
         --link-in-bin='bin/ascp' \
@@ -436,6 +448,7 @@ koopa_linux_install_aspera_connect() {
         --platform='linux' \
         "$@"
 }
+
 koopa_linux_install_attr() {
     koopa_install_app \
         --installer='gnu-app' \
@@ -446,6 +459,7 @@ koopa_linux_install_attr() {
        -D '--disable-silent-rules' \
         "$@"
 }
+
 koopa_linux_install_aws_cli() {
     koopa_install_app \
         --link-in-bin='bin/aws' \
@@ -454,6 +468,7 @@ koopa_linux_install_aws_cli() {
         --platform='linux' \
         "$@"
 }
+
 koopa_linux_install_bcbio_nextgen() {
     koopa_install_app \
         --link-in-bin='tools/bin/bcbio_nextgen.py' \
@@ -462,6 +477,7 @@ koopa_linux_install_bcbio_nextgen() {
         --version="$(koopa_current_bcbio_nextgen_version)" \
         "$@"
 }
+
 koopa_linux_install_bcl2fastq() {
     if koopa_is_fedora
     then
@@ -480,6 +496,7 @@ koopa_linux_install_bcl2fastq() {
     fi
     return 0
 }
+
 koopa_linux_install_cellranger() {
     koopa_install_app \
         --link-in-bin='bin/cellranger' \
@@ -488,6 +505,7 @@ koopa_linux_install_cellranger() {
         --platform='linux' \
         "$@"
 }
+
 koopa_linux_install_cloudbiolinux() {
     koopa_install_app \
         --name-fancy='CloudBioLinux' \
@@ -496,6 +514,7 @@ koopa_linux_install_cloudbiolinux() {
         --version='latest' \
         "$@"
 }
+
 koopa_linux_install_docker_credential_pass() {
     koopa_install_app \
         --link-in-bin='bin/docker-credential-pass' \
@@ -503,6 +522,7 @@ koopa_linux_install_docker_credential_pass() {
         --platform='linux' \
         "$@"
 }
+
 koopa_linux_install_julia_binary() {
     koopa_install_app \
         --installer="julia-binary" \
@@ -512,6 +532,7 @@ koopa_linux_install_julia_binary() {
         --platform='linux' \
         "$@"
 }
+
 koopa_linux_install_lmod() {
     koopa_install_app \
         --name-fancy='Lmod' \
@@ -519,6 +540,7 @@ koopa_linux_install_lmod() {
         --platform='linux' \
         "$@"
 }
+
 koopa_linux_install_pihole() {
     koopa_update_app \
         --name-fancy='Pi-hole' \
@@ -527,6 +549,7 @@ koopa_linux_install_pihole() {
         --system \
         "$@"
 }
+
 koopa_linux_install_pivpn() {
     koopa_update_app \
         --name-fancy='PiVPN' \
@@ -535,6 +558,7 @@ koopa_linux_install_pivpn() {
         --system \
         "$@"
 }
+
 koopa_linux_java_update_alternatives() {
     local app dict
     local prefix priority
@@ -582,21 +606,27 @@ koopa_linux_java_update_alternatives() {
     "${app[update_alternatives]}" --display 'jar'
     return 0
 }
+
 koopa_linux_locate_bcbio() {
     koopa_locate_app 'bcbio-nextgen.py'
 }
+
 koopa_linux_locate_bcl2fastq() {
     koopa_locate_app 'bcl2fastq'
 }
+
 koopa_linux_locate_getconf() {
     koopa_locate_app '/usr/bin/getconf'
 }
+
 koopa_linux_locate_groupadd() {
     koopa_locate_app '/usr/sbin/groupadd'
 }
+
 koopa_linux_locate_gpasswd() {
     koopa_locate_app '/usr/bin/gpasswd'
 }
+
 koopa_linux_locate_ldconfig() {
     local os_id str
     os_id="$(koopa_os_id)"
@@ -611,6 +641,7 @@ koopa_linux_locate_ldconfig() {
     esac
     koopa_locate_app "$str"
 }
+
 koopa_linux_locate_systemctl() {
     local os_id str
     os_id="$(koopa_os_id)"
@@ -624,6 +655,7 @@ koopa_linux_locate_systemctl() {
     esac
     koopa_locate_app "$str"
 }
+
 koopa_linux_locate_update_alternatives() {
     local str
     if koopa_is_fedora_like
@@ -634,12 +666,15 @@ koopa_linux_locate_update_alternatives() {
     fi
     koopa_locate_app "$str"
 }
+
 koopa_linux_locate_useradd() {
     koopa_locate_app '/usr/sbin/useradd'
 }
+
 koopa_linux_locate_usermod() {
     koopa_locate_app '/usr/sbin/usermod'
 }
+
 koopa_linux_os_version() {
     local app x
     koopa_assert_has_no_args "$#"
@@ -651,6 +686,7 @@ koopa_linux_os_version() {
     koopa_print "$x"
     return 0
 }
+
 koopa_linux_remove_user_from_group() {
     local app dict
     koopa_assert_has_args_le "$#" 2
@@ -667,11 +703,13 @@ koopa_linux_remove_user_from_group() {
     "${app[sudo]}" "${app[gpasswd]}" --delete "${dict[user]}" "${dict[group]}"
     return 0
 }
+
 koopa_linux_uninstall_apptainer() {
     koopa_uninstall_app \
         --name='apptainer' \
         "$@"
 }
+
 koopa_linux_uninstall_aspera_connect() {
     koopa_uninstall_app \
         --name-fancy='Aspera Connect' \
@@ -680,12 +718,14 @@ koopa_linux_uninstall_aspera_connect() {
         --unlink-in-bin='ascp' \
         "$@"
 }
+
 koopa_linux_uninstall_attr() {
     koopa_uninstall_app \
         --name='attr' \
         --platform='linux' \
         "$@"
 }
+
 koopa_linux_uninstall_bcbio_nextgen() {
     koopa_uninstall_app \
         --name='bcbio-nextgen' \
@@ -693,6 +733,7 @@ koopa_linux_uninstall_bcbio_nextgen() {
         --unlink-in-bin='bcbio_nextgen.py' \
         "$@"
 }
+
 koopa_linux_uninstall_bcl2fastq() {
     koopa_uninstall_app \
         --name='bcl2fastq' \
@@ -700,6 +741,7 @@ koopa_linux_uninstall_bcl2fastq() {
         --unlink-in-bin='bcl2fastq' \
         "$@"
 }
+
 koopa_linux_uninstall_cellranger() {
     koopa_uninstall_app \
         --name-fancy='Cell Ranger' \
@@ -708,6 +750,7 @@ koopa_linux_uninstall_cellranger() {
         --unlink-in-bin='cellranger' \
         "$@"
 }
+
 koopa_linux_uninstall_cloudbiolinux() {
     koopa_uninstall_app \
         --name-fancy='CloudBioLinux' \
@@ -715,6 +758,7 @@ koopa_linux_uninstall_cloudbiolinux() {
         --platform='linux' \
         "$@"
 }
+
 koopa_linux_uninstall_docker_credential_pass() {
     koopa_uninstall_app \
         --name='docker-credential-pass' \
@@ -722,6 +766,7 @@ koopa_linux_uninstall_docker_credential_pass() {
         --unlink-in-bin='docker-credential-pass' \
         "$@"
 }
+
 koopa_linux_uninstall_lmod() {
     koopa_uninstall_app \
         --name-fancy='Lmod' \
@@ -730,6 +775,7 @@ koopa_linux_uninstall_lmod() {
         "$@"
     return 0
 }
+
 koopa_linux_update_etc_profile_d() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -746,16 +792,19 @@ koopa_linux_update_etc_profile_d() {
     koopa_alert "Adding koopa activation to '${dict[file]}'."
     koopa_rm --sudo "${dict[file]}"
     read -r -d '' "dict[string]" << END || true
+
 __koopa_activate_shared_profile() {
     . "${dict[koopa_prefix]}/activate"
     return 0
 }
+
 __koopa_activate_shared_profile
 END
     koopa_sudo_write_string \
         --file="${dict[file]}" \
         --string="${dict[string]}"
 }
+
 koopa_linux_update_ldconfig() {
     local app dict source_file
     koopa_assert_has_no_args "$#"
@@ -782,6 +831,7 @@ koopa_linux_update_ldconfig() {
     "${app[sudo]}" "${app[ldconfig]}" || true
     return 0
 }
+
 koopa_linux_update_sshd_config() {
     local dict
     koopa_assert_has_no_args "$#"
