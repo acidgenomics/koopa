@@ -1,6 +1,46 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Need to harden all 'locate_*' (locate_app) calls.
+    Check using '-x' and add return 1 for all.
+
+# FIXME Need to also link (install) and unlink (uninstall) man files,
+# where applicable.
+# FIXME Add back support for 'prune'.
+# FIXME Need to nest our macOS-specific functions under 'koopa os XXX'.
+# FIXME Need to add support for OS-specific link functions.
+# FIXME 'koopa app list' shouldn't work any more...
+# FIXME Need to rework these, formerly defined in 'koopa_cli_app':
+# FIXME Improve the error message handling for this:
+# ❯ koopa app XXX hello
+# !! Error: Invalid and/or incomplete argument: 'XXX hello'.
+# Check autocompletion of supported arguments with <TAB>.
+# !! Error: Unsupported command.
+
+** TODO Add Debian support for Quarto
+    https://quarto.org/docs/get-started/
+    https://github.com/quarto-dev/quarto-cli/releases/download/v0.9.393/quarto-0.9.393-linux-amd64.deb
+** TODO Consider adding r-cli style inline markup support for CLI messages.
+    https://cli.r-lib.org/reference/inline-markup.html
+    The default theme defines the following inline classes:
+    - 'arg' for a function argument.
+    - 'cls' for an S3, S4, R6 or other class name.
+    - 'code' for a piece of code.
+    - 'dd' is used for the descriptions in a definition list (cli_dl()).
+    - 'dt' is used for the terms in a definition list (cli_dl()).
+    - 'email' for an email address.
+    - 'emph' for emphasized text.
+    - 'envvar' for the name of an environment variable.
+    - 'field' for a generic field, e.g. in a named list.
+    - 'file' for a file name.
+    - 'fun' for a function name.
+    - 'key' for a keyboard key.
+    - 'path' for a path (essentially the same as file).
+    - 'pkg' for a package name.
+    - 'strong' for strong importance.
+    - 'url' for a URL.
+    - 'val' for a generic "value".
+    - 'var' for a variable name.
 ** TODO Create a 'compress' function that automatically wraps 'tar -czvf XXX.tar.gz XXX/'
 ** TODO Don't rely on Homebrew packages anywhere in our build scripts or R configuration.
 ** TODO Improve color and formatting of alert messages, using an r-cli style approach (e.g. '{.var XXX}' rather than just using single quotes.

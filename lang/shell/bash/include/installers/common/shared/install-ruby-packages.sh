@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install Ruby packages (gems).
     # @note Updated 2022-04-14.

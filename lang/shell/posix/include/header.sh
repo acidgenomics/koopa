@@ -1,11 +1,10 @@
 #!/bin/sh
 
-__koopa_posix_header() { # {{{1
+__koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-04-17.
+    # @note Updated 2022-05-20.
     # """
-    local shell
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
@@ -36,7 +35,7 @@ __koopa_posix_header() { # {{{1
         # Edge case for RStudio Server terminal to support dircolors correctly.
         [ -n "${SHELL:-}" ] && export SHELL
         koopa_activate_xdg || return 1
-        koopa_add_koopa_config_link \
+        koopa_add_config_link \
             "$(koopa_koopa_prefix)" 'home' \
             "$(koopa_koopa_prefix)/activate" 'activate' \
             "$(koopa_dotfiles_prefix)" 'dotfiles' \
@@ -64,9 +63,14 @@ __koopa_posix_header() { # {{{1
             koopa_export_history || return 1
             koopa_export_pager || return 1
             koopa_activate_color_mode || return 1
+            koopa_activate_alacritty || return 1
             koopa_activate_bat || return 1
+            koopa_activate_delta || return 1
+            koopa_activate_difftastic || return 1
             koopa_activate_dircolors || return 1
+            koopa_activate_fzf || return 0
             koopa_activate_gcc_colors || return 1
+            koopa_activate_kitty || return 1
             koopa_activate_lesspipe || return 1
             koopa_activate_secrets || return 1
             koopa_activate_ssh_key || return 1
@@ -75,8 +79,7 @@ __koopa_posix_header() { # {{{1
             then
                 koopa_macos_activate_cli_colors || return 1
             fi
-            shell="$(koopa_shell_name)"
-            case "$shell" in
+            case "$(koopa_shell_name)" in
                 'zsh')
                     alias conda='koopa_alias_conda'
                     ;;

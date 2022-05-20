@@ -3,7 +3,7 @@
 # NOTE Seeing warnings on macOS from ranlib, regarding no symbols for some
 # GHC 8.10.7 files
 
-main() { # {{{1
+main() {
     # """
     # Install Pandoc.
     # @note Updated 2022-04-14.
@@ -11,7 +11,8 @@ main() { # {{{1
     # @seealso
     # - stack install --help
     # - https://hackage.haskell.org/package/pandoc-1.16/src/INSTALL
-    # - https://github.com/jgm/pandoc/wiki/Installing-the-development-version-of-pandoc
+    # - https://github.com/jgm/pandoc/wiki/
+    #     Installing-the-development-version-of-pandoc
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/pandoc.rb
     # - https://github.com/commercialhaskell/stack/issues/342
     # """

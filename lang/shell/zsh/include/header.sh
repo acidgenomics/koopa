@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-__koopa_is_installed() { # {{{1
+__koopa_is_installed() {
     # """
     # are all of the requested programs installed?
     # @note updated 2021-05-07.
@@ -13,7 +13,7 @@ __koopa_is_installed() { # {{{1
     return 0
 }
 
-__koopa_print() { # {{{1
+__koopa_print() {
     # """
     # print a string.
     # @note updated 2021-05-07.
@@ -26,7 +26,7 @@ __koopa_print() { # {{{1
     return 0
 }
 
-__koopa_realpath() { # {{{1
+__koopa_realpath() {
     # """
     # Resolve file path.
     # @note Updated 2022-04-08.
@@ -71,7 +71,7 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
-__koopa_warn() { # {{{1
+__koopa_warn() {
     # """
     # Print a warning message to the console.
     # @note Updated 2021-05-14.
@@ -84,7 +84,7 @@ __koopa_warn() { # {{{1
     return 0
 }
 
-__koopa_zsh_header() { # {{{1
+__koopa_zsh_header() {
     # """
     # Zsh header.
     # @note Updated 2022-02-25.

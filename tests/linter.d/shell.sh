@@ -4,7 +4,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
-main() { # {{{1
+main() {
     # """
     # Shell script checks.
     # Updated 2020-07-20.
@@ -17,7 +17,7 @@ main() { # {{{1
     return 0
 }
 
-test_all() { # {{{1
+test_all() {
     local files
     koopa_assert_has_no_args "$#"
     readarray -t files <<< \
@@ -27,7 +27,7 @@ test_all() { # {{{1
     return 0
 }
 
-test_all_illegal_strings() { # {{{1
+test_all_illegal_strings() {
     local array pattern
     koopa_assert_has_args "$#"
     # shellcheck disable=SC2016,SC1112
@@ -56,7 +56,7 @@ test_all_illegal_strings() { # {{{1
     return 0
 }
 
-test_all_quoting() { # {{{1
+test_all_quoting() {
     local array pattern
     koopa_assert_has_args "$#"
     array=(
@@ -80,7 +80,7 @@ test_all_quoting() { # {{{1
     return 0
 }
 
-test_bash() { # {{{1
+test_bash() {
     # """
     # Bash shell checks.
     # @note Updated 2020-07-08.
@@ -93,7 +93,7 @@ test_bash() { # {{{1
     return 0
 }
 
-test_bash_illegal_strings() { # {{{1
+test_bash_illegal_strings() {
     local array pattern
     koopa_assert_has_args "$#"
     array=(
@@ -112,7 +112,7 @@ test_bash_illegal_strings() { # {{{1
     return 0
 }
 
-test_posix() { # {{{1
+test_posix() {
     # """
     # POSIX shell checks.
     # @note Updated 2020-07-08.
@@ -125,7 +125,7 @@ test_posix() { # {{{1
     return 0
 }
 
-test_posix_illegal_strings() { # {{{1
+test_posix_illegal_strings() {
     local array pattern
     koopa_assert_has_args "$#"
     array=(
@@ -146,7 +146,7 @@ test_posix_illegal_strings() { # {{{1
     return 0
 }
 
-test_zsh() { # {{{1
+test_zsh() {
     # """
     # Zsh shell checks.
     # @note Updated 2020-07-08.
@@ -159,7 +159,7 @@ test_zsh() { # {{{1
     return 0
 }
 
-test_zsh_illegal_strings() { # {{{1
+test_zsh_illegal_strings() {
     local array pattern
     koopa_assert_has_args "$#"
     array=(
@@ -178,7 +178,7 @@ test_zsh_illegal_strings() { # {{{1
     return 0
 }
 
-test_shellcheck() { # {{{1
+test_shellcheck() {
     # """
     # Run ShellCheck.
     # @note Updated 2022-02-23.

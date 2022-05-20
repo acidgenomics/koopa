@@ -7,7 +7,7 @@
 # No package 'xorg-macros' found
 # https://github.com/freedesktop/xorg-macros
 
-main() { # {{{1
+main() {
     # """
     # Install libxau.
     # @note Updated 2022-04-26.

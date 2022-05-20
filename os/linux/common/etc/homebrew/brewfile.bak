@@ -3,13 +3,13 @@
 # Updated 2022-04-13.
 # """
 
-# Taps {{{1
+# Taps
 # ==============================================================================
 
 tap "homebrew/core"
 tap "homebrew/bundle"
 
-# Brews {{{1
+# Brews
 # ==============================================================================
 
 # This conflicts with "bash-completion" and "rename".

@@ -5,7 +5,7 @@
 # >   universal-darwin21/rbconfig.rb:230: warning: Insecure world writable dir
 # >   /Applications/Emacs.app/Contents/MacOS in PATH, mode 040777
 
-main() { # {{{1
+main() {
     # """
     # Update Doom Emacs.
     # @note Updated 2022-04-19.

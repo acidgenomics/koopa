@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Update macOS defaults.
     # @note Updated 2022-01-27.

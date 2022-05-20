@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{
+main() {
     # """
     # Install Tcl/Tk.
     # @note Updated 2022-04-28.
