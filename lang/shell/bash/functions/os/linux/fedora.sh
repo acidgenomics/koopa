@@ -1,5 +1,6 @@
 #!/bin/sh
 # shellcheck disable=all
+
 koopa_fedora_add_azure_cli_repo() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -22,6 +23,7 @@ gpgkey=https://packages.microsoft.com/keys/microsoft.asc
 END
     return 0
 }
+
 koopa_fedora_add_google_cloud_sdk_repo() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -62,6 +64,7 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
 END
     return 0
 }
+
 koopa_fedora_dnf_delete_repo() {
     local file name
     koopa_assert_has_args "$#"
@@ -73,12 +76,15 @@ koopa_fedora_dnf_delete_repo() {
     done
     return 0
 }
+
 koopa_fedora_dnf_install() {
     koopa_fedora_dnf install "$@"
 }
+
 koopa_fedora_dnf_remove() {
     koopa_fedora_dnf remove "$@"
 }
+
 koopa_fedora_dnf() {
     local app
     declare -A app=(
@@ -90,6 +96,7 @@ koopa_fedora_dnf() {
     "${app[sudo]}" "${app[dnf]}" -y "$@"
     return 0
 }
+
 koopa_fedora_import_azure_cli_key() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -104,6 +111,7 @@ koopa_fedora_import_azure_cli_key() {
     "${app[sudo]}" "${app[rpm]}" --import "${dict[key]}"
     return 0
 }
+
 koopa_fedora_install_azure_cli() {
     koopa_install_app \
         --name-fancy='Azure CLI' \
@@ -112,6 +120,7 @@ koopa_fedora_install_azure_cli() {
         --system \
         "$@"
 }
+
 koopa_fedora_install_base_system() {
     koopa_install_app \
         --name-fancy='Fedora base system' \
@@ -120,6 +129,7 @@ koopa_fedora_install_base_system() {
         --system \
         "$@"
 }
+
 koopa_fedora_install_from_rpm() {
     local app
     koopa_assert_has_args "$#"
@@ -133,6 +143,7 @@ koopa_fedora_install_from_rpm() {
         "$@"
     return 0
 }
+
 koopa_fedora_install_google_cloud_sdk() {
     koopa_install_app \
         --name-fancy='Google Cloud SDK' \
@@ -141,6 +152,7 @@ koopa_fedora_install_google_cloud_sdk() {
         --system \
         "$@"
 }
+
 koopa_fedora_install_oracle_instant_client() {
     koopa_install_app \
         --name-fancy='Oracle Instant Client' \
@@ -149,6 +161,7 @@ koopa_fedora_install_oracle_instant_client() {
         --system \
         "$@"
 }
+
 koopa_fedora_install_rstudio_server() {
     koopa_install_app \
         --name-fancy='RStudio Server' \
@@ -157,6 +170,7 @@ koopa_fedora_install_rstudio_server() {
         --system \
         "$@"
 }
+
 koopa_fedora_install_shiny_server() {
     koopa_install_app \
         --name-fancy='Shiny Server' \
@@ -165,12 +179,15 @@ koopa_fedora_install_shiny_server() {
         --system \
         "$@"
 }
+
 koopa_fedora_locate_dnf() {
     koopa_locate_app '/usr/bin/dnf'
 }
+
 koopa_fedora_locate_rpm() {
     koopa_locate_app '/usr/bin/rpm'
 }
+
 koopa_fedora_set_locale() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -195,6 +212,7 @@ koopa_fedora_set_locale() {
     koopa_alert_success "Locale is defined as '${dict[lang_string]}'."
     return 0
 }
+
 koopa_fedora_uninstall_azure_cli() {
     koopa_uninstall_app \
         --name-fancy='Azure CLI' \
@@ -203,6 +221,7 @@ koopa_fedora_uninstall_azure_cli() {
         --system \
         "$@"
 }
+
 koopa_fedora_uninstall_google_cloud_sdk() {
     koopa_uninstall_app \
         --name-fancy='Google Cloud SDK' \
@@ -211,6 +230,7 @@ koopa_fedora_uninstall_google_cloud_sdk() {
         --system \
         "$@"
 }
+
 koopa_fedora_uninstall_oracle_instant_client() {
     koopa_uninstall_app \
         --name-fancy='Oracle Instant Client' \
@@ -219,6 +239,7 @@ koopa_fedora_uninstall_oracle_instant_client() {
         --system \
         "$@"
 }
+
 koopa_fedora_uninstall_rstudio_server() {
     koopa_uninstall_app \
         --name-fancy='RStudio Server' \
@@ -227,6 +248,7 @@ koopa_fedora_uninstall_rstudio_server() {
         --system \
         "$@"
 }
+
 koopa_fedora_uninstall_shiny_server() {
     koopa_uninstall_app \
         --name-fancy='Shiny Server' \
