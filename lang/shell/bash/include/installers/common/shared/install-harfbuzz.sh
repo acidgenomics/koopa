@@ -6,7 +6,7 @@
 # - gobject-introspection
 # - graphite2
 
-main() { # {{{1
+main() {
     # """
     # Install HarfBuzz.
     # @note Updated 2022-04-19.

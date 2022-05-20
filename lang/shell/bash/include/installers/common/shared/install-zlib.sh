@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{
+main() {
     # """
     # Install zlib.
     # @note Updated 2022-04-28.

@@ -2,7 +2,7 @@
 
 # NOTE Consider adding support for 'xorg-macros'.
 
-main() { # {{{1
+main() {
     # """
     # Install libx11.
     # @note Updated 2022-04-266.

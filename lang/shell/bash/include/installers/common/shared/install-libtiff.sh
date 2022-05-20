@@ -2,7 +2,7 @@
 
 # Switch to libjpeg-turbo?
 
-main() { # {{{1
+main() {
     # """
     # Install libtiff.
     # @note Updated 2022-04-10.

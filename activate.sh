@@ -20,7 +20,7 @@ then
     return 1
 fi
 
-__koopa_activate_usage() { # {{{1
+__koopa_activate_usage() {
     # """
     # Koopa activation usage triggered by '--help' flag.
     # @note Updated 2021-10-25.
@@ -67,7 +67,7 @@ examples:
 END
 }
 
-__koopa_bash_source() { # {{{1
+__koopa_bash_source() {
     # """
     # Bash source file location.
     # @note Updated 2021-05-07.
@@ -77,7 +77,7 @@ __koopa_bash_source() { # {{{1
     return 0
 }
 
-__koopa_check_zsh() { # {{{1
+__koopa_check_zsh() {
     # """
     # Check that current Zsh configuration is supported.
     # @note Updated 2021-05-25.
@@ -103,7 +103,7 @@ __koopa_check_zsh() { # {{{1
     return 0
 }
 
-__koopa_export_koopa_prefix() { # {{{1
+__koopa_export_koopa_prefix() {
     # """
     # Export 'KOOPA_PREFIX' variable.
     # @note Updated 2022-04-14.
@@ -128,7 +128,7 @@ __koopa_export_koopa_prefix() { # {{{1
     return 0
 }
 
-__koopa_export_koopa_subshell() { # {{{1
+__koopa_export_koopa_subshell() {
     # """
     # Export 'KOOPA_SUBSHELL' variable.
     # @note Updated 2021-05-26.
@@ -142,7 +142,7 @@ __koopa_export_koopa_subshell() { # {{{1
     return 0
 }
 
-__koopa_header() { # {{{1
+__koopa_header() {
     # """
     # Shared shell header file location.
     # @note Updated 2021-05-25.
@@ -156,7 +156,7 @@ __koopa_header() { # {{{1
     return 0
 }
 
-__koopa_is_installed() { # {{{1
+__koopa_is_installed() {
     # """
     # Are all of the requested programs installed?
     # @note Updated 2021-05-07.
@@ -169,7 +169,7 @@ __koopa_is_installed() { # {{{1
     return 0
 }
 
-__koopa_is_interactive() { # {{{1
+__koopa_is_interactive() {
     # """
     # Is the current shell interactive?
     # @note Updated 2021-10-25.
@@ -177,7 +177,7 @@ __koopa_is_interactive() { # {{{1
     __koopa_str_detect_posix "$-" 'i'
 }
 
-__koopa_posix_source() { # {{{1
+__koopa_posix_source() {
     # """
     # POSIX source file location.
     # @note Updated 2021-05-10.
@@ -201,7 +201,7 @@ __koopa_posix_source() { # {{{1
     return 0
 }
 
-__koopa_preflight() { # {{{1
+__koopa_preflight() {
     # """
     # Run pre-flight checks.
     # @note Updated 2021-10-25.
@@ -213,7 +213,7 @@ __koopa_preflight() { # {{{1
     return 0
 }
 
-__koopa_print() { # {{{1
+__koopa_print() {
     # """
     # Print a string.
     # @note Updated 2021-05-07.
@@ -226,7 +226,7 @@ __koopa_print() { # {{{1
     return 0
 }
 
-__koopa_realpath() { # {{{1
+__koopa_realpath() {
     # """
     # Resolve file path.
     # @note Updated 2022-04-10.
@@ -269,7 +269,7 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
-__koopa_shell_name() { # {{{1
+__koopa_shell_name() {
     # """
     # Shell name.
     # @note Updated 2021-05-25.
@@ -286,7 +286,7 @@ __koopa_shell_name() { # {{{1
     __koopa_print "$shell"
 }
 
-__koopa_str_detect_posix() { # {{{1
+__koopa_str_detect_posix() {
     # """
     # Evaluate whether a string contains a desired value.
     # @note Updated 2022-01-10.
@@ -294,7 +294,7 @@ __koopa_str_detect_posix() { # {{{1
     test "${1#*"$2"}" != "$1"
 }
 
-__koopa_warn() { # {{{1
+__koopa_warn() {
     # """
     # Print a warning message to the console.
     # @note Updated 2021-05-14.
@@ -307,7 +307,7 @@ __koopa_warn() { # {{{1
     return 0
 }
 
-__koopa_zsh_source() { # {{{1
+__koopa_zsh_source() {
     # """
     # Zsh source file location.
     # @note Updated 2021-11-18.
@@ -320,7 +320,7 @@ __koopa_zsh_source() { # {{{1
     return 0
 }
 
-__koopa_activate() { # {{{1
+__koopa_activate() {
     # """
     # Activate koopa bootloader inside shell session.
     # @note Updated 2022-02-25.

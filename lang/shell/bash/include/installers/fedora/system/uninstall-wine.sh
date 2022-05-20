@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Uninstall Wine.
     # @note Updated 2022-01-27.

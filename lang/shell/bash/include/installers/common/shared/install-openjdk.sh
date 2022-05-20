@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install OpenJDK.
     # @note Updated 2022-03-28.

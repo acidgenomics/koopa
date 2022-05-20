@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Uninstall RingCentral.
     # @note Updated 2021-10-30.

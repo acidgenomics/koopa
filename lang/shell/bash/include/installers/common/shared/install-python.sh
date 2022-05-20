@@ -6,7 +6,7 @@
 # clang: warning: argument unused during compilation:
 # '-fno-semantic-interposition' [-Wunused-command-line-argument]
 
-main() { # {{{1
+main() {
     # """
     # Install Python.
     # @note Updated 2022-04-25.

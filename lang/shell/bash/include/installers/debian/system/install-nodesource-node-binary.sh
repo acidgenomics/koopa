@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install NodeSource Node.js binary package for Debian.
     # @note Updated 2022-04-07.

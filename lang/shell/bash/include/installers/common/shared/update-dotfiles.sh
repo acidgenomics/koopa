@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Update dotfiles repo and run install script, if defined.
     # @note Updated 2022-01-19.

@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
-# Incorrect:
-# https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2022.02.1-461-.deb
-#
-# Correct:
-# https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2022.02.1-461-amd64.deb
-
-main() { # {{{1
+main() {
     # """
     # Install RStudio Server binary.
     # @note Updated 2022-04-26.

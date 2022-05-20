@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-main() { # {{{1
+main() {
     # """
     # Install Haskell Stack.
     # @note Updated 2022-04-17.

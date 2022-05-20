@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-koopa_zsh_prompt() { # {{{1
+koopa_zsh_prompt() {
     # """
     # Koopa ZSH prompt.
     # @note Updated 2022-02-25.
@@ -13,7 +13,7 @@ koopa_zsh_prompt() { # {{{1
     PROMPT="$(koopa_zsh_prompt_string)"
 }
 
-koopa_zsh_prompt_string() { # {{{1
+koopa_zsh_prompt_string() {
     # """
     # Zsh prompt string (PS1).
     # @note Updated 2022-01-21.

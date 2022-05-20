@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-05-01.
+    # @note Updated 2022-05-06.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -43,6 +43,9 @@ main() { # {{{1
     )
     # Edge case handling of name variants on crates.io.
     case "${dict[name]}" in
+        'delta')
+            dict[cargo_name]='git-delta'
+            ;;
         'ripgrep-all')
             dict[cargo_name]='ripgrep_all'
             ;;

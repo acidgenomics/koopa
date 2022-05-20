@@ -2,7 +2,7 @@
 
 koopa_assert_is_r_package_installed 'syntactic'
 
-test_camel_case_bin() { # {{{1
+test_camel_case_bin() {
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
     MOCK_OUTPUT="$(koopa_dirname "${MOCK_INPUT}")/fooBar"
     koopa_touch "$MOCK_INPUT"
@@ -12,7 +12,7 @@ test_camel_case_bin() { # {{{1
     assertTrue "[ -f '${MOCK_OUTPUT}' ]"
 }
 
-test_kebab_case_bin() { # {{{1
+test_kebab_case_bin() {
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
     MOCK_OUTPUT="$(koopa_dirname "${MOCK_INPUT}")/foo-bar"
     koopa_touch "$MOCK_INPUT"
@@ -22,7 +22,7 @@ test_kebab_case_bin() { # {{{1
     assertTrue "[ -f '${MOCK_OUTPUT}' ]"
 }
 
-test_snake_case_bin() { # {{{1
+test_snake_case_bin() {
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
     MOCK_OUTPUT="$(koopa_dirname "${MOCK_INPUT}")/foo_bar"
     koopa_touch "$MOCK_INPUT"

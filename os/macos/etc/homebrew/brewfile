@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-04-13.
+# Updated 2022-05-12.
 #
 # @section Cask reinstallation:
 #
@@ -13,7 +13,7 @@
 # - https://github.com/Homebrew/homebrew-bundle/issues/446
 # """
 
-# Taps {{{1
+# Taps
 # ==============================================================================
 
 tap "homebrew/core"
@@ -23,14 +23,14 @@ tap "homebrew/cask-drivers"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 
-# Bootstrap brews {{{1
+# Bootstrap brews
 # ==============================================================================
 
 # > brew "bash"
 # > brew "coreutils"
 # > brew "gdal"
 
-# Disabled casks {{{1
+# Disabled casks
 # ==============================================================================
 
 # > cask "adobe-acrobat-reader"
@@ -48,7 +48,7 @@ tap "homebrew/cask-versions"
 # > cask "virtualbox"
 # > cask "webex"
 
-# Casks {{{1
+# Casks
 # ==============================================================================
 
 cask "1password"
@@ -110,6 +110,7 @@ cask "igv"
 cask "iterm2-nightly"
 # > cask "julia"
 cask "keka"
+cask "kitty"
 cask "libreoffice"
 cask "little-snitch"
 cask "macvim"
@@ -119,6 +120,7 @@ cask "nightfall"
 cask "omnidisksweeper"
 cask "pacifist"
 cask "pycharm-ce"
+cask "quarto"
 cask "r"
 cask "rstudio"
 cask "skype"

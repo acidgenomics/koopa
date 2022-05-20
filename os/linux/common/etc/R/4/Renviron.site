@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for Linux.
 #
-# @note Updated 2022-04-22.
+# @note Updated 2022-05-11.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -88,6 +88,8 @@ PATH="/usr/bin:/bin"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
+# For gfortran.
+# > PATH="${KOOPA_OPT_PREFIX}/gcc/bin:${PATH}"
 # This is required for 'png' package to install.
 PATH="${KOOPA_OPT_PREFIX}/libpng/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"
@@ -191,6 +193,12 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # > OCI_LIB="${ORACLE_HOME}/lib"
 # > TNS_ADMIN="${ORACLE_HOME}/network/admin"
 # > PATH="${PATH}:${ORACLE_HOME}/bin"
+
+# rcmdcheck {{{2
+# ------------------------------------------------------------------------------
+
+# Options: "never", "error", "warning", "note".
+RCMDCHECK_ERROR_ON="note"
 
 # remotes {{{2
 # ------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-main() { # {{{1
+main() {
     # """
     # Run shUnit2 tests.
     # @note Updated 2022-03-18.

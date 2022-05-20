@@ -2,7 +2,7 @@
 
 # NOTE Consider adding expat as a requirement here.
 
-main() { # {{{1
+main() {
     # """
     # Install fontconfig.
     # @note Updated 2022-04-22.

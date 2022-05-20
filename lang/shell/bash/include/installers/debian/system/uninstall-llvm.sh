@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Uninstall LLVM.
     # @note Updated 2022-01-31.

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2207
 
-__koopa_complete() { # {{{1
+__koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-04-22.
+    # Updated 2022-05-18.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -51,7 +51,6 @@ __koopa_complete() { # {{{1
                         'git'
                         'gpg'
                         'kallisto'
-                        'r'
                         'rnaeditingindexer'
                         'salmon'
                         'sra'
@@ -63,6 +62,7 @@ __koopa_complete() { # {{{1
                 'configure')
                     args=(
                         'chemacs'
+                        'chezmoi'
                         'dotfiles'
                         'go'
                         'julia'
@@ -88,8 +88,6 @@ __koopa_complete() { # {{{1
                 'uninstall')
                     args=(
                         # > 'ripgrep-all'
-                        # > 'termcap'
-                        # > 'the-silver-searcher'
                         # > 'unzip'
                         # > 'zip'
                         'anaconda'
@@ -111,11 +109,13 @@ __koopa_complete() { # {{{1
                         'bzip2'
                         'cairo'
                         'chemacs'
+                        'chezmoi'
                         'cmake'
                         'conda'
                         'coreutils'
                         'cpufetch'
                         'curl'
+                        'delta'
                         'difftastic'
                         'doom-emacs'
                         'dotfiles'
@@ -189,6 +189,7 @@ __koopa_complete() { # {{{1
                         'mamba'
                         'man-db'
                         'mcfly'
+                        'mdcat'
                         'meson'
                         'mpc'
                         'mpfr'
@@ -358,7 +359,7 @@ __koopa_complete() { # {{{1
                     args=(
                         'brew-dump-brewfile'
                         'brew-outdated'
-                        'cache-bash-functions' # FIXME Add support.
+                        'cache-all-functions'
                         'check'
                         'delete-cache'
                         'disable-passwordless-sudo'
@@ -406,6 +407,7 @@ __koopa_complete() { # {{{1
                         'dotfiles'
                         'google-cloud-sdk'
                         'homebrew'
+                        'julia-packages'
                         'koopa'
                         'mamba'
                         'nim-packages'
@@ -540,12 +542,6 @@ __koopa_complete() { # {{{1
                         'md5sum')
                             args=(
                                 'check-to-new-md5-file'
-                            )
-                            ;;
-                        'r')
-                            args=(
-                                'drat'
-                                'shiny-run-app'
                             )
                             ;;
                         'sra')

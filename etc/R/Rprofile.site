@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-05-02.
+#' @note Updated 2022-05-13.
 #'
 #' @section Restarting R:
 #'
@@ -352,6 +352,9 @@ local({  # nolint
         ## `options(BiocManager.snapshot = "RSPM")` to install CRAN packages for
         ## out-of-date Bioconductor versions.
     }
+    if (isInstalled("cli")) {
+        options("cli.unicode" = TRUE)
+    }
     if (isInstalled("crayon")) {
         options(
             "crayon.enabled" = TRUE,
@@ -455,12 +458,34 @@ local({  # nolint
     ## >     )
     ## > }
     if (isInstalled("testthat")) {
-        ## Stop on the first check failure.
-        options("testthat.progress.max_fails" = 1L)
+        options(
+            "testthat.progress.max_fails" = 1L,
+            "testthat.progress.verbose_skips" = TRUE
+        )
     }
     if (isInstalled("tidyverse")) {
         ## Suppress annoying tidyverse startup message.
         options("tidyverse.quiet" = TRUE)
+    }
+    ## Quartz {{{2
+    ## -------------------------------------------------------------------------
+    ## https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/quartz.html
+    if (isTRUE(flag[["macos"]]) && isInstalled("grDevices")) {
+        setHook(
+            hookName = packageEvent("grDevices", "onLoad"),
+            function(...) {
+                grDevices::quartz.options(
+                    width = 10L,
+                    height = 10L,
+                    pointsize = 12L,
+                    family = "Helvetica",
+                    antialias = TRUE,
+                    type = "native",
+                    bg = "transparent",
+                    canvas = "white"
+                )
+            }
+        )
     }
     ## RStudio {{{2
     ## -------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
-main() { # {{{1
+main() {
     # """
     # R script checks.
     # Updated 2020-07-07.
@@ -13,6 +13,8 @@ main() { # {{{1
     koopa_assert_is_installed 'R'
     koopa_assert_is_r_package_installed 'lintr'
     # Find scripts by file extension.
+    # FIXME This is currently erroring, need to relax...doesn't seem to be
+    # locating our header.R file?
     readarray -t r_files <<< "$(koopa_test_find_files_by_ext '.R')"
     # Find scripts by shebang.
     readarray -t rscript_files <<< \
@@ -27,7 +29,7 @@ main() { # {{{1
     return 0
 }
 
-test_lintr() { # {{{1
+test_lintr() {
     local app file
     koopa_assert_has_args "$#"
     declare -A app=(

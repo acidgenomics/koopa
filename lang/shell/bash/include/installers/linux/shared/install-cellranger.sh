@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+# NOTE Consider informing user interactively regarding license agreement.
+
+main() {
     # """
     # Install Cell Ranger.
     # @note Updated 2022-04-07.

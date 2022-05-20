@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install Prelude Emacs.
     # @note Updated 2021-11-23.
