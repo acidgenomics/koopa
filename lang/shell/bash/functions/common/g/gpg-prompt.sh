@@ -12,6 +12,7 @@ koopa_gpg_prompt() {
     declare -A app=(
         [gpg]="$(koopa_locate_gpg)"
     )
+    [[ -x "${app[gpg]}" ]] || return 1
     printf '' | "${app[gpg]}" -s
     return 0
 }
