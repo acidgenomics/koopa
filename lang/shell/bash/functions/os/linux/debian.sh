@@ -1,5 +1,6 @@
 #!/bin/sh
 # shellcheck disable=all
+
 koopa_debian_apt_add_azure_cli_repo() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_microsoft_key
@@ -12,6 +13,7 @@ koopa_debian_apt_add_azure_cli_repo() {
         --component='main'
     return 0
 }
+
 koopa_debian_apt_add_docker_key() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
@@ -20,6 +22,7 @@ koopa_debian_apt_add_docker_key() {
         --url="https://download.docker.com/linux/$(koopa_os_id)/gpg"
     return 0
 }
+
 koopa_debian_apt_add_docker_repo() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_docker_key
@@ -31,6 +34,7 @@ koopa_debian_apt_add_docker_repo() {
         --component='stable'
     return 0
 }
+
 koopa_debian_apt_add_google_cloud_key() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
@@ -39,6 +43,7 @@ koopa_debian_apt_add_google_cloud_key() {
         --url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     return 0
 }
+
 koopa_debian_apt_add_google_cloud_sdk_repo() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_google_cloud_key
@@ -51,6 +56,7 @@ koopa_debian_apt_add_google_cloud_sdk_repo() {
         --component='main'
     return 0
 }
+
 koopa_debian_apt_add_key() {
     local app dict
     koopa_assert_has_args "$#"
@@ -118,6 +124,7 @@ koopa_debian_apt_add_key() {
     koopa_assert_is_file "${dict[file]}"
     return 0
 }
+
 koopa_debian_apt_add_llvm_key() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
@@ -126,6 +133,7 @@ koopa_debian_apt_add_llvm_key() {
         --url='https://apt.llvm.org/llvm-snapshot.gpg.key'
     return 0
 }
+
 koopa_debian_apt_add_llvm_repo() {
     koopa_assert_has_args_le "$#" 1
     declare -A dict=(
@@ -151,6 +159,7 @@ koopa_debian_apt_add_llvm_repo() {
         --component="${dict[component]}"
     return 0
 }
+
 koopa_debian_apt_add_microsoft_key() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
@@ -159,6 +168,7 @@ koopa_debian_apt_add_microsoft_key() {
         --url='https://packages.microsoft.com/keys/microsoft.asc'
     return 0
 }
+
 koopa_debian_apt_add_r_key() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -183,6 +193,7 @@ koopa_debian_apt_add_r_key() {
         --sudo
     return 0
 }
+
 koopa_debian_apt_add_r_repo() {
     local dict
     koopa_assert_has_args_le "$#" 1
@@ -227,6 +238,7 @@ koopa_debian_apt_add_r_repo() {
         --distribution="${dict[distribution]}"
     return 0
 }
+
 koopa_debian_apt_add_repo() {
     local components dict
     koopa_assert_has_args "$#"
@@ -348,6 +360,7 @@ ${dict[url]} ${dict[distribution]} ${components[*]}"
         --string="${dict[string]}"
     return 0
 }
+
 koopa_debian_apt_add_wine_key() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
@@ -356,6 +369,7 @@ koopa_debian_apt_add_wine_key() {
         --url='https://dl.winehq.org/wine-builds/winehq.key'
     return 0
 }
+
 koopa_debian_apt_add_wine_obs_key() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -389,6 +403,7 @@ Emulators:/Wine:/Debian/${dict[subdir]}/Release.key"
         --url="${dict[url]}"
     return 0
 }
+
 koopa_debian_apt_add_wine_obs_repo() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -425,6 +440,7 @@ Emulators:/Wine:/Debian"
         --distribution="${dict[distribution]}"
     return 0
 }
+
 koopa_debian_apt_add_wine_repo() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_wine_key
@@ -436,7 +452,9 @@ koopa_debian_apt_add_wine_repo() {
         --component='main'
     return 0
 }
+
 koopa_debian_apt_clean() {
+
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
@@ -448,6 +466,7 @@ koopa_debian_apt_clean() {
     "${app[sudo]}" "${app[apt_get]}" --yes clean
     return 0
 }
+
 koopa_debian_apt_configure_sources() {
     local app codenames repos urls
     koopa_assert_has_no_args "$#"
@@ -532,6 +551,7 @@ END
     fi
     return 0
 }
+
 koopa_debian_apt_delete_repo() {
     local dict name
     koopa_assert_has_args "$#"
@@ -548,6 +568,7 @@ koopa_debian_apt_delete_repo() {
     done
     return 0
 }
+
 koopa_debian_apt_disable_deb_src() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -578,6 +599,7 @@ koopa_debian_apt_disable_deb_src() {
     "${app[sudo]}" "${app[apt_get]}" update
     return 0
 }
+
 koopa_debian_apt_enable_deb_src() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -608,6 +630,7 @@ koopa_debian_apt_enable_deb_src() {
     "${app[sudo]}" "${app[apt_get]}" update
     return 0
 }
+
 koopa_debian_apt_enabled_repos() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -629,6 +652,7 @@ koopa_debian_apt_enabled_repos() {
     [[ -n "${dict[str]}" ]] || return 1
     koopa_print "${dict[str]}"
 }
+
 koopa_debian_apt_get() {
     local app
     koopa_assert_has_args "$#"
@@ -646,10 +670,12 @@ koopa_debian_apt_get() {
             "$@"
     return 0
 }
+
 koopa_debian_apt_install() {
     koopa_assert_has_args "$#"
     koopa_debian_apt_get install "$@"
 }
+
 koopa_debian_apt_is_key_imported() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
@@ -672,10 +698,12 @@ koopa_debian_apt_is_key_imported() {
         --string="${dict[string]}" \
         --pattern="${dict[key_pattern]}"
 }
+
 koopa_debian_apt_key_prefix() {
     koopa_assert_has_no_args "$#"
     koopa_print '/usr/share/keyrings'
 }
+
 koopa_debian_apt_remove() {
     local app
     koopa_assert_has_args "$#"
@@ -688,14 +716,17 @@ koopa_debian_apt_remove() {
     koopa_debian_apt_clean
     return 0
 }
+
 koopa_debian_apt_sources_file() {
     koopa_assert_has_no_args "$#"
     koopa_print '/etc/apt/sources.list'
 }
+
 koopa_debian_apt_sources_prefix() {
     koopa_assert_has_no_args "$#"
     koopa_print '/etc/apt/sources.list.d'
 }
+
 koopa_debian_apt_space_used_by_grep() {
     local app x
     koopa_assert_has_args "$#"
@@ -716,6 +747,7 @@ koopa_debian_apt_space_used_by_grep() {
     koopa_print "$x"
     return 0
 }
+
 koopa_debian_apt_space_used_by_no_deps() {
     local app x
     koopa_assert_has_args "$#"
@@ -732,6 +764,7 @@ koopa_debian_apt_space_used_by_no_deps() {
     koopa_print "$x"
     return 0
 }
+
 koopa_debian_apt_space_used_by() {
     local app
     koopa_assert_has_args "$#"
@@ -743,6 +776,7 @@ koopa_debian_apt_space_used_by() {
     "${app[sudo]}" "${app[apt_get]}" --assume-no autoremove "$@"
     return 0
 }
+
 koopa_debian_debian_version() {
     local file x
     file='/etc/debian_version'
@@ -751,6 +785,7 @@ koopa_debian_debian_version() {
     koopa_print "$x"
     return 0
 }
+
 koopa_debian_enable_unattended_upgrades() {
     local app
     koopa_assert_has_no_args "$#"
@@ -765,6 +800,7 @@ koopa_debian_enable_unattended_upgrades() {
     "${app[sudo]}" "${app[unattended_upgrades]}" -d
     return 0
 }
+
 koopa_debian_gdebi_install() {
     local app
     koopa_assert_has_args "$#"
@@ -776,6 +812,7 @@ koopa_debian_gdebi_install() {
     "${app[sudo]}" "${app[gdebi]}" --non-interactive "$@"
     return 0
 }
+
 koopa_debian_install_azure_cli() {
     koopa_install_app \
         --name-fancy='Azure CLI' \
@@ -784,6 +821,7 @@ koopa_debian_install_azure_cli() {
         --system \
         "$@"
 }
+
 koopa_debian_install_base_system() {
     koopa_install_app \
         --name-fancy='Debian base system' \
@@ -792,12 +830,14 @@ koopa_debian_install_base_system() {
         --system \
         "$@"
 }
+
 koopa_debian_install_bcbio_nextgen_vm() {
     koopa_install_app \
         --name='bcbio-nextgen-vm' \
         --platform='debian' \
         "$@"
 }
+
 koopa_debian_install_docker() {
     koopa_install_app \
         --name-fancy='Docker' \
@@ -806,6 +846,7 @@ koopa_debian_install_docker() {
         --system \
         "$@"
 }
+
 koopa_debian_install_from_deb() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
@@ -820,6 +861,7 @@ koopa_debian_install_from_deb() {
     "${app[sudo]}" "${app[gdebi]}" --non-interactive "${dict[file]}"
     return 0
 }
+
 koopa_debian_install_google_cloud_sdk() {
     koopa_install_app \
         --name-fancy='Google Cloud SDK' \
@@ -828,6 +870,7 @@ koopa_debian_install_google_cloud_sdk() {
         --system \
         "$@"
 }
+
 koopa_debian_install_llvm() {
     koopa_install_app \
         --name-fancy='LLVM' \
@@ -836,6 +879,7 @@ koopa_debian_install_llvm() {
         --system \
         "$@"
 }
+
 koopa_debian_install_nodesource_node_binary() {
     koopa_install_app \
         --name-fancy='NodeSource Node.js' \
@@ -844,6 +888,7 @@ koopa_debian_install_nodesource_node_binary() {
         --system \
         "$@"
 }
+
 koopa_debian_install_pandoc_binary() {
     koopa_install_app \
         --installer='pandoc-binary' \
@@ -853,6 +898,7 @@ koopa_debian_install_pandoc_binary() {
         --system \
         "$@"
 }
+
 koopa_debian_install_r_binary() {
     koopa_install_app \
         --installer='r-binary' \
@@ -863,6 +909,7 @@ koopa_debian_install_r_binary() {
         --version-key='r' \
         "$@"
 }
+
 koopa_debian_install_rstudio_server() {
     koopa_install_app \
         --name-fancy='RStudio Server' \
@@ -871,6 +918,7 @@ koopa_debian_install_rstudio_server() {
         --system \
         "$@"
 }
+
 koopa_debian_install_shiny_server() {
     koopa_install_app \
         --name-fancy='Shiny Server' \
@@ -879,6 +927,7 @@ koopa_debian_install_shiny_server() {
         --system \
         "$@"
 }
+
 koopa_debian_install_wine() {
     koopa_install_app \
         --name-fancy='Wine' \
@@ -887,39 +936,51 @@ koopa_debian_install_wine() {
         --system \
         "$@"
 }
+
 koopa_debian_locate_apt() {
     koopa_locate_app '/usr/bin/apt'
 }
+
 koopa_debian_locate_apt_get() {
     koopa_locate_app '/usr/bin/apt-get'
 }
+
 koopa_debian_locate_apt_key() {
     koopa_locate_app '/usr/bin/apt-key'
 }
+
 koopa_debian_locate_dpkg() {
     koopa_locate_app '/usr/bin/dpkg'
 }
+
 koopa_debian_locate_dpkg_reconfigure() {
     koopa_locate_app '/usr/sbin/dpkg-reconfigure'
 }
+
 koopa_debian_locate_gdebi() {
     koopa_locate_app '/usr/bin/gdebi'
 }
+
 koopa_debian_locate_locale_gen() {
     koopa_locate_app '/usr/sbin/locale-gen'
 }
+
 koopa_debian_locate_service() {
     koopa_locate_app '/usr/sbin/service'
 }
+
 koopa_debian_locate_timedatectl() {
     koopa_locate_app '/usr/bin/timedatectl'
 }
+
 koopa_debian_locate_unattended_upgrades() {
     koopa_locate_app '/usr/bin/unattended-upgrades'
 }
+
 koopa_debian_locate_update_locale() {
     koopa_locate_app '/usr/sbin/update-locale'
 }
+
 koopa_debian_set_locale() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -950,6 +1011,7 @@ koopa_debian_set_locale() {
     "${app[locale]}" -a
     return 0
 }
+
 koopa_debian_set_timezone() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -966,6 +1028,7 @@ koopa_debian_set_timezone() {
     "${app[sudo]}" "${app[timedatectl]}" set-timezone "${dict[tz]}"
     return 0
 }
+
 koopa_debian_uninstall_azure_cli() {
     koopa_uninstall_app \
         --name-fancy='Azure CLI' \
@@ -974,12 +1037,14 @@ koopa_debian_uninstall_azure_cli() {
         --system \
         "$@"
 }
+
 koopa_debian_uninstall_bcbio_nextgen_vm() {
     koopa_uninstall_app \
         --name='bcbio-nextgen-vm' \
         --platform='debian' \
         "$@"
 }
+
 koopa_debian_uninstall_docker() {
     koopa_uninstall_app \
         --name-fancy='Docker' \
@@ -988,6 +1053,7 @@ koopa_debian_uninstall_docker() {
         --system \
         "$@"
 }
+
 koopa_debian_uninstall_google_cloud_sdk() {
     koopa_uninstall_app \
         --name-fancy='Google Cloud SDK' \
@@ -996,6 +1062,7 @@ koopa_debian_uninstall_google_cloud_sdk() {
         --system \
         "$@"
 }
+
 koopa_debian_uninstall_llvm() {
     koopa_uninstall_app \
         --name-fancy='LLVM' \
@@ -1004,6 +1071,7 @@ koopa_debian_uninstall_llvm() {
         --system \
         "$@"
 }
+
 koopa_debian_uninstall_pandoc_binary() {
     koopa_uninstall_app \
         --name-fancy='Pandoc' \
@@ -1013,6 +1081,7 @@ koopa_debian_uninstall_pandoc_binary() {
         --uninstaller='pandoc-binary' \
         "$@"
 }
+
 koopa_debian_uninstall_r_binary() {
     koopa_uninstall_app \
         --name-fancy='R CRAN binary' \
@@ -1024,6 +1093,7 @@ koopa_debian_uninstall_r_binary() {
         --unlink-in-bin='Rscript' \
         "$@"
 }
+
 koopa_debian_uninstall_rstudio_server() {
     koopa_uninstall_app \
         --name-fancy='RStudio Server' \
@@ -1032,6 +1102,7 @@ koopa_debian_uninstall_rstudio_server() {
         --system \
         "$@"
 }
+
 koopa_debian_uninstall_shiny_server() {
     koopa_uninstall_app \
         --name-fancy='Shiny Server' \
@@ -1040,6 +1111,7 @@ koopa_debian_uninstall_shiny_server() {
         --system \
         "$@"
 }
+
 koopa_debian_uninstall_wine() {
     koopa_uninstall_app \
         --name-fancy='Wine' \
