@@ -7,7 +7,7 @@ koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
 
 # Also update this value in 'lang/r/include/header.R'.
-r-koopa="0.2.0"
+r-koopa="0.3.0"
 
 # Globals
 # ==============================================================================
