@@ -1,10 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# FIXME Consider moving this to Bash.
 koopa_java_prefix() {
     # """
     # Java prefix.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-05-20.
     #
     # See also:
     # - https://www.mkyong.com/java/
@@ -12,24 +11,24 @@ koopa_java_prefix() {
     # - https://stackoverflow.com/questions/22290554
     # """
     local prefix
-    if [ -n "${JAVA_HOME:-}" ]
+    if [[ -n "${JAVA_HOME:-}" ]]
     then
         koopa_print "$JAVA_HOME"
         return 0
     fi
-    if [ -d "$(koopa_openjdk_prefix)" ]
+    if [[ -d "$(koopa_openjdk_prefix)" ]]
     then
         koopa_print "$(koopa_openjdk_prefix)"
         return 0
     fi
-    if [ -x '/usr/libexec/java_home' ]
+    if [[ -x '/usr/libexec/java_home' ]]
     then
         prefix="$('/usr/libexec/java_home' || true)"
         [ -n "$prefix" ] || return 1
         koopa_print "$prefix"
         return 0
     fi
-    if [ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]
+    if [[ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]]
     then
         koopa_print "$(koopa_homebrew_opt_prefix)/openjdk"
         return 0
