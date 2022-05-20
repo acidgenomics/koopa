@@ -508,14 +508,6 @@ koopa_macos_homebrew_cask_version() {
     done
     return 0
 }
-koopa_macos_install_aws_cli() {
-    koopa_install_app \
-        --link-in-bin='bin/aws' \
-        --name-fancy='AWS CLI' \
-        --name='aws-cli' \
-        --platform='macos' \
-        "$@"
-}
 koopa_macos_ifactive() {
     local app x
     declare -A app=(
@@ -529,6 +521,14 @@ koopa_macos_ifactive() {
     [[ -n "$x" ]] || return 1
     koopa_print "$x"
     return 0
+}
+koopa_macos_install_aws_cli() {
+    koopa_install_app \
+        --link-in-bin='bin/aws' \
+        --name-fancy='AWS CLI' \
+        --name='aws-cli' \
+        --platform='macos' \
+        "$@"
 }
 koopa_macos_install_neovim_binary() {
     koopa_install_app \
@@ -587,9 +587,6 @@ koopa_macos_install_xcode_clt() {
         --system \
         "$@"
 }
-koopa_macos_locate_installer() {
-    koopa_locate_app '/usr/sbin/installer'
-}
 koopa_macos_link_homebrew() {
     local dict
     declare -A dict
@@ -622,6 +619,9 @@ koopa_macos_list_launch_agents() {
         '/Library/LaunchDaemons' \
         '/Library/PrivilegedHelperTools'
     return 0
+}
+koopa_macos_locate_installer() {
+    koopa_locate_app '/usr/sbin/installer'
 }
 koopa_macos_locate_automount() {
     koopa_locate_app '/usr/sbin/automount'
