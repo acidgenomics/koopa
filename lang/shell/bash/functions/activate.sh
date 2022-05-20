@@ -1,5 +1,6 @@
 #!/bin/sh
 # shellcheck disable=all
+
 koopa_activate_bash_aliases() {
     local dict
     [[ "$#" -eq 0 ]] || return 1
@@ -12,6 +13,7 @@ koopa_activate_bash_aliases() {
     fi
     return 0
 }
+
 koopa_activate_bash_completion() {
     local dict
     [[ "$#" -eq 0 ]] || return 1
@@ -34,6 +36,7 @@ koopa_activate_bash_completion() {
     fi
     return 0
 }
+
 koopa_activate_bash_extras() {
     [[ "$#" -eq 0 ]] || return 1
     koopa_is_interactive || return 0
@@ -45,6 +48,7 @@ koopa_activate_bash_extras() {
     koopa_activate_completion
     return 0
 }
+
 koopa_activate_bash_prompt() {
     [[ "$#" -eq 0 ]] || return 1
     koopa_is_root && return 0
@@ -58,6 +62,7 @@ koopa_activate_bash_prompt() {
     export PS1
     return 0
 }
+
 koopa_activate_bash_readline() {
     local dict
     [[ "$#" -eq 0 ]] || return 1
@@ -69,10 +74,12 @@ koopa_activate_bash_readline() {
     export INPUTRC="${dict[input_rc_file]}"
     return 0
 }
+
 koopa_activate_bash_reverse_search() {
     koopa_activate_mcfly
     return 0
 }
+
 koopa_bash_prompt_string() {
     local dict
     [[ "$#" -eq 0 ]] || return 1

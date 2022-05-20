@@ -11,8 +11,18 @@ __koopa_posix_header() {
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
-    # shellcheck source=/dev/null
-    . "${KOOPA_PREFIX}/lang/shell/posix/functions.sh"
+    if [ -f "${KOOPA_PREFIX}/lang/shell/posix/functions.sh" ]
+    then
+        # shellcheck source=/dev/null
+        . "${KOOPA_PREFIX}/lang/shell/posix/functions.sh"
+    else
+        local file
+        for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'.sh'
+        do
+            # shellcheck source=/dev/null
+            . "$file"
+        done
+    fi
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         koopa_duration_start || return 1
