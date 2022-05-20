@@ -1,33 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to work on adding support for RHEL 9 here.
-
-koopa_fedora_add_azure_cli_repo() {
-    # """
-    # Add Microsoft Azure CLI repo.
-    # @note Updated 2021-11-02.
-    # """
-    local app dict
-    koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
-    declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [tee]="$(koopa_locate_tee)"
-    )
-    declare -A dict=(
-        [file]='/etc/yum.repos.d/azure-cli.repo'
-    )
-    [[ -f "${dict[file]}" ]] && return 0
-    "${app[sudo]}" "${app[tee]}" "${dict[file]}" >/dev/null << END
-[azure-cli]
-name=Azure CLI
-baseurl=https://packages.microsoft.com/yumrepos/azure-cli
-enabled=1
-gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc
-END
-    return 0
-}
+# FIXME Need to add support for RHEL 9.
 
 koopa_fedora_add_google_cloud_sdk_repo() {
     # """
@@ -80,24 +53,5 @@ repo_gpgcheck=${dict[repo_gpgcheck]}
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 END
-    return 0
-}
-
-koopa_fedora_import_azure_cli_key() {
-    # """
-    # Import the Microsoft Azure CLI public key.
-    # @note Updated 2021-11-02.
-    # """
-    local app dict
-    koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
-    declare -A app=(
-        [rpm]="$(koopa_fedora_locate_rpm)"
-        [sudo]="$(koopa_locate_sudo)"
-    )
-    declare -A dict=(
-        [key]='https://packages.microsoft.com/keys/microsoft.asc'
-    )
-    "${app[sudo]}" "${app[rpm]}" --import "${dict[key]}"
     return 0
 }
