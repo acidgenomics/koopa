@@ -3,29 +3,16 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-05-16.
+    # @note Updated 2022-05-20.
     # """
-    local cache_file file prefix shell
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
-    prefix="${KOOPA_PREFIX}/lang/shell/posix"
-    cache_file="${prefix}/functions.sh"
-    if [ -f "$cache_file" ]
-    then
-        # shellcheck source=/dev/null
-        . "$cache_file"
-    else
-        # FIXME Need to run file caching at end of header call.
-        for file in "${prefix}/functions/"*'.sh'
-        do
-            # shellcheck source=/dev/null
-            . "$file"
-        done
-    fi
+    # shellcheck source=/dev/null
+    . "${KOOPA_PREFIX}/lang/shell/posix/functions.sh"
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         koopa_duration_start || return 1
@@ -92,8 +79,7 @@ __koopa_posix_header() {
             then
                 koopa_macos_activate_cli_colors || return 1
             fi
-            shell="$(koopa_shell_name)"
-            case "$shell" in
+            case "$(koopa_shell_name)" in
                 'zsh')
                     alias conda='koopa_alias_conda'
                     ;;
