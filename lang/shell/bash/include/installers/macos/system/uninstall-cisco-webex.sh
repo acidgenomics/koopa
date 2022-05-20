@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Uninstall Cisco WebEx.
     # @note Updated 2021-10-30.

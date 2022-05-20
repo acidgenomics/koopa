@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     local dict
     koopa_assert_has_no_args "$#"
     koopa_is_admin || return 0

@@ -2,7 +2,7 @@
 
 # Consider requiring: liblzma, zstd, and xz?.
 
-main() { # {{{
+main() {
     # """
     # Install libzip.
     # @note Updated 2022-04-11.

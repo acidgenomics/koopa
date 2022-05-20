@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install xz.
     # @note Updated 2022-04-22.

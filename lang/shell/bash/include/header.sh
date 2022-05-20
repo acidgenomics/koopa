@@ -1,32 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework as cached function approach.
-__koopa_bash_source_dir() { # {{{1
-    # """
-    # Source multiple Bash script files inside a directory.
-    # @note Updated 2022-04-08.
-    #
-    # Note that macOS ships with an ancient version of Bash by default that
-    # doesn't support readarray/mapfile.
-    # """
-    local fun_script fun_scripts prefix
-    prefix="$(koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
-    [[ -d "$prefix" ]] || return 0
-    readarray -t fun_scripts <<< "$( \
-        find -L "$prefix" \
-            -mindepth 1 \
-            -type 'f' \
-            -name '*.sh' \
-            -print \
-    )"
-    for fun_script in "${fun_scripts[@]}"
-    do
-        # shellcheck source=/dev/null
-        source "$fun_script"
-    done
-    return 0
-}
-
 __koopa_exit_trap() {
     # """
     # Kill all processes whose parent is this process.
@@ -66,7 +39,7 @@ __koopa_exit_trap() {
     return 0
 }
 
-__koopa_is_installed() { # {{{1
+__koopa_is_installed() {
     # """
     # Are all of the requested programs installed?
     # @note Updated 2021-06-16.
@@ -79,7 +52,7 @@ __koopa_is_installed() { # {{{1
     return 0
 }
 
-__koopa_print() { # {{{1
+__koopa_print() {
     # """
     # Print a string.
     # @note Updated 2021-05-07.
@@ -92,7 +65,7 @@ __koopa_print() { # {{{1
     return 0
 }
 
-__koopa_realpath() { # {{{1
+__koopa_realpath() {
     # """
     # Resolve file path.
     # @note Updated 2022-04-08.
@@ -137,7 +110,41 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
-__koopa_warn() { # {{{1
+__koopa_source_functions() {
+    # """
+    # Source multiple Bash script files inside a directory.
+    # @note Updated 2022-05-20.
+    #
+    # Note that macOS ships with an ancient version of Bash by default that
+    # doesn't support readarray/mapfile.
+    # """
+    local cache_file file files prefix
+    prefix="$(koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
+    [[ -d "$prefix" ]] || return 0
+
+    cache_file="${prefix}.sh"
+    if [[ -f "$cache_file" ]]
+    then
+        # shellcheck source=/dev/null
+        source "$cache_file"
+        return 0
+    fi
+    readarray -t files <<< "$( \
+        find -L "$prefix" \
+            -mindepth 1 \
+            -type 'f' \
+            -name '*.sh' \
+            -print \
+    )"
+    for file in "${files[@]}"
+    do
+        # shellcheck source=/dev/null
+        source "$file"
+    done
+    return 0
+}
+
+__koopa_warn() {
     # """
     # Print a warning message to the console.
     # @note Updated 2021-05-14.
@@ -150,10 +157,10 @@ __koopa_warn() { # {{{1
     return 0
 }
 
-__koopa_bash_header() { # {{{1
+__koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-05-16.
     #
     # @seealso
     # - shopt
@@ -300,7 +307,6 @@ __koopa_bash_header() { # {{{1
         export KOOPA_PREFIX
     fi
     # shellcheck source=/dev/null
-    # FIXME This step is now failing inside of Docker build...
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     if [[ "${dict[test]}" -eq 1 ]]
     then
@@ -308,8 +314,7 @@ __koopa_bash_header() { # {{{1
     fi
     if [[ "${dict[activate]}" -eq 1 ]]
     then
-        # shellcheck source=/dev/null
-        source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
+        __koopa_source_functions 'activate'
         if [[ "${dict[minimal]}" -eq 0 ]]
         then
             koopa_activate_bash_extras
@@ -318,27 +323,26 @@ __koopa_bash_header() { # {{{1
     if [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
     then
-        # NOTE Rework this in favor of a single cache file of functions.
-        __koopa_bash_source_dir 'common'
+        __koopa_source_functions 'common'
         dict[os_id]="$(koopa_os_id)"
         if koopa_is_linux
         then
             dict[linux_prefix]='os/linux'
-            __koopa_bash_source_dir "${dict[linux_prefix]}/common"
+            __koopa_source_functions "${dict[linux_prefix]}/common"
             if koopa_is_debian_like
             then
-                __koopa_bash_source_dir "${dict[linux_prefix]}/debian"
+                __koopa_source_functions "${dict[linux_prefix]}/debian"
                 # > koopa_is_ubuntu_like && \
-                # >     __koopa_bash_source_dir "${dict[linux_prefix]}/ubuntu"
+                # >     __koopa_source_functions "${dict[linux_prefix]}/ubuntu"
             elif koopa_is_fedora_like
             then
-                __koopa_bash_source_dir "${dict[linux_prefix]}/fedora"
+                __koopa_source_functions "${dict[linux_prefix]}/fedora"
                 koopa_is_rhel_like && \
-                    __koopa_bash_source_dir "${dict[linux_prefix]}/rhel"
+                    __koopa_source_functions "${dict[linux_prefix]}/rhel"
             fi
-            __koopa_bash_source_dir "${dict[linux_prefix]}/${dict[os_id]}"
+            __koopa_source_functions "${dict[linux_prefix]}/${dict[os_id]}"
         else
-            __koopa_bash_source_dir "os/${dict[os_id]}"
+            __koopa_source_functions "os/${dict[os_id]}"
         fi
         # Check if user is requesting help documentation.
         case "${1:-}" in

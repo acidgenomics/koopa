@@ -10,7 +10,7 @@
 # >     done
 # > done
 
-main() { # {{{1
+main() {
     # """
     # Uninstall Homebrew.
     # @note Updated 2022-04-08.

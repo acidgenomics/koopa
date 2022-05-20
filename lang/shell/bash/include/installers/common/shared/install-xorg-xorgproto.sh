@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install xorgproto.
     # @note Updated 2022-04-25.

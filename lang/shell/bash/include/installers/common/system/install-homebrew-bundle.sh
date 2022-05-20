@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install Homebrew packages using Bundle Brewfile.
     # @note Updated 2022-04-22.

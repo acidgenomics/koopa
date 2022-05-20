@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install AWS CLI binary.
     # @note Updated 2022-04-07.

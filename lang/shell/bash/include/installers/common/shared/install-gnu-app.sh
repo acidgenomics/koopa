@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Build and install a GNU package from source.
     # @note Updated 2022-04-25.
@@ -51,7 +51,6 @@ main() { # {{{1
         'readline' | \
         'stow' | \
         'tar' | \
-        'termcap' | \
         'wget' | \
         'which')
             dict[suffix]='gz'

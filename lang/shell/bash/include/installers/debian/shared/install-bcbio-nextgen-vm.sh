@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install bcbio-nextgen-vm.
     # @note Updated 2022-01-25.

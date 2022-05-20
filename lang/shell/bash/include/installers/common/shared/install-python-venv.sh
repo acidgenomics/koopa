@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{
+main() {
     # """
     # Install Python package as a venv.
     # @note Updated 2022-04-26.

@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-koopa_activate_zsh_aliases() { # {{{1
+koopa_activate_zsh_aliases() {
     # """
     # Activate Zsh aliases.
     # @note Updated 2020-11-24.
@@ -15,7 +15,7 @@ koopa_activate_zsh_aliases() { # {{{1
     return 0
 }
 
-koopa_activate_zsh_bashcompinit() { # {{{1
+koopa_activate_zsh_bashcompinit() {
     # """
     # Activate Bash completions for Zsh.
     # @note Updated 2020-11-24.
@@ -24,7 +24,7 @@ koopa_activate_zsh_bashcompinit() { # {{{1
     return 0
 }
 
-koopa_activate_zsh_colors() { # {{{1
+koopa_activate_zsh_colors() {
     # """
     # Enable colors in terminal.
     # @note Updated 2020-11-24.
@@ -33,7 +33,7 @@ koopa_activate_zsh_colors() { # {{{1
     return 0
 }
 
-koopa_activate_zsh_compinit() { # {{{1
+koopa_activate_zsh_compinit() {
     # """
     # Activate Zsh compinit (completion system).
     # @note Updated 2020-11-24.
@@ -42,7 +42,7 @@ koopa_activate_zsh_compinit() { # {{{1
     return 0
 }
 
-koopa_activate_zsh_editor() { # {{{1
+koopa_activate_zsh_editor() {
     # """
     # Activate Zsh editor.
     # @note Updated 2020-11-24.
@@ -59,7 +59,7 @@ koopa_activate_zsh_editor() { # {{{1
     return 0
 }
 
-koopa_activate_zsh_extras() { # {{{1
+koopa_activate_zsh_extras() {
     # """
     # Activate Zsh extras.
     # @note Updated 2021-06-16.
@@ -89,7 +89,7 @@ koopa_activate_zsh_extras() { # {{{1
     return 0
 }
 
-koopa_activate_zsh_fpath() { # {{{1
+koopa_activate_zsh_fpath() {
     # """
     # Activate Zsh FPATH.
     # @note Updated 2021-01-19.
@@ -107,10 +107,10 @@ koopa_activate_zsh_fpath() { # {{{1
     return 0
 }
 
-koopa_activate_zsh_plugins() { # {{{1
+koopa_activate_zsh_plugins() {
     # """
     # Activate Zsh plugins.
-    # Updated 2022-04-05.
+    # Updated 2022-05-10.
     #
     # Debug plugins via:
     # > zsh -df
@@ -122,7 +122,7 @@ koopa_activate_zsh_plugins() { # {{{1
     local dotfiles_prefix plugin plugins zsh_plugins_dir
     [[ "$#" -eq 0 ]] || return 1
     dotfiles_prefix="$(koopa_dotfiles_prefix)"
-    zsh_plugins_dir="${dotfiles_prefix}/shell/zsh/plugins"
+    zsh_plugins_dir="$(koopa_xdg_data_home)/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
     plugins=("${(@f)$( \
         find "$zsh_plugins_dir" \
@@ -139,7 +139,7 @@ koopa_activate_zsh_plugins() { # {{{1
     return 0
 }
 
-koopa_activate_zsh_prompt() { # {{{1
+koopa_activate_zsh_prompt() {
     # """
     # Activate Zsh prompt.
     # Updated 2022-03-16.
@@ -164,7 +164,7 @@ koopa_activate_zsh_prompt() { # {{{1
     return 0
 }
 
-koopa_activate_zsh_reverse_search() { # {{{1
+koopa_activate_zsh_reverse_search() {
     # """
     # Activate reverse search using Ctrl+R in Zsh.
     # @note Updated 2022-01-21.

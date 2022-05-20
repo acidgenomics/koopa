@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install Red Hat Enterprise Linux (RHEL) base system.
     # @note Updated 2021-11-30.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() { # {{{1
+main() {
     # """
     # Install Pandoc binary.
     # @note Updated 2022-05-14.
