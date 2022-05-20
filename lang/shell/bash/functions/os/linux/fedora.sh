@@ -28,18 +28,24 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    koopa_assert_is_x86_64
     declare -A app=(
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
     declare -A dict=(
-        [arch]='x86_64'
+        [arch]="$(koopa_arch)"
         [enabled]=1
         [file]='/etc/yum.repos.d/google-cloud-sdk.repo'
         [gpgcheck]=1
         [repo_gpgcheck]=0
     )
+    case "${dict[arch]}" in
+        'x86_64')
+            ;;
+        *)
+            koopa_stop 'Unsupported architecture.'
+            ;;
+    esac
     if koopa_is_fedora || koopa_is_rhel_8_like
     then
         dict[platform]='el8'
