@@ -13384,6 +13384,33 @@ koopa_julia_script_prefix() {
     return 0
 }
 
+koopa_java_prefix() {
+    local prefix
+    if [[ -n "${JAVA_HOME:-}" ]]
+    then
+        koopa_print "$JAVA_HOME"
+        return 0
+    fi
+    if [[ -d "$(koopa_openjdk_prefix)" ]]
+    then
+        koopa_print "$(koopa_openjdk_prefix)"
+        return 0
+    fi
+    if [[ -x '/usr/libexec/java_home' ]]
+    then
+        prefix="$('/usr/libexec/java_home' || true)"
+        [ -n "$prefix" ] || return 1
+        koopa_print "$prefix"
+        return 0
+    fi
+    if [[ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]]
+    then
+        koopa_print "$(koopa_homebrew_opt_prefix)/openjdk"
+        return 0
+    fi
+    return 1
+}
+
 koopa_kallisto_fastq_library_type() {
     local from to
     koopa_assert_has_args_eq "$#" 1
@@ -15644,6 +15671,10 @@ koopa_lowercase() {
             | "${app[tr]}" '[:upper:]' '[:lower:]'
     done
     return 0
+}
+
+koopa_lmod_prefix() {
+    koopa_print "$(koopa_opt_prefix)/lmod"
 }
 
 koopa_make_build_string() {
