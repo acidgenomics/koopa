@@ -23,4 +23,3 @@ koopa_alias_colorls() {
             "$@"
     return 0
 }
-

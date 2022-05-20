@@ -18,4 +18,3 @@ koopa_add_to_manpath_start() {
     export MANPATH
     return 0
 }
-

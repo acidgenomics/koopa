@@ -36,4 +36,3 @@ koopa_git_branch() {
     koopa_print "$branch"
     return 0
 }
-

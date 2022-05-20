@@ -42,4 +42,3 @@ koopa_host_id() {
     koopa_print "$id"
     return 0
 }
-

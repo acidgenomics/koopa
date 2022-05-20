@@ -58,4 +58,3 @@ koopa_export_history() {
     export SAVEHIST
     return 0
 }
-
