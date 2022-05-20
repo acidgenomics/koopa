@@ -308,11 +308,17 @@ koopa_macos_disable_zoom_daemon() {
 }
 
 koopa_macos_download_macos() {
-    local version
-    version="${1:?}"
-    softwareupdate \
+    local app dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A app=(
+        [softwareupdate]="$(koopa_macos_locate_softwareupdate)"
+    )
+    declare -A dict=(
+        [version]="${1:?}"
+    )
+    "${app[softwareupdate]}" \
         --fetch-full-installer \
-        --full-installer-version "$version"
+        --full-installer-version "${dict[version]}"
     return 0
 }
 
@@ -461,16 +467,26 @@ koopa_macos_enable_zoom_daemon() {
 }
 
 koopa_macos_finder_hide() {
+    local app
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'setfile'
-    setfile -a V "$@"
+    declare -A app=(
+        [setfile]="$(koopa_macos_locate_setfile)"
+    )
+    [[ -x "${app[setfile]}" ]] || return 1
+    koopa_assert_is_existing "$@"
+    "${app[setfile]}" -a V "$@"
     return 0
 }
 
 koopa_macos_finder_unhide() {
+    local app
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'setfile'
-    setfile -a v "$@"
+    declare -A app=(
+        [setfile]="$(koopa_macos_locate_setfile)"
+    )
+    [[ -x "${app[setfile]}" ]] || return 1
+    koopa_assert_is_existing "$@"
+    "${app[setfile]}" -a v "$@"
     return 0
 }
 
