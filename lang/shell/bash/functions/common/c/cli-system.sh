@@ -63,7 +63,7 @@ koopa_cli_system() {
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
-        'cache-functions' | \
+        'cache-all-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
         'find-non-symlinked-make-files' | \

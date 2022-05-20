@@ -359,7 +359,7 @@ __koopa_complete() {
                     args=(
                         'brew-dump-brewfile'
                         'brew-outdated'
-                        'cache-functions'
+                        'cache-all-functions'
                         'check'
                         'delete-cache'
                         'disable-passwordless-sudo'
