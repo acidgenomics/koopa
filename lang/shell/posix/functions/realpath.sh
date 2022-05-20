@@ -43,4 +43,3 @@ gnubin/readlink"
     koopa_print "$x"
     return 0
 }
-
