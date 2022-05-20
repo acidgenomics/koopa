@@ -1682,10 +1682,6 @@ koopa_is_ubuntu() {
     koopa_is_os 'ubuntu'
 }
 
-koopa_is_x86_64() {
-    [ "$(koopa_arch)" = 'x86_64' ]
-}
-
 koopa_julia_packages_prefix() {
     __koopa_packages_prefix 'julia' "$@"
 }

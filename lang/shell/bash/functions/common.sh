@@ -1674,15 +1674,6 @@ koopa_assert_is_writable() {
     return 0
 }
 
-koopa_assert_is_x86_64() {
-    koopa_assert_has_no_args "$#"
-    if ! koopa_is_x86_64
-    then
-        koopa_stop 'Architecture is not x86_64 (Intel x86 64-bit).'
-    fi
-    return 0
-}
-
 koopa_autopad_zeros() {
     local files newname num padwidth oldname pos prefix stem
     koopa_assert_has_args "$#"
