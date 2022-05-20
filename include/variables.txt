@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-05-13"
+koopa-date="2022-05-19"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -23,7 +23,7 @@ gnu-mirror-url="https://ftpmirror.gnu.org"
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
-anaconda="2021.11"
+anaconda="2022.05"
 
 # https://github.com/apptainer/apptainer
 apptainer="1.0.1"
@@ -113,13 +113,13 @@ cellranger="7.0.0"
 chemacs="latest"
 
 # https://www.chezmoi.io/
-chezmoi="2.15.4"
+chezmoi="2.16.0"
 
 # https://cmake.org/download/
 cmake="3.23.0"
 
 # https://repo.anaconda.com/miniconda/
-conda="4.11.0" # 2022-02-15
+conda="4.12.0"
 
 # https://www.gnu.org/software/coreutils/
 coreutils="9.1"
@@ -250,7 +250,7 @@ hdf5="1.12.1"
 # https://github.com/htop-dev/htop
 htop="3.2.0"
 
-hyperfine="1.13.0" # rust
+hyperfine="1.14.0" # rust
 
 # http://site.icu-project.org/
 icu4c="71.1"
@@ -523,7 +523,7 @@ rstudio-server="2022.02.1+461"
 ruby="3.1.2p20"
 
 # https://www.rust-lang.org/
-rust="1.60.0"
+rust="1.61.0"
 
 # https://rustup.rs/
 rustup="1.24.3"
