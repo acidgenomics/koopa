@@ -1,5 +1,6 @@
 #!/bin/sh
 # shellcheck disable=all
+
 koopa_macos_app_version() {
     local app x
     koopa_assert_has_args "$#"
@@ -26,6 +27,7 @@ koopa_macos_app_version() {
     done
     return 0
 }
+
 koopa_macos_brew_cask_outdated() {
     local app keep_latest tmp_file x
     koopa_assert_has_no_args "$#"
@@ -54,6 +56,7 @@ koopa_macos_brew_cask_outdated() {
     koopa_print "$x"
     return 0
 }
+
 koopa_macos_brew_cask_quarantine_fix() {
     local app
     koopa_assert_has_no_args "$#"
@@ -67,6 +70,7 @@ koopa_macos_brew_cask_quarantine_fix() {
         '/Applications/'*'.app'
     return 0
 }
+
 koopa_macos_brew_upgrade_casks() {
     local app cask casks
     koopa_assert_has_no_args "$#"
@@ -118,6 +122,7 @@ koopa_macos_brew_upgrade_casks() {
     done
     return 0
 }
+
 koopa_macos_clean_launch_services() {
     local app
     koopa_assert_has_no_args "$#"
@@ -138,6 +143,7 @@ koopa_macos_clean_launch_services() {
     koopa_alert_success 'Clean up was successful.'
     return 0
 }
+
 koopa_macos_create_dmg() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
@@ -157,6 +163,7 @@ koopa_macos_create_dmg() {
         -volname "${dict[volname]}"
     return 0
 }
+
 koopa_macos_disable_crashplan() {
     koopa_assert_has_no_args "$#"
     koopa_macos_disable_plist_file \
@@ -164,6 +171,7 @@ koopa_macos_disable_crashplan() {
         '/Library/LaunchDaemons/com.crashplan.engine.plist'
     return 0
 }
+
 koopa_macos_disable_google_keystone() {
     koopa_assert_has_no_args "$#"
     koopa_macos_disable_plist_file \
@@ -172,17 +180,20 @@ koopa_macos_disable_google_keystone() {
         '/Library/LaunchDaemons/com.google.keystone.daemon.plist'
     return 0
 }
+
 koopa_macos_disable_gpg_updater() {
     koopa_assert_has_no_args "$#"
     koopa_macos_disable_plist_file \
         '/Library/LaunchAgents/org.gpgtools.updater.plist'
 }
+
 koopa_macos_disable_microsoft_teams_updater() { # {[[1
     koopa_assert_has_no_args "$#"
     koopa_macos_disable_plist_file \
         '/Library/LaunchDaemons/com.microsoft.teams.TeamsUpdaterDaemon.plist'
     return 0
 }
+
 koopa_macos_disable_plist_file() {
     local app file
     koopa_assert_has_args "$#"
@@ -239,6 +250,7 @@ disabled/$(koopa_basename "${dict[enabled_file]}")"
     done
     return 0
 }
+
 koopa_macos_disable_privileged_helper_tool() {
     local bn dict
     koopa_assert_has_args "$#"
@@ -258,6 +270,7 @@ disabled/$(koopa_basename "${dict[enabled_file]}")"
     done
     return 0
 }
+
 koopa_macos_disable_touch_id_sudo() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -285,6 +298,7 @@ koopa_macos_disable_touch_id_sudo() {
     koopa_alert_success 'Touch ID disabled for sudo.'
     return 0
 }
+
 koopa_macos_disable_zoom_daemon() {
     koopa_assert_has_no_args "$#"
     koopa_macos_disable_plist_file \
@@ -292,6 +306,7 @@ koopa_macos_disable_zoom_daemon() {
     koopa_macos_disable_privileged_helper_tool \
         'us.zoom.ZoomDaemon'
 }
+
 koopa_macos_download_macos() {
     local version
     version="${1:?}"
@@ -300,6 +315,7 @@ koopa_macos_download_macos() {
         --full-installer-version "$version"
     return 0
 }
+
 koopa_macos_enable_crashplan() {
     koopa_assert_has_no_args "$#"
     koopa_macos_enable_plist_file \
@@ -307,6 +323,7 @@ koopa_macos_enable_crashplan() {
         '/Library/LaunchDaemons/com.crashplan.engine.plist'
     return 0
 }
+
 koopa_macos_enable_google_keystone() {
     koopa_assert_has_no_args "$#"
     koopa_macos_enable_plist_file \
@@ -315,17 +332,20 @@ koopa_macos_enable_google_keystone() {
         '/Library/LaunchDaemons/com.google.keystone.daemon.plist'
     return 0
 }
+
 koopa_macos_enable_gpg_updater() {
     koopa_assert_has_no_args "$#"
     koopa_macos_enable_plist_file \
         '/Library/LaunchAgents/org.gpgtools.updater.plist'
 }
+
 koopa_macos_enable_microsoft_teams_updater() {
     koopa_assert_has_no_args "$#"
     koopa_macos_enable_plist_file \
         '/Library/LaunchDaemons/com.microsoft.teams.TeamsUpdaterDaemon.plist'
     return 0
 }
+
 koopa_macos_enable_plist_file() {
     local app file
     koopa_assert_has_args "$#"
@@ -382,6 +402,7 @@ disabled/$(koopa_basename "${dict[enabled_file]}")"
     done
     return 0
 }
+
 koopa_macos_enable_privileged_helper_tool() {
     local bn dict
     koopa_assert_has_args "$#"
@@ -401,6 +422,7 @@ disabled/$(koopa_basename "${dict[enabled_file]}")"
     done
     return 0
 }
+
 koopa_macos_enable_touch_id_sudo() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -429,6 +451,7 @@ koopa_macos_enable_touch_id_sudo() {
     koopa_alert_success 'Touch ID enabled for sudo.'
     return 0
 }
+
 koopa_macos_enable_zoom_daemon() {
     koopa_assert_has_no_args "$#"
     koopa_macos_enable_plist_file \
@@ -436,18 +459,21 @@ koopa_macos_enable_zoom_daemon() {
     koopa_macos_enable_privileged_helper_tool \
         'us.zoom.ZoomDaemon'
 }
+
 koopa_macos_finder_hide() {
     koopa_assert_has_args "$#"
     koopa_assert_is_installed 'setfile'
     setfile -a V "$@"
     return 0
 }
+
 koopa_macos_finder_unhide() {
     koopa_assert_has_args "$#"
     koopa_assert_is_installed 'setfile'
     setfile -a v "$@"
     return 0
 }
+
 koopa_macos_flush_dns() {
     local app
     koopa_assert_has_no_args "$#"
@@ -463,6 +489,7 @@ koopa_macos_flush_dns() {
     koopa_alert_success 'DNS flush was successful.'
     return 0
 }
+
 koopa_macos_force_eject() {
     local app mount name
     koopa_assert_has_args_eq "$#" 1
@@ -476,6 +503,7 @@ koopa_macos_force_eject() {
     "${app[sudo]}" "${app[diskutil]}" unmount force "$mount"
     return 0
 }
+
 koopa_macos_force_reset_icloud_drive() {
     local app
     koopa_assert_has_no_args "$#"
@@ -492,6 +520,7 @@ koopa_macos_force_reset_icloud_drive() {
     "${app[sudo]}" "${app[reboot]}" now
     return 0
 }
+
 koopa_macos_homebrew_cask_version() {
     local app cask x
     koopa_assert_has_args "$#"
@@ -508,6 +537,7 @@ koopa_macos_homebrew_cask_version() {
     done
     return 0
 }
+
 koopa_macos_ifactive() {
     local app x
     declare -A app=(
@@ -522,6 +552,7 @@ koopa_macos_ifactive() {
     koopa_print "$x"
     return 0
 }
+
 koopa_macos_install_aws_cli() {
     koopa_install_app \
         --link-in-bin='bin/aws' \
@@ -530,6 +561,7 @@ koopa_macos_install_aws_cli() {
         --platform='macos' \
         "$@"
 }
+
 koopa_macos_install_neovim_binary() {
     koopa_install_app \
         --installer='neovim-binary' \
@@ -539,6 +571,7 @@ koopa_macos_install_neovim_binary() {
         --platform='macos' \
         "$@"
 }
+
 koopa_macos_install_python_binary() {
     koopa_install_app \
         --installer='python-binary' \
@@ -550,6 +583,7 @@ koopa_macos_install_python_binary() {
         --system \
         "$@"
 }
+
 koopa_macos_install_r_binary() {
     koopa_install_app \
         --installer='r-binary' \
@@ -562,6 +596,7 @@ koopa_macos_install_r_binary() {
         --system \
         "$@"
 }
+
 koopa_macos_install_r_gfortran() {
     koopa_install_app \
         --name-fancy='R gfortran' \
@@ -571,6 +606,7 @@ koopa_macos_install_r_gfortran() {
         --system \
         "$@"
 }
+
 koopa_macos_install_r_openmp() {
     koopa_install_app \
         --name-fancy='R OpenMP' \
@@ -579,6 +615,7 @@ koopa_macos_install_r_openmp() {
         --system \
         "$@"
 }
+
 koopa_macos_install_xcode_clt() {
     koopa_install_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
@@ -587,6 +624,7 @@ koopa_macos_install_xcode_clt() {
         --system \
         "$@"
 }
+
 koopa_macos_link_homebrew() {
     local dict
     declare -A dict
@@ -605,6 +643,7 @@ koopa_macos_link_homebrew() {
         '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' \
         'code'
 }
+
 koopa_macos_list_launch_agents() {
     local app
     koopa_assert_has_no_args "$#"
@@ -620,94 +659,124 @@ koopa_macos_list_launch_agents() {
         '/Library/PrivilegedHelperTools'
     return 0
 }
+
 koopa_macos_locate_installer() {
     koopa_locate_app '/usr/sbin/installer'
 }
+
 koopa_macos_locate_automount() {
     koopa_locate_app '/usr/sbin/automount'
 }
+
 koopa_macos_locate_defaults() {
     koopa_locate_app '/usr/bin/defaults'
 }
+
 koopa_macos_locate_diskutil() {
     koopa_locate_app '/usr/sbin/diskutil'
 }
+
 koopa_macos_locate_dscacheutil() {
     koopa_locate_app '/usr/bin/dscacheutil'
 }
+
 koopa_macos_locate_fs_usage() {
     koopa_locate_app '/usr/bin/fs_usage'
 }
+
 koopa_macos_locate_hdiutil() {
     koopa_locate_app '/usr/bin/hdiutil'
 }
+
 koopa_macos_locate_ifconfig() {
     koopa_locate_app '/sbin/ifconfig'
 }
+
 koopa_macos_locate_kill_all() {
     koopa_locate_app '/usr/bin/killAll'
 }
+
 koopa_macos_locate_launchctl() {
     koopa_locate_app '/bin/launchctl'
 }
+
 koopa_macos_locate_lsregister() {
     koopa_locate_app "/System/Library/Frameworks/CoreServices.framework\
 /Frameworks/LaunchServices.framework/Support/lsregister"
 }
+
 koopa_macos_locate_mount_nfs() {
     koopa_locate_app '/sbin/mount_nfs'
 }
+
 koopa_macos_locate_nfsstat() {
     koopa_locate_app '/usr/bin/nfsstat'
 }
+
 koopa_macos_locate_nvram() {
     koopa_locate_app '/usr/sbin/nvram'
 }
+
 koopa_macos_locate_open() {
     koopa_locate_app '/usr/bin/open'
 }
+
 koopa_macos_locate_otool() {
     koopa_locate_app '/usr/bin/otool'
 }
+
 koopa_macos_locate_pkgutil() {
     koopa_locate_app '/usr/sbin/pkgutil'
 }
+
 koopa_macos_locate_plistbuddy() {
     koopa_locate_app '/usr/libexec/PlistBuddy'
 }
+
 koopa_macos_locate_plutil() {
     koopa_locate_app '/usr/bin/plutil'
 }
+
 koopa_macos_locate_pmset() {
     koopa_locate_app '/usr/bin/pmset'
 }
+
 koopa_macos_locate_reboot() {
     koopa_locate_app '/sbin/reboot'
 }
+
 koopa_macos_locate_scutil() {
     koopa_locate_app '/usr/sbin/scutil'
 }
+
 koopa_macos_locate_softwareupdate() {
     koopa_locate_app '/usr/sbin/softwareupdate'
 }
+
 koopa_macos_locate_sw_vers() {
     koopa_locate_app '/usr/bin/sw_vers'
 }
+
 koopa_macos_locate_sysctl() {
     koopa_locate_app '/usr/sbin/sysctl'
 }
+
 koopa_macos_locate_xattr() {
     koopa_locate_app '/usr/bin/xattr'
 }
+
 koopa_macos_locate_xcode_select() {
     koopa_locate_app '/usr/bin/xcode-select'
 }
+
 koopa_macos_locate_xcodebuild() {
     koopa_locate_app '/usr/bin/xcodebuild'
 }
+
 koopa_macos_locate_xcrun() {
     koopa_locate_app '/usr/bin/xcrun'
 }
+
 koopa_macos_reload_autofs() {
     local app
     koopa_assert_has_no_args "$#"
@@ -719,6 +788,7 @@ koopa_macos_reload_autofs() {
     "${app[sudo]}" "${app[automount]}" -vc
     return 0
 }
+
 koopa_macos_spotlight_find() {
     local pattern x
     koopa_assert_has_args_le "$#" 2
@@ -735,6 +805,7 @@ koopa_macos_spotlight_find() {
     koopa_print "$x"
     return 0
 }
+
 koopa_macos_spotlight_usage() {
     declare -A app=(
         [fs_usage]="$(koopa_macos_locate_fs_usage)"
@@ -743,6 +814,7 @@ koopa_macos_spotlight_usage() {
     "${app[sudo]}" "${app[fs_usage]}" -w -f filesys mds
     return 0
 }
+
 koopa_macos_symlink_dropbox() {
     local app
     koopa_assert_has_no_args "$#"
@@ -758,6 +830,7 @@ koopa_macos_symlink_dropbox() {
     "${app[sudo]}" "${app[kill_all]}" 'Finder'
     return 0
 }
+
 koopa_macos_symlink_icloud_drive() {
     koopa_assert_has_no_args "$#"
     koopa_ln \
@@ -765,6 +838,7 @@ koopa_macos_symlink_icloud_drive() {
         "${HOME}/icloud"
     return 0
 }
+
 koopa_macos_uninstall_adobe_creative_cloud() {
     koopa_uninstall_app \
         --name-fancy='Adobe Creative Cloud' \
@@ -773,6 +847,7 @@ koopa_macos_uninstall_adobe_creative_cloud() {
         --system \
         "$@"
 }
+
 koopa_macos_uninstall_brewfile_casks() {
     local app cask casks dict
     koopa_assert_has_args_eq "$#" 1
@@ -796,6 +871,7 @@ koopa_macos_uninstall_brewfile_casks() {
     done
     return 0
 }
+
 koopa_macos_uninstall_cisco_webex() {
     koopa_uninstall_app \
         --name-fancy='Cisco WebEx' \
@@ -804,6 +880,7 @@ koopa_macos_uninstall_cisco_webex() {
         --system \
         "$@"
 }
+
 koopa_macos_uninstall_microsoft_onedrive() {
     koopa_uninstall_app \
         --name-fancy='Microsoft OneDrive' \
@@ -812,6 +889,7 @@ koopa_macos_uninstall_microsoft_onedrive() {
         --system \
         "$@"
 }
+
 koopa_macos_uninstall_oracle_java() {
     koopa_uninstall_app \
         --name-fancy='Oracle Java' \
@@ -820,6 +898,7 @@ koopa_macos_uninstall_oracle_java() {
         --system \
         "$@"
 }
+
 koopa_macos_uninstall_python_binary() {
     koopa_uninstall_app \
         --name-fancy='Python' \
@@ -831,6 +910,7 @@ koopa_macos_uninstall_python_binary() {
         --unlink-in-bin='python3' \
         "$@"
 }
+
 koopa_macos_uninstall_r_binary() {
     koopa_uninstall_app \
         --name-fancy='R' \
@@ -842,6 +922,7 @@ koopa_macos_uninstall_r_binary() {
         --unlink-in-bin='Rscript' \
         "$@"
 }
+
 koopa_macos_uninstall_r_gfortran() {
     koopa_uninstall_app \
         --name-fancy='R gfortran' \
@@ -851,6 +932,7 @@ koopa_macos_uninstall_r_gfortran() {
         --system \
         "$@"
 }
+
 koopa_macos_uninstall_r_openmp() {
     koopa_uninstall_app \
         --name-fancy='R OpenMP' \
@@ -859,6 +941,7 @@ koopa_macos_uninstall_r_openmp() {
         --system \
         "$@"
 }
+
 koopa_macos_uninstall_ringcentral() {
     koopa_uninstall_app \
         --name-fancy='RingCentral' \
@@ -867,6 +950,7 @@ koopa_macos_uninstall_ringcentral() {
         --system \
         "$@"
 }
+
 koopa_macos_uninstall_xcode_clt() {
     koopa_uninstall_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
@@ -875,6 +959,7 @@ koopa_macos_uninstall_xcode_clt() {
         --system \
         "$@"
 }
+
 koopa_macos_unlink_homebrew() {
     koopa_assert_has_no_args "$#"
     koopa_unlink_in_bin \
@@ -885,6 +970,7 @@ koopa_macos_unlink_homebrew() {
         'julia'
     return 0
 }
+
 koopa_macos_update_defaults() {
     koopa_update_app \
         --name-fancy='macOS defaults' \
@@ -893,6 +979,7 @@ koopa_macos_update_defaults() {
         --system \
         "$@"
 }
+
 koopa_macos_update_microsoft_office() {
     local msupdate
     koopa_assert_has_no_args "$#"
@@ -902,6 +989,7 @@ Microsoft AutoUpdate.app/Contents/MacOS/msupdate"
     "$msupdate" --install
     return 0
 }
+
 koopa_macos_update_system() {
     koopa_update_app \
         --name-fancy='macOS system' \
@@ -910,6 +998,7 @@ koopa_macos_update_system() {
         --system \
         "$@"
 }
+
 koopa_macos_xcode_clt_version() {
     local app str
     koopa_assert_has_no_args "$#"

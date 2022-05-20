@@ -1,5 +1,6 @@
 #!/bin/sh
 # shellcheck disable=all
+
 __koopa_add_to_path_string_end() {
     local dir str
     str="${1:-}"
@@ -17,6 +18,7 @@ __koopa_add_to_path_string_end() {
     koopa_print "$str"
     return 0
 }
+
 __koopa_add_to_path_string_start() {
     local dir str
     str="${1:-}"
@@ -34,6 +36,7 @@ __koopa_add_to_path_string_start() {
     koopa_print "$str"
     return 0
 }
+
 __koopa_id() {
     local str
     str="$(id "$@")"
@@ -41,6 +44,7 @@ __koopa_id() {
     koopa_print "$str"
     return 0
 }
+
 __koopa_packages_prefix() {
     local name str version
     name="${1:?}-packages"
@@ -55,10 +59,12 @@ __koopa_packages_prefix() {
     koopa_print "$str"
     return 0
 }
+
 __koopa_remove_from_path_string() {
     koopa_print "${1:?}" | sed "s|${2:?}||g"
     return 0
 }
+
 koopa_activate_alacritty() {
     local color_mode prefix source_bn source_file target_file target_link_bn
     koopa_is_alacritty || return 0
@@ -77,6 +83,7 @@ koopa_activate_alacritty() {
     ln -fns "$source_file" "$target_file"
     return 0
 }
+
 koopa_activate_aliases() {
     local file
     koopa_activate_coreutils_aliases
@@ -140,6 +147,7 @@ koopa_activate_aliases() {
     [ -f "$file" ] && . "$file"
     return 0
 }
+
 koopa_activate_bat() {
     local color_mode conf_file prefix
     [ -x "$(koopa_bin_prefix)/bat" ] || return 0
@@ -151,6 +159,7 @@ koopa_activate_bat() {
     export BAT_CONFIG_PATH="$conf_file"
     return 0
 }
+
 koopa_activate_bcbio_nextgen() {
     local prefix
     prefix="$(koopa_bcbio_nextgen_prefix)"
@@ -158,6 +167,7 @@ koopa_activate_bcbio_nextgen() {
     koopa_add_to_path_end "${prefix}/tools/bin"
     return 0
 }
+
 koopa_activate_broot() {
     local config_dir nounset script shell
     [ -x "$(koopa_bin_prefix)/broot" ] || return 0
@@ -180,6 +190,7 @@ koopa_activate_broot() {
     [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
+
 koopa_activate_color_mode() {
     if [ -z "${KOOPA_COLOR_MODE:-}" ]
     then
@@ -193,6 +204,7 @@ koopa_activate_color_mode() {
     fi
     return 0
 }
+
 koopa_activate_completion() {
     local file koopa_prefix shell
     shell="$(koopa_shell_name)"
@@ -211,6 +223,7 @@ koopa_activate_completion() {
     done
     return 0
 }
+
 koopa_activate_conda() {
     local nounset prefix
     prefix="${1:-}"
@@ -232,6 +245,7 @@ koopa_activate_conda() {
     [ -z "${MAMBA_NO_BANNER:-}" ] && export MAMBA_NO_BANNER=1
     return 0
 }
+
 koopa_activate_coreutils_aliases() {
     [ -x "$(koopa_bin_prefix)/cp" ] || return 0
     local cp cp_args ln ln_args mkdir mkdir_args mv mv_args rm rm_args
@@ -252,6 +266,7 @@ koopa_activate_coreutils_aliases() {
     alias rm="${rm} ${rm_args}"
     return 0
 }
+
 koopa_activate_delta() {
     local color_mode prefix source_bn source_file target_file target_link_bn
     [ -x "$(koopa_bin_prefix)/delta" ] || return 0
@@ -270,6 +285,7 @@ koopa_activate_delta() {
     ln -fns "$source_file" "$target_file"
     return 0
 }
+
 koopa_activate_difftastic() {
     [ -x "$(koopa_bin_prefix)/difft" ] || return 0
     DFT_BACKGROUND="$(koopa_color_mode)"
@@ -277,6 +293,7 @@ koopa_activate_difftastic() {
     export DFT_BACKGROUND DFT_DISPLAY
     return 0
 }
+
 koopa_activate_dircolors() {
     [ -n "${SHELL:-}" ] || return 0
     local dircolors
@@ -296,6 +313,7 @@ koopa_activate_dircolors() {
     alias vdir='vdir --color=auto'
     return 0
 }
+
 koopa_activate_fzf() {
     [ -x "$(koopa_bin_prefix)/fzf" ] || return 0
     if [ -z "${FZF_DEFAULT_OPTS:-}" ]
@@ -304,12 +322,14 @@ koopa_activate_fzf() {
     fi
     return 0
 }
+
 koopa_activate_gcc_colors() {
     [ -n "${GCC_COLORS:-}" ] && return 0
     export GCC_COLORS="caret=01;32:error=01;31:locus=01:note=01;36:\
 quote=01:warning=01;35"
     return 0
 }
+
 koopa_activate_go() {
     local prefix
     [ -x "$(koopa_bin_prefix)/go" ] || return 0
@@ -319,6 +339,7 @@ koopa_activate_go() {
     export GOPATH
     return 0
 }
+
 koopa_activate_homebrew() {
     local prefix
     prefix="$(koopa_homebrew_prefix)"
@@ -336,6 +357,7 @@ koopa_activate_homebrew() {
     fi
     return 0
 }
+
 koopa_activate_julia() {
     local prefix
     [ -x "$(koopa_bin_prefix)/julia" ] || return 0
@@ -346,6 +368,7 @@ koopa_activate_julia() {
     fi
     return 0
 }
+
 koopa_activate_kitty() {
     local color_mode prefix source_bn source_file target_file target_link_bn
     koopa_is_kitty || return 0
@@ -364,6 +387,7 @@ koopa_activate_kitty() {
     ln -fns "$source_file" "$target_file"
     return 0
 }
+
 koopa_activate_lesspipe() {
     local lesspipe
     lesspipe="$(koopa_bin_prefix)/lesspipe.sh"
@@ -377,6 +401,7 @@ koopa_activate_lesspipe() {
     [ -z "${LESSCHARSET:-}" ] && export LESSCHARSET='utf-8'
     return 0
 }
+
 koopa_activate_make_paths() {
     local make_prefix_1 make_prefix_2
     make_prefix_1='/usr/local'
@@ -401,6 +426,7 @@ koopa_activate_make_paths() {
     fi
     return 0
 }
+
 koopa_activate_mcfly() {
     local nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
@@ -440,6 +466,7 @@ koopa_activate_mcfly() {
     [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
+
 koopa_activate_nim() {
     local prefix
     [ -x "$(koopa_bin_prefix)/nim" ] || return 0
@@ -448,6 +475,7 @@ koopa_activate_nim() {
     export NIMBLE_DIR="$prefix"
     return 0
 }
+
 koopa_activate_node() {
     local prefix
     [ -x "$(koopa_bin_prefix)/node" ] || return 0
@@ -456,6 +484,7 @@ koopa_activate_node() {
     export NPM_CONFIG_PREFIX="$prefix"
     return 0
 }
+
 koopa_activate_path_helper() {
     local path_helper
     path_helper='/usr/libexec/path_helper'
@@ -463,6 +492,7 @@ koopa_activate_path_helper() {
     eval "$("$path_helper" -s)"
     return 0
 }
+
 koopa_activate_perl() {
     local prefix
     [ -x "$(koopa_bin_prefix)/perl" ] || return 0
@@ -475,6 +505,7 @@ koopa_activate_perl() {
     export PERL_MM_USE_DEFAULT=1
     return 0
 }
+
 koopa_activate_perlbrew() {
     local nounset prefix script shell
     [ -n "${PERLBREW_ROOT:-}" ] && return 0
@@ -498,6 +529,7 @@ koopa_activate_perlbrew() {
     [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
+
 koopa_activate_pipx() {
     local prefix
     [ -x "$(koopa_bin_prefix)/pipx" ] || return 0
@@ -508,6 +540,7 @@ koopa_activate_pipx() {
     export PIPX_HOME PIPX_BIN_DIR
     return 0
 }
+
 koopa_activate_prefix() {
     local prefix
     for prefix in "$@"
@@ -522,6 +555,7 @@ koopa_activate_prefix() {
     done
     return 0
 }
+
 koopa_activate_pyenv() {
     local nounset prefix script
     [ -n "${PYENV_ROOT:-}" ] && return 0
@@ -537,6 +571,7 @@ koopa_activate_pyenv() {
     [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
+
 koopa_activate_python() {
     if [ -z "${PIP_REQUIRE_VIRTUALENV:-}" ]
     then
@@ -565,6 +600,7 @@ koopa_activate_python() {
     fi
     return 0
 }
+
 koopa_activate_rbenv() {
     local nounset prefix script
     [ -n "${RBENV_ROOT:-}" ] && return 0
@@ -580,6 +616,7 @@ koopa_activate_rbenv() {
     [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
+
 koopa_activate_ruby() {
     local prefix
     [ -x "$(koopa_bin_prefix)/ruby" ] || return 0
@@ -588,6 +625,7 @@ koopa_activate_ruby() {
     export GEM_HOME="$prefix"
     return 0
 }
+
 koopa_activate_secrets() {
     local file
     file="${1:-}"
@@ -596,6 +634,7 @@ koopa_activate_secrets() {
     . "$file"
     return 0
 }
+
 koopa_activate_ssh_key() {
     local key
     koopa_is_linux || return 0
@@ -611,6 +650,7 @@ koopa_activate_ssh_key() {
     ssh-add "$key" >/dev/null 2>&1
     return 0
 }
+
 koopa_activate_starship() {
     local nounset shell
     [ -x "$(koopa_bin_prefix)/starship" ] || return 0
@@ -629,6 +669,7 @@ koopa_activate_starship() {
     eval "$(starship init "$shell")"
     return 0
 }
+
 koopa_activate_tealdeer() {
     [ -x "$(koopa_bin_prefix)/tldr" ] || return 0
     if [ -z "${TEALDEER_CACHE_DIR:-}" ]
@@ -646,6 +687,7 @@ koopa_activate_tealdeer() {
     export TEALDEER_CACHE_DIR TEALDEER_CONFIG_DIR
     return 0
 }
+
 koopa_activate_today_bucket() {
     local bucket_dir today_bucket today_link
     bucket_dir="${KOOPA_BUCKET:-}"
@@ -663,6 +705,7 @@ koopa_activate_today_bucket() {
     ln -fns "${bucket_dir}/${today_bucket}" "$today_link"
     return 0
 }
+
 koopa_activate_xdg() {
     if [ -z "${XDG_CACHE_HOME:-}" ]
     then
@@ -688,6 +731,7 @@ koopa_activate_xdg() {
         XDG_DATA_DIRS XDG_DATA_HOME
     return 0
 }
+
 koopa_activate_zoxide() {
     local nounset shell zoxide
     zoxide="$(koopa_bin_prefix)/zoxide"
@@ -707,6 +751,7 @@ koopa_activate_zoxide() {
     [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
+
 koopa_add_config_link() {
     local config_prefix dest_file dest_name source_file
     config_prefix="$(koopa_config_prefix)"
@@ -726,6 +771,7 @@ koopa_add_config_link() {
     done
     return 0
 }
+
 koopa_add_to_fpath_end() {
     local dir
     FPATH="${FPATH:-}"
@@ -737,6 +783,7 @@ koopa_add_to_fpath_end() {
     export FPATH
     return 0
 }
+
 koopa_add_to_fpath_start() {
     local dir
     FPATH="${FPATH:-}"
@@ -748,6 +795,7 @@ koopa_add_to_fpath_start() {
     export FPATH
     return 0
 }
+
 koopa_add_to_manpath_end() {
     local dir
     MANPATH="${MANPATH:-}"
@@ -759,6 +807,7 @@ koopa_add_to_manpath_end() {
     export MANPATH
     return 0
 }
+
 koopa_add_to_manpath_start() {
     local dir
     MANPATH="${MANPATH:-}"
@@ -770,6 +819,7 @@ koopa_add_to_manpath_start() {
     export MANPATH
     return 0
 }
+
 koopa_add_to_path_end() {
     local dir
     PATH="${PATH:-}"
@@ -781,6 +831,7 @@ koopa_add_to_path_end() {
     export PATH
     return 0
 }
+
 koopa_add_to_path_start() {
     local dir
     PATH="${PATH:-}"
@@ -792,11 +843,13 @@ koopa_add_to_path_start() {
     export PATH
     return 0
 }
+
 koopa_alias_broot() {
     koopa_is_alias 'br' && unalias 'br'
     koopa_activate_broot
     br "$@"
 }
+
 koopa_alias_bucket() {
     local prefix
     prefix="${HOME:?}/today"
@@ -804,6 +857,7 @@ koopa_alias_bucket() {
     cd "$prefix" || return 1
     ls
 }
+
 koopa_alias_colorls() {
     local color_flag color_mode
     color_mode="$(koopa_color_mode)"
@@ -821,20 +875,24 @@ koopa_alias_colorls() {
             "$@"
     return 0
 }
+
 koopa_alias_conda() {
     koopa_is_alias 'conda' && unalias 'conda'
     koopa_activate_conda
     conda "$@"
 }
+
 koopa_alias_doom_emacs() {
     local prefix
     prefix="$(koopa_doom_emacs_prefix)"
     [ -d "$prefix" ] || return 1
     emacs --with-profile 'doom' "$@"
 }
+
 koopa_alias_emacs_vanilla() {
     emacs --no-init-file --no-window-system "$@"
 }
+
 koopa_alias_emacs() {
     local prefix
     prefix="${HOME:?}/.emacs.d"
@@ -846,9 +904,11 @@ koopa_alias_emacs() {
         emacs --no-window-system "$@"
     fi
 }
+
 koopa_alias_k() {
     cd "$(koopa_koopa_prefix)" || return 1
 }
+
 koopa_alias_l() {
     if koopa_is_installed 'exa'
     then
@@ -862,48 +922,58 @@ koopa_alias_l() {
         ls -BFh "$@"
     fi
 }
+
 koopa_alias_mamba() {
     koopa_is_alias 'conda' && unalias 'conda'
     koopa_is_alias 'mamba' && unalias 'mamba'
     koopa_activate_conda
     mamba "$@"
 }
+
 koopa_alias_nvim_fzf() {
     nvim "$(fzf)"
 }
+
 koopa_alias_nvim_vanilla() {
     nvim -u 'NONE' "$@"
 }
+
 koopa_alias_perlbrew() {
     koopa_is_alias 'perlbrew' && unalias 'perlbrew'
     koopa_activate_perlbrew
     perlbrew "$@"
 }
+
 koopa_alias_prelude_emacs() {
     local prefix
     prefix="$(koopa_prelude_emacs_prefix)"
     [ -d "$prefix" ] || return 1
     emacs --with-profile 'prelude' "$@"
 }
+
 koopa_alias_pyenv() {
     koopa_is_alias 'pyenv' && unalias 'pyenv'
     koopa_activate_pyenv
     pyenv "$@"
 }
+
 koopa_alias_rbenv() {
     koopa_is_alias 'rbenv' && unalias 'rbenv'
     koopa_activate_rbenv
     rbenv "$@"
 }
+
 koopa_alias_sha256() {
     shasum -a 256 "$@"
 }
+
 koopa_alias_spacemacs() {
     local prefix
     prefix="$(koopa_spacemacs_prefix)"
     [ -d "$prefix" ] || return 1
     emacs --with-profile 'spacemacs' "$@"
 }
+
 koopa_alias_spacevim() {
     local gvim prefix vim vimrc
     vim='vim'
@@ -921,34 +991,43 @@ koopa_alias_spacevim() {
     koopa_is_alias 'vim' && unalias 'vim'
     "$vim" -u "$vimrc" "$@"
 }
+
 koopa_alias_tmux_vanilla() {
     tmux -f '/dev/null'
 }
+
 koopa_alias_today() {
     date '+%Y-%m-%d'
 }
+
 koopa_alias_vim_fzf() {
     vim "$(fzf)"
 }
+
 koopa_alias_vim_vanilla() {
     vim -i 'NONE' -u 'NONE' -U 'NONE' "$@"
 }
+
 koopa_alias_week() {
     date '+%V'
 }
+
 koopa_alias_zoxide() {
     koopa_is_alias 'z' && unalias 'z'
     koopa_activate_zoxide
     z "$@"
 }
+
 koopa_anaconda_prefix() {
     koopa_print "$(koopa_opt_prefix)/anaconda"
     return 0
 }
+
 koopa_app_prefix() {
     koopa_print "$(koopa_koopa_prefix)/app"
     return 0
 }
+
 koopa_arch() {
     local x
     x="$(uname -m)"
@@ -956,18 +1035,22 @@ koopa_arch() {
     koopa_print "$x"
     return 0
 }
+
 koopa_aspera_connect_prefix() {
     koopa_print "$(koopa_opt_prefix)/aspera-connect"
     return 0
 }
+
 koopa_bcbio_nextgen_prefix() {
     koopa_print "$(koopa_opt_prefix)/bcbio-nextgen"
     return 0
 }
+
 koopa_bin_prefix() {
     koopa_print "$(koopa_koopa_prefix)/bin"
     return 0
 }
+
 koopa_boolean_nounset() {
     local bool
     if koopa_is_set_nounset
@@ -979,9 +1062,11 @@ koopa_boolean_nounset() {
     koopa_print "$bool"
     return 0
 }
+
 koopa_is_centos_like() {
     koopa_is_os_like 'centos'
 }
+
 koopa_color_mode() {
     local str
     str="${KOOPA_COLOR_MODE:-}"
@@ -1006,6 +1091,7 @@ koopa_color_mode() {
     koopa_print "$str"
     return 0
 }
+
 koopa_conda_env_name() {
     local x
     x="${CONDA_DEFAULT_ENV:-}"
@@ -1013,14 +1099,17 @@ koopa_conda_env_name() {
     koopa_print "$x"
     return 0
 }
+
 koopa_conda_prefix() {
     koopa_print "$(koopa_opt_prefix)/conda"
     return 0
 }
+
 koopa_config_prefix() {
     koopa_print "$(koopa_xdg_config_home)/koopa"
     return 0
 }
+
 koopa_debian_os_codename() {
     local x
     koopa_is_installed 'lsb_release' || return 0
@@ -1029,6 +1118,7 @@ koopa_debian_os_codename() {
     koopa_print "$x"
     return 0
 }
+
 koopa_distro_prefix() {
     local koopa_prefix os_id prefix
     koopa_prefix="$(koopa_koopa_prefix)"
@@ -1042,26 +1132,32 @@ koopa_distro_prefix() {
     koopa_print "$prefix"
     return 0
 }
+
 koopa_docker_prefix() {
     koopa_print "$(koopa_config_prefix)/docker"
     return 0
 }
+
 koopa_docker_private_prefix() {
     koopa_print "$(koopa_config_prefix)/docker-private"
     return 0
 }
+
 koopa_doom_emacs_prefix() {
     koopa_print "$(koopa_xdg_data_home)/doom"
     return 0
 }
+
 koopa_dotfiles_prefix() {
     koopa_print "$(koopa_opt_prefix)/dotfiles"
     return 0
 }
+
 koopa_dotfiles_private_prefix() {
     koopa_print "$(koopa_config_prefix)/dotfiles-private"
     return 0
 }
+
 koopa_duration_start() {
     local bin_prefix
     bin_prefix="$(koopa_bin_prefix)"
@@ -1070,6 +1166,7 @@ koopa_duration_start() {
     export KOOPA_DURATION_START
     return 0
 }
+
 koopa_duration_stop() {
     local bin_prefix
     bin_prefix="$(koopa_bin_prefix)"
@@ -1094,14 +1191,17 @@ koopa_duration_stop() {
     unset -v KOOPA_DURATION_START
     return 0
 }
+
 koopa_emacs_prefix() {
     koopa_print "${HOME:?}/.emacs.d"
     return 0
 }
+
 koopa_ensembl_perl_api_prefix() {
     koopa_print "$(koopa_opt_prefix)/ensembl-perl-api"
     return 0
 }
+
 koopa_export_editor() {
     if [ -z "${EDITOR:-}" ]
     then
@@ -1111,6 +1211,7 @@ koopa_export_editor() {
     export EDITOR VISUAL
     return 0
 }
+
 koopa_export_git() {
     if [ -z "${GIT_MERGE_AUTOEDIT:-}" ]
     then
@@ -1119,6 +1220,7 @@ koopa_export_git() {
     export GIT_MERGE_AUTOEDIT
     return 0
 }
+
 koopa_export_gnupg() {
     [ -z "${GPG_TTY:-}" ] || return 0
     koopa_is_tty || return 0
@@ -1127,6 +1229,7 @@ koopa_export_gnupg() {
     export GPG_TTY
     return 0
 }
+
 koopa_export_history() {
     local shell
     shell="$(koopa_shell_name)"
@@ -1168,12 +1271,14 @@ koopa_export_history() {
     export SAVEHIST
     return 0
 }
+
 koopa_export_koopa_shell() {
     unset -v KOOPA_SHELL
     KOOPA_SHELL="$(koopa_locate_shell)"
     export KOOPA_SHELL
     return 0
 }
+
 koopa_export_pager() {
     local less
     [ -n "${PAGER:-}" ] && return 0
@@ -1182,13 +1287,16 @@ koopa_export_pager() {
     export PAGER="${less} -R"
     return 0
 }
+
 koopa_expr() {
     expr "${1:?}" : "${2:?}" 1>/dev/null
 }
+
 koopa_fzf_prefix() {
     koopa_print "$(koopa_opt_prefix)/fzf"
     return 0
 }
+
 koopa_git_branch() {
     local branch
     koopa_is_git_repo || return 0
@@ -1205,45 +1313,55 @@ koopa_git_branch() {
     koopa_print "$branch"
     return 0
 }
+
 koopa_git_repo_has_unstaged_changes() {
     local x
     git update-index --refresh >/dev/null 2>&1
     x="$(git diff-index 'HEAD' -- 2>/dev/null)"
     [ -n "$x" ]
 }
+
 koopa_git_repo_needs_pull_or_push() {
     local rev_1 rev_2
     rev_1="$(git rev-parse 'HEAD' 2>/dev/null)"
     rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
     [ "$rev_1" != "$rev_2" ]
 }
+
 koopa_go_packages_prefix() {
     __koopa_packages_prefix 'go' "$@"
 }
+
 koopa_go_prefix() {
     koopa_print "$(koopa_opt_prefix)/go"
     return 0
 }
+
 koopa_group_id() {
     __koopa_id -g
     return 0
 }
+
 koopa_group() {
     __koopa_id -gn
     return 0
 }
+
 koopa_homebrew_cask_prefix() {
     koopa_print "$(koopa_homebrew_prefix)/Caskroom"
     return 0
 }
+
 koopa_homebrew_cellar_prefix() {
     koopa_print "$(koopa_homebrew_prefix)/Cellar"
     return 0
 }
+
 koopa_homebrew_opt_prefix() {
     koopa_print "$(koopa_homebrew_prefix)/opt"
     return 0
 }
+
 koopa_homebrew_prefix() {
     local arch x
     x="${HOMEBREW_PREFIX:-}"
@@ -1272,6 +1390,7 @@ koopa_homebrew_prefix() {
     koopa_print "$x"
     return 0
 }
+
 koopa_host_id() {
     local id
     if [ -r '/etc/hostname' ]
@@ -1298,6 +1417,7 @@ koopa_host_id() {
     koopa_print "$id"
     return 0
 }
+
 koopa_hostname() {
     local x
     x="$(uname -n)"
@@ -1305,16 +1425,20 @@ koopa_hostname() {
     koopa_print "$x"
     return 0
 }
+
 koopa_include_prefix() {
     koopa_print "$(koopa_koopa_prefix)/include"
     return 0
 }
+
 koopa_is_aarch64() {
     [ "$(koopa_arch)" = 'aarch64' ]
 }
+
 koopa_is_alacritty() {
     [ -n "${ALACRITTY_SOCKET:-}" ]
 }
+
 koopa_is_alias() {
     local cmd str
     for cmd in "$@"
@@ -1327,66 +1451,84 @@ koopa_is_alias() {
     done
     return 0
 }
+
 koopa_is_alpine() {
     koopa_is_os 'alpine'
 }
+
 koopa_is_amzn() {
     koopa_is_os 'amzn'
 }
+
 koopa_is_arch() {
     koopa_is_os 'arch'
 }
+
 koopa_is_aws() {
     koopa_is_host 'aws'
 }
+
 koopa_is_azure() {
     koopa_is_host 'azure'
 }
+
 koopa_is_centos() {
     koopa_is_os 'centos'
 }
+
 koopa_is_conda_active() {
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
+
 koopa_is_conda_env_active() {
     [ "${CONDA_SHLVL:-1}" -gt 1 ] && return 0
     [ "${CONDA_DEFAULT_ENV:-base}" != 'base' ] && return 0
     return 1
 }
+
 koopa_is_debian_like() {
     koopa_is_os_like 'debian'
 }
+
 koopa_is_debian() {
     koopa_is_os 'debian'
 }
+
 koopa_is_docker() {
     [ -f '/.dockerenv' ]
 }
+
 koopa_is_fedora_like() {
     koopa_is_os_like 'fedora'
 }
+
 koopa_is_fedora() {
     koopa_is_os 'fedora'
 }
+
 koopa_is_git_repo_clean() {
     koopa_is_git_repo || return 1
     koopa_git_repo_has_unstaged_changes && return 1
     koopa_git_repo_needs_pull_or_push && return 1
     return 0
 }
+
 koopa_is_git_repo_top_level() {
     local dir
     dir="${1:-.}"
     [ -e "${dir}/.git" ]
 }
+
 koopa_is_git_repo() {
     koopa_is_git_repo_top_level '.' && return 0
     git rev-parse --git-dir >/dev/null 2>&1 || return 1
     return 0
 }
+
 koopa_is_host() {
     [ "$(koopa_host_id)" = "${1:?}" ]
 }
+
 koopa_is_installed() {
     local cmd
     for cmd in "$@"
@@ -1395,6 +1537,7 @@ koopa_is_installed() {
     done
     return 0
 }
+
 koopa_is_interactive() {
     [ "${KOOPA_INTERACTIVE:-0}" -eq 1 ] && return 0
     [ "${KOOPA_FORCE:-0}" -eq 1 ] && return 0
@@ -1402,21 +1545,27 @@ koopa_is_interactive() {
     koopa_is_tty && return 0
     return 1
 }
+
 koopa_is_kitty() {
     [ -n "${KITTY_PID:-}" ]
 }
+
 koopa_is_linux() {
     [ "$(uname -s)" = 'Linux' ]
 }
+
 koopa_is_local_install() {
     koopa_str_detect_posix "$(koopa_koopa_prefix)" "${HOME:?}"
 }
+
 koopa_is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
 }
+
 koopa_is_opensuse() {
     koopa_is_os 'opensuse'
 }
+
 koopa_is_os_like() {
     local grep file id
     grep='grep'
@@ -1428,6 +1577,7 @@ koopa_is_os_like() {
     "$grep" 'ID_LIKE=' "$file" | "$grep" -q "$id" && return 0
     return 1
 }
+
 koopa_is_os_version() {
     local file grep version
     file='/etc/os-release'
@@ -1436,12 +1586,15 @@ koopa_is_os_version() {
     [ -f "$file" ] || return 1
     "$grep" -q "VERSION_ID=\"${version}" "$file"
 }
+
 koopa_is_os() {
     [ "$(koopa_os_id)" = "${1:?}" ]
 }
+
 koopa_is_python_venv_active() {
     [ -n "${VIRTUAL_ENV:-}" ]
 }
+
 koopa_is_qemu() {
     local basename cmd real_cmd
     basename='basename'
@@ -1455,64 +1608,84 @@ koopa_is_qemu() {
     esac
     return 1
 }
+
 koopa_is_raspbian() {
     koopa_is_os 'raspbian'
 }
+
 koopa_is_remote() {
     [ -n "${SSH_CONNECTION:-}" ]
 }
+
 koopa_is_rhel_7_like() {
     koopa_is_rhel_like && koopa_is_os_version 7
 }
+
 koopa_is_rhel_8_like() {
     koopa_is_rhel_like && koopa_is_os_version 8
 }
+
 koopa_is_rhel_9_like() {
     koopa_is_rhel_like && koopa_is_os_version 9
 }
+
 koopa_is_rhel_like() {
     koopa_is_os_like 'rhel'
 }
+
 koopa_is_rhel_ubi() {
     [ -f '/etc/yum.repos.d/ubi.repo' ]
 }
+
 koopa_is_rhel() {
     koopa_is_os 'rhel'
 }
+
 koopa_is_rocky() {
     koopa_is_os 'rocky'
 }
+
 koopa_is_root() {
     [ "$(koopa_user_id)" -eq 0 ]
 }
+
 koopa_is_rstudio() {
     [ -n "${RSTUDIO:-}" ]
 }
+
 koopa_is_set_nounset() {
     koopa_str_detect_posix "$(set +o)" 'set -o nounset'
 }
+
 koopa_is_shared_install() {
     ! koopa_is_local_install
 }
+
 koopa_is_subshell() {
     [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
 }
+
 koopa_is_tmux() {
     [ -n "${TMUX:-}" ]
 }
+
 koopa_is_tty() {
     koopa_is_installed 'tty' || return 1
     tty >/dev/null 2>&1 || false
 }
+
 koopa_is_ubuntu_like() {
     koopa_is_os_like 'ubuntu'
 }
+
 koopa_is_ubuntu() {
     koopa_is_os 'ubuntu'
 }
+
 koopa_is_x86_64() {
     [ "$(koopa_arch)" = 'x86_64' ]
 }
+
 koopa_java_prefix() {
     local prefix
     if [ -n "${JAVA_HOME:-}" ]
@@ -1539,21 +1712,26 @@ koopa_java_prefix() {
     fi
     return 1
 }
+
 koopa_julia_packages_prefix() {
     __koopa_packages_prefix 'julia' "$@"
 }
+
 koopa_koopa_prefix() {
     koopa_print "${KOOPA_PREFIX:?}"
     return 0
 }
+
 koopa_lmod_prefix() {
     koopa_print "$(koopa_opt_prefix)/lmod"
     return 0
 }
+
 koopa_local_data_prefix() {
     koopa_print "$(koopa_xdg_data_home)"
     return 0
 }
+
 koopa_locate_shell() {
     local proc_file pid shell
     shell="${KOOPA_SHELL:-}"
@@ -1603,24 +1781,29 @@ koopa_locate_shell() {
     koopa_print "$shell"
     return 0
 }
+
 koopa_macos_activate_cli_colors() {
     [ -z "${CLICOLOR:-}" ] && export CLICOLOR=1
     [ -z "${LSCOLORS:-}" ] && export LSCOLORS='Gxfxcxdxbxegedabagacad'
     return 0
 }
+
 koopa_macos_activate_google_cloud_sdk() {
     CLOUDSDK_PYTHON="$(koopa_homebrew_opt_prefix)/python@3.9/bin/python3.9"
     export CLOUDSDK_PYTHON
     return 0
 }
+
 koopa_macos_is_dark_mode() {
     local x
     x=$(defaults read -g 'AppleInterfaceStyle' 2>/dev/null)
     [ "$x" = 'Dark' ]
 }
+
 koopa_macos_is_light_mode() {
     ! koopa_macos_is_dark_mode
 }
+
 koopa_macos_julia_prefix() {
     local x
     x="$( \
@@ -1638,6 +1821,7 @@ koopa_macos_julia_prefix() {
     [ -d "$x" ] || return 1
     koopa_print "$prefix"
 }
+
 koopa_macos_os_codename() {
     local version x
     version="$(koopa_macos_os_version)"
@@ -1707,6 +1891,7 @@ koopa_macos_os_codename() {
     koopa_print "$x"
     return 0
 }
+
 koopa_macos_os_version() {
     local x
     x="$(sw_vers -productVersion)"
@@ -1714,12 +1899,15 @@ koopa_macos_os_version() {
     koopa_print "$x"
     return 0
 }
+
 koopa_macos_python_prefix() {
     koopa_print '/Library/Frameworks/Python.framework/Versions/Current'
 }
+
 koopa_macos_r_prefix() {
     koopa_print '/Library/Frameworks/R.framework/Versions/Current/Resources'
 }
+
 koopa_major_minor_patch_version() {
     local version x
     for version in "$@"
@@ -1733,6 +1921,7 @@ koopa_major_minor_patch_version() {
     done
     return 0
 }
+
 koopa_major_minor_version() {
     local version x
     for version in "$@"
@@ -1746,6 +1935,7 @@ koopa_major_minor_version() {
     done
     return 0
 }
+
 koopa_major_version() {
     local version x
     for version in "$@"
@@ -1759,6 +1949,7 @@ koopa_major_version() {
     done
     return 0
 }
+
 koopa_make_prefix() {
     local prefix
     if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
@@ -1773,28 +1964,35 @@ koopa_make_prefix() {
     koopa_print "$prefix"
     return 0
 }
+
 koopa_monorepo_prefix() {
     koopa_print "${HOME:?}/monorepo"
     return 0
 }
+
 koopa_msigdb_prefix() {
     koopa_print "$(koopa_refdata_prefix)/msigdb"
     return 0
 }
+
 koopa_nim_packages_prefix() {
     __koopa_packages_prefix 'nim' "$@"
 }
+
 koopa_node_packages_prefix() {
     __koopa_packages_prefix 'node' "$@"
 }
+
 koopa_openjdk_prefix() {
     koopa_print "$(koopa_opt_prefix)/openjdk"
     return 0
 }
+
 koopa_opt_prefix() {
     koopa_print "$(koopa_koopa_prefix)/opt"
     return 0
 }
+
 koopa_os_codename() {
     if koopa_is_debian_like
     then
@@ -1807,6 +2005,7 @@ koopa_os_codename() {
     fi
     return 0
 }
+
 koopa_os_id() {
     local x
     x="$( \
@@ -1817,6 +2016,7 @@ koopa_os_id() {
     koopa_print "$x"
     return 0
 }
+
 koopa_os_string() {
     local id release_file string version
     if koopa_is_macos
@@ -1856,21 +2056,26 @@ koopa_os_string() {
     koopa_print "$string"
     return 0
 }
+
 koopa_perl_packages_prefix() {
     __koopa_packages_prefix 'perl' "$@"
 }
+
 koopa_perlbrew_prefix() {
     koopa_print "$(koopa_opt_prefix)/perlbrew"
     return 0
 }
+
 koopa_pipx_prefix() {
     koopa_print "$(koopa_opt_prefix)/pipx"
     return 0
 }
+
 koopa_prelude_emacs_prefix() {
     koopa_print "$(koopa_xdg_data_home)/prelude"
     return 0
 }
+
 koopa_print() {
     local string
     if [ "$#" -eq 0 ]
@@ -1884,6 +2089,7 @@ koopa_print() {
     done
     return 0
 }
+
 koopa_prompt_conda() {
     local env
     env="$(koopa_conda_env_name)"
@@ -1891,6 +2097,7 @@ koopa_prompt_conda() {
     koopa_print " conda:${env}"
     return 0
 }
+
 koopa_prompt_git() {
     local git_branch git_status
     koopa_is_git_repo || return 0
@@ -1904,6 +2111,7 @@ koopa_prompt_git() {
     koopa_print " ${git_branch}${git_status}"
     return 0
 }
+
 koopa_prompt_python_venv() {
     local env
     env="$(koopa_python_venv_name)"
@@ -1911,10 +2119,12 @@ koopa_prompt_python_venv() {
     koopa_print " venv:${env}"
     return 0
 }
+
 koopa_pyenv_prefix() {
     koopa_print "$(koopa_opt_prefix)/pyenv"
     return 0
 }
+
 koopa_python_venv_name() {
     local x
     x="${VIRTUAL_ENV:-}"
@@ -1924,17 +2134,21 @@ koopa_python_venv_name() {
     koopa_print "$x"
     return 0
 }
+
 koopa_python_virtualenvs_prefix() {
     koopa_print "$(koopa_opt_prefix)/python-virtualenvs"
     return 0
 }
+
 koopa_r_packages_prefix() {
     __koopa_packages_prefix 'r' "$@"
 }
+
 koopa_rbenv_prefix() {
     koopa_print "$(koopa_opt_prefix)/rbenv"
     return 0
 }
+
 koopa_realpath() {
     local readlink x
     readlink='readlink'
@@ -1959,28 +2173,35 @@ gnubin/readlink"
     koopa_print "$x"
     return 0
 }
+
 koopa_refdata_prefix() {
     koopa_print "$(koopa_opt_prefix)/refdata"
     return 0
 }
+
 koopa_ruby_packages_prefix() {
     __koopa_packages_prefix 'ruby' "$@"
 }
+
 koopa_rust_packages_prefix() {
     __koopa_packages_prefix 'rust' "$@"
 }
+
 koopa_rust_prefix() {
     koopa_print "$(koopa_opt_prefix)/rust"
     return 0
 }
+
 koopa_sbin_prefix() {
     koopa_print "$(koopa_koopa_prefix)/sbin"
     return 0
 }
+
 koopa_scripts_private_prefix() {
     koopa_print "$(koopa_config_prefix)/scripts-private"
     return 0
 }
+
 koopa_shell_name() {
     local shell str
     shell="$(koopa_locate_shell)"
@@ -1989,18 +2210,22 @@ koopa_shell_name() {
     koopa_print "$str"
     return 0
 }
+
 koopa_spacemacs_prefix() {
     koopa_print "$(koopa_xdg_data_home)/spacemacs"
     return 0
 }
+
 koopa_spacevim_prefix() {
     koopa_print "$(koopa_xdg_data_home)/spacevim"
     return 0
 }
+
 koopa_str_detect_posix() {
     unset test
     test "${1#*"$2"}" != "$1"
 }
+
 koopa_today() {
     local str
     str="$(date '+%Y-%m-%d')"
@@ -2008,18 +2233,22 @@ koopa_today() {
     koopa_print "$str"
     return 0
 }
+
 koopa_umask() {
     umask 0002
     return 0
 }
+
 koopa_user_id() {
     __koopa_id -u
     return 0
 }
+
 koopa_user() {
     __koopa_id -un
     return 0
 }
+
 koopa_xdg_cache_home() {
     local x
     x="${XDG_CACHE_HOME:-}"
@@ -2030,6 +2259,7 @@ koopa_xdg_cache_home() {
     koopa_print "$x"
     return 0
 }
+
 koopa_xdg_config_dirs() {
     local x
     x="${XDG_CONFIG_DIRS:-}"
@@ -2040,6 +2270,7 @@ koopa_xdg_config_dirs() {
     koopa_print "$x"
     return 0
 }
+
 koopa_xdg_config_home() {
     local x
     x="${XDG_CONFIG_HOME:-}"
@@ -2050,6 +2281,7 @@ koopa_xdg_config_home() {
     koopa_print "$x"
     return 0
 }
+
 koopa_xdg_data_dirs() {
     local x
     x="${XDG_DATA_DIRS:-}"
@@ -2060,6 +2292,7 @@ koopa_xdg_data_dirs() {
     koopa_print "$x"
     return 0
 }
+
 koopa_xdg_data_home() {
     local x
     x="${XDG_DATA_HOME:-}"
@@ -2070,6 +2303,7 @@ koopa_xdg_data_home() {
     koopa_print "$x"
     return 0
 }
+
 koopa_xdg_local_home() {
     koopa_print "${HOME:?}/.local"
     return 0
