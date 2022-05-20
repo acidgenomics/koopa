@@ -28,4 +28,3 @@ koopa_activate_ssh_key() {
     ssh-add "$key" >/dev/null 2>&1
     return 0
 }
-

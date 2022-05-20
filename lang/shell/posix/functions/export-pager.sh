@@ -16,4 +16,3 @@ koopa_export_pager() {
     export PAGER="${less} -R"
     return 0
 }
-

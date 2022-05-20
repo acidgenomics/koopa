@@ -14,4 +14,3 @@ koopa_xdg_data_dirs() {
     koopa_print "$x"
     return 0
 }
-
