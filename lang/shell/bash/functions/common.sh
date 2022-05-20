@@ -6021,13 +6021,16 @@ koopa_delete_named_subdirs() {
 }
 
 koopa_detab() {
-    local file
+    local app file
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'vim'
+    declare -A app=(
+        [vim]="$(koopa_locate_vim)"
+    )
+    [[ -x "${app[vim]}" ]] || return 1
     koopa_assert_is_file "$@"
     for file in "$@"
     do
-        vim \
+        "${app[vim]}" \
             -c 'set expandtab tabstop=4 shiftwidth=4' \
             -c ':%retab' \
             -c ':wq' \
@@ -7155,13 +7158,16 @@ koopa_ensure_newline_at_end_of_file() {
 }
 
 koopa_entab() {
-    local file
+    local app file
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'vim'
+    declare -A app=(
+        [vim]="$(koopa_locate_vim)"
+    )
+    [[ -x "${app[vim]}" ]] || return 1
     koopa_assert_is_file "$@"
     for file in "$@"
     do
-        vim \
+        "${app[vim]}" \
             -c 'set noexpandtab tabstop=4 shiftwidth=4' \
             -c ':%retab!' \
             -c ':wq' \
@@ -9350,6 +9356,7 @@ koopa_gpg_download_key_from_keyserver() {
     declare -A app=(
         [gpg]="$(koopa_locate_gpg)"
     )
+    [[ -x "${app[gpg]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
         [tmp_dir]="$(koopa_tmp_dir)"
@@ -9417,23 +9424,35 @@ koopa_gpg_download_key_from_keyserver() {
 }
 
 koopa_gpg_prompt() {
+    local app
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_installed 'gpg'
-    printf '' | gpg -s
+    declare -A app=(
+        [gpg]="$(koopa_locate_gpg)"
+    )
+    [[ -x "${app[gpg]}" ]] || return 1
+    printf '' | "${app[gpg]}" -s
     return 0
 }
 
 koopa_gpg_reload() {
+    local app
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_installed 'gpg-connect-agent'
-    gpg-connect-agent reloadagent '/bye'
+    declare -A app=(
+        [gpg_connect_agent]="$(koopa_locate_gpg_connect_agent)"
+    )
+    [[ -x "${app[gpg_connect_agent]}" ]] || return 1
+    "${app[gpg_connect_agent]}" reloadagent '/bye'
     return 0
 }
 
 koopa_gpg_restart() {
+    local app
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_installed 'gpgconf'
-    gpgconf --kill gpg-agent
+    declare -A app=(
+        [gpgconf]="$(koopa_locate_gpgconf)"
+    )
+    [[ -x "${app[gpgconf]}" ]] || return 1
+    "${app[gpgconf]}" --kill 'gpg-agent'
     return 0
 }
 
@@ -14960,6 +14979,12 @@ koopa_locate_gpg_agent() {
         --opt-name='gnupg'
 }
 
+koopa_locate_gpg_connect_agent() {
+    koopa_locate_app \
+        --app-name='gpg-connect-agent' \
+        --opt-name='gnupg'
+}
+
 koopa_locate_gpg() {
     koopa_locate_app \
         --app-name='gpg' \
@@ -18712,13 +18737,16 @@ koopa_snake_case() {
 }
 
 koopa_sort_lines() {
-    local file
+    local app file
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'vim'
+    declare -A app=(
+        [vim]="$(koopa_locate_vim)"
+    )
+    [[ -x "${app[vim]}" ]] || return 1
     koopa_assert_is_file "$@"
     for file in "$@"
     do
-        vim \
+        "${app[vim]}" \
             -c ':sort' \
             -c ':wq' \
             -E -s "$file"
