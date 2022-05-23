@@ -4,7 +4,7 @@
 local({
     #' Check if r-koopa package is installed, and meets dependency requirements.
     #'
-    #' @note Updated 2022-05-20.
+    #' @note Updated 2022-05-23.
     #' @noRd
     checkInstall <- function() {
         ## Minimum version of koopa R package.
