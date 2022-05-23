@@ -1,5 +1,5 @@
-linters: with_defaults(
-    # Updated 2022-05-18.
+linters: linters_with_defaults(
+    # Updated 2022-05-23.
     # > help(topic = "linters", package = "lintr")
     absolute_path_linter(),
     any_duplicated_linter(),
@@ -68,8 +68,7 @@ linters: with_defaults(
     unneeded_concatenation_linter(),
     unreachable_code_linter(),
     vector_logic_linter(),
-    yoda_test_linter(),
-    default = default_linters)
+    yoda_test_linter())
 exclude: "# nolint"
 exclude_start: "# nolint start"
 exclude_end: "# nolint end"
