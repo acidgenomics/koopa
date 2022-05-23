@@ -1,9 +1,9 @@
 #!/bin/sh
 
-koopa_homebrew_cask_prefix() {
+koopa_macos_homebrew_cask_prefix() {
     # """
     # Homebrew cask prefix.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-05-23.
     # """
     koopa_print "$(koopa_homebrew_prefix)/Caskroom"
     return 0

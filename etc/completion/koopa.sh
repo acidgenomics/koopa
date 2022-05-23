@@ -359,7 +359,7 @@ __koopa_complete() {
                     args=(
                         'brew-dump-brewfile'
                         'brew-outdated'
-                        'cache-all-functions'
+                        'cache-functions'
                         'check'
                         'delete-cache'
                         'disable-passwordless-sudo'
@@ -392,9 +392,7 @@ __koopa_complete() {
                             'enable-touch-id-sudo'
                             'flush-dns'
                             'force-eject'
-                            'homebrew-cask-version'
                             'ifactive'
-                            'macos-app-version'
                             'reload-autofs'
                             'spotlight'
                         )
