@@ -1347,11 +1347,6 @@ koopa_group() {
     return 0
 }
 
-koopa_homebrew_cask_prefix() {
-    koopa_print "$(koopa_homebrew_prefix)/Caskroom"
-    return 0
-}
-
 koopa_homebrew_cellar_prefix() {
     koopa_print "$(koopa_homebrew_prefix)/Cellar"
     return 0
@@ -1755,6 +1750,11 @@ koopa_macos_activate_cli_colors() {
 koopa_macos_activate_google_cloud_sdk() {
     CLOUDSDK_PYTHON="$(koopa_homebrew_opt_prefix)/python@3.9/bin/python3.9"
     export CLOUDSDK_PYTHON
+    return 0
+}
+
+koopa_macos_homebrew_cask_prefix() {
+    koopa_print "$(koopa_homebrew_prefix)/Caskroom"
     return 0
 }
 
