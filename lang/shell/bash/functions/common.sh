@@ -3155,29 +3155,7 @@ koopa_brew_upgrade_brews() {
     return 0
 }
 
-koopa_cache_all_functions() {
-    local dict
-    koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-    )
-    dict[shell_prefix]="${dict[koopa_prefix]}/lang/shell"
-    koopa_cache_functions \
-        "${dict[shell_prefix]}/bash/functions/activate" \
-        "${dict[shell_prefix]}/bash/functions/common" \
-        "${dict[shell_prefix]}/bash/functions/os/linux/alpine" \
-        "${dict[shell_prefix]}/bash/functions/os/linux/arch" \
-        "${dict[shell_prefix]}/bash/functions/os/linux/common" \
-        "${dict[shell_prefix]}/bash/functions/os/linux/debian" \
-        "${dict[shell_prefix]}/bash/functions/os/linux/fedora" \
-        "${dict[shell_prefix]}/bash/functions/os/linux/opensuse" \
-        "${dict[shell_prefix]}/bash/functions/os/linux/rhel" \
-        "${dict[shell_prefix]}/bash/functions/os/macos" \
-        "${dict[shell_prefix]}/posix/functions"
-    return 0
-}
-
-koopa_cache_functions() {
+koopa_cache_functions_dir() {
     local app prefix
     koopa_assert_has_args "$#"
     declare -A app=(
@@ -3224,6 +3202,28 @@ in '${dict[target_file]}'."
             "${dict[tmp_target_file]}" \
             "${dict[target_file]}"
     done
+    return 0
+}
+
+koopa_cache_functions() {
+    local dict
+    koopa_assert_has_no_args "$#"
+    declare -A dict=(
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+    )
+    dict[shell_prefix]="${dict[koopa_prefix]}/lang/shell"
+    koopa_cache_functions_dir \
+        "${dict[shell_prefix]}/bash/functions/activate" \
+        "${dict[shell_prefix]}/bash/functions/common" \
+        "${dict[shell_prefix]}/bash/functions/os/linux/alpine" \
+        "${dict[shell_prefix]}/bash/functions/os/linux/arch" \
+        "${dict[shell_prefix]}/bash/functions/os/linux/common" \
+        "${dict[shell_prefix]}/bash/functions/os/linux/debian" \
+        "${dict[shell_prefix]}/bash/functions/os/linux/fedora" \
+        "${dict[shell_prefix]}/bash/functions/os/linux/opensuse" \
+        "${dict[shell_prefix]}/bash/functions/os/linux/rhel" \
+        "${dict[shell_prefix]}/bash/functions/os/macos" \
+        "${dict[shell_prefix]}/posix/functions"
     return 0
 }
 
@@ -3997,7 +3997,7 @@ koopa_cli_system() {
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
-        'cache-all-functions' | \
+        'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
         'find-non-symlinked-make-files' | \
@@ -4036,14 +4036,6 @@ koopa_cli_system() {
         elif koopa_is_macos
         then
             case "${1:-}" in
-                'homebrew-cask-version')
-                    key='get-homebrew-cask-version'
-                    shift 1
-                    ;;
-                'macos-app-version')
-                    key='get-macos-app-version'
-                    shift 1
-                    ;;
                 'spotlight')
                     key='spotlight-find'
                     shift 1
@@ -13291,6 +13283,33 @@ koopa_is_xcode_clt_installed() {
     return 0
 }
 
+koopa_java_prefix() {
+    local prefix
+    if [[ -n "${JAVA_HOME:-}" ]]
+    then
+        koopa_print "$JAVA_HOME"
+        return 0
+    fi
+    if [[ -d "$(koopa_openjdk_prefix)" ]]
+    then
+        koopa_print "$(koopa_openjdk_prefix)"
+        return 0
+    fi
+    if [[ -x '/usr/libexec/java_home' ]]
+    then
+        prefix="$('/usr/libexec/java_home' || true)"
+        [ -n "$prefix" ] || return 1
+        koopa_print "$prefix"
+        return 0
+    fi
+    if [[ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]]
+    then
+        koopa_print "$(koopa_homebrew_opt_prefix)/openjdk"
+        return 0
+    fi
+    return 1
+}
+
 koopa_jekyll_deploy_to_aws() {
     local app dict
     koopa_assert_has_args "$#"
@@ -13392,33 +13411,6 @@ koopa_jekyll_serve() {
 koopa_julia_script_prefix() {
     koopa_print "$(koopa_koopa_prefix)/lang/julia/include"
     return 0
-}
-
-koopa_java_prefix() {
-    local prefix
-    if [[ -n "${JAVA_HOME:-}" ]]
-    then
-        koopa_print "$JAVA_HOME"
-        return 0
-    fi
-    if [[ -d "$(koopa_openjdk_prefix)" ]]
-    then
-        koopa_print "$(koopa_openjdk_prefix)"
-        return 0
-    fi
-    if [[ -x '/usr/libexec/java_home' ]]
-    then
-        prefix="$('/usr/libexec/java_home' || true)"
-        [ -n "$prefix" ] || return 1
-        koopa_print "$prefix"
-        return 0
-    fi
-    if [[ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]]
-    then
-        koopa_print "$(koopa_homebrew_opt_prefix)/openjdk"
-        return 0
-    fi
-    return 1
 }
 
 koopa_kallisto_fastq_library_type() {
@@ -14373,6 +14365,10 @@ koopa_list_programs() {
     koopa_assert_has_no_args "$#"
     koopa_r_koopa --vanilla 'cliListPrograms'
     return 0
+}
+
+koopa_lmod_prefix() {
+    koopa_print "$(koopa_opt_prefix)/lmod"
 }
 
 koopa_lmod_version() {
@@ -15687,10 +15683,6 @@ koopa_lowercase() {
             | "${app[tr]}" '[:upper:]' '[:lower:]'
     done
     return 0
-}
-
-koopa_lmod_prefix() {
-    koopa_print "$(koopa_opt_prefix)/lmod"
 }
 
 koopa_make_build_string() {
