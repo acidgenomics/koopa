@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for RHEL 9.
-
 koopa_fedora_add_google_cloud_sdk_repo() {
     # """
     # Add Google Cloud SDK repo.
-    # @note Updated 2021-11-02.
+    # @note Updated 2022-05-20.
     #
     # Spacing is important in the 'gpgkey' section.
     #
@@ -19,18 +17,25 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    koopa_assert_is_x86_64
     declare -A app=(
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
     declare -A dict=(
-        [arch]='x86_64'
+        [arch]="$(koopa_arch)"
         [enabled]=1
         [file]='/etc/yum.repos.d/google-cloud-sdk.repo'
         [gpgcheck]=1
         [repo_gpgcheck]=0
     )
+    case "${dict[arch]}" in
+        'x86_64')
+            ;;
+        *)
+            koopa_stop 'Unsupported architecture.'
+            ;;
+    esac
+    # NOTE May need to harden against unsupported RHEL 9 here.
     if koopa_is_fedora || koopa_is_rhel_8_like
     then
         dict[platform]='el8'
