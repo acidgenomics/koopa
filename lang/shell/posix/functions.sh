@@ -1347,11 +1347,6 @@ koopa_group() {
     return 0
 }
 
-koopa_homebrew_cask_prefix() {
-    koopa_print "$(koopa_homebrew_prefix)/Caskroom"
-    return 0
-}
-
 koopa_homebrew_cellar_prefix() {
     koopa_print "$(koopa_homebrew_prefix)/Cellar"
     return 0
@@ -1682,48 +1677,12 @@ koopa_is_ubuntu() {
     koopa_is_os 'ubuntu'
 }
 
-koopa_is_x86_64() {
-    [ "$(koopa_arch)" = 'x86_64' ]
-}
-
-koopa_java_prefix() {
-    local prefix
-    if [ -n "${JAVA_HOME:-}" ]
-    then
-        koopa_print "$JAVA_HOME"
-        return 0
-    fi
-    if [ -d "$(koopa_openjdk_prefix)" ]
-    then
-        koopa_print "$(koopa_openjdk_prefix)"
-        return 0
-    fi
-    if [ -x '/usr/libexec/java_home' ]
-    then
-        prefix="$('/usr/libexec/java_home' || true)"
-        [ -n "$prefix" ] || return 1
-        koopa_print "$prefix"
-        return 0
-    fi
-    if [ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]
-    then
-        koopa_print "$(koopa_homebrew_opt_prefix)/openjdk"
-        return 0
-    fi
-    return 1
-}
-
 koopa_julia_packages_prefix() {
     __koopa_packages_prefix 'julia' "$@"
 }
 
 koopa_koopa_prefix() {
     koopa_print "${KOOPA_PREFIX:?}"
-    return 0
-}
-
-koopa_lmod_prefix() {
-    koopa_print "$(koopa_opt_prefix)/lmod"
     return 0
 }
 
@@ -1791,6 +1750,11 @@ koopa_macos_activate_cli_colors() {
 koopa_macos_activate_google_cloud_sdk() {
     CLOUDSDK_PYTHON="$(koopa_homebrew_opt_prefix)/python@3.9/bin/python3.9"
     export CLOUDSDK_PYTHON
+    return 0
+}
+
+koopa_macos_homebrew_cask_prefix() {
+    koopa_print "$(koopa_homebrew_prefix)/Caskroom"
     return 0
 }
 

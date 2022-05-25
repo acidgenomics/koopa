@@ -4,7 +4,7 @@
 local({
     #' Check if r-koopa package is installed, and meets dependency requirements.
     #'
-    #' @note Updated 2022-05-20.
+    #' @note Updated 2022-05-23.
     #' @noRd
     checkInstall <- function() {
         ## Minimum version of koopa R package.
@@ -31,14 +31,16 @@ local({
     #'
     #' Display help if `--help` flag is defined.
     #'
-    #' @note Updated 2022-04-26.
+    #' @note Updated 2022-05-23.
     #' @noRd
     getHelpIfNecessary <- function() {
         args <- commandArgs()
-        if (!isTRUE(any(c("--help", "-h") %in% args))) return()
+        if (!isTRUE(any(c("--help", "-h") %in% args))) {
+            return()
+        }
         koopaPrefix <- normalizePath(
             path = file.path(
-                dirname(sys.frame(1L)[["ofile"]]),
+                dirname(thisFile()),
                 "..", "..", ".."
             ),
             mustWork = TRUE
@@ -69,6 +71,14 @@ local({
     #' @noRd
     isVerbose <- function() {
         isTRUE("--verbose" %in% commandArgs())
+    }
+
+    #' Get the absolute path of this file
+    #'
+    #' @note Updated 2022-05-23.
+    #' @noRd
+    thisFile <- function() {
+        sys.frame(1L)[["ofile"]]
     }
 
     #' Main R script header

@@ -63,7 +63,7 @@ koopa_cli_system() {
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
-        'cache-all-functions' | \
+        'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
         'find-non-symlinked-make-files' | \
@@ -105,14 +105,6 @@ koopa_cli_system() {
         elif koopa_is_macos
         then
             case "${1:-}" in
-                'homebrew-cask-version')
-                    key='get-homebrew-cask-version'
-                    shift 1
-                    ;;
-                'macos-app-version')
-                    key='get-macos-app-version'
-                    shift 1
-                    ;;
                 'spotlight')
                     key='spotlight-find'
                     shift 1
