@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-05-18.
+    # Updated 2022-05-27.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -225,6 +225,7 @@ __koopa_complete() {
                         'proj'
                         'pyenv'
                         'pyflakes'
+                        'pygments'
                         'pylint'
                         'pytaglib'
                         'pytest'
@@ -282,6 +283,7 @@ __koopa_complete() {
                         'xsv'
                         'xxhash'
                         'xz'
+                        'yt-dlp'
                         'zlib'
                         'zoxide'
                         'zsh'

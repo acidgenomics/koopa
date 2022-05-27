@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-05-26"
+koopa-date="2022-05-27"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -472,6 +472,9 @@ pyenv="2.2.5"
 
 pyflakes="2.4.0" # python
 
+# https://pygments.org/
+pygments="2.12.0"
+
 pylint="2.13.4" # python
 
 # https://github.com/supermihi/pytaglib
@@ -635,6 +638,9 @@ xxhash="0.8.1"
 
 # https://tukaani.org/xz/
 xz="5.2.5"
+
+# https://github.com/yt-dlp/yt-dlp
+yt-dlp="2022.05.18"
 
 # https://www.zlib.net/
 zlib="1.2.12"
