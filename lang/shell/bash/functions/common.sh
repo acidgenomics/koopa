@@ -11385,6 +11385,14 @@ koopa_install_fish() {
         "$@"
 }
 
+koopa_install_flac() {
+    koopa_install_app \
+        --link-in-bin='bin/flac' \
+        --name-fancy='FLAC' \
+        --name='flac' \
+        "$@"
+}
+
 koopa_install_flake8() {
     koopa_install_app \
         --installer='python-venv' \
@@ -11656,6 +11664,15 @@ koopa_install_imagemagick() {
         --link-in-bin='bin/magick' \
         --name-fancy='ImageMagick' \
         --name='imagemagick' \
+        "$@"
+}
+
+koopa_install_ipython() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/ipython' \
+        --name-fancy='IPython' \
+        --name='ipython' \
         "$@"
 }
 
@@ -21191,6 +21208,14 @@ koopa_uninstall_fish() {
         "$@"
 }
 
+koopa_uninstall_flac() {
+    koopa_uninstall_app \
+        --name-fancy='FLAC' \
+        --name='flac' \
+        --unlink-in-bin='flac' \
+        "$@"
+}
+
 koopa_uninstall_flake8() {
     koopa_uninstall_app \
         --name='flake8' \
@@ -21424,6 +21449,14 @@ koopa_uninstall_imagemagick() {
         --name-fancy='ImageMagick' \
         --name='imagemagick' \
         --link-in-bin='magick' \
+        "$@"
+}
+
+koopa_uninstall_ipython() {
+    koopa_uninstall_app \
+        --name-fancy='IPython' \
+        --name='ipython' \
+        --unlink-in-bin='ipython' \
         "$@"
 }
 
