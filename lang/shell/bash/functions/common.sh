@@ -12353,6 +12353,14 @@ koopa_install_pyflakes() {
         "$@"
 }
 
+koopa_install_pygments() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/pygments' \
+        --name='pygments' \
+        "$@"
+}
+
 koopa_install_pylint() {
     koopa_install_app \
         --installer='python-venv' \
@@ -12825,6 +12833,14 @@ koopa_install_xz() {
     koopa_install_app \
         --link-in-bin='bin/xz' \
         --name='xz' \
+        "$@"
+}
+
+koopa_install_yt_dlp() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/yt-dlp' \
+        --name='yt-dlp' \
         "$@"
 }
 
@@ -21903,6 +21919,13 @@ koopa_uninstall_pyflakes() {
         "$@"
 }
 
+koopa_uninstall_pygments() {
+    koopa_uninstall_app \
+        --name='pygments' \
+        --unlink-in-bin='pygments' \
+        "$@"
+}
+
 koopa_uninstall_pylint() {
     koopa_uninstall_app \
         --name='pylint' \
@@ -22316,6 +22339,13 @@ koopa_uninstall_xz() {
     koopa_uninstall_app \
         --name='xz' \
         --unlink-in-bin='xz' \
+        "$@"
+}
+
+koopa_uninstall_yt_dlp() {
+    koopa_uninstall_app \
+        --name='yt-dlp' \
+        --unlink-in-bin='yt-dlp' \
         "$@"
 }
 
