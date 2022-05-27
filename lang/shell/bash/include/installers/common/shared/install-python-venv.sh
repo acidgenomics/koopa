@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python package as a venv.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-05-27.
     # """
     local bin_name bin_names dict
     koopa_assert_has_no_args "$#"
@@ -14,6 +14,9 @@ main() {
     )
     dict[libexec]="${dict[prefix]}/libexec"
     case "${dict[name]}" in
+        'pygments')
+            bin_names=('pygmentize')
+            ;;
         'pytaglib')
             bin_names=('pyprinttags')
             ;;
