@@ -12356,7 +12356,7 @@ koopa_install_pyflakes() {
 koopa_install_pygments() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pygments' \
+        --link-in-bin='bin/pygmentize' \
         --name='pygments' \
         "$@"
 }
@@ -21922,7 +21922,7 @@ koopa_uninstall_pyflakes() {
 koopa_uninstall_pygments() {
     koopa_uninstall_app \
         --name='pygments' \
-        --unlink-in-bin='pygments' \
+        --unlink-in-bin='pygmentize' \
         "$@"
 }
 
