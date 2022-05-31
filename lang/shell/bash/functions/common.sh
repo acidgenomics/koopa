@@ -11367,6 +11367,14 @@ koopa_install_fd_find() {
         "$@"
 }
 
+koopa_install_ffmpeg() {
+    koopa_install_app \
+        --link-in-bin='bin/ffmpeg' \
+        --name-fancy='FFmpeg' \
+        --name='ffmpeg' \
+        "$@"
+}
+
 koopa_install_findutils() {
     local install_args
     install_args=(
@@ -21208,6 +21216,14 @@ koopa_uninstall_fd_find() {
     koopa_uninstall_app \
         --unlink-in-bin='fd' \
         --name='fd-find' \
+        "$@"
+}
+
+koopa_uninstall_ffmpeg() {
+    koopa_uninstall_app \
+        --name-fancy='FFmpeg' \
+        --name='ffmpeg' \
+        --unlink-in-bin='ffmpeg' \
         "$@"
 }
 
