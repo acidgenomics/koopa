@@ -12568,6 +12568,14 @@ koopa_install_shunit2() {
         "$@"
 }
 
+koopa_install_sox() {
+    koopa_install_app \
+        --link-in-bin='bin/sox' \
+        --name-fancy='SoX' \
+        --name='sox' \
+        "$@"
+}
+
 koopa_install_spacemacs() {
     koopa_install_app \
         --name-fancy='Spacemacs' \
@@ -22131,6 +22139,14 @@ koopa_uninstall_shunit2() {
         --name-fancy='shUnit2' \
         --name='shunit2' \
         --unlink-in-bin='shunit2' \
+        "$@"
+}
+
+koopa_uninstall_sox() {
+    koopa_uninstall_app \
+        --name-fancy='SoX' \
+        --name='sox' \
+        --unlink-in-bin='sox' \
         "$@"
 }
 
