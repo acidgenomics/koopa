@@ -33,12 +33,13 @@ koopa_find_and_replace_in_file() {
     # >     --replacement='YYY' \
     # >     'file1' 'file2' 'file3'
     # """
-    local app dict pos
+    local app dict flags pos
     koopa_assert_has_args "$#"
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
     declare -A dict=(
+        [multiline]=0
         [pattern]=''
         [regex]=0
         [replacement]=''
@@ -70,6 +71,10 @@ koopa_find_and_replace_in_file() {
                 dict[regex]=0
                 shift 1
                 ;;
+            '--multiline')
+                dict[multiline]=1
+                shift 1
+                ;;
             '--regex')
                 dict[regex]=1
                 shift 1
@@ -99,8 +104,10 @@ koopa_find_and_replace_in_file() {
             s/\$pattern/\$replacement/g; \
         "
     fi
-    # Consider using '-0' here for multi-line matching. This makes regular
-    # expression matching with line endings more difficult, so disabled.
-    "${app[perl]}" -i -p -e "${dict[expr]}" "$@"
+    flags=('-i' '-p')
+    # Multi-line matching is disabled by default, because it makes regular
+    # expression matching end of line break.
+    [[ "${dict[multiline]}" -eq 1 ]] && flags+=('-0')
+    "${app[perl]}" "${flags[@]}" -e "${dict[expr]}" "$@"
     return 0
 }
