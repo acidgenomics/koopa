@@ -7697,12 +7697,13 @@ koopa_find_and_move_in_sequence() {
 }
 
 koopa_find_and_replace_in_file() {
-    local app dict pos
+    local app dict flags pos
     koopa_assert_has_args "$#"
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
     declare -A dict=(
+        [multiline]=0
         [pattern]=''
         [regex]=0
         [replacement]=''
@@ -7729,6 +7730,10 @@ koopa_find_and_replace_in_file() {
                 ;;
             '--fixed')
                 dict[regex]=0
+                shift 1
+                ;;
+            '--multiline')
+                dict[multiline]=1
                 shift 1
                 ;;
             '--regex')
@@ -7759,7 +7764,9 @@ koopa_find_and_replace_in_file() {
             s/\$pattern/\$replacement/g; \
         "
     fi
-    "${app[perl]}" -i -p -e "${dict[expr]}" "$@"
+    flags=('-i' '-p')
+    [[ "${dict[multiline]}" -eq 1 ]] && flags+=('-0')
+    "${app[perl]}" "${flags[@]}" -e "${dict[expr]}" "$@"
     return 0
 }
 
@@ -11874,6 +11881,14 @@ koopa_install_koopa() {
     koopa_fix_zsh_permissions
     koopa_add_config_link "${dict[prefix]}/activate" 'activate'
     return 0
+}
+
+koopa_install_lame() {
+    koopa_install_app \
+        --link-in-bin='bin/lame' \
+        --name-fancy='LAME' \
+        --name='lame' \
+        "$@"
 }
 
 koopa_install_lapack() {
@@ -21511,6 +21526,14 @@ koopa_uninstall_koopa() {
         "${dict[config_prefix]}" \
         "${dict[koopa_prefix]}"
     return 0
+}
+
+koopa_uninstall_lame() {
+    koopa_uninstall_app \
+        --name-fancy='LAME' \
+        --name='lame' \
+        --unlink-in-bin='lame' \
+        "$@"
 }
 
 koopa_uninstall_lapack() {

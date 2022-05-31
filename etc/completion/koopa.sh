@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-05-27.
+    # Updated 2022-05-31.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -166,6 +166,7 @@ __koopa_complete() {
                         'julia'
                         'julia-packages'
                         'koopa'
+                        'lame'
                         'lapack'
                         'lesspipe'
                         'libevent'

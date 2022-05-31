@@ -273,6 +273,9 @@ jpeg="9e"
 # https://github.com/JuliaLang/julia/releases
 julia="1.7.3"
 
+# https://lame.sourceforge.io/
+lame="3.100"
+
 # https://www.netlib.org/lapack/
 lapack="3.10.1"
 
