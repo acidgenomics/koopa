@@ -564,6 +564,9 @@ shiny-server="1.5.18.987" # 2022-04-20
 # https://github.com/kward/shunit2/releases
 shunit2="2.1.7"
 
+# http://sox.sourceforge.net/sox.html
+sox="14.4.2"
+
 # https://github.com/syl20bnr/spacemacs
 spacemacs="latest"
 
