@@ -40,13 +40,13 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
         '--enable-versioned-symbols'
         "--with-ssl=${dict[ssl]}"
     )
-    if koopa_is_linux
-    then
-        koopa_add_rpath_to_ldflags "${dict[ssl]}/lib64"
-    elif koopa_is_macos
-    then
-        koopa_add_rpath_to_ldflags "${dict[ssl]}/lib"
-    fi
+    # > if koopa_is_linux
+    # > then
+    # >     koopa_add_rpath_to_ldflags "${dict[ssl]}/lib64"
+    # > elif koopa_is_macos
+    # > then
+    # >     koopa_add_rpath_to_ldflags "${dict[ssl]}/lib"
+    # > fi
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
