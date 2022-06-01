@@ -3,13 +3,13 @@
 main() {
     # """
     # Install libevent.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-06-01.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #       Formula/libevent.rb
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix 'openssl'
@@ -28,7 +28,12 @@ download/release-${dict[version]}-stable/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}-stable"
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--disable-debug-mode'
+        '--disable-dependency-tracking'
+    )
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
     "${app[make]}" install
