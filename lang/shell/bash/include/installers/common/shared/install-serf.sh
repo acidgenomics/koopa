@@ -41,6 +41,7 @@ main() {
 serf-1.3.9-openssl3_fixes-1.patch"
     "${app[patch]}" -Np1 -i 'serf-1.3.9-openssl3_fixes-1.patch'
     # These steps require GNU sed.
+    # Alternatively, can consider using Perl approach here instead.
     "${app[sed]}" -i.bak "/Append/s:RPATH=libdir,::" 'SConstruct'
     "${app[sed]}" -i.bak "/Default/s:lib_static,::"  'SConstruct'
     "${app[sed]}" -i.bak "/Alias/s:install_static,::" 'SConstruct'
