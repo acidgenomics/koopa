@@ -626,7 +626,7 @@ utf8proc="2.7.0"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4900"
+vim="8.2.5050"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.3"
