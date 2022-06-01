@@ -747,6 +747,9 @@ koopa_activate_opt_prefix() {
             [[ -d "${prefix}/lib64" ]] && \
                 LDFLAGS="${LDFLAGS:-} -L${prefix}/lib64"
         fi
+        koopa_add_rpath_to_ldflags \
+            "${prefix}/lib" \
+            "${prefix}/lib64"
     done
     export CPPFLAGS LDFLAGS LDLIBS
     return 0
@@ -12777,7 +12780,8 @@ koopa_install_wget() {
         --link-in-bin='bin/wget' \
         --name='wget' \
         -D '--disable-debug' \
-        -D "--with-ssl=${dict[ssl]}" \
+        -D '--with-ssl=openssl' \
+        -D "--with-libssl-prefix=${dict[ssl]}" \
         -D '--without-included-regex' \
         -D '--without-libpsl' \
         "$@"
