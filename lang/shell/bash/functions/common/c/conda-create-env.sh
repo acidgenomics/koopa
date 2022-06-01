@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Consider supporting direct linkage into koopa 'bin/' here.
+# FIXME Need to add support for linking into 'bin/' here.
 
 koopa_conda_create_env() {
     # """
