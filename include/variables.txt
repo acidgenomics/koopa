@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-05-31"
+koopa-date="2022-06-01"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -610,7 +610,7 @@ tex="2022"
 texinfo="6.8"
 
 # https://github.com/tmux/tmux/releases
-tmux="3.2a"
+tmux="3.3"
 
 tokei="12.1.2" # rust
 
@@ -619,6 +619,9 @@ tree="2.0.2"
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
 udunits="2.2.28"
+
+# https://juliastrings.github.io/utf8proc/
+utf8proc="2.7.0"
 
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
