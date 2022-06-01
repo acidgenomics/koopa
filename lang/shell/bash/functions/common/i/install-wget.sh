@@ -5,6 +5,11 @@ koopa_install_wget() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/wget.rb
     # """
+    local dict
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
+    dict[ssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl")"
     koopa_install_app \
         --activate-build-opt='autoconf' \
         --activate-build-opt='automake' \
@@ -20,7 +25,7 @@ koopa_install_wget() {
         --link-in-bin='bin/wget' \
         --name='wget' \
         -D '--disable-debug' \
-        -D '--with-ssl=openssl' \
+        -D "--with-ssl=${dict[ssl]}" \
         -D '--without-included-regex' \
         -D '--without-libpsl' \
         "$@"
