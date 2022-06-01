@@ -814,6 +814,7 @@ koopa_add_rpath_to_ldflags() {
     LDFLAGS="${LDFLAGS:-}"
     for dir in "$@"
     do
+        [[ -d "$dir" ]] || continue
         LDFLAGS="${LDFLAGS} -Wl,-rpath,${dir}"
     done
     export LDFLAGS
