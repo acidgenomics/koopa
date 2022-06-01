@@ -40,9 +40,6 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
         '--enable-versioned-symbols'
         "--with-ssl=${dict[ssl]}"
     )
-    koopa_add_rpath_to_ldflags \
-        "${dict[ssl]}/lib64" \
-        "${dict[ssl]}/lib"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
