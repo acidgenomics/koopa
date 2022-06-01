@@ -12740,6 +12740,12 @@ koopa_install_udunits() {
         "$@"
 }
 
+koopa_install_utf8proc() {
+    koopa_install_app \
+        --name='utf8proc' \
+        "$@"
+}
+
 koopa_install_vim() {
     koopa_install_app \
         --link-in-bin='bin/vim' \
@@ -22300,6 +22306,12 @@ koopa_uninstall_udunits() {
     koopa_uninstall_app \
         --name='udunits' \
         --unlink-in-bin='udunits2' \
+        "$@"
+}
+
+koopa_uninstall_utf8proc() {
+    koopa_uninstall_app \
+        --name='utf8proc' \
         "$@"
 }
 

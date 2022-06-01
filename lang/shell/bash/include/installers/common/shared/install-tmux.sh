@@ -3,14 +3,17 @@
 main() {
     # """
     # Install Tmux.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-06-01.
     #
-    # Consider adding tmux to enabled shells in a future update.
+    # Consider adding tmux to enabled login shells in a future update.
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'libevent' 'ncurses'
+    koopa_activate_opt_prefix \
+        'libevent' \
+        'ncurses' \
+        'utf8proc'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -26,7 +29,11 @@ download/${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--enable-utf8proc'
+    )
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     app[tmux]="${dict[prefix]}/bin/tmux"
