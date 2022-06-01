@@ -7697,12 +7697,13 @@ koopa_find_and_move_in_sequence() {
 }
 
 koopa_find_and_replace_in_file() {
-    local app dict pos
+    local app dict flags pos
     koopa_assert_has_args "$#"
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
     declare -A dict=(
+        [multiline]=0
         [pattern]=''
         [regex]=0
         [replacement]=''
@@ -7729,6 +7730,10 @@ koopa_find_and_replace_in_file() {
                 ;;
             '--fixed')
                 dict[regex]=0
+                shift 1
+                ;;
+            '--multiline')
+                dict[multiline]=1
                 shift 1
                 ;;
             '--regex')
@@ -7759,7 +7764,9 @@ koopa_find_and_replace_in_file() {
             s/\$pattern/\$replacement/g; \
         "
     fi
-    "${app[perl]}" -i -p -e "${dict[expr]}" "$@"
+    flags=('-i' '-p')
+    [[ "${dict[multiline]}" -eq 1 ]] && flags+=('-0')
+    "${app[perl]}" "${flags[@]}" -e "${dict[expr]}" "$@"
     return 0
 }
 
@@ -11360,6 +11367,14 @@ koopa_install_fd_find() {
         "$@"
 }
 
+koopa_install_ffmpeg() {
+    koopa_install_app \
+        --link-in-bin='bin/ffmpeg' \
+        --name-fancy='FFmpeg' \
+        --name='ffmpeg' \
+        "$@"
+}
+
 koopa_install_findutils() {
     local install_args
     install_args=(
@@ -11382,6 +11397,14 @@ koopa_install_fish() {
         --link-in-bin='bin/fish' \
         --name-fancy='Fish' \
         --name='fish' \
+        "$@"
+}
+
+koopa_install_flac() {
+    koopa_install_app \
+        --link-in-bin='bin/flac' \
+        --name-fancy='FLAC' \
+        --name='flac' \
         "$@"
 }
 
@@ -11659,6 +11682,15 @@ koopa_install_imagemagick() {
         "$@"
 }
 
+koopa_install_ipython() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/ipython' \
+        --name-fancy='IPython' \
+        --name='ipython' \
+        "$@"
+}
+
 koopa_install_jpeg() {
     koopa_install_app \
         --name='jpeg' \
@@ -11857,6 +11889,14 @@ koopa_install_koopa() {
     koopa_fix_zsh_permissions
     koopa_add_config_link "${dict[prefix]}/activate" 'activate'
     return 0
+}
+
+koopa_install_lame() {
+    koopa_install_app \
+        --link-in-bin='bin/lame' \
+        --name-fancy='LAME' \
+        --name='lame' \
+        "$@"
 }
 
 koopa_install_lapack() {
@@ -12353,6 +12393,14 @@ koopa_install_pyflakes() {
         "$@"
 }
 
+koopa_install_pygments() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/pygmentize' \
+        --name='pygments' \
+        "$@"
+}
+
 koopa_install_pylint() {
     koopa_install_app \
         --installer='python-venv' \
@@ -12543,6 +12591,14 @@ koopa_install_shunit2() {
         "$@"
 }
 
+koopa_install_sox() {
+    koopa_install_app \
+        --link-in-bin='bin/sox' \
+        --name-fancy='SoX' \
+        --name='sox' \
+        "$@"
+}
+
 koopa_install_spacemacs() {
     koopa_install_app \
         --name-fancy='Spacemacs' \
@@ -12681,6 +12737,12 @@ koopa_install_udunits() {
     koopa_install_app \
         --link-in-bin='bin/udunits2' \
         --name='udunits' \
+        "$@"
+}
+
+koopa_install_utf8proc() {
+    koopa_install_app \
+        --name='utf8proc' \
         "$@"
 }
 
@@ -12825,6 +12887,14 @@ koopa_install_xz() {
     koopa_install_app \
         --link-in-bin='bin/xz' \
         --name='xz' \
+        "$@"
+}
+
+koopa_install_yt_dlp() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/yt-dlp' \
+        --name='yt-dlp' \
         "$@"
 }
 
@@ -21155,6 +21225,14 @@ koopa_uninstall_fd_find() {
         "$@"
 }
 
+koopa_uninstall_ffmpeg() {
+    koopa_uninstall_app \
+        --name-fancy='FFmpeg' \
+        --name='ffmpeg' \
+        --unlink-in-bin='ffmpeg' \
+        "$@"
+}
+
 koopa_uninstall_findutils() {
     local uninstall_args
     uninstall_args=(
@@ -21172,6 +21250,14 @@ koopa_uninstall_fish() {
         --name-fancy='Fish' \
         --name='fish' \
         --unlink-in-bin='fish' \
+        "$@"
+}
+
+koopa_uninstall_flac() {
+    koopa_uninstall_app \
+        --name-fancy='FLAC' \
+        --name='flac' \
+        --unlink-in-bin='flac' \
         "$@"
 }
 
@@ -21411,6 +21497,14 @@ koopa_uninstall_imagemagick() {
         "$@"
 }
 
+koopa_uninstall_ipython() {
+    koopa_uninstall_app \
+        --name-fancy='IPython' \
+        --name='ipython' \
+        --unlink-in-bin='ipython' \
+        "$@"
+}
+
 koopa_uninstall_jpeg() {
     koopa_uninstall_app \
         --name='jpeg' \
@@ -21454,6 +21548,14 @@ koopa_uninstall_koopa() {
         "${dict[config_prefix]}" \
         "${dict[koopa_prefix]}"
     return 0
+}
+
+koopa_uninstall_lame() {
+    koopa_uninstall_app \
+        --name-fancy='LAME' \
+        --name='lame' \
+        --unlink-in-bin='lame' \
+        "$@"
 }
 
 koopa_uninstall_lapack() {
@@ -21903,6 +22005,13 @@ koopa_uninstall_pyflakes() {
         "$@"
 }
 
+koopa_uninstall_pygments() {
+    koopa_uninstall_app \
+        --name='pygments' \
+        --unlink-in-bin='pygmentize' \
+        "$@"
+}
+
 koopa_uninstall_pylint() {
     koopa_uninstall_app \
         --name='pylint' \
@@ -22078,6 +22187,14 @@ koopa_uninstall_shunit2() {
         "$@"
 }
 
+koopa_uninstall_sox() {
+    koopa_uninstall_app \
+        --name-fancy='SoX' \
+        --name='sox' \
+        --unlink-in-bin='sox' \
+        "$@"
+}
+
 koopa_uninstall_spacemacs() {
     koopa_uninstall_app \
         --name-fancy='Spacemacs' \
@@ -22189,6 +22306,12 @@ koopa_uninstall_udunits() {
     koopa_uninstall_app \
         --name='udunits' \
         --unlink-in-bin='udunits2' \
+        "$@"
+}
+
+koopa_uninstall_utf8proc() {
+    koopa_uninstall_app \
+        --name='utf8proc' \
         "$@"
 }
 
@@ -22316,6 +22439,13 @@ koopa_uninstall_xz() {
     koopa_uninstall_app \
         --name='xz' \
         --unlink-in-bin='xz' \
+        "$@"
+}
+
+koopa_uninstall_yt_dlp() {
+    koopa_uninstall_app \
+        --name='yt-dlp' \
+        --unlink-in-bin='yt-dlp' \
         "$@"
 }
 
