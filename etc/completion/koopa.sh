@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-05-18.
+    # Updated 2022-05-31.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -124,8 +124,10 @@ __koopa_complete() {
                         'ensembl-perl-api'
                         'exa'
                         'fd-find'
+                        'ffmpeg'
                         'findutils'
                         'fish'
+                        'flac'
                         'flake8'
                         'fltk'
                         'fontconfig'
@@ -158,11 +160,13 @@ __koopa_complete() {
                         'hyperfine'
                         'icu4c'
                         'imagemagick'
+                        'ipython'
                         'jpeg'
                         'jq'
                         'julia'
                         'julia-packages'
                         'koopa'
+                        'lame'
                         'lapack'
                         'lesspipe'
                         'libevent'
@@ -225,6 +229,7 @@ __koopa_complete() {
                         'proj'
                         'pyenv'
                         'pyflakes'
+                        'pygments'
                         'pylint'
                         'pytaglib'
                         'pytest'
@@ -247,6 +252,7 @@ __koopa_complete() {
                         'serf'
                         'shellcheck'
                         'shunit2'
+                        'sox'
                         'spacemacs'
                         'spacevim'
                         'sqlite'
@@ -262,6 +268,7 @@ __koopa_complete() {
                         'tokei'
                         'tree'
                         'udunits'
+                        'utf8proc'
                         'vim'
                         'wget'
                         'which'
@@ -282,6 +289,7 @@ __koopa_complete() {
                         'xsv'
                         'xxhash'
                         'xz'
+                        'yt-dlp'
                         'zlib'
                         'zoxide'
                         'zsh'

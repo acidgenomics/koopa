@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-05-13.
+#' @note Updated 2022-06-01.
 #'
 #' @section Restarting R:
 #'
@@ -205,7 +205,7 @@ local({  # nolint
     options("install.packages.compile.from.source" = "always")
     if (isTRUE(flag[["linux"]])) {
         ## Configure the RSPM CRAN snapshot.
-        snapshot <- "2022-04-21"
+        snapshot <- "2022-05-31"
         cran <- "https://packagemanager.rstudio.com/cran"
         ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
         if (isTRUE(grepl(
