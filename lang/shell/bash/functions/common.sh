@@ -12623,6 +12623,7 @@ koopa_install_spacevim() {
 
 koopa_install_sqlite() {
     koopa_install_app \
+        --link-in-bin='bin/sqlite3' \
         --name-fancy='SQLite' \
         --name='sqlite' \
         "$@"
@@ -22227,6 +22228,7 @@ koopa_uninstall_sqlite() {
     koopa_uninstall_app \
         --name-fancy='SQLite' \
         --name='sqlite' \
+        --unlink-in-bin='sqlite3' \
         "$@"
 }
 
