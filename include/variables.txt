@@ -366,7 +366,7 @@ lzo="2.10"
 make="4.3"
 
 # https://github.com/mamba-org/mamba/tags/
-mamba="0.23.0"
+mamba="0.24.0"
 
 man-db="2.10.2"
 
