@@ -268,6 +268,7 @@ __koopa_complete() {
                         'tokei'
                         'tree'
                         'udunits'
+                        'utf8proc'
                         'vim'
                         'wget'
                         'which'
