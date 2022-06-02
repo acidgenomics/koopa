@@ -282,6 +282,8 @@ lame="3.100"
 # https://www.netlib.org/lapack/
 lapack="3.10.1"
 
+latch="1.0.3"
+
 # https://ftp.gnu.org/gnu/less/
 less="590"
 

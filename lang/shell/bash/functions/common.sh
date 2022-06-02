@@ -11910,6 +11910,15 @@ koopa_install_lapack() {
         "$@"
 }
 
+koopa_install_latch() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/latch' \
+        --name-fancy='LatchBio SDK' \
+        --name='latch' \
+        "$@"
+}
+
 koopa_install_less() {
     koopa_install_app \
         --activate-opt='ncurses' \
@@ -21573,6 +21582,14 @@ koopa_uninstall_lapack() {
     koopa_uninstall_app \
         --name-fancy='LAPACK' \
         --name='lapack' \
+        "$@"
+}
+
+koopa_uninstall_latch() {
+    koopa_uninstall_app \
+        --name-fancy='LatchBio SDK' \
+        --name='latch' \
+        --unlink-in-bin='latch' \
         "$@"
 }
 
