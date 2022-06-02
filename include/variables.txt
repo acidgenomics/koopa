@@ -377,7 +377,7 @@ mcfly="0.6.0" # rust
 mdcat="0.27.1" # rust
 
 # https://github.com/mesonbuild/meson/tags
-meson="0.62.1"
+meson="0.62.2"
 
 # http://www.multiprecision.org/mpc/
 mpc="1.2.1"
