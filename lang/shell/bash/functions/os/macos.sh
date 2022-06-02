@@ -271,6 +271,19 @@ disabled/$(koopa_basename "${dict[enabled_file]}")"
     return 0
 }
 
+koopa_macos_disable_spotlight_indexing() {
+    local app
+    declare -A app=(
+        [mdutil]="$(koopa_macos_locate_mdutil)"
+        [sudo]="$(koopa_locate_sudo)"
+    )
+    [[ -x "${app[mdutil]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
+    "${app[sudo]}" "${app[mdutil]}" -a -i off
+    "${app[mdutil]}" -a -s
+    return 0
+}
+
 koopa_macos_disable_touch_id_sudo() {
     local app dict
     koopa_assert_has_no_args "$#"
