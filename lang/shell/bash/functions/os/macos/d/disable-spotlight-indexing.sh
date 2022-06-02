@@ -6,6 +6,9 @@ koopa_macos_disable_spotlight_indexing() {
     # @note Updated 2022-06-02.
     #
     # Conversely, use 'on' instead of 'off' to re-enable.
+    #
+    # Useful command to monitor mds usage:
+    # > sudo fs_usage -w -f filesys mds
     # """
     local app
     declare -A app=(
