@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 
 # FIXME Need to add support for linking into 'bin/' here.
+# FIXME For our installers, should we set a custom install prefix?
+# FIXME Can map '--prefix' to change the environment path.
+# FIXME Consider putting prefix in libexec and then linking into bin
+# similar to our Python virtual environment approach.
+# FIXME Consider reworking this for ffq, bowtie2, gget, salmon, snakemake, etc.
+# FIXME Don't allow installation of multiple environments in a single call?
 
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2022-03-16.
+    # @note Updated 2022-06-03.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
