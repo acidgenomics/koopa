@@ -1,13 +1,10 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-06-02"
+koopa-date="2022-06-07"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
-
-# Also update this value in 'lang/r/include/header.R'.
-r-koopa="0.3.1"
 
 # Globals
 # ==============================================================================
@@ -282,7 +279,7 @@ lame="3.100"
 # https://www.netlib.org/lapack/
 lapack="3.10.1"
 
-latch="1.0.3"
+latch="1.1.0"
 
 # https://ftp.gnu.org/gnu/less/
 less="590"
@@ -768,11 +765,6 @@ conda-trimmomatic="0.39"        # 2021-03-27 bioconda                 [trimming]
 conda-umap-learn="0.5.2"        # 2021-11-03 bioconda               [singlecell]
 conda-vardict="2019.06.04"      # 2019-06-05 bioconda                [variation]
 conda-visidata="2.8"            # 2022-01-13 conda-forge          [file formats]
-
-# Homebrew cask versions
-# ==============================================================================
-
-homebrew-cask-gpg-suite="2022.1"
 
 # Nim (Nimble) packages
 # ==============================================================================
