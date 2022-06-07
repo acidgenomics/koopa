@@ -11,7 +11,7 @@
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2022-06-03.
+    # @note Updated 2022-06-07.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -77,7 +77,7 @@ koopa_conda_create_env() {
             --pattern='='
         then
             dict[env_version]="$( \
-                koopa_variable "conda-${dict[env_string]}" \
+                koopa_variable "${dict[env_string]}" \
                 || true \
             )"
             if [[ -z "${dict[env_version]}" ]]
