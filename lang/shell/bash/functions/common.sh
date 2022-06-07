@@ -4337,7 +4337,7 @@ koopa_conda_create_env() {
             --pattern='='
         then
             dict[env_version]="$( \
-                koopa_variable "conda-${dict[env_string]}" \
+                koopa_variable "${dict[env_string]}" \
                 || true \
             )"
             if [[ -z "${dict[env_version]}" ]]
