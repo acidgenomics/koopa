@@ -15749,6 +15749,12 @@ koopa_locate_yes() {
         --opt-name='coreutils'
 }
 
+koopa_locate_yt_dlp() {
+    koopa_locate_app \
+        --app-name='yt-dlp' \
+        --opt-name='yt-dlp'
+}
+
 koopa_locate_zcat() {
     koopa_locate_app \
         --app-name='zcat' \
