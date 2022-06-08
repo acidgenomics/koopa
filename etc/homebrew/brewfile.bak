@@ -162,7 +162,7 @@ brew "ripgrep" # rust
 brew "ripgrep-all" # rust
 brew "rsync"
 brew "rust"
-brew "rustup-init"
+# > brew "rustup-init"
 brew "screen"
 brew "sd"
 brew "shellcheck"

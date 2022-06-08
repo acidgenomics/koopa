@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-06-07"
+koopa-date="2022-06-08"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -59,14 +59,11 @@ azure-cli="2.35.0"
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
 
-bat="0.21.0" # rust
-
 # https://ftp.gnu.org/gnu/bc/
 bc="1.07"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-# 1.2.9 has issues with bcftools and samtools
 bcbio-nextgen="1.2.9"
 
 # https://github.com/bcbio/bcbio-nextgen-vm/releases
@@ -86,14 +83,8 @@ binutils="2.37"
 # https://bioconductor.org/
 bioconductor="3.15"
 
-black="22.3.0" # python
-
 # https://www.boost.org/
 boost="1.78.0"
-
-bpytop="1.0.68" # python
-
-broot="1.12.0" # rust (br)
 
 # https://www.sourceware.org/bzip2/
 bzip2="1.0.8"
@@ -108,9 +99,6 @@ cellranger="7.0.0"
 
 # https://github.com/plexus/chemacs2
 chemacs="latest"
-
-# https://www.chezmoi.io/
-chezmoi="2.17.0"
 
 # https://cmake.org/download/
 cmake="3.23.0"
@@ -130,15 +118,11 @@ curl="7.82.0"
 # https://github.com/dandavison/delta
 delta="0.13.0"
 
-difftastic="0.27.0" # rust (difft)
-
 # https://docs.docker.com/install/
 docker="20.10.14"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
-
-dog="0.1.0" # rust
 
 # https://github.com/hlissner/doom-emacs
 doom-emacs="latest"
@@ -146,17 +130,11 @@ doom-emacs="latest"
 # https://github.com/acidgenomics/dotfiles
 dotfiles="latest"
 
-du-dust="0.8.0" # rust (dust)
-
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
 
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl-perl-api="latest"
-
-exa="0.10.1" # rust
-
-fd-find="8.3.2" # rust
 
 # https://ffmpeg.org/
 ffmpeg="5.0.1"
@@ -166,8 +144,6 @@ findutils="4.9.0"
 
 # https://xiph.org/flac/
 flac="1.3.4"
-
-flake8="4.0.1" # python
 
 # https://www.fltk.org/
 fltk="1.3.8"
@@ -205,8 +181,6 @@ gettext="0.21"
 # https://git-scm.com/
 # https://github.com/git/git/releases
 git="2.35.1"
-
-glances="3.2.5" # python
 
 glib="2.72.0"
 
@@ -253,16 +227,11 @@ hdf5="1.12.1"
 # https://github.com/htop-dev/htop
 htop="3.2.0"
 
-hyperfine="1.14.0" # rust
-
 # http://site.icu-project.org/
 icu4c="71.1"
 
 # https://imagemagick.org/
 imagemagick="7.1.0-29"
-
-# https://ipython.org/
-ipython="8.3.0"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -369,12 +338,6 @@ mamba="0.24.0"
 
 man-db="2.10.2"
 
-mcfly="0.6.0" # rust
-
-# Used by lesspipe for Markdown files.
-# https://crates.io/crates/mdcat
-mdcat="0.27.1" # rust
-
 # https://github.com/mesonbuild/meson/tags
 meson="0.62.2"
 
@@ -459,21 +422,14 @@ perl-file-rename="1.30"
 # https://github.com/php/php-src/releases
 php="8.1.2"
 
-pipx="1.0.0" # python
-
 pixman="0.40.0"
 
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
 
-# https://python-poetry.org/
-poetry="1.1.13"
-
 # https://github.com/bbatsov/prelude
 prelude-emacs="latest"
-
-procs="0.12.1" # rust
 
 # https://proj.org/
 proj="9.0.0"
@@ -481,17 +437,8 @@ proj="9.0.0"
 # https://github.com/pyenv/pyenv
 pyenv="2.2.5"
 
-pyflakes="2.4.0" # python
-
 # https://pygments.org/
 pygments="2.12.0"
-
-pylint="2.13.4" # python
-
-# https://github.com/supermihi/pytaglib
-pytaglib="1.5.0"
-
-pytest="6.2.5" # python
 
 # https://www.python.org/downloads/
 python="3.10.4"
@@ -515,17 +462,11 @@ r-gfortran="8.2"
 # This is the SVN revision number.
 r-devel="82272" # 2022-04-28
 
-ranger-fm="1.9.3" # python
-
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.2.0"
 
 # https://tiswww.cwru.edu/php/chet/readline/rltop.html
 readline="8.1.2"
-
-ripgrep="13.0.0" # rust
-
-# > ripgrep-all="0.9.6" # rust (rga)
 
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"
@@ -538,9 +479,6 @@ ruby="3.1.2p20"
 
 # https://www.rust-lang.org/
 rust="1.61.0"
-
-# https://rustup.rs/
-rustup="1.24.3"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
@@ -581,9 +519,6 @@ spacevim="latest"
 # https://www.sqlite.org/download.html
 sqlite="3.38.2"
 
-# https://starship.rs/
-starship="1.7.1" # rust
-
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
 
@@ -599,8 +534,6 @@ tar="1.34"
 # https://www.tcl-lang.org
 tcl-tk="8.6.12"
 
-tealdeer="1.5.0" # rust (tldr)
-
 # https://www.latex-project.org/get/
 tex="2022"
 
@@ -610,8 +543,6 @@ texinfo="6.8"
 
 # https://github.com/tmux/tmux/releases
 tmux="3.3"
-
-tokei="12.1.2" # rust
 
 tree="2.0.2"
 
@@ -648,8 +579,6 @@ xorg-xcb-proto="1.14.1"
 xorg-xorgproto="2021.5"
 xorg-xtrans="1.4.0"
 
-xsv="0.13.0" # rust
-
 # https://github.com/Cyan4973/xxHash
 xxhash="0.8.1"
 
@@ -661,8 +590,6 @@ yt-dlp="2022.05.18"
 
 # https://www.zlib.net/
 zlib="1.2.12"
-
-zoxide="0.8.1" # rust (z)
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8.1"
@@ -762,29 +689,73 @@ umap-learn="0.5.2" # 2021-11-03 bioconda
 vardict="2019.06.04" # 2019-06-05 bioconda
 visidata="2.8" # 2022-01-13 conda-forge
 
+# Go packages
+# ==============================================================================
+
+# https://www.chezmoi.io/
+chezmoi="2.17.0"
+
 # Nim (Nimble) packages
 # ==============================================================================
 # Updated 2021-10-05.
 
 # https://github.com/soasme/nim-markdown/tags/
-nim-markdown="0.8.5"                # markdown
+nim-markdown="0.8.5"
 
 # Node (NPM) packages
 # ==============================================================================
 # Updated 2022-04-19 from https://www.npmjs.com/
 
-node-npm="8.7.0"                    # system
+node-npm="8.7.0"
 
-node-bash-language-server="2.1.0"   # bash-language-server
-node-gtop="1.1.3"                   # gtop
-node-prettier="2.6.2"               # prettier
+node-bash-language-server="2.1.0"
+node-gtop="1.1.3"
+node-prettier="2.6.2"
+
+# Python packages
+# ==============================================================================
+
+black="22.3.0"
+bpytop="1.0.68"
+flake8="4.0.1"
+glances="3.2.6.4"
+ipython="8.4.0"
+pipx="1.1.0"
+poetry="1.1.13"
+pyflakes="2.4.0"
+pylint="2.14.1"
+pytaglib="1.5.0"
+pytest="7.1.2"
+ranger-fm="1.9.3"
 
 # Ruby packages (gems)
 # ==============================================================================
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.12"           # system
+ruby-bundler="2.3.12"
 
-ruby-bashcov="1.8.2"            # bashcov
-ruby-colorls="1.4.6"            # colorls
-ruby-ronn="0.7.3"               # ronn
+ruby-bashcov="1.8.2"
+ruby-colorls="1.4.6"
+ruby-ronn="0.7.3"
+
+# Rust packages
+# ==============================================================================
+
+# > ripgrep-all="0.9.6" # rga
+bat="0.21.0"
+broot="1.13.1" # br
+difftastic="0.27.0" # difft
+dog="0.1.0"
+du-dust="0.8.0"
+exa="0.10.1"
+fd-find="8.4.0"
+hyperfine="1.14.0"
+mcfly="0.6.0"
+mdcat="0.27.1"
+procs="0.12.3"
+ripgrep="13.0.0"
+starship="1.7.1"
+tealdeer="1.5.0" # tldr
+tokei="12.1.2"
+xsv="0.13.0"
+zoxide="0.8.1" # z
