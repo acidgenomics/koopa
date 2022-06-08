@@ -102,5 +102,6 @@ main() {
     esac
     koopa_rm "${HOME}/.cargo"
     "${app[cargo]}" install "${install_args[@]}"
+    koopa_rm "${HOME}/.cargo"
     return 0
 }
