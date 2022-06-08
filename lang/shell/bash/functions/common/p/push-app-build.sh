@@ -2,6 +2,8 @@
 
 # FIXME This needs to also invalidate cloud cache.
 # FIXME Rework using koopa_koopa_app_binary with 's3://' instead of 'https://'
+# FIXME Consider pushing only to OS major version, instead of point release.
+# e.g. macOS 12, not 12.4.
 
 koopa_push_app_build() {
     # """
