@@ -28,6 +28,7 @@ main() {
         [cargo]="$(koopa_locate_cargo)"
     )
     declare -A dict=(
+        [cargo_home]="$(koopa_init_dir 'cargo')"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -100,8 +101,7 @@ main() {
             esac
             ;;
     esac
-    koopa_rm "${HOME}/.cargo"
+    export CARGO_HOME="${dict[cargo_home]}"
     "${app[cargo]}" install "${install_args[@]}"
-    koopa_rm "${HOME}/.cargo"
     return 0
 }
