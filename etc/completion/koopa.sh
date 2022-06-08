@@ -460,7 +460,7 @@ __koopa_complete() {
                         )
                         if koopa_is_macos
                         then
-                            args+=('launch-agents') # FIXME Support this.
+                            args+=('launch-agents')
                         fi
                         ;;
                     esac
