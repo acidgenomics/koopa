@@ -100,6 +100,7 @@ main() {
             esac
             ;;
     esac
+    koopa_rm "${HOME}/.cargo"
     "${app[cargo]}" install "${install_args[@]}"
     return 0
 }
