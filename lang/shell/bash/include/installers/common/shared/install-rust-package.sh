@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME broot is now having compilation issues with rust 1.61.
+# FIXME try installing from GitHub instead of crates.io?
+
 main() {
     # """
     # Install Rust packages.
