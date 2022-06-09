@@ -1987,7 +1987,7 @@ koopa_os_string() {
     then
         id='macos'
         version="$(koopa_macos_os_version)"
-        version="$(koopa_major_minor_version "$version")"
+        version="$(koopa_major_version "$version")"
     elif koopa_is_linux
     then
         release_file='/etc/os-release'
