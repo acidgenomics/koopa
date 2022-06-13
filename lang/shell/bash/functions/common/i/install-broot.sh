@@ -2,17 +2,20 @@
 
 koopa_install_broot() {
     # """
+    # Consider including opt (used in Homebrew recipe):
+    # - xorg-xorgproto
+    # - xorg-xcb-proto
+    # - xorg-libpthread-stubs
+    # - xorg-libxau
+    # - xorg-libxau
+    # - xorg-libxdmcp
+    # - 'xorg-libxcb'
+    #
     # @seealso
     # - https://dystroy.org/broot/install/
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/broot.rb
     # """
     koopa_install_app \
-        --activate-opt='xorg-xorgproto' \
-        --activate-opt='xorg-xcb-proto' \
-        --activate-opt='xorg-libpthread-stubs' \
-        --activate-opt='xorg-libxau' \
-        --activate-opt='xorg-libxau' \
-        --activate-opt='xorg-libxdmcp' \
-        --activate-opt='xorg-libxcb' \
         --installer='rust-package' \
         --link-in-bin='bin/broot' \
         --name='broot' \
