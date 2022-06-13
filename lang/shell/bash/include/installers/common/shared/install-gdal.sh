@@ -28,20 +28,20 @@ main() {
             '/usr/bin/gdal-config' \
             '/usr/include/gdal'
     fi
-    koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
+    koopa_activate_build_opt_prefix \
+        'cmake' \
+        'libtool' \
+        'pkg-config'
     koopa_activate_opt_prefix \
+        'curl' \
         'geos' \
         'hdf5' \
-        'jpeg' \
         'libgeotiff' \
-        'libpng' \
-        'libtiff' \
-        'libtool' \
         'libxml2' \
         'openssl' \
         'pcre2' \
-        'proj' \
         'sqlite' \
+        'proj' \
         'xz' \
         'zstd'
     declare -A app=(
@@ -71,60 +71,110 @@ v${dict[version]}/${dict[file]}"
     then
         dict[shared_ext]='dylib'
     fi
-    # FIXME Refer to PROJ installer for syntax on specifying shared libraries.
     cmake_args=(
+        '-DBUILD_APPS=ON'
+        '-DBUILD_PYTHON_BINDINGS=ON'
+        '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
-        '-DBUILD_APPS=ON'
-        '-DBUILD_SHARED_LIBS=ON'
-        # cURL support.
+        '-DGDAL_USE_ARMADILLO=OFF'
+        '-DGDAL_USE_ARROW=OFF'
+        '-DGDAL_USE_BLOSC=OFF'
+        '-DGDAL_USE_BRUNSLI=OFF'
+        '-DGDAL_USE_CFITSIO=OFF'
+        '-DGDAL_USE_CRNLIB=OFF'
+        '-DGDAL_USE_CRYPTOPP=OFF'
         '-DGDAL_USE_CURL=ON'
+        '-DGDAL_USE_DEFLATE=OFF'
+        '-DGDAL_USE_ECW=OFF'
+        '-DGDAL_USE_EXPAT=OFF'
+        '-DGDAL_USE_FILEGDB=OFF'
+        '-DGDAL_USE_FREEXL=OFF'
+        '-DGDAL_USE_FYBA=OFF'
+        '-DGDAL_USE_GEOS=ON'
+        '-DGDAL_USE_GEOTIFF=ON'
+        '-DGDAL_USE_GIF_INTERNAL=ON'
+        '-DGDAL_USE_GTA=OFF'
+        '-DGDAL_USE_HDF4=OFF'
+        '-DGDAL_USE_HDF5=ON'
+        '-DGDAL_USE_HDFS=OFF'
+        '-DGDAL_USE_HEIF=OFF'
+        '-DGDAL_USE_ICONV=OFF'
+        '-DGDAL_USE_IDB=OFF'
+        '-DGDAL_USE_JPEG12_INTERNAL=ON'
+        '-DGDAL_USE_JPEG_INTERNAL=ON'
+        '-DGDAL_USE_JSONC_INTERNAL=ON'
+        '-DGDAL_USE_JXL=OFF'
+        '-DGDAL_USE_KDU=OFF'
+        '-DGDAL_USE_KEA=OFF'
+        '-DGDAL_USE_LERC_INTERNAL=ON'
+        '-DGDAL_USE_LIBKML=OFF'
+        '-DGDAL_USE_LIBLZMA=OFF'
+        '-DGDAL_USE_LIBXML2=ON'
+        '-DGDAL_USE_LURATECH=OFF'
+        '-DGDAL_USE_LZ4=OFF'
+        '-DGDAL_USE_MONGOCXX=OFF'
+        '-DGDAL_USE_MRSID=OFF'
+        '-DGDAL_USE_MSSQL_NCLI=OFF'
+        '-DGDAL_USE_MSSQL_ODBC=OFF'
+        '-DGDAL_USE_MYSQL=OFF'
+        '-DGDAL_USE_NETCDF=OFF'
+        '-DGDAL_USE_ODBC=OFF'
+        '-DGDAL_USE_ODBCCPP=OFF'
+        '-DGDAL_USE_OGDI=OFF'
+        '-DGDAL_USE_OPENCAD_INTERNAL=ON'
+        '-DGDAL_USE_OPENCL=OFF'
+        '-DGDAL_USE_OPENEXR=OFF'
+        '-DGDAL_USE_OPENJPEG=OFF'
+        '-DGDAL_USE_OPENSSL=ON'
+        '-DGDAL_USE_ORACLE=OFF'
+        '-DGDAL_USE_PARQUET=OFF'
+        '-DGDAL_USE_PCRE2=ON'
+        '-DGDAL_USE_PDFIUM=OFF'
+        '-DGDAL_USE_PNG_INTERNAL=ON'
+        '-DGDAL_USE_POPPLER=OFF'
+        '-DGDAL_USE_POSTGRESQL=OFF'
+        '-DGDAL_USE_QHULL_INTERNAL=ON'
+        '-DGDAL_USE_RASTERLITE2=OFF'
+        '-DGDAL_USE_RDB=OFF'
+        '-DGDAL_USE_SFCGAL=OFF'
+        '-DGDAL_USE_SPATIALITE=OFF'
+        '-DGDAL_USE_SQLITE3=ON'
+        '-DGDAL_USE_TEIGHA=OFF'
+        '-DGDAL_USE_TIFF_INTERNAL=ON'
+        '-DGDAL_USE_TILEDB=OFF'
+        '-DGDAL_USE_WEBP=OFF'
+        '-DGDAL_USE_XERCESC=OFF'
+        '-DGDAL_USE_ZLIB_INTERNAL=ON'
+        '-DGDAL_USE_ZSTD=ON'
+        # Required dependency paths.
+        "-DPROJ_INCLUDE_DIR=${dict[opt_prefix]}/proj/include"
+        "-DPROJ_LIBRARY_RELEASE=${dict[opt_prefix]}/proj/lib/\
+libproj.${dict[shared_ext]}"
+        # Optional dependency paths.
         "-DCURL_INCLUDE_DIR=${dict[opt_prefix]}/curl/include"
         "-DCURL_LIBRARY=${dict[opt_prefix]}/curl/lib/\
 libcurl.${dict[shared_ext]}"
-        # GEOS support.
-        '-DGDAL_USE_GEOS=ON'
         "-DGEOS_INCLUDE_DIR=${dict[opt_prefix]}/geos/include"
         "-DGEOS_LIBRARY=${dict[opt_prefix]}/geos/lib/\
 libgeos.${dict[shared_ext]}"
-        # GEOTIFF support (libgeotiff).
-        # FIXME Need to reinstall this.
-        '-DGDAL_USE_GEOTIFF=ON'
-        # FIXME GEOTIFF_INCLUDE_DIR
-        # FIXME GEOTIFF_LIBRARY_RELEASE
-        # HDF5 support.
-        '-DGDAL_USE_HDF5=ON'
-        # JPEG support.
-        '-DGDAL_USE_JPEG=ON'
-        # FIXME JPEG_INCLUDE_DIR (jpeg)
-        # FIXME JPEG_LIBRARY_RELEASE
-        # OpenSSL support.
-        '-DGDAL_USE_OPENSSL=ON'
-        # FIXME OPENSSL_ROOT_DIR
-        # PCRE2 support.
-        '-DGDAL_USE_PCRE2=ON'
-        # FIXME PCRE2_INCLUDE_DIR
-        # FIXME PCRE2_LIBRARY
-        # PNG support (libpng).
-        '-DGDAL_USE_PNG=ON'
-        # FIXME PNG_PNG_INCLUDE_DIR
-        # FIXME PNG_LIBRARY_RELEASE
-        # PROJ support.
-        # FIXME PROJ_INCLUDE_DIR
-        # FIXME PROJ_LIBRARY_RELEASE
-        # SQLite3 support (sqlite).
-        '-DGDAL_USE_SQLITE3=ON'
-        # FIXME SQLite3_INCLUDE_DIR
-        # FIXME SQLite3_LIBRARY
-        # TIFF support.
-        "-DTIFF_INCLUDE_DIR=${dict[opt_prefix]}/libtiff/include"
-        "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib/\
-libtiff.${dict[shared_ext]}"
-        # ZSTD support.
-        '-DGDAL_USE_ZSTD=ON'
-        # FIXME ZSTD_INCLUDE_DIR
-        # FIXME ZSTD_LIBRARY
+        "-DGEOTIFF_INCLUDE_DIR=${dict[opt_prefix]}/libgeotiff/include"
+        "-DGEOTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libgeotiff/lib/\
+libgeotiff.${dict[shared_ext]}"
+        "-DLIBXML2_INCLUDE_DIR=${dict[opt_prefix]}/libxml2/include"
+        "-DLIBXML2_LIBRARY=${dict[opt_prefix]}/libxml2/lib/\
+libxml2.${dict[shared_ext]}"
+        "-DPCRE2_INCLUDE_DIR=${dict[opt_prefix]}/pcre2/include"
+        "-DPCRE2_LIBRARY=${dict[opt_prefix]}/pcre2/lib/\
+libpcre2-8.${dict[shared_ext]}"
+        "-DPython_ROOT=${dict[opt_prefix]}/python"
+        "-DSQLite3_INCLUDE_DIR=${dict[opt_prefix]}/sqlite/include"
+        "-DSQLite3_LIBRARY=${dict[opt_prefix]}/sqlite/lib/\
+libsqlite3.${dict[shared_ext]}"
+        "-DZSTD_INCLUDE_DIR=${dict[opt_prefix]}/zstd/include"
+        "-DZSTD_LIBRARY=${dict[opt_prefix]}/zstd/lib/\
+libzstd.${dict[shared_ext]}"
     )
     koopa_mkdir "${dict[prefix]}/include"
     "${app[cmake]}" .. "${cmake_args[@]}"
