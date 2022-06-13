@@ -98,6 +98,7 @@ __koopa_complete() {
                         'autoconf'
                         'automake'
                         'aws-cli'
+                        'azure-cli'
                         'bash'
                         'bat'
                         'bc'

@@ -11031,6 +11031,15 @@ koopa_install_automake() {
         "$@"
 }
 
+koopa_install_azure_cli() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/az' \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
+        "$@"
+}
+
 koopa_install_bash() {
     koopa_install_app \
         --link-in-bin='bin/bash' \
@@ -20927,6 +20936,14 @@ koopa_uninstall_aws_cli() {
         --name-fancy='AWS CLI' \
         --name='aws-cli' \
         --unlink-in-bin='aws' \
+        "$@"
+}
+
+koopa_uninstall_azure_cli() {
+    koopa_uninstall_app \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
+        --unlink-in-bin='az' \
         "$@"
 }
 
