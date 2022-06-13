@@ -229,6 +229,7 @@ __koopa_complete() {
                         'pipx'
                         'pixman'
                         'pkg-config'
+                        'poetry'
                         'prelude-emacs'
                         'procs'
                         'proj'
