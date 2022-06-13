@@ -6,22 +6,23 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 main() {
     # """
     # Conda environment test script.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-06-03.
     # """
-    local kallisto_version salmon_version
-    kallisto_version="$(koopa_variable 'conda-kallisto')"
-    salmon_version="$(koopa_variable 'conda-salmon')"
+    local dict
+    declare -A dict=(
+        [kallisto_version]="$(koopa_variable 'kallisto')"
+        [salmon_version]="$(koopa_variable 'salmon')"
+    )
     koopa_alert 'Testing conda environment loading.'
-    koopa_conda_create_env \
-        "kallisto@${kallisto_version}" \
-        "salmon@${salmon_version}"
+    koopa_conda_create_env "kallisto@${dict[kallisto_version]}"
+    koopa_conda_create_env "salmon@${dict[salmon_version]}"
     koopa_conda_activate_env 'kallisto'
     kallisto version
-    koopa_conda_activate_env "kallisto@${kallisto_version}"
+    koopa_conda_activate_env "kallisto@${dict[kallisto_version]}"
     kallisto version
     koopa_conda_activate_env 'salmon'
     salmon --version
-    koopa_conda_activate_env "salmon@${salmon_version}"
+    koopa_conda_activate_env "salmon@${dict[salmon_version]}"
     salmon --version
     koopa_conda_deactivate
     koopa_alert_success 'Conda environments loaded successfully.'

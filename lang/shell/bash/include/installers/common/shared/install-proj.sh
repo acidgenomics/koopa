@@ -56,21 +56,23 @@ ${dict[version]}/${dict[file]}"
         dict[shared_ext]='dylib'
     fi
     cmake_args=(
-        '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
         '-DBUILD_APPS=ON'
         '-DBUILD_SHARED_LIBS=ON'
         '-DBUILD_TESTING=OFF'
+        '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        '-DENABLE_CURL=ON'
+        '-DENABLE_TIFF=ON'
+        # Required dependency paths.
         "-DEXE_SQLITE3=${dict[opt_prefix]}/sqlite/bin/sqlite3"
         "-DSQLITE3_INCLUDE_DIR=${dict[opt_prefix]}/sqlite/include"
         "-DSQLITE3_LIBRARY=${dict[opt_prefix]}/sqlite/lib/\
 libsqlite3.${dict[shared_ext]}"
-        '-DENABLE_CURL=ON'
+        # Optional dependency paths.
         "-DCURL_INCLUDE_DIR=${dict[opt_prefix]}/curl/include"
         "-DCURL_LIBRARY=${dict[opt_prefix]}/curl/lib/\
 libcurl.${dict[shared_ext]}"
-        '-DENABLE_TIFF=ON'
         "-DTIFF_INCLUDE_DIR=${dict[opt_prefix]}/libtiff/include"
         "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib/\
 libtiff.${dict[shared_ext]}"

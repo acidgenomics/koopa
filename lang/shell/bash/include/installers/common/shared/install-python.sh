@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE FIXME Need to handle this warning on macOS:
-# > argument unused during compilation: '-fno-semantic-interposition'
-# > [-Wunused-command-line-argument]
+# NOTE Need to clean this up on macOS:
 # clang: warning: argument unused during compilation:
 # '-fno-semantic-interposition' [-Wunused-command-line-argument]
 

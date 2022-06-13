@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-05-06.
+    # @note Updated 2022-06-13.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -28,6 +28,7 @@ main() {
         [cargo]="$(koopa_locate_cargo)"
     )
     declare -A dict=(
+        [cargo_home]="$(koopa_init_dir 'cargo')"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -38,6 +39,7 @@ main() {
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(
         '--jobs' "${dict[jobs]}"
+        '--locked'
         '--root' "${dict[prefix]}"
         '--verbose'
     )
@@ -97,9 +99,13 @@ main() {
                 'ripgrep')
                     install_args+=('--features' 'pcre2')
                     ;;
+                'tuc')
+                    install_args+=('--features' 'regex')
+                    ;;
             esac
             ;;
     esac
+    export CARGO_HOME="${dict[cargo_home]}"
     "${app[cargo]}" install "${install_args[@]}"
     return 0
 }

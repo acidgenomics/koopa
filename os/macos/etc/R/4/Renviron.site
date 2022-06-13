@@ -120,7 +120,7 @@ XML_CONFIG="${KOOPA_OPT_PREFIX}/libxml2/bin/xml2-config"
 # ------------------------------------------------------------------------------
 
 # Options: "never", "error", "warning", "note".
-RCMDCHECK_ERROR_ON="note"
+RCMDCHECK_ERROR_ON="warning"
 
 # remotes {{{2
 # ------------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-05-31.
+    # Updated 2022-06-13.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -94,10 +94,12 @@ __koopa_complete() {
                         'apr'
                         'apr-util'
                         'armadillo'
+                        'asdf'
                         'attr'
                         'autoconf'
                         'automake'
                         'aws-cli'
+                        'azure-cli'
                         'bash'
                         'bat'
                         'bc'
@@ -145,6 +147,7 @@ __koopa_complete() {
                         'gmp'
                         'gnupg'
                         'go'
+                        'google-cloud-sdk'
                         'gperf'
                         'grep'
                         'groff'
@@ -161,6 +164,7 @@ __koopa_complete() {
                         'icu4c'
                         'imagemagick'
                         'ipython'
+                        'isort'
                         'jpeg'
                         'jq'
                         'julia'
@@ -168,6 +172,7 @@ __koopa_complete() {
                         'koopa'
                         'lame'
                         'lapack'
+                        'latch'
                         'lesspipe'
                         'libevent'
                         'libffi'
@@ -224,6 +229,7 @@ __koopa_complete() {
                         'pipx'
                         'pixman'
                         'pkg-config'
+                        'poetry'
                         'prelude-emacs'
                         'procs'
                         'proj'
@@ -267,6 +273,7 @@ __koopa_complete() {
                         'tmux'
                         'tokei'
                         'tree'
+                        'tuc'
                         'udunits'
                         'utf8proc'
                         'vim'
@@ -290,6 +297,7 @@ __koopa_complete() {
                         'xxhash'
                         'xz'
                         'yt-dlp'
+                        'zellij'
                         'zlib'
                         'zoxide'
                         'zsh'
@@ -300,14 +308,12 @@ __koopa_complete() {
                         args+=(
                             'apptainer'
                             'aspera-connect'
-                            'azure-cli'
                             'base-system'
                             'bcbio-nextgen'
                             'bcl2fastq'
                             'cellranger'
                             'cloudbiolinux'
                             'docker-credential-pass'
-                            'google-cloud-sdk'
                             'julia-binary'
                             'lmod'
                             'node-binary'
@@ -459,7 +465,7 @@ __koopa_complete() {
                         )
                         if koopa_is_macos
                         then
-                            args+=('launch-agents') # FIXME Support this.
+                            args+=('launch-agents')
                         fi
                         ;;
                     esac
