@@ -196,7 +196,7 @@ gnutls="3.7.4"
 go="1.18.1"
 
 # https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="380.0.0"
+google-cloud-sdk="389.0.0"
 
 # https://www.gnu.org/software/gperf
 gperf="3.1"
