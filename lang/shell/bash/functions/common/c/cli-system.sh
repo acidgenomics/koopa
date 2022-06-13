@@ -78,7 +78,6 @@ koopa_cli_system() {
         'test' | \
         'variable' | \
         'variables')
-            # FIXME This isn't passing arguments for 'push-app-build' correctly.
             key="${1:?}"
             shift 1
             ;;

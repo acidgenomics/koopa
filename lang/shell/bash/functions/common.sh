@@ -11016,6 +11016,13 @@ koopa_install_armadillo() {
         "$@"
 }
 
+koopa_install_asdf() {
+    koopa_install_app \
+        --link-in-bin='bin/asdf' \
+        --name='asdf' \
+        "$@"
+}
+
 koopa_install_autoconf() {
     koopa_install_app \
         --installer='gnu-app' \
@@ -20932,6 +20939,13 @@ koopa_uninstall_armadillo() {
     koopa_uninstall_app \
         --name-fancy='Armadillo' \
         --name='armadillo' \
+        "$@"
+}
+
+koopa_uninstall_asdf() {
+    koopa_uninstall_app \
+        --name='asdf' \
+        --unlink-in-bin='asdf' \
         "$@"
 }
 
