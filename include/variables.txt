@@ -515,7 +515,7 @@ spacemacs="latest"
 spacevim="latest"
 
 # https://www.sqlite.org/download.html
-sqlite="3.38.2"
+sqlite="3.38.5"
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
