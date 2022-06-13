@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# NOTE Need to clean this up on macOS:
+# clang: warning: argument unused during compilation:
+# '-fno-semantic-interposition' [-Wunused-command-line-argument]
+
 main() {
     # """
     # Install Python.
