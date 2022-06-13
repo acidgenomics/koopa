@@ -152,16 +152,14 @@ v${dict[version]}/${dict[file]}"
         '-DGDAL_USE_ZLIB_INTERNAL=ON'
         '-DGDAL_USE_ZSTD=ON'
         # Required dependency paths.
-        "-DPROJ_INCLUDE_DIR=${dict[opt_prefix]}/proj/include"
-        "-DPROJ_LIBRARY_RELEASE=${dict[opt_prefix]}/proj/lib/\
-libproj.${dict[shared_ext]}"
+        # CMake installer currently warns when this is set:
+        # > "-DPROJ_INCLUDE_DIR=${dict[opt_prefix]}/proj/include"
+        # > "-DPROJ_LIBRARY_RELEASE=${dict[opt_prefix]}/proj/lib/\
+# > libproj.${dict[shared_ext]}"
         # Optional dependency paths.
         "-DCURL_INCLUDE_DIR=${dict[opt_prefix]}/curl/include"
         "-DCURL_LIBRARY=${dict[opt_prefix]}/curl/lib/\
 libcurl.${dict[shared_ext]}"
-        "-DGEOS_INCLUDE_DIR=${dict[opt_prefix]}/geos/include"
-        "-DGEOS_LIBRARY=${dict[opt_prefix]}/geos/lib/\
-libgeos.${dict[shared_ext]}"
         "-DLIBXML2_INCLUDE_DIR=${dict[opt_prefix]}/libxml2/include"
         "-DLIBXML2_LIBRARY=${dict[opt_prefix]}/libxml2/lib/\
 libxml2.${dict[shared_ext]}"
@@ -172,9 +170,13 @@ libpcre2-8.${dict[shared_ext]}"
         "-DSQLite3_INCLUDE_DIR=${dict[opt_prefix]}/sqlite/include"
         "-DSQLite3_LIBRARY=${dict[opt_prefix]}/sqlite/lib/\
 libsqlite3.${dict[shared_ext]}"
-        "-DZSTD_INCLUDE_DIR=${dict[opt_prefix]}/zstd/include"
-        "-DZSTD_LIBRARY=${dict[opt_prefix]}/zstd/lib/\
-libzstd.${dict[shared_ext]}"
+        # CMake installer currently warns when these are set:
+        # > "-DGEOS_INCLUDE_DIR=${dict[opt_prefix]}/geos/include"
+        # > "-DGEOS_LIBRARY=${dict[opt_prefix]}/geos/lib/\
+# > libgeos.${dict[shared_ext]}"
+        # > "-DZSTD_INCLUDE_DIR=${dict[opt_prefix]}/zstd/include"
+        # > "-DZSTD_LIBRARY=${dict[opt_prefix]}/zstd/lib/\
+# > libzstd.${dict[shared_ext]}"
     )
     koopa_mkdir "${dict[prefix]}/include"
     "${app[cmake]}" .. "${cmake_args[@]}"
