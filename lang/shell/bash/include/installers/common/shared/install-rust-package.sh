@@ -99,6 +99,9 @@ main() {
                 'ripgrep')
                     install_args+=('--features' 'pcre2')
                     ;;
+                'tuc')
+                    install_args+=('--features' 'regex')
+                    ;;
             esac
             ;;
     esac

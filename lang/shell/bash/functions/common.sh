@@ -12779,6 +12779,14 @@ koopa_install_tree() {
         "$@"
 }
 
+koopa_install_tuc() {
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/tuc' \
+        --name='tuc' \
+        "$@"
+}
+
 koopa_install_udunits() {
     koopa_install_app \
         --link-in-bin='bin/udunits2' \
@@ -12947,6 +12955,14 @@ koopa_install_yt_dlp() {
         --installer='python-venv' \
         --link-in-bin='bin/yt-dlp' \
         --name='yt-dlp' \
+        "$@"
+}
+
+koopa_install_zellij() {
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/zellij' \
+        --name='zellij' \
         "$@"
 }
 
@@ -22399,6 +22415,13 @@ koopa_uninstall_tree() {
         "$@"
 }
 
+koopa_uninstall_tuc() {
+    koopa_uninstall_app \
+        --unlink-in-bin='tuc' \
+        --name='tuc' \
+        "$@"
+}
+
 koopa_uninstall_udunits() {
     koopa_uninstall_app \
         --name='udunits' \
@@ -22543,6 +22566,13 @@ koopa_uninstall_yt_dlp() {
     koopa_uninstall_app \
         --name='yt-dlp' \
         --unlink-in-bin='yt-dlp' \
+        "$@"
+}
+
+koopa_uninstall_zellij() {
+    koopa_uninstall_app \
+        --unlink-in-bin='zellij' \
+        --name='zellij' \
         "$@"
 }
 
