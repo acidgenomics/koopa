@@ -1,13 +1,10 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-06-01"
+koopa-date="2022-06-13"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
-
-# Also update this value in 'lang/r/include/header.R'.
-r-koopa="0.3.1"
 
 # Globals
 # ==============================================================================
@@ -38,7 +35,7 @@ apr-util="1.6.1"
 armadillo="10.8.2"
 
 # https://github.com/asdf-vm/asdf/releases
-asdf="0.10.0"
+asdf="0.10.2"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="4.1.3.93"
@@ -54,22 +51,19 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.7.0"
+aws-cli="2.7.7"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.35.0"
+azure-cli="2.37.0"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
-
-bat="0.21.0" # rust
 
 # https://ftp.gnu.org/gnu/bc/
 bc="1.07"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-# 1.2.9 has issues with bcftools and samtools
 bcbio-nextgen="1.2.9"
 
 # https://github.com/bcbio/bcbio-nextgen-vm/releases
@@ -89,14 +83,8 @@ binutils="2.37"
 # https://bioconductor.org/
 bioconductor="3.15"
 
-black="22.3.0" # python
-
 # https://www.boost.org/
 boost="1.78.0"
-
-bpytop="1.0.68" # python
-
-broot="1.12.0" # rust (br)
 
 # https://www.sourceware.org/bzip2/
 bzip2="1.0.8"
@@ -111,9 +99,6 @@ cellranger="7.0.0"
 
 # https://github.com/plexus/chemacs2
 chemacs="latest"
-
-# https://www.chezmoi.io/
-chezmoi="2.17.0"
 
 # https://cmake.org/download/
 cmake="3.23.0"
@@ -133,15 +118,11 @@ curl="7.82.0"
 # https://github.com/dandavison/delta
 delta="0.13.0"
 
-difftastic="0.27.0" # rust (difft)
-
 # https://docs.docker.com/install/
 docker="20.10.14"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
-
-dog="0.1.0" # rust
 
 # https://github.com/hlissner/doom-emacs
 doom-emacs="latest"
@@ -149,17 +130,11 @@ doom-emacs="latest"
 # https://github.com/acidgenomics/dotfiles
 dotfiles="latest"
 
-du-dust="0.8.0" # rust (dust)
-
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
 
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl-perl-api="latest"
-
-exa="0.10.1" # rust
-
-fd-find="8.3.2" # rust
 
 # https://ffmpeg.org/
 ffmpeg="5.0.1"
@@ -169,8 +144,6 @@ findutils="4.9.0"
 
 # https://xiph.org/flac/
 flac="1.3.4"
-
-flake8="4.0.1" # python
 
 # https://www.fltk.org/
 fltk="1.3.8"
@@ -200,7 +173,7 @@ gcc="12.1.0"
 gdal="3.5.0"
 
 # https://github.com/libgeos/geos/releases
-geos="3.10.2"
+geos="3.10.3"
 
 # https://www.gnu.org/software/gettext/
 gettext="0.21"
@@ -208,8 +181,6 @@ gettext="0.21"
 # https://git-scm.com/
 # https://github.com/git/git/releases
 git="2.35.1"
-
-glances="3.2.5" # python
 
 glib="2.72.0"
 
@@ -225,7 +196,7 @@ gnutls="3.7.4"
 go="1.18.1"
 
 # https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="380.0.0"
+google-cloud-sdk="389.0.0"
 
 # https://www.gnu.org/software/gperf
 gperf="3.1"
@@ -256,16 +227,11 @@ hdf5="1.12.1"
 # https://github.com/htop-dev/htop
 htop="3.2.0"
 
-hyperfine="1.14.0" # rust
-
 # http://site.icu-project.org/
 icu4c="71.1"
 
 # https://imagemagick.org/
 imagemagick="7.1.0-29"
-
-# https://ipython.org/
-ipython="8.3.0"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -370,14 +336,8 @@ mamba="0.24.0"
 
 man-db="2.10.2"
 
-mcfly="0.6.0" # rust
-
-# Used by lesspipe for Markdown files.
-# https://crates.io/crates/mdcat
-mdcat="0.27.1" # rust
-
 # https://github.com/mesonbuild/meson/tags
-meson="0.62.1"
+meson="0.62.2"
 
 # http://www.multiprecision.org/mpc/
 mpc="1.2.1"
@@ -423,7 +383,7 @@ openjdk="17.0.2"
 openssh="8.9p1"
 
 # https://www.openssl.org/source/
-openssl="3.0.2"
+openssl="3.0.3"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
@@ -460,21 +420,14 @@ perl-file-rename="1.30"
 # https://github.com/php/php-src/releases
 php="8.1.2"
 
-pipx="1.0.0" # python
-
 pixman="0.40.0"
 
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
 
-# https://python-poetry.org/
-poetry="1.1.13"
-
 # https://github.com/bbatsov/prelude
 prelude-emacs="latest"
-
-procs="0.12.1" # rust
 
 # https://proj.org/
 proj="9.0.0"
@@ -482,20 +435,11 @@ proj="9.0.0"
 # https://github.com/pyenv/pyenv
 pyenv="2.2.5"
 
-pyflakes="2.4.0" # python
-
 # https://pygments.org/
 pygments="2.12.0"
 
-pylint="2.13.4" # python
-
-# https://github.com/supermihi/pytaglib
-pytaglib="1.5.0"
-
-pytest="6.2.5" # python
-
 # https://www.python.org/downloads/
-python="3.10.4"
+python="3.10.5"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
@@ -516,32 +460,23 @@ r-gfortran="8.2"
 # This is the SVN revision number.
 r-devel="82272" # 2022-04-28
 
-ranger-fm="1.9.3" # python
-
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.2.0"
 
 # https://tiswww.cwru.edu/php/chet/readline/rltop.html
 readline="8.1.2"
 
-ripgrep="13.0.0" # rust
-
-# > ripgrep-all="0.9.6" # rust (rga)
-
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2022.02.1+461"
+rstudio-server="2022.02.3+492"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.1.2p20"
 
 # https://www.rust-lang.org/
 rust="1.61.0"
-
-# https://rustup.rs/
-rustup="1.24.3"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
@@ -565,7 +500,7 @@ serf="1.3.9"
 shellcheck="0.8.0"
 
 # https://www.rstudio.com/products/shiny/download-server/
-shiny-server="1.5.18.987" # 2022-04-20
+shiny-server="1.5.18.987"
 
 # https://github.com/kward/shunit2/releases
 shunit2="2.1.7"
@@ -580,10 +515,7 @@ spacemacs="latest"
 spacevim="latest"
 
 # https://www.sqlite.org/download.html
-sqlite="3.38.2"
-
-# https://starship.rs/
-starship="1.7.1" # rust
+sqlite="3.38.5"
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
@@ -600,8 +532,6 @@ tar="1.34"
 # https://www.tcl-lang.org
 tcl-tk="8.6.12"
 
-tealdeer="1.5.0" # rust (tldr)
-
 # https://www.latex-project.org/get/
 tex="2022"
 
@@ -610,9 +540,7 @@ tex="2022"
 texinfo="6.8"
 
 # https://github.com/tmux/tmux/releases
-tmux="3.3"
-
-tokei="12.1.2" # rust
+tmux="3.3a"
 
 tree="2.0.2"
 
@@ -626,7 +554,7 @@ utf8proc="2.7.0"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4900"
+vim="8.2.5050"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.3"
@@ -649,8 +577,6 @@ xorg-xcb-proto="1.14.1"
 xorg-xorgproto="2021.5"
 xorg-xtrans="1.4.0"
 
-xsv="0.13.0" # rust
-
 # https://github.com/Cyan4973/xxHash
 xxhash="0.8.1"
 
@@ -663,137 +589,176 @@ yt-dlp="2022.05.18"
 # https://www.zlib.net/
 zlib="1.2.12"
 
-zoxide="0.8.1" # rust (z)
-
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8.1"
 
 # https://facebook.github.io/zstd/
 zstd="1.5.2"
 
-# Conda environments
-# ==============================================================================
-# Updated 2022-03-15.
-#
-# Use 'conda search --info <name>' to retrieve timestamp and dependency info.
-# Consider removing very old packages from our workflows.
-
-# Linux only (not supported on macOS):
-conda-biobambam="2.0.182"       # 2021-04-21 bioconda linux       [file formats]
-conda-bwa-mem2="2.2.1"          # 2021-03-17 bioconda linux           [aligners]
-conda-merfishtools="1.5.0"      # 2018-10-24 bioconda linux            [spatial]
-conda-ribotaper="1.3.1"         # 2020-07-13 bioconda linux            [riboseq]
-
-# Cross platform (Linux and macOS):
-conda-alevin-fry="0.6.0"        # 2022-06-01 bioconda               [singlecell]
-conda-arriba="2.2.1"            # 2022-01-23 bioconda                [variation]
-conda-atropos="1.1.31"          # 2021-07-07 bioconda                 [trimming]
-conda-bamtools="2.5.2"          # 2022-03-14 bioconda             [file formats]
-conda-bcftools="1.15"           # 2022-03-02 bioconda             [file formats]
-conda-bedtools="2.30.0"         # 2021-08-12 bioconda             [file formats]
-conda-bioawk="1.0"              # 2019-10-26 bioconda             [file formats]
-conda-bismark="0.23.1"          # 2021-07-26 bioconda              [methylation]
-conda-bowtie2="2.4.5"           # 2022-02-08 bioconda                 [aligners]
-conda-bustools="0.41.0"         # 2021-06-25 bioconda               [singlecell]
-conda-bwa="0.7.17"              # 2019-12-19 bioconda                 [aligners]
-conda-cellrank="1.5.1"          # 2022-01-14 bioconda               [singlecell]
-conda-celltypist="0.2.0"        # 2022-02-14 bioconda               [singlecell]
-conda-chromhmm="1.23"           # 2021-09-03 bioconda                  [chipseq]
-conda-cromwell="76"             # 2022-02-15 conda-forge             [workflows]
-conda-deeptools="3.5.1"         # 2021-03-17 bioconda                  [chipseq]
-conda-entrez-direct="16.2"      # 2021-11-04 bioconda              [data mining]
-conda-ericscript="0.5.5"        # 2021-03-26 bioconda                [variation]
-conda-fastqc="0.11.9"           # 2021-03-25 bioconda                       [qc]
-conda-fgbio="2.0.1"             # 2022-04-18 bioconda                [workflows]
-conda-gatk4="4.2.5.0"           # 2022-02-05 bioconda                [workflows]
-conda-gdal="3.4.2"              # YYYY-MM-DD conda-forge         [visualization]
-conda-genrich="0.6.1"           # 2021-03-17 bioconda                  [chipseq]
-conda-gget="0.1.1"              # 2022-05-27 bioconda              [data mining]
-conda-gffread="0.12.7"          # 2021-09-24 bioconda             [file formats]
-conda-gffutils="0.10.1"         # 2020-07-26 bioconda             [file formats]
-conda-gseapy="0.10.8"           # 2022-02-10 bioconda               [enrichment]
-conda-hisat2="2.2.1"            # 2020-07-24 bioconda                 [aligners]
-conda-homer="4.11"              # 2020-04-29 bioconda                  [chipseq]
-conda-igvtools="2.5.3"          # 2021-03-25 bioconda            [visualization]
-conda-jupyterlab="3.4.0"        # 2022-05-03 conda-forge             [workflows]
-conda-kallisto="0.48.0"         # 2022-01-17 bioconda                   [rnaseq]
-conda-kraken2="2.1.2"           # 2021-05-10 bioconda                       [qc]
-conda-luigi="3.0.3"             # 2021-04-16 conda-forge             [workflows]
-conda-macs2="2.2.7.1"           # 2021-09-22 bioconda                  [chipseq]
-conda-mashmap="2.0"             # 2022-01-14 bioconda                   [rnaseq]
-conda-meme="5.4.1"              # 2022-01-02 bioconda               [enrichment]
-conda-miniwdl="1.5.0"           # 2022-02-19 conda-forge             [workflows]
-conda-minimap2="2.24"           # 2021-12-27 bioconda                 [aligners]
-conda-mirdeep2="2.0.1.3"        # 2021-07-15 bioconda                 [smallrna]
-conda-mirtop="0.4.24"           # 2021-11-12 bioconda                 [smallrna]
-conda-multiqc="1.12"            # 2022-02-08 bioconda                       [qc]
-conda-nextflow="22.04.0"        # 2022-04-23 bioconda                [workflows]
-conda-novoalign="3.09.00"       # 2018-09-02 bioconda                 [aligners]
-conda-numpy="1.22.3"            # 2022-03-08 conda-forge          [data science]
-conda-oncofuse="1.1.1"          # 2021-03-27 bioconda                [variation]
-conda-pandas="1.4.1"            # 2022-02-16 conda-forge          [data science]
-conda-peddy="0.4.8"             # 2021-06-02 bioconda                [variation]
-conda-picard="2.26.10"          # 2022-01-04 bioconda                [workflows]
-conda-pizzly="0.37.3"           # 2019-01-17 bioconda                [variation]
-conda-qualimap="2.2.2d"         # 2021-03-28 bioconda                       [qc]
-conda-r-monocle3="1.0.0"        # 2021-06-02 bioconda               [singlecell]
-conda-r-seurat="4.1.0"          # 2022-01-15 conda-forge            [singlecell]
-conda-r-tailfindr="1.3"         # 2021-08-24 bioconda         [rna modification]
-conda-ribocode="1.2.14"         # 2022-03-07 bioconda                  [riboseq]
-conda-ribodiff="0.2.2"          # 2019-10-27 bioconda                  [riboseq]
-conda-rsem="1.3.3"              # 2022-02-25 bioconda                 [aligners]
-conda-salmon="1.8.0"            # 2022-03-12 bioconda                   [rnaseq]
-conda-sambamba="0.8.0"          # 2021-01-02 bioconda             [file formats]
-conda-samblaster="0.1.26"       # 2021-03-26 bioconda             [file formats]
-conda-samtools="1.15"           # 2022-02-22 bioconda             [file formats]
-conda-scanpy="1.8.2"            # 2021-11-04 bioconda               [singlecell]
-conda-scikit-learn="1.0.2"      # 2021-12-25 conda-forge                    [ml]
-conda-scrublet="0.2.3"          # 2021-04-12 bioconda               [singlecell]
-conda-seqbuster="3.5"           # 2021-03-26 bioconda                 [smallrna]
-conda-seqcluster="1.2.8"        # 2021-06-22 bioconda                 [smallrna]
-conda-seqkit="2.2.0"            # 2022-03-14 bioconda             [file formats]
-conda-seqtk="1.3"               # 2019-07-31 bioconda             [file formats]
-conda-sicer2="1.0.3"            # 2021-03-26 bioconda                  [chipseq]
-conda-snakemake="7.8.1"         # 2022-05-31 bioconda                [workflows]
-conda-snakefmt="0.6.0"          # 2022-03-03 bioconda                [workflows]
-conda-squid="1.5"               # 2021-03-27 bioconda                [variation]
-conda-stringtie="2.2.1"         # 2022-02-23 bioconda                   [rnaseq]
-conda-sra-tools="2.11.0"        # 2021-11-10 bioconda              [data mining]
-conda-star-fusion="1.10.0"      # 2021-04-15 bioconda                [variation]
-conda-star="2.7.10a"            # 2022-01-15 bioconda                 [aligners]
-conda-trimmomatic="0.39"        # 2021-03-27 bioconda                 [trimming]
-conda-umap-learn="0.5.2"        # 2021-11-03 bioconda               [singlecell]
-conda-vardict="2019.06.04"      # 2019-06-05 bioconda                [variation]
-conda-visidata="2.8"            # 2022-01-13 conda-forge          [file formats]
-
-# Homebrew cask versions
+# Conda recipes
 # ==============================================================================
 
-homebrew-cask-gpg-suite="2022.1"
+# Linux only:
+biobambam="2.0.182" # 2021-04-21 bioconda (linux)
+bwa-mem2="2.2.1" # 2021-03-17 bioconda (linux)
+merfishtools="1.5.0" # 2018-10-24 bioconda (linux)
+ribotaper="1.3.1" # 2020-07-13 bioconda (linux)
+
+# Linux and macOS:
+alevin-fry="0.6.0" # 2022-06-01 bioconda
+arriba="2.2.1" # 2022-01-23 bioconda
+atropos="1.1.31" # 2021-07-07 bioconda
+bamtools="2.5.2" # 2022-03-14 bioconda
+bcftools="1.15" # 2022-03-02 bioconda
+bedtools="2.30.0" # 2021-08-12 bioconda
+bioawk="1.0" # 2019-10-26 bioconda
+bismark="0.23.1" # 2021-07-26 bioconda
+bowtie2="2.4.5" # 2022-02-08 bioconda
+bustools="0.41.0" # 2021-06-25 bioconda
+bwa="0.7.17" # 2019-12-19 bioconda
+cellrank="1.5.1" # 2022-01-14 bioconda
+celltypist="0.2.0" # 2022-02-14 bioconda
+chromhmm="1.23" # 2021-09-03 bioconda
+cromwell="76" # 2022-02-15 conda-forge
+deeptools="3.5.1" # 2021-03-17 bioconda
+entrez-direct="16.2" # 2021-11-04 bioconda
+ericscript="0.5.5" # 2021-03-26 bioconda
+fastqc="0.11.9" # 2021-03-25 bioconda
+ffq="0.2.1" # 2022-05-05 bioconda
+fgbio="2.0.1" # 2022-04-18 bioconda
+gatk4="4.2.5.0" # 2022-02-05 bioconda
+gdal="3.4.2" # YYYY-MM-DD conda-forge
+genrich="0.6.1" # 2021-03-17 bioconda
+gffread="0.12.7" # 2021-09-24 bioconda
+gffutils="0.10.1" # 2020-07-26 bioconda
+gget="0.2.0" # 2022-06-08 bioconda
+gseapy="0.10.8" # 2022-02-10 bioconda
+hisat2="2.2.1" # 2020-07-24 bioconda
+homer="4.11" # 2020-04-29 bioconda
+igvtools="2.5.3" # 2021-03-25 bioconda
+jupyterlab="3.4.0" # 2022-05-03 conda-forge
+kallisto="0.48.0" # 2022-01-17 bioconda
+kraken2="2.1.2" # 2021-05-10 bioconda
+luigi="3.0.3" # 2021-04-16 conda-forge
+macs2="2.2.7.1" # 2021-09-22 bioconda
+mashmap="2.0" # 2022-01-14 bioconda
+meme="5.4.1" # 2022-01-02 bioconda
+minimap2="2.24" # 2021-12-27 bioconda
+miniwdl="1.5.0" # 2022-02-19 conda-forge
+mirdeep2="2.0.1.3" # 2021-07-15 bioconda
+mirtop="0.4.24" # 2021-11-12 bioconda
+multiqc="1.12" # 2022-02-08 bioconda
+nextflow="22.04.0" # 2022-04-23 bioconda
+novoalign="3.09.00" # 2018-09-02 bioconda
+numpy="1.22.3" # 2022-03-08 conda-forge
+oncofuse="1.1.1" # 2021-03-27 bioconda
+pandas="1.4.1" # 2022-02-16 conda-forge
+peddy="0.4.8" # 2021-06-02 bioconda
+picard="2.26.10" # 2022-01-04 bioconda
+pizzly="0.37.3" # 2019-01-17 bioconda
+qualimap="2.2.2d" # 2021-03-28 bioconda
+r-monocle3="1.0.0" # 2021-06-02 bioconda
+r-seurat="4.1.0" # 2022-01-15 conda-forge
+r-tailfindr="1.3" # 2021-08-24 bioconda
+ribocode="1.2.14" # 2022-03-07 bioconda
+ribodiff="0.2.2" # 2019-10-27 bioconda
+rsem="1.3.3" # 2022-02-25 bioconda
+salmon="1.8.0" # 2022-03-12 bioconda
+sambamba="0.8.0" # 2021-01-02 bioconda
+samblaster="0.1.26" # 2021-03-26 bioconda
+samtools="1.15" # 2022-02-22 bioconda
+scanpy="1.8.2" # 2021-11-04 bioconda
+scikit-learn="1.0.2" # 2021-12-25 conda-forge
+scrublet="0.2.3" # 2021-04-12 bioconda
+seqbuster="3.5" # 2021-03-26 bioconda
+seqcluster="1.2.8" # 2021-06-22 bioconda
+seqkit="2.2.0" # 2022-03-14 bioconda
+seqtk="1.3" # 2019-07-31 bioconda
+sicer2="1.0.3" # 2021-03-26 bioconda
+snakefmt="0.6.0" # 2022-03-03 bioconda
+snakemake="7.8.1" # 2022-05-31 bioconda
+squid="1.5" # 2021-03-27 bioconda
+sra-tools="2.11.0" # 2021-11-10 bioconda
+star-fusion="1.10.0" # 2021-04-15 bioconda
+star="2.7.10a" # 2022-01-15 bioconda
+stringtie="2.2.1" # 2022-02-23 bioconda
+trimmomatic="0.39" # 2021-03-27 bioconda
+umap-learn="0.5.2" # 2021-11-03 bioconda
+vardict="2019.06.04" # 2019-06-05 bioconda
+visidata="2.8" # 2022-01-13 conda-forge
+
+# Go packages
+# ==============================================================================
+
+# https://www.chezmoi.io/
+chezmoi="2.17.0"
 
 # Nim (Nimble) packages
 # ==============================================================================
 # Updated 2021-10-05.
 
 # https://github.com/soasme/nim-markdown/tags/
-nim-markdown="0.8.5"                # markdown
+nim-markdown="0.8.5"
 
 # Node (NPM) packages
 # ==============================================================================
 # Updated 2022-04-19 from https://www.npmjs.com/
 
-node-npm="8.7.0"                    # system
+node-npm="8.7.0"
 
-node-bash-language-server="2.1.0"   # bash-language-server
-node-gtop="1.1.3"                   # gtop
-node-prettier="2.6.2"               # prettier
+node-bash-language-server="2.1.0"
+node-gtop="1.1.3"
+node-prettier="2.6.2"
+
+# Python packages
+# ==============================================================================
+
+black="22.3.0"
+bpytop="1.0.68"
+flake8="4.0.1"
+glances="3.2.6.4"
+ipython="8.4.0"
+isort="5.10.1"
+latch="1.1.0"
+pipx="1.1.0"
+poetry="1.1.13"
+pyflakes="2.4.0"
+pylint="2.14.1"
+pytaglib="1.5.0"
+pytest="7.1.2"
+ranger-fm="1.9.3"
 
 # Ruby packages (gems)
 # ==============================================================================
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.12"           # system
+ruby-bundler="2.3.12"
 
-ruby-bashcov="1.8.2"            # bashcov
-ruby-colorls="1.4.6"            # colorls
-ruby-ronn="0.7.3"               # ronn
+ruby-bashcov="1.8.2"
+ruby-colorls="1.4.6"
+ruby-ronn="0.7.3"
+
+# Rust packages
+# ==============================================================================
+
+# > ripgrep-all="0.9.6" # rga
+bat="0.21.0"
+
+broot="1.13.1" # br (build issues with rust 1.61).
+difftastic="0.29.0" # difft
+dog="0.1.0"
+du-dust="0.8.0"
+exa="0.10.1"
+fd-find="8.4.0"
+hyperfine="1.14.0"
+mcfly="0.6.0"
+mdcat="0.27.1"
+procs="0.12.3"
+ripgrep="13.0.0"
+starship="1.7.1"
+tealdeer="1.5.0" # tldr
+tokei="12.1.2"
+tuc="0.10.0"
+xsv="0.13.0"
+zellij="0.30.0"
+zoxide="0.8.1" # z

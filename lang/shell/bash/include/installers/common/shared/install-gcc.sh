@@ -84,6 +84,7 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
     koopa_cd 'build'
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--disable-multilib'
         '--enable-checking=release'
         '--enable-languages=c,c++,fortran,objc,obj-c++'
         "--with-gmp=${dict[gmp]}"

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python package as a venv.
-    # @note Updated 2022-05-27.
+    # @note Updated 2022-06-13.
     # """
     local bin_name bin_names dict
     koopa_assert_has_no_args "$#"
@@ -14,6 +14,9 @@ main() {
     )
     dict[libexec]="${dict[prefix]}/libexec"
     case "${dict[name]}" in
+        'azure-cli')
+            bin_names=('az')
+            ;;
         'pygments')
             bin_names=('pygmentize')
             ;;

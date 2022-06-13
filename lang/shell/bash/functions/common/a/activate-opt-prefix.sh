@@ -3,7 +3,7 @@
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-04-23.
+    # @note Updated 2022-06-01.
     #
     # Consider using pkg-config to manage CPPFLAGS and LDFLAGS:
     # > pkg-config --libs PKG_CONFIG_NAME...
@@ -126,6 +126,9 @@ koopa_activate_opt_prefix() {
             [[ -d "${prefix}/lib64" ]] && \
                 LDFLAGS="${LDFLAGS:-} -L${prefix}/lib64"
         fi
+        koopa_add_rpath_to_ldflags \
+            "${prefix}/lib" \
+            "${prefix}/lib64"
     done
     export CPPFLAGS LDFLAGS LDLIBS
     return 0

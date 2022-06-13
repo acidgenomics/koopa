@@ -747,6 +747,9 @@ koopa_activate_opt_prefix() {
             [[ -d "${prefix}/lib64" ]] && \
                 LDFLAGS="${LDFLAGS:-} -L${prefix}/lib64"
         fi
+        koopa_add_rpath_to_ldflags \
+            "${prefix}/lib" \
+            "${prefix}/lib64"
     done
     export CPPFLAGS LDFLAGS LDLIBS
     return 0
@@ -814,6 +817,7 @@ koopa_add_rpath_to_ldflags() {
     LDFLAGS="${LDFLAGS:-}"
     for dir in "$@"
     do
+        [[ -d "$dir" ]] || continue
         LDFLAGS="${LDFLAGS} -Wl,-rpath,${dir}"
     done
     export LDFLAGS
@@ -4333,7 +4337,7 @@ koopa_conda_create_env() {
             --pattern='='
         then
             dict[env_version]="$( \
-                koopa_variable "conda-${dict[env_string]}" \
+                koopa_variable "${dict[env_string]}" \
                 || true \
             )"
             if [[ -z "${dict[env_version]}" ]]
@@ -11012,6 +11016,13 @@ koopa_install_armadillo() {
         "$@"
 }
 
+koopa_install_asdf() {
+    koopa_install_app \
+        --link-in-bin='bin/asdf' \
+        --name='asdf' \
+        "$@"
+}
+
 koopa_install_autoconf() {
     koopa_install_app \
         --installer='gnu-app' \
@@ -11024,6 +11035,15 @@ koopa_install_automake() {
         --activate-opt='autoconf' \
         --installer='gnu-app' \
         --name='automake' \
+        "$@"
+}
+
+koopa_install_azure_cli() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/az' \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
         "$@"
 }
 
@@ -11083,9 +11103,9 @@ koopa_install_bpytop() {
 
 koopa_install_broot() {
     koopa_install_app \
+        --installer='rust-package' \
         --link-in-bin='bin/broot' \
         --name='broot' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -11565,6 +11585,14 @@ koopa_install_go() {
         "$@"
 }
 
+koopa_install_google_cloud_sdk() {
+    koopa_install_app \
+        --link-in-bin='bin/gcloud' \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        "$@"
+}
+
 koopa_install_gperf() {
     koopa_install_app \
         --installer='gnu-app' \
@@ -11688,6 +11716,14 @@ koopa_install_ipython() {
         --link-in-bin='bin/ipython' \
         --name-fancy='IPython' \
         --name='ipython' \
+        "$@"
+}
+
+koopa_install_isort() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/isort' \
+        --name='isort' \
         "$@"
 }
 
@@ -11903,6 +11939,15 @@ koopa_install_lapack() {
     koopa_install_app \
         --name-fancy='LAPACK' \
         --name='lapack' \
+        "$@"
+}
+
+koopa_install_latch() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/latch' \
+        --name-fancy='LatchBio SDK' \
+        --name='latch' \
         "$@"
 }
 
@@ -12354,6 +12399,14 @@ koopa_install_pkg_config() {
         "$@"
 }
 
+koopa_install_poetry() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/poetry' \
+        --name='poetry' \
+        "$@"
+}
+
 koopa_install_prelude_emacs() {
     koopa_install_app \
         --name-fancy='Prelude Emacs' \
@@ -12619,6 +12672,7 @@ koopa_install_spacevim() {
 
 koopa_install_sqlite() {
     koopa_install_app \
+        --link-in-bin='bin/sqlite3' \
         --name-fancy='SQLite' \
         --name='sqlite' \
         "$@"
@@ -12733,6 +12787,14 @@ koopa_install_tree() {
         "$@"
 }
 
+koopa_install_tuc() {
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/tuc' \
+        --name='tuc' \
+        "$@"
+}
+
 koopa_install_udunits() {
     koopa_install_app \
         --link-in-bin='bin/udunits2' \
@@ -12756,6 +12818,11 @@ koopa_install_vim() {
 }
 
 koopa_install_wget() {
+    local dict
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
+    dict[ssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl")"
     koopa_install_app \
         --activate-build-opt='autoconf' \
         --activate-build-opt='automake' \
@@ -12772,6 +12839,7 @@ koopa_install_wget() {
         --name='wget' \
         -D '--disable-debug' \
         -D '--with-ssl=openssl' \
+        -D "--with-libssl-prefix=${dict[ssl]}" \
         -D '--without-included-regex' \
         -D '--without-libpsl' \
         "$@"
@@ -12895,6 +12963,14 @@ koopa_install_yt_dlp() {
         --installer='python-venv' \
         --link-in-bin='bin/yt-dlp' \
         --name='yt-dlp' \
+        "$@"
+}
+
+koopa_install_zellij() {
+    koopa_install_app \
+        --installer='rust-package' \
+        --link-in-bin='bin/zellij' \
+        --name='zellij' \
         "$@"
 }
 
@@ -15727,6 +15803,12 @@ koopa_locate_yes() {
         --allow-in-path \
         --app-name='yes' \
         --opt-name='coreutils'
+}
+
+koopa_locate_yt_dlp() {
+    koopa_locate_app \
+        --app-name='yt-dlp' \
+        --opt-name='yt-dlp'
 }
 
 koopa_locate_zcat() {
@@ -20884,6 +20966,13 @@ koopa_uninstall_armadillo() {
         "$@"
 }
 
+koopa_uninstall_asdf() {
+    koopa_uninstall_app \
+        --name='asdf' \
+        --unlink-in-bin='asdf' \
+        "$@"
+}
+
 koopa_uninstall_autoconf() {
     koopa_uninstall_app \
         --name='autoconf' \
@@ -20901,6 +20990,14 @@ koopa_uninstall_aws_cli() {
         --name-fancy='AWS CLI' \
         --name='aws-cli' \
         --unlink-in-bin='aws' \
+        "$@"
+}
+
+koopa_uninstall_azure_cli() {
+    koopa_uninstall_app \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
+        --unlink-in-bin='az' \
         "$@"
 }
 
@@ -21398,6 +21495,14 @@ koopa_uninstall_go() {
         "$@"
 }
 
+koopa_uninstall_google_cloud_sdk() {
+    koopa_uninstall_app \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        --unlink-in-bin='gcloud' \
+        "$@"
+}
+
 koopa_uninstall_gperf() {
     koopa_uninstall_app \
         --name='gperf' \
@@ -21505,6 +21610,13 @@ koopa_uninstall_ipython() {
         "$@"
 }
 
+koopa_uninstall_isort() {
+    koopa_uninstall_app \
+        --name='isort' \
+        --unlink-in-bin='isort' \
+        "$@"
+}
+
 koopa_uninstall_jpeg() {
     koopa_uninstall_app \
         --name='jpeg' \
@@ -21562,6 +21674,14 @@ koopa_uninstall_lapack() {
     koopa_uninstall_app \
         --name-fancy='LAPACK' \
         --name='lapack' \
+        "$@"
+}
+
+koopa_uninstall_latch() {
+    koopa_uninstall_app \
+        --name-fancy='LatchBio SDK' \
+        --name='latch' \
+        --unlink-in-bin='latch' \
         "$@"
 }
 
@@ -21968,6 +22088,13 @@ koopa_uninstall_pkg_config() {
         "$@"
 }
 
+koopa_uninstall_poetry() {
+    koopa_uninstall_app \
+        --name='poetry' \
+        --unlink-in-bin='poetry' \
+        "$@"
+}
+
 koopa_uninstall_prelude_emacs() {
     koopa_uninstall_app \
         --name-fancy='Prelude Emacs' \
@@ -22217,6 +22344,7 @@ koopa_uninstall_sqlite() {
     koopa_uninstall_app \
         --name-fancy='SQLite' \
         --name='sqlite' \
+        --unlink-in-bin='sqlite3' \
         "$@"
 }
 
@@ -22299,6 +22427,13 @@ koopa_uninstall_tree() {
     koopa_uninstall_app \
         --name='tree' \
         --unlink-in-bin='tree' \
+        "$@"
+}
+
+koopa_uninstall_tuc() {
+    koopa_uninstall_app \
+        --unlink-in-bin='tuc' \
+        --name='tuc' \
         "$@"
 }
 
@@ -22446,6 +22581,13 @@ koopa_uninstall_yt_dlp() {
     koopa_uninstall_app \
         --name='yt-dlp' \
         --unlink-in-bin='yt-dlp' \
+        "$@"
+}
+
+koopa_uninstall_zellij() {
+    koopa_uninstall_app \
+        --unlink-in-bin='zellij' \
+        --name='zellij' \
         "$@"
 }
 
