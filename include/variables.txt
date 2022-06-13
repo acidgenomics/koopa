@@ -383,7 +383,7 @@ openjdk="17.0.2"
 openssh="8.9p1"
 
 # https://www.openssl.org/source/
-openssl="3.0.2"
+openssl="3.0.3"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
@@ -439,7 +439,7 @@ pyenv="2.2.5"
 pygments="2.12.0"
 
 # https://www.python.org/downloads/
-python="3.10.4"
+python="3.10.5"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
