@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Regarding Python bindings:
+# Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
+
 main() {
     # """
     # Install GDAL.
@@ -36,7 +39,6 @@ main() {
         'curl' \
         'geos' \
         'hdf5' \
-        'libgeotiff' \
         'libxml2' \
         'openssl' \
         'pcre2' \
@@ -94,7 +96,7 @@ v${dict[version]}/${dict[file]}"
         '-DGDAL_USE_FREEXL=OFF'
         '-DGDAL_USE_FYBA=OFF'
         '-DGDAL_USE_GEOS=ON'
-        '-DGDAL_USE_GEOTIFF=ON'
+        '-DGDAL_USE_GEOTIFF_INTERNAL=ON'
         '-DGDAL_USE_GIF_INTERNAL=ON'
         '-DGDAL_USE_GTA=OFF'
         '-DGDAL_USE_HDF4=OFF'
@@ -160,9 +162,6 @@ libcurl.${dict[shared_ext]}"
         "-DGEOS_INCLUDE_DIR=${dict[opt_prefix]}/geos/include"
         "-DGEOS_LIBRARY=${dict[opt_prefix]}/geos/lib/\
 libgeos.${dict[shared_ext]}"
-        "-DGEOTIFF_INCLUDE_DIR=${dict[opt_prefix]}/libgeotiff/include"
-        "-DGEOTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libgeotiff/lib/\
-libgeotiff.${dict[shared_ext]}"
         "-DLIBXML2_INCLUDE_DIR=${dict[opt_prefix]}/libxml2/include"
         "-DLIBXML2_LIBRARY=${dict[opt_prefix]}/libxml2/lib/\
 libxml2.${dict[shared_ext]}"
