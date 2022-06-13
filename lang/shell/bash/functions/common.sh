@@ -11704,6 +11704,14 @@ koopa_install_ipython() {
         "$@"
 }
 
+koopa_install_isort() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/isort' \
+        --name='isort' \
+        "$@"
+}
+
 koopa_install_jpeg() {
     koopa_install_app \
         --name='jpeg' \
@@ -21545,6 +21553,13 @@ koopa_uninstall_ipython() {
         --name-fancy='IPython' \
         --name='ipython' \
         --unlink-in-bin='ipython' \
+        "$@"
+}
+
+koopa_uninstall_isort() {
+    koopa_uninstall_app \
+        --name='isort' \
+        --unlink-in-bin='isort' \
         "$@"
 }
 

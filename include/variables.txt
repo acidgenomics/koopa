@@ -54,7 +54,7 @@ automake="1.16.5"
 aws-cli="2.7.4"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.35.0"
+azure-cli="2.37.0"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
@@ -718,6 +718,7 @@ bpytop="1.0.68"
 flake8="4.0.1"
 glances="3.2.6.4"
 ipython="8.4.0"
+isort="5.10.1"
 latch="1.1.0"
 pipx="1.1.0"
 poetry="1.1.13"
