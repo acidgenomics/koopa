@@ -3,6 +3,11 @@
 # NOTE Regarding Python bindings:
 # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
 
+# NOTE May be able to enable these:
+# * ICONV component has been detected, but is disabled with GDAL_USE_ICONV=OFF
+# * EXPAT component has been detected, but is disabled with GDAL_USE_EXPAT=OFF
+# * OPENCL component has been detected, but is disabled with GDAL_USE_OPENCL=OFF
+
 main() {
     # """
     # Install GDAL.
