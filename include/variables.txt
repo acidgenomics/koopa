@@ -173,7 +173,7 @@ gcc="12.1.0"
 gdal="3.5.0"
 
 # https://github.com/libgeos/geos/releases
-geos="3.10.2"
+geos="3.10.3"
 
 # https://www.gnu.org/software/gettext/
 gettext="0.21"
