@@ -12399,6 +12399,14 @@ koopa_install_pkg_config() {
         "$@"
 }
 
+koopa_install_poetry() {
+    koopa_install_app \
+        --installer='python-venv' \
+        --link-in-bin='bin/poetry' \
+        --name='poetry' \
+        "$@"
+}
+
 koopa_install_prelude_emacs() {
     koopa_install_app \
         --name-fancy='Prelude Emacs' \
@@ -22077,6 +22085,13 @@ koopa_uninstall_pixman() {
 koopa_uninstall_pkg_config() {
     koopa_uninstall_app \
         --name='pkg-config' \
+        "$@"
+}
+
+koopa_uninstall_poetry() {
+    koopa_uninstall_app \
+        --name='poetry' \
+        --unlink-in-bin='poetry' \
         "$@"
 }
 
