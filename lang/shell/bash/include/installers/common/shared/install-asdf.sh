@@ -4,6 +4,8 @@ main() {
     # """
     # Install asdf.
     # @note Updated 2022-06-13.
+    #
+    # Be aware that symlink into bin currently won't work (2022-06-13).
     # """
     local dict
     declare -A dict=(
