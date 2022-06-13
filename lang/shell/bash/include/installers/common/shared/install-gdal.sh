@@ -41,6 +41,7 @@ main() {
         'openssl' \
         'pcre2' \
         'sqlite' \
+        'libtiff' \
         'proj' \
         'xz' \
         'zstd'
