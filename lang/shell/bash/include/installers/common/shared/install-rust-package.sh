@@ -6,7 +6,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-05-06.
+    # @note Updated 2022-06-13.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -42,6 +42,7 @@ main() {
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(
         '--jobs' "${dict[jobs]}"
+        '--locked' # recommended by broot.
         '--root' "${dict[prefix]}"
         '--verbose'
     )
