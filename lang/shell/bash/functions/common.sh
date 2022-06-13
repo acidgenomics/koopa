@@ -11578,6 +11578,14 @@ koopa_install_go() {
         "$@"
 }
 
+koopa_install_google_cloud_sdk() {
+    koopa_install_app \
+        --link-in-bin='bin/gcloud' \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        "$@"
+}
+
 koopa_install_gperf() {
     koopa_install_app \
         --installer='gnu-app' \
@@ -21446,6 +21454,14 @@ koopa_uninstall_go() {
         --name-fancy='Go' \
         --name='go' \
         --unlink-in-bin='go' \
+        "$@"
+}
+
+koopa_uninstall_google_cloud_sdk() {
+    koopa_uninstall_app \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        --unlink-in-bin='gcloud' \
         "$@"
 }
 
