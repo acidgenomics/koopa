@@ -162,6 +162,7 @@ __koopa_complete() {
                         'icu4c'
                         'imagemagick'
                         'ipython'
+                        'isort'
                         'jpeg'
                         'jq'
                         'julia'
