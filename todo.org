@@ -1,22 +1,14 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Consider versioning apps by major.minor release only, not including point release.
 ** TODO Need to harden all 'locate_*' (locate_app) calls.
     Check using '-x' and add return 1 for all.
-
-# FIXME Need to also link (install) and unlink (uninstall) man files,
-# where applicable.
-# FIXME Add back support for 'prune'.
-# FIXME Need to nest our macOS-specific functions under 'koopa os XXX'.
-# FIXME Need to add support for OS-specific link functions.
-# FIXME 'koopa app list' shouldn't work any more...
-# FIXME Need to rework these, formerly defined in 'koopa_cli_app':
-# FIXME Improve the error message handling for this:
-# ❯ koopa app XXX hello
-# !! Error: Invalid and/or incomplete argument: 'XXX hello'.
-# Check autocompletion of supported arguments with <TAB>.
-# !! Error: Unsupported command.
-
+** TODO Need to also link (install) and unlink (uninstall) man files, where applicable.
+** TODO Consider adding back support for 'prune'.
+** TODO Need to nest our macOS-specific functions under 'koopa os XXX'.
+** TODO Need to add support for OS-specific link functions.
+** TODO 'koopa app list' shouldn't work any more...
 ** TODO Add Debian support for Quarto
     https://quarto.org/docs/get-started/
     https://github.com/quarto-dev/quarto-cli/releases/download/v0.9.393/quarto-0.9.393-linux-amd64.deb

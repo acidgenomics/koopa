@@ -3,7 +3,7 @@
 koopa_os_string() {
     # """
     # Operating system string.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-06-08.
     #
     # Alternatively, use 'hostnamectl'.
     # https://linuxize.com/post/how-to-check-linux-version/
@@ -15,7 +15,7 @@ koopa_os_string() {
     then
         id='macos'
         version="$(koopa_macos_os_version)"
-        version="$(koopa_major_minor_version "$version")"
+        version="$(koopa_major_version "$version")"
     elif koopa_is_linux
     then
         release_file='/etc/os-release'

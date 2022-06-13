@@ -1748,7 +1748,7 @@ koopa_macos_activate_cli_colors() {
 }
 
 koopa_macos_activate_google_cloud_sdk() {
-    CLOUDSDK_PYTHON="$(koopa_homebrew_opt_prefix)/python@3.9/bin/python3.9"
+    CLOUDSDK_PYTHON="$(koopa_opt_prefix)/python/bin/python3"
     export CLOUDSDK_PYTHON
     return 0
 }
@@ -1987,7 +1987,7 @@ koopa_os_string() {
     then
         id='macos'
         version="$(koopa_macos_os_version)"
-        version="$(koopa_major_minor_version "$version")"
+        version="$(koopa_major_version "$version")"
     elif koopa_is_linux
     then
         release_file='/etc/os-release'

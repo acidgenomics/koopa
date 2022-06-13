@@ -3,7 +3,7 @@
 main() {
     # """
     # Install FFmpeg.
-    # @note Updated 2022-05-31.
+    # @note Updated 2022-06-07.
     #
     # Consider also requiring:
     # - "aom"
@@ -64,6 +64,7 @@ main() {
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-x86asm'
+        '--enable-libmp3lame'
         '--enable-pthreads'
         '--enable-shared'
         '--enable-version3'

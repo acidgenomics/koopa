@@ -198,7 +198,7 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # ------------------------------------------------------------------------------
 
 # Options: "never", "error", "warning", "note".
-RCMDCHECK_ERROR_ON="note"
+RCMDCHECK_ERROR_ON="warning"
 
 # remotes {{{2
 # ------------------------------------------------------------------------------

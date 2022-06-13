@@ -49,7 +49,7 @@ main() {
     export CPPFLAGS="${CPPFLAGS:-} -fPIC"
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" test
+    # > "${app[make]}" test
     "${app[make]}" install
     if koopa_is_linux
     then

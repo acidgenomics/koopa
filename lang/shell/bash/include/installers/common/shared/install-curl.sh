@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cURL.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-06-01.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -23,9 +23,11 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='curl'
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[ssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl")"
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[version2]="${dict[version]//./_}"
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/releases/\
@@ -36,7 +38,7 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-versioned-symbols'
-        '--with-openssl'
+        "--with-ssl=${dict[ssl]}"
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
