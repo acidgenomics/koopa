@@ -330,16 +330,6 @@ quote=01:warning=01;35"
     return 0
 }
 
-koopa_activate_go() {
-    local prefix
-    [ -x "$(koopa_bin_prefix)/go" ] || return 0
-    prefix="$(koopa_go_packages_prefix)"
-    [ -d "$prefix" ] || return 0
-    GOPATH="$(koopa_go_packages_prefix)"
-    export GOPATH
-    return 0
-}
-
 koopa_activate_homebrew() {
     local prefix
     prefix="$(koopa_homebrew_prefix)"
@@ -1326,10 +1316,6 @@ koopa_git_repo_needs_pull_or_push() {
     rev_1="$(git rev-parse 'HEAD' 2>/dev/null)"
     rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
     [ "$rev_1" != "$rev_2" ]
-}
-
-koopa_go_packages_prefix() {
-    __koopa_packages_prefix 'go' "$@"
 }
 
 koopa_go_prefix() {
