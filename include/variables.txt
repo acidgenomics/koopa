@@ -212,7 +212,7 @@ gzip="1.12"
 
 hadolint="2.10.0"
 
-harfbuzz="4.2.0"
+harfbuzz="4.3.0"
 
 # https://docs.haskellstack.org/en/stable/install_and_upgrade/
 haskell-stack="2.7.5"
