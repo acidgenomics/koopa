@@ -34,6 +34,7 @@ main() {
     case "${dict[name]}" in
         'attr' | \
         'bc' | \
+        'gdbm' | \
         'gperf' | \
         'groff' | \
         'gsl' | \

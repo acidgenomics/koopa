@@ -9,6 +9,7 @@ koopa_install_man_db() {
     koopa_install_app \
         --activate-opt='groff' \
         --activate-opt='libpipeline' \
+        --activate-opt='gdbm' \
         --installer='gnu-app' \
         --link-in-bin='bin/man' \
         --name='man-db' \

@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-06-13.
+    # Updated 2022-06-14.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -139,6 +139,7 @@ __koopa_complete() {
                         'gawk'
                         'gcc'
                         'gdal'
+                        'gdbm'
                         'geos'
                         'gettext'
                         'git'
