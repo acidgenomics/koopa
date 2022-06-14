@@ -34,12 +34,11 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    # FIXME Need to link to OpenSSL 1.1 LTS not 3 here.
     # Refer to 'https://docs.rs/openssl/latest/openssl/' for details.
     case "${dict[name]}" in
         'dog')
-            koopa_activate_opt_prefix 'openssl'
-            export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
+            koopa_activate_opt_prefix 'openssl-v1'
+            export OPENSSL_DIR="${dict[opt_prefix]}/openssl-v1"
             ;;
     esac
     export RUST_BACKTRACE='full' # or '1'.
