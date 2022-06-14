@@ -20,10 +20,9 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'autoconf'
-    koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
-        [openssl]="$(koopa_locate_openssl)"
     )
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"

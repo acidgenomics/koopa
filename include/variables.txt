@@ -379,8 +379,8 @@ openjdk="17.0.2"
 openssh="8.9p1"
 
 # https://www.openssl.org/source/
-openssl="3.0.3"
-openssl-v1="1.1.1o"
+openssl1="1.1.1o"
+openssl3="3.0.3"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html

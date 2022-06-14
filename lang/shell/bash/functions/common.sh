@@ -12294,17 +12294,17 @@ koopa_install_openssh() {
         "$@"
 }
 
-koopa_install_openssl_v1() {
+koopa_install_openssl1() {
     koopa_install_app \
         --name-fancy='OpenSSL (v1)' \
-        --name='openssl-v1' \
+        --name='openssl1' \
         "$@"
 }
 
-koopa_install_openssl() {
+koopa_install_openssl3() {
     koopa_install_app \
-        --name-fancy='OpenSSL' \
-        --name='openssl' \
+        --name-fancy='OpenSSL (v3)' \
+        --name='openssl3' \
         "$@"
 }
 
@@ -15408,7 +15408,7 @@ koopa_locate_od() {
 koopa_locate_openssl() {
     koopa_locate_app \
         --app-name='openssl' \
-        --opt-name='openssl'
+        --opt-name='openssl3'
 }
 
 koopa_locate_parallel() {
@@ -21992,17 +21992,17 @@ koopa_uninstall_openssh() {
         "$@"
 }
 
-koopa_uninstall_openssl_v1() {
+koopa_uninstall_openssl1() {
     koopa_uninstall_app \
         --name-fancy='OpenSSL (v1)' \
-        --name='openssl-v1' \
+        --name='openssl1' \
         "$@"
 }
 
-koopa_uninstall_openssl() {
+koopa_uninstall_openssl3() {
     koopa_uninstall_app \
-        --name-fancy='OpenSSL' \
-        --name='openssl' \
+        --name-fancy='OpenSSL (v3)' \
+        --name='openssl3' \
         "$@"
 }
 
