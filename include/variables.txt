@@ -371,8 +371,7 @@ ninja="1.10.2.3"
 node="16.14.2" # LTS
 
 # https://github.com/kkos/oniguruma/
-# https://github.com/kkos/oniguruma/
-oniguruma="6.9.7.1"
+oniguruma="6.9.8"
 
 # https://www.openblas.net/
 openblas="0.3.20"
