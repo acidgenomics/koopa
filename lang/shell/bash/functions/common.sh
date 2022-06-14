@@ -11018,7 +11018,6 @@ koopa_install_armadillo() {
 
 koopa_install_asdf() {
     koopa_install_app \
-        --link-in-bin='bin/asdf' \
         --name='asdf' \
         "$@"
 }
@@ -20969,7 +20968,6 @@ koopa_uninstall_armadillo() {
 koopa_uninstall_asdf() {
     koopa_uninstall_app \
         --name='asdf' \
-        --unlink-in-bin='asdf' \
         "$@"
 }
 
