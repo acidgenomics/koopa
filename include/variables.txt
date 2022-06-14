@@ -401,7 +401,7 @@ patch="2.7.6"
 pcre="8.45"
 
 # https://www.pcre.org/
-pcre2="10.39"
+pcre2="10.40"
 
 # https://www.perl.org/get.html
 perl="5.34.1"
