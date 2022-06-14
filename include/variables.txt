@@ -396,7 +396,7 @@ oracle-instant-client="21.5.0.0.0-1"
 pandoc="2.18"
 
 # https://www.gnu.org/software/parallel/
-parallel="20220322"
+parallel="20220522"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
