@@ -8,6 +8,13 @@
 # * EXPAT component has been detected, but is disabled with GDAL_USE_EXPAT=OFF
 # * OPENCL component has been detected, but is disabled with GDAL_USE_OPENCL=OFF
 
+# FIXME This is failing on Ubuntu:
+# [ 26%] Building CXX object ogr/CMakeFiles/ogr.dir/ogr_geo_utils.cpp.o
+# [ 27%] Building CXX object ogr/CMakeFiles/ogr.dir/ogr_proj_p.cpp.o
+# [ 27%] Built target alg
+# [ 27%] Built target ogr
+# make: *** [Makefile:146: all] Error 2
+
 main() {
     # """
     # Install GDAL.
