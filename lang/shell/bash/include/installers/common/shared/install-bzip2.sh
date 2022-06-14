@@ -31,10 +31,6 @@ main() {
     then
         "${app[make]}" -f 'Makefile-libbz2_so' 'clean'
         "${app[make]}" -f 'Makefile-libbz2_so'
-        # FIXME May need to add this:
-        # > lib.install "libbz2.so.#{version}", "libbz2.so.#{version.major_minor}"
-        # > lib.install_symlink "libbz2.so.#{version}" => "libbz2.so.#{version.major}"
-        # > lib.install_symlink "libbz2.so.#{version}" => "libbz2.so"
     fi
     "${app[make]}" install "PREFIX=${dict[prefix]}"
     return 0
