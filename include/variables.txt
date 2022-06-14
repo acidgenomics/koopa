@@ -29,7 +29,7 @@ apr="1.7.0"
 apr-util="1.6.1"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.8.2"
+armadillo="11.2.0"
 
 # https://github.com/asdf-vm/asdf/releases
 asdf="0.10.2"
