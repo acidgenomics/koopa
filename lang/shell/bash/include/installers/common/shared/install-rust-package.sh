@@ -21,7 +21,6 @@ main() {
     local app dict install_args
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix \
-        'openssl' \
         'pkg-config' \
         'rust'
     declare -A app=(
@@ -35,7 +34,12 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
+    case "${dict[name]}" in
+        'dog')
+            koopa_activate_opt_prefix 'openssl'
+            export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
+            ;;
+    esac
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(
         '--jobs' "${dict[jobs]}"
