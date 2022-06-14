@@ -17,8 +17,8 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='hadolint'
-        [stack_root]="$(koopa_init_dir 'stack')"
         [prefix]="${INSTALL_PREFIX:?}"
+        [stack_root]="$(koopa_init_dir 'stack')"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[file]="v${dict[version]}.tar.gz"
