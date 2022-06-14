@@ -116,7 +116,7 @@ curl="7.82.0"
 delta="0.13.0"
 
 # https://docs.docker.com/install/
-docker="20.10.14"
+docker="20.10.17"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
