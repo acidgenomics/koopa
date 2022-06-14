@@ -34,6 +34,7 @@ refs/tags/${dict[file]}"
         GOPATH="${dict[gopath]}" \
         GO_LDFLAGS="-X main.version=${dict[version]}" \
         PREFIX="${dict[prefix]}"
+    koopa_chmod --recursive 'u+rw' "${dict[gopath]}"
     koopa_configure_chezmoi
     return 0
 }
