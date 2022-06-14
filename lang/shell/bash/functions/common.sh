@@ -4645,13 +4645,6 @@ koopa_configure_dotfiles() {
     return 0
 }
 
-koopa_configure_go() {
-    koopa_configure_app_packages \
-        --name-fancy='Go' \
-        --name='go' \
-        "$@"
-}
-
 koopa_configure_julia() {
     koopa_configure_app_packages \
         --name-fancy='Julia' \

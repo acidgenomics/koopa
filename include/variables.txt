@@ -22,9 +22,6 @@ gnu-mirror-url="https://ftpmirror.gnu.org"
 # https://repo.continuum.io/archive/
 anaconda="2022.05"
 
-# https://github.com/apptainer/apptainer
-apptainer="1.0.1"
-
 # https://apr.apache.org/
 apr="1.7.0"
 
@@ -159,9 +156,6 @@ freetype="2.12.0"
 
 # https://github.com/fribidi/fribidi/
 fribidi="1.0.11"
-
-# https://github.com/junegunn/fzf
-fzf="0.30.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.1"
@@ -692,8 +686,14 @@ visidata="2.8" # 2022-01-13 conda-forge
 # Go packages
 # ==============================================================================
 
+# https://github.com/apptainer/apptainer
+apptainer="1.0.1"
+
 # https://www.chezmoi.io/
 chezmoi="2.17.1"
+
+# https://github.com/junegunn/fzf
+fzf="0.30.0"
 
 # Nim (Nimble) packages
 # ==============================================================================
