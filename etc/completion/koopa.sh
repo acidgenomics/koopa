@@ -218,6 +218,7 @@ __koopa_complete() {
                         'openjdk'
                         'openssh'
                         'openssl'
+                        'openssl-v1'
                         'pandoc'
                         'parallel'
                         'password-store'

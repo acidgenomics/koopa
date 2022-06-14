@@ -12294,6 +12294,13 @@ koopa_install_openssh() {
         "$@"
 }
 
+koopa_install_openssl_v1() {
+    koopa_install_app \
+        --name-fancy='OpenSSL (v1)' \
+        --name='openssl-v1' \
+        "$@"
+}
+
 koopa_install_openssl() {
     koopa_install_app \
         --name-fancy='OpenSSL' \
@@ -21982,6 +21989,13 @@ koopa_uninstall_openssh() {
     koopa_uninstall_app \
         --name-fancy='OpenSSH' \
         --name='openssh' \
+        "$@"
+}
+
+koopa_uninstall_openssl_v1() {
+    koopa_uninstall_app \
+        --name-fancy='OpenSSL (v1)' \
+        --name='openssl-v1' \
         "$@"
 }
 
