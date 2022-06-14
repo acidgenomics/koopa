@@ -404,7 +404,7 @@ pcre="8.45"
 pcre2="10.40"
 
 # https://www.perl.org/get.html
-perl="5.34.1"
+perl="5.36.0"
 
 # https://perlbrew.pl/
 perlbrew="latest"
