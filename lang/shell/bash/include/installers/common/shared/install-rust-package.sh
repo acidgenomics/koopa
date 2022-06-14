@@ -34,6 +34,7 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    # OpenSSL 3 is not currently supported.
     # Refer to 'https://docs.rs/openssl/latest/openssl/' for details.
     case "${dict[name]}" in
         'dog')
