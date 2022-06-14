@@ -23,7 +23,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'lz4' 'openssl' 'xxhash'
+    koopa_activate_opt_prefix 'lz4' 'openssl3' 'xxhash'
     ! koopa_is_macos && koopa_activate_opt_prefix 'zstd'
     declare -A app=(
         [make]="$(koopa_locate_make)"

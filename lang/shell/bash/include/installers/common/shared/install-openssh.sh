@@ -23,7 +23,7 @@ main() {
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -46,7 +46,7 @@ portable/${dict[file]}"
         '--with-kerberos5'
         '--with-libedit'
         '--with-pam'
-        "--with-ssl-dir=${dict[opt_prefix]}/openssl"
+        "--with-ssl-dir=${dict[opt_prefix]}/openssl3"
         '--without-ldns'
     )
     if koopa_is_linux

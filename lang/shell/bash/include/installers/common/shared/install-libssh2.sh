@@ -10,7 +10,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -21,7 +21,7 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[openssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl")"
+    dict[openssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl3")"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://www.libssh2.org/download/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"

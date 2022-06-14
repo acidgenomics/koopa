@@ -38,8 +38,8 @@ main() {
     # Refer to 'https://docs.rs/openssl/latest/openssl/' for details.
     case "${dict[name]}" in
         'dog')
-            koopa_activate_opt_prefix 'openssl-v1'
-            export OPENSSL_DIR="${dict[opt_prefix]}/openssl-v1"
+            koopa_activate_opt_prefix 'openssl1'
+            export OPENSSL_DIR="${dict[opt_prefix]}/openssl1"
             ;;
     esac
     export RUST_BACKTRACE='full' # or '1'.
