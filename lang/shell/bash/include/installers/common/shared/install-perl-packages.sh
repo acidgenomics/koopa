@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Need to version pin these.
+# FIXME Here's how to version pin:
+# https://www.perl.com/article/4/2013/3/27/How-to-install-a-specific-version-of-a-Perl-module-with-CPAN/
 
 main() {
     # """
