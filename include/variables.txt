@@ -738,7 +738,7 @@ ranger-fm="1.9.3"
 # ==============================================================================
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.12"
+ruby-bundler="2.3.15"
 
 ruby-bashcov="1.8.2"
 ruby-colorls="1.4.6"
