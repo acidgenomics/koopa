@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-06-14.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
@@ -17,6 +17,7 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='hadolint'
+        [stack_root]="$(koopa_init_dir 'stack')"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -32,6 +33,7 @@ archive/${dict[file]}"
         # > '--skip-ghc-check'
         # > '--system-ghc'
     )
+    export STACK_ROOT="${dict[stack_root]}"
     # > koopa_rm "${HOME:?}/.stack"
     # > "${app[stack]}" config set system-ghc --global true
     "${app[stack]}" "${stack_args[@]}" build
