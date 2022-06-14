@@ -376,7 +376,7 @@ openblas="0.3.20"
 openjdk="17.0.2"
 
 # https://www.openssh.com/portable.html
-openssh="8.9p1"
+openssh="9.0p1"
 
 # https://www.openssl.org/source/
 openssl1="1.1.1o"
