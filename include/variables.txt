@@ -218,7 +218,7 @@ harfbuzz="4.2.0"
 haskell-stack="2.7.5"
 
 # https://www.hdfgroup.org/downloads/hdf5/
-hdf5="1.12.1"
+hdf5="1.12.2"
 
 # https://hisham.hm/htop/
 # https://github.com/htop-dev/htop
