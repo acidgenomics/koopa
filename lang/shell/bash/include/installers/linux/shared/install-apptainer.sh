@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apptainer.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-06-14.
     #
     # @seealso
     # - https://github.com/apptainer/apptainer
@@ -16,6 +16,7 @@ main() {
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
+        [gopath]="$(koopa_init_dir 'go')"
         [name]='apptainer'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -38,8 +39,10 @@ tags/${dict[file]}"
         '-P' 'release-stripped'
         '-v'
     )
+    export GOPATH="${dict[gopath]}"
     ./mconfig "${conf_args[@]}"
     "${app[make]}" -C 'builddir'
     "${app[make]}" -C 'builddir' install
+    koopa_chmod --recursive 'u+rw' "${dict[gopath]}"
     return 0
 }
