@@ -29,11 +29,12 @@ archive/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     stack_args=(
         "--jobs=${dict[jobs]}"
+        "--stack-root=${dict[stack_root]}"
         # > '--no-install-ghc'
         # > '--skip-ghc-check'
         # > '--system-ghc'
     )
-    export STACK_ROOT="${dict[stack_root]}"
+    # > export STACK_ROOT="${dict[stack_root]}"
     # > koopa_rm "${HOME:?}/.stack"
     # > "${app[stack]}" config set system-ghc --global true
     "${app[stack]}" "${stack_args[@]}" build
