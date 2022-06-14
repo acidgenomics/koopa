@@ -4,6 +4,8 @@
 # FIXME Here's how to version pin:
 # https://www.perl.com/article/4/2013/3/27/How-to-install-a-specific-version-of-a-Perl-module-with-CPAN/
 
+# FIXME Can we avoid installing cpanm? Seems more sensible...rework.
+
 main() {
     # """
     # Install Perl packages.
