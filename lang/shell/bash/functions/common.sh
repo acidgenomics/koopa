@@ -21477,13 +21477,6 @@ koopa_uninstall_gnutls() {
         "$@"
 }
 
-koopa_uninstall_go_packages() {
-    koopa_uninstall_app \
-        --name-fancy='Go packages' \
-        --name='go-packages' \
-        "$@"
-}
-
 koopa_uninstall_go() {
     koopa_uninstall_app \
         --name-fancy='Go' \
