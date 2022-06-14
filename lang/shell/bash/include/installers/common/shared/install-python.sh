@@ -7,7 +7,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-06-14.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -45,7 +45,9 @@ main() {
     dict[file]="Python-${dict[version]}.tar.xz"
     dict[url]="https://www.python.org/ftp/${dict[name]}/${dict[version]}/\
 ${dict[file]}"
-    koopa_mkdir "${dict[prefix]}/bin"
+    koopa_mkdir \
+        "${dict[prefix]}/bin" \
+        "${dict[prefix]}/lib"
     koopa_add_to_path_start "${dict[prefix]}/bin"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
