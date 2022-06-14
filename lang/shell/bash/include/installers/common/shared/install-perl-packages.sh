@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to version pin these.
+
 main() {
     # """
     # Install Perl packages.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-06-14.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
