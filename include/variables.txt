@@ -196,7 +196,7 @@ gnupg="2.3.4"
 gnutls="3.7.4"
 
 # https://golang.org/dl/
-go="1.18.1"
+go="1.18.3"
 
 # https://cloud.google.com/sdk/docs/install
 google-cloud-sdk="389.0.0"
