@@ -26,10 +26,9 @@ main() {
         [name]='pandoc'
         [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
+        [stack_root]="$(koopa_init_dir 'stack')"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[stack_root]="${dict[opt_prefix]}/haskell-stack/libexec"
-    koopa_assert_is_dir "${dict[stack_root]}"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://hackage.haskell.org/package/\
 ${dict[name]}-${dict[version]}/${dict[file]}"
