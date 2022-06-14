@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-06-13.
+    # @note Updated 2022-06-14.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -57,41 +57,41 @@ main() {
     esac
     install_args+=("${dict[cargo_name]}")
     case "${dict[name]}" in
-        'dog')
-            # Currently only available on GitHub.
-            install_args+=(
-                '--git' 'https://github.com/ogham/dog.git'
-                '--tag' "v${dict[version]}"
-            )
-            ;;
-        'du-dust')
-            # Currently outdated on crates.io.
-            install_args+=(
-                '--git' 'https://github.com/bootandy/dust.git'
-                '--tag' "v${dict[version]}"
-            )
-            ;;
-        'fd-find')
-            # Currently outdated on crates.io.
-            install_args+=(
-                '--git' 'https://github.com/sharkdp/fd.git'
-                '--tag' "v${dict[version]}"
-            )
-            ;;
-        'mcfly')
-            # Currently only available on GitHub.
-            install_args+=(
-                '--git' 'https://github.com/cantino/mcfly.git'
-                '--tag' "v${dict[version]}"
-            )
-            ;;
-        'ripgrep-all')
-            # Current v0.9.6 stable doesn't build on Linux.
-            # https://github.com/phiresky/ripgrep-all/issues/88
-            install_args+=(
-                '--git' 'https://github.com/phiresky/ripgrep-all'
-            )
-            ;;
+        # > 'dog')
+        # >     # Currently only available on GitHub.
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/ogham/dog.git'
+        # >         '--tag' "v${dict[version]}"
+        # >     )
+        # >     ;;
+        # > 'du-dust')
+        # >     # Currently outdated on crates.io.
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/bootandy/dust.git'
+        # >         '--tag' "v${dict[version]}"
+        # >     )
+        # >     ;;
+        # > 'fd-find')
+        # >     # Currently outdated on crates.io.
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/sharkdp/fd.git'
+        # >         '--tag' "v${dict[version]}"
+        # >     )
+        # >     ;;
+        # > 'mcfly')
+        # >     # Currently only available on GitHub.
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/cantino/mcfly.git'
+        # >         '--tag' "v${dict[version]}"
+        # >     )
+        # >     ;;
+        # > 'ripgrep-all')
+        # >     # Current v0.9.6 stable doesn't build on Linux.
+        # >     # https://github.com/phiresky/ripgrep-all/issues/88
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/phiresky/ripgrep-all'
+        # >     )
+        # >     ;;
         *)
             # Packages available on crates.io.
             install_args+=('--version' "${dict[version]}")
