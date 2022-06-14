@@ -362,7 +362,7 @@ nim="1.6.6"
 ninja="1.10.2.3"
 
 # https://nodejs.org/en/download/
-node="16.14.2" # LTS
+node="16.15.1" # LTS
 
 # https://github.com/kkos/oniguruma/
 oniguruma="6.9.8"
