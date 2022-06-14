@@ -98,7 +98,7 @@ cellranger="7.0.0"
 chemacs="latest"
 
 # https://cmake.org/download/
-cmake="3.23.0"
+cmake="3.23.2"
 
 # https://repo.anaconda.com/miniconda/
 conda="4.12.0"
