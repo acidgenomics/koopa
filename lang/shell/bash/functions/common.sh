@@ -11130,6 +11130,7 @@ koopa_install_chezmoi() {
 
 koopa_install_cmake() {
     koopa_install_app \
+        --link-in-bin='bin/cmake' \
         --name-fancy='CMake' \
         --name='cmake' \
         "$@"
@@ -21079,6 +21080,7 @@ koopa_uninstall_cmake() {
     koopa_uninstall_app \
         --name-fancy='CMake' \
         --name='cmake' \
+        --unlink-in-bin='cmake' \
         "$@"
 }
 
