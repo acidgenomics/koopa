@@ -11498,6 +11498,14 @@ koopa_install_gdal() {
         "$@"
 }
 
+koopa_install_gdbm() {
+    koopa_install_app \
+        --installer='gnu-app' \
+        --activate-opt='readline' \
+        --name='gdbm' \
+        "$@"
+}
+
 koopa_install_geos() {
     koopa_install_app \
         --name-fancy='GEOS' \
@@ -12120,6 +12128,7 @@ koopa_install_man_db() {
     koopa_install_app \
         --activate-opt='groff' \
         --activate-opt='libpipeline' \
+        --activate-opt='gdbm' \
         --installer='gnu-app' \
         --link-in-bin='bin/man' \
         --name='man-db' \
@@ -21414,6 +21423,12 @@ koopa_uninstall_gdal() {
     koopa_uninstall_app \
         --name-fancy='GDAL' \
         --name='gdal' \
+        "$@"
+}
+
+koopa_uninstall_gdbm() {
+    koopa_uninstall_app \
+        --name='gdbm' \
         "$@"
 }
 
