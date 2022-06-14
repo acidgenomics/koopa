@@ -58,7 +58,7 @@ main() {
     install_args+=("${dict[cargo_name]}")
     case "${dict[name]}" in
         'dog')
-            # Current 0.1.0 crate on crates.io has build issues.
+            # Current 0.1.0 crate on crates.io fails with Rust 1.61.
             install_args+=(
                 '--git' 'https://github.com/ogham/dog.git'
                 '--tag' "v${dict[version]}"
@@ -71,6 +71,13 @@ main() {
         # >         '--tag' "v${dict[version]}"
         # >     )
         # >     ;;
+        'exa')
+            # Current 0.10.1 crate on crates.io fails with Rust 1.61.
+            install_args+=(
+                '--git' 'https://github.com/ogham/exa.git'
+                '--tag' "v${dict[version]}"
+            )
+            ;;
         # > 'fd-find')
         # >     # Currently outdated on crates.io.
         # >     install_args+=(
