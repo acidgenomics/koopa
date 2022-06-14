@@ -71,13 +71,13 @@ main() {
         # >         '--tag' "v${dict[version]}"
         # >     )
         # >     ;;
-        'exa')
-            # Current 0.10.1 crate on crates.io fails with Rust 1.61.
-            install_args+=(
-                '--git' 'https://github.com/ogham/exa.git'
-                '--tag' "v${dict[version]}"
-            )
-            ;;
+        # > 'exa')
+        # >     # Current 0.10.1 crate on crates.io fails with Rust 1.61.
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/ogham/exa.git'
+        # >         '--tag' "v${dict[version]}"
+        # >     )
+        # >     ;;
         # > 'fd-find')
         # >     # Currently outdated on crates.io.
         # >     install_args+=(
