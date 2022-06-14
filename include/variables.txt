@@ -746,11 +746,11 @@ ruby-ronn="0.7.3"
 # > ripgrep-all="0.9.6" # rga
 bat="0.21.0"
 
-broot="1.13.1" # br (build issues with rust 1.61).
-difftastic="0.29.0" # difft
+broot="1.13.1" # br
+difftastic="0.29.1" # difft
 dog="0.1.0"
 du-dust="0.8.0"
-exa="0.10.1"
+exa="0.10.1" (build issues with rust 1.61).
 fd-find="8.4.0"
 hyperfine="1.14.0"
 mcfly="0.6.0"
