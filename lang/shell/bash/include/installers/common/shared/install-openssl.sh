@@ -34,10 +34,10 @@ main() {
     # Check supported platforms with:
     # > ./Configure LIST
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        '--libdir=lib' # Avoid 'lib64' inconsistency on Linux.
         "--openssldir=${dict[prefix]}"
-        "-Wl,-rpath,${dict[prefix]}/lib64"
-        'shared' # or 'no-shared'
+        "--prefix=${dict[prefix]}"
+        'shared' # or 'no-shared'.
         'zlib'
     )
     if koopa_is_linux
