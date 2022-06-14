@@ -749,7 +749,6 @@ ruby-ronn="0.7.3"
 
 # > ripgrep-all="0.9.6" # rga
 bat="0.21.0"
-
 broot="1.13.1" # br
 difftastic="0.29.1" # difft
 dog="0.1.0"
