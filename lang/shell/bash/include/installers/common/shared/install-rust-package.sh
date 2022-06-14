@@ -57,13 +57,13 @@ main() {
     esac
     install_args+=("${dict[cargo_name]}")
     case "${dict[name]}" in
-        # > 'dog')
-        # >     # Currently only available on GitHub.
-        # >     install_args+=(
-        # >         '--git' 'https://github.com/ogham/dog.git'
-        # >         '--tag' "v${dict[version]}"
-        # >     )
-        # >     ;;
+        'dog')
+            # Current 0.1.0 crate on crates.io has build issues.
+            install_args+=(
+                '--git' 'https://github.com/ogham/dog.git'
+                '--tag' "v${dict[version]}"
+            )
+            ;;
         # > 'du-dust')
         # >     # Currently outdated on crates.io.
         # >     install_args+=(
