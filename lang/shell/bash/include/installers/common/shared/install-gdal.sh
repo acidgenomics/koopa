@@ -45,7 +45,7 @@ main() {
         'geos' \
         'hdf5' \
         'libxml2' \
-        'openssl' \
+        'openssl3' \
         'pcre2' \
         'sqlite' \
         'libtiff' \

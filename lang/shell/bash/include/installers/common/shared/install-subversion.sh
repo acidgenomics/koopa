@@ -20,7 +20,7 @@ main() {
     koopa_activate_opt_prefix \
         'apr' \
         'apr-util' \
-        'openssl' \
+        'openssl3' \
         'perl' \
         'python' \
         'ruby' \
