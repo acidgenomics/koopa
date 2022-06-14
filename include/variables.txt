@@ -702,13 +702,13 @@ nim-markdown="0.8.5"
 
 # Node (NPM) packages
 # ==============================================================================
-# Updated 2022-04-19 from https://www.npmjs.com/
+# Updated 2022-06-14 from https://www.npmjs.com/
 
-node-npm="8.7.0"
+node-npm="8.12.1"
 
 node-bash-language-server="2.1.0"
 node-gtop="1.1.3"
-node-prettier="2.6.2"
+node-prettier="2.7.0"
 
 # Python packages
 # ==============================================================================
