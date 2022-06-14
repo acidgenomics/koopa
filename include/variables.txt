@@ -525,9 +525,6 @@ tar="1.34"
 # https://www.tcl-lang.org
 tcl-tk="8.6.12"
 
-# https://www.latex-project.org/get/
-tex="2022"
-
 # NOTE There seems to be a Homebrew cask that masks this on macOS.
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.8"
