@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2022-04-28.
+    # @note Updated 2022-06-14.
     #
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
@@ -37,6 +37,7 @@ main() {
         '--libdir=lib' # Avoid 'lib64' inconsistency on Linux.
         "--openssldir=${dict[prefix]}"
         "--prefix=${dict[prefix]}"
+        "-Wl,-rpath,${dict[prefix]}/lib"
         'shared' # or 'no-shared'.
         'zlib'
     )
