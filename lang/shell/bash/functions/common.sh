@@ -15261,6 +15261,12 @@ koopa_locate_hostname() {
     koopa_locate_app '/bin/hostname'
 }
 
+koopa_locate_icu_config() {
+    koopa_locate_app \
+        --app-name='icu-config' \
+        --opt-name='icu4c'
+}
+
 koopa_locate_id() {
     koopa_locate_app \
         --app-name='id' \
