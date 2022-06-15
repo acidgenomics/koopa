@@ -32,15 +32,10 @@ main() {
     "${app[make]}" install
     app[luarocks]="${dict[prefix]}/bin/luarocks"
     koopa_assert_is_installed "${app[luarocks]}"
-
-
-
-    # FIXME This is intalling to temporary directory, need to rework...
-    # FIXME Where is this installing? Not finding on Ubuntu...
-    # FIXME Need to configure this to install into system?
-    koopa_warn "luarocks: ${app[luarocks]}"
-
-    "${app[luarocks]}" install 'luaposix'
-    "${app[luarocks]}" install 'luafilesystem'
+    (
+        koopa_cd "${dict[prefix]}"
+        "${app[luarocks]}" install 'luaposix'
+        "${app[luarocks]}" install 'luafilesystem'
+    )
     return 0
 }
