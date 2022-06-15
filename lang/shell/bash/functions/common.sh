@@ -11778,6 +11778,14 @@ koopa_install_julia() {
         "$@"
 }
 
+koopa_install_kallisto() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bin/kallisto' \
+        --name='kallisto' \
+        "$@"
+}
+
 koopa_install_koopa() {
     local bool dict
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
@@ -15232,7 +15240,9 @@ koopa_locate_julia() {
 }
 
 koopa_locate_kallisto() {
-    koopa_locate_conda_app 'kallisto'
+    koopa_locate_app \
+        --app-name='kallisto' \
+        --opt-name='kallisto'
 }
 
 koopa_locate_ldd() {
@@ -21668,6 +21678,12 @@ koopa_uninstall_julia() {
         --name-fancy='Julia' \
         --name='julia' \
         --unlink-in-bin='julia' \
+        "$@"
+}
+
+koopa_uninstall_kallisto() {
+    koopa_uninstall_app \
+        --name='kallisto' \
         "$@"
 }
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
 koopa_locate_kallisto() {
-    koopa_locate_conda_app 'kallisto'
+    koopa_locate_app \
+        --app-name='kallisto' \
+        --opt-name='kallisto'
 }
