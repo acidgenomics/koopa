@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to require app name and opt prefix name...simpler.
 # FIXME Also need to support platform-specific locator here...
 # FIXME Alternatively, allow pass in of app name and opt prefix name,
 # rather than looping per command...
