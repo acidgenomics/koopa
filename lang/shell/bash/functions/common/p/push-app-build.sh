@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME This needs to also invalidate cloud cache.
-# FIXME Rework using koopa_koopa_app_binary with 's3://' instead of 'https://'
+# NOTE This also should invalidate cloud cache in a future update.
 
 koopa_push_app_build() {
     # """
