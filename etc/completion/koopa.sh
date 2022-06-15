@@ -255,6 +255,7 @@ __koopa_complete() {
                         'ruby'
                         'ruby-packages'
                         'rust'
+                        'salmon'
                         'scons'
                         'sed'
                         'serf'
