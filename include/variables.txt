@@ -308,7 +308,7 @@ llvm="14.0.3"
 
 # https://lmod.readthedocs.io/
 # https://github.com/TACC/Lmod
-lmod="8.6"
+lmod="8.7"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
