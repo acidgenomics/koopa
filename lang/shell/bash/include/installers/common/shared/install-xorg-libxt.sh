@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libxt.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-06-15.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxt.rb
@@ -12,14 +12,14 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
-        'xorgproto' \
-        'libpthread-stubs' \
-        'libice' \
-        'libsm' \
-        'libxau' \
-        'libxdmcp' \
-        'libxcb' \
-        'libx11'
+        'xorg-xorgproto' \
+        'xorg-libpthread-stubs' \
+        'xorg-libice' \
+        'xorg-libsm' \
+        'xorg-libxau' \
+        'xorg-libxdmcp' \
+        'xorg-libxcb' \
+        'xorg-libx11'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
