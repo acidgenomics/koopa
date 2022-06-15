@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is now failing on macOS:
-# checking for XT... no
-# configure: error: Package requirements (sm ice x11 xproto kbproto) were not met:
-# No package 'x11' found
-
 main() {
     # """
     # Install libxt.

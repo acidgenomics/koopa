@@ -10,7 +10,6 @@ koopa_install_app_from_binary_package() {
     declare -A app=(
         [tar]="$(koopa_locate_tar)"
     )
-    # FIXME Rework koopa_koopa_app_binary_url here.
     declare -A dict=(
         [arch]="$(koopa_arch2)"
         [binary_prefix]='/opt/koopa'
