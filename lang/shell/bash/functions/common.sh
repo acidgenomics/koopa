@@ -267,7 +267,8 @@ __koopa_get_version_name() {
         'homebrew')
             name='brew'
             ;;
-        'icu')
+        'icu' | \
+        'icu4c')
             name='icu-config'
             ;;
         'llvm')
