@@ -623,6 +623,7 @@ genrich="0.6.1" # 2021-03-17 bioconda
 gffread="0.12.7" # 2021-09-24 bioconda
 gffutils="0.10.1" # 2020-07-26 bioconda
 gget="0.2.0" # 2022-06-08 bioconda
+ghostscript="9.54.0" 2021-05-14 conda-forge
 gseapy="0.10.8" # 2022-02-10 bioconda
 hisat2="2.2.1" # 2020-07-24 bioconda
 homer="4.11" # 2020-04-29 bioconda
