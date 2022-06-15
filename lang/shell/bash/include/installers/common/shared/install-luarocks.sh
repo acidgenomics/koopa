@@ -38,8 +38,8 @@ main() {
     # FIXME This is intalling to temporary directory, need to rework...
     # FIXME Where is this installing? Not finding on Ubuntu...
     # FIXME Need to configure this to install into system?
-    koopa_alert "luarocks: ${app[luarocks]}"
-    koopa_stop 'FIXME HMMMM'
+    koopa_warn "luarocks: ${app[luarocks]}"
+
     "${app[luarocks]}" install 'luaposix'
     "${app[luarocks]}" install 'luafilesystem'
     return 0
