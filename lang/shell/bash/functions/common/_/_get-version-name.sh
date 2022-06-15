@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rethink this approach, matching to app-name and opt-name instead.
+
 __koopa_get_version_name() {
     # """
     # Match a desired program name to corresponding to dependency to

@@ -1087,7 +1087,9 @@ koopa_arch2() {
 
 koopa_armadillo_version() {
     koopa_assert_has_no_args "$#"
-    koopa_get_version_from_pkg_config 'armadillo'
+    koopa_get_version_from_pkg_config \
+        --opt-name='armadillo' \
+        --pc-name='armadillo'
 }
 
 koopa_assert_are_identical() {
@@ -3234,7 +3236,9 @@ koopa_cache_functions() {
 
 koopa_cairo_version() {
     koopa_assert_has_no_args "$#"
-    koopa_get_version_from_pkg_config 'cairo'
+    koopa_get_version_from_pkg_config \
+        --opt-name='cairo' \
+        --pc-name='cairo'
 }
 
 koopa_camel_case_simple() {
@@ -7090,11 +7094,6 @@ koopa_download() {
     return 0
 }
 
-koopa_eigen_version() {
-    koopa_assert_has_no_args "$#"
-    koopa_get_version_from_pkg_config 'eigen3'
-}
-
 koopa_enable_passwordless_sudo() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -8572,26 +8571,47 @@ koopa_gcrypt_url() {
 
 koopa_get_version_from_pkg_config() {
     local app dict
-    koopa_assert_has_args_eq "$#" 1
+    koopa_assert_has_args "$#"
     declare -A app=(
         [pkg_config]="$(koopa_locate_pkg_config)"
     )
+    [[ -x "${app[pkg_config]}" ]] || return 1
     declare -A dict=(
+        [opt_name]=''
         [opt_prefix]="$(koopa_opt_prefix)"
-        [pkg]="${1:?}"
-        [pkg_config_path]="${PKG_CONFIG_PATH:-}"
+        [pc_name]=''
     )
-    dict[pkgconfig]="${dict[opt_prefix]}/${dict[pkg]}/lib/pkgconfig"
-    [[ -d "${dict[pkgconfig]}" ]] || return 1
-    koopa_add_to_pkg_config_path "${dict[pkgconfig]}"
-    dict[str]="$("${app[pkg_config]}" --modversion "${dict[pkg]}")"
-    if [[ -n "${dict[pkg_config_path]}" ]]
-    then
-        PKG_CONFIG_PATH="${dict[pkg_config_path]}"
-        export PKG_CONFIG_PATH
-    else
-        unset -v PKG_CONFIG_PATH
-    fi
+    while (("$#"))
+    do
+        case "$1" in
+            '--opt-name='*)
+                dict[opt_name]="${1#*=}"
+                shift 1
+                ;;
+            '--opt-name')
+                dict[opt_name]="${2:?}"
+                shift 2
+                ;;
+            '--pc-name='*)
+                dict[pc_name]="${1#*=}"
+                shift 1
+                ;;
+            '--pc-name')
+                dict[pc_name]="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--opt-name' "${dict[opt_name]}" \
+        '--pc-name' "${dict[pc_name]}"
+    dict[pc_file]="${dict[opt_prefix]}/${dict[opt_name]}/lib/\
+pkgconfig/${dict[pc_name]}.pc"
+    koopa_assert_is_file "${dict[pc_file]}"
+    dict[str]="$("${app[pkg_config]}" --modversion "${dict[pc_file]}")"
     [[ -n "${dict[str]}" ]] || return 1
     koopa_print "${dict[str]}"
     return 0
@@ -9718,7 +9738,9 @@ koopa_h7() {
 
 koopa_harfbuzz_version() {
     koopa_assert_has_no_args "$#"
-    koopa_get_version_from_pkg_config 'harfbuzz'
+    koopa_get_version_from_pkg_config \
+        --opt-name='harfbuzz' \
+        --pc-name='harfbuzz'
 }
 
 koopa_has_file_ext() {
@@ -10440,16 +10462,20 @@ koopa_hisat2_index() {
 
 koopa_icu4c_version() {
     koopa_assert_has_no_args "$#"
-    koopa_get_version_from_pkg_config 'icu-uc'
+    koopa_get_version_from_pkg_config \
+        --opt-name='icu4c' \
+        --pc-name='icu-uc'
 }
 
 koopa_imagemagick_version() {
     local app str
+    koopa_assert_has_no_args "$#"
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
         [magick_core_config]="$(koopa_locate_magick_core_config)"
     )
-    koopa_assert_has_no_args "$#"
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[magick_core_config]}" ]] || return 1
     str="$( \
         "${app[magick_core_config]}" --version \
             | "${app[cut]}" -d ' ' -f 1 \
