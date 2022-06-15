@@ -424,7 +424,7 @@ pkg-config="0.29.2"
 prelude-emacs="latest"
 
 # https://proj.org/
-proj="9.0.0"
+proj="9.0.1"
 
 # https://github.com/pyenv/pyenv
 pyenv="2.2.5"
