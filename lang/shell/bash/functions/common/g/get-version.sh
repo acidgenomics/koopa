@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Also need to support platform-specific locator here...
+# FIXME Alternatively, allow pass in of app name and opt prefix name,
+# rather than looping per command...
 
 koopa_get_version() {
     # """
