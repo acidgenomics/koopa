@@ -15231,6 +15231,12 @@ koopa_locate_gs() {
         --env-name='ghostscript'
 }
 
+koopa_locate_gsl_config() {
+    koopa_locate_app \
+        --app-name='gsl-config' \
+        --opt-name='gsl'
+}
+
 koopa_locate_gzip() {
     koopa_locate_app \
         --allow-in-path \
@@ -15504,6 +15510,12 @@ koopa_locate_patch() {
     koopa_locate_app \
         --app-name='patch' \
         --opt-name='patch'
+}
+
+koopa_locate_pcre2_config() {
+    koopa_locate_app \
+        --app-name='pcre2-config' \
+        --opt-name='pcre2'
 }
 
 koopa_locate_pcregrep() {
