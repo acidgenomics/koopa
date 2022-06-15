@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Also need to support platform-specific locator here...
+
 koopa_get_version() {
     # """
     # Get the version of an installed program.
-    # @note Updated 2022-04-15.
+    # @note Updated 2022-06-15.
     #
     # @examples
     # > koopa system version 'R' 'conda' 'coreutils' 'python' 'salmon' 'zsh'
@@ -25,6 +27,9 @@ koopa_get_version() {
         fi
         dict[bn_snake]="$(koopa_snake_case_simple "${dict[bn]}")"
         dict[version_arg]="$(__koopa_get_version_arg "${dict[bn]}")"
+        # FIXME Need to also support platform-specific locator here.
+        # e.g. this applies to rstudio server on Ubuntu,
+        # when 'sbin' is not in path...
         dict[locate_fun]="koopa_locate_${dict[bn_snake]}"
         dict[version_fun]="koopa_${dict[bn_snake]}_version"
         if [[ -x "${dict[cmd]}" ]] && \
