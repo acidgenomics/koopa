@@ -11410,6 +11410,14 @@ koopa_install_ffmpeg() {
         "$@"
 }
 
+koopa_install_ffq() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bin/ffq' \
+        --name='ffq' \
+        "$@"
+}
+
 koopa_install_findutils() {
     local install_args
     install_args=(
@@ -11543,6 +11551,14 @@ koopa_install_gettext() {
         )
     fi
     koopa_install_app "${install_args[@]}" "$@"
+}
+
+koopa_install_gget() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bin/gget' \
+        --name='gget' \
+        "$@"
 }
 
 koopa_install_git() {
@@ -12679,6 +12695,14 @@ koopa_install_shunit2() {
         --link-in-bin='bin/shunit2' \
         --name-fancy='shUnit2' \
         --name='shunit2' \
+        "$@"
+}
+
+koopa_install_snakemake() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bin/snakemake' \
+        --name='snakemake' \
         "$@"
 }
 
@@ -21367,6 +21391,12 @@ koopa_uninstall_ffmpeg() {
         "$@"
 }
 
+koopa_uninstall_ffq() {
+    koopa_uninstall_app \
+        --name='ffq' \
+        "$@"
+}
+
 koopa_uninstall_findutils() {
     local uninstall_args
     uninstall_args=(
@@ -21472,6 +21502,12 @@ koopa_uninstall_geos() {
 koopa_uninstall_gettext() {
     koopa_uninstall_app \
         --name='gettext' \
+        "$@"
+}
+
+koopa_uninstall_gget() {
+    koopa_uninstall_app \
+        --name='gget' \
         "$@"
 }
 
@@ -22366,6 +22402,12 @@ koopa_uninstall_shunit2() {
         --name-fancy='shUnit2' \
         --name='shunit2' \
         --unlink-in-bin='shunit2' \
+        "$@"
+}
+
+koopa_uninstall_snakemake() {
+    koopa_uninstall_app \
+        --name='snakemake' \
         "$@"
 }
 
