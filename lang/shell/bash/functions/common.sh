@@ -15588,7 +15588,9 @@ koopa_locate_rustc() {
 }
 
 koopa_locate_salmon() {
-    koopa_locate_conda_app 'salmon'
+    koopa_locate_app \
+        --app-name='salmon' \
+        --opt-name='salmon'
 }
 
 koopa_locate_scons() {
@@ -22305,6 +22307,12 @@ koopa_uninstall_rust() {
     koopa_uninstall_app \
         --name-fancy='Rust' \
         --name='rust' \
+        "$@"
+}
+
+koopa_uninstall_salmon() {
+    koopa_uninstall_app \
+        --name='salmon' \
         "$@"
 }
 
