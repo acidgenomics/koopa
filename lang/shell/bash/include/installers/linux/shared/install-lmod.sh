@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to put luarocks modules in path.
+# How to do this?
+
 main() {
     # """
     # Install Lmod.
@@ -32,9 +35,13 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name2]}-${dict[version]}"
+    eval "$("${app[luarocks]}" path)"
     koopa_dl \
-        'LUA_PATH' "$("${app[lua]}" -e 'print(package.path)')" \
-        'LUA_CPATH' "$("${app[lua]}" -e 'print(package.cpath)')"
+        'LUA_PATH' "${LUA_PATH:?}" \
+        'LUA_CPATH' "${LUA_CPATH:?}"
+    # > koopa_dl \
+    # >     'LUA_PATH' "$("${app[lua]}" -e 'print(package.path)')" \
+    # >     'LUA_CPATH' "$("${app[lua]}" -e 'print(package.cpath)')"
     ./configure \
         --prefix="${dict[apps_dir]}" \
         --with-spiderCacheDir="${dict[data_dir]}/cacheDir" \
