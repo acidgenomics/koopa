@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Consider supporting different opt prefix name here.
+# FIXME Need to add support for opt prefix here.
 
 koopa_get_version_from_pkg_config() {
     # """
