@@ -3,10 +3,11 @@
 main() {
     # """
     # Install Luarocks.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-06-15.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'lua'
     declare -A app=(
         [lua]="$(koopa_locate_lua)"
         [make]="$(koopa_locate_make)"
@@ -20,7 +21,6 @@ main() {
     dict[lua_maj_min_ver]="$(koopa_major_minor_version "${dict[lua_version]}")"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://luarocks.org/releases/${dict[file]}"
-    koopa_activate_opt_prefix 'lua'
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
@@ -32,6 +32,8 @@ main() {
     "${app[make]}" install
     app[luarocks]="${dict[prefix]}/bin/luarocks"
     koopa_assert_is_installed "${app[luarocks]}"
+    # FIXME Where is this installing? Not finding on Ubuntu...
+    # FIXME Need to configure this to install into system?
     "${app[luarocks]}" install 'luaposix'
     "${app[luarocks]}" install 'luafilesystem'
     return 0
