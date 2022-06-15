@@ -3,12 +3,13 @@
 main() {
     # """
     # Install Lmod.
-    # @note Updated 2022-01-30.
+    # @note Updated 2022-06-15.
     #
     # @seealso
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
     # """
     local app dict
+    koopa_activate_opt_prefix 'lua' 'luarocks'
     declare -A app=(
         [lua]="$(koopa_locate_lua)"
         [luarocks]="$(koopa_locate_luarocks)"
