@@ -170,6 +170,7 @@ __koopa_complete() {
                         'jq'
                         'julia'
                         'julia-packages'
+                        'kallisto'
                         'koopa'
                         'lame'
                         'lapack'
