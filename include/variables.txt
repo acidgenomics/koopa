@@ -618,7 +618,6 @@ fastqc="0.11.9" # 2021-03-25 bioconda
 ffq="0.2.1" # 2022-05-05 bioconda
 fgbio="2.0.1" # 2022-04-18 bioconda
 gatk4="4.2.5.0" # 2022-02-05 bioconda
-gdal="3.4.2" # YYYY-MM-DD conda-forge
 genrich="0.6.1" # 2021-03-17 bioconda
 gffread="0.12.7" # 2021-09-24 bioconda
 gffutils="0.10.1" # 2020-07-26 bioconda
