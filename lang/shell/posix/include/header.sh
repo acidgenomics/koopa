@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-05-20.
+    # @note Updated 2022-06-15.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -35,6 +35,8 @@ __koopa_posix_header() {
     then
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
+    # Ensure that RStudio terminal doesn't set this.
+    unset -v LD_LIBRARY_PATH
     koopa_activate_path_helper || return 1
     koopa_activate_make_paths || return 1
     koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
