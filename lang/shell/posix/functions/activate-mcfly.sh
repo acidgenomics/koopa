@@ -3,11 +3,12 @@
 koopa_activate_mcfly() {
     # """
     # Activate mcfly.
-    # @note Updated 2022-05-12.
+    # @note Updated 2022-06-16.
     #
     # Use "mcfly search 'query'" to query directly.
     # """
     local nounset shell
+    [ "${KOOPA_DEV:-0}" -eq 1 ] && return 0
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     [ -x "$(koopa_bin_prefix)/mcfly" ] || return 0
     koopa_is_root && return 0
