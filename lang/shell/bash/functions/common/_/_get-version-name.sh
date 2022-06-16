@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Rethink this approach, matching to app-name and opt-name instead.
+# FIXME Need to remove this, rethink approach...
 
 __koopa_get_version_name() {
     # """

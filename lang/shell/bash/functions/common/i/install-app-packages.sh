@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework and simplify this...
+
 koopa_install_app_packages() {
     # """
     # Install application packages.
@@ -70,7 +72,11 @@ koopa_install_app_packages() {
     then
         koopa_rm "${dict[prefix]}"
     fi
-    dict[version]="$(koopa_get_version "${dict[name]}")"
+    dict[version]="$( \
+        koopa_get_version \
+            --app-name="${dict[name]}" \
+            --opt-name="${dict[name]}-packages" \
+    )"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     koopa_install_app \
         --name-fancy="${dict[name_fancy]} packages" \
