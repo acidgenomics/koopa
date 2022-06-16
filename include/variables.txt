@@ -147,7 +147,7 @@ fltk="1.3.8"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
-fish="3.4.1"
+fish="3.5.0"
 
 fontconfig="2.14.0"
 
@@ -758,7 +758,7 @@ mcfly="0.6.0"
 mdcat="0.27.1"
 procs="0.12.3"
 ripgrep="13.0.0"
-starship="1.7.1"
+starship="1.8.0"
 tealdeer="1.5.0" # tldr
 tokei="12.1.2"
 tuc="0.10.0"
