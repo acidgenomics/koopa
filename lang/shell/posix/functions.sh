@@ -902,7 +902,7 @@ koopa_alias_k() {
 }
 
 koopa_alias_kdev() {
-    export KOOPA_DEV=1; bash -il; set -x
+    export KOOPA_DEV=1; bash -il
 }
 
 koopa_alias_l() {

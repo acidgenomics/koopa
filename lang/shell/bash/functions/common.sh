@@ -8650,21 +8650,28 @@ koopa_get_version() {
             '--opt-name' "${dict[opt_name]}"
         dict[cmd]="${dict[opt_prefix]}/${dict[opt_name]}/bin/${dict[app_name]}"
     fi
-    [[ -x "${dict[cmd]}" ]] || return 1
-    [[ -d "${dict[cmd]}" ]] && return 1
-    koopa_is_installed "${dict[cmd]}" || return 1
-    dict[cmd]="$(koopa_realpath "${dict[cmd]}")"
     dict[bn]="$(koopa_basename "${dict[cmd]}")"
     dict[bn_snake]="$(koopa_snake_case_simple "${dict[bn]}")"
     dict[version_arg]="$(__koopa_get_version_arg "${dict[bn]}")"
     dict[version_fun]="koopa_${dict[bn_snake]}_version"
     if koopa_is_function "${dict[version_fun]}"
     then
-        dict[str]="$("${dict[version_fun]}" "${dict[cmd]}")"
+        if [[ -x "${dict[cmd]}" ]] && \
+            [[ ! -d "${dict[cmd]}" ]] && \
+            koopa_is_installed "${dict[cmd]}"
+        then
+            dict[str]="$("${dict[version_fun]}" "${dict[cmd]}")"
+        else
+            dict[str]="$("${dict[version_fun]}")"
+        fi
         [[ -n "${dict[str]}" ]] || return 1
         koopa_print "${dict[str]}"
         return 0
     fi
+    [[ -x "${dict[cmd]}" ]] || return 1
+    [[ ! -d "${dict[cmd]}" ]] || return 1
+    koopa_is_installed "${dict[cmd]}" || return 1
+    dict[cmd]="$(koopa_realpath "${dict[cmd]}")"
     dict[str]="$("${dict[cmd]}" "${dict[version_arg]}" 2>&1 || true)"
     [[ -n "${dict[str]}" ]] || return 1
     dict[str]="$(koopa_extract_version "${dict[str]}")"
