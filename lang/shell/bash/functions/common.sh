@@ -1263,20 +1263,6 @@ koopa_assert_is_conda_active() {
     return 0
 }
 
-koopa_assert_is_current_version() {
-    local arg expected
-    koopa_assert_has_args "$#"
-    for arg in "$@"
-    do
-        if ! koopa_is_installed "$arg"
-        then
-            expected="$(koopa_variable "$arg")"
-            koopa_stop "'${arg}' is not current; expecting '${expected}'."
-        fi
-    done
-    return 0
-}
-
 koopa_assert_is_dir() {
     local arg
     koopa_assert_has_args "$#"
@@ -8618,66 +8604,72 @@ pkgconfig/${dict[pc_name]}.pc"
 }
 
 koopa_get_version() {
-    local cmd
+    local dict pos
     koopa_assert_has_args "$#"
-    for cmd in "$@"
+    declare -A dict=(
+        [app_name]=''
+        [opt_name]=''
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
+    pos=()
+    while (("$#"))
     do
-        local dict
-        declare -A dict
-        dict[cmd]="$cmd"
-        dict[bn1]="$(koopa_basename "${dict[cmd]}")"
-        dict[bn]="${dict[bn1]}"
-        dict[bn2]="$(__koopa_get_version_name "${dict[bn1]}")"
-        if [[ "${dict[bn1]}" != "${dict[bn2]}" ]]
-        then
-            dict[bn]="${dict[bn2]}"
-            dict[cmd]="${dict[bn]}"
-        fi
-        dict[bn_snake]="$(koopa_snake_case_simple "${dict[bn]}")"
-        dict[version_arg]="$(__koopa_get_version_arg "${dict[bn]}")"
-        dict[locate_fun]="koopa_locate_${dict[bn_snake]}"
-        dict[version_fun]="koopa_${dict[bn_snake]}_version"
-        if [[ -x "${dict[cmd]}" ]] && \
-            [[ ! -d "${dict[cmd]}" ]] && \
-            koopa_is_installed "${dict[cmd]}"
-        then
-            dict[cmd]="$(koopa_realpath "${dict[cmd]}")"
-        fi
-        if koopa_is_function "${dict[version_fun]}"
-        then
-            if [[ -x "${dict[cmd]}" ]] && \
-                [[ ! -d "${dict[cmd]}" ]] && \
-                koopa_is_installed "${dict[cmd]}"
-            then
-                dict[str]="$("${dict[version_fun]}" "${dict[cmd]}")"
-            else
-                dict[str]="$("${dict[version_fun]}")"
-            fi
-            [[ -n "${dict[str]}" ]] || return 1
-            koopa_print "${dict[str]}"
-            continue
-        fi
-        if ! { \
-            [[ -x "${dict[cmd]}" ]] && \
-            [[ ! -d "${dict[cmd]}" ]] && \
-            koopa_is_installed "${dict[cmd]}"; \
-        }
-        then
-            if koopa_is_function "${dict[locate_fun]}"
-            then
-                dict[cmd]="$("${dict[locate_fun]}")"
-            else
-                dict[cmd]="$(koopa_which_realpath "${dict[cmd]}")"
-            fi
-        fi
-        koopa_is_installed "${dict[cmd]}" || return 1
-        [[ -x "${dict[cmd]}" ]] || return 1
-        dict[str]="$("${dict[cmd]}" "${dict[version_arg]}" 2>&1 || true)"
-        [[ -n "${dict[str]}" ]] || return 1
-        dict[str]="$(koopa_extract_version "${dict[str]}")"
+        case "$1" in
+            '--app-name='*)
+                dict[app_name]="${1#*=}"
+                shift 1
+                ;;
+            '--app-name')
+                dict[app_name]="${2:?}"
+                shift 2
+                ;;
+            '--opt-name='*)
+                dict[opt_name]="${1#*=}"
+                shift 1
+                ;;
+            '--opt-name')
+                dict[opt_name]="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -eq 1 ]]
+    then
+        dict[cmd]="${1:?}"
+    else
+        koopa_assert_is_set \
+            '--app-name' "${dict[app_name]}" \
+            '--opt-name' "${dict[opt_name]}"
+        dict[cmd]="${dict[opt_prefix]}/${dict[opt_name]}/bin/${dict[app_name]}"
+    fi
+    [[ -x "${dict[cmd]}" ]] || return 1
+    [[ -d "${dict[cmd]}" ]] && return 1
+    koopa_is_installed "${dict[cmd]}" || return 1
+    dict[cmd]="$(koopa_realpath "${dict[cmd]}")"
+    dict[bn]="$(koopa_basename "${dict[cmd]}")"
+    dict[bn_snake]="$(koopa_snake_case_simple "${dict[bn]}")"
+    dict[version_arg]="$(__koopa_get_version_arg "${dict[bn]}")"
+    dict[version_fun]="koopa_${dict[bn_snake]}_version"
+    if koopa_is_function "${dict[version_fun]}"
+    then
+        dict[str]="$("${dict[version_fun]}" "${dict[cmd]}")"
         [[ -n "${dict[str]}" ]] || return 1
         koopa_print "${dict[str]}"
-    done
+        return 0
+    fi
+    dict[str]="$("${dict[cmd]}" "${dict[version_arg]}" 2>&1 || true)"
+    [[ -n "${dict[str]}" ]] || return 1
+    dict[str]="$(koopa_extract_version "${dict[str]}")"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa_print "${dict[str]}"
     return 0
 }
 
@@ -10675,7 +10667,11 @@ koopa_install_app_packages() {
     then
         koopa_rm "${dict[prefix]}"
     fi
-    dict[version]="$(koopa_get_version "${dict[name]}")"
+    dict[version]="$( \
+        koopa_get_version \
+            --app-name="${dict[name]}" \
+            --opt-name="${dict[name]}-packages" \
+    )"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     koopa_install_app \
         --name-fancy="${dict[name_fancy]} packages" \
@@ -13232,18 +13228,6 @@ koopa_is_array_non_empty() {
     return 0
 }
 
-koopa_is_current_version() {
-    local actual_version app expected_version
-    koopa_assert_has_args "$#"
-    for app in "$@"
-    do
-        expected_version="$(koopa_variable "$app")"
-        actual_version="$(koopa_get_version "$app")"
-        [[ "$actual_version" == "$expected_version" ]] || return 1
-    done
-    return 0
-}
-
 koopa_is_defined_in_user_profile() {
     local file
     koopa_assert_has_no_args "$#"
@@ -13432,6 +13416,7 @@ koopa_is_r_package_installed() {
     declare -A app=(
         [r]="$(koopa_locate_r)"
     )
+    [[ -x "${app[r]}" ]] || return 1
     declare -A dict
     dict[version]="$(koopa_get_version "${app[r]}")"
     dict[prefix]="$(koopa_r_packages_prefix "${dict[version]}")"
@@ -17144,7 +17129,7 @@ koopa_python_pip_outdated() {
         [python]="${1:-}"
     )
     [[ -z "${app[python]}" ]] && app[python]="$(koopa_locate_python)"
-    koopa_assert_is_installed "${app[python]}"
+    [[ -x "${app[python]}" ]] || return 1
     declare -A dict=(
         [version]="$(koopa_get_version "${app[python]}")"
     )
@@ -20400,6 +20385,8 @@ koopa_system_info() {
         [bash]="$(koopa_locate_bash)"
         [cat]="$(koopa_locate_cat)"
     )
+    [[ -x "${app[bash]}" ]] || return 1
+    [[ -x "${app[cat]}" ]] || return 1
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [arch]="$(koopa_arch)"
