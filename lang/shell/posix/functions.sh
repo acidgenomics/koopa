@@ -420,6 +420,7 @@ koopa_activate_make_paths() {
 
 koopa_activate_mcfly() {
     local nounset shell
+    [ "${KOOPA_DEV:-0}" -eq 1 ] && return 0
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     [ -x "$(koopa_bin_prefix)/mcfly" ] || return 0
     koopa_is_root && return 0
@@ -901,7 +902,7 @@ koopa_alias_k() {
 }
 
 koopa_alias_kdev() {
-    export KOOPA_DEV=1; bash -il
+    export KOOPA_DEV=1; bash -il; set -x
 }
 
 koopa_alias_l() {
