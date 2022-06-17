@@ -50,7 +50,7 @@ main() {
                 koopa_stop 'Unsupported Perl package.'
                 ;;
         esac
-        version="$(koopa_variable "perl-${name}")"
+        version="$(koopa_variable "perl-v${name}")"
         modules+=("${repo}-${version}")
     done
     for module in "${modules[@]}"
