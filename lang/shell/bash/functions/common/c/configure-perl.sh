@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME This will fail because cpanm isn't installed...
+
 koopa_configure_perl() {
     # """
     # Configure Perl.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-06-17.
     #
     # Ignore these unit test errors:
     # > Failed test 'fish: activate PATH'
@@ -20,6 +22,8 @@ koopa_configure_perl() {
         [yes]="$(koopa_locate_yes)"
     )
     [[ -z "${app[perl]}" ]] && app[perl]="$(koopa_locate_perl)"
+    [[ -x "${app[perl]}" ]] || return 1
+    [[ -x "${app[yes]}" ]] || return 1
     declare -A dict=(
         [prefix]="$(koopa_perl_packages_prefix)"
     )
@@ -31,6 +35,7 @@ koopa_configure_perl() {
     koopa_alert "Setting up 'local::lib' at '${dict[prefix]}' using CPAN."
     koopa_add_to_path_start "$(koopa_dirname "${app[perl]}")"
     app[cpan]="$(koopa_locate_cpan)"
+    [[ -x "${app[cpan]}" ]] || return 1
     "${app[yes]}" \
         | PERL_MM_OPT="INSTALL_BASE=${dict[prefix]}" \
             "${app[cpan]}" -f -i 'local::lib' \
