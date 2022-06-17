@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to put luarocks modules in path.
-# How to do this?
-
 main() {
     # """
     # Install Lmod.
