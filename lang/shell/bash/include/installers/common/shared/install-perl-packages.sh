@@ -31,11 +31,14 @@ main() {
     modules=()
     for name in "${names[@]}"
     do
-        local repo version
+        local repo version version2
+        version="$(koopa_variable "perl-${name}")"
+        version2="$version"
         case "$name" in
             'ack')
                 # App::Ack.
                 repo='PETDANCE/ack'
+                version2="v${version}"
                 ;;
             'cpanminus')
                 # App::cpanminus.
@@ -49,8 +52,7 @@ main() {
                 koopa_stop 'Unsupported Perl package.'
                 ;;
         esac
-        version="$(koopa_variable "perl-${name}")"
-        modules+=("${repo}-v${version}")
+        modules+=("${repo}-${version2}")
     done
     for module in "${modules[@]}"
     do
