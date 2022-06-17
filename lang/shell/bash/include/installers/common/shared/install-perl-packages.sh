@@ -16,7 +16,7 @@ main() {
     # - https://www.perl.com/article/4/2013/3/27/
     #     How-to-install-a-specific-version-of-a-Perl-module-with-CPAN/
     # """
-    local app module modules
+    local app module modules name names
     koopa_assert_has_no_args "$#"
     koopa_configure_perl
     koopa_activate_perl
@@ -24,11 +24,35 @@ main() {
         [cpan]="$(koopa_locate_cpan)"
     )
     [[ -x "${app[cpan]}" ]] || return 1
-    modules=(
-        'MIYAGAWA/App-cpanminus-1.7046' # 2022-04-27; App::cpanminus
-        'PETDANCE/ack-v3.5.0' # 2021-03-12; App::Ack
-        'RMBARKER/File-Rename-1.31' # 2022-05-07; File::Rename
+    names=(
+        'cpanminus'
+        'ack'
+        'rename'
     )
+    modules=()
+    for name in "${names[@]}"
+    do
+        local repo version
+        case "$name" in
+            'ack')
+                # App::Ack.
+                repo='PETDANCE/ack'
+                ;;
+            'cpanminus')
+                # App::cpanminus.
+                repo='MIYAGAWA/App-cpanminus'
+                ;;
+            'rename')
+                # File::Rename.
+                repo='RMBARKER/File-Rename'
+                ;;
+            *)
+                koopa_stop 'Unsupported Perl package.'
+                ;;
+        esac
+        version="$(koopa_variable "perl-${name}")"
+        modules+=("${repo}-${version}")
+    done
     for module in "${modules[@]}"
     do
         koopa_alert "Installing '${module}'."
