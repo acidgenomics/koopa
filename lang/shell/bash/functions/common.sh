@@ -16366,11 +16366,6 @@ koopa_node_package_version() {
     return 0
 }
 
-koopa_npm_version() {
-    koopa_assert_has_no_args "$#"
-    koopa_node_package_version 'npm'
-}
-
 koopa_openjdk_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
