@@ -18,7 +18,6 @@ main() {
     # """
     local app module modules name names
     koopa_assert_has_no_args "$#"
-    koopa_configure_perl
     koopa_activate_perl
     declare -A app=(
         [cpan]="$(koopa_locate_cpan)"
@@ -50,8 +49,8 @@ main() {
                 koopa_stop 'Unsupported Perl package.'
                 ;;
         esac
-        version="$(koopa_variable "perl-v${name}")"
-        modules+=("${repo}-${version}")
+        version="$(koopa_variable "perl-${name}")"
+        modules+=("${repo}-v${version}")
     done
     for module in "${modules[@]}"
     do
