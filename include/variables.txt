@@ -710,9 +710,9 @@ node-prettier="2.7.0"
 # Perl packages
 # ==============================================================================
 
-# FIXME Need to version pin these.
-# FIXME ack
-# FIXME rename
+perl-ack="3.5.0"
+perl-cpanminus="1.7046"
+perl-rename="1.31"
 
 # Python packages
 # ==============================================================================
