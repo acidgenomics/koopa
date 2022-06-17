@@ -4577,6 +4577,8 @@ koopa_configure_perl() {
         [yes]="$(koopa_locate_yes)"
     )
     [[ -z "${app[perl]}" ]] && app[perl]="$(koopa_locate_perl)"
+    [[ -x "${app[perl]}" ]] || return 1
+    [[ -x "${app[yes]}" ]] || return 1
     declare -A dict=(
         [prefix]="$(koopa_perl_packages_prefix)"
     )
@@ -4588,6 +4590,7 @@ koopa_configure_perl() {
     koopa_alert "Setting up 'local::lib' at '${dict[prefix]}' using CPAN."
     koopa_add_to_path_start "$(koopa_dirname "${app[perl]}")"
     app[cpan]="$(koopa_locate_cpan)"
+    [[ -x "${app[cpan]}" ]] || return 1
     "${app[yes]}" \
         | PERL_MM_OPT="INSTALL_BASE=${dict[prefix]}" \
             "${app[cpan]}" -f -i 'local::lib' \
@@ -10505,8 +10508,9 @@ ${dict[name]}/${dict[version]}.tar.gz"
 }
 
 koopa_install_app_packages() {
-    local name name_fancy pos
+    local app name name_fancy pos
     koopa_assert_has_args "$#"
+    declare -A app
     declare -A dict=(
         [name]=''
         [name_fancy]=''
@@ -10550,6 +10554,8 @@ koopa_install_app_packages() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
+    app[cmd]="$("koopa_locate_${dict[name]}")"
+    koopa_assert_is_installed "${app[cmd]}"
     dict[configure_fun]="koopa_configure_${dict[name]}"
     "${dict[configure_fun]}"
     koopa_assert_is_function "${dict[configure_fun]}"
@@ -10564,11 +10570,7 @@ koopa_install_app_packages() {
     then
         koopa_rm "${dict[prefix]}"
     fi
-    dict[version]="$( \
-        koopa_get_version \
-            --app-name="${dict[name]}" \
-            --opt-name="${dict[name]}-packages" \
-    )"
+    dict[version]="$(koopa_get_version "${app[cmd]}")"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     koopa_install_app \
         --name-fancy="${dict[name_fancy]} packages" \
