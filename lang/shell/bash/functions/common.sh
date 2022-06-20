@@ -11505,6 +11505,14 @@ koopa_install_gget() {
         "$@"
 }
 
+koopa_install_ghostscript() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bin/gs' \
+        --name='ghostscript' \
+        "$@"
+}
+
 koopa_install_git() {
     local install_args
     install_args=(
@@ -12600,6 +12608,14 @@ koopa_install_salmon() {
         --installer='conda-env' \
         --link-in-bin='bin/salmon' \
         --name='salmon' \
+        "$@"
+}
+
+koopa_install_samtools() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bin/samtools' \
+        --name='samtools' \
         "$@"
 }
 
@@ -15155,9 +15171,9 @@ koopa_locate_groups() {
 }
 
 koopa_locate_gs() {
-    koopa_locate_conda_app \
+    koopa_locate_app \
         --app-name='gs' \
-        --env-name='ghostscript'
+        --opt-name='ghostscript'
 }
 
 koopa_locate_gsl_config() {
@@ -15322,10 +15338,6 @@ koopa_locate_man() {
         --allow-in-path \
         --app-name='man' \
         --opt-name='man-db'
-}
-
-koopa_locate_mashmap() {
-    koopa_locate_conda_app 'mashmap'
 }
 
 koopa_locate_md5sum() {
@@ -15586,6 +15598,12 @@ koopa_locate_salmon() {
     koopa_locate_app \
         --app-name='salmon' \
         --opt-name='salmon'
+}
+
+koopa_locate_samtools() {
+    koopa_locate_app \
+        --app-name='samtools' \
+        --opt-name='samtools'
 }
 
 koopa_locate_scons() {
@@ -15956,6 +15974,7 @@ koopa_merge_pdf() {
     declare -A app=(
         [gs]="$(koopa_locate_gs)"
     )
+    [[ -x "${app[gs]}" ]] || return 1
     koopa_assert_is_file "$@"
     "${app[gs]}" \
         -dBATCH \
@@ -18820,7 +18839,7 @@ koopa_samtools_convert_sam_to_bam() {
     koopa_assert_is_file "$input_sam"
     threads="$(koopa_cpu_count)"
     koopa_dl 'Threads' "$threads"
-    samtools view \
+    "${app[samtools]}" view \
         -@ "$threads" \
         -b \
         -h \
@@ -21476,6 +21495,13 @@ koopa_uninstall_gget() {
         "$@"
 }
 
+koopa_uninstall_ghostscript() {
+    koopa_uninstall_app \
+        --name='ghostscript' \
+        --unlink-in-bin='gs' \
+        "$@"
+}
+
 koopa_uninstall_git() {
     local uninstall_args
     uninstall_args=(
@@ -22332,6 +22358,13 @@ koopa_uninstall_salmon() {
     koopa_uninstall_app \
         --name='salmon' \
         --unlink-in-bin='salmon' \
+        "$@"
+}
+
+koopa_uninstall_samtools() {
+    koopa_uninstall_app \
+        --name='samtools' \
+        --unlink-in-bin='samtools' \
         "$@"
 }
 
