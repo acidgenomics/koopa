@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this locating samtools directly instead of activating conda env.
+
 koopa_convert_sam_to_bam() {
     # """
     # Convert multiple SAM files in a directory to BAM files.

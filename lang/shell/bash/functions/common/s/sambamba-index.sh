@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to locate sambamba and samtools directly here.
+# FIXME Rework using a dict approach.
+
 koopa_sambamba_index() {
     # """
     # Index BAM file with sambamba.

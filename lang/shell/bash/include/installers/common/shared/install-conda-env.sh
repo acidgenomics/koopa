@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2022-06-15.
+    # @note Updated 2022-06-20.
     # """
     koopa_assert_has_no_args "$#"
     declare -A dict=(
@@ -15,6 +15,10 @@ main() {
     case "${dict[name]}" in
         'ghostscript')
             bin_names=('gs')
+            ;;
+        'star')
+            # Case sensitive.
+            bin_names=('STAR')
             ;;
         *)
             bin_names=("${dict[name]}")

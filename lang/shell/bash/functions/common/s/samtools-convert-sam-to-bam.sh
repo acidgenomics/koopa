@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 # FIXME Rework our location of conda environment tool here instead.
+# FIXME Rework using a dl approach here.
 
 koopa_samtools_convert_sam_to_bam() {
     # """
     # Convert a SAM file to BAM format.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-06-20.
     #
     # samtools view --help
     # Useful flags:
@@ -62,7 +63,7 @@ koopa_samtools_convert_sam_to_bam() {
     koopa_assert_is_file "$input_sam"
     threads="$(koopa_cpu_count)"
     koopa_dl 'Threads' "$threads"
-    samtools view \
+    "${app[samtools]}" view \
         -@ "$threads" \
         -b \
         -h \
