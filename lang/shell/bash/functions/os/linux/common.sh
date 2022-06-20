@@ -480,22 +480,11 @@ koopa_linux_install_bcbio_nextgen() {
 }
 
 koopa_linux_install_bcl2fastq() {
-    if koopa_is_fedora
-    then
-        koopa_install_app \
-            --link-in-bin='bin/bcl2fastq' \
-            --installer='bcl2fastq-from-rpm' \
-            --name='bcl2fastq' \
-            --platform='fedora' \
-            "$@"
-    else
-        koopa_install_app \
-            --link-in-bin='bin/bcl2fastq' \
-            --name='bcl2fastq' \
-            --platform='linux' \
-            "$@"
-    fi
-    return 0
+    koopa_install_app \
+        --link-in-bin='bin/bcl2fastq' \
+        --name='bcl2fastq' \
+        --platform='linux' \
+        "$@"
 }
 
 koopa_linux_install_cellranger() {

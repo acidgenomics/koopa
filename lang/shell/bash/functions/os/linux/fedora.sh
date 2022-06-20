@@ -136,6 +136,15 @@ koopa_fedora_install_base_system() {
         "$@"
 }
 
+koopa_fedora_install_bcl2fastq() {
+    koopa_install_app \
+        --installer='bcl2fastq-from-rpm' \
+        --link-in-bin='bin/bcl2fastq' \
+        --name='bcl2fastq' \
+        --platform='fedora' \
+        "$@"
+}
+
 koopa_fedora_install_from_rpm() {
     local app
     koopa_assert_has_args "$#"
