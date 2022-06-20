@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for unlinking from 'bin/' here.
-
 koopa_conda_remove_env() {
     # """
     # Remove conda environment.
