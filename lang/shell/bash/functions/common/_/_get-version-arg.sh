@@ -3,7 +3,7 @@
 __koopa_get_version_arg() {
     # """
     # Return matching version argument for an input program.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-06-20.
     # """
     local arg name
     koopa_assert_has_args_eq "$#" 1
@@ -15,6 +15,9 @@ __koopa_get_version_arg() {
         'openssl' | \
         'rstudio-server')
             arg='version'
+            ;;
+        'exiftool')
+            arg='-ver'
             ;;
         'lua')
             arg='-v'
