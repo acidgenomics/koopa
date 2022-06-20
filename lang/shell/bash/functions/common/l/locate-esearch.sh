@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa_locate_esearch() {
-    koopa_locate_conda_app \
+    koopa_locate_app \
         --app-name='esearch' \
-        --env-name='entrez-direct'
+        --opt-name='entrez-direct'
 }

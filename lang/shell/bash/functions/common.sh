@@ -11330,6 +11330,15 @@ koopa_install_ensembl_perl_api() {
         "$@"
 }
 
+koopa_install_entrez_direct() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bin/efetch' \
+        --link-in-bin='bin/esearch' \
+        --name='entrez-direct' \
+        "$@"
+}
+
 koopa_install_exa() {
     koopa_install_app \
         --link-in-bin='bin/exa' \
@@ -15026,9 +15035,9 @@ koopa_locate_du() {
 }
 
 koopa_locate_efetch() {
-    koopa_locate_conda_app \
+    koopa_locate_app \
         --app-name='efetch' \
-        --env-name='entrez-direct'
+        --opt-name='entrez-direct'
 }
 
 koopa_locate_emacs() {
@@ -15038,9 +15047,9 @@ koopa_locate_emacs() {
 }
 
 koopa_locate_esearch() {
-    koopa_locate_conda_app \
+    koopa_locate_app \
         --app-name='esearch' \
-        --env-name='entrez-direct'
+        --opt-name='entrez-direct'
 }
 
 koopa_locate_exiftool() {
@@ -21350,6 +21359,14 @@ koopa_uninstall_ensembl_perl_api() {
     koopa_uninstall_app \
         --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
+        "$@"
+}
+
+koopa_uninstall_entrez_direct() {
+    koopa_install_app \
+        --name='entrez-direct' \
+        --unlink-in-bin='efetch' \
+        --unlink-in-bin='esearch' \
         "$@"
 }
 

@@ -125,6 +125,7 @@ __koopa_complete() {
                         'du-dust'
                         'emacs'
                         'ensembl-perl-api'
+                        'entrez-direct'
                         'exa'
                         'fd-find'
                         'ffmpeg'

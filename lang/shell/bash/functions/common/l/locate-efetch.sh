@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Rework as app.
-
 koopa_locate_efetch() {
-    koopa_locate_conda_app \
+    koopa_locate_app \
         --app-name='efetch' \
-        --env-name='entrez-direct'
+        --opt-name='entrez-direct'
 }
