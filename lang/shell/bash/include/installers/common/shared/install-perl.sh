@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider taking out the 'configure_perl' and 'activate_perl' steps.
+
 main() {
     # """
     # Install Perl.
