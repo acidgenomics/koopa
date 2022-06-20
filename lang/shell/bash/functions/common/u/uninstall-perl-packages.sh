@@ -6,6 +6,7 @@ koopa_uninstall_perl_packages() {
         --name='perl-packages' \
         --unlink-in-bin='ack' \
         --unlink-in-bin='cpanm' \
+        --unlink-in-bin='exiftool' \
         --unlink-in-bin='rename' \
         "$@"
 }
