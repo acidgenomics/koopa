@@ -20,8 +20,9 @@ local({
 
         if (isFALSE(utils::packageVersion("koopa") >= minVersion)) {
             stop(sprintf(
-                "%s %s %s is required.",
-                "koopa", ">=", as.character(minVersion)
+                "%s %s %s is required.\nRun '%s' to resolve.",
+                "R koopa", ">=", as.character(minVersion),
+                "koopa install r-packages"
             ))
         }
         invisible(TRUE)
