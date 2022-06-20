@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This will fail because cpanm isn't installed...
-
 koopa_configure_perl() {
     # """
     # Configure Perl.
