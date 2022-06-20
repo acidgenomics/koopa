@@ -711,6 +711,7 @@ node-prettier="2.7.0"
 
 perl-ack="3.5.0"
 perl-cpanminus="1.7046"
+perl-exiftool="12.42"
 perl-rename="1.31"
 
 # Python packages
