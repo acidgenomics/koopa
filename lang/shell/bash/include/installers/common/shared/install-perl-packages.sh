@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to split this out to install Perl package per prefix.
+
 main() {
     # """
     # Install Perl packages.
-    # @note Updated 2022-06-17.
+    # @note Updated 2022-06-20.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -24,8 +26,9 @@ main() {
     )
     [[ -x "${app[cpan]}" ]] || return 1
     names=(
-        'cpanminus'
         'ack'
+        'cpanminus'
+        'exiftool'
         'rename'
     )
     modules=()
@@ -43,6 +46,10 @@ main() {
             'cpanminus')
                 # App::cpanminus.
                 repo='MIYAGAWA/App-cpanminus'
+                ;;
+            'exiftool')
+                # Image::ExifTool.
+                repo='EXIFTOOL/Image-ExifTool'
                 ;;
             'rename')
                 # File::Rename.
