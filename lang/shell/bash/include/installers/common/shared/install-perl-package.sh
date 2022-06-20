@@ -2,6 +2,16 @@
 
 # FIXME Need to split this out to install Perl package per prefix.
 
+# See also:
+# https://metacpan.org/release/APEIRON/local-lib-1.005001/view/lib/local/lib.pm#CREATING-A-SELF-CONTAINED-SET-OF-MODULES
+
+# FIXME Consider using this type of approach:
+# Install LWP and *all non-core* dependencies to the 'my_lwp' directory
+# > perl -MCPAN -Mlocal::lib=--self-contained,my_lwp -e 'CPAN::install(LWP)'
+
+# FIXME Consider taking out the configure Perl packages approach, and the
+# activate Perl step...
+
 main() {
     # """
     # Install Perl packages.
