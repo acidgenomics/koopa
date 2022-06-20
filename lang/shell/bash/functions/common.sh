@@ -11021,6 +11021,14 @@ koopa_install_bc() {
         "$@"
 }
 
+koopa_install_bedtools() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bin/bedtools' \
+        --name='bedtools' \
+        "$@"
+}
+
 koopa_install_binutils() {
     koopa_install_app \
         --installer='gnu-app' \
@@ -14755,7 +14763,9 @@ koopa_locate_bc() {
 }
 
 koopa_locate_bedtools() {
-    koopa_locate_conda_app 'bedtools'
+    koopa_locate_app \
+        --app-name='bedtools' \
+        --opt-name='bedtools'
 }
 
 koopa_locate_bpytop() {
@@ -21028,6 +21038,13 @@ koopa_uninstall_bc() {
     koopa_uninstall_app \
         --name='bc' \
         --unlink-in-bin='bc' \
+        "$@"
+}
+
+koopa_uninstall_bedtools() {
+    koopa_uninstall_app \
+        --name='bedtools' \
+        --unlink-in-bin='bedtools' \
         "$@"
 }
 
