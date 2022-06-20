@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-06-14.
+    # Updated 2022-06-20.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -103,6 +103,7 @@ __koopa_complete() {
                         'bash'
                         'bat'
                         'bc'
+                        'bedtools'
                         'binutils'
                         'black'
                         'boost'
@@ -144,6 +145,7 @@ __koopa_complete() {
                         'geos'
                         'gettext'
                         'gget'
+                        'ghostscript'
                         'git'
                         'glances'
                         'glib'
@@ -259,6 +261,7 @@ __koopa_complete() {
                         'ruby-packages'
                         'rust'
                         'salmon'
+                        'samtools'
                         'scons'
                         'sed'
                         'serf'

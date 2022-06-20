@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Rework as app.
-
 koopa_locate_gs() {
-    koopa_locate_conda_app \
+    koopa_locate_app \
         --app-name='gs' \
-        --env-name='ghostscript'
+        --opt-name='ghostscript'
 }
