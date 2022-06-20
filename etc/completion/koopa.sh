@@ -269,6 +269,7 @@ __koopa_complete() {
                         'spacemacs'
                         'spacevim'
                         'sqlite'
+                        'star'
                         'starship'
                         'stow'
                         'subversion'

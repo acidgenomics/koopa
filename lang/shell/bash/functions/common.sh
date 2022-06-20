@@ -12676,6 +12676,14 @@ koopa_install_sqlite() {
         "$@"
 }
 
+koopa_install_star() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bin/STAR' \
+        --name='star' \
+        "$@"
+}
+
 koopa_install_starship() {
     koopa_install_app \
         --installer='rust-package' \
@@ -15656,9 +15664,9 @@ koopa_locate_stack() {
 }
 
 koopa_locate_star() {
-    koopa_locate_conda_app \
+    koopa_locate_app \
         --app-name='STAR' \
-        --env-name='star'
+        --opt-name='star'
 }
 
 koopa_locate_stat() {
@@ -21660,6 +21668,7 @@ koopa_uninstall_julia() {
 koopa_uninstall_kallisto() {
     koopa_uninstall_app \
         --name='kallisto' \
+        --unlink-in-bin='kallisto' \
         "$@"
 }
 
@@ -22305,6 +22314,7 @@ koopa_uninstall_rust() {
 koopa_uninstall_salmon() {
     koopa_uninstall_app \
         --name='salmon' \
+        --unlink-in-bin='salmon' \
         "$@"
 }
 
@@ -22382,6 +22392,13 @@ koopa_uninstall_sqlite() {
         --name-fancy='SQLite' \
         --name='sqlite' \
         --unlink-in-bin='sqlite3' \
+        "$@"
+}
+
+koopa_uninstall_star() {
+    koopa_uninstall_app \
+        --name='star' \
+        --unlink-in-bin='STAR' \
         "$@"
 }
 
