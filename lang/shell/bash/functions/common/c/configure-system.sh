@@ -13,7 +13,7 @@
 koopa_configure_system() {
     # """
     # Configure system.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-06-21.
     #
     # Intended primarily for virtual machine and Docker image builds.
     #
@@ -674,12 +674,19 @@ koopa_configure_system() {
         koopa install 'pytest'
         koopa install 'ranger-fm'
     fi
-    [[ "${dict[install_r_packages]}" -eq 1 ]] && \
+    if [[ "${dict[install_r_packages]}" -eq 1 ]]
+    then
         koopa install 'r-packages'
-    [[ "${dict[install_perl_packages]}" -eq 1 ]] && \
+    fi
+    if [[ "${dict[install_perl_packages]}" -eq 1 ]]
+    then
+        # FIXME Need to split this out into individual packages.
         koopa install 'perl-packages'
-    [[ "${dict[install_ruby_packages]}" -eq 1 ]] && \
+    fi
+    if [[ "${dict[install_ruby_packages]}" -eq 1 ]]
+    then
         koopa install 'ruby-packages'
+    fi
     if [[ "${dict[install_rust_packages]}" -eq 1 ]]
     then
         koopa install 'bat'
