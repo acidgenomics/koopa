@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-06-20"
+koopa-date="2022-06-21"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -709,10 +709,9 @@ node-prettier="2.7.0"
 # Perl packages
 # ==============================================================================
 
-perl-ack="3.5.0"
-perl-cpanminus="1.7046"
-perl-exiftool="12.42"
-perl-rename="1.31"
+ack="3.5.0"
+exiftool="12.42"
+rename="1.31"
 
 # Python packages
 # ==============================================================================

@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider taking out the 'configure_perl' and 'activate_perl' steps.
-
 main() {
     # """
     # Install Perl.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-06-21.
     #
     # @seealso
     # - https://www.cpan.org/src/
@@ -30,15 +28,10 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    koopa_alert_coffee_time
     ./Configure -des -Dprefix="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # The installer will warn when you skip this step.
     # > "${app[make]}" test
     "${app[make]}" install
-    app[perl]="${dict[prefix]}/bin/perl"
-    koopa_assert_is_installed "${app[perl]}"
-    koopa_rm "${HOME}/.cpan" "${HOME}/.cpanm"
-    koopa_configure_perl "${app[perl]}"
     return 0
 }

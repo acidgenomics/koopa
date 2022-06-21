@@ -1,80 +1,77 @@
 #!/usr/bin/env bash
 
-# FIXME Need to split this out to install Perl package per prefix.
-
-# See also:
-# https://metacpan.org/release/APEIRON/local-lib-1.005001/view/lib/local/lib.pm#CREATING-A-SELF-CONTAINED-SET-OF-MODULES
-
-# FIXME Consider using this type of approach:
-# Install LWP and *all non-core* dependencies to the 'my_lwp' directory
-# > perl -MCPAN -Mlocal::lib=--self-contained,my_lwp -e 'CPAN::install(LWP)'
-
-# FIXME Consider taking out the configure Perl packages approach, and the
-# activate Perl step...
-
 main() {
     # """
     # Install Perl packages.
-    # @note Updated 2022-06-20.
+    # @note Updated 2022-06-21.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
-    # CPAN Minus (cpanm) mirror options:
-    # * --mirror http://cpan.cpantesters.org/  # use the fast-syncing mirror
-    # * --from https://cpan.metacpan.org/      # use only the HTTPS mirror
-    #
     # @seealso
     # - https://www.cpan.org/modules/INSTALL.html
+    # - https://metacpan.org/pod/local::lib
     # - https://www.perl.com/article/4/2013/3/27/
     #     How-to-install-a-specific-version-of-a-Perl-module-with-CPAN/
+    # - https://stackoverflow.com/questions/41527057/
+    # - https://kb.iu.edu/d/baiu
     # """
-    local app module modules name names
+    local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_perl
+    koopa_activate_build_opt_prefix 'perl'
     declare -A app=(
-        [cpan]="$(koopa_locate_cpan)"
+        [cpan]="$(koopa_locate_perl)"
+        [perl]="$(koopa_locate_perl)"
+        [yes]="$(koopa_locate_yes)"
     )
     [[ -x "${app[cpan]}" ]] || return 1
-    names=(
-        'ack'
-        'cpanminus'
-        'exiftool'
-        'rename'
+    [[ -x "${app[perl]}" ]] || return 1
+    [[ -x "${app[yes]}" ]] || return 1
+    declare -A dict=(
+        [name]="${INSTALL_NAME:?}"
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
     )
-    modules=()
-    for name in "${names[@]}"
-    do
-        local repo version version2
-        version="$(koopa_variable "perl-${name}")"
-        version2="$version"
-        case "$name" in
-            'ack')
-                # App::Ack.
-                repo='PETDANCE/ack'
-                version2="v${version}"
-                ;;
-            'cpanminus')
-                # App::cpanminus.
-                repo='MIYAGAWA/App-cpanminus'
-                ;;
-            'exiftool')
-                # Image::ExifTool.
-                repo='EXIFTOOL/Image-ExifTool'
-                ;;
-            'rename')
-                # File::Rename.
-                repo='RMBARKER/File-Rename'
-                ;;
-            *)
-                koopa_stop 'Unsupported Perl package.'
-                ;;
-        esac
-        modules+=("${repo}-${version2}")
-    done
-    for module in "${modules[@]}"
-    do
-        koopa_alert "Installing '${module}'."
-        "${app[cpan]}" -i "${module}.tar.gz"
-    done
+    dict[version2]="${dict[version]}"
+    case "${dict[name]}" in
+        'ack')
+            # App::Ack.
+            dict[repo]='PETDANCE/ack'
+            dict[version2]="v${version}"
+            ;;
+        'cpanminus')
+            # App::cpanminus.
+            dict[repo]='MIYAGAWA/App-cpanminus'
+            ;;
+        'exiftool')
+            # Image::ExifTool.
+            dict[repo]='EXIFTOOL/Image-ExifTool'
+            ;;
+        'rename')
+            # File::Rename.
+            dict[repo]='RMBARKER/File-Rename'
+            ;;
+        *)
+            koopa_stop "Unsupported Perl package: '${dict[name]}'."
+            ;;
+    esac
+    dict[module]="${dict[repo]}-${dict[version2]}"
+    unset -v PERL5LIB PERL_BASE
+    "${app[yes]}" \
+        | PERL_MM_OPT="INSTALL_BASE=${dict[prefix]}" \
+            "${app[cpan]}" -f -i 'local::lib' \
+            &>/dev/null \
+        || true
+    eval "$( \
+        "${app[perl]}" \
+        "-Mlocal::lib=${dict[prefix]}" \
+        "-I${dict[prefix]}/lib/perl5" \
+        &>/dev/null \
+    )"
+    # Alternative approach:
+    # > "${app[perl]}" \
+    # >     -MCPAN \
+    # >     -Mlocal::lib \
+    # >     -e "CPAN::install(${dict[module]})"
+    "${app[cpan]}" -i "${dict[module]}.tar.gz"
     return 0
 }

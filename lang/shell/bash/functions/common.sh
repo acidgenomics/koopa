@@ -201,6 +201,9 @@ __koopa_get_version_arg() {
         'rstudio-server')
             arg='version'
             ;;
+        'exiftool')
+            arg='-ver'
+            ;;
         'lua')
             arg='-v'
             ;;
@@ -4569,42 +4572,6 @@ koopa_configure_node() {
         "$@"
 }
 
-koopa_configure_perl() {
-    local app dict
-    koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        [perl]="${1:-}"
-        [yes]="$(koopa_locate_yes)"
-    )
-    [[ -z "${app[perl]}" ]] && app[perl]="$(koopa_locate_perl)"
-    [[ -x "${app[perl]}" ]] || return 1
-    [[ -x "${app[yes]}" ]] || return 1
-    declare -A dict=(
-        [prefix]="$(koopa_perl_packages_prefix)"
-    )
-    koopa_configure_app_packages \
-        --app="${app[perl]}" \
-        --name-fancy='Perl' \
-        --name='perl'
-    koopa_assert_is_dir "${dict[prefix]}"
-    koopa_alert "Setting up 'local::lib' at '${dict[prefix]}' using CPAN."
-    koopa_add_to_path_start "$(koopa_dirname "${app[perl]}")"
-    app[cpan]="$(koopa_locate_cpan)"
-    [[ -x "${app[cpan]}" ]] || return 1
-    "${app[yes]}" \
-        | PERL_MM_OPT="INSTALL_BASE=${dict[prefix]}" \
-            "${app[cpan]}" -f -i 'local::lib' \
-            &>/dev/null \
-        || true
-    eval "$( \
-        "${app[perl]}" \
-            "-I${dict[prefix]}/lib/perl5" \
-            "-Mlocal::lib=${dict[prefix]}" \
-            &>/dev/null \
-    )"
-    return 0
-}
-
 koopa_configure_r() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -5104,12 +5071,18 @@ koopa_configure_system() {
         koopa install 'pytest'
         koopa install 'ranger-fm'
     fi
-    [[ "${dict[install_r_packages]}" -eq 1 ]] && \
+    if [[ "${dict[install_r_packages]}" -eq 1 ]]
+    then
         koopa install 'r-packages'
-    [[ "${dict[install_perl_packages]}" -eq 1 ]] && \
+    fi
+    if [[ "${dict[install_perl_packages]}" -eq 1 ]]
+    then
         koopa install 'perl-packages'
-    [[ "${dict[install_ruby_packages]}" -eq 1 ]] && \
+    fi
+    if [[ "${dict[install_ruby_packages]}" -eq 1 ]]
+    then
         koopa install 'ruby-packages'
+    fi
     if [[ "${dict[install_rust_packages]}" -eq 1 ]]
     then
         koopa install 'bat'
@@ -12364,6 +12337,7 @@ koopa_install_perl_packages() {
     koopa_install_app_packages \
         --link-in-bin='bin/ack' \
         --link-in-bin='bin/cpanm' \
+        --link-in-bin='bin/exiftool' \
         --link-in-bin='bin/rename' \
         --name-fancy='Perl' \
         --name='perl' \
@@ -14970,13 +14944,6 @@ koopa_locate_cpan() {
         --opt-name='perl'
 }
 
-koopa_locate_cpanm() {
-    koopa_locate_app \
-        --app-name='cpanm' \
-        --opt-name='perl-packages' \
-        "$@"
-}
-
 koopa_locate_curl() {
     koopa_locate_app \
         --allow-in-path \
@@ -15055,7 +15022,7 @@ koopa_locate_esearch() {
 koopa_locate_exiftool() {
     koopa_locate_app \
         --app-name='exiftool' \
-        --opt-name='exiftool'
+        --opt-name='perl-packages'
 }
 
 koopa_locate_fasterq_dump() {
@@ -22137,16 +22104,6 @@ koopa_uninstall_pcre2() {
         "$@"
 }
 
-koopa_uninstall_perl_packages() {
-    koopa_uninstall_app \
-        --name-fancy='Perl packages' \
-        --name='perl-packages' \
-        --unlink-in-bin='ack' \
-        --unlink-in-bin='cpanm' \
-        --unlink-in-bin='rename' \
-        "$@"
-}
-
 koopa_uninstall_perl() {
     koopa_uninstall_app \
         --name-fancy='Perl' \
@@ -23060,10 +23017,6 @@ koopa_update_nim_packages() {
 
 koopa_update_node_packages() {
     koopa_install_node_packages "$@"
-}
-
-koopa_update_perl_packages() {
-    koopa_install_perl_packages "$@"
 }
 
 koopa_update_prelude_emacs() {

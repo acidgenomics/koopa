@@ -60,7 +60,6 @@ __koopa_posix_header() {
         koopa_activate_ruby || return 1
         koopa_activate_node || return 1
         koopa_activate_julia || return 1
-        koopa_activate_perl || return 1
         koopa_activate_python || return 1
         koopa_activate_pipx || return 1
         koopa_activate_bcbio_nextgen || return 1
