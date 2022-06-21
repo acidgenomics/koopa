@@ -1,6 +1,6 @@
 # """
 # Conda configuration.
-# @note Updated 2022-03-16.
+# @note Updated 2022-06-21.
 #
 # @seealso
 # - 'conda config --json --show' and 'conda config --json --show-sources'.
@@ -31,7 +31,7 @@ changeps1: False
 channels:
   - conda-forge
   - bioconda
-  - defaults
+  # > - defaults
 
 channel_priority: strict
 
