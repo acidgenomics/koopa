@@ -485,19 +485,6 @@ koopa_activate_path_helper() {
     return 0
 }
 
-koopa_activate_perl() {
-    local prefix
-    [ -x "$(koopa_bin_prefix)/perl" ] || return 0
-    prefix="$(koopa_perl_packages_prefix)"
-    [ -d "$prefix" ] || return 0
-    export PERL5LIB="${prefix}/lib/perl5"
-    export PERL_LOCAL_LIB_ROOT="$prefix"
-    export PERL_MB_OPT="--install_base '${prefix}'"
-    export PERL_MM_OPT="INSTALL_BASE=${prefix}"
-    export PERL_MM_USE_DEFAULT=1
-    return 0
-}
-
 koopa_activate_perlbrew() {
     local nounset prefix script shell
     [ -n "${PERLBREW_ROOT:-}" ] && return 0
@@ -2011,10 +1998,6 @@ koopa_os_string() {
     fi
     koopa_print "$string"
     return 0
-}
-
-koopa_perl_packages_prefix() {
-    __koopa_packages_prefix 'perl' "$@"
 }
 
 koopa_perlbrew_prefix() {
