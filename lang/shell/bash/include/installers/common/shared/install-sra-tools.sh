@@ -76,6 +76,7 @@ ${dict[version]}.tar.gz"
             -S "${dict2[name]}-${dict[version]}" \
             -B "${dict2[name]}-${dict[version]}-build" \
             -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
+            -DPython3_EXECUTABLE="${app[python]}" \
             -DVDB_BINDIR="${dict[ncbi_vdb_build]}" \
             -DVDB_INCDIR="${dict[ncbi_vdb_source]}/interfaces" \
             -DVDB_LIBDIR="${dict[ncbi_vdb_build]}/lib"
