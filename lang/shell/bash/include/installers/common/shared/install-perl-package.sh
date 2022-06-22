@@ -84,9 +84,6 @@ ${dict[author]:0:1}/${dict[author]:0:2}/${dict[author]}/${dict[file]}"
     dict[perl_ver]="$(koopa_get_version "${app[perl]}")"
     dict[perl_maj_ver]="$(koopa_major_version "${dict[perl_ver]}")"
     dict[lib_prefix]="${dict[prefix]}/lib/perl${dict[perl_maj_ver]}"
-    # FIXME This approach isn't working...may need to reinstall Perl.
-    # FIXME Need to set ~/.cpan to temporary location.
-    # FIXME Need to avoid prompt regarding CPAN config...
     case "${dict[name]}" in
         'ack')
             # Install 'File::Next' dependency.
