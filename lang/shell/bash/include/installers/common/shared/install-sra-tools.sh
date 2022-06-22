@@ -54,6 +54,12 @@ ${dict[version]}.tar.gz"
 ${dict[version]}.tar.gz"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
+    # Need to fix '/obj/ngs/ngs-java' path issue in 'CMakeLists.txt' file.
+    koopa_find_and_replace_in_file \
+        --fixed \
+        --pattern='/obj/ngs/ngs-java/' \
+        --replacement='/ngs/ngs-java/' \
+        "${dict[name]}-${dict[version]}/ngs/ngs-java/CMakeLists.txt"
     "${app[cmake]}" \
         -S "${dict[name]}-${dict[version]}" \
         -B "${dict[name]}-${dict[version]}-build" \
@@ -63,9 +69,7 @@ ${dict[version]}.tar.gz"
         -DVDB_LIBDIR="${dict[ncbi_vdb_build]}/lib"
     "${app[cmake]}" --build "${dict[name]}-${dict[version]}-build"
     "${app[cmake]}" --install "${dict[name]}-${dict[version]}-build"
-
     # FIXME Install NCBI NGS Toolkit.
     # > dict[url]="${dict[base_url]}/ngs-tools/archive/refs/tags/${dict[file]}"
-
     return 0
 }
