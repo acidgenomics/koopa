@@ -26,10 +26,15 @@ main() {
     [[ -x "${app[cmake]}" ]] || return 1
     declare -A dict=(
         [base_url]='https://github.com/ncbi'
+        [java_home]="$(koopa_java_prefix)"
         [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    # Ensure we define Java location, otherwise can hit warnings during
+    # ngs-tools install.
+    koopa_assert_is_dir "${dict[java_home]}"
+    export JAVA_HOME="${dict[java_home]}"
     # CMake configuration will pick up Python Framework on macOS unless we
     # set this manually.
     app[python]="$(koopa_realpath "${dict[opt_prefix]}/python/bin/python3")"
@@ -45,6 +50,7 @@ main() {
 ${dict[version]}.tar.gz"
         koopa_download "${dict2[url]}" "${dict2[file]}"
         koopa_extract "${dict2[file]}"
+        # FIXME Consider reworking this using configure script.
         "${app[cmake]}" \
             -S "${dict2[name]}-${dict[version]}" \
             -B "${dict2[name]}-${dict[version]}-build" \
@@ -75,6 +81,7 @@ ${dict[version]}.tar.gz"
             --pattern='/obj/ngs/ngs-java/' \
             --replacement='/ngs/ngs-java/' \
             "${dict2[name]}-${dict[version]}/ngs/ngs-java/CMakeLists.txt"
+        # FIXME Consider reworking this using configure script.
         "${app[cmake]}" \
             -S "${dict2[name]}-${dict[version]}" \
             -B "${dict2[name]}-${dict[version]}-build" \
@@ -86,6 +93,12 @@ ${dict[version]}.tar.gz"
         "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
         "${app[cmake]}" --install "${dict2[name]}-${dict[version]}-build"
     )
+    dict[sra_tools_build]="$( \
+        koopa_realpath "sra-tools-${dict[version]}-build" \
+    )"
+    dict[sra_tools_source]="$( \
+        koopa_realpath "sra-tools-${dict[version]}" \
+    )"
     # Build and install NCBI NGS Toolkit.
     (
         local dict2
@@ -96,11 +109,15 @@ ${dict[version]}.tar.gz"
 ${dict[version]}.tar.gz"
         koopa_download "${dict2[url]}" "${dict2[file]}"
         koopa_extract "${dict2[file]}"
+        # FIXME Consider reworking this using configure script.
+        # FIXME NGS_INCDIR and NGS_LIBDIR are incorrect...rethink.
         "${app[cmake]}" \
             -S "${dict2[name]}-${dict[version]}" \
             -B "${dict2[name]}-${dict[version]}-build" \
             -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
-            -DSRATOOLS_BINDIR="${dict[prefix]}" \
+            -DNGS_INCDIR="${dict[sra_tools_build]}/ngs/ngs-sdk" \
+            -DNGS_LIBDIR="${dict[sra_tools_build]}/lib" \
+            -DSRATOOLS_BINDIR="${dict[sra_tools_build]}" \
             -DVDB_INCDIR="${dict[ncbi_vdb_source]}/interfaces" \
             -DVDB_LIBDIR="${dict[ncbi_vdb_build]}/lib"
         "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
