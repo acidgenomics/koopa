@@ -253,6 +253,7 @@ __koopa_complete() {
                         'ranger-fm'
                         'rbenv'
                         'readline'
+                        'rename'
                         'ripgrep'
                         'rmate'
                         'rsync'

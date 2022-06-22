@@ -10413,6 +10413,58 @@ koopa_init_dir() {
     return 0
 }
 
+koopa_insert_at_line_number() {
+    declare -A app=(
+        [perl]="$(koopa_locate_perl)"
+    )
+    [[ -x "${app[perl]}" ]] || return 1
+    declare -A dict=(
+        [file]=''
+        [line_number]=''
+        [string]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            '--file='*)
+                dict[file]="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict[file]="${2:?}"
+                shift 2
+                ;;
+            '--line-number='*)
+                dict[line_number]="${1#*=}"
+                shift 1
+                ;;
+            '--line-number')
+                dict[line_number]="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict[string]="${1#*=}"
+                shift 1
+                ;;
+            '--string')
+                dict[string]="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--file' "${dict[file]}" \
+        '--line-number' "${dict[line_number]}" \
+        '--string' "${dict[string]}"
+    koopa_assert_is_file "${dict[file]}"
+    dict[perl_cmd]="print '${dict[string]}' if \$. == ${dict[line_number]}"
+    "${app[perl]}" -i -l -p -e "${dict[perl_cmd]}" "${dict[file]}"
+    return 0
+}
+
 koopa_install_anaconda() {
     koopa_install_app \
         --name-fancy='Anaconda' \
@@ -12338,7 +12390,6 @@ koopa_install_perl_packages() {
         --link-in-bin='bin/ack' \
         --link-in-bin='bin/cpanm' \
         --link-in-bin='bin/exiftool' \
-        --link-in-bin='bin/rename' \
         --name-fancy='Perl' \
         --name='perl' \
         "$@"
@@ -12532,6 +12583,14 @@ koopa_install_rbenv() {
 koopa_install_readline() {
     koopa_install_app \
         --name='readline' \
+        "$@"
+}
+
+koopa_install_rename() {
+    koopa_install_app \
+        --installer='perl-package' \
+        --link-in-bin='bin/rename' \
+        --name='rename' \
         "$@"
 }
 
@@ -22276,6 +22335,13 @@ koopa_uninstall_rbenv() {
 koopa_uninstall_readline() {
     koopa_uninstall_app \
         --name='readline' \
+        "$@"
+}
+
+koopa_uninstall_rename() {
+    koopa_uninstall_app \
+        --name='rename' \
+        --unlink-in-bin='rename' \
         "$@"
 }
 
