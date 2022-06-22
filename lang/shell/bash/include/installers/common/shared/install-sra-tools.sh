@@ -100,8 +100,8 @@ ${dict[version]}.tar.gz"
             -DSRATOOLS_BINDIR="${dict[prefix]}" \
             -DVDB_INCDIR="${dict[ncbi_vdb_source]}/interfaces" \
             -DVDB_LIBDIR="${dict[ncbi_vdb_build]}/lib"
-        "${app[cmake]}" --build "${dict[2name]}-${dict[version]}-build"
-        "${app[cmake]}" --install "${dict[2name]}-${dict[version]}-build"
+        "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
+        "${app[cmake]}" --install "${dict2[name]}-${dict[version]}-build"
     )
     return 0
 }
