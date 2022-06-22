@@ -63,24 +63,24 @@ ${dict[version]}.tar.gz"
         dict2[file]="${dict2[name]}-${dict[version]}.tar.gz"
         dict2[url]="${dict[base_url]}/${dict2[name]}/archive/refs/tags/\
 ${dict[version]}.tar.gz"
-        koopa_download "${dict2[url]}" "${dict[file]}"
-        koopa_extract "${dict[file]}"
+        koopa_download "${dict2[url]}" "${dict2[file]}"
+        koopa_extract "${dict2[file]}"
         # Need to fix '/obj/ngs/ngs-java' path issue in 'CMakeLists.txt' file.
         # See related: https://github.com/ncbi/sra-tools/pull/664/files
         koopa_find_and_replace_in_file \
             --fixed \
             --pattern='/obj/ngs/ngs-java/' \
             --replacement='/ngs/ngs-java/' \
-            "${dict[name]}-${dict[version]}/ngs/ngs-java/CMakeLists.txt"
+            "${dict2[name]}-${dict[version]}/ngs/ngs-java/CMakeLists.txt"
         "${app[cmake]}" \
-            -S "${dict[name]}-${dict[version]}" \
-            -B "${dict[name]}-${dict[version]}-build" \
+            -S "${dict2[name]}-${dict[version]}" \
+            -B "${dict2[name]}-${dict[version]}-build" \
             -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
             -DVDB_BINDIR="${dict[ncbi_vdb_build]}" \
             -DVDB_INCDIR="${dict[ncbi_vdb_source]}/interfaces" \
             -DVDB_LIBDIR="${dict[ncbi_vdb_build]}/lib"
-        "${app[cmake]}" --build "${dict[name]}-${dict[version]}-build"
-        "${app[cmake]}" --install "${dict[name]}-${dict[version]}-build"
+        "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
+        "${app[cmake]}" --install "${dict2[name]}-${dict[version]}-build"
     )
     # Install NCBI NGS Toolkit.
     (
@@ -90,17 +90,17 @@ ${dict[version]}.tar.gz"
         dict2[file]="${dict2[name]}-${dict[version]}.tar.gz"
         dict2[url]="${dict[base_url]}/${dict2[name]}/archive/refs/tags/\
 ${dict[version]}.tar.gz"
-        koopa_download "${dict2[url]}" "${dict[file]}"
-        koopa_extract "${dict[file]}"
+        koopa_download "${dict2[url]}" "${dict2[file]}"
+        koopa_extract "${dict2[file]}"
         "${app[cmake]}" \
-            -S "${dict[name]}-${dict[version]}" \
-            -B "${dict[name]}-${dict[version]}-build" \
+            -S "${dict2[name]}-${dict[version]}" \
+            -B "${dict2[name]}-${dict[version]}-build" \
             -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
             -DSRATOOLS_BINDIR="${dict[prefix]}" \
             -DVDB_INCDIR="${dict[ncbi_vdb_source]}/interfaces" \
             -DVDB_LIBDIR="${dict[ncbi_vdb_build]}/lib"
-        "${app[cmake]}" --build "${dict[name]}-${dict[version]}-build"
-        "${app[cmake]}" --install "${dict[name]}-${dict[version]}-build"
+        "${app[cmake]}" --build "${dict[2name]}-${dict[version]}-build"
+        "${app[cmake]}" --install "${dict[2name]}-${dict[version]}-build"
     )
     return 0
 }
