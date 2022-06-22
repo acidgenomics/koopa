@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework and simplify this...
-
 koopa_install_app_packages() {
     # """
     # Install application packages.
