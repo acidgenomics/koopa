@@ -7,6 +7,11 @@ main() {
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
+    # @section ack installation:
+    #
+    # File::Next is required for ack.
+    # https://github.com/beyondgrep/ack2/issues/459
+    #
     # @seealso
     # - https://www.cpan.org/modules/INSTALL.html
     # - https://perldoc.perl.org/ExtUtils::MakeMaker
@@ -25,9 +30,11 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
         [perl]="$(koopa_locate_perl)"
+        [yes]="$(koopa_locate_yes)"
     )
     [[ -x "${app[make]}" ]] || return 1
     [[ -x "${app[perl]}" ]] || return 1
+    [[ -x "${app[yes]}" ]] || return 1
     declare -A dict=(
         [name]="${INSTALL_NAME:?}"
         [prefix]="${INSTALL_PREFIX:?}"
@@ -73,17 +80,29 @@ ${dict[author]:0:1}/${dict[author]:0:2}/${dict[author]}/${dict[file]}"
         PERL_LOCAL_LIB_ROOT \
         PERL_MB_OPT \
         PERL_MM_OPT
+    dict[perl_ver]="$(koopa_get_version "${app[perl]}")"
+    dict[perl_maj_ver]="$(koopa_major_version "${dict[perl_ver]}")"
+    dict[lib_prefix]="${dict[prefix]}/lib/perl${dict[perl_maj_ver]}"
+    # FIXME This approach isn't working...may need to reinstall Perl.
+    # FIXME Need to set ~/.cpan to temporary location.
+    # FIXME Need to avoid prompt regarding CPAN config...
+    case "${dict[name]}" in
+        'ack')
+            # Install 'File::Next' dependency.
+            "${app[yes]}" | \
+                PERL5LIB="${dict[lib_prefix]}" \
+                "${app[perl]}" -MCPAN -e 'install File::Next' \
+                || true
+            ;;
+    esac
     koopa_assert_is_file 'Makefile.PL'
     "${app[perl]}" 'Makefile.PL' INSTALL_BASE="${dict[prefix]}"
     "${app[make]}"
     # > "${app[make]}" test
     "${app[make]}" install
+    koopa_assert_is_dir "${dict[lib_prefix]}"
     # Ensure we burn Perl library path into executables. This will add a line
     # directly under the shebang.
-    dict[perl_ver]="$(koopa_get_version "${app[perl]}")"
-    dict[perl_maj_ver]="$(koopa_major_version "${dict[perl_ver]}")"
-    dict[lib_prefix]="${dict[prefix]}/lib/perl${dict[perl_maj_ver]}"
-    koopa_assert_is_dir "${dict[lib_prefix]}"
     # > dict[lib_string]="BEGIN { unshift @INC, \"${dict[lib_prefix]}\"; }"
     dict[lib_string]="use lib \"${dict[lib_prefix]}\";"
     readarray -t bin_files <<< "$( \
