@@ -8,7 +8,7 @@
 main() {
     # """
     # Update Doom Emacs.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-06-22.
     #
     # @seealso
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/upgrade.el
@@ -20,8 +20,8 @@ main() {
         [emacs]="$(koopa_locate_emacs)"
     )
     koopa_add_to_path_start "$(koopa_dirname "${app[emacs]}")"
-    "${app[doom]}" --yes upgrade --force
-    "${app[doom]}" --yes sync
-    # > "${app[doom]}" --yes doctor
+    "${app[doom]}" --force upgrade
+    "${app[doom]}" --force sync
+    # > "${app[doom]}" --force doctor
     return 0
 }
