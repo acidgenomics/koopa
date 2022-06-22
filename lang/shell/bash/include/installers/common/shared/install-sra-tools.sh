@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Consider requiring bison and doxygen for build environment.
+# NOTE Consider requiring bison, doxygen, and flex for build environment.
 # Can set doxygen with 'DOXYGEN_EXECUTABLE'.
 
 main() {
