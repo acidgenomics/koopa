@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Consider requiring bison and doxygen for build environment.
+# Can set doxygen with 'DOXYGEN_EXECUTABLE'.
+
 main() {
     # """
     # Install SRA toolkit.
