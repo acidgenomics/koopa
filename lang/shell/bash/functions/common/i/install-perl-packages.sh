@@ -7,7 +7,6 @@ koopa_install_perl_packages() {
         --link-in-bin='bin/ack' \
         --link-in-bin='bin/cpanm' \
         --link-in-bin='bin/exiftool' \
-        --link-in-bin='bin/rename' \
         --name-fancy='Perl' \
         --name='perl' \
         "$@"
