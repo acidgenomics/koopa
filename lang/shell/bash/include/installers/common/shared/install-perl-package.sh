@@ -39,7 +39,7 @@ main() {
         'ack')
             # App::Ack.
             dict[author]='PETDANCE'
-            dict[version2]="v${version}"
+            dict[version2]="v${dict[version]}"
             ;;
         # > 'cpanminus')
         # >     # App::cpanminus.

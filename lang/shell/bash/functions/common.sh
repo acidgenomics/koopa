@@ -10465,6 +10465,14 @@ koopa_insert_at_line_number() {
     return 0
 }
 
+koopa_install_ack() {
+    koopa_install_app \
+        --installer='perl-package' \
+        --link-in-bin='bin/ack' \
+        --name='ack' \
+        "$@"
+}
+
 koopa_install_anaconda() {
     koopa_install_app \
         --name-fancy='Anaconda' \
@@ -11369,6 +11377,14 @@ koopa_install_exa() {
         --link-in-bin='bin/exa' \
         --name='exa' \
         --installer='rust-package' \
+        "$@"
+}
+
+koopa_install_exiftool() {
+    koopa_install_app \
+        --installer='perl-package' \
+        --link-in-bin='bin/exiftool' \
+        --name='exiftool' \
         "$@"
 }
 
@@ -20821,6 +20837,13 @@ koopa_trim_ws() {
     return 0
 }
 
+koopa_uninstall_ack() {
+    koopa_uninstall_app \
+        --name='ack' \
+        --unlink-in-bin='ack' \
+        "$@"
+}
+
 koopa_uninstall_anaconda() {
     koopa_uninstall_app \
         --name-fancy='Anaconda' \
@@ -21400,6 +21423,13 @@ koopa_uninstall_exa() {
     koopa_uninstall_app \
         --name='exa' \
         --unlink-in-bin='exa' \
+        "$@"
+}
+
+koopa_uninstall_exiftool() {
+    koopa_uninstall_app \
+        --name='exiftool' \
+        --unlink-in-bin='exiftool' \
         "$@"
 }
 
