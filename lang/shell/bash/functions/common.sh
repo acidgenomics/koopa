@@ -12763,6 +12763,14 @@ koopa_install_sqlite() {
         "$@"
 }
 
+koopa_install_sra_tools() {
+    koopa_install_app \
+        --link-in-bin='bin/fasterq-dump' \
+        --name-fancy='SRA Toolkit' \
+        --name='sra-tools' \
+        "$@"
+}
+
 koopa_install_star() {
     koopa_install_app \
         --installer='conda-env' \
@@ -15102,13 +15110,13 @@ koopa_locate_esearch() {
 koopa_locate_exiftool() {
     koopa_locate_app \
         --app-name='exiftool' \
-        --opt-name='perl-packages'
+        --opt-name='exiftool'
 }
 
 koopa_locate_fasterq_dump() {
     koopa_locate_app \
         --app-name='fasterq-dump' \
-        --opt-name='sratoolkit'
+        --opt-name='sra-tools'
 }
 
 koopa_locate_fd() {
@@ -15606,7 +15614,7 @@ koopa_locate_realpath() {
 koopa_locate_rename() {
     koopa_locate_app \
         --app-name='rename' \
-        --koopa-opt-name='perl-packages'
+        --opt-name='rename'
 }
 
 koopa_locate_rg() {
@@ -20740,6 +20748,7 @@ koopa_tmp_dir() {
     koopa_assert_has_no_args "$#"
     x="$(koopa_mktemp -d)"
     koopa_assert_is_dir "$x"
+    x="$(koopa_realpath "$x")"
     koopa_print "$x"
     return 0
 }
@@ -20749,6 +20758,7 @@ koopa_tmp_file() {
     koopa_assert_has_no_args "$#"
     x="$(koopa_mktemp)"
     koopa_assert_is_file "$x"
+    x="$(koopa_realpath "$x")"
     koopa_print "$x"
     return 0
 }
@@ -22522,6 +22532,14 @@ koopa_uninstall_sqlite() {
         --name-fancy='SQLite' \
         --name='sqlite' \
         --unlink-in-bin='sqlite3' \
+        "$@"
+}
+
+koopa_uninstall_sra_tools() {
+    koopa_uninstall_app \
+        --name-fancy='SRA Toolkit' \
+        --name='sra-tools' \
+        --unlink-in-bin='fasterq-dump' \
         "$@"
 }
 
