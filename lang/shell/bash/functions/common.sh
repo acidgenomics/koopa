@@ -5925,11 +5925,18 @@ koopa_dirname() {
     koopa_assert_has_args "$#"
     for arg in "$@"
     do
+        local str
         if [[ -e "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"
         fi
-        koopa_print "${arg%/*}"
+        if koopa_str_detect_fixed --string="$arg" --pattern='/'
+        then
+            str="${arg%/*}"
+        else
+            str='.'
+        fi
+        koopa_print "$str"
     done
     return 0
 }
@@ -12089,8 +12096,15 @@ koopa_install_libtiff() {
 koopa_install_libtool() {
     koopa_install_app \
         --installer='gnu-app' \
+        --link-in-bin='bin/libtool' \
+        --link-in-bin='bin/libtoolize' \
         --name='libtool' \
         "$@"
+    (
+        koopa_cd "$(koopa_bin_prefix)"
+        koopa_ln 'libtool' 'glibtool'
+        koopa_ln 'libtoolize' 'glibtoolize'
+    )
 }
 
 koopa_install_libunistring() {
@@ -12153,6 +12167,7 @@ koopa_install_lzo() {
 koopa_install_make() {
     koopa_install_app \
         --installer='gnu-app' \
+        --link-in-bin='bin/make' \
         --name='make' \
         "$@"
 }
@@ -12398,16 +12413,6 @@ koopa_install_pcre2() {
     koopa_install_app \
         --name-fancy='PCRE2' \
         --name='pcre2' \
-        "$@"
-}
-
-koopa_install_perl_packages() {
-    koopa_install_app_packages \
-        --link-in-bin='bin/ack' \
-        --link-in-bin='bin/cpanm' \
-        --link-in-bin='bin/exiftool' \
-        --name-fancy='Perl' \
-        --name='perl' \
         "$@"
 }
 
@@ -21911,6 +21916,10 @@ koopa_uninstall_libtiff() {
 koopa_uninstall_libtool() {
     koopa_uninstall_app \
         --name='libtool' \
+        --unlink-in-bin='glibtool' \
+        --unlink-in-bin='glibtoolize' \
+        --unlink-in-bin='libtool' \
+        --unlink-in-bin='libtoolize' \
         "$@"
 }
 
@@ -21973,6 +21982,7 @@ koopa_uninstall_lzo() {
 koopa_uninstall_make() {
     koopa_uninstall_app \
         --name='make' \
+        --unlink-in-bin='make' \
         "$@"
 }
 
