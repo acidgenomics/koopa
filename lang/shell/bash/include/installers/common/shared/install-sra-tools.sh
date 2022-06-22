@@ -82,7 +82,7 @@ ${dict[version]}.tar.gz"
         "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
         "${app[cmake]}" --install "${dict2[name]}-${dict[version]}-build"
     )
-    # Install NCBI NGS Toolkit.
+    # Build and install NCBI NGS Toolkit.
     (
         local dict2
         declare -A dict2
