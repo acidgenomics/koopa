@@ -8,8 +8,9 @@
 main() {
     # """
     # Update system.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-06-23.
     # """
+    koopa_stop '[FIXME] Temporarily disabled.'
     local dict
     declare -A dict=(
         [config_prefix]="$(koopa_config_prefix)"

@@ -3,8 +3,9 @@
 main() {
     # """
     # Update macOS system.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-06-23.
     # """
+    koopa_stop '[FIXME] Temporarily disabled.'
     local app
     koopa_assert_has_no_args "$#"
     declare -A app=(
