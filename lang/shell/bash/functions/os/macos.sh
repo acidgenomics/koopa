@@ -910,6 +910,15 @@ koopa_macos_uninstall_cisco_webex() {
         "$@"
 }
 
+koopa_macos_uninstall_docker() {
+    koopa_uninstall_app \
+        --name-fancy='Docker' \
+        --name='docker' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
 koopa_macos_uninstall_microsoft_onedrive() {
     koopa_uninstall_app \
         --name-fancy='Microsoft OneDrive' \

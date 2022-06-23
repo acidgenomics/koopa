@@ -28,6 +28,5 @@ ${dict[arch]}.tar.gz"
     koopa_cp --target-directory="${dict[prefix]}" "${dict[name]}/"*
     app[go]="${dict[prefix]}/bin/go"
     koopa_assert_is_installed "${app[go]}"
-    koopa_configure_go "${app[go]}"
     return 0
 }

@@ -3,10 +3,11 @@
 koopa_install_app_packages() {
     # """
     # Install application packages.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-06-17.
     # """
-    local name name_fancy pos
+    local app name name_fancy pos
     koopa_assert_has_args "$#"
+    declare -A app
     declare -A dict=(
         [name]=''
         [name_fancy]=''
@@ -54,6 +55,8 @@ koopa_install_app_packages() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
+    app[cmd]="$("koopa_locate_${dict[name]}")"
+    koopa_assert_is_installed "${app[cmd]}"
     # Configure the language.
     dict[configure_fun]="koopa_configure_${dict[name]}"
     "${dict[configure_fun]}"
@@ -70,7 +73,7 @@ koopa_install_app_packages() {
     then
         koopa_rm "${dict[prefix]}"
     fi
-    dict[version]="$(koopa_get_version "${dict[name]}")"
+    dict[version]="$(koopa_get_version "${app[cmd]}")"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     koopa_install_app \
         --name-fancy="${dict[name_fancy]} packages" \

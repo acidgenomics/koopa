@@ -10,7 +10,7 @@ main() {
     # """
     local app bootstrap_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'ncurses' 'openssl'
+    koopa_activate_opt_prefix 'ncurses' 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -42,7 +42,7 @@ v${dict[version]}/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--'
         '-DCMAKE_BUILD_TYPE=RELEASE'
-        "-DCMAKE_PREFIX_PATH=${dict[opt_prefix]}/openssl"
+        "-DCMAKE_PREFIX_PATH=${dict[opt_prefix]}/openssl3"
     )
     ./bootstrap "${bootstrap_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"

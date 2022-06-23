@@ -3,7 +3,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-05-10.
+    # @note Updated 2022-06-23.
     # """
     local app bin_arr build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -196,11 +196,13 @@ koopa_install_app() {
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
-    if [[ -z "${dict[version]}" ]]
+    dict[current_version]="$(\
+        koopa_variable "${dict[version_key]}" 2>/dev/null || true \
+    )"
+    [[ -z "${dict[version]}" ]] && dict[version]="${dict[current_version]}"
+    if [[ "${dict[version]}" != "${dict[current_version]}" ]]
     then
-        dict[version]="$(\
-            koopa_variable "${dict[version_key]}" 2>/dev/null || true \
-        )"
+        dict[link_in_opt]=0
     fi
     case "${dict[mode]}" in
         'shared')

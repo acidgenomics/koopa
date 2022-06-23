@@ -22,6 +22,7 @@ main() {
     dict[version2]="$( \
         koopa_sub \
             --pattern='\.[0-9]+$' \
+            --regex \
             --replacement='' \
             "${dict[version]}" \
     )"

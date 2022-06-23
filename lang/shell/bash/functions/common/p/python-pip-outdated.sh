@@ -3,7 +3,7 @@
 koopa_python_pip_outdated() {
     # """
     # List oudated pip packages.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-06-15.
     #
     # Requesting 'freeze' format will return '<pkg>==<version>'.
     #
@@ -15,7 +15,7 @@ koopa_python_pip_outdated() {
         [python]="${1:-}"
     )
     [[ -z "${app[python]}" ]] && app[python]="$(koopa_locate_python)"
-    koopa_assert_is_installed "${app[python]}"
+    [[ -x "${app[python]}" ]] || return 1
     declare -A dict=(
         [version]="$(koopa_get_version "${app[python]}")"
     )

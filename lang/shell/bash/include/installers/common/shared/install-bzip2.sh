@@ -3,7 +3,7 @@
 main() {
     # """
     # Install bzip2.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-06-14.
     #
     # @seealso
     # - https://www.sourceware.org/bzip2/
@@ -29,7 +29,8 @@ main() {
     # Build 'libbz2.so' shared library on Linux.
     if koopa_is_linux
     then
-      "${app[make]}" -f 'Makefile-libbz2_so'
+        "${app[make]}" -f 'Makefile-libbz2_so' 'clean'
+        "${app[make]}" -f 'Makefile-libbz2_so'
     fi
     "${app[make]}" install "PREFIX=${dict[prefix]}"
     return 0

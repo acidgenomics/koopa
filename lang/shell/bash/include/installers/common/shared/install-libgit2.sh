@@ -15,7 +15,7 @@ main() {
         'cmake' \
         'pkg-config'
     koopa_activate_opt_prefix \
-        'openssl' \
+        'openssl3' \
         'libssh2'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"

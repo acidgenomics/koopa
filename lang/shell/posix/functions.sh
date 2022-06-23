@@ -111,6 +111,7 @@ koopa_activate_aliases() {
     alias h='history'
     alias j='z'
     alias k='koopa_alias_k'
+    alias kdev='koopa_alias_kdev'
     alias l.='l -d .*'
     alias l1='l -1'
     alias l='koopa_alias_l'
@@ -330,16 +331,6 @@ quote=01:warning=01;35"
     return 0
 }
 
-koopa_activate_go() {
-    local prefix
-    [ -x "$(koopa_bin_prefix)/go" ] || return 0
-    prefix="$(koopa_go_packages_prefix)"
-    [ -d "$prefix" ] || return 0
-    GOPATH="$(koopa_go_packages_prefix)"
-    export GOPATH
-    return 0
-}
-
 koopa_activate_homebrew() {
     local prefix
     prefix="$(koopa_homebrew_prefix)"
@@ -429,6 +420,7 @@ koopa_activate_make_paths() {
 
 koopa_activate_mcfly() {
     local nounset shell
+    [ "${KOOPA_DEV:-0}" -eq 1 ] && return 0
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     [ -x "$(koopa_bin_prefix)/mcfly" ] || return 0
     koopa_is_root && return 0
@@ -490,19 +482,6 @@ koopa_activate_path_helper() {
     path_helper='/usr/libexec/path_helper'
     [ -x "$path_helper" ] || return 0
     eval "$("$path_helper" -s)"
-    return 0
-}
-
-koopa_activate_perl() {
-    local prefix
-    [ -x "$(koopa_bin_prefix)/perl" ] || return 0
-    prefix="$(koopa_perl_packages_prefix)"
-    [ -d "$prefix" ] || return 0
-    export PERL5LIB="${prefix}/lib/perl5"
-    export PERL_LOCAL_LIB_ROOT="$prefix"
-    export PERL_MB_OPT="--install_base '${prefix}'"
-    export PERL_MM_OPT="INSTALL_BASE=${prefix}"
-    export PERL_MM_USE_DEFAULT=1
     return 0
 }
 
@@ -907,6 +886,10 @@ koopa_alias_emacs() {
 
 koopa_alias_k() {
     cd "$(koopa_koopa_prefix)" || return 1
+}
+
+koopa_alias_kdev() {
+    export KOOPA_DEV=1; bash -il
 }
 
 koopa_alias_l() {
@@ -1326,10 +1309,6 @@ koopa_git_repo_needs_pull_or_push() {
     rev_1="$(git rev-parse 'HEAD' 2>/dev/null)"
     rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
     [ "$rev_1" != "$rev_2" ]
-}
-
-koopa_go_packages_prefix() {
-    __koopa_packages_prefix 'go' "$@"
 }
 
 koopa_go_prefix() {
@@ -2019,10 +1998,6 @@ koopa_os_string() {
     fi
     koopa_print "$string"
     return 0
-}
-
-koopa_perl_packages_prefix() {
-    __koopa_packages_prefix 'perl' "$@"
 }
 
 koopa_perlbrew_prefix() {

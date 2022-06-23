@@ -5,14 +5,17 @@
 main() {
     # """
     # Install libx11.
-    # @note Updated 2022-04-266.
+    # @note Updated 2022-06-15.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config' 'python'
+    koopa_activate_build_opt_prefix \
+        'pkg-config' \
+        'python' \
+        'sed'
     koopa_activate_opt_prefix \
         'xorg-xorgproto' \
         'xorg-xtrans' \

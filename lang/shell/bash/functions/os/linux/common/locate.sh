@@ -35,6 +35,14 @@ koopa_linux_locate_ldconfig() {
     koopa_locate_app "$str"
 }
 
+koopa_linux_locate_rstudio_server() {
+    koopa_locate_app '/usr/sbin/rstudio-server'
+}
+
+koopa_linux_locate_shiny_server() {
+    koopa_locate_app '/usr/bin/shiny-server'
+}
+
 koopa_linux_locate_systemctl() {
     local os_id str
     os_id="$(koopa_os_id)"

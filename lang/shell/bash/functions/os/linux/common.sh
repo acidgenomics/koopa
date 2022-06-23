@@ -435,6 +435,7 @@ koopa_linux_fix_sudo_setrlimit_error() {
 
 koopa_linux_install_apptainer() {
     koopa_install_app \
+        --link-in-bin='bin/apptainer' \
         --name='apptainer' \
         --platform='linux' \
         "$@"
@@ -479,22 +480,11 @@ koopa_linux_install_bcbio_nextgen() {
 }
 
 koopa_linux_install_bcl2fastq() {
-    if koopa_is_fedora
-    then
-        koopa_install_app \
-            --link-in-bin='bin/bcl2fastq' \
-            --installer='bcl2fastq-from-rpm' \
-            --name='bcl2fastq' \
-            --platform='fedora' \
-            "$@"
-    else
-        koopa_install_app \
-            --link-in-bin='bin/bcl2fastq' \
-            --name='bcl2fastq' \
-            --platform='linux' \
-            "$@"
-    fi
-    return 0
+    koopa_install_app \
+        --link-in-bin='bin/bcl2fastq' \
+        --name='bcl2fastq' \
+        --platform='linux' \
+        "$@"
 }
 
 koopa_linux_install_cellranger() {
@@ -642,6 +632,14 @@ koopa_linux_locate_ldconfig() {
     koopa_locate_app "$str"
 }
 
+koopa_linux_locate_rstudio_server() {
+    koopa_locate_app '/usr/sbin/rstudio-server'
+}
+
+koopa_linux_locate_shiny_server() {
+    koopa_locate_app '/usr/bin/shiny-server'
+}
+
 koopa_linux_locate_systemctl() {
     local os_id str
     os_id="$(koopa_os_id)"
@@ -707,6 +705,7 @@ koopa_linux_remove_user_from_group() {
 koopa_linux_uninstall_apptainer() {
     koopa_uninstall_app \
         --name='apptainer' \
+        --unlink-in-bin='apptainer' \
         "$@"
 }
 

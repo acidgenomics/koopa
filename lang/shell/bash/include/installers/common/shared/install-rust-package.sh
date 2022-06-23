@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-06-13.
+    # @note Updated 2022-06-14.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -21,7 +21,6 @@ main() {
     local app dict install_args
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix \
-        'openssl' \
         'pkg-config' \
         'rust'
     declare -A app=(
@@ -35,7 +34,14 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    export OPENSSL_DIR="${dict[opt_prefix]}/openssl"
+    # OpenSSL 3 is not currently supported.
+    # Refer to 'https://docs.rs/openssl/latest/openssl/' for details.
+    case "${dict[name]}" in
+        'dog')
+            koopa_activate_opt_prefix 'openssl1'
+            export OPENSSL_DIR="${dict[opt_prefix]}/openssl1"
+            ;;
+    esac
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(
         '--jobs' "${dict[jobs]}"
@@ -58,40 +64,47 @@ main() {
     install_args+=("${dict[cargo_name]}")
     case "${dict[name]}" in
         'dog')
-            # Currently only available on GitHub.
+            # Current 0.1.0 crate on crates.io fails with Rust 1.61.
             install_args+=(
                 '--git' 'https://github.com/ogham/dog.git'
                 '--tag' "v${dict[version]}"
             )
             ;;
-        'du-dust')
-            # Currently outdated on crates.io.
-            install_args+=(
-                '--git' 'https://github.com/bootandy/dust.git'
-                '--tag' "v${dict[version]}"
-            )
-            ;;
-        'fd-find')
-            # Currently outdated on crates.io.
-            install_args+=(
-                '--git' 'https://github.com/sharkdp/fd.git'
-                '--tag' "v${dict[version]}"
-            )
-            ;;
-        'mcfly')
-            # Currently only available on GitHub.
-            install_args+=(
-                '--git' 'https://github.com/cantino/mcfly.git'
-                '--tag' "v${dict[version]}"
-            )
-            ;;
-        'ripgrep-all')
-            # Current v0.9.6 stable doesn't build on Linux.
-            # https://github.com/phiresky/ripgrep-all/issues/88
-            install_args+=(
-                '--git' 'https://github.com/phiresky/ripgrep-all'
-            )
-            ;;
+        # > 'du-dust')
+        # >     # Currently outdated on crates.io.
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/bootandy/dust.git'
+        # >         '--tag' "v${dict[version]}"
+        # >     )
+        # >     ;;
+        # > 'exa')
+        # >     # Current 0.10.1 crate on crates.io fails with Rust 1.61.
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/ogham/exa.git'
+        # >         '--tag' "v${dict[version]}"
+        # >     )
+        # >     ;;
+        # > 'fd-find')
+        # >     # Currently outdated on crates.io.
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/sharkdp/fd.git'
+        # >         '--tag' "v${dict[version]}"
+        # >     )
+        # >     ;;
+        # > 'mcfly')
+        # >     # Currently only available on GitHub.
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/cantino/mcfly.git'
+        # >         '--tag' "v${dict[version]}"
+        # >     )
+        # >     ;;
+        # > 'ripgrep-all')
+        # >     # Current v0.9.6 stable doesn't build on Linux.
+        # >     # https://github.com/phiresky/ripgrep-all/issues/88
+        # >     install_args+=(
+        # >         '--git' 'https://github.com/phiresky/ripgrep-all'
+        # >     )
+        # >     ;;
         *)
             # Packages available on crates.io.
             install_args+=('--version' "${dict[version]}")
