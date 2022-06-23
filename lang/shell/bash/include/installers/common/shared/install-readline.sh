@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# NOTE This requires 'libncursesw5-dev' on Debian.
+# Consider changing '-lncurses' to '-lncursesw' in Makefile.
+# https://stackoverflow.com/questions/13925355/
+
 main() {
     # """
     # Install readline.
