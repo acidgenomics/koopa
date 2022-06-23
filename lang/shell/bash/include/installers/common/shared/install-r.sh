@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# NOTE Consider also requiring 'gcc' here on Linux, so we can pin GCC and
+# gfortran versions better across platforms.
+
 main() {
     # """
     # Install R.
-    # @note Updated 2022-04-28.
+    # @note Updated 2022-06-23.
     #
     # @section gfortran configuration on macOS:
     #
@@ -96,20 +99,22 @@ main() {
     fi
     build_deps=('pkg-config')
     deps=(
+        'bzip2'
+        'icu4c'
+        'readline'
+        'libxml2'
         'gettext'
         'xz'
+        'openssl3'
         'curl'
-        'icu4c'
         'lapack'
         'libffi'
         'libjpeg-turbo'
         'libpng'
         'libtiff'
-        'libxml2'
         'openblas'
         'pcre'
         'pcre2'
-        'readline'
         'tcl-tk'
         'texinfo'
         'glib' # cairo
