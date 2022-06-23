@@ -12,13 +12,17 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    # FIXME Consider also requiring these on macOS.
     if koopa_is_linux
     then
         koopa_activate_build_opt_prefix 'pkg-config'
         koopa_activate_opt_prefix \
-            'xorg-libx11' \
-            'xorg-libxext'
+            'xorg-xorgproto' \
+            'xorg-xcb-proto' \
+            'xorg-libpthread-stubs' \
+            'xorg-libxau' \
+            'xorg-libxdmcp' \
+            'xorg-libxcb' \
+            'xorg-libx11'
     fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
