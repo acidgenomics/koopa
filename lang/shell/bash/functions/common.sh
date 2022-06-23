@@ -20087,6 +20087,7 @@ koopa_sub() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
+    [[ -x "${app[perl]}" ]] || return 1
     declare -A dict=(
         [global]=0
         [pattern]=''
