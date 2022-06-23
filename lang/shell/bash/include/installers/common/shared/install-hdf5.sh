@@ -3,7 +3,7 @@
 main() {
     # """
     # Install HDF5.
-    # @note Updated 2022-04-28.
+    # @note Updated 2022-06-23.
     #
     # Using gcc here for gfortran.
     # """

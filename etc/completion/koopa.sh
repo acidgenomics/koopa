@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-06-21.
+    # Updated 2022-06-23.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -107,6 +107,7 @@ __koopa_complete() {
                         'bc'
                         'bedtools'
                         'binutils'
+                        'bison'
                         'black'
                         'boost'
                         'bpytop'
@@ -204,6 +205,7 @@ __koopa_complete() {
                         'lz4'
                         'lzma'
                         'lzo'
+                        'm4'
                         'make'
                         'mamba'
                         'man-db'
