@@ -96,11 +96,12 @@ main() {
     fi
     build_deps=('pkg-config')
     deps=(
+        'icu4c'
         'gettext'
         'xz'
+        'openssl3'
         'curl'
-        'icu4c'
-        'lapack'
+        'lapack' # requires gcc.
         'libffi'
         'libjpeg-turbo'
         'libpng'
