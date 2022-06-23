@@ -3,15 +3,17 @@
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-06-23.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
     # See also:
     # - https://github.com/stephenturner/oneliners
     # """
-    local cmd cmd_args file
+    local cmd cmd_args file orig_path
     koopa_assert_has_args "$#"
+    # Ensure modifications to 'PATH' are temporary during this function call.
+    orig_path="${PATH:-}"
     for file in "$@"
     do
         koopa_assert_is_file "$file"
@@ -114,5 +116,6 @@ koopa_extract() {
         esac
         "$cmd" "${cmd_args[@]}"
     done
+    export PATH="$orig_path"
     return 0
 }

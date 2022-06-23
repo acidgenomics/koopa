@@ -3,11 +3,18 @@
 __koopa_remove_from_path_string() {
     # """
     # Remove directory from PATH string with POSIX conventions.
-    # @note Updated 2022-04-17.
+    # @note Updated 2022-06-23.
     #
-    # Alternative non-POSIX approach that works on Bash and Zsh:
-    # > PATH="${PATH//:$dir/}"
+    # @seealso
+    # - https://unix.stackexchange.com/questions/145402/
     # """
-    koopa_print "${1:?}" | sed "s|${2:?}||g"
+    local dir str
+    str="${1:?}"
+    dir="${2:?}"
+    koopa_print "$str" \
+        | sed \
+            -e "s|^${dir}:||g" \
+            -e "s|:${dir}:|:|g" \
+            -e "s|:${dir}\$||g"
     return 0
 }
