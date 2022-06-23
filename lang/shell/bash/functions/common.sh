@@ -12121,6 +12121,7 @@ koopa_install_libtiff() {
 
 koopa_install_libtool() {
     koopa_install_app \
+        --activate-opt='m4' \
         --installer='gnu-app' \
         --link-in-bin='bin/libtool' \
         --link-in-bin='bin/libtoolize' \

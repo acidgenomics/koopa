@@ -8,6 +8,9 @@
 # PATH='/bin:/usr/usr/sbin:/sbin'
 # This is due to an issue with '__koopa_remove_from_path_string'.
 
+# NOTE Consider improving this by setting a trap to delete prefix on install
+# failure.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
