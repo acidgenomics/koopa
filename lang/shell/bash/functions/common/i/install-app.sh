@@ -202,6 +202,8 @@ koopa_install_app() {
     [[ -z "${dict[version]}" ]] && dict[version]="${dict[current_version]}"
     if [[ "${dict[version]}" != "${dict[current_version]}" ]]
     then
+        dict[link_in_bin]=0
+        dict[link_in_make]=0
         dict[link_in_opt]=0
     fi
     case "${dict[mode]}" in
