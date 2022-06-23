@@ -12,6 +12,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'cmake'
     if koopa_is_macos
     then
         koopa_activate_opt_prefix 'gcc'
