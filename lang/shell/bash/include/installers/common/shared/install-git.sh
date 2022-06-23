@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Build error in Ubuntu Docker image:
-#     BUILTIN git-whatchanged
-#     SUBDIR git-gui
-# GITGUI_VERSION = 0.21.0.99.gdf4f9e
-#     * new locations or Tcl/Tk interpreter
-#     MSGFMT    po/bg.msg     MSGFMT    po/de.msg make[1]: *** [Makefile:254: po/bg.msg] Error 127
-# make[1]: *** Waiting for unfinished jobs....
-#     MSGFMT    po/fr.msg     MSGFMT    po/el.msg make[1]: *** [Makefile:254: po/el.msg] Error 127
-# make[1]: *** [Makefile:254: po/de.msg] Error 127
-# make[1]: *** [Makefile:254: po/fr.msg] Error 127
-# make: *** [Makefile:2154: all] Error 2
-
-
 main() {
     # """
     # Install Git.
