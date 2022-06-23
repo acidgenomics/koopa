@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# NOTE Consider also requiring 'gcc' here on Linux, so we can pin GCC and
+# gfortran versions better across platforms.
+
 main() {
     # """
     # Install R.
-    # @note Updated 2022-04-28.
+    # @note Updated 2022-06-23.
     #
     # @section gfortran configuration on macOS:
     #
