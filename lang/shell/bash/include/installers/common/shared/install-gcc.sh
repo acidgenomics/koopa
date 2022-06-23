@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2022-04-24.
+    # @note Updated 2022-06-23.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -98,7 +98,7 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
         # e.g. '21.4.0' for macOS 12.3.1.
         dict[kernel_version]="$("${app[uname]}" -r)"
         dict[kernel_maj_ver]="$(koopa_major_version "${dict[kernel_version]}")"
-        dict[sdk_prefix]='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+        dict[sdk_prefix]="$(koopa_macos_sdk_prefix)"
         conf_args+=(
             "--build=${dict[arch]}-apple-darwin${dict[kernel_maj_ver]}"
             '--disable-multilib'
