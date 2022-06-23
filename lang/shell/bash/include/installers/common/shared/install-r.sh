@@ -96,6 +96,7 @@ main() {
     fi
     build_deps=('pkg-config')
     deps=(
+        'bzip2'
         'icu4c'
         'readline'
         'libxml2'
