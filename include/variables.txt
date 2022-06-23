@@ -688,7 +688,7 @@ sra-tools="3.0.0"
 apptainer="1.0.2"
 
 # https://www.chezmoi.io/
-chezmoi="2.18.0"
+chezmoi="2.18.1"
 
 # https://github.com/junegunn/fzf
 fzf="0.30.0"
