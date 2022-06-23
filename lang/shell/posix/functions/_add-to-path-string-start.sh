@@ -3,7 +3,10 @@
 __koopa_add_to_path_string_start() {
     # """
     # Add a directory to the beginning of a PATH string.
-    # @note Updated 2022-04-17.
+    # @note Updated 2022-06-23.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/35693980/
     # """
     local dir str
     str="${1:-}"
