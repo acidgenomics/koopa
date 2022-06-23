@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Consider supporting user pass-in of 'koopa install r==4.2.1', handing
+# off with '--name=r --version=4.2.1' internally here.
+# FIXME Main CLI function needs to look for this and handle accordingly...
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.

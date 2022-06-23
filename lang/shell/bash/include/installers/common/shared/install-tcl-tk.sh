@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Tcl/Tk.
-    # @note Updated 2022-04-28.
+    # @note Updated 2022-06-23.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
@@ -12,6 +12,14 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    # FIXME Consider also requiring these on macOS.
+    if koopa_is_linux
+    then
+        koopa_activate_build_opt_prefix 'pkg-config'
+        koopa_activate_opt_prefix \
+            'libx11' \
+            'libxext'
+    fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
