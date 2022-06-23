@@ -3,7 +3,7 @@
 koopa_sub() {
     # """
     # Single substitution.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-06-23.
     #
     # @seealso
     # - https://perldoc.perl.org/functions/quotemeta
@@ -22,6 +22,7 @@ koopa_sub() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
+    [[ -x "${app[perl]}" ]] || return 1
     declare -A dict=(
         [global]=0
         [pattern]=''
