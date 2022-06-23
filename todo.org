@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Need to support 'koopa install --binary XXX YYY' and 'koopa uninstall XXX YYY' in a future release.
 ** TODO Consider versioning apps by major.minor release only, not including point release.
 ** TODO Need to harden all 'locate_*' (locate_app) calls.
     Check using '-x' and add return 1 for all.
