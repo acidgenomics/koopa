@@ -3,7 +3,7 @@
 koopa_get_version() {
     # """
     # Get the version of an installed program.
-    # @note Updated 2022-06-16.
+    # @note Updated 2022-06-23.
     #
     # Option 1: direct app input mode.
     # Option 2: specify app and opt names.
@@ -51,8 +51,9 @@ koopa_get_version() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -eq 1 ]]
+    if [[ "$#" -gt 0 ]]
     then
+        koopa_assert_has_args_eq "$#" 1
         dict[cmd]="${1:?}"
     else
         koopa_assert_is_set \
