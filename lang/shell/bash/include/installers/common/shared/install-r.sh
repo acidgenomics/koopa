@@ -97,6 +97,8 @@ main() {
     build_deps=('pkg-config')
     deps=(
         'icu4c'
+        'readline'
+        'libxml2'
         'gettext'
         'xz'
         'openssl3'
@@ -106,11 +108,9 @@ main() {
         'libjpeg-turbo'
         'libpng'
         'libtiff'
-        'libxml2'
         'openblas'
         'pcre'
         'pcre2'
-        'readline'
         'tcl-tk'
         'texinfo'
         'glib' # cairo
