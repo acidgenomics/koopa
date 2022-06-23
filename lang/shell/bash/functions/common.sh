@@ -596,7 +596,7 @@ koopa_activate_opt_prefix() {
         expected_ver="$(koopa_variable "$name")"
         if [[ "$current_ver" != "$expected_ver" ]]
         then
-            koopa_stop "'${name}' version mismatch \
+            koopa_stop "'${name}' version mismatch at '${prefix}' \
 (${current_ver} != ${expected_ver})."
         fi
         if koopa_is_empty_dir "$prefix"
@@ -10812,6 +10812,8 @@ koopa_install_app() {
     [[ -z "${dict[version]}" ]] && dict[version]="${dict[current_version]}"
     if [[ "${dict[version]}" != "${dict[current_version]}" ]]
     then
+        dict[link_in_bin]=0
+        dict[link_in_make]=0
         dict[link_in_opt]=0
     fi
     case "${dict[mode]}" in
@@ -20269,9 +20271,10 @@ koopa_switch_to_develop() {
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     (
         koopa_cd "${dict[prefix]}"
-        "${app[git]}" checkout \
-            -B "${dict[branch]}" \
-            "${dict[origin]}/${dict[branch]}"
+        "${app[git]}" remote set-branches \
+            --add "${dict[origin]}" "${dict[branch]}"
+        "${app[git]}" fetch "${dict[origin]}"
+        "${app[git]}" checkout --track "${dict[origin]}/${dict[branch]}"
     )
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     koopa_fix_zsh_permissions
@@ -22772,7 +22775,7 @@ koopa_uninstall_xorg_libxt() {
         "$@"
 }
 
-koopa_uninstall_xorg-xcb_proto() {
+koopa_uninstall_xorg_xcb_proto() {
     koopa_uninstall_app \
         --name='xorg-xcb-proto' \
         "$@"
