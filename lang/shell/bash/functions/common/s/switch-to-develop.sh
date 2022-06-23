@@ -3,7 +3,10 @@
 koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
-    # @note Updated 2022-02-14.
+    # @note Updated 2022-06-23.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/49297153/
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -19,9 +22,15 @@ koopa_switch_to_develop() {
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     (
         koopa_cd "${dict[prefix]}"
-        "${app[git]}" checkout \
-            -B "${dict[branch]}" \
-            "${dict[origin]}/${dict[branch]}"
+        # > "${app[git]}" fetch --unshallow || true
+        # > "${app[git]}" checkout \
+        # >     -B "${dict[branch]}" \
+        # >     "${dict[origin]}/${dict[branch]}"
+        # This approach works with shallow clone:
+        "${app[git]}" remote set-branches \
+            --add "${dict[origin]}" "${dict[branch]}"
+        "${app[git]}" fetch "${dict[origin]}"
+        "${app[git]}" checkout --track "${dict[origin]}/${dict[branch]}"
     )
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     koopa_fix_zsh_permissions

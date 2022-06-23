@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+# FIXME Build error in Ubuntu Docker image:
+#     BUILTIN git-whatchanged
+#     SUBDIR git-gui
+# GITGUI_VERSION = 0.21.0.99.gdf4f9e
+#     * new locations or Tcl/Tk interpreter
+#     MSGFMT    po/bg.msg     MSGFMT    po/de.msg make[1]: *** [Makefile:254: po/bg.msg] Error 127
+# make[1]: *** Waiting for unfinished jobs....
+#     MSGFMT    po/fr.msg     MSGFMT    po/el.msg make[1]: *** [Makefile:254: po/el.msg] Error 127
+# make[1]: *** [Makefile:254: po/de.msg] Error 127
+# make[1]: *** [Makefile:254: po/fr.msg] Error 127
+# make: *** [Makefile:2154: all] Error 2
+
+
 main() {
     # """
     # Install Git.
@@ -17,10 +30,10 @@ main() {
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/git.rb
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'autoconf'
-    koopa_activate_opt_prefix 'openssl3'
+    koopa_activate_opt_prefix 'gettext' 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -37,7 +50,11 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     "${app[make]}" configure
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--without-tcltk'
+    )
+    ./configure "${conf_args[@]}"
     # Additional features here require 'asciidoc' to be installed.
     "${app[make]}" --jobs="${dict[jobs]}" # 'all' 'doc' 'info'
     "${app[make]}" install # 'install-doc' 'install-html' 'install-info'
