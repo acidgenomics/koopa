@@ -17,10 +17,10 @@ main() {
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/git.rb
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'autoconf'
-    koopa_activate_opt_prefix 'openssl3'
+    koopa_activate_opt_prefix 'gettext' 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -37,7 +37,11 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     "${app[make]}" configure
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--without-tcltk'
+    )
+    ./configure "${conf_args[@]}"
     # Additional features here require 'asciidoc' to be installed.
     "${app[make]}" --jobs="${dict[jobs]}" # 'all' 'doc' 'info'
     "${app[make]}" install # 'install-doc' 'install-html' 'install-info'

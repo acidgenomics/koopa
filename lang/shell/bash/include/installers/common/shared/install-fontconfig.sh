@@ -5,7 +5,7 @@
 main() {
     # """
     # Install fontconfig.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-04-23.
     #
     # @seealso
     # - https://www.freedesktop.org/wiki/Software/fontconfig/
@@ -21,7 +21,8 @@ main() {
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
         'gperf' \
-        'freetype'
+        'freetype' \
+        'libxml2'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -39,6 +40,7 @@ release/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--enable-libxml2'
     )
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"

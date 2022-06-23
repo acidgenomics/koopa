@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Need to define a main CLI runner that handles multi app uninstall with
+# version support, such as 'r==4.2.1'. This should only remove opt for current
+# version, or if not packages exist anymore in app. Follow new conventions
+# in development for 'install_app'.
+
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
@@ -110,6 +115,9 @@ koopa_uninstall_app() {
     done
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    # FIXME Only set 'unlink_in_opt' for current version, similar to new change
+    # in 'install_app' function.
+    # FIXME Also disable 'unlink_in_bin' and 'unlink_in_make' for this case.
     case "${dict[mode]}" in
         'shared')
             dict[unlink_in_opt]=1
