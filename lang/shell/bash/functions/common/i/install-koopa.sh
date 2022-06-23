@@ -40,7 +40,7 @@ koopa_install_koopa() {
                 ;;
             # Flags ------------------------------------------------------------
             '--add-to-user-profile')
-                bool[add_to_user_profile]=0
+                bool[add_to_user_profile]=1
                 shift 1
                 ;;
             '--no-add-to-user-profile')
