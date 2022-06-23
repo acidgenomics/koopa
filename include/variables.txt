@@ -80,6 +80,9 @@ binutils="2.37"
 # https://bioconductor.org/
 bioconductor="3.15"
 
+# https://www.gnu.org/software/bison/
+bison="3.8.2"
+
 # https://www.boost.org/
 boost="1.78.0"
 
@@ -324,6 +327,9 @@ lz4="1.9.3"
 lzma="4.32.7"
 
 lzo="2.10"
+
+# https://www.gnu.org/software/m4
+m4="1.4.19"
 
 # https://ftp.gnu.org/gnu/make/
 make="4.3"

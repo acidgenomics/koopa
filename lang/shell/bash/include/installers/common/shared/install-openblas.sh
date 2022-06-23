@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBLAS.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-06-23.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/

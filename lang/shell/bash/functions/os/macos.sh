@@ -818,6 +818,11 @@ koopa_macos_reload_autofs() {
     return 0
 }
 
+koopa_macos_sdk_prefix() {
+    koopa_print '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+    return 0
+}
+
 koopa_macos_spotlight_find() {
     local pattern x
     koopa_assert_has_args_le "$#" 2

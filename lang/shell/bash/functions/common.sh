@@ -11092,6 +11092,15 @@ koopa_install_binutils() {
         "$@"
 }
 
+koopa_install_bison() {
+    koopa_install_app \
+        --activate-opt='m4' \
+        --installer='gnu-app' \
+        --name='bison' \
+        -D '--enable-relocatable' \
+        "$@"
+}
+
 koopa_install_black() {
     koopa_install_app \
         --installer='python-venv' \
@@ -12177,6 +12186,14 @@ koopa_install_lzma() {
 koopa_install_lzo() {
     koopa_install_app \
         --name='lzo' \
+        "$@"
+}
+
+koopa_install_m4() {
+    koopa_install_app \
+        --installer='gnu-app' \
+        --name-fancy='M4' \
+        --name='m4' \
         "$@"
 }
 
@@ -21182,6 +21199,12 @@ koopa_uninstall_binutils() {
         "$@"
 }
 
+koopa_uninstall_bison() {
+    koopa_uninstall_app \
+        --name='bison' \
+        "$@"
+}
+
 koopa_uninstall_black() {
     koopa_uninstall_app \
         --name='black' \
@@ -22022,6 +22045,13 @@ koopa_uninstall_lzma() {
 koopa_uninstall_lzo() {
     koopa_uninstall_app \
         --name='lzo' \
+        "$@"
+}
+
+koopa_uninstall_mp4() {
+    koopa_uninstall_app \
+        --name-fancy='M4' \
+        --name='mp4' \
         "$@"
 }
 
