@@ -10805,13 +10805,13 @@ koopa_install_app() {
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
-    if [[ -n "${dict[version]}" ]]
+    dict[current_version]="$(\
+        koopa_variable "${dict[version_key]}" 2>/dev/null || true \
+    )"
+    [[ -z "${dict[version]}" ]] && dict[version]="${dict[current_version]}"
+    if [[ "${dict[version]}" != "${dict[current_version]}" ]]
     then
         dict[link_in_opt]=0
-    else
-        dict[version]="$(\
-            koopa_variable "${dict[version_key]}" 2>/dev/null || true \
-        )"
     fi
     case "${dict[mode]}" in
         'shared')
