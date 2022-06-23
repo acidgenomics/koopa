@@ -3,9 +3,10 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2022-05-12.
+    # @note Updated 2022-06-23.
     # """
     local bool dict
+    # NOTE Consider requiring: 'cut', 'perl', 'tr'.
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
     declare -A bool=(
@@ -39,7 +40,7 @@ koopa_install_koopa() {
                 ;;
             # Flags ------------------------------------------------------------
             '--add-to-user-profile')
-                bool[add_to_user_profile]=0
+                bool[add_to_user_profile]=1
                 shift 1
                 ;;
             '--no-add-to-user-profile')

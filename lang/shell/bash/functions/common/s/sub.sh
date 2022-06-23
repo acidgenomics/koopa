@@ -91,7 +91,10 @@ koopa_sub() {
         "
     fi
     # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
-    # matching line break characters.
-    printf '%s' "$@" | "${app[perl]}" -p -e "${dict[expr]}"
+    # matching line break characters. Additionally, using 'LANG=C' helps avoid
+    # locale issues on machines with non-standard configurations, such as the
+    # current biocontainers Docker image.
+    printf '%s' "$@" | \
+        LANG=C "${app[perl]}" -p -e "${dict[expr]}"
     return 0
 }
