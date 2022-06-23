@@ -20271,9 +20271,10 @@ koopa_switch_to_develop() {
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     (
         koopa_cd "${dict[prefix]}"
-        "${app[git]}" checkout \
-            -B "${dict[branch]}" \
-            "${dict[origin]}/${dict[branch]}"
+        "${app[git]}" remote set-branches \
+            --add "${dict[origin]}" "${dict[branch]}"
+        "${app[git]}" fetch "${dict[origin]}"
+        "${app[git]}" checkout --track "${dict[origin]}/${dict[branch]}"
     )
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     koopa_fix_zsh_permissions
