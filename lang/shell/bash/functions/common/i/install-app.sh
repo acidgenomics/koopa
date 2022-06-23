@@ -15,6 +15,7 @@ koopa_install_app() {
     declare -A app=(
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         # When enabled, this will change permissions on the top level directory
