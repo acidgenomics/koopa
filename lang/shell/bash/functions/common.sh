@@ -4617,6 +4617,7 @@ koopa_configure_rust() {
 }
 
 koopa_configure_system() {
+    koopa_stop '[FIXME] Temporarily disabled.'
     local dict prefixes
     koopa_assert_has_no_envs
     declare -A dict=(
