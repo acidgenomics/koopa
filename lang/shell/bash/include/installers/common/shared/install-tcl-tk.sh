@@ -17,8 +17,8 @@ main() {
     then
         koopa_activate_build_opt_prefix 'pkg-config'
         koopa_activate_opt_prefix \
-            'libx11' \
-            'libxext'
+            'xorg-libx11' \
+            'xorg-libxext'
     fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
