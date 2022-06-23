@@ -73,6 +73,7 @@ __koopa_complete() {
                         'r'
                         'ruby'
                         'rust'
+                        'system'
                     )
                     ;;
                 'header')

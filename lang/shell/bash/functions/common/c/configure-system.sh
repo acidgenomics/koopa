@@ -29,6 +29,7 @@ koopa_configure_system() {
     # - "minimal": Minimal config used for lightweight Docker images. This mode
     #   skips all program installation.
     # """
+    koopa_stop '[FIXME] Temporarily disabled.'
     local dict prefixes
     koopa_assert_has_no_envs
     declare -A dict=(
