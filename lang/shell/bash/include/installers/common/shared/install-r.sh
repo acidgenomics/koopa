@@ -101,7 +101,7 @@ main() {
         'xz'
         'openssl3'
         'curl'
-        'lapack' # requires gcc.
+        'lapack'
         'libffi'
         'libjpeg-turbo'
         'libpng'
