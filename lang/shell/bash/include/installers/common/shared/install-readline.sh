@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE This requires 'libncursesw5-dev' on Debian.
-# Consider changing '-lncurses' to '-lncursesw' in Makefile.
-# https://stackoverflow.com/questions/13925355/
-
 main() {
     # """
     # Install readline.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-06-23.
     #
     # Check linkage on Linux with:
     # ldd -r /opt/koopa/opt/readline/lib/libreadline.so
@@ -19,7 +15,7 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/master/readline/
     #     repos/core-x86_64/PKGBUILD
     # """
-    local app conf_args dict
+    local app conf_args dict make_args
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix 'ncurses'
@@ -54,9 +50,12 @@ main() {
         --replacement='# \1' \
         'readline.pc.in'
     ./configure "${conf_args[@]}"
-    "${app[make]}" \
-        --jobs="${dict[jobs]}" \
-        SHLIB_LIBS='-lncurses'
+    make_args=("--jobs=${dict[jobs]}")
+    if koopa_is_linux
+    then
+        make_args+=('SHLIB_LIBS=-lcurses')
+    fi
+    "${app[make]}" "${make_args[@]}"
     "${app[make]}" install
     if koopa_is_linux
     then
