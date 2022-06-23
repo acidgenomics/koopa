@@ -7116,8 +7116,9 @@ koopa_extract_version() {
 }
 
 koopa_extract() {
-    local cmd cmd_args file
+    local cmd cmd_args file orig_path
     koopa_assert_has_args "$#"
+    orig_path="${PATH:-}"
     for file in "$@"
     do
         koopa_assert_is_file "$file"
@@ -7218,6 +7219,7 @@ koopa_extract() {
         esac
         "$cmd" "${cmd_args[@]}"
     done
+    export PATH="$orig_path"
     return 0
 }
 
