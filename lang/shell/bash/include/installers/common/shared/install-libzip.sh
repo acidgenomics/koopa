@@ -16,7 +16,7 @@ main() {
     koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
     koopa_activate_opt_prefix \
         'nettle' \
-        'openssl' \
+        'openssl3' \
         'perl' \
         'zstd'
     declare -A app=(

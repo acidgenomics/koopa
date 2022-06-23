@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-05-20.
+    # @note Updated 2022-06-15.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -35,6 +35,10 @@ __koopa_posix_header() {
     then
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
+    # Ensure these are never set (e.g. inside RStudio terminal).
+    unset -v \
+        LD_LIBRARY_PATH \
+        PYTHONPATH
     koopa_activate_path_helper || return 1
     koopa_activate_make_paths || return 1
     koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
@@ -52,12 +56,10 @@ __koopa_posix_header() {
             || return 1
         koopa_add_to_manpath_end '/usr/share/man'
         koopa_activate_homebrew || return 1
-        koopa_activate_go || return 1
         koopa_activate_nim || return 1
         koopa_activate_ruby || return 1
         koopa_activate_node || return 1
         koopa_activate_julia || return 1
-        koopa_activate_perl || return 1
         koopa_activate_python || return 1
         koopa_activate_pipx || return 1
         koopa_activate_bcbio_nextgen || return 1
