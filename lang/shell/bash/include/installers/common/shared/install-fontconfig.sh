@@ -21,7 +21,7 @@ main() {
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
         'gperf' \
-        'freetype'
+        'freetype' \
         'libxml2'
     declare -A app=(
         [make]="$(koopa_locate_make)"
