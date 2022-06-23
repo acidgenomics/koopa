@@ -11855,7 +11855,7 @@ koopa_install_koopa() {
                 shift 2
                 ;;
             '--add-to-user-profile')
-                bool[add_to_user_profile]=0
+                bool[add_to_user_profile]=1
                 shift 1
                 ;;
             '--no-add-to-user-profile')
@@ -20151,7 +20151,8 @@ koopa_sub() {
             s/\$pattern/\$replacement/${dict[perl_tail]}; \
         "
     fi
-    printf '%s' "$@" | "${app[perl]}" -p -e "${dict[expr]}"
+    printf '%s' "$@" | \
+        LANG=C "${app[perl]}" -p -e "${dict[expr]}"
     return 0
 }
 
