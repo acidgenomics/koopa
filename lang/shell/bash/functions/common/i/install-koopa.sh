@@ -3,9 +3,10 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2022-05-12.
+    # @note Updated 2022-06-23.
     # """
     local bool dict
+    # NOTE Consider adding 'perl' as a requirement here.
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
     declare -A bool=(
