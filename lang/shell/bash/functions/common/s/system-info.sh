@@ -3,7 +3,7 @@
 koopa_system_info() {
     # """
     # System information.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-06-15.
     # """
     local app dict info nf_info
     koopa_assert_has_no_args "$#"
@@ -11,6 +11,8 @@ koopa_system_info() {
         [bash]="$(koopa_locate_bash)"
         [cat]="$(koopa_locate_cat)"
     )
+    [[ -x "${app[bash]}" ]] || return 1
+    [[ -x "${app[cat]}" ]] || return 1
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [arch]="$(koopa_arch)"

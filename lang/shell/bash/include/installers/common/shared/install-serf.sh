@@ -18,7 +18,7 @@ main() {
     koopa_activate_opt_prefix \
         'apr' \
         'apr-util' \
-        'openssl' \
+        'openssl3' \
         'scons'
     declare -A app=(
         [patch]="$(koopa_locate_patch)"
@@ -50,7 +50,7 @@ serf-1.3.9-openssl3_fixes-1.patch"
     scons_args=(
         "APR=${dict[opt_prefix]}/apr"
         "APU=${dict[opt_prefix]}/apr-util"
-        "OPENSSL=${dict[opt_prefix]}/openssl"
+        "OPENSSL=${dict[opt_prefix]}/openssl3"
         "PREFIX=${dict[prefix]}"
     )
     "${app[scons]}" "${scons_args[@]}"

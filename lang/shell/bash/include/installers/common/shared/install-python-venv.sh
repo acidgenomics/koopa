@@ -2,8 +2,8 @@
 
 main() {
     # """
-    # Install Python package as a venv.
-    # @note Updated 2022-06-13.
+    # Install a Python package as a virtual environment application.
+    # @note Updated 2022-06-15.
     # """
     local bin_name bin_names dict
     koopa_assert_has_no_args "$#"

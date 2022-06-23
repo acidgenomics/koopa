@@ -3,21 +3,20 @@
 koopa_install_app_from_binary_package() {
     # """
     # Install app from pre-built binary package.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-06-15.
     # """
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
         [tar]="$(koopa_locate_tar)"
     )
-    # FIXME Rework koopa_koopa_app_binary_url here.
     declare -A dict=(
         [arch]="$(koopa_arch2)"
         [binary_prefix]='/opt/koopa'
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [name]=''
         [os_string]="$(koopa_os_string)"
-        [url_stem]="$(koopa_koopa_app_binary_url)"
+        [url_stem]="$(koopa_koopa_url)/app"
         [version]=''
     )
     while (("$#"))

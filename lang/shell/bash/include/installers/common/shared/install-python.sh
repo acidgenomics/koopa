@@ -7,7 +7,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-06-14.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -29,7 +29,7 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'openssl'
+    koopa_activate_opt_prefix 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -40,12 +40,14 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[openssl_prefix]="$(koopa_realpath "${dict[opt_prefix]}/openssl")"
+    dict[openssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl3")"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[file]="Python-${dict[version]}.tar.xz"
     dict[url]="https://www.python.org/ftp/${dict[name]}/${dict[version]}/\
 ${dict[file]}"
-    koopa_mkdir "${dict[prefix]}/bin"
+    koopa_mkdir \
+        "${dict[prefix]}/bin" \
+        "${dict[prefix]}/lib"
     koopa_add_to_path_start "${dict[prefix]}/bin"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
@@ -54,7 +56,7 @@ ${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--enable-optimizations'
         '--enable-shared'
-        "--with-openssl=${dict[openssl_prefix]}"
+        "--with-openssl=${dict[openssl]}"
     )
     koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
     ./configure "${conf_args[@]}"

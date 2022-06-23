@@ -3,9 +3,10 @@
 koopa_icu4c_version() {
     # """
     # ICU version.
-    # C/C++ and Java libraries for Unicode and globalization.
-    # @note Updated 2021-09-15.
+    # @note Updated 2022-06-15.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_get_version_from_pkg_config 'icu-uc'
+    koopa_get_version_from_pkg_config \
+        --opt-name='icu4c' \
+        --pc-name='icu-uc'
 }

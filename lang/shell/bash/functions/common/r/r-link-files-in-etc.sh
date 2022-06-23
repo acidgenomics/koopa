@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to call sudo here when managing outside of koopa.
-# FIXME Fall back to linking against 'current', if a versioned symlink is
-# not present in the koopa configuration.
-
 koopa_r_link_files_in_etc() {
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2022-04-12.
+    # @note Updated 2022-06-15.
     #
     # Don't copy Makevars file across machines.
     # """
