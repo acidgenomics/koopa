@@ -596,7 +596,7 @@ koopa_activate_opt_prefix() {
         expected_ver="$(koopa_variable "$name")"
         if [[ "$current_ver" != "$expected_ver" ]]
         then
-            koopa_stop "'${name}' version mismatch \
+            koopa_stop "'${name}' version mismatch at '${prefix}' \
 (${current_ver} != ${expected_ver})."
         fi
         if koopa_is_empty_dir "$prefix"
