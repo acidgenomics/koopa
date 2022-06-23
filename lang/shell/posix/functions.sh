@@ -61,7 +61,14 @@ __koopa_packages_prefix() {
 }
 
 __koopa_remove_from_path_string() {
-    koopa_print "${1:?}" | sed "s|${2:?}||g"
+    local dir str
+    str="${1:?}"
+    dir="${2:?}"
+    koopa_print "$str" \
+        | sed \
+            -e "s|^${dir}:||g" \
+            -e "s|:${dir}:|:|g" \
+            -e "s|:${dir}\$||g"
     return 0
 }
 

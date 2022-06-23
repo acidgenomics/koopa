@@ -4,6 +4,10 @@
 # off with '--name=r --version=4.2.1' internally here.
 # FIXME Main CLI function needs to look for this and handle accordingly...
 
+# FIXME This is messing up PATH on basic Debian install:
+# PATH='/bin:/usr/usr/sbin:/sbin'
+# This is due to an issue with '__koopa_remove_from_path_string'.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
