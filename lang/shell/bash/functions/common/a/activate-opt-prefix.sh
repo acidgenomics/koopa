@@ -3,7 +3,7 @@
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-06-01.
+    # @note Updated 2022-06-23.
     #
     # Consider using pkg-config to manage CPPFLAGS and LDFLAGS:
     # > pkg-config --libs PKG_CONFIG_NAME...
@@ -65,9 +65,18 @@ koopa_activate_opt_prefix() {
     LDLIBS="${LDLIBS:-}"
     for name in "$@"
     do
-        local pkgconfig_dirs prefix
+        local current_ver expected_ver pkgconfig_dirs prefix
         prefix="${dict[opt_prefix]}/${name}"
         koopa_assert_is_dir "$prefix"
+        current_ver="$(koopa_opt_version "$name")"
+        expected_ver="$(koopa_variable "$name")"
+        if [[ "$current_ver" != "$expected_ver" ]]
+        then
+            koopa_stop "'${name}' version mismatch \
+(${current_ver} != ${expected_ver})."
+        fi
+        # NOTE This check will fail for incomplete install that still contains
+        # our invisible log file. Consider improving this check in the future.
         if koopa_is_empty_dir "$prefix"
         then
             koopa_stop "'${prefix}' is empty."
@@ -80,7 +89,7 @@ koopa_activate_opt_prefix() {
             koopa_alert "Activating '${prefix}'."
         fi
         # Set 'PATH' variable.
-        koopa_activate_prefix "${prefix}"
+        koopa_activate_prefix "$prefix"
         # Set 'PKG_CONFIG_PATH' variable.
         readarray -t pkgconfig_dirs <<< "$( \
             koopa_find \

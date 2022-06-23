@@ -589,9 +589,16 @@ koopa_activate_opt_prefix() {
     LDLIBS="${LDLIBS:-}"
     for name in "$@"
     do
-        local pkgconfig_dirs prefix
+        local current_ver expected_ver pkgconfig_dirs prefix
         prefix="${dict[opt_prefix]}/${name}"
         koopa_assert_is_dir "$prefix"
+        current_ver="$(koopa_opt_version "$name")"
+        expected_ver="$(koopa_variable "$name")"
+        if [[ "$current_ver" != "$expected_ver" ]]
+        then
+            koopa_stop "'${name}' version mismatch \
+(${current_ver} != ${expected_ver})."
+        fi
         if koopa_is_empty_dir "$prefix"
         then
             koopa_stop "'${prefix}' is empty."
@@ -603,7 +610,7 @@ koopa_activate_opt_prefix() {
         else
             koopa_alert "Activating '${prefix}'."
         fi
-        koopa_activate_prefix "${prefix}"
+        koopa_activate_prefix "$prefix"
         readarray -t pkgconfig_dirs <<< "$( \
             koopa_find \
                 --pattern='pkgconfig' \
@@ -8514,8 +8521,9 @@ koopa_get_version() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -eq 1 ]]
+    if [[ "$#" -gt 0 ]]
     then
+        koopa_assert_has_args_eq "$#" 1
         dict[cmd]="${1:?}"
     else
         koopa_assert_is_set \
@@ -10797,8 +10805,10 @@ koopa_install_app() {
     koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
-    if [[ -z "${dict[version]}" ]]
+    if [[ -n "${dict[version]}" ]]
     then
+        dict[link_in_opt]=0
+    else
         dict[version]="$(\
             koopa_variable "${dict[version_key]}" 2>/dev/null || true \
         )"
@@ -16484,6 +16494,21 @@ koopa_openjdk_version() {
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
+    return 0
+}
+
+koopa_opt_version() {
+    local dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict=(
+        [name]="${1:?}"
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
+    dict[symlink]="${dict[opt_prefix]}/${dict[name]}"
+    koopa_assert_is_symlink "${dict[symlink]}"
+    dict[realpath]="$(koopa_realpath "${dict[symlink]}")"
+    dict[version]="$(koopa_basename "${dict[realpath]}")"
+    koopa_print "${dict[version]}"
     return 0
 }
 
