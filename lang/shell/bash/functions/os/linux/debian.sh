@@ -215,7 +215,8 @@ koopa_debian_apt_add_r_repo() {
     fi
     dict[version2]="$(koopa_major_minor_version "${dict[version]}")"
     case "${dict[version2]}" in
-        '4.1')
+        '4.1' | \
+        '4.2')
             dict[version2]='4.0'
             ;;
         '3.6')
@@ -224,6 +225,7 @@ koopa_debian_apt_add_r_repo() {
     esac
     dict[version2]="$( \
         koopa_gsub \
+            --fixed \
             --pattern='\.' \
             --replacement='' \
             "${dict[version2]}" \
