@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework this on Linux:
-# /usr/bin/ld: cannot find -lcurses
-
 main() {
     # """
     # Install readline.
