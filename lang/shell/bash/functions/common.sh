@@ -6865,7 +6865,6 @@ koopa_download() {
         [file]="${2:-}"
         [url]="${1:?}"
     )
-    koopa_is_qemu && dict[engine]='wget'
     pos=()
     while (("$#"))
     do
