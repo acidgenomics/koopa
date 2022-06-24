@@ -10,58 +10,11 @@ main() {
     #
     # @section gfortran configuration on macOS:
     #
-    # fxcoudert's gfortran works more reliably than using Homebrew gcc
-    # See also:
     # - https://mac.r-project.org
     # - https://github.com/fxcoudert/gfortran-for-macOS/releases
     # - https://developer.r-project.org/Blog/public/2020/11/02/
     #     will-r-work-on-apple-silicon/index.html
     # - https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
-    #
-    # @section Recommended Debian packages (for Dockerfile):
-    #
-    # - 'bash-completion'
-    # - 'bison'
-    # - 'debhelper'
-    # - 'default-jdk'
-    # - 'g++'
-    # - 'gcc'
-    # - 'gdb'
-    # - 'gfortran'
-    # - 'groff-base'
-    # - 'libblas-dev'
-    # - 'libbz2-dev'
-    # - 'libcairo2-dev'
-    # - 'libcurl4-openssl-dev'
-    # - 'libjpeg-dev'
-    # - 'liblapack-dev'
-    # - 'liblzma-dev'
-    # - 'libncurses5-dev'
-    # - 'libpango1.0-dev'
-    # - 'libpcre3-dev'
-    # - 'libpng-dev'
-    # - 'libreadline-dev'
-    # - 'libtiff5-dev'
-    # - 'libx11-dev'
-    # - 'libxt-dev'
-    # - 'mpack'
-    # - 'subversion'
-    # - 'tcl8.6-dev'
-    # - 'texinfo'
-    # - 'texlive-base'
-    # - 'texlive-extra-utils'
-    # - 'texlive-fonts-extra'
-    # - 'texlive-fonts-recommended'
-    # - 'texlive-latex-base'
-    # - 'texlive-latex-extra'
-    # - 'texlive-latex-recommended'
-    # - 'tk8.6-dev'
-    # - 'x11proto-core-dev'
-    # - 'xauth'
-    # - 'xdg-utils'
-    # - 'xfonts-base'
-    # - 'xvfb'
-    # - 'zlib1g-dev'
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
