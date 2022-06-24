@@ -627,6 +627,10 @@ koopa_activate_opt_prefix() {
         if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
         then
             local cflags ldflags ldlibs pc_files
+            if [[ ! -x "${app[pkg_config]}" ]]
+            then
+                koopa_stop "'pkg-config' is not installed."
+            fi
             readarray -t pc_files <<< "$( \
                 koopa_find \
                     --prefix="$prefix" \
