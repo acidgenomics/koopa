@@ -51,10 +51,6 @@ main() {
         'readline.pc.in'
     ./configure "${conf_args[@]}"
     make_args=("--jobs=${dict[jobs]}")
-    if koopa_is_linux
-    then
-        make_args+=('SHLIB_LIBS=-lcurses')
-    fi
     "${app[make]}" "${make_args[@]}"
     "${app[make]}" install
     if koopa_is_linux
