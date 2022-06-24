@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2022-04-15.
+    # @note Updated 2022-06-24.
     #
     # @section curl:
     #
@@ -33,7 +33,7 @@ koopa_download() {
         [file]="${2:-}"
         [url]="${1:?}"
     )
-    koopa_is_qemu && dict[engine]='wget'
+    # > koopa_is_qemu && dict[engine]='wget'
     pos=()
     while (("$#"))
     do
