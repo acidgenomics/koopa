@@ -8,7 +8,7 @@ main() {
     # Positional arguments are passed to 'conf_args' array.
     # """
     local app conf_args dict
-    # > koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_build_opt_prefix 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
