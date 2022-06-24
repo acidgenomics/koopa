@@ -10656,6 +10656,7 @@ koopa_install_app() {
         [mode]='shared'
         [name]=''
         [name_fancy]=''
+        [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
         [prefix_check]=1
@@ -10670,7 +10671,13 @@ koopa_install_app() {
     )
     bin_arr=()
     build_opt_arr=()
-    clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
+    clean_path_arr=(
+        "${dict[opt_prefix]}/gcc/bin"
+        '/usr/bin'
+        '/bin'
+        '/usr/sbin'
+        '/sbin'
+    )
     opt_arr=()
     pos=()
     while (("$#"))
