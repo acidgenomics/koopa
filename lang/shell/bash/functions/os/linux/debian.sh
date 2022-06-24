@@ -226,7 +226,7 @@ koopa_debian_apt_add_r_repo() {
     dict[version2]="$( \
         koopa_gsub \
             --fixed \
-            --pattern='\.' \
+            --pattern='.' \
             --replacement='' \
             "${dict[version2]}" \
     )"
