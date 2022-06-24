@@ -46,8 +46,6 @@ main() {
         dict[pc_path]='/usr/lib/pkgconfig'
         conf_args+=("--with-pc-path=${dict[pc_path]}")
     fi
-    echo "${conf_args[@]}"
-    koopa_stop 'FIXME'
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
