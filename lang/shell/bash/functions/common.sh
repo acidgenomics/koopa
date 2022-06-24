@@ -22055,10 +22055,10 @@ koopa_uninstall_lzo() {
         "$@"
 }
 
-koopa_uninstall_mp4() {
+koopa_uninstall_m4() {
     koopa_uninstall_app \
         --name-fancy='M4' \
-        --name='mp4' \
+        --name='m4' \
         "$@"
 }
 
