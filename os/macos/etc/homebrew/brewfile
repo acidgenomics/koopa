@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-06-17.
+# Updated 2022-06-24.
 #
 # @section Cask reinstallation:
 #
@@ -116,6 +116,7 @@ cask "libreoffice"
 cask "little-snitch"
 cask "macvim"
 cask "museeks"
+cask "neovide"
 cask "netnewswire"
 cask "nightfall"
 cask "omnidisksweeper"
