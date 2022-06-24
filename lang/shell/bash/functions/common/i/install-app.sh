@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
-# FIXME Consider supporting user pass-in of 'koopa install r==4.2.1', handing
+# NOTE Consider supporting user pass-in of 'koopa install r==4.2.1', handing
 # off with '--name=r --version=4.2.1' internally here.
-# FIXME Main CLI function needs to look for this and handle accordingly...
-
-# FIXME This is messing up PATH on basic Debian install:
-# PATH='/bin:/usr/usr/sbin:/sbin'
-# This is due to an issue with '__koopa_remove_from_path_string'.
-
+#
+# NOTE Main CLI function needs to look for this and handle accordingly...
+#
 # NOTE Consider improving this by setting a trap to delete prefix on install
 # failure.
 
@@ -46,7 +43,7 @@ koopa_install_app() {
         [mode]='shared'
         [name]=''
         [name_fancy]=''
-        [opt_prefix]="$(koopa_opt_prefix)"
+        # > [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
         # This override is useful for app packages configuration.
@@ -66,7 +63,7 @@ koopa_install_app() {
     bin_arr=()
     build_opt_arr=()
     clean_path_arr=(
-        "${dict[opt_prefix]}/gcc/bin"
+        # > "${dict[opt_prefix]}/gcc/bin"
         '/usr/bin'
         '/bin'
         '/usr/sbin'
