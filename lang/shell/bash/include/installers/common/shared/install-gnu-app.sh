@@ -3,7 +3,7 @@
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-06-24.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
