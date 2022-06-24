@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GMP.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-06-23.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gmp.rb
@@ -11,6 +11,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'm4'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

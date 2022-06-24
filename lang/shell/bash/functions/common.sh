@@ -10670,7 +10670,12 @@ koopa_install_app() {
     )
     bin_arr=()
     build_opt_arr=()
-    clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
+    clean_path_arr=(
+        '/usr/bin'
+        '/bin'
+        '/usr/sbin'
+        '/sbin'
+    )
     opt_arr=()
     pos=()
     while (("$#"))
@@ -11031,6 +11036,7 @@ koopa_install_asdf() {
 
 koopa_install_autoconf() {
     koopa_install_app \
+        --activate-opt='m4' \
         --installer='gnu-app' \
         --name='autoconf' \
         "$@"
@@ -12120,6 +12126,7 @@ koopa_install_libtiff() {
 
 koopa_install_libtool() {
     koopa_install_app \
+        --activate-opt='m4' \
         --installer='gnu-app' \
         --link-in-bin='bin/libtool' \
         --link-in-bin='bin/libtoolize' \
