@@ -32,6 +32,7 @@ main() {
             ;;
     esac
     case "${dict[name]}" in
+        'aspell' | \
         'attr' | \
         'bc' | \
         'gdbm' | \
