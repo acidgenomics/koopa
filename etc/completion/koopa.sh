@@ -97,6 +97,7 @@ __koopa_complete() {
                         'apr-util'
                         'armadillo'
                         'asdf'
+                        'aspell'
                         'attr'
                         'autoconf'
                         'automake'

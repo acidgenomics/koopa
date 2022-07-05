@@ -11037,6 +11037,14 @@ koopa_install_asdf() {
         "$@"
 }
 
+koopa_install_aspell() {
+    koopa_install_app \
+        --installer='gnu-app' \
+        --link-in-bin='bin/aspell' \
+        --name='aspell' \
+        "$@"
+}
+
 koopa_install_autoconf() {
     koopa_install_app \
         --activate-opt='m4' \
@@ -21153,6 +21161,13 @@ koopa_uninstall_armadillo() {
 koopa_uninstall_asdf() {
     koopa_uninstall_app \
         --name='asdf' \
+        "$@"
+}
+
+koopa_uninstall_aspell() {
+    koopa_uninstall_app \
+        --name='aspell' \
+        --unlink-in-bin='aspell' \
         "$@"
 }
 

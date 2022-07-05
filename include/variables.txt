@@ -34,6 +34,9 @@ armadillo="11.2.0"
 # https://github.com/asdf-vm/asdf/releases
 asdf="0.10.2"
 
+# http://aspell.net/
+aspell="0.60.8"
+
 # https://www.ibm.com/aspera/connect/
 aspera-connect="4.1.3.93"
 
