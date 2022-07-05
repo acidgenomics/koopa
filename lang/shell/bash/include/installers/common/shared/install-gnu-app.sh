@@ -3,7 +3,7 @@
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-06-24.
+    # @note Updated 2022-07-05.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -52,6 +52,7 @@ main() {
         'readline' | \
         'stow' | \
         'tar' | \
+        'units' | \
         'wget' | \
         'which')
             dict[suffix]='gz'

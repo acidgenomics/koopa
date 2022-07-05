@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-06-23.
+    # Updated 2022-07-05.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -292,6 +292,7 @@ __koopa_complete() {
                         'tree'
                         'tuc'
                         'udunits'
+                        'units'
                         'utf8proc'
                         'vim'
                         'wget'
