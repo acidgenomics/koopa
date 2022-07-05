@@ -11039,7 +11039,6 @@ koopa_install_asdf() {
 
 koopa_install_aspell() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='bin/aspell' \
         --name='aspell' \
         "$@"
@@ -14871,6 +14870,12 @@ koopa_locate_ascp() {
     koopa_locate_app \
         --app-name='ascp' \
         --opt-name='aspera-connect'
+}
+
+koopa_locate_aspell() {
+    koopa_locate_app \
+        --app-name='aspell' \
+        --opt-name='aspell'
 }
 
 koopa_locate_autoreconf() {
@@ -19086,6 +19091,21 @@ koopa_source_dir() {
         [[ -f "$file" ]] || continue
         . "$file"
     done
+    return 0
+}
+
+koopa_spell() {
+    local app
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [aspell]="$(koopa_locate_aspell)"
+        [tail]="$(koopa_locate_tail)"
+    )
+    [[ -x "${app[aspell]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
+    koopa_print "$@" \
+        | "${app[aspell]}" pipe \
+        | "${app[tail]}" -n '+2'
     return 0
 }
 
