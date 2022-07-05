@@ -482,7 +482,7 @@ rstudio-server="2022.02.3+492"
 ruby="3.1.2p20"
 
 # https://www.rust-lang.org/
-rust="1.61.0"
+rust="1.62.0"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
