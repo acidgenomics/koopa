@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-04"
+koopa-date="2022-07-05"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -762,7 +762,7 @@ ruby-ronn="0.7.3"
 
 # > ripgrep-all="0.9.6" # rga
 bat="0.21.0"
-broot="1.13.3" # br
+broot="1.14.0" # br
 difftastic="0.29.1" # difft
 dog="0.1.0"
 du-dust="0.8.0"
