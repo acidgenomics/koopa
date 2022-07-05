@@ -12947,6 +12947,15 @@ koopa_install_udunits() {
         "$@"
 }
 
+koopa_install_units() {
+    koopa_install_app \
+        --activate-opt='readline' \
+        --installer='gnu-app' \
+        --link-in-bin='bin/units' \
+        --name='units' \
+        "$@"
+}
+
 koopa_install_utf8proc() {
     koopa_install_app \
         --name='utf8proc' \
@@ -22721,6 +22730,13 @@ koopa_uninstall_udunits() {
     koopa_uninstall_app \
         --name='udunits' \
         --unlink-in-bin='udunits2' \
+        "$@"
+}
+
+koopa_uninstall_units() {
+    koopa_uninstall_app \
+        --name='units' \
+        --unlink-in-bin='units' \
         "$@"
 }
 
