@@ -5,5 +5,6 @@ koopa_uninstall_ffmpeg() {
         --name-fancy='FFmpeg' \
         --name='ffmpeg' \
         --unlink-in-bin='ffmpeg' \
+        --unlink-in-bin='ffprobe' \
         "$@"
 }

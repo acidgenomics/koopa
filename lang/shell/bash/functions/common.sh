@@ -11447,6 +11447,7 @@ koopa_install_fd_find() {
 koopa_install_ffmpeg() {
     koopa_install_app \
         --link-in-bin='bin/ffmpeg' \
+        --link-in-bin='bin/ffprobe' \
         --name-fancy='FFmpeg' \
         --name='ffmpeg' \
         "$@"
@@ -21574,6 +21575,7 @@ koopa_uninstall_ffmpeg() {
         --name-fancy='FFmpeg' \
         --name='ffmpeg' \
         --unlink-in-bin='ffmpeg' \
+        --unlink-in-bin='ffprobe' \
         "$@"
 }
 
