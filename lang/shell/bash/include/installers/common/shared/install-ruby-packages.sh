@@ -35,13 +35,12 @@ main() {
         'ronn'
     )
     "${app[gem]}" cleanup
-
-    # FIXME Add version using ':'.
-    # FIXME Install all gems in a single call here.
-
     for gem in "${gems[@]}"
     do
-        "${app[gem]}" install "$gem"
+        local version
+        version="$(koopa_variable "ruby-${gem}")"
+        # Alternatively, can use "${gem}:${version}" format here.
+        "${app[gem]}" install "$gem" --version "$version"
     done
     "${app[gem]}" cleanup
     return 0
