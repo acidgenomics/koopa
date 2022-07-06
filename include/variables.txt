@@ -394,7 +394,9 @@ openjdk="17.0.2"
 openssh="9.0p1"
 
 # https://www.openssl.org/source/
-openssl1="1.1.1q"
+# NOTE 1.1.1q currently fails to build on macOS.
+# See https://github.com/openssl/openssl for details.
+openssl1="1.1.1p"
 openssl3="3.0.5"
 
 # https://www.oracle.com/database/technologies/instant-client/
