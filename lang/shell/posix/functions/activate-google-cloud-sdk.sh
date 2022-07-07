@@ -15,6 +15,7 @@ koopa_activate_google_cloud_sdk() {
     else
         python='/usr/bin/python3'
     fi
+    [ -x "$python" ] || return 0
     CLOUDSDK_PYTHON="$python"
     export CLOUDSDK_PYTHON
     return 0
