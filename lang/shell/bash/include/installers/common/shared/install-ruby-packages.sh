@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Need to version pin the programs here.
+# FIXME Can we install a Ruby gem into an isolated directory?
+# FIXME Use the '--version' argument to do this.
+# FIXME For Ruby 1.9+ use ':' here.
+
 main() {
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2022-04-14.
+    # @note Updated 2022-07-06.
     #
     # @seealso
     # - 'gem pristine --all'
@@ -32,7 +37,10 @@ main() {
     "${app[gem]}" cleanup
     for gem in "${gems[@]}"
     do
-        "${app[gem]}" install "$gem"
+        local version
+        version="$(koopa_variable "ruby-${gem}")"
+        # Alternatively, can use "${gem}:${version}" format here.
+        "${app[gem]}" install "$gem" --version "$version"
     done
     "${app[gem]}" cleanup
     return 0

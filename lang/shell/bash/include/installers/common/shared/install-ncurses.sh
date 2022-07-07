@@ -3,13 +3,15 @@
 main() {
     # """
     # Install ncurses.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-07-07.
     #
     # @seealso
     # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
     #     repos/core-x86_64/PKGBUILD
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/ncurses.rb
+    # - https://lists.gnu.org/archive/html/bug-ncurses/2019-07/msg00025.html
     # - https://github.com/microsoft/vcpkg/issues/22654
+    # - https://stackoverflow.com/questions/6562403/
     # """
     local dict
     koopa_assert_has_no_args "$#"
@@ -18,6 +20,7 @@ main() {
     )
     dict[pkgconfig_dir]="${dict[prefix]}/lib/pkgconfig"
     koopa_mkdir "${dict[pkgconfig_dir]}"
+    koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
     koopa_install_app \
         --installer='gnu-app' \
         --name='ncurses' \

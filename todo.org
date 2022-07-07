@@ -1,6 +1,16 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Split out node and ruby packages into isolated apps.
+** TODO Ensure 'wheel' package gets installed for all Python venvs.
+    Otherwise, can run into legacy 'setup.py' warnings/issues.
+** TODO Consider nesting all system level installers under koopa install system XXX.
+    This includes:
+        - R framework on macOS.
+        - Python framework on macOS.
+        - LLVM binary for Debian.
+        - R binary for Debian.
+        - AWS, Azure, Google Cloud repos on Debian and Fedora.
 ** TODO Need to support 'koopa install --binary XXX YYY' and 'koopa uninstall XXX YYY' in a future release.
 ** TODO Consider versioning apps by major.minor release only, not including point release.
 ** TODO Need to harden all 'locate_*' (locate_app) calls.

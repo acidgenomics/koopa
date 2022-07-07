@@ -10900,10 +10900,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 ;;
         esac
     fi
-    if [[ "${dict[link_in_opt]}" -eq 1 ]]
-    then
-        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
-    fi
     if [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
@@ -10970,6 +10966,10 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
             ;;
     esac
+    if [[ "${dict[link_in_opt]}" -eq 1 ]]
+    then
+        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
+    fi
     if [[ "${dict[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
@@ -11034,6 +11034,13 @@ koopa_install_armadillo() {
 koopa_install_asdf() {
     koopa_install_app \
         --name='asdf' \
+        "$@"
+}
+
+koopa_install_aspell() {
+    koopa_install_app \
+        --link-in-bin='bin/aspell' \
+        --name='aspell' \
         "$@"
 }
 
@@ -11440,6 +11447,7 @@ koopa_install_fd_find() {
 koopa_install_ffmpeg() {
     koopa_install_app \
         --link-in-bin='bin/ffmpeg' \
+        --link-in-bin='bin/ffprobe' \
         --name-fancy='FFmpeg' \
         --name='ffmpeg' \
         "$@"
@@ -11552,6 +11560,7 @@ koopa_install_gcc() {
 
 koopa_install_gdal() {
     koopa_install_app \
+        --link-in-bin='bin/gdal-config' \
         --name-fancy='GDAL' \
         --name='gdal' \
         "$@"
@@ -11567,6 +11576,7 @@ koopa_install_gdbm() {
 
 koopa_install_geos() {
     koopa_install_app \
+        --link-in-bin='bin/geos-config' \
         --name-fancy='GEOS' \
         --name='geos' \
         "$@"
@@ -12944,6 +12954,15 @@ koopa_install_udunits() {
     koopa_install_app \
         --link-in-bin='bin/udunits2' \
         --name='udunits' \
+        "$@"
+}
+
+koopa_install_units() {
+    koopa_install_app \
+        --activate-opt='readline' \
+        --installer='gnu-app' \
+        --link-in-bin='bin/units' \
+        --name='units' \
         "$@"
 }
 
@@ -14854,6 +14873,12 @@ koopa_locate_ascp() {
     koopa_locate_app \
         --app-name='ascp' \
         --opt-name='aspera-connect'
+}
+
+koopa_locate_aspell() {
+    koopa_locate_app \
+        --app-name='aspell' \
+        --opt-name='aspell'
 }
 
 koopa_locate_autoreconf() {
@@ -19072,6 +19097,21 @@ koopa_source_dir() {
     return 0
 }
 
+koopa_spell() {
+    local app
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [aspell]="$(koopa_locate_aspell)"
+        [tail]="$(koopa_locate_tail)"
+    )
+    [[ -x "${app[aspell]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
+    koopa_print "$@" \
+        | "${app[aspell]}" pipe \
+        | "${app[tail]}" -n '+2'
+    return 0
+}
+
 koopa_sra_download_accession_list() {
     local app dict
     koopa_assert_has_args "$#"
@@ -21147,6 +21187,13 @@ koopa_uninstall_asdf() {
         "$@"
 }
 
+koopa_uninstall_aspell() {
+    koopa_uninstall_app \
+        --name='aspell' \
+        --unlink-in-bin='aspell' \
+        "$@"
+}
+
 koopa_uninstall_autoconf() {
     koopa_uninstall_app \
         --name='autoconf' \
@@ -21530,6 +21577,7 @@ koopa_uninstall_ffmpeg() {
         --name-fancy='FFmpeg' \
         --name='ffmpeg' \
         --unlink-in-bin='ffmpeg' \
+        --unlink-in-bin='ffprobe' \
         "$@"
 }
 
@@ -21625,6 +21673,7 @@ koopa_uninstall_gdal() {
     koopa_uninstall_app \
         --name-fancy='GDAL' \
         --name='gdal' \
+        --unlink-in-bin='gdal-config' \
         "$@"
 }
 
@@ -21638,6 +21687,7 @@ koopa_uninstall_geos() {
     koopa_uninstall_app \
         --name-fancy='GEOS' \
         --name='geos' \
+        --unlink-in-bin='geos-config' \
         "$@"
 }
 
@@ -22721,6 +22771,13 @@ koopa_uninstall_udunits() {
     koopa_uninstall_app \
         --name='udunits' \
         --unlink-in-bin='udunits2' \
+        "$@"
+}
+
+koopa_uninstall_units() {
+    koopa_uninstall_app \
+        --name='units' \
+        --unlink-in-bin='units' \
         "$@"
 }
 

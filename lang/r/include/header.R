@@ -17,7 +17,6 @@ local({
         if (isFALSE(isInstalled("koopa"))) {
             stop("koopa R package is not installed.")
         }
-
         if (isFALSE(utils::packageVersion("koopa") >= minVersion)) {
             stop(sprintf(
                 "%s %s %s is required.\nRun '%s' to resolve.",
