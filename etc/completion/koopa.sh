@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-06-23.
+    # Updated 2022-07-05.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -97,6 +97,7 @@ __koopa_complete() {
                         'apr-util'
                         'armadillo'
                         'asdf'
+                        'aspell'
                         'attr'
                         'autoconf'
                         'automake'
@@ -292,6 +293,7 @@ __koopa_complete() {
                         'tree'
                         'tuc'
                         'udunits'
+                        'units'
                         'utf8proc'
                         'vim'
                         'wget'
@@ -325,12 +327,14 @@ __koopa_complete() {
                         args+=(
                             'apptainer'
                             'aspera-connect'
+                            'azure-cli-binary'
                             'base-system'
                             'bcbio-nextgen'
                             'bcl2fastq'
                             'cellranger'
                             'cloudbiolinux'
                             'docker-credential-pass'
+                            'google-cloud-sdk-binary'
                             'julia-binary'
                             'lmod'
                             'node-binary'

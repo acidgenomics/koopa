@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R packages.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-07-07.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -14,11 +14,15 @@ main() {
         [bioc_version]="$(koopa_variable 'bioconductor')"
     )
     "${app[rscript]}" -e " \
-        install.packages(pkgs = 'BiocManager', dependencies = NA); \
-        BiocManager::install(version = '${dict[bioc_version]}'); \
-        install.packages(pkgs = 'AcidDevTools', dependencies = NA); \
+        isInstalled <- function(pkgs) { ; \
+            basename(pkgs) %in% rownames(utils::installed.packages()); \
+        } ; \
+        if (isFALSE(isInstalled('AcidDevTools'))) { ; \
+            install.packages(pkgs = 'BiocManager'); \
+            BiocManager::install(version = '${dict[bioc_version]}'); \
+            install.packages(pkgs = 'AcidDevTools'); \
+        } ; \
         AcidDevTools::installRecommendedPackages(); \
-        install.packages(pkgs = 'koopa', dependencies = TRUE); \
     "
     return 0
 }

@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-06-24.
+# Updated 2022-07-07.
 #
 # @section Cask reinstallation:
 #
@@ -108,7 +108,7 @@ cask "gpg-suite-no-mail"
 cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
-cask "iterm2-nightly"
+cask "iterm2"
 # > cask "julia"
 cask "keka"
 cask "kitty"
