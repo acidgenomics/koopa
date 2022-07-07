@@ -11560,6 +11560,7 @@ koopa_install_gcc() {
 
 koopa_install_gdal() {
     koopa_install_app \
+        --link-in-bin='bin/gdal-config' \
         --name-fancy='GDAL' \
         --name='gdal' \
         "$@"
@@ -11575,6 +11576,7 @@ koopa_install_gdbm() {
 
 koopa_install_geos() {
     koopa_install_app \
+        --link-in-bin='bin/geos-config' \
         --name-fancy='GEOS' \
         --name='geos' \
         "$@"
@@ -21671,6 +21673,7 @@ koopa_uninstall_gdal() {
     koopa_uninstall_app \
         --name-fancy='GDAL' \
         --name='gdal' \
+        --unlink-in-bin='gdal-config' \
         "$@"
 }
 
@@ -21684,6 +21687,7 @@ koopa_uninstall_geos() {
     koopa_uninstall_app \
         --name-fancy='GEOS' \
         --name='geos' \
+        --unlink-in-bin='geos-config' \
         "$@"
 }
 
