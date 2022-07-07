@@ -772,7 +772,7 @@ ruby-ronn="0.7.3"
 # > ripgrep-all="0.9.6" # rga
 bat="0.21.0"
 # NOTE 1.14.0 doesn't build with Rust 1.62.0.
-broot="1.13.3" # br
+broot="1.14.1" # br
 difftastic="0.30.0" # difft
 dog="0.1.0"
 du-dust="0.8.0"
