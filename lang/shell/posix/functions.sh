@@ -338,6 +338,19 @@ quote=01:warning=01;35"
     return 0
 }
 
+koopa_activate_google_cloud_sdk() {
+    local python
+    if koopa_is_macos
+    then
+        python="$(koopa_opt_prefix)/python/bin/python3"
+    else
+        python='/usr/bin/python3'
+    fi
+    CLOUDSDK_PYTHON="$python"
+    export CLOUDSDK_PYTHON
+    return 0
+}
+
 koopa_activate_homebrew() {
     local prefix
     prefix="$(koopa_homebrew_prefix)"
@@ -1730,12 +1743,6 @@ koopa_locate_shell() {
 koopa_macos_activate_cli_colors() {
     [ -z "${CLICOLOR:-}" ] && export CLICOLOR=1
     [ -z "${LSCOLORS:-}" ] && export LSCOLORS='Gxfxcxdxbxegedabagacad'
-    return 0
-}
-
-koopa_macos_activate_google_cloud_sdk() {
-    CLOUDSDK_PYTHON="$(koopa_opt_prefix)/python/bin/python3"
-    export CLOUDSDK_PYTHON
     return 0
 }
 
