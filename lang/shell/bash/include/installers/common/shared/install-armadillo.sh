@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Armadillo.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-07-05.
     #
     # @seealso
     # - http://arma.sourceforge.net/download.html
@@ -12,6 +12,7 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'hdf5'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
@@ -27,7 +28,6 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    koopa_activate_opt_prefix 'hdf5'
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX:PATH=${dict[prefix]}"
         '-DDETECT_HDF5=ON'
