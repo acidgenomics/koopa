@@ -118,9 +118,9 @@ koopa_fedora_import_azure_cli_key() {
     return 0
 }
 
-koopa_fedora_install_azure_cli() {
+koopa_fedora_install_azure_cli_binary() {
     koopa_install_app \
-        --name-fancy='Azure CLI' \
+        --name-fancy='Azure CLI (binary)' \
         --name='azure-cli' \
         --platform='fedora' \
         --system \
@@ -159,9 +159,9 @@ koopa_fedora_install_from_rpm() {
     return 0
 }
 
-koopa_fedora_install_google_cloud_sdk() {
+koopa_fedora_install_google_cloud_sdk_binary() {
     koopa_install_app \
-        --name-fancy='Google Cloud SDK' \
+        --name-fancy='Google Cloud SDK (binary)' \
         --name='google-cloud-sdk' \
         --platform='fedora' \
         --system \
@@ -228,18 +228,18 @@ koopa_fedora_set_locale() {
     return 0
 }
 
-koopa_fedora_uninstall_azure_cli() {
+koopa_fedora_uninstall_azure_cli_binary() {
     koopa_uninstall_app \
-        --name-fancy='Azure CLI' \
+        --name-fancy='Azure CLI (binary)' \
         --name='azure-cli' \
         --platform='fedora' \
         --system \
         "$@"
 }
 
-koopa_fedora_uninstall_google_cloud_sdk() {
+koopa_fedora_uninstall_google_cloud_sdk_binary() {
     koopa_uninstall_app \
-        --name-fancy='Google Cloud SDK' \
+        --name-fancy='Google Cloud SDK (binary)' \
         --name='google-cloud-sdk' \
         --platform='fedora' \
         --system \

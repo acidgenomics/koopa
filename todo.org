@@ -1,6 +1,13 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Consider nesting all system level installers under koopa install system XXX.
+    This includes:
+        - R framework on macOS.
+        - Python framework on macOS.
+        - LLVM binary for Debian.
+        - R binary for Debian.
+        - AWS, Azure, Google Cloud repos on Debian and Fedora.
 ** TODO Need to support 'koopa install --binary XXX YYY' and 'koopa uninstall XXX YYY' in a future release.
 ** TODO Consider versioning apps by major.minor release only, not including point release.
 ** TODO Need to harden all 'locate_*' (locate_app) calls.
