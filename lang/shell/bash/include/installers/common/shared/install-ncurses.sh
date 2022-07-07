@@ -9,7 +9,9 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
     #     repos/core-x86_64/PKGBUILD
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/ncurses.rb
+    # - https://lists.gnu.org/archive/html/bug-ncurses/2019-07/msg00025.html
     # - https://github.com/microsoft/vcpkg/issues/22654
+    # - https://stackoverflow.com/questions/6562403/
     # """
     local dict
     koopa_assert_has_no_args "$#"
