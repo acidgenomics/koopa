@@ -815,9 +815,9 @@ koopa_debian_gdebi_install() {
     return 0
 }
 
-koopa_debian_install_azure_cli() {
+koopa_debian_install_azure_cli_binary() {
     koopa_install_app \
-        --name-fancy='Azure CLI' \
+        --name-fancy='Azure CLI (binary)' \
         --name='azure-cli' \
         --platform='debian' \
         --system \
@@ -864,9 +864,9 @@ koopa_debian_install_from_deb() {
     return 0
 }
 
-koopa_debian_install_google_cloud_sdk() {
+koopa_debian_install_google_cloud_sdk_binary() {
     koopa_install_app \
-        --name-fancy='Google Cloud SDK' \
+        --name-fancy='Google Cloud SDK (binary)' \
         --name='google-cloud-sdk' \
         --platform='debian' \
         --system \
@@ -1031,9 +1031,9 @@ koopa_debian_set_timezone() {
     return 0
 }
 
-koopa_debian_uninstall_azure_cli() {
+koopa_debian_uninstall_azure_cli_binary() {
     koopa_uninstall_app \
-        --name-fancy='Azure CLI' \
+        --name-fancy='Azure CLI (binary)' \
         --name='azure-cli' \
         --platform='debian' \
         --system \
@@ -1056,9 +1056,9 @@ koopa_debian_uninstall_docker() {
         "$@"
 }
 
-koopa_debian_uninstall_google_cloud_sdk() {
+koopa_debian_uninstall_google_cloud_sdk_binary() {
     koopa_uninstall_app \
-        --name-fancy='Google Cloud SDK' \
+        --name-fancy='Google Cloud SDK (binary)' \
         --name='google-cloud-sdk' \
         --platform='debian' \
         --system \
