@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Split out node and ruby packages into isolated apps.
 ** TODO Ensure 'wheel' package gets installed for all Python venvs.
     Otherwise, can run into legacy 'setup.py' warnings/issues.
 ** TODO Consider nesting all system level installers under koopa install system XXX.
