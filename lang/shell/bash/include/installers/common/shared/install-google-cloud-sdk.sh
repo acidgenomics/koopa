@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME This approach is currently failing on Linux.
+# Seeing error message: gcloud failed to load: No module named '_sqlite3'.
+# FIXME Setting CLOUDSDK_PYTHON='/usr/bin/python3' works, but this shouldn't
+# be required to fix this...
+
 main() {
     # """
     # Install Google Cloud SDK.
