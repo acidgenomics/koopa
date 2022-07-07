@@ -296,10 +296,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 ;;
         esac
     fi
-    if [[ "${dict[link_in_opt]}" -eq 1 ]]
-    then
-        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
-    fi
     if [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
@@ -379,6 +375,10 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
             ;;
     esac
+    if [[ "${dict[link_in_opt]}" -eq 1 ]]
+    then
+        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
+    fi
     if [[ "${dict[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
