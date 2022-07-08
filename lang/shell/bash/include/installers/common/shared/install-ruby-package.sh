@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-
-
+# FIXME This isn't installing with isolation correctly.
+# shcov (Gem::GemNotFoundException)
+# 	from /opt/koopa/app/ruby/3.1.2p20/lib/ruby/3.1.0/rubygems.rb:284:in `activate_bin_path'
+# 	from /opt/koopa/bin/bashcov:25:in `<main>'
+# FIXME Do we need to use bundle to accomplish this?
 
 main() {
     # """
@@ -32,10 +35,11 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    export GEM_HOME="${dict[prefix]}"
     "${app[bundle]}" install \
         --binstubs \
         --jobs "${dict[jobs]}" \
-        --path "${dict[prefix]}/libexec" \
+        --path "${dict[prefix]}" \
         "${dict[name]}" \
         --version "${dict[version]}"
     return 0
