@@ -11176,6 +11176,14 @@ koopa_install_cmake() {
         "$@"
 }
 
+koopa_install_colorls() {
+    koopa_install_app \
+        --installer='ruby-package' \
+        --link-in-bin='bin/colorls' \
+        --name='colorls' \
+        "$@"
+}
+
 koopa_install_conda() {
     koopa_install_app \
         --link-in-bin='bin/conda' \
@@ -12241,14 +12249,6 @@ koopa_install_man_db() {
         "$@"
 }
 
-koopa_install_markdown() {
-    koopa_install_app \
-        --installer='nim-package' \
-        --link-in-bin='bin/markdown' \
-        --name='markdown' \
-        "$@"
-}
-
 koopa_install_mcfly() {
     koopa_install_app \
         --link-in-bin='bin/mcfly' \
@@ -12680,6 +12680,14 @@ koopa_install_rmate() {
     koopa_install_app \
         --link-in-bin='bin/rmate' \
         --name='rmate' \
+        "$@"
+}
+
+koopa_install_ronn() {
+    koopa_install_app \
+        --installer='ruby-package' \
+        --link-in-bin='bin/ronn' \
+        --name='ronn' \
         "$@"
 }
 
@@ -21307,6 +21315,13 @@ koopa_uninstall_cmake() {
         "$@"
 }
 
+koopa_uninstall_colorls() {
+    koopa_uninstall_app \
+        --name='colorls' \
+        --unlink-in-bin='colorls' \
+        "$@"
+}
+
 koopa_uninstall_conda() {
     koopa_uninstall_app \
         --name-fancy='Miniconda' \
@@ -22117,13 +22132,6 @@ koopa_uninstall_man_db() {
         "$@"
 }
 
-koopa_uninstall_markdown() {
-    koopa_uninstall_app \
-        --name='markdown' \
-        --unlink-in-bin='markdown' \
-        "$@"
-}
-
 koopa_uninstall_mcfly() {
     koopa_uninstall_app \
         --name='mcfly' \
@@ -22517,6 +22525,13 @@ koopa_uninstall_rmate() {
     koopa_uninstall_app \
         --name='rmate' \
         --unlink-in-bin='rmate' \
+        "$@"
+}
+
+koopa_uninstall_ronn() {
+    koopa_uninstall_app \
+        --name='ronn' \
+        --unlink-in-bin='ronn' \
         "$@"
 }
 

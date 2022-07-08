@@ -711,13 +711,6 @@ chezmoi="2.18.1"
 # https://github.com/junegunn/fzf
 fzf="0.30.0"
 
-# Nim (Nimble) packages
-# ==============================================================================
-# Updated 2021-10-05.
-
-# https://github.com/soasme/nim-markdown/tags/
-markdown="0.8.5"
-
 # Node (NPM) packages
 # ==============================================================================
 # Updated 2022-06-14 from https://www.npmjs.com/
