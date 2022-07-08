@@ -56,6 +56,7 @@ __koopa_posix_header() {
             || return 1
         koopa_add_to_manpath_end '/usr/share/man'
         koopa_activate_homebrew || return 1
+        koopa_activate_google_cloud_sdk || return 1
         koopa_activate_nim || return 1
         koopa_activate_ruby || return 1
         koopa_activate_node || return 1
@@ -63,10 +64,6 @@ __koopa_posix_header() {
         koopa_activate_python || return 1
         koopa_activate_pipx || return 1
         koopa_activate_bcbio_nextgen || return 1
-        if koopa_is_macos
-        then
-            koopa_macos_activate_google_cloud_sdk
-        fi
         if [ "${KOOPA_ACTIVATE:-0}" -eq 1 ]
         then
             koopa_export_editor || return 1
