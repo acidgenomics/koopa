@@ -528,6 +528,9 @@ spacevim="latest"
 # https://www.sqlite.org/download.html
 sqlite="3.38.5"
 
+# https://github.com/ncbi/sra-tools
+sra-tools="3.0.0"
+
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
 
@@ -683,7 +686,7 @@ bowtie2="2.4.5" # 2022-02-08 bioconda
 bustools="0.41.0" # 2021-06-25 bioconda
 entrez-direct="16.2" # 2022-06-06 bioconda
 ffq="0.2.1" # 2022-05-05 bioconda
-gget="0.2.1" # 2022-06-09 bioconda
+gget="0.2.5" # 2022-06-30 bioconda
 ghostscript="9.54.0" 2021-05-14 conda-forge
 hisat2="2.2.1" # 2020-07-24 bioconda
 jupyterlab="3.4.0" # 2022-05-03 conda-forge
@@ -695,11 +698,6 @@ samtools="1.15.1" # 2022-04-07 bioconda
 snakemake="7.8.2" # 2022-06-08 bioconda
 star="2.7.10a" # 2022-01-15 bioconda
 visidata="2.8" # 2022-01-13 conda-forge
-
-# FIXME Consider installing this from source.
-# Current bioconda recipe is out of date.
-# > sra-tools="2.11.0" # 2021-11-10 bioconda
-sra-tools="3.0.0"
 
 # Go packages
 # ==============================================================================
