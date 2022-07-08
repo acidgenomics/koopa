@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Cairo.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-08.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
@@ -13,7 +13,12 @@ main() {
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    deps=(
+    deps=()
+    if koopa_is_linux
+    then
+        deps+=('zlib')
+    fi
+    deps+=(
         'gettext'
         'freetype'
         'libxml2'
