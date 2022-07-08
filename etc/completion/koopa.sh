@@ -212,6 +212,7 @@ __koopa_complete() {
                         'make'
                         'mamba'
                         'man-db'
+                        'markdown'
                         'mcfly'
                         'mdcat'
                         'meson'

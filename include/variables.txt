@@ -716,7 +716,7 @@ fzf="0.30.0"
 # Updated 2021-10-05.
 
 # https://github.com/soasme/nim-markdown/tags/
-nim-markdown="0.8.5"
+markdown="0.8.5"
 
 # Node (NPM) packages
 # ==============================================================================
