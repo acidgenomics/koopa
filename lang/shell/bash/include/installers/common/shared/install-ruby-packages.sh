@@ -5,6 +5,8 @@
 # FIXME Use the '--version' argument to do this.
 # FIXME For Ruby 1.9+ use ':' here.
 
+# FIXME Just set GEM_HOME here.
+
 main() {
     # """
     # Install Ruby packages (gems).

@@ -75,6 +75,5 @@ ${dict[file]}"
         app[otool]="$(koopa_macos_locate_otool)"
         "${app[otool]}" -L "${app[python]}"
     fi
-    # > koopa_configure_python "${app[python]}"
     return 0
 }
