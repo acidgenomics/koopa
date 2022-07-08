@@ -57,6 +57,7 @@ __koopa_posix_header() {
         koopa_add_to_manpath_end '/usr/share/man'
         koopa_activate_homebrew || return 1
         koopa_activate_google_cloud_sdk || return 1
+        koopa_activate_ruby || return 1
         koopa_activate_julia || return 1
         koopa_activate_python || return 1
         koopa_activate_pipx || return 1

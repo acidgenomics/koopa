@@ -599,6 +599,14 @@ koopa_activate_rbenv() {
     return 0
 }
 
+koopa_activate_ruby() {
+    local prefix
+    prefix="${HOME:?}/.gem"
+    export GEM_HOME="$prefix"
+    koopa_add_to_path_start "${prefix}/bin"
+    return 0
+}
+
 koopa_activate_secrets() {
     local file
     file="${1:-}"
