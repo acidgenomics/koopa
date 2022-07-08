@@ -755,12 +755,9 @@ ranger-fm="1.9.3"
 # ==============================================================================
 # https://rubygems.org/gems/bundler/versions/
 
-# NOTE Need to pin this better in a future update.
-ruby-bundler="2.3.17"
-
-ruby-bashcov="1.8.2"
-ruby-colorls="1.4.6"
-ruby-ronn="0.7.3"
+bashcov="1.8.2"
+colorls="1.4.6"
+ronn="0.7.3"
 
 # Rust packages
 # ==============================================================================
