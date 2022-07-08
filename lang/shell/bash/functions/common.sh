@@ -4599,13 +4599,6 @@ koopa_configure_r() {
     return 0
 }
 
-koopa_configure_ruby() {
-    koopa_configure_app_packages \
-        --name-fancy='Ruby' \
-        --name='ruby' \
-        "$@"
-}
-
 koopa_configure_rust() {
     koopa_configure_app_packages \
         --name-fancy='Rust' \
@@ -11069,6 +11062,14 @@ koopa_install_bash() {
         "$@"
 }
 
+koopa_install_bashcov() {
+    koopa_install_app \
+        --installer='ruby-package' \
+        --link-in-bin='bin/bashcov' \
+        --name='bashcov' \
+        "$@"
+}
+
 koopa_install_bat() {
     koopa_install_app \
         --link-in-bin='bin/bat' \
@@ -12691,6 +12692,8 @@ koopa_install_rsync() {
 
 koopa_install_ruby() {
     koopa_install_app \
+        --link-in-bin='bin/bundle' \
+        --link-in-bin='bin/bundler' \
         --link-in-bin='bin/gem' \
         --link-in-bin='bin/ruby' \
         --name-fancy='Ruby' \
@@ -21201,6 +21204,13 @@ koopa_uninstall_bash() {
         "$@"
 }
 
+koopa_uninstall_bashcov() {
+    koopa_uninstall_app \
+        --name='bashcov' \
+        --unlink-in-bin='bashcov' \
+        "$@"
+}
+
 koopa_uninstall_bat() {
     koopa_uninstall_app \
         --name='bat' \
@@ -22521,6 +22531,8 @@ koopa_uninstall_ruby() {
     koopa_uninstall_app \
         --name-fancy='Ruby' \
         --name='ruby' \
+        --unlink-in-bin='bundle' \
+        --unlink-in-bin='bundler' \
         --unlink-in-bin='gem' \
         --unlink-in-bin='ruby' \
         "$@"
