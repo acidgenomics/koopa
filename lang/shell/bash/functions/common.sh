@@ -12349,18 +12349,8 @@ koopa_install_node_binary() {
     koopa_install_app \
         --installer='node-binary' \
         --link-in-bin='bin/node' \
-        --name-fancy='Node.js' \
-        --name='node' \
-        "$@"
-}
-
-koopa_install_node_packages() {
-    koopa_install_app_packages \
-        --link-in-bin='bin/bash-language-server' \
-        --link-in-bin='bin/gtop' \
         --link-in-bin='bin/npm' \
-        --link-in-bin='bin/prettier' \
-        --name-fancy='Node' \
+        --name-fancy='Node.js' \
         --name='node' \
         "$@"
 }
@@ -12368,6 +12358,7 @@ koopa_install_node_packages() {
 koopa_install_node() {
     koopa_install_app \
         --link-in-bin='bin/node' \
+        --link-in-bin='bin/npm' \
         --name-fancy='Node.js' \
         --name='node' \
         "$@"
@@ -22216,17 +22207,7 @@ koopa_uninstall_node_binary() {
         --name-fancy='Node.js' \
         --name='node' \
         --unlink-in-bin='node' \
-        "$@"
-}
-
-koopa_uninstall_node_packages() {
-    koopa_uninstall_app \
-        --name='node-packages' \
-        --name-fancy='Node.js packages' \
-        --unlink-in-bin='bash-language-server' \
-        --unlink-in-bin='gtop' \
         --unlink-in-bin='npm' \
-        --unlink-in-bin='prettier' \
         "$@"
 }
 
@@ -22235,6 +22216,7 @@ koopa_uninstall_node() {
         --name-fancy='Node.js' \
         --name='node' \
         --unlink-in-bin='node' \
+        --unlink-in-bin='npm' \
         "$@"
 }
 
