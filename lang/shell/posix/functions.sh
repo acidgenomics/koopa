@@ -489,15 +489,6 @@ koopa_activate_nim() {
     return 0
 }
 
-koopa_activate_node() {
-    local prefix
-    [ -x "$(koopa_bin_prefix)/node" ] || return 0
-    prefix="$(koopa_node_packages_prefix)"
-    [ -d "$prefix" ] || return 0
-    export NPM_CONFIG_PREFIX="$prefix"
-    return 0
-}
-
 koopa_activate_path_helper() {
     local path_helper
     path_helper='/usr/libexec/path_helper'
