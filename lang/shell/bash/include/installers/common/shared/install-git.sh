@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Need to address this issue on Linux:
+# git: 'remote-https' is not a git command. See 'git --help'.
+# FIXME Need to ensure curl is included here.
+
 main() {
     # """
     # Install Git.
@@ -24,7 +28,7 @@ main() {
     then
         koopa_activate_opt_prefix 'zlib'
     fi
-    koopa_activate_opt_prefix 'gettext' 'openssl3'
+    koopa_activate_opt_prefix 'gettext' 'openssl3' 'curl'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
