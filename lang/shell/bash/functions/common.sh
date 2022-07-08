@@ -4576,13 +4576,6 @@ koopa_configure_nim() {
         "$@"
 }
 
-koopa_configure_node() {
-    koopa_configure_app_packages \
-        --name-fancy='Node.js' \
-        --name='node' \
-        "$@"
-}
-
 koopa_configure_r() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -11060,6 +11053,14 @@ koopa_install_azure_cli() {
         "$@"
 }
 
+koopa_install_bash_language_server() {
+    koopa_install_app \
+        --installer='node-package' \
+        --link-in-bin='bin/bash-language-server' \
+        --name='bash-language-server' \
+        "$@"
+}
+
 koopa_install_bash() {
     koopa_install_app \
         --link-in-bin='bin/bash' \
@@ -11706,6 +11707,14 @@ koopa_install_gsl() {
         --installer='gnu-app' \
         --name='gsl' \
         --name-fancy='GSL' \
+        "$@"
+}
+
+koopa_install_gtop() {
+    koopa_install_app \
+        --installer='node-package' \
+        --link-in-bin='bin/gtop' \
+        --name='gtop' \
         "$@"
 }
 
@@ -12500,6 +12509,14 @@ koopa_install_prelude_emacs() {
         --name='prelude-emacs' \
         --prefix="$(koopa_prelude_emacs_prefix)" \
         --user \
+        "$@"
+}
+
+koopa_install_prettier() {
+    koopa_install_app \
+        --installer='node-package' \
+        --link-in-bin='bin/prettier' \
+        --name='prettier' \
         "$@"
 }
 
@@ -21203,6 +21220,13 @@ koopa_uninstall_azure_cli() {
         "$@"
 }
 
+koopa_uninstall_bash_language_server() {
+    koopa_uninstall_app \
+        --name='bash-language-server' \
+        --unlink-in-bin='bash-language-server' \
+        "$@"
+}
+
 koopa_uninstall_bash() {
     koopa_uninstall_app \
         --name-fancy='Bash' \
@@ -21779,6 +21803,13 @@ koopa_uninstall_groff() {
 koopa_uninstall_gsl() {
     koopa_uninstall_app \
         --name='gsl' \
+        "$@"
+}
+
+koopa_uninstall_gtop() {
+    koopa_uninstall_app \
+        --name='gtop' \
+        --unlink-in-bin='gtop' \
         "$@"
 }
 
@@ -22359,6 +22390,13 @@ koopa_uninstall_prelude_emacs() {
         --name='prelude-emacs' \
         --prefix="$(koopa_prelude_emacs_prefix)" \
         --user \
+        "$@"
+}
+
+koopa_uninstall_prettier() {
+    koopa_uninstall_app \
+        --name='prettier' \
+        --unlink-in-bin='prettier' \
         "$@"
 }
 
