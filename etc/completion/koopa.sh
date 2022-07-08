@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-07-05.
+    # Updated 2022-07-08.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -104,6 +104,7 @@ __koopa_complete() {
                         'aws-cli'
                         'azure-cli'
                         'bash'
+                        'bash-language-server'
                         'bat'
                         'bc'
                         'bedtools'
@@ -163,6 +164,7 @@ __koopa_complete() {
                         'grep'
                         'groff'
                         'gsl'
+                        'gtop'
                         'gzip'
                         'hadolint'
                         'harfbuzz'
@@ -243,6 +245,7 @@ __koopa_complete() {
                         'pkg-config'
                         'poetry'
                         'prelude-emacs'
+                        'prettier'
                         'procs'
                         'proj'
                         'pyenv'

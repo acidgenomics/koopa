@@ -722,11 +722,9 @@ nim-markdown="0.8.5"
 # ==============================================================================
 # Updated 2022-06-14 from https://www.npmjs.com/
 
-node-npm="8.12.1"
-
-node-bash-language-server="2.1.0"
-node-gtop="1.1.3"
-node-prettier="2.7.0"
+bash-language-server="2.1.0"
+gtop="1.1.3"
+prettier="2.7.0"
 
 # Perl packages
 # ==============================================================================
