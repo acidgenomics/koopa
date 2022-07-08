@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider installing into libexec and then linking...
-
 main() {
     # """
     # Install Node.js package using npm.
