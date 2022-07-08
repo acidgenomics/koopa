@@ -22253,7 +22253,7 @@ koopa_uninstall_openblas() {
 koopa_uninstall_openjdk() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=OpenJDK'
+        '--name-fancy=Adoptium Temurin OpenJDK'
         '--name=openjdk'
         '--unlink-in-bin=jar'
         '--unlink-in-bin=java'
