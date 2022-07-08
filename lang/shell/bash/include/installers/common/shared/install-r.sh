@@ -6,7 +6,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-08.
     #
     # @section gfortran configuration on macOS:
     #
@@ -51,7 +51,12 @@ main() {
         dict[x11_prefix]='/opt/X11'
     fi
     build_deps=('pkg-config')
-    deps=(
+    deps=()
+    if koopa_is_linux
+    then
+        deps+=('zlib')
+    fi
+    deps+=(
         'bzip2'
         'icu4c'
         'readline'
