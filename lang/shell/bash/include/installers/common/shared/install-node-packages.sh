@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this as isolated node environment instead.
+# FIXME Don't attempt to version pin npm here? Install into main node
+# app environment instead?
+# FIXME Just set the NPM_CONFIG_PREFIX value to prefix here.
+
 main() {
     # """
     # Install Node.js packages using npm.
@@ -14,6 +19,7 @@ main() {
     # """
     local app dict i pkgs
     koopa_assert_has_no_args "$#"
+    # FIXME Rework this approach...
     koopa_activate_node
     declare -A app=(
         [node]="$(koopa_locate_node)"
@@ -23,6 +29,7 @@ main() {
         [npm_version]="$(koopa_variable 'node-npm')"
         [prefix]="${INSTALL_PREFIX:?}"
     )
+    # FIXME Consider doing this in main node install call instead...
     # The npm install step will fail unless 'node' is in 'PATH'.
     koopa_add_to_path_start "$(koopa_dirname "${app[node]}")"
     koopa_alert "Pinning 'npm' to version ${dict[npm_version]}".
