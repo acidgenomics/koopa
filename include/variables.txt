@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-06"
+koopa-date="2022-07-08"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -481,7 +481,7 @@ readline="8.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2022.02.3+492"
+rstudio-server="2022.07.0+548"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.1.2p20"
