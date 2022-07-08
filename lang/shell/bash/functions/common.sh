@@ -10942,15 +10942,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         export INSTALL_PREFIX="${dict[prefix]}"
         export INSTALL_VERSION="${dict[version]}"
         "${dict[installer_fun]}" "$@"
-        [[ "$#" -gt 0 ]] && koopa_dl 'configure args' "$*"
-        koopa_dl \
-            'CFLAGS' "${CFLAGS:-}" \
-            'CPPFLAGS' "${CPPFLAGS:-}" \
-            'LDFLAGS' "${LDFLAGS:-}" \
-            'LDLIBS' "${LDLIBS:-}" \
-            'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:-}" \
-            'PATH' "${PATH:-}" \
-            'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
         return 0
     ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
     koopa_rm "${dict[tmp_dir]}"
