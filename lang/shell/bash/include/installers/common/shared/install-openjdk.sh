@@ -73,14 +73,16 @@ ${dict[platform]}_hotspot_${dict[version2]}.tar.gz"
 releases/download/jdk-${dict[version3]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
-    if koopa_is_macos
-    then
-        koopa_cp "jdk-${dict[version]}" "${dict[prefix]}/libexec"
-        (
-            koopa_cd "${dict[prefix]}"
+    koopa_cp "jdk-${dict[version]}" "${dict[prefix]}/libexec"
+    (
+        koopa_cd "${dict[prefix]}"
+        if koopa_is_macos
+        then
             koopa_ln 'libexec/Contents/Home/bin' 'bin'
-        )
-    fi
+        else
+            koopa_ln 'libexec/bin' 'bin'
+        fi
+    )
     if koopa_is_linux
     then
         # This step will skip for non-shared install.
