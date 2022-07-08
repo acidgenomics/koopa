@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-06-15.
+    # @note Updated 2022-07-08.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -59,7 +59,6 @@ __koopa_posix_header() {
         koopa_activate_google_cloud_sdk || return 1
         koopa_activate_nim || return 1
         koopa_activate_ruby || return 1
-        koopa_activate_node || return 1
         koopa_activate_julia || return 1
         koopa_activate_python || return 1
         koopa_activate_pipx || return 1
