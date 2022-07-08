@@ -224,7 +224,6 @@ __koopa_complete() {
                         'ninja'
                         'node'
                         'node-binary'
-                        'node-packages'
                         'oniguruma'
                         'openblas'
                         'openjdk'
