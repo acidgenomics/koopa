@@ -5,6 +5,9 @@ koopa_uninstall_openjdk() {
     uninstall_args=(
         '--name-fancy=OpenJDK'
         '--name=openjdk'
+        '--unlink-in-bin=jar'
+        '--unlink-in-bin=java'
+        '--unlink-in-bin=javac'
     )
     # Reset 'default-java' on Linux, when possible.
     if koopa_is_linux
