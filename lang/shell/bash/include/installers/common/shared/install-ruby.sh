@@ -37,8 +37,5 @@ ${dict[maj_min_ver]}/${dict[file]}"
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
-    app[ruby]="${dict[prefix]}/bin/ruby"
-    koopa_assert_is_installed "${app[ruby]}"
-    koopa_configure_ruby "${app[ruby]}"
     return 0
 }
