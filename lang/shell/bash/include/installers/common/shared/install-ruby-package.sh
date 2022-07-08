@@ -11,7 +11,11 @@ main() {
     # Install Ruby package.
     # @note Updated 2022-07-08.
     #
-    # Alternatively, can use "${dict[name]}:${dict[version]}" format here.
+    # Alternative approach using gem:
+    # > "${app[gem]}" install \
+    # >     "${dict[name]}" \
+    # >     --version "${dict[version]}" \
+    # >     --install-dir "${dict[prefix]}"
     #
     # @seealso
     # - 'gem pristine --all'
@@ -22,25 +26,45 @@ main() {
     # - https://coderwall.com/p/rz7sqa/keeping-your-bundler-gems-isolated
     # - https://bundler.io/man/bundle-pristine.1.html
     # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
+    # - https://stackoverflow.com/questions/16098757/
     # """
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [bundle]="$(koopa_locate_bundle)"
+        [ruby]="$(koopa_locate_ruby)"
     )
     [[ -x "${app[bundle]}" ]] || return 1
+    [[ -x "${app[ruby]}" ]] || return 1
+    app[ruby]="$(koopa_realpath "${app[ruby]}")"
     declare -A dict=(
+        [gemfile]='Gemfile'
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    export GEM_HOME="${dict[prefix]}"
-    "${app[bundle]}" install \
-        --binstubs \
-        --jobs "${dict[jobs]}" \
-        --path "${dict[prefix]}" \
-        "${dict[name]}" \
-        --version "${dict[version]}"
+    dict[gemfile_string]="\
+source \"https://rubygems.org\"\n\
+gem \"${dict[name]}\", \"${dict[version]}\""
+    dict[libexec]="${dict[prefix]}/libexec"
+    koopa_mkdir "${dict[libexec]}"
+    unset -v GEM_HOME GEM_PATH
+    (
+        koopa_cd "${dict[libexec]}"
+        koopa_write_string \
+            --file="${dict[gemfile]}" \
+            --string="${dict[gemfile_string]}"
+        "${app[bundle]}" install \
+            --gemfile="${dict[gemfile]}" \
+            --jobs="${dict[jobs]}" \
+            --retry=3 \
+            --standalone
+        "${app[bundle]}" binstubs \
+            "${dict[name]}" \
+            --path="${dict[prefix]}/bin" \
+            --shebang="${app[ruby]}" \
+            --standalone
+    )
     return 0
 }
