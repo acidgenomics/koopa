@@ -5,7 +5,7 @@
 #
 # NOTE Main CLI function needs to look for this and handle accordingly...
 #
-# NOTE Consider improving this by setting a trap to delete prefix on install
+# FIXME Consider improving this by setting a trap to delete prefix on install
 # failure.
 
 koopa_install_app() {
