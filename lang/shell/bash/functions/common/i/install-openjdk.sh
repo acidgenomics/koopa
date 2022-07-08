@@ -2,7 +2,10 @@
 
 koopa_install_openjdk() {
     koopa_install_app \
-        --name-fancy='OpenJDK' \
+        --link-in-bin='bin/jar' \
+        --link-in-bin='bin/java' \
+        --link-in-bin='bin/javac' \
+        --name-fancy='Adoptium Temurin OpenJDK' \
         --name='openjdk' \
         "$@"
 }

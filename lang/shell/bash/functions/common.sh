@@ -12389,7 +12389,10 @@ koopa_install_openblas() {
 
 koopa_install_openjdk() {
     koopa_install_app \
-        --name-fancy='OpenJDK' \
+        --link-in-bin='bin/jar' \
+        --link-in-bin='bin/java' \
+        --link-in-bin='bin/javac' \
+        --name-fancy='Adoptium Temurin OpenJDK' \
         --name='openjdk' \
         "$@"
 }
@@ -22252,6 +22255,9 @@ koopa_uninstall_openjdk() {
     uninstall_args=(
         '--name-fancy=OpenJDK'
         '--name=openjdk'
+        '--unlink-in-bin=jar'
+        '--unlink-in-bin=java'
+        '--unlink-in-bin=javac'
     )
     if koopa_is_linux
     then
