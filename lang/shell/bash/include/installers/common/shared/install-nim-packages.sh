@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Split this out to isolate per package.
+# FIXME Set NIMBLE_DIR here.
+
 main() {
     # """
     # Install Nim packages using nimble.
@@ -10,7 +13,6 @@ main() {
     # """
     local app i pkgs
     koopa_assert_has_no_args "$#"
-    koopa_activate_nim
     declare -A app=(
         [nim]="$(koopa_locate_nim)"
         [nimble]="$(koopa_locate_nimble)"

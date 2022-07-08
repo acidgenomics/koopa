@@ -17202,28 +17202,6 @@ koopa_python_pip_install() {
     return 0
 }
 
-koopa_python_pip_outdated() {
-    local app dict
-    declare -A app=(
-        [python]="${1:-}"
-    )
-    [[ -z "${app[python]}" ]] && app[python]="$(koopa_locate_python)"
-    [[ -x "${app[python]}" ]] || return 1
-    declare -A dict=(
-        [version]="$(koopa_get_version "${app[python]}")"
-    )
-    dict[prefix]="$(koopa_python_packages_prefix "${dict[version]}")"
-    dict[str]="$( \
-        "${app[python]}" -m pip list \
-            --format 'freeze' \
-            --outdated \
-            --path "${dict[prefix]}" \
-    )"
-    [[ -n "${dict[str]}" ]] || return 0
-    koopa_print "${dict[str]}"
-    return 0
-}
-
 koopa_python_system_packages_prefix() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -22210,14 +22188,6 @@ koopa_uninstall_nettle() {
         "$@"
 }
 
-koopa_uninstall_nim_packages() {
-    koopa_uninstall_app \
-        --name='nim-packages' \
-        --name-fancy='Nim packages' \
-        --unlink-in-bin='markdown' \
-        "$@"
-}
-
 koopa_uninstall_nim() {
     koopa_uninstall_app \
         --name-fancy='Nim' \
@@ -23281,10 +23251,6 @@ koopa_update_mamba() {
 
 koopa_update_nim_packages() {
     koopa_install_nim_packages "$@"
-}
-
-koopa_update_node_packages() {
-    koopa_install_node_packages "$@"
 }
 
 koopa_update_prelude_emacs() {

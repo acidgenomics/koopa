@@ -10,6 +10,12 @@
 # - apr-util
 # - subversion
 
+# FIXME Rework the approach to these:
+# - nim-packages
+# - rust-packages
+# - ruby-packages
+# - python-packages
+
 koopa_configure_system() {
     # """
     # Configure system.
