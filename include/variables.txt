@@ -492,9 +492,6 @@ rust="1.62.0"
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
 
-# http://rtomayko.github.io/ronn/
-ronn="0.7.3"
-
 # https://scons.org/
 scons="4.3.0"
 
