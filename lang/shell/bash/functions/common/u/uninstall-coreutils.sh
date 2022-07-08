@@ -84,7 +84,6 @@ koopa_uninstall_coreutils() {
         '--unlink-in-bin=sort'
         '--unlink-in-bin=split'
         '--unlink-in-bin=stat'
-        '--unlink-in-bin=stdbuf'
         '--unlink-in-bin=stty'
         '--unlink-in-bin=sum'
         '--unlink-in-bin=sync'
