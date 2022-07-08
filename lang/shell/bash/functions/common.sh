@@ -12240,6 +12240,14 @@ koopa_install_man_db() {
         "$@"
 }
 
+koopa_install_markdown() {
+    koopa_install_app \
+        --installer='nim-package' \
+        --link-in-bin='bin/markdown' \
+        --name='markdown' \
+        "$@"
+}
+
 koopa_install_mcfly() {
     koopa_install_app \
         --link-in-bin='bin/mcfly' \
@@ -12327,14 +12335,6 @@ koopa_install_nettle() {
         -D '--disable-dependency-tracking' \
         -D '--enable-mini-gmp' \
         -D '--enable-shared' \
-        "$@"
-}
-
-koopa_install_nim_packages() {
-    koopa_install_app_packages \
-        --link-in-bin='bin/markdown' \
-        --name-fancy='Nim' \
-        --name='nim' \
         "$@"
 }
 
@@ -12686,18 +12686,6 @@ koopa_install_rsync() {
     koopa_install_app \
         --link-in-bin='bin/rsync' \
         --name='rsync' \
-        "$@"
-}
-
-koopa_install_ruby_packages() {
-    koopa_install_app_packages \
-        --link-in-bin='bin/bashcov' \
-        --link-in-bin='bin/bundle' \
-        --link-in-bin='bin/bundler' \
-        --link-in-bin='bin/colorls' \
-        --link-in-bin='bin/ronn' \
-        --name-fancy='Ruby' \
-        --name='ruby' \
         "$@"
 }
 
@@ -22119,6 +22107,13 @@ koopa_uninstall_man_db() {
         "$@"
 }
 
+koopa_uninstall_markdown() {
+    koopa_uninstall_app \
+        --name='markdown' \
+        --unlink-in-bin='markdown' \
+        "$@"
+}
+
 koopa_uninstall_mcfly() {
     koopa_uninstall_app \
         --name='mcfly' \
@@ -22519,18 +22514,6 @@ koopa_uninstall_rsync() {
     koopa_uninstall_app \
         --name='rsync' \
         --unlink-in-bin='rsync' \
-        "$@"
-}
-
-koopa_uninstall_ruby_packages() {
-    koopa_uninstall_app \
-        --name-fancy='Ruby packages' \
-        --name='ruby-packages' \
-        --unlink-in-bin='bashcov' \
-        --unlink-in-bin='bundle' \
-        --unlink-in-bin='bundler' \
-        --unlink-in-bin='colorls' \
-        --unlink-in-bin='ronn' \
         "$@"
 }
 
@@ -23249,10 +23232,6 @@ koopa_update_mamba() {
     koopa_install_mamba "$@"
 }
 
-koopa_update_nim_packages() {
-    koopa_install_nim_packages "$@"
-}
-
 koopa_update_prelude_emacs() {
     koopa_update_app \
         --name-fancy='Prelude Emacs' \
@@ -23267,10 +23246,6 @@ koopa_update_r_packages() {
         --name-fancy='R packages' \
         --name='r-packages' \
         "$@"
-}
-
-koopa_update_ruby_packages() {  # {{{3
-    koopa_install_ruby_packages "$@"
 }
 
 koopa_update_spacemacs() {
