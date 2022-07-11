@@ -9,21 +9,29 @@ main() {
     #
     # - https://mac.r-project.org
     # - https://github.com/fxcoudert/gfortran-for-macOS/releases
+    # - https://github.com/Rdatatable/data.table/wiki/Installation/
     # - https://developer.r-project.org/Blog/public/2020/11/02/
     #     will-r-work-on-apple-silicon/index.html
     # - https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
-    # - https://hub.docker.com/r/rocker/r-ver/dockerfile
-    # - https://bookdown.org/lionel/contributing/building-r.html
     # - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
-    # - https://support.rstudio.com/hc/en-us/articles/
-    #       218004217-Building-R-from-source
+    # - https://cran.r-project.org/doc/manuals/r-release/
+    #     R-admin.html#macOS-packages
+    # - https://cran.r-project.org/doc/manuals/r-devel/
+    #     R-exts.html#Using-Makevars
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/r.rb
-    # - https://hub.docker.com/r/rocker/r-devel/dockerfile
     # - https://developer.r-project.org/
     # - https://svn.r-project.org/R/
+    # - https://www.gnu.org/software/make/manual/make.html#Using-Implicit
+    # - https://www.gnu.org/software/make/manual/html_node/
+    #     Implicit-Variables.html
+    # - https://bookdown.org/lionel/contributing/building-r.html
+    # - https://hub.docker.com/r/rocker/r-ver/dockerfile
+    # - https://hub.docker.com/r/rocker/r-devel/dockerfile
+    # - https://support.rstudio.com/hc/en-us/articles/
+    #       218004217-Building-R-from-source
     # - https://cran.r-project.org/doc/manuals/r-devel/
     #       R-admin.html#Getting-patched-and-development-versions
     # - https://cran.r-project.org/bin/linux/debian/
