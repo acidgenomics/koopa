@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2022-07-08.
+    # @note Updated 2022-07-11.
     #
     # @section gfortran configuration on macOS:
     #
@@ -173,7 +173,6 @@ main() {
                 'libpcre2-32' \
                 'libpcre2-posix' \
         )"
-        # FIXME This isn't working.
         "--with-readline=$( \
             "${app[pkg_config]}" --libs 'readline' \
         )"
@@ -194,7 +193,7 @@ main() {
         "${app[cc]}" \
         "${app[cxx]}" \
         "${app[fc]}"
-    conf_args=(
+    conf_args+=(
         "CC=${app[cc]}"
         "CXX=${app[cxx]}"
         "F77=${app[fc]}"
