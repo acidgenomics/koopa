@@ -19,7 +19,16 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
     )
+    if koopa_is_macos
+    then
+        dict[shared_ext]='dylib'
+    else
+        dict[shared_ext]='so'
+    fi
+    dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[pkgconfig_dir]="${dict[prefix]}/lib/pkgconfig"
     koopa_mkdir "${dict[pkgconfig_dir]}"
     koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
@@ -40,8 +49,51 @@ main() {
         -D '--without-ada' \
         "$@"
     (
+        local name names
+        names=('form' 'menu' 'ncurses' 'ncurses++' 'panel')
+        koopa_cd "${dict[prefix]}/lib"
+        for name in "${names[@]}"
+        do
+            koopa_ln  \
+                "lib${name}w.${dict[shared_ext]}" \
+                "lib${name}.${dict[shared_ext]}"
+            koopa_ln \
+                "lib${name}w.a" \
+                "lib${name}.a"
+            koopa_ln \
+                "lib${name}w_g.a" \
+                "lib${name}_g.a"
+            if koopa_is_linux
+            then
+                koopa_ln \
+                    "lib${name}w.${dict[shared_ext]}.${dict[maj_ver]}" \
+                    "lib${name}.${dict[shared_ext]}.${dict[maj_ver]}"
+                koopa_ln \
+                    "lib${name}w.${dict[shared_ext]}.${dict[maj_min_ver]}" \
+                    "lib${name}.${dict[shared_ext]}.${dict[maj_min_ver]}"
+            elif koopa_is_macos
+            then
+                koopa_ln \
+                    "lib${name}w.${dict[maj_ver]}.dylib" \
+                    "lib${name}.${dict[maj_ver]}.dylib"
+            fi
+        done
+    )
+    if koopa_is_linux
+    then
+        (
+            koopa_cd "${dict[prefix]}/lib"
+            koopa_ln 'libncurses.so' => 'libtermcap.so'
+            koopa_ln 'libncurses.so' => 'libtinfo.so'
+        )
+    fi
+    (
+        local name names
         koopa_cd "${dict[prefix]}/lib/pkgconfig"
-        koopa_ln 'ncursesw.pc' 'ncurses.pc'
-        koopa_ln 'ncurses++w.pc' 'ncurses++.pc'
+        names=('form' 'menu' 'ncurses++' 'ncurses' 'panel')
+        for name in "${names[@]}"
+        do
+            koopa_ln "${name}w.pc" "${name}.pc"
+        done
     )
 }
