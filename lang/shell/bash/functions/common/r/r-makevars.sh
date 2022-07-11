@@ -22,6 +22,7 @@ koopa_r_makevars() {
         return 0
     fi
     declare -A dict=(
+        [arch]="$(koopa_arch)"
         [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
     )
@@ -29,9 +30,11 @@ koopa_r_makevars() {
     koopa_alert "Updating 'Makevars' at '${dict[file]}'."
     dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
     app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+    # This will cover 'lib' and 'lib64' subdirs.
+    # See also 'gcc --print-search-dirs'.
     readarray -t libs <<< "$( \
         koopa_find \
-            --prefix="${dict[gcc_prefix]}/lib" \
+            --prefix="${dict[gcc_prefix]}" \
             --pattern='*.a' \
             --type 'f' \
         | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
@@ -43,7 +46,15 @@ koopa_r_makevars() {
     do
         flibs+=("-L${libs[i]}")
     done
-    flibs+=('-lgfortran' '-lquadmath' '-lm')
+    flibs+=('-lgfortran')
+    # NOTE quadmath not yet supported for aarch64.
+    # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96016
+    case "${dict[arch]}" in
+        'x86_64')
+            flibs+=('-lquadmath')
+            ;;
+    esac
+    flibs+=('-lm')
     dict[flibs]="${flibs[*]}"
     read -r -d '' "dict[string]" << END || true
 FC = ${app[fc]}

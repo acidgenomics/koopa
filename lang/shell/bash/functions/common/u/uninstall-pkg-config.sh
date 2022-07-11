@@ -3,5 +3,6 @@
 koopa_uninstall_pkg_config() {
     koopa_uninstall_app \
         --name='pkg-config' \
+        --unlink-in-bin='pkg-config' \
         "$@"
 }
