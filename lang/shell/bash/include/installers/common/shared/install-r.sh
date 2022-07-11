@@ -178,6 +178,7 @@ main() {
                 'libpcre2-32' \
                 'libpcre2-posix' \
         )"
+        # FIXME This isn't working.
         "--with-readline=$( \
             "${app[pkg_config]}" --libs 'readline' \
         )"
