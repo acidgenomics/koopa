@@ -3,7 +3,7 @@
 koopa_r_link_site_library() {
     # """
     # Link R site library.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-07-11.
     #
     # R on Fedora won't pick up site library in '--vanilla' mode unless we
     # symlink the site-library into '/usr/local/lib/R' as well.
@@ -12,11 +12,10 @@ koopa_r_link_site_library() {
     # Changed to unversioned library approach at opt prefix in koopa v0.9.
     # """
     local app conf_args dict
-    koopa_assert_has_args_le "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [r]="${1:-}"
+        [r]="${1:?}"
     )
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     koopa_assert_is_installed "${app[r]}"
     declare -A dict=(
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"

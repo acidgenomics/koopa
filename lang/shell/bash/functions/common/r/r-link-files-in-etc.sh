@@ -8,13 +8,11 @@ koopa_r_link_files_in_etc() {
     # Don't copy Makevars file across machines.
     # """
     local app dict file files
-    koopa_assert_has_args_le "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [r]="${1:-}"
+        [r]="${1:?}"
     )
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     koopa_assert_is_installed "${app[r]}"
-    app[r]="$(koopa_realpath "${app[r]}")"
     declare -A dict=(
         [distro_prefix]="$(koopa_distro_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
