@@ -8,6 +8,7 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix \
+        'm4' \
         'autoconf' \
         'automake' \
         'ncurses' \
