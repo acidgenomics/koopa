@@ -17193,6 +17193,7 @@ koopa_python_pip_install() {
     pkgs=("$@")
     install_args=(
         '--disable-pip-version-check'
+        '--ignore-installed'
         '--no-warn-script-location'
     )
     dl_args=(
