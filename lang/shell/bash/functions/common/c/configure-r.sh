@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting this on macOS, need to rework.
+# chmod: Unable to change file mode on /opt/koopa/app/r/4.2.1/lib/R/etc/Makevars.site: Operation not permitted
+
 koopa_configure_r() {
     # """
     # Update R configuration.

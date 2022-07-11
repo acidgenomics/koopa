@@ -3,7 +3,7 @@
 koopa_r_package_version() {
     # """
     # R package version.
-    # @note Updated 2022-02-27.
+    # @note Updated 2022-07-11.
     #
     # @examples
     # > koopa_r_package_version 'basejump'
@@ -13,6 +13,7 @@ koopa_r_package_version() {
     declare -A app=(
         [rscript]="$(koopa_locate_rscript)"
     )
+    [[ -x "${app[rscript]}" ]] || return 1
     pkgs=("$@")
     koopa_is_r_package_installed "${pkgs[@]}" || return 1
     vec="$(koopa_r_paste_to_vector "${pkgs[@]}")"

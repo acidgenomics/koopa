@@ -3,12 +3,13 @@
 koopa_r_shiny_run_app() {
     # """
     # Run an R/Shiny application.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-07-11.
     # """
     local app dict
     declare -A app=(
         [r]="$(koopa_locate_r)"
     )
+    [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
         [prefix]="${1:-}"
     )

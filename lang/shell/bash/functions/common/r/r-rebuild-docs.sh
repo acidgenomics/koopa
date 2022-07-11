@@ -3,7 +3,7 @@
 koopa_r_rebuild_docs() {
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-07-11.
     #
     # 1. Ensure HTML package index is writable.
     # 2. Touch an empty 'R.css' file to eliminate additional package warnings.
@@ -16,15 +16,15 @@ koopa_r_rebuild_docs() {
     # """
     local app doc_dir html_dir pkg_index rscript_args
     declare -A app=(
-        [r]="${1:-}"
+        [r]="${1:?}"
     )
-    declare -A dict
-    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa_locate_r)"
+    koopa_assert_is_installed "${app[r]}"
     app[rscript]="${app[r]}script"
     koopa_assert_is_installed "${app[rscript]}"
     koopa_is_koopa_app "${app[rscript]}" || return 0
-    rscript_args=('--vanilla')
+    declare -A dict
     koopa_alert 'Updating HTML package index.'
+    rscript_args=('--vanilla')
     dict[doc_dir]="$( \
         "${app[rscript]}" "${rscript_args[@]}" -e 'cat(R.home("doc"))' \
     )"
