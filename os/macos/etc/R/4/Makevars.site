@@ -1,1 +1,23 @@
-../../../../../etc/R/Makevars.site
+# """
+# Makevars configuration.
+# @note Updated 2022-05-11.
+#
+# @seealso
+# - https://cran.r-project.org/doc/manuals/r-release/
+#     R-admin.html#macOS-packages
+# - https://cran.r-project.org/doc/manuals/r-devel/
+#     R-exts.html#Using-Makevars
+# - https://www.gnu.org/software/make/manual/make.html#Using-Implicit
+# - https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+# - https://github.com/fxcoudert/gfortran-for-macOS/releases/
+# - https://github.com/Rdatatable/data.table/wiki/Installation/
+# - https://mac.r-project.org/
+# """
+
+# FIXME R configuration function needs to write this file dynamically.
+# FIXME Set these during install call instead.
+
+OPT_LOC = /opt/koopa/opt
+
+FC = $(OPT_LOC)/gcc/bin/gfortran
+FLIBS = -L$(OPT_LOC)/gcc/lib/gcc/x86_64-apple-darwin21/12.1.0 -L$(OPT_LOC)/gcc/lib -lgfortran -lquadmath -lm

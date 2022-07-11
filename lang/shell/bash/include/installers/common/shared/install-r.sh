@@ -16,6 +16,7 @@ main() {
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
     # - https://hub.docker.com/r/rocker/r-ver/dockerfile
+    # - https://bookdown.org/lionel/contributing/building-r.html
     # - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
     # - https://support.rstudio.com/hc/en-us/articles/
     #       218004217-Building-R-from-source
@@ -177,34 +178,25 @@ main() {
     else
         conf_args+=('--with-recommended-packages')
     fi
+    dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
+    app[cc]="${dict[gcc_prefix]}/bin/gcc"
+    app[cxx]="${dict[gcc_prefix]}/bin/g++"
+    app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+    koopa_assert_is_installed \
+        "${app[cc]}" \
+        "${app[cxx]}" \
+        "${app[fc]}"
+    conf_args=(
+        "CC=${app[cc]}"
+        "CXX=${app[cxx]}"
+        "F77=${app[fc]}"
+        "FC=${app[fc]}"
+        "OBJC=${app[cc]}"
+        "OBJCXX=${app[cxx]}"
+    )
     if koopa_is_macos
     then
-        # NOTE If using clang/clang++ instead for CC and CXX, need to enable
-        # access to OpenMP headers built specifically for clang.
-        # See 'https://mac.r-project.org/openmp/' for details.
-        # > app[cc]='/usr/bin/clang'
-        # > app[cxx]='/usr/bin/clang++'
-        # Will see this in install log:
-        # checking for /usr/bin/clang option to support OpenMP... unsupported
-        dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
-        app[cc]="${dict[gcc_prefix]}/bin/gcc"
-        app[cxx]="${dict[gcc_prefix]}/bin/g++"
-        app[fc]="${dict[gcc_prefix]}/bin/gfortran"
-        app[objc]='/usr/bin/clang'
-        app[objcxx]='/usr/bin/clang++'
-        koopa_assert_is_installed \
-            "${app[cc]}" \
-            "${app[cxx]}" \
-            "${app[fc]}" \
-            "${app[objc]}" \
-            "${app[objcxx]}"
         conf_args+=(
-            "CC=${app[cc]}"
-            "CXX=${app[cxx]}"
-            "FC=${app[fc]}"
-            "F77=${app[fc]}"
-            "OBJC=${app[cc]}"
-            "OBJCXX=${app[cxx]}"
             "--x-includes=${dict[x11_prefix]}/include"
             "--x-libraries=${dict[x11_prefix]}/lib"
             '--without-aqua'
