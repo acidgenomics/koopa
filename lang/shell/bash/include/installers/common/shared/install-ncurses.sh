@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to symlink ncursesw.pc to ncurses.pc
+
 main() {
     # """
     # Install ncurses.
@@ -37,4 +39,9 @@ main() {
         -D '--with-versioned-syms' \
         -D '--without-ada' \
         "$@"
+    (
+        koopa_cd "${dict[prefix]}/lib/pkgconfig"
+        koopa_ln 'ncursesw.pc' 'ncurses.pc'
+        koopa_ln 'ncurses++w.pc' 'ncurses++.pc'
+    )
 }
