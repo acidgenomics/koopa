@@ -19,6 +19,7 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     apr-util.rb
+    # - https://bz.apache.org/bugzilla/show_bug.cgi?id=61379
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -48,6 +49,8 @@ main() {
         "--with-openssl=${dict[opt_prefix]}/openssl3"
         '--without-pgsql'
     )
+    ./configure --help
+    koopa_stop 'FIXME'
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
