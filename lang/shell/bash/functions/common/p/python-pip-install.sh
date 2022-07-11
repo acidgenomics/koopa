@@ -3,7 +3,7 @@
 koopa_python_pip_install() {
     # """
     # Internal pip install command.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-07-11.
     #
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
@@ -56,6 +56,7 @@ koopa_python_pip_install() {
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
         '--disable-pip-version-check'
+        '--ignore-installed'
         '--no-warn-script-location'
     )
     dl_args=(
