@@ -3,7 +3,7 @@
 koopa_r_version() {
     # """
     # R version.
-    # @note Updated 2022-02-27.
+    # @note Updated 2022-07-11.
     # """
     local app str
     koopa_assert_has_args_le "$#" 1
@@ -12,6 +12,7 @@ koopa_r_version() {
         [r]="${1:-}"
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    koopa_assert_is_installed "${app[r]}"
     str="$( \
         "${app[r]}" --version 2>/dev/null \
         | "${app[head]}" -n 1 \
