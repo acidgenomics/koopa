@@ -17472,7 +17472,7 @@ koopa_r_makevars() {
     app[fc]="${dict[gcc_prefix]}/bin/gfortran"
     readarray -t libs <<< "$( \
         koopa_find \
-            --prefix="${dict[gcc_prefix]}/lib" \
+            --prefix="${dict[gcc_prefix]}" \
             --pattern='*.a' \
             --type 'f' \
         | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
