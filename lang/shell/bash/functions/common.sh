@@ -12506,6 +12506,7 @@ koopa_install_pixman() {
 
 koopa_install_pkg_config() {
     koopa_install_app \
+        --link-in-bin='bin/pkg-config' \
         --name='pkg-config' \
         "$@"
 }
@@ -17461,6 +17462,7 @@ koopa_r_makevars() {
         return 0
     fi
     declare -A dict=(
+        [arch]="$(koopa_arch)"
         [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
     )
@@ -17470,7 +17472,7 @@ koopa_r_makevars() {
     app[fc]="${dict[gcc_prefix]}/bin/gfortran"
     readarray -t libs <<< "$( \
         koopa_find \
-            --prefix="${dict[gcc_prefix]}/lib" \
+            --prefix="${dict[gcc_prefix]}" \
             --pattern='*.a' \
             --type 'f' \
         | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
@@ -17482,7 +17484,13 @@ koopa_r_makevars() {
     do
         flibs+=("-L${libs[i]}")
     done
-    flibs+=('-lgfortran' '-lquadmath' '-lm')
+    flibs+=('-lgfortran')
+    case "${dict[arch]}" in
+        'x86_64')
+            flibs+=('-lquadmath')
+            ;;
+    esac
+    flibs+=('-lm')
     dict[flibs]="${flibs[*]}"
     read -r -d '' "dict[string]" << END || true
 FC = ${app[fc]}
@@ -22447,6 +22455,7 @@ koopa_uninstall_pixman() {
 koopa_uninstall_pkg_config() {
     koopa_uninstall_app \
         --name='pkg-config' \
+        --unlink-in-bin='pkg-config' \
         "$@"
 }
 
