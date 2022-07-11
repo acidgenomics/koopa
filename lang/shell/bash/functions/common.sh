@@ -17461,6 +17461,10 @@ koopa_r_makevars() {
     [[ -x "${app[xargs]}" ]] || return 1
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     app[r]="$(koopa_which_realpath "${app[r]}")"
+    if koopa_is_linux && ! koopa_is_koopa_app "${app[r]}"
+    then
+        return 0
+    fi
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
