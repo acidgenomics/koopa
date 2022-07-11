@@ -5,5 +5,6 @@ koopa_uninstall_curl() {
         --name-fancy='cURL' \
         --name='curl' \
         --unlink-in-bin='curl' \
+        --unlink-in-bin='curl-config' \
         "$@"
 }
