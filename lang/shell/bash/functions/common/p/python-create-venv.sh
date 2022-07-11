@@ -110,6 +110,7 @@ ${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
     if [[ "${dict[pip]}" -eq 1 ]]
     then
+        # FIXME Consider defining this variables in 'variables.txt'.
         koopa_python_pip_install \
             --python="${app[venv_python]}" \
             'pip==22.1.2' \
