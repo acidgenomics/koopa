@@ -54,6 +54,8 @@ koopa_r_makevars() {
             flibs+=('-lquadmath')
             ;;
     esac
+    # NOTE Consider also including '-lemutls_w' here, which is recommended
+    # by default macOS build config.
     flibs+=('-lm')
     dict[flibs]="${flibs[*]}"
     read -r -d '' "dict[string]" << END || true
