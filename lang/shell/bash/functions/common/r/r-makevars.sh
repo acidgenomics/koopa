@@ -30,9 +30,11 @@ koopa_r_makevars() {
     koopa_alert "Updating 'Makevars' at '${dict[file]}'."
     dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
     app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+    # This will cover 'lib' and 'lib64' subdirs.
+    # See also 'gcc --print-search-dirs'.
     readarray -t libs <<< "$( \
         koopa_find \
-            --prefix="${dict[gcc_prefix]}/lib" \
+            --prefix="${dict[gcc_prefix]}" \
             --pattern='*.a' \
             --type 'f' \
         | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
