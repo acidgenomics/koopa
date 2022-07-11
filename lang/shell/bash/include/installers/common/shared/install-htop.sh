@@ -8,12 +8,11 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix \
-        'm4' \
         'autoconf' \
-        'automake' \
-        'python'
+        'automake'
     koopa_activate_opt_prefix \
-        'ncurses'
+        'ncurses' \
+        'python'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
