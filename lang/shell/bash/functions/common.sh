@@ -12506,6 +12506,7 @@ koopa_install_pixman() {
 
 koopa_install_pkg_config() {
     koopa_install_app \
+        --link-in-bin='bin/pkg-config' \
         --name='pkg-config' \
         "$@"
 }
@@ -22447,6 +22448,7 @@ koopa_uninstall_pixman() {
 koopa_uninstall_pkg_config() {
     koopa_uninstall_app \
         --name='pkg-config' \
+        --unlink-in-bin='pkg-config' \
         "$@"
 }
 
