@@ -12183,6 +12183,7 @@ koopa_install_libuv() {
 
 koopa_install_libxml2() {
     koopa_install_app \
+        --link-in-bin='bin/xml2-config' \
         --name='libxml2' \
         "$@"
 }
@@ -22097,6 +22098,7 @@ koopa_uninstall_libuv() {
 koopa_uninstall_libxml2() {
     koopa_uninstall_app \
         --name='libxml2' \
+        --unlink-in-bin='xml2-config' \
         "$@"
 }
 
