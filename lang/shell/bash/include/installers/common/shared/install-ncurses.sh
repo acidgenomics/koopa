@@ -83,8 +83,8 @@ main() {
     then
         (
             koopa_cd "${dict[prefix]}/lib"
-            koopa_ln 'libncurses.so' => 'libtermcap.so'
-            koopa_ln 'libncurses.so' => 'libtinfo.so'
+            koopa_ln 'libncurses.so' 'libtermcap.so'
+            koopa_ln 'libncurses.so' 'libtinfo.so'
         )
     fi
     (
