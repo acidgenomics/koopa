@@ -11436,6 +11436,12 @@ koopa_install_exiftool() {
         "$@"
 }
 
+koopa_install_expat() {
+    koopa_install_app \
+        --name='expat' \
+        "$@"
+}
+
 koopa_install_fd_find() {
     koopa_install_app \
         --installer='rust-package' \
@@ -21560,6 +21566,12 @@ koopa_uninstall_exiftool() {
     koopa_uninstall_app \
         --name='exiftool' \
         --unlink-in-bin='exiftool' \
+        "$@"
+}
+
+koopa_uninstall_expat() {
+    koopa_uninstall_app \
+        --name='expat' \
         "$@"
 }
 
