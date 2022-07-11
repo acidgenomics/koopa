@@ -9,15 +9,18 @@ koopa_r_makevars() {
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [dirname]="$(koopa_locate_dirname)"
-        [r]="${1:-}"
+        [r]="${1:?}"
         [sort]="$(koopa_locate_sort)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    koopa_assert_is_installed "${app[r]}"
     [[ -x "${app[dirname]}" ]] || return 1
     [[ -x "${app[sort]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
-    app[r]="$(koopa_which_realpath "${app[r]}")"
+    if koopa_is_linux && ! koopa_is_koopa_app "${app[r]}"
+    then
+        return 0
+    fi
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
@@ -46,12 +49,14 @@ koopa_r_makevars() {
 FC = ${app[fc]}
 FLIBS = ${dict[flibs]}
 END
-    if ! koopa_is_koopa_app "${app[r]}"
+    if koopa_is_koopa_app "${app[r]}"
     then
         koopa_write_string \
             --file="${dict[file]}" \
             --string="${dict[string]}"
-    else
+    elif koopa_is_macos
+    then
+        # This applies to R CRAN binary.
         koopa_sudo_write_string \
             --file="${dict[file]}" \
             --string="${dict[string]}"

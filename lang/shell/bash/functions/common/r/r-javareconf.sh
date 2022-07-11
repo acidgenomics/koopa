@@ -3,7 +3,7 @@
 koopa_r_javareconf() {
     # """
     # Update R Java configuration.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-07-11.
     #
     # The default Java path differs depending on the system.
     #
@@ -25,16 +25,15 @@ koopa_r_javareconf() {
     # > .jinit()
     # """
     local app dict java_args r_cmd
-    koopa_assert_has_args_le "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [r]="${1:-}"
+        [r]="${1:?}"
         [sudo]="$(koopa_locate_sudo)"
     )
+    koopa_assert_is_installed "${app[r]}"
     declare -A dict=(
         [java_home]="$(koopa_java_prefix)"
     )
-    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa_locate_r)"
-    app[r]="$(koopa_which_realpath "${app[r]}")"
     if [[ ! -d "${dict[java_home]}" ]]
     then
         koopa_alert_note 'Skipping R Java configuration.'

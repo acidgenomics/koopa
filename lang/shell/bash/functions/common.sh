@@ -17243,16 +17243,15 @@ koopa_python_system_packages_prefix() {
 
 koopa_r_javareconf() {
     local app dict java_args r_cmd
-    koopa_assert_has_args_le "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [r]="${1:-}"
+        [r]="${1:?}"
         [sudo]="$(koopa_locate_sudo)"
     )
+    koopa_assert_is_installed "${app[r]}"
     declare -A dict=(
         [java_home]="$(koopa_java_prefix)"
     )
-    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa_locate_r)"
-    app[r]="$(koopa_which_realpath "${app[r]}")"
     if [[ ! -d "${dict[java_home]}" ]]
     then
         koopa_alert_note 'Skipping R Java configuration.'
@@ -17352,13 +17351,11 @@ koopa_r_library_prefix() {
 
 koopa_r_link_files_in_etc() {
     local app dict file files
-    koopa_assert_has_args_le "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [r]="${1:-}"
+        [r]="${1:?}"
     )
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     koopa_assert_is_installed "${app[r]}"
-    app[r]="$(koopa_realpath "${app[r]}")"
     declare -A dict=(
         [distro_prefix]="$(koopa_distro_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
@@ -17405,11 +17402,10 @@ koopa_r_link_files_in_etc() {
 
 koopa_r_link_site_library() {
     local app conf_args dict
-    koopa_assert_has_args_le "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [r]="${1:-}"
+        [r]="${1:?}"
     )
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     koopa_assert_is_installed "${app[r]}"
     declare -A dict=(
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
@@ -17452,15 +17448,18 @@ koopa_r_makevars() {
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [dirname]="$(koopa_locate_dirname)"
-        [r]="${1:-}"
+        [r]="${1:?}"
         [sort]="$(koopa_locate_sort)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    koopa_assert_is_installed "${app[r]}"
     [[ -x "${app[dirname]}" ]] || return 1
     [[ -x "${app[sort]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
-    app[r]="$(koopa_which_realpath "${app[r]}")"
+    if koopa_is_linux && ! koopa_is_koopa_app "${app[r]}"
+    then
+        return 0
+    fi
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
@@ -17489,12 +17488,13 @@ koopa_r_makevars() {
 FC = ${app[fc]}
 FLIBS = ${dict[flibs]}
 END
-    if ! koopa_is_koopa_app "${app[r]}"
+    if koopa_is_koopa_app "${app[r]}"
     then
         koopa_write_string \
             --file="${dict[file]}" \
             --string="${dict[string]}"
-    else
+    elif koopa_is_macos
+    then
         koopa_sudo_write_string \
             --file="${dict[file]}" \
             --string="${dict[string]}"
@@ -17508,6 +17508,7 @@ koopa_r_package_version() {
     declare -A app=(
         [rscript]="$(koopa_locate_rscript)"
     )
+    [[ -x "${app[rscript]}" ]] || return 1
     pkgs=("$@")
     koopa_is_r_package_installed "${pkgs[@]}" || return 1
     vec="$(koopa_r_paste_to_vector "${pkgs[@]}")"
@@ -17562,15 +17563,15 @@ koopa_r_prefix() {
 koopa_r_rebuild_docs() {
     local app doc_dir html_dir pkg_index rscript_args
     declare -A app=(
-        [r]="${1:-}"
+        [r]="${1:?}"
     )
-    declare -A dict
-    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa_locate_r)"
+    koopa_assert_is_installed "${app[r]}"
     app[rscript]="${app[r]}script"
     koopa_assert_is_installed "${app[rscript]}"
     koopa_is_koopa_app "${app[rscript]}" || return 0
-    rscript_args=('--vanilla')
+    declare -A dict
     koopa_alert 'Updating HTML package index.'
+    rscript_args=('--vanilla')
     dict[doc_dir]="$( \
         "${app[rscript]}" "${rscript_args[@]}" -e 'cat(R.home("doc"))' \
     )"
@@ -17599,6 +17600,7 @@ koopa_r_shiny_run_app() {
     declare -A app=(
         [r]="$(koopa_locate_r)"
     )
+    [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
         [prefix]="${1:-}"
     )
@@ -17641,6 +17643,7 @@ koopa_r_version() {
         [r]="${1:-}"
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    koopa_assert_is_installed "${app[r]}"
     str="$( \
         "${app[r]}" --version 2>/dev/null \
         | "${app[head]}" -n 1 \
