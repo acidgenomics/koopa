@@ -480,24 +480,6 @@ koopa_activate_mcfly() {
     return 0
 }
 
-koopa_activate_nim() {
-    local prefix
-    [ -x "$(koopa_bin_prefix)/nim" ] || return 0
-    prefix="$(koopa_nim_packages_prefix)"
-    [ -d "$prefix" ] || return 0
-    export NIMBLE_DIR="$prefix"
-    return 0
-}
-
-koopa_activate_node() {
-    local prefix
-    [ -x "$(koopa_bin_prefix)/node" ] || return 0
-    prefix="$(koopa_node_packages_prefix)"
-    [ -d "$prefix" ] || return 0
-    export NPM_CONFIG_PREFIX="$prefix"
-    return 0
-}
-
 koopa_activate_path_helper() {
     local path_helper
     path_helper='/usr/libexec/path_helper'
@@ -619,10 +601,9 @@ koopa_activate_rbenv() {
 
 koopa_activate_ruby() {
     local prefix
-    [ -x "$(koopa_bin_prefix)/ruby" ] || return 0
-    prefix="$(koopa_ruby_packages_prefix)"
-    [ -d "$prefix" ] || return 0
+    prefix="${HOME:?}/.gem"
     export GEM_HOME="$prefix"
+    koopa_add_to_path_start "${prefix}/bin"
     return 0
 }
 
@@ -1933,14 +1914,6 @@ koopa_msigdb_prefix() {
     return 0
 }
 
-koopa_nim_packages_prefix() {
-    __koopa_packages_prefix 'nim' "$@"
-}
-
-koopa_node_packages_prefix() {
-    __koopa_packages_prefix 'node' "$@"
-}
-
 koopa_openjdk_prefix() {
     koopa_print "$(koopa_opt_prefix)/openjdk"
     return 0
@@ -2131,14 +2104,6 @@ gnubin/readlink"
 koopa_refdata_prefix() {
     koopa_print "$(koopa_opt_prefix)/refdata"
     return 0
-}
-
-koopa_ruby_packages_prefix() {
-    __koopa_packages_prefix 'ruby' "$@"
-}
-
-koopa_rust_packages_prefix() {
-    __koopa_packages_prefix 'rust' "$@"
 }
 
 koopa_rust_prefix() {
