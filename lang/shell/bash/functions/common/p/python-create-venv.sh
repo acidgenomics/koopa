@@ -2,12 +2,13 @@
 
 # NOTE Consider adding support for linkage of useful programs directly into
 # '/opt/koopa/bin' from here.
+
 # NOTE Work on adding support for 'requirements.txt' input.
 
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-07-11.
     #
     # @seealso
     # - https://docs.python.org/3/library/venv.html
@@ -107,6 +108,10 @@ ${dict[py_maj_min_ver]}"
     "${app[python]}" -m venv "${venv_args[@]}"
     app[venv_python]="${dict[prefix]}/bin/python${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
+    koopa_python_pip_install \
+        --python="${app[venv_python]}" \
+        'setuptools==63.1.0' \
+        'wheel==0.37.1'
     if koopa_is_array_non_empty "${pkgs[@]:-}"
     then
         koopa_python_pip_install --python="${app[venv_python]}" "${pkgs[@]}"
