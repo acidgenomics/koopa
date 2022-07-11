@@ -237,7 +237,7 @@ hdf5="1.12.2"
 
 # https://hisham.hm/htop/
 # https://github.com/htop-dev/htop
-htop="3.2.0"
+htop="3.2.1"
 
 # http://site.icu-project.org/
 icu4c="71.1"
