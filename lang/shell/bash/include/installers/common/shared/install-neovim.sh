@@ -26,6 +26,7 @@ main() {
         'ninja' \
         'pkg-config'
     koopa_activate_opt_prefix \
+        'm4' \
         'gettext' \
         'lua' \
         'luarocks' \

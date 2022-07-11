@@ -5,13 +5,13 @@
 #
 # NOTE Main CLI function needs to look for this and handle accordingly...
 #
-# NOTE Consider improving this by setting a trap to delete prefix on install
+# FIXME Consider improving this by setting a trap to delete prefix on install
 # failure.
 
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-08.
     # """
     local app bin_arr build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -351,15 +351,16 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         # shellcheck disable=SC2030
         export INSTALL_VERSION="${dict[version]}"
         "${dict[installer_fun]}" "$@"
-        [[ "$#" -gt 0 ]] && koopa_dl 'configure args' "$*"
-        koopa_dl \
-            'CFLAGS' "${CFLAGS:-}" \
-            'CPPFLAGS' "${CPPFLAGS:-}" \
-            'LDFLAGS' "${LDFLAGS:-}" \
-            'LDLIBS' "${LDLIBS:-}" \
-            'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:-}" \
-            'PATH' "${PATH:-}" \
-            'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
+        # Returning these can be useful for compilation debugging.
+        # > [[ "$#" -gt 0 ]] && koopa_dl 'configure args' "$*"
+        # > koopa_dl \
+        # >     'CFLAGS' "${CFLAGS:-}" \
+        # >     'CPPFLAGS' "${CPPFLAGS:-}" \
+        # >     'LDFLAGS' "${LDFLAGS:-}" \
+        # >     'LDLIBS' "${LDLIBS:-}" \
+        # >     'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:-}" \
+        # >     'PATH' "${PATH:-}" \
+        # >     'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
         return 0
     ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
     koopa_rm "${dict[tmp_dir]}"

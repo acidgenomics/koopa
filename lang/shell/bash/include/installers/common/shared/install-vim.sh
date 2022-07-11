@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+# FIXME Now running into this issue on Ubuntu:
+# checking --with-tlib argument... ncurses
+# checking for linking with ncurses library... configure: error: FAILED
+
+
+# FIXME Need to rework this:
+# checking --with-tlib argument... empty: automatic terminal library selection
+# checking for tgetent in -ltinfo... no
+# checking for tgetent in -lncurses... no
+# checking for tgetent in -ltermlib... no
+# checking for tgetent in -ltermcap... no
+# checking for tgetent in -lcurses... no
+# no terminal library found
+
 main() {
     # """
     # Install Vim.
@@ -44,12 +58,13 @@ archive/${dict[file]}"
         # > '--enable-luainterp'
         # > '--enable-perlinterp'
         # > '--enable-rubyinterp'
+        '--enable-huge'
         '--enable-multibyte'
         '--enable-python3interp'
         '--enable-terminal'
-        '--with-tlib=ncurses'
         "--with-python3-command=${app[python]}"
         "--with-python3-config-dir=${dict[python_config_dir]}"
+        '--with-tlib=ncurses'
     )
     if koopa_is_macos
     then

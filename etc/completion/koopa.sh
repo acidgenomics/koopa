@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-07-05.
+    # Updated 2022-07-11.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -104,6 +104,8 @@ __koopa_complete() {
                         'aws-cli'
                         'azure-cli'
                         'bash'
+                        'bash-language-server'
+                        'bashcov'
                         'bat'
                         'bc'
                         'bedtools'
@@ -118,6 +120,7 @@ __koopa_complete() {
                         'chemacs'
                         'chezmoi'
                         'cmake'
+                        'colorls'
                         'conda'
                         'coreutils'
                         'cpufetch'
@@ -132,6 +135,7 @@ __koopa_complete() {
                         'entrez-direct'
                         'exa'
                         'exiftool'
+                        'expat'
                         'fd-find'
                         'ffmpeg'
                         'ffq'
@@ -163,6 +167,7 @@ __koopa_complete() {
                         'grep'
                         'groff'
                         'gsl'
+                        'gtop'
                         'gzip'
                         'hadolint'
                         'harfbuzz'
@@ -220,11 +225,9 @@ __koopa_complete() {
                         'neovim'
                         'nettle'
                         'nim'
-                        'nim-packages'
                         'ninja'
                         'node'
                         'node-binary'
-                        'node-packages'
                         'oniguruma'
                         'openblas'
                         'openjdk'
@@ -244,6 +247,7 @@ __koopa_complete() {
                         'pkg-config'
                         'poetry'
                         'prelude-emacs'
+                        'prettier'
                         'procs'
                         'proj'
                         'pyenv'
@@ -262,6 +266,7 @@ __koopa_complete() {
                         'rename'
                         'ripgrep'
                         'rmate'
+                        'ronn'
                         'rsync'
                         'ruby'
                         'ruby-packages'
@@ -443,13 +448,8 @@ __koopa_complete() {
                         'julia-packages'
                         'koopa'
                         'mamba'
-                        'nim-packages'
-                        'node-packages'
                         'prelude-emacs'
-                        'python-packages'
                         'r-packages'
-                        'ruby-packages'
-                        'rust-packages'
                         'spacemacs'
                         'spacevim'
                         'system'
