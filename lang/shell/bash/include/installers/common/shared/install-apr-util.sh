@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
 
+# FIXME Need to resolve this on Linux:
+# fatal error: expat.h: No such file or directory
+#
+#  uses_from_macos "expat"
+#  uses_from_macos "libxcrypt"
+#  uses_from_macos "sqlite"
+#
+#  on_linux do
+#    depends_on "mawk"
+#    depends_on "unixodbc"
+
 main() {
     # """
     # Companion library to apr, the Apache Portable Runtime library.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-07-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -11,7 +22,10 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'apr' 'openssl3'
+    koopa_activate_opt_prefix \
+        'apr' \
+        'expat' \
+        'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

@@ -139,6 +139,9 @@ emacs="28.1"
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl-perl-api="latest"
 
+# https://libexpat.github.io/
+expat="2.4.8"
+
 # https://ffmpeg.org/
 ffmpeg="5.0.1"
 
