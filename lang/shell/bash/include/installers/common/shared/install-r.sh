@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Consider also requiring 'gcc' here on Linux, so we can pin GCC and
-# gfortran versions better across platforms.
-
 main() {
     # """
     # Install R.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-08.
     #
     # @section gfortran configuration on macOS:
     #
@@ -51,9 +48,16 @@ main() {
         dict[x11_prefix]='/opt/X11'
     fi
     build_deps=('pkg-config')
-    deps=(
+    deps=()
+    if koopa_is_linux
+    then
+        deps+=('zlib')
+    fi
+    deps+=(
+        'gcc'
         'bzip2'
         'icu4c'
+        'ncurses'
         'readline'
         'libxml2'
         'gettext'
@@ -66,6 +70,7 @@ main() {
         'libpng'
         'libtiff'
         'openblas'
+        'openjdk'
         'pcre'
         'pcre2'
         'tcl-tk'
@@ -76,10 +81,10 @@ main() {
         'lzo' # cairo
         'pixman' # cairo
     )
-    # Configure X11.
     if koopa_is_macos
     then
         koopa_add_to_pkg_config_path "${dict[x11_prefix]}/lib/pkgconfig"
+        koopa_add_to_path_start '/Library/TeX/texbin'
     else
         deps+=(
             'xorg-xorgproto'
@@ -96,22 +101,13 @@ main() {
             'xorg-libxt'
         )
     fi
-    deps+=('cairo') # depends on X11.
-    if koopa_is_linux
-    then
-        deps+=('openjdk')
-    elif koopa_is_macos
-    then
-        # We're using Adoptium Temurin LTS for OpenJDK on macOS.
-        koopa_add_to_path_start '/Library/TeX/texbin'
-        deps+=('gcc')
-    fi
+    # Cairo depends on X11.
+    deps+=('cairo')
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
     dict[tcl_tk]="$(koopa_realpath "${dict[opt_prefix]}/tcl-tk")"
     conf_args=(
-        # > '--enable-BLAS-shlib' # Linux only?
         "--prefix=${dict[prefix]}"
         '--enable-R-profiling'
         '--enable-R-shlib'
@@ -168,6 +164,7 @@ main() {
                 'libpcre2-32' \
                 'libpcre2-posix' \
         )"
+        # FIXME This isn't working.
         "--with-readline=$( \
             "${app[pkg_config]}" --libs 'readline' \
         )"

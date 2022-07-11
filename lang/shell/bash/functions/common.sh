@@ -4576,13 +4576,6 @@ koopa_configure_nim() {
         "$@"
 }
 
-koopa_configure_node() {
-    koopa_configure_app_packages \
-        --name-fancy='Node.js' \
-        --name='node' \
-        "$@"
-}
-
 koopa_configure_r() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -4604,13 +4597,6 @@ koopa_configure_r() {
     koopa_sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
     koopa_alert_configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
     return 0
-}
-
-koopa_configure_ruby() {
-    koopa_configure_app_packages \
-        --name-fancy='Ruby' \
-        --name='ruby' \
-        "$@"
 }
 
 koopa_configure_rust() {
@@ -10942,15 +10928,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         export INSTALL_PREFIX="${dict[prefix]}"
         export INSTALL_VERSION="${dict[version]}"
         "${dict[installer_fun]}" "$@"
-        [[ "$#" -gt 0 ]] && koopa_dl 'configure args' "$*"
-        koopa_dl \
-            'CFLAGS' "${CFLAGS:-}" \
-            'CPPFLAGS' "${CPPFLAGS:-}" \
-            'LDFLAGS' "${LDFLAGS:-}" \
-            'LDLIBS' "${LDLIBS:-}" \
-            'LD_LIBRARY_PATH' "${LD_LIBRARY_PATH:-}" \
-            'PATH' "${PATH:-}" \
-            'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
         return 0
     ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
     koopa_rm "${dict[tmp_dir]}"
@@ -11069,11 +11046,27 @@ koopa_install_azure_cli() {
         "$@"
 }
 
+koopa_install_bash_language_server() {
+    koopa_install_app \
+        --installer='node-package' \
+        --link-in-bin='bin/bash-language-server' \
+        --name='bash-language-server' \
+        "$@"
+}
+
 koopa_install_bash() {
     koopa_install_app \
         --link-in-bin='bin/bash' \
         --name-fancy='Bash' \
         --name='bash' \
+        "$@"
+}
+
+koopa_install_bashcov() {
+    koopa_install_app \
+        --installer='ruby-package' \
+        --link-in-bin='bin/bashcov' \
+        --name='bashcov' \
         "$@"
 }
 
@@ -11087,6 +11080,7 @@ koopa_install_bat() {
 
 koopa_install_bc() {
     koopa_install_app \
+        --activate-build-opt='texinfo' \
         --installer='gnu-app' \
         --link-in-bin='bin/bc' \
         --name='bc' \
@@ -11180,6 +11174,14 @@ koopa_install_cmake() {
         --link-in-bin='bin/cmake' \
         --name-fancy='CMake' \
         --name='cmake' \
+        "$@"
+}
+
+koopa_install_colorls() {
+    koopa_install_app \
+        --installer='ruby-package' \
+        --link-in-bin='bin/colorls' \
+        --name='colorls' \
         "$@"
 }
 
@@ -11380,6 +11382,7 @@ koopa_install_emacs() {
     local install_args
     install_args=(
         '--activate-opt=gmp'
+        '--activate-opt=ncurses'
         '--activate-opt=libtasn1'
         '--activate-opt=libunistring'
         '--activate-opt=libxml2'
@@ -11432,6 +11435,12 @@ koopa_install_exiftool() {
         --installer='perl-package' \
         --link-in-bin='bin/exiftool' \
         --name='exiftool' \
+        "$@"
+}
+
+koopa_install_expat() {
+    koopa_install_app \
+        --name='expat' \
         "$@"
 }
 
@@ -11715,6 +11724,14 @@ koopa_install_gsl() {
         --installer='gnu-app' \
         --name='gsl' \
         --name-fancy='GSL' \
+        "$@"
+}
+
+koopa_install_gtop() {
+    koopa_install_app \
+        --installer='node-package' \
+        --link-in-bin='bin/gtop' \
+        --name='gtop' \
         "$@"
 }
 
@@ -12322,19 +12339,12 @@ koopa_install_neovim() {
 koopa_install_nettle() {
     koopa_install_app \
         --activate-opt='gmp' \
+        --activate-opt='m4' \
         --installer='gnu-app' \
         --name='nettle' \
         -D '--disable-dependency-tracking' \
         -D '--enable-mini-gmp' \
         -D '--enable-shared' \
-        "$@"
-}
-
-koopa_install_nim_packages() {
-    koopa_install_app_packages \
-        --link-in-bin='bin/markdown' \
-        --name-fancy='Nim' \
-        --name='nim' \
         "$@"
 }
 
@@ -12358,18 +12368,8 @@ koopa_install_node_binary() {
     koopa_install_app \
         --installer='node-binary' \
         --link-in-bin='bin/node' \
-        --name-fancy='Node.js' \
-        --name='node' \
-        "$@"
-}
-
-koopa_install_node_packages() {
-    koopa_install_app_packages \
-        --link-in-bin='bin/bash-language-server' \
-        --link-in-bin='bin/gtop' \
         --link-in-bin='bin/npm' \
-        --link-in-bin='bin/prettier' \
-        --name-fancy='Node' \
+        --name-fancy='Node.js' \
         --name='node' \
         "$@"
 }
@@ -12377,6 +12377,7 @@ koopa_install_node_packages() {
 koopa_install_node() {
     koopa_install_app \
         --link-in-bin='bin/node' \
+        --link-in-bin='bin/npm' \
         --name-fancy='Node.js' \
         --name='node' \
         "$@"
@@ -12397,7 +12398,10 @@ koopa_install_openblas() {
 
 koopa_install_openjdk() {
     koopa_install_app \
-        --name-fancy='OpenJDK' \
+        --link-in-bin='bin/jar' \
+        --link-in-bin='bin/java' \
+        --link-in-bin='bin/javac' \
+        --name-fancy='Adoptium Temurin OpenJDK' \
         --name='openjdk' \
         "$@"
 }
@@ -12518,6 +12522,14 @@ koopa_install_prelude_emacs() {
         --name='prelude-emacs' \
         --prefix="$(koopa_prelude_emacs_prefix)" \
         --user \
+        "$@"
+}
+
+koopa_install_prettier() {
+    koopa_install_app \
+        --installer='node-package' \
+        --link-in-bin='bin/prettier' \
+        --name='prettier' \
         "$@"
 }
 
@@ -12683,6 +12695,14 @@ koopa_install_rmate() {
         "$@"
 }
 
+koopa_install_ronn() {
+    koopa_install_app \
+        --installer='ruby-package' \
+        --link-in-bin='bin/ronn' \
+        --name='ronn' \
+        "$@"
+}
+
 koopa_install_rsync() {
     koopa_install_app \
         --link-in-bin='bin/rsync' \
@@ -12690,20 +12710,10 @@ koopa_install_rsync() {
         "$@"
 }
 
-koopa_install_ruby_packages() {
-    koopa_install_app_packages \
-        --link-in-bin='bin/bashcov' \
-        --link-in-bin='bin/bundle' \
-        --link-in-bin='bin/bundler' \
-        --link-in-bin='bin/colorls' \
-        --link-in-bin='bin/ronn' \
-        --name-fancy='Ruby' \
-        --name='ruby' \
-        "$@"
-}
-
 koopa_install_ruby() {
     koopa_install_app \
+        --link-in-bin='bin/bundle' \
+        --link-in-bin='bin/bundler' \
         --link-in-bin='bin/gem' \
         --link-in-bin='bin/ruby' \
         --name-fancy='Ruby' \
@@ -17022,7 +17032,7 @@ koopa_python_create_venv() {
     )
     declare -A dict=(
         [name]=''
-        [pip]=0
+        [pip]=1
         [prefix]=''
         [system_site_packages]=1
     )
@@ -17102,6 +17112,14 @@ ${dict[py_maj_min_ver]}"
     "${app[python]}" -m venv "${venv_args[@]}"
     app[venv_python]="${dict[prefix]}/bin/python${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
+    if [[ "${dict[pip]}" -eq 1 ]]
+    then
+        koopa_python_pip_install \
+            --python="${app[venv_python]}" \
+            'pip==22.1.2' \
+            'setuptools==63.1.0' \
+            'wheel==0.37.1'
+    fi
     if koopa_is_array_non_empty "${pkgs[@]:-}"
     then
         koopa_python_pip_install --python="${app[venv_python]}" "${pkgs[@]}"
@@ -17182,6 +17200,7 @@ koopa_python_pip_install() {
     pkgs=("$@")
     install_args=(
         '--disable-pip-version-check'
+        '--ignore-installed'
         '--no-warn-script-location'
     )
     dl_args=(
@@ -17200,28 +17219,6 @@ koopa_python_pip_install() {
     export PIP_REQUIRE_VIRTUALENV='false'
     "${app[python]}" -m pip --isolated \
         install "${install_args[@]}" "${pkgs[@]}"
-    return 0
-}
-
-koopa_python_pip_outdated() {
-    local app dict
-    declare -A app=(
-        [python]="${1:-}"
-    )
-    [[ -z "${app[python]}" ]] && app[python]="$(koopa_locate_python)"
-    [[ -x "${app[python]}" ]] || return 1
-    declare -A dict=(
-        [version]="$(koopa_get_version "${app[python]}")"
-    )
-    dict[prefix]="$(koopa_python_packages_prefix "${dict[version]}")"
-    dict[str]="$( \
-        "${app[python]}" -m pip list \
-            --format 'freeze' \
-            --outdated \
-            --path "${dict[prefix]}" \
-    )"
-    [[ -n "${dict[str]}" ]] || return 0
-    koopa_print "${dict[str]}"
     return 0
 }
 
@@ -21221,11 +21218,25 @@ koopa_uninstall_azure_cli() {
         "$@"
 }
 
+koopa_uninstall_bash_language_server() {
+    koopa_uninstall_app \
+        --name='bash-language-server' \
+        --unlink-in-bin='bash-language-server' \
+        "$@"
+}
+
 koopa_uninstall_bash() {
     koopa_uninstall_app \
         --name-fancy='Bash' \
         --name='bash' \
         --unlink-in-bin='bash' \
+        "$@"
+}
+
+koopa_uninstall_bashcov() {
+    koopa_uninstall_app \
+        --name='bashcov' \
+        --unlink-in-bin='bashcov' \
         "$@"
 }
 
@@ -21322,6 +21333,13 @@ koopa_uninstall_cmake() {
         --name-fancy='CMake' \
         --name='cmake' \
         --unlink-in-bin='cmake' \
+        "$@"
+}
+
+koopa_uninstall_colorls() {
+    koopa_uninstall_app \
+        --name='colorls' \
+        --unlink-in-bin='colorls' \
         "$@"
 }
 
@@ -21563,6 +21581,12 @@ koopa_uninstall_exiftool() {
         "$@"
 }
 
+koopa_uninstall_expat() {
+    koopa_uninstall_app \
+        --name='expat' \
+        "$@"
+}
+
 koopa_uninstall_fd_find() {
     koopa_uninstall_app \
         --unlink-in-bin='fd' \
@@ -21797,6 +21821,13 @@ koopa_uninstall_groff() {
 koopa_uninstall_gsl() {
     koopa_uninstall_app \
         --name='gsl' \
+        "$@"
+}
+
+koopa_uninstall_gtop() {
+    koopa_uninstall_app \
+        --name='gtop' \
+        --unlink-in-bin='gtop' \
         "$@"
 }
 
@@ -22197,14 +22228,6 @@ koopa_uninstall_nettle() {
         "$@"
 }
 
-koopa_uninstall_nim_packages() {
-    koopa_uninstall_app \
-        --name='nim-packages' \
-        --name-fancy='Nim packages' \
-        --unlink-in-bin='markdown' \
-        "$@"
-}
-
 koopa_uninstall_nim() {
     koopa_uninstall_app \
         --name-fancy='Nim' \
@@ -22225,17 +22248,7 @@ koopa_uninstall_node_binary() {
         --name-fancy='Node.js' \
         --name='node' \
         --unlink-in-bin='node' \
-        "$@"
-}
-
-koopa_uninstall_node_packages() {
-    koopa_uninstall_app \
-        --name='node-packages' \
-        --name-fancy='Node.js packages' \
-        --unlink-in-bin='bash-language-server' \
-        --unlink-in-bin='gtop' \
         --unlink-in-bin='npm' \
-        --unlink-in-bin='prettier' \
         "$@"
 }
 
@@ -22244,6 +22257,7 @@ koopa_uninstall_node() {
         --name-fancy='Node.js' \
         --name='node' \
         --unlink-in-bin='node' \
+        --unlink-in-bin='npm' \
         "$@"
 }
 
@@ -22263,8 +22277,11 @@ koopa_uninstall_openblas() {
 koopa_uninstall_openjdk() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=OpenJDK'
+        '--name-fancy=Adoptium Temurin OpenJDK'
         '--name=openjdk'
+        '--unlink-in-bin=jar'
+        '--unlink-in-bin=java'
+        '--unlink-in-bin=javac'
     )
     if koopa_is_linux
     then
@@ -22386,6 +22403,13 @@ koopa_uninstall_prelude_emacs() {
         --name='prelude-emacs' \
         --prefix="$(koopa_prelude_emacs_prefix)" \
         --user \
+        "$@"
+}
+
+koopa_uninstall_prettier() {
+    koopa_uninstall_app \
+        --name='prettier' \
+        --unlink-in-bin='prettier' \
         "$@"
 }
 
@@ -22534,6 +22558,13 @@ koopa_uninstall_rmate() {
         "$@"
 }
 
+koopa_uninstall_ronn() {
+    koopa_uninstall_app \
+        --name='ronn' \
+        --unlink-in-bin='ronn' \
+        "$@"
+}
+
 koopa_uninstall_rsync() {
     koopa_uninstall_app \
         --name='rsync' \
@@ -22541,22 +22572,12 @@ koopa_uninstall_rsync() {
         "$@"
 }
 
-koopa_uninstall_ruby_packages() {
-    koopa_uninstall_app \
-        --name-fancy='Ruby packages' \
-        --name='ruby-packages' \
-        --unlink-in-bin='bashcov' \
-        --unlink-in-bin='bundle' \
-        --unlink-in-bin='bundler' \
-        --unlink-in-bin='colorls' \
-        --unlink-in-bin='ronn' \
-        "$@"
-}
-
 koopa_uninstall_ruby() {
     koopa_uninstall_app \
         --name-fancy='Ruby' \
         --name='ruby' \
+        --unlink-in-bin='bundle' \
+        --unlink-in-bin='bundler' \
         --unlink-in-bin='gem' \
         --unlink-in-bin='ruby' \
         "$@"
@@ -23268,14 +23289,6 @@ koopa_update_mamba() {
     koopa_install_mamba "$@"
 }
 
-koopa_update_nim_packages() {
-    koopa_install_nim_packages "$@"
-}
-
-koopa_update_node_packages() {
-    koopa_install_node_packages "$@"
-}
-
 koopa_update_prelude_emacs() {
     koopa_update_app \
         --name-fancy='Prelude Emacs' \
@@ -23290,10 +23303,6 @@ koopa_update_r_packages() {
         --name-fancy='R packages' \
         --name='r-packages' \
         "$@"
-}
-
-koopa_update_ruby_packages() {  # {{{3
-    koopa_install_ruby_packages "$@"
 }
 
 koopa_update_spacemacs() {

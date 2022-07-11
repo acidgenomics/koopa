@@ -5,5 +5,6 @@ koopa_uninstall_node_binary() {
         --name-fancy='Node.js' \
         --name='node' \
         --unlink-in-bin='node' \
+        --unlink-in-bin='npm' \
         "$@"
 }

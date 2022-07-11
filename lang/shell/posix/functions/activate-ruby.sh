@@ -2,13 +2,12 @@
 
 koopa_activate_ruby() {
     # """
-    # Activate Ruby gems.
-    # @note Updated 2022-05-12.
+    # Activate Ruby gems for current user.
+    # @note Updated 2022-07-08.
     # """
     local prefix
-    [ -x "$(koopa_bin_prefix)/ruby" ] || return 0
-    prefix="$(koopa_ruby_packages_prefix)"
-    [ -d "$prefix" ] || return 0
+    prefix="${HOME:?}/.gem"
     export GEM_HOME="$prefix"
+    koopa_add_to_path_start "${prefix}/bin"
     return 0
 }

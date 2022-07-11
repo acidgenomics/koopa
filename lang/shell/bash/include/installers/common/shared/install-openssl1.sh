@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2022-06-14.
+    # @note Updated 2022-07-08.
     #
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
@@ -12,6 +12,10 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'zlib'
+    fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

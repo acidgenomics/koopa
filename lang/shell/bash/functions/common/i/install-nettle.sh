@@ -11,6 +11,7 @@ koopa_install_nettle() {
     # """
     koopa_install_app \
         --activate-opt='gmp' \
+        --activate-opt='m4' \
         --installer='gnu-app' \
         --name='nettle' \
         -D '--disable-dependency-tracking' \
