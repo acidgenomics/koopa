@@ -60,6 +60,10 @@ main() {
     then
         app[ldd]="$(koopa_locate_ldd)"
         "${app[ldd]}" -r "${dict[prefix]}/lib/libreadline.so"
+    elif koopa_is_macos
+    then
+        app[otool]="$(koopa_locate_otool)"
+        "${app[otool]}" -L "${dict[prefix]}/lib/libreadline.dylib"
     fi
     return 0
 }
