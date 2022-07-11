@@ -1,1 +1,24 @@
-../../../../../../etc/R/Makevars.site
+# """
+# Makevars configuration for additional koopa app packages.
+# @note Updated 2022-07-11.
+#
+# @seealso
+# # - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
+# """
+
+OPT_LOC = /opt/koopa/opt
+
+FC = $(OPT_LOC)/gcc/bin/gfortran
+
+# FIXME Pin the GCC we want to use to koopa GCC.
+
+# FIXME This is incorrect, need to rethink.
+# FIXME Need to write this file dynamically, so not hard coded to x86 here.
+
+# FIXME Only Linux it's here:
+# - /opt/koopa/opt/gcc/lib/gcc/x86_64-pc-linux-gnu/12.1.0
+# - /opt/koopa/app/gcc/12.1.0/lib/gcc/aarch64-unknown-linux-gnu/12.1.0
+
+# FIXME Need to update: R_HOME/etc/ldpaths
+
+FLIBS = -L$(OPT_LOC)/gcc/lib/gcc/x86_64-apple-darwin21/12.1.0 -L$(OPT_LOC)/gcc/lib -lgfortran -lquadmath -lm
