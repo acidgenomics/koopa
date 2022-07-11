@@ -7,7 +7,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-07-08.
+    # @note Updated 2022-07-11.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -33,7 +33,9 @@ main() {
     then
         koopa_activate_opt_prefix 'zlib'
     fi
-    koopa_activate_opt_prefix 'openssl3'
+    koopa_activate_opt_prefix \
+        'libffi' \
+        'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
