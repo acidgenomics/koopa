@@ -3,11 +3,16 @@
 main() {
     # """
     # Install htop.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-07-11.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'autoconf' 'automake' 'python'
+    koopa_activate_build_opt_prefix \
+        'autoconf' \
+        'automake'
+    koopa_activate_opt_prefix \
+        'ncurses' \
+        'python'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

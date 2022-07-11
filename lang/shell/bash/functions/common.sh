@@ -4592,6 +4592,7 @@ koopa_configure_r() {
     koopa_assert_is_dir "${dict[r_prefix]}"
     koopa_r_link_files_in_etc "${app[r]}"
     koopa_r_link_site_library "${app[r]}"
+    koopa_r_makevars "${app[r]}"
     koopa_r_javareconf "${app[r]}"
     koopa_r_rebuild_docs "${app[r]}"
     koopa_sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
@@ -12183,6 +12184,7 @@ koopa_install_libuv() {
 
 koopa_install_libxml2() {
     koopa_install_app \
+        --link-in-bin='bin/xml2-config' \
         --name='libxml2' \
         "$@"
 }
@@ -17380,7 +17382,6 @@ koopa_r_link_files_in_etc() {
         dict[r_etc_target]="${dict[r_prefix]}/etc"
     fi
     files=(
-        'Makevars.site' # macOS
         'Renviron.site'
         'Rprofile.site'
         'repositories'
@@ -17442,6 +17443,61 @@ koopa_r_link_site_library() {
         koopa_ln --sudo \
             '/usr/lib64/R/site-library' \
             '/usr/local/lib/R/site-library'
+    fi
+    return 0
+}
+
+koopa_r_makevars() {
+    local app dict flibs i libs
+    koopa_assert_has_args_le "$#" 1
+    declare -A app=(
+        [dirname]="$(koopa_locate_dirname)"
+        [r]="${1:-}"
+        [sort]="$(koopa_locate_sort)"
+        [xargs]="$(koopa_locate_xargs)"
+    )
+    [[ -x "${app[dirname]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
+    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    app[r]="$(koopa_which_realpath "${app[r]}")"
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+        [r_prefix]="$(koopa_r_prefix "${app[r]}")"
+    )
+    dict[file]="${dict[r_prefix]}/etc/Makevars.site"
+    koopa_alert "Updating 'Makevars' at '${dict[file]}'."
+    dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
+    app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+    readarray -t libs <<< "$( \
+        koopa_find \
+            --prefix="${dict[gcc_prefix]}/lib" \
+            --pattern='*.a' \
+            --type 'f' \
+        | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
+        | "${app[sort]}" --unique \
+    )"
+    koopa_assert_is_array_non_empty "${libs[@]:-}"
+    flibs=()
+    for i in "${!libs[@]}"
+    do
+        flibs+=("-L${libs[i]}")
+    done
+    flibs+=('-lgfortran' '-lquadmath' '-lm')
+    dict[flibs]="${flibs[*]}"
+    read -r -d '' "dict[string]" << END || true
+FC = ${app[fc]}
+FLIBS = ${dict[flibs]}
+END
+    if ! koopa_is_koopa_app "${app[r]}"
+    then
+        koopa_write_string \
+            --file="${dict[file]}" \
+            --string="${dict[string]}"
+    else
+        koopa_sudo_write_string \
+            --file="${dict[file]}" \
+            --string="${dict[string]}"
     fi
     return 0
 }
@@ -22097,6 +22153,7 @@ koopa_uninstall_libuv() {
 koopa_uninstall_libxml2() {
     koopa_uninstall_app \
         --name='libxml2' \
+        --unlink-in-bin='xml2-config' \
         "$@"
 }
 

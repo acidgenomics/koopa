@@ -72,13 +72,19 @@ releases/download/jdk-${dict[version3]}/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cp "jdk-${dict[version]}" "${dict[prefix]}/libexec"
     (
+        local libexec name names
         koopa_cd "${dict[prefix]}"
         if koopa_is_macos
         then
-            koopa_ln 'libexec/Contents/Home/bin' 'bin'
+            libexec='libexec/Contents/Home'
         else
-            koopa_ln 'libexec/bin' 'bin'
+            libexec='libexec'
         fi
+        names=('bin' 'include' 'lib' 'man')
+        for name in "${names[@]}"
+        do
+            koopa_ln "${libexec}/${name}" "$name"
+        done
     )
     if koopa_is_shared_install && koopa_is_linux
     then
