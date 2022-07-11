@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to symlink ncursesw.pc to ncurses.pc
-
 main() {
     # """
     # Install ncurses.
@@ -49,9 +47,25 @@ main() {
         -D '--without-ada' \
         "$@"
     (
+        koopa_cd "${dict[prefix]}/bin"
+        koopa_ln \
+            "ncursesw${dict[maj_ver]}-config" \
+            "ncurses${dict[maj_ver]}-config"
+    )
+    (
         local name names
-        names=('form' 'menu' 'ncurses' 'ncurses++' 'panel')
+        koopa_cd "${dict[prefix]}/include"
+        koopa_ln 'ncursesw' 'ncurses'
+        names=('curses' 'form' 'ncurses' 'panel' 'term' 'termcap')
+        for name in "${names[@]}"
+        do
+            koopa_ln "ncursesw/${name}.h" "${name}.h"
+        done
+    )
+    (
+        local name names
         koopa_cd "${dict[prefix]}/lib"
+        names=('form' 'menu' 'ncurses' 'ncurses++' 'panel')
         for name in "${names[@]}"
         do
             koopa_ln  \
@@ -78,15 +92,12 @@ main() {
                     "lib${name}.${dict[maj_ver]}.dylib"
             fi
         done
+        if koopa_is_linux
+        then
+                koopa_ln 'libncurses.so' 'libtermcap.so'
+                koopa_ln 'libncurses.so' 'libtinfo.so'
+        fi
     )
-    if koopa_is_linux
-    then
-        (
-            koopa_cd "${dict[prefix]}/lib"
-            koopa_ln 'libncurses.so' 'libtermcap.so'
-            koopa_ln 'libncurses.so' 'libtinfo.so'
-        )
-    fi
     (
         local name names
         koopa_cd "${dict[prefix]}/lib/pkgconfig"
