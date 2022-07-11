@@ -74,8 +74,6 @@ archive/${dict[file]}"
         )
     fi
     koopa_add_rpath_to_ldflags "${dict[python_rpath]}" "${dict[vim_rpath]}"
-    LDFLAGS="-L${dict[opt_prefix]}/ncurses/lib ${LDFLAGS:-}"
-    export LDFLAGS
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
