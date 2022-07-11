@@ -3,7 +3,7 @@
 koopa_r_link_files_in_etc() {
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2022-06-15.
+    # @note Updated 2022-07-11.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -39,7 +39,6 @@ koopa_r_link_files_in_etc() {
         dict[r_etc_target]="${dict[r_prefix]}/etc"
     fi
     files=(
-        'Makevars.site' # macOS
         'Renviron.site'
         'Rprofile.site'
         'repositories'

@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2022-07-07.
+# @note Updated 2022-07-11.
 #
 # @seealso
 # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
@@ -36,19 +36,10 @@ PATH="/usr/bin:/bin"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
-# For gfortran.
-# > PATH="${KOOPA_OPT_PREFIX}/gcc/bin:${PATH}"
-# This is required for 'png' package to install.
-# > PATH="${KOOPA_OPT_PREFIX}/libpng/bin:${PATH}"
-# > PATH="${KOOPA_OPT_PREFIX}/pkg-config/bin:${PATH}"
-# > PATH="${KOOPA_OPT_PREFIX}/subversion/bin:${PATH}"
 
 # Pandoc. Use RStudio bundled version of pandoc when possible,
 # for improved R Markdown stability.
 PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
-
-# GNU Fortran from fxcoudert, recommended by CRAN.
-# > PATH="/usr/local/gfortran/bin:${PATH}"
 
 # pdflatex is required for PDF manual generation.
 PATH="${PATH}:/Library/TeX/texbin"
@@ -80,16 +71,12 @@ PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zstd/lib/pkgconfig:${PKG_CONFIG_PATH}"
 R_LD_LIBRARY_PATH=""
 # Determine SDK path with 'xcrun --show-sdk-path'.
 R_LD_LIBRARY_PATH="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="/usr/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="/usr/local/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="/usr/local/gfortran/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${R_HOME}/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/lapack/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libssh2/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/openssl3/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/zlib/lib:${R_LD_LIBRARY_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
