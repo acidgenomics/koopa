@@ -203,6 +203,7 @@ local({  # nolint
     repos <- getOption("repos")
     cran <- "https://cloud.r-project.org"
     options("install.packages.compile.from.source" = "always")
+    # FIXME On macOS, pin this to RSPM when not using R CRAN binary.
     if (isTRUE(flag[["linux"]])) {
         ## Configure the RSPM CRAN snapshot.
         snapshot <- "2022-06-24"
