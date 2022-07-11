@@ -11382,6 +11382,7 @@ koopa_install_emacs() {
     local install_args
     install_args=(
         '--activate-opt=gmp'
+        '--activate-opt=ncurses'
         '--activate-opt=libtasn1'
         '--activate-opt=libunistring'
         '--activate-opt=libxml2'
