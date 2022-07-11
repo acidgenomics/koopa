@@ -36,7 +36,6 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    # FIXME Should we specify with curses here?
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-shared'
