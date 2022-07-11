@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE For macOS, consider installing into libexec instead.
-
 main() {
     # """
     # Install Adoptium Temurin OpenJDK.
-    # @note Updated 2022-07-08.
+    # @note Updated 2022-07-11.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -27,7 +25,6 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         [arch]="$(koopa_arch)"
-        [name]='openjdk'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -83,9 +80,8 @@ releases/download/jdk-${dict[version3]}/${dict[file]}"
             koopa_ln 'libexec/bin' 'bin'
         fi
     )
-    if koopa_is_linux
+    if koopa_is_shared_install && koopa_is_linux
     then
-        # This step will skip for non-shared install.
         koopa_linux_java_update_alternatives "${dict[prefix]}"
     fi
 }
