@@ -16,6 +16,7 @@ main() {
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
     # - https://hub.docker.com/r/rocker/r-ver/dockerfile
+    # - https://bookdown.org/lionel/contributing/building-r.html
     # - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
     # - https://support.rstudio.com/hc/en-us/articles/
     #       218004217-Building-R-from-source
