@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't installing with isolation correctly.
-# shcov (Gem::GemNotFoundException)
-# 	from /opt/koopa/app/ruby/3.1.2p20/lib/ruby/3.1.0/rubygems.rb:284:in `activate_bin_path'
-# 	from /opt/koopa/bin/bashcov:25:in `<main>'
-# FIXME Do we need to use bundle to accomplish this?
-
 main() {
     # """
     # Install Ruby package.
-    # @note Updated 2022-07-08.
+    # @note Updated 2022-07-11.
     #
     # Alternative approach using gem:
     # > "${app[gem]}" install \
@@ -44,9 +38,10 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[gemfile_string]="\
-source \"https://rubygems.org\"\n\
-gem \"${dict[name]}\", \"${dict[version]}\""
+    read -r -d '' "dict[gemfile_string]" << END || true
+source "https://rubygems.org"
+gem "${dict[name]}", "${dict[version]}"
+END
     dict[libexec]="${dict[prefix]}/libexec"
     koopa_mkdir "${dict[libexec]}"
     unset -v GEM_HOME GEM_PATH
