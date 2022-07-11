@@ -57,6 +57,7 @@ main() {
         deps+=('zlib')
     fi
     deps+=(
+        'gcc'
         'bzip2'
         'icu4c'
         'readline'
@@ -71,6 +72,7 @@ main() {
         'libpng'
         'libtiff'
         'openblas'
+        'openjdk'
         'pcre'
         'pcre2'
         'tcl-tk'
@@ -81,10 +83,10 @@ main() {
         'lzo' # cairo
         'pixman' # cairo
     )
-    # Configure X11.
     if koopa_is_macos
     then
         koopa_add_to_pkg_config_path "${dict[x11_prefix]}/lib/pkgconfig"
+        koopa_add_to_path_start '/Library/TeX/texbin'
     else
         deps+=(
             'xorg-xorgproto'
@@ -101,22 +103,13 @@ main() {
             'xorg-libxt'
         )
     fi
-    deps+=('cairo') # depends on X11.
-    if koopa_is_linux
-    then
-        deps+=('openjdk')
-    elif koopa_is_macos
-    then
-        # We're using Adoptium Temurin LTS for OpenJDK on macOS.
-        koopa_add_to_path_start '/Library/TeX/texbin'
-        deps+=('gcc')
-    fi
+    # Cairo depends on X11.
+    deps+=('cairo')
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
     dict[tcl_tk]="$(koopa_realpath "${dict[opt_prefix]}/tcl-tk")"
     conf_args=(
-        # > '--enable-BLAS-shlib' # Linux only?
         "--prefix=${dict[prefix]}"
         '--enable-R-profiling'
         '--enable-R-shlib'
