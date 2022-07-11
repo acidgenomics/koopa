@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Now running into this issue on Ubuntu:
+# checking --with-tlib argument... ncurses
+# checking for linking with ncurses library... configure: error: FAILED
+
 main() {
     # """
     # Install Vim.
@@ -44,10 +48,11 @@ archive/${dict[file]}"
         # > '--enable-luainterp'
         # > '--enable-perlinterp'
         # > '--enable-rubyinterp'
+        # > '--with-tlib=ncurses'
+        '--enable-huge'
         '--enable-multibyte'
         '--enable-python3interp'
         '--enable-terminal'
-        '--with-tlib=ncurses'
         "--with-python3-command=${app[python]}"
         "--with-python3-config-dir=${dict[python_config_dir]}"
     )

@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to address this:
-# checking for library containing tputs... no
-# configure: error: The required function 'tputs' was not found in any library.
-# The following libraries were tried (in order):
-#   libtinfo, libncurses, libterminfo, libcurses, libtermcap
-# Please try installing whichever of these libraries is most appropriate
-# for your system, together with its header files.
-# For example, a libncurses-dev(el) or similar package.
-
 koopa_install_emacs() {
     # """
     # @seealso
