@@ -45,8 +45,9 @@ main() {
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--with-apr=${dict[opt_prefix]}/apr/bin/apr-1-config"
-        '--with-crypto'
+        "--with-expat=${dict[opt_prefix]}/expat"
         "--with-openssl=${dict[opt_prefix]}/openssl3"
+        '--with-crypto'
         '--without-pgsql'
     )
     ./configure --help
