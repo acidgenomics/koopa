@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# NOTE Currently seeing this issue on Linux:
+# /opt/koopa/app/anaconda/2022.05/bin/gtk-query-immodules-3.0: error while
+# loading shared libraries: libXi.so.6: cannot open shared object file: No such
+# file or directory
+
 main() {
     # """
     # Install full Anaconda distribution.
