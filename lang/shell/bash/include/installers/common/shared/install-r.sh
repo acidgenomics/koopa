@@ -3,6 +3,17 @@
 # NOTE Consider also requiring 'gcc' here on Linux, so we can pin GCC and
 # gfortran versions better across platforms.
 
+# FIXME readline is now failing on Linux.
+# checking for readline/history.h... yes
+# checking for readline/readline.h... yes
+# checking for rl_callback_read_char in -lreadline... no
+# checking for main in -lncurses... no
+# checking for main in -ltinfo... no
+# checking for main in -ltermcap... no
+# checking for main in -ltermlib... no
+# checking for rl_callback_read_char in -lreadline... no
+# configure: error: --with-readline=yes (default) and headers/libs are not available
+
 main() {
     # """
     # Install R.
@@ -60,6 +71,7 @@ main() {
         'gcc'
         'bzip2'
         'icu4c'
+        'ncurses'
         'readline'
         'libxml2'
         'gettext'
