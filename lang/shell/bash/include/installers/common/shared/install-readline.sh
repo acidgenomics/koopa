@@ -3,7 +3,7 @@
 main() {
     # """
     # Install readline.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-11.
     #
     # Check linkage on Linux with:
     # ldd -r /opt/koopa/opt/readline/lib/libreadline.so
@@ -14,6 +14,8 @@ main() {
     # - https://stackoverflow.com/a/34723695/3911732
     # - https://github.com/archlinux/svntogit-packages/blob/master/readline/
     #     repos/core-x86_64/PKGBUILD
+    # - https://www.linuxfromscratch.org/lfs/view/11.1-systemd/chapter08/
+    #     readline.html
     # """
     local app conf_args dict make_args
     koopa_assert_has_no_args "$#"
@@ -34,6 +36,7 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    # FIXME Should we specify with curses here?
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-shared'
@@ -50,9 +53,9 @@ main() {
         --replacement='# \1' \
         'readline.pc.in'
     ./configure "${conf_args[@]}"
-    make_args=("--jobs=${dict[jobs]}")
-    "${app[make]}" "${make_args[@]}"
-    "${app[make]}" install
+    make_args=('SHLIB_LIBS=-lncursesw')
+    "${app[make]}" "${make_args[@]}" --jobs="${dict[jobs]}"
+    "${app[make]}" "${make_args[@]}" install
     if koopa_is_linux
     then
         app[ldd]="$(koopa_locate_ldd)"
