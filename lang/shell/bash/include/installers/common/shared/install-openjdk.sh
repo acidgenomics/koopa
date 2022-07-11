@@ -76,8 +76,12 @@ releases/download/jdk-${dict[version3]}/${dict[file]}"
         if koopa_is_macos
         then
             koopa_ln 'libexec/Contents/Home/bin' 'bin'
+            koopa_ln 'libexec/Contents/Home/lib' 'lib'
+            koopa_ln 'libexec/Contents/Home/man' 'man'
         else
             koopa_ln 'libexec/bin' 'bin'
+            koopa_ln 'libexec/lib' 'lib'
+            koopa_ln 'libexec/man' 'man'
         fi
     )
     if koopa_is_shared_install && koopa_is_linux
