@@ -1,45 +1,60 @@
 #!/usr/bin/env bash
 
-# FIXME Only set FC and FLIBS for R CRAN framework on macOS.
-# FIXME Rework our GCC configuration approach.
-# FIXME Need to update the Makevars only for R CRAN binary.
-
 koopa_r_makevars() {
     # """
     # Generate 'Makevars.site' file with compiler settings.
     # @note Updated 2022-07-11.
     # """
-    local app dict
+    local app dict flibs i libs
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
+        [dirname]="$(koopa_locate_dirname)"
         [r]="${1:-}"
+        [sort]="$(koopa_locate_sort)"
+        [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[dirname]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     app[r]="$(koopa_which_realpath "${app[r]}")"
     declare -A dict=(
-        [arch]="$(koopa_arch)" # e.g. 'x86_64'.
         [opt_prefix]="$(koopa_opt_prefix)"
+        [r_prefix]="$(koopa_r_prefix "${app[r]}")"
     )
+    dict[file]="${dict[r_prefix]}/etc/Makevars.site"
+    koopa_alert "Updating 'Makevars' at '${dict[file]}'."
     dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
-    dict[cc]="${dict[gcc_prefix]}/bin/gcc"
-    dict[cxx]="${dict[gcc_prefix]}/bin/g++"
-    dict[fc]="${dict[gcc_prefix]}/bin/gfortran"
-
-    # FIXME Need to handle GCC string here...look up libs manually instead.
-
-    dict[flibs]="-L${dict[gcc_prefix]}/lib/gcc/${dict[arch]}-apple-darwin21/12.1.0 -L${dict[gcc_prefix]}/lib -lgfortran -lquadmath -lm"
-
-    # FIXME Need to handle macOS approach.
-    if koopa_is_koopa_app "${app[r]}"
+    app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+    readarray -t libs <<< "$( \
+        koopa_find \
+            --prefix="${dict[gcc_prefix]}/lib" \
+            --pattern='*.a' \
+            --type 'f' \
+        | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
+        | "${app[sort]}" --unique \
+    )"
+    koopa_assert_is_array_non_empty "${libs[@]:-}"
+    flibs=()
+    for i in "${!libs[@]}"
+    do
+        flibs+=("-L${libs[i]}")
+    done
+    flibs+=('-lgfortran' '-lquadmath' '-lm')
+    dict[flibs]="${flibs[*]}"
+    read -r -d '' "dict[string]" << END || true
+FC = ${app[fc]}
+FLIBS = ${dict[flibs]}
+END
+    if ! koopa_is_koopa_app "${app[r]}"
     then
-        # FIXME Write CC and CXX here in addition to FC and FLIBS.
+        koopa_write_string \
+            --file="${dict[file]}" \
+            --string="${dict[string]}"
     else
-        # R CRAN binary.
-        # FIXME Only write FC and FLIBS here.
+        koopa_sudo_write_string \
+            --file="${dict[file]}" \
+            --string="${dict[string]}"
     fi
-
-    # FIXME Return the lines during debugging.
-    # FIXME Need to write this file in final version.
-
     return 0
 }
