@@ -17109,10 +17109,13 @@ ${dict[py_maj_min_ver]}"
     "${app[python]}" -m venv "${venv_args[@]}"
     app[venv_python]="${dict[prefix]}/bin/python${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
-    koopa_python_pip_install \
-        --python="${app[venv_python]}" \
-        'setuptools==63.1.0' \
-        'wheel==0.37.1'
+    if [[ "${dict[pip]}" -eq 1 ]]
+    then
+        koopa_python_pip_install \
+            --python="${app[venv_python]}" \
+            'setuptools==63.1.0' \
+            'wheel==0.37.1'
+    fi
     if koopa_is_array_non_empty "${pkgs[@]:-}"
     then
         koopa_python_pip_install --python="${app[venv_python]}" "${pkgs[@]}"
