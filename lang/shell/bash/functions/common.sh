@@ -12132,6 +12132,8 @@ koopa_install_libpipeline() {
 
 koopa_install_libpng() {
     koopa_install_app \
+        --link-in-bin='bin/libpng-config' \
+        --link-in-bin='bin/libpng16-config' \
         --name='libpng' \
         "$@"
 }
@@ -22120,6 +22122,8 @@ koopa_uninstall_libpipeline() {
 koopa_uninstall_libpng() {
     koopa_uninstall_app \
         --name='libpng' \
+        --unlink-in-bin='libpng-config' \
+        --unlink-in-bin='libpng16-config' \
         "$@"
 }
 
