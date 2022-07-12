@@ -13,10 +13,6 @@ main() {
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'zlib'
-    fi
     koopa_activate_opt_prefix \
         'freetype' \
         'xorg-xorgproto' \
