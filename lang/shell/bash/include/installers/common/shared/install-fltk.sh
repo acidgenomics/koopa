@@ -18,17 +18,20 @@ main() {
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix \
-        'freetype' \
-        'xorg-xorgproto' \
-        'xorg-xcb-proto' \
-        'xorg-libpthread-stubs' \
-        'xorg-libxau' \
-        'xorg-libxdmcp' \
-        'xorg-libxcb' \
-        'xorg-libx11' \
-        'xorg-libxext' \
-        'xorg-libxrender'
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix \
+            'freetype' \
+            'xorg-xorgproto' \
+            'xorg-xcb-proto' \
+            'xorg-libpthread-stubs' \
+            'xorg-libxau' \
+            'xorg-libxdmcp' \
+            'xorg-libxcb' \
+            'xorg-libx11' \
+            'xorg-libxext' \
+            'xorg-libxrender'
+    fi
     # >     'xorg-xorgproto' \
     # >     'xorg-xtrans' \
     # >     'xorg-libpthread-stubs' \
@@ -51,16 +54,28 @@ ${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    dict[opt_prefix]="$(koopa_opt_prefix)"
+    dict[x11]="$(koopa_realpath "${dict[opt_prefix]}/xorg-libx11")"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-cairo'
         '--disable-xft'
         '--enable-shared'
         '--enable-threads'
-        '--enable-x11'
-        # FIXME --x-includes
-        # FIXME --x-libraries
     )
+    if koopa_is_linux
+    then
+        conf_args+=(
+            '--enable-x11'
+            "--x-includes=${dict[x11]}/include"
+            "--x-libraries=${dict[x11]}/lib"
+        )
+    elif koopa_is_macos
+    then
+        conf_args+=(
+            '--disable-x11'
+        )
+    fi
     ./configure --help # FIXME
     # FIXME Remove these upon success.
     koopa_dl \
