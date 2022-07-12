@@ -29,6 +29,7 @@ main() {
         'xorg-libx11' \
         'xorg-libxext' \
         'xorg-libxrender' \
+        'glib' \
         'cairo'
     # >     'xorg-xorgproto' \
     # >     'xorg-xtrans' \
