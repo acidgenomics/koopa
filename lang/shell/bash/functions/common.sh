@@ -4524,7 +4524,20 @@ koopa_configure_app_packages() {
 }
 
 koopa_configure_chemacs() {
-    koopa_link_dotfile --from-opt --overwrite 'chemacs' 'emacs.d'
+    local dict
+    koopa_assert_has_args_le "$#" 1
+    declare -A dict=(
+        [source_prefix]="${1:-}"
+        [opt_prefix]="$(koopa_opt_prefix)"
+        [target_prefix]="${HOME:?}/.emacs.d"
+    )
+    if [[ -z "${dict[source_prefix]}" ]]
+    then
+        dict[source_prefix]="${dict[opt_prefix]}/chemacs"
+    fi
+    koopa_assert_is_dir "${dict[source_prefix]}"
+    dict[source_prefix]="$(koopa_realpath "${dict[source_prefix]}")"
+    koopa_ln "${dict[source_prefix]}" "${dict[target_prefix]}"
     return 0
 }
 
@@ -14422,9 +14435,7 @@ koopa_link_dotfile() {
         [dotfiles_config_link]="$(koopa_dotfiles_config_link)"
         [dotfiles_prefix]="$(koopa_dotfiles_prefix)"
         [dotfiles_private_prefix]="$(koopa_dotfiles_private_prefix)"
-        [from_opt]=0
         [into_xdg_config_home]=0
-        [opt_prefix]="$(koopa_opt_prefix)"
         [overwrite]=0
         [private]=0
         [xdg_config_home]="$(koopa_xdg_config_home)"
@@ -14433,10 +14444,6 @@ koopa_link_dotfile() {
     while (("$#"))
     do
         case "$1" in
-            '--from-opt')
-                dict[from_opt]=1
-                shift 1
-                ;;
             '--into-xdg-config-home')
                 dict[into_xdg_config_home]=1
                 shift 1
@@ -14466,10 +14473,7 @@ koopa_link_dotfile() {
     then
         dict[symlink_basename]="$(koopa_basename "${dict[source_subdir]}")"
     fi
-    if [[ "${dict[from_opt]}" -eq 1 ]]
-    then
-        dict[source_prefix]="${dict[opt_prefix]}"
-    elif [[ "${dict[private]}" -eq 1 ]]
+    if [[ "${dict[private]}" -eq 1 ]]
     then
         dict[source_prefix]="${dict[dotfiles_private_prefix]}"
     else
@@ -14480,11 +14484,6 @@ koopa_link_dotfile() {
         fi
     fi
     dict[source_path]="${dict[source_prefix]}/${dict[source_subdir]}"
-    if [[ "${dict[from_opt]}" -eq 1 ]] && [[ ! -e "${dict[source_path]}" ]]
-    then
-        koopa_warn "Does not exist: '${dict[source_path]}'."
-        return 0
-    fi
     koopa_assert_is_existing "${dict[source_path]}"
     if [[ "${dict[into_xdg_config_home]}" -eq 1 ]]
     then
