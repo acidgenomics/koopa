@@ -18,6 +18,7 @@ main() {
         koopa_activate_opt_prefix 'zlib'
     fi
     koopa_activate_opt_prefix \
+        'freetype' \
         'xorg-xorgproto' \
         'xorg-xcb-proto' \
         'xorg-libpthread-stubs' \
@@ -42,6 +43,7 @@ ${dict[version]}/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--disable-xft'
         '--enable-shared'
         '--enable-threads'
     )
