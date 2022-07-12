@@ -20,6 +20,12 @@ main() {
     then
         koopa_activate_opt_prefix \
             'freetype' \
+            'xorg-xorgproto' \
+            'xorg-xtrans' \
+            'xorg-libpthread-stubs' \
+            'xorg-libxau' \
+            'xorg-libxdmcp' \
+            'xorg-libxcb' \
             'xorg-libx11'
     fi
     declare -A app=(
