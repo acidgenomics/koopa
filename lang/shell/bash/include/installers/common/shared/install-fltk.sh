@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME This is having trouble locating '-lX11' on Ubuntu...
+
+# NOTE Consider adding support for libxft.
+# https://gitlab.freedesktop.org/xorg/lib/libxft
+
 main() {
     # """
     # Install FLTK.
@@ -16,7 +21,7 @@ main() {
     koopa_activate_opt_prefix \
         'freetype' \
         'xorg-xorgproto' \
-        'xorg-xcb-proto' \
+        'xorg-xtrans' \
         'xorg-libpthread-stubs' \
         'xorg-libxau' \
         'xorg-libxdmcp' \
