@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Haskell Stack.
-    # @note Updated 2022-04-17.
+    # @note Updated 2022-07-12.
     #
     # GHC will be installed at:
     # libexec/root/programs/x86_64-osx/ghc-9.0.2/bin
@@ -26,6 +26,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'gmp'
     declare -A app
     declare -A dict=(
         [arch]="$(koopa_arch)" # e.g. 'x86_64'.
