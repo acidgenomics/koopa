@@ -13,11 +13,11 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
     if koopa_is_linux
     then
-        koopa_activate_opt_prefix 'zlib'
+        koopa_activate_build_opt_prefix 'zlib'
     fi
+    koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
     koopa_activate_opt_prefix \
         'nettle' \
         'openssl3' \
