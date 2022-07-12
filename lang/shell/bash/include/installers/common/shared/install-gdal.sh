@@ -2,23 +2,16 @@
 
 # NOTE Regarding Python bindings:
 # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
-
+#
 # NOTE May be able to enable these:
 # * ICONV component has been detected, but is disabled with GDAL_USE_ICONV=OFF
 # * EXPAT component has been detected, but is disabled with GDAL_USE_EXPAT=OFF
 # * OPENCL component has been detected, but is disabled with GDAL_USE_OPENCL=OFF
 
-# FIXME This is failing on Ubuntu:
-# [ 26%] Building CXX object ogr/CMakeFiles/ogr.dir/ogr_geo_utils.cpp.o
-# [ 27%] Building CXX object ogr/CMakeFiles/ogr.dir/ogr_proj_p.cpp.o
-# [ 27%] Built target alg
-# [ 27%] Built target ogr
-# make: *** [Makefile:146: all] Error 2
-
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2022-06-13.
+    # @note Updated 2022-07-12.
     #
     # Use 'configure --help' for build options.
     #
@@ -86,6 +79,13 @@ v${dict[version]}/${dict[file]}"
     then
         dict[shared_ext]='dylib'
     fi
+    dict[curl]="$(koopa_realpath "${dict[opt_prefix]}/curl")"
+    dict[hdf5]="$(koopa_realpath "${dict[opt_prefix]}/hdf5")"
+    dict[libxml2]="$(koopa_realpath "${dict[opt_prefix]}/libxml2")"
+    dict[pcre2]="$(koopa_realpath "${dict[opt_prefix]}/pcre2")"
+    # > dict[proj]="$(koopa_realpath "${dict[opt_prefix]}/proj")"
+    dict[python]="$(koopa_realpath "${dict[opt_prefix]}/python")"
+    dict[sqlite]="$(koopa_realpath "${dict[opt_prefix]}/sqlite")"
     cmake_args=(
         '-DBUILD_APPS=ON'
         '-DBUILD_PYTHON_BINDINGS=ON'
@@ -165,30 +165,20 @@ v${dict[version]}/${dict[file]}"
         '-DGDAL_USE_ZSTD=ON'
         # Required dependency paths.
         # CMake installer currently warns when this is set:
-        # > "-DPROJ_INCLUDE_DIR=${dict[opt_prefix]}/proj/include"
-        # > "-DPROJ_LIBRARY_RELEASE=${dict[opt_prefix]}/proj/lib/\
-# > libproj.${dict[shared_ext]}"
+        # > "-DPROJ_INCLUDE_DIR=${dict[proj]}/include"
+        # > "-DPROJ_LIBRARY_RELEASE=${dict[proj]}/lib/\
+        # > libproj.${dict[shared_ext]}"
         # Optional dependency paths.
-        "-DCURL_INCLUDE_DIR=${dict[opt_prefix]}/curl/include"
-        "-DCURL_LIBRARY=${dict[opt_prefix]}/curl/lib/\
-libcurl.${dict[shared_ext]}"
-        "-DLIBXML2_INCLUDE_DIR=${dict[opt_prefix]}/libxml2/include"
-        "-DLIBXML2_LIBRARY=${dict[opt_prefix]}/libxml2/lib/\
-libxml2.${dict[shared_ext]}"
-        "-DPCRE2_INCLUDE_DIR=${dict[opt_prefix]}/pcre2/include"
-        "-DPCRE2_LIBRARY=${dict[opt_prefix]}/pcre2/lib/\
-libpcre2-8.${dict[shared_ext]}"
-        "-DPython_ROOT=${dict[opt_prefix]}/python"
-        "-DSQLite3_INCLUDE_DIR=${dict[opt_prefix]}/sqlite/include"
-        "-DSQLite3_LIBRARY=${dict[opt_prefix]}/sqlite/lib/\
-libsqlite3.${dict[shared_ext]}"
-        # CMake installer currently warns when these are set:
-        # > "-DGEOS_INCLUDE_DIR=${dict[opt_prefix]}/geos/include"
-        # > "-DGEOS_LIBRARY=${dict[opt_prefix]}/geos/lib/\
-# > libgeos.${dict[shared_ext]}"
-        # > "-DZSTD_INCLUDE_DIR=${dict[opt_prefix]}/zstd/include"
-        # > "-DZSTD_LIBRARY=${dict[opt_prefix]}/zstd/lib/\
-# > libzstd.${dict[shared_ext]}"
+        "-DCURL_INCLUDE_DIR=${dict[curl]}/include"
+        "-DCURL_LIBRARY=${dict[curl]}/lib/libcurl.${dict[shared_ext]}"
+        "-DHDF5_ROOT=${dict[hdf5]}"
+        "-DLIBXML2_INCLUDE_DIR=${dict[libxml2]}/include"
+        "-DLIBXML2_LIBRARY=${dict[libxml2]}/lib/libxml2.${dict[shared_ext]}"
+        "-DPCRE2_INCLUDE_DIR=${dict[pcre2]}/include"
+        "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
+        "-DPython_ROOT=${dict[python]}"
+        "-DSQLite3_INCLUDE_DIR=${dict[sqlite]}/include"
+        "-DSQLite3_LIBRARY=${dict[sqlite]}/lib/libsqlite3.${dict[shared_ext]}"
     )
     koopa_mkdir "${dict[prefix]}/include"
     "${app[cmake]}" .. "${cmake_args[@]}"

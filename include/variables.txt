@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-11"
+koopa-date="2022-07-12"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -213,6 +213,9 @@ google-cloud-sdk="392.0.0"
 # https://www.gnu.org/software/gperf
 gperf="3.1"
 
+# https://www.graphviz.org/
+graphviz="5.0.0"
+
 # https://www.gnu.org/software/grep/
 grep="3.7"
 
@@ -243,7 +246,7 @@ htop="3.2.1"
 icu4c="71.1"
 
 # https://imagemagick.org/
-imagemagick="7.1.0-29"
+imagemagick="7.1.0-43"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"

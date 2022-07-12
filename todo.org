@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Can we install RStudio Server and Shiny Server deb packages without using gdebi-core?
+    Apparently apt may support direct installs from a deb file now.
 ** TODO Split out node and ruby packages into isolated apps.
 ** TODO Ensure 'wheel' package gets installed for all Python venvs.
     Otherwise, can run into legacy 'setup.py' warnings/issues.

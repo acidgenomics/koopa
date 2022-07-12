@@ -42,13 +42,11 @@ koopa_r_javareconf() {
     dict[jar]="${dict[java_home]}/bin/jar"
     dict[java]="${dict[java_home]}/bin/java"
     dict[javac]="${dict[java_home]}/bin/javac"
-    dict[javah]="${dict[java_home]}/bin/javah"
     koopa_alert 'Updating R Java configuration.'
     koopa_dl \
         'JAR' "${dict[jar]}" \
         'JAVA' "${dict[java]}" \
         'JAVAC' "${dict[javac]}" \
-        'JAVAH' "${dict[javah]}" \
         'JAVA_HOME' "${dict[java_home]}" \
         'R' "${app[r]}"
     if koopa_is_koopa_app "${app[r]}"
@@ -62,7 +60,6 @@ koopa_r_javareconf() {
         "JAR=${dict[jar]}"
         "JAVA=${dict[java]}"
         "JAVAC=${dict[javac]}"
-        "JAVAH=${dict[javah]}"
         "JAVA_HOME=${dict[java_home]}"
     )
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
