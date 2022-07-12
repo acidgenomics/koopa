@@ -41,9 +41,7 @@ main() {
             'xorg-libxau' \
             'xorg-libxdmcp' \
             'xorg-libxcb' \
-            'xorg-libx11' \
-            'xorg-libxext' \
-            'xorg-libxrender'
+            'xorg-libx11'
     fi
     # >     'xorg-xorgproto' \
     # >     'xorg-xtrans' \
