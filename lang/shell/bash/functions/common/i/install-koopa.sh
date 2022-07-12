@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This is currently erroring if user doesn't have a bashrc file but
+# wants to write koopa activation into it...resolve this.
+
 koopa_install_koopa() {
     # """
     # Install koopa.
