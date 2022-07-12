@@ -3,7 +3,7 @@
 main() {
     # """
     # Install jq.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-07-12.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/jq.rb
@@ -17,6 +17,7 @@ main() {
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix \
+        'm4' \
         'autoconf' \
         'automake' \
         'gettext' \
