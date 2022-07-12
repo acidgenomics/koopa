@@ -18,8 +18,18 @@ main() {
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    # > koopa_activate_opt_prefix \
-    # >     'freetype' \
+    koopa_activate_opt_prefix \
+        'freetype' \
+        'xorg-xorgproto' \
+        'xorg-xcb-proto' \
+        'xorg-libpthread-stubs' \
+        'xorg-libxau' \
+        'xorg-libxdmcp' \
+        'xorg-libxcb' \
+        'xorg-libx11' \
+        'xorg-libxext' \
+        'xorg-libxrender' \
+        'cairo'
     # >     'xorg-xorgproto' \
     # >     'xorg-xtrans' \
     # >     'xorg-libpthread-stubs' \
@@ -44,9 +54,9 @@ ${dict[version]}/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
-        # > '--disable-cairo'
-        '--disable-x11'
-        # . '--disable-xft'
+        # > '--disable-xft'
+        '--enable-cairo'
+        '--enable-x11'
         '--enable-shared'
         '--enable-threads'
     )
