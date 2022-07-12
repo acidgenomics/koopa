@@ -3,7 +3,7 @@
 main() {
     # """
     # Install FLTK.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-07-12.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/fltk.rb
@@ -12,6 +12,19 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'zlib'
+    fi
+    koopa_activate_opt_prefix \
+        'xorg-xorgproto' \
+        'xorg-xcb-proto' \
+        'xorg-libpthread-stubs' \
+        'xorg-libxau' \
+        'xorg-libxdmcp' \
+        'xorg-libxcb' \
+        'xorg-libx11'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
