@@ -34,6 +34,7 @@ releases/download/${dict[version]}/${dict[file]}"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCURSES_INCLUDE_PATH=${dict[ncurses]}/include"
+        "-DCURSES_LIBRARY=${dict[ncurses]}/lib"
     )
     "${app[cmake]}" \
         -S '.' \
