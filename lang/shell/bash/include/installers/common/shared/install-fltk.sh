@@ -18,15 +18,15 @@ main() {
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix \
-        'freetype' \
-        'xorg-xorgproto' \
-        'xorg-xtrans' \
-        'xorg-libpthread-stubs' \
-        'xorg-libxau' \
-        'xorg-libxdmcp' \
-        'xorg-libxcb' \
-        'xorg-libx11'
+    # > koopa_activate_opt_prefix \
+    # >     'freetype' \
+    # >     'xorg-xorgproto' \
+    # >     'xorg-xtrans' \
+    # >     'xorg-libpthread-stubs' \
+    # >     'xorg-libxau' \
+    # >     'xorg-libxdmcp' \
+    # >     'xorg-libxcb' \
+    # >     'xorg-libx11'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -44,12 +44,13 @@ ${dict[version]}/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
-        '--disable-xft'
+        # > '--disable-cairo'
+        '--disable-x11'
+        # . '--disable-xft'
         '--enable-shared'
         '--enable-threads'
     )
-    ./configure --help
-    koopa_stop 'FIXME'
+    ./configure --help # FIXME
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
