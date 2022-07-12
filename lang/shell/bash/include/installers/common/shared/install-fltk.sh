@@ -5,6 +5,19 @@
 # NOTE Consider adding support for libxft.
 # https://gitlab.freedesktop.org/xorg/lib/libxft
 
+# FIXME Hitting this error consistently on Linux:
+# /usr/bin/ar cr ../lib/libfltk.a ...
+# g++ -L. -L/opt/koopa/app/xorg-libx11/1.7.2/lib -R/opt/koopa/app/xorg-libx11/1.7.2/lib -Wl,-no-undefined -Wl,-Bsymbolic-functions -Wl,-gc-sections -Wl,-soname,libfltk.so.1.3 -lXrender -lXext -lpthread -lm -lX11 -shared -fPIC -o libfltk.so.1.3 ...
+# /usr/bin/ld: cannot find -lXrender: No such file or directory
+# /usr/bin/ld: cannot find -lXext: No such file or directory
+# /usr/bin/ld: cannot find -lXrender: No such file or directory
+# /usr/bin/ld: cannot find -lXext: No such file or directory
+# /usr/bin/ar cr ../lib/libfltk_forms.a ...
+# collect2: error: ld returned 1 exit status
+# make[1]: *** [Makefile:240: libfltk.so.1.3] Error 1
+
+
+
 main() {
     # """
     # Install FLTK.
