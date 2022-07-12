@@ -26,7 +26,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'gmp'
+    koopa_activate_opt_prefix 'gmp'
     declare -A app
     declare -A dict=(
         [arch]="$(koopa_arch)" # e.g. 'x86_64'.
