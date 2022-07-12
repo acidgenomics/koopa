@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This requires tcl.h.
+
 main() {
     # """
     # Install Lmod.

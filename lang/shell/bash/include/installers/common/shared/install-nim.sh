@@ -31,6 +31,5 @@ main() {
     koopa_cp "${PWD:?}" "${dict[prefix]}"
     app[nim]="${dict[prefix]}/bin/nim"
     koopa_assert_is_installed "${app[nim]}"
-    koopa_configure_nim "${app[nim]}"
     return 0
 }
