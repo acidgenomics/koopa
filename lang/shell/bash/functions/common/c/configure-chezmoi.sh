@@ -3,7 +3,7 @@
 koopa_configure_chezmoi() {
     # """
     # Configure chezmoi to use koopa managed dotfiles repo.
-    # @note Updated 2022-05-10.
+    # @note Updated 2022-07-12.
     #
     # Alternative approach:
     # > chezmoi init \
@@ -26,7 +26,9 @@ koopa_configure_chezmoi() {
         [xdg_data_home]="$(koopa_xdg_data_home)"
     )
     dict[chezmoi_prefix]="${dict[xdg_data_home]}/chezmoi"
-    koopa_assert_is_dir "${dict[dotfiles_prefix]}"
-    koopa_ln "${dict[dotfiles_prefix]}" "${dict[chezmoi_prefix]}"
+    if [[ -d "${dict[dotfiles_prefix]}" ]]
+    then
+        koopa_ln "${dict[dotfiles_prefix]}" "${dict[chezmoi_prefix]}"
+    fi
     return 0
 }
