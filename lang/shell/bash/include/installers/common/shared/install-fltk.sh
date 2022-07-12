@@ -28,12 +28,7 @@ main() {
         'xorg-libxcb' \
         'xorg-libx11' \
         'xorg-libxext' \
-        'xorg-libxrender' \
-        'zlib' \
-        'libffi' \
-        'pcre' \
-        'glib' \
-        'cairo'
+        'xorg-libxrender'
     # >     'xorg-xorgproto' \
     # >     'xorg-xtrans' \
     # >     'xorg-libpthread-stubs' \
@@ -58,11 +53,11 @@ ${dict[version]}/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
-        # > '--disable-xft'
-        '--enable-cairo'
-        '--enable-x11'
+        '--disable-cairo'
+        '--disable-xft'
         '--enable-shared'
         '--enable-threads'
+        '--enable-x11'
     )
     ./configure --help # FIXME
     ./configure "${conf_args[@]}"
