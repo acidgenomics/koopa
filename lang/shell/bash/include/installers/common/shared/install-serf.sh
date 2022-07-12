@@ -51,6 +51,7 @@ serf-1.3.9-openssl3_fixes-1.patch"
     "${app[sed]}" -i.bak "/Alias/s:install_static,::" 'SConstruct'
     "${app[sed]}" -i.bak "/  print/{s/print/print(/; s/$/)/}" 'SConstruct'
     "${app[sed]}" -i.bak "/get_contents()/s/,/.decode()&/" 'SConstruct'
+    # NOTE Refer to 'SConstruct' file for details.
     scons_args=(
         "APR=${dict[opt_prefix]}/apr"
         "APU=${dict[opt_prefix]}/apr-util"
@@ -60,6 +61,7 @@ serf-1.3.9-openssl3_fixes-1.patch"
     if koopa_is_linux
     then
         scons_args+=(
+            "DEBUG=true"
             "ZLIB=${dict[opt_prefix]}/zlib"
         )
     fi
