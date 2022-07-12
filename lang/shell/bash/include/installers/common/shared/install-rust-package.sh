@@ -39,7 +39,9 @@ main() {
     case "${dict[name]}" in
         'dog')
             koopa_activate_opt_prefix 'openssl1'
-            export OPENSSL_DIR="${dict[opt_prefix]}/openssl1"
+            dict[openssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl1")"
+            export OPENSSL_DIR="${dict[openssl]}"
+            koopa_add_rpath_to_ldflags "${dict[openssl]}/lib"
             ;;
     esac
     export RUST_BACKTRACE='full' # or '1'.
