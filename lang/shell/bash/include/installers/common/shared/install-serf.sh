@@ -57,6 +57,12 @@ serf-1.3.9-openssl3_fixes-1.patch"
         "OPENSSL=${dict[opt_prefix]}/openssl3"
         "PREFIX=${dict[prefix]}"
     )
+    if koopa_is_linux
+    then
+        scons_args+=(
+            "ZLIB=${dict[opt_prefix]}/zlib"
+        )
+    fi
     "${app[scons]}" "${scons_args[@]}"
     "${app[scons]}" "${scons_args[@]}" install
     return 0
