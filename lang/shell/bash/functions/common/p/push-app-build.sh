@@ -2,6 +2,9 @@
 
 # NOTE This also should invalidate cloud cache in a future update.
 
+# FIXME Check that application contains files and not only a failed build
+# log file.
+
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
