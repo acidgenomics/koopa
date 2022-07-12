@@ -48,6 +48,8 @@ ${dict[version]}/${dict[file]}"
         '--enable-shared'
         '--enable-threads'
     )
+    ./configure --help
+    koopa_stop 'FIXME'
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
