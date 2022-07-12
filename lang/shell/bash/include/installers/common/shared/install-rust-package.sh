@@ -36,6 +36,8 @@ main() {
     )
     # OpenSSL 3 is not currently supported.
     # Refer to 'https://docs.rs/openssl/latest/openssl/' for details.
+    # FIXME This approach still doesn't work for Linux.
+    # Expected 'libssl.so.1.1' and 'libcrypto.so.1.1' files are missing.
     case "${dict[name]}" in
         'dog')
             koopa_activate_opt_prefix 'openssl1'
