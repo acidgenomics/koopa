@@ -3,7 +3,7 @@
 koopa_link_dotfile() {
     # """
     # Link dotfile.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-07-12.
     # """
     local dict pos
     koopa_assert_has_args "$#"
@@ -11,9 +11,7 @@ koopa_link_dotfile() {
         [dotfiles_config_link]="$(koopa_dotfiles_config_link)"
         [dotfiles_prefix]="$(koopa_dotfiles_prefix)"
         [dotfiles_private_prefix]="$(koopa_dotfiles_private_prefix)"
-        [from_opt]=0
         [into_xdg_config_home]=0
-        [opt_prefix]="$(koopa_opt_prefix)"
         [overwrite]=0
         [private]=0
         [xdg_config_home]="$(koopa_xdg_config_home)"
@@ -22,10 +20,6 @@ koopa_link_dotfile() {
     while (("$#"))
     do
         case "$1" in
-            '--from-opt')
-                dict[from_opt]=1
-                shift 1
-                ;;
             '--into-xdg-config-home')
                 dict[into_xdg_config_home]=1
                 shift 1
@@ -55,10 +49,7 @@ koopa_link_dotfile() {
     then
         dict[symlink_basename]="$(koopa_basename "${dict[source_subdir]}")"
     fi
-    if [[ "${dict[from_opt]}" -eq 1 ]]
-    then
-        dict[source_prefix]="${dict[opt_prefix]}"
-    elif [[ "${dict[private]}" -eq 1 ]]
+    if [[ "${dict[private]}" -eq 1 ]]
     then
         dict[source_prefix]="${dict[dotfiles_private_prefix]}"
     else
@@ -69,11 +60,6 @@ koopa_link_dotfile() {
         fi
     fi
     dict[source_path]="${dict[source_prefix]}/${dict[source_subdir]}"
-    if [[ "${dict[from_opt]}" -eq 1 ]] && [[ ! -e "${dict[source_path]}" ]]
-    then
-        koopa_warn "Does not exist: '${dict[source_path]}'."
-        return 0
-    fi
     koopa_assert_is_existing "${dict[source_path]}"
     if [[ "${dict[into_xdg_config_home]}" -eq 1 ]]
     then
