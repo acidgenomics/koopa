@@ -2,23 +2,62 @@
 
 # NOTE Regarding Python bindings:
 # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
-
+#
 # NOTE May be able to enable these:
 # * ICONV component has been detected, but is disabled with GDAL_USE_ICONV=OFF
 # * EXPAT component has been detected, but is disabled with GDAL_USE_EXPAT=OFF
 # * OPENCL component has been detected, but is disabled with GDAL_USE_OPENCL=OFF
 
-# FIXME This is failing on Ubuntu:
-# [ 26%] Building CXX object ogr/CMakeFiles/ogr.dir/ogr_geo_utils.cpp.o
-# [ 27%] Building CXX object ogr/CMakeFiles/ogr.dir/ogr_proj_p.cpp.o
-# [ 27%] Built target alg
-# [ 27%] Built target ogr
-# make: *** [Makefile:146: all] Error 2
+# FIXME Pin dependencies to use absolute paths.
+# FIXME Hitting compilation issues on Ubuntu 22:
+
+#-- Could NOT find ODBC (missing: ODBC_LIBRARY ODBC_INCLUDE_DIR ODBCINST)
+#-- Could NOT find ODBCCPP (missing: ODBCCPP_LIBRARY ODBCCPP_INCLUDE_DIR)
+#-- Could NOT find MSSQL_ODBC (missing: MSSQL_ODBC_LIBRARY MSSQL_ODBC_INCLUDE_DIR MSSQL_ODBC_VERSION)
+#-- Could NOT find MySQL (missing: MYSQL_LIBRARY MYSQL_INCLUDE_DIR)
+#-- Found CURL: /opt/koopa/opt/curl/lib/libcurl.so (found version "7.82.0")
+#-- Performing Test Iconv_IS_BUILT_IN
+#-- Performing Test Iconv_IS_BUILT_IN - Success
+#-- Found Iconv: /usr/lib/x86_64-linux-gnu/libc.so
+#-- Performing Test _ICONV_SECOND_ARGUMENT_IS_NOT_CONST
+#-- Performing Test _ICONV_SECOND_ARGUMENT_IS_NOT_CONST - Success
+#-- Found LibXml2: /opt/koopa/opt/libxml2/lib/libxml2.so
+#-- Could NOT find EXPAT (missing: EXPAT_DIR)
+#-- Could NOT find EXPAT (missing: EXPAT_LIBRARY EXPAT_INCLUDE_DIR)
+#-- Failed to find XercesC (missing: XercesC_LIBRARY XercesC_INCLUDE_DIR XercesC_VERSION)
+#-- Could NOT find ZLIB (missing: ZLIB_LIBRARY ZLIB_INCLUDE_DIR)
+#-- Could NOT find Deflate (missing: Deflate_LIBRARY Deflate_INCLUDE_DIR)
+#-- Found OpenSSL: /opt/koopa/app/openssl3/3.0.5/lib/libcrypto.so (found version "3.0.5") found components: SSL Crypto
+#-- Could NOT find CryptoPP (missing: CRYPTOPP_LIBRARY CRYPTOPP_TEST_KNOWNBUG CRYPTOPP_INCLUDE_DIR)
+#-- Could NOT find TIFF (missing: TIFF_LIBRARY TIFF_INCLUDE_DIR) (Required is at least version "4.0")
+#-- Could NOT find SFCGAL (missing: SFCGAL_LIBRARY SFCGAL_INCLUDE_DIR)
+#-- Could NOT find GeoTIFF (missing: GeoTIFF_DIR)
+#-- Could NOT find GeoTIFF (missing: GEOTIFF_LIBRARY GEOTIFF_INCLUDE_DIR)
+#-- Could NOT find ZLIB (missing: ZLIB_LIBRARY ZLIB_INCLUDE_DIR)
+#-- Could NOT find PNG (missing: PNG_LIBRARY PNG_PNG_INCLUDE_DIR)
+#-- Could NOT find JPEG (missing: JPEG_LIBRARY JPEG_INCLUDE_DIR)
+#-- Could NOT find GIF (missing: GIF_LIBRARY GIF_INCLUDE_DIR)
+#-- Could NOT find JSONC (missing: JSONC_DIR)
+#-- Could NOT find JSONC (missing: JSONC_LIBRARY JSONC_INCLUDE_DIR)
+#-- Could NOT find OpenCAD (missing: OPENCAD_LIBRARY OPENCAD_INCLUDE_DIR)
+#-- Could NOT find QHULL (missing: QHULL_LIBRARY QHULL_INCLUDE_DIR)
+#-- Could NOT find LERC (missing: LERC_LIBRARY LERC_INCLUDE_DIR)
+#-- Could NOT find BRUNSLI (missing: BRUNSLI_ENC_LIB BRUNSLI_DEC_LIB BRUNSLI_INCLUDE_DIR)
+#-- Could NOT find Shapelib (missing: Shapelib_INCLUDE_DIR Shapelib_LIBRARY)
+#-- Found PCRE2: /opt/koopa/opt/pcre2/lib/libpcre2-8.so
+#-- Could NOT find SPATIALITE (missing: SPATIALITE_LIBRARY SPATIALITE_INCLUDE_DIR)
+#-- Could NOT find RASTERLITE2 (missing: RASTERLITE2_LIBRARY RASTERLITE2_INCLUDE_DIR)
+#-- Could NOT find LibKML (missing: LIBKML_BASE_LIBRARY LIBKML_INCLUDE_DIR LIBKML_DOM_LIBRARY LIBKML_ENGINE_LIBRARY)
+#-- HDF5 C compiler wrapper is unable to compile a minimal HDF5 program.
+#-- HDF5 CXX compiler wrapper is unable to compile a minimal HDF5 program.
+#-- Could NOT find HDF5 (missing: HDF5_LIBRARIES HDF5_INCLUDE_DIRS C CXX) (found version "")
+
+
 
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2022-06-13.
+    # @note Updated 2022-07-12.
     #
     # Use 'configure --help' for build options.
     #
@@ -189,6 +228,11 @@ libsqlite3.${dict[shared_ext]}"
         # > "-DZSTD_INCLUDE_DIR=${dict[opt_prefix]}/zstd/include"
         # > "-DZSTD_LIBRARY=${dict[opt_prefix]}/zstd/lib/\
 # > libzstd.${dict[shared_ext]}"
+
+
+        "HDF5_LIBRARIES"
+        "HDF5_INCLUDE_DIRS"
+
     )
     koopa_mkdir "${dict[prefix]}/include"
     "${app[cmake]}" .. "${cmake_args[@]}"
