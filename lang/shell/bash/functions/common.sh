@@ -12017,10 +12017,10 @@ koopa_install_koopa() {
             [[ ! -L "${dict[user_profile]}" ]]
         then
             koopa_alert_note 'Koopa activation missing in user profile.'
-            dict[add_to_user_profile]="$( \
+            bool[add_to_user_profile]="$( \
                 koopa_read_yn \
                     "Modify '${dict[user_profile]}'" \
-                    "${dict[add_to_user_profile]}" \
+                    "${bool[add_to_user_profile]}" \
             )"
         fi
     else
