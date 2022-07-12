@@ -58,8 +58,14 @@ ${dict[version]}/${dict[file]}"
         '--enable-shared'
         '--enable-threads'
         '--enable-x11'
+
+        # FIXME --x-includes
+        # FIXME --x-libraries
     )
     ./configure --help # FIXME
+    koopa_dl \
+        'LDFLAGS' "${LDFLAGS:-}" \
+        'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
