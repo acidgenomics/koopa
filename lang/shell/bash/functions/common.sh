@@ -11702,6 +11702,12 @@ koopa_install_gperf() {
         "$@"
 }
 
+koopa_install_graphfiz() {
+    koopa_install_app \
+        --name='graphviz' \
+        "$@"
+}
+
 koopa_install_grep() {
     koopa_install_app \
         --activate-opt='pcre' \
@@ -17264,13 +17270,11 @@ koopa_r_javareconf() {
     dict[jar]="${dict[java_home]}/bin/jar"
     dict[java]="${dict[java_home]}/bin/java"
     dict[javac]="${dict[java_home]}/bin/javac"
-    dict[javah]="${dict[java_home]}/bin/javah"
     koopa_alert 'Updating R Java configuration.'
     koopa_dl \
         'JAR' "${dict[jar]}" \
         'JAVA' "${dict[java]}" \
         'JAVAC' "${dict[javac]}" \
-        'JAVAH' "${dict[javah]}" \
         'JAVA_HOME' "${dict[java_home]}" \
         'R' "${app[r]}"
     if koopa_is_koopa_app "${app[r]}"
@@ -17284,7 +17288,6 @@ koopa_r_javareconf() {
         "JAR=${dict[jar]}"
         "JAVA=${dict[java]}"
         "JAVAC=${dict[javac]}"
-        "JAVAH=${dict[javah]}"
         "JAVA_HOME=${dict[java_home]}"
     )
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
@@ -21870,6 +21873,12 @@ koopa_uninstall_google_cloud_sdk() {
 koopa_uninstall_gperf() {
     koopa_uninstall_app \
         --name='gperf' \
+        "$@"
+}
+
+koopa_uninstall_graphviz() {
+    koopa_uninstall_app \
+        --name='graphviz' \
         "$@"
 }
 
