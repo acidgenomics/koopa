@@ -63,9 +63,10 @@ ${dict[version]}/${dict[file]}"
         # FIXME --x-libraries
     )
     ./configure --help # FIXME
+    # FIXME Remove these upon success.
     koopa_dl \
         'CFLAGS' "${CFLAGS:-}" \
-        'CXXFLAGS' "${CXXFLAGS:-}" \
+        'CPPFLAGS' "${CPPFLAGS:-}" \
         'LDFLAGS' "${LDFLAGS:-}" \
         'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
     ./configure "${conf_args[@]}"
