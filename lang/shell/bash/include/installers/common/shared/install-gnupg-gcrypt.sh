@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Skip key check for nPth...expired.
+
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-07-12.
     # """
     local app conf_args dict
     koopa_activate_build_opt_prefix 'autoconf' 'automake' 'pkg-config'
@@ -13,6 +15,7 @@ main() {
         [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
+        [check_key]=1
         [compress_ext]='bz2'
         [gcrypt_url]="$(koopa_gcrypt_url)"
         [import_gpg_keys]="${INSTALL_IMPORT_GPG_KEYS:-1}"
@@ -34,11 +37,16 @@ main() {
             dict[base_url]="${dict[base_url]}/v${dict[maj_min_ver]}"
             dict[compress_ext]='xz'
             ;;
+        'npth')
+            # Uses expired 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' key.
+            dict[check_key]=0
+            ;;
     esac
     dict[tar_file]="${dict[name]}-${dict[version]}.tar.${dict[compress_ext]}"
     dict[tar_url]="${dict[base_url]}/${dict[tar_file]}"
     koopa_download "${dict[tar_url]}" "${dict[tar_file]}"
-    if koopa_is_installed "${app[gpg_agent]}"
+    if [[ "${dict[check_key]}" -eq 1 ]] && \
+        koopa_is_installed "${app[gpg_agent]}"
     then
         if [[ "${dict[import_gpg_keys]}" -eq 1 ]]
         then
