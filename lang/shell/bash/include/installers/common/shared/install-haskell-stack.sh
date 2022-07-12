@@ -2,6 +2,9 @@
 
 # FIXME Not yet suppored for ARM.
 
+# FIXME Running into '-lgmp' linker issue on Ubuntu.
+# https://github.com/commercialhaskell/stack/issues/5027
+
 main() {
     # """
     # Install Haskell Stack.
