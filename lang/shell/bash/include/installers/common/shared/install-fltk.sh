@@ -65,14 +65,6 @@ ${dict[version]}/${dict[file]}"
             '--disable-x11'
         )
     fi
-    ./configure --help # FIXME
-    # FIXME Remove these upon success.
-    koopa_dl \
-        'CFLAGS' "${CFLAGS:-}" \
-        'CPPFLAGS' "${CPPFLAGS:-}" \
-        'LDFLAGS' "${LDFLAGS:-}" \
-        'LDLIBS' "${LDLIBS:-}" \
-        'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
