@@ -22,7 +22,7 @@ main() {
     koopa_activate_opt_prefix \
         'apr' \
         'apr-util' \
-        'openssl3' \
+        'openssl1' \
         'scons'
     declare -A app=(
         [patch]="$(koopa_locate_patch)"
@@ -41,26 +41,32 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     # Download patch required for OpenSSL 3 compatibility.
-    koopa_download "https://www.linuxfromscratch.org/patches/blfs/svn/\
-serf-1.3.9-openssl3_fixes-1.patch"
-    "${app[patch]}" -Np1 -i 'serf-1.3.9-openssl3_fixes-1.patch'
+    # > koopa_download "https://www.linuxfromscratch.org/patches/blfs/svn/\
+# > serf-1.3.9-openssl3_fixes-1.patch"
+    # > "${app[patch]}" -Np1 -i 'serf-1.3.9-openssl3_fixes-1.patch'
     # These steps require GNU sed.
     # Alternatively, can consider using Perl approach here instead.
-    "${app[sed]}" -i.bak "/Append/s:RPATH=libdir,::" 'SConstruct'
-    "${app[sed]}" -i.bak "/Default/s:lib_static,::"  'SConstruct'
-    "${app[sed]}" -i.bak "/Alias/s:install_static,::" 'SConstruct'
-    "${app[sed]}" -i.bak "/  print/{s/print/print(/; s/$/)/}" 'SConstruct'
-    "${app[sed]}" -i.bak "/get_contents()/s/,/.decode()&/" 'SConstruct'
-    # NOTE Refer to 'SConstruct' file for details.
+    # > "${app[sed]}" -i.bak "/Append/s:RPATH=libdir,::" 'SConstruct'
+    # > "${app[sed]}" -i.bak "/Default/s:lib_static,::"  'SConstruct'
+    # > "${app[sed]}" -i.bak "/Alias/s:install_static,::" 'SConstruct'
+    # > "${app[sed]}" -i.bak "/  print/{s/print/print(/; s/$/)/}" 'SConstruct'
+    # > "${app[sed]}" -i.bak "/get_contents()/s/,/.decode()&/" 'SConstruct'
+    # NOTE Refer to 'SConstruct' file for supported arguments.
     scons_args=(
         "APR=${dict[opt_prefix]}/apr"
         "APU=${dict[opt_prefix]}/apr-util"
-        "OPENSSL=${dict[opt_prefix]}/openssl3"
+        # > 'LIBDIR=lib'
+        "OPENSSL=${dict[opt_prefix]}/openssl1"
         "PREFIX=${dict[prefix]}"
     )
     if koopa_is_linux
     then
         scons_args+=(
+            # FIXME CC
+            # FIXME CFLAGS
+            # FIXME CPPFLAGS
+            # FIXME LIBS
+            # FIXME LINKFLAGS
             "DEBUG=true"
             "ZLIB=${dict[opt_prefix]}/zlib"
         )
