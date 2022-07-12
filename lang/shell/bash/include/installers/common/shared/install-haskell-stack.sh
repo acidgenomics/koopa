@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Not yet suppored for ARM.
 
 main() {
     # """
