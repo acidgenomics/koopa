@@ -58,7 +58,6 @@ ${dict[version]}/${dict[file]}"
         '--enable-shared'
         '--enable-threads'
         '--enable-x11'
-
         # FIXME --x-includes
         # FIXME --x-libraries
     )
@@ -68,6 +67,7 @@ ${dict[version]}/${dict[file]}"
         'CFLAGS' "${CFLAGS:-}" \
         'CPPFLAGS' "${CPPFLAGS:-}" \
         'LDFLAGS' "${LDFLAGS:-}" \
+        'LDLIBS' "${LDLIBS:-}" \
         'PKG_CONFIG_PATH' "${PKG_CONFIG_PATH:-}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
