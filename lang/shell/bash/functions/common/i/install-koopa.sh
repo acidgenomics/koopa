@@ -3,6 +3,9 @@
 # FIXME This is currently erroring if user doesn't have a bashrc file but
 # wants to write koopa activation into it...resolve this.
 
+# FIXME default profile file on macOS should be zshrc, not bashrc...
+# we may be checking wrong shell config for that.
+
 koopa_install_koopa() {
     # """
     # Install koopa.
