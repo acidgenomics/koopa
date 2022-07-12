@@ -11702,7 +11702,7 @@ koopa_install_gperf() {
         "$@"
 }
 
-koopa_install_graphfiz() {
+koopa_install_graphviz() {
     koopa_install_app \
         --name='graphviz' \
         "$@"

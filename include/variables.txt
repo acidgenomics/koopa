@@ -214,7 +214,7 @@ google-cloud-sdk="392.0.0"
 gperf="3.1"
 
 # https://www.graphviz.org/
-graphviz="3.0.0"
+graphviz="5.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.7"
