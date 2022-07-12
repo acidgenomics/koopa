@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME This is a go package. Work on building from source.
+# FIXME Rename this to 'docker-credential-helpers'.
+# FIXME Rework this approach.
+
 main() {
     # """
     # Install docker-credential-pass.
