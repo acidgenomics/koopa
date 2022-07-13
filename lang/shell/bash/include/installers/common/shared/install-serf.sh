@@ -43,18 +43,20 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    # FIXME How to quote these?
     koopa_find_and_replace_in_file \
+        --regex \
         --pattern="print 'Warning: Used unknown variables:', ', '.join(unknown.keys())" \
         --replacement="print('Warning: Used unknown variables:', ', '.join(unknown.keys()))" \
         'SConstruct'
     koopa_find_and_replace_in_file \
+        --fixed \
         --pattern='variables=opts,' \
         --replacement="variables=opts, RPATHPREFIX = '-Wl,-rpath,'," \
         'SConstruct'
     if koopa_is_linux
     then
         koopa_find_and_replace_in_file \
+            --regex \
             --pattern="env.Append(LIBPATH=['\$OPENSSL/lib'])" \
             --replacement="\\1\nenv.Append(CPPPATH=['\$ZLIB/include'])\nenv.Append(LIBPATH=['\$ZLIB/lib'])" \
             'SConstruct'
