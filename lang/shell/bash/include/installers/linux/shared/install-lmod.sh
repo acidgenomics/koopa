@@ -9,6 +9,10 @@ main() {
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
     # """
     local app dict
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'zlib'
+    fi
     koopa_activate_opt_prefix 'lua' 'luarocks' 'tcl-tk'
     declare -A app=(
         [lua]="$(koopa_locate_lua)"
