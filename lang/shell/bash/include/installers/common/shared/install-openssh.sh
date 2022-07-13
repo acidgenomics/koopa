@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE Consider adding support for libfido2.
+# FIXME Need to add support for libedit on Linux.
 
 main() {
     # """
