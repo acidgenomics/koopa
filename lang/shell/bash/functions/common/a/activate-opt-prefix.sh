@@ -99,6 +99,7 @@ koopa_activate_opt_prefix() {
                 --type='d' \
             || true \
         )"
+        # FIXME Do we need to remove trailing slash here?
         if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
         then
             koopa_add_to_pkg_config_path "${pkgconfig_dirs[@]}"

@@ -3,10 +3,11 @@
 main() {
     # """
     # Install udunits.
-    # @note Updated 2022-01-03.
+    # @note Updated 2022-07-13.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'expat'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

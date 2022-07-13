@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libuv.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-07-12.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libuv.rb
@@ -14,6 +14,7 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix \
+        'm4' \
         'autoconf' \
         'automake' \
         'libtool' \

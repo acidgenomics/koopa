@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-12"
+koopa-date="2022-07-13"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -280,7 +280,7 @@ libffi="3.4.2"
 libgeotiff="1.7.1"
 
 # https://github.com/libgit2/libgit2
-libgit2="1.4.3"
+libgit2="1.4.3" # latest: 1.4.4
 
 # https://www.gnu.org/software/libidn/
 libidn="2.3.2"
@@ -312,7 +312,7 @@ libtool="2.4.6"
 libunistring="1.0"
 
 # https://github.com/libuv/libuv
-libuv="1.44.1"
+libuv="1.44.1" # latest: 1.44.2
 
 # https://gitlab.gnome.org/GNOME/libxml2/-/releases
 libxml2="2.9.13"

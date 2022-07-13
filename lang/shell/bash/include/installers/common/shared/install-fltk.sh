@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for libxft.
+# https://gitlab.freedesktop.org/xorg/lib/libxft
+
 main() {
     # """
     # Install FLTK.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-07-12.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/fltk.rb
@@ -12,6 +15,19 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix \
+            'freetype' \
+            'xorg-xorgproto' \
+            'xorg-xtrans' \
+            'xorg-libpthread-stubs' \
+            'xorg-libxau' \
+            'xorg-libxdmcp' \
+            'xorg-libxcb' \
+            'xorg-libx11'
+    fi
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -27,11 +43,28 @@ ${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    dict[opt_prefix]="$(koopa_opt_prefix)"
+    dict[x11]="$(koopa_realpath "${dict[opt_prefix]}/xorg-libx11")"
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--disable-cairo'
+        '--disable-xft'
         '--enable-shared'
         '--enable-threads'
     )
+    if koopa_is_linux
+    then
+        conf_args+=(
+            '--enable-x11'
+            "--x-includes=${dict[x11]}/include"
+            "--x-libraries=${dict[x11]}/lib"
+        )
+    elif koopa_is_macos
+    then
+        conf_args+=(
+            '--disable-x11'
+        )
+    fi
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

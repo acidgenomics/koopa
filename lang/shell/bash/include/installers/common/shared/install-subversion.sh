@@ -3,10 +3,12 @@
 main() {
     # """
     # Install Subversion.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-07-13.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
+    #
+    # Including serf for HTTPS is useful for installing R-devel.
     #
     # @seealso
     # - https://svn.apache.org/repos/asf/subversion/trunk/INSTALL
@@ -14,9 +16,14 @@ main() {
     # - https://subversion.apache.org/source-code.html
     # - Need to use serf to support HTTPS URLs.
     #   https://serverfault.com/questions/522646/
+    # - https://lists.apache.org/thread/3qbhp66woztkgzq8sx6vfb7cjn6mcl9y
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'zlib'
+    fi
     koopa_activate_opt_prefix \
         'apr' \
         'apr-util' \

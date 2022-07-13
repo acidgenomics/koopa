@@ -5,15 +5,19 @@
 main() {
     # """
     # Install libzip.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-07-12.
     #
     # @seealso
     # - https://libzip.org/download/
     # - https://noknow.info/it/os/install_libzip_from_source?lang=en
     # """
-    local app dict
+    local app cmake_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'zlib'
+    fi
     koopa_activate_opt_prefix \
         'nettle' \
         'openssl3' \
@@ -26,6 +30,7 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='libzip'
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -36,8 +41,18 @@ main() {
     koopa_cd "${dict[name]}-${dict[version]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    "${app[cmake]}" .. \
-        -DCMAKE_INSTALL_PREFIX="${dict[prefix]}"
+    cmake_args=(
+        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+    )
+    if koopa_is_linux
+    then
+        dict[zlib]="$(koopa_realpath "${dict[opt_prefix]}/zlib")"
+        cmake_args+=(
+            "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
+            "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.so"
+        )
+    fi
+    "${app[cmake]}" .. "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
