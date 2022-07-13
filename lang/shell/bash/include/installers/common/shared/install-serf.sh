@@ -6,7 +6,7 @@
 main() {
     # """
     # Install Apache Serf.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-07-13.
     #
     # Required by subversion for HTTPS connections.
     #
@@ -32,7 +32,7 @@ main() {
     koopa_activate_opt_prefix \
         'apr' \
         'apr-util' \
-        'openssl1' \
+        'openssl3' \
         'scons'
     declare -A app=(
         [patch]="$(koopa_locate_patch)"
@@ -52,10 +52,10 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     # Patch diff created with:
-    # > diff -Naur 'SConstruct' 'SConstruct-1' > 'sconstruct-1.patch'
+    # > diff -u 'SConstruct' 'SConstruct-1' > 'sconstruct-1.patch'
     cat << END > 'sconstruct-1.patch'
 --- SConstruct	2022-07-13 07:51:34.000000000 -0400
-+++ SConstruct-1	2022-07-13 07:51:14.000000000 -0400
++++ SConstruct-1	2022-07-13 08:15:24.000000000 -0400
 @@ -152,7 +152,7 @@
                   True),
      )
@@ -65,6 +65,19 @@ main() {
                    tools=('default', 'textfile',),
                    CPPPATH=['.', ],
                    )
+@@ -163,9 +163,9 @@
+               suffix='.def', src_suffix='.h')
+   })
+ 
+-match = re.search('SERF_MAJOR_VERSION ([0-9]+).*'
+-                  'SERF_MINOR_VERSION ([0-9]+).*'
+-                  'SERF_PATCH_VERSION ([0-9]+)',
++match = re.search(b'SERF_MAJOR_VERSION ([0-9]+).*'
++                  b'SERF_MINOR_VERSION ([0-9]+).*'
++                  b'SERF_PATCH_VERSION ([0-9]+)',
+                   env.File('serf.h').get_contents(),
+                   re.DOTALL)
+ MAJOR, MINOR, PATCH = [int(x) for x in match.groups()]
 @@ -183,7 +183,7 @@
  
  unknown = opts.UnknownVariables()
@@ -79,10 +92,23 @@ END
     if koopa_is_linux
     then
         # Patch diff created with:
-        # > diff -Naur 'SConstruct-1' 'SConstruct-2' > 'sconstruct-2.patch'
+        # > diff -u 'SConstruct-1' 'SConstruct-2' > 'sconstruct-2.patch'
         cat << END > 'sconstruct-2.patch'
---- SConstruct-1	2022-07-13 07:51:14.000000000 -0400
+--- SConstruct-1	2022-07-13 08:15:24.000000000 -0400
 +++ SConstruct-2	2022-07-13 07:53:59.000000000 -0400
+@@ -163,9 +163,9 @@
+               suffix='.def', src_suffix='.h')
+   })
+ 
+-match = re.search(b'SERF_MAJOR_VERSION ([0-9]+).*'
+-                  b'SERF_MINOR_VERSION ([0-9]+).*'
+-                  b'SERF_PATCH_VERSION ([0-9]+)',
++match = re.search('SERF_MAJOR_VERSION ([0-9]+).*'
++                  'SERF_MINOR_VERSION ([0-9]+).*'
++                  'SERF_PATCH_VERSION ([0-9]+)',
+                   env.File('serf.h').get_contents(),
+                   re.DOTALL)
+ MAJOR, MINOR, PATCH = [int(x) for x in match.groups()]
 @@ -372,6 +372,8 @@
  
    env.Append(CPPPATH=['$OPENSSL/include'])
@@ -95,6 +121,10 @@ END
 END
         "${app[patch]}" -u 'SConstruct' 'sconstruct-2.patch'
     fi
+    # Download patch required for OpenSSL 3 compatibility.
+    koopa_download "https://www.linuxfromscratch.org/patches/blfs/svn/\
+serf-1.3.9-openssl3_fixes-1.patch"
+    "${app[patch]}" -Np1 -i 'serf-1.3.9-openssl3_fixes-1.patch'
     # Refer to 'SConstruct' file for supported arguments.
     scons_args=(
         # > 'CC=gcc'
@@ -104,7 +134,7 @@ END
         "CFLAGS=${CFLAGS:-}"
         'LIBDIR=lib'
         "LINKFLAGS=${LDFLAGS:-}"
-        "OPENSSL=${dict[opt_prefix]}/openssl1"
+        "OPENSSL=${dict[opt_prefix]}/openssl3"
         "PREFIX=${dict[prefix]}"
     )
     if koopa_is_linux
