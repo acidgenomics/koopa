@@ -59,7 +59,8 @@ serf-1.3.9-openssl3_fixes-1.patch"
         "APU=${dict[opt_prefix]}/apr-util"
         'CC=gcc'
         "CFLAGS=${CFLAGS:-}"
-        'GSSAPI=/usr'
+        # > "DEBUG=true"
+        # > 'GSSAPI=/usr'
         "LINKFLAGS=${LDFLAGS:-}"
         "OPENSSL=${dict[opt_prefix]}/openssl3"
         "PREFIX=${dict[prefix]}"
@@ -67,12 +68,6 @@ serf-1.3.9-openssl3_fixes-1.patch"
     if koopa_is_linux
     then
         scons_args+=(
-            # FIXME CC
-            # FIXME CFLAGS
-            # FIXME CPPFLAGS
-            # FIXME LIBS
-            # FIXME LINKFLAGS
-            "DEBUG=true"
             "ZLIB=${dict[opt_prefix]}/zlib"
         )
     fi
