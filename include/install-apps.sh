@@ -176,7 +176,6 @@ pkgs=(
     'units'
     'wget'
     'which'
-    'yt-dlp'
     'libgeotiff'
 
 
@@ -208,7 +207,8 @@ pkgs=(
     'ranger-fm'
     'scons'
     'serf'
-    # Install Mode packages.
+    'yt-dlp'
+    # Install Node packages.
     'node-binary'
     'bash-language-server'
     'gtop'
