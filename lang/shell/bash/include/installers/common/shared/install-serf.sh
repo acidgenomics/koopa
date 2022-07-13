@@ -61,6 +61,7 @@ serf-1.3.9-openssl3_fixes-1.patch"
         "CFLAGS=${CFLAGS:-}"
         # > "DEBUG=true"
         # > 'GSSAPI=/usr'
+        "LIBS=${LD_LIBRARY_PATH:-}"
         "LINKFLAGS=${LDFLAGS:-}"
         "OPENSSL=${dict[opt_prefix]}/openssl3"
         "PREFIX=${dict[prefix]}"
