@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+# FIXME Now we're running into serf issue on Linux:
+#
+# checking for serf.h... yes
+# checking for serf_context_create in -lserf-1... no
+# checking was serf enabled... no
+#
+# An appropriate version of serf could not be found, so libsvn_ra_serf
+# will not be built.  If you want to build libsvn_ra_serf, please
+# install serf 1.3.4 or newer.
+#
+# configure: error: Serf was explicitly enabled but an appropriate version was not found.
+
+
 main() {
     # """
     # Install Subversion.
