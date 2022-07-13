@@ -113,10 +113,10 @@ END
  MAJOR, MINOR, PATCH = [int(x) for x in match.groups()]
 @@ -372,6 +372,8 @@
  
-   env.Append(CPPPATH=['$OPENSSL/include'])
-   env.Append(LIBPATH=['$OPENSSL/lib'])
-+  env.Append(CPPPATH=['$ZLIB\/include'])
-+  env.Append(LIBPATH=['$ZLIB/lib'])
+   env.Append(CPPPATH=['\$OPENSSL/include'])
+   env.Append(LIBPATH=['\$OPENSSL/lib'])
++  env.Append(CPPPATH=['\$ZLIB\/include'])
++  env.Append(LIBPATH=['\$ZLIB/lib'])
  
  
  # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
