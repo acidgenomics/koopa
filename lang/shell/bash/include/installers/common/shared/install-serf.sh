@@ -161,10 +161,10 @@ END
     scons_args=(
         # > 'CC=gcc'
         # > "LIBS=${LD_LIBRARY_PATH:-}"
+        # > "LIBDIR=${dict[prefix]}/lib"
         "APR=${dict[opt_prefix]}/apr"
         "APU=${dict[opt_prefix]}/apr-util"
         "CFLAGS=${CFLAGS:-}"
-        'LIBDIR=lib'
         "LINKFLAGS=${LDFLAGS:-}"
         "OPENSSL=${dict[opt_prefix]}/openssl3"
         "PREFIX=${dict[prefix]}"

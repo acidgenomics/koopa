@@ -21,12 +21,15 @@ main() {
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
     #
+    # Including serf for HTTPS is useful for installing R-devel.
+    #
     # @seealso
     # - https://svn.apache.org/repos/asf/subversion/trunk/INSTALL
     # - https://subversion.apache.org/download.cgi
     # - https://subversion.apache.org/source-code.html
     # - Need to use serf to support HTTPS URLs.
     #   https://serverfault.com/questions/522646/
+    # - https://lists.apache.org/thread/3qbhp66woztkgzq8sx6vfb7cjn6mcl9y
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
