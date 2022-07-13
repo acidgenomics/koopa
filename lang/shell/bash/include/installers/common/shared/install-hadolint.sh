@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2022-06-14.
+    # @note Updated 2022-07-12.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
@@ -11,6 +11,7 @@ main() {
     #     hadolint.rb
     # """
     local app dict stack_args
+    koopa_activate_build_opt_prefix 'haskell-stack'
     declare -A app=(
         [stack]="$(koopa_locate_stack)"
     )
