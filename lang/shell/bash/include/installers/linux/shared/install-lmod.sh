@@ -9,6 +9,7 @@ main() {
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
     # """
     local app dict
+    koopa_activate_build_opt_prefix 'pkg-config'
     if koopa_is_linux
     then
         koopa_activate_opt_prefix 'zlib'
