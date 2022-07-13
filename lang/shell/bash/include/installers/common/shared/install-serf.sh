@@ -44,7 +44,7 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     koopa_find_and_replace_in_file \
-        --regex \
+        --fixed \
         --pattern="print 'Warning: Used unknown variables:', ', '.join(unknown.keys())" \
         --replacement="print('Warning: Used unknown variables:', ', '.join(unknown.keys()))" \
         'SConstruct'
@@ -56,9 +56,9 @@ main() {
     if koopa_is_linux
     then
         koopa_find_and_replace_in_file \
-            --regex \
+            --fixed \
             --pattern="env.Append(LIBPATH=['\$OPENSSL/lib'])" \
-            --replacement="\\1\nenv.Append(CPPPATH=['\$ZLIB/include'])\nenv.Append(LIBPATH=['\$ZLIB/lib'])" \
+            --replacement="env.Append(LIBPATH=['\$OPENSSL/lib'])\nenv.Append(CPPPATH=['\$ZLIB/include'])\nenv.Append(LIBPATH=['\$ZLIB/lib'])" \
             'SConstruct'
     fi
     koopa_stop "${PWD} FIXME"
