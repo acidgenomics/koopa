@@ -1,22 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Now we're running into serf issue on Linux:
-#
-# checking for serf.h... yes
-# checking for serf_context_create in -lserf-1... no
-# checking was serf enabled... no
-#
-# An appropriate version of serf could not be found, so libsvn_ra_serf
-# will not be built.  If you want to build libsvn_ra_serf, please
-# install serf 1.3.4 or newer.
-#
-# configure: error: Serf was explicitly enabled but an appropriate version was not found.
-
-
 main() {
     # """
     # Install Subversion.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-07-13.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -33,6 +20,10 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'zlib'
+    fi
     koopa_activate_opt_prefix \
         'apr' \
         'apr-util' \
