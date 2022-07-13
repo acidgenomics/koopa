@@ -54,10 +54,10 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     # Patch diff created with:
-    # > diff -u 'SConstruct' 'SConstruct-1' > 'sconstruct-1.patch'
-    "${app[cat]}" << END > 'sconstruct-1.patch'
---- SConstruct	2022-07-13 07:51:34.000000000 -0400
-+++ SConstruct-1	2022-07-13 08:15:24.000000000 -0400
+    # > diff -u 'SConstruct' 'SConstruct-1' > 'patch-sconstruct-1.patch'
+    "${app[cat]}" << END > 'patch-sconstruct-1.patch'
+--- SConstruct	2022-07-13 08:31:30.000000000 -0400
++++ SConstruct-1	2022-07-13 08:33:39.000000000 -0400
 @@ -152,7 +152,7 @@
                   True),
      )
@@ -90,43 +90,30 @@ main() {
  apr = str(env['APR'])
  apu = str(env['APU'])
 END
-    "${app[patch]}" -u 'SConstruct' -i 'sconstruct-1.patch'
+    "${app[patch]}" -u 'SConstruct' -i 'patch-sconstruct-1.patch'
     if koopa_is_linux
     then
         # Patch diff created with:
-        # > diff -u 'SConstruct-1' 'SConstruct-2' > 'sconstruct-2.patch'
-        "${app[cat]}" << END > 'sconstruct-2.patch'
---- SConstruct-1	2022-07-13 08:15:24.000000000 -0400
-+++ SConstruct-2	2022-07-13 07:53:59.000000000 -0400
-@@ -163,9 +163,9 @@
-               suffix='.def', src_suffix='.h')
-   })
- 
--match = re.search(b'SERF_MAJOR_VERSION ([0-9]+).*'
--                  b'SERF_MINOR_VERSION ([0-9]+).*'
--                  b'SERF_PATCH_VERSION ([0-9]+)',
-+match = re.search('SERF_MAJOR_VERSION ([0-9]+).*'
-+                  'SERF_MINOR_VERSION ([0-9]+).*'
-+                  'SERF_PATCH_VERSION ([0-9]+)',
-                   env.File('serf.h').get_contents(),
-                   re.DOTALL)
- MAJOR, MINOR, PATCH = [int(x) for x in match.groups()]
+        # > diff -u 'SConstruct-1' 'SConstruct-2' > 'patch-sconstruct-2.patch'
+        "${app[cat]}" << END > 'patch-sconstruct-2.patch'
+--- SConstruct-1	2022-07-13 08:33:39.000000000 -0400
++++ SConstruct-2	2022-07-13 08:34:21.000000000 -0400
 @@ -372,6 +372,8 @@
  
-   env.Append(CPPPATH=['\$OPENSSL/include'])
-   env.Append(LIBPATH=['\$OPENSSL/lib'])
-+  env.Append(CPPPATH=['\$ZLIB\/include'])
-+  env.Append(LIBPATH=['\$ZLIB/lib'])
+   env.Append(CPPPATH=['$OPENSSL/include'])
+   env.Append(LIBPATH=['$OPENSSL/lib'])
++  env.Append(CPPPATH=['$ZLIB\/include'])
++  env.Append(LIBPATH=['$ZLIB/lib'])
  
  
  # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
 END
-        "${app[patch]}" -u 'SConstruct' 'sconstruct-2.patch'
+        "${app[patch]}" -u 'SConstruct' 'patch-sconstruct-2.patch'
     fi
     # Apply OpenSSL compatibility patch.
     # https://www.linuxfromscratch.org/patches/blfs/svn/
     #   serf-1.3.9-openssl3_fixes-1.patch
-    "${app[cat]}" << END > 'openssl3.patch'
+    "${app[cat]}" << END > 'patch-openssl3.patch'
 Submitted By:            Douglas R. Reno <renodr at linuxfromscratch dot org>
 Date:                    2021-12-30
 Initial Package Version: 1.3.9
@@ -169,7 +156,7 @@ diff -Naurp serf-1.3.9.orig/buckets/ssl_buckets.c serf-1.3.9/buckets/ssl_buckets
  {
      serf_ssl_context_t *ctx = SSL_get_app_data(ssl);
 END
-    "${app[patch]}" -Np1 -i 'openssl3.patch'
+    "${app[patch]}" -Np1 -i 'patch-openssl3.patch'
     # Refer to 'SConstruct' file for supported arguments.
     scons_args=(
         # > 'CC=gcc'
