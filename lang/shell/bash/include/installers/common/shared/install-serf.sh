@@ -44,15 +44,17 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     koopa_find_and_replace_in_file \
-        --regex \
-        --pattern="print 'Warning: Used unknown variables:', ', '.join(unknown.keys())" \
-        --replacement="print('Warning: Used unknown variables:', ', '.join(unknown.keys()))" \
-        'SConstruct'
-    koopa_find_and_replace_in_file \
         --fixed \
         --pattern='variables=opts,' \
         --replacement="variables=opts, RPATHPREFIX = '-Wl,-rpath,'," \
         'SConstruct'
+    # FIXME Seems like Perl isn't hardened enough for this...
+    koopa_find_and_replace_in_file \
+        --fixed \
+        --pattern="print 'Warning: Used unknown variables:', ', '.join(unknown.keys())" \
+        --replacement="print('Warning: Used unknown variables:', ', '.join(unknown.keys()))" \
+        'SConstruct'
+    # FIXME This doesn't seem to work with Perl engine...another approach?
     if koopa_is_linux
     then
         koopa_find_and_replace_in_file \
