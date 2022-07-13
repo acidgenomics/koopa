@@ -100,10 +100,10 @@ END
 +++ SConstruct-2	2022-07-13 08:34:21.000000000 -0400
 @@ -372,6 +372,8 @@
  
-   env.Append(CPPPATH=['$\OPENSSL/include'])
-   env.Append(LIBPATH=['$\OPENSSL/lib'])
-+  env.Append(CPPPATH=['$\ZLIB\/include'])
-+  env.Append(LIBPATH=['$\ZLIB/lib'])
+   env.Append(CPPPATH=['\$OPENSSL/include'])
+   env.Append(LIBPATH=['\$OPENSSL/lib'])
++  env.Append(CPPPATH=['\$ZLIB/include'])
++  env.Append(LIBPATH=['\$ZLIB/lib'])
  
  
  # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
