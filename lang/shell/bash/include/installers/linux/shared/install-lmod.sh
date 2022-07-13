@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME This requires tcl.h.
-
 main() {
     # """
     # Install Lmod.
-    # @note Updated 2022-06-15.
+    # @note Updated 2022-07-13.
     #
     # @seealso
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
     # """
     local app dict
-    koopa_activate_opt_prefix 'lua' 'luarocks'
+    koopa_activate_opt_prefix 'lua' 'luarocks' 'tcl-tk'
     declare -A app=(
         [lua]="$(koopa_locate_lua)"
         [luarocks]="$(koopa_locate_luarocks)"
