@@ -59,14 +59,15 @@ serf-1.3.9-openssl3_fixes-1.patch"
     "${app[sed]}" -i.bak "/  print/{s/print/print(/; s/$/)/}" 'SConstruct'
     "${app[sed]}" -i.bak "/get_contents()/s/,/.decode()&/" 'SConstruct'
 
-    if koopa_is_linux
-    then
+    # FIXME May need to apply this approach used by Homebrew.
+    # > if koopa_is_linux
+    # > then
         # FIXME Need to fix detection of ZLIB.
         # > inreplace "SConstruct" do |s|
         # >   s.gsub! "env.Append(LIBPATH=['$OPENSSL\/lib'])",
         # >   "\\1\nenv.Append(CPPPATH=['$ZLIB\/include'])\nenv.Append(LIBPATH=['$ZLIB/lib'])"
         # > end
-    fi
+    # > fi
 
     # NOTE Refer to 'SConstruct' file for supported arguments.
     scons_args=(
