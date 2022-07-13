@@ -44,7 +44,7 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     koopa_find_and_replace_in_file \
-        --fixed \
+        --regex \
         --pattern="print 'Warning: Used unknown variables:', ', '.join(unknown.keys())" \
         --replacement="print('Warning: Used unknown variables:', ', '.join(unknown.keys()))" \
         'SConstruct'
