@@ -56,7 +56,7 @@ main() {
     if koopa_is_linux
     then
         koopa_find_and_replace_in_file \
-            --fixed \
+            --regex \
             --pattern="env.Append(LIBPATH=['\$OPENSSL/lib'])" \
             --replacement="env.Append(LIBPATH=['\$OPENSSL/lib'])\nenv.Append(CPPPATH=['\$ZLIB/include'])\nenv.Append(LIBPATH=['\$ZLIB/lib'])" \
             'SConstruct'
