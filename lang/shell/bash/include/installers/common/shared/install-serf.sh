@@ -159,12 +159,10 @@ END
     "${app[patch]}" -Np1 -i 'patch-openssl3.patch'
     # Refer to 'SConstruct' file for supported arguments.
     scons_args=(
-        # > 'CC=gcc'
-        # > "LIBS=${LD_LIBRARY_PATH:-}"
-        # > "LIBDIR=${dict[prefix]}/lib"
         "APR=${dict[opt_prefix]}/apr"
         "APU=${dict[opt_prefix]}/apr-util"
         "CFLAGS=${CFLAGS:-}"
+        "LIBDIR=${dict[prefix]}/lib"
         "LINKFLAGS=${LDFLAGS:-}"
         "OPENSSL=${dict[opt_prefix]}/openssl3"
         "PREFIX=${dict[prefix]}"
