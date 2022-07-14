@@ -3,12 +3,12 @@
 koopa_alert_is_installed() {
     # """
     # Alert the user that a program is installed.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-07-14.
     # """
     local name prefix
     name="${1:?}"
     prefix="${2:-}"
-    x="${name} is installed"
+    x="'${name}' is installed"
     if [[ -n "$prefix" ]]
     then
         x="${x} at '${prefix}'"
