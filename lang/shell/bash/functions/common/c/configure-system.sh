@@ -16,6 +16,8 @@
 # - ruby-packages
 # - python-packages
 
+# FIXME Rethink this approach.
+
 koopa_configure_system() {
     # """
     # Configure system.
