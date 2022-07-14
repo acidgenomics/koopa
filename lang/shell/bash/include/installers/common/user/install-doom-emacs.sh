@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Doom Emacs.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-07-14.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -22,24 +22,21 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'chemacs'
     declare -A app=(
         [emacs]="$(koopa_locate_emacs)"
     )
+    [[ -x "${app[emacs]}" ]] || return 1
     declare -A dict=(
         [branch]='master'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [url]='https://github.com/hlissner/doom-emacs.git'
     )
-    if [[ ! -d "${dict[opt_prefix]}/chemacs" ]]
-    then
-        koopa_stop 'Install chemacs first.'
-    fi
     koopa_add_to_path_start "$(koopa_dirname "${app[emacs]}")"
     koopa_git_clone \
         --branch="${dict[branch]}" \
-        "${dict[url]}" \
-        "${dict[prefix]}"
+        --prefix="${dict[prefix]}" \
+        --url="${dict[url]}"
     app[doom]="${dict[prefix]}/bin/doom"
     koopa_assert_is_installed "${app[doom]}"
     install_args=(
