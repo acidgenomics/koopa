@@ -10563,6 +10563,14 @@ ${dict[name]}/${dict[version]}.tar.gz"
     return 0
 }
 
+koopa_install_app_internal() {
+    koopa_install_app \
+        --no-link-in-opt \
+        --no-prefix-check \
+        --quiet \
+        "$@"
+}
+
 koopa_install_app_packages() {
     local app name name_fancy pos
     koopa_assert_has_args "$#"
