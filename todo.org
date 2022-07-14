@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Reorganize installation of system packages under 'koopa install system XXX'.
+    e.g. update this for Homebrew, etc.
 ** TODO Rework koopa install conventions.
     Use 'koopa install --binary --reinstall XXX YYY' instead of 'koopa install XXX --binary --reinstall'.
 ** TODO Can we install RStudio Server and Shiny Server deb packages without using gdebi-core?
