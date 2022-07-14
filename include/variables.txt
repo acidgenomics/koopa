@@ -101,7 +101,10 @@ cairo="1.16.0"
 cellranger="7.0.0"
 
 # https://github.com/plexus/chemacs2
-chemacs="latest"
+chemacs="d722459287566e8c91ae077bf3d65966ebece190"
+
+# https://github.com/chapmanb/cloudbiolinux
+cloudbiolinux="c4c7cf8e508fe947c8b038543c98a2846bb900d6"
 
 # https://cmake.org/download/
 cmake="3.23.2"
@@ -131,7 +134,7 @@ docker-credential-pass="0.6.4"
 doom-emacs="latest"
 
 # https://github.com/acidgenomics/dotfiles
-dotfiles="latest"
+dotfiles="08b427442803287281bc58a39e9944087d0ac9a9"
 
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
