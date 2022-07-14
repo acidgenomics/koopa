@@ -3,7 +3,8 @@
 main() {
     # """
     # Install SpaceVim.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-07-14.
+    #
     # @seealso
     # - https://spacevim.org
     # - https://spacevim.org/quick-start-guide/
@@ -14,7 +15,9 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
+        [branch]='master'
         [prefix]="${INSTALL_PREFIX:?}"
         [url]='https://github.com/SpaceVim/SpaceVim.git'
         [xdg_data_home]="$(koopa_xdg_data_home)"
@@ -24,7 +27,10 @@ main() {
     then
         koopa_ln "${HOME:?}/Library/Fonts" "${dict[xdg_data_home]}/fonts"
     fi
-    koopa_git_clone "${dict[url]}" "${dict[prefix]}"
+    koopa_git_clone \
+        --branch="${dict[branch]}" \
+        --prefix="${dict[prefix]}" \
+        --url="${dict[url]}"
     # Bug fix for vimproc error.
     # https://github.com/SpaceVim/SpaceVim/issues/435
     dict[vimproc_prefix]="${dict[prefix]}/bundle/vimproc.vim"
