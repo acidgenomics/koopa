@@ -3,7 +3,7 @@
 main() {
     # """
     # Install rbenv.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-07-14.
     #
     # @seealso
     # - https://github.com/rbenv/rbenv
@@ -23,9 +23,9 @@ refs/tags/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cp "${dict[name]}-${dict[version]}" "${dict[prefix]}"
     koopa_mkdir "${dict[prefix]}/plugins"
-    # NOTE Consider also versioning 'ruby-build' here.
     koopa_git_clone \
-        'https://github.com/rbenv/ruby-build.git' \
-        "${dict[prefix]}/plugins/ruby-build"
+        --prefix="${dict[prefix]}/plugins/ruby-build" \
+        --tag='v20220713' \
+        --url='https://github.com/rbenv/ruby-build.git'
     return 0
 }
