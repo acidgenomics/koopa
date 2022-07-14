@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-07-12.
+    # Updated 2022-07-14.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -127,7 +127,6 @@ __koopa_complete() {
                         'curl'
                         'delta'
                         'difftastic'
-                        'doom-emacs'
                         'dotfiles'
                         'du-dust'
                         'emacs'
@@ -174,8 +173,6 @@ __koopa_complete() {
                         'harfbuzz'
                         'haskell-stack'
                         'hdf5'
-                        'homebrew'
-                        'homebrew-bundle'
                         'htop'
                         'hyperfine'
                         'icu4c'
@@ -228,7 +225,7 @@ __koopa_complete() {
                         'nim'
                         'ninja'
                         'node'
-                        'node-binary'
+                        # > 'node-binary'
                         'oniguruma'
                         'openblas'
                         'openjdk'
@@ -281,8 +278,6 @@ __koopa_complete() {
                         'shunit2'
                         'snakemake'
                         'sox'
-                        'spacemacs'
-                        'spacevim'
                         'sqlite'
                         'sra-tools'
                         'star'
@@ -333,68 +328,14 @@ __koopa_complete() {
                         args+=(
                             'apptainer'
                             'aspera-connect'
-                            'azure-cli-binary'
-                            'base-system'
                             'bcbio-nextgen'
                             'bcl2fastq'
                             'cellranger'
                             'cloudbiolinux'
                             'docker-credential-pass'
-                            'google-cloud-sdk-binary'
-                            'julia-binary'
                             'lmod'
-                            'node-binary'
-                            'pihole'
-                            'pivpn'
-                            'wine'
-                        )
-                        if koopa_is_debian_like || koopa_is_fedora_like
-                        then
-                            args+=(
-                                'rstudio-server'
-                                'shiny-server'
-                            )
-                            if koopa_is_debian_like
-                            then
-                                args+=(
-                                    'bcbio-nextgen-vm'
-                                    'pandoc-binary'
-                                    'r-binary'
-                                )
-                            elif koopa_is_fedora_like
-                            then
-                                args+=(
-                                    'oracle-instant-client'
-                                )
-                            fi
-                        fi 
-                    fi
-                    if koopa_is_macos
-                    then
-                        args+=(
-                            'neovim-binary'
-                            'python-binary'
-                            'r-binary'
-                            'r-gfortran'
-                            'r-openmp'
-                            'xcode-clt'
                         )
                     fi
-                    # Handle 'install' or 'uninstall'-specific arguments.
-                    case "${COMP_WORDS[COMP_CWORD-1]}" in
-                        'install' | \
-                        'reinstall')
-                            args+=(
-                                'homebrew-bundle'
-                                'tex-packages'
-                            )
-                            ;;
-                        'uninstall')
-                            args+=(
-                                'koopa'
-                            )
-                            ;;
-                    esac
                     ;;
                 'system')
                     args=(
@@ -441,33 +382,11 @@ __koopa_complete() {
                     ;;
                 'update')
                     args=(
-                        'chemacs'
-                        'doom-emacs'
-                        'dotfiles'
-                        'google-cloud-sdk'
-                        'homebrew'
-                        'julia-packages'
                         'koopa'
-                        'mamba'
-                        'prelude-emacs'
                         'r-packages'
-                        'spacemacs'
-                        'spacevim'
                         'system'
-                        'tex-packages'
+                        'user'
                     )
-                    if koopa_is_linux
-                    then
-                        args+=(
-                            'google-cloud-sdk'
-                        )
-                    elif koopa_is_macos
-                    then
-                        args+=(
-                            'defaults'
-                            'microsoft-office'
-                        )
-                    fi
                     ;;
                 *)
                     ;;
@@ -475,22 +394,103 @@ __koopa_complete() {
             ;;
         '3')
             case "${COMP_WORDS[COMP_CWORD-2]}" in
+                'install' | \
+                'reinstall' | \
+                'uninstall')
+                    case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        'system')
+                            args+=(
+                                'base'
+                                'homebrew'
+                                'homebrew-bundle'
+                                'tex-packages'
+                            )
+                            if koopa_is_linux
+                            then
+                                args+=(
+                                    'pihole'
+                                    'pivpn'
+                                    'wine'
+                                )
+                                if koopa_is_debian_like || koopa_is_fedora_like
+                                then
+                                    args+=(
+                                        'azure-cli'
+                                        'google-cloud-sdk'
+                                        'rstudio-server'
+                                        'shiny-server'
+                                    )
+                                fi 
+                                if koopa_is_debian_like
+                                then
+                                    args+=(
+                                        'bcbio-nextgen-vm'
+                                        'pandoc'
+                                        'llvm'
+                                        'r'
+                                    )
+                                elif koopa_is_fedora_like
+                                then
+                                    args+=(
+                                        'oracle-instant-client'
+                                    )
+                                fi
+                            elif koopa_is_macos
+                            then
+                                args+=(
+                                    'defaults'
+                                    'python'
+                                    'r'
+                                    'r-gfortran'
+                                    'r-openmp'
+                                    'xcode-clt'
+                                )
+                            fi
+                            ;;
+                        'user')
+                            args+=(
+                                'doom-emacs'
+                                'spacemacs'
+                                'spacevim'
+                            )
+                            ;;
+                        esac
+                        ;;
+                'update')
+                    case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        'system')
+                            args+=(
+                                'homebrew'
+                                'homebrew-bundle'
+                                'tex-packages'
+                            )
+                            ;;
+                        'user')
+                            args+=(
+                                'doom-emacs'
+                                'prelude-emacs'
+                                'spacemacs'
+                                'spacevim'
+                            )
+                            ;;
+                        esac
+                        ;;
                 'system')
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
-                    'list')
-                        args=(
-                            'app-versions'
-                            'dotfiles'
-                            'path-priority'
-                            'programs'
-                        )
-                        if koopa_is_macos
-                        then
-                            args+=('launch-agents')
-                        fi
+                        'list')
+                            args=(
+                                'app-versions'
+                                'dotfiles'
+                                'path-priority'
+                                'programs'
+                            )
+                            if koopa_is_macos
+                            then
+                                args+=('launch-agents')
+                            fi
+                            ;;
+                        esac
                         ;;
-                    esac
-                    ;;
                 'app')
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'aws')
