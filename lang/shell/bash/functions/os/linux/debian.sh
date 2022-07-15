@@ -1029,15 +1029,6 @@ koopa_debian_uninstall_bcbio_nextgen_vm() {
         "$@"
 }
 
-koopa_debian_uninstall_rstudio_server() {
-    koopa_uninstall_app \
-        --name-fancy='RStudio Server' \
-        --name='rstudio-server' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
 koopa_debian_uninstall_shiny_server() {
     koopa_uninstall_app \
         --name-fancy='Shiny Server' \
@@ -1100,6 +1091,15 @@ koopa_debian_uninstall_system_r() {
         --system \
         --unlink-in-bin='R' \
         --unlink-in-bin='Rscript' \
+        "$@"
+}
+
+koopa_debian_uninstall_system_rstudio_server() {
+    koopa_uninstall_app \
+        --name-fancy='RStudio Server' \
+        --name='rstudio-server' \
+        --platform='debian' \
+        --system \
         "$@"
 }
 

@@ -1,6 +1,11 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Consider requiring zlib on macOS for all install recipes.
+** TODO Modify 'koopa_app_prefix' to accept input, such as 'gcc', 'zlib', etc.
+** TODO Create a function that combines ldd and otool for linker lookups.
+** TODO Create a function that returns dylib prefix ('.so' on Linux, '.dylib' on macOS).
+    Rework install functions to use this.
 ** TODO Move all installer link and unlink operations to 'include/installers' script instead.
 ** TODO Ensure that 'koopa install --help' works.
 ** TODO Need to add 'koopa update system' support for Linux distros.
