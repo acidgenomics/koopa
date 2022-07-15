@@ -10,12 +10,9 @@ main() {
     # @note Updated 2022-07-15.
     #
     # @section Required dependencies:
-    # 'libgmp-dev', 'zlib1g-dev' required for 'haskell-stack'.
     #
-    # Expecting these files on Ubuntu:
-    # - /usr/include/gmpxx.h
-    # - /usr/include/x86_64-linux-gnu/gmp.h
-    # - /usr/include/zlib.h
+    # 'haskell-stack' currently requires 'libgmp-dev' with no apparent
+    # workaround for providing a local copy of gmp instead.
     #
     # @seealso
     # - https://www.serverlab.ca/tutorials/linux/administration-linux/
@@ -31,7 +28,9 @@ main() {
         | debconf-set-selections
     echo 'tzdata tzdata/Zones/America select New_York' \
         | debconf-set-selections
-    # Needed for compiling software: 'gcc' 'g++' 'libc-dev' 'make'.
+    # Needed for compiling software: 'gcc' 'g++' 'libc-dev' 'make'. Don't
+    # include 'zlib1g-dev' here. We want to ensure that our build recipes are
+    # hardened with a local copy of zlib.
     apt-get \
         --no-install-recommends \
         --yes \
@@ -54,8 +53,7 @@ main() {
             'sudo' \
             'systemd' \
             'tzdata' \
-            'unzip' \
-            'zlib1g-dev'
+            'unzip'
     apt-get autoremove --yes
     apt-get clean
     # Set the time zone.
