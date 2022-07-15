@@ -3,7 +3,7 @@
 koopa_snake_case_simple() {
     # """
     # Simple snake case function.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - syntactic R package.
@@ -15,15 +15,16 @@ koopa_snake_case_simple() {
     # > koopa_snake_case_simple 'bcbio-nextgen.py'
     # # bcbio_nextgen_py
     # """
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         str="$( \
             koopa_gsub \
                 --pattern='[^A-Za-z0-9_]' \
