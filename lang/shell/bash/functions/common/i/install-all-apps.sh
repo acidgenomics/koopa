@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE This will currently fail for platforms where not all apps can be
+# successfully compiled, such as ARM.
+
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
