@@ -64,15 +64,8 @@ __koopa_complete() {
                         'chemacs'
                         'chezmoi'
                         'dotfiles'
-                        'go'
                         'julia'
-                        'nim'
-                        'node'
-                        'perl'
-                        'python'
                         'r'
-                        'ruby'
-                        'rust'
                     )
                     ;;
                 'header')
@@ -330,6 +323,7 @@ __koopa_complete() {
                             'apptainer'
                             'aspera-connect'
                             'bcbio-nextgen'
+                            'bcbio-nextgen-vm'
                             'bcl2fastq'
                             'cellranger'
                             'cloudbiolinux'
@@ -425,7 +419,7 @@ __koopa_complete() {
                                 if koopa_is_debian_like
                                 then
                                     args+=(
-                                        'bcbio-nextgen-vm'
+                                        'docker'
                                         'pandoc'
                                         'llvm'
                                         'r'
