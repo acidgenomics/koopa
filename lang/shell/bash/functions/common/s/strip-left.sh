@@ -3,7 +3,7 @@
 koopa_strip_left() {
     # """
     # Strip pattern from left side (start) of string.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-15.
     #
     # @usage koopa_strip_left --pattern=PATTERN STRING...
     #
@@ -43,8 +43,12 @@ koopa_strip_left() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
-    for str in "${pos[@]}"
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
+    set -- "${pos[@]}"
+    for str in "$@"
     do
         printf '%s\n' "${str##"${dict[pattern]}"}"
     done
