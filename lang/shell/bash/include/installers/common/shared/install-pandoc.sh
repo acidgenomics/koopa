@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Improve install consistency with hadolint...include a build step?
+
 main() {
     # """
     # Install Pandoc.

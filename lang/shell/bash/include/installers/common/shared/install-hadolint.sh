@@ -3,18 +3,19 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     hadolint.rb
     # """
-    local app dict stack_args
+    local app dict install_args stack_args
     koopa_activate_build_opt_prefix 'haskell-stack'
     declare -A app=(
         [stack]="$(koopa_locate_stack)"
     )
+    [[ -x "${app[stack]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='hadolint'
@@ -31,16 +32,10 @@ archive/${dict[file]}"
     stack_args=(
         "--jobs=${dict[jobs]}"
         "--stack-root=${dict[stack_root]}"
-        # > '--no-install-ghc'
-        # > '--skip-ghc-check'
-        # > '--system-ghc'
+        '--verbose'
     )
-    # > export STACK_ROOT="${dict[stack_root]}"
-    # > koopa_rm "${HOME:?}/.stack"
-    # > "${app[stack]}" config set system-ghc --global true
+    install_args=("--local-bin-path=${dict[prefix]}/bin")
     "${app[stack]}" "${stack_args[@]}" build
-    "${app[stack]}" "${stack_args[@]}" \
-        --local-bin-path="${dict[prefix]}/bin" \
-        install
+    "${app[stack]}" "${stack_args[@]}" install "${install_args[@]}"
     return 0
 }
