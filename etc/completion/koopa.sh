@@ -349,6 +349,7 @@ __koopa_complete() {
                         'log'
                         'os-string'
                         'prefix'
+                        'push-all-app-builds'
                         'push-app-build'
                         'reload-shell'
                         'roff'
