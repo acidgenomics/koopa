@@ -3,7 +3,7 @@
 main() {
     # """
     # Install TeX packages.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-07-15.
     #
     # Including both curl and wget here is useful, to avoid SSH certificate
     # check timeouts and/or other issues.
@@ -15,6 +15,8 @@ main() {
         [sudo]="$(koopa_locate_sudo)"
         [tlmgr]="$(koopa_locate_tlmgr)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[tlmgr]}" ]] || return 1
     "${app[sudo]}" "${app[tlmgr]}" update --self
     packages=(
         # Priority ----
