@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_install_spacevim() {
+koopa_install_user_spacevim() {
     koopa_install_app \
         --name-fancy='SpaceVim' \
         --name='spacevim' \

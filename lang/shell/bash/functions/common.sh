@@ -12555,15 +12555,6 @@ koopa_install_poetry() {
         "$@"
 }
 
-koopa_install_prelude_emacs() {
-    koopa_install_app \
-        --name-fancy='Prelude Emacs' \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_install_prettier() {
     koopa_install_app \
         --installer='node-package' \
@@ -12838,24 +12829,6 @@ koopa_install_sox() {
         "$@"
 }
 
-koopa_install_user_spacemacs() {
-    koopa_install_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_install_spacevim() {
-    koopa_install_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_install_sqlite() {
     koopa_install_app \
         --link-in-bin='bin/sqlite3' \
@@ -13037,6 +13010,33 @@ koopa_install_user_doom_emacs() {
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
         --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_install_user_prelude_emacs() {
+    koopa_install_app \
+        --name-fancy='Prelude Emacs' \
+        --name='prelude-emacs' \
+        --prefix="$(koopa_prelude_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_install_user_spacemacs() {
+    koopa_install_app \
+        --name-fancy='Spacemacs' \
+        --name='spacemacs' \
+        --prefix="$(koopa_spacemacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_install_user_spacevim() {
+    koopa_install_app \
+        --name-fancy='SpaceVim' \
+        --name='spacevim' \
+        --prefix="$(koopa_spacevim_prefix)" \
         --user \
         "$@"
 }
@@ -21614,15 +21614,6 @@ koopa_uninstall_dog() {
         "$@"
 }
 
-koopa_uninstall_doom_emacs() {
-    koopa_uninstall_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_uninstall_dotfiles() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -22513,15 +22504,6 @@ koopa_uninstall_poetry() {
         "$@"
 }
 
-koopa_uninstall_prelude_emacs() {
-    koopa_uninstall_app \
-        --name-fancy='Prelude Emacs' \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_uninstall_prettier() {
     koopa_uninstall_app \
         --name='prettier' \
@@ -22771,24 +22753,6 @@ koopa_uninstall_sox() {
         "$@"
 }
 
-koopa_uninstall_spacemacs() {
-    koopa_uninstall_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_uninstall_spacevim() {
-    koopa_uninstall_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_uninstall_sqlite() {
     koopa_uninstall_app \
         --name-fancy='SQLite' \
@@ -22921,6 +22885,42 @@ koopa_uninstall_units() {
     koopa_uninstall_app \
         --name='units' \
         --unlink-in-bin='units' \
+        "$@"
+}
+
+koopa_uninstall_user_doom_emacs() {
+    koopa_uninstall_app \
+        --name-fancy='Doom Emacs' \
+        --name='doom-emacs' \
+        --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_uninstall_user_prelude_emacs() {
+    koopa_uninstall_app \
+        --name-fancy='Prelude Emacs' \
+        --name='prelude-emacs' \
+        --prefix="$(koopa_prelude_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_uninstall_user_spacemacs() {
+    koopa_uninstall_app \
+        --name-fancy='Spacemacs' \
+        --name='spacemacs' \
+        --prefix="$(koopa_spacemacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_uninstall_user_spacevim() {
+    koopa_uninstall_app \
+        --name-fancy='SpaceVim' \
+        --name='spacevim' \
+        --prefix="$(koopa_spacevim_prefix)" \
+        --user \
         "$@"
 }
 
@@ -23348,15 +23348,6 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     return 0
 }
 
-koopa_update_doom_emacs() {
-    koopa_update_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_update_koopa() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -23375,37 +23366,10 @@ koopa_update_koopa() {
     return 0
 }
 
-koopa_update_prelude_emacs() {
-    koopa_update_app \
-        --name-fancy='Prelude Emacs' \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_update_r_packages() {
     koopa_update_app \
         --name-fancy='R packages' \
         --name='r-packages' \
-        "$@"
-}
-
-koopa_update_spacemacs() {
-    koopa_update_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_update_spacevim() {
-    koopa_update_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
-        --user \
         "$@"
 }
 
@@ -23429,6 +23393,42 @@ koopa_update_system() {
     koopa_update_app \
         --name='system' \
         --system \
+        "$@"
+}
+
+koopa_update_doom_emacs() {
+    koopa_update_app \
+        --name-fancy='Doom Emacs' \
+        --name='doom-emacs' \
+        --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_update_prelude_emacs() {
+    koopa_update_app \
+        --name-fancy='Prelude Emacs' \
+        --name='prelude-emacs' \
+        --prefix="$(koopa_prelude_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_update_spacemacs() {
+    koopa_update_app \
+        --name-fancy='Spacemacs' \
+        --name='spacemacs' \
+        --prefix="$(koopa_spacemacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_update_spacevim() {
+    koopa_update_app \
+        --name-fancy='SpaceVim' \
+        --name='spacevim' \
+        --prefix="$(koopa_spacevim_prefix)" \
+        --user \
         "$@"
 }
 
