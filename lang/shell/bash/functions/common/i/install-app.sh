@@ -258,15 +258,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     # shellcheck source=/dev/null
     source "${dict[installer_file]}"
     koopa_assert_is_function "${dict[installer_fun]}"
-    if [[ "${bool[quiet]}" -eq 0 ]]
-    then
-        if [[ -n "${dict[prefix]}" ]]
-        then
-            koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
-        else
-            koopa_alert_install_start "${dict[name_fancy]}"
-        fi
-    fi
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ -d "${dict[prefix]}" ]] && [[ "${bool[prefix_check]}" -eq 1 ]]
@@ -307,6 +298,15 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         dict[log_file]="${dict[prefix]}/.install.log"
     else
         dict[log_file]="$(koopa_tmp_log_file)"
+    fi
+    if [[ "${bool[quiet]}" -eq 0 ]]
+    then
+        if [[ -n "${dict[prefix]}" ]]
+        then
+            koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
+        else
+            koopa_alert_install_start "${dict[name_fancy]}"
+        fi
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
