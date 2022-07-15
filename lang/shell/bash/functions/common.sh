@@ -849,7 +849,7 @@ koopa_alert_is_installed() {
     local name prefix
     name="${1:?}"
     prefix="${2:-}"
-    x="${name} is installed"
+    x="'${name}' is installed"
     if [[ -n "$prefix" ]]
     then
         x="${x} at '${prefix}'"
@@ -3795,11 +3795,72 @@ koopa_cli_app() {
 }
 
 koopa_cli_configure() {
-    koopa_cli_nested_runner 'configure' "$@"
+    local app
+    koopa_assert_has_args "$#"
+    for app in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [key]="configure-${app}"
+        )
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        if ! koopa_is_function "${dict[fun]}"
+        then
+            koopa_stop "Unsupported app: '${app}'."
+        fi
+        "${dict[fun]}"
+    done
+    return 0
 }
 
 koopa_cli_install() {
-    koopa_cli_nested_runner 'install' "$@"
+    local app flags pos stem
+    koopa_assert_has_args "$#"
+    flags=()
+    pos=()
+    stem='install'
+    while (("$#"))
+    do
+        case "$1" in
+            '--binary' | \
+            '--push' | \
+            '--reinstall' | \
+            '--verbose')
+                flags+=("$1")
+                shift 1
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    case "$1" in
+        'system' | \
+        'user')
+            stem="${stem}-${1}"
+            shift 1
+            ;;
+    esac
+    koopa_assert_has_args "$#"
+    for app in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [key]="${stem}-${app}"
+        )
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        if ! koopa_is_function "${dict[fun]}"
+        then
+            koopa_stop "Unsupported app: '${app}'."
+        fi
+        "${dict[fun]}" "${flags[@]}"
+    done
+    return 0
 }
 
 koopa_cli_invalid_arg() {
@@ -3813,45 +3874,22 @@ Check autocompletion of supported arguments with <TAB>."
     fi
 }
 
-koopa_cli_nested_runner() {
-    local dict
-    declare -A dict=(
-        [runner]="${1:?}"
-        [key]="${2:-}"
-    )
-    case "${dict[key]}" in
-        '')
-            koopa_cli_invalid_arg
-            ;;
-        '--help' | \
-        '-h')
-            koopa_help "$(koopa_man_prefix)/man/man1/${dict[runner]}.1"
-            ;;
-        '-'*)
-            koopa_cli_invalid_arg "$@"
-            ;;
-        *)
-            shift 2
-            ;;
-    esac
-    koopa_print "${dict[runner]}-${dict[key]}" "$@"
-    return 0
+koopa_cli_reinstall() {
+    koopa_cli_install --reinstall "$@"
 }
 
 koopa_cli_system() {
-    local key
-    key=''
+    local dict
+    declare -A dict=(
+        [key]=''
+    )
     case "${1:-}" in
-        '--help' | \
-        '-h')
-            koopa_help "$(koopa_man_prefix)/man1/system.1"
-            ;;
         'check')
-            key='check-system'
+            dict[key]='check-system'
             shift 1
             ;;
         'info')
-            key='system-info'
+            dict[key]='system-info'
             shift 1
             ;;
         'list')
@@ -3861,37 +3899,37 @@ koopa_cli_system() {
                 'launch-agents' | \
                 'path-priority' | \
                 'programs')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
             esac
             ;;
         'log')
-            key='view-latest-tmp-log-file'
+            dict[key]='view-latest-tmp-log-file'
             shift 1
             ;;
         'prefix')
             case "${2:-}" in
                 '')
-                    key='koopa-prefix'
+                    dict[key]='koopa-prefix'
                     shift 1
                     ;;
                 'koopa')
-                    key='koopa-prefix'
+                    dict[key]='koopa-prefix'
                     shift 2
                     ;;
                 *)
-                    key="${2}-prefix"
+                    dict[key]="${2}-prefix"
                     shift 2
                     ;;
             esac
             ;;
         'version')
-            key='get-version'
+            dict[key]='get-version'
             shift 1
             ;;
         'which')
-            key='which-realpath'
+            dict[key]='which-realpath'
             shift 1
             ;;
         'brew-dump-brewfile' | \
@@ -3911,7 +3949,7 @@ koopa_cli_system() {
         'test' | \
         'variable' | \
         'variables')
-            key="${1:?}"
+            dict[key]="${1:?}"
             shift 1
             ;;
         'conda-create-env')
@@ -3921,14 +3959,14 @@ koopa_cli_system() {
             koopa_defunct 'koopa app conda remove-env'
             ;;
     esac
-    if [[ -z "$key" ]]
+    if [[ -z "${dict[key]}" ]]
     then
         if koopa_is_linux
         then
             case "${1:-}" in
                 'delete-cache' | \
                 'fix-sudo-setrlimit-error')
-                    key="${1:?}"
+                    dict[key]="${1:?}"
                     shift 1
                     ;;
             esac
@@ -3936,7 +3974,7 @@ koopa_cli_system() {
         then
             case "${1:-}" in
                 'spotlight')
-                    key='spotlight-find'
+                    dict[key]='spotlight-find'
                     shift 1
                     ;;
                 'clean-launch-services' | \
@@ -3948,41 +3986,95 @@ koopa_cli_system() {
                 'ifactive' | \
                 'list-launch-agents' | \
                 'reload-autofs')
-                    key="${1:?}"
+                    dict[key]="${1:?}"
                     shift 1
                     ;;
             esac
         fi
     fi
-    [[ -z "$key" ]] && koopa_cli_invalid_arg "$@"
-    koopa_print "$key" "$@"
+    [[ -z "${dict[key]}" ]] && koopa_cli_invalid_arg "$@"
+    dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+    if ! koopa_is_function "${dict[fun]}"
+    then
+        koopa_stop 'Unsupported command.'
+    fi
+    "${dict[fun]}" "$@"
     return 0
 }
 
 koopa_cli_uninstall() {
-    koopa_cli_nested_runner 'uninstall' "$@"
+    local app
+    [[ "$#" -eq 0 ]] && set -- 'koopa'
+    stem='uninstall'
+    case "$1" in
+        'system' | \
+        'user')
+            stem="${stem}-${1}"
+            shift 1
+            ;;
+    esac
+    koopa_assert_has_args "$#"
+    for app in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [key]="${stem}-${app}"
+        )
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        if ! koopa_is_function "${dict[fun]}"
+        then
+            koopa_stop "Unsupported app: '${app}'."
+        fi
+        "${dict[fun]}"
+    done
+    return 0
 }
 
 koopa_cli_update() {
+    local app stem
     [[ "$#" -eq 0 ]] && set -- 'koopa'
-    koopa_cli_nested_runner 'update' "$@"
+    stem='update'
+    case "$1" in
+        'system' | \
+        'user')
+            stem="${stem}-${1}"
+            shift 1
+            ;;
+    esac
+    koopa_assert_has_args "$#"
+    for app in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [key]="${stem}-${app}"
+        )
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        if ! koopa_is_function "${dict[fun]}"
+        then
+            koopa_stop "Unsupported app: '${app}'."
+        fi
+        "${dict[fun]}"
+    done
+    return 0
 }
 
 koopa_cli() {
     local dict
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [nested_runner]=0
+        [nested]=0
     )
     case "${1:?}" in
+        '--help' | \
+        '-h')
+            dict[manfile]="$(koopa_man_prefix)/man1/koopa.1"
+            koopa_help "${dict[manfile]}"
+            return 0
+            ;;
         '--version' | \
         '-V' | \
         'version')
             dict[key]='koopa-version'
-            shift 1
-            ;;
-        'reinstall')
-            dict[key]='reinstall-app'
             shift 1
             ;;
         'header')
@@ -3992,116 +4084,25 @@ koopa_cli() {
         'app' | \
         'configure' | \
         'install' | \
+        'reinstall' | \
         'system' | \
         'uninstall' | \
         'update')
-            dict[nested_runner]=1
+            dict[nested]=1
             dict[key]="cli-${1}"
             shift 1
-            ;;
-        'app-prefix')
-            koopa_defunct 'koopa system prefix app'
-            ;;
-        'cellar-prefix')
-            koopa_defunct 'koopa system prefix app'
-            ;;
-        'check' | \
-        'check-system')
-            koopa_defunct 'koopa system check'
-            ;;
-        'conda-prefix')
-            koopa_defunct 'koopa system prefix conda'
-            ;;
-        'config-prefix')
-            koopa_defunct 'koopa system prefix config'
-            ;;
-        'delete-cache')
-            koopa_defunct 'koopa system delete-cache'
-            ;;
-        'fix-zsh-permissions')
-            koopa_defunct 'koopa system fix-zsh-permissions'
-            ;;
-        'get-homebrew-cask-version')
-            koopa_defunct 'koopa system homebrew-cask-version'
-            ;;
-        'get-macos-app-version')
-            koopa_defunct 'koopa system macos-app-version'
-            ;;
-        'get-version')
-            koopa_defunct 'koopa system version'
-            ;;
-        'help')
-            koopa_defunct 'koopa --help'
-            ;;
-        'home' | \
-        'prefix')
-            koopa_defunct 'koopa system prefix'
-            ;;
-        'host-id')
-            koopa_defunct 'koopa system host-id'
-            ;;
-        'info')
-            koopa_defunct 'koopa system info'
-            ;;
-        'make-prefix')
-            koopa_defunct 'koopa system prefix make'
-            ;;
-        'os-string')
-            koopa_defunct 'koopa system os-string'
-            ;;
-        'r-home')
-            koopa_defunct 'koopa system prefix r'
-            ;;
-        'roff')
-            koopa_defunct 'koopa system roff'
-            ;;
-        'set-permissions')
-            koopa_defunct 'koopa system set-permissions'
-            ;;
-        'test')
-            koopa_defunct 'koopa system test'
-            ;;
-        'update-r-config')
-            koopa_defunct 'koopa update r-config'
-            ;;
-        'upgrade')
-            koopa_defunct 'koopa update'
-            ;;
-        'variable')
-            koopa_defunct 'koopa system variable'
-            ;;
-        'variables')
-            koopa_defunct 'koopa system variables'
-            ;;
-        'which-realpath')
-            koopa_defunct 'koopa system which'
             ;;
         *)
             koopa_cli_invalid_arg "$@"
             ;;
     esac
-    if [[ "${dict[nested_runner]}"  -eq 1 ]]
+    if [[ "${dict[nested]}"  -eq 1 ]]
     then
-        local pos
         dict[fun]="koopa_${dict[key]//-/_}"
         koopa_assert_is_function "${dict[fun]}"
-        readarray -t pos <<< "$("${dict[fun]}" "$@")"
-        dict[key]="${pos[0]}"
-        unset "pos[0]"
-        if koopa_is_array_non_empty "${pos[@]:-}"
-        then
-            set -- "${pos[@]}"
-        else
-            set --
-        fi
+    else
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
     fi
-    case "${!#:-}" in
-        '--help' | \
-        '-h')
-            koopa_help "$(koopa_man_prefix)/man1/${dict[key]}.1"
-            ;;
-    esac
-    dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
     if ! koopa_is_function "${dict[fun]}"
     then
         koopa_stop 'Unsupported command.'
@@ -4584,13 +4585,6 @@ koopa_configure_julia() {
         "$@"
 }
 
-koopa_configure_nim() {
-    koopa_configure_app_packages \
-        --name-fancy='Nim' \
-        --name='nim' \
-        "$@"
-}
-
 koopa_configure_r() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -4613,13 +4607,6 @@ koopa_configure_r() {
     koopa_sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
     koopa_alert_configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
     return 0
-}
-
-koopa_configure_rust() {
-    koopa_configure_app_packages \
-        --name-fancy='Rust' \
-        --name='rust' \
-        "$@"
 }
 
 koopa_configure_system() {
@@ -8664,15 +8651,19 @@ koopa_git_checkout_recursive() {
 }
 
 koopa_git_clone() {
-    local app clone_args dict pos
-    koopa_assert_has_args_ge "$#" 2
+    local app clone_args dict
+    koopa_assert_has_args "$#"
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     declare -A dict=(
         [branch]=''
+        [commit]=''
+        [prefix]=''
+        [tag]=''
+        [url]=''
     )
-    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -8684,56 +8675,92 @@ koopa_git_clone() {
                 dict[branch]="${2:?}"
                 shift 2
                 ;;
-            '-'*)
-                koopa_invalid_arg "$1"
+            '--commit='*)
+                dict[commit]="${1#*=}"
+                shift 1
+                ;;
+            '--commit')
+                dict[commit]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--tag='*)
+                dict[tag]="${1#*=}"
+                shift 1
+                ;;
+            '--tag')
+                dict[tag]="${2:?}"
+                shift 2
+                ;;
+            '--url='*)
+                dict[url]="${1#*=}"
+                shift 1
+                ;;
+            '--url')
+                dict[url]="${2:?}"
+                shift 2
                 ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_ge "$#" 2
-    while [[ "$#" -ge 2 ]]
-    do
-        local dict2
-        declare -A dict2=(
-            [url]="${1:?}"
-            [prefix]="${2:?}"
-        )
-        if [[ -d "${dict2[prefix]}" ]]
-        then
-            koopa_rm "${dict2[prefix]}"
-        fi
-        if koopa_str_detect_fixed \
-            --string="${dict2[url]}" \
-            --pattern='git@github.com'
-        then
-            koopa_assert_is_github_ssh_enabled
-        elif koopa_str_detect_fixed \
-            --string="${dict2[url]}" \
-            --pattern='git@gitlab.com'
-        then
-            koopa_assert_is_gitlab_ssh_enabled
-        fi
-        clone_args=()
-        if [[ -n "${dict[branch]}" ]]
-        then
-            clone_args+=(
-                '-b' "${dict[branch]}"
-            )
-        fi
+    koopa_assert_is_set \
+        '--prefix' "${dict[prefix]}" \
+        '--url' "${dict[url]}"
+    if [[ -d "${dict[prefix]}" ]]
+    then
+        koopa_rm "${dict[prefix]}"
+    fi
+    if koopa_str_detect_fixed \
+        --string="${dict[url]}" \
+        --pattern='git@github.com'
+    then
+        koopa_assert_is_github_ssh_enabled
+    elif koopa_str_detect_fixed \
+        --string="${dict[url]}" \
+        --pattern='git@gitlab.com'
+    then
+        koopa_assert_is_gitlab_ssh_enabled
+    fi
+    clone_args=(
+        '--quiet'
+    )
+    if [[ -n "${dict[branch]}" ]]
+    then
         clone_args+=(
-            '--depth' 1
-            '--quiet'
-            '--recursive'
-            "${dict2[url]}"
-            "${dict2[prefix]}"
+            '--depth=1'
+            '--single-branch'
+            "--branch=${dict[branch]}"
         )
-        "${app[git]}" clone "${clone_args[@]}"
-        shift 2
-    done
+    else
+        clone_args+=(
+            '--filter=blob:none'
+        )
+    fi
+    clone_args+=("${dict[url]}" "${dict[prefix]}")
+    "${app[git]}" clone "${clone_args[@]}"
+    if [[ -n "${dict[commit]}" ]]
+    then
+        (
+            koopa_cd "${dict[prefix]}"
+            "${app[git]}" checkout --quiet "${dict[commit]}"
+        )
+    elif [[ -n "${dict[tag]}" ]]
+    then
+        (
+            koopa_cd "${dict[prefix]}"
+            "${app[git]}" fetch --quiet --tags
+            "${app[git]}" checkout --quiet "tags/${dict[tag]}"
+        )
+    fi
     return 0
 }
 
@@ -10778,6 +10805,18 @@ koopa_install_app() {
                 dict[binary]=1
                 shift 1
                 ;;
+            '--push')
+                dict[push]=1
+                shift 1
+                ;;
+            '--reinstall')
+                dict[reinstall]=1
+                shift 1
+                ;;
+            '--verbose')
+                dict[verbose]=1
+                shift 1
+                ;;
             '--link-in-make')
                 dict[link_in_make]=1
                 shift 1
@@ -10790,16 +10829,8 @@ koopa_install_app() {
                 dict[prefix_check]=0
                 shift 1
                 ;;
-            '--push')
-                dict[push]=1
-                shift 1
-                ;;
             '--quiet')
                 dict[quiet]=1
-                shift 1
-                ;;
-            '--reinstall')
-                dict[reinstall]=1
                 shift 1
                 ;;
             '--system')
@@ -10810,13 +10841,12 @@ koopa_install_app() {
                 dict[mode]='user'
                 shift 1
                 ;;
-            '--verbose')
-                dict[verbose]=1
-                shift 1
-                ;;
             '-D')
             pos+=("${2:?}")
                 shift 2
+                ;;
+            '')
+                shift 1
                 ;;
             *)
                 koopa_invalid_arg "$1"
@@ -11379,15 +11409,6 @@ koopa_install_dog() {
         "$@"
 }
 
-koopa_install_doom_emacs() {
-    koopa_install_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_install_dotfiles() {
     koopa_install_app \
         --name-fancy='Dotfiles' \
@@ -11799,24 +11820,6 @@ koopa_install_hdf5() {
     koopa_install_app \
         --name-fancy='HDF5' \
         --name='hdf5' \
-        "$@"
-}
-
-koopa_install_homebrew_bundle() {
-    koopa_install_app \
-        --name-fancy='Homebrew bundle' \
-        --name='homebrew-bundle' \
-        --system \
-        "$@"
-}
-
-koopa_install_homebrew() {
-    koopa_install_app \
-        --name-fancy='Homebrew' \
-        --name='homebrew' \
-        --no-prefix-check \
-        --prefix="$(koopa_homebrew_prefix)" \
-        --system \
         "$@"
 }
 
@@ -12835,7 +12838,7 @@ koopa_install_sox() {
         "$@"
 }
 
-koopa_install_spacemacs() {
+koopa_install_user_spacemacs() {
     koopa_install_app \
         --name-fancy='Spacemacs' \
         --name='spacemacs' \
@@ -12902,6 +12905,32 @@ koopa_install_subversion() {
         "$@"
 }
 
+koopa_install_system_homebrew_bundle() {
+    koopa_install_app \
+        --name-fancy='Homebrew bundle' \
+        --name='homebrew-bundle' \
+        --system \
+        "$@"
+}
+
+koopa_install_system_homebrew() {
+    koopa_install_app \
+        --name-fancy='Homebrew' \
+        --name='homebrew' \
+        --no-prefix-check \
+        --prefix="$(koopa_homebrew_prefix)" \
+        --system \
+        "$@"
+}
+
+koopa_install_system_tex_packages() {
+    koopa_install_app \
+        --name-fancy='TeX packages' \
+        --name='tex-packages' \
+        --system \
+        "$@"
+}
+
 koopa_install_taglib() {
     koopa_install_app \
         --name-fancy='TagLib' \
@@ -12929,14 +12958,6 @@ koopa_install_tealdeer() {
         --installer='rust-package' \
         --link-in-bin='bin/tldr' \
         --name='tealdeer' \
-        "$@"
-}
-
-koopa_install_tex_packages() {
-    koopa_install_app \
-        --name-fancy='TeX packages' \
-        --name='tex-packages' \
-        --system \
         "$@"
 }
 
@@ -13008,6 +13029,15 @@ koopa_install_units() {
         --installer='gnu-app' \
         --link-in-bin='bin/units' \
         --name='units' \
+        "$@"
+}
+
+koopa_install_user_doom_emacs() {
+    koopa_install_app \
+        --name-fancy='Doom Emacs' \
+        --name='doom-emacs' \
+        --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
         "$@"
 }
 
@@ -21955,14 +21985,6 @@ koopa_uninstall_hdf5() {
         "$@"
 }
 
-koopa_uninstall_homebrew() {
-    koopa_uninstall_app \
-        --name-fancy='Homebrew' \
-        --name='homebrew' \
-        --system \
-        "$@"
-}
-
 koopa_uninstall_htop() {
     koopa_uninstall_app \
         --name='htop' \
@@ -22812,6 +22834,14 @@ koopa_uninstall_subversion() {
         "$@"
 }
 
+koopa_uninstall_system_homebrew() {
+    koopa_uninstall_app \
+        --name-fancy='Homebrew' \
+        --name='homebrew' \
+        --system \
+        "$@"
+}
+
 koopa_uninstall_taglib() {
     koopa_uninstall_app \
         --name-fancy='TagLib' \
@@ -23318,13 +23348,6 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     return 0
 }
 
-koopa_update_chemacs() {
-    koopa_update_app \
-        --name='chemacs' \
-        --name-fancy='Chemacs' \
-        "$@"
-}
-
 koopa_update_doom_emacs() {
     koopa_update_app \
         --name-fancy='Doom Emacs' \
@@ -23332,33 +23355,6 @@ koopa_update_doom_emacs() {
         --prefix="$(koopa_doom_emacs_prefix)" \
         --user \
         "$@"
-}
-
-koopa_update_dotfiles() {
-    koopa_update_app \
-        --name='dotfiles' \
-        --name-fancy='Dotfiles' \
-        "$@"
-}
-
-koopa_update_google_cloud_sdk() {
-    koopa_update_app \
-        --name-fancy='Google Cloud SDK' \
-        --name='google-cloud-sdk' \
-        --system \
-        "$@"
-}
-
-koopa_update_homebrew() {
-    koopa_update_app \
-        --name-fancy='Homebrew' \
-        --name='homebrew' \
-        --system \
-        "$@"
-}
-
-koopa_update_julia_packages() {
-    koopa_install_julia_packages "$@"
 }
 
 koopa_update_koopa() {
@@ -23377,10 +23373,6 @@ koopa_update_koopa() {
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     koopa_fix_zsh_permissions
     return 0
-}
-
-koopa_update_mamba() {
-    koopa_install_mamba "$@"
 }
 
 koopa_update_prelude_emacs() {
@@ -23417,17 +23409,25 @@ koopa_update_spacevim() {
         "$@"
 }
 
-koopa_update_system() {
+koopa_update_system_homebrew() {
     koopa_update_app \
-        --name='system' \
+        --name-fancy='Homebrew' \
+        --name='homebrew' \
         --system \
         "$@"
 }
 
-koopa_update_tex_packages() {
+koopa_update_system_tex_packages() {
     koopa_update_app \
         --name-fancy='TeX packages' \
         --name='tex-packages' \
+        --system \
+        "$@"
+}
+
+koopa_update_system() {
+    koopa_update_app \
+        --name='system' \
         --system \
         "$@"
 }

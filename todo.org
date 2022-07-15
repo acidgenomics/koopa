@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Move all installer link and unlink operations to 'include/installers' script instead.
+** TODO Ensure that 'koopa install --help' works.
 ** TODO Need to add 'koopa update system' support for Linux distros.
 ** TODO Reorganize installation of system packages under 'koopa install system XXX'.
     e.g. update this for Homebrew, etc.
