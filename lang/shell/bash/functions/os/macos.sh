@@ -591,6 +591,15 @@ koopa_macos_install_aws_cli() {
         "$@"
 }
 
+koopa_macos_install_system_defaults() {
+    koopa_update_app \
+        --name-fancy='macOS system defaults' \
+        --name='defaults' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
 koopa_macos_install_system_python_binary() {
     koopa_install_app \
         --installer='python-binary' \
@@ -599,19 +608,6 @@ koopa_macos_install_system_python_binary() {
         --name='python' \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
-        --system \
-        "$@"
-}
-
-koopa_macos_install_system_r_binary() {
-    koopa_install_app \
-        --installer='r-binary' \
-        --link-in-bin='bin/R' \
-        --link-in-bin='bin/Rscript' \
-        --name-fancy='R' \
-        --name='r' \
-        --platform='macos' \
-        --prefix="$(koopa_macos_r_prefix)" \
         --system \
         "$@"
 }
@@ -635,16 +631,20 @@ koopa_macos_install_r_openmp() {
         "$@"
 }
 
-koopa_macos_install_system_defaults() {
-    koopa_update_app \
-        --name-fancy='macOS system defaults' \
-        --name='defaults' \
+koopa_macos_install_system_r_binary() {
+    koopa_install_app \
+        --installer='r-binary' \
+        --link-in-bin='bin/R' \
+        --link-in-bin='bin/Rscript' \
+        --name-fancy='R' \
+        --name='r' \
         --platform='macos' \
+        --prefix="$(koopa_macos_r_prefix)" \
         --system \
         "$@"
 }
 
-koopa_macos_install_xcode_clt() {
+koopa_macos_install_system_xcode_clt() {
     koopa_install_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
@@ -688,10 +688,6 @@ koopa_macos_list_launch_agents() {
     return 0
 }
 
-koopa_macos_locate_installer() {
-    koopa_locate_app '/usr/sbin/installer'
-}
-
 koopa_macos_locate_automount() {
     koopa_locate_app '/usr/sbin/automount'
 }
@@ -718,6 +714,10 @@ koopa_macos_locate_hdiutil() {
 
 koopa_macos_locate_ifconfig() {
     koopa_locate_app '/sbin/ifconfig'
+}
+
+koopa_macos_locate_installer() {
+    koopa_locate_app '/usr/sbin/installer'
 }
 
 koopa_macos_locate_kill_all() {
@@ -872,15 +872,6 @@ koopa_macos_symlink_icloud_drive() {
     return 0
 }
 
-koopa_macos_uninstall_adobe_creative_cloud() {
-    koopa_uninstall_app \
-        --name-fancy='Adobe Creative Cloud' \
-        --name='adobe-creative-cloud' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa_macos_uninstall_brewfile_casks() {
     local app cask casks dict
     koopa_assert_has_args_eq "$#" 1
@@ -903,6 +894,15 @@ koopa_macos_uninstall_brewfile_casks() {
         "${app[brew]}" uninstall --cask --force "$cask"
     done
     return 0
+}
+
+koopa_macos_uninstall_adobe_creative_cloud() {
+    koopa_uninstall_app \
+        --name-fancy='Adobe Creative Cloud' \
+        --name='adobe-creative-cloud' \
+        --platform='macos' \
+        --system \
+        "$@"
 }
 
 koopa_macos_uninstall_cisco_webex() {
@@ -953,18 +953,6 @@ koopa_macos_uninstall_python_binary() {
         "$@"
 }
 
-koopa_macos_uninstall_r_binary() {
-    koopa_uninstall_app \
-        --name-fancy='R' \
-        --name='r' \
-        --platform='macos' \
-        --system \
-        --uninstaller='r-binary' \
-        --unlink-in-bin='R' \
-        --unlink-in-bin='Rscript' \
-        "$@"
-}
-
 koopa_macos_uninstall_r_gfortran() {
     koopa_uninstall_app \
         --name-fancy='R gfortran' \
@@ -984,6 +972,18 @@ koopa_macos_uninstall_r_openmp() {
         "$@"
 }
 
+koopa_macos_uninstall_r_binary() {
+    koopa_uninstall_app \
+        --name-fancy='R' \
+        --name='r' \
+        --platform='macos' \
+        --system \
+        --uninstaller='r-binary' \
+        --unlink-in-bin='R' \
+        --unlink-in-bin='Rscript' \
+        "$@"
+}
+
 koopa_macos_uninstall_ringcentral() {
     koopa_uninstall_app \
         --name-fancy='RingCentral' \
@@ -993,7 +993,7 @@ koopa_macos_uninstall_ringcentral() {
         "$@"
 }
 
-koopa_macos_uninstall_xcode_clt() {
+koopa_macos_uninstall_system_xcode_clt() {
     koopa_uninstall_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \

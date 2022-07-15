@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to link into koopa bin.
+
 main() {
     # """
     # Install Azure CLI.
