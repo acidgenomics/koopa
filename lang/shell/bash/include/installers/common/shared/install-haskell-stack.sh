@@ -36,6 +36,7 @@ main() {
         [arch]="$(koopa_arch)" # e.g. 'x86_64'.
         [jobs]="$(koopa_cpu_count)"
         [name]='stack'
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -57,8 +58,8 @@ download/v${dict[version]}/${dict[file]}"
     koopa_cp "${dict[file]}" "${app[stack]}"
     unset -v STACK_ROOT
     koopa_rm "${HOME:?}/.stack"
-    export LIBRARY_PATH="${LD_LIBRARY_PATH:?}"
-    echo "LIBRARY_PATH: ${LIBRARY_PATH}" # FIXME
+    dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
+    export LIBRARY_PATH="${dict[gmp]}"
     "${app[stack]}" \
         --jobs="${dict[jobs]}" \
         --stack-root="${dict[root]}" \
