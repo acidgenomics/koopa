@@ -6,6 +6,7 @@ koopa_push_all_app_builds() {
     # @note Updated 2022-07-15.
     # """
     local app dict names
+    koopa_assert_has_no_args "$#"
     declare -A app=(
         [basename]="$(koopa_locate_basename)"
         [grep]="$(koopa_locate_grep)"
