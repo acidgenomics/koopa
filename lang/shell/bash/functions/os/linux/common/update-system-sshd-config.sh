@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_linux_update_sshd_config() {
+koopa_linux_update_system_sshd_config() {
     # """
     # Update sshd configuration.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-07-15.
     #
     # Creates a 'koopa.conf' file, which contains passthrough support of
     # 'KOOPA_COLOR_MODE' environment variable.

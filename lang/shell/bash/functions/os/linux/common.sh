@@ -821,7 +821,7 @@ koopa_linux_update_ldconfig() {
     return 0
 }
 
-koopa_linux_update_sshd_config() {
+koopa_linux_update_system_sshd_config() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
