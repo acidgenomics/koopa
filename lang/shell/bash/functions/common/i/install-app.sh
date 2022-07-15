@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to pass modified version string when using '--push'
-# if we are truncating the prefix...
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
@@ -264,6 +261,11 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         then
             if [[ "${bool[reinstall]}" -eq 1 ]]
             then
+                if [[ "${dict[quiet]}" -eq 0 ]]
+                then
+                    koopa_alert_uninstall_start \
+                        "${dict[name_fancy]}" "${dict[prefix]}"
+                fi
                 case "${dict[mode]}" in
                     'system')
                         koopa_rm --sudo "${dict[prefix]}"

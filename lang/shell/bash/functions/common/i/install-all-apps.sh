@@ -222,6 +222,6 @@ koopa_install_all_apps() {
         'zsh'
         'zstd'
     )
-    koopa_cli_install --binary --reinstall "${pkgs[@]}"
+    koopa_cli_install --binary "${pkgs[@]}"
     return 0
 }
