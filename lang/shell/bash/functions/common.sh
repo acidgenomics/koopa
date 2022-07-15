@@ -11030,13 +11030,12 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     if [[ "${bool[push]}" -eq 1 ]]
     then
         [[ "${dict[mode]}" == 'shared' ]] || return 1
-        dict[version2]="$(koopa_basename "${dict[prefix]}")"
         koopa_assert_is_set \
             '--name' "${dict[name]}" \
             '--prefix' "${dict[prefix]}"
         koopa_push_app_build \
             --app-name="${dict[name]}" \
-            --app-version="${dict[version2]}"
+            --app-version="$(koopa_basename "${dict[prefix]}")"
     fi
     if [[ "${bool[quiet]}" -eq 0 ]]
     then
@@ -12527,14 +12526,6 @@ koopa_install_perl() {
         --link-in-bin='bin/perl' \
         --name-fancy='Perl' \
         --name='perl' \
-        "$@"
-}
-
-koopa_install_perlbrew() {
-    koopa_install_app \
-        --link-in-bin='bin/perlbrew' \
-        --name-fancy='Perlbrew' \
-        --name='perlbrew' \
         "$@"
 }
 
@@ -15684,12 +15675,6 @@ koopa_locate_perl() {
         --allow-in-path \
         --app-name='perl' \
         --opt-name='perl'
-}
-
-koopa_locate_perlbrew() {
-    koopa_locate_app \
-        --app-name='perlbrew' \
-        --opt-name='perlbrew'
 }
 
 koopa_locate_pkg_config() {
@@ -22481,14 +22466,6 @@ koopa_uninstall_perl() {
         "$@"
 }
 
-koopa_uninstall_perlbrew() {
-    koopa_uninstall_app \
-        --name-fancy='Perlbrew' \
-        --name='perlbrew' \
-        --unlink-in-bin='perlbrew' \
-        "$@"
-}
-
 koopa_uninstall_pipx() {
     koopa_uninstall_app \
         --name='pipx' \
@@ -23397,13 +23374,6 @@ koopa_update_system_tex_packages() {
     koopa_update_app \
         --name-fancy='TeX packages' \
         --name='tex-packages' \
-        --system \
-        "$@"
-}
-
-koopa_update_system() {
-    koopa_update_app \
-        --name='system' \
         --system \
         "$@"
 }

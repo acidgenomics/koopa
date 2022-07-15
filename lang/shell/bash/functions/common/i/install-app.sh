@@ -390,13 +390,12 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     if [[ "${bool[push]}" -eq 1 ]]
     then
         [[ "${dict[mode]}" == 'shared' ]] || return 1
-        dict[version2]="$(koopa_basename "${dict[prefix]}")"
         koopa_assert_is_set \
             '--name' "${dict[name]}" \
             '--prefix' "${dict[prefix]}"
         koopa_push_app_build \
             --app-name="${dict[name]}" \
-            --app-version="${dict[version2]}"
+            --app-version="$(koopa_basename "${dict[prefix]}")"
     fi
     if [[ "${bool[quiet]}" -eq 0 ]]
     then
