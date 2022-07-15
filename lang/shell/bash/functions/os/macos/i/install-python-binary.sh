@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_install_python_binary() {
+koopa_macos_install_system_python_binary() {
     koopa_install_app \
         --installer='python-binary' \
         --link-in-bin='bin/python3' \
