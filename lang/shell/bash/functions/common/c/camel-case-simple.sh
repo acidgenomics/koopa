@@ -3,7 +3,7 @@
 koopa_camel_case_simple() {
     # """
     # Simple camel case function.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - syntactic R package.
@@ -15,14 +15,14 @@ koopa_camel_case_simple() {
     # > koopa_camel_case_simple 'hello world'
     # # helloWorld
     # """
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
         [[ -n "$str" ]] || return 1
         str="$( \
