@@ -23396,7 +23396,7 @@ koopa_update_system() {
         "$@"
 }
 
-koopa_update_doom_emacs() {
+koopa_update_user_doom_emacs() {
     koopa_update_app \
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
@@ -23405,7 +23405,7 @@ koopa_update_doom_emacs() {
         "$@"
 }
 
-koopa_update_prelude_emacs() {
+koopa_update_user_prelude_emacs() {
     koopa_update_app \
         --name-fancy='Prelude Emacs' \
         --name='prelude-emacs' \
@@ -23414,7 +23414,7 @@ koopa_update_prelude_emacs() {
         "$@"
 }
 
-koopa_update_spacemacs() {
+koopa_update_user_spacemacs() {
     koopa_update_app \
         --name-fancy='Spacemacs' \
         --name='spacemacs' \
@@ -23423,7 +23423,7 @@ koopa_update_spacemacs() {
         "$@"
 }
 
-koopa_update_spacevim() {
+koopa_update_user_spacevim() {
     koopa_update_app \
         --name-fancy='SpaceVim' \
         --name='spacevim' \
