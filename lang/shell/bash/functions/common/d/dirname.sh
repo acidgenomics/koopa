@@ -20,6 +20,7 @@ koopa_dirname() {
     for arg in "$@"
     do
         local str
+        [[ -n "$arg" ]] || return 1
         if [[ -e "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"
