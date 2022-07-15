@@ -1,17 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Consider supporting user pass-in of 'koopa install r==4.2.1', handing
-# off with '--name=r --version=4.2.1' internally here.
-#
-# NOTE Main CLI function needs to look for this and handle accordingly...
-#
-# FIXME Consider improving this by setting a trap to delete prefix on install
-# failure.
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-07-08.
+    # @note Updated 2022-07-14.
     # """
     local app bin_arr build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -155,11 +147,24 @@ koopa_install_app() {
                 dict[version_key]="${2:?}"
                 shift 2
                 ;;
-            # Flags ------------------------------------------------------------
+            # CLI user-accessible flags ----------------------------------------
             '--binary')
                 dict[binary]=1
                 shift 1
                 ;;
+            '--push')
+                dict[push]=1
+                shift 1
+                ;;
+            '--reinstall')
+                dict[reinstall]=1
+                shift 1
+                ;;
+            '--verbose')
+                dict[verbose]=1
+                shift 1
+                ;;
+            # Internal flags ---------------------------------------------------
             '--link-in-make')
                 dict[link_in_make]=1
                 shift 1
@@ -172,16 +177,8 @@ koopa_install_app() {
                 dict[prefix_check]=0
                 shift 1
                 ;;
-            '--push')
-                dict[push]=1
-                shift 1
-                ;;
             '--quiet')
                 dict[quiet]=1
-                shift 1
-                ;;
-            '--reinstall')
-                dict[reinstall]=1
                 shift 1
                 ;;
             '--system')
@@ -192,10 +189,6 @@ koopa_install_app() {
                 dict[mode]='user'
                 shift 1
                 ;;
-            '--verbose')
-                dict[verbose]=1
-                shift 1
-                ;;
             # Configuration passthrough support --------------------------------
             # Inspired by CMake approach using '-D' prefix.
             '-D')
@@ -203,6 +196,9 @@ koopa_install_app() {
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
+            '')
+                shift 1
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
