@@ -3,7 +3,7 @@
 koopa_find_and_replace_in_file() {
     # """
     # Find and replace inside files.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-07-15.
     #
     # Parameterized, supporting multiple files.
     #
@@ -90,7 +90,10 @@ koopa_find_and_replace_in_file() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
