@@ -513,16 +513,6 @@ koopa_linux_install_docker_credential_pass() {
         "$@"
 }
 
-koopa_linux_install_julia_binary() {
-    koopa_install_app \
-        --installer="julia-binary" \
-        --link-in-bin='bin/julia' \
-        --name-fancy='Julia' \
-        --name='julia' \
-        --platform='linux' \
-        "$@"
-}
-
 koopa_linux_install_lmod() {
     koopa_install_app \
         --name-fancy='Lmod' \
@@ -531,7 +521,7 @@ koopa_linux_install_lmod() {
         "$@"
 }
 
-koopa_linux_install_pihole() {
+koopa_linux_install_system_pihole() {
     koopa_update_app \
         --name-fancy='Pi-hole' \
         --name='pihole' \
@@ -540,7 +530,7 @@ koopa_linux_install_pihole() {
         "$@"
 }
 
-koopa_linux_install_pivpn() {
+koopa_linux_install_system_pivpn() {
     koopa_update_app \
         --name-fancy='PiVPN' \
         --name='pivpn' \
@@ -609,12 +599,12 @@ koopa_linux_locate_getconf() {
     koopa_locate_app '/usr/bin/getconf'
 }
 
-koopa_linux_locate_groupadd() {
-    koopa_locate_app '/usr/sbin/groupadd'
-}
-
 koopa_linux_locate_gpasswd() {
     koopa_locate_app '/usr/bin/gpasswd'
+}
+
+koopa_linux_locate_groupadd() {
+    koopa_locate_app '/usr/sbin/groupadd'
 }
 
 koopa_linux_locate_ldconfig() {

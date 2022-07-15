@@ -127,15 +127,6 @@ koopa_fedora_install_azure_cli_binary() {
         "$@"
 }
 
-koopa_fedora_install_base_system() {
-    koopa_install_app \
-        --name-fancy='Fedora base system' \
-        --name='base-system' \
-        --platform='fedora' \
-        --system \
-        "$@"
-}
-
 koopa_fedora_install_bcl2fastq() {
     koopa_install_app \
         --installer='bcl2fastq-from-rpm' \
@@ -190,6 +181,15 @@ koopa_fedora_install_shiny_server() {
     koopa_install_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
+        --platform='fedora' \
+        --system \
+        "$@"
+}
+
+koopa_fedora_install_system_base() {
+    koopa_install_app \
+        --name-fancy='Fedora base system' \
+        --name='base' \
         --platform='fedora' \
         --system \
         "$@"

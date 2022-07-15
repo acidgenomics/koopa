@@ -1,16 +1,16 @@
 #!/bin/sh
 # shellcheck disable=all
 
-koopa_alpine_install_base_system() {
+koopa_alpine_install_system_base() {
     koopa_install_app \
         --name-fancy='Alpine base system' \
-        --name='base-system' \
+        --name='base' \
         --platform='alpine' \
         --system \
         "$@"
 }
 
-koopa_alpine_install_glibc() {
+koopa_alpine_install_system_glibc() {
     koopa_install_app \
         --name='glibc' \
         --platform='alpine' \
