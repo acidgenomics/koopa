@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# FIXME If we can get haskell-stack to build, remove 'libgmp-dev'
-# and 'zlib1g-dev' from our recipe here.
-
 # Require this script to run as root.
 [[ "${UID:?}" -eq 0 ]] || return 1
 
@@ -13,7 +10,12 @@ main() {
     # @note Updated 2022-07-15.
     #
     # @section Required dependencies:
-    # - 'libgmp-dev', 'zlib1g-dev' required for 'haskell-stack'.
+    # 'libgmp-dev', 'zlib1g-dev' required for 'haskell-stack'.
+    #
+    # Expecting these files on Ubuntu:
+    # - /usr/include/gmpxx.h
+    # - /usr/include/x86_64-linux-gnu/gmp.h
+    # - /usr/include/zlib.h
     #
     # @seealso
     # - https://www.serverlab.ca/tutorials/linux/administration-linux/
