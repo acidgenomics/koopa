@@ -130,15 +130,13 @@ docker="20.10.17"
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
 
-# https://github.com/hlissner/doom-emacs
-doom-emacs="latest"
-
 # https://github.com/acidgenomics/dotfiles
 dotfiles="08b427442803287281bc58a39e9944087d0ac9a9"
 
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
 
+# FIXME Need to version pin this.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl-perl-api="latest"
 
@@ -431,6 +429,7 @@ pcre2="10.40"
 # https://www.perl.org/get.html
 perl="5.36.0"
 
+# FIXME Need to version pin this.
 # https://perlbrew.pl/
 perlbrew="latest"
 
@@ -443,9 +442,6 @@ pixman="0.40.0"
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
-
-# https://github.com/bbatsov/prelude
-prelude-emacs="latest"
 
 # https://proj.org/
 proj="9.0.1"
@@ -522,12 +518,6 @@ shunit2="2.1.7"
 
 # http://sox.sourceforge.net/sox.html
 sox="14.4.2"
-
-# https://github.com/syl20bnr/spacemacs
-spacemacs="latest"
-
-# https://github.com/SpaceVim/SpaceVim
-spacevim="latest"
 
 # https://www.sqlite.org/download.html
 sqlite="3.38.5"
