@@ -17,6 +17,10 @@ main() {
     # - https://github.com/commercialhaskell/stack/issues/342
     # """
     local app dict stack_args
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'zlib'
+    fi
     koopa_activate_opt_prefix 'haskell-stack'
     declare -A app=(
         [stack]="$(koopa_locate_stack)"
@@ -39,6 +43,11 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
         "--jobs=${dict[jobs]}"
         "--stack-root=${dict[stack_root]}"
     )
+
+    # FIXME Consider adding this for zlib on Linux.
+    # > --extra-include-dirs=
+    # > -extra-lib-dirs= to specify where it is.
+
     "${app[stack]}" "${stack_args[@]}" \
         install --local-bin-path="${dict[prefix]}/bin"
     return 0
