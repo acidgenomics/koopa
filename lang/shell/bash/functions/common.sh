@@ -2576,9 +2576,15 @@ koopa_basename_sans_ext() {
 
 koopa_basename() {
     local arg
-    koopa_assert_has_args "$#"
+    if [[ "$#" -eq 0 ]]
+    then
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     for arg in "$@"
     do
+        [[ -n "$arg" ]] || return 1
         koopa_print "${arg##*/}"
     done
     return 0
@@ -3374,14 +3380,14 @@ koopa_cairo_version() {
 }
 
 koopa_camel_case_simple() {
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
         [[ -n "$str" ]] || return 1
         str="$( \
@@ -3403,18 +3409,20 @@ koopa_camel_case() {
 }
 
 koopa_capitalize() {
-    local app args str
+    local app str
     declare -A app=(
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[tr]}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         str="$("${app[tr]}" '[:lower:]' '[:upper:]' <<< "${str:0:1}")${str:1}"
         koopa_print "$str"
     done
@@ -6182,10 +6190,16 @@ koopa_df() {
 
 koopa_dirname() {
     local arg
-    koopa_assert_has_args "$#"
+    if [[ "$#" -eq 0 ]]
+    then
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     for arg in "$@"
     do
         local str
+        [[ -n "$arg" ]] || return 1
         if [[ -e "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"
@@ -7889,7 +7903,10 @@ koopa_find_and_replace_in_file() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
@@ -11017,57 +11034,43 @@ koopa_install_app_from_binary_package() {
     declare -A app=(
         [tar]="$(koopa_locate_tar)"
     )
+    [[ -x "${app[tar]}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch2)"
+        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
         [binary_prefix]='/opt/koopa'
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [name]=''
         [os_string]="$(koopa_os_string)"
         [url_stem]="$(koopa_koopa_url)/app"
-        [version]=''
     )
-    while (("$#"))
-    do
-        case "$1" in
-            '--name='*)
-                dict[name]="${1#*=}"
-                shift 1
-                ;;
-            '--name')
-                dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--version='*)
-                dict[version]="${1#*=}"
-                shift 1
-                ;;
-            '--version')
-                dict[version]="${2:?}"
-                shift 2
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_set \
-        '--name' "${dict[name]}" \
-        '--version' "${dict[version]}"
     if [[ "${dict[koopa_prefix]}" != "${dict[binary_prefix]}" ]]
     then
         koopa_stop "Binary package installation not supported for koopa \
 install located at '${dict[koopa_prefix]}'. Koopa must be installed at \
 default '${dict[binary_prefix]}' location."
     fi
-    dict[tarball_file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[tarball_url]="${dict[url_stem]}/${dict[os_string]}/${dict[arch]}/\
-${dict[name]}/${dict[version]}.tar.gz"
-    if ! koopa_is_url_active "${dict[tarball_url]}"
-    then
-        koopa_stop "No package at '${dict[tarball_url]}'."
-    fi
-    koopa_download "${dict[tarball_url]}" "${dict[tarball_file]}"
-    "${app[tar]}" -Pxzvf "${dict[tarball_file]}"
+    koopa_assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        local dict2
+        declare -A dict2
+        dict2[prefix]="$(koopa_realpath "$prefix")"
+        dict2[name]="$( \
+            koopa_print "${dict2[prefix]}" \
+                | koopa_dirname \
+                | koopa_basename \
+        )"
+        dict2[version]="$(koopa_basename "$prefix")"
+        dict2[tar_file]="${dict2[name]}-${dict2[version]}.tar.gz"
+        dict2[tar_url]="${dict[url_stem]}/${dict[os_string]}/${dict[arch]}/\
+${dict2[name]}/${dict2[version]}.tar.gz"
+        if ! koopa_is_url_active "${dict2[tar_url]}"
+        then
+            koopa_stop "No package at '${dict2[tar_url]}'."
+        fi
+        koopa_download "${dict2[tar_url]}" "${dict2[tar_file]}"
+        "${app[tar]}" -Pxzf "${dict2[tar_file]}"
+        koopa_touch "${prefix}/.binary"
+    done
     return 0
 }
 
@@ -11439,9 +11442,8 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         koopa_cd "${dict[tmp_dir]}"
         if [[ "${bool[binary]}" -eq 1 ]]
         then
-            koopa_install_app_from_binary_package \
-                --name="${dict[name]}" \
-                --version="${dict[version]}"
+            [[ -n "${dict[prefix]}" ]] || return 1
+            koopa_install_app_from_binary_package "${dict[prefix]}"
             return 0
         fi
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
@@ -14828,15 +14830,16 @@ koopa_kallisto_quant_single_end() {
 }
 
 koopa_kebab_case_simple() {
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         str="$(\
             koopa_gsub \
                 --pattern='[^-A-Za-z0-9]' \
@@ -16536,19 +16539,20 @@ koopa_locate_zcat() {
 }
 
 koopa_lowercase() {
-    local app args str
-    koopa_assert_has_args "$#"
+    local app str
     declare -A app=(
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[tr]}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         koopa_print "$str" \
             | "${app[tr]}" '[:upper:]' '[:lower:]'
     done
@@ -19631,15 +19635,16 @@ koopa_script_name() {
 }
 
 koopa_snake_case_simple() {
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         str="$( \
             koopa_gsub \
                 --pattern='[^A-Za-z0-9_]' \
@@ -20692,8 +20697,12 @@ koopa_strip_left() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
-    for str in "${pos[@]}"
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
+    set -- "${pos[@]}"
+    for str in "$@"
     do
         printf '%s\n' "${str##"${dict[pattern]}"}"
     done
@@ -20727,8 +20736,12 @@ koopa_strip_right() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
-    for str in "${pos[@]}"
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
+    set -- "${pos[@]}"
+    for str in "$@"
     do
         printf '%s\n' "${str%%"${dict[pattern]}"}"
     done
@@ -20736,14 +20749,13 @@ koopa_strip_right() {
 }
 
 koopa_strip_trailing_slash() {
-    local args
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    koopa_strip_right --pattern='/' "${args[@]}"
+    koopa_strip_right --pattern='/' "$@"
     return 0
 }
 
@@ -20802,7 +20814,10 @@ koopa_sub() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     [[ "${dict[global]}" -eq 1 ]] && dict[perl_tail]='g'
@@ -21532,14 +21547,14 @@ koopa_touch() {
 }
 
 koopa_trim_ws() {
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
         str="${str#"${str%%[![:space:]]*}"}"
         str="${str%"${str##*[![:space:]]}"}"
