@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_install_r_binary() {
+koopa_macos_install_system_r_binary() {
     koopa_install_app \
         --installer='r-binary' \
         --link-in-bin='bin/R' \
