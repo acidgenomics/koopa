@@ -342,6 +342,6 @@ main() {
     koopa_debian_apt_clean
     koopa_debian_set_locale
     koopa_debian_set_timezone
-    koopa_linux_update_sshd_config
+    koopa_linux_update_system_sshd_config
     return 0
 }
