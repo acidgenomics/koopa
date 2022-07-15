@@ -236,7 +236,6 @@ __koopa_complete() {
                         'pixman'
                         'pkg-config'
                         'poetry'
-                        'prelude-emacs'
                         'prettier'
                         'procs'
                         'proj'
