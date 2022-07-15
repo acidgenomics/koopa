@@ -35,7 +35,6 @@ archive/${dict[file]}"
         '--verbose'
     )
     install_args=("--local-bin-path=${dict[prefix]}/bin")
-    "${app[stack]}" "${stack_args[@]}" build
     "${app[stack]}" "${stack_args[@]}" install "${install_args[@]}"
     return 0
 }
