@@ -11017,7 +11017,7 @@ koopa_install_all_apps() {
         'zsh'
         'zstd'
     )
-    koopa_cli_install --binary --reinstall "${pkgs[@]}"
+    koopa_cli_install --binary "${pkgs[@]}"
     return 0
 }
 
@@ -11394,6 +11394,11 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         then
             if [[ "${bool[reinstall]}" -eq 1 ]]
             then
+                if [[ "${dict[quiet]}" -eq 0 ]]
+                then
+                    koopa_alert_uninstall_start \
+                        "${dict[name_fancy]}" "${dict[prefix]}"
+                fi
                 case "${dict[mode]}" in
                     'system')
                         koopa_rm --sudo "${dict[prefix]}"
