@@ -10,10 +10,14 @@ koopa_dirname() {
     # @seealso
     # - https://stackoverflow.com/questions/22401091/
     # """
-    local arg pos
-    pos=("$@")
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
-    for arg in "${pos[@]}"
+    local arg
+    if [[ "$#" -eq 0 ]]
+    then
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
+    for arg in "$@"
     do
         local str
         if [[ -e "$arg" ]]
