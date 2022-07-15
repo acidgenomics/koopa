@@ -393,9 +393,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         koopa_assert_is_set \
             '--name' "${dict[name]}" \
             '--prefix' "${dict[prefix]}"
-        koopa_push_app_build \
-            --app-name="${dict[name]}" \
-            --app-version="$(koopa_basename "${dict[prefix]}")"
+        koopa_push_app_build "${dict[name]}"
     fi
     if [[ "${bool[quiet]}" -eq 0 ]]
     then
