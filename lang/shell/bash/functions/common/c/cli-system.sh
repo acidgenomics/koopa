@@ -61,6 +61,7 @@ koopa_cli_system() {
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
+        'build-all-apps' | \
         'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
