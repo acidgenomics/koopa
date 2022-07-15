@@ -129,7 +129,6 @@ koopa_activate_aliases() {
     alias mamba='koopa_alias_mamba'
     alias nvim-fzf='koopa_alias_nvim_fzf'
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
-    alias perlbrew='koopa_alias_perlbrew'
     alias prelude-emacs='koopa_alias_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
     alias python='python3'
@@ -485,30 +484,6 @@ koopa_activate_path_helper() {
     path_helper='/usr/libexec/path_helper'
     [ -x "$path_helper" ] || return 0
     eval "$("$path_helper" -s)"
-    return 0
-}
-
-koopa_activate_perlbrew() {
-    local nounset prefix script shell
-    [ -n "${PERLBREW_ROOT:-}" ] && return 0
-    [ -x "$(koopa_bin_prefix)/perlbrew" ] || return 0
-    shell="$(koopa_shell_name)"
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    prefix="$(koopa_perlbrew_prefix)"
-    [ -d "$prefix" ] || return 0
-    script="${prefix}/etc/bashrc"
-    [ -r "$script" ] || return 0
-    nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    . "$script"
-    [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
 
@@ -921,12 +896,6 @@ koopa_alias_nvim_fzf() {
 
 koopa_alias_nvim_vanilla() {
     nvim -u 'NONE' "$@"
-}
-
-koopa_alias_perlbrew() {
-    koopa_is_alias 'perlbrew' && unalias 'perlbrew'
-    koopa_activate_perlbrew
-    perlbrew "$@"
 }
 
 koopa_alias_prelude_emacs() {

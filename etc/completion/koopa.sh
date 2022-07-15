@@ -231,7 +231,6 @@ __koopa_complete() {
                         'pcre'
                         'pcre2'
                         'perl'
-                        'perlbrew'
                         'pipx'
                         'pixman'
                         'pkg-config'

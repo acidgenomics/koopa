@@ -429,15 +429,6 @@ pcre2="10.40"
 # https://www.perl.org/get.html
 perl="5.36.0"
 
-# FIXME Need to version pin this.
-# https://github.com/gugod/App-perlbrew/tags
-# https://perlbrew.pl/
-perlbrew="latest"
-
-# https://www.php.net/downloads
-# https://github.com/php/php-src/releases
-php="8.1.2"
-
 pixman="0.40.0"
 
 # Note that Fedora now masks this with pkgconf.
