@@ -6,6 +6,7 @@ koopa_install_all_apps() {
     # @note Updated 2022-07-15.
     # """
     local pkgs
+    koopa_assert_has_no_args "$#"
     pkgs=(
         'ack'
         'anaconda'
@@ -222,4 +223,5 @@ koopa_install_all_apps() {
         'zstd'
     )
     koopa install --binary "${pkgs[@]}"
+    return 0
 }
