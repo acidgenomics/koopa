@@ -32,6 +32,7 @@ proto/${dict[file]}"
         '--disable-silent-rules'
         'PYTHON=python3'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

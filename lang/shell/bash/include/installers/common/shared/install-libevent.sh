@@ -33,6 +33,7 @@ download/release-${dict[version]}-stable/${dict[file]}"
         '--disable-debug-mode'
         '--disable-dependency-tracking'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check

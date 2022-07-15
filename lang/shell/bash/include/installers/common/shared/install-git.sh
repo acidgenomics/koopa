@@ -49,6 +49,7 @@ main() {
         "--prefix=${dict[prefix]}"
         '--without-tcltk'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     # Additional features here require 'asciidoc' to be installed.
     "${app[make]}" --jobs="${dict[jobs]}" # 'all' 'doc' 'info'

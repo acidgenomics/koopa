@@ -74,6 +74,7 @@ archive/${dict[file]}"
         )
     fi
     koopa_add_rpath_to_ldflags "${dict[python_rpath]}" "${dict[vim_rpath]}"
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test

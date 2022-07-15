@@ -31,6 +31,7 @@ lzmautils/${dict[file]}"
         '--disable-dependency-tracking'
         '--disable-silent-rules'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check

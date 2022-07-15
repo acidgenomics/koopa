@@ -31,6 +31,7 @@ main() {
         # > '--enable-static=no'
         "--prefix=${dict[prefix]}"
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" install
     return 0

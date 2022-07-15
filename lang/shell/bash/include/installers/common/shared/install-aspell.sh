@@ -3,7 +3,7 @@
 main() {
     # """
     # Install aspell.
-    # @note Updated 2022-07-14.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - http://aspell.net/
@@ -35,7 +35,7 @@ main() {
     )
     for key in "${!lang[@]}"
     do
-        local dict2
+        local conf_args dict2
         declare -A dict2
         dict2[bn]="${lang[$key]}"
         dict2[file]="${dict2[bn]}.tar.bz2"
@@ -44,7 +44,13 @@ main() {
         koopa_extract "${dict2[file]}"
         koopa_cd "${dict2[bn]}"
         # Useful vars: ASPELL ASPELL_PARMS PREZIP DESTDIR.
-        ./configure --vars ASPELL="${app[aspell]}" PREZIP="${app[prezip]}"
+        conf_args=(
+            '--vars'
+            "ASPELL=${app[aspell]}"
+            "PREZIP=${app[prezip]}"
+        )
+        ./configure --help
+        ./configure "${conf_args[@]}"
         "${app[make]}" install
     done
     "${app[aspell]}" dump dicts

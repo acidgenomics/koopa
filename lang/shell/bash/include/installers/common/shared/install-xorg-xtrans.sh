@@ -40,6 +40,7 @@ main() {
         --pattern='# include <sys/stropts.h>' \
         --replacement='# include <sys/ioctl.h>' \
         'Xtranslcl.c'
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

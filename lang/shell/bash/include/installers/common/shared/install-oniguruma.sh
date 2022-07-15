@@ -35,6 +35,7 @@ download/v${dict[version]}/${dict[file]}"
         '--disable-dependency-tracking'
     )
     "${app[autoreconf]}" -vfi
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

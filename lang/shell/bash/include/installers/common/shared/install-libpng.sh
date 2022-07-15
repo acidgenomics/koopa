@@ -54,6 +54,7 @@ ${dict[name]}${dict[version2]}/${dict[version]}/${dict[file]}"
             --replacement='# \1' \
             'libpng.pc.in'
     fi
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

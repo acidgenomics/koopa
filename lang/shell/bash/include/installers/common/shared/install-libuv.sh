@@ -49,6 +49,7 @@ archive/${dict[file]}"
     )
     # This tries to locate 'glibtoolize'.
     ./autogen.sh
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

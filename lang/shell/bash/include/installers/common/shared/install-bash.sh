@@ -98,6 +98,7 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
         )
         conf_args+=("CFLAGS=${cflags[*]}")
     fi
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test

@@ -45,6 +45,7 @@ download/${dict[name]}-${dict[version]}/${dict[file]}"
         '--enable-pcre2grep-libbz2'
         '--enable-pcre2grep-libz'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
