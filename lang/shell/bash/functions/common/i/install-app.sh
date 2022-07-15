@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Truncate git commit versions (e.g. chemacs) to 8 characters
+# in the install prefix. Need to come up with a clever approach for this.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
