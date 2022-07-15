@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Consider linking this into '/opt/koopa/bin'.
+
 koopa_debian_install_system_r() {
     koopa_install_app \
-        --installer='r-binary' \
         --name-fancy='R CRAN binary' \
         --name='r' \
         --platform='debian' \

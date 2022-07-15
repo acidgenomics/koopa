@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_linux_install_pihole() {
+koopa_linux_install_system_pivpn() {
     koopa_update_app \
-        --name-fancy='Pi-hole' \
-        --name='pihole' \
+        --name-fancy='PiVPN' \
+        --name='pivpn' \
         --platform='linux' \
         --system \
         "$@"
