@@ -1957,11 +1957,6 @@ koopa_os_string() {
     return 0
 }
 
-koopa_perlbrew_prefix() {
-    koopa_print "$(koopa_opt_prefix)/perlbrew"
-    return 0
-}
-
 koopa_pipx_prefix() {
     koopa_print "$(koopa_opt_prefix)/pipx"
     return 0
