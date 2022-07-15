@@ -32,6 +32,7 @@ download/v${dict[version]}/${dict[file]}"
         '--disable-silent-rules'
         '--enable-static'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

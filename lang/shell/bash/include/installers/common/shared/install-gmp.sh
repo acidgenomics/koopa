@@ -31,6 +31,7 @@ main() {
         '--enable-cxx'
         '--with-pic'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" check

@@ -29,6 +29,7 @@ main() {
     koopa_cd "${dict[name]}-v${dict[version]}"
     koopa_alert_coffee_time
     conf_args=("--prefix=${dict[prefix]}")
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test

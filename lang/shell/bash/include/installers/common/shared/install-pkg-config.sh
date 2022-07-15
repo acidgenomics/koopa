@@ -46,6 +46,7 @@ main() {
         dict[pc_path]='/usr/lib/pkgconfig'
         conf_args+=("--with-pc-path=${dict[pc_path]}")
     fi
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

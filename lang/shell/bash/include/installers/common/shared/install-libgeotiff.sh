@@ -41,6 +41,7 @@ ${dict[version]}/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--with-jpeg'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

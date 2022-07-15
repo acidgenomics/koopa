@@ -34,6 +34,7 @@ main() {
         "--with-libssl-prefix=${dict[openssl]}"
         '--without-libz'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Zsh.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-07-15.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -26,7 +26,7 @@ main() {
     # - https://github.com/Homebrew/legacy-homebrew/issues/25719
     # - https://github.com/TACC/Lmod/issues/434
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'ncurses'
     declare -A app=(
@@ -47,10 +47,13 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    ./configure \
-        --prefix="${dict[prefix]}" \
-        --enable-etcdir="${dict[etc_dir]}" \
-        --without-tcsetpgrp
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        "--enable-etcdir=${dict[etc_dir]}"
+        '--without-tcsetpgrp'
+    )
+    ./configure --help
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
     # > "${app[make]}" test

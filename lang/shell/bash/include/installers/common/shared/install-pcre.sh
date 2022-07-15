@@ -49,6 +49,7 @@ ${dict[name]}/${dict[version]}/${dict[file]}"
         '--enable-unicode-properties'
         '--enable-utf8'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

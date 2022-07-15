@@ -3,14 +3,14 @@
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://imagemagick.org/script/install-source.php
     # - https://imagemagick.org/script/advanced-linux-installation.php
     # - https://download.imagemagick.org/ImageMagick/download/releases/
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'libtool'
     declare -A app=(
@@ -26,9 +26,12 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "ImageMagick-${dict[mmp_ver]}"
-    ./configure \
-        --prefix="${dict[prefix]}" \
-        --with-modules
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        '--with-modules'
+    )
+    ./configure --help
+    ./configure "${conf_args[@]}"
     "${app[make]}"
     "${app[make]}" install
     return 0

@@ -33,6 +33,7 @@ R_${dict[version2]}/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=("--prefix=${dict[prefix]}")
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}"
     "${app[make]}" install

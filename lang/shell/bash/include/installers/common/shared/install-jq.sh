@@ -62,6 +62,7 @@ download/${dict[name]}-${dict[version]}/${dict[file]}"
     )
     "${app[libtoolize]}"
     "${app[autoreconf]}" -iv
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

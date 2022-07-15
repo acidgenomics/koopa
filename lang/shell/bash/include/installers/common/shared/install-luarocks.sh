@@ -3,9 +3,9 @@
 main() {
     # """
     # Install Luarocks.
-    # @note Updated 2022-06-15.
+    # @note Updated 2022-07-15.
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'lua'
     declare -A app=(
@@ -26,10 +26,13 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    ./configure \
-        --prefix="${dict[prefix]}" \
-        --lua-version="${dict[lua_maj_min_ver]}" \
-        --versioned-rocks-dir
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        "--lua-version=${dict[lua_maj_min_ver]}"
+        '--versioned-rocks-dir'
+    )
+    ./configure --help
+    ./configure "${conf_args[@]}"
     "${app[make]}" build
     "${app[make]}" install
     app[luarocks]="${dict[prefix]}/bin/luarocks"

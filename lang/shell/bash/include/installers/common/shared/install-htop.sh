@@ -33,6 +33,7 @@ archive/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--disable-unicode'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check

@@ -36,6 +36,7 @@ ${dict[maj_min_ver]}/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--enable-static'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

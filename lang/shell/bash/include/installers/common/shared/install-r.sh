@@ -247,6 +247,7 @@ R-${dict[maj_ver]}/${dict[file]}"
     unset -v R_HOME
     # Need to burn in rpath, otherwise grDevices will fail to build.
     koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check

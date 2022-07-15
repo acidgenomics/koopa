@@ -51,6 +51,7 @@ main() {
         --pattern='^(Requires.private: .*)$' \
         --replacement='# \1' \
         'readline.pc.in'
+    ./configure --help
     ./configure "${conf_args[@]}"
     make_args=('SHLIB_LIBS=-lncursesw')
     "${app[make]}" "${make_args[@]}" --jobs="${dict[jobs]}"

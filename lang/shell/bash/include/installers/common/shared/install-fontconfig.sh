@@ -42,6 +42,7 @@ release/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--enable-libxml2'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

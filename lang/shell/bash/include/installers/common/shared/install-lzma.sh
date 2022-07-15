@@ -31,6 +31,7 @@ main() {
         '--disable-debug'
         '--disable-dependency-tracking'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

@@ -33,6 +33,7 @@ download/${dict[version]}/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--enable-utf8proc'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
