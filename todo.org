@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Consider not configuring any apps, such as R at the end of install call.
+    This behavior will be inconsistency with binary package install.
 ** TODO Consider taking out name fancy variable using in install scripts.
 ** TODO For installed git versions, consider truncating commit to 8 characters.
 ** TODO Consider requiring zlib on macOS for all install recipes.
