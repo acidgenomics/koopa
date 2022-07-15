@@ -136,9 +136,8 @@ dotfiles="08b427442803287281bc58a39e9944087d0ac9a9"
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
 
-# FIXME Need to version pin this.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
-ensembl-perl-api="latest"
+ensembl-perl-api="107"
 
 # https://libexpat.github.io/
 expat="2.4.8"
