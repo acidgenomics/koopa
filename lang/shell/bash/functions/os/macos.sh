@@ -591,17 +591,7 @@ koopa_macos_install_aws_cli() {
         "$@"
 }
 
-koopa_macos_install_neovim_binary() {
-    koopa_install_app \
-        --installer='neovim-binary' \
-        --link-in-bin='bin/nvim' \
-        --name-fancy='Neovim' \
-        --name='neovim' \
-        --platform='macos' \
-        "$@"
-}
-
-koopa_macos_install_python_binary() {
+koopa_macos_install_system_python_binary() {
     koopa_install_app \
         --installer='python-binary' \
         --link-in-bin='bin/python3' \
@@ -613,7 +603,7 @@ koopa_macos_install_python_binary() {
         "$@"
 }
 
-koopa_macos_install_r_binary() {
+koopa_macos_install_system_r_binary() {
     koopa_install_app \
         --installer='r-binary' \
         --link-in-bin='bin/R' \
@@ -640,6 +630,15 @@ koopa_macos_install_r_openmp() {
     koopa_install_app \
         --name-fancy='R OpenMP' \
         --name='r-openmp' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa_macos_install_system_defaults() {
+    koopa_update_app \
+        --name-fancy='macOS system defaults' \
+        --name='defaults' \
         --platform='macos' \
         --system \
         "$@"
@@ -1011,25 +1010,6 @@ koopa_macos_unlink_homebrew() {
         'emacs' \
         'gcloud' \
         'julia'
-    return 0
-}
-
-koopa_macos_update_defaults() {
-    koopa_update_app \
-        --name-fancy='macOS defaults' \
-        --name='defaults' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa_macos_update_microsoft_office() {
-    local msupdate
-    koopa_assert_has_no_args "$#"
-    koopa_h1 "Updating Microsoft Office via 'msupdate'."
-    msupdate="/Library/Application Support/Microsoft/MAU2.0/\
-Microsoft AutoUpdate.app/Contents/MacOS/msupdate"
-    "$msupdate" --install
     return 0
 }
 

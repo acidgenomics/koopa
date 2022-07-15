@@ -815,37 +815,10 @@ koopa_debian_gdebi_install() {
     return 0
 }
 
-koopa_debian_install_azure_cli_binary() {
-    koopa_install_app \
-        --name-fancy='Azure CLI (binary)' \
-        --name='azure-cli' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_install_base_system() {
-    koopa_install_app \
-        --name-fancy='Debian base system' \
-        --name='base-system' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
 koopa_debian_install_bcbio_nextgen_vm() {
     koopa_install_app \
         --name='bcbio-nextgen-vm' \
         --platform='debian' \
-        "$@"
-}
-
-koopa_debian_install_docker() {
-    koopa_install_app \
-        --name-fancy='Docker' \
-        --name='docker' \
-        --platform='debian' \
-        --system \
         "$@"
 }
 
@@ -866,16 +839,43 @@ koopa_debian_install_from_deb() {
     return 0
 }
 
-koopa_debian_install_google_cloud_sdk_binary() {
+koopa_debian_install_system_azure_cli() {
     koopa_install_app \
-        --name-fancy='Google Cloud SDK (binary)' \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_install_system_base() {
+    koopa_install_app \
+        --name-fancy='Debian base system' \
+        --name='base' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_install_system_docker() {
+    koopa_install_app \
+        --name-fancy='Docker' \
+        --name='docker' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_install_system_google_cloud_sdk() {
+    koopa_install_app \
+        --name-fancy='Google Cloud SDK' \
         --name='google-cloud-sdk' \
         --platform='debian' \
         --system \
         "$@"
 }
 
-koopa_debian_install_llvm() {
+koopa_debian_install_system_llvm() {
     koopa_install_app \
         --name-fancy='LLVM' \
         --name='llvm' \
@@ -884,18 +884,8 @@ koopa_debian_install_llvm() {
         "$@"
 }
 
-koopa_debian_install_nodesource_node_binary() {
+koopa_debian_install_system_pandoc() {
     koopa_install_app \
-        --name-fancy='NodeSource Node.js' \
-        --name='nodesource-node-binary' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_install_pandoc_binary() {
-    koopa_install_app \
-        --installer='pandoc-binary' \
         --name-fancy='Pandoc' \
         --name='pandoc' \
         --platform='debian' \
@@ -903,9 +893,8 @@ koopa_debian_install_pandoc_binary() {
         "$@"
 }
 
-koopa_debian_install_r_binary() {
+koopa_debian_install_system_r() {
     koopa_install_app \
-        --installer='r-binary' \
         --name-fancy='R CRAN binary' \
         --name='r' \
         --platform='debian' \
@@ -914,7 +903,7 @@ koopa_debian_install_r_binary() {
         "$@"
 }
 
-koopa_debian_install_rstudio_server() {
+koopa_debian_install_system_rstudio_server() {
     koopa_install_app \
         --name-fancy='RStudio Server' \
         --name='rstudio-server' \
@@ -923,7 +912,7 @@ koopa_debian_install_rstudio_server() {
         "$@"
 }
 
-koopa_debian_install_shiny_server() {
+koopa_debian_install_system_shiny_server() {
     koopa_install_app \
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
@@ -932,17 +921,13 @@ koopa_debian_install_shiny_server() {
         "$@"
 }
 
-koopa_debian_install_wine() {
+koopa_debian_install_system_wine() {
     koopa_install_app \
         --name-fancy='Wine' \
         --name='wine' \
         --platform='debian' \
         --system \
         "$@"
-}
-
-koopa_debian_locate_apt() {
-    koopa_locate_app '/usr/bin/apt'
 }
 
 koopa_debian_locate_apt_get() {
@@ -953,12 +938,16 @@ koopa_debian_locate_apt_key() {
     koopa_locate_app '/usr/bin/apt-key'
 }
 
-koopa_debian_locate_dpkg() {
-    koopa_locate_app '/usr/bin/dpkg'
+koopa_debian_locate_apt() {
+    koopa_locate_app '/usr/bin/apt'
 }
 
 koopa_debian_locate_dpkg_reconfigure() {
     koopa_locate_app '/usr/sbin/dpkg-reconfigure'
+}
+
+koopa_debian_locate_dpkg() {
+    koopa_locate_app '/usr/bin/dpkg'
 }
 
 koopa_debian_locate_gdebi() {
@@ -1033,77 +1022,10 @@ koopa_debian_set_timezone() {
     return 0
 }
 
-koopa_debian_uninstall_azure_cli_binary() {
-    koopa_uninstall_app \
-        --name-fancy='Azure CLI (binary)' \
-        --name='azure-cli' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
 koopa_debian_uninstall_bcbio_nextgen_vm() {
     koopa_uninstall_app \
         --name='bcbio-nextgen-vm' \
         --platform='debian' \
-        "$@"
-}
-
-koopa_debian_uninstall_docker() {
-    koopa_uninstall_app \
-        --name-fancy='Docker' \
-        --name='docker' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_google_cloud_sdk_binary() {
-    koopa_uninstall_app \
-        --name-fancy='Google Cloud SDK (binary)' \
-        --name='google-cloud-sdk' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_llvm() {
-    koopa_uninstall_app \
-        --name-fancy='LLVM' \
-        --name='llvm' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_nodesource_node_binary() {
-    koopa_uninstall_app \
-        --name-fancy='NodeSource Node.js' \
-        --name='nodesource-node-binary' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_pandoc_binary() {
-    koopa_uninstall_app \
-        --name-fancy='Pandoc' \
-        --name='pandoc' \
-        --platform='debian' \
-        --system \
-        --uninstaller='pandoc-binary' \
-        "$@"
-}
-
-koopa_debian_uninstall_r_binary() {
-    koopa_uninstall_app \
-        --name-fancy='R CRAN binary' \
-        --name='r' \
-        --platform='debian' \
-        --system \
-        --uninstaller='r-binary' \
-        --unlink-in-bin='R' \
-        --unlink-in-bin='Rscript' \
         "$@"
 }
 
@@ -1125,7 +1047,63 @@ koopa_debian_uninstall_shiny_server() {
         "$@"
 }
 
-koopa_debian_uninstall_wine() {
+koopa_debian_uninstall_system_azure_cli() {
+    koopa_uninstall_app \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_uninstall_system_docker() {
+    koopa_uninstall_app \
+        --name-fancy='Docker' \
+        --name='docker' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_uninstall_system_google_cloud_sdk() {
+    koopa_uninstall_app \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_uninstall_system_llvm() {
+    koopa_uninstall_app \
+        --name-fancy='LLVM' \
+        --name='llvm' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_uninstall_system_pandoc() {
+    koopa_uninstall_app \
+        --name-fancy='Pandoc' \
+        --name='pandoc' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa_debian_uninstall_system_r() {
+    koopa_uninstall_app \
+        --name-fancy='R CRAN binary' \
+        --name='r' \
+        --platform='debian' \
+        --system \
+        --unlink-in-bin='R' \
+        --unlink-in-bin='Rscript' \
+        "$@"
+}
+
+koopa_debian_uninstall_system_wine() {
     koopa_uninstall_app \
         --name-fancy='Wine' \
         --name='wine' \
