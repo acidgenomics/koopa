@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_debian_uninstall_wine() {
+koopa_debian_uninstall_system_azure_cli() {
     koopa_uninstall_app \
-        --name-fancy='Wine' \
-        --name='wine' \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
         --platform='debian' \
         --system \
         "$@"

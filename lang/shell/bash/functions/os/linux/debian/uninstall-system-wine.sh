@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_debian_uninstall_llvm() {
+koopa_debian_uninstall_system_wine() {
     koopa_uninstall_app \
-        --name-fancy='LLVM' \
-        --name='llvm' \
+        --name-fancy='Wine' \
+        --name='wine' \
         --platform='debian' \
         --system \
         "$@"
