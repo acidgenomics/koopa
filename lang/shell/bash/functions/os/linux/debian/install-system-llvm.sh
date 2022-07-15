@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_debian_install_docker() {
+koopa_debian_install_system_llvm() {
     koopa_install_app \
-        --name-fancy='Docker' \
-        --name='docker' \
+        --name-fancy='LLVM' \
+        --name='llvm' \
         --platform='debian' \
         --system \
         "$@"

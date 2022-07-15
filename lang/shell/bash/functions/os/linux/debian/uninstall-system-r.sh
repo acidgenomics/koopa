@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_debian_uninstall_r_binary() {
+koopa_debian_uninstall_system_r() {
     koopa_uninstall_app \
         --name-fancy='R CRAN binary' \
         --name='r' \

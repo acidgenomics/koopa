@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_debian_install_pandoc_binary() {
+koopa_debian_install_system_pandoc() {
     koopa_install_app \
         --installer='pandoc-binary' \
         --name-fancy='Pandoc' \
