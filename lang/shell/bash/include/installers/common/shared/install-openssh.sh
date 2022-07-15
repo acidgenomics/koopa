@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for libfido2.
-# FIXME Need to add support for libedit on Linux.
+# FIXME Need to install pam?
+# PAM headers not found
 
 main() {
     # """
@@ -48,11 +48,11 @@ portable/${dict[file]}"
     conf_args=(
         # > '--with-security-key-builtin' # libfido2
         "--prefix=${dict[prefix]}"
-        '--with-kerberos5'
         '--with-libedit'
-        '--with-pam'
         "--with-ssl-dir=${dict[opt_prefix]}/openssl3"
+        '--without-kerberos5'
         '--without-ldns'
+        '--without-pam'
     )
     if koopa_is_linux
     then
