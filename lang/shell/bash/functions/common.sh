@@ -4066,6 +4066,12 @@ koopa_cli_configure() {
 koopa_cli_install() {
     local app flags pos stem
     koopa_assert_has_args "$#"
+    case "${1:-}" in
+        '--all')
+            koopa_install_all_apps
+            return 0
+            ;;
+    esac
     flags=()
     pos=()
     stem='install'
