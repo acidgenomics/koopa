@@ -36,7 +36,6 @@ main() {
         [arch]="$(koopa_arch)" # e.g. 'x86_64'.
         [jobs]="$(koopa_cpu_count)"
         [name]='stack'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -58,13 +57,19 @@ download/v${dict[version]}/${dict[file]}"
     koopa_cp "${dict[file]}" "${app[stack]}"
     unset -v STACK_ROOT
     koopa_rm "${HOME:?}/.stack"
+
+    # FIXME This approach doesn't work.
+    dict[opt_prefix]="$(koopa_opt_prefix)"
     dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
     export LIBRARY_PATH="${dict[gmp]}"
+
     "${app[stack]}" \
         --jobs="${dict[jobs]}" \
         --stack-root="${dict[root]}" \
         setup
     # NOTE Can install a specific GHC version here with:
-    # > stack install ghc-9.0.2
+    # > app[stack]="${dict[prefix]}/bin/stack"
+    # > koopa_assert_is_installed "${app[stack]}"
+    # > "${app[stack]}" install 'ghc-9.0.2'
     return 0
 }
