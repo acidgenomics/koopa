@@ -3053,6 +3053,246 @@ koopa_brew_upgrade_brews() {
     return 0
 }
 
+koopa_build_all_apps() {
+    local pkgs
+    pkgs=(
+        'pkg-config'
+        'make'
+        'xz'
+        'm4'
+        'gmp'
+        'gperf'
+        'coreutils'
+        'patch'
+        'bash'
+        'mpfr'
+        'mpc'
+        'gcc'
+        'autoconf'
+        'automake'
+        'bison'
+        'libtool'
+        'bash'
+        'attr'
+        'coreutils'
+        'findutils'
+        'sed'
+        'ncurses'
+        'icu4c'
+        'readline'
+        'libxml2'
+        'gettext'
+        'zlib'
+        'openssl1'
+        'openssl3'
+        'cmake'
+        'curl'
+        'git'
+        'lapack'
+        'libffi'
+        'libjpeg-turbo'
+        'libpng'
+        'zstd'
+        'libtiff'
+        'openblas'
+        'bzip2'
+        'pcre'
+        'pcre2'
+        'python'
+        'xorg-xorgproto'
+        'xorg-xcb-proto'
+        'xorg-libpthread-stubs'
+        'xorg-xtrans'
+        'xorg-libice'
+        'xorg-libsm'
+        'xorg-libxau'
+        'xorg-libxdmcp'
+        'xorg-libxcb'
+        'xorg-libx11'
+        'xorg-libxext'
+        'xorg-libxrender'
+        'xorg-libxt'
+        'xorg-libxrandr'
+        'tcl-tk'
+        'perl'
+        'texinfo'
+        'meson'
+        'ninja'
+        'glib'
+        'freetype'
+        'fontconfig'
+        'lzo'
+        'pixman'
+        'cairo'
+        'hdf5'
+        'openjdk'
+        'libssh2'
+        'libgit2'
+        'imagemagick'
+        'graphviz'
+        'geos'
+        'proj'
+        'gdal'
+        'r'
+        'conda'
+        'sqlite'
+        'apr'
+        'apr-util'
+        'armadillo'
+        'aspell'
+        'bc'
+        'binutils'
+        'cpufetch'
+        'exiftool'
+        'libtasn1'
+        'libunistring'
+        'nettle'
+        'texinfo'
+        'gnutls'
+        'emacs'
+        'vim'
+        'lua'
+        'luarocks'
+        'neovim'
+        'libevent'
+        'utf8proc'
+        'tmux'
+        'htop'
+        'boost'
+        'fish'
+        'zsh'
+        'gawk'
+        'aspera-connect'
+        'docker-credential-pass'
+        'lame'
+        'ffmpeg'
+        'flac'
+        'fltk'
+        'fribidi'
+        'gdbm'
+        'gnupg'
+        'grep'
+        'groff'
+        'gsl'
+        'gzip'
+        'harfbuzz'
+        'hyperfine'
+        'jpeg'
+        'oniguruma'
+        'jq'
+        'less'
+        'lesspipe'
+        'libidn'
+        'libpipeline'
+        'libuv'
+        'libzip'
+        'lz4'
+        'lzma'
+        'man-db'
+        'neofetch'
+        'nim'
+        'parallel'
+        'password-store'
+        'taglib'
+        'pytaglib'
+        'pytest'
+        'xxhash'
+        'rsync'
+        'serf'
+        'subversion'
+        'shellcheck'
+        'shunit2'
+        'sox'
+        'stow'
+        'tar'
+        'tokei'
+        'tree'
+        'tuc'
+        'udunits'
+        'units'
+        'wget'
+        'which'
+        'libgeotiff'
+        'go'
+        'apptainer'
+        'chezmoi'
+        'fzf'
+        'aws-cli'
+        'azure-cli'
+        'google-cloud-sdk'
+        'black'
+        'bpytop'
+        'flake8'
+        'glances'
+        'ipython'
+        'isort'
+        'latch'
+        'poetry'
+        'pipx'
+        'pyflakes'
+        'pygments'
+        'ranger-fm'
+        'scons'
+        'serf'
+        'yt-dlp'
+        'node'
+        'bash-language-server'
+        'gtop'
+        'prettier'
+        'ack'
+        'rename'
+        'ruby'
+        'bashcov'
+        'colorls'
+        'ronn'
+        'rust'
+        'bat'
+        'broot'
+        'delta'
+        'difftastic'
+        'du-dust'
+        'exa'
+        'mcfly'
+        'mdcat'
+        'procs'
+        'ripgrep'
+        'starship'
+        'tealdeer'
+        'tokei'
+        'xsv'
+        'zellij'
+        'zoxide'
+        'julia'
+        'julia-packages'
+        'ffq'
+        'gget'
+        'chemacs'
+        'dotfiles'
+    )
+    if ! koopa_is_aarch64
+    then
+        pkgs+=(
+            'anaconda'
+            'haskell-stack'
+            'hadolint'
+            'pandoc'
+            'kallisto'
+            'salmon'
+            'snakemake'
+        )
+    fi
+    if koopa_is_linux
+    then
+        pkgs+=(
+            'lmod'
+        )
+    fi
+    pkgs+=('r-packages')
+    koopa_cli_reinstall "${pkgs[@]}"
+    koopa_push_all_apps
+    return 0
+}
+
 koopa_cache_functions_dir() {
     local app prefix
     koopa_assert_has_args "$#"
@@ -3944,6 +4184,7 @@ koopa_cli_system() {
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
+        'build-all-apps' | \
         'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
@@ -17002,9 +17243,11 @@ koopa_push_all_app_builds() {
     local app dict names
     declare -A app=(
         [basename]="$(koopa_locate_basename)"
+        [grep]="$(koopa_locate_grep)"
         [xargs]="$(koopa_locate_xargs)"
     )
     [[ -x "${app[basename]}" ]] || return 1
+    [[ -x "${app[grep]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -17018,6 +17261,7 @@ koopa_push_all_app_builds() {
             --sort \
             --type='l' \
         | "${app[xargs]}" -0 -n 1 "${app[basename]}" \
+        | "${app[grep]}" -Ev '^.+-packages$' \
     )"
     koopa_assert_is_array_non_empty "${names[@]:-}"
     koopa_push_app_build "${names[@]}"
