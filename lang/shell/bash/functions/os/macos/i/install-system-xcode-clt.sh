@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-koopa_macos_uninstall_xcode_clt() {
-    koopa_uninstall_app \
+koopa_macos_install_system_xcode_clt() {
+    koopa_install_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
         --platform='macos' \
