@@ -10,7 +10,7 @@ main() {
     # @note Updated 2022-07-15.
     #
     # @section Required dependencies:
-    # - 'libgmp-dev' is required for 'haskell-stack' to install.
+    # - 'libgmp-dev', 'zlib1g-dev' required for 'haskell-stack'.
     #
     # @seealso
     # - https://www.serverlab.ca/tutorials/linux/administration-linux/
@@ -49,7 +49,8 @@ main() {
             'sudo' \
             'systemd' \
             'tzdata' \
-            'unzip'
+            'unzip' \
+            'zlib1g-dev'
     apt-get autoremove --yes
     apt-get clean
     # Set the time zone.
