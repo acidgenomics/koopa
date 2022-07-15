@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
-# FIXME Not yet suppored for ARM.
-
-# FIXME Running into '-lgmp' linker issue on Ubuntu.
-# https://github.com/commercialhaskell/stack/issues/5027
+# NOTE Not yet suppored for ARM.
 
 main() {
     # """
     # Install Haskell Stack.
     # @note Updated 2022-07-12.
+    #
+    # @section Required system dependencies:
+    #
+    # Debian / Ubuntu:
+    # > sudo apt-get install g++ gcc libc6-dev libffi-dev libgmp-dev make \
+    # >   xz-utils zlib1g-dev git gnupg netbase
+    # Fedora / CentOS:
+    # > sudo dnf install perl make automake gcc gmp-devel libffi zlib \
+    # >   zlib-devel xz tar git gnupg
+    #
+    # Arch Linux:
+    # > sudo pacman -S make gcc ncurses git gnupg xz zlib gmp libffi zlib
     #
     # GHC will be installed at:
     # libexec/root/programs/x86_64-osx/ghc-9.0.2/bin
@@ -24,13 +33,11 @@ main() {
     # - stack exec env
     # - stack ghc, stack ghci, stack runghc, or stack exec
     # - https://docs.haskellstack.org/en/stable/install_and_upgrade/
+    # - https://docs.haskellstack.org/en/stable/GUIDE/
     # - https://github.com/commercialhaskell/stack/releases
-    # - GMP debugging info:
-    #   https://github.com/commercialhaskell/stack/issues/2028
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'gmp'
     declare -A app
     declare -A dict=(
         [arch]="$(koopa_arch)" # e.g. 'x86_64'.
@@ -57,12 +64,6 @@ download/v${dict[version]}/${dict[file]}"
     koopa_cp "${dict[file]}" "${app[stack]}"
     unset -v STACK_ROOT
     koopa_rm "${HOME:?}/.stack"
-
-    # FIXME This approach doesn't work.
-    dict[opt_prefix]="$(koopa_opt_prefix)"
-    dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
-    export LIBRARY_PATH="${dict[gmp]}"
-
     "${app[stack]}" \
         --jobs="${dict[jobs]}" \
         --stack-root="${dict[root]}" \
