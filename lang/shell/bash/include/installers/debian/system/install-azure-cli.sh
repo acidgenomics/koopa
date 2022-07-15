@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Azure CLI.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-apt
@@ -21,5 +21,6 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_azure_cli_repo
     koopa_debian_apt_install 'azure-cli'
+    koopa_link_in_bin '/usr/bin/az' 'az'
     return 0
 }

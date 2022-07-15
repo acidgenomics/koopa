@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure we link into koopa bin.
+
 main() {
     # """
     # Install LLVM (clang).
