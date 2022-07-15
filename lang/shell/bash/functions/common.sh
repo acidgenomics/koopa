@@ -11427,7 +11427,8 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 ;;
         esac
     fi
-    if [[ -d "${dict[prefix]}" ]] && \
+    if [[ "${bool[binary]}" -eq 0 ]] && \
+        [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
         dict[log_file]="${dict[prefix]}/.install.log"
