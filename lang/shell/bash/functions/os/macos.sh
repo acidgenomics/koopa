@@ -1013,15 +1013,6 @@ koopa_macos_unlink_homebrew() {
     return 0
 }
 
-koopa_macos_update_system() {
-    koopa_update_app \
-        --name-fancy='macOS system' \
-        --name='system' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa_macos_xcode_clt_version() {
     local app str
     koopa_assert_has_no_args "$#"
