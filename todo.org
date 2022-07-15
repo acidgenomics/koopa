@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Consider taking out name fancy variable using in install scripts.
 ** TODO For installed git versions, consider truncating commit to 8 characters.
 ** TODO Consider requiring zlib on macOS for all install recipes.
 ** TODO Modify 'koopa_app_prefix' to accept input, such as 'gcc', 'zlib', etc.
