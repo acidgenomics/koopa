@@ -6,6 +6,7 @@ koopa_build_all_apps() {
     # @note Updated 2022-07-15.
     # """
     local pkgs
+    koopa_assert_has_no_args "$#"
     pkgs=(
         'pkg-config'
         'make'
