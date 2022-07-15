@@ -12131,6 +12131,12 @@ koopa_install_lesspipe() {
         "$@"
 }
 
+koopa_install_libedit() {
+    koopa_install_app \
+        --name='libedit' \
+        "$@"
+}
+
 koopa_install_libevent() {
     koopa_install_app \
         --name='libevent' \
@@ -22104,6 +22110,12 @@ koopa_uninstall_lesspipe() {
     koopa_uninstall_app \
         --name='lesspipe' \
         --unlink-in-bin='lesspipe.sh' \
+        "$@"
+}
+
+koopa_uninstall_libedit() {
+    koopa_uninstall_app \
+        --name='libedit' \
         "$@"
 }
 

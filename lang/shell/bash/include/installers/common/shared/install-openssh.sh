@@ -6,7 +6,7 @@
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2022-07-13.
+    # @note Updated 2022-07-15.
     #
     # @section Privilege separation:
     #
@@ -28,7 +28,7 @@ main() {
     then
         koopa_activate_opt_prefix 'zlib'
     fi
-    koopa_activate_opt_prefix 'openssl3'
+    koopa_activate_opt_prefix 'libedit' 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -60,6 +60,7 @@ portable/${dict[file]}"
             "--with-privsep-path=${dict[prefix]}/var/lib/sshd"
         )
     fi
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

@@ -181,6 +181,7 @@ __koopa_complete() {
                         'lapack'
                         'latch'
                         'lesspipe'
+                        'libedit'
                         'libevent'
                         'libffi'
                         'libgeotiff'
