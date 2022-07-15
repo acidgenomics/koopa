@@ -90,8 +90,8 @@ download/v${dict[version]}/${dict[file]}"
     then
         dict[zlib]="$(koopa_realpath "${dict[opt_prefix]}/zlib")"
         stack_args+=(
-            "--extra-include-dirs=${dict[gmp]}/include"
-            "--extra-lib-dirs=${dict[gmp]}/lib"
+            "--extra-include-dirs=${dict[zlib]}/include"
+            "--extra-lib-dirs=${dict[zlib]}/lib"
         )
     fi
     "${app[stack]}" "${stack_args[@]}" setup
