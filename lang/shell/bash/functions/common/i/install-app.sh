@@ -2,6 +2,7 @@
 
 # FIXME Truncate git commit versions (e.g. chemacs) to 8 characters
 # in the install prefix. Need to come up with a clever approach for this.
+# FIXME Consider using '--commit' or '--commit version' to address this.
 
 koopa_install_app() {
     # """
