@@ -3,7 +3,7 @@
 koopa_sub() {
     # """
     # Single substitution.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://perldoc.perl.org/functions/quotemeta
@@ -76,7 +76,10 @@ koopa_sub() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     [[ "${dict[global]}" -eq 1 ]] && dict[perl_tail]='g'
