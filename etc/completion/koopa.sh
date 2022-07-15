@@ -444,6 +444,7 @@ __koopa_complete() {
                         'user')
                             args+=(
                                 'doom-emacs'
+                                'prelude-emacs'
                                 'spacemacs'
                                 'spacevim'
                             )
