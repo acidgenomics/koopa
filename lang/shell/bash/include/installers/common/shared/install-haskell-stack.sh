@@ -25,7 +25,8 @@ main() {
     # - stack ghc, stack ghci, stack runghc, or stack exec
     # - https://docs.haskellstack.org/en/stable/install_and_upgrade/
     # - https://github.com/commercialhaskell/stack/releases
-    # - https://github.com/commercialhaskell/stack/issues/2028
+    # - GMP debugging info:
+    #   https://github.com/commercialhaskell/stack/issues/2028
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -56,6 +57,8 @@ download/v${dict[version]}/${dict[file]}"
     koopa_cp "${dict[file]}" "${app[stack]}"
     unset -v STACK_ROOT
     koopa_rm "${HOME:?}/.stack"
+    export LIBRARY_PATH="${LD_LIBRARY_PATH:?}"
+    echo "LIBRARY_PATH: ${LIBRARY_PATH}" # FIXME
     "${app[stack]}" \
         --jobs="${dict[jobs]}" \
         --stack-root="${dict[root]}" \
