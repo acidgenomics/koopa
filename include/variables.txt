@@ -429,6 +429,8 @@ pcre2="10.40"
 # https://www.perl.org/get.html
 perl="5.36.0"
 
+# FIXME Need to version pin this.
+# https://github.com/gugod/App-perlbrew/tags
 # https://perlbrew.pl/
 perlbrew="latest"
 
