@@ -47,17 +47,17 @@ main() {
     # """
     local app dict stack_args
     koopa_assert_has_no_args "$#"
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'zlib'
-    fi
-    koopa_activate_opt_prefix 'gmp'
+    # > if koopa_is_linux
+    # > then
+    # >     koopa_activate_opt_prefix 'zlib'
+    # > fi
+    # > koopa_activate_opt_prefix 'gmp'
     declare -A app
     declare -A dict=(
         [arch]="$(koopa_arch)" # e.g. 'x86_64'.
         [jobs]="$(koopa_cpu_count)"
         [name]='stack'
-        [opt_prefix]="$(koopa_opt_prefix)"
+        # > [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -79,10 +79,10 @@ download/v${dict[version]}/${dict[file]}"
     koopa_cp "${dict[file]}" "${app[stack]}"
     unset -v STACK_ROOT
     koopa_rm "${HOME:?}/.stack"
-    dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
+    # > dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
     stack_args=(
-        "--extra-include-dirs=${dict[gmp]}/include"
-        "--extra-lib-dirs=${dict[gmp]}/lib"
+        # > "--extra-include-dirs=${dict[gmp]}/include"
+        # > "--extra-lib-dirs=${dict[gmp]}/lib"
         "--jobs=${dict[jobs]}"
         "--stack-root=${dict[root]}"
         '--verbose'
