@@ -63,6 +63,7 @@ r1882980%2B1882981-configure.patch" \
         koopa_cd ..
     fi
     koopa_cd "${dict[name]}-${dict[version]}"
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

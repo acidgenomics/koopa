@@ -43,6 +43,7 @@ main() {
         '--enable-devel-docs=no'
         '--with-doxygen=no'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

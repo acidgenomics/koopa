@@ -53,6 +53,7 @@ main() {
                 --regex \
                 'tcl.pc.in'
         fi
+        ./configure --help
         ./configure "${conf_args[@]}"
         "${app[make]}" --jobs="${dict[jobs]}"
         # > "${app[make]}" test
@@ -65,6 +66,7 @@ main() {
     koopa_extract "${dict[tk_file]}"
     (
         koopa_cd "tk${dict[version]}/unix"
+        ./configure --help
         ./configure "${conf_args[@]}"
         "${app[make]}" --jobs="${dict[jobs]}"
         # > "${app[make]}" test

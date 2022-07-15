@@ -44,10 +44,13 @@ main() {
     # > koopa_dl \
     # >     'LUA_PATH' "$("${app[lua]}" -e 'print(package.path)')" \
     # >     'LUA_CPATH' "$("${app[lua]}" -e 'print(package.cpath)')"
-    ./configure \
-        --prefix="${dict[apps_dir]}" \
-        --with-spiderCacheDir="${dict[data_dir]}/cacheDir" \
-        --with-updateSystemFn="${dict[data_dir]}/system.txt"
+    conf_args=(
+        "--prefix=${dict[apps_dir]}"
+        "--with-spiderCacheDir=${dict[data_dir]}/cacheDir"
+        "--with-updateSystemFn=${dict[data_dir]}/system.txt"
+    )
+    ./configure --help
+    ./configure "${conf_args[@]}"
     "${app[make]}"
     "${app[make]}" install
     if koopa_is_admin

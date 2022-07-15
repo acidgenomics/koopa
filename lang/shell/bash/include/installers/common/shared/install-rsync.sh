@@ -57,6 +57,7 @@ main() {
         conf_args+=('--enable-zstd')
     fi
     # > ./prepare-source
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

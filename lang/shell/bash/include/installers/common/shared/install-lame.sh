@@ -37,6 +37,7 @@ ${dict[name]}/${dict[version]}/${dict[file]}"
         '--disable-dependency-tracking'
         '--enable-nasm'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

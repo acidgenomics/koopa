@@ -65,6 +65,7 @@ ${dict[file]}"
         "--with-openssl=${dict[openssl]}"
     )
     koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test

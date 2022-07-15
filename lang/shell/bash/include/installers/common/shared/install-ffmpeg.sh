@@ -69,6 +69,7 @@ main() {
         '--enable-shared'
         '--enable-version3'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

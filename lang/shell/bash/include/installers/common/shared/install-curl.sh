@@ -40,6 +40,7 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
         '--enable-versioned-symbols'
         "--with-ssl=${dict[ssl]}"
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test

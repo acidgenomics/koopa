@@ -28,6 +28,7 @@ download/v${dict[version]}/${dict[file]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
