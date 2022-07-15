@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# FIXME If we can get haskell-stack to build, remove 'libgmp-dev'
+# and 'zlib1g-dev' from our recipe here.
+
 # Require this script to run as root.
 [[ "${UID:?}" -eq 0 ]] || return 1
 
