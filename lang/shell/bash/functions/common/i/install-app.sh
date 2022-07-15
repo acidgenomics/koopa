@@ -312,9 +312,8 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         koopa_cd "${dict[tmp_dir]}"
         if [[ "${bool[binary]}" -eq 1 ]]
         then
-            koopa_install_app_from_binary_package \
-                --name="${dict[name]}" \
-                --version="${dict[version]}"
+            [[ -n "${dict[prefix]}" ]] || return 1
+            koopa_install_app_from_binary_package "${dict[prefix]}"
             return 0
         fi
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
