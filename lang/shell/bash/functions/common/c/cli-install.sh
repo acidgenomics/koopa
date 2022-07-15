@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for '--all' flag here.
-# In this case, call 'koopa_install_all_apps'.
-
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
@@ -14,6 +11,12 @@ koopa_cli_install() {
     # """
     local app flags pos stem
     koopa_assert_has_args "$#"
+    case "${1:-}" in
+        '--all')
+            koopa_install_all_apps
+            return 0
+            ;;
+    esac
     flags=()
     pos=()
     stem='install'
