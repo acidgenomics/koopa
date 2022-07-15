@@ -30,6 +30,7 @@ koopa_push_app_build() {
         declare -A dict2
         dict2[name]="$name"
         dict2[prefix]="$(koopa_realpath "${dict[opt_prefix]}/${dict2[name]}")"
+        koopa_assert_is_dir "${dict2[prefix]}"
         dict2[version]="$(koopa_basename "${dict2[prefix]}")"
         dict2[local_tar]="${dict[tmp_dir]}/\
 ${dict2[name]}/${dict2[version]}.tar.gz"
