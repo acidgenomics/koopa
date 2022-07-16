@@ -2,7 +2,6 @@
 
 koopa_update_system_tex_packages() {
     koopa_update_app \
-        --name-fancy='TeX packages' \
         --name='tex-packages' \
         --system \
         "$@"

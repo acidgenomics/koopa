@@ -3,7 +3,7 @@
 koopa_debian_apt_add_repo() {
     # """
     # Add an apt repo.
-    # @note Updated 2021-11-09.
+    # @note Updated 2022-07-15.
     #
     # @section Debian Repository Format:
     #
@@ -61,8 +61,13 @@ koopa_debian_apt_add_repo() {
     koopa_assert_is_admin
     declare -A dict=(
         [arch]="$(koopa_arch2)" # e.g. 'amd64'.
+        [distribution]=''
+        [key_name]=''
         [key_prefix]="$(koopa_debian_apt_key_prefix)"
+        [name]=''
         [prefix]="$(koopa_debian_apt_sources_prefix)"
+        [signed_by]=''
+        [url]=''
     )
     components=()
     while (("$#"))
@@ -99,14 +104,6 @@ koopa_debian_apt_add_repo() {
                 ;;
             '--key-prefix')
                 dict[key_prefix]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--name='*)
@@ -152,13 +149,12 @@ koopa_debian_apt_add_repo() {
         dict[key_name]="${dict[name]}"
     fi
     koopa_assert_is_set \
-        '--distribution' "${dict[distribution]:-}" \
-        '--key-name' "${dict[key_name]:-}" \
-        '--key-prefix' "${dict[key_prefix]:-}" \
-        '--name' "${dict[name]:-}" \
-        '--name-fancy' "${dict[name_fancy]:-}" \
-        '--prefix' "${dict[prefix]:-}" \
-        '--url' "${dict[url]:-}"
+        '--distribution' "${dict[distribution]}" \
+        '--key-name' "${dict[key_name]}" \
+        '--key-prefix' "${dict[key_prefix]}" \
+        '--name' "${dict[name]}" \
+        '--prefix' "${dict[prefix]}" \
+        '--url' "${dict[url]}"
     koopa_assert_is_dir \
         "${dict[key_prefix]}" \
         "${dict[prefix]}"
@@ -169,10 +165,10 @@ koopa_debian_apt_add_repo() {
 ${dict[url]} ${dict[distribution]} ${components[*]}"
     if [[ -f "${dict[file]}" ]]
     then
-        koopa_alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
+        koopa_alert_info "'${dict[name]}' repo exists at '${dict[file]}'."
         return 0
     fi
-    koopa_alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
+    koopa_alert "Adding '${dict[name]}' repo at '${dict[file]}'."
     koopa_sudo_write_string \
         --file="${dict[file]}" \
         --string="${dict[string]}"

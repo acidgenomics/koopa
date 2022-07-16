@@ -7,15 +7,12 @@ koopa_configure_app_packages() {
     #
     # @examples
     # > koopa_configure_app_packages \
-    # >     --app='/opt/koopa/app/python/3.10.3/bin/python3'
-    # >     --name-fancy='Python' \
+    # >     --app='/opt/koopa/app/python/3.10.3/bin/python3' \
     # >     --name='python'
     # > koopa_configure_app_packages \
-    # >     --name-fancy='Python' \
     # >     --name='python' \
     # >     --version='3.10.3'
     # > koopa_configure_app_packages \
-    # >     --name-fancy='Python3' \
     # >     --name='python' \
     # >     --prefix='/opt/koopa/app/python-packages/3.10'
     # """
@@ -25,7 +22,6 @@ koopa_configure_app_packages() {
         [app]=''
         [link_in_opt]=1
         [name]=''
-        [name_fancy]=''
         [prefix]=''
         [version]=''
     )
@@ -48,14 +44,6 @@ koopa_configure_app_packages() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
@@ -100,10 +88,6 @@ koopa_configure_app_packages() {
         dict[app]="${1:?}"
     fi
     koopa_assert_is_set '--name' "${dict[name]}"
-    if [[ -z "${dict[name_fancy]}" ]]
-    then
-        dict[name_fancy]="${dict[name]}"
-    fi
     dict[pkg_prefix_fun]="koopa_${dict[name]}_packages_prefix"
     koopa_assert_is_function "${dict[pkg_prefix_fun]}"
     if [[ -z "${dict[prefix]}" ]]
@@ -121,7 +105,7 @@ koopa_configure_app_packages() {
         fi
         dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
     fi
-    koopa_alert_configure_start "${dict[name_fancy]}" "${dict[prefix]}"
+    koopa_alert_configure_start "${dict[name]}" "${dict[prefix]}"
     if [[ ! -d "${dict[prefix]}" ]]
     then
         koopa_sys_mkdir "${dict[prefix]}"
@@ -131,6 +115,6 @@ koopa_configure_app_packages() {
     then
         koopa_link_in_opt "${dict[prefix]}" "${dict[name]}-packages"
     fi
-    koopa_alert_configure_success "${dict[name_fancy]}" "${dict[prefix]}"
+    koopa_alert_configure_success "${dict[name]}" "${dict[prefix]}"
     return 0
 }

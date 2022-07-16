@@ -17,7 +17,7 @@ koopa_install_broot() {
     # """
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/broot' \
+        --link-in-bin='broot' \
         --name='broot' \
         "$@"
 }

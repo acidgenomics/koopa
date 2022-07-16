@@ -11,7 +11,6 @@ koopa_debian_apt_add_docker_key() {
     # """
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
-        --name-fancy='Docker' \
         --name='docker' \
         --url="https://download.docker.com/linux/$(koopa_os_id)/gpg"
     return 0

@@ -1878,11 +1878,6 @@ koopa_monorepo_prefix() {
     return 0
 }
 
-koopa_msigdb_prefix() {
-    koopa_print "$(koopa_refdata_prefix)/msigdb"
-    return 0
-}
-
 koopa_openjdk_prefix() {
     koopa_print "$(koopa_opt_prefix)/openjdk"
     return 0
@@ -2062,11 +2057,6 @@ gnubin/readlink"
     x="$("$readlink" -f "$@")"
     [ -n "$x" ] || return 1
     koopa_print "$x"
-    return 0
-}
-
-koopa_refdata_prefix() {
-    koopa_print "$(koopa_opt_prefix)/refdata"
     return 0
 }
 

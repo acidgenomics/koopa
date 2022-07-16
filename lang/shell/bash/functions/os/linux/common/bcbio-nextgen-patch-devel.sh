@@ -3,7 +3,7 @@
 koopa_linux_bcbio_nextgen_patch_devel() {
     # """
     # Patch bcbio-nextgen development install.
-    # @note Updated 2022-01-29.
+    # @note Updated 2022-07-15.
     # """
     local app cache_files dict
     koopa_assert_has_no_envs
@@ -11,10 +11,11 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         [bcbio_python]='bcbio_python'
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [git_dir]="${HOME:?}/git/bcbio-nextgen"
         [install_dir]=''
-        [name_fancy]='bcbio-nextgen'
+        [name]='bcbio-nextgen'
         [tmp_log_file]="$(koopa_tmp_log_file)"
     )
     while (("$#"))
@@ -63,8 +64,7 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         dict[install_dir]="$(koopa_parent_dir --num=3 "${app[bcbio_python]}")"
     fi
     koopa_assert_is_dir "${dict[install_dir]}"
-    koopa_h1 "Patching ${dict[name_fancy]} installation at \
-'${dict[install_dir]}'."
+    koopa_h1 "Patching '${dict[name]}' installation at '${dict[install_dir]}'."
     koopa_dl  \
         'Git dir' "${dict[git_dir]}" \
         'Install dir' "${dict[install_dir]}" \
@@ -92,6 +92,6 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         koopa_alert "Patching installation via 'setup.py' script."
         "${app[bcbio_python]}" setup.py install
     ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
-    koopa_alert_success "Patching of ${dict[name_fancy]} was successful."
+    koopa_alert_success "Patching of '${dict[name]}' was successful."
     return 0
 }

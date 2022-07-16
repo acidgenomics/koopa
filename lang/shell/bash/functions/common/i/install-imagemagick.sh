@@ -2,8 +2,7 @@
 
 koopa_install_imagemagick() {
     koopa_install_app \
-        --link-in-bin='bin/magick' \
-        --name-fancy='ImageMagick' \
+        --link-in-bin='magick' \
         --name='imagemagick' \
         "$@"
 }

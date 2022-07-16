@@ -2,8 +2,7 @@
 
 koopa_install_cmake() {
     koopa_install_app \
-        --link-in-bin='bin/cmake' \
-        --name-fancy='CMake' \
+        --link-in-bin='cmake' \
         --name='cmake' \
         "$@"
 }

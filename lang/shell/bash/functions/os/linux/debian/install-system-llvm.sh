@@ -4,7 +4,6 @@
 
 koopa_debian_install_system_llvm() {
     koopa_install_app \
-        --name-fancy='LLVM' \
         --name='llvm' \
         --platform='debian' \
         --system \

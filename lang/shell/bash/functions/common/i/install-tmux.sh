@@ -2,7 +2,7 @@
 
 koopa_install_tmux() {
     koopa_install_app \
-        --link-in-bin='bin/tmux' \
+        --link-in-bin='tmux' \
         --name='tmux' \
         "$@"
 }

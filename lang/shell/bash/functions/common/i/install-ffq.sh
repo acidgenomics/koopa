@@ -3,7 +3,7 @@
 koopa_install_ffq() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/ffq' \
+        --link-in-bin='ffq' \
         --name='ffq' \
         "$@"
 }

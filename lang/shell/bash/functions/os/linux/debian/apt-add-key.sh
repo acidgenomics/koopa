@@ -3,7 +3,7 @@
 koopa_debian_apt_add_key() {
     # """
     # Add a GPG key (and/or keyring) for apt.
-    # @note Updated 2021-11-09.
+    # @note Updated 2022-07-15.
     #
     # @section Hardening against insecure URL failure:
     #
@@ -40,7 +40,6 @@ koopa_debian_apt_add_key() {
     )
     declare -A dict=(
         [name]=''
-        [name_fancy]=''
         [prefix]="$(koopa_debian_apt_key_prefix)"
         [url]=''
     )
@@ -54,14 +53,6 @@ koopa_debian_apt_add_key() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
@@ -89,7 +80,7 @@ koopa_debian_apt_add_key() {
     koopa_assert_is_dir "${dict[prefix]}"
     dict[file]="${dict[prefix]}/koopa-${dict[name]}.gpg"
     [[ -f "${dict[file]}" ]] && return 0
-    koopa_alert "Adding ${dict[name_fancy]} key at '${dict[file]}'."
+    koopa_alert "Adding '${dict[name]}' key at '${dict[file]}'."
     koopa_parse_url --insecure "${dict[url]}" \
         | "${app[sudo]}" "${app[gpg]}" \
             --dearmor \

@@ -5,7 +5,7 @@
 
 koopa_linux_install_docker_credential_pass() {
     koopa_install_app \
-        --link-in-bin='bin/docker-credential-pass' \
+        --link-in-bin='docker-credential-pass' \
         --name='docker-credential-pass' \
         --platform='linux' \
         "$@"

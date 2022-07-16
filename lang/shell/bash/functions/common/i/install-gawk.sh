@@ -6,7 +6,7 @@ koopa_install_gawk() {
         --activate-opt='gettext' \
         --activate-opt='mpfr' \
         --activate-opt='readline' \
-        --link-in-bin='bin/awk' \
+        --link-in-bin='awk' \
         --name='gawk' \
         "$@"
 }

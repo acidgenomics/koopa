@@ -7,7 +7,6 @@ koopa_debian_apt_add_microsoft_key() {
     # """
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
-        --name-fancy='Microsoft' \
         --name='microsoft' \
         --url='https://packages.microsoft.com/keys/microsoft.asc'
     return 0
