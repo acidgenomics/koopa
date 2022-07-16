@@ -2,7 +2,7 @@
 
 koopa_install_tree() {
     koopa_install_app \
-        --link-in-bin='bin/tree' \
+        --link-in-bin='tree' \
         --name='tree' \
         "$@"
 }

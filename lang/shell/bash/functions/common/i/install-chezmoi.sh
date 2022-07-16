@@ -2,7 +2,7 @@
 
 koopa_install_chezmoi() {
     koopa_install_app \
-        --link-in-bin='bin/chezmoi' \
+        --link-in-bin='chezmoi' \
         --name='chezmoi' \
         "$@"
 }

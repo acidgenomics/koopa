@@ -4,7 +4,6 @@ koopa_install_git() {
     local install_args
     install_args=(
         '--link-in-bin=bin/git'
-        '--name-fancy=Git'
         '--name=git'
     )
     if koopa_is_macos

@@ -3,13 +3,12 @@
 koopa_debian_apt_add_llvm_repo() {
     # """
     # Add LLVM apt repo.
-    # @note Updated 2021-11-10.
+    # @note Updated 2022-07-15.
     # """
     koopa_assert_has_args_le "$#" 1
     declare -A dict=(
         [component]='main'
         [name]='llvm'
-        [name_fancy]='LLVM'
         [os]="$(koopa_os_codename)"
         [version]="${1:-}"
     )
@@ -22,10 +21,9 @@ koopa_debian_apt_add_llvm_repo() {
     dict[distribution]="llvm-toolchain-${dict[os]}-${dict[version2]}"
     koopa_debian_apt_add_llvm_key
     koopa_debian_apt_add_repo \
-        --name-fancy="${dict[name_fancy]}" \
-        --name="${dict[name]}" \
-        --url="${dict[url]}" \
+        --component="${dict[component]}" \
         --distribution="${dict[distribution]}" \
-        --component="${dict[component]}"
+        --name="${dict[name]}" \
+        --url="${dict[url]}"
     return 0
 }

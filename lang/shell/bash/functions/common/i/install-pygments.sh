@@ -3,7 +3,7 @@
 koopa_install_pygments() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pygmentize' \
+        --link-in-bin='pygmentize' \
         --name='pygments' \
         "$@"
 }

@@ -7,7 +7,6 @@ koopa_install_r() {
     # """
     local install_args
     install_args=(
-        '--name-fancy=R'
         '--name=r'
     )
     if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]

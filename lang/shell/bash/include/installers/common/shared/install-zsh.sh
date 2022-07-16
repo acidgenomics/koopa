@@ -35,7 +35,6 @@ main() {
     declare -A dict=(
         [bin_prefix]="$(koopa_bin_prefix)"
         [jobs]="$(koopa_cpu_count)"
-        [link_in_bin]="${INSTALL_LINK_IN_BIN:?}"
         [name]='zsh'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -66,7 +65,7 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
             --target-directory="${dict[etc_dir]}" \
             "${dict[distro_prefix]}/etc/zsh/"*
     fi
-    if [[ "${dict[link_in_bin]}" -eq 1 ]]
+    if koopa_is_shared_install
     then
         koopa_enable_shell_for_all_users "${dict[bin_prefix]}/${dict[name]}"
     fi

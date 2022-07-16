@@ -3,7 +3,7 @@
 koopa_install_ghostscript() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/gs' \
+        --link-in-bin='gs' \
         --name='ghostscript' \
         "$@"
 }
