@@ -23507,7 +23507,7 @@ koopa_update_app() {
                 ;;
         esac
     done
-    koopa_assert_set '--name' "${dict[name]}"
+    koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     case "${dict[mode]}" in
         'shared')
