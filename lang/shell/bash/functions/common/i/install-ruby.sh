@@ -2,11 +2,10 @@
 
 koopa_install_ruby() {
     koopa_install_app \
-        --link-in-bin='bin/bundle' \
-        --link-in-bin='bin/bundler' \
-        --link-in-bin='bin/gem' \
-        --link-in-bin='bin/ruby' \
-        --name-fancy='Ruby' \
+        --link-in-bin='bundle' \
+        --link-in-bin='bundler' \
+        --link-in-bin='gem' \
+        --link-in-bin='ruby' \
         --name='ruby' \
         "$@"
 }

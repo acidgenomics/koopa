@@ -2,7 +2,6 @@
 
 koopa_fedora_install_system_oracle_instant_client() {
     koopa_install_app \
-        --name-fancy='Oracle Instant Client' \
         --name='oracle-instant-client' \
         --platform='fedora' \
         --system \

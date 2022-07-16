@@ -11,7 +11,6 @@ koopa_debian_apt_add_google_cloud_key() {
     # """
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
-        --name-fancy='Google Cloud' \
         --name='google-cloud' \
         --url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     return 0

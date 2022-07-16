@@ -3,7 +3,7 @@
 koopa_uninstall_dotfiles() {
     # """
     # Uninstall dotfiles.
-    # @note Updated 2022-05-17.
+    # @note Updated 2022-07-15.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -12,7 +12,6 @@ koopa_uninstall_dotfiles() {
     )
     [[ -x "${app[bash]}" ]] || return 1
     declare -A dict=(
-        [name_fancy]='Dotfiles'
         [name]='dotfiles'
         [prefix]="$(koopa_dotfiles_prefix)"
     )
@@ -20,7 +19,6 @@ koopa_uninstall_dotfiles() {
     koopa_assert_is_file "${dict[script]}"
     "${app[bash]}" "${dict[script]}"
     koopa_uninstall_app \
-        --name-fancy="${dict[name_fancy]}" \
         --name="${dict[name]}" \
         --prefix="${dict[prefix]}" \
         "$@"

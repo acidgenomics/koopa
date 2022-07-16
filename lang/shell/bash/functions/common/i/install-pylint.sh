@@ -3,7 +3,7 @@
 koopa_install_pylint() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pylint' \
+        --link-in-bin='pylint' \
         --name='pylint' \
         "$@"
 }

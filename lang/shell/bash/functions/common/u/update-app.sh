@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using bool array for booleans.
+
 koopa_update_app() {
     # """
     # Update application.
-    # @note Updated 2022-05-16.
+    # @note Updated 2022-07-15.
     # """
     local clean_path_arr dict opt_arr
     koopa_assert_has_args "$#"
@@ -12,7 +14,7 @@ koopa_update_app() {
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [mode]='shared'
-        [name_fancy]=''
+        [name]=''
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
@@ -44,14 +46,6 @@ koopa_update_app() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
@@ -113,6 +107,7 @@ koopa_update_app() {
                 ;;
         esac
     done
+    koopa_assert_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     case "${dict[mode]}" in
         'shared')
@@ -126,12 +121,11 @@ koopa_update_app() {
             koopa_is_linux && dict[update_ldconfig]=1
             ;;
     esac
-    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
         then
-            koopa_alert_is_not_installed "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_is_not_installed "${dict[name]}" "${dict[prefix]}"
             return 1
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
@@ -147,9 +141,9 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     then
         if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_update_start "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_update_start "${dict[name_fancy]}"
+            koopa_alert_update_start "${dict[name]}"
         fi
     fi
     (
@@ -205,9 +199,9 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     then
         if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_alert_update_success "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_update_success "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_update_success "${dict[name_fancy]}"
+            koopa_alert_update_success "${dict[name]}"
         fi
     fi
     return 0
