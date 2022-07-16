@@ -2936,7 +2936,7 @@ koopa_brew_cleanup() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
-    koopa_alert 'Cleaning up Homebrew install.'
+    [[ -x "${app[brew]}" ]] || return 1
     "${app[brew]}" cleanup -s || true
     koopa_rm "$("${app[brew]}" --cache)"
     "${app[brew]}" autoremove || true
