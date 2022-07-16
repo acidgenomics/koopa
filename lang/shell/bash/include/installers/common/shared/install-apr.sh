@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apache Portable Runtime (APR) library.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/apr.rb
@@ -16,6 +16,7 @@ main() {
     then
         koopa_activate_build_opt_prefix 'autoconf' 'automake' 'libtool'
     fi
+    koopa_activate_opt_prefix 'sqlite'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
