@@ -18,6 +18,7 @@ koopa_kallisto_index() {
     declare -A app=(
         [kallisto]="$(koopa_locate_kallisto)"
     )
+    [[ -x "${app[kallisto]}" ]] || return 1
     declare -A dict=(
         [kmer_size]=31
         [mem_gb]="$(koopa_mem_gb)"

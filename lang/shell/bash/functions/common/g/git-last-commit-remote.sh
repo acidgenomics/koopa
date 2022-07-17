@@ -20,6 +20,9 @@ koopa_git_last_commit_remote() {
         [git]="$(koopa_locate_git)"
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict=(
         [ref]='HEAD'
     )

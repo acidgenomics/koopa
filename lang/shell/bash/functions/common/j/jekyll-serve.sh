@@ -10,6 +10,7 @@ koopa_jekyll_serve() {
     declare -A app=(
         [bundle]="$(koopa_locate_bundle)"
     )
+    [[ -x "${app[bundle]}" ]] || return 1
     declare -A dict=(
         [prefix]="${1:-}"
     )

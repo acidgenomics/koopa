@@ -10,6 +10,7 @@ koopa_parse_url() {
     declare -A app=(
         [curl]="$(koopa_locate_curl)"
     )
+    [[ -x "${app[curl]}" ]] || return 1
     curl_args=(
         '--disable' # Ignore '~/.curlrc'. Must come first.
         '--fail'

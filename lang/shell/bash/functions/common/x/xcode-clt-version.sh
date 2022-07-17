@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is macOS specific. Need to rework / reorganize this.
+
 koopa_xcode_clt_version() {
     # """
     # Xcode CLT version.
@@ -16,6 +18,8 @@ koopa_xcode_clt_version() {
         [awk]="$(koopa_locate_awk)"
         [pkgutil]="$(koopa_macos_locate_pkgutil)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[pkgutil]}" ]] || return 1
     declare -A dict=(
         [pkg]='com.apple.pkg.CLTools_Executables'
     )

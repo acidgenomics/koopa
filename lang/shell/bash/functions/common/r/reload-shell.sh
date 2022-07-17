@@ -10,6 +10,7 @@ koopa_reload_shell() {
     declare -A app=(
         [shell]="$(koopa_locate_shell)"
     )
+    [[ -x "${app[shell]}" ]] || return 1
     # shellcheck disable=SC2093
     exec "${app[shell]}" -il
     return 0

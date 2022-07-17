@@ -26,6 +26,7 @@ koopa_mktemp() {
     declare -A app=(
         [mktemp]="$(koopa_locate_mktemp)"
     )
+    [[ -x "${app[mktemp]}" ]] || return 1
     declare -A dict=(
         [date_id]="$(koopa_datetime)"
         [user_id]="$(koopa_user_id)"

@@ -47,7 +47,7 @@ koopa_install_app_packages() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
     app[cmd]="$("koopa_locate_${dict[name]}")"
-    koopa_assert_is_installed "${app[cmd]}"
+    [[ -x "${app[cmd]}" ]] || return 1
     # Configure the language.
     dict[configure_fun]="koopa_configure_${dict[name]}"
     "${dict[configure_fun]}"

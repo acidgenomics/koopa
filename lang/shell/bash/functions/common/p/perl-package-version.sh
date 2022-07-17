@@ -19,6 +19,7 @@ koopa_perl_package_version() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
+    [[ -x "${app[perl]}" ]] || return 1
     for pkg in "$@"
     do
         local dict

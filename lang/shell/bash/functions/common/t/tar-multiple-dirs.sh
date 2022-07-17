@@ -10,6 +10,7 @@ koopa_tar_multiple_dirs() {
     declare -A app=(
         [tar]="$(koopa_locate_tar)"
     )
+    [[ -x "${app[tar]}" ]] || return 1
     declare -A dict=(
         [delete]=0
     )
