@@ -24,6 +24,7 @@ koopa_python_create_venv() {
     declare -A app=(
         [python]="$(koopa_locate_python)"
     )
+    [[ -x "${app[python]}" ]] || return 1
     declare -A dict=(
         [name]=''
         [pip]=1

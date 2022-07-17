@@ -71,6 +71,7 @@ koopa_download() {
     declare -A app=(
         [download]="$("koopa_locate_${dict[engine]}")"
     )
+    [[ -x "${app[download]}" ]] || return 1
     if [[ -z "${dict[file]}" ]]
     then
         dict[file]="$(koopa_basename "${dict[url]}")"

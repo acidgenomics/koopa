@@ -17,6 +17,10 @@ koopa_current_gencode_version() {
         [grep]="$(koopa_locate_grep)"
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[curl]}" ]] || return 1
+    [[ -x "${app[grep]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict=(
         [organism]="${1:-}"
     )

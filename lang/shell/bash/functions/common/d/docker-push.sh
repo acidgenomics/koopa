@@ -21,6 +21,10 @@ koopa_docker_push() {
         [sort]="$(koopa_locate_sort)"
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[tr]}" ]] || return 1
     declare -A dict=(
         # Consider allowing user to define, so we can support quay.io.
         [server]='docker.io'

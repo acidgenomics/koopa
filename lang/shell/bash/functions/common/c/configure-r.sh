@@ -12,11 +12,11 @@ koopa_configure_r() {
     declare -A app=(
         [r]="${1:-}"
     )
+    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
         [name]='r'
     )
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
-    koopa_assert_is_installed "${app[r]}"
     dict[r_prefix]="$(koopa_r_prefix "${app[r]}")"
     koopa_alert_configure_start "${dict[name]}" "${dict[r_prefix]}"
     koopa_assert_is_dir "${dict[r_prefix]}"

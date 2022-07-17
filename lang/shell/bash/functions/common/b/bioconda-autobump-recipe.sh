@@ -11,6 +11,8 @@ koopa_bioconda_autobump_recipe() {
         [git]="$(koopa_locate_git)"
         [vim]="$(koopa_locate_vim)"
     )
+    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app[vim]}" ]] || return 1
     declare -A dict=(
         [recipe]="${1:?}"
         [repo]="${HOME:?}/git/bioconda-recipes"

@@ -14,6 +14,9 @@ koopa_line_count() {
         [wc]="$(koopa_locate_wc)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[wc]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     for file in "$@"
     do
         str="$( \

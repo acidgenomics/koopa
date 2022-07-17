@@ -30,7 +30,8 @@ koopa_r_javareconf() {
         [r]="${1:?}"
         [sudo]="$(koopa_locate_sudo)"
     )
-    koopa_assert_is_installed "${app[r]}"
+    [[ -x "${app[r]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [java_home]="$(koopa_java_prefix)"
     )

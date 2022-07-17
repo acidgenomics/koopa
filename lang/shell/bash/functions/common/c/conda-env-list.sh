@@ -10,6 +10,7 @@ koopa_conda_env_list() {
     declare -A app=(
         [conda]="$(koopa_locate_mamba_or_conda)"
     )
+    [[ -x "${app[conda]}" ]] || return 1
     str="$("${app[conda]}" env list --json --quiet)"
     koopa_print "$str"
     return 0

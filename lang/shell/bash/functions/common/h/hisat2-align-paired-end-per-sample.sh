@@ -24,6 +24,7 @@ koopa_hisat2_align_paired_end_per_sample() {
     declare -A app=(
         [hisat2]="$(koopa_locate_hisat2)"
     )
+    [[ -x "${app[hisat2]}" ]] || return 1
     declare -A dict=(
         # e.g. 'sample1_R1_001.fastq.gz'.
         [fastq_r1_file]=''

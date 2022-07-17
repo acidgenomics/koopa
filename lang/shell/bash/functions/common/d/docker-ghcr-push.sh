@@ -12,6 +12,7 @@ koopa_docker_ghcr_push() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     declare -A dict=(
         [image_name]="${2:?}"
         [owner]="${1:?}"

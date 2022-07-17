@@ -11,6 +11,8 @@ koopa_os_type() {
         [tr]="$(koopa_locate_tr)"
         [uname]="$(koopa_locate_uname)"
     )
+    [[ -x "${app[tr]}" ]] || return 1
+    [[ -x "${app[uname]}" ]] || return 1
     str="$( \
         "${app[uname]}" -s \
         | "${app[tr]}" '[:upper:]' '[:lower:]' \

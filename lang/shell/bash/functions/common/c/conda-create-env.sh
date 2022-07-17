@@ -14,6 +14,8 @@ koopa_conda_create_env() {
         [conda]="$(koopa_locate_mamba_or_conda)"
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[conda]}" ]] || return 1
+    [[ -x "${app[cut]}" ]] || return 1
     declare -A dict=(
         [conda_prefix]="$(koopa_conda_prefix)"
         [force]=0

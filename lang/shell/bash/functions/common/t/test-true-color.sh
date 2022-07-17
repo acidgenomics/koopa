@@ -13,6 +13,7 @@ koopa_test_true_color() {
     declare -A app=(
         [awk]="$(koopa_locate_awk)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
     "${app[awk]}" 'BEGIN{
         s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
         for (colnum = 0; colnum<77; colnum++) {
