@@ -13,6 +13,9 @@ koopa_vim_version() {
         [vim]="${1:-}"
     )
     [[ -z "${app[vim]}" ]] && app[vim]="$(koopa_locate_vim)"
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[vim]}" ]] || return 1
     declare -A dict=(
         [str]="$("${app[vim]}" --version 2>/dev/null)"
     )

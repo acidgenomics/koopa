@@ -24,6 +24,8 @@ koopa_conda_env_prefix() {
         [sed]="$(koopa_locate_sed)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [env_name]="${1:?}"
         [env_list]="${2:-}"

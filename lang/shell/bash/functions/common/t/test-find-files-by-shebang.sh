@@ -11,6 +11,8 @@ koopa_test_find_files_by_shebang() {
         [head]="$(koopa_locate_head)"
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[tr]}" ]] || return 1
     declare -A dict=(
         [pattern]="${1:?}"
     )

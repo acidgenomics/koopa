@@ -3,7 +3,7 @@
 __koopa_is_ssh_enabled() {
     # """
     # Is SSH key enabled (e.g. for git)?
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://help.github.com/en/github/authenticating-to-github/
@@ -14,6 +14,7 @@ __koopa_is_ssh_enabled() {
     declare -A app=(
         [ssh]="$(koopa_locate_ssh)"
     )
+    [[ -x "${app[ssh]}" ]] || return 1
     declare -A dict=(
         [url]="${1:?}"
         [pattern]="${2:?}"

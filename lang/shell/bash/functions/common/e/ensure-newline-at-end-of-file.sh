@@ -19,6 +19,7 @@ koopa_ensure_newline_at_end_of_file() {
     declare -A app=(
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [file]="${1:?}"
     )

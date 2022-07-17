@@ -3,7 +3,7 @@
 koopa_anaconda_version() {
     # """
     # Anaconda verison.
-    # @note Updated 2022-03-18.
+    # @note Updated 2022-07-15.
     #
     # @examples
     # # Version-specific lookup:
@@ -16,7 +16,9 @@ koopa_anaconda_version() {
         [awk]="$(koopa_locate_awk)"
         [conda]="${1:-}"
     )
+    [[ -x "${app[awk]}" ]] || return 1
     [[ -z "${app[conda]}" ]] && app[conda]="$(koopa_locate_anaconda)"
+    [[ -x "${app[conda]}" ]] || return 1
     koopa_is_anaconda "${app[conda]}" || return 1
     # shellcheck disable=SC2016
     str="$( \

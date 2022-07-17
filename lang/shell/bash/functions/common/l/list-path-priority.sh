@@ -9,6 +9,7 @@ koopa_list_path_priority() {
     declare -A app=(
         [awk]="$(koopa_locate_awk)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
     declare -A dict
     readarray -t all_arr <<< "$( \
         __koopa_list_path_priority "$@" \

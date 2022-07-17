@@ -23,6 +23,8 @@ koopa_git_default_branch() {
         [git]="$(koopa_locate_git)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [remote]='origin'
     )

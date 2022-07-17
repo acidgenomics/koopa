@@ -37,6 +37,10 @@ koopa_docker_build() {
         [docker]="$(koopa_locate_docker)"
         [sort]="$(koopa_locate_sort)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[date]}" ]] || return 1
+    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
     declare -A dict=(
         [docker_dir]="$(koopa_docker_prefix)"
         [delete]=0
