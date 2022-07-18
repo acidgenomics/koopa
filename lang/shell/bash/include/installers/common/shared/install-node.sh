@@ -16,6 +16,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='node'
@@ -29,6 +30,7 @@ main() {
     koopa_cd "${dict[name]}-v${dict[version]}"
     koopa_alert_coffee_time
     conf_args=("--prefix=${dict[prefix]}")
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test

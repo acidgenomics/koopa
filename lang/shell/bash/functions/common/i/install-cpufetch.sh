@@ -2,7 +2,7 @@
 
 koopa_install_cpufetch() {
     koopa_install_app \
-        --link-in-bin='bin/cpufetch' \
+        --link-in-bin='cpufetch' \
         --name='cpufetch' \
         "$@"
 }

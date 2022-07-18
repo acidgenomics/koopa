@@ -3,7 +3,7 @@
 main() {
     # """
     # Install RStudio Server binary.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-07-18.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
     #
@@ -38,7 +38,14 @@ main() {
     then
         app[fun]='koopa_debian_gdebi_install'
         dict[arch]="$(koopa_arch2)" # e.g 'amd64'.
-        dict[distro]='bionic'
+        dict[distro]="$(koopa_os_codename)"
+        case "${dict[distro]}" in
+            'jammy')
+                ;;
+            *)
+                dict[distro]='bionic'
+                ;;
+        esac
         dict[file_ext]='deb'
     elif koopa_is_fedora_like
     then
@@ -74,5 +81,8 @@ ${dict[arch]}/${dict[file]}"
     koopa_add_to_path_start "$(koopa_dirname "${app[r]}")"
     koopa_download "${dict[url]}" "${dict[file]}"
     "${app[fun]}" "${dict[file]}"
+    # FIXME Ensure we point to our R for server config.
+    # /etc/rstudio/rserver.conf
+    # > rsession-which-r=/opt/koopa/bin/R
     return 0
 }

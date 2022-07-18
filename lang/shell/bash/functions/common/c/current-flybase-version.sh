@@ -16,6 +16,9 @@ koopa_current_flybase_version() {
         [head]="$(koopa_locate_head)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     str="$( \
         koopa_parse_url --list-only "ftp://ftp.flybase.net/releases/" \
         | koopa_grep --pattern='^FB[0-9]{4}_[0-9]{2}$' --regex \

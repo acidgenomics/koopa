@@ -12,12 +12,15 @@ koopa_find_large_dirs() {
     # """
     local app prefix
     koopa_assert_has_args "$#"
+    koopa_assert_is_dir "$@"
     declare -A app=(
         [du]="$(koopa_locate_du)"
         [sort]="$(koopa_locate_sort)"
         [tail]="$(koopa_locate_tail)"
     )
-    koopa_assert_is_dir "$@"
+    [[ -x "${app[du]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     for prefix in "$@"
     do
         local str

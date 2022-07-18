@@ -16,7 +16,6 @@ koopa_install_emacs() {
         '--activate-opt=texinfo'
         '--activate-opt=gnutls'
         '--installer=gnu-app'
-        '--name-fancy=Emacs'
         '--name=emacs'
         '-D' '--with-modules'
         '-D' '--without-dbus'
@@ -28,7 +27,7 @@ koopa_install_emacs() {
     # Assume we're using Emacs cask by default on macOS.
     if ! koopa_is_macos
     then
-        install_args+=('--link-in-bin=bin/emacs')
+        install_args+=('--link-in-bin=emacs')
     fi
     koopa_install_app "${install_args[@]}" "$@"
 }

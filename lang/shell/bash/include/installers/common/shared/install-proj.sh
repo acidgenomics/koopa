@@ -32,6 +32,8 @@ main() {
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[cmake]}" ]] || return 1
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [make_prefix]="$(koopa_make_prefix)"

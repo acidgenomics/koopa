@@ -90,6 +90,7 @@ koopa_decompress() {
                     cmd="$(koopa_locate_xz)"
                     ;;
             esac
+            [[ -x "$cmd" ]] || return 1
             cmd_args=(
                 '-c' # '--stdout'.
                 '-d' # '--decompress'.
@@ -113,6 +114,7 @@ koopa_decompress() {
                     ;;
                 '1')
                     cmd="$(koopa_locate_cat)"
+                    [[ -x "$cmd" ]] || return 1
                     "$cmd" "${dict[source_file]}"
                     ;;
             esac

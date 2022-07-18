@@ -13,6 +13,9 @@ koopa_macos_flush_dns() {
         [kill_all]="$(koopa_macos_locate_kill_all)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[dscacheutil]}" ]] || return 1
+    [[ -x "${app[kill_all]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     koopa_alert 'Flushing DNS.'
     "${app[sudo]}" "${app[dscacheutil]}" -flushcache
     "${app[sudo]}" "${app[kill_all]}" -HUP 'mDNSResponder'

@@ -13,6 +13,8 @@ koopa_rename_lowercase() {
         [rename]="$(koopa_locate_rename)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[rename]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     declare -A dict=(
         [pattern]='y/A-Z/a-z/'
         [recursive]=0

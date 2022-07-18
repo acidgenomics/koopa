@@ -10,10 +10,11 @@ koopa_find_files_without_line_ending() {
     # """
     local app files prefix
     koopa_assert_has_args "$#"
+    koopa_assert_is_dir "$@"
     declare -A app=(
         [pcregrep]="$(koopa_locate_pcregrep)"
     )
-    koopa_assert_is_dir "$@"
+    [[ -x "${app[pcregrep]}" ]] || return 1
     for prefix in "$@"
     do
         local str

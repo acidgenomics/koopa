@@ -1,19 +1,23 @@
 #!/usr/bin/env bash
 
-# FIXME Skip key check for nPth...expired.
-
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-07-18.
     # """
     local app conf_args dict
     koopa_activate_build_opt_prefix 'autoconf' 'automake' 'pkg-config'
+    # FIXME Rework this approach to activate 'dict[prefix]' instead.
+    # FIXME This involves reworking our 'koopa_activate_prefix' and
+    # 'koopa_activate_opt_prefix' approach to also include pkg_config
+    # by default...
+    koopa_activate_opt_prefix 'gnupg'
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [check_key]=1
         [compress_ext]='bz2'
@@ -21,25 +25,21 @@ main() {
         [import_gpg_keys]="${INSTALL_IMPORT_GPG_KEYS:-1}"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if [[ -d "${dict[opt_prefix]}/gnupg" ]] &&
-        ! koopa_is_empty_dir "${dict[opt_prefix]}/gnupg"
-    then
-        koopa_activate_opt_prefix 'gnupg'
-    fi
     dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
     case "${dict[name]}" in
+        'dirmngr' | \
+        'npth')
+            # nPth uses expired 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' key.
+            # dirmngr is from 2013 and also has an expired key.
+            dict[check_key]=0
+            ;;
         'gnutls')
             dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
             dict[base_url]="${dict[base_url]}/v${dict[maj_min_ver]}"
             dict[compress_ext]='xz'
-            ;;
-        'npth')
-            # Uses expired 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' key.
-            dict[check_key]=0
             ;;
     esac
     dict[tar_file]="${dict[name]}-${dict[version]}.tar.${dict[compress_ext]}"
@@ -58,6 +58,7 @@ main() {
                 # Extra key needed for pinentry 1.1.1.
                 # > '80CC1B8D04C262DDFEE1980C6F7F0F91D138FC7B'
                 # Current GnuPG keys:
+                '02F38DFF731FF97CB039A1DA549E695E905BA208'
                 '5B80C5754298F0CB55D8ED6ABCEF7E294B092E28' # 2027-03-15
                 '6DAA6E64A76D2840571B4902528897B826403ADA' # 2030-06-30
                 'AC8E115BF73E2D8D47FA9908E98E9B2D19C6C8BD' # 2027-04-04
@@ -104,6 +105,7 @@ main() {
             )
             ;;
     esac
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

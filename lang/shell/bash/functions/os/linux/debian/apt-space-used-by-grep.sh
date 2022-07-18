@@ -16,6 +16,9 @@ koopa_debian_apt_space_used_by_grep() {
         [cut]="$(koopa_locate_cut)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[apt_get]}" ]] || return 1
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     x="$( \
         "${app[sudo]}" "${app[apt_get]}" \
             --assume-no \

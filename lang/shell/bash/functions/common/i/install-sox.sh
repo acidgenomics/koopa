@@ -2,8 +2,7 @@
 
 koopa_install_sox() {
     koopa_install_app \
-        --link-in-bin='bin/sox' \
-        --name-fancy='SoX' \
+        --link-in-bin='sox' \
         --name='sox' \
         "$@"
 }

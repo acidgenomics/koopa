@@ -11,6 +11,7 @@ koopa_touch() {
         [mkdir]='koopa_mkdir'
         [touch]="$(koopa_locate_touch)"
     )
+    [[ -x "${app[touch]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
     )

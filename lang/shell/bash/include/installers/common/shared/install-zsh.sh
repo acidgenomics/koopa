@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Zsh.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-07-15.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -26,16 +26,16 @@ main() {
     # - https://github.com/Homebrew/legacy-homebrew/issues/25719
     # - https://github.com/TACC/Lmod/issues/434
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'ncurses'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [bin_prefix]="$(koopa_bin_prefix)"
         [jobs]="$(koopa_cpu_count)"
-        [link_in_bin]="${INSTALL_LINK_IN_BIN:?}"
         [name]='zsh'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -47,10 +47,13 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    ./configure \
-        --prefix="${dict[prefix]}" \
-        --enable-etcdir="${dict[etc_dir]}" \
-        --without-tcsetpgrp
+    conf_args=(
+        "--prefix=${dict[prefix]}"
+        "--enable-etcdir=${dict[etc_dir]}"
+        '--without-tcsetpgrp'
+    )
+    ./configure --help
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
     # > "${app[make]}" test
@@ -63,7 +66,8 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
             --target-directory="${dict[etc_dir]}" \
             "${dict[distro_prefix]}/etc/zsh/"*
     fi
-    if [[ "${dict[link_in_bin]}" -eq 1 ]]
+    # FIXME This step will be skipped for binary install.
+    if koopa_is_shared_install
     then
         koopa_enable_shell_for_all_users "${dict[bin_prefix]}/${dict[name]}"
     fi

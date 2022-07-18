@@ -15,6 +15,7 @@ koopa_file_count() {
     declare -A app=(
         [wc]="$(koopa_locate_wc)"
     )
+    [[ -x "${app[wc]}" ]] || return 1
     declare -A dict=(
         [prefix]="${1:?}"
     )

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GnuPG.
-    # @note Updated 2022-04-21.
+    # @note Updated 2022-07-14.
     #
     # @seealso
     # - https://gnupg.org/download/index.html
@@ -20,6 +20,15 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     case "${dict[version]}" in
+        '2.3.7')
+            # 2022-07-11.
+            dict[libassuan_version]='2.5.5'       # 2021-03-22
+            dict[libgcrypt_version]='1.10.1'      # 2022-03-28
+            dict[libgpg_error_version]='1.45'     # 2022-04-07
+            dict[libksba_version]='1.6.0'         # 2021-06-10
+            dict[npth_version]='1.6'              # 2018-07-16
+            dict[pinentry_version]='1.2.0'        # 2021-08-25
+            ;;
         '2.3.4')
             # 2022-03-29.
             dict[libassuan_version]='2.5.5'       # 2021-03-22
@@ -127,43 +136,40 @@ main() {
     esac
     install_args=(
         '--installer=gnupg-gcrypt'
-        '--no-link-in-opt'
-        '--no-prefix-check'
         "--prefix=${dict[prefix]}"
-        '--quiet'
     )
-    koopa_install_app \
+    koopa_install_app_internal \
         --name='libgpg-error' \
         --version="${dict[libgpg_error_version]}" \
         "${install_args[@]}"
     # Avoid repetitive key re-imports.
     export INSTALL_IMPORT_GPG_KEYS=0
-    koopa_install_app \
+    koopa_install_app_internal \
         --name='libgcrypt' \
         --version="${dict[libgcrypt_version]}" \
         "${install_args[@]}"
-    koopa_install_app \
+    koopa_install_app_internal \
         --name='libassuan' \
         --version="${dict[libassuan_version]}" \
         "${install_args[@]}"
-    koopa_install_app \
+    koopa_install_app_internal \
         --name='libksba' \
         --version="${dict[libksba_version]}" \
         "${install_args[@]}"
-    koopa_install_app \
+    koopa_install_app_internal \
         --name='npth' \
         --version="${dict[npth_version]}" \
         "${install_args[@]}"
     if ! koopa_is_macos
     then
-        koopa_install_app \
+        koopa_install_app_internal \
             --activate-opt='fltk' \
             --activate-opt='ncurses' \
             --name='pinentry' \
             --version="${dict[pinentry_version]}" \
             "${install_args[@]}"
     fi
-    koopa_install_app \
+    koopa_install_app_internal \
         --name='gnupg' \
         --version="${dict[version]}" \
         "${install_args[@]}"

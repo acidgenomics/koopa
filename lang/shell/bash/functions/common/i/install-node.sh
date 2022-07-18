@@ -2,9 +2,8 @@
 
 koopa_install_node() {
     koopa_install_app \
-        --link-in-bin='bin/node' \
-        --link-in-bin='bin/npm' \
-        --name-fancy='Node.js' \
+        --link-in-bin='node' \
+        --link-in-bin='npm' \
         --name='node' \
         "$@"
 }

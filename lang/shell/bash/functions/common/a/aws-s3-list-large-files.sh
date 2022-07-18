@@ -3,7 +3,7 @@
 koopa_aws_s3_list_large_files() {
     # """
     # List large files in an S3 bucket.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-07-15.
     #
     # @examples
     # > koopa_aws_s3_list_large_files \
@@ -20,6 +20,11 @@ koopa_aws_s3_list_large_files() {
         [sort]="$(koopa_locate_sort)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app[jq]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [bucket]=''
         [num]='20'

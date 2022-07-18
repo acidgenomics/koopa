@@ -1,10 +1,9 @@
 #!/bin/sh
 # shellcheck disable=all
 
-koopa_opensuse_install_base_system() {
+koopa_opensuse_install_system_base() {
     koopa_install_app \
-        --name-fancy='openSUSE base system' \
-        --name='base-system' \
+        --name='base' \
         --platform='opensuse' \
         --system \
         "$@"

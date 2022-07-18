@@ -45,6 +45,8 @@ main() {
         [make]="$(koopa_locate_make)"
         [pkg_config]="$(koopa_locate_pkg_config)"
     )
+    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app[pkg_config]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
@@ -216,6 +218,7 @@ main() {
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
         app[svn]="$(koopa_locate_svn)"
+        [[ -x "${app[svn]}" ]] || return 1
         dict[rtop]="$(koopa_init_dir 'svn/r')"
         dict[svn_url]='https://svn.r-project.org/R/trunk'
         dict[trust_cert]='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
@@ -247,6 +250,7 @@ R-${dict[maj_ver]}/${dict[file]}"
     unset -v R_HOME
     # Need to burn in rpath, otherwise grDevices will fail to build.
     koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check

@@ -3,13 +3,12 @@
 koopa_debian_apt_add_wine_obs_key() {
     # """
     # Add the Wine OBS openSUSE key.
-    # @note Updated 2021-11-10.
+    # @note Updated 2022-07-15.
     # """
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         [name]='wine-obs'
-        [name_fancy]='Wine OBS'
         [os_string]="$(koopa_os_string)"
     )
     case "${dict[os_string]}" in
@@ -32,7 +31,6 @@ koopa_debian_apt_add_wine_obs_key() {
     dict[url]="https://download.opensuse.org/repositories/\
 Emulators:/Wine:/Debian/${dict[subdir]}/Release.key"
     koopa_debian_apt_add_key \
-        --name-fancy="${dict[name_fancy]}" \
         --name="${dict[name]}" \
         --url="${dict[url]}"
     return 0
