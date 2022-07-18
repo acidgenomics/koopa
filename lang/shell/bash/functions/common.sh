@@ -11140,11 +11140,10 @@ koopa_install_all_apps() {
     )
     koopa_cli_install --binary "${pkgs[@]}"
     pkgs=(
-        'julia-packages'
         'r-packages'
     )
     koopa_cli_install "${pkgs[@]}"
-    koopa_cli_configure 'dotfiles'
+    koopa_configure_dotfiles
     return 0
 }
 
