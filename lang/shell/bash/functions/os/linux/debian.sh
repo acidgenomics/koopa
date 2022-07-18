@@ -57,7 +57,7 @@ koopa_debian_apt_add_key() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [gpg]="$(koopa_locate_gpg)"
+        [gpg]='/usr/bin/gpg'
         [sudo]="$(koopa_locate_sudo)"
     )
     [[ -x "${app[gpg]}" ]] || return 1

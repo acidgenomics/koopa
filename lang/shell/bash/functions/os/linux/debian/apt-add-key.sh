@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider using system gpg for this.
-
 koopa_debian_apt_add_key() {
     # """
     # Add a GPG key (and/or keyring) for apt.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-07-18.
     #
     # @section Hardening against insecure URL failure:
     #
@@ -37,7 +35,8 @@ koopa_debian_apt_add_key() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [gpg]="$(koopa_locate_gpg)"
+        # NOTE Will run into dirmngr missing issue if using koopa gpg here.
+        [gpg]='/usr/bin/gpg'
         [sudo]="$(koopa_locate_sudo)"
     )
     [[ -x "${app[gpg]}" ]] || return 1
