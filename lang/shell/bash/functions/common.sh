@@ -4170,12 +4170,13 @@ koopa_cli_install() {
     koopa_assert_has_args "$#"
     if [[ "${dict[custom_enabled]}" -eq 1 ]]
     then
-        dict[key]="${dict[stem]}-${1:?}"
+        dict[app]="${1:?}"
         shift 1
+        dict[key]="${dict[stem]}-${dict[app]}"
         dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
         if ! koopa_is_function "${dict[fun]}"
         then
-            koopa_stop 'Unsupported app.'
+            koopa_stop "Unsupported app: '${dict[app]}'."
         fi
         "${dict[fun]}" "$@"
         return 0
@@ -4184,12 +4185,13 @@ koopa_cli_install() {
     do
         local dict2
         declare -A dict2=(
-            [key]="${dict[stem]}-${app}"
+            [app]="$app"
+            [key]="${dict[stem]}-${dict2[app]}"
         )
         dict2[fun]="$(koopa_which_function "${dict2[key]}" || true)"
         if ! koopa_is_function "${dict2[fun]}"
         then
-            koopa_stop "Unsupported app: '${app}'."
+            koopa_stop "Unsupported app: '${dict2[app]}'."
         fi
         "${dict2[fun]}" "${flags[@]}"
     done
