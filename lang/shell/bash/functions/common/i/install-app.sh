@@ -301,6 +301,11 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_alert_install_start "${dict[name]}"
         fi
     fi
+    # Need to include here, otherwise GnuPG won't install correctly.
+    if [[ "${bool[link_in_opt]}" -eq 1 ]]
+    then
+        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
+    fi
     (
         koopa_cd "${dict[tmp_dir]}"
         if [[ "${bool[binary]}" -eq 1 ]]
@@ -354,10 +359,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
             ;;
     esac
-    if [[ "${bool[link_in_opt]}" -eq 1 ]]
-    then
-        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
-    fi
     if [[ "${bool[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
