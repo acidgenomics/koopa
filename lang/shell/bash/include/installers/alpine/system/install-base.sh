@@ -21,8 +21,6 @@ main() {
     )
     [[ -x "${app[apk]}" ]] || return 1
     [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[apk]}" --no-cache update
-    "${app[sudo]}" "${app[apk]}" --no-cache upgrade
     pkgs=(
         # > R-dev
         # > R-doc
@@ -63,6 +61,8 @@ main() {
         'xz'
         'zsh'
     )
+    "${app[sudo]}" "${app[apk]}" --no-cache update
+    "${app[sudo]}" "${app[apk]}" --no-cache upgrade
     "${app[sudo]}" "${app[apk]}" --no-cache add "${pkgs[@]}"
     return 0
 }
