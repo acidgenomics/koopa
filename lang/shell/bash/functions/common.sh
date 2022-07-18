@@ -10924,6 +10924,8 @@ koopa_install_all_apps() {
     local pkgs
     koopa_assert_has_no_args "$#"
     pkgs=(
+        'openssl1'
+        'openssl3'
         'pcre'
         'pcre2'
         'ack'
