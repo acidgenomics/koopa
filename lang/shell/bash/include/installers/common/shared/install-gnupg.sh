@@ -20,6 +20,16 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     case "${dict[version]}" in
+        '2.3.7')
+            # 2022-07-11.
+            dict[dirmngr_version]='1.1.1'         # 2013-04-26
+            dict[libassuan_version]='2.5.5'       # 2021-03-22
+            dict[libgcrypt_version]='1.10.1'      # 2022-03-28
+            dict[libgpg_error_version]='1.45'     # 2022-04-07
+            dict[libksba_version]='1.6.0'         # 2021-06-10
+            dict[npth_version]='1.6'              # 2018-07-16
+            dict[pinentry_version]='1.2.0'        # 2021-08-25
+            ;;
         '2.3.4')
             # 2022-03-29.
             dict[libassuan_version]='2.5.5'       # 2021-03-22
@@ -150,6 +160,10 @@ main() {
     koopa_install_app_internal \
         --name='npth' \
         --version="${dict[npth_version]}" \
+        "${install_args[@]}"
+    koopa_install_app_internal \
+        --name='dirmngr' \
+        --version="${dict[dirmngr_version]}" \
         "${install_args[@]}"
     if ! koopa_is_macos
     then
