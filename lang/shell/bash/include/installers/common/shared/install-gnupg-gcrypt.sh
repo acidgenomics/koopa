@@ -7,6 +7,11 @@ main() {
     # """
     local app conf_args dict
     koopa_activate_build_opt_prefix 'autoconf' 'automake' 'pkg-config'
+    # FIXME Rework this approach to activate 'dict[prefix]' instead.
+    # FIXME This involves reworking our 'koopa_activate_prefix' and
+    # 'koopa_activate_opt_prefix' approach to also include pkg_config
+    # by default...
+    koopa_activate_opt_prefix 'gnupg'
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'
@@ -23,7 +28,6 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    koopa_activate_opt_prefix "${dict[prefix]}"
     dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
     case "${dict[name]}" in
         'dirmngr' | \
