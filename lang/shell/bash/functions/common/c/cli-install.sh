@@ -3,6 +3,7 @@
 # FIXME This approach is currently breaking argument passthrough for
 # primary koopa installer (e.g. '--non-interactive').
 # FIXME Need to allow argument passthrough in this edge case.
+# FIXME Need to rework this to relax 'koopa install koopa --non-interactive'...
 
 koopa_cli_install() {
     # """
