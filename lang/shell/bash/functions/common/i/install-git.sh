@@ -3,13 +3,13 @@
 koopa_install_git() {
     local install_args
     install_args=(
-        '--link-in-bin=bin/git'
+        '--link-in-bin=git'
         '--name=git'
     )
     if koopa_is_macos
     then
         install_args+=(
-            '--link-in-bin=bin/git-credential-osxkeychain'
+            '--link-in-bin=git-credential-osxkeychain'
         )
     fi
     koopa_install_app "${install_args[@]}" "$@"

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Red Hat Enterprise Linux (RHEL) base system.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-07-18.
     #
     # 'dnf-plugins-core' installs 'config-manager'.
     # """
