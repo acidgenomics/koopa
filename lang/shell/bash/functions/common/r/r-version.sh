@@ -12,7 +12,8 @@ koopa_r_version() {
         [r]="${1:-}"
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
-    koopa_assert_is_installed "${app[r]}"
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[r]}" ]] || return 1
     str="$( \
         "${app[r]}" --version 2>/dev/null \
         | "${app[head]}" -n 1 \

@@ -11,6 +11,8 @@ koopa_find_app_version() {
         [sort]="$(koopa_locate_sort)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [name]="${1:?}"

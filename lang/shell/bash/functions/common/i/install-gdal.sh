@@ -2,8 +2,7 @@
 
 koopa_install_gdal() {
     koopa_install_app \
-        --link-in-bin='bin/gdal-config' \
-        --name-fancy='GDAL' \
+        --link-in-bin='gdal-config' \
         --name='gdal' \
         "$@"
 }

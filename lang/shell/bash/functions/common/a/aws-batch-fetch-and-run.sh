@@ -17,6 +17,7 @@ koopa_aws_batch_fetch_and_run() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     declare -A dict=(
         [file]="$(koopa_tmp_file)"
         [profile]="${AWS_PROFILE:-}"

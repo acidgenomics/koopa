@@ -63,9 +63,11 @@ koopa_system_info() {
         )"
     else
         app[uname]="$(koopa_locate_uname)"
+        [[ -x "${app[uname]}" ]] || return 1
         dict[os]="$("${app[uname]}" --all)"
         # Alternate approach using Python:
         # > app[python]="$(koopa_locate_python)"
+        # > [[ -x "${app[python]}" ]] || return 1
         # > dict[os]="$("${app[python]}" -mplatform)"
     fi
     info+=(
@@ -79,6 +81,7 @@ koopa_system_info() {
     if koopa_is_installed 'neofetch'
     then
         app[neofetch]="$(koopa_locate_neofetch)"
+        [[ -x "${app[neofetch]}" ]] || return 1
         readarray -t nf_info <<< "$("${app[neofetch]}" --stdout)"
         info+=(
             ''

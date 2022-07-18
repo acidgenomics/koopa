@@ -11,6 +11,8 @@ koopa_brew_reset_core_repo() {
         [brew]="$(koopa_locate_brew)"
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app[git]}" ]] || return 1
     repo='homebrew/core'
     origin='origin'
     (

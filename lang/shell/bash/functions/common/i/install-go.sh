@@ -2,8 +2,7 @@
 
 koopa_install_go() {
     koopa_install_app \
-        --link-in-bin='bin/go' \
-        --name-fancy='Go' \
+        --link-in-bin='go' \
         --name='go' \
         "$@"
 }

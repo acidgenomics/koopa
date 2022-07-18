@@ -17,6 +17,9 @@ koopa_docker_is_build_recent() {
         [docker]="$(koopa_locate_docker)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[date]}" ]] || return 1
+    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [days]=7
     )

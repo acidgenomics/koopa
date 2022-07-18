@@ -6,7 +6,6 @@ koopa_install_r_devel() {
     # """
     koopa_install_app \
         --installer='r' \
-        --name-fancy='R-devel' \
         --name='r-devel' \
         "$@"
 }

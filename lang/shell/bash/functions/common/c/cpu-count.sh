@@ -16,10 +16,12 @@ koopa_cpu_count() {
     elif koopa_is_macos
     then
         app[sysctl]="$(koopa_macos_locate_sysctl)"
+        [[ -x "${app[sysctl]}" ]] || return 1
         num="$("${app[sysctl]}" -n 'hw.ncpu')"
     elif koopa_is_linux
     then
         app[getconf]="$(koopa_linux_locate_getconf)"
+        [[ -x "${app[getconf]}" ]] || return 1
         num="$("${app[getconf]}" '_NPROCESSORS_ONLN')"
     else
         num=1

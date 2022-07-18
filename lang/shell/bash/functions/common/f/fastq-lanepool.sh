@@ -12,6 +12,7 @@ koopa_fastq_lanepool() {
     declare -A app=(
         [cat]="$(koopa_locate_cat)"
     )
+    [[ -x "${app[cat]}" ]] || return 1
     declare -A dict=(
         [prefix]='lanepool'
         [source_dir]="${PWD:?}"

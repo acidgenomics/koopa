@@ -2,9 +2,8 @@
 
 koopa_install_ffmpeg() {
     koopa_install_app \
-        --link-in-bin='bin/ffmpeg' \
-        --link-in-bin='bin/ffprobe' \
-        --name-fancy='FFmpeg' \
+        --link-in-bin='ffmpeg' \
+        --link-in-bin='ffprobe' \
         --name='ffmpeg' \
         "$@"
 }

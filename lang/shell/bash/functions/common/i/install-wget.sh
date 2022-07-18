@@ -22,7 +22,7 @@ koopa_install_wget() {
         --activate-opt='gnutls' \
         --installer='gnu-app' \
         --name='wget' \
-        --link-in-bin='bin/wget' \
+        --link-in-bin='wget' \
         --name='wget' \
         -D '--disable-debug' \
         -D '--with-ssl=openssl' \

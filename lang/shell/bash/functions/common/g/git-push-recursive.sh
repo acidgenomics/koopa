@@ -9,6 +9,7 @@ koopa_git_push_recursive() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     dirs=("$@")
     koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     koopa_assert_is_dir "${dirs[@]}"
