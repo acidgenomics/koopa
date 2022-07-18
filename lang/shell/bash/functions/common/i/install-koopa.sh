@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME We can no longer pass '--non-interactive' through to koopa_install_app.
+# Need to think of a different approach here.
+
 # FIXME This is currently erroring if user doesn't have a bashrc file but
 # wants to write koopa activation into it...resolve this.
 
