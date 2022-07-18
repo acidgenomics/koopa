@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-# NOTE This will currently fail for platforms where not all apps can be
-# successfully compiled, such as ARM.
-
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
     # @note Updated 2022-07-15.
+    #
+    # This will currently fail for platforms where not all apps can be
+    # successfully compiled, such as ARM.
+    #
+    # Need to install PCRE libraries before grep.
     # """
     local pkgs
     koopa_assert_has_no_args "$#"
@@ -79,6 +81,8 @@ koopa_install_all_apps() {
         'google-cloud-sdk'
         'gperf'
         'graphviz'
+        'pcre'
+        'pcre2'
         'grep'
         'groff'
         'gsl'
@@ -150,8 +154,6 @@ koopa_install_all_apps() {
         'parallel'
         'password-store'
         'patch'
-        'pcre'
-        'pcre2'
         'perl'
         'pipx'
         'pixman'

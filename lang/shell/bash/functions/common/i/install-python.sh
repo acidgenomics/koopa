@@ -10,7 +10,7 @@ koopa_install_python() {
     )
     if ! koopa_is_macos
     then
-        install_args+=('--link-in-bin=bin/python3')
+        install_args+=('--link-in-bin=python3')
     fi
     koopa_install_app \
         "${install_args[@]}" \
