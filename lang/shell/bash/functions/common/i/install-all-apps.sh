@@ -231,7 +231,8 @@ koopa_install_all_apps() {
     )
     koopa_cli_install --binary "${pkgs[@]}"
     pkgs=(
-        'julia-packages'
+        # NOTE Consider enabling this in a future update.
+        # > 'julia-packages'
         'r-packages'
     )
     koopa_cli_install "${pkgs[@]}"
