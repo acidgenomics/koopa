@@ -46,6 +46,15 @@ main() {
         [scutil]="$(koopa_macos_locate_scutil)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[chflags]}" ]] || return 1
+    [[ -x "${app[defaults]}" ]] || return 1
+    [[ -x "${app[kill_all]}" ]] || return 1
+    [[ -x "${app[lsregister]}" ]] || return 1
+    [[ -x "${app[nvram]}" ]] || return 1
+    [[ -x "${app[plistbuddy]}" ]] || return 1
+    [[ -x "${app[pmset]}" ]] || return 1
+    [[ -x "${app[scutil]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [screenshots_dir]="${HOME}/Documents/screenshots"
     )

@@ -14,6 +14,7 @@ main() {
         [gpg_agent]='/usr/bin/gpg-agent'
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [check_key]=1
         [compress_ext]='bz2'

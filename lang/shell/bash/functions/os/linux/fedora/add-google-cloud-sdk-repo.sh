@@ -21,6 +21,8 @@ koopa_fedora_add_google_cloud_sdk_repo() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [enabled]=1

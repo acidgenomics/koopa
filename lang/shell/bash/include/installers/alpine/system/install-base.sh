@@ -15,6 +15,8 @@ main() {
         [apk]="$(koopa_alpine_locate_apk)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[apk]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [base]=1
         [dev]=1

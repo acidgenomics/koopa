@@ -20,6 +20,8 @@ koopa_macos_uninstall_brewfile_casks() {
         [brew]="$(koopa_locate_brew)"
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app[cut]}" ]] || return 1
     declare -A dict=(
         [brewfile]="${1:?}"
     )

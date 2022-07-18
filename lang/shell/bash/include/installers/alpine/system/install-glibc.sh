@@ -35,6 +35,9 @@ main() {
         [localedef]="$(koopa_alpine_locate_localedef)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[apk]}" ]] || return 1
+    [[ -x "${app[localedef]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [version]="${INSTALL_VERSION:?}"
         [base_url]="https://github.com/sgerrand/alpine-pkg-glibc/\

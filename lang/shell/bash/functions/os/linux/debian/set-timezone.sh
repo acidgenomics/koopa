@@ -16,6 +16,8 @@ koopa_debian_set_timezone() {
         [sudo]="$(koopa_locate_sudo)"
         [timedatectl]="$(koopa_debian_locate_timedatectl)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[timedatectl]}" ]] || return 1
     declare -A dict=(
         [tz]="${1:-}"
     )

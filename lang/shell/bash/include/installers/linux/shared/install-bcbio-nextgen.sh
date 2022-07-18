@@ -27,6 +27,7 @@ main() {
     declare -A app=(
         [python]="$(koopa_locate_python)"
     )
+    [[ -x "${app[python]}" ]] || return 1
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
