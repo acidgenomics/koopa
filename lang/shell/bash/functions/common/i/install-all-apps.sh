@@ -14,6 +14,8 @@ koopa_install_all_apps() {
     koopa_assert_has_no_args "$#"
     pkgs=(
         # Priority -------------------------------------------------------------
+        'openssl1'
+        'openssl3'
         'pcre'
         'pcre2'
         # Alphabetical ---------------------------------------------------------
