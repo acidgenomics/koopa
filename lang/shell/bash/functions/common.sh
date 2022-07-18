@@ -4184,10 +4184,9 @@ koopa_cli_install() {
     for app in "$@"
     do
         local dict2
-        declare -A dict2=(
-            [app]="$app"
-            [key]="${dict[stem]}-${dict2[app]}"
-        )
+        declare -A dict2
+        dict2[app]="$app"
+        dict2[key]="${dict[stem]}-${dict2[app]}"
         dict2[fun]="$(koopa_which_function "${dict2[key]}" || true)"
         if ! koopa_is_function "${dict2[fun]}"
         then
