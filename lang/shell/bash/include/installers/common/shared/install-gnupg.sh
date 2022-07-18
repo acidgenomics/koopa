@@ -170,7 +170,7 @@ main() {
         "${install_args[@]}"
     koopa_install_app_internal \
         --name='dirmngr' \
-        --version="${dict[version]}" \
+        --version="${dict[dirmngr_version]}" \
         "${install_args[@]}"
     if ! koopa_is_macos
     then

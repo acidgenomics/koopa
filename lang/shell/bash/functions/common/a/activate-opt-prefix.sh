@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to simply call on opt_prefix, but use activate_prefix
+# internally instead...
+
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
