@@ -3,7 +3,7 @@
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2022-07-14.
+    # @note Updated 2022-07-18.
     #
     # @examples
     # > koopa_cli_install --binary --reinstall --verbose 'python' 'tmux'
@@ -78,10 +78,9 @@ koopa_cli_install() {
     for app in "$@"
     do
         local dict2
-        declare -A dict2=(
-            [app]="$app"
-            [key]="${dict[stem]}-${dict2[app]}"
-        )
+        declare -A dict2
+        dict2[app]="$app"
+        dict2[key]="${dict[stem]}-${dict2[app]}"
         dict2[fun]="$(koopa_which_function "${dict2[key]}" || true)"
         if ! koopa_is_function "${dict2[fun]}"
         then
