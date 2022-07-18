@@ -1,6 +1,9 @@
 #!/bin/sh
 # shellcheck disable=SC2034
 
+# FIXME Consider only including this when R is build from source.
+# Otherwise, we can run into LD issues with R CRAN binary on Debian/Ubuntu.
+
 # """
 # Shared R environment configuration for Linux.
 #
