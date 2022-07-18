@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME This approach is currently breaking argument passthrough for
+# primary koopa installer (e.g. '--non-interactive').
+# FIXME Need to allow argument passthrough in this edge case.
+
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
@@ -20,6 +24,8 @@ koopa_cli_install() {
     flags=()
     pos=()
     stem='install'
+    # FIXME Need to rework this to not error for '--non-interactive' input
+    # during main koopa install command.
     while (("$#"))
     do
         case "$1" in
