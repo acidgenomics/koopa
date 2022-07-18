@@ -57,7 +57,7 @@ koopa_cli_install() {
     case "${1:-}" in
         'system' | \
         'user')
-            dict[stem]="${dict[stem]}-${1}"
+            dict[stem]="${dict[stem]}-${1:?}"
             shift 1
             ;;
     esac
@@ -86,7 +86,7 @@ koopa_cli_install() {
         then
             koopa_stop "Unsupported app: '${dict2[app]}'."
         fi
-        "${dict2[fun]}" "${flags[@]}"
+        "${dict2[fun]}" "${flags[@]:-}"
     done
     return 0
 }
