@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure we link into koopa bin.
-
 main() {
     # """
     # Install RStudio Server binary.
@@ -83,5 +81,8 @@ ${dict[arch]}/${dict[file]}"
     koopa_add_to_path_start "$(koopa_dirname "${app[r]}")"
     koopa_download "${dict[url]}" "${dict[file]}"
     "${app[fun]}" "${dict[file]}"
+    # FIXME Ensure we point to our R for server config.
+    # /etc/rstudio/rserver.conf
+    # > rsession-which-r=/opt/koopa/bin/R
     return 0
 }
