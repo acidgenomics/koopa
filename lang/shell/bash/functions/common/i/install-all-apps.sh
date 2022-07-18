@@ -233,5 +233,10 @@ koopa_install_all_apps() {
         'zstd'
     )
     koopa_cli_install --binary "${pkgs[@]}"
+    pkgs=(
+        'julia-packages'
+        'r-packages'
+    )
+    koopa_cli_install "${pkgs[@]}"
     return 0
 }
