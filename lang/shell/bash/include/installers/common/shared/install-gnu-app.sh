@@ -51,6 +51,7 @@ main() {
         'ncurses' | \
         'nettle' | \
         'patch' | \
+        'pth' | \
         'readline' | \
         'stow' | \
         'tar' | \

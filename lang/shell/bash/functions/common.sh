@@ -11075,6 +11075,7 @@ koopa_install_all_apps() {
         'prettier'
         'procs'
         'proj'
+        'pth'
         'pyflakes'
         'pygments'
         'pylint'
