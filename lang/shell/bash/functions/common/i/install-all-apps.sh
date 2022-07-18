@@ -229,6 +229,15 @@ koopa_install_all_apps() {
         'zsh'
         'zstd'
     )
+    if koopa_is_linux
+    then
+        pkgs+=(
+            'apptainer'
+            'aspera-connect'
+            'docker-credential-pass'
+            'lmod'
+        )
+    fi
     koopa_cli_install --binary "${pkgs[@]}"
     pkgs=(
         # NOTE Consider enabling this in a future update.
