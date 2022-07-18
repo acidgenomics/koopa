@@ -23174,7 +23174,7 @@ koopa_uninstall_r() {
     uninstall_args=(
         '--name=r'
     )
-    if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
+    if ! koopa_is_macos
     then
         install_args+=(
             '--unlink-in-bin=R'

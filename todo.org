@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Our R built from source on Ubuntu doesn't seem to be linking libR.so correctly for stringi.
+    # ldd /opt/koopa/opt/r-packages/stringi/libs/stringi.so
+    # libR.so => not found
 ** TODO zsh prompt string isn't getting configured for T's MacBook
 ** TODO Consider not configuring any apps, such as R at the end of install call.
     This behavior will be inconsistency with binary package install.
