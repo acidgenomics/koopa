@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Arch Linux base system.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-07-18.
     #
     # base-devel:
     # 1) autoconf  2) automake  3) binutils  4) bison  5) fakeroot  6) file
@@ -20,7 +20,8 @@ main() {
     # Note that Arch is currently overwriting PS1 for root.
     # This is due to configuration in '/etc/profile'.
     # """
-    local app dict pkgs
+    local app pkgs
+    koopa_assert_has_no_args "$#"
     declare -A app=(
         [pacman]="$(koopa_arch_locate_pacman)"
         [pacman_db_upgrade]="$(koopa_arch_locate_pacman_db_upgrade)"
@@ -29,80 +30,36 @@ main() {
     [[ -x "${app[pacman]}" ]] || return 1
     [[ -x "${app[pacman_db_upgrade]}" ]] || return 1
     [[ -x "${app[sudo]}" ]] || return 1
-    declare -A dict=(
-        [base]=1
-        [recommended]=1
-        [upgrade]=1
+    pkgs=(
+        'awk'
+        'base-devel'
+        'bash'
+        'bc'
+        'cmake'
+        'gcc-fortran'
+        'git'
+        'gmp'
+        'libevent'
+        'libffi'
+        'man'
+        'mpc'
+        'mpfr'
+        'pandoc'
+        'procps' # ps
+        'r'
+        'tcl'
+        'texlive-core'
+        'tree'
+        'unzip'
+        'wget'
+        'xz'
+        'zsh'
     )
-    while (("$#"))
-    do
-        case "$1" in
-            '')
-                shift 1
-                ;;
-            '--base-image')
-                dict[base]=1
-                dict[recommended]=0
-                dict[upgrade]=0
-                shift 1
-                ;;
-            '--full')
-                dict[base]=1
-                dict[recommended]=1
-                dict[upgrade]=1
-                shift 1
-                ;;
-            '--default' | \
-            '--recommended')
-                shift 1
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
     # Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
     # is non-standard and can cause koopa's application link script to break.
-    [[ -L '/usr/local/share/man' ]] && \
-        koopa_rm --sudo '/usr/local/share/man'
-    if [[ "${dict[upgrade]}" -eq 1 ]]
-    then
-        "${app[sudo]}" "${app[pacman]}" -Syyu --noconfirm
-    fi
-    pkgs=()
-    if [[ "${dict[base]}" -eq 1 ]]
-    then
-        pkgs+=(
-            'base-devel'
-            'bash'
-            'bc'
-            'git'
-            'man'
-            'procps' # ps
-            'unzip'
-            'xz'
-        )
-    fi
-    if [[ "${dict[recommended]}" -eq 1 ]]
-    then
-        pkgs+=(
-            'awk'
-            'cmake'
-            'gcc-fortran'
-            'gmp'
-            'libevent'
-            'libffi'
-            'mpc'
-            'mpfr'
-            'pandoc'
-            'r'
-            'tcl'
-            'texlive-core'
-            'tree'
-            'wget'
-            'zsh'
-        )
-    fi
+    # > [[ -L '/usr/local/share/man' ]] && \
+    # >     koopa_rm --sudo '/usr/local/share/man'
+    "${app[sudo]}" "${app[pacman]}" -Syyu --noconfirm
     "${app[sudo]}" "${app[pacman]}" -Syy --noconfirm
     "${app[sudo]}" "${app[pacman_db_upgrade]}"
     "${app[sudo]}" "${app[pacman]}" -S --noconfirm "${pkgs[@]}"
