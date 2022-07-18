@@ -86,8 +86,9 @@ releases/download/jdk-${dict[version3]}/${dict[file]}"
             koopa_ln "${libexec}/${name}" "$name"
         done
     )
-    if koopa_is_shared_install && koopa_is_linux
-    then
-        koopa_linux_java_update_alternatives "${dict[prefix]}"
-    fi
+    # > if koopa_is_shared_install && koopa_is_linux
+    # > then
+    # >     koopa_linux_java_update_alternatives "${dict[prefix]}"
+    # > fi
+    return 0
 }
