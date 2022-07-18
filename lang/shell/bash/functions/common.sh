@@ -10924,6 +10924,8 @@ koopa_install_all_apps() {
     local pkgs
     koopa_assert_has_no_args "$#"
     pkgs=(
+        'pcre'
+        'pcre2'
         'ack'
         'anaconda'
         'apr'
@@ -10992,8 +10994,6 @@ koopa_install_all_apps() {
         'google-cloud-sdk'
         'gperf'
         'graphviz'
-        'pcre'
-        'pcre2'
         'grep'
         'groff'
         'gsl'
