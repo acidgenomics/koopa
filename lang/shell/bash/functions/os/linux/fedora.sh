@@ -9,6 +9,8 @@ koopa_fedora_add_azure_cli_repo() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [file]='/etc/yum.repos.d/azure-cli.repo'
     )
@@ -32,6 +34,8 @@ koopa_fedora_add_google_cloud_sdk_repo() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [enabled]=1
@@ -111,6 +115,8 @@ koopa_fedora_import_azure_cli_key() {
         [rpm]="$(koopa_fedora_locate_rpm)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[rpm]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [key]='https://packages.microsoft.com/keys/microsoft.asc'
     )
@@ -134,6 +140,8 @@ koopa_fedora_install_from_rpm() {
         [rpm]="$(koopa_fedora_locate_rpm)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[rpm]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     "${app[sudo]}" "${app[rpm]}" -v \
         --force \
         --install \
@@ -206,6 +214,9 @@ koopa_fedora_set_locale() {
         [localedef]="$(koopa_locate_localedef)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[locale]}" ]] || return 1
+    [[ -x "${app[localedef]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [lang]='en'
         [country]='US'
