@@ -236,6 +236,6 @@ koopa_install_all_apps() {
         'r-packages'
     )
     koopa_cli_install "${pkgs[@]}"
-    koopa_cli_configure 'dotfiles'
+    koopa_configure_dotfiles
     return 0
 }
