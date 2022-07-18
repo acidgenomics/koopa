@@ -28,6 +28,9 @@ main() {
         [libtoolize]="$(koopa_locate_libtoolize)"
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[autoreconf]}" ]] || return 1
+    [[ -x "${app[libtoolize]}" ]] || return 1
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='jq'
@@ -62,6 +65,7 @@ download/${dict[name]}-${dict[version]}/${dict[file]}"
     )
     "${app[libtoolize]}"
     "${app[autoreconf]}" -iv
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

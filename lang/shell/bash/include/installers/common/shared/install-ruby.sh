@@ -3,12 +3,12 @@
 main() {
     # """
     # Install Ruby.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://www.ruby-lang.org/en/downloads/
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     if koopa_is_linux
@@ -19,6 +19,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='ruby'
@@ -38,7 +39,9 @@ ${dict[maj_min_ver]}/${dict[file]}"
     # - https://github.com/rbenv/ruby-build/issues/156
     # - https://github.com/rbenv/ruby-build/issues/729
     # > export RUBY_CONFIGURE_OPTS='--disable-install-doc'
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=("--prefix=${dict[prefix]}")
+    ./configure --help
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0

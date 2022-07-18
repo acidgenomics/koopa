@@ -3,7 +3,7 @@
 main() {
     # """
     # Install aspell.
-    # @note Updated 2022-07-05.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - http://aspell.net/
@@ -20,12 +20,9 @@ main() {
         [lang_base_url]='https://ftp.gnu.org/gnu/aspell/dict'
         [prefix]="${INSTALL_PREFIX:?}"
     )
-    koopa_install_app \
+    koopa_install_app_internal \
         --installer='gnu-app' \
-        --name='aspell' \
-        --no-link-in-opt \
-        --no-prefix-check \
-        --quiet
+        --name='aspell'
     app[aspell]="${dict[prefix]}/bin/aspell"
     app[prezip]="${dict[prefix]}/bin/prezip"
     koopa_assert_is_installed "${app[aspell]}" "${app[prezip]}"
@@ -38,7 +35,7 @@ main() {
     )
     for key in "${!lang[@]}"
     do
-        local dict2
+        local conf_args dict2
         declare -A dict2
         dict2[bn]="${lang[$key]}"
         dict2[file]="${dict2[bn]}.tar.bz2"
@@ -47,7 +44,13 @@ main() {
         koopa_extract "${dict2[file]}"
         koopa_cd "${dict2[bn]}"
         # Useful vars: ASPELL ASPELL_PARMS PREZIP DESTDIR.
-        ./configure --vars ASPELL="${app[aspell]}" PREZIP="${app[prezip]}"
+        conf_args=(
+            '--vars'
+            "ASPELL=${app[aspell]}"
+            "PREZIP=${app[prezip]}"
+        )
+        ./configure --help
+        ./configure "${conf_args[@]}"
         "${app[make]}" install
     done
     "${app[aspell]}" dump dicts

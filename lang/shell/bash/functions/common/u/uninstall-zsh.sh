@@ -4,7 +4,6 @@
 
 koopa_uninstall_zsh() {
     koopa_uninstall_app \
-        --name-fancy="Zsh" \
         --name='zsh' \
         --unlink-in-bin='zsh' \
         "$@"

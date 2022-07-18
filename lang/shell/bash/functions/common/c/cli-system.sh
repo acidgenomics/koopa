@@ -3,22 +3,20 @@
 koopa_cli_system() {
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-05-20.
+    # @note Updated 2022-07-15.
     # """
-    local key
-    key=''
+    local dict
+    declare -A dict=(
+        [key]=''
+    )
     # Platform independent.
     case "${1:-}" in
-        '--help' | \
-        '-h')
-            koopa_help "$(koopa_man_prefix)/man1/system.1"
-            ;;
         'check')
-            key='check-system'
+            dict[key]='check-system'
             shift 1
             ;;
         'info')
-            key='system-info'
+            dict[key]='system-info'
             shift 1
             ;;
         'list')
@@ -28,41 +26,42 @@ koopa_cli_system() {
                 'launch-agents' | \
                 'path-priority' | \
                 'programs')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
             esac
             ;;
         'log')
-            key='view-latest-tmp-log-file'
+            dict[key]='view-latest-tmp-log-file'
             shift 1
             ;;
         'prefix')
             case "${2:-}" in
                 '')
-                    key='koopa-prefix'
+                    dict[key]='koopa-prefix'
                     shift 1
                     ;;
                 'koopa')
-                    key='koopa-prefix'
+                    dict[key]='koopa-prefix'
                     shift 2
                     ;;
                 *)
-                    key="${2}-prefix"
+                    dict[key]="${2}-prefix"
                     shift 2
                     ;;
             esac
             ;;
         'version')
-            key='get-version'
+            dict[key]='get-version'
             shift 1
             ;;
         'which')
-            key='which-realpath'
+            dict[key]='which-realpath'
             shift 1
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
+        'build-all-apps' | \
         'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
@@ -70,15 +69,16 @@ koopa_cli_system() {
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
+        'push-all-app-builds' | \
+        'push-app-build' | \
         'reload-shell' | \
         'roff' | \
-        'push-app-build' | \
         'set-permissions' | \
         'switch-to-develop' | \
         'test' | \
         'variable' | \
         'variables')
-            key="${1:?}"
+            dict[key]="${1:?}"
             shift 1
             ;;
         # Defunct --------------------------------------------------------------
@@ -90,14 +90,14 @@ koopa_cli_system() {
             ;;
     esac
     # Platform specific.
-    if [[ -z "$key" ]]
+    if [[ -z "${dict[key]}" ]]
     then
         if koopa_is_linux
         then
             case "${1:-}" in
                 'delete-cache' | \
                 'fix-sudo-setrlimit-error')
-                    key="${1:?}"
+                    dict[key]="${1:?}"
                     shift 1
                     ;;
             esac
@@ -105,7 +105,7 @@ koopa_cli_system() {
         then
             case "${1:-}" in
                 'spotlight')
-                    key='spotlight-find'
+                    dict[key]='spotlight-find'
                     shift 1
                     ;;
                 'clean-launch-services' | \
@@ -117,13 +117,18 @@ koopa_cli_system() {
                 'ifactive' | \
                 'list-launch-agents' | \
                 'reload-autofs')
-                    key="${1:?}"
+                    dict[key]="${1:?}"
                     shift 1
                     ;;
             esac
         fi
     fi
-    [[ -z "$key" ]] && koopa_cli_invalid_arg "$@"
-    koopa_print "$key" "$@"
+    [[ -z "${dict[key]}" ]] && koopa_cli_invalid_arg "$@"
+    dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+    if ! koopa_is_function "${dict[fun]}"
+    then
+        koopa_stop 'Unsupported command.'
+    fi
+    "${dict[fun]}" "$@"
     return 0
 }

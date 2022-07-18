@@ -3,7 +3,7 @@
 koopa_trim_ws() {
     # """
     # Trim leading and trailing white-space from string.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-15.
     #
     # This is an alternative to sed, awk, perl and other tools. The function
     # works by finding all leading and trailing white-space and removing it from
@@ -16,14 +16,14 @@ koopa_trim_ws() {
     # # hello world
     # # foo bar
     # """
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
         str="${str#"${str%%[![:space:]]*}"}"
         str="${str%"${str##*[![:space:]]}"}"

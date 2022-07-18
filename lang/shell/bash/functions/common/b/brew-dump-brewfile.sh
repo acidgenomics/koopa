@@ -10,6 +10,7 @@ koopa_brew_dump_brewfile() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
     today="$(koopa_today)"
     "${app[brew]}" bundle dump \
         --file="brewfile-${today}" \

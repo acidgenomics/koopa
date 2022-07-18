@@ -5,7 +5,7 @@ koopa_install_less() {
         --activate-opt='ncurses' \
         --activate-opt='pcre2' \
         --installer='gnu-app' \
-        --link-in-bin='bin/less' \
+        --link-in-bin='less' \
         --name='less' \
         "$@"
 }

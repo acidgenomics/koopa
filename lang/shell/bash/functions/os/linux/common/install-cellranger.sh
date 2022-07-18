@@ -2,8 +2,7 @@
 
 koopa_linux_install_cellranger() {
     koopa_install_app \
-        --link-in-bin='bin/cellranger' \
-        --name-fancy='Cell Ranger' \
+        --link-in-bin='cellranger' \
         --name='cellranger' \
         --platform='linux' \
         "$@"

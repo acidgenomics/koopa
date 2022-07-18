@@ -3,7 +3,7 @@
 koopa_bpytop_version() {
     # """
     # bpytop version.
-    # @note Updated 2022-03-18.
+    # @note Updated 2022-07-15.
     # """
     local app str
     koopa_assert_has_args_le "$#" 1
@@ -11,7 +11,9 @@ koopa_bpytop_version() {
         [awk]="$(koopa_locate_awk)"
         [bpytop]="${1:-}"
     )
+    [[ -x "${app[awk]}" ]] || return 1
     [[ -z "${app[bpytop]}" ]] && app[bpytop]="$(koopa_locate_bpytop)"
+    [[ -x "${app[bpytop]}" ]] || return 1
     # shellcheck disable=SC2016
     str="$( \
         "${app[bpytop]}" --version \

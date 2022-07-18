@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Bash.
-    # @note Updated 2022-04-23.
+    # @note Updated 2022-07-15.
     #
     # @section Applying patches:
     #
@@ -23,11 +23,15 @@ main() {
         [patch]="$(koopa_locate_patch)"
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[curl]}" ]] || return 1
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app[patch]}" ]] || return 1
+    [[ -x "${app[tr]}" ]] || return 1
     declare -A dict=(
         [bin_prefix]="$(koopa_bin_prefix)"
         [gnu_mirror]="$(koopa_gnu_mirror_url)"
         [jobs]="$(koopa_cpu_count)"
-        [link_in_bin]="${INSTALL_LINK_IN_BIN:?}"
         [name]='bash'
         [patch_prefix]='patches'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -98,11 +102,12 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
         )
         conf_args+=("CFLAGS=${cflags[*]}")
     fi
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
-    if [[ "${dict[link_in_bin]}" -eq 1 ]]
+    if koopa_is_shared_install
     then
         koopa_enable_shell_for_all_users "${dict[bin_prefix]}/${dict[name]}"
     fi

@@ -2,7 +2,7 @@
 
 koopa_install_du_dust() {
     koopa_install_app \
-        --link-in-bin='bin/dust' \
+        --link-in-bin='dust' \
         --name='du-dust' \
         --installer='rust-package' \
         "$@"

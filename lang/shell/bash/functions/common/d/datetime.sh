@@ -10,6 +10,7 @@ koopa_datetime() {
     declare -A app=(
         [date]="$(koopa_locate_date)"
     )
+    [[ -x "${app[date]}" ]] || return 1
     str="$("${app[date]}" '+%Y%m%d-%H%M%S')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

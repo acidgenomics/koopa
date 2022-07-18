@@ -3,14 +3,15 @@
 main() {
     # """
     # Install udunits.
-    # @note Updated 2022-07-13.
+    # @note Updated 2022-07-15.
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'expat'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='udunits'
@@ -25,7 +26,9 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=("--prefix=${dict[prefix]}")
+    ./configure --help
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
     "${app[make]}" install

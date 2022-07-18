@@ -18,6 +18,8 @@ koopa_boost_version() {
         [bc]="$(koopa_locate_bc)"
         [gcc]="$(koopa_locate_gcc)"
     )
+    [[ -x "${app[bc]}" ]] || return 1
+    [[ -x "${app[gcc]}" ]] || return 1
     declare -A dict
     gcc_args=()
     if koopa_is_macos

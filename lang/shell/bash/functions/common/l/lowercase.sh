@@ -3,7 +3,7 @@
 koopa_lowercase() {
     # """
     # Transform string to lowercase.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-15.
     #
     # awk alternative:
     # > koopa_print "$str" | "${app[awk]}" '{print tolower($0)}'
@@ -15,19 +15,20 @@ koopa_lowercase() {
     # > koopa_lowercase 'HELLO WORLD'
     # # hello world
     # """
-    local app args str
-    koopa_assert_has_args "$#"
+    local app str
     declare -A app=(
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[tr]}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         koopa_print "$str" \
             | "${app[tr]}" '[:upper:]' '[:lower:]'
     done

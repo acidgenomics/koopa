@@ -7,14 +7,13 @@ koopa_install_r() {
     # """
     local install_args
     install_args=(
-        '--name-fancy=R'
         '--name=r'
     )
-    if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
+    if ! koopa_is_macos
     then
         install_args+=(
-            '--link-in-bin=bin/R'
-            '--link-in-bin=bin/Rscript'
+            '--link-in-bin=R'
+            '--link-in-bin=Rscript'
         )
     fi
     koopa_install_app \

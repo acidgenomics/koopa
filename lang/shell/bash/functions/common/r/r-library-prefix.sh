@@ -11,8 +11,9 @@ koopa_r_library_prefix() {
         [r]="${1:-}"
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    [[ -x "${app[r]}" ]] || return 1
     app[rscript]="${app[r]}script"
-    koopa_assert_is_installed "${app[rscript]}"
+    [[ -x "${app[rscript]}" ]] || return 1
     declare -A dict
     dict[prefix]="$( \
         "${app[rscript]}" -e 'cat(normalizePath(.libPaths()[[1L]]))' \

@@ -3,7 +3,7 @@
 koopa_strip_trailing_slash() {
     # """
     # Strip trailing slash in file path string.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-15.
     #
     # Alternate approach using sed:
     # > sed 's/\/$//' <<< "$1"
@@ -15,13 +15,12 @@ koopa_strip_trailing_slash() {
     # # ./dir1
     # # ./dir2
     # """
-    local args
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    koopa_strip_right --pattern='/' "${args[@]}"
+    koopa_strip_right --pattern='/' "$@"
     return 0
 }

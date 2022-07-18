@@ -3,10 +3,25 @@
 koopa_cli_configure() {
     # """
     # Parse user input to 'koopa configure'.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-07-14.
     #
     # @examples
-    # > koopa_cli_configure 'python'
+    # > koopa_cli_configure 'julia' 'r'
     # """
-    koopa_cli_nested_runner 'configure' "$@"
+    local app
+    koopa_assert_has_args "$#"
+    for app in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [key]="configure-${app}"
+        )
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        if ! koopa_is_function "${dict[fun]}"
+        then
+            koopa_stop "Unsupported app: '${app}'."
+        fi
+        "${dict[fun]}"
+    done
+    return 0
 }

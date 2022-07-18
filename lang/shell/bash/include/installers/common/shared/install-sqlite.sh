@@ -26,6 +26,8 @@ main() {
         [make]="$(koopa_locate_make)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='sqlite'
@@ -74,6 +76,7 @@ main() {
         '--enable-shared'
     )
     koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

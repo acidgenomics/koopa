@@ -10,6 +10,7 @@ koopa_brew_upgrade_brews() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
     readarray -t brews <<< "$(koopa_brew_outdated)"
     koopa_is_array_non_empty "${brews[@]:-}" || return 0
     koopa_dl \

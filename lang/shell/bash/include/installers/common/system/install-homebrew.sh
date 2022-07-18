@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Homebrew.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-07-14.
     #
     # @seealso
     # - https://docs.brew.sh/Installation
@@ -22,8 +22,8 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [sudo]="$(koopa_locate_sudo)"
-        [yes]="$(koopa_locate_yes)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict
     dict[file]='install.sh'
     dict[url]="https://raw.githubusercontent.com/Homebrew/install/\
@@ -35,6 +35,6 @@ master/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_chmod 'u+x' "${dict[file]}"
     "${app[sudo]}" -v
-    "${app[yes]}" | "./${dict[file]}" || true
+    NONINTERACTIVE=1 "./${dict[file]}" || true
     return 0
 }

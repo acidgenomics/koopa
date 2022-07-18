@@ -9,6 +9,7 @@ koopa_aws_batch_list_jobs() {
     local -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     local -A dict=(
         [account_id]="${AWS_BATCH_ACCOUNT_ID:-}"
         [profile]="${AWS_PROFILE:-}"

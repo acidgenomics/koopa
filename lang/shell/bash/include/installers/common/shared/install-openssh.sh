@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for libfido2.
+# FIXME Need to install pam?
+# PAM headers not found
 
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-07-15.
     #
     # @section Privilege separation:
     #
@@ -23,10 +24,15 @@ main() {
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'openssl3'
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'zlib'
+    fi
+    koopa_activate_opt_prefix 'libedit' 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='openssh'
@@ -43,11 +49,11 @@ portable/${dict[file]}"
     conf_args=(
         # > '--with-security-key-builtin' # libfido2
         "--prefix=${dict[prefix]}"
-        '--with-kerberos5'
         '--with-libedit'
-        '--with-pam'
         "--with-ssl-dir=${dict[opt_prefix]}/openssl3"
+        '--without-kerberos5'
         '--without-ldns'
+        '--without-pam'
     )
     if koopa_is_linux
     then
@@ -55,6 +61,7 @@ portable/${dict[file]}"
             "--with-privsep-path=${dict[prefix]}/var/lib/sshd"
         )
     fi
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

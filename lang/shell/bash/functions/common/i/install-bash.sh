@@ -4,8 +4,7 @@
 
 koopa_install_bash() {
     koopa_install_app \
-        --link-in-bin='bin/bash' \
-        --name-fancy='Bash' \
+        --link-in-bin='bash' \
         --name='bash' \
         "$@"
 }

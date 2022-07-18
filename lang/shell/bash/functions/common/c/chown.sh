@@ -9,6 +9,7 @@ koopa_chown() {
     declare -A app=(
         [chown]="$(koopa_locate_chown)"
     )
+    [[ -x "${app[chown]}" ]] || return 1
     declare -A dict=(
         [dereference]=1
         [recursive]=0
@@ -54,6 +55,7 @@ koopa_chown() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         chown=("${app[sudo]}" "${app[chown]}")
     else
         chown=("${app[chown]}")

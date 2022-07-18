@@ -11,6 +11,7 @@ koopa_parent_dir() {
     declare -A app=(
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [cd_tail]=''
         [n]=1

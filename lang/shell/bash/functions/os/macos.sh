@@ -35,6 +35,8 @@ koopa_macos_brew_cask_outdated() {
         [brew]="$(koopa_locate_brew)"
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app[cut]}" ]] || return 1
     keep_latest=0
     tmp_file="$(koopa_tmp_file)"
     script -q "$tmp_file" \
@@ -65,6 +67,8 @@ koopa_macos_brew_cask_quarantine_fix() {
         [sudo]="$(koopa_locate_sudo)"
         [xattr]="$(koopa_macos_locate_xattr)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[xattr]}" ]] || return 1
     "${app[sudo]}" "${app[xattr]}" -r -d \
         'com.apple.quarantine' \
         '/Applications/'*'.app'
@@ -77,6 +81,7 @@ koopa_macos_brew_upgrade_casks() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
     readarray -t casks <<< "$(koopa_macos_brew_cask_outdated)"
     koopa_is_array_non_empty "${casks[@]:-}" || return 0
     koopa_dl \
@@ -132,6 +137,9 @@ koopa_macos_clean_launch_services() {
         [lsregister]="$(koopa_macos_locate_lsregister)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[kill_all]}" ]] || return 1
+    [[ -x "${app[lsregister]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     koopa_alert "Cleaning LaunchServices 'Open With' menu."
     "${app[lsregister]}" \
         -kill \
@@ -201,6 +209,8 @@ koopa_macos_disable_plist_file() {
         [launchctl]="$(koopa_macos_locate_launchctl)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[launchctl]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     koopa_assert_is_file "$@"
     for file in "$@"
     do
@@ -292,6 +302,8 @@ koopa_macos_disable_touch_id_sudo() {
         [cp]="$(koopa_locate_cp)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[cp]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [source_file]="$(koopa_koopa_prefix)/os/macos/etc/pam.d/sudo~orig"
         [target_file]='/etc/pam.d/sudo'
@@ -372,6 +384,8 @@ koopa_macos_enable_plist_file() {
         [launchctl]="$(koopa_macos_locate_launchctl)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[launchctl]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     koopa_assert_is_not_file "$@"
     for file in "$@"
     do
@@ -450,6 +464,8 @@ koopa_macos_enable_touch_id_sudo() {
         [cp]="$(koopa_locate_cp)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[cp]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [source_file]="$(koopa_koopa_prefix)/os/macos/etc/pam.d/sudo"
         [target_file]='/etc/pam.d/sudo'
@@ -512,6 +528,9 @@ koopa_macos_flush_dns() {
         [kill_all]="$(koopa_macos_locate_kill_all)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[dscacheutil]}" ]] || return 1
+    [[ -x "${app[kill_all]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     koopa_alert 'Flushing DNS.'
     "${app[sudo]}" "${app[dscacheutil]}" -flushcache
     "${app[sudo]}" "${app[kill_all]}" -HUP 'mDNSResponder'
@@ -526,6 +545,8 @@ koopa_macos_force_eject() {
         [diskutil]="$(koopa_macos_locate_diskutil)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[diskutil]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     name="${1:?}"
     mount="/Volumes/${name}"
     koopa_assert_is_dir "$mount"
@@ -542,6 +563,9 @@ koopa_macos_force_reset_icloud_drive() {
         [reboot]="$(koopa_macos_locate_reboot)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[kill_all]}" ]] || return 1
+    [[ -x "${app[reboot]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     "${app[sudo]}" "${app[kill_all]}" bird
     koopa_rm \
         "${HOME:?}/Library/Application Support/CloudDocs" \
@@ -573,6 +597,8 @@ koopa_macos_ifactive() {
         [ifconfig]="$(koopa_macos_locate_ifconfig)"
         [pcregrep]="$(koopa_locate_pcregrep)"
     )
+    [[ -x "${app[ifconfig]}" ]] || return 1
+    [[ -x "${app[pcregrep]}" ]] || return 1
     x="$( \
         "${app[ifconfig]}" \
             | "${app[pcregrep]}" -M -o '^[^\t:]+:([^\n]|\n\t)*status: active' \
@@ -584,28 +610,24 @@ koopa_macos_ifactive() {
 
 koopa_macos_install_aws_cli() {
     koopa_install_app \
-        --link-in-bin='bin/aws' \
-        --name-fancy='AWS CLI' \
+        --link-in-bin='aws' \
         --name='aws-cli' \
         --platform='macos' \
         "$@"
 }
 
-koopa_macos_install_neovim_binary() {
-    koopa_install_app \
-        --installer='neovim-binary' \
-        --link-in-bin='bin/nvim' \
-        --name-fancy='Neovim' \
-        --name='neovim' \
+koopa_macos_install_system_defaults() {
+    koopa_update_app \
+        --name='defaults' \
         --platform='macos' \
+        --system \
         "$@"
 }
 
-koopa_macos_install_python_binary() {
+koopa_macos_install_system_python_binary() {
     koopa_install_app \
         --installer='python-binary' \
-        --link-in-bin='bin/python3' \
-        --name-fancy='Python' \
+        --link-in-bin='python3' \
         --name='python' \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
@@ -613,22 +635,8 @@ koopa_macos_install_python_binary() {
         "$@"
 }
 
-koopa_macos_install_r_binary() {
-    koopa_install_app \
-        --installer='r-binary' \
-        --link-in-bin='bin/R' \
-        --link-in-bin='bin/Rscript' \
-        --name-fancy='R' \
-        --name='r' \
-        --platform='macos' \
-        --prefix="$(koopa_macos_r_prefix)" \
-        --system \
-        "$@"
-}
-
 koopa_macos_install_r_gfortran() {
     koopa_install_app \
-        --name-fancy='R gfortran' \
         --name='r-gfortran' \
         --platform='macos' \
         --prefix='/usr/local/gfortran' \
@@ -638,16 +646,26 @@ koopa_macos_install_r_gfortran() {
 
 koopa_macos_install_r_openmp() {
     koopa_install_app \
-        --name-fancy='R OpenMP' \
         --name='r-openmp' \
         --platform='macos' \
         --system \
         "$@"
 }
 
-koopa_macos_install_xcode_clt() {
+koopa_macos_install_system_r_binary() {
     koopa_install_app \
-        --name-fancy='Xcode Command Line Tools (CLT)' \
+        --installer='r-binary' \
+        --link-in-bin='R' \
+        --link-in-bin='Rscript' \
+        --name='r' \
+        --platform='macos' \
+        --prefix="$(koopa_macos_r_prefix)" \
+        --system \
+        "$@"
+}
+
+koopa_macos_install_system_xcode_clt() {
+    koopa_install_app \
         --name='xcode-clt' \
         --platform='macos' \
         --system \
@@ -679,7 +697,7 @@ koopa_macos_list_launch_agents() {
     declare -A app=(
         [ls]="$(koopa_locate_ls)"
     )
-    koopa_alert 'Listing launch agents and daemons.'
+    [[ -x "${app[ls]}" ]] || return 1
     "${app[ls]}" \
         --ignore='disabled' \
         "${HOME}/Library/LaunchAgents" \
@@ -687,10 +705,6 @@ koopa_macos_list_launch_agents() {
         '/Library/LaunchDaemons' \
         '/Library/PrivilegedHelperTools'
     return 0
-}
-
-koopa_macos_locate_installer() {
-    koopa_locate_app '/usr/sbin/installer'
 }
 
 koopa_macos_locate_automount() {
@@ -719,6 +733,10 @@ koopa_macos_locate_hdiutil() {
 
 koopa_macos_locate_ifconfig() {
     koopa_locate_app '/sbin/ifconfig'
+}
+
+koopa_macos_locate_installer() {
+    koopa_locate_app '/usr/sbin/installer'
 }
 
 koopa_macos_locate_kill_all() {
@@ -814,6 +832,8 @@ koopa_macos_reload_autofs() {
         [automount]="$(koopa_macos_locate_automount)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[automount]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     "${app[sudo]}" "${app[automount]}" -vc
     return 0
 }
@@ -845,6 +865,8 @@ koopa_macos_spotlight_usage() {
         [fs_usage]="$(koopa_macos_locate_fs_usage)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[fs_usage]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     "${app[sudo]}" "${app[fs_usage]}" -w -f filesys mds
     return 0
 }
@@ -857,6 +879,8 @@ koopa_macos_symlink_dropbox() {
         [kill_all]="$(koopa_macos_locate_kill_all)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[kill_all]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     koopa_rm --sudo "${HOME}/Desktop"
     koopa_ln "${HOME}/Dropbox/Desktop" "${HOME}/."
     koopa_rm --sudo "${HOME}/Documents"
@@ -873,15 +897,6 @@ koopa_macos_symlink_icloud_drive() {
     return 0
 }
 
-koopa_macos_uninstall_adobe_creative_cloud() {
-    koopa_uninstall_app \
-        --name-fancy='Adobe Creative Cloud' \
-        --name='adobe-creative-cloud' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa_macos_uninstall_brewfile_casks() {
     local app cask casks dict
     koopa_assert_has_args_eq "$#" 1
@@ -889,6 +904,8 @@ koopa_macos_uninstall_brewfile_casks() {
         [brew]="$(koopa_locate_brew)"
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app[cut]}" ]] || return 1
     declare -A dict=(
         [brewfile]="${1:?}"
     )
@@ -906,9 +923,16 @@ koopa_macos_uninstall_brewfile_casks() {
     return 0
 }
 
+koopa_macos_uninstall_adobe_creative_cloud() {
+    koopa_uninstall_app \
+        --name='adobe-creative-cloud' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
 koopa_macos_uninstall_cisco_webex() {
     koopa_uninstall_app \
-        --name-fancy='Cisco WebEx' \
         --name='cisco-webex' \
         --platform='macos' \
         --system \
@@ -917,7 +941,6 @@ koopa_macos_uninstall_cisco_webex() {
 
 koopa_macos_uninstall_docker() {
     koopa_uninstall_app \
-        --name-fancy='Docker' \
         --name='docker' \
         --platform='macos' \
         --system \
@@ -926,7 +949,6 @@ koopa_macos_uninstall_docker() {
 
 koopa_macos_uninstall_microsoft_onedrive() {
     koopa_uninstall_app \
-        --name-fancy='Microsoft OneDrive' \
         --name='microsoft-onedrive' \
         --platform='macos' \
         --system \
@@ -935,7 +957,6 @@ koopa_macos_uninstall_microsoft_onedrive() {
 
 koopa_macos_uninstall_oracle_java() {
     koopa_uninstall_app \
-        --name-fancy='Oracle Java' \
         --name='oracle-java' \
         --platform='macos' \
         --system \
@@ -944,7 +965,6 @@ koopa_macos_uninstall_oracle_java() {
 
 koopa_macos_uninstall_python_binary() {
     koopa_uninstall_app \
-        --name-fancy='Python' \
         --name='python' \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
@@ -954,21 +974,8 @@ koopa_macos_uninstall_python_binary() {
         "$@"
 }
 
-koopa_macos_uninstall_r_binary() {
-    koopa_uninstall_app \
-        --name-fancy='R' \
-        --name='r' \
-        --platform='macos' \
-        --system \
-        --uninstaller='r-binary' \
-        --unlink-in-bin='R' \
-        --unlink-in-bin='Rscript' \
-        "$@"
-}
-
 koopa_macos_uninstall_r_gfortran() {
     koopa_uninstall_app \
-        --name-fancy='R gfortran' \
         --name='r-gfortran' \
         --platform='macos' \
         --prefix='/usr/local/gfortran' \
@@ -978,25 +985,33 @@ koopa_macos_uninstall_r_gfortran() {
 
 koopa_macos_uninstall_r_openmp() {
     koopa_uninstall_app \
-        --name-fancy='R OpenMP' \
         --name='r-openmp' \
         --platform='macos' \
         --system \
         "$@"
 }
 
+koopa_macos_uninstall_r_binary() {
+    koopa_uninstall_app \
+        --name='r' \
+        --platform='macos' \
+        --system \
+        --uninstaller='r-binary' \
+        --unlink-in-bin='R' \
+        --unlink-in-bin='Rscript' \
+        "$@"
+}
+
 koopa_macos_uninstall_ringcentral() {
     koopa_uninstall_app \
-        --name-fancy='RingCentral' \
         --name='ringcentral' \
         --platform='macos' \
         --system \
         "$@"
 }
 
-koopa_macos_uninstall_xcode_clt() {
+koopa_macos_uninstall_system_xcode_clt() {
     koopa_uninstall_app \
-        --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
         --platform='macos' \
         --system \
@@ -1012,34 +1027,6 @@ koopa_macos_unlink_homebrew() {
         'gcloud' \
         'julia'
     return 0
-}
-
-koopa_macos_update_defaults() {
-    koopa_update_app \
-        --name-fancy='macOS defaults' \
-        --name='defaults' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa_macos_update_microsoft_office() {
-    local msupdate
-    koopa_assert_has_no_args "$#"
-    koopa_h1 "Updating Microsoft Office via 'msupdate'."
-    msupdate="/Library/Application Support/Microsoft/MAU2.0/\
-Microsoft AutoUpdate.app/Contents/MacOS/msupdate"
-    "$msupdate" --install
-    return 0
-}
-
-koopa_macos_update_system() {
-    koopa_update_app \
-        --name-fancy='macOS system' \
-        --name='system' \
-        --platform='macos' \
-        --system \
-        "$@"
 }
 
 koopa_macos_xcode_clt_version() {

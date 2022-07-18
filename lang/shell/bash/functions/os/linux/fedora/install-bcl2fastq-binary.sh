@@ -7,7 +7,7 @@ koopa_fedora_install_bcl2fastq() {
     # """
     koopa_install_app \
         --installer='bcl2fastq-from-rpm' \
-        --link-in-bin='bin/bcl2fastq' \
+        --link-in-bin='bcl2fastq' \
         --name='bcl2fastq' \
         --platform='fedora' \
         "$@"

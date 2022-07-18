@@ -10,6 +10,7 @@ koopa_view_latest_tmp_log_file() {
     declare -A app=(
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [tmp_dir]="${TMPDIR:-/tmp}"
         [user_id]="$(koopa_user_id)"

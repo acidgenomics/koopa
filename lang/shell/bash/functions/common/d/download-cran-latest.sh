@@ -10,6 +10,7 @@ koopa_download_cran_latest() {
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[head]}" ]] || return 1
     for name in "$@"
     do
         url="https://cran.r-project.org/web/packages/${name}/"

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apache Portable Runtime (APR) library.
-    # @note Updated 2022-04-09.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/apr.rb
@@ -16,13 +16,17 @@ main() {
     then
         koopa_activate_build_opt_prefix 'autoconf' 'automake' 'libtool'
     fi
+    koopa_activate_opt_prefix 'sqlite'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     if koopa_is_macos
     then
         app[autoreconf]="$(koopa_locate_autoreconf)"
         app[patch]="$(koopa_locate_patch)"
+        [[ -x "${app[autoreconf]}" ]] || return 1
+        [[ -x "${app[patch]}" ]] || return 1
     fi
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
@@ -63,6 +67,7 @@ r1882980%2B1882981-configure.patch" \
         koopa_cd ..
     fi
     koopa_cd "${dict[name]}-${dict[version]}"
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

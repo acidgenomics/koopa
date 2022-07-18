@@ -30,12 +30,9 @@ main() {
     dict[pkgconfig_dir]="${dict[prefix]}/lib/pkgconfig"
     koopa_mkdir "${dict[pkgconfig_dir]}"
     koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
-    koopa_install_app \
+    koopa_install_app_internal \
         --installer='gnu-app' \
         --name='ncurses' \
-        --no-link-in-opt \
-        --no-prefix-check \
-        --quiet \
         -D '--enable-pc-files' \
         -D '--enable-widec' \
         -D '--with-cxx-binding' \

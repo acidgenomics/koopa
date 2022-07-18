@@ -10,6 +10,7 @@ koopa_roff() {
     declare -A app=(
         [ronn]="$(koopa_locate_ronn)"
     )
+    [[ -x "${app[ronn]}" ]] || return 1
     declare -A app=(
         [man_prefix]="$(koopa_man_prefix)"
     )

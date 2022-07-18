@@ -2,8 +2,7 @@
 
 koopa_install_julia() {
     koopa_install_app \
-        --link-in-bin='bin/julia' \
-        --name-fancy='Julia' \
+        --link-in-bin='julia' \
         --name='julia' \
         "$@"
 }

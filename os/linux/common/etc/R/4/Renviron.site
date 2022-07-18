@@ -1,10 +1,13 @@
 #!/bin/sh
 # shellcheck disable=SC2034
 
+# FIXME Consider only including this when R is build from source.
+# Otherwise, we can run into LD issues with R CRAN binary on Debian/Ubuntu.
+
 # """
 # Shared R environment configuration for Linux.
 #
-# @note Updated 2022-07-12.
+# @note Updated 2022-07-18.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -121,6 +124,7 @@ R_LD_LIBRARY_PATH="/usr/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${R_HOME}/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/gdal/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/geos/lib:${R_LD_LIBRARY_PATH}"
+R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/lapack/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib:${R_LD_LIBRARY_PATH}"

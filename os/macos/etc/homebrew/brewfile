@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-07-07.
+# Updated 2022-07-14.
 #
 # @section Cask reinstallation:
 #
@@ -51,6 +51,9 @@ tap "homebrew/cask-versions"
 # Casks
 # ==============================================================================
 
+# This is currently managed with koopa, but consider switching.
+# > cask "anaconda"
+
 cask "1password"
 cask "airfoil"
 cask "alacritty"
@@ -64,7 +67,7 @@ cask "boop"
 cask "brave-browser"
 cask "carbon-copy-cloner"
 cask "coconutbattery"
-# > cask "docker"
+cask "docker"
 cask "easyfind"
 cask "emacs"
 cask "firefox"
@@ -108,7 +111,7 @@ cask "gpg-suite-no-mail"
 cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
-cask "iterm2"
+cask "iterm2-beta"
 # > cask "julia"
 cask "keka"
 cask "kitty"

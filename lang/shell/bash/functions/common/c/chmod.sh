@@ -9,6 +9,7 @@ koopa_chmod() {
     declare -A app=(
         [chmod]="$(koopa_locate_chmod)"
     )
+    [[ -x "${app[chmod]}" ]] || return 1
     declare -A dict=(
         [recursive]=0
         [sudo]=0
@@ -43,6 +44,7 @@ koopa_chmod() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         chmod=("${app[sudo]}" "${app[chmod]}")
     else
         chmod=("${app[chmod]}")

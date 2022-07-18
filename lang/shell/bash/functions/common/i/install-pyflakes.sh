@@ -3,7 +3,7 @@
 koopa_install_pyflakes() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pyflakes' \
+        --link-in-bin='pyflakes' \
         --name='pyflakes' \
         "$@"
 }

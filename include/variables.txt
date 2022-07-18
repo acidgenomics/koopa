@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-13"
+koopa-date="2022-07-15"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -51,7 +51,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.7.13"
+aws-cli="2.7.15"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.38.0"
@@ -101,7 +101,10 @@ cairo="1.16.0"
 cellranger="7.0.0"
 
 # https://github.com/plexus/chemacs2
-chemacs="latest"
+chemacs="d722459287566e8c91ae077bf3d65966ebece190"
+
+# https://github.com/chapmanb/cloudbiolinux
+cloudbiolinux="c4c7cf8e508fe947c8b038543c98a2846bb900d6"
 
 # https://cmake.org/download/
 cmake="3.23.2"
@@ -127,17 +130,14 @@ docker="20.10.17"
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
 
-# https://github.com/hlissner/doom-emacs
-doom-emacs="latest"
-
 # https://github.com/acidgenomics/dotfiles
-dotfiles="latest"
+dotfiles="08b427442803287281bc58a39e9944087d0ac9a9"
 
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
 
 # https://useast.ensembl.org/info/docs/api/api_installation.html
-ensembl-perl-api="latest"
+ensembl-perl-api="107"
 
 # https://libexpat.github.io/
 expat="2.4.8"
@@ -191,15 +191,11 @@ git="2.35.1"
 # https://gitlab.gnome.org/GNOME/glib
 glib="2.72.0"
 
-# FIXME Add install support for this.
-# https://www.gnu.org/software/libc/
-glibc="2.35"
-
 # https://gmplib.org/
 gmp="6.2.1"
 
 # https://gnupg.org/download/index.html
-gnupg="2.3.4"
+gnupg="2.3.7"
 
 # https://www.gnutls.org/
 gnutls="3.7.4"
@@ -269,6 +265,9 @@ less="590"
 # https://github.com/wofr06/lesspipe/
 lesspipe="2.05"
 
+# https://thrysoee.dk/editline/
+libedit="20210910-3.1"
+
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
 libevent="2.1.12"
@@ -280,7 +279,7 @@ libffi="3.4.2"
 libgeotiff="1.7.1"
 
 # https://github.com/libgit2/libgit2
-libgit2="1.4.3" # latest: 1.4.4
+libgit2="1.4.3" # latest: 1.5.0
 
 # https://www.gnu.org/software/libidn/
 libidn="2.3.2"
@@ -428,24 +427,17 @@ pcre2="10.40"
 # https://www.perl.org/get.html
 perl="5.36.0"
 
-# https://perlbrew.pl/
-perlbrew="latest"
-
-# https://www.php.net/downloads
-# https://github.com/php/php-src/releases
-php="8.1.2"
-
 pixman="0.40.0"
 
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
 
-# https://github.com/bbatsov/prelude
-prelude-emacs="latest"
-
 # https://proj.org/
 proj="9.0.1"
+
+# https://ftp.gnu.org/gnu/pth/
+pth="2.0.7"
 
 # https://github.com/pyenv/pyenv
 pyenv="2.2.5"
@@ -519,12 +511,6 @@ shunit2="2.1.7"
 
 # http://sox.sourceforge.net/sox.html
 sox="14.4.2"
-
-# https://github.com/syl20bnr/spacemacs
-spacemacs="latest"
-
-# https://github.com/SpaceVim/SpaceVim
-spacevim="latest"
 
 # https://www.sqlite.org/download.html
 sqlite="3.38.5"
@@ -736,7 +722,7 @@ flake8="4.0.1"
 glances="3.2.6.4"
 ipython="8.4.0"
 isort="5.10.1"
-latch="1.6.1"
+latch="1.10.1"
 pipx="1.1.0"
 poetry="1.1.13"
 pyflakes="2.4.0"
@@ -759,9 +745,9 @@ ronn="0.7.3"
 # > ripgrep-all="0.9.6" # rga
 bat="0.21.0"
 broot="1.14.2" # br
-difftastic="0.30.0" # difft
+difftastic="0.31.0" # difft
 dog="0.1.0"
-du-dust="0.8.0"
+du-dust="0.8.1"
 exa="0.10.1"
 fd-find="8.4.0"
 hyperfine="1.14.0"

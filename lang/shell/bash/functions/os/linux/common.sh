@@ -36,6 +36,8 @@ koopa_linux_add_user_to_group() {
         [gpasswd]="$(koopa_linux_locate_gpasswd)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[gpasswd]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [group]="${1:?}"
         [user]="${2:-}"
@@ -55,6 +57,8 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         [sed]="$(koopa_locate_sed)"
         [touch]="$(koopa_locate_touch)"
     )
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[touch]}" ]] || return 1
     declare -A dict=(
         [cores]="$(koopa_cpu_count)"
         [fasta_file]=''
@@ -200,10 +204,11 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         [bcbio_python]='bcbio_python'
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [git_dir]="${HOME:?}/git/bcbio-nextgen"
         [install_dir]=''
-        [name_fancy]='bcbio-nextgen'
+        [name]='bcbio-nextgen'
         [tmp_log_file]="$(koopa_tmp_log_file)"
     )
     while (("$#"))
@@ -250,8 +255,7 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         dict[install_dir]="$(koopa_parent_dir --num=3 "${app[bcbio_python]}")"
     fi
     koopa_assert_is_dir "${dict[install_dir]}"
-    koopa_h1 "Patching ${dict[name_fancy]} installation at \
-'${dict[install_dir]}'."
+    koopa_h1 "Patching '${dict[name]}' installation at '${dict[install_dir]}'."
     koopa_dl  \
         'Git dir' "${dict[git_dir]}" \
         'Install dir' "${dict[install_dir]}" \
@@ -279,7 +283,7 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         koopa_alert "Patching installation via 'setup.py' script."
         "${app[bcbio_python]}" setup.py install
     ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
-    koopa_alert_success "Patching of ${dict[name_fancy]} was successful."
+    koopa_alert_success "Patching of '${dict[name]}' was successful."
     return 0
 }
 
@@ -354,6 +358,8 @@ koopa_linux_bcl2fastq_indrops() {
         [bcl2fastq]="$(koopa_linux_locate_bcl2fastq)"
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[bcl2fastq]}" ]] || return 1
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [log_file]='bcl2fastq-indrops.log'
     )
@@ -435,7 +441,7 @@ koopa_linux_fix_sudo_setrlimit_error() {
 
 koopa_linux_install_apptainer() {
     koopa_install_app \
-        --link-in-bin='bin/apptainer' \
+        --link-in-bin='apptainer' \
         --name='apptainer' \
         --platform='linux' \
         "$@"
@@ -443,8 +449,7 @@ koopa_linux_install_apptainer() {
 
 koopa_linux_install_aspera_connect() {
     koopa_install_app \
-        --link-in-bin='bin/ascp' \
-        --name-fancy='Aspera Connect' \
+        --link-in-bin='ascp' \
         --name='aspera-connect' \
         --platform='linux' \
         "$@"
@@ -463,8 +468,7 @@ koopa_linux_install_attr() {
 
 koopa_linux_install_aws_cli() {
     koopa_install_app \
-        --link-in-bin='bin/aws' \
-        --name-fancy='AWS CLI' \
+        --link-in-bin='aws' \
         --name='aws-cli' \
         --platform='linux' \
         "$@"
@@ -481,7 +485,7 @@ koopa_linux_install_bcbio_nextgen() {
 
 koopa_linux_install_bcl2fastq() {
     koopa_install_app \
-        --link-in-bin='bin/bcl2fastq' \
+        --link-in-bin='bcl2fastq' \
         --name='bcl2fastq' \
         --platform='linux' \
         "$@"
@@ -489,8 +493,7 @@ koopa_linux_install_bcl2fastq() {
 
 koopa_linux_install_cellranger() {
     koopa_install_app \
-        --link-in-bin='bin/cellranger' \
-        --name-fancy='Cell Ranger' \
+        --link-in-bin='cellranger' \
         --name='cellranger' \
         --platform='linux' \
         "$@"
@@ -498,7 +501,6 @@ koopa_linux_install_cellranger() {
 
 koopa_linux_install_cloudbiolinux() {
     koopa_install_app \
-        --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
         --platform='linux' \
         --version='latest' \
@@ -507,42 +509,29 @@ koopa_linux_install_cloudbiolinux() {
 
 koopa_linux_install_docker_credential_pass() {
     koopa_install_app \
-        --link-in-bin='bin/docker-credential-pass' \
+        --link-in-bin='docker-credential-pass' \
         --name='docker-credential-pass' \
-        --platform='linux' \
-        "$@"
-}
-
-koopa_linux_install_julia_binary() {
-    koopa_install_app \
-        --installer="julia-binary" \
-        --link-in-bin='bin/julia' \
-        --name-fancy='Julia' \
-        --name='julia' \
         --platform='linux' \
         "$@"
 }
 
 koopa_linux_install_lmod() {
     koopa_install_app \
-        --name-fancy='Lmod' \
         --name='lmod' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_install_pihole() {
+koopa_linux_install_system_pihole() {
     koopa_update_app \
-        --name-fancy='Pi-hole' \
         --name='pihole' \
         --platform='linux' \
         --system \
         "$@"
 }
 
-koopa_linux_install_pivpn() {
+koopa_linux_install_system_pivpn() {
     koopa_update_app \
-        --name-fancy='PiVPN' \
         --name='pivpn' \
         --platform='linux' \
         --system \
@@ -558,6 +547,8 @@ koopa_linux_java_update_alternatives() {
         [sudo]="$(koopa_locate_sudo)"
         [update_alternatives]="$(koopa_linux_locate_update_alternatives)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[update_alternatives]}" ]] || return 1
     declare -A dict=(
         [alt_prefix]='/var/lib/alternatives'
         [prefix]="$(koopa_realpath "${1:?}")"
@@ -609,12 +600,12 @@ koopa_linux_locate_getconf() {
     koopa_locate_app '/usr/bin/getconf'
 }
 
-koopa_linux_locate_groupadd() {
-    koopa_locate_app '/usr/sbin/groupadd'
-}
-
 koopa_linux_locate_gpasswd() {
     koopa_locate_app '/usr/bin/gpasswd'
+}
+
+koopa_linux_locate_groupadd() {
+    koopa_locate_app '/usr/sbin/groupadd'
 }
 
 koopa_linux_locate_ldconfig() {
@@ -679,6 +670,7 @@ koopa_linux_os_version() {
     declare -A app=(
         [uname]="$(koopa_locate_uname)"
     )
+    [[ -x "${app[uname]}" ]] || return 1
     x="$("${app[uname]}" -r)"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"
@@ -693,6 +685,8 @@ koopa_linux_remove_user_from_group() {
         [gpasswd]="$(koopa_linux_locate_gpasswd)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[gpasswd]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [group]="${1:?}"
         [user]="${2:-}"
@@ -711,7 +705,6 @@ koopa_linux_uninstall_apptainer() {
 
 koopa_linux_uninstall_aspera_connect() {
     koopa_uninstall_app \
-        --name-fancy='Aspera Connect' \
         --name='aspera-connect' \
         --platform='linux' \
         --unlink-in-bin='ascp' \
@@ -743,7 +736,6 @@ koopa_linux_uninstall_bcl2fastq() {
 
 koopa_linux_uninstall_cellranger() {
     koopa_uninstall_app \
-        --name-fancy='Cell Ranger' \
         --name='cellranger' \
         --platform='linux' \
         --unlink-in-bin='cellranger' \
@@ -752,7 +744,6 @@ koopa_linux_uninstall_cellranger() {
 
 koopa_linux_uninstall_cloudbiolinux() {
     koopa_uninstall_app \
-        --name-fancy='CloudBioLinux' \
         --name='cloudbiolinux' \
         --platform='linux' \
         "$@"
@@ -768,7 +759,6 @@ koopa_linux_uninstall_docker_credential_pass() {
 
 koopa_linux_uninstall_lmod() {
     koopa_uninstall_app \
-        --name-fancy='Lmod' \
         --name='lmod' \
         --platform='linux' \
         "$@"
@@ -812,6 +802,8 @@ koopa_linux_update_ldconfig() {
         [ldconfig]="$(koopa_linux_locate_ldconfig)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[ldconfig]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [distro_prefix]="$(koopa_distro_prefix)"
         [target_prefix]='/etc/ld.so.conf.d'
@@ -831,7 +823,7 @@ koopa_linux_update_ldconfig() {
     return 0
 }
 
-koopa_linux_update_sshd_config() {
+koopa_linux_update_system_sshd_config() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(

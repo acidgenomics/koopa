@@ -13,6 +13,9 @@ koopa_parallel_version() {
         [parallel]="${1:-}"
     )
     [[ -z "${app[parallel]}" ]] && app[parallel]="$(koopa_locate_parallel)"
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[parallel]}" ]] || return 1
     str="$( \
         "${app[parallel]}" --version \
             | "${app[head]}" -n 1 \

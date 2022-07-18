@@ -177,11 +177,12 @@ koopa_find() {
     else
         app[find]="$(koopa_locate_"${dict[engine]}")"
     fi
-    koopa_assert_is_installed "${app[find]}"
+    [[ -x "${app[find]}" ]] || return 1
     find=()
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         find+=("${app[sudo]}")
     fi
     find+=("${app[find]}")
@@ -381,6 +382,7 @@ koopa_find() {
     if [[ "${dict[sort]}" -eq 1 ]]
     then
         app[sort]="$(koopa_locate_sort)"
+        [[ -x "${app[sort]}" ]] || return 1
     fi
     if [[ "${dict[print0]}" -eq 1 ]]
     then

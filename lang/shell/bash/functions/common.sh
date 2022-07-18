@@ -265,6 +265,7 @@ __koopa_is_ssh_enabled() {
     declare -A app=(
         [ssh]="$(koopa_locate_ssh)"
     )
+    [[ -x "${app[ssh]}" ]] || return 1
     declare -A dict=(
         [url]="${1:?}"
         [pattern]="${2:?}"
@@ -356,6 +357,8 @@ __koopa_list_path_priority_unique() {
         [awk]="$(koopa_locate_awk)"
         [tac]="$(koopa_locate_tac)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[tac]}" ]] || return 1
     str="$( \
         __koopa_list_path_priority "$@" \
             | "${app[tac]}" \
@@ -546,6 +549,7 @@ koopa_activate_ensembl_perl_api() {
     )
     koopa_assert_is_dir "${dict[prefix]}"
     koopa_activate_prefix "${dict[prefix]}/ensembl-git-tools"
+    PERL5LIB="${PERL5LIB:-}"
     PERL5LIB="${PERL5LIB}:${dict[prefix]}/bioperl-1.6.924"
     PERL5LIB="${PERL5LIB}:${dict[prefix]}/ensembl/modules"
     PERL5LIB="${PERL5LIB}:${dict[prefix]}/ensembl-compara/modules"
@@ -849,7 +853,7 @@ koopa_alert_is_installed() {
     local name prefix
     name="${1:?}"
     prefix="${2:-}"
-    x="${name} is installed"
+    x="'${name}' is installed"
     if [[ -n "$prefix" ]]
     then
         x="${x} at '${prefix}'"
@@ -913,7 +917,9 @@ koopa_anaconda_version() {
         [awk]="$(koopa_locate_awk)"
         [conda]="${1:-}"
     )
+    [[ -x "${app[awk]}" ]] || return 1
     [[ -z "${app[conda]}" ]] && app[conda]="$(koopa_locate_anaconda)"
+    [[ -x "${app[conda]}" ]] || return 1
     koopa_is_anaconda "${app[conda]}" || return 1
     str="$( \
         "${app[conda]}" list 'anaconda' \
@@ -1635,6 +1641,7 @@ koopa_aws_batch_fetch_and_run() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     declare -A dict=(
         [file]="$(koopa_tmp_file)"
         [profile]="${AWS_PROFILE:-}"
@@ -1664,6 +1671,7 @@ koopa_aws_batch_list_jobs() {
     local -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     local -A dict=(
         [account_id]="${AWS_BATCH_ACCOUNT_ID:-}"
         [profile]="${AWS_PROFILE:-}"
@@ -1767,6 +1775,7 @@ koopa_aws_ec2_suspend() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     declare -A dict=(
         [id]="$(koopa_aws_ec2_instance_id)"
         [profile]="${AWS_PROFILE:-}"
@@ -1800,6 +1809,7 @@ koopa_aws_ec2_terminate() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     declare -A dict=(
         [id]="$(koopa_aws_ec2_instance_id)"
         [profile]="${AWS_PROFILE:-}"
@@ -1834,6 +1844,7 @@ koopa_aws_s3_cp_regex() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     declare -A dict=(
         [bucket_pattern]='^s3://.+/$'
         [pattern]=''
@@ -2047,6 +2058,11 @@ koopa_aws_s3_list_large_files() {
         [sort]="$(koopa_locate_sort)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app[jq]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [bucket]=''
         [num]='20'
@@ -2121,6 +2137,9 @@ koopa_aws_s3_ls() {
         [aws]="$(koopa_locate_aws)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [prefix]=''
         [profile]="${AWS_PROFILE:-}"
@@ -2280,6 +2299,7 @@ koopa_aws_s3_mv_to_parent() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     declare -A dict=(
         [prefix]=''
         [profile]="${AWS_PROFILE:-}"
@@ -2349,6 +2369,7 @@ koopa_aws_s3_sync() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     declare -A dict=(
         [profile]="${AWS_PROFILE:-}"
     )
@@ -2543,6 +2564,7 @@ koopa_basename_sans_ext_2() {
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
     for file in "$@"
     do
         str="$(koopa_basename "$file")"
@@ -2575,9 +2597,15 @@ koopa_basename_sans_ext() {
 
 koopa_basename() {
     local arg
-    koopa_assert_has_args "$#"
+    if [[ "$#" -eq 0 ]]
+    then
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     for arg in "$@"
     do
+        [[ -n "$arg" ]] || return 1
         koopa_print "${arg##*/}"
     done
     return 0
@@ -2590,6 +2618,8 @@ koopa_bioconda_autobump_recipe() {
         [git]="$(koopa_locate_git)"
         [vim]="$(koopa_locate_vim)"
     )
+    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app[vim]}" ]] || return 1
     declare -A dict=(
         [recipe]="${1:?}"
         [repo]="${HOME:?}/git/bioconda-recipes"
@@ -2617,6 +2647,8 @@ koopa_boost_version() {
         [bc]="$(koopa_locate_bc)"
         [gcc]="$(koopa_locate_gcc)"
     )
+    [[ -x "${app[bc]}" ]] || return 1
+    [[ -x "${app[gcc]}" ]] || return 1
     declare -A dict
     gcc_args=()
     if koopa_is_macos
@@ -2648,6 +2680,7 @@ koopa_bowtie2_align() {
     declare -A app=(
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [threads]="$(koopa_cpu_count)"
     )
@@ -2751,6 +2784,7 @@ koopa_bowtie2_index() {
     declare -A app=(
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [threads]="$(koopa_cpu_count)"
     )
@@ -2912,7 +2946,9 @@ koopa_bpytop_version() {
         [awk]="$(koopa_locate_awk)"
         [bpytop]="${1:-}"
     )
+    [[ -x "${app[awk]}" ]] || return 1
     [[ -z "${app[bpytop]}" ]] && app[bpytop]="$(koopa_locate_bpytop)"
+    [[ -x "${app[bpytop]}" ]] || return 1
     str="$( \
         "${app[bpytop]}" --version \
             | koopa_grep --pattern='bpytop version:' \
@@ -2929,7 +2965,7 @@ koopa_brew_cleanup() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
-    koopa_alert 'Cleaning up Homebrew install.'
+    [[ -x "${app[brew]}" ]] || return 1
     "${app[brew]}" cleanup -s || true
     koopa_rm "$("${app[brew]}" --cache)"
     "${app[brew]}" autoremove || true
@@ -2942,6 +2978,7 @@ koopa_brew_dump_brewfile() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
     today="$(koopa_today)"
     "${app[brew]}" bundle dump \
         --file="brewfile-${today}" \
@@ -2955,6 +2992,7 @@ koopa_brew_outdated() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
     x="$("${app[brew]}" outdated --quiet)"
     koopa_print "$x"
     return 0
@@ -2967,6 +3005,8 @@ koopa_brew_reset_core_repo() {
         [brew]="$(koopa_locate_brew)"
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app[git]}" ]] || return 1
     repo='homebrew/core'
     origin='origin'
     (
@@ -3006,6 +3046,8 @@ koopa_brew_uninstall_all_brews() {
         [brew]="$(koopa_locate_brew)"
         [wc]="$(koopa_locate_wc)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app[wc]}" ]] || return 1
     while [[ "$("${app[brew]}" list --formulae | "${app[wc]}" -l)" -gt 0 ]]
     do
         local brews
@@ -3024,6 +3066,7 @@ koopa_brew_upgrade_brews() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
     readarray -t brews <<< "$(koopa_brew_outdated)"
     koopa_is_array_non_empty "${brews[@]:-}" || return 0
     koopa_dl \
@@ -3049,6 +3092,247 @@ koopa_brew_upgrade_brews() {
             esac
         fi
     done
+    return 0
+}
+
+koopa_build_all_apps() {
+    local pkgs
+    koopa_assert_has_no_args "$#"
+    pkgs=(
+        'pkg-config'
+        'make'
+        'xz'
+        'm4'
+        'gmp'
+        'gperf'
+        'coreutils'
+        'patch'
+        'bash'
+        'mpfr'
+        'mpc'
+        'gcc'
+        'autoconf'
+        'automake'
+        'bison'
+        'libtool'
+        'bash'
+        'attr'
+        'coreutils'
+        'findutils'
+        'sed'
+        'ncurses'
+        'icu4c'
+        'readline'
+        'libxml2'
+        'gettext'
+        'zlib'
+        'openssl1'
+        'openssl3'
+        'cmake'
+        'curl'
+        'git'
+        'lapack'
+        'libffi'
+        'libjpeg-turbo'
+        'libpng'
+        'zstd'
+        'libtiff'
+        'openblas'
+        'bzip2'
+        'pcre'
+        'pcre2'
+        'python'
+        'xorg-xorgproto'
+        'xorg-xcb-proto'
+        'xorg-libpthread-stubs'
+        'xorg-xtrans'
+        'xorg-libice'
+        'xorg-libsm'
+        'xorg-libxau'
+        'xorg-libxdmcp'
+        'xorg-libxcb'
+        'xorg-libx11'
+        'xorg-libxext'
+        'xorg-libxrender'
+        'xorg-libxt'
+        'xorg-libxrandr'
+        'tcl-tk'
+        'perl'
+        'texinfo'
+        'meson'
+        'ninja'
+        'glib'
+        'freetype'
+        'fontconfig'
+        'lzo'
+        'pixman'
+        'cairo'
+        'hdf5'
+        'openjdk'
+        'libssh2'
+        'libgit2'
+        'imagemagick'
+        'graphviz'
+        'geos'
+        'proj'
+        'gdal'
+        'r'
+        'conda'
+        'sqlite'
+        'apr'
+        'apr-util'
+        'armadillo'
+        'aspell'
+        'bc'
+        'binutils'
+        'cpufetch'
+        'exiftool'
+        'libtasn1'
+        'libunistring'
+        'nettle'
+        'texinfo'
+        'gnutls'
+        'emacs'
+        'vim'
+        'lua'
+        'luarocks'
+        'neovim'
+        'libevent'
+        'utf8proc'
+        'tmux'
+        'htop'
+        'boost'
+        'fish'
+        'zsh'
+        'gawk'
+        'aspera-connect'
+        'docker-credential-pass'
+        'lame'
+        'ffmpeg'
+        'flac'
+        'fltk'
+        'fribidi'
+        'gdbm'
+        'gnupg'
+        'grep'
+        'groff'
+        'gsl'
+        'gzip'
+        'harfbuzz'
+        'hyperfine'
+        'jpeg'
+        'oniguruma'
+        'jq'
+        'less'
+        'lesspipe'
+        'libidn'
+        'libpipeline'
+        'libuv'
+        'libzip'
+        'lz4'
+        'lzma'
+        'man-db'
+        'neofetch'
+        'nim'
+        'parallel'
+        'password-store'
+        'taglib'
+        'pytaglib'
+        'pytest'
+        'xxhash'
+        'rsync'
+        'serf'
+        'subversion'
+        'shellcheck'
+        'shunit2'
+        'sox'
+        'stow'
+        'tar'
+        'tokei'
+        'tree'
+        'tuc'
+        'udunits'
+        'units'
+        'wget'
+        'which'
+        'libgeotiff'
+        'go'
+        'apptainer'
+        'chezmoi'
+        'fzf'
+        'aws-cli'
+        'azure-cli'
+        'google-cloud-sdk'
+        'black'
+        'bpytop'
+        'flake8'
+        'glances'
+        'ipython'
+        'isort'
+        'latch'
+        'poetry'
+        'pipx'
+        'pyflakes'
+        'pygments'
+        'ranger-fm'
+        'scons'
+        'serf'
+        'yt-dlp'
+        'node'
+        'bash-language-server'
+        'gtop'
+        'prettier'
+        'ack'
+        'rename'
+        'ruby'
+        'bashcov'
+        'colorls'
+        'ronn'
+        'rust'
+        'bat'
+        'broot'
+        'delta'
+        'difftastic'
+        'du-dust'
+        'exa'
+        'mcfly'
+        'mdcat'
+        'procs'
+        'ripgrep'
+        'starship'
+        'tealdeer'
+        'tokei'
+        'xsv'
+        'zellij'
+        'zoxide'
+        'julia'
+        'julia-packages'
+        'ffq'
+        'gget'
+        'chemacs'
+        'dotfiles'
+    )
+    if ! koopa_is_aarch64
+    then
+        pkgs+=(
+            'anaconda'
+            'haskell-stack'
+            'hadolint'
+            'pandoc'
+            'kallisto'
+            'salmon'
+            'snakemake'
+        )
+    fi
+    if koopa_is_linux
+    then
+        pkgs+=(
+            'lmod'
+        )
+    fi
+    pkgs+=('r-packages')
+    koopa_cli_reinstall "${pkgs[@]}"
+    koopa_push_all_apps
     return 0
 }
 
@@ -3132,14 +3416,14 @@ koopa_cairo_version() {
 }
 
 koopa_camel_case_simple() {
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
         [[ -n "$str" ]] || return 1
         str="$( \
@@ -3161,18 +3445,20 @@ koopa_camel_case() {
 }
 
 koopa_capitalize() {
-    local app args str
+    local app str
     declare -A app=(
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[tr]}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         str="$("${app[tr]}" '[:lower:]' '[:upper:]' <<< "${str:0:1}")${str:1}"
         koopa_print "$str"
     done
@@ -3375,6 +3661,7 @@ koopa_chgrp() {
     declare -A app=(
         [chgrp]="$(koopa_locate_chgrp)"
     )
+    [[ -x "${app[chgrp]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
     )
@@ -3401,6 +3688,7 @@ koopa_chgrp() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         chgrp=("${app[sudo]}" "${app[chgrp]}")
     else
         chgrp=("${app[chgrp]}")
@@ -3414,6 +3702,7 @@ koopa_chmod() {
     declare -A app=(
         [chmod]="$(koopa_locate_chmod)"
     )
+    [[ -x "${app[chmod]}" ]] || return 1
     declare -A dict=(
         [recursive]=0
         [sudo]=0
@@ -3446,6 +3735,7 @@ koopa_chmod() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         chmod=("${app[sudo]}" "${app[chmod]}")
     else
         chmod=("${app[chmod]}")
@@ -3463,6 +3753,7 @@ koopa_chown() {
     declare -A app=(
         [chown]="$(koopa_locate_chown)"
     )
+    [[ -x "${app[chown]}" ]] || return 1
     declare -A dict=(
         [dereference]=1
         [recursive]=0
@@ -3506,6 +3797,7 @@ koopa_chown() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         chown=("${app[sudo]}" "${app[chown]}")
     else
         chown=("${app[chown]}")
@@ -3523,7 +3815,10 @@ koopa_chown() {
 }
 
 koopa_cli_app() {
-    local key
+    local dict
+    declare -A dict=(
+        [key]=''
+    )
     case "${1:-}" in
         '--help' | \
         '-h')
@@ -3535,7 +3830,7 @@ koopa_cli_app() {
                     case "${3:-}" in
                         'fetch-and-run' | \
                         'list-jobs')
-                            key="${1:?}-${2:?}-${3:?}"
+                            dict[key]="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -3548,7 +3843,7 @@ koopa_cli_app() {
                         'instance-id' | \
                         'suspend' | \
                         'terminate')
-                            key="${1:?}-${2:?}-${3:?}"
+                            dict[key]="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -3563,7 +3858,7 @@ koopa_cli_app() {
                         'ls' | \
                         'mv-to-parent' | \
                         'sync')
-                            key="${1:?}-${2:?}-${3:?}"
+                            dict[key]="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -3579,7 +3874,7 @@ koopa_cli_app() {
         'bioconda')
             case "${2:-}" in
                 'autobump-recipe')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3591,7 +3886,7 @@ koopa_cli_app() {
             case "${2:-}" in
                 'align' | \
                 'index')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3603,7 +3898,7 @@ koopa_cli_app() {
             case "${2:-}" in
                 'create-env' | \
                 'remove-env')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3624,7 +3919,7 @@ koopa_cli_app() {
                 'remove' | \
                 'run' | \
                 'tag')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3635,7 +3930,7 @@ koopa_cli_app() {
         'ftp')
             case "${2:-}" in
                 'mirror')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3656,7 +3951,7 @@ koopa_cli_app() {
                 'rm-submodule' | \
                 'rm-untracked' | \
                 'status-recursive')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3669,7 +3964,7 @@ koopa_cli_app() {
                 'prompt' | \
                 'reload' | \
                 'restart')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3680,7 +3975,7 @@ koopa_cli_app() {
         'jekyll')
             case "${2:-}" in
                 'serve')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3692,14 +3987,14 @@ koopa_cli_app() {
         'salmon')
             case "${2:-}" in
                 'index')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 'quant')
                     case "${3:-}" in
                         'paired-end' | \
                         'single-end')
-                            key="${1:?}-${2:?}-${3:?}"
+                            dict[key]="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -3715,7 +4010,7 @@ koopa_cli_app() {
         'md5sum')
             case "${2:-}" in
                 'check-to-new-md5-file')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3724,7 +4019,7 @@ koopa_cli_app() {
             esac
             ;;
         'rnaeditingindexer')
-            key="${1:?}"
+            dict[key]="${1:?}"
             shift 1
             ;;
         'sra')
@@ -3733,7 +4028,7 @@ koopa_cli_app() {
                 'download-run-info-table' | \
                 'fastq-dump' | \
                 'prefetch')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3744,7 +4039,7 @@ koopa_cli_app() {
         'ssh')
             case "${2:-}" in
                 'generate-key')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3758,7 +4053,7 @@ koopa_cli_app() {
                     case "${3:-}" in
                         'paired-end' | \
                         'single-end')
-                            key="${1:?}-${2:?}-${3:?}"
+                            dict[key]="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -3767,7 +4062,7 @@ koopa_cli_app() {
                     esac
                     ;;
                 'index')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3778,7 +4073,7 @@ koopa_cli_app() {
         'wget')
             case "${2:-}" in
                 'recursive')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -3790,16 +4085,89 @@ koopa_cli_app() {
             koopa_cli_invalid_arg "$@"
             ;;
     esac
-    koopa_print "$key" "$@"
+    [[ -z "${dict[key]}" ]] && koopa_cli_invalid_arg "$@"
+    dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+    if ! koopa_is_function "${dict[fun]}"
+    then
+        koopa_stop 'Unsupported command.'
+    fi
+    "${dict[fun]}" "$@"
     return 0
 }
 
 koopa_cli_configure() {
-    koopa_cli_nested_runner 'configure' "$@"
+    local app
+    koopa_assert_has_args "$#"
+    for app in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [key]="configure-${app}"
+        )
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        if ! koopa_is_function "${dict[fun]}"
+        then
+            koopa_stop "Unsupported app: '${app}'."
+        fi
+        "${dict[fun]}"
+    done
+    return 0
 }
 
 koopa_cli_install() {
-    koopa_cli_nested_runner 'install' "$@"
+    local app flags pos stem
+    koopa_assert_has_args "$#"
+    case "${1:-}" in
+        '--all')
+            koopa_install_all_apps
+            return 0
+            ;;
+    esac
+    flags=()
+    pos=()
+    stem='install'
+    while (("$#"))
+    do
+        case "$1" in
+            '--binary' | \
+            '--push' | \
+            '--reinstall' | \
+            '--verbose')
+                flags+=("$1")
+                shift 1
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    case "$1" in
+        'system' | \
+        'user')
+            stem="${stem}-${1}"
+            shift 1
+            ;;
+    esac
+    koopa_assert_has_args "$#"
+    for app in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [key]="${stem}-${app}"
+        )
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        if ! koopa_is_function "${dict[fun]}"
+        then
+            koopa_stop "Unsupported app: '${app}'."
+        fi
+        "${dict[fun]}" "${flags[@]}"
+    done
+    return 0
 }
 
 koopa_cli_invalid_arg() {
@@ -3813,45 +4181,22 @@ Check autocompletion of supported arguments with <TAB>."
     fi
 }
 
-koopa_cli_nested_runner() {
-    local dict
-    declare -A dict=(
-        [runner]="${1:?}"
-        [key]="${2:-}"
-    )
-    case "${dict[key]}" in
-        '')
-            koopa_cli_invalid_arg
-            ;;
-        '--help' | \
-        '-h')
-            koopa_help "$(koopa_man_prefix)/man/man1/${dict[runner]}.1"
-            ;;
-        '-'*)
-            koopa_cli_invalid_arg "$@"
-            ;;
-        *)
-            shift 2
-            ;;
-    esac
-    koopa_print "${dict[runner]}-${dict[key]}" "$@"
-    return 0
+koopa_cli_reinstall() {
+    koopa_cli_install --reinstall "$@"
 }
 
 koopa_cli_system() {
-    local key
-    key=''
+    local dict
+    declare -A dict=(
+        [key]=''
+    )
     case "${1:-}" in
-        '--help' | \
-        '-h')
-            koopa_help "$(koopa_man_prefix)/man1/system.1"
-            ;;
         'check')
-            key='check-system'
+            dict[key]='check-system'
             shift 1
             ;;
         'info')
-            key='system-info'
+            dict[key]='system-info'
             shift 1
             ;;
         'list')
@@ -3861,41 +4206,42 @@ koopa_cli_system() {
                 'launch-agents' | \
                 'path-priority' | \
                 'programs')
-                    key="${1:?}-${2:?}"
+                    dict[key]="${1:?}-${2:?}"
                     shift 2
                     ;;
             esac
             ;;
         'log')
-            key='view-latest-tmp-log-file'
+            dict[key]='view-latest-tmp-log-file'
             shift 1
             ;;
         'prefix')
             case "${2:-}" in
                 '')
-                    key='koopa-prefix'
+                    dict[key]='koopa-prefix'
                     shift 1
                     ;;
                 'koopa')
-                    key='koopa-prefix'
+                    dict[key]='koopa-prefix'
                     shift 2
                     ;;
                 *)
-                    key="${2}-prefix"
+                    dict[key]="${2}-prefix"
                     shift 2
                     ;;
             esac
             ;;
         'version')
-            key='get-version'
+            dict[key]='get-version'
             shift 1
             ;;
         'which')
-            key='which-realpath'
+            dict[key]='which-realpath'
             shift 1
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
+        'build-all-apps' | \
         'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
@@ -3903,15 +4249,16 @@ koopa_cli_system() {
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
+        'push-all-app-builds' | \
+        'push-app-build' | \
         'reload-shell' | \
         'roff' | \
-        'push-app-build' | \
         'set-permissions' | \
         'switch-to-develop' | \
         'test' | \
         'variable' | \
         'variables')
-            key="${1:?}"
+            dict[key]="${1:?}"
             shift 1
             ;;
         'conda-create-env')
@@ -3921,14 +4268,14 @@ koopa_cli_system() {
             koopa_defunct 'koopa app conda remove-env'
             ;;
     esac
-    if [[ -z "$key" ]]
+    if [[ -z "${dict[key]}" ]]
     then
         if koopa_is_linux
         then
             case "${1:-}" in
                 'delete-cache' | \
                 'fix-sudo-setrlimit-error')
-                    key="${1:?}"
+                    dict[key]="${1:?}"
                     shift 1
                     ;;
             esac
@@ -3936,7 +4283,7 @@ koopa_cli_system() {
         then
             case "${1:-}" in
                 'spotlight')
-                    key='spotlight-find'
+                    dict[key]='spotlight-find'
                     shift 1
                     ;;
                 'clean-launch-services' | \
@@ -3948,41 +4295,95 @@ koopa_cli_system() {
                 'ifactive' | \
                 'list-launch-agents' | \
                 'reload-autofs')
-                    key="${1:?}"
+                    dict[key]="${1:?}"
                     shift 1
                     ;;
             esac
         fi
     fi
-    [[ -z "$key" ]] && koopa_cli_invalid_arg "$@"
-    koopa_print "$key" "$@"
+    [[ -z "${dict[key]}" ]] && koopa_cli_invalid_arg "$@"
+    dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+    if ! koopa_is_function "${dict[fun]}"
+    then
+        koopa_stop 'Unsupported command.'
+    fi
+    "${dict[fun]}" "$@"
     return 0
 }
 
 koopa_cli_uninstall() {
-    koopa_cli_nested_runner 'uninstall' "$@"
+    local app
+    [[ "$#" -eq 0 ]] && set -- 'koopa'
+    stem='uninstall'
+    case "$1" in
+        'system' | \
+        'user')
+            stem="${stem}-${1}"
+            shift 1
+            ;;
+    esac
+    koopa_assert_has_args "$#"
+    for app in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [key]="${stem}-${app}"
+        )
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        if ! koopa_is_function "${dict[fun]}"
+        then
+            koopa_stop "Unsupported app: '${app}'."
+        fi
+        "${dict[fun]}"
+    done
+    return 0
 }
 
 koopa_cli_update() {
+    local app stem
     [[ "$#" -eq 0 ]] && set -- 'koopa'
-    koopa_cli_nested_runner 'update' "$@"
+    stem='update'
+    case "$1" in
+        'system' | \
+        'user')
+            stem="${stem}-${1}"
+            shift 1
+            ;;
+    esac
+    koopa_assert_has_args "$#"
+    for app in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [key]="${stem}-${app}"
+        )
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        if ! koopa_is_function "${dict[fun]}"
+        then
+            koopa_stop "Unsupported app: '${app}'."
+        fi
+        "${dict[fun]}"
+    done
+    return 0
 }
 
 koopa_cli() {
     local dict
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [nested_runner]=0
+        [nested]=0
     )
     case "${1:?}" in
+        '--help' | \
+        '-h')
+            dict[manfile]="$(koopa_man_prefix)/man1/koopa.1"
+            koopa_help "${dict[manfile]}"
+            return 0
+            ;;
         '--version' | \
         '-V' | \
         'version')
             dict[key]='koopa-version'
-            shift 1
-            ;;
-        'reinstall')
-            dict[key]='reinstall-app'
             shift 1
             ;;
         'header')
@@ -3992,116 +4393,25 @@ koopa_cli() {
         'app' | \
         'configure' | \
         'install' | \
+        'reinstall' | \
         'system' | \
         'uninstall' | \
         'update')
-            dict[nested_runner]=1
+            dict[nested]=1
             dict[key]="cli-${1}"
             shift 1
-            ;;
-        'app-prefix')
-            koopa_defunct 'koopa system prefix app'
-            ;;
-        'cellar-prefix')
-            koopa_defunct 'koopa system prefix app'
-            ;;
-        'check' | \
-        'check-system')
-            koopa_defunct 'koopa system check'
-            ;;
-        'conda-prefix')
-            koopa_defunct 'koopa system prefix conda'
-            ;;
-        'config-prefix')
-            koopa_defunct 'koopa system prefix config'
-            ;;
-        'delete-cache')
-            koopa_defunct 'koopa system delete-cache'
-            ;;
-        'fix-zsh-permissions')
-            koopa_defunct 'koopa system fix-zsh-permissions'
-            ;;
-        'get-homebrew-cask-version')
-            koopa_defunct 'koopa system homebrew-cask-version'
-            ;;
-        'get-macos-app-version')
-            koopa_defunct 'koopa system macos-app-version'
-            ;;
-        'get-version')
-            koopa_defunct 'koopa system version'
-            ;;
-        'help')
-            koopa_defunct 'koopa --help'
-            ;;
-        'home' | \
-        'prefix')
-            koopa_defunct 'koopa system prefix'
-            ;;
-        'host-id')
-            koopa_defunct 'koopa system host-id'
-            ;;
-        'info')
-            koopa_defunct 'koopa system info'
-            ;;
-        'make-prefix')
-            koopa_defunct 'koopa system prefix make'
-            ;;
-        'os-string')
-            koopa_defunct 'koopa system os-string'
-            ;;
-        'r-home')
-            koopa_defunct 'koopa system prefix r'
-            ;;
-        'roff')
-            koopa_defunct 'koopa system roff'
-            ;;
-        'set-permissions')
-            koopa_defunct 'koopa system set-permissions'
-            ;;
-        'test')
-            koopa_defunct 'koopa system test'
-            ;;
-        'update-r-config')
-            koopa_defunct 'koopa update r-config'
-            ;;
-        'upgrade')
-            koopa_defunct 'koopa update'
-            ;;
-        'variable')
-            koopa_defunct 'koopa system variable'
-            ;;
-        'variables')
-            koopa_defunct 'koopa system variables'
-            ;;
-        'which-realpath')
-            koopa_defunct 'koopa system which'
             ;;
         *)
             koopa_cli_invalid_arg "$@"
             ;;
     esac
-    if [[ "${dict[nested_runner]}"  -eq 1 ]]
+    if [[ "${dict[nested]}"  -eq 1 ]]
     then
-        local pos
         dict[fun]="koopa_${dict[key]//-/_}"
         koopa_assert_is_function "${dict[fun]}"
-        readarray -t pos <<< "$("${dict[fun]}" "$@")"
-        dict[key]="${pos[0]}"
-        unset "pos[0]"
-        if koopa_is_array_non_empty "${pos[@]:-}"
-        then
-            set -- "${pos[@]}"
-        else
-            set --
-        fi
+    else
+        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
     fi
-    case "${!#:-}" in
-        '--help' | \
-        '-h')
-            koopa_help "$(koopa_man_prefix)/man1/${dict[key]}.1"
-            ;;
-    esac
-    dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
     if ! koopa_is_function "${dict[fun]}"
     then
         koopa_stop 'Unsupported command.'
@@ -4181,6 +4491,8 @@ koopa_conda_create_env() {
         [conda]="$(koopa_locate_mamba_or_conda)"
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[conda]}" ]] || return 1
+    [[ -x "${app[cut]}" ]] || return 1
     declare -A dict=(
         [conda_prefix]="$(koopa_conda_prefix)"
         [force]=0
@@ -4319,6 +4631,9 @@ koopa_conda_env_latest_version() {
         [conda]="$(koopa_locate_mamba_or_conda)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[conda]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [env_name]="${1:?}"
     )
@@ -4338,6 +4653,7 @@ koopa_conda_env_list() {
     declare -A app=(
         [conda]="$(koopa_locate_mamba_or_conda)"
     )
+    [[ -x "${app[conda]}" ]] || return 1
     str="$("${app[conda]}" env list --json --quiet)"
     koopa_print "$str"
     return 0
@@ -4350,6 +4666,8 @@ koopa_conda_env_prefix() {
         [sed]="$(koopa_locate_sed)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [env_name]="${1:?}"
         [env_list]="${2:-}"
@@ -4391,6 +4709,7 @@ koopa_conda_remove_env() {
     declare -A app=(
         [conda]="$(koopa_locate_mamba_or_conda)"
     )
+    [[ -x "${app[conda]}" ]] || return 1
     declare -A dict=(
         [nounset]="$(koopa_boolean_nounset)"
     )
@@ -4416,7 +4735,6 @@ koopa_configure_app_packages() {
         [app]=''
         [link_in_opt]=1
         [name]=''
-        [name_fancy]=''
         [prefix]=''
         [version]=''
     )
@@ -4438,14 +4756,6 @@ koopa_configure_app_packages() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
@@ -4488,10 +4798,6 @@ koopa_configure_app_packages() {
         dict[app]="${1:?}"
     fi
     koopa_assert_is_set '--name' "${dict[name]}"
-    if [[ -z "${dict[name_fancy]}" ]]
-    then
-        dict[name_fancy]="${dict[name]}"
-    fi
     dict[pkg_prefix_fun]="koopa_${dict[name]}_packages_prefix"
     koopa_assert_is_function "${dict[pkg_prefix_fun]}"
     if [[ -z "${dict[prefix]}" ]]
@@ -4509,7 +4815,7 @@ koopa_configure_app_packages() {
         fi
         dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
     fi
-    koopa_alert_configure_start "${dict[name_fancy]}" "${dict[prefix]}"
+    koopa_alert_configure_start "${dict[name]}" "${dict[prefix]}"
     if [[ ! -d "${dict[prefix]}" ]]
     then
         koopa_sys_mkdir "${dict[prefix]}"
@@ -4519,7 +4825,7 @@ koopa_configure_app_packages() {
     then
         koopa_link_in_opt "${dict[prefix]}" "${dict[name]}-packages"
     fi
-    koopa_alert_configure_success "${dict[name_fancy]}" "${dict[prefix]}"
+    koopa_alert_configure_success "${dict[name]}" "${dict[prefix]}"
     return 0
 }
 
@@ -4579,15 +4885,7 @@ koopa_configure_dotfiles() {
 
 koopa_configure_julia() {
     koopa_configure_app_packages \
-        --name-fancy='Julia' \
         --name='julia' \
-        "$@"
-}
-
-koopa_configure_nim() {
-    koopa_configure_app_packages \
-        --name-fancy='Nim' \
-        --name='nim' \
         "$@"
 }
 
@@ -4597,13 +4895,13 @@ koopa_configure_r() {
     declare -A app=(
         [r]="${1:-}"
     )
-    declare -A dict=(
-        [name_fancy]='R'
-    )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
-    koopa_assert_is_installed "${app[r]}"
+    [[ -x "${app[r]}" ]] || return 1
+    declare -A dict=(
+        [name]='r'
+    )
     dict[r_prefix]="$(koopa_r_prefix "${app[r]}")"
-    koopa_alert_configure_start "${dict[name_fancy]}" "${dict[r_prefix]}"
+    koopa_alert_configure_start "${dict[name]}" "${dict[r_prefix]}"
     koopa_assert_is_dir "${dict[r_prefix]}"
     koopa_r_link_files_in_etc "${app[r]}"
     koopa_r_link_site_library "${app[r]}"
@@ -4611,15 +4909,8 @@ koopa_configure_r() {
     koopa_r_javareconf "${app[r]}"
     koopa_r_rebuild_docs "${app[r]}"
     koopa_sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
-    koopa_alert_configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
+    koopa_alert_configure_success "${dict[name]}" "${dict[r_prefix]}"
     return 0
-}
-
-koopa_configure_rust() {
-    koopa_configure_app_packages \
-        --name-fancy='Rust' \
-        --name='rust' \
-        "$@"
 }
 
 koopa_configure_system() {
@@ -5151,6 +5442,10 @@ koopa_convert_fastq_to_fasta() {
         [sed]="$(koopa_locate_sed)"
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[paste]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[tr]}" ]] || return 1
     declare -A dict=(
         [source_dir]=''
         [target_dir]=''
@@ -5216,6 +5511,7 @@ koopa_convert_line_endings_from_crlf_to_lf() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
+    [[ -x "${app[perl]}" ]] || return 1
     for file in "$@"
     do
         "${app[perl]}" -pe 's/\r$//g' < "$file" > "${file}.tmp"
@@ -5230,6 +5526,7 @@ koopa_convert_line_endings_from_lf_to_crlf() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
+    [[ -x "${app[perl]}" ]] || return 1
     for file in "$@"
     do
         "${app[perl]}" -pe 's/(?<!\r)\n/\r\n/g' < "$file" > "${file}.tmp"
@@ -5303,6 +5600,7 @@ koopa_convert_utf8_nfd_to_nfc() {
     declare -A app=(
         [convmv]="$(koopa_locate_convmv)"
     )
+    [[ -x "${app[convmv]}" ]] || return 1
     koopa_assert_is_file "$@"
     "${app[convmv]}" \
         -r \
@@ -5321,6 +5619,7 @@ koopa_cp() {
         [mkdir]='koopa_mkdir'
         [rm]='koopa_rm'
     )
+    [[ -x "${app[cp]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
         [symlink]=0
@@ -5364,6 +5663,7 @@ koopa_cp() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         cp=("${app[sudo]}" "${app[cp]}")
         mkdir=("${app[mkdir]}" '--sudo')
         rm=("${app[rm]}" '--sudo')
@@ -5415,10 +5715,12 @@ koopa_cpu_count() {
     elif koopa_is_macos
     then
         app[sysctl]="$(koopa_macos_locate_sysctl)"
+        [[ -x "${app[sysctl]}" ]] || return 1
         num="$("${app[sysctl]}" -n 'hw.ncpu')"
     elif koopa_is_linux
     then
         app[getconf]="$(koopa_linux_locate_getconf)"
+        [[ -x "${app[getconf]}" ]] || return 1
         num="$("${app[getconf]}" '_NPROCESSORS_ONLN')"
     else
         num=1
@@ -5433,6 +5735,7 @@ koopa_current_bcbio_nextgen_version() {
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
     str="$( \
         koopa_parse_url "https://raw.githubusercontent.com/bcbio/\
 bcbio-nextgen/master/requirements-conda.txt" \
@@ -5460,6 +5763,8 @@ koopa_current_ensembl_version() {
         [cut]="$(koopa_locate_cut)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     str="$( \
         koopa_parse_url 'ftp://ftp.ensembl.org/pub/current_README' \
         | "${app[sed]}" -n '3p' \
@@ -5478,6 +5783,9 @@ koopa_current_flybase_version() {
         [head]="$(koopa_locate_head)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     str="$( \
         koopa_parse_url --list-only "ftp://ftp.flybase.net/releases/" \
         | koopa_grep --pattern='^FB[0-9]{4}_[0-9]{2}$' --regex \
@@ -5497,6 +5805,10 @@ koopa_current_gencode_version() {
         [grep]="$(koopa_locate_grep)"
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[curl]}" ]] || return 1
+    [[ -x "${app[grep]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict=(
         [organism]="${1:-}"
     )
@@ -5548,6 +5860,7 @@ koopa_current_wormbase_version() {
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
     url="ftp://ftp.wormbase.org/pub/wormbase/\
 releases/current-production-release"
     str="$( \
@@ -5569,6 +5882,7 @@ koopa_datetime() {
     declare -A app=(
         [date]="$(koopa_locate_date)"
     )
+    [[ -x "${app[date]}" ]] || return 1
     str="$("${app[date]}" '+%Y%m%d-%H%M%S')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
@@ -5637,6 +5951,7 @@ koopa_decompress() {
                     cmd="$(koopa_locate_xz)"
                     ;;
             esac
+            [[ -x "$cmd" ]] || return 1
             cmd_args=(
                 '-c' # '--stdout'.
                 '-d' # '--decompress'.
@@ -5660,6 +5975,7 @@ koopa_decompress() {
                     ;;
                 '1')
                     cmd="$(koopa_locate_cat)"
+                    [[ -x "$cmd" ]] || return 1
                     "$cmd" "${dict[source_file]}"
                     ;;
             esac
@@ -5926,6 +6242,7 @@ koopa_df() {
     declare -A app=(
         [df]="$(koopa_locate_df)"
     )
+    [[ -x "${app[df]}" ]] || return 1
     "${app[df]}" \
         --portability \
         --print-type \
@@ -5936,10 +6253,16 @@ koopa_df() {
 
 koopa_dirname() {
     local arg
-    koopa_assert_has_args "$#"
+    if [[ "$#" -eq 0 ]]
+    then
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     for arg in "$@"
     do
         local str
+        [[ -n "$arg" ]] || return 1
         if [[ -e "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"
@@ -6115,6 +6438,9 @@ koopa_docker_build_all_images() {
         [docker]="$(koopa_locate_docker)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[basename]}" ]] || return 1
+    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     declare -A dict=(
         [days]=7
         [docker_dir]="$(koopa_docker_prefix)"
@@ -6242,6 +6568,10 @@ koopa_docker_build() {
         [docker]="$(koopa_locate_docker)"
         [sort]="$(koopa_locate_sort)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[date]}" ]] || return 1
+    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
     declare -A dict=(
         [docker_dir]="$(koopa_docker_prefix)"
         [delete]=0
@@ -6433,6 +6763,7 @@ koopa_docker_ghcr_login() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     declare -A dict=(
         [pat]="${GHCR_PAT:?}"
         [server]='ghcr.io'
@@ -6452,6 +6783,7 @@ koopa_docker_ghcr_push() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     declare -A dict=(
         [image_name]="${2:?}"
         [owner]="${1:?}"
@@ -6473,6 +6805,9 @@ koopa_docker_is_build_recent() {
         [docker]="$(koopa_locate_docker)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[date]}" ]] || return 1
+    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [days]=7
     )
@@ -6538,6 +6873,7 @@ koopa_docker_prune_all_images() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     koopa_alert 'Pruning Docker images.'
     "${app[docker]}" system prune --all --force || true
     "${app[docker]}" images
@@ -6559,6 +6895,7 @@ koopa_docker_prune_old_images() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     koopa_alert 'Pruning Docker images older than 3 months.'
     "${app[docker]}" image prune \
         --all \
@@ -6584,6 +6921,10 @@ koopa_docker_push() {
         [sort]="$(koopa_locate_sort)"
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[tr]}" ]] || return 1
     declare -A dict=(
         [server]='docker.io'
     )
@@ -6631,6 +6972,9 @@ koopa_docker_remove() {
         [docker]="$(koopa_locate_docker)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     for pattern in "$@"
     do
         "${app[docker]}" images \
@@ -6647,6 +6991,7 @@ koopa_docker_run() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     declare -A dict=(
         [arm]=0
         [bash]=0
@@ -6724,6 +7069,7 @@ koopa_docker_tag() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     declare -A dict=(
         [dest_tag]="${3:-}"
         [image]="${1:?}"
@@ -6766,6 +7112,7 @@ koopa_download_cran_latest() {
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[head]}" ]] || return 1
     for name in "$@"
     do
         url="https://cran.r-project.org/web/packages/${name}/"
@@ -6800,6 +7147,8 @@ koopa_download_github_latest() {
         [cut]="$(koopa_locate_cut)"
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[tr]}" ]] || return 1
     for repo in "$@"
     do
         api_url="https://api.github.com/repos/${repo}/releases/latest"
@@ -6812,38 +7161,6 @@ koopa_download_github_latest() {
         tag="$(koopa_basename "$tarball_url")"
         koopa_download "$tarball_url" "${tag}.tar.gz"
     done
-    return 0
-}
-
-koopa_download_refdata_scsig() {
-    local basename basenames dict
-    koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        [base_url]='http://software.broadinstitute.org/gsea/msigdb/supplemental'
-        [name_fancy]='MSigDB SCSig'
-        [refdata_prefix]="$(koopa_refdata_prefix)"
-        [version]='1.0.1'
-    )
-    dict[prefix]="${dict[refdata_prefix]}/scsig/${dict[version]}"
-    koopa_assert_is_not_dir "${dict[prefix]}"
-    koopa_alert "Downloading ${dict[name_fancy]} ${dict[version]} \
-to ${dict[prefix]}."
-    koopa_mkdir "${dict[prefix]}"
-    basenames=(
-        "scsig.all.v${dict[version]}.entrez.gmt"
-        "scsig.all.v${dict[version]}.symbols.gmt"
-        "scsig.v${dict[version]}.metadata.txt"
-        "scsig.v${dict[version]}.metadata.xls"
-    )
-    for basename in "${basenames[@]}"
-    do
-        koopa_download \
-            "${dict[base_url]}/${basename}" \
-            "${dict[prefix]}/${basename]}"
-    done
-    koopa_sys_set_permissions --recursive "${dict[prefix]}"
-    koopa_alert_success "Download of ${dict[name_fancy]} to \
-${dict[prefix]} was successful."
     return 0
 }
 
@@ -6901,6 +7218,7 @@ koopa_download() {
     declare -A app=(
         [download]="$("koopa_locate_${dict[engine]}")"
     )
+    [[ -x "${app[download]}" ]] || return 1
     if [[ -z "${dict[file]}" ]]
     then
         dict[file]="$(koopa_basename "${dict[url]}")"
@@ -7032,6 +7350,7 @@ koopa_ensure_newline_at_end_of_file() {
     declare -A app=(
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [file]="${1:?}"
     )
@@ -7094,6 +7413,7 @@ koopa_extract_version() {
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict=(
         [pattern]="$(koopa_version_pattern)"
     )
@@ -7121,9 +7441,11 @@ koopa_extract_version() {
 }
 
 koopa_extract() {
-    local cmd cmd_args file orig_path
+    local app cmd_args dict file
     koopa_assert_has_args "$#"
-    orig_path="${PATH:-}"
+    declare -A app
+    declare -A dict
+    dict[orig_path]="${PATH:-}"
     for file in "$@"
     do
         koopa_assert_is_file "$file"
@@ -7133,52 +7455,55 @@ koopa_extract() {
             *'.tar.bz2' | \
             *'.tar.gz' | \
             *'.tar.xz')
-                cmd="$(koopa_locate_tar)"
+                app[cmd]="$(koopa_locate_tar)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 case "$file" in
                     *'.bz2')
-                        local cmd2
-                        cmd2="$(koopa_locate_bzip2)"
-                        koopa_add_to_path_start "$(koopa_dirname "$cmd2")"
+                        app[cmd2]="$(koopa_locate_bzip2)"
+                        [[ -x "${app[cmd2]}" ]] || return 1
+                        koopa_add_to_path_start \
+                            "$(koopa_dirname "${app[cmd2]}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
                     *'.gz')
-                        local cmd2
-                        cmd2="$(koopa_locate_gzip)"
-                        koopa_add_to_path_start "$(koopa_dirname "$cmd2")"
+                        app[cmd2]="$(koopa_locate_gzip)"
+                        [[ -x "${app[cmd2]}" ]] || return 1
+                        koopa_add_to_path_start \
+                            "$(koopa_dirname "${app[cmd2]}")"
                         cmd_args+=('-z') # '--gzip'.
                         ;;
                     *'.xz')
-                        local cmd2
-                        cmd2="$(koopa_locate_xz)"
-                        koopa_add_to_path_start "$(koopa_dirname "$cmd2")"
+                        app[cmd2]="$(koopa_locate_xz)"
+                        [[ -x "${app[cmd2]}" ]] || return 1
+                        koopa_add_to_path_start \
+                            "$(koopa_dirname "${app[cmd2]}")"
                         cmd_args+=('-J') # '--xz'.
                         ;;
                 esac
                 ;;
             *'.bz2')
-                cmd="$(koopa_locate_bunzip2)"
+                app[cmd]="$(koopa_locate_bunzip2)"
                 cmd_args=("$file")
                 ;;
             *'.gz')
-                cmd="$(koopa_locate_gzip)"
+                app[cmd]="$(koopa_locate_gzip)"
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                 )
                 ;;
             *'.tar')
-                cmd="$(koopa_locate_tar)"
+                app[cmd]="$(koopa_locate_tar)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 ;;
             *'.tbz2')
-                cmd="$(koopa_locate_tar)"
+                app[cmd]="$(koopa_locate_tar)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-j' # '--bzip2'.
@@ -7186,7 +7511,7 @@ koopa_extract() {
                 )
                 ;;
             *'.tgz')
-                cmd="$(koopa_locate_tar)"
+                app[cmd]="$(koopa_locate_tar)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
@@ -7194,25 +7519,25 @@ koopa_extract() {
                 )
                 ;;
             *'.xz')
-                cmd="$(koopa_locate_xz)"
+                app[cmd]="$(koopa_locate_xz)"
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                     )
                 ;;
             *'.zip')
-                cmd="$(koopa_locate_unzip)"
+                app[cmd]="$(koopa_locate_unzip)"
                 cmd_args=(
                     '-qq'
                     "$file"
                 )
                 ;;
             *'.Z')
-                cmd="$(koopa_locate_uncompress)"
+                app[cmd]="$(koopa_locate_uncompress)"
                 cmd_args=("$file")
                 ;;
             *'.7z')
-                cmd="$(koopa_locate_7z)"
+                app[cmd]="$(koopa_locate_7z)"
                 cmd_args=(
                     '-x'
                     "$file"
@@ -7222,9 +7547,10 @@ koopa_extract() {
                 koopa_stop "Unsupported extension: '${file}'."
                 ;;
         esac
-        "$cmd" "${cmd_args[@]}"
+        [[ -x "${app[cmd]}" ]] || return 1
+        "${app[cmd]}" "${cmd_args[@]}"
     done
-    export PATH="$orig_path"
+    export PATH="${dict[orig_path]}"
     return 0
 }
 
@@ -7236,6 +7562,9 @@ koopa_fasta_generate_chromosomes_file() {
         [grep]="$(koopa_locate_grep)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[grep]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [genome_fasta_file]=''
         [output_file]=''
@@ -7289,6 +7618,7 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     declare -A app=(
         [cat]="$(koopa_locate_cat)"
     )
+    [[ -x "${app[cat]}" ]] || return 1
     declare -A dict=(
         [genome_fasta_file]=''
         [output_file]='' # 'gentrome.fa.gz'
@@ -7363,12 +7693,15 @@ at '${dict[output_file]}'."
 koopa_fastq_detect_quality_score() {
     local app file
     koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
     declare -A app=(
         [awk]="$(koopa_locate_awk)"
         [head]="$(koopa_locate_head)"
         [od]="$(koopa_locate_od)"
     )
-    koopa_assert_is_file "$@"
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[od]}" ]] || return 1
     for file in "$@"
     do
         local str
@@ -7403,6 +7736,7 @@ koopa_fastq_lanepool() {
     declare -A app=(
         [cat]="$(koopa_locate_cat)"
     )
+    [[ -x "${app[cat]}" ]] || return 1
     declare -A dict=(
         [prefix]='lanepool'
         [source_dir]="${PWD:?}"
@@ -7492,13 +7826,13 @@ koopa_fastq_lanepool() {
 koopa_fastq_number_of_reads() {
     local app file
     koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
     declare -A app=(
         [awk]="$(koopa_locate_awk)"
         [wc]="$(koopa_locate_wc)"
     )
     [[ -x "${app[awk]}" ]] || return 1
     [[ -x "${app[wc]}" ]] || return 1
-    koopa_assert_is_file "$@"
     for file in "$@"
     do
         local num
@@ -7519,6 +7853,7 @@ koopa_file_count() {
     declare -A app=(
         [wc]="$(koopa_locate_wc)"
     )
+    [[ -x "${app[wc]}" ]] || return 1
     declare -A dict=(
         [prefix]="${1:?}"
     )
@@ -7551,6 +7886,7 @@ koopa_file_ext_2() {
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
     for file in "$@"
     do
         if koopa_has_file_ext "$file"
@@ -7595,6 +7931,7 @@ koopa_find_and_replace_in_file() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
+    [[ -x "${app[perl]}" ]] || return 1
     declare -A dict=(
         [multiline]=0
         [pattern]=''
@@ -7643,7 +7980,10 @@ koopa_find_and_replace_in_file() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
@@ -7670,6 +8010,8 @@ koopa_find_app_version() {
         [sort]="$(koopa_locate_sort)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [name]="${1:?}"
@@ -7719,6 +8061,9 @@ koopa_find_dotfiles() {
         [basename]="$(koopa_locate_basename)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[basename]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     declare -A dict=(
         [type]="${1:?}"
         [header]="${2:?}"
@@ -7763,10 +8108,11 @@ koopa_find_empty_dirs() {
 koopa_find_files_without_line_ending() {
     local app files prefix
     koopa_assert_has_args "$#"
+    koopa_assert_is_dir "$@"
     declare -A app=(
         [pcregrep]="$(koopa_locate_pcregrep)"
     )
-    koopa_assert_is_dir "$@"
+    [[ -x "${app[pcregrep]}" ]] || return 1
     for prefix in "$@"
     do
         local str
@@ -7788,12 +8134,15 @@ koopa_find_files_without_line_ending() {
 koopa_find_large_dirs() {
     local app prefix
     koopa_assert_has_args "$#"
+    koopa_assert_is_dir "$@"
     declare -A app=(
         [du]="$(koopa_locate_du)"
         [sort]="$(koopa_locate_sort)"
         [tail]="$(koopa_locate_tail)"
     )
-    koopa_assert_is_dir "$@"
+    [[ -x "${app[du]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     for prefix in "$@"
     do
         local str
@@ -7817,10 +8166,11 @@ koopa_find_large_dirs() {
 koopa_find_large_files() {
     local app prefix str
     koopa_assert_has_args "$#"
+    koopa_assert_is_dir "$@"
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
-    koopa_assert_is_dir "$@"
+    [[ -x "${app[head]}" ]] || return 1
     for prefix in "$@"
     do
         str="$( \
@@ -8111,11 +8461,12 @@ koopa_find() {
     else
         app[find]="$(koopa_locate_"${dict[engine]}")"
     fi
-    koopa_assert_is_installed "${app[find]}"
+    [[ -x "${app[find]}" ]] || return 1
     find=()
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         find+=("${app[sudo]}")
     fi
     find+=("${app[find]}")
@@ -8308,6 +8659,7 @@ koopa_find() {
     if [[ "${dict[sort]}" -eq 1 ]]
     then
         app[sort]="$(koopa_locate_sort)"
+        [[ -x "${app[sort]}" ]] || return 1
     fi
     if [[ "${dict[print0]}" -eq 1 ]]
     then
@@ -8359,15 +8711,26 @@ koopa_fix_rbenv_permissions() {
 }
 
 koopa_fix_zsh_permissions() {
-    local app dict
+    local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
     )
-    koopa_chmod 'g-w' \
-        "${dict[koopa_prefix]}/lang/shell/zsh" \
-        "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+    if koopa_is_shared_install
+    then
+        koopa_assert_is_admin
+        koopa_chown --sudo 'root' \
+            "${dict[koopa_prefix]}/lang/shell/zsh" \
+            "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+        koopa_chmod --sudo 'g-w' \
+            "${dict[koopa_prefix]}/lang/shell/zsh" \
+            "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+    else
+        koopa_chmod 'g-w' \
+            "${dict[koopa_prefix]}/lang/shell/zsh" \
+            "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+    fi
     if [[ -d "${dict[app_prefix]}/zsh" ]]
     then
         koopa_chmod 'g-w' \
@@ -8384,6 +8747,7 @@ koopa_ftp_mirror() {
     declare -A app=(
         [wget]="$(koopa_locate_wget)"
     )
+    [[ -x "${app[wget]}" ]] || return 1
     declare -A dict=(
         [dir]=''
         [host]=''
@@ -8574,6 +8938,7 @@ koopa_git_checkout_recursive() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     declare -A dict=(
         [branch]=''
         [origin]=''
@@ -8664,15 +9029,19 @@ koopa_git_checkout_recursive() {
 }
 
 koopa_git_clone() {
-    local app clone_args dict pos
-    koopa_assert_has_args_ge "$#" 2
+    local app clone_args dict
+    koopa_assert_has_args "$#"
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     declare -A dict=(
         [branch]=''
+        [commit]=''
+        [prefix]=''
+        [tag]=''
+        [url]=''
     )
-    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -8684,56 +9053,92 @@ koopa_git_clone() {
                 dict[branch]="${2:?}"
                 shift 2
                 ;;
-            '-'*)
-                koopa_invalid_arg "$1"
+            '--commit='*)
+                dict[commit]="${1#*=}"
+                shift 1
+                ;;
+            '--commit')
+                dict[commit]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--tag='*)
+                dict[tag]="${1#*=}"
+                shift 1
+                ;;
+            '--tag')
+                dict[tag]="${2:?}"
+                shift 2
+                ;;
+            '--url='*)
+                dict[url]="${1#*=}"
+                shift 1
+                ;;
+            '--url')
+                dict[url]="${2:?}"
+                shift 2
                 ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_ge "$#" 2
-    while [[ "$#" -ge 2 ]]
-    do
-        local dict2
-        declare -A dict2=(
-            [url]="${1:?}"
-            [prefix]="${2:?}"
-        )
-        if [[ -d "${dict2[prefix]}" ]]
-        then
-            koopa_rm "${dict2[prefix]}"
-        fi
-        if koopa_str_detect_fixed \
-            --string="${dict2[url]}" \
-            --pattern='git@github.com'
-        then
-            koopa_assert_is_github_ssh_enabled
-        elif koopa_str_detect_fixed \
-            --string="${dict2[url]}" \
-            --pattern='git@gitlab.com'
-        then
-            koopa_assert_is_gitlab_ssh_enabled
-        fi
-        clone_args=()
-        if [[ -n "${dict[branch]}" ]]
-        then
-            clone_args+=(
-                '-b' "${dict[branch]}"
-            )
-        fi
+    koopa_assert_is_set \
+        '--prefix' "${dict[prefix]}" \
+        '--url' "${dict[url]}"
+    if [[ -d "${dict[prefix]}" ]]
+    then
+        koopa_rm "${dict[prefix]}"
+    fi
+    if koopa_str_detect_fixed \
+        --string="${dict[url]}" \
+        --pattern='git@github.com'
+    then
+        koopa_assert_is_github_ssh_enabled
+    elif koopa_str_detect_fixed \
+        --string="${dict[url]}" \
+        --pattern='git@gitlab.com'
+    then
+        koopa_assert_is_gitlab_ssh_enabled
+    fi
+    clone_args=(
+        '--quiet'
+    )
+    if [[ -n "${dict[branch]}" ]]
+    then
         clone_args+=(
-            '--depth' 1
-            '--quiet'
-            '--recursive'
-            "${dict2[url]}"
-            "${dict2[prefix]}"
+            '--depth=1'
+            '--single-branch'
+            "--branch=${dict[branch]}"
         )
-        "${app[git]}" clone "${clone_args[@]}"
-        shift 2
-    done
+    else
+        clone_args+=(
+            '--filter=blob:none'
+        )
+    fi
+    clone_args+=("${dict[url]}" "${dict[prefix]}")
+    "${app[git]}" clone "${clone_args[@]}"
+    if [[ -n "${dict[commit]}" ]]
+    then
+        (
+            koopa_cd "${dict[prefix]}"
+            "${app[git]}" checkout --quiet "${dict[commit]}"
+        )
+    elif [[ -n "${dict[tag]}" ]]
+    then
+        (
+            koopa_cd "${dict[prefix]}"
+            "${app[git]}" fetch --quiet --tags
+            "${app[git]}" checkout --quiet "tags/${dict[tag]}"
+        )
+    fi
     return 0
 }
 
@@ -8743,6 +9148,8 @@ koopa_git_default_branch() {
         [git]="$(koopa_locate_git)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [remote]='origin'
     )
@@ -8773,6 +9180,7 @@ koopa_git_last_commit_local() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     declare -A dict=(
         [ref]='HEAD'
     )
@@ -8802,6 +9210,9 @@ koopa_git_last_commit_remote() {
         [git]="$(koopa_locate_git)"
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict=(
         [ref]='HEAD'
     )
@@ -8824,6 +9235,7 @@ koopa_git_latest_tag() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -8848,6 +9260,7 @@ koopa_git_pull_recursive() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     dirs=("$@")
     koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     koopa_assert_is_dir "${dirs[@]}"
@@ -8894,6 +9307,7 @@ koopa_git_pull() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_assert_is_dir "${repos[@]}"
     (
@@ -8915,6 +9329,7 @@ koopa_git_push_recursive() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     dirs=("$@")
     koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     koopa_assert_is_dir "${dirs[@]}"
@@ -8959,6 +9374,7 @@ koopa_git_push_submodules() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -8980,6 +9396,7 @@ koopa_git_remote_url() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -9003,6 +9420,7 @@ koopa_git_rename_master_to_main() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     declare -A dict=(
         [origin]='origin'
         [old_branch]='master'
@@ -9045,6 +9463,7 @@ koopa_git_reset_fork_to_upstream() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -9074,6 +9493,7 @@ koopa_git_reset() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -9107,6 +9527,7 @@ koopa_git_rm_submodule() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     for module in "$@"
     do
         "${app[git]}" submodule deinit -f "$module"
@@ -9123,6 +9544,7 @@ koopa_git_rm_untracked() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -9147,6 +9569,7 @@ koopa_git_set_remote_url() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     declare -A dict=(
         [url]="${1:?}"
         [origin]='origin'
@@ -9160,6 +9583,7 @@ koopa_git_status_recursive() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     dirs=("$@")
     koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     (
@@ -9204,6 +9628,8 @@ koopa_git_submodule_init() {
         [awk]="$(koopa_locate_awk)"
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -9267,6 +9693,8 @@ koopa_github_latest_release() {
         [cut]="$(koopa_locate_cut)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     for repo in "$@"
     do
         local dict
@@ -9675,6 +10103,8 @@ koopa_hdf5_version() {
         [h5cc]="$(koopa_locate_h5cc)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[h5cc]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     str="$( \
         "${app[h5cc]}" -showconfig \
             | koopa_grep --pattern='HDF5 Version:' \
@@ -9732,6 +10162,8 @@ koopa_help() {
         [head]="$(koopa_locate_head)"
         [man]="$(koopa_locate_man)"
     )
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[man]}" ]] || return 1
     declare -A dict=(
         [man_file]="${1:?}"
     )
@@ -9748,6 +10180,7 @@ koopa_hisat2_align_paired_end_per_sample() {
     declare -A app=(
         [hisat2]="$(koopa_locate_hisat2)"
     )
+    [[ -x "${app[hisat2]}" ]] || return 1
     declare -A dict=(
         [fastq_r1_file]=''
         [fastq_r1_tail]=''
@@ -10013,6 +10446,7 @@ koopa_hisat2_align_single_end_per_sample() {
     declare -A app=(
         [hisat2]="$(koopa_locate_hisat2)"
     )
+    [[ -x "${app[hisat2]}" ]] || return 1
     declare -A dict=(
         [fastq_file]=''
         [fastq_tail]=''
@@ -10288,6 +10722,7 @@ koopa_hisat2_index() {
     declare -A app=(
         [hisat2_build]="$(koopa_locate_hisat2_build)"
     )
+    [[ -x "${app[hisat2_build]}" ]] || return 1
     declare -A dict=(
         [genome_fasta_file]=''
         [mem_gb]="$(koopa_mem_gb)"
@@ -10491,14 +10926,249 @@ koopa_insert_at_line_number() {
 koopa_install_ack() {
     koopa_install_app \
         --installer='perl-package' \
-        --link-in-bin='bin/ack' \
+        --link-in-bin='ack' \
         --name='ack' \
         "$@"
 }
 
+koopa_install_all_apps() {
+    local pkgs
+    koopa_assert_has_no_args "$#"
+    pkgs=(
+        'openssl1'
+        'openssl3'
+        'pcre'
+        'pcre2'
+        'ack'
+        'anaconda'
+        'apr'
+        'apr-util'
+        'armadillo'
+        'aspell'
+        'autoconf'
+        'automake'
+        'aws-cli'
+        'azure-cli'
+        'bash'
+        'bash-language-server'
+        'bashcov'
+        'bat'
+        'bc'
+        'binutils'
+        'bison'
+        'black'
+        'boost'
+        'bpytop'
+        'broot'
+        'bzip2'
+        'cairo'
+        'chemacs'
+        'chezmoi'
+        'cmake'
+        'colorls'
+        'conda'
+        'coreutils'
+        'cpufetch'
+        'curl'
+        'delta'
+        'difftastic'
+        'dotfiles'
+        'du-dust'
+        'emacs'
+        'ensembl-perl-api'
+        'exa'
+        'exiftool'
+        'fd-find'
+        'ffmpeg'
+        'ffq'
+        'findutils'
+        'fish'
+        'flac'
+        'flake8'
+        'fltk'
+        'fontconfig'
+        'freetype'
+        'fribidi'
+        'fzf'
+        'gawk'
+        'gcc'
+        'gdal'
+        'gdbm'
+        'geos'
+        'gettext'
+        'gget'
+        'git'
+        'glances'
+        'glib'
+        'gmp'
+        'gnupg'
+        'gnutls'
+        'go'
+        'google-cloud-sdk'
+        'gperf'
+        'graphviz'
+        'grep'
+        'groff'
+        'gsl'
+        'gtop'
+        'gzip'
+        'hadolint'
+        'harfbuzz'
+        'haskell-stack'
+        'hdf5'
+        'htop'
+        'hyperfine'
+        'icu4c'
+        'imagemagick'
+        'ipython'
+        'isort'
+        'jpeg'
+        'jq'
+        'julia'
+        'kallisto'
+        'lame'
+        'lapack'
+        'latch'
+        'less'
+        'lesspipe'
+        'libedit'
+        'libevent'
+        'libffi'
+        'libgeotiff'
+        'libgit2'
+        'libidn'
+        'libjpeg-turbo'
+        'libpipeline'
+        'libpng'
+        'libssh2'
+        'libtasn1'
+        'libtiff'
+        'libtool'
+        'libunistring'
+        'libuv'
+        'libxml2'
+        'libzip'
+        'lua'
+        'luarocks'
+        'lz4'
+        'lzma'
+        'lzo'
+        'm4'
+        'make'
+        'man-db'
+        'mcfly'
+        'mdcat'
+        'meson'
+        'mpc'
+        'mpfr'
+        'ncurses'
+        'neofetch'
+        'neovim'
+        'nettle'
+        'nim'
+        'ninja'
+        'node'
+        'oniguruma'
+        'openblas'
+        'openjdk'
+        'openssh'
+        'pandoc'
+        'parallel'
+        'password-store'
+        'patch'
+        'perl'
+        'pipx'
+        'pixman'
+        'pkg-config'
+        'poetry'
+        'prettier'
+        'procs'
+        'proj'
+        'pyflakes'
+        'pygments'
+        'pylint'
+        'pytaglib'
+        'pytest'
+        'python'
+        'r'
+        'ranger-fm'
+        'readline'
+        'rename'
+        'ripgrep'
+        'ronn'
+        'rsync'
+        'ruby'
+        'rust'
+        'salmon'
+        'scons'
+        'sed'
+        'serf'
+        'shellcheck'
+        'shunit2'
+        'snakemake'
+        'sox'
+        'sqlite'
+        'starship'
+        'stow'
+        'subversion'
+        'taglib'
+        'tar'
+        'tcl-tk'
+        'tealdeer'
+        'texinfo'
+        'tmux'
+        'tokei'
+        'tree'
+        'tuc'
+        'udunits'
+        'units'
+        'utf8proc'
+        'vim'
+        'wget'
+        'which'
+        'xorg-libice'
+        'xorg-libpthread-stubs'
+        'xorg-libsm'
+        'xorg-libx11'
+        'xorg-libxau'
+        'xorg-libxcb'
+        'xorg-libxdmcp'
+        'xorg-libxext'
+        'xorg-libxrandr'
+        'xorg-libxrender'
+        'xorg-libxt'
+        'xorg-xcb-proto'
+        'xorg-xorgproto'
+        'xorg-xtrans'
+        'xsv'
+        'xxhash'
+        'xz'
+        'yt-dlp'
+        'zellij'
+        'zoxide'
+        'zsh'
+        'zstd'
+    )
+    if koopa_is_linux
+    then
+        pkgs+=(
+            'apptainer'
+            'aspera-connect'
+            'docker-credential-pass'
+            'lmod'
+        )
+    fi
+    koopa_cli_install --binary "${pkgs[@]}"
+    pkgs=(
+        'r-packages'
+    )
+    koopa_cli_install "${pkgs[@]}"
+    koopa_configure_dotfiles
+    return 0
+}
+
 koopa_install_anaconda() {
     koopa_install_app \
-        --name-fancy='Anaconda' \
         --name='anaconda' \
         "$@"
 }
@@ -10509,67 +11179,60 @@ koopa_install_app_from_binary_package() {
     declare -A app=(
         [tar]="$(koopa_locate_tar)"
     )
+    [[ -x "${app[tar]}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch2)"
+        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
         [binary_prefix]='/opt/koopa'
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [name]=''
         [os_string]="$(koopa_os_string)"
         [url_stem]="$(koopa_koopa_url)/app"
-        [version]=''
     )
-    while (("$#"))
-    do
-        case "$1" in
-            '--name='*)
-                dict[name]="${1#*=}"
-                shift 1
-                ;;
-            '--name')
-                dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--version='*)
-                dict[version]="${1#*=}"
-                shift 1
-                ;;
-            '--version')
-                dict[version]="${2:?}"
-                shift 2
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_set \
-        '--name' "${dict[name]}" \
-        '--version' "${dict[version]}"
     if [[ "${dict[koopa_prefix]}" != "${dict[binary_prefix]}" ]]
     then
         koopa_stop "Binary package installation not supported for koopa \
 install located at '${dict[koopa_prefix]}'. Koopa must be installed at \
 default '${dict[binary_prefix]}' location."
     fi
-    dict[tarball_file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[tarball_url]="${dict[url_stem]}/${dict[os_string]}/${dict[arch]}/\
-${dict[name]}/${dict[version]}.tar.gz"
-    if ! koopa_is_url_active "${dict[tarball_url]}"
-    then
-        koopa_stop "No package at '${dict[tarball_url]}'."
-    fi
-    koopa_download "${dict[tarball_url]}" "${dict[tarball_file]}"
-    "${app[tar]}" -Pxzvf "${dict[tarball_file]}"
+    koopa_assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        local dict2
+        declare -A dict2
+        dict2[prefix]="$(koopa_realpath "$prefix")"
+        dict2[name]="$( \
+            koopa_print "${dict2[prefix]}" \
+                | koopa_dirname \
+                | koopa_basename \
+        )"
+        dict2[version]="$(koopa_basename "$prefix")"
+        dict2[tar_file]="${dict2[name]}-${dict2[version]}.tar.gz"
+        dict2[tar_url]="${dict[url_stem]}/${dict[os_string]}/${dict[arch]}/\
+${dict2[name]}/${dict2[version]}.tar.gz"
+        if ! koopa_is_url_active "${dict2[tar_url]}"
+        then
+            koopa_stop "No package at '${dict2[tar_url]}'."
+        fi
+        koopa_download "${dict2[tar_url]}" "${dict2[tar_file]}"
+        "${app[tar]}" -Pxzf "${dict2[tar_file]}"
+        koopa_touch "${prefix}/.binary"
+    done
     return 0
 }
 
+koopa_install_app_internal() {
+    koopa_install_app \
+        --no-link-in-opt \
+        --no-prefix-check \
+        --quiet \
+        "$@"
+}
+
 koopa_install_app_packages() {
-    local app name name_fancy pos
+    local app dict pos
     koopa_assert_has_args "$#"
     declare -A app
     declare -A dict=(
         [name]=''
-        [name_fancy]=''
         [reinstall]=0
     )
     pos=()
@@ -10582,14 +11245,6 @@ koopa_install_app_packages() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--reinstall')
@@ -10611,7 +11266,7 @@ koopa_install_app_packages() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
     app[cmd]="$("koopa_locate_${dict[name]}")"
-    koopa_assert_is_installed "${app[cmd]}"
+    [[ -x "${app[cmd]}" ]] || return 1
     dict[configure_fun]="koopa_configure_${dict[name]}"
     "${dict[configure_fun]}"
     koopa_assert_is_function "${dict[configure_fun]}"
@@ -10629,7 +11284,6 @@ koopa_install_app_packages() {
     dict[version]="$(koopa_get_version "${app[cmd]}")"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     koopa_install_app \
-        --name-fancy="${dict[name_fancy]} packages" \
         --name="${dict[name]}-packages" \
         --no-prefix-check \
         --prefix="${dict[prefix]}" \
@@ -10639,48 +11293,45 @@ koopa_install_app_packages() {
 }
 
 koopa_install_app() {
-    local app bin_arr build_opt_arr clean_path_arr dict i opt_arr pos
+    local app bin_arr bool build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
         [tee]="$(koopa_locate_tee)"
     )
     [[ -x "${app[tee]}" ]] || return 1
-    declare -A dict=(
-        [app_prefix]="$(koopa_app_prefix)"
+    declare -A bool=(
         [auto_prefix]=0
         [binary]=0
-        [installer_bn]=''
-        [installer_fun]='main'
-        [installers_prefix]="$(koopa_installers_prefix)"
-        [koopa_prefix]="$(koopa_koopa_prefix)"
         [link_in_bin]=0
         [link_in_make]=0
         [link_in_opt]=1
-        [make_prefix]="$(koopa_make_prefix)"
-        [mode]='shared'
-        [name]=''
-        [name_fancy]=''
-        [platform]='common'
-        [prefix]=''
         [prefix_check]=1
         [push]=0
         [quiet]=0
         [reinstall]=0
-        [tmp_dir]="$(koopa_tmp_dir)"
         [update_ldconfig]=0
         [verbose]=0
+        [version_is_git_commit]=0
+    )
+    declare -A dict=(
+        [app_prefix]="$(koopa_app_prefix)"
+        [installer_bn]=''
+        [installer_fun]='main'
+        [installers_prefix]="$(koopa_installers_prefix)"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+        [make_prefix]="$(koopa_make_prefix)"
+        [mode]='shared'
+        [name]=''
+        [platform]='common'
+        [prefix]=''
+        [tmp_dir]="$(koopa_tmp_dir)"
         [version]=''
         [version_key]=''
     )
     bin_arr=()
     build_opt_arr=()
-    clean_path_arr=(
-        '/usr/bin'
-        '/bin'
-        '/usr/sbin'
-        '/sbin'
-    )
+    clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     opt_arr=()
     pos=()
     while (("$#"))
@@ -10726,14 +11377,6 @@ koopa_install_app() {
                 dict[name]="${2:?}"
                 shift 2
                 ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
-                shift 2
-                ;;
             '--platform='*)
                 dict[platform]="${1#*=}"
                 shift 1
@@ -10767,31 +11410,35 @@ koopa_install_app() {
                 shift 2
                 ;;
             '--binary')
-                dict[binary]=1
-                shift 1
-                ;;
-            '--link-in-make')
-                dict[link_in_make]=1
-                shift 1
-                ;;
-            '--no-link-in-opt')
-                dict[link_in_opt]=0
-                shift 1
-                ;;
-            '--no-prefix-check')
-                dict[prefix_check]=0
+                bool[binary]=1
                 shift 1
                 ;;
             '--push')
-                dict[push]=1
-                shift 1
-                ;;
-            '--quiet')
-                dict[quiet]=1
+                bool[push]=1
                 shift 1
                 ;;
             '--reinstall')
-                dict[reinstall]=1
+                bool[reinstall]=1
+                shift 1
+                ;;
+            '--verbose')
+                bool[verbose]=1
+                shift 1
+                ;;
+            '--link-in-make')
+                bool[link_in_make]=1
+                shift 1
+                ;;
+            '--no-link-in-opt')
+                bool[link_in_opt]=0
+                shift 1
+                ;;
+            '--no-prefix-check')
+                bool[prefix_check]=0
+                shift 1
+                ;;
+            '--quiet')
+                bool[quiet]=1
                 shift 1
                 ;;
             '--system')
@@ -10802,13 +11449,16 @@ koopa_install_app() {
                 dict[mode]='user'
                 shift 1
                 ;;
-            '--verbose')
-                dict[verbose]=1
+            '--version-is-git-commit')
+                bool[version_is_git_commit]=1
                 shift 1
                 ;;
             '-D')
             pos+=("${2:?}")
                 shift 2
+                ;;
+            '')
+                shift 1
                 ;;
             *)
                 koopa_invalid_arg "$1"
@@ -10817,7 +11467,7 @@ koopa_install_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
-    [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    [[ "${bool[verbose]}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
     dict[current_version]="$(\
         koopa_variable "${dict[version_key]}" 2>/dev/null || true \
@@ -10825,32 +11475,36 @@ koopa_install_app() {
     [[ -z "${dict[version]}" ]] && dict[version]="${dict[current_version]}"
     if [[ "${dict[version]}" != "${dict[current_version]}" ]]
     then
-        dict[link_in_bin]=0
-        dict[link_in_make]=0
-        dict[link_in_opt]=0
+        bool[link_in_bin]=0
+        bool[link_in_make]=0
+        bool[link_in_opt]=0
     fi
     case "${dict[mode]}" in
         'shared')
             if [[ -z "${dict[prefix]}" ]]
             then
-                dict[auto_prefix]=1
+                bool[auto_prefix]=1
+                dict[version2]="${dict[version]}"
+                if [[ "${bool[version_is_git_commit]}" -eq 1 ]]
+                then
+                    dict[version2]="${dict[version2]:0:8}"
+                fi
                 dict[prefix]="${dict[app_prefix]}/${dict[name]}/\
-${dict[version]}"
+${dict[version2]}"
             fi
             ;;
         'system')
             koopa_assert_is_admin
-            dict[link_in_make]=0
-            dict[link_in_opt]=0
-            koopa_is_linux && dict[update_ldconfig]=1
+            bool[link_in_make]=0
+            bool[link_in_opt]=0
+            koopa_is_linux && bool[update_ldconfig]=1
             ;;
         'user')
-            dict[link_in_make]=0
-            dict[link_in_opt]=0
+            bool[link_in_make]=0
+            bool[link_in_opt]=0
             ;;
     esac
-    koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[link_in_bin]=1
-    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
+    koopa_is_array_non_empty "${bin_arr[@]:-}" && bool[link_in_bin]=1
     [[ -d "${dict[prefix]}" ]] && \
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     [[ -z "${dict[installer_bn]}" ]] && dict[installer_bn]="${dict[name]}"
@@ -10859,21 +11513,17 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     koopa_assert_is_file "${dict[installer_file]}"
     source "${dict[installer_file]}"
     koopa_assert_is_function "${dict[installer_fun]}"
-    if [[ "${dict[quiet]}" -eq 0 ]]
-    then
-        if [[ -n "${dict[prefix]}" ]]
-        then
-            koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
-        else
-            koopa_alert_install_start "${dict[name_fancy]}"
-        fi
-    fi
     if [[ -n "${dict[prefix]}" ]]
     then
-        if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
+        if [[ -d "${dict[prefix]}" ]] && [[ "${bool[prefix_check]}" -eq 1 ]]
         then
-            if [[ "${dict[reinstall]}" -eq 1 ]]
+            if [[ "${bool[reinstall]}" -eq 1 ]]
             then
+                if [[ "${bool[quiet]}" -eq 0 ]]
+                then
+                    koopa_alert_uninstall_start \
+                        "${dict[name]}" "${dict[prefix]}"
+                fi
                 case "${dict[mode]}" in
                     'system')
                         koopa_rm --sudo "${dict[prefix]}"
@@ -10885,10 +11535,10 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             fi
             if [[ -d "${dict[prefix]}" ]]
             then
-                if [[ "${dict[quiet]}" -eq 0 ]]
+                if [[ "${bool[quiet]}" -eq 0 ]]
                 then
                     koopa_alert_is_installed \
-                        "${dict[name_fancy]}" "${dict[prefix]}"
+                        "${dict[name]}" "${dict[prefix]}"
                 fi
                 return 0
             fi
@@ -10902,20 +11552,33 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 ;;
         esac
     fi
-    if [[ -d "${dict[prefix]}" ]] && \
+    if [[ "${bool[binary]}" -eq 0 ]] && \
+        [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
         dict[log_file]="${dict[prefix]}/.install.log"
     else
         dict[log_file]="$(koopa_tmp_log_file)"
     fi
+    if [[ "${bool[quiet]}" -eq 0 ]]
+    then
+        if [[ -n "${dict[prefix]}" ]]
+        then
+            koopa_alert_install_start "${dict[name]}" "${dict[prefix]}"
+        else
+            koopa_alert_install_start "${dict[name]}"
+        fi
+    fi
+    if [[ "${bool[link_in_opt]}" -eq 1 ]]
+    then
+        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
+    fi
     (
         koopa_cd "${dict[tmp_dir]}"
-        if [[ "${dict[binary]}" -eq 1 ]]
+        if [[ "${bool[binary]}" -eq 1 ]]
         then
-            koopa_install_app_from_binary_package \
-                --name="${dict[name]}" \
-                --version="${dict[version]}"
+            [[ -n "${dict[prefix]}" ]] || return 1
+            koopa_install_app_from_binary_package "${dict[prefix]}"
             return 0
         fi
         PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
@@ -10934,22 +11597,22 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         then
             koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
-        if [[ "${dict[update_ldconfig]}" -eq 1 ]]
+        if [[ "${bool[update_ldconfig]}" -eq 1 ]]
         then
             koopa_linux_update_ldconfig
         fi
-        export INSTALL_LINK_IN_BIN="${dict[link_in_bin]}"
-        export INSTALL_LINK_IN_MAKE="${dict[link_in_make]}"
         export INSTALL_NAME="${dict[name]}"
         export INSTALL_PREFIX="${dict[prefix]}"
         export INSTALL_VERSION="${dict[version]}"
+        [[ "${bool[verbose]}" -eq 1 ]] && declare -x
         "${dict[installer_fun]}" "$@"
+        [[ "${bool[verbose]}" -eq 1 ]] && declare -x
         return 0
     ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
     koopa_rm "${dict[tmp_dir]}"
     case "${dict[mode]}" in
         'shared')
-            if [[ "${dict[auto_prefix]}" -eq 1 ]]
+            if [[ "${bool[auto_prefix]}" -eq 1 ]]
             then
                 koopa_sys_set_permissions "$(koopa_dirname "${dict[prefix]}")"
             fi
@@ -10959,44 +11622,38 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
             ;;
     esac
-    if [[ "${dict[link_in_opt]}" -eq 1 ]]
-    then
-        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
-    fi
-    if [[ "${dict[link_in_bin]}" -eq 1 ]]
+    if [[ "${bool[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
         do
             koopa_link_in_bin \
-                "${dict[prefix]}/${bin_arr[i]}" \
+                "${dict[prefix]}/bin/${bin_arr[i]}" \
                 "$(koopa_basename "${bin_arr[i]}")"
         done
     fi
-    if [[ "${dict[link_in_make]}" -eq 1 ]]
+    if [[ "${bool[link_in_make]}" -eq 1 ]]
     then
         koopa_link_in_make --prefix="${dict[prefix]}"
     fi
-    if [[ "${dict[update_ldconfig]}" -eq 1 ]]
+    if [[ "${bool[update_ldconfig]}" -eq 1 ]]
     then
         koopa_linux_update_ldconfig
     fi
-    if [[ "${dict[push]}" -eq 1 ]]
+    if [[ "${bool[push]}" -eq 1 ]]
     then
+        [[ "${dict[mode]}" == 'shared' ]] || return 1
         koopa_assert_is_set \
             '--name' "${dict[name]}" \
-            '--prefix' "${dict[prefix]}" \
-            '--version' "${dict[version]}"
-        koopa_push_app_build \
-            --app-name="${dict[name]}" \
-            --app-version="${dict[version]}"
+            '--prefix' "${dict[prefix]}"
+        koopa_push_app_build "${dict[name]}"
     fi
-    if [[ "${dict[quiet]}" -eq 0 ]]
+    if [[ "${bool[quiet]}" -eq 0 ]]
     then
         if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_install_success "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_install_success "${dict[name_fancy]}"
+            koopa_alert_install_success "${dict[name]}"
         fi
     fi
     return 0
@@ -11004,22 +11661,18 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
 
 koopa_install_apr_util() {
     koopa_install_app \
-        --name-fancy='Apache Portable Runtime (APR) utilities' \
         --name='apr-util' \
         "$@"
 }
 
 koopa_install_apr() {
     koopa_install_app \
-        --activate-opt='sqlite' \
-        --name-fancy='Apache Portable Runtime (APR) library' \
         --name='apr' \
         "$@"
 }
 
 koopa_install_armadillo() {
     koopa_install_app \
-        --name-fancy='Armadillo' \
         --name='armadillo' \
         "$@"
 }
@@ -11032,7 +11685,7 @@ koopa_install_asdf() {
 
 koopa_install_aspell() {
     koopa_install_app \
-        --link-in-bin='bin/aspell' \
+        --link-in-bin='aspell' \
         --name='aspell' \
         "$@"
 }
@@ -11056,8 +11709,7 @@ koopa_install_automake() {
 koopa_install_azure_cli() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/az' \
-        --name-fancy='Azure CLI' \
+        --link-in-bin='az' \
         --name='azure-cli' \
         "$@"
 }
@@ -11065,15 +11717,14 @@ koopa_install_azure_cli() {
 koopa_install_bash_language_server() {
     koopa_install_app \
         --installer='node-package' \
-        --link-in-bin='bin/bash-language-server' \
+        --link-in-bin='bash-language-server' \
         --name='bash-language-server' \
         "$@"
 }
 
 koopa_install_bash() {
     koopa_install_app \
-        --link-in-bin='bin/bash' \
-        --name-fancy='Bash' \
+        --link-in-bin='bash' \
         --name='bash' \
         "$@"
 }
@@ -11081,14 +11732,14 @@ koopa_install_bash() {
 koopa_install_bashcov() {
     koopa_install_app \
         --installer='ruby-package' \
-        --link-in-bin='bin/bashcov' \
+        --link-in-bin='bashcov' \
         --name='bashcov' \
         "$@"
 }
 
 koopa_install_bat() {
     koopa_install_app \
-        --link-in-bin='bin/bat' \
+        --link-in-bin='bat' \
         --name='bat' \
         --installer='rust-package' \
         "$@"
@@ -11098,7 +11749,7 @@ koopa_install_bc() {
     koopa_install_app \
         --activate-build-opt='texinfo' \
         --installer='gnu-app' \
-        --link-in-bin='bin/bc' \
+        --link-in-bin='bc' \
         --name='bc' \
         "$@"
 }
@@ -11106,7 +11757,7 @@ koopa_install_bc() {
 koopa_install_bedtools() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/bedtools' \
+        --link-in-bin='bedtools' \
         --name='bedtools' \
         "$@"
 }
@@ -11130,14 +11781,13 @@ koopa_install_bison() {
 koopa_install_black() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/black' \
+        --link-in-bin='black' \
         --name='black' \
         "$@"
 }
 
 koopa_install_boost() {
     koopa_install_app \
-        --name-fancy='Boost' \
         --name='boost' \
         "$@"
 }
@@ -11145,7 +11795,7 @@ koopa_install_boost() {
 koopa_install_bpytop() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/bpytop' \
+        --link-in-bin='bpytop' \
         --name='bpytop' \
         "$@"
 }
@@ -11153,7 +11803,7 @@ koopa_install_bpytop() {
 koopa_install_broot() {
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/broot' \
+        --link-in-bin='broot' \
         --name='broot' \
         "$@"
 }
@@ -11166,29 +11816,27 @@ koopa_install_bzip2() {
 
 koopa_install_cairo() {
     koopa_install_app \
-        --name-fancy='Cairo' \
         --name='cairo' \
         "$@"
 }
 
 koopa_install_chemacs() {
     koopa_install_app \
-        --name-fancy='Chemacs' \
         --name='chemacs' \
+        --version-is-git-commit \
         "$@"
 }
 
 koopa_install_chezmoi() {
     koopa_install_app \
-        --link-in-bin='bin/chezmoi' \
+        --link-in-bin='chezmoi' \
         --name='chezmoi' \
         "$@"
 }
 
 koopa_install_cmake() {
     koopa_install_app \
-        --link-in-bin='bin/cmake' \
-        --name-fancy='CMake' \
+        --link-in-bin='cmake' \
         --name='cmake' \
         "$@"
 }
@@ -11196,15 +11844,14 @@ koopa_install_cmake() {
 koopa_install_colorls() {
     koopa_install_app \
         --installer='ruby-package' \
-        --link-in-bin='bin/colorls' \
+        --link-in-bin='colorls' \
         --name='colorls' \
         "$@"
 }
 
 koopa_install_conda() {
     koopa_install_app \
-        --link-in-bin='bin/conda' \
-        --name-fancy='Miniconda' \
+        --link-in-bin='conda' \
         --name='conda' \
         "$@"
 }
@@ -11216,111 +11863,111 @@ koopa_install_coreutils() {
         '--activate-opt=gmp'
         '--installer=gnu-app'
         '--name=coreutils'
-        '--link-in-bin=bin/['
-        '--link-in-bin=bin/b2sum'
-        '--link-in-bin=bin/base32'
-        '--link-in-bin=bin/base64'
-        '--link-in-bin=bin/basename'
-        '--link-in-bin=bin/basenc'
-        '--link-in-bin=bin/cat'
-        '--link-in-bin=bin/chcon'
-        '--link-in-bin=bin/chgrp'
-        '--link-in-bin=bin/chmod'
-        '--link-in-bin=bin/chown'
-        '--link-in-bin=bin/chroot'
-        '--link-in-bin=bin/cksum'
-        '--link-in-bin=bin/comm'
-        '--link-in-bin=bin/cp'
-        '--link-in-bin=bin/csplit'
-        '--link-in-bin=bin/cut'
-        '--link-in-bin=bin/date'
-        '--link-in-bin=bin/dd'
-        '--link-in-bin=bin/df'
-        '--link-in-bin=bin/dir'
-        '--link-in-bin=bin/dircolors'
-        '--link-in-bin=bin/dirname'
-        '--link-in-bin=bin/du'
-        '--link-in-bin=bin/echo'
-        '--link-in-bin=bin/env'
-        '--link-in-bin=bin/expand'
-        '--link-in-bin=bin/expr'
-        '--link-in-bin=bin/factor'
-        '--link-in-bin=bin/false'
-        '--link-in-bin=bin/fmt'
-        '--link-in-bin=bin/fold'
-        '--link-in-bin=bin/groups'
-        '--link-in-bin=bin/head'
-        '--link-in-bin=bin/hostid'
-        '--link-in-bin=bin/id'
-        '--link-in-bin=bin/install'
-        '--link-in-bin=bin/join'
-        '--link-in-bin=bin/kill'
-        '--link-in-bin=bin/link'
-        '--link-in-bin=bin/ln'
-        '--link-in-bin=bin/logname'
-        '--link-in-bin=bin/ls'
-        '--link-in-bin=bin/md5sum'
-        '--link-in-bin=bin/mkdir'
-        '--link-in-bin=bin/mkfifo'
-        '--link-in-bin=bin/mknod'
-        '--link-in-bin=bin/mktemp'
-        '--link-in-bin=bin/mv'
-        '--link-in-bin=bin/nice'
-        '--link-in-bin=bin/nl'
-        '--link-in-bin=bin/nohup'
-        '--link-in-bin=bin/nproc'
-        '--link-in-bin=bin/numfmt'
-        '--link-in-bin=bin/od'
-        '--link-in-bin=bin/paste'
-        '--link-in-bin=bin/pathchk'
-        '--link-in-bin=bin/pinky'
-        '--link-in-bin=bin/pr'
-        '--link-in-bin=bin/printenv'
-        '--link-in-bin=bin/printf'
-        '--link-in-bin=bin/ptx'
-        '--link-in-bin=bin/pwd'
-        '--link-in-bin=bin/readlink'
-        '--link-in-bin=bin/realpath'
-        '--link-in-bin=bin/rm'
-        '--link-in-bin=bin/rmdir'
-        '--link-in-bin=bin/runcon'
-        '--link-in-bin=bin/seq'
-        '--link-in-bin=bin/sha1sum'
-        '--link-in-bin=bin/sha224sum'
-        '--link-in-bin=bin/sha256sum'
-        '--link-in-bin=bin/sha384sum'
-        '--link-in-bin=bin/sha512sum'
-        '--link-in-bin=bin/shred'
-        '--link-in-bin=bin/shuf'
-        '--link-in-bin=bin/sleep'
-        '--link-in-bin=bin/sort'
-        '--link-in-bin=bin/split'
-        '--link-in-bin=bin/stat'
-        '--link-in-bin=bin/stty'
-        '--link-in-bin=bin/sum'
-        '--link-in-bin=bin/sync'
-        '--link-in-bin=bin/tac'
-        '--link-in-bin=bin/tail'
-        '--link-in-bin=bin/tee'
-        '--link-in-bin=bin/test'
-        '--link-in-bin=bin/timeout'
-        '--link-in-bin=bin/touch'
-        '--link-in-bin=bin/tr'
-        '--link-in-bin=bin/true'
-        '--link-in-bin=bin/truncate'
-        '--link-in-bin=bin/tsort'
-        '--link-in-bin=bin/tty'
-        '--link-in-bin=bin/uname'
-        '--link-in-bin=bin/unexpand'
-        '--link-in-bin=bin/uniq'
-        '--link-in-bin=bin/unlink'
-        '--link-in-bin=bin/uptime'
-        '--link-in-bin=bin/users'
-        '--link-in-bin=bin/vdir'
-        '--link-in-bin=bin/wc'
-        '--link-in-bin=bin/who'
-        '--link-in-bin=bin/whoami'
-        '--link-in-bin=bin/yes'
+        '--link-in-bin=['
+        '--link-in-bin=b2sum'
+        '--link-in-bin=base32'
+        '--link-in-bin=base64'
+        '--link-in-bin=basename'
+        '--link-in-bin=basenc'
+        '--link-in-bin=cat'
+        '--link-in-bin=chcon'
+        '--link-in-bin=chgrp'
+        '--link-in-bin=chmod'
+        '--link-in-bin=chown'
+        '--link-in-bin=chroot'
+        '--link-in-bin=cksum'
+        '--link-in-bin=comm'
+        '--link-in-bin=cp'
+        '--link-in-bin=csplit'
+        '--link-in-bin=cut'
+        '--link-in-bin=date'
+        '--link-in-bin=dd'
+        '--link-in-bin=df'
+        '--link-in-bin=dir'
+        '--link-in-bin=dircolors'
+        '--link-in-bin=dirname'
+        '--link-in-bin=du'
+        '--link-in-bin=echo'
+        '--link-in-bin=env'
+        '--link-in-bin=expand'
+        '--link-in-bin=expr'
+        '--link-in-bin=factor'
+        '--link-in-bin=false'
+        '--link-in-bin=fmt'
+        '--link-in-bin=fold'
+        '--link-in-bin=groups'
+        '--link-in-bin=head'
+        '--link-in-bin=hostid'
+        '--link-in-bin=id'
+        '--link-in-bin=install'
+        '--link-in-bin=join'
+        '--link-in-bin=kill'
+        '--link-in-bin=link'
+        '--link-in-bin=ln'
+        '--link-in-bin=logname'
+        '--link-in-bin=ls'
+        '--link-in-bin=md5sum'
+        '--link-in-bin=mkdir'
+        '--link-in-bin=mkfifo'
+        '--link-in-bin=mknod'
+        '--link-in-bin=mktemp'
+        '--link-in-bin=mv'
+        '--link-in-bin=nice'
+        '--link-in-bin=nl'
+        '--link-in-bin=nohup'
+        '--link-in-bin=nproc'
+        '--link-in-bin=numfmt'
+        '--link-in-bin=od'
+        '--link-in-bin=paste'
+        '--link-in-bin=pathchk'
+        '--link-in-bin=pinky'
+        '--link-in-bin=pr'
+        '--link-in-bin=printenv'
+        '--link-in-bin=printf'
+        '--link-in-bin=ptx'
+        '--link-in-bin=pwd'
+        '--link-in-bin=readlink'
+        '--link-in-bin=realpath'
+        '--link-in-bin=rm'
+        '--link-in-bin=rmdir'
+        '--link-in-bin=runcon'
+        '--link-in-bin=seq'
+        '--link-in-bin=sha1sum'
+        '--link-in-bin=sha224sum'
+        '--link-in-bin=sha256sum'
+        '--link-in-bin=sha384sum'
+        '--link-in-bin=sha512sum'
+        '--link-in-bin=shred'
+        '--link-in-bin=shuf'
+        '--link-in-bin=sleep'
+        '--link-in-bin=sort'
+        '--link-in-bin=split'
+        '--link-in-bin=stat'
+        '--link-in-bin=stty'
+        '--link-in-bin=sum'
+        '--link-in-bin=sync'
+        '--link-in-bin=tac'
+        '--link-in-bin=tail'
+        '--link-in-bin=tee'
+        '--link-in-bin=test'
+        '--link-in-bin=timeout'
+        '--link-in-bin=touch'
+        '--link-in-bin=tr'
+        '--link-in-bin=true'
+        '--link-in-bin=truncate'
+        '--link-in-bin=tsort'
+        '--link-in-bin=tty'
+        '--link-in-bin=uname'
+        '--link-in-bin=unexpand'
+        '--link-in-bin=uniq'
+        '--link-in-bin=unlink'
+        '--link-in-bin=uptime'
+        '--link-in-bin=users'
+        '--link-in-bin=vdir'
+        '--link-in-bin=wc'
+        '--link-in-bin=who'
+        '--link-in-bin=whoami'
+        '--link-in-bin=yes'
         -D '--with-gmp'
         -D '--without-selinux'
     )
@@ -11333,23 +11980,22 @@ koopa_install_coreutils() {
 
 koopa_install_cpufetch() {
     koopa_install_app \
-        --link-in-bin='bin/cpufetch' \
+        --link-in-bin='cpufetch' \
         --name='cpufetch' \
         "$@"
 }
 
 koopa_install_curl() {
     koopa_install_app \
-        --link-in-bin='bin/curl' \
-        --link-in-bin='bin/curl-config' \
-        --name-fancy='cURL' \
+        --link-in-bin='curl' \
+        --link-in-bin='curl-config' \
         --name='curl' \
         "$@"
 }
 
 koopa_install_delta() {
     koopa_install_app \
-        --link-in-bin='bin/delta' \
+        --link-in-bin='delta' \
         --name='delta' \
         --installer='rust-package' \
         "$@"
@@ -11357,7 +12003,7 @@ koopa_install_delta() {
 
 koopa_install_difftastic() {
     koopa_install_app \
-        --link-in-bin='bin/difft' \
+        --link-in-bin='difft' \
         --name='difftastic' \
         --installer='rust-package' \
         "$@"
@@ -11365,31 +12011,22 @@ koopa_install_difftastic() {
 
 koopa_install_dog() {
     koopa_install_app \
-        --link-in-bin='bin/dog' \
+        --link-in-bin='dog' \
         --name='dog' \
         --installer='rust-package' \
         "$@"
 }
 
-koopa_install_doom_emacs() {
-    koopa_install_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_install_dotfiles() {
     koopa_install_app \
-        --name-fancy='Dotfiles' \
         --name='dotfiles' \
+        --version-is-git-commit \
         "$@"
 }
 
 koopa_install_du_dust() {
     koopa_install_app \
-        --link-in-bin='bin/dust' \
+        --link-in-bin='dust' \
         --name='du-dust' \
         --installer='rust-package' \
         "$@"
@@ -11407,7 +12044,6 @@ koopa_install_emacs() {
         '--activate-opt=texinfo'
         '--activate-opt=gnutls'
         '--installer=gnu-app'
-        '--name-fancy=Emacs'
         '--name=emacs'
         '-D' '--with-modules'
         '-D' '--without-dbus'
@@ -11418,14 +12054,13 @@ koopa_install_emacs() {
     )
     if ! koopa_is_macos
     then
-        install_args+=('--link-in-bin=bin/emacs')
+        install_args+=('--link-in-bin=emacs')
     fi
     koopa_install_app "${install_args[@]}" "$@"
 }
 
 koopa_install_ensembl_perl_api() {
     koopa_install_app \
-        --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
         "$@"
 }
@@ -11433,15 +12068,15 @@ koopa_install_ensembl_perl_api() {
 koopa_install_entrez_direct() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/efetch' \
-        --link-in-bin='bin/esearch' \
+        --link-in-bin='efetch' \
+        --link-in-bin='esearch' \
         --name='entrez-direct' \
         "$@"
 }
 
 koopa_install_exa() {
     koopa_install_app \
-        --link-in-bin='bin/exa' \
+        --link-in-bin='exa' \
         --name='exa' \
         --installer='rust-package' \
         "$@"
@@ -11450,7 +12085,7 @@ koopa_install_exa() {
 koopa_install_exiftool() {
     koopa_install_app \
         --installer='perl-package' \
-        --link-in-bin='bin/exiftool' \
+        --link-in-bin='exiftool' \
         --name='exiftool' \
         "$@"
 }
@@ -11464,16 +12099,15 @@ koopa_install_expat() {
 koopa_install_fd_find() {
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/fd' \
+        --link-in-bin='fd' \
         --name='fd-find' \
         "$@"
 }
 
 koopa_install_ffmpeg() {
     koopa_install_app \
-        --link-in-bin='bin/ffmpeg' \
-        --link-in-bin='bin/ffprobe' \
-        --name-fancy='FFmpeg' \
+        --link-in-bin='ffmpeg' \
+        --link-in-bin='ffprobe' \
         --name='ffmpeg' \
         "$@"
 }
@@ -11481,7 +12115,7 @@ koopa_install_ffmpeg() {
 koopa_install_ffq() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/ffq' \
+        --link-in-bin='ffq' \
         --name='ffq' \
         "$@"
 }
@@ -11490,10 +12124,10 @@ koopa_install_findutils() {
     local install_args
     install_args=(
         '--installer=gnu-app'
-        '--link-in-bin=bin/find'
-        '--link-in-bin=bin/locate'
-        '--link-in-bin=bin/updatedb'
-        '--link-in-bin=bin/xargs'
+        '--link-in-bin=find'
+        '--link-in-bin=locate'
+        '--link-in-bin=updatedb'
+        '--link-in-bin=xargs'
         '--name=findutils'
     )
     if koopa_is_macos
@@ -11505,16 +12139,14 @@ koopa_install_findutils() {
 
 koopa_install_fish() {
     koopa_install_app \
-        --link-in-bin='bin/fish' \
-        --name-fancy='Fish' \
+        --link-in-bin='fish' \
         --name='fish' \
         "$@"
 }
 
 koopa_install_flac() {
     koopa_install_app \
-        --link-in-bin='bin/flac' \
-        --name-fancy='FLAC' \
+        --link-in-bin='flac' \
         --name='flac' \
         "$@"
 }
@@ -11522,14 +12154,13 @@ koopa_install_flac() {
 koopa_install_flake8() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/flake8' \
+        --link-in-bin='flake8' \
         --name='flake8' \
         "$@"
 }
 
 koopa_install_fltk() {
     koopa_install_app \
-        --name-fancy='FLTK' \
         --name='fltk' \
         "$@"
 }
@@ -11559,8 +12190,7 @@ koopa_install_fribidi() {
 
 koopa_install_fzf() {
     koopa_install_app \
-        --link-in-bin='bin/fzf' \
-        --name-fancy='FZF' \
+        --link-in-bin='fzf' \
         --name='fzf' \
         "$@"
 }
@@ -11571,22 +12201,20 @@ koopa_install_gawk() {
         --activate-opt='gettext' \
         --activate-opt='mpfr' \
         --activate-opt='readline' \
-        --link-in-bin='bin/awk' \
+        --link-in-bin='awk' \
         --name='gawk' \
         "$@"
 }
 
 koopa_install_gcc() {
     koopa_install_app \
-        --name-fancy='GCC' \
         --name='gcc' \
         "$@"
 }
 
 koopa_install_gdal() {
     koopa_install_app \
-        --link-in-bin='bin/gdal-config' \
-        --name-fancy='GDAL' \
+        --link-in-bin='gdal-config' \
         --name='gdal' \
         "$@"
 }
@@ -11601,8 +12229,7 @@ koopa_install_gdbm() {
 
 koopa_install_geos() {
     koopa_install_app \
-        --link-in-bin='bin/geos-config' \
-        --name-fancy='GEOS' \
+        --link-in-bin='geos-config' \
         --name='geos' \
         "$@"
 }
@@ -11626,7 +12253,7 @@ koopa_install_gettext() {
 koopa_install_gget() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/gget' \
+        --link-in-bin='gget' \
         --name='gget' \
         "$@"
 }
@@ -11634,7 +12261,7 @@ koopa_install_gget() {
 koopa_install_ghostscript() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/gs' \
+        --link-in-bin='gs' \
         --name='ghostscript' \
         "$@"
 }
@@ -11642,14 +12269,13 @@ koopa_install_ghostscript() {
 koopa_install_git() {
     local install_args
     install_args=(
-        '--link-in-bin=bin/git'
-        '--name-fancy=Git'
+        '--link-in-bin=git'
         '--name=git'
     )
     if koopa_is_macos
     then
         install_args+=(
-            '--link-in-bin=bin/git-credential-osxkeychain'
+            '--link-in-bin=git-credential-osxkeychain'
         )
     fi
     koopa_install_app "${install_args[@]}" "$@"
@@ -11658,7 +12284,7 @@ koopa_install_git() {
 koopa_install_glances() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/glances' \
+        --link-in-bin='glances' \
         --name='glances' \
         "$@"
 }
@@ -11677,7 +12303,6 @@ koopa_install_gmp() {
 
 koopa_install_gnupg() {
     koopa_install_app \
-        --name-fancy='GnuPG suite' \
         --name='gnupg' \
         "$@"
 }
@@ -11696,16 +12321,14 @@ koopa_install_gnutls() {
 
 koopa_install_go() {
     koopa_install_app \
-        --link-in-bin='bin/go' \
-        --name-fancy='Go' \
+        --link-in-bin='go' \
         --name='go' \
         "$@"
 }
 
 koopa_install_google_cloud_sdk() {
     koopa_install_app \
-        --link-in-bin='bin/gcloud' \
-        --name-fancy='Google Cloud SDK' \
+        --link-in-bin='gcloud' \
         --name='google-cloud-sdk' \
         "$@"
 }
@@ -11727,9 +12350,9 @@ koopa_install_grep() {
     koopa_install_app \
         --activate-opt='pcre' \
         --installer='gnu-app' \
-        --link-in-bin='bin/egrep' \
-        --link-in-bin='bin/fgrep' \
-        --link-in-bin='bin/grep' \
+        --link-in-bin='egrep' \
+        --link-in-bin='fgrep' \
+        --link-in-bin='grep' \
         --name='grep' \
         "$@"
 }
@@ -11738,7 +12361,7 @@ koopa_install_groff() {
     koopa_install_app \
         --activate-opt='texinfo' \
         --installer='gnu-app' \
-        --link-in-bin='bin/groff' \
+        --link-in-bin='groff' \
         --name='groff' \
         "$@"
 }
@@ -11747,14 +12370,13 @@ koopa_install_gsl() {
     koopa_install_app \
         --installer='gnu-app' \
         --name='gsl' \
-        --name-fancy='GSL' \
         "$@"
 }
 
 koopa_install_gtop() {
     koopa_install_app \
         --installer='node-package' \
-        --link-in-bin='bin/gtop' \
+        --link-in-bin='gtop' \
         --name='gtop' \
         "$@"
 }
@@ -11768,60 +12390,39 @@ koopa_install_gzip() {
 
 koopa_install_hadolint() {
     koopa_install_app \
-        --link-in-bin='bin/hadolint' \
+        --link-in-bin='hadolint' \
         --name='hadolint' \
         "$@"
 }
 
 koopa_install_harfbuzz() {
     koopa_install_app \
-        --name-fancy='HarfBuzz' \
         --name='harfbuzz' \
         "$@"
 }
 
 koopa_install_haskell_stack() {
     koopa_install_app \
-        --name-fancy='Haskell Stack' \
         --name='haskell-stack' \
         "$@"
 }
 
 koopa_install_hdf5() {
     koopa_install_app \
-        --name-fancy='HDF5' \
         --name='hdf5' \
-        "$@"
-}
-
-koopa_install_homebrew_bundle() {
-    koopa_install_app \
-        --name-fancy='Homebrew bundle' \
-        --name='homebrew-bundle' \
-        --system \
-        "$@"
-}
-
-koopa_install_homebrew() {
-    koopa_install_app \
-        --name-fancy='Homebrew' \
-        --name='homebrew' \
-        --no-prefix-check \
-        --prefix="$(koopa_homebrew_prefix)" \
-        --system \
         "$@"
 }
 
 koopa_install_htop() {
     koopa_install_app \
-        --link-in-bin='bin/htop' \
+        --link-in-bin='htop' \
         --name='htop' \
         "$@"
 }
 
 koopa_install_hyperfine() {
     koopa_install_app \
-        --link-in-bin='bin/hyperfine' \
+        --link-in-bin='hyperfine' \
         --name='hyperfine' \
         --installer='rust-package' \
         "$@"
@@ -11829,15 +12430,13 @@ koopa_install_hyperfine() {
 
 koopa_install_icu4c() {
     koopa_install_app \
-        --name-fancy='ICU4C' \
         --name='icu4c' \
         "$@"
 }
 
 koopa_install_imagemagick() {
     koopa_install_app \
-        --link-in-bin='bin/magick' \
-        --name-fancy='ImageMagick' \
+        --link-in-bin='magick' \
         --name='imagemagick' \
         "$@"
 }
@@ -11845,8 +12444,7 @@ koopa_install_imagemagick() {
 koopa_install_ipython() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/ipython' \
-        --name-fancy='IPython' \
+        --link-in-bin='ipython' \
         --name='ipython' \
         "$@"
 }
@@ -11854,7 +12452,7 @@ koopa_install_ipython() {
 koopa_install_isort() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/isort' \
+        --link-in-bin='isort' \
         --name='isort' \
         "$@"
 }
@@ -11867,22 +12465,20 @@ koopa_install_jpeg() {
 
 koopa_install_jq() {
     koopa_install_app \
-        --link-in-bin='bin/jq' \
+        --link-in-bin='jq' \
         --name='jq' \
         "$@"
 }
 
 koopa_install_julia_packages() {
     koopa_install_app_packages \
-        --name-fancy='Julia' \
         --name='julia' \
         "$@"
 }
 
 koopa_install_julia() {
     koopa_install_app \
-        --link-in-bin='bin/julia' \
-        --name-fancy='Julia' \
+        --link-in-bin='julia' \
         --name='julia' \
         "$@"
 }
@@ -11890,7 +12486,7 @@ koopa_install_julia() {
 koopa_install_kallisto() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/kallisto' \
+        --link-in-bin='kallisto' \
         --name='kallisto' \
         "$@"
 }
@@ -12069,15 +12665,13 @@ koopa_install_koopa() {
 
 koopa_install_lame() {
     koopa_install_app \
-        --link-in-bin='bin/lame' \
-        --name-fancy='LAME' \
+        --link-in-bin='lame' \
         --name='lame' \
         "$@"
 }
 
 koopa_install_lapack() {
     koopa_install_app \
-        --name-fancy='LAPACK' \
         --name='lapack' \
         "$@"
 }
@@ -12085,8 +12679,7 @@ koopa_install_lapack() {
 koopa_install_latch() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/latch' \
-        --name-fancy='LatchBio SDK' \
+        --link-in-bin='latch' \
         --name='latch' \
         "$@"
 }
@@ -12096,15 +12689,21 @@ koopa_install_less() {
         --activate-opt='ncurses' \
         --activate-opt='pcre2' \
         --installer='gnu-app' \
-        --link-in-bin='bin/less' \
+        --link-in-bin='less' \
         --name='less' \
         "$@"
 }
 
 koopa_install_lesspipe() {
     koopa_install_app \
-        --link-in-bin='bin/lesspipe.sh' \
+        --link-in-bin='lesspipe.sh' \
         --name='lesspipe' \
+        "$@"
+}
+
+koopa_install_libedit() {
+    koopa_install_app \
+        --name='libedit' \
         "$@"
 }
 
@@ -12154,8 +12753,8 @@ koopa_install_libpipeline() {
 
 koopa_install_libpng() {
     koopa_install_app \
-        --link-in-bin='bin/libpng-config' \
-        --link-in-bin='bin/libpng16-config' \
+        --link-in-bin='libpng-config' \
+        --link-in-bin='libpng16-config' \
         --name='libpng' \
         "$@"
 }
@@ -12183,8 +12782,8 @@ koopa_install_libtool() {
     koopa_install_app \
         --activate-opt='m4' \
         --installer='gnu-app' \
-        --link-in-bin='bin/libtool' \
-        --link-in-bin='bin/libtoolize' \
+        --link-in-bin='libtool' \
+        --link-in-bin='libtoolize' \
         --name='libtool' \
         "$@"
     (
@@ -12209,7 +12808,7 @@ koopa_install_libuv() {
 
 koopa_install_libxml2() {
     koopa_install_app \
-        --link-in-bin='bin/xml2-config' \
+        --link-in-bin='xml2-config' \
         --name='libxml2' \
         "$@"
 }
@@ -12222,7 +12821,6 @@ koopa_install_libzip() {
 
 koopa_install_lua() {
     koopa_install_app \
-        --name-fancy='Lua' \
         --name='lua' \
         "$@"
 }
@@ -12241,7 +12839,6 @@ koopa_install_lz4() {
 
 koopa_install_lzma() {
     koopa_install_app \
-        --name-fancy='LZMA' \
         --name='lzma' \
         "$@"
 }
@@ -12255,7 +12852,6 @@ koopa_install_lzo() {
 koopa_install_m4() {
     koopa_install_app \
         --installer='gnu-app' \
-        --name-fancy='M4' \
         --name='m4' \
         "$@"
 }
@@ -12263,15 +12859,14 @@ koopa_install_m4() {
 koopa_install_make() {
     koopa_install_app \
         --installer='gnu-app' \
-        --link-in-bin='bin/make' \
+        --link-in-bin='make' \
         --name='make' \
         "$@"
 }
 
 koopa_install_mamba() {
     koopa_install_app \
-        --link-in-bin='bin/mamba' \
-        --name-fancy='Mamba' \
+        --link-in-bin='mamba' \
         --name='mamba' \
         --no-prefix-check \
         "$@"
@@ -12279,14 +12874,14 @@ koopa_install_mamba() {
 
 koopa_install_man_db() {
     koopa_install_app \
-        --link-in-bin='bin/man' \
+        --link-in-bin='man' \
         --name='man-db' \
         "$@"
 }
 
 koopa_install_mcfly() {
     koopa_install_app \
-        --link-in-bin='bin/mcfly' \
+        --link-in-bin='mcfly' \
         --name='mcfly' \
         --installer='rust-package' \
         "$@"
@@ -12294,7 +12889,7 @@ koopa_install_mcfly() {
 
 koopa_install_mdcat() {
     koopa_install_app \
-        --link-in-bin='bin/mdcat' \
+        --link-in-bin='mdcat' \
         --name='mdcat' \
         --installer='rust-package' \
         "$@"
@@ -12303,7 +12898,6 @@ koopa_install_mdcat() {
 koopa_install_meson() {
     koopa_install_app \
         --installer='python-venv' \
-        --name-fancy='Meson' \
         --name='meson' \
         "$@"
 }
@@ -12335,30 +12929,30 @@ koopa_install_mpfr() {
 
 koopa_install_ncurses() {
     koopa_install_app \
-        --link-in-bin='bin/captoinfo' \
-        --link-in-bin='bin/clear' \
-        --link-in-bin='bin/infocmp' \
-        --link-in-bin='bin/infotocap' \
-        --link-in-bin='bin/reset' \
-        --link-in-bin='bin/tabs' \
-        --link-in-bin='bin/tic' \
-        --link-in-bin='bin/toe' \
-        --link-in-bin='bin/tput' \
-        --link-in-bin='bin/tset' \
+        --link-in-bin='captoinfo' \
+        --link-in-bin='clear' \
+        --link-in-bin='infocmp' \
+        --link-in-bin='infotocap' \
+        --link-in-bin='reset' \
+        --link-in-bin='tabs' \
+        --link-in-bin='tic' \
+        --link-in-bin='toe' \
+        --link-in-bin='tput' \
+        --link-in-bin='tset' \
         --name='ncurses' \
         "$@"
 }
 
 koopa_install_neofetch() {
     koopa_install_app \
-        --link-in-bin='bin/neofetch' \
+        --link-in-bin='neofetch' \
         --name='neofetch' \
         "$@"
 }
 
 koopa_install_neovim() {
     koopa_install_app \
-        --link-in-bin='bin/nvim' \
+        --link-in-bin='nvim' \
         --name='neovim' \
         "$@"
 }
@@ -12377,8 +12971,7 @@ koopa_install_nettle() {
 
 koopa_install_nim() {
     koopa_install_app \
-        --link-in-bin='bin/nim' \
-        --name-fancy='Nim' \
+        --link-in-bin='nim' \
         --name='nim' \
         "$@"
 }
@@ -12386,7 +12979,6 @@ koopa_install_nim() {
 koopa_install_ninja() {
     koopa_install_app \
         --installer='python-venv' \
-        --name-fancy='Ninja' \
         --name='ninja' \
         "$@"
 }
@@ -12394,18 +12986,16 @@ koopa_install_ninja() {
 koopa_install_node_binary() {
     koopa_install_app \
         --installer='node-binary' \
-        --link-in-bin='bin/node' \
-        --link-in-bin='bin/npm' \
-        --name-fancy='Node.js' \
+        --link-in-bin='node' \
+        --link-in-bin='npm' \
         --name='node' \
         "$@"
 }
 
 koopa_install_node() {
     koopa_install_app \
-        --link-in-bin='bin/node' \
-        --link-in-bin='bin/npm' \
-        --name-fancy='Node.js' \
+        --link-in-bin='node' \
+        --link-in-bin='npm' \
         --name='node' \
         "$@"
 }
@@ -12418,46 +13008,40 @@ koopa_install_oniguruma() {
 
 koopa_install_openblas() {
     koopa_install_app \
-        --name-fancy='OpenBLAS' \
         --name='openblas' \
         "$@"
 }
 
 koopa_install_openjdk() {
     koopa_install_app \
-        --link-in-bin='bin/jar' \
-        --link-in-bin='bin/java' \
-        --link-in-bin='bin/javac' \
-        --name-fancy='Adoptium Temurin OpenJDK' \
+        --link-in-bin='jar' \
+        --link-in-bin='java' \
+        --link-in-bin='javac' \
         --name='openjdk' \
         "$@"
 }
 
 koopa_install_openssh() {
     koopa_install_app \
-        --name-fancy='OpenSSH' \
         --name='openssh' \
         "$@"
 }
 
 koopa_install_openssl1() {
     koopa_install_app \
-        --name-fancy='OpenSSL (v1)' \
         --name='openssl1' \
         "$@"
 }
 
 koopa_install_openssl3() {
     koopa_install_app \
-        --name-fancy='OpenSSL (v3)' \
         --name='openssl3' \
         "$@"
 }
 
 koopa_install_pandoc() {
     koopa_install_app \
-        --link-in-bin='bin/pandoc' \
-        --name-fancy='Pandoc' \
+        --link-in-bin='pandoc' \
         --name='pandoc' \
         "$@"
 }
@@ -12465,14 +13049,14 @@ koopa_install_pandoc() {
 koopa_install_parallel() {
     koopa_install_app \
         --installer='gnu-app' \
-        --link-in-bin='bin/parallel' \
+        --link-in-bin='parallel' \
         --name='parallel' \
         "$@"
 }
 
 koopa_install_password_store() {
     koopa_install_app \
-        --link-in-bin='bin/pass' \
+        --link-in-bin='pass' \
         --name='password-store' \
         "$@"
 }
@@ -12480,45 +13064,34 @@ koopa_install_password_store() {
 koopa_install_patch() {
     koopa_install_app \
         --installer='gnu-app' \
-        --link-in-bin='bin/patch' \
+        --link-in-bin='patch' \
         --name='patch' \
         "$@"
 }
 
 koopa_install_pcre() {
     koopa_install_app \
-        --name-fancy='PCRE' \
         --name='pcre' \
         "$@"
 }
 
 koopa_install_pcre2() {
     koopa_install_app \
-        --name-fancy='PCRE2' \
         --name='pcre2' \
         "$@"
 }
 
 koopa_install_perl() {
     koopa_install_app \
-        --link-in-bin='bin/perl' \
-        --name-fancy='Perl' \
+        --link-in-bin='perl' \
         --name='perl' \
-        "$@"
-}
-
-koopa_install_perlbrew() {
-    koopa_install_app \
-        --link-in-bin='bin/perlbrew' \
-        --name-fancy='Perlbrew' \
-        --name='perlbrew' \
         "$@"
 }
 
 koopa_install_pipx() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pipx' \
+        --link-in-bin='pipx' \
         --name='pipx' \
         "$@"
 }
@@ -12531,7 +13104,7 @@ koopa_install_pixman() {
 
 koopa_install_pkg_config() {
     koopa_install_app \
-        --link-in-bin='bin/pkg-config' \
+        --link-in-bin='pkg-config' \
         --name='pkg-config' \
         "$@"
 }
@@ -12539,31 +13112,22 @@ koopa_install_pkg_config() {
 koopa_install_poetry() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/poetry' \
+        --link-in-bin='poetry' \
         --name='poetry' \
-        "$@"
-}
-
-koopa_install_prelude_emacs() {
-    koopa_install_app \
-        --name-fancy='Prelude Emacs' \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
-        --user \
         "$@"
 }
 
 koopa_install_prettier() {
     koopa_install_app \
         --installer='node-package' \
-        --link-in-bin='bin/prettier' \
+        --link-in-bin='prettier' \
         --name='prettier' \
         "$@"
 }
 
 koopa_install_procs() {
     koopa_install_app \
-        --link-in-bin='bin/procs' \
+        --link-in-bin='procs' \
         --name='procs' \
         --installer='rust-package' \
         "$@"
@@ -12571,14 +13135,13 @@ koopa_install_procs() {
 
 koopa_install_proj() {
     koopa_install_app \
-        --name-fancy='PROJ' \
         --name='proj' \
         "$@"
 }
 
 koopa_install_pyenv() {
     koopa_install_app \
-        --link-in-bin='bin/pyenv' \
+        --link-in-bin='pyenv' \
         --name='pyenv' \
         "$@"
 }
@@ -12586,7 +13149,7 @@ koopa_install_pyenv() {
 koopa_install_pyflakes() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pyflakes' \
+        --link-in-bin='pyflakes' \
         --name='pyflakes' \
         "$@"
 }
@@ -12594,7 +13157,7 @@ koopa_install_pyflakes() {
 koopa_install_pygments() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pygmentize' \
+        --link-in-bin='pygmentize' \
         --name='pygments' \
         "$@"
 }
@@ -12602,14 +13165,14 @@ koopa_install_pygments() {
 koopa_install_pylint() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pylint' \
+        --link-in-bin='pylint' \
         --name='pylint' \
         "$@"
 }
 
 koopa_install_pytaglib() {
     koopa_install_app \
-        --link-in-bin='bin/pyprinttags' \
+        --link-in-bin='pyprinttags' \
         --activate-opt='taglib' \
         --installer='python-venv' \
         --name='pytaglib' \
@@ -12619,7 +13182,7 @@ koopa_install_pytaglib() {
 koopa_install_pytest() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pytest' \
+        --link-in-bin='pytest' \
         --name='pytest' \
         "$@"
 }
@@ -12627,12 +13190,11 @@ koopa_install_pytest() {
 koopa_install_python() {
     local install_args
     install_args=(
-        '--name-fancy=Python'
         '--name=python'
     )
     if ! koopa_is_macos
     then
-        install_args+=('--link-in-bin=bin/python3')
+        install_args+=('--link-in-bin=python3')
     fi
     koopa_install_app \
         "${install_args[@]}" \
@@ -12642,7 +13204,6 @@ koopa_install_python() {
 koopa_install_r_devel() {
     koopa_install_app \
         --installer='r' \
-        --name-fancy='R-devel' \
         --name='r-devel' \
         "$@"
 }
@@ -12655,7 +13216,6 @@ koopa_install_r_koopa() {
 
 koopa_install_r_packages() {
     koopa_install_app_packages \
-        --name-fancy='R' \
         --name='r' \
         "$@"
 }
@@ -12663,14 +13223,13 @@ koopa_install_r_packages() {
 koopa_install_r() {
     local install_args
     install_args=(
-        '--name-fancy=R'
         '--name=r'
     )
-    if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
+    if ! koopa_is_macos
     then
         install_args+=(
-            '--link-in-bin=bin/R'
-            '--link-in-bin=bin/Rscript'
+            '--link-in-bin=R'
+            '--link-in-bin=Rscript'
         )
     fi
     koopa_install_app \
@@ -12681,14 +13240,14 @@ koopa_install_r() {
 koopa_install_ranger_fm() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/ranger' \
+        --link-in-bin='ranger' \
         --name='ranger-fm' \
         "$@"
 }
 
 koopa_install_rbenv() {
     koopa_install_app \
-        --link-in-bin='bin/rbenv' \
+        --link-in-bin='rbenv' \
         --name='rbenv' \
         "$@"
 }
@@ -12702,7 +13261,7 @@ koopa_install_readline() {
 koopa_install_rename() {
     koopa_install_app \
         --installer='perl-package' \
-        --link-in-bin='bin/rename' \
+        --link-in-bin='rename' \
         --name='rename' \
         "$@"
 }
@@ -12711,14 +13270,14 @@ koopa_install_ripgrep() {
     koopa_install_app \
         --activate-opt='pcre2' \
         --installer='rust-package' \
-        --link-in-bin='bin/rg' \
+        --link-in-bin='rg' \
         --name='ripgrep' \
         "$@"
 }
 
 koopa_install_rmate() {
     koopa_install_app \
-        --link-in-bin='bin/rmate' \
+        --link-in-bin='rmate' \
         --name='rmate' \
         "$@"
 }
@@ -12726,32 +13285,30 @@ koopa_install_rmate() {
 koopa_install_ronn() {
     koopa_install_app \
         --installer='ruby-package' \
-        --link-in-bin='bin/ronn' \
+        --link-in-bin='ronn' \
         --name='ronn' \
         "$@"
 }
 
 koopa_install_rsync() {
     koopa_install_app \
-        --link-in-bin='bin/rsync' \
+        --link-in-bin='rsync' \
         --name='rsync' \
         "$@"
 }
 
 koopa_install_ruby() {
     koopa_install_app \
-        --link-in-bin='bin/bundle' \
-        --link-in-bin='bin/bundler' \
-        --link-in-bin='bin/gem' \
-        --link-in-bin='bin/ruby' \
-        --name-fancy='Ruby' \
+        --link-in-bin='bundle' \
+        --link-in-bin='bundler' \
+        --link-in-bin='gem' \
+        --link-in-bin='ruby' \
         --name='ruby' \
         "$@"
 }
 
 koopa_install_rust() {
     koopa_install_app \
-        --name-fancy='Rust' \
         --name='rust' \
         "$@"
 }
@@ -12759,7 +13316,7 @@ koopa_install_rust() {
 koopa_install_salmon() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/salmon' \
+        --link-in-bin='salmon' \
         --name='salmon' \
         "$@"
 }
@@ -12767,7 +13324,7 @@ koopa_install_salmon() {
 koopa_install_samtools() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/samtools' \
+        --link-in-bin='samtools' \
         --name='samtools' \
         "$@"
 }
@@ -12775,7 +13332,6 @@ koopa_install_samtools() {
 koopa_install_scons() {
     koopa_install_app \
         --installer='python-venv' \
-        --name-fancy='SCONS' \
         --name='scons' \
         "$@"
 }
@@ -12783,30 +13339,27 @@ koopa_install_scons() {
 koopa_install_sed() {
     koopa_install_app \
         --installer='gnu-app' \
-        --link-in-bin='bin/sed' \
+        --link-in-bin='sed' \
         --name='sed' \
         "$@"
 }
 
 koopa_install_serf() {
     koopa_install_app \
-        --name-fancy='Apache Serf' \
         --name='serf' \
         "$@"
 }
 
 koopa_install_shellcheck() {
     koopa_install_app \
-        --link-in-bin='bin/shellcheck' \
-        --name-fancy='ShellCheck' \
+        --link-in-bin='shellcheck' \
         --name='shellcheck' \
         "$@"
 }
 
 koopa_install_shunit2() {
     koopa_install_app \
-        --link-in-bin='bin/shunit2' \
-        --name-fancy='shUnit2' \
+        --link-in-bin='shunit2' \
         --name='shunit2' \
         "$@"
 }
@@ -12814,50 +13367,29 @@ koopa_install_shunit2() {
 koopa_install_snakemake() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/snakemake' \
+        --link-in-bin='snakemake' \
         --name='snakemake' \
         "$@"
 }
 
 koopa_install_sox() {
     koopa_install_app \
-        --link-in-bin='bin/sox' \
-        --name-fancy='SoX' \
+        --link-in-bin='sox' \
         --name='sox' \
-        "$@"
-}
-
-koopa_install_spacemacs() {
-    koopa_install_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_install_spacevim() {
-    koopa_install_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
-        --user \
         "$@"
 }
 
 koopa_install_sqlite() {
     koopa_install_app \
-        --link-in-bin='bin/sqlite3' \
-        --name-fancy='SQLite' \
+        --link-in-bin='sqlite3' \
         --name='sqlite' \
         "$@"
 }
 
 koopa_install_sra_tools() {
     koopa_install_app \
-        --link-in-bin='bin/fasterq-dump' \
-        --link-in-bin='bin/vdb-config' \
-        --name-fancy='SRA Toolkit' \
+        --link-in-bin='fasterq-dump' \
+        --link-in-bin='vdb-config' \
         --name='sra-tools' \
         "$@"
 }
@@ -12865,7 +13397,7 @@ koopa_install_sra_tools() {
 koopa_install_star() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/STAR' \
+        --link-in-bin='STAR' \
         --name='star' \
         "$@"
 }
@@ -12873,7 +13405,7 @@ koopa_install_star() {
 koopa_install_starship() {
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/starship' \
+        --link-in-bin='starship' \
         --name='starship' \
         "$@"
 }
@@ -12882,21 +13414,43 @@ koopa_install_stow() {
     koopa_install_app \
         --activate-opt='perl' \
         --installer='gnu-app' \
-        --link-in-bin='bin/stow' \
+        --link-in-bin='stow' \
         --name='stow' \
         "$@"
 }
 
 koopa_install_subversion() {
     koopa_install_app \
-        --link-in-bin='bin/svn' \
+        --link-in-bin='svn' \
         --name='subversion' \
+        "$@"
+}
+
+koopa_install_system_homebrew_bundle() {
+    koopa_install_app \
+        --name='homebrew-bundle' \
+        --system \
+        "$@"
+}
+
+koopa_install_system_homebrew() {
+    koopa_install_app \
+        --name='homebrew' \
+        --no-prefix-check \
+        --prefix="$(koopa_homebrew_prefix)" \
+        --system \
+        "$@"
+}
+
+koopa_install_system_tex_packages() {
+    koopa_install_app \
+        --name='tex-packages' \
+        --system \
         "$@"
 }
 
 koopa_install_taglib() {
     koopa_install_app \
-        --name-fancy='TagLib' \
         --name='taglib' \
         "$@"
 }
@@ -12904,14 +13458,13 @@ koopa_install_taglib() {
 koopa_install_tar() {
     koopa_install_app \
         --installer='gnu-app' \
-        --link-in-bin='bin/tar' \
+        --link-in-bin='tar' \
         --name='tar' \
         "$@"
 }
 
 koopa_install_tcl_tk() {
     koopa_install_app \
-        --name-fancy='Tcl/Tk' \
         --name='tcl-tk' \
         "$@"
 }
@@ -12919,16 +13472,8 @@ koopa_install_tcl_tk() {
 koopa_install_tealdeer() {
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/tldr' \
+        --link-in-bin='tldr' \
         --name='tealdeer' \
-        "$@"
-}
-
-koopa_install_tex_packages() {
-    koopa_install_app \
-        --name-fancy='TeX packages' \
-        --name='tex-packages' \
-        --system \
         "$@"
 }
 
@@ -12936,12 +13481,12 @@ koopa_install_texinfo() {
     local install_args
     install_args=(
         '--installer=gnu-app'
-        '--link-in-bin=bin/pdftexi2dvi'
-        '--link-in-bin=bin/pod2texi'
-        '--link-in-bin=bin/texi2any'
-        '--link-in-bin=bin/texi2dvi'
-        '--link-in-bin=bin/texi2pdf'
-        '--link-in-bin=bin/texindex'
+        '--link-in-bin=pdftexi2dvi'
+        '--link-in-bin=pod2texi'
+        '--link-in-bin=texi2any'
+        '--link-in-bin=texi2dvi'
+        '--link-in-bin=texi2pdf'
+        '--link-in-bin=texindex'
         '--name=texinfo'
         -D '--disable-dependency-tracking'
         -D '--disable-install-warnings'
@@ -12959,7 +13504,7 @@ koopa_install_texinfo() {
 
 koopa_install_tmux() {
     koopa_install_app \
-        --link-in-bin='bin/tmux' \
+        --link-in-bin='tmux' \
         --name='tmux' \
         "$@"
 }
@@ -12967,14 +13512,14 @@ koopa_install_tmux() {
 koopa_install_tokei() {
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/tokei' \
+        --link-in-bin='tokei' \
         --name='tokei' \
         "$@"
 }
 
 koopa_install_tree() {
     koopa_install_app \
-        --link-in-bin='bin/tree' \
+        --link-in-bin='tree' \
         --name='tree' \
         "$@"
 }
@@ -12982,14 +13527,14 @@ koopa_install_tree() {
 koopa_install_tuc() {
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/tuc' \
+        --link-in-bin='tuc' \
         --name='tuc' \
         "$@"
 }
 
 koopa_install_udunits() {
     koopa_install_app \
-        --link-in-bin='bin/udunits2' \
+        --link-in-bin='udunits2' \
         --name='udunits' \
         "$@"
 }
@@ -12998,8 +13543,40 @@ koopa_install_units() {
     koopa_install_app \
         --activate-opt='readline' \
         --installer='gnu-app' \
-        --link-in-bin='bin/units' \
+        --link-in-bin='units' \
         --name='units' \
+        "$@"
+}
+
+koopa_install_user_doom_emacs() {
+    koopa_install_app \
+        --name='doom-emacs' \
+        --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_install_user_prelude_emacs() {
+    koopa_install_app \
+        --name='prelude-emacs' \
+        --prefix="$(koopa_prelude_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_install_user_spacemacs() {
+    koopa_install_app \
+        --name='spacemacs' \
+        --prefix="$(koopa_spacemacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_install_user_spacevim() {
+    koopa_install_app \
+        --name='spacevim' \
+        --prefix="$(koopa_spacevim_prefix)" \
+        --user \
         "$@"
 }
 
@@ -13011,9 +13588,8 @@ koopa_install_utf8proc() {
 
 koopa_install_vim() {
     koopa_install_app \
-        --link-in-bin='bin/vim' \
-        --link-in-bin='bin/vimdiff' \
-        --name-fancy='Vim' \
+        --link-in-bin='vim' \
+        --link-in-bin='vimdiff' \
         --name='vim' \
         "$@"
 }
@@ -13036,7 +13612,7 @@ koopa_install_wget() {
         --activate-opt='gnutls' \
         --installer='gnu-app' \
         --name='wget' \
-        --link-in-bin='bin/wget' \
+        --link-in-bin='wget' \
         --name='wget' \
         -D '--disable-debug' \
         -D '--with-ssl=openssl' \
@@ -13049,7 +13625,7 @@ koopa_install_wget() {
 koopa_install_which() {
     koopa_install_app \
         --installer='gnu-app' \
-        --link-in-bin='bin/which' \
+        --link-in-bin='which' \
         --name='which' \
         "$@"
 }
@@ -13141,7 +13717,7 @@ koopa_install_xorg_xtrans() {
 koopa_install_xsv() {
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/xsv' \
+        --link-in-bin='xsv' \
         --name='xsv' \
         "$@"
 }
@@ -13154,7 +13730,7 @@ koopa_install_xxhash() {
 
 koopa_install_xz() {
     koopa_install_app \
-        --link-in-bin='bin/xz' \
+        --link-in-bin='xz' \
         --name='xz' \
         "$@"
 }
@@ -13162,7 +13738,7 @@ koopa_install_xz() {
 koopa_install_yt_dlp() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/yt-dlp' \
+        --link-in-bin='yt-dlp' \
         --name='yt-dlp' \
         "$@"
 }
@@ -13170,7 +13746,7 @@ koopa_install_yt_dlp() {
 koopa_install_zellij() {
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/zellij' \
+        --link-in-bin='zellij' \
         --name='zellij' \
         "$@"
 }
@@ -13184,15 +13760,14 @@ koopa_install_zlib() {
 koopa_install_zoxide() {
     koopa_install_app \
         --installer='rust-package' \
-        --link-in-bin='bin/zoxide' \
+        --link-in-bin='zoxide' \
         --name='zoxide' \
         "$@"
 }
 
 koopa_install_zsh() {
     koopa_install_app \
-        --link-in-bin='bin/zsh' \
-        --name-fancy='Zsh' \
+        --link-in-bin='zsh' \
         --name='zsh' \
         "$@"
     koopa_fix_zsh_permissions
@@ -13389,6 +13964,8 @@ koopa_is_file_system_case_sensitive() {
         [find]="$(koopa_locate_find)"
         [wc]="$(koopa_locate_wc)"
     )
+    [[ -x "${app[find]}" ]] || return 1
+    [[ -x "${app[wc]}" ]] || return 1
     declare -A dict=(
         [prefix]="${PWD:?}"
         [tmp_stem]='.koopa.tmp.'
@@ -13535,6 +14112,7 @@ koopa_is_recent() {
     declare -A app=(
         [find]="$(koopa_locate_find)"
     )
+    [[ -x "${app[find]}" ]] || return 1
     declare -A dict=(
         [days]=14
     )
@@ -13570,6 +14148,7 @@ koopa_is_url_active() {
     declare -A app=(
         [curl]="$(koopa_locate_curl)"
     )
+    [[ -x "${app[curl]}" ]] || return 1
     declare -A dict=(
         [url_pattern]='://'
     )
@@ -13653,6 +14232,8 @@ koopa_jekyll_deploy_to_aws() {
         [aws]="$(koopa_locate_aws)"
         [bundle]="$(koopa_locate_bundle)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app[bundle]}" ]] || return 1
     declare -A dict=(
         [bucket_prefix]=''
         [distribution_id]=''
@@ -13725,6 +14306,7 @@ koopa_jekyll_serve() {
     declare -A app=(
         [bundle]="$(koopa_locate_bundle)"
     )
+    [[ -x "${app[bundle]}" ]] || return 1
     declare -A dict=(
         [prefix]="${1:-}"
     )
@@ -13777,6 +14359,7 @@ koopa_kallisto_index() {
     declare -A app=(
         [kallisto]="$(koopa_locate_kallisto)"
     )
+    [[ -x "${app[kallisto]}" ]] || return 1
     declare -A dict=(
         [kmer_size]=31
         [mem_gb]="$(koopa_mem_gb)"
@@ -13845,6 +14428,7 @@ koopa_kallisto_quant_paired_end_per_sample() {
     declare -A app=(
         [kallisto]="$(koopa_locate_kallisto)"
     )
+    [[ -x "${app[kallisto]}" ]] || return 1
     declare -A dict=(
         [bootstraps]=30
         [fastq_r1_file]=''
@@ -14102,6 +14686,7 @@ koopa_kallisto_quant_single_end_per_sample() {
     declare -A app=(
         [kallisto]="$(koopa_locate_kallisto)"
     )
+    [[ -x "${app[kallisto]}" ]] || return 1
     declare -A dict=(
         [bootstraps]=30
         [fastq_file]=''
@@ -14302,15 +14887,16 @@ koopa_kallisto_quant_single_end() {
 }
 
 koopa_kebab_case_simple() {
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         str="$(\
             koopa_gsub \
                 --pattern='[^-A-Za-z0-9]' \
@@ -14354,9 +14940,13 @@ koopa_local_ip_address() {
         [head]="$(koopa_locate_head)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[tail]}" ]] || return 1
     if koopa_is_macos
     then
         app[ifconfig]="$(koopa_macos_locate_ifconfig)"
+        [[ -x "${app[ifconfig]}" ]] || return 1
         str="$( \
             "${app[ifconfig]}" \
             | koopa_grep --pattern='inet ' \
@@ -14366,6 +14956,7 @@ koopa_local_ip_address() {
         )"
     else
         app[hostname]="$(koopa_locate_hostname)"
+        [[ -x "${app[hostname]}" ]] || return 1
         str="$( \
             "${app[hostname]}" -I \
             | "${app[awk]}" '{print $1}' \
@@ -14398,6 +14989,9 @@ koopa_lesspipe_version() {
         [sed]="$(koopa_locate_sed)"
     )
     [[ -z "${app[lesspipe]}" ]] && app[lesspipe]="$(koopa_locate_lesspipe)"
+    [[ -x "${app[cat]}" ]] || return 1
+    [[ -x "${app[lesspipe]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     str="$( \
         "${app[cat]}" "${app[lesspipe]}" \
             | "${app[sed]}" -n '2p' \
@@ -14416,6 +15010,9 @@ koopa_line_count() {
         [wc]="$(koopa_locate_wc)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[wc]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     for file in "$@"
     do
         str="$( \
@@ -14652,6 +15249,7 @@ koopa_list_path_priority() {
     declare -A app=(
         [awk]="$(koopa_locate_awk)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
     declare -A dict
     readarray -t all_arr <<< "$( \
         __koopa_list_path_priority "$@" \
@@ -14704,6 +15302,7 @@ koopa_ln() {
         [mkdir]='koopa_mkdir'
         [rm]='koopa_rm'
     )
+    [[ -x "${app[ln]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
         [target_dir]=''
@@ -14740,6 +15339,7 @@ koopa_ln() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         ln=("${app[sudo]}" "${app[ln]}")
         mkdir=("${app[mkdir]}" '--sudo')
         rm=("${app[rm]}" '--sudo')
@@ -15636,12 +16236,6 @@ koopa_locate_perl() {
         --opt-name='perl'
 }
 
-koopa_locate_perlbrew() {
-    koopa_locate_app \
-        --app-name='perlbrew' \
-        --opt-name='perlbrew'
-}
-
 koopa_locate_pkg_config() {
     koopa_locate_app \
         --app-name='pkg-config' \
@@ -15730,6 +16324,7 @@ koopa_locate_rscript() {
     declare -A app=(
         [r]="$(koopa_locate_r)"
     )
+    [[ -x "${app[r]}" ]] || return 1
     app[rscript]="${app[r]}script"
     koopa_locate_app "${app[rscript]}"
 }
@@ -16016,19 +16611,20 @@ koopa_locate_zcat() {
 }
 
 koopa_lowercase() {
-    local app args str
-    koopa_assert_has_args "$#"
+    local app str
     declare -A app=(
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[tr]}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         koopa_print "$str" \
             | "${app[tr]}" '[:upper:]' '[:lower:]'
     done
@@ -16064,6 +16660,8 @@ koopa_man_version() {
         [man]="${1:-}"
     )
     [[ -z "${app[man]}" ]] && app[man]="$(koopa_locate_man)"
+    [[ -x "${app[grep]}" ]] || return 1
+    [[ -x "${app[man]}" ]] || return 1
     str="$( \
         "${app[grep]}" \
             --extended-regexp \
@@ -16084,6 +16682,8 @@ koopa_md5sum_check_to_new_md5_file() {
         [md5sum]="$(koopa_locate_md5sum)"
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[md5sum]}" ]] || return 1
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [datetime]="$(koopa_datetime)"
     )
@@ -16153,6 +16753,7 @@ koopa_mkdir() {
     declare -A app=(
         [mkdir]="$(koopa_locate_mkdir)"
     )
+    [[ -x "${app[mkdir]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
     )
@@ -16180,6 +16781,7 @@ koopa_mkdir() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         mkdir=("${app[sudo]}" "${app[mkdir]}")
     else
         mkdir=("${app[mkdir]}")
@@ -16193,6 +16795,7 @@ koopa_mktemp() {
     declare -A app=(
         [mktemp]="$(koopa_locate_mktemp)"
     )
+    [[ -x "${app[mktemp]}" ]] || return 1
     declare -A dict=(
         [date_id]="$(koopa_datetime)"
         [user_id]="$(koopa_user_id)"
@@ -16214,6 +16817,7 @@ koopa_move_files_in_batch() {
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict=(
         [num]=''
         [source_dir]=''
@@ -16344,6 +16948,7 @@ koopa_mv() {
         [mv]="$(koopa_locate_mv)"
         [rm]='koopa_rm'
     )
+    [[ -x "${app[mv]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
         [target_dir]=''
@@ -16426,6 +17031,9 @@ koopa_nfiletypes() {
         [sort]="$(koopa_locate_sort)"
         [uniq]="$(koopa_locate_uniq)"
     )
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[uniq]}" ]] || return 1
     declare -A dict=(
         [prefix]="${1:?}"
     )
@@ -16544,6 +17152,8 @@ koopa_node_package_version() {
         [jq]="$(koopa_locate_jq)"
         [npm]="$(koopa_locate_npm)"
     )
+    [[ -x "${app[jq]}" ]] || return 1
+    [[ -x "${app[npm]}" ]] || return 1
     for pkg in "$@"
     do
         local dict
@@ -16570,6 +17180,9 @@ koopa_openjdk_version() {
         [java]="${1:-}"
     )
     [[ -z "${app[java]}" ]] && app[java]="$(koopa_locate_java)"
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[java]}" ]] || return 1
     str="$( \
         "${app[java]}" --version \
             | "${app[head]}" -n 1 \
@@ -16601,6 +17214,7 @@ koopa_oracle_instantclient_version() {
     declare -A app=(
         [sqlplus]="$(koopa_locate_sqlplus)"
     )
+    [[ -x "${app[sqlplus]}" ]] || return 1
     str="$( \
         "${app[sqlplus]}" -v \
             | koopa_grep --pattern='^Version' --regex \
@@ -16618,6 +17232,8 @@ koopa_os_type() {
         [tr]="$(koopa_locate_tr)"
         [uname]="$(koopa_locate_uname)"
     )
+    [[ -x "${app[tr]}" ]] || return 1
+    [[ -x "${app[uname]}" ]] || return 1
     str="$( \
         "${app[uname]}" -s \
         | "${app[tr]}" '[:upper:]' '[:lower:]' \
@@ -16648,6 +17264,7 @@ koopa_pager() {
     declare -A app=(
         [less]="$(koopa_locate_less)"
     )
+    [[ -x "${app[less]}" ]] || return 1
     args=("$@")
     koopa_assert_is_file "${args[-1]}"
     "${app[less]}" -R "${args[@]}"
@@ -16663,6 +17280,9 @@ koopa_parallel_version() {
         [parallel]="${1:-}"
     )
     [[ -z "${app[parallel]}" ]] && app[parallel]="$(koopa_locate_parallel)"
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[parallel]}" ]] || return 1
     str="$( \
         "${app[parallel]}" --version \
             | "${app[head]}" -n 1 \
@@ -16678,6 +17298,7 @@ koopa_parent_dir() {
     declare -A app=(
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [cd_tail]=''
         [n]=1
@@ -16732,6 +17353,7 @@ koopa_parse_url() {
     declare -A app=(
         [curl]="$(koopa_locate_curl)"
     )
+    [[ -x "${app[curl]}" ]] || return 1
     curl_args=(
         '--disable' # Ignore '~/.curlrc'. Must come first.
         '--fail'
@@ -16810,6 +17432,7 @@ koopa_perl_package_version() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
+    [[ -x "${app[perl]}" ]] || return 1
     for pkg in "$@"
     do
         local dict
@@ -16948,70 +17571,71 @@ koopa_public_ip_address() {
     return 0
 }
 
+koopa_push_all_app_builds() {
+    local app dict names
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [basename]="$(koopa_locate_basename)"
+        [grep]="$(koopa_locate_grep)"
+        [xargs]="$(koopa_locate_xargs)"
+    )
+    [[ -x "${app[basename]}" ]] || return 1
+    [[ -x "${app[grep]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
+    readarray -t names <<< "$( \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict[opt_prefix]}" \
+            --print0 \
+            --sort \
+            --type='l' \
+        | "${app[xargs]}" -0 -n 1 "${app[basename]}" \
+        | "${app[grep]}" -Ev '^.+-packages$' \
+    )"
+    koopa_assert_is_array_non_empty "${names[@]:-}"
+    koopa_push_app_build "${names[@]}"
+    return 0
+}
+
 koopa_push_app_build() {
-    local app dict pos
+    local app dict name
     koopa_assert_has_args "$#"
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
         [tar]="$(koopa_locate_tar)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app[tar]}" ]] || return 1
     declare -A dict=(
-        [app_name]=''
-        [app_prefix]="$(koopa_app_prefix)"
-        [app_version]=''
-        [arch]="$(koopa_arch2)"
+        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
+        [opt_prefix]="$(koopa_opt_prefix)"
         [os_string]="$(koopa_os_string)"
         [s3_prefix]='s3://koopa.acidgenomics.com/app'
         [s3_profile]='acidgenomics'
         [tmp_dir]="$(koopa_tmp_dir)"
     )
-    pos=()
-    while (("$#"))
+    for name in "$@"
     do
-        case "$1" in
-            '--app-name='*)
-                dict[app_name]="${1#*=}"
-                shift 1
-                ;;
-            '--app-name')
-                dict[app_name]="${2:?}"
-                shift 2
-                ;;
-            '--app-version='*)
-                dict[app_version]="${1#*=}"
-                shift 1
-                ;;
-            '--app-version')
-                dict[app_version]="${2:?}"
-                shift 2
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
+        local dict2
+        declare -A dict2
+        dict2[name]="$name"
+        dict2[prefix]="$(koopa_realpath "${dict[opt_prefix]}/${dict2[name]}")"
+        koopa_assert_is_dir "${dict2[prefix]}"
+        dict2[version]="$(koopa_basename "${dict2[prefix]}")"
+        dict2[local_tar]="${dict[tmp_dir]}/\
+${dict2[name]}/${dict2[version]}.tar.gz"
+        dict2[remote_tar]="${dict[s3_prefix]}/${dict[os_string]}/${dict[arch]}/\
+${dict2[name]}/${dict2[version]}.tar.gz"
+        koopa_alert "Pushing '${dict2[prefix]}' to '${dict2[remote_tar]}'."
+        koopa_mkdir "${dict[tmp_dir]}/${dict2[name]}"
+        "${app[tar]}" -Pczf "${dict2[local_tar]}" "${dict2[prefix]}/"
+        "${app[aws]}" --profile="${dict[s3_profile]}" \
+            s3 cp "${dict2[local_tar]}" "${dict2[remote_tar]}"
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -gt 0 ]]
-    then
-        koopa_assert_has_args_eq "$#" 2
-        dict[app_name]="${1:?}"
-        dict[app_version]="${2:?}"
-    fi
-    koopa_assert_is_set \
-        '--app-name' "${dict[app_name]}" \
-        '--app-version' "${dict[app_version]}"
-    dict[prefix]="${dict[app_prefix]}/${dict[app_name]}/${dict[app_version]}"
-    dict[local_tarball]="${dict[tmp_dir]}/${dict[app_version]}.tar.gz"
-    dict[remote_tarball]="${dict[s3_prefix]}/${dict[os_string]}/${dict[arch]}/\
-${dict[app_name]}/${dict[app_version]}.tar.gz"
-    koopa_alert "Pushing '${dict[prefix]}' to '${dict[remote_tarball]}'."
-    "${app[tar]}" -Pczf "${dict[local_tarball]}" "${dict[prefix]}/"
-    "${app[aws]}" --profile="${dict[s3_profile]}" \
-        s3 cp "${dict[local_tarball]}" "${dict[remote_tarball]}"
     koopa_rm "${dict[tmp_dir]}"
     return 0
 }
@@ -17044,6 +17668,7 @@ koopa_python_create_venv() {
     declare -A app=(
         [python]="$(koopa_locate_python)"
     )
+    [[ -x "${app[python]}" ]] || return 1
     declare -A dict=(
         [name]=''
         [pip]=1
@@ -17177,6 +17802,7 @@ koopa_python_pip_install() {
     declare -A app=(
         [python]="$(koopa_locate_python)"
     )
+    [[ -x "${app[python]}" ]] || return 1
     declare -A dict=(
         [prefix]=''
     )
@@ -17243,7 +17869,7 @@ koopa_python_system_packages_prefix() {
         [python]="${1:-}"
     )
     [[ -z "${app[python]}" ]] && app[python]="$(koopa_locate_python)"
-    koopa_assert_is_installed "${app[python]}"
+    [[ -x "${app[python]}" ]] || return 1
     declare -A dict
     dict[prefix]="$( \
         "${app[python]}" -c 'import site; print(site.getsitepackages()[0])' \
@@ -17260,7 +17886,8 @@ koopa_r_javareconf() {
         [r]="${1:?}"
         [sudo]="$(koopa_locate_sudo)"
     )
-    koopa_assert_is_installed "${app[r]}"
+    [[ -x "${app[r]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [java_home]="$(koopa_java_prefix)"
     )
@@ -17347,8 +17974,9 @@ koopa_r_library_prefix() {
         [r]="${1:-}"
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    [[ -x "${app[r]}" ]] || return 1
     app[rscript]="${app[r]}script"
-    koopa_assert_is_installed "${app[rscript]}"
+    [[ -x "${app[rscript]}" ]] || return 1
     declare -A dict
     dict[prefix]="$( \
         "${app[rscript]}" -e 'cat(normalizePath(.libPaths()[[1L]]))' \
@@ -17432,7 +18060,6 @@ koopa_r_link_site_library() {
         koopa_ln --sudo "${dict[lib_source]}" "${dict[lib_target]}"
     fi
     conf_args=(
-        '--name-fancy=R'
         '--name=r'
         "--prefix=${dict[lib_source]}"
     )
@@ -17443,7 +18070,7 @@ koopa_r_link_site_library() {
     koopa_configure_app_packages "${conf_args[@]}"
     if koopa_is_fedora && [[ -d '/usr/lib64/R' ]]
     then
-        koopa_alert_note "Fixing Fedora R configuration at '/usr/lib64/R'."
+        koopa_alert_note "Fixing configuration at '/usr/lib64/R'."
         koopa_mkdir --sudo '/usr/lib64/R/site-library'
         koopa_ln --sudo \
             '/usr/lib64/R/site-library' \
@@ -17461,8 +18088,8 @@ koopa_r_makevars() {
         [sort]="$(koopa_locate_sort)"
         [xargs]="$(koopa_locate_xargs)"
     )
-    koopa_assert_is_installed "${app[r]}"
     [[ -x "${app[dirname]}" ]] || return 1
+    [[ -x "${app[r]}" ]] || return 1
     [[ -x "${app[sort]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
     if koopa_is_linux && ! koopa_is_koopa_app "${app[r]}"
@@ -17562,8 +18189,9 @@ koopa_r_prefix() {
         [r]="${1:-}"
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    [[ -x "${app[r]}" ]] || return 1
     app[rscript]="${app[r]}script"
-    koopa_assert_is_installed "${app[rscript]}"
+    [[ -x "${app[rscript]}" ]] || return 1
     declare -A dict
     dict[prefix]="$( \
         "${app[rscript]}" \
@@ -17638,8 +18266,9 @@ koopa_r_system_library_prefix() {
         [r]="${1:-}"
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    [[ -x "${app[r]}" ]] || return 1
     app[rscript]="${app[r]}script"
-    koopa_assert_is_installed "${app[rscript]}"
+    [[ -x "${app[rscript]}" ]] || return 1
     declare -A dict
     dict[prefix]="$( \
         "${app[rscript]}" \
@@ -17659,7 +18288,8 @@ koopa_r_version() {
         [r]="${1:-}"
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
-    koopa_assert_is_installed "${app[r]}"
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[r]}" ]] || return 1
     str="$( \
         "${app[r]}" --version 2>/dev/null \
         | "${app[head]}" -n 1 \
@@ -17824,6 +18454,7 @@ koopa_reload_shell() {
     declare -A app=(
         [shell]="$(koopa_locate_shell)"
     )
+    [[ -x "${app[shell]}" ]] || return 1
     exec "${app[shell]}" -il
     return 0
 }
@@ -17850,6 +18481,8 @@ koopa_rename_lowercase() {
         [rename]="$(koopa_locate_rename)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[rename]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     declare -A dict=(
         [pattern]='y/A-Z/a-z/'
         [recursive]=0
@@ -17921,6 +18554,8 @@ koopa_reset_permissions() {
         [chmod]="$(koopa_locate_chmod)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[chmod]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     declare -A dict=(
         [group]="$(koopa_group)"
         [prefix]="${1:?}"
@@ -17957,6 +18592,7 @@ koopa_rg_sort() {
     declare -A app=(
         [rg]="$(koopa_locate_rg)"
     )
+    [[ -x "${app[rg]}" ]] || return 1
     declare -A dict=(
         [pattern]="${1:?}"
     )
@@ -17978,6 +18614,8 @@ koopa_rg_unique() {
         [rg]="$(koopa_locate_rg)"
         [sort]="$(koopa_locate_sort)"
     )
+    [[ -x "${app[rg]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
     declare -A dict=(
         [pattern]="${1:?}"
     )
@@ -18000,6 +18638,7 @@ koopa_rm() {
     declare -A app=(
         [rm]="$(koopa_locate_rm)"
     )
+    [[ -x "${app[rm]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
     )
@@ -18027,6 +18666,7 @@ koopa_rm() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         rm+=("${app[sudo]}" "${app[rm]}")
     else
         rm=("${app[rm]}")
@@ -18040,6 +18680,7 @@ koopa_rnaeditingindexer() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     declare -A dict=(
         [bam_suffix]='.Aligned.sortedByCoord.out.bam'
         [docker_image]='acidgenomics/rnaeditingindexer'
@@ -18123,6 +18764,7 @@ koopa_roff() {
     declare -A app=(
         [ronn]="$(koopa_locate_ronn)"
     )
+    [[ -x "${app[ronn]}" ]] || return 1
     declare -A app=(
         [man_prefix]="$(koopa_man_prefix)"
     )
@@ -18165,6 +18807,7 @@ koopa_rsync() {
     declare -A app=(
         [rsync]="$(koopa_locate_rsync)"
     )
+    [[ -x "${app[rsync]}" ]] || return 1
     declare -A dict=(
         [source_dir]=''
         [target_dir]=''
@@ -18260,6 +18903,7 @@ koopa_ruby_api_version() {
         [ruby]="${1:-}"
     )
     [[ -z "${app[ruby]}" ]] && app[ruby]="$(koopa_locate_ruby)"
+    [[ -x "${app[ruby]}" ]] || return 1
     str="$("${app[ruby]}" -e 'print Gem.ruby_api_version')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
@@ -18288,6 +18932,7 @@ koopa_salmon_index() {
     declare -A app=(
         [salmon]="$(koopa_locate_salmon)"
     )
+    [[ -x "${app[salmon]}" ]] || return 1
     declare -A dict=(
         [decoys]=1
         [gencode]=0
@@ -18427,6 +19072,7 @@ koopa_salmon_quant_paired_end_per_sample() {
     declare -A app=(
         [salmon]="$(koopa_locate_salmon)"
     )
+    [[ -x "${app[salmon]}" ]] || return 1
     declare -A dict=(
         [bootstraps]=30
         [fastq_r1_file]=''
@@ -18683,6 +19329,7 @@ koopa_salmon_quant_single_end_per_sample() {
     declare -A app=(
         [salmon]="$(koopa_locate_salmon)"
     )
+    [[ -x "${app[salmon]}" ]] || return 1
     declare -A dict=(
         [bootstraps]=30
         [fastq_file]=''
@@ -19097,6 +19744,8 @@ koopa_script_name() {
         [cut]="$(koopa_locate_cut)"
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict
     dict[file]="$( \
         caller \
@@ -19110,15 +19759,16 @@ koopa_script_name() {
 }
 
 koopa_snake_case_simple() {
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         str="$( \
             koopa_gsub \
                 --pattern='[^A-Za-z0-9_]' \
@@ -19192,6 +19842,10 @@ koopa_sra_download_accession_list() {
         [esearch]="$(koopa_locate_esearch)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[efetch]}" ]] || return 1
+    [[ -x "${app[esearch]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [acc_file]=''
         [srp_id]=''
@@ -19244,6 +19898,8 @@ koopa_sra_download_run_info_table() {
         [efetch]="$(koopa_locate_efetch)"
         [esearch]="$(koopa_locate_esearch)"
     )
+    [[ -x "${app[efetch]}" ]] || return 1
+    [[ -x "${app[esearch]}" ]] || return 1
     declare -A dict=(
         [run_info_file]=''
         [srp_id]=''
@@ -19294,6 +19950,9 @@ koopa_sra_fastq_dump() {
         [gzip]="$(koopa_locate_gzip)"
         [parallel]="$(koopa_locate_parallel)"
     )
+    [[ -x "${app[fasterq_dump]}" ]] || return 1
+    [[ -x "${app[gzip]}" ]] || return 1
+    [[ -x "${app[parallel]}" ]] || return 1
     declare -A dict=(
         [acc_file]=''
         [compress]=1
@@ -19416,6 +20075,8 @@ koopa_sra_prefetch() {
         [parallel]="$(koopa_locate_parallel)"
         [prefetch]="$(koopa_locate_prefetch)"
     )
+    [[ -x "${app[parallel]}" ]] || return 1
+    [[ -x "${app[prefetch]}" ]] || return 1
     declare -A dict=(
         [acc_file]=''
         [jobs]="$(koopa_cpu_count)"
@@ -19565,6 +20226,7 @@ koopa_star_align_paired_end_per_sample() {
     declare -A app=(
         [star]="$(koopa_locate_star)"
     )
+    [[ -x "${app[star]}" ]] || return 1
     declare -A dict=(
         [fastq_r1_file]=''
         [fastq_r1_tail]=''
@@ -19797,6 +20459,7 @@ koopa_star_align_single_end_per_sample() {
     declare -A app=(
         [star]="$(koopa_locate_star)"
     )
+    [[ -x "${app[star]}" ]] || return 1
     declare -A dict=(
         [fastq_file]=''
         [fastq_tail]=''
@@ -19988,6 +20651,7 @@ koopa_star_index() {
     declare -A app=(
         [star]="$(koopa_locate_star)"
     )
+    [[ -x "${app[star]}" ]] || return 1
     declare -A dict=(
         [genome_fasta_file]=''
         [gtf_file]=''
@@ -20085,6 +20749,7 @@ koopa_stat_modified() {
     declare -A app=(
         [date]="$(koopa_locate_date)"
     )
+    [[ -x "${app[date]}" ]] || return 1
     declare -A dict=(
         [format]="${1:?}"
     )
@@ -20109,6 +20774,7 @@ koopa_stat() {
     declare -A app=(
         [stat]="$(koopa_locate_stat)"
     )
+    [[ -x "${app[stat]}" ]] || return 1
     declare -A dict=(
         [format]="${1:?}"
     )
@@ -20171,8 +20837,12 @@ koopa_strip_left() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
-    for str in "${pos[@]}"
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
+    set -- "${pos[@]}"
+    for str in "$@"
     do
         printf '%s\n' "${str##"${dict[pattern]}"}"
     done
@@ -20206,8 +20876,12 @@ koopa_strip_right() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
-    for str in "${pos[@]}"
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
+    set -- "${pos[@]}"
+    for str in "$@"
     do
         printf '%s\n' "${str%%"${dict[pattern]}"}"
     done
@@ -20215,14 +20889,13 @@ koopa_strip_right() {
 }
 
 koopa_strip_trailing_slash() {
-    local args
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    koopa_strip_right --pattern='/' "${args[@]}"
+    koopa_strip_right --pattern='/' "$@"
     return 0
 }
 
@@ -20281,7 +20954,10 @@ koopa_sub() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        readarray -t pos <<< "$(</dev/stdin)"
+    fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     [[ "${dict[global]}" -eq 1 ]] && dict[perl_tail]='g'
@@ -20308,6 +20984,8 @@ koopa_sudo_append_string() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [file]=''
         [string]=''
@@ -20357,6 +21035,8 @@ koopa_sudo_write_string() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [file]=''
         [string]=''
@@ -20404,6 +21084,7 @@ koopa_switch_to_develop() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     declare -A dict=(
         [branch]='develop'
         [origin]='origin'
@@ -20607,6 +21288,7 @@ koopa_system_info() {
         )"
     else
         app[uname]="$(koopa_locate_uname)"
+        [[ -x "${app[uname]}" ]] || return 1
         dict[os]="$("${app[uname]}" --all)"
     fi
     info+=(
@@ -20620,6 +21302,7 @@ koopa_system_info() {
     if koopa_is_installed 'neofetch'
     then
         app[neofetch]="$(koopa_locate_neofetch)"
+        [[ -x "${app[neofetch]}" ]] || return 1
         readarray -t nf_info <<< "$("${app[neofetch]}" --stdout)"
         info+=(
             ''
@@ -20639,6 +21322,7 @@ koopa_tar_multiple_dirs() {
     declare -A app=(
         [tar]="$(koopa_locate_tar)"
     )
+    [[ -x "${app[tar]}" ]] || return 1
     declare -A dict=(
         [delete]=0
     )
@@ -20711,6 +21395,8 @@ koopa_test_find_files_by_shebang() {
         [head]="$(koopa_locate_head)"
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[tr]}" ]] || return 1
     declare -A dict=(
         [pattern]="${1:?}"
     )
@@ -20773,6 +21459,7 @@ koopa_test_grep() {
     declare -A app=(
         [grep]="$(koopa_locate_grep)"
     )
+    [[ -x "${app[grep]}" ]] || return 1
     declare -A dict=(
         [ignore]=''
         [name]=''
@@ -20862,6 +21549,7 @@ koopa_test_true_color() {
     declare -A app=(
         [awk]="$(koopa_locate_awk)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
     "${app[awk]}" 'BEGIN{
         s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
         for (colnum = 0; colnum<77; colnum++) {
@@ -20905,6 +21593,9 @@ koopa_tex_version() {
         [tex]="${1:-}"
     )
     [[ -z "${app[tex]}" ]] && app[tex]="$(koopa_locate_tex)"
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[tex]}" ]] || return 1
     str="$( \
         "${app[tex]}" --version \
             | "${app[head]}" -n 1 \
@@ -20957,6 +21648,7 @@ koopa_touch() {
         [mkdir]='koopa_mkdir'
         [touch]="$(koopa_locate_touch)"
     )
+    [[ -x "${app[touch]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
     )
@@ -21011,14 +21703,14 @@ koopa_touch() {
 }
 
 koopa_trim_ws() {
-    local args str
+    local str
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
         str="${str#"${str%%[![:space:]]*}"}"
         str="${str%"${str##*[![:space:]]}"}"
@@ -21036,7 +21728,6 @@ koopa_uninstall_ack() {
 
 koopa_uninstall_anaconda() {
     koopa_uninstall_app \
-        --name-fancy='Anaconda' \
         --name='anaconda' \
         "$@"
 }
@@ -21050,7 +21741,6 @@ koopa_uninstall_app() {
         [make_prefix]="$(koopa_make_prefix)"
         [mode]='shared'
         [name]=''
-        [name_fancy]=''
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
@@ -21072,14 +21762,6 @@ koopa_uninstall_app() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
@@ -21162,12 +21844,11 @@ koopa_uninstall_app() {
             ;;
     esac
     koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[unlink_in_bin]=1
-    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
         then
-            koopa_alert_is_not_installed "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_is_not_installed "${dict[name]}" "${dict[prefix]}"
             return 1
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
@@ -21176,9 +21857,9 @@ koopa_uninstall_app() {
     then
         if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_alert_uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_uninstall_start "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_uninstall_start "${dict[name_fancy]}"
+            koopa_alert_uninstall_start "${dict[name]}"
         fi
     fi
     [[ -z "${dict[uninstaller_bn]}" ]] && dict[uninstaller_bn]="${dict[name]}"
@@ -21223,9 +21904,9 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
         if [[ -n "${dict[prefix]}" ]]
         then
             koopa_alert_uninstall_success \
-                "${dict[name_fancy]}" "${dict[prefix]}"
+                "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_uninstall_success "${dict[name_fancy]}"
+            koopa_alert_uninstall_success "${dict[name]}"
         fi
     fi
     return 0
@@ -21233,21 +21914,18 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
 
 koopa_uninstall_apr_util() {
     koopa_uninstall_app \
-        --name-fancy='Apache Portable Runtime (APR) utilities' \
         --name='apr-util' \
         "$@"
 }
 
 koopa_uninstall_apr() {
     koopa_uninstall_app \
-        --name-fancy='Apache Portable Runtime (APR) library' \
         --name='apr' \
         "$@"
 }
 
 koopa_uninstall_armadillo() {
     koopa_uninstall_app \
-        --name-fancy='Armadillo' \
         --name='armadillo' \
         "$@"
 }
@@ -21279,7 +21957,6 @@ koopa_uninstall_automake() {
 
 koopa_uninstall_aws_cli() {
     koopa_uninstall_app \
-        --name-fancy='AWS CLI' \
         --name='aws-cli' \
         --unlink-in-bin='aws' \
         "$@"
@@ -21287,7 +21964,6 @@ koopa_uninstall_aws_cli() {
 
 koopa_uninstall_azure_cli() {
     koopa_uninstall_app \
-        --name-fancy='Azure CLI' \
         --name='azure-cli' \
         --unlink-in-bin='az' \
         "$@"
@@ -21302,7 +21978,6 @@ koopa_uninstall_bash_language_server() {
 
 koopa_uninstall_bash() {
     koopa_uninstall_app \
-        --name-fancy='Bash' \
         --name='bash' \
         --unlink-in-bin='bash' \
         "$@"
@@ -21357,7 +22032,6 @@ koopa_uninstall_black() {
 
 koopa_uninstall_boost() {
     koopa_uninstall_app \
-        --name-fancy='Boost' \
         --name='boost' \
         "$@"
 }
@@ -21384,14 +22058,12 @@ koopa_uninstall_bzip2() {
 
 koopa_uninstall_cairo() {
     koopa_uninstall_app \
-        --name-fancy='Cairo' \
         --name='cairo' \
         "$@"
 }
 
 koopa_uninstall_chemacs() {
     koopa_uninstall_app \
-        --name-fancy='Chemacs' \
         --name='chemacs' \
         "$@"
 }
@@ -21405,7 +22077,6 @@ koopa_uninstall_chezmoi() {
 
 koopa_uninstall_cmake() {
     koopa_uninstall_app \
-        --name-fancy='CMake' \
         --name='cmake' \
         --unlink-in-bin='cmake' \
         "$@"
@@ -21420,7 +22091,6 @@ koopa_uninstall_colorls() {
 
 koopa_uninstall_conda() {
     koopa_uninstall_app \
-        --name-fancy='Miniconda' \
         --name='conda' \
         --unlink-in-bin='conda' \
         "$@"
@@ -21548,7 +22218,6 @@ koopa_uninstall_cpufetch() {
 
 koopa_uninstall_curl() {
     koopa_uninstall_app \
-        --name-fancy='cURL' \
         --name='curl' \
         --unlink-in-bin='curl' \
         --unlink-in-bin='curl-config' \
@@ -21576,15 +22245,6 @@ koopa_uninstall_dog() {
         "$@"
 }
 
-koopa_uninstall_doom_emacs() {
-    koopa_uninstall_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_uninstall_dotfiles() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -21593,7 +22253,6 @@ koopa_uninstall_dotfiles() {
     )
     [[ -x "${app[bash]}" ]] || return 1
     declare -A dict=(
-        [name_fancy]='Dotfiles'
         [name]='dotfiles'
         [prefix]="$(koopa_dotfiles_prefix)"
     )
@@ -21601,7 +22260,6 @@ koopa_uninstall_dotfiles() {
     koopa_assert_is_file "${dict[script]}"
     "${app[bash]}" "${dict[script]}"
     koopa_uninstall_app \
-        --name-fancy="${dict[name_fancy]}" \
         --name="${dict[name]}" \
         --prefix="${dict[prefix]}" \
         "$@"
@@ -21618,7 +22276,6 @@ koopa_uninstall_du_dust() {
 koopa_uninstall_emacs() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=Emacs'
         '--name=emacs'
     )
     if ! koopa_is_macos
@@ -21630,7 +22287,6 @@ koopa_uninstall_emacs() {
 
 koopa_uninstall_ensembl_perl_api() {
     koopa_uninstall_app \
-        --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
         "$@"
 }
@@ -21672,7 +22328,6 @@ koopa_uninstall_fd_find() {
 
 koopa_uninstall_ffmpeg() {
     koopa_uninstall_app \
-        --name-fancy='FFmpeg' \
         --name='ffmpeg' \
         --unlink-in-bin='ffmpeg' \
         --unlink-in-bin='ffprobe' \
@@ -21699,7 +22354,6 @@ koopa_uninstall_findutils() {
 
 koopa_uninstall_fish() {
     koopa_uninstall_app \
-        --name-fancy='Fish' \
         --name='fish' \
         --unlink-in-bin='fish' \
         "$@"
@@ -21707,7 +22361,6 @@ koopa_uninstall_fish() {
 
 koopa_uninstall_flac() {
     koopa_uninstall_app \
-        --name-fancy='FLAC' \
         --name='flac' \
         --unlink-in-bin='flac' \
         "$@"
@@ -21722,7 +22375,6 @@ koopa_uninstall_flake8() {
 
 koopa_uninstall_fltk() {
     koopa_uninstall_app \
-        --name-fancy='FLTK' \
         --name='fltk' \
         "$@"
 }
@@ -21747,7 +22399,6 @@ koopa_uninstall_fribidi() {
 
 koopa_uninstall_fzf() {
     koopa_uninstall_app \
-        --name-fancy='FZF' \
         --name='fzf' \
         --unlink-in-bin='fzf' \
         "$@"
@@ -21762,14 +22413,12 @@ koopa_uninstall_gawk() {
 
 koopa_uninstall_gcc() {
     koopa_uninstall_app \
-        --name-fancy='GCC' \
         --name='gcc' \
         "$@"
 }
 
 koopa_uninstall_gdal() {
     koopa_uninstall_app \
-        --name-fancy='GDAL' \
         --name='gdal' \
         --unlink-in-bin='gdal-config' \
         "$@"
@@ -21783,7 +22432,6 @@ koopa_uninstall_gdbm() {
 
 koopa_uninstall_geos() {
     koopa_uninstall_app \
-        --name-fancy='GEOS' \
         --name='geos' \
         --unlink-in-bin='geos-config' \
         "$@"
@@ -21811,7 +22459,6 @@ koopa_uninstall_ghostscript() {
 koopa_uninstall_git() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=Git'
         '--name=git'
         '--unlink-in-bin=git'
     )
@@ -21845,7 +22492,6 @@ koopa_uninstall_gmp() {
 
 koopa_uninstall_gnupg() {
     koopa_uninstall_app \
-        --name-fancy='gnupg suite' \
         --name='gnupg' \
         "$@"
 }
@@ -21858,7 +22504,6 @@ koopa_uninstall_gnutls() {
 
 koopa_uninstall_go() {
     koopa_uninstall_app \
-        --name-fancy='Go' \
         --name='go' \
         --unlink-in-bin='go' \
         "$@"
@@ -21866,7 +22511,6 @@ koopa_uninstall_go() {
 
 koopa_uninstall_google_cloud_sdk() {
     koopa_uninstall_app \
-        --name-fancy='Google Cloud SDK' \
         --name='google-cloud-sdk' \
         --unlink-in-bin='gcloud' \
         "$@"
@@ -21928,30 +22572,19 @@ koopa_uninstall_hadolint() {
 
 koopa_uninstall_harfbuzz() {
     koopa_uninstall_app \
-        --name-fancy='HarfBuzz' \
         --name='harfbuzz' \
         "$@"
 }
 
 koopa_uninstall_haskell_stack() {
     koopa_uninstall_app \
-        --name-fancy='Haskell Stack' \
         --name='haskell-stack' \
         "$@"
 }
 
 koopa_uninstall_hdf5() {
     koopa_uninstall_app \
-        --name-fancy='HDF5' \
         --name='hdf5' \
-        "$@"
-}
-
-koopa_uninstall_homebrew() {
-    koopa_uninstall_app \
-        --name-fancy='Homebrew' \
-        --name='homebrew' \
-        --system \
         "$@"
 }
 
@@ -21971,14 +22604,12 @@ koopa_uninstall_hyperfine() {
 
 koopa_uninstall_icu4c() {
     koopa_uninstall_app \
-        --name-fancy='ICU4C' \
         --name='icu4c' \
         "$@"
 }
 
 koopa_uninstall_imagemagick() {
     koopa_uninstall_app \
-        --name-fancy='ImageMagick' \
         --name='imagemagick' \
         --link-in-bin='magick' \
         "$@"
@@ -21986,7 +22617,6 @@ koopa_uninstall_imagemagick() {
 
 koopa_uninstall_ipython() {
     koopa_uninstall_app \
-        --name-fancy='IPython' \
         --name='ipython' \
         --unlink-in-bin='ipython' \
         "$@"
@@ -22014,14 +22644,12 @@ koopa_uninstall_jq() {
 
 koopa_uninstall_julia_packages() {
     koopa_uninstall_app \
-        --name-fancy='Julia packages' \
         --name='julia-packages' \
         "$@"
 }
 
 koopa_uninstall_julia() {
     koopa_uninstall_app \
-        --name-fancy='Julia' \
         --name='julia' \
         --unlink-in-bin='julia' \
         "$@"
@@ -22053,7 +22681,6 @@ koopa_uninstall_koopa() {
 
 koopa_uninstall_lame() {
     koopa_uninstall_app \
-        --name-fancy='LAME' \
         --name='lame' \
         --unlink-in-bin='lame' \
         "$@"
@@ -22061,14 +22688,12 @@ koopa_uninstall_lame() {
 
 koopa_uninstall_lapack() {
     koopa_uninstall_app \
-        --name-fancy='LAPACK' \
         --name='lapack' \
         "$@"
 }
 
 koopa_uninstall_latch() {
     koopa_uninstall_app \
-        --name-fancy='LatchBio SDK' \
         --name='latch' \
         --unlink-in-bin='latch' \
         "$@"
@@ -22085,6 +22710,12 @@ koopa_uninstall_lesspipe() {
     koopa_uninstall_app \
         --name='lesspipe' \
         --unlink-in-bin='lesspipe.sh' \
+        "$@"
+}
+
+koopa_uninstall_libedit() {
+    koopa_uninstall_app \
+        --name='libedit' \
         "$@"
 }
 
@@ -22193,7 +22824,6 @@ koopa_uninstall_libzip() {
 
 koopa_uninstall_lua() {
     koopa_uninstall_app \
-        --name-fancy='Lua' \
         --name='lua' \
         "$@"
 }
@@ -22212,7 +22842,6 @@ koopa_uninstall_lz4() {
 
 koopa_uninstall_lzma() {
     koopa_uninstall_app \
-        --name-fancy='LZMA' \
         --name='lzma' \
         "$@"
 }
@@ -22225,7 +22854,6 @@ koopa_uninstall_lzo() {
 
 koopa_uninstall_m4() {
     koopa_uninstall_app \
-        --name-fancy='M4' \
         --name='m4' \
         "$@"
 }
@@ -22260,7 +22888,6 @@ koopa_uninstall_mdcat() {
 
 koopa_uninstall_meson() {
     koopa_uninstall_app \
-        --name-fancy='Meson' \
         --name='meson' \
         "$@"
 }
@@ -22315,7 +22942,6 @@ koopa_uninstall_nettle() {
 
 koopa_uninstall_nim() {
     koopa_uninstall_app \
-        --name-fancy='Nim' \
         --name='nim' \
         --unlink-in-bin='nim' \
         "$@"
@@ -22323,14 +22949,12 @@ koopa_uninstall_nim() {
 
 koopa_uninstall_ninja() {
     koopa_uninstall_app \
-        --name-fancy='Ninja' \
         --name='ninja' \
         "$@"
 }
 
 koopa_uninstall_node_binary() {
     koopa_uninstall_app \
-        --name-fancy='Node.js' \
         --name='node' \
         --unlink-in-bin='node' \
         --unlink-in-bin='npm' \
@@ -22339,7 +22963,6 @@ koopa_uninstall_node_binary() {
 
 koopa_uninstall_node() {
     koopa_uninstall_app \
-        --name-fancy='Node.js' \
         --name='node' \
         --unlink-in-bin='node' \
         --unlink-in-bin='npm' \
@@ -22354,7 +22977,6 @@ koopa_uninstall_oniguruma() {
 
 koopa_uninstall_openblas() {
     koopa_uninstall_app \
-        --name-fancy='OpenBLAS' \
         --name='openblas' \
         "$@"
 }
@@ -22362,7 +22984,6 @@ koopa_uninstall_openblas() {
 koopa_uninstall_openjdk() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=Adoptium Temurin OpenJDK'
         '--name=openjdk'
         '--unlink-in-bin=jar'
         '--unlink-in-bin=java'
@@ -22378,28 +22999,24 @@ koopa_uninstall_openjdk() {
 
 koopa_uninstall_openssh() {
     koopa_uninstall_app \
-        --name-fancy='OpenSSH' \
         --name='openssh' \
         "$@"
 }
 
 koopa_uninstall_openssl1() {
     koopa_uninstall_app \
-        --name-fancy='OpenSSL (v1)' \
         --name='openssl1' \
         "$@"
 }
 
 koopa_uninstall_openssl3() {
     koopa_uninstall_app \
-        --name-fancy='OpenSSL (v3)' \
         --name='openssl3' \
         "$@"
 }
 
 koopa_uninstall_pandoc() {
     koopa_uninstall_app \
-        --name-fancy='Pandoc' \
         --name='pandoc' \
         --unlink-in-bin='pandoc' \
         "$@"
@@ -22428,31 +23045,20 @@ koopa_uninstall_patch() {
 
 koopa_uninstall_pcre() {
     koopa_uninstall_app \
-        --name-fancy='PCRE' \
         --name='pcre' \
         "$@"
 }
 
 koopa_uninstall_pcre2() {
     koopa_uninstall_app \
-        --name-fancy='PCRE2' \
         --name='pcre2' \
         "$@"
 }
 
 koopa_uninstall_perl() {
     koopa_uninstall_app \
-        --name-fancy='Perl' \
         --name='perl' \
         --unlink-in-bin='perl' \
-        "$@"
-}
-
-koopa_uninstall_perlbrew() {
-    koopa_uninstall_app \
-        --name-fancy='Perlbrew' \
-        --name='perlbrew' \
-        --unlink-in-bin='perlbrew' \
         "$@"
 }
 
@@ -22483,15 +23089,6 @@ koopa_uninstall_poetry() {
         "$@"
 }
 
-koopa_uninstall_prelude_emacs() {
-    koopa_uninstall_app \
-        --name-fancy='Prelude Emacs' \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_uninstall_prettier() {
     koopa_uninstall_app \
         --name='prettier' \
@@ -22508,7 +23105,6 @@ koopa_uninstall_procs() {
 
 koopa_uninstall_proj() {
     koopa_uninstall_app \
-        --name-fancy='PROJ' \
         --name='proj' \
         "$@"
 }
@@ -22558,7 +23154,6 @@ koopa_uninstall_pytest() {
 koopa_uninstall_python() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=Python'
         '--name=python'
     )
     if ! koopa_is_macos
@@ -22572,7 +23167,6 @@ koopa_uninstall_python() {
 
 koopa_uninstall_r_devel() {
     koopa_uninstall_app \
-        --name-fancy='R-devel' \
         --name='r-devel' \
         --unlink-in-bin='R-devel' \
         "$@"
@@ -22580,7 +23174,6 @@ koopa_uninstall_r_devel() {
 
 koopa_uninstall_r_packages() {
     koopa_uninstall_app \
-        --name-fancy='R packages' \
         --name='r-packages' \
         "$@"
 }
@@ -22588,10 +23181,9 @@ koopa_uninstall_r_packages() {
 koopa_uninstall_r() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=R'
         '--name=r'
     )
-    if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
+    if ! koopa_is_macos
     then
         install_args+=(
             '--unlink-in-bin=R'
@@ -22660,7 +23252,6 @@ koopa_uninstall_rsync() {
 
 koopa_uninstall_ruby() {
     koopa_uninstall_app \
-        --name-fancy='Ruby' \
         --name='ruby' \
         --unlink-in-bin='bundle' \
         --unlink-in-bin='bundler' \
@@ -22671,7 +23262,6 @@ koopa_uninstall_ruby() {
 
 koopa_uninstall_rust() {
     koopa_uninstall_app \
-        --name-fancy='Rust' \
         --name='rust' \
         "$@"
 }
@@ -22692,7 +23282,6 @@ koopa_uninstall_samtools() {
 
 koopa_uninstall_scons() {
     koopa_uninstall_app \
-        --name-fancy='SCONS' \
         --name='scons' \
         "$@"
 }
@@ -22706,14 +23295,12 @@ koopa_uninstall_sed() {
 
 koopa_uninstall_serf() {
     koopa_uninstall_app \
-        --name-fancy='Apache Serf' \
         --name='serf' \
         "$@"
 }
 
 koopa_uninstall_shellcheck() {
     koopa_uninstall_app \
-        --name-fancy='ShellCheck' \
         --name='shellcheck' \
         --unlink-in-bin='shellcheck' \
         "$@"
@@ -22721,7 +23308,6 @@ koopa_uninstall_shellcheck() {
 
 koopa_uninstall_shunit2() {
     koopa_uninstall_app \
-        --name-fancy='shUnit2' \
         --name='shunit2' \
         --unlink-in-bin='shunit2' \
         "$@"
@@ -22735,33 +23321,13 @@ koopa_uninstall_snakemake() {
 
 koopa_uninstall_sox() {
     koopa_uninstall_app \
-        --name-fancy='SoX' \
         --name='sox' \
         --unlink-in-bin='sox' \
         "$@"
 }
 
-koopa_uninstall_spacemacs() {
-    koopa_uninstall_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_uninstall_spacevim() {
-    koopa_uninstall_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_uninstall_sqlite() {
     koopa_uninstall_app \
-        --name-fancy='SQLite' \
         --name='sqlite' \
         --unlink-in-bin='sqlite3' \
         "$@"
@@ -22769,7 +23335,6 @@ koopa_uninstall_sqlite() {
 
 koopa_uninstall_sra_tools() {
     koopa_uninstall_app \
-        --name-fancy='SRA Toolkit' \
         --name='sra-tools' \
         --unlink-in-bin='fasterq-dump' \
         --unlink-in-bin='vdb-config' \
@@ -22804,9 +23369,15 @@ koopa_uninstall_subversion() {
         "$@"
 }
 
+koopa_uninstall_system_homebrew() {
+    koopa_uninstall_app \
+        --name='homebrew' \
+        --system \
+        "$@"
+}
+
 koopa_uninstall_taglib() {
     koopa_uninstall_app \
-        --name-fancy='TagLib' \
         --name='taglib' \
         "$@"
 }
@@ -22820,7 +23391,6 @@ koopa_uninstall_tar() {
 
 koopa_uninstall_tcl_tk() {
     koopa_uninstall_app \
-        --name-fancy='Tcl/Tk' \
         --name='tcl-tk' \
         "$@"
 }
@@ -22886,6 +23456,38 @@ koopa_uninstall_units() {
         "$@"
 }
 
+koopa_uninstall_user_doom_emacs() {
+    koopa_uninstall_app \
+        --name='doom-emacs' \
+        --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_uninstall_user_prelude_emacs() {
+    koopa_uninstall_app \
+        --name='prelude-emacs' \
+        --prefix="$(koopa_prelude_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_uninstall_user_spacemacs() {
+    koopa_uninstall_app \
+        --name='spacemacs' \
+        --prefix="$(koopa_spacemacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_uninstall_user_spacevim() {
+    koopa_uninstall_app \
+        --name='spacevim' \
+        --prefix="$(koopa_spacevim_prefix)" \
+        --user \
+        "$@"
+}
+
 koopa_uninstall_utf8proc() {
     koopa_uninstall_app \
         --name='utf8proc' \
@@ -22894,7 +23496,6 @@ koopa_uninstall_utf8proc() {
 
 koopa_uninstall_vim() {
     koopa_uninstall_app \
-        --name-fancy='Vim' \
         --name='vim' \
         --unlink-in-bin='vim' \
         --unlink-in-bin='vimdiff' \
@@ -23048,7 +23649,6 @@ koopa_uninstall_zoxide() {
 
 koopa_uninstall_zsh() {
     koopa_uninstall_app \
-        --name-fancy="Zsh" \
         --name='zsh' \
         --unlink-in-bin='zsh' \
         "$@"
@@ -23118,7 +23718,7 @@ koopa_update_app() {
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [mode]='shared'
-        [name_fancy]=''
+        [name]=''
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
@@ -23150,14 +23750,6 @@ koopa_update_app() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
@@ -23217,6 +23809,7 @@ koopa_update_app() {
                 ;;
         esac
     done
+    koopa_assert_is_set '--name' "${dict[name]}"
     [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
     case "${dict[mode]}" in
         'shared')
@@ -23230,12 +23823,11 @@ koopa_update_app() {
             koopa_is_linux && dict[update_ldconfig]=1
             ;;
     esac
-    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
         then
-            koopa_alert_is_not_installed "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_is_not_installed "${dict[name]}" "${dict[prefix]}"
             return 1
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
@@ -23250,9 +23842,9 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     then
         if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_update_start "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_update_start "${dict[name_fancy]}"
+            koopa_alert_update_start "${dict[name]}"
         fi
     fi
     (
@@ -23302,55 +23894,12 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     then
         if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_alert_update_success "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_update_success "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_update_success "${dict[name_fancy]}"
+            koopa_alert_update_success "${dict[name]}"
         fi
     fi
     return 0
-}
-
-koopa_update_chemacs() {
-    koopa_update_app \
-        --name='chemacs' \
-        --name-fancy='Chemacs' \
-        "$@"
-}
-
-koopa_update_doom_emacs() {
-    koopa_update_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_update_dotfiles() {
-    koopa_update_app \
-        --name='dotfiles' \
-        --name-fancy='Dotfiles' \
-        "$@"
-}
-
-koopa_update_google_cloud_sdk() {
-    koopa_update_app \
-        --name-fancy='Google Cloud SDK' \
-        --name='google-cloud-sdk' \
-        --system \
-        "$@"
-}
-
-koopa_update_homebrew() {
-    koopa_update_app \
-        --name-fancy='Homebrew' \
-        --name='homebrew' \
-        --system \
-        "$@"
-}
-
-koopa_update_julia_packages() {
-    koopa_install_julia_packages "$@"
 }
 
 koopa_update_koopa() {
@@ -23371,56 +23920,56 @@ koopa_update_koopa() {
     return 0
 }
 
-koopa_update_mamba() {
-    koopa_install_mamba "$@"
+koopa_update_r_packages() {
+    koopa_update_app \
+        --name='r-packages' \
+        "$@"
 }
 
-koopa_update_prelude_emacs() {
+koopa_update_system_homebrew() {
     koopa_update_app \
-        --name-fancy='Prelude Emacs' \
+        --name='homebrew' \
+        --prefix="$(koopa_homebrew_prefix)" \
+        --system \
+        "$@"
+}
+
+koopa_update_system_tex_packages() {
+    koopa_update_app \
+        --name='tex-packages' \
+        --system \
+        "$@"
+}
+
+koopa_update_user_doom_emacs() {
+    koopa_update_app \
+        --name='doom-emacs' \
+        --prefix="$(koopa_doom_emacs_prefix)" \
+        --user \
+        "$@"
+}
+
+koopa_update_user_prelude_emacs() {
+    koopa_update_app \
         --name='prelude-emacs' \
         --prefix="$(koopa_prelude_emacs_prefix)" \
         --user \
         "$@"
 }
 
-koopa_update_r_packages() {
+koopa_update_user_spacemacs() {
     koopa_update_app \
-        --name-fancy='R packages' \
-        --name='r-packages' \
-        "$@"
-}
-
-koopa_update_spacemacs() {
-    koopa_update_app \
-        --name-fancy='Spacemacs' \
         --name='spacemacs' \
         --prefix="$(koopa_spacemacs_prefix)" \
         --user \
         "$@"
 }
 
-koopa_update_spacevim() {
+koopa_update_user_spacevim() {
     koopa_update_app \
-        --name-fancy='SpaceVim' \
         --name='spacevim' \
         --prefix="$(koopa_spacevim_prefix)" \
         --user \
-        "$@"
-}
-
-koopa_update_system() {
-    koopa_update_app \
-        --name='system' \
-        --system \
-        "$@"
-}
-
-koopa_update_tex_packages() {
-    koopa_update_app \
-        --name-fancy='TeX packages' \
-        --name='tex-packages' \
-        --system \
         "$@"
 }
 
@@ -23431,6 +23980,8 @@ koopa_variable() {
         [cut]="$(koopa_locate_cut)"
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict=(
         [key]="${1:?}"
         [include_prefix]="$(koopa_include_prefix)"
@@ -23473,6 +24024,7 @@ koopa_view_latest_tmp_log_file() {
     declare -A app=(
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
         [tmp_dir]="${TMPDIR:-/tmp}"
         [user_id]="$(koopa_user_id)"
@@ -23505,6 +24057,9 @@ koopa_vim_version() {
         [vim]="${1:-}"
     )
     [[ -z "${app[vim]}" ]] && app[vim]="$(koopa_locate_vim)"
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[vim]}" ]] || return 1
     declare -A dict=(
         [str]="$("${app[vim]}" --version 2>/dev/null)"
     )
@@ -23554,6 +24109,7 @@ koopa_wget_recursive() {
     declare -A app=(
         [wget]="$(koopa_locate_wget)"
     )
+    [[ -x "${app[wget]}" ]] || return 1
     declare -A dict=(
         [datetime]="$(koopa_datetime)"
         [password]=''
@@ -23737,6 +24293,8 @@ koopa_xcode_clt_version() {
         [awk]="$(koopa_locate_awk)"
         [pkgutil]="$(koopa_macos_locate_pkgutil)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[pkgutil]}" ]] || return 1
     declare -A dict=(
         [pkg]='com.apple.pkg.CLTools_Executables'
     )

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-# NOTE Seeing warnings on macOS from ranlib, regarding no symbols for some
-# GHC 8.10.7 files
+# FIXME Improve install consistency with hadolint...include a build step?
 
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2022-06-14.
+    # @note Updated 2022-07-15.
+    #
+    # This may require system zlib to be installed currently.
     #
     # @seealso
     # - stack install --help
@@ -16,11 +17,16 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/pandoc.rb
     # - https://github.com/commercialhaskell/stack/issues/342
     # """
-    local app dict stack_args
-    koopa_activate_opt_prefix 'haskell-stack'
+    local app dict install_args stack_args
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'zlib'
+    fi
+    koopa_activate_build_opt_prefix 'haskell-stack'
     declare -A app=(
         [stack]="$(koopa_locate_stack)"
     )
+    [[ -x "${app[stack]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='pandoc'
@@ -38,8 +44,17 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
     stack_args=(
         "--jobs=${dict[jobs]}"
         "--stack-root=${dict[stack_root]}"
+        '--verbose'
     )
-    "${app[stack]}" "${stack_args[@]}" \
-        install --local-bin-path="${dict[prefix]}/bin"
+    if koopa_is_linux
+    then
+        dict[zlib]="$(koopa_realpath "${dict[opt_prefix]}/zlib")"
+        stack_args+=(
+            "--extra-include-dirs=${dict[zlib]}/include"
+            "--extra-lib-dirs=${dict[zlib]}/lib"
+        )
+    fi
+    install_args=("--local-bin-path=${dict[prefix]}/bin")
+    "${app[stack]}" "${stack_args[@]}" install "${install_args[@]}"
     return 0
 }

@@ -13,6 +13,9 @@ koopa_openjdk_version() {
         [java]="${1:-}"
     )
     [[ -z "${app[java]}" ]] && app[java]="$(koopa_locate_java)"
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[java]}" ]] || return 1
     str="$( \
         "${app[java]}" --version \
             | "${app[head]}" -n 1 \

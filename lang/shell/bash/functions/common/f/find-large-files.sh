@@ -15,10 +15,11 @@ koopa_find_large_files() {
     # """
     local app prefix str
     koopa_assert_has_args "$#"
+    koopa_assert_is_dir "$@"
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
-    koopa_assert_is_dir "$@"
+    [[ -x "${app[head]}" ]] || return 1
     for prefix in "$@"
     do
         str="$( \

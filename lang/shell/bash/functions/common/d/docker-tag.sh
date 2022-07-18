@@ -10,6 +10,7 @@ koopa_docker_tag() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     declare -A dict=(
         [dest_tag]="${3:-}"
         [image]="${1:?}"
