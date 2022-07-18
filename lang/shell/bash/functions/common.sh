@@ -8717,13 +8717,17 @@ koopa_fix_zsh_permissions() {
         [app_prefix]="$(koopa_app_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
     )
-    koopa_is_shared_install && koopa_assert_is_admin
-    koopa_chmod 'g-w' \
-        "${dict[koopa_prefix]}/lang/shell/zsh" \
-        "${dict[koopa_prefix]}/lang/shell/zsh/functions"
     if koopa_is_shared_install
     then
+        koopa_assert_is_admin
         koopa_chown --sudo 'root' \
+            "${dict[koopa_prefix]}/lang/shell/zsh" \
+            "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+        koopa_chmod --sudo 'g-w' \
+            "${dict[koopa_prefix]}/lang/shell/zsh" \
+            "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+    else
+        koopa_chmod 'g-w' \
             "${dict[koopa_prefix]}/lang/shell/zsh" \
             "${dict[koopa_prefix]}/lang/shell/zsh/functions"
     fi
