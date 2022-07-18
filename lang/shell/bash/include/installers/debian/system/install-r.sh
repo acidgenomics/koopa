@@ -35,9 +35,7 @@ main() {
     pkgs=('r-base' 'r-base-dev')
     koopa_debian_apt_install "${pkgs[@]}"
     koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
+    # FIXME Rework this so that R packages are not linked into koopa opt.
     koopa_configure_r "${app[r]}"
-    koopa_link_in_bin \
-        "${app[r]}" 'R' \
-        "${app[rscript]}" 'Rscript'
     return 0
 }
