@@ -17,6 +17,7 @@ koopa_star_align_single_end_per_sample() {
     declare -A app=(
         [star]="$(koopa_locate_star)"
     )
+    [[ -x "${app[star]}" ]] || return 1
     declare -A dict=(
         # e.g. 'fastq'.
         [fastq_file]=''

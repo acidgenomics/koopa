@@ -3,7 +3,6 @@
 koopa_uninstall_git() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=Git'
         '--name=git'
         '--unlink-in-bin=git'
     )

@@ -4,7 +4,6 @@
 
 koopa_debian_install_system_pandoc() {
     koopa_install_app \
-        --name-fancy='Pandoc' \
         --name='pandoc' \
         --platform='debian' \
         --system \

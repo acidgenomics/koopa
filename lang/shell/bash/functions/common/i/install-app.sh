@@ -48,7 +48,6 @@ koopa_install_app() {
         [make_prefix]="$(koopa_make_prefix)"
         [mode]='shared'
         [name]=''
-        [name_fancy]=''
         [platform]='common'
         [prefix]=''
         [tmp_dir]="$(koopa_tmp_dir)"
@@ -102,14 +101,6 @@ koopa_install_app() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
@@ -245,7 +236,6 @@ ${dict[version2]}"
             ;;
     esac
     koopa_is_array_non_empty "${bin_arr[@]:-}" && bool[link_in_bin]=1
-    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     [[ -d "${dict[prefix]}" ]] && \
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     [[ -z "${dict[installer_bn]}" ]] && dict[installer_bn]="${dict[name]}"
@@ -261,10 +251,10 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         then
             if [[ "${bool[reinstall]}" -eq 1 ]]
             then
-                if [[ "${dict[quiet]}" -eq 0 ]]
+                if [[ "${bool[quiet]}" -eq 0 ]]
                 then
                     koopa_alert_uninstall_start \
-                        "${dict[name_fancy]}" "${dict[prefix]}"
+                        "${dict[name]}" "${dict[prefix]}"
                 fi
                 case "${dict[mode]}" in
                     'system')
@@ -280,7 +270,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 if [[ "${bool[quiet]}" -eq 0 ]]
                 then
                     koopa_alert_is_installed \
-                        "${dict[name_fancy]}" "${dict[prefix]}"
+                        "${dict[name]}" "${dict[prefix]}"
                 fi
                 return 0
             fi
@@ -306,9 +296,9 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     then
         if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_install_start "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_install_start "${dict[name_fancy]}"
+            koopa_alert_install_start "${dict[name]}"
         fi
     fi
     (
@@ -340,10 +330,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         then
             koopa_linux_update_ldconfig
         fi
-        # shellcheck disable=SC2030
-        export INSTALL_LINK_IN_BIN="${bool[link_in_bin]}"
-        # shellcheck disable=SC2030
-        export INSTALL_LINK_IN_MAKE="${bool[link_in_make]}"
         # shellcheck disable=SC2030
         export INSTALL_NAME="${dict[name]}"
         # shellcheck disable=SC2030
@@ -377,7 +363,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         for i in "${!bin_arr[@]}"
         do
             koopa_link_in_bin \
-                "${dict[prefix]}/${bin_arr[i]}" \
+                "${dict[prefix]}/bin/${bin_arr[i]}" \
                 "$(koopa_basename "${bin_arr[i]}")"
         done
     fi
@@ -401,9 +387,9 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     then
         if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_install_success "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_install_success "${dict[name_fancy]}"
+            koopa_alert_install_success "${dict[name]}"
         fi
     fi
     return 0

@@ -2,8 +2,7 @@
 
 koopa_install_mamba() {
     koopa_install_app \
-        --link-in-bin='bin/mamba' \
-        --name-fancy='Mamba' \
+        --link-in-bin='mamba' \
         --name='mamba' \
         --no-prefix-check \
         "$@"

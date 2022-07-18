@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using 'bool' array for booleans.
+
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
@@ -13,7 +15,6 @@ koopa_uninstall_app() {
         [make_prefix]="$(koopa_make_prefix)"
         [mode]='shared'
         [name]=''
-        [name_fancy]=''
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
@@ -35,14 +36,6 @@ koopa_uninstall_app() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
@@ -127,12 +120,11 @@ koopa_uninstall_app() {
             ;;
     esac
     koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[unlink_in_bin]=1
-    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
         then
-            koopa_alert_is_not_installed "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_is_not_installed "${dict[name]}" "${dict[prefix]}"
             return 1
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
@@ -141,9 +133,9 @@ koopa_uninstall_app() {
     then
         if [[ -n "${dict[prefix]}" ]]
         then
-            koopa_alert_uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa_alert_uninstall_start "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_uninstall_start "${dict[name_fancy]}"
+            koopa_alert_uninstall_start "${dict[name]}"
         fi
     fi
     [[ -z "${dict[uninstaller_bn]}" ]] && dict[uninstaller_bn]="${dict[name]}"
@@ -189,9 +181,9 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
         if [[ -n "${dict[prefix]}" ]]
         then
             koopa_alert_uninstall_success \
-                "${dict[name_fancy]}" "${dict[prefix]}"
+                "${dict[name]}" "${dict[prefix]}"
         else
-            koopa_alert_uninstall_success "${dict[name_fancy]}"
+            koopa_alert_uninstall_success "${dict[name]}"
         fi
     fi
     return 0

@@ -11,6 +11,8 @@ koopa_download_github_latest() {
         [cut]="$(koopa_locate_cut)"
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[tr]}" ]] || return 1
     for repo in "$@"
     do
         api_url="https://api.github.com/repos/${repo}/releases/latest"

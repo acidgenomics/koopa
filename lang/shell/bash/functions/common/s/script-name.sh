@@ -13,6 +13,8 @@ koopa_script_name() {
         [cut]="$(koopa_locate_cut)"
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict
     dict[file]="$( \
         caller \

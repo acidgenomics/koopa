@@ -11,6 +11,7 @@ koopa_bowtie2_index() {
     declare -A app=(
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [threads]="$(koopa_cpu_count)"
     )

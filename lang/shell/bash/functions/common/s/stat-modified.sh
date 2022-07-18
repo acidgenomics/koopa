@@ -19,6 +19,7 @@ koopa_stat_modified() {
     declare -A app=(
         [date]="$(koopa_locate_date)"
     )
+    [[ -x "${app[date]}" ]] || return 1
     declare -A dict=(
         [format]="${1:?}"
     )

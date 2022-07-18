@@ -14,6 +14,7 @@ koopa_stat() {
     declare -A app=(
         [stat]="$(koopa_locate_stat)"
     )
+    [[ -x "${app[stat]}" ]] || return 1
     declare -A dict=(
         [format]="${1:?}"
     )

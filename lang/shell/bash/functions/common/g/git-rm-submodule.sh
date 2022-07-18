@@ -19,6 +19,7 @@ koopa_git_rm_submodule() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     for module in "$@"
     do
         # Remove the submodule entry from '.git/config'.

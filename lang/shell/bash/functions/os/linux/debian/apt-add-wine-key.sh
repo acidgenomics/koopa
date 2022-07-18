@@ -20,7 +20,6 @@ koopa_debian_apt_add_wine_key() {
     # """
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
-        --name-fancy='Wine' \
         --name='wine' \
         --url='https://dl.winehq.org/wine-builds/winehq.key'
     return 0

@@ -3,7 +3,6 @@
 koopa_uninstall_emacs() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=Emacs'
         '--name=emacs'
     )
     # Assume we're using Emacs cask by default on macOS.

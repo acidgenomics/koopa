@@ -19,7 +19,6 @@ koopa_debian_apt_add_wine_obs_repo() {
 Emulators:/Wine:/Debian"
         [distribution]='./'
         [name]='wine-obs'
-        [name_fancy]='Wine OBS'
         [os_string]="$(koopa_os_string)"
     )
     case "${dict[os_string]}" in
@@ -41,9 +40,8 @@ Emulators:/Wine:/Debian"
     esac
     koopa_debian_apt_add_wine_obs_key
     koopa_debian_apt_add_repo \
-        --name-fancy="${dict[name_fancy]}" \
+        --distribution="${dict[distribution]}" \
         --name="${dict[name]}" \
-        --url="${dict[url]}" \
-        --distribution="${dict[distribution]}"
+        --url="${dict[url]}"
     return 0
 }
