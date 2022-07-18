@@ -12,6 +12,8 @@ koopa_linux_update_ldconfig() {
         [ldconfig]="$(koopa_linux_locate_ldconfig)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[ldconfig]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [distro_prefix]="$(koopa_distro_prefix)"
         [target_prefix]='/etc/ld.so.conf.d'

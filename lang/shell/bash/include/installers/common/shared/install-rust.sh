@@ -11,6 +11,8 @@ main() {
         [cut]="$(koopa_locate_cut)"
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
         [tmp_prefix]='rustup'
