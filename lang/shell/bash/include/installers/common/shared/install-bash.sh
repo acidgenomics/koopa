@@ -23,6 +23,11 @@ main() {
         [patch]="$(koopa_locate_patch)"
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[curl]}" ]] || return 1
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app[patch]}" ]] || return 1
+    [[ -x "${app[tr]}" ]] || return 1
     declare -A dict=(
         [bin_prefix]="$(koopa_bin_prefix)"
         [gnu_mirror]="$(koopa_gnu_mirror_url)"

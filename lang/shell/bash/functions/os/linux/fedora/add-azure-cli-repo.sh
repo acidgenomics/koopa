@@ -12,6 +12,8 @@ koopa_fedora_add_azure_cli_repo() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [file]='/etc/yum.repos.d/azure-cli.repo'
     )

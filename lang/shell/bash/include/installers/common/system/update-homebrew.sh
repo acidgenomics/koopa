@@ -17,6 +17,7 @@ main() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
     declare -A dict=(
         [reset]=0
     )

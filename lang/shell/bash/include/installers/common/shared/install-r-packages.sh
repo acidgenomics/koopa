@@ -10,6 +10,7 @@ main() {
     declare -A app=(
         [rscript]="$(koopa_locate_rscript)"
     )
+    [[ -x "${app[rscript]}" ]] || return 1
     declare -A dict=(
         [bioc_version]="$(koopa_variable 'bioconductor')"
     )

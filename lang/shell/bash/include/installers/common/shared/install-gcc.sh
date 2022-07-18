@@ -62,6 +62,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [gnu_mirror]="$(koopa_gnu_mirror_url)"
@@ -95,6 +96,7 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
     if koopa_is_macos
     then
         app[uname]="$(koopa_locate_uname)"
+        [[ -x "${app[uname]}" ]] || return 1
         # e.g. '21.4.0' for macOS 12.3.1.
         dict[kernel_version]="$("${app[uname]}" -r)"
         dict[kernel_maj_ver]="$(koopa_major_version "${dict[kernel_version]}")"

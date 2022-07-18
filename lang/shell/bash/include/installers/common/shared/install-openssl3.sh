@@ -21,6 +21,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='openssl'
@@ -55,13 +56,16 @@ main() {
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
+    # FIXME Rework this as a function.
     if koopa_is_linux
     then
         app[ldd]="$(koopa_locate_ldd)"
+        [[ -x "${app[ldd]}" ]] || return 1
         "${app[ldd]}" "${dict[prefix]}/bin/openssl"
     elif koopa_is_macos
     then
         app[otool]="$(koopa_macos_locate_otool)"
+        [[ -x "${app[otool]}" ]] || return 1
         "${app[otool]}" -L "${dict[prefix]}/bin/openssl"
     fi
     return 0

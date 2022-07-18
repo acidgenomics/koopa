@@ -12,6 +12,8 @@ koopa_macos_disable_touch_id_sudo() {
         [cp]="$(koopa_locate_cp)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[cp]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [source_file]="$(koopa_koopa_prefix)/os/macos/etc/pam.d/sudo~orig"
         [target_file]='/etc/pam.d/sudo'

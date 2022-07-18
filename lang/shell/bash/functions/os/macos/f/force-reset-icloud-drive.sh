@@ -33,6 +33,9 @@ koopa_macos_force_reset_icloud_drive() {
         [reboot]="$(koopa_macos_locate_reboot)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[kill_all]}" ]] || return 1
+    [[ -x "${app[reboot]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     "${app[sudo]}" "${app[kill_all]}" bird
     koopa_rm \
         "${HOME:?}/Library/Application Support/CloudDocs" \
