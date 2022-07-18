@@ -2,7 +2,7 @@
 
 koopa_install_password_store() {
     koopa_install_app \
-        --link-in-bin='bin/pass' \
+        --link-in-bin='pass' \
         --name='password-store' \
         "$@"
 }

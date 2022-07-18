@@ -25,6 +25,7 @@ koopa_star_index() {
     declare -A app=(
         [star]="$(koopa_locate_star)"
     )
+    [[ -x "${app[star]}" ]] || return 1
     declare -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         [genome_fasta_file]=''

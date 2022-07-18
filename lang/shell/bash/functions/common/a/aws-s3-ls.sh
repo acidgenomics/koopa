@@ -46,6 +46,9 @@ koopa_aws_s3_ls() {
         [aws]="$(koopa_locate_aws)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     declare -A dict=(
         [prefix]=''
         [profile]="${AWS_PROFILE:-}"

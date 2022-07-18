@@ -44,6 +44,7 @@ koopa_aws_s3_sync() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     declare -A dict=(
         [profile]="${AWS_PROFILE:-}"
     )

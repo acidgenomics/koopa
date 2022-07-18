@@ -3,7 +3,7 @@
 koopa_install_bash_language_server() {
     koopa_install_app \
         --installer='node-package' \
-        --link-in-bin='bin/bash-language-server' \
+        --link-in-bin='bash-language-server' \
         --name='bash-language-server' \
         "$@"
 }

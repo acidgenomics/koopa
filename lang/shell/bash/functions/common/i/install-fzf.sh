@@ -2,8 +2,7 @@
 
 koopa_install_fzf() {
     koopa_install_app \
-        --link-in-bin='bin/fzf' \
-        --name-fancy='FZF' \
+        --link-in-bin='fzf' \
         --name='fzf' \
         "$@"
 }

@@ -3,14 +3,13 @@
 koopa_install_app_packages() {
     # """
     # Install application packages.
-    # @note Updated 2022-06-17.
+    # @note Updated 2022-07-15.
     # """
-    local app name name_fancy pos
+    local app dict pos
     koopa_assert_has_args "$#"
     declare -A app
     declare -A dict=(
         [name]=''
-        [name_fancy]=''
         [reinstall]=0
     )
     pos=()
@@ -24,14 +23,6 @@ koopa_install_app_packages() {
                 ;;
             '--name')
                 dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
@@ -56,7 +47,7 @@ koopa_install_app_packages() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict[name]}"
     app[cmd]="$("koopa_locate_${dict[name]}")"
-    koopa_assert_is_installed "${app[cmd]}"
+    [[ -x "${app[cmd]}" ]] || return 1
     # Configure the language.
     dict[configure_fun]="koopa_configure_${dict[name]}"
     "${dict[configure_fun]}"
@@ -76,7 +67,6 @@ koopa_install_app_packages() {
     dict[version]="$(koopa_get_version "${app[cmd]}")"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     koopa_install_app \
-        --name-fancy="${dict[name_fancy]} packages" \
         --name="${dict[name]}-packages" \
         --no-prefix-check \
         --prefix="${dict[prefix]}" \

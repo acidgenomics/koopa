@@ -14,6 +14,7 @@ koopa_test_grep() {
     declare -A app=(
         [grep]="$(koopa_locate_grep)"
     )
+    [[ -x "${app[grep]}" ]] || return 1
     declare -A dict=(
         [ignore]=''
         [name]=''

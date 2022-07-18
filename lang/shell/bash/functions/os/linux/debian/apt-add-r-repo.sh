@@ -3,13 +3,12 @@
 koopa_debian_apt_add_r_repo() {
     # """
     # Add R apt repo.
-    # @note Updated 2022-06-24.
+    # @note Updated 2022-07-15.
     # """
     local dict
     koopa_assert_has_args_le "$#" 1
     declare -A dict=(
         [name]='r'
-        [name_fancy]='R'
         [os_codename]="$(koopa_os_codename)"
         [version]="${1:-}"
     )
@@ -44,9 +43,8 @@ koopa_debian_apt_add_r_repo() {
     dict[distribution]="${dict[os_codename]}-cran${dict[version2]}/"
     koopa_debian_apt_add_r_key
     koopa_debian_apt_add_repo \
-        --name-fancy="${dict[name_fancy]}" \
+        --distribution="${dict[distribution]}" \
         --name="${dict[name]}" \
-        --url="${dict[url]}" \
-        --distribution="${dict[distribution]}"
+        --url="${dict[url]}"
     return 0
 }

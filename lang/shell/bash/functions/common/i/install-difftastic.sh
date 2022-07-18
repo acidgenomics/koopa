@@ -2,7 +2,7 @@
 
 koopa_install_difftastic() {
     koopa_install_app \
-        --link-in-bin='bin/difft' \
+        --link-in-bin='difft' \
         --name='difftastic' \
         --installer='rust-package' \
         "$@"

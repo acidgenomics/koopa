@@ -15,6 +15,8 @@ koopa_current_ensembl_version() {
         [cut]="$(koopa_locate_cut)"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
     str="$( \
         koopa_parse_url 'ftp://ftp.ensembl.org/pub/current_README' \
         | "${app[sed]}" -n '3p' \

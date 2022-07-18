@@ -16,6 +16,7 @@ koopa_basename_sans_ext_2() {
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
     for file in "$@"
     do
         str="$(koopa_basename "$file")"

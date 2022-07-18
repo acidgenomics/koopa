@@ -33,7 +33,6 @@ koopa_r_link_site_library() {
         koopa_ln --sudo "${dict[lib_source]}" "${dict[lib_target]}"
     fi
     conf_args=(
-        '--name-fancy=R'
         '--name=r'
         "--prefix=${dict[lib_source]}"
     )
@@ -44,7 +43,7 @@ koopa_r_link_site_library() {
     koopa_configure_app_packages "${conf_args[@]}"
     if koopa_is_fedora && [[ -d '/usr/lib64/R' ]]
     then
-        koopa_alert_note "Fixing Fedora R configuration at '/usr/lib64/R'."
+        koopa_alert_note "Fixing configuration at '/usr/lib64/R'."
         koopa_mkdir --sudo '/usr/lib64/R/site-library'
         koopa_ln --sudo \
             '/usr/lib64/R/site-library' \

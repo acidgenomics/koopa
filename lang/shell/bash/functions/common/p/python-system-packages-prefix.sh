@@ -11,7 +11,7 @@ koopa_python_system_packages_prefix() {
         [python]="${1:-}"
     )
     [[ -z "${app[python]}" ]] && app[python]="$(koopa_locate_python)"
-    koopa_assert_is_installed "${app[python]}"
+    [[ -x "${app[python]}" ]] || return 1
     declare -A dict
     dict[prefix]="$( \
         "${app[python]}" -c 'import site; print(site.getsitepackages()[0])' \

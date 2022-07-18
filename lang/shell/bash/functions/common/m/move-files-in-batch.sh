@@ -24,6 +24,7 @@ koopa_move_files_in_batch() {
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
+    [[ -x "${app[head]}" ]] || return 1
     declare -A dict=(
         [num]=''
         [source_dir]=''

@@ -15,6 +15,8 @@ koopa_sra_download_run_info_table() {
         [efetch]="$(koopa_locate_efetch)"
         [esearch]="$(koopa_locate_esearch)"
     )
+    [[ -x "${app[efetch]}" ]] || return 1
+    [[ -x "${app[esearch]}" ]] || return 1
     declare -A dict=(
         [run_info_file]=''
         [srp_id]=''

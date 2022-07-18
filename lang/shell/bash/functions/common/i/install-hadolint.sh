@@ -2,7 +2,7 @@
 
 koopa_install_hadolint() {
     koopa_install_app \
-        --link-in-bin='bin/hadolint' \
+        --link-in-bin='hadolint' \
         --name='hadolint' \
         "$@"
 }

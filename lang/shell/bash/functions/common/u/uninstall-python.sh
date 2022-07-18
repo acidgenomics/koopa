@@ -3,7 +3,6 @@
 koopa_uninstall_python() {
     local uninstall_args
     uninstall_args=(
-        '--name-fancy=Python'
         '--name=python'
     )
     if ! koopa_is_macos

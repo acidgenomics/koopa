@@ -3,7 +3,7 @@
 koopa_install_salmon() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/salmon' \
+        --link-in-bin='salmon' \
         --name='salmon' \
         "$@"
 }

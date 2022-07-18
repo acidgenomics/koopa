@@ -13,8 +13,8 @@ koopa_r_makevars() {
         [sort]="$(koopa_locate_sort)"
         [xargs]="$(koopa_locate_xargs)"
     )
-    koopa_assert_is_installed "${app[r]}"
     [[ -x "${app[dirname]}" ]] || return 1
+    [[ -x "${app[r]}" ]] || return 1
     [[ -x "${app[sort]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
     if koopa_is_linux && ! koopa_is_koopa_app "${app[r]}"

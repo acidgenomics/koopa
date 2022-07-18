@@ -5,7 +5,7 @@
 
 koopa_install_exa() {
     koopa_install_app \
-        --link-in-bin='bin/exa' \
+        --link-in-bin='exa' \
         --name='exa' \
         --installer='rust-package' \
         "$@"

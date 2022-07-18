@@ -584,8 +584,7 @@ koopa_macos_ifactive() {
 
 koopa_macos_install_aws_cli() {
     koopa_install_app \
-        --link-in-bin='bin/aws' \
-        --name-fancy='AWS CLI' \
+        --link-in-bin='aws' \
         --name='aws-cli' \
         --platform='macos' \
         "$@"
@@ -593,7 +592,6 @@ koopa_macos_install_aws_cli() {
 
 koopa_macos_install_system_defaults() {
     koopa_update_app \
-        --name-fancy='macOS system defaults' \
         --name='defaults' \
         --platform='macos' \
         --system \
@@ -603,8 +601,7 @@ koopa_macos_install_system_defaults() {
 koopa_macos_install_system_python_binary() {
     koopa_install_app \
         --installer='python-binary' \
-        --link-in-bin='bin/python3' \
-        --name-fancy='Python' \
+        --link-in-bin='python3' \
         --name='python' \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
@@ -614,7 +611,6 @@ koopa_macos_install_system_python_binary() {
 
 koopa_macos_install_r_gfortran() {
     koopa_install_app \
-        --name-fancy='R gfortran' \
         --name='r-gfortran' \
         --platform='macos' \
         --prefix='/usr/local/gfortran' \
@@ -624,7 +620,6 @@ koopa_macos_install_r_gfortran() {
 
 koopa_macos_install_r_openmp() {
     koopa_install_app \
-        --name-fancy='R OpenMP' \
         --name='r-openmp' \
         --platform='macos' \
         --system \
@@ -634,9 +629,8 @@ koopa_macos_install_r_openmp() {
 koopa_macos_install_system_r_binary() {
     koopa_install_app \
         --installer='r-binary' \
-        --link-in-bin='bin/R' \
-        --link-in-bin='bin/Rscript' \
-        --name-fancy='R' \
+        --link-in-bin='R' \
+        --link-in-bin='Rscript' \
         --name='r' \
         --platform='macos' \
         --prefix="$(koopa_macos_r_prefix)" \
@@ -646,7 +640,6 @@ koopa_macos_install_system_r_binary() {
 
 koopa_macos_install_system_xcode_clt() {
     koopa_install_app \
-        --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
         --platform='macos' \
         --system \
@@ -898,7 +891,6 @@ koopa_macos_uninstall_brewfile_casks() {
 
 koopa_macos_uninstall_adobe_creative_cloud() {
     koopa_uninstall_app \
-        --name-fancy='Adobe Creative Cloud' \
         --name='adobe-creative-cloud' \
         --platform='macos' \
         --system \
@@ -907,7 +899,6 @@ koopa_macos_uninstall_adobe_creative_cloud() {
 
 koopa_macos_uninstall_cisco_webex() {
     koopa_uninstall_app \
-        --name-fancy='Cisco WebEx' \
         --name='cisco-webex' \
         --platform='macos' \
         --system \
@@ -916,7 +907,6 @@ koopa_macos_uninstall_cisco_webex() {
 
 koopa_macos_uninstall_docker() {
     koopa_uninstall_app \
-        --name-fancy='Docker' \
         --name='docker' \
         --platform='macos' \
         --system \
@@ -925,7 +915,6 @@ koopa_macos_uninstall_docker() {
 
 koopa_macos_uninstall_microsoft_onedrive() {
     koopa_uninstall_app \
-        --name-fancy='Microsoft OneDrive' \
         --name='microsoft-onedrive' \
         --platform='macos' \
         --system \
@@ -934,7 +923,6 @@ koopa_macos_uninstall_microsoft_onedrive() {
 
 koopa_macos_uninstall_oracle_java() {
     koopa_uninstall_app \
-        --name-fancy='Oracle Java' \
         --name='oracle-java' \
         --platform='macos' \
         --system \
@@ -943,7 +931,6 @@ koopa_macos_uninstall_oracle_java() {
 
 koopa_macos_uninstall_python_binary() {
     koopa_uninstall_app \
-        --name-fancy='Python' \
         --name='python' \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
@@ -955,7 +942,6 @@ koopa_macos_uninstall_python_binary() {
 
 koopa_macos_uninstall_r_gfortran() {
     koopa_uninstall_app \
-        --name-fancy='R gfortran' \
         --name='r-gfortran' \
         --platform='macos' \
         --prefix='/usr/local/gfortran' \
@@ -965,7 +951,6 @@ koopa_macos_uninstall_r_gfortran() {
 
 koopa_macos_uninstall_r_openmp() {
     koopa_uninstall_app \
-        --name-fancy='R OpenMP' \
         --name='r-openmp' \
         --platform='macos' \
         --system \
@@ -974,7 +959,6 @@ koopa_macos_uninstall_r_openmp() {
 
 koopa_macos_uninstall_r_binary() {
     koopa_uninstall_app \
-        --name-fancy='R' \
         --name='r' \
         --platform='macos' \
         --system \
@@ -986,7 +970,6 @@ koopa_macos_uninstall_r_binary() {
 
 koopa_macos_uninstall_ringcentral() {
     koopa_uninstall_app \
-        --name-fancy='RingCentral' \
         --name='ringcentral' \
         --platform='macos' \
         --system \
@@ -995,7 +978,6 @@ koopa_macos_uninstall_ringcentral() {
 
 koopa_macos_uninstall_system_xcode_clt() {
     koopa_uninstall_app \
-        --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
         --platform='macos' \
         --system \

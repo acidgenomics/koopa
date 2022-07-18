@@ -15,6 +15,7 @@ koopa_git_reset() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"

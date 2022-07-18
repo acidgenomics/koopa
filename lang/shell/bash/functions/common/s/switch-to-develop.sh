@@ -13,6 +13,7 @@ koopa_switch_to_develop() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     declare -A dict=(
         [branch]='develop'
         [origin]='origin'

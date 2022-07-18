@@ -22,6 +22,7 @@ koopa_wget_recursive() {
     declare -A app=(
         [wget]="$(koopa_locate_wget)"
     )
+    [[ -x "${app[wget]}" ]] || return 1
     declare -A dict=(
         [datetime]="$(koopa_datetime)"
         [password]=''

@@ -18,6 +18,7 @@ koopa_git_pull() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     repos=("$@")
     koopa_assert_is_dir "${repos[@]}"
     # Using a single subshell here to avoid performance hit during looping.

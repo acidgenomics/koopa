@@ -18,6 +18,7 @@ koopa_file_ext_2() {
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
     for file in "$@"
     do
         if koopa_has_file_ext "$file"

@@ -16,7 +16,6 @@ koopa_install_emacs() {
         '--activate-opt=texinfo'
         '--activate-opt=gnutls'
         '--installer=gnu-app'
-        '--name-fancy=Emacs'
         '--name=emacs'
         '-D' '--with-modules'
         '-D' '--without-dbus'

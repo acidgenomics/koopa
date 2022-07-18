@@ -3,7 +3,7 @@
 koopa_install_bedtools() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='bin/bedtools' \
+        --link-in-bin='bedtools' \
         --name='bedtools' \
         "$@"
 }

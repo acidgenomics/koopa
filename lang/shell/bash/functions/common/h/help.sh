@@ -11,6 +11,8 @@ koopa_help() {
         [head]="$(koopa_locate_head)"
         [man]="$(koopa_locate_man)"
     )
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[man]}" ]] || return 1
     declare -A dict=(
         [man_file]="${1:?}"
     )

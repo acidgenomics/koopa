@@ -12,6 +12,9 @@ koopa_docker_build_all_images() {
         [docker]="$(koopa_locate_docker)"
         [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[basename]}" ]] || return 1
+    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     declare -A dict=(
         [days]=7
         [docker_dir]="$(koopa_docker_prefix)"

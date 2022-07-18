@@ -3,7 +3,7 @@
 koopa_install_gtop() {
     koopa_install_app \
         --installer='node-package' \
-        --link-in-bin='bin/gtop' \
+        --link-in-bin='gtop' \
         --name='gtop' \
         "$@"
 }

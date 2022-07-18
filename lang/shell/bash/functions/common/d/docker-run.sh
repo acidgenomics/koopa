@@ -17,6 +17,7 @@ koopa_docker_run() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
+    [[ -x "${app[docker]}" ]] || return 1
     declare -A dict=(
         [arm]=0
         [bash]=0

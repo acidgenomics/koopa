@@ -6,7 +6,6 @@ koopa_install_python() {
     # """
     local install_args
     install_args=(
-        '--name-fancy=Python'
         '--name=python'
     )
     if ! koopa_is_macos

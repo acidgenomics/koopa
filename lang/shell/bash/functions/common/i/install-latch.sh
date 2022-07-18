@@ -3,8 +3,7 @@
 koopa_install_latch() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/latch' \
-        --name-fancy='LatchBio SDK' \
+        --link-in-bin='latch' \
         --name='latch' \
         "$@"
 }

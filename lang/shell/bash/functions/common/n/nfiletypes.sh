@@ -15,6 +15,9 @@ koopa_nfiletypes() {
         [sort]="$(koopa_locate_sort)"
         [uniq]="$(koopa_locate_uniq)"
     )
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[uniq]}" ]] || return 1
     declare -A dict=(
         [prefix]="${1:?}"
     )

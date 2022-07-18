@@ -3,16 +3,15 @@
 koopa_debian_apt_add_google_cloud_sdk_repo() {
     # """
     # Add Google Cloud SDK apt repo.
-    # @note Updated 2021-11-09.
+    # @note Updated 2022-07-15.
     # """
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_google_cloud_key
     koopa_debian_apt_add_repo \
-        --name-fancy='Google Cloud SDK' \
-        --name='google-cloud-sdk' \
-        --key-name='google-cloud' \
-        --url='https://packages.cloud.google.com/apt' \
+        --component='main' \
         --distribution='cloud-sdk' \
-        --component='main'
+        --key-name='google-cloud' \
+        --name='google-cloud-sdk' \
+        --url='https://packages.cloud.google.com/apt'
     return 0
 }

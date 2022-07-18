@@ -2,7 +2,7 @@
 
 koopa_install_mcfly() {
     koopa_install_app \
-        --link-in-bin='bin/mcfly' \
+        --link-in-bin='mcfly' \
         --name='mcfly' \
         --installer='rust-package' \
         "$@"
