@@ -9,7 +9,7 @@ koopa_install_r() {
     install_args=(
         '--name=r'
     )
-    if ! koopa_is_macos && [[ ! -x '/usr/bin/R' ]]
+    if ! koopa_is_macos
     then
         install_args+=(
             '--link-in-bin=R'
