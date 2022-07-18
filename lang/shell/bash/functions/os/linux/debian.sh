@@ -1081,8 +1081,6 @@ koopa_debian_uninstall_system_r() {
         --name='r' \
         --platform='debian' \
         --system \
-        --unlink-in-bin='R' \
-        --unlink-in-bin='Rscript' \
         "$@"
 }
 
