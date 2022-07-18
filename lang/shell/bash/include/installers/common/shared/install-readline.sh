@@ -24,6 +24,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [gnu_mirror]="$(koopa_gnu_mirror_url)"
         [jobs]="$(koopa_cpu_count)"
@@ -56,13 +57,16 @@ main() {
     make_args=('SHLIB_LIBS=-lncursesw')
     "${app[make]}" "${make_args[@]}" --jobs="${dict[jobs]}"
     "${app[make]}" "${make_args[@]}" install
+    # FIXME Need to make this a function.
     if koopa_is_linux
     then
         app[ldd]="$(koopa_locate_ldd)"
+        [[ -x "${app[ldd]}" ]] || return 1
         "${app[ldd]}" -r "${dict[prefix]}/lib/libreadline.so"
     elif koopa_is_macos
     then
         app[otool]="$(koopa_locate_otool)"
+        [[ -x "${app[otool]}" ]] || return 1
         "${app[otool]}" -L "${dict[prefix]}/lib/libreadline.dylib"
     fi
     return 0

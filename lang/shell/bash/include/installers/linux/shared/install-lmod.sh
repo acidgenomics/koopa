@@ -20,6 +20,9 @@ main() {
         [luarocks]="$(koopa_locate_luarocks)"
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[lua]}" ]] || return 1
+    [[ -x "${app[luarocks]}" ]] || return 1
+    [[ -x "${app[make]}" ]] || return 1
     app[lua]="$(koopa_realpath "${app[lua]}")"
     app[luarocks]="$(koopa_realpath "${app[luarocks]}")"
     declare -A dict=(

@@ -13,6 +13,9 @@ koopa_macos_clean_launch_services() {
         [lsregister]="$(koopa_macos_locate_lsregister)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[kill_all]}" ]] || return 1
+    [[ -x "${app[lsregister]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     koopa_alert "Cleaning LaunchServices 'Open With' menu."
     "${app[lsregister]}" \
         -kill \
