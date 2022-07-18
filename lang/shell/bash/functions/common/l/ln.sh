@@ -13,8 +13,6 @@ koopa_ln() {
         [rm]='koopa_rm'
     )
     [[ -x "${app[ln]}" ]] || return 1
-    [[ -x "${app[mkdir]}" ]] || return 1
-    [[ -x "${app[rm]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
         [target_dir]=''
