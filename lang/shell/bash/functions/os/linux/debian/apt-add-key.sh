@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider using system gpg for this.
+
 koopa_debian_apt_add_key() {
     # """
     # Add a GPG key (and/or keyring) for apt.

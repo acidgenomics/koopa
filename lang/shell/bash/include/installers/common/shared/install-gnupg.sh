@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to install dirmngr.
+# gpg: assuming signed data in 'dirmngr-1.1.1.tar.bz2'
+# gpg: Signature made Fri 26 Apr 2013 04:36:54 AM EDT
+# gpg:                using RSA key 249B39D24F25E3B6
+# gpg: Can't check signature: No public key
+
 main() {
     # """
     # Install GnuPG.
@@ -164,7 +170,7 @@ main() {
         "${install_args[@]}"
     koopa_install_app_internal \
         --name='dirmngr' \
-        --version="${dict[dirmngr_version]}" \
+        --version="${dict[version]}" \
         "${install_args[@]}"
     if ! koopa_is_macos
     then
