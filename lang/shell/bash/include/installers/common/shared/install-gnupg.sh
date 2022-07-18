@@ -32,6 +32,7 @@ main() {
             ;;
         '2.3.4')
             # 2022-03-29.
+            dict[dirmngr_version]='1.1.1'         # 2013-04-26
             dict[libassuan_version]='2.5.5'       # 2021-03-22
             dict[libgcrypt_version]='1.10.1'      # 2022-03-28
             dict[libgpg_error_version]='1.44'     # 2022-01-27
