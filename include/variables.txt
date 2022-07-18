@@ -195,7 +195,7 @@ glib="2.72.0"
 gmp="6.2.1"
 
 # https://gnupg.org/download/index.html
-gnupg="2.3.4"
+gnupg="2.3.7"
 
 # https://www.gnutls.org/
 gnutls="3.7.4"
