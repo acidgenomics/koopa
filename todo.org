@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO zsh prompt string isn't getting configured for T's MacBook
 ** TODO Consider not configuring any apps, such as R at the end of install call.
     This behavior will be inconsistency with binary package install.
 ** TODO Consider taking out name fancy variable using in install scripts.
