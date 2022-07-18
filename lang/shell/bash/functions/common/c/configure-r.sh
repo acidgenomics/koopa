@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Rather than using symlinks to configure Renviron.site,
+# dynamically create this using a function.
+
+# FIXME Is R is installed as system package, don't link into /opt/koopa,
+# as this can conflict with R built from source.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
