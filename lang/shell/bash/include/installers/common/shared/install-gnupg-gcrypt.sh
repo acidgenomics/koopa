@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Skip key check for nPth...expired.
-
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-07-18.
     # """
     local app conf_args dict
     koopa_activate_build_opt_prefix 'autoconf' 'automake' 'pkg-config'
@@ -22,25 +20,22 @@ main() {
         [import_gpg_keys]="${INSTALL_IMPORT_GPG_KEYS:-1}"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if [[ -d "${dict[opt_prefix]}/gnupg" ]] &&
-        ! koopa_is_empty_dir "${dict[opt_prefix]}/gnupg"
-    then
-        koopa_activate_opt_prefix 'gnupg'
-    fi
+    koopa_activate_opt_prefix "${dict[prefix]}"
     dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
     case "${dict[name]}" in
+        'dirmngr' | \
+        'npth')
+            # nPth uses expired 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' key.
+            # dirmngr is from 2013 and also has an expired key.
+            dict[check_key]=0
+            ;;
         'gnutls')
             dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
             dict[base_url]="${dict[base_url]}/v${dict[maj_min_ver]}"
             dict[compress_ext]='xz'
-            ;;
-        'npth')
-            # Uses expired 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' key.
-            dict[check_key]=0
             ;;
     esac
     dict[tar_file]="${dict[name]}-${dict[version]}.tar.${dict[compress_ext]}"
