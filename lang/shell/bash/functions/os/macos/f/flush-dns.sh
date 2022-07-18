@@ -16,7 +16,7 @@ koopa_macos_flush_dns() {
     [[ -x "${app[dscacheutil]}" ]] || return 1
     [[ -x "${app[kill_all]}" ]] || return 1
     [[ -x "${app[sudo]}" ]] || return 1
-    koopa_alert Flushing DNS."
+    koopa_alert 'Flushing DNS.'
     "${app[sudo]}" "${app[dscacheutil]}" -flushcache
     "${app[sudo]}" "${app[kill_all]}" -HUP 'mDNSResponder'
     koopa_alert_success 'DNS flush was successful.'

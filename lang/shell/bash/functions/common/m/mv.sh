@@ -19,9 +19,7 @@ koopa_mv() {
         [mv]="$(koopa_locate_mv)"
         [rm]='koopa_rm'
     )
-    [[ -x "${app[mkdir]}" ]] || return 1
     [[ -x "${app[mv]}" ]] || return 1
-    [[ -x "${app[rm]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
         [target_dir]=''

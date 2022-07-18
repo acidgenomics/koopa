@@ -57,6 +57,8 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         [sed]="$(koopa_locate_sed)"
         [touch]="$(koopa_locate_touch)"
     )
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[touch]}" ]] || return 1
     declare -A dict=(
         [cores]="$(koopa_cpu_count)"
         [fasta_file]=''
@@ -356,6 +358,8 @@ koopa_linux_bcl2fastq_indrops() {
         [bcl2fastq]="$(koopa_linux_locate_bcl2fastq)"
         [tee]="$(koopa_locate_tee)"
     )
+    [[ -x "${app[bcl2fastq]}" ]] || return 1
+    [[ -x "${app[tee]}" ]] || return 1
     declare -A dict=(
         [log_file]='bcl2fastq-indrops.log'
     )
@@ -543,6 +547,8 @@ koopa_linux_java_update_alternatives() {
         [sudo]="$(koopa_locate_sudo)"
         [update_alternatives]="$(koopa_linux_locate_update_alternatives)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[update_alternatives]}" ]] || return 1
     declare -A dict=(
         [alt_prefix]='/var/lib/alternatives'
         [prefix]="$(koopa_realpath "${1:?}")"
@@ -664,6 +670,7 @@ koopa_linux_os_version() {
     declare -A app=(
         [uname]="$(koopa_locate_uname)"
     )
+    [[ -x "${app[uname]}" ]] || return 1
     x="$("${app[uname]}" -r)"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"
@@ -678,6 +685,8 @@ koopa_linux_remove_user_from_group() {
         [gpasswd]="$(koopa_linux_locate_gpasswd)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[gpasswd]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [group]="${1:?}"
         [user]="${2:-}"
@@ -793,6 +802,8 @@ koopa_linux_update_ldconfig() {
         [ldconfig]="$(koopa_linux_locate_ldconfig)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[ldconfig]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [distro_prefix]="$(koopa_distro_prefix)"
         [target_prefix]='/etc/ld.so.conf.d'
