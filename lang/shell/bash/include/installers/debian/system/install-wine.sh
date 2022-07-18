@@ -31,6 +31,8 @@ main() {
         [dpkg]="$(koopa_debian_locate_dpkg)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[dpkg]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     koopa_debian_apt_add_wine_repo
     # This is required to install missing libaudio0 dependency.
     koopa_debian_apt_add_wine_obs_repo

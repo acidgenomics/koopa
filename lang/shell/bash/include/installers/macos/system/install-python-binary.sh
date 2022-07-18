@@ -11,6 +11,8 @@ main() {
         [installer]="$(koopa_macos_locate_installer)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[installer]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [framework_prefix]='/Library/Frameworks/Python.framework'
         [macos_version]="$(koopa_macos_os_version)"

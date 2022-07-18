@@ -36,6 +36,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         # > [mirror]='https://mirrors.ocf.berkeley.edu/apache'
         [mirror]='https://archive.apache.org/dist'

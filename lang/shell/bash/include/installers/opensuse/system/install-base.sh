@@ -13,6 +13,8 @@ main() {
         [sudo]="$(koopa_locate_sudo)"
         [zypper]="$(koopa_locate_zypper)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[zypper]}" ]] || return 1
     declare -A dict=(
         [base]=1
         [dev]=1

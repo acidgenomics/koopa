@@ -9,6 +9,7 @@ main() {
     declare -A app=(
         [bash]="$(koopa_locate_bash)"
     )
+    [[ -x "${app[bash]}" ]] || return 1
     declare -A dict=(
         [arch]="$(koopa_arch)" # e.g. 'x86_64'.
         [koopa_prefix]="$(koopa_koopa_prefix)"

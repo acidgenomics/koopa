@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Think we can set NONINTERACTIVE=1 here now similar to installer.
+# FIXME Remove the usage of 'yes' here.
+
 # Here's how to remove all brew formula:
 # https://apple.stackexchange.com/questions/198623/
 # > while [[ "$(brew list | wc -l)" -ne 0 ]]
@@ -26,6 +29,8 @@ main() {
         [sudo]="$(koopa_locate_sudo)"
         [yes]="$(koopa_locate_yes)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[yes]}" ]] || return 1
     declare -A dict=(
         [user]="$(koopa_user)"
     )

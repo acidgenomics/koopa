@@ -20,10 +20,13 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     if koopa_is_macos
     then
         app[autoreconf]="$(koopa_locate_autoreconf)"
         app[patch]="$(koopa_locate_patch)"
+        [[ -x "${app[autoreconf]}" ]] || return 1
+        [[ -x "${app[patch]}" ]] || return 1
     fi
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"

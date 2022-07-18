@@ -26,6 +26,9 @@ main() {
         [pacman_db_upgrade]="$(koopa_arch_locate_pacman_db_upgrade)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[pacman]}" ]] || return 1
+    [[ -x "${app[pacman_db_upgrade]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [base]=1
         [recommended]=1

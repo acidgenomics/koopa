@@ -13,6 +13,9 @@ koopa_debian_apt_disable_deb_src() {
         [sed]="$(koopa_locate_sed)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[apt_get]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [file]="${1:-}"
     )
