@@ -3,7 +3,7 @@
 koopa_install_sed() {
     koopa_install_app \
         --installer='gnu-app' \
-        --link-in-bin='bin/sed' \
+        --link-in-bin='sed' \
         --name='sed' \
         "$@"
 }

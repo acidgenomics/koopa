@@ -72,6 +72,7 @@ koopa_salmon_quant_paired_end_per_sample() {
     declare -A app=(
         [salmon]="$(koopa_locate_salmon)"
     )
+    [[ -x "${app[salmon]}" ]] || return 1
     declare -A dict=(
         # Current recommendation in bcbio-nextgen.
         [bootstraps]=30

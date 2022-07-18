@@ -3,18 +3,19 @@
 main() {
     # """
     # Install lesspipe.
-    # @note Updated 2022-01-19.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://github.com/wofr06/lesspipe
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/lesspipe.rb
     # """
-    local app dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='lesspipe'
@@ -34,7 +35,9 @@ tags/${dict[file]}"
         --pattern='\$(DESTDIR)/etc/bash_completion.d' \
         --replacement='\$(DESTDIR)\$(PREFIX)/etc/bash_completion.d' \
         'configure'
-    ./configure --prefix="${dict[prefix]}"
+    conf_args=("--prefix=${dict[prefix]}")
+    ./configure --help
+    ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install

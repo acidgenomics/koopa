@@ -10,6 +10,7 @@ koopa_debian_apt_enabled_repos() {
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[cut]}" ]] || return 1
     declare -A dict=(
         [file]="$(koopa_debian_apt_sources_file)"
         [os]="$(koopa_os_codename)"

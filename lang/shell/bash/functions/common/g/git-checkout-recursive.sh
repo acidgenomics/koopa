@@ -9,6 +9,7 @@ koopa_git_checkout_recursive() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
+    [[ -x "${app[git]}" ]] || return 1
     declare -A dict=(
         [branch]=''
         [origin]=''

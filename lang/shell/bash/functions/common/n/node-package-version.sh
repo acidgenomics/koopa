@@ -17,6 +17,8 @@ koopa_node_package_version() {
         [jq]="$(koopa_locate_jq)"
         [npm]="$(koopa_locate_npm)"
     )
+    [[ -x "${app[jq]}" ]] || return 1
+    [[ -x "${app[npm]}" ]] || return 1
     for pkg in "$@"
     do
         local dict

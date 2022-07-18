@@ -3,7 +3,7 @@
 koopa_dirname() {
     # """
     # Extract the file dirname.
-    # @note Updated 2022-06-22.
+    # @note Updated 2022-07-15.
     #
     # Parameterized, supporting multiple basename extractions.
     #
@@ -11,10 +11,16 @@ koopa_dirname() {
     # - https://stackoverflow.com/questions/22401091/
     # """
     local arg
-    koopa_assert_has_args "$#"
+    if [[ "$#" -eq 0 ]]
+    then
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     for arg in "$@"
     do
         local str
+        [[ -n "$arg" ]] || return 1
         if [[ -e "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"

@@ -3,7 +3,7 @@
 koopa_install_pipx() {
     koopa_install_app \
         --installer='python-venv' \
-        --link-in-bin='bin/pipx' \
+        --link-in-bin='pipx' \
         --name='pipx' \
         "$@"
 }

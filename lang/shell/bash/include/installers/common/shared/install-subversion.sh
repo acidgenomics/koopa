@@ -36,6 +36,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         # > [mirror]='https://mirrors.ocf.berkeley.edu/apache'
         [mirror]='https://archive.apache.org/dist'
@@ -72,6 +73,7 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

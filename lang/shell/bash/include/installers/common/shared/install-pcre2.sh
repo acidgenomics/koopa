@@ -24,6 +24,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='pcre2'
@@ -45,6 +46,7 @@ download/${dict[name]}-${dict[version]}/${dict[file]}"
         '--enable-pcre2grep-libbz2'
         '--enable-pcre2grep-libz'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

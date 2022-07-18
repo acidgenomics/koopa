@@ -2,7 +2,7 @@
 
 koopa_install_dotfiles() {
     koopa_install_app \
-        --name-fancy='Dotfiles' \
         --name='dotfiles' \
+        --version-is-git-commit \
         "$@"
 }

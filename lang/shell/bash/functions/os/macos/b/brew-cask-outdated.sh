@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using a 'dict' approach.
+
 koopa_macos_brew_cask_outdated() {
     # """
     # List outdated Homebrew casks.
@@ -24,6 +26,8 @@ koopa_macos_brew_cask_outdated() {
         [brew]="$(koopa_locate_brew)"
         [cut]="$(koopa_locate_cut)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app[cut]}" ]] || return 1
     # Whether we want to keep unversioned 'latest' casks returned with
     # '--greedy'. This tends to include font casks and the Google Cloud SDK,
     # which are annoying to have reinstall with each update, so disabling

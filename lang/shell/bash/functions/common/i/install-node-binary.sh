@@ -3,9 +3,8 @@
 koopa_install_node_binary() {
     koopa_install_app \
         --installer='node-binary' \
-        --link-in-bin='bin/node' \
-        --link-in-bin='bin/npm' \
-        --name-fancy='Node.js' \
+        --link-in-bin='node' \
+        --link-in-bin='npm' \
         --name='node' \
         "$@"
 }

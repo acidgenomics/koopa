@@ -1,6 +1,25 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO For system R, both on Linux and Mac, don't link the site-packages library into koopa opt. Create it inside the system path instead.
+** TODO Our R built from source on Ubuntu doesn't seem to be linking libR.so correctly for stringi.
+    # ldd /opt/koopa/opt/r-packages/stringi/libs/stringi.so
+    # libR.so => not found
+** TODO zsh prompt string isn't getting configured for T's MacBook
+** TODO Consider not configuring any apps, such as R at the end of install call.
+    This behavior will be inconsistency with binary package install.
+** TODO Consider taking out name fancy variable using in install scripts.
+** TODO For installed git versions, consider truncating commit to 8 characters.
+** TODO Consider requiring zlib on macOS for all install recipes.
+** TODO Modify 'koopa_app_prefix' to accept input, such as 'gcc', 'zlib', etc.
+** TODO Create a function that combines ldd and otool for linker lookups.
+** TODO Create a function that returns dylib prefix ('.so' on Linux, '.dylib' on macOS).
+    Rework install functions to use this.
+** TODO Move all installer link and unlink operations to 'include/installers' script instead.
+** TODO Ensure that 'koopa install --help' works.
+** TODO Need to add 'koopa update system' support for Linux distros.
+** TODO Reorganize installation of system packages under 'koopa install system XXX'.
+    e.g. update this for Homebrew, etc.
 ** TODO Rework koopa install conventions.
     Use 'koopa install --binary --reinstall XXX YYY' instead of 'koopa install XXX --binary --reinstall'.
 ** TODO Can we install RStudio Server and Shiny Server deb packages without using gdebi-core?

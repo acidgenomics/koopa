@@ -4,10 +4,10 @@ koopa_install_findutils() {
     local install_args
     install_args=(
         '--installer=gnu-app'
-        '--link-in-bin=bin/find'
-        '--link-in-bin=bin/locate'
-        '--link-in-bin=bin/updatedb'
-        '--link-in-bin=bin/xargs'
+        '--link-in-bin=find'
+        '--link-in-bin=locate'
+        '--link-in-bin=updatedb'
+        '--link-in-bin=xargs'
         '--name=findutils'
     )
     if koopa_is_macos

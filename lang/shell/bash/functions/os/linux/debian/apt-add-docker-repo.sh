@@ -3,7 +3,7 @@
 koopa_debian_apt_add_docker_repo() {
     # """
     # Add Docker apt repo.
-    # @note Updated 2021-11-09.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://docs.docker.com/engine/install/debian/
@@ -12,10 +12,9 @@ koopa_debian_apt_add_docker_repo() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_docker_key
     koopa_debian_apt_add_repo \
-        --name-fancy='Docker' \
-        --name='docker' \
-        --url="https://download.docker.com/linux/$(koopa_os_id)" \
+        --component='stable' \
         --distribution="$(koopa_os_codename)" \
-        --component='stable'
+        --name='docker' \
+        --url="https://download.docker.com/linux/$(koopa_os_id)"
     return 0
 }

@@ -10,6 +10,7 @@ koopa_ftp_mirror() {
     declare -A app=(
         [wget]="$(koopa_locate_wget)"
     )
+    [[ -x "${app[wget]}" ]] || return 1
     declare -A dict=(
         [dir]=''
         [host]=''

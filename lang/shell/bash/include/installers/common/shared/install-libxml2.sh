@@ -16,6 +16,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='libxml2'
@@ -36,6 +37,7 @@ ${dict[maj_min_ver]}/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--enable-static'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

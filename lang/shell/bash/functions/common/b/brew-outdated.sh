@@ -10,6 +10,7 @@ koopa_brew_outdated() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
     x="$("${app[brew]}" outdated --quiet)"
     koopa_print "$x"
     return 0

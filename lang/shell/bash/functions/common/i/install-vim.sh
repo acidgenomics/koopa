@@ -2,9 +2,8 @@
 
 koopa_install_vim() {
     koopa_install_app \
-        --link-in-bin='bin/vim' \
-        --link-in-bin='bin/vimdiff' \
-        --name-fancy='Vim' \
+        --link-in-bin='vim' \
+        --link-in-bin='vimdiff' \
         --name='vim' \
         "$@"
 }

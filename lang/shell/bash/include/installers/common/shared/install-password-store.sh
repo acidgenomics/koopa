@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Password Store.
-    # @note Updated 2021-12-21.
+    # @note Updated 2022-07-18.
     # @seealso
     # - https://www.passwordstore.org/
     # - https://git.zx2c4.com/password-store/
@@ -13,6 +13,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [name]='password-store'
         [prefix]="${INSTALL_PREFIX:?}"

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Fish shell.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
@@ -15,15 +15,16 @@ main() {
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
+    [[ -x "${app[cmake]}" ]] || return 1
     declare -A dict=(
         [bin_prefix]="$(koopa_bin_prefix)"
         [jobs]="$(koopa_cpu_count)"
-        [link_in_bin]="${INSTALL_LINK_IN_BIN:?}"
         [name]='fish'
         [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    # FIXME Make this a function.
     if koopa_is_macos
     then
         dict[shared_ext]='dylib'
@@ -50,7 +51,7 @@ releases/download/${dict[version]}/${dict[file]}"
         --build 'build' \
         --parallel "${dict[jobs]}"
     "${app[cmake]}" --install 'build'
-    if [[ "${dict[link_in_bin]}" -eq 1 ]]
+    if koopa_is_shared_install
     then
         koopa_enable_shell_for_all_users "${dict[bin_prefix]}/${dict[name]}"
     fi

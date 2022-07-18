@@ -17,6 +17,8 @@ main() {
         [sudo]="$(koopa_locate_sudo)"
         [tar]="$(koopa_locate_tar)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[tar]}" ]] || return 1
     declare -A dict=(
         [name]='openmp'
         [platform]='darwin'

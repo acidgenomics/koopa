@@ -16,6 +16,7 @@ koopa_aws_s3_mv_to_parent() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
+    [[ -x "${app[aws]}" ]] || return 1
     declare -A dict=(
         [prefix]=''
         [profile]="${AWS_PROFILE:-}"

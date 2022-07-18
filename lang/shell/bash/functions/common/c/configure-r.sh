@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this on macOS, need to rework.
-# chmod: Unable to change file mode on /opt/koopa/app/r/4.2.1/lib/R/etc/Makevars.site: Operation not permitted
+# FIXME Rather than using symlinks to configure Renviron.site,
+# dynamically create this using a function.
+
+# FIXME Is R is installed as system package, don't link into /opt/koopa,
+# as this can conflict with R built from source.
 
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-07-15.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -15,13 +18,13 @@ koopa_configure_r() {
     declare -A app=(
         [r]="${1:-}"
     )
-    declare -A dict=(
-        [name_fancy]='R'
-    )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
-    koopa_assert_is_installed "${app[r]}"
+    [[ -x "${app[r]}" ]] || return 1
+    declare -A dict=(
+        [name]='r'
+    )
     dict[r_prefix]="$(koopa_r_prefix "${app[r]}")"
-    koopa_alert_configure_start "${dict[name_fancy]}" "${dict[r_prefix]}"
+    koopa_alert_configure_start "${dict[name]}" "${dict[r_prefix]}"
     koopa_assert_is_dir "${dict[r_prefix]}"
     koopa_r_link_files_in_etc "${app[r]}"
     koopa_r_link_site_library "${app[r]}"
@@ -29,6 +32,6 @@ koopa_configure_r() {
     koopa_r_javareconf "${app[r]}"
     koopa_r_rebuild_docs "${app[r]}"
     koopa_sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
-    koopa_alert_configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
+    koopa_alert_configure_success "${dict[name]}" "${dict[r_prefix]}"
     return 0
 }

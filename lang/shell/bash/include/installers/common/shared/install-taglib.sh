@@ -28,6 +28,7 @@ main() {
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
+    [[ -x "${app[cmake]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='taglib'

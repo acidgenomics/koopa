@@ -3,7 +3,7 @@
 koopa_capitalize() {
     # """
     # Capitalize the first letter (only) of a string.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-15.
     #
     # @seealso
     # - https://stackoverflow.com/a/12487465
@@ -14,18 +14,20 @@ koopa_capitalize() {
     # > koopa_capitalize 'hello world' 'foo bar'
     # # 'Hello world' 'Foo bar'
     # """
-    local app args str
+    local app str
     declare -A app=(
         [tr]="$(koopa_locate_tr)"
     )
+    [[ -x "${app[tr]}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
+        local pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
     fi
-    for str in "${args[@]}"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         str="$("${app[tr]}" '[:lower:]' '[:upper:]' <<< "${str:0:1}")${str:1}"
         koopa_print "$str"
     done

@@ -12,6 +12,7 @@ koopa_ln() {
         [mkdir]='koopa_mkdir'
         [rm]='koopa_rm'
     )
+    [[ -x "${app[ln]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
         [target_dir]=''
@@ -51,6 +52,7 @@ koopa_ln() {
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
+        [[ -x "${app[sudo]}" ]] || return 1
         ln=("${app[sudo]}" "${app[ln]}")
         mkdir=("${app[mkdir]}" '--sudo')
         rm=("${app[rm]}" '--sudo')

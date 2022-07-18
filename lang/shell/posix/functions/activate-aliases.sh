@@ -42,7 +42,6 @@ koopa_activate_aliases() {
     alias mamba='koopa_alias_mamba'
     alias nvim-fzf='koopa_alias_nvim_fzf'
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
-    alias perlbrew='koopa_alias_perlbrew'
     alias prelude-emacs='koopa_alias_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
     alias python='python3'

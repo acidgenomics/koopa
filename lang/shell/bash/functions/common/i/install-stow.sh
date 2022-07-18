@@ -7,7 +7,7 @@ koopa_install_stow() {
     koopa_install_app \
         --activate-opt='perl' \
         --installer='gnu-app' \
-        --link-in-bin='bin/stow' \
+        --link-in-bin='stow' \
         --name='stow' \
         "$@"
 }

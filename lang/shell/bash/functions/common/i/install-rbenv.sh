@@ -2,7 +2,7 @@
 
 koopa_install_rbenv() {
     koopa_install_app \
-        --link-in-bin='bin/rbenv' \
+        --link-in-bin='rbenv' \
         --name='rbenv' \
         "$@"
 }

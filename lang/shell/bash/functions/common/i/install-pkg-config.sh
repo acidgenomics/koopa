@@ -2,7 +2,7 @@
 
 koopa_install_pkg_config() {
     koopa_install_app \
-        --link-in-bin='bin/pkg-config' \
+        --link-in-bin='pkg-config' \
         --name='pkg-config' \
         "$@"
 }
