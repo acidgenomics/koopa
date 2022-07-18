@@ -14,6 +14,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [name]='utf8proc'
         [prefix]="${INSTALL_PREFIX:?}"

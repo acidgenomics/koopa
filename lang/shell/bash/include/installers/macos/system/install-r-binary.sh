@@ -30,6 +30,8 @@ main() {
         [installer]="$(koopa_macos_locate_installer)"
         [sudo]="$(koopa_locate_sudo)"
     )
+    [[ -x "${app[installer]}" ]] || return 1
+    [[ -x "${app[sudo]}" ]] || return 1
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [framework_prefix]='/Library/Frameworks/R.framework'

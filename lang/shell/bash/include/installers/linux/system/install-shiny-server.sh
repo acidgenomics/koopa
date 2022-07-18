@@ -19,6 +19,7 @@ main() {
     declare -A app=(
         [r]="$(koopa_locate_r)"
     )
+    [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
         [arch]="$(koopa_arch)" # e.g. 'x86_64'.
         [arch2]="$(koopa_arch2)" # e.g. 'amd64'.

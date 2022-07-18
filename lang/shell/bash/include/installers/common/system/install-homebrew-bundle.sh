@@ -18,6 +18,7 @@ main() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
+    [[ -x "${app[brew]}" ]] || return 1
     declare -A dict=(
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [local_brewfile]="$(koopa_xdg_config_home)/homebrew/brewfile"

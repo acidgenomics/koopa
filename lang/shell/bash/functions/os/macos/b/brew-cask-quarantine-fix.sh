@@ -12,6 +12,8 @@ koopa_macos_brew_cask_quarantine_fix() {
         [sudo]="$(koopa_locate_sudo)"
         [xattr]="$(koopa_macos_locate_xattr)"
     )
+    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app[xattr]}" ]] || return 1
     "${app[sudo]}" "${app[xattr]}" -r -d \
         'com.apple.quarantine' \
         '/Applications/'*'.app'

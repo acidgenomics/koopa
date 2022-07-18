@@ -26,6 +26,7 @@ main() {
     declare -A app=(
         [cargo]="$(koopa_locate_cargo)"
     )
+    [[ -x "${app[cargo]}" ]] || return 1
     declare -A dict=(
         [cargo_home]="$(koopa_init_dir 'cargo')"
         [jobs]="$(koopa_cpu_count)"

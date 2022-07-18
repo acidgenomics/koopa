@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to not require bcbio activation step.
+# FIXME Work on locating bcbio_setup_genome directly.
+
 koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # """
     # Install bcbio-nextgen genome from Ensembl.
@@ -52,6 +55,11 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         [sed]="$(koopa_locate_sed)"
         [touch]="$(koopa_locate_touch)"
     )
+    # FIXME Add step to harden against bcbio_setup_genome being present in
+    # path here.
+    # > [[ -x "${app[bcbio_setup_genome]}" ]] || return 1
+    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app[touch]}" ]] || return 1
     declare -A dict=(
         [cores]="$(koopa_cpu_count)"
         [fasta_file]=''
@@ -128,7 +136,9 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         '--index' "${indexes[*]}" \
         '--organism' "${dict[organism]}" \
         '--release' "${dict[release]}"
+    # FIXME Rework this step.
     koopa_activate_bcbio_nextgen
+    # FIXME Rework this step.
     koopa_assert_is_installed "${app[bcbio_setup_genome]}"
     koopa_assert_is_file "${dict[fasta_file]}" "${dict[gtf_file]}"
     dict[fasta_file]="$(koopa_realpath "${dict[fasta_file]}")"
