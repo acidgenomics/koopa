@@ -66,6 +66,7 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
             --target-directory="${dict[etc_dir]}" \
             "${dict[distro_prefix]}/etc/zsh/"*
     fi
+    # FIXME This step will be skipped for binary install.
     if koopa_is_shared_install
     then
         koopa_enable_shell_for_all_users "${dict[bin_prefix]}/${dict[name]}"
