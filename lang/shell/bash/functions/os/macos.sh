@@ -656,6 +656,8 @@ koopa_macos_install_system_r_openmp() {
 
 koopa_macos_install_system_r() {
     koopa_install_app \
+        --link-in-bin='R' \
+        --link-in-bin='Rscript' \
         --name='r' \
         --no-prefix-check \
         --platform='macos' \
@@ -998,6 +1000,8 @@ koopa_macos_uninstall_system_r() {
         --platform='macos' \
         --prefix="$(koopa_macos_r_prefix)" \
         --system \
+        --unlink-in-bin='R' \
+        --unlink-in-bin='Rscript' \
         "$@"
 }
 

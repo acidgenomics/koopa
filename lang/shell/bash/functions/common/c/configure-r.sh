@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME On macOS, consider looking into /Library/Frameworks and locating
+# R there if it exists.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
