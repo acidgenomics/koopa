@@ -88,9 +88,11 @@ main() {
     if koopa_is_linux
     then
         deps+=('zlib')
+    elif koopa_is_macos
+    then
+        deps+=('gcc')
     fi
     deps+=(
-        'gcc'
         'bzip2'
         'icu4c'
         'ncurses'
@@ -259,13 +261,9 @@ main() {
     flibs+=('-lm')
     dict[flibs]="${flibs[*]}"
     conf_args+=(
-        "CC=${app[cc]}"
-        "CXX=${app[cxx]}"
         "F77=${app[fc]}"
         "FC=${app[fc]}"
         "FLIBS=${dict[flibs]}"
-        "OBJC=${app[cc]}"
-        "OBJCXX=${app[cxx]}"
         # Ensure that OpenMP is enabled.
         # https://stackoverflow.com/a/12307488/3911732
         # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up
@@ -278,6 +276,10 @@ main() {
     if koopa_is_macos
     then
         conf_args+=(
+            "CC=${app[cc]}"
+            "CXX=${app[cxx]}"
+            "OBJC=${app[cc]}"
+            "OBJCXX=${app[cxx]}"
             "--x-includes=${dict[x11_prefix]}/include"
             "--x-libraries=${dict[x11_prefix]}/lib"
             '--without-aqua'
