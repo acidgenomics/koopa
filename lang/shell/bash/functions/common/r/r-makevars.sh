@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Consider making this macOS-specific and rename the function.
+# FIXME This should only apply when installing macOS R CRAN binary.
 
 koopa_r_makevars() {
     # """

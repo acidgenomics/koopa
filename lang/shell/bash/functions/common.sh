@@ -649,6 +649,7 @@ koopa_activate_opt_prefix() {
             ldlibs="$("${app[pkg_config]}" --libs-only-l "${pc_files[@]}")"
             [[ -n "$ldlibs" ]] && LDLIBS="${LDLIBS:-} ${ldlibs}"
         else
+
             [[ -d "${prefix}/include" ]] && \
                 CPPFLAGS="${CPPFLAGS:-} -I${prefix}/include"
             [[ -d "${prefix}/lib" ]] && \
@@ -4926,16 +4927,26 @@ koopa_configure_r() {
     [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
         [name]='r'
+        [system]=0
     )
+    ! koopa_is_koopa_app "${app[r]}" && dict[system]=1
     dict[r_prefix]="$(koopa_r_prefix "${app[r]}")"
+    dict[site_library]="${dict[r_prefix]}/site-library"
     koopa_alert_configure_start "${dict[name]}" "${dict[r_prefix]}"
     koopa_assert_is_dir "${dict[r_prefix]}"
     koopa_r_link_files_in_etc "${app[r]}"
-    koopa_r_link_site_library "${app[r]}"
-    koopa_r_makevars "${app[r]}"
+    case "${dict[system]}" in
+        '0')
+            koopa_r_link_site_library "${app[r]}"
+            ;;
+        '1')
+            koopa_r_makevars "${app[r]}"
+            koopa_mkdir --sudo "${dict[site_library]}"
+            koopa_chmod --sudo '0777' "${dict[site_library]}"
+            ;;
+    esac
     koopa_r_javareconf "${app[r]}"
     koopa_r_rebuild_docs "${app[r]}"
-    koopa_sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
     koopa_alert_configure_success "${dict[name]}" "${dict[r_prefix]}"
     return 0
 }
@@ -11241,7 +11252,7 @@ ${dict2[name]}/${dict2[version]}.tar.gz"
         fi
         koopa_download "${dict2[tar_url]}" "${dict2[tar_file]}"
         "${app[tar]}" -Pxzf "${dict2[tar_file]}"
-        koopa_touch "${prefix}/.binary"
+        koopa_touch "${prefix}/.koopa-binary"
     done
     return 0
 }
@@ -11540,9 +11551,9 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     koopa_assert_is_file "${dict[installer_file]}"
     source "${dict[installer_file]}"
     koopa_assert_is_function "${dict[installer_fun]}"
-    if [[ -n "${dict[prefix]}" ]]
+    if [[ -n "${dict[prefix]}" ]] && [[ "${bool[prefix_check]}" -eq 1 ]]
     then
-        if [[ -d "${dict[prefix]}" ]] && [[ "${bool[prefix_check]}" -eq 1 ]]
+        if [[ -d "${dict[prefix]}" ]]
         then
             if [[ "${bool[reinstall]}" -eq 1 ]]
             then
@@ -11583,7 +11594,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
-        dict[log_file]="${dict[prefix]}/.install.log"
+        dict[log_file]="${dict[prefix]}/.koopa-install.log"
     else
         dict[log_file]="$(koopa_tmp_log_file)"
     fi
@@ -11595,10 +11606,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         else
             koopa_alert_install_start "${dict[name]}"
         fi
-    fi
-    if [[ "${bool[link_in_opt]}" -eq 1 ]]
-    then
-        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
@@ -11649,6 +11656,10 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
             ;;
     esac
+    if [[ "${bool[link_in_opt]}" -eq 1 ]]
+    then
+        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
+    fi
     if [[ "${bool[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
@@ -13215,16 +13226,9 @@ koopa_install_pytest() {
 }
 
 koopa_install_python() {
-    local install_args
-    install_args=(
-        '--name=python'
-    )
-    if ! koopa_is_macos
-    then
-        install_args+=('--link-in-bin=python3')
-    fi
     koopa_install_app \
-        "${install_args[@]}" \
+        --link-in-bin='python3' \
+        --name='python' \
         "$@"
 }
 
@@ -13248,19 +13252,10 @@ koopa_install_r_packages() {
 }
 
 koopa_install_r() {
-    local install_args
-    install_args=(
-        '--name=r'
-    )
-    if ! koopa_is_macos
-    then
-        install_args+=(
-            '--link-in-bin=R'
-            '--link-in-bin=Rscript'
-        )
-    fi
     koopa_install_app \
-        "${install_args[@]}" \
+        --link-in-bin='R' \
+        --link-in-bin='Rscript' \
+        --name='r' \
         "$@"
 }
 
@@ -18119,10 +18114,8 @@ koopa_r_makevars() {
     [[ -x "${app[r]}" ]] || return 1
     [[ -x "${app[sort]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
-    if koopa_is_linux && ! koopa_is_koopa_app "${app[r]}"
-    then
-        return 0
-    fi
+    koopa_is_macos || return 0
+    ! koopa_is_koopa_app "${app[r]}" || return 0
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -18158,17 +18151,9 @@ koopa_r_makevars() {
 FC = ${app[fc]}
 FLIBS = ${dict[flibs]}
 END
-    if koopa_is_koopa_app "${app[r]}"
-    then
-        koopa_write_string \
-            --file="${dict[file]}" \
-            --string="${dict[string]}"
-    elif koopa_is_macos
-    then
-        koopa_sudo_write_string \
-            --file="${dict[file]}" \
-            --string="${dict[string]}"
-    fi
+    koopa_sudo_write_string \
+        --file="${dict[file]}" \
+        --string="${dict[string]}"
     return 0
 }
 
@@ -23179,16 +23164,9 @@ koopa_uninstall_pytest() {
 }
 
 koopa_uninstall_python() {
-    local uninstall_args
-    uninstall_args=(
-        '--name=python'
-    )
-    if ! koopa_is_macos
-    then
-        uninstall_args+=('--unlink-in-bin=python3')
-    fi
     koopa_uninstall_app \
-        "${uninstall_args[@]}" \
+        --name='python' \
+        --unlink-in-bin='python3' \
         "$@"
 }
 
@@ -23206,19 +23184,10 @@ koopa_uninstall_r_packages() {
 }
 
 koopa_uninstall_r() {
-    local uninstall_args
-    uninstall_args=(
-        '--name=r'
-    )
-    if ! koopa_is_macos
-    then
-        install_args+=(
-            '--unlink-in-bin=R'
-            '--unlink-in-bin=Rscript'
-        )
-    fi
     koopa_uninstall_app \
-        "${uninstall_args[@]}" \
+        --name='r' \
+        --unlink-in-bin='R' \
+        --unlink-in-bin='Rscript' \
         "$@"
 }
 

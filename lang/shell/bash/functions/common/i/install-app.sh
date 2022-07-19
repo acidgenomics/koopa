@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add an override so 'koopa install r-packages' doesn't
+# log into this directory.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-07-19.
     # """
     local app bin_arr bool build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -245,9 +248,9 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     # shellcheck source=/dev/null
     source "${dict[installer_file]}"
     koopa_assert_is_function "${dict[installer_fun]}"
-    if [[ -n "${dict[prefix]}" ]]
+    if [[ -n "${dict[prefix]}" ]] && [[ "${bool[prefix_check]}" -eq 1 ]]
     then
-        if [[ -d "${dict[prefix]}" ]] && [[ "${bool[prefix_check]}" -eq 1 ]]
+        if [[ -d "${dict[prefix]}" ]]
         then
             if [[ "${bool[reinstall]}" -eq 1 ]]
             then
@@ -288,7 +291,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
-        dict[log_file]="${dict[prefix]}/.install.log"
+        dict[log_file]="${dict[prefix]}/.koopa-install.log"
     else
         dict[log_file]="$(koopa_tmp_log_file)"
     fi
@@ -300,11 +303,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         else
             koopa_alert_install_start "${dict[name]}"
         fi
-    fi
-    # Need to include here, otherwise GnuPG won't install correctly.
-    if [[ "${bool[link_in_opt]}" -eq 1 ]]
-    then
-        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
@@ -359,6 +357,10 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
             ;;
     esac
+    if [[ "${bool[link_in_opt]}" -eq 1 ]]
+    then
+        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
+    fi
     if [[ "${bool[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"

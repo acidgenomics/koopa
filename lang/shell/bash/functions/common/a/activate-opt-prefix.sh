@@ -3,6 +3,10 @@
 # FIXME Rework this to simply call on opt_prefix, but use activate_prefix
 # internally instead...
 
+# FIXME Also include any nested include, lib/lib64, as is the case for GCC.
+# FIXME Generalize this function so we can work on a specific prefix.
+# FIXME This will help improve the configuration of GnuPG, for example.
+
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
@@ -134,6 +138,10 @@ koopa_activate_opt_prefix() {
             ldlibs="$("${app[pkg_config]}" --libs-only-l "${pc_files[@]}")"
             [[ -n "$ldlibs" ]] && LDLIBS="${LDLIBS:-} ${ldlibs}"
         else
+
+            # FIXME Recursively search for lib/lib64 and include dirs.
+            # FIXME Set these here.
+
             # Set 'CPPFLAGS' variable.
             [[ -d "${prefix}/include" ]] && \
                 CPPFLAGS="${CPPFLAGS:-} -I${prefix}/include"
@@ -143,6 +151,7 @@ koopa_activate_opt_prefix() {
             [[ -d "${prefix}/lib64" ]] && \
                 LDFLAGS="${LDFLAGS:-} -L${prefix}/lib64"
         fi
+        # FIXME Always burn these in...
         koopa_add_rpath_to_ldflags \
             "${prefix}/lib" \
             "${prefix}/lib64"

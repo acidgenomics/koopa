@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rather than using symlinks to configure Renviron.site,
-# dynamically create this using a function.
-
-# FIXME Is R is installed as system package, don't link into /opt/koopa,
-# as this can conflict with R built from source.
-
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-07-19.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -22,16 +16,27 @@ koopa_configure_r() {
     [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
         [name]='r'
+        [system]=0
     )
+    ! koopa_is_koopa_app "${app[r]}" && dict[system]=1
     dict[r_prefix]="$(koopa_r_prefix "${app[r]}")"
+    dict[site_library]="${dict[r_prefix]}/site-library"
     koopa_alert_configure_start "${dict[name]}" "${dict[r_prefix]}"
     koopa_assert_is_dir "${dict[r_prefix]}"
     koopa_r_link_files_in_etc "${app[r]}"
-    koopa_r_link_site_library "${app[r]}"
-    koopa_r_makevars "${app[r]}"
+    case "${dict[system]}" in
+        '0')
+            koopa_r_link_site_library "${app[r]}"
+            # > koopa_sys_set_permissions --recursive "${dict[site_library]}"
+            ;;
+        '1')
+            koopa_r_makevars "${app[r]}"
+            koopa_mkdir --sudo "${dict[site_library]}"
+            koopa_chmod --sudo '0777' "${dict[site_library]}"
+            ;;
+    esac
     koopa_r_javareconf "${app[r]}"
     koopa_r_rebuild_docs "${app[r]}"
-    koopa_sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
     koopa_alert_configure_success "${dict[name]}" "${dict[r_prefix]}"
     return 0
 }

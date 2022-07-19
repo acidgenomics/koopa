@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Confirm that this no longer errors if the 'koopa-r.list' repo
+# file isn't present.
+
 main() {
     # """
     # Uninstall R CRAN binary.
