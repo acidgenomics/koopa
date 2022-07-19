@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME Now hitting this OpenMP linker error on Ubuntu during install:
+# R.bin Rmain.o  -lR
+# /usr/bin/ld: ../../lib/libR.so: undefined reference to `GOMP_parallel'
+# /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_thread_num'
+# /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_num_threads'
+# collect2: error: ld returned 1 exit status
+# This is working correctly on macOS though...
+
+# FIXME This is currently working on macOS because we installed OpenMP here:
+# /usr/local/lib/libomp.dylib
+
 main() {
     # """
     # Install R.
