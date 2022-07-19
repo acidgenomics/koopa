@@ -3,6 +3,10 @@
 # FIXME Need to add an override so 'koopa install r-packages' doesn't
 # log into this directory.
 
+# FIXME opt links are currently set with incorrect group permissions on
+# Ubuntu, which causes an uninstall error.
+# FIXME This can be accomplished with 'sudo chown -h 'ubuntu:sudo' *'
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
