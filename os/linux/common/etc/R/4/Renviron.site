@@ -4,6 +4,10 @@
 # FIXME Consider only including this when R is build from source.
 # Otherwise, we can run into LD issues with R CRAN binary on Debian/Ubuntu.
 
+# FIXME Need to rework our ldpaths config approach.
+# FIXME R_LD_LIBRARY_PATH doesn't seem to do the trick correctly.
+# FIXME Check `Sys.getenv("LD_LIBRARY_PATH")` in the R session.
+
 # """
 # Shared R environment configuration for Linux.
 #
@@ -132,6 +136,10 @@ R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libssh2/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/openssl3/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/proj/lib:${R_LD_LIBRARY_PATH}"
+
+# FIXME This is a new addition that may not work correctly.
+LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"
+LD_LIBRARY_PATH="${R_LD_LIBRARY_PATH}:${LD_LIBRARY_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
