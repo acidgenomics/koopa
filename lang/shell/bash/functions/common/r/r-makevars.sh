@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Consider making this macOS-specific and rename the function.
+
 koopa_r_makevars() {
     # """
     # Generate 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-07-19.
     # """
     local app dict flibs i libs
     koopa_assert_has_args_le "$#" 1
@@ -17,10 +19,9 @@ koopa_r_makevars() {
     [[ -x "${app[r]}" ]] || return 1
     [[ -x "${app[sort]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
-    if koopa_is_linux && ! koopa_is_koopa_app "${app[r]}"
-    then
-        return 0
-    fi
+    # FIXME Rename the function, based on this line.
+    koopa_is_macos || return 0
+    ! koopa_is_koopa_app "${app[r]}" || return 0
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -62,17 +63,9 @@ koopa_r_makevars() {
 FC = ${app[fc]}
 FLIBS = ${dict[flibs]}
 END
-    if koopa_is_koopa_app "${app[r]}"
-    then
-        koopa_write_string \
-            --file="${dict[file]}" \
-            --string="${dict[string]}"
-    elif koopa_is_macos
-    then
-        # This applies to R CRAN binary.
-        koopa_sudo_write_string \
-            --file="${dict[file]}" \
-            --string="${dict[string]}"
-    fi
+    # This applies to R CRAN binary.
+    koopa_sudo_write_string \
+        --file="${dict[file]}" \
+        --string="${dict[string]}"
     return 0
 }
