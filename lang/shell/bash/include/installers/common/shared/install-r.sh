@@ -88,11 +88,9 @@ main() {
     if koopa_is_linux
     then
         deps+=('zlib')
-    elif koopa_is_macos
-    then
-        deps+=('gcc')
     fi
     deps+=(
+        'gcc'
         'bzip2'
         'icu4c'
         'ncurses'
