@@ -16,6 +16,10 @@ koopa_fix_zsh_permissions() {
     )
     if koopa_is_shared_install
     then
+        # FIXME Rework to conditionally require the '--sudo' calls here only
+        # if the file is not currently owned by root, AND has incorrect
+        # permissions. Rework this to early return when permissions are correct,
+        # therefore not requiring sudo call.
         koopa_assert_is_admin
         koopa_chown --sudo 'root' \
             "${dict[koopa_prefix]}/lang/shell/zsh" \
