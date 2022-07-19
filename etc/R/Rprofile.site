@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-07-01.
+#' @note Updated 2022-07-19.
 #'
 #' @section Restarting R:
 #'
@@ -56,13 +56,23 @@ local({  # nolint
     )
     flag <- list(
         "conda" = isTRUE(as.integer(Sys.getenv("CONDA_SHLVL")) > 0L),
+        "cranBinary" = FALSE,
         "interactive" = isTRUE(interactive()),
         "linux" = identical(dict[["sysname"]], "Linux"),
         "macos" = identical(dict[["sysname"]], "Darwin"),
         "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))
     )
-    if (isTRUE(flag[["macos"]])) {
-        flag[["framework"]] <- identical(
+    if (isTRUE(flag[["linux"]])) {
+        flag[["cranBinary"]] <- identical(
+            x = R.home(),
+            y = file.path(
+                "",
+                "bin",
+                "R"
+            )
+        )
+    } else if (isTRUE(flag[["macos"]])) {
+        flag[["cranBinary"]] <- identical(
             x = R.home(),
             y = file.path(
                 "",
@@ -143,7 +153,7 @@ local({  # nolint
                 sep = "\n"
             ))
         }
-        if (isTRUE(flag[["framework"]])) {
+        if (isTRUE(flag[["cranBinary"]])) {
             if (isFALSE(all(file.exists(file.path(
                 "", "usr", "local",
                 c(
@@ -155,7 +165,7 @@ local({  # nolint
             ))))) {
                 stop(paste(
                     "OpenMP for Xcode is not installed.",
-                    "Run 'koopa install r-openmp' to resolve.",
+                    "Run 'koopa install system r-openmp' to resolve.",
                     sep = "\n"
                 ))
             }
@@ -200,49 +210,56 @@ local({  # nolint
     ## >     "https://packagemanager.rstudio.com/cran/latest"
     ## > repos[["CRAN"]] <-
     ## >     "https://repo.miserver.it.umich.edu/cran"
-    repos <- getOption("repos")
-    cran <- "https://cloud.r-project.org"
+    snapshot <- "2022-07-01"
+    cran <- paste(
+        "https://packagemanager.rstudio.com",
+        "cran",
+        snapshot,
+        sep = "/"
+    )
     options("install.packages.compile.from.source" = "always")
-    # FIXME On macOS, pin this to RSPM when not using R CRAN binary.
-    if (isTRUE(flag[["linux"]])) {
-        ## Configure the RSPM CRAN snapshot.
-        snapshot <- "2022-07-01"
-        cran <- "https://packagemanager.rstudio.com/cran"
-        ## Enable binary packages for Ubuntu.
-        if (isTRUE(grepl(
-            pattern = "Ubuntu",
+    ## Configure the Ubuntu RSPM binary CRAN snapshot.
+    if (isTRUE(grepl(
+        pattern = "Ubuntu",
+        x = dict[["osVersion"]],
+        fixed = TRUE
+    ))) {
+        x <- strsplit(
             x = dict[["osVersion"]],
+            split = " ",
             fixed = TRUE
-        ))) {
-            x <- strsplit(
-                x = dict[["osVersion"]],
-                split = " ",
-                fixed = TRUE
-            )[[1L]][[2L]]
-            x <- strsplit(
-                x = x,
-                split = ".",
-                fixed = TRUE
-            )[[1L]][[1L]]
-            distro <- switch(
-                EXPR = x,
-                "18" = "bionic",
-                "20" = "focal",
-                "22" = "jammy"
-            )
-            cran <- paste(cran, "__linux__", distro, sep = "/")
-        }
-        cran <- paste(cran, snapshot, sep = "/")
+        )[[1L]][[2L]]
+        x <- strsplit(
+            x = x,
+            split = ".",
+            fixed = TRUE
+        )[[1L]][[1L]]
+        distro <- switch(
+            EXPR = x,
+            "18" = "bionic",
+            "20" = "focal",
+            "22" = "jammy",
+            "jammy"
+        )
+        cran <- paste(
+            "https://packagemanager.rstudio.com",
+            "cran",
+            "__linux__",
+            distro,
+            snapshot
+        )
         options("install.packages.compile.from.source" = "never")
     }
     ## Allow binary install on macOS for CRAN R. Otherwise default to installing
     ## from source. Note that RSPM doesn't currently support macOS binaries.
-    if (isTRUE(flag[["macos"]]) && isTRUE(flag[["framework"]])) {
+    if (isTRUE(flag[["macos"]]) && isTRUE(flag[["cranBinary"]])) {
+        cran <- "https://cloud.r-project.org"
         options(
             "pkgType" = "both",
             "install.packages.compile.from.source" = "never"
         )
     }
+    repos <- getOption("repos")
     repos[["CRAN"]] <- cran
     ## Configure the RSPM Bioconductor mirror repo.
     ## This is currently warning about new books repo, so disabled for now.
