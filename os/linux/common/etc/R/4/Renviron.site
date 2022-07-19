@@ -7,7 +7,7 @@
 # """
 # Shared R environment configuration for Linux.
 #
-# @note Updated 2022-07-18.
+# @note Updated 2022-07-19.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -125,6 +125,7 @@ R_LD_LIBRARY_PATH="${R_HOME}/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/gdal/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/geos/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib:${R_LD_LIBRARY_PATH}"
+R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/lapack/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib:${R_LD_LIBRARY_PATH}"
 R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib:${R_LD_LIBRARY_PATH}"
