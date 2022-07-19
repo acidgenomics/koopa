@@ -923,7 +923,7 @@ koopa_macos_uninstall_brewfile_casks() {
     return 0
 }
 
-koopa_macos_uninstall_adobe_creative_cloud() {
+koopa_macos_uninstall_system_adobe_creative_cloud() {
     koopa_uninstall_app \
         --name='adobe-creative-cloud' \
         --platform='macos' \
@@ -931,7 +931,7 @@ koopa_macos_uninstall_adobe_creative_cloud() {
         "$@"
 }
 
-koopa_macos_uninstall_cisco_webex() {
+koopa_macos_uninstall_system_cisco_webex() {
     koopa_uninstall_app \
         --name='cisco-webex' \
         --platform='macos' \
@@ -939,7 +939,7 @@ koopa_macos_uninstall_cisco_webex() {
         "$@"
 }
 
-koopa_macos_uninstall_docker() {
+koopa_macos_uninstall_system_docker() {
     koopa_uninstall_app \
         --name='docker' \
         --platform='macos' \
@@ -947,7 +947,7 @@ koopa_macos_uninstall_docker() {
         "$@"
 }
 
-koopa_macos_uninstall_microsoft_onedrive() {
+koopa_macos_uninstall_system_microsoft_onedrive() {
     koopa_uninstall_app \
         --name='microsoft-onedrive' \
         --platform='macos' \
@@ -955,7 +955,7 @@ koopa_macos_uninstall_microsoft_onedrive() {
         "$@"
 }
 
-koopa_macos_uninstall_oracle_java() {
+koopa_macos_uninstall_system_oracle_java() {
     koopa_uninstall_app \
         --name='oracle-java' \
         --platform='macos' \
@@ -963,18 +963,16 @@ koopa_macos_uninstall_oracle_java() {
         "$@"
 }
 
-koopa_macos_uninstall_python_binary() {
+koopa_macos_uninstall_system_python() {
     koopa_uninstall_app \
         --name='python' \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
         --system \
-        --uninstaller='python-binary' \
-        --unlink-in-bin='python3' \
         "$@"
 }
 
-koopa_macos_uninstall_r_gfortran() {
+koopa_macos_uninstall_system_r_gfortran() {
     koopa_uninstall_app \
         --name='r-gfortran' \
         --platform='macos' \
@@ -983,7 +981,7 @@ koopa_macos_uninstall_r_gfortran() {
         "$@"
 }
 
-koopa_macos_uninstall_r_openmp() {
+koopa_macos_uninstall_system_r_openmp() {
     koopa_uninstall_app \
         --name='r-openmp' \
         --platform='macos' \
@@ -991,14 +989,11 @@ koopa_macos_uninstall_r_openmp() {
         "$@"
 }
 
-koopa_macos_uninstall_r_binary() {
+koopa_macos_uninstall_system_r() {
     koopa_uninstall_app \
         --name='r' \
         --platform='macos' \
         --system \
-        --uninstaller='r-binary' \
-        --unlink-in-bin='R' \
-        --unlink-in-bin='Rscript' \
         "$@"
 }
 
