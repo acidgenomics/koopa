@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework this for macOS R CRAN binary.
+
 main() {
     # """
     # Install R packages.
