@@ -223,12 +223,15 @@ main() {
         conf_args+=('--with-recommended-packages')
     fi
     dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
+    # Alternatively, can consider using our bundled GCC instead.
+    # > app[cc]="${dict[gcc_prefix]}/bin/gcc"
+    # > app[cxx]="${dict[gcc_prefix]}/bin/g++"
     if koopa_is_macos
     then
-        app[cc]="${dict[gcc_prefix]}/bin/gcc"
-        app[cxx]="${dict[gcc_prefix]}/bin/g++"
+        # Clang tends to compile a number of tricky RStudio packages better.
+        app[cc]='/usr/bin/clang'
+        app[cxx]='/usr/bin/clang++'
     else
-        # FIXME Consider reworking this on Linux, if we can resolve our
         # OpenMP linkage issue above.
         app[cc]='/usr/bin/gcc'
         app[cxx]='/usr/bin/g++'
