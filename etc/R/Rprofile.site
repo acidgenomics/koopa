@@ -246,7 +246,8 @@ local({  # nolint
             "cran",
             "__linux__",
             distro,
-            snapshot
+            snapshot,
+            sep = "/"
         )
         options("install.packages.compile.from.source" = "never")
     }
