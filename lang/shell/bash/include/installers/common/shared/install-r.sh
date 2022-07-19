@@ -17,6 +17,8 @@
 # FIXME We need to set the FLIBS here, instead of doing it later in Makevars.site
 # config, otherwise we'll hit OpenMP errors.
 # FIXME Ensure we set FC and FLIBS in our main install call, rather than a Makevars.site approach.
+# FIXME Consider hardening Linux config to point to system GCC in the conf_args.
+# FIXME Spell out the absolute path here.
 
 main() {
     # """
