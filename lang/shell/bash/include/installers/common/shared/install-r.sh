@@ -7,9 +7,16 @@
 # /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_num_threads'
 # collect2: error: ld returned 1 exit status
 # This is working correctly on macOS though...
-
 # FIXME This is currently working on macOS because we installed OpenMP here:
 # /usr/local/lib/libomp.dylib
+# FIXME Seems like we also need to include these:
+# Linux:
+# /opt/koopa/app/gcc/12.1.0/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include
+# macOS:
+# /opt/koopa/app/gcc/12.1.0/lib/gcc/x86_64-apple-darwin21/12.1.0/include
+# FIXME We need to set the FLIBS here, instead of doing it later in Makevars.site
+# config, otherwise we'll hit OpenMP errors.
+# FIXME Ensure we set FC and FLIBS in our main install call, rather than a Makevars.site approach.
 
 main() {
     # """
@@ -50,15 +57,22 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
     # """
-    local app conf_args deps dict
+    local app conf_args deps dict flibs i libs
     koopa_assert_has_no_args "$#"
     declare -A app=(
+        [dirname]="$(koopa_locate_dirname)"
         [make]="$(koopa_locate_make)"
         [pkg_config]="$(koopa_locate_pkg_config)"
+        [sort]="$(koopa_locate_sort)"
+        [xargs]="$(koopa_locate_xargs)"
     )
+    [[ -x "${app[dirname]}" ]] || return 1
     [[ -x "${app[make]}" ]] || return 1
     [[ -x "${app[pkg_config]}" ]] || return 1
+    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
     declare -A dict=(
+        [arch]="$(koopa_arch)"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -217,13 +231,49 @@ main() {
         "${app[cc]}" \
         "${app[cxx]}" \
         "${app[fc]}"
+    # Configure fortran FLIBS to link GCC correctly.
+    readarray -t libs <<< "$( \
+        koopa_find \
+            --prefix="${dict[gcc_prefix]}" \
+            --pattern='*.a' \
+            --type 'f' \
+        | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
+        | "${app[sort]}" --unique \
+    )"
+    koopa_assert_is_array_non_empty "${libs[@]:-}"
+    flibs=()
+    for i in "${!libs[@]}"
+    do
+        flibs+=("-L${libs[i]}")
+    done
+    flibs+=('-lgfortran')
+    # NOTE quadmath not yet supported for aarch64.
+    # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96016
+    case "${dict[arch]}" in
+        'x86_64')
+            flibs+=('-lquadmath')
+            ;;
+    esac
+    # NOTE Consider also including '-lemutls_w' here, which is recommended
+    # by default macOS build config.
+    flibs+=('-lm')
+    dict[flibs]="${flibs[*]}"
     conf_args+=(
         "CC=${app[cc]}"
         "CXX=${app[cxx]}"
         "F77=${app[fc]}"
         "FC=${app[fc]}"
+        "FLIBS=${dict[flibs]}"
         "OBJC=${app[cc]}"
         "OBJCXX=${app[cxx]}"
+        # Ensure that OpenMP is enabled.
+        # https://stackoverflow.com/a/12307488/3911732
+        # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up
+        # in macOS 'Makeconf' file. May be safe to remove 'FCFLAGS' here.
+        'SHLIB_OPENMP_CFLAGS=-fopenmp'
+        'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
+        'SHLIB_OPENMP_FCFLAGS=-fopenmp'
+        'SHLIB_OPENMP_FFLAGS=-fopenmp'
     )
     if koopa_is_macos
     then

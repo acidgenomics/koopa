@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME This is creating a 'Current 1' directory at '/Library/Ferameworks/R.framework/Versions'....argh.
+# FIXME Consider linking this into '/usr/local/bin'.
+
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-07-19.
     #
     # @section Intel:
     #
@@ -40,7 +43,8 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     dict[maj_min_version]="$(koopa_major_minor_version "${dict[version]}")"
-    dict[prefix]="${dict[framework_prefix]}/Versions/${dict[maj_min_version]}"
+    dict[prefix]="${dict[framework_prefix]}/Versions/\
+${dict[maj_min_version]}/Resources"
     case "${dict[arch]}" in
         'aarch64')
             dict[arch2]='arm64'

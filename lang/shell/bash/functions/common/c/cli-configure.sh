@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME May need to override to allow the user to configure system R here.
+# FIXME Simplify this, passing in a single language per call, which makes
+# configuration of a specific R or Python easier. Don't look across multiple
+# programmling languages here.
+
 koopa_cli_configure() {
     # """
     # Parse user input to 'koopa configure'.
