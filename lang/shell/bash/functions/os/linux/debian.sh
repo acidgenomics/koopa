@@ -542,7 +542,11 @@ koopa_debian_apt_delete_repo() {
     do
         local file
         file="${dict[prefix]}/koopa-${name}.list"
-        koopa_assert_is_file "$file"
+        if [[ ! -f "$file" ]]
+        then
+            koopa_alert_note "File does not exist: '${file}'."
+            continue
+        fi
         koopa_rm --sudo "$file"
     done
     return 0

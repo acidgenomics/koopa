@@ -50,7 +50,7 @@ ${dict2[name]}/${dict2[version]}.tar.gz"
         fi
         koopa_download "${dict2[tar_url]}" "${dict2[tar_file]}"
         "${app[tar]}" -Pxzf "${dict2[tar_file]}"
-        koopa_touch "${prefix}/.binary"
+        koopa_touch "${prefix}/.koopa-binary"
     done
     return 0
 }

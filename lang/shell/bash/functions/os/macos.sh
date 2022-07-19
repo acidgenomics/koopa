@@ -624,40 +624,40 @@ koopa_macos_install_system_defaults() {
         "$@"
 }
 
-koopa_macos_install_system_python_binary() {
+koopa_macos_install_system_python() {
     koopa_install_app \
-        --installer='python-binary' \
-        --link-in-bin='python3' \
         --name='python' \
+        --no-prefix-check \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
         --system \
         "$@"
 }
 
-koopa_macos_install_r_gfortran() {
+koopa_macos_install_system_r_gfortran() {
     koopa_install_app \
         --name='r-gfortran' \
+        --no-prefix-check \
         --platform='macos' \
         --prefix='/usr/local/gfortran' \
         --system \
         "$@"
 }
 
-koopa_macos_install_r_openmp() {
+koopa_macos_install_system_r_openmp() {
     koopa_install_app \
         --name='r-openmp' \
+        --no-prefix-check \
         --platform='macos' \
+        --prefix='/usr/local' \
         --system \
         "$@"
 }
 
-koopa_macos_install_system_r_binary() {
+koopa_macos_install_system_r() {
     koopa_install_app \
-        --installer='r-binary' \
-        --link-in-bin='R' \
-        --link-in-bin='Rscript' \
         --name='r' \
+        --no-prefix-check \
         --platform='macos' \
         --prefix="$(koopa_macos_r_prefix)" \
         --system \
@@ -667,7 +667,9 @@ koopa_macos_install_system_r_binary() {
 koopa_macos_install_system_xcode_clt() {
     koopa_install_app \
         --name='xcode-clt' \
+        --no-prefix-check \
         --platform='macos' \
+        --prefix='/Library/Developer/CommandLineTools' \
         --system \
         "$@"
 }
@@ -985,6 +987,7 @@ koopa_macos_uninstall_system_r_openmp() {
     koopa_uninstall_app \
         --name='r-openmp' \
         --platform='macos' \
+        --prefix='/usr/local' \
         --system \
         "$@"
 }
@@ -993,6 +996,7 @@ koopa_macos_uninstall_system_r() {
     koopa_uninstall_app \
         --name='r' \
         --platform='macos' \
+        --prefix="$(koopa_macos_r_prefix)" \
         --system \
         "$@"
 }

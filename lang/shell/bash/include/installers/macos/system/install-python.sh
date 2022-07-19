@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider linking into '/usr/local'.
+
 main() {
     # """
     # Install Python framework binary.
