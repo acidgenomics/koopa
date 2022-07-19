@@ -6,10 +6,7 @@
 # /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_thread_num'
 # /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_num_threads'
 # collect2: error: ld returned 1 exit status
-# This is working correctly on macOS though...
-# FIXME This is currently working on macOS because we installed OpenMP here:
-# /usr/local/lib/libomp.dylib
-# FIXME Seems like we also need to include these:
+
 # Linux:
 # /opt/koopa/app/gcc/12.1.0/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include
 # macOS:
@@ -226,8 +223,16 @@ main() {
         conf_args+=('--with-recommended-packages')
     fi
     dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
-    app[cc]="${dict[gcc_prefix]}/bin/gcc"
-    app[cxx]="${dict[gcc_prefix]}/bin/g++"
+    if koopa_is_macos
+    then
+        app[cc]="${dict[gcc_prefix]}/bin/gcc"
+        app[cxx]="${dict[gcc_prefix]}/bin/g++"
+    else
+        # FIXME Consider reworking this on Linux, if we can resolve our
+        # OpenMP linkage issue above.
+        app[cc]='/usr/bin/gcc'
+        app[cxx]='/usr/bin/g++'
+    fi
     app[fc]="${dict[gcc_prefix]}/bin/gfortran"
     koopa_assert_is_installed \
         "${app[cc]}" \
@@ -261,9 +266,13 @@ main() {
     flibs+=('-lm')
     dict[flibs]="${flibs[*]}"
     conf_args+=(
+        "CC=${app[cc]}"
+        "CXX=${app[cxx]}"
         "F77=${app[fc]}"
         "FC=${app[fc]}"
         "FLIBS=${dict[flibs]}"
+        "OBJC=${app[cc]}"
+        "OBJCXX=${app[cxx]}"
         # Ensure that OpenMP is enabled.
         # https://stackoverflow.com/a/12307488/3911732
         # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up
@@ -276,10 +285,6 @@ main() {
     if koopa_is_macos
     then
         conf_args+=(
-            "CC=${app[cc]}"
-            "CXX=${app[cxx]}"
-            "OBJC=${app[cc]}"
-            "OBJCXX=${app[cxx]}"
             "--x-includes=${dict[x11_prefix]}/include"
             "--x-libraries=${dict[x11_prefix]}/lib"
             '--without-aqua'
