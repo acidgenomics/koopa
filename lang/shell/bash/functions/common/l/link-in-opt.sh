@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to fix group permission to koopa group.
+
 koopa_link_in_opt() {
     # """
     # Link an application in koopa 'opt/' directory.

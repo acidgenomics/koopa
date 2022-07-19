@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to set to koopa sys group.
+
 __koopa_link_in_dir() {
     # """
     # Symlink multiple programs in a directory.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-07-19.
     #
     # @usage
     # > __koopa_link_in_dir \
@@ -84,6 +86,7 @@ __koopa_link_in_dir() {
             koopa_alert "Linking '${dict2[source_file]}' -> \
 '${dict2[target_file]}'."
         fi
+        # FIXME This needs to set group permission on the symlink.
         koopa_sys_ln "${dict2[source_file]}" "${dict2[target_file]}"
         shift 2
     done

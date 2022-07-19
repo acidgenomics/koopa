@@ -11265,71 +11265,6 @@ koopa_install_app_internal() {
         "$@"
 }
 
-koopa_install_app_packages() {
-    local app dict pos
-    koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict=(
-        [name]=''
-        [reinstall]=0
-    )
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--name='*)
-                dict[name]="${1#*=}"
-                shift 1
-                ;;
-            '--name')
-                dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--reinstall')
-                dict[reinstall]=1
-                shift 1
-                ;;
-            '--prefix='* | '--prefix' | \
-            '--version='* | '--version' | \
-            '--no-prefix-check' | \
-            '--prefix-check')
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_is_set '--name' "${dict[name]}"
-    app[cmd]="$("koopa_locate_${dict[name]}")"
-    [[ -x "${app[cmd]}" ]] || return 1
-    dict[configure_fun]="koopa_configure_${dict[name]}"
-    "${dict[configure_fun]}"
-    koopa_assert_is_function "${dict[configure_fun]}"
-    dict[prefix_fun]="koopa_${dict[name]}_packages_prefix"
-    koopa_assert_is_function "${dict[prefix_fun]}"
-    dict[prefix]="$("${dict[prefix_fun]}")"
-    if [[ -d "${dict[prefix]}" ]]
-    then
-        dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
-    fi
-    if [[ "${dict[reinstall]}" -eq 1 ]]
-    then
-        koopa_rm "${dict[prefix]}"
-    fi
-    dict[version]="$(koopa_get_version "${app[cmd]}")"
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
-    koopa_install_app \
-        --name="${dict[name]}-packages" \
-        --no-prefix-check \
-        --prefix="${dict[prefix]}" \
-        --version="${dict[maj_min_ver]}" \
-        "$@"
-    return 0
-}
-
 koopa_install_app() {
     local app bin_arr bool build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -12509,8 +12444,8 @@ koopa_install_jq() {
 }
 
 koopa_install_julia_packages() {
-    koopa_install_app_packages \
-        --name='julia' \
+    koopa_install_app \
+        --name='julia-packages' \
         "$@"
 }
 
@@ -13246,8 +13181,8 @@ koopa_install_r_koopa() {
 }
 
 koopa_install_r_packages() {
-    koopa_install_app_packages \
-        --name='r' \
+    koopa_install_app \
+        --name='r-packages' \
         "$@"
 }
 
@@ -21138,10 +21073,7 @@ koopa_sys_ln() {
     )
     koopa_rm "${dict[target]}"
     koopa_ln "${dict[source]}" "${dict[target]}"
-    if koopa_is_macos
-    then
-        koopa_sys_set_permissions --no-dereference "${dict[target]}"
-    fi
+    koopa_sys_set_permissions --no-dereference "${dict[target]}"
     return 0
 }
 
