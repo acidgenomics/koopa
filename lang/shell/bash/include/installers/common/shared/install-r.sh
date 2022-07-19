@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider requiring 'imagemagick' here.
-
 main() {
     # """
     # Install R.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-07-19.
     #
     # @section gfortran configuration on macOS:
     #
@@ -93,6 +91,17 @@ main() {
         'fontconfig' # cairo
         'lzo' # cairo
         'pixman' # cairo
+        # Added these on 2022-07-19:
+        'zstd'
+        'fribidi'
+        'graphviz'
+        'harfbuzz'
+        'imagemagick'
+        'libgit2'
+        'sqlite'
+        'geos'
+        'proj'
+        'gdal'
     )
     if koopa_is_macos
     then
