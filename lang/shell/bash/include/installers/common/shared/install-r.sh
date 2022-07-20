@@ -105,11 +105,8 @@ main() {
         'fribidi'
         'graphviz'
         'harfbuzz'
-
-        # FIXME Something here is messed up:
-        # This is returning the 'GOMP_parallel' error.
-
-        # 'imagemagick'
+        # FIXME This appears to be returning the 'GOMP_parallel' error.
+        'imagemagick'
         # 'libgit2'
         # 'sqlite'
         # 'geos'
