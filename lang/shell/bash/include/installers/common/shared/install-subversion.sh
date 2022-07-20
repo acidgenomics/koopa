@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Subversion.
-    # @note Updated 2022-07-13.
+    # @note Updated 2022-07-20.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -20,11 +20,8 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'zlib'
-    fi
     koopa_activate_opt_prefix \
+        'zlib' \
         'apr' \
         'apr-util' \
         'openssl3' \
