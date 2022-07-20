@@ -13,7 +13,7 @@
 main() {
     # """
     # Install rsync.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-07-20.
     #
     # @seealso
     # - https://download.samba.org/pub/rsync/INSTALL
@@ -21,10 +21,20 @@ main() {
     # - https://download.samba.org/pub/rsync/NEWS
     # - https://bugs.gentoo.org/729186
     # """
-    local app dict
+    local app deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'lz4' 'openssl3' 'xxhash'
-    ! koopa_is_macos && koopa_activate_opt_prefix 'zstd'
+    deps=()
+    if koopa_is_linux
+    then
+        deps+=('zstd')
+    fi
+    deps+=(
+        'zlib'
+        'lz4'
+        'openssl3'
+        'xxhash'
+    )
+    koopa_activate_opt_prefix  "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

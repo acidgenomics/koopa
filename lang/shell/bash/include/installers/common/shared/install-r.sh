@@ -67,16 +67,10 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    build_deps=('pkg-config')
-    deps=()
-    if koopa_is_linux
-    then
-        deps+=(
-            # zlib deps: none.
-            'zlib'
-        )
-    fi
-    deps+=(
+    koopa_activate_build_opt_prefix 'pkg-config'
+    deps=(
+        # zlib deps: none.
+        'zlib'
         # zstd deps: none.
         'zstd'
         # m4 deps: none.
@@ -187,7 +181,6 @@ main() {
         # tcl-tk deps: X11.
         'tcl-tk'
     )
-    koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     if koopa_is_macos
     then

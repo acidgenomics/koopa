@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-18"
+koopa-date="2022-07-20"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -483,7 +483,7 @@ rstudio-server="2022.07.0+548"
 ruby="3.1.2p20"
 
 # https://www.rust-lang.org/
-rust="1.62.0"
+rust="1.62.1"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"

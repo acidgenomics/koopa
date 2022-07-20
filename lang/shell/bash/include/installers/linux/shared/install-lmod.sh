@@ -3,18 +3,18 @@
 main() {
     # """
     # Install Lmod.
-    # @note Updated 2022-07-13.
+    # @note Updated 2022-07-20.
     #
     # @seealso
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
     # """
     local app dict
     koopa_activate_build_opt_prefix 'pkg-config'
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'zlib'
-    fi
-    koopa_activate_opt_prefix 'lua' 'luarocks' 'tcl-tk'
+    koopa_activate_opt_prefix \
+        'zlib' \
+        'lua' \
+        'luarocks' \
+        'tcl-tk'
     declare -A app=(
         [lua]="$(koopa_locate_lua)"
         [luarocks]="$(koopa_locate_luarocks)"

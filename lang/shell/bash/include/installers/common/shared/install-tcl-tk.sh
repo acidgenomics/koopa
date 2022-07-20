@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Tcl/Tk.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-20.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
@@ -12,6 +12,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_opt_prefix 'zlib'
     if koopa_is_linux
     then
         koopa_activate_build_opt_prefix 'pkg-config'
@@ -46,14 +47,6 @@ main() {
     koopa_extract "${dict[tcl_file]}"
     (
         koopa_cd "tcl${dict[version]}/unix"
-        if koopa_is_macos
-        then
-            koopa_find_and_replace_in_file \
-                --pattern='^(Requires.private: zlib.*)$' \
-                --replacement='# \1' \
-                --regex \
-                'tcl.pc.in'
-        fi
         ./configure --help
         ./configure "${conf_args[@]}"
         "${app[make]}" --jobs="${dict[jobs]}"
