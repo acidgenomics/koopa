@@ -12,6 +12,13 @@
 # macOS:
 # /opt/koopa/app/gcc/12.1.0/lib/gcc/x86_64-apple-darwin21/12.1.0/include
 
+# FIXME Set the Java configuration in the main install call.
+# NOTE Don't set JAVAH, no longer used.
+# - JAR
+# - JAVA
+# - JAVAC
+# - JAVA_HOME
+
 main() {
     # """
     # Install R.
@@ -151,6 +158,7 @@ main() {
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
+    dict[openjdk]="$(koopa_realpath "${dict[opt_prefix]}/openjdk")"
     dict[tcl_tk]="$(koopa_realpath "${dict[opt_prefix]}/tcl-tk")"
     conf_args=(
         "--prefix=${dict[prefix]}"
@@ -233,10 +241,16 @@ main() {
         app[cxx]="${dict[gcc_prefix]}/bin/g++"
     fi
     app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+    app[jar]="${dict[openjdk]}/bin/jar"
+    app[java]="${dict[openjdk]}/bin/java"
+    app[javac]="${dict[openjdk]}/bin/javac"
     koopa_assert_is_installed \
         "${app[cc]}" \
         "${app[cxx]}" \
-        "${app[fc]}"
+        "${app[fc]}" \
+        "${app[jar]}" \
+        "${app[java]}" \
+        "${app[javac]}"
     # Configure fortran FLIBS to link GCC correctly.
     readarray -t libs <<< "$( \
         koopa_find \
@@ -270,6 +284,10 @@ main() {
         "F77=${app[fc]}"
         "FC=${app[fc]}"
         "FLIBS=${dict[flibs]}"
+        "JAR=${app[jar]}"
+        "JAVA=${app[java]}"
+        "JAVAC=${app[javac]}"
+        "JAVA_HOME=${dict[openjdk]}"
         "OBJC=${app[cc]}"
         "OBJCXX=${app[cxx]}"
         # Ensure that OpenMP is enabled.

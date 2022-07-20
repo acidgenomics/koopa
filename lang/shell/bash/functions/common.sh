@@ -17843,6 +17843,7 @@ koopa_r_javareconf() {
         koopa_alert_note 'Skipping R Java configuration.'
         return 0
     fi
+    dict[java_home]="$(koopa_realpath "${dict[java_home]}")"
     dict[jar]="${dict[java_home]}/bin/jar"
     dict[java]="${dict[java_home]}/bin/java"
     dict[javac]="${dict[java_home]}/bin/javac"
