@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# NOTE Need to clean this up on macOS:
+# NOTE Consider cleaning this up on macOS:
 # clang: warning: argument unused during compilation:
 # '-fno-semantic-interposition' [-Wunused-command-line-argument]
 
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-07-20.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -29,11 +29,8 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'zlib'
-    fi
     koopa_activate_opt_prefix \
+        'zlib' \
         'libffi' \
         'openssl3'
     declare -A app=(
