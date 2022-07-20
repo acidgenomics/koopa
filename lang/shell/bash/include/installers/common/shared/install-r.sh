@@ -125,20 +125,33 @@ main() {
         'pcre'
         # pcre2 deps: zlib, bzip2.
         'pcre2'
-        # FIXME Need to include Perl here.
+        # perl deps: none.
+        'perl'
         # texinfo deps: gettext, ncurses, perl.
         'texinfo'
         # glib deps: zlib, gettext, libffi, pcre.
-        'glib' # cairo
-        'freetype' # cairo
+        'glib'
+        # freetype deps: none.
+        'freetype'
+        # gperf deps: none.
+        'gperf'
+        # fontconfig deps: gperf, freetype, libxml2.
         'fontconfig' # cairo
-        'lzo' # cairo
-        'pixman' # cairo
+        # lzo deps: none.
+        'lzo'
+        # pixman deps: none.
+        'pixman'
+        # fribidi deps: none.
         'fribidi'
+        # graphviz deps: none.
         'graphviz'
+        # harfbuzz deps: freetype, icu4c.
         'harfbuzz'
-        'libtool' # imagemagick
-        'imagemagick' # FIXME This is the culprit of cryptic OpenMP error.
+        # libtool deps: m4.
+        'libtool'
+        # imagemagick deps: libtool.
+        'imagemagick'
+        # libssh2 deps: openssl3.
         'libssh2' # libgit2
         'libgit2'
         'sqlite'
