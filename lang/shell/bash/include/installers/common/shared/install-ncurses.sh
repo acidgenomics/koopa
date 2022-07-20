@@ -19,6 +19,7 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    # FIXME Convert this into a function.
     if koopa_is_macos
     then
         dict[shared_ext]='dylib'
