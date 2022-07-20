@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-20.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -58,7 +58,10 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'gmp' 'mpc' 'mpfr'
+    koopa_activate_opt_prefix \
+        'gmp' \
+        'mpfr' \
+        'mpc'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

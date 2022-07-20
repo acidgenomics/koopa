@@ -71,46 +71,83 @@ main() {
     deps=()
     if koopa_is_linux
     then
-        deps+=('zlib')
+        deps+=(
+            # zlib deps: none.
+            'zlib'
+        )
     fi
     deps+=(
+        # zstd deps: none.
+        'zstd'
+        # m4 deps: none.
+        'm4'
+        # gmp deps: m4.
+        'gmp'
+        # mpfr deps: gmp.
+        'mpfr'
+        # mpc deps: gmp, mpfr.
+        'mpc'
+        # gcc deps: gmp, mpfr, mpc.
         'gcc'
+        # bzip2 deps: none.
         'bzip2'
+        # icu4c deps: none.
         'icu4c'
+        # ncurses deps: none.
         'ncurses'
+        # readline deps: ncurses.
         'readline'
+        # libxml2 deps: icu4c, readline.
         'libxml2'
+        # gettext deps: ncurses, libxml2.
         'gettext'
+        # xz deps: none.
         'xz'
+        # openssl3 deps: zlib.
         'openssl3'
+        # curl deps: openssl3.
         'curl'
+        # lapack deps: gcc.
         'lapack'
+        # libffi deps: none.
         'libffi'
+        # libjpeg-turbo deps: none.
         'libjpeg-turbo'
+        # libpng deps: zlib.
         'libpng'
+        # libtiff deps: libjpeg-turbo, zstd.
         'libtiff'
+        # openblas deps: gcc.
         'openblas'
+        # openjdk deps: none.
         'openjdk'
+        # pcre deps: zlib, bzip2.
         'pcre'
+        # pcre2 deps: zlib, bzip2.
         'pcre2'
-        'tcl-tk'
+        # FIXME Need to include Perl here.
+        # texinfo deps: gettext, ncurses, perl.
         'texinfo'
+        # glib deps: zlib, gettext, libffi, pcre.
         'glib' # cairo
         'freetype' # cairo
         'fontconfig' # cairo
         'lzo' # cairo
         'pixman' # cairo
-        # Added these on 2022-07-19:
-        'zstd'
         'fribidi'
         'graphviz'
         'harfbuzz'
         'libtool' # imagemagick
         'imagemagick' # FIXME This is the culprit of cryptic OpenMP error.
+        'libssh2' # libgit2
         'libgit2'
         'sqlite'
         'geos'
-        'proj'
+        # python deps: zlib, libffi, openssl3.
+        'python' # proj
+        'proj' # gdal
+        # gdal deps: curl, geos, hdf5, libxml2, openssl3, pcre2, sqlite,
+        # libtiff, proj, xz, zstd
         'gdal'
     )
     if koopa_is_macos
@@ -133,8 +170,14 @@ main() {
             'xorg-libxt'
         )
     fi
-    # Cairo depends on X11.
-    deps+=('cairo')
+    deps+=(
+        # tcl-tk deps: X11.
+        'tcl-tk'
+        # FIXME Ensure all these deps are in install recipe.
+        # cairo deps: gettext, freetype, libxml2, fontconfig, libffi,
+        # pcre, glib, libpng, lzo, pixman, X11.
+        'cairo'
+    )
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
