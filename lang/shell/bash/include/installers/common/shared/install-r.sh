@@ -136,7 +136,7 @@ main() {
         # gperf deps: none.
         'gperf'
         # fontconfig deps: gperf, freetype, libxml2.
-        'fontconfig' # cairo
+        'fontconfig'
         # lzo deps: none.
         'lzo'
         # pixman deps: none.
@@ -152,15 +152,21 @@ main() {
         # imagemagick deps: libtool.
         'imagemagick'
         # libssh2 deps: openssl3.
-        'libssh2' # libgit2
+        'libssh2'
+        # libgit2 deps: openssl3, libssh2.
         'libgit2'
+        # sqlite deps: readline.
         'sqlite'
-        'geos'
         # python deps: zlib, libffi, openssl3.
-        'python' # proj
-        'proj' # gdal
+        'python'
+        # hdf5 deps: gcc.
+        'hdf5'
+        # geos deps: none.
+        'geos'
+        # proj deps: curl, libtiff, python, sqlite.
+        'proj'
         # gdal deps: curl, geos, hdf5, libxml2, openssl3, pcre2, sqlite,
-        # libtiff, proj, xz, zstd
+        # libtiff, proj, xz, zstd.
         'gdal'
     )
     if koopa_is_macos
@@ -169,6 +175,7 @@ main() {
         koopa_add_to_path_start '/Library/TeX/texbin'
     else
         deps+=(
+            # X11.
             'xorg-xorgproto'
             'xorg-xcb-proto'
             'xorg-libpthread-stubs'
@@ -184,12 +191,11 @@ main() {
         )
     fi
     deps+=(
-        # tcl-tk deps: X11.
-        'tcl-tk'
-        # FIXME Ensure all these deps are in install recipe.
         # cairo deps: gettext, freetype, libxml2, fontconfig, libffi,
         # pcre, glib, libpng, lzo, pixman, X11.
         'cairo'
+        # tcl-tk deps: X11.
+        'tcl-tk'
     )
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
