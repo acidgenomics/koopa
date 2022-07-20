@@ -4927,26 +4927,16 @@ koopa_configure_r() {
     [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
         [name]='r'
-        [system]=0
     )
-    ! koopa_is_koopa_app "${app[r]}" && dict[system]=1
     dict[r_prefix]="$(koopa_r_prefix "${app[r]}")"
     dict[site_library]="${dict[r_prefix]}/site-library"
     koopa_alert_configure_start "${dict[name]}" "${dict[r_prefix]}"
     koopa_assert_is_dir "${dict[r_prefix]}"
     koopa_r_link_files_in_etc "${app[r]}"
-    case "${dict[system]}" in
-        '0')
-            koopa_r_link_site_library "${app[r]}"
-            ;;
-        '1')
-            koopa_r_makevars "${app[r]}"
-            koopa_mkdir --sudo "${dict[site_library]}"
-            koopa_chmod --sudo '0777' "${dict[site_library]}"
-            ;;
-    esac
+    koopa_r_link_site_library "${app[r]}"
     koopa_r_javareconf "${app[r]}"
     koopa_r_rebuild_docs "${app[r]}"
+    koopa_sys_set_permissions --recursive "${dict[site_library]}"
     koopa_alert_configure_success "${dict[name]}" "${dict[r_prefix]}"
     return 0
 }
@@ -13183,6 +13173,7 @@ koopa_install_r_koopa() {
 koopa_install_r_packages() {
     koopa_install_app \
         --name='r-packages' \
+        --no-prefix-check \
         "$@"
 }
 
@@ -16233,7 +16224,6 @@ koopa_locate_python() {
 
 koopa_locate_r() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='R' \
         --opt-name='r'
 }
@@ -23121,6 +23111,8 @@ koopa_uninstall_r() {
         --unlink-in-bin='R' \
         --unlink-in-bin='Rscript' \
         "$@"
+    koopa_uninstall_r_packages
+    return 0
 }
 
 koopa_uninstall_ranger_fm() {
