@@ -293,7 +293,6 @@ main() {
     else
         conf_args+=('--with-x')
     fi
-    koopa_dl 'configure args' "${conf_args[*]}"
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
         app[svn]="$(koopa_locate_svn)"
@@ -329,6 +328,7 @@ R-${dict[maj_ver]}/${dict[file]}"
     # Need to burn LAPACK in rpath, otherwise grDevices will fail to build.
     koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
     ./configure --help
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
