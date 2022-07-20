@@ -16,11 +16,8 @@ main() {
         'meson' \
         'ninja' \
         'python'
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'zlib'
-    fi
     koopa_activate_opt_prefix \
+        'zlib' \
         'gettext' \
         'libffi' \
         'pcre'
