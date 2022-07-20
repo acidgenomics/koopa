@@ -100,22 +100,22 @@ main() {
         'fontconfig' # cairo
         'lzo' # cairo
         'pixman' # cairo
+
         # Added these on 2022-07-19:
         'zstd'
+        'fribidi'
 
         # FIXME Something here is messed up:
         # This is returning the 'GOMP_parallel' error.
 
-        'fribidi'
-        #'graphviz'
-        #'harfbuzz'
-        #'imagemagick'
-        #'libgit2'
-        #'sqlite'
-
-        # FIXME 'geos'
-        # FIXME 'proj'
-        # FIXME 'gdal'
+        'graphviz'
+        # 'harfbuzz'
+        # 'imagemagick'
+        # 'libgit2'
+        # 'sqlite'
+        # 'geos'
+        # 'proj'
+        # 'gdal'
     )
     if koopa_is_macos
     then
