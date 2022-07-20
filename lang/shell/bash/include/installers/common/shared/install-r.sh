@@ -102,12 +102,17 @@ main() {
         'pixman' # cairo
         # Added these on 2022-07-19:
         'zstd'
+
+        # FIXME Something here is messed up:
+        # This is returning the 'GOMP_parallel' error.
+
         'fribidi'
-        'graphviz'
-        'harfbuzz'
-        'imagemagick'
-        'libgit2'
-        'sqlite'
+        #'graphviz'
+        #'harfbuzz'
+        #'imagemagick'
+        #'libgit2'
+        #'sqlite'
+
         # FIXME 'geos'
         # FIXME 'proj'
         # FIXME 'gdal'
