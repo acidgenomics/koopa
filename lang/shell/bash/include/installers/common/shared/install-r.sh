@@ -12,9 +12,6 @@
 # macOS:
 # /opt/koopa/app/gcc/12.1.0/lib/gcc/x86_64-apple-darwin21/12.1.0/include
 
-# FIXME We need to set the FLIBS here, instead of doing it later in Makevars.site
-# config, otherwise we'll hit OpenMP errors.
-
 main() {
     # """
     # Install R.
@@ -114,6 +111,8 @@ main() {
         'lzo' # cairo
         'pixman' # cairo
         # Added these on 2022-07-19:
+        # FIXME One of these may be causing the weird OpenMP issue...re-enable
+        # these individually to see if we can reproduce.
         # FIXME 'zstd'
         # FIXME 'fribidi'
         # FIXME 'graphviz'
@@ -170,9 +169,7 @@ main() {
         "--with-blas=$( \
             "${app[pkg_config]}" --libs 'openblas' \
         )"
-        # On macOS only, consider including:
-        # - 'cairo-quartz'
-        # - 'cairo-quartz-font'
+        # On macOS, consider including: 'cairo-quartz', 'cairo-quartz-font'.
         "--with-cairo=$( \
             "${app[pkg_config]}" --libs \
                 'cairo' \
@@ -221,18 +218,17 @@ main() {
         conf_args+=('--with-recommended-packages')
     fi
     dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
-    # Alternatively, can consider using our bundled GCC instead.
-    # > app[cc]="${dict[gcc_prefix]}/bin/gcc"
-    # > app[cxx]="${dict[gcc_prefix]}/bin/g++"
     if koopa_is_macos
     then
         # Clang tends to compile a number of tricky RStudio packages better.
         app[cc]='/usr/bin/clang'
         app[cxx]='/usr/bin/clang++'
     else
-        # OpenMP linkage issue above.
-        app[cc]='/usr/bin/gcc'
-        app[cxx]='/usr/bin/g++'
+        # Alternatively, can use system GCC here instead.
+        # > app[cc]='/usr/bin/gcc'
+        # > app[cxx]='/usr/bin/g++'
+        app[cc]="${dict[gcc_prefix]}/bin/gcc"
+        app[cxx]="${dict[gcc_prefix]}/bin/g++"
     fi
     app[fc]="${dict[gcc_prefix]}/bin/gfortran"
     koopa_assert_is_installed \
@@ -255,7 +251,7 @@ main() {
         flibs+=("-L${libs[i]}")
     done
     flibs+=('-lgfortran')
-    # NOTE quadmath not yet supported for aarch64.
+    # quadmath is not yet supported for ARM.
     # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96016
     case "${dict[arch]}" in
         'x86_64')
@@ -266,25 +262,24 @@ main() {
     # by default macOS build config.
     flibs+=('-lm')
     dict[flibs]="${flibs[*]}"
-    # FIXME Re-enable these if we can get R to build again.
-    # > conf_args+=(
-    # >     "CC=${app[cc]}"
-    # >     "CXX=${app[cxx]}"
-    # >     "F77=${app[fc]}"
-    # >     "FC=${app[fc]}"
-    # >     "FLIBS=${dict[flibs]}"
-    # >     "OBJC=${app[cc]}"
-    # >     "OBJCXX=${app[cxx]}"
-    # >     # Ensure that OpenMP is enabled.
-    # >     # https://stackoverflow.com/a/12307488/3911732
-    # >     # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up
-    # >     # in macOS 'Makeconf' file. May be safe to remove 'FCFLAGS' here.
-    # >     'SHLIB_OPENMP_CFLAGS=-fopenmp'
-    # >     'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
-    # >     'SHLIB_OPENMP_FCFLAGS=-fopenmp'
-    # >     'SHLIB_OPENMP_FFLAGS=-fopenmp'
-    # >     'TZ=America/New_York'
-    # > )
+    conf_args+=(
+        "CC=${app[cc]}"
+        "CXX=${app[cxx]}"
+        "F77=${app[fc]}"
+        "FC=${app[fc]}"
+        "FLIBS=${dict[flibs]}"
+        "OBJC=${app[cc]}"
+        "OBJCXX=${app[cxx]}"
+        # Ensure that OpenMP is enabled.
+        # https://stackoverflow.com/a/12307488/3911732
+        # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up
+        # in macOS 'Makeconf' file. May be safe to remove 'FCFLAGS' here.
+        'SHLIB_OPENMP_CFLAGS=-fopenmp'
+        'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
+        'SHLIB_OPENMP_FCFLAGS=-fopenmp'
+        'SHLIB_OPENMP_FFLAGS=-fopenmp'
+        'TZ=America/New_York'
+    )
     if koopa_is_macos
     then
         conf_args+=(
@@ -296,7 +291,6 @@ main() {
     else
         conf_args+=('--with-x')
     fi
-    koopa_dl 'configure args' "${conf_args[*]}"
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
         app[svn]="$(koopa_locate_svn)"
@@ -329,9 +323,10 @@ R-${dict[maj_ver]}/${dict[file]}"
         koopa_cd "R-${dict[version]}"
     fi
     unset -v R_HOME
-    # Need to burn in rpath, otherwise grDevices will fail to build.
+    # Need to burn LAPACK in rpath, otherwise grDevices will fail to build.
     koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
     ./configure --help
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
