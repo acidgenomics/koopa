@@ -3,6 +3,7 @@
 # FIXME Need to improve our build recipe.
 # FIXME For macOS, include libomp as a dependency here.
 # This is required to add OpenMP for LLVM.
+# FIXME Ensure we rebuild for macOS.
 
 main() {
     # """
