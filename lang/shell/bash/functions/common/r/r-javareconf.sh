@@ -3,7 +3,7 @@
 koopa_r_javareconf() {
     # """
     # Update R Java configuration.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-07-20.
     #
     # The default Java path differs depending on the system.
     #
@@ -40,6 +40,7 @@ koopa_r_javareconf() {
         koopa_alert_note 'Skipping R Java configuration.'
         return 0
     fi
+    dict[java_home]="$(koopa_realpath "${dict[java_home]}")"
     dict[jar]="${dict[java_home]}/bin/jar"
     dict[java]="${dict[java_home]}/bin/java"
     dict[javac]="${dict[java_home]}/bin/javac"
