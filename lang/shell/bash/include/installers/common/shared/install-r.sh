@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME imagemagick seems to be the source of the 'libR.so' undefined
+# FIXME imagemagick is the source of the 'libR.so' undefined
 # reference to 'GOMP_parallel' issue.
+# FIXME Consider pinning to our zlib for all install recipes.
 
 main() {
     # """

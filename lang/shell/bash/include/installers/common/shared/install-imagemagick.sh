@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 
+# FIXME Need to improve our build recipe.
+# FIXME For macOS, include libomp as a dependency here.
+# This is required to add OpenMP for LLVM.
+
 main() {
     # """
     # Install ImageMagick.
     # @note Updated 2022-07-20.
     #
     # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
+    #     imagemagick.rb
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/libomp.rb
     # - https://imagemagick.org/script/install-source.php
     # - https://imagemagick.org/script/advanced-linux-installation.php
     # - https://download.imagemagick.org/ImageMagick/download/releases/
