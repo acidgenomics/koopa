@@ -1,24 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting this OpenMP linker error on Ubuntu during install:
-# R.bin Rmain.o  -lR
-# /usr/bin/ld: ../../lib/libR.so: undefined reference to `GOMP_parallel'
-# /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_thread_num'
-# /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_num_threads'
-# collect2: error: ld returned 1 exit status
-
-# Linux:
-# /opt/koopa/app/gcc/12.1.0/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include
-# macOS:
-# /opt/koopa/app/gcc/12.1.0/lib/gcc/x86_64-apple-darwin21/12.1.0/include
-
-# FIXME Set the Java configuration in the main install call.
-# NOTE Don't set JAVAH, no longer used.
-# - JAR
-# - JAVA
-# - JAVAC
-# - JAVA_HOME
-
 main() {
     # """
     # Install R.
@@ -120,9 +101,7 @@ main() {
         'lzo' # cairo
         'pixman' # cairo
         # Added these on 2022-07-19:
-        # FIXME One of these may be causing the weird OpenMP issue...re-enable
-        # these individually to see if we can reproduce.
-        # FIXME 'zstd'
+        'zstd'
         # FIXME 'fribidi'
         # FIXME 'graphviz'
         # FIXME 'harfbuzz'
@@ -298,7 +277,6 @@ main() {
         'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
         'SHLIB_OPENMP_FCFLAGS=-fopenmp'
         'SHLIB_OPENMP_FFLAGS=-fopenmp'
-        'TZ=America/New_York'
     )
     if koopa_is_macos
     then
@@ -343,6 +321,7 @@ R-${dict[maj_ver]}/${dict[file]}"
         koopa_cd "R-${dict[version]}"
     fi
     unset -v R_HOME
+    # > export TZ='America/New_York'
     # Need to burn LAPACK in rpath, otherwise grDevices will fail to build.
     koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
     ./configure --help
