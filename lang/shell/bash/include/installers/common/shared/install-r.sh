@@ -150,7 +150,9 @@ main() {
         # libtool deps: m4.
         'libtool'
         # imagemagick deps: libtool.
-        'imagemagick'
+        # FIXME This seems to be the source of the 'libR.so' undefined
+        # reference to 'GOMP_parallel' issue.
+        # > 'imagemagick'
         # libssh2 deps: openssl3.
         'libssh2'
         # libgit2 deps: openssl3, libssh2.
