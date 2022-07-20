@@ -33,6 +33,8 @@ main() {
     #     R-admin.html#macOS-packages
     # - https://cran.r-project.org/doc/manuals/r-devel/
     #     R-exts.html#Using-Makevars
+    # - https://stat.ethz.ch/R-manual/R-devel/library/base/
+    #     html/capabilities.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/r.rb
     # - https://developer.r-project.org/
     # - https://svn.r-project.org/R/
@@ -291,6 +293,7 @@ main() {
     else
         conf_args+=('--with-x')
     fi
+    koopa_dl 'configure args' "${conf_args[*]}"
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
         app[svn]="$(koopa_locate_svn)"
@@ -326,7 +329,6 @@ R-${dict[maj_ver]}/${dict[file]}"
     # Need to burn LAPACK in rpath, otherwise grDevices will fail to build.
     koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
     ./configure --help
-    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
@@ -341,6 +343,7 @@ R-${dict[maj_ver]}/${dict[file]}"
     then
         koopa_link_in_bin "${app[r]}" 'R-devel'
     fi
+    # NOTE libxml is now expected to return FALSE as of R 4.2.
     "${app[rscript]}" -e 'capabilities()'
     return 0
 }
