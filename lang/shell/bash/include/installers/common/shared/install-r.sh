@@ -67,10 +67,6 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa_is_macos
-    then
-        dict[x11_prefix]='/opt/X11'
-    fi
     build_deps=('pkg-config')
     deps=()
     if koopa_is_linux
@@ -154,7 +150,7 @@ main() {
         # libtool deps: m4.
         'libtool'
         # imagemagick deps: libtool.
-        # > FIXME 'imagemagick'
+        'imagemagick'
         # libssh2 deps: openssl3.
         'libssh2'
         # libgit2 deps: openssl3, libssh2.
@@ -172,29 +168,19 @@ main() {
         # gdal deps: curl, geos, hdf5, libxml2, openssl3, pcre2, sqlite,
         # libtiff, proj, xz, zstd.
         'gdal'
-    )
-    if koopa_is_macos
-    then
-        koopa_add_to_pkg_config_path "${dict[x11_prefix]}/lib/pkgconfig"
-        koopa_add_to_path_start '/Library/TeX/texbin'
-    else
-        deps+=(
-            # X11.
-            'xorg-xorgproto'
-            'xorg-xcb-proto'
-            'xorg-libpthread-stubs'
-            'xorg-libice'
-            'xorg-libsm'
-            'xorg-libxau'
-            'xorg-libxdmcp'
-            'xorg-libxcb'
-            'xorg-libx11'
-            'xorg-libxext'
-            'xorg-libxrender'
-            'xorg-libxt'
-        )
-    fi
-    deps+=(
+        # X11.
+        'xorg-xorgproto'
+        'xorg-xcb-proto'
+        'xorg-libpthread-stubs'
+        'xorg-libice'
+        'xorg-libsm'
+        'xorg-libxau'
+        'xorg-libxdmcp'
+        'xorg-libxcb'
+        'xorg-libx11'
+        'xorg-libxext'
+        'xorg-libxrender'
+        'xorg-libxt'
         # cairo deps: gettext, freetype, libxml2, fontconfig, libffi,
         # pcre, glib, libpng, lzo, pixman, X11.
         'cairo'
@@ -203,6 +189,11 @@ main() {
     )
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
+    if koopa_is_macos
+    then
+        dict[texbin]='/Library/TeX/texbin'
+        koopa_add_to_path_start "${dict[texbin]}"
+    fi
     dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
     dict[openjdk]="$(koopa_realpath "${dict[opt_prefix]}/openjdk")"
     dict[tcl_tk]="$(koopa_realpath "${dict[opt_prefix]}/tcl-tk")"
@@ -347,11 +338,7 @@ main() {
     )
     if koopa_is_macos
     then
-        conf_args+=(
-            "--x-includes=${dict[x11_prefix]}/include"
-            "--x-libraries=${dict[x11_prefix]}/lib"
-            '--without-aqua'
-        )
+        conf_args+=('--without-aqua')
         export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
     else
         conf_args+=('--with-x')
