@@ -6,4 +6,6 @@ koopa_uninstall_r() {
         --unlink-in-bin='R' \
         --unlink-in-bin='Rscript' \
         "$@"
+    koopa_uninstall_r_packages
+    return 0
 }

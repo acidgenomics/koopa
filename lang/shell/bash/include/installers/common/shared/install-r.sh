@@ -11,16 +11,14 @@
 # /opt/koopa/app/gcc/12.1.0/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include
 # macOS:
 # /opt/koopa/app/gcc/12.1.0/lib/gcc/x86_64-apple-darwin21/12.1.0/include
+
 # FIXME We need to set the FLIBS here, instead of doing it later in Makevars.site
 # config, otherwise we'll hit OpenMP errors.
-# FIXME Ensure we set FC and FLIBS in our main install call, rather than a Makevars.site approach.
-# FIXME Consider hardening Linux config to point to system GCC in the conf_args.
-# FIXME Spell out the absolute path here.
 
 main() {
     # """
     # Install R.
-    # @note Updated 2022-07-19.
+    # @note Updated 2022-07-20.
     #
     # @section gfortran configuration on macOS:
     #
@@ -116,16 +114,16 @@ main() {
         'lzo' # cairo
         'pixman' # cairo
         # Added these on 2022-07-19:
-        'zstd'
-        'fribidi'
-        'graphviz'
-        'harfbuzz'
-        'imagemagick'
-        'libgit2'
-        'sqlite'
-        'geos'
-        'proj'
-        'gdal'
+        # FIXME 'zstd'
+        # FIXME 'fribidi'
+        # FIXME 'graphviz'
+        # FIXME 'harfbuzz'
+        # FIXME 'imagemagick'
+        # FIXME 'libgit2'
+        # FIXME 'sqlite'
+        # FIXME 'geos'
+        # FIXME 'proj'
+        # FIXME 'gdal'
     )
     if koopa_is_macos
     then
@@ -268,23 +266,25 @@ main() {
     # by default macOS build config.
     flibs+=('-lm')
     dict[flibs]="${flibs[*]}"
-    conf_args+=(
-        "CC=${app[cc]}"
-        "CXX=${app[cxx]}"
-        "F77=${app[fc]}"
-        "FC=${app[fc]}"
-        "FLIBS=${dict[flibs]}"
-        "OBJC=${app[cc]}"
-        "OBJCXX=${app[cxx]}"
-        # Ensure that OpenMP is enabled.
-        # https://stackoverflow.com/a/12307488/3911732
-        # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up
-        # in macOS 'Makeconf' file. May be safe to remove 'FCFLAGS' here.
-        'SHLIB_OPENMP_CFLAGS=-fopenmp'
-        'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
-        'SHLIB_OPENMP_FCFLAGS=-fopenmp'
-        'SHLIB_OPENMP_FFLAGS=-fopenmp'
-    )
+    # FIXME Re-enable these if we can get R to build again.
+    # > conf_args+=(
+    # >     "CC=${app[cc]}"
+    # >     "CXX=${app[cxx]}"
+    # >     "F77=${app[fc]}"
+    # >     "FC=${app[fc]}"
+    # >     "FLIBS=${dict[flibs]}"
+    # >     "OBJC=${app[cc]}"
+    # >     "OBJCXX=${app[cxx]}"
+    # >     # Ensure that OpenMP is enabled.
+    # >     # https://stackoverflow.com/a/12307488/3911732
+    # >     # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up
+    # >     # in macOS 'Makeconf' file. May be safe to remove 'FCFLAGS' here.
+    # >     'SHLIB_OPENMP_CFLAGS=-fopenmp'
+    # >     'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
+    # >     'SHLIB_OPENMP_FCFLAGS=-fopenmp'
+    # >     'SHLIB_OPENMP_FFLAGS=-fopenmp'
+    # >     'TZ=America/New_York'
+    # > )
     if koopa_is_macos
     then
         conf_args+=(
@@ -328,7 +328,6 @@ R-${dict[maj_ver]}/${dict[file]}"
         koopa_extract "${dict[file]}"
         koopa_cd "R-${dict[version]}"
     fi
-    export TZ='America/New_York'
     unset -v R_HOME
     # Need to burn in rpath, otherwise grDevices will fail to build.
     koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
