@@ -105,6 +105,7 @@ main() {
         'fribidi'
         'graphviz'
         'harfbuzz'
+        'libtool' # imagemagick
         # FIXME Need to reinstall and improve this recipe.
         'imagemagick'
         # 'libgit2'
