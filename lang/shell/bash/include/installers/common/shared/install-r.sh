@@ -105,7 +105,7 @@ main() {
         'fribidi'
         'graphviz'
         'harfbuzz'
-        # FIXME This appears to be returning the 'GOMP_parallel' error.
+        # FIXME Need to reinstall and improve this recipe.
         'imagemagick'
         # 'libgit2'
         # 'sqlite'
