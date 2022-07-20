@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to improve this recipe for Ubuntu.
+
 main() {
     # """
     # Install ImageMagick.
