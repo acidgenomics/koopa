@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve this recipe for Ubuntu.
-
 main() {
     # """
     # Install ImageMagick.
@@ -14,7 +12,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'libtool'
+    koopa_activate_opt_prefix 'libtool'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
