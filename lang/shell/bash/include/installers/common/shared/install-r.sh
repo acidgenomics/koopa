@@ -106,13 +106,12 @@ main() {
         'graphviz'
         'harfbuzz'
         'libtool' # imagemagick
-        # FIXME Need to reinstall and improve this recipe.
-        'imagemagick'
-        # 'libgit2'
-        # 'sqlite'
-        # 'geos'
-        # 'proj'
-        # 'gdal'
+        'imagemagick' # FIXME This is the culprit of cryptic OpenMP error.
+        'libgit2'
+        'sqlite'
+        'geos'
+        'proj'
+        'gdal'
     )
     if koopa_is_macos
     then
