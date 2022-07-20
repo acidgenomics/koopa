@@ -104,12 +104,12 @@ main() {
         # Added these on 2022-07-19:
         'zstd'
         'fribidi'
+        'graphviz'
+        'harfbuzz'
 
         # FIXME Something here is messed up:
         # This is returning the 'GOMP_parallel' error.
 
-        'graphviz'
-        # 'harfbuzz'
         # 'imagemagick'
         # 'libgit2'
         # 'sqlite'
