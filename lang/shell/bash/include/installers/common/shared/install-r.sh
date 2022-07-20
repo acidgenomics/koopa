@@ -102,12 +102,12 @@ main() {
         'pixman' # cairo
         # Added these on 2022-07-19:
         'zstd'
-        # FIXME 'fribidi'
-        # FIXME 'graphviz'
-        # FIXME 'harfbuzz'
-        # FIXME 'imagemagick'
-        # FIXME 'libgit2'
-        # FIXME 'sqlite'
+        'fribidi'
+        'graphviz'
+        'harfbuzz'
+        'imagemagick'
+        'libgit2'
+        'sqlite'
         # FIXME 'geos'
         # FIXME 'proj'
         # FIXME 'gdal'
