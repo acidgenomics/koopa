@@ -32,20 +32,35 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     deps=(
+        # zlib deps: none.
         'zlib'
-        'gcc'
-        'bzip2'
-        'freetype'
-        'fontconfig'
-        'graphviz'
-        'jpeg'
-        'libpng'
-        'libtiff'
-        'libtool'
-        'libxml2'
-        'libzip'
-        'xz'
+        # zstd deps: none.
         'zstd'
+        # bzip2 deps: none.
+        'bzip2'
+        # xz deps: none.
+        'xz'
+        # freetype deps: none.
+        'freetype'
+        # graphviz deps: none.
+        'graphviz'
+        # jpeg deps: none.
+        'jpeg'
+        # libpng deps: none.
+        'libpng'
+        # libtiff deps: libjpeg-turbo, zstd.
+        'libtiff'
+        # libtool deps: m4.
+        'libtool'
+        # libxml2 deps: icu4c, readline.
+        'libxml2'
+        # libzip deps: zlib, nettle, openssl3, perl, zstd.
+        'libzip'
+        # gcc deps: gmp, mpfr, mpc.
+        'gcc'
+        # fontconfig deps: gperf, freetype, libxml2.
+        'fontconfig'
+        # X11.
         'xorg-xorgproto'
         'xorg-xcb-proto'
         'xorg-libpthread-stubs'
