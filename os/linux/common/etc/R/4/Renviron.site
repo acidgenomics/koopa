@@ -1,16 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2034
 
-# FIXME Consider only including this when R is build from source.
-# Otherwise, we can run into LD issues with R CRAN binary on Debian/Ubuntu.
-# FIXME Need to rework our ldpaths config approach.
-# FIXME R_LD_LIBRARY_PATH doesn't seem to do the trick correctly.
-# FIXME Check `Sys.getenv("LD_LIBRARY_PATH")` in the R session.
-
 # """
 # Shared R environment configuration for Linux.
 #
-# @note Updated 2022-07-19.
+# @note Updated 2022-07-21.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -94,53 +88,6 @@ PATH="/usr/bin:/bin"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
-
-# Package configuration {{{2
-# ------------------------------------------------------------------------------
-
-# FIXME Add these in as required packages to build R from source.
-# > PKG_CONFIG_PATH=""
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/fontconfig/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/freetype/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/fribidi/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/gdal/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/geos/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/graphviz/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/harfbuzz/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libpng/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/libtiff/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/openssl3/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/pcre2/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/proj/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/readline/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/xz/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zlib/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zstd/lib/pkgconfig:${PKG_CONFIG_PATH}"
-
-# FIXME Try installing packages without these enabled.
-# > R_LD_LIBRARY_PATH="${R_LD_LIBRARY_PATH:-}"
-# > R_LD_LIBRARY_PATH="/usr/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${R_HOME}/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/gdal/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/geos/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/icu4c/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/imagemagick/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/lapack/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libgit2/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libjpeg-turbo/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/libssh2/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/openssl3/lib:${R_LD_LIBRARY_PATH}"
-# > R_LD_LIBRARY_PATH="${KOOPA_OPT_PREFIX}/proj/lib:${R_LD_LIBRARY_PATH}"
-
-# FIXME This is a new addition that may not work correctly.
-# > LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"
-# > LD_LIBRARY_PATH="${R_LD_LIBRARY_PATH}:${LD_LIBRARY_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
