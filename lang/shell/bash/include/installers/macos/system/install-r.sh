@@ -64,7 +64,11 @@ base/${dict[pkg_file]}"
     "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
     koopa_assert_is_dir "${dict[prefix]}"
     app[r]="${dict[prefix]}/bin/R"
-    koopa_assert_is_installed "${app[r]}"
+    app[rscript]="${app[r]}script"
+    koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
+    koopa_link_in_bin \
+        "${app[r]}" 'R' \
+        "${app[rscript]}" 'Rscript'
     koopa_configure_r "${app[r]}"
     return 0
 }
