@@ -437,6 +437,7 @@ __koopa_complete() {
                                     'defaults'
                                     'python'
                                     'r'
+                                    'r-openmp'
                                     'xcode-clt'
                                 )
                             fi

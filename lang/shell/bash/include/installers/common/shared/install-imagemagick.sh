@@ -56,8 +56,6 @@ main() {
         'libxml2'
         # libzip deps: zlib, nettle, openssl3, perl, zstd.
         'libzip'
-        # gcc deps: gmp, mpfr, mpc.
-        'gcc'
         # fontconfig deps: gperf, freetype, libxml2.
         'fontconfig'
         # X11.
@@ -74,6 +72,13 @@ main() {
         'xorg-libxrender'
         'xorg-libxt'
     )
+    # Using system clang on macOS to avoid '-lopenmp' issues when building
+    # R from source.
+    if koopa_is_linux
+    then
+        # gcc deps: gmp, mpfr, mpc.
+        deps+=('gcc')
+    fi
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
