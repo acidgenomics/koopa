@@ -311,17 +311,17 @@ main() {
     # NOTE Consider also including '-lemutls_w' here, which is recommended
     # by default macOS build config.
     flibs+=('-lm')
-    dict[cc]=${app[cc]}"
-    dict[cxx]=${app[cxx]}"
-    dict[f77]=${app[fc]}"
-    dict[fc]=${app[fc]}"
+    dict[cc]="${app[cc]}"
+    dict[cxx]="${app[cxx]}"
+    dict[f77]="${app[fc]}"
+    dict[fc]="${app[fc]}"
     dict[flibs]="${flibs[*]}"
-    dict[jar]=${app[jar]}"
-    dict[java]=${app[java]}"
-    dict[java_home]=${dict[openjdk]}"
-    dict[javac]=${app[javac]}"
-    dict[objc]=${app[cc]}"
-    dict[objcxx]=${app[cxx]}"
+    dict[jar]="${app[jar]}"
+    dict[java]="${app[java]}"
+    dict[java_home]="${dict[openjdk]}"
+    dict[javac]="${app[javac]}"
+    dict[objc]="${app[cc]}"
+    dict[objcxx]="${app[cxx]}"
     if koopa_is_linux
     then
         dict[cc]="${dict[cc]} -fopenmp"
