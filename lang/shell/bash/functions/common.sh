@@ -4922,12 +4922,12 @@ koopa_configure_r() {
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [r]="${1:-}"
-        [system]=0
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
         [name]='r'
+        [system]=0
     )
     if ! koopa_is_koopa_app "${app[r]}"
     then

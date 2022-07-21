@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Still seeing this ImageMagick OpenMP issue on Ubuntu:
-# /usr/bin/ld: ../../lib/libR.so: undefined reference to `GOMP_parallel'
-# /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_thread_num'
-# /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_num_threads'
-
-# On Ubuntu, libgomp.so is here:
-# /opt/koopa/app/gcc/12.1.0/lib64
-
 main() {
     # """
     # Install R.
@@ -268,7 +260,7 @@ main() {
         app[cc]='/usr/bin/clang'
         app[cxx]='/usr/bin/clang++'
     else
-        # Alternatively, can use system GCC here instead.
+        # Alternatively, can use system GCC here.
         # > app[cc]='/usr/bin/gcc'
         # > app[cxx]='/usr/bin/g++'
         app[cc]="${dict[gcc_prefix]}/bin/gcc"

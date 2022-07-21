@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This is creating a 'Current 1' directory at '/Library/Ferameworks/R.framework/Versions'....argh.
-# FIXME Consider linking this into '/usr/local/bin'.
-
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2022-07-19.
+    # @note Updated 2022-07-21.
     #
     # @section Intel:
     #
@@ -64,6 +61,8 @@ base/${dict[pkg_file]}"
     "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
     koopa_assert_is_dir "${dict[prefix]}"
     koopa_macos_install_system_r_openmp
+    koopa_install_system_tex
+    koopa_install_system_tex_packages
     app[r]="${dict[prefix]}/bin/R"
     app[rscript]="${app[r]}script"
     koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
