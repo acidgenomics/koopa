@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Consider installing all X11 libraries into a single prefix.
 ** TODO For system R, both on Linux and Mac, don't link the site-packages library into koopa opt. Create it inside the system path instead.
 ** TODO Our R built from source on Ubuntu doesn't seem to be linking libR.so correctly for stringi.
     # ldd /opt/koopa/opt/r-packages/stringi/libs/stringi.so
