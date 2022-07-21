@@ -13206,7 +13206,7 @@ koopa_install_r() {
             '--link-in-bin=Rscript'
         )
     fi
-    koopa_install_app "${install_args[@}" "$@"
+    koopa_install_app "${install_args[@]}" "$@"
 }
 
 koopa_install_ranger_fm() {
