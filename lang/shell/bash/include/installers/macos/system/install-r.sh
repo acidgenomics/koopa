@@ -63,6 +63,7 @@ base/${dict[pkg_file]}"
     koopa_download "${dict[url]}"
     "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
     koopa_assert_is_dir "${dict[prefix]}"
+    koopa_macos_install_system_r_openmp
     app[r]="${dict[prefix]}/bin/R"
     app[rscript]="${app[r]}script"
     koopa_assert_is_installed "${app[r]}" "${app[rscript]}"

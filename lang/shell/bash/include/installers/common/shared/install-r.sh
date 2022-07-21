@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Still seeing this ImageMagick OpenMP issue on Ubuntu:
+# /usr/bin/ld: ../../lib/libR.so: undefined reference to `GOMP_parallel'
+# /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_thread_num'
+# /usr/bin/ld: ../../lib/libR.so: undefined reference to `omp_get_num_threads'
+
+# On Ubuntu, libgomp.so is here:
+# /opt/koopa/app/gcc/12.1.0/lib64
+
 main() {
     # """
     # Install R.
@@ -303,26 +311,40 @@ main() {
     # NOTE Consider also including '-lemutls_w' here, which is recommended
     # by default macOS build config.
     flibs+=('-lm')
+    dict[cc]=${app[cc]}"
+    dict[cxx]=${app[cxx]}"
+    dict[f77]=${app[fc]}"
+    dict[fc]=${app[fc]}"
     dict[flibs]="${flibs[*]}"
+    dict[jar]=${app[jar]}"
+    dict[java]=${app[java]}"
+    dict[java_home]=${dict[openjdk]}"
+    dict[javac]=${app[javac]}"
+    dict[objc]=${app[cc]}"
+    dict[objcxx]=${app[cxx]}"
+    if koopa_is_linux
+    then
+        dict[cc]="${dict[cc]} -fopenmp"
+    fi
     conf_args+=(
-        "CC=${app[cc]}"
-        "CXX=${app[cxx]}"
-        "F77=${app[fc]}"
-        "FC=${app[fc]}"
+        "CC=${dict[cc]}"
+        "CXX=${dict[cxx]}"
+        "F77=${dict[f77]}"
+        "FC=${dict[fc]}"
         "FLIBS=${dict[flibs]}"
-        "JAR=${app[jar]}"
-        "JAVA=${app[java]}"
-        "JAVAC=${app[javac]}"
-        "JAVA_HOME=${dict[openjdk]}"
-        "OBJC=${app[cc]}"
-        "OBJCXX=${app[cxx]}"
+        "JAR=${dict[jar]}"
+        "JAVA=${dict[java]}"
+        "JAVAC=${dict[javac]}"
+        "JAVA_HOME=${dict[java_home]}"
+        "OBJC=${dict[objc]}"
+        "OBJCXX=${dict[objcxx]}"
         # Ensure that OpenMP is enabled.
         # https://stackoverflow.com/a/12307488/3911732
         # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up
         # in macOS 'Makeconf' file. May be safe to remove 'FCFLAGS' here.
         'SHLIB_OPENMP_CFLAGS=-fopenmp'
         'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
-        'SHLIB_OPENMP_FCFLAGS=-fopenmp'
+        # > 'SHLIB_OPENMP_FCFLAGS=-fopenmp'
         'SHLIB_OPENMP_FFLAGS=-fopenmp'
     )
     if koopa_is_macos
