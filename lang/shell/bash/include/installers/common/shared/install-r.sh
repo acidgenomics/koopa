@@ -182,6 +182,13 @@ main() {
     then
         dict[texbin]='/Library/TeX/texbin'
         koopa_add_to_path_start "${dict[texbin]}"
+        # How to check that OpenMP for clang is installed. However, can't assume
+        # user without admin can install OpenMP, so keep disabled.
+        # > koopa_assert_is_file \
+        # >     '/usr/local/include/omp-tools.h' \
+        # >     '/usr/local/include/omp.h' \
+        # >     '/usr/local/include/ompt.h' \
+        # >     '/usr/local/lib/libomp.dylib'
     fi
     dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
     dict[openjdk]="$(koopa_realpath "${dict[opt_prefix]}/openjdk")"
@@ -246,6 +253,7 @@ main() {
         )"
         "--with-tcl-config=${dict[tcl_tk]}/lib/tclConfig.sh"
         "--with-tk-config=${dict[tcl_tk]}/lib/tkConfig.sh"
+        '--with-x'
     )
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
@@ -300,8 +308,8 @@ main() {
             flibs+=('-lquadmath')
             ;;
     esac
-    # NOTE Consider also including '-lemutls_w' here, which is recommended
-    # by default macOS build config.
+    # Consider also including '-lemutls_w' here, which is recommended by
+    # macOS CRAN binary build config.
     flibs+=('-lm')
     dict[cc]="${app[cc]}"
     dict[cxx]="${app[cxx]}"
@@ -330,21 +338,22 @@ main() {
         "JAVA_HOME=${dict[java_home]}"
         "OBJC=${dict[objc]}"
         "OBJCXX=${dict[objcxx]}"
-        # Ensure that OpenMP is enabled.
-        # https://stackoverflow.com/a/12307488/3911732
-        # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up
-        # in macOS 'Makeconf' file. May be safe to remove 'FCFLAGS' here.
-        'SHLIB_OPENMP_CFLAGS=-fopenmp'
-        'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
-        # > 'SHLIB_OPENMP_FCFLAGS=-fopenmp'
-        'SHLIB_OPENMP_FFLAGS=-fopenmp'
     )
     if koopa_is_macos
     then
         conf_args+=('--without-aqua')
         export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
     else
-        conf_args+=('--with-x')
+        # Ensure that OpenMP is enabled.
+        # https://stackoverflow.com/a/12307488/3911732
+        # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up in
+        # 'Makeconf' file currently.
+        conf_args+=(
+            'SHLIB_OPENMP_CFLAGS=-fopenmp'
+            'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
+            # > 'SHLIB_OPENMP_FCFLAGS=-fopenmp'
+            'SHLIB_OPENMP_FFLAGS=-fopenmp'
+        )
     fi
     if [[ "${dict[name]}" == 'r-devel' ]]
     then
@@ -378,7 +387,7 @@ R-${dict[maj_ver]}/${dict[file]}"
         koopa_cd "R-${dict[version]}"
     fi
     unset -v R_HOME
-    # > export TZ='America/New_York'
+    export TZ='America/New_York'
     # Need to burn LAPACK in rpath, otherwise grDevices will fail to build.
     koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
     ./configure --help
@@ -399,5 +408,8 @@ R-${dict[maj_ver]}/${dict[file]}"
     fi
     # NOTE libxml is now expected to return FALSE as of R 4.2.
     "${app[rscript]}" -e 'capabilities()'
+    # FIXME Check linkage at end of install.
+    # FIXME Rework this using a custom linker function...
+    # > ldd "${dict[prefix]}/lib/R/lib/libR.so
     return 0
 }
