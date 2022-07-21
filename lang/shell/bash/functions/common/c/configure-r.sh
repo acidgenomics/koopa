@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework to keep site library inside of system R instead of linking
-# into koopa.
-# FIXME Set the permissions on system library to koopa system permissions
-# e.g. 'ubuntu:sudo' on Linux with 775 permissions.
-
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-07-19.
+    # @note Updated 2022-07-21.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -16,12 +11,12 @@ koopa_configure_r() {
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [r]="${1:-}"
-        [system]=0
     )
     [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
     [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
         [name]='r'
+        [system]=0
     )
     if ! koopa_is_koopa_app "${app[r]}"
     then
