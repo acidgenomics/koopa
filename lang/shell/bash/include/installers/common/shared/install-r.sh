@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME imagemagick is the source of the 'libR.so' undefined
-# reference to 'GOMP_parallel' issue.
-# FIXME Consider pinning to our zlib for all install recipes.
-
 main() {
     # """
     # Install R.
@@ -74,13 +70,13 @@ main() {
         # zstd deps: none.
         'zstd'
         # m4 deps: none.
-        'm4'
+        # > 'm4'
         # gmp deps: m4.
-        'gmp'
+        # > 'gmp'
         # mpfr deps: gmp.
-        'mpfr'
+        # > 'mpfr'
         # mpc deps: gmp, mpfr.
-        'mpc'
+        # > 'mpc'
         # gcc deps: gmp, mpfr, mpc.
         'gcc'
         # bzip2 deps: none.
