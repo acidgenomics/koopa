@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Seeing this error message for R-devel on Ubuntu:
+# creating doc/html/resources.html
+# make[1]: Leaving directory '/tmp/koopa-1000-20220721-110201-sRHSY6DW0C/svn/r/doc/manual'
+# ERROR: not an svn checkout
+# make: *** [Makefile:107: svnonly] Error 1
+
 main() {
     # """
     # Install R.
