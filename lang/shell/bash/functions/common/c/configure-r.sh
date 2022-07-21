@@ -2,6 +2,8 @@
 
 # FIXME Rework to keep site library inside of system R instead of linking
 # into koopa.
+# FIXME Set the permissions on system library to koopa system permissions
+# e.g. 'ubuntu:sudo' on Linux with 775 permissions.
 
 koopa_configure_r() {
     # """
@@ -21,7 +23,11 @@ koopa_configure_r() {
     declare -A dict=(
         [name]='r'
     )
-    ! koopa_is_koopa_app "${app[r]}" && dict[system]=1
+    if ! koopa_is_koopa_app "${app[r]}"
+    then
+        koopa_assert_is_admin
+        dict[system]=1
+    fi
     dict[r_prefix]="$(koopa_r_prefix "${app[r]}")"
     dict[site_library]="${dict[r_prefix]}/site-library"
     koopa_alert_configure_start "${dict[name]}" "${dict[r_prefix]}"
@@ -33,8 +39,13 @@ koopa_configure_r() {
             koopa_sys_set_permissions --recursive "${dict[site_library]}"
             ;;
         '1')
+            dict[group]="$(koopa_admin_group)"
+            dict[user]="$(koopa_user)"
             koopa_mkdir --sudo "${dict[site_library]}"
-            koopa_chmod --sudo '0777' "${dict[site_library]}"
+            koopa_chmod --sudo '0775' "${dict[site_library]}"
+            koopa_chown --sudo \
+                "${dict[user]}:${dict[group]}" \
+                "${dict[site_library]}"
             koopa_r_javareconf "${app[r]}"
             koopa_r_rebuild_docs "${app[r]}"
             ;;

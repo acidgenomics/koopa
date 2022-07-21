@@ -6,5 +6,4 @@ koopa_debian_uninstall_system_r() {
         --platform='debian' \
         --system \
         "$@"
-    koopa_uninstall_r_packages
 }
