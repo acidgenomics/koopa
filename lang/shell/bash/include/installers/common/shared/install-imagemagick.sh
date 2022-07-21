@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve our build recipe.
-# FIXME For macOS, include libomp as a dependency here.
-# This is required to add OpenMP for LLVM.
-# FIXME Ensure we rebuild for macOS.
-
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-07-21.
+    #
+    # Also consider requiring:
+    # - ghostscript
+    # - libheif
+    # - liblqr
+    # - libraw
+    # - little-cms2
+    # - openexr
+    # - openjpeg
+    # - webp
+    # - X11 (on Linux)
+    #
+    # If using clang on macOS, need to include libomp, or ensure that
+    # use has run 'koopa install system r-openmp'.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -20,7 +29,18 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'libtool'
+    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_opt_prefix \
+        'zlib' \
+        'bzip2' \
+        'freetype' \
+        'gcc' \
+        'jpeg' \
+        'libpng' \
+        'libtiff' \
+        'libtool' \
+        'libxml2' \
+        'xz'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
