@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-20"
+koopa-date="2022-07-21"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -465,7 +465,7 @@ r-gfortran="8.2"
 # https://developer.r-project.org/SVNtips.html
 # https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
 # This is the SVN revision number.
-r-devel="82487" # 2022-06-15
+r-devel="82608" # 2022-07-21
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.2.0"
