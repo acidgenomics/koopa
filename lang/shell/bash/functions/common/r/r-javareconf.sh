@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider setting JAVAH empty to improve R CRAN config.
+
 koopa_r_javareconf() {
     # """
     # Update R Java configuration.

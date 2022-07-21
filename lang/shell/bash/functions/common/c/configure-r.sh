@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to create Makevars.site for R CRAN here.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
