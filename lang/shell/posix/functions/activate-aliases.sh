@@ -3,7 +3,7 @@
 koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-06-15.
+    # @note Updated 2022-07-21.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -31,6 +31,7 @@ koopa_activate_aliases() {
     alias h='history'
     alias j='z'
     alias k='koopa_alias_k'
+    alias kb='koopa_alias_kb'
     alias kdev='koopa_alias_kdev'
     alias l.='l -d .*'
     alias l1='l -1'

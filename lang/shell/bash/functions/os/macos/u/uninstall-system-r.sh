@@ -9,5 +9,4 @@ koopa_macos_uninstall_system_r() {
         --unlink-in-bin='R-system' \
         --unlink-in-bin='Rscript-system' \
         "$@"
-    koopa_uninstall_r_packages
 }

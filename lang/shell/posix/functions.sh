@@ -118,6 +118,7 @@ koopa_activate_aliases() {
     alias h='history'
     alias j='z'
     alias k='koopa_alias_k'
+    alias kb='koopa_alias_kb'
     alias kdev='koopa_alias_kdev'
     alias l.='l -d .*'
     alias l1='l -1'
@@ -863,6 +864,10 @@ koopa_alias_emacs() {
 
 koopa_alias_k() {
     cd "$(koopa_koopa_prefix)" || return 1
+}
+
+koopa_alias_kb() {
+    cd "$(koopa_koopa_prefix)/lang/shell/bash" || return 1
 }
 
 koopa_alias_kdev() {
