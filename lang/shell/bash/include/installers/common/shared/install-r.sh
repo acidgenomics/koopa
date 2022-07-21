@@ -387,8 +387,9 @@ R-${dict[maj_ver]}/${dict[file]}"
         koopa_cd "R-${dict[version]}"
     fi
     unset -v R_HOME
-    export TZ='America/New_York'
-    # Need to burn LAPACK in rpath, otherwise grDevices will fail to build.
+    # Setting the time zone used to be required for build to complete.
+    # > export TZ='America/New_York'
+    # Need to burn LAPACK in rpath, otherwise grDevices can fail to build.
     koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
     ./configure --help
     koopa_dl 'configure args' "${conf_args[*]}"
@@ -408,8 +409,17 @@ R-${dict[maj_ver]}/${dict[file]}"
     fi
     # NOTE libxml is now expected to return FALSE as of R 4.2.
     "${app[rscript]}" -e 'capabilities()'
-    # FIXME Check linkage at end of install.
-    # FIXME Rework this using a custom linker function...
-    # > ldd "${dict[prefix]}/lib/R/lib/libR.so
+    # > if koopa_is_linux
+    # > then
+    # >     app[ldd]="$(koopa_locate_ldd)"
+    # >     [[ -x "${app[ldd]}" ]] || return 1
+    # >     "${app[ldd]}" "${dict[prefix]}/lib/R/lib/libR.so"
+    # > elif koopa_is_macos
+    # > then
+    # >     # NOTE This can error due to openssl not being in PATH.
+    # >     app[otool]="$(koopa_macos_locate_otool)"
+    # >     [[ -x "${app[otool]}" ]] || return 1
+    # >     "${app[otool]}" -L "${dict[prefix]}/lib/R/lib/libR.dylib"
+    # > fi
     return 0
 }
