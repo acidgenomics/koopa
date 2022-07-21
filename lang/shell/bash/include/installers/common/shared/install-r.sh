@@ -14,6 +14,15 @@ main() {
     #     will-r-work-on-apple-silicon/index.html
     # - https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
     #
+    # @section R-spatial evolution:
+    #
+    # R-spatial packages are being reworked. rgdal, rgeos, and maptools will be
+    # retired in 2023 in favor of more modern packages, such as sf. When this
+    # occurs, it may be possible to remove the geospatial libraries (geos, proj,
+    # gdal) as dependencies here.
+    #
+    # https://r-spatial.org/r/2022/04/12/evolution.html
+    #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
     # - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
@@ -416,7 +425,7 @@ R-${dict[maj_ver]}/${dict[file]}"
     # >     "${app[ldd]}" "${dict[prefix]}/lib/R/lib/libR.so"
     # > elif koopa_is_macos
     # > then
-    # >     # NOTE This can error due to openssl not being in PATH.
+    # >     # NOTE This step can error due to openssl not being in PATH?
     # >     app[otool]="$(koopa_macos_locate_otool)"
     # >     [[ -x "${app[otool]}" ]] || return 1
     # >     "${app[otool]}" -L "${dict[prefix]}/lib/R/lib/libR.dylib"
