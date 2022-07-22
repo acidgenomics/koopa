@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to create Makevars.site for R CRAN here.
-# FIXME Need to ensure gfortran is configured on Ubuntu R CRAN as well.
-# FIXME Need to consistently configure ldpaths for R CRAN binaries across
-# platforms here. Don't need to do this when R is built from source.
-
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-07-21.
+    # @note Updated 2022-07-22.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -36,7 +31,6 @@ koopa_configure_r() {
     case "${dict[system]}" in
         '0')
             koopa_r_link_site_library "${app[r]}"
-            koopa_sys_set_permissions --recursive "${dict[site_library]}"
             ;;
         '1')
             dict[group]="$(koopa_admin_group)"
@@ -46,10 +40,16 @@ koopa_configure_r() {
             koopa_chown --sudo \
                 "${dict[user]}:${dict[group]}" \
                 "${dict[site_library]}"
+            # FIXME Need to add an ldpaths configuration step here.
+            if koopa_is_macos
+            then
+                koopa_r_makevars "${app[r]}"
+            fi
             koopa_r_javareconf "${app[r]}"
             koopa_r_rebuild_docs "${app[r]}"
             ;;
     esac
+    koopa_sys_set_permissions --recursive "${dict[site_library]}"
     koopa_alert_configure_success "${dict[name]}" "${dict[r_prefix]}"
     return 0
 }
