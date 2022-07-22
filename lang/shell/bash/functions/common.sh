@@ -4956,6 +4956,7 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict[user]}:${dict[group]}" \
                 "${dict[site_library]}"
+            koopa_r_ldpaths "${app[r]}"
             koopa_r_makevars "${app[r]}"
             koopa_r_javareconf "${app[r]}"
             koopa_r_rebuild_docs "${app[r]}"
@@ -17984,6 +17985,56 @@ koopa_r_koopa() {
     return 0
 }
 
+koopa_r_ldpaths() {
+    local app dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A app=(
+        [r]="${1:?}"
+    )
+    [[ -x "${app[r]}" ]] || return 1
+    koopa_is_koopa_app "${app[r]}" && return 0
+    koopa_is_linux || return 0
+    declare -A dict=(
+        [arch]="$(koopa_arch)"
+        [koopa_prefix]="$(koopa_prefix)"
+        [opt_prefix]="$(koopa_opt_prefix)"
+        [r_prefix]="$(koopa_r_prefix "${app[r]}")"
+    )
+    dict[file]="${dict[r_prefix]}/etc/ldpaths"
+    dict[java_home]="$(koopa_realpath "${dict[opt_prefix]}/openjdk")"
+    dict[fontconfig]="$(koopa_realpath "${dict[opt_prefix]}/fontconfig")"
+    dict[freetype]="$(koopa_realpath "${dict[opt_prefix]}/freetype")"
+    dict[gdal]="$(koopa_realpath "${dict[opt_prefix]}/gdal")"
+    dict[geos]="$(koopa_realpath "${dict[opt_prefix]}/geos")"
+    dict[imagemagick]="$(koopa_realpath "${dict[opt_prefix]}/imagemagick")"
+    dict[libgit2]="$(koopa_realpath "${dict[opt_prefix]}/libgit2")"
+    dict[proj]="$(koopa_realpath "${dict[opt_prefix]}/proj")"
+    read -r -d '' "dict[string]" << END || true
+if test -z "\${KOOPA_PREFIX}"; then
+: \${KOOPA_PREFIX=${dict[koopa_prefix]}}
+fi
+: \${KOOPA_OPT_PREFIX=\${KOOPA_PREFIX}/opt}
+: \${JAVA_HOME=${dict[java_home]}}
+: \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/libexec/lib/server}
+LD_LIBRARY_PATH=""
+LD_LIBRARY_PATH="/usr/lib/${dict[arch]}-linux-gnu:\${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="\${R_HOME}/lib:\${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="${dict[fontconfig]}/lib:\${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="${dict[freetype]}/lib:\${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="${dict[gdal]}/lib:\${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="${dict[geos]}/lib:\${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="${dict[imagemagick]}/lib:\${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="${dict[libgit2]}/lib:\${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="${dict[proj]}/lib:\${LD_LIBRARY_PATH}"
+LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:\${R_JAVA_LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH
+END
+    koopa_sudo_write_string \
+        --file="${dict[file]}" \
+        --string="${dict[string]}"
+    return 0
+}
+
 koopa_r_library_prefix() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -18098,7 +18149,7 @@ koopa_r_link_site_library() {
 
 koopa_r_makevars() {
     local app dict flibs i libs
-    koopa_assert_has_args_le "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         [dirname]="$(koopa_locate_dirname)"
         [r]="${1:?}"
@@ -18110,7 +18161,6 @@ koopa_r_makevars() {
     [[ -x "${app[sort]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
     koopa_is_koopa_app "${app[r]}" && return 0
-    koopa_assert_is_admin
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [opt_prefix]="$(koopa_opt_prefix)"
