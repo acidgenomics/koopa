@@ -92,7 +92,6 @@ PATH="${KOOPA_PREFIX}/bin:${PATH}"
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
-# FIXME Consider only using these for R built from source.
 PKG_CONFIG_PATH=""
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/fontconfig/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/freetype/lib/pkgconfig:${PKG_CONFIG_PATH}"
