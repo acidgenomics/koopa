@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to bundle CA certificates here.
+
 main() {
     # """
     # Install OpenSSL.
