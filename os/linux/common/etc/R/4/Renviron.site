@@ -185,6 +185,12 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # > TNS_ADMIN="${ORACLE_HOME}/network/admin"
 # > PATH="${PATH}:${ORACLE_HOME}/bin"
 
+# data.table {{{2
+# ------------------------------------------------------------------------------
+
+# Refer to 'data.table::getDTthreads' for more info.
+R_DATATABLE_NUM_PROCS_PERCENT=100
+
 # rcmdcheck {{{2
 # ------------------------------------------------------------------------------
 
