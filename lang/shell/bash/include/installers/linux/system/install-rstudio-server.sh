@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to link this into koopa bin. Or more appropriate in koopa sbin?
+
 main() {
     # """
     # Install RStudio Server binary.
