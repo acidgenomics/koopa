@@ -4193,7 +4193,12 @@ koopa_cli_install() {
         then
             koopa_stop "Unsupported app: '${dict2[app]}'."
         fi
-        "${dict2[fun]}" "${flags[@]:-}"
+        if koopa_is_array_non_empty "${flags[@]:-}"
+        then
+            "${dict2[fun]}" "${flags[@]:-}"
+        else
+            "${dict2[fun]}"
+        fi
     done
     return 0
 }
@@ -12463,9 +12468,21 @@ koopa_install_jq() {
 }
 
 koopa_install_julia_packages() {
-    koopa_install_app \
-        --name='julia-packages' \
-        "$@"
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [julia]="$(koopa_locate_julia)"
+    )
+    [[ -x "${app[julia]}" ]] || return 1
+    declare -A dict=(
+        [script_prefix]="$(koopa_julia_script_prefix)"
+    )
+    dict[script]="${dict[script_prefix]}/install-packages.jl"
+    koopa_assert_is_file "${dict[script]}"
+    koopa_configure_julia "${app[julia]}"
+    koopa_activate_julia
+    "${app[julia]}" "${dict[script]}"
+    return 0
 }
 
 koopa_install_julia() {
@@ -13200,10 +13217,30 @@ koopa_install_r_koopa() {
 }
 
 koopa_install_r_packages() {
-    koopa_install_app \
-        --name='r-packages' \
-        --no-prefix-check \
-        "$@"
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [r]="$(koopa_locate_r)"
+        [rscript]="$(koopa_locate_rscript)"
+    )
+    [[ -x "${app[r]}" ]] || return 1
+    [[ -x "${app[rscript]}" ]] || return 1
+    koopa_configure_r "${app[r]}"
+    declare -A dict=(
+        [bioc_version]="$(koopa_variable 'bioconductor')"
+    )
+    "${app[rscript]}" -e " \
+        isInstalled <- function(pkgs) { ; \
+            basename(pkgs) %in% rownames(utils::installed.packages()); \
+        } ; \
+        if (isFALSE(isInstalled('AcidDevTools'))) { ; \
+            install.packages(pkgs = 'BiocManager'); \
+            BiocManager::install(version = '${dict[bioc_version]}'); \
+            install.packages(pkgs = 'AcidDevTools'); \
+        } ; \
+        AcidDevTools::installRecommendedPackages(); \
+    "
+    return 0
 }
 
 koopa_install_r() {
