@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to bundle CA certificates here.
-
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-07-22.
     #
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
@@ -16,7 +14,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'zlib'
+    koopa_activate_opt_prefix 'ca-certificates'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -24,6 +22,7 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='openssl'
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -41,8 +40,10 @@ main() {
         "--openssldir=${dict[prefix]}"
         "--prefix=${dict[prefix]}"
         "-Wl,-rpath,${dict[prefix]}/lib"
-        'shared' # or 'no-shared'.
-        'zlib'
+        'no-ssl3'
+        'no-ssl3-method'
+        'no-zlib'
+        'shared'
     )
     if koopa_is_linux
     then
@@ -51,10 +52,20 @@ main() {
     # The '-fPIC' flag is required for non-prefixed configuration arguments,
     # such as 'no-shared' or 'shared' to be detected correctly.
     export CPPFLAGS="${CPPFLAGS:-} -fPIC"
+    ./config --help
     ./config "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
+    dict[cacert]="$(koopa_realpath "${dict[opt_prefix]}/ca-certificates/share/\
+ca-certificates/cacert.pem")"
+    koopa_assert_is_file "${dict[cacert]}"
+    koopa_ln \
+        "${dict[cacert]}" \
+        "${dict[prefix]}/certs/cacert.pem"
+    app[openssl]="${dict[prefix]}/bin/openssl"
+    koopa_assert_is_installed "${app[openssl]}"
+    "${app[openssl]}" version -d
     # FIXME Rework this as a function.
     if koopa_is_linux
     then
