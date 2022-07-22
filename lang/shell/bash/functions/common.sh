@@ -18010,10 +18010,6 @@ koopa_r_ldpaths() {
     dict[libgit2]="$(koopa_realpath "${dict[opt_prefix]}/libgit2")"
     dict[proj]="$(koopa_realpath "${dict[opt_prefix]}/proj")"
     read -r -d '' "dict[string]" << END || true
-if test -z "\${KOOPA_PREFIX}"; then
-: \${KOOPA_PREFIX=${dict[koopa_prefix]}}
-fi
-: \${KOOPA_OPT_PREFIX=\${KOOPA_PREFIX}/opt}
 : \${JAVA_HOME=${dict[java_home]}}
 : \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/libexec/lib/server}
 LD_LIBRARY_PATH=""
