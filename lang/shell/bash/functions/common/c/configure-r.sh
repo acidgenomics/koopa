@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Improve ldpaths configuration in Linux using settings from T's VM.
-
 koopa_configure_r() {
     # """
     # Update R configuration.
@@ -42,6 +40,7 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict[user]}:${dict[group]}" \
                 "${dict[site_library]}"
+            koopa_r_ldpaths "${app[r]}"
             koopa_r_makevars "${app[r]}"
             koopa_r_javareconf "${app[r]}"
             koopa_r_rebuild_docs "${app[r]}"

@@ -6,7 +6,7 @@ koopa_r_makevars() {
     # @note Updated 2022-07-22.
     # """
     local app dict flibs i libs
-    koopa_assert_has_args_le "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         [dirname]="$(koopa_locate_dirname)"
         [r]="${1:?}"
@@ -18,7 +18,6 @@ koopa_r_makevars() {
     [[ -x "${app[sort]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
     koopa_is_koopa_app "${app[r]}" && return 0
-    koopa_assert_is_admin
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [opt_prefix]="$(koopa_opt_prefix)"
