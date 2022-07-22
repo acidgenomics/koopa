@@ -108,6 +108,7 @@ __koopa_complete() {
                         'bpytop'
                         'broot'
                         'bzip2'
+                        'ca-certificates'
                         'cairo'
                         'chemacs'
                         'chezmoi'

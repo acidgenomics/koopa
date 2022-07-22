@@ -11800,6 +11800,12 @@ koopa_install_bzip2() {
         "$@"
 }
 
+koopa_install_ca_certificates() {
+    koopa_install_app \
+        --name='ca-certificates' \
+        "$@"
+}
+
 koopa_install_cairo() {
     koopa_install_app \
         --name='cairo' \
@@ -22017,6 +22023,12 @@ koopa_uninstall_broot() {
 koopa_uninstall_bzip2() {
     koopa_uninstall_app \
         --name='bzip2' \
+        "$@"
+}
+
+koopa_uninstall_ca_certificates() {
+    koopa_uninstall_app \
+        --name='ca-certificates' \
         "$@"
 }
 

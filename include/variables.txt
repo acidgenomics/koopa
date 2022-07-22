@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-21"
+koopa-date="2022-07-22"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -91,6 +91,9 @@ boost="1.78.0"
 
 # https://www.sourceware.org/bzip2/
 bzip2="1.0.8"
+
+# https://curl.se/docs/caextract.html
+ca-certificates="2022-07-19"
 
 # https://cairographics.org/
 cairo="1.16.0"
