@@ -21,7 +21,11 @@ koopa_update_koopa() {
         koopa_alert_note "Pinned release detected at '${dict[prefix]}'."
         return 1
     fi
-    koopa_chown --recursive --sudo "${dict[user]}" "${dict[prefix]}"
+    if koopa_is_shared_install
+    then
+        set -x # FIXME
+        koopa_chown --recursive --sudo "${dict[user]}" "${dict[prefix]}"
+    fi
     koopa_git_pull "${dict[prefix]}"
     koopa_sys_set_permissions --recursive "${dict[prefix]}"
     koopa_fix_zsh_permissions
