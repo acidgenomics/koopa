@@ -23,7 +23,6 @@ koopa_update_koopa() {
     fi
     if koopa_is_shared_install
     then
-        set -x # FIXME
         koopa_chown --recursive --sudo "${dict[user]}" "${dict[prefix]}"
     fi
     koopa_git_pull "${dict[prefix]}"
