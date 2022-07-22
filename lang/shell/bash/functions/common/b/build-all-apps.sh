@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Work on finishing this.
+
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
