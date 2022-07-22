@@ -28,7 +28,7 @@ koopa_r_makevars() {
     koopa_alert "Updating 'Makevars' at '${dict[file]}'."
     if koopa_is_linux
     then
-        dict[freetype]="$(koopa_realpath "${dict[opt_prefix]}/freetype2")"
+        dict[freetype]="$(koopa_realpath "${dict[opt_prefix]}/freetype")"
         read -r -d '' "dict[string]" << END || true
 CPPFLAGS += -I${dict[freetype]}/include/freetype2
 END
