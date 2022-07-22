@@ -4948,7 +4948,7 @@ koopa_configure_r() {
             dict[user]="$(koopa_user)"
             koopa_mkdir --sudo "${dict[site_library]}"
             koopa_chmod --sudo '0775' "${dict[site_library]}"
-            koopa_chown --sudo \
+            koopa_chown --sudo --recursive \
                 "${dict[user]}:${dict[group]}" \
                 "${dict[site_library]}"
             if koopa_is_macos
@@ -4957,7 +4957,6 @@ koopa_configure_r() {
             fi
             koopa_r_javareconf "${app[r]}"
             koopa_r_rebuild_docs "${app[r]}"
-            koopa_chown --recursive --sudo "${dict[site_library]}"
             ;;
     esac
     koopa_sys_set_permissions --recursive "${dict[site_library]}"
