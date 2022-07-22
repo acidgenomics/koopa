@@ -3,7 +3,7 @@
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2022-07-18.
+    # @note Updated 2022-07-22.
     #
     # @examples
     # > koopa_cli_install --binary --reinstall --verbose 'python' 'tmux'
@@ -86,7 +86,12 @@ koopa_cli_install() {
         then
             koopa_stop "Unsupported app: '${dict2[app]}'."
         fi
-        "${dict2[fun]}" "${flags[@]:-}"
+        if koopa_is_array_non_empty "${flags[@]:-}"
+        then
+            "${dict2[fun]}" "${flags[@]:-}"
+        else
+            "${dict2[fun]}"
+        fi
     done
     return 0
 }
