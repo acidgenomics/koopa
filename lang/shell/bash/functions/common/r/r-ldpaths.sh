@@ -18,7 +18,7 @@ koopa_r_ldpaths() {
     koopa_is_linux || return 0
     declare -A dict=(
         [arch]="$(koopa_arch)"
-        [koopa_prefix]="$(koopa_prefix)"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
         [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
     )
