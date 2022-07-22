@@ -4957,6 +4957,7 @@ koopa_configure_r() {
             fi
             koopa_r_javareconf "${app[r]}"
             koopa_r_rebuild_docs "${app[r]}"
+            koopa_chown --recursive --sudo "${dict[site_library]}"
             ;;
     esac
     koopa_sys_set_permissions --recursive "${dict[site_library]}"
