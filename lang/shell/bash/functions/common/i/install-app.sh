@@ -7,6 +7,14 @@
 # Ubuntu, which causes an uninstall error.
 # FIXME This can be accomplished with 'sudo chown -h 'ubuntu:sudo' *'
 
+# FIXME This is now failing for 'koopa install r-packages' when using
+# system R on Ubuntu. Need to rethink the prefix handling here, not using
+# '--no-prefix-check'....the steps after the installer have issues here,
+# including the opt linkage...
+
+# FIXME Consider removing support for link-in-make option here.
+# FIXME Need to add support for link in man here.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
