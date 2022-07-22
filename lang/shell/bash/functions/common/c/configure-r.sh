@@ -2,7 +2,8 @@
 
 # FIXME Need to create Makevars.site for R CRAN here.
 # FIXME Need to ensure gfortran is configured on Ubuntu R CRAN as well.
-# FIXME Need to consistently configure ldpaths across platforms here.
+# FIXME Need to consistently configure ldpaths for R CRAN binaries across
+# platforms here. Don't need to do this when R is built from source.
 
 koopa_configure_r() {
     # """
