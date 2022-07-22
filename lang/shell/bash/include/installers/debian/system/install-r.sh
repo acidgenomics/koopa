@@ -3,7 +3,7 @@
 main() {
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-07-22.
     #
     # In case of missing files in '/etc/R', such as ldpaths or Makeconf:
     # > sudo apt purge r-base-core
@@ -35,7 +35,9 @@ main() {
     pkgs=('r-base' 'r-base-dev')
     koopa_debian_apt_install "${pkgs[@]}"
     koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
-    # FIXME Rework this so that R packages are not linked into koopa opt.
+    koopa_link_in_bin \
+        "${app[r]}" 'R' \
+        "${app[rscript]}" 'Rscript'
     koopa_configure_r "${app[r]}"
     return 0
 }
