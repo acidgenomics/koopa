@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for Linux.
 #
-# @note Updated 2022-07-21.
+# @note Updated 2022-07-22.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -114,6 +114,7 @@ PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/pcre2/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/proj/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/readline/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/xz/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zlib/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${KOOPA_OPT_PREFIX}/zstd/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
