@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Improve ldpaths configuration in Linux using settings from T's VM.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
