@@ -4956,10 +4956,7 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict[user]}:${dict[group]}" \
                 "${dict[site_library]}"
-            if koopa_is_macos
-            then
-                koopa_r_makevars "${app[r]}"
-            fi
+            koopa_r_makevars "${app[r]}"
             koopa_r_javareconf "${app[r]}"
             koopa_r_rebuild_docs "${app[r]}"
             ;;
@@ -18112,8 +18109,8 @@ koopa_r_makevars() {
     [[ -x "${app[r]}" ]] || return 1
     [[ -x "${app[sort]}" ]] || return 1
     [[ -x "${app[xargs]}" ]] || return 1
-    koopa_is_macos || return 0
-    ! koopa_is_koopa_app "${app[r]}" || return 0
+    koopa_is_koopa_app "${app[r]}" && return 0
+    koopa_assert_is_admin
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -18121,34 +18118,43 @@ koopa_r_makevars() {
     )
     dict[file]="${dict[r_prefix]}/etc/Makevars.site"
     koopa_alert "Updating 'Makevars' at '${dict[file]}'."
-    dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
-    app[fc]="${dict[gcc_prefix]}/bin/gfortran"
-    readarray -t libs <<< "$( \
-        koopa_find \
-            --prefix="${dict[gcc_prefix]}" \
-            --pattern='*.a' \
-            --type 'f' \
-        | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
-        | "${app[sort]}" --unique \
-    )"
-    koopa_assert_is_array_non_empty "${libs[@]:-}"
-    flibs=()
-    for i in "${!libs[@]}"
-    do
-        flibs+=("-L${libs[i]}")
-    done
-    flibs+=('-lgfortran')
-    case "${dict[arch]}" in
-        'x86_64')
-            flibs+=('-lquadmath')
-            ;;
-    esac
-    flibs+=('-lm')
-    dict[flibs]="${flibs[*]}"
-    read -r -d '' "dict[string]" << END || true
+    if koopa_is_linux
+    then
+        dict[freetype]="$(koopa_realpath "${dict[opt_prefix]}/freetype2")"
+        read -r -d '' "dict[string]" << END || true
+CPPFLAGS += -I${dict[freetype]}/include/freetype2
+END
+    elif koopa_is_macos
+    then
+        dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
+        app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+        readarray -t libs <<< "$( \
+            koopa_find \
+                --prefix="${dict[gcc_prefix]}" \
+                --pattern='*.a' \
+                --type 'f' \
+            | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
+            | "${app[sort]}" --unique \
+        )"
+        koopa_assert_is_array_non_empty "${libs[@]:-}"
+        flibs=()
+        for i in "${!libs[@]}"
+        do
+            flibs+=("-L${libs[i]}")
+        done
+        flibs+=('-lgfortran')
+        case "${dict[arch]}" in
+            'x86_64')
+                flibs+=('-lquadmath')
+                ;;
+        esac
+        flibs+=('-lm')
+        dict[flibs]="${flibs[*]}"
+        read -r -d '' "dict[string]" << END || true
 FC = ${app[fc]}
 FLIBS = ${dict[flibs]}
 END
+    fi
     koopa_sudo_write_string \
         --file="${dict[file]}" \
         --string="${dict[string]}"

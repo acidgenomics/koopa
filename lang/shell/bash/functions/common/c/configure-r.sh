@@ -42,10 +42,7 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict[user]}:${dict[group]}" \
                 "${dict[site_library]}"
-            if koopa_is_macos
-            then
-                koopa_r_makevars "${app[r]}"
-            fi
+            koopa_r_makevars "${app[r]}"
             koopa_r_javareconf "${app[r]}"
             koopa_r_rebuild_docs "${app[r]}"
             ;;
