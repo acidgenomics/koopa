@@ -17893,6 +17893,7 @@ koopa_r_javareconf() {
         "JAR=${dict[jar]}"
         "JAVA=${dict[java]}"
         "JAVAC=${dict[javac]}"
+        'JAVAH='
         "JAVA_HOME=${dict[java_home]}"
     )
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
