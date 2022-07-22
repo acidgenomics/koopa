@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider setting JAVAH empty to improve R CRAN config.
-
 koopa_r_javareconf() {
     # """
     # Update R Java configuration.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-07-22.
     #
     # The default Java path differs depending on the system.
     #
@@ -64,6 +62,8 @@ koopa_r_javareconf() {
         "JAR=${dict[jar]}"
         "JAVA=${dict[java]}"
         "JAVAC=${dict[javac]}"
+        # No longer in use.
+        'JAVAH='
         "JAVA_HOME=${dict[java_home]}"
     )
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
