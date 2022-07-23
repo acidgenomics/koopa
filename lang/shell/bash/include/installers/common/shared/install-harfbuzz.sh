@@ -5,6 +5,9 @@
 # - glib
 # - gobject-introspection
 # - graphite2
+#
+# FIXME Can we rework this so it installs library into 'lib' instead of
+# 'lib64' on Linux? This makes shared R configuration simpler.
 
 main() {
     # """

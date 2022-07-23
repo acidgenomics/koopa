@@ -24,7 +24,7 @@ koopa_r_makevars() {
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
     )
     dict[file]="${dict[r_prefix]}/etc/Makevars.site"
-    koopa_alert "Updating 'Makevars' at '${dict[file]}'."
+    koopa_alert "Configuring '${dict[file]}'."
     if koopa_is_linux
     then
         dict[freetype]="$(koopa_realpath "${dict[opt_prefix]}/freetype")"

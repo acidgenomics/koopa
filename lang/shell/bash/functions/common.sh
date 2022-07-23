@@ -4944,6 +4944,7 @@ koopa_configure_r() {
     koopa_alert_configure_start "${dict[name]}" "${dict[r_prefix]}"
     koopa_assert_is_dir "${dict[r_prefix]}"
     koopa_r_link_files_in_etc "${app[r]}"
+    koopa_r_environ "${app[r]}"
     case "${dict[system]}" in
         '0')
             koopa_r_link_site_library "${app[r]}"
@@ -17895,6 +17896,154 @@ koopa_python_system_packages_prefix() {
     return 0
 }
 
+koopa_r_environ() {
+    local app dict i pkgconfig pkg pkgs
+    koopa_assert_has_args_eq "$#" 1
+    declare -A app=(
+        [cat]="$(koopa_locate_cat)"
+        [r]="${1:?}"
+    )
+    [[ -x "${app[cat]}" ]] || return 1
+    [[ -x "${app[r]}" ]] || return 1
+    declare -A dict=(
+        [koopa_prefix]="$(koopa_koopa_prefix)"
+        [opt_prefix]="$(koopa_opt_prefix)"
+        [r_prefix]="$(koopa_r_prefix "${app[r]}")"
+        [system]=0
+        [tmp_file]="$(koopa_tmp_file)"
+    )
+    dict[file]="${dict[r_prefix]}/etc/Renviron.site"
+    ! koopa_is_koopa_app "${app[r]}" && dict[system]=1
+    koopa_alert "Configuring '${dict[file]}'."
+    "${app[cat]}" <<END >>"${dict[tmp_file]}"
+R_LIBS_SITE="\${R_HOME}/site-library"
+R_LIBS_USER="\${R_LIBS_SITE}"
+PATH="/usr/bin:/bin"
+PATH="\${dict[koopa_prefix]}/bin:\${PATH}"
+END
+    if koopa_is_macos
+    then
+        "${app[cat]}" >> "${dict[tmp_file]}" << END
+PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:\${PATH}"
+PATH="\${PATH}:/Library/TeX/texbin"
+END
+    fi
+    "${app[cat]}" >> "${dict[tmp_file]}" << END
+PKG_CONFIG_PATH=""
+END
+    pkgs=(
+        'fontconfig'
+        'freetype'
+        'fribidi'
+        'gdal'
+        'geos'
+        'graphviz'
+        'harfbuzz'
+        'icu4c'
+        'imagemagick'
+        'lapack'
+        'libgit2'
+        'libjpeg-turbo'
+        'libpng'
+        'libssh2'
+        'libtiff'
+        'openblas'
+        'openssl3'
+        'pcre2'
+        'proj'
+        'readline'
+        'xz'
+        'zlib'
+        'zstd'
+    )
+    declare -A pkgconfig
+    for pkg in "${pkgs[@]}"
+    do
+        pkgconfig[$pkg]="$(koopa_realpath "${dict[opt_prefix]}/${pkg}")"
+    done
+    for i in "${!pkgconfig[@]}"
+    do
+        pkgconfig[$i]="${pkgconfig[$i]}/lib"
+    done
+    if koopa_is_linux
+    then
+        pkgconfig[harfbuzz]="${pkgconfig[harfbuzz]}64"
+    fi
+    for i in "${!pkgconfig[@]}"
+    do
+        pkgconfig[$i]="${pkgconfig[$i]}/pkgconfig"
+        "${app[cat]}" >> "${dict[tmp_file]}" << END
+PKG_CONFIG_PATH="${pkgconfig[$i]}:\${PKG_CONFIG_PATH}"
+END
+    done
+    "${app[cat]}" >> "${dict[tmp_file]}" << END
+PAGER="\${PAGER:-less}"
+TZ="\${TZ:-America/New_York}"
+R_PAPERSIZE="letter"
+R_PAPERSIZE_USER="\${R_PAPERSIZE}"
+END
+    if koopa_is_linux
+    then
+    "${app[cat]}" >> "${dict[tmp_file]}" << END
+R_BROWSER="\${R_BROWSER:-xdg-open}"
+R_PRINTCMD="\${R_PRINTCMD:-lpr}"
+END
+    elif koopa_is_macos
+    then
+    "${app[cat]}" >> "${dict[tmp_file]}" << END
+R_MAX_NUM_DLLS=153
+END
+    fi
+    dict[conda]="$(koopa_realpath "${dict[opt_prefix]}/conda")"
+    dict[udunits2]="$(koopa_realpath "${dict[opt_prefix]}/udunits")"
+    "${app[cat]}" >> "${dict[tmp_file]}" << END
+R_DATATABLE_NUM_PROCS_PERCENT=100
+RCMDCHECK_ERROR_ON="warning"
+R_REMOTES_UPGRADE="always"
+R_REMOTES_STANDALONE="true"
+RETICULATE_MINICONDA_PATH="${dict[conda]}"
+WORKON_HOME="\${HOME}/.virtualenvs"
+STRINGI_DISABLE_ICU_BUNDLE=1
+R_USER_CACHE_DIR="\${XDG_CACHE_HOME:-~/.cache}"
+R_USER_CONFIG_DIR="\${XDG_CONFIG_HOME:-~/.config}"
+R_USER_DATA_DIR="\${XDG_DATA_HOME:-~/.local/share}"
+UDUNITS2_INCLUDE="${dict[udunits2]}/include"
+UDUNITS2_LIBS="${dict[udunits2]}/lib"
+END
+    if koopa_is_fedora_like
+    then
+        dict[oracle_ver]="$(koopa_variable 'oracle-instant-client')"
+        dict[oracle_ver]="$(koopa_major_minor_version "${dict[oracle_ver]}")"
+        "${app[cat]}" >> "${dict[tmp_file]}" << END
+OCI_VERSION="${dict[oracle_ver]}"
+ORACLE_HOME="\${ORACLE_HOME-/usr/lib/oracle/\${OCI_VERSION}/client64}"
+OCI_INC="\${OCI_INC-/usr/include/oracle/\${OCI_VERSION}/client64}"
+OCI_LIB="\${ORACLE_HOME}/lib"
+TNS_ADMIN="\${ORACLE_HOME}/network/admin"
+PATH="\${PATH}:\${ORACLE_HOME}/bin"
+END
+    fi
+    "${app[cat]}" >> "${dict[tmp_file]}" << END
+_R_CHECK_SYSTEM_CLOCK_=0
+_R_CHECK_COMPILATION_FLAGS_KNOWN_="-Wformat -Werror=format-security -Wdate-time"
+_R_CHECK_LENGTH_1_CONDITION_="\${_R_CHECK_LENGTH_1_CONDITION_-verbose}"
+_R_CHECK_LENGTH_1_LOGIC2_="\${_R_CHECK_LENGTH_1_LOGIC2_-verbose}"
+_R_CHECK_TESTS_NLINES_=0
+_R_CHECK_EXECUTABLES_="false"
+_R_CHECK_EXECUTABLES_EXCLUSIONS_="false"
+_R_CHECK_S3_METHODS_NOT_REGISTERED_="true"
+END
+    case "${dict[system]}" in
+        '0')
+            koopa_cp "${dict[tmp_file]}" "${dict[file]}"
+            ;;
+        '1')
+            koopa_cp --sudo "${dict[tmp_file]}" "${dict[file]}"
+            ;;
+    esac
+    return 0
+}
+
 koopa_r_javareconf() {
     local app dict java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
@@ -18163,7 +18312,7 @@ koopa_r_makevars() {
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
     )
     dict[file]="${dict[r_prefix]}/etc/Makevars.site"
-    koopa_alert "Updating 'Makevars' at '${dict[file]}'."
+    koopa_alert "Configuring '${dict[file]}'."
     if koopa_is_linux
     then
         dict[freetype]="$(koopa_realpath "${dict[opt_prefix]}/freetype")"
