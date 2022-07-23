@@ -54,6 +54,8 @@ koopa_fasta_generate_chromosomes_file() {
     koopa_assert_is_file "${dict[genome_fasta_file]}"
     koopa_alert "Generating '${dict[output_file]}' from \
 '${dict[genome_fasta_file]}'."
+    # FIXME This command is causing shellcheck to fail inside of
+    # cached 'common.sh' file. Can we rework this approach?
     "${app[grep]}" '^>' \
         <(koopa_decompress --stdout "${dict[genome_fasta_file]}") \
         | "${app[cut]}" -d ' ' -f '1' \
