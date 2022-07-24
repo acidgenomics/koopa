@@ -24,7 +24,10 @@ main() {
         'cmake' \
         'meson' \
         'ninja'
+    # glib deps: zlib, gettext, libffi, pcre.
     koopa_activate_opt_prefix \
+        'zlib' \
+        'libffi' \
         'glib' \
         'freetype' \
         'icu4c'
