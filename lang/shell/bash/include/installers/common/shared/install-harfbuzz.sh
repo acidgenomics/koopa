@@ -27,7 +27,9 @@ main() {
     # glib deps: zlib, gettext, libffi, pcre.
     koopa_activate_opt_prefix \
         'zlib' \
+        'gettext' \
         'libffi' \
+        'pcre' \
         'glib' \
         'freetype' \
         'icu4c'
