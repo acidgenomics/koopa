@@ -1,18 +1,14 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for:
+# Consider adding support for:
 # - cairo
-# - glib
 # - gobject-introspection
 # - graphite2
-#
-# FIXME Can we rework this so it installs library into 'lib' instead of
-# 'lib64' on Linux? This makes shared R configuration simpler.
 
 main() {
     # """
     # Install HarfBuzz.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-07-24.
     #
     # @seealso
     # - https://harfbuzz.github.io/building.html
@@ -29,6 +25,7 @@ main() {
         'meson' \
         'ninja'
     koopa_activate_opt_prefix \
+        'glib' \
         'freetype' \
         'icu4c'
     declare -A app=(
@@ -50,17 +47,17 @@ archive/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     meson_args=(
-        # > '--default-library=both'
-        # > '-Dcairo=enabled'
-        # > '-Dcoretext=enabled'
-        # > '-Dfreetype=enabled'
-        # > '-Dglib=enabled'
-        # > '-Dgobject=enabled'
-        # > '-Dgraphite=enabled'
-        # > '-Dintrospection=enabled'
         "--prefix=${dict[prefix]}"
         '--buildtype=release'
+        '--default-library=both'
+        '-Dcairo=disabled'
+        '-Dcoretext=enabled' # FIXME Check on Linux.
+        '-Dfreetype=enabled'
+        '-Dglib=enabled'
+        '-Dgobject=disabled'
+        '-Dgraphite=disabled'
         '-Dicu=enabled'
+        '-Dintrospection=disabled'
     )
     "${app[meson]}" "${meson_args[@]}" build
     # Alternate build approach using meson.
