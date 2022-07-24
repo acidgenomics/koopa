@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_r_ldpaths() {
+koopa_r_configure_ldpaths() {
     # """
-    # Generate 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2022-07-22.
+    # Configure 'ldpaths' file for system R LD linker configuration.
+    # @note Updated 2022-07-24.
     #
     # Usage of ': ${KEY=VALUE}' here stores the variable internally, but does
     # not export into R session, and is not accessible with 'Sys.getenv()'.

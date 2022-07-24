@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_r_makevars() {
+koopa_r_configure_makevars() {
     # """
-    # Generate 'Makevars.site' file with compiler settings.
+    # Configure 'Makevars.site' file with compiler settings.
     # @note Updated 2022-07-22.
     # """
     local app dict flibs i libs

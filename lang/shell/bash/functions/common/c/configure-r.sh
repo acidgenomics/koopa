@@ -3,7 +3,7 @@
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-07-23.
+    # @note Updated 2022-07-24.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -30,7 +30,7 @@ koopa_configure_r() {
     # FIXME Simplify this function to not be OS specific, just
     # use '/opt/koopa/etc/R'...
     koopa_r_link_files_in_etc "${app[r]}"
-    koopa_r_environ "${app[r]}"
+    koopa_r_configure_environ "${app[r]}"
     case "${dict[system]}" in
         '0')
             koopa_r_link_site_library "${app[r]}"
@@ -43,8 +43,8 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict[user]}:${dict[group]}" \
                 "${dict[site_library]}"
-            koopa_r_ldpaths "${app[r]}"
-            koopa_r_makevars "${app[r]}"
+            koopa_r_configure_ldpaths "${app[r]}"
+            koopa_r_configure_makevars "${app[r]}"
             koopa_r_javareconf "${app[r]}"
             koopa_r_rebuild_docs "${app[r]}"
             ;;
