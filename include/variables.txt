@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-22"
+koopa-date="2022-07-24"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -229,7 +229,10 @@ gzip="1.12"
 
 hadolint="2.10.0"
 
-harfbuzz="4.3.0"
+# FIXME latest: 5.0.1
+# FIXME Consider: 4.4.1
+# FIXME Current: 4.3.0.
+harfbuzz="5.0.1"
 
 # https://docs.haskellstack.org/en/stable/install_and_upgrade/
 haskell-stack="2.7.5"

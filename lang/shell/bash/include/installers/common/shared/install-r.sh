@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rebuild on macOS and Linux with Harfbuzz update.
+
 # FIXME Seeing this error message for R-devel on Ubuntu:
 #
 # # creating doc/html/resources.html
