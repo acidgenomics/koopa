@@ -62,10 +62,9 @@ ${dict[arch]}-bin"
     dict[url]="https://github.com/commercialhaskell/${dict[name]}/releases/\
 download/v${dict[version]}/${dict[file]}"
     # Attempting to use alternative GHCup URL for ARM at the moment.
-    koopa_warn "${dict[arch]}"
     case "${dict[arch]}" in
         'aarch64')
-            dict[name]="${dict[name]}-${dict[version]}-${dict[platform]}-\
+            dict[file]="${dict[name]}-${dict[version]}-${dict[platform]}-\
 ${dict[arch]}.tar.gz"
             dict[url]="https://downloads.haskell.org/ghcup/unofficial-bindists\
 /stack/${dict[version]}/${dict[file]}"
