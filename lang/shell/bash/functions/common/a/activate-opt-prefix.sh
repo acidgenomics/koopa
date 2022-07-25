@@ -72,6 +72,7 @@ koopa_activate_opt_prefix() {
     LDLIBS="${LDLIBS:-}"
     for name in "$@"
     do
+        # FIXME Rework this using a dict approach.
         local current_ver expected_ver pkgconfig_dirs prefix
         prefix="${dict[opt_prefix]}/${name}"
         koopa_assert_is_dir "$prefix"
@@ -96,7 +97,8 @@ koopa_activate_opt_prefix() {
             koopa_alert "Activating '${prefix}'."
         fi
         # Set 'PATH' variable.
-        koopa_activate_prefix "$prefix"
+        # FIXME Rework this to just add to PATH start.
+        koopa_add_to_path_start "${prefix}/bin"
         # Set 'PKG_CONFIG_PATH' variable.
         readarray -t pkgconfig_dirs <<< "$( \
             koopa_find \
