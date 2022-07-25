@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Haskell Stack.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-07-25.
     #
     # @section Required system dependencies:
     #
@@ -35,6 +35,8 @@ main() {
     # - https://docs.haskellstack.org/en/stable/install_and_upgrade/
     # - https://docs.haskellstack.org/en/stable/GUIDE/
     # - https://github.com/commercialhaskell/stack/releases
+    # - GHCup may help with install support on ARM.
+    #   https://github.com/haskell/ghcup-metadata/blob/master/ghcup-0.0.7.yaml
     # """
     local app dict stack_args
     koopa_assert_has_no_args "$#"
@@ -59,6 +61,15 @@ main() {
 ${dict[arch]}-bin"
     dict[url]="https://github.com/commercialhaskell/${dict[name]}/releases/\
 download/v${dict[version]}/${dict[file]}"
+    # Attempting to use alternative GHCup URL for ARM at the moment.
+    case "${dict[arch]}" in
+        'aarch64')
+            dict[name]="${dict[name]}-${dict[version]}-${dict[platform]}-\
+${dict[arch]}.tar.gz"
+            dict[url]="https://downloads.haskell.org/ghcup/unofficial-bindists\
+/stack/${dict[version]}/${dict[file]}"
+            ;;
+    esac
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_chmod 'u+x' "${dict[file]}"
     koopa_cp "${dict[file]}" "${app[stack]}"
