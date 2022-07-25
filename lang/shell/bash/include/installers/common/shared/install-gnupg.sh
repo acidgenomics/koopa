@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework this approach using opt_prefix link...on existing
+# Ubuntu install:
+# !! Error: 'gnupg' version mismatch at '/opt/koopa/opt/gnupg' (2.3.4 != 2.3.7).
+# FIXME Need to add improved 'koopa_activate_prefix' where we can define
+# the current prefix, rather than use opt_prefix.
+
 main() {
     # """
     # Install GnuPG.
