@@ -499,21 +499,6 @@ koopa_activate_pipx() {
     return 0
 }
 
-koopa_activate_prefix() {
-    local prefix
-    for prefix in "$@"
-    do
-        [ -d "$prefix" ] || continue
-        koopa_add_to_path_start \
-            "${prefix}/bin" \
-            "${prefix}/sbin"
-        koopa_add_to_manpath_start \
-            "${prefix}/man" \
-            "${prefix}/share/man"
-    done
-    return 0
-}
-
 koopa_activate_pyenv() {
     local nounset prefix script
     [ -n "${PYENV_ROOT:-}" ] && return 0
