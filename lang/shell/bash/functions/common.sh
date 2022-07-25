@@ -16383,10 +16383,18 @@ koopa_locate_scons() {
 }
 
 koopa_locate_scp() {
-    koopa_locate_app \
-        --allow-in-path \
-        --app-name='scp' \
-        --opt-name='openssh'
+    local args
+    if koopa_is_macos
+    then
+        args=('/usr/bin/scp')
+    else
+        args=(
+            '--allow-in-path'
+            '--app-name=scp'
+            '--opt-name=openssh'
+        )
+    fi
+    koopa_locate_app "${args[@]}"
 }
 
 koopa_locate_sed() {
