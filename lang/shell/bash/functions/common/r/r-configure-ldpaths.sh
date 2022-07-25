@@ -24,6 +24,7 @@ koopa_r_configure_ldpaths() {
     )
     dict[file]="${dict[r_prefix]}/etc/ldpaths"
     dict[java_home]="$(koopa_realpath "${dict[opt_prefix]}/openjdk")"
+    koopa_alert "Configuring '${dict[file]}'."
     lines=()
     lines+=(
         ": \${JAVA_HOME=${dict[java_home]}}"
