@@ -1,8 +1,22 @@
 #!/usr/bin/env bash
 
-# NOTE Not yet suppored for ARM.
-# FIXME GHCup binary attempt results in this error:
-# -bash: ./stack: cannot execute binary file: Exec format error
+# FIXME ARM support currently requires LLVM. Refer to Homebrew recipe
+# for details.
+#
+# Details regarding ARM build for stack 2.7.5:
+#
+# All ghc versions before 9.2.1 requires LLVM Code Generator as a backend on
+# ARM. GHC 8.10.7 user manual recommend use LLVM 9 through 12 and we met some
+# unknown issue with LLVM 13 before so conservatively use LLVM 12 here.
+#
+# References:
+#   https://downloads.haskell.org/~ghc/8.10.7/docs/html/users_guide/8.10.7-notes.html
+#   https://gitlab.haskell.org/ghc/ghc/-/issues/20559
+#
+# FIXME Rework to use the source URL instead:
+# FIXME This will require cabal-install and ghc to build.
+# FIXME Refer to Homebrew recipe for details.
+# https://github.com/commercialhaskell/stack/archive/v2.7.5.tar.gz
 
 main() {
     # """
@@ -37,6 +51,10 @@ main() {
     # - https://docs.haskellstack.org/en/stable/install_and_upgrade/
     # - https://docs.haskellstack.org/en/stable/GUIDE/
     # - https://github.com/commercialhaskell/stack/releases
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
+    #     haskell-stack.rb
+    # - https://www.haskell.org/ghc/blog/20200515-ghc-on-arm.html
+    # - https://github.com/commercialhaskell/stack/issues/5617
     # - GHCup may help with install support on ARM.
     #   https://github.com/haskell/ghcup-metadata/blob/master/ghcup-0.0.7.yaml
     # """
@@ -64,6 +82,7 @@ ${dict[arch]}-bin"
     dict[url]="https://github.com/commercialhaskell/${dict[name]}/releases/\
 download/v${dict[version]}/${dict[file]}"
     # Attempting to use alternative GHCup URL for ARM at the moment.
+    # FIXME This approach doesn't work. Rethink ARM support.
     case "${dict[arch]}" in
         'aarch64')
             dict[file]="${dict[name]}-${dict[version]}-${dict[platform]}-\
