@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # NOTE Not yet suppored for ARM.
+# FIXME GHCup binary attempt results in this error:
+# -bash: ./stack: cannot execute binary file: Exec format error
 
 main() {
     # """
