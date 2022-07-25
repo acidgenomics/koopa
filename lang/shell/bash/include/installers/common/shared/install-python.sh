@@ -9,6 +9,11 @@
 # clang: warning: argument unused during compilation:
 # '-fno-semantic-interposition' [-Wunused-command-line-argument]
 
+# FIXME Likely need to implement this to fix ncurses location on Linux:
+# > inreplace "configure",
+# >     'CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"',
+# >     "CPPFLAGS=\"$CPPFLAGS -I#{Formula["ncurses"].opt_include}\""
+
 main() {
     # """
     # Install Python.
@@ -82,10 +87,22 @@ ${dict[file]}"
     koopa_cd "Python-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--enable-ipv6'
+        '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
         '--enable-shared'
+        '--with-dbmliborder=gdbm:ndbm'
+        '--with-ensurepip'
+        '--with-lto'
         "--with-openssl=${dict[openssl]}"
     )
+    if koopa_is_macos
+    then
+        conf_args+=(
+            '--disable-framework'
+            '--with-dtrace'
+        )
+    fi
     koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
     ./configure --help
     ./configure "${conf_args[@]}"
