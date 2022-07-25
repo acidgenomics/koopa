@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# NOTE Consider including support for:
+# - libxcrypt
+# - mpdecimal
+# - unzip
+
 # NOTE Consider cleaning this up on macOS:
 # clang: warning: argument unused during compilation:
 # '-fno-semantic-interposition' [-Wunused-command-line-argument]
@@ -7,7 +12,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-07-25.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -26,13 +31,32 @@ main() {
     # - https://stackoverflow.com/questions/43333207
     # - https://bugs.python.org/issue36659
     # """
-    local app dict
+    local app deps dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix \
-        'zlib' \
-        'libffi' \
+    deps=(
+        # zlib deps: none.
+        'zlib'
+        # bzip2 deps: none.
+        'bzip2'
+        # expat deps: none.
+        'expat'
+        # libffi deps: none.
+        'libffi'
+        # ncurses deps: none.
+        'ncurses'
+        # openssl3 deps: none.
         'openssl3'
+        # xz deps: none.
+        'xz'
+        # readline deps: ncurses.
+        'readline'
+        # gdbm deps: readline.
+        'gdbm'
+        # sqlite deps: readline.
+        'sqlite'
+    )
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
