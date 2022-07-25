@@ -3,12 +3,12 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2022-07-24.
+    # @note Updated 2022-07-25.
     #
     # Usage of ': ${KEY=VALUE}' here stores the variable internally, but does
     # not export into R session, and is not accessible with 'Sys.getenv()'.
     # """
-    local app dict
+    local app dict key keys ld_lib_arr ld_lib_opt_arr lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         [r]="${1:?}"
@@ -24,29 +24,38 @@ koopa_r_configure_ldpaths() {
     )
     dict[file]="${dict[r_prefix]}/etc/ldpaths"
     dict[java_home]="$(koopa_realpath "${dict[opt_prefix]}/openjdk")"
-    dict[fontconfig]="$(koopa_realpath "${dict[opt_prefix]}/fontconfig")"
-    dict[freetype]="$(koopa_realpath "${dict[opt_prefix]}/freetype")"
-    dict[gdal]="$(koopa_realpath "${dict[opt_prefix]}/gdal")"
-    dict[geos]="$(koopa_realpath "${dict[opt_prefix]}/geos")"
-    dict[imagemagick]="$(koopa_realpath "${dict[opt_prefix]}/imagemagick")"
-    dict[libgit2]="$(koopa_realpath "${dict[opt_prefix]}/libgit2")"
-    dict[proj]="$(koopa_realpath "${dict[opt_prefix]}/proj")"
-    read -r -d '' "dict[string]" << END || true
-: \${JAVA_HOME=${dict[java_home]}}
-: \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/libexec/lib/server}
-LD_LIBRARY_PATH=""
-LD_LIBRARY_PATH="/usr/lib/${dict[arch]}-linux-gnu:\${LD_LIBRARY_PATH}"
-LD_LIBRARY_PATH="\${R_HOME}/lib:\${LD_LIBRARY_PATH}"
-LD_LIBRARY_PATH="${dict[fontconfig]}/lib:\${LD_LIBRARY_PATH}"
-LD_LIBRARY_PATH="${dict[freetype]}/lib:\${LD_LIBRARY_PATH}"
-LD_LIBRARY_PATH="${dict[gdal]}/lib:\${LD_LIBRARY_PATH}"
-LD_LIBRARY_PATH="${dict[geos]}/lib:\${LD_LIBRARY_PATH}"
-LD_LIBRARY_PATH="${dict[imagemagick]}/lib:\${LD_LIBRARY_PATH}"
-LD_LIBRARY_PATH="${dict[libgit2]}/lib:\${LD_LIBRARY_PATH}"
-LD_LIBRARY_PATH="${dict[proj]}/lib:\${LD_LIBRARY_PATH}"
-LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:\${R_JAVA_LD_LIBRARY_PATH}"
-export LD_LIBRARY_PATH
-END
+    lines=()
+    lines+=(
+        ": \${JAVA_HOME=${dict[java_home]}}"
+        ": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/libexec/lib/server}"
+    )
+    declare -A ld_lib_opt_arr
+    keys=(
+        'fontconfig'
+        'freetype'
+        'gdal'
+        'geos'
+        'imagemagick'
+        'libgit2'
+        'proj'
+    )
+    for key in "${keys[@]}"
+    do
+        ld_lib_opt_arr[$key]="$( \
+            koopa_realpath "${dict[opt_prefix]}/${key}/lib" \
+        )"
+    done
+    ld_lib_arr=(
+        "/usr/lib/${dict[arch]}-linux-gnu"
+        "\${R_HOME}/lib"
+        "${ld_lib_opt_arr[@]}"
+        "\${R_JAVA_LD_LIBRARY_PATH}"
+    )
+    lines+=(
+        "LD_LIBRARY_PATH=$(printf '%s:' "${ld_lib_arr[@]}")"
+        'export LD_LIBRARY_PATH'
+    )
+    dict[string]="$(koopa_print "${lines[@]}")"
     # This should only apply to R CRAN binary, not source install.
     koopa_sudo_write_string \
         --file="${dict[file]}" \
