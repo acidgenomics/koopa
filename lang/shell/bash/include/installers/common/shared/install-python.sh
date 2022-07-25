@@ -9,10 +9,13 @@
 # clang: warning: argument unused during compilation:
 # '-fno-semantic-interposition' [-Wunused-command-line-argument]
 
-# FIXME Likely need to implement this to fix ncurses location on Linux:
+# NOTE Likely need to implement this to fix ncurses location on Linux:
 # > inreplace "configure",
 # >     'CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"',
 # >     "CPPFLAGS=\"$CPPFLAGS -I#{Formula["ncurses"].opt_include}\""
+
+# NOTE Now seeing this warning:
+# > warning: "_XOPEN_SOURCE" redefined
 
 main() {
     # """
