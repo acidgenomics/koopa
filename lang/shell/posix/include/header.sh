@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-07-08.
+    # @note Updated 2022-07-25.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -36,12 +36,13 @@ __koopa_posix_header() {
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
     # Ensure these are never set (e.g. inside RStudio terminal).
-    unset -v \
-        LD_LIBRARY_PATH \
-        PYTHONPATH
+    # > unset -v \
+    # >     LD_LIBRARY_PATH \
+    # >     PYTHONPATH
     koopa_activate_path_helper || return 1
     koopa_activate_make_paths || return 1
-    koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
+    koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
+    koopa_add_to_manpath_start "${KOOPA_PREFIX}/man" || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # > koopa_umask || return 1
@@ -94,8 +95,9 @@ __koopa_posix_header() {
                     koopa_activate_conda || return 1
                     ;;
             esac
-            koopa_activate_prefix "$(koopa_xdg_local_home)" || return 1
-            koopa_activate_prefix "$(koopa_scripts_private_prefix)" || return 1
+            # FIXME Can we parameterize here?
+            koopa_add_to_path_start "$(koopa_xdg_local_home)/bin" || return 1
+            koopa_add_to_path_start "$(koopa_scripts_private_prefix)/bin" || return 1
             koopa_activate_aliases || return 1
             if ! koopa_is_subshell
             then

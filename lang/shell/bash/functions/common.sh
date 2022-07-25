@@ -548,7 +548,7 @@ koopa_activate_ensembl_perl_api() {
         [prefix]="$(koopa_ensembl_perl_api_prefix)"
     )
     koopa_assert_is_dir "${dict[prefix]}"
-    koopa_activate_prefix "${dict[prefix]}/ensembl-git-tools"
+    koopa_add_to_path_start "${dict[prefix]}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB:-}"
     PERL5LIB="${PERL5LIB}:${dict[prefix]}/bioperl-1.6.924"
     PERL5LIB="${PERL5LIB}:${dict[prefix]}/ensembl/modules"
@@ -614,7 +614,7 @@ koopa_activate_opt_prefix() {
         else
             koopa_alert "Activating '${prefix}'."
         fi
-        koopa_activate_prefix "$prefix"
+        koopa_add_to_path_start "${prefix}/bin"
         readarray -t pkgconfig_dirs <<< "$( \
             koopa_find \
                 --pattern='pkgconfig' \
@@ -19184,6 +19184,7 @@ koopa_salmon_index() {
     [[ -x "${app[salmon]}" ]] || return 1
     declare -A dict=(
         [decoys]=1
+        [fasta_pattern]='\.fa(sta)?'
         [gencode]=0
         [genome_fasta_file]=''
         [kmer_length]=31
@@ -19242,6 +19243,7 @@ koopa_salmon_index() {
     koopa_assert_is_set \
         '--output-dir' "${dict[output_dir]}" \
         '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
+    [[ "${dict[decoys]}" -eq 1 ]] && dict[mem_gb_cutoff]=30
     if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
     then
         koopa_stop "salmon index requires ${dict[mem_gb_cutoff]} GB of RAM."
@@ -19251,7 +19253,7 @@ koopa_salmon_index() {
         koopa_realpath "${dict[transcriptome_fasta_file]}" \
     )"
     koopa_assert_is_matching_regex \
-        --pattern='\.fa(sta)?' \
+        --pattern="${dict[fasta_pattern]}" \
         --string="${dict[transcriptome_fasta_file]}"
     koopa_assert_is_not_dir "${dict[output_dir]}"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
@@ -19276,10 +19278,10 @@ koopa_salmon_index() {
         koopa_assert_is_file "${dict[genome_fasta_file]}"
         dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
         koopa_assert_is_matching_regex \
-            --pattern='\.fa(sta)?\.gz$' \
+            --pattern="${dict[fasta_pattern]}" \
             --string="${dict[genome_fasta_file]}"
         koopa_assert_is_matching_regex \
-            --pattern='\.fa(sta)?\.gz$' \
+            --pattern="${dict[fasta_pattern]}" \
             --string="${dict[transcriptome_fasta_file]}"
         dict[tmp_dir]="$(koopa_tmp_dir)"
         dict[decoys_file]="${dict[tmp_dir]}/decoys.txt"

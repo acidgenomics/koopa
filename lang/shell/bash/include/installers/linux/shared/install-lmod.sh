@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Lmod.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-07-25.
     #
     # @seealso
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
@@ -36,7 +36,6 @@ main() {
     dict[data_dir]="${dict[prefix]}/moduleData"
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/TACC/${dict[name2]}/archive/${dict[file]}"
-    koopa_activate_prefix "${dict[make_prefix]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name2]}-${dict[version]}"
