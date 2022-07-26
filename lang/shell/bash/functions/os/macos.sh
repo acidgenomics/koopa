@@ -29,7 +29,7 @@ koopa_macos_app_version() {
 }
 
 koopa_macos_brew_cask_outdated() {
-    local app keep_latest tmp_file x
+    local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
@@ -37,25 +37,26 @@ koopa_macos_brew_cask_outdated() {
     )
     [[ -x "${app[brew]}" ]] || return 1
     [[ -x "${app[cut]}" ]] || return 1
-    keep_latest=0
-    tmp_file="$(koopa_tmp_file)"
-    script -q "$tmp_file" \
+    declare -A dict
+    dict[keep_latest]=0
+    dict[tmp_file]="$(koopa_tmp_file)"
+    script -q "${dict[tmp_file]}" \
         "${app[brew]}" outdated --cask --greedy >/dev/null
-    if [[ "$keep_latest" -eq 1 ]]
+    if [[ "${dict[keep_latest]}" -eq 1 ]]
     then
-        x="$("${app[cut]}" -d ' ' -f '1' < "$tmp_file")"
+        dict[str]="$("${app[cut]}" -d ' ' -f '1' < "${dict[tmp_file]}")"
     else
-        x="$( \
+        dict[str]="$( \
             koopa_grep \
-                --file="$tmp_file" \
+                --file="${dict[tmp_file]}" \
                 --invert-match \
                 --pattern='(latest)' \
             | "${app[cut]}" -d ' ' -f '1' \
         )"
     fi
-    koopa_rm "$tmp_file"
-    [[ -n "$x" ]] || return 0
-    koopa_print "$x"
+    koopa_rm "${dict[tmp_file]}"
+    [[ -n "${dict[str]}" ]] || return 0
+    koopa_print "${dict[str]}"
     return 0
 }
 
@@ -547,10 +548,11 @@ koopa_macos_force_eject() {
     )
     [[ -x "${app[diskutil]}" ]] || return 1
     [[ -x "${app[sudo]}" ]] || return 1
-    name="${1:?}"
-    mount="/Volumes/${name}"
-    koopa_assert_is_dir "$mount"
-    "${app[sudo]}" "${app[diskutil]}" unmount force "$mount"
+    declare -A dict
+    dict[name]="${1:?}"
+    dict[mount]="/Volumes/${dict[name]}"
+    koopa_assert_is_dir "${dict[mount]}"
+    "${app[sudo]}" "${app[diskutil]}" unmount force "${dict[mount]}"
     return 0
 }
 
