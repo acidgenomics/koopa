@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to address this build issue for ARM.
+# configure: error: cannot guess build type; you must specify one
+
 main() {
     # """
     # Install lzma.
