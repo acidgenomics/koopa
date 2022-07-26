@@ -58,6 +58,7 @@ main() {
     # - https://github.com/commercialhaskell/stack/releases
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     haskell-stack.rb
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/ghc@9.rb
     # - https://www.haskell.org/ghc/blog/20200515-ghc-on-arm.html
     # - https://github.com/commercialhaskell/stack/issues/5617
     # - GHCup may help with install support on ARM.
