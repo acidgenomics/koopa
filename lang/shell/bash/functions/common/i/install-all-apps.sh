@@ -131,7 +131,6 @@ koopa_install_all_apps() {
         'lua'
         'luarocks'
         'lz4'
-        'lzma'
         'lzo'
         'm4'
         'make'

@@ -3231,7 +3231,6 @@ koopa_build_all_apps() {
         'libuv'
         'libzip'
         'lz4'
-        'lzma'
         'man-db'
         'neofetch'
         'nim'
@@ -11106,7 +11105,6 @@ koopa_install_all_apps() {
         'lua'
         'luarocks'
         'lz4'
-        'lzma'
         'lzo'
         'm4'
         'make'
@@ -12842,12 +12840,6 @@ koopa_install_luarocks() {
 koopa_install_lz4() {
     koopa_install_app \
         --name='lz4' \
-        "$@"
-}
-
-koopa_install_lzma() {
-    koopa_install_app \
-        --name='lzma' \
         "$@"
 }
 
@@ -23097,12 +23089,6 @@ koopa_uninstall_luarocks() {
 koopa_uninstall_lz4() {
     koopa_uninstall_app \
         --name='lz4' \
-        "$@"
-}
-
-koopa_uninstall_lzma() {
-    koopa_uninstall_app \
-        --name='lzma' \
         "$@"
 }
 

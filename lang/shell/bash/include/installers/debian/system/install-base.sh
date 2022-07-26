@@ -157,7 +157,7 @@ main() {
         'liblapack-dev'
         'libldns-dev' # openssh
         'liblz4-dev' # rsync
-        'liblzma-dev'
+        # > 'liblzma-dev'
         'libmagick++-dev'
         'libmodule-build-perl'
         'libmpc-dev'

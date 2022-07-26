@@ -201,7 +201,6 @@ __koopa_complete() {
                         'lua'
                         'luarocks'
                         'lz4'
-                        'lzma'
                         'lzo'
                         'm4'
                         'make'

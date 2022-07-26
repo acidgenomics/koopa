@@ -144,9 +144,6 @@ koopa_build_all_apps() {
         'libuv'
         'libzip'
         'lz4'
-        # FIXME This doesn't work on ARM.
-        # Need to manually specify build type.
-        'lzma'
         'man-db'
         'neofetch'
         'nim'
