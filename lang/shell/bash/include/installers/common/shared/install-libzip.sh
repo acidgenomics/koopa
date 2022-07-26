@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Consider requiring: liblzma, zstd, and xz?.
+# Consider requiring xz here.
 
 main() {
     # """
