@@ -677,6 +677,26 @@ koopa_linux_os_version() {
     return 0
 }
 
+koopa_linux_proc_cmdline() {
+    local app pid
+    koopa_assert_has_args_eq "$#" 1
+    declare -A app=(
+        ['cat']="$(koopa_locate_cat)"
+        ['echo']="$(koopa_locate_echo)"
+        ['xargs']="$(koopa_locate_xargs)"
+    )
+    [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['echo']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
+    declare -A dict
+    dict['pid']="${1:?}"
+    dict['cmdline']="/proc/${dict['pid']}/cmdline"
+    koopa_assert_is_file "${dict['cmdline']}"
+    "${app['cat']}" "${dict['cmdline']}" \
+        | "${app['xargs']}" -0 "${app['echo']}"
+    return 0
+}
+
 koopa_linux_remove_user_from_group() {
     local app dict
     koopa_assert_has_args_le "$#" 2
