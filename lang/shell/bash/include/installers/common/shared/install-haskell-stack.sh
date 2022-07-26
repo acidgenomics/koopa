@@ -18,6 +18,9 @@
 # FIXME Refer to Homebrew recipe for details.
 # https://github.com/commercialhaskell/stack/archive/v2.7.5.tar.gz
 
+# FIXME Consider using cabal, which appears to support ARM.
+# https://www.haskell.org/cabal/
+
 main() {
     # """
     # Install Haskell Stack.
