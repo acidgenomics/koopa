@@ -21,6 +21,7 @@
 # FIXME Consider using cabal, which appears to support ARM.
 # https://www.haskell.org/cabal/
 # https://www.reddit.com/r/haskell/comments/tqzxy1/now_that_stackage_supports_ghc_92_is_it_easy_to/
+# https://stackoverflow.com/questions/30913145/what-is-the-difference-between-cabal-and-stack
 
 main() {
     # """
