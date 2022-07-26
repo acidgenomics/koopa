@@ -115,6 +115,7 @@ koopa_activate_aliases() {
     alias emacs='koopa_alias_emacs'
     alias fd='fd --case-sensitive --no-ignore'
     alias fvim='vim "$(fzf)"'
+    alias glances='koopa_alias_glances'
     alias h='history'
     alias j='z'
     alias k='koopa_alias_k'
@@ -845,6 +846,20 @@ koopa_alias_emacs() {
     else
         emacs --no-window-system "$@"
     fi
+}
+
+koopa_alias_glances() {
+    local color_mode
+    color_mode="$(koopa_color_mode)"
+    case "$color_mode" in
+        'dark')
+            glances "$@"
+            ;;
+        'light')
+            glances --light --theme-white "$@"
+            ;;
+    esac
+    return 0
 }
 
 koopa_alias_k() {
