@@ -23,6 +23,9 @@
 # https://www.reddit.com/r/haskell/comments/tqzxy1/now_that_stackage_supports_ghc_92_is_it_easy_to/
 # https://stackoverflow.com/questions/30913145/what-is-the-difference-between-cabal-and-stack
 
+# FIXME GHC binary links are here:
+# https://downloads.haskell.org/~ghc/9.2.3/
+
 main() {
     # """
     # Install Haskell Stack.
