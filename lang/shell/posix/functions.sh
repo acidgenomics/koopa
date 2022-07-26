@@ -45,21 +45,6 @@ __koopa_id() {
     return 0
 }
 
-__koopa_packages_prefix() {
-    local name str version
-    name="${1:?}-packages"
-    version="${2:-}"
-    if [ -n "$version" ]
-    then
-        version="$(koopa_major_minor_version "$version")"
-        str="$(koopa_app_prefix)/${name}/${version}"
-    else
-        str="$(koopa_opt_prefix)/${name}"
-    fi
-    koopa_print "$str"
-    return 0
-}
-
 __koopa_remove_from_path_string() {
     local dir str
     str="${1:?}"
@@ -375,10 +360,8 @@ koopa_activate_julia() {
     local prefix
     [ -x "$(koopa_bin_prefix)/julia" ] || return 0
     prefix="$(koopa_julia_packages_prefix)"
-    if [ -d "$prefix" ]
-    then
-        export JULIA_DEPOT_PATH="$prefix"
-    fi
+    [ -d "$prefix" ] || return 0
+    export JULIA_DEPOT_PATH="$prefix"
     return 0
 }
 
@@ -980,11 +963,6 @@ koopa_alias_zoxide() {
 
 koopa_anaconda_prefix() {
     koopa_print "$(koopa_opt_prefix)/anaconda"
-    return 0
-}
-
-koopa_app_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/app"
     return 0
 }
 
@@ -1634,7 +1612,7 @@ koopa_is_ubuntu() {
 }
 
 koopa_julia_packages_prefix() {
-    __koopa_packages_prefix 'julia' "$@"
+    koopa_print "$(koopa_opt_prefix)/julia-packages"
 }
 
 koopa_koopa_prefix() {
@@ -2030,10 +2008,6 @@ koopa_python_venv_name() {
 koopa_python_virtualenvs_prefix() {
     koopa_print "$(koopa_opt_prefix)/python-virtualenvs"
     return 0
-}
-
-koopa_r_packages_prefix() {
-    __koopa_packages_prefix 'r' "$@"
 }
 
 koopa_rbenv_prefix() {
