@@ -95,9 +95,10 @@ __koopa_posix_header() {
                     koopa_activate_conda || return 1
                     ;;
             esac
-            # FIXME Can we parameterize here?
-            koopa_add_to_path_start "$(koopa_xdg_local_home)/bin" || return 1
-            koopa_add_to_path_start "$(koopa_scripts_private_prefix)/bin" || return 1
+            koopa_add_to_path_start \
+                "$(koopa_xdg_local_home)/bin" \
+                "$(koopa_scripts_private_prefix)/bin" \
+                || return 1
             koopa_activate_aliases || return 1
             if ! koopa_is_subshell
             then
