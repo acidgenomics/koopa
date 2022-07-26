@@ -3,12 +3,7 @@
 koopa_julia_packages_prefix() {
     # """
     # Julia packages (depot) library prefix.
-    # @note Updated 2021-06-14.
-    #
-    # @usage koopa_julia_packages_prefix [VERSION]
-    #
-    # In the shell environment, check 'JULIA_DEPOT_PATH'.
-    # Inside Julia, check 'DEPOT_PATH'.
+    # @note Updated 2022-07-26.
     # """
-    __koopa_packages_prefix 'julia' "$@"
+    koopa_print "$(koopa_opt_prefix)/julia-packages"
 }
