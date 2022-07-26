@@ -493,7 +493,8 @@ koopa_activate_pipx() {
     local prefix
     [ -x "$(koopa_bin_prefix)/pipx" ] || return 0
     prefix="$(koopa_pipx_prefix)"
-    [ -d "$prefix" ] || return 0
+    [ ! -d "$prefix" ] && mkdir -p "$prefix"
+    koopa_add_to_path_start "${prefix}/bin"
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
     export PIPX_HOME PIPX_BIN_DIR
@@ -1958,7 +1959,7 @@ koopa_os_string() {
 }
 
 koopa_pipx_prefix() {
-    koopa_print "$(koopa_opt_prefix)/pipx"
+    koopa_print "$(koopa_xdg_data_home)/pipx"
     return 0
 }
 

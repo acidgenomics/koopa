@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using a 'dict' approach.
-
 koopa_macos_brew_cask_outdated() {
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-07-26.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
@@ -20,7 +18,7 @@ koopa_macos_brew_cask_outdated() {
     # - brew list --versions
     # - brew info
     # """
-    local app keep_latest tmp_file x
+    local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
@@ -28,29 +26,30 @@ koopa_macos_brew_cask_outdated() {
     )
     [[ -x "${app[brew]}" ]] || return 1
     [[ -x "${app[cut]}" ]] || return 1
+    declare -A dict
     # Whether we want to keep unversioned 'latest' casks returned with
     # '--greedy'. This tends to include font casks and the Google Cloud SDK,
     # which are annoying to have reinstall with each update, so disabling
     # here by default.
-    keep_latest=0
+    dict[keep_latest]=0
     # This approach keeps the version information, which we can parse.
-    tmp_file="$(koopa_tmp_file)"
-    script -q "$tmp_file" \
+    dict[tmp_file]="$(koopa_tmp_file)"
+    script -q "${dict[tmp_file]}" \
         "${app[brew]}" outdated --cask --greedy >/dev/null
-    if [[ "$keep_latest" -eq 1 ]]
+    if [[ "${dict[keep_latest]}" -eq 1 ]]
     then
-        x="$("${app[cut]}" -d ' ' -f '1' < "$tmp_file")"
+        dict[str]="$("${app[cut]}" -d ' ' -f '1' < "${dict[tmp_file]}")"
     else
-        x="$( \
+        dict[str]="$( \
             koopa_grep \
-                --file="$tmp_file" \
+                --file="${dict[tmp_file]}" \
                 --invert-match \
                 --pattern='(latest)' \
             | "${app[cut]}" -d ' ' -f '1' \
         )"
     fi
-    koopa_rm "$tmp_file"
-    [[ -n "$x" ]] || return 0
-    koopa_print "$x"
+    koopa_rm "${dict[tmp_file]}"
+    [[ -n "${dict[str]}" ]] || return 0
+    koopa_print "${dict[str]}"
     return 0
 }

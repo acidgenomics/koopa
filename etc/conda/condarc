@@ -44,6 +44,8 @@ disallow:
   - anaconda
   - conda
 
+# FIXME Rework this to install into ~/.conda for current user by default.
+
 # Change default environment directory path.
 # > envs_dirs:
 # >   - /opt/koopa/opt/conda/envs
@@ -51,6 +53,8 @@ disallow:
 notify_outdated_conda: False
 
 # > offline: False
+
+# FIXME Rework this to install into ~/.conda for current user by default.
 
 # Change default package directory path.
 # > pkgs_dirs:
