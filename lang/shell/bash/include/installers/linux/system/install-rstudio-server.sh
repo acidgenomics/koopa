@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to link this into koopa bin. Or more appropriate in koopa sbin?
-
 main() {
     # """
     # Install RStudio Server binary.
-    # @note Updated 2022-07-18.
+    # @note Updated 2022-07-26.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
     #
@@ -83,8 +81,13 @@ ${dict[arch]}/${dict[file]}"
     koopa_add_to_path_start "$(koopa_dirname "${app[r]}")"
     koopa_download "${dict[url]}" "${dict[file]}"
     "${app[fun]}" "${dict[file]}"
-    # FIXME Ensure we point to our R for server config.
-    # /etc/rstudio/rserver.conf
-    # > rsession-which-r=/opt/koopa/bin/R
+    # Ensure RStudio Server is using our recommended version of R.
+    read -r -d '' "dict[conf_string]" << END || true
+rsession-which-r="${app[r]}"
+END
+    dict[conf_file]='/etc/rstudio/rserver.conf'
+    koopa_sudo_write_string \
+        --file="${dict[conf_file]}" \
+        --string="${dict[conf_string]}"
     return 0
 }
