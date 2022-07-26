@@ -229,9 +229,6 @@ gzip="1.12"
 
 hadolint="2.10.0"
 
-# FIXME latest: 5.0.1
-# FIXME Consider: 4.4.1
-# FIXME Current: 4.3.0.
 harfbuzz="5.0.1"
 
 # https://docs.haskellstack.org/en/stable/install_and_upgrade/
