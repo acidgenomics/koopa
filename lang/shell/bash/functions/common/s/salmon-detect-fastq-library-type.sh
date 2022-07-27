@@ -15,7 +15,7 @@ koopa_salmon_detect_fastq_library_type() {
     # > koopa_salmon_detect_fastq_library_type \
     # >     'DMSO-1_R1_001.fastq.gz' \
     # >     'DMSO-1_R2_001.fastq.gz'
-    # # FIXME Show example code.
+    # # ISF
     #
     # Single-end:
     # > koopa_salmon_detect_fastq_library_type \
@@ -33,6 +33,9 @@ koopa_salmon_detect_fastq_library_type() {
     [[ -x "${app[jq]}" ]] || return 1
     [[ -x "${app[salmon]}" ]] || return 1
     declare -A dict=(
+        [fastq_r1_file]=''
+        [fastq_r2_file]=''
+        [index_dir]=''
         [lib_type]='A'
         [n]='400000'
         [threads]="$(koopa_cpu_count)"
@@ -87,35 +90,37 @@ koopa_salmon_detect_fastq_library_type() {
         '--skipQuant'
         "--threads=${dict[threads]}"
     )
-    case "$#" in
-        '1')
-            dict[unmated_reads]="${dict[tmp_dir]}/reads.fastq"
-            koopa_decompress --stdout "${dict[fastq_r1_file]}" \
-                | "${app[head]}" -n "${dict[n]}" \
-                > "${dict[unmated_reads]}"
-            quant_args+=(
-                "--unmatedReads=${dict[unmated_reads]}"
-            )
-            ;;
-        '2')
-            koopa_assert_is_file "${dict[fastq_r2_file]}"
-            dict[mates1]="${dict[tmp_dir]}/mates1.fastq"
-            dict[mates2]="${dict[tmp_dir]}/mates2.fastq"
-            koopa_decompress --stdout "${dict[fastq_r1_file]}" \
-                | "${app[head]}" -n "${dict[n]}" \
-                > "${dict[mates1]}"
-            koopa_decompress --stdout "${dict[fastq_r2_file]}" \
-                | "${app[head]}" -n "${dict[n]}" \
-                > "${dict[mates2]}"
-            quant_args+=(
-                "--mates1=${dict[mates1]}"
-                "--mates2=${dict[mates2]}"
-            )
-            ;;
-    esac
-    "${app[salmon]}" quant "${quant_args[@]}"
-    # FIXME Extract library strandedness in 'lib_format_counts.json' 'expected_format' value.
-    # > koopa_print "${dict[lib_type]}"
-    # > koopa_rm "${dict[tmp_dir]}"
+    if [[ -n "${dict[fastq_r2_file]}" ]]
+    then
+        koopa_assert_is_file "${dict[fastq_r2_file]}"
+        dict[mates1]="${dict[tmp_dir]}/mates1.fastq"
+        dict[mates2]="${dict[tmp_dir]}/mates2.fastq"
+        koopa_decompress --stdout "${dict[fastq_r1_file]}" \
+            | "${app[head]}" -n "${dict[n]}" \
+            > "${dict[mates1]}"
+        koopa_decompress --stdout "${dict[fastq_r2_file]}" \
+            | "${app[head]}" -n "${dict[n]}" \
+            > "${dict[mates2]}"
+        quant_args+=(
+            "--mates1=${dict[mates1]}"
+            "--mates2=${dict[mates2]}"
+        )
+    else
+        dict[unmated_reads]="${dict[tmp_dir]}/reads.fastq"
+        koopa_decompress --stdout "${dict[fastq_r1_file]}" \
+            | "${app[head]}" -n "${dict[n]}" \
+            > "${dict[unmated_reads]}"
+        quant_args+=(
+            "--unmatedReads=${dict[unmated_reads]}"
+        )
+    fi
+    "${app[salmon]}" quant "${quant_args[@]}" &>/dev/null
+    dict[json_file]="${dict[output_dir]}/lib_format_counts.json"
+    koopa_assert_is_file "${dict[json_file]}"
+    dict[lib_type]="$( \
+        "${app[jq]}" --raw-output '.expected_format' "${dict[json_file]}" \
+    )"
+    koopa_print "${dict[lib_type]}"
+    koopa_rm "${dict[tmp_dir]}"
     return 0
 }
