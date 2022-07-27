@@ -15,12 +15,12 @@ koopa_salmon_detect_fastq_library_type() {
     # > koopa_salmon_detect_fastq_library_type \
     # >     'DMSO-1_R1_001.fastq.gz' \
     # >     'DMSO-1_R2_001.fastq.gz'
-    # # ISF
+    # # IU
     #
     # Single-end:
     # > koopa_salmon_detect_fastq_library_type \
     # >     'DMSO-1_R1_001.fastq.gz'
-    # # FIXME Show example code.
+    # # U
     # """
     local app dict quant_args
     koopa_assert_has_args "$#"
