@@ -287,8 +287,7 @@ __koopa_bash_header() {
                 ;;
         esac
     fi
-    if [[ "${dict[dev]}" -eq 1 ]] || \
-        [[ "${dict[verbose]}" -eq 1 ]]
+    if [[ "${dict[verbose]}" -eq 1 ]]
     then
         set -o verbose # -v
         set -o xtrace # -x
