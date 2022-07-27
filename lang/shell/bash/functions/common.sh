@@ -934,6 +934,24 @@ koopa_anaconda_version() {
     return 0
 }
 
+koopa_app_prefix() {
+    local dict
+    koopa_assert_has_args_le "$#" 1
+    declare -A dict
+    dict[name]="${1:-}"
+    if [[ -n "${dict[name]}" ]]
+    then
+        dict[opt_prefix]="$(koopa_opt_prefix)"
+        dict[str]="${dict[opt_prefix]}/${dict[name]}"
+        [[ -d "${dict[str]}" ]] || return 1
+        dict[str]="$(koopa_realpath "${dict[str]}")"
+    else
+        dict[str]="$(koopa_koopa_prefix)/app"
+    fi
+    koopa_print "${dict[str]}"
+    return 0
+}
+
 koopa_append_string() {
     local dict
     koopa_assert_has_args "$#"
@@ -6018,7 +6036,7 @@ koopa_decompress() {
                     "$cmd" "${cmd_args[@]}" > "${dict[target_file]}"
                     ;;
                 '1')
-                    "$cmd" "${cmd_args[@]}"
+                    "$cmd" "${cmd_args[@]}" || true
                     ;;
             esac
             ;;
@@ -6030,7 +6048,7 @@ koopa_decompress() {
                 '1')
                     cmd="$(koopa_locate_cat)"
                     [[ -x "$cmd" ]] || return 1
-                    "$cmd" "${dict[source_file]}"
+                    "$cmd" "${dict[source_file]}" || true
                     ;;
             esac
             ;;
@@ -8773,13 +8791,18 @@ koopa_fix_zsh_permissions() {
     )
     if koopa_is_shared_install
     then
-        koopa_assert_is_admin
-        koopa_chown --sudo 'root' \
-            "${dict[koopa_prefix]}/lang/shell/zsh" \
-            "${dict[koopa_prefix]}/lang/shell/zsh/functions"
-        koopa_chmod --sudo 'g-w' \
-            "${dict[koopa_prefix]}/lang/shell/zsh" \
-            "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+        dict[stat_user]="$( \
+            koopa_stat_user "${dict[koopa_prefix]}/lang/shell/zsh" \
+        )"
+        if [[ "${dict[stat_user]}" != 'root' ]]
+        then
+            koopa_chown --sudo 'root' \
+                "${dict[koopa_prefix]}/lang/shell/zsh" \
+                "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+            koopa_chmod --sudo 'g-w' \
+                "${dict[koopa_prefix]}/lang/shell/zsh" \
+                "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+        fi
     else
         koopa_chmod 'g-w' \
             "${dict[koopa_prefix]}/lang/shell/zsh" \
@@ -14107,8 +14130,7 @@ koopa_is_r_package_installed() {
     )
     [[ -x "${app[r]}" ]] || return 1
     declare -A dict
-    dict[version]="$(koopa_get_version "${app[r]}")"
-    dict[prefix]="$(koopa_r_packages_prefix "${dict[version]}")"
+    dict[prefix]="$(koopa_r_packages_prefix "${app[r]}")"
     for pkg in "$@"
     do
         [[ -d "${dict[prefix]}/${pkg}" ]] || return 1
@@ -18356,13 +18378,13 @@ koopa_r_link_site_library() {
     declare -A app=(
         [r]="${1:?}"
     )
-    koopa_assert_is_installed "${app[r]}"
+    [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
+        [lib_source]="$(koopa_r_packages_prefix "${app[r]}")"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
         [version]="$(koopa_r_version "${app[r]}")"
     )
     koopa_assert_is_dir "${dict[r_prefix]}"
-    dict[lib_source]="$(koopa_r_packages_prefix "${dict[version]}")"
     dict[lib_target]="${dict[r_prefix]}/site-library"
     koopa_alert "Linking '${dict[lib_target]}' to '${dict[lib_source]}'."
     koopa_sys_mkdir "${dict[lib_source]}"
@@ -18415,6 +18437,23 @@ koopa_r_package_version() {
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
+    return 0
+}
+
+koopa_r_packages_prefix() {
+    local app dict
+    declare -A app
+    app[r]="${1:?}"
+    declare -A dict
+    dict[app_prefix]="$(koopa_app_prefix)"
+    dict[name]='r-packages'
+    dict[version]="$(koopa_r_version "${app[r]}")"
+    if [[ "${dict[version]}" != 'devel' ]]
+    then
+        dict[version]="$(koopa_major_minor_version "${dict[version]}")"
+    fi
+    dict[str]="${dict[app_prefix]}/${dict[name]}/${dict[version]}"
+    koopa_print "${dict[str]}"
     return 0
 }
 
@@ -19170,6 +19209,108 @@ koopa_run_if_installed() {
         exe="$(koopa_which_realpath "$arg")"
         "$exe"
     done
+    return 0
+}
+
+koopa_salmon_detect_fastq_library_type() {
+    local app dict quant_args
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        [head]="$(koopa_locate_head)"
+        [jq]="$(koopa_locate_jq)"
+        [salmon]="$(koopa_locate_salmon)"
+    )
+    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app[jq]}" ]] || return 1
+    [[ -x "${app[salmon]}" ]] || return 1
+    declare -A dict=(
+        [fastq_r1_file]=''
+        [fastq_r2_file]=''
+        [index_dir]=''
+        [lib_type]='A'
+        [n]='400000'
+        [threads]="$(koopa_cpu_count)"
+        [tmp_dir]="$(koopa_tmp_dir)"
+    )
+    dict[output_dir]="${dict[tmp_dir]}/quant"
+    while (("$#"))
+    do
+        case "$1" in
+            '--fastq-r1-file='*)
+                dict[fastq_r1_file]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-r1-file')
+                dict[fastq_r1_file]="${2:?}"
+                shift 2
+                ;;
+            '--fastq-r2-file='*)
+                dict[fastq_r2_file]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-r2-file')
+                dict[fastq_r2_file]="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict[index_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--fastq-r1-file' "${dict[fastq_r1_file]}" \
+        '--index-dir' "${dict[index_dir]}"
+    koopa_assert_is_file "${dict[fastq_r1_file]}"
+    koopa_assert_is_dir "${dict[index_dir]}"
+    quant_args=(
+        "--index=${dict[index_dir]}"
+        "--libType=${dict[lib_type]}"
+        '--no-version-check'
+        "--output=${dict[output_dir]}"
+        '--quiet'
+        '--skipQuant'
+        "--threads=${dict[threads]}"
+    )
+    if [[ -n "${dict[fastq_r2_file]}" ]]
+    then
+        koopa_assert_is_file "${dict[fastq_r2_file]}"
+        dict[mates1]="${dict[tmp_dir]}/mates1.fastq"
+        dict[mates2]="${dict[tmp_dir]}/mates2.fastq"
+        koopa_decompress --stdout "${dict[fastq_r1_file]}" \
+            | "${app[head]}" -n "${dict[n]}" \
+            > "${dict[mates1]}"
+        koopa_decompress --stdout "${dict[fastq_r2_file]}" \
+            | "${app[head]}" -n "${dict[n]}" \
+            > "${dict[mates2]}"
+        quant_args+=(
+            "--mates1=${dict[mates1]}"
+            "--mates2=${dict[mates2]}"
+        )
+    else
+        dict[unmated_reads]="${dict[tmp_dir]}/reads.fastq"
+        koopa_decompress --stdout "${dict[fastq_r1_file]}" \
+            | "${app[head]}" -n "${dict[n]}" \
+            > "${dict[unmated_reads]}"
+        quant_args+=(
+            "--unmatedReads=${dict[unmated_reads]}"
+        )
+    fi
+    "${app[salmon]}" quant "${quant_args[@]}" &>/dev/null
+    dict[json_file]="${dict[output_dir]}/lib_format_counts.json"
+    koopa_assert_is_file "${dict[json_file]}"
+    dict[lib_type]="$( \
+        "${app[jq]}" --raw-output '.expected_format' "${dict[json_file]}" \
+    )"
+    koopa_print "${dict[lib_type]}"
+    koopa_rm "${dict[tmp_dir]}"
     return 0
 }
 
