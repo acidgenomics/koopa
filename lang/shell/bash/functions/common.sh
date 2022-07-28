@@ -6375,10 +6375,13 @@ koopa_dirname() {
 }
 
 koopa_disable_passwordless_sudo() {
-    local file
+    local dict
+    koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    file='/etc/sudoers.d/sudo'
-    if [[ -f "$file" ]]
+    declare -A dict
+    dict[group]="$(koopa_admin_group)"
+    dict[file]="/etc/sudoers.d/koopa-${dict[group]}"
+    if [[ -f "${dict[file]}" ]]
     then
         koopa_alert "Removing sudo permission file at '${file}'."
         koopa_rm --sudo "$file"
@@ -7384,23 +7387,18 @@ koopa_enable_passwordless_sudo() {
     local dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A dict=(
-        [file]='/etc/sudoers.d/sudo'
-        [group]="$(koopa_admin_group)"
-    )
+    declare -A dict
+    dict[group]="$(koopa_admin_group)"
+    dict[file]="/etc/sudoers.d/koopa-${dict[group]}"
     dict[string]="%${dict[group]} ALL=(ALL) NOPASSWD: ALL"
-    if [[ -f "${dict[file]}" ]] && \
-        koopa_file_detect_fixed \
-            --file="${dict[file]}" \
-            --pattern="${dict[group]}" \
-            --sudo
+    if [[ -f "${dict[file]}" ]]
     then
         koopa_alert_success "Passwordless sudo for '${dict[group]}' group \
 already enabled at '${dict[file]}'."
         return 0
     fi
     koopa_alert "Modifying '${dict[file]}' to include '${dict[group]}'."
-    koopa_sudo_append_string \
+    koopa_sudo_write_string \
         --file="${dict[file]}" \
         --string="${dict[string]}"
     koopa_chmod --sudo '0440' "${dict[file]}"
