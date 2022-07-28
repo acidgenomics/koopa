@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Seeing this pop up with Ubuntu 22:
+# debconf: DbDriver "passwords" warning: could not open /var/cache/debconf/passwords.dat: Permission denied
+# debconf: DbDriver "config": could not write /var/cache/debconf/config.dat-new: Permission denied
+
 koopa_debian_install_system_builder_base() {
     # """
     # Bootstrap the Debian/Ubuntu builder AMI.
@@ -27,11 +31,15 @@ koopa_debian_install_system_builder_base() {
     [[ -x "${app['debconf_set_selections']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    export DEBCONF_NONINTERACTIVE_SEEN='true'
-    export DEBIAN_FRONTEND='noninteractive'
     "${app['sudo']}" "${app['apt_get']}" update
-    "${app['sudo']}" "${app['apt_get']}" upgrade --yes
-    "${app['sudo']}" "${app['apt_get']}" dist-upgrade --yes
+    "${app['sudo']}" \
+        DEBCONF_NONINTERACTIVE_SEEN='true' \
+        DEBIAN_FRONTEND='noninteractive' \
+        "${app['apt_get']}" upgrade --yes
+    "${app['sudo']}" \
+        DEBCONF_NONINTERACTIVE_SEEN='true' \
+        DEBIAN_FRONTEND='noninteractive' \
+        "${app['apt_get']}" dist-upgrade --yes
     "${app['echo']}" 'tzdata tzdata/Areas select America' \
         | "${app['debconf_set_selections']}"
     "${app['echo']}" 'tzdata tzdata/Zones/America select New_York' \
@@ -39,7 +47,10 @@ koopa_debian_install_system_builder_base() {
     # Needed for compiling software: 'gcc' 'g++' 'libc-dev' 'make'. Don't
     # include 'zlib1g-dev' here. We want to ensure that our build recipes are
     # hardened with a local copy of zlib.
-    "${app['sudo']}" "${app['apt_get']}" \
+    "${app['sudo']}" \
+        DEBCONF_NONINTERACTIVE_SEEN='true' \
+        DEBIAN_FRONTEND='noninteractive' \
+        "${app['apt_get']}" \
         --no-install-recommends \
         --yes \
         install \
