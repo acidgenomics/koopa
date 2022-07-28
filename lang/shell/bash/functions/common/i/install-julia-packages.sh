@@ -3,12 +3,13 @@
 koopa_install_julia_packages() {
     # """
     # Install Julia packages.
-    # @note Updated 2022-07-22.
+    # @note Updated 2022-07-28.
     #
     # @seealso
     # - 'JULIA_DEPOT_PATH' in shell.
-    # - 'DEPOT_PATH' in Julia.
-    # - https://docs.julialang.org/en/v1/
+    # - 'DEPOT_PATH' in Julia. Can check with 'Base.DEPOT_PATH'.
+    #   Currently defaults to '~/.julia' unless set otherwise.
+    # - https://docs.julialang.org/en/v1/manual/environment-variables/
     # - https://pkgdocs.julialang.org/v1/managing-packages/
     # - https://pkgdocs.julialang.org/v1/api/
     # - https://biojulia.net
@@ -29,7 +30,6 @@ koopa_install_julia_packages() {
     )
     dict[script]="${dict[script_prefix]}/install-packages.jl"
     koopa_assert_is_file "${dict[script]}"
-    koopa_configure_julia "${app[julia]}"
     koopa_activate_julia
     "${app[julia]}" "${dict[script]}"
     return 0
