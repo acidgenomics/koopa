@@ -7390,7 +7390,6 @@ koopa_enable_passwordless_sudo() {
     declare -A dict
     dict[group]="$(koopa_admin_group)"
     dict[file]="/etc/sudoers.d/koopa-${dict[group]}"
-    dict[string]="%${dict[group]} ALL=(ALL) NOPASSWD: ALL"
     if [[ -f "${dict[file]}" ]]
     then
         koopa_alert_success "Passwordless sudo for '${dict[group]}' group \
@@ -7398,6 +7397,7 @@ already enabled at '${dict[file]}'."
         return 0
     fi
     koopa_alert "Modifying '${dict[file]}' to include '${dict[group]}'."
+    dict[string]="%${dict[group]} ALL=(ALL) NOPASSWD: ALL"
     koopa_sudo_write_string \
         --file="${dict[file]}" \
         --string="${dict[string]}"
