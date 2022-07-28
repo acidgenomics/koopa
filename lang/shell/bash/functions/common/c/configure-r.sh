@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Simplify R configuration to just create a site-library without
+# symbolic linking to '/opt/koopa/r-packages'...
+
 koopa_configure_r() {
     # """
     # Update R configuration.
