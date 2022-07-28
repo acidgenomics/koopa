@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-25"
+koopa-date="2022-07-28"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -134,7 +134,7 @@ docker="20.10.17"
 docker-credential-pass="0.6.4"
 
 # https://github.com/acidgenomics/dotfiles
-dotfiles="08b427442803287281bc58a39e9944087d0ac9a9"
+dotfiles="57b39242f049b5e00d0a5a437488b7352ec34107"
 
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
