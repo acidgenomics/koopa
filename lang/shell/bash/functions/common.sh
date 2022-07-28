@@ -4544,7 +4544,7 @@ koopa_conda_create_env() {
     [[ -x "${app[conda]}" ]] || return 1
     [[ -x "${app[cut]}" ]] || return 1
     declare -A dict=(
-        [conda_prefix]="$(koopa_conda_prefix)"
+        [env_prefix]="$(koopa_conda_env_prefix)"
         [force]=0
         [latest]=0
         [prefix]=''
@@ -4629,7 +4629,7 @@ koopa_conda_create_env() {
             koopa_print "${dict2[env_string]//=/@}" \
             | "${app[cut]}" -d '@' -f '1-2' \
         )"
-        dict2[env_prefix]="${dict[conda_prefix]}/envs/${dict2[env_name]}"
+        dict2[env_prefix]="${dict[env_prefix]}/${dict2[env_name]}"
         if [[ -d "${dict2[env_prefix]}" ]]
         then
             if [[ "${dict[force]}" -eq 1 ]]
@@ -4647,9 +4647,6 @@ exists at '${dict2[env_prefix]}'."
             --quiet \
             --yes \
             "${dict2[env_string]}"
-        koopa_sys_set_permissions --recursive \
-            "${dict[conda_prefix]}/pkgs" \
-            "${dict2[env_prefix]}"
         koopa_alert_install_success "${dict2[env_name]}" "${dict2[env_prefix]}"
     done
     return 0
@@ -4711,36 +4708,44 @@ koopa_conda_env_list() {
 
 koopa_conda_env_prefix() {
     local app dict
-    koopa_assert_has_args_le "$#" 2
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
+        [conda]="$(koopa_locate_conda)"
+        [jq]="$(koopa_locate_jq)"
         [sed]="$(koopa_locate_sed)"
         [tail]="$(koopa_locate_tail)"
     )
+    [[ -x "${app[conda]}" ]] || return 1
+    [[ -x "${app[jq]}" ]] || return 1
     [[ -x "${app[sed]}" ]] || return 1
     [[ -x "${app[tail]}" ]] || return 1
     declare -A dict=(
-        [env_name]="${1:?}"
-        [env_list]="${2:-}"
+        [env_name]="${1:-}"
     )
-    [[ -n "${dict[env_name]}" ]] || return 1
-    if [[ -z "${dict[env_list]}" ]]
+    dict[env_prefix]="$( \
+        "${app[conda]}" info --json | \
+            "${app[jq]}" --raw-output '.envs_dirs[0]' \
+    )"
+    [[ -n "${dict[env_prefix]}" ]] || return 1
+    if [[ -z "${dict[env_name]}" ]]
     then
-        dict[conda_prefix]="$(koopa_conda_prefix)"
-        dict[env_prefix]="${dict[conda_prefix]}/envs/${dict[env_name]}"
-        if [[ -d "${dict[env_prefix]}" ]]
-        then
-            koopa_print "${dict[env_prefix]}"
-            return 0
-        fi
-        dict[env_list]="$(koopa_conda_env_list)"
+        koopa_print "${dict[env_prefix]}"
+        return 0
     fi
+    dict[prefix]="${dict[env_prefix]}/${dict[env_name]}"
+    if [[ -d "${dict[prefix]}" ]]
+    then
+        koopa_print "${dict[prefix]}"
+        return 0
+    fi
+    dict[env_list]="$(koopa_conda_env_list)"
     dict[env_list2]="$( \
         koopa_grep \
             --pattern="${dict[env_name]}" \
             --string="${dict[env_list]}" \
     )"
     [[ -n "${dict[env_list2]}" ]] || return 1
-    dict[env_prefix]="$( \
+    dict[prefix]="$( \
         koopa_grep \
             --pattern="/${dict[env_name]}(@[.0-9]+)?\"" \
             --regex \
@@ -4748,8 +4753,27 @@ koopa_conda_env_prefix() {
         | "${app[tail]}" -n 1 \
         | "${app[sed]}" -E 's/^.*"(.+)".*$/\1/' \
     )"
-    [[ -d "${dict[env_prefix]}" ]] || return 1
-    koopa_print "${dict[env_prefix]}"
+    [[ -d "${dict[prefix]}" ]] || return 1
+    koopa_print "${dict[prefix]}"
+    return 0
+}
+
+koopa_conda_pkg_cache_prefix() {
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [conda]="$(koopa_locate_conda)"
+        [jq]="$(koopa_locate_jq)"
+    )
+    [[ -x "${app[conda]}" ]] || return 1
+    [[ -x "${app[jq]}" ]] || return 1
+    declare -A dict
+    dict[prefix]="$( \
+        "${app[conda]}" info --json \
+            | "${app[jq]}" --raw-output '.pkgs_dirs[0]' \
+    )"
+    [[ -n "${dict[prefix]}" ]] || return 1
+    koopa_print "${dict[prefix]}"
     return 0
 }
 
@@ -13768,6 +13792,13 @@ koopa_install_xz() {
         "$@"
 }
 
+koopa_install_yq() {
+    koopa_install_app \
+        --link-in-bin='yq' \
+        --name='yq' \
+        "$@"
+}
+
 koopa_install_yt_dlp() {
     koopa_install_app \
         --installer='python-venv' \
@@ -16633,6 +16664,12 @@ koopa_locate_yes() {
         --allow-in-path \
         --app-name='yes' \
         --opt-name='coreutils'
+}
+
+koopa_locate_yq() {
+    koopa_locate_app \
+        --app-name='yq' \
+        --opt-name='yq'
 }
 
 koopa_locate_yt_dlp() {
@@ -24006,6 +24043,13 @@ koopa_uninstall_xz() {
     koopa_uninstall_app \
         --name='xz' \
         --unlink-in-bin='xz' \
+        "$@"
+}
+
+koopa_uninstall_yq() {
+    koopa_uninstall_app \
+        --name='yq' \
+        --unlink-in-bin='yq' \
         "$@"
 }
 
