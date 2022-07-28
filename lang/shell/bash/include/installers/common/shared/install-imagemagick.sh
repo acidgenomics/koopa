@@ -43,7 +43,7 @@ main() {
         # freetype deps: none.
         'freetype'
         # graphviz deps: none.
-        'graphviz'
+        # > 'graphviz'
         # jpeg deps: none.
         'jpeg'
         # libpng deps: none.
