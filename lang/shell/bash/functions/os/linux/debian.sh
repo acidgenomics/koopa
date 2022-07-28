@@ -865,6 +865,7 @@ koopa_debian_install_system_builder_base() {
     local app
     declare -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
+        ['cat']="$(koopa_locate_cat)"
         ['debconf_set_selections']="$( \
             koopa_debian_locate_debconf_set_selections \
         )"
@@ -872,6 +873,7 @@ koopa_debian_install_system_builder_base() {
         ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['apt_get']}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['debconf_set_selections']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
@@ -884,10 +886,11 @@ koopa_debian_install_system_builder_base() {
         DEBCONF_NONINTERACTIVE_SEEN='true' \
         DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" dist-upgrade --yes
-    "${app['echo']}" 'tzdata tzdata/Areas select America' \
-        | "${app['debconf_set_selections']}"
-    "${app['echo']}" 'tzdata tzdata/Zones/America select New_York' \
-        | "${app['debconf_set_selections']}"
+    "${app['cat']}" << END \
+        | "${app['sudo']}" "${app['debconf_set_selections']}"
+tzdata tzdata/Areas select America
+tzdata tzdata/Zones/America select New_York
+END
     "${app['sudo']}" \
         DEBCONF_NONINTERACTIVE_SEEN='true' \
         DEBIAN_FRONTEND='noninteractive' \
