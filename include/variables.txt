@@ -601,7 +601,7 @@ yt-dlp="2022.05.18"
 zlib="1.2.12"
 
 # http://zsh.sourceforge.net/Arc/source.html
-zsh="5.8.1"
+zsh="5.9"
 
 # https://facebook.github.io/zstd/
 zstd="1.5.2"
