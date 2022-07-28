@@ -4969,11 +4969,19 @@ koopa_configure_r() {
     koopa_r_configure_environ "${app[r]}"
     case "${dict[system]}" in
         '0')
+            if [[ -L "${dict[site_library]}" ]]
+            then
+                koopa_rm "${dict[site_library]}"
+            fi
             koopa_sys_mkdir "${dict[site_library]}"
             ;;
         '1')
             dict[group]="$(koopa_admin_group)"
             dict[user]="$(koopa_user)"
+            if [[ -L "${dict[site_library]}" ]]
+            then
+                koopa_rm --sudo "${dict[site_library]}"
+            fi
             koopa_mkdir --sudo "${dict[site_library]}"
             koopa_chmod --sudo '0775' "${dict[site_library]}"
             koopa_chown --sudo --recursive \
@@ -18327,20 +18335,14 @@ koopa_r_link_files_in_etc() {
     declare -A app=(
         [r]="${1:?}"
     )
-    koopa_assert_is_installed "${app[r]}"
+    [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
-        [distro_prefix]="$(koopa_distro_prefix)"
+        [r_etc_source]="$(koopa_koopa_prefix)/etc/R"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
         [sudo]=0
         [version]="$(koopa_r_version "${app[r]}")"
     )
-    koopa_assert_is_dir "${dict[r_prefix]}"
-    if [[ "${dict[version]}" != 'devel' ]]
-    then
-        dict[version]="$(koopa_major_minor_version "${dict[version]}")"
-    fi
-    dict[r_etc_source]="${dict[distro_prefix]}/etc/R/${dict[version]}"
-    koopa_assert_is_dir "${dict[r_etc_source]}"
+    koopa_assert_is_dir "${dict[r_etc_source]}" "${dict[r_prefix]}"
     if koopa_is_linux && \
         ! koopa_is_koopa_app "${app[r]}" && \
         [[ -d '/etc/R' ]]
@@ -18351,13 +18353,11 @@ koopa_r_link_files_in_etc() {
         dict[r_etc_target]="${dict[r_prefix]}/etc"
     fi
     files=(
-        'Renviron.site'
         'Rprofile.site'
         'repositories'
     )
     for file in "${files[@]}"
     do
-        [[ -f "${dict[r_etc_source]}/${file}" ]] || continue
         if [[ "${dict[sudo]}" -eq 1 ]]
         then
             koopa_ln --sudo \
@@ -18369,48 +18369,6 @@ koopa_r_link_files_in_etc() {
                 "${dict[r_etc_target]}/${file}"
         fi
     done
-    return 0
-}
-
-koopa_r_link_site_library() {
-    local app conf_args dict
-    koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        [r]="${1:?}"
-    )
-    [[ -x "${app[r]}" ]] || return 1
-    declare -A dict=(
-        [lib_source]="$(koopa_r_packages_prefix "${app[r]}")"
-        [r_prefix]="$(koopa_r_prefix "${app[r]}")"
-        [version]="$(koopa_r_version "${app[r]}")"
-    )
-    koopa_assert_is_dir "${dict[r_prefix]}"
-    dict[lib_target]="${dict[r_prefix]}/site-library"
-    koopa_alert "Linking '${dict[lib_target]}' to '${dict[lib_source]}'."
-    koopa_sys_mkdir "${dict[lib_source]}"
-    if koopa_is_koopa_app "${app[r]}"
-    then
-        koopa_sys_ln "${dict[lib_source]}" "${dict[lib_target]}"
-    else
-        koopa_ln --sudo "${dict[lib_source]}" "${dict[lib_target]}"
-    fi
-    conf_args=(
-        '--name=r'
-        "--prefix=${dict[lib_source]}"
-    )
-    if [[ "${dict[version]}" == 'devel' ]]
-    then
-        conf_args+=('--no-link-in-opt')
-    fi
-    koopa_configure_app_packages "${conf_args[@]}"
-    if koopa_is_fedora && [[ -d '/usr/lib64/R' ]]
-    then
-        koopa_alert_note "Fixing configuration at '/usr/lib64/R'."
-        koopa_mkdir --sudo '/usr/lib64/R/site-library'
-        koopa_ln --sudo \
-            '/usr/lib64/R/site-library' \
-            '/usr/local/lib/R/site-library'
-    fi
     return 0
 }
 

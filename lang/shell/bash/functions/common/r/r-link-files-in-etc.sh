@@ -15,21 +15,14 @@ koopa_r_link_files_in_etc() {
     declare -A app=(
         [r]="${1:?}"
     )
-    koopa_assert_is_installed "${app[r]}"
+    [[ -x "${app[r]}" ]] || return 1
     declare -A dict=(
-        # FIXME Rework this approach.
-        [distro_prefix]="$(koopa_distro_prefix)"
+        [r_etc_source]="$(koopa_koopa_prefix)/etc/R"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
         [sudo]=0
         [version]="$(koopa_r_version "${app[r]}")"
     )
-    koopa_assert_is_dir "${dict[r_prefix]}"
-    if [[ "${dict[version]}" != 'devel' ]]
-    then
-        dict[version]="$(koopa_major_minor_version "${dict[version]}")"
-    fi
-    dict[r_etc_source]="${dict[distro_prefix]}/etc/R/${dict[version]}"
-    koopa_assert_is_dir "${dict[r_etc_source]}"
+    koopa_assert_is_dir "${dict[r_etc_source]}" "${dict[r_prefix]}"
     if koopa_is_linux && \
         ! koopa_is_koopa_app "${app[r]}" && \
         [[ -d '/etc/R' ]]
@@ -41,13 +34,11 @@ koopa_r_link_files_in_etc() {
         dict[r_etc_target]="${dict[r_prefix]}/etc"
     fi
     files=(
-        'Renviron.site'
         'Rprofile.site'
         'repositories'
     )
     for file in "${files[@]}"
     do
-        [[ -f "${dict[r_etc_source]}/${file}" ]] || continue
         if [[ "${dict[sudo]}" -eq 1 ]]
         then
             koopa_ln --sudo \
