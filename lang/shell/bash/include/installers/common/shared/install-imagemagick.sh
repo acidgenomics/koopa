@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
+# NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
+# package in R, which bundles a very old version (2.28.0) currently.
+
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2022-07-21.
+    # @note Updated 2022-07-28.
     #
     # Also consider requiring:
     # - ghostscript
-    # - graphviz
     # - libheif
     # - liblqr
     # - libraw
@@ -42,8 +44,6 @@ main() {
         'xz'
         # freetype deps: none.
         'freetype'
-        # graphviz deps: none.
-        # > 'graphviz'
         # jpeg deps: none.
         'jpeg'
         # libpng deps: none.
