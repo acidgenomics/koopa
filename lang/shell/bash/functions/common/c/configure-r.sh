@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Simplify R configuration to just create a site-library without
-# symbolic linking to '/opt/koopa/r-packages'...
-# FIXME Need to remove r-packages uninstaller.
-
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-07-24.
+    # @note Updated 2022-07-28.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -31,18 +27,23 @@ koopa_configure_r() {
     dict[site_library]="${dict[r_prefix]}/site-library"
     koopa_alert_configure_start "${dict[name]}" "${dict[r_prefix]}"
     koopa_assert_is_dir "${dict[r_prefix]}"
-    # FIXME Simplify this function to not be OS specific, just
-    # use '/opt/koopa/etc/R'...
     koopa_r_link_files_in_etc "${app[r]}"
     koopa_r_configure_environ "${app[r]}"
     case "${dict[system]}" in
         '0')
-            # FIXME Need to test this out for macOS.
+            if [[ -L "${dict[site_library]}" ]]
+            then
+                koopa_rm "${dict[site_library]}"
+            fi
             koopa_sys_mkdir "${dict[site_library]}"
             ;;
         '1')
             dict[group]="$(koopa_admin_group)"
             dict[user]="$(koopa_user)"
+            if [[ -L "${dict[site_library]}" ]]
+            then
+                koopa_rm --sudo "${dict[site_library]}"
+            fi
             koopa_mkdir --sudo "${dict[site_library]}"
             koopa_chmod --sudo '0775' "${dict[site_library]}"
             koopa_chown --sudo --recursive \
