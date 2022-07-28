@@ -357,11 +357,10 @@ koopa_activate_homebrew() {
 }
 
 koopa_activate_julia() {
-    local prefix
+    local num_threads
     [ -x "$(koopa_bin_prefix)/julia" ] || return 0
-    prefix="$(koopa_julia_packages_prefix)"
-    [ -d "$prefix" ] || return 0
-    export JULIA_DEPOT_PATH="$prefix"
+    num_threads="$(koopa_cpu_count)"
+    export JULIA_NUM_THREADS="$num_threads"
     return 0
 }
 
@@ -1048,6 +1047,37 @@ koopa_config_prefix() {
     return 0
 }
 
+koopa_cpu_count() {
+    local bin_prefix getconf nproc num sysctl
+    [ "$#" -eq 0 ] || return 1
+    num="${KOOPA_CPU_COUNT:-}"
+    if [ -n "$num" ]
+    then
+        koopa_print "$num"
+        return 0
+    fi
+    bin_prefix="$(koopa_bin_prefix)"
+    nproc="${bin_prefix}/nproc"
+    if [ -x "$nproc" ]
+    then
+        num="$("$nproc")"
+    elif koopa_is_macos
+    then
+        sysctl='/usr/sbin/sysctl'
+        [ -x "$sysctl" ] || return 1
+        num="$("$sysctl" -n 'hw.ncpu')"
+    elif koopa_is_linux
+    then
+        getconf='/usr/bin/getconf'
+        [ -x "$getconf" ] || return 1
+        num="$("$getconf" '_NPROCESSORS_ONLN')"
+    else
+        num=1
+    fi
+    koopa_print "$num"
+    return 0
+}
+
 koopa_debian_os_codename() {
     local x
     koopa_is_installed 'lsb_release' || return 0
@@ -1207,6 +1237,12 @@ koopa_export_history() {
         SAVEHIST="$HISTSIZE"
     fi
     export SAVEHIST
+    return 0
+}
+
+koopa_export_koopa_cpu_count() {
+    KOOPA_CPU_COUNT="$(koopa_cpu_count)"
+    export KOOPA_CPU_COUNT
     return 0
 }
 

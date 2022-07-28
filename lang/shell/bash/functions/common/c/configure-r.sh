@@ -2,7 +2,6 @@
 
 # FIXME Simplify R configuration to just create a site-library without
 # symbolic linking to '/opt/koopa/r-packages'...
-
 # FIXME Need to remove r-packages uninstaller.
 
 koopa_configure_r() {
