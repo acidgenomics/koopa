@@ -1,17 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now seeing this error specifically on macOS, but not Linux:
-#
-# mkdir -p "/opt/koopa/app/chezmoi/2.19.0/bin"
-# install -m 755 --target-directory "/opt/koopa/app/chezmoi/2.19.0/bin" chezmoi
-# install: illegal option -- -
-# usage: install [-bCcpSsv] [-B suffix] [-f flags] [-g group] [-m mode]
-#                [-o owner] file1 file2
-#        install [-bCcpSsv] [-B suffix] [-f flags] [-g group] [-m mode]
-#                [-o owner] file1 ... fileN directory
-#        install -d [-v] [-g group] [-m mode] [-o owner] directory ...
-# make: *** [Makefile:35: install] Error 64
-
 main() {
     # """
     # Install chezmoi.
@@ -47,6 +35,5 @@ refs/tags/${dict[file]}"
     "${app[go]}" build -ldflags "${dict[ldflags]}"
     koopa_cp --target-directory="${dict[prefix]}/bin" 'chezmoi'
     koopa_chmod --recursive 'u+rw' "${dict[gopath]}"
-    koopa_configure_chezmoi
     return 0
 }

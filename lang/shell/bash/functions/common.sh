@@ -4921,21 +4921,6 @@ koopa_configure_chemacs() {
     return 0
 }
 
-koopa_configure_chezmoi() {
-    local dict
-    koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        [dotfiles_prefix]="$(koopa_dotfiles_prefix)"
-        [xdg_data_home]="$(koopa_xdg_data_home)"
-    )
-    dict[chezmoi_prefix]="${dict[xdg_data_home]}/chezmoi"
-    if [[ -d "${dict[dotfiles_prefix]}" ]]
-    then
-        koopa_ln "${dict[dotfiles_prefix]}" "${dict[chezmoi_prefix]}"
-    fi
-    return 0
-}
-
 koopa_configure_dotfiles() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -4944,6 +4929,7 @@ koopa_configure_dotfiles() {
     )
     [[ -x "${app[bash]}" ]] || return 1
     declare -A dict=(
+        [cm_prefix]="$(koopa_xdg_data_home)/chezmoi"
         [name]='dotfiles'
         [prefix]="${1:-}"
     )
@@ -4951,6 +4937,7 @@ koopa_configure_dotfiles() {
     koopa_assert_is_dir "${dict[prefix]}"
     dict[script]="${dict[prefix]}/install"
     koopa_assert_is_file "${dict[script]}"
+    koopa_ln "${dict[prefix]}" "${dict[cm_prefix]}"
     koopa_add_config_link "${dict[prefix]}" "${dict[name]}"
     koopa_add_to_path_start "$(koopa_dirname "${app[bash]}")"
     "${app[bash]}" "${dict[script]}"
