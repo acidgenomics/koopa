@@ -4988,7 +4988,7 @@ koopa_configure_r() {
     koopa_r_configure_environ "${app[r]}"
     case "${dict[system]}" in
         '0')
-            koopa_r_link_site_library "${app[r]}"
+            koopa_sys_mkdir "${dict[site_library]}"
             ;;
         '1')
             dict[group]="$(koopa_admin_group)"
@@ -12384,12 +12384,6 @@ koopa_install_gperf() {
 koopa_install_graphviz() {
     koopa_install_app \
         --name='graphviz' \
-        "$@"
-}
-
-koopa_install_graphviz2() {
-    koopa_install_app \
-        --name='graphviz2' \
         "$@"
 }
 
@@ -22972,12 +22966,6 @@ koopa_uninstall_gperf() {
 koopa_uninstall_graphviz() {
     koopa_uninstall_app \
         --name='graphviz' \
-        "$@"
-}
-
-koopa_uninstall_graphviz2() {
-    koopa_uninstall_app \
-        --name='graphviz2' \
         "$@"
 }
 
