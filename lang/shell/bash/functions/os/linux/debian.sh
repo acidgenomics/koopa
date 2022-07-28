@@ -861,6 +861,74 @@ koopa_debian_install_system_base() {
         "$@"
 }
 
+koopa_debian_install_system_builder_base() {
+    local app
+    declare -A app=(
+        ['apt_get']="$(koopa_debian_locate_apt_get)"
+        ['debconf_set_selections']="$( \
+            koopa_debian_locate_debconf_set_selections \
+        )"
+        ['echo']="$(koopa_locate_echo)"
+        ['sudo']="$(koopa_locate_sudo)"
+    )
+    [[ -x "${app['apt_get']}" ]] || return 1
+    [[ -x "${app['debconf_set_selections']}" ]] || return 1
+    [[ -x "${app['echo']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    export DEBCONF_NONINTERACTIVE_SEEN='true'
+    export DEBIAN_FRONTEND='noninteractive'
+    "${app['sudo']}" "${app['apt_get']}" update
+    "${app['sudo']}" "${app['apt_get']}" upgrade --yes
+    "${app['sudo']}" "${app['apt_get']}" dist-upgrade --yes
+    "${app['echo']}" 'tzdata tzdata/Areas select America' \
+        | "${app['debconf_set_selections']}"
+    "${app['echo']}" 'tzdata tzdata/Zones/America select New_York' \
+        | "${app['debconf_set_selections']}"
+    "${app['sudo']}" "${app['apt_get']}" \
+        --no-install-recommends \
+        --yes \
+        install \
+            'bash' \
+            'ca-certificates' \
+            'coreutils' \
+            'curl' \
+            'findutils' \
+            'g++' \
+            'gcc' \
+            'git' \
+            'libc-dev' \
+            'libgmp-dev' \
+            'locales' \
+            'lsb-release' \
+            'make' \
+            'perl' \
+            'procps' \
+            'sudo' \
+            'systemd' \
+            'tzdata' \
+            'unzip'
+    app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
+    app['locale_gen']="$(koopa_debian_locate_locale_gen)"
+    app['timedatectl']="$(koopa_debian_locate_timedatectl)"
+    app['update_locale']="$(koopa_debian_locate_update_locale)"
+    [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
+    [[ -x "${app['locale_gen']}" ]] || return 1
+    [[ -x "${app['timedatectl']}" ]] || return 1
+    [[ -x "${app['update_locale']}" ]] || return 1
+    "${app['sudo']}" "${app['apt_get']}" autoremove --yes
+    "${app['sudo']}" "${app['apt_get']}" clean
+    "${app['sudo']}" "${app['timedatectl']}" set-timezone 'America/New_York'
+    koopa_sudo_write_string \
+        --file='/etc/locale.gen' \
+        --string='en_US.UTF-8 UTF-8'
+    "${app['sudo']}" "${app['locale_gen']}" --purge
+    "${app['sudo']}" "${app['dpkg_reconfigure']}" \
+        --frontend='noninteractive' locales
+    "${app['sudo']}" "${app['update_locale']}" LANG='en_US.UTF-8'
+    koopa_enable_passwordless_sudo
+    return 0
+}
+
 koopa_debian_install_system_docker() {
     koopa_install_app \
         --name='docker' \
@@ -936,6 +1004,10 @@ koopa_debian_locate_apt_key() {
 
 koopa_debian_locate_apt() {
     koopa_locate_app '/usr/bin/apt'
+}
+
+koopa_debian_locate_debconf_set_selections() {
+    koopa_locate_app '/usr/bin/debconf-set-selections'
 }
 
 koopa_debian_locate_dpkg_reconfigure() {

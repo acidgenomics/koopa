@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Take this out.
+# FIXME Rework this to just locate the 'site-library' inside the package.
+
 koopa_r_packages_prefix() {
     # """
     # R site library prefix.
