@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to take this out. No longer necessary -- we can configure
+# Julia and R specifically here.
+
 # FIXME This currently creates incorrect user permissions at top level
 # directory (e.g. /opt/koopa/app/r-packages), which is set to user as
 # group instead of sudo group.

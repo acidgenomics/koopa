@@ -3,9 +3,9 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-07-22.
+    # @note Updated 2022-07-28.
     # """
-    local app dict flibs i libs
+    local app cppflags dict flibs i ldflags libs
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         [dirname]="$(koopa_locate_dirname)"
@@ -33,13 +33,15 @@ CPPFLAGS += -I${dict[freetype]}/include/freetype2
 END
     elif koopa_is_macos
     then
-        dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
-        app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+        dict[gcc]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
+        # gettext is needed to resolve clang '-lintl' warning.
+        dict[gettext]="$(koopa_realpath "${dict[opt_prefix]}/gettext")"
+        app[fc]="${dict[gcc]}/bin/gfortran"
         # This will cover 'lib' and 'lib64' subdirs.
         # See also 'gcc --print-search-dirs'.
         readarray -t libs <<< "$( \
             koopa_find \
-                --prefix="${dict[gcc_prefix]}" \
+                --prefix="${dict[gcc]}" \
                 --pattern='*.a' \
                 --type 'f' \
             | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
@@ -52,20 +54,30 @@ END
             flibs+=("-L${libs[i]}")
         done
         flibs+=('-lgfortran')
-        # NOTE quadmath not yet supported for aarch64.
+        # quadmath not yet supported for aarch64.
         # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96016
         case "${dict[arch]}" in
             'x86_64')
                 flibs+=('-lquadmath')
                 ;;
         esac
-        # NOTE Consider also including '-lemutls_w' here, which is recommended
-        # by default macOS build config.
+        # Consider also including '-lemutls_w' here, which is recommended by
+        # default macOS build config.
         flibs+=('-lm')
         dict[flibs]="${flibs[*]}"
+        cppflags=('-Xclang' '-fopenmp')
+        dict[cppflags]="${cppflags[*]}"
+        ldflags=(
+            "-I${dict[gettext]}/include"
+            "-L${dict[gettext]}/lib"
+            '-lomp'
+        )
+        dict[ldflags]="${ldflags[*]}"
         read -r -d '' "dict[string]" << END || true
+CPPFLAGS += ${dict[cppflags]}
 FC = ${app[fc]}
 FLIBS = ${dict[flibs]}
+LDFLAGS += ${dict[ldflags]}
 END
     fi
     # This should only apply to R CRAN binary, not source install.

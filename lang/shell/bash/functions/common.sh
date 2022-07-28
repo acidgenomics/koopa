@@ -18149,7 +18149,7 @@ koopa_r_configure_ldpaths() {
 }
 
 koopa_r_configure_makevars() {
-    local app dict flibs i libs
+    local app cppflags dict flibs i ldflags libs
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         [dirname]="$(koopa_locate_dirname)"
@@ -18177,11 +18177,12 @@ CPPFLAGS += -I${dict[freetype]}/include/freetype2
 END
     elif koopa_is_macos
     then
-        dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
-        app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+        dict[gcc]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
+        dict[gettext]="$(koopa_realpath "${dict[opt_prefix]}/gettext")"
+        app[fc]="${dict[gcc]}/bin/gfortran"
         readarray -t libs <<< "$( \
             koopa_find \
-                --prefix="${dict[gcc_prefix]}" \
+                --prefix="${dict[gcc]}" \
                 --pattern='*.a' \
                 --type 'f' \
             | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
@@ -18201,9 +18202,19 @@ END
         esac
         flibs+=('-lm')
         dict[flibs]="${flibs[*]}"
+        cppflags=('-Xclang' '-fopenmp')
+        dict[cppflags]="${cppflags[*]}"
+        ldflags=(
+            "-I${dict[gettext]}/include"
+            "-L${dict[gettext]}/lib"
+            '-lomp'
+        )
+        dict[ldflags]="${ldflags[*]}"
         read -r -d '' "dict[string]" << END || true
+CPPFLAGS += ${dict[cppflags]}
 FC = ${app[fc]}
 FLIBS = ${dict[flibs]}
+LDFLAGS += ${dict[ldflags]}
 END
     fi
     koopa_sudo_write_string \
