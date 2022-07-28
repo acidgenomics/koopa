@@ -46,6 +46,7 @@ __koopa_posix_header() {
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # > koopa_umask || return 1
+        koopa_export_koopa_cpu_count || return 1
         koopa_export_koopa_shell || return 1
         # Edge case for RStudio Server terminal to support dircolors correctly.
         [ -n "${SHELL:-}" ] && export SHELL
