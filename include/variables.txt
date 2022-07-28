@@ -581,13 +581,16 @@ xorg-xcb-proto="1.14.1"
 xorg-xorgproto="2021.5"
 xorg-xtrans="1.4.0"
 
-# https://github.com/Cyan4973/xxHash
+# https://github.com/Cyan4973/xxHash/
 xxhash="0.8.1"
 
 # https://tukaani.org/xz/
 xz="5.2.5"
 
-# https://github.com/yt-dlp/yt-dlp
+# https://github.com/mikefarah/yq/
+yq="4.26.1"
+
+# https://github.com/yt-dlp/yt-dlp/
 yt-dlp="2022.05.18"
 
 # https://www.zlib.net/

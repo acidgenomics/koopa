@@ -187,6 +187,7 @@ brew "vim"
 brew "wget"
 brew "xh"
 brew "xsv" # rust
+brew "yq" # go
 brew "zlib"
 brew "zoxide" # rust
 brew "zsh"
