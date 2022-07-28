@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Simpliy this, to take out platform-specific files.
+# In this case, we need to write them per machine.
+
 koopa_r_link_files_in_etc() {
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-07-28.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -14,6 +17,7 @@ koopa_r_link_files_in_etc() {
     )
     koopa_assert_is_installed "${app[r]}"
     declare -A dict=(
+        # FIXME Rework this approach.
         [distro_prefix]="$(koopa_distro_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
         [sudo]=0

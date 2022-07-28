@@ -421,9 +421,10 @@ __koopa_complete() {
                                 if koopa_is_debian_like
                                 then
                                     args+=(
+                                        'builder-base'
                                         'docker'
-                                        'pandoc'
                                         'llvm'
+                                        'pandoc'
                                         'r'
                                     )
                                 elif koopa_is_fedora_like

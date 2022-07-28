@@ -3,6 +3,8 @@
 # FIXME Simplify R configuration to just create a site-library without
 # symbolic linking to '/opt/koopa/r-packages'...
 
+# FIXME Need to remove r-packages uninstaller.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
@@ -36,7 +38,8 @@ koopa_configure_r() {
     koopa_r_configure_environ "${app[r]}"
     case "${dict[system]}" in
         '0')
-            koopa_r_link_site_library "${app[r]}"
+            # FIXME Need to test this out for macOS.
+            koopa_sys_mkdir "${dict[site_library]}"
             ;;
         '1')
             dict[group]="$(koopa_admin_group)"
