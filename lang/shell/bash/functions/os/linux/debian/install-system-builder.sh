@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Seeing this pop up with Ubuntu 22:
-# debconf: DbDriver "passwords" warning: could not open /var/cache/debconf/passwords.dat: Permission denied
-# debconf: DbDriver "config": could not write /var/cache/debconf/config.dat-new: Permission denied
-
 koopa_debian_install_system_builder_base() {
     # """
     # Bootstrap the Debian/Ubuntu builder AMI.
@@ -17,10 +13,13 @@ koopa_debian_install_system_builder_base() {
     # @seealso
     # - https://www.serverlab.ca/tutorials/linux/administration-linux/
     #     how-to-check-and-set-timezone-in-ubuntu-20-04/
+    # - https://sleeplessbeastie.eu/2018/09/17/
+    #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
     local app
     declare -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
+        ['cat']="$(koopa_locate_cat)"
         ['debconf_set_selections']="$( \
             koopa_debian_locate_debconf_set_selections \
         )"
@@ -28,6 +27,7 @@ koopa_debian_install_system_builder_base() {
         ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['apt_get']}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['debconf_set_selections']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
@@ -40,10 +40,11 @@ koopa_debian_install_system_builder_base() {
         DEBCONF_NONINTERACTIVE_SEEN='true' \
         DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" dist-upgrade --yes
-    "${app['echo']}" 'tzdata tzdata/Areas select America' \
-        | "${app['debconf_set_selections']}"
-    "${app['echo']}" 'tzdata tzdata/Zones/America select New_York' \
-        | "${app['debconf_set_selections']}"
+    "${app['cat']}" << END \
+        | "${app['sudo']}" "${app['debconf_set_selections']}"
+tzdata tzdata/Areas select America
+tzdata tzdata/Zones/America select New_York
+END
     # Needed for compiling software: 'gcc' 'g++' 'libc-dev' 'make'. Don't
     # include 'zlib1g-dev' here. We want to ensure that our build recipes are
     # hardened with a local copy of zlib.
