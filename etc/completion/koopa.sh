@@ -62,7 +62,6 @@ __koopa_complete() {
                 'configure')
                     args=(
                         'chemacs'
-                        'chezmoi'
                         'dotfiles'
                         'julia'
                         'r'

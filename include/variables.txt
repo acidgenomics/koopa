@@ -134,7 +134,7 @@ docker="20.10.17"
 docker-credential-pass="0.6.4"
 
 # https://github.com/acidgenomics/dotfiles
-dotfiles="57b39242f049b5e00d0a5a437488b7352ec34107"
+dotfiles="32af9862a83c46d24baa9551bad8c06c4abe8330"
 
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
