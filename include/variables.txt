@@ -703,7 +703,7 @@ visidata="2.8" # 2022-01-13 conda-forge
 apptainer="1.0.2"
 
 # https://www.chezmoi.io/
-chezmoi="2.18.1"
+chezmoi="2.19.0"
 
 # https://github.com/junegunn/fzf
 fzf="0.30.0"
