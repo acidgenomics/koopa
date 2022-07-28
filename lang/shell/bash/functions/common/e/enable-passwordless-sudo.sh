@@ -24,6 +24,6 @@ already enabled at '${dict[file]}'."
         --string="${dict[string]}"
     koopa_chmod --sudo '0440' "${dict[file]}"
     koopa_alert_success "Passwordless sudo enabled for '${dict[group]}' \
-at '${file}'."
+at '${dict[file]}'."
     return 0
 }
