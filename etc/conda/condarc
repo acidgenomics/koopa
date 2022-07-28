@@ -1,73 +1,39 @@
 # """
 # Conda configuration.
-# @note Updated 2022-06-21.
+# @note Updated 2022-07-28.
 #
 # @seealso
 # - 'conda config --json --show' and 'conda config --json --show-sources'.
-# - https://bioconda.github.io/#set-up-channels
 # - https://conda.io/projects/conda/en/latest/user-guide/configuration/
 #       use-condarc.html
 # - https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/
 #       admin-multi-user-install.html
 # - https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/
 #       manage-conda.html
+# - https://docs.conda.io/projects/conda/en/latest/configuration.html
+# - https://bioconda.github.io/#set-up-channels
 # """
 
-# > add_pip_as_python_dependency: True
-
 allow_other_channels: False
-
-# > allow_softlinks: True
-
-# Don't ever prompt the user.
-# > always_yes: True
-
+always_yes: True
 auto_activate_base: False
-
 auto_update_conda: False
-
 changeps1: False
-
 channels:
   - conda-forge
   - bioconda
   # > - defaults
-
 channel_priority: strict
-
-# Configure number of threads to use.
-# This applies to 'repodata_threads', 'verify_threads', and 'execute_threads'.
-# > default_threads: 4
-
-# Disallow installation of specific packages.
 disallow:
   - anaconda
   - conda
-
-# FIXME Rework this to install into ~/.conda for current user by default.
-
-# Change default environment directory path.
-# > envs_dirs:
-# >   - /opt/koopa/opt/conda/envs
-
+envs_dirs:
+  - ~/.conda/envs
 notify_outdated_conda: False
-
-# > offline: False
-
-# FIXME Rework this to install into ~/.conda for current user by default.
-
-# Change default package directory path.
-# > pkgs_dirs:
-# >   - /opt/koopa/opt/conda/pkgs
-
+override_channels_enabled: False
+pkgs_dirs:
+  - ~/.conda/pkgs
 report_errors: True
-
 show_channel_urls: True
-
 ssl_verify: True
-
 update_dependencies: False
-
-# > use_only_tar_bz2: False
-
-# > use_pip: True
