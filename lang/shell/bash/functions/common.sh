@@ -12387,6 +12387,12 @@ koopa_install_graphviz() {
         "$@"
 }
 
+koopa_install_graphviz2() {
+    koopa_install_app \
+        --name='graphviz2' \
+        "$@"
+}
+
 koopa_install_grep() {
     koopa_install_app \
         --activate-opt='pcre' \
@@ -22966,6 +22972,12 @@ koopa_uninstall_gperf() {
 koopa_uninstall_graphviz() {
     koopa_uninstall_app \
         --name='graphviz' \
+        "$@"
+}
+
+koopa_uninstall_graphviz2() {
+    koopa_uninstall_app \
+        --name='graphviz2' \
         "$@"
 }
 

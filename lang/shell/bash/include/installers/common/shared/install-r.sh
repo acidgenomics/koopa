@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Rebuild on macOS and Linux with Harfbuzz update.
-
-# FIXME Seeing this error message for R-devel on Ubuntu:
+# NOTE Seeing this error message for R-devel on Ubuntu:
 #
 # # creating doc/html/resources.html
 # # make[1]: Leaving directory '/tmp/koopa-1000-20220721-110201-sRHSY6DW0C/svn/r/doc/manual'
@@ -11,10 +9,13 @@
 #
 # https://github.com/r-devel/r-svn/blob/master/Makefile.in#L114
 
+# NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
+# package in R, which bundles a very old version (2.28.0) currently.
+
 main() {
     # """
     # Install R.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-07-28.
     #
     # @section gfortran configuration on macOS:
     #
@@ -153,8 +154,6 @@ main() {
         'pixman'
         # fribidi deps: none.
         'fribidi'
-        # graphviz deps: none.
-        'graphviz'
         # harfbuzz deps: freetype, icu4c.
         'harfbuzz'
         # libtool deps: m4.

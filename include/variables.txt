@@ -215,6 +215,10 @@ gperf="3.1"
 # https://www.graphviz.org/
 graphviz="5.0.0"
 
+# Rgraphviz bundles 2.28.0.
+# https://www.graphviz.org/
+graphviz2="2.28.0"
+
 # https://www.gnu.org/software/grep/
 grep="3.7"
 
