@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Zsh.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-07-28.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -28,7 +28,10 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'ncurses'
+    koopa_activate_opt_prefix \
+        'ncurses' \
+        'pcre' \
+        'texinfo'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -40,7 +43,6 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[etc_dir]="${dict[prefix]}/etc/${dict[name]}"
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="https://downloads.sourceforge.net/project/\
 ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
@@ -49,24 +51,28 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
-        "--enable-etcdir=${dict[etc_dir]}"
-        '--without-tcsetpgrp'
+        '--enable-cap'
+        '--enable-etcdir=/etc'
+        '--enable-maildir-support'
+        '--enable-multibyte'
+        '--enable-pcre'
+        '--enable-unicode9'
+        '--enable-zsh-secure-free'
+        '--with-tcsetpgrp'
     )
+    # Work around configure issues with Xcode 12.
+    # https://www.zsh.org/mla/workers/2020/index.html
+    # https://github.com/Homebrew/homebrew-core/issues/64921
+    if koopa_is_macos
+    then
+        CFLAGS="-Wno-implicit-function-declaration ${CFLAGS:-}"
+        export CFLAGS
+    fi
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" check
-    # > "${app[make]}" test
     "${app[make]}" install
-    if koopa_is_debian_like
-    then
-        koopa_alert "Linking shared config scripts into '${dict[etc_dir]}'."
-        dict[distro_prefix]="$(koopa_distro_prefix)"
-        koopa_ln \
-            --target-directory="${dict[etc_dir]}" \
-            "${dict[distro_prefix]}/etc/zsh/"*
-    fi
-    # FIXME This step will be skipped for binary install.
+    "${app[make]}" install.info
     if koopa_is_shared_install
     then
         koopa_enable_shell_for_all_users "${dict[bin_prefix]}/${dict[name]}"
