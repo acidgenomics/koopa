@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Rework using 'bool' array for booleans.
+# FIXME Consider allowing an override here if we set '--prefix'.
 
 koopa_uninstall_app() {
     # """

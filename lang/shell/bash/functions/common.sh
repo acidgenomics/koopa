@@ -4944,12 +4944,6 @@ koopa_configure_dotfiles() {
     return 0
 }
 
-koopa_configure_julia() {
-    koopa_configure_app_packages \
-        --name='julia' \
-        "$@"
-}
-
 koopa_configure_r() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -12482,7 +12476,6 @@ koopa_install_julia_packages() {
     )
     dict[script]="${dict[script_prefix]}/install-packages.jl"
     koopa_assert_is_file "${dict[script]}"
-    koopa_configure_julia "${app[julia]}"
     koopa_activate_julia
     "${app[julia]}" "${dict[script]}"
     return 0
@@ -23045,6 +23038,7 @@ koopa_uninstall_jq() {
 koopa_uninstall_julia_packages() {
     koopa_uninstall_app \
         --name='julia-packages' \
+        --prefix="$(koopa_julia_packages_prefix)" \
         "$@"
 }
 

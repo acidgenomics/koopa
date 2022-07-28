@@ -357,9 +357,11 @@ koopa_activate_homebrew() {
 }
 
 koopa_activate_julia() {
-    local num_threads
+    local depot_path num_threads
     [ -x "$(koopa_bin_prefix)/julia" ] || return 0
+    depot_path="$(koopa_julia_packages_prefix)"
     num_threads="$(koopa_cpu_count)"
+    export JULIA_DEPOT_PATH="$depot_path"
     export JULIA_NUM_THREADS="$num_threads"
     return 0
 }
@@ -1648,7 +1650,7 @@ koopa_is_ubuntu() {
 }
 
 koopa_julia_packages_prefix() {
-    koopa_print "$(koopa_opt_prefix)/julia-packages"
+    koopa_print "${HOME:?}/.julia"
 }
 
 koopa_koopa_prefix() {
