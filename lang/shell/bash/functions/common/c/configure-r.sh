@@ -38,6 +38,12 @@ koopa_configure_r() {
             koopa_sys_mkdir "${dict[site_library]}"
             ;;
         '1')
+            # On macOS, ensure we've installed OpenMP.
+            if koopa_is_macos && \
+                [[ ! -f '/usr/local/include/omp.h' ]]
+            then
+                koopa_macos_install_system_r_openmp
+            fi
             dict[group]="$(koopa_admin_group)"
             dict[user]="$(koopa_user)"
             if [[ -L "${dict[site_library]}" ]]
