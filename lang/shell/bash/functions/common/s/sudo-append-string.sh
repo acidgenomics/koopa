@@ -3,7 +3,7 @@
 koopa_sudo_append_string() {
     # """
     # Append a string at end of file as root user.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-29.
     #
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' >> '${file}'"
@@ -50,9 +50,13 @@ koopa_sudo_append_string() {
     koopa_assert_is_set \
         '--file' "${dict[file]}" \
         '--string' "${dict[string]}"
+    dict[parent_dir]="$(koopa_dirname "${dict[file]}")"
+    if [[ ! -d "${dict[parent_dir]}" ]]
+    then
+        koopa_mkdir --sudo "${dict[parent_dir]}"
+    fi
     if [[ ! -f "${dict[file]}" ]]
     then
-        koopa_mkdir --sudo "$(koopa_dirname "${dict[file]}")"
         koopa_touch --sudo "${dict[file]}"
     fi
     koopa_print "${dict[string]}" \
