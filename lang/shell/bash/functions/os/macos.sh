@@ -651,7 +651,6 @@ koopa_macos_install_system_r_openmp() {
         --name='r-openmp' \
         --no-prefix-check \
         --platform='macos' \
-        --prefix='/usr/local' \
         --system \
         "$@"
 }
