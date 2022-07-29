@@ -14285,6 +14285,14 @@ koopa_is_xcode_clt_installed() {
     return 0
 }
 
+koopa_install_bamtools() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bamtools' \
+        --name='bamtools' \
+        "$@"
+}
+
 koopa_java_prefix() {
     local prefix
     if [[ -n "${JAVA_HOME:-}" ]]
@@ -22375,6 +22383,13 @@ koopa_uninstall_azure_cli() {
     koopa_uninstall_app \
         --name='azure-cli' \
         --unlink-in-bin='az' \
+        "$@"
+}
+
+koopa_uninstall_bamtools() {
+    koopa_uninstall_app \
+        --name='bamtools' \
+        --unlink-in-bin='bamtools' \
         "$@"
 }
 
