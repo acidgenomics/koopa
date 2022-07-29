@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-28"
+koopa-date="2022-07-29"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -356,7 +356,7 @@ m4="1.4.19"
 make="4.3"
 
 # https://github.com/mamba-org/mamba/tags/
-mamba="0.24.0"
+mamba="0.25.0"
 
 man-db="2.10.2"
 
@@ -627,7 +627,6 @@ zstd="1.5.2"
 # > celltypist="0.2.0" # 2022-02-14 bioconda
 # > chromhmm="1.23" # 2021-09-03 bioconda
 # > cromwell="76" # 2022-02-15 conda-forge
-# > deeptools="3.5.1" # 2021-03-17 bioconda
 # > ericscript="0.5.5" # 2021-03-26 bioconda
 # > fastqc="0.11.9" # 2021-03-25 bioconda
 # > fgbio="2.0.2" # 2022-05-24 bioconda
@@ -678,23 +677,26 @@ zstd="1.5.2"
 # > trimmomatic="0.39" # 2021-03-27 bioconda
 # > umap-learn="0.5.2" # 2021-11-03 bioconda
 # > vardict="2019.06.04" # 2019-06-05 bioconda
+
+# FIXME bowtie2="2.4.5" # 2022-02-08 bioconda
+# FIXME bustools="0.41.0" # 2021-06-25 bioconda
+# FIXME deeptools="3.5.1" # 2021-03-17 bioconda
+# FIXME hisat2="2.2.1" # 2020-07-24 bioconda
+# FIXME jupyterlab="3.4.0" # 2022-05-03 conda-forge
+# FIXME nextflow="22.04.0" # 2022-04-23 bioconda
+# FIXME sambamba="0.8.0" # 2021-01-02 bioconda
+# FIXME visidata="2.8" # 2022-01-13 conda-forge
+
 bedtools="2.30.0" # 2021-08-12 bioconda
-bowtie2="2.4.5" # 2022-02-08 bioconda
-bustools="0.41.0" # 2021-06-25 bioconda
 entrez-direct="16.2" # 2022-06-06 bioconda
 ffq="0.2.1" # 2022-05-05 bioconda
-gget="0.2.5" # 2022-06-30 bioconda
+gget="0.2.6" # 2022-07-08 bioconda
 ghostscript="9.54.0" 2021-05-14 conda-forge
-hisat2="2.2.1" # 2020-07-24 bioconda
-jupyterlab="3.4.0" # 2022-05-03 conda-forge
 kallisto="0.48.0" # 2022-01-17 bioconda
-nextflow="22.04.0" # 2022-04-23 bioconda
 salmon="1.9.0" # 2022-06-23 bioconda
-sambamba="0.8.0" # 2021-01-02 bioconda
 samtools="1.15.1" # 2022-04-07 bioconda
 snakemake="7.9.0" # 2022-07-19 bioconda
 star="2.7.10a" # 2022-01-15 bioconda
-visidata="2.8" # 2022-01-13 conda-forge
 
 # Go packages
 # ==============================================================================
@@ -703,7 +705,7 @@ visidata="2.8" # 2022-01-13 conda-forge
 apptainer="1.0.2"
 
 # https://www.chezmoi.io/
-chezmoi="2.19.0"
+chezmoi="2.20.0"
 
 # https://github.com/junegunn/fzf
 fzf="0.30.0"
@@ -729,7 +731,7 @@ rename="1.31"
 black="22.3.0"
 bpytop="1.0.68"
 flake8="4.0.1"
-glances="3.2.6.4"
+glances="3.2.7"
 ipython="8.4.0"
 isort="5.10.1"
 latch="1.11.1"
