@@ -11710,6 +11710,14 @@ koopa_install_azure_cli() {
         "$@"
 }
 
+koopa_install_bamtools() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bamtools' \
+        --name='bamtools' \
+        "$@"
+}
+
 koopa_install_bash_language_server() {
     koopa_install_app \
         --installer='node-package' \
@@ -11762,6 +11770,14 @@ koopa_install_binutils() {
     koopa_install_app \
         --installer='gnu-app' \
         --name='binutils' \
+        "$@"
+}
+
+koopa_install_bioawk() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bioawk' \
+        --name='bioawk' \
         "$@"
 }
 
@@ -14283,14 +14299,6 @@ koopa_is_xcode_clt_installed() {
     koopa_is_macos || return 1
     [[ -d '/Library/Developer/CommandLineTools/usr/bin' ]] || return 1
     return 0
-}
-
-koopa_install_bamtools() {
-    koopa_install_app \
-        --installer='conda-env' \
-        --link-in-bin='bamtools' \
-        --name='bamtools' \
-        "$@"
 }
 
 koopa_java_prefix() {
@@ -22438,6 +22446,13 @@ koopa_uninstall_bedtools() {
 koopa_uninstall_binutils() {
     koopa_uninstall_app \
         --name='binutils' \
+        "$@"
+}
+
+koopa_uninstall_bioawk() {
+    koopa_uninstall_app \
+        --name='bioawk' \
+        --unlink-in-bin='bioawk' \
         "$@"
 }
 
