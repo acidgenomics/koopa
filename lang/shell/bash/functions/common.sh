@@ -16484,6 +16484,12 @@ koopa_locate_rm() {
         --opt-name='coreutils'
 }
 
+koopa_locate_ronn() {
+    koopa_locate_app \
+        --app-name='ronn' \
+        --opt-name='ronn'
+}
+
 koopa_locate_rscript() {
     local app
     declare -A app=(
@@ -19153,13 +19159,13 @@ koopa_roff() {
         [ronn]="$(koopa_locate_ronn)"
     )
     [[ -x "${app[ronn]}" ]] || return 1
-    declare -A app=(
+    declare -A dict=(
         [man_prefix]="$(koopa_man_prefix)"
     )
     (
-        koopa_cd "${dict[man_prefix]}"
+        koopa_cd "${dict[man_prefix]}/man1-ronn"
         "${app[ronn]}" --roff ./*'.ronn'
-        koopa_mv --target-directory='man1' ./*'.1'
+        koopa_mv --target-directory="${dict[man_prefix]}/man1" ./*'.1'
     )
     return 0
 }
