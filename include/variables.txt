@@ -679,10 +679,7 @@ zstd="1.5.2"
 
 # FIXME Ensure all of these are checked in 'r-koopa'.
 
-# FIXME nextflow="22.04.0" # 2022-04-23 bioconda
 # FIXME sambamba="0.8.0" # 2021-01-02 bioconda
-
-visidata="2.8" # 2022-01-13 conda-forge
 
 bedtools="2.30.0" # 2021-08-12 bioconda
 bowtie2="2.4.5" # 2022-02-08 bioconda
@@ -695,10 +692,12 @@ ghostscript="9.54.0" 2021-05-14 conda-forge
 hisat2="2.2.1" # 2020-07-24 bioconda
 jupyterlab="3.4.4" # 2022-07-21 conda-forge
 kallisto="0.48.0" # 2022-01-17 bioconda
+nextflow="22.04.0" # 2022-04-23 bioconda
 salmon="1.9.0" # 2022-06-23 bioconda
 samtools="1.15.1" # 2022-04-07 bioconda
 snakemake="7.9.0" # 2022-07-19 bioconda
 star="2.7.10a" # 2022-01-15 bioconda
+visidata="2.8" # 2022-01-13 conda-forge
 
 # Go packages
 # ==============================================================================

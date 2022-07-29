@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't detecting bin files for jupyterlab correctly.
+# FIXME snakemake needs to map to snakemake-minimal.
 
 main() {
     # """
@@ -24,11 +24,17 @@ main() {
     koopa_conda_create_env \
         --prefix="${dict[libexec]}" \
         "${dict[name]}==${dict[version]}"
+    dict[json_pattern]="${dict[name]}-${dict[version]}-*.json"
+    case "${dict[name]}" in
+        'snakemake')
+            dict[json_pattern]="${dict[name]}-minimal-*.json"
+            ;;
+    esac
     dict[json_file]="$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
-            --pattern="${dict[name]}-${dict[version]}-*.json" \
+            --pattern="${dict[json_pattern]}" \
             --prefix="${dict[libexec]}/conda-meta" \
             --type='f' \
     )"
@@ -38,11 +44,14 @@ main() {
             | koopa_grep --pattern='^bin/' --regex \
             | "${app[cut]}" -d '/' -f '2' \
     )"
-    for bin_name in "${bin_names[@]}"
-    do
-        koopa_ln \
-            "${dict[libexec]}/bin/${bin_name}" \
-            "${dict[prefix]}/bin/${bin_name}"
-    done
+    if koopa_is_array_non_empty "${bin_names[@]:-}"
+    then
+        for bin_name in "${bin_names[@]}"
+        do
+            koopa_ln \
+                "${dict[libexec]}/bin/${bin_name}" \
+                "${dict[prefix]}/bin/${bin_name}"
+        done
+    fi
     return 0
 }
