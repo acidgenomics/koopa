@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to support 'koopa configure system r'.
-
 koopa_cli_configure() {
     # """
     # Parse user input to 'koopa configure'.
