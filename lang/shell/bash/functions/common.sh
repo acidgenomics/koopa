@@ -13719,6 +13719,7 @@ koopa_install_visidata() {
     koopa_install_app \
         --installer='conda-env' \
         --link-in-bin='vd' \
+        --link-in-bin='visidata' \
         --name='visidata' \
         "$@"
 }
@@ -24046,6 +24047,7 @@ koopa_uninstall_visidata() {
     koopa_uninstall_app \
         --name='visidata' \
         --unlink-in-bin='vd' \
+        --unlink-in-bin='visidata' \
         "$@"
 }
 
