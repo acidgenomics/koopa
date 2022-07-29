@@ -3,7 +3,7 @@
 koopa_install_gffutils() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='gffutils' \
+        --link-in-bin='gffutils-cli' \
         --name='gffutils' \
         "$@"
 }
