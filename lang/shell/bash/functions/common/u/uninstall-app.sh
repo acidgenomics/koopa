@@ -1,31 +1,28 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using 'bool' array for booleans.
-# FIXME Consider allowing an override here if we set '--prefix'.
-
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-29.
     # """
-    local bin_arr dict
+    local bin_arr bool dict
+    declare -A bool=(
+        [quiet]=0
+        [unlink_in_bin]=0
+        [unlink_in_opt]=1
+        [verbose]=0
+    )
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [make_prefix]="$(koopa_make_prefix)"
         [mode]='shared'
         [name]=''
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
-        [quiet]=0
         [uninstaller_bn]=''
         [uninstaller_fun]='main'
-        [unlink_in_bin]=0
-        [unlink_in_make]=0
-        [unlink_in_opt]=1
-        [verbose]=0
     )
     bin_arr=()
     while (("$#"))
@@ -73,19 +70,15 @@ koopa_uninstall_app() {
                 ;;
             # Flags ------------------------------------------------------------
             '--no-unlink-in-opt')
-                dict[unlink_in_opt]=0
+                bool[unlink_in_opt]=0
                 shift 1
                 ;;
             '--quiet')
-                dict[quiet]=1
+                bool[quiet]=1
                 shift 1
                 ;;
             '--system')
                 dict[mode]='system'
-                shift 1
-                ;;
-            '--unlink-in-make')
-                dict[unlink_in_make]=1
                 shift 1
                 ;;
             '--user')
@@ -93,7 +86,7 @@ koopa_uninstall_app() {
                 shift 1
                 ;;
             '--verbose')
-                dict[verbose]=1
+                bool[verbose]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -103,10 +96,10 @@ koopa_uninstall_app() {
         esac
     done
     koopa_assert_is_set '--name' "${dict[name]}"
-    [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    [[ "${bool[verbose]}" -eq 1 ]] && set -o xtrace
     case "${dict[mode]}" in
         'shared')
-            dict[unlink_in_opt]=1
+            bool[unlink_in_opt]=1
             if [[ -z "${dict[prefix]}" ]]
             then
                 dict[prefix]="${dict[app_prefix]}/${dict[name]}"
@@ -114,13 +107,13 @@ koopa_uninstall_app() {
             ;;
         'system')
             koopa_assert_is_admin
-            dict[unlink_in_opt]=0
+            bool[unlink_in_opt]=0
             ;;
         'user')
-            dict[unlink_in_opt]=0
+            bool[unlink_in_opt]=0
             ;;
     esac
-    koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[unlink_in_bin]=1
+    koopa_is_array_non_empty "${bin_arr[@]:-}" && bool[unlink_in_bin]=1
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
@@ -130,7 +123,7 @@ koopa_uninstall_app() {
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     fi
-    if [[ "${dict[quiet]}" -eq 0 ]]
+    if [[ "${bool[quiet]}" -eq 0 ]]
     then
         if [[ -n "${dict[prefix]}" ]]
         then
@@ -165,19 +158,15 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
                 ;;
         esac
     fi
-    if [[ "${dict[unlink_in_bin]}" -eq 1 ]]
+    if [[ "${bool[unlink_in_bin]}" -eq 1 ]]
     then
         koopa_unlink_in_bin "${bin_arr[@]}"
     fi
-    if [[ "${dict[unlink_in_opt]}" -eq 1 ]]
+    if [[ "${bool[unlink_in_opt]}" -eq 1 ]]
     then
         koopa_unlink_in_opt "${dict[name]}"
     fi
-    if [[ "${dict[unlink_in_make]}" -eq 1 ]]
-    then
-        koopa_unlink_in_make "${dict[prefix]}"
-    fi
-    if [[ "${dict[quiet]}" -eq 0 ]]
+    if [[ "${bool[quiet]}" -eq 0 ]]
     then
         if [[ -n "${dict[prefix]}" ]]
         then
