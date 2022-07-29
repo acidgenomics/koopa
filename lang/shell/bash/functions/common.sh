@@ -12300,6 +12300,14 @@ koopa_install_gettext() {
     koopa_install_app "${install_args[@]}" "$@"
 }
 
+koopa_install_gffutils() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='gffutils' \
+        --name='gffutils' \
+        "$@"
+}
+
 koopa_install_gget() {
     koopa_install_app \
         --installer='conda-env' \
@@ -22921,6 +22929,13 @@ koopa_uninstall_geos() {
 koopa_uninstall_gettext() {
     koopa_uninstall_app \
         --name='gettext' \
+        "$@"
+}
+
+koopa_uninstall_gffutils() {
+    koopa_uninstall_app \
+        --name='gffutils' \
+        --unlink-in-bin='gffutils' \
         "$@"
 }
 
