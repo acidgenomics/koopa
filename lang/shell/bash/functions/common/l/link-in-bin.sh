@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Need to automatically handle man files here too.
-
-# Some examples:
-# - coreutils: share/man/man1
-
-# FIXME See if we can match file here:
-# share/man/man1/XXX.1
-
 koopa_link_in_bin() {
     # """
     # Link a program in koopa 'bin/' directory.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-07-29.
+    #
+    # Also updates corresponding 'man1' files automatically.
     #
     # @usage
     # > koopa_link_in_bin \
