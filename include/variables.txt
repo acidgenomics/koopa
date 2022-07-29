@@ -672,13 +672,13 @@ zstd="1.5.2"
 
 # FIXME Ensure all of these are checked in 'r-koopa'.
 
-bamtools="2.5.2" # 2022-03-14 bioconda
 # > bioawk="1.0" # 2019-10-26 bioconda
 # > fastqc="0.11.9" # 2021-03-25 bioconda
 # > gffutils="0.11.0" # 2022-06-05 bioconda
 # > gseapy="0.10.8" # 2022-02-10 bioconda
 # > multiqc="1.13a" # 2022-06-28 bioconda
 
+bamtools="2.5.2" # 2022-03-14 bioconda
 bedtools="2.30.0" # 2021-08-12 bioconda
 bowtie2="2.4.5" # 2022-02-08 bioconda
 bustools="0.41.0" # 2021-06-25 bioconda
