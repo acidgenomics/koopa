@@ -21485,9 +21485,13 @@ koopa_sudo_append_string() {
     koopa_assert_is_set \
         '--file' "${dict[file]}" \
         '--string' "${dict[string]}"
+    dict[parent_dir]="$(koopa_dirname "${dict[file]}")"
+    if [[ ! -d "${dict[parent_dir]}" ]]
+    then
+        koopa_mkdir --sudo "${dict[parent_dir]}"
+    fi
     if [[ ! -f "${dict[file]}" ]]
     then
-        koopa_mkdir --sudo "$(koopa_dirname "${dict[file]}")"
         koopa_touch --sudo "${dict[file]}"
     fi
     koopa_print "${dict[string]}" \
@@ -21540,6 +21544,10 @@ koopa_sudo_write_string() {
     if [[ ! -d "${dict[parent_dir]}" ]]
     then
         koopa_mkdir --sudo "${dict[parent_dir]}"
+    fi
+    if [[ ! -f "${dict[file]}" ]]
+    then
+        koopa_touch --sudo "${dict[file]}"
     fi
     koopa_print "${dict[string]}" \
         | "${app[sudo]}" "${app[tee]}" "${dict[file]}" >/dev/null
