@@ -12303,7 +12303,7 @@ koopa_install_gettext() {
 koopa_install_gffutils() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='gffutils' \
+        --link-in-bin='gffutils-cli' \
         --name='gffutils' \
         "$@"
 }
@@ -22935,7 +22935,7 @@ koopa_uninstall_gettext() {
 koopa_uninstall_gffutils() {
     koopa_uninstall_app \
         --name='gffutils' \
-        --unlink-in-bin='gffutils' \
+        --unlink-in-bin='gffutils-cli' \
         "$@"
 }
 
