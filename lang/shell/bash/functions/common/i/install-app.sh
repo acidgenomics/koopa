@@ -1,24 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add an override so 'koopa install r-packages' doesn't
-# log into this directory.
-
-# FIXME opt links are currently set with incorrect group permissions on
-# Ubuntu, which causes an uninstall error.
-# FIXME This can be accomplished with 'sudo chown -h 'ubuntu:sudo' *'
-
-# FIXME This is now failing for 'koopa install r-packages' when using
-# system R on Ubuntu. Need to rethink the prefix handling here, not using
-# '--no-prefix-check'....the steps after the installer have issues here,
-# including the opt linkage...
-
-# FIXME Consider removing support for link-in-make option here.
-# FIXME Need to add support for link in man here.
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-07-19.
+    # @note Updated 2022-07-29.
     # """
     local app bin_arr bool build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -36,9 +21,6 @@ koopa_install_app() {
         [binary]=0
         # Will any individual programs be linked into koopa 'bin/'?
         [link_in_bin]=0
-        # When enabled, this will symlink all files into make prefix,
-        # typically '/usr/local'.
-        [link_in_make]=0
         # Create an unversioned symlink in koopa 'opt/' directory.
         [link_in_opt]=1
         # This override is useful for app packages configuration.
@@ -60,7 +42,6 @@ koopa_install_app() {
         [installer_fun]='main'
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [make_prefix]="$(koopa_make_prefix)"
         [mode]='shared'
         [name]=''
         [platform]='common'
@@ -168,10 +149,6 @@ koopa_install_app() {
                 shift 1
                 ;;
             # Internal flags ---------------------------------------------------
-            '--link-in-make')
-                bool[link_in_make]=1
-                shift 1
-                ;;
             '--no-link-in-opt')
                 bool[link_in_opt]=0
                 shift 1
@@ -222,7 +199,6 @@ koopa_install_app() {
     if [[ "${dict[version]}" != "${dict[current_version]}" ]]
     then
         bool[link_in_bin]=0
-        bool[link_in_make]=0
         bool[link_in_opt]=0
     fi
     case "${dict[mode]}" in
@@ -241,12 +217,10 @@ ${dict[version2]}"
             ;;
         'system')
             koopa_assert_is_admin
-            bool[link_in_make]=0
             bool[link_in_opt]=0
             koopa_is_linux && bool[update_ldconfig]=1
             ;;
         'user')
-            bool[link_in_make]=0
             bool[link_in_opt]=0
             ;;
     esac
@@ -381,10 +355,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 "${dict[prefix]}/bin/${bin_arr[i]}" \
                 "$(koopa_basename "${bin_arr[i]}")"
         done
-    fi
-    if [[ "${bool[link_in_make]}" -eq 1 ]]
-    then
-        koopa_link_in_make --prefix="${dict[prefix]}"
     fi
     if [[ "${bool[update_ldconfig]}" -eq 1 ]]
     then

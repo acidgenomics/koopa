@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to automatically handle manfiles here too.
+
 koopa_unlink_in_bin() {
     # """
     # Unlink a program symlinked in koopa 'bin/ directory.

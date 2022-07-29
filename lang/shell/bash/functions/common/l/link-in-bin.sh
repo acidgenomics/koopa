@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to automatically handle man files here too.
+
 koopa_link_in_bin() {
     # """
     # Link a program in koopa 'bin/' directory.
