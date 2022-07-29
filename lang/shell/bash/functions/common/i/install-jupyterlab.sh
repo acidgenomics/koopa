@@ -3,7 +3,7 @@
 koopa_install_jupyterlab() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='jupyterlab' \
+        --link-in-bin='jupyter' \
         --name='jupyterlab' \
         "$@"
 }

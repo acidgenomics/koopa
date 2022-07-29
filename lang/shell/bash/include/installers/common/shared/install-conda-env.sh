@@ -1,102 +1,41 @@
 #!/usr/bin/env bash
 
-# FIXME Work on improving bin linkage for deepTools.
-
 main() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2022-06-20.
+    # @note Updated 2022-07-29.
     # """
+    local app bin_names dict
     koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [cut]="$(koopa_locate_cut)"
+        [jq]="$(koopa_locate_jq)"
+    )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[jq]}" ]] || return 1
     declare -A dict=(
         [name]="${INSTALL_NAME:?}"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[libexec]="$(koopa_init_dir "${dict[prefix]}/libexec")"
-    case "${dict[name]}" in
-        'entrez-direct')
-            bin_names=(
-                'accn-at-a-time'
-                'align-columns'
-                'amino-acid-composition'
-                'archive-pubmed'
-                'asn2xml'
-                'between-two-genes'
-                'blst2tkns'
-                'csv2xml'
-                'disambiguate-nucleotides'
-                'download-ncbi-data'
-                'download-ncbi-software'
-                'download-pubmed'
-                'download-sequence'
-                'ecommon.sh'
-                'edirect.py'
-                'efetch'
-                'efilter'
-                'einfo'
-                'elink'
-                'epost'
-                'esample'
-                'esearch'
-                'esummary'
-                'exclude-uid-lists'
-                'expand-current'
-                'fetch-pubmed'
-                'filter-columns'
-                'filter-stop-words'
-                'find-in-gene'
-                'fuse-ranges'
-                'fuse-segments'
-                'gbf2xml'
-                'gene2range'
-                'hgvs2spdi'
-                'intersect-uid-lists'
-                'join-into-groups-of'
-                'json2xml'
-                'nquire'
-                'phrase-search'
-                'print-columns'
-                'rchive'
-                'reorder-columns'
-                'run-ncbi-converter'
-                'skip-if-file-exists'
-                'snp2hgvs'
-                'snp2tbl'
-                'sort-table'
-                'sort-uniq-count'
-                'sort-uniq-count-rank'
-                'spdi2tbl'
-                'split-at-intron'
-                'stream-pubmed'
-                'tbl2prod'
-                'tbl2xml'
-                'test-edirect'
-                'test-eutils'
-                'test-pubmed-index'
-                'transmute'
-                'uniq-table'
-                'word-at-a-time'
-                'xml2fsa'
-                'xml2json'
-                'xml2tbl'
-                'xtract'
-            )
-            ;;
-        'ghostscript')
-            bin_names=('gs')
-            ;;
-        'star')
-            # Case sensitive.
-            bin_names=('STAR')
-            ;;
-        *)
-            bin_names=("${dict[name]}")
-            ;;
-    esac
     koopa_conda_create_env \
         --prefix="${dict[libexec]}" \
         "${dict[name]}==${dict[version]}"
+    dict[json_file]="$( \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --pattern="${dict[name]}-${dict[version]}-*.json" \
+            --prefix="${dict[libexec]}/conda-meta" \
+            --type='f' \
+    )"
+    koopa_assert_is_file "${dict[json_file]}"
+    readarray -t bin_names <<< "$( \
+        "${app[jq]}" --raw-output '.files[]' "${dict[json_file]}" \
+            | koopa_grep --pattern='^bin/' --regex \
+            | "${app[cut]}" -d '/' -f '2' \
+    )"
     for bin_name in "${bin_names[@]}"
     do
         koopa_ln \
