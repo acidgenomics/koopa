@@ -11305,7 +11305,6 @@ koopa_install_app() {
         [auto_prefix]=0
         [binary]=0
         [link_in_bin]=0
-        [link_in_make]=0
         [link_in_opt]=1
         [prefix_check]=1
         [push]=0
@@ -11321,7 +11320,6 @@ koopa_install_app() {
         [installer_fun]='main'
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [make_prefix]="$(koopa_make_prefix)"
         [mode]='shared'
         [name]=''
         [platform]='common'
@@ -11426,10 +11424,6 @@ koopa_install_app() {
                 bool[verbose]=1
                 shift 1
                 ;;
-            '--link-in-make')
-                bool[link_in_make]=1
-                shift 1
-                ;;
             '--no-link-in-opt')
                 bool[link_in_opt]=0
                 shift 1
@@ -11477,7 +11471,6 @@ koopa_install_app() {
     if [[ "${dict[version]}" != "${dict[current_version]}" ]]
     then
         bool[link_in_bin]=0
-        bool[link_in_make]=0
         bool[link_in_opt]=0
     fi
     case "${dict[mode]}" in
@@ -11496,12 +11489,10 @@ ${dict[version2]}"
             ;;
         'system')
             koopa_assert_is_admin
-            bool[link_in_make]=0
             bool[link_in_opt]=0
             koopa_is_linux && bool[update_ldconfig]=1
             ;;
         'user')
-            bool[link_in_make]=0
             bool[link_in_opt]=0
             ;;
     esac
@@ -11631,10 +11622,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
                 "${dict[prefix]}/bin/${bin_arr[i]}" \
                 "$(koopa_basename "${bin_arr[i]}")"
         done
-    fi
-    if [[ "${bool[link_in_make]}" -eq 1 ]]
-    then
-        koopa_link_in_make --prefix="${dict[prefix]}"
     fi
     if [[ "${bool[update_ldconfig]}" -eq 1 ]]
     then
@@ -15256,7 +15243,39 @@ to '${dict[symlink_path]}'."
 }
 
 koopa_link_in_bin() {
-    __koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
+    local bin_files bin_links dict
+    koopa_assert_has_args "$#"
+    bin_files=()
+    bin_links=()
+    declare -A dict=(
+        [bin_prefix]="$(koopa_bin_prefix)"
+        [man_prefix]="$(koopa_man_prefix)"
+    )
+    while [[ "$#" -ge 2 ]]
+    do
+        bin_files+=("${1:?}")
+        bin_links+=("${2:?}")
+        shift 2
+    done
+    for i in "${!bin_files[@]}"
+    do
+        local dict2
+        declare -A dict2
+        dict2[bin_file]="${bin_files[$i]}"
+        dict2[bin_link]="${bin_links[$i]}"
+        dict2[bin_file_bn]="$(koopa_basename "${dict2[bin_file]}")"
+        dict2[parent_dir]="$(koopa_parent_dir --num=2 "${dict2[bin_file]}")"
+        dict2[man1_file]="${dict2[parent_dir]}/share/man/\
+man1/${dict2[bin_file_bn]}.1"
+        dict2[man1_link]="${dict2[bin_link]}.1"
+        __koopa_link_in_dir \
+            --prefix="${dict[bin_prefix]}" \
+            "${dict2[bin_file]}" "${dict2[bin_link]}"
+        __koopa_link_in_dir \
+            --prefix="${dict[man_prefix]}/man1" \
+            "${dict2[man1_file]}" "${dict2[man1_link]}"
+    done
+    return 0
 }
 
 koopa_link_in_make() {
@@ -16800,7 +16819,7 @@ koopa_make_build_string() {
 }
 
 koopa_man_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/man"
+    koopa_print "$(koopa_koopa_prefix)/share/man"
     return 0
 }
 
@@ -17767,8 +17786,8 @@ koopa_push_app_build() {
         [distribution_id]="${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:?}"
         [opt_prefix]="$(koopa_opt_prefix)"
         [os_string]="$(koopa_os_string)"
+        [profile]='acidgenomics'
         [s3_bucket]='s3://koopa.acidgenomics.com'
-        [s3_profile]='acidgenomics'
         [tmp_dir]="$(koopa_tmp_dir)"
     )
     for name in "$@"
@@ -17783,16 +17802,16 @@ koopa_push_app_build() {
 ${dict2[name]}/${dict2[version]}.tar.gz"
         dict2[s3_rel_path]="/app/${dict[os_string]}/${dict[arch]}/\
 ${dict2[name]}/${dict2[version]}.tar.gz"
-        dict2[remote_tar]="${dict[s3_bucket]}${dict[s3_rel_path]}"
+        dict2[remote_tar]="${dict[s3_bucket]}${dict2[s3_rel_path]}"
         koopa_alert "Pushing '${dict2[prefix]}' to '${dict2[remote_tar]}'."
         koopa_mkdir "${dict[tmp_dir]}/${dict2[name]}"
         "${app[tar]}" -Pczf "${dict2[local_tar]}" "${dict2[prefix]}/"
-        "${app[aws]}" --profile="${dict[s3_profile]}" \
+        "${app[aws]}" --profile="${dict[profile]}" \
             s3 cp "${dict2[local_tar]}" "${dict2[remote_tar]}"
         "${app[aws]}" --profile="${dict[profile]}" \
             cloudfront create-invalidation \
                 --distribution-id="${dict[distribution_id]}" \
-                --paths="${dict[s3_rel_path]}" \
+                --paths="${dict2[s3_rel_path]}" \
                 >/dev/null
     done
     koopa_rm "${dict[tmp_dir]}"
@@ -22211,24 +22230,24 @@ koopa_uninstall_anaconda() {
 }
 
 koopa_uninstall_app() {
-    local bin_arr dict
+    local bin_arr bool dict
+    declare -A bool=(
+        [quiet]=0
+        [unlink_in_bin]=0
+        [unlink_in_opt]=1
+        [verbose]=0
+    )
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [make_prefix]="$(koopa_make_prefix)"
         [mode]='shared'
         [name]=''
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
-        [quiet]=0
         [uninstaller_bn]=''
         [uninstaller_fun]='main'
-        [unlink_in_bin]=0
-        [unlink_in_make]=0
-        [unlink_in_opt]=1
-        [verbose]=0
     )
     bin_arr=()
     while (("$#"))
@@ -22275,19 +22294,15 @@ koopa_uninstall_app() {
                 shift 2
                 ;;
             '--no-unlink-in-opt')
-                dict[unlink_in_opt]=0
+                bool[unlink_in_opt]=0
                 shift 1
                 ;;
             '--quiet')
-                dict[quiet]=1
+                bool[quiet]=1
                 shift 1
                 ;;
             '--system')
                 dict[mode]='system'
-                shift 1
-                ;;
-            '--unlink-in-make')
-                dict[unlink_in_make]=1
                 shift 1
                 ;;
             '--user')
@@ -22295,7 +22310,7 @@ koopa_uninstall_app() {
                 shift 1
                 ;;
             '--verbose')
-                dict[verbose]=1
+                bool[verbose]=1
                 shift 1
                 ;;
             *)
@@ -22304,10 +22319,10 @@ koopa_uninstall_app() {
         esac
     done
     koopa_assert_is_set '--name' "${dict[name]}"
-    [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    [[ "${bool[verbose]}" -eq 1 ]] && set -o xtrace
     case "${dict[mode]}" in
         'shared')
-            dict[unlink_in_opt]=1
+            bool[unlink_in_opt]=1
             if [[ -z "${dict[prefix]}" ]]
             then
                 dict[prefix]="${dict[app_prefix]}/${dict[name]}"
@@ -22315,13 +22330,13 @@ koopa_uninstall_app() {
             ;;
         'system')
             koopa_assert_is_admin
-            dict[unlink_in_opt]=0
+            bool[unlink_in_opt]=0
             ;;
         'user')
-            dict[unlink_in_opt]=0
+            bool[unlink_in_opt]=0
             ;;
     esac
-    koopa_is_array_non_empty "${bin_arr[@]:-}" && dict[unlink_in_bin]=1
+    koopa_is_array_non_empty "${bin_arr[@]:-}" && bool[unlink_in_bin]=1
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
@@ -22331,7 +22346,7 @@ koopa_uninstall_app() {
         fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     fi
-    if [[ "${dict[quiet]}" -eq 0 ]]
+    if [[ "${bool[quiet]}" -eq 0 ]]
     then
         if [[ -n "${dict[prefix]}" ]]
         then
@@ -22365,19 +22380,15 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
                 ;;
         esac
     fi
-    if [[ "${dict[unlink_in_bin]}" -eq 1 ]]
+    if [[ "${bool[unlink_in_bin]}" -eq 1 ]]
     then
         koopa_unlink_in_bin "${bin_arr[@]}"
     fi
-    if [[ "${dict[unlink_in_opt]}" -eq 1 ]]
+    if [[ "${bool[unlink_in_opt]}" -eq 1 ]]
     then
         koopa_unlink_in_opt "${dict[name]}"
     fi
-    if [[ "${dict[unlink_in_make]}" -eq 1 ]]
-    then
-        koopa_unlink_in_make "${dict[prefix]}"
-    fi
-    if [[ "${dict[quiet]}" -eq 0 ]]
+    if [[ "${bool[quiet]}" -eq 0 ]]
     then
         if [[ -n "${dict[prefix]}" ]]
         then
