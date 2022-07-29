@@ -39,10 +39,13 @@ __koopa_posix_header() {
     # > unset -v \
     # >     LD_LIBRARY_PATH \
     # >     PYTHONPATH
-    koopa_activate_path_helper || return 1
-    koopa_activate_make_paths || return 1
+    if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
+    then
+        koopa_activate_path_helper || return 1
+        koopa_activate_make_paths || return 1
+    fi
     koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
-    koopa_add_to_manpath_start "${KOOPA_PREFIX}/man" || return 1
+    koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # > koopa_umask || return 1
