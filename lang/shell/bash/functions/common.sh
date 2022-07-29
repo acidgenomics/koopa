@@ -13386,6 +13386,14 @@ koopa_install_salmon() {
         "$@"
 }
 
+koopa_install_sambamba() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='sambamba' \
+        --name='sambamba' \
+        "$@"
+}
+
 koopa_install_samtools() {
     koopa_install_app \
         --installer='conda-env' \
@@ -23705,6 +23713,13 @@ koopa_uninstall_salmon() {
     koopa_uninstall_app \
         --name='salmon' \
         --unlink-in-bin='salmon' \
+        "$@"
+}
+
+koopa_uninstall_sambamba() {
+    koopa_uninstall_app \
+        --name='sambamba' \
+        --unlink-in-bin='sambamba' \
         "$@"
 }
 
