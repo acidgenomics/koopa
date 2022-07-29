@@ -215,10 +215,6 @@ gperf="3.1"
 # https://www.graphviz.org/
 graphviz="5.0.0"
 
-# Rgraphviz bundles 2.28.0.
-# https://www.graphviz.org/
-graphviz2="2.28.0"
-
 # https://www.gnu.org/software/grep/
 grep="3.7"
 
@@ -670,26 +666,23 @@ zstd="1.5.2"
 # > umap-learn="0.5.2" # 2021-11-03 bioconda
 # > vardict="2019.06.04" # 2019-06-05 bioconda
 
-# FIXME Ensure all of these are checked in 'r-koopa'.
-
-bioawk="1.0" # 2019-10-26 bioconda
-fastqc="0.11.9" # 2021-03-25 bioconda
-gffutils="0.11.0" # 2022-06-05 bioconda
-gseapy="0.10.8" # 2022-02-10 bioconda
-multiqc="1.13a" # 2022-06-28 bioconda
-
 bamtools="2.5.2" # 2022-03-14 bioconda
 bedtools="2.30.0" # 2021-08-12 bioconda
+bioawk="1.0" # 2019-10-26 bioconda
 bowtie2="2.4.5" # 2022-02-08 bioconda
 bustools="0.41.0" # 2021-06-25 bioconda
 deeptools="3.5.1" # 2021-03-17 bioconda
 entrez-direct="16.2" # 2022-06-06 bioconda
+fastqc="0.11.9" # 2021-03-25 bioconda
 ffq="0.2.1" # 2022-05-05 bioconda
+gffutils="0.11.0" # 2022-06-05 bioconda
 gget="0.2.6" # 2022-07-08 bioconda
 ghostscript="9.54.0" 2021-05-14 conda-forge
+gseapy="0.10.8" # 2022-02-10 bioconda
 hisat2="2.2.1" # 2020-07-24 bioconda
 jupyterlab="3.4.4" # 2022-07-21 conda-forge
 kallisto="0.48.0" # 2022-01-17 bioconda
+multiqc="1.13a" # 2022-06-28 bioconda
 nextflow="22.04.0" # 2022-04-23 bioconda
 salmon="1.9.0" # 2022-06-23 bioconda
 sambamba="0.8.0" # 2021-01-02 bioconda
