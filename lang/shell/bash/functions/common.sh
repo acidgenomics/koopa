@@ -12531,7 +12531,7 @@ koopa_install_julia() {
 koopa_install_jupyterlab() {
     koopa_install_app \
         --installer='conda-env' \
-        --link-in-bin='jupyter' \
+        --link-in-bin='jupyter-lab' \
         --name='jupyterlab' \
         "$@"
 }
@@ -13648,6 +13648,14 @@ koopa_install_vim() {
         --link-in-bin='vim' \
         --link-in-bin='vimdiff' \
         --name='vim' \
+        "$@"
+}
+
+koopa_install_visidata() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='vd' \
+        --name='visidata' \
         "$@"
 }
 
@@ -23078,7 +23086,7 @@ koopa_uninstall_julia() {
 koopa_uninstall_jupyterlab() {
     koopa_uninstall_app \
         --name='jupyterlab' \
-        --unlink-in-bin='jupyter' \
+        --unlink-in-bin='jupyter-lab' \
         "$@"
 }
 
@@ -23911,6 +23919,13 @@ koopa_uninstall_vim() {
         --name='vim' \
         --unlink-in-bin='vim' \
         --unlink-in-bin='vimdiff' \
+        "$@"
+}
+
+koopa_uninstall_visidata() {
+    koopa_uninstall_app \
+        --name='visidata' \
+        --unlink-in-bin='vd' \
         "$@"
 }
 

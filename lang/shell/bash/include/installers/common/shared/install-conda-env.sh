@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't detecting bin files for jupyterlab correctly.
+
 main() {
     # """
     # Install a conda environment as an application.
