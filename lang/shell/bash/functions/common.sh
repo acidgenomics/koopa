@@ -12014,6 +12014,7 @@ koopa_install_curl() {
 koopa_install_deeptools() {
     koopa_install_app \
         --installer='conda-env' \
+        --link-in-bin='deeptools' \
         --name='deeptools' \
         "$@"
 }
@@ -12435,6 +12436,14 @@ koopa_install_haskell_stack() {
 koopa_install_hdf5() {
     koopa_install_app \
         --name='hdf5' \
+        "$@"
+}
+
+koopa_install_hisat2() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='hisat2' \
+        --name='hisat2' \
         "$@"
 }
 
@@ -22612,6 +22621,13 @@ koopa_uninstall_curl() {
         "$@"
 }
 
+koopa_uninstall_deeptools() {
+    koopa_uninstall_app \
+        --name='deeptools' \
+        --unlink-in-bin='deeptools' \
+        "$@"
+}
+
 koopa_uninstall_delta() {
     koopa_uninstall_app \
         --name='delta' \
@@ -22973,6 +22989,13 @@ koopa_uninstall_haskell_stack() {
 koopa_uninstall_hdf5() {
     koopa_uninstall_app \
         --name='hdf5' \
+        "$@"
+}
+
+koopa_uninstall_hisat2() {
+    koopa_uninstall_app \
+        --name='hisat2' \
+        --unlink-in-bin='hisat2' \
         "$@"
 }
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Work on improving bin linkage for deepTools.
+
 main() {
     # """
     # Install a conda environment as an application.
