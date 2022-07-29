@@ -12528,6 +12528,14 @@ koopa_install_julia() {
         "$@"
 }
 
+koopa_install_jupyterlab() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='jupyterlab' \
+        --name='jupyterlab' \
+        "$@"
+}
+
 koopa_install_kallisto() {
     koopa_install_app \
         --installer='conda-env' \
@@ -23064,6 +23072,13 @@ koopa_uninstall_julia() {
     koopa_uninstall_app \
         --name='julia' \
         --unlink-in-bin='julia' \
+        "$@"
+}
+
+koopa_uninstall_jupyterlab() {
+    koopa_uninstall_app \
+        --name='jupyterlab' \
+        --unlink-in-bin='jupyterlab' \
         "$@"
 }
 
