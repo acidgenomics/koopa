@@ -13014,6 +13014,14 @@ koopa_install_mpfr() {
         "$@"
 }
 
+koopa_install_multiqc() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='multiqc' \
+        --name='multiqc' \
+        "$@"
+}
+
 koopa_install_ncurses() {
     koopa_install_app \
         --link-in-bin='captoinfo' \
@@ -23421,6 +23429,13 @@ koopa_uninstall_mpc() {
 koopa_uninstall_mpfr() {
     koopa_uninstall_app \
         --name='mpfr' \
+        "$@"
+}
+
+koopa_uninstall_multiqc() {
+    koopa_uninstall_app \
+        --name='multiqc' \
+        --unlink-in-bin='multiqc' \
         "$@"
 }
 
