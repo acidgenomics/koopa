@@ -13016,6 +13016,14 @@ koopa_install_nettle() {
         "$@"
 }
 
+koopa_install_nextflow() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='nextflow' \
+        --name='nextflow' \
+        "$@"
+}
+
 koopa_install_nim() {
     koopa_install_app \
         --link-in-bin='nim' \
@@ -23366,6 +23374,13 @@ koopa_uninstall_neovim() {
 koopa_uninstall_nettle() {
     koopa_uninstall_app \
         --name='nettle' \
+        "$@"
+}
+
+koopa_uninstall_nextflow() {
+    koopa_uninstall_app \
+        --name='nextflow' \
+        --unlink-in-bin='nextflow' \
         "$@"
 }
 
