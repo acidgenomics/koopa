@@ -12424,6 +12424,14 @@ koopa_install_groff() {
         "$@"
 }
 
+koopa_install_gseapy() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='gseapy' \
+        --name='gseapy' \
+        "$@"
+}
+
 koopa_install_gsl() {
     koopa_install_app \
         --installer='gnu-app' \
@@ -23037,6 +23045,13 @@ koopa_uninstall_groff() {
     koopa_uninstall_app \
         --name='groff' \
         --unlink-in-bin='groff' \
+        "$@"
+}
+
+koopa_uninstall_gseapy() {
+    koopa_uninstall_app \
+        --name='gseapy' \
+        --unlink-in-bin='gseapy' \
         "$@"
 }
 
