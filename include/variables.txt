@@ -679,7 +679,7 @@ zstd="1.5.2"
 
 # FIXME Ensure all of these are checked in 'r-koopa'.
 
-# FIXME hisat2="2.2.1" # 2020-07-24 bioconda
+hisat2="2.2.1" # 2020-07-24 bioconda
 # FIXME jupyterlab="3.4.0" # 2022-05-03 conda-forge
 # FIXME nextflow="22.04.0" # 2022-04-23 bioconda
 # FIXME sambamba="0.8.0" # 2021-01-02 bioconda
