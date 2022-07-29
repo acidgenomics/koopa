@@ -11788,6 +11788,14 @@ koopa_install_boost() {
         "$@"
 }
 
+koopa_install_bowtie2() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bowtie2' \
+        --name='bowtie2' \
+        "$@"
+}
+
 koopa_install_bpytop() {
     koopa_install_app \
         --installer='python-venv' \
@@ -11801,6 +11809,14 @@ koopa_install_broot() {
         --installer='rust-package' \
         --link-in-bin='broot' \
         --name='broot' \
+        "$@"
+}
+
+koopa_install_bustools() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --link-in-bin='bustools' \
+        --name='bustools' \
         "$@"
 }
 
@@ -11992,6 +12008,13 @@ koopa_install_curl() {
         --link-in-bin='curl' \
         --link-in-bin='curl-config' \
         --name='curl' \
+        "$@"
+}
+
+koopa_install_deeptools() {
+    koopa_install_app \
+        --installer='conda-env' \
+        --name='deeptools' \
         "$@"
 }
 
@@ -22381,6 +22404,13 @@ koopa_uninstall_boost() {
         "$@"
 }
 
+koopa_uninstall_bowtie2() {
+    koopa_uninstall_app \
+        --name='bowtie2' \
+        --unlink-in-bin='bowtie2' \
+        "$@"
+}
+
 koopa_uninstall_bpytop() {
     koopa_uninstall_app \
         --name='bpytop' \
@@ -22392,6 +22422,13 @@ koopa_uninstall_broot() {
     koopa_uninstall_app \
         --name='broot' \
         --unlink-in-bin='broot' \
+        "$@"
+}
+
+koopa_uninstall_bustools() {
+    koopa_uninstall_app \
+        --name='bustools' \
+        --unlink-in-bin='bustools' \
         "$@"
 }
 
