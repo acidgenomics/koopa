@@ -2,7 +2,6 @@
 
 # FIXME Rework this to simply call on opt_prefix, but use activate_prefix
 # internally instead...
-
 # FIXME Also include any nested include, lib/lib64, as is the case for GCC.
 # FIXME Generalize this function so we can work on a specific prefix.
 # FIXME This will help improve the configuration of GnuPG, for example.
@@ -10,9 +9,9 @@
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-07-29.
     #
-    # Consider using pkg-config to manage CPPFLAGS and LDFLAGS:
+    # Consider using 'pkg-config' to manage 'CPPFLAGS' and 'LDFLAGS':
     # > pkg-config --libs PKG_CONFIG_NAME...
     # > pkg-config --cflags PKG_CONFIG_NAME...
     #
