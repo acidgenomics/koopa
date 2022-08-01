@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME We need a way to check binary timestamps and update any outdated
+# packages with the same version...
+
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
