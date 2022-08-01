@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-07-21.
+#' @note Updated 2022-08-01.
 #'
 #' @section Restarting R:
 #'
@@ -394,10 +394,9 @@ local({  # nolint
             "crayon.colors" = 256L
         )
     }
-    ## > if (isInstalled("data.table")) {
-    ## >     ## Suppress annoying data.table startup message.
-    ## >     options("datatable.quiet" = TRUE)
-    ## > }
+    if (isInstalled("data.table")) {
+        options("datatable.quiet" = TRUE)
+    }
     if (isInstalled("formatR")) {
         options(
             "formatR.args.newline" = FALSE,
@@ -497,7 +496,6 @@ local({  # nolint
         )
     }
     if (isInstalled("tidyverse")) {
-        ## Suppress annoying tidyverse startup message.
         options("tidyverse.quiet" = TRUE)
     }
     ## Quartz {{{2
