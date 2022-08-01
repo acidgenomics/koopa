@@ -74,6 +74,7 @@ __koopa_posix_header() {
             koopa_export_gnupg || return 1
             koopa_export_history || return 1
             koopa_export_pager || return 1
+            koopa_activate_ca_certificates || return 1
             koopa_activate_color_mode || return 1
             koopa_activate_alacritty || return 1
             koopa_activate_bat || return 1
