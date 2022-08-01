@@ -24340,9 +24340,16 @@ koopa_unlink_in_sbin() {
 }
 
 koopa_update_app() {
-    local clean_path_arr dict opt_arr
+    local bool clean_path_arr dict opt_arr
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
+    declare -A bool=(
+        [prefix_check]=1
+        [quiet]=0
+        [set_permissions]=1
+        [update_ldconfig]=0
+        [verbose]=0
+    )
     declare -A dict=(
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
@@ -24351,13 +24358,9 @@ koopa_update_app() {
         [opt_prefix]="$(koopa_opt_prefix)"
         [platform]='common'
         [prefix]=''
-        [quiet]=0
-        [set_permissions]=1
         [tmp_dir]="$(koopa_tmp_dir)"
-        [update_ldconfig]=0
         [updater_bn]=''
         [updater_fun]='main'
-        [verbose]=0
         [version]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
@@ -24413,12 +24416,16 @@ koopa_update_app() {
                 dict[version]="${2:?}"
                 shift 2
                 ;;
+            '--no-prefix-check')
+                bool[prefix_check]=0
+                shift 1
+                ;;
             '--no-set-permissions')
-                dict[set_permissions]=0
+                bool[set_permissions]=0
                 shift 1
                 ;;
             '--quiet')
-                dict[quiet]=1
+                bool[quiet]=1
                 shift 1
                 ;;
             '--system')
@@ -24439,7 +24446,7 @@ koopa_update_app() {
         esac
     done
     koopa_assert_is_set '--name' "${dict[name]}"
-    [[ "${dict[verbose]}" -eq 1 ]] && set -o xtrace
+    [[ "${bool[verbose]}" -eq 1 ]] && set -o xtrace
     case "${dict[mode]}" in
         'shared')
             if [[ -z "${dict[prefix]}" ]]
@@ -24449,12 +24456,13 @@ koopa_update_app() {
             ;;
         'system')
             koopa_assert_is_admin
-            koopa_is_linux && dict[update_ldconfig]=1
+            koopa_is_linux && bool[update_ldconfig]=1
             ;;
     esac
     if [[ -n "${dict[prefix]}" ]]
     then
-        if [[ ! -d "${dict[prefix]}" ]]
+        if [[ ! -d "${dict[prefix]}" ]] && \
+            [[ "${bool[prefix_check]}" -eq 1 ]]
         then
             koopa_alert_is_not_installed "${dict[name]}" "${dict[prefix]}"
             return 1
@@ -24467,7 +24475,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     koopa_assert_is_file "${dict[updater_file]}"
     source "${dict[updater_file]}"
     koopa_assert_is_function "${dict[updater_fun]}"
-    if [[ "${dict[quiet]}" -eq 0 ]]
+    if [[ "${bool[quiet]}" -eq 0 ]]
     then
         if [[ -n "${dict[prefix]}" ]]
         then
@@ -24497,7 +24505,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
         then
             koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
-        if [[ "${dict[update_ldconfig]}" -eq 1 ]]
+        if [[ "${bool[update_ldconfig]}" -eq 1 ]]
         then
             koopa_linux_update_ldconfig
         fi
@@ -24506,7 +24514,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     )
     koopa_rm "${dict[tmp_dir]}"
     if [[ -d "${dict[prefix]}" ]] && \
-        [[ "${dict[set_permissions]}" -eq 1 ]]
+        [[ "${bool[set_permissions]}" -eq 1 ]]
     then
         case "${dict[mode]}" in
             'shared')
@@ -24515,11 +24523,11 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
                 ;;
         esac
     fi
-    if [[ "${dict[update_ldconfig]}" -eq 1 ]]
+    if [[ "${bool[update_ldconfig]}" -eq 1 ]]
     then
         koopa_linux_update_ldconfig
     fi
-    if [[ "${dict[quiet]}" -eq 0 ]]
+    if [[ "${bool[quiet]}" -eq 0 ]]
     then
         if [[ -n "${dict[prefix]}" ]]
         then
@@ -24556,6 +24564,7 @@ koopa_update_koopa() {
 koopa_update_r_packages() {
     koopa_update_app \
         --name='r-packages' \
+        --no-prefix-check \
         "$@"
 }
 
