@@ -24477,7 +24477,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     koopa_assert_is_function "${dict[updater_fun]}"
     if [[ "${bool[quiet]}" -eq 0 ]]
     then
-        if [[ -n "${dict[prefix]}" ]]
+        if [[ -d "${dict[prefix]}" ]]
         then
             koopa_alert_update_start "${dict[name]}" "${dict[prefix]}"
         else
@@ -24529,7 +24529,7 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
     fi
     if [[ "${bool[quiet]}" -eq 0 ]]
     then
-        if [[ -n "${dict[prefix]}" ]]
+        if [[ -d "${dict[prefix]}" ]]
         then
             koopa_alert_update_success "${dict[name]}" "${dict[prefix]}"
         else
