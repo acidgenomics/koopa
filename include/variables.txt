@@ -229,7 +229,7 @@ gzip="1.12"
 
 hadolint="2.10.0"
 
-harfbuzz="5.0.1"
+harfbuzz="5.0.1" # latest: 5.1.0
 
 # https://docs.haskellstack.org/en/stable/install_and_upgrade/
 haskell-stack="2.7.5"
@@ -588,7 +588,7 @@ xxhash="0.8.1"
 xz="5.2.5"
 
 # https://github.com/mikefarah/yq/
-yq="4.26.1"
+yq="4.26.1" # latest: 4.27.2
 
 # https://github.com/yt-dlp/yt-dlp/
 yt-dlp="2022.05.18"
