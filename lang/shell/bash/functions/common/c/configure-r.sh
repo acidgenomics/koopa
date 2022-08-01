@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to create a symlink into koopa bin when missing.
+# This can happen if user installs R directly from Homebrew.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
