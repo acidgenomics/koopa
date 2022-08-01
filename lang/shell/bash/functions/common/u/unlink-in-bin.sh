@@ -3,7 +3,7 @@
 koopa_unlink_in_bin() {
     # """
     # Unlink a program symlinked in koopa 'bin/ directory.
-    # @note Updated 2022-07-29.
+    # @note Updated 2022-08-01.
     #
     # @usage koopa_unlink_in_bin NAME...
     #
@@ -27,6 +27,7 @@ koopa_unlink_in_bin() {
         "${bin_links[@]}"
     __koopa_unlink_in_dir \
         --prefix="${dict[man_prefix]}/man1" \
+        --quiet \
         "${man_links[@]}"
     return 0
 }
