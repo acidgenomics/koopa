@@ -3,9 +3,9 @@
 koopa_link_in_bin() {
     # """
     # Link a program in koopa 'bin/' directory.
-    # @note Updated 2022-07-29.
+    # @note Updated 2022-08-01.
     #
-    # Also updates corresponding 'man1' files automatically.
+    # Also updates corresponding 'man1' files automatically, when applicable.
     #
     # @usage
     # > koopa_link_in_bin \
@@ -48,6 +48,7 @@ man1/${dict2[bin_file_bn]}.1"
             "${dict2[bin_file]}" "${dict2[bin_link]}"
         __koopa_link_in_dir \
             --prefix="${dict[man_prefix]}/man1" \
+            --quiet \
             "${dict2[man1_file]}" "${dict2[man1_link]}"
     done
     return 0
