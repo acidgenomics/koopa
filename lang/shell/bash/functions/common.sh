@@ -13144,6 +13144,7 @@ koopa_install_openssl1() {
 
 koopa_install_openssl3() {
     koopa_install_app \
+        --link-in-bin='openssl' \
         --name='openssl3' \
         "$@"
 }
@@ -23607,6 +23608,7 @@ koopa_uninstall_openssl1() {
 koopa_uninstall_openssl3() {
     koopa_uninstall_app \
         --name='openssl3' \
+        --unlink-in-bin='openssl' \
         "$@"
 }
 
