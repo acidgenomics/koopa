@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to generalize this as 'koopa_activate_prefix'.
 # FIXME Rework this to simply call on opt_prefix, but use activate_prefix
 # internally instead...
 # FIXME Also include any nested include, lib/lib64, as is the case for GCC.
