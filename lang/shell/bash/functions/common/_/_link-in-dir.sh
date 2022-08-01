@@ -3,7 +3,7 @@
 __koopa_link_in_dir() {
     # """
     # Symlink multiple programs in a directory.
-    # @note Updated 2022-07-19.
+    # @note Updated 2022-08-01.
     #
     # @usage
     # > __koopa_link_in_dir \

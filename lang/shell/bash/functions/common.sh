@@ -493,10 +493,11 @@ __koopa_str_detect() {
 }
 
 __koopa_unlink_in_dir() {
-    local dict pos
+    local dict file files name names pos
     koopa_assert_has_args "$#"
     declare -A dict=(
         [prefix]=''
+        [quiet]=0
     )
     pos=()
     while (("$#"))
@@ -509,6 +510,10 @@ __koopa_unlink_in_dir() {
             '--prefix')
                 dict[prefix]="${2:?}"
                 shift 2
+                ;;
+            '--quiet')
+                dict[quiet]=1
+                shift 1
                 ;;
             '-'*)
                 koopa_invalid_arg "$1"
@@ -526,11 +531,20 @@ __koopa_unlink_in_dir() {
     dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     names=("$@")
     files=()
-    for i in "${!names[@]}"
+    for name in "${names[@]}"
     do
-        files+=("${dict[prefix]}/${names[$i]}")
+        files+=("${dict[prefix]}/${name}")
     done
-    koopa_rm "${files[@]}"
+    if [[ "${dict[quiet]}" -eq 1 ]]
+    then
+        koopa_rm "${files[@]}"
+    else
+        for file in "${files[@]}"
+        do
+            koopa_alert "Unlinking '${file}'."
+            koopa_rm "$file"
+        done
+    fi
     return 0
 }
 
@@ -15273,6 +15287,7 @@ man1/${dict2[bin_file_bn]}.1"
             "${dict2[bin_file]}" "${dict2[bin_link]}"
         __koopa_link_in_dir \
             --prefix="${dict[man_prefix]}/man1" \
+            --quiet \
             "${dict2[man1_file]}" "${dict2[man1_link]}"
     done
     return 0
@@ -24271,6 +24286,7 @@ koopa_unlink_in_bin() {
         "${bin_links[@]}"
     __koopa_unlink_in_dir \
         --prefix="${dict[man_prefix]}/man1" \
+        --quiet \
         "${man_links[@]}"
     return 0
 }
@@ -24544,7 +24560,6 @@ koopa_update_r_packages() {
 koopa_update_system_homebrew() {
     koopa_update_app \
         --name='homebrew' \
-        --prefix="$(koopa_homebrew_prefix)" \
         --system \
         "$@"
 }
