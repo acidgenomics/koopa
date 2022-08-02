@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to install from source.
+
 main() {
     # """
     # Install Go.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-08-02.
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/go.rb
     # """
     local app dict
     koopa_assert_has_no_args "$#"
