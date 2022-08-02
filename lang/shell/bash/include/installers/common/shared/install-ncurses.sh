@@ -3,7 +3,7 @@
 main() {
     # """
     # Install ncurses.
-    # @note Updated 2022-07-07.
+    # @note Updated 2022-08-02.
     #
     # @seealso
     # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
@@ -17,15 +17,9 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
+        [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    # FIXME Convert this into a function.
-    if koopa_is_macos
-    then
-        dict[shared_ext]='dylib'
-    else
-        dict[shared_ext]='so'
-    fi
     dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[pkgconfig_dir]="${dict[prefix]}/lib/pkgconfig"
@@ -42,8 +36,7 @@ main() {
         -D "--with-pkg-config-libdir=${dict[pkgconfig_dir]}" \
         -D '--with-shared' \
         -D '--with-versioned-syms' \
-        -D '--without-ada' \
-        "$@"
+        -D '--without-ada'
     (
         koopa_cd "${dict[prefix]}/bin"
         koopa_ln \
@@ -86,14 +79,18 @@ main() {
             elif koopa_is_macos
             then
                 koopa_ln \
-                    "lib${name}w.${dict[maj_ver]}.dylib" \
-                    "lib${name}.${dict[maj_ver]}.dylib"
+                    "lib${name}w.${dict[maj_ver]}.${dict[shared_ext]}" \
+                    "lib${name}.${dict[maj_ver]}.${dict[shared_ext]}"
             fi
         done
         if koopa_is_linux
         then
-                koopa_ln 'libncurses.so' 'libtermcap.so'
-                koopa_ln 'libncurses.so' 'libtinfo.so'
+                koopa_ln \
+                    "libncurses.${dict[shared_ext]}" \
+                    "libtermcap.${dict[shared_ext]}"
+                koopa_ln \
+                    "libncurses.${dict[shared_ext]}" \
+                    "libtinfo.${dict[shared_ext]}"
         fi
     )
     (
