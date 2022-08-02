@@ -3,7 +3,7 @@
 # NOTE Seeing this error message for R-devel on Ubuntu:
 #
 # # creating doc/html/resources.html
-# # make[1]: Leaving directory '/tmp/koopa-1000-20220721-110201-sRHSY6DW0C/svn/r/doc/manual'
+# # make[1]: Leaving directory '/tmp/[...]/svn/r/doc/manual'
 # # ERROR: not an svn checkout
 # # make: *** [Makefile:107: svnonly] Error 1
 #
@@ -15,7 +15,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2022-07-28.
+    # @note Updated 2022-08-02.
     #
     # @section gfortran configuration on macOS:
     #
@@ -80,7 +80,6 @@ main() {
         [arch]="$(koopa_arch)"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -201,17 +200,11 @@ main() {
     then
         dict[texbin]='/Library/TeX/texbin'
         koopa_add_to_path_start "${dict[texbin]}"
-        # How to check that OpenMP for clang is installed. However, can't assume
-        # user without admin can install OpenMP, so keep disabled.
-        # > koopa_assert_is_file \
-        # >     '/usr/local/include/omp-tools.h' \
-        # >     '/usr/local/include/omp.h' \
-        # >     '/usr/local/include/ompt.h' \
-        # >     '/usr/local/lib/libomp.dylib'
     fi
-    dict[lapack]="$(koopa_realpath "${dict[opt_prefix]}/lapack")"
-    dict[openjdk]="$(koopa_realpath "${dict[opt_prefix]}/openjdk")"
-    dict[tcl_tk]="$(koopa_realpath "${dict[opt_prefix]}/tcl-tk")"
+    dict[gcc]="$(koopa_app_prefix 'gcc')"
+    dict[lapack]="$(koopa_app_prefix 'lapack')"
+    dict[openjdk]="$(koopa_app_prefix 'openjdk')"
+    dict[tcl_tk]="$(koopa_app_prefix 'tcl-tk')"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-R-profiling'
@@ -280,7 +273,6 @@ main() {
     else
         conf_args+=('--with-recommended-packages')
     fi
-    dict[gcc_prefix]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
     if koopa_is_macos
     then
         # Clang tends to compile a number of tricky RStudio packages better.
@@ -290,10 +282,10 @@ main() {
         # Alternatively, can use system GCC here.
         # > app[cc]='/usr/bin/gcc'
         # > app[cxx]='/usr/bin/g++'
-        app[cc]="${dict[gcc_prefix]}/bin/gcc"
-        app[cxx]="${dict[gcc_prefix]}/bin/g++"
+        app[cc]="${dict[gcc]}/bin/gcc"
+        app[cxx]="${dict[gcc]}/bin/g++"
     fi
-    app[fc]="${dict[gcc_prefix]}/bin/gfortran"
+    app[fc]="${dict[gcc]}/bin/gfortran"
     app[jar]="${dict[openjdk]}/bin/jar"
     app[java]="${dict[openjdk]}/bin/java"
     app[javac]="${dict[openjdk]}/bin/javac"
@@ -307,7 +299,7 @@ main() {
     # Configure fortran FLIBS to link GCC correctly.
     readarray -t libs <<< "$( \
         koopa_find \
-            --prefix="${dict[gcc_prefix]}" \
+            --prefix="${dict[gcc]}" \
             --pattern='*.a' \
             --type 'f' \
         | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
@@ -419,26 +411,11 @@ R-${dict[maj_ver]}/${dict[file]}"
     "${app[make]}" 'info'
     "${app[make]}" install
     app[r]="${dict[prefix]}/bin/R"
-    app[rscript]="${app[r]}script"
-    koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
     koopa_configure_r "${app[r]}"
-    if [[ "${dict[name]}" == 'r-devel' ]]
-    then
-        koopa_link_in_bin "${app[r]}" 'R-devel'
-    fi
     # NOTE libxml is now expected to return FALSE as of R 4.2.
     "${app[rscript]}" -e 'capabilities()'
-    # > if koopa_is_linux
-    # > then
-    # >     app[ldd]="$(koopa_locate_ldd)"
-    # >     [[ -x "${app[ldd]}" ]] || return 1
-    # >     "${app[ldd]}" "${dict[prefix]}/lib/R/lib/libR.so"
-    # > elif koopa_is_macos
-    # > then
-    # >     # NOTE This step can error due to openssl not being in PATH?
-    # >     app[otool]="$(koopa_macos_locate_otool)"
-    # >     [[ -x "${app[otool]}" ]] || return 1
-    # >     "${app[otool]}" -L "${dict[prefix]}/lib/R/lib/libR.dylib"
-    # > fi
+    koopa_check_shared_object \
+        --name='libR' \
+        --prefix="${dict[prefix]}/lib/R/lib"
     return 0
 }
