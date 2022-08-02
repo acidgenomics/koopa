@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GEOS.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-08-02.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.
@@ -25,13 +25,13 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    if koopa_is_linux
-    then
-        koopa_assert_is_non_existing \
-            '/usr/bin/geos-config' \
-            '/usr/include/geos' \
-            '/usr/include/geos_c.h'
-    fi
+    # > if koopa_is_linux
+    # > then
+    # >     koopa_assert_is_non_existing \
+    # >         '/usr/bin/geos-config' \
+    # >         '/usr/include/geos' \
+    # >         '/usr/include/geos_c.h'
+    # > fi
     koopa_activate_build_opt_prefix 'cmake'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
