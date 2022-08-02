@@ -11,7 +11,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-08-02.
     #
     # Use 'configure --help' for build options.
     #
@@ -30,12 +30,12 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    if koopa_is_linux
-    then
-        koopa_assert_is_non_existing \
-            '/usr/bin/gdal-config' \
-            '/usr/include/gdal'
-    fi
+    # > if koopa_is_linux
+    # > then
+    # >     koopa_assert_is_non_existing \
+    # >         '/usr/bin/gdal-config' \
+    # >         '/usr/include/gdal'
+    # > fi
     koopa_activate_build_opt_prefix \
         'cmake' \
         'libtool' \
@@ -62,8 +62,8 @@ main() {
         [jobs]="$(koopa_cpu_count)"
         [make_prefix]="$(koopa_make_prefix)"
         [name]='gdal'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
+        [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
@@ -74,20 +74,13 @@ v${dict[version]}/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    if koopa_is_linux
-    then
-        dict[shared_ext]='so'
-    elif koopa_is_macos
-    then
-        dict[shared_ext]='dylib'
-    fi
-    dict[curl]="$(koopa_realpath "${dict[opt_prefix]}/curl")"
-    dict[hdf5]="$(koopa_realpath "${dict[opt_prefix]}/hdf5")"
-    dict[libxml2]="$(koopa_realpath "${dict[opt_prefix]}/libxml2")"
-    dict[pcre2]="$(koopa_realpath "${dict[opt_prefix]}/pcre2")"
-    # > dict[proj]="$(koopa_realpath "${dict[opt_prefix]}/proj")"
-    dict[python]="$(koopa_realpath "${dict[opt_prefix]}/python")"
-    dict[sqlite]="$(koopa_realpath "${dict[opt_prefix]}/sqlite")"
+    dict[curl]="$(koopa_app_prefix 'curl')"
+    dict[hdf5]="$(koopa_app_prefix 'hdf5')"
+    dict[libxml2]="$(koopa_app_prefix 'libxml2')"
+    dict[pcre2]="$(koopa_app_prefix 'pcre2')"
+    # > dict[proj]="$(koopa_app_prefix 'proj')"
+    dict[python]="$(koopa_app_prefix 'python')"
+    dict[sqlite]="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
         '-DBUILD_APPS=ON'
         '-DBUILD_PYTHON_BINDINGS=ON'
