@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rename and rethink this function.
+# Consider retiring in favor of using '--build-only' flag instead.
+
 koopa_activate_build_opt_prefix() {
     # """
     # Activate a build-only opt prefix.
