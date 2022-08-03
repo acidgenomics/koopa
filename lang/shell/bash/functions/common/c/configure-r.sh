@@ -5,6 +5,8 @@
 
 # FIXME Link R and Rscript into koopa bin if not currently defined.
 
+# FIXME Consider reworking R_SHELL to improve cross-platform consistency.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
