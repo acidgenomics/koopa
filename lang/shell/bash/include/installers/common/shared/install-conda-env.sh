@@ -62,10 +62,10 @@ man1/${dict2[name]}.1"
             dict2[man1_target]="${dict[prefix]}/share/man/\
 man1/${dict2[name]}.1"
             koopa_assert_is_file "${dict2[bin_source]}"
-            koopa_ln "${dict2[bin_source]}" "${dict[bin_target]}"
+            koopa_ln "${dict2[bin_source]}" "${dict2[bin_target]}"
             if [[ -f "${dict2[man1_source]}" ]]
             then
-                koopa_ln "${dict2[man1_source]}" "${dict[man1_target]}"
+                koopa_ln "${dict2[man1_source]}" "${dict2[man1_target]}"
             fi
         done
     fi
