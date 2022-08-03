@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Add nmap install recipe.
+    https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nmap.rb
 ** TODO Move binary apps to private S3 bucket that requires credential key access, to avoid excess AWS charges.
 ** TODO Consider quoting all key names in dict associative arrays, for better syntax highlighting in vim.
 ** TODO Consider adding build support for:
