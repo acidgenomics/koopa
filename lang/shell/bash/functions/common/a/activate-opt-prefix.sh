@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rename, using 'koopa_activate_app' instead.
+# FIXME Consider using 'koopa_activate_prefix' as an alternative variant,
+# that we can use for tricky builds, such as GnuPG...
 # FIXME Need to generalize this as 'koopa_activate_prefix'.
 # FIXME Rework this to simply call on opt_prefix, but use activate_prefix
 # internally instead...
