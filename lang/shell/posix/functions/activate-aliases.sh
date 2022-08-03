@@ -3,7 +3,7 @@
 koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-07-26.
+    # @note Updated 2022-08-03.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -46,7 +46,7 @@ koopa_activate_aliases() {
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
     alias prelude-emacs='koopa_alias_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
-    alias python='python3'
+    alias python='koopa_alias_python'
     alias q='exit'
     alias rbenv='koopa_alias_rbenv'
     alias rg='rg --case-sensitive' # '--no-ignore'
