@@ -328,7 +328,7 @@ __koopa_link_in_dir() {
     [[ ! -d "${dict['prefix']}" ]] && koopa_mkdir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     dict['target']="${dict['prefix']}/${dict['name']}"
-    koopa_assert_is_exiting "${dict['source']}"
+    koopa_assert_is_existing "${dict['source']}"
     koopa_alert "Linking '${dict['source']}' -> '${dict['target']}'."
     koopa_sys_ln "${dict['source']}" "${dict['target']}"
     return 0
