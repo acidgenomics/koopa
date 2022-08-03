@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME snakemake needs to map to snakemake-minimal.
+# FIXME This also needs to handle man1 linkage.
+# e.g. can try this for hisat2.
+# FIXME Most of the man1 files are for coreutils and Python, not specific
+# informatics tools...see if we can find a case of a tool having man1
+# documentation.
 
 main() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2022-07-29.
+    # @note Updated 2022-08-02.
     # """
     local app bin_names dict
     koopa_assert_has_no_args "$#"
@@ -48,9 +52,21 @@ main() {
     then
         for bin_name in "${bin_names[@]}"
         do
-            koopa_ln \
-                "${dict[libexec]}/bin/${bin_name}" \
-                "${dict[prefix]}/bin/${bin_name}"
+            local dict2
+            declare -A dict2
+            dict2[name]="$bin_name"
+            dict2[bin_source]="${dict[libexec]}/bin/${dict2[name]}"
+            dict2[bin_target]="${dict[prefix]}/bin/${dict2[name]}"
+            dict2[man1_source]="${dict[libexec]}/share/man/\
+man1/${dict2[name]}.1"
+            dict2[man1_target]="${dict[prefix]}/share/man/\
+man1/${dict2[name]}.1"
+            koopa_assert_is_file "${dict2[bin_source]}"
+            koopa_ln "${dict2[bin_source]}" "${dict[bin_target]}"
+            if [[ -f "${dict2[man1_source]}" ]]
+            then
+                koopa_ln "${dict2[man1_source]}" "${dict[man1_target]}"
+            fi
         done
     fi
     return 0
