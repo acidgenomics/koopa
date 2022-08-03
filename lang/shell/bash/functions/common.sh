@@ -24275,7 +24275,10 @@ koopa_uninstall_zstd() {
 }
 
 koopa_unlink_in_bin() {
-    __koopa_unlink_in_dir --prefix="$(koopa_bin_prefix)" "$@"
+    __koopa_unlink_in_dir \
+        --allow-missing \
+        --prefix="$(koopa_bin_prefix)" \
+        "$@"
 }
 
 koopa_unlink_in_make() {
