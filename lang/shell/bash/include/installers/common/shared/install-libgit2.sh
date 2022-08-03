@@ -29,6 +29,7 @@ main() {
         [jobs]="$(koopa_cpu_count)"
         [name]='libgit2'
         [prefix]="${INSTALL_PREFIX:?}"
+        [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[file]="v${dict[version]}.tar.gz"
@@ -46,9 +47,9 @@ archive/${dict[file]}"
         '-DCMAKE_BUILD_TYPE=Release'
         '-DBUILD_TESTS=OFF'
         "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
-        "-DZLIB_LIBRARY=${dict[zlib]}/lib"
+        "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
         "-DPCRE_INCLUDE_DIR=${dict[pcre]}/include"
-        "-DPCRE_LIBRARY=${dict[pcre]}/lib"
+        "-DPCRE_LIBRARY=${dict[pcre]}/lib/libpcre.${dict[shared_ext]}"
         '-DUSE_BUNDLED_ZLIB=OFF'
         '-DUSE_SSH=YES'
     )
