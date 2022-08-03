@@ -282,72 +282,55 @@ __koopa_is_ssh_enabled() {
 }
 
 __koopa_link_in_dir() {
-    local dict pos
+    local dict
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [allow_missing]=0
-        [prefix]=''
-        [quiet]=0
+        ['name']=''
+        ['prefix']=''
+        ['source']=''
     )
-    pos=()
     while (("$#"))
     do
         case "$1" in
+            '--name='*)
+                dict['name']="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict['name']="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
-            '--allow-missing')
-                dict[allow_missing]=1
+            '--source='*)
+                dict['source']="${1#*=}"
                 shift 1
                 ;;
-            '--quiet')
-                dict[quiet]=1
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
+            '--source')
+                dict['source']="${2:?}"
+                shift 2
                 ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_ge "$#" 2
-    koopa_assert_is_set '--prefix' "${dict[prefix]}"
-    [[ ! -d "${dict[prefix]}" ]] && koopa_mkdir "${dict[prefix]}"
-    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
-    while [[ "$#" -ge 2 ]]
-    do
-        local dict2
-        declare -A dict2=(
-            [source_file]="${1:?}"
-            [target_name]="${2:?}"
-        )
-        dict2[target_file]="${dict[prefix]}/${dict2[target_name]}"
-        if [[ ! -e "${dict2[source_file]}" ]] && \
-            [[ "${dict[allow_missing]}" -eq 0 ]]
-        then
-            if [[ "${dict[quiet]}" -eq 0 ]]
-            then
-                koopa_alert_note "Skipping link of '${dict2[source_file]}'."
-            fi
-            return 0
-        fi
-        if [[ "${dict[quiet]}" -eq 0 ]]
-        then
-            koopa_alert "Linking '${dict2[source_file]}' -> \
-'${dict2[target_file]}'."
-        fi
-        koopa_sys_ln "${dict2[source_file]}" "${dict2[target_file]}"
-        shift 2
-    done
+    koopa_assert_is_set \
+        '--name' "${dict['name']}" \
+        '--prefix' "${dict['prefix']}" \
+        '--source' "${dict['source']}"
+    [[ ! -d "${dict['prefix']}" ]] && koopa_mkdir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    dict['target']="${dict['prefix']}/${dict['name']}"
+    koopa_assert_is_exiting "${dict['source']}"
+    koopa_alert "Linking '${dict['source']}' -> '${dict['target']}'."
+    koopa_sys_ln "${dict['source']}" "${dict['target']}"
     return 0
 }
 
@@ -493,11 +476,10 @@ __koopa_str_detect() {
 }
 
 __koopa_unlink_in_dir() {
-    local dict file files name names pos
+    local dict name names pos
     koopa_assert_has_args "$#"
     declare -A dict=(
         [prefix]=''
-        [quiet]=0
     )
     pos=()
     while (("$#"))
@@ -510,10 +492,6 @@ __koopa_unlink_in_dir() {
             '--prefix')
                 dict[prefix]="${2:?}"
                 shift 2
-                ;;
-            '--quiet')
-                dict[quiet]=1
-                shift 1
                 ;;
             '-'*)
                 koopa_invalid_arg "$1"
@@ -530,21 +508,14 @@ __koopa_unlink_in_dir() {
     koopa_assert_is_dir "${dict[prefix]}"
     dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     names=("$@")
-    files=()
     for name in "${names[@]}"
     do
-        files+=("${dict[prefix]}/${name}")
+        local file
+        file="${dict[prefix]}/${name}"
+        koopa_assert_is_symlink "$file"
+        koopa_alert "Unlinking '${file}'."
+        koopa_rm "$file"
     done
-    if [[ "${dict[quiet]}" -eq 1 ]]
-    then
-        koopa_rm "${files[@]}"
-    else
-        for file in "${files[@]}"
-        do
-            koopa_alert "Unlinking '${file}'."
-            koopa_rm "$file"
-        done
-    fi
     return 0
 }
 
@@ -3635,6 +3606,60 @@ koopa_check_mount() {
     return 0
 }
 
+koopa_check_shared_object() {
+    local app dict tool_args
+    koopa_assert_has_args "$#"
+    declare -A app
+    declare -A dict=(
+        [name]=''
+        [prefix]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            '--name='*)
+                dict[name]="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--name' "${dict[name]}" \
+        '--prefix' "${dict[prefix]}"
+    tool_args=()
+    if koopa_is_linux
+    then
+        app[tool]="$(koopa_locate_ldd)"
+        dict[shared_ext]='so'
+    elif koopa_is_macos
+    then
+        app[tool]="$(koopa_macos_locate_otool)"
+        dict[shared_ext]='dylib'
+        tool_args+=('-L')
+    fi
+    [[ -x "${app[tool]}" ]] || return 1
+    dict[file]="${dict[prefix]}/${dict[name]}.${dict[shared_ext]}"
+    koopa_assert_is_file "${dict[file]}"
+    tool_args+=("${dict[file]}")
+    "${app[tool]}" "${tool_args[@]}"
+    return 0
+}
+
 koopa_check_system() {
     koopa_assert_has_no_args "$#"
     koopa_check_exports || return 1
@@ -4813,107 +4838,6 @@ koopa_conda_remove_env() {
         koopa_alert_uninstall_success "${dict[name]}" "${dict[prefix]}"
     done
     [[ "${dict[nounset]}" -eq 1 ]] && set -o nounset
-    return 0
-}
-
-koopa_configure_app_packages() {
-    local dict pos
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        [app]=''
-        [link_in_opt]=1
-        [name]=''
-        [prefix]=''
-        [version]=''
-    )
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--app='*)
-                dict[app]="${1#*=}"
-                shift 1
-                ;;
-            '--app')
-                dict[app]="${2:?}"
-                shift 2
-                ;;
-            '--name='*)
-                dict[name]="${1#*=}"
-                shift 1
-                ;;
-            '--name')
-                dict[name]="${2:?}"
-                shift 2
-                ;;
-            '--prefix='*)
-                dict[prefix]="${1#*=}"
-                shift 1
-                ;;
-            '--prefix')
-                dict[prefix]="${2:?}"
-                shift 2
-                ;;
-            '--version='*)
-                dict[version]="${1#*=}"
-                shift 1
-                ;;
-            '--version')
-                dict[version]="${2:?}"
-                shift 2
-                ;;
-            '--link-in-opt')
-                dict[link_in_opt]=1
-                shift 1
-                ;;
-            '--no-link-in-opt')
-                dict[link_in_opt]=0
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -gt 0 ]]
-    then
-        koopa_assert_has_args_eq "$#" 1
-        dict[app]="${1:?}"
-    fi
-    koopa_assert_is_set '--name' "${dict[name]}"
-    dict[pkg_prefix_fun]="koopa_${dict[name]}_packages_prefix"
-    koopa_assert_is_function "${dict[pkg_prefix_fun]}"
-    if [[ -z "${dict[prefix]}" ]]
-    then
-        if [[ -z "${dict[version]}" ]]
-        then
-            if [[ -z "${dict[app]}" ]]
-            then
-                dict[locate_app_fun]="koopa_locate_${dict[name]}"
-                koopa_assert_is_function "${dict[locate_app_fun]}"
-                dict[app]="$("${dict[locate_app_fun]}")"
-            fi
-            koopa_assert_is_installed "${dict[app]}"
-            dict[version]="$(koopa_get_version "${dict[app]}")"
-        fi
-        dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
-    fi
-    koopa_alert_configure_start "${dict[name]}" "${dict[prefix]}"
-    if [[ ! -d "${dict[prefix]}" ]]
-    then
-        koopa_sys_mkdir "${dict[prefix]}"
-        koopa_sys_set_permissions "$(koopa_dirname "${dict[prefix]}")"
-    fi
-    if [[ "${dict[link_in_opt]}" -eq 1 ]]
-    then
-        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}-packages"
-    fi
-    koopa_alert_configure_success "${dict[name]}" "${dict[prefix]}"
     return 0
 }
 
@@ -11319,6 +11243,7 @@ koopa_install_app() {
         [auto_prefix]=0
         [binary]=0
         [link_in_bin]=0
+        [link_in_man]=0
         [link_in_opt]=1
         [prefix_check]=1
         [push]=0
@@ -11510,7 +11435,11 @@ ${dict[version2]}"
             bool[link_in_opt]=0
             ;;
     esac
-    koopa_is_array_non_empty "${bin_arr[@]:-}" && bool[link_in_bin]=1
+    if koopa_is_array_non_empty "${bin_arr[@]:-}"
+    then
+        bool[link_in_bin]=1
+        bool[link_in_man]=1
+    fi
     [[ -d "${dict[prefix]}" ]] && \
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     [[ -z "${dict[installer_bn]}" ]] && dict[installer_bn]="${dict[name]}"
@@ -11626,15 +11555,43 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     esac
     if [[ "${bool[link_in_opt]}" -eq 1 ]]
     then
-        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
+        koopa_link_in_opt \
+            --name="${dict[name]}" \
+            --source="${dict[prefix]}"
     fi
     if [[ "${bool[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
         do
+            local dict2
+            declare -A dict2
+            dict2[name]="${bin_arr[i]}"
+            dict2[source]="${dict[prefix]}/bin/${dict2[name]}"
             koopa_link_in_bin \
-                "${dict[prefix]}/bin/${bin_arr[i]}" \
-                "$(koopa_basename "${bin_arr[i]}")"
+                --name="${dict2[name]}" \
+                --source="${dict2[source]}"
+        done
+    fi
+    if [[ "${bool[link_in_man]}" -eq 1 ]]
+    then
+        for i in "${!bin_arr[@]}"
+        do
+            local dict2
+            declare -A dict2
+            dict2[name]="${bin_arr[i]}.1"
+            dict2[manfile1]="${dict[prefix]}/share/man/man1/${dict2[name]}"
+            dict2[manfile2]="${dict[prefix]}/man/man1/${dict2[name]}"
+            if [[ -f "${dict2[manfile1]}" ]]
+            then
+                koopa_link_in_man1 \
+                    --name="${dict2[name]}" \
+                    --source="${dict2[manfile1]}"
+            elif [[ -f "${dict2[manfile2]}" ]]
+            then
+                koopa_link_in_man1 \
+                    --name="${dict2[name]}" \
+                    --source="${dict2[manfile2]}"
+            fi
         done
     fi
     if [[ "${bool[update_ldconfig]}" -eq 1 ]]
@@ -15258,40 +15215,7 @@ to '${dict[symlink_path]}'."
 }
 
 koopa_link_in_bin() {
-    local bin_files bin_links dict
-    koopa_assert_has_args "$#"
-    bin_files=()
-    bin_links=()
-    declare -A dict=(
-        [bin_prefix]="$(koopa_bin_prefix)"
-        [man_prefix]="$(koopa_man_prefix)"
-    )
-    while [[ "$#" -ge 2 ]]
-    do
-        bin_files+=("${1:?}")
-        bin_links+=("${2:?}")
-        shift 2
-    done
-    for i in "${!bin_files[@]}"
-    do
-        local dict2
-        declare -A dict2
-        dict2[bin_file]="${bin_files[$i]}"
-        dict2[bin_link]="${bin_links[$i]}"
-        dict2[bin_file_bn]="$(koopa_basename "${dict2[bin_file]}")"
-        dict2[parent_dir]="$(koopa_parent_dir --num=2 "${dict2[bin_file]}")"
-        dict2[man1_file]="${dict2[parent_dir]}/share/man/\
-man1/${dict2[bin_file_bn]}.1"
-        dict2[man1_link]="${dict2[bin_link]}.1"
-        __koopa_link_in_dir \
-            --prefix="${dict[bin_prefix]}" \
-            "${dict2[bin_file]}" "${dict2[bin_link]}"
-        __koopa_link_in_dir \
-            --prefix="${dict[man_prefix]}/man1" \
-            --quiet \
-            "${dict2[man1_file]}" "${dict2[man1_link]}"
-    done
-    return 0
+    __koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }
 
 koopa_link_in_make() {
@@ -15378,6 +15302,10 @@ into '${dict[make_prefix]}'."
     )
     koopa_cp "${cp_args[@]}"
     return 0
+}
+
+koopa_link_in_man1() {
+    __koopa_link_in_dir --prefix="$(koopa_man_prefix)/man1" "$@"
 }
 
 koopa_link_in_opt() {
@@ -16458,6 +16386,7 @@ koopa_locate_python() {
 
 koopa_locate_r() {
     koopa_locate_app \
+        --allow-in-path \
         --app-name='R' \
         --opt-name='r'
 }
@@ -17869,6 +17798,7 @@ koopa_python_create_venv() {
         [python]="$(koopa_locate_python)"
     )
     [[ -x "${app[python]}" ]] || return 1
+    app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
         [name]=''
         [pip]=1
@@ -17932,7 +17862,9 @@ ${dict[py_maj_min_ver]}"
             koopa_sys_mkdir "${dict[app_prefix]}"
             koopa_sys_set_permissions "$(koopa_dirname "${dict[app_prefix]}")"
         fi
-        koopa_link_in_opt "${dict[app_prefix]}" "${dict[app_bn]}"
+        koopa_link_in_opt \
+            --name="${dict[app_bn]}" \
+            --source="${dict[app_prefix]}"
     fi
     [[ -d "${dict[prefix]}" ]] && koopa_rm "${dict[prefix]}"
     koopa_assert_is_not_dir "${dict[prefix]}"
@@ -17953,11 +17885,21 @@ ${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
     if [[ "${dict[pip]}" -eq 1 ]]
     then
+        case "${dict[py_maj_min_ver]}" in
+            '3.10')
+                dict[pip_version]='22.1.2'
+                dict[setuptools_version]='63.1.0'
+                dict[wheel_version]='0.37.1'
+                ;;
+            *)
+                koopa_stop "Unsupported Python: ${dict[py_version]}."
+                ;;
+        esac
         koopa_python_pip_install \
             --python="${app[venv_python]}" \
-            'pip==22.1.2' \
-            'setuptools==63.1.0' \
-            'wheel==0.37.1'
+            "pip==${dict[pip_version]}" \
+            "setuptools==${dict[setuptools_version]}" \
+            "wheel==${dict[wheel_version]}"
     fi
     if koopa_is_array_non_empty "${pkgs[@]:-}"
     then
@@ -20272,6 +20214,18 @@ koopa_script_name() {
     return 0
 }
 
+koopa_shared_ext() {
+    local str
+    if koopa_is_macos
+    then
+        str='dylib'
+    else
+        str='so'
+    fi
+    koopa_print "$str"
+    return 0
+}
+
 koopa_snake_case_simple() {
     local str
     if [[ "$#" -eq 0 ]]
@@ -22252,10 +22206,11 @@ koopa_uninstall_anaconda() {
 }
 
 koopa_uninstall_app() {
-    local bin_arr bool dict
+    local bin_arr bool dict i man_arr
     declare -A bool=(
         [quiet]=0
         [unlink_in_bin]=0
+        [unlink_in_man]=0
         [unlink_in_opt]=1
         [verbose]=0
     )
@@ -22272,6 +22227,7 @@ koopa_uninstall_app() {
         [uninstaller_fun]='main'
     )
     bin_arr=()
+    man_arr=()
     while (("$#"))
     do
         case "$1" in
@@ -22358,7 +22314,11 @@ koopa_uninstall_app() {
             bool[unlink_in_opt]=0
             ;;
     esac
-    koopa_is_array_non_empty "${bin_arr[@]:-}" && bool[unlink_in_bin]=1
+    if koopa_is_array_non_empty "${bin_arr[@]:-}"
+    then
+        bool[unlink_in_bin]=1
+        bool[unlink_in_man]=1
+    fi
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
@@ -22405,6 +22365,14 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
     if [[ "${bool[unlink_in_bin]}" -eq 1 ]]
     then
         koopa_unlink_in_bin "${bin_arr[@]}"
+    fi
+    if [[ "${bool[unlink_in_man]}" -eq 1 ]]
+    then
+        for i in "${!bin_arr[@]}"
+        do
+            man_arr+=("${bin_arr[$i]}.1")
+        done
+        koopa_unlink_in_man1 "${man_arr[@]}"
     fi
     if [[ "${bool[unlink_in_opt]}" -eq 1 ]]
     then
@@ -24271,26 +24239,7 @@ koopa_uninstall_zstd() {
 }
 
 koopa_unlink_in_bin() {
-    local bin_link bin_links dict man_links
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        [bin_prefix]="$(koopa_bin_prefix)"
-        [man_prefix]="$(koopa_man_prefix)"
-    )
-    bin_links=("$@")
-    man_links=()
-    for bin_link in "${bin_links[@]}"
-    do
-        man_links+=("${bin_link}.1")
-    done
-    __koopa_unlink_in_dir \
-        --prefix="${dict[bin_prefix]}" \
-        "${bin_links[@]}"
-    __koopa_unlink_in_dir \
-        --prefix="${dict[man_prefix]}/man1" \
-        --quiet \
-        "${man_links[@]}"
-    return 0
+    __koopa_unlink_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }
 
 koopa_unlink_in_make() {
@@ -24329,6 +24278,10 @@ koopa_unlink_in_make() {
         done
     done
     return 0
+}
+
+koopa_unlink_in_man1() {
+    __koopa_unlink_in_dir --prefix="$(koopa_man_prefix)/man1" "$@"
 }
 
 koopa_unlink_in_opt() {

@@ -118,7 +118,7 @@ koopa_activate_aliases() {
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
     alias prelude-emacs='koopa_alias_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
-    alias python='python3'
+    alias python='koopa_alias_python'
     alias q='exit'
     alias rbenv='koopa_alias_rbenv'
     alias rg='rg --case-sensitive' # '--no-ignore'
@@ -910,6 +910,11 @@ koopa_alias_pyenv() {
     koopa_is_alias 'pyenv' && unalias 'pyenv'
     koopa_activate_pyenv
     pyenv "$@"
+}
+
+koopa_alias_python() {
+    koopa_print "Use 'python3' instead of 'python'."
+    return 1
 }
 
 koopa_alias_rbenv() {
