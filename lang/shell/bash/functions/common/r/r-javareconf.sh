@@ -3,7 +3,7 @@
 koopa_r_javareconf() {
     # """
     # Update R Java configuration.
-    # @note Updated 2022-07-22.
+    # @note Updated 2022-08-03.
     #
     # The default Java path differs depending on the system.
     #
@@ -23,6 +23,10 @@ koopa_r_javareconf() {
     # How to check that rJava works:
     # > library(rJava)
     # > .jinit()
+    #
+    # @seealso
+    # - JAVAH deprecated in JDK 9.
+    #   https://docs.oracle.com/javase/9/tools/javah.htm#JSWOR687
     # """
     local app dict java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
@@ -44,11 +48,16 @@ koopa_r_javareconf() {
     dict[jar]="${dict[java_home]}/bin/jar"
     dict[java]="${dict[java_home]}/bin/java"
     dict[javac]="${dict[java_home]}/bin/javac"
+    # javah was deprecated in JDK 9 in favor if 'javac -h', but this approach
+    # doesn't currently work with R.
+    # > dict[javah]="${dict[javac]} -h"
+    dict[javah]=''
     koopa_alert 'Updating R Java configuration.'
     koopa_dl \
         'JAR' "${dict[jar]}" \
         'JAVA' "${dict[java]}" \
         'JAVAC' "${dict[javac]}" \
+        'JAVAH' "${dict[javah]}" \
         'JAVA_HOME' "${dict[java_home]}" \
         'R' "${app[r]}"
     if koopa_is_koopa_app "${app[r]}"
@@ -62,8 +71,7 @@ koopa_r_javareconf() {
         "JAR=${dict[jar]}"
         "JAVA=${dict[java]}"
         "JAVAC=${dict[javac]}"
-        # No longer in use.
-        'JAVAH='
+        "JAVAH=${dict[javah]}"
         "JAVA_HOME=${dict[java_home]}"
     )
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
