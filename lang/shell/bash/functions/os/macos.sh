@@ -680,18 +680,22 @@ koopa_macos_link_homebrew() {
     declare -A dict
     koopa_assert_has_no_args "$#"
     koopa_link_in_bin \
-        '/Applications/BBEdit.app/Contents/Helpers/bbedit_tool' \
-        'bbedit'
+        --name='bbedit' \
+        --source='/Applications/BBEdit.app/Contents/Helpers/bbedit_tool'
     koopa_link_in_bin \
-        '/Applications/Emacs.app/Contents/MacOS/Emacs' \
-        'emacs'
+        --name='emacs' \
+        --source='/Applications/Emacs.app/Contents/MacOS/Emacs'
     dict[r]="$(koopa_macos_r_prefix)"
     koopa_link_in_bin \
-        "${dict[r]}/bin/R" 'R' \
-        "${dict[r]}/bin/Rscript" 'Rscript'
+        --name='R' \
+        --source="${dict[r]}/bin/R"
     koopa_link_in_bin \
-        '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' \
-        'code'
+        --name='Rscript' \
+        --source="${dict[r]}/bin/Rscript"
+    koopa_link_in_bin \
+        --name='code' \
+        --source="/Applications/Visual Studio Code.app/Contents/Resources/\
+app/bin/code"
 }
 
 koopa_macos_list_launch_agents() {
