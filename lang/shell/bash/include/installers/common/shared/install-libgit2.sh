@@ -23,7 +23,7 @@ main() {
         'cmake' \
         'pkg-config'
     koopa_activate_opt_prefix \
-        'pcre2' \
+        'pcre' \
         'openssl3' \
         'libssh2'
     declare -A app=(
@@ -43,11 +43,14 @@ archive/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     dict[openssl]="$(koopa_app_prefix 'openssl3')"
+    dict[pcre]="$(koopa_app_prefix 'pcre')"
     koopa_add_rpath_to_ldflags "${dict[openssl]}/lib"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         '-DCMAKE_BUILD_TYPE=Release'
         '-DBUILD_TESTS=OFF'
+        "-DPCRE_INCLUDE_DIR=${dict[pcre]}/include"
+        "-DPCRE_LIBRARY=${dict[pcre]}/lib"
         '-DUSE_BUNDLED_ZLIB=OFF'
         '-DUSE_SSH=YES'
     )
