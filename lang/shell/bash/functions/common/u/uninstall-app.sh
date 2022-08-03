@@ -3,12 +3,13 @@
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2022-07-29.
+    # @note Updated 2022-08-02.
     # """
-    local bin_arr bool dict
+    local bin_arr bool dict i man_arr
     declare -A bool=(
         [quiet]=0
         [unlink_in_bin]=0
+        [unlink_in_man]=0
         [unlink_in_opt]=1
         [verbose]=0
     )
@@ -25,6 +26,7 @@ koopa_uninstall_app() {
         [uninstaller_fun]='main'
     )
     bin_arr=()
+    man_arr=()
     while (("$#"))
     do
         case "$1" in
@@ -113,7 +115,11 @@ koopa_uninstall_app() {
             bool[unlink_in_opt]=0
             ;;
     esac
-    koopa_is_array_non_empty "${bin_arr[@]:-}" && bool[unlink_in_bin]=1
+    if koopa_is_array_non_empty "${bin_arr[@]:-}"
+    then
+        bool[unlink_in_bin]=1
+        bool[unlink_in_man]=1
+    fi
     if [[ -n "${dict[prefix]}" ]]
     then
         if [[ ! -d "${dict[prefix]}" ]]
@@ -161,6 +167,14 @@ ${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
     if [[ "${bool[unlink_in_bin]}" -eq 1 ]]
     then
         koopa_unlink_in_bin "${bin_arr[@]}"
+    fi
+    if [[ "${bool[unlink_in_man]}" -eq 1 ]]
+    then
+        for i in "${!bin_arr[@]}"
+        do
+            man_arr+=("${bin_arr[$i]}.1")
+        done
+        koopa_unlink_in_man1 "${man_arr[@]}"
     fi
     if [[ "${bool[unlink_in_opt]}" -eq 1 ]]
     then
