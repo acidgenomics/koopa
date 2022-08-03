@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME emacs man files are gz compressed.
+# Need to handle this edge case.
+
 koopa_link_in_man1() {
     # """
     # Link documentation into koopa 'MANPATH' man1 directory.
