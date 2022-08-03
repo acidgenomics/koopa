@@ -479,6 +479,7 @@ __koopa_unlink_in_dir() {
     local dict name names pos
     koopa_assert_has_args "$#"
     declare -A dict=(
+        [allow_missing]=0
         [prefix]=''
     )
     pos=()
@@ -492,6 +493,10 @@ __koopa_unlink_in_dir() {
             '--prefix')
                 dict[prefix]="${2:?}"
                 shift 2
+                ;;
+            '--allow-missing')
+                dict[allow_missing]=1
+                shift 1
                 ;;
             '-'*)
                 koopa_invalid_arg "$1"
@@ -512,9 +517,18 @@ __koopa_unlink_in_dir() {
     do
         local file
         file="${dict[prefix]}/${name}"
-        koopa_assert_is_symlink "$file"
-        koopa_alert "Unlinking '${file}'."
-        koopa_rm "$file"
+        if [[ "${dict[allow_missing]}" -eq 1 ]]
+        then
+            if [[ -L "$file" ]]
+            then
+                koopa_alert "Unlinking '${file}'."
+                koopa_rm "$file"
+            fi
+        else
+            koopa_assert_is_symlink "$file"
+            koopa_alert "Unlinking '${file}'."
+            koopa_rm "$file"
+        fi
     done
     return 0
 }
@@ -11801,6 +11815,17 @@ koopa_install_bustools() {
 
 koopa_install_bzip2() {
     koopa_install_app \
+        --link-in-bin='bunzip2' \
+        --link-in-bin='bzcat' \
+        --link-in-bin='bzcmp' \
+        --link-in-bin='bzdiff' \
+        --link-in-bin='bzegrep' \
+        --link-in-bin='bzfgrep' \
+        --link-in-bin='bzgrep' \
+        --link-in-bin='bzip2' \
+        --link-in-bin='bzip2recover' \
+        --link-in-bin='bzless' \
+        --link-in-bin='bzmore' \
         --name='bzip2' \
         "$@"
 }
@@ -22560,6 +22585,17 @@ koopa_uninstall_bustools() {
 koopa_uninstall_bzip2() {
     koopa_uninstall_app \
         --name='bzip2' \
+        --unlink-in-bin='bunzip2' \
+        --unlink-in-bin='bzcat' \
+        --unlink-in-bin='bzcmp' \
+        --unlink-in-bin='bzdiff' \
+        --unlink-in-bin='bzegrep' \
+        --unlink-in-bin='bzfgrep' \
+        --unlink-in-bin='bzgrep' \
+        --unlink-in-bin='bzip2' \
+        --unlink-in-bin='bzip2recover' \
+        --unlink-in-bin='bzless' \
+        --unlink-in-bin='bzmore' \
         "$@"
 }
 
@@ -24281,7 +24317,10 @@ koopa_unlink_in_make() {
 }
 
 koopa_unlink_in_man1() {
-    __koopa_unlink_in_dir --prefix="$(koopa_man_prefix)/man1" "$@"
+    __koopa_unlink_in_dir \
+        --allow-missing \
+        --prefix="$(koopa_man_prefix)/man1" \
+        "$@"
 }
 
 koopa_unlink_in_opt() {
