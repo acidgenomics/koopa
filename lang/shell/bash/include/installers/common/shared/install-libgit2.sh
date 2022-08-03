@@ -48,8 +48,6 @@ archive/${dict[file]}"
         '-DBUILD_TESTS=OFF'
         '-DUSE_BUNDLED_ZLIB=OFF'
         '-DUSE_SSH=YES'
-        "-DOPENSSL_INCLUDE_DIR=${dict[openssl]}/include"
-        "-DOPENSSL_LIBRARY=${dict[openssl]}/lib/libcrypto.${dict[shared_ext]}"
         "-DPCRE_INCLUDE_DIR=${dict[pcre]}/include"
         "-DPCRE_LIBRARY=${dict[pcre]}/lib/libpcre.${dict[shared_ext]}"
         "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
