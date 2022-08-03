@@ -21,7 +21,6 @@ main() {
     declare -A app=(
         [r]='/usr/bin/R'
     )
-    app[rscript]="${app[r]}script"
     declare -A dict=(
         [version]="${INSTALL_VERSION:?}"
     )
@@ -34,7 +33,7 @@ main() {
     koopa_debian_apt_add_r_repo "${dict[version]}"
     pkgs=('r-base' 'r-base-dev')
     koopa_debian_apt_install "${pkgs[@]}"
-    koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
+    koopa_assert_is_installed "${app[r]}"
     koopa_configure_r "${app[r]}"
     return 0
 }
