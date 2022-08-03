@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE 1.5.0 has OpenSSL header include linkage issues on Ubuntu 22.
+
 main() {
     # """
     # Install libgit2.
