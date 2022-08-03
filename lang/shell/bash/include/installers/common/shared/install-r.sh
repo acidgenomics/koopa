@@ -411,6 +411,8 @@ R-${dict[maj_ver]}/${dict[file]}"
     "${app[make]}" 'info'
     "${app[make]}" install
     app[r]="${dict[prefix]}/bin/R"
+    app[rscript]="${app[r]}script"
+    koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
     koopa_configure_r "${app[r]}"
     # NOTE libxml is now expected to return FALSE as of R 4.2.
     "${app[rscript]}" -e 'capabilities()'
