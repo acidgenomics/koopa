@@ -148,10 +148,8 @@ koopa_activate_opt_prefix() {
             ldlibs="$("${app[pkg_config]}" --libs-only-l "${pc_files[@]}")"
             [[ -n "$ldlibs" ]] && LDLIBS="${LDLIBS:-} ${ldlibs}"
         else
-
             # FIXME Recursively search for lib/lib64 and include dirs.
             # FIXME Set these here.
-
             # Set 'CPPFLAGS' variable.
             [[ -d "${prefix}/include" ]] && \
                 CPPFLAGS="${CPPFLAGS:-} -I${prefix}/include"
