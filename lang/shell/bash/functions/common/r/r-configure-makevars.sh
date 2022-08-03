@@ -3,9 +3,9 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-07-28.
+    # @note Updated 2022-08-03.
     # """
-    local app cppflags dict flibs i ldflags libs
+    local app cppflags dict flibs i ldflags libs lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         [dirname]="$(koopa_locate_dirname)"
@@ -20,22 +20,20 @@ koopa_r_configure_makevars() {
     koopa_is_koopa_app "${app[r]}" && return 0
     declare -A dict=(
         [arch]="$(koopa_arch)"
-        [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
     )
     dict[file]="${dict[r_prefix]}/etc/Makevars.site"
     koopa_alert "Configuring '${dict[file]}'."
+    lines=()
     if koopa_is_linux
     then
-        dict[freetype]="$(koopa_realpath "${dict[opt_prefix]}/freetype")"
-        read -r -d '' "dict[string]" << END || true
-CPPFLAGS += -I${dict[freetype]}/include/freetype2
-END
+        dict[freetype]="$(koopa_app_prefix 'freetype')"
+        lines+=("CPPFLAGS += -I${dict[freetype]}/include/freetype2")
     elif koopa_is_macos
     then
-        dict[gcc]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
+        dict[gcc]="$(koopa_app_prefix 'gcc')"
         # gettext is needed to resolve clang '-lintl' warning.
-        dict[gettext]="$(koopa_realpath "${dict[opt_prefix]}/gettext")"
+        dict[gettext]="$(koopa_app_prefix 'gettext')"
         app[fc]="${dict[gcc]}/bin/gfortran"
         # This will cover 'lib' and 'lib64' subdirs.
         # See also 'gcc --print-search-dirs'.
@@ -73,14 +71,26 @@ END
             '-lomp'
         )
         dict[ldflags]="${ldflags[*]}"
-        read -r -d '' "dict[string]" << END || true
-CPPFLAGS += ${dict[cppflags]}
-FC = ${app[fc]}
-FLIBS = ${dict[flibs]}
-LDFLAGS += ${dict[ldflags]}
-END
+        lines+=(
+            "CPPFLAGS += ${dict[cppflags]}"
+            "FC = ${app[fc]}"
+            "FLIBS = ${dict[flibs]}"
+            "LDFLAGS += ${dict[ldflags]}"
+        )
     fi
-    # This should only apply to R CRAN binary, not source install.
+    dict[bash]="$(koopa_app_prefix 'bash')"
+    dict[binutils]="$(koopa_app_prefix 'binutils')"
+    dict[bison]="$(koopa_app_prefix 'bison')"
+    dict[coreutils]="$(koopa_app_prefix 'coreutils')"
+    dict[sed]="$(koopa_app_prefix 'sed')"
+    lines+=(
+        "AR = ${dict[binutils]}/bin/ar"
+        "ECHO = ${dict[coreutils]}/bin/echo"
+        "SED = ${dict[sed]}/bin/sed"
+        "SHELL = ${dict[bash]}/bin/bash"
+        "YACC = ${dict[bison]}/bin/yacc"
+    )
+    dict[string]="$(koopa_print "${lines[@]}" | "${app[sort]}")"
     koopa_sudo_write_string \
         --file="${dict[file]}" \
         --string="${dict[string]}"

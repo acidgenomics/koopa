@@ -648,7 +648,6 @@ koopa_activate_opt_prefix() {
             ldlibs="$("${app[pkg_config]}" --libs-only-l "${pc_files[@]}")"
             [[ -n "$ldlibs" ]] && LDLIBS="${LDLIBS:-} ${ldlibs}"
         else
-
             [[ -d "${prefix}/include" ]] && \
                 CPPFLAGS="${CPPFLAGS:-} -I${prefix}/include"
             [[ -d "${prefix}/lib" ]] && \
@@ -12240,6 +12239,7 @@ koopa_install_gawk() {
         --activate-opt='mpfr' \
         --activate-opt='readline' \
         --link-in-bin='awk' \
+        --link-in-bin='gawk' \
         --name='gawk' \
         "$@"
 }
@@ -18279,7 +18279,7 @@ koopa_r_configure_ldpaths() {
 }
 
 koopa_r_configure_makevars() {
-    local app cppflags dict flibs i ldflags libs
+    local app cppflags dict flibs i ldflags libs lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         [dirname]="$(koopa_locate_dirname)"
@@ -18294,21 +18294,19 @@ koopa_r_configure_makevars() {
     koopa_is_koopa_app "${app[r]}" && return 0
     declare -A dict=(
         [arch]="$(koopa_arch)"
-        [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app[r]}")"
     )
     dict[file]="${dict[r_prefix]}/etc/Makevars.site"
     koopa_alert "Configuring '${dict[file]}'."
+    lines=()
     if koopa_is_linux
     then
-        dict[freetype]="$(koopa_realpath "${dict[opt_prefix]}/freetype")"
-        read -r -d '' "dict[string]" << END || true
-CPPFLAGS += -I${dict[freetype]}/include/freetype2
-END
+        dict[freetype]="$(koopa_app_prefix 'freetype')"
+        lines+=("CPPFLAGS += -I${dict[freetype]}/include/freetype2")
     elif koopa_is_macos
     then
-        dict[gcc]="$(koopa_realpath "${dict[opt_prefix]}/gcc")"
-        dict[gettext]="$(koopa_realpath "${dict[opt_prefix]}/gettext")"
+        dict[gcc]="$(koopa_app_prefix 'gcc')"
+        dict[gettext]="$(koopa_app_prefix 'gettext')"
         app[fc]="${dict[gcc]}/bin/gfortran"
         readarray -t libs <<< "$( \
             koopa_find \
@@ -18340,13 +18338,26 @@ END
             '-lomp'
         )
         dict[ldflags]="${ldflags[*]}"
-        read -r -d '' "dict[string]" << END || true
-CPPFLAGS += ${dict[cppflags]}
-FC = ${app[fc]}
-FLIBS = ${dict[flibs]}
-LDFLAGS += ${dict[ldflags]}
-END
+        lines+=(
+            "CPPFLAGS += ${dict[cppflags]}"
+            "FC = ${app[fc]}"
+            "FLIBS = ${dict[flibs]}"
+            "LDFLAGS += ${dict[ldflags]}"
+        )
     fi
+    dict[bash]="$(koopa_app_prefix 'bash')"
+    dict[binutils]="$(koopa_app_prefix 'binutils')"
+    dict[bison]="$(koopa_app_prefix 'bison')"
+    dict[coreutils]="$(koopa_app_prefix 'coreutils')"
+    dict[sed]="$(koopa_app_prefix 'sed')"
+    lines+=(
+        "AR = ${dict[binutils]}/bin/ar"
+        "ECHO = ${dict[coreutils]}/bin/echo"
+        "SED = ${dict[sed]}/bin/sed"
+        "SHELL = ${dict[bash]}/bin/bash"
+        "YACC = ${dict[bison]}/bin/yacc"
+    )
+    dict[string]="$(koopa_print "${lines[@]}" | "${app[sort]}")"
     koopa_sudo_write_string \
         --file="${dict[file]}" \
         --string="${dict[string]}"
@@ -18374,11 +18385,13 @@ koopa_r_javareconf() {
     dict[jar]="${dict[java_home]}/bin/jar"
     dict[java]="${dict[java_home]}/bin/java"
     dict[javac]="${dict[java_home]}/bin/javac"
+    dict[javah]=''
     koopa_alert 'Updating R Java configuration.'
     koopa_dl \
         'JAR' "${dict[jar]}" \
         'JAVA' "${dict[java]}" \
         'JAVAC' "${dict[javac]}" \
+        'JAVAH' "${dict[javah]}" \
         'JAVA_HOME' "${dict[java_home]}" \
         'R' "${app[r]}"
     if koopa_is_koopa_app "${app[r]}"
@@ -18392,7 +18405,7 @@ koopa_r_javareconf() {
         "JAR=${dict[jar]}"
         "JAVA=${dict[java]}"
         "JAVAC=${dict[javac]}"
-        'JAVAH='
+        "JAVAH=${dict[javah]}"
         "JAVA_HOME=${dict[java_home]}"
     )
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
@@ -22971,6 +22984,7 @@ koopa_uninstall_gawk() {
     koopa_uninstall_app \
         --name='gawk' \
         --unlink-in-bin='awk' \
+        --unlink-in-bin='gawk' \
         "$@"
 }
 
@@ -23783,7 +23797,6 @@ koopa_uninstall_r() {
         )
     fi
     koopa_uninstall_app "${uninstall_args[@]}" "$@"
-    koopa_uninstall_r_packages
     return 0
 }
 
