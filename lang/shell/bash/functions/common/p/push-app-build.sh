@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework as private app bucket for binary builds.
+
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
