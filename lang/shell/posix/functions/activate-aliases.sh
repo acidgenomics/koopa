@@ -26,7 +26,7 @@ koopa_activate_aliases() {
     alias e='exit'
     alias emacs-vanilla='koopa_alias_emacs_vanilla'
     alias emacs='koopa_alias_emacs'
-    alias fd='fd --case-sensitive --no-ignore'
+    alias fd='fd --case-sensitive --hidden --no-ignore'
     alias fvim='vim "$(fzf)"'
     alias glances='koopa_alias_glances'
     alias h='history'
