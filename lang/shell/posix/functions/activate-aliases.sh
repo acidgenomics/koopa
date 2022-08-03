@@ -49,6 +49,7 @@ koopa_activate_aliases() {
     alias python='koopa_alias_python'
     alias q='exit'
     alias rbenv='koopa_alias_rbenv'
+    # Add '--binary' here to make rg behave like 'grep -r'.
     alias rg='rg --case-sensitive --hidden --no-ignore'
     alias ronn='ronn --roff'
     alias sha256='koopa_alias_sha256'
