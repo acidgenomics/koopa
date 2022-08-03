@@ -3,6 +3,8 @@
 # FIXME This needs to create a symlink into koopa bin when missing.
 # This can happen if user installs R directly from Homebrew.
 
+# FIXME Link R and Rscript into koopa bin if not currently defined.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
