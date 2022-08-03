@@ -10,10 +10,15 @@
 # FIXME Generalize this function so we can work on a specific prefix.
 # FIXME This will help improve the configuration of GnuPG, for example.
 
+# FIXME Also consider setting CFLAGS here.
+# https://libgit2.org/docs/guides/build-and-link/
+# > CFLAGS = $(shell pkg-config --cflags libgit2)
+
+
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-07-29.
+    # @note Updated 2022-08-03.
     #
     # Consider using 'pkg-config' to manage 'CPPFLAGS' and 'LDFLAGS':
     # > pkg-config --libs PKG_CONFIG_NAME...

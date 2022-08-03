@@ -3,9 +3,10 @@
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2022-04-28.
+    # @note Updated 2022-08-03.
     #
     # @seealso
+    # - https://libgit2.org/docs/guides/build-and-link/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libgit2.rb
     # - https://github.com/libgit2/libgit2/issues/5079
     # """
@@ -38,6 +39,7 @@ archive/${dict[file]}"
         '-DBUILD_CLAR=NO'
         '-DBUILD_EXAMPLES=YES'
         '-DBUILD_SHARED_LIBS=ON'
+        '-DCMAKE_BUILD_TYPE=Release'
         '-DUSE_SSH=YES'
     )
     "${app[cmake]}" \

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider reworking to simplify, not taking 'activate-opt'...
+# as input. Need to rethink the conceptual approach of our wrappers here.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
