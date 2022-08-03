@@ -12,6 +12,8 @@
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
+# FIXME Set R_SHELL to /opt/koopa/bin/bash or /opt/koopa/bin/zsh?
+
 main() {
     # """
     # Install R.

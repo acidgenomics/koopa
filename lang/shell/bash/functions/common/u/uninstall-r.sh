@@ -11,6 +11,5 @@ koopa_uninstall_r() {
         )
     fi
     koopa_uninstall_app "${uninstall_args[@]}" "$@"
-    koopa_uninstall_r_packages
     return 0
 }
