@@ -3,12 +3,15 @@
 koopa_unlink_in_bin() {
     # """
     # Unlink a program symlinked in koopa 'bin/ directory.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-08-03.
     #
     # @usage koopa_unlink_in_bin NAME...
     #
     # @examples
     # > koopa_unlink_in_bin 'R' 'Rscript'
     # """
-    __koopa_unlink_in_dir --prefix="$(koopa_bin_prefix)" "$@"
+    __koopa_unlink_in_dir \
+        --allow-missing \
+        --prefix="$(koopa_bin_prefix)" \
+        "$@"
 }
