@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't finding correct ZLIB on macOS.
+# FIXME This isn't detecting PCRE on macOS.
+
+# FIXME This isn't detecting OpenSSL headers correctly on Linux.
+# /opt/koopa/app/openssl3/3.0.5/include/openssl/sha.h
+
 main() {
     # """
     # Install libgit2.
@@ -17,7 +23,7 @@ main() {
         'cmake' \
         'pkg-config'
     koopa_activate_opt_prefix \
-        'zlib' \
+        'pcre2' \
         'openssl3' \
         'libssh2'
     declare -A app=(
@@ -36,6 +42,8 @@ archive/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    dict[openssl]="$(koopa_app_prefix 'openssl3')"
+    koopa_add_rpath_to_ldflags "${dict[openssl]}/lib"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         '-DCMAKE_BUILD_TYPE=Release'
