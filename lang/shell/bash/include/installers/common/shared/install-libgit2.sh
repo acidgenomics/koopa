@@ -8,6 +8,7 @@ main() {
     # @seealso
     # - https://libgit2.org/docs/guides/build-and-link/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libgit2.rb
+    # - https://github.com/libgit2/libgit2/blob/main/CMakeLists.txt
     # - https://github.com/libgit2/libgit2/issues/5079
     # """
     local app cmake_args dict
@@ -16,6 +17,7 @@ main() {
         'cmake' \
         'pkg-config'
     koopa_activate_opt_prefix \
+        'zlib' \
         'openssl3' \
         'libssh2'
     declare -A app=(
@@ -36,10 +38,9 @@ archive/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        '-DBUILD_CLAR=NO'
-        '-DBUILD_EXAMPLES=YES'
-        '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
+        '-DBUILD_TESTS=OFF'
+        '-DUSE_BUNDLED_ZLIB=OFF'
         '-DUSE_SSH=YES'
     )
     "${app[cmake]}" \
