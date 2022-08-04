@@ -9160,6 +9160,39 @@ koopa_git_clone() {
     return 0
 }
 
+koopa_git_commit_date() {
+    local app repos
+    declare -A app=(
+        [date]="$(koopa_locate_date)"
+        [git]="$(koopa_locate_git)"
+        [xargs]="$(koopa_locate_xargs)"
+    )
+    [[ -x "${app[date]}" ]] || return 1
+    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app[xargs]}" ]] || return 1
+    repos=("$@")
+    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
+    koopa_assert_is_dir "${repos[@]}"
+    (
+        local repo
+        for repo in "${repos[@]}"
+        do
+            local x
+            koopa_cd "$repo"
+            koopa_is_git_repo || return 1
+            x="$( \
+                "${app[git]}" log -1 --format='%at' \
+                    | "${app[xargs]}" -I '{}' \
+                        "${app[date]}" -d '@{}' '+%Y-%m-%d' \
+                    2>/dev/null || true \
+            )"
+            [[ -n "$x" ]] || return 1
+            koopa_print "$x"
+        done
+    )
+    return 0
+}
+
 koopa_git_default_branch() {
     local app dict repos
     declare -A app=(
@@ -13176,6 +13209,7 @@ koopa_install_pcre2() {
 koopa_install_perl() {
     koopa_install_app \
         --link-in-bin='perl' \
+        --link-in-bin='perldoc' \
         --name='perl' \
         "$@"
 }
@@ -15038,18 +15072,6 @@ koopa_kebab_case_simple() {
 koopa_kebab_case() {
     koopa_assert_has_args "$#"
     koopa_r_koopa 'cliKebabCase' "$@"
-}
-
-koopa_koopa_date() {
-    koopa_assert_has_no_args "$#"
-    koopa_variable 'koopa-date'
-    return 0
-}
-
-koopa_koopa_github_url() {
-    koopa_assert_has_no_args "$#"
-    koopa_variable 'koopa-github-url'
-    return 0
 }
 
 koopa_koopa_installers_url() {
@@ -18418,6 +18440,7 @@ koopa_r_koopa() {
     declare -A app=(
         [rscript]="$(koopa_locate_rscript)"
     )
+    [[ -x "${app[rscript]}" ]] || return 1
     rscript_args=()
     pos=()
     while (("$#"))
@@ -21756,8 +21779,6 @@ koopa_system_info() {
         [ascii_turtle_file]="$(koopa_include_prefix)/ascii-turtle.txt"
         [bash_version]="$(koopa_get_version "${app[bash]}")"
         [config_prefix]="$(koopa_config_prefix)"
-        [koopa_date]="$(koopa_koopa_date)"
-        [koopa_github_url]="$(koopa_koopa_github_url)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [koopa_url]="$(koopa_koopa_url)"
         [koopa_version]="$(koopa_koopa_version)"
@@ -21765,17 +21786,23 @@ koopa_system_info() {
         [opt_prefix]="$(koopa_opt_prefix)"
     )
     info=(
-        "koopa ${dict[koopa_version]} (${dict[koopa_date]})"
+        "koopa ${dict[koopa_version]}"
         "URL: ${dict[koopa_url]}"
-        "GitHub URL: ${dict[koopa_github_url]}"
     )
     if koopa_is_git_repo_top_level "${dict[koopa_prefix]}"
     then
-        dict[remote]="$(koopa_git_remote_url "${dict[koopa_prefix]}")"
-        dict[commit]="$(koopa_git_last_commit_local "${dict[koopa_prefix]}")"
+        dict[git_remote]="$(koopa_git_remote_url "${dict[koopa_prefix]}")"
+        dict[git_commit]="$( \
+            koopa_git_last_commit_local "${dict[koopa_prefix]}" \
+        )"
+        dict[git_date]="$(koopa_git_commit_date "${dict[koopa_prefix]}")"
         info+=(
-            "Git Remote: ${dict[remote]}"
-            "Git Commit: ${dict[commit]}"
+            ''
+            'Git repo'
+            '--------'
+            "Remote: ${dict[git_remote]}"
+            "Commit: ${dict[git_commit]}"
+            "Date: ${dict[git_date]}"
         )
     fi
     info+=(
@@ -21791,6 +21818,7 @@ koopa_system_info() {
     if koopa_is_macos
     then
         app[sw_vers]="$(koopa_macos_locate_sw_vers)"
+        [[ -x "${app[sw_vers]}" ]] || return 1
         dict[os]="$( \
             printf '%s %s (%s)\n' \
                 "$("${app[sw_vers]}" -productName)" \
@@ -23674,6 +23702,7 @@ koopa_uninstall_perl() {
     koopa_uninstall_app \
         --name='perl' \
         --unlink-in-bin='perl' \
+        --unlink-in-bin='perldoc' \
         "$@"
 }
 
