@@ -1,7 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-08-02"
+koopa-date="2022-08-04"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -679,7 +679,7 @@ ffq="0.2.1" # 2022-05-05 bioconda
 gffutils="0.11.0" # 2022-06-05 bioconda
 gget="0.2.6" # 2022-07-08 bioconda
 ghostscript="9.54.0" 2021-05-14 conda-forge
-gseapy="0.10.8" # 2022-02-10 bioconda
+gseapy="0.10.8" # 2022-02-10 bioconda  # latest 0.11.0
 hisat2="2.2.1" # 2020-07-24 bioconda
 jupyterlab="3.4.4" # 2022-07-21 conda-forge
 kallisto="0.48.0" # 2022-01-17 bioconda
