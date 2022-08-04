@@ -51,8 +51,8 @@ main() {
     # - https://www.gnu.org/software/make/manual/html_node/
     #     Implicit-Variables.html
     # - https://bookdown.org/lionel/contributing/building-r.html
-    # - https://hub.docker.com/r/rocker/r-ver/dockerfile
     # - https://hub.docker.com/r/rocker/r-devel/dockerfile
+    # - https://hub.docker.com/r/rocker/r-ver/dockerfile
     # - https://support.rstudio.com/hc/en-us/articles/
     #       218004217-Building-R-from-source
     # - https://cran.r-project.org/doc/manuals/r-devel/
@@ -337,6 +337,19 @@ main() {
     # macOS CRAN binary build config.
     flibs+=('-lm')
     conf_dict['flibs']="${flibs[*]}"
+    # FIXME Consider also setting these, based on rocker Dockerfile.
+    # > 'AWK=/usr/bin/awk'
+    # > "CFLAGS=$(R CMD config CFLAGS)"
+    # > "CXXFLAGS=$(R CMD config CXXFLAGS)"
+    # > 'LIBnn=lib'
+    # > 'PAGER=/usr/bin/pager'
+    # > 'PERL=/usr/bin/perl'
+    # > 'R_BATCHSAVE=--no-save --no-restore'
+    # > 'R_BROWSER=xdg-open'
+    # > 'R_PAPERSIZE=letter'
+    # > 'R_PRINTCMD=/usr/bin/lpr'
+    # > 'R_UNZIPCMD=/usr/bin/unzip'
+    # > 'R_ZIPCMD=/usr/bin/zip'
     conf_args+=(
         "--prefix=${dict['prefix']}"
         '--enable-R-profiling'
@@ -394,7 +407,10 @@ main() {
     fi
     if [[ "${dict['name']}" == 'r-devel' ]]
     then
-        conf_args+=('--without-recommended-packages')
+        conf_args+=(
+            '--program-suffix=dev'
+            '--without-recommended-packages'
+        )
         app['svn']="$(koopa_locate_svn)"
         [[ -x "${app['svn']}" ]] || return 1
         dict['rtop']="$(koopa_init_dir 'svn/r')"
