@@ -468,7 +468,7 @@ r-gfortran="8.2"
 # https://developer.r-project.org/SVNtips.html
 # https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
 # This is the SVN revision number.
-r-devel="82608" # 2022-07-21
+r-devel="82673" # 2022-08-04
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.2.0"
