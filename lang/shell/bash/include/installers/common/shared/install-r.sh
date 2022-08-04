@@ -3,7 +3,7 @@
 # NOTE Seeing this error message for R-devel on Ubuntu:
 #
 # # creating doc/html/resources.html
-# # make[1]: Leaving directory '/tmp/[...]/svn/r/doc/manual'
+# # make['1']: Leaving directory '/tmp/[...]/svn/r/doc/manual'
 # # ERROR: not an svn checkout
 # # make: *** [Makefile:107: svnonly] Error 1
 #
@@ -12,12 +12,10 @@
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
-# FIXME Set R_SHELL to /opt/koopa/bin/bash or /opt/koopa/bin/zsh?
-
 main() {
     # """
     # Install R.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-08-04.
     #
     # @section gfortran configuration on macOS:
     #
@@ -64,27 +62,8 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
     # """
-    local app conf_args deps dict flibs i libs
+    local app conf_args conf_dict deps dict flibs i libs
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [dirname]="$(koopa_locate_dirname)"
-        [make]="$(koopa_locate_make)"
-        [pkg_config]="$(koopa_locate_pkg_config)"
-        [sort]="$(koopa_locate_sort)"
-        [xargs]="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app[dirname]}" ]] || return 1
-    [[ -x "${app[make]}" ]] || return 1
-    [[ -x "${app[pkg_config]}" ]] || return 1
-    [[ -x "${app[sort]}" ]] || return 1
-    [[ -x "${app[xargs]}" ]] || return 1
-    declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
-    )
     koopa_activate_build_opt_prefix 'pkg-config'
     deps=(
         # zlib deps: none.
@@ -198,17 +177,165 @@ main() {
         'tcl-tk'
     )
     koopa_activate_opt_prefix "${deps[@]}"
+    declare -A app=(
+        ['dirname']="$(koopa_locate_dirname)"
+        ['make']="$(koopa_locate_make)"
+        ['pkg_config']="$(koopa_locate_pkg_config)"
+        ['sort']="$(koopa_locate_sort)"
+        ['xargs']="$(koopa_locate_xargs)"
+    )
+    [[ -x "${app['dirname']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['pkg_config']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
+    conf_args=()
+    declare -A conf_dict
+    declare -A dict=(
+        ['arch']="$(koopa_arch)"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
+    )
     if koopa_is_macos
     then
-        dict[texbin]='/Library/TeX/texbin'
-        koopa_add_to_path_start "${dict[texbin]}"
+        dict['texbin']='/Library/TeX/texbin'
+        koopa_add_to_path_start "${dict['texbin']}"
     fi
-    dict[gcc]="$(koopa_app_prefix 'gcc')"
-    dict[lapack]="$(koopa_app_prefix 'lapack')"
-    dict[openjdk]="$(koopa_app_prefix 'openjdk')"
-    dict[tcl_tk]="$(koopa_app_prefix 'tcl-tk')"
-    conf_args=(
-        "--prefix=${dict[prefix]}"
+    dict['bash']="$(koopa_app_prefix 'bash')"
+    dict['binutils']="$(koopa_app_prefix 'binutils')"
+    dict['bison']="$(koopa_app_prefix 'bison')"
+    dict['coreutils']="$(koopa_app_prefix 'coreutils')"
+    dict['gcc']="$(koopa_app_prefix 'gcc')"
+    dict['lapack']="$(koopa_app_prefix 'lapack')"
+    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+    dict['sed']="$(koopa_app_prefix 'sed')"
+    dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
+    conf_dict['with_blas']="$( \
+        "${app['pkg_config']}" --libs 'openblas' \
+    )"
+    # On macOS, consider including: 'cairo-quartz', 'cairo-quartz-font'.
+    conf_dict['with_cairo']="$( \
+        "${app['pkg_config']}" --libs \
+            'cairo' \
+            'cairo-fc' \
+            'cairo-ft' \
+            'cairo-pdf' \
+            'cairo-png' \
+            'cairo-ps' \
+            'cairo-script' \
+            'cairo-svg' \
+            'cairo-xcb' \
+            'cairo-xcb-shm' \
+            'cairo-xlib' \
+            'cairo-xlib-xrender' \
+    )"
+    conf_dict['with_icu']="$( \
+        "${app['pkg_config']}" --libs \
+            'icu-i18n' \
+            'icu-io' \
+            'icu-uc' \
+    )"
+    conf_dict['with_jpeglib']="$( \
+        "${app['pkg_config']}" --libs 'libjpeg' \
+    )"
+    conf_dict['with_lapack']="$( \
+        "${app['pkg_config']}" --libs 'lapack' \
+    )"
+    conf_dict['with_libpng']="$( \
+        "${app['pkg_config']}" --libs 'libpng' \
+    )"
+    conf_dict['with_libtiff']="$( \
+        "${app['pkg_config']}" --libs 'libtiff-4' \
+    )"
+    conf_dict['with_pcre2']="$( \
+        "${app['pkg_config']}" --libs \
+            'libpcre2-8' \
+            'libpcre2-16' \
+            'libpcre2-32' \
+            'libpcre2-posix' \
+    )"
+    conf_dict['with_readline']="$( \
+        "${app['pkg_config']}" --libs 'readline' \
+    )"
+    conf_dict['with_tcl_config']="${dict['tcl_tk']}/lib/tclConfig.sh"
+    conf_dict['with_tk_config']="${dict['tcl_tk']}/lib/tkConfig.sh"
+    koopa_assert_is_file \
+        "${conf_dict['with_tcl_config']}" \
+        "${conf_dict['with_tk_config']}"
+    if koopa_is_macos
+    then
+        # Clang tends to compile a number of tricky RStudio packages better.
+        conf_dict['cc']='/usr/bin/clang'
+        conf_dict['cxx']='/usr/bin/clang++'
+    else
+        # Alternatively, can use system GCC here.
+        # > conf_dict['cc']='/usr/bin/gcc'
+        # > conf_dict['cxx']='/usr/bin/g++'
+        conf_dict['cc']="${dict['gcc']}/bin/gcc"
+        conf_dict['cxx']="${dict['gcc']}/bin/g++"
+    fi
+    conf_dict['ar']="${dict['binutils']}/bin/ar"
+    conf_dict['echo']="${dict['coreutils']}/bin/echo"
+    conf_dict['fc']="${dict['gcc']}/bin/gfortran"
+    conf_dict['jar']="${dict['openjdk']}/bin/jar"
+    conf_dict['java']="${dict['openjdk']}/bin/java"
+    conf_dict['javac']="${dict['openjdk']}/bin/javac"
+    conf_dict['r_shell']="${dict['bash']}/bin/bash"
+    conf_dict['sed']="${dict['sed']}/bin/sed"
+    conf_dict['yacc']="${dict['bison']}/bin/yacc"
+    koopa_assert_is_installed \
+        "${conf_dict['ar']}" \
+        "${conf_dict['cc']}" \
+        "${conf_dict['cxx']}" \
+        "${conf_dict['echo']}" \
+        "${conf_dict['fc']}" \
+        "${conf_dict['jar']}" \
+        "${conf_dict['java']}" \
+        "${conf_dict['javac']}" \
+        "${conf_dict['r_shell']}" \
+        "${conf_dict['sed']}" \
+        "${conf_dict['yacc']}"
+    conf_dict['f77']="${conf_dict['fc']}"
+    conf_dict['java_home']="${dict['openjdk']}"
+    # > conf_dict['javah']="${conf_dict['javac']} -h"
+    conf_dict['javah']=''
+    conf_dict['objc']="${conf_dict['cc']}"
+    conf_dict['objcxx']="${conf_dict['cxx']}"
+    if koopa_is_linux
+    then
+        conf_dict['cc']="${conf_dict['cc']} -fopenmp"
+    fi
+    # Configure fortran FLIBS to link GCC correctly.
+    readarray -t libs <<< "$( \
+        koopa_find \
+            --prefix="${dict['gcc']}" \
+            --pattern='*.a' \
+            --type 'f' \
+        | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
+        | "${app['sort']}" --unique \
+    )"
+    koopa_assert_is_array_non_empty "${libs[@]:-}"
+    flibs=()
+    for i in "${!libs[@]}"
+    do
+        flibs+=("-L${libs[$i]}")
+    done
+    flibs+=('-lgfortran')
+    # quadmath is not yet supported for ARM.
+    # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96016
+    case "${dict['arch']}" in
+        'x86_64')
+            flibs+=('-lquadmath')
+            ;;
+    esac
+    # Consider also including '-lemutls_w' here, which is recommended by
+    # macOS CRAN binary build config.
+    flibs+=('-lm')
+    conf_dict['flibs']="${flibs[*]}"
+    conf_args+=(
+        "--prefix=${dict['prefix']}"
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-byte-compiled-packages'
@@ -217,140 +344,36 @@ main() {
         '--enable-memory-profiling'
         '--enable-shared'
         '--enable-static'
-        "--with-ICU=$( \
-            "${app[pkg_config]}" --libs \
-                'icu-i18n' \
-                'icu-io' \
-                'icu-uc' \
-        )"
-        "--with-blas=$( \
-            "${app[pkg_config]}" --libs 'openblas' \
-        )"
-        # On macOS, consider including: 'cairo-quartz', 'cairo-quartz-font'.
-        "--with-cairo=$( \
-            "${app[pkg_config]}" --libs \
-                'cairo' \
-                'cairo-fc' \
-                'cairo-ft' \
-                'cairo-pdf' \
-                'cairo-png' \
-                'cairo-ps' \
-                'cairo-script' \
-                'cairo-svg' \
-                'cairo-xcb' \
-                'cairo-xcb-shm' \
-                'cairo-xlib' \
-                'cairo-xlib-xrender' \
-        )"
+        "--with-ICU=${conf_dict['with_icu']}"
+        "--with-blas=${conf_dict['with_blas']}"
+        "--with-cairo=${conf_dict['with_cairo']}"
+        "--with-jpeglib=${conf_dict['with_jpeglib']}"
+        "--with-lapack=${conf_dict['with_lapack']}"
+        "--with-libpng=${conf_dict['with_libpng']}"
+        "--with-libtiff=${conf_dict['with_libtiff']}"
+        "--with-pcre2=${conf_dict['with_pcre2']}"
+        "--with-readline=${conf_dict['with_readline']}"
+        "--with-tcl-config=${conf_dict['with_tcl_config']}"
+        "--with-tk-config=${conf_dict['with_tk_config']}"
         '--with-static-cairo=no'
-        "--with-jpeglib=$( \
-            "${app[pkg_config]}" --libs 'libjpeg' \
-        )"
-        "--with-lapack=$( \
-            "${app[pkg_config]}" --libs 'lapack' \
-        )"
-        "--with-libpng=$( \
-            "${app[pkg_config]}" --libs 'libpng' \
-        )"
-        "--with-libtiff=$( \
-            "${app[pkg_config]}" --libs 'libtiff-4' \
-        )"
-        "--with-pcre2=$( \
-            "${app[pkg_config]}" --libs \
-                'libpcre2-8' \
-                'libpcre2-16' \
-                'libpcre2-32' \
-                'libpcre2-posix' \
-        )"
-        "--with-readline=$( \
-            "${app[pkg_config]}" --libs 'readline' \
-        )"
-        "--with-tcl-config=${dict[tcl_tk]}/lib/tclConfig.sh"
-        "--with-tk-config=${dict[tcl_tk]}/lib/tkConfig.sh"
         '--with-x'
-    )
-    if [[ "${dict[name]}" == 'r-devel' ]]
-    then
-        conf_args+=('--without-recommended-packages')
-    else
-        conf_args+=('--with-recommended-packages')
-    fi
-    if koopa_is_macos
-    then
-        # Clang tends to compile a number of tricky RStudio packages better.
-        app[cc]='/usr/bin/clang'
-        app[cxx]='/usr/bin/clang++'
-    else
-        # Alternatively, can use system GCC here.
-        # > app[cc]='/usr/bin/gcc'
-        # > app[cxx]='/usr/bin/g++'
-        app[cc]="${dict[gcc]}/bin/gcc"
-        app[cxx]="${dict[gcc]}/bin/g++"
-    fi
-    app[fc]="${dict[gcc]}/bin/gfortran"
-    app[jar]="${dict[openjdk]}/bin/jar"
-    app[java]="${dict[openjdk]}/bin/java"
-    app[javac]="${dict[openjdk]}/bin/javac"
-    koopa_assert_is_installed \
-        "${app[cc]}" \
-        "${app[cxx]}" \
-        "${app[fc]}" \
-        "${app[jar]}" \
-        "${app[java]}" \
-        "${app[javac]}"
-    # Configure fortran FLIBS to link GCC correctly.
-    readarray -t libs <<< "$( \
-        koopa_find \
-            --prefix="${dict[gcc]}" \
-            --pattern='*.a' \
-            --type 'f' \
-        | "${app[xargs]}" -I '{}' "${app[dirname]}" '{}' \
-        | "${app[sort]}" --unique \
-    )"
-    koopa_assert_is_array_non_empty "${libs[@]:-}"
-    flibs=()
-    for i in "${!libs[@]}"
-    do
-        flibs+=("-L${libs[i]}")
-    done
-    flibs+=('-lgfortran')
-    # quadmath is not yet supported for ARM.
-    # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96016
-    case "${dict[arch]}" in
-        'x86_64')
-            flibs+=('-lquadmath')
-            ;;
-    esac
-    # Consider also including '-lemutls_w' here, which is recommended by
-    # macOS CRAN binary build config.
-    flibs+=('-lm')
-    dict[cc]="${app[cc]}"
-    dict[cxx]="${app[cxx]}"
-    dict[f77]="${app[fc]}"
-    dict[fc]="${app[fc]}"
-    dict[flibs]="${flibs[*]}"
-    dict[jar]="${app[jar]}"
-    dict[java]="${app[java]}"
-    dict[java_home]="${dict[openjdk]}"
-    dict[javac]="${app[javac]}"
-    dict[objc]="${app[cc]}"
-    dict[objcxx]="${app[cxx]}"
-    if koopa_is_linux
-    then
-        dict[cc]="${dict[cc]} -fopenmp"
-    fi
-    conf_args+=(
-        "CC=${dict[cc]}"
-        "CXX=${dict[cxx]}"
-        "F77=${dict[f77]}"
-        "FC=${dict[fc]}"
-        "FLIBS=${dict[flibs]}"
-        "JAR=${dict[jar]}"
-        "JAVA=${dict[java]}"
-        "JAVAC=${dict[javac]}"
-        "JAVA_HOME=${dict[java_home]}"
-        "OBJC=${dict[objc]}"
-        "OBJCXX=${dict[objcxx]}"
+        "AR=${conf_dict['ar']}"
+        "CC=${conf_dict['cc']}"
+        "CXX=${conf_dict['cxx']}"
+        "ECHO=${conf_dict['echo']}"
+        "F77=${conf_dict['f77']}"
+        "FC=${conf_dict['fc']}"
+        "FLIBS=${conf_dict['flibs']}"
+        "JAR=${conf_dict['jar']}"
+        "JAVA=${conf_dict['java']}"
+        "JAVAC=${conf_dict['javac']}"
+        "JAVAH=${conf_dict['javah']}"
+        "JAVA_HOME=${conf_dict['java_home']}"
+        "OBJC=${conf_dict['objc']}"
+        "OBJCXX=${conf_dict['objcxx']}"
+        "R_SHELL=${conf_dict['r_shell']}"
+        "SED=${conf_dict['sed']}"
+        "YACC=${conf_dict['yacc']}"
     )
     if koopa_is_macos
     then
@@ -368,58 +391,57 @@ main() {
             'SHLIB_OPENMP_FFLAGS=-fopenmp'
         )
     fi
-    if [[ "${dict[name]}" == 'r-devel' ]]
+    if [[ "${dict['name']}" == 'r-devel' ]]
     then
-        app[svn]="$(koopa_locate_svn)"
-        [[ -x "${app[svn]}" ]] || return 1
-        dict[rtop]="$(koopa_init_dir 'svn/r')"
-        dict[svn_url]='https://svn.r-project.org/R/trunk'
-        dict[trust_cert]='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
+        conf_args+=('--without-recommended-packages')
+        app['svn']="$(koopa_locate_svn)"
+        [[ -x "${app['svn']}" ]] || return 1
+        dict['rtop']="$(koopa_init_dir 'svn/r')"
+        dict['svn_url']='https://svn.r-project.org/R/trunk'
+        dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
         # Can debug subversion linkage with:
-        # > "${app[svn]}" --version --verbose
-        "${app[svn]}" \
+        # > "${app['svn']}" --version --verbose
+        "${app['svn']}" \
             --non-interactive \
-            --trust-server-cert-failures="${dict[trust_cert]}" \
+            --trust-server-cert-failures="${dict['trust_cert']}" \
             checkout \
-                --revision="${dict[version]}" \
-                "${dict[svn_url]}" \
-                "${dict[rtop]}"
-        koopa_cd "${dict[rtop]}"
-        # Edge case for 'Makefile:107' issue.
-        if koopa_is_macos
-        then
-            koopa_print "Revision: ${dict[version]}" > 'SVNINFO'
-        fi
+                --revision="${dict['version']}" \
+                "${dict['svn_url']}" \
+                "${dict['rtop']}"
+        koopa_cd "${dict['rtop']}"
+        # FIXME Does this help avoid SVN build issue on Ubuntu? See above.
+        koopa_print "Revision: ${dict['version']}" > 'SVNINFO'
     else
-        dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
-        dict[file]="R-${dict[version]}.tar.gz"
-        dict[url]="https://cloud.r-project.org/src/base/\
-R-${dict[maj_ver]}/${dict[file]}"
-        koopa_download "${dict[url]}" "${dict[file]}"
-        koopa_extract "${dict[file]}"
-        koopa_cd "R-${dict[version]}"
+        conf_args+=('--with-recommended-packages')
+        dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+        dict['file']="R-${dict['version']}.tar.gz"
+        dict['url']="https://cloud.r-project.org/src/base/\
+R-${dict['maj_ver']}/${dict['file']}"
+        koopa_download "${dict['url']}" "${dict['file']}"
+        koopa_extract "${dict['file']}"
+        koopa_cd "R-${dict['version']}"
     fi
     unset -v R_HOME
     # Setting the time zone used to be required for build to complete.
     # > export TZ='America/New_York'
     # Need to burn LAPACK in rpath, otherwise grDevices can fail to build.
-    koopa_add_rpath_to_ldflags "${dict[lapack]}/lib"
+    koopa_add_rpath_to_ldflags "${dict['lapack']}/lib"
     ./configure --help
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" check
-    # > "${app[make]}" 'pdf'
-    "${app[make]}" 'info'
-    "${app[make]}" install
-    app[r]="${dict[prefix]}/bin/R"
-    app[rscript]="${app[r]}script"
-    koopa_assert_is_installed "${app[r]}" "${app[rscript]}"
-    koopa_configure_r "${app[r]}"
+    "${app['make']}" --jobs="${dict['jobs']}"
+    # > "${app['make']}" check
+    # > "${app['make']}" 'pdf'
+    "${app['make']}" 'info'
+    "${app['make']}" install
+    app['r']="${dict['prefix']}/bin/R"
+    app['rscript']="${app['r']}script"
+    koopa_assert_is_installed "${app['r']}" "${app['rscript']}"
+    koopa_configure_r "${app['r']}"
     # NOTE libxml is now expected to return FALSE as of R 4.2.
-    "${app[rscript]}" -e 'capabilities()'
+    "${app['rscript']}" -e 'capabilities()'
     koopa_check_shared_object \
         --name='libR' \
-        --prefix="${dict[prefix]}/lib/R/lib"
+        --prefix="${dict['prefix']}/lib/R/lib"
     return 0
 }
