@@ -12,9 +12,6 @@
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
-# FIXME Now seeing this error on macOS:
-# dyld[71057]: symbol not found in flat namespace (_R_gmtime_r)
-
 main() {
     # """
     # Install R.
