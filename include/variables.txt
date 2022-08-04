@@ -588,10 +588,10 @@ xxhash="0.8.1"
 xz="5.2.5"
 
 # https://github.com/mikefarah/yq/
-yq="4.26.1" # latest: 4.27.2
+yq="4.27.2"
 
 # https://github.com/yt-dlp/yt-dlp/
-yt-dlp="2022.05.18"
+yt-dlp="2022.07.18"
 
 # https://www.zlib.net/
 zlib="1.2.12"
