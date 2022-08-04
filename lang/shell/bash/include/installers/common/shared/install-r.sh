@@ -12,6 +12,9 @@
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
+# FIXME Now seeing this error on macOS:
+# dyld[71057]: symbol not found in flat namespace (_R_gmtime_r)
+
 main() {
     # """
     # Install R.
@@ -204,7 +207,6 @@ main() {
         koopa_add_to_path_start "${dict['texbin']}"
     fi
     dict['bash']="$(koopa_app_prefix 'bash')"
-    dict['binutils']="$(koopa_app_prefix 'binutils')"
     dict['bison']="$(koopa_app_prefix 'bison')"
     dict['coreutils']="$(koopa_app_prefix 'coreutils')"
     dict['gcc']="$(koopa_app_prefix 'gcc')"
@@ -276,7 +278,10 @@ main() {
         conf_dict['cc']="${dict['gcc']}/bin/gcc"
         conf_dict['cxx']="${dict['gcc']}/bin/g++"
     fi
-    conf_dict['ar']="${dict['binutils']}/bin/ar"
+    # Usage of binutils ar on macOS results in this error:
+    # # symbol not found in flat namespace (_R_gmtime_r)
+    # > conf_dict['ar']="${dict['binutils']}/bin/ar"
+    conf_dict['ar']='/usr/bin/ar'
     conf_dict['echo']="${dict['coreutils']}/bin/echo"
     conf_dict['fc']="${dict['gcc']}/bin/gfortran"
     conf_dict['jar']="${dict['openjdk']}/bin/jar"
@@ -284,6 +289,7 @@ main() {
     conf_dict['javac']="${dict['openjdk']}/bin/javac"
     conf_dict['r_shell']="${dict['bash']}/bin/bash"
     conf_dict['sed']="${dict['sed']}/bin/sed"
+    # Alternatively, can use 'bison -y' for YACC.
     conf_dict['yacc']="${dict['bison']}/bin/yacc"
     koopa_assert_is_installed \
         "${conf_dict['ar']}" \
@@ -380,14 +386,12 @@ main() {
         conf_args+=('--without-aqua')
         export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
     else
-        # Ensure that OpenMP is enabled.
+        # Ensure that OpenMP is enabled. Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS'
+        # (but not 'FCFLAGS') get defined in Makeconf' file.
         # https://stackoverflow.com/a/12307488/3911732
-        # NOTE Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS' getting picked up in
-        # 'Makeconf' file currently.
         conf_args+=(
             'SHLIB_OPENMP_CFLAGS=-fopenmp'
             'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
-            # > 'SHLIB_OPENMP_FCFLAGS=-fopenmp'
             'SHLIB_OPENMP_FFLAGS=-fopenmp'
         )
     fi
