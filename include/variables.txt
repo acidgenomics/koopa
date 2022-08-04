@@ -1,8 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-08-04"
-koopa-github-url="https://github.com/acidgenomics/koopa"
+koopa-git-url="https://github.com/acidgenomics/koopa.git"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
 
@@ -411,7 +410,7 @@ openssl3="3.0.5"
 oracle-instant-client="21.7.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.18"
+pandoc="2.19"
 
 # https://www.gnu.org/software/parallel/
 parallel="20220522"
