@@ -102,6 +102,9 @@ cairo="1.16.0"
 #     pipelines/latest/installation
 cellranger="7.0.0"
 
+# https://github.com/cheat/cheat/
+cheat="4.3.0"
+
 # https://github.com/plexus/chemacs2
 chemacs="d722459287566e8c91ae077bf3d65966ebece190"
 
@@ -750,7 +753,7 @@ ronn="0.7.3"
 # > ripgrep-all="0.9.6" # rga
 bat="0.21.0"
 broot="1.14.2" # br
-difftastic="0.31.0" # difft
+difftastic="0.32.0" # difft
 dog="0.1.0"
 du-dust="0.8.1"
 exa="0.10.1"
