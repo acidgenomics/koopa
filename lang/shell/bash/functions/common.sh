@@ -13215,8 +13215,23 @@ koopa_install_pcre2() {
 
 koopa_install_perl() {
     koopa_install_app \
+        --link-in-bin='cpan' \
         --link-in-bin='perl' \
+        --link-in-bin='perlbug' \
         --link-in-bin='perldoc' \
+        --link-in-bin='perlivp' \
+        --link-in-bin='perlthanks' \
+        --link-in-bin='piconv' \
+        --link-in-bin='pl2pm' \
+        --link-in-bin='pod2html' \
+        --link-in-bin='pod2man' \
+        --link-in-bin='pod2text' \
+        --link-in-bin='pod2usage' \
+        --link-in-bin='podchecker' \
+        --link-in-bin='prove' \
+        --link-in-bin='ptar' \
+        --link-in-bin='ptardiff' \
+        --link-in-bin='ptargrep' \
         --name='perl' \
         "$@"
 }
@@ -23715,8 +23730,23 @@ koopa_uninstall_pcre2() {
 koopa_uninstall_perl() {
     koopa_uninstall_app \
         --name='perl' \
+        --unlink-in-bin='cpan' \
         --unlink-in-bin='perl' \
+        --unlink-in-bin='perlbug' \
         --unlink-in-bin='perldoc' \
+        --unlink-in-bin='perlivp' \
+        --unlink-in-bin='perlthanks' \
+        --unlink-in-bin='piconv' \
+        --unlink-in-bin='pl2pm' \
+        --unlink-in-bin='pod2html' \
+        --unlink-in-bin='pod2man' \
+        --unlink-in-bin='pod2text' \
+        --unlink-in-bin='pod2usage' \
+        --unlink-in-bin='podchecker' \
+        --unlink-in-bin='prove' \
+        --unlink-in-bin='ptar' \
+        --unlink-in-bin='ptardiff' \
+        --unlink-in-bin='ptargrep' \
         "$@"
 }
 
