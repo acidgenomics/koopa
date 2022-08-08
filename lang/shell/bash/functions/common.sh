@@ -11874,6 +11874,13 @@ koopa_install_cairo() {
         "$@"
 }
 
+koopa_install_cheat() {
+    koopa_install_app \
+        --link-in-bin='cheat' \
+        --name='cheat' \
+        "$@"
+}
+
 koopa_install_chemacs() {
     koopa_install_app \
         --name='chemacs' \
@@ -22649,6 +22656,13 @@ koopa_uninstall_ca_certificates() {
 koopa_uninstall_cairo() {
     koopa_uninstall_app \
         --name='cairo' \
+        "$@"
+}
+
+koopa_uninstall_cheat() {
+    koopa_uninstall_app \
+        --name='cheat' \
+        --unlink-in-bin='cheat' \
         "$@"
 }
 
