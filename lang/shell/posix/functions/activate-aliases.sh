@@ -3,7 +3,7 @@
 koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-08-03.
+    # @note Updated 2022-08-09.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -26,7 +26,8 @@ koopa_activate_aliases() {
     alias e='exit'
     alias emacs-vanilla='koopa_alias_emacs_vanilla'
     alias emacs='koopa_alias_emacs'
-    alias fd='fd --case-sensitive --hidden --no-ignore'
+    # Consider including '--hidden'.
+    alias fd='fd --case-sensitive --no-ignore'
     alias fvim='vim "$(fzf)"'
     alias glances='koopa_alias_glances'
     alias h='history'
@@ -49,8 +50,8 @@ koopa_activate_aliases() {
     alias python='koopa_alias_python'
     alias q='exit'
     alias rbenv='koopa_alias_rbenv'
-    # Add '--binary' here to make rg behave like 'grep -r'.
-    alias rg='rg --case-sensitive --hidden --no-ignore'
+    # Add '--binary' and '--hidden' here to make rg behave like 'grep -r'.
+    alias rg='rg --case-sensitive --no-ignore'
     alias ronn='ronn --roff'
     alias sha256='koopa_alias_sha256'
     alias spacemacs='koopa_alias_spacemacs'
