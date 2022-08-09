@@ -15,7 +15,7 @@ main() {
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app[cmake]}" ]] || return 1
     declare -A dict=(
         [name]='zstd'
         [prefix]="${INSTALL_PREFIX:?}"
