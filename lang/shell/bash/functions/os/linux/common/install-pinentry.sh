@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_install_gnutls() {
+koopa_linux_install_pinentry() {
     koopa_install_app \
         --installer='gnupg-gcrypt' \
-        --name='gnutls' \
+        --name='pinentry' \
+        --platform='linux' \
         "$@"
 }

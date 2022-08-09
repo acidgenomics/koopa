@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME ARM support currently requires LLVM. Refer to Homebrew recipe
+# NOTE ARM support currently requires LLVM. Refer to Homebrew recipe
 # for details.
 #
 # Details regarding ARM build for stack 2.7.5:
@@ -12,24 +12,21 @@
 # References:
 #   https://downloads.haskell.org/~ghc/8.10.7/docs/html/users_guide/8.10.7-notes.html
 #   https://gitlab.haskell.org/ghc/ghc/-/issues/20559
-#
-# FIXME Rework to use the source URL instead:
-# FIXME This will require cabal-install and ghc to build.
-# FIXME Refer to Homebrew recipe for details.
-# https://github.com/commercialhaskell/stack/archive/v2.7.5.tar.gz
 
-# FIXME Consider using cabal, which appears to support ARM.
-# https://www.haskell.org/cabal/
-# https://www.reddit.com/r/haskell/comments/tqzxy1/now_that_stackage_supports_ghc_92_is_it_easy_to/
-# https://stackoverflow.com/questions/30913145/what-is-the-difference-between-cabal-and-stack
+# NOTE Consider using cabal, which appears to support ARM.
+# - https://www.haskell.org/cabal/
+# - https://www.reddit.com/r/haskell/comments/tqzxy1/
+#     now_that_stackage_supports_ghc_92_is_it_easy_to/
+# - https://stackoverflow.com/questions/30913145/
+#     what-is-the-difference-between-cabal-and-stack
 
-# FIXME GHC binary links are here:
+# NOTE GHC binary links (including ARM) are here:
 # https://downloads.haskell.org/~ghc/9.2.3/
 
 main() {
     # """
     # Install Haskell Stack.
-    # @note Updated 2022-07-25.
+    # @note Updated 2022-08-09.
     #
     # @section Required system dependencies:
     #
@@ -90,16 +87,6 @@ main() {
 ${dict[arch]}-bin"
     dict[url]="https://github.com/commercialhaskell/${dict[name]}/releases/\
 download/v${dict[version]}/${dict[file]}"
-    # Attempting to use alternative GHCup URL for ARM at the moment.
-    # FIXME This approach doesn't work. Rethink ARM support.
-    case "${dict[arch]}" in
-        'aarch64')
-            dict[file]="${dict[name]}-${dict[version]}-${dict[platform]}-\
-${dict[arch]}.tar.gz"
-            dict[url]="https://downloads.haskell.org/ghcup/unofficial-bindists\
-/stack/${dict[version]}/${dict[file]}"
-            ;;
-    esac
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_chmod 'u+x' "${dict[file]}"
     koopa_cp "${dict[file]}" "${app[stack]}"
