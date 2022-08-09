@@ -269,7 +269,7 @@ koopa_build_all_apps() {
         'julia-packages'
         'r-packages'
     )
-    koopa_cli_reinstall "${pkgs[@]}"
+    koopa_cli_install "${pkgs[@]}"
     koopa_push_all_apps
     return 0
 }
