@@ -1,29 +1,11 @@
 #!/usr/bin/env bash
 
-# NOTE Work on adding support for 'requirements.txt' input.
-# FIXME This needs to handle man1 links when applicable.
-# FIXME Is there a way to get recipe-specific bins to link out of libexec
-# into bin here?
-# FIXME Need to get the realpath of Python, so pyvenv.cfg shows better path.
-
-# FIXME Alternatively, just consider excluding these from linking out of
-# libexec into main bin:
-# - Activate.ps1
-# - activate
-# - activate.csh
-# - activate.fish
-# - pip
-# - pip3
-# - pip3.10
-# - python
-# - python3
-# - python3.10
-# - wheel
-
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2022-08-03.
+    # @note Updated 2022-08-09.
+    #
+    # In the future, consider adding support for 'requirements.txt' input.
     #
     # @seealso
     # - https://docs.python.org/3/library/venv.html
@@ -130,8 +112,15 @@ ${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
     if [[ "${dict[pip]}" -eq 1 ]]
     then
-        case "${dict[py_maj_min_ver]}" in
-            '3.10')
+        case "${dict[py_version]}" in
+            '3.10.6')
+                # 2022-08-09.
+                dict[pip_version]='22.2.2'
+                dict[setuptools_version]='63.4.2'
+                dict[wheel_version]='0.37.1'
+                ;;
+            '3.10.5' | \
+            '3.10.'*)
                 dict[pip_version]='22.1.2'
                 dict[setuptools_version]='63.1.0'
                 dict[wheel_version]='0.37.1'

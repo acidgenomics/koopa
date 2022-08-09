@@ -3,36 +3,40 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-06-15.
+    # @note Updated 2022-08-09.
     # """
-    local bin_name bin_names dict
+    local app bin_name bin_names dict
     koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [cut]="$(koopa_locate_cut)"
+        [python]="$(koopa_locate_python)"
+    )
+    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app[python]}" ]] || return 1
     declare -A dict=(
         [name]="${INSTALL_NAME:?}"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[libexec]="${dict[prefix]}/libexec"
-    case "${dict[name]}" in
-        'azure-cli')
-            bin_names=('az')
-            ;;
-        'pygments')
-            bin_names=('pygmentize')
-            ;;
-        'pytaglib')
-            bin_names=('pyprinttags')
-            ;;
-        'ranger-fm')
-            bin_names=('ranger')
-            ;;
-        *)
-            bin_names=("${dict[name]}")
-            ;;
-    esac
+    dict[snake_name]="$(koopa_snake_case_simple "${dict[name]}")"
+    dict[py_version]="$(koopa_get_version "${app[python]}")"
+    dict[py_maj_min_ver]="$(koopa_major_minor_version "${dict[py_version]}")"
     koopa_python_create_venv \
         --prefix="${dict[libexec]}" \
         "${dict[name]}==${dict[version]}"
+    dict[record_file]="${dict[libexec]}/lib/python${dict[py_maj_min_ver]}/\
+site-packages/${dict[snake_name]}-${dict[version]}.dist-info/RECORD"
+    koopa_assert_is_file "${dict[record_file]}"
+    readarray -t bin_names <<< "$( \
+        koopa_grep \
+            --file="${dict[record_file]}" \
+            --pattern='^\.\./\.\./\.\./bin/' \
+            --regex \
+        | "${app[cut]}" -d ',' -f '1' \
+        | "${app[cut]}" -d '/' -f '5' \
+    )"
+    koopa_assert_is_array_non_empty "${bin_names[@]:-}"
     for bin_name in "${bin_names[@]}"
     do
         koopa_ln \
