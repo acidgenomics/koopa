@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
+# NOTE Consider building GnuPG with gnutls and sqlite3.
+
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-07-25.
+    # @note Updated 2022-08-09.
     # """
     local app conf_args dict
+    koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'autoconf' 'automake' 'pkg-config'
-    # FIXME Rework this approach to activate 'dict[prefix]' instead.
-    # FIXME This involves reworking our 'koopa_activate_prefix' and
-    # 'koopa_activate_opt_prefix' approach to also include pkg_config
-    # by default...
-    koopa_activate_opt_prefix 'gnupg'
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'
@@ -22,14 +20,86 @@ main() {
         [check_key]=1
         [compress_ext]='bz2'
         [gcrypt_url]="$(koopa_gcrypt_url)"
-        [import_gpg_keys]="${INSTALL_IMPORT_GPG_KEYS:-1}"
+        [import_gpg_keys]="${INSTALL_IMPORT_GPG_KEYS:-0}"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    conf_args=(
+        # > '--enable-maintainer-mode'
+        "--prefix=${dict[prefix]}"
+        '--disable-dependency-tracking'
+    )
+    case "${dict[name]}" in
+        'libassuan' | \
+        'libgcrypt' | \
+        'libksba')
+            koopa_activate_opt_prefix 'libgpg-error'
+            dict[libgpg_error]="$(koopa_app_prefix 'libgpg-error')"
+            conf_args+=(
+                "--with-libgpg-error-prefix=${dict[libgpg_error]}"
+            )
+            ;;
+        'gnutls')
+            koopa_activate_opt_prefix \
+                'gmp' \
+                'libtasn1' \
+                'libunistring' \
+                'nettle'
+            conf_args+=('--without-p11-kit')
+            ;;
+        'pinentry')
+            koopa_activate_opt_prefix 'fltk' 'ncurses'
+            ;;
+        'gnupg')
+            koopa_activate_opt_prefix \
+                'zlib' \
+                'bzip2' \
+                'readline' \
+                'nettle' \
+                'libtasn1' \
+                'gnutls' \
+                'sqlite' \
+                'libgpg-error' \
+                'libgcrypt' \
+                'libassuan' \
+                'libksba' \
+                'npth'
+            dict[bzip2]="$(koopa_app_prefix 'bzip2')"
+            dict[libassuan]="$(koopa_app_prefix 'libassuan')"
+            dict[libgcrypt]="$(koopa_app_prefix 'libgcrypt')"
+            dict[libgpg_error]="$(koopa_app_prefix 'libgpg-error')"
+            dict[libksba]="$(koopa_app_prefix 'libksba')"
+            dict[npth]="$(koopa_app_prefix 'npth')"
+            dict[readline]="$(koopa_app_prefix 'readline')"
+            dict[zlib]="$(koopa_app_prefix 'zlib')"
+            conf_args+=(
+                # > '--disable-doc'
+                '--enable-gnutls'
+                "--with-bzip2=${dict[bzip2]}"
+                "--with-libassuan-prefix=${dict[libassuan]}"
+                "--with-libgcrypt-prefix=${dict[libgcrypt]}"
+                "--with-libgpg-error-prefix=${dict[libgpg_error]}"
+                "--with-libksba-prefix=${dict[libksba]}"
+                "--with-npth-prefix=${dict[npth]}"
+                "--with-readline=${dict[readline]}"
+                "--with-zlib=${dict[zlib]}"
+            )
+            if koopa_is_linux
+            then
+                koopa_activate_opt_prefix 'pinentry'
+                dict[pinentry]="$(koopa_app_prefix 'pinentry')"
+                # FIXME Do we need to point to the pinentry binary here?
+                conf_args+=("--with-pinentry-pgm=${dict[pintentry]}")
+            fi
+            ;;
+    esac
     dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
     case "${dict[name]}" in
+        'libgpg-error')
+            dict[import_gpg_keys]=1
+            ;;
         'dirmngr' | \
         'npth')
             # nPth uses expired 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' key.
@@ -79,32 +149,6 @@ main() {
     fi
     koopa_extract "${dict[tar_file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    conf_args=(
-        # > '--enable-maintainer-mode'
-        "--prefix=${dict[prefix]}"
-        '--disable-dependency-tracking'
-        "$@"
-    )
-    case "${dict[name]}" in
-        'libassuan' | \
-        'libgcrypt' | \
-        'libksba')
-            conf_args+=(
-                "--with-libgpg-error-prefix=${dict[prefix]}"
-            )
-            ;;
-        'gnupg')
-            conf_args+=(
-                # > '--disable-doc'
-                "--with-ksba-prefix=${dict[prefix]}"
-                "--with-libassuan-prefix=${dict[prefix]}"
-                "--with-libgcrypt-prefix=${dict[prefix]}"
-                "--with-libgpg-error-prefix=${dict[prefix]}"
-                "--with-libksba-prefix=${dict[prefix]}"
-                "--with-npth-prefix=${dict[prefix]}"
-            )
-            ;;
-    esac
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
