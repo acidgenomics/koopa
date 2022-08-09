@@ -61,6 +61,7 @@ koopa_build_all_apps() {
         'pcre'
         'pcre2'
         'expat'
+        'gdbm'
         'python'
         'xorg-xorgproto'
         'xorg-xcb-proto'
