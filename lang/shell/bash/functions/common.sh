@@ -3160,6 +3160,7 @@ koopa_build_all_apps() {
         'bzip2'
         'pcre'
         'pcre2'
+        'expat'
         'python'
         'xorg-xorgproto'
         'xorg-xcb-proto'
