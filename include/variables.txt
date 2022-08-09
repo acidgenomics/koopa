@@ -356,9 +356,6 @@ mamba="0.25.0"
 
 man-db="2.10.2"
 
-# https://github.com/mesonbuild/meson/tags
-meson="0.63.0"
-
 # http://www.multiprecision.org/mpc/
 mpc="1.2.1"
 
@@ -380,9 +377,6 @@ nettle="3.6"
 
 # https://nim-lang.org/
 nim="1.6.6"
-
-# https://github.com/ninja-build/ninja/tags
-ninja="1.10.2.3"
 
 # https://nodejs.org/en/download/
 node="16.16.0" # LTS
@@ -445,9 +439,6 @@ pth="2.0.7"
 # https://github.com/pyenv/pyenv
 pyenv="2.2.5"
 
-# https://pygments.org/
-pygments="2.12.0"
-
 # https://www.python.org/downloads/
 python="3.10.6"
 
@@ -490,9 +481,6 @@ rust="1.62.1"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
-
-# https://scons.org/
-scons="4.3.0"
 
 # https://www.gnu.org/software/screen/
 screen="4.8.0"
@@ -589,9 +577,6 @@ xz="5.2.5"
 
 # https://github.com/mikefarah/yq/
 yq="4.27.2"
-
-# https://github.com/yt-dlp/yt-dlp/
-yt-dlp="2022.07.18"
 
 # https://www.zlib.net/
 zlib="1.2.12"
@@ -729,13 +714,18 @@ glances="3.2.7"
 ipython="8.4.0"
 isort="5.10.1"
 latch="1.12.3"
+meson="0.63.0"
+ninja="1.10.2.3"
 pipx="1.1.0"
 poetry="1.1.14"
 pyflakes="2.5.0"
+pygments="2.12.0"
 pylint="2.14.5"
 pytaglib="1.5.0"
 pytest="7.1.2"
 ranger-fm="1.9.3"
+scons="4.4.0"
+yt-dlp="2022.8.8"
 
 # Ruby packages (gems)
 # ==============================================================================
