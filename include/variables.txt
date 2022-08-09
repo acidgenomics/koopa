@@ -238,7 +238,7 @@ htop="3.2.1"
 icu4c="71.1"
 
 # https://imagemagick.org/
-imagemagick="7.1.0-43"
+imagemagick="7.1.0-45"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
