@@ -17832,7 +17832,8 @@ ${dict2[name]}/${dict2[version]}.tar.gz"
             cloudfront create-invalidation \
                 --distribution-id="${dict[distribution_id]}" \
                 --paths="${dict2[s3_rel_path]}" \
-                >/dev/null
+                >/dev/null \
+            || true
     done
     koopa_rm "${dict[tmp_dir]}"
     return 0
