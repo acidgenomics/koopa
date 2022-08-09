@@ -3115,25 +3115,26 @@ koopa_brew_upgrade_brews() {
 koopa_build_all_apps() {
     local pkgs
     koopa_assert_has_no_args "$#"
-    pkgs=(
+    pkgs=()
+    pkgs+=(
         'pkg-config'
         'make'
+    )
+    koopa_is_linux && pkgs+=('attr')
+    pkgs+=(
+        'patch'
         'xz'
         'm4'
         'gmp'
         'gperf'
-        'coreutils'
-        'patch'
-        'bash'
         'mpfr'
         'mpc'
         'gcc'
         'autoconf'
         'automake'
-        'bison'
         'libtool'
+        'bison'
         'bash'
-        'attr'
         'coreutils'
         'findutils'
         'sed'
@@ -3143,6 +3144,7 @@ koopa_build_all_apps() {
         'libxml2'
         'gettext'
         'zlib'
+        'ca-certificates'
         'openssl1'
         'openssl3'
         'cmake'
@@ -3272,9 +3274,9 @@ koopa_build_all_apps() {
         'sox'
         'stow'
         'tar'
-        'tokei'
+        'tokei' # FIXME Rust
         'tree'
-        'tuc'
+        'tuc' # FIXME Rust
         'udunits'
         'units'
         'wget'
@@ -3330,7 +3332,6 @@ koopa_build_all_apps() {
         'zellij'
         'zoxide'
         'julia'
-        'julia-packages'
         'ffq'
         'gget'
         'chemacs'
@@ -3348,14 +3349,12 @@ koopa_build_all_apps() {
             'snakemake'
         )
     fi
-    if koopa_is_linux
-    then
-        pkgs+=(
-            'lmod'
-        )
-    fi
-    pkgs+=('r-packages')
-    koopa_cli_reinstall "${pkgs[@]}"
+    koopa_is_linux && pkgs+=('lmod')
+    pkgs+=(
+        'julia-packages'
+        'r-packages'
+    )
+    koopa_cli_install "${pkgs[@]}"
     koopa_push_all_apps
     return 0
 }
