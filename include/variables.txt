@@ -498,7 +498,7 @@ shunit2="2.1.7"
 sox="14.4.2"
 
 # https://www.sqlite.org/download.html
-sqlite="3.38.5"
+sqlite="3.39.2"
 
 # https://github.com/ncbi/sra-tools
 sra-tools="3.0.0"
