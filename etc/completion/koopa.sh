@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-08-08.
+    # Updated 2022-08-09.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -160,6 +160,7 @@ __koopa_complete() {
                         'glib'
                         'gmp'
                         'gnupg'
+                        'gnutls'
                         'go'
                         'google-cloud-sdk'
                         'gperf'
@@ -192,12 +193,16 @@ __koopa_complete() {
                         'lapack'
                         'latch'
                         'lesspipe'
+                        'libassuan'
                         'libedit'
                         'libevent'
                         'libffi'
+                        'libgcrypt'
                         'libgeotiff'
                         'libgit2'
+                        'libgpg-error'
                         'libjpeg-turbo'
+                        'libksba'
                         'libpipeline'
                         'libpng'
                         'libssh2'
@@ -230,6 +235,7 @@ __koopa_complete() {
                         'nim'
                         'ninja'
                         'node'
+                        'npth'
                         'oniguruma'
                         'openblas'
                         'openjdk'
@@ -341,6 +347,7 @@ __koopa_complete() {
                             'cloudbiolinux'
                             'docker-credential-pass'
                             'lmod'
+                            'pinentry'
                         )
                     fi
                     ;;
