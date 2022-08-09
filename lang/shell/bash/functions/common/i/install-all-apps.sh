@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME We need a way to check binary timestamps and update any outdated
-# packages with the same version...
-
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
@@ -114,13 +111,17 @@ koopa_install_all_apps() {
         'latch'
         'less'
         'lesspipe'
+        'libassuan'
         'libedit'
         'libevent'
         'libffi'
+        'libgcrypt'
         'libgeotiff'
         'libgit2'
+        'libgpg-error'
         'libidn'
         'libjpeg-turbo'
+        'libksba'
         'libpipeline'
         'libpng'
         'libssh2'
@@ -150,6 +151,7 @@ koopa_install_all_apps() {
         'nim'
         'ninja'
         'node'
+        'npth'
         'oniguruma'
         'openblas'
         'openjdk'
@@ -208,20 +210,20 @@ koopa_install_all_apps() {
         'vim'
         'wget'
         'which'
-        'xorg-xorgproto'
-        'xorg-xtrans'
         'xorg-libice'
         'xorg-libpthread-stubs'
         'xorg-libsm'
-        'xorg-libxau'
-        'xorg-libxdmcp'
-        'xorg-xcb-proto'
-        'xorg-libxcb'
         'xorg-libx11'
+        'xorg-libxau'
+        'xorg-libxcb'
+        'xorg-libxdmcp'
         'xorg-libxext'
-        'xorg-libxrender'
         'xorg-libxrandr'
+        'xorg-libxrender'
         'xorg-libxt'
+        'xorg-xcb-proto'
+        'xorg-xorgproto'
+        'xorg-xtrans'
         'xsv'
         'xxhash'
         'xz'
@@ -238,6 +240,7 @@ koopa_install_all_apps() {
             'aspera-connect'
             'docker-credential-pass'
             'lmod'
+            'pinentry'
         )
     fi
     koopa_cli_install --binary "${pkgs[@]}"
