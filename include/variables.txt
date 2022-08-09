@@ -452,7 +452,7 @@ pyenv="2.2.5"
 pygments="2.12.0"
 
 # https://www.python.org/downloads/
-python="3.10.5"
+python="3.10.6"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
