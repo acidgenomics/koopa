@@ -5,7 +5,7 @@
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-09.
     # """
     local pkgs
     koopa_assert_has_no_args "$#"
@@ -127,6 +127,14 @@ koopa_build_all_apps() {
         'fltk'
         'fribidi'
         'gdbm'
+        'libgpg-error'
+        'libgcrypt'
+        'libassuan'
+        'libksba'
+        'npth'
+    )
+    koopa_is_linux && pkgs+=('pinentry')
+    pkgs+=(
         'gnupg'
         'grep'
         'groff'

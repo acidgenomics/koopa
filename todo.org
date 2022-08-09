@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO We need to construct a SHA256 and/or timestamp management approach.
 ** TODO Create a JSON file that manages bin links per program.
     We can then look up these values during install and uninstall calls.
 ** TODO Add nmap install recipe.
