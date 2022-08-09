@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# NOTE Here is a bootstrap workaround for Bash 4+ on macOS:
+# > /opt/koopa/include/bootstrap.sh
+# > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
+
 __koopa_exit_trap() {
     # """
     # Kill all processes whose parent is this process.
@@ -160,7 +164,7 @@ __koopa_warn() {
 __koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2022-05-16.
+    # @note Updated 2022-08-09.
     #
     # @seealso
     # - shopt

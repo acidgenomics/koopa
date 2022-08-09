@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Work on finishing this.
+# NOTE Here is a bootstrap workaround for Bash 4+ on macOS:
+# > /opt/koopa/include/bootstrap.sh
+# > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
 
 koopa_build_all_apps() {
     # """
@@ -9,25 +11,27 @@ koopa_build_all_apps() {
     # """
     local pkgs
     koopa_assert_has_no_args "$#"
-    pkgs=(
+    pkgs=()
+    pkgs+=(
         'pkg-config'
         'make'
+    )
+    koopa_is_linux && pkgs+=('attr')
+    # FIXME Need to add 'attr' support for 'patch' on Linux.
+    pkgs+=(
+        'patch'
         'xz'
         'm4'
         'gmp'
         'gperf'
-        'coreutils'
-        'patch'
-        'bash'
         'mpfr'
         'mpc'
         'gcc'
         'autoconf'
         'automake'
-        'bison'
         'libtool'
+        'bison'
         'bash'
-        'attr'
         'coreutils'
         'findutils'
         'sed'
@@ -36,7 +40,10 @@ koopa_build_all_apps() {
         'readline'
         'libxml2'
         'gettext'
+        # NOTE Consider moving this up in priority.
         'zlib'
+        # FIXME Ensure this is added to install all apps.
+        'ca-certificates'
         'openssl1'
         'openssl3'
         'cmake'
@@ -46,6 +53,7 @@ koopa_build_all_apps() {
         'libffi'
         'libjpeg-turbo'
         'libpng'
+        # NOTE Consider moving this up, under zlib.
         'zstd'
         'libtiff'
         'openblas'
@@ -169,9 +177,9 @@ koopa_build_all_apps() {
         'sox'
         'stow'
         'tar'
-        'tokei'
+        'tokei' # FIXME Rust
         'tree'
-        'tuc'
+        'tuc' # FIXME Rust
         'udunits'
         'units'
         'wget'
@@ -237,7 +245,6 @@ koopa_build_all_apps() {
         'zoxide'
         # Install Julia packages.
         'julia'
-        'julia-packages'
         # Install conda packages.
         'ffq'
         'gget'
@@ -249,7 +256,6 @@ koopa_build_all_apps() {
     then
         pkgs+=(
             'anaconda'
-            # FIXME This is erroring due to '-lgmp' issue on Ubuntu.
             'haskell-stack'
             'hadolint'
             'pandoc'
@@ -258,17 +264,11 @@ koopa_build_all_apps() {
             'snakemake'
         )
     fi
-    # FIXME This step will currently fail due to DepMapAnalysis.
-    # Use this to resolve:
-    # > Rscript -e 'AcidDevTools::installFromGitHub("acidgenomics/r-koopa", branch = "develop")'
-    # > Rscript -e 'AcidDevTools::installFromGitHub("acidgenomics/r-depmapanalysis", branch = "develop")'
-    if koopa_is_linux
-    then
-        pkgs+=(
-            'lmod'
-        )
-    fi
-    pkgs+=('r-packages')
+    koopa_is_linux && pkgs+=('lmod')
+    pkgs+=(
+        'julia-packages'
+        'r-packages'
+    )
     koopa_cli_reinstall "${pkgs[@]}"
     koopa_push_all_apps
     return 0
