@@ -522,6 +522,14 @@ koopa_linux_install_lmod() {
         "$@"
 }
 
+koopa_linux_install_pinentry() {
+    koopa_install_app \
+        --installer='gnupg-gcrypt' \
+        --name='pinentry' \
+        --platform='linux' \
+        "$@"
+}
+
 koopa_linux_install_system_pihole() {
     koopa_update_app \
         --name='pihole' \
@@ -782,7 +790,13 @@ koopa_linux_uninstall_lmod() {
         --name='lmod' \
         --platform='linux' \
         "$@"
-    return 0
+}
+
+koopa_linux_uninstall_pinentry() {
+    koopa_uninstall_app \
+        --name='pinentry' \
+        --platform='linux' \
+        "$@"
 }
 
 koopa_linux_update_etc_profile_d() {

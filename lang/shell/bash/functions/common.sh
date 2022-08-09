@@ -11176,20 +11176,20 @@ koopa_install_all_apps() {
         'vim'
         'wget'
         'which'
+        'xorg-xorgproto'
+        'xorg-xtrans'
         'xorg-libice'
         'xorg-libpthread-stubs'
         'xorg-libsm'
-        'xorg-libx11'
         'xorg-libxau'
-        'xorg-libxcb'
         'xorg-libxdmcp'
-        'xorg-libxext'
-        'xorg-libxrandr'
-        'xorg-libxrender'
-        'xorg-libxt'
         'xorg-xcb-proto'
-        'xorg-xorgproto'
-        'xorg-xtrans'
+        'xorg-libxcb'
+        'xorg-libx11'
+        'xorg-libxext'
+        'xorg-libxrender'
+        'xorg-libxrandr'
+        'xorg-libxt'
         'xsv'
         'xxhash'
         'xz'
@@ -12389,19 +12389,15 @@ koopa_install_gmp() {
 
 koopa_install_gnupg() {
     koopa_install_app \
+        --installer='gnupg-gcrypt' \
         --name='gnupg' \
         "$@"
 }
 
 koopa_install_gnutls() {
     koopa_install_app \
-        --activate-opt='gmp' \
-        --activate-opt='libtasn1' \
-        --activate-opt='libunistring' \
-        --activate-opt='nettle' \
         --installer='gnupg-gcrypt' \
         --name='gnutls' \
-        -D '--without-p11-kit' \
         "$@"
 }
 
@@ -12822,6 +12818,13 @@ koopa_install_lesspipe() {
         "$@"
 }
 
+koopa_install_libassuan() {
+    koopa_install_app \
+        --installer='gnupg-gcrypt' \
+        --name='libassuan' \
+        "$@"
+}
+
 koopa_install_libedit() {
     koopa_install_app \
         --name='libedit' \
@@ -12840,6 +12843,13 @@ koopa_install_libffi() {
         "$@"
 }
 
+koopa_install_libgcrypt() {
+    koopa_install_app \
+        --installer='gnupg-gcrypt' \
+        --name='libgcrypt' \
+        "$@"
+}
+
 koopa_install_libgeotiff() {
     koopa_install_app \
         --name='libgeotiff' \
@@ -12849,6 +12859,13 @@ koopa_install_libgeotiff() {
 koopa_install_libgit2() {
     koopa_install_app \
         --name='libgit2' \
+        "$@"
+}
+
+koopa_install_libgpg_error() {
+    koopa_install_app \
+        --installer='gnupg-gcrypt' \
+        --name='libgpg-error' \
         "$@"
 }
 
@@ -12862,6 +12879,13 @@ koopa_install_libidn() {
 koopa_install_libjpeg_turbo() {
     koopa_install_app \
         --name='libjpeg-turbo' \
+        "$@"
+}
+
+koopa_install_libksba() {
+    koopa_install_app \
+        --installer='gnupg-gcrypt' \
+        --name='libksba' \
         "$@"
 }
 
@@ -13128,6 +13152,13 @@ koopa_install_node() {
         --link-in-bin='node' \
         --link-in-bin='npm' \
         --name='node' \
+        "$@"
+}
+
+koopa_install_npth() {
+    koopa_install_app \
+        --installer='gnupg-gcrypt' \
+        --name='npth' \
         "$@"
 }
 
@@ -23383,6 +23414,12 @@ koopa_uninstall_lesspipe() {
         "$@"
 }
 
+koopa_uninstall_libassuan() {
+    koopa_uninstall_app \
+        --name='libassuan' \
+        "$@"
+}
+
 koopa_uninstall_libedit() {
     koopa_uninstall_app \
         --name='libedit' \
@@ -23401,6 +23438,12 @@ koopa_uninstall_libffi() {
         "$@"
 }
 
+koopa_uninstall_libgcrypt() {
+    koopa_uninstall_app \
+        --name='libgcrypt' \
+        "$@"
+}
+
 koopa_uninstall_libgeotiff() {
     koopa_uninstall_app \
         --name='libgeotiff' \
@@ -23413,6 +23456,12 @@ koopa_uninstall_libgit2() {
         "$@"
 }
 
+koopa_uninstall_libgpg_error() {
+    koopa_uninstall_app \
+        --name='libgpg-error' \
+        "$@"
+}
+
 koopa_uninstall_libidn() {
     koopa_uninstall_app \
         --name='libidn' \
@@ -23422,6 +23471,12 @@ koopa_uninstall_libidn() {
 koopa_uninstall_libjpeg_turbo() {
     koopa_uninstall_app \
         --name='libjpeg-turbo' \
+        "$@"
+}
+
+koopa_uninstall_libksba() {
+    koopa_uninstall_app \
+        --name='libksba' \
         "$@"
 }
 
@@ -23644,6 +23699,12 @@ koopa_uninstall_node() {
         --name='node' \
         --unlink-in-bin='node' \
         --unlink-in-bin='npm' \
+        "$@"
+}
+
+koopa_uninstall_npth() {
+    koopa_uninstall_app \
+        --name='npth' \
         "$@"
 }
 

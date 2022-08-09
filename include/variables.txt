@@ -196,12 +196,6 @@ glib="2.72.3"
 # https://gmplib.org/
 gmp="6.2.1"
 
-# https://gnupg.org/download/index.html
-gnupg="2.3.7"
-
-# https://www.gnutls.org/
-gnutls="3.7.4"
-
 # https://golang.org/dl/
 go="1.18.5"
 
@@ -675,6 +669,21 @@ samtools="1.15.1" # 2022-04-07 bioconda
 snakemake="7.12.0" # 2022-07-29 bioconda
 star="2.7.10a" # 2022-01-15 bioconda
 visidata="2.8" # 2022-01-13 conda-forge
+
+# GnuPG packages
+# ==============================================================================
+
+# https://gnupg.org/download/index.html
+# https://www.gnutls.org/
+
+gnutls="3.7.7"
+gnupg="2.3.7"
+libgpg-error="1.45"
+libgcrypt="1.10.1"
+libksba="1.6.0"
+libassuan="2.5.5"
+npth="1.6"
+pinentry="1.2.0"
 
 # Go packages
 # ==============================================================================
