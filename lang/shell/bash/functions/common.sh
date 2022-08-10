@@ -3349,7 +3349,15 @@ koopa_build_all_apps() {
         )
     fi
     koopa_is_linux && pkgs+=('lmod')
-    koopa_cli_install "${pkgs[@]}"
+    local app pkg
+    declare -A app=(
+        [koopa]="$(koopa_locate_koopa)"
+    )
+    [[ -x "${app[koopa]}" ]] || return 1
+    for pkg in "${pkgs[@]}"
+    do
+        "${app[koopa]}" install "$pkg"
+    done
     koopa_push_all_apps
     return 0
 }
@@ -16239,6 +16247,10 @@ koopa_locate_kallisto() {
     koopa_locate_app \
         --app-name='kallisto' \
         --opt-name='kallisto'
+}
+
+koopa_locate_koopa() {
+    koopa_locate_app "$(koopa_koopa_prefix)/bin/koopa"
 }
 
 koopa_locate_ldd() {
