@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-08-09.
+    # @note Updated 2022-08-10.
     # """
     local app bin_name bin_names dict
     koopa_assert_has_no_args "$#"
@@ -19,14 +19,21 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     dict[libexec]="${dict[prefix]}/libexec"
-    dict[snake_name]="$(koopa_snake_case_simple "${dict[name]}")"
+    case "${dict[name]}" in
+        'scons')
+            dict[pkg_name]='SCons'
+            ;;
+        *)
+            dict[pkg_name]="$(koopa_snake_case_simple "${dict[name]}")"
+            ;;
+    esac
     dict[py_version]="$(koopa_get_version "${app[python]}")"
     dict[py_maj_min_ver]="$(koopa_major_minor_version "${dict[py_version]}")"
     koopa_python_create_venv \
         --prefix="${dict[libexec]}" \
         "${dict[name]}==${dict[version]}"
     dict[record_file]="${dict[libexec]}/lib/python${dict[py_maj_min_ver]}/\
-site-packages/${dict[snake_name]}-${dict[version]}.dist-info/RECORD"
+site-packages/${dict[pkg_name]}-${dict[version]}.dist-info/RECORD"
     koopa_assert_is_file "${dict[record_file]}"
     readarray -t bin_names <<< "$( \
         koopa_grep \
