@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-07-25.
+    # @note Updated 2022-08-10.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -100,8 +100,9 @@ __koopa_posix_header() {
                     koopa_activate_conda || return 1
                     ;;
             esac
+            # Previously included:
+            # > "$(koopa_xdg_local_home)/bin"
             koopa_add_to_path_start \
-                "$(koopa_xdg_local_home)/bin" \
                 "$(koopa_scripts_private_prefix)/bin" \
                 || return 1
             koopa_activate_aliases || return 1
