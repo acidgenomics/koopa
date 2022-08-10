@@ -104,11 +104,11 @@ koopa_r_configure_environ() {
         path_arr+=(
             '/Applications/quarto/bin'
             '/Applications/RStudio.app/Contents/MacOS'
-            '/Applications/RStudio.app/Contents/MacOS/quarto/bin'
-            '/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools'
+            # > '/Applications/RStudio.app/Contents/MacOS/quarto/bin'
+            # . '/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools'
             '/Library/TeX/texbin'
-            '/opt/X11/bin'
             '/usr/local/MacGPG2/bin'
+            '/opt/X11/bin'
         )
     fi
     # Set the 'PKG_CONFIG_PATH' string.
