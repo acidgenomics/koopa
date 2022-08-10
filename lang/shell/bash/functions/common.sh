@@ -15474,10 +15474,6 @@ koopa_link_in_opt() {
     __koopa_link_in_dir --prefix="$(koopa_opt_prefix)" "$@"
 }
 
-koopa_link_in_sbin() {
-    __koopa_link_in_dir --prefix="$(koopa_sbin_prefix)" "$@"
-}
-
 koopa_list_app_versions() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -24553,10 +24549,6 @@ koopa_unlink_in_opt() {
         --allow-missing \
         --prefix="$(koopa_opt_prefix)" \
         "$@"
-}
-
-koopa_unlink_in_sbin() {
-    __koopa_unlink_in_dir --prefix="$(koopa_sbin_prefix)" "$@"
 }
 
 koopa_update_app() {
