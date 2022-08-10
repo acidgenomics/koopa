@@ -424,8 +424,7 @@ koopa_activate_make_paths() {
     if [ -d "$make_prefix_1" ]
     then
         koopa_add_to_path_start \
-            "${make_prefix_1}/bin" \
-            "${make_prefix_1}/sbin"
+            "${make_prefix_1}/bin"
         koopa_add_to_manpath_start \
             "${make_prefix_1}/man" \
             "${make_prefix_1}/share/man"
@@ -433,8 +432,7 @@ koopa_activate_make_paths() {
     if [ "$make_prefix_2" != "$make_prefix_1" ] && [ -d "$make_prefix_2" ]
     then
         koopa_add_to_path_start \
-            "${make_prefix_2}/bin" \
-            "${make_prefix_2}/sbin"
+            "${make_prefix_2}/bin"
         koopa_add_to_manpath_start \
             "${make_prefix_2}/man" \
             "${make_prefix_2}/share/man"
