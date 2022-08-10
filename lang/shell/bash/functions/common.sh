@@ -3347,12 +3347,12 @@ koopa_build_all_apps() {
     then
         pkgs+=(
             'anaconda'
-            'hadolint'
             'haskell-stack'
-            'kallisto'
-            'pandoc'
-            'salmon'
-            'snakemake'
+            'hadolint' # deps: haskell-stack
+            'pandoc' # deps: haskell-stack
+            'kallisto' # deps: conda
+            'salmon' # deps: conda
+            'snakemake' # deps: conda
         )
     fi
     if koopa_is_linux
