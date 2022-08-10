@@ -95,7 +95,7 @@ main() {
                 koopa_activate_opt_prefix 'pinentry'
                 dict[pinentry]="$(koopa_app_prefix 'pinentry')"
                 # FIXME Do we need to point to the pinentry binary here?
-                conf_args+=("--with-pinentry-pgm=${dict[pintentry]}")
+                conf_args+=("--with-pinentry-pgm=${dict[pinentry]}")
             fi
             ;;
     esac
