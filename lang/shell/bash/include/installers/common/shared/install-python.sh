@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE It looks like Python includes '/usr/local' in '-I' and '-L' compilation
+# arguments by default. We should work on restricting this in a future build.
+
 # NOTE Consider including support for:
 # - libxcrypt
 # - mpdecimal
