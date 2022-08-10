@@ -3190,6 +3190,7 @@ koopa_build_all_apps() {
         'openjdk'
         'libssh2'
         'libgit2'
+        'jpeg'
         'imagemagick'
         'graphviz'
         'geos'
@@ -3244,7 +3245,6 @@ koopa_build_all_apps() {
         'gzip'
         'harfbuzz'
         'hyperfine'
-        'jpeg'
         'oniguruma'
         'jq'
         'less'
@@ -23349,7 +23349,7 @@ koopa_uninstall_icu4c() {
 koopa_uninstall_imagemagick() {
     koopa_uninstall_app \
         --name='imagemagick' \
-        --link-in-bin='magick' \
+        --unlink-in-bin='magick' \
         "$@"
 }
 
