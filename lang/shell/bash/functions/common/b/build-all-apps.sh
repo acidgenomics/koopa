@@ -242,6 +242,7 @@ koopa_build_all_apps() {
         # > 'dog' # deps: rust
         'du-dust' # deps: rust
         'exa' # deps: rust
+        'fd-find' # deps: rust
         'hyperfine' # deps: rust
         'mcfly' # deps: rust
         'mdcat' # deps: rust
