@@ -3270,8 +3270,9 @@ koopa_build_all_apps() {
         'xxhash'
         'rsync'
         'scons'
-        'serf'
-        'subversion'
+        'serf' # deps: scons
+        'ruby'
+        'subversion' # deps: ruby, serf
         'shellcheck'
         'shunit2'
         'sox'
@@ -3308,13 +3309,12 @@ koopa_build_all_apps() {
         'bash-language-server'
         'gtop'
         'prettier'
-        'ack'
-        'rename'
-        'ruby'
-        'bashcov'
-        'colorls'
-        'ronn'
-        'rust'
+        'ack' # deps: perl
+        'rename' # deps: perl
+        'bashcov' # deps: ruby
+        'colorls' # deps: ruby
+        'ronn' # deps: ruby
+        'rust' # deps: ruby
         'bat' # deps: rust
         'broot' # deps: rust
         'delta' # deps: rust
