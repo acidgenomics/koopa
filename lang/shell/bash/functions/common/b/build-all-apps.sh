@@ -221,7 +221,7 @@ koopa_build_all_apps() {
         'pygments'
         'ranger-fm'
         'yt-dlp'
-        # NOTE Move this up.
+        # NOTE Can consider using 'node-binary' here instead.
         'node'
         'bash-language-server' # deps: node
         'gtop' # deps: node
