@@ -2104,11 +2104,6 @@ koopa_rust_prefix() {
     return 0
 }
 
-koopa_sbin_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/sbin"
-    return 0
-}
-
 koopa_scripts_private_prefix() {
     koopa_print "$(koopa_config_prefix)/scripts-private"
     return 0
