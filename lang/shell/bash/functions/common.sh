@@ -3123,8 +3123,13 @@ koopa_build_all_apps() {
         [opt_prefix]="$(koopa_opt_prefix)"
     )
     pkgs=()
-    pkgs+=('pkg-config' 'make')
-    koopa_is_linux && pkgs+=('attr')
+    pkgs+=(
+        'pkg-config'
+        'make'
+    )
+    koopa_is_linux && pkgs+=(
+        'attr'
+    )
     pkgs+=(
         'patch'
         'xz'
@@ -3271,24 +3276,22 @@ koopa_build_all_apps() {
         'rsync'
         'scons'
         'serf' # deps: scons
-        'ruby'
+        'ruby' # deps: openssl3, zlib
         'subversion' # deps: ruby, serf
         'shellcheck'
         'shunit2'
         'sox'
         'stow'
         'tar'
-        'tokei' # FIXME Rust
         'tree'
-        'tuc' # FIXME Rust
         'udunits'
         'units'
         'wget'
         'which'
         'libgeotiff'
         'go'
-        'chezmoi'
-        'fzf'
+        'chezmoi' # deps: go
+        'fzf' # deps: go
         'aws-cli'
         'azure-cli'
         'google-cloud-sdk'
@@ -3306,9 +3309,9 @@ koopa_build_all_apps() {
         'ranger-fm'
         'yt-dlp'
         'node'
-        'bash-language-server'
-        'gtop'
-        'prettier'
+        'bash-language-server' # deps: node
+        'gtop' # deps: node
+        'prettier' # deps: node
         'ack' # deps: perl
         'rename' # deps: perl
         'bashcov' # deps: ruby
@@ -3329,6 +3332,7 @@ koopa_build_all_apps() {
         'starship' # deps: rust
         'tealdeer' # deps: rust
         'tokei' # deps: rust
+        'tuc' # deps: rust
         'xsv' # deps: rust
         'zellij' # deps: rust
         'zoxide' # deps: rust
@@ -3336,7 +3340,7 @@ koopa_build_all_apps() {
         'ffq' # deps: conda
         'gget' # deps: conda
         'chemacs' # deps: go
-        'dotfiles' # deps: chemacs
+        'dotfiles'
     )
     if ! koopa_is_aarch64
     then
