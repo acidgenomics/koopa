@@ -3347,7 +3347,6 @@ koopa_build_all_apps() {
     then
         pkgs+=(
             'anaconda'
-            'docker-credential-pass'
             'hadolint'
             'haskell-stack'
             'kallisto'
@@ -3366,6 +3365,7 @@ koopa_build_all_apps() {
         then
             pkgs+=(
                 'aspera-connect'
+                'docker-credential-pass'
             )
         fi
     fi
@@ -3378,7 +3378,6 @@ koopa_build_all_apps() {
         fi
         "${app[koopa]}" install "$pkg"
     done
-    koopa_push_all_apps
     return 0
 }
 
@@ -18226,7 +18225,6 @@ koopa_r_configure_environ() {
     then
         path_arr+=(
             '/Applications/quarto/bin'
-            '/Applications/RStudio.app/Contents/MacOS'
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
