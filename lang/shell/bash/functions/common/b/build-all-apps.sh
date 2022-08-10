@@ -261,7 +261,17 @@ koopa_build_all_apps() {
     # App package libraries aren't supported as binary downloads, so keep
     # this step disabled.
     # > pkgs+=('julia-packages' 'r-packages')
-    koopa_cli_install "${pkgs[@]}"
+    # FIXME This approach is problematic on macOS.
+    # > koopa_cli_install "${pkgs[@]}"
+    local app pkg
+    declare -A app=(
+        [koopa]="$(koopa_locate_koopa)"
+    )
+    [[ -x "${app[koopa]}" ]] || return 1
+    for pkg in "${pkgs[@]}"
+    do
+        "${app[koopa]}" install "$pkg"
+    done
     koopa_push_all_apps
     return 0
 }
