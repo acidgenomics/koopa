@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-07-24.
+    # @note Updated 2022-08-10.
     #
     # @section Package library location:
     #
@@ -94,10 +94,6 @@ koopa_r_configure_environ() {
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
     path_arr=()
-    if koopa_is_macos
-    then
-        path_arr+=('/Applications/RStudio.app/Contents/MacOS/pandoc')
-    fi
     path_arr+=(
         "${dict[koopa_prefix]}/bin"
         '/usr/bin'
@@ -105,7 +101,15 @@ koopa_r_configure_environ() {
     )
     if koopa_is_macos
     then
-        path_arr+=('/Library/TeX/texbin')
+        path_arr+=(
+            '/Applications/quarto/bin'
+            '/Applications/RStudio.app/Contents/MacOS'
+            '/Applications/RStudio.app/Contents/MacOS/quarto/bin'
+            '/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools'
+            '/Library/TeX/texbin'
+            '/opt/X11/bin'
+            '/usr/local/MacGPG2/bin'
+        )
     fi
     # Set the 'PKG_CONFIG_PATH' string.
     declare -A pkgconfig_arr
