@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Now hitting this Meson build error on macOS:
+# > Checking if "GCC size_t typedef is long long" compiles: NO
+
 main() {
     # """
     # Install glib.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-10.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
@@ -13,9 +16,9 @@ main() {
     local app meson_args dict
     koopa_activate_build_opt_prefix \
         'pkg-config' \
+        'python' \
         'meson' \
-        'ninja' \
-        'python'
+        'ninja'
     koopa_activate_opt_prefix \
         'zlib' \
         'gettext' \
