@@ -267,8 +267,6 @@ koopa_build_all_apps() {
     then
         pkgs+=(
             'anaconda'
-            # FIXME Consider renaming / reworking this recipe...helpers.
-            'docker-credential-pass'
             'hadolint'
             'haskell-stack'
             'kallisto'
@@ -287,6 +285,8 @@ koopa_build_all_apps() {
         then
             pkgs+=(
                 'aspera-connect'
+                # FIXME Consider renaming / reworking this recipe...helpers.
+                'docker-credential-pass'
             )
         fi
     fi
@@ -309,6 +309,7 @@ koopa_build_all_apps() {
         # after this step completes. Need to work this into the main
         # 'install_app' command.
     done
-    koopa_push_all_apps
+    # FIXME Enable this last step once our recipe works.
+    # > koopa_push_all_apps
     return 0
 }

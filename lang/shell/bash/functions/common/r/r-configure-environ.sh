@@ -103,7 +103,7 @@ koopa_r_configure_environ() {
     then
         path_arr+=(
             '/Applications/quarto/bin'
-            '/Applications/RStudio.app/Contents/MacOS'
+            # > '/Applications/RStudio.app/Contents/MacOS'
             # > '/Applications/RStudio.app/Contents/MacOS/quarto/bin'
             # . '/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools'
             '/Library/TeX/texbin'
