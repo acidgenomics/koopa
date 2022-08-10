@@ -11829,6 +11829,7 @@ koopa_install_bedtools() {
 
 koopa_install_binutils() {
     koopa_install_app \
+        --activate-build-opt='texinfo' \
         --installer='gnu-app' \
         --name='binutils' \
         "$@"
