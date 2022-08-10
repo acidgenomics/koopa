@@ -273,6 +273,9 @@ koopa_build_all_apps() {
     for pkg in "${pkgs[@]}"
     do
         "${app[koopa]}" install "$pkg"
+        # FIXME Consider asserting that the opt prefix isn't empty
+        # after this step completes. We can work this into the main
+        # 'install_app' command.
     done
     koopa_push_all_apps
     return 0
