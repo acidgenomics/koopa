@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE This currently takes a long time to install.
+
 main() {
     # """
     # Install Node.js.
