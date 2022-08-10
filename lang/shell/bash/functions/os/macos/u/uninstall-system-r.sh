@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-koopa_macos_uninstall_r_binary() {
+koopa_macos_uninstall_system_r() {
     koopa_uninstall_app \
         --name='r' \
         --platform='macos' \
         --system \
-        --uninstaller='r-binary' \
-        --unlink-in-bin='R' \
-        --unlink-in-bin='Rscript' \
+        --unlink-in-bin='R-system' \
+        --unlink-in-bin='Rscript-system' \
         "$@"
 }

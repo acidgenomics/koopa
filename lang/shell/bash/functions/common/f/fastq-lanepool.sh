@@ -70,6 +70,7 @@ koopa_fastq_lanepool() {
     fi
     dict[target_dir]="$(koopa_init_dir "${dict[target_dir]}")"
     basenames=()
+    # FIXME Consider improving the variable name here.
     for i in "${fastq_files[@]}"
     do
         basenames+=("$(koopa_basename "$i")")

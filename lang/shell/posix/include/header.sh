@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-07-08.
+    # @note Updated 2022-07-25.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -36,15 +36,20 @@ __koopa_posix_header() {
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
     # Ensure these are never set (e.g. inside RStudio terminal).
-    unset -v \
-        LD_LIBRARY_PATH \
-        PYTHONPATH
-    koopa_activate_path_helper || return 1
-    koopa_activate_make_paths || return 1
-    koopa_activate_prefix "$(koopa_koopa_prefix)" || return 1
+    # > unset -v \
+    # >     LD_LIBRARY_PATH \
+    # >     PYTHONPATH
+    if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
+    then
+        koopa_activate_path_helper || return 1
+        koopa_activate_make_paths || return 1
+    fi
+    koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
+    koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # > koopa_umask || return 1
+        koopa_export_koopa_cpu_count || return 1
         koopa_export_koopa_shell || return 1
         # Edge case for RStudio Server terminal to support dircolors correctly.
         [ -n "${SHELL:-}" ] && export SHELL
@@ -69,6 +74,7 @@ __koopa_posix_header() {
             koopa_export_gnupg || return 1
             koopa_export_history || return 1
             koopa_export_pager || return 1
+            koopa_activate_ca_certificates || return 1
             koopa_activate_color_mode || return 1
             koopa_activate_alacritty || return 1
             koopa_activate_bat || return 1
@@ -94,8 +100,10 @@ __koopa_posix_header() {
                     koopa_activate_conda || return 1
                     ;;
             esac
-            koopa_activate_prefix "$(koopa_xdg_local_home)" || return 1
-            koopa_activate_prefix "$(koopa_scripts_private_prefix)" || return 1
+            koopa_add_to_path_start \
+                "$(koopa_xdg_local_home)/bin" \
+                "$(koopa_scripts_private_prefix)/bin" \
+                || return 1
             koopa_activate_aliases || return 1
             if ! koopa_is_subshell
             then

@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-07-15.
+    # Updated 2022-08-09.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -62,7 +62,6 @@ __koopa_complete() {
                 'configure')
                     args=(
                         'chemacs'
-                        'chezmoi'
                         'dotfiles'
                         'julia'
                         'r'
@@ -95,6 +94,7 @@ __koopa_complete() {
                         'automake'
                         'aws-cli'
                         'azure-cli'
+                        'bamtools'
                         'bash'
                         'bash-language-server'
                         'bashcov'
@@ -102,13 +102,18 @@ __koopa_complete() {
                         'bc'
                         'bedtools'
                         'binutils'
+                        'bioawk'
                         'bison'
                         'black'
                         'boost'
+                        'bowtie2'
                         'bpytop'
                         'broot'
+                        'bustools'
                         'bzip2'
+                        'ca-certificates'
                         'cairo'
+                        'cheat'
                         'chemacs'
                         'chezmoi'
                         'cmake'
@@ -117,6 +122,7 @@ __koopa_complete() {
                         'coreutils'
                         'cpufetch'
                         'curl'
+                        'deeptools'
                         'delta'
                         'difftastic'
                         'dotfiles'
@@ -127,6 +133,7 @@ __koopa_complete() {
                         'exa'
                         'exiftool'
                         'expat'
+                        'fastqc'
                         'fd-find'
                         'ffmpeg'
                         'ffq'
@@ -145,6 +152,7 @@ __koopa_complete() {
                         'gdbm'
                         'geos'
                         'gettext'
+                        'gffutils'
                         'gget'
                         'ghostscript'
                         'git'
@@ -152,12 +160,14 @@ __koopa_complete() {
                         'glib'
                         'gmp'
                         'gnupg'
+                        'gnutls'
                         'go'
                         'google-cloud-sdk'
                         'gperf'
                         'graphviz'
                         'grep'
                         'groff'
+                        'gseapy'
                         'gsl'
                         'gtop'
                         'gzip'
@@ -165,6 +175,7 @@ __koopa_complete() {
                         'harfbuzz'
                         'haskell-stack'
                         'hdf5'
+                        'hisat2'
                         'htop'
                         'hyperfine'
                         'icu4c'
@@ -175,18 +186,23 @@ __koopa_complete() {
                         'jq'
                         'julia'
                         'julia-packages'
+                        'jupyterlab'
                         'kallisto'
                         'koopa'
                         'lame'
                         'lapack'
                         'latch'
                         'lesspipe'
+                        'libassuan'
                         'libedit'
                         'libevent'
                         'libffi'
+                        'libgcrypt'
                         'libgeotiff'
                         'libgit2'
+                        'libgpg-error'
                         'libjpeg-turbo'
+                        'libksba'
                         'libpipeline'
                         'libpng'
                         'libssh2'
@@ -200,7 +216,6 @@ __koopa_complete() {
                         'lua'
                         'luarocks'
                         'lz4'
-                        'lzma'
                         'lzo'
                         'm4'
                         'make'
@@ -211,14 +226,16 @@ __koopa_complete() {
                         'meson'
                         'mpc'
                         'mpfr'
+                        'multiqc'
                         'ncurses'
                         'neofetch'
                         'neovim'
                         'nettle'
+                        'nextflow'
                         'nim'
                         'ninja'
                         'node'
-                        # > 'node-binary'
+                        'npth'
                         'oniguruma'
                         'openblas'
                         'openjdk'
@@ -261,6 +278,7 @@ __koopa_complete() {
                         'ruby-packages'
                         'rust'
                         'salmon'
+                        'sambamba'
                         'samtools'
                         'scons'
                         'sed'
@@ -290,6 +308,7 @@ __koopa_complete() {
                         'user'
                         'utf8proc'
                         'vim'
+                        'visidata'
                         'wget'
                         'which'
                         'xorg-libice'
@@ -328,6 +347,7 @@ __koopa_complete() {
                             'cloudbiolinux'
                             'docker-credential-pass'
                             'lmod'
+                            'pinentry'
                         )
                     fi
                     ;;
@@ -360,6 +380,7 @@ __koopa_complete() {
                         'variables'
                         'version'
                         'which'
+                        'yq'
                     )
                     if koopa_is_macos
                     then
@@ -420,9 +441,10 @@ __koopa_complete() {
                                 if koopa_is_debian_like
                                 then
                                     args+=(
+                                        'builder-base'
                                         'docker'
-                                        'pandoc'
                                         'llvm'
+                                        'pandoc'
                                         'r'
                                     )
                                 elif koopa_is_fedora_like
@@ -437,7 +459,6 @@ __koopa_complete() {
                                     'defaults'
                                     'python'
                                     'r'
-                                    'r-gfortran'
                                     'r-openmp'
                                     'xcode-clt'
                                 )

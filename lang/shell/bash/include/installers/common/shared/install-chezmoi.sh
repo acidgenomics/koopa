@@ -3,7 +3,7 @@
 main() {
     # """
     # Install chezmoi.
-    # @note Updated 2022-06-14.
+    # @note Updated 2022-07-28.
     #
     # @seealso
     # - https://www.chezmoi.io/
@@ -15,9 +15,9 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'go'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        [go]="$(koopa_locate_go)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app[go]}" ]] || return 1
     declare -A dict=(
         [gopath]="$(koopa_init_dir 'go')"
         [name]='chezmoi'
@@ -30,12 +30,10 @@ refs/tags/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    koopa_mkdir "${dict[prefix]}/bin"
-    "${app[make]}" install \
-        GOPATH="${dict[gopath]}" \
-        GO_LDFLAGS="-X main.version=${dict[version]}" \
-        PREFIX="${dict[prefix]}"
+    export GOPATH="${dict[gopath]}"
+    dict[ldflags]="-X main.version=${dict[version]}"
+    "${app[go]}" build -ldflags "${dict[ldflags]}"
+    koopa_cp --target-directory="${dict[prefix]}/bin" 'chezmoi'
     koopa_chmod --recursive 'u+rw' "${dict[gopath]}"
-    koopa_configure_chezmoi
     return 0
 }

@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Need to link to CA certificates here.
+# FIXME These can be installed with OpenSSL.
+# --with-ca-path=DIRECTORY
+
 main() {
     # """
     # Install cURL.

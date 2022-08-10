@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Bash.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-03.
     #
     # @section Applying patches:
     #

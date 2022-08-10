@@ -39,7 +39,7 @@ main() {
         'libevent-devel'
         'libffi-devel'
         'libxml2-devel'
-        'lzma-devel'
+        # > 'lzma-devel'
         'make'
         'man'
         'mpc-devel'

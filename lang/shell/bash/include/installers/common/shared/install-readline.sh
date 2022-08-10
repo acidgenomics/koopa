@@ -3,7 +3,7 @@
 main() {
     # """
     # Install readline.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-08-02.
     #
     # Check linkage on Linux with:
     # ldd -r /opt/koopa/opt/readline/lib/libreadline.so
@@ -57,17 +57,8 @@ main() {
     make_args=('SHLIB_LIBS=-lncursesw')
     "${app[make]}" "${make_args[@]}" --jobs="${dict[jobs]}"
     "${app[make]}" "${make_args[@]}" install
-    # FIXME Need to make this a function.
-    if koopa_is_linux
-    then
-        app[ldd]="$(koopa_locate_ldd)"
-        [[ -x "${app[ldd]}" ]] || return 1
-        "${app[ldd]}" -r "${dict[prefix]}/lib/libreadline.so"
-    elif koopa_is_macos
-    then
-        app[otool]="$(koopa_locate_otool)"
-        [[ -x "${app[otool]}" ]] || return 1
-        "${app[otool]}" -L "${dict[prefix]}/lib/libreadline.dylib"
-    fi
+    koopa_check_shared_object \
+        --name='libreadline' \
+        --prefix="${dict[prefix]}/lib"
     return 0
 }

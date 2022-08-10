@@ -3,13 +3,14 @@
 koopa_r_koopa() {
     # """
     # Execute a function in koopa R package.
-    # @note Updated 2021-10-29.
+    # @note Updated 2022-08-03.
     # """
     local app code header_file fun pos rscript_args
     koopa_assert_has_args "$#"
     declare -A app=(
         [rscript]="$(koopa_locate_rscript)"
     )
+    [[ -x "${app[rscript]}" ]] || return 1
     rscript_args=()
     pos=()
     while (("$#"))

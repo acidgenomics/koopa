@@ -1,14 +1,26 @@
 #!/usr/bin/env bash
 
+# FIXME Rename, using 'koopa_activate_app' instead.
+# FIXME Consider using 'koopa_activate_prefix' as an alternative variant,
+# that we can use for tricky builds, such as GnuPG...
+# FIXME Need to generalize this as 'koopa_activate_prefix'.
 # FIXME Rework this to simply call on opt_prefix, but use activate_prefix
 # internally instead...
+# FIXME Also include any nested include, lib/lib64, as is the case for GCC.
+# FIXME Generalize this function so we can work on a specific prefix.
+# FIXME This will help improve the configuration of GnuPG, for example.
+
+# FIXME Also consider setting CFLAGS here.
+# https://libgit2.org/docs/guides/build-and-link/
+# > CFLAGS = $(shell pkg-config --cflags libgit2)
+
 
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-08-03.
     #
-    # Consider using pkg-config to manage CPPFLAGS and LDFLAGS:
+    # Consider using 'pkg-config' to manage 'CPPFLAGS' and 'LDFLAGS':
     # > pkg-config --libs PKG_CONFIG_NAME...
     # > pkg-config --cflags PKG_CONFIG_NAME...
     #
@@ -68,6 +80,7 @@ koopa_activate_opt_prefix() {
     LDLIBS="${LDLIBS:-}"
     for name in "$@"
     do
+        # FIXME Rework this using a dict approach.
         local current_ver expected_ver pkgconfig_dirs prefix
         prefix="${dict[opt_prefix]}/${name}"
         koopa_assert_is_dir "$prefix"
@@ -92,7 +105,8 @@ koopa_activate_opt_prefix() {
             koopa_alert "Activating '${prefix}'."
         fi
         # Set 'PATH' variable.
-        koopa_activate_prefix "$prefix"
+        # FIXME Rework this to just add to PATH start.
+        koopa_add_to_path_start "${prefix}/bin"
         # Set 'PKG_CONFIG_PATH' variable.
         readarray -t pkgconfig_dirs <<< "$( \
             koopa_find \
@@ -134,6 +148,8 @@ koopa_activate_opt_prefix() {
             ldlibs="$("${app[pkg_config]}" --libs-only-l "${pc_files[@]}")"
             [[ -n "$ldlibs" ]] && LDLIBS="${LDLIBS:-} ${ldlibs}"
         else
+            # FIXME Recursively search for lib/lib64 and include dirs.
+            # FIXME Set these here.
             # Set 'CPPFLAGS' variable.
             [[ -d "${prefix}/include" ]] && \
                 CPPFLAGS="${CPPFLAGS:-} -I${prefix}/include"
@@ -143,6 +159,7 @@ koopa_activate_opt_prefix() {
             [[ -d "${prefix}/lib64" ]] && \
                 LDFLAGS="${LDFLAGS:-} -L${prefix}/lib64"
         fi
+        # FIXME Always burn these in...
         koopa_add_rpath_to_ldflags \
             "${prefix}/lib" \
             "${prefix}/lib64"

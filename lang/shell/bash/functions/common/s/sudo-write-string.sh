@@ -3,7 +3,7 @@
 koopa_sudo_write_string() {
     # """
     # Write a string to disk using root user.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-07-29.
     #
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' > '${file}'"
@@ -54,6 +54,10 @@ koopa_sudo_write_string() {
     if [[ ! -d "${dict[parent_dir]}" ]]
     then
         koopa_mkdir --sudo "${dict[parent_dir]}"
+    fi
+    if [[ ! -f "${dict[file]}" ]]
+    then
+        koopa_touch --sudo "${dict[file]}"
     fi
     koopa_print "${dict[string]}" \
         | "${app[sudo]}" "${app[tee]}" "${dict[file]}" >/dev/null
