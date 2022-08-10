@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This didn't create symlink correctly on macOS...what's up?
+
 koopa_install_r() {
     local install_args
     install_args=('--name=r')

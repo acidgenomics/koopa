@@ -12,12 +12,15 @@ koopa_build_all_apps() {
     # > /opt/koopa/include/bootstrap.sh
     # > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
     # """
-    local app pkg pkgs
+    local app dict pkg pkgs
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [koopa]="$(koopa_locate_koopa)"
     )
     [[ -x "${app[koopa]}" ]] || return 1
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
     pkgs=()
     pkgs+=('pkg-config' 'make')
     koopa_is_linux && pkgs+=('attr')
@@ -105,6 +108,7 @@ koopa_build_all_apps() {
         'proj'
         'gdal'
         'fribidi'
+        'harfbuzz'
         'r'
         'conda'
         'apr'
@@ -150,8 +154,6 @@ koopa_build_all_apps() {
         'groff'
         'gsl'
         'gzip'
-        'harfbuzz'
-        'hyperfine'
         'oniguruma'
         'jq'
         'less'
@@ -188,7 +190,6 @@ koopa_build_all_apps() {
         # FIXME Need to finish out recipe here.
         # Install Go packages.
         'go'
-        'apptainer'
         'chezmoi'
         'fzf'
         # Install Cloud SDKs.
@@ -232,6 +233,7 @@ koopa_build_all_apps() {
         # > 'dog' # deps: rust
         'du-dust' # deps: rust
         'exa' # deps: rust
+        'hyperfine' # deps: rust
         'mcfly' # deps: rust
         'mdcat' # deps: rust
         'procs' # deps: rust
@@ -252,7 +254,6 @@ koopa_build_all_apps() {
     then
         pkgs+=(
             'anaconda'
-            'aspera-connect'
             # FIXME Consider renaming / reworking this recipe...helpers.
             'docker-credential-pass'
             'hadolint'
@@ -263,7 +264,19 @@ koopa_build_all_apps() {
             'snakemake'
         )
     fi
-    koopa_is_linux && pkgs+=('lmod')
+    if koopa_is_linux
+    then
+        pkgs+=(
+            'apptainer'
+            'lmod'
+        )
+        if ! koopa_is_aarch64
+        then
+            pkgs+=(
+                'aspera-connect'
+            )
+        fi
+    fi
     # App package libraries aren't supported as binary downloads, so keep
     # this step disabled.
     # > pkgs+=('julia-packages' 'r-packages')
@@ -271,6 +284,13 @@ koopa_build_all_apps() {
     # > koopa_cli_install "${pkgs[@]}"
     for pkg in "${pkgs[@]}"
     do
+        # FIXME Consider defining this as 'koopa_is_symlink'.
+        # FIXME Only do this if symlink exists.
+        if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
+            [[ -e "${dict[opt_prefix]}/${pkg}" ]]
+        then
+            continue
+        fi
         "${app[koopa]}" install "$pkg"
         # FIXME Consider asserting that the opt prefix isn't empty
         # after this step completes. We can work this into the main
