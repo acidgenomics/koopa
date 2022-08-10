@@ -142,6 +142,7 @@ koopa_build_all_apps() {
         # NOTE Consider moving these up in the install order.
         'libevent'
         'utf8proc'
+        # deps: libevent, utf8proc.
         'tmux'
         'htop'
         'boost'
