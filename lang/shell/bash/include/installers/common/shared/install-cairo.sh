@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Cairo.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-10.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
@@ -51,10 +51,25 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    # Consider adding support for:
+    # * '--enable-qt'
+    # * '--enable-xml'
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-dependency-tracking'
+        '--disable-valgrind'
+        '--enable-gobject'
+        '--enable-svg'
+        '--enable-tee'
+        '--enable-xcb'
+        '--enable-xlib'
+        '--enable-xlib-xcb'
+        '--enable-xlib-xrender'
     )
+    if koopa_is_macos
+    then
+        conf_args+=('--enable-quartz-image')
+    fi
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"

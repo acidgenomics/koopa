@@ -1,23 +1,19 @@
 #!/usr/bin/env bash
 
-# NOTE Here is a bootstrap workaround for Bash 4+ on macOS:
-# > /opt/koopa/include/bootstrap.sh
-# > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
-
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-08-09.
+    # @note Updated 2022-08-10.
+    #
+    # @section Bootstrap workaround for macOS:
+    # > /opt/koopa/include/bootstrap.sh
+    # > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
     # """
     local pkgs
     koopa_assert_has_no_args "$#"
     pkgs=()
-    pkgs+=(
-        'pkg-config'
-        'make'
-    )
+    pkgs+=('pkg-config' 'make')
     koopa_is_linux && pkgs+=('attr')
-    # FIXME Need to add 'attr' support for 'patch' on Linux.
     pkgs+=(
         'patch'
         'xz'
@@ -127,10 +123,6 @@ koopa_build_all_apps() {
         'fish'
         'zsh'
         'gawk'
-        # FIXME This doesn't currently work on Ubuntu Arm. Need to rethink.
-        'aspera-connect'
-        # FIXME Not yet supported for ARM.
-        'docker-credential-pass'
         'lame'
         'ffmpeg'
         'flac'
@@ -226,51 +218,49 @@ koopa_build_all_apps() {
         'bashcov'
         'colorls'
         'ronn'
-        # Install Rust packages.
         'rust'
-        'bat'
-        'broot'
-        'delta'
-        'difftastic'
-        # > 'dog'
-        'du-dust'
-        'exa'
-        'mcfly'
-        'mdcat'
-        'procs'
-        'ripgrep'
-        'starship'
-        'tealdeer'
-        'tokei'
-        'xsv'
-        'zellij'
-        'zoxide'
-        # Install Julia packages.
+        'bat' # deps: rust
+        'broot' # deps: rust
+        'delta' # deps: rust
+        'difftastic' # deps: rust
+        # > 'dog' # deps: rust
+        'du-dust' # deps: rust
+        'exa' # deps: rust
+        'mcfly' # deps: rust
+        'mdcat' # deps: rust
+        'procs' # deps: rust
+        'ripgrep' # deps: rust
+        'starship' # deps: rust
+        'tealdeer' # deps: rust
+        'tokei' # deps: rust
+        'xsv' # deps: rust
+        'zellij' # deps: rust
+        'zoxide' # deps: rust
         'julia'
-        # Install conda packages.
-        'ffq'
-        'gget'
-        # FIXME Reorganize this with user-specific installs at the end.
-        'chemacs'
-        'dotfiles'
+        'ffq' # deps: conda
+        'gget' # deps: conda
+        'chemacs' # deps: go
+        'dotfiles' # deps: chemacs
     )
     if ! koopa_is_aarch64
     then
         pkgs+=(
             'anaconda'
-            'haskell-stack'
+            'aspera-connect'
+            # FIXME Consider renaming / reworking this recipe...helpers.
+            'docker-credential-pass'
             'hadolint'
-            'pandoc'
+            'haskell-stack'
             'kallisto'
+            'pandoc'
             'salmon'
             'snakemake'
         )
     fi
     koopa_is_linux && pkgs+=('lmod')
-    pkgs+=(
-        'julia-packages'
-        'r-packages'
-    )
+    # App package libraries aren't supported as binary downloads, so keep
+    # this step disabled.
+    # > pkgs+=('julia-packages' 'r-packages')
     koopa_cli_install "${pkgs[@]}"
     koopa_push_all_apps
     return 0
