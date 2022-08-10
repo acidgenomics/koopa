@@ -192,9 +192,7 @@ koopa_build_all_apps() {
         'sox'
         'stow'
         'tar'
-        'tokei' # FIXME Rust
         'tree'
-        'tuc' # FIXME Rust
         'udunits'
         'units'
         'wget'
@@ -251,6 +249,7 @@ koopa_build_all_apps() {
         'starship' # deps: rust
         'tealdeer' # deps: rust
         'tokei' # deps: rust
+        'tuc' # deps: rust
         'xsv' # deps: rust
         'zellij' # deps: rust
         'zoxide' # deps: rust
