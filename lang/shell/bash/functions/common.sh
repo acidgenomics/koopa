@@ -18220,10 +18220,6 @@ koopa_r_configure_environ() {
         "R_LIBS_USER=\${R_LIBS_SITE}"
     )
     path_arr=()
-    if koopa_is_macos
-    then
-        path_arr+=('/Applications/RStudio.app/Contents/MacOS/pandoc')
-    fi
     path_arr+=(
         "${dict[koopa_prefix]}/bin"
         '/usr/bin'
@@ -18231,7 +18227,13 @@ koopa_r_configure_environ() {
     )
     if koopa_is_macos
     then
-        path_arr+=('/Library/TeX/texbin')
+        path_arr+=(
+            '/Library/TeX/texbin'
+            '/Applications/quarto/bin'
+            '/Applications/RStudio.app/Contents/MacOS'
+            '/Applications/RStudio.app/Contents/MacOS/quarto/bin'
+            '/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools'
+        )
     fi
     declare -A pkgconfig_arr
     keys=(
