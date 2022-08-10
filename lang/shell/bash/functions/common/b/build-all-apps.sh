@@ -172,6 +172,7 @@ koopa_build_all_apps() {
         'pytest'
         'xxhash'
         'rsync'
+        'scons'
         'serf'
         'subversion'
         'shellcheck'
@@ -209,8 +210,6 @@ koopa_build_all_apps() {
         'pyflakes'
         'pygments'
         'ranger-fm'
-        'serf'
-        'scons'
         'yt-dlp'
         # Install Node packages.
         'node'
