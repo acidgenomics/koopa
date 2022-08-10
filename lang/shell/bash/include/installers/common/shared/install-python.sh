@@ -98,6 +98,7 @@ ${dict[file]}"
         '--with-ensurepip'
         '--with-lto'
         "--with-openssl=${dict[openssl]}"
+        '--with-openssl-rpath=auto'
     )
     if koopa_is_macos
     then
