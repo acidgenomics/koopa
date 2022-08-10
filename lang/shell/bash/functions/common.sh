@@ -3113,8 +3113,12 @@ koopa_brew_upgrade_brews() {
 }
 
 koopa_build_all_apps() {
-    local pkgs
+    local app pkg pkgs
     koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [koopa]="$(koopa_locate_koopa)"
+    )
+    [[ -x "${app[koopa]}" ]] || return 1
     pkgs=()
     pkgs+=('pkg-config' 'make')
     koopa_is_linux && pkgs+=('attr')
@@ -3349,11 +3353,6 @@ koopa_build_all_apps() {
         )
     fi
     koopa_is_linux && pkgs+=('lmod')
-    local app pkg
-    declare -A app=(
-        [koopa]="$(koopa_locate_koopa)"
-    )
-    [[ -x "${app[koopa]}" ]] || return 1
     for pkg in "${pkgs[@]}"
     do
         "${app[koopa]}" install "$pkg"

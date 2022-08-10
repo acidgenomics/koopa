@@ -5,12 +5,19 @@ koopa_build_all_apps() {
     # Build and install all koopa apps from source.
     # @note Updated 2022-08-10.
     #
+    # The approach calling 'koopa_cli_install' internally on pkgs array
+    # can run into weird compilation issues on macOS.
+    #
     # @section Bootstrap workaround for macOS:
     # > /opt/koopa/include/bootstrap.sh
     # > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
     # """
-    local pkgs
+    local app pkg pkgs
     koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [koopa]="$(koopa_locate_koopa)"
+    )
+    [[ -x "${app[koopa]}" ]] || return 1
     pkgs=()
     pkgs+=('pkg-config' 'make')
     koopa_is_linux && pkgs+=('attr')
@@ -261,13 +268,8 @@ koopa_build_all_apps() {
     # App package libraries aren't supported as binary downloads, so keep
     # this step disabled.
     # > pkgs+=('julia-packages' 'r-packages')
-    # FIXME This approach is problematic on macOS.
+    # This approach runs into compiler issues on macOS.
     # > koopa_cli_install "${pkgs[@]}"
-    local app pkg
-    declare -A app=(
-        [koopa]="$(koopa_locate_koopa)"
-    )
-    [[ -x "${app[koopa]}" ]] || return 1
     for pkg in "${pkgs[@]}"
     do
         "${app[koopa]}" install "$pkg"
