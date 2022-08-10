@@ -20,7 +20,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-07-25.
+    # @note Updated 2022-08-10.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -115,17 +115,6 @@ ${dict[file]}"
     "${app[make]}" install
     app[python]="${dict[prefix]}/bin/${dict[name]}${dict[maj_min_ver]}"
     koopa_assert_is_installed "${app[python]}"
-    # FIXME Need to rework this as a function.
-    if koopa_is_linux
-    then
-        app[ldd]="$(koopa_locate_ldd)"
-        [[ -x "${app[ldd]}" ]] || return 1
-        "${app[ldd]}" "${app[python]}"
-    elif koopa_is_macos
-    then
-        app[otool]="$(koopa_macos_locate_otool)"
-        [[ -x "${app[otool]}" ]] || return 1
-        "${app[otool]}" -L "${app[python]}"
-    fi
+    koopa_check_shared_object --file="${app[python]}"
     return 0
 }
