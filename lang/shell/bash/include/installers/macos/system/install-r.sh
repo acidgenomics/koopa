@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-08-02.
     #
     # @section Intel:
     #
@@ -40,7 +40,8 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     dict[maj_min_version]="$(koopa_major_minor_version "${dict[version]}")"
-    dict[prefix]="${dict[framework_prefix]}/Versions/${dict[maj_min_version]}"
+    dict[prefix]="${dict[framework_prefix]}/Versions/\
+${dict[maj_min_version]}/Resources"
     case "${dict[arch]}" in
         'aarch64')
             dict[arch2]='arm64'
@@ -59,6 +60,9 @@ base/${dict[pkg_file]}"
     koopa_download "${dict[url]}"
     "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
     koopa_assert_is_dir "${dict[prefix]}"
+    koopa_macos_install_system_r_openmp
+    koopa_install_system_tex
+    koopa_install_system_tex_packages
     app[r]="${dict[prefix]}/bin/R"
     koopa_assert_is_installed "${app[r]}"
     koopa_configure_r "${app[r]}"

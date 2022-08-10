@@ -29,7 +29,7 @@ koopa_macos_app_version() {
 }
 
 koopa_macos_brew_cask_outdated() {
-    local app keep_latest tmp_file x
+    local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
@@ -37,25 +37,26 @@ koopa_macos_brew_cask_outdated() {
     )
     [[ -x "${app[brew]}" ]] || return 1
     [[ -x "${app[cut]}" ]] || return 1
-    keep_latest=0
-    tmp_file="$(koopa_tmp_file)"
-    script -q "$tmp_file" \
+    declare -A dict
+    dict[keep_latest]=0
+    dict[tmp_file]="$(koopa_tmp_file)"
+    script -q "${dict[tmp_file]}" \
         "${app[brew]}" outdated --cask --greedy >/dev/null
-    if [[ "$keep_latest" -eq 1 ]]
+    if [[ "${dict[keep_latest]}" -eq 1 ]]
     then
-        x="$("${app[cut]}" -d ' ' -f '1' < "$tmp_file")"
+        dict[str]="$("${app[cut]}" -d ' ' -f '1' < "${dict[tmp_file]}")"
     else
-        x="$( \
+        dict[str]="$( \
             koopa_grep \
-                --file="$tmp_file" \
+                --file="${dict[tmp_file]}" \
                 --invert-match \
                 --pattern='(latest)' \
             | "${app[cut]}" -d ' ' -f '1' \
         )"
     fi
-    koopa_rm "$tmp_file"
-    [[ -n "$x" ]] || return 0
-    koopa_print "$x"
+    koopa_rm "${dict[tmp_file]}"
+    [[ -n "${dict[str]}" ]] || return 0
+    koopa_print "${dict[str]}"
     return 0
 }
 
@@ -547,10 +548,11 @@ koopa_macos_force_eject() {
     )
     [[ -x "${app[diskutil]}" ]] || return 1
     [[ -x "${app[sudo]}" ]] || return 1
-    name="${1:?}"
-    mount="/Volumes/${name}"
-    koopa_assert_is_dir "$mount"
-    "${app[sudo]}" "${app[diskutil]}" unmount force "$mount"
+    declare -A dict
+    dict[name]="${1:?}"
+    dict[mount]="/Volumes/${dict[name]}"
+    koopa_assert_is_dir "${dict[mount]}"
+    "${app[sudo]}" "${app[diskutil]}" unmount force "${dict[mount]}"
     return 0
 }
 
@@ -624,40 +626,39 @@ koopa_macos_install_system_defaults() {
         "$@"
 }
 
-koopa_macos_install_system_python_binary() {
+koopa_macos_install_system_python() {
     koopa_install_app \
-        --installer='python-binary' \
-        --link-in-bin='python3' \
         --name='python' \
+        --no-prefix-check \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
         --system \
         "$@"
 }
 
-koopa_macos_install_r_gfortran() {
+koopa_macos_install_system_r_gfortran() {
     koopa_install_app \
         --name='r-gfortran' \
+        --no-prefix-check \
         --platform='macos' \
         --prefix='/usr/local/gfortran' \
         --system \
         "$@"
 }
 
-koopa_macos_install_r_openmp() {
+koopa_macos_install_system_r_openmp() {
     koopa_install_app \
         --name='r-openmp' \
+        --no-prefix-check \
         --platform='macos' \
         --system \
         "$@"
 }
 
-koopa_macos_install_system_r_binary() {
+koopa_macos_install_system_r() {
     koopa_install_app \
-        --installer='r-binary' \
-        --link-in-bin='R' \
-        --link-in-bin='Rscript' \
         --name='r' \
+        --no-prefix-check \
         --platform='macos' \
         --prefix="$(koopa_macos_r_prefix)" \
         --system \
@@ -667,7 +668,9 @@ koopa_macos_install_system_r_binary() {
 koopa_macos_install_system_xcode_clt() {
     koopa_install_app \
         --name='xcode-clt' \
+        --no-prefix-check \
         --platform='macos' \
+        --prefix='/Library/Developer/CommandLineTools' \
         --system \
         "$@"
 }
@@ -677,18 +680,22 @@ koopa_macos_link_homebrew() {
     declare -A dict
     koopa_assert_has_no_args "$#"
     koopa_link_in_bin \
-        '/Applications/BBEdit.app/Contents/Helpers/bbedit_tool' \
-        'bbedit'
+        --name='bbedit' \
+        --source='/Applications/BBEdit.app/Contents/Helpers/bbedit_tool'
     koopa_link_in_bin \
-        '/Applications/Emacs.app/Contents/MacOS/Emacs' \
-        'emacs'
+        --name='emacs' \
+        --source='/Applications/Emacs.app/Contents/MacOS/Emacs'
     dict[r]="$(koopa_macos_r_prefix)"
     koopa_link_in_bin \
-        "${dict[r]}/bin/R" 'R' \
-        "${dict[r]}/bin/Rscript" 'Rscript'
+        --name='R' \
+        --source="${dict[r]}/bin/R"
     koopa_link_in_bin \
-        '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' \
-        'code'
+        --name='Rscript' \
+        --source="${dict[r]}/bin/Rscript"
+    koopa_link_in_bin \
+        --name='code' \
+        --source="/Applications/Visual Studio Code.app/Contents/Resources/\
+app/bin/code"
 }
 
 koopa_macos_list_launch_agents() {
@@ -923,7 +930,7 @@ koopa_macos_uninstall_brewfile_casks() {
     return 0
 }
 
-koopa_macos_uninstall_adobe_creative_cloud() {
+koopa_macos_uninstall_system_adobe_creative_cloud() {
     koopa_uninstall_app \
         --name='adobe-creative-cloud' \
         --platform='macos' \
@@ -931,7 +938,7 @@ koopa_macos_uninstall_adobe_creative_cloud() {
         "$@"
 }
 
-koopa_macos_uninstall_cisco_webex() {
+koopa_macos_uninstall_system_cisco_webex() {
     koopa_uninstall_app \
         --name='cisco-webex' \
         --platform='macos' \
@@ -939,7 +946,7 @@ koopa_macos_uninstall_cisco_webex() {
         "$@"
 }
 
-koopa_macos_uninstall_docker() {
+koopa_macos_uninstall_system_docker() {
     koopa_uninstall_app \
         --name='docker' \
         --platform='macos' \
@@ -947,7 +954,7 @@ koopa_macos_uninstall_docker() {
         "$@"
 }
 
-koopa_macos_uninstall_microsoft_onedrive() {
+koopa_macos_uninstall_system_microsoft_onedrive() {
     koopa_uninstall_app \
         --name='microsoft-onedrive' \
         --platform='macos' \
@@ -955,7 +962,7 @@ koopa_macos_uninstall_microsoft_onedrive() {
         "$@"
 }
 
-koopa_macos_uninstall_oracle_java() {
+koopa_macos_uninstall_system_oracle_java() {
     koopa_uninstall_app \
         --name='oracle-java' \
         --platform='macos' \
@@ -963,18 +970,15 @@ koopa_macos_uninstall_oracle_java() {
         "$@"
 }
 
-koopa_macos_uninstall_python_binary() {
+koopa_macos_uninstall_system_python() {
     koopa_uninstall_app \
         --name='python' \
         --platform='macos' \
-        --prefix="$(koopa_macos_python_prefix)" \
         --system \
-        --uninstaller='python-binary' \
-        --unlink-in-bin='python3' \
         "$@"
 }
 
-koopa_macos_uninstall_r_gfortran() {
+koopa_macos_uninstall_system_r_gfortran() {
     koopa_uninstall_app \
         --name='r-gfortran' \
         --platform='macos' \
@@ -983,7 +987,7 @@ koopa_macos_uninstall_r_gfortran() {
         "$@"
 }
 
-koopa_macos_uninstall_r_openmp() {
+koopa_macos_uninstall_system_r_openmp() {
     koopa_uninstall_app \
         --name='r-openmp' \
         --platform='macos' \
@@ -991,14 +995,13 @@ koopa_macos_uninstall_r_openmp() {
         "$@"
 }
 
-koopa_macos_uninstall_r_binary() {
+koopa_macos_uninstall_system_r() {
     koopa_uninstall_app \
         --name='r' \
         --platform='macos' \
         --system \
-        --uninstaller='r-binary' \
-        --unlink-in-bin='R' \
-        --unlink-in-bin='Rscript' \
+        --unlink-in-bin='R-system' \
+        --unlink-in-bin='Rscript-system' \
         "$@"
 }
 

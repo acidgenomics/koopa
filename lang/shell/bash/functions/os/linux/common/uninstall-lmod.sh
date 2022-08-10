@@ -5,5 +5,4 @@ koopa_linux_uninstall_lmod() {
         --name='lmod' \
         --platform='linux' \
         "$@"
-    return 0
 }

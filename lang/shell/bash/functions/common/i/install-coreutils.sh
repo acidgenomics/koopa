@@ -2,7 +2,12 @@
 
 koopa_install_coreutils() {
     local install_args
-    install_args=(
+    install_args=()
+    if koopa_is_linux
+    then
+        install_args+=('--activate-opt=attr')
+    fi
+    install_args+=(
         '--activate-build-opt=gperf'
         '--activate-opt=gmp'
         '--installer=gnu-app'
@@ -115,9 +120,5 @@ koopa_install_coreutils() {
         -D '--with-gmp'
         -D '--without-selinux'
     )
-    if koopa_is_linux
-    then
-        install_args+=('--activate-opt=attr')
-    fi
     koopa_install_app "${install_args[@]}" "$@"
 }

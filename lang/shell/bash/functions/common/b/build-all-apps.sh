@@ -3,29 +3,38 @@
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-10.
+    #
+    # The approach calling 'koopa_cli_install' internally on pkgs array
+    # can run into weird compilation issues on macOS.
+    #
+    # @section Bootstrap workaround for macOS:
+    # > /opt/koopa/include/bootstrap.sh
+    # > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
     # """
-    local pkgs
+    local app pkg pkgs
     koopa_assert_has_no_args "$#"
-    pkgs=(
-        'pkg-config'
-        'make'
+    declare -A app=(
+        [koopa]="$(koopa_locate_koopa)"
+    )
+    [[ -x "${app[koopa]}" ]] || return 1
+    pkgs=()
+    pkgs+=('pkg-config' 'make')
+    koopa_is_linux && pkgs+=('attr')
+    pkgs+=(
+        'patch'
         'xz'
         'm4'
         'gmp'
         'gperf'
-        'coreutils'
-        'patch'
-        'bash'
         'mpfr'
         'mpc'
         'gcc'
         'autoconf'
         'automake'
-        'bison'
         'libtool'
+        'bison'
         'bash'
-        'attr'
         'coreutils'
         'findutils'
         'sed'
@@ -34,7 +43,10 @@ koopa_build_all_apps() {
         'readline'
         'libxml2'
         'gettext'
+        # NOTE Consider moving this up in priority.
         'zlib'
+        # FIXME Ensure this is added to install all apps.
+        'ca-certificates'
         'openssl1'
         'openssl3'
         'cmake'
@@ -44,12 +56,16 @@ koopa_build_all_apps() {
         'libffi'
         'libjpeg-turbo'
         'libpng'
+        # NOTE Consider moving this up, under zlib.
         'zstd'
         'libtiff'
         'openblas'
         'bzip2'
         'pcre'
         'pcre2'
+        'expat'
+        'gdbm'
+        'sqlite'
         'python'
         'xorg-xorgproto'
         'xorg-xcb-proto'
@@ -80,6 +96,9 @@ koopa_build_all_apps() {
         'openjdk'
         'libssh2'
         'libgit2'
+        'jpeg'
+        'nettle'
+        'libzip'
         'imagemagick'
         'graphviz'
         'geos'
@@ -87,7 +106,6 @@ koopa_build_all_apps() {
         'gdal'
         'r'
         'conda'
-        'sqlite'
         'apr'
         'apr-util'
         'armadillo'
@@ -98,7 +116,6 @@ koopa_build_all_apps() {
         'exiftool'
         'libtasn1'
         'libunistring'
-        'nettle'
         'texinfo'
         'gnutls'
         'emacs'
@@ -115,16 +132,20 @@ koopa_build_all_apps() {
         'fish'
         'zsh'
         'gawk'
-        # FIXME This doesn't currently work on Ubuntu Arm. Need to rethink.
-        'aspera-connect'
-        # FIXME Not yet supported for ARM.
-        'docker-credential-pass'
         'lame'
         'ffmpeg'
         'flac'
         'fltk'
         'fribidi'
         'gdbm'
+        'libgpg-error'
+        'libgcrypt'
+        'libassuan'
+        'libksba'
+        'npth'
+    )
+    koopa_is_linux && pkgs+=('pinentry')
+    pkgs+=(
         'gnupg'
         'grep'
         'groff'
@@ -132,7 +153,6 @@ koopa_build_all_apps() {
         'gzip'
         'harfbuzz'
         'hyperfine'
-        'jpeg'
         'oniguruma'
         'jq'
         'less'
@@ -140,11 +160,7 @@ koopa_build_all_apps() {
         'libidn'
         'libpipeline'
         'libuv'
-        'libzip'
         'lz4'
-        # FIXME This doesn't work on ARM.
-        # Need to manually specify build type.
-        'lzma'
         'man-db'
         'neofetch'
         'nim'
@@ -162,9 +178,9 @@ koopa_build_all_apps() {
         'sox'
         'stow'
         'tar'
-        'tokei'
+        'tokei' # FIXME Rust
         'tree'
-        'tuc'
+        'tuc' # FIXME Rust
         'udunits'
         'units'
         'wget'
@@ -209,60 +225,58 @@ koopa_build_all_apps() {
         'bashcov'
         'colorls'
         'ronn'
-        # Install Rust packages.
         'rust'
-        'bat'
-        'broot'
-        'delta'
-        'difftastic'
-        # > 'dog'
-        'du-dust'
-        'exa'
-        'mcfly'
-        'mdcat'
-        'procs'
-        'ripgrep'
-        'starship'
-        'tealdeer'
-        'tokei'
-        'xsv'
-        'zellij'
-        'zoxide'
-        # Install Julia packages.
+        'bat' # deps: rust
+        'broot' # deps: rust
+        'delta' # deps: rust
+        'difftastic' # deps: rust
+        # > 'dog' # deps: rust
+        'du-dust' # deps: rust
+        'exa' # deps: rust
+        'mcfly' # deps: rust
+        'mdcat' # deps: rust
+        'procs' # deps: rust
+        'ripgrep' # deps: rust
+        'starship' # deps: rust
+        'tealdeer' # deps: rust
+        'tokei' # deps: rust
+        'xsv' # deps: rust
+        'zellij' # deps: rust
+        'zoxide' # deps: rust
         'julia'
-        'julia-packages'
-        # Install conda packages.
-        'ffq'
-        'gget'
-        # FIXME Reorganize this with user-specific installs at the end.
-        'chemacs'
-        'dotfiles'
+        'ffq' # deps: conda
+        'gget' # deps: conda
+        'chemacs' # deps: go
+        'dotfiles' # deps: chemacs
     )
     if ! koopa_is_aarch64
     then
         pkgs+=(
             'anaconda'
-            # FIXME This is erroring due to '-lgmp' issue on Ubuntu.
-            'haskell-stack'
+            'aspera-connect'
+            # FIXME Consider renaming / reworking this recipe...helpers.
+            'docker-credential-pass'
             'hadolint'
-            'pandoc'
+            'haskell-stack'
             'kallisto'
+            'pandoc'
             'salmon'
             'snakemake'
         )
     fi
-    # FIXME This step will currently fail due to DepMapAnalysis.
-    # Use this to resolve:
-    # > Rscript -e 'AcidDevTools::installFromGitHub("acidgenomics/r-koopa", branch = "develop")'
-    # > Rscript -e 'AcidDevTools::installFromGitHub("acidgenomics/r-depmapanalysis", branch = "develop")'
-    if koopa_is_linux
-    then
-        pkgs+=(
-            'lmod'
-        )
-    fi
-    pkgs+=('r-packages')
-    koopa_cli_reinstall "${pkgs[@]}"
+    koopa_is_linux && pkgs+=('lmod')
+    # App package libraries aren't supported as binary downloads, so keep
+    # this step disabled.
+    # > pkgs+=('julia-packages' 'r-packages')
+    # This approach runs into compiler issues on macOS.
+    # > koopa_cli_install "${pkgs[@]}"
+    for pkg in "${pkgs[@]}"
+    do
+        "${app[koopa]}" install "$pkg"
+        # FIXME Consider asserting that the opt prefix isn't empty
+        # after this step completes. We can work this into the main
+        # 'install_app' command.
+    done
     koopa_push_all_apps
     return 0
 }

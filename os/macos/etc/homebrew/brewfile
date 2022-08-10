@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-07-14.
+# Updated 2022-07-27.
 #
 # @section Cask reinstallation:
 #
@@ -46,7 +46,6 @@ tap "homebrew/cask-versions"
 # > cask "safari-technology-preview"
 # Virtualbox is useful but installs a lot of garbage into the system.
 # > cask "virtualbox"
-# > cask "webex"
 
 # Casks
 # ==============================================================================
@@ -126,7 +125,7 @@ cask "omnidisksweeper"
 cask "pacifist"
 cask "pycharm-ce"
 cask "quarto"
-cask "r"
+# > cask "r"
 cask "rstudio"
 cask "skype"
 cask "sublime-text"
@@ -139,6 +138,7 @@ cask "vanilla"
 cask "visual-studio-code"
 cask "vlc"
 cask "vscodium"
+cask "webex"
 cask "xld"
 cask "xquartz"
 cask "zoom"

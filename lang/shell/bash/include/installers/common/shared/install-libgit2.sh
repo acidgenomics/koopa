@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
+# NOTE 1.5.0 has OpenSSL header include linkage issues on Ubuntu 22.
+
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2022-04-28.
+    # @note Updated 2022-08-03.
     #
     # @seealso
+    # - https://libgit2.org/docs/guides/build-and-link/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libgit2.rb
+    # - https://github.com/libgit2/libgit2/blob/main/CMakeLists.txt
     # - https://github.com/libgit2/libgit2/issues/5079
     # """
     local app cmake_args dict
@@ -15,6 +19,8 @@ main() {
         'cmake' \
         'pkg-config'
     koopa_activate_opt_prefix \
+        'zlib' \
+        'pcre' \
         'openssl3' \
         'libssh2'
     declare -A app=(
@@ -25,6 +31,7 @@ main() {
         [jobs]="$(koopa_cpu_count)"
         [name]='libgit2'
         [prefix]="${INSTALL_PREFIX:?}"
+        [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[file]="v${dict[version]}.tar.gz"
@@ -33,12 +40,20 @@ archive/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    dict[openssl]="$(koopa_app_prefix 'openssl3')"
+    dict[pcre]="$(koopa_app_prefix 'pcre')"
+    dict[zlib]="$(koopa_app_prefix 'zlib')"
+    koopa_add_rpath_to_ldflags "${dict[openssl]}/lib"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        '-DBUILD_CLAR=NO'
-        '-DBUILD_EXAMPLES=YES'
-        '-DBUILD_SHARED_LIBS=ON'
+        '-DCMAKE_BUILD_TYPE=Release'
+        '-DBUILD_TESTS=OFF'
+        '-DUSE_BUNDLED_ZLIB=OFF'
         '-DUSE_SSH=YES'
+        "-DPCRE_INCLUDE_DIR=${dict[pcre]}/include"
+        "-DPCRE_LIBRARY=${dict[pcre]}/lib/libpcre.${dict[shared_ext]}"
+        "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
+        "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
     )
     "${app[cmake]}" \
         -S '.' \

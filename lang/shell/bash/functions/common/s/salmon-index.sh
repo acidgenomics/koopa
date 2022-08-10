@@ -3,7 +3,7 @@
 koopa_salmon_index() {
     # """
     # Generate salmon index.
-    # @note Updated 2022-03-25.
+    # @note Updated 2022-07-25.
     #
     # @section GENCODE:
     #
@@ -38,6 +38,7 @@ koopa_salmon_index() {
     [[ -x "${app[salmon]}" ]] || return 1
     declare -A dict=(
         [decoys]=1
+        [fasta_pattern]='\.fa(sta)?'
         [gencode]=0
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'.
         [genome_fasta_file]=''
@@ -102,6 +103,9 @@ koopa_salmon_index() {
     koopa_assert_is_set \
         '--output-dir' "${dict[output_dir]}" \
         '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
+    # Currently seeing that decoy-aware transcriptome indexing uses about 20 GB
+    # of RAM with Homo sapiens GRCh38 GENCODE 41.
+    [[ "${dict[decoys]}" -eq 1 ]] && dict[mem_gb_cutoff]=30
     if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
     then
         koopa_stop "salmon index requires ${dict[mem_gb_cutoff]} GB of RAM."
@@ -111,7 +115,7 @@ koopa_salmon_index() {
         koopa_realpath "${dict[transcriptome_fasta_file]}" \
     )"
     koopa_assert_is_matching_regex \
-        --pattern='\.fa(sta)?' \
+        --pattern="${dict[fasta_pattern]}" \
         --string="${dict[transcriptome_fasta_file]}"
     koopa_assert_is_not_dir "${dict[output_dir]}"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
@@ -136,10 +140,10 @@ koopa_salmon_index() {
         koopa_assert_is_file "${dict[genome_fasta_file]}"
         dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
         koopa_assert_is_matching_regex \
-            --pattern='\.fa(sta)?\.gz$' \
+            --pattern="${dict[fasta_pattern]}" \
             --string="${dict[genome_fasta_file]}"
         koopa_assert_is_matching_regex \
-            --pattern='\.fa(sta)?\.gz$' \
+            --pattern="${dict[fasta_pattern]}" \
             --string="${dict[transcriptome_fasta_file]}"
         dict[tmp_dir]="$(koopa_tmp_dir)"
         dict[decoys_file]="${dict[tmp_dir]}/decoys.txt"

@@ -1,13 +1,29 @@
 #!/usr/bin/env bash
 
-# NOTE Need to clean this up on macOS:
+# NOTE It looks like Python includes '/usr/local' in '-I' and '-L' compilation
+# arguments by default. We should work on restricting this in a future build.
+
+# NOTE Consider including support for:
+# - libxcrypt
+# - mpdecimal
+# - unzip
+
+# NOTE Consider cleaning this up on macOS:
 # clang: warning: argument unused during compilation:
 # '-fno-semantic-interposition' [-Wunused-command-line-argument]
+
+# NOTE Likely need to implement this to fix ncurses location on Linux:
+# > inreplace "configure",
+# >     'CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"',
+# >     "CPPFLAGS=\"$CPPFLAGS -I#{Formula["ncurses"].opt_include}\""
+
+# NOTE Now seeing this warning:
+# > warning: "_XOPEN_SOURCE" redefined
 
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-08-10.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -26,16 +42,32 @@ main() {
     # - https://stackoverflow.com/questions/43333207
     # - https://bugs.python.org/issue36659
     # """
-    local app dict
+    local app deps dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'zlib'
-    fi
-    koopa_activate_opt_prefix \
-        'libffi' \
+    deps=(
+        # zlib deps: none.
+        'zlib'
+        # bzip2 deps: none.
+        'bzip2'
+        # expat deps: none.
+        'expat'
+        # libffi deps: none.
+        'libffi'
+        # ncurses deps: none.
+        'ncurses'
+        # openssl3 deps: none.
         'openssl3'
+        # xz deps: none.
+        'xz'
+        # readline deps: ncurses.
+        'readline'
+        # gdbm deps: readline.
+        'gdbm'
+        # sqlite deps: readline.
+        'sqlite'
+    )
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -61,10 +93,23 @@ ${dict[file]}"
     koopa_cd "Python-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
+        '--enable-ipv6'
+        '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
         '--enable-shared'
+        '--with-dbmliborder=gdbm:ndbm'
+        '--with-ensurepip'
+        '--with-lto'
         "--with-openssl=${dict[openssl]}"
+        '--with-openssl-rpath=auto'
     )
+    if koopa_is_macos
+    then
+        conf_args+=(
+            '--disable-framework'
+            '--with-dtrace'
+        )
+    fi
     koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
     ./configure --help
     ./configure "${conf_args[@]}"
@@ -74,17 +119,6 @@ ${dict[file]}"
     "${app[make]}" install
     app[python]="${dict[prefix]}/bin/${dict[name]}${dict[maj_min_ver]}"
     koopa_assert_is_installed "${app[python]}"
-    # FIXME Need to rework this as a function.
-    if koopa_is_linux
-    then
-        app[ldd]="$(koopa_locate_ldd)"
-        [[ -x "${app[ldd]}" ]] || return 1
-        "${app[ldd]}" "${app[python]}"
-    elif koopa_is_macos
-    then
-        app[otool]="$(koopa_macos_locate_otool)"
-        [[ -x "${app[otool]}" ]] || return 1
-        "${app[otool]}" -L "${app[python]}"
-    fi
+    koopa_check_shared_object --file="${app[python]}"
     return 0
 }

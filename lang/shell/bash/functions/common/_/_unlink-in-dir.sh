@@ -3,11 +3,12 @@
 __koopa_unlink_in_dir() {
     # """
     # Unlink multiple symlinks in a directory.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-08-03.
     # """
-    local dict pos
+    local dict name names pos
     koopa_assert_has_args "$#"
     declare -A dict=(
+        [allow_missing]=0
         [prefix]=''
     )
     pos=()
@@ -22,6 +23,11 @@ __koopa_unlink_in_dir() {
             '--prefix')
                 dict[prefix]="${2:?}"
                 shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--allow-missing')
+                dict[allow_missing]=1
+                shift 1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
@@ -39,11 +45,22 @@ __koopa_unlink_in_dir() {
     koopa_assert_is_dir "${dict[prefix]}"
     dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     names=("$@")
-    files=()
-    for i in "${!names[@]}"
+    for name in "${names[@]}"
     do
-        files+=("${dict[prefix]}/${names[$i]}")
+        local file
+        file="${dict[prefix]}/${name}"
+        if [[ "${dict[allow_missing]}" -eq 1 ]]
+        then
+            if [[ -L "$file" ]]
+            then
+                koopa_alert "Unlinking '${file}'."
+                koopa_rm "$file"
+            fi
+        else
+            koopa_assert_is_symlink "$file"
+            koopa_alert "Unlinking '${file}'."
+            koopa_rm "$file"
+        fi
     done
-    koopa_rm "${files[@]}"
     return 0
 }

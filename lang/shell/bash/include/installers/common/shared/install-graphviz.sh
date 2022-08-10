@@ -1,9 +1,21 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for: expat, fontconfig, freetype2, openjdk,
+# tcl-tk, zlib, X11.
+#
+# > options:
+# >   fontconfig:    No (missing fontconfig-config)
+# >   freetype:      No (missing freetype-config)
+# >   glut:          No (missing GL/glut.h)
+# >   ann:           No (no ann.pc found)
+# >   gts:           No (gts library not available)
+# >   swig:          No (swig not available) (  )
+# >   qt:            No (qmake not found)
+
 main() {
     # """
     # Install graphviz.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-07-28.
     #
     # @seealso
     # - https://graphviz.org/
@@ -36,6 +48,7 @@ ${dict[name]}-releases/${dict[version]}/${dict[file]}"
         '--enable-shared'
         '--enable-static'
     )
+    koopa_mkdir "${dict[prefix]}/lib"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"

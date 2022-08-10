@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider just writing a string here, rather than linking to an
+# external file...
+
 koopa_linux_update_ldconfig() {
     # """
     # Update dynamic linker (LD) configuration.

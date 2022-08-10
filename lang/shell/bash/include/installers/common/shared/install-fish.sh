@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Fish shell.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-02.
     #
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
@@ -22,15 +22,9 @@ main() {
         [name]='fish'
         [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
+        [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    # FIXME Make this a function.
-    if koopa_is_macos
-    then
-        dict[shared_ext]='dylib'
-    else
-        dict[shared_ext]='so'
-    fi
     dict[ncurses]="$(koopa_realpath "${dict[opt_prefix]}/ncurses")"
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="https://github.com/${dict[name]}-shell/${dict[name]}-shell/\

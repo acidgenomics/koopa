@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for:
+# Consider adding support for:
 # - cairo
-# - glib
 # - gobject-introspection
 # - graphite2
 
 main() {
     # """
     # Install HarfBuzz.
-    # @note Updated 2022-04-19.
+    # @note Updated 2022-07-24.
     #
     # @seealso
     # - https://harfbuzz.github.io/building.html
@@ -20,8 +19,20 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'cmake' 'meson' 'ninja' 'pkg-config'
-    koopa_activate_opt_prefix 'freetype' 'icu4c'
+    koopa_activate_build_opt_prefix \
+        'pkg-config' \
+        'cmake' \
+        'meson' \
+        'ninja'
+    # glib deps: zlib, gettext, libffi, pcre.
+    koopa_activate_opt_prefix \
+        'zlib' \
+        'gettext' \
+        'libffi' \
+        'pcre' \
+        'glib' \
+        'freetype' \
+        'icu4c'
     declare -A app=(
         [meson]="$(koopa_locate_meson)"
         [ninja]="$(koopa_locate_ninja)"
@@ -41,17 +52,17 @@ archive/${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     meson_args=(
-        # > '--default-library=both'
-        # > '-Dcairo=enabled'
-        # > '-Dcoretext=enabled'
-        # > '-Dfreetype=enabled'
-        # > '-Dglib=enabled'
-        # > '-Dgobject=enabled'
-        # > '-Dgraphite=enabled'
-        # > '-Dintrospection=enabled'
         "--prefix=${dict[prefix]}"
         '--buildtype=release'
+        '--default-library=both'
+        '-Dcairo=disabled'
+        '-Dcoretext=enabled' # FIXME Check on Linux.
+        '-Dfreetype=enabled'
+        '-Dglib=enabled'
+        '-Dgobject=disabled'
+        '-Dgraphite=disabled'
         '-Dicu=enabled'
+        '-Dintrospection=disabled'
     )
     "${app[meson]}" "${meson_args[@]}" build
     # Alternate build approach using meson.

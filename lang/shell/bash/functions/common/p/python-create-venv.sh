@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for linkage of useful programs directly into
-# '/opt/koopa/bin' from here.
-
-# NOTE Work on adding support for 'requirements.txt' input.
-
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-08-09.
+    #
+    # In the future, consider adding support for 'requirements.txt' input.
     #
     # @seealso
     # - https://docs.python.org/3/library/venv.html
@@ -25,6 +22,8 @@ koopa_python_create_venv() {
         [python]="$(koopa_locate_python)"
     )
     [[ -x "${app[python]}" ]] || return 1
+    # This helps improve path definition in 'pyvenv.cfg' output file.
+    app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
         [name]=''
         [pip]=1
@@ -90,7 +89,9 @@ ${dict[py_maj_min_ver]}"
             koopa_sys_mkdir "${dict[app_prefix]}"
             koopa_sys_set_permissions "$(koopa_dirname "${dict[app_prefix]}")"
         fi
-        koopa_link_in_opt "${dict[app_prefix]}" "${dict[app_bn]}"
+        koopa_link_in_opt \
+            --name="${dict[app_bn]}" \
+            --source="${dict[app_prefix]}"
     fi
     [[ -d "${dict[prefix]}" ]] && koopa_rm "${dict[prefix]}"
     koopa_assert_is_not_dir "${dict[prefix]}"
@@ -111,12 +112,28 @@ ${dict[py_maj_min_ver]}"
     koopa_assert_is_installed "${app[venv_python]}"
     if [[ "${dict[pip]}" -eq 1 ]]
     then
-        # FIXME Consider defining this variables in 'variables.txt'.
+        case "${dict[py_version]}" in
+            '3.10.6')
+                # 2022-08-09.
+                dict[pip_version]='22.2.2'
+                dict[setuptools_version]='63.4.2'
+                dict[wheel_version]='0.37.1'
+                ;;
+            '3.10.5' | \
+            '3.10.'*)
+                dict[pip_version]='22.1.2'
+                dict[setuptools_version]='63.1.0'
+                dict[wheel_version]='0.37.1'
+                ;;
+            *)
+                koopa_stop "Unsupported Python: ${dict[py_version]}."
+                ;;
+        esac
         koopa_python_pip_install \
             --python="${app[venv_python]}" \
-            'pip==22.1.2' \
-            'setuptools==63.1.0' \
-            'wheel==0.37.1'
+            "pip==${dict[pip_version]}" \
+            "setuptools==${dict[setuptools_version]}" \
+            "wheel==${dict[wheel_version]}"
     fi
     if koopa_is_array_non_empty "${pkgs[@]:-}"
     then
