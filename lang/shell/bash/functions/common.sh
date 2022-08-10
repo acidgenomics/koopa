@@ -3116,10 +3116,7 @@ koopa_build_all_apps() {
     local pkgs
     koopa_assert_has_no_args "$#"
     pkgs=()
-    pkgs+=(
-        'pkg-config'
-        'make'
-    )
+    pkgs+=('pkg-config' 'make')
     koopa_is_linux && pkgs+=('attr')
     pkgs+=(
         'patch'
@@ -3226,8 +3223,6 @@ koopa_build_all_apps() {
         'fish'
         'zsh'
         'gawk'
-        'aspera-connect'
-        'docker-credential-pass'
         'lame'
         'ffmpeg'
         'flac'
@@ -3317,45 +3312,43 @@ koopa_build_all_apps() {
         'colorls'
         'ronn'
         'rust'
-        'bat'
-        'broot'
-        'delta'
-        'difftastic'
-        'du-dust'
-        'exa'
-        'mcfly'
-        'mdcat'
-        'procs'
-        'ripgrep'
-        'starship'
-        'tealdeer'
-        'tokei'
-        'xsv'
-        'zellij'
-        'zoxide'
+        'bat' # deps: rust
+        'broot' # deps: rust
+        'delta' # deps: rust
+        'difftastic' # deps: rust
+        'du-dust' # deps: rust
+        'exa' # deps: rust
+        'mcfly' # deps: rust
+        'mdcat' # deps: rust
+        'procs' # deps: rust
+        'ripgrep' # deps: rust
+        'starship' # deps: rust
+        'tealdeer' # deps: rust
+        'tokei' # deps: rust
+        'xsv' # deps: rust
+        'zellij' # deps: rust
+        'zoxide' # deps: rust
         'julia'
-        'ffq'
-        'gget'
-        'chemacs'
-        'dotfiles'
+        'ffq' # deps: conda
+        'gget' # deps: conda
+        'chemacs' # deps: go
+        'dotfiles' # deps: chemacs
     )
     if ! koopa_is_aarch64
     then
         pkgs+=(
             'anaconda'
-            'haskell-stack'
+            'aspera-connect'
+            'docker-credential-pass'
             'hadolint'
-            'pandoc'
+            'haskell-stack'
             'kallisto'
+            'pandoc'
             'salmon'
             'snakemake'
         )
     fi
     koopa_is_linux && pkgs+=('lmod')
-    pkgs+=(
-        'julia-packages'
-        'r-packages'
-    )
     koopa_cli_install "${pkgs[@]}"
     koopa_push_all_apps
     return 0
