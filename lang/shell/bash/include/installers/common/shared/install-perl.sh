@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Consider including 'expat', 'gdbm', and possibly 'zlib' here?
+
 main() {
     # """
     # Install Perl.

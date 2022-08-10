@@ -3,7 +3,7 @@
 main() {
     # """
     # Install PROJ.
-    # @note Updated 2022-05-13.
+    # @note Updated 2022-08-02.
     #
     # Alternative approach for SQLite3 dependency:
     # > -DCMAKE_PREFIX_PATH='/opt/koopa/opt/sqlite'
@@ -15,13 +15,13 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    if koopa_is_linux
-    then
-        koopa_assert_is_non_existing \
-            '/usr/include/proj' \
-            '/usr/include/proj.h' \
-            '/usr/lib/x86_64-linux-gnu/pkgconfig/proj.pc'
-    fi
+    # > if koopa_is_linux
+    # > then
+    # >     koopa_assert_is_non_existing \
+    # >         '/usr/include/proj' \
+    # >         '/usr/include/proj.h' \
+    # >         '/usr/lib/x86_64-linux-gnu/pkgconfig/proj.pc'
+    # > fi
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix \
         'curl' \
@@ -38,8 +38,8 @@ main() {
         [jobs]="$(koopa_cpu_count)"
         [make_prefix]="$(koopa_make_prefix)"
         [name]='proj'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
+        [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
@@ -50,13 +50,9 @@ ${dict[version]}/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    if koopa_is_linux
-    then
-        dict[shared_ext]='so'
-    elif koopa_is_macos
-    then
-        dict[shared_ext]='dylib'
-    fi
+    dict[curl]="$(koopa_app_prefix 'curl')"
+    dict[libtiff]="$(koopa_app_prefix 'libtiff')"
+    dict[sqlite]="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
         '-DBUILD_APPS=ON'
         '-DBUILD_SHARED_LIBS=ON'
@@ -67,16 +63,14 @@ ${dict[version]}/${dict[file]}"
         '-DENABLE_CURL=ON'
         '-DENABLE_TIFF=ON'
         # Required dependency paths.
-        "-DEXE_SQLITE3=${dict[opt_prefix]}/sqlite/bin/sqlite3"
-        "-DSQLITE3_INCLUDE_DIR=${dict[opt_prefix]}/sqlite/include"
-        "-DSQLITE3_LIBRARY=${dict[opt_prefix]}/sqlite/lib/\
-libsqlite3.${dict[shared_ext]}"
+        "-DEXE_SQLITE3=${dict[sqlite]}/bin/sqlite3"
+        "-DSQLITE3_INCLUDE_DIR=${dict[sqlite]}/include"
+        "-DSQLITE3_LIBRARY=${dict[sqlite]}/lib/libsqlite3.${dict[shared_ext]}"
         # Optional dependency paths.
-        "-DCURL_INCLUDE_DIR=${dict[opt_prefix]}/curl/include"
-        "-DCURL_LIBRARY=${dict[opt_prefix]}/curl/lib/\
-libcurl.${dict[shared_ext]}"
-        "-DTIFF_INCLUDE_DIR=${dict[opt_prefix]}/libtiff/include"
-        "-DTIFF_LIBRARY_RELEASE=${dict[opt_prefix]}/libtiff/lib/\
+        "-DCURL_INCLUDE_DIR=${dict[curl]}/include"
+        "-DCURL_LIBRARY=${dict[curl]}/lib/libcurl.${dict[shared_ext]}"
+        "-DTIFF_INCLUDE_DIR=${dict[libtiff]}/include"
+        "-DTIFF_LIBRARY_RELEASE=${dict[libtiff]}/lib/\
 libtiff.${dict[shared_ext]}"
     )
     "${app[cmake]}" .. "${cmake_args[@]}"

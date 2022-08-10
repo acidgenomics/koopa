@@ -3,18 +3,19 @@
 koopa_link_in_bin() {
     # """
     # Link a program in koopa 'bin/' directory.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-08-02.
+    #
+    # Also updates corresponding 'man1' files automatically, when applicable.
     #
     # @usage
     # > koopa_link_in_bin \
-    # >     SOURCE_FILE_1 TARGET_NAME_1 \
-    # >     SOURCE_FILE_2 TARGET_NAME_2 \
-    # >     ...
+    # >     --source=SOURCE_FILE \
+    # >     --target=TARGET_NAME
     #
     # @examples
     # > koopa_link_in_bin \
-    # >     '/usr/local/bin/emacs' 'emacs' \
-    # >     '/usr/local/bin/vim' 'vim'
+    # >     --name='emacs' \
+    # >     --source='/usr/local/bin/emacs'
     # """
     __koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }

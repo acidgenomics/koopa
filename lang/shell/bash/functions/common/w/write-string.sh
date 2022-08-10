@@ -3,7 +3,7 @@
 koopa_write_string() {
     # """
     # Write a string to disk.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-29.
     # """
     local dict
     koopa_assert_has_args "$#"

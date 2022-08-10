@@ -1,6 +1,16 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO We need to construct a SHA256 and/or timestamp management approach.
+** TODO Create a JSON file that manages bin links per program.
+    We can then look up these values during install and uninstall calls.
+** TODO Add nmap install recipe.
+    https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nmap.rb
+** TODO Move binary apps to private S3 bucket that requires credential key access, to avoid excess AWS charges.
+** TODO Consider quoting all key names in dict associative arrays, for better syntax highlighting in vim.
+** TODO Consider adding build support for:
+    glibc, ld, llvm, ghc, haskell-stack (ARM).
+** TODO Consider installing all X11 libraries into a single prefix.
 ** TODO For system R, both on Linux and Mac, don't link the site-packages library into koopa opt. Create it inside the system path instead.
 ** TODO Our R built from source on Ubuntu doesn't seem to be linking libR.so correctly for stringi.
     # ldd /opt/koopa/opt/r-packages/stringi/libs/stringi.so

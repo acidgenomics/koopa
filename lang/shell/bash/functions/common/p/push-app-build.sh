@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework as private app bucket for binary builds.
+
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-09.
     #
     # @examples
     # > koopa_push_app_build 'emacs' 'vim'
@@ -18,10 +20,11 @@ koopa_push_app_build() {
     [[ -x "${app[tar]}" ]] || return 1
     declare -A dict=(
         [arch]="$(koopa_arch2)" # e.g. 'amd64'.
+        [distribution_id]="${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:?}"
         [opt_prefix]="$(koopa_opt_prefix)"
         [os_string]="$(koopa_os_string)"
-        [s3_prefix]='s3://koopa.acidgenomics.com/app'
-        [s3_profile]='acidgenomics'
+        [profile]='acidgenomics'
+        [s3_bucket]='s3://koopa.acidgenomics.com'
         [tmp_dir]="$(koopa_tmp_dir)"
     )
     for name in "$@"
@@ -34,13 +37,21 @@ koopa_push_app_build() {
         dict2[version]="$(koopa_basename "${dict2[prefix]}")"
         dict2[local_tar]="${dict[tmp_dir]}/\
 ${dict2[name]}/${dict2[version]}.tar.gz"
-        dict2[remote_tar]="${dict[s3_prefix]}/${dict[os_string]}/${dict[arch]}/\
+        dict2[s3_rel_path]="/app/${dict[os_string]}/${dict[arch]}/\
 ${dict2[name]}/${dict2[version]}.tar.gz"
+        dict2[remote_tar]="${dict[s3_bucket]}${dict2[s3_rel_path]}"
         koopa_alert "Pushing '${dict2[prefix]}' to '${dict2[remote_tar]}'."
         koopa_mkdir "${dict[tmp_dir]}/${dict2[name]}"
         "${app[tar]}" -Pczf "${dict2[local_tar]}" "${dict2[prefix]}/"
-        "${app[aws]}" --profile="${dict[s3_profile]}" \
+        "${app[aws]}" --profile="${dict[profile]}" \
             s3 cp "${dict2[local_tar]}" "${dict2[remote_tar]}"
+        # Using 'true' here to harden against 'ServiceUnavailable' errors.
+        "${app[aws]}" --profile="${dict[profile]}" \
+            cloudfront create-invalidation \
+                --distribution-id="${dict[distribution_id]}" \
+                --paths="${dict2[s3_rel_path]}" \
+                >/dev/null \
+            || true
     done
     koopa_rm "${dict[tmp_dir]}"
     return 0

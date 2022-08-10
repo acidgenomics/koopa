@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Can we use CMake here instead with CMakeList.txt reference?
-# FIXME Failing to locate 'zlib.h' inside of Ubuntu here.
-
 main() {
     # """
     # Install Apache Serf.
-    # @note Updated 2022-07-13.
+    # @note Updated 2022-07-20.
     #
     # Required by subversion for HTTPS connections.
     #
@@ -25,11 +22,8 @@ main() {
     local app dict scons_args
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'patch'
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'zlib'
-    fi
     koopa_activate_opt_prefix \
+        'zlib' \
         'apr' \
         'apr-util' \
         'openssl3' \
@@ -158,21 +152,23 @@ diff -Naurp serf-1.3.9.orig/buckets/ssl_buckets.c serf-1.3.9/buckets/ssl_buckets
 END
     "${app[patch]}" -Np1 -i 'patch-openssl3.patch'
     # Refer to 'SConstruct' file for supported arguments.
+    dict[apr]="$(koopa_realpath "${dict[opt_prefix]}/apr")"
+    dict[apu]="$(koopa_realpath "${dict[opt_prefix]}/apr-util")"
+    dict[cflags]="${CFLAGS:-}"
+    dict[libdir]="${dict[prefix]}/lib"
+    dict[linkflags]="${LDFLAGS:-}"
+    dict[openssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl3")"
+    dict[zlib]="$(koopa_realpath "${dict[opt_prefix]}/zlib")"
     scons_args=(
-        "APR=${dict[opt_prefix]}/apr"
-        "APU=${dict[opt_prefix]}/apr-util"
-        "CFLAGS=${CFLAGS:-}"
-        "LIBDIR=${dict[prefix]}/lib"
-        "LINKFLAGS=${LDFLAGS:-}"
-        "OPENSSL=${dict[opt_prefix]}/openssl3"
+        "APR=${dict[apr]}"
+        "APU=${dict[apu]}"
+        "CFLAGS=${dict[cflags]}"
+        "LIBDIR=${dict[libdir]}"
+        "LINKFLAGS=${dict[linkflags]}"
+        "OPENSSL=${dict[openssl]}"
         "PREFIX=${dict[prefix]}"
+        "ZLIB=${dict[zlib]}"
     )
-    if koopa_is_linux
-    then
-        scons_args+=(
-            "ZLIB=${dict[opt_prefix]}/zlib"
-        )
-    fi
     "${app[scons]}" "${scons_args[@]}"
     "${app[scons]}" "${scons_args[@]}" install
     return 0

@@ -45,21 +45,6 @@ __koopa_id() {
     return 0
 }
 
-__koopa_packages_prefix() {
-    local name str version
-    name="${1:?}-packages"
-    version="${2:-}"
-    if [ -n "$version" ]
-    then
-        version="$(koopa_major_minor_version "$version")"
-        str="$(koopa_app_prefix)/${name}/${version}"
-    else
-        str="$(koopa_opt_prefix)/${name}"
-    fi
-    koopa_print "$str"
-    return 0
-}
-
 __koopa_remove_from_path_string() {
     local dir str
     str="${1:?}"
@@ -73,21 +58,28 @@ __koopa_remove_from_path_string() {
 }
 
 koopa_activate_alacritty() {
-    local color_mode prefix source_bn source_file target_file target_link_bn
+    local conf_file color_file color_mode pattern prefix replacement
     koopa_is_alacritty || return 0
     prefix="$(koopa_xdg_config_home)/alacritty"
     [ -d "$prefix" ] || return 0
+    conf_file="${prefix}/alacritty.yml"
+    [ -f "$conf_file" ] || return 0
     color_mode="$(koopa_color_mode)"
-    source_bn="colors-${color_mode}.yml"
-    source_file="${prefix}/${source_bn}"
-    [ -f "$source_file" ] || return 0
-    target_file="${prefix}/colors.yml"
-    if [ -h "$target_file" ] && koopa_is_installed 'readlink'
+    color_file_bn="colors-${color_mode}.yml"
+    color_file="${prefix}/${color_file_bn}"
+    [ -f "$color_file" ] || return 0
+    if ! grep -q "$color_file_bn" "$conf_file"
     then
-        target_link_bn="$(readlink "$target_file")"
-        [ "$target_link_bn" = "$source_bn" ] && return 0
+        pattern="^  - \"~/\.config/alacritty/colors.*\.yml\"$"
+        replacement="  - \"~/.config/alacritty/${color_file_bn}\""
+        perl -i -l -p \
+            -e "s|${pattern}|${replacement}|" \
+            "$conf_file"
     fi
-    ln -fns "$source_file" "$target_file"
+    if [ -f "${prefix}/colors.yml" ]
+    then
+        rm "${prefix}/colors.yml"
+    fi
     return 0
 }
 
@@ -115,9 +107,11 @@ koopa_activate_aliases() {
     alias emacs='koopa_alias_emacs'
     alias fd='fd --case-sensitive --no-ignore'
     alias fvim='vim "$(fzf)"'
+    alias glances='koopa_alias_glances'
     alias h='history'
     alias j='z'
     alias k='koopa_alias_k'
+    alias kb='koopa_alias_kb'
     alias kdev='koopa_alias_kdev'
     alias l.='l -d .*'
     alias l1='l -1'
@@ -131,10 +125,10 @@ koopa_activate_aliases() {
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
     alias prelude-emacs='koopa_alias_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
-    alias python='python3'
+    alias python='koopa_alias_python'
     alias q='exit'
     alias rbenv='koopa_alias_rbenv'
-    alias rg='rg --case-sensitive' # '--no-ignore'
+    alias rg='rg --case-sensitive --no-ignore'
     alias ronn='ronn --roff'
     alias sha256='koopa_alias_sha256'
     alias spacemacs='koopa_alias_spacemacs'
@@ -195,6 +189,17 @@ koopa_activate_broot() {
     [ "$nounset" -eq 1 ] && set +o nounset
     . "$script"
     [ "$nounset" -eq 1 ] && set -o nounset
+    return 0
+}
+
+koopa_activate_ca_certificates() {
+    local prefix ssl_cert_file
+    prefix="$(koopa_opt_prefix)/ca-certificates"
+    [ -d "$prefix" ] || return 0
+    prefix="$(koopa_realpath "$prefix")"
+    ssl_cert_file="${prefix}/share/ca-certificates/cacert.pem"
+    [ -f "$ssl_cert_file" ] || return 0
+    export SSL_CERT_FILE="$ssl_cert_file"
     return 0
 }
 
@@ -370,13 +375,12 @@ koopa_activate_homebrew() {
 }
 
 koopa_activate_julia() {
-    local prefix
+    local depot_path num_threads
     [ -x "$(koopa_bin_prefix)/julia" ] || return 0
-    prefix="$(koopa_julia_packages_prefix)"
-    if [ -d "$prefix" ]
-    then
-        export JULIA_DEPOT_PATH="$prefix"
-    fi
+    depot_path="$(koopa_julia_packages_prefix)"
+    num_threads="$(koopa_cpu_count)"
+    export JULIA_DEPOT_PATH="$depot_path"
+    export JULIA_NUM_THREADS="$num_threads"
     return 0
 }
 
@@ -491,25 +495,11 @@ koopa_activate_pipx() {
     local prefix
     [ -x "$(koopa_bin_prefix)/pipx" ] || return 0
     prefix="$(koopa_pipx_prefix)"
-    [ -d "$prefix" ] || return 0
+    [ ! -d "$prefix" ] && mkdir -p "$prefix"
+    koopa_add_to_path_start "${prefix}/bin"
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
     export PIPX_HOME PIPX_BIN_DIR
-    return 0
-}
-
-koopa_activate_prefix() {
-    local prefix
-    for prefix in "$@"
-    do
-        [ -d "$prefix" ] || continue
-        koopa_add_to_path_start \
-            "${prefix}/bin" \
-            "${prefix}/sbin"
-        koopa_add_to_manpath_start \
-            "${prefix}/man" \
-            "${prefix}/share/man"
-    done
     return 0
 }
 
@@ -861,8 +851,26 @@ koopa_alias_emacs() {
     fi
 }
 
+koopa_alias_glances() {
+    local color_mode
+    color_mode="$(koopa_color_mode)"
+    case "$color_mode" in
+        'dark')
+            glances "$@"
+            ;;
+        'light')
+            glances --light --theme-white "$@"
+            ;;
+    esac
+    return 0
+}
+
 koopa_alias_k() {
     cd "$(koopa_koopa_prefix)" || return 1
+}
+
+koopa_alias_kb() {
+    cd "$(koopa_koopa_prefix)/lang/shell/bash" || return 1
 }
 
 koopa_alias_kdev() {
@@ -909,6 +917,11 @@ koopa_alias_pyenv() {
     koopa_is_alias 'pyenv' && unalias 'pyenv'
     koopa_activate_pyenv
     pyenv "$@"
+}
+
+koopa_alias_python() {
+    koopa_print "Use 'python3' instead of 'python'."
+    return 1
 }
 
 koopa_alias_rbenv() {
@@ -974,11 +987,6 @@ koopa_alias_zoxide() {
 
 koopa_anaconda_prefix() {
     koopa_print "$(koopa_opt_prefix)/anaconda"
-    return 0
-}
-
-koopa_app_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/app"
     return 0
 }
 
@@ -1061,6 +1069,37 @@ koopa_conda_prefix() {
 
 koopa_config_prefix() {
     koopa_print "$(koopa_xdg_config_home)/koopa"
+    return 0
+}
+
+koopa_cpu_count() {
+    local bin_prefix getconf nproc num sysctl
+    [ "$#" -eq 0 ] || return 1
+    num="${KOOPA_CPU_COUNT:-}"
+    if [ -n "$num" ]
+    then
+        koopa_print "$num"
+        return 0
+    fi
+    bin_prefix="$(koopa_bin_prefix)"
+    nproc="${bin_prefix}/nproc"
+    if [ -x "$nproc" ]
+    then
+        num="$("$nproc")"
+    elif koopa_is_macos
+    then
+        sysctl='/usr/sbin/sysctl'
+        [ -x "$sysctl" ] || return 1
+        num="$("$sysctl" -n 'hw.ncpu')"
+    elif koopa_is_linux
+    then
+        getconf='/usr/bin/getconf'
+        [ -x "$getconf" ] || return 1
+        num="$("$getconf" '_NPROCESSORS_ONLN')"
+    else
+        num=1
+    fi
+    koopa_print "$num"
     return 0
 }
 
@@ -1223,6 +1262,12 @@ koopa_export_history() {
         SAVEHIST="$HISTSIZE"
     fi
     export SAVEHIST
+    return 0
+}
+
+koopa_export_koopa_cpu_count() {
+    KOOPA_CPU_COUNT="$(koopa_cpu_count)"
+    export KOOPA_CPU_COUNT
     return 0
 }
 
@@ -1628,7 +1673,7 @@ koopa_is_ubuntu() {
 }
 
 koopa_julia_packages_prefix() {
-    __koopa_packages_prefix 'julia' "$@"
+    koopa_print "${HOME:?}/.julia"
 }
 
 koopa_koopa_prefix() {
@@ -1953,7 +1998,7 @@ koopa_os_string() {
 }
 
 koopa_pipx_prefix() {
-    koopa_print "$(koopa_opt_prefix)/pipx"
+    koopa_print "$(koopa_xdg_data_home)/pipx"
     return 0
 }
 
@@ -2024,10 +2069,6 @@ koopa_python_venv_name() {
 koopa_python_virtualenvs_prefix() {
     koopa_print "$(koopa_opt_prefix)/python-virtualenvs"
     return 0
-}
-
-koopa_r_packages_prefix() {
-    __koopa_packages_prefix 'r' "$@"
 }
 
 koopa_rbenv_prefix() {

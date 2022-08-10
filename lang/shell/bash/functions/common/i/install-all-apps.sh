@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-09.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -111,13 +111,17 @@ koopa_install_all_apps() {
         'latch'
         'less'
         'lesspipe'
+        'libassuan'
         'libedit'
         'libevent'
         'libffi'
+        'libgcrypt'
         'libgeotiff'
         'libgit2'
+        'libgpg-error'
         'libidn'
         'libjpeg-turbo'
+        'libksba'
         'libpipeline'
         'libpng'
         'libssh2'
@@ -131,7 +135,6 @@ koopa_install_all_apps() {
         'lua'
         'luarocks'
         'lz4'
-        'lzma'
         'lzo'
         'm4'
         'make'
@@ -148,6 +151,7 @@ koopa_install_all_apps() {
         'nim'
         'ninja'
         'node'
+        'npth'
         'oniguruma'
         'openblas'
         'openjdk'
@@ -236,6 +240,7 @@ koopa_install_all_apps() {
             'aspera-connect'
             'docker-credential-pass'
             'lmod'
+            'pinentry'
         )
     fi
     koopa_cli_install --binary "${pkgs[@]}"

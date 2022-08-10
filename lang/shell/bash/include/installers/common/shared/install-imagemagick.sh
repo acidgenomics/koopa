@@ -1,18 +1,85 @@
 #!/usr/bin/env bash
 
+# NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
+# package in R, which bundles a very old version (2.28.0) currently.
+
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-07-28.
+    #
+    # Also consider requiring:
+    # - ghostscript
+    # - libheif
+    # - liblqr
+    # - libraw
+    # - little-cms2
+    # - openexr
+    # - openjpeg
+    # - perl
+    # - webp
+    #
+    # If using clang on macOS, need to include libomp, or ensure that
+    # use has run 'koopa install system r-openmp'.
     #
     # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
+    #     imagemagick.rb
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/libomp.rb
     # - https://imagemagick.org/script/install-source.php
     # - https://imagemagick.org/script/advanced-linux-installation.php
     # - https://download.imagemagick.org/ImageMagick/download/releases/
     # """
-    local app conf_args dict
+    local app conf_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'libtool'
+    koopa_activate_build_opt_prefix 'pkg-config'
+    deps=(
+        # zlib deps: none.
+        'zlib'
+        # zstd deps: none.
+        'zstd'
+        # bzip2 deps: none.
+        'bzip2'
+        # xz deps: none.
+        'xz'
+        # freetype deps: none.
+        'freetype'
+        # jpeg deps: none.
+        'jpeg'
+        # libpng deps: none.
+        'libpng'
+        # libtiff deps: libjpeg-turbo, zstd.
+        'libtiff'
+        # libtool deps: m4.
+        'libtool'
+        # libxml2 deps: icu4c, readline.
+        'libxml2'
+        # libzip deps: zlib, nettle, openssl3, perl, zstd.
+        'libzip'
+        # fontconfig deps: gperf, freetype, libxml2.
+        'fontconfig'
+        # X11.
+        'xorg-xorgproto'
+        'xorg-xcb-proto'
+        'xorg-libpthread-stubs'
+        'xorg-libice'
+        'xorg-libsm'
+        'xorg-libxau'
+        'xorg-libxdmcp'
+        'xorg-libxcb'
+        'xorg-libx11'
+        'xorg-libxext'
+        'xorg-libxrender'
+        'xorg-libxt'
+    )
+    # Using system clang on macOS to avoid '-lopenmp' issues when building
+    # R from source.
+    if koopa_is_linux
+    then
+        # gcc deps: gmp, mpfr, mpc.
+        deps+=('gcc')
+    fi
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

@@ -3,7 +3,7 @@
 koopa_decompress() {
     # """
     # Decompress a compressed file.
-    # @note Updated 2022-05-16.
+    # @note Updated 2022-07-27.
     #
     # This function currently allows uncompressed files to pass through.
     #
@@ -103,7 +103,7 @@ koopa_decompress() {
                     "$cmd" "${cmd_args[@]}" > "${dict[target_file]}"
                     ;;
                 '1')
-                    "$cmd" "${cmd_args[@]}"
+                    "$cmd" "${cmd_args[@]}" || true
                     ;;
             esac
             ;;
@@ -115,7 +115,7 @@ koopa_decompress() {
                 '1')
                     cmd="$(koopa_locate_cat)"
                     [[ -x "$cmd" ]] || return 1
-                    "$cmd" "${dict[source_file]}"
+                    "$cmd" "${dict[source_file]}" || true
                     ;;
             esac
             ;;

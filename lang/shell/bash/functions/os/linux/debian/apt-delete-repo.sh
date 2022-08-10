@@ -3,7 +3,7 @@
 koopa_debian_apt_delete_repo() {
     # """
     # Delete an apt repo file.
-    # @note Updated 2022-05-18.
+    # @note Updated 2022-07-19.
     # """
     local dict name
     koopa_assert_has_args "$#"
@@ -15,7 +15,11 @@ koopa_debian_apt_delete_repo() {
     do
         local file
         file="${dict[prefix]}/koopa-${name}.list"
-        koopa_assert_is_file "$file"
+        if [[ ! -f "$file" ]]
+        then
+            koopa_alert_note "File does not exist: '${file}'."
+            continue
+        fi
         koopa_rm --sudo "$file"
     done
     return 0

@@ -3,7 +3,7 @@
 koopa_activate_alacritty() {
     # """
     # Activate Alacritty terminal client.
-    # @note Updated 2022-05-06.
+    # @note Updated 2022-08-04.
     #
     # This function dynamically updates dark/light color mode.
     #
@@ -11,20 +11,28 @@ koopa_activate_alacritty() {
     # - Live config reload doesn't detect symlink change.
     #   https://github.com/alacritty/alacritty/issues/2237
     # """
-    local color_mode prefix source_bn source_file target_file target_link_bn
+    local conf_file color_file color_mode pattern prefix replacement
     koopa_is_alacritty || return 0
     prefix="$(koopa_xdg_config_home)/alacritty"
     [ -d "$prefix" ] || return 0
+    conf_file="${prefix}/alacritty.yml"
+    [ -f "$conf_file" ] || return 0
     color_mode="$(koopa_color_mode)"
-    source_bn="colors-${color_mode}.yml"
-    source_file="${prefix}/${source_bn}"
-    [ -f "$source_file" ] || return 0
-    target_file="${prefix}/colors.yml"
-    if [ -h "$target_file" ] && koopa_is_installed 'readlink'
+    color_file_bn="colors-${color_mode}.yml"
+    color_file="${prefix}/${color_file_bn}"
+    [ -f "$color_file" ] || return 0
+    if ! grep -q "$color_file_bn" "$conf_file"
     then
-        target_link_bn="$(readlink "$target_file")"
-        [ "$target_link_bn" = "$source_bn" ] && return 0
+        pattern="^  - \"~/\.config/alacritty/colors.*\.yml\"$"
+        replacement="  - \"~/.config/alacritty/${color_file_bn}\""
+        perl -i -l -p \
+            -e "s|${pattern}|${replacement}|" \
+            "$conf_file"
     fi
-    ln -fns "$source_file" "$target_file"
+    # Clean up legacy 'colors.yml' file, if necessary.
+    if [ -f "${prefix}/colors.yml" ]
+    then
+        rm "${prefix}/colors.yml"
+    fi
     return 0
 }

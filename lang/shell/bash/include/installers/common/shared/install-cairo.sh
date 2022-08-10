@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Cairo.
-    # @note Updated 2022-07-08.
+    # @note Updated 2022-08-10.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
@@ -13,12 +13,8 @@ main() {
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    deps=()
-    if koopa_is_linux
-    then
-        deps+=('zlib')
-    fi
-    deps+=(
+    deps=(
+        'zlib'
         'gettext'
         'freetype'
         'libxml2'
@@ -29,23 +25,16 @@ main() {
         'libpng'
         'lzo'
         'pixman'
+        'xorg-xorgproto'
+        'xorg-xcb-proto'
+        'xorg-libpthread-stubs'
+        'xorg-libxau'
+        'xorg-libxdmcp'
+        'xorg-libxcb'
+        'xorg-libx11'
+        'xorg-libxext'
+        'xorg-libxrender'
     )
-    if koopa_is_macos
-    then
-        koopa_add_to_pkg_config_path '/opt/X11/pkgconfig'
-    else
-        deps+=(
-            'xorg-xorgproto'
-            'xorg-xcb-proto'
-            'xorg-libpthread-stubs'
-            'xorg-libxau'
-            'xorg-libxdmcp'
-            'xorg-libxcb'
-            'xorg-libx11'
-            'xorg-libxext'
-            'xorg-libxrender'
-        )
-    fi
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
@@ -62,17 +51,24 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    # Consider adding support for:
+    # * '--enable-qt'
+    # * '--enable-xml'
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-dependency-tracking'
+        '--disable-valgrind'
+        '--enable-gobject'
+        '--enable-svg'
+        '--enable-tee'
+        '--enable-xcb'
+        '--enable-xlib'
+        '--enable-xlib-xcb'
+        '--enable-xlib-xrender'
     )
-    if ! koopa_is_macos
+    if koopa_is_macos
     then
-        conf_args+=(
-            '--enable-xcb'
-            '--enable-xlib'
-            '--enable-xlib-xrender'
-        )
+        conf_args+=('--enable-quartz-image')
     fi
     ./configure --help
     ./configure "${conf_args[@]}"

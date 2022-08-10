@@ -1,8 +1,7 @@
 # koopa
 # ==============================================================================
 
-koopa-date="2022-07-18"
-koopa-github-url="https://github.com/acidgenomics/koopa"
+koopa-git-url="https://github.com/acidgenomics/koopa.git"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
 
@@ -29,7 +28,7 @@ apr="1.7.0"
 apr-util="1.6.1"
 
 # http://arma.sourceforge.net/download.html
-armadillo="11.2.0"
+armadillo="11.2.3"
 
 # https://github.com/asdf-vm/asdf/releases
 asdf="0.10.2"
@@ -51,16 +50,13 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.7.15"
-
-# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.38.0"
+aws-cli="2.7.21"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
 
 # https://ftp.gnu.org/gnu/bc/
-bc="1.07"
+bc="1.07.1"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
@@ -77,7 +73,7 @@ bcl2fastq="2.20.0.422"
 bfg="1.14.0"
 
 # https://ftp.gnu.org/gnu/binutils/
-binutils="2.37"
+binutils="2.38"
 
 # This is used during 'r-packages' install.
 # https://bioconductor.org/
@@ -87,10 +83,13 @@ bioconductor="3.15"
 bison="3.8.2"
 
 # https://www.boost.org/
-boost="1.78.0"
+boost="1.79.0"
 
 # https://www.sourceware.org/bzip2/
 bzip2="1.0.8"
+
+# https://curl.se/docs/caextract.html
+ca-certificates="2022-07-19"
 
 # https://cairographics.org/
 cairo="1.16.0"
@@ -100,6 +99,9 @@ cairo="1.16.0"
 #     pipelines/latest/installation
 cellranger="7.0.0"
 
+# https://github.com/cheat/cheat/
+cheat="4.3.0"
+
 # https://github.com/plexus/chemacs2
 chemacs="d722459287566e8c91ae077bf3d65966ebece190"
 
@@ -107,7 +109,7 @@ chemacs="d722459287566e8c91ae077bf3d65966ebece190"
 cloudbiolinux="c4c7cf8e508fe947c8b038543c98a2846bb900d6"
 
 # https://cmake.org/download/
-cmake="3.23.2"
+cmake="3.24.0"
 
 # https://repo.anaconda.com/miniconda/
 conda="4.12.0"
@@ -119,7 +121,7 @@ coreutils="9.1"
 cpufetch="1.02"
 
 # https://curl.haxx.se/
-curl="7.82.0"
+curl="7.84.0"
 
 # https://github.com/dandavison/delta
 delta="0.13.0"
@@ -131,7 +133,7 @@ docker="20.10.17"
 docker-credential-pass="0.6.4"
 
 # https://github.com/acidgenomics/dotfiles
-dotfiles="08b427442803287281bc58a39e9944087d0ac9a9"
+dotfiles="1ff11a6f59777aad6ec34a92ebbc83b53a5bd66d"
 
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
@@ -143,20 +145,20 @@ ensembl-perl-api="107"
 expat="2.4.8"
 
 # https://ffmpeg.org/
-ffmpeg="5.0.1"
+ffmpeg="5.1"
 
 # https://www.gnu.org/software/findutils/
 findutils="4.9.0"
+
+# https://fishshell.com/
+# https://github.com/fish-shell/fish-shell/releases
+fish="3.5.1"
 
 # https://xiph.org/flac/
 flac="1.3.4"
 
 # https://www.fltk.org/
 fltk="1.3.8"
-
-# https://fishshell.com/
-# https://github.com/fish-shell/fish-shell/releases
-fish="3.5.0"
 
 # https://www.freedesktop.org/wiki/Software/fontconfig/
 fontconfig="2.14.0"
@@ -165,7 +167,7 @@ fontconfig="2.14.0"
 freetype="2.12.1"
 
 # https://github.com/fribidi/fribidi/
-fribidi="1.0.11"
+fribidi="1.0.12"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.1"
@@ -180,31 +182,25 @@ gdal="3.5.1"
 gdbm="1.23"
 
 # https://github.com/libgeos/geos/releases
-geos="3.10.3"
+geos="3.11.0"
 
 # https://www.gnu.org/software/gettext/
 gettext="0.21"
 
 # https://git-scm.com/
-git="2.35.1"
+git="2.37.1"
 
 # https://gitlab.gnome.org/GNOME/glib
-glib="2.72.0"
+glib="2.72.3"
 
 # https://gmplib.org/
 gmp="6.2.1"
 
-# https://gnupg.org/download/index.html
-gnupg="2.3.7"
-
-# https://www.gnutls.org/
-gnutls="3.7.4"
-
 # https://golang.org/dl/
-go="1.18.3"
+go="1.19"
 
 # https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="392.0.0"
+google-cloud-sdk="396.0.0"
 
 # https://www.gnu.org/software/gperf
 gperf="3.1"
@@ -226,7 +222,7 @@ gzip="1.12"
 
 hadolint="2.10.0"
 
-harfbuzz="4.3.0"
+harfbuzz="5.1.0"
 
 # https://docs.haskellstack.org/en/stable/install_and_upgrade/
 haskell-stack="2.7.5"
@@ -242,7 +238,7 @@ htop="3.2.1"
 icu4c="71.1"
 
 # https://imagemagick.org/
-imagemagick="7.1.0-43"
+imagemagick="7.1.0-45"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -278,17 +274,18 @@ libffi="3.4.2"
 # https://github.com/OSGeo/libgeotiff
 libgeotiff="1.7.1"
 
+# NOTE 1.5.0 has build issues on Ubuntu.
 # https://github.com/libgit2/libgit2
-libgit2="1.4.3" # latest: 1.5.0
+libgit2="1.4.4"
 
 # https://www.gnu.org/software/libidn/
-libidn="2.3.2"
+libidn="2.3.3"
 
 # https://www.libjpeg-turbo.org/
 libjpeg-turbo="2.1.3"
 
 # https://libpipeline.nongnu.org/
-libpipeline="1.5.5"
+libpipeline="1.5.6"
 
 # http://www.libpng.org/pub/png/libpng.html
 libpng="1.6.37"
@@ -301,23 +298,22 @@ libtasn1="4.18.0"
 
 # https://download.osgeo.org/libtiff/
 # https://libtiff.gitlab.io/libtiff/
-# 4.3.0 currently has build issues on macOS.
-libtiff="4.2.0"
+libtiff="4.4.0"
 
 # https://ftp.gnu.org/gnu/libtool/
-libtool="2.4.6"
+libtool="2.4.7"
 
 # https://www.gnu.org/software/libunistring/
 libunistring="1.0"
 
 # https://github.com/libuv/libuv
-libuv="1.44.1" # latest: 1.44.2
+libuv="1.44.2"
 
 # https://gitlab.gnome.org/GNOME/libxml2/-/releases
-libxml2="2.9.13"
+libxml2="2.9.14"
 
 # https://libzip.org/download/
-libzip="1.8.0"
+libzip="1.9.2"
 
 # LLVM
 # https://releases.llvm.org/
@@ -332,7 +328,7 @@ lmod="8.7"
 lua="5.4.4"
 
 # https://github.com/luarocks/luarocks/releases
-luarocks="3.9.0"
+luarocks="3.9.1"
 
 # https://lz4.github.io/lz4/
 lz4="1.9.3"
@@ -349,12 +345,9 @@ m4="1.4.19"
 make="4.3"
 
 # https://github.com/mamba-org/mamba/tags/
-mamba="0.24.0"
+mamba="0.25.0"
 
 man-db="2.10.2"
-
-# https://github.com/mesonbuild/meson/tags
-meson="0.63.0"
 
 # http://www.multiprecision.org/mpc/
 mpc="1.2.1"
@@ -369,17 +362,13 @@ ncurses="6.3.20211021"
 neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
-neovim="0.7.0"
+neovim="0.7.2"
 
 # https://ftp.gnu.org/gnu/nettle/
-# > nettle="3.7.3"
-nettle="3.6"
+nettle="3.8.1"
 
 # https://nim-lang.org/
 nim="1.6.6"
-
-# https://github.com/ninja-build/ninja/tags
-ninja="1.10.2.3"
 
 # https://nodejs.org/en/download/
 node="16.16.0" # LTS
@@ -388,10 +377,10 @@ node="16.16.0" # LTS
 oniguruma="6.9.8"
 
 # https://www.openblas.net/
-openblas="0.3.20"
+openblas="0.3.21"
 
 # https://adoptium.net/
-openjdk="17.0.3+7"
+openjdk="17.0.4+8"
 
 # https://www.openssh.com/portable.html
 openssh="9.0p1"
@@ -404,13 +393,13 @@ openssl3="3.0.5"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
-oracle-instant-client="21.5.0.0.0-1"
+oracle-instant-client="21.7.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.18"
+pandoc="2.19"
 
 # https://www.gnu.org/software/parallel/
-parallel="20220522"
+parallel="20220722"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
@@ -442,11 +431,8 @@ pth="2.0.7"
 # https://github.com/pyenv/pyenv
 pyenv="2.2.5"
 
-# https://pygments.org/
-pygments="2.12.0"
-
 # https://www.python.org/downloads/
-python="3.10.5"
+python="3.10.6"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
@@ -465,7 +451,7 @@ r-gfortran="8.2"
 # https://developer.r-project.org/SVNtips.html
 # https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
 # This is the SVN revision number.
-r-devel="82487" # 2022-06-15
+r-devel="82673" # 2022-08-04
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.2.0"
@@ -477,19 +463,16 @@ readline="8.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2022.07.0+548"
+rstudio-server="2022.07.1+554"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.1.2p20"
 
 # https://www.rust-lang.org/
-rust="1.62.0"
+rust="1.62.1"
 
 # https://download.samba.org/pub/rsync/src/
-rsync="3.2.3"
-
-# https://scons.org/
-scons="4.3.0"
+rsync="3.2.4"
 
 # https://www.gnu.org/software/screen/
 screen="4.8.0"
@@ -507,13 +490,13 @@ shellcheck="0.8.0"
 shiny-server="1.5.18.987"
 
 # https://github.com/kward/shunit2/releases
-shunit2="2.1.7"
+shunit2="2.1.8"
 
 # http://sox.sourceforge.net/sox.html
 sox="14.4.2"
 
 # https://www.sqlite.org/download.html
-sqlite="3.38.5"
+sqlite="3.39.2"
 
 # https://github.com/ncbi/sra-tools
 sra-tools="3.0.0"
@@ -522,7 +505,7 @@ sra-tools="3.0.0"
 stow="2.3.1"
 
 # https://subversion.apache.org
-subversion="1.14.1"
+subversion="1.14.2"
 
 # https://github.com/taglib/taglib/
 taglib="1.12"
@@ -555,7 +538,7 @@ utf8proc="2.7.0"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="9.0.0000"
+vim="9.0.0150"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.3"
@@ -566,32 +549,32 @@ which="2.21"
 xorg-libice="1.0.10"
 xorg-libpthread-stubs="0.4"
 xorg-libsm="1.2.3"
-xorg-libx11="1.7.2"
+xorg-libx11="1.8.1"
 xorg-libxau="1.0.9"
-xorg-libxcb="1.14"
+xorg-libxcb="1.15"
 xorg-libxdmcp="1.1.3"
 xorg-libxext="1.3.4"
 xorg-libxrandr="1.5.2"
 xorg-libxrender="0.9.10"
 xorg-libxt="1.2.1"
-xorg-xcb-proto="1.14.1"
-xorg-xorgproto="2021.5"
+xorg-xcb-proto="1.15.2"
+xorg-xorgproto="2022.1"
 xorg-xtrans="1.4.0"
 
-# https://github.com/Cyan4973/xxHash
+# https://github.com/Cyan4973/xxHash/
 xxhash="0.8.1"
 
 # https://tukaani.org/xz/
 xz="5.2.5"
 
-# https://github.com/yt-dlp/yt-dlp
-yt-dlp="2022.05.18"
+# https://github.com/mikefarah/yq/
+yq="4.27.2"
 
 # https://www.zlib.net/
 zlib="1.2.12"
 
 # http://zsh.sourceforge.net/Arc/source.html
-zsh="5.8.1"
+zsh="5.9"
 
 # https://facebook.github.io/zstd/
 zstd="1.5.2"
@@ -600,32 +583,26 @@ zstd="1.5.2"
 # ==============================================================================
 
 # Linux only:
-# > biobambam="2.0.182" # 2021-04-21 bioconda (linux)
-# > bwa-mem2="2.2.1" # 2021-03-17 bioconda (linux)
-# > merfishtools="1.5.0" # 2018-10-24 bioconda (linux)
-# > ribotaper="1.3.1" # 2020-07-13 bioconda (linux)
+# > biobambam="2.0.182" # 2021-04-21 bioconda
+# > bwa-mem2="2.2.1" # 2021-03-17 bioconda
+# > merfishtools="1.5.0" # 2018-10-24 bioconda
+# > ribotaper="1.3.1" # 2020-07-13 bioconda
 
 # Linux and macOS:
 # > alevin-fry="0.6.0" # 2022-06-01 bioconda
 # > arriba="2.2.1" # 2022-01-23 bioconda
 # > atropos="1.1.31" # 2021-07-07 bioconda
-# > bamtools="2.5.2" # 2022-03-14 bioconda
-# > bioawk="1.0" # 2019-10-26 bioconda
 # > bismark="0.23.1" # 2021-07-26 bioconda
 # > bwa="0.7.17" # 2019-12-19 bioconda
 # > cellrank="1.5.1" # 2022-01-14 bioconda
 # > celltypist="0.2.0" # 2022-02-14 bioconda
 # > chromhmm="1.23" # 2021-09-03 bioconda
 # > cromwell="76" # 2022-02-15 conda-forge
-# > deeptools="3.5.1" # 2021-03-17 bioconda
 # > ericscript="0.5.5" # 2021-03-26 bioconda
-# > fastqc="0.11.9" # 2021-03-25 bioconda
 # > fgbio="2.0.2" # 2022-05-24 bioconda
 # > gatk4="4.2.5.0" # 2022-02-05 bioconda
 # > genrich="0.6.1" # 2021-03-17 bioconda
 # > gffread="0.12.7" # 2021-09-24 bioconda
-# > gffutils="0.10.1" # 2020-07-26 bioconda
-# > gseapy="0.10.8" # 2022-02-10 bioconda
 # > homer="4.11" # 2020-04-29 bioconda
 # > igvtools="2.5.3" # 2021-03-25 bioconda
 # > kraken2="2.1.2" # 2021-05-10 bioconda
@@ -637,11 +614,8 @@ zstd="1.5.2"
 # > miniwdl="1.5.0" # 2022-02-19 conda-forge
 # > mirdeep2="2.0.1.3" # 2021-07-15 bioconda
 # > mirtop="0.4.24" # 2021-11-12 bioconda
-# > multiqc="1.12" # 2022-02-08 bioconda
 # > novoalign="3.09.00" # 2018-09-02 bioconda
-# > numpy="1.22.3" # 2022-03-08 conda-forge
 # > oncofuse="1.1.1" # 2021-03-27 bioconda
-# > pandas="1.4.1" # 2022-02-16 conda-forge
 # > peddy="0.4.8" # 2021-06-02 bioconda
 # > picard="2.26.10" # 2022-01-04 bioconda
 # > pizzly="0.37.3" # 2019-01-17 bioconda
@@ -668,23 +642,46 @@ zstd="1.5.2"
 # > trimmomatic="0.39" # 2021-03-27 bioconda
 # > umap-learn="0.5.2" # 2021-11-03 bioconda
 # > vardict="2019.06.04" # 2019-06-05 bioconda
+
+bamtools="2.5.2" # 2022-03-14 bioconda
 bedtools="2.30.0" # 2021-08-12 bioconda
+bioawk="1.0" # 2019-10-26 bioconda
 bowtie2="2.4.5" # 2022-02-08 bioconda
 bustools="0.41.0" # 2021-06-25 bioconda
+deeptools="3.5.1" # 2021-03-17 bioconda
 entrez-direct="16.2" # 2022-06-06 bioconda
+fastqc="0.11.9" # 2021-03-25 bioconda
 ffq="0.2.1" # 2022-05-05 bioconda
-gget="0.2.5" # 2022-06-30 bioconda
+gffutils="0.11.0" # 2022-06-05 bioconda
+gget="0.3.5" # 2022-07-08 bioconda # latest: 0.3.7
 ghostscript="9.54.0" 2021-05-14 conda-forge
+gseapy="0.10.8" # 2022-02-10 bioconda  # latest: 0.11.0
 hisat2="2.2.1" # 2020-07-24 bioconda
-jupyterlab="3.4.0" # 2022-05-03 conda-forge
+jupyterlab="3.4.4" # 2022-07-21 conda-forge
 kallisto="0.48.0" # 2022-01-17 bioconda
-nextflow="22.04.0" # 2022-04-23 bioconda
+multiqc="1.13a" # 2022-06-28 bioconda
+nextflow="22.04.5" # 2022-07-27 bioconda
 salmon="1.9.0" # 2022-06-23 bioconda
 sambamba="0.8.0" # 2021-01-02 bioconda
 samtools="1.15.1" # 2022-04-07 bioconda
-snakemake="7.8.2" # 2022-06-08 bioconda
+snakemake="7.12.0" # 2022-07-29 bioconda
 star="2.7.10a" # 2022-01-15 bioconda
 visidata="2.8" # 2022-01-13 conda-forge
+
+# GnuPG packages
+# ==============================================================================
+
+# https://gnupg.org/download/index.html
+# https://www.gnutls.org/
+
+gnutls="3.7.7"
+gnupg="2.3.7"
+libgpg-error="1.45"
+libgcrypt="1.10.1"
+libksba="1.6.0"
+libassuan="2.5.5"
+npth="1.6"
+pinentry="1.2.0"
 
 # Go packages
 # ==============================================================================
@@ -693,18 +690,17 @@ visidata="2.8" # 2022-01-13 conda-forge
 apptainer="1.0.2"
 
 # https://www.chezmoi.io/
-chezmoi="2.18.1"
+chezmoi="2.20.0"
 
 # https://github.com/junegunn/fzf
-fzf="0.30.0"
+fzf="0.32.1"
 
 # Node (NPM) packages
 # ==============================================================================
-# Updated 2022-06-14 from https://www.npmjs.com/
 
-bash-language-server="2.1.0"
+bash-language-server="3.0.5"
 gtop="1.1.3"
-prettier="2.7.0"
+prettier="2.7.1"
 
 # Perl packages
 # ==============================================================================
@@ -716,20 +712,26 @@ rename="1.31"
 # Python packages
 # ==============================================================================
 
-black="22.3.0"
+azure-cli="2.39.0"
+black="22.6.0"
 bpytop="1.0.68"
-flake8="4.0.1"
-glances="3.2.6.4"
+flake8="5.0.4"
+glances="3.2.7"
 ipython="8.4.0"
 isort="5.10.1"
-latch="1.10.1"
+latch="1.12.3"
+meson="0.63.0"
+ninja="1.10.2.3"
 pipx="1.1.0"
-poetry="1.1.13"
-pyflakes="2.4.0"
-pylint="2.14.1"
+poetry="1.1.14"
+pyflakes="2.5.0"
+pygments="2.12.0"
+pylint="2.14.5"
 pytaglib="1.5.0"
 pytest="7.1.2"
 ranger-fm="1.9.3"
+scons="4.4.0"
+yt-dlp="2022.8.8"
 
 # Ruby packages (gems)
 # ==============================================================================
@@ -745,7 +747,7 @@ ronn="0.7.3"
 # > ripgrep-all="0.9.6" # rga
 bat="0.21.0"
 broot="1.14.2" # br
-difftastic="0.31.0" # difft
+difftastic="0.32.0" # difft
 dog="0.1.0"
 du-dust="0.8.1"
 exa="0.10.1"
@@ -758,7 +760,7 @@ ripgrep="13.0.0"
 starship="1.8.0"
 tealdeer="1.5.0" # tldr
 tokei="12.1.2"
-tuc="0.10.0"
+tuc="0.11.0"
 xsv="0.13.0"
 zellij="0.30.0"
 zoxide="0.8.1" # z

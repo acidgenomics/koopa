@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider reworking this to use only Shell code instead of relying
-# on external r-koopa package.
-
 koopa_check_system() {
     # """
     # Check system.

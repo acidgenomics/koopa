@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Consider reworking to simplify, not taking 'activate-opt'...
+# as input. Need to rethink the conceptual approach of our wrappers here.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-03.
     # """
     local app bin_arr bool build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
@@ -21,9 +24,8 @@ koopa_install_app() {
         [binary]=0
         # Will any individual programs be linked into koopa 'bin/'?
         [link_in_bin]=0
-        # When enabled, this will symlink all files into make prefix,
-        # typically '/usr/local'.
-        [link_in_make]=0
+        # Link corresponding man1 documentation files for app in bin.
+        [link_in_man]=0
         # Create an unversioned symlink in koopa 'opt/' directory.
         [link_in_opt]=1
         # This override is useful for app packages configuration.
@@ -45,7 +47,6 @@ koopa_install_app() {
         [installer_fun]='main'
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
-        [make_prefix]="$(koopa_make_prefix)"
         [mode]='shared'
         [name]=''
         [platform]='common'
@@ -153,10 +154,6 @@ koopa_install_app() {
                 shift 1
                 ;;
             # Internal flags ---------------------------------------------------
-            '--link-in-make')
-                bool[link_in_make]=1
-                shift 1
-                ;;
             '--no-link-in-opt')
                 bool[link_in_opt]=0
                 shift 1
@@ -207,7 +204,6 @@ koopa_install_app() {
     if [[ "${dict[version]}" != "${dict[current_version]}" ]]
     then
         bool[link_in_bin]=0
-        bool[link_in_make]=0
         bool[link_in_opt]=0
     fi
     case "${dict[mode]}" in
@@ -226,16 +222,18 @@ ${dict[version2]}"
             ;;
         'system')
             koopa_assert_is_admin
-            bool[link_in_make]=0
             bool[link_in_opt]=0
             koopa_is_linux && bool[update_ldconfig]=1
             ;;
         'user')
-            bool[link_in_make]=0
             bool[link_in_opt]=0
             ;;
     esac
-    koopa_is_array_non_empty "${bin_arr[@]:-}" && bool[link_in_bin]=1
+    if koopa_is_array_non_empty "${bin_arr[@]:-}"
+    then
+        bool[link_in_bin]=1
+        bool[link_in_man]=1
+    fi
     [[ -d "${dict[prefix]}" ]] && \
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     [[ -z "${dict[installer_bn]}" ]] && dict[installer_bn]="${dict[name]}"
@@ -245,9 +243,9 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
     # shellcheck source=/dev/null
     source "${dict[installer_file]}"
     koopa_assert_is_function "${dict[installer_fun]}"
-    if [[ -n "${dict[prefix]}" ]]
+    if [[ -n "${dict[prefix]}" ]] && [[ "${bool[prefix_check]}" -eq 1 ]]
     then
-        if [[ -d "${dict[prefix]}" ]] && [[ "${bool[prefix_check]}" -eq 1 ]]
+        if [[ -d "${dict[prefix]}" ]]
         then
             if [[ "${bool[reinstall]}" -eq 1 ]]
             then
@@ -288,7 +286,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
-        dict[log_file]="${dict[prefix]}/.install.log"
+        dict[log_file]="${dict[prefix]}/.koopa-install.log"
     else
         dict[log_file]="$(koopa_tmp_log_file)"
     fi
@@ -300,11 +298,6 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         else
             koopa_alert_install_start "${dict[name]}"
         fi
-    fi
-    # Need to include here, otherwise GnuPG won't install correctly.
-    if [[ "${bool[link_in_opt]}" -eq 1 ]]
-    then
-        koopa_link_in_opt "${dict[prefix]}" "${dict[name]}"
     fi
     (
         koopa_cd "${dict[tmp_dir]}"
@@ -359,18 +352,46 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_sys_set_permissions --recursive --user "${dict[prefix]}"
             ;;
     esac
+    if [[ "${bool[link_in_opt]}" -eq 1 ]]
+    then
+        koopa_link_in_opt \
+            --name="${dict[name]}" \
+            --source="${dict[prefix]}"
+    fi
     if [[ "${bool[link_in_bin]}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
         do
+            local dict2
+            declare -A dict2
+            dict2[name]="${bin_arr[i]}"
+            dict2[source]="${dict[prefix]}/bin/${dict2[name]}"
             koopa_link_in_bin \
-                "${dict[prefix]}/bin/${bin_arr[i]}" \
-                "$(koopa_basename "${bin_arr[i]}")"
+                --name="${dict2[name]}" \
+                --source="${dict2[source]}"
         done
     fi
-    if [[ "${bool[link_in_make]}" -eq 1 ]]
+    if [[ "${bool[link_in_man]}" -eq 1 ]]
     then
-        koopa_link_in_make --prefix="${dict[prefix]}"
+        for i in "${!bin_arr[@]}"
+        do
+            local dict2
+            declare -A dict2
+            dict2[name]="${bin_arr[i]}.1"
+            dict2[manfile1]="${dict[prefix]}/share/man/man1/${dict2[name]}"
+            dict2[manfile2]="${dict[prefix]}/man/man1/${dict2[name]}"
+            if [[ -f "${dict2[manfile1]}" ]]
+            then
+                koopa_link_in_man1 \
+                    --name="${dict2[name]}" \
+                    --source="${dict2[manfile1]}"
+            elif [[ -f "${dict2[manfile2]}" ]]
+            then
+                koopa_link_in_man1 \
+                    --name="${dict2[name]}" \
+                    --source="${dict2[manfile2]}"
+            fi
+        done
     fi
     if [[ "${bool[update_ldconfig]}" -eq 1 ]]
     then

@@ -16,6 +16,5 @@ main() {
         --commit="${dict[commit]}" \
         --prefix="${dict[prefix]}" \
         --url="${dict[url]}"
-    # > koopa_configure_dotfiles "${dict[prefix]}"
     return 0
 }

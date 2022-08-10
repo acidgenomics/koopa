@@ -3,7 +3,7 @@
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2022-06-15.
+    # @note Updated 2022-07-28.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -17,7 +17,7 @@ koopa_conda_create_env() {
     [[ -x "${app[conda]}" ]] || return 1
     [[ -x "${app[cut]}" ]] || return 1
     declare -A dict=(
-        [conda_prefix]="$(koopa_conda_prefix)"
+        [env_prefix]="$(koopa_conda_env_prefix)"
         [force]=0
         [latest]=0
         [prefix]=''
@@ -108,7 +108,7 @@ koopa_conda_create_env() {
             koopa_print "${dict2[env_string]//=/@}" \
             | "${app[cut]}" -d '@' -f '1-2' \
         )"
-        dict2[env_prefix]="${dict[conda_prefix]}/envs/${dict2[env_name]}"
+        dict2[env_prefix]="${dict[env_prefix]}/${dict2[env_name]}"
         if [[ -d "${dict2[env_prefix]}" ]]
         then
             if [[ "${dict[force]}" -eq 1 ]]
@@ -126,9 +126,6 @@ exists at '${dict2[env_prefix]}'."
             --quiet \
             --yes \
             "${dict2[env_string]}"
-        koopa_sys_set_permissions --recursive \
-            "${dict[conda_prefix]}/pkgs" \
-            "${dict2[env_prefix]}"
         koopa_alert_install_success "${dict2[env_name]}" "${dict2[env_prefix]}"
     done
     return 0

@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Improve install consistency with hadolint...include a build step?
-
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-07-20.
     #
     # This may require system zlib to be installed currently.
     #
@@ -18,11 +16,8 @@ main() {
     # - https://github.com/commercialhaskell/stack/issues/342
     # """
     local app dict install_args stack_args
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'zlib'
-    fi
     koopa_activate_build_opt_prefix 'haskell-stack'
+    koopa_activate_opt_prefix 'zlib'
     declare -A app=(
         [stack]="$(koopa_locate_stack)"
     )
