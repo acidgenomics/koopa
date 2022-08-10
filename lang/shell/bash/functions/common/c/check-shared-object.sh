@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add support for simple direct file input.
+
 koopa_check_shared_object() {
     # """
     # Check shared object file.
@@ -14,6 +16,7 @@ koopa_check_shared_object() {
     koopa_assert_has_args "$#"
     declare -A app
     declare -A dict=(
+        [file]=''
         [name]=''
         [prefix]=''
     )
@@ -21,6 +24,14 @@ koopa_check_shared_object() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--file='*)
+                dict[file]="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict[file]="${2:?}"
+                shift 2
+                ;;
             '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
@@ -42,23 +53,31 @@ koopa_check_shared_object() {
                 ;;
         esac
     done
-    koopa_assert_is_set \
-        '--name' "${dict[name]}" \
-        '--prefix' "${dict[prefix]}"
+    if [[ -z "${dict[file]}" ]]
+    then
+        koopa_assert_is_set \
+            '--name' "${dict[name]}" \
+            '--prefix' "${dict[prefix]}"
+        if koopa_is_linux
+        then
+            dict[shared_ext]='so'
+        elif koopa_is_macos
+        then
+            dict[shared_ext]='dylib'
+        fi
+        dict[file]="${dict[prefix]}/${dict[name]}.${dict[shared_ext]}"
+    fi
+    koopa_assert_is_file "${dict[file]}"
     tool_args=()
     if koopa_is_linux
     then
         app[tool]="$(koopa_locate_ldd)"
-        dict[shared_ext]='so'
     elif koopa_is_macos
     then
         app[tool]="$(koopa_macos_locate_otool)"
-        dict[shared_ext]='dylib'
         tool_args+=('-L')
     fi
     [[ -x "${app[tool]}" ]] || return 1
-    dict[file]="${dict[prefix]}/${dict[name]}.${dict[shared_ext]}"
-    koopa_assert_is_file "${dict[file]}"
     tool_args+=("${dict[file]}")
     "${app[tool]}" "${tool_args[@]}"
     return 0
