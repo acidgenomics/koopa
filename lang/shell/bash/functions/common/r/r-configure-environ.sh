@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+# FIXME RStudio PATH is now inconsistent with R due to breaking changes
+# in internal 'SessionPath.cpp'.
+#
+# Consider filing an issue or pull request that looks for PATH defined
+# in system 'Renviron', 'Renviron.site', or user '~/.R/Renviron' config files.
+#
+# See related:
+# - https://github.com/rstudio/rstudio/blob/main/src/cpp/session/
+#     modules/SessionPath.cpp
+# - https://github.com/rstudio/rstudio/issues/10551
+# - https://github.com/rstudio/rstudio/issues/10311
+
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
