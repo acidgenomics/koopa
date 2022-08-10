@@ -18228,11 +18228,13 @@ koopa_r_configure_environ() {
     if koopa_is_macos
     then
         path_arr+=(
-            '/Library/TeX/texbin'
             '/Applications/quarto/bin'
             '/Applications/RStudio.app/Contents/MacOS'
             '/Applications/RStudio.app/Contents/MacOS/quarto/bin'
             '/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools'
+            '/Library/TeX/texbin'
+            '/opt/X11/bin'
+            '/usr/local/MacGPG2/bin'
         )
     fi
     declare -A pkgconfig_arr
