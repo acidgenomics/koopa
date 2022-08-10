@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Finalize labeling all dependencies in this build script.
+# Indicate the dependencies above each install command here.
+
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
@@ -22,8 +25,16 @@ koopa_build_all_apps() {
         [opt_prefix]="$(koopa_opt_prefix)"
     )
     pkgs=()
-    pkgs+=('pkg-config' 'make')
-    koopa_is_linux && pkgs+=('attr')
+    pkgs+=(
+        # deps: none.
+        'pkg-config'
+        # deps: none.
+        'make'
+    )
+    koopa_is_linux && pkgs+=(
+        # deps: none
+        'attr'
+    )
     pkgs+=(
         'patch'
         'xz'
@@ -173,8 +184,9 @@ koopa_build_all_apps() {
         'xxhash'
         'rsync'
         'scons'
-        'serf'
-        'subversion'
+        'serf' # deps: scons
+        'ruby' # deps: openssl3, zlib
+        'subversion' # deps: ruby, serf
         'shellcheck'
         'shunit2'
         'sox'
@@ -191,8 +203,8 @@ koopa_build_all_apps() {
         # FIXME Need to finish out recipe here.
         # Install Go packages.
         'go'
-        'chezmoi'
-        'fzf'
+        'chezmoi' # deps: go
+        'fzf' # deps: go
         # Install Cloud SDKs.
         'aws-cli'
         'azure-cli'
@@ -211,20 +223,19 @@ koopa_build_all_apps() {
         'pygments'
         'ranger-fm'
         'yt-dlp'
-        # Install Node packages.
+        # NOTE Move this up.
         'node'
-        'bash-language-server'
-        'gtop'
-        'prettier'
+        'bash-language-server' # deps: node
+        'gtop' # deps: node
+        'prettier' # deps: node
         # Install Perl packages.
-        'ack'
-        'rename'
+        'ack' # deps: perl
+        'rename' # deps: perl
         # Install Ruby packages.
-        'ruby'
-        'bashcov'
-        'colorls'
-        'ronn'
-        'rust'
+        'bashcov' # deps: ruby
+        'colorls' # deps: ruby
+        'ronn' # deps: ruby
+        'rust' # deps: ruby
         'bat' # deps: rust
         'broot' # deps: rust
         'delta' # deps: rust
@@ -243,11 +254,13 @@ koopa_build_all_apps() {
         'xsv' # deps: rust
         'zellij' # deps: rust
         'zoxide' # deps: rust
+        # NOTE Move this up.
         'julia'
         'ffq' # deps: conda
         'gget' # deps: conda
         'chemacs' # deps: go
-        'dotfiles' # deps: chemacs
+        # deps: chemacs (to configure).
+        'dotfiles'
     )
     if ! koopa_is_aarch64
     then
@@ -292,7 +305,7 @@ koopa_build_all_apps() {
         fi
         "${app[koopa]}" install "$pkg"
         # FIXME Consider asserting that the opt prefix isn't empty
-        # after this step completes. We can work this into the main
+        # after this step completes. Need to work this into the main
         # 'install_app' command.
     done
     koopa_push_all_apps
