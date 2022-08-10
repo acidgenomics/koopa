@@ -209,8 +209,8 @@ koopa_build_all_apps() {
         'pyflakes'
         'pygments'
         'ranger-fm'
-        'scons'
         'serf'
+        'scons'
         'yt-dlp'
         # Install Node packages.
         'node'
