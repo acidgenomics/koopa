@@ -92,6 +92,7 @@ koopa_install_coreutils() {
         '--link-in-bin=sort'
         '--link-in-bin=split'
         '--link-in-bin=stat'
+        '--link-in-bin=stdbuf'
         '--link-in-bin=stty'
         '--link-in-bin=sum'
         '--link-in-bin=sync'
