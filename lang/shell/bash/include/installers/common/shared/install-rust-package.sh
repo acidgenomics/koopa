@@ -31,7 +31,6 @@ main() {
         [cargo_home]="$(koopa_init_dir 'cargo')"
         [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -42,7 +41,7 @@ main() {
     case "${dict[name]}" in
         'dog')
             koopa_activate_opt_prefix 'openssl1'
-            dict[openssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl1")"
+            dict[openssl]="$(koopa_app_prefix 'openssl1')"
             export OPENSSL_DIR="${dict[openssl]}"
             koopa_add_rpath_to_ldflags "${dict[openssl]}/lib"
             ;;

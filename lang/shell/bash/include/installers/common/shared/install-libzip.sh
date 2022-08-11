@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libzip.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://libzip.org/download/
@@ -29,8 +29,8 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='libzip'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
+        [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
@@ -40,17 +40,12 @@ main() {
     koopa_cd "${dict[name]}-${dict[version]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
+    dict[zlib]="$(koopa_app_prefix 'zlib')"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+        "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
+        "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
     )
-    if koopa_is_linux
-    then
-        dict[zlib]="$(koopa_realpath "${dict[opt_prefix]}/zlib")"
-        cmake_args+=(
-            "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
-            "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.so"
-        )
-    fi
     "${app[cmake]}" .. "${cmake_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install

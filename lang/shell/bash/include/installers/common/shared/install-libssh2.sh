@@ -18,11 +18,10 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='libssh2'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[openssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl3")"
+    dict[openssl]="$(koopa_app_prefix 'openssl3')"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://www.libssh2.org/download/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
