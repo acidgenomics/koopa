@@ -19,9 +19,13 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     dict[libexec]="${dict[prefix]}/libexec"
+    # NOTE Consider reworking the case-sensitivity edge case handling here.
     case "${dict[name]}" in
         'glances')
             dict[pkg_name]='Glances'
+            ;;
+        'pygments')
+            dict[pkg_name]='Pygments'
             ;;
         'scons')
             dict[pkg_name]='SCons'
@@ -34,7 +38,7 @@ main() {
     dict[py_maj_min_ver]="$(koopa_major_minor_version "${dict[py_version]}")"
     koopa_python_create_venv \
         --prefix="${dict[libexec]}" \
-        "${dict[name]}==${dict[version]}"
+        "${dict[pkg_name]}==${dict[version]}"
     dict[record_file]="${dict[libexec]}/lib/python${dict[py_maj_min_ver]}/\
 site-packages/${dict[pkg_name]}-${dict[version]}.dist-info/RECORD"
     koopa_assert_is_file "${dict[record_file]}"
