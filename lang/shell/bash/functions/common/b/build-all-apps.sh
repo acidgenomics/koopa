@@ -339,6 +339,8 @@ koopa_build_all_apps() {
             continue
         fi
         "${app[koopa]}" install "$pkg"
+        # FIXME This needs to ensure that target directory didn't fail during
+        # build and only contains the log file.
         # FIXME Consider asserting that the opt prefix isn't empty
         # after this step completes. Need to work this into the main
         # 'install_app' command.
