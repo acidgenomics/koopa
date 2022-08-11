@@ -42,10 +42,12 @@ main() {
     dict[record_file]="${dict[libexec]}/lib/python${dict[py_maj_min_ver]}/\
 site-packages/${dict[pkg_name]}-${dict[version]}.dist-info/RECORD"
     koopa_assert_is_file "${dict[record_file]}"
+    # Ensure we exclude any nested subdirectories in libexec bin, which is
+    # known to happen with some conda recipes (e.g. bowtie2).
     readarray -t bin_names <<< "$( \
         koopa_grep \
             --file="${dict[record_file]}" \
-            --pattern='^\.\./\.\./\.\./bin/' \
+            --pattern='^\.\./\.\./\.\./bin/[^/]+,' \
             --regex \
         | "${app[cut]}" -d ',' -f '1' \
         | "${app[cut]}" -d '/' -f '5' \
