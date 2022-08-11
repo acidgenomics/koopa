@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 koopa_install_mpc() {
+    set -x # FIXME
     local dict
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
