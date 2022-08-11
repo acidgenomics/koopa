@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Indicate the dependencies above each install command here.
+
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-11.
     #
     # The approach calling 'koopa_cli_install' internally on pkgs array
     # can run into weird compilation issues on macOS.
@@ -12,15 +14,27 @@ koopa_build_all_apps() {
     # > /opt/koopa/include/bootstrap.sh
     # > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
     # """
-    local app pkg pkgs
+    local app dict pkg pkgs
     koopa_assert_has_no_args "$#"
+    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
     declare -A app=(
         [koopa]="$(koopa_locate_koopa)"
     )
     [[ -x "${app[koopa]}" ]] || return 1
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
     pkgs=()
-    pkgs+=('pkg-config' 'make')
-    koopa_is_linux && pkgs+=('attr')
+    pkgs+=(
+        # deps: none.
+        'pkg-config'
+        # deps: none.
+        'make'
+    )
+    koopa_is_linux && pkgs+=(
+        # deps: none
+        'attr'
+    )
     pkgs+=(
         'patch'
         'xz'
@@ -104,6 +118,8 @@ koopa_build_all_apps() {
         'geos'
         'proj'
         'gdal'
+        'fribidi'
+        'harfbuzz'
         'r'
         'conda'
         'apr'
@@ -126,6 +142,7 @@ koopa_build_all_apps() {
         # NOTE Consider moving these up in the install order.
         'libevent'
         'utf8proc'
+        # deps: libevent, utf8proc.
         'tmux'
         'htop'
         'boost'
@@ -136,8 +153,6 @@ koopa_build_all_apps() {
         'ffmpeg'
         'flac'
         'fltk'
-        'fribidi'
-        'gdbm'
         'libgpg-error'
         'libgcrypt'
         'libassuan'
@@ -151,8 +166,6 @@ koopa_build_all_apps() {
         'groff'
         'gsl'
         'gzip'
-        'harfbuzz'
-        'hyperfine'
         'oniguruma'
         'jq'
         'less'
@@ -171,16 +184,17 @@ koopa_build_all_apps() {
         'pytest'
         'xxhash'
         'rsync'
-        'serf'
-        'subversion'
+        'scons'
+        'serf' # deps: scons.
+        'ruby' # deps: openssl3, zlib.
+        'subversion' # deps: ruby, serf.
+        'r-devel' # deps: subversion.
         'shellcheck'
         'shunit2'
         'sox'
         'stow'
         'tar'
-        'tokei' # FIXME Rust
         'tree'
-        'tuc' # FIXME Rust
         'udunits'
         'units'
         'wget'
@@ -189,9 +203,8 @@ koopa_build_all_apps() {
         # FIXME Need to finish out recipe here.
         # Install Go packages.
         'go'
-        'apptainer'
-        'chezmoi'
-        'fzf'
+        'chezmoi' # deps: go
+        'fzf' # deps: go
         # Install Cloud SDKs.
         'aws-cli'
         'azure-cli'
@@ -209,23 +222,22 @@ koopa_build_all_apps() {
         'pyflakes'
         'pygments'
         'ranger-fm'
-        'scons'
-        'serf'
         'yt-dlp'
-        # Install Node packages.
+        'libedit'
+        'openssh' # deps: libedit
+        # NOTE Can consider using 'node-binary' here instead.
         'node'
-        'bash-language-server'
-        'gtop'
-        'prettier'
+        'bash-language-server' # deps: node
+        'gtop' # deps: node
+        'prettier' # deps: node
         # Install Perl packages.
-        'ack'
-        'rename'
+        'ack' # deps: perl
+        'rename' # deps: perl
         # Install Ruby packages.
-        'ruby'
-        'bashcov'
-        'colorls'
-        'ronn'
-        'rust'
+        'bashcov' # deps: ruby
+        'colorls' # deps: ruby
+        'ronn' # deps: ruby
+        'rust' # deps: ruby
         'bat' # deps: rust
         'broot' # deps: rust
         'delta' # deps: rust
@@ -233,6 +245,8 @@ koopa_build_all_apps() {
         # > 'dog' # deps: rust
         'du-dust' # deps: rust
         'exa' # deps: rust
+        'fd-find' # deps: rust
+        'hyperfine' # deps: rust
         'mcfly' # deps: rust
         'mdcat' # deps: rust
         'procs' # deps: rust
@@ -240,43 +254,89 @@ koopa_build_all_apps() {
         'starship' # deps: rust
         'tealdeer' # deps: rust
         'tokei' # deps: rust
+        'tuc' # deps: rust
         'xsv' # deps: rust
         'zellij' # deps: rust
         'zoxide' # deps: rust
+        # NOTE Move this up.
         'julia'
         'ffq' # deps: conda
-        'gget' # deps: conda
+        'ensembl-perl-api' # deps: none.
+        'pyenv' # deps: none.
+        'rbenv' # deps: none.
+        'cheat' # deps: go.
+        'pylint' # deps: python.
+        'yq' # deps: go.
+        'sra-tools' # deps: cmake, hdf5, libxml2, python.
         'chemacs' # deps: go
-        'dotfiles' # deps: chemacs
+        # deps: chemacs (to configure).
+        'dotfiles'
     )
     if ! koopa_is_aarch64
     then
         pkgs+=(
             'anaconda'
-            'aspera-connect'
-            # FIXME Consider renaming / reworking this recipe...helpers.
-            'docker-credential-pass'
-            'hadolint'
             'haskell-stack'
-            'kallisto'
-            'pandoc'
-            'salmon'
-            'snakemake'
+            'hadolint' # deps: haskell-stack
+            'pandoc' # deps: haskell-stack
+            'bamtools' # deps: conda
+            'bedtools' # deps: conda
+            'bioawk' # deps: conda
+            'bowtie2' # deps: conda
+            'bustools' # deps: conda
+            'deeptools' # deps: conda
+            'entrez-direct' # deps: conda
+            'fastqc' # deps: conda
+            'gffutils' # deps: conda
+            'gget' # deps: conda
+            'ghostscript' # deps: conda
+            'gseapy' # deps: conda
+            'hisat2' # deps: conda
+            'jupyterlab' # deps: conda
+            'kallisto' # deps: conda
+            'multiqc' # deps: conda
+            'nextflow' # deps: conda
+            'salmon' # deps: conda
+            'sambamba' # deps: conda
+            'samtools' # deps: conda
+            'snakemake' # deps: conda
+            'star' # deps: conda
+            'visidata' # deps: conda
         )
     fi
-    koopa_is_linux && pkgs+=('lmod')
-    # App package libraries aren't supported as binary downloads, so keep
-    # this step disabled.
-    # > pkgs+=('julia-packages' 'r-packages')
-    # This approach runs into compiler issues on macOS.
-    # > koopa_cli_install "${pkgs[@]}"
+    if koopa_is_linux
+    then
+        pkgs+=(
+            'apptainer'
+            'lmod'
+        )
+        if ! koopa_is_aarch64
+        then
+            pkgs+=(
+                'aspera-connect'
+                # FIXME Rename this to 'docker-credential-helpers'.
+                'docker-credential-pass'
+            )
+        fi
+    fi
+    # FIXME Rework this using 'koopa_is_symlink'.
+    # FIXME Also check if directory is empty...need to rework our log file
+    # copy approach first here.
+    # FIXME This needs to ensure that target directory didn't fail during
+    # build and only contains the log file.
+    # FIXME Consider asserting that the opt prefix isn't empty
+    # after this step completes. Need to work this into the main
+    # 'install_app' command.
     for pkg in "${pkgs[@]}"
     do
-        "${app[koopa]}" install "$pkg"
-        # FIXME Consider asserting that the opt prefix isn't empty
-        # after this step completes. We can work this into the main
-        # 'install_app' command.
+        if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
+            [[ -e "${dict[opt_prefix]}/${pkg}" ]]
+        then
+            continue
+        fi
+        # NOTE This approach is running into compiler issues on macOS.
+        # > koopa_cli_install "$pkg"
+        "${app[koopa]}" install --push "$pkg"
     done
-    koopa_push_all_apps
     return 0
 }

@@ -3113,15 +3113,24 @@ koopa_brew_upgrade_brews() {
 }
 
 koopa_build_all_apps() {
-    local app pkg pkgs
+    local app dict pkg pkgs
     koopa_assert_has_no_args "$#"
+    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
     declare -A app=(
         [koopa]="$(koopa_locate_koopa)"
     )
     [[ -x "${app[koopa]}" ]] || return 1
+    declare -A dict=(
+        [opt_prefix]="$(koopa_opt_prefix)"
+    )
     pkgs=()
-    pkgs+=('pkg-config' 'make')
-    koopa_is_linux && pkgs+=('attr')
+    pkgs+=(
+        'pkg-config'
+        'make'
+    )
+    koopa_is_linux && pkgs+=(
+        'attr'
+    )
     pkgs+=(
         'patch'
         'xz'
@@ -3202,6 +3211,8 @@ koopa_build_all_apps() {
         'geos'
         'proj'
         'gdal'
+        'fribidi'
+        'harfbuzz'
         'r'
         'conda'
         'apr'
@@ -3233,8 +3244,6 @@ koopa_build_all_apps() {
         'ffmpeg'
         'flac'
         'fltk'
-        'fribidi'
-        'gdbm'
         'libgpg-error'
         'libgcrypt'
         'libassuan'
@@ -3248,8 +3257,6 @@ koopa_build_all_apps() {
         'groff'
         'gsl'
         'gzip'
-        'harfbuzz'
-        'hyperfine'
         'oniguruma'
         'jq'
         'less'
@@ -3268,25 +3275,25 @@ koopa_build_all_apps() {
         'pytest'
         'xxhash'
         'rsync'
-        'serf'
-        'subversion'
+        'scons'
+        'serf' # deps: scons.
+        'ruby' # deps: openssl3, zlib.
+        'subversion' # deps: ruby, serf.
+        'r-devel' # deps: subversion.
         'shellcheck'
         'shunit2'
         'sox'
         'stow'
         'tar'
-        'tokei' # FIXME Rust
         'tree'
-        'tuc' # FIXME Rust
         'udunits'
         'units'
         'wget'
         'which'
         'libgeotiff'
         'go'
-        'apptainer'
-        'chezmoi'
-        'fzf'
+        'chezmoi' # deps: go
+        'fzf' # deps: go
         'aws-cli'
         'azure-cli'
         'google-cloud-sdk'
@@ -3302,26 +3309,27 @@ koopa_build_all_apps() {
         'pyflakes'
         'pygments'
         'ranger-fm'
-        'scons'
-        'serf'
         'yt-dlp'
+        'libedit'
+        'openssh' # deps: libedit
         'node'
-        'bash-language-server'
-        'gtop'
-        'prettier'
-        'ack'
-        'rename'
-        'ruby'
-        'bashcov'
-        'colorls'
-        'ronn'
-        'rust'
+        'bash-language-server' # deps: node
+        'gtop' # deps: node
+        'prettier' # deps: node
+        'ack' # deps: perl
+        'rename' # deps: perl
+        'bashcov' # deps: ruby
+        'colorls' # deps: ruby
+        'ronn' # deps: ruby
+        'rust' # deps: ruby
         'bat' # deps: rust
         'broot' # deps: rust
         'delta' # deps: rust
         'difftastic' # deps: rust
         'du-dust' # deps: rust
         'exa' # deps: rust
+        'fd-find' # deps: rust
+        'hyperfine' # deps: rust
         'mcfly' # deps: rust
         'mdcat' # deps: rust
         'procs' # deps: rust
@@ -3329,35 +3337,77 @@ koopa_build_all_apps() {
         'starship' # deps: rust
         'tealdeer' # deps: rust
         'tokei' # deps: rust
+        'tuc' # deps: rust
         'xsv' # deps: rust
         'zellij' # deps: rust
         'zoxide' # deps: rust
         'julia'
         'ffq' # deps: conda
-        'gget' # deps: conda
+        'ensembl-perl-api' # deps: none.
+        'pyenv' # deps: none.
+        'rbenv' # deps: none.
+        'cheat' # deps: go.
+        'pylint' # deps: python.
+        'yq' # deps: go.
+        'sra-tools' # deps: cmake, hdf5, libxml2, python.
         'chemacs' # deps: go
-        'dotfiles' # deps: chemacs
+        'dotfiles'
     )
     if ! koopa_is_aarch64
     then
         pkgs+=(
             'anaconda'
-            'aspera-connect'
-            'docker-credential-pass'
-            'hadolint'
             'haskell-stack'
-            'kallisto'
-            'pandoc'
-            'salmon'
-            'snakemake'
+            'hadolint' # deps: haskell-stack
+            'pandoc' # deps: haskell-stack
+            'bamtools' # deps: conda
+            'bedtools' # deps: conda
+            'bioawk' # deps: conda
+            'bowtie2' # deps: conda
+            'bustools' # deps: conda
+            'deeptools' # deps: conda
+            'entrez-direct' # deps: conda
+            'fastqc' # deps: conda
+            'gffutils' # deps: conda
+            'gget' # deps: conda
+            'ghostscript' # deps: conda
+            'gseapy' # deps: conda
+            'hisat2' # deps: conda
+            'jupyterlab' # deps: conda
+            'kallisto' # deps: conda
+            'multiqc' # deps: conda
+            'nextflow' # deps: conda
+            'salmon' # deps: conda
+            'sambamba' # deps: conda
+            'samtools' # deps: conda
+            'snakemake' # deps: conda
+            'star' # deps: conda
+            'visidata' # deps: conda
         )
     fi
-    koopa_is_linux && pkgs+=('lmod')
+    if koopa_is_linux
+    then
+        pkgs+=(
+            'apptainer'
+            'lmod'
+        )
+        if ! koopa_is_aarch64
+        then
+            pkgs+=(
+                'aspera-connect'
+                'docker-credential-pass'
+            )
+        fi
+    fi
     for pkg in "${pkgs[@]}"
     do
-        "${app[koopa]}" install "$pkg"
+        if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
+            [[ -e "${dict[opt_prefix]}/${pkg}" ]]
+        then
+            continue
+        fi
+        "${app[koopa]}" install --push "$pkg"
     done
-    koopa_push_all_apps
     return 0
 }
 
@@ -11014,8 +11064,10 @@ koopa_install_all_apps() {
     pkgs=(
         'openssl1'
         'openssl3'
+        'curl'
         'pcre'
         'pcre2'
+        'grep'
         'ack'
         'anaconda'
         'apr'
@@ -11026,19 +11078,26 @@ koopa_install_all_apps() {
         'automake'
         'aws-cli'
         'azure-cli'
+        'bamtools'
         'bash'
         'bash-language-server'
         'bashcov'
         'bat'
         'bc'
+        'bedtools'
         'binutils'
+        'bioawk'
         'bison'
         'black'
         'boost'
+        'bowtie2'
         'bpytop'
         'broot'
+        'bustools'
         'bzip2'
+        'ca-certificates'
         'cairo'
+        'cheat'
         'chemacs'
         'chezmoi'
         'cmake'
@@ -11046,15 +11105,18 @@ koopa_install_all_apps() {
         'conda'
         'coreutils'
         'cpufetch'
-        'curl'
+        'deeptools'
         'delta'
         'difftastic'
         'dotfiles'
         'du-dust'
         'emacs'
         'ensembl-perl-api'
+        'entrez-direct'
         'exa'
         'exiftool'
+        'expat'
+        'fastqc'
         'fd-find'
         'ffmpeg'
         'ffq'
@@ -11073,7 +11135,9 @@ koopa_install_all_apps() {
         'gdbm'
         'geos'
         'gettext'
+        'gffutils'
         'gget'
+        'ghostscript'
         'git'
         'glances'
         'glib'
@@ -11084,8 +11148,8 @@ koopa_install_all_apps() {
         'google-cloud-sdk'
         'gperf'
         'graphviz'
-        'grep'
         'groff'
+        'gseapy'
         'gsl'
         'gtop'
         'gzip'
@@ -11093,6 +11157,7 @@ koopa_install_all_apps() {
         'harfbuzz'
         'haskell-stack'
         'hdf5'
+        'hisat2'
         'htop'
         'hyperfine'
         'icu4c'
@@ -11102,6 +11167,7 @@ koopa_install_all_apps() {
         'jpeg'
         'jq'
         'julia'
+        'jupyterlab'
         'kallisto'
         'lame'
         'lapack'
@@ -11141,10 +11207,12 @@ koopa_install_all_apps() {
         'meson'
         'mpc'
         'mpfr'
+        'multiqc'
         'ncurses'
         'neofetch'
         'neovim'
         'nettle'
+        'nextflow'
         'nim'
         'ninja'
         'node'
@@ -11165,6 +11233,7 @@ koopa_install_all_apps() {
         'prettier'
         'procs'
         'proj'
+        'pyenv'
         'pyflakes'
         'pygments'
         'pylint'
@@ -11172,7 +11241,9 @@ koopa_install_all_apps() {
         'pytest'
         'python'
         'r'
+        'r-devel'
         'ranger-fm'
+        'rbenv'
         'readline'
         'rename'
         'ripgrep'
@@ -11181,6 +11252,8 @@ koopa_install_all_apps() {
         'ruby'
         'rust'
         'salmon'
+        'sambamba'
+        'samtools'
         'scons'
         'sed'
         'serf'
@@ -11189,6 +11262,8 @@ koopa_install_all_apps() {
         'snakemake'
         'sox'
         'sqlite'
+        'sra-tools'
+        'star'
         'starship'
         'stow'
         'subversion'
@@ -11205,6 +11280,7 @@ koopa_install_all_apps() {
         'units'
         'utf8proc'
         'vim'
+        'visidata'
         'wget'
         'which'
         'xorg-libice'
@@ -11224,8 +11300,10 @@ koopa_install_all_apps() {
         'xsv'
         'xxhash'
         'xz'
+        'yq'
         'yt-dlp'
         'zellij'
+        'zlib'
         'zoxide'
         'zsh'
         'zstd'
@@ -11241,11 +11319,6 @@ koopa_install_all_apps() {
         )
     fi
     koopa_cli_install --binary "${pkgs[@]}"
-    pkgs=(
-        'r-packages'
-    )
-    koopa_cli_install "${pkgs[@]}"
-    koopa_configure_dotfiles
     return 0
 }
 
@@ -11809,6 +11882,7 @@ koopa_install_bedtools() {
 
 koopa_install_binutils() {
     koopa_install_app \
+        --activate-build-opt='texinfo' \
         --installer='gnu-app' \
         --name='binutils' \
         "$@"
@@ -15452,10 +15526,6 @@ koopa_link_in_opt() {
     __koopa_link_in_dir --prefix="$(koopa_opt_prefix)" "$@"
 }
 
-koopa_link_in_sbin() {
-    __koopa_link_in_dir --prefix="$(koopa_sbin_prefix)" "$@"
-}
-
 koopa_list_app_versions() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -17885,6 +17955,8 @@ koopa_push_app_build() {
         [s3_bucket]='s3://koopa.acidgenomics.com'
         [tmp_dir]="$(koopa_tmp_dir)"
     )
+    export AWS_MAX_ATTEMPTS=5
+    export AWS_RETRY_MODE='standard'
     for name in "$@"
     do
         local dict2
@@ -18199,10 +18271,6 @@ koopa_r_configure_environ() {
         "R_LIBS_USER=\${R_LIBS_SITE}"
     )
     path_arr=()
-    if koopa_is_macos
-    then
-        path_arr+=('/Applications/RStudio.app/Contents/MacOS/pandoc')
-    fi
     path_arr+=(
         "${dict[koopa_prefix]}/bin"
         '/usr/bin'
@@ -18210,7 +18278,12 @@ koopa_r_configure_environ() {
     )
     if koopa_is_macos
     then
-        path_arr+=('/Library/TeX/texbin')
+        path_arr+=(
+            '/Applications/quarto/bin'
+            '/Library/TeX/texbin'
+            '/usr/local/MacGPG2/bin'
+            '/opt/X11/bin'
+        )
     fi
     declare -A pkgconfig_arr
     keys=(
@@ -24529,10 +24602,6 @@ koopa_unlink_in_opt() {
         --allow-missing \
         --prefix="$(koopa_opt_prefix)" \
         "$@"
-}
-
-koopa_unlink_in_sbin() {
-    __koopa_unlink_in_dir --prefix="$(koopa_sbin_prefix)" "$@"
 }
 
 koopa_update_app() {

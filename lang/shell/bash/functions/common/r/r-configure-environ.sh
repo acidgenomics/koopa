@@ -1,9 +1,21 @@
 #!/usr/bin/env bash
 
+# FIXME RStudio PATH is now inconsistent with R due to breaking changes
+# in internal 'SessionPath.cpp'.
+#
+# Consider filing an issue or pull request that looks for PATH defined
+# in system 'Renviron', 'Renviron.site', or user '~/.R/Renviron' config files.
+#
+# See related:
+# - https://github.com/rstudio/rstudio/blob/main/src/cpp/session/
+#     modules/SessionPath.cpp
+# - https://github.com/rstudio/rstudio/issues/10551
+# - https://github.com/rstudio/rstudio/issues/10311
+
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-07-24.
+    # @note Updated 2022-08-10.
     #
     # @section Package library location:
     #
@@ -94,10 +106,6 @@ koopa_r_configure_environ() {
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
     path_arr=()
-    if koopa_is_macos
-    then
-        path_arr+=('/Applications/RStudio.app/Contents/MacOS/pandoc')
-    fi
     path_arr+=(
         "${dict[koopa_prefix]}/bin"
         '/usr/bin'
@@ -105,7 +113,15 @@ koopa_r_configure_environ() {
     )
     if koopa_is_macos
     then
-        path_arr+=('/Library/TeX/texbin')
+        path_arr+=(
+            '/Applications/quarto/bin'
+            # > '/Applications/RStudio.app/Contents/MacOS'
+            # > '/Applications/RStudio.app/Contents/MacOS/quarto/bin'
+            # . '/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools'
+            '/Library/TeX/texbin'
+            '/usr/local/MacGPG2/bin'
+            '/opt/X11/bin'
+        )
     fi
     # Set the 'PKG_CONFIG_PATH' string.
     declare -A pkgconfig_arr

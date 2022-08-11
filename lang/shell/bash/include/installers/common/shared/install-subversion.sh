@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Something didn't link expat correctly in one of the upstream
+# dependencies...how to deal with that?
+
 main() {
     # """
     # Install Subversion.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-11.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -39,14 +42,14 @@ main() {
         [mirror]='https://archive.apache.org/dist'
         [jobs]="$(koopa_cpu_count)"
         [name]='subversion'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[apr]="$(koopa_realpath "${dict[opt_prefix]}/apr")"
-    dict[apr_util]="$(koopa_realpath "${dict[opt_prefix]}/apr-util")"
-    dict[serf]="$(koopa_realpath "${dict[opt_prefix]}/serf")"
-    dict[sqlite]="$(koopa_realpath "${dict[opt_prefix]}/sqlite")"
+    # FIXME What about expat here?
+    dict[apr]="$(koopa_app_prefix 'apr')"
+    dict[apr_util]="$(koopa_app_prefix 'apr-util')"
+    dict[serf]="$(koopa_app_prefix 'serf')"
+    dict[sqlite]="$(koopa_app_prefix 'sqlite')"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-debug'
