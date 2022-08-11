@@ -3,6 +3,9 @@
 # FIXME This is causing 'koopa install --all' to error because it's attempting
 # to locate mpfr, which isn't installed yet.
 # FIXME Need to rework the installer here for better binary support.
+# FIXME Break out to separate installer. Don't use '--activate-opt' here, as
+# it can cause issues with binary package install.
+
 
 koopa_install_mpc() {
     set -x 

@@ -16,6 +16,9 @@
 
 # FIXME Is this not creating a 'subversion' link correctly into opt?
 
+# FIXME Consider not allowing '--activate-opt', '--activate-build-opt' usage
+# here, in favor of wrapping inside an internal only installer function...
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
