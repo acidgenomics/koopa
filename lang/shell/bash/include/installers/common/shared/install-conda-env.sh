@@ -43,9 +43,11 @@ main() {
             --type='f' \
     )"
     koopa_assert_is_file "${dict[json_file]}"
+    # Be sure to excluded nested directories that may exist in libexec bin, such
+    # as 'bin/scripts' for bowtie2.
     readarray -t bin_names <<< "$( \
         "${app[jq]}" --raw-output '.files[]' "${dict[json_file]}" \
-            | koopa_grep --pattern='^bin/' --regex \
+            | koopa_grep --pattern='^bin/[^/]+$' --regex \
             | "${app[cut]}" -d '/' -f '2' \
     )"
     if koopa_is_array_non_empty "${bin_names[@]:-}"
