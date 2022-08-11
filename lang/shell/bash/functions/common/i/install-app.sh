@@ -3,10 +3,23 @@
 # FIXME Consider reworking to simplify, not taking 'activate-opt'...
 # as input. Need to rethink the conceptual approach of our wrappers here.
 
+# FIXME Rework our log file approach...copy the log file to the target prefix
+# only when the build completes and is successful.
+# FIXME That way we can define checks during 'build_all_apps' that will rebuild
+# if a directory is empty. This also makes the reinstall check better because
+# a build folder will be empty.
+
+# FIXME Need to add 'koopa_is_symlink', which uses '-L' and '-e' to see if
+# the symlink is function.
+# FIXME Need to add 'koopa_is_broken_symlink', which uses '-L' and ! -'e'
+# to see if the link doesn't resolve.
+
+# FIXME Is this not creating a 'subversion' link correctly into opt?
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-08-03.
+    # @note Updated 2022-08-11.
     # """
     local app bin_arr bool build_opt_arr clean_path_arr dict i opt_arr pos
     koopa_assert_has_args "$#"
