@@ -19,6 +19,9 @@
 # FIXME Consider not allowing '--activate-opt', '--activate-build-opt' usage
 # here, in favor of wrapping inside an internal only installer function...
 
+# FIXME Rework our logic here to only link into opt when user is not passing
+# in a custom version. We may need to set a boolean to handle this.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
