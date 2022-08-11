@@ -279,7 +279,7 @@ koopa_install_all_apps() {
     fi
     for pkg in "${pkgs[@]}"
     do
-        koopa_cli_install --binary "$pkg"
+        koopa install --binary "$pkg"
     done
     return 0
 }

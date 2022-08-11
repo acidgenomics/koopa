@@ -11320,7 +11320,7 @@ koopa_install_all_apps() {
     fi
     for pkg in "${pkgs[@]}"
     do
-        koopa_cli_install --binary "$pkg"
+        koopa install --binary "$pkg"
     done
     return 0
 }
@@ -13152,6 +13152,7 @@ koopa_install_meson() {
 }
 
 koopa_install_mpc() {
+    set -x # FIXME
     local dict
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
