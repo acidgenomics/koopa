@@ -5,7 +5,7 @@
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-08-09.
+    # @note Updated 2022-08-10.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -50,7 +50,11 @@ main() {
             conf_args+=('--without-p11-kit')
             ;;
         'pinentry')
-            koopa_activate_opt_prefix 'fltk' 'ncurses'
+            koopa_activate_opt_prefix \
+                'fltk' \
+                'ncurses' \
+                'libgpg-error' \
+                'libassuan' \
             ;;
         'gnupg')
             koopa_activate_opt_prefix \
@@ -91,7 +95,7 @@ main() {
                 koopa_activate_opt_prefix 'pinentry'
                 dict[pinentry]="$(koopa_app_prefix 'pinentry')"
                 # FIXME Do we need to point to the pinentry binary here?
-                conf_args+=("--with-pinentry-pgm=${dict[pintentry]}")
+                conf_args+=("--with-pinentry-pgm=${dict[pinentry]}")
             fi
             ;;
     esac
