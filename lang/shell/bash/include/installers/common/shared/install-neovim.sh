@@ -56,13 +56,13 @@ refs/tags/${dict[file]}"
     koopa_extract "${dict[file]}"
     # Need to create g-prefixed libtools symlinks, otherwise the build will
     # fail on macOS.
-    dict[opt_prefix]="$(koopa_opt_prefix)"
+    dict[libtool]="$(koopa_app_prefix 'libtool')"
     dict[bin_extra]="$(koopa_init_dir 'bin-extra')"
     koopa_ln \
-        "${dict[opt_prefix]}/libtool/bin/libtool" \
+        "${dict[libtool]}/bin/libtool" \
         "${dict[bin_extra]}/glibtool"
     koopa_ln \
-        "${dict[opt_prefix]}/libtool/bin/libtoolize" \
+        "${dict[libtool]}/bin/libtoolize" \
         "${dict[bin_extra]}/glibtoolize"
     koopa_add_to_path_start "${dict[bin_extra]}"
     koopa_cd "${dict[name]}-${dict[version]}"
@@ -70,13 +70,11 @@ refs/tags/${dict[file]}"
     if koopa_is_macos
     then
         dict[link_gettext]=0
-        dict[opt_prefix]="$(koopa_opt_prefix)"
+        dict[gettext]="$(koopa_app_prefix 'gettext')"
         if [[ ! -d '/usr/local/opt/gettext' ]]
         then
             dict[link_gettext]=1
-            koopa_ln \
-                "${dict[opt_prefix]}/gettext" \
-                '/usr/local/opt/gettext'
+            koopa_ln "${dict[gettext]}" '/usr/local/opt/gettext'
         fi
     fi
     "${app[make]}" distclean

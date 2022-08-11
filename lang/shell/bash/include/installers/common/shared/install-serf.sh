@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apache Serf.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-11.
     #
     # Required by subversion for HTTPS connections.
     #
@@ -38,7 +38,6 @@ main() {
     [[ -x "${app[scons]}" ]] || return 1
     declare -A dict=(
         [name]='serf'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -152,13 +151,13 @@ diff -Naurp serf-1.3.9.orig/buckets/ssl_buckets.c serf-1.3.9/buckets/ssl_buckets
 END
     "${app[patch]}" -Np1 -i 'patch-openssl3.patch'
     # Refer to 'SConstruct' file for supported arguments.
-    dict[apr]="$(koopa_realpath "${dict[opt_prefix]}/apr")"
-    dict[apu]="$(koopa_realpath "${dict[opt_prefix]}/apr-util")"
+    dict[apr]="$(koopa_app_prefix 'apr')"
+    dict[apu]="$(koopa_app_prefix 'apr-util')"
     dict[cflags]="${CFLAGS:-}"
     dict[libdir]="${dict[prefix]}/lib"
     dict[linkflags]="${LDFLAGS:-}"
-    dict[openssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl3")"
-    dict[zlib]="$(koopa_realpath "${dict[opt_prefix]}/zlib")"
+    dict[openssl]="$(koopa_app_prefix 'openssl3')"
+    dict[zlib]="$(koopa_app_prefix 'zlib')"
     scons_args=(
         "APR=${dict[apr]}"
         "APU=${dict[apu]}"

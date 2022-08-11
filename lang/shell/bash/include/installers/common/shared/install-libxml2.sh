@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libxml2.
-    # @note Updated 2022-04-28.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
@@ -20,7 +20,6 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='libxml2'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -31,9 +30,10 @@ ${dict[maj_min_ver]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    # > dict[python]="$(koopa_app_prefix 'python')"
     conf_args=(
         # > '--with-history'
-        # > "--with-python=${dict[opt_prefix]}/python/bin/python3"
+        # > "--with-python=${dict[python]}/bin/python3"
         "--prefix=${dict[prefix]}"
         '--enable-static'
     )

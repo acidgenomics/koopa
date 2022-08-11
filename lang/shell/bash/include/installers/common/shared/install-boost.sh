@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Boost library.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://www.boost.org/users/download/
@@ -18,11 +18,9 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='boost'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[icu4c_prefix]="${dict[opt_prefix]}/icu4c"
     dict[snake_version]="$(koopa_snake_case_simple "${dict[version]}")"
     dict[file]="${dict[name]}_${dict[snake_version]}.tar.bz2"
     dict[url]="https://boostorg.jfrog.io/artifactory/main/release/\
@@ -30,9 +28,10 @@ ${dict[version]}/source/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}_${dict[snake_version]}"
+    dict[icu4c]="$(koopa_app_prefix 'icu4c')"
     bootstrap_args=(
         "--prefix=${dict[prefix]}"
-        "--with-icu=${dict[icu4c_prefix]}"
+        "--with-icu=${dict[icu4c]}"
         "--with-python=${app[python]}"
     )
     b2_args=(

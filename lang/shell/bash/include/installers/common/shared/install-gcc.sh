@@ -71,13 +71,12 @@ main() {
         [gnu_mirror]="$(koopa_gnu_mirror_url)"
         [jobs]="$(koopa_cpu_count)"
         [name]='gcc'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
-    dict[mpc]="$(koopa_realpath "${dict[opt_prefix]}/mpc")"
-    dict[mpfr]="$(koopa_realpath "${dict[opt_prefix]}/mpfr")"
+    dict[gmp]="$(koopa_app_prefix 'gmp')"
+    dict[mpc]="$(koopa_app_prefix 'mpc')"
+    dict[mpfr]="$(koopa_app_prefix 'mpfr')"
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="${dict[gnu_mirror]}/${dict[name]}/\
 ${dict[name]}-${dict[version]}/${dict[file]}"

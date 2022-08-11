@@ -13,7 +13,7 @@
 main() {
     # """
     # Install rsync.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://download.samba.org/pub/rsync/INSTALL
@@ -42,7 +42,6 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='rsync'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )

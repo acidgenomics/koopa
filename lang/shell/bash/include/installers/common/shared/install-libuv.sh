@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libuv.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libuv.rb
@@ -36,10 +36,10 @@ archive/${dict[file]}"
     koopa_extract "${dict[file]}"
     # Need to create g-prefixed libtools symlinks, otherwise the build will
     # fail on macOS.
-    dict[opt_prefix]="$(koopa_opt_prefix)"
+    dict[libtool]="$(koopa_app_prefix 'libtool')"
     dict[bin_extra]="$(koopa_init_dir 'bin-extra')"
     koopa_ln \
-        "${dict[opt_prefix]}/libtool/bin/libtoolize" \
+        "${dict[libtool]}/bin/libtoolize" \
         "${dict[bin_extra]}/glibtoolize"
     koopa_add_to_path_start "${dict[bin_extra]}"
     koopa_cd "${dict[name]}-${dict[version]}"

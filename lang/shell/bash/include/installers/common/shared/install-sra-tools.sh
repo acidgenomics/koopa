@@ -6,7 +6,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2022-06-22.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://github.com/ncbi/sra-tools/wiki/
@@ -22,12 +22,16 @@ main() {
     koopa_activate_opt_prefix 'hdf5' 'libxml2' 'python'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
+        [python]="$(koopa_locate_python)"
     )
     [[ -x "${app[cmake]}" ]] || return 1
+    [[ -x "${app[python]}" ]] || return 1
+    # CMake configuration will pick up Python Framework on macOS unless we
+    # set this manually.
+    app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
         [base_url]='https://github.com/ncbi'
         [java_home]="$(koopa_java_prefix)"
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -35,9 +39,6 @@ main() {
     # ngs-tools install.
     koopa_assert_is_dir "${dict[java_home]}"
     export JAVA_HOME="${dict[java_home]}"
-    # CMake configuration will pick up Python Framework on macOS unless we
-    # set this manually.
-    app[python]="$(koopa_realpath "${dict[opt_prefix]}/python/bin/python3")"
     # Need to use HDF5 1.10 API.
     export CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
     # Build NCBI VDB Software Development Kit (no install).
