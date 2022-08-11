@@ -6,7 +6,7 @@
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-11.
     #
     # The approach calling 'koopa_cli_install' internally on pkgs array
     # can run into weird compilation issues on macOS.
@@ -290,6 +290,40 @@ koopa_build_all_apps() {
             )
         fi
     fi
+
+    # FIXME Double check which conda recipes aren't available on aarch64
+    # e.g. bioconda
+    pkgs+=(
+        'libedit'
+        'openssh' # deps: libedit
+        'bamtools'
+        'bedtools'
+        'bioawk'
+        'bowtie2'
+        'bustools'
+        'cheat'
+        'deeptools'
+        'ensembl-perl-api'
+        'entrez-direct'
+        'fastqc'
+        'gffutils'
+        'ghostscript'
+        'gseapy'
+        'hisat2'
+        'jupyterlab'
+        'multiqc'
+        'nextflow'
+        'pyenv'
+        'pylint'
+        'r-devel'
+        'rbenv'
+        'sambamba'
+        'samtools'
+        'sra-tools'
+        'star'
+        'visidata'
+        'yq'
+    )
     # App package libraries aren't supported as binary downloads, so keep
     # this step disabled.
     # > pkgs+=('julia-packages' 'r-packages')

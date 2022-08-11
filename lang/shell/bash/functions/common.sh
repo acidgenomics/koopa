@@ -3369,6 +3369,38 @@ koopa_build_all_apps() {
             )
         fi
     fi
+
+    pkgs+=(
+        'libedit'
+        'openssh' # deps: libedit
+        'bamtools'
+        'bedtools'
+        'bioawk'
+        'bowtie2'
+        'bustools'
+        'cheat'
+        'deeptools'
+        'ensembl-perl-api'
+        'entrez-direct'
+        'fastqc'
+        'gffutils'
+        'ghostscript'
+        'gseapy'
+        'hisat2'
+        'jupyterlab'
+        'multiqc'
+        'nextflow'
+        'pyenv'
+        'pylint'
+        'r-devel'
+        'rbenv'
+        'sambamba'
+        'samtools'
+        'sra-tools'
+        'star'
+        'visidata'
+        'yq'
+    )
     for pkg in "${pkgs[@]}"
     do
         if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
