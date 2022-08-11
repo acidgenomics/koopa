@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Doom Emacs.
-    # @note Updated 2022-07-14.
+    # @note Updated 2022-08-11.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -45,8 +45,8 @@ main() {
         '--no-env'
         '--no-fonts'
     )
-    "${app[doom]}" --yes install "${install_args[@]}"
-    "${app[doom]}" --yes sync
-    # > "${app[doom]}" --yes doctor
+    "${app[doom]}" install "${install_args[@]}"
+    "${app[doom]}" sync
+    # > "${app[doom]}" doctor
     return 0
 }
