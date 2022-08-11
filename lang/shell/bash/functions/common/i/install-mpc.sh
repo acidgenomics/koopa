@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME This is causing 'koopa install --all' to error because it's attempting
+# to locate mpfr, which isn't installed yet.
+# FIXME Need to rework the installer here for better binary support.
+
 koopa_install_mpc() {
-    set -x # FIXME
+    set -x 
     local dict
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
