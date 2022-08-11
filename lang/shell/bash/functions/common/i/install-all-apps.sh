@@ -160,6 +160,10 @@ koopa_install_all_apps() {
         'mcfly'
         'mdcat'
         'meson'
+        # FIXME This step is currently problematic because install recipes
+        # requires mpfr to be installed first...need to rework install approach
+        # to not include '--activate-opt' in the main install command, so we
+        # don't hit issues when installing binary packages.
         'mpc'
         'mpfr'
         'multiqc'
