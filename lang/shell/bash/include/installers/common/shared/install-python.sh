@@ -75,11 +75,10 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='python'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[openssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl3")"
+    dict[openssl]="$(koopa_app_prefix 'openssl3')"
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[file]="Python-${dict[version]}.tar.xz"
     dict[url]="https://www.python.org/ftp/${dict[name]}/${dict[version]}/\

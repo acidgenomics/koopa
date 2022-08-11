@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-11.
     #
     # This may require system zlib to be installed currently.
     #
@@ -25,7 +25,6 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='pandoc'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [stack_root]="$(koopa_init_dir 'stack')"
         [version]="${INSTALL_VERSION:?}"
@@ -36,20 +35,17 @@ ${dict[name]}-${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    dict[zlib]="$(koopa_app_prefix 'zlib')"
     stack_args=(
         "--jobs=${dict[jobs]}"
         "--stack-root=${dict[stack_root]}"
         '--verbose'
+        "--extra-include-dirs=${dict[zlib]}/include"
+        "--extra-lib-dirs=${dict[zlib]}/lib"
     )
-    if koopa_is_linux
-    then
-        dict[zlib]="$(koopa_realpath "${dict[opt_prefix]}/zlib")"
-        stack_args+=(
-            "--extra-include-dirs=${dict[zlib]}/include"
-            "--extra-lib-dirs=${dict[zlib]}/lib"
-        )
-    fi
-    install_args=("--local-bin-path=${dict[prefix]}/bin")
+    install_args=(
+        "--local-bin-path=${dict[prefix]}/bin"
+    )
     "${app[stack]}" "${stack_args[@]}" install "${install_args[@]}"
     return 0
 }

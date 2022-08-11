@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2022-07-22.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
@@ -22,7 +22,6 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='openssl'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -57,8 +56,8 @@ main() {
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
-    dict[cacert]="$(koopa_realpath "${dict[opt_prefix]}/ca-certificates/share/\
-ca-certificates/cacert.pem")"
+    dict[ca_certificates]="$(koopa_app_prefix 'ca-certificates')"
+    dict[cacert]="${dict[ca_certificates]}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict[cacert]}"
     koopa_ln \
         "${dict[cacert]}" \

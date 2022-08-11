@@ -17,7 +17,7 @@
 main() {
     # """
     # Install Vim.
-    # @note Updated 2022-04-11.
+    # @note Updated 2022-08-11.
     #
     # On Ubuntu, '--enable-rubyinterp' currently causing a false positive error
     # related to ncurses, even when '--with-tlib' is correctly set.
@@ -30,19 +30,21 @@ main() {
     koopa_activate_opt_prefix 'ncurses' 'python'
     declare -A app=(
         [make]="$(koopa_locate_make)"
+        [python]="$(koopa_locate_python)"
     )
     [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app[python]}" ]] || return 1
+    app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='vim'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[vim_rpath]="${dict[prefix]}/lib"
-    dict[python_rpath]="${dict[opt_prefix]}/python/lib"
+    dict[python]="$(koopa_app_prefix 'python')"
+    dict[python_rpath]="${dict[python]}/python/lib"
     koopa_assert_is_dir "${dict[python_rpath]}"
-    app[python]="${dict[opt_prefix]}/python/bin/python3"
     app[python_config]="${app[python]}-config"
     koopa_assert_is_installed "${app[python]}" "${app[python_config]}"
     dict[python_config_dir]="$("${app[python_config]}" --configdir)"

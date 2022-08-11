@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-11.
     #
     # @section Privilege separation:
     #
@@ -32,7 +32,6 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='openssh'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -42,11 +41,12 @@ portable/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    dict[ssl]="$(koopa_app_prefix 'openssl3')"
     conf_args=(
         # > '--with-security-key-builtin' # libfido2
         "--prefix=${dict[prefix]}"
         '--with-libedit'
-        "--with-ssl-dir=${dict[opt_prefix]}/openssl3"
+        "--with-ssl-dir=${dict[ssl]}"
         '--without-kerberos5'
         '--without-ldns'
         '--without-pam'

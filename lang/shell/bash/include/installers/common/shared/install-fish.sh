@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Fish shell.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
@@ -20,12 +20,11 @@ main() {
         [bin_prefix]="$(koopa_bin_prefix)"
         [jobs]="$(koopa_cpu_count)"
         [name]='fish'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[ncurses]="$(koopa_realpath "${dict[opt_prefix]}/ncurses")"
+    dict[ncurses]="$(koopa_app_prefix 'ncurses')"
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="https://github.com/${dict[name]}-shell/${dict[name]}-shell/\
 releases/download/${dict[version]}/${dict[file]}"

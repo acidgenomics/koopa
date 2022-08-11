@@ -28,11 +28,10 @@ main() {
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='curl'
-        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[ssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl3")"
+    dict[ssl]="$(koopa_app_prefix 'openssl3')"
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[version2]="${dict[version]//./_}"
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/releases/\

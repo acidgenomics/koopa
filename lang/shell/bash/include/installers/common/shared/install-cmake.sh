@@ -3,7 +3,7 @@
 main() {
     # """
     # Install CMake.
-    # @note Updated 2022-04-22.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://github.com/Kitware/CMake
@@ -16,7 +16,6 @@ main() {
     )
     [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
-        [opt_prefix]="$(koopa_opt_prefix)"
         [jobs]="$(koopa_cpu_count)"
         [name]='cmake'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -36,6 +35,7 @@ v${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
+    dict[openssl]="$(koopa_app_prefix 'openssl3')"
     # Note that the './configure' script is just a wrapper for './bootstrap'.
     # > ./bootstrap --help
     bootstrap_args=(
@@ -43,7 +43,7 @@ v${dict[version]}/${dict[file]}"
         "--prefix=${dict[prefix]}"
         '--'
         '-DCMAKE_BUILD_TYPE=RELEASE'
-        "-DCMAKE_PREFIX_PATH=${dict[opt_prefix]}/openssl3"
+        "-DCMAKE_PREFIX_PATH=${dict[openssl]}"
     )
     ./bootstrap "${bootstrap_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"

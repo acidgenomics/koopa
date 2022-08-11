@@ -6,7 +6,7 @@
 main() {
     # """
     # Install FLTK.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-08-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/fltk.rb
@@ -44,8 +44,7 @@ ${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    dict[opt_prefix]="$(koopa_opt_prefix)"
-    dict[x11]="$(koopa_realpath "${dict[opt_prefix]}/xorg-libx11")"
+    dict[x11]="$(koopa_app_prefix 'xorg-libx11')"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--disable-cairo'
@@ -62,9 +61,7 @@ ${dict[version]}/${dict[file]}"
         )
     elif koopa_is_macos
     then
-        conf_args+=(
-            '--disable-x11'
-        )
+        conf_args+=('--disable-x11')
     fi
     ./configure --help
     ./configure "${conf_args[@]}"
