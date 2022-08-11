@@ -597,6 +597,10 @@ koopa_activate_opt_prefix() {
         koopa_assert_is_dir "$prefix"
         current_ver="$(koopa_opt_version "$name")"
         expected_ver="$(koopa_variable "$name")"
+        if [[ "${#expected_ver}" -eq 40 ]]
+        then
+            expected_ver="${expected_ver:0:8}"
+        fi
         if [[ "$current_ver" != "$expected_ver" ]]
         then
             koopa_stop "'${name}' version mismatch at '${prefix}' \
@@ -12118,6 +12122,7 @@ koopa_install_coreutils() {
         '--link-in-bin=sort'
         '--link-in-bin=split'
         '--link-in-bin=stat'
+        '--link-in-bin=stdbuf'
         '--link-in-bin=stty'
         '--link-in-bin=sum'
         '--link-in-bin=sync'
@@ -13152,7 +13157,7 @@ koopa_install_meson() {
 }
 
 koopa_install_mpc() {
-    set -x # FIXME
+    set -x 
     local dict
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -22958,6 +22963,7 @@ koopa_uninstall_coreutils() {
         '--unlink-in-bin=sort'
         '--unlink-in-bin=split'
         '--unlink-in-bin=stat'
+        '--unlink-in-bin=stdbuf'
         '--unlink-in-bin=stty'
         '--unlink-in-bin=sum'
         '--unlink-in-bin=sync'
