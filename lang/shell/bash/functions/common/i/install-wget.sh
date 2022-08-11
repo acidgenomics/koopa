@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework this as an internal install command, so we don't hit
+# activation issues when installing as a binary package.
+
+# FIXME Break out to separate installer. Don't use '--activate-opt' here, as
+# it can cause issues with binary package install.
+
 koopa_install_wget() {
     # """
     # @seealso
