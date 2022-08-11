@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-11.
     # """
     local app bin_name bin_names dict
     koopa_assert_has_no_args "$#"
@@ -20,6 +20,9 @@ main() {
     )
     dict[libexec]="${dict[prefix]}/libexec"
     case "${dict[name]}" in
+        'glances')
+            dict[pkg_name]='Glances'
+            ;;
         'scons')
             dict[pkg_name]='SCons'
             ;;
