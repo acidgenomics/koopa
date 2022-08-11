@@ -3275,9 +3275,10 @@ koopa_build_all_apps() {
         'xxhash'
         'rsync'
         'scons'
-        'serf' # deps: scons
-        'ruby' # deps: openssl3, zlib
-        'subversion' # deps: ruby, serf
+        'serf' # deps: scons.
+        'ruby' # deps: openssl3, zlib.
+        'subversion' # deps: ruby, serf.
+        'r-devel' # deps: subversion.
         'shellcheck'
         'shunit2'
         'sox'
@@ -3308,6 +3309,8 @@ koopa_build_all_apps() {
         'pygments'
         'ranger-fm'
         'yt-dlp'
+        'libedit'
+        'openssh' # deps: libedit
         'node'
         'bash-language-server' # deps: node
         'gtop' # deps: node
@@ -3339,7 +3342,13 @@ koopa_build_all_apps() {
         'zoxide' # deps: rust
         'julia'
         'ffq' # deps: conda
-        'gget' # deps: conda
+        'ensembl-perl-api' # deps: none.
+        'pyenv' # deps: none.
+        'rbenv' # deps: none.
+        'cheat' # deps: go.
+        'pylint' # deps: python.
+        'yq' # deps: go.
+        'sra-tools' # deps: cmake, hdf5, libxml2, python.
         'chemacs' # deps: go
         'dotfiles'
     )
@@ -3350,9 +3359,29 @@ koopa_build_all_apps() {
             'haskell-stack'
             'hadolint' # deps: haskell-stack
             'pandoc' # deps: haskell-stack
+            'bamtools' # deps: conda
+            'bedtools' # deps: conda
+            'bioawk' # deps: conda
+            'bowtie2' # deps: conda
+            'bustools' # deps: conda
+            'deeptools' # deps: conda
+            'entrez-direct' # deps: conda
+            'fastqc' # deps: conda
+            'gffutils' # deps: conda
+            'gget' # deps: conda
+            'ghostscript' # deps: conda
+            'gseapy' # deps: conda
+            'hisat2' # deps: conda
+            'jupyterlab' # deps: conda
             'kallisto' # deps: conda
+            'multiqc' # deps: conda
+            'nextflow' # deps: conda
             'salmon' # deps: conda
+            'sambamba' # deps: conda
+            'samtools' # deps: conda
             'snakemake' # deps: conda
+            'star' # deps: conda
+            'visidata' # deps: conda
         )
     fi
     if koopa_is_linux
@@ -3369,38 +3398,6 @@ koopa_build_all_apps() {
             )
         fi
     fi
-
-    pkgs+=(
-        'libedit'
-        'openssh' # deps: libedit
-        'bamtools'
-        'bedtools'
-        'bioawk'
-        'bowtie2'
-        'bustools'
-        'cheat'
-        'deeptools'
-        'ensembl-perl-api'
-        'entrez-direct'
-        'fastqc'
-        'gffutils'
-        'ghostscript'
-        'gseapy'
-        'hisat2'
-        'jupyterlab'
-        'multiqc'
-        'nextflow'
-        'pyenv'
-        'pylint'
-        'r-devel'
-        'rbenv'
-        'sambamba'
-        'samtools'
-        'sra-tools'
-        'star'
-        'visidata'
-        'yq'
-    )
     for pkg in "${pkgs[@]}"
     do
         if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
@@ -3410,6 +3407,7 @@ koopa_build_all_apps() {
         fi
         "${app[koopa]}" install "$pkg"
     done
+    koopa_push_all_apps
     return 0
 }
 

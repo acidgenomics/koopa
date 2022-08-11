@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Finalize labeling all dependencies in this build script.
-# Indicate the dependencies above each install command here.
+# FIXME Indicate the dependencies above each install command here.
 
 koopa_build_all_apps() {
     # """
@@ -185,9 +184,10 @@ koopa_build_all_apps() {
         'xxhash'
         'rsync'
         'scons'
-        'serf' # deps: scons
-        'ruby' # deps: openssl3, zlib
-        'subversion' # deps: ruby, serf
+        'serf' # deps: scons.
+        'ruby' # deps: openssl3, zlib.
+        'subversion' # deps: ruby, serf.
+        'r-devel' # deps: subversion.
         'shellcheck'
         'shunit2'
         'sox'
@@ -222,6 +222,8 @@ koopa_build_all_apps() {
         'pygments'
         'ranger-fm'
         'yt-dlp'
+        'libedit'
+        'openssh' # deps: libedit
         # NOTE Can consider using 'node-binary' here instead.
         'node'
         'bash-language-server' # deps: node
@@ -258,7 +260,13 @@ koopa_build_all_apps() {
         # NOTE Move this up.
         'julia'
         'ffq' # deps: conda
-        'gget' # deps: conda
+        'ensembl-perl-api' # deps: none.
+        'pyenv' # deps: none.
+        'rbenv' # deps: none.
+        'cheat' # deps: go.
+        'pylint' # deps: python.
+        'yq' # deps: go.
+        'sra-tools' # deps: cmake, hdf5, libxml2, python.
         'chemacs' # deps: go
         # deps: chemacs (to configure).
         'dotfiles'
@@ -270,9 +278,29 @@ koopa_build_all_apps() {
             'haskell-stack'
             'hadolint' # deps: haskell-stack
             'pandoc' # deps: haskell-stack
+            'bamtools' # deps: conda
+            'bedtools' # deps: conda
+            'bioawk' # deps: conda
+            'bowtie2' # deps: conda
+            'bustools' # deps: conda
+            'deeptools' # deps: conda
+            'entrez-direct' # deps: conda
+            'fastqc' # deps: conda
+            'gffutils' # deps: conda
+            'gget' # deps: conda
+            'ghostscript' # deps: conda
+            'gseapy' # deps: conda
+            'hisat2' # deps: conda
+            'jupyterlab' # deps: conda
             'kallisto' # deps: conda
+            'multiqc' # deps: conda
+            'nextflow' # deps: conda
             'salmon' # deps: conda
+            'sambamba' # deps: conda
+            'samtools' # deps: conda
             'snakemake' # deps: conda
+            'star' # deps: conda
+            'visidata' # deps: conda
         )
     fi
     if koopa_is_linux
@@ -285,67 +313,30 @@ koopa_build_all_apps() {
         then
             pkgs+=(
                 'aspera-connect'
-                # FIXME Consider renaming / reworking this recipe...helpers.
+                # FIXME Rename this to 'docker-credential-helpers'.
                 'docker-credential-pass'
             )
         fi
     fi
-
-    # FIXME Double check which conda recipes aren't available on aarch64
-    # e.g. bioconda
-    pkgs+=(
-        'libedit'
-        'openssh' # deps: libedit
-        'bamtools'
-        'bedtools'
-        'bioawk'
-        'bowtie2'
-        'bustools'
-        'cheat'
-        'deeptools'
-        'ensembl-perl-api'
-        'entrez-direct'
-        'fastqc'
-        'gffutils'
-        'ghostscript'
-        'gseapy'
-        'hisat2'
-        'jupyterlab'
-        'multiqc'
-        'nextflow'
-        'pyenv'
-        'pylint'
-        'r-devel'
-        'rbenv'
-        'sambamba'
-        'samtools'
-        'sra-tools'
-        'star'
-        'visidata'
-        'yq'
-    )
-    # App package libraries aren't supported as binary downloads, so keep
-    # this step disabled.
-    # > pkgs+=('julia-packages' 'r-packages')
-    # This approach runs into compiler issues on macOS.
-    # > koopa_cli_install "${pkgs[@]}"
+    # FIXME Rework this using 'koopa_is_symlink'.
+    # FIXME Also check if directory is empty...need to rework our log file
+    # copy approach first here.
+    # FIXME This needs to ensure that target directory didn't fail during
+    # build and only contains the log file.
+    # FIXME Consider asserting that the opt prefix isn't empty
+    # after this step completes. Need to work this into the main
+    # 'install_app' command.
     for pkg in "${pkgs[@]}"
     do
-        # FIXME Consider defining this as 'koopa_is_symlink'.
-        # FIXME Only do this if symlink exists.
         if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
             [[ -e "${dict[opt_prefix]}/${pkg}" ]]
         then
             continue
         fi
+        # NOTE This approach is running into compiler issues on macOS.
+        # > koopa_cli_install "$pkg"
         "${app[koopa]}" install "$pkg"
-        # FIXME This needs to ensure that target directory didn't fail during
-        # build and only contains the log file.
-        # FIXME Consider asserting that the opt prefix isn't empty
-        # after this step completes. Need to work this into the main
-        # 'install_app' command.
     done
-    # FIXME Enable this last step once our recipe works.
-    # > koopa_push_all_apps
+    koopa_push_all_apps
     return 0
 }
