@@ -16,6 +16,7 @@ koopa_build_all_apps() {
     # """
     local app dict pkg pkgs
     koopa_assert_has_no_args "$#"
+    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
     declare -A app=(
         [koopa]="$(koopa_locate_koopa)"
     )
@@ -335,8 +336,7 @@ koopa_build_all_apps() {
         fi
         # NOTE This approach is running into compiler issues on macOS.
         # > koopa_cli_install "$pkg"
-        "${app[koopa]}" install "$pkg"
+        "${app[koopa]}" install --push "$pkg"
     done
-    koopa_push_all_apps
     return 0
 }
