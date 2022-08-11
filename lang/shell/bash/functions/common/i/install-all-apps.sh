@@ -277,6 +277,9 @@ koopa_install_all_apps() {
             'pinentry'
         )
     fi
-    koopa_cli_install --binary "${pkgs[@]}"
+    for pkg in "${pkgs[@]}"
+    do
+        koopa_cli_install --binary "$pkg"
+    done
     return 0
 }
