@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework as private app bucket for binary builds.
-
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2022-08-09.
+    # @note Updated 2022-08-11.
     #
     # @examples
     # > koopa_push_app_build 'emacs' 'vim'
+    #
+    # @seealso
+    # - https://docs.aws.amazon.com/cli/latest/userguide/
+    #     cli-configure-retries.html
     # """
     local app dict name
     koopa_assert_has_args "$#"
@@ -27,6 +29,9 @@ koopa_push_app_build() {
         [s3_bucket]='s3://koopa.acidgenomics.com'
         [tmp_dir]="$(koopa_tmp_dir)"
     )
+    # Attempt to avoid retry errors (default = 2) for CloudFront.
+    export AWS_MAX_ATTEMPTS=5
+    export AWS_RETRY_MODE='standard'
     for name in "$@"
     do
         local dict2

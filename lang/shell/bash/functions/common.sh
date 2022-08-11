@@ -3115,6 +3115,7 @@ koopa_brew_upgrade_brews() {
 koopa_build_all_apps() {
     local app dict pkg pkgs
     koopa_assert_has_no_args "$#"
+    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
     declare -A app=(
         [koopa]="$(koopa_locate_koopa)"
     )
@@ -3405,9 +3406,8 @@ koopa_build_all_apps() {
         then
             continue
         fi
-        "${app[koopa]}" install "$pkg"
+        "${app[koopa]}" install --push "$pkg"
     done
-    koopa_push_all_apps
     return 0
 }
 
@@ -17932,6 +17932,8 @@ koopa_push_app_build() {
         [s3_bucket]='s3://koopa.acidgenomics.com'
         [tmp_dir]="$(koopa_tmp_dir)"
     )
+    export AWS_MAX_ATTEMPTS=5
+    export AWS_RETRY_MODE='standard'
     for name in "$@"
     do
         local dict2
