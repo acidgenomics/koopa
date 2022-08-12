@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME See if we can take GCC activation out on Linux and whether this will
+# rebuild correctly.
+
 # The difference in HDF5 configuration may be the source of the zlib issue.
 #
 # Ubuntu (note that zlib is missing):
@@ -9,10 +12,11 @@
 # -- Found HDF5: /opt/koopa/app/hdf5/1.12.2/lib/libhdf5.dylib;/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libz.tbd;/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libdl.tbd;/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libm.tbd (found version "1.12.2") found components: C
 
 main() {
-
     # """
     # Install SRA toolkit.
     # @note Updated 2022-08-11.
+    #
+    # This requires that HDF5 C compilation support includes zlib.
     #
     # Consider requiring doxygen, and flex for build environment.
     # Can set doxygen with 'DOXYGEN_EXECUTABLE'.
