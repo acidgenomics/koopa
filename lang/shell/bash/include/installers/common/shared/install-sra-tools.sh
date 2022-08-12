@@ -26,10 +26,13 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
+    if koopa_is_linux
+    then
+        koopa_activate_opt_prefix 'gcc'
+    fi
     koopa_activate_opt_prefix \
         'bzip2' \
         'bison' \
-        'gcc' \
         'hdf5' \
         'libxml2' \
         'python'
