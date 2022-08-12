@@ -19,7 +19,11 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
-    koopa_activate_opt_prefix 'hdf5' 'libxml2' 'python'
+    koopa_activate_opt_prefix \
+        'zlib' \
+        'hdf5' \
+        'libxml2' \
+        'python'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [python]="$(koopa_locate_python)"
