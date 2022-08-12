@@ -15,7 +15,11 @@
 # > gmake[2]: *** [tools/bam-loader/CMakeFiles/samview.dir/build.make:76: tools/bam-loader/CMakeFiles/samview.dir/bam.c.o] Error 1
 # > gmake[1]: *** [CMakeFiles/Makefile2:3090: tools/bam-loader/CMakeFiles/samview.dir/all] Error 2
 
+# FIXME This is failing on Ubuntu:
+# -- Could NOT find HDF5 (missing: HDF5_LIBRARIES HDF5_INCLUDE_DIRS C) (found version "1.12.2")
+
 main() {
+
     # """
     # Install SRA toolkit.
     # @note Updated 2022-08-11.
