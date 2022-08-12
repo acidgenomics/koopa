@@ -29,6 +29,7 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://sourceware.org/pub/${dict[name]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
@@ -89,12 +90,19 @@ bzlib.o: bzlib.c
 	$(CC) $(CFLAGS) -c bzlib.c
 END
     fi
-    # FIXME Need to set a PREFIX here or something?
     "${app[make]}" -f "${dict[makefile_shared]}" 'clean'
-    "${app[make]}" -f "${dict[makefile_shared]}" "PREFIX=${dict[prefix]}"
-    # FIXME May need these clean up steps:
-    # lib.install "libbz2.so.#{version}", "libbz2.so.#{version.major_minor}"
-    # lib.install_symlink "libbz2.so.#{version}" => "libbz2.so.#{version.major}"
-    # lib.install_symlink "libbz2.so.#{version}" => "libbz2.so"
+    "${app[make]}" -f "${dict[makefile_shared]}"
+    koopa_cp \
+        --target-directory="${dict[prefix]}/lib" \
+        "libbz2.${dict[shared_ext]}.${dict[version]}"
+    (
+        koopa_cd "${dict[prefix]}/lib"
+        koopa_ln \
+            "libbz2.${dict[shared_ext]}.${dict[version]}" \
+            "libbz2.${dict[shared_ext]}.${dict[maj_min_ver]}"
+        koopa_ln \
+            "libbz2.${dict[shared_ext]}.${dict[version]}"
+            "libbz2.${dict[shared_ext]}"
+    )
     return 0
 }
