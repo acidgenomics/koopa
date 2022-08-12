@@ -27,6 +27,7 @@ main() {
         [jobs]="$(koopa_cpu_count)"
         [name]='bzip2'
         [prefix]="${INSTALL_PREFIX:?}"
+        [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
