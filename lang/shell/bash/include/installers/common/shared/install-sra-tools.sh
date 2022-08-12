@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Seeing this compilation warning on Ubuntu:
-# -- HDF5 C compiler wrapper is unable to compile a minimal HDF5 program.
+# FIXME Should we pin to our CC to compile on Ubuntu?
 
 main() {
 
@@ -26,6 +25,9 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
+    # This is required for CMake to activate HDF5 properly on Linux.
+    # NOTE We may also want to enable this for macOS in the future, for
+    # improved cross-platform consistency.
     if koopa_is_linux
     then
         koopa_activate_opt_prefix 'gcc'
