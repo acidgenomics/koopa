@@ -1,23 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Now running into this issue on Ubuntu:
-# checking --with-tlib argument... ncurses
-# checking for linking with ncurses library... configure: error: FAILED
-
-
-# FIXME Need to rework this:
-# checking --with-tlib argument... empty: automatic terminal library selection
-# checking for tgetent in -ltinfo... no
-# checking for tgetent in -lncurses... no
-# checking for tgetent in -ltermlib... no
-# checking for tgetent in -ltermcap... no
-# checking for tgetent in -lcurses... no
-# no terminal library found
-
 main() {
     # """
     # Install Vim.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-08-12.
     #
     # On Ubuntu, '--enable-rubyinterp' currently causing a false positive error
     # related to ncurses, even when '--with-tlib' is correctly set.
@@ -43,12 +29,11 @@ main() {
     )
     dict[vim_rpath]="${dict[prefix]}/lib"
     dict[python]="$(koopa_app_prefix 'python')"
-    dict[python_rpath]="${dict[python]}/python/lib"
-    koopa_assert_is_dir "${dict[python_rpath]}"
     app[python_config]="${app[python]}-config"
     koopa_assert_is_installed "${app[python]}" "${app[python_config]}"
     dict[python_config_dir]="$("${app[python_config]}" --configdir)"
-    koopa_assert_is_dir "${dict[python_config_dir]}"
+    dict[python_rpath]="${dict[python]}/lib"
+    koopa_assert_is_dir "${dict[python_config_dir]}" "${dict[python_rpath]}"
     dict[file]="v${dict[version]}.tar.gz"
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/\
 archive/${dict[file]}"
