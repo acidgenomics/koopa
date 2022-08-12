@@ -133,11 +133,12 @@ ${dict[version]}.tar.gz"
             "-DVDB_LIBDIR=${dict[ncbi_vdb_build]}/lib"
             "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
             "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
-            "-DZLIB_ROOT=${dict[zlib]}"
+            # > "-DZLIB_ROOT=${dict[zlib]}"
         )
-        export "ZLIB_INCLUDE_DIR=${dict[zlib]}/include"
-        export "ZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
-        export "ZLIB_ROOT=${dict[zlib]}"
+        # FIXME These settings don't help.
+        # > export "ZLIB_INCLUDE_DIR=${dict[zlib]}/include"
+        # > export "ZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
+        # > export "ZLIB_ROOT=${dict[zlib]}"
         "${app[cmake]}" \
             -S "${dict2[name]}-${dict[version]}" \
             -B "${dict2[name]}-${dict[version]}-build" \
