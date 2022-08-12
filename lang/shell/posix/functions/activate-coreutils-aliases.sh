@@ -3,7 +3,7 @@
 koopa_activate_coreutils_aliases() {
     # """
     # Activate BSD/GNU coreutils aliases.
-    # @note Updated 2022-05-12.
+    # @note Updated 2022-08-12.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -20,14 +20,14 @@ koopa_activate_coreutils_aliases() {
     mkdir='mkdir'
     mv='mv'
     rm='rm'
-    cp_args='-R -i' # '--interactive --recursive'.
-    ln_args='-ins' # '--interactive --no-dereference --symbolic'.
-    mkdir_args='-p' # '--parents'.
-    mv_args='-i' # '--interactive'
+    cp_args='-Riv' # '--interactive --recursive --verbose'.
+    ln_args='-insv' # '--interactive --no-dereference --symbolic --verbose'.
+    mkdir_args='-pv' # '--parents --verbose'.
+    mv_args='-iv' # '--interactive --verbose'
     # Problematic on some file systems: '--dir', '--preserve-root'.
     # Don't enable '--recursive' here by default, to provide against
     # accidental deletion of an important directory.
-    rm_args='-i' # '--interactive=once'.
+    rm_args='-iv' # '--interactive=once --verbose'.
     # shellcheck disable=SC2139
     alias cp="${cp} ${cp_args}"
     # shellcheck disable=SC2139
