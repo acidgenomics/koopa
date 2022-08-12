@@ -92,7 +92,7 @@ ${dict[version]}.tar.gz"
         koopa_extract "${dict2[file]}"
         koopa_mv \
             "${dict2[name]}-${dict[version]}" \
-            "${dict2[name]}-${dict[version]}-source"
+            "${dict2[name]}-source"
         cmake_args=(
             "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
             "-DPython3_EXECUTABLE=${app[python]}"
@@ -102,20 +102,19 @@ ${dict[version]}.tar.gz"
             "-DLIBXML2_LIBRARY=${dict[libxml2]}/lib/libxml2.${dict[shared_ext]}"
         )
         "${app[cmake]}" \
-            -S "${dict2[name]}-${dict[version]}-source" \
-            -B "${dict2[name]}-${dict[version]}-build" \
+            -S "${dict2[name]}-source" \
+            -B "${dict2[name]}-build" \
             "${cmake_args[@]}"
-        "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
+        "${app[cmake]}" --build "${dict2[name]}-build"
     )
     dict[ncbi_vdb_build]="$( \
-        koopa_realpath "ncbi-vdb-${dict[version]}-build" \
+        koopa_realpath "ncbi-vdb-build" \
     )"
     dict[ncbi_vdb_source]="$( \
-        koopa_realpath "ncbi-vdb-${dict[version]}-source" \
+        koopa_realpath "ncbi-vdb-source" \
     )"
-    koopa_ln \
-        "ncbi-vdb-${dict[version]}-build" \
-        "ncbi-vdb-${dict[version]}"
+    # FIXME Does this need to be the source instead?
+    koopa_ln 'ncbi-vdb-build' 'ncbi-vdb'
     # Build and install NCBI SRA Toolkit.
     (
         local cmake_args dict2
@@ -128,14 +127,14 @@ ${dict[version]}.tar.gz"
         koopa_extract "${dict2[file]}"
         koopa_mv \
             "${dict2[name]}-${dict[version]}" \
-            "${dict2[name]}-${dict[version]}-source"
+            "${dict2[name]}-source"
         # Need to fix '/obj/ngs/ngs-java' path issue in 'CMakeLists.txt' file.
         # See related: https://github.com/ncbi/sra-tools/pull/664/files
         koopa_find_and_replace_in_file \
             --fixed \
             --pattern='/obj/ngs/ngs-java/' \
             --replacement='/ngs/ngs-java/' \
-            "${dict2[name]}-${dict[version]}-source/ngs/ngs-java/CMakeLists.txt"
+            "${dict2[name]}-source/ngs/ngs-java/CMakeLists.txt"
         cmake_args=(
             "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
             "-DPython3_EXECUTABLE=${app[python]}"
@@ -151,11 +150,11 @@ ${dict[version]}.tar.gz"
             "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
         )
         "${app[cmake]}" \
-            -S "${dict2[name]}-${dict[version]}-source" \
-            -B "${dict2[name]}-${dict[version]}-build" \
+            -S "${dict2[name]}-source" \
+            -B "${dict2[name]}-build" \
             "${cmake_args[@]}"
-        "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
-        "${app[cmake]}" --install "${dict2[name]}-${dict[version]}-build"
+        "${app[cmake]}" --build "${dict2[name]}-build"
+        "${app[cmake]}" --install "${dict2[name]}-build"
     )
     return 0
 }
