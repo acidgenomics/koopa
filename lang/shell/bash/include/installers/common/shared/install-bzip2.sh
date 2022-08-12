@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
 
+# FIXME We need to rework our shared object build approach here.
+
 main() {
     # """
     # Install bzip2.
-    # @note Updated 2022-06-14.
+    # @note Updated 2022-08-12.
     #
     # @seealso
     # - https://www.sourceware.org/bzip2/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bzip2.rb
+    # - https://stackoverflow.com/questions/67179779/
+    # - https://opensource.apple.com/source/bzip2/bzip2-16.5/bzip2/
+    #     Makefile.auto.html
+    # - https://gist.githubusercontent.com/obihill/
+    #     3278c17bcee41c0c8b59a41ada8c0d35/raw/
+    #     3bf890e2ad40d0af358e153395c228326f0b44d5/Makefile-libbz2_dylib
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -26,13 +34,67 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
-    "${app[make]}"
-    # Build 'libbz2.so' shared library on Linux.
+    "${app[make]}" install "PREFIX=${dict[prefix]}"
     if koopa_is_linux
     then
-        "${app[make]}" -f 'Makefile-libbz2_so' 'clean'
-        "${app[make]}" -f 'Makefile-libbz2_so'
+        dict[makefile_shared]='Makefile-libbz2_so'
+    elif koopa_is_macos
+    then
+        dict[makefile_shared]='Makefile-libbz2_dylib'
+        "${app[cat]}" > "${dict[makefile_shared]}" << END
+# This Makefile builds a shared version of the library,
+# libbz2.dylib for MacOSX x86 (10.13.4 or higher),
+# with gcc-2.96 20000731 (Red Hat Linux 7.1 2.96-98).
+# It is a custom Makefile. Use at own risk.
+# Run in your MacOS terminal with the following command:
+# make -f Makefile-libbz2_dylib
+
+PKG_VERSION?=1.0.8
+PREFIX?=/usr/local
+
+SHELL=/bin/sh
+CC=gcc
+BIGFILES=-D_FILE_OFFSET_BITS=64
+CFLAGS=-fpic -fPIC -Wall -Winline -O2 -g $(BIGFILES)
+
+OBJS= blocksort.o  \
+	  huffman.o    \
+	  crctable.o   \
+	  randtable.o  \
+	  compress.o   \
+	  decompress.o \
+	  bzlib.o
+
+all: $(OBJS)
+	$(CC) -shared -Wl,-install_name -Wl,libbz2.dylib -o libbz2.${PKG_VERSION}.dylib $(OBJS)
+	cp libbz2.${PKG_VERSION}.dylib ${PREFIX}/lib/
+	ln -s libbz2.${PKG_VERSION}.dylib ${PREFIX}/lib/libbz2.dylib
+
+clean:
+	rm -f libbz2.dylib libbz2.${PKG_VERSION}.dylib
+
+blocksort.o: blocksort.c
+	$(CC) $(CFLAGS) -c blocksort.c
+huffman.o: huffman.c
+	$(CC) $(CFLAGS) -c huffman.c
+crctable.o: crctable.c
+	$(CC) $(CFLAGS) -c crctable.c
+randtable.o: randtable.c
+	$(CC) $(CFLAGS) -c randtable.c
+compress.o: compress.c
+	$(CC) $(CFLAGS) -c compress.c
+decompress.o: decompress.c
+	$(CC) $(CFLAGS) -c decompress.c
+bzlib.o: bzlib.c
+	$(CC) $(CFLAGS) -c bzlib.c
+END
     fi
-    "${app[make]}" install "PREFIX=${dict[prefix]}"
+    # FIXME Need to set a PREFIX here or something?
+    "${app[make]}" -f "${dict[makefile_shared]}" 'clean'
+    "${app[make]}" -f "${dict[makefile_shared]}" "PREFIX=${dict[prefix]}"
+    # FIXME May need these clean up steps:
+    # lib.install "libbz2.so.#{version}", "libbz2.so.#{version.major_minor}"
+    # lib.install_symlink "libbz2.so.#{version}" => "libbz2.so.#{version.major}"
+    # lib.install_symlink "libbz2.so.#{version}" => "libbz2.so"
     return 0
 }
