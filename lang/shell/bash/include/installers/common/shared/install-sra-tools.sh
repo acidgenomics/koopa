@@ -85,8 +85,7 @@ ${dict[version]}.tar.gz"
             -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
             -DPython3_EXECUTABLE="${app[python]}" \
             -DBISON_EXECUTABLE="${dict[bison]}/bin/bison" \
-            -DHDF5_INCLUDE_DIRS="${dict[hdf5]}/include" \
-            -DHDF5_LIBRARIES="${dict[hdf5]}/lib/libhdf5.${dict[shared_ext]}" \
+            -DHDF5_ROOT="${dict[hdf5]}" \
             -DLIBXML2_INCLUDE_DIR="${dict[libxml2]}/include" \
             -DLIBXML2_LIBRARY="${dict[libxml2]}/lib/libxml2.${dict[shared_ext]}"
         "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
@@ -121,8 +120,7 @@ ${dict[version]}.tar.gz"
             -DPython3_EXECUTABLE="${app[python]}" \
             -DBZIP2_INCLUDE_DIR="${dict[bzip2]}/include" \
             -DBZIP2_LIBRARIES="${dict[bzip2]}/lib/libbz2.${dict[shared_ext]}" \
-            -DHDF5_INCLUDE_DIRS="${dict[hdf5]}/include" \
-            -DHDF5_LIBRARIES="${dict[hdf5]}/lib/libhdf5.${dict[shared_ext]}" \
+            -DHDF5_ROOT="${dict[hdf5]}" \
             -DVDB_BINDIR="${dict[ncbi_vdb_build]}" \
             -DVDB_INCDIR="${dict[ncbi_vdb_source]}/interfaces" \
             -DVDB_LIBDIR="${dict[ncbi_vdb_build]}/lib"
