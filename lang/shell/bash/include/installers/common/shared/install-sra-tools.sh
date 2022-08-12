@@ -27,6 +27,8 @@ main() {
     # - https://hpc.nih.gov/apps/sratoolkit.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/sratoolkit.rb
+    # - https://stackoverflow.com/questions/53298492/how-to-link-zlib-with-cmake
+    # - https://cmake.org/cmake/help/latest/module/FindZLIB.html
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -47,10 +49,12 @@ main() {
     app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
         [base_url]='https://github.com/ncbi'
+        [hdf5]="$(koopa_app_prefix 'hdf5')"
         [java_home]="$(koopa_java_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
+        [xml2]="$(koopa_app_prefix 'libxml2')"
         [zlib]="$(koopa_app_prefix 'zlib')"
     )
     # Ensure we define Java location, otherwise can hit warnings during
@@ -108,7 +112,7 @@ ${dict[version]}.tar.gz"
             -DVDB_INCDIR="${dict[ncbi_vdb_source]}/interfaces" \
             -DVDB_LIBDIR="${dict[ncbi_vdb_build]}/lib" \
             -DZLIB_INCLUDE_DIR="${dict[zlib]}/include" \
-            -DZLIB_LIBRARY="${dict[zlib]}/lib/libz.${dict[shared_ext]}"
+            -DZLIB_LIBRARIES="${dict[zlib]}/lib/libz.${dict[shared_ext]}"
         "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
         "${app[cmake]}" --install "${dict2[name]}-${dict[version]}-build"
     )
