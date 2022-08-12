@@ -3,9 +3,7 @@
 koopa_activate_homebrew() {
     # """
     # Activate Homebrew.
-    # @note Updated 2022-05-12.
-    #
-    # Don't activate 'binutils' here. Can mess up R package compilation.
+    # @note Updated 2022-08-12.
     # """
     local prefix
     prefix="$(koopa_homebrew_prefix)"
@@ -19,7 +17,8 @@ koopa_activate_homebrew() {
     export HOMEBREW_PREFIX="$prefix"
     if koopa_is_macos
     then
-        export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
+        # Alternatively, can add '--no-binaries' here.
+        export HOMEBREW_CASK_OPTS='--no-quarantine'
     fi
     return 0
 }
