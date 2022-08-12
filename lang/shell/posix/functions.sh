@@ -704,6 +704,7 @@ koopa_add_config_link() {
         source_file="${1:?}"
         dest_name="${2:?}"
         shift 2
+        [ -e "$source_file" ] || continue
         dest_file="${config_prefix}/${dest_name}"
         if [ -L "$dest_file" ] && [ -e "$dest_file" ]
         then
