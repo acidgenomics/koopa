@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Should we include zlib here?
+
 main() {
     # """
     # Install HDF5.
