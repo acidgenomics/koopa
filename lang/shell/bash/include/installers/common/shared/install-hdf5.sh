@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Should we include zlib here?
-
 main() {
     # """
     # Install HDF5.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-08-12.
     #
     # Using gcc here for gfortran.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'gcc'
+    koopa_activate_opt_prefix 'zlib' 'gcc'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -21,6 +19,7 @@ main() {
         [name]='hdf5'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
+        [zlib]="$(koopa_app_prefix 'zlib')"
     )
     dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
@@ -37,6 +36,7 @@ src/${dict[file]}"
         '--enable-build-mode=production'
         '--enable-cxx'
         '--enable-fortran'
+        "--with-zlib=${dict[zlib]}"
     )
     ./configure --help
     ./configure "${conf_args[@]}"
