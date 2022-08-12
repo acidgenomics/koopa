@@ -65,6 +65,7 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
+        [zlib]="$(koopa_app_prefix 'zlib')"
     )
     # Ensure we define Java location, otherwise can hit warnings during
     # ngs-tools install.
@@ -132,6 +133,9 @@ ${dict[version]}.tar.gz"
             "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
             "-DZLIB_ROOT=${dict[zlib]}"
         )
+        export "ZLIB_INCLUDE_DIR=${dict[zlib]}/include"
+        export "ZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
+        export "ZLIB_ROOT=${dict[zlib]}"
         "${app[cmake]}" \
             -S "${dict2[name]}-${dict[version]}" \
             -B "${dict2[name]}-${dict[version]}-build" \
