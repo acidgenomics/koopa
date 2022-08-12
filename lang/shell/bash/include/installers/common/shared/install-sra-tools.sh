@@ -25,8 +25,6 @@ main() {
     # - https://hpc.nih.gov/apps/sratoolkit.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/sratoolkit.rb
-    # - https://stackoverflow.com/questions/53298492/how-to-link-zlib-with-cmake
-    # - https://cmake.org/cmake/help/latest/module/FindZLIB.html
     # """
     local app dict
     koopa_assert_has_no_args "$#"
