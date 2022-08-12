@@ -11,6 +11,18 @@
 # macOS (note that system zlib is detected):
 # -- Found HDF5: /opt/koopa/app/hdf5/1.12.2/lib/libhdf5.dylib;/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libz.tbd;/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libdl.tbd;/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libm.tbd (found version "1.12.2") found components: C
 
+# FIXME Still hitting this zlib issue on Ubuntu:
+#
+# [ 38%] Built target align-info
+# [ 38%] Building C object tools/bam-loader/CMakeFiles/samview.dir/bam.c.o
+# /tmp/koopa-1000-20220812-174700-b3f7iLU4VI/sra-tools-3.0.0/tools/bam-loader/bam.c:63:10: fatal error: zlib.h: No such file or directory
+#    63 | #include <zlib.h>
+#       |          ^~~~~~~~
+# compilation terminated.
+# gmake[2]: *** [tools/bam-loader/CMakeFiles/samview.dir/build.make:76: tools/bam-loader/CMakeFiles/samview.dir/bam.c.o] Error 1
+# gmake[1]: *** [CMakeFiles/Makefile2:3090: tools/bam-loader/CMakeFiles/samview.dir/all] Error 2
+# gmake: *** [Makefile:166: all] Error 2
+
 main() {
     # """
     # Install SRA toolkit.
@@ -33,13 +45,6 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
-    # This is required for CMake to activate HDF5 properly on Linux.
-    # NOTE We may also want to enable this for macOS in the future, for
-    # improved cross-platform consistency.
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'gcc'
-    fi
     koopa_activate_opt_prefix \
         'bzip2' \
         'bison' \
