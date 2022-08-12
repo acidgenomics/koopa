@@ -1,21 +1,12 @@
 #!/usr/bin/env bash
 
-# NOTE Seeing this error message for R-devel on Ubuntu:
-#
-# # creating doc/html/resources.html
-# # make['1']: Leaving directory '/tmp/[...]/svn/r/doc/manual'
-# # ERROR: not an svn checkout
-# # make: *** [Makefile:107: svnonly] Error 1
-#
-# https://github.com/r-devel/r-svn/blob/master/Makefile.in#L114
-
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
 main() {
     # """
     # Install R.
-    # @note Updated 2022-08-04.
+    # @note Updated 2022-08-12.
     #
     # @section gfortran configuration on macOS:
     #
