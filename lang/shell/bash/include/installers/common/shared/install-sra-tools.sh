@@ -48,6 +48,7 @@ main() {
     koopa_activate_opt_prefix \
         'bzip2' \
         'bison' \
+        'gcc' \
         'hdf5' \
         'libxml2' \
         'python'
