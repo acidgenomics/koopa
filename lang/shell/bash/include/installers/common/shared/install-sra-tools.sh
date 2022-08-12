@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME See if we can take GCC activation out on Linux and whether this will
-# rebuild correctly.
-
-# The difference in HDF5 configuration may be the source of the zlib issue.
-#
-# Ubuntu (note that zlib is missing):
-# -- Found HDF5: /opt/koopa/app/hdf5/1.12.2/lib/libhdf5.so;/usr/lib/x86_64-linux-gnu/libdl.a;/usr/lib/x86_64-linux-gnu/libm.so (found version "1.12.2") found components: C
-#
-# macOS (note that system zlib is detected):
-# -- Found HDF5: /opt/koopa/app/hdf5/1.12.2/lib/libhdf5.dylib;/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libz.tbd;/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libdl.tbd;/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libm.tbd (found version "1.12.2") found components: C
-
 # FIXME Still hitting this zlib issue on Ubuntu:
 #
 # [ 38%] Built target align-info
@@ -26,7 +15,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-08-12.
     #
     # This requires that HDF5 C compilation support includes zlib.
     #
@@ -42,16 +31,21 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/sratoolkit.rb
     # """
-    local app dict
+    local app deps dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
-    koopa_activate_opt_prefix \
-        'bzip2' \
-        'bison' \
-        'gcc' \
-        'hdf5' \
-        'libxml2' \
+    deps=(
+        'zlib'
+        'bzip2'
+        'bison'
+    )
+    koopa_is_linux && deps+=('gcc')
+    deps+=(
+        'hdf5'
+        'libxml2'
         'python'
+    )
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [python]="$(koopa_locate_python)"
@@ -134,6 +128,9 @@ ${dict[version]}.tar.gz"
             "-DVDB_BINDIR=${dict[ncbi_vdb_build]}"
             "-DVDB_INCDIR=${dict[ncbi_vdb_source]}/interfaces"
             "-DVDB_LIBDIR=${dict[ncbi_vdb_build]}/lib"
+            "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
+            "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
+            "-DZLIB_ROOT=${dict[zlib]}"
         )
         "${app[cmake]}" \
             -S "${dict2[name]}-${dict[version]}" \
