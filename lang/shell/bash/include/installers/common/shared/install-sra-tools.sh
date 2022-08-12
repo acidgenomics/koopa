@@ -1,28 +1,17 @@
 #!/usr/bin/env bash
 
-# NOTE Consider requiring bison, doxygen, and flex for build environment.
-# Can set doxygen with 'DOXYGEN_EXECUTABLE'.
-
-# FIXME Now hitting this error on Ubuntu:
-# Adding zlib as a dependency doesn't fix the issue...
-#
-# > [ 41%] Built target align-info
-# > [ 41%] Building C object tools/bam-loader/CMakeFiles/samview.dir/bam.c.o
-# > /tmp/koopa-1000-20220812-152017-8xoh32EGWU/sra-tools-3.0.0/tools/bam-loader/bam.c:63:10: fatal error: zlib.h: No such file or directory
-# >    63 | #include <zlib.h>
-# >       |          ^~~~~~~~
-# > compilation terminated.
-# > gmake[2]: *** [tools/bam-loader/CMakeFiles/samview.dir/build.make:76: tools/bam-loader/CMakeFiles/samview.dir/bam.c.o] Error 1
-# > gmake[1]: *** [CMakeFiles/Makefile2:3090: tools/bam-loader/CMakeFiles/samview.dir/all] Error 2
-
-# FIXME This is failing on Ubuntu:
-# -- Could NOT find HDF5 (missing: HDF5_LIBRARIES HDF5_INCLUDE_DIRS C) (found version "1.12.2")
+# FIXME Seeing this compilation warning on Ubuntu:
+# -- HDF5 C compiler wrapper is unable to compile a minimal HDF5 program.
 
 main() {
 
     # """
     # Install SRA toolkit.
     # @note Updated 2022-08-11.
+    #
+    # Consider requiring doxygen, and flex for build environment.
+    # Can set doxygen with 'DOXYGEN_EXECUTABLE'.
+    # Can set flex with 'FLEX_EXECUTABLE'.
     #
     # @seealso
     # - https://github.com/ncbi/sra-tools/wiki/
@@ -38,9 +27,9 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
     koopa_activate_opt_prefix \
-        'zlib' \
         'bzip2' \
         'bison' \
+        'gcc' \
         'hdf5' \
         'libxml2' \
         'python'
@@ -63,7 +52,6 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
-        [zlib]="$(koopa_app_prefix 'zlib')"
     )
     # Ensure we define Java location, otherwise can hit warnings during
     # ngs-tools install.
@@ -127,8 +115,6 @@ ${dict[version]}.tar.gz"
             "-DVDB_BINDIR=${dict[ncbi_vdb_build]}"
             "-DVDB_INCDIR=${dict[ncbi_vdb_source]}/interfaces"
             "-DVDB_LIBDIR=${dict[ncbi_vdb_build]}/lib"
-            "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
-            "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
         )
         "${app[cmake]}" \
             -S "${dict2[name]}-${dict[version]}" \
