@@ -35,6 +35,7 @@ main() {
     koopa_activate_build_opt_prefix 'cmake'
     koopa_activate_opt_prefix \
         'zlib' \
+        'bzip2' \
         'hdf5' \
         'libxml2' \
         'python'
@@ -49,12 +50,12 @@ main() {
     app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
         [base_url]='https://github.com/ncbi'
+        [bzip2]="$(koopa_app_prefix 'bzip2')"
         [hdf5]="$(koopa_app_prefix 'hdf5')"
         [java_home]="$(koopa_java_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
-        [xml2]="$(koopa_app_prefix 'libxml2')"
         [zlib]="$(koopa_app_prefix 'zlib')"
     )
     # Ensure we define Java location, otherwise can hit warnings during
@@ -108,11 +109,16 @@ ${dict[version]}.tar.gz"
             -B "${dict2[name]}-${dict[version]}-build" \
             -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
             -DPython3_EXECUTABLE="${app[python]}" \
+            -DBZIP2_INCLUDE_DIR="${dict[bzip2]}/include" \
+            -DBZIP2_LIBRARIES="${dict[bzip2]}/lib/libbz2.${dict[shared_ext]}" \
+            -DHDF5_INCLUDE_DIRS="${dict[hdf5]}/include" \
+            -DHDF5_LIBRARIES="${dict[hdf5]}/lib/libhdf5.${dict[shared_ext]}" \
             -DVDB_BINDIR="${dict[ncbi_vdb_build]}" \
             -DVDB_INCDIR="${dict[ncbi_vdb_source]}/interfaces" \
             -DVDB_LIBDIR="${dict[ncbi_vdb_build]}/lib" \
             -DZLIB_INCLUDE_DIR="${dict[zlib]}/include" \
-            -DZLIB_LIBRARIES="${dict[zlib]}/lib/libz.${dict[shared_ext]}"
+            -DZLIB_LIBRARY="${dict[zlib]}/lib/libz.${dict[shared_ext]}" \
+            -DZLIB_ROOT="${dict[zlib]}"
         "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
         "${app[cmake]}" --install "${dict2[name]}-${dict[version]}-build"
     )
