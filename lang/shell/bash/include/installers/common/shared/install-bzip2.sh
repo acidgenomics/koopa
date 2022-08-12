@@ -102,7 +102,7 @@ END
             "libbz2.${dict[shared_ext]}.${dict[version]}" \
             "libbz2.${dict[shared_ext]}.${dict[maj_min_ver]}"
         koopa_ln \
-            "libbz2.${dict[shared_ext]}.${dict[version]}"
+            "libbz2.${dict[shared_ext]}.${dict[version]}" \
             "libbz2.${dict[shared_ext]}"
     )
     return 0
