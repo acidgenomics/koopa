@@ -81,6 +81,8 @@ ${dict[version]}.tar.gz"
             -DCMAKE_INSTALL_PREFIX="${dict[prefix]}" \
             -DPython3_EXECUTABLE="${app[python]}" \
             -DBISON_EXECUTABLE="${dict[bison]}/bin/bison" \
+            -DHDF5_INCLUDE_DIRS="${dict[hdf5]}/include" \
+            -DHDF5_LIBRARIES="${dict[hdf5]}/lib/libhdf5.${dict[shared_ext]}" \
             -DLIBXML2_INCLUDE_DIR="${dict[libxml2]}/include" \
             -DLIBXML2_LIBRARY="${dict[libxml2]}/lib/libxml2.${dict[shared_ext]}"
         "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"

@@ -15,8 +15,10 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
+        [cat]="$(koopa_locate_cat)"
         [make]="$(koopa_locate_make)"
     )
+    [[ -x "${app[cat]}" ]] || return 1
     [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
@@ -38,7 +40,7 @@ v${dict[version]}/${dict[file]}"
     unset -v LLVM_CONFIG
     # Customize the 'Make.user' file.
     # Need to ensure we configure internal LLVM build here.
-    cat > 'Make.user' << END
+    "${app[cat]}" > 'Make.user' << END
 prefix=${dict[prefix]}
 # > LLVM_ASSERTIONS=1
 # > LLVM_DEBUG=Release
