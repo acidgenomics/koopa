@@ -12,12 +12,19 @@
 # gmake[1]: *** [CMakeFiles/Makefile2:3090: tools/bam-loader/CMakeFiles/samview.dir/all] Error 2
 # gmake: *** [Makefile:166: all] Error 2
 
+# FIXME This path structure may be problematic...
+# > tools/bam-loader/CMakeLists.txt
+# include_directories( ${CMAKE_SOURCE_DIR}/../ncbi-vdb/interfaces/ext/ ) # zlib.h
+
 main() {
     # """
     # Install SRA toolkit.
     # @note Updated 2022-08-12.
     #
     # This requires that HDF5 C compilation support includes zlib.
+    #
+    # Currently, we need to build '../ncbi-vdb' relative to sra-tools to ensure
+    # that zlib.h gets linked correctly.
     #
     # Consider requiring doxygen, and flex for build environment.
     # Can set doxygen with 'DOXYGEN_EXECUTABLE'.
@@ -83,6 +90,9 @@ main() {
 ${dict[version]}.tar.gz"
         koopa_download "${dict2[url]}" "${dict2[file]}"
         koopa_extract "${dict2[file]}"
+        koopa_mv \
+            "${dict2[name]}-${dict[version]}" \
+            "${dict2[name]}-${dict[version]}-source"
         cmake_args=(
             "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
             "-DPython3_EXECUTABLE=${app[python]}"
@@ -92,7 +102,7 @@ ${dict[version]}.tar.gz"
             "-DLIBXML2_LIBRARY=${dict[libxml2]}/lib/libxml2.${dict[shared_ext]}"
         )
         "${app[cmake]}" \
-            -S "${dict2[name]}-${dict[version]}" \
+            -S "${dict2[name]}-${dict[version]}-source" \
             -B "${dict2[name]}-${dict[version]}-build" \
             "${cmake_args[@]}"
         "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
@@ -101,8 +111,11 @@ ${dict[version]}.tar.gz"
         koopa_realpath "ncbi-vdb-${dict[version]}-build" \
     )"
     dict[ncbi_vdb_source]="$( \
-        koopa_realpath "ncbi-vdb-${dict[version]}" \
+        koopa_realpath "ncbi-vdb-${dict[version]}-source" \
     )"
+    koopa_ln \
+        "ncbi-vdb-${dict[version]}-build" \
+        "ncbi-vdb-${dict[version]}"
     # Build and install NCBI SRA Toolkit.
     (
         local cmake_args dict2
@@ -113,13 +126,16 @@ ${dict[version]}.tar.gz"
 ${dict[version]}.tar.gz"
         koopa_download "${dict2[url]}" "${dict2[file]}"
         koopa_extract "${dict2[file]}"
+        koopa_mv \
+            "${dict2[name]}-${dict[version]}" \
+            "${dict2[name]}-${dict[version]}-source"
         # Need to fix '/obj/ngs/ngs-java' path issue in 'CMakeLists.txt' file.
         # See related: https://github.com/ncbi/sra-tools/pull/664/files
         koopa_find_and_replace_in_file \
             --fixed \
             --pattern='/obj/ngs/ngs-java/' \
             --replacement='/ngs/ngs-java/' \
-            "${dict2[name]}-${dict[version]}/ngs/ngs-java/CMakeLists.txt"
+            "${dict2[name]}-${dict[version]}-source/ngs/ngs-java/CMakeLists.txt"
         cmake_args=(
             "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
             "-DPython3_EXECUTABLE=${app[python]}"
@@ -133,14 +149,9 @@ ${dict[version]}.tar.gz"
             "-DVDB_LIBDIR=${dict[ncbi_vdb_build]}/lib"
             "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
             "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
-            # > "-DZLIB_ROOT=${dict[zlib]}"
         )
-        # FIXME These settings don't help.
-        # > export "ZLIB_INCLUDE_DIR=${dict[zlib]}/include"
-        # > export "ZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
-        # > export "ZLIB_ROOT=${dict[zlib]}"
         "${app[cmake]}" \
-            -S "${dict2[name]}-${dict[version]}" \
+            -S "${dict2[name]}-${dict[version]}-source" \
             -B "${dict2[name]}-${dict[version]}-build" \
             "${cmake_args[@]}"
         "${app[cmake]}" --build "${dict2[name]}-${dict[version]}-build"
