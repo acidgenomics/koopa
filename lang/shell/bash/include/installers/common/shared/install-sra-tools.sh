@@ -16,6 +16,21 @@
 # > tools/bam-loader/CMakeLists.txt
 # include_directories( ${CMAKE_SOURCE_DIR}/../ncbi-vdb/interfaces/ext/ ) # zlib.h
 
+# FIXME Now on Linux we're hitting this issue:
+# [ 72%] Built target sharq.py
+# [ 72%] Building CXX object tools/sharq/CMakeFiles/sharq.dir/fastq_parse.cpp.o
+# In file included from /tmp/koopa-1000-20220812-200055-JqZscjuaMR/sra-tools-source/tools/sharq/bxzstr/compression_types.hpp:14,
+#                  from /tmp/koopa-1000-20220812-200055-JqZscjuaMR/sra-tools-source/tools/sharq/bxzstr/bxzstr.hpp:20,
+#                  from /tmp/koopa-1000-20220812-200055-JqZscjuaMR/sra-tools-source/tools/sharq/fastq_parser.hpp:49,
+#                  from /tmp/koopa-1000-20220812-200055-JqZscjuaMR/sra-tools-source/tools/sharq/fastq_parse.cpp:46:
+# /tmp/koopa-1000-20220812-200055-JqZscjuaMR/sra-tools-source/tools/sharq/bxzstr/bz_stream_wrapper.hpp:13:10: fatal error: bzlib.h: No such file or directory
+#    13 | #include <bzlib.h>
+#       |          ^~~~~~~~~
+# compilation terminated.
+# gmake[2]: *** [tools/sharq/CMakeFiles/sharq.dir/build.make:76: tools/sharq/CMakeFiles/sharq.dir/fastq_parse.cpp.o] Error 1
+# gmake[1]: *** [CMakeFiles/Makefile2:4025: tools/sharq/CMakeFiles/sharq.dir/all] Error 2
+# gmake: *** [Makefile:166: all] Error 2
+
 main() {
     # """
     # Install SRA toolkit.
@@ -41,11 +56,12 @@ main() {
     local app deps dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
-    deps=(
-        'zlib'
-        'bzip2'
-        'bison'
-    )
+    deps=()
+    # > deps=(
+    # >     'zlib'
+    # >     'bzip2'
+    # >     'bison'
+    # > )
     koopa_is_linux && deps+=('gcc')
     deps+=(
         'hdf5'
@@ -64,15 +80,15 @@ main() {
     app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
         [base_url]='https://github.com/ncbi'
-        [bison]="$(koopa_app_prefix 'bison')"
-        [bzip2]="$(koopa_app_prefix 'bzip2')"
+        # > [bison]="$(koopa_app_prefix 'bison')"
+        # > [bzip2]="$(koopa_app_prefix 'bzip2')"
         [hdf5]="$(koopa_app_prefix 'hdf5')"
         [java_home]="$(koopa_java_prefix)"
         [libxml2]="$(koopa_app_prefix 'libxml2')"
         [prefix]="${INSTALL_PREFIX:?}"
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
-        [zlib]="$(koopa_app_prefix 'zlib')"
+        # > [zlib]="$(koopa_app_prefix 'zlib')"
     )
     # Ensure we define Java location, otherwise can hit warnings during
     # ngs-tools install.
@@ -96,7 +112,7 @@ ${dict[version]}.tar.gz"
         cmake_args=(
             "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
             "-DPython3_EXECUTABLE=${app[python]}"
-            "-DBISON_EXECUTABLE=${dict[bison]}/bin/bison"
+            # > "-DBISON_EXECUTABLE=${dict[bison]}/bin/bison"
             "-DHDF5_ROOT=${dict[hdf5]}"
             "-DLIBXML2_INCLUDE_DIR=${dict[libxml2]}/include"
             "-DLIBXML2_LIBRARY=${dict[libxml2]}/lib/libxml2.${dict[shared_ext]}"
@@ -138,16 +154,16 @@ ${dict[version]}.tar.gz"
         cmake_args=(
             "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
             "-DPython3_EXECUTABLE=${app[python]}"
-            "-DBZIP2_INCLUDE_DIR=${dict[bzip2]}/include"
-            "-DBZIP2_LIBRARIES=${dict[bzip2]}/lib/libbz2.${dict[shared_ext]}"
+            # > "-DBZIP2_INCLUDE_DIR=${dict[bzip2]}/include"
+            # > "-DBZIP2_LIBRARIES=${dict[bzip2]}/lib/libbz2.${dict[shared_ext]}"
             "-DHDF5_ROOT=${dict[hdf5]}"
             "-DLIBXML2_INCLUDE_DIR=${dict[libxml2]}/include"
             "-DLIBXML2_LIBRARY=${dict[libxml2]}/lib/libxml2.${dict[shared_ext]}"
             "-DVDB_BINDIR=${dict[ncbi_vdb_build]}"
             "-DVDB_INCDIR=${dict[ncbi_vdb_source]}/interfaces"
             "-DVDB_LIBDIR=${dict[ncbi_vdb_build]}/lib"
-            "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
-            "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
+            # > "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
+            # > "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
         )
         "${app[cmake]}" \
             -S "${dict2[name]}-source" \
