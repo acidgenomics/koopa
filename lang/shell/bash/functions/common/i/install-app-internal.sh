@@ -31,6 +31,8 @@ koopa_install_app_internal() {
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
+            '--link-in-bin='* | \
+            '--link-in-bin' | \
             '--no-link-in-opt' | \
             '--no-prefix-check' | \
             '--quiet')
@@ -38,6 +40,7 @@ koopa_install_app_internal() {
                 ;;
             *)
                 pos+=("$1")
+                shift 1
                 ;;
         esac
     done
@@ -53,6 +56,7 @@ koopa_install_app_internal() {
     koopa_install_app \
         --no-link-in-opt \
         --no-prefix-check \
+        --no-restrict-path \
         --quiet \
         "$@"
 }
