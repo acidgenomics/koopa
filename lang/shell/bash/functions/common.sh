@@ -12511,8 +12511,6 @@ koopa_install_grep() {
 
 koopa_install_groff() {
     koopa_install_app \
-        --activate-opt='texinfo' \
-        --installer='gnu-app' \
         --link-in-bin='groff' \
         --name='groff' \
         "$@"
@@ -12873,9 +12871,6 @@ koopa_install_latch() {
 
 koopa_install_less() {
     koopa_install_app \
-        --activate-opt='ncurses' \
-        --activate-opt='pcre2' \
-        --installer='gnu-app' \
         --link-in-bin='less' \
         --name='less' \
         "$@"
