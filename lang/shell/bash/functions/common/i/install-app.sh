@@ -34,6 +34,7 @@ koopa_install_app() {
         # nested install calls (e.g. Emacs installer handoff to GNU app).
         [quiet]=0
         [reinstall]=0
+        [restrict_path]=1
         [update_ldconfig]=0
         [verbose]=0
         # When enabled, shortens git commit to 8 characters.
@@ -141,6 +142,10 @@ koopa_install_app() {
                 ;;
             '--no-prefix-check')
                 bool[prefix_check]=0
+                shift 1
+                ;;
+            '--no-restrict-path')
+                bool[restrict_path]=0
                 shift 1
                 ;;
             '--quiet')
@@ -286,8 +291,11 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_install_app_from_binary_package "${dict[prefix]}"
             return 0
         fi
-        PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
-        export PATH
+        if [[ "${bool[restrict_path]}" -eq 1 ]]
+        then
+            PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
+            export PATH
+        fi
         if koopa_is_linux && \
             [[ -x '/usr/bin/pkg-config' ]]
         then
