@@ -3,9 +3,9 @@
 koopa_update_app() {
     # """
     # Update application.
-    # @note Updated 2022-08-01.
+    # @note Updated 2022-08-12.
     # """
-    local bool clean_path_arr dict opt_arr
+    local bool clean_path_arr dict
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A bool=(
@@ -29,18 +29,9 @@ koopa_update_app() {
         [version]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    opt_arr=()
     while (("$#"))
     do
         case "$1" in
-            '--activate-opt='*)
-                opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-opt')
-                opt_arr+=("${2:?}")
-                shift 2
-                ;;
             '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
@@ -168,11 +159,6 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
         then
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
-        fi
-        # Activate packages installed in koopa 'opt/' directory.
-        if koopa_is_array_non_empty "${opt_arr[@]:-}"
-        then
-            koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
         if [[ "${bool[update_ldconfig]}" -eq 1 ]]
         then
