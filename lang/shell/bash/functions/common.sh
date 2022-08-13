@@ -3405,13 +3405,10 @@ koopa_build_all_apps() {
     fi
     for pkg in "${pkgs[@]}"
     do
-        if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
-            [[ -e "${dict[opt_prefix]}/${pkg}" ]]
-        then
-            continue
-        fi
-        "${app[koopa]}" install --push "$pkg"
+        koopa_is_symlink "${dict[opt_prefix]}/${pkg}" && continue
+        "${app[koopa]}" install "$pkg"
     done
+    koopa_push_all_app_builds
     return 0
 }
 
@@ -11382,15 +11379,38 @@ ${dict2[name]}/${dict2[version]}.tar.gz"
 }
 
 koopa_install_app_internal() {
+    local pos
+    koopa_assert_has_args "$#"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--link-in-bin' | \
+            '--link-in-bin='* | \
+            '--no-link-in-opt' | \
+            '--no-prefix-check' | \
+            '--quiet' | \
+            '--no-restrict-path')
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
     koopa_install_app \
         --no-link-in-opt \
         --no-prefix-check \
+        --no-restrict-path \
         --quiet \
         "$@"
 }
 
 koopa_install_app() {
-    local app bin_arr bool build_opt_arr clean_path_arr dict i opt_arr pos
+    local app bin_arr bool clean_path_arr dict i pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
@@ -11400,6 +11420,7 @@ koopa_install_app() {
     declare -A bool=(
         [auto_prefix]=0
         [binary]=0
+        [copy_log_file]=0
         [link_in_bin]=0
         [link_in_man]=0
         [link_in_opt]=1
@@ -11407,6 +11428,7 @@ koopa_install_app() {
         [push]=0
         [quiet]=0
         [reinstall]=0
+        [restrict_path]=1
         [update_ldconfig]=0
         [verbose]=0
         [version_is_git_commit]=0
@@ -11417,6 +11439,7 @@ koopa_install_app() {
         [installer_fun]='main'
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
+        [log_file]="$(koopa_tmp_log_file)"
         [mode]='shared'
         [name]=''
         [platform]='common'
@@ -11426,29 +11449,11 @@ koopa_install_app() {
         [version_key]=''
     )
     bin_arr=()
-    build_opt_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    opt_arr=()
     pos=()
     while (("$#"))
     do
         case "$1" in
-            '--activate-build-opt='*)
-                build_opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-build-opt')
-                build_opt_arr+=("${2:?}")
-                shift 2
-                ;;
-            '--activate-opt='*)
-                opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-opt')
-                opt_arr+=("${2:?}")
-                shift 2
-                ;;
             '--installer='*)
                 dict[installer_bn]="${1#*=}"
                 shift 1
@@ -11529,6 +11534,10 @@ koopa_install_app() {
                 bool[prefix_check]=0
                 shift 1
                 ;;
+            '--no-restrict-path')
+                bool[restrict_path]=0
+                shift 1
+                ;;
             '--quiet')
                 bool[quiet]=1
                 shift 1
@@ -11546,7 +11555,7 @@ koopa_install_app() {
                 shift 1
                 ;;
             '-D')
-            pos+=("${2:?}")
+                pos+=("${2:?}")
                 shift 2
                 ;;
             '')
@@ -11649,9 +11658,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
-        dict[log_file]="${dict[prefix]}/.koopa-install.log"
-    else
-        dict[log_file]="$(koopa_tmp_log_file)"
+        bool[copy_log_file]=1
     fi
     if [[ "${bool[quiet]}" -eq 0 ]]
     then
@@ -11670,21 +11677,16 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_install_app_from_binary_package "${dict[prefix]}"
             return 0
         fi
-        PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
-        export PATH
+        if [[ "${bool[restrict_path]}" -eq 1 ]]
+        then
+            PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
+            export PATH
+        fi
         if koopa_is_linux && \
             [[ -x '/usr/bin/pkg-config' ]]
         then
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
-        fi
-        if koopa_is_array_non_empty "${build_opt_arr[@]:-}"
-        then
-            koopa_activate_build_opt_prefix "${build_opt_arr[@]}"
-        fi
-        if koopa_is_array_non_empty "${opt_arr[@]:-}"
-        then
-            koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
         if [[ "${bool[update_ldconfig]}" -eq 1 ]]
         then
@@ -11698,6 +11700,12 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         [[ "${bool[verbose]}" -eq 1 ]] && declare -x
         return 0
     ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
+    if [[ "${bool[copy_log_file]}" -eq 1 ]]
+    then
+        koopa_cp \
+            "${dict[log_file]}" \
+            "${dict[prefix]}/.koopa-install.log"
+    fi
     koopa_rm "${dict[tmp_dir]}"
     case "${dict[mode]}" in
         'shared')
@@ -11809,16 +11817,12 @@ koopa_install_aspell() {
 
 koopa_install_autoconf() {
     koopa_install_app \
-        --activate-opt='m4' \
-        --installer='gnu-app' \
         --name='autoconf' \
         "$@"
 }
 
 koopa_install_automake() {
     koopa_install_app \
-        --activate-opt='autoconf' \
-        --installer='gnu-app' \
         --name='automake' \
         "$@"
 }
@@ -11872,8 +11876,6 @@ koopa_install_bat() {
 
 koopa_install_bc() {
     koopa_install_app \
-        --activate-build-opt='texinfo' \
-        --installer='gnu-app' \
         --link-in-bin='bc' \
         --name='bc' \
         "$@"
@@ -11889,8 +11891,6 @@ koopa_install_bedtools() {
 
 koopa_install_binutils() {
     koopa_install_app \
-        --activate-build-opt='texinfo' \
-        --installer='gnu-app' \
         --name='binutils' \
         "$@"
 }
@@ -11905,10 +11905,7 @@ koopa_install_bioawk() {
 
 koopa_install_bison() {
     koopa_install_app \
-        --activate-opt='m4' \
-        --installer='gnu-app' \
         --name='bison' \
-        -D '--enable-relocatable' \
         "$@"
 }
 
@@ -13924,30 +13921,9 @@ koopa_install_visidata() {
 }
 
 koopa_install_wget() {
-    local dict
-    declare -A dict=(
-        [opt_prefix]="$(koopa_opt_prefix)"
-    )
-    dict[ssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl3")"
     koopa_install_app \
-        --activate-build-opt='autoconf' \
-        --activate-build-opt='automake' \
-        --activate-opt='gettext' \
-        --activate-opt='libidn' \
-        --activate-opt='libtasn1' \
-        --activate-opt='nettle' \
-        --activate-opt='openssl3' \
-        --activate-opt='pcre2' \
-        --activate-opt='gnutls' \
-        --installer='gnu-app' \
         --name='wget' \
         --link-in-bin='wget' \
-        --name='wget' \
-        -D '--disable-debug' \
-        -D '--with-ssl=openssl' \
-        -D "--with-libssl-prefix=${dict[ssl]}" \
-        -D '--without-included-regex' \
-        -D '--without-libpsl' \
         "$@"
 }
 
@@ -14241,6 +14217,20 @@ koopa_is_array_non_empty() {
     return 0
 }
 
+koopa_is_broken_symlink() {
+    local file
+    koopa_assert_has_args "$#"
+    for file in "$@"
+    do
+        if [[ -L "$file" ]] && [[ ! -e "$file" ]]
+        then
+            continue
+        fi
+        return 1
+    done
+    return 0
+}
+
 koopa_is_defined_in_user_profile() {
     local file
     koopa_assert_has_no_args "$#"
@@ -14475,6 +14465,20 @@ koopa_is_spacemacs_installed() {
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
     koopa_file_detect_fixed --file="$init_file" --pattern='Spacemacs'
+}
+
+koopa_is_symlink() {
+    local file
+    koopa_assert_has_args "$#"
+    for file in "$@"
+    do
+        if [[ -L "$file" ]] && [[ -e "$file" ]]
+        then
+            continue
+        fi
+        return 1
+    done
+    return 0
 }
 
 koopa_is_url_active() {

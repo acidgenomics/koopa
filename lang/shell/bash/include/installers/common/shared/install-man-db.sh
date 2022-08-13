@@ -3,7 +3,7 @@
 main() {
     # """
     # Install man-db.
-    # @note Updated 2022-07-14.
+    # @note Updated 2022-08-12.
     #
     # Potentially useful:
     # > --program-prefix=g
@@ -13,13 +13,14 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/man-db.rb
     # """
     local dict
+    koopa_activate_opt_prefix \
+        'groff' \
+        'libpipeline' \
+        'gdbm'
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
     )
     koopa_install_app_internal \
-        --activate-opt='groff' \
-        --activate-opt='libpipeline' \
-        --activate-opt='gdbm' \
         --installer='gnu-app' \
         --name='man-db' \
         -D '--disable-cache-owner' \
