@@ -114,7 +114,7 @@ ${dict[version]}.tar.gz"
         koopa_realpath "ncbi-vdb-source" \
     )"
     # FIXME Does this need to be the source instead?
-    koopa_ln 'ncbi-vdb-build' 'ncbi-vdb'
+    koopa_ln 'ncbi-vdb-source' 'ncbi-vdb'
     # Build and install NCBI SRA Toolkit.
     (
         local cmake_args dict2
