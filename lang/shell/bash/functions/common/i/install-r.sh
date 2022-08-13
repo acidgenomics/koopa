@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This didn't create symlink correctly on macOS...what's up?
-
 koopa_install_r() {
+    # ""
+    # Assume we're linking R CRAN binary on macOS instead.
+    # """
     local install_args
     install_args=('--name=r')
     if koopa_is_linux && [[ ! -x '/usr/bin/R' ]]
