@@ -5,7 +5,7 @@
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-08-12.
     #
     # The approach calling 'koopa_cli_install' internally on pkgs array
     # can run into weird compilation issues on macOS.
@@ -321,24 +321,11 @@ koopa_build_all_apps() {
             )
         fi
     fi
-    # FIXME Rework this using 'koopa_is_symlink'.
-    # FIXME Also check if directory is empty...need to rework our log file
-    # copy approach first here.
-    # FIXME This needs to ensure that target directory didn't fail during
-    # build and only contains the log file.
-    # FIXME Consider asserting that the opt prefix isn't empty
-    # after this step completes. Need to work this into the main
-    # 'install_app' command.
     for pkg in "${pkgs[@]}"
     do
-        if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
-            [[ -e "${dict[opt_prefix]}/${pkg}" ]]
-        then
-            continue
-        fi
-        # NOTE This approach is running into compiler issues on macOS.
-        # > koopa_cli_install "$pkg"
-        "${app[koopa]}" install --push "$pkg"
+        koopa_is_symlink "${dict[opt_prefix]}/${pkg}" && continue
+        "${app[koopa]}" install "$pkg"
     done
+    koopa_push_all_app_builds
     return 0
 }
