@@ -267,13 +267,12 @@ koopa_build_all_apps() {
         'cheat' # deps: go.
         'pylint' # deps: python.
         'yq' # deps: go.
-        'chemacs' # deps: go
+        # deps: cmake, gcc, hdf5, libxml2, python.
+        'sra-tools'
+        # deps: go.
+        'chemacs'
         # deps: chemacs (to configure).
         'dotfiles'
-    )
-    pkgs+=(
-        # deps: cmake, hdf5, libxml2, python.
-        'sra-tools'
     )
     if ! koopa_is_aarch64
     then
