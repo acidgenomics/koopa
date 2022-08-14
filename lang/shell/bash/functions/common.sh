@@ -12025,127 +12025,115 @@ koopa_install_conda() {
 }
 
 koopa_install_coreutils() {
-    local install_args
-    install_args=()
-    if koopa_is_linux
-    then
-        install_args+=('--activate-opt=attr')
-    fi
-    install_args+=(
-        '--activate-build-opt=gperf'
-        '--activate-opt=gmp'
-        '--installer=gnu-app'
-        '--name=coreutils'
-        '--link-in-bin=['
-        '--link-in-bin=b2sum'
-        '--link-in-bin=base32'
-        '--link-in-bin=base64'
-        '--link-in-bin=basename'
-        '--link-in-bin=basenc'
-        '--link-in-bin=cat'
-        '--link-in-bin=chcon'
-        '--link-in-bin=chgrp'
-        '--link-in-bin=chmod'
-        '--link-in-bin=chown'
-        '--link-in-bin=chroot'
-        '--link-in-bin=cksum'
-        '--link-in-bin=comm'
-        '--link-in-bin=cp'
-        '--link-in-bin=csplit'
-        '--link-in-bin=cut'
-        '--link-in-bin=date'
-        '--link-in-bin=dd'
-        '--link-in-bin=df'
-        '--link-in-bin=dir'
-        '--link-in-bin=dircolors'
-        '--link-in-bin=dirname'
-        '--link-in-bin=du'
-        '--link-in-bin=echo'
-        '--link-in-bin=env'
-        '--link-in-bin=expand'
-        '--link-in-bin=expr'
-        '--link-in-bin=factor'
-        '--link-in-bin=false'
-        '--link-in-bin=fmt'
-        '--link-in-bin=fold'
-        '--link-in-bin=groups'
-        '--link-in-bin=head'
-        '--link-in-bin=hostid'
-        '--link-in-bin=id'
-        '--link-in-bin=install'
-        '--link-in-bin=join'
-        '--link-in-bin=kill'
-        '--link-in-bin=link'
-        '--link-in-bin=ln'
-        '--link-in-bin=logname'
-        '--link-in-bin=ls'
-        '--link-in-bin=md5sum'
-        '--link-in-bin=mkdir'
-        '--link-in-bin=mkfifo'
-        '--link-in-bin=mknod'
-        '--link-in-bin=mktemp'
-        '--link-in-bin=mv'
-        '--link-in-bin=nice'
-        '--link-in-bin=nl'
-        '--link-in-bin=nohup'
-        '--link-in-bin=nproc'
-        '--link-in-bin=numfmt'
-        '--link-in-bin=od'
-        '--link-in-bin=paste'
-        '--link-in-bin=pathchk'
-        '--link-in-bin=pinky'
-        '--link-in-bin=pr'
-        '--link-in-bin=printenv'
-        '--link-in-bin=printf'
-        '--link-in-bin=ptx'
-        '--link-in-bin=pwd'
-        '--link-in-bin=readlink'
-        '--link-in-bin=realpath'
-        '--link-in-bin=rm'
-        '--link-in-bin=rmdir'
-        '--link-in-bin=runcon'
-        '--link-in-bin=seq'
-        '--link-in-bin=sha1sum'
-        '--link-in-bin=sha224sum'
-        '--link-in-bin=sha256sum'
-        '--link-in-bin=sha384sum'
-        '--link-in-bin=sha512sum'
-        '--link-in-bin=shred'
-        '--link-in-bin=shuf'
-        '--link-in-bin=sleep'
-        '--link-in-bin=sort'
-        '--link-in-bin=split'
-        '--link-in-bin=stat'
-        '--link-in-bin=stdbuf'
-        '--link-in-bin=stty'
-        '--link-in-bin=sum'
-        '--link-in-bin=sync'
-        '--link-in-bin=tac'
-        '--link-in-bin=tail'
-        '--link-in-bin=tee'
-        '--link-in-bin=test'
-        '--link-in-bin=timeout'
-        '--link-in-bin=touch'
-        '--link-in-bin=tr'
-        '--link-in-bin=true'
-        '--link-in-bin=truncate'
-        '--link-in-bin=tsort'
-        '--link-in-bin=tty'
-        '--link-in-bin=uname'
-        '--link-in-bin=unexpand'
-        '--link-in-bin=uniq'
-        '--link-in-bin=unlink'
-        '--link-in-bin=uptime'
-        '--link-in-bin=users'
-        '--link-in-bin=vdir'
-        '--link-in-bin=wc'
-        '--link-in-bin=who'
-        '--link-in-bin=whoami'
-        '--link-in-bin=yes'
-        -D '--with-gmp'
-        -D '--without-selinux'
-    )
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --link-in-bin='[' \
+        --link-in-bin='b2sum' \
+        --link-in-bin='base32' \
+        --link-in-bin='base64' \
+        --link-in-bin='basename' \
+        --link-in-bin='basenc' \
+        --link-in-bin='cat' \
+        --link-in-bin='chcon' \
+        --link-in-bin='chgrp' \
+        --link-in-bin='chmod' \
+        --link-in-bin='chown' \
+        --link-in-bin='chroot' \
+        --link-in-bin='cksum' \
+        --link-in-bin='comm' \
+        --link-in-bin='cp' \
+        --link-in-bin='csplit' \
+        --link-in-bin='cut' \
+        --link-in-bin='date' \
+        --link-in-bin='dd' \
+        --link-in-bin='df' \
+        --link-in-bin='dir' \
+        --link-in-bin='dircolors' \
+        --link-in-bin='dirname' \
+        --link-in-bin='du' \
+        --link-in-bin='echo' \
+        --link-in-bin='env' \
+        --link-in-bin='expand' \
+        --link-in-bin='expr' \
+        --link-in-bin='factor' \
+        --link-in-bin='false' \
+        --link-in-bin='fmt' \
+        --link-in-bin='fold' \
+        --link-in-bin='groups' \
+        --link-in-bin='head' \
+        --link-in-bin='hostid' \
+        --link-in-bin='id' \
+        --link-in-bin='install' \
+        --link-in-bin='join' \
+        --link-in-bin='kill' \
+        --link-in-bin='link' \
+        --link-in-bin='ln' \
+        --link-in-bin='logname' \
+        --link-in-bin='ls' \
+        --link-in-bin='md5sum' \
+        --link-in-bin='mkdir' \
+        --link-in-bin='mkfifo' \
+        --link-in-bin='mknod' \
+        --link-in-bin='mktemp' \
+        --link-in-bin='mv' \
+        --link-in-bin='nice' \
+        --link-in-bin='nl' \
+        --link-in-bin='nohup' \
+        --link-in-bin='nproc' \
+        --link-in-bin='numfmt' \
+        --link-in-bin='od' \
+        --link-in-bin='paste' \
+        --link-in-bin='pathchk' \
+        --link-in-bin='pinky' \
+        --link-in-bin='pr' \
+        --link-in-bin='printenv' \
+        --link-in-bin='printf' \
+        --link-in-bin='ptx' \
+        --link-in-bin='pwd' \
+        --link-in-bin='readlink' \
+        --link-in-bin='realpath' \
+        --link-in-bin='rm' \
+        --link-in-bin='rmdir' \
+        --link-in-bin='runcon' \
+        --link-in-bin='seq' \
+        --link-in-bin='sha1sum' \
+        --link-in-bin='sha224sum' \
+        --link-in-bin='sha256sum' \
+        --link-in-bin='sha384sum' \
+        --link-in-bin='sha512sum' \
+        --link-in-bin='shred' \
+        --link-in-bin='shuf' \
+        --link-in-bin='sleep' \
+        --link-in-bin='sort' \
+        --link-in-bin='split' \
+        --link-in-bin='stat' \
+        --link-in-bin='stdbuf' \
+        --link-in-bin='stty' \
+        --link-in-bin='sum' \
+        --link-in-bin='sync' \
+        --link-in-bin='tac' \
+        --link-in-bin='tail' \
+        --link-in-bin='tee' \
+        --link-in-bin='test' \
+        --link-in-bin='timeout' \
+        --link-in-bin='touch' \
+        --link-in-bin='tr' \
+        --link-in-bin='true' \
+        --link-in-bin='truncate' \
+        --link-in-bin='tsort' \
+        --link-in-bin='tty' \
+        --link-in-bin='uname' \
+        --link-in-bin='unexpand' \
+        --link-in-bin='uniq' \
+        --link-in-bin='unlink' \
+        --link-in-bin='uptime' \
+        --link-in-bin='users' \
+        --link-in-bin='vdir' \
+        --link-in-bin='wc' \
+        --link-in-bin='who' \
+        --link-in-bin='whoami' \
+        --link-in-bin='yes' \
+        --name='coreutils' \
+        "$@"
 }
 
 koopa_install_cpufetch() {
@@ -12212,24 +12200,7 @@ koopa_install_du_dust() {
 
 koopa_install_emacs() {
     local install_args
-    install_args=(
-        '--activate-opt=gmp'
-        '--activate-opt=ncurses'
-        '--activate-opt=libtasn1'
-        '--activate-opt=libunistring'
-        '--activate-opt=libxml2'
-        '--activate-opt=nettle'
-        '--activate-opt=texinfo'
-        '--activate-opt=gnutls'
-        '--installer=gnu-app'
-        '--name=emacs'
-        '-D' '--with-modules'
-        '-D' '--without-dbus'
-        '-D' '--without-imagemagick'
-        '-D' '--without-ns'
-        '-D' '--without-selinux'
-        '-D' '--without-x'
-    )
+    install_args=('--name=emacs')
     if ! koopa_is_macos
     then
         install_args+=('--link-in-bin=emacs')
@@ -12383,14 +12354,15 @@ koopa_install_fzf() {
 
 koopa_install_gawk() {
     koopa_install_app \
-        --installer='gnu-app' \
-        --activate-opt='gettext' \
-        --activate-opt='mpfr' \
-        --activate-opt='readline' \
         --link-in-bin='awk' \
         --link-in-bin='gawk' \
         --name='gawk' \
         "$@"
+    (
+        koopa_cd "$(koopa_man_prefix)/man1"
+        koopa_ln 'gawk.1' 'awk.1'
+    )
+    return 0
 }
 
 koopa_install_gcc() {
@@ -12408,8 +12380,6 @@ koopa_install_gdal() {
 
 koopa_install_gdbm() {
     koopa_install_app \
-        --installer='gnu-app' \
-        --activate-opt='readline' \
         --name='gdbm' \
         "$@"
 }
@@ -12422,19 +12392,9 @@ koopa_install_geos() {
 }
 
 koopa_install_gettext() {
-    local install_args
-    install_args=(
-        '--installer=gnu-app'
-        '--name=gettext'
-    )
-    if ! koopa_is_macos
-    then
-        install_args+=(
-            '--activate-opt=ncurses'
-            '--activate-opt=libxml2'
-        )
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --name='gettext' \
+        "$@"
 }
 
 koopa_install_gffutils() {
@@ -12539,8 +12499,6 @@ koopa_install_graphviz() {
 
 koopa_install_grep() {
     koopa_install_app \
-        --activate-opt='pcre' \
-        --installer='gnu-app' \
         --link-in-bin='egrep' \
         --link-in-bin='fgrep' \
         --link-in-bin='grep' \
@@ -12550,8 +12508,6 @@ koopa_install_grep() {
 
 koopa_install_groff() {
     koopa_install_app \
-        --activate-opt='texinfo' \
-        --installer='gnu-app' \
         --link-in-bin='groff' \
         --name='groff' \
         "$@"
@@ -12912,9 +12868,6 @@ koopa_install_latch() {
 
 koopa_install_less() {
     koopa_install_app \
-        --activate-opt='ncurses' \
-        --activate-opt='pcre2' \
-        --installer='gnu-app' \
         --link-in-bin='less' \
         --name='less' \
         "$@"
@@ -24622,7 +24575,7 @@ koopa_unlink_in_opt() {
 }
 
 koopa_update_app() {
-    local bool clean_path_arr dict opt_arr
+    local bool clean_path_arr dict
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A bool=(
@@ -24646,18 +24599,9 @@ koopa_update_app() {
         [version]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    opt_arr=()
     while (("$#"))
     do
         case "$1" in
-            '--activate-opt='*)
-                opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-opt')
-                opt_arr+=("${2:?}")
-                shift 2
-                ;;
             '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
@@ -24782,10 +24726,6 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
         then
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
-        fi
-        if koopa_is_array_non_empty "${opt_arr[@]:-}"
-        then
-            koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
         if [[ "${bool[update_ldconfig]}" -eq 1 ]]
         then
