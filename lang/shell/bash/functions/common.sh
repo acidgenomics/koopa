@@ -12987,8 +12987,6 @@ koopa_install_libtiff() {
 
 koopa_install_libtool() {
     koopa_install_app \
-        --activate-opt='m4' \
-        --installer='gnu-app' \
         --link-in-bin='libtool' \
         --link-in-bin='libtoolize' \
         --name='libtool' \
@@ -13104,16 +13102,19 @@ koopa_install_meson() {
 }
 
 koopa_install_mpc() {
-    set -x 
+    koopa_install_app \
+        --name='mpc' \
+        "$@"
+}
+
+main() {
     local dict
     declare -A dict=(
-        [opt_prefix]="$(koopa_opt_prefix)"
+        [gmp]="$(koopa_app_prefix 'gmp')"
+        [mpfr]="$(koopa_app_prefix 'mpfr')"
     )
-    dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
-    dict[mpfr]="$(koopa_realpath "${dict[opt_prefix]}/mpfr")"
-    koopa_install_app \
-        --activate-opt='gmp' \
-        --activate-opt='mpfr' \
+    koopa_activate_opt_prefix 'gmp' 'mpfr'
+    koopa_install_app_internal \
         --installer='gnu-app' \
         --name='mpc' \
         -D "--with-gmp=${dict[gmp]}" \
@@ -13123,8 +13124,6 @@ koopa_install_mpc() {
 
 koopa_install_mpfr() {
     koopa_install_app \
-        --activate-opt='gmp' \
-        --installer='gnu-app' \
         --name='mpfr' \
         "$@"
 }
@@ -13169,13 +13168,7 @@ koopa_install_neovim() {
 
 koopa_install_nettle() {
     koopa_install_app \
-        --activate-opt='gmp' \
-        --activate-opt='m4' \
-        --installer='gnu-app' \
         --name='nettle' \
-        -D '--disable-dependency-tracking' \
-        -D '--enable-mini-gmp' \
-        -D '--enable-shared' \
         "$@"
 }
 
@@ -13288,18 +13281,10 @@ koopa_install_password_store() {
 }
 
 koopa_install_patch() {
-    local install_args
-    install_args=()
-    if koopa_is_linux
-    then
-        install_args+=('--activate-opt=attr')
-    fi
-    install_args+=(
-        '--installer=gnu-app'
-        '--link-in-bin=patch'
-        '--name=patch'
-    )
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --link-in-bin='patch' \
+        --name='patch' \
+        "$@"
 }
 
 koopa_install_pcre() {
@@ -13422,8 +13407,6 @@ koopa_install_pylint() {
 koopa_install_pytaglib() {
     koopa_install_app \
         --link-in-bin='pyprinttags' \
-        --activate-opt='taglib' \
-        --installer='python-venv' \
         --name='pytaglib' \
         "$@"
 }
@@ -13527,8 +13510,6 @@ koopa_install_rename() {
 
 koopa_install_ripgrep() {
     koopa_install_app \
-        --activate-opt='pcre2' \
-        --installer='rust-package' \
         --link-in-bin='rg' \
         --name='ripgrep' \
         "$@"
@@ -13679,8 +13660,6 @@ koopa_install_starship() {
 
 koopa_install_stow() {
     koopa_install_app \
-        --activate-opt='perl' \
-        --installer='gnu-app' \
         --link-in-bin='stow' \
         --name='stow' \
         "$@"
@@ -13745,28 +13724,15 @@ koopa_install_tealdeer() {
 }
 
 koopa_install_texinfo() {
-    local install_args
-    install_args=(
-        '--installer=gnu-app'
-        '--link-in-bin=pdftexi2dvi'
-        '--link-in-bin=pod2texi'
-        '--link-in-bin=texi2any'
-        '--link-in-bin=texi2dvi'
-        '--link-in-bin=texi2pdf'
-        '--link-in-bin=texindex'
-        '--name=texinfo'
-        -D '--disable-dependency-tracking'
-        -D '--disable-install-warnings'
-    )
-    if ! koopa_is_macos
-    then
-        install_args+=(
-            '--activate-opt=gettext'
-            '--activate-opt=ncurses'
-            '--activate-opt=perl'
-        )
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --link-in-bin='pdftexi2dvi' \
+        --link-in-bin='pod2texi' \
+        --link-in-bin='texi2any' \
+        --link-in-bin='texi2dvi' \
+        --link-in-bin='texi2pdf' \
+        --link-in-bin='texindex' \
+        --name='texinfo' \
+        "$@"
 }
 
 koopa_install_tmux() {
@@ -13808,8 +13774,6 @@ koopa_install_udunits() {
 
 koopa_install_units() {
     koopa_install_app \
-        --activate-opt='readline' \
-        --installer='gnu-app' \
         --link-in-bin='units' \
         --name='units' \
         "$@"
@@ -19422,9 +19386,11 @@ koopa_rsync() {
                 shift 2
                 ;;
             '--archive' | \
+            '--copy-links' | \
             '--delete' | \
             '--delete-before' | \
-            '--dry-run')
+            '--dry-run' | \
+            '--log-file='*)
                 rsync_args+=("$1")
                 shift 1
                 ;;
