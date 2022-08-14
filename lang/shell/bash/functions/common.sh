@@ -11053,7 +11053,6 @@ koopa_insert_at_line_number() {
 
 koopa_install_ack() {
     koopa_install_app \
-        --installer='perl-package' \
         --link-in-bin='ack' \
         --name='ack' \
         "$@"
@@ -11829,7 +11828,6 @@ koopa_install_automake() {
 
 koopa_install_azure_cli() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='az' \
         --name='azure-cli' \
         "$@"
@@ -11837,7 +11835,6 @@ koopa_install_azure_cli() {
 
 koopa_install_bamtools() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bamtools' \
         --name='bamtools' \
         "$@"
@@ -16518,6 +16515,12 @@ koopa_locate_nproc() {
         --app-name='nproc' \
         --opt-name='coreutils' \
         "$@"
+}
+
+koopa_locate_numfmt() {
+    koopa_locate_app \
+        --app-name='numfmt' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_od() {
