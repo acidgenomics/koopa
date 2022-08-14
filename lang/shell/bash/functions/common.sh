@@ -19337,7 +19337,6 @@ koopa_rsync() {
     )
     rsync_args=(
         '--human-readable'
-        '--one-file-system'
         '--progress'
         '--protect-args'
         '--recursive'

@@ -43,8 +43,8 @@ koopa_rsync() {
         [target_dir]=''
     )
     rsync_args=(
+        # > '--one-file-system'
         '--human-readable'
-        '--one-file-system'
         '--progress'
         '--protect-args'
         '--recursive'
