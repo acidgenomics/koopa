@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_activate_build_opt_prefix 'texinfo'
+    koopa_is_linux && koopa_activate_opt_prefix 'attr'
     koopa_install_app_internal \
         --installer='gnu-app' \
-        --name='bc' \
+        --name='patch' \
         "$@"
 }
