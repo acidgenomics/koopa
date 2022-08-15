@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_install_gtop() {
+main() {
     koopa_install_app \
-        --link-in-bin='gtop' \
+        --installer='node-package' \
         --name='gtop' \
         "$@"
 }
