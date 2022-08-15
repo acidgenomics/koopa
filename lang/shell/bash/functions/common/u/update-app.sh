@@ -3,7 +3,7 @@
 koopa_update_app() {
     # """
     # Update application.
-    # @note Updated 2022-08-12.
+    # @note Updated 2022-08-15.
     # """
     local bool clean_path_arr dict
     koopa_assert_has_args "$#"
@@ -16,7 +16,6 @@ koopa_update_app() {
         [verbose]=0
     )
     declare -A dict=(
-        [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [mode]='shared'
         [name]=''
@@ -128,8 +127,8 @@ koopa_update_app() {
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     fi
     [[ -z "${dict[updater_bn]}" ]] && dict[updater_bn]="${dict[name]}"
-    dict[updater_file]="${dict[installers_prefix]}/${dict[platform]}/\
-${dict[mode]}/update-${dict[updater_bn]}.sh"
+    dict[updater_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+update/${dict[platform]}/${dict[mode]}/${dict[updater_bn]}.sh"
     koopa_assert_is_file "${dict[updater_file]}"
     # shellcheck source=/dev/null
     source "${dict[updater_file]}"
