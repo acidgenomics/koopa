@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-06-14.
+    # @note Updated 2022-08-15.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -34,18 +34,6 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    # OpenSSL 3 is not currently supported.
-    # Refer to 'https://docs.rs/openssl/latest/openssl/' for details.
-    # FIXME This approach still doesn't work for Linux.
-    # Expected 'libssl.so.1.1' and 'libcrypto.so.1.1' files are missing.
-    case "${dict[name]}" in
-        'dog')
-            koopa_activate_opt_prefix 'openssl1'
-            dict[openssl]="$(koopa_app_prefix 'openssl1')"
-            export OPENSSL_DIR="${dict[openssl]}"
-            koopa_add_rpath_to_ldflags "${dict[openssl]}/lib"
-            ;;
-    esac
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(
         '--jobs' "${dict[jobs]}"
