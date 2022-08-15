@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_install_deeptools() {
+main() {
     koopa_install_app \
-        --link-in-bin='deeptools' \
+        --installer='conda-env' \
         --name='deeptools' \
         "$@"
 }
