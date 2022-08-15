@@ -16376,15 +16376,10 @@ koopa_locate_mktemp() {
 }
 
 koopa_locate_mv() {
-    if koopa_is_macos
-    then
-        koopa_locate_app '/bin/mv'
-    else
-        koopa_locate_app \
-            --allow-in-path \
-            --app-name='mv' \
-            --opt-name='coreutils'
-    fi
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='mv' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_neofetch() {
@@ -17214,9 +17209,14 @@ koopa_mv() {
     local app dict mkdir mv mv_args pos rm
     declare -A app=(
         [mkdir]='koopa_mkdir'
-        [mv]="$(koopa_locate_mv)"
         [rm]='koopa_rm'
     )
+    if koopa_is_macos
+    then
+        app[mv]='/bin/mv'
+    else
+        app[mv]="$(koopa_locate_mv)"
+    fi
     [[ -x "${app[mv]}" ]] || return 1
     declare -A dict=(
         [sudo]=0

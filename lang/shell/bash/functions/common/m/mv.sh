@@ -3,8 +3,9 @@
 koopa_mv() {
     # """
     # Move a file or directory with GNU mv.
-    # @note Updated 2021-10-29.
-    # @note '-t' flag is not supported for BSD variant.
+    # @note Updated 2022-08-15.
+    #
+    # The '-t' flag is not supported for BSD variant.
     #
     # This function works on 1 file or directory at a time.
     # It ensures that the target parent directory exists automatically.
@@ -12,13 +13,20 @@ koopa_mv() {
     # Useful GNU mv args, for reference (non-POSIX):
     # * '--no-target-directory'
     # * '--strip-trailing-slashes'
+    #
     # """
     local app dict mkdir mv mv_args pos rm
     declare -A app=(
         [mkdir]='koopa_mkdir'
-        [mv]="$(koopa_locate_mv)"
         [rm]='koopa_rm'
     )
+    # macOS gmv currently has issues on NFS shares.
+    if koopa_is_macos
+    then
+        app[mv]='/bin/mv'
+    else
+        app[mv]="$(koopa_locate_mv)"
+    fi
     [[ -x "${app[mv]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
