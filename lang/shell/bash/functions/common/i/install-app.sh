@@ -3,7 +3,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-08-12.
+    # @note Updated 2022-08-15.
     # """
     local app bin_arr bool clean_path_arr dict i pos
     koopa_assert_has_args "$#"
@@ -44,7 +44,6 @@ koopa_install_app() {
         [app_prefix]="$(koopa_app_prefix)"
         [installer_bn]=''
         [installer_fun]='main'
-        [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [log_file]="$(koopa_tmp_log_file)"
         [mode]='shared'
@@ -223,8 +222,8 @@ ${dict[version2]}"
     [[ -d "${dict[prefix]}" ]] && \
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     [[ -z "${dict[installer_bn]}" ]] && dict[installer_bn]="${dict[name]}"
-    dict[installer_file]="${dict[installers_prefix]}/${dict[platform]}/\
-${dict[mode]}/install-${dict[installer_bn]}.sh"
+    dict[installer_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+install/${dict[platform]}/${dict[mode]}/${dict[installer_bn]}.sh"
     koopa_assert_is_file "${dict[installer_file]}"
     # shellcheck source=/dev/null
     source "${dict[installer_file]}"

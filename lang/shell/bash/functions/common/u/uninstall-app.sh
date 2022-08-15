@@ -3,7 +3,7 @@
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-08-15.
     # """
     local bin_arr bool dict i man_arr
     declare -A bool=(
@@ -15,7 +15,6 @@ koopa_uninstall_app() {
     )
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
-        [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [mode]='shared'
         [name]=''
@@ -139,8 +138,8 @@ koopa_uninstall_app() {
         fi
     fi
     [[ -z "${dict[uninstaller_bn]}" ]] && dict[uninstaller_bn]="${dict[name]}"
-    dict[uninstaller_file]="${dict[installers_prefix]}/${dict[platform]}/\
-${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
+    dict[uninstaller_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+uninstall/${dict[platform]}/${dict[mode]}/${dict[uninstaller_bn]}.sh"
     if [[ -f "${dict[uninstaller_file]}" ]]
     then
         dict[tmp_dir]="$(koopa_tmp_dir)"
