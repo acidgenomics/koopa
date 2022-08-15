@@ -2,7 +2,6 @@
 
 koopa_install_flake8() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='flake8' \
         --name='flake8' \
         "$@"
