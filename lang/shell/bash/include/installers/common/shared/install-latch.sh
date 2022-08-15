@@ -2,7 +2,7 @@
 
 main() {
     koopa_install_app_internal \
-        --installer='node-package' \
-        --name='gtop' \
+        --installer='python-venv' \
+        --name='latch' \
         "$@"
 }
