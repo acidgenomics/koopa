@@ -11842,7 +11842,6 @@ koopa_install_bamtools() {
 
 koopa_install_bash_language_server() {
     koopa_install_app \
-        --installer='node-package' \
         --link-in-bin='bash-language-server' \
         --name='bash-language-server' \
         "$@"
@@ -11857,7 +11856,6 @@ koopa_install_bash() {
 
 koopa_install_bashcov() {
     koopa_install_app \
-        --installer='ruby-package' \
         --link-in-bin='bashcov' \
         --name='bashcov' \
         "$@"
@@ -11867,7 +11865,6 @@ koopa_install_bat() {
     koopa_install_app \
         --link-in-bin='bat' \
         --name='bat' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -11880,7 +11877,6 @@ koopa_install_bc() {
 
 koopa_install_bedtools() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bedtools' \
         --name='bedtools' \
         "$@"
@@ -11894,7 +11890,6 @@ koopa_install_binutils() {
 
 koopa_install_bioawk() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bioawk' \
         --name='bioawk' \
         "$@"
@@ -11908,7 +11903,6 @@ koopa_install_bison() {
 
 koopa_install_black() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='black' \
         --name='black' \
         "$@"
@@ -11922,7 +11916,6 @@ koopa_install_boost() {
 
 koopa_install_bowtie2() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bowtie2' \
         --name='bowtie2' \
         "$@"
@@ -11930,7 +11923,6 @@ koopa_install_bowtie2() {
 
 koopa_install_bpytop() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='bpytop' \
         --name='bpytop' \
         "$@"
@@ -11938,7 +11930,6 @@ koopa_install_bpytop() {
 
 koopa_install_broot() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='broot' \
         --name='broot' \
         "$@"
@@ -11946,7 +11937,6 @@ koopa_install_broot() {
 
 koopa_install_bustools() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bustools' \
         --name='bustools' \
         "$@"
