@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libjpeg-turbo.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-08-16.
     #
     # @seealso
     # - https://libjpeg-turbo.org/
@@ -15,6 +15,7 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"

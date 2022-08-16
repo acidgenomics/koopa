@@ -3,13 +3,14 @@
 main() {
     # """
     # Install libffi.
-    # @note Updated 2022-04-20.
+    # @note Updated 2022-08-16.
     #
     # @seealso
     # - https://sourceware.org/libffi/
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

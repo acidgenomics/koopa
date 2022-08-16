@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LAPACK.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-08-16.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
@@ -12,7 +12,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'cmake'
+    koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
     koopa_activate_opt_prefix 'gcc'
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
