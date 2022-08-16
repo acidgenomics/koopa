@@ -1,37 +1,39 @@
 #!/usr/bin/env bash
 
-# FIXME Need to link to CA certificates here.
-# FIXME These can be installed with OpenSSL.
-# --with-ca-path=DIRECTORY
-
 main() {
     # """
     # Install cURL.
-    # @note Updated 2022-06-01.
+    # @note Updated 2022-08-16.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
     #
+    # Alternatively, can use '--with-ca-path' instead of '--with-ca-bundle'.
+    #
     # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/curl.rb
     # - https://curl.haxx.se/docs/install.html
+    # - https://curl.se/docs/sslcerts.html
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/curl.rb
     # - https://stackoverflow.com/questions/30017397
     # """
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'openssl3'
+    koopa_activate_opt_prefix 'ca-certificates' 'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
     [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
+        [ca_certificates]="$(koopa_app_prefix 'ca-certificates')"
         [jobs]="$(koopa_cpu_count)"
         [name]='curl'
         [prefix]="${INSTALL_PREFIX:?}"
+        [ssl]="$(koopa_app_prefix 'openssl3')"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[ssl]="$(koopa_app_prefix 'openssl3')"
+    dict[cacert]="${dict[ca_certificates]}/share/ca-certificates/cacert.pem"
+    koopa_assert_is_file "${dict[cacert]}"
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[version2]="${dict[version]//./_}"
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/releases/\
@@ -42,6 +44,7 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-versioned-symbols'
+        "--with-ca-bundle=${dict[cacert]}"
         "--with-ssl=${dict[ssl]}"
     )
     ./configure --help
