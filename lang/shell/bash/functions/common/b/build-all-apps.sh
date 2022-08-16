@@ -86,7 +86,9 @@ koopa_build_all_apps() {
         'openssl1'
         # deps: ca-certificates, make, pkg-config.
         'openssl3'
+        # deps: make, ncurses, openssl3.
         'cmake'
+        # deps: make, openssl3, pkg-config.
         'curl'
         'git'
         'lapack'
