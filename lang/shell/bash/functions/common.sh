@@ -13468,7 +13468,6 @@ koopa_install_sambamba() {
 
 koopa_install_samtools() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='samtools' \
         --name='samtools' \
         "$@"
@@ -13476,14 +13475,12 @@ koopa_install_samtools() {
 
 koopa_install_scons() {
     koopa_install_app \
-        --installer='python-venv' \
         --name='scons' \
         "$@"
 }
 
 koopa_install_sed() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='sed' \
         --name='sed' \
         "$@"
@@ -13511,7 +13508,6 @@ koopa_install_shunit2() {
 
 koopa_install_snakemake() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='snakemake' \
         --name='snakemake' \
         "$@"
@@ -13541,7 +13537,6 @@ koopa_install_sra_tools() {
 
 koopa_install_star() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='STAR' \
         --name='star' \
         "$@"
@@ -13599,7 +13594,6 @@ koopa_install_taglib() {
 
 koopa_install_tar() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='tar' \
         --name='tar' \
         "$@"
@@ -13613,7 +13607,6 @@ koopa_install_tcl_tk() {
 
 koopa_install_tealdeer() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='tldr' \
         --name='tealdeer' \
         "$@"
@@ -13640,7 +13633,6 @@ koopa_install_tmux() {
 
 koopa_install_tokei() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='tokei' \
         --name='tokei' \
         "$@"
@@ -13655,7 +13647,6 @@ koopa_install_tree() {
 
 koopa_install_tuc() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='tuc' \
         --name='tuc' \
         "$@"
@@ -13723,7 +13714,6 @@ koopa_install_vim() {
 
 koopa_install_visidata() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='vd' \
         --link-in-bin='visidata' \
         --name='visidata' \
@@ -13739,7 +13729,6 @@ koopa_install_wget() {
 
 koopa_install_which() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='which' \
         --name='which' \
         "$@"
@@ -13831,7 +13820,6 @@ koopa_install_xorg_xtrans() {
 
 koopa_install_xsv() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='xsv' \
         --name='xsv' \
         "$@"
@@ -13859,7 +13847,6 @@ koopa_install_yq() {
 
 koopa_install_yt_dlp() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='yt-dlp' \
         --name='yt-dlp' \
         "$@"
@@ -13867,7 +13854,6 @@ koopa_install_yt_dlp() {
 
 koopa_install_zellij() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='zellij' \
         --name='zellij' \
         "$@"
@@ -13881,7 +13867,6 @@ koopa_install_zlib() {
 
 koopa_install_zoxide() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='zoxide' \
         --name='zoxide' \
         "$@"
