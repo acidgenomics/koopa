@@ -46,6 +46,7 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
         '--enable-versioned-symbols'
         "--with-ca-bundle=${dict[cacert]}"
         "--with-ssl=${dict[ssl]}"
+        '--without-ca-path'
     )
     ./configure --help
     ./configure "${conf_args[@]}"
