@@ -78,16 +78,16 @@ koopa_build_all_apps() {
         'gettext'
         # deps: make, pkg-config.
         'zlib'
-        # deps: make, ncurses, openssl3.
-        'cmake'
-        # deps: cmake.
-        'zstd'
         # deps: none.
         'ca-certificates'
         # deps: ca-certificates, make, pkg-config.
         'openssl1'
         # deps: ca-certificates, make, pkg-config.
         'openssl3'
+        # deps: make, ncurses, openssl3.
+        'cmake'
+        # deps: cmake.
+        'zstd'
         # deps: ca-certificates, make, openssl3, pkg-config, zlib, zstd.
         'curl'
         # deps: autoconf, curl, gettext, make, openssl3, zlib.
