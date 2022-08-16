@@ -3158,17 +3158,17 @@ koopa_build_all_apps() {
         'libxml2'
         'gettext'
         'zlib'
+        'cmake'
+        'zstd'
         'ca-certificates'
         'openssl1'
         'openssl3'
-        'cmake'
         'curl'
         'git'
         'lapack'
         'libffi'
         'libjpeg-turbo'
         'libpng'
-        'zstd'
         'libtiff'
         'openblas'
         'bzip2'
@@ -3338,6 +3338,7 @@ koopa_build_all_apps() {
         'mdcat' # deps: rust
         'procs' # deps: rust
         'ripgrep' # deps: rust
+        'ripgrep-all' # deps: rust
         'starship' # deps: rust
         'tealdeer' # deps: rust
         'tokei' # deps: rust
