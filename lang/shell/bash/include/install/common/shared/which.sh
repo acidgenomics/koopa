@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_install_which() {
+main() {
     koopa_install_app \
-        --link-in-bin='which' \
+        --installer='gnu-app' \
         --name='which' \
         "$@"
 }
