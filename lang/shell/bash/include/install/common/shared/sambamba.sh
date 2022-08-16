@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_install_sambamba() {
+main() {
     koopa_install_app \
-        --link-in-bin='sambamba' \
+        --installer='conda-env' \
         --name='sambamba' \
         "$@"
 }
