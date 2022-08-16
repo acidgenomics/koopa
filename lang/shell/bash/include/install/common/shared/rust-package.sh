@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-08-15.
+    # @note Updated 2022-08-16.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -62,6 +62,13 @@ main() {
                 '--tag' "v${dict[version]}"
             )
             ;;
+        'ripgrep-all')
+            # Current v0.9.6 stable doesn't build on Linux.
+            # https://github.com/phiresky/ripgrep-all/issues/88
+            install_args+=(
+                '--git' 'https://github.com/phiresky/ripgrep-all'
+            )
+            ;;
         # > 'du-dust')
         # >     # Currently outdated on crates.io.
         # >     install_args+=(
@@ -88,13 +95,6 @@ main() {
         # >     install_args+=(
         # >         '--git' 'https://github.com/cantino/mcfly.git'
         # >         '--tag' "v${dict[version]}"
-        # >     )
-        # >     ;;
-        # > 'ripgrep-all')
-        # >     # Current v0.9.6 stable doesn't build on Linux.
-        # >     # https://github.com/phiresky/ripgrep-all/issues/88
-        # >     install_args+=(
-        # >         '--git' 'https://github.com/phiresky/ripgrep-all'
         # >     )
         # >     ;;
         *)
