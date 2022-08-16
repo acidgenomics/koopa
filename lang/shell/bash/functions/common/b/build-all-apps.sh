@@ -80,31 +80,46 @@ koopa_build_all_apps() {
         'gettext'
         # deps: make, pkg-config.
         'zlib'
+        # deps: make, ncurses, openssl3.
+        'cmake'
+        # deps: cmake.
+        'zstd'
         # deps: none.
         'ca-certificates'
         # deps: ca-certificates, make, pkg-config.
         'openssl1'
         # deps: ca-certificates, make, pkg-config.
         'openssl3'
-        # deps: make, ncurses, openssl3.
-        'cmake'
-        # deps: make, openssl3, pkg-config.
+        # deps: ca-certificates, make, openssl3, pkg-config, zlib, zstd.
         'curl'
+        # deps: autoconf, curl, gettext, make, openssl3, zlib.
         'git'
+        # deps: cmake, gcc, pkg-config.
         'lapack'
+        # deps: make, pkg-config.
         'libffi'
+        # deps: cmake, make, pkg-config.
         'libjpeg-turbo'
+        # deps: make, pkg-config, zlib.
         'libpng'
-        # NOTE Consider moving this up, under zlib.
-        'zstd'
+        # deps: libjpeg-turbo, make, pkg-config, zstd.
         'libtiff'
+        # deps: gcc, make, pkg-config.
         'openblas'
+        # deps: make.
         'bzip2'
+        # deps: autoconf, automake, bzip2, libtool, make, pkg-config, zlib.
         'pcre'
+        # deps: autoconf, automake, bzip2, libtool, make, pkg-config, zlib.
         'pcre2'
+        # deps: make, pkg-config.
         'expat'
+        # deps: make, readline.
         'gdbm'
+        # deps: make, pkg-config, readline, zlib.
         'sqlite'
+        # deps: bzip2, expat, gdbm, libffi, make, ncurses, openssl3, pkg-config,
+        # readline, sqlite, xz, zlib.
         'python'
         'xorg-xorgproto'
         'xorg-xcb-proto'

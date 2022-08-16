@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME We need to rework our shared object build approach here.
-
 main() {
     # """
     # Install bzip2.

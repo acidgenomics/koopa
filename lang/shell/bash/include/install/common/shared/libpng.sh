@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libpng.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-16.
     #
     # @seealso
     # - http://www.libpng.org/pub/png/libpng.html
@@ -11,6 +11,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix 'zlib'
     declare -A app=(
         [make]="$(koopa_locate_make)"
