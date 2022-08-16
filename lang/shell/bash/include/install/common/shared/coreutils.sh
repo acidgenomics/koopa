@@ -9,6 +9,7 @@ main() {
     koopa_activate_opt_prefix "${deps[@]}"
     koopa_install_app_internal \
         --installer='gnu-app' \
+        --name='coreutils' \
         -D '--with-gmp' \
         -D '--without-selinux' \
         "$@"
