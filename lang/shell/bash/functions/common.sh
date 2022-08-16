@@ -13048,7 +13048,6 @@ koopa_install_mpfr() {
 
 koopa_install_multiqc() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='multiqc' \
         --name='multiqc' \
         "$@"
@@ -13092,7 +13091,6 @@ koopa_install_nettle() {
 
 koopa_install_nextflow() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='nextflow' \
         --name='nextflow' \
         "$@"
@@ -13107,17 +13105,7 @@ koopa_install_nim() {
 
 koopa_install_ninja() {
     koopa_install_app \
-        --installer='python-venv' \
         --name='ninja' \
-        "$@"
-}
-
-koopa_install_node_binary() {
-    koopa_install_app \
-        --installer='node-binary' \
-        --link-in-bin='node' \
-        --link-in-bin='npm' \
-        --name='node' \
         "$@"
 }
 
@@ -13131,7 +13119,6 @@ koopa_install_node() {
 
 koopa_install_npth() {
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='npth' \
         "$@"
 }
@@ -13185,7 +13172,6 @@ koopa_install_pandoc() {
 
 koopa_install_parallel() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='parallel' \
         --name='parallel' \
         "$@"
@@ -13242,7 +13228,6 @@ koopa_install_perl() {
 
 koopa_install_pipx() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pipx' \
         --name='pipx' \
         "$@"
@@ -13263,7 +13248,6 @@ koopa_install_pkg_config() {
 
 koopa_install_poetry() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='poetry' \
         --name='poetry' \
         "$@"
@@ -13271,7 +13255,6 @@ koopa_install_poetry() {
 
 koopa_install_prettier() {
     koopa_install_app \
-        --installer='node-package' \
         --link-in-bin='prettier' \
         --name='prettier' \
         "$@"
@@ -13281,7 +13264,6 @@ koopa_install_procs() {
     koopa_install_app \
         --link-in-bin='procs' \
         --name='procs' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -13300,7 +13282,6 @@ koopa_install_pyenv() {
 
 koopa_install_pyflakes() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pyflakes' \
         --name='pyflakes' \
         "$@"
@@ -13308,7 +13289,6 @@ koopa_install_pyflakes() {
 
 koopa_install_pygments() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pygmentize' \
         --name='pygments' \
         "$@"
@@ -13316,7 +13296,6 @@ koopa_install_pygments() {
 
 koopa_install_pylint() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pylint' \
         --name='pylint' \
         "$@"
@@ -13331,7 +13310,6 @@ koopa_install_pytaglib() {
 
 koopa_install_pytest() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pytest' \
         --name='pytest' \
         "$@"
@@ -13346,7 +13324,6 @@ koopa_install_python() {
 
 koopa_install_r_devel() {
     koopa_install_app \
-        --installer='r' \
         --name='r-devel' \
         "$@"
 }
@@ -13399,7 +13376,6 @@ koopa_install_r() {
 
 koopa_install_ranger_fm() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='ranger' \
         --name='ranger-fm' \
         "$@"
@@ -13420,9 +13396,15 @@ koopa_install_readline() {
 
 koopa_install_rename() {
     koopa_install_app \
-        --installer='perl-package' \
         --link-in-bin='rename' \
         --name='rename' \
+        "$@"
+}
+
+koopa_install_ripgrep_all() {
+    koopa_install_app \
+        --link-in-bin='rga' \
+        --name='ripgrep-all' \
         "$@"
 }
 
@@ -23649,14 +23631,6 @@ koopa_uninstall_ninja() {
         "$@"
 }
 
-koopa_uninstall_node_binary() {
-    koopa_uninstall_app \
-        --name='node' \
-        --unlink-in-bin='node' \
-        --unlink-in-bin='npm' \
-        "$@"
-}
-
 koopa_uninstall_node() {
     koopa_uninstall_app \
         --name='node' \
@@ -23928,6 +23902,13 @@ koopa_uninstall_rename() {
     koopa_uninstall_app \
         --name='rename' \
         --unlink-in-bin='rename' \
+        "$@"
+}
+
+koopa_uninstall_ripgrep_all() {
+    koopa_uninstall_app \
+        --unlink-in-bin='rga' \
+        --name='ripgrep-all' \
         "$@"
 }
 
