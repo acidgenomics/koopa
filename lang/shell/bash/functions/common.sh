@@ -12988,14 +12988,12 @@ koopa_install_lzo() {
 
 koopa_install_m4() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='m4' \
         "$@"
 }
 
 koopa_install_make() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='make' \
         --name='make' \
         "$@"
@@ -13020,7 +13018,6 @@ koopa_install_mcfly() {
     koopa_install_app \
         --link-in-bin='mcfly' \
         --name='mcfly' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -13028,13 +13025,11 @@ koopa_install_mdcat() {
     koopa_install_app \
         --link-in-bin='mdcat' \
         --name='mdcat' \
-        --installer='rust-package' \
         "$@"
 }
 
 koopa_install_meson() {
     koopa_install_app \
-        --installer='python-venv' \
         --name='meson' \
         "$@"
 }
@@ -13042,21 +13037,6 @@ koopa_install_meson() {
 koopa_install_mpc() {
     koopa_install_app \
         --name='mpc' \
-        "$@"
-}
-
-main() {
-    local dict
-    declare -A dict=(
-        [gmp]="$(koopa_app_prefix 'gmp')"
-        [mpfr]="$(koopa_app_prefix 'mpfr')"
-    )
-    koopa_activate_opt_prefix 'gmp' 'mpfr'
-    koopa_install_app_internal \
-        --installer='gnu-app' \
-        --name='mpc' \
-        -D "--with-gmp=${dict[gmp]}" \
-        -D "--with-mpfr=${dict[mpfr]}" \
         "$@"
 }
 
