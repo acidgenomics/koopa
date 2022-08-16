@@ -457,12 +457,8 @@ koopa_linux_install_aspera_connect() {
 
 koopa_linux_install_attr() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='attr' \
         --platform='linux' \
-       -D '--disable-debug' \
-       -D '--disable-dependency-tracking' \
-       -D '--disable-silent-rules' \
         "$@"
 }
 
@@ -524,8 +520,8 @@ koopa_linux_install_lmod() {
 
 koopa_linux_install_pinentry() {
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='pinentry' \
+        --platform='linux' \
         "$@"
 }
 
