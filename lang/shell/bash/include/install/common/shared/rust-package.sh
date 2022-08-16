@@ -56,17 +56,23 @@ main() {
     install_args+=("${dict[cargo_name]}")
     case "${dict[name]}" in
         'dog')
-            # Current 0.1.0 crate on crates.io fails with Rust 1.61.
             install_args+=(
                 '--git' 'https://github.com/ogham/dog.git'
                 '--tag' "v${dict[version]}"
             )
             ;;
         'ripgrep-all')
-            # Current v0.9.6 stable doesn't build on Linux.
-            # https://github.com/phiresky/ripgrep-all/issues/88
+            case "${dict[version]}" in
+                '0.9.7')
+                    dict[commit]='9e933ca7'
+                    ;;
+                *)
+                    koopa_stop 'Unsupported version.'
+                    ;;
+            esac
             install_args+=(
-                '--git' 'https://github.com/phiresky/ripgrep-all'
+                '--git' 'https://github.com/phiresky/ripgrep-all.git'
+                '--rev' "${dict[commit]}"
             )
             ;;
         # > 'du-dust')
