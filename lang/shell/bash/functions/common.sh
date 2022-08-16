@@ -13424,7 +13424,6 @@ koopa_install_rmate() {
 
 koopa_install_ronn() {
     koopa_install_app \
-        --installer='ruby-package' \
         --link-in-bin='ronn' \
         --name='ronn' \
         "$@"
@@ -13455,7 +13454,6 @@ koopa_install_rust() {
 
 koopa_install_salmon() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='salmon' \
         --name='salmon' \
         "$@"
@@ -13463,7 +13461,6 @@ koopa_install_salmon() {
 
 koopa_install_sambamba() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='sambamba' \
         --name='sambamba' \
         "$@"
