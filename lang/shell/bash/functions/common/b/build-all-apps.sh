@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Indicate the dependencies above each install command here.
-
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
