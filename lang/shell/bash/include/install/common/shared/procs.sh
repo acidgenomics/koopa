@@ -2,7 +2,8 @@
 
 main() {
     koopa_install_app_internal \
-        --installer='python-venv' \
-        --name='meson' \
+        --installer='rust-package' \
+        --name='procs' \
         "$@"
 }
+

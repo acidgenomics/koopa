@@ -225,7 +225,6 @@ koopa_build_all_apps() {
         'yt-dlp'
         'libedit'
         'openssh' # deps: libedit
-        # NOTE Can consider using 'node-binary' here instead.
         'node'
         'bash-language-server' # deps: node
         'gtop' # deps: node
