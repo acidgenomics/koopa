@@ -3,13 +3,14 @@
 main() {
     # """
     # Install expat.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-08-16.
     #
     # @seealso
     # - https://libexpat.github.io/
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'pkg-config'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )

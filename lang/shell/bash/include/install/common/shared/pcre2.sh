@@ -3,7 +3,7 @@
 main() {
     # """
     # Install PCRE2.
-    # @note Updated 2022-07-20.
+    # @note Updated 2022-08-16.
     #
     # @seealso
     # - https://www.pcre.org/
@@ -14,7 +14,8 @@ main() {
     koopa_activate_build_opt_prefix \
         'autoconf' \
         'automake' \
-        'libtool'
+        'libtool' \
+        'pkg-config'
     koopa_activate_opt_prefix \
         'zlib' \
         'bzip2'

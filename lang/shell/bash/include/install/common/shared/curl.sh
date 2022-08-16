@@ -19,7 +19,11 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'ca-certificates' 'openssl3'
+    koopa_activate_opt_prefix \
+        'zlib' \
+        'zstd' \
+        'ca-certificates' \
+        'openssl3'
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
@@ -31,6 +35,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [ssl]="$(koopa_app_prefix 'openssl3')"
         [version]="${INSTALL_VERSION:?}"
+        [zlib]="$(koopa_app_prefix 'zlib')"
+        [zstd]="$(koopa_app_prefix 'zstd')"
     )
     dict[cacert]="${dict[ca_certificates]}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict[cacert]}"
@@ -46,6 +52,8 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
         '--enable-versioned-symbols'
         "--with-ca-bundle=${dict[cacert]}"
         "--with-ssl=${dict[ssl]}"
+        "--with-zlib=${dict[zlib]}"
+        "--with-zstd=${dict[zstd]}"
         '--without-ca-path'
     )
     ./configure --help
