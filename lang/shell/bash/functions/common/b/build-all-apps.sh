@@ -5,7 +5,7 @@
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-08-12.
+    # @note Updated 2022-08-16.
     #
     # The approach calling 'koopa_cli_install' internally on pkgs array
     # can run into weird compilation issues on macOS.
@@ -26,42 +26,65 @@ koopa_build_all_apps() {
     )
     pkgs=()
     pkgs+=(
-        # deps: none.
+        # deps: make (system).
         'pkg-config'
-        # deps: none.
+        # deps: make (system).
         'make'
     )
     koopa_is_linux && pkgs+=(
-        # deps: none
+        # deps: make, pkg-config.
         'attr'
     )
     pkgs+=(
+        # deps: attr (linux), make.
         'patch'
+        # deps: make, pkg-config.
         'xz'
+        # deps: make.
         'm4'
+        # deps: m4, make, pkg-config.
         'gmp'
+        # deps: make.
         'gperf'
+        # deps: gmp, make, pkg-config.
         'mpfr'
+        # deps: gmp, make, mpfr.
         'mpc'
+        # deps: gmp, make, mpc, mpfr.
         'gcc'
+        # deps: m4, make.
         'autoconf'
+        # deps: autoconf, make.
         'automake'
+        # deps: m4, make.
         'libtool'
+        # deps: m4, make.
         'bison'
+        # deps: make, patch, pkg-config.
         'bash'
+        # deps: attr (linux), gmp, gperf, make.
         'coreutils'
+        # deps: make.
         'findutils'
+        # deps: make.
         'sed'
+        # deps: make, pkg-config.
         'ncurses'
+        # deps: make, pkg-config.
         'icu4c'
+        # deps: make, ncurses, pkg-config.
         'readline'
+        # deps: icu4c, make, pkg-config, readline.
         'libxml2'
+        # deps: libxml2 (linux), make, ncurses (linux), pkg-config.
         'gettext'
-        # NOTE Consider moving this up in priority.
+        # deps: make, pkg-config.
         'zlib'
-        # FIXME Ensure this is added to install all apps.
+        # deps: none.
         'ca-certificates'
+        # deps: ca-certificates, make, pkg-config.
         'openssl1'
+        # deps: ca-certificates, make, pkg-config.
         'openssl3'
         'cmake'
         'curl'
@@ -250,6 +273,7 @@ koopa_build_all_apps() {
         'mdcat' # deps: rust
         'procs' # deps: rust
         'ripgrep' # deps: rust
+        'ripgrep-all' # deps: rust
         'starship' # deps: rust
         'tealdeer' # deps: rust
         'tokei' # deps: rust
