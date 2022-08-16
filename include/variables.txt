@@ -757,7 +757,9 @@ mdcat="0.28.0"
 procs="0.13.0"
 ripgrep="13.0.0"
 ripgrep-all="0.9.7" # rga
-starship="1.10.1"
+# NOTE starship 1.10+ currently has problems displaying correct branch for
+# submodules inside a monorepo.
+starship="1.9.1"
 tealdeer="1.5.0" # tldr
 tokei="12.1.2"
 tuc="0.11.0"
