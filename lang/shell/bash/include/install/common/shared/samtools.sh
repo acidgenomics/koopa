@@ -3,6 +3,6 @@
 main() {
     koopa_install_app_internal \
         --installer='conda-env' \
-        --name='sambamba' \
+        --name='samtools' \
         "$@"
 }
