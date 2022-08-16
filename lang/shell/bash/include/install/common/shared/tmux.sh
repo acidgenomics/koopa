@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Tmux.
-    # @note Updated 2022-06-01.
+    # @note Updated 2022-08-16.
     #
     # Consider adding tmux to enabled login shells in a future update.
     # """
@@ -38,8 +38,9 @@ download/${dict[version]}/${dict[file]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
-    app[tmux]="${dict[prefix]}/bin/tmux"
-    koopa_assert_is_installed "${app[tmux]}"
-    "${app[tmux]}" kill-server &>/dev/null || true
+    # This can kill system tmux server, so keep disabled.
+    # > app[tmux]="${dict[prefix]}/bin/tmux"
+    # > koopa_assert_is_installed "${app[tmux]}"
+    # > "${app[tmux]}" kill-server &>/dev/null || true
     return 0
 }
