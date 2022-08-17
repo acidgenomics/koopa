@@ -1,38 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Work on improving recipe, based on Homebrew:
-#
-# # Requires the M1 fork of GCC to build
-# # https://github.com/JuliaLang/julia/issues/36617
-# depends_on arch: :x86_64
-# depends_on "ca-certificates"
-# depends_on "curl"
-# depends_on "gcc" # for gfortran
-# depends_on "gmp"
-# depends_on "libgit2"
-# depends_on "libnghttp2"
-# depends_on "libssh2"
-# depends_on "llvm@13"
-# depends_on "mbedtls@2"
-# depends_on "mpfr"
-# depends_on "openblas"
-# depends_on "openlibm"
-# depends_on "p7zip"
-# depends_on "pcre2"
-# depends_on "suite-sparse"
-# depends_on "utf8proc"
-#
-# uses_from_macos "perl" => :build
-# uses_from_macos "python" => :build
-# uses_from_macos "zlib"
-#
-# on_linux do
-#   depends_on "patchelf" => :build
-#   # This dependency can be dropped when upstream resolves
-#   # https://github.com/JuliaLang/julia/issues/30154
-#   depends_on "libunwind"
-# end
-
 main() {
     # """
     # Install Julia (from source).
@@ -48,19 +15,44 @@ main() {
     # """
     local app deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix \
-        'bzip2' \
-        'cmake' \
-        'tar'
+    koopa_activate_build_opt_prefix 'cmake'
     deps=(
+        # deps: none.
         'zlib'
-        # > 'zstd'
-        # > 'ca-certificates'
-        'pcre2'
-        'gcc' # gfortran
+        # deps: none.
+        'zstd'
+        # deps: none.
+        'bzip2'
+        # deps: none.
+        'tar'
+        # deps: none.
+        'xz'
+        # deps: none.
+        'ca-certificates'
+        # deps: ca-certificates.
         'openssl3'
+        # deps: ca-certificates, openssl3, zlib, zstd.
         'curl'
+        # deps: bzip2, zlib.
+        # > 'pcre'
+        # deps: bzip2, zlib.
+        'pcre2'
+        # deps: openssl3.
+        'libssh2'
+        # deps: libssh2, openssl3, pcre, zlib.
         'libgit2'
+        # deps: m4.
+        'gmp'
+        # deps: gmp.
+        'mpfr'
+        # deps: gmp, mpfr.
+        # > 'mpc'
+        # deps: gmp, mpfr, mpc.
+        'gcc' # gfortran
+        # deps: gcc.
+        'openblas'
+        # deps: none.
+        'utf8proc'
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
@@ -90,9 +82,39 @@ tags/${dict[file]}"
 prefix=${dict[prefix]}
 # > LLVM_ASSERTIONS=1
 # > LLVM_DEBUG=Release
-# > USE_BINARYBUILDER=0
+
+USE_BINARYBUILDER=0
+VERBOSE=1
+
+# > USE_SYSTEM_LLVM=1
 USE_LLVM_SHLIB=0
 USE_SYSTEM_LLVM=0
+
+# > USE_BLAS64=0
+# > USE_SYSTEM_BLAS=1
+# > USE_SYSTEM_CSL=1
+# > USE_SYSTEM_CURL=1
+# > USE_SYSTEM_GMP=1
+# > USE_SYSTEM_LAPACK=1
+# > USE_SYSTEM_LIBGIT2=1
+# > USE_SYSTEM_LIBSSH2=1
+# > USE_SYSTEM_LIBSUITESPARSE=1
+# > USE_SYSTEM_LIBUNWIND=1
+# > USE_SYSTEM_MBEDTLS=1
+# > USE_SYSTEM_MPFR=1
+# > USE_SYSTEM_NGHTTP2=1
+# > USE_SYSTEM_OPENLIBM=1
+# > USE_SYSTEM_P7ZIP=1
+# > USE_SYSTEM_PATCHELF=1
+# > USE_SYSTEM_PCRE=1
+# > USE_SYSTEM_UTF8PROC=1
+# > USE_SYSTEM_ZLIB=1
+
+# > LIBBLAS=-lopenblas
+# > LIBBLASNAME=libopenblas
+# > LIBLAPACK=-lopenblas
+# > LIBLAPACKNAME=libopenblas
+# > PYTHON=python3
 END
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
