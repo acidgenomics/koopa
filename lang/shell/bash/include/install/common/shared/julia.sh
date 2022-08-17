@@ -52,8 +52,9 @@ main() {
     deps=(
         'zlib'
         'pcre2'
-        'gcc'
+        'gcc' # gfortran
         'openssl3'
+        'curl'
         'libgit2'
     )
     koopa_activate_opt_prefix "${deps[@]}"
