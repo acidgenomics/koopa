@@ -50,6 +50,8 @@ main() {
         # deps: gmp, mpfr, mpc.
         'gcc' # gfortran
         # deps: gcc.
+        'lapack'
+        # deps: gcc.
         'openblas'
         # deps: none.
         'utf8proc'
@@ -58,9 +60,12 @@ main() {
     declare -A app=(
         [cat]="$(koopa_locate_cat)"
         [make]="$(koopa_locate_make)"
+        [python]="$(koopa_locate_python)"
     )
     [[ -x "${app[cat]}" ]] || return 1
     [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app[python]}" ]] || return 1
+    app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='julia'
@@ -83,38 +88,40 @@ prefix=${dict[prefix]}
 # > LLVM_ASSERTIONS=1
 # > LLVM_DEBUG=Release
 
-USE_BINARYBUILDER=0
 VERBOSE=1
+USE_BINARYBUILDER=1
 
-# > USE_SYSTEM_LLVM=1
-USE_LLVM_SHLIB=0
+# koopa doesn't currently provide recipe support for these.
+USE_SYSTEM_CSL=0
+USE_SYSTEM_LIBSUITESPARSE=0
+USE_SYSTEM_LIBUNWIND=0
 USE_SYSTEM_LLVM=0
+USE_SYSTEM_MBEDTLS=0
+USE_SYSTEM_NGHTTP2=0
+USE_SYSTEM_OPENLIBM=0
+USE_SYSTEM_P7ZIP=0
+USE_SYSTEM_PATCHELF=0
 
-# > USE_BLAS64=0
-# > USE_SYSTEM_BLAS=1
-# > USE_SYSTEM_CSL=1
-# > USE_SYSTEM_CURL=1
-# > USE_SYSTEM_GMP=1
-# > USE_SYSTEM_LAPACK=1
-# > USE_SYSTEM_LIBGIT2=1
-# > USE_SYSTEM_LIBSSH2=1
-# > USE_SYSTEM_LIBSUITESPARSE=1
-# > USE_SYSTEM_LIBUNWIND=1
-# > USE_SYSTEM_MBEDTLS=1
-# > USE_SYSTEM_MPFR=1
-# > USE_SYSTEM_NGHTTP2=1
-# > USE_SYSTEM_OPENLIBM=1
-# > USE_SYSTEM_P7ZIP=1
-# > USE_SYSTEM_PATCHELF=1
-# > USE_SYSTEM_PCRE=1
-# > USE_SYSTEM_UTF8PROC=1
-# > USE_SYSTEM_ZLIB=1
+USE_SYSTEM_BLAS=1
+USE_SYSTEM_CURL=1
+USE_SYSTEM_GMP=1
+USE_SYSTEM_LAPACK=1
+USE_SYSTEM_LIBGIT2=1
+USE_SYSTEM_LIBSSH2=1
+USE_SYSTEM_MPFR=1
+USE_SYSTEM_PCRE=1
+USE_SYSTEM_UTF8PROC=1
+USE_SYSTEM_ZLIB=1
+
+USE_BLAS64=0
+USE_LLVM_SHLIB=0
 
 # > LIBBLAS=-lopenblas
 # > LIBBLASNAME=libopenblas
 # > LIBLAPACK=-lopenblas
 # > LIBLAPACKNAME=libopenblas
-# > PYTHON=python3
+
+PYTHON=${app[python]}"
 END
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
