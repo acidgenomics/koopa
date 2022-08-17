@@ -3346,7 +3346,6 @@ koopa_build_all_apps() {
         'xsv' # deps: rust
         'zellij' # deps: rust
         'zoxide' # deps: rust
-        'julia'
         'ffq' # deps: conda
         'ensembl-perl-api' # deps: none.
         'pyenv' # deps: none.
@@ -13194,12 +13193,18 @@ koopa_install_patch() {
 
 koopa_install_pcre() {
     koopa_install_app \
+        --link-in-bin='pcre-config' \
+        --link-in-bin='pcregrep' \
+        --link-in-bin='pcretest' \
         --name='pcre' \
         "$@"
 }
 
 koopa_install_pcre2() {
     koopa_install_app \
+        --link-in-bin='pcre2-config' \
+        --link-in-bin='pcre2grep' \
+        --link-in-bin='pcre2test' \
         --name='pcre2' \
         "$@"
 }
@@ -23705,12 +23710,18 @@ koopa_uninstall_patch() {
 
 koopa_uninstall_pcre() {
     koopa_uninstall_app \
+        --unlink-in-bin='pcre-config' \
+        --unlink-in-bin='pcregrep' \
+        --unlink-in-bin='pcretest' \
         --name='pcre' \
         "$@"
 }
 
 koopa_uninstall_pcre2() {
     koopa_uninstall_app \
+        --unlink-in-bin='pcre2-config' \
+        --unlink-in-bin='pcre2grep' \
+        --unlink-in-bin='pcre2test' \
         --name='pcre2' \
         "$@"
 }
