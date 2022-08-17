@@ -48,7 +48,10 @@ main() {
     # """
     local app deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'cmake'
+    koopa_activate_build_opt_prefix \
+        'bzip2' \
+        'cmake' \
+        'tar'
     deps=(
         'zlib'
         # > 'zstd'
