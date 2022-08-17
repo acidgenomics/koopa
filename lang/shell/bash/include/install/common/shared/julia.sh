@@ -51,8 +51,8 @@ main() {
     koopa_activate_build_opt_prefix 'cmake'
     deps=(
         'zlib'
-        'zstd'
-        'ca-certificates'
+        # > 'zstd'
+        # > 'ca-certificates'
         'pcre2'
         'gcc' # gfortran
         'openssl3'
