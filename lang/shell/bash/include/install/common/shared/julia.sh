@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently failing for 1.8.0.
-# Install from source is very complicated.
-
 main() {
     # """
     # Install Julia (from source).
