@@ -50,7 +50,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.7.21"
+aws-cli="2.7.24"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
