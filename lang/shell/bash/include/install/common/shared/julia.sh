@@ -52,6 +52,7 @@ main() {
     deps=(
         'pcre2'
         'gcc'
+        'openssl3'
         'libgit2'
     )
     koopa_activate_opt_prefix "${deps[@]}"
