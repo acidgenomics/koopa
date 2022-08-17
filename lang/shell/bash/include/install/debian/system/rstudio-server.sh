@@ -1,1 +1,1 @@
-../../linux/system/install-rstudio-server.sh
+../../linux/system/rstudio-server.sh
