@@ -50,6 +50,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
     deps=(
+        'zlib'
         'pcre2'
         'gcc'
         'openssl3'
