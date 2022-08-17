@@ -127,11 +127,11 @@ USE_SYSTEM_ZLIB=0 # 1
 # > LIBLAPACK=-lopenblas
 # > LIBLAPACKNAME=libopenblas
 
-# > LLVM_CONFIG=\$LLVM_CONFIG
-# > LLVM_VER=\$LLVM_VER
+# > LLVM_CONFIG=\${LLVM_CONFIG}
+# > LLVM_VER=\${LLVM_VER}
 
 # NOTE This doesn't seem to pick up our Python correctly.
-# > PYTHON=${app[python]}"
+# > PYTHON=\${app[python]}
 END
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
