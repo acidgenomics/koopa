@@ -296,8 +296,8 @@ koopa_build_all_apps() {
         'xsv' # deps: rust
         'zellij' # deps: rust
         'zoxide' # deps: rust
-        # NOTE Move this up.
-        'julia'
+        # FIXME 1.8.0 is currently very hard to build.
+        # > 'julia'
         'ffq' # deps: conda
         'ensembl-perl-api' # deps: none.
         'pyenv' # deps: none.
