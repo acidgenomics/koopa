@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Ensure coreutils aliases are not activated for root user on Linux.
 ** TODO Consider setting apt to not prompt configuration boxes inside Debian environment.
 ** TODO Rework koopa prompt to show 7 character git commit string?
     Is this too CPU intensive with git?
