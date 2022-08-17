@@ -3,7 +3,7 @@
 main() {
     # """
     # Install RStudio Server binary.
-    # @note Updated 2022-07-26.
+    # @note Updated 2022-08-17.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
     #
@@ -30,6 +30,7 @@ main() {
         [r]="$(koopa_locate_r)"
     )
     [[ -x "${app[r]}" ]] || return 1
+    app[r]="$(koopa_realpath "${app[r]}")"
     declare -A dict=(
         [name]="${INSTALL_NAME:?}"
         [version]="${INSTALL_VERSION:?}"
