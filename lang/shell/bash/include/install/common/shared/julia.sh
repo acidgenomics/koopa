@@ -1,5 +1,38 @@
 #!/usr/bin/env bash
 
+# NOTE Work on improving recipe, based on Homebrew:
+#
+# # Requires the M1 fork of GCC to build
+# # https://github.com/JuliaLang/julia/issues/36617
+# depends_on arch: :x86_64
+# depends_on "ca-certificates"
+# depends_on "curl"
+# depends_on "gcc" # for gfortran
+# depends_on "gmp"
+# depends_on "libgit2"
+# depends_on "libnghttp2"
+# depends_on "libssh2"
+# depends_on "llvm@13"
+# depends_on "mbedtls@2"
+# depends_on "mpfr"
+# depends_on "openblas"
+# depends_on "openlibm"
+# depends_on "p7zip"
+# depends_on "pcre2"
+# depends_on "suite-sparse"
+# depends_on "utf8proc"
+#
+# uses_from_macos "perl" => :build
+# uses_from_macos "python" => :build
+# uses_from_macos "zlib"
+#
+# on_linux do
+#   depends_on "patchelf" => :build
+#   # This dependency can be dropped when upstream resolves
+#   # https://github.com/JuliaLang/julia/issues/30154
+#   depends_on "libunwind"
+# end
+
 main() {
     # """
     # Install Julia (from source).
@@ -11,9 +44,17 @@ main() {
     # - https://docs.julialang.org/en/v1/devdocs/llvm/
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md#llvm
     # - https://github.com/JuliaLang/julia/blob/master/Make.inc
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/julia.rb
     # """
-    local app dict
+    local app deps dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'cmake'
+    deps=(
+        'pcre2'
+        'gcc'
+        'libgit2'
+    )
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [cat]="$(koopa_locate_cat)"
         [make]="$(koopa_locate_make)"
