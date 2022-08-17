@@ -90,7 +90,7 @@ libexecdir=${dict[prefix]}/lib
 sysconfdir=${dict[prefix]}/etc
 
 VERBOSE=1
-USE_BINARYBUILDER=0
+USE_BINARYBUILDER=1
 
 USE_SYSTEM_ARPACK=0
 USE_SYSTEM_BLAS=0 # 1
