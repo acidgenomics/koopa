@@ -61,12 +61,12 @@ main() {
     declare -A app=(
         [cat]="$(koopa_locate_cat)"
         [make]="$(koopa_locate_make)"
-        [python]="$(koopa_locate_python)"
+        # > [python]="$(koopa_locate_python)"
     )
     [[ -x "${app[cat]}" ]] || return 1
     [[ -x "${app[make]}" ]] || return 1
-    [[ -x "${app[python]}" ]] || return 1
-    app[python]="$(koopa_realpath "${app[python]}")"
+    # > [[ -x "${app[python]}" ]] || return 1
+    # > app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='julia'
@@ -130,7 +130,8 @@ USE_SYSTEM_ZLIB=0 # 1
 # > LLVM_CONFIG=\$LLVM_CONFIG
 # > LLVM_VER=\$LLVM_VER
 
-PYTHON=${app[python]}"
+# NOTE This doesn't seem to pick up our Python correctly.
+# > PYTHON=${app[python]}"
 END
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
