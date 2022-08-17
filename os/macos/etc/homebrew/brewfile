@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-07-27.
+# Updated 2022-08-17.
 #
 # @section Cask reinstallation:
 #
@@ -111,7 +111,7 @@ cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
 cask "iterm2-beta"
-# > cask "julia"
+cask "julia"
 cask "keka"
 cask "kitty"
 cask "libreoffice"
@@ -125,7 +125,7 @@ cask "omnidisksweeper"
 cask "pacifist"
 cask "pycharm-ce"
 cask "quarto"
-# > cask "r"
+cask "r"
 cask "rstudio"
 cask "skype"
 cask "sublime-text"
