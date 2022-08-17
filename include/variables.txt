@@ -15,11 +15,11 @@ gcrypt-url="https://gnupg.org/ftp/gcrypt"
 # https://www.gnu.org/prep/ftp.en.html
 gnu-mirror-url="https://ftpmirror.gnu.org"
 
-# Program versions
+# Conservative program versions
 # ==============================================================================
 
-# https://repo.continuum.io/archive/
-anaconda="2022.05"
+# Don't update these versions frequently, as other packages depend on them.
+# Consider updating and rebuilding semi-annually.
 
 # https://apr.apache.org/
 apr="1.7.0"
@@ -30,15 +30,6 @@ apr-util="1.6.1"
 # http://arma.sourceforge.net/download.html
 armadillo="11.2.3"
 
-# https://github.com/asdf-vm/asdf/releases
-asdf="0.10.2"
-
-# http://aspell.net/
-aspell="0.60.8"
-
-# https://www.ibm.com/aspera/connect/
-aspera-connect="4.1.3.93"
-
 # https://savannah.nongnu.org/projects/attr
 attr="2.5.1"
 
@@ -48,36 +39,11 @@ autoconf="2.71"
 # https://ftp.gnu.org/gnu/automake/
 automake="1.16.5"
 
-# https://aws.amazon.com/cli/
-# https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.7.24"
-
-# https://www.gnu.org/software/bash/
-bash="5.1.16"
-
 # https://ftp.gnu.org/gnu/bc/
 bc="1.07.1"
 
-# https://bcbio-nextgen.readthedocs.io/
-# https://github.com/bcbio/bcbio-nextgen/releases
-bcbio-nextgen="1.2.9"
-
-# https://github.com/bcbio/bcbio-nextgen-vm/releases
-bcbio-nextgen-vm="0.1.6"
-
-# https://support.illumina.com/sequencing/sequencing_software/
-#     bcl2fastq-conversion-software.html
-bcl2fastq="2.20.0.422"
-
-# https://rtyley.github.io/bfg-repo-cleaner/
-bfg="1.14.0"
-
 # https://ftp.gnu.org/gnu/binutils/
 binutils="2.38"
-
-# This is used during 'r-packages' install.
-# https://bioconductor.org/
-bioconductor="3.15"
 
 # https://www.gnu.org/software/bison/
 bison="3.8.2"
@@ -94,68 +60,20 @@ ca-certificates="2022-07-19"
 # https://cairographics.org/
 cairo="1.16.0"
 
-# 10X Genomics Cell Ranger
-# https://support.10xgenomics.com/single-cell-gene-expression/software/
-#     pipelines/latest/installation
-cellranger="7.0.0"
-
-# https://github.com/cheat/cheat/
-cheat="4.3.0"
-
-# https://github.com/plexus/chemacs2
-chemacs="d722459287566e8c91ae077bf3d65966ebece190"
-
-# https://github.com/chapmanb/cloudbiolinux
-cloudbiolinux="c4c7cf8e508fe947c8b038543c98a2846bb900d6"
-
 # https://cmake.org/download/
 cmake="3.24.0"
-
-# https://repo.anaconda.com/miniconda/
-conda="4.12.0"
 
 # https://www.gnu.org/software/coreutils/
 coreutils="9.1"
 
-# https://github.com/Dr-Noob/cpufetch/releases
-cpufetch="1.02"
-
 # https://curl.haxx.se/
 curl="7.84.0"
-
-# https://github.com/dandavison/delta
-delta="0.13.0"
-
-# https://docs.docker.com/install/
-docker="20.10.17"
-
-# https://github.com/docker/docker-credential-helpers/releases
-docker-credential-pass="0.6.4"
-
-# https://github.com/acidgenomics/dotfiles
-dotfiles="3aa2dd956786ef33636c23e13733141071a51ecf"
-
-# https://www.gnu.org/software/emacs/
-emacs="28.1"
-
-# https://useast.ensembl.org/info/docs/api/api_installation.html
-ensembl-perl-api="107"
 
 # https://libexpat.github.io/
 expat="2.4.8"
 
-# https://ffmpeg.org/
-ffmpeg="5.1"
-
 # https://www.gnu.org/software/findutils/
 findutils="4.9.0"
-
-# https://fishshell.com/
-# https://github.com/fish-shell/fish-shell/releases
-fish="3.5.1"
-
-# https://xiph.org/flac/
-flac="1.3.4"
 
 # https://www.fltk.org/
 fltk="1.3.8"
@@ -168,9 +86,6 @@ freetype="2.12.1"
 
 # https://github.com/fribidi/fribidi/
 fribidi="1.0.12"
-
-# https://ftp.gnu.org/gnu/gawk/
-gawk="5.1.1"
 
 # https://ftp.gnu.org/gnu/gcc/
 gcc="12.1.0"
@@ -196,31 +111,17 @@ glib="2.72.3"
 # https://gmplib.org/
 gmp="6.2.1"
 
-# https://golang.org/dl/
-go="1.19"
-
-# https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="396.0.0"
-
 # https://www.gnu.org/software/gperf
 gperf="3.1"
 
 # https://www.graphviz.org/
 graphviz="5.0.0"
 
-# https://www.gnu.org/software/grep/
-grep="3.7"
-
-# https://ftp.gnu.org/gnu/groff/
-groff="1.22.4"
-
 # https://www.gnu.org/software/gsl/
 gsl="2.7.1"
 
 # https://www.gnu.org/software/gzip/
 gzip="1.12"
-
-hadolint="2.10.0"
 
 harfbuzz="5.1.0"
 
@@ -230,36 +131,17 @@ haskell-stack="2.7.5"
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.12.2"
 
-# https://hisham.hm/htop/
-# https://github.com/htop-dev/htop
-htop="3.2.1"
-
 # http://site.icu-project.org/
 icu4c="71.1"
 
 # https://imagemagick.org/
 imagemagick="7.1.0-45"
 
-# https://github.com/stedolan/jq/releases
-jq="1.6"
-
 # https://www.ijg.org/
 jpeg="9e"
 
-# https://github.com/JuliaLang/julia/releases
-julia="1.7.3"
-
-# https://lame.sourceforge.io/
-lame="3.100"
-
 # https://www.netlib.org/lapack/
 lapack="3.10.1"
-
-# https://ftp.gnu.org/gnu/less/
-less="590"
-
-# https://github.com/wofr06/lesspipe/
-lesspipe="2.05"
 
 # https://thrysoee.dk/editline/
 libedit="20210910-3.1"
@@ -315,7 +197,7 @@ libxml2="2.9.14"
 # https://libzip.org/download/
 libzip="1.9.2"
 
-# LLVM
+# FIXME Need to add a script to build this from source.
 # https://releases.llvm.org/
 llvm="14.0.3"
 
@@ -344,11 +226,6 @@ m4="1.4.19"
 # https://ftp.gnu.org/gnu/make/
 make="4.3"
 
-# https://github.com/mamba-org/mamba/tags/
-mamba="0.25.0"
-
-man-db="2.10.2"
-
 # http://www.multiprecision.org/mpc/
 mpc="1.2.1"
 
@@ -358,17 +235,8 @@ mpfr="4.1.0"
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
 
-# https://github.com/dylanaraps/neofetch/releases
-neofetch="7.1.0"
-
-# https://github.com/neovim/neovim/releases
-neovim="0.7.2"
-
 # https://ftp.gnu.org/gnu/nettle/
 nettle="3.8.1"
-
-# https://nim-lang.org/
-nim="1.6.6"
 
 # https://nodejs.org/en/download/
 node="16.16.0" # LTS
@@ -391,19 +259,6 @@ openssh="9.0p1"
 openssl1="1.1.1p"
 openssl3="3.0.5"
 
-# https://www.oracle.com/database/technologies/instant-client/
-#     linux-x86-64-downloads.html
-oracle-instant-client="21.7.0.0.0-1"
-
-# https://pandoc.org/releases.html
-pandoc="2.19"
-
-# https://www.gnu.org/software/parallel/
-parallel="20220722"
-
-# https://www.passwordstore.org/
-password-store="1.7.4"
-
 # ftp://ftp.gnu.org/gnu/patch
 patch="2.7.6"
 
@@ -418,7 +273,6 @@ perl="5.36.0"
 
 pixman="0.40.0"
 
-# Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
 
@@ -428,87 +282,23 @@ proj="9.0.1"
 # https://ftp.gnu.org/gnu/pth/
 pth="2.0.7"
 
-# https://github.com/pyenv/pyenv
-pyenv="2.2.5"
-
 # https://www.python.org/downloads/
 python="3.10.6"
-
-# https://www.r-project.org/
-# https://cloud.r-project.org/src/base/R-4/
-r="4.2.1"
-
-# https://mac.r-project.org/openmp/
-r-openmp="13.0.0"
-
-# https://mac.r-project.org/
-# This release matches current R version.
-r-gfortran="8.2"
-
-# https://svn.r-project.org/R/
-# https://stat.ethz.ch/R/daily/
-# https://github.com/r-devel/r-svn/tree/trunk
-# https://developer.r-project.org/SVNtips.html
-# https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
-# This is the SVN revision number.
-r-devel="82673" # 2022-08-04
-
-# https://github.com/rbenv/rbenv/releases
-rbenv="1.2.0"
 
 # https://tiswww.cwru.edu/php/chet/readline/rltop.html
 readline="8.1.2"
 
-# https://github.com/aurora/rmate/releases
-rmate="1.0.2"
-
-# https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2022.07.1+554"
-
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.1.2p20"
-
-# https://www.rust-lang.org/
-rust="1.63.0"
-
-# https://download.samba.org/pub/rsync/src/
-rsync="3.2.4"
-
-# https://www.gnu.org/software/screen/
-screen="4.8.0"
-
-# https://www.gnu.org/software/sed/
-sed="4.8"
 
 # https://serf.apache.org/download
 serf="1.3.9"
 
-# https://github.com/koalaman/shellcheck/releases
-shellcheck="0.8.0"
-
-# https://www.rstudio.com/products/shiny/download-server/
-shiny-server="1.5.18.987"
-
-# https://github.com/kward/shunit2/releases
-shunit2="2.1.8"
-
-# http://sox.sourceforge.net/sox.html
-sox="14.4.2"
-
 # https://www.sqlite.org/download.html
 sqlite="3.39.2"
 
-# https://github.com/ncbi/sra-tools
-sra-tools="3.0.0"
-
-# https://www.gnu.org/software/stow/
-stow="2.3.1"
-
 # https://subversion.apache.org
 subversion="1.14.2"
-
-# https://github.com/taglib/taglib/
-taglib="1.12"
 
 # https://www.gnu.org/software/tar/
 tar="1.34"
@@ -516,14 +306,8 @@ tar="1.34"
 # https://www.tcl-lang.org
 tcl-tk="8.6.12"
 
-# NOTE There seems to be a Homebrew cask that masks this on macOS.
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.8"
-
-# https://github.com/tmux/tmux/releases
-tmux="3.3a"
-
-tree="2.0.2"
 
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
@@ -535,16 +319,11 @@ units="2.21"
 # https://juliastrings.github.io/utf8proc/
 utf8proc="2.7.0"
 
-# https://github.com/vim/vim/releases
-# Homebrew updates every '*.0000' patch release on multiples of 25.
-# https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="9.0.0150"
+# https://ftp.gnu.org/gnu/which/
+which="2.21"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.3"
-
-# https://ftp.gnu.org/gnu/which/
-which="2.21"
 
 xorg-libice="1.0.10"
 xorg-libpthread-stubs="0.4"
@@ -567,17 +346,245 @@ xxhash="0.8.1"
 # https://tukaani.org/xz/
 xz="5.2.5"
 
-# https://github.com/mikefarah/yq/
-yq="4.27.2"
-
 # https://www.zlib.net/
 zlib="1.2.12"
 
-# http://zsh.sourceforge.net/Arc/source.html
-zsh="5.9"
-
 # https://facebook.github.io/zstd/
 zstd="1.5.2"
+
+# Liberal program versions (a.k.a. "the fun stuff")
+# ==============================================================================
+
+# These programs can be updated more regularly without breaking dependencies
+# in any other packages.
+
+# https://repo.continuum.io/archive/
+anaconda="2022.05"
+
+# https://github.com/asdf-vm/asdf/releases
+asdf="0.10.2"
+
+# http://aspell.net/
+aspell="0.60.8"
+
+# https://www.ibm.com/aspera/connect/
+aspera-connect="4.1.3.93"
+
+# https://aws.amazon.com/cli/
+# https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
+aws-cli="2.7.24"
+
+# https://www.gnu.org/software/bash/
+bash="5.1.16"
+
+# https://bcbio-nextgen.readthedocs.io/
+# https://github.com/bcbio/bcbio-nextgen/releases
+bcbio-nextgen="1.2.9"
+
+# https://github.com/bcbio/bcbio-nextgen-vm/releases
+bcbio-nextgen-vm="0.1.6"
+
+# https://support.illumina.com/sequencing/sequencing_software/
+#     bcl2fastq-conversion-software.html
+bcl2fastq="2.20.0.422"
+
+# FIXME Need to add a build script for this.
+# https://rtyley.github.io/bfg-repo-cleaner/
+bfg="1.14.1"
+
+# This is used during 'r-packages' install.
+# https://bioconductor.org/
+bioconductor="3.15"
+
+# 10X Genomics Cell Ranger
+# https://support.10xgenomics.com/single-cell-gene-expression/software/
+#     pipelines/latest/installation
+cellranger="7.0.0"
+
+# https://github.com/cheat/cheat/
+cheat="4.3.0"
+
+# https://github.com/plexus/chemacs2
+chemacs="d722459287566e8c91ae077bf3d65966ebece190"
+
+# https://github.com/chapmanb/cloudbiolinux
+cloudbiolinux="c4c7cf8e508fe947c8b038543c98a2846bb900d6"
+
+# https://repo.anaconda.com/miniconda/
+conda="4.12.0"
+
+# https://github.com/Dr-Noob/cpufetch/releases
+cpufetch="1.02"
+
+# https://github.com/dandavison/delta
+delta="0.13.0"
+
+# https://docs.docker.com/install/
+docker="20.10.17"
+
+# https://github.com/docker/docker-credential-helpers/releases
+docker-credential-pass="0.6.4"
+
+# https://github.com/acidgenomics/dotfiles
+dotfiles="3aa2dd956786ef33636c23e13733141071a51ecf"
+
+# https://www.gnu.org/software/emacs/
+emacs="28.1"
+
+# https://useast.ensembl.org/info/docs/api/api_installation.html
+ensembl-perl-api="107"
+
+# https://ffmpeg.org/
+ffmpeg="5.1"
+
+# https://fishshell.com/
+# https://github.com/fish-shell/fish-shell/releases
+fish="3.5.1"
+
+# https://xiph.org/flac/
+flac="1.3.4"
+
+# https://ftp.gnu.org/gnu/gawk/
+gawk="5.1.1"
+
+# https://golang.org/dl/
+go="1.19"
+
+# https://cloud.google.com/sdk/docs/install
+google-cloud-sdk="396.0.0"
+
+# https://www.gnu.org/software/grep/
+grep="3.7"
+
+# https://ftp.gnu.org/gnu/groff/
+groff="1.22.4"
+
+hadolint="2.10.0"
+
+# https://hisham.hm/htop/
+# https://github.com/htop-dev/htop
+htop="3.2.1"
+
+# https://github.com/stedolan/jq/releases
+jq="1.6"
+
+# https://github.com/JuliaLang/julia/releases
+julia="1.7.3"
+
+# https://lame.sourceforge.io/
+lame="3.100"
+
+# https://ftp.gnu.org/gnu/less/
+less="590"
+
+# https://github.com/wofr06/lesspipe/
+lesspipe="2.06"
+
+# https://github.com/mamba-org/mamba/tags/
+mamba="0.25.0"
+
+man-db="2.10.2"
+
+# https://github.com/dylanaraps/neofetch/releases
+neofetch="7.1.0"
+
+# https://github.com/neovim/neovim/releases
+neovim="0.7.2"
+
+# https://nim-lang.org/
+nim="1.6.6"
+
+# https://www.oracle.com/database/technologies/instant-client/
+#     linux-x86-64-downloads.html
+oracle-instant-client="21.7.0.0.0-1"
+
+# https://pandoc.org/releases.html
+pandoc="2.19"
+
+# https://www.gnu.org/software/parallel/
+parallel="20220722"
+
+# https://www.passwordstore.org/
+password-store="1.7.4"
+
+# https://github.com/pyenv/pyenv
+pyenv="2.2.5"
+
+# https://www.r-project.org/
+# https://cloud.r-project.org/src/base/R-4/
+r="4.2.1"
+
+# https://mac.r-project.org/openmp/
+r-openmp="13.0.0"
+
+# https://mac.r-project.org/
+r-gfortran="8.2"
+
+# https://svn.r-project.org/R/
+# https://stat.ethz.ch/R/daily/
+# https://github.com/r-devel/r-svn/tree/trunk
+# https://developer.r-project.org/SVNtips.html
+# https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
+# This is the SVN revision number.
+r-devel="82673" # 2022-08-04
+
+# https://github.com/rbenv/rbenv/releases
+rbenv="1.2.0"
+
+# https://github.com/aurora/rmate/releases
+rmate="1.0.2"
+
+# https://www.rstudio.com/products/rstudio/download-server/
+rstudio-server="2022.07.1+554"
+
+# https://www.rust-lang.org/
+rust="1.63.0"
+
+# https://download.samba.org/pub/rsync/src/
+rsync="3.2.4"
+
+# https://www.gnu.org/software/screen/
+screen="4.8.0"
+
+# https://www.gnu.org/software/sed/
+sed="4.8"
+
+# https://github.com/koalaman/shellcheck/releases
+shellcheck="0.8.0"
+
+# https://www.rstudio.com/products/shiny/download-server/
+shiny-server="1.5.18.987"
+
+# https://github.com/kward/shunit2/releases
+shunit2="2.1.8"
+
+# http://sox.sourceforge.net/sox.html
+sox="14.4.2"
+
+# https://github.com/ncbi/sra-tools
+sra-tools="3.0.0"
+
+# https://www.gnu.org/software/stow/
+stow="2.3.1"
+
+# https://github.com/taglib/taglib/
+taglib="1.12"
+
+# https://github.com/tmux/tmux/releases
+tmux="3.3a"
+
+tree="2.0.2"
+
+# https://github.com/vim/vim/releases
+# Homebrew updates every '*.0000' patch release on multiples of 25.
+# https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
+vim="9.0.0150"
+
+# https://github.com/mikefarah/yq/
+yq="4.27.2"
+
+# http://zsh.sourceforge.net/Arc/source.html
+zsh="5.9"
 
 # Conda recipes
 # ==============================================================================
@@ -764,5 +771,5 @@ tealdeer="1.5.0" # tldr
 tokei="12.1.2"
 tuc="0.11.0"
 xsv="0.13.0"
-zellij="0.31.1"
+zellij="0.31.2"
 zoxide="0.8.2" # z
