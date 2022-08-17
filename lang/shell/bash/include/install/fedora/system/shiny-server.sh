@@ -1,1 +1,1 @@
-../../linux/system/install-shiny-server.sh
+../../linux/system/shiny-server.sh
