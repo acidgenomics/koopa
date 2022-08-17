@@ -67,12 +67,9 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    # > dict[file]="v${dict[version]}.tar.gz"
-    # > dict[url]="https://github.com/JuliaLang/${dict[name]}/\
-    # >     archive/${dict[file]}"
-    dict[file]="${dict[name]}-${dict[version]}-full.tar.gz"
-    dict[url]="https://github.com/JuliaLang/${dict[name]}/releases/download/\
-v${dict[version]}/${dict[file]}"
+    dict[file]="v${dict[version]}.tar.gz"
+    dict[url]="https://github.com/JuliaLang/julia/archive/refs/\
+tags/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
