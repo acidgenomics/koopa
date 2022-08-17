@@ -83,8 +83,9 @@ ${dict[arch]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     "${app[fun]}" "${dict[file]}"
     # Ensure RStudio Server is using our recommended version of R.
+    # Don't enclose values in quotes in the conf file.
     read -r -d '' "dict[conf_string]" << END || true
-rsession-which-r="${app[r]}"
+rsession-which-r=${app[r]}
 END
     dict[conf_file]='/etc/rstudio/rserver.conf'
     koopa_sudo_write_string \
