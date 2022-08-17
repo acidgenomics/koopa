@@ -239,7 +239,7 @@ ncurses="6.3.20211021"
 nettle="3.8.1"
 
 # https://nodejs.org/en/download/
-node="16.16.0" # LTS
+node="16.16.0" # LTS (latest: 16.17.0)
 
 # https://github.com/kkos/oniguruma/
 oniguruma="6.9.8"
