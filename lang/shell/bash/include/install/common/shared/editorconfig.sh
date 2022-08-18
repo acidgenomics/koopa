@@ -40,9 +40,9 @@ archive/${dict[file]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     cmake_args=(
-        '-DBUILD_DOCUMENTATION=False'
-        '-DCMAKE_BUILD_TYPE=None'
-        '-DCMAKE_INSTALL_LIBDIR=lib'
+        # > '-DBUILD_DOCUMENTATION=False'
+        # > '-DCMAKE_BUILD_TYPE=None'
+        # > '-DCMAKE_INSTALL_LIBDIR=lib'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
         # Approach 1:
