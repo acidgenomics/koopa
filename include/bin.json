@@ -1,0 +1,274 @@
+{
+  "ack": [
+    "ack"
+  ],
+  "aspell": [
+    "aspell"
+  ],
+  "azure-cli": [
+    "az"
+  ],
+  "bamtools": [
+    "bamtools"
+  ],
+  "bash-language-server": [
+    "bash-language-server"
+  ],
+  "bash": [
+    "bash"
+  ],
+  "bashcov": [
+    "bashcov"
+  ],
+  "bat": [
+    "bat"
+  ],
+  "bc": [
+    "bc"
+  ],
+  "bedtools": [
+    "bedtools"
+  ],
+  "bioawk": [
+    "bioawk"
+  ],
+  "black": [
+    "black"
+  ],
+  "bowtie2": [
+    "bowtie2"
+  ],
+  "bpytop": [
+    "bpytop"
+  ],
+  "broot": [
+    "broot"
+  ],
+  "bustools": [
+    "bustools"
+  ],
+  "bzip2": [
+    "bunzip2",
+    "bzcat",
+    "bzcmp",
+    "bzdiff",
+    "bzegrep",
+    "bzfgrep",
+    "bzgrep",
+    "bzip2",
+    "bzip2recover",
+    "bzless",
+    "bzmore"
+  ],
+  "cheat": [
+    "cheat"
+  ],
+  "chezmoi": [
+    "chezmoi"
+  ],
+  "cmake": [
+    "cmake"
+  ],
+  "colorls": [
+    "colorls"
+  ],
+  "conda": [
+    "conda"
+  ],
+  "coreutils": [
+    "[",
+    "b2sum",
+    "base32",
+    "base64",
+    "basename",
+    "basenc",
+    "cat",
+    "chcon",
+    "chgrp",
+    "chmod",
+    "chown",
+    "chroot",
+    "cksum",
+    "comm",
+    "cp",
+    "csplit",
+    "cut",
+    "date",
+    "dd",
+    "df",
+    "dir",
+    "dircolors",
+    "dirname",
+    "du",
+    "echo",
+    "env",
+    "expand",
+    "expr",
+    "factor",
+    "false",
+    "fmt",
+    "fold",
+    "groups",
+    "head",
+    "hostid",
+    "id",
+    "install",
+    "join",
+    "kill",
+    "link",
+    "ln",
+    "logname",
+    "ls",
+    "md5sum",
+    "mkdir",
+    "mkfifo",
+    "mknod",
+    "mktemp",
+    "mv",
+    "nice",
+    "nl",
+    "nohup",
+    "nproc",
+    "numfmt",
+    "od",
+    "paste",
+    "pathchk",
+    "pinky",
+    "pr",
+    "printenv",
+    "printf",
+    "ptx",
+    "pwd",
+    "readlink",
+    "realpath",
+    "rm",
+    "rmdir",
+    "runcon",
+    "seq",
+    "sha1sum",
+    "sha224sum",
+    "sha256sum",
+    "sha384sum",
+    "sha512sum",
+    "shred",
+    "shuf",
+    "sleep",
+    "sort",
+    "split",
+    "stat",
+    "stdbuf",
+    "stty",
+    "sum",
+    "sync",
+    "tac",
+    "tail",
+    "tee",
+    "test",
+    "timeout",
+    "touch",
+    "tr",
+    "true",
+    "truncate",
+    "tsort",
+    "tty",
+    "uname",
+    "unexpand",
+    "uniq",
+    "unlink",
+    "uptime",
+    "users",
+    "vdir",
+    "wc",
+    "who",
+    "whoami",
+    "yes"
+  ],
+  "cpufetch": [
+    "cpufetch"
+  ],
+  "curl": [
+    "curl",
+    "curl-config"
+  ],
+  "deeptools": [
+    "deeptools"
+  ],
+  "delta": [
+    "delta"
+  ],
+  "difftastic": [
+    "difft"
+  ],
+  "dog": [
+    "dog"
+  ],
+  "du-dust": [
+    "dust"
+  ],
+  "editorconfig": [
+    "editorconfig"
+  ],
+  "emacs": [
+    "emacs"
+  ],
+  "entrez-direct": [
+    "efetch",
+    "esearch"
+  ],
+  "exa": [
+    "exa"
+  ],
+  "exiftool": [
+    "exiftool"
+  ],
+  "fastqc": [
+    "fastqc"
+  ],
+  "fd-find": [
+    "fd"
+  ],
+  "ffmpeg": [
+    "ffmpeg",
+    "ffprobe"
+  ],
+  "ffq": [
+    "ffq"
+  ],
+  "findutils": [
+    "find",
+    "locate",
+    "updatedb",
+    "xargs"
+  ],
+  "fish": [
+    "fish"
+  ],
+  "flac": [
+    "flac"
+  ],
+  "flake8": [
+    "flake8"
+  ],
+  "fzf": [
+    "fzf"
+  ],
+  "gawk": [
+    "awk",
+    "gawk"
+  ],
+  "gdal": [
+    "gdal-config"
+  ],
+  "geos": [
+    "geos-config"
+  ],
+  "gffutils": [
+    "gffutils-cli"
+  ],
+  "gget": [
+    "gget"
+  ],
+  "ghostscript": [
+    "gs"
+  ]
+}
