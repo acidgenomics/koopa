@@ -597,6 +597,10 @@ koopa_activate_opt_prefix() {
         koopa_assert_is_dir "$prefix"
         current_ver="$(koopa_opt_version "$name")"
         expected_ver="$(koopa_variable "$name")"
+        if [[ "${#expected_ver}" -eq 40 ]]
+        then
+            expected_ver="${expected_ver:0:8}"
+        fi
         if [[ "$current_ver" != "$expected_ver" ]]
         then
             koopa_stop "'${name}' version mismatch at '${prefix}' \
@@ -3158,13 +3162,13 @@ koopa_build_all_apps() {
         'openssl1'
         'openssl3'
         'cmake'
+        'zstd'
         'curl'
         'git'
         'lapack'
         'libffi'
         'libjpeg-turbo'
         'libpng'
-        'zstd'
         'libtiff'
         'openblas'
         'bzip2'
@@ -3334,6 +3338,7 @@ koopa_build_all_apps() {
         'mdcat' # deps: rust
         'procs' # deps: rust
         'ripgrep' # deps: rust
+        'ripgrep-all' # deps: rust
         'starship' # deps: rust
         'tealdeer' # deps: rust
         'tokei' # deps: rust
@@ -3341,7 +3346,6 @@ koopa_build_all_apps() {
         'xsv' # deps: rust
         'zellij' # deps: rust
         'zoxide' # deps: rust
-        'julia'
         'ffq' # deps: conda
         'ensembl-perl-api' # deps: none.
         'pyenv' # deps: none.
@@ -3349,8 +3353,8 @@ koopa_build_all_apps() {
         'cheat' # deps: go.
         'pylint' # deps: python.
         'yq' # deps: go.
-        'sra-tools' # deps: cmake, hdf5, libxml2, python.
-        'chemacs' # deps: go
+        'sra-tools'
+        'chemacs'
         'dotfiles'
     )
     if ! koopa_is_aarch64
@@ -3401,13 +3405,10 @@ koopa_build_all_apps() {
     fi
     for pkg in "${pkgs[@]}"
     do
-        if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
-            [[ -e "${dict[opt_prefix]}/${pkg}" ]]
-        then
-            continue
-        fi
-        "${app[koopa]}" install --push "$pkg"
+        koopa_is_symlink "${dict[opt_prefix]}/${pkg}" && continue
+        "${app[koopa]}" install "$pkg"
     done
+    koopa_push_all_app_builds
     return 0
 }
 
@@ -11052,7 +11053,6 @@ koopa_insert_at_line_number() {
 
 koopa_install_ack() {
     koopa_install_app \
-        --installer='perl-package' \
         --link-in-bin='ack' \
         --name='ack' \
         "$@"
@@ -11318,7 +11318,10 @@ koopa_install_all_apps() {
             'pinentry'
         )
     fi
-    koopa_cli_install --binary "${pkgs[@]}"
+    for pkg in "${pkgs[@]}"
+    do
+        koopa install --binary "$pkg"
+    done
     return 0
 }
 
@@ -11375,15 +11378,38 @@ ${dict2[name]}/${dict2[version]}.tar.gz"
 }
 
 koopa_install_app_internal() {
+    local pos
+    koopa_assert_has_args "$#"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--link-in-bin' | \
+            '--link-in-bin='* | \
+            '--no-link-in-opt' | \
+            '--no-prefix-check' | \
+            '--quiet' | \
+            '--no-restrict-path')
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
     koopa_install_app \
         --no-link-in-opt \
         --no-prefix-check \
+        --no-restrict-path \
         --quiet \
         "$@"
 }
 
 koopa_install_app() {
-    local app bin_arr bool build_opt_arr clean_path_arr dict i opt_arr pos
+    local app bin_arr bool clean_path_arr dict i pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
@@ -11393,6 +11419,7 @@ koopa_install_app() {
     declare -A bool=(
         [auto_prefix]=0
         [binary]=0
+        [copy_log_file]=0
         [link_in_bin]=0
         [link_in_man]=0
         [link_in_opt]=1
@@ -11400,6 +11427,7 @@ koopa_install_app() {
         [push]=0
         [quiet]=0
         [reinstall]=0
+        [restrict_path]=1
         [update_ldconfig]=0
         [verbose]=0
         [version_is_git_commit]=0
@@ -11408,8 +11436,8 @@ koopa_install_app() {
         [app_prefix]="$(koopa_app_prefix)"
         [installer_bn]=''
         [installer_fun]='main'
-        [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
+        [log_file]="$(koopa_tmp_log_file)"
         [mode]='shared'
         [name]=''
         [platform]='common'
@@ -11419,29 +11447,11 @@ koopa_install_app() {
         [version_key]=''
     )
     bin_arr=()
-    build_opt_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    opt_arr=()
     pos=()
     while (("$#"))
     do
         case "$1" in
-            '--activate-build-opt='*)
-                build_opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-build-opt')
-                build_opt_arr+=("${2:?}")
-                shift 2
-                ;;
-            '--activate-opt='*)
-                opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-opt')
-                opt_arr+=("${2:?}")
-                shift 2
-                ;;
             '--installer='*)
                 dict[installer_bn]="${1#*=}"
                 shift 1
@@ -11522,6 +11532,10 @@ koopa_install_app() {
                 bool[prefix_check]=0
                 shift 1
                 ;;
+            '--no-restrict-path')
+                bool[restrict_path]=0
+                shift 1
+                ;;
             '--quiet')
                 bool[quiet]=1
                 shift 1
@@ -11539,7 +11553,7 @@ koopa_install_app() {
                 shift 1
                 ;;
             '-D')
-            pos+=("${2:?}")
+                pos+=("${2:?}")
                 shift 2
                 ;;
             '')
@@ -11594,8 +11608,8 @@ ${dict[version2]}"
     [[ -d "${dict[prefix]}" ]] && \
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     [[ -z "${dict[installer_bn]}" ]] && dict[installer_bn]="${dict[name]}"
-    dict[installer_file]="${dict[installers_prefix]}/${dict[platform]}/\
-${dict[mode]}/install-${dict[installer_bn]}.sh"
+    dict[installer_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+install/${dict[platform]}/${dict[mode]}/${dict[installer_bn]}.sh"
     koopa_assert_is_file "${dict[installer_file]}"
     source "${dict[installer_file]}"
     koopa_assert_is_function "${dict[installer_fun]}"
@@ -11642,9 +11656,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
-        dict[log_file]="${dict[prefix]}/.koopa-install.log"
-    else
-        dict[log_file]="$(koopa_tmp_log_file)"
+        bool[copy_log_file]=1
     fi
     if [[ "${bool[quiet]}" -eq 0 ]]
     then
@@ -11663,21 +11675,16 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_install_app_from_binary_package "${dict[prefix]}"
             return 0
         fi
-        PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
-        export PATH
+        if [[ "${bool[restrict_path]}" -eq 1 ]]
+        then
+            PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
+            export PATH
+        fi
         if koopa_is_linux && \
             [[ -x '/usr/bin/pkg-config' ]]
         then
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
-        fi
-        if koopa_is_array_non_empty "${build_opt_arr[@]:-}"
-        then
-            koopa_activate_build_opt_prefix "${build_opt_arr[@]}"
-        fi
-        if koopa_is_array_non_empty "${opt_arr[@]:-}"
-        then
-            koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
         if [[ "${bool[update_ldconfig]}" -eq 1 ]]
         then
@@ -11691,6 +11698,12 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         [[ "${bool[verbose]}" -eq 1 ]] && declare -x
         return 0
     ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
+    if [[ "${bool[copy_log_file]}" -eq 1 ]]
+    then
+        koopa_cp \
+            "${dict[log_file]}" \
+            "${dict[prefix]}/.koopa-install.log"
+    fi
     koopa_rm "${dict[tmp_dir]}"
     case "${dict[mode]}" in
         'shared')
@@ -11802,23 +11815,18 @@ koopa_install_aspell() {
 
 koopa_install_autoconf() {
     koopa_install_app \
-        --activate-opt='m4' \
-        --installer='gnu-app' \
         --name='autoconf' \
         "$@"
 }
 
 koopa_install_automake() {
     koopa_install_app \
-        --activate-opt='autoconf' \
-        --installer='gnu-app' \
         --name='automake' \
         "$@"
 }
 
 koopa_install_azure_cli() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='az' \
         --name='azure-cli' \
         "$@"
@@ -11826,7 +11834,6 @@ koopa_install_azure_cli() {
 
 koopa_install_bamtools() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bamtools' \
         --name='bamtools' \
         "$@"
@@ -11834,7 +11841,6 @@ koopa_install_bamtools() {
 
 koopa_install_bash_language_server() {
     koopa_install_app \
-        --installer='node-package' \
         --link-in-bin='bash-language-server' \
         --name='bash-language-server' \
         "$@"
@@ -11849,7 +11855,6 @@ koopa_install_bash() {
 
 koopa_install_bashcov() {
     koopa_install_app \
-        --installer='ruby-package' \
         --link-in-bin='bashcov' \
         --name='bashcov' \
         "$@"
@@ -11859,14 +11864,11 @@ koopa_install_bat() {
     koopa_install_app \
         --link-in-bin='bat' \
         --name='bat' \
-        --installer='rust-package' \
         "$@"
 }
 
 koopa_install_bc() {
     koopa_install_app \
-        --activate-build-opt='texinfo' \
-        --installer='gnu-app' \
         --link-in-bin='bc' \
         --name='bc' \
         "$@"
@@ -11874,7 +11876,6 @@ koopa_install_bc() {
 
 koopa_install_bedtools() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bedtools' \
         --name='bedtools' \
         "$@"
@@ -11882,15 +11883,12 @@ koopa_install_bedtools() {
 
 koopa_install_binutils() {
     koopa_install_app \
-        --activate-build-opt='texinfo' \
-        --installer='gnu-app' \
         --name='binutils' \
         "$@"
 }
 
 koopa_install_bioawk() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bioawk' \
         --name='bioawk' \
         "$@"
@@ -11898,16 +11896,12 @@ koopa_install_bioawk() {
 
 koopa_install_bison() {
     koopa_install_app \
-        --activate-opt='m4' \
-        --installer='gnu-app' \
         --name='bison' \
-        -D '--enable-relocatable' \
         "$@"
 }
 
 koopa_install_black() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='black' \
         --name='black' \
         "$@"
@@ -11921,7 +11915,6 @@ koopa_install_boost() {
 
 koopa_install_bowtie2() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bowtie2' \
         --name='bowtie2' \
         "$@"
@@ -11929,7 +11922,6 @@ koopa_install_bowtie2() {
 
 koopa_install_bpytop() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='bpytop' \
         --name='bpytop' \
         "$@"
@@ -11937,7 +11929,6 @@ koopa_install_bpytop() {
 
 koopa_install_broot() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='broot' \
         --name='broot' \
         "$@"
@@ -11945,7 +11936,6 @@ koopa_install_broot() {
 
 koopa_install_bustools() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='bustools' \
         --name='bustools' \
         "$@"
@@ -12010,7 +12000,6 @@ koopa_install_cmake() {
 
 koopa_install_colorls() {
     koopa_install_app \
-        --installer='ruby-package' \
         --link-in-bin='colorls' \
         --name='colorls' \
         "$@"
@@ -12024,126 +12013,115 @@ koopa_install_conda() {
 }
 
 koopa_install_coreutils() {
-    local install_args
-    install_args=()
-    if koopa_is_linux
-    then
-        install_args+=('--activate-opt=attr')
-    fi
-    install_args+=(
-        '--activate-build-opt=gperf'
-        '--activate-opt=gmp'
-        '--installer=gnu-app'
-        '--name=coreutils'
-        '--link-in-bin=['
-        '--link-in-bin=b2sum'
-        '--link-in-bin=base32'
-        '--link-in-bin=base64'
-        '--link-in-bin=basename'
-        '--link-in-bin=basenc'
-        '--link-in-bin=cat'
-        '--link-in-bin=chcon'
-        '--link-in-bin=chgrp'
-        '--link-in-bin=chmod'
-        '--link-in-bin=chown'
-        '--link-in-bin=chroot'
-        '--link-in-bin=cksum'
-        '--link-in-bin=comm'
-        '--link-in-bin=cp'
-        '--link-in-bin=csplit'
-        '--link-in-bin=cut'
-        '--link-in-bin=date'
-        '--link-in-bin=dd'
-        '--link-in-bin=df'
-        '--link-in-bin=dir'
-        '--link-in-bin=dircolors'
-        '--link-in-bin=dirname'
-        '--link-in-bin=du'
-        '--link-in-bin=echo'
-        '--link-in-bin=env'
-        '--link-in-bin=expand'
-        '--link-in-bin=expr'
-        '--link-in-bin=factor'
-        '--link-in-bin=false'
-        '--link-in-bin=fmt'
-        '--link-in-bin=fold'
-        '--link-in-bin=groups'
-        '--link-in-bin=head'
-        '--link-in-bin=hostid'
-        '--link-in-bin=id'
-        '--link-in-bin=install'
-        '--link-in-bin=join'
-        '--link-in-bin=kill'
-        '--link-in-bin=link'
-        '--link-in-bin=ln'
-        '--link-in-bin=logname'
-        '--link-in-bin=ls'
-        '--link-in-bin=md5sum'
-        '--link-in-bin=mkdir'
-        '--link-in-bin=mkfifo'
-        '--link-in-bin=mknod'
-        '--link-in-bin=mktemp'
-        '--link-in-bin=mv'
-        '--link-in-bin=nice'
-        '--link-in-bin=nl'
-        '--link-in-bin=nohup'
-        '--link-in-bin=nproc'
-        '--link-in-bin=numfmt'
-        '--link-in-bin=od'
-        '--link-in-bin=paste'
-        '--link-in-bin=pathchk'
-        '--link-in-bin=pinky'
-        '--link-in-bin=pr'
-        '--link-in-bin=printenv'
-        '--link-in-bin=printf'
-        '--link-in-bin=ptx'
-        '--link-in-bin=pwd'
-        '--link-in-bin=readlink'
-        '--link-in-bin=realpath'
-        '--link-in-bin=rm'
-        '--link-in-bin=rmdir'
-        '--link-in-bin=runcon'
-        '--link-in-bin=seq'
-        '--link-in-bin=sha1sum'
-        '--link-in-bin=sha224sum'
-        '--link-in-bin=sha256sum'
-        '--link-in-bin=sha384sum'
-        '--link-in-bin=sha512sum'
-        '--link-in-bin=shred'
-        '--link-in-bin=shuf'
-        '--link-in-bin=sleep'
-        '--link-in-bin=sort'
-        '--link-in-bin=split'
-        '--link-in-bin=stat'
-        '--link-in-bin=stty'
-        '--link-in-bin=sum'
-        '--link-in-bin=sync'
-        '--link-in-bin=tac'
-        '--link-in-bin=tail'
-        '--link-in-bin=tee'
-        '--link-in-bin=test'
-        '--link-in-bin=timeout'
-        '--link-in-bin=touch'
-        '--link-in-bin=tr'
-        '--link-in-bin=true'
-        '--link-in-bin=truncate'
-        '--link-in-bin=tsort'
-        '--link-in-bin=tty'
-        '--link-in-bin=uname'
-        '--link-in-bin=unexpand'
-        '--link-in-bin=uniq'
-        '--link-in-bin=unlink'
-        '--link-in-bin=uptime'
-        '--link-in-bin=users'
-        '--link-in-bin=vdir'
-        '--link-in-bin=wc'
-        '--link-in-bin=who'
-        '--link-in-bin=whoami'
-        '--link-in-bin=yes'
-        -D '--with-gmp'
-        -D '--without-selinux'
-    )
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --link-in-bin='[' \
+        --link-in-bin='b2sum' \
+        --link-in-bin='base32' \
+        --link-in-bin='base64' \
+        --link-in-bin='basename' \
+        --link-in-bin='basenc' \
+        --link-in-bin='cat' \
+        --link-in-bin='chcon' \
+        --link-in-bin='chgrp' \
+        --link-in-bin='chmod' \
+        --link-in-bin='chown' \
+        --link-in-bin='chroot' \
+        --link-in-bin='cksum' \
+        --link-in-bin='comm' \
+        --link-in-bin='cp' \
+        --link-in-bin='csplit' \
+        --link-in-bin='cut' \
+        --link-in-bin='date' \
+        --link-in-bin='dd' \
+        --link-in-bin='df' \
+        --link-in-bin='dir' \
+        --link-in-bin='dircolors' \
+        --link-in-bin='dirname' \
+        --link-in-bin='du' \
+        --link-in-bin='echo' \
+        --link-in-bin='env' \
+        --link-in-bin='expand' \
+        --link-in-bin='expr' \
+        --link-in-bin='factor' \
+        --link-in-bin='false' \
+        --link-in-bin='fmt' \
+        --link-in-bin='fold' \
+        --link-in-bin='groups' \
+        --link-in-bin='head' \
+        --link-in-bin='hostid' \
+        --link-in-bin='id' \
+        --link-in-bin='install' \
+        --link-in-bin='join' \
+        --link-in-bin='kill' \
+        --link-in-bin='link' \
+        --link-in-bin='ln' \
+        --link-in-bin='logname' \
+        --link-in-bin='ls' \
+        --link-in-bin='md5sum' \
+        --link-in-bin='mkdir' \
+        --link-in-bin='mkfifo' \
+        --link-in-bin='mknod' \
+        --link-in-bin='mktemp' \
+        --link-in-bin='mv' \
+        --link-in-bin='nice' \
+        --link-in-bin='nl' \
+        --link-in-bin='nohup' \
+        --link-in-bin='nproc' \
+        --link-in-bin='numfmt' \
+        --link-in-bin='od' \
+        --link-in-bin='paste' \
+        --link-in-bin='pathchk' \
+        --link-in-bin='pinky' \
+        --link-in-bin='pr' \
+        --link-in-bin='printenv' \
+        --link-in-bin='printf' \
+        --link-in-bin='ptx' \
+        --link-in-bin='pwd' \
+        --link-in-bin='readlink' \
+        --link-in-bin='realpath' \
+        --link-in-bin='rm' \
+        --link-in-bin='rmdir' \
+        --link-in-bin='runcon' \
+        --link-in-bin='seq' \
+        --link-in-bin='sha1sum' \
+        --link-in-bin='sha224sum' \
+        --link-in-bin='sha256sum' \
+        --link-in-bin='sha384sum' \
+        --link-in-bin='sha512sum' \
+        --link-in-bin='shred' \
+        --link-in-bin='shuf' \
+        --link-in-bin='sleep' \
+        --link-in-bin='sort' \
+        --link-in-bin='split' \
+        --link-in-bin='stat' \
+        --link-in-bin='stdbuf' \
+        --link-in-bin='stty' \
+        --link-in-bin='sum' \
+        --link-in-bin='sync' \
+        --link-in-bin='tac' \
+        --link-in-bin='tail' \
+        --link-in-bin='tee' \
+        --link-in-bin='test' \
+        --link-in-bin='timeout' \
+        --link-in-bin='touch' \
+        --link-in-bin='tr' \
+        --link-in-bin='true' \
+        --link-in-bin='truncate' \
+        --link-in-bin='tsort' \
+        --link-in-bin='tty' \
+        --link-in-bin='uname' \
+        --link-in-bin='unexpand' \
+        --link-in-bin='uniq' \
+        --link-in-bin='unlink' \
+        --link-in-bin='uptime' \
+        --link-in-bin='users' \
+        --link-in-bin='vdir' \
+        --link-in-bin='wc' \
+        --link-in-bin='who' \
+        --link-in-bin='whoami' \
+        --link-in-bin='yes' \
+        --name='coreutils' \
+        "$@"
 }
 
 koopa_install_cpufetch() {
@@ -12163,7 +12141,6 @@ koopa_install_curl() {
 
 koopa_install_deeptools() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='deeptools' \
         --name='deeptools' \
         "$@"
@@ -12173,7 +12150,6 @@ koopa_install_delta() {
     koopa_install_app \
         --link-in-bin='delta' \
         --name='delta' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -12181,7 +12157,6 @@ koopa_install_difftastic() {
     koopa_install_app \
         --link-in-bin='difft' \
         --name='difftastic' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -12189,7 +12164,6 @@ koopa_install_dog() {
     koopa_install_app \
         --link-in-bin='dog' \
         --name='dog' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -12204,30 +12178,12 @@ koopa_install_du_dust() {
     koopa_install_app \
         --link-in-bin='dust' \
         --name='du-dust' \
-        --installer='rust-package' \
         "$@"
 }
 
 koopa_install_emacs() {
     local install_args
-    install_args=(
-        '--activate-opt=gmp'
-        '--activate-opt=ncurses'
-        '--activate-opt=libtasn1'
-        '--activate-opt=libunistring'
-        '--activate-opt=libxml2'
-        '--activate-opt=nettle'
-        '--activate-opt=texinfo'
-        '--activate-opt=gnutls'
-        '--installer=gnu-app'
-        '--name=emacs'
-        '-D' '--with-modules'
-        '-D' '--without-dbus'
-        '-D' '--without-imagemagick'
-        '-D' '--without-ns'
-        '-D' '--without-selinux'
-        '-D' '--without-x'
-    )
+    install_args=('--name=emacs')
     if ! koopa_is_macos
     then
         install_args+=('--link-in-bin=emacs')
@@ -12243,7 +12199,6 @@ koopa_install_ensembl_perl_api() {
 
 koopa_install_entrez_direct() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='efetch' \
         --link-in-bin='esearch' \
         --name='entrez-direct' \
@@ -12254,13 +12209,11 @@ koopa_install_exa() {
     koopa_install_app \
         --link-in-bin='exa' \
         --name='exa' \
-        --installer='rust-package' \
         "$@"
 }
 
 koopa_install_exiftool() {
     koopa_install_app \
-        --installer='perl-package' \
         --link-in-bin='exiftool' \
         --name='exiftool' \
         "$@"
@@ -12274,7 +12227,6 @@ koopa_install_expat() {
 
 koopa_install_fastqc() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='fastqc' \
         --name='fastqc' \
         "$@"
@@ -12282,7 +12234,6 @@ koopa_install_fastqc() {
 
 koopa_install_fd_find() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='fd' \
         --name='fd-find' \
         "$@"
@@ -12298,27 +12249,19 @@ koopa_install_ffmpeg() {
 
 koopa_install_ffq() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='ffq' \
         --name='ffq' \
         "$@"
 }
 
 koopa_install_findutils() {
-    local install_args
-    install_args=(
-        '--installer=gnu-app'
-        '--link-in-bin=find'
-        '--link-in-bin=locate'
-        '--link-in-bin=updatedb'
-        '--link-in-bin=xargs'
-        '--name=findutils'
-    )
-    if koopa_is_macos
-    then
-        export CFLAGS='-D__nonnull\(params\)='
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --link-in-bin='find' \
+        --link-in-bin='locate' \
+        --link-in-bin='updatedb' \
+        --link-in-bin='xargs' \
+        --name='findutils' \
+        "$@"
 }
 
 koopa_install_fish() {
@@ -12337,7 +12280,6 @@ koopa_install_flac() {
 
 koopa_install_flake8() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='flake8' \
         --name='flake8' \
         "$@"
@@ -12357,12 +12299,7 @@ koopa_install_fontconfig() {
 
 koopa_install_freetype() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='freetype' \
-        -D '--enable-freetype-config' \
-        -D '--enable-shared=yes' \
-        -D '--enable-static=yes' \
-        -D '--without-harfbuzz' \
         "$@"
 }
 
@@ -12381,14 +12318,15 @@ koopa_install_fzf() {
 
 koopa_install_gawk() {
     koopa_install_app \
-        --installer='gnu-app' \
-        --activate-opt='gettext' \
-        --activate-opt='mpfr' \
-        --activate-opt='readline' \
         --link-in-bin='awk' \
         --link-in-bin='gawk' \
         --name='gawk' \
         "$@"
+    (
+        koopa_cd "$(koopa_man_prefix)/man1"
+        koopa_ln 'gawk.1' 'awk.1'
+    )
+    return 0
 }
 
 koopa_install_gcc() {
@@ -12406,8 +12344,6 @@ koopa_install_gdal() {
 
 koopa_install_gdbm() {
     koopa_install_app \
-        --installer='gnu-app' \
-        --activate-opt='readline' \
         --name='gdbm' \
         "$@"
 }
@@ -12420,24 +12356,13 @@ koopa_install_geos() {
 }
 
 koopa_install_gettext() {
-    local install_args
-    install_args=(
-        '--installer=gnu-app'
-        '--name=gettext'
-    )
-    if ! koopa_is_macos
-    then
-        install_args+=(
-            '--activate-opt=ncurses'
-            '--activate-opt=libxml2'
-        )
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --name='gettext' \
+        "$@"
 }
 
 koopa_install_gffutils() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='gffutils-cli' \
         --name='gffutils' \
         "$@"
@@ -12445,7 +12370,6 @@ koopa_install_gffutils() {
 
 koopa_install_gget() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='gget' \
         --name='gget' \
         "$@"
@@ -12453,7 +12377,6 @@ koopa_install_gget() {
 
 koopa_install_ghostscript() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='gs' \
         --name='ghostscript' \
         "$@"
@@ -12476,7 +12399,6 @@ koopa_install_git() {
 
 koopa_install_glances() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='glances' \
         --name='glances' \
         "$@"
@@ -12496,14 +12418,12 @@ koopa_install_gmp() {
 
 koopa_install_gnupg() {
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='gnupg' \
         "$@"
 }
 
 koopa_install_gnutls() {
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='gnutls' \
         "$@"
 }
@@ -12524,7 +12444,6 @@ koopa_install_google_cloud_sdk() {
 
 koopa_install_gperf() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='gperf' \
         "$@"
 }
@@ -12537,8 +12456,6 @@ koopa_install_graphviz() {
 
 koopa_install_grep() {
     koopa_install_app \
-        --activate-opt='pcre' \
-        --installer='gnu-app' \
         --link-in-bin='egrep' \
         --link-in-bin='fgrep' \
         --link-in-bin='grep' \
@@ -12548,8 +12465,6 @@ koopa_install_grep() {
 
 koopa_install_groff() {
     koopa_install_app \
-        --activate-opt='texinfo' \
-        --installer='gnu-app' \
         --link-in-bin='groff' \
         --name='groff' \
         "$@"
@@ -12557,7 +12472,6 @@ koopa_install_groff() {
 
 koopa_install_gseapy() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='gseapy' \
         --name='gseapy' \
         "$@"
@@ -12565,14 +12479,12 @@ koopa_install_gseapy() {
 
 koopa_install_gsl() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='gsl' \
         "$@"
 }
 
 koopa_install_gtop() {
     koopa_install_app \
-        --installer='node-package' \
         --link-in-bin='gtop' \
         --name='gtop' \
         "$@"
@@ -12580,7 +12492,6 @@ koopa_install_gtop() {
 
 koopa_install_gzip() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='gzip' \
         "$@"
 }
@@ -12612,7 +12523,6 @@ koopa_install_hdf5() {
 
 koopa_install_hisat2() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='hisat2' \
         --name='hisat2' \
         "$@"
@@ -12629,7 +12539,6 @@ koopa_install_hyperfine() {
     koopa_install_app \
         --link-in-bin='hyperfine' \
         --name='hyperfine' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -12648,7 +12557,6 @@ koopa_install_imagemagick() {
 
 koopa_install_ipython() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='ipython' \
         --name='ipython' \
         "$@"
@@ -12656,7 +12564,6 @@ koopa_install_ipython() {
 
 koopa_install_isort() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='isort' \
         --name='isort' \
         "$@"
@@ -12701,7 +12608,6 @@ koopa_install_julia() {
 
 koopa_install_jupyterlab() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='jupyter-lab' \
         --name='jupyterlab' \
         "$@"
@@ -12709,7 +12615,6 @@ koopa_install_jupyterlab() {
 
 koopa_install_kallisto() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='kallisto' \
         --name='kallisto' \
         "$@"
@@ -12902,7 +12807,6 @@ koopa_install_lapack() {
 
 koopa_install_latch() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='latch' \
         --name='latch' \
         "$@"
@@ -12910,9 +12814,6 @@ koopa_install_latch() {
 
 koopa_install_less() {
     koopa_install_app \
-        --activate-opt='ncurses' \
-        --activate-opt='pcre2' \
-        --installer='gnu-app' \
         --link-in-bin='less' \
         --name='less' \
         "$@"
@@ -12927,7 +12828,6 @@ koopa_install_lesspipe() {
 
 koopa_install_libassuan() {
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='libassuan' \
         "$@"
 }
@@ -12952,7 +12852,6 @@ koopa_install_libffi() {
 
 koopa_install_libgcrypt() {
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='libgcrypt' \
         "$@"
 }
@@ -12971,14 +12870,12 @@ koopa_install_libgit2() {
 
 koopa_install_libgpg_error() {
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='libgpg-error' \
         "$@"
 }
 
 koopa_install_libidn() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='libidn' \
         "$@"
 }
@@ -12991,14 +12888,12 @@ koopa_install_libjpeg_turbo() {
 
 koopa_install_libksba() {
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='libksba' \
         "$@"
 }
 
 koopa_install_libpipeline() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='libpipeline' \
         "$@"
 }
@@ -13019,7 +12914,6 @@ koopa_install_libssh2() {
 
 koopa_install_libtasn1() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='libtasn1' \
         "$@"
 }
@@ -13032,8 +12926,6 @@ koopa_install_libtiff() {
 
 koopa_install_libtool() {
     koopa_install_app \
-        --activate-opt='m4' \
-        --installer='gnu-app' \
         --link-in-bin='libtool' \
         --link-in-bin='libtoolize' \
         --name='libtool' \
@@ -13047,7 +12939,6 @@ koopa_install_libtool() {
 
 koopa_install_libunistring() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='libunistring' \
         "$@"
 }
@@ -13097,14 +12988,12 @@ koopa_install_lzo() {
 
 koopa_install_m4() {
     koopa_install_app \
-        --installer='gnu-app' \
         --name='m4' \
         "$@"
 }
 
 koopa_install_make() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='make' \
         --name='make' \
         "$@"
@@ -13129,7 +13018,6 @@ koopa_install_mcfly() {
     koopa_install_app \
         --link-in-bin='mcfly' \
         --name='mcfly' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -13137,45 +13025,29 @@ koopa_install_mdcat() {
     koopa_install_app \
         --link-in-bin='mdcat' \
         --name='mdcat' \
-        --installer='rust-package' \
         "$@"
 }
 
 koopa_install_meson() {
     koopa_install_app \
-        --installer='python-venv' \
         --name='meson' \
         "$@"
 }
 
 koopa_install_mpc() {
-    local dict
-    declare -A dict=(
-        [opt_prefix]="$(koopa_opt_prefix)"
-    )
-    dict[gmp]="$(koopa_realpath "${dict[opt_prefix]}/gmp")"
-    dict[mpfr]="$(koopa_realpath "${dict[opt_prefix]}/mpfr")"
     koopa_install_app \
-        --activate-opt='gmp' \
-        --activate-opt='mpfr' \
-        --installer='gnu-app' \
         --name='mpc' \
-        -D "--with-gmp=${dict[gmp]}" \
-        -D "--with-mpfr=${dict[mpfr]}" \
         "$@"
 }
 
 koopa_install_mpfr() {
     koopa_install_app \
-        --activate-opt='gmp' \
-        --installer='gnu-app' \
         --name='mpfr' \
         "$@"
 }
 
 koopa_install_multiqc() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='multiqc' \
         --name='multiqc' \
         "$@"
@@ -13213,19 +13085,12 @@ koopa_install_neovim() {
 
 koopa_install_nettle() {
     koopa_install_app \
-        --activate-opt='gmp' \
-        --activate-opt='m4' \
-        --installer='gnu-app' \
         --name='nettle' \
-        -D '--disable-dependency-tracking' \
-        -D '--enable-mini-gmp' \
-        -D '--enable-shared' \
         "$@"
 }
 
 koopa_install_nextflow() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='nextflow' \
         --name='nextflow' \
         "$@"
@@ -13240,17 +13105,7 @@ koopa_install_nim() {
 
 koopa_install_ninja() {
     koopa_install_app \
-        --installer='python-venv' \
         --name='ninja' \
-        "$@"
-}
-
-koopa_install_node_binary() {
-    koopa_install_app \
-        --installer='node-binary' \
-        --link-in-bin='node' \
-        --link-in-bin='npm' \
-        --name='node' \
         "$@"
 }
 
@@ -13264,7 +13119,6 @@ koopa_install_node() {
 
 koopa_install_npth() {
     koopa_install_app \
-        --installer='gnupg-gcrypt' \
         --name='npth' \
         "$@"
 }
@@ -13318,7 +13172,6 @@ koopa_install_pandoc() {
 
 koopa_install_parallel() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='parallel' \
         --name='parallel' \
         "$@"
@@ -13332,28 +13185,26 @@ koopa_install_password_store() {
 }
 
 koopa_install_patch() {
-    local install_args
-    install_args=()
-    if koopa_is_linux
-    then
-        install_args+=('--activate-opt=attr')
-    fi
-    install_args+=(
-        '--installer=gnu-app'
-        '--link-in-bin=patch'
-        '--name=patch'
-    )
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --link-in-bin='patch' \
+        --name='patch' \
+        "$@"
 }
 
 koopa_install_pcre() {
     koopa_install_app \
+        --link-in-bin='pcre-config' \
+        --link-in-bin='pcregrep' \
+        --link-in-bin='pcretest' \
         --name='pcre' \
         "$@"
 }
 
 koopa_install_pcre2() {
     koopa_install_app \
+        --link-in-bin='pcre2-config' \
+        --link-in-bin='pcre2grep' \
+        --link-in-bin='pcre2test' \
         --name='pcre2' \
         "$@"
 }
@@ -13383,7 +13234,6 @@ koopa_install_perl() {
 
 koopa_install_pipx() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pipx' \
         --name='pipx' \
         "$@"
@@ -13404,7 +13254,6 @@ koopa_install_pkg_config() {
 
 koopa_install_poetry() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='poetry' \
         --name='poetry' \
         "$@"
@@ -13412,7 +13261,6 @@ koopa_install_poetry() {
 
 koopa_install_prettier() {
     koopa_install_app \
-        --installer='node-package' \
         --link-in-bin='prettier' \
         --name='prettier' \
         "$@"
@@ -13422,7 +13270,6 @@ koopa_install_procs() {
     koopa_install_app \
         --link-in-bin='procs' \
         --name='procs' \
-        --installer='rust-package' \
         "$@"
 }
 
@@ -13441,7 +13288,6 @@ koopa_install_pyenv() {
 
 koopa_install_pyflakes() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pyflakes' \
         --name='pyflakes' \
         "$@"
@@ -13449,7 +13295,6 @@ koopa_install_pyflakes() {
 
 koopa_install_pygments() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pygmentize' \
         --name='pygments' \
         "$@"
@@ -13457,7 +13302,6 @@ koopa_install_pygments() {
 
 koopa_install_pylint() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pylint' \
         --name='pylint' \
         "$@"
@@ -13466,15 +13310,12 @@ koopa_install_pylint() {
 koopa_install_pytaglib() {
     koopa_install_app \
         --link-in-bin='pyprinttags' \
-        --activate-opt='taglib' \
-        --installer='python-venv' \
         --name='pytaglib' \
         "$@"
 }
 
 koopa_install_pytest() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='pytest' \
         --name='pytest' \
         "$@"
@@ -13489,7 +13330,6 @@ koopa_install_python() {
 
 koopa_install_r_devel() {
     koopa_install_app \
-        --installer='r' \
         --name='r-devel' \
         "$@"
 }
@@ -13542,7 +13382,6 @@ koopa_install_r() {
 
 koopa_install_ranger_fm() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='ranger' \
         --name='ranger-fm' \
         "$@"
@@ -13563,16 +13402,20 @@ koopa_install_readline() {
 
 koopa_install_rename() {
     koopa_install_app \
-        --installer='perl-package' \
         --link-in-bin='rename' \
         --name='rename' \
         "$@"
 }
 
+koopa_install_ripgrep_all() {
+    koopa_install_app \
+        --link-in-bin='rga' \
+        --name='ripgrep-all' \
+        "$@"
+}
+
 koopa_install_ripgrep() {
     koopa_install_app \
-        --activate-opt='pcre2' \
-        --installer='rust-package' \
         --link-in-bin='rg' \
         --name='ripgrep' \
         "$@"
@@ -13587,7 +13430,6 @@ koopa_install_rmate() {
 
 koopa_install_ronn() {
     koopa_install_app \
-        --installer='ruby-package' \
         --link-in-bin='ronn' \
         --name='ronn' \
         "$@"
@@ -13618,7 +13460,6 @@ koopa_install_rust() {
 
 koopa_install_salmon() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='salmon' \
         --name='salmon' \
         "$@"
@@ -13626,7 +13467,6 @@ koopa_install_salmon() {
 
 koopa_install_sambamba() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='sambamba' \
         --name='sambamba' \
         "$@"
@@ -13634,7 +13474,6 @@ koopa_install_sambamba() {
 
 koopa_install_samtools() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='samtools' \
         --name='samtools' \
         "$@"
@@ -13642,14 +13481,12 @@ koopa_install_samtools() {
 
 koopa_install_scons() {
     koopa_install_app \
-        --installer='python-venv' \
         --name='scons' \
         "$@"
 }
 
 koopa_install_sed() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='sed' \
         --name='sed' \
         "$@"
@@ -13677,7 +13514,6 @@ koopa_install_shunit2() {
 
 koopa_install_snakemake() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='snakemake' \
         --name='snakemake' \
         "$@"
@@ -13707,7 +13543,6 @@ koopa_install_sra_tools() {
 
 koopa_install_star() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='STAR' \
         --name='star' \
         "$@"
@@ -13715,7 +13550,6 @@ koopa_install_star() {
 
 koopa_install_starship() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='starship' \
         --name='starship' \
         "$@"
@@ -13723,8 +13557,6 @@ koopa_install_starship() {
 
 koopa_install_stow() {
     koopa_install_app \
-        --activate-opt='perl' \
-        --installer='gnu-app' \
         --link-in-bin='stow' \
         --name='stow' \
         "$@"
@@ -13768,7 +13600,6 @@ koopa_install_taglib() {
 
 koopa_install_tar() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='tar' \
         --name='tar' \
         "$@"
@@ -13782,35 +13613,21 @@ koopa_install_tcl_tk() {
 
 koopa_install_tealdeer() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='tldr' \
         --name='tealdeer' \
         "$@"
 }
 
 koopa_install_texinfo() {
-    local install_args
-    install_args=(
-        '--installer=gnu-app'
-        '--link-in-bin=pdftexi2dvi'
-        '--link-in-bin=pod2texi'
-        '--link-in-bin=texi2any'
-        '--link-in-bin=texi2dvi'
-        '--link-in-bin=texi2pdf'
-        '--link-in-bin=texindex'
-        '--name=texinfo'
-        -D '--disable-dependency-tracking'
-        -D '--disable-install-warnings'
-    )
-    if ! koopa_is_macos
-    then
-        install_args+=(
-            '--activate-opt=gettext'
-            '--activate-opt=ncurses'
-            '--activate-opt=perl'
-        )
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --link-in-bin='pdftexi2dvi' \
+        --link-in-bin='pod2texi' \
+        --link-in-bin='texi2any' \
+        --link-in-bin='texi2dvi' \
+        --link-in-bin='texi2pdf' \
+        --link-in-bin='texindex' \
+        --name='texinfo' \
+        "$@"
 }
 
 koopa_install_tmux() {
@@ -13822,7 +13639,6 @@ koopa_install_tmux() {
 
 koopa_install_tokei() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='tokei' \
         --name='tokei' \
         "$@"
@@ -13837,7 +13653,6 @@ koopa_install_tree() {
 
 koopa_install_tuc() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='tuc' \
         --name='tuc' \
         "$@"
@@ -13852,8 +13667,6 @@ koopa_install_udunits() {
 
 koopa_install_units() {
     koopa_install_app \
-        --activate-opt='readline' \
-        --installer='gnu-app' \
         --link-in-bin='units' \
         --name='units' \
         "$@"
@@ -13907,7 +13720,6 @@ koopa_install_vim() {
 
 koopa_install_visidata() {
     koopa_install_app \
-        --installer='conda-env' \
         --link-in-bin='vd' \
         --link-in-bin='visidata' \
         --name='visidata' \
@@ -13915,36 +13727,14 @@ koopa_install_visidata() {
 }
 
 koopa_install_wget() {
-    local dict
-    declare -A dict=(
-        [opt_prefix]="$(koopa_opt_prefix)"
-    )
-    dict[ssl]="$(koopa_realpath "${dict[opt_prefix]}/openssl3")"
     koopa_install_app \
-        --activate-build-opt='autoconf' \
-        --activate-build-opt='automake' \
-        --activate-opt='gettext' \
-        --activate-opt='libidn' \
-        --activate-opt='libtasn1' \
-        --activate-opt='nettle' \
-        --activate-opt='openssl3' \
-        --activate-opt='pcre2' \
-        --activate-opt='gnutls' \
-        --installer='gnu-app' \
         --name='wget' \
         --link-in-bin='wget' \
-        --name='wget' \
-        -D '--disable-debug' \
-        -D '--with-ssl=openssl' \
-        -D "--with-libssl-prefix=${dict[ssl]}" \
-        -D '--without-included-regex' \
-        -D '--without-libpsl' \
         "$@"
 }
 
 koopa_install_which() {
     koopa_install_app \
-        --installer='gnu-app' \
         --link-in-bin='which' \
         --name='which' \
         "$@"
@@ -14036,7 +13826,6 @@ koopa_install_xorg_xtrans() {
 
 koopa_install_xsv() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='xsv' \
         --name='xsv' \
         "$@"
@@ -14064,7 +13853,6 @@ koopa_install_yq() {
 
 koopa_install_yt_dlp() {
     koopa_install_app \
-        --installer='python-venv' \
         --link-in-bin='yt-dlp' \
         --name='yt-dlp' \
         "$@"
@@ -14072,7 +13860,6 @@ koopa_install_yt_dlp() {
 
 koopa_install_zellij() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='zellij' \
         --name='zellij' \
         "$@"
@@ -14086,7 +13873,6 @@ koopa_install_zlib() {
 
 koopa_install_zoxide() {
     koopa_install_app \
-        --installer='rust-package' \
         --link-in-bin='zoxide' \
         --name='zoxide' \
         "$@"
@@ -14105,11 +13891,6 @@ koopa_install_zstd() {
     koopa_install_app \
         --name='zstd' \
         "$@"
-}
-
-koopa_installers_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/lang/shell/bash/include/installers"
-    return 0
 }
 
 koopa_int_to_yn() {
@@ -14229,6 +14010,20 @@ koopa_is_array_non_empty() {
     arr=("$@")
     [[ "${#arr[@]}" -gt 0 ]] || return 1
     [[ -n "${arr[0]}" ]] || return 1
+    return 0
+}
+
+koopa_is_broken_symlink() {
+    local file
+    koopa_assert_has_args "$#"
+    for file in "$@"
+    do
+        if [[ -L "$file" ]] && [[ ! -e "$file" ]]
+        then
+            continue
+        fi
+        return 1
+    done
     return 0
 }
 
@@ -14466,6 +14261,20 @@ koopa_is_spacemacs_installed() {
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
     koopa_file_detect_fixed --file="$init_file" --pattern='Spacemacs'
+}
+
+koopa_is_symlink() {
+    local file
+    koopa_assert_has_args "$#"
+    for file in "$@"
+    do
+        if [[ -L "$file" ]] && [[ -e "$file" ]]
+        then
+            continue
+        fi
+        return 1
+    done
+    return 0
 }
 
 koopa_is_url_active() {
@@ -16449,15 +16258,10 @@ koopa_locate_mktemp() {
 }
 
 koopa_locate_mv() {
-    if koopa_is_macos
-    then
-        koopa_locate_app '/bin/mv'
-    else
-        koopa_locate_app \
-            --allow-in-path \
-            --app-name='mv' \
-            --opt-name='coreutils'
-    fi
+    koopa_locate_app \
+        --allow-in-path \
+        --app-name='mv' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_neofetch() {
@@ -16505,6 +16309,12 @@ koopa_locate_nproc() {
         --app-name='nproc' \
         --opt-name='coreutils' \
         "$@"
+}
+
+koopa_locate_numfmt() {
+    koopa_locate_app \
+        --app-name='numfmt' \
+        --opt-name='coreutils'
 }
 
 koopa_locate_od() {
@@ -17281,9 +17091,14 @@ koopa_mv() {
     local app dict mkdir mv mv_args pos rm
     declare -A app=(
         [mkdir]='koopa_mkdir'
-        [mv]="$(koopa_locate_mv)"
         [rm]='koopa_rm'
     )
+    if koopa_is_macos
+    then
+        app[mv]='/bin/mv'
+    else
+        app[mv]="$(koopa_locate_mv)"
+    fi
     [[ -x "${app[mv]}" ]] || return 1
     declare -A dict=(
         [sudo]=0
@@ -19404,7 +19219,6 @@ koopa_rsync() {
     )
     rsync_args=(
         '--human-readable'
-        '--one-file-system'
         '--progress'
         '--protect-args'
         '--recursive'
@@ -19453,9 +19267,11 @@ koopa_rsync() {
                 shift 2
                 ;;
             '--archive' | \
+            '--copy-links' | \
             '--delete' | \
             '--delete-before' | \
-            '--dry-run')
+            '--dry-run' | \
+            '--log-file='*)
                 rsync_args+=("$1")
                 shift 1
                 ;;
@@ -22459,7 +22275,6 @@ koopa_uninstall_app() {
     )
     declare -A dict=(
         [app_prefix]="$(koopa_app_prefix)"
-        [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [mode]='shared'
         [name]=''
@@ -22581,8 +22396,8 @@ koopa_uninstall_app() {
         fi
     fi
     [[ -z "${dict[uninstaller_bn]}" ]] && dict[uninstaller_bn]="${dict[name]}"
-    dict[uninstaller_file]="${dict[installers_prefix]}/${dict[platform]}/\
-${dict[mode]}/uninstall-${dict[uninstaller_bn]}.sh"
+    dict[uninstaller_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+uninstall/${dict[platform]}/${dict[mode]}/${dict[uninstaller_bn]}.sh"
     if [[ -f "${dict[uninstaller_file]}" ]]
     then
         dict[tmp_dir]="$(koopa_tmp_dir)"
@@ -22954,6 +22769,7 @@ koopa_uninstall_coreutils() {
         '--unlink-in-bin=sort'
         '--unlink-in-bin=split'
         '--unlink-in-bin=stat'
+        '--unlink-in-bin=stdbuf'
         '--unlink-in-bin=stty'
         '--unlink-in-bin=sum'
         '--unlink-in-bin=sync'
@@ -23803,14 +23619,6 @@ koopa_uninstall_ninja() {
         "$@"
 }
 
-koopa_uninstall_node_binary() {
-    koopa_uninstall_app \
-        --name='node' \
-        --unlink-in-bin='node' \
-        --unlink-in-bin='npm' \
-        "$@"
-}
-
 koopa_uninstall_node() {
     koopa_uninstall_app \
         --name='node' \
@@ -23902,12 +23710,18 @@ koopa_uninstall_patch() {
 
 koopa_uninstall_pcre() {
     koopa_uninstall_app \
+        --unlink-in-bin='pcre-config' \
+        --unlink-in-bin='pcregrep' \
+        --unlink-in-bin='pcretest' \
         --name='pcre' \
         "$@"
 }
 
 koopa_uninstall_pcre2() {
     koopa_uninstall_app \
+        --unlink-in-bin='pcre2-config' \
+        --unlink-in-bin='pcre2grep' \
+        --unlink-in-bin='pcre2test' \
         --name='pcre2' \
         "$@"
 }
@@ -24082,6 +23896,13 @@ koopa_uninstall_rename() {
     koopa_uninstall_app \
         --name='rename' \
         --unlink-in-bin='rename' \
+        "$@"
+}
+
+koopa_uninstall_ripgrep_all() {
+    koopa_uninstall_app \
+        --unlink-in-bin='rga' \
+        --name='ripgrep-all' \
         "$@"
 }
 
@@ -24605,7 +24426,7 @@ koopa_unlink_in_opt() {
 }
 
 koopa_update_app() {
-    local bool clean_path_arr dict opt_arr
+    local bool clean_path_arr dict
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A bool=(
@@ -24616,7 +24437,6 @@ koopa_update_app() {
         [verbose]=0
     )
     declare -A dict=(
-        [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [mode]='shared'
         [name]=''
@@ -24629,18 +24449,9 @@ koopa_update_app() {
         [version]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    opt_arr=()
     while (("$#"))
     do
         case "$1" in
-            '--activate-opt='*)
-                opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-opt')
-                opt_arr+=("${2:?}")
-                shift 2
-                ;;
             '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
@@ -24735,8 +24546,8 @@ koopa_update_app() {
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     fi
     [[ -z "${dict[updater_bn]}" ]] && dict[updater_bn]="${dict[name]}"
-    dict[updater_file]="${dict[installers_prefix]}/${dict[platform]}/\
-${dict[mode]}/update-${dict[updater_bn]}.sh"
+    dict[updater_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+update/${dict[platform]}/${dict[mode]}/${dict[updater_bn]}.sh"
     koopa_assert_is_file "${dict[updater_file]}"
     source "${dict[updater_file]}"
     koopa_assert_is_function "${dict[updater_fun]}"
@@ -24765,10 +24576,6 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
         then
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
-        fi
-        if koopa_is_array_non_empty "${opt_arr[@]:-}"
-        then
-            koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
         if [[ "${bool[update_ldconfig]}" -eq 1 ]]
         then

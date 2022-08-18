@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Indicate the dependencies above each install command here.
-
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-08-16.
     #
     # The approach calling 'koopa_cli_install' internally on pkgs array
     # can run into weird compilation issues on macOS.
@@ -26,60 +24,100 @@ koopa_build_all_apps() {
     )
     pkgs=()
     pkgs+=(
-        # deps: none.
+        # deps: make (system).
         'pkg-config'
-        # deps: none.
+        # deps: make (system).
         'make'
     )
     koopa_is_linux && pkgs+=(
-        # deps: none
+        # deps: make, pkg-config.
         'attr'
     )
     pkgs+=(
+        # deps: attr (linux), make.
         'patch'
+        # deps: make, pkg-config.
         'xz'
+        # deps: make.
         'm4'
+        # deps: m4, make, pkg-config.
         'gmp'
+        # deps: make.
         'gperf'
+        # deps: gmp, make, pkg-config.
         'mpfr'
+        # deps: gmp, make, mpfr.
         'mpc'
+        # deps: gmp, make, mpc, mpfr.
         'gcc'
+        # deps: m4, make.
         'autoconf'
+        # deps: autoconf, make.
         'automake'
+        # deps: m4, make.
         'libtool'
+        # deps: m4, make.
         'bison'
+        # deps: make, patch, pkg-config.
         'bash'
+        # deps: attr (linux), gmp, gperf, make.
         'coreutils'
+        # deps: make.
         'findutils'
+        # deps: make.
         'sed'
+        # deps: make, pkg-config.
         'ncurses'
+        # deps: make, pkg-config.
         'icu4c'
+        # deps: make, ncurses, pkg-config.
         'readline'
+        # deps: icu4c, make, pkg-config, readline.
         'libxml2'
+        # deps: libxml2 (linux), make, ncurses (linux), pkg-config.
         'gettext'
-        # NOTE Consider moving this up in priority.
+        # deps: make, pkg-config.
         'zlib'
-        # FIXME Ensure this is added to install all apps.
+        # deps: none.
         'ca-certificates'
+        # deps: ca-certificates, make, pkg-config.
         'openssl1'
+        # deps: ca-certificates, make, pkg-config.
         'openssl3'
+        # deps: make, ncurses, openssl3.
         'cmake'
-        'curl'
-        'git'
-        'lapack'
-        'libffi'
-        'libjpeg-turbo'
-        'libpng'
-        # NOTE Consider moving this up, under zlib.
+        # deps: cmake.
         'zstd'
+        # deps: ca-certificates, make, openssl3, pkg-config, zlib, zstd.
+        'curl'
+        # deps: autoconf, curl, gettext, make, openssl3, zlib.
+        'git'
+        # deps: cmake, gcc, pkg-config.
+        'lapack'
+        # deps: make, pkg-config.
+        'libffi'
+        # deps: cmake, make, pkg-config.
+        'libjpeg-turbo'
+        # deps: make, pkg-config, zlib.
+        'libpng'
+        # deps: libjpeg-turbo, make, pkg-config, zstd.
         'libtiff'
+        # deps: gcc, make, pkg-config.
         'openblas'
+        # deps: make.
         'bzip2'
+        # deps: autoconf, automake, bzip2, libtool, make, pkg-config, zlib.
         'pcre'
+        # deps: autoconf, automake, bzip2, libtool, make, pkg-config, zlib.
         'pcre2'
+        # deps: make, pkg-config.
         'expat'
+        # deps: make, readline.
         'gdbm'
+        # deps: make, pkg-config, readline, zlib.
         'sqlite'
+        # deps: bzip2, expat, gdbm, libffi, make, ncurses, openssl3, pkg-config,
+        # readline, sqlite, xz, zlib.
         'python'
         'xorg-xorgproto'
         'xorg-xcb-proto'
@@ -225,7 +263,6 @@ koopa_build_all_apps() {
         'yt-dlp'
         'libedit'
         'openssh' # deps: libedit
-        # NOTE Can consider using 'node-binary' here instead.
         'node'
         'bash-language-server' # deps: node
         'gtop' # deps: node
@@ -251,6 +288,7 @@ koopa_build_all_apps() {
         'mdcat' # deps: rust
         'procs' # deps: rust
         'ripgrep' # deps: rust
+        'ripgrep-all' # deps: rust
         'starship' # deps: rust
         'tealdeer' # deps: rust
         'tokei' # deps: rust
@@ -258,8 +296,8 @@ koopa_build_all_apps() {
         'xsv' # deps: rust
         'zellij' # deps: rust
         'zoxide' # deps: rust
-        # NOTE Move this up.
-        'julia'
+        # FIXME 1.8.0 is currently very hard to build.
+        # > 'julia'
         'ffq' # deps: conda
         'ensembl-perl-api' # deps: none.
         'pyenv' # deps: none.
@@ -267,8 +305,10 @@ koopa_build_all_apps() {
         'cheat' # deps: go.
         'pylint' # deps: python.
         'yq' # deps: go.
-        'sra-tools' # deps: cmake, hdf5, libxml2, python.
-        'chemacs' # deps: go
+        # deps: cmake, gcc, hdf5, libxml2, python.
+        'sra-tools'
+        # deps: go.
+        'chemacs'
         # deps: chemacs (to configure).
         'dotfiles'
     )
@@ -319,24 +359,11 @@ koopa_build_all_apps() {
             )
         fi
     fi
-    # FIXME Rework this using 'koopa_is_symlink'.
-    # FIXME Also check if directory is empty...need to rework our log file
-    # copy approach first here.
-    # FIXME This needs to ensure that target directory didn't fail during
-    # build and only contains the log file.
-    # FIXME Consider asserting that the opt prefix isn't empty
-    # after this step completes. Need to work this into the main
-    # 'install_app' command.
     for pkg in "${pkgs[@]}"
     do
-        if [[ -L "${dict[opt_prefix]}/${pkg}" ]] && \
-            [[ -e "${dict[opt_prefix]}/${pkg}" ]]
-        then
-            continue
-        fi
-        # NOTE This approach is running into compiler issues on macOS.
-        # > koopa_cli_install "$pkg"
-        "${app[koopa]}" install --push "$pkg"
+        koopa_is_symlink "${dict[opt_prefix]}/${pkg}" && continue
+        "${app[koopa]}" install "$pkg"
     done
+    koopa_push_all_app_builds
     return 0
 }

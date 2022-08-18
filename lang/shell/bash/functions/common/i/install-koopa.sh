@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 
-# FIXME We can no longer pass '--non-interactive' through to koopa_install_app.
-# Need to think of a different approach here.
-
 # FIXME This is currently erroring if user doesn't have a bashrc file but
 # wants to write koopa activation into it...resolve this.
-
 # FIXME default profile file on macOS should be zshrc, not bashrc...
 # we may be checking wrong shell config for that.
+# FIXME We can no longer pass '--non-interactive' through to koopa_install_app.
+# Need to think of a different approach here.
 
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2022-07-12.
+    # @note Updated 2022-08-13.
     # """
     local bool dict
     # NOTE Consider requiring: 'cut', 'perl', 'tr'.
