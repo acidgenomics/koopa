@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting this CMake error on Ubuntu:
+#
+#CMake Error at /opt/koopa/app/cmake/3.24.0/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake:230 (message):
+#  Could NOT find PCRE2 (missing: PCRE2_LIBRARY)
+#Call Stack (most recent call first):
+#  /opt/koopa/app/cmake/3.24.0/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake:594 (_FPHSA_FAILURE_MESSAGE)
+#  CMake_Modules/FindPCRE2.cmake:31 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)
+#  src/CMakeLists.txt:38 (find_package)
+
 main() {
     # """
     # Install EditorConfig.
@@ -39,19 +48,18 @@ archive/${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
     koopa_mkdir 'build'
     koopa_cd 'build'
+    dict[pcre2_include_dir]="${dict[pcre2]}/include"
+    dict[pcre2_library]="${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
+    koopa_assert_is_dir "${dict[pcre2_include_dir]}"
+    koopa_assert_is_file "${dict[pcre2_library]}"
     cmake_args=(
-        # > '-DBUILD_DOCUMENTATION=False'
-        # > '-DCMAKE_BUILD_TYPE=None'
-        # > '-DCMAKE_INSTALL_LIBDIR=lib'
+        '-DBUILD_DOCUMENTATION=False'
+        '-DCMAKE_BUILD_TYPE=None'
+        '-DCMAKE_INSTALL_LIBDIR=lib'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
-        # Approach 1:
-        # > "-DPCRE2_INCLUDE_DIRS=${dict[pcre2]}/include"
-        # > "-DPCRE2_LIBRARIES=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
-        # Approach 2:
-        "-DPCRE2_INCLUDE_DIR=${dict[pcre2]}/include"
-        "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
-        # > "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2.a"
+        "-DPCRE2_INCLUDE_DIR=${dict[pcre2_include_dir]}"
+        "-DPCRE2_LIBRARY=${dict[pcre2_library]}"
     )
     koopa_print "${cmake_args[@]}"
     "${app[cmake]}" .. "${cmake_args[@]}"
