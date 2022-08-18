@@ -81,16 +81,19 @@ v${dict[version]}/${dict[file]}"
     unset -v LLVM_CONFIG
     # Customize the 'Make.user' file.
     # Need to ensure we configure internal LLVM build here.
-    # FIXME Consider saving into a lines array here, so we can make macOS-
-    # and Linux-specific configuration easier.
     "${app[cat]}" > 'Make.user' << END
 prefix=${dict[prefix]}
 libexecdir=${dict[prefix]}/lib
 sysconfdir=${dict[prefix]}/etc
 
 VERBOSE=1
-USE_BINARYBUILDER=1
 
+# > USE_BINARYBUILDER=1
+# > USE_BLAS64=0
+# > USE_LLVM_SHLIB=0
+
+# > USE_SYSTEM_ARPACK=0
+# > USE_SYSTEM_BLAS=0
 # > USE_SYSTEM_CSL=0
 # > USE_SYSTEM_CURL=0 # 1
 # > USE_SYSTEM_DSFMT=0
@@ -103,6 +106,7 @@ USE_BINARYBUILDER=1
 # > USE_SYSTEM_LIBSUITESPARSE=0
 # > USE_SYSTEM_LIBUNWIND=0
 # > USE_SYSTEM_LIBUV=0
+# > USE_SYSTEM_LLVM=0
 # > USE_SYSTEM_MBEDTLS=0
 # > USE_SYSTEM_MPFR=0 # 1
 # > USE_SYSTEM_NGHTTP2=0
@@ -113,13 +117,7 @@ USE_BINARYBUILDER=1
 # > USE_SYSTEM_PCRE=0 # 1
 # > USE_SYSTEM_SUITESPARSE=0
 # > USE_SYSTEM_UTF8PROC=0 # 1
-
-USE_SYSTEM_ARPACK=0
-USE_SYSTEM_LLVM=0
-USE_SYSTEM_ZLIB=0 # 1
-
-USE_BLAS64=0
-USE_LLVM_SHLIB=0
+# > USE_SYSTEM_ZLIB=0 # 1
 
 # > LIBBLAS=-lopenblas
 # > LIBBLASNAME=libopenblas
