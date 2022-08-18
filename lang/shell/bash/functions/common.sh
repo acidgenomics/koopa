@@ -18298,8 +18298,6 @@ koopa_r_configure_ldpaths() {
         lines+=(
             "DYLD_FALLBACK_LIBRARY_PATH=\"\${LD_LIBRARY_PATH}\""
             'export DYLD_FALLBACK_LIBRARY_PATH'
-            "DYLD_LIBRARY_PATH=\"\${LD_LIBRARY_PATH}\""
-            'export DYLD_LIBRARY_PATH'
         )
     fi
     dict[string]="$(koopa_print "${lines[@]}")"
