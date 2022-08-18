@@ -12181,6 +12181,13 @@ koopa_install_du_dust() {
         "$@"
 }
 
+koopa_install_editorconfig() {
+    koopa_install_app \
+        --link-in-bin='editorconfig' \
+        --name='editorconfig' \
+        "$@"
+}
+
 koopa_install_emacs() {
     local install_args
     install_args=('--name=emacs')
@@ -22867,6 +22874,13 @@ koopa_uninstall_du_dust() {
     koopa_uninstall_app \
         --name='du-dust' \
         --unlink-in-bin='dust' \
+        "$@"
+}
+
+koopa_uninstall_editorconfig() {
+    koopa_uninstall_app \
+        --name='editorconfig' \
+        --unlink-in-bin='editorconfig' \
         "$@"
 }
 
