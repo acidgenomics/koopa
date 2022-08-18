@@ -24,7 +24,9 @@ main() {
     [[ -x "${app[make]}" ]] || return 1
     declare -A dict=(
         [name]='editorconfig-core-c'
+        [pcre2]="$(koopa_app_prefix 'pcre2')"
         [prefix]="${INSTALL_PREFIX:?}"
+        [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
     dict[file]="v${dict[version]}.tar.gz"
@@ -38,6 +40,8 @@ archive/${dict[file]}"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        "-DPCRE2_INCLUDE_DIR=${dict[pcre2]}/lib"
+        "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
     )
     "${app[cmake]}" .. "${cmake_args[@]}"
     "${app[make]}" install
