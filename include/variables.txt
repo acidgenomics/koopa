@@ -469,7 +469,7 @@ htop="3.2.1"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.8.0"
+julia="1.7.3" # latest: 1.8.0
 
 # https://lame.sourceforge.io/
 lame="3.100"

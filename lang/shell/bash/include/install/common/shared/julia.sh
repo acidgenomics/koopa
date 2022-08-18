@@ -70,9 +70,9 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict[version]}.tar.gz"
-    dict[url]="https://github.com/JuliaLang/julia/archive/refs/\
-tags/${dict[file]}"
+    dict[file]="${dict[name]}-${dict[version]}-full.tar.gz"
+    dict[url]="https://github.com/JuliaLang/julia/releases/download/\
+v${dict[version]}/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-${dict[version]}"
@@ -87,37 +87,38 @@ libexecdir=${dict[prefix]}/lib
 sysconfdir=${dict[prefix]}/etc
 
 VERBOSE=1
-USE_BINARYBUILDER=0
+USE_BINARYBUILDER=1
 
-USE_SYSTEM_ARPACK=0
-USE_SYSTEM_BLAS=0 # 1
-USE_SYSTEM_CSL=0
-USE_SYSTEM_CURL=0 # 1
-USE_SYSTEM_DSFMT=0
-USE_SYSTEM_FFTW=0
-USE_SYSTEM_GMP=0 # 1
-USE_SYSTEM_LAPACK=0 # 1
-USE_SYSTEM_LIBGIT2=0 # 1
-USE_SYSTEM_LIBM=0
-USE_SYSTEM_LIBSSH2=0 # 1
-USE_SYSTEM_LIBSUITESPARSE=0
-USE_SYSTEM_LIBUNWIND=0
-USE_SYSTEM_LIBUV=0
+# > USE_SYSTEM_ARPACK=0
+# > USE_SYSTEM_BLAS=0 # 1
+# > USE_SYSTEM_CSL=0
+# > USE_SYSTEM_CURL=0 # 1
+# > USE_SYSTEM_DSFMT=0
+# > USE_SYSTEM_FFTW=0
+# > USE_SYSTEM_GMP=0 # 1
+# > USE_SYSTEM_LAPACK=0 # 1
+# > USE_SYSTEM_LIBGIT2=0 # 1
+# > USE_SYSTEM_LIBM=0
+# > USE_SYSTEM_LIBSSH2=0 # 1
+# > USE_SYSTEM_LIBSUITESPARSE=0
+# > USE_SYSTEM_LIBUNWIND=0
+# > USE_SYSTEM_LIBUV=0
 USE_SYSTEM_LLVM=0
-USE_SYSTEM_MBEDTLS=0
-USE_SYSTEM_MPFR=0 # 1
-USE_SYSTEM_NGHTTP2=0
-USE_SYSTEM_OPENLIBM=0
-USE_SYSTEM_OPENSPECFUN=0
-USE_SYSTEM_P7ZIP=0
-USE_SYSTEM_PATCHELF=0
-USE_SYSTEM_PCRE=0 # 1
-USE_SYSTEM_SUITESPARSE=0
-USE_SYSTEM_UTF8PROC=0 # 1
-USE_SYSTEM_ZLIB=0 # 1
+# > USE_SYSTEM_MBEDTLS=0
+# > USE_SYSTEM_MPFR=0 # 1
+# > USE_SYSTEM_NGHTTP2=0
+# > USE_SYSTEM_OPENLIBM=0
+# > USE_SYSTEM_OPENSPECFUN=0
+# > USE_SYSTEM_P7ZIP=0
+# > USE_SYSTEM_PATCHELF=0
+# > USE_SYSTEM_PCRE=0 # 1
+# > USE_SYSTEM_SUITESPARSE=0
+# > USE_SYSTEM_UTF8PROC=0 # 1
+# > USE_SYSTEM_ZLIB=0 # 1
 
 # > USE_BLAS64=0
-# > USE_LLVM_SHLIB=0
+
+USE_LLVM_SHLIB=0
 
 # > LIBBLAS=-lopenblas
 # > LIBBLASNAME=libopenblas

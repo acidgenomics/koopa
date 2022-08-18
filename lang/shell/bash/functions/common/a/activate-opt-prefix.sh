@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Have this print informative path information by default.
+#   LDFLAGS, LD_LIBRARY_PATH, etc...
 # FIXME This needs to adjust version check for git repo (e.g. chemacs for
 # spacemacs and doom-emacs.
 # FIXME Rename, using 'koopa_activate_app' instead.
