@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-08-03.
+    # @note Updated 2022-08-18.
     # """
     local app cppflags dict flibs i ldflags libs lines
     koopa_assert_has_args_eq "$#" 1
