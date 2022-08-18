@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rework bin man linkage using 'app-links.json' file and jq.
+# > jq '.coreutils.bin[]' --raw-output /opt/koopa/include/app-links.json
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
