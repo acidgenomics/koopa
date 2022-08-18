@@ -50,8 +50,8 @@ archive/${dict[file]}"
         # > "-DPCRE2_LIBRARIES=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
         # Approach 2:
         "-DPCRE2_INCLUDE_DIR=${dict[pcre2]}/include"
-        # > "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
-        "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2.a"
+        "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
+        # > "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2.a"
     )
     koopa_print "${cmake_args[@]}"
     "${app[cmake]}" .. "${cmake_args[@]}"
