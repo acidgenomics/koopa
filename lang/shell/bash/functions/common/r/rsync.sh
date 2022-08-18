@@ -3,7 +3,7 @@
 koopa_rsync() {
     # """
     # GNU rsync wrapper.
-    # @note Updated 2022-04-04.
+    # @note Updated 2022-08-14.
     #
     # Useful arguments:
     #     --delete-before         receiver deletes before xfer, not during
@@ -43,8 +43,8 @@ koopa_rsync() {
         [target_dir]=''
     )
     rsync_args=(
+        # > '--one-file-system'
         '--human-readable'
-        '--one-file-system'
         '--progress'
         '--protect-args'
         '--recursive'
@@ -93,11 +93,13 @@ koopa_rsync() {
                 dict[target_dir]="${2:?}"
                 shift 2
                 ;;
-            # Flags ------------------------------------------------------------
+            # Passthrough args -------------------------------------------------
             '--archive' | \
+            '--copy-links' | \
             '--delete' | \
             '--delete-before' | \
-            '--dry-run')
+            '--dry-run' | \
+            '--log-file='*)
                 rsync_args+=("$1")
                 shift 1
                 ;;

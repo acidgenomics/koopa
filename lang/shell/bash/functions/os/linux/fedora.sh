@@ -126,7 +126,6 @@ koopa_fedora_import_azure_cli_key() {
 
 koopa_fedora_install_bcl2fastq() {
     koopa_install_app \
-        --installer='bcl2fastq-from-rpm' \
         --link-in-bin='bcl2fastq' \
         --name='bcl2fastq' \
         --platform='fedora' \

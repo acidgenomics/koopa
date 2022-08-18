@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Have this print informative path information by default.
+#   LDFLAGS, LD_LIBRARY_PATH, etc...
+# FIXME This needs to adjust version check for git repo (e.g. chemacs for
+# spacemacs and doom-emacs.
 # FIXME Rename, using 'koopa_activate_app' instead.
 # FIXME Consider using 'koopa_activate_prefix' as an alternative variant,
 # that we can use for tricky builds, such as GnuPG...
@@ -14,11 +18,10 @@
 # https://libgit2.org/docs/guides/build-and-link/
 # > CFLAGS = $(shell pkg-config --cflags libgit2)
 
-
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-08-03.
+    # @note Updated 2022-08-11.
     #
     # Consider using 'pkg-config' to manage 'CPPFLAGS' and 'LDFLAGS':
     # > pkg-config --libs PKG_CONFIG_NAME...
@@ -86,6 +89,11 @@ koopa_activate_opt_prefix() {
         koopa_assert_is_dir "$prefix"
         current_ver="$(koopa_opt_version "$name")"
         expected_ver="$(koopa_variable "$name")"
+        # Sanitize git commit string to 8 characters.
+        if [[ "${#expected_ver}" -eq 40 ]]
+        then
+            expected_ver="${expected_ver:0:8}"
+        fi
         if [[ "$current_ver" != "$expected_ver" ]]
         then
             koopa_stop "'${name}' version mismatch at '${prefix}' \

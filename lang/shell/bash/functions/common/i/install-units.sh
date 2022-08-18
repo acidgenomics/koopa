@@ -2,8 +2,6 @@
 
 koopa_install_units() {
     koopa_install_app \
-        --activate-opt='readline' \
-        --installer='gnu-app' \
         --link-in-bin='units' \
         --name='units' \
         "$@"

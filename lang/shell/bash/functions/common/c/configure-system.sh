@@ -10,18 +10,13 @@
 # - apr-util
 # - subversion
 
-# FIXME Rework the approach to these:
-# - nim-packages
-# - rust-packages
-# - ruby-packages
-# - python-packages
-
-# FIXME Rethink this approach.
+# FIXME Rework using 'koopa_install_all_apps'.
+# FIXME Need to support 'r-packages' and 'julia-packages'.
 
 koopa_configure_system() {
     # """
     # Configure system.
-    # @note Updated 2022-06-21.
+    # @note Updated 2022-08-16.
     #
     # Intended primarily for virtual machine and Docker image builds.
     #
@@ -451,7 +446,7 @@ koopa_configure_system() {
     # - julia-packages
     # - nim
     # - nim-packages
-    # - node-binary (or node)
+    # - node
     # - node-packages
     # - ruby
     # - ruby-packages

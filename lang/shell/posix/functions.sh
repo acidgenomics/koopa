@@ -266,11 +266,11 @@ koopa_activate_coreutils_aliases() {
     mkdir='mkdir'
     mv='mv'
     rm='rm'
-    cp_args='-R -i' # '--interactive --recursive'.
-    ln_args='-ins' # '--interactive --no-dereference --symbolic'.
-    mkdir_args='-p' # '--parents'.
-    mv_args='-i' # '--interactive'
-    rm_args='-i' # '--interactive=once'.
+    cp_args='-Riv' # '--interactive --recursive --verbose'.
+    ln_args='-insv' # '--interactive --no-dereference --symbolic --verbose'.
+    mkdir_args='-pv' # '--parents --verbose'.
+    mv_args='-iv' # '--interactive --verbose'
+    rm_args='-iv' # '--interactive=once --verbose'.
     alias cp="${cp} ${cp_args}"
     alias ln="${ln} ${ln_args}"
     alias mkdir="${mkdir} ${mkdir_args}"
@@ -369,7 +369,7 @@ koopa_activate_homebrew() {
     export HOMEBREW_PREFIX="$prefix"
     if koopa_is_macos
     then
-        export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
+        export HOMEBREW_CASK_OPTS='--no-quarantine'
     fi
     return 0
 }
@@ -704,6 +704,7 @@ koopa_add_config_link() {
         source_file="${1:?}"
         dest_name="${2:?}"
         shift 2
+        [ -e "$source_file" ] || continue
         dest_file="${config_prefix}/${dest_name}"
         if [ -L "$dest_file" ] && [ -e "$dest_file" ]
         then
