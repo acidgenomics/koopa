@@ -20,6 +20,8 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/
     #     editorconfig.rb
     # - https://github.com/editorconfig/editorconfig-core-c/blob/master/
+    #     INSTALL.md
+    # - https://github.com/editorconfig/editorconfig-core-c/blob/master/
     #     CMake_Modules/FindPCRE2.cmake
     # - https://git.alpinelinux.org/aports/tree/community/editorconfig/APKBUILD
     # """
@@ -58,6 +60,7 @@ archive/${dict[file]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
         "-DPCRE2_INCLUDE_DIR=${dict[pcre2_include_dir]}"
         "-DPCRE2_LIBRARY=${dict[pcre2_library]}"
+        '-DPCRE2_FOUND=True'
     )
     koopa_print "${cmake_args[@]}"
     "${app[cmake]}" .. "${cmake_args[@]}"
