@@ -12,6 +12,7 @@ main() {
     #     editorconfig.rb
     # - https://github.com/editorconfig/editorconfig-core-c/blob/master/
     #     CMake_Modules/FindPCRE2.cmake
+    # - https://git.alpinelinux.org/aports/tree/community/editorconfig/APKBUILD
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
@@ -40,9 +41,14 @@ archive/${dict[file]}"
     koopa_cd 'build'
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+        '-DCMAKE_INSTALL_LIBDIR=lib'
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        # Approach 1:
         "-DPCRE2_INCLUDE_DIRS=${dict[pcre2]}/include"
         "-DPCRE2_LIBRARIES=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
+        # Approach 2:
+        "-DPCRE2_INCLUDE_DIR=${dict[pcre2]}/include"
+        "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
     )
     koopa_print "${cmake_args[@]}"
     "${app[cmake]}" .. "${cmake_args[@]}"
