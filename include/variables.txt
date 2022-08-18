@@ -69,6 +69,10 @@ coreutils="9.1"
 # https://curl.haxx.se/
 curl="7.84.0"
 
+# https://editorconfig.org/
+# https://github.com/editorconfig/editorconfig-core-c/
+editorconfig="0.12.5"
+
 # https://libexpat.github.io/
 expat="2.4.8"
 
