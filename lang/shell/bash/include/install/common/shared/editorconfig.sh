@@ -60,7 +60,8 @@ archive/${dict[file]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
         "-DPCRE2_INCLUDE_DIR=${dict[pcre2_include_dir]}"
         "-DPCRE2_LIBRARY=${dict[pcre2_library]}"
-        '-DPCRE2_FOUND=True'
+        # FIXME Does this help on Linux?
+        "-DCMAKE_LIBRARY_PATH=${dict[pcre2]}/lib"
     )
     koopa_print "${cmake_args[@]}"
     "${app[cmake]}" .. "${cmake_args[@]}"
