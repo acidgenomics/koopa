@@ -40,7 +40,7 @@ archive/${dict[file]}"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
-        "-DPCRE2_INCLUDE_DIR=${dict[pcre2]}/lib"
+        "-DPCRE2_INCLUDE_DIR=${dict[pcre2]}/include"
         "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
     )
     "${app[cmake]}" .. "${cmake_args[@]}"
