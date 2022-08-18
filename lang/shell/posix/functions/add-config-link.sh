@@ -3,7 +3,7 @@
 koopa_add_config_link() {
     # """
     # Add a symlink into the koopa configuration directory.
-    # @note Updated 2022-05-16.
+    # @note Updated 2022-08-12.
     # """
     local config_prefix dest_file dest_name source_file
     config_prefix="$(koopa_config_prefix)"
@@ -12,6 +12,7 @@ koopa_add_config_link() {
         source_file="${1:?}"
         dest_name="${2:?}"
         shift 2
+        [ -e "$source_file" ] || continue
         dest_file="${config_prefix}/${dest_name}"
         if [ -L "$dest_file" ] && [ -e "$dest_file" ]
         then

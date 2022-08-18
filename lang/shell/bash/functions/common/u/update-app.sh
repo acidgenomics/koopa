@@ -3,9 +3,9 @@
 koopa_update_app() {
     # """
     # Update application.
-    # @note Updated 2022-08-01.
+    # @note Updated 2022-08-15.
     # """
-    local bool clean_path_arr dict opt_arr
+    local bool clean_path_arr dict
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A bool=(
@@ -16,7 +16,6 @@ koopa_update_app() {
         [verbose]=0
     )
     declare -A dict=(
-        [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [mode]='shared'
         [name]=''
@@ -29,18 +28,9 @@ koopa_update_app() {
         [version]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    opt_arr=()
     while (("$#"))
     do
         case "$1" in
-            '--activate-opt='*)
-                opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-opt')
-                opt_arr+=("${2:?}")
-                shift 2
-                ;;
             '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
@@ -137,8 +127,8 @@ koopa_update_app() {
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     fi
     [[ -z "${dict[updater_bn]}" ]] && dict[updater_bn]="${dict[name]}"
-    dict[updater_file]="${dict[installers_prefix]}/${dict[platform]}/\
-${dict[mode]}/update-${dict[updater_bn]}.sh"
+    dict[updater_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+update/${dict[platform]}/${dict[mode]}/${dict[updater_bn]}.sh"
     koopa_assert_is_file "${dict[updater_file]}"
     # shellcheck source=/dev/null
     source "${dict[updater_file]}"
@@ -168,11 +158,6 @@ ${dict[mode]}/update-${dict[updater_bn]}.sh"
         then
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
-        fi
-        # Activate packages installed in koopa 'opt/' directory.
-        if koopa_is_array_non_empty "${opt_arr[@]:-}"
-        then
-            koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
         if [[ "${bool[update_ldconfig]}" -eq 1 ]]
         then

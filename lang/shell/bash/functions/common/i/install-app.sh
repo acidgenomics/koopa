@@ -1,27 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Consider reworking to simplify, not taking 'activate-opt'...
-# as input. Need to rethink the conceptual approach of our wrappers here.
-
-# FIXME Rework our log file approach...copy the log file to the target prefix
-# only when the build completes and is successful.
-# FIXME That way we can define checks during 'build_all_apps' that will rebuild
-# if a directory is empty. This also makes the reinstall check better because
-# a build folder will be empty.
-
-# FIXME Need to add 'koopa_is_symlink', which uses '-L' and '-e' to see if
-# the symlink is function.
-# FIXME Need to add 'koopa_is_broken_symlink', which uses '-L' and ! -'e'
-# to see if the link doesn't resolve.
-
-# FIXME Is this not creating a 'subversion' link correctly into opt?
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-08-15.
     # """
-    local app bin_arr bool build_opt_arr clean_path_arr dict i opt_arr pos
+    local app bin_arr bool clean_path_arr dict i pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
@@ -35,6 +19,7 @@ koopa_install_app() {
         # Download pre-built binary from our S3 bucket. Inspired by the
         # Homebrew bottle approach.
         [binary]=0
+        [copy_log_file]=0
         # Will any individual programs be linked into koopa 'bin/'?
         [link_in_bin]=0
         # Link corresponding man1 documentation files for app in bin.
@@ -49,6 +34,7 @@ koopa_install_app() {
         # nested install calls (e.g. Emacs installer handoff to GNU app).
         [quiet]=0
         [reinstall]=0
+        [restrict_path]=1
         [update_ldconfig]=0
         [verbose]=0
         # When enabled, shortens git commit to 8 characters.
@@ -58,8 +44,8 @@ koopa_install_app() {
         [app_prefix]="$(koopa_app_prefix)"
         [installer_bn]=''
         [installer_fun]='main'
-        [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
+        [log_file]="$(koopa_tmp_log_file)"
         [mode]='shared'
         [name]=''
         [platform]='common'
@@ -69,30 +55,12 @@ koopa_install_app() {
         [version_key]=''
     )
     bin_arr=()
-    build_opt_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    opt_arr=()
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--activate-build-opt='*)
-                build_opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-build-opt')
-                build_opt_arr+=("${2:?}")
-                shift 2
-                ;;
-            '--activate-opt='*)
-                opt_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--activate-opt')
-                opt_arr+=("${2:?}")
-                shift 2
-                ;;
             '--installer='*)
                 dict[installer_bn]="${1#*=}"
                 shift 1
@@ -175,6 +143,10 @@ koopa_install_app() {
                 bool[prefix_check]=0
                 shift 1
                 ;;
+            '--no-restrict-path')
+                bool[restrict_path]=0
+                shift 1
+                ;;
             '--quiet')
                 bool[quiet]=1
                 shift 1
@@ -194,7 +166,7 @@ koopa_install_app() {
             # Configuration passthrough support --------------------------------
             # Inspired by CMake approach using '-D' prefix.
             '-D')
-            pos+=("${2:?}")
+                pos+=("${2:?}")
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -250,8 +222,8 @@ ${dict[version2]}"
     [[ -d "${dict[prefix]}" ]] && \
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     [[ -z "${dict[installer_bn]}" ]] && dict[installer_bn]="${dict[name]}"
-    dict[installer_file]="${dict[installers_prefix]}/${dict[platform]}/\
-${dict[mode]}/install-${dict[installer_bn]}.sh"
+    dict[installer_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+install/${dict[platform]}/${dict[mode]}/${dict[installer_bn]}.sh"
     koopa_assert_is_file "${dict[installer_file]}"
     # shellcheck source=/dev/null
     source "${dict[installer_file]}"
@@ -299,9 +271,7 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[mode]}" != 'system' ]]
     then
-        dict[log_file]="${dict[prefix]}/.koopa-install.log"
-    else
-        dict[log_file]="$(koopa_tmp_log_file)"
+        bool[copy_log_file]=1
     fi
     if [[ "${bool[quiet]}" -eq 0 ]]
     then
@@ -320,22 +290,16 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
             koopa_install_app_from_binary_package "${dict[prefix]}"
             return 0
         fi
-        PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
-        export PATH
+        if [[ "${bool[restrict_path]}" -eq 1 ]]
+        then
+            PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
+            export PATH
+        fi
         if koopa_is_linux && \
             [[ -x '/usr/bin/pkg-config' ]]
         then
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
-        fi
-        # Activate packages installed in koopa 'opt/' directory.
-        if koopa_is_array_non_empty "${build_opt_arr[@]:-}"
-        then
-            koopa_activate_build_opt_prefix "${build_opt_arr[@]}"
-        fi
-        if koopa_is_array_non_empty "${opt_arr[@]:-}"
-        then
-            koopa_activate_opt_prefix "${opt_arr[@]}"
         fi
         if [[ "${bool[update_ldconfig]}" -eq 1 ]]
         then
@@ -352,6 +316,12 @@ ${dict[mode]}/install-${dict[installer_bn]}.sh"
         [[ "${bool[verbose]}" -eq 1 ]] && declare -x
         return 0
     ) 2>&1 | "${app[tee]}" "${dict[log_file]}"
+    if [[ "${bool[copy_log_file]}" -eq 1 ]]
+    then
+        koopa_cp \
+            "${dict[log_file]}" \
+            "${dict[prefix]}/.koopa-install.log"
+    fi
     koopa_rm "${dict[tmp_dir]}"
     case "${dict[mode]}" in
         'shared')

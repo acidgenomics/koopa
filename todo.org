@@ -1,6 +1,12 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Can we improve black, flake8, pylint support for automatic linting in PyCharm?
+** TODO Ensure coreutils aliases are not activated for root user on Linux.
+** TODO Consider setting apt to not prompt configuration boxes inside Debian environment.
+** TODO Rework koopa prompt to show 7 character git commit string?
+    Is this too CPU intensive with git?
+    Alternatively, consider removing any git information in default koopa prompt.
 ** TODO We need to construct a SHA256 and/or timestamp management approach.
 ** TODO Create a JSON file that manages bin links per program.
     We can then look up these values during install and uninstall calls.
