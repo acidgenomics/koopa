@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this CMake error on Ubuntu:
-#
-#CMake Error at /opt/koopa/app/cmake/3.24.0/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake:230 (message):
-#  Could NOT find PCRE2 (missing: PCRE2_LIBRARY)
-#Call Stack (most recent call first):
-#  /opt/koopa/app/cmake/3.24.0/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake:594 (_FPHSA_FAILURE_MESSAGE)
-#  CMake_Modules/FindPCRE2.cmake:31 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)
-#  src/CMakeLists.txt:38 (find_package)
-
 main() {
     # """
     # Install EditorConfig.
@@ -58,10 +49,9 @@ archive/${dict[file]}"
         '-DCMAKE_INSTALL_LIBDIR=lib'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        "-DCMAKE_LIBRARY_PATH=${dict[pcre2]}/lib"
         "-DPCRE2_INCLUDE_DIR=${dict[pcre2_include_dir]}"
         "-DPCRE2_LIBRARY=${dict[pcre2_library]}"
-        # FIXME Does this help on Linux?
-        "-DCMAKE_LIBRARY_PATH=${dict[pcre2]}/lib"
     )
     koopa_print "${cmake_args[@]}"
     "${app[cmake]}" .. "${cmake_args[@]}"
