@@ -53,8 +53,6 @@ archive/${dict[file]}"
     koopa_assert_is_dir "${dict[pcre2_include_dir]}"
     koopa_assert_is_file "${dict[pcre2_library]}"
     cmake_args=(
-        '-DBUILD_DOCUMENTATION=False'
-        '-DCMAKE_BUILD_TYPE=None'
         '-DCMAKE_INSTALL_LIBDIR=lib'
         "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
         "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
