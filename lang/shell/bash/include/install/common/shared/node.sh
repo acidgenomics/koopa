@@ -61,8 +61,8 @@ main() {
     koopa_cd "${dict[name]}-v${dict[version]}"
     koopa_alert_coffee_time
     conf_args=(
+        # > '--enable-lto'
         "--prefix=${dict[prefix]}"
-        '--enable-lto'
         '--shared-brotli'
         "--shared-brotli-includes=${dict[brotli]}/include"
         "--shared-brotli-libpath=${dict[brotli]}/lib"
