@@ -503,7 +503,7 @@ nim="1.6.6"
 oracle-instant-client="21.7.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.19"
+pandoc="2.19.1"
 
 # https://www.gnu.org/software/parallel/
 parallel="20220722"
@@ -674,7 +674,7 @@ multiqc="1.13a" # 2022-06-28 bioconda
 nextflow="22.04.5" # 2022-07-27 bioconda
 salmon="1.9.0" # 2022-06-23 bioconda
 sambamba="0.8.0" # 2021-01-02 bioconda
-samtools="1.15.1" # 2022-04-07 bioconda
+samtools="1.15.1" # 2022-04-07 bioconda; latest: 1.16
 snakemake="7.12.0" # 2022-07-29 bioconda
 star="2.7.10a" # 2022-01-15 bioconda
 visidata="2.8" # 2022-01-13 conda-forge
@@ -742,7 +742,7 @@ pytaglib="1.5.0"
 pytest="7.1.2"
 ranger-fm="1.9.3"
 scons="4.4.0"
-yt-dlp="2022.8.14"
+yt-dlp="2022.8.19"
 
 # Ruby packages (gems)
 # ==============================================================================
@@ -770,7 +770,7 @@ ripgrep="13.0.0"
 ripgrep-all="0.9.7" # rga
 # NOTE starship 1.10+ currently has problems displaying correct branch for
 # submodules inside a monorepo.
-starship="1.9.1"
+starship="1.9.1" # latest: 1.10.2
 tealdeer="1.5.0" # tldr
 tokei="12.1.2"
 tuc="0.11.0"
