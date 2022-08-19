@@ -109,6 +109,7 @@ __koopa_complete() {
                         'bowtie2'
                         'bpytop'
                         'broot'
+                        'brotli'
                         'bustools'
                         'bzip2'
                         'ca-certificates'

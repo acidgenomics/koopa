@@ -51,6 +51,9 @@ bison="3.8.2"
 # https://www.boost.org/
 boost="1.79.0"
 
+# https://github.com/google/brotli/
+brotli="1.0.9"
+
 # https://www.sourceware.org/bzip2/
 bzip2="1.0.8"
 
