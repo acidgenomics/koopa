@@ -60,6 +60,7 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-v${dict[version]}"
     koopa_alert_coffee_time
+    export PYTHON="${app[python]}"
     conf_args=(
         # > '--enable-lto'
         "--prefix=${dict[prefix]}"
@@ -85,7 +86,6 @@ main() {
         '--without-corepack'
         "--openssl-system-ca-path=${dict[cacerts]}"
         '--openssl-use-def-ca-store'
-        "PYTHON=${app[python]}"
     )
     ./configure --help
     ./configure "${conf_args[@]}"
