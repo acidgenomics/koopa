@@ -11934,6 +11934,12 @@ koopa_install_broot() {
         "$@"
 }
 
+koopa_install_brotli() {
+    koopa_install_app \
+        --name='brotli' \
+        "$@"
+}
+
 koopa_install_bustools() {
     koopa_install_app \
         --link-in-bin='bustools' \
@@ -22627,6 +22633,12 @@ koopa_uninstall_broot() {
     koopa_uninstall_app \
         --name='broot' \
         --unlink-in-bin='broot' \
+        "$@"
+}
+
+koopa_uninstall_brotli() {
+    koopa_uninstall_app \
+        --name='brotli' \
         "$@"
 }
 
