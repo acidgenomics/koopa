@@ -45,6 +45,7 @@ main() {
     export PYTHON="${app[python]}"
     conf_args=(
         # Consider adding these in the future:
+        # > "--openssl-system-ca-path=<CACERTS.PEM>"
         # > '--shared-brotli'
         # > "--shared-brotli-includes=<INCLUDE>"
         # > "--shared-brotli-libpath=<LIB>"
