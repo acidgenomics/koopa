@@ -57,6 +57,9 @@ brotli="1.0.9"
 # https://www.sourceware.org/bzip2/
 bzip2="1.0.8"
 
+# https://c-ares.org/
+c-ares="1.18.1"
+
 # https://curl.se/docs/caextract.html
 ca-certificates="2022-07-19"
 
