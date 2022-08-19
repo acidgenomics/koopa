@@ -283,4 +283,7 @@
     "rustdoc",
     "rustfmt"
   ]
+  "yarn": [
+    "yarn"
+  ]
 }

@@ -13851,6 +13851,13 @@ koopa_install_xz() {
         "$@"
 }
 
+koopa_install_yarn() {
+    koopa_install_app \
+        --link-in-bin='yarn' \
+        --name='yarn' \
+        "$@"
+}
+
 koopa_install_yq() {
     koopa_install_app \
         --link-in-bin='yq' \
@@ -24338,6 +24345,13 @@ koopa_uninstall_xz() {
     koopa_uninstall_app \
         --name='xz' \
         --unlink-in-bin='xz' \
+        "$@"
+}
+
+koopa_uninstall_yarn() {
+    koopa_uninstall_app \
+        --name='yarn' \
+        --unlink-in-bin='yarn' \
         "$@"
 }
 
