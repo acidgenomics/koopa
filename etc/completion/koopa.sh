@@ -185,6 +185,7 @@ __koopa_complete() {
                         'imagemagick'
                         'ipython'
                         'isort'
+                        'jemalloc'
                         'jpeg'
                         'jq'
                         'julia'
