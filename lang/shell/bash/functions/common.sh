@@ -12863,6 +12863,12 @@ koopa_install_libedit() {
         "$@"
 }
 
+koopa_install_libev() {
+    koopa_install_app \
+        --name='libev' \
+        "$@"
+}
+
 koopa_install_libevent() {
     koopa_install_app \
         --name='libevent' \
@@ -13118,6 +13124,12 @@ koopa_install_nextflow() {
     koopa_install_app \
         --link-in-bin='nextflow' \
         --name='nextflow' \
+        "$@"
+}
+
+koopa_install_nghttp2() {
+    koopa_install_app \
+        --name='nghttp2' \
         "$@"
 }
 
@@ -23424,6 +23436,12 @@ koopa_uninstall_libedit() {
         "$@"
 }
 
+koopa_uninstall_libev() {
+    koopa_uninstall_app \
+        --name='libev' \
+        "$@"
+}
+
 koopa_uninstall_libevent() {
     koopa_uninstall_app \
         --name='libevent' \
@@ -23668,6 +23686,12 @@ koopa_uninstall_nextflow() {
     koopa_uninstall_app \
         --name='nextflow' \
         --unlink-in-bin='nextflow' \
+        "$@"
+}
+
+koopa_uninstall_nghttp2() {
+    koopa_uninstall_app \
+        --name='nghttp2' \
         "$@"
 }
 
