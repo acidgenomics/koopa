@@ -6,9 +6,7 @@ main() {
     # @note Updated 2022-08-19.
     #
     # @seealso
-    # - http://arma.sourceforge.net/download.html
-    # - https://github.com/Homebrew/homebrew-core/blob/master/
-    #     Formula/armadillo.rb
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/brotli.rb
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"

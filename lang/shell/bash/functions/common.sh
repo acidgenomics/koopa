@@ -12588,6 +12588,12 @@ koopa_install_isort() {
         "$@"
 }
 
+koopa_install_jemalloc() {
+    koopa_install_app \
+        --name='jemalloc' \
+        "$@"
+}
+
 koopa_install_jpeg() {
     koopa_install_app \
         --name='jpeg' \
@@ -23305,6 +23311,12 @@ koopa_uninstall_isort() {
     koopa_uninstall_app \
         --name='isort' \
         --unlink-in-bin='isort' \
+        "$@"
+}
+
+koopa_uninstall_jemalloc() {
+    koopa_uninstall_app \
+        --name='jemalloc' \
         "$@"
 }
 
