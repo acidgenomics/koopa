@@ -31,7 +31,7 @@ main() {
         [jobs]="$(koopa_cpu_count)"
         [libuv]="$(koopa_app_prefix 'libuv')"
         [name]='node'
-        [openssl]="$(koopa_app_prefix 'openssl')"
+        [openssl]="$(koopa_app_prefix 'openssl3')"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
         [zlib]="$(koopa_app_prefix 'zlib')"
