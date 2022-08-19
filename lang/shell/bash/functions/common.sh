@@ -11964,6 +11964,12 @@ koopa_install_bzip2() {
         "$@"
 }
 
+koopa_install_c_ares() {
+    koopa_install_app \
+        --name='c-ares' \
+        "$@"
+}
+
 koopa_install_ca_certificates() {
     koopa_install_app \
         --name='ca-certificates' \
@@ -22663,6 +22669,12 @@ koopa_uninstall_bzip2() {
         --unlink-in-bin='bzip2recover' \
         --unlink-in-bin='bzless' \
         --unlink-in-bin='bzmore' \
+        "$@"
+}
+
+koopa_uninstall_c_ares() {
+    koopa_uninstall_app \
+        --name='c-ares' \
         "$@"
 }
 
