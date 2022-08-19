@@ -270,5 +270,17 @@
   ],
   "ghostscript": [
     "gs"
+  ],
+  "rust": [
+    "cargo",
+    "cargo-clippy",
+    "cargo-fmt",
+    "clippy-driver",
+    "rust-gdb",
+    "rust-gdbgui",
+    "rust-lldb",
+    "rustc",
+    "rustdoc",
+    "rustfmt"
   ]
 }
