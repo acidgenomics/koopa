@@ -329,6 +329,7 @@ __koopa_complete() {
                         'xsv'
                         'xxhash'
                         'xz'
+                        'yarn'
                         'yt-dlp'
                         'zellij'
                         'zlib'
