@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME The node GYP installer doesn't set LD_LIBRARY_PATH correctly.
+# Now seeing this issue: Library not loaded: 'libbrotlidec.1.dylib'
+
+# FIXME Need to figure out how to pass LD_LIBRARY_PATH correctly during
+# build argh...
+# dyld[4379]: Library not loaded: 'libbrotlidec.1.dylib'
+
+# It appears to be hard coded against /usr/lib and /usr/local/lib...
+#
+#  Reason: tried: 'libbrotlidec.1.dylib' (no such file), '/usr/local/lib/libbrotlidec.1.dylib' (no such file), '/usr/lib/libbrotlidec.1.dylib' (no such file), '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220819-161858-VrllNF5yx0/node-v16.17.0/tools/v8_gypfiles/libbrotlidec.1.dylib' (no such file), '/usr/local/lib/libbrotlidec.1.dylib' (no such file), '/usr/lib/libbrotlidec.1.dylib' (no such file)
+
 # FIXME Cryptic yarn (node package) registry error when attempting to build
 # coc.nvim dependencies in ~/.vim/plugged/coc.nvim:
 # 
@@ -14,12 +25,14 @@ main() {
     # @note Updated 2022-08-19.
     #
     # @seealso
-    # - https://github.com/nodejs/node
+    # - https://github.com/nodejs/node/blob/main/BUILDING.md
+    # - https://github.com/nodejs/node/blob/main/doc/contributing/
+    #     building-node-with-ninja.md
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/node.rb
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_build_opt_prefix 'pkg-config' 'ninja'
     deps=(
         'zlib'
         'icu4c'
@@ -63,6 +76,7 @@ main() {
     export PYTHON="${app[python]}"
     conf_args=(
         # > '--enable-lto'
+        '--ninja'
         "--prefix=${dict[prefix]}"
         '--shared-brotli'
         "--shared-brotli-includes=${dict[brotli]}/include"
