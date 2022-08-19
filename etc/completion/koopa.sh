@@ -112,6 +112,7 @@ __koopa_complete() {
                         'brotli'
                         'bustools'
                         'bzip2'
+                        'c-ares'
                         'ca-certificates'
                         'cairo'
                         'cheat'
