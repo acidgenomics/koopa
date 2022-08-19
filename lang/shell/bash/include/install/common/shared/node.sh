@@ -67,7 +67,6 @@ main() {
         "--shared-zlib-includes=${dict[zlib]}/include"
         "--shared-zlib-libpath=${dict[zlib]}/lib"
         '--with-intl=system-icu'
-        '--with-npm'
         '--without-corepack'
         '--openssl-use-def-ca-store'
     )
