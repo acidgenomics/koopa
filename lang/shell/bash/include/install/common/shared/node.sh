@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-# NOTE This currently takes a long time to install.
+# FIXME Cryptic yarn (node package) registry error when attempting to build
+# coc.nvim dependencies in ~/.vim/plugged/coc.nvim:
+# 
+# # 'yarn registry error incorrect data check'
+#
+# This is likely due to some OpenSSL issue, so rebuild Node.js with better
+# linkage, and see if that resolves.
 
 main() {
     # """
