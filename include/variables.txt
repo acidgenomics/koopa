@@ -159,6 +159,9 @@ lapack="3.10.1"
 # https://thrysoee.dk/editline/
 libedit="20210910-3.1"
 
+# http://software.schmorp.de/pkg/libev.html
+libev="4.33"
+
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
 libevent="2.1.12"
@@ -250,6 +253,9 @@ ncurses="6.3.20211021"
 
 # https://ftp.gnu.org/gnu/nettle/
 nettle="3.8.1"
+
+# https://nghttp2.org/
+nghttp2="1.48.0"
 
 # https://nodejs.org/en/download/
 node="16.17.0" # LTS
