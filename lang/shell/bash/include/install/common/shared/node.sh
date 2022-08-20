@@ -25,7 +25,7 @@
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-08-19.
+    # @note Updated 2022-08-20.
     #
     # @seealso
     # - https://github.com/nodejs/node/blob/main/BUILDING.md
@@ -78,47 +78,48 @@ main() {
     koopa_alert_coffee_time
     dict[tmp_ld_target]='tools/v8_gypfiles'
     koopa_assert_is_dir "${dict[tmp_ld_target]}"
-    dict[opt_prefix]="$(koopa_opt_prefix)"
-    # FIXME We may need to temporarily link these into '/usr/local/lib'.
-    for dep in "${deps[@]}"
-    do
-        local files
-        libdir="${dict[opt_prefix]}/${dep}/lib"
-        [[ -d "$libdir" ]] || continue
-        libdir="$(koopa_realpath "$libdir")"
-        readarray -t files <<< "$( \
-            koopa_find \
-                --max-depth=1 \
-                --min-depth=1 \
-                --prefix="$libdir" \
-                --type='f' \
-        )"
-        if koopa_is_array_non_empty "${files[@]}"
-        then
-            koopa_ln \
-                --target-directory="$PWD" \
-                "${files[@]}"
-            koopa_ln \
-                --target-directory="${dict[tmp_ld_target]}" \
-                "${files[@]}"
-        fi
-        readarray -t links <<< "$( \
-            koopa_find \
-                --max-depth=1 \
-                --min-depth=1 \
-                --prefix="$libdir" \
-                --type='l' \
-        )"
-        if koopa_is_array_non_empty "${links[@]}"
-        then
-            koopa_ln \
-                --target-directory="$PWD" \
-                "${links[@]}"
-            koopa_ln \
-                --target-directory="${dict[tmp_ld_target]}" \
-                "${links[@]}"
-        fi
-    done
+    # This approach will allow Node to install, but it will result in broken
+    # dylib files after installation.
+    # > dict[opt_prefix]="$(koopa_opt_prefix)"
+    # > for dep in "${deps[@]}"
+    # > do
+    # >     local files
+    # >     libdir="${dict[opt_prefix]}/${dep}/lib"
+    # >     [[ -d "$libdir" ]] || continue
+    # >     libdir="$(koopa_realpath "$libdir")"
+    # >     readarray -t files <<< "$( \
+    # >         koopa_find \
+    # >             --max-depth=1 \
+    # >             --min-depth=1 \
+    # >             --prefix="$libdir" \
+    # >             --type='f' \
+    # >     )"
+    # >     if koopa_is_array_non_empty "${files[@]}"
+    # >     then
+    # >         koopa_ln \
+    # >             --target-directory="$PWD" \
+    # >             "${files[@]}"
+    # >         koopa_ln \
+    # >             --target-directory="${dict[tmp_ld_target]}" \
+    # >             "${files[@]}"
+    # >     fi
+    # >     readarray -t links <<< "$( \
+    # >         koopa_find \
+    # >             --max-depth=1 \
+    # >             --min-depth=1 \
+    # >             --prefix="$libdir" \
+    # >             --type='l' \
+    # >     )"
+    # >     if koopa_is_array_non_empty "${links[@]}"
+    # >     then
+    # >         koopa_ln \
+    # >             --target-directory="$PWD" \
+    # >             "${links[@]}"
+    # >         koopa_ln \
+    # >             --target-directory="${dict[tmp_ld_target]}" \
+    # >             "${links[@]}"
+    # >     fi
+    # > done
     export PYTHON="${app[python]}"
     conf_args=(
         # > '--enable-lto'
