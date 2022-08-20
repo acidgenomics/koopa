@@ -113,9 +113,7 @@ main() {
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    # > "${app[ninja]}" -C 'out/Release' -j"${dict[jobs]}"
     "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" test
     "${app[make]}" install
     return 0
 }
