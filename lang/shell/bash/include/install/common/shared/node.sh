@@ -67,9 +67,6 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
         [zlib]="$(koopa_app_prefix 'zlib')"
-        # FIXME Take these out if the LD_LIBRARY_PATH approach doesn't work.
-        [icu4c]="$(koopa_app_prefix 'icu4c')"
-        [python]="$(koopa_app_prefix 'python')"
     )
     dict[cacerts]="${dict[ca_certificates]}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict[cacerts]}"
@@ -79,6 +76,48 @@ main() {
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-v${dict[version]}"
     koopa_alert_coffee_time
+    dict[tmp_ld_target]='tools/v8_gypfiles'
+    koopa_assert_is_dir "${dict[tmp_ld_target]}"
+    dict[opt_prefix]="$(koopa_opt_prefix)"
+    for dep in "${deps[@]}"
+    do
+        local files
+        libdir="${dict[opt_prefix]}/${dep}/lib"
+        [[ -d "$libdir" ]] || continue
+        libdir="$(koopa_realpath "$libdir")"
+        readarray -t files <<< "$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --prefix="$libdir" \
+                --type='f' \
+        )"
+        if koopa_is_array_non_empty "${files[@]}"
+        then
+            koopa_ln \
+                --target-directory="$PWD" \
+                "${files[@]}"
+            koopa_ln \
+                --target-directory="${dict[tmp_ld_target]}" \
+                "${files[@]}"
+        fi
+        readarray -t links <<< "$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --prefix="$libdir" \
+                --type='l' \
+        )"
+        if koopa_is_array_non_empty "${links[@]}"
+        then
+            koopa_ln \
+                --target-directory="$PWD" \
+                "${links[@]}"
+            koopa_ln \
+                --target-directory="${dict[tmp_ld_target]}" \
+                "${links[@]}"
+        fi
+    done
     export PYTHON="${app[python]}"
     conf_args=(
         # > '--enable-lto'
@@ -107,42 +146,6 @@ main() {
         "--openssl-system-ca-path=${dict[cacerts]}"
         '--openssl-use-def-ca-store'
     )
-    dict[tmp_ld_target]='tools/v8_gypfiles'
-    koopa_assert_is_dir "${dict[tmp_ld_target]}"
-    dict[opt_prefix]="$(koopa_opt_prefix)"
-    for dep in "${deps[@]}"
-    do
-        local files
-        libdir="${dict[opt_prefix]}/${dep}/lib"
-        [[ -d "$libdir" ]] || continue
-        libdir="$(koopa_realpath "$libdir")"
-        readarray -t files <<< "$( \
-            koopa_find \
-                --max-depth=1 \
-                --min-depth=1 \
-                --prefix="$libdir" \
-                --type='f' \
-        )"
-        if koopa_is_array_non_empty "${files[@]}"
-        then
-            koopa_ln \
-                --target-directory="${dict[tmp_ld_target]}" \
-                "${files[@]}"
-        fi
-        readarray -t links <<< "$( \
-            koopa_find \
-                --max-depth=1 \
-                --min-depth=1 \
-                --prefix="$libdir" \
-                --type='l' \
-        )"
-        if koopa_is_array_non_empty "${links[@]}"
-        then
-            koopa_ln \
-                --target-directory="${dict[tmp_ld_target]}" \
-                "${links[@]}"
-        fi
-    done
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
