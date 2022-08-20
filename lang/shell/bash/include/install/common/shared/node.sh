@@ -111,37 +111,42 @@ main() {
     # - https://stackoverflow.com/questions/16215082/
     # - https://bugs.chromium.org/p/gyp/adminIntro
     # - https://github.com/nodejs/node-gyp
+    # - https://github.com/conda-forge/nodejs-feedstock/blob/main/
+    #     recipe/build.sh
+    # - https://github.com/nodejs/gyp-next/actions/runs/711098809/workflow
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config' 'ninja'
     deps=(
+        'ca-certificates'
         'zlib'
         'icu4c'
         'libuv'
-        'python'
         'openssl3'
-        'c-ares'
-        'brotli'
-        'nghttp2'
-        'ca-certificates'
+        'python'
+        # > 'brotli'
+        # > 'c-ares'
+        # > 'nghttp2'
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         [make]="$(koopa_locate_make)"
+        # > [ninja]="$(koopa_locate_ninja)"
         [python]="$(koopa_locate_python)"
     )
     [[ -x "${app[make]}" ]] || return 1
+    # > [[ -x "${app[ninja]}" ]] || return 1
     [[ -x "${app[python]}" ]] || return 1
     app[python]="$(koopa_realpath "${app[python]}")"
     declare -A dict=(
+        # > [brotli]="$(koopa_app_prefix 'brotli')"
+        # > [cares]="$(koopa_app_prefix 'c-ares')"
+        # > [nghttp2]="$(koopa_app_prefix 'nghttp2')"
         [ca_certificates]="$(koopa_app_prefix 'ca-certificates')"
-        [brotli]="$(koopa_app_prefix 'brotli')"
-        [cares]="$(koopa_app_prefix 'c-ares')"
         [jobs]="$(koopa_cpu_count)"
         [libuv]="$(koopa_app_prefix 'libuv')"
         [name]='node'
-        [nghttp2]="$(koopa_app_prefix 'nghttp2')"
         [openssl]="$(koopa_app_prefix 'openssl3')"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -154,9 +159,9 @@ main() {
     koopa_download "${dict[url]}" "${dict[file]}"
     koopa_extract "${dict[file]}"
     koopa_cd "${dict[name]}-v${dict[version]}"
-    koopa_alert_coffee_time
-    dict[tmp_ld_target]='tools/v8_gypfiles'
-    koopa_assert_is_dir "${dict[tmp_ld_target]}"
+    # > koopa_alert_coffee_time
+    # > dict[tmp_ld_target]='tools/v8_gypfiles'
+    # > koopa_assert_is_dir "${dict[tmp_ld_target]}"
     # This approach will allow Node to install, but it will result in broken
     # dylib files after installation.
     # > dict[opt_prefix]="$(koopa_opt_prefix)"
@@ -199,23 +204,31 @@ main() {
     # >             "${links[@]}"
     # >     fi
     # > done
+    export LDFLAGS_host="${LDFLAGS:?}"
     export PYTHON="${app[python]}"
+    # conda-forge currently uses shared libuv, openssl, zlib.
     conf_args=(
+        # > '--cross-compiling'
         # > '--enable-lto'
-        '--ninja'
+        # > '--error-on-warn'
+        # > '--v8-options'
         "--prefix=${dict[prefix]}"
-        '--shared-brotli'
-        "--shared-brotli-includes=${dict[brotli]}/include"
-        "--shared-brotli-libpath=${dict[brotli]}/lib"
-        '--shared-cares'
-        "--shared-cares-includes=${dict[cares]}/include"
-        "--shared-cares-libpath=${dict[cares]}/lib"
+        '--ninja'
+        "--openssl-system-ca-path=${dict[cacerts]}"
+        '--openssl-use-def-ca-store'
+        '--shared'
+        # > '--shared-brotli'
+        # > "--shared-brotli-includes=${dict[brotli]}/include"
+        # > "--shared-brotli-libpath=${dict[brotli]}/lib"
+        # > '--shared-cares'
+        # > "--shared-cares-includes=${dict[cares]}/include"
+        # > "--shared-cares-libpath=${dict[cares]}/lib"
         '--shared-libuv'
         "--shared-libuv-includes=${dict[libuv]}/include"
         "--shared-libuv-libpath=${dict[libuv]}/lib"
-        '--shared-nghttp2'
-        "--shared-nghttp2-includes=${dict[nghttp2]}/include"
-        "--shared-nghttp2-libpath=${dict[nghttp2]}/lib"
+        # > '--shared-nghttp2'
+        # > "--shared-nghttp2-includes=${dict[nghttp2]}/include"
+        # > "--shared-nghttp2-libpath=${dict[nghttp2]}/lib"
         '--shared-openssl'
         "--shared-openssl-includes=${dict[openssl]}/include"
         "--shared-openssl-libpath=${dict[openssl]}/lib"
@@ -224,11 +237,12 @@ main() {
         "--shared-zlib-libpath=${dict[zlib]}/lib"
         '--with-intl=system-icu'
         '--without-corepack'
-        "--openssl-system-ca-path=${dict[cacerts]}"
-        '--openssl-use-def-ca-store'
+        '--without-node-snapshot'
+        '--verbose'
     )
     ./configure --help
     ./configure "${conf_args[@]}"
+    # > "${app[ninja]}" -C 'out/Release' -j"${dict[jobs]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test
     "${app[make]}" install
