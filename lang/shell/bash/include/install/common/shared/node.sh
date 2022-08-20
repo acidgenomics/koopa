@@ -79,6 +79,7 @@ main() {
     dict[tmp_ld_target]='tools/v8_gypfiles'
     koopa_assert_is_dir "${dict[tmp_ld_target]}"
     dict[opt_prefix]="$(koopa_opt_prefix)"
+    # FIXME We may need to temporarily link these into '/usr/local/lib'.
     for dep in "${deps[@]}"
     do
         local files
