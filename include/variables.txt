@@ -258,6 +258,7 @@ nettle="3.8.1"
 nghttp2="1.48.0"
 
 # https://nodejs.org/en/download/
+# > node="18.7.0"
 node="16.17.0" # LTS
 
 # https://github.com/kkos/oniguruma/
