@@ -22,6 +22,76 @@
 # This is likely due to some OpenSSL issue, so rebuild Node.js with better
 # linkage, and see if that resolves.
 
+
+
+# The answer may be here for GYP:
+# https://chromium.googlesource.com/external/github.com/v8/v8.wiki/+/c62669e6c70cc82c55ced64faf44804bd28f33d5/Building-with-Gyp.md
+#
+# Custom build settings
+#
+# You can export the GYP_DEFINES environment variable in your shell to configure
+# custom build options.
+#
+# The syntax is GYP_DEFINES="-Dvariable1=value1 -Dvariable2=value2" and so on
+# for as many variables as you wish. Possibly interesting options include:
+#    -Dcomponent=shared_library (see library=shared in the GCC + make section above)
+#    -Dconsole=readline (see console=readline)
+#    -Dv8_enable_disassembler=1 (see disassembler=on)
+#    -Dv8_use_snapshot='false' (see snapshot=off)
+#    -Dv8_enable_gdbjit=1 (see gdbjit=on)
+#    -Dv8_use_liveobjectlist=true (see liveobjectlist=on)
+
+
+
+# Use this as the reference:
+# https://stackoverflow.com/questions/16215082/node-gyp-include-and-library-directories-with-boost/16216870#16216870
+
+# You need to add them in the binding.gyp file:
+#
+# 'include_dirs': [
+#   '<some directory>',
+# ],
+# 'libraries': [
+#   '-l<some library>', '-L<some library directory>'
+# ]
+
+
+
+
+# Custom binding.gyp example:
+#
+#{
+#  "targets": [
+#    {
+#      "target_name": "target1",
+#      "sources": [ # some files #],
+#      "direct_dependent_settings":
+#      {
+#        "include_dirs": [ "C:\Boost\boost_1_53_0" ]
+#      },
+#      "link_settings": 
+#      {
+#        "libraries": [ "-LC:\Boost\boost_1_53_0\stage\lib" ]
+#      },
+#    },
+#    {
+#      "target_name": "target2",
+#      "sources": [ # some files # ],
+#      "direct_dependent_settings":
+#      {
+#      	"include_dirs": [ "C:\Boost\boost_1_53_0" ]
+#      },
+#      "link_settings": 
+#      {
+#        "libraries": [ "C:\Boost\boost_1_53_0\stage\lib" ]
+#      },
+#    },
+#  ],
+#}
+
+
+
+
 main() {
     # """
     # Install Node.js.
@@ -32,6 +102,15 @@ main() {
     # - https://github.com/nodejs/node/blob/main/doc/contributing/
     #     building-node-with-ninja.md
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/node.rb
+    # - https://code.google.com/p/v8/wiki/BuildingWithGYP
+    # - https://chromium.googlesource.com/external/github.com/v8/v8.wiki/+/
+    #     c62669e6c70cc82c55ced64faf44804bd28f33d5/Building-with-Gyp.md
+    # - https://v8.dev/docs/build-gn
+    # - https://code.google.com/archive/p/pyv8/
+    # - https://stackoverflow.com/questions/29773160/
+    # - https://stackoverflow.com/questions/16215082/
+    # - https://bugs.chromium.org/p/gyp/adminIntro
+    # - https://github.com/nodejs/node-gyp
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
