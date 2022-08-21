@@ -350,7 +350,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         do
             local dict2
             declare -A dict2
-            dict2['name']="${bin_arr['i']}"
+            dict2['name']="${bin_arr[$i]}"
             dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
             koopa_link_in_bin \
                 --name="${dict2['name']}" \
@@ -363,7 +363,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         do
             local dict2
             declare -A dict2
-            dict2['name']="${bin_arr['i']}.1"
+            dict2['name']="${bin_arr[$i]}.1"
             dict2['manfile1']="${dict['prefix']}/share/man/man1/${dict2['name']}"
             dict2['manfile2']="${dict['prefix']}/man/man1/${dict2['name']}"
             if [[ -f "${dict2['manfile1']}" ]]

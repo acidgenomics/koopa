@@ -391,6 +391,79 @@
   "make": [
     "make"
   ],
+  "man-db": [
+    "man"
+  ],
+  "mcfly": [
+    "mcfly"
+  ],
+  "mdcat": [
+    "mdcat"
+  ],
+  "meson": [
+    "meson"
+  ],
+  "multiqc": [
+    "multiqc"
+  ],
+  "ncurses": [
+    "captoinfo",
+    "clear",
+    "infocmp",
+    "infotocap",
+    "reset",
+    "tabs",
+    "tic",
+    "toe",
+    "tput",
+    "tset"
+  ],
+  "neofetch": [
+    "neofetch"
+  ],
+  "neovim": [
+    "nvim"
+  ],
+  "nextflow": [
+    "nextflow"
+  ],
+  "ninja": [
+    "ninja"
+  ],
+  "node": [
+    "node",
+    "npm"
+  ],
+  "openjdk": [
+    "jar",
+    "java",
+    "javac"
+  ],
+  "openssl3": [
+    "openssl"
+  ],
+  "pandoc": [
+    "pandoc"
+  ],
+  "parallel": [
+    "parallel"
+  ],
+  "password-store": [
+    "pass"
+  ],
+  "patch": [
+    "patch"
+  ],
+  "pcre": [
+    "pcre-config",
+    "pcregrep",
+    "pcretest"
+  ],
+  "pcre2": [
+    "pcre2-config",
+    "pcre2grep",
+    "pcre2test"
+  ],
   "rust": [
     "cargo",
     "cargo-clippy",

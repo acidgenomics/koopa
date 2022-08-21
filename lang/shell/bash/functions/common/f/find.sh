@@ -306,7 +306,7 @@ koopa_find() {
                         for i in "${!globs1[@]}"
                         do
                             globs2+=(
-                                "-name ${globs1['i']}"
+                                "-name ${globs1[$i]}"
                             )
                         done
                         str="( $(koopa_paste --sep=' -o ' "${globs2[@]}") )"

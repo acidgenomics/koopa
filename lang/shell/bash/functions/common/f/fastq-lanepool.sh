@@ -98,8 +98,8 @@ koopa_fastq_lanepool() {
     for i in "${!out[@]}"
     do
         "${app['cat']}" \
-            "${dict['source_dir']}/${head['i']}_L00"[1-9]"_${tail['i']}" \
-            > "${out['i']}"
+            "${dict['source_dir']}/${head[$i]}_L00"[1-9]"_${tail[$i]}" \
+            > "${out[$i]}"
     done
     return 0
 }

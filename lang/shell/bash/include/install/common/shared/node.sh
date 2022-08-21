@@ -1,19 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Cryptic yarn (node package) registry error when attempting to build
-# coc.nvim dependencies in ~/.vim/plugged/coc.nvim:
-# 
-# # 'yarn registry error incorrect data check'
-#
-# This is likely due to some OpenSSL issue, so rebuild Node.js with better
-# linkage, and see if that resolves.
-
-
-
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-08-20.
+    # @note Updated 2022-08-21.
     #
     # @seealso
     # - https://github.com/nodejs/node/blob/main/BUILDING.md
@@ -43,9 +33,9 @@ main() {
         'libuv'
         'openssl3'
         'python'
+        'c-ares'
+        'nghttp2'
         # > 'brotli'
-        # > 'c-ares'
-        # > 'nghttp2'
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
@@ -58,11 +48,11 @@ main() {
     declare -A dict=(
         # > [brotli]="$(koopa_app_prefix 'brotli')"
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-        # > [cares]="$(koopa_app_prefix 'c-ares')"
+        [cares]="$(koopa_app_prefix 'c-ares')"
         ['jobs']="$(koopa_cpu_count)"
         ['libuv']="$(koopa_app_prefix 'libuv')"
         ['name']='node'
-        # > [nghttp2]="$(koopa_app_prefix 'nghttp2')"
+        [nghttp2]="$(koopa_app_prefix 'nghttp2')"
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
@@ -91,15 +81,15 @@ main() {
         # > '--shared-brotli'
         # > "--shared-brotli-includes=${dict['brotli']}/include"
         # > "--shared-brotli-libpath=${dict['brotli']}/lib"
-        # > '--shared-cares'
-        # > "--shared-cares-includes=${dict['cares']}/include"
-        # > "--shared-cares-libpath=${dict['cares']}/lib"
+        '--shared-cares'
+        "--shared-cares-includes=${dict['cares']}/include"
+        "--shared-cares-libpath=${dict['cares']}/lib"
         '--shared-libuv'
         "--shared-libuv-includes=${dict['libuv']}/include"
         "--shared-libuv-libpath=${dict['libuv']}/lib"
-        # > '--shared-nghttp2'
-        # > "--shared-nghttp2-includes=${dict['nghttp2']}/include"
-        # > "--shared-nghttp2-libpath=${dict['nghttp2']}/lib"
+        '--shared-nghttp2'
+        "--shared-nghttp2-includes=${dict['nghttp2']}/include"
+        "--shared-nghttp2-libpath=${dict['nghttp2']}/lib"
         '--shared-openssl'
         "--shared-openssl-includes=${dict['openssl']}/include"
         "--shared-openssl-libpath=${dict['openssl']}/lib"

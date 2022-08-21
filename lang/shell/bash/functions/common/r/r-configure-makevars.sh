@@ -49,7 +49,7 @@ koopa_r_configure_makevars() {
         flibs=()
         for i in "${!libs[@]}"
         do
-            flibs+=("-L${libs['i']}")
+            flibs+=("-L${libs[$i]}")
         done
         flibs+=('-lgfortran')
         # quadmath not yet supported for aarch64.
