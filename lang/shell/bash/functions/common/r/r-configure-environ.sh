@@ -80,19 +80,19 @@ koopa_r_configure_environ() {
     local app dict i key keys lines path_arr pkgconfig_arr
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [cat]="$(koopa_locate_cat)"
-        [r]="${1:?}"
-        [sort]="$(koopa_locate_sort)"
+        ['cat']="$(koopa_locate_cat)"
+        ['r']="${1:?}"
+        ['sort']="$(koopa_locate_sort)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [opt_prefix]="$(koopa_opt_prefix)"
-        [r_prefix]="$(koopa_r_prefix "${app['r']}")"
-        [system]=0
-        [tmp_file]="$(koopa_tmp_file)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['opt_prefix']="$(koopa_opt_prefix)"
+        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+        ['system']=0
+        ['tmp_file']="$(koopa_tmp_file)"
     )
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
     ! koopa_is_koopa_app "${app['r']}" && dict[system]=1

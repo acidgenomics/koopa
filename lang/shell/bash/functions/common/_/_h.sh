@@ -8,8 +8,8 @@ __koopa_h() {
     local dict
     koopa_assert_has_args_ge "$#" 2
     declare -A dict=(
-        [emoji]="$(koopa_acid_emoji)"
-        [level]="${1:?}"
+        ['emoji']="$(koopa_acid_emoji)"
+        ['level']="${1:?}"
     )
     shift 1
     case "${dict['level']}" in

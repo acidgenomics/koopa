@@ -11,15 +11,15 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'zlib' 'gcc'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='hdf5'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
-        [zlib]="$(koopa_app_prefix 'zlib')"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='hdf5'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
+        ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"

@@ -14,11 +14,11 @@ koopa_python_pip_install() {
     local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [python]="$(koopa_locate_python)"
+        ['python']="$(koopa_locate_python)"
     )
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
-        [prefix]=''
+        ['prefix']=''
     )
     pos=()
     while (("$#"))

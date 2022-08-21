@@ -51,11 +51,11 @@ koopa_activate_opt_prefix() {
     local app dict name pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [pkg_config]="$(koopa_locate_pkg_config --allow-missing)"
+        ['pkg_config']="$(koopa_locate_pkg_config --allow-missing)"
     )
     declare -A dict=(
-        [build_only]=0
-        [opt_prefix]="$(koopa_opt_prefix)"
+        ['build_only']=0
+        ['opt_prefix']="$(koopa_opt_prefix)"
     )
     pos=()
     while (("$#"))

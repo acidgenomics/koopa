@@ -18,15 +18,15 @@ koopa_cp() {
     # """
     local app cp cp_args dict mkdir pos rm
     declare -A app=(
-        [cp]="$(koopa_locate_cp)"
-        [mkdir]='koopa_mkdir'
-        [rm]='koopa_rm'
+        ['cp']="$(koopa_locate_cp)"
+        ['mkdir']='koopa_mkdir'
+        ['rm']='koopa_rm'
     )
     [[ -x "${app['cp']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
-        [symlink]=0
-        [target_dir]=''
+        ['sudo']=0
+        ['symlink']=0
+        ['target_dir']=''
     )
     pos=()
     while (("$#"))

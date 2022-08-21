@@ -6,13 +6,13 @@ koopa_fedora_add_azure_cli_repo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [tee]="$(koopa_locate_tee)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        [file]='/etc/yum.repos.d/azure-cli.repo'
+        ['file']='/etc/yum.repos.d/azure-cli.repo'
     )
     [[ -f "${dict['file']}" ]] && return 0
     "${app['sudo']}" "${app['tee']}" "${dict['file']}" >/dev/null << END
@@ -31,17 +31,17 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [tee]="$(koopa_locate_tee)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [enabled]=1
-        [file]='/etc/yum.repos.d/google-cloud-sdk.repo'
-        [gpgcheck]=1
-        [repo_gpgcheck]=0
+        ['arch']="$(koopa_arch)"
+        ['enabled']=1
+        ['file']='/etc/yum.repos.d/google-cloud-sdk.repo'
+        ['gpgcheck']=1
+        ['repo_gpgcheck']=0
     )
     case "${dict['arch']}" in
         'x86_64')
@@ -98,8 +98,8 @@ koopa_fedora_dnf_remove() {
 koopa_fedora_dnf() {
     local app
     declare -A app=(
-        [dnf]="$(koopa_fedora_locate_dnf)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['dnf']="$(koopa_fedora_locate_dnf)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['dnf']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
@@ -112,13 +112,13 @@ koopa_fedora_import_azure_cli_key() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [rpm]="$(koopa_fedora_locate_rpm)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['rpm']="$(koopa_fedora_locate_rpm)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['rpm']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [key]='https://packages.microsoft.com/keys/microsoft.asc'
+        ['key']='https://packages.microsoft.com/keys/microsoft.asc'
     )
     "${app['sudo']}" "${app['rpm']}" --import "${dict['key']}"
     return 0
@@ -136,8 +136,8 @@ koopa_fedora_install_from_rpm() {
     local app
     koopa_assert_has_args "$#"
     declare -A app=(
-        [rpm]="$(koopa_fedora_locate_rpm)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['rpm']="$(koopa_fedora_locate_rpm)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['rpm']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
@@ -209,17 +209,17 @@ koopa_fedora_set_locale() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [locale]="$(koopa_locate_locale)"
-        [localedef]="$(koopa_locate_localedef)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['locale']="$(koopa_locate_locale)"
+        ['localedef']="$(koopa_locate_localedef)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['locale']}" ]] || return 1
     [[ -x "${app['localedef']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [lang]='en'
-        [country]='US'
-        [charset]='UTF-8'
+        ['lang']='en'
+        ['country']='US'
+        ['charset']='UTF-8'
     )
     dict['lang_string']="${dict['lang']}_${dict['country']}.${dict['charset']}"
     koopa_alert "Setting locale to '${dict['lang_string']}'."

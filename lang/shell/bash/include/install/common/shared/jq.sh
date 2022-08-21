@@ -24,18 +24,18 @@ main() {
         'libtool' \
         'oniguruma'
     declare -A app=(
-        [autoreconf]="$(koopa_locate_autoreconf)"
-        [libtoolize]="$(koopa_locate_libtoolize)"
-        [make]="$(koopa_locate_make)"
+        ['autoreconf']="$(koopa_locate_autoreconf)"
+        ['libtoolize']="$(koopa_locate_libtoolize)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['autoreconf']}" ]] || return 1
     [[ -x "${app['libtoolize']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='jq'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='jq'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['url_stem']="https://github.com/stedolan/${dict['name']}"
     case "${dict['version']}" in

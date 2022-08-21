@@ -7,11 +7,11 @@ koopa_mkdir() {
     # """
     local app dict mkdir mkdir_args pos
     declare -A app=(
-        [mkdir]="$(koopa_locate_mkdir)"
+        ['mkdir']="$(koopa_locate_mkdir)"
     )
     [[ -x "${app['mkdir']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))

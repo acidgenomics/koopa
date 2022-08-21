@@ -15,13 +15,13 @@ koopa_aws_batch_fetch_and_run() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_set 'BATCH_FILE_URL' "${BATCH_FILE_URL:-}"
     declare -A app=(
-        [aws]="$(koopa_locate_aws)"
+        ['aws']="$(koopa_locate_aws)"
     )
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
-        [file]="$(koopa_tmp_file)"
-        [profile]="${AWS_PROFILE:-}"
-        [url]="${BATCH_FILE_URL:?}"
+        ['file']="$(koopa_tmp_file)"
+        ['profile']="${AWS_PROFILE:-}"
+        ['url']="${BATCH_FILE_URL:?}"
     )
     [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     case "${dict['url']}" in

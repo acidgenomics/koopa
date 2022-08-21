@@ -9,15 +9,15 @@ koopa_debian_apt_enable_deb_src() {
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
     declare -A app=(
-        [apt_get]="$(koopa_debian_locate_apt_get)"
-        [sed]="$(koopa_locate_sed)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['apt_get']="$(koopa_debian_locate_apt_get)"
+        ['sed']="$(koopa_locate_sed)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['apt_get']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [file]="${1:-}"
+        ['file']="${1:-}"
     )
     [[ -z "${dict['file']}" ]] && dict[file]="$(koopa_debian_apt_sources_file)"
     koopa_assert_is_file "${dict['file']}"

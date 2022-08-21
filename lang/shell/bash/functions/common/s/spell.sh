@@ -16,8 +16,8 @@ koopa_spell() {
     local app
     koopa_assert_has_args "$#"
     declare -A app=(
-        [aspell]="$(koopa_locate_aspell)"
-        [tail]="$(koopa_locate_tail)"
+        ['aspell']="$(koopa_locate_aspell)"
+        ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['aspell']}" ]] || return 1
     [[ -x "${app['tail']}" ]] || return 1

@@ -12,19 +12,19 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [hdiutil]="$(koopa_macos_locate_hdiutil)"
-        [installer]="$(koopa_macos_locate_installer)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['hdiutil']="$(koopa_macos_locate_hdiutil)"
+        ['installer']="$(koopa_macos_locate_installer)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['hdiutil']}" ]] || return 1
     [[ -x "${app['installer']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [make_prefix]="$(koopa_make_prefix)"
-        [name]='gfortran'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['make_prefix']="$(koopa_make_prefix)"
+        ['name']='gfortran'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     case "${dict['arch']}" in
         'aarch64')

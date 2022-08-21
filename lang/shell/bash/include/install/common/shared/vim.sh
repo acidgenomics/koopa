@@ -15,17 +15,17 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'ncurses' 'python'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
-        [python]="$(koopa_locate_python)"
+        ['make']="$(koopa_locate_make)"
+        ['python']="$(koopa_locate_python)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='vim'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='vim'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['vim_rpath']="${dict['prefix']}/lib"
     dict['python']="$(koopa_app_prefix 'python')"

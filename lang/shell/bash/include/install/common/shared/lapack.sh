@@ -15,14 +15,14 @@ main() {
     koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
     koopa_activate_opt_prefix 'gcc'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
+        ['cmake']="$(koopa_locate_cmake)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='lapack'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='lapack'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/Reference-LAPACK/${dict['name']}/archive/\

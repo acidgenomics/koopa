@@ -24,13 +24,13 @@ koopa_configure_dotfiles() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [bash]="$(koopa_locate_bash)"
+        ['bash']="$(koopa_locate_bash)"
     )
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
-        [cm_prefix]="$(koopa_xdg_data_home)/chezmoi"
-        [name]='dotfiles'
-        [prefix]="${1:-}"
+        ['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"
+        ['name']='dotfiles'
+        ['prefix']="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_dotfiles_prefix)"
     koopa_assert_is_dir "${dict['prefix']}"

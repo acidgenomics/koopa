@@ -45,12 +45,12 @@ koopa_is_admin() {
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.
     declare -A app=(
-        [groups]="$(koopa_locate_groups)"
+        ['groups']="$(koopa_locate_groups)"
     )
     [[ -x "${app['groups']}" ]] || return 1
     declare -A dict=(
-        [groups]="$("${app['groups']}")"
-        [pattern]='\b(admin|root|sudo|wheel)\b'
+        ['groups']="$("${app['groups']}")"
+        ['pattern']='\b(admin|root|sudo|wheel)\b'
     )
     [[ -n "${dict['groups']}" ]] || return 1
     koopa_str_detect_regex \

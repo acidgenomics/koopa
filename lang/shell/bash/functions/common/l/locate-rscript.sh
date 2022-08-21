@@ -3,7 +3,7 @@
 koopa_locate_rscript() {
     local app
     declare -A app=(
-        [r]="$(koopa_locate_r)"
+        ['r']="$(koopa_locate_r)"
     )
     [[ -x "${app['r']}" ]] || return 1
     app['rscript']="${app['r']}script"

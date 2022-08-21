@@ -23,19 +23,19 @@ koopa_bash_prompt_string() {
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        [conda]="\$(koopa_prompt_conda)"
-        [conda_color]=33
-        [git]="\$(koopa_prompt_git)"
-        [git_color]=32
-        [newline]='\n'
-        [prompt]='\$'
-        [prompt_color]=35
-        [user]="$(koopa_user)@$(koopa_hostname)"
-        [user_color]=36
-        [venv]="\$(koopa_prompt_python_venv)"
-        [venv_color]=33
-        [wd]='\w'
-        [wd_color]=34
+        ['conda']="\$(koopa_prompt_conda)"
+        ['conda_color']=33
+        ['git']="\$(koopa_prompt_git)"
+        ['git_color']=32
+        ['newline']='\n'
+        ['prompt']='\$'
+        ['prompt_color']=35
+        ['user']="$(koopa_user)@$(koopa_hostname)"
+        ['user_color']=36
+        ['venv']="\$(koopa_prompt_python_venv)"
+        ['venv_color']=33
+        ['wd']='\w'
+        ['wd_color']=34
     )
     printf '%s%s%s%s%s%s%s%s%s ' \
         "${dict['newline']}" \

@@ -15,14 +15,14 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [r]="$(koopa_locate_r)"
+        ['r']="$(koopa_locate_r)"
     )
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)" # e.g. 'x86_64'.
-        [arch2]="$(koopa_arch2)" # e.g. 'amd64'.
-        [name]='shiny-server'
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
+        ['arch2']="$(koopa_arch2)" # e.g. 'amd64'.
+        ['name']='shiny-server'
+        ['version']="${INSTALL_VERSION:?}"
     )
     if koopa_is_debian_like
     then

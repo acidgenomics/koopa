@@ -12,14 +12,14 @@ koopa_sudo_append_string() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [tee]="$(koopa_locate_tee)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        [file]=''
-        [string]=''
+        ['file']=''
+        ['string']=''
     )
     while (("$#"))
     do

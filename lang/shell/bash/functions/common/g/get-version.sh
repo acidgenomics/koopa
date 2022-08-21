@@ -15,9 +15,9 @@ koopa_get_version() {
     local dict pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [app_name]=''
-        [opt_name]=''
-        [opt_prefix]="$(koopa_opt_prefix)"
+        ['app_name']=''
+        ['opt_name']=''
+        ['opt_prefix']="$(koopa_opt_prefix)"
     )
     pos=()
     while (("$#"))

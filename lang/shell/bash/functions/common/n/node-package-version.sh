@@ -14,8 +14,8 @@ koopa_node_package_version() {
     local app pkg
     koopa_assert_has_args "$#"
     declare -A app=(
-        [jq]="$(koopa_locate_jq)"
-        [npm]="$(koopa_locate_npm)"
+        ['jq']="$(koopa_locate_jq)"
+        ['npm']="$(koopa_locate_npm)"
     )
     [[ -x "${app['jq']}" ]] || return 1
     [[ -x "${app['npm']}" ]] || return 1

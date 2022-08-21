@@ -17,7 +17,7 @@ koopa_strip_left() {
     # """
     local dict pos str
     declare -A dict=(
-        [pattern]=''
+        ['pattern']=''
     )
     pos=()
     while (("$#"))

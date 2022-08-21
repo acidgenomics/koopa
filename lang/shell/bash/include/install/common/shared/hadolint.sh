@@ -13,15 +13,15 @@ main() {
     local app dict install_args stack_args
     koopa_activate_build_opt_prefix 'haskell-stack'
     declare -A app=(
-        [stack]="$(koopa_locate_stack)"
+        ['stack']="$(koopa_locate_stack)"
     )
     [[ -x "${app['stack']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='hadolint'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [stack_root]="$(koopa_init_dir 'stack')"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='hadolint'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['stack_root']="$(koopa_init_dir 'stack')"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\

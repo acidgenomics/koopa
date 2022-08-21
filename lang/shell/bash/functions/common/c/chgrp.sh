@@ -7,11 +7,11 @@ koopa_chgrp() {
     # """
     local app chgrp dict pos
     declare -A app=(
-        [chgrp]="$(koopa_locate_chgrp)"
+        ['chgrp']="$(koopa_locate_chgrp)"
     )
     [[ -x "${app['chgrp']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))

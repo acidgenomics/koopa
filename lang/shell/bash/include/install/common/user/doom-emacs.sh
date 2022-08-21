@@ -24,13 +24,13 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'chemacs'
     declare -A app=(
-        [emacs]="$(koopa_locate_emacs)"
+        ['emacs']="$(koopa_locate_emacs)"
     )
     [[ -x "${app['emacs']}" ]] || return 1
     declare -A dict=(
-        [branch]='master'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [url]='https://github.com/hlissner/doom-emacs.git'
+        ['branch']='master'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['url']='https://github.com/hlissner/doom-emacs.git'
     )
     koopa_add_to_path_start "$(koopa_dirname "${app['emacs']}")"
     koopa_git_clone \

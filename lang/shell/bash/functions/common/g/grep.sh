@@ -28,16 +28,16 @@ koopa_grep() {
     koopa_assert_has_args "$#"
     declare -A app
     declare -A dict=(
-        [boolean]=0
-        [engine]="${KOOPA_GREP_ENGINE:-}"
-        [file]=''
-        [invert_match]=0
-        [only_matching]=0
-        [mode]='fixed' # or 'regex'.
-        [pattern]=''
-        [stdin]=1
-        [string]=''
-        [sudo]=0
+        ['boolean']=0
+        ['engine']="${KOOPA_GREP_ENGINE:-}"
+        ['file']=''
+        ['invert_match']=0
+        ['only_matching']=0
+        ['mode']='fixed' # or 'regex'.
+        ['pattern']=''
+        ['stdin']=1
+        ['string']=''
+        ['sudo']=0
     )
     while (("$#"))
     do

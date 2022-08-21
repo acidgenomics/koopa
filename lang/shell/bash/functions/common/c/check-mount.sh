@@ -11,10 +11,10 @@ koopa_check_mount() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [wc]="$(koopa_locate_wc)"
+        ['wc']="$(koopa_locate_wc)"
     )
     declare -A dict=(
-        [prefix]="${1:?}"
+        ['prefix']="${1:?}"
     )
     if [[ ! -r "${dict['prefix']}" ]] || [[ ! -d "${dict['prefix']}" ]]
     then

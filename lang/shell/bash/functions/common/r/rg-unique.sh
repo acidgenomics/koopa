@@ -8,13 +8,13 @@ koopa_rg_unique() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [rg]="$(koopa_locate_rg)"
-        [sort]="$(koopa_locate_sort)"
+        ['rg']="$(koopa_locate_rg)"
+        ['sort']="$(koopa_locate_sort)"
     )
     [[ -x "${app['rg']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
-        [pattern]="${1:?}"
+        ['pattern']="${1:?}"
     )
     dict['str']="$( \
         "${app['rg']}" \

@@ -11,12 +11,12 @@ koopa_gpg_download_key_from_keyserver() {
     local app cp dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [gpg]="$(koopa_locate_gpg)"
+        ['gpg']="$(koopa_locate_gpg)"
     )
     [[ -x "${app['gpg']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
-        [tmp_dir]="$(koopa_tmp_dir)"
+        ['sudo']=0
+        ['tmp_dir']="$(koopa_tmp_dir)"
     )
     dict['tmp_file']="${dict['tmp_dir']}/export.gpg"
     while (("$#"))

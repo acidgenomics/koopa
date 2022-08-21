@@ -24,9 +24,9 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     if koopa_is_macos
     then

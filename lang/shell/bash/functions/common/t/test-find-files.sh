@@ -10,7 +10,7 @@ koopa_test_find_files() {
     local dict files
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [prefix]="$(koopa_koopa_prefix)"
+        ['prefix']="$(koopa_koopa_prefix)"
     )
     readarray -t files <<< "$( \
         koopa_find \

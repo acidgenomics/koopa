@@ -8,12 +8,12 @@ koopa_touch() {
     local app mkdir pos touch
     koopa_assert_has_args "$#"
     declare -A app=(
-        [mkdir]='koopa_mkdir'
-        [touch]="$(koopa_locate_touch)"
+        ['mkdir']='koopa_mkdir'
+        ['touch']="$(koopa_locate_touch)"
     )
     [[ -x "${app['touch']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))

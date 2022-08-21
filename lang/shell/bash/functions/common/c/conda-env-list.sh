@@ -8,7 +8,7 @@ koopa_conda_env_list() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [conda]="$(koopa_locate_mamba_or_conda)"
+        ['conda']="$(koopa_locate_mamba_or_conda)"
     )
     [[ -x "${app['conda']}" ]] || return 1
     str="$("${app['conda']}" env list --json --quiet)"

@@ -11,8 +11,8 @@ main() {
     local dict repo repos
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     koopa_git_clone \
         --branch='release-1-6-924' \

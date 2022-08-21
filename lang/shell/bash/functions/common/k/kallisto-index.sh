@@ -16,17 +16,17 @@ koopa_kallisto_index() {
     local app dict index_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [kallisto]="$(koopa_locate_kallisto)"
+        ['kallisto']="$(koopa_locate_kallisto)"
     )
     [[ -x "${app['kallisto']}" ]] || return 1
     declare -A dict=(
-        [kmer_size]=31
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['kmer_size']=31
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'kallisto-index'.
-        [output_dir]=''
+        ['output_dir']=''
         # e.g. 'gencode.v39.transcripts.fa.gz'.
-        [transcriptome_fasta_file]=''
+        ['transcriptome_fasta_file']=''
     )
     index_args=()
     while (("$#"))

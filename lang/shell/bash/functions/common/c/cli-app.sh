@@ -10,7 +10,7 @@ koopa_cli_app() {
     # """
     local dict
     declare -A dict=(
-        [key]=''
+        ['key']=''
     )
     case "${1:-}" in
         # Help documentation ---------------------------------------------------

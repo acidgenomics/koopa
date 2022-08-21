@@ -8,12 +8,12 @@ koopa_debian_apt_enabled_repos() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
-        [file]="$(koopa_debian_apt_sources_file)"
-        [os]="$(koopa_os_codename)"
+        ['file']="$(koopa_debian_apt_sources_file)"
+        ['os']="$(koopa_os_codename)"
     )
     dict['pattern']="^deb\s.+\s${dict['os']}\s.+$"
     dict['str']="$( \

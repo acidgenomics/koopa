@@ -24,12 +24,12 @@ koopa_mktemp() {
     # """
     local app dict mktemp_args str
     declare -A app=(
-        [mktemp]="$(koopa_locate_mktemp)"
+        ['mktemp']="$(koopa_locate_mktemp)"
     )
     [[ -x "${app['mktemp']}" ]] || return 1
     declare -A dict=(
-        [date_id]="$(koopa_datetime)"
-        [user_id]="$(koopa_user_id)"
+        ['date_id']="$(koopa_datetime)"
+        ['user_id']="$(koopa_user_id)"
     )
     dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"
     mktemp_args=(

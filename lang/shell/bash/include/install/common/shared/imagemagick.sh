@@ -81,12 +81,12 @@ main() {
     fi
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
     dict['file']="ImageMagick-${dict['version']}.tar.xz"

@@ -15,15 +15,15 @@ koopa_docker_run() {
     local app dict pos run_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [docker]="$(koopa_locate_docker)"
+        ['docker']="$(koopa_locate_docker)"
     )
     [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
-        [arm]=0
-        [bash]=0
-        [bind]=0
-        [workdir]='/mnt/work'
-        [x86]=0
+        ['arm']=0
+        ['bash']=0
+        ['bind']=0
+        ['workdir']='/mnt/work'
+        ['x86']=0
     )
     pos=()
     while (("$#"))

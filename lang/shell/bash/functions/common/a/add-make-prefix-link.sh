@@ -13,8 +13,8 @@ koopa_add_make_prefix_link() {
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
     declare -A dict=(
-        [koopa_prefix]="${1:-}"
-        [make_prefix]='/usr/local'
+        ['koopa_prefix']="${1:-}"
+        ['make_prefix']='/usr/local'
     )
     if [[ -z "${dict['koopa_prefix']}" ]]
     then

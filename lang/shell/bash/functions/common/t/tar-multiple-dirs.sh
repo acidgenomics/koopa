@@ -8,11 +8,11 @@ koopa_tar_multiple_dirs() {
     local app dict dir dirs pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [tar]="$(koopa_locate_tar)"
+        ['tar']="$(koopa_locate_tar)"
     )
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
-        [delete]=0
+        ['delete']=0
     )
     pos=()
     while (("$#"))

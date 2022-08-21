@@ -10,15 +10,15 @@ main() {
     local app conf_args dict
     koopa_activate_build_opt_prefix 'pkg-config'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [gnu_mirror]="$(koopa_gnu_mirror_url)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['gnu_mirror']="$(koopa_gnu_mirror_url)"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['name2']="${dict['name']}"
     conf_args=("--prefix=${dict['prefix']}" "$@")

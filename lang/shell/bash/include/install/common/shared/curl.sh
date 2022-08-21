@@ -25,18 +25,18 @@ main() {
         'ca-certificates' \
         'openssl3'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [ca_certificates]="$(koopa_app_prefix 'ca-certificates')"
-        [jobs]="$(koopa_cpu_count)"
-        [name]='curl'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [ssl]="$(koopa_app_prefix 'openssl3')"
-        [version]="${INSTALL_VERSION:?}"
-        [zlib]="$(koopa_app_prefix 'zlib')"
-        [zstd]="$(koopa_app_prefix 'zstd')"
+        ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='curl'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['ssl']="$(koopa_app_prefix 'openssl3')"
+        ['version']="${INSTALL_VERSION:?}"
+        ['zlib']="$(koopa_app_prefix 'zlib')"
+        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict['cacert']}"

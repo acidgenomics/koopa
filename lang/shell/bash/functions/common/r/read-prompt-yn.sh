@@ -8,12 +8,12 @@ koopa_read_prompt_yn() {
     local dict
     koopa_assert_has_args_eq "$#" 2
     declare -A dict=(
-        [input]="${2:?}"
-        [no]="$(koopa_print_red 'no')"
-        [no_default]="$(koopa_print_red_bold 'NO')"
-        [prompt]="${1:?}"
-        [yes]="$(koopa_print_green 'yes')"
-        [yes_default]="$(koopa_print_green_bold 'YES')"
+        ['input']="${2:?}"
+        ['no']="$(koopa_print_red 'no')"
+        ['no_default']="$(koopa_print_red_bold 'NO')"
+        ['prompt']="${1:?}"
+        ['yes']="$(koopa_print_green 'yes')"
+        ['yes_default']="$(koopa_print_green_bold 'YES')"
     )
     case "${dict['input']}" in
         '0')

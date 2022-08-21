@@ -9,17 +9,17 @@ koopa_fedora_set_locale() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [locale]="$(koopa_locate_locale)"
-        [localedef]="$(koopa_locate_localedef)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['locale']="$(koopa_locate_locale)"
+        ['localedef']="$(koopa_locate_localedef)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['locale']}" ]] || return 1
     [[ -x "${app['localedef']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [lang]='en'
-        [country]='US'
-        [charset]='UTF-8'
+        ['lang']='en'
+        ['country']='US'
+        ['charset']='UTF-8'
     )
     dict['lang_string']="${dict['lang']}_${dict['country']}.${dict['charset']}"
     koopa_alert "Setting locale to '${dict['lang_string']}'."

@@ -22,27 +22,27 @@ koopa_hisat2_align_paired_end_per_sample() {
     # """
     local align_args app dict
     declare -A app=(
-        [hisat2]="$(koopa_locate_hisat2)"
+        ['hisat2']="$(koopa_locate_hisat2)"
     )
     [[ -x "${app['hisat2']}" ]] || return 1
     declare -A dict=(
         # e.g. 'sample1_R1_001.fastq.gz'.
-        [fastq_r1_file]=''
+        ['fastq_r1_file']=''
         # e.g. '_R1_001.fastq.gz'.
-        [fastq_r1_tail]=''
+        ['fastq_r1_tail']=''
         # e.g. 'sample1_R2_001.fastq.gz'.
-        [fastq_r2_file]=''
+        ['fastq_r2_file']=''
         # e.g. '_R2_001.fastq.gz'.
-        [fastq_r2_tail]=''
+        ['fastq_r2_tail']=''
         # e.g. 'hisat2-index'.
-        [index_dir]=''
+        ['index_dir']=''
         # Using salmon fragment library type conventions here.
-        [lib_type]='A'
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['lib_type']='A'
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'hisat2'.
-        [output_dir]=''
-        [threads]="$(koopa_cpu_count)"
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
     )
     align_args=()
     while (("$#"))

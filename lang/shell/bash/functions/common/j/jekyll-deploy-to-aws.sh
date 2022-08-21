@@ -8,16 +8,16 @@ koopa_jekyll_deploy_to_aws() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [aws]="$(koopa_locate_aws)"
-        [bundle]="$(koopa_locate_bundle)"
+        ['aws']="$(koopa_locate_aws)"
+        ['bundle']="$(koopa_locate_bundle)"
     )
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['bundle']}" ]] || return 1
     declare -A dict=(
-        [bucket_prefix]=''
-        [distribution_id]=''
-        [local_prefix]='_site'
-        [profile]="${AWS_PROFILE:-}"
+        ['bucket_prefix']=''
+        ['distribution_id']=''
+        ['local_prefix']='_site'
+        ['profile']="${AWS_PROFILE:-}"
     )
     [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     while (("$#"))

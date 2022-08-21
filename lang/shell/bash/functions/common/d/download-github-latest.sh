@@ -8,8 +8,8 @@ koopa_download_github_latest() {
     local api_url app repo tag tarball_url
     koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [tr]="$(koopa_locate_tr)"
+        ['cut']="$(koopa_locate_cut)"
+        ['tr']="$(koopa_locate_tr)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['tr']}" ]] || return 1

@@ -9,7 +9,7 @@ koopa_debian_apt_delete_repo() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A dict=(
-        [prefix]="$(koopa_debian_apt_sources_prefix)"
+        ['prefix']="$(koopa_debian_apt_sources_prefix)"
     )
     for name in "$@"
     do

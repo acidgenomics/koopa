@@ -6,13 +6,13 @@ koopa_insert_at_line_number() {
     # @note Updated 2022-06-22.
     # """
     declare -A app=(
-        [perl]="$(koopa_locate_perl)"
+        ['perl']="$(koopa_locate_perl)"
     )
     [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
-        [file]=''
-        [line_number]=''
-        [string]=''
+        ['file']=''
+        ['line_number']=''
+        ['string']=''
     )
     while (("$#"))
     do

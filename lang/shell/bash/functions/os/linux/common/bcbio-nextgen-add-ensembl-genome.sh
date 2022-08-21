@@ -51,9 +51,9 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
-        [bcbio_setup_genome]='bcbio_setup_genome.py'
-        [sed]="$(koopa_locate_sed)"
-        [touch]="$(koopa_locate_touch)"
+        ['bcbio_setup_genome']='bcbio_setup_genome.py'
+        ['sed']="$(koopa_locate_sed)"
+        ['touch']="$(koopa_locate_touch)"
     )
     # FIXME Add step to harden against bcbio_setup_genome being present in
     # path here.
@@ -61,14 +61,14 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['touch']}" ]] || return 1
     declare -A dict=(
-        [cores]="$(koopa_cpu_count)"
-        [fasta_file]=''
-        [genome_build]=''
-        [gtf_file]=''
-        [organism]=''
-        [organism_pattern]='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
-        [provider]='Ensembl'
-        [release]=''
+        ['cores']="$(koopa_cpu_count)"
+        ['fasta_file']=''
+        ['genome_build']=''
+        ['gtf_file']=''
+        ['organism']=''
+        ['organism_pattern']='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
+        ['provider']='Ensembl'
+        ['release']=''
     )
     indexes=()
     while (("$#"))

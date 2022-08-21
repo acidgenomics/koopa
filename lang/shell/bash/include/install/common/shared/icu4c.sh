@@ -14,14 +14,14 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='icu4c'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='icu4c'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['kebab_version']="$(koopa_kebab_case_simple "${dict['version']}")"
     dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"

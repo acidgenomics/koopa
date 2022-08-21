@@ -14,13 +14,13 @@ main() {
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix 'ncurses'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [name]='libedit'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='libedit'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://thrysoee.dk/editline/${dict['file']}"

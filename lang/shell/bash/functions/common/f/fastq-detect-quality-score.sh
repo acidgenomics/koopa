@@ -22,9 +22,9 @@ koopa_fastq_detect_quality_score() {
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [head]="$(koopa_locate_head)"
-        [od]="$(koopa_locate_od)"
+        ['awk']="$(koopa_locate_awk)"
+        ['head']="$(koopa_locate_head)"
+        ['od']="$(koopa_locate_od)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1

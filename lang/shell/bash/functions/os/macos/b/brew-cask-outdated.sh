@@ -21,8 +21,8 @@ koopa_macos_brew_cask_outdated() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
-        [cut]="$(koopa_locate_cut)"
+        ['brew']="$(koopa_locate_brew)"
+        ['cut']="$(koopa_locate_cut)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['cut']}" ]] || return 1

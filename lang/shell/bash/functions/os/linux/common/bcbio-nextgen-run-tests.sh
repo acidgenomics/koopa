@@ -11,9 +11,9 @@ koopa_linux_bcbio_nextgen_run_tests() {
     # """
     local dict test tests
     declare -A dict=(
-        [git_dir]="${HOME:?}/git/bcbio-nextgen"
-        [output_dir]="${PWD:?}/bcbio-tests"
-        [tools_dir]="$(koopa_bcbio_nextgen_tools_prefix)"
+        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
+        ['output_dir']="${PWD:?}/bcbio-tests"
+        ['tools_dir']="$(koopa_bcbio_nextgen_tools_prefix)"
     )
     while (("$#"))
     do

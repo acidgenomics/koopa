@@ -24,15 +24,15 @@ main() {
         'openssl3' \
         'libssh2'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
+        ['cmake']="$(koopa_locate_cmake)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='libgit2'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [shared_ext]="$(koopa_shared_ext)"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='libgit2'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\

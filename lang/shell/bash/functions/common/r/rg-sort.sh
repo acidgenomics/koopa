@@ -8,11 +8,11 @@ koopa_rg_sort() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [rg]="$(koopa_locate_rg)"
+        ['rg']="$(koopa_locate_rg)"
     )
     [[ -x "${app['rg']}" ]] || return 1
     declare -A dict=(
-        [pattern]="${1:?}"
+        ['pattern']="${1:?}"
     )
     dict['str']="$( \
         "${app['rg']}" \

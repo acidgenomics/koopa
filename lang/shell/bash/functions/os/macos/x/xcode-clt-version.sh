@@ -8,8 +8,8 @@ koopa_macos_xcode_clt_version() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [pkgutil]="$(koopa_macos_locate_pkgutil)"
+        ['cut']="$(koopa_locate_cut)"
+        ['pkgutil']="$(koopa_macos_locate_pkgutil)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['pkgutil']}" ]] || return 1

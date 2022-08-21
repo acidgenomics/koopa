@@ -10,8 +10,8 @@ main() {
     local app
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [apt_get]="$(koopa_debian_locate_apt_get)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['apt_get']="$(koopa_debian_locate_apt_get)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['apt_get']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1

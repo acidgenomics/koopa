@@ -8,8 +8,8 @@ koopa_check_user() {
     local dict
     koopa_assert_has_args_eq "$#" 2
     declare -A dict=(
-        [file]="${1:?}"
-        [expected_user]="${2:?}"
+        ['file']="${1:?}"
+        ['expected_user']="${2:?}"
     )
     if [[ ! -e "${dict['file']}" ]]
     then

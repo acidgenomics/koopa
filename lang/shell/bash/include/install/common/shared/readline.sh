@@ -22,15 +22,15 @@ main() {
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix 'ncurses'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [gnu_mirror]="$(koopa_gnu_mirror_url)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]='readline'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['gnu_mirror']="$(koopa_gnu_mirror_url)"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='readline'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"

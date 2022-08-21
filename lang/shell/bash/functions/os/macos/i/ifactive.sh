@@ -7,8 +7,8 @@ koopa_macos_ifactive() {
     # """
     local app x
     declare -A app=(
-        [ifconfig]="$(koopa_macos_locate_ifconfig)"
-        [pcregrep]="$(koopa_locate_pcregrep)"
+        ['ifconfig']="$(koopa_macos_locate_ifconfig)"
+        ['pcregrep']="$(koopa_locate_pcregrep)"
     )
     [[ -x "${app['ifconfig']}" ]] || return 1
     [[ -x "${app['pcregrep']}" ]] || return 1

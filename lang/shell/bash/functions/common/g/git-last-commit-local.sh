@@ -15,11 +15,11 @@ koopa_git_last_commit_local() {
     # """
     local app dict repos
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
-        [ref]='HEAD'
+        ['ref']='HEAD'
     )
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"

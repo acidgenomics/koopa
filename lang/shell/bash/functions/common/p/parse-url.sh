@@ -8,7 +8,7 @@ koopa_parse_url() {
     local app curl_args pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [curl]="$(koopa_locate_curl)"
+        ['curl']="$(koopa_locate_curl)"
     )
     [[ -x "${app['curl']}" ]] || return 1
     curl_args=(

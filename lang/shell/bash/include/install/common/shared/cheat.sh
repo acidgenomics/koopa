@@ -13,14 +13,14 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'go'
     declare -A app=(
-        [go]="$(koopa_locate_go)"
+        ['go']="$(koopa_locate_go)"
     )
     [[ -x "${app['go']}" ]] || return 1
     declare -A dict=(
-        [gopath]="$(koopa_init_dir 'go')"
-        [name]='cheat'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['gopath']="$(koopa_init_dir 'go')"
+        ['name']='cheat'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/cheat/cheat/archive/refs/tags/${dict['file']}"

@@ -7,7 +7,7 @@ koopa_init_dir() {
     # """
     local dict mkdir pos
     declare -A dict=(
-        [sudo]=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))

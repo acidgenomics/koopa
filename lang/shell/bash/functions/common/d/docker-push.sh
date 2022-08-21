@@ -16,10 +16,10 @@ koopa_docker_push() {
     local app dict pattern
     koopa_assert_has_args "$#"
     declare -A app=(
-        [docker]="$(koopa_locate_docker)"
-        [sed]="$(koopa_locate_sed)"
-        [sort]="$(koopa_locate_sort)"
-        [tr]="$(koopa_locate_tr)"
+        ['docker']="$(koopa_locate_docker)"
+        ['sed']="$(koopa_locate_sed)"
+        ['sort']="$(koopa_locate_sort)"
+        ['tr']="$(koopa_locate_tr)"
     )
     [[ -x "${app['docker']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -27,13 +27,13 @@ koopa_docker_push() {
     [[ -x "${app['tr']}" ]] || return 1
     declare -A dict=(
         # Consider allowing user to define, so we can support quay.io.
-        [server]='docker.io'
+        ['server']='docker.io'
     )
     for pattern in "$@"
     do
         local dict2 image images
         declare -A dict2=(
-            [pattern]="$pattern"
+            ['pattern']="$pattern"
         )
         koopa_assert_is_matching_regex \
             --string="${dict2['pattern']}" \

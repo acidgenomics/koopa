@@ -14,12 +14,12 @@ koopa_locate_app() {
     # """
     local dict pos
     declare -A dict=(
-        [allow_in_path]=0
-        [allow_missing]=0
-        [app_name]=''
-        [bin_prefix]="$(koopa_bin_prefix)"
-        [opt_name]=''
-        [opt_prefix]="$(koopa_opt_prefix)"
+        ['allow_in_path']=0
+        ['allow_missing']=0
+        ['app_name']=''
+        ['bin_prefix']="$(koopa_bin_prefix)"
+        ['opt_name']=''
+        ['opt_prefix']="$(koopa_opt_prefix)"
     )
     pos=()
     while (("$#"))

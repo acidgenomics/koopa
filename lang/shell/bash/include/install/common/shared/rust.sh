@@ -8,15 +8,15 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [head]="$(koopa_locate_head)"
+        ['cut']="$(koopa_locate_cut)"
+        ['head']="$(koopa_locate_head)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
-        [prefix]="${INSTALL_PREFIX:?}"
-        [tmp_prefix]='rustup'
-        [version]="${INSTALL_VERSION:?}" # or 'stable' toolchain
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['tmp_prefix']='rustup'
+        ['version']="${INSTALL_VERSION:?}" # or 'stable' toolchain
     )
     dict['cargo_home']="${dict['tmp_prefix']}"
     dict['rustup_home']="${dict['tmp_prefix']}"

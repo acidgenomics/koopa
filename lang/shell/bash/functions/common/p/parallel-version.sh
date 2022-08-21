@@ -8,9 +8,9 @@ koopa_parallel_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [head]="$(koopa_locate_head)"
-        [parallel]="${1:-}"
+        ['cut']="$(koopa_locate_cut)"
+        ['head']="$(koopa_locate_head)"
+        ['parallel']="${1:-}"
     )
     [[ -z "${app['parallel']}" ]] && app[parallel]="$(koopa_locate_parallel)"
     [[ -x "${app['cut']}" ]] || return 1

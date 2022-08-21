@@ -11,9 +11,9 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [branch]='master'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [url]='https://github.com/bbatsov/prelude.git'
+        ['branch']='master'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['url']='https://github.com/bbatsov/prelude.git'
     )
     koopa_git_clone \
         --branch="${dict['branch']}" \

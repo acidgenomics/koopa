@@ -13,17 +13,17 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_opt_prefix 'm4' 'autoconf' 'automake' 'libtool'
     declare -A app=(
-        [autoreconf]="$(koopa_locate_autoreconf)"
-        [make]="$(koopa_locate_make)"
+        ['autoreconf']="$(koopa_locate_autoreconf)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['autoreconf']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name1]='oniguruma'
-        [name2]='onig'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name1']='oniguruma'
+        ['name2']='onig'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['version2']="$(koopa_major_minor_patch_version "${dict['version']}")"
     dict['file']="${dict['name2']}-${dict['version']}.tar.gz"

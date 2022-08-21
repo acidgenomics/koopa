@@ -8,12 +8,12 @@ koopa_view_latest_tmp_log_file() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [tail]="$(koopa_locate_tail)"
+        ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['tail']}" ]] || return 1
     declare -A dict=(
-        [tmp_dir]="${TMPDIR:-/tmp}"
-        [user_id]="$(koopa_user_id)"
+        ['tmp_dir']="${TMPDIR:-/tmp}"
+        ['user_id']="$(koopa_user_id)"
     )
     dict['log_file']="$( \
         koopa_find \

@@ -8,14 +8,14 @@ koopa_is_file_system_case_sensitive() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [find]="$(koopa_locate_find)"
-        [wc]="$(koopa_locate_wc)"
+        ['find']="$(koopa_locate_find)"
+        ['wc']="$(koopa_locate_wc)"
     )
     [[ -x "${app['find']}" ]] || return 1
     [[ -x "${app['wc']}" ]] || return 1
     declare -A dict=(
-        [prefix]="${PWD:?}"
-        [tmp_stem]='.koopa.tmp.'
+        ['prefix']="${PWD:?}"
+        ['tmp_stem']='.koopa.tmp.'
     )
     dict['file1']="${dict['tmp_stem']}checkcase"
     dict['file2']="${dict['tmp_stem']}checkCase"

@@ -12,9 +12,9 @@ koopa_cli_install() {
     local app dict flags pos stem
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [allow_custom]=0
-        [custom_enabled]=0
-        [stem]='install'
+        ['allow_custom']=0
+        ['custom_enabled']=0
+        ['stem']='install'
     )
     case "${1:-}" in
         'koopa')

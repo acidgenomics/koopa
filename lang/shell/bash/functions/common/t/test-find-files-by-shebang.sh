@@ -8,13 +8,13 @@ koopa_test_find_files_by_shebang() {
     local all_files app dict file shebang_files
     koopa_assert_has_args "$#"
     declare -A app=(
-        [head]="$(koopa_locate_head)"
-        [tr]="$(koopa_locate_tr)"
+        ['head']="$(koopa_locate_head)"
+        ['tr']="$(koopa_locate_tr)"
     )
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['tr']}" ]] || return 1
     declare -A dict=(
-        [pattern]="${1:?}"
+        ['pattern']="${1:?}"
     )
     readarray -t all_files <<< "$(koopa_test_find_files)"
     shebang_files=()

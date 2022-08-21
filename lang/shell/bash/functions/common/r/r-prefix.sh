@@ -11,7 +11,7 @@ koopa_r_prefix() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [r]="${1:-}"
+        ['r']="${1:-}"
     )
     [[ -z "${app['r']}" ]] && app[r]="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1

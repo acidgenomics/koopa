@@ -24,14 +24,14 @@ main() {
         'freetype' \
         'libxml2'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [name]='fontconfig'
-        [jobs]="$(koopa_cpu_count)"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='fontconfig'
+        ['jobs']="$(koopa_cpu_count)"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://www.freedesktop.org/software/${dict['name']}/\

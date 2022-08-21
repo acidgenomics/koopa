@@ -13,16 +13,16 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [node]="$(koopa_locate_node)"
-        [npm]="$(koopa_locate_npm)"
+        ['node']="$(koopa_locate_node)"
+        ['npm']="$(koopa_locate_npm)"
     )
     [[ -x "${app['node']}" ]] || return 1
     [[ -x "${app['npm']}" ]] || return 1
     app['node']="$(koopa_realpath "${app['node']}")"
     declare -A dict=(
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     koopa_add_to_path_start "$(koopa_dirname "${app['node']}")"
     export NPM_CONFIG_PREFIX="${dict['prefix']}"

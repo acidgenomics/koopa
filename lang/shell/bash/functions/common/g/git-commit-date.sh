@@ -14,9 +14,9 @@ koopa_git_commit_date() {
     # """
     local app repos
     declare -A app=(
-        [date]="$(koopa_locate_date)"
-        [git]="$(koopa_locate_git)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['date']="$(koopa_locate_date)"
+        ['git']="$(koopa_locate_git)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['date']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1

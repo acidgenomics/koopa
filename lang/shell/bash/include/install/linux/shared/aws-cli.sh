@@ -25,11 +25,11 @@ main() {
     # """
     local dict
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
-        [tmp_bin_dir]='tmp_bin'
-        [tmp_install_dir]='tmp_install'
+        ['arch']="$(koopa_arch)"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
+        ['tmp_bin_dir']='tmp_bin'
+        ['tmp_install_dir']='tmp_install'
     )
     dict['file']="awscli-exe-linux-${dict['arch']}-${dict['version']}.zip"
     dict['url']="https://awscli.amazonaws.com/${dict['file']}"

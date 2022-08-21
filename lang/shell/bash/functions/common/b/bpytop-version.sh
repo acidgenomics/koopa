@@ -8,8 +8,8 @@ koopa_bpytop_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [bpytop]="${1:-}"
+        ['awk']="$(koopa_locate_awk)"
+        ['bpytop']="${1:-}"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -z "${app['bpytop']}" ]] && app[bpytop]="$(koopa_locate_bpytop)"

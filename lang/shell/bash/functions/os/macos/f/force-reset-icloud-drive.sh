@@ -29,9 +29,9 @@ koopa_macos_force_reset_icloud_drive() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [kill_all]="$(koopa_macos_locate_kill_all)"
-        [reboot]="$(koopa_macos_locate_reboot)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['kill_all']="$(koopa_macos_locate_kill_all)"
+        ['reboot']="$(koopa_macos_locate_reboot)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['kill_all']}" ]] || return 1
     [[ -x "${app['reboot']}" ]] || return 1

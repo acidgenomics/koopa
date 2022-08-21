@@ -8,8 +8,8 @@ koopa_conda_deactivate() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [env_name]="$(koopa_conda_env_name)"
-        [nounset]="$(koopa_boolean_nounset)"
+        ['env_name']="$(koopa_conda_env_name)"
+        ['nounset']="$(koopa_boolean_nounset)"
     )
     if [[ -z "${dict['env_name']}" ]]
     then

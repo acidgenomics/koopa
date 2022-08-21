@@ -26,11 +26,11 @@ koopa_is_url_active() {
     local app url
     koopa_assert_has_args "$#"
     declare -A app=(
-        [curl]="$(koopa_locate_curl)"
+        ['curl']="$(koopa_locate_curl)"
     )
     [[ -x "${app['curl']}" ]] || return 1
     declare -A dict=(
-        [url_pattern]='://'
+        ['url_pattern']='://'
     )
     for url in "$@"
     do

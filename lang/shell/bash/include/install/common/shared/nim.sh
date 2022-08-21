@@ -15,9 +15,9 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A app
     declare -A dict=(
-        [name]='nim'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='nim'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://nim-lang.org/download/${dict['file']}"

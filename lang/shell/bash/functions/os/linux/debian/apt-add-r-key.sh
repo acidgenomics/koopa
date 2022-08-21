@@ -22,10 +22,10 @@ koopa_debian_apt_add_r_key() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A dict=(
-        [key_name]='r'
+        ['key_name']='r'
         # Alternatively, can use 'keys.gnupg.net' keyserver.
-        [keyserver]='keyserver.ubuntu.com'
-        [prefix]="$(koopa_debian_apt_key_prefix)"
+        ['keyserver']='keyserver.ubuntu.com'
+        ['prefix']="$(koopa_debian_apt_key_prefix)"
     )
     dict['file']="${dict['prefix']}/koopa-${dict['key_name']}.gpg"
     if koopa_is_ubuntu_like

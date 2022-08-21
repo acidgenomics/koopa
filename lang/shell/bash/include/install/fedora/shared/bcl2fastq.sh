@@ -8,12 +8,12 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [installers_url]="$(koopa_koopa_installers_url)"
-        [name]='bcl2fastq'
-        [platform]='linux'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['installers_url']="$(koopa_koopa_installers_url)"
+        ['name']='bcl2fastq'
+        ['platform']='linux'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['arch2']="$(koopa_kebab_case_simple "${dict['arch']}")"
     dict['platform2']="$(koopa_capitalize "${dict['platform']}")"

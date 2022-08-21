@@ -17,8 +17,8 @@ koopa_mv() {
     # """
     local app dict mkdir mv mv_args pos rm
     declare -A app=(
-        [mkdir]='koopa_mkdir'
-        [rm]='koopa_rm'
+        ['mkdir']='koopa_mkdir'
+        ['rm']='koopa_rm'
     )
     # macOS gmv currently has issues on NFS shares.
     if koopa_is_macos
@@ -29,8 +29,8 @@ koopa_mv() {
     fi
     [[ -x "${app['mv']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
-        [target_dir]=''
+        ['sudo']=0
+        ['target_dir']=''
     )
     pos=()
     while (("$#"))

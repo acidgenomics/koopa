@@ -17,13 +17,13 @@ koopa_git_rename_master_to_main() {
     # """
     local app dict repos
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
-        [origin]='origin'
-        [old_branch]='master'
-        [new_branch]='main'
+        ['origin']='origin'
+        ['old_branch']='master'
+        ['new_branch']='main'
     )
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"

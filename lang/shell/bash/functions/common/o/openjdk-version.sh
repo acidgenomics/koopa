@@ -8,9 +8,9 @@ koopa_openjdk_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [head]="$(koopa_locate_head)"
-        [java]="${1:-}"
+        ['cut']="$(koopa_locate_cut)"
+        ['head']="$(koopa_locate_head)"
+        ['java']="${1:-}"
     )
     [[ -z "${app['java']}" ]] && app[java]="$(koopa_locate_java)"
     [[ -x "${app['cut']}" ]] || return 1

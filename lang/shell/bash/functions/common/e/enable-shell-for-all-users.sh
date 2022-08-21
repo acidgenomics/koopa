@@ -17,8 +17,8 @@ koopa_enable_shell_for_all_users() {
     koopa_assert_has_args "$#"
     koopa_is_admin || return 0
     declare -A dict=(
-        [etc_file]='/etc/shells'
-        [user]="$(koopa_user)"
+        ['etc_file']='/etc/shells'
+        ['user']="$(koopa_user)"
     )
     apps=("$@")
     # Intentionally not checking to see whether file exists here.

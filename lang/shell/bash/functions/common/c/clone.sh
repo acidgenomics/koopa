@@ -9,8 +9,8 @@ koopa_clone() {
     koopa_assert_has_args_eq "$#" 2
     koopa_assert_has_no_flags "$@"
     declare -A dict=(
-        [source_dir]="${1:?}"
-        [target_dir]="${2:?}"
+        ['source_dir']="${1:?}"
+        ['target_dir']="${2:?}"
     )
     koopa_assert_is_dir "${dict['source_dir']}" "${dict['target_dir']}"
     dict['source_dir']="$( \

@@ -9,23 +9,23 @@ koopa_update_app() {
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A bool=(
-        [prefix_check]=1
-        [quiet]=0
-        [set_permissions]=1
-        [update_ldconfig]=0
-        [verbose]=0
+        ['prefix_check']=1
+        ['quiet']=0
+        ['set_permissions']=1
+        ['update_ldconfig']=0
+        ['verbose']=0
     )
     declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [mode]='shared'
-        [name]=''
-        [opt_prefix]="$(koopa_opt_prefix)"
-        [platform]='common'
-        [prefix]=''
-        [tmp_dir]="$(koopa_tmp_dir)"
-        [updater_bn]=''
-        [updater_fun]='main'
-        [version]=''
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['mode']='shared'
+        ['name']=''
+        ['opt_prefix']="$(koopa_opt_prefix)"
+        ['platform']='common'
+        ['prefix']=''
+        ['tmp_dir']="$(koopa_tmp_dir)"
+        ['updater_bn']=''
+        ['updater_fun']='main'
+        ['version']=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     while (("$#"))

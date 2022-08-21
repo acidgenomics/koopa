@@ -7,22 +7,22 @@ koopa_uninstall_app() {
     # """
     local bin_arr bool dict i man_arr
     declare -A bool=(
-        [quiet]=0
-        [unlink_in_bin]=0
-        [unlink_in_man]=0
-        [unlink_in_opt]=1
-        [verbose]=0
+        ['quiet']=0
+        ['unlink_in_bin']=0
+        ['unlink_in_man']=0
+        ['unlink_in_opt']=1
+        ['verbose']=0
     )
     declare -A dict=(
-        [app_prefix]="$(koopa_app_prefix)"
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [mode]='shared'
-        [name]=''
-        [opt_prefix]="$(koopa_opt_prefix)"
-        [platform]='common'
-        [prefix]=''
-        [uninstaller_bn]=''
-        [uninstaller_fun]='main'
+        ['app_prefix']="$(koopa_app_prefix)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['mode']='shared'
+        ['name']=''
+        ['opt_prefix']="$(koopa_opt_prefix)"
+        ['platform']='common'
+        ['prefix']=''
+        ['uninstaller_bn']=''
+        ['uninstaller_fun']='main'
     )
     bin_arr=()
     man_arr=()

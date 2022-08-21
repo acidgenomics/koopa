@@ -11,20 +11,20 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'autoconf' 'automake' 'pkg-config'
     declare -A app=(
-        [gpg]='/usr/bin/gpg'
-        [gpg_agent]='/usr/bin/gpg-agent'
-        [make]="$(koopa_locate_make)"
+        ['gpg']='/usr/bin/gpg'
+        ['gpg_agent']='/usr/bin/gpg-agent'
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [check_key]=1
-        [compress_ext]='bz2'
-        [gcrypt_url]="$(koopa_gcrypt_url)"
-        [import_gpg_keys]="${INSTALL_IMPORT_GPG_KEYS:-0}"
-        [jobs]="$(koopa_cpu_count)"
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['check_key']=1
+        ['compress_ext']='bz2'
+        ['gcrypt_url']="$(koopa_gcrypt_url)"
+        ['import_gpg_keys']="${INSTALL_IMPORT_GPG_KEYS:-0}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     conf_args=(
         # > '--enable-maintainer-mode'

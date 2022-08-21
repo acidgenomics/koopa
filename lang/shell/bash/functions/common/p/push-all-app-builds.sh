@@ -8,15 +8,15 @@ koopa_push_all_app_builds() {
     local app dict names
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [basename]="$(koopa_locate_basename)"
-        [grep]="$(koopa_locate_grep)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['basename']="$(koopa_locate_basename)"
+        ['grep']="$(koopa_locate_grep)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['basename']}" ]] || return 1
     [[ -x "${app['grep']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
-        [opt_prefix]="$(koopa_opt_prefix)"
+        ['opt_prefix']="$(koopa_opt_prefix)"
     )
     readarray -t names <<< "$( \
         koopa_find \

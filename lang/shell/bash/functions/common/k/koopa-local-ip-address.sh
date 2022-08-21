@@ -12,9 +12,9 @@ koopa_local_ip_address() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [head]="$(koopa_locate_head)"
-        [tail]="$(koopa_locate_tail)"
+        ['awk']="$(koopa_locate_awk)"
+        ['head']="$(koopa_locate_head)"
+        ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1

@@ -8,7 +8,7 @@ koopa_python_system_packages_prefix() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [python]="${1:-}"
+        ['python']="${1:-}"
     )
     [[ -z "${app['python']}" ]] && app[python]="$(koopa_locate_python)"
     [[ -x "${app['python']}" ]] || return 1

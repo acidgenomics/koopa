@@ -8,14 +8,14 @@ koopa_ln() {
     # """
     local app dict ln ln_args mkdir pos rm
     declare -A app=(
-        [ln]="$(koopa_locate_ln)"
-        [mkdir]='koopa_mkdir'
-        [rm]='koopa_rm'
+        ['ln']="$(koopa_locate_ln)"
+        ['mkdir']='koopa_mkdir'
+        ['rm']='koopa_rm'
     )
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
-        [target_dir]=''
+        ['sudo']=0
+        ['target_dir']=''
     )
     pos=()
     while (("$#"))

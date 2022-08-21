@@ -13,8 +13,8 @@ koopa_update_koopa() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [prefix]="$(koopa_koopa_prefix)"
-        [user]="$(koopa_user)"
+        ['prefix']="$(koopa_koopa_prefix)"
+        ['user']="$(koopa_user)"
     )
     if ! koopa_is_git_repo_top_level "${dict['prefix']}"
     then

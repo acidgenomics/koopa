@@ -13,15 +13,15 @@ koopa_aws_s3_cp_regex() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [aws]="$(koopa_locate_aws)"
+        ['aws']="$(koopa_locate_aws)"
     )
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
-        [bucket_pattern]='^s3://.+/$'
-        [pattern]=''
-        [profile]="${AWS_PROFILE:-}"
-        [source_prefix]=''
-        [target_prefix]=''
+        ['bucket_pattern']='^s3://.+/$'
+        ['pattern']=''
+        ['profile']="${AWS_PROFILE:-}"
+        ['source_prefix']=''
+        ['target_prefix']=''
     )
     [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     while (("$#"))

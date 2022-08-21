@@ -12,15 +12,15 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
-        [make]="$(koopa_locate_make)"
+        ['cmake']="$(koopa_locate_cmake)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [name]='brotli'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='brotli'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/google/${dict['name']}/archive/${dict['file']}"

@@ -17,18 +17,18 @@ koopa_install_koopa() {
     koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
     declare -A bool=(
-        [add_to_user_profile]=0
-        [interactive]=1
-        [passwordless_sudo]=0
-        [shared]=0
-        [test]=0
+        ['add_to_user_profile']=0
+        ['interactive']=1
+        ['passwordless_sudo']=0
+        ['shared']=0
+        ['test']=0
     )
     declare -A dict=(
-        [config_prefix]="$(koopa_config_prefix)"
-        [prefix]=''
-        [source_prefix]="$(koopa_koopa_prefix)"
-        [user_profile]="$(koopa_find_user_profile)"
-        [xdg_data_home]="$(koopa_xdg_data_home)"
+        ['config_prefix']="$(koopa_config_prefix)"
+        ['prefix']=''
+        ['source_prefix']="$(koopa_koopa_prefix)"
+        ['user_profile']="$(koopa_find_user_profile)"
+        ['xdg_data_home']="$(koopa_xdg_data_home)"
     )
     dict['koopa_prefix_system']='/opt/koopa'
     dict['koopa_prefix_user']="${dict['xdg_data_home']}/koopa"

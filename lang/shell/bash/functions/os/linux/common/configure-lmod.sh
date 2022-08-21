@@ -9,8 +9,8 @@ koopa_linux_configure_lmod() {
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
     declare -A dict=(
-        [etc_dir]='/etc/profile.d'
-        [prefix]="${1:-}"
+        ['etc_dir']='/etc/profile.d'
+        ['prefix']="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_lmod_prefix)"
     dict['init_dir']="${dict['prefix']}/apps/lmod/lmod/init"

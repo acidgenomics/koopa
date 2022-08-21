@@ -7,7 +7,7 @@ koopa_list_path_priority() {
     # """
     local all_arr app dict unique_arr
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
+        ['awk']="$(koopa_locate_awk)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     declare -A dict

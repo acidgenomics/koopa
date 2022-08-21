@@ -13,15 +13,15 @@ koopa_linux_java_update_alternatives() {
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [update_alternatives]="$(koopa_linux_locate_update_alternatives)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['update_alternatives']="$(koopa_linux_locate_update_alternatives)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['update_alternatives']}" ]] || return 1
     declare -A dict=(
-        [alt_prefix]='/var/lib/alternatives'
-        [prefix]="$(koopa_realpath "${1:?}")"
-        [priority]=100
+        ['alt_prefix']='/var/lib/alternatives'
+        ['prefix']="$(koopa_realpath "${1:?}")"
+        ['priority']=100
     )
     koopa_rm --sudo \
         "${dict['alt_prefix']}/java" \

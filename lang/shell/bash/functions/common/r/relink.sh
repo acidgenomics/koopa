@@ -7,11 +7,11 @@ koopa_relink() {
     # """
     local app dict ln pos rm sudo
     declare -A app=(
-        [ln]='koopa_ln'
-        [rm]='koopa_rm'
+        ['ln']='koopa_ln'
+        ['rm']='koopa_rm'
     )
     declare -A dict=(
-        [sudo]=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))

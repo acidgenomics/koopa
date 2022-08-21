@@ -10,8 +10,8 @@ koopa_hdf5_version() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [h5cc]="$(koopa_locate_h5cc)"
-        [sed]="$(koopa_locate_sed)"
+        ['h5cc']="$(koopa_locate_h5cc)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['h5cc']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1

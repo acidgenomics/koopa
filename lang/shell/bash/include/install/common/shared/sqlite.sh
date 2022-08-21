@@ -24,16 +24,16 @@ main() {
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix 'zlib' 'readline'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
-        [sed]="$(koopa_locate_sed)"
+        ['make']="$(koopa_locate_make)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='sqlite'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='sqlite'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     case "${dict['version']}" in
         '3.39.2' | \

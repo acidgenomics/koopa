@@ -6,8 +6,8 @@ koopa_assert_is_matching_regex() {
     # @note Updated 2022-02-27.
     # """
     declare -A dict=(
-        [pattern]=''
-        [string]=''
+        ['pattern']=''
+        ['string']=''
     )
     while (("$#"))
     do

@@ -10,8 +10,8 @@ koopa_header() {
     local dict
     koopa_assert_has_args_eq "$#" 1
     declare -A dict=(
-        [lang]="$(koopa_lowercase "${1:?}")"
-        [prefix]="$(koopa_koopa_prefix)/lang"
+        ['lang']="$(koopa_lowercase "${1:?}")"
+        ['prefix']="$(koopa_koopa_prefix)/lang"
     )
     case "${dict['lang']}" in
         'bash' | \

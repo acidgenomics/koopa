@@ -12,9 +12,9 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'chemacs'
     declare -A dict=(
-        [branch]='develop'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [url]='https://github.com/syl20bnr/spacemacs.git'
+        ['branch']='develop'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['url']='https://github.com/syl20bnr/spacemacs.git'
     )
     koopa_git_clone \
         --branch="${dict['branch']}" \

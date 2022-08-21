@@ -8,13 +8,13 @@ koopa_get_version_from_pkg_config() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [pkg_config]="$(koopa_locate_pkg_config)"
+        ['pkg_config']="$(koopa_locate_pkg_config)"
     )
     [[ -x "${app['pkg_config']}" ]] || return 1
     declare -A dict=(
-        [opt_name]=''
-        [opt_prefix]="$(koopa_opt_prefix)"
-        [pc_name]=''
+        ['opt_name']=''
+        ['opt_prefix']="$(koopa_opt_prefix)"
+        ['pc_name']=''
     )
     while (("$#"))
     do

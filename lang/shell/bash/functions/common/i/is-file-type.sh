@@ -12,7 +12,7 @@ koopa_is_file_type() {
     # """
     local dict file pos
     declare -A dict=(
-        [ext]=''
+        ['ext']=''
     )
     pos=()
     while (("$#"))

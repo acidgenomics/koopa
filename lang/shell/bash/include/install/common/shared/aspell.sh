@@ -13,12 +13,12 @@ main() {
     local dict key lang
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [lang_base_url]='https://ftp.gnu.org/gnu/aspell/dict'
-        [prefix]="${INSTALL_PREFIX:?}"
+        ['lang_base_url']='https://ftp.gnu.org/gnu/aspell/dict'
+        ['prefix']="${INSTALL_PREFIX:?}"
     )
     koopa_install_app_internal \
         --installer='gnu-app' \
@@ -28,10 +28,10 @@ main() {
     koopa_assert_is_installed "${app['aspell']}" "${app['prezip']}"
     koopa_add_to_path_start "${dict['prefix']}/bin"
     declare -A lang=(
-        [de]='aspell6-de-20161207-7-0'
-        [en]='aspell6-en-2020.12.07-0'
-        [es]='aspell6-es-1.11-2'
-        [fr]='aspell-fr-0.50-3'
+        ['de']='aspell6-de-20161207-7-0'
+        ['en']='aspell6-en-2020.12.07-0'
+        ['es']='aspell6-es-1.11-2'
+        ['fr']='aspell-fr-0.50-3'
     )
     for key in "${!lang[@]}"
     do

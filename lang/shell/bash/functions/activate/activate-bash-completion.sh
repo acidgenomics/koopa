@@ -8,8 +8,8 @@ koopa_activate_bash_completion() {
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        [make_prefix]="$(koopa_make_prefix)"
-        [nounset]="$(koopa_boolean_nounset)"
+        ['make_prefix']="$(koopa_make_prefix)"
+        ['nounset']="$(koopa_boolean_nounset)"
     )
     dict['script']="${dict['make_prefix']}/etc/profile.d/bash_completion.sh"
     [[ -r "${dict['script']}" ]] || return 0

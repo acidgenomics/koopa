@@ -8,18 +8,18 @@ koopa_docker_build_all_images() {
     local app build_args image images
     local pos repo repos
     declare -A app=(
-        [basename]="$(koopa_locate_basename)"
-        [docker]="$(koopa_locate_docker)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['basename']="$(koopa_locate_basename)"
+        ['docker']="$(koopa_locate_docker)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['basename']}" ]] || return 1
     [[ -x "${app['docker']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
-        [days]=7
-        [docker_dir]="$(koopa_docker_prefix)"
-        [force]=0
-        [prune]=0
+        ['days']=7
+        ['docker_dir']="$(koopa_docker_prefix)"
+        ['force']=0
+        ['prune']=0
     )
     pos=()
     while (("$#"))

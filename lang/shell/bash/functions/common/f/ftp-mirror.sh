@@ -8,13 +8,13 @@ koopa_ftp_mirror() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [wget]="$(koopa_locate_wget)"
+        ['wget']="$(koopa_locate_wget)"
     )
     [[ -x "${app['wget']}" ]] || return 1
     declare -A dict=(
-        [dir]=''
-        [host]=''
-        [user]=''
+        ['dir']=''
+        ['host']=''
+        ['user']=''
     )
     while (("$#"))
     do

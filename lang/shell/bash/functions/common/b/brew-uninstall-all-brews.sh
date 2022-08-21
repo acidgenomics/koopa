@@ -11,8 +11,8 @@ koopa_brew_uninstall_all_brews() {
     local app
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
-        [wc]="$(koopa_locate_wc)"
+        ['brew']="$(koopa_locate_brew)"
+        ['wc']="$(koopa_locate_wc)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['wc']}" ]] || return 1

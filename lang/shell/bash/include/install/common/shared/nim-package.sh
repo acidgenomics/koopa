@@ -11,15 +11,15 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [nim]="$(koopa_locate_nim)"
-        [nimble]="$(koopa_locate_nimble)"
+        ['nim']="$(koopa_locate_nim)"
+        ['nimble']="$(koopa_locate_nimble)"
     )
     [[ -x "${app['nim']}" ]] || return 1
     [[ -x "${app['nimble']}" ]] || return 1
     declare -A dict=(
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     export NIMBLE_DIR="${dict['prefix']}"
     "${app['nimble']}" \

@@ -15,11 +15,11 @@ koopa_debian_apt_add_wine_obs_repo() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [base_url]="https://download.opensuse.org/repositories/\
+        ['base_url']="https://download.opensuse.org/repositories/\
 Emulators:/Wine:/Debian"
-        [distribution]='./'
-        [name]='wine-obs'
-        [os_string]="$(koopa_os_string)"
+        ['distribution']='./'
+        ['name']='wine-obs'
+        ['os_string']="$(koopa_os_string)"
     )
     case "${dict['os_string']}" in
         'debian-10')

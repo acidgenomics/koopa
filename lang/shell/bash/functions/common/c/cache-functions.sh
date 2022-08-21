@@ -8,7 +8,7 @@ koopa_cache_functions() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
     )
     dict['shell_prefix']="${dict['koopa_prefix']}/lang/shell"
     koopa_cache_functions_dir \

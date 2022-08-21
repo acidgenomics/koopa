@@ -12,7 +12,7 @@ koopa_macos_homebrew_cask_version() {
     local app cask x
     koopa_assert_has_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
+        ['brew']="$(koopa_locate_brew)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     for cask in "$@"

@@ -7,7 +7,7 @@ koopa_python_deactivate_venv() {
     # """
     local dict
     declare -A dict=(
-        [prefix]="${VIRTUAL_ENV:-}"
+        ['prefix']="${VIRTUAL_ENV:-}"
     )
     if [[ -z "${dict['prefix']}" ]]
     then

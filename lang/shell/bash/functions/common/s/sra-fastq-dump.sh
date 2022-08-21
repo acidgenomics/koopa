@@ -59,19 +59,19 @@ koopa_sra_fastq_dump() {
     # """
     local app dict sra_file sra_files
     declare -A app=(
-        [fasterq_dump]="$(koopa_locate_fasterq_dump)"
-        [gzip]="$(koopa_locate_gzip)"
-        [parallel]="$(koopa_locate_parallel)"
+        ['fasterq_dump']="$(koopa_locate_fasterq_dump)"
+        ['gzip']="$(koopa_locate_gzip)"
+        ['parallel']="$(koopa_locate_parallel)"
     )
     [[ -x "${app['fasterq_dump']}" ]] || return 1
     [[ -x "${app['gzip']}" ]] || return 1
     [[ -x "${app['parallel']}" ]] || return 1
     declare -A dict=(
-        [acc_file]=''
-        [compress]=1
-        [fastq_dir]='fastq'
-        [prefetch_dir]='sra'
-        [threads]="$(koopa_cpu_count)"
+        ['acc_file']=''
+        ['compress']=1
+        ['fastq_dir']='fastq'
+        ['prefetch_dir']='sra'
+        ['threads']="$(koopa_cpu_count)"
     )
     while (("$#"))
     do

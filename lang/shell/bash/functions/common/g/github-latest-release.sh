@@ -11,8 +11,8 @@ koopa_github_latest_release() {
     local app repo
     koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [sed]="$(koopa_locate_sed)"
+        ['cut']="$(koopa_locate_cut)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1

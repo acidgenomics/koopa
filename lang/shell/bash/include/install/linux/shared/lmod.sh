@@ -16,9 +16,9 @@ main() {
         'luarocks' \
         'tcl-tk'
     declare -A app=(
-        [lua]="$(koopa_locate_lua)"
-        [luarocks]="$(koopa_locate_luarocks)"
-        [make]="$(koopa_locate_make)"
+        ['lua']="$(koopa_locate_lua)"
+        ['luarocks']="$(koopa_locate_luarocks)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['lua']}" ]] || return 1
     [[ -x "${app['luarocks']}" ]] || return 1
@@ -26,11 +26,11 @@ main() {
     app['lua']="$(koopa_realpath "${app['lua']}")"
     app['luarocks']="$(koopa_realpath "${app['luarocks']}")"
     declare -A dict=(
-        [make_prefix]="$(koopa_make_prefix)"
-        [name2]='Lmod'
-        [name]='lmod'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['make_prefix']="$(koopa_make_prefix)"
+        ['name2']='Lmod'
+        ['name']='lmod'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['apps_dir']="${dict['prefix']}/apps"
     dict['data_dir']="${dict['prefix']}/moduleData"

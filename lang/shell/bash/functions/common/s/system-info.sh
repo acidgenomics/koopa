@@ -8,23 +8,23 @@ koopa_system_info() {
     local app dict info nf_info
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [bash]="$(koopa_locate_bash)"
-        [cat]="$(koopa_locate_cat)"
+        ['bash']="$(koopa_locate_bash)"
+        ['cat']="$(koopa_locate_cat)"
     )
     [[ -x "${app['bash']}" ]] || return 1
     [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(
-        [app_prefix]="$(koopa_app_prefix)"
-        [arch]="$(koopa_arch)"
-        [arch2]="$(koopa_arch2)"
-        [ascii_turtle_file]="$(koopa_include_prefix)/ascii-turtle.txt"
-        [bash_version]="$(koopa_get_version "${app['bash']}")"
-        [config_prefix]="$(koopa_config_prefix)"
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [koopa_url]="$(koopa_koopa_url)"
-        [koopa_version]="$(koopa_koopa_version)"
-        [make_prefix]="$(koopa_make_prefix)"
-        [opt_prefix]="$(koopa_opt_prefix)"
+        ['app_prefix']="$(koopa_app_prefix)"
+        ['arch']="$(koopa_arch)"
+        ['arch2']="$(koopa_arch2)"
+        ['ascii_turtle_file']="$(koopa_include_prefix)/ascii-turtle.txt"
+        ['bash_version']="$(koopa_get_version "${app['bash']}")"
+        ['config_prefix']="$(koopa_config_prefix)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['koopa_url']="$(koopa_koopa_url)"
+        ['koopa_version']="$(koopa_koopa_version)"
+        ['make_prefix']="$(koopa_make_prefix)"
+        ['opt_prefix']="$(koopa_opt_prefix)"
     )
     info=(
         "koopa ${dict['koopa_version']}"

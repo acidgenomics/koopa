@@ -17,11 +17,11 @@ koopa_debian_set_locale() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [dpkg_reconfigure]="$(koopa_debian_locate_dpkg_reconfigure)"
-        [locale]="$(koopa_locate_locale)"
-        [locale_gen]="$(koopa_debian_locate_locale_gen)"
-        [sudo]="$(koopa_locate_sudo)"
-        [update_locale]="$(koopa_debian_locate_update_locale)" 
+        ['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
+        ['locale']="$(koopa_locate_locale)"
+        ['locale_gen']="$(koopa_debian_locate_locale_gen)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['update_locale']="$(koopa_debian_locate_update_locale)" 
     )
     [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
     [[ -x "${app['locale']}" ]] || return 1
@@ -29,10 +29,10 @@ koopa_debian_set_locale() {
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['update_locale']}" ]] || return 1
     declare -A dict=(
-        [charset]='UTF-8'
-        [country]='US'
-        [lang]='en'
-        [locale_file]='/etc/locale.gen'
+        ['charset']='UTF-8'
+        ['country']='US'
+        ['lang']='en'
+        ['locale_file']='/etc/locale.gen'
     )
     dict['lang_string']="${dict['lang']}_${dict['country']}.${dict['charset']}"
     koopa_alert "Setting locale to '${dict['lang_string']}'."

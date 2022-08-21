@@ -10,7 +10,7 @@ main() {
     local dict
     koopa_activate_opt_prefix 'openssl1'
     declare -A dict=(
-        [openssl]="$(koopa_app_prefix 'openssl1')"
+        ['openssl']="$(koopa_app_prefix 'openssl1')"
     )
     export OPENSSL_DIR="${dict['openssl']}"
     koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"

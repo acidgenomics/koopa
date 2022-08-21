@@ -8,8 +8,8 @@ koopa_os_type() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [tr]="$(koopa_locate_tr)"
-        [uname]="$(koopa_locate_uname)"
+        ['tr']="$(koopa_locate_tr)"
+        ['uname']="$(koopa_locate_uname)"
     )
     [[ -x "${app['tr']}" ]] || return 1
     [[ -x "${app['uname']}" ]] || return 1

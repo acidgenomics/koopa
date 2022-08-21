@@ -14,15 +14,15 @@ koopa_git_clone() {
     local app clone_args dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
-        [branch]=''
-        [commit]=''
-        [prefix]=''
-        [tag]=''
-        [url]=''
+        ['branch']=''
+        ['commit']=''
+        ['prefix']=''
+        ['tag']=''
+        ['url']=''
     )
     while (("$#"))
     do

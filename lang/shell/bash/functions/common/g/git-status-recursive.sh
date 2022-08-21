@@ -7,7 +7,7 @@ koopa_git_status_recursive() {
     # """
     local app dirs
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")

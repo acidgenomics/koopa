@@ -8,13 +8,13 @@ koopa_link_dotfile() {
     local dict pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [dotfiles_config_link]="$(koopa_dotfiles_config_link)"
-        [dotfiles_prefix]="$(koopa_dotfiles_prefix)"
-        [dotfiles_private_prefix]="$(koopa_dotfiles_private_prefix)"
-        [into_xdg_config_home]=0
-        [overwrite]=0
-        [private]=0
-        [xdg_config_home]="$(koopa_xdg_config_home)"
+        ['dotfiles_config_link']="$(koopa_dotfiles_config_link)"
+        ['dotfiles_prefix']="$(koopa_dotfiles_prefix)"
+        ['dotfiles_private_prefix']="$(koopa_dotfiles_private_prefix)"
+        ['into_xdg_config_home']=0
+        ['overwrite']=0
+        ['private']=0
+        ['xdg_config_home']="$(koopa_xdg_config_home)"
     )
     pos=()
     while (("$#"))

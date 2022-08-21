@@ -10,14 +10,14 @@ koopa_rename_lowercase() {
     local app dict pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [rename]="$(koopa_locate_rename)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['rename']="$(koopa_locate_rename)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['rename']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
-        [pattern]='y/A-Z/a-z/'
-        [recursive]=0
+        ['pattern']='y/A-Z/a-z/'
+        ['recursive']=0
     )
     pos=()
     while (("$#"))

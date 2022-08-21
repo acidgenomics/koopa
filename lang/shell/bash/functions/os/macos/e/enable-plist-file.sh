@@ -8,8 +8,8 @@ koopa_macos_enable_plist_file() {
     local app file
     koopa_assert_has_args "$#"
     declare -A app=(
-        [launchctl]="$(koopa_macos_locate_launchctl)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['launchctl']="$(koopa_macos_locate_launchctl)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['launchctl']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
@@ -18,9 +18,9 @@ koopa_macos_enable_plist_file() {
     do
         local dict
         declare -A dict=(
-            [daemon]=0
-            [enabled_file]="$file"
-            [sudo]=1
+            ['daemon']=0
+            ['enabled_file']="$file"
+            ['sudo']=1
         )
         dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
 disabled/$(koopa_basename "${dict['enabled_file']}")"

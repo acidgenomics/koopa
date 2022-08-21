@@ -11,13 +11,13 @@ koopa_switch_to_develop() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
-        [branch]='develop'
-        [origin]='origin'
-        [prefix]="$(koopa_koopa_prefix)"
+        ['branch']='develop'
+        ['origin']='origin'
+        ['prefix']="$(koopa_koopa_prefix)"
     )
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     koopa_sys_set_permissions --recursive "${dict['prefix']}"

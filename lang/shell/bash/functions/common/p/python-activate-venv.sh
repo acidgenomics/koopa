@@ -24,10 +24,10 @@ koopa_python_activate_venv() {
     local dict
     koopa_assert_has_args_eq "$#" 1
     declare -A dict=(
-        [active_env]="${VIRTUAL_ENV:-}"
-        [name]="${1:?}"
-        [nounset]="$(koopa_boolean_nounset)"
-        [prefix]="$(koopa_python_virtualenvs_prefix)"
+        ['active_env']="${VIRTUAL_ENV:-}"
+        ['name']="${1:?}"
+        ['nounset']="$(koopa_boolean_nounset)"
+        ['prefix']="$(koopa_python_virtualenvs_prefix)"
     )
     dict['script']="${dict['prefix']}/${dict['name']}/bin/activate"
     koopa_assert_is_readable "${dict['script']}"

@@ -16,11 +16,11 @@ koopa_build_all_apps() {
     koopa_assert_has_no_args "$#"
     [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
     declare -A app=(
-        [koopa]="$(koopa_locate_koopa)"
+        ['koopa']="$(koopa_locate_koopa)"
     )
     [[ -x "${app['koopa']}" ]] || return 1
     declare -A dict=(
-        [opt_prefix]="$(koopa_opt_prefix)"
+        ['opt_prefix']="$(koopa_opt_prefix)"
     )
     pkgs=()
     pkgs+=(

@@ -7,8 +7,8 @@ koopa_assert_is_matching_fixed() {
     # """
     local dict
     declare -A dict=(
-        [pattern]=''
-        [string]=''
+        ['pattern']=''
+        ['string']=''
     )
     while (("$#"))
     do

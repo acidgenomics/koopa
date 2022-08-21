@@ -25,21 +25,21 @@ koopa_salmon_detect_fastq_library_type() {
     local app dict quant_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [head]="$(koopa_locate_head)"
-        [jq]="$(koopa_locate_jq)"
-        [salmon]="$(koopa_locate_salmon)"
+        ['head']="$(koopa_locate_head)"
+        ['jq']="$(koopa_locate_jq)"
+        ['salmon']="$(koopa_locate_salmon)"
     )
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     [[ -x "${app['salmon']}" ]] || return 1
     declare -A dict=(
-        [fastq_r1_file]=''
-        [fastq_r2_file]=''
-        [index_dir]=''
-        [lib_type]='A'
-        [n]='400000'
-        [threads]="$(koopa_cpu_count)"
-        [tmp_dir]="$(koopa_tmp_dir)"
+        ['fastq_r1_file']=''
+        ['fastq_r2_file']=''
+        ['index_dir']=''
+        ['lib_type']='A'
+        ['n']='400000'
+        ['threads']="$(koopa_cpu_count)"
+        ['tmp_dir']="$(koopa_tmp_dir)"
     )
     dict['output_dir']="${dict['tmp_dir']}/quant"
     while (("$#"))

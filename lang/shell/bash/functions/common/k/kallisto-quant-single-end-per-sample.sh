@@ -33,26 +33,26 @@ koopa_kallisto_quant_single_end_per_sample() {
     # """
     local app dict quant_args
     declare -A app=(
-        [kallisto]="$(koopa_locate_kallisto)"
+        ['kallisto']="$(koopa_locate_kallisto)"
     )
     [[ -x "${app['kallisto']}" ]] || return 1
     declare -A dict=(
         # Current recommendation in bcbio-nextgen.
-        [bootstraps]=30
+        ['bootstraps']=30
         # e.g. 'sample1_001.fastq.gz'.
-        [fastq_file]=''
+        ['fastq_file']=''
         # e.g. '_001.fastq.gz'.
-        [fastq_tail]=''
+        ['fastq_tail']=''
         # Current recommendation in bcbio-nextgen.
-        [fragment_length]=200
+        ['fragment_length']=200
         # e.g. 'kallisto-index'.
-        [index_dir]=''
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['index_dir']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'kallisto'.
-        [output_dir]=''
+        ['output_dir']=''
         # Current recommendation in bcbio-nextgen.
-        [sd]=25
+        ['sd']=25
     )
     quant_args=()
     while (("$#"))

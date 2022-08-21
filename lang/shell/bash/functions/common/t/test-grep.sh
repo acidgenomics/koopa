@@ -12,13 +12,13 @@ koopa_test_grep() {
     local app dict failures file pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [grep]="$(koopa_locate_grep)"
+        ['grep']="$(koopa_locate_grep)"
     )
     [[ -x "${app['grep']}" ]] || return 1
     declare -A dict=(
-        [ignore]=''
-        [name]=''
-        [pattern]=''
+        ['ignore']=''
+        ['name']=''
+        ['pattern']=''
     )
     pos=()
     while (("$#"))

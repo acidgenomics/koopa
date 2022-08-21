@@ -27,17 +27,17 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [installer]="$(koopa_macos_locate_installer)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['installer']="$(koopa_macos_locate_installer)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['installer']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [framework_prefix]='/Library/Frameworks/R.framework'
-        [os]="$(koopa_kebab_case_simple "$(koopa_os_codename)")"
-        [url_stem]='https://cran.r-project.org/bin/macosx'
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['framework_prefix']='/Library/Frameworks/R.framework'
+        ['os']="$(koopa_kebab_case_simple "$(koopa_os_codename)")"
+        ['url_stem']='https://cran.r-project.org/bin/macosx'
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['maj_min_version']="$(koopa_major_minor_version "${dict['version']}")"
     dict['prefix']="${dict['framework_prefix']}/Versions/\

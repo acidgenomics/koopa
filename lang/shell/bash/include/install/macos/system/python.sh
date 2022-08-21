@@ -8,16 +8,16 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [installer]="$(koopa_macos_locate_installer)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['installer']="$(koopa_macos_locate_installer)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['installer']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [framework_prefix]='/Library/Frameworks/Python.framework'
-        [macos_version]="$(koopa_macos_os_version)"
-        [name]='python'
-        [version]="${INSTALL_VERSION:?}"
+        ['framework_prefix']='/Library/Frameworks/Python.framework'
+        ['macos_version']="$(koopa_macos_os_version)"
+        ['name']='python'
+        ['version']="${INSTALL_VERSION:?}"
     )
     case "${dict['macos_version']}" in
         '11'* | \

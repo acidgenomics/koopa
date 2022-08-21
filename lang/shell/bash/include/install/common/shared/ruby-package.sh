@@ -25,18 +25,18 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [bundle]="$(koopa_locate_bundle)"
-        [ruby]="$(koopa_locate_ruby)"
+        ['bundle']="$(koopa_locate_bundle)"
+        ['ruby']="$(koopa_locate_ruby)"
     )
     [[ -x "${app['bundle']}" ]] || return 1
     [[ -x "${app['ruby']}" ]] || return 1
     app['ruby']="$(koopa_realpath "${app['ruby']}")"
     declare -A dict=(
-        [gemfile]='Gemfile'
-        [jobs]="$(koopa_cpu_count)"
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['gemfile']='Gemfile'
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     read -r -d '' "dict[gemfile_string]" << END || true
 source "https://rubygems.org"

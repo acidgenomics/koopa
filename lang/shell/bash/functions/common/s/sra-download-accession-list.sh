@@ -12,18 +12,18 @@ koopa_sra_download_accession_list() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [efetch]="$(koopa_locate_efetch)"
-        [esearch]="$(koopa_locate_esearch)"
-        [sed]="$(koopa_locate_sed)"
+        ['cut']="$(koopa_locate_cut)"
+        ['efetch']="$(koopa_locate_efetch)"
+        ['esearch']="$(koopa_locate_esearch)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['efetch']}" ]] || return 1
     [[ -x "${app['esearch']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
-        [acc_file]=''
-        [srp_id]=''
+        ['acc_file']=''
+        ['srp_id']=''
     )
     while (("$#"))
     do
