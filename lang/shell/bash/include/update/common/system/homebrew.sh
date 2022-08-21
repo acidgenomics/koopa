@@ -17,7 +17,7 @@ main() {
     declare -A app=(
         [brew]="$(koopa_locate_brew)"
     )
-    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || return 1
     declare -A dict=(
         [reset]=0
     )
@@ -42,20 +42,20 @@ main() {
     then
         koopa_stop 'Need to reinstall Xcode CLT.'
     fi
-    if [[ "${dict[reset]}" -eq 1 ]]
+    if [[ "${dict['reset']}" -eq 1 ]]
     then
         koopa_brew_reset_permissions
         koopa_brew_reset_core_repo
     fi
-    "${app[brew]}" analytics off
-    "${app[brew]}" update &>/dev/null
+    "${app['brew']}" analytics off
+    "${app['brew']}" update &>/dev/null
     if koopa_is_macos
     then
         koopa_macos_brew_upgrade_casks
     fi
     koopa_brew_upgrade_brews
     koopa_brew_cleanup
-    if [[ "${dict[reset]}" -eq 1 ]]
+    if [[ "${dict['reset']}" -eq 1 ]]
     then
         koopa_brew_reset_permissions
     fi
