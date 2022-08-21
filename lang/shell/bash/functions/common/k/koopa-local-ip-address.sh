@@ -21,7 +21,7 @@ koopa_local_ip_address() {
     [[ -x "${app['tail']}" ]] || return 1
     if koopa_is_macos
     then
-        app[ifconfig]="$(koopa_macos_locate_ifconfig)"
+        app['ifconfig']="$(koopa_macos_locate_ifconfig)"
         [[ -x "${app['ifconfig']}" ]] || return 1
         # shellcheck disable=SC2016
         str="$( \
@@ -32,7 +32,7 @@ koopa_local_ip_address() {
             | "${app['tail']}" -n 1 \
         )"
     else
-        app[hostname]="$(koopa_locate_hostname)"
+        app['hostname']="$(koopa_locate_hostname)"
         [[ -x "${app['hostname']}" ]] || return 1
         # shellcheck disable=SC2016
         str="$( \

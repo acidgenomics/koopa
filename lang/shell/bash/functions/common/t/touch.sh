@@ -22,7 +22,7 @@ koopa_touch() {
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -40,7 +40,7 @@ koopa_touch() {
     mkdir=("${app['mkdir']}")
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         mkdir+=('--sudo')
         touch=("${app['sudo']}" "${app['touch']}")
     else

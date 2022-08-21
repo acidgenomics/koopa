@@ -29,18 +29,18 @@ main() {
     )
     case "${dict['os_type']}" in
         'darwin'*)
-            dict[os_type]='MacOSX'
+            dict['os_type']='MacOSX'
             ;;
         'linux'*)
-            dict[os_type]='Linux'
+            dict['os_type']='Linux'
             ;;
         *)
             koopa_stop "'${dict['os_type']}' is not supported."
             ;;
     esac
-    dict[file]="Anaconda${dict['py_maj_ver']}-${dict['version']}-\
+    dict['file']="Anaconda${dict['py_maj_ver']}-${dict['version']}-\
 ${dict['os_type']}-${dict['arch']}.sh"
-    dict[url]="https://repo.anaconda.com/archive/${dict['file']}"
+    dict['url']="https://repo.anaconda.com/archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     unset -v PYTHONHOME PYTHONPATH
     "${app['bash']}" "${dict['file']}" -bf -p "${dict['prefix']}"

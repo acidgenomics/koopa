@@ -25,8 +25,8 @@ main() {
     )
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict
-    dict[file]='install.sh'
-    dict[url]="https://raw.githubusercontent.com/Homebrew/install/\
+    dict['file']='install.sh'
+    dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
 master/${dict['file']}"
     if koopa_is_macos && [[ ! -d '/Library/Developer/CommandLineTools' ]]
     then

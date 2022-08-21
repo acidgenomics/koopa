@@ -42,19 +42,19 @@ koopa_convert_fastq_to_fasta() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--source-dir='*)
-                dict[source_dir]="${1#*=}"
+                dict['source_dir']="${1#*=}"
                 shift 1
                 ;;
             '--source-dir')
-                dict[source_dir]="${2:?}"
+                dict['source_dir']="${2:?}"
                 shift 2
                 ;;
             '--target-dir='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-dir')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -67,7 +67,7 @@ koopa_convert_fastq_to_fasta() {
         '--source-dir' "${dict['source_dir']}" \
         '--target-dir' "${dict['target_dir']}"
     koopa_assert_is_dir "${dict['source_dir']}"
-    dict[source_dir]="$(koopa_realpath "${dict['source_dir']}")"
+    dict['source_dir']="$(koopa_realpath "${dict['source_dir']}")"
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -81,7 +81,7 @@ koopa_convert_fastq_to_fasta() {
     then
         koopa_stop "No FASTQ files detected in '${dict['source_dir']}'."
     fi
-    dict[target_dir]="$(koopa_init_dir "${dict['target_dir']}")"
+    dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     for fastq_file in "${fastq_files[@]}"
     do
         local fasta_file

@@ -20,7 +20,7 @@ koopa_relink() {
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -42,8 +42,8 @@ koopa_relink() {
         ln+=('--sudo')
         rm+=('--sudo')
     fi
-    dict[source_file]="${1:?}"
-    dict[dest_file]="${2:?}"
+    dict['source_file']="${1:?}"
+    dict['dest_file']="${2:?}"
     # Keep this check relaxed (i.e. in case dotfiles haven't been cloned).
     [[ -e "${dict['source_file']}" ]] || return 0
     [[ -L "${dict['dest_file']}" ]] && return 0

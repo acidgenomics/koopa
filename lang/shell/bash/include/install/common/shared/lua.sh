@@ -19,14 +19,14 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="http://www.lua.org/ftp/${dict['file']}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="http://www.lua.org/ftp/${dict['file']}"
     if koopa_is_macos
     then
-        dict[platform]='macosx'
+        dict['platform']='macosx'
     elif koopa_is_linux
     then
-        dict[platform]='linux'
+        dict['platform']='linux'
     fi
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

@@ -43,27 +43,27 @@ koopa_fasta_generate_decoy_transcriptome_file() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-file='*)
-                dict[output_file]="${1#*=}"
+                dict['output_file']="${1#*=}"
                 shift 1
                 ;;
             '--output-file')
-                dict[output_file]="${2:?}"
+                dict['output_file']="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
+                dict['transcriptome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
+                dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -80,8 +80,8 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     koopa_assert_is_file \
         "${dict['genome_fasta_file']}" \
         "${dict['transcriptome_fasta_file']}"
-    dict[genome_fasta_file]="$(koopa_realpath "${dict['genome_fasta_file']}")"
-    dict[transcriptome_fasta_file]="$( \
+    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+    dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \

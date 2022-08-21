@@ -13,11 +13,11 @@ koopa_clone() {
         [target_dir]="${2:?}"
     )
     koopa_assert_is_dir "${dict['source_dir']}" "${dict['target_dir']}"
-    dict[source_dir]="$( \
+    dict['source_dir']="$( \
         koopa_realpath "${dict['source_dir']}" \
         | koopa_strip_trailing_slash \
     )"
-    dict[target_dir]="$( \
+    dict['target_dir']="$( \
         koopa_realpath "${dict['target_dir']}" \
         | koopa_strip_trailing_slash \
     )"

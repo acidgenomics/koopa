@@ -44,14 +44,14 @@ koopa_r_javareconf() {
         koopa_alert_note 'Skipping R Java configuration.'
         return 0
     fi
-    dict[java_home]="$(koopa_realpath "${dict['java_home']}")"
-    dict[jar]="${dict['java_home']}/bin/jar"
-    dict[java]="${dict['java_home']}/bin/java"
-    dict[javac]="${dict['java_home']}/bin/javac"
+    dict['java_home']="$(koopa_realpath "${dict['java_home']}")"
+    dict['jar']="${dict['java_home']}/bin/jar"
+    dict['java']="${dict['java_home']}/bin/java"
+    dict['javac']="${dict['java_home']}/bin/javac"
     # javah was deprecated in JDK 9 in favor if 'javac -h', but this approach
     # doesn't currently work with R.
     # > dict[javah]="${dict['javac']} -h"
-    dict[javah]=''
+    dict['javah']=''
     koopa_alert 'Updating R Java configuration.'
     koopa_dl \
         'JAR' "${dict['jar']}" \

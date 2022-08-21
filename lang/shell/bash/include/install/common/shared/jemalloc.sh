@@ -21,8 +21,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.bz2"
-    dict[url]="https://github.com/jemalloc/jemalloc/releases/download/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
+    dict['url']="https://github.com/jemalloc/jemalloc/releases/download/\
 ${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

@@ -35,8 +35,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
-    dict[url]="https://gitlab.com/api/v4/projects/4207231/packages/generic/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+    dict['url']="https://gitlab.com/api/v4/projects/4207231/packages/generic/\
 ${dict['name']}-releases/${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

@@ -78,36 +78,36 @@ koopa_sra_fastq_dump() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--accession-file='*)
-                dict[acc_file]="${1#*=}"
+                dict['acc_file']="${1#*=}"
                 shift 1
                 ;;
             '--accession-file')
-                dict[acc_file]="${2:?}"
+                dict['acc_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-directory='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-directory')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--prefetch-directory='*)
-                dict[prefetch_dir]="${1#*=}"
+                dict['prefetch_dir']="${1#*=}"
                 shift 1
                 ;;
             '--prefetch-directory')
-                dict[prefetch_dir]="${2:?}"
+                dict['prefetch_dir']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--compress')
-                dict[compress]=1
+                dict['compress']=1
                 shift 1
                 ;;
             '--no-compress')
-                dict[compress]=0
+                dict['compress']=0
                 shift 1
                 ;;
             # Invalid ----------------------------------------------------------

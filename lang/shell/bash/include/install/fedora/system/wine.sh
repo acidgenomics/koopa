@@ -19,13 +19,13 @@ main() {
     )
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict
-    dict[version]="$( \
+    dict['version']="$( \
         koopa_grep \
             --file='/etc/os-release' \
             --pattern='VERSION_ID=' \
         | "${app['cut']}" -d '=' -f '2' \
     )"
-    dict[repo_url]="https://dl.winehq.org/wine-builds/fedora/\
+    dict['repo_url']="https://dl.winehq.org/wine-builds/fedora/\
 ${dict['version']}/winehq.repo"
     koopa_fedora_dnf update
     koopa_fedora_dnf_install 'dnf-plugins-core'

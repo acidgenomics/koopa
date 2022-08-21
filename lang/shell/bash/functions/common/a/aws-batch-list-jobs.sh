@@ -22,35 +22,35 @@ koopa_aws_batch_list_jobs() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--account-id='*)
-                dict[account_id]="${1#*=}"
+                dict['account_id']="${1#*=}"
                 shift 1
                 ;;
             '--account-id')
-                dict[account_id]="${2:?}"
+                dict['account_id']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--queue='*)
-                dict[queue]="${1#*=}"
+                dict['queue']="${1#*=}"
                 shift 1
                 ;;
             '--queue')
-                dict[queue]="${2:?}"
+                dict['queue']="${2:?}"
                 shift 2
                 ;;
             '--region='*)
-                dict[region]="${1#*=}"
+                dict['region']="${1#*=}"
                 shift 1
                 ;;
             '--region')
-                dict[region]="${2:?}"
+                dict['region']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -82,7 +82,7 @@ koopa_aws_batch_list_jobs() {
         'SUCCEEDED'
         'FAILED'
     )
-    dict[job_queue]="$(koopa_paste --sep=':' "${job_queue_array[@]}")"
+    dict['job_queue']="$(koopa_paste --sep=':' "${job_queue_array[@]}")"
     for status in "${status_array[@]}"
     do
         koopa_h2 "$status"

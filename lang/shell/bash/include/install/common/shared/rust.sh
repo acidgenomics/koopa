@@ -18,29 +18,29 @@ main() {
         [tmp_prefix]='rustup'
         [version]="${INSTALL_VERSION:?}" # or 'stable' toolchain
     )
-    dict[cargo_home]="${dict['tmp_prefix']}"
-    dict[rustup_home]="${dict['tmp_prefix']}"
+    dict['cargo_home']="${dict['tmp_prefix']}"
+    dict['rustup_home']="${dict['tmp_prefix']}"
     CARGO_HOME="${dict['cargo_home']}"
     RUSTUP_HOME="${dict['rustup_home']}"
     export CARGO_HOME RUSTUP_HOME
     koopa_mkdir "${dict['rustup_home']}"
-    dict[url]='https://sh.rustup.rs'
-    dict[file]='rustup.sh'
+    dict['url']='https://sh.rustup.rs'
+    dict['file']='rustup.sh'
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_chmod 'u+x' "${dict['file']}"
     "./${dict['file']}" -v -y \
         --default-toolchain 'none' \
         --no-modify-path
-    app[rustup]="${dict['tmp_prefix']}/bin/rustup"
+    app['rustup']="${dict['tmp_prefix']}/bin/rustup"
     koopa_assert_is_installed "${app['rustup']}"
     "${app['rustup']}" install "${dict['version']}"
     "${app['rustup']}" default "${dict['version']}"
-    dict[toolchain]="$( \
+    dict['toolchain']="$( \
         "${app['rustup']}" toolchain list \
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '1' \
     )"
-    dict[toolchain_prefix]="${dict['tmp_prefix']}/toolchains/${dict['toolchain']}"
+    dict['toolchain_prefix']="${dict['tmp_prefix']}/toolchains/${dict['toolchain']}"
     koopa_assert_is_dir "${dict['toolchain_prefix']}"
     koopa_cp "${dict['toolchain_prefix']}" "${dict['prefix']}"
     return 0

@@ -20,15 +20,15 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[version2]="$( \
+    dict['version2']="$( \
         koopa_gsub \
             --fixed \
             --pattern='.' \
             --replacement='_' \
             "${dict['version']}" \
     )"
-    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
-    dict[url]="https://github.com/libexpat/libexpat/releases/download/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+    dict['url']="https://github.com/libexpat/libexpat/releases/download/\
 R_${dict['version2']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

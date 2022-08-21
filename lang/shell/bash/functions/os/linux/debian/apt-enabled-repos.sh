@@ -15,8 +15,8 @@ koopa_debian_apt_enabled_repos() {
         [file]="$(koopa_debian_apt_sources_file)"
         [os]="$(koopa_os_codename)"
     )
-    dict[pattern]="^deb\s.+\s${dict['os']}\s.+$"
-    dict[str]="$( \
+    dict['pattern']="^deb\s.+\s${dict['os']}\s.+$"
+    dict['str']="$( \
         koopa_grep \
             --file="${dict['file']}" \
             --pattern="${dict['pattern']}" \

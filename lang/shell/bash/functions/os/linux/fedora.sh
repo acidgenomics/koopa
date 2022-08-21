@@ -52,14 +52,14 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     esac
     if koopa_is_fedora || koopa_is_rhel_8_like
     then
-        dict[platform]='el8'
+        dict['platform']='el8'
     elif koopa_is_rhel_7_like
     then
-        dict[platform]='el7'
+        dict['platform']='el7'
     else
         koopa_stop 'Unsupported platform.'
     fi
-    dict[baseurl]="https://packages.cloud.google.com/yum/repos/\
+    dict['baseurl']="https://packages.cloud.google.com/yum/repos/\
 cloud-sdk-${dict['platform']}-${dict['arch']}"
     [[ -f "${dict['file']}" ]] && return 0
     "${app['sudo']}" "${app['tee']}" "${dict['file']}" >/dev/null << END
@@ -221,7 +221,7 @@ koopa_fedora_set_locale() {
         [country]='US'
         [charset]='UTF-8'
     )
-    dict[lang_string]="${dict['lang']}_${dict['country']}.${dict['charset']}"
+    dict['lang_string']="${dict['lang']}_${dict['country']}.${dict['charset']}"
     koopa_alert "Setting locale to '${dict['lang_string']}'."
     "${app['sudo']}" "${app['localedef']}" \
         -i "${dict['lang']}_${dict['country']}" \

@@ -21,13 +21,13 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://github.com/Kitware/CMake/releases/download/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/Kitware/CMake/releases/download/\
 v${dict['version']}/${dict['file']}"
     if koopa_is_linux
     then
-        app[cc]='/usr/bin/gcc'
-        app[cxx]='/usr/bin/g++'
+        app['cc']='/usr/bin/gcc'
+        app['cxx']='/usr/bin/g++'
         koopa_assert_is_installed "${app['cc']}" "${app['cxx']}"
         export CC="${app['cc']}"
         export CXX="${app['cxx']}"
@@ -35,7 +35,7 @@ v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    dict[openssl]="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     # Note that the './configure' script is just a wrapper for './bootstrap'.
     # > ./bootstrap --help
     bootstrap_args=(

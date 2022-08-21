@@ -17,7 +17,7 @@ koopa_bioconda_autobump_recipe() {
         [recipe]="${1:?}"
         [repo]="${HOME:?}/git/bioconda-recipes"
     )
-    dict[branch]="${dict['recipe']/-/_}"
+    dict['branch']="${dict['recipe']/-/_}"
     koopa_assert_is_dir "${dict['repo']}"
     (
         koopa_cd "${dict['repo']}"

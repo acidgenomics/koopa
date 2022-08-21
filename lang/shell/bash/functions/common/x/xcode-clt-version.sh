@@ -25,7 +25,7 @@ koopa_xcode_clt_version() {
     )
     "${app['pkgutil']}" --pkgs="${dict['pkg']}" >/dev/null || return 1
     # shellcheck disable=SC2016
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['pkgutil']}" --pkg-info="${dict['pkg']}" \
             | "${app['awk']}" '/version:/ {print $2}' \
     )"

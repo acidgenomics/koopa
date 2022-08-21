@@ -14,11 +14,11 @@ koopa_debian_apt_add_llvm_repo() {
     )
     if [[ -z "${dict['version']}" ]]
     then
-        dict[version]="$(koopa_variable "${dict['name']}")"
+        dict['version']="$(koopa_variable "${dict['name']}")"
     fi
-    dict[url]="http://apt.llvm.org/${dict['os']}/"
-    dict[version2]="$(koopa_major_version "${dict['version']}")"
-    dict[distribution]="llvm-toolchain-${dict['os']}-${dict['version2']}"
+    dict['url']="http://apt.llvm.org/${dict['os']}/"
+    dict['version2']="$(koopa_major_version "${dict['version']}")"
+    dict['distribution']="llvm-toolchain-${dict['os']}-${dict['version2']}"
     koopa_debian_apt_add_llvm_key
     koopa_debian_apt_add_repo \
         --component="${dict['component']}" \

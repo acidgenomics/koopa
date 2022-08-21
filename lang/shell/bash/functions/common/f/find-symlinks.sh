@@ -28,24 +28,24 @@ koopa_find_symlinks() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--source-prefix='*)
-                dict[source_prefix]="${1#*=}"
+                dict['source_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--source-prefix')
-                dict[source_prefix]="${2:?}"
+                dict['source_prefix']="${2:?}"
                 shift 2
                 ;;
             '--target-prefix='*)
-                dict[target_prefix]="${1#*=}"
+                dict['target_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--target-prefix')
-                dict[target_prefix]="${2:?}"
+                dict['target_prefix']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--verbose')
-                dict[verbose]=1
+                dict['verbose']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -58,8 +58,8 @@ koopa_find_symlinks() {
         '--source-prefix' "${dict['source_prefix']}" \
         '--target-prefix' "${dict['target_prefix']}"
     koopa_assert_is_dir "${dict['source_prefix']}" "${dict['target_prefix']}"
-    dict[source_prefix]="$(koopa_realpath "${dict['source_prefix']}")"
-    dict[target_prefix]="$(koopa_realpath "${dict['target_prefix']}")"
+    dict['source_prefix']="$(koopa_realpath "${dict['source_prefix']}")"
+    dict['target_prefix']="$(koopa_realpath "${dict['target_prefix']}")"
     readarray -t symlinks <<< "$(
         koopa_find \
             --prefix="${dict['target_prefix']}" \

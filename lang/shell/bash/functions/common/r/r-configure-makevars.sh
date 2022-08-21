@@ -22,19 +22,19 @@ koopa_r_configure_makevars() {
         [arch]="$(koopa_arch)"
         [r_prefix]="$(koopa_r_prefix "${app['r']}")"
     )
-    dict[file]="${dict['r_prefix']}/etc/Makevars.site"
+    dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
     if koopa_is_linux
     then
-        dict[freetype]="$(koopa_app_prefix 'freetype')"
+        dict['freetype']="$(koopa_app_prefix 'freetype')"
         lines+=("CPPFLAGS += -I${dict['freetype']}/include/freetype2")
     elif koopa_is_macos
     then
-        dict[gcc]="$(koopa_app_prefix 'gcc')"
+        dict['gcc']="$(koopa_app_prefix 'gcc')"
         # gettext is needed to resolve clang '-lintl' warning.
-        dict[gettext]="$(koopa_app_prefix 'gettext')"
-        app[fc]="${dict['gcc']}/bin/gfortran"
+        dict['gettext']="$(koopa_app_prefix 'gettext')"
+        app['fc']="${dict['gcc']}/bin/gfortran"
         # This will cover 'lib' and 'lib64' subdirs.
         # See also 'gcc --print-search-dirs'.
         readarray -t libs <<< "$( \
@@ -62,15 +62,15 @@ koopa_r_configure_makevars() {
         # Consider also including '-lemutls_w' here, which is recommended by
         # default macOS build config.
         flibs+=('-lm')
-        dict[flibs]="${flibs[*]}"
+        dict['flibs']="${flibs[*]}"
         cppflags=('-Xclang' '-fopenmp')
-        dict[cppflags]="${cppflags[*]}"
+        dict['cppflags']="${cppflags[*]}"
         ldflags=(
             "-I${dict['gettext']}/include"
             "-L${dict['gettext']}/lib"
             '-lomp'
         )
-        dict[ldflags]="${ldflags[*]}"
+        dict['ldflags']="${ldflags[*]}"
         lines+=(
             "CPPFLAGS += ${dict['cppflags']}"
             "FC = ${app['fc']}"
@@ -78,11 +78,11 @@ koopa_r_configure_makevars() {
             "LDFLAGS += ${dict['ldflags']}"
         )
     fi
-    dict[bash]="$(koopa_app_prefix 'bash')"
-    dict[binutils]="$(koopa_app_prefix 'binutils')"
-    dict[bison]="$(koopa_app_prefix 'bison')"
-    dict[coreutils]="$(koopa_app_prefix 'coreutils')"
-    dict[sed]="$(koopa_app_prefix 'sed')"
+    dict['bash']="$(koopa_app_prefix 'bash')"
+    dict['binutils']="$(koopa_app_prefix 'binutils')"
+    dict['bison']="$(koopa_app_prefix 'bison')"
+    dict['coreutils']="$(koopa_app_prefix 'coreutils')"
+    dict['sed']="$(koopa_app_prefix 'sed')"
     lines+=(
         "AR = ${dict['binutils']}/bin/ar"
         "ECHO = ${dict['coreutils']}/bin/echo"
@@ -90,7 +90,7 @@ koopa_r_configure_makevars() {
         "SHELL = ${dict['bash']}/bin/bash"
         "YACC = ${dict['bison']}/bin/yacc"
     )
-    dict[string]="$(koopa_print "${lines[@]}" | "${app['sort']}")"
+    dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"

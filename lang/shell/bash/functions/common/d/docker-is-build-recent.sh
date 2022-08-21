@@ -29,11 +29,11 @@ koopa_docker_is_build_recent() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--days='*)
-                dict[days]="${1#*=}"
+                dict['days']="${1#*=}"
                 shift 1
                 ;;
             '--days')
-                dict[days]="${2:?}"
+                dict['days']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -49,7 +49,7 @@ koopa_docker_is_build_recent() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     # 24 hours * 60 minutes * 60 seconds = 86400.
-    dict[seconds]="$((dict[days] * 86400))"
+    dict['seconds']="$((dict[days] * 86400))"
     for image in "$@"
     do
         local dict2
@@ -58,12 +58,12 @@ koopa_docker_is_build_recent() {
             [image]="$image"
         )
         "${app['docker']}" pull "${dict2['image']}" >/dev/null
-        dict2[json]="$( \
+        dict2['json']="$( \
             "${app['docker']}" inspect \
                 --format='{{json .Created}}' \
                 "${dict2['image']}" \
         )"
-        dict2[created]="$( \
+        dict2['created']="$( \
             koopa_grep \
                 --only-matching \
                 --pattern='[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
@@ -72,10 +72,10 @@ koopa_docker_is_build_recent() {
             | "${app['sed']}" 's/T/ /' \
             | "${app['sed']}" 's/\$/ UTC/'
         )"
-        dict2[created]="$( \
+        dict2['created']="$( \
             "${app['date']}" --utc --date="${dict2['created']}" '+%s' \
         )"
-        dict2[diff]=$((dict2[current] - dict2[created]))
+        dict2['diff']=$((dict2[current] - dict2[created]))
         [[ "${dict2['diff']}" -le "${dict['seconds']}" ]] && continue
         return 1
     done

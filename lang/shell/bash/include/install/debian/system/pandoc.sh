@@ -20,8 +20,8 @@ main() {
         [version]="${INSTALL_VERSION:?}"
         [name]='pandoc'
     )
-    dict[file]="${dict['name']}-${dict['version']}-1-${dict['arch']}.deb"
-    dict[url]="https://github.com/jgm/${dict['name']}/releases/download/\
+    dict['file']="${dict['name']}-${dict['version']}-1-${dict['arch']}.deb"
+    dict['url']="https://github.com/jgm/${dict['name']}/releases/download/\
 ${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     "${app['sudo']}" "${app['dpkg']}" -i "${dict['file']}"

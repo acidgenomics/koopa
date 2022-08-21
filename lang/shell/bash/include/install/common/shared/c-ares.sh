@@ -21,8 +21,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://c-ares.org/download/${dict['file']}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://c-ares.org/download/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

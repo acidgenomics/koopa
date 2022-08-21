@@ -65,11 +65,11 @@ koopa_install_app() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--installer='*)
-                dict[installer_bn]="${1#*=}"
+                dict['installer_bn']="${1#*=}"
                 shift 1
                 ;;
             '--installer')
-                dict[installer_bn]="${2:?}"
+                dict['installer_bn']="${2:?}"
                 shift 2
                 ;;
             '--link-in-bin='*)
@@ -81,89 +81,89 @@ koopa_install_app() {
                 shift 2
                 ;;
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
-                dict[platform]="${1#*=}"
+                dict['platform']="${1#*=}"
                 shift 1
                 ;;
             '--platform')
-                dict[platform]="${2:?}"
+                dict['platform']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--version='*)
-                dict[version]="${1#*=}"
+                dict['version']="${1#*=}"
                 shift 1
                 ;;
             '--version')
-                dict[version]="${2:?}"
+                dict['version']="${2:?}"
                 shift 2
                 ;;
             '--version-key='*)
-                dict[version_key]="${1#*=}"
+                dict['version_key']="${1#*=}"
                 shift 1
                 ;;
             '--version-key')
-                dict[version_key]="${2:?}"
+                dict['version_key']="${2:?}"
                 shift 2
                 ;;
             # CLI user-accessible flags ----------------------------------------
             '--binary')
-                bool[binary]=1
+                bool['binary']=1
                 shift 1
                 ;;
             '--push')
-                bool[push]=1
+                bool['push']=1
                 shift 1
                 ;;
             '--reinstall')
-                bool[reinstall]=1
+                bool['reinstall']=1
                 shift 1
                 ;;
             '--verbose')
-                bool[verbose]=1
+                bool['verbose']=1
                 shift 1
                 ;;
             # Internal flags ---------------------------------------------------
             '--no-link-in-opt')
-                bool[link_in_opt]=0
+                bool['link_in_opt']=0
                 shift 1
                 ;;
             '--no-prefix-check')
-                bool[prefix_check]=0
+                bool['prefix_check']=0
                 shift 1
                 ;;
             '--no-restrict-path')
-                bool[restrict_path]=0
+                bool['restrict_path']=0
                 shift 1
                 ;;
             '--quiet')
-                bool[quiet]=1
+                bool['quiet']=1
                 shift 1
                 ;;
             '--system')
-                dict[mode]='system'
+                dict['mode']='system'
                 shift 1
                 ;;
             '--user')
-                dict[mode]='user'
+                dict['mode']='user'
                 shift 1
                 ;;
             '--version-is-git-commit')
-                bool[version_is_git_commit]=1
+                bool['version_is_git_commit']=1
                 shift 1
                 ;;
             # Configuration passthrough support --------------------------------
@@ -185,47 +185,47 @@ koopa_install_app() {
     koopa_assert_is_set '--name' "${dict['name']}"
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict['version_key']}" ]] && dict[version_key]="${dict['name']}"
-    dict[current_version]="$(\
+    dict['current_version']="$(\
         koopa_variable "${dict['version_key']}" 2>/dev/null || true \
     )"
     [[ -z "${dict['version']}" ]] && dict[version]="${dict['current_version']}"
     if [[ "${dict['version']}" != "${dict['current_version']}" ]]
     then
-        bool[link_in_bin]=0
-        bool[link_in_opt]=0
+        bool['link_in_bin']=0
+        bool['link_in_opt']=0
     fi
     case "${dict['mode']}" in
         'shared')
             if [[ -z "${dict['prefix']}" ]]
             then
-                bool[auto_prefix]=1
-                dict[version2]="${dict['version']}"
+                bool['auto_prefix']=1
+                dict['version2']="${dict['version']}"
                 if [[ "${bool['version_is_git_commit']}" -eq 1 ]]
                 then
-                    dict[version2]="${dict['version2']:0:8}"
+                    dict['version2']="${dict['version2']:0:8}"
                 fi
-                dict[prefix]="${dict['app_prefix']}/${dict['name']}/\
+                dict['prefix']="${dict['app_prefix']}/${dict['name']}/\
 ${dict['version2']}"
             fi
             ;;
         'system')
             koopa_assert_is_admin
-            bool[link_in_opt]=0
+            bool['link_in_opt']=0
             koopa_is_linux && bool[update_ldconfig]=1
             ;;
         'user')
-            bool[link_in_opt]=0
+            bool['link_in_opt']=0
             ;;
     esac
     if koopa_is_array_non_empty "${bin_arr[@]:-}"
     then
-        bool[link_in_bin]=1
-        bool[link_in_man]=1
+        bool['link_in_bin']=1
+        bool['link_in_man']=1
     fi
     [[ -d "${dict['prefix']}" ]] && \
-        dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     [[ -z "${dict['installer_bn']}" ]] && dict[installer_bn]="${dict['name']}"
-    dict[installer_file]="${dict['koopa_prefix']}/lang/shell/bash/include/\
+    dict['installer_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     koopa_assert_is_file "${dict['installer_file']}"
     # shellcheck source=/dev/null
@@ -263,10 +263,10 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         fi
         case "${dict['mode']}" in
             'system')
-                dict[prefix]="$(koopa_init_dir --sudo "${dict['prefix']}")"
+                dict['prefix']="$(koopa_init_dir --sudo "${dict['prefix']}")"
                 ;;
             *)
-                dict[prefix]="$(koopa_init_dir "${dict['prefix']}")"
+                dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
                 ;;
         esac
     fi
@@ -274,7 +274,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         [[ -d "${dict['prefix']}" ]] && \
         [[ "${dict['mode']}" != 'system' ]]
     then
-        bool[copy_log_file]=1
+        bool['copy_log_file']=1
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
@@ -350,8 +350,8 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         do
             local dict2
             declare -A dict2
-            dict2[name]="${bin_arr['i']}"
-            dict2[source]="${dict['prefix']}/bin/${dict2['name']}"
+            dict2['name']="${bin_arr['i']}"
+            dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
             koopa_link_in_bin \
                 --name="${dict2['name']}" \
                 --source="${dict2['source']}"
@@ -363,9 +363,9 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         do
             local dict2
             declare -A dict2
-            dict2[name]="${bin_arr['i']}.1"
-            dict2[manfile1]="${dict['prefix']}/share/man/man1/${dict2['name']}"
-            dict2[manfile2]="${dict['prefix']}/man/man1/${dict2['name']}"
+            dict2['name']="${bin_arr['i']}.1"
+            dict2['manfile1']="${dict['prefix']}/share/man/man1/${dict2['name']}"
+            dict2['manfile2']="${dict['prefix']}/man/man1/${dict2['name']}"
             if [[ -f "${dict2['manfile1']}" ]]
             then
                 koopa_link_in_man1 \

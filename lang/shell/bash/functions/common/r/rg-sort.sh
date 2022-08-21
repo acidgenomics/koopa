@@ -14,7 +14,7 @@ koopa_rg_sort() {
     declare -A dict=(
         [pattern]="${1:?}"
     )
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['rg']}" \
             --pretty \
             --sort 'path' \

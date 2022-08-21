@@ -17,7 +17,7 @@ koopa_linux_add_user_to_etc_passwd() {
     then
         koopa_alert "Updating '${dict['passwd_file']}' to \
 include '${dict['user']}'."
-        dict[user_string]="$(getent passwd "${dict['user']}")"
+        dict['user_string']="$(getent passwd "${dict['user']}")"
         koopa_sudo_append_string \
             --file="${dict['passwd_file']}" \
             --string="${dict['user_string']}"
@@ -74,27 +74,27 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     do
         case "$1" in
             '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
+                dict['fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--fasta-file')
-                dict[fasta_file]="${2:?}"
+                dict['fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--genome-build='*)
-                dict[genome_build]="${1#*=}"
+                dict['genome_build']="${1#*=}"
                 shift 1
                 ;;
             '--genome-build')
-                dict[genome_build]="${2:?}"
+                dict['genome_build']="${2:?}"
                 shift 2
                 ;;
             '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
+                dict['gtf_file']="${1#*=}"
                 shift 1
                 ;;
             '--gtf-file')
-                dict[gtf_file]="${2:?}"
+                dict['gtf_file']="${2:?}"
                 shift 2
                 ;;
             '--indexes='*)
@@ -106,19 +106,19 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
                 shift 2
                 ;;
             '--organism='*)
-                dict[organism]="${1#*=}"
+                dict['organism']="${1#*=}"
                 shift 1
                 ;;
             '--organism')
-                dict[organism]="${2:?}"
+                dict['organism']="${2:?}"
                 shift 2
                 ;;
             '--release='*)
-                dict[release]="${1#*=}"
+                dict['release']="${1#*=}"
                 shift 1
                 ;;
             '--release')
-                dict[release]="${2:?}"
+                dict['release']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -136,24 +136,24 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     koopa_activate_bcbio_nextgen
     koopa_assert_is_installed "${app['bcbio_setup_genome']}"
     koopa_assert_is_file "${dict['fasta_file']}" "${dict['gtf_file']}"
-    dict[fasta_file]="$(koopa_realpath "${dict['fasta_file']}")"
-    dict[gtf_file]="$(koopa_realpath "${dict['gtf_file']}")"
+    dict['fasta_file']="$(koopa_realpath "${dict['fasta_file']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     if ! koopa_str_detect_regex \
         --string="${dict['organism']}" \
         --pattern="${dict['organism_pattern']}"
     then
         koopa_stop "Invalid organism: '${dict['organism']}'."
     fi
-    dict[build_version]="${dict['provider']}_${dict['release']}"
-    dict[bcbio_genome_name]="${dict['build']} ${dict['provider']} ${dict['release']}"
-    dict[bcbio_genome_name]="${dict['bcbio_genome_name']// /_}"
+    dict['build_version']="${dict['provider']}_${dict['release']}"
+    dict['bcbio_genome_name']="${dict['build']} ${dict['provider']} ${dict['release']}"
+    dict['bcbio_genome_name']="${dict['bcbio_genome_name']// /_}"
     koopa_alert_install_start "${dict['bcbio_genome_name']}"
-    dict[bcbio_species_dir]="$( \
+    dict['bcbio_species_dir']="$( \
         koopa_print "${dict['organism']// /_}" \
             | "${app['sed']}" -E 's/^([A-Z])[a-z]+_([a-z]+)$/\1\2/g' \
     )"
-    dict[install_prefix]="$(koopa_parent_dir --num=3 "${dict['script']}")"
-    dict[tool_data_prefix]="${dict['install_prefix']}/galaxy/tool-data"
+    dict['install_prefix']="$(koopa_parent_dir --num=3 "${dict['script']}")"
+    dict['tool_data_prefix']="${dict['install_prefix']}/galaxy/tool-data"
     koopa_mkdir "${dict['tool_data_prefix']}"
     "${app['touch']}" "${dict['tool_data_prefix']}/sam_fa_indices.log"
     koopa_dl \
@@ -215,27 +215,27 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     do
         case "$1" in
             '--bcbio-python='*)
-                app[bcbio_python]="${1#*=}"
+                app['bcbio_python']="${1#*=}"
                 shift 1
                 ;;
             '--bcbio-python')
-                app[bcbio_python]="${2:?}"
+                app['bcbio_python']="${2:?}"
                 shift 2
                 ;;
             '--git-dir='*)
-                dict[git_dir]="${1#*=}"
+                dict['git_dir']="${1#*=}"
                 shift 1
                 ;;
             '--git-dir')
-                dict[git_dir]="${2:?}"
+                dict['git_dir']="${2:?}"
                 shift 2
                 ;;
             '--install-dir='*)
-                dict[install_dir]="${1#*=}"
+                dict['install_dir']="${1#*=}"
                 shift 1
                 ;;
             '--install-dir')
-                dict[install_dir]="${2:?}"
+                dict['install_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -248,11 +248,11 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     then
         koopa_locate_app "${app['bcbio_python']}"
     fi
-    app[bcbio_python]="$(koopa_realpath "${app['bcbio_python']}")"
+    app['bcbio_python']="$(koopa_realpath "${app['bcbio_python']}")"
     koopa_assert_is_installed "${app['bcbio_python']}"
     if [[ -z "${dict['install_dir']}" ]]
     then
-        dict[install_dir]="$(koopa_parent_dir --num=3 "${app['bcbio_python']}")"
+        dict['install_dir']="$(koopa_parent_dir --num=3 "${app['bcbio_python']}")"
     fi
     koopa_assert_is_dir "${dict['install_dir']}"
     koopa_h1 "Patching '${dict['name']}' installation at '${dict['install_dir']}'."
@@ -298,27 +298,27 @@ koopa_linux_bcbio_nextgen_run_tests() {
     do
         case "$1" in
             '--git-dir='*)
-                dict[git_dir]="${1#*=}"
+                dict['git_dir']="${1#*=}"
                 shift 1
                 ;;
             '--git-dir')
-                dict[git_dir]="${2:?}"
+                dict['git_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             '--tools-dir='*)
-                dict[tools_dir]="${1#*=}"
+                dict['tools_dir']="${1#*=}"
                 shift 1
                 ;;
             '--tools-dir')
-                dict[tools_dir]="${2:?}"
+                dict['tools_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -380,7 +380,7 @@ koopa_linux_configure_lmod() {
         [prefix]="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_lmod_prefix)"
-    dict[init_dir]="${dict['prefix']}/apps/lmod/lmod/init"
+    dict['init_dir']="${dict['prefix']}/apps/lmod/lmod/init"
     koopa_assert_is_dir "${dict['init_dir']}"
     if [[ ! -d "${dict['etc_dir']}" ]]
     then
@@ -394,7 +394,7 @@ koopa_linux_configure_lmod() {
         "${dict['etc_dir']}/z00_lmod.csh"
     if koopa_is_installed 'fish'
     then
-        dict[fish_etc_dir]='/etc/fish/conf.d'
+        dict['fish_etc_dir']='/etc/fish/conf.d'
         koopa_alert "Updating Fish configuration in '${dict['fish_etc_dir']}'."
         if [[ ! -d "${dict['fish_etc_dir']}" ]]
         then
@@ -692,8 +692,8 @@ koopa_linux_proc_cmdline() {
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict
-    dict['pid']="${1:?}"
-    dict['cmdline']="/proc/${dict['pid']}/cmdline"
+    dict[''pid'']="${1:?}"
+    dict[''cmdline'']="/proc/${dict['pid']}/cmdline"
     koopa_assert_is_file "${dict['cmdline']}"
     "${app['cat']}" "${dict['cmdline']}" \
         | "${app['xargs']}" -0 "${app['echo']}"
@@ -838,7 +838,7 @@ koopa_linux_update_ldconfig() {
         [target_prefix]='/etc/ld.so.conf.d'
     )
     [[ -d "${dict['target_prefix']}" ]] || return 0
-    dict[conf_source]="${dict['distro_prefix']}${dict['target_prefix']}"
+    dict['conf_source']="${dict['distro_prefix']}${dict['target_prefix']}"
     [[ -d "${dict['conf_source']}" ]] || return 0
     koopa_alert "Updating ldconfig in '${dict['target_prefix']}'."
     for source_file in "${dict['conf_source']}/"*".conf"

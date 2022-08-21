@@ -32,13 +32,13 @@ koopa_conda_activate_env() {
         [env_name]="${1:?}"
         [nounset]="$(koopa_boolean_nounset)"
     )
-    dict[env_prefix]="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
+    dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
     if [[ ! -d "${dict['env_prefix']}" ]]
     then
         koopa_alert_info "Attempting to install missing conda \
 environment '${dict['env_name']}'."
         koopa_conda_create_env "${dict['env_name']}"
-        dict[env_prefix]="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
+        dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
     fi
     if [[ ! -d "${dict['env_prefix']}" ]]
     then

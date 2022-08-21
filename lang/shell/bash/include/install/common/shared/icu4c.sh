@@ -23,10 +23,10 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[kebab_version]="$(koopa_kebab_case_simple "${dict['version']}")"
-    dict[snake_version]="$(koopa_snake_case_simple "${dict['version']}")"
-    dict[file]="${dict['name']}-${dict['snake_version']}-src.tgz"
-    dict[url]="https://github.com/unicode-org/icu/releases/download/\
+    dict['kebab_version']="$(koopa_kebab_case_simple "${dict['version']}")"
+    dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"
+    dict['file']="${dict['name']}-${dict['snake_version']}-src.tgz"
+    dict['url']="https://github.com/unicode-org/icu/releases/download/\
 release-${dict['kebab_version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

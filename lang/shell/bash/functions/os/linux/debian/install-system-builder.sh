@@ -74,10 +74,10 @@ END
             'systemd' \
             'tzdata' \
             'unzip'
-    app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
-    app['locale_gen']="$(koopa_debian_locate_locale_gen)"
-    app['timedatectl']="$(koopa_debian_locate_timedatectl)"
-    app['update_locale']="$(koopa_debian_locate_update_locale)"
+    app[''dpkg_reconfigure'']="$(koopa_debian_locate_dpkg_reconfigure)"
+    app[''locale_gen'']="$(koopa_debian_locate_locale_gen)"
+    app[''timedatectl'']="$(koopa_debian_locate_timedatectl)"
+    app[''update_locale'']="$(koopa_debian_locate_update_locale)"
     [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
     [[ -x "${app['locale_gen']}" ]] || return 1
     [[ -x "${app['timedatectl']}" ]] || return 1

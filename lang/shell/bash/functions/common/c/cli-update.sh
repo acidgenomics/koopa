@@ -26,7 +26,7 @@ koopa_cli_update() {
         declare -A dict=(
             [key]="${stem}-${app}"
         )
-        dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then
             koopa_stop "Unsupported app: '${app}'."

@@ -14,19 +14,19 @@ koopa_assert_is_matching_regex() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

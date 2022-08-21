@@ -33,7 +33,7 @@ main() {
         --url="${dict['url']}"
     # Bug fix for vimproc error.
     # https://github.com/SpaceVim/SpaceVim/issues/435
-    dict[vimproc_prefix]="${dict['prefix']}/bundle/vimproc.vim"
+    dict['vimproc_prefix']="${dict['prefix']}/bundle/vimproc.vim"
     koopa_alert "Fixing vimproc at '${dict['vimproc_prefix']}'."
     (
         koopa_cd "${dict['vimproc_prefix']}"

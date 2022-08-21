@@ -25,7 +25,7 @@ koopa_cli_app() {
                     case "${3:-}" in
                         'fetch-and-run' | \
                         'list-jobs')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -38,7 +38,7 @@ koopa_cli_app() {
                         'instance-id' | \
                         'suspend' | \
                         'terminate')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -53,7 +53,7 @@ koopa_cli_app() {
                         'ls' | \
                         'mv-to-parent' | \
                         'sync')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -69,7 +69,7 @@ koopa_cli_app() {
         'bioconda')
             case "${2:-}" in
                 'autobump-recipe')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -81,7 +81,7 @@ koopa_cli_app() {
             case "${2:-}" in
                 'align' | \
                 'index')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -93,7 +93,7 @@ koopa_cli_app() {
             case "${2:-}" in
                 'create-env' | \
                 'remove-env')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -114,7 +114,7 @@ koopa_cli_app() {
                 'remove' | \
                 'run' | \
                 'tag')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -125,7 +125,7 @@ koopa_cli_app() {
         'ftp')
             case "${2:-}" in
                 'mirror')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -146,7 +146,7 @@ koopa_cli_app() {
                 'rm-submodule' | \
                 'rm-untracked' | \
                 'status-recursive')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -159,7 +159,7 @@ koopa_cli_app() {
                 'prompt' | \
                 'reload' | \
                 'restart')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -170,7 +170,7 @@ koopa_cli_app() {
         'jekyll')
             case "${2:-}" in
                 'serve')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -182,14 +182,14 @@ koopa_cli_app() {
         'salmon')
             case "${2:-}" in
                 'index')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 'quant')
                     case "${3:-}" in
                         'paired-end' | \
                         'single-end')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -205,7 +205,7 @@ koopa_cli_app() {
         'md5sum')
             case "${2:-}" in
                 'check-to-new-md5-file')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -214,7 +214,7 @@ koopa_cli_app() {
             esac
             ;;
         'rnaeditingindexer')
-            dict[key]="${1:?}"
+            dict['key']="${1:?}"
             shift 1
             ;;
         'sra')
@@ -223,7 +223,7 @@ koopa_cli_app() {
                 'download-run-info-table' | \
                 'fastq-dump' | \
                 'prefetch')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -234,7 +234,7 @@ koopa_cli_app() {
         'ssh')
             case "${2:-}" in
                 'generate-key')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -248,7 +248,7 @@ koopa_cli_app() {
                     case "${3:-}" in
                         'paired-end' | \
                         'single-end')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -257,7 +257,7 @@ koopa_cli_app() {
                     esac
                     ;;
                 'index')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -268,7 +268,7 @@ koopa_cli_app() {
         'wget')
             case "${2:-}" in
                 'recursive')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -282,7 +282,7 @@ koopa_cli_app() {
             ;;
     esac
     [[ -z "${dict['key']}" ]] && koopa_cli_invalid_arg "$@"
-    dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+    dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
     if ! koopa_is_function "${dict['fun']}"
     then
         koopa_stop 'Unsupported command.'

@@ -20,19 +20,19 @@ koopa_bowtie2_index() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
+                dict['fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--fasta-file')
-                dict[fasta_file]="${2:?}"
+                dict['fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -52,8 +52,8 @@ koopa_bowtie2_index() {
     koopa_h2 "Generating bowtie2 index at '${dict['output_dir']}'."
     koopa_mkdir "${dict['output_dir']}"
     # This step adds 'bowtie2.*' prefix to the files created in the output.
-    dict[index_base]="${dict['output_dir']}/bowtie2"
-    dict[log_file]="${dict['output_dir']}/index.log"
+    dict['index_base']="${dict['output_dir']}/bowtie2"
+    dict['log_file']="${dict['output_dir']}/index.log"
     index_args=(
         "--threads=${dict['threads']}"
         '--verbose'

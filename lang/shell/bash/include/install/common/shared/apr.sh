@@ -23,8 +23,8 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     if koopa_is_macos
     then
-        app[autoreconf]="$(koopa_locate_autoreconf)"
-        app[patch]="$(koopa_locate_patch)"
+        app['autoreconf']="$(koopa_locate_autoreconf)"
+        app['patch']="$(koopa_locate_patch)"
         [[ -x "${app['autoreconf']}" ]] || return 1
         [[ -x "${app['patch']}" ]] || return 1
     fi
@@ -34,8 +34,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.bz2"
-    dict[url]="https://archive.apache.org/dist/${dict['name']}/${dict['file']}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
+    dict['url']="https://archive.apache.org/dist/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     conf_args=(

@@ -23,8 +23,8 @@ koopa_node_package_version() {
     do
         local dict
         declare -A dict
-        dict[pkg]="$pkg"
-        dict[str]="$( \
+        dict['pkg']="$pkg"
+        dict['str']="$( \
             "${app['npm']}" --global --json list "${dict['pkg']}" \
             | "${app['jq']}" \
                 --raw-output \

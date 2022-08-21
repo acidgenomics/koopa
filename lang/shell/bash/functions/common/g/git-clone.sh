@@ -29,43 +29,43 @@ koopa_git_clone() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--branch='*)
-                dict[branch]="${1#*=}"
+                dict['branch']="${1#*=}"
                 shift 1
                 ;;
             '--branch')
-                dict[branch]="${2:?}"
+                dict['branch']="${2:?}"
                 shift 2
                 ;;
             '--commit='*)
-                dict[commit]="${1#*=}"
+                dict['commit']="${1#*=}"
                 shift 1
                 ;;
             '--commit')
-                dict[commit]="${2:?}"
+                dict['commit']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--tag='*)
-                dict[tag]="${1#*=}"
+                dict['tag']="${1#*=}"
                 shift 1
                 ;;
             '--tag')
-                dict[tag]="${2:?}"
+                dict['tag']="${2:?}"
                 shift 2
                 ;;
             '--url='*)
-                dict[url]="${1#*=}"
+                dict['url']="${1#*=}"
                 shift 1
                 ;;
             '--url')
-                dict[url]="${2:?}"
+                dict['url']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

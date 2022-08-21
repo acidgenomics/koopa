@@ -66,21 +66,21 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://github.com/OSGeo/${dict['name']}/releases/download/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/OSGeo/${dict['name']}/releases/download/\
 v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    dict[curl]="$(koopa_app_prefix 'curl')"
-    dict[hdf5]="$(koopa_app_prefix 'hdf5')"
-    dict[libxml2]="$(koopa_app_prefix 'libxml2')"
-    dict[pcre2]="$(koopa_app_prefix 'pcre2')"
+    dict['curl']="$(koopa_app_prefix 'curl')"
+    dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     # > dict[proj]="$(koopa_app_prefix 'proj')"
-    dict[python]="$(koopa_app_prefix 'python')"
-    dict[sqlite]="$(koopa_app_prefix 'sqlite')"
+    dict['python']="$(koopa_app_prefix 'python')"
+    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
         '-DBUILD_APPS=ON'
         '-DBUILD_PYTHON_BINDINGS=ON'

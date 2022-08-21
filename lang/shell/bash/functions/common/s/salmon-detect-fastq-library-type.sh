@@ -41,33 +41,33 @@ koopa_salmon_detect_fastq_library_type() {
         [threads]="$(koopa_cpu_count)"
         [tmp_dir]="$(koopa_tmp_dir)"
     )
-    dict[output_dir]="${dict['tmp_dir']}/quant"
+    dict['output_dir']="${dict['tmp_dir']}/quant"
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--fastq-r1-file='*)
-                dict[fastq_r1_file]="${1#*=}"
+                dict['fastq_r1_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-file')
-                dict[fastq_r1_file]="${2:?}"
+                dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-file='*)
-                dict[fastq_r2_file]="${1#*=}"
+                dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
-                dict[fastq_r2_file]="${2:?}"
+                dict['fastq_r2_file']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -93,8 +93,8 @@ koopa_salmon_detect_fastq_library_type() {
     if [[ -n "${dict['fastq_r2_file']}" ]]
     then
         koopa_assert_is_file "${dict['fastq_r2_file']}"
-        dict[mates1]="${dict['tmp_dir']}/mates1.fastq"
-        dict[mates2]="${dict['tmp_dir']}/mates2.fastq"
+        dict['mates1']="${dict['tmp_dir']}/mates1.fastq"
+        dict['mates2']="${dict['tmp_dir']}/mates2.fastq"
         koopa_decompress --stdout "${dict['fastq_r1_file']}" \
             | "${app['head']}" -n "${dict['n']}" \
             > "${dict['mates1']}"
@@ -106,7 +106,7 @@ koopa_salmon_detect_fastq_library_type() {
             "--mates2=${dict['mates2']}"
         )
     else
-        dict[unmated_reads]="${dict['tmp_dir']}/reads.fastq"
+        dict['unmated_reads']="${dict['tmp_dir']}/reads.fastq"
         koopa_decompress --stdout "${dict['fastq_r1_file']}" \
             | "${app['head']}" -n "${dict['n']}" \
             > "${dict['unmated_reads']}"
@@ -115,9 +115,9 @@ koopa_salmon_detect_fastq_library_type() {
         )
     fi
     "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
-    dict[json_file]="${dict['output_dir']}/lib_format_counts.json"
+    dict['json_file']="${dict['output_dir']}/lib_format_counts.json"
     koopa_assert_is_file "${dict['json_file']}"
-    dict[lib_type]="$( \
+    dict['lib_type']="$( \
         "${app['jq']}" --raw-output '.expected_format' "${dict['json_file']}" \
     )"
     koopa_print "${dict['lib_type']}"

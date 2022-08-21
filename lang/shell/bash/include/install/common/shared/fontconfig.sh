@@ -33,8 +33,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
-    dict[url]="https://www.freedesktop.org/software/${dict['name']}/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+    dict['url']="https://www.freedesktop.org/software/${dict['name']}/\
 release/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

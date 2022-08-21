@@ -132,7 +132,7 @@ koopa_debian_apt_configure_sources() {
     then
         koopa_stop 'Failed to extract apt security URL.'
     fi
-    urls[updates]="${urls['main']}"
+    urls['updates']="${urls['main']}"
     case "${dict['os_id']}" in
         'debian')
             # Can consider including 'backports' here.

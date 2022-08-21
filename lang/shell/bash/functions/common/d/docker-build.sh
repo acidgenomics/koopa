@@ -55,53 +55,53 @@ koopa_docker_build() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--docker-dir='*)
-                dict[docker_dir]="${1#*=}"
+                dict['docker_dir']="${1#*=}"
                 shift 1
                 ;;
             '--docker-dir')
-                dict[docker_dir]="${2:?}"
+                dict['docker_dir']="${2:?}"
                 shift 2
                 ;;
             '--memory='*)
                 # e.g. use '8g' for 8 GB limit.
-                dict[memory]="${1#*=}"
+                dict['memory']="${1#*=}"
                 shift 1
                 ;;
             '--memory')
-                dict[memory]="${2:?}"
+                dict['memory']="${2:?}"
                 shift 2
                 ;;
             '--server='*)
-                dict[server]="${1#*=}"
+                dict['server']="${1#*=}"
                 shift 1
                 ;;
             '--server')
-                dict[server]="${2:?}"
+                dict['server']="${2:?}"
                 shift 2
                 ;;
             '--tag='*)
-                dict[tag]="${1#*=}"
+                dict['tag']="${1#*=}"
                 shift 1
                 ;;
             '--tag')
-                dict[tag]="${2:?}"
+                dict['tag']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--delete')
-                dict[delete]=1
+                dict['delete']=1
                 shift 1
                 ;;
             '--no-delete')
-                dict[delete]=0
+                dict['delete']=0
                 shift 1
                 ;;
             '--no-push')
-                dict[push]=0
+                dict['push']=0
                 shift 1
                 ;;
             '--push')
-                dict[push]=1
+                dict['push']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -120,7 +120,7 @@ koopa_docker_build() {
     do
         local build_args dict2 image_ids platforms tag tags
         declare -A dict2
-        dict2[image]="$image"
+        dict2['image']="$image"
         build_args=()
         platforms=()
         tags=()
@@ -129,28 +129,28 @@ koopa_docker_build() {
             --string="${dict2['image']}" \
             --pattern='/'
         then
-            dict2[image]="acidgenomics/${dict2['image']}"
+            dict2['image']="acidgenomics/${dict2['image']}"
         fi
         # Handle tag support, if necessary.
         if koopa_str_detect_fixed \
             --string="${dict2['image']}" \
             --pattern=':'
         then
-            dict2[tag]="$( \
+            dict2['tag']="$( \
                 koopa_print "${dict2['image']}" \
                 | "${app['cut']}" -d ':' -f '2' \
             )"
-            dict2[image]="$( \
+            dict2['image']="$( \
                 koopa_print "${dict2['image']}" \
                 | "${app['cut']}" -d ':' -f '1' \
             )"
         else
-            dict2[tag]="${dict['tag']}"
+            dict2['tag']="${dict['tag']}"
         fi
-        dict2[source_image]="${dict['docker_dir']}/${dict2['image']}/${dict2['tag']}"
+        dict2['source_image']="${dict['docker_dir']}/${dict2['image']}/${dict2['tag']}"
         koopa_assert_is_dir "${dict2['source_image']}"
         # Tags.
-        dict2[tags_file]="${dict2['source_image']}/tags.txt"
+        dict2['tags_file']="${dict2['source_image']}/tags.txt"
         if [[ -f "${dict2['tags_file']}" ]]
         then
             readarray -t tags < "${dict2['tags_file']}"
@@ -158,8 +158,8 @@ koopa_docker_build() {
         if [[ -L "${dict2['source_image']}" ]]
         then
             tags+=("${dict2['tag']}")
-            dict2[source_image]="$(koopa_realpath "${dict2['source_image']}")"
-            dict2[tag]="$(koopa_basename "${dict2['source_image']}")"
+            dict2['source_image']="$(koopa_realpath "${dict2['source_image']}")"
+            dict2['tag']="$(koopa_basename "${dict2['source_image']}")"
         fi
         tags+=(
             "${dict2['tag']}"
@@ -177,13 +177,13 @@ koopa_docker_build() {
         # Platforms.
         # Assume x86 by default.
         platforms=('linux/amd64')
-        dict2[platforms_file]="${dict2['source_image']}/platforms.txt"
+        dict2['platforms_file']="${dict2['source_image']}/platforms.txt"
         if [[ -f "${dict2['platforms_file']}" ]]
         then
             readarray -t platforms < "${dict2['platforms_file']}"
         fi
         # e.g. 'linux/amd64,linux/arm64'.
-        dict2[platforms_string]="$(koopa_paste --sep=',' "${platforms[@]}")"
+        dict2['platforms_string']="$(koopa_paste --sep=',' "${platforms[@]}")"
         build_args+=("--platform=${dict2['platforms_string']}")
         # Harden against buildx blowing up memory on a local machine.
         # Consider raising this when we deploy a more powerful build machine.
@@ -225,7 +225,7 @@ koopa_docker_build() {
         koopa_alert "Building '${dict2['source_image']}' Docker image."
         koopa_dl 'Build args' "${build_args[*]}"
         "${app['docker']}" login "${dict['server']}" >/dev/null || return 1
-        dict2[build_name]="$(koopa_basename "${dict2['image']}")"
+        dict2['build_name']="$(koopa_basename "${dict2['image']}")"
         # Ensure any previous build failres are removed.
         "${app['docker']}" buildx rm \
             "${dict2['build_name']}" \

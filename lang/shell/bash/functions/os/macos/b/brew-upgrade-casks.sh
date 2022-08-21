@@ -40,7 +40,7 @@ koopa_macos_brew_upgrade_casks() {
             'openjdk' | \
             'r' | \
             'temurin')
-                app[r]="$(koopa_macos_r_prefix)/bin/R"
+                app['r']="$(koopa_macos_r_prefix)/bin/R"
                 koopa_configure_r "${app['r']}"
                 ;;
             # > 'emacs')

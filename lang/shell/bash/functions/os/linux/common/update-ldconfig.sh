@@ -22,7 +22,7 @@ koopa_linux_update_ldconfig() {
         [target_prefix]='/etc/ld.so.conf.d'
     )
     [[ -d "${dict['target_prefix']}" ]] || return 0
-    dict[conf_source]="${dict['distro_prefix']}${dict['target_prefix']}"
+    dict['conf_source']="${dict['distro_prefix']}${dict['target_prefix']}"
     # Intentionally early return for distros that don't need configuration.
     [[ -d "${dict['conf_source']}" ]] || return 0
     # Create symlinks with 'koopa-' prefix.

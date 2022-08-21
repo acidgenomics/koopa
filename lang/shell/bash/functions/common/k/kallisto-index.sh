@@ -34,19 +34,19 @@ koopa_kallisto_index() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
+                dict['transcriptome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
+                dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -63,15 +63,15 @@ koopa_kallisto_index() {
         koopa_stop "kallisto index requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_file "${dict['transcriptome_fasta_file']}"
-    dict[transcriptome_fasta_file]="$( \
+    dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
         --pattern='\.fa(sta)?' \
         --string="${dict['transcriptome_fasta_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
-    dict[index_file]="${dict['output_dir']}/kallisto.idx"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['index_file']="${dict['output_dir']}/kallisto.idx"
     koopa_alert "Generating kallisto index at '${dict['output_dir']}'."
     index_args+=(
         "--index=${dict['index_file']}"

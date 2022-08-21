@@ -27,8 +27,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="tiff-${dict['version']}.tar.gz"
-    dict[url]="http://download.osgeo.org/libtiff/${dict['file']}"
+    dict['file']="tiff-${dict['version']}.tar.gz"
+    dict['url']="http://download.osgeo.org/libtiff/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "tiff-${dict['version']}"

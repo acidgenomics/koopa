@@ -16,7 +16,7 @@ koopa_check_group() {
         koopa_warn "'${dict['file']}' does not exist."
         return 1
     fi
-    dict[group]="$(koopa_stat_group "${dict['file']}")"
+    dict['group']="$(koopa_stat_group "${dict['file']}")"
     if [[ "${dict['group']}" != "${dict['code']}" ]]
     then
         koopa_warn "'${dict['file']}' current group '${dict['group']}' \

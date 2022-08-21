@@ -15,7 +15,7 @@ koopa_view_latest_tmp_log_file() {
         [tmp_dir]="${TMPDIR:-/tmp}"
         [user_id]="$(koopa_user_id)"
     )
-    dict[log_file]="$( \
+    dict['log_file']="$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \

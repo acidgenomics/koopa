@@ -46,10 +46,10 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     # FIXME What about expat here?
-    dict[apr]="$(koopa_app_prefix 'apr')"
-    dict[apr_util]="$(koopa_app_prefix 'apr-util')"
-    dict[serf]="$(koopa_app_prefix 'serf')"
-    dict[sqlite]="$(koopa_app_prefix 'sqlite')"
+    dict['apr']="$(koopa_app_prefix 'apr')"
+    dict['apr_util']="$(koopa_app_prefix 'apr-util')"
+    dict['serf']="$(koopa_app_prefix 'serf')"
+    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-debug'
@@ -68,8 +68,8 @@ main() {
         '--without-gpg-agent'
         '--without-jikes'
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.bz2"
-    dict[url]="${dict['mirror']}/${dict['name']}/${dict['file']}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
+    dict['url']="${dict['mirror']}/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

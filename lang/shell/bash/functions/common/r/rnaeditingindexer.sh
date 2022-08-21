@@ -42,32 +42,32 @@ koopa_rnaeditingindexer() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--bam-dir='*)
-                dict[local_bam_dir]="${1#*=}"
+                dict['local_bam_dir']="${1#*=}"
                 shift 1
                 ;;
             '--bam-dir')
-                dict[local_bam_dir]="${2:?}"
+                dict['local_bam_dir']="${2:?}"
                 shift 2
                 ;;
             '--genome='*)
-                dict[genome]="${1#*=}"
+                dict['genome']="${1#*=}"
                 shift 1
                 ;;
             '--genome')
-                dict[genome]="${2:?}"
+                dict['genome']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[local_output_dir]="${1#*=}"
+                dict['local_output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[local_output_dir]="${2:?}"
+                dict['local_output_dir']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--example')
-                dict[example]=1
+                dict['example']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -79,15 +79,15 @@ koopa_rnaeditingindexer() {
     run_args=()
     if [[ "${dict['example']}" -eq 1 ]]
     then
-        dict[bam_suffix]="_sampled_with_0.1.Aligned.sortedByCoord.out.\
+        dict['bam_suffix']="_sampled_with_0.1.Aligned.sortedByCoord.out.\
 bam.AluChr1Only.bam"
-        dict[local_bam_dir]=''
-        dict[mnt_bam_dir]='/bin/AEI/RNAEditingIndexer/TestResources/BAMs'
+        dict['local_bam_dir']=''
+        dict['mnt_bam_dir']='/bin/AEI/RNAEditingIndexer/TestResources/BAMs'
     else
         koopa_assert_is_dir "${dict['local_bam_dir']}"
-        dict[local_bam_dir]="$(koopa_realpath "${dict['local_bam_dir']}")"
+        dict['local_bam_dir']="$(koopa_realpath "${dict['local_bam_dir']}")"
         koopa_rm "${dict['local_output_dir']}"
-        dict[local_output_dir]="$(koopa_init_dir "${dict['local_output_dir']}")"
+        dict['local_output_dir']="$(koopa_init_dir "${dict['local_output_dir']}")"
         run_args+=(
             -v "${dict['local_bam_dir']}:${dict['mnt_bam_dir']}:ro"
             -v "${dict['local_output_dir']}:${dict['mnt_output_dir']}:rw"

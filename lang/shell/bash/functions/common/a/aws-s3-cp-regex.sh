@@ -29,35 +29,35 @@ koopa_aws_s3_cp_regex() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--source_prefix='*)
-                dict[source_prefix]="${1#*=}"
+                dict['source_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--source_prefix')
-                dict[source_prefix]="${2:?}"
+                dict['source_prefix']="${2:?}"
                 shift 2
                 ;;
             '--target_prefix='*)
-                dict[target_prefix]="${1#*=}"
+                dict['target_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--target_prefix')
-                dict[target_prefix]="${2:?}"
+                dict['target_prefix']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

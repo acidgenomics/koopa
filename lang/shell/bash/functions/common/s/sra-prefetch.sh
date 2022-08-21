@@ -31,19 +31,19 @@ koopa_sra_prefetch() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--accession-file='*)
-                dict[acc_file]="${1#*=}"
+                dict['acc_file']="${1#*=}"
                 shift 1
                 ;;
             '--accession-file')
-                dict[acc_file]="${2:?}"
+                dict['acc_file']="${2:?}"
                 shift 2
                 ;;
             '--output-directory='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-directory')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Invalid ----------------------------------------------------------
@@ -57,7 +57,7 @@ koopa_sra_prefetch() {
         '--accession-file' "${dict['acc_file']}" \
         '--output-directory' "${dict['output_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Prefetching SRA files to '${dict['output_dir']}'."
     cmd=(
         "${app['prefetch']}"

@@ -41,7 +41,7 @@ main() {
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    app[python]="$(koopa_realpath "${app['python']}")"
+    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         [base_url]='https://github.com/ncbi'
         [hdf5]="$(koopa_app_prefix 'hdf5')"
@@ -61,9 +61,9 @@ main() {
     (
         local cmake_args dict2
         declare -A dict2
-        dict2[name]='ncbi-vdb'
-        dict2[file]="${dict2['name']}-${dict['version']}.tar.gz"
-        dict2[url]="${dict['base_url']}/${dict2['name']}/archive/refs/tags/\
+        dict2['name']='ncbi-vdb'
+        dict2['file']="${dict2['name']}-${dict['version']}.tar.gz"
+        dict2['url']="${dict['base_url']}/${dict2['name']}/archive/refs/tags/\
 ${dict['version']}.tar.gz"
         koopa_download "${dict2['url']}" "${dict2['file']}"
         koopa_extract "${dict2['file']}"
@@ -83,10 +83,10 @@ ${dict['version']}.tar.gz"
             "${cmake_args[@]}"
         "${app['cmake']}" --build "${dict2['name']}-build"
     )
-    dict[ncbi_vdb_build]="$( \
+    dict['ncbi_vdb_build']="$( \
         koopa_realpath "ncbi-vdb-build" \
     )"
-    dict[ncbi_vdb_source]="$( \
+    dict['ncbi_vdb_source']="$( \
         koopa_realpath "ncbi-vdb-source" \
     )"
     # This step is currently needed to correctly link bzip2 and zlib.
@@ -95,9 +95,9 @@ ${dict['version']}.tar.gz"
     (
         local cmake_args dict2
         declare -A dict2
-        dict2[name]='sra-tools'
-        dict2[file]="${dict2['name']}-${dict['version']}.tar.gz"
-        dict2[url]="${dict['base_url']}/${dict2['name']}/archive/refs/tags/\
+        dict2['name']='sra-tools'
+        dict2['file']="${dict2['name']}-${dict['version']}.tar.gz"
+        dict2['url']="${dict['base_url']}/${dict2['name']}/archive/refs/tags/\
 ${dict['version']}.tar.gz"
         koopa_download "${dict2['url']}" "${dict2['file']}"
         koopa_extract "${dict2['file']}"

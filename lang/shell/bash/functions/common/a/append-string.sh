@@ -16,19 +16,19 @@ koopa_append_string() {
         case "$1" in
             # Key value pairs --------------------------------------------------
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

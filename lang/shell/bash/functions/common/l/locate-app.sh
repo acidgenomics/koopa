@@ -27,28 +27,28 @@ koopa_locate_app() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--app-name='*)
-                dict[app_name]="${1#*=}"
+                dict['app_name']="${1#*=}"
                 shift 1
                 ;;
             '--app-name')
-                dict[app_name]="${2:?}"
+                dict['app_name']="${2:?}"
                 shift 2
                 ;;
             '--opt-name='*)
-                dict[opt_name]="${1#*=}"
+                dict['opt_name']="${1#*=}"
                 shift 1
                 ;;
             '--opt-name')
-                dict[opt_name]="${2:?}"
+                dict['opt_name']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--allow-in-path')
-                dict[allow_in_path]=1
+                dict['allow_in_path']=1
                 shift 1
                 ;;
             '--allow-missing')
-                dict[allow_missing]=1
+                dict['allow_missing']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -70,7 +70,7 @@ koopa_locate_app() {
         then
             koopa_stop "Need to rework locator for '${1:?}'."
         fi
-        dict[app]="${1:?}"
+        dict['app']="${1:?}"
         if [[ -x "${dict['app']}" ]] && koopa_is_installed "${dict['app']}"
         then
             koopa_print "${dict['app']}"
@@ -78,7 +78,7 @@ koopa_locate_app() {
         fi
         koopa_stop "Failed to locate '${dict['app']}'."
     fi
-    dict[app]="${dict['bin_prefix']}/${dict['app_name']}"
+    dict['app']="${dict['bin_prefix']}/${dict['app_name']}"
     if [[ -x "${dict['app']}" ]]
     then
         koopa_print "${dict['app']}"
@@ -86,7 +86,7 @@ koopa_locate_app() {
     fi
     if [[ -n "${dict['opt_name']}" ]]
     then
-        dict[app]="${dict['opt_prefix']}/${dict['opt_name']}/bin/${dict['app_name']}"
+        dict['app']="${dict['opt_prefix']}/${dict['opt_name']}/bin/${dict['app_name']}"
         if [[ -x "${dict['app']}" ]]
         then
             koopa_print "${dict['app']}"
@@ -100,7 +100,7 @@ koopa_locate_app() {
     fi
     if [[ "${dict['allow_in_path']}" -eq 1 ]]
     then
-        dict[app]="$(koopa_which "${dict['app_name']}" || true)"
+        dict['app']="$(koopa_which "${dict['app_name']}" || true)"
     fi
     if { \
         [[ -n "${dict['app']}" ]] && \

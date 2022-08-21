@@ -45,17 +45,17 @@ koopa_git_submodule_init() {
                 local dict2
                 declare -A dict2
                 # shellcheck disable=SC2016
-                dict2[target_key]="$( \
+                dict2['target_key']="$( \
                     koopa_print "$string" \
                     | "${app['awk']}" '{ print $1 }' \
                 )"
                 # shellcheck disable=SC2016
-                dict2[target]="$( \
+                dict2['target']="$( \
                     koopa_print "$string" \
                     | "${app['awk']}" '{ print $2 }' \
                 )"
-                dict2[url_key]="${dict2['target_key']//\.path/.url}"
-                dict2[url]="$( \
+                dict2['url_key']="${dict2['target_key']//\.path/.url}"
+                dict2['url']="$( \
                     "${app['git']}" config \
                         --file "${dict['module_file']}" \
                         --get "${dict2['url_key']}" \

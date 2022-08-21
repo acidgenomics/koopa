@@ -20,22 +20,22 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    app[python]="$(koopa_realpath "${app['python']}")"
+    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='vim'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[vim_rpath]="${dict['prefix']}/lib"
-    dict[python]="$(koopa_app_prefix 'python')"
-    app[python_config]="${app['python']}-config"
+    dict['vim_rpath']="${dict['prefix']}/lib"
+    dict['python']="$(koopa_app_prefix 'python')"
+    app['python_config']="${app['python']}-config"
     koopa_assert_is_installed "${app['python']}" "${app['python_config']}"
-    dict[python_config_dir]="$("${app['python_config']}" --configdir)"
-    dict[python_rpath]="${dict['python']}/lib"
+    dict['python_config_dir']="$("${app['python_config']}" --configdir)"
+    dict['python_rpath']="${dict['python']}/lib"
     koopa_assert_is_dir "${dict['python_config_dir']}" "${dict['python_rpath']}"
-    dict[file]="v${dict['version']}.tar.gz"
-    dict[url]="https://github.com/${dict['name']}/${dict['name']}/\
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
 archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

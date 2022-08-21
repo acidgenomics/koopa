@@ -8,8 +8,8 @@ koopa_read_yn() {
     local dict read_args
     koopa_assert_has_args_eq "$#" 2
     declare -A dict
-    dict[prompt]="$(koopa_read_prompt_yn "$@")"
-    dict[default]="$(koopa_int_to_yn "${2:?}")"
+    dict['prompt']="$(koopa_read_prompt_yn "$@")"
+    dict['default']="$(koopa_int_to_yn "${2:?}")"
     read_args=(
         -e
         -i "${dict['default']}"
@@ -30,7 +30,7 @@ koopa_read_yn() {
         'true' | \
         'y' | \
         'yes')
-            dict[int]=1
+            dict['int']=1
             ;;
         '0' | \
         'F' | \
@@ -42,7 +42,7 @@ koopa_read_yn() {
         'false' | \
         'n' | \
         'no')
-            dict[int]=0
+            dict['int']=0
             ;;
         *)
             koopa_stop "Invalid 'yes/no' choice: '${dict['choice']}'."

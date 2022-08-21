@@ -21,7 +21,7 @@ koopa_activate_bash_completion() {
         [make_prefix]="$(koopa_make_prefix)"
         [nounset]="$(koopa_boolean_nounset)"
     )
-    dict[script]="${dict['make_prefix']}/etc/profile.d/bash_completion.sh"
+    dict['script']="${dict['make_prefix']}/etc/profile.d/bash_completion.sh"
     [[ -r "${dict['script']}" ]] || return 0
     if [[ "${dict['nounset']}" -eq 1 ]]
     then

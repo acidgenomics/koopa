@@ -40,33 +40,33 @@ main() {
         '3.38.5' | \
         '3.38.2' | \
         '3.37.2')
-            dict[year]='2022'
+            dict['year']='2022'
             ;;
         '3.37.1' | \
         '3.37.0' | \
         '3.36.'* | \
         '3.35.'* | \
         '3.34.1')
-            dict[year]='2021'
+            dict['year']='2021'
             ;;
         '3.34.0' | \
         '3.33.'*)
-            dict[year]='2020'
+            dict['year']='2020'
             ;;
         '3.32.'*)
-            dict[year]='2020'
+            dict['year']='2020'
             ;;
         *)
             koopa_stop "Unsupported version: '${dict['version']}'."
             ;;
     esac
     # e.g. '3.32.3' to '3320300'.
-    dict[file_version]="$( \
+    dict['file_version']="$( \
         koopa_print "${dict['version']}" \
         | "${app['sed']}" -E 's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
     )"
-    dict[file]="${dict['name']}-autoconf-${dict['file_version']}.tar.gz"
-    dict[url]="https://www.sqlite.org/${dict['year']}/${dict['file']}"
+    dict['file']="${dict['name']}-autoconf-${dict['file_version']}.tar.gz"
+    dict['url']="https://www.sqlite.org/${dict['year']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-autoconf-${dict['file_version']}"

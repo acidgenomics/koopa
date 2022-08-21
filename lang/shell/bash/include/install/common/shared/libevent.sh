@@ -23,8 +23,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}-stable.tar.gz"
-    dict[url]="https://github.com/${dict['name']}/${dict['name']}/releases/\
+    dict['file']="${dict['name']}-${dict['version']}-stable.tar.gz"
+    dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\
 download/release-${dict['version']}-stable/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

@@ -137,50 +137,50 @@ koopa_configure_system() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--mode='*)
-                dict[mode]="${1#*=}"
+                dict['mode']="${1#*=}"
                 shift 1
                 ;;
             '--mode')
-                dict[mode]="${2:?}"
+                dict['mode']="${2:?}"
                 shift 2
                 ;;
             '--python-version='*)
-                dict[python_version]="${1#*=}"
+                dict['python_version']="${1#*=}"
                 shift 1
                 ;;
             '--python-version')
-                dict[python_version]="${2:?}"
+                dict['python_version']="${2:?}"
                 shift 2
                 ;;
             '--r-version='*)
-                dict[r_version]="${1#*=}"
+                dict['r_version']="${1#*=}"
                 shift 1
                 ;;
             '--r-version')
-                dict[r_version]="${2:?}"
+                dict['r_version']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--all' | \
             '--full')
-                dict[mode]='full'
+                dict['mode']='full'
                 shift 1
                 ;;
             '--base-image')
-                dict[mode]='base-image'
+                dict['mode']='base-image'
                 shift 1
                 ;;
             '--bioconductor')
-                dict[mode]='bioconductor'
+                dict['mode']='bioconductor'
                 shift 1
                 ;;
             '--default' | \
             '--recommended')
-                dict[mode]='default'
+                dict['mode']='default'
                 shift 1
                 ;;
             '--minimal')
-                dict[mode]='minimal'
+                dict['mode']='minimal'
                 shift 1
                 ;;
             '--verbose')
@@ -201,96 +201,96 @@ koopa_configure_system() {
         'base-image')
             # > dict[install_bash]=1
             # > dict[install_zsh]=1
-            dict[install_base_system_args]='--base-image'
+            dict['install_base_system_args']='--base-image'
             ;;
         'bioconductor')
-            dict[install_dotfiles]=1
-            dict[install_openjdk]=1
+            dict['install_dotfiles']=1
+            dict['install_openjdk']=1
             ;;
         'full')
-            dict[install_aspera_connect]=1
-            dict[install_autoconf]=1
-            dict[install_automake]=1
-            dict[install_azure_cli]=1
-            dict[install_base_system_args]='--full'
-            dict[install_bash]=1
-            dict[install_binutils]=1
-            dict[install_cmake]=1
-            dict[install_conda_envs]=1
-            dict[install_coreutils]=1
-            dict[install_curl]=1
-            dict[install_curl]=1
-            dict[install_docker]=1
-            dict[install_docker_credential_pass]=1
-            dict[install_dotfiles]=1
-            dict[install_emacs]=1
-            dict[install_findutils]=1
-            dict[install_fish]=1
-            dict[install_fzf]=1
-            dict[install_gawk]=1
+            dict['install_aspera_connect']=1
+            dict['install_autoconf']=1
+            dict['install_automake']=1
+            dict['install_azure_cli']=1
+            dict['install_base_system_args']='--full'
+            dict['install_bash']=1
+            dict['install_binutils']=1
+            dict['install_cmake']=1
+            dict['install_conda_envs']=1
+            dict['install_coreutils']=1
+            dict['install_curl']=1
+            dict['install_curl']=1
+            dict['install_docker']=1
+            dict['install_docker_credential_pass']=1
+            dict['install_dotfiles']=1
+            dict['install_emacs']=1
+            dict['install_findutils']=1
+            dict['install_fish']=1
+            dict['install_fzf']=1
+            dict['install_gawk']=1
             # > dict[install_gdal]=1
             # > dict[install_geos]=1
-            dict[install_git]=1
-            dict[install_gnupg]=1
-            dict[install_go]=1
-            dict[install_google_cloud_sdk]=1
-            dict[install_grep]=1
-            dict[install_gsl]=1
-            dict[install_hdf5]=1
-            dict[install_homebrew]=1
-            dict[install_homebrew_bundle]=1
-            dict[install_julia]=1
-            dict[install_libevent]=1
-            dict[install_libtool]=1
-            dict[install_llvm]=1
-            dict[install_lmod]=1
-            dict[install_lua]=1
-            dict[install_luarocks]=1
-            dict[install_make]=1
-            dict[install_ncurses]=1
-            dict[install_neofetch]=1
-            dict[install_neovim]=1
-            dict[install_openssh]=1
-            dict[install_parallel]=1
-            dict[install_password_store]=1
-            dict[install_patch]=1
-            dict[install_perl]=1
-            dict[install_perl_packages]=1
-            dict[install_pkg_config]=1
+            dict['install_git']=1
+            dict['install_gnupg']=1
+            dict['install_go']=1
+            dict['install_google_cloud_sdk']=1
+            dict['install_grep']=1
+            dict['install_gsl']=1
+            dict['install_hdf5']=1
+            dict['install_homebrew']=1
+            dict['install_homebrew_bundle']=1
+            dict['install_julia']=1
+            dict['install_libevent']=1
+            dict['install_libtool']=1
+            dict['install_llvm']=1
+            dict['install_lmod']=1
+            dict['install_lua']=1
+            dict['install_luarocks']=1
+            dict['install_make']=1
+            dict['install_ncurses']=1
+            dict['install_neofetch']=1
+            dict['install_neovim']=1
+            dict['install_openssh']=1
+            dict['install_parallel']=1
+            dict['install_password_store']=1
+            dict['install_patch']=1
+            dict['install_perl']=1
+            dict['install_perl_packages']=1
+            dict['install_pkg_config']=1
             # > dict[install_proj]=1
-            dict[install_python_packages]=1
-            dict[install_r_packages]=1
-            dict[install_rstudio_server]=1
-            dict[install_rsync]=1
-            dict[install_ruby]=1
-            dict[install_ruby_packages]=1
-            dict[install_rust]=1
-            dict[install_rust_packages]=1
-            dict[install_sed]=1
-            dict[install_shiny_server]=1
-            dict[install_sqlite]=1
-            dict[install_subversion]=1
-            dict[install_taglib]=1
-            dict[install_texinfo]=1
-            dict[install_udunits]=1
-            dict[install_wget]=1
-            dict[install_zsh]=1
-            dict[passwordless_sudo]=1
-            dict[which_conda]='anaconda'
+            dict['install_python_packages']=1
+            dict['install_r_packages']=1
+            dict['install_rstudio_server']=1
+            dict['install_rsync']=1
+            dict['install_ruby']=1
+            dict['install_ruby_packages']=1
+            dict['install_rust']=1
+            dict['install_rust_packages']=1
+            dict['install_sed']=1
+            dict['install_shiny_server']=1
+            dict['install_sqlite']=1
+            dict['install_subversion']=1
+            dict['install_taglib']=1
+            dict['install_texinfo']=1
+            dict['install_udunits']=1
+            dict['install_wget']=1
+            dict['install_zsh']=1
+            dict['passwordless_sudo']=1
+            dict['which_conda']='anaconda'
             ;;
         'recommended')
-            dict[install_aws_cli]=1
-            dict[install_conda]=1
-            dict[install_dotfiles]=1
-            dict[install_homebrew]=1
-            dict[install_htop]=1
-            dict[install_openjdk]=1
-            dict[install_python]=1
-            dict[install_r]=1
-            dict[install_shellcheck]=1
-            dict[install_shunit2]=1
-            dict[install_tmux]=1
-            dict[install_vim]=1
+            dict['install_aws_cli']=1
+            dict['install_conda']=1
+            dict['install_dotfiles']=1
+            dict['install_homebrew']=1
+            dict['install_htop']=1
+            dict['install_openjdk']=1
+            dict['install_python']=1
+            dict['install_r']=1
+            dict['install_shellcheck']=1
+            dict['install_shunit2']=1
+            dict['install_tmux']=1
+            dict['install_vim']=1
             ;;
         *)
             koopa_stop 'Invalid mode.'
@@ -298,13 +298,13 @@ koopa_configure_system() {
     esac
     if [[ "${dict['docker']}" -eq 1 ]]
     then
-        dict[delete_cache]=1
-        dict[ssh_key]=0
+        dict['delete_cache']=1
+        dict['ssh_key']=0
     fi
     # NOTE Building Python from source can break dnf on Fedora 32+.
     if koopa_is_fedora
     then
-        dict[install_python]=0
+        dict['install_python']=0
     fi
     # Initial configuration {{{2
     # --------------------------------------------------------------------------

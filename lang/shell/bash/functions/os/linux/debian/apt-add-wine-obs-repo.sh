@@ -23,16 +23,16 @@ Emulators:/Wine:/Debian"
     )
     case "${dict['os_string']}" in
         'debian-10')
-            dict[url]="${dict['base_url']}/Debian_10/"
+            dict['url']="${dict['base_url']}/Debian_10/"
             ;;
         'debian-11')
-            dict[url]="${dict['base_url']}/Debian_11/"
+            dict['url']="${dict['base_url']}/Debian_11/"
             ;;
         'ubuntu-18')
-            dict[url]="${dict['base_url']}/xUbuntu_18.04/"
+            dict['url']="${dict['base_url']}/xUbuntu_18.04/"
             ;;
         'ubuntu-20')
-            dict[url]="${dict['base_url']}/xUbuntu_20.04/"
+            dict['url']="${dict['base_url']}/xUbuntu_20.04/"
             ;;
         *)
             koopa_stop "Unsupported OS: '${dict['os_string']}'."

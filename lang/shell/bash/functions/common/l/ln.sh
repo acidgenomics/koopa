@@ -23,18 +23,18 @@ koopa_ln() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--target-directory='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-directory' | \
             '-t')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -51,7 +51,7 @@ koopa_ln() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         ln=("${app['sudo']}" "${app['ln']}")
         mkdir=("${app['mkdir']}" '--sudo')
@@ -66,7 +66,7 @@ koopa_ln() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict[target_dir]="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"
@@ -74,14 +74,14 @@ koopa_ln() {
         ln_args+=("${dict['target_dir']}")
     else
         koopa_assert_has_args_eq "$#" 2
-        dict[source_file]="${1:?}"
+        dict['source_file']="${1:?}"
         koopa_assert_is_existing "${dict['source_file']}"
-        dict[target_file]="${2:?}"
+        dict['target_file']="${2:?}"
         if [[ -e "${dict['target_file']}" ]]
         then
             "${rm[@]}" "${dict['target_file']}"
         fi
-        dict[target_parent]="$(koopa_dirname "${dict['target_file']}")"
+        dict['target_parent']="$(koopa_dirname "${dict['target_file']}")"
         if [[ ! -d "${dict['target_parent']}" ]]
         then
             "${mkdir[@]}" "${dict['target_parent']}"

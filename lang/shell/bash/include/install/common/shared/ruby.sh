@@ -23,10 +23,10 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     # Ensure '2.7.1p83' becomes '2.7.1' here, for example.
-    dict[version]="$(koopa_sanitize_version "${dict['version']}")"
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://cache.ruby-lang.org/pub/${dict['name']}/\
+    dict['version']="$(koopa_sanitize_version "${dict['version']}")"
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://cache.ruby-lang.org/pub/${dict['name']}/\
 ${dict['maj_min_ver']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

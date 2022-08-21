@@ -33,7 +33,7 @@ koopa_conda_env_prefix() {
     declare -A dict=(
         [env_name]="${1:-}"
     )
-    dict[env_prefix]="$( \
+    dict['env_prefix']="$( \
         "${app['conda']}" info --json | \
             "${app['jq']}" --raw-output '.envs_dirs[0]' \
     )"
@@ -43,21 +43,21 @@ koopa_conda_env_prefix() {
         koopa_print "${dict['env_prefix']}"
         return 0
     fi
-    dict[prefix]="${dict['env_prefix']}/${dict['env_name']}"
+    dict['prefix']="${dict['env_prefix']}/${dict['env_name']}"
     if [[ -d "${dict['prefix']}" ]]
     then
         koopa_print "${dict['prefix']}"
         return 0
     fi
-    dict[env_list]="$(koopa_conda_env_list)"
-    dict[env_list2]="$( \
+    dict['env_list']="$(koopa_conda_env_list)"
+    dict['env_list2']="$( \
         koopa_grep \
             --pattern="${dict['env_name']}" \
             --string="${dict['env_list']}" \
     )"
     [[ -n "${dict['env_list2']}" ]] || return 1
     # Note that this step attempts to automatically match the latest version.
-    dict[prefix]="$( \
+    dict['prefix']="$( \
         koopa_grep \
             --pattern="/${dict['env_name']}(@[.0-9]+)?\"" \
             --regex \

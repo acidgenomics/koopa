@@ -34,11 +34,11 @@ koopa_sra_download_run_info_table() {
                 shift 2
                 ;;
             '--srp-id='*)
-                dict[srp_id]="${1#*=}"
+                dict['srp_id']="${1#*=}"
                 shift 1
                 ;;
             '--srp-id')
-                dict[srp_id]="${2:?}"
+                dict['srp_id']="${2:?}"
                 shift 2
                 ;;
             # Invalid ----------------------------------------------------------
@@ -51,7 +51,7 @@ koopa_sra_download_run_info_table() {
     koopa_assert_is_set '--srp-id' "${dict['srp_id']}"
     if [[ -z "${dict['run_info_file']}" ]]
     then
-        dict[run_info_file]="$(koopa_lowercase "${dict['srp_id']}")-\
+        dict['run_info_file']="$(koopa_lowercase "${dict['srp_id']}")-\
 run-info-table.csv"
     fi
     koopa_alert "Downloading SRA run info table for '${dict['srp_id']}' \

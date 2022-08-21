@@ -22,7 +22,7 @@ koopa_nfiletypes() {
         [prefix]="${1:?}"
     )
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[out]="$( \
+    dict['out']="$( \
         koopa_find \
             --exclude='.*' \
             --max-depth=1 \

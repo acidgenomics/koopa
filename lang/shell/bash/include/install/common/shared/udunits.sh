@@ -18,11 +18,11 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     # HTTP alternative:
     # > dict[url]="https://www.unidata.ucar.edu/downloads/
     # >     ${dict['name']}/${dict['file']}"
-    dict[url]="ftp://ftp.unidata.ucar.edu/pub/${dict['name']}/${dict['file']}"
+    dict['url']="ftp://ftp.unidata.ucar.edu/pub/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

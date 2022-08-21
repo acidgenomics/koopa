@@ -24,8 +24,8 @@ koopa_r_configure_ldpaths() {
         [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app['r']}")"
     )
-    dict[file]="${dict['r_prefix']}/etc/ldpaths"
-    dict[java_home]="$(koopa_realpath "${dict['opt_prefix']}/openjdk")"
+    dict['file']="${dict['r_prefix']}/etc/ldpaths"
+    dict['java_home']="$(koopa_realpath "${dict['opt_prefix']}/openjdk")"
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
     lines+=(
@@ -44,7 +44,7 @@ koopa_r_configure_ldpaths() {
     )
     for key in "${keys[@]}"
     do
-        ld_lib_app_arr[$key]="$(koopa_app_prefix "$key")/lib"
+        ld_lib_app_arr['$key']="$(koopa_app_prefix "$key")/lib"
     done
     ld_lib_arr=()
     if koopa_is_linux
@@ -67,7 +67,7 @@ koopa_r_configure_ldpaths() {
             'export DYLD_FALLBACK_LIBRARY_PATH'
         )
     fi
-    dict[string]="$(koopa_print "${lines[@]}")"
+    dict['string']="$(koopa_print "${lines[@]}")"
     # This should only apply to R CRAN binary, not source install.
     koopa_sudo_write_string \
         --file="${dict['file']}" \

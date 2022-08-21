@@ -58,40 +58,40 @@ koopa_salmon_index() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
+                dict['transcriptome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
+                dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--decoys')
-                dict[decoys]=1
+                dict['decoys']=1
                 shift 1
                 ;;
             '--gencode')
-                dict[gencode]=1
+                dict['gencode']=1
                 shift 1
                 ;;
             '--no-decoys')
-                dict[decoys]=0
+                dict['decoys']=0
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -111,21 +111,21 @@ koopa_salmon_index() {
         koopa_stop "salmon index requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_file "${dict['transcriptome_fasta_file']}"
-    dict[transcriptome_fasta_file]="$( \
+    dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
         --pattern="${dict['fasta_pattern']}" \
         --string="${dict['transcriptome_fasta_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating salmon index at '${dict['output_dir']}'."
     if [[ "${dict['gencode']}" -eq 0 ]] && \
         koopa_str_detect_regex \
             --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
             --pattern='^gencode\.'
     then
-        dict[gencode]=1
+        dict['gencode']=1
     fi
     if [[ "${dict['gencode']}" -eq 1 ]]
     then
@@ -138,16 +138,16 @@ koopa_salmon_index() {
         koopa_assert_is_set \
             '--genome-fasta-file' "${dict['genome_fasta_file']}"
         koopa_assert_is_file "${dict['genome_fasta_file']}"
-        dict[genome_fasta_file]="$(koopa_realpath "${dict['genome_fasta_file']}")"
+        dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
         koopa_assert_is_matching_regex \
             --pattern="${dict['fasta_pattern']}" \
             --string="${dict['genome_fasta_file']}"
         koopa_assert_is_matching_regex \
             --pattern="${dict['fasta_pattern']}" \
             --string="${dict['transcriptome_fasta_file']}"
-        dict[tmp_dir]="$(koopa_tmp_dir)"
-        dict[decoys_file]="${dict['tmp_dir']}/decoys.txt"
-        dict[gentrome_fasta_file]="${dict['tmp_dir']}/gentrome.fa.gz"
+        dict['tmp_dir']="$(koopa_tmp_dir)"
+        dict['decoys_file']="${dict['tmp_dir']}/decoys.txt"
+        dict['gentrome_fasta_file']="${dict['tmp_dir']}/gentrome.fa.gz"
         koopa_fasta_generate_chromosomes_file \
             --genome-fasta-file="${dict['genome_fasta_file']}" \
             --output-file="${dict['decoys_file']}"

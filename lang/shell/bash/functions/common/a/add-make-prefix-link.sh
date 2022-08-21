@@ -18,10 +18,10 @@ koopa_add_make_prefix_link() {
     )
     if [[ -z "${dict['koopa_prefix']}" ]]
     then
-        dict[koopa_prefix]="$(koopa_koopa_prefix)"
+        dict['koopa_prefix']="$(koopa_koopa_prefix)"
     fi
-    dict[source_link]="${dict['koopa_prefix']}/bin/koopa"
-    dict[target_link]="${dict['make_prefix']}/bin/koopa"
+    dict['source_link']="${dict['koopa_prefix']}/bin/koopa"
+    dict['target_link']="${dict['make_prefix']}/bin/koopa"
     [[ -d "${dict['make_prefix']}" ]] || return 0
     [[ -L "${dict['target_link']}" ]] && return 0
     koopa_alert "Adding 'koopa' link inside '${dict['make_prefix']}'."

@@ -17,7 +17,7 @@ koopa_macos_link_homebrew() {
         --name='emacs' \
         --source='/Applications/Emacs.app/Contents/MacOS/Emacs'
     # R cask.
-    dict[r]="$(koopa_macos_r_prefix)"
+    dict['r']="$(koopa_macos_r_prefix)"
     koopa_link_in_bin \
         --name='R' \
         --source="${dict['r']}/bin/R"

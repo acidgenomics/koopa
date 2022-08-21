@@ -33,14 +33,14 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://libzip.org/download/${dict['file']}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://libzip.org/download/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    dict[zlib]="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"

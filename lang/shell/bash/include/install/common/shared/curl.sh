@@ -38,11 +38,11 @@ main() {
         [zlib]="$(koopa_app_prefix 'zlib')"
         [zstd]="$(koopa_app_prefix 'zstd')"
     )
-    dict[cacert]="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
+    dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict['cacert']}"
-    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
-    dict[version2]="${dict['version']//./_}"
-    dict[url]="https://github.com/${dict['name']}/${dict['name']}/releases/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+    dict['version2']="${dict['version']//./_}"
+    dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\
 download/${dict['name']}-${dict['version2']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

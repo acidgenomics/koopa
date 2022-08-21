@@ -36,15 +36,15 @@ koopa_push_app_build() {
     do
         local dict2
         declare -A dict2
-        dict2[name]="$name"
-        dict2[prefix]="$(koopa_realpath "${dict['opt_prefix']}/${dict2['name']}")"
+        dict2['name']="$name"
+        dict2['prefix']="$(koopa_realpath "${dict['opt_prefix']}/${dict2['name']}")"
         koopa_assert_is_dir "${dict2['prefix']}"
-        dict2[version]="$(koopa_basename "${dict2['prefix']}")"
-        dict2[local_tar]="${dict['tmp_dir']}/\
+        dict2['version']="$(koopa_basename "${dict2['prefix']}")"
+        dict2['local_tar']="${dict['tmp_dir']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
-        dict2[s3_rel_path]="/app/${dict['os_string']}/${dict['arch']}/\
+        dict2['s3_rel_path']="/app/${dict['os_string']}/${dict['arch']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
-        dict2[remote_tar]="${dict['s3_bucket']}${dict2['s3_rel_path']}"
+        dict2['remote_tar']="${dict['s3_bucket']}${dict2['s3_rel_path']}"
         koopa_alert "Pushing '${dict2['prefix']}' to '${dict2['remote_tar']}'."
         koopa_mkdir "${dict['tmp_dir']}/${dict2['name']}"
         "${app['tar']}" -Pczf "${dict2['local_tar']}" "${dict2['prefix']}/"

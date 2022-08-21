@@ -22,12 +22,12 @@ koopa_parent_dir() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--num='*)
-                dict[n]="${1#*=}"
+                dict['n']="${1#*=}"
                 shift 1
                 ;;
             '--num' | \
             '-n')
-                dict[n]="${2:?}"
+                dict['n']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -45,8 +45,8 @@ koopa_parent_dir() {
     [[ "${dict['n']}" -ge 1 ]] || dict[n]=1
     if [[ "${dict['n']}" -ge 2 ]]
     then
-        dict[n]="$((dict[n]-1))"
-        dict[cd_tail]="$( \
+        dict['n']="$((dict[n]-1))"
+        dict['cd_tail']="$( \
             printf "%${dict['n']}s" \
             | "${app['sed']}" 's| |/..|g' \
         )"

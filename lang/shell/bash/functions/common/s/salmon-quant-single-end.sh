@@ -31,43 +31,43 @@ koopa_salmon_quant_single_end() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq_tail]="${2:?}"
+                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -83,9 +83,9 @@ koopa_salmon_quant_single_end() {
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running salmon quant.'
     koopa_dl \
         'Mode' "${dict['mode']}" \

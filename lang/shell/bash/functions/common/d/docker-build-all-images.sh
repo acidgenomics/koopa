@@ -27,28 +27,28 @@ koopa_docker_build_all_images() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--days='*)
-                dict[days]="${1#*=}"
+                dict['days']="${1#*=}"
                 shift 1
                 ;;
             '--days')
-                dict[days]="${2:?}"
+                dict['days']="${2:?}"
                 shift 2
                 ;;
             '--docker-dir='*)
-                dict[docker_dir]="${1#*=}"
+                dict['docker_dir']="${1#*=}"
                 shift 1
                 ;;
             '--docker-dir')
-                dict[docker_dir]="${2:?}"
+                dict['docker_dir']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--force')
-                dict[force]=1
+                dict['force']=1
                 shift 1
                 ;;
             '--prune')
-                dict[prune]=1
+                dict['prune']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------

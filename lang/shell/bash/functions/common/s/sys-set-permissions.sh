@@ -23,23 +23,23 @@ koopa_sys_set_permissions() {
         case "$1" in
             '--dereference' | \
             '-H')
-                dict[dereference]=1
+                dict['dereference']=1
                 shift 1
                 ;;
             '--no-dereference' | \
             '-h')
-                dict[dereference]=0
+                dict['dereference']=0
                 shift 1
                 ;;
             '--recursive' | \
             '-R' | \
             '-r')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '--user' | \
             '-u')
-                dict[shared]=0
+                dict['shared']=0
                 shift 1
                 ;;
             '-'*)
@@ -55,12 +55,12 @@ koopa_sys_set_permissions() {
     koopa_assert_has_args "$#"
     case "${dict['shared']}" in
         '0')
-            dict[group]="$(koopa_group)"
-            dict[user]="$(koopa_user)"
+            dict['group']="$(koopa_group)"
+            dict['user']="$(koopa_user)"
             ;;
         '1')
-            dict[group]="$(koopa_sys_group)"
-            dict[user]="$(koopa_sys_user)"
+            dict['group']="$(koopa_sys_group)"
+            dict['user']="$(koopa_sys_user)"
             ;;
     esac
     chown_args+=('--no-dereference')

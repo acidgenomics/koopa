@@ -19,12 +19,12 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_ver]="$(koopa_major_version "${dict['version']}")"
-    dict[file]="${dict['name']}_${dict['version']}_${dict['platform']}.tar.gz"
-    dict[url]="https://d3gcli72yxqn2z.cloudfront.net/connect_latest/\
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+    dict['file']="${dict['name']}_${dict['version']}_${dict['platform']}.tar.gz"
+    dict['url']="https://d3gcli72yxqn2z.cloudfront.net/connect_latest/\
 v${dict['maj_ver']}/bin/${dict['file']}"
-    dict[script]="${dict['file']//.tar.gz/.sh}"
-    dict[script_target]="${dict['aspera_user_prefix']}/connect"
+    dict['script']="${dict['file']//.tar.gz/.sh}"
+    dict['script_target']="${dict['aspera_user_prefix']}/connect"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     "./${dict['script']}" &>/dev/null

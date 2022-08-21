@@ -28,7 +28,7 @@ koopa_install_julia_packages() {
     declare -A dict=(
         [script_prefix]="$(koopa_julia_script_prefix)"
     )
-    dict[script]="${dict['script_prefix']}/install-packages.jl"
+    dict['script']="${dict['script_prefix']}/install-packages.jl"
     koopa_assert_is_file "${dict['script']}"
     koopa_activate_julia
     "${app['julia']}" "${dict['script']}"

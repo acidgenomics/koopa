@@ -17,10 +17,10 @@ koopa_read_prompt_yn() {
     )
     case "${dict['input']}" in
         '0')
-            dict[yn]="${dict['yes']}/${dict['no_default']}"
+            dict['yn']="${dict['yes']}/${dict['no_default']}"
             ;;
         '1')
-            dict[yn]="${dict['yes_default']}/${dict['no']}"
+            dict['yn']="${dict['yes_default']}/${dict['no']}"
             ;;
         *)
             koopa_stop "Invalid choice: requires '0' or '1'."

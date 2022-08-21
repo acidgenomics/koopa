@@ -54,7 +54,7 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    app[python]="$(koopa_realpath "${app['python']}")"
+    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         # > [brotli]="$(koopa_app_prefix 'brotli')"
         [ca_certificates]="$(koopa_app_prefix 'ca-certificates')"
@@ -68,10 +68,10 @@ main() {
         [version]="${INSTALL_VERSION:?}"
         [zlib]="$(koopa_app_prefix 'zlib')"
     )
-    dict[cacerts]="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
+    dict['cacerts']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict['cacerts']}"
-    dict[file]="${dict['name']}-v${dict['version']}.tar.xz"
-    dict[url]="https://nodejs.org/dist/v${dict['version']}/${dict['file']}"
+    dict['file']="${dict['name']}-v${dict['version']}.tar.xz"
+    dict['url']="https://nodejs.org/dist/v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-v${dict['version']}"

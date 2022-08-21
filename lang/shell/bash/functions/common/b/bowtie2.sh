@@ -22,43 +22,43 @@ koopa_bowtie2() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -69,11 +69,11 @@ koopa_bowtie2() {
     done
     koopa_h1 'Running bowtie2.'
     koopa_assert_is_file "${dict['fasta_file']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
-    dict[index_dir]="${dict['output_dir']}/index"
-    dict[index_base]="${dict['index_dir']}/bowtie2"
-    dict[samples_dir]="${dict['output_dir']}/samples"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['index_dir']="${dict['output_dir']}/index"
+    dict['index_base']="${dict['index_dir']}/bowtie2"
+    dict['samples_dir']="${dict['output_dir']}/samples"
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \

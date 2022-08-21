@@ -23,27 +23,27 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--bcbio-python='*)
-                app[bcbio_python]="${1#*=}"
+                app['bcbio_python']="${1#*=}"
                 shift 1
                 ;;
             '--bcbio-python')
-                app[bcbio_python]="${2:?}"
+                app['bcbio_python']="${2:?}"
                 shift 2
                 ;;
             '--git-dir='*)
-                dict[git_dir]="${1#*=}"
+                dict['git_dir']="${1#*=}"
                 shift 1
                 ;;
             '--git-dir')
-                dict[git_dir]="${2:?}"
+                dict['git_dir']="${2:?}"
                 shift 2
                 ;;
             '--install-dir='*)
-                dict[install_dir]="${1#*=}"
+                dict['install_dir']="${1#*=}"
                 shift 1
                 ;;
             '--install-dir')
-                dict[install_dir]="${2:?}"
+                dict['install_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -57,11 +57,11 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     then
         koopa_locate_app "${app['bcbio_python']}"
     fi
-    app[bcbio_python]="$(koopa_realpath "${app['bcbio_python']}")"
+    app['bcbio_python']="$(koopa_realpath "${app['bcbio_python']}")"
     koopa_assert_is_installed "${app['bcbio_python']}"
     if [[ -z "${dict['install_dir']}" ]]
     then
-        dict[install_dir]="$(koopa_parent_dir --num=3 "${app['bcbio_python']}")"
+        dict['install_dir']="$(koopa_parent_dir --num=3 "${app['bcbio_python']}")"
     fi
     koopa_assert_is_dir "${dict['install_dir']}"
     koopa_h1 "Patching '${dict['name']}' installation at '${dict['install_dir']}'."

@@ -30,16 +30,16 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://sourceware.org/pub/${dict['name']}/${dict['file']}"
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://sourceware.org/pub/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    dict[makefile_shared]="Makefile-libbz2_${dict['shared_ext']}"
+    dict['makefile_shared']="Makefile-libbz2_${dict['shared_ext']}"
     if koopa_is_macos
     then
-        dict[makefile_shared]='Makefile-libbz2_dylib'
+        dict['makefile_shared']='Makefile-libbz2_dylib'
         "${app['cat']}" > "${dict['makefile_shared']}" << END
 PKG_VERSION=${dict['version']}
 

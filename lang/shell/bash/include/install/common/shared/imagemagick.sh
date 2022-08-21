@@ -88,9 +88,9 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[mmp_ver]="$(koopa_major_minor_patch_version "${dict['version']}")"
-    dict[file]="ImageMagick-${dict['version']}.tar.xz"
-    dict[url]="https://imagemagick.org/archive/releases/${dict['file']}"
+    dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
+    dict['file']="ImageMagick-${dict['version']}.tar.xz"
+    dict['url']="https://imagemagick.org/archive/releases/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "ImageMagick-${dict['mmp_ver']}"

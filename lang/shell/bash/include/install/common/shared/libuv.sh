@@ -29,15 +29,15 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict['version']}.tar.gz"
-    dict[url]="https://github.com/${dict['name']}/${dict['name']}/\
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
 archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     # Need to create g-prefixed libtools symlinks, otherwise the build will
     # fail on macOS.
-    dict[libtool]="$(koopa_app_prefix 'libtool')"
-    dict[bin_extra]="$(koopa_init_dir 'bin-extra')"
+    dict['libtool']="$(koopa_app_prefix 'libtool')"
+    dict['bin_extra']="$(koopa_init_dir 'bin-extra')"
     koopa_ln \
         "${dict['libtool']}/bin/libtoolize" \
         "${dict['bin_extra']}/glibtoolize"

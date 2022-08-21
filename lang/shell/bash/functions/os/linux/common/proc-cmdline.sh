@@ -19,8 +19,8 @@ koopa_linux_proc_cmdline() {
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict
-    dict['pid']="${1:?}"
-    dict['cmdline']="/proc/${dict['pid']}/cmdline"
+    dict[''pid'']="${1:?}"
+    dict[''cmdline'']="/proc/${dict['pid']}/cmdline"
     koopa_assert_is_file "${dict['cmdline']}"
     "${app['cat']}" "${dict['cmdline']}" \
         | "${app['xargs']}" -0 "${app['echo']}"

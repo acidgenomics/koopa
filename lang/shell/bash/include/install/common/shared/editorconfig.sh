@@ -33,16 +33,16 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict['version']}.tar.gz"
-    dict[url]="https://github.com/editorconfig/${dict['name']}/\
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/editorconfig/${dict['name']}/\
 archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    dict[pcre2_include_dir]="${dict['pcre2']}/include"
-    dict[pcre2_library]="${dict['pcre2']}/lib/libpcre2-8.${dict['shared_ext']}"
+    dict['pcre2_include_dir']="${dict['pcre2']}/include"
+    dict['pcre2_library']="${dict['pcre2']}/lib/libpcre2-8.${dict['shared_ext']}"
     koopa_assert_is_dir "${dict['pcre2_include_dir']}"
     koopa_assert_is_file "${dict['pcre2_library']}"
     cmake_args=(

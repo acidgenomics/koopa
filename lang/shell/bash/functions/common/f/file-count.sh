@@ -20,8 +20,8 @@ koopa_file_count() {
         [prefix]="${1:?}"
     )
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
-    dict[out]="$( \
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    dict['out']="$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \

@@ -28,8 +28,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://downloads.sourceforge.net/project/${dict['name']}/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://downloads.sourceforge.net/project/${dict['name']}/\
 ${dict['version']}/${dict['name']}-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

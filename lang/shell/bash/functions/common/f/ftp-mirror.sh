@@ -21,27 +21,27 @@ koopa_ftp_mirror() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--dir='*)
-                dict[dir]="${1#*=}"
+                dict['dir']="${1#*=}"
                 shift 1
                 ;;
             '--dir')
-                dict[dir]="${2:?}"
+                dict['dir']="${2:?}"
                 shift 2
                 ;;
             '--host='*)
-                dict[host]="${1#*=}"
+                dict['host']="${1#*=}"
                 shift 1
                 ;;
             '--host')
-                dict[host]="${2:?}"
+                dict['host']="${2:?}"
                 shift 2
                 ;;
             '--user='*)
-                dict[user]="${1#*=}"
+                dict['user']="${1#*=}"
                 shift 1
                 ;;
             '--user')
-                dict[user]="${2:?}"
+                dict['user']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -55,9 +55,9 @@ koopa_ftp_mirror() {
         '--user' "${dict['user']}"
     if [[ -n "${dict['dir']}" ]]
     then
-        dict[dir]="${dict['host']}/${dict['dir']}"
+        dict['dir']="${dict['host']}/${dict['dir']}"
     else
-        dict[dir]="${dict['host']}"
+        dict['dir']="${dict['host']}"
     fi
     "${app['wget']}" \
         --ask-password \

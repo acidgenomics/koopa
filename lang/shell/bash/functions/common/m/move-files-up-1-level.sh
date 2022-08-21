@@ -19,7 +19,7 @@ koopa_move_files_up_1_level() {
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="${PWD:?}"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     readarray -t files <<< "$( \
         koopa_find \
             --max-depth=2 \

@@ -34,7 +34,7 @@ koopa_debian_set_locale() {
         [lang]='en'
         [locale_file]='/etc/locale.gen'
     )
-    dict[lang_string]="${dict['lang']}_${dict['country']}.${dict['charset']}"
+    dict['lang_string']="${dict['lang']}_${dict['country']}.${dict['charset']}"
     koopa_alert "Setting locale to '${dict['lang_string']}'."
     koopa_sudo_write_string \
         --file="${dict['locale_file']}" \

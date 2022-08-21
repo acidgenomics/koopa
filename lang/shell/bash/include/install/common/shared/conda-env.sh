@@ -24,17 +24,17 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[libexec]="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     koopa_conda_create_env \
         --prefix="${dict['libexec']}" \
         "${dict['name']}==${dict['version']}"
-    dict[json_pattern]="${dict['name']}-${dict['version']}-*.json"
+    dict['json_pattern']="${dict['name']}-${dict['version']}-*.json"
     case "${dict['name']}" in
         'snakemake')
-            dict[json_pattern]="${dict['name']}-minimal-*.json"
+            dict['json_pattern']="${dict['name']}-minimal-*.json"
             ;;
     esac
-    dict[json_file]="$( \
+    dict['json_file']="$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
@@ -56,12 +56,12 @@ main() {
         do
             local dict2
             declare -A dict2
-            dict2[name]="$bin_name"
-            dict2[bin_source]="${dict['libexec']}/bin/${dict2['name']}"
-            dict2[bin_target]="${dict['prefix']}/bin/${dict2['name']}"
-            dict2[man1_source]="${dict['libexec']}/share/man/\
+            dict2['name']="$bin_name"
+            dict2['bin_source']="${dict['libexec']}/bin/${dict2['name']}"
+            dict2['bin_target']="${dict['prefix']}/bin/${dict2['name']}"
+            dict2['man1_source']="${dict['libexec']}/share/man/\
 man1/${dict2['name']}.1"
-            dict2[man1_target]="${dict['prefix']}/share/man/\
+            dict2['man1_target']="${dict['prefix']}/share/man/\
 man1/${dict2['name']}.1"
             koopa_assert_is_file "${dict2['bin_source']}"
             koopa_ln "${dict2['bin_source']}" "${dict2['bin_target']}"

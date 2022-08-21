@@ -25,27 +25,27 @@ koopa_jekyll_deploy_to_aws() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--bucket='*)
-                dict[bucket_prefix]="${1#*=}"
+                dict['bucket_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--bucket')
-                dict[bucket_prefix]="${2:?}"
+                dict['bucket_prefix']="${2:?}"
                 shift 2
                 ;;
             '--distribution-id='*)
-                dict[distribution_id]="${1#*=}"
+                dict['distribution_id']="${1#*=}"
                 shift 1
                 ;;
             '--distribution-id')
-                dict[distribution_id]="${2:?}"
+                dict['distribution_id']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -58,10 +58,10 @@ koopa_jekyll_deploy_to_aws() {
         '--bucket' "${dict['bucket_prefix']:-}" \
         '--distribution-id' "${dict['distribution_id']:-}" \
         '--profile' "${dict['profile']:-}"
-    dict[bucket_prefix]="$( \
+    dict['bucket_prefix']="$( \
         koopa_strip_trailing_slash "${dict['bucket_prefix']}" \
     )"
-    dict[local_prefix]="$( \
+    dict['local_prefix']="$( \
         koopa_strip_trailing_slash "${dict['local_prefix']}" \
     )"
     koopa_assert_is_file 'Gemfile'

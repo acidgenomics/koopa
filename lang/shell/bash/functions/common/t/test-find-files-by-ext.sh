@@ -10,9 +10,9 @@ koopa_test_find_files_by_ext() {
     declare -A dict=(
         [ext]="${1:?}"
     )
-    dict[pattern]="\.${dict['ext']}$"
+    dict['pattern']="\.${dict['ext']}$"
     readarray -t all_files <<< "$(koopa_test_find_files)"
-    dict[files]="$( \
+    dict['files']="$( \
         koopa_print "${all_files[@]}" \
         | koopa_grep \
             --pattern="${dict['pattern']}" \

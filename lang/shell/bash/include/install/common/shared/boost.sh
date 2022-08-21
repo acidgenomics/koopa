@@ -21,14 +21,14 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[snake_version]="$(koopa_snake_case_simple "${dict['version']}")"
-    dict[file]="${dict['name']}_${dict['snake_version']}.tar.bz2"
-    dict[url]="https://boostorg.jfrog.io/artifactory/main/release/\
+    dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"
+    dict['file']="${dict['name']}_${dict['snake_version']}.tar.bz2"
+    dict['url']="https://boostorg.jfrog.io/artifactory/main/release/\
 ${dict['version']}/source/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}_${dict['snake_version']}"
-    dict[icu4c]="$(koopa_app_prefix 'icu4c')"
+    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     bootstrap_args=(
         "--prefix=${dict['prefix']}"
         "--with-icu=${dict['icu4c']}"

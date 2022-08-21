@@ -21,8 +21,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict['version']}.tar.gz"
-    dict[url]="https://github.com/facebook/${dict['name']}/archive/${dict['file']}"
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/facebook/${dict['name']}/archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

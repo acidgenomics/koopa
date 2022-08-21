@@ -23,27 +23,27 @@ koopa_fastq_lanepool() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--source-dir='*)
-                dict[source_dir]="${1#*=}"
+                dict['source_dir']="${1#*=}"
                 shift 1
                 ;;
             '--source-dir')
-                dict[source_dir]="${2:?}"
+                dict['source_dir']="${2:?}"
                 shift 2
                 ;;
             '--target-dir='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-dir')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -53,7 +53,7 @@ koopa_fastq_lanepool() {
         esac
     done
     koopa_assert_is_dir "${dict['source_dir']}"
-    dict[source_dir]="$(koopa_realpath "${dict['source_dir']}")"
+    dict['source_dir']="$(koopa_realpath "${dict['source_dir']}")"
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -68,7 +68,7 @@ koopa_fastq_lanepool() {
     then
         koopa_stop "No lane-split FASTQ files in '${dict['source_dir']}'."
     fi
-    dict[target_dir]="$(koopa_init_dir "${dict['target_dir']}")"
+    dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     basenames=()
     # FIXME Consider improving the variable name here.
     for i in "${fastq_files[@]}"

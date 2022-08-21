@@ -18,7 +18,7 @@ main() {
     )
     [[ -x "${app['node']}" ]] || return 1
     [[ -x "${app['npm']}" ]] || return 1
-    app[node]="$(koopa_realpath "${app['node']}")"
+    app['node']="$(koopa_realpath "${app['node']}")"
     declare -A dict=(
         [name]="${INSTALL_NAME:?}"
         [prefix]="${INSTALL_PREFIX:?}"

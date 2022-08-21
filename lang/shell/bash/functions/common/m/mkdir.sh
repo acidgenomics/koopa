@@ -20,7 +20,7 @@ koopa_mkdir() {
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -38,7 +38,7 @@ koopa_mkdir() {
     mkdir_args=('-p')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         mkdir=("${app['sudo']}" "${app['mkdir']}")
     else

@@ -4,29 +4,29 @@
 __koopa_alert_process_start() {
     local dict
     declare -A dict
-    dict[word]="${1:?}"
+    dict['word']="${1:?}"
     shift 1
     koopa_assert_has_args_le "$#" 3
-    dict[name]="${1:?}"
-    dict[version]=''
-    dict[prefix]=''
+    dict['name']="${1:?}"
+    dict['version']=''
+    dict['prefix']=''
     if [[ "$#" -eq 2 ]]
     then
-        dict[prefix]="${2:?}"
+        dict['prefix']="${2:?}"
     elif [[ "$#" -eq 3 ]]
     then
-        dict[version]="${2:?}"
-        dict[prefix]="${3:?}"
+        dict['version']="${2:?}"
+        dict['prefix']="${3:?}"
     fi
     if [[ -n "${dict['prefix']}" ]] && [[ -n "${dict['version']}" ]]
     then
-        dict[out]="${dict['word']} '${dict['name']}' ${dict['version']} \
+        dict['out']="${dict['word']} '${dict['name']}' ${dict['version']} \
 at '${dict['prefix']}'."
     elif [[ -n "${dict['prefix']}" ]]
     then
-        dict[out]="${dict['word']} '${dict['name']}' at '${dict['prefix']}'."
+        dict['out']="${dict['word']} '${dict['name']}' at '${dict['prefix']}'."
     else
-        dict[out]="${dict['word']} '${dict['name']}'."
+        dict['out']="${dict['word']} '${dict['name']}'."
     fi
     koopa_alert "${dict['out']}"
     return 0
@@ -35,17 +35,17 @@ at '${dict['prefix']}'."
 __koopa_alert_process_success() {
     local dict
     declare -A dict
-    dict[word]="${1:?}"
+    dict['word']="${1:?}"
     shift 1
     koopa_assert_has_args_le "$#" 2
-    dict[name]="${1:?}"
-    dict[prefix]="${2:-}"
+    dict['name']="${1:?}"
+    dict['prefix']="${2:-}"
     if [[ -n "${dict['prefix']}" ]]
     then
-        dict[out]="${dict['word']} of '${dict['name']}' at '${dict['prefix']}' \
+        dict['out']="${dict['word']} of '${dict['name']}' at '${dict['prefix']}' \
 was successful."
     else
-        dict[out]="${dict['word']} of '${dict['name']}' was successful."
+        dict['out']="${dict['word']} of '${dict['name']}' was successful."
     fi
     koopa_alert_success "${dict['out']}"
     return 0
@@ -133,37 +133,37 @@ __koopa_file_detect() {
     do
         case "$1" in
             '--file='*)
-                dict[file]="${1#*=}"
-                dict[stdin]=0
+                dict['file']="${1#*=}"
+                dict['stdin']=0
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
-                dict[stdin]=0
+                dict['file']="${2:?}"
+                dict['stdin']=0
                 shift 2
                 ;;
             '--mode='*)
-                dict[mode]="${1#*=}"
+                dict['mode']="${1#*=}"
                 shift 1
                 ;;
             '--mode')
-                dict[mode]="${2:?}"
+                dict['mode']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-')
-                dict[stdin]=1
+                dict['stdin']=1
                 shift 1
                 ;;
             *)
@@ -173,7 +173,7 @@ __koopa_file_detect() {
     done
     if [[ "${dict['stdin']}" -eq 1 ]]
     then
-        dict[file]="$(</dev/stdin)"
+        dict['file']="$(</dev/stdin)"
     fi
     koopa_assert_is_set \
         '--file' "${dict['file']}" \
@@ -231,25 +231,25 @@ __koopa_h() {
     case "${dict['level']}" in
         '1')
             koopa_print ''
-            dict[prefix]='#'
+            dict['prefix']='#'
             ;;
         '2')
-            dict[prefix]='##'
+            dict['prefix']='##'
             ;;
         '3')
-            dict[prefix]='###'
+            dict['prefix']='###'
             ;;
         '4')
-            dict[prefix]='####'
+            dict['prefix']='####'
             ;;
         '5')
-            dict[prefix]='#####'
+            dict['prefix']='#####'
             ;;
         '6')
-            dict[prefix]='######'
+            dict['prefix']='######'
             ;;
         '7')
-            dict[prefix]='#######'
+            dict['prefix']='#######'
             ;;
         *)
             koopa_stop 'Invalid header level.'
@@ -270,7 +270,7 @@ __koopa_is_ssh_enabled() {
         [url]="${1:?}"
         [pattern]="${2:?}"
     )
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['ssh']}" -T \
             -o StrictHostKeyChecking='no' \
             "${dict['url']}" 2>&1 \
@@ -293,27 +293,27 @@ __koopa_link_in_dir() {
     do
         case "$1" in
             '--name='*)
-                dict['name']="${1#*=}"
+                dict[''name'']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict['name']="${2:?}"
+                dict[''name'']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict['prefix']="${1#*=}"
+                dict[''prefix'']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict['prefix']="${2:?}"
+                dict[''prefix'']="${2:?}"
                 shift 2
                 ;;
             '--source='*)
-                dict['source']="${1#*=}"
+                dict[''source'']="${1#*=}"
                 shift 1
                 ;;
             '--source')
-                dict['source']="${2:?}"
+                dict[''source'']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -326,8 +326,8 @@ __koopa_link_in_dir() {
         '--prefix' "${dict['prefix']}" \
         '--source' "${dict['source']}"
     [[ ! -d "${dict['prefix']}" ]] && koopa_mkdir "${dict['prefix']}"
-    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    dict['target']="${dict['prefix']}/${dict['name']}"
+    dict[''prefix'']="$(koopa_realpath "${dict['prefix']}")"
+    dict[''target'']="${dict['prefix']}/${dict['name']}"
     koopa_assert_is_existing "${dict['source']}"
     koopa_alert "Linking '${dict['source']}' -> '${dict['target']}'."
     koopa_sys_ln "${dict['source']}" "${dict['target']}"
@@ -420,37 +420,37 @@ __koopa_str_detect() {
     do
         case "$1" in
             '--mode='*)
-                dict[mode]="${1#*=}"
+                dict['mode']="${1#*=}"
                 shift 1
                 ;;
             '--mode')
-                dict[mode]="${2:?}"
+                dict['mode']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
-                dict[stdin]=0
+                dict['string']="${1#*=}"
+                dict['stdin']=0
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:-}"
-                dict[stdin]=0
+                dict['string']="${2:-}"
+                dict['stdin']=0
                 shift 2
                 ;;
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-')
-                dict[stdin]=1
+                dict['stdin']=1
                 shift 1
                 ;;
             *)
@@ -460,7 +460,7 @@ __koopa_str_detect() {
     done
     if [[ "${dict['stdin']}" -eq 1 ]]
     then
-        dict[string]="$(</dev/stdin)"
+        dict['string']="$(</dev/stdin)"
     fi
     koopa_assert_is_set \
         '--mode' "${dict['mode']}" \
@@ -487,15 +487,15 @@ __koopa_unlink_in_dir() {
     do
         case "$1" in
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--allow-missing')
-                dict[allow_missing]=1
+                dict['allow_missing']=1
                 shift 1
                 ;;
             '-'*)
@@ -511,7 +511,7 @@ __koopa_unlink_in_dir() {
     koopa_assert_has_args "$#"
     koopa_assert_is_set '--prefix' "${dict['prefix']}"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     names=("$@")
     for name in "${names[@]}"
     do
@@ -573,7 +573,7 @@ koopa_activate_opt_prefix() {
     do
         case "$1" in
             '--build-only')
-                dict[build_only]=1
+                dict['build_only']=1
                 shift 1
                 ;;
             '-'*)
@@ -696,10 +696,10 @@ koopa_add_make_prefix_link() {
     )
     if [[ -z "${dict['koopa_prefix']}" ]]
     then
-        dict[koopa_prefix]="$(koopa_koopa_prefix)"
+        dict['koopa_prefix']="$(koopa_koopa_prefix)"
     fi
-    dict[source_link]="${dict['koopa_prefix']}/bin/koopa"
-    dict[target_link]="${dict['make_prefix']}/bin/koopa"
+    dict['source_link']="${dict['koopa_prefix']}/bin/koopa"
+    dict['target_link']="${dict['make_prefix']}/bin/koopa"
     [[ -d "${dict['make_prefix']}" ]] || return 0
     [[ -L "${dict['target_link']}" ]] && return 0
     koopa_alert "Adding 'koopa' link inside '${dict['make_prefix']}'."
@@ -940,15 +940,15 @@ koopa_app_prefix() {
     local dict
     koopa_assert_has_args_le "$#" 1
     declare -A dict
-    dict[name]="${1:-}"
+    dict['name']="${1:-}"
     if [[ -n "${dict['name']}" ]]
     then
-        dict[opt_prefix]="$(koopa_opt_prefix)"
-        dict[str]="${dict['opt_prefix']}/${dict['name']}"
+        dict['opt_prefix']="$(koopa_opt_prefix)"
+        dict['str']="${dict['opt_prefix']}/${dict['name']}"
         [[ -d "${dict['str']}" ]] || return 1
-        dict[str]="$(koopa_realpath "${dict['str']}")"
+        dict['str']="$(koopa_realpath "${dict['str']}")"
     else
-        dict[str]="$(koopa_koopa_prefix)/app"
+        dict['str']="$(koopa_koopa_prefix)/app"
     fi
     koopa_print "${dict['str']}"
     return 0
@@ -965,19 +965,19 @@ koopa_append_string() {
     do
         case "$1" in
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -1350,19 +1350,19 @@ koopa_assert_is_matching_fixed() {
     do
         case "$1" in
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -1391,19 +1391,19 @@ koopa_assert_is_matching_regex() {
     do
         case "$1" in
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -1704,35 +1704,35 @@ koopa_aws_batch_list_jobs() {
     do
         case "$1" in
             '--account-id='*)
-                dict[account_id]="${1#*=}"
+                dict['account_id']="${1#*=}"
                 shift 1
                 ;;
             '--account-id')
-                dict[account_id]="${2:?}"
+                dict['account_id']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--queue='*)
-                dict[queue]="${1#*=}"
+                dict['queue']="${1#*=}"
                 shift 1
                 ;;
             '--queue')
-                dict[queue]="${2:?}"
+                dict['queue']="${2:?}"
                 shift 2
                 ;;
             '--region='*)
-                dict[region]="${1#*=}"
+                dict['region']="${1#*=}"
                 shift 1
                 ;;
             '--region')
-                dict[region]="${2:?}"
+                dict['region']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -1763,7 +1763,7 @@ koopa_aws_batch_list_jobs() {
         'SUCCEEDED'
         'FAILED'
     )
-    dict[job_queue]="$(koopa_paste --sep=':' "${job_queue_array[@]}")"
+    dict['job_queue']="$(koopa_paste --sep=':' "${job_queue_array[@]}")"
     for status in "${status_array[@]}"
     do
         koopa_h2 "$status"
@@ -1780,9 +1780,9 @@ koopa_aws_ec2_instance_id() {
     declare -A app
     if koopa_is_ubuntu
     then
-        app[ec2_metadata]='/usr/bin/ec2metadata'
+        app['ec2_metadata']='/usr/bin/ec2metadata'
     else
-        app[ec2_metadata]='/usr/bin/ec2-metadata'
+        app['ec2_metadata']='/usr/bin/ec2-metadata'
     fi
     [[ -x "${app['ec2_metadata']}" ]] || return 1
     str="$("${app['ec2_metadata']}" --instance-id)"
@@ -1806,11 +1806,11 @@ koopa_aws_ec2_suspend() {
     do
         case "$1" in
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -1840,11 +1840,11 @@ koopa_aws_ec2_terminate() {
     do
         case "$1" in
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -1878,35 +1878,35 @@ koopa_aws_s3_cp_regex() {
     do
         case "$1" in
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--source_prefix='*)
-                dict[source_prefix]="${1#*=}"
+                dict['source_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--source_prefix')
-                dict[source_prefix]="${2:?}"
+                dict['source_prefix']="${2:?}"
                 shift 2
                 ;;
             '--target_prefix='*)
-                dict[target_prefix]="${1#*=}"
+                dict['target_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--target_prefix')
-                dict[target_prefix]="${2:?}"
+                dict['target_prefix']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -1956,43 +1956,43 @@ koopa_aws_s3_find() {
     do
         case "$1" in
             '--exclude='*)
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--exclude')
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${2:?}")
                 shift 2
                 ;;
             '--include='*)
-                dict[include]=1
+                dict['include']=1
                 include_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--include')
-                dict[include]=1
+                dict['include']=1
                 include_arr+=("${2:?}")
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--recursive')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             *)
@@ -2093,27 +2093,27 @@ koopa_aws_s3_list_large_files() {
     do
         case "$1" in
             '--bucket='*)
-                dict[bucket]="${1#*=}"
+                dict['bucket']="${1#*=}"
                 shift 1
                 ;;
             '--bucket')
-                dict[bucket]="${2:?}"
+                dict['bucket']="${2:?}"
                 shift 2
                 ;;
             '--num='*)
-                dict[num]="${1#*=}"
+                dict['num']="${1#*=}"
                 shift 1
                 ;;
             '--num')
-                dict[num]="${2:?}"
+                dict['num']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -2128,14 +2128,14 @@ koopa_aws_s3_list_large_files() {
     koopa_assert_is_matching_regex \
         --pattern='^s3://.+/$' \
         --string="${dict['bucket']}"
-    dict[bucket]="$( \
+    dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
             --replacement='' \
             "${dict['bucket']}" \
     )"
-    dict[bucket]="$(koopa_strip_trailing_slash "${dict['bucket']}")"
-    dict[str]="$( \
+    dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
+    dict['str']="$( \
         "${app['aws']}" --profile="${dict['profile']}" \
             s3api list-object-versions --bucket "${dict['bucket']}" \
             | "${app['jq']}" \
@@ -2173,31 +2173,31 @@ koopa_aws_s3_ls() {
     do
         case "$1" in
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--type='*)
-                dict[type]="${1#*=}"
+                dict['type']="${1#*=}"
                 shift 1
                 ;;
             '--type')
-                dict[type]="${2:?}"
+                dict['type']="${2:?}"
                 shift 2
                 ;;
             '--recursive')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             *)
@@ -2213,16 +2213,16 @@ koopa_aws_s3_ls() {
         --string="${dict['prefix']}"
     case "${dict['type']}" in
         '')
-            dict[dirs]=1
-            dict[files]=1
+            dict['dirs']=1
+            dict['files']=1
             ;;
         'd')
-            dict[dirs]=1
-            dict[files]=0
+            dict['dirs']=1
+            dict['files']=0
             ;;
         'f')
-            dict[dirs]=0
-            dict[files]=1
+            dict['dirs']=0
+            dict['files']=1
             ;;
         *)
             koopa_stop "Unsupported type: '${dict['type']}'."
@@ -2244,7 +2244,7 @@ koopa_aws_s3_ls() {
     [[ -n "$str" ]] || return 1
     if [[ "${dict['recursive']}" -eq 1 ]]
     then
-        dict[bucket_prefix]="$( \
+        dict['bucket_prefix']="$( \
             koopa_grep \
                 --only-matching \
                 --pattern='^s3://[^/]+' \
@@ -2330,19 +2330,19 @@ koopa_aws_s3_mv_to_parent() {
     do
         case "$1" in
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -2356,7 +2356,7 @@ koopa_aws_s3_mv_to_parent() {
     koopa_assert_is_matching_regex \
         --pattern='^s3://.+/$' \
         --string="${dict['prefix']}"
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_aws_s3_ls \
             --prefix="${dict['prefix']}" \
             --profile="${dict['profile']}" \
@@ -2373,8 +2373,8 @@ koopa_aws_s3_mv_to_parent() {
             [bn]="$(koopa_basename "$file")"
             [dn1]="$(koopa_dirname "$file")"
         )
-        dict2[dn2]="$(koopa_dirname "${dict2['dn1']}")"
-        dict2[target]="${dict2['dn2']}/${dict2['bn']}"
+        dict2['dn2']="$(koopa_dirname "${dict2['dn1']}")"
+        dict2['target']="${dict2['dn2']}/${dict2['bn']}"
         "${app['aws']}" --profile="${dict['profile']}" \
             s3 mv \
                 --recursive \
@@ -2419,27 +2419,27 @@ koopa_aws_s3_sync() {
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--source-prefix='*)
-                dict[source_prefix]="${1#*=}"
+                dict['source_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--source-prefix')
-                dict[source_prefix]="${2:?}"
+                dict['source_prefix']="${2:?}"
                 shift 2
                 ;;
             '--target-prefix='*)
-                dict[target_prefix]="${1#*=}"
+                dict['target_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--target-prefix')
-                dict[target_prefix]="${2:?}"
+                dict['target_prefix']="${2:?}"
                 shift 2
                 ;;
             '--delete' | \
@@ -2645,7 +2645,7 @@ koopa_bioconda_autobump_recipe() {
         [recipe]="${1:?}"
         [repo]="${HOME:?}/git/bioconda-recipes"
     )
-    dict[branch]="${dict['recipe']/-/_}"
+    dict['branch']="${dict['recipe']/-/_}"
     koopa_assert_is_dir "${dict['repo']}"
     (
         koopa_cd "${dict['repo']}"
@@ -2674,22 +2674,22 @@ koopa_boost_version() {
     gcc_args=()
     if koopa_is_macos
     then
-        dict[brew_prefix]="$(koopa_homebrew_prefix)"
+        dict['brew_prefix']="$(koopa_homebrew_prefix)"
         gcc_args+=("-I${dict['brew_prefix']}/opt/boost/include")
     fi
     gcc_args+=(
         '-x' 'c++'
         '-E' '-'
     )
-    dict[version]="$( \
+    dict['version']="$( \
         koopa_print '#include <boost/version.hpp>\nBOOST_VERSION' \
         | "${app['gcc']}" "${gcc_args[@]}" \
         | koopa_grep --pattern='^[0-9]+$' --regex \
     )"
     [[ -n "${dict['version']}" ]] || return 1
-    dict[major]="$(koopa_print "${dict['version']} / 100000" | "${app['bc']}")"
-    dict[minor]="$(koopa_print "${dict['version']} / 100 % 1000" | "${app['bc']}")"
-    dict[patch]="$(koopa_print "${dict['version']} % 100" | "${app['bc']}")"
+    dict['major']="$(koopa_print "${dict['version']} / 100000" | "${app['bc']}")"
+    dict['minor']="$(koopa_print "${dict['version']} / 100 % 1000" | "${app['bc']}")"
+    dict['patch']="$(koopa_print "${dict['version']} % 100" | "${app['bc']}")"
     koopa_print "${dict['major']}.${dict['minor']}.${dict['patch']}"
     return 0
 }
@@ -2709,51 +2709,51 @@ koopa_bowtie2_align() {
     do
         case "$1" in
             '--fastq-r1='*)
-                dict[fastq_r1]="${1#*=}"
+                dict['fastq_r1']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1')
-                dict[fastq_r1]="${2:?}"
+                dict['fastq_r1']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2='*)
-                dict[fastq_r2]="${1#*=}"
+                dict['fastq_r2']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2')
-                dict[fastq_r2]="${2:?}"
+                dict['fastq_r2']="${2:?}"
                 shift 2
                 ;;
             '--index-base='*)
-                dict[index_base]="${1#*=}"
+                dict['index_base']="${1#*=}"
                 shift 1
                 ;;
             '--index-base')
-                dict[index_base]="${2:?}"
+                dict['index_base']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             '--r1-tail='*)
-                dict[r1_tail]="${1#*=}"
+                dict['r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--r1-tail')
-                dict[r1_tail]="${2:?}"
+                dict['r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--r2-tail='*)
-                dict[r2_tail]="${1#*=}"
+                dict['r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--r2-tail')
-                dict[r2_tail]="${2:?}"
+                dict['r2_tail']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -2762,13 +2762,13 @@ koopa_bowtie2_align() {
         esac
     done
     koopa_assert_is_file "${dict['fastq_r1']}" "${dict['fastq_r2']}"
-    dict[fastq_r1_bn]="$(koopa_basename "${dict['fastq_r1']}")"
-    dict[fastq_r1_bn]="${dict['fastq_r1_bn']/${dict['r1_tail']}/}"
-    dict[fastq_r2_bn]="$(koopa_basename "${dict['fastq_r2']}")"
-    dict[fastq_r2_bn]="${dict['fastq_r2_bn']/${dict['r2_tail']}/}"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1']}")"
+    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['r1_tail']}/}"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2']}")"
+    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
     id="${dict['fastq_r1_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
@@ -2813,19 +2813,19 @@ koopa_bowtie2_index() {
     do
         case "$1" in
             '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
+                dict['fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--fasta-file')
-                dict[fasta_file]="${2:?}"
+                dict['fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -2843,8 +2843,8 @@ koopa_bowtie2_index() {
     fi
     koopa_h2 "Generating bowtie2 index at '${dict['output_dir']}'."
     koopa_mkdir "${dict['output_dir']}"
-    dict[index_base]="${dict['output_dir']}/bowtie2"
-    dict[log_file]="${dict['output_dir']}/index.log"
+    dict['index_base']="${dict['output_dir']}/bowtie2"
+    dict['log_file']="${dict['output_dir']}/index.log"
     index_args=(
         "--threads=${dict['threads']}"
         '--verbose'
@@ -2869,43 +2869,43 @@ koopa_bowtie2() {
     do
         case "$1" in
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -2915,11 +2915,11 @@ koopa_bowtie2() {
     done
     koopa_h1 'Running bowtie2.'
     koopa_assert_is_file "${dict['fasta_file']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
-    dict[index_dir]="${dict['output_dir']}/index"
-    dict[index_base]="${dict['index_dir']}/bowtie2"
-    dict[samples_dir]="${dict['output_dir']}/samples"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['index_dir']="${dict['output_dir']}/index"
+    dict['index_base']="${dict['index_dir']}/bowtie2"
+    dict['samples_dir']="${dict['output_dir']}/samples"
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -3428,7 +3428,7 @@ koopa_cache_functions_dir() {
             [prefix]="$prefix"
         )
         koopa_assert_is_dir "${dict['prefix']}"
-        dict[target_file]="${dict['prefix']}.sh"
+        dict['target_file']="${dict['prefix']}.sh"
         koopa_alert "Caching functions at '${dict['prefix']}' \
 in '${dict['target_file']}'."
         readarray -t files <<< "$( \
@@ -3450,7 +3450,7 @@ in '${dict['target_file']}'."
                 "$file" \
             >> "${dict['target_file']}"
         done
-        dict[tmp_target_file]="${dict['target_file']}.tmp"
+        dict['tmp_target_file']="${dict['target_file']}.tmp"
         "${app['perl']}" \
             -0pe 's/\n\n\n+/\n\n/g' \
             "${dict['target_file']}" \
@@ -3468,7 +3468,7 @@ koopa_cache_functions() {
     declare -A dict=(
         [koopa_prefix]="$(koopa_koopa_prefix)"
     )
-    dict[shell_prefix]="${dict['koopa_prefix']}/lang/shell"
+    dict['shell_prefix']="${dict['koopa_prefix']}/lang/shell"
     koopa_cache_functions_dir \
         "${dict['shell_prefix']}/bash/functions/activate" \
         "${dict['shell_prefix']}/bash/functions/common" \
@@ -3561,7 +3561,7 @@ koopa_check_access_human() {
         koopa_warn "'${dict['file']}' does not exist."
         return 1
     fi
-    dict[access]="$(koopa_stat_access_human "${dict['file']}")"
+    dict['access']="$(koopa_stat_access_human "${dict['file']}")"
     if [[ "${dict['access']}" != "${dict['code']}" ]]
     then
         koopa_warn "'${dict['file']}' current access '${dict['access']}' \
@@ -3583,7 +3583,7 @@ koopa_check_access_octal() {
         koopa_warn "'${dict['file']}' does not exist."
         return 1
     fi
-    dict[access]="$(koopa_stat_access_octal "${dict['file']}")"
+    dict['access']="$(koopa_stat_access_octal "${dict['file']}")"
     if [[ "${dict['access']}" != "${dict['code']}" ]]
     then
         koopa_warn "'${dict['file']}' current access '${dict['access']}' \
@@ -3640,7 +3640,7 @@ koopa_check_group() {
         koopa_warn "'${dict['file']}' does not exist."
         return 1
     fi
-    dict[group]="$(koopa_stat_group "${dict['file']}")"
+    dict['group']="$(koopa_stat_group "${dict['file']}")"
     if [[ "${dict['group']}" != "${dict['code']}" ]]
     then
         koopa_warn "'${dict['file']}' current group '${dict['group']}' \
@@ -3664,7 +3664,7 @@ koopa_check_mount() {
         koopa_warn "'${dict['prefix']}' is not a readable directory."
         return 1
     fi
-    dict[nfiles]="$( \
+    dict['nfiles']="$( \
         koopa_find \
             --prefix="${dict['prefix']}" \
             --min-depth=1 \
@@ -3692,27 +3692,27 @@ koopa_check_shared_object() {
     do
         case "$1" in
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -3727,21 +3727,21 @@ koopa_check_shared_object() {
             '--prefix' "${dict['prefix']}"
         if koopa_is_linux
         then
-            dict[shared_ext]='so'
+            dict['shared_ext']='so'
         elif koopa_is_macos
         then
-            dict[shared_ext]='dylib'
+            dict['shared_ext']='dylib'
         fi
-        dict[file]="${dict['prefix']}/${dict['name']}.${dict['shared_ext']}"
+        dict['file']="${dict['prefix']}/${dict['name']}.${dict['shared_ext']}"
     fi
     koopa_assert_is_file "${dict['file']}"
     tool_args=()
     if koopa_is_linux
     then
-        app[tool]="$(koopa_locate_ldd)"
+        app['tool']="$(koopa_locate_ldd)"
     elif koopa_is_macos
     then
-        app[tool]="$(koopa_macos_locate_otool)"
+        app['tool']="$(koopa_macos_locate_otool)"
         tool_args+=('-L')
     fi
     [[ -x "${app['tool']}" ]] || return 1
@@ -3775,8 +3775,8 @@ koopa_check_user() {
         koopa_warn "'${dict['file']}' does not exist on disk."
         return 1
     fi
-    dict[file]="$(koopa_realpath "${dict['file']}")"
-    dict[current_user]="$(koopa_stat_user "${dict['file']}")"
+    dict['file']="$(koopa_realpath "${dict['file']}")"
+    dict['current_user']="$(koopa_stat_user "${dict['file']}")"
     if [[ "${dict['current_user']}" != "${dict['expected_user']}" ]]
     then
         koopa_warn "'${dict['file']}' user '${dict['current_user']}' \
@@ -3818,7 +3818,7 @@ koopa_chgrp() {
         case "$1" in
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -3834,7 +3834,7 @@ koopa_chgrp() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         chgrp=("${app['sudo']}" "${app['chgrp']}")
     else
@@ -3860,12 +3860,12 @@ koopa_chmod() {
         case "$1" in
             '--recursive' | \
             '-R')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -3881,7 +3881,7 @@ koopa_chmod() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         chmod=("${app['sudo']}" "${app['chmod']}")
     else
@@ -3912,22 +3912,22 @@ koopa_chown() {
         case "$1" in
             '--dereference' | \
             '-H')
-                dict[dereference]=1
+                dict['dereference']=1
                 shift 1
                 ;;
             '--no-dereference' | \
             '-h')
-                dict[dereference]=0
+                dict['dereference']=0
                 shift 1
                 ;;
             '--recursive' | \
             '-R')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -3943,7 +3943,7 @@ koopa_chown() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         chown=("${app['sudo']}" "${app['chown']}")
     else
@@ -3977,7 +3977,7 @@ koopa_cli_app() {
                     case "${3:-}" in
                         'fetch-and-run' | \
                         'list-jobs')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -3990,7 +3990,7 @@ koopa_cli_app() {
                         'instance-id' | \
                         'suspend' | \
                         'terminate')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -4005,7 +4005,7 @@ koopa_cli_app() {
                         'ls' | \
                         'mv-to-parent' | \
                         'sync')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -4021,7 +4021,7 @@ koopa_cli_app() {
         'bioconda')
             case "${2:-}" in
                 'autobump-recipe')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4033,7 +4033,7 @@ koopa_cli_app() {
             case "${2:-}" in
                 'align' | \
                 'index')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4045,7 +4045,7 @@ koopa_cli_app() {
             case "${2:-}" in
                 'create-env' | \
                 'remove-env')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4066,7 +4066,7 @@ koopa_cli_app() {
                 'remove' | \
                 'run' | \
                 'tag')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4077,7 +4077,7 @@ koopa_cli_app() {
         'ftp')
             case "${2:-}" in
                 'mirror')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4098,7 +4098,7 @@ koopa_cli_app() {
                 'rm-submodule' | \
                 'rm-untracked' | \
                 'status-recursive')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4111,7 +4111,7 @@ koopa_cli_app() {
                 'prompt' | \
                 'reload' | \
                 'restart')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4122,7 +4122,7 @@ koopa_cli_app() {
         'jekyll')
             case "${2:-}" in
                 'serve')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4134,14 +4134,14 @@ koopa_cli_app() {
         'salmon')
             case "${2:-}" in
                 'index')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 'quant')
                     case "${3:-}" in
                         'paired-end' | \
                         'single-end')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -4157,7 +4157,7 @@ koopa_cli_app() {
         'md5sum')
             case "${2:-}" in
                 'check-to-new-md5-file')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4166,7 +4166,7 @@ koopa_cli_app() {
             esac
             ;;
         'rnaeditingindexer')
-            dict[key]="${1:?}"
+            dict['key']="${1:?}"
             shift 1
             ;;
         'sra')
@@ -4175,7 +4175,7 @@ koopa_cli_app() {
                 'download-run-info-table' | \
                 'fastq-dump' | \
                 'prefetch')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4186,7 +4186,7 @@ koopa_cli_app() {
         'ssh')
             case "${2:-}" in
                 'generate-key')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4200,7 +4200,7 @@ koopa_cli_app() {
                     case "${3:-}" in
                         'paired-end' | \
                         'single-end')
-                            dict[key]="${1:?}-${2:?}-${3:?}"
+                            dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
                         *)
@@ -4209,7 +4209,7 @@ koopa_cli_app() {
                     esac
                     ;;
                 'index')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4220,7 +4220,7 @@ koopa_cli_app() {
         'wget')
             case "${2:-}" in
                 'recursive')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
                 *)
@@ -4233,7 +4233,7 @@ koopa_cli_app() {
             ;;
     esac
     [[ -z "${dict['key']}" ]] && koopa_cli_invalid_arg "$@"
-    dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+    dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
     if ! koopa_is_function "${dict['fun']}"
     then
         koopa_stop 'Unsupported command.'
@@ -4251,7 +4251,7 @@ koopa_cli_configure() {
         declare -A dict=(
             [key]="configure-${app}"
         )
-        dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then
             koopa_stop "Unsupported app: '${app}'."
@@ -4271,7 +4271,7 @@ koopa_cli_install() {
     )
     case "${1:-}" in
         'koopa')
-            dict[allow_custom]=1
+            dict['allow_custom']=1
             ;;
         '--all')
             koopa_install_all_apps
@@ -4293,7 +4293,7 @@ koopa_cli_install() {
             '-'*)
                 if [[ "${dict['allow_custom']}" -eq 1 ]]
                 then
-                    dict[custom_enabled]=1
+                    dict['custom_enabled']=1
                     pos+=("$1")
                     shift 1
                 else
@@ -4310,17 +4310,17 @@ koopa_cli_install() {
     case "${1:-}" in
         'system' | \
         'user')
-            dict[stem]="${dict['stem']}-${1:?}"
+            dict['stem']="${dict['stem']}-${1:?}"
             shift 1
             ;;
     esac
     koopa_assert_has_args "$#"
     if [[ "${dict['custom_enabled']}" -eq 1 ]]
     then
-        dict[app]="${1:?}"
+        dict['app']="${1:?}"
         shift 1
-        dict[key]="${dict['stem']}-${dict['app']}"
-        dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+        dict['key']="${dict['stem']}-${dict['app']}"
+        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then
             koopa_stop "Unsupported app: '${dict['app']}'."
@@ -4332,9 +4332,9 @@ koopa_cli_install() {
     do
         local dict2
         declare -A dict2
-        dict2[app]="$app"
-        dict2[key]="${dict['stem']}-${dict2['app']}"
-        dict2[fun]="$(koopa_which_function "${dict2['key']}" || true)"
+        dict2['app']="$app"
+        dict2['key']="${dict['stem']}-${dict2['app']}"
+        dict2['fun']="$(koopa_which_function "${dict2['key']}" || true)"
         if ! koopa_is_function "${dict2['fun']}"
         then
             koopa_stop "Unsupported app: '${dict2['app']}'."
@@ -4371,11 +4371,11 @@ koopa_cli_system() {
     )
     case "${1:-}" in
         'check')
-            dict[key]='check-system'
+            dict['key']='check-system'
             shift 1
             ;;
         'info')
-            dict[key]='system-info'
+            dict['key']='system-info'
             shift 1
             ;;
         'list')
@@ -4385,37 +4385,37 @@ koopa_cli_system() {
                 'launch-agents' | \
                 'path-priority' | \
                 'programs')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
             esac
             ;;
         'log')
-            dict[key]='view-latest-tmp-log-file'
+            dict['key']='view-latest-tmp-log-file'
             shift 1
             ;;
         'prefix')
             case "${2:-}" in
                 '')
-                    dict[key]='koopa-prefix'
+                    dict['key']='koopa-prefix'
                     shift 1
                     ;;
                 'koopa')
-                    dict[key]='koopa-prefix'
+                    dict['key']='koopa-prefix'
                     shift 2
                     ;;
                 *)
-                    dict[key]="${2}-prefix"
+                    dict['key']="${2}-prefix"
                     shift 2
                     ;;
             esac
             ;;
         'version')
-            dict[key]='get-version'
+            dict['key']='get-version'
             shift 1
             ;;
         'which')
-            dict[key]='which-realpath'
+            dict['key']='which-realpath'
             shift 1
             ;;
         'brew-dump-brewfile' | \
@@ -4437,7 +4437,7 @@ koopa_cli_system() {
         'test' | \
         'variable' | \
         'variables')
-            dict[key]="${1:?}"
+            dict['key']="${1:?}"
             shift 1
             ;;
         'conda-create-env')
@@ -4454,7 +4454,7 @@ koopa_cli_system() {
             case "${1:-}" in
                 'delete-cache' | \
                 'fix-sudo-setrlimit-error')
-                    dict[key]="${1:?}"
+                    dict['key']="${1:?}"
                     shift 1
                     ;;
             esac
@@ -4462,7 +4462,7 @@ koopa_cli_system() {
         then
             case "${1:-}" in
                 'spotlight')
-                    dict[key]='spotlight-find'
+                    dict['key']='spotlight-find'
                     shift 1
                     ;;
                 'clean-launch-services' | \
@@ -4474,14 +4474,14 @@ koopa_cli_system() {
                 'ifactive' | \
                 'list-launch-agents' | \
                 'reload-autofs')
-                    dict[key]="${1:?}"
+                    dict['key']="${1:?}"
                     shift 1
                     ;;
             esac
         fi
     fi
     [[ -z "${dict['key']}" ]] && koopa_cli_invalid_arg "$@"
-    dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+    dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
     if ! koopa_is_function "${dict['fun']}"
     then
         koopa_stop 'Unsupported command.'
@@ -4508,7 +4508,7 @@ koopa_cli_uninstall() {
         declare -A dict=(
             [key]="${stem}-${app}"
         )
-        dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then
             koopa_stop "Unsupported app: '${app}'."
@@ -4536,7 +4536,7 @@ koopa_cli_update() {
         declare -A dict=(
             [key]="${stem}-${app}"
         )
-        dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then
             koopa_stop "Unsupported app: '${app}'."
@@ -4555,18 +4555,18 @@ koopa_cli() {
     case "${1:?}" in
         '--help' | \
         '-h')
-            dict[manfile]="$(koopa_man_prefix)/man1/koopa.1"
+            dict['manfile']="$(koopa_man_prefix)/man1/koopa.1"
             koopa_help "${dict['manfile']}"
             return 0
             ;;
         '--version' | \
         '-V' | \
         'version')
-            dict[key]='koopa-version'
+            dict['key']='koopa-version'
             shift 1
             ;;
         'header')
-            dict[key]="$1"
+            dict['key']="$1"
             shift 1
             ;;
         'app' | \
@@ -4576,8 +4576,8 @@ koopa_cli() {
         'system' | \
         'uninstall' | \
         'update')
-            dict[nested]=1
-            dict[key]="cli-${1}"
+            dict['nested']=1
+            dict['key']="cli-${1}"
             shift 1
             ;;
         *)
@@ -4586,10 +4586,10 @@ koopa_cli() {
     esac
     if [[ "${dict['nested']}"  -eq 1 ]]
     then
-        dict[fun]="koopa_${dict['key']//-/_}"
+        dict['fun']="koopa_${dict['key']//-/_}"
         koopa_assert_is_function "${dict['fun']}"
     else
-        dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
     fi
     if ! koopa_is_function "${dict['fun']}"
     then
@@ -4608,11 +4608,11 @@ koopa_clone() {
         [target_dir]="${2:?}"
     )
     koopa_assert_is_dir "${dict['source_dir']}" "${dict['target_dir']}"
-    dict[source_dir]="$( \
+    dict['source_dir']="$( \
         koopa_realpath "${dict['source_dir']}" \
         | koopa_strip_trailing_slash \
     )"
-    dict[target_dir]="$( \
+    dict['target_dir']="$( \
         koopa_realpath "${dict['target_dir']}" \
         | koopa_strip_trailing_slash \
     )"
@@ -4642,13 +4642,13 @@ koopa_conda_activate_env() {
         [env_name]="${1:?}"
         [nounset]="$(koopa_boolean_nounset)"
     )
-    dict[env_prefix]="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
+    dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
     if [[ ! -d "${dict['env_prefix']}" ]]
     then
         koopa_alert_info "Attempting to install missing conda \
 environment '${dict['env_name']}'."
         koopa_conda_create_env "${dict['env_name']}"
-        dict[env_prefix]="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
+        dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
     fi
     if [[ ! -d "${dict['env_prefix']}" ]]
     then
@@ -4683,20 +4683,20 @@ koopa_conda_create_env() {
     do
         case "$1" in
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--force' | \
             '--reinstall')
-                dict[force]=1
+                dict['force']=1
                 shift 1
                 ;;
             '--latest')
-                dict[latest]=1
+                dict['latest']=1
                 shift 1
                 ;;
             '-'*)
@@ -4725,7 +4725,7 @@ koopa_conda_create_env() {
     do
         local dict2
         declare -A dict2
-        dict2[env_string]="${string//@/=}"
+        dict2['env_string']="${string//@/=}"
         if [[ "${dict['latest']}" -eq 1 ]]
         then
             if koopa_str_detect_fixed \
@@ -4735,16 +4735,16 @@ koopa_conda_create_env() {
                 koopa_stop "Don't specify version when using '--latest'."
             fi
             koopa_alert "Obtaining latest version for '${dict2['env_string']}'."
-            dict2[env_version]="$( \
+            dict2['env_version']="$( \
                 koopa_conda_env_latest_version "${dict2['env_string']}" \
             )"
             [[ -n "${dict2['env_version']}" ]] || return 1
-            dict2[env_string]="${dict2['env_string']}=${dict2['env_version']}"
+            dict2['env_string']="${dict2['env_string']}=${dict2['env_version']}"
         elif ! koopa_str_detect_fixed \
             --string="${dict2['env_string']}" \
             --pattern='='
         then
-            dict2[env_version]="$( \
+            dict2['env_version']="$( \
                 koopa_variable "${dict2['env_string']}" \
                 || true \
             )"
@@ -4752,13 +4752,13 @@ koopa_conda_create_env() {
             then
                 koopa_stop 'Pinned environment version not defined in koopa.'
             fi
-            dict2[env_string]="${dict2['env_string']}=${dict2['env_version']}"
+            dict2['env_string']="${dict2['env_string']}=${dict2['env_version']}"
         fi
-        dict2[env_name]="$( \
+        dict2['env_name']="$( \
             koopa_print "${dict2['env_string']//=/@}" \
             | "${app['cut']}" -d '@' -f '1-2' \
         )"
-        dict2[env_prefix]="${dict['env_prefix']}/${dict2['env_name']}"
+        dict2['env_prefix']="${dict['env_prefix']}/${dict2['env_name']}"
         if [[ -d "${dict2['env_prefix']}" ]]
         then
             if [[ "${dict['force']}" -eq 1 ]]
@@ -4851,7 +4851,7 @@ koopa_conda_env_prefix() {
     declare -A dict=(
         [env_name]="${1:-}"
     )
-    dict[env_prefix]="$( \
+    dict['env_prefix']="$( \
         "${app['conda']}" info --json | \
             "${app['jq']}" --raw-output '.envs_dirs[0]' \
     )"
@@ -4861,20 +4861,20 @@ koopa_conda_env_prefix() {
         koopa_print "${dict['env_prefix']}"
         return 0
     fi
-    dict[prefix]="${dict['env_prefix']}/${dict['env_name']}"
+    dict['prefix']="${dict['env_prefix']}/${dict['env_name']}"
     if [[ -d "${dict['prefix']}" ]]
     then
         koopa_print "${dict['prefix']}"
         return 0
     fi
-    dict[env_list]="$(koopa_conda_env_list)"
-    dict[env_list2]="$( \
+    dict['env_list']="$(koopa_conda_env_list)"
+    dict['env_list2']="$( \
         koopa_grep \
             --pattern="${dict['env_name']}" \
             --string="${dict['env_list']}" \
     )"
     [[ -n "${dict['env_list2']}" ]] || return 1
-    dict[prefix]="$( \
+    dict['prefix']="$( \
         koopa_grep \
             --pattern="/${dict['env_name']}(@[.0-9]+)?\"" \
             --regex \
@@ -4897,7 +4897,7 @@ koopa_conda_pkg_cache_prefix() {
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$( \
+    dict['prefix']="$( \
         "${app['conda']}" info --json \
             | "${app['jq']}" --raw-output '.pkgs_dirs[0]' \
     )"
@@ -4919,9 +4919,9 @@ koopa_conda_remove_env() {
     [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
     for name in "$@"
     do
-        dict[prefix]="$(koopa_conda_env_prefix "$name")"
+        dict['prefix']="$(koopa_conda_env_prefix "$name")"
         koopa_assert_is_dir "${dict['prefix']}"
-        dict[name]="$(koopa_basename "${dict['prefix']}")"
+        dict['name']="$(koopa_basename "${dict['prefix']}")"
         koopa_alert_uninstall_start "${dict['name']}" "${dict['prefix']}"
         "${app['conda']}" env remove --name="${dict['name']}" --yes
         [[ -d "${dict['prefix']}" ]] && koopa_rm "${dict['prefix']}"
@@ -4941,10 +4941,10 @@ koopa_configure_chemacs() {
     )
     if [[ -z "${dict['source_prefix']}" ]]
     then
-        dict[source_prefix]="${dict['opt_prefix']}/chemacs"
+        dict['source_prefix']="${dict['opt_prefix']}/chemacs"
     fi
     koopa_assert_is_dir "${dict['source_prefix']}"
-    dict[source_prefix]="$(koopa_realpath "${dict['source_prefix']}")"
+    dict['source_prefix']="$(koopa_realpath "${dict['source_prefix']}")"
     koopa_ln "${dict['source_prefix']}" "${dict['target_prefix']}"
     return 0
 }
@@ -4963,7 +4963,7 @@ koopa_configure_dotfiles() {
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_dotfiles_prefix)"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[script]="${dict['prefix']}/install"
+    dict['script']="${dict['prefix']}/install"
     koopa_assert_is_file "${dict['script']}"
     koopa_ln "${dict['prefix']}" "${dict['cm_prefix']}"
     koopa_add_config_link "${dict['prefix']}" "${dict['name']}"
@@ -4987,10 +4987,10 @@ koopa_configure_r() {
     if ! koopa_is_koopa_app "${app['r']}"
     then
         koopa_assert_is_admin
-        dict[system]=1
+        dict['system']=1
     fi
-    dict[r_prefix]="$(koopa_r_prefix "${app['r']}")"
-    dict[site_library]="${dict['r_prefix']}/site-library"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['site_library']="${dict['r_prefix']}/site-library"
     koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     koopa_r_link_files_in_etc "${app['r']}"
@@ -5009,8 +5009,8 @@ koopa_configure_r() {
             then
                 koopa_macos_install_system_r_openmp
             fi
-            dict[group]="$(koopa_admin_group)"
-            dict[user]="$(koopa_user)"
+            dict['group']="$(koopa_admin_group)"
+            dict['user']="$(koopa_user)"
             if [[ -L "${dict['site_library']}" ]]
             then
                 koopa_rm --sudo "${dict['site_library']}"
@@ -5133,49 +5133,49 @@ koopa_configure_system() {
     do
         case "$1" in
             '--mode='*)
-                dict[mode]="${1#*=}"
+                dict['mode']="${1#*=}"
                 shift 1
                 ;;
             '--mode')
-                dict[mode]="${2:?}"
+                dict['mode']="${2:?}"
                 shift 2
                 ;;
             '--python-version='*)
-                dict[python_version]="${1#*=}"
+                dict['python_version']="${1#*=}"
                 shift 1
                 ;;
             '--python-version')
-                dict[python_version]="${2:?}"
+                dict['python_version']="${2:?}"
                 shift 2
                 ;;
             '--r-version='*)
-                dict[r_version]="${1#*=}"
+                dict['r_version']="${1#*=}"
                 shift 1
                 ;;
             '--r-version')
-                dict[r_version]="${2:?}"
+                dict['r_version']="${2:?}"
                 shift 2
                 ;;
             '--all' | \
             '--full')
-                dict[mode]='full'
+                dict['mode']='full'
                 shift 1
                 ;;
             '--base-image')
-                dict[mode]='base-image'
+                dict['mode']='base-image'
                 shift 1
                 ;;
             '--bioconductor')
-                dict[mode]='bioconductor'
+                dict['mode']='bioconductor'
                 shift 1
                 ;;
             '--default' | \
             '--recommended')
-                dict[mode]='default'
+                dict['mode']='default'
                 shift 1
                 ;;
             '--minimal')
-                dict[mode]='minimal'
+                dict['mode']='minimal'
                 shift 1
                 ;;
             '--verbose')
@@ -5192,93 +5192,93 @@ koopa_configure_system() {
         'minimal')
             ;;
         'base-image')
-            dict[install_base_system_args]='--base-image'
+            dict['install_base_system_args']='--base-image'
             ;;
         'bioconductor')
-            dict[install_dotfiles]=1
-            dict[install_openjdk]=1
+            dict['install_dotfiles']=1
+            dict['install_openjdk']=1
             ;;
         'full')
-            dict[install_aspera_connect]=1
-            dict[install_autoconf]=1
-            dict[install_automake]=1
-            dict[install_azure_cli]=1
-            dict[install_base_system_args]='--full'
-            dict[install_bash]=1
-            dict[install_binutils]=1
-            dict[install_cmake]=1
-            dict[install_conda_envs]=1
-            dict[install_coreutils]=1
-            dict[install_curl]=1
-            dict[install_curl]=1
-            dict[install_docker]=1
-            dict[install_docker_credential_pass]=1
-            dict[install_dotfiles]=1
-            dict[install_emacs]=1
-            dict[install_findutils]=1
-            dict[install_fish]=1
-            dict[install_fzf]=1
-            dict[install_gawk]=1
-            dict[install_git]=1
-            dict[install_gnupg]=1
-            dict[install_go]=1
-            dict[install_google_cloud_sdk]=1
-            dict[install_grep]=1
-            dict[install_gsl]=1
-            dict[install_hdf5]=1
-            dict[install_homebrew]=1
-            dict[install_homebrew_bundle]=1
-            dict[install_julia]=1
-            dict[install_libevent]=1
-            dict[install_libtool]=1
-            dict[install_llvm]=1
-            dict[install_lmod]=1
-            dict[install_lua]=1
-            dict[install_luarocks]=1
-            dict[install_make]=1
-            dict[install_ncurses]=1
-            dict[install_neofetch]=1
-            dict[install_neovim]=1
-            dict[install_openssh]=1
-            dict[install_parallel]=1
-            dict[install_password_store]=1
-            dict[install_patch]=1
-            dict[install_perl]=1
-            dict[install_perl_packages]=1
-            dict[install_pkg_config]=1
-            dict[install_python_packages]=1
-            dict[install_r_packages]=1
-            dict[install_rstudio_server]=1
-            dict[install_rsync]=1
-            dict[install_ruby]=1
-            dict[install_ruby_packages]=1
-            dict[install_rust]=1
-            dict[install_rust_packages]=1
-            dict[install_sed]=1
-            dict[install_shiny_server]=1
-            dict[install_sqlite]=1
-            dict[install_subversion]=1
-            dict[install_taglib]=1
-            dict[install_texinfo]=1
-            dict[install_udunits]=1
-            dict[install_wget]=1
-            dict[install_zsh]=1
-            dict[passwordless_sudo]=1
-            dict[which_conda]='anaconda'
+            dict['install_aspera_connect']=1
+            dict['install_autoconf']=1
+            dict['install_automake']=1
+            dict['install_azure_cli']=1
+            dict['install_base_system_args']='--full'
+            dict['install_bash']=1
+            dict['install_binutils']=1
+            dict['install_cmake']=1
+            dict['install_conda_envs']=1
+            dict['install_coreutils']=1
+            dict['install_curl']=1
+            dict['install_curl']=1
+            dict['install_docker']=1
+            dict['install_docker_credential_pass']=1
+            dict['install_dotfiles']=1
+            dict['install_emacs']=1
+            dict['install_findutils']=1
+            dict['install_fish']=1
+            dict['install_fzf']=1
+            dict['install_gawk']=1
+            dict['install_git']=1
+            dict['install_gnupg']=1
+            dict['install_go']=1
+            dict['install_google_cloud_sdk']=1
+            dict['install_grep']=1
+            dict['install_gsl']=1
+            dict['install_hdf5']=1
+            dict['install_homebrew']=1
+            dict['install_homebrew_bundle']=1
+            dict['install_julia']=1
+            dict['install_libevent']=1
+            dict['install_libtool']=1
+            dict['install_llvm']=1
+            dict['install_lmod']=1
+            dict['install_lua']=1
+            dict['install_luarocks']=1
+            dict['install_make']=1
+            dict['install_ncurses']=1
+            dict['install_neofetch']=1
+            dict['install_neovim']=1
+            dict['install_openssh']=1
+            dict['install_parallel']=1
+            dict['install_password_store']=1
+            dict['install_patch']=1
+            dict['install_perl']=1
+            dict['install_perl_packages']=1
+            dict['install_pkg_config']=1
+            dict['install_python_packages']=1
+            dict['install_r_packages']=1
+            dict['install_rstudio_server']=1
+            dict['install_rsync']=1
+            dict['install_ruby']=1
+            dict['install_ruby_packages']=1
+            dict['install_rust']=1
+            dict['install_rust_packages']=1
+            dict['install_sed']=1
+            dict['install_shiny_server']=1
+            dict['install_sqlite']=1
+            dict['install_subversion']=1
+            dict['install_taglib']=1
+            dict['install_texinfo']=1
+            dict['install_udunits']=1
+            dict['install_wget']=1
+            dict['install_zsh']=1
+            dict['passwordless_sudo']=1
+            dict['which_conda']='anaconda'
             ;;
         'recommended')
-            dict[install_aws_cli]=1
-            dict[install_conda]=1
-            dict[install_dotfiles]=1
-            dict[install_homebrew]=1
-            dict[install_htop]=1
-            dict[install_openjdk]=1
-            dict[install_python]=1
-            dict[install_r]=1
-            dict[install_shellcheck]=1
-            dict[install_shunit2]=1
-            dict[install_tmux]=1
-            dict[install_vim]=1
+            dict['install_aws_cli']=1
+            dict['install_conda']=1
+            dict['install_dotfiles']=1
+            dict['install_homebrew']=1
+            dict['install_htop']=1
+            dict['install_openjdk']=1
+            dict['install_python']=1
+            dict['install_r']=1
+            dict['install_shellcheck']=1
+            dict['install_shunit2']=1
+            dict['install_tmux']=1
+            dict['install_vim']=1
             ;;
         *)
             koopa_stop 'Invalid mode.'
@@ -5286,12 +5286,12 @@ koopa_configure_system() {
     esac
     if [[ "${dict['docker']}" -eq 1 ]]
     then
-        dict[delete_cache]=1
-        dict[ssh_key]=0
+        dict['delete_cache']=1
+        dict['ssh_key']=0
     fi
     if koopa_is_fedora
     then
-        dict[install_python]=0
+        dict['install_python']=0
     fi
     koopa_h1 'Configuring system.'
     export FORCE_UNSAFE_CONFIGURE=1
@@ -5572,19 +5572,19 @@ koopa_convert_fastq_to_fasta() {
     do
         case "$1" in
             '--source-dir='*)
-                dict[source_dir]="${1#*=}"
+                dict['source_dir']="${1#*=}"
                 shift 1
                 ;;
             '--source-dir')
-                dict[source_dir]="${2:?}"
+                dict['source_dir']="${2:?}"
                 shift 2
                 ;;
             '--target-dir='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-dir')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -5596,7 +5596,7 @@ koopa_convert_fastq_to_fasta() {
         '--source-dir' "${dict['source_dir']}" \
         '--target-dir' "${dict['target_dir']}"
     koopa_assert_is_dir "${dict['source_dir']}"
-    dict[source_dir]="$(koopa_realpath "${dict['source_dir']}")"
+    dict['source_dir']="$(koopa_realpath "${dict['source_dir']}")"
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -5610,7 +5610,7 @@ koopa_convert_fastq_to_fasta() {
     then
         koopa_stop "No FASTQ files detected in '${dict['source_dir']}'."
     fi
-    dict[target_dir]="$(koopa_init_dir "${dict['target_dir']}")"
+    dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     for fastq_file in "${fastq_files[@]}"
     do
         local fasta_file
@@ -5748,23 +5748,23 @@ koopa_cp() {
     do
         case "$1" in
             '--target-directory='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-directory' | \
             '-t')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '--symbolic-link' | \
             '--symlink' | \
             '-s')
-                dict[symlink]=1
+                dict['symlink']=1
                 shift 1
                 ;;
             '-'*)
@@ -5780,7 +5780,7 @@ koopa_cp() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         cp=("${app['sudo']}" "${app['cp']}")
         mkdir=("${app['mkdir']}" '--sudo')
@@ -5796,7 +5796,7 @@ koopa_cp() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict[target_dir]="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"
@@ -5804,14 +5804,14 @@ koopa_cp() {
         cp_args+=("${dict['target_dir']}")
     else
         koopa_assert_has_args_eq "$#" 2
-        dict[source_file]="${1:?}"
+        dict['source_file']="${1:?}"
         koopa_assert_is_existing "${dict['source_file']}"
-        dict[target_file]="${2:?}"
+        dict['target_file']="${2:?}"
         if [[ -e "${dict['target_file']}" ]]
         then
             "${rm[@]}" "${dict['target_file']}"
         fi
-        dict[target_parent]="$(koopa_dirname "${dict['target_file']}")"
+        dict['target_parent']="$(koopa_dirname "${dict['target_file']}")"
         if [[ ! -d "${dict['target_parent']}" ]]
         then
             "${mkdir[@]}" "${dict['target_parent']}"
@@ -5908,21 +5908,21 @@ koopa_current_gencode_version() {
     case "${dict['organism']}" in
         'Homo sapiens' | \
         'human')
-            dict[short_name]='human'
-            dict[pattern]='Release [0-9]+'
+            dict['short_name']='human'
+            dict['pattern']='Release [0-9]+'
             ;;
         'Mus musculus' | \
         'mouse')
-            dict[short_name]='mouse'
-            dict[pattern]='Release M[0-9]+'
+            dict['short_name']='mouse'
+            dict['pattern']='Release M[0-9]+'
             ;;
         *)
             koopa_stop "Unsupported organism: '${dict['organism']}'."
             ;;
     esac
-    dict[base_url]='https://www.gencodegenes.org'
-    dict[url]="${dict['base_url']}/${dict['short_name']}/"
-    dict[str]="$( \
+    dict['base_url']='https://www.gencodegenes.org'
+    dict['url']="${dict['base_url']}/${dict['short_name']}/"
+    dict['str']="$( \
         koopa_parse_url "${dict['url']}" \
         | koopa_grep \
             --only-matching \
@@ -5993,7 +5993,7 @@ koopa_decompress() {
     do
         case "$1" in
             '--stdout')
-                dict[stdout]=1
+                dict['stdout']=1
                 shift 1
                 ;;
             '-')
@@ -6007,14 +6007,14 @@ koopa_decompress() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    dict[source_file]="${1:?}"
-    dict[target_file]="${2:-}"
+    dict['source_file']="${1:?}"
+    dict['target_file']="${2:-}"
     koopa_assert_is_file "${dict['source_file']}"
     case "${dict['stdout']}" in
         '0')
             if [[ -z "${dict['target_file']}" ]]
             then
-                dict[target_file]="$( \
+                dict['target_file']="$( \
                     koopa_sub \
                         --pattern="${dict['compress_ext_pattern']}" \
                         --replacement='' \
@@ -6234,7 +6234,7 @@ koopa_delete_dotfile() {
     do
         case "$1" in
             '--config')
-                dict[config]=1
+                dict['config']=1
                 shift 1
                 ;;
             '-'*)
@@ -6375,8 +6375,8 @@ koopa_disable_passwordless_sudo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A dict
-    dict[group]="$(koopa_admin_group)"
-    dict[file]="/etc/sudoers.d/koopa-${dict['group']}"
+    dict['group']="$(koopa_admin_group)"
+    dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
     if [[ -f "${dict['file']}" ]]
     then
         koopa_alert "Removing sudo permission file at '${file}'."
@@ -6547,27 +6547,27 @@ koopa_docker_build_all_images() {
     do
         case "$1" in
             '--days='*)
-                dict[days]="${1#*=}"
+                dict['days']="${1#*=}"
                 shift 1
                 ;;
             '--days')
-                dict[days]="${2:?}"
+                dict['days']="${2:?}"
                 shift 2
                 ;;
             '--docker-dir='*)
-                dict[docker_dir]="${1#*=}"
+                dict['docker_dir']="${1#*=}"
                 shift 1
                 ;;
             '--docker-dir')
-                dict[docker_dir]="${2:?}"
+                dict['docker_dir']="${2:?}"
                 shift 2
                 ;;
             '--force')
-                dict[force]=1
+                dict['force']=1
                 shift 1
                 ;;
             '--prune')
-                dict[prune]=1
+                dict['prune']=1
                 shift 1
                 ;;
             '-'*)
@@ -6680,51 +6680,51 @@ koopa_docker_build() {
     do
         case "$1" in
             '--docker-dir='*)
-                dict[docker_dir]="${1#*=}"
+                dict['docker_dir']="${1#*=}"
                 shift 1
                 ;;
             '--docker-dir')
-                dict[docker_dir]="${2:?}"
+                dict['docker_dir']="${2:?}"
                 shift 2
                 ;;
             '--memory='*)
-                dict[memory]="${1#*=}"
+                dict['memory']="${1#*=}"
                 shift 1
                 ;;
             '--memory')
-                dict[memory]="${2:?}"
+                dict['memory']="${2:?}"
                 shift 2
                 ;;
             '--server='*)
-                dict[server]="${1#*=}"
+                dict['server']="${1#*=}"
                 shift 1
                 ;;
             '--server')
-                dict[server]="${2:?}"
+                dict['server']="${2:?}"
                 shift 2
                 ;;
             '--tag='*)
-                dict[tag]="${1#*=}"
+                dict['tag']="${1#*=}"
                 shift 1
                 ;;
             '--tag')
-                dict[tag]="${2:?}"
+                dict['tag']="${2:?}"
                 shift 2
                 ;;
             '--delete')
-                dict[delete]=1
+                dict['delete']=1
                 shift 1
                 ;;
             '--no-delete')
-                dict[delete]=0
+                dict['delete']=0
                 shift 1
                 ;;
             '--no-push')
-                dict[push]=0
+                dict['push']=0
                 shift 1
                 ;;
             '--push')
-                dict[push]=1
+                dict['push']=1
                 shift 1
                 ;;
             '-'*)
@@ -6742,7 +6742,7 @@ koopa_docker_build() {
     do
         local build_args dict2 image_ids platforms tag tags
         declare -A dict2
-        dict2[image]="$image"
+        dict2['image']="$image"
         build_args=()
         platforms=()
         tags=()
@@ -6750,26 +6750,26 @@ koopa_docker_build() {
             --string="${dict2['image']}" \
             --pattern='/'
         then
-            dict2[image]="acidgenomics/${dict2['image']}"
+            dict2['image']="acidgenomics/${dict2['image']}"
         fi
         if koopa_str_detect_fixed \
             --string="${dict2['image']}" \
             --pattern=':'
         then
-            dict2[tag]="$( \
+            dict2['tag']="$( \
                 koopa_print "${dict2['image']}" \
                 | "${app['cut']}" -d ':' -f '2' \
             )"
-            dict2[image]="$( \
+            dict2['image']="$( \
                 koopa_print "${dict2['image']}" \
                 | "${app['cut']}" -d ':' -f '1' \
             )"
         else
-            dict2[tag]="${dict['tag']}"
+            dict2['tag']="${dict['tag']}"
         fi
-        dict2[source_image]="${dict['docker_dir']}/${dict2['image']}/${dict2['tag']}"
+        dict2['source_image']="${dict['docker_dir']}/${dict2['image']}/${dict2['tag']}"
         koopa_assert_is_dir "${dict2['source_image']}"
-        dict2[tags_file]="${dict2['source_image']}/tags.txt"
+        dict2['tags_file']="${dict2['source_image']}/tags.txt"
         if [[ -f "${dict2['tags_file']}" ]]
         then
             readarray -t tags < "${dict2['tags_file']}"
@@ -6777,8 +6777,8 @@ koopa_docker_build() {
         if [[ -L "${dict2['source_image']}" ]]
         then
             tags+=("${dict2['tag']}")
-            dict2[source_image]="$(koopa_realpath "${dict2['source_image']}")"
-            dict2[tag]="$(koopa_basename "${dict2['source_image']}")"
+            dict2['source_image']="$(koopa_realpath "${dict2['source_image']}")"
+            dict2['tag']="$(koopa_basename "${dict2['source_image']}")"
         fi
         tags+=(
             "${dict2['tag']}"
@@ -6793,12 +6793,12 @@ koopa_docker_build() {
             build_args+=("--tag=${dict2['image']}:${tag}")
         done
         platforms=('linux/amd64')
-        dict2[platforms_file]="${dict2['source_image']}/platforms.txt"
+        dict2['platforms_file']="${dict2['source_image']}/platforms.txt"
         if [[ -f "${dict2['platforms_file']}" ]]
         then
             readarray -t platforms < "${dict2['platforms_file']}"
         fi
-        dict2[platforms_string]="$(koopa_paste --sep=',' "${platforms[@]}")"
+        dict2['platforms_string']="$(koopa_paste --sep=',' "${platforms[@]}")"
         build_args+=("--platform=${dict2['platforms_string']}")
         if [[ -n "${dict['memory']}" ]]
         then
@@ -6833,7 +6833,7 @@ koopa_docker_build() {
         koopa_alert "Building '${dict2['source_image']}' Docker image."
         koopa_dl 'Build args' "${build_args[*]}"
         "${app['docker']}" login "${dict['server']}" >/dev/null || return 1
-        dict2[build_name]="$(koopa_basename "${dict2['image']}")"
+        dict2['build_name']="$(koopa_basename "${dict2['image']}")"
         "${app['docker']}" buildx rm \
             "${dict2['build_name']}" \
             &>/dev/null \
@@ -6885,7 +6885,7 @@ koopa_docker_ghcr_push() {
         [server]='ghcr.io'
         [version]="${3:?}"
     )
-    dict[url]="${dict['server']}/${dict['owner']}/\
+    dict['url']="${dict['server']}/${dict['owner']}/\
 ${dict['image_name']}:${dict['version']}"
     koopa_docker_ghcr_login
     "${app['docker']}" push "${dict['url']}"
@@ -6911,11 +6911,11 @@ koopa_docker_is_build_recent() {
     do
         case "$1" in
             '--days='*)
-                dict[days]="${1#*=}"
+                dict['days']="${1#*=}"
                 shift 1
                 ;;
             '--days')
-                dict[days]="${2:?}"
+                dict['days']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -6929,7 +6929,7 @@ koopa_docker_is_build_recent() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    dict[seconds]="$((dict[days] * 86400))"
+    dict['seconds']="$((dict[days] * 86400))"
     for image in "$@"
     do
         local dict2
@@ -6938,12 +6938,12 @@ koopa_docker_is_build_recent() {
             [image]="$image"
         )
         "${app['docker']}" pull "${dict2['image']}" >/dev/null
-        dict2[json]="$( \
+        dict2['json']="$( \
             "${app['docker']}" inspect \
                 --format='{{json .Created}}' \
                 "${dict2['image']}" \
         )"
-        dict2[created]="$( \
+        dict2['created']="$( \
             koopa_grep \
                 --only-matching \
                 --pattern='[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
@@ -6952,10 +6952,10 @@ koopa_docker_is_build_recent() {
             | "${app['sed']}" 's/T/ /' \
             | "${app['sed']}" 's/\$/ UTC/'
         )"
-        dict2[created]="$( \
+        dict2['created']="$( \
             "${app['date']}" --utc --date="${dict2['created']}" '+%s' \
         )"
-        dict2[diff]=$((dict2[current] - dict2[created]))
+        dict2['diff']=$((dict2[current] - dict2[created]))
         [[ "${dict2['diff']}" -le "${dict['seconds']}" ]] && continue
         return 1
     done
@@ -7032,7 +7032,7 @@ koopa_docker_push() {
         koopa_assert_is_matching_regex \
             --string="${dict2['pattern']}" \
             --pattern='^.+/.+$'
-        dict2[json]="$( \
+        dict2['json']="$( \
             "${app['docker']}" inspect \
                 --format="{{json .RepoTags}}" \
                 "${dict2['pattern']}" \
@@ -7099,19 +7099,19 @@ koopa_docker_run() {
     do
         case "$1" in
             '--arm')
-                dict[arm]=1
+                dict['arm']=1
                 shift 1
                 ;;
             '--bash')
-                dict[bash]=1
+                dict['bash']=1
                 shift 1
                 ;;
             '--bind')
-                dict[bind]=1
+                dict['bind']=1
                 shift 1
                 ;;
             '--x86')
-                dict[x86]=1
+                dict['x86']=1
                 shift 1
                 ;;
             '-'*)
@@ -7125,7 +7125,7 @@ koopa_docker_run() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
-    dict[image]="${1:?}"
+    dict['image']="${1:?}"
     "${app['docker']}" pull "${dict['image']}"
     run_args=(
         '--interactive'
@@ -7176,7 +7176,7 @@ koopa_docker_tag() {
         --string="${dict['image']}" \
         --pattern='/'
     then
-        dict[image]="acidgenomics/${dict['image']}"
+        dict['image']="acidgenomics/${dict['image']}"
     fi
     if [[ "${dict['source_tag']}" == "${dict['dest_tag']}" ]]
     then
@@ -7284,19 +7284,19 @@ koopa_download() {
     do
         case "$1" in
             '--engine='*)
-                dict[engine]="${1#*=}"
+                dict['engine']="${1#*=}"
                 shift 1
                 ;;
             '--engine')
-                dict[engine]="${2:?}"
+                dict['engine']="${2:?}"
                 shift 2
                 ;;
             '--decompress')
-                dict[decompress]=1
+                dict['decompress']=1
                 shift 1
                 ;;
             '--extract')
-                dict[extract]=1
+                dict['extract']=1
                 shift 1
                 ;;
             '-'*)
@@ -7316,10 +7316,10 @@ koopa_download() {
     [[ -x "${app['download']}" ]] || return 1
     if [[ -z "${dict['file']}" ]]
     then
-        dict[file]="$(koopa_basename "${dict['url']}")"
+        dict['file']="$(koopa_basename "${dict['url']}")"
         if koopa_str_detect_fixed --string="${dict['file']}" --pattern='%'
         then
-            dict[file]="$( \
+            dict['file']="$( \
                 koopa_print "${dict['file']}" \
                 | koopa_gsub \
                     --fixed \
@@ -7344,7 +7344,7 @@ koopa_download() {
         --string="${dict['file']}" \
         --pattern='/'
     then
-        dict[file]="${PWD:?}/${dict['file']}"
+        dict['file']="${PWD:?}/${dict['file']}"
     fi
     download_args=()
     case "${dict['engine']}" in
@@ -7384,8 +7384,8 @@ koopa_enable_passwordless_sudo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A dict
-    dict[group]="$(koopa_admin_group)"
-    dict[file]="/etc/sudoers.d/koopa-${dict['group']}"
+    dict['group']="$(koopa_admin_group)"
+    dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
     if [[ -f "${dict['file']}" ]]
     then
         koopa_alert_success "Passwordless sudo for '${dict['group']}' group \
@@ -7393,7 +7393,7 @@ already enabled at '${dict['file']}'."
         return 0
     fi
     koopa_alert "Modifying '${dict['file']}' to include '${dict['group']}'."
-    dict[string]="%${dict['group']} ALL=(ALL) NOPASSWD: ALL"
+    dict['string']="%${dict['group']} ALL=(ALL) NOPASSWD: ALL"
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
@@ -7535,7 +7535,7 @@ koopa_extract() {
     koopa_assert_has_args "$#"
     declare -A app
     declare -A dict
-    dict[orig_path]="${PATH:-}"
+    dict['orig_path']="${PATH:-}"
     for file in "$@"
     do
         koopa_assert_is_file "$file"
@@ -7545,28 +7545,28 @@ koopa_extract() {
             *'.tar.bz2' | \
             *'.tar.gz' | \
             *'.tar.xz')
-                app[cmd]="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 case "$file" in
                     *'.bz2')
-                        app[cmd2]="$(koopa_locate_bzip2)"
+                        app['cmd2']="$(koopa_locate_bzip2)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
                     *'.gz')
-                        app[cmd2]="$(koopa_locate_gzip)"
+                        app['cmd2']="$(koopa_locate_gzip)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
                         ;;
                     *'.xz')
-                        app[cmd2]="$(koopa_locate_xz)"
+                        app['cmd2']="$(koopa_locate_xz)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
@@ -7575,25 +7575,25 @@ koopa_extract() {
                 esac
                 ;;
             *'.bz2')
-                app[cmd]="$(koopa_locate_bunzip2)"
+                app['cmd']="$(koopa_locate_bunzip2)"
                 cmd_args=("$file")
                 ;;
             *'.gz')
-                app[cmd]="$(koopa_locate_gzip)"
+                app['cmd']="$(koopa_locate_gzip)"
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                 )
                 ;;
             *'.tar')
-                app[cmd]="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 ;;
             *'.tbz2')
-                app[cmd]="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-j' # '--bzip2'.
@@ -7601,7 +7601,7 @@ koopa_extract() {
                 )
                 ;;
             *'.tgz')
-                app[cmd]="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
@@ -7609,25 +7609,25 @@ koopa_extract() {
                 )
                 ;;
             *'.xz')
-                app[cmd]="$(koopa_locate_xz)"
+                app['cmd']="$(koopa_locate_xz)"
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                     )
                 ;;
             *'.zip')
-                app[cmd]="$(koopa_locate_unzip)"
+                app['cmd']="$(koopa_locate_unzip)"
                 cmd_args=(
                     '-qq'
                     "$file"
                 )
                 ;;
             *'.Z')
-                app[cmd]="$(koopa_locate_uncompress)"
+                app['cmd']="$(koopa_locate_uncompress)"
                 cmd_args=("$file")
                 ;;
             *'.7z')
-                app[cmd]="$(koopa_locate_7z)"
+                app['cmd']="$(koopa_locate_7z)"
                 cmd_args=(
                     '-x'
                     "$file"
@@ -7663,19 +7663,19 @@ koopa_fasta_generate_chromosomes_file() {
     do
         case "$1" in
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-file='*)
-                dict[output_file]="${1#*=}"
+                dict['output_file']="${1#*=}"
                 shift 1
                 ;;
             '--output-file')
-                dict[output_file]="${2:?}"
+                dict['output_file']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -7718,27 +7718,27 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     do
         case "$1" in
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-file='*)
-                dict[output_file]="${1#*=}"
+                dict['output_file']="${1#*=}"
                 shift 1
                 ;;
             '--output-file')
-                dict[output_file]="${2:?}"
+                dict['output_file']="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
+                dict['transcriptome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
+                dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -7754,8 +7754,8 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     koopa_assert_is_file \
         "${dict['genome_fasta_file']}" \
         "${dict['transcriptome_fasta_file']}"
-    dict[genome_fasta_file]="$(koopa_realpath "${dict['genome_fasta_file']}")"
-    dict[transcriptome_fasta_file]="$( \
+    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+    dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
@@ -7836,27 +7836,27 @@ koopa_fastq_lanepool() {
     do
         case "$1" in
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--source-dir='*)
-                dict[source_dir]="${1#*=}"
+                dict['source_dir']="${1#*=}"
                 shift 1
                 ;;
             '--source-dir')
-                dict[source_dir]="${2:?}"
+                dict['source_dir']="${2:?}"
                 shift 2
                 ;;
             '--target-dir='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-dir')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -7865,7 +7865,7 @@ koopa_fastq_lanepool() {
         esac
     done
     koopa_assert_is_dir "${dict['source_dir']}"
-    dict[source_dir]="$(koopa_realpath "${dict['source_dir']}")"
+    dict['source_dir']="$(koopa_realpath "${dict['source_dir']}")"
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -7879,7 +7879,7 @@ koopa_fastq_lanepool() {
     then
         koopa_stop "No lane-split FASTQ files in '${dict['source_dir']}'."
     fi
-    dict[target_dir]="$(koopa_init_dir "${dict['target_dir']}")"
+    dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     basenames=()
     for i in "${fastq_files[@]}"
     do
@@ -7948,8 +7948,8 @@ koopa_file_count() {
         [prefix]="${1:?}"
     )
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
-    dict[out]="$( \
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    dict['out']="$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
@@ -8033,31 +8033,31 @@ koopa_find_and_replace_in_file() {
     do
         case "$1" in
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--replacement='*)
-                dict[replacement]="${1#*=}"
+                dict['replacement']="${1#*=}"
                 shift 1
                 ;;
             '--replacement')
-                dict[replacement]="${2:-}"
+                dict['replacement']="${2:-}"
                 shift 2
                 ;;
             '--fixed')
-                dict[regex]=0
+                dict['regex']=0
                 shift 1
                 ;;
             '--multiline')
-                dict[multiline]=1
+                dict['multiline']=1
                 shift 1
                 ;;
             '--regex')
-                dict[regex]=1
+                dict['regex']=1
                 shift 1
                 ;;
             '-'*)
@@ -8079,9 +8079,9 @@ koopa_find_and_replace_in_file() {
     koopa_assert_is_file "$@"
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict[expr]="s/${dict['pattern']}/${dict['replacement']}/g"
+        dict['expr']="s/${dict['pattern']}/${dict['replacement']}/g"
     else
-        dict[expr]=" \
+        dict['expr']=" \
             \$pattern = quotemeta '${dict['pattern']}'; \
             \$replacement = '${dict['replacement']}'; \
             s/\$pattern/\$replacement/g; \
@@ -8106,9 +8106,9 @@ koopa_find_app_version() {
         [app_prefix]="$(koopa_app_prefix)"
         [name]="${1:?}"
     )
-    dict[prefix]="${dict['app_prefix']}/${dict['name']}"
+    dict['prefix']="${dict['app_prefix']}/${dict['name']}"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[hit]="$( \
+    dict['hit']="$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
@@ -8118,7 +8118,7 @@ koopa_find_app_version() {
         | "${app['tail']}" -n 1 \
     )"
     [[ -d "${dict['hit']}" ]] || return 1
-    dict[hit_bn]="$(koopa_basename "${dict['hit']}")"
+    dict['hit_bn']="$(koopa_basename "${dict['hit']}")"
     koopa_print "${dict['hit_bn']}"
     return 0
 }
@@ -8158,7 +8158,7 @@ koopa_find_dotfiles() {
         [type]="${1:?}"
         [header]="${2:?}"
     )
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_find \
             --max-depth=1 \
             --pattern='.*' \
@@ -8315,7 +8315,7 @@ koopa_find_non_symlinked_make_files() {
             '--exclude' 'var/homebrew/**'
         )
     fi
-    dict[out]="$(koopa_find "${find_args[@]}")"
+    dict['out']="$(koopa_find "${find_args[@]}")"
     koopa_print "${dict['out']}"
     return 0
 }
@@ -8333,23 +8333,23 @@ koopa_find_symlinks() {
     do
         case "$1" in
             '--source-prefix='*)
-                dict[source_prefix]="${1#*=}"
+                dict['source_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--source-prefix')
-                dict[source_prefix]="${2:?}"
+                dict['source_prefix']="${2:?}"
                 shift 2
                 ;;
             '--target-prefix='*)
-                dict[target_prefix]="${1#*=}"
+                dict['target_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--target-prefix')
-                dict[target_prefix]="${2:?}"
+                dict['target_prefix']="${2:?}"
                 shift 2
                 ;;
             '--verbose')
-                dict[verbose]=1
+                dict['verbose']=1
                 shift 1
                 ;;
             *)
@@ -8361,8 +8361,8 @@ koopa_find_symlinks() {
         '--source-prefix' "${dict['source_prefix']}" \
         '--target-prefix' "${dict['target_prefix']}"
     koopa_assert_is_dir "${dict['source_prefix']}" "${dict['target_prefix']}"
-    dict[source_prefix]="$(koopa_realpath "${dict['source_prefix']}")"
-    dict[target_prefix]="$(koopa_realpath "${dict['target_prefix']}")"
+    dict['source_prefix']="$(koopa_realpath "${dict['source_prefix']}")"
+    dict['target_prefix']="$(koopa_realpath "${dict['target_prefix']}")"
     readarray -t symlinks <<< "$(
         koopa_find \
             --prefix="${dict['target_prefix']}" \
@@ -8397,13 +8397,13 @@ koopa_find_user_profile() {
     )
     case "${dict['shell']}" in
         'bash')
-            dict[file]="${HOME}/.bashrc"
+            dict['file']="${HOME}/.bashrc"
             ;;
         'zsh')
-            dict[file]="${HOME}/.zshrc"
+            dict['file']="${HOME}/.zshrc"
             ;;
         *)
-            dict[file]="${HOME}/.profile"
+            dict['file']="${HOME}/.profile"
             ;;
     esac
     [[ -n "${dict['file']}" ]] || return 1
@@ -8435,105 +8435,105 @@ koopa_find() {
     do
         case "$1" in
             '--days-modified-before='*)
-                dict[days_modified_gt]="${1#*=}"
+                dict['days_modified_gt']="${1#*=}"
                 shift 1
                 ;;
             '--days-modified-before')
-                dict[days_modified_gt]="${2:?}"
+                dict['days_modified_gt']="${2:?}"
                 shift 2
                 ;;
             '--days-modified-within='*)
-                dict[days_modified_lt]="${1#*=}"
+                dict['days_modified_lt']="${1#*=}"
                 shift 1
                 ;;
             '--days-modified-within')
-                dict[days_modified_lt]="${2:?}"
+                dict['days_modified_lt']="${2:?}"
                 shift 2
                 ;;
             '--engine='*)
-                dict[engine]="${1#*=}"
+                dict['engine']="${1#*=}"
                 shift 1
                 ;;
             '--engine')
-                dict[engine]="${2:?}"
+                dict['engine']="${2:?}"
                 shift 2
                 ;;
             '--exclude='*)
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--exclude')
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${2:?}")
                 shift 2
                 ;;
             '--max-depth='*)
-                dict[max_depth]="${1#*=}"
+                dict['max_depth']="${1#*=}"
                 shift 1
                 ;;
             '--max-depth')
-                dict[max_depth]="${2:?}"
+                dict['max_depth']="${2:?}"
                 shift 2
                 ;;
             '--min-depth='*)
-                dict[min_depth]="${1#*=}"
+                dict['min_depth']="${1#*=}"
                 shift 1
                 ;;
             '--min-depth')
-                dict[min_depth]="${2:?}"
+                dict['min_depth']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--size='*)
-                dict[size]="${1#*=}"
+                dict['size']="${1#*=}"
                 shift 1
                 ;;
             '--size')
-                dict[size]="${2:?}"
+                dict['size']="${2:?}"
                 shift 2
                 ;;
             '--type='*)
-                dict[type]="${1#*=}"
+                dict['type']="${1#*=}"
                 shift 1
                 ;;
             '--type')
-                dict[type]="${2:?}"
+                dict['type']="${2:?}"
                 shift 2
                 ;;
             '--empty')
-                dict[empty]=1
+                dict['empty']=1
                 shift 1
                 ;;
             '--print0')
-                dict[print0]=1
+                dict['print0']=1
                 shift 1
                 ;;
             '--sort')
-                dict[sort]=1
+                dict['sort']=1
                 shift 1
                 ;;
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '--verbose')
-                dict[verbose]=1
+                dict['verbose']=1
                 shift 1
                 ;;
             *)
@@ -8542,20 +8542,20 @@ koopa_find() {
         esac
     done
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     if [[ -z "${dict['engine']}" ]]
     then
-        app[find]="$(koopa_locate_fd --allow-missing)"
+        app['find']="$(koopa_locate_fd --allow-missing)"
         [[ ! -x "${app['find']}" ]] && app[find]="$(koopa_locate_find)"
-        dict[engine]="$(koopa_basename "${app['find']}")"
+        dict['engine']="$(koopa_basename "${app['find']}")"
     else
-        app[find]="$(koopa_locate_"${dict['engine']}")"
+        app['find']="$(koopa_locate_"${dict['engine']}")"
     fi
     [[ -x "${app['find']}" ]] || return 1
     find=()
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         find+=("${app['sudo']}")
     fi
@@ -8584,13 +8584,13 @@ koopa_find() {
             then
                 case "${dict['type']}" in
                     'd')
-                        dict[type]='directory'
+                        dict['type']='directory'
                         ;;
                     'f')
-                        dict[type]='file'
+                        dict['type']='file'
                         ;;
                     'l')
-                        dict[type]='symlink'
+                        dict['type']='symlink'
                         ;;
                     *)
                         koopa_stop 'Invalid type argument for Rust fd.'
@@ -8625,7 +8625,7 @@ koopa_find() {
             fi
             if [[ -n "${dict['size']}" ]]
             then
-                dict[size]="$( \
+                dict['size']="$( \
                     koopa_sub \
                         --pattern='c$' \
                         --replacement='b' \
@@ -8748,7 +8748,7 @@ koopa_find() {
     fi
     if [[ "${dict['sort']}" -eq 1 ]]
     then
-        app[sort]="$(koopa_locate_sort)"
+        app['sort']="$(koopa_locate_sort)"
         [[ -x "${app['sort']}" ]] || return 1
     fi
     if [[ "${dict['print0']}" -eq 1 ]]
@@ -8809,7 +8809,7 @@ koopa_fix_zsh_permissions() {
     )
     if koopa_is_shared_install
     then
-        dict[stat_user]="$( \
+        dict['stat_user']="$( \
             koopa_stat_user "${dict['koopa_prefix']}/lang/shell/zsh" \
         )"
         if [[ "${dict['stat_user']}" != 'root' ]]
@@ -8852,27 +8852,27 @@ koopa_ftp_mirror() {
     do
         case "$1" in
             '--dir='*)
-                dict[dir]="${1#*=}"
+                dict['dir']="${1#*=}"
                 shift 1
                 ;;
             '--dir')
-                dict[dir]="${2:?}"
+                dict['dir']="${2:?}"
                 shift 2
                 ;;
             '--host='*)
-                dict[host]="${1#*=}"
+                dict['host']="${1#*=}"
                 shift 1
                 ;;
             '--host')
-                dict[host]="${2:?}"
+                dict['host']="${2:?}"
                 shift 2
                 ;;
             '--user='*)
-                dict[user]="${1#*=}"
+                dict['user']="${1#*=}"
                 shift 1
                 ;;
             '--user')
-                dict[user]="${2:?}"
+                dict['user']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -8885,9 +8885,9 @@ koopa_ftp_mirror() {
         '--user' "${dict['user']}"
     if [[ -n "${dict['dir']}" ]]
     then
-        dict[dir]="${dict['host']}/${dict['dir']}"
+        dict['dir']="${dict['host']}/${dict['dir']}"
     else
-        dict[dir]="${dict['host']}"
+        dict['dir']="${dict['host']}"
     fi
     "${app['wget']}" \
         --ask-password \
@@ -8918,19 +8918,19 @@ koopa_get_version_from_pkg_config() {
     do
         case "$1" in
             '--opt-name='*)
-                dict[opt_name]="${1#*=}"
+                dict['opt_name']="${1#*=}"
                 shift 1
                 ;;
             '--opt-name')
-                dict[opt_name]="${2:?}"
+                dict['opt_name']="${2:?}"
                 shift 2
                 ;;
             '--pc-name='*)
-                dict[pc_name]="${1#*=}"
+                dict['pc_name']="${1#*=}"
                 shift 1
                 ;;
             '--pc-name')
-                dict[pc_name]="${2:?}"
+                dict['pc_name']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -8941,10 +8941,10 @@ koopa_get_version_from_pkg_config() {
     koopa_assert_is_set \
         '--opt-name' "${dict['opt_name']}" \
         '--pc-name' "${dict['pc_name']}"
-    dict[pc_file]="${dict['opt_prefix']}/${dict['opt_name']}/lib/\
+    dict['pc_file']="${dict['opt_prefix']}/${dict['opt_name']}/lib/\
 pkgconfig/${dict['pc_name']}.pc"
     koopa_assert_is_file "${dict['pc_file']}"
-    dict[str]="$("${app['pkg_config']}" --modversion "${dict['pc_file']}")"
+    dict['str']="$("${app['pkg_config']}" --modversion "${dict['pc_file']}")"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
     return 0
@@ -8963,19 +8963,19 @@ koopa_get_version() {
     do
         case "$1" in
             '--app-name='*)
-                dict[app_name]="${1#*=}"
+                dict['app_name']="${1#*=}"
                 shift 1
                 ;;
             '--app-name')
-                dict[app_name]="${2:?}"
+                dict['app_name']="${2:?}"
                 shift 2
                 ;;
             '--opt-name='*)
-                dict[opt_name]="${1#*=}"
+                dict['opt_name']="${1#*=}"
                 shift 1
                 ;;
             '--opt-name')
-                dict[opt_name]="${2:?}"
+                dict['opt_name']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -8991,26 +8991,26 @@ koopa_get_version() {
     if [[ "$#" -gt 0 ]]
     then
         koopa_assert_has_args_eq "$#" 1
-        dict[cmd]="${1:?}"
+        dict['cmd']="${1:?}"
     else
         koopa_assert_is_set \
             '--app-name' "${dict['app_name']}" \
             '--opt-name' "${dict['opt_name']}"
-        dict[cmd]="${dict['opt_prefix']}/${dict['opt_name']}/bin/${dict['app_name']}"
+        dict['cmd']="${dict['opt_prefix']}/${dict['opt_name']}/bin/${dict['app_name']}"
     fi
-    dict[bn]="$(koopa_basename "${dict['cmd']}")"
-    dict[bn_snake]="$(koopa_snake_case_simple "${dict['bn']}")"
-    dict[version_arg]="$(__koopa_get_version_arg "${dict['bn']}")"
-    dict[version_fun]="koopa_${dict['bn_snake']}_version"
+    dict['bn']="$(koopa_basename "${dict['cmd']}")"
+    dict['bn_snake']="$(koopa_snake_case_simple "${dict['bn']}")"
+    dict['version_arg']="$(__koopa_get_version_arg "${dict['bn']}")"
+    dict['version_fun']="koopa_${dict['bn_snake']}_version"
     if koopa_is_function "${dict['version_fun']}"
     then
         if [[ -x "${dict['cmd']}" ]] && \
             [[ ! -d "${dict['cmd']}" ]] && \
             koopa_is_installed "${dict['cmd']}"
         then
-            dict[str]="$("${dict['version_fun']}" "${dict['cmd']}")"
+            dict['str']="$("${dict['version_fun']}" "${dict['cmd']}")"
         else
-            dict[str]="$("${dict['version_fun']}")"
+            dict['str']="$("${dict['version_fun']}")"
         fi
         [[ -n "${dict['str']}" ]] || return 1
         koopa_print "${dict['str']}"
@@ -9019,10 +9019,10 @@ koopa_get_version() {
     [[ -x "${dict['cmd']}" ]] || return 1
     [[ ! -d "${dict['cmd']}" ]] || return 1
     koopa_is_installed "${dict['cmd']}" || return 1
-    dict[cmd]="$(koopa_realpath "${dict['cmd']}")"
-    dict[str]="$("${dict['cmd']}" "${dict['version_arg']}" 2>&1 || true)"
+    dict['cmd']="$(koopa_realpath "${dict['cmd']}")"
+    dict['str']="$("${dict['cmd']}" "${dict['version_arg']}" 2>&1 || true)"
     [[ -n "${dict['str']}" ]] || return 1
-    dict[str]="$(koopa_extract_version "${dict['str']}")"
+    dict['str']="$(koopa_extract_version "${dict['str']}")"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
     return 0
@@ -9043,19 +9043,19 @@ koopa_git_checkout_recursive() {
     do
         case "$1" in
             '--branch='*)
-                dict[branch]="${1#*=}"
+                dict['branch']="${1#*=}"
                 shift 1
                 ;;
             '--branch')
-                dict[branch]="${2:?}"
+                dict['branch']="${2:?}"
                 shift 2
                 ;;
             '--origin='*)
-                dict[origin]="${1#*=}"
+                dict['origin']="${1#*=}"
                 shift 1
                 ;;
             '--origin')
-                dict[origin]="${2:?}"
+                dict['origin']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -9096,11 +9096,11 @@ koopa_git_checkout_recursive() {
                 declare -A dict2
                 koopa_h2 "$repo"
                 koopa_cd "$repo"
-                dict2[branch]="${dict['branch']}"
-                dict2[default_branch]="$(koopa_git_default_branch)"
+                dict2['branch']="${dict['branch']}"
+                dict2['default_branch']="$(koopa_git_default_branch)"
                 if [[ -z "${dict2['branch']}" ]]
                 then
-                    dict2[branch]="${dict2['default_branch']}"
+                    dict2['branch']="${dict2['default_branch']}"
                 fi
                 if [[ -n "${dict['origin']}" ]]
                 then
@@ -9141,43 +9141,43 @@ koopa_git_clone() {
     do
         case "$1" in
             '--branch='*)
-                dict[branch]="${1#*=}"
+                dict['branch']="${1#*=}"
                 shift 1
                 ;;
             '--branch')
-                dict[branch]="${2:?}"
+                dict['branch']="${2:?}"
                 shift 2
                 ;;
             '--commit='*)
-                dict[commit]="${1#*=}"
+                dict['commit']="${1#*=}"
                 shift 1
                 ;;
             '--commit')
-                dict[commit]="${2:?}"
+                dict['commit']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--tag='*)
-                dict[tag]="${1#*=}"
+                dict['tag']="${1#*=}"
                 shift 1
                 ;;
             '--tag')
-                dict[tag]="${2:?}"
+                dict['tag']="${2:?}"
                 shift 2
                 ;;
             '--url='*)
-                dict[url]="${1#*=}"
+                dict['url']="${1#*=}"
                 shift 1
                 ;;
             '--url')
-                dict[url]="${2:?}"
+                dict['url']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -9788,16 +9788,16 @@ koopa_git_submodule_init() {
             do
                 local dict2
                 declare -A dict2
-                dict2[target_key]="$( \
+                dict2['target_key']="$( \
                     koopa_print "$string" \
                     | "${app['awk']}" '{ print $1 }' \
                 )"
-                dict2[target]="$( \
+                dict2['target']="$( \
                     koopa_print "$string" \
                     | "${app['awk']}" '{ print $2 }' \
                 )"
-                dict2[url_key]="${dict2['target_key']//\.path/.url}"
-                dict2[url]="$( \
+                dict2['url_key']="${dict2['target_key']//\.path/.url}"
+                dict2['url']="$( \
                     "${app['git']}" config \
                         --file "${dict['module_file']}" \
                         --get "${dict2['url_key']}" \
@@ -9827,9 +9827,9 @@ koopa_github_latest_release() {
     do
         local dict
         declare -A dict
-        dict[repo]="$repo"
-        dict[url]="https://api.github.com/repos/${dict['repo']}/releases/latest"
-        dict[str]="$( \
+        dict['repo']="$repo"
+        dict['url']="https://api.github.com/repos/${dict['repo']}/releases/latest"
+        dict['str']="$( \
             koopa_parse_url "${dict['url']}" \
                 | koopa_grep --pattern='"tag_name":' \
                 | "${app['cut']}" -d '"' -f '4' \
@@ -9858,36 +9858,36 @@ koopa_gpg_download_key_from_keyserver() {
         [sudo]=0
         [tmp_dir]="$(koopa_tmp_dir)"
     )
-    dict[tmp_file]="${dict['tmp_dir']}/export.gpg"
+    dict['tmp_file']="${dict['tmp_dir']}/export.gpg"
     while (("$#"))
     do
         case "$1" in
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--key='*)
-                dict[key]="${1#*=}"
+                dict['key']="${1#*=}"
                 shift 1
                 ;;
             '--key')
-                dict[key]="${2:?}"
+                dict['key']="${2:?}"
                 shift 2
                 ;;
             '--keyserver='*)
-                dict[keyserver]="${1#*=}"
+                dict['keyserver']="${1#*=}"
                 shift 1
                 ;;
             '--keyserver')
-                dict[keyserver]="${2:?}"
+                dict['keyserver']="${2:?}"
                 shift 2
                 ;;
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             *)
@@ -9973,78 +9973,78 @@ koopa_grep() {
     do
         case "$1" in
             '--engine='*)
-                dict[engine]="${1#*=}"
+                dict['engine']="${1#*=}"
                 shift 1
                 ;;
             '--engine')
-                dict[engine]="${2:?}"
+                dict['engine']="${2:?}"
                 shift 2
                 ;;
             '--file='*)
-                dict[file]="${1#*=}"
-                dict[stdin]=0
+                dict['file']="${1#*=}"
+                dict['stdin']=0
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
-                dict[stdin]=0
+                dict['file']="${2:?}"
+                dict['stdin']=0
                 shift 2
                 ;;
             '--mode='*)
-                dict[mode]="${1#*=}"
+                dict['mode']="${1#*=}"
                 shift 1
                 ;;
             '--mode')
-                dict[mode]="${2:?}"
+                dict['mode']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
-                dict[stdin]=0
+                dict['string']="${1#*=}"
+                dict['stdin']=0
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:-}"
-                dict[stdin]=0
+                dict['string']="${2:-}"
+                dict['stdin']=0
                 shift 2
                 ;;
             '--boolean' | \
             '--quiet')
-                dict[boolean]=1
+                dict['boolean']=1
                 shift 1
                 ;;
             '--regex' | \
             '--extended-regexp')
-                dict[mode]='regex'
+                dict['mode']='regex'
                 shift 1
                 ;;
             '--fixed' | \
             '--fixed-strings')
-                dict[mode]='fixed'
+                dict['mode']='fixed'
                 shift 1
                 ;;
             '--invert-match')
-                dict[invert_match]=1
+                dict['invert_match']=1
                 shift 1
                 ;;
             '--only-matching')
-                dict[only_matching]=1
+                dict['only_matching']=1
                 shift 1
                 ;;
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-')
-                dict[stdin]=1
+                dict['stdin']=1
                 shift 1
                 ;;
             *)
@@ -10055,16 +10055,16 @@ koopa_grep() {
     koopa_assert_is_set '--pattern' "${dict['pattern']}"
     if [[ -z "${dict['engine']}" ]]
     then
-        app[grep]="$(koopa_locate_rg --allow-missing)"
+        app['grep']="$(koopa_locate_rg --allow-missing)"
         [[ ! -x "${app['grep']}" ]] && app[grep]="$(koopa_locate_grep)"
-        dict[engine]="$(koopa_basename "${app['grep']}")"
+        dict['engine']="$(koopa_basename "${app['grep']}")"
     else
-        app[grep]="$(koopa_locate_"${dict['engine']}")"
+        app['grep']="$(koopa_locate_"${dict['engine']}")"
     fi
     [[ -x "${app['grep']}" ]] || return 1
     if [[ "${dict['stdin']}" -eq 1 ]]
     then
-        dict[string]="$(</dev/stdin)"
+        dict['string']="$(</dev/stdin)"
     fi
     if [[ -n "${dict['file']}" ]] && [[ -n "${dict['string']}" ]]
     then
@@ -10254,17 +10254,17 @@ koopa_header() {
         'bash' | \
         'posix' | \
         'zsh')
-            dict[prefix]="${dict['prefix']}/shell"
-            dict[ext]='sh'
+            dict['prefix']="${dict['prefix']}/shell"
+            dict['ext']='sh'
             ;;
         'r')
-            dict[ext]='R'
+            dict['ext']='R'
             ;;
         *)
             koopa_invalid_arg "${dict['lang']}"
             ;;
     esac
-    dict[file]="${dict['prefix']}/${dict['lang']}/include/header.${dict['ext']}"
+    dict['file']="${dict['prefix']}/${dict['lang']}/include/header.${dict['ext']}"
     koopa_assert_is_file "${dict['file']}"
     koopa_print "${dict['file']}"
     return 0
@@ -10273,12 +10273,12 @@ koopa_header() {
 koopa_help_2() {
     local dict
     declare -A dict
-    dict[script_file]="$(koopa_realpath "$0")"
-    dict[script_name]="$(koopa_basename "${dict['script_file']}")"
-    dict[man_prefix]="$( \
+    dict['script_file']="$(koopa_realpath "$0")"
+    dict['script_name']="$(koopa_basename "${dict['script_file']}")"
+    dict['man_prefix']="$( \
         koopa_parent_dir --num=2 "${dict['script_file']}" \
     )"
-    dict[man_file]="${dict['man_prefix']}/man/\
+    dict['man_file']="${dict['man_prefix']}/man/\
 man1/${dict['script_name']}.1"
     koopa_help "${dict['man_file']}"
 }
@@ -10326,59 +10326,59 @@ koopa_hisat2_align_paired_end_per_sample() {
     do
         case "$1" in
             '--fastq-r1-file='*)
-                dict[fastq_r1_file]="${1#*=}"
+                dict['fastq_r1_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-file')
-                dict[fastq_r1_file]="${2:?}"
+                dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-file='*)
-                dict[fastq_r2_file]="${1#*=}"
+                dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
-                dict[fastq_r2_file]="${2:?}"
+                dict['fastq_r2_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -10399,26 +10399,26 @@ koopa_hisat2_align_paired_end_per_sample() {
         koopa_stop "HISAT2 align requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
-    dict[fastq_r1_file]="$(koopa_realpath "${dict['fastq_r1_file']}")"
-    dict[fastq_r1_bn]="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict[fastq_r1_bn]="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict[fastq_r2_file]="$(koopa_realpath "${dict['fastq_r2_file']}")"
-    dict[fastq_r2_bn]="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict[fastq_r2_bn]="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict[id]="${dict['fastq_r1_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['id']="${dict['fastq_r1_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
-    dict[hisat2_idx]="${dict['index_dir']}/index"
-    dict[sam_file]="${dict['output_dir']}/${dict['id']}.sam"
+    dict['hisat2_idx']="${dict['index_dir']}/index"
+    dict['sam_file']="${dict['output_dir']}/${dict['id']}.sam"
     align_args+=(
         '-1' "${dict['fastq_r1_file']}"
         '-2' "${dict['fastq_r2_file']}"
@@ -10428,12 +10428,12 @@ koopa_hisat2_align_paired_end_per_sample() {
         '--new-summary'
         '--threads' "${dict['threads']}"
     )
-    dict[lib_type]="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
         align_args+=('--rna-strandedness' "${dict['lib_type']}")
     fi
-    dict[quality_flag]="$( \
+    dict['quality_flag']="$( \
         koopa_hisat2_fastq_quality_format "${dict['fastq_r1_file']}" \
     )"
     if [[ -n "${dict['quality_flag']}" ]]
@@ -10461,51 +10461,51 @@ koopa_hisat2_align_paired_end() {
     do
         case "$1" in
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -10521,9 +10521,9 @@ koopa_hisat2_align_paired_end() {
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running HISAT2 aligner.'
     koopa_dl \
         'Mode' "${dict['mode']}" \
@@ -10590,43 +10590,43 @@ koopa_hisat2_align_single_end_per_sample() {
     do
         case "$1" in
             '--fastq-file='*)
-                dict[fastq_file]="${1#*=}"
+                dict['fastq_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-file')
-                dict[fastq_file]="${2:?}"
+                dict['fastq_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq_tail]="${2:?}"
+                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -10645,22 +10645,22 @@ koopa_hisat2_align_single_end_per_sample() {
         koopa_stop "HISAT2 align requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict[fastq_file]="$(koopa_realpath "${dict['fastq_file']}")"
-    dict[fastq_bn]="$(koopa_basename "${dict['fastq_file']}")"
-    dict[fastq_bn]="${dict['fastq_bn']/${dict['tail']}/}"
-    dict[id]="${dict['fastq_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
+    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
+    dict['id']="${dict['fastq_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
-    dict[hisat2_idx]="${dict['index_dir']}/index"
-    dict[sam_file]="${dict['output_dir']}/${dict['id']}.sam"
+    dict['hisat2_idx']="${dict['index_dir']}/index"
+    dict['sam_file']="${dict['output_dir']}/${dict['id']}.sam"
     align_args+=(
         '-S' "${dict['sam_file']}"
         '-U' "${dict['fastq_file']}"
@@ -10669,12 +10669,12 @@ koopa_hisat2_align_single_end_per_sample() {
         '--new-summary'
         '--threads' "${dict['threads']}"
     )
-    dict[lib_type]="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
         align_args+=('--rna-strandedness' "${dict['lib_type']}")
     fi
-    dict[quality_flag]="$( \
+    dict['quality_flag']="$( \
         koopa_hisat2_fastq_quality_format "${dict['fastq_r1_file']}" \
     )"
     if [[ -n "${dict['quality_flag']}" ]]
@@ -10701,43 +10701,43 @@ koopa_hisat2_align_single_end() {
     do
         case "$1" in
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq_tail]="${2:?}"
+                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -10752,9 +10752,9 @@ koopa_hisat2_align_single_end() {
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running HISAT2 aligner.'
     koopa_dl \
         'Mode' "${dict['mode']}" \
@@ -10829,13 +10829,13 @@ koopa_hisat2_fastq_quality_format() {
         [fastq_file]="${1:?}"
     )
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict[format]="$(koopa_fastq_detect_quality_format "${dict['fastq_file']}")"
+    dict['format']="$(koopa_fastq_detect_quality_format "${dict['fastq_file']}")"
     case "${dict['format']}" in
         'Phread+33')
-            dict[flag]='--phred33'
+            dict['flag']='--phred33'
             ;;
         'Phread+64')
-            dict[flag]='--phred64'
+            dict['flag']='--phred64'
             ;;
         *)
             return 0
@@ -10864,19 +10864,19 @@ koopa_hisat2_index() {
     do
         case "$1" in
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -10887,7 +10887,7 @@ koopa_hisat2_index() {
     koopa_assert_is_set \
         '--genome-fasta-file' "${dict['genome_fasta_file']}" \
         '--output-dir' "${dict['output_dir']}"
-    dict[ht2_base]="${dict['output_dir']}/index"
+    dict['ht2_base']="${dict['output_dir']}/index"
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "'hisat2-build' requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -10962,7 +10962,7 @@ koopa_init_dir() {
         case "$1" in
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -10976,12 +10976,12 @@ koopa_init_dir() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
-    dict[dir]="${1:?}"
+    dict['dir']="${1:?}"
     if koopa_str_detect_regex \
         --string="${dict['dir']}" \
         --pattern='^~'
     then
-        dict[dir]="$( \
+        dict['dir']="$( \
             koopa_sub \
                 --pattern='^~' \
                 --replacement="${HOME:?}" \
@@ -10994,7 +10994,7 @@ koopa_init_dir() {
     then
         "${mkdir[@]}" "${dict['dir']}"
     fi
-    dict[realdir]="$(koopa_realpath "${dict['dir']}")"
+    dict['realdir']="$(koopa_realpath "${dict['dir']}")"
     koopa_print "${dict['realdir']}"
     return 0
 }
@@ -11013,27 +11013,27 @@ koopa_insert_at_line_number() {
     do
         case "$1" in
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--line-number='*)
-                dict[line_number]="${1#*=}"
+                dict['line_number']="${1#*=}"
                 shift 1
                 ;;
             '--line-number')
-                dict[line_number]="${2:?}"
+                dict['line_number']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -11046,7 +11046,7 @@ koopa_insert_at_line_number() {
         '--line-number' "${dict['line_number']}" \
         '--string' "${dict['string']}"
     koopa_assert_is_file "${dict['file']}"
-    dict[perl_cmd]="print '${dict['string']}' if \$. == ${dict['line_number']}"
+    dict['perl_cmd']="print '${dict['string']}' if \$. == ${dict['line_number']}"
     "${app['perl']}" -i -l -p -e "${dict['perl_cmd']}" "${dict['file']}"
     return 0
 }
@@ -11356,15 +11356,15 @@ default '${dict['binary_prefix']}' location."
     do
         local dict2
         declare -A dict2
-        dict2[prefix]="$(koopa_realpath "$prefix")"
-        dict2[name]="$( \
+        dict2['prefix']="$(koopa_realpath "$prefix")"
+        dict2['name']="$( \
             koopa_print "${dict2['prefix']}" \
                 | koopa_dirname \
                 | koopa_basename \
         )"
-        dict2[version]="$(koopa_basename "$prefix")"
-        dict2[tar_file]="${dict2['name']}-${dict2['version']}.tar.gz"
-        dict2[tar_url]="${dict['url_stem']}/${dict['os_string']}/${dict['arch']}/\
+        dict2['version']="$(koopa_basename "$prefix")"
+        dict2['tar_file']="${dict2['name']}-${dict2['version']}.tar.gz"
+        dict2['tar_url']="${dict['url_stem']}/${dict['os_string']}/${dict['arch']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
         if ! koopa_is_url_active "${dict2['tar_url']}"
         then
@@ -11453,11 +11453,11 @@ koopa_install_app() {
     do
         case "$1" in
             '--installer='*)
-                dict[installer_bn]="${1#*=}"
+                dict['installer_bn']="${1#*=}"
                 shift 1
                 ;;
             '--installer')
-                dict[installer_bn]="${2:?}"
+                dict['installer_bn']="${2:?}"
                 shift 2
                 ;;
             '--link-in-bin='*)
@@ -11469,87 +11469,87 @@ koopa_install_app() {
                 shift 2
                 ;;
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
-                dict[platform]="${1#*=}"
+                dict['platform']="${1#*=}"
                 shift 1
                 ;;
             '--platform')
-                dict[platform]="${2:?}"
+                dict['platform']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--version='*)
-                dict[version]="${1#*=}"
+                dict['version']="${1#*=}"
                 shift 1
                 ;;
             '--version')
-                dict[version]="${2:?}"
+                dict['version']="${2:?}"
                 shift 2
                 ;;
             '--version-key='*)
-                dict[version_key]="${1#*=}"
+                dict['version_key']="${1#*=}"
                 shift 1
                 ;;
             '--version-key')
-                dict[version_key]="${2:?}"
+                dict['version_key']="${2:?}"
                 shift 2
                 ;;
             '--binary')
-                bool[binary]=1
+                bool['binary']=1
                 shift 1
                 ;;
             '--push')
-                bool[push]=1
+                bool['push']=1
                 shift 1
                 ;;
             '--reinstall')
-                bool[reinstall]=1
+                bool['reinstall']=1
                 shift 1
                 ;;
             '--verbose')
-                bool[verbose]=1
+                bool['verbose']=1
                 shift 1
                 ;;
             '--no-link-in-opt')
-                bool[link_in_opt]=0
+                bool['link_in_opt']=0
                 shift 1
                 ;;
             '--no-prefix-check')
-                bool[prefix_check]=0
+                bool['prefix_check']=0
                 shift 1
                 ;;
             '--no-restrict-path')
-                bool[restrict_path]=0
+                bool['restrict_path']=0
                 shift 1
                 ;;
             '--quiet')
-                bool[quiet]=1
+                bool['quiet']=1
                 shift 1
                 ;;
             '--system')
-                dict[mode]='system'
+                dict['mode']='system'
                 shift 1
                 ;;
             '--user')
-                dict[mode]='user'
+                dict['mode']='user'
                 shift 1
                 ;;
             '--version-is-git-commit')
-                bool[version_is_git_commit]=1
+                bool['version_is_git_commit']=1
                 shift 1
                 ;;
             '-D')
@@ -11568,47 +11568,47 @@ koopa_install_app() {
     koopa_assert_is_set '--name' "${dict['name']}"
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict['version_key']}" ]] && dict[version_key]="${dict['name']}"
-    dict[current_version]="$(\
+    dict['current_version']="$(\
         koopa_variable "${dict['version_key']}" 2>/dev/null || true \
     )"
     [[ -z "${dict['version']}" ]] && dict[version]="${dict['current_version']}"
     if [[ "${dict['version']}" != "${dict['current_version']}" ]]
     then
-        bool[link_in_bin]=0
-        bool[link_in_opt]=0
+        bool['link_in_bin']=0
+        bool['link_in_opt']=0
     fi
     case "${dict['mode']}" in
         'shared')
             if [[ -z "${dict['prefix']}" ]]
             then
-                bool[auto_prefix]=1
-                dict[version2]="${dict['version']}"
+                bool['auto_prefix']=1
+                dict['version2']="${dict['version']}"
                 if [[ "${bool['version_is_git_commit']}" -eq 1 ]]
                 then
-                    dict[version2]="${dict['version2']:0:8}"
+                    dict['version2']="${dict['version2']:0:8}"
                 fi
-                dict[prefix]="${dict['app_prefix']}/${dict['name']}/\
+                dict['prefix']="${dict['app_prefix']}/${dict['name']}/\
 ${dict['version2']}"
             fi
             ;;
         'system')
             koopa_assert_is_admin
-            bool[link_in_opt]=0
+            bool['link_in_opt']=0
             koopa_is_linux && bool[update_ldconfig]=1
             ;;
         'user')
-            bool[link_in_opt]=0
+            bool['link_in_opt']=0
             ;;
     esac
     if koopa_is_array_non_empty "${bin_arr[@]:-}"
     then
-        bool[link_in_bin]=1
-        bool[link_in_man]=1
+        bool['link_in_bin']=1
+        bool['link_in_man']=1
     fi
     [[ -d "${dict['prefix']}" ]] && \
-        dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     [[ -z "${dict['installer_bn']}" ]] && dict[installer_bn]="${dict['name']}"
-    dict[installer_file]="${dict['koopa_prefix']}/lang/shell/bash/include/\
+    dict['installer_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     koopa_assert_is_file "${dict['installer_file']}"
     source "${dict['installer_file']}"
@@ -11645,10 +11645,10 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         fi
         case "${dict['mode']}" in
             'system')
-                dict[prefix]="$(koopa_init_dir --sudo "${dict['prefix']}")"
+                dict['prefix']="$(koopa_init_dir --sudo "${dict['prefix']}")"
                 ;;
             *)
-                dict[prefix]="$(koopa_init_dir "${dict['prefix']}")"
+                dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
                 ;;
         esac
     fi
@@ -11656,7 +11656,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         [[ -d "${dict['prefix']}" ]] && \
         [[ "${dict['mode']}" != 'system' ]]
     then
-        bool[copy_log_file]=1
+        bool['copy_log_file']=1
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
@@ -11729,8 +11729,8 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         do
             local dict2
             declare -A dict2
-            dict2[name]="${bin_arr['i']}"
-            dict2[source]="${dict['prefix']}/bin/${dict2['name']}"
+            dict2['name']="${bin_arr['i']}"
+            dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
             koopa_link_in_bin \
                 --name="${dict2['name']}" \
                 --source="${dict2['source']}"
@@ -11742,9 +11742,9 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         do
             local dict2
             declare -A dict2
-            dict2[name]="${bin_arr['i']}.1"
-            dict2[manfile1]="${dict['prefix']}/share/man/man1/${dict2['name']}"
-            dict2[manfile2]="${dict['prefix']}/man/man1/${dict2['name']}"
+            dict2['name']="${bin_arr['i']}.1"
+            dict2['manfile1']="${dict['prefix']}/share/man/man1/${dict2['name']}"
+            dict2['manfile2']="${dict['prefix']}/man/man1/${dict2['name']}"
             if [[ -f "${dict2['manfile1']}" ]]
             then
                 koopa_link_in_man1 \
@@ -12617,7 +12617,7 @@ koopa_install_julia_packages() {
     declare -A dict=(
         [script_prefix]="$(koopa_julia_script_prefix)"
     )
-    dict[script]="${dict['script_prefix']}/install-packages.jl"
+    dict['script']="${dict['script_prefix']}/install-packages.jl"
     koopa_assert_is_file "${dict['script']}"
     koopa_activate_julia
     "${app['julia']}" "${dict['script']}"
@@ -12663,60 +12663,60 @@ koopa_install_koopa() {
         [user_profile]="$(koopa_find_user_profile)"
         [xdg_data_home]="$(koopa_xdg_data_home)"
     )
-    dict[koopa_prefix_system]='/opt/koopa'
-    dict[koopa_prefix_user]="${dict['xdg_data_home']}/koopa"
+    dict['koopa_prefix_system']='/opt/koopa'
+    dict['koopa_prefix_user']="${dict['xdg_data_home']}/koopa"
     koopa_is_admin && bool[shared]=1
     while (("$#"))
     do
         case "$1" in
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--add-to-user-profile')
-                bool[add_to_user_profile]=1
+                bool['add_to_user_profile']=1
                 shift 1
                 ;;
             '--no-add-to-user-profile')
-                bool[add_to_user_profile]=0
+                bool['add_to_user_profile']=0
                 shift 1
                 ;;
             '--interactive')
-                bool[interactive]=1
+                bool['interactive']=1
                 shift 1
                 ;;
             '--non-interactive')
-                bool[interactive]=0
+                bool['interactive']=0
                 shift 1
                 ;;
             '--passwordless-sudo')
-                bool[passwordless_sudo]=1
+                bool['passwordless_sudo']=1
                 shift 1
                 ;;
             '--no-passwordless-sudo')
-                bool[passwordless_sudo]=0
+                bool['passwordless_sudo']=0
                 shift 1
                 ;;
             '--shared')
-                bool[shared]=1
+                bool['shared']=1
                 shift 1
                 ;;
             '--no-shared')
-                bool[shared]=0
+                bool['shared']=0
                 shift 1
                 ;;
             '--test' | \
             '--verbose')
-                bool[test]=1
+                bool['test']=1
                 shift 1
                 ;;
             '--no-test' | \
             '--no-verbose')
-                bool[test]=0
+                bool['test']=0
                 shift 1
                 ;;
             *)
@@ -12728,7 +12728,7 @@ koopa_install_koopa() {
     then
         if koopa_is_admin && [[ -z "${dict['prefix']}" ]]
         then
-            bool[shared]="$( \
+            bool['shared']="$( \
                 koopa_read_yn \
                     'Install for all users' \
                     "${bool['shared']}" \
@@ -12738,12 +12738,12 @@ koopa_install_koopa() {
         then
             if [[ "${bool['shared']}" -eq 1 ]]
             then
-                dict[prefix]="${dict['koopa_prefix_system']}"
+                dict['prefix']="${dict['koopa_prefix_system']}"
             else
-                dict[prefix]="${dict['koopa_prefix_user']}"
+                dict['prefix']="${dict['koopa_prefix_user']}"
             fi
         fi
-        dict[koopa_prefix]="$( \
+        dict['koopa_prefix']="$( \
             koopa_read \
                 'Install prefix' \
                 "${dict['prefix']}" \
@@ -12752,13 +12752,13 @@ koopa_install_koopa() {
             --string="${dict['prefix']}" \
             --pattern="^${HOME:?}"
         then
-            bool[shared]=0
+            bool['shared']=0
         else
-            bool[shared]=1
+            bool['shared']=1
         fi
         if [[ "${bool['shared']}" -eq 1 ]]
         then
-            bool[passwordless_sudo]="$( \
+            bool['passwordless_sudo']="$( \
                 koopa_read_yn \
                     'Enable passwordless sudo' \
                     "${bool['passwordless_sudo']}" \
@@ -12768,7 +12768,7 @@ koopa_install_koopa() {
             [[ ! -L "${dict['user_profile']}" ]]
         then
             koopa_alert_note 'Koopa activation missing in user profile.'
-            bool[add_to_user_profile]="$( \
+            bool['add_to_user_profile']="$( \
                 koopa_read_yn \
                     "Modify '${dict['user_profile']}'" \
                     "${bool['add_to_user_profile']}" \
@@ -12779,9 +12779,9 @@ koopa_install_koopa() {
         then
             if [[ "${bool['shared']}" -eq 1 ]]
             then
-                dict[prefix]="${dict['koopa_prefix_system']}"
+                dict['prefix']="${dict['koopa_prefix_system']}"
             else
-                dict[prefix]="${dict['koopa_prefix_user']}"
+                dict['prefix']="${dict['koopa_prefix_user']}"
             fi
         fi
     fi
@@ -13976,11 +13976,11 @@ koopa_ip_address() {
     do
         case "$1" in
             '--local')
-                dict[type]='local'
+                dict['type']='local'
                 shift 1
                 ;;
             '--public')
-                dict[type]='public'
+                dict['type']='public'
                 shift 1
                 ;;
             *)
@@ -14136,10 +14136,10 @@ koopa_is_file_system_case_sensitive() {
         [prefix]="${PWD:?}"
         [tmp_stem]='.koopa.tmp.'
     )
-    dict[file1]="${dict['tmp_stem']}checkcase"
-    dict[file2]="${dict['tmp_stem']}checkCase"
+    dict['file1']="${dict['tmp_stem']}checkcase"
+    dict['file2']="${dict['tmp_stem']}checkCase"
     koopa_touch "${dict['file1']}" "${dict['file2']}"
-    dict[count]="$( \
+    dict['count']="$( \
         "${app['find']}" \
             "${dict['prefix']}" \
             -maxdepth 1 \
@@ -14161,11 +14161,11 @@ koopa_is_file_type() {
     do
         case "$1" in
             '--ext='*)
-                dict[ext]="${1#*=}"
+                dict['ext']="${1#*=}"
                 shift 1
                 ;;
             '--ext')
-                dict[ext]="${2:?}"
+                dict['ext']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -14263,7 +14263,7 @@ koopa_is_r_package_installed() {
     )
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$(koopa_r_packages_prefix "${app['r']}")"
+    dict['prefix']="$(koopa_r_packages_prefix "${app['r']}")"
     for pkg in "$@"
     do
         [[ -d "${dict['prefix']}/${pkg}" ]] || return 1
@@ -14424,27 +14424,27 @@ koopa_jekyll_deploy_to_aws() {
     do
         case "$1" in
             '--bucket='*)
-                dict[bucket_prefix]="${1#*=}"
+                dict['bucket_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--bucket')
-                dict[bucket_prefix]="${2:?}"
+                dict['bucket_prefix']="${2:?}"
                 shift 2
                 ;;
             '--distribution-id='*)
-                dict[distribution_id]="${1#*=}"
+                dict['distribution_id']="${1#*=}"
                 shift 1
                 ;;
             '--distribution-id')
-                dict[distribution_id]="${2:?}"
+                dict['distribution_id']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -14456,10 +14456,10 @@ koopa_jekyll_deploy_to_aws() {
         '--bucket' "${dict['bucket_prefix']:-}" \
         '--distribution-id' "${dict['distribution_id']:-}" \
         '--profile' "${dict['profile']:-}"
-    dict[bucket_prefix]="$( \
+    dict['bucket_prefix']="$( \
         koopa_strip_trailing_slash "${dict['bucket_prefix']}" \
     )"
-    dict[local_prefix]="$( \
+    dict['local_prefix']="$( \
         koopa_strip_trailing_slash "${dict['local_prefix']}" \
     )"
     koopa_assert_is_file 'Gemfile'
@@ -14490,7 +14490,7 @@ koopa_jekyll_serve() {
         [prefix]="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="${PWD:?}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     koopa_alert "Serving Jekyll website in '${dict['prefix']}'."
     (
         koopa_cd "${dict['prefix']}"
@@ -14551,19 +14551,19 @@ koopa_kallisto_index() {
     do
         case "$1" in
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
+                dict['transcriptome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
+                dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -14579,15 +14579,15 @@ koopa_kallisto_index() {
         koopa_stop "kallisto index requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_file "${dict['transcriptome_fasta_file']}"
-    dict[transcriptome_fasta_file]="$( \
+    dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
         --pattern='\.fa(sta)?' \
         --string="${dict['transcriptome_fasta_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
-    dict[index_file]="${dict['output_dir']}/kallisto.idx"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['index_file']="${dict['output_dir']}/kallisto.idx"
     koopa_alert "Generating kallisto index at '${dict['output_dir']}'."
     index_args+=(
         "--index=${dict['index_file']}"
@@ -14623,59 +14623,59 @@ koopa_kallisto_quant_paired_end_per_sample() {
     do
         case "$1" in
             '--fastq-r1-file='*)
-                dict[fastq_r1_file]="${1#*=}"
+                dict['fastq_r1_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-file')
-                dict[fastq_r1_file]="${2:?}"
+                dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-file='*)
-                dict[fastq_r2_file]="${1#*=}"
+                dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
-                dict[fastq_r2_file]="${2:?}"
+                dict['fastq_r2_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -14696,27 +14696,27 @@ koopa_kallisto_quant_paired_end_per_sample() {
         koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[index_file]="${dict['index_dir']}/kallisto.idx"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_file']="${dict['index_dir']}/kallisto.idx"
     koopa_assert_is_file \
         "${dict['fastq_r1_file']}" \
         "${dict['fastq_r2_file']}" \
         "${dict['index_file']}"
-    dict[fastq_r1_file]="$(koopa_realpath "${dict['fastq_r1_file']}")"
-    dict[fastq_r1_bn]="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict[fastq_r1_bn]="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict[fastq_r2_file]="$(koopa_realpath "${dict['fastq_r2_file']}")"
-    dict[fastq_r2_bn]="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict[fastq_r2_bn]="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict[id]="${dict['fastq_r1_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['id']="${dict['fastq_r1_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
     quant_args+=(
         "--bootstrap-samples=${dict['bootstraps']}"
@@ -14726,7 +14726,7 @@ koopa_kallisto_quant_paired_end_per_sample() {
         '--bias'
         '--verbose'
     )
-    dict[lib_type]="$(koopa_kallisto_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$(koopa_kallisto_fastq_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
         quant_args+=("${dict['lib_type']}")
@@ -14753,51 +14753,51 @@ koopa_kallisto_quant_paired_end() {
     do
         case "$1" in
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -14813,9 +14813,9 @@ koopa_kallisto_quant_paired_end() {
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running kallisto quant.'
     koopa_dl \
         'Mode' "${dict['mode']}" \
@@ -14882,43 +14882,43 @@ koopa_kallisto_quant_single_end_per_sample() {
     do
         case "$1" in
             '--fastq-file='*)
-                dict[fastq_file]="${1#*=}"
+                dict['fastq_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-file')
-                dict[fastq_file]="${2:?}"
+                dict['fastq_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq_tail]="${2:?}"
+                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--fragment-length='*)
-                dict[fragment_length]="${1#*=}"
+                dict['fragment_length']="${1#*=}"
                 shift 1
                 ;;
             '--fragment-length')
-                dict[fragment_length]="${2:?}"
+                dict['fragment_length']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -14937,20 +14937,20 @@ koopa_kallisto_quant_single_end_per_sample() {
         koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[index_file]="${dict['index_dir']}/kallisto.idx"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_file']="${dict['index_dir']}/kallisto.idx"
     koopa_assert_is_file "${dict['fastq_file']}" "${dict['index_file']}"
-    dict[fastq_file]="$(koopa_realpath "${dict['fastq_file']}")"
-    dict[fastq_bn]="$(koopa_basename "${dict['fastq_file']}")"
-    dict[fastq_bn]="${dict['fastq_bn']/${dict['fastq_tail']}/}"
-    dict[id]="${dict['fastq_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
+    dict['fastq_bn']="${dict['fastq_bn']/${dict['fastq_tail']}/}"
+    dict['id']="${dict['fastq_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
     quant_args+=(
         "--bootstrap-samples=${dict['bootstraps']}"
@@ -14982,35 +14982,35 @@ koopa_kallisto_quant_single_end() {
     do
         case "$1" in
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq-tail]="${2:?}"
+                dict['fastq-tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -15024,9 +15024,9 @@ koopa_kallisto_quant_single_end() {
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running kallisto quant.'
     koopa_dl \
         'Mode' "${dict['mode']}" \
@@ -15112,7 +15112,7 @@ koopa_local_ip_address() {
     [[ -x "${app['tail']}" ]] || return 1
     if koopa_is_macos
     then
-        app[ifconfig]="$(koopa_macos_locate_ifconfig)"
+        app['ifconfig']="$(koopa_macos_locate_ifconfig)"
         [[ -x "${app['ifconfig']}" ]] || return 1
         str="$( \
             "${app['ifconfig']}" \
@@ -15122,7 +15122,7 @@ koopa_local_ip_address() {
             | "${app['tail']}" -n 1 \
         )"
     else
-        app[hostname]="$(koopa_locate_hostname)"
+        app['hostname']="$(koopa_locate_hostname)"
         [[ -x "${app['hostname']}" ]] || return 1
         str="$( \
             "${app['hostname']}" -I \
@@ -15210,15 +15210,15 @@ koopa_link_dotfile() {
     do
         case "$1" in
             '--into-xdg-config-home')
-                dict[into_xdg_config_home]=1
+                dict['into_xdg_config_home']=1
                 shift 1
                 ;;
             '--overwrite')
-                dict[overwrite]=1
+                dict['overwrite']=1
                 shift 1
                 ;;
             '--private')
-                dict[private]=1
+                dict['private']=1
                 shift 1
                 ;;
             '-'*)
@@ -15232,32 +15232,32 @@ koopa_link_dotfile() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    dict[source_subdir]="${1:?}"
-    dict[symlink_basename]="${2:-}"
+    dict['source_subdir']="${1:?}"
+    dict['symlink_basename']="${2:-}"
     if [[ -z "${dict['symlink_basename']}" ]]
     then
-        dict[symlink_basename]="$(koopa_basename "${dict['source_subdir']}")"
+        dict['symlink_basename']="$(koopa_basename "${dict['source_subdir']}")"
     fi
     if [[ "${dict['private']}" -eq 1 ]]
     then
-        dict[source_prefix]="${dict['dotfiles_private_prefix']}"
+        dict['source_prefix']="${dict['dotfiles_private_prefix']}"
     else
-        dict[source_prefix]="${dict['dotfiles_config_link']}"
+        dict['source_prefix']="${dict['dotfiles_config_link']}"
         if [[ ! -L "${dict['source_prefix']}" ]]
         then
             koopa_ln "${dict['dotfiles_prefix']}" "${dict['source_prefix']}"
         fi
     fi
-    dict[source_path]="${dict['source_prefix']}/${dict['source_subdir']}"
+    dict['source_path']="${dict['source_prefix']}/${dict['source_subdir']}"
     koopa_assert_is_existing "${dict['source_path']}"
     if [[ "${dict['into_xdg_config_home']}" -eq 1 ]]
     then
-        dict[symlink_prefix]="${dict['xdg_config_home']}"
+        dict['symlink_prefix']="${dict['xdg_config_home']}"
     else
-        dict[symlink_prefix]="${HOME:?}"
-        dict[symlink_basename]=".${dict['symlink_basename']}"
+        dict['symlink_prefix']="${HOME:?}"
+        dict['symlink_basename']=".${dict['symlink_basename']}"
     fi
-    dict[symlink_path]="${dict['symlink_prefix']}/${dict['symlink_basename']}"
+    dict['symlink_path']="${dict['symlink_prefix']}/${dict['symlink_basename']}"
     if [[ "${dict['overwrite']}" -eq 1 ]] ||
         { [[ -L "${dict['symlink_path']}" ]] && \
             [[ ! -e "${dict['symlink_path']}" ]]; }
@@ -15272,7 +15272,7 @@ koopa_link_dotfile() {
     fi
     koopa_alert "Linking dotfile from '${dict['source_path']}' \
 to '${dict['symlink_path']}'."
-    dict[symlink_dirname]="$(koopa_dirname "${dict['symlink_path']}")"
+    dict['symlink_dirname']="$(koopa_dirname "${dict['symlink_path']}")"
     if [[ "${dict['symlink_dirname']}" != "${HOME:?}" ]]
     then
         koopa_mkdir "${dict['symlink_dirname']}"
@@ -15314,11 +15314,11 @@ koopa_link_in_make() {
                 shift 2
                 ;;
             '--prefix='*)
-                dict[app_prefix]="${1#*=}"
+                dict['app_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[app_prefix]="${2:?}"
+                dict['app_prefix']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -15328,12 +15328,12 @@ koopa_link_in_make() {
     done
     koopa_assert_is_set '--prefix' "${dict['app_prefix']}"
     koopa_assert_is_dir "${dict['app_prefix']}" "${dict['make_prefix']}"
-    dict[app_prefix]="$(koopa_realpath "${dict['app_prefix']}")"
+    dict['app_prefix']="$(koopa_realpath "${dict['app_prefix']}")"
     if koopa_is_array_non_empty "${include_arr[@]:-}"
     then
         for i in "${!include_arr[@]}"
         do
-            files_arr[i]="${dict['app_prefix']}/${include_arr['i']}"
+            files_arr['i']="${dict['app_prefix']}/${include_arr['i']}"
         done
     else
         find_args=(
@@ -15390,7 +15390,7 @@ koopa_list_app_versions() {
         koopa_alert_note "No apps are installed in '${dict['prefix']}'."
         return 0
     fi
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_find \
             --max-depth=2 \
             --min-depth=2 \
@@ -15427,9 +15427,9 @@ koopa_list_path_priority() {
             | "${app['awk']}" '!a[$0]++' \
     )"
     koopa_is_array_non_empty "${unique_arr[@]:-}" || return 1
-    dict[n_all]="${#all_arr[@]}"
-    dict[n_unique]="${#unique_arr[@]}"
-    dict[n_dupes]="$((dict[n_all] - dict[n_unique]))"
+    dict['n_all']="${#all_arr[@]}"
+    dict['n_unique']="${#unique_arr[@]}"
+    dict['n_dupes']="$((dict[n_all] - dict[n_unique]))"
     if [[ "${dict['n_dupes']}" -gt 0 ]]
     then
         koopa_alert_note "$(koopa_ngettext \
@@ -15479,17 +15479,17 @@ koopa_ln() {
     do
         case "$1" in
             '--target-directory='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-directory' | \
             '-t')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -15505,7 +15505,7 @@ koopa_ln() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         ln=("${app['sudo']}" "${app['ln']}")
         mkdir=("${app['mkdir']}" '--sudo')
@@ -15520,7 +15520,7 @@ koopa_ln() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict[target_dir]="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"
@@ -15528,14 +15528,14 @@ koopa_ln() {
         ln_args+=("${dict['target_dir']}")
     else
         koopa_assert_has_args_eq "$#" 2
-        dict[source_file]="${1:?}"
+        dict['source_file']="${1:?}"
         koopa_assert_is_existing "${dict['source_file']}"
-        dict[target_file]="${2:?}"
+        dict['target_file']="${2:?}"
         if [[ -e "${dict['target_file']}" ]]
         then
             "${rm[@]}" "${dict['target_file']}"
         fi
-        dict[target_parent]="$(koopa_dirname "${dict['target_file']}")"
+        dict['target_parent']="$(koopa_dirname "${dict['target_file']}")"
         if [[ ! -d "${dict['target_parent']}" ]]
         then
             "${mkdir[@]}" "${dict['target_parent']}"
@@ -15572,27 +15572,27 @@ koopa_locate_app() {
     do
         case "$1" in
             '--app-name='*)
-                dict[app_name]="${1#*=}"
+                dict['app_name']="${1#*=}"
                 shift 1
                 ;;
             '--app-name')
-                dict[app_name]="${2:?}"
+                dict['app_name']="${2:?}"
                 shift 2
                 ;;
             '--opt-name='*)
-                dict[opt_name]="${1#*=}"
+                dict['opt_name']="${1#*=}"
                 shift 1
                 ;;
             '--opt-name')
-                dict[opt_name]="${2:?}"
+                dict['opt_name']="${2:?}"
                 shift 2
                 ;;
             '--allow-in-path')
-                dict[allow_in_path]=1
+                dict['allow_in_path']=1
                 shift 1
                 ;;
             '--allow-missing')
-                dict[allow_missing]=1
+                dict['allow_missing']=1
                 shift 1
                 ;;
             '-'*)
@@ -15613,7 +15613,7 @@ koopa_locate_app() {
         then
             koopa_stop "Need to rework locator for '${1:?}'."
         fi
-        dict[app]="${1:?}"
+        dict['app']="${1:?}"
         if [[ -x "${dict['app']}" ]] && koopa_is_installed "${dict['app']}"
         then
             koopa_print "${dict['app']}"
@@ -15621,7 +15621,7 @@ koopa_locate_app() {
         fi
         koopa_stop "Failed to locate '${dict['app']}'."
     fi
-    dict[app]="${dict['bin_prefix']}/${dict['app_name']}"
+    dict['app']="${dict['bin_prefix']}/${dict['app_name']}"
     if [[ -x "${dict['app']}" ]]
     then
         koopa_print "${dict['app']}"
@@ -15629,7 +15629,7 @@ koopa_locate_app() {
     fi
     if [[ -n "${dict['opt_name']}" ]]
     then
-        dict[app]="${dict['opt_prefix']}/${dict['opt_name']}/bin/${dict['app_name']}"
+        dict['app']="${dict['opt_prefix']}/${dict['opt_name']}/bin/${dict['app_name']}"
         if [[ -x "${dict['app']}" ]]
         then
             koopa_print "${dict['app']}"
@@ -15643,7 +15643,7 @@ koopa_locate_app() {
     fi
     if [[ "${dict['allow_in_path']}" -eq 1 ]]
     then
-        dict[app]="$(koopa_which "${dict['app_name']}" || true)"
+        dict['app']="$(koopa_which "${dict['app_name']}" || true)"
     fi
     if { \
         [[ -n "${dict['app']}" ]] && \
@@ -15801,35 +15801,35 @@ koopa_locate_conda_app() {
     do
         case "$1" in
             '--app-name='*)
-                dict[app_name]="${1#*=}"
+                dict['app_name']="${1#*=}"
                 shift 1
                 ;;
             '--app-name')
-                dict[app_name]="${2:?}"
+                dict['app_name']="${2:?}"
                 shift 2
                 ;;
             '--conda-prefix='*)
-                dict[conda_prefix]="${1#*=}"
+                dict['conda_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--conda-prefix')
-                dict[conda_prefix]="${2:?}"
+                dict['conda_prefix']="${2:?}"
                 shift 2
                 ;;
             '--env-name='*)
-                dict[env_name]="${1#*=}"
+                dict['env_name']="${1#*=}"
                 shift 1
                 ;;
             '--env-name')
-                dict[env_name]="${2:?}"
+                dict['env_name']="${2:?}"
                 shift 2
                 ;;
             '--env-version='*)
-                dict[env_version]="${1#*=}"
+                dict['env_version']="${1#*=}"
                 shift 1
                 ;;
             '--env-version')
-                dict[env_version]="${2:?}"
+                dict['env_version']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -15846,22 +15846,22 @@ koopa_locate_conda_app() {
     if [[ -z "${dict['app_name']}" ]]
     then
         koopa_assert_has_args_eq "$#" 1
-        dict[app_name]="${1:?}"
+        dict['app_name']="${1:?}"
     fi
     if [[ -z "${dict['env_name']}" ]]
     then
-        dict[env_name]="${dict['app_name']}"
+        dict['env_name']="${dict['app_name']}"
     fi
     if [[ -z "${dict['env_version']}" ]]
     then
-        dict[env_version]="$(koopa_variable "conda-${dict['env_name']}")"
+        dict['env_version']="$(koopa_variable "conda-${dict['env_name']}")"
     fi
     koopa_assert_is_set \
         '--app-name' "${dict['app_name']}" \
         '--conda-prefix' "${dict['conda_prefix']}" \
         '--env-name' "${dict['env_name']}" \
         '--env-version' "${dict['env_version']}"
-    dict[app_path]="${dict['conda_prefix']}/envs/\
+    dict['app_path']="${dict['conda_prefix']}/envs/\
 ${dict['env_name']}@${dict['env_version']}/bin/${dict['app_name']}"
     koopa_assert_is_executable "${dict['app_path']}"
     koopa_print "${dict['app_path']}"
@@ -16016,8 +16016,8 @@ koopa_locate_gcc() {
     declare -A dict=(
         [name]='gcc'
     )
-    dict[version]="$(koopa_variable "${dict['name']}")"
-    dict[maj_ver]="$(koopa_major_version "${dict['version']}")"
+    dict['version']="$(koopa_variable "${dict['name']}")"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     koopa_locate_app \
         --allow-in-path \
         --app-name="${dict['name']}-${dict['maj_ver']}" \
@@ -16444,9 +16444,9 @@ koopa_locate_python() {
     declare -A dict=(
         [name]='python'
     )
-    dict[version]="$(koopa_variable "${dict['name']}")"
-    dict[maj_ver]="$(koopa_major_version "${dict['version']}")"
-    dict[python]="${dict['name']}${dict['maj_ver']}"
+    dict['version']="$(koopa_variable "${dict['name']}")"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+    dict['python']="${dict['name']}${dict['maj_ver']}"
     koopa_locate_app \
         --app-name="${dict['python']}" \
         --opt-name='python'
@@ -16509,7 +16509,7 @@ koopa_locate_rscript() {
         [r]="$(koopa_locate_r)"
     )
     [[ -x "${app['r']}" ]] || return 1
-    app[rscript]="${app['r']}script"
+    app['rscript']="${app['r']}script"
     koopa_locate_app "${app['rscript']}"
 }
 
@@ -16829,9 +16829,9 @@ koopa_make_build_string() {
     )
     if koopa_is_linux
     then
-        dict[os_type]='linux-gnu'
+        dict['os_type']='linux-gnu'
     else
-        dict[os_type]="$(koopa_os_type)"
+        dict['os_type']="$(koopa_os_type)"
     fi
     koopa_print "${dict['arch']}-${dict['os_type']}"
     return 0
@@ -16877,7 +16877,7 @@ koopa_md5sum_check_to_new_md5_file() {
     declare -A dict=(
         [datetime]="$(koopa_datetime)"
     )
-    dict[log_file]="md5sum-${dict['datetime']}.md5"
+    dict['log_file']="md5sum-${dict['datetime']}.md5"
     koopa_assert_is_not_file "${dict['log_file']}"
     koopa_assert_is_file "$@"
     "${app['md5sum']}" "$@" 2>&1 | "${app['tee']}" "${dict['log_file']}"
@@ -16893,19 +16893,19 @@ koopa_mem_gb() {
     declare -A dict
     if koopa_is_macos
     then
-        app[sysctl]="$(koopa_macos_locate_sysctl)"
-        dict[mem]="$("${app['sysctl']}" -n 'hw.memsize')"
-        dict[denom]=1073741824  # 1024^3; bytes
+        app['sysctl']="$(koopa_macos_locate_sysctl)"
+        dict['mem']="$("${app['sysctl']}" -n 'hw.memsize')"
+        dict['denom']=1073741824  # 1024^3; bytes
     elif koopa_is_linux
     then
-        dict[meminfo]='/proc/meminfo'
+        dict['meminfo']='/proc/meminfo'
         koopa_assert_is_file "${dict['meminfo']}"
-        dict[mem]="$("${app['awk']}" '/MemTotal/ {print $2}' "${dict['meminfo']}")"
-        dict[denom]=1048576  # 1024^2; KB
+        dict['mem']="$("${app['awk']}" '/MemTotal/ {print $2}' "${dict['meminfo']}")"
+        dict['denom']=1048576  # 1024^2; KB
     else
         koopa_stop 'Unsupported system.'
     fi
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['awk']}" \
             -v denom="${dict['denom']}" \
             -v mem="${dict['mem']}" \
@@ -16953,7 +16953,7 @@ koopa_mkdir() {
         case "$1" in
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -16970,7 +16970,7 @@ koopa_mkdir() {
     mkdir_args=('-p')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         mkdir=("${app['sudo']}" "${app['mkdir']}")
     else
@@ -16990,7 +16990,7 @@ koopa_mktemp() {
         [date_id]="$(koopa_datetime)"
         [user_id]="$(koopa_user_id)"
     )
-    dict[template]="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"
+    dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"
     mktemp_args=(
         "$@"
         '-t' "${dict['template']}"
@@ -17017,27 +17017,27 @@ koopa_move_files_in_batch() {
     do
         case "$1" in
             '--num='*)
-                dict[num]="${1#*=}"
+                dict['num']="${1#*=}"
                 shift 1
                 ;;
             '--num')
-                dict[num]="${2:?}"
+                dict['num']="${2:?}"
                 shift 2
                 ;;
             '--source-dir='*)
-                dict[source_dir]="${1#*=}"
+                dict['source_dir']="${1#*=}"
                 shift 1
                 ;;
             '--source-dir')
-                dict[source_dir]="${2:?}"
+                dict['source_dir']="${2:?}"
                 shift 2
                 ;;
             '--target-dir='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-dir')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -17050,7 +17050,7 @@ koopa_move_files_in_batch() {
         '--source-dir' "${dict['source_dir']}" \
         '--target-dir' "${dict['target_dir']}"
     koopa_assert_is_dir "${dict['target_dir']}"
-    dict[target_dir]="$(koopa_init_dir "${dict['target_dir']}")"
+    dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     readarray -t files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -17073,7 +17073,7 @@ koopa_move_files_up_1_level() {
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="${PWD:?}"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     readarray -t files <<< "$( \
         koopa_find \
             --max-depth=2 \
@@ -17107,10 +17107,10 @@ koopa_move_into_dated_dirs_by_filename() {
         )
         if [[ "${dict['file']}" =~ $grep_string ]]
         then
-            dict[year]="${BASH_REMATCH[1]}"
-            dict[month]="${BASH_REMATCH[3]}"
-            dict[day]="${BASH_REMATCH[5]}"
-            dict[subdir]="${dict['year']}/${dict['month']}/${dict['day']}"
+            dict['year']="${BASH_REMATCH[1]}"
+            dict['month']="${BASH_REMATCH[3]}"
+            dict['day']="${BASH_REMATCH[5]}"
+            dict['subdir']="${dict['year']}/${dict['month']}/${dict['day']}"
             koopa_mv --target-directory="${dict['subdir']}" "${dict['file']}"
         else
             koopa_stop "Does not contain date: '${dict['file']}'."
@@ -17139,9 +17139,9 @@ koopa_mv() {
     )
     if koopa_is_macos
     then
-        app[mv]='/bin/mv'
+        app['mv']='/bin/mv'
     else
-        app[mv]="$(koopa_locate_mv)"
+        app['mv']="$(koopa_locate_mv)"
     fi
     [[ -x "${app['mv']}" ]] || return 1
     declare -A dict=(
@@ -17153,17 +17153,17 @@ koopa_mv() {
     do
         case "$1" in
             '--target-directory='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-directory' | \
             '-t')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -17179,7 +17179,7 @@ koopa_mv() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         mkdir=("${app['mkdir']}" '--sudo')
         mv=("${app['sudo']}" "${app['mv']}")
         rm=("${app['rm']}" '--sudo')
@@ -17193,7 +17193,7 @@ koopa_mv() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict[target_dir]="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"
@@ -17201,14 +17201,14 @@ koopa_mv() {
         mv_args+=("${dict['target_dir']}")
     else
         koopa_assert_has_args_eq "$#" 2
-        dict[source_file]="$(koopa_strip_trailing_slash "${1:?}")"
+        dict['source_file']="$(koopa_strip_trailing_slash "${1:?}")"
         koopa_assert_is_existing "${dict['source_file']}"
-        dict[target_file]="$(koopa_strip_trailing_slash "${2:?}")"
+        dict['target_file']="$(koopa_strip_trailing_slash "${2:?}")"
         if [[ -e "${dict['target_file']}" ]]
         then
             "${rm[@]}" "${dict['target_file']}"
         fi
-        dict[target_parent]="$(koopa_dirname "${dict['target_file']}")"
+        dict['target_parent']="$(koopa_dirname "${dict['target_file']}")"
         if [[ ! -d "${dict['target_parent']}" ]]
         then
             "${mkdir[@]}" "${dict['target_parent']}"
@@ -17233,7 +17233,7 @@ koopa_nfiletypes() {
         [prefix]="${1:?}"
     )
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[out]="$( \
+    dict['out']="$( \
         koopa_find \
             --exclude='.*' \
             --max-depth=1 \
@@ -17269,51 +17269,51 @@ koopa_ngettext() {
     do
         case "$1" in
             '--middle='*)
-                dict[middle]="${1#*=}"
+                dict['middle']="${1#*=}"
                 shift 1
                 ;;
             '--middle')
-                dict[middle]="${2:?}"
+                dict['middle']="${2:?}"
                 shift 2
                 ;;
             '--msg1='*)
-                dict[msg1]="${1#*=}"
+                dict['msg1']="${1#*=}"
                 shift 1
                 ;;
             '--msg1')
-                dict[msg1]="${2:?}"
+                dict['msg1']="${2:?}"
                 shift 2
                 ;;
             '--msg2='*)
-                dict[msg2]="${1#*=}"
+                dict['msg2']="${1#*=}"
                 shift 1
                 ;;
             '--msg2')
-                dict[msg2]="${2:?}"
+                dict['msg2']="${2:?}"
                 shift 2
                 ;;
             '--num='*)
-                dict[num]="${1#*=}"
+                dict['num']="${1#*=}"
                 shift 1
                 ;;
             '--num')
-                dict[num]="${2:?}"
+                dict['num']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--suffix='*)
-                dict[suffix]="${1#*=}"
+                dict['suffix']="${1#*=}"
                 shift 1
                 ;;
             '--suffix')
-                dict[suffix]="${2:?}"
+                dict['suffix']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -17328,13 +17328,13 @@ koopa_ngettext() {
         '--num' "${dict['num']}"
     case "${dict['num']}" in
         '1')
-            dict[msg]="${dict['msg1']}"
+            dict['msg']="${dict['msg1']}"
             ;;
         *)
-            dict[msg]="${dict['msg2']}"
+            dict['msg']="${dict['msg2']}"
             ;;
     esac
-    dict[str]="${dict['prefix']}${dict['num']}${dict['middle']}\
+    dict['str']="${dict['prefix']}${dict['num']}${dict['middle']}\
 ${dict['msg']}${dict['suffix']}"
     koopa_print "${dict['str']}"
     return 0
@@ -17353,8 +17353,8 @@ koopa_node_package_version() {
     do
         local dict
         declare -A dict
-        dict[pkg]="$pkg"
-        dict[str]="$( \
+        dict['pkg']="$pkg"
+        dict['str']="$( \
             "${app['npm']}" --global --json list "${dict['pkg']}" \
             | "${app['jq']}" \
                 --raw-output \
@@ -17395,10 +17395,10 @@ koopa_opt_version() {
         [name]="${1:?}"
         [opt_prefix]="$(koopa_opt_prefix)"
     )
-    dict[symlink]="${dict['opt_prefix']}/${dict['name']}"
+    dict['symlink']="${dict['opt_prefix']}/${dict['name']}"
     koopa_assert_is_symlink "${dict['symlink']}"
-    dict[realpath]="$(koopa_realpath "${dict['symlink']}")"
-    dict[version]="$(koopa_basename "${dict['realpath']}")"
+    dict['realpath']="$(koopa_realpath "${dict['symlink']}")"
+    dict['version']="$(koopa_basename "${dict['realpath']}")"
     koopa_print "${dict['version']}"
     return 0
 }
@@ -17503,12 +17503,12 @@ koopa_parent_dir() {
     do
         case "$1" in
             '--num='*)
-                dict[n]="${1#*=}"
+                dict['n']="${1#*=}"
                 shift 1
                 ;;
             '--num' | \
             '-n')
-                dict[n]="${2:?}"
+                dict['n']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -17525,8 +17525,8 @@ koopa_parent_dir() {
     [[ "${dict['n']}" -ge 1 ]] || dict[n]=1
     if [[ "${dict['n']}" -ge 2 ]]
     then
-        dict[n]="$((dict[n]-1))"
-        dict[cd_tail]="$( \
+        dict['n']="$((dict[n]-1))"
+        dict['cd_tail']="$( \
             printf "%${dict['n']}s" \
             | "${app['sed']}" 's| |/..|g' \
         )"
@@ -17632,8 +17632,8 @@ koopa_perl_package_version() {
     do
         local dict
         declare -A dict
-        dict[pkg]="$pkg"
-        dict[str]="$( \
+        dict['pkg']="$pkg"
+        dict['str']="$( \
             "${app['perl']}" \
                 -M"${dict['pkg']}" \
                 -e "print \$${dict['pkg']}::VERSION .\"\n\";" \
@@ -17820,15 +17820,15 @@ koopa_push_app_build() {
     do
         local dict2
         declare -A dict2
-        dict2[name]="$name"
-        dict2[prefix]="$(koopa_realpath "${dict['opt_prefix']}/${dict2['name']}")"
+        dict2['name']="$name"
+        dict2['prefix']="$(koopa_realpath "${dict['opt_prefix']}/${dict2['name']}")"
         koopa_assert_is_dir "${dict2['prefix']}"
-        dict2[version]="$(koopa_basename "${dict2['prefix']}")"
-        dict2[local_tar]="${dict['tmp_dir']}/\
+        dict2['version']="$(koopa_basename "${dict2['prefix']}")"
+        dict2['local_tar']="${dict['tmp_dir']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
-        dict2[s3_rel_path]="/app/${dict['os_string']}/${dict['arch']}/\
+        dict2['s3_rel_path']="/app/${dict['os_string']}/${dict['arch']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
-        dict2[remote_tar]="${dict['s3_bucket']}${dict2['s3_rel_path']}"
+        dict2['remote_tar']="${dict['s3_bucket']}${dict2['s3_rel_path']}"
         koopa_alert "Pushing '${dict2['prefix']}' to '${dict2['remote_tar']}'."
         koopa_mkdir "${dict['tmp_dir']}/${dict2['name']}"
         "${app['tar']}" -Pczf "${dict2['local_tar']}" "${dict2['prefix']}/"
@@ -17854,7 +17854,7 @@ koopa_python_activate_venv() {
         [nounset]="$(koopa_boolean_nounset)"
         [prefix]="$(koopa_python_virtualenvs_prefix)"
     )
-    dict[script]="${dict['prefix']}/${dict['name']}/bin/activate"
+    dict['script']="${dict['prefix']}/${dict['name']}/bin/activate"
     koopa_assert_is_readable "${dict['script']}"
     if [[ -n "${dict['active_env']}" ]]
     then
@@ -17874,7 +17874,7 @@ koopa_python_create_venv() {
         [python]="$(koopa_locate_python)"
     )
     [[ -x "${app['python']}" ]] || return 1
-    app[python]="$(koopa_realpath "${app['python']}")"
+    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         [name]=''
         [pip]=1
@@ -17886,27 +17886,27 @@ koopa_python_create_venv() {
     do
         case "$1" in
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--python='*)
-                app[python]="${1#*=}"
+                app['python']="${1#*=}"
                 shift 1
                 ;;
             '--python')
-                app[python]="${2:?}"
+                app['python']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -17922,15 +17922,15 @@ koopa_python_create_venv() {
     pkgs=("$@")
     koopa_assert_is_set --python "${app['python']}"
     koopa_assert_is_installed "${app['python']}"
-    dict[py_version]="$(koopa_get_version "${app['python']}")"
-    dict[py_maj_min_ver]="$(koopa_major_minor_version "${dict['py_version']}")"
+    dict['py_version']="$(koopa_get_version "${app['python']}")"
+    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_version']}")"
     if [[ -z "${dict['prefix']}" ]]
     then
         koopa_assert_is_set --name "${dict['name']}"
-        dict[venv_prefix]="$(koopa_python_virtualenvs_prefix)"
-        dict[prefix]="${dict['venv_prefix']}/${dict['name']}"
-        dict[app_bn]="$(koopa_basename "${dict['venv_prefix']}")"
-        dict[app_prefix]="$(koopa_app_prefix)/${dict['app_bn']}/\
+        dict['venv_prefix']="$(koopa_python_virtualenvs_prefix)"
+        dict['prefix']="${dict['venv_prefix']}/${dict['name']}"
+        dict['app_bn']="$(koopa_basename "${dict['venv_prefix']}")"
+        dict['app_prefix']="$(koopa_app_prefix)/${dict['app_bn']}/\
 ${dict['py_maj_min_ver']}"
         if [[ ! -d "${dict['app_prefix']}" ]]
         then
@@ -17957,21 +17957,21 @@ ${dict['py_maj_min_ver']}"
     fi
     venv_args+=("${dict['prefix']}")
     "${app['python']}" -m venv "${venv_args[@]}"
-    app[venv_python]="${dict['prefix']}/bin/python${dict['py_maj_min_ver']}"
+    app['venv_python']="${dict['prefix']}/bin/python${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${dict['pip']}" -eq 1 ]]
     then
         case "${dict['py_version']}" in
             '3.10.6')
-                dict[pip_version]='22.2.2'
-                dict[setuptools_version]='63.4.2'
-                dict[wheel_version]='0.37.1'
+                dict['pip_version']='22.2.2'
+                dict['setuptools_version']='63.4.2'
+                dict['wheel_version']='0.37.1'
                 ;;
             '3.10.5' | \
             '3.10.'*)
-                dict[pip_version]='22.1.2'
-                dict[setuptools_version]='63.1.0'
-                dict[wheel_version]='0.37.1'
+                dict['pip_version']='22.1.2'
+                dict['setuptools_version']='63.1.0'
+                dict['wheel_version']='0.37.1'
                 ;;
             *)
                 koopa_stop "Unsupported Python: ${dict['py_version']}."
@@ -18014,7 +18014,7 @@ koopa_python_get_pkg_versions() {
         pkg="${pkgs[$i]}"
         pkg_lower="$(koopa_lowercase "$pkg")"
         version="$(koopa_variable "python-${pkg_lower}")"
-        pkgs[$i]="${pkg}==${version}"
+        pkgs['$i']="${pkg}==${version}"
     done
     koopa_print "${pkgs[@]}"
     return 0
@@ -18035,19 +18035,19 @@ koopa_python_pip_install() {
     do
         case "$1" in
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--python='*)
-                app[python]="${1#*=}"
+                app['python']="${1#*=}"
                 shift 1
                 ;;
             '--python')
-                app[python]="${2:?}"
+                app['python']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -18095,7 +18095,7 @@ koopa_python_system_packages_prefix() {
     [[ -z "${app['python']}" ]] && app[python]="$(koopa_locate_python)"
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$( \
+    dict['prefix']="$( \
         "${app['python']}" -c 'import site; print(site.getsitepackages()[0])' \
     )"
     koopa_assert_is_dir "${dict['prefix']}"
@@ -18121,7 +18121,7 @@ koopa_r_configure_environ() {
         [system]=0
         [tmp_file]="$(koopa_tmp_file)"
     )
-    dict[file]="${dict['r_prefix']}/etc/Renviron.site"
+    dict['file']="${dict['r_prefix']}/etc/Renviron.site"
     ! koopa_is_koopa_app "${app['r']}" && dict[system]=1
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
@@ -18172,19 +18172,19 @@ koopa_r_configure_environ() {
     )
     for key in "${keys[@]}"
     do
-        pkgconfig_arr[$key]="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
+        pkgconfig_arr['$key']="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
     done
     for i in "${!pkgconfig_arr[@]}"
     do
-        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/lib"
+        pkgconfig_arr['$i']="${pkgconfig_arr[$i]}/lib"
     done
     if koopa_is_linux
     then
-        pkgconfig_arr[harfbuzz]="${pkgconfig_arr['harfbuzz']}64"
+        pkgconfig_arr['harfbuzz']="${pkgconfig_arr['harfbuzz']}64"
     fi
     for i in "${!pkgconfig_arr[@]}"
     do
-        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/pkgconfig"
+        pkgconfig_arr['$i']="${pkgconfig_arr[$i]}/pkgconfig"
     done
     lines+=(
         "PAGER=\${PAGER:-less}"
@@ -18210,7 +18210,7 @@ koopa_r_configure_environ() {
         'R_REMOTES_STANDALONE=true'
         'R_REMOTES_UPGRADE=always'
     )
-    dict[conda]="$(koopa_realpath "${dict['opt_prefix']}/conda")"
+    dict['conda']="$(koopa_realpath "${dict['opt_prefix']}/conda")"
     lines+=(
         "RETICULATE_MINICONDA_PATH=${dict['conda']}"
         "WORKON_HOME=\${HOME}/.virtualenvs"
@@ -18223,15 +18223,15 @@ koopa_r_configure_environ() {
         "R_USER_CONFIG_DIR=\${HOME}/.config"
         "R_USER_DATA_DIR=\${HOME}/.local/share"
     )
-    dict[udunits2]="$(koopa_realpath "${dict['opt_prefix']}/udunits")"
+    dict['udunits2']="$(koopa_realpath "${dict['opt_prefix']}/udunits")"
     lines+=(
         "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
         "UDUNITS2_LIBS=${dict['udunits2']}/lib"
     )
     if koopa_is_fedora_like
     then
-        dict[oracle_ver]="$(koopa_variable 'oracle-instant-client')"
-        dict[oracle_ver]="$(koopa_major_minor_version "${dict['oracle_ver']}")"
+        dict['oracle_ver']="$(koopa_variable 'oracle-instant-client')"
+        dict['oracle_ver']="$(koopa_major_minor_version "${dict['oracle_ver']}")"
         lines+=(
             "OCI_VERSION=${dict['oracle_ver']}"
             "ORACLE_HOME=/usr/lib/oracle/\${OCI_VERSION}/client64"
@@ -18262,7 +18262,7 @@ abort,verbose"
 -Werror=format-security -Wdate-time"
         )
     fi
-    dict[string]="$(koopa_print "${lines[@]}" | "${app['sort']}")"
+    dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     case "${dict['system']}" in
         '0')
             koopa_rm "${dict['file']}"
@@ -18294,8 +18294,8 @@ koopa_r_configure_ldpaths() {
         [opt_prefix]="$(koopa_opt_prefix)"
         [r_prefix]="$(koopa_r_prefix "${app['r']}")"
     )
-    dict[file]="${dict['r_prefix']}/etc/ldpaths"
-    dict[java_home]="$(koopa_realpath "${dict['opt_prefix']}/openjdk")"
+    dict['file']="${dict['r_prefix']}/etc/ldpaths"
+    dict['java_home']="$(koopa_realpath "${dict['opt_prefix']}/openjdk")"
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
     lines+=(
@@ -18314,7 +18314,7 @@ koopa_r_configure_ldpaths() {
     )
     for key in "${keys[@]}"
     do
-        ld_lib_app_arr[$key]="$(koopa_app_prefix "$key")/lib"
+        ld_lib_app_arr['$key']="$(koopa_app_prefix "$key")/lib"
     done
     ld_lib_arr=()
     if koopa_is_linux
@@ -18337,7 +18337,7 @@ koopa_r_configure_ldpaths() {
             'export DYLD_FALLBACK_LIBRARY_PATH'
         )
     fi
-    dict[string]="$(koopa_print "${lines[@]}")"
+    dict['string']="$(koopa_print "${lines[@]}")"
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
@@ -18362,18 +18362,18 @@ koopa_r_configure_makevars() {
         [arch]="$(koopa_arch)"
         [r_prefix]="$(koopa_r_prefix "${app['r']}")"
     )
-    dict[file]="${dict['r_prefix']}/etc/Makevars.site"
+    dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
     if koopa_is_linux
     then
-        dict[freetype]="$(koopa_app_prefix 'freetype')"
+        dict['freetype']="$(koopa_app_prefix 'freetype')"
         lines+=("CPPFLAGS += -I${dict['freetype']}/include/freetype2")
     elif koopa_is_macos
     then
-        dict[gcc]="$(koopa_app_prefix 'gcc')"
-        dict[gettext]="$(koopa_app_prefix 'gettext')"
-        app[fc]="${dict['gcc']}/bin/gfortran"
+        dict['gcc']="$(koopa_app_prefix 'gcc')"
+        dict['gettext']="$(koopa_app_prefix 'gettext')"
+        app['fc']="${dict['gcc']}/bin/gfortran"
         readarray -t libs <<< "$( \
             koopa_find \
                 --prefix="${dict['gcc']}" \
@@ -18395,15 +18395,15 @@ koopa_r_configure_makevars() {
                 ;;
         esac
         flibs+=('-lm')
-        dict[flibs]="${flibs[*]}"
+        dict['flibs']="${flibs[*]}"
         cppflags=('-Xclang' '-fopenmp')
-        dict[cppflags]="${cppflags[*]}"
+        dict['cppflags']="${cppflags[*]}"
         ldflags=(
             "-I${dict['gettext']}/include"
             "-L${dict['gettext']}/lib"
             '-lomp'
         )
-        dict[ldflags]="${ldflags[*]}"
+        dict['ldflags']="${ldflags[*]}"
         lines+=(
             "CPPFLAGS += ${dict['cppflags']}"
             "FC = ${app['fc']}"
@@ -18411,11 +18411,11 @@ koopa_r_configure_makevars() {
             "LDFLAGS += ${dict['ldflags']}"
         )
     fi
-    dict[bash]="$(koopa_app_prefix 'bash')"
-    dict[binutils]="$(koopa_app_prefix 'binutils')"
-    dict[bison]="$(koopa_app_prefix 'bison')"
-    dict[coreutils]="$(koopa_app_prefix 'coreutils')"
-    dict[sed]="$(koopa_app_prefix 'sed')"
+    dict['bash']="$(koopa_app_prefix 'bash')"
+    dict['binutils']="$(koopa_app_prefix 'binutils')"
+    dict['bison']="$(koopa_app_prefix 'bison')"
+    dict['coreutils']="$(koopa_app_prefix 'coreutils')"
+    dict['sed']="$(koopa_app_prefix 'sed')"
     lines+=(
         "AR = ${dict['binutils']}/bin/ar"
         "ECHO = ${dict['coreutils']}/bin/echo"
@@ -18423,7 +18423,7 @@ koopa_r_configure_makevars() {
         "SHELL = ${dict['bash']}/bin/bash"
         "YACC = ${dict['bison']}/bin/yacc"
     )
-    dict[string]="$(koopa_print "${lines[@]}" | "${app['sort']}")"
+    dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
@@ -18447,11 +18447,11 @@ koopa_r_javareconf() {
         koopa_alert_note 'Skipping R Java configuration.'
         return 0
     fi
-    dict[java_home]="$(koopa_realpath "${dict['java_home']}")"
-    dict[jar]="${dict['java_home']}/bin/jar"
-    dict[java]="${dict['java_home']}/bin/java"
-    dict[javac]="${dict['java_home']}/bin/javac"
-    dict[javah]=''
+    dict['java_home']="$(koopa_realpath "${dict['java_home']}")"
+    dict['jar']="${dict['java_home']}/bin/jar"
+    dict['java']="${dict['java_home']}/bin/java"
+    dict['javac']="${dict['java_home']}/bin/javac"
+    dict['javah']=''
     koopa_alert 'Updating R Java configuration.'
     koopa_dl \
         'JAR' "${dict['jar']}" \
@@ -18531,10 +18531,10 @@ koopa_r_library_prefix() {
     )
     [[ -z "${app['r']}" ]] && app[r]="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    app[rscript]="${app['r']}script"
+    app['rscript']="${app['r']}script"
     [[ -x "${app['rscript']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$( \
+    dict['prefix']="$( \
         "${app['rscript']}" -e 'cat(normalizePath(.libPaths()[[1L]]))' \
     )"
     koopa_assert_is_dir "${dict['prefix']}"
@@ -18560,10 +18560,10 @@ koopa_r_link_files_in_etc() {
         ! koopa_is_koopa_app "${app['r']}" && \
         [[ -d '/etc/R' ]]
     then
-        dict[r_etc_target]='/etc/R'
-        dict[sudo]=1
+        dict['r_etc_target']='/etc/R'
+        dict['sudo']=1
     else
-        dict[r_etc_target]="${dict['r_prefix']}/etc"
+        dict['r_etc_target']="${dict['r_prefix']}/etc"
     fi
     files=(
         'Rprofile.site'
@@ -18614,16 +18614,16 @@ koopa_r_package_version() {
 koopa_r_packages_prefix() {
     local app dict
     declare -A app
-    app[r]="${1:?}"
+    app['r']="${1:?}"
     declare -A dict
-    dict[app_prefix]="$(koopa_app_prefix)"
-    dict[name]='r-packages'
-    dict[version]="$(koopa_r_version "${app['r']}")"
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['name']='r-packages'
+    dict['version']="$(koopa_r_version "${app['r']}")"
     if [[ "${dict['version']}" != 'devel' ]]
     then
-        dict[version]="$(koopa_major_minor_version "${dict['version']}")"
+        dict['version']="$(koopa_major_minor_version "${dict['version']}")"
     fi
-    dict[str]="${dict['app_prefix']}/${dict['name']}/${dict['version']}"
+    dict['str']="${dict['app_prefix']}/${dict['name']}/${dict['version']}"
     koopa_print "${dict['str']}"
     return 0
 }
@@ -18647,10 +18647,10 @@ koopa_r_prefix() {
     )
     [[ -z "${app['r']}" ]] && app[r]="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    app[rscript]="${app['r']}script"
+    app['rscript']="${app['r']}script"
     [[ -x "${app['rscript']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$( \
+    dict['prefix']="$( \
         "${app['rscript']}" \
             --vanilla \
             -e 'cat(normalizePath(Sys.getenv("R_HOME")))' \
@@ -18667,18 +18667,18 @@ koopa_r_rebuild_docs() {
         [r]="${1:?}"
     )
     koopa_assert_is_installed "${app['r']}"
-    app[rscript]="${app['r']}script"
+    app['rscript']="${app['r']}script"
     koopa_assert_is_installed "${app['rscript']}"
     koopa_is_koopa_app "${app['rscript']}" || return 0
     declare -A dict
     koopa_alert 'Updating HTML package index.'
     rscript_args=('--vanilla')
-    dict[doc_dir]="$( \
+    dict['doc_dir']="$( \
         "${app['rscript']}" "${rscript_args[@]}" -e 'cat(R.home("doc"))' \
     )"
-    dict[html_dir]="${dict['doc_dir']}/html"
-    dict[pkg_index]="${dict['html_dir']}/packages.html"
-    dict[r_css]="${dict['html_dir']}/R.css"
+    dict['html_dir']="${dict['doc_dir']}/html"
+    dict['pkg_index']="${dict['html_dir']}/packages.html"
+    dict['r_css']="${dict['html_dir']}/R.css"
     if [[ ! -d "${dict['html_dir']}" ]]
     then
         koopa_mkdir "${dict['html_dir']}"
@@ -18707,7 +18707,7 @@ koopa_r_shiny_run_app() {
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="${PWD:?}"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     "${app['r']}" \
         --no-restore \
         --no-save \
@@ -18724,10 +18724,10 @@ koopa_r_system_library_prefix() {
     )
     [[ -z "${app['r']}" ]] && app[r]="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    app[rscript]="${app['r']}script"
+    app['rscript']="${app['r']}script"
     [[ -x "${app['rscript']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$( \
+    dict['prefix']="$( \
         "${app['rscript']}" \
             --vanilla \
             -e 'cat(normalizePath(tail(.libPaths(), n = 1L)))' \
@@ -18777,10 +18777,10 @@ koopa_read_prompt_yn() {
     )
     case "${dict['input']}" in
         '0')
-            dict[yn]="${dict['yes']}/${dict['no_default']}"
+            dict['yn']="${dict['yes']}/${dict['no_default']}"
             ;;
         '1')
-            dict[yn]="${dict['yes_default']}/${dict['no']}"
+            dict['yn']="${dict['yes_default']}/${dict['no']}"
             ;;
         *)
             koopa_stop "Invalid choice: requires '0' or '1'."
@@ -18794,8 +18794,8 @@ koopa_read_yn() {
     local dict read_args
     koopa_assert_has_args_eq "$#" 2
     declare -A dict
-    dict[prompt]="$(koopa_read_prompt_yn "$@")"
-    dict[default]="$(koopa_int_to_yn "${2:?}")"
+    dict['prompt']="$(koopa_read_prompt_yn "$@")"
+    dict['default']="$(koopa_int_to_yn "${2:?}")"
     read_args=(
         -e
         -i "${dict['default']}"
@@ -18815,7 +18815,7 @@ koopa_read_yn() {
         'true' | \
         'y' | \
         'yes')
-            dict[int]=1
+            dict['int']=1
             ;;
         '0' | \
         'F' | \
@@ -18827,7 +18827,7 @@ koopa_read_yn() {
         'false' | \
         'n' | \
         'no')
-            dict[int]=0
+            dict['int']=0
             ;;
         *)
             koopa_stop "Invalid 'yes/no' choice: '${dict['choice']}'."
@@ -18841,8 +18841,8 @@ koopa_read() {
     local dict read_args
     koopa_assert_has_args_eq "$#" 2
     declare -A dict
-    dict[default]="${2:?}"
-    dict[prompt]="${1:?} [${dict['default']}]: "
+    dict['default']="${2:?}"
+    dict['prompt']="${1:?} [${dict['default']}]: "
     read_args=(
         -e
         -i "${dict['default']}"
@@ -18875,7 +18875,7 @@ koopa_relink() {
         case "$1" in
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -18896,8 +18896,8 @@ koopa_relink() {
         ln+=('--sudo')
         rm+=('--sudo')
     fi
-    dict[source_file]="${1:?}"
-    dict[dest_file]="${2:?}"
+    dict['source_file']="${1:?}"
+    dict['dest_file']="${2:?}"
     [[ -e "${dict['source_file']}" ]] || return 0
     [[ -L "${dict['dest_file']}" ]] && return 0
     "${rm[@]}" "${dict['dest_file']}"
@@ -18949,7 +18949,7 @@ koopa_rename_lowercase() {
     do
         case "$1" in
             '--recursive')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '-'*)
@@ -18965,7 +18965,7 @@ koopa_rename_lowercase() {
     if [[ "${dict['recursive']}" -eq 1 ]]
     then
         koopa_assert_has_args_le "$#" 1
-        dict[prefix]="${1:-.}"
+        dict['prefix']="${1:-.}"
         koopa_assert_is_dir "${dict['prefix']}"
         koopa_find \
             --exclude='.*' \
@@ -19019,7 +19019,7 @@ koopa_reset_permissions() {
         [user]="$(koopa_user)"
     )
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     koopa_chown --recursive "${dict['user']}:${dict['group']}" "${dict['prefix']}"
     koopa_find \
         --prefix="${dict['prefix']}" \
@@ -19053,7 +19053,7 @@ koopa_rg_sort() {
     declare -A dict=(
         [pattern]="${1:?}"
     )
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['rg']}" \
             --pretty \
             --sort 'path' \
@@ -19076,7 +19076,7 @@ koopa_rg_unique() {
     declare -A dict=(
         [pattern]="${1:?}"
     )
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['rg']}" \
             --no-filename \
             --no-line-number \
@@ -19105,7 +19105,7 @@ koopa_rm() {
         case "$1" in
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -19122,7 +19122,7 @@ koopa_rm() {
     rm_args=('-fr')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         rm+=("${app['sudo']}" "${app['rm']}")
     else
@@ -19152,31 +19152,31 @@ koopa_rnaeditingindexer() {
     do
         case "$1" in
             '--bam-dir='*)
-                dict[local_bam_dir]="${1#*=}"
+                dict['local_bam_dir']="${1#*=}"
                 shift 1
                 ;;
             '--bam-dir')
-                dict[local_bam_dir]="${2:?}"
+                dict['local_bam_dir']="${2:?}"
                 shift 2
                 ;;
             '--genome='*)
-                dict[genome]="${1#*=}"
+                dict['genome']="${1#*=}"
                 shift 1
                 ;;
             '--genome')
-                dict[genome]="${2:?}"
+                dict['genome']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[local_output_dir]="${1#*=}"
+                dict['local_output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[local_output_dir]="${2:?}"
+                dict['local_output_dir']="${2:?}"
                 shift 2
                 ;;
             '--example')
-                dict[example]=1
+                dict['example']=1
                 shift 1
                 ;;
             *)
@@ -19187,15 +19187,15 @@ koopa_rnaeditingindexer() {
     run_args=()
     if [[ "${dict['example']}" -eq 1 ]]
     then
-        dict[bam_suffix]="_sampled_with_0.1.Aligned.sortedByCoord.out.\
+        dict['bam_suffix']="_sampled_with_0.1.Aligned.sortedByCoord.out.\
 bam.AluChr1Only.bam"
-        dict[local_bam_dir]=''
-        dict[mnt_bam_dir]='/bin/AEI/RNAEditingIndexer/TestResources/BAMs'
+        dict['local_bam_dir']=''
+        dict['mnt_bam_dir']='/bin/AEI/RNAEditingIndexer/TestResources/BAMs'
     else
         koopa_assert_is_dir "${dict['local_bam_dir']}"
-        dict[local_bam_dir]="$(koopa_realpath "${dict['local_bam_dir']}")"
+        dict['local_bam_dir']="$(koopa_realpath "${dict['local_bam_dir']}")"
         koopa_rm "${dict['local_output_dir']}"
-        dict[local_output_dir]="$(koopa_init_dir "${dict['local_output_dir']}")"
+        dict['local_output_dir']="$(koopa_init_dir "${dict['local_output_dir']}")"
         run_args+=(
             -v "${dict['local_bam_dir']}:${dict['mnt_bam_dir']}:ro"
             -v "${dict['local_output_dir']}:${dict['mnt_output_dir']}:rw"
@@ -19303,19 +19303,19 @@ koopa_rsync() {
                 shift 2
                 ;;
             '--source-dir='*)
-                dict[source_dir]="${1#*=}"
+                dict['source_dir']="${1#*=}"
                 shift 1
                 ;;
             '--source-dir')
-                dict[source_dir]="${2:?}"
+                dict['source_dir']="${2:?}"
                 shift 2
                 ;;
             '--target-dir='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-dir')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             '--archive' | \
@@ -19341,14 +19341,14 @@ koopa_rsync() {
         '--target-dir' "${dict['target_dir']}"
     if [[ -d "${dict['source_dir']}" ]]
     then
-        dict[source_dir]="$(koopa_realpath "${dict['source_dir']}")"
+        dict['source_dir']="$(koopa_realpath "${dict['source_dir']}")"
     fi
     if [[ -d "${dict['target_dir']}" ]]
     then
-        dict[target_dir]="$(koopa_realpath "${dict['target_dir']}")"
+        dict['target_dir']="$(koopa_realpath "${dict['target_dir']}")"
     fi
-    dict[source_dir]="$(koopa_strip_trailing_slash "${dict['source_dir']}")"
-    dict[target_dir]="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+    dict['source_dir']="$(koopa_strip_trailing_slash "${dict['source_dir']}")"
+    dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
     rsync_args+=("${dict['source_dir']}/" "${dict['target_dir']}/")
     "${app['rsync']}" "${rsync_args[@]}"
     return 0
@@ -19404,32 +19404,32 @@ koopa_salmon_detect_fastq_library_type() {
         [threads]="$(koopa_cpu_count)"
         [tmp_dir]="$(koopa_tmp_dir)"
     )
-    dict[output_dir]="${dict['tmp_dir']}/quant"
+    dict['output_dir']="${dict['tmp_dir']}/quant"
     while (("$#"))
     do
         case "$1" in
             '--fastq-r1-file='*)
-                dict[fastq_r1_file]="${1#*=}"
+                dict['fastq_r1_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-file')
-                dict[fastq_r1_file]="${2:?}"
+                dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-file='*)
-                dict[fastq_r2_file]="${1#*=}"
+                dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
-                dict[fastq_r2_file]="${2:?}"
+                dict['fastq_r2_file']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -19454,8 +19454,8 @@ koopa_salmon_detect_fastq_library_type() {
     if [[ -n "${dict['fastq_r2_file']}" ]]
     then
         koopa_assert_is_file "${dict['fastq_r2_file']}"
-        dict[mates1]="${dict['tmp_dir']}/mates1.fastq"
-        dict[mates2]="${dict['tmp_dir']}/mates2.fastq"
+        dict['mates1']="${dict['tmp_dir']}/mates1.fastq"
+        dict['mates2']="${dict['tmp_dir']}/mates2.fastq"
         koopa_decompress --stdout "${dict['fastq_r1_file']}" \
             | "${app['head']}" -n "${dict['n']}" \
             > "${dict['mates1']}"
@@ -19467,7 +19467,7 @@ koopa_salmon_detect_fastq_library_type() {
             "--mates2=${dict['mates2']}"
         )
     else
-        dict[unmated_reads]="${dict['tmp_dir']}/reads.fastq"
+        dict['unmated_reads']="${dict['tmp_dir']}/reads.fastq"
         koopa_decompress --stdout "${dict['fastq_r1_file']}" \
             | "${app['head']}" -n "${dict['n']}" \
             > "${dict['unmated_reads']}"
@@ -19476,9 +19476,9 @@ koopa_salmon_detect_fastq_library_type() {
         )
     fi
     "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
-    dict[json_file]="${dict['output_dir']}/lib_format_counts.json"
+    dict['json_file']="${dict['output_dir']}/lib_format_counts.json"
     koopa_assert_is_file "${dict['json_file']}"
-    dict[lib_type]="$( \
+    dict['lib_type']="$( \
         "${app['jq']}" --raw-output '.expected_format' "${dict['json_file']}" \
     )"
     koopa_print "${dict['lib_type']}"
@@ -19511,39 +19511,39 @@ koopa_salmon_index() {
     do
         case "$1" in
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
+                dict['transcriptome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
+                dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--decoys')
-                dict[decoys]=1
+                dict['decoys']=1
                 shift 1
                 ;;
             '--gencode')
-                dict[gencode]=1
+                dict['gencode']=1
                 shift 1
                 ;;
             '--no-decoys')
-                dict[decoys]=0
+                dict['decoys']=0
                 shift 1
                 ;;
             *)
@@ -19560,21 +19560,21 @@ koopa_salmon_index() {
         koopa_stop "salmon index requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_file "${dict['transcriptome_fasta_file']}"
-    dict[transcriptome_fasta_file]="$( \
+    dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
         --pattern="${dict['fasta_pattern']}" \
         --string="${dict['transcriptome_fasta_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating salmon index at '${dict['output_dir']}'."
     if [[ "${dict['gencode']}" -eq 0 ]] && \
         koopa_str_detect_regex \
             --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
             --pattern='^gencode\.'
     then
-        dict[gencode]=1
+        dict['gencode']=1
     fi
     if [[ "${dict['gencode']}" -eq 1 ]]
     then
@@ -19587,16 +19587,16 @@ koopa_salmon_index() {
         koopa_assert_is_set \
             '--genome-fasta-file' "${dict['genome_fasta_file']}"
         koopa_assert_is_file "${dict['genome_fasta_file']}"
-        dict[genome_fasta_file]="$(koopa_realpath "${dict['genome_fasta_file']}")"
+        dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
         koopa_assert_is_matching_regex \
             --pattern="${dict['fasta_pattern']}" \
             --string="${dict['genome_fasta_file']}"
         koopa_assert_is_matching_regex \
             --pattern="${dict['fasta_pattern']}" \
             --string="${dict['transcriptome_fasta_file']}"
-        dict[tmp_dir]="$(koopa_tmp_dir)"
-        dict[decoys_file]="${dict['tmp_dir']}/decoys.txt"
-        dict[gentrome_fasta_file]="${dict['tmp_dir']}/gentrome.fa.gz"
+        dict['tmp_dir']="$(koopa_tmp_dir)"
+        dict['decoys_file']="${dict['tmp_dir']}/decoys.txt"
+        dict['gentrome_fasta_file']="${dict['tmp_dir']}/gentrome.fa.gz"
         koopa_fasta_generate_chromosomes_file \
             --genome-fasta-file="${dict['genome_fasta_file']}" \
             --output-file="${dict['decoys_file']}"
@@ -19653,59 +19653,59 @@ koopa_salmon_quant_paired_end_per_sample() {
     do
         case "$1" in
             '--fastq-r1-file='*)
-                dict[fastq_r1_file]="${1#*=}"
+                dict['fastq_r1_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-file')
-                dict[fastq_r1_file]="${2:?}"
+                dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-file='*)
-                dict[fastq_r2_file]="${1#*=}"
+                dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
-                dict[fastq_r2_file]="${2:?}"
+                dict['fastq_r2_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -19726,23 +19726,23 @@ koopa_salmon_quant_paired_end_per_sample() {
         koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
-    dict[fastq_r1_file]="$(koopa_realpath "${dict['fastq_r1_file']}")"
-    dict[fastq_r1_bn]="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict[fastq_r1_bn]="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict[fastq_r2_file]="$(koopa_realpath "${dict['fastq_r2_file']}")"
-    dict[fastq_r2_bn]="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict[fastq_r2_bn]="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict[id]="${dict['fastq_r1_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['id']="${dict['fastq_r1_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     quant_args+=(
         '--gcBias' # Recommended for DESeq2.
@@ -19778,51 +19778,51 @@ koopa_salmon_quant_paired_end() {
     do
         case "$1" in
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -19838,9 +19838,9 @@ koopa_salmon_quant_paired_end() {
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running salmon quant.'
     koopa_dl \
         'Mode' "${dict['mode']}" \
@@ -19908,43 +19908,43 @@ koopa_salmon_quant_single_end_per_sample() {
     do
         case "$1" in
             '--fastq-file='*)
-                dict[fastq_file]="${1#*=}"
+                dict['fastq_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-file')
-                dict[fastq_file]="${2:?}"
+                dict['fastq_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq_tail]="${2:?}"
+                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -19963,19 +19963,19 @@ koopa_salmon_quant_single_end_per_sample() {
         koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict[fastq_file]="$(koopa_realpath "${dict['fastq_file']}")"
-    dict[fastq_bn]="$(koopa_basename "${dict['fastq_file']}")"
-    dict[fastq_bn]="${dict['fastq_bn']/${dict['tail']}/}"
-    dict[id]="${dict['fastq_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
+    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
+    dict['id']="${dict['fastq_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     quant_args+=(
         "--index=${dict['index_dir']}"
@@ -20008,43 +20008,43 @@ koopa_salmon_quant_single_end() {
     do
         case "$1" in
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq_tail]="${2:?}"
+                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -20059,9 +20059,9 @@ koopa_salmon_quant_single_end() {
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running salmon quant.'
     koopa_dl \
         'Mode' "${dict['mode']}" \
@@ -20309,12 +20309,12 @@ koopa_script_name() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict
-    dict[file]="$( \
+    dict['file']="$( \
         caller \
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '2' \
     )"
-    dict[bn]="$(koopa_basename "${dict['file']}")"
+    dict['bn']="$(koopa_basename "${dict['file']}")"
     [[ -n "${dict['bn']}" ]] || return 0
     koopa_print "${dict['bn']}"
     return 0
@@ -20436,11 +20436,11 @@ koopa_sra_download_accession_list() {
                 shift 2
                 ;;
             '--srp-id='*)
-                dict[srp_id]="${1#*=}"
+                dict['srp_id']="${1#*=}"
                 shift 1
                 ;;
             '--srp-id')
-                dict[srp_id]="${2:?}"
+                dict['srp_id']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -20452,7 +20452,7 @@ koopa_sra_download_accession_list() {
     koopa_assert_is_set '--srp-id' "${dict['srp_id']}"
     if [[ -z "${dict['acc_file']}" ]]
     then
-        dict[acc_file]="$(koopa_lowercase "${dict['srp_id']}")-\
+        dict['acc_file']="$(koopa_lowercase "${dict['srp_id']}")-\
 accession-list.txt"
     fi
     koopa_alert "Downloading SRA accession list for '${dict['srp_id']}' \
@@ -20490,11 +20490,11 @@ koopa_sra_download_run_info_table() {
                 shift 2
                 ;;
             '--srp-id='*)
-                dict[srp_id]="${1#*=}"
+                dict['srp_id']="${1#*=}"
                 shift 1
                 ;;
             '--srp-id')
-                dict[srp_id]="${2:?}"
+                dict['srp_id']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -20506,7 +20506,7 @@ koopa_sra_download_run_info_table() {
     koopa_assert_is_set '--srp-id' "${dict['srp_id']}"
     if [[ -z "${dict['run_info_file']}" ]]
     then
-        dict[run_info_file]="$(koopa_lowercase "${dict['srp_id']}")-\
+        dict['run_info_file']="$(koopa_lowercase "${dict['srp_id']}")-\
 run-info-table.csv"
     fi
     koopa_alert "Downloading SRA run info table for '${dict['srp_id']}' \
@@ -20538,35 +20538,35 @@ koopa_sra_fastq_dump() {
     do
         case "$1" in
             '--accession-file='*)
-                dict[acc_file]="${1#*=}"
+                dict['acc_file']="${1#*=}"
                 shift 1
                 ;;
             '--accession-file')
-                dict[acc_file]="${2:?}"
+                dict['acc_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-directory='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-directory')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--prefetch-directory='*)
-                dict[prefetch_dir]="${1#*=}"
+                dict['prefetch_dir']="${1#*=}"
                 shift 1
                 ;;
             '--prefetch-directory')
-                dict[prefetch_dir]="${2:?}"
+                dict['prefetch_dir']="${2:?}"
                 shift 2
                 ;;
             '--compress')
-                dict[compress]=1
+                dict['compress']=1
                 shift 1
                 ;;
             '--no-compress')
-                dict[compress]=0
+                dict['compress']=0
                 shift 1
                 ;;
             *)
@@ -20660,19 +20660,19 @@ koopa_sra_prefetch() {
     do
         case "$1" in
             '--accession-file='*)
-                dict[acc_file]="${1#*=}"
+                dict['acc_file']="${1#*=}"
                 shift 1
                 ;;
             '--accession-file')
-                dict[acc_file]="${2:?}"
+                dict['acc_file']="${2:?}"
                 shift 2
                 ;;
             '--output-directory='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-directory')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -20685,7 +20685,7 @@ koopa_sra_prefetch() {
         '--accession-file' "${dict['acc_file']}" \
         '--output-directory' "${dict['output_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Prefetching SRA files to '${dict['output_dir']}'."
     cmd=(
         "${app['prefetch']}"
@@ -20725,11 +20725,11 @@ koopa_ssh_generate_key() {
     do
         case "$1" in
             '--key-name='*)
-                dict[key_name]="${1#*=}"
+                dict['key_name']="${1#*=}"
                 shift 1
                 ;;
             '--key-name')
-                dict[key_name]="${2:?}"
+                dict['key_name']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -20817,51 +20817,51 @@ koopa_star_align_paired_end_per_sample() {
     do
         case "$1" in
             '--fastq-r1-file='*)
-                dict[fastq_r1_file]="${1#*=}"
+                dict['fastq_r1_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-file')
-                dict[fastq_r1_file]="${2:?}"
+                dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-file='*)
-                dict[fastq_r2_file]="${1#*=}"
+                dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
-                dict[fastq_r2_file]="${2:?}"
+                dict['fastq_r2_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -20882,23 +20882,23 @@ koopa_star_align_paired_end_per_sample() {
 GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
-    dict[fastq_r1_file]="$(koopa_realpath "${dict['fastq_r1_file']}")"
-    dict[fastq_r1_bn]="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict[fastq_r1_bn]="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict[fastq_r2_file]="$(koopa_realpath "${dict['fastq_r2_file']}")"
-    dict[fastq_r2_bn]="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict[fastq_r2_bn]="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict[id]="${dict['fastq_r1_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['id']="${dict['fastq_r1_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
@@ -20930,43 +20930,43 @@ koopa_star_align_paired_end() {
     do
         case "$1" in
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -20981,9 +20981,9 @@ koopa_star_align_paired_end() {
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
         'Mode' "${dict['mode']}" \
@@ -21048,35 +21048,35 @@ koopa_star_align_single_end_per_sample() {
     do
         case "$1" in
             '--fastq-file='*)
-                dict[fastq_file]="${1#*=}"
+                dict['fastq_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-file')
-                dict[fastq_file]="${2:?}"
+                dict['fastq_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq_tail]="${2:?}"
+                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -21095,19 +21095,19 @@ koopa_star_align_single_end_per_sample() {
 GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict[fastq_file]="$(koopa_realpath "${dict['fastq_file']}")"
-    dict[fastq_bn]="$(koopa_basename "${dict['fastq_file']}")"
-    dict[fastq_bn]="${dict['fastq_bn']/${dict['tail']}/}"
-    dict[id]="${dict['fastq_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
+    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
+    dict['id']="${dict['fastq_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
@@ -21137,35 +21137,35 @@ koopa_star_align_single_end() {
     do
         case "$1" in
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq_tail]="${2:?}"
+                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -21179,9 +21179,9 @@ koopa_star_align_single_end() {
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict[fastq_dir]="$(koopa_realpath "${dict['fastq_dir']}")"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
         'Mode' "${dict['mode']}" \
@@ -21240,27 +21240,27 @@ koopa_star_index() {
     do
         case "$1" in
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
+                dict['gtf_file']="${1#*=}"
                 shift 1
                 ;;
             '--gtf-file')
-                dict[gtf_file]="${2:?}"
+                dict['gtf_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -21353,7 +21353,7 @@ koopa_stat() {
         [format]="${1:?}"
     )
     shift 1
-    dict[out]="$("${app['stat']}" --format="${dict['format']}" "$@")"
+    dict['out']="$("${app['stat']}" --format="${dict['format']}" "$@")"
     [[ -n "${dict['out']}" ]] || return 1
     koopa_print "${dict['out']}"
     return 0
@@ -21394,11 +21394,11 @@ koopa_strip_left() {
     do
         case "$1" in
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -21433,11 +21433,11 @@ koopa_strip_right() {
     do
         case "$1" in
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -21491,31 +21491,31 @@ koopa_sub() {
     do
         case "$1" in
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--replacement='*)
-                dict[replacement]="${1#*=}"
+                dict['replacement']="${1#*=}"
                 shift 1
                 ;;
             '--replacement')
-                dict[replacement]="${2:-}"
+                dict['replacement']="${2:-}"
                 shift 2
                 ;;
             '--fixed')
-                dict[regex]=0
+                dict['regex']=0
                 shift 1
                 ;;
             '--global')
-                dict[global]=1
+                dict['global']=1
                 shift 1
                 ;;
             '--regex')
-                dict[regex]=1
+                dict['regex']=1
                 shift 1
                 ;;
             '-'*)
@@ -21537,9 +21537,9 @@ koopa_sub() {
     [[ "${dict['global']}" -eq 1 ]] && dict[perl_tail]='g'
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict[expr]="s/${dict['pattern']}/${dict['replacement']}/${dict['perl_tail']}"
+        dict['expr']="s/${dict['pattern']}/${dict['replacement']}/${dict['perl_tail']}"
     else
-        dict[expr]=" \
+        dict['expr']=" \
             \$pattern = quotemeta '${dict['pattern']}'; \
             \$replacement = '${dict['replacement']}'; \
             s/\$pattern/\$replacement/${dict['perl_tail']}; \
@@ -21568,19 +21568,19 @@ koopa_sudo_append_string() {
     do
         case "$1" in
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -21591,7 +21591,7 @@ koopa_sudo_append_string() {
     koopa_assert_is_set \
         '--file' "${dict['file']}" \
         '--string' "${dict['string']}"
-    dict[parent_dir]="$(koopa_dirname "${dict['file']}")"
+    dict['parent_dir']="$(koopa_dirname "${dict['file']}")"
     if [[ ! -d "${dict['parent_dir']}" ]]
     then
         koopa_mkdir --sudo "${dict['parent_dir']}"
@@ -21623,19 +21623,19 @@ koopa_sudo_write_string() {
     do
         case "$1" in
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -21646,7 +21646,7 @@ koopa_sudo_write_string() {
     koopa_assert_is_set \
         '--file' "${dict['file']}" \
         '--string' "${dict['string']}"
-    dict[parent_dir]="$(koopa_dirname "${dict['file']}")"
+    dict['parent_dir']="$(koopa_dirname "${dict['file']}")"
     if [[ ! -d "${dict['parent_dir']}" ]]
     then
         koopa_mkdir --sudo "${dict['parent_dir']}"
@@ -21735,23 +21735,23 @@ koopa_sys_set_permissions() {
         case "$1" in
             '--dereference' | \
             '-H')
-                dict[dereference]=1
+                dict['dereference']=1
                 shift 1
                 ;;
             '--no-dereference' | \
             '-h')
-                dict[dereference]=0
+                dict['dereference']=0
                 shift 1
                 ;;
             '--recursive' | \
             '-R' | \
             '-r')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '--user' | \
             '-u')
-                dict[shared]=0
+                dict['shared']=0
                 shift 1
                 ;;
             '-'*)
@@ -21767,12 +21767,12 @@ koopa_sys_set_permissions() {
     koopa_assert_has_args "$#"
     case "${dict['shared']}" in
         '0')
-            dict[group]="$(koopa_group)"
-            dict[user]="$(koopa_user)"
+            dict['group']="$(koopa_group)"
+            dict['user']="$(koopa_user)"
             ;;
         '1')
-            dict[group]="$(koopa_sys_group)"
-            dict[user]="$(koopa_sys_user)"
+            dict['group']="$(koopa_sys_group)"
+            dict['user']="$(koopa_sys_user)"
             ;;
     esac
     chown_args+=('--no-dereference')
@@ -21836,11 +21836,11 @@ koopa_system_info() {
     )
     if koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
     then
-        dict[git_remote]="$(koopa_git_remote_url "${dict['koopa_prefix']}")"
-        dict[git_commit]="$( \
+        dict['git_remote']="$(koopa_git_remote_url "${dict['koopa_prefix']}")"
+        dict['git_commit']="$( \
             koopa_git_last_commit_local "${dict['koopa_prefix']}" \
         )"
-        dict[git_date]="$(koopa_git_commit_date "${dict['koopa_prefix']}")"
+        dict['git_date']="$(koopa_git_commit_date "${dict['koopa_prefix']}")"
         info+=(
             ''
             'Git repo'
@@ -21862,18 +21862,18 @@ koopa_system_info() {
     )
     if koopa_is_macos
     then
-        app[sw_vers]="$(koopa_macos_locate_sw_vers)"
+        app['sw_vers']="$(koopa_macos_locate_sw_vers)"
         [[ -x "${app['sw_vers']}" ]] || return 1
-        dict[os]="$( \
+        dict['os']="$( \
             printf '%s %s (%s)\n' \
                 "$("${app['sw_vers']}" -productName)" \
                 "$("${app['sw_vers']}" -productVersion)" \
                 "$("${app['sw_vers']}" -buildVersion)" \
         )"
     else
-        app[uname]="$(koopa_locate_uname)"
+        app['uname']="$(koopa_locate_uname)"
         [[ -x "${app['uname']}" ]] || return 1
-        dict[os]="$("${app['uname']}" --all)"
+        dict['os']="$("${app['uname']}" --all)"
     fi
     info+=(
         ''
@@ -21885,7 +21885,7 @@ koopa_system_info() {
     )
     if koopa_is_installed 'neofetch'
     then
-        app[neofetch]="$(koopa_locate_neofetch)"
+        app['neofetch']="$(koopa_locate_neofetch)"
         [[ -x "${app['neofetch']}" ]] || return 1
         readarray -t nf_info <<< "$("${app['neofetch']}" --stdout)"
         info+=(
@@ -21915,12 +21915,12 @@ koopa_tar_multiple_dirs() {
     do
         case "$1" in
             '--delete')
-                dict[delete]=1
+                dict['delete']=1
                 shift 1
                 ;;
             '--no-delete' | \
             '--keep')
-                dict[delete]=0
+                dict['delete']=0
                 shift 1
                 ;;
             '-'*)
@@ -21955,9 +21955,9 @@ koopa_test_find_files_by_ext() {
     declare -A dict=(
         [ext]="${1:?}"
     )
-    dict[pattern]="\.${dict['ext']}$"
+    dict['pattern']="\.${dict['ext']}$"
     readarray -t all_files <<< "$(koopa_test_find_files)"
-    dict[files]="$( \
+    dict['files']="$( \
         koopa_print "${all_files[@]}" \
         | koopa_grep \
             --pattern="${dict['pattern']}" \
@@ -22054,30 +22054,30 @@ koopa_test_grep() {
     do
         case "$1" in
             '--ignore='*)
-                dict[ignore]="${1#*=}"
+                dict['ignore']="${1#*=}"
                 shift 1
                 ;;
             '--ignore' | \
             '-i')
-                dict[ignore]="${2:?}"
+                dict['ignore']="${2:?}"
                 shift 2
                 ;;
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name' | \
             '-n')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern' | \
             '-p')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '-'*)
@@ -22242,7 +22242,7 @@ koopa_touch() {
         case "$1" in
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '-'*)
@@ -22259,7 +22259,7 @@ koopa_touch() {
     mkdir=("${app['mkdir']}")
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         mkdir+=('--sudo')
         touch=("${app['sudo']}" "${app['touch']}")
     else
@@ -22342,35 +22342,35 @@ koopa_uninstall_app() {
     do
         case "$1" in
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
-                dict[platform]="${1#*=}"
+                dict['platform']="${1#*=}"
                 shift 1
                 ;;
             '--platform')
-                dict[platform]="${2:?}"
+                dict['platform']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--uninstaller='*)
-                dict[uninstaller_bn]="${1#*=}"
+                dict['uninstaller_bn']="${1#*=}"
                 shift 1
                 ;;
             '--uninstaller')
-                dict[uninstaller_bn]="${2:?}"
+                dict['uninstaller_bn']="${2:?}"
                 shift 2
                 ;;
             '--unlink-in-bin='*)
@@ -22382,23 +22382,23 @@ koopa_uninstall_app() {
                 shift 2
                 ;;
             '--no-unlink-in-opt')
-                bool[unlink_in_opt]=0
+                bool['unlink_in_opt']=0
                 shift 1
                 ;;
             '--quiet')
-                bool[quiet]=1
+                bool['quiet']=1
                 shift 1
                 ;;
             '--system')
-                dict[mode]='system'
+                dict['mode']='system'
                 shift 1
                 ;;
             '--user')
-                dict[mode]='user'
+                dict['mode']='user'
                 shift 1
                 ;;
             '--verbose')
-                bool[verbose]=1
+                bool['verbose']=1
                 shift 1
                 ;;
             *)
@@ -22410,24 +22410,24 @@ koopa_uninstall_app() {
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     case "${dict['mode']}" in
         'shared')
-            bool[unlink_in_opt]=1
+            bool['unlink_in_opt']=1
             if [[ -z "${dict['prefix']}" ]]
             then
-                dict[prefix]="${dict['app_prefix']}/${dict['name']}"
+                dict['prefix']="${dict['app_prefix']}/${dict['name']}"
             fi
             ;;
         'system')
             koopa_assert_is_admin
-            bool[unlink_in_opt]=0
+            bool['unlink_in_opt']=0
             ;;
         'user')
-            bool[unlink_in_opt]=0
+            bool['unlink_in_opt']=0
             ;;
     esac
     if koopa_is_array_non_empty "${bin_arr[@]:-}"
     then
-        bool[unlink_in_bin]=1
-        bool[unlink_in_man]=1
+        bool['unlink_in_bin']=1
+        bool['unlink_in_man']=1
     fi
     if [[ -n "${dict['prefix']}" ]]
     then
@@ -22436,7 +22436,7 @@ koopa_uninstall_app() {
             koopa_alert_is_not_installed "${dict['name']}" "${dict['prefix']}"
             return 1
         fi
-        dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
@@ -22448,11 +22448,11 @@ koopa_uninstall_app() {
         fi
     fi
     [[ -z "${dict['uninstaller_bn']}" ]] && dict[uninstaller_bn]="${dict['name']}"
-    dict[uninstaller_file]="${dict['koopa_prefix']}/lang/shell/bash/include/\
+    dict['uninstaller_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     if [[ -f "${dict['uninstaller_file']}" ]]
     then
-        dict[tmp_dir]="$(koopa_tmp_dir)"
+        dict['tmp_dir']="$(koopa_tmp_dir)"
         (
             koopa_cd "${dict['tmp_dir']}"
             source "${dict['uninstaller_file']}"
@@ -22917,7 +22917,7 @@ koopa_uninstall_dotfiles() {
         [name]='dotfiles'
         [prefix]="$(koopa_dotfiles_prefix)"
     )
-    dict[script]="${dict['prefix']}/uninstall"
+    dict['script']="${dict['prefix']}/uninstall"
     koopa_assert_is_file "${dict['script']}"
     "${app['bash']}" "${dict['script']}"
     koopa_uninstall_app \
@@ -24479,9 +24479,9 @@ koopa_unlink_in_make() {
     koopa_assert_is_dir "${dict['make_prefix']}"
     for app_prefix in "$@"
     do
-        dict[app_prefix]="$app_prefix"
+        dict['app_prefix']="$app_prefix"
         koopa_assert_is_dir "${dict['app_prefix']}"
-        dict[app_prefix]="$(koopa_realpath "${dict['app_prefix']}")"
+        dict['app_prefix']="$(koopa_realpath "${dict['app_prefix']}")"
         readarray -t files <<< "$( \
             koopa_find_symlinks \
                 --source-prefix="${dict['app_prefix']}" \
@@ -24549,67 +24549,67 @@ koopa_update_app() {
     do
         case "$1" in
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
-                dict[platform]="${1#*=}"
+                dict['platform']="${1#*=}"
                 shift 1
                 ;;
             '--platform')
-                dict[platform]="${2:?}"
+                dict['platform']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--updater='*)
-                dict[updater_bn]="${1#*=}"
+                dict['updater_bn']="${1#*=}"
                 shift 1
                 ;;
             '--updater')
-                dict[updater_bn]="${2:?}"
+                dict['updater_bn']="${2:?}"
                 shift 2
                 ;;
             '--version='*)
-                dict[version]="${1#*=}"
+                dict['version']="${1#*=}"
                 shift 1
                 ;;
             '--version')
-                dict[version]="${2:?}"
+                dict['version']="${2:?}"
                 shift 2
                 ;;
             '--no-prefix-check')
-                bool[prefix_check]=0
+                bool['prefix_check']=0
                 shift 1
                 ;;
             '--no-set-permissions')
-                bool[set_permissions]=0
+                bool['set_permissions']=0
                 shift 1
                 ;;
             '--quiet')
-                bool[quiet]=1
+                bool['quiet']=1
                 shift 1
                 ;;
             '--system')
-                dict[mode]='system'
+                dict['mode']='system'
                 shift 1
                 ;;
             '--user')
-                dict[mode]='user'
+                dict['mode']='user'
                 shift 1
                 ;;
             '--verbose')
-                dict[verbose]=1
+                dict['verbose']=1
                 shift 1
                 ;;
             *)
@@ -24623,7 +24623,7 @@ koopa_update_app() {
         'shared')
             if [[ -z "${dict['prefix']}" ]]
             then
-                dict[prefix]="${dict['opt_prefix']}/${dict['name']}"
+                dict['prefix']="${dict['opt_prefix']}/${dict['name']}"
             fi
             ;;
         'system')
@@ -24639,10 +24639,10 @@ koopa_update_app() {
             koopa_alert_is_not_installed "${dict['name']}" "${dict['prefix']}"
             return 1
         fi
-        dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     fi
     [[ -z "${dict['updater_bn']}" ]] && dict[updater_bn]="${dict['name']}"
-    dict[updater_file]="${dict['koopa_prefix']}/lang/shell/bash/include/\
+    dict['updater_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
     koopa_assert_is_file "${dict['updater_file']}"
     source "${dict['updater_file']}"
@@ -24795,9 +24795,9 @@ koopa_variable() {
         [key]="${1:?}"
         [include_prefix]="$(koopa_include_prefix)"
     )
-    dict[file]="${dict['include_prefix']}/variables.txt"
+    dict['file']="${dict['include_prefix']}/variables.txt"
     koopa_assert_is_file "${dict['file']}"
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_grep \
             --file="${dict['file']}" \
             --only-matching \
@@ -24805,7 +24805,7 @@ koopa_variable() {
             --regex \
     )"
     [[ -n "${dict['str']}" ]] || return 1
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_print "${dict['str']}" \
             | "${app['head']}" -n 1 \
             | "${app['cut']}" -d '"' -f '2' \
@@ -24838,7 +24838,7 @@ koopa_view_latest_tmp_log_file() {
         [tmp_dir]="${TMPDIR:-/tmp}"
         [user_id]="$(koopa_user_id)"
     )
-    dict[log_file]="$( \
+    dict['log_file']="$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
@@ -24872,23 +24872,23 @@ koopa_vim_version() {
     declare -A dict=(
         [str]="$("${app['vim']}" --version 2>/dev/null)"
     )
-    dict[maj_min]="$( \
+    dict['maj_min']="$( \
         koopa_print "${dict['str']}" \
             | "${app['head']}" -n 1 \
             | "${app['cut']}" -d ' ' -f '5' \
     )"
-    dict[out]="${dict['maj_min']}"
+    dict['out']="${dict['maj_min']}"
     if koopa_str_detect_fixed \
         --string="${dict['str']}" \
         --pattern='Included patches:'
     then
-        dict[patch]="$( \
+        dict['patch']="$( \
             koopa_print "${dict['str']}" \
                 | koopa_grep --pattern='Included patches:' \
                 | "${app['cut']}" -d '-' -f '2' \
                 | "${app['cut']}" -d ',' -f '1' \
         )"
-        dict[out]="${dict['out']}.${dict['patch']}"
+        dict['out']="${dict['out']}.${dict['patch']}"
     fi
     koopa_print "${dict['out']}"
     return 0
@@ -24929,27 +24929,27 @@ koopa_wget_recursive() {
     do
         case "$1" in
             '--password='*)
-                dict[password]="${1#*=}"
+                dict['password']="${1#*=}"
                 shift 1
                 ;;
             '--password')
-                dict[password]="${2:?}"
+                dict['password']="${2:?}"
                 shift 2
                 ;;
             '--url='*)
-                dict[url]="${1#*=}"
+                dict['url']="${1#*=}"
                 shift 1
                 ;;
             '--url')
-                dict[url]="${2:?}"
+                dict['url']="${2:?}"
                 shift 2
                 ;;
             '--user='*)
-                dict[user]="${1#*=}"
+                dict['user']="${1#*=}"
                 shift 1
                 ;;
             '--user')
-                dict[user]="${2:?}"
+                dict['user']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -24961,8 +24961,8 @@ koopa_wget_recursive() {
         '--password' "${dict['password']}" \
         '--url' "${dict['url']}" \
         '--user' "${dict['user']}"
-    dict[log_file]="wget-${dict['datetime']}.log"
-    dict[password]="${dict['password']@Q}"
+    dict['log_file']="wget-${dict['datetime']}.log"
+    dict['password']="${dict['password']@Q}"
     wget_args=(
         "--output-file=${dict['log_file']}"
         "--password=${dict['password']}"
@@ -24989,29 +24989,29 @@ koopa_which_function() {
         koopa_print "${dict['input_key']}"
         return 0
     fi
-    dict[key]="${dict['input_key']//-/_}"
-    dict[os_id]="$(koopa_os_id)"
+    dict['key']="${dict['input_key']//-/_}"
+    dict['os_id']="$(koopa_os_id)"
     if koopa_is_function "koopa_${dict['os_id']}_${dict['key']}"
     then
-        dict[fun]="koopa_${dict['os_id']}_${dict['key']}"
+        dict['fun']="koopa_${dict['os_id']}_${dict['key']}"
     elif koopa_is_rhel_like && \
         koopa_is_function "koopa_rhel_${dict['key']}"
     then
-        dict[fun]="koopa_rhel_${dict['key']}"
+        dict['fun']="koopa_rhel_${dict['key']}"
     elif koopa_is_debian_like && \
         koopa_is_function "koopa_debian_${dict['key']}"
     then
-        dict[fun]="koopa_debian_${dict['key']}"
+        dict['fun']="koopa_debian_${dict['key']}"
     elif koopa_is_fedora_like && \
         koopa_is_function "koopa_fedora_${dict['key']}"
     then
-        dict[fun]="koopa_fedora_${dict['key']}"
+        dict['fun']="koopa_fedora_${dict['key']}"
     elif koopa_is_linux && \
         koopa_is_function "koopa_linux_${dict['key']}"
     then
-        dict[fun]="koopa_linux_${dict['key']}"
+        dict['fun']="koopa_linux_${dict['key']}"
     else
-        dict[fun]="koopa_${dict['key']}"
+        dict['fun']="koopa_${dict['key']}"
     fi
     koopa_is_function "${dict['fun']}" || return 1
     koopa_print "${dict['fun']}"
@@ -25062,19 +25062,19 @@ koopa_write_string() {
     do
         case "$1" in
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -25085,7 +25085,7 @@ koopa_write_string() {
     koopa_assert_is_set \
         '--file' "${dict['file']}" \
         '--string' "${dict['string']}"
-    dict[parent_dir]="$(koopa_dirname "${dict['file']}")"
+    dict['parent_dir']="$(koopa_dirname "${dict['file']}")"
     if [[ ! -d "${dict['parent_dir']}" ]]
     then
         koopa_mkdir "${dict['parent_dir']}"
@@ -25108,7 +25108,7 @@ koopa_xcode_clt_version() {
         [pkg]='com.apple.pkg.CLTools_Executables'
     )
     "${app['pkgutil']}" --pkgs="${dict['pkg']}" >/dev/null || return 1
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['pkgutil']}" --pkg-info="${dict['pkg']}" \
             | "${app['awk']}" '/version:/ {print $2}' \
     )"

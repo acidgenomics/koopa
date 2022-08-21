@@ -15,25 +15,25 @@ __koopa_h() {
     case "${dict['level']}" in
         '1')
             koopa_print ''
-            dict[prefix]='#'
+            dict['prefix']='#'
             ;;
         '2')
-            dict[prefix]='##'
+            dict['prefix']='##'
             ;;
         '3')
-            dict[prefix]='###'
+            dict['prefix']='###'
             ;;
         '4')
-            dict[prefix]='####'
+            dict['prefix']='####'
             ;;
         '5')
-            dict[prefix]='#####'
+            dict['prefix']='#####'
             ;;
         '6')
-            dict[prefix]='######'
+            dict['prefix']='######'
             ;;
         '7')
-            dict[prefix]='#######'
+            dict['prefix']='#######'
             ;;
         *)
             koopa_stop 'Invalid header level.'

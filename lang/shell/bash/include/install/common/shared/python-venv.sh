@@ -18,28 +18,28 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[libexec]="${dict['prefix']}/libexec"
+    dict['libexec']="${dict['prefix']}/libexec"
     # NOTE Consider reworking the case-sensitivity edge case handling here.
     case "${dict['name']}" in
         'glances')
-            dict[pkg_name]='Glances'
+            dict['pkg_name']='Glances'
             ;;
         'pygments')
-            dict[pkg_name]='Pygments'
+            dict['pkg_name']='Pygments'
             ;;
         'scons')
-            dict[pkg_name]='SCons'
+            dict['pkg_name']='SCons'
             ;;
         *)
-            dict[pkg_name]="$(koopa_snake_case_simple "${dict['name']}")"
+            dict['pkg_name']="$(koopa_snake_case_simple "${dict['name']}")"
             ;;
     esac
-    dict[py_version]="$(koopa_get_version "${app['python']}")"
-    dict[py_maj_min_ver]="$(koopa_major_minor_version "${dict['py_version']}")"
+    dict['py_version']="$(koopa_get_version "${app['python']}")"
+    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_version']}")"
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
         "${dict['pkg_name']}==${dict['version']}"
-    dict[record_file]="${dict['libexec']}/lib/python${dict['py_maj_min_ver']}/\
+    dict['record_file']="${dict['libexec']}/lib/python${dict['py_maj_min_ver']}/\
 site-packages/${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
     koopa_assert_is_file "${dict['record_file']}"
     # Ensure we exclude any nested subdirectories in libexec bin, which is

@@ -22,8 +22,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.bz2"
-    dict[url]="https://xorg.freedesktop.org/archive/individual/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
+    dict['url']="https://xorg.freedesktop.org/archive/individual/\
 proto/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

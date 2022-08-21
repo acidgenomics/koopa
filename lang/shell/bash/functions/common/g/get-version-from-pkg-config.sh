@@ -21,19 +21,19 @@ koopa_get_version_from_pkg_config() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--opt-name='*)
-                dict[opt_name]="${1#*=}"
+                dict['opt_name']="${1#*=}"
                 shift 1
                 ;;
             '--opt-name')
-                dict[opt_name]="${2:?}"
+                dict['opt_name']="${2:?}"
                 shift 2
                 ;;
             '--pc-name='*)
-                dict[pc_name]="${1#*=}"
+                dict['pc_name']="${1#*=}"
                 shift 1
                 ;;
             '--pc-name')
-                dict[pc_name]="${2:?}"
+                dict['pc_name']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -45,10 +45,10 @@ koopa_get_version_from_pkg_config() {
     koopa_assert_is_set \
         '--opt-name' "${dict['opt_name']}" \
         '--pc-name' "${dict['pc_name']}"
-    dict[pc_file]="${dict['opt_prefix']}/${dict['opt_name']}/lib/\
+    dict['pc_file']="${dict['opt_prefix']}/${dict['opt_name']}/lib/\
 pkgconfig/${dict['pc_name']}.pc"
     koopa_assert_is_file "${dict['pc_file']}"
-    dict[str]="$("${app['pkg_config']}" --modversion "${dict['pc_file']}")"
+    dict['str']="$("${app['pkg_config']}" --modversion "${dict['pc_file']}")"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
     return 0

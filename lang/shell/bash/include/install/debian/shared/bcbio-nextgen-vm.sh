@@ -36,11 +36,11 @@ main() {
     esac
     # Install is failing latest version of Miniconda installer, so pin
     # specifically to this legacy version instead.
-    dict[script]='Miniconda3-py37_4.9.2-Linux-x86_64.sh'
-    dict[url]="https://repo.anaconda.com/miniconda/${dict['script']}"
+    dict['script']='Miniconda3-py37_4.9.2-Linux-x86_64.sh'
+    dict['url']="https://repo.anaconda.com/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
     "${app['bash']}" "$script" -b -p "${dict['prefix']}/anaconda"
-    app[conda]="${dict['prefix']}/anaconda/bin/conda"
+    app['conda']="${dict['prefix']}/anaconda/bin/conda"
     koopa_assert_is_executable "${app['conda']}"
     "${app['conda']}" install --yes \
         --channel='bioconda' \

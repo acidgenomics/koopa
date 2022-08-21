@@ -17,7 +17,7 @@ koopa_conda_pkg_cache_prefix() {
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$( \
+    dict['prefix']="$( \
         "${app['conda']}" info --json \
             | "${app['jq']}" --raw-output '.pkgs_dirs[0]' \
     )"

@@ -17,10 +17,10 @@ koopa_is_file_system_case_sensitive() {
         [prefix]="${PWD:?}"
         [tmp_stem]='.koopa.tmp.'
     )
-    dict[file1]="${dict['tmp_stem']}checkcase"
-    dict[file2]="${dict['tmp_stem']}checkCase"
+    dict['file1']="${dict['tmp_stem']}checkcase"
+    dict['file2']="${dict['tmp_stem']}checkCase"
     koopa_touch "${dict['file1']}" "${dict['file2']}"
-    dict[count]="$( \
+    dict['count']="$( \
         "${app['find']}" \
             "${dict['prefix']}" \
             -maxdepth 1 \

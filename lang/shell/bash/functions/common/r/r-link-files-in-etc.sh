@@ -28,10 +28,10 @@ koopa_r_link_files_in_etc() {
         [[ -d '/etc/R' ]]
     then
         # This applies to Debian/Ubuntu CRAN binary installs.
-        dict[r_etc_target]='/etc/R'
-        dict[sudo]=1
+        dict['r_etc_target']='/etc/R'
+        dict['sudo']=1
     else
-        dict[r_etc_target]="${dict['r_prefix']}/etc"
+        dict['r_etc_target']="${dict['r_prefix']}/etc"
     fi
     files=(
         'Rprofile.site'

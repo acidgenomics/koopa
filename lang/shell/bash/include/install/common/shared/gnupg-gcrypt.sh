@@ -36,7 +36,7 @@ main() {
         'libgcrypt' | \
         'libksba')
             koopa_activate_opt_prefix 'libgpg-error'
-            dict[libgpg_error]="$(koopa_app_prefix 'libgpg-error')"
+            dict['libgpg_error']="$(koopa_app_prefix 'libgpg-error')"
             conf_args+=(
                 "--with-libgpg-error-prefix=${dict['libgpg_error']}"
             )
@@ -70,14 +70,14 @@ main() {
                 'libassuan' \
                 'libksba' \
                 'npth'
-            dict[bzip2]="$(koopa_app_prefix 'bzip2')"
-            dict[libassuan]="$(koopa_app_prefix 'libassuan')"
-            dict[libgcrypt]="$(koopa_app_prefix 'libgcrypt')"
-            dict[libgpg_error]="$(koopa_app_prefix 'libgpg-error')"
-            dict[libksba]="$(koopa_app_prefix 'libksba')"
-            dict[npth]="$(koopa_app_prefix 'npth')"
-            dict[readline]="$(koopa_app_prefix 'readline')"
-            dict[zlib]="$(koopa_app_prefix 'zlib')"
+            dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+            dict['libassuan']="$(koopa_app_prefix 'libassuan')"
+            dict['libgcrypt']="$(koopa_app_prefix 'libgcrypt')"
+            dict['libgpg_error']="$(koopa_app_prefix 'libgpg-error')"
+            dict['libksba']="$(koopa_app_prefix 'libksba')"
+            dict['npth']="$(koopa_app_prefix 'npth')"
+            dict['readline']="$(koopa_app_prefix 'readline')"
+            dict['zlib']="$(koopa_app_prefix 'zlib')"
             conf_args+=(
                 # > '--disable-doc'
                 '--enable-gnutls'
@@ -93,31 +93,31 @@ main() {
             if koopa_is_linux
             then
                 koopa_activate_opt_prefix 'pinentry'
-                dict[pinentry]="$(koopa_app_prefix 'pinentry')"
+                dict['pinentry']="$(koopa_app_prefix 'pinentry')"
                 # FIXME Do we need to point to the pinentry binary here?
                 conf_args+=("--with-pinentry-pgm=${dict['pinentry']}")
             fi
             ;;
     esac
-    dict[base_url]="${dict['gcrypt_url']}/${dict['name']}"
+    dict['base_url']="${dict['gcrypt_url']}/${dict['name']}"
     case "${dict['name']}" in
         'libgpg-error')
-            dict[import_gpg_keys]=1
+            dict['import_gpg_keys']=1
             ;;
         'dirmngr' | \
         'npth')
             # nPth uses expired 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' key.
             # dirmngr is from 2013 and also has an expired key.
-            dict[check_key]=0
+            dict['check_key']=0
             ;;
         'gnutls')
-            dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
-            dict[base_url]="${dict['base_url']}/v${dict['maj_min_ver']}"
-            dict[compress_ext]='xz'
+            dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+            dict['base_url']="${dict['base_url']}/v${dict['maj_min_ver']}"
+            dict['compress_ext']='xz'
             ;;
     esac
-    dict[tar_file]="${dict['name']}-${dict['version']}.tar.${dict['compress_ext']}"
-    dict[tar_url]="${dict['base_url']}/${dict['tar_file']}"
+    dict['tar_file']="${dict['name']}-${dict['version']}.tar.${dict['compress_ext']}"
+    dict['tar_url']="${dict['base_url']}/${dict['tar_file']}"
     koopa_download "${dict['tar_url']}" "${dict['tar_file']}"
     if [[ "${dict['check_key']}" -eq 1 ]] && \
         koopa_is_installed "${app['gpg_agent']}"
@@ -146,8 +146,8 @@ main() {
             # List keys with:
             # > "${app['gpg']}" --list-keys
         fi
-        dict[sig_file]="${dict['tar_file']}.sig"
-        dict[sig_url]="${dict['base_url']}/${dict['sig_file']}"
+        dict['sig_file']="${dict['tar_file']}.sig"
+        dict['sig_url']="${dict['base_url']}/${dict['sig_file']}"
         koopa_download "${dict['sig_url']}" "${dict['sig_file']}"
         "${app['gpg']}" --verify "${dict['sig_file']}" || return 1
     fi

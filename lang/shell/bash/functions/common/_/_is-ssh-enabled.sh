@@ -19,7 +19,7 @@ __koopa_is_ssh_enabled() {
         [url]="${1:?}"
         [pattern]="${2:?}"
     )
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['ssh']}" -T \
             -o StrictHostKeyChecking='no' \
             "${dict['url']}" 2>&1 \

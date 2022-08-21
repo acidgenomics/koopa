@@ -24,8 +24,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict['version']}.tar.gz"
-    dict[url]="https://github.com/Reference-LAPACK/${dict['name']}/archive/\
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/Reference-LAPACK/${dict['name']}/archive/\
 refs/tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

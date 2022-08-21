@@ -40,20 +40,20 @@ koopa_download() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--engine='*)
-                dict[engine]="${1#*=}"
+                dict['engine']="${1#*=}"
                 shift 1
                 ;;
             '--engine')
-                dict[engine]="${2:?}"
+                dict['engine']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--decompress')
-                dict[decompress]=1
+                dict['decompress']=1
                 shift 1
                 ;;
             '--extract')
-                dict[extract]=1
+                dict['extract']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -74,10 +74,10 @@ koopa_download() {
     [[ -x "${app['download']}" ]] || return 1
     if [[ -z "${dict['file']}" ]]
     then
-        dict[file]="$(koopa_basename "${dict['url']}")"
+        dict['file']="$(koopa_basename "${dict['url']}")"
         if koopa_str_detect_fixed --string="${dict['file']}" --pattern='%'
         then
-            dict[file]="$( \
+            dict['file']="$( \
                 koopa_print "${dict['file']}" \
                 | koopa_gsub \
                     --fixed \
@@ -102,7 +102,7 @@ koopa_download() {
         --string="${dict['file']}" \
         --pattern='/'
     then
-        dict[file]="${PWD:?}/${dict['file']}"
+        dict['file']="${PWD:?}/${dict['file']}"
     fi
     download_args=()
     case "${dict['engine']}" in

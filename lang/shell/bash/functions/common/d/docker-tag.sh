@@ -24,7 +24,7 @@ koopa_docker_tag() {
         --string="${dict['image']}" \
         --pattern='/'
     then
-        dict[image]="acidgenomics/${dict['image']}"
+        dict['image']="acidgenomics/${dict['image']}"
     fi
     if [[ "${dict['source_tag']}" == "${dict['dest_tag']}" ]]
     then

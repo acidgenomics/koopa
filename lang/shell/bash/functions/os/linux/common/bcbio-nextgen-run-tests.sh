@@ -20,27 +20,27 @@ koopa_linux_bcbio_nextgen_run_tests() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--git-dir='*)
-                dict[git_dir]="${1#*=}"
+                dict['git_dir']="${1#*=}"
                 shift 1
                 ;;
             '--git-dir')
-                dict[git_dir]="${2:?}"
+                dict['git_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             '--tools-dir='*)
-                dict[tools_dir]="${1#*=}"
+                dict['tools_dir']="${1#*=}"
                 shift 1
                 ;;
             '--tools-dir')
-                dict[tools_dir]="${2:?}"
+                dict['tools_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

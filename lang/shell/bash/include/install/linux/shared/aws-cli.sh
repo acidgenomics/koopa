@@ -31,8 +31,8 @@ main() {
         [tmp_bin_dir]='tmp_bin'
         [tmp_install_dir]='tmp_install'
     )
-    dict[file]="awscli-exe-linux-${dict['arch']}-${dict['version']}.zip"
-    dict[url]="https://awscli.amazonaws.com/${dict['file']}"
+    dict['file']="awscli-exe-linux-${dict['arch']}-${dict['version']}.zip"
+    dict['url']="https://awscli.amazonaws.com/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     ./aws/install \
@@ -41,7 +41,7 @@ main() {
         > /dev/null
     koopa_cd "${dict['tmp_install_dir']}/v2"
     # Note that directory structure currently returns differently for Alpine.
-    dict[version_subdir]="$( \
+    dict['version_subdir']="$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \

@@ -20,16 +20,16 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[name2]="${dict['name']}"
+    dict['name2']="${dict['name']}"
     conf_args=("--prefix=${dict['prefix']}" "$@")
     case "${dict['name']}" in
         'freetype' | \
         'man-db')
-            dict[gnu_mirror]='https://download.savannah.gnu.org/releases'
+            dict['gnu_mirror']='https://download.savannah.gnu.org/releases'
             ;;
         'attr' | \
         'libpipeline')
-            dict[gnu_mirror]='https://download.savannah.nongnu.org/releases'
+            dict['gnu_mirror']='https://download.savannah.nongnu.org/releases'
             ;;
     esac
     case "${dict['name']}" in
@@ -58,25 +58,25 @@ main() {
         'units' | \
         'wget' | \
         'which')
-            dict[suffix]='gz'
+            dict['suffix']='gz'
             ;;
         'parallel')
-            dict[suffix]='bz2'
+            dict['suffix']='bz2'
             ;;
         *)
-            dict[suffix]='xz'
+            dict['suffix']='xz'
             ;;
     esac
     case "${dict['name']}" in
         'libidn')
-            dict[name2]='libidn2'
+            dict['name2']='libidn2'
             ;;
         'ncurses')
-            dict[version]="$(koopa_major_minor_version "${dict['version']}")"
+            dict['version']="$(koopa_major_minor_version "${dict['version']}")"
             ;;
     esac
-    dict[file]="${dict['name2']}-${dict['version']}.tar.${dict['suffix']}"
-    dict[url]="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"
+    dict['file']="${dict['name2']}-${dict['version']}.tar.${dict['suffix']}"
+    dict['url']="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name2']}-${dict['version']}"

@@ -19,9 +19,9 @@ main() {
     koopa_rhel_enable_epel
     if koopa_is_centos || koopa_is_rocky
     then
-        dict[powertools]='powertools'
+        dict['powertools']='powertools'
     else
-        dict[powertools]='PowerTools'
+        dict['powertools']='PowerTools'
     fi
     if ! koopa_is_rhel_ubi
     then

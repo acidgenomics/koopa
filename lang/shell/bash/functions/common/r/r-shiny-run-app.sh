@@ -15,7 +15,7 @@ koopa_r_shiny_run_app() {
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="${PWD:?}"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     "${app['r']}" \
         --no-restore \
         --no-save \

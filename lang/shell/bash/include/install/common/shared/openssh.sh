@@ -35,13 +35,13 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
 portable/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    dict[ssl]="$(koopa_app_prefix 'openssl3')"
+    dict['ssl']="$(koopa_app_prefix 'openssl3')"
     conf_args=(
         # > '--with-security-key-builtin' # libfido2
         "--prefix=${dict['prefix']}"

@@ -12,13 +12,13 @@ koopa_find_user_profile() {
     )
     case "${dict['shell']}" in
         'bash')
-            dict[file]="${HOME}/.bashrc"
+            dict['file']="${HOME}/.bashrc"
             ;;
         'zsh')
-            dict[file]="${HOME}/.zshrc"
+            dict['file']="${HOME}/.zshrc"
             ;;
         *)
-            dict[file]="${HOME}/.profile"
+            dict['file']="${HOME}/.profile"
             ;;
     esac
     [[ -n "${dict['file']}" ]] || return 1

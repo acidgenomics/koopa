@@ -32,68 +32,68 @@ koopa_update_app() {
     do
         case "$1" in
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
-                dict[platform]="${1#*=}"
+                dict['platform']="${1#*=}"
                 shift 1
                 ;;
             '--platform')
-                dict[platform]="${2:?}"
+                dict['platform']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--updater='*)
-                dict[updater_bn]="${1#*=}"
+                dict['updater_bn']="${1#*=}"
                 shift 1
                 ;;
             '--updater')
-                dict[updater_bn]="${2:?}"
+                dict['updater_bn']="${2:?}"
                 shift 2
                 ;;
             '--version='*)
-                dict[version]="${1#*=}"
+                dict['version']="${1#*=}"
                 shift 1
                 ;;
             '--version')
-                dict[version]="${2:?}"
+                dict['version']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--no-prefix-check')
-                bool[prefix_check]=0
+                bool['prefix_check']=0
                 shift 1
                 ;;
             '--no-set-permissions')
-                bool[set_permissions]=0
+                bool['set_permissions']=0
                 shift 1
                 ;;
             '--quiet')
-                bool[quiet]=1
+                bool['quiet']=1
                 shift 1
                 ;;
             '--system')
-                dict[mode]='system'
+                dict['mode']='system'
                 shift 1
                 ;;
             '--user')
-                dict[mode]='user'
+                dict['mode']='user'
                 shift 1
                 ;;
             '--verbose')
-                dict[verbose]=1
+                dict['verbose']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -108,7 +108,7 @@ koopa_update_app() {
         'shared')
             if [[ -z "${dict['prefix']}" ]]
             then
-                dict[prefix]="${dict['opt_prefix']}/${dict['name']}"
+                dict['prefix']="${dict['opt_prefix']}/${dict['name']}"
             fi
             ;;
         'system')
@@ -124,10 +124,10 @@ koopa_update_app() {
             koopa_alert_is_not_installed "${dict['name']}" "${dict['prefix']}"
             return 1
         fi
-        dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     fi
     [[ -z "${dict['updater_bn']}" ]] && dict[updater_bn]="${dict['name']}"
-    dict[updater_file]="${dict['koopa_prefix']}/lang/shell/bash/include/\
+    dict['updater_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
     koopa_assert_is_file "${dict['updater_file']}"
     # shellcheck source=/dev/null

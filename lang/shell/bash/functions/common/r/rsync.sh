@@ -78,19 +78,19 @@ koopa_rsync() {
                 shift 2
                 ;;
             '--source-dir='*)
-                dict[source_dir]="${1#*=}"
+                dict['source_dir']="${1#*=}"
                 shift 1
                 ;;
             '--source-dir')
-                dict[source_dir]="${2:?}"
+                dict['source_dir']="${2:?}"
                 shift 2
                 ;;
             '--target-dir='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-dir')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             # Passthrough args -------------------------------------------------
@@ -118,14 +118,14 @@ koopa_rsync() {
         '--target-dir' "${dict['target_dir']}"
     if [[ -d "${dict['source_dir']}" ]]
     then
-        dict[source_dir]="$(koopa_realpath "${dict['source_dir']}")"
+        dict['source_dir']="$(koopa_realpath "${dict['source_dir']}")"
     fi
     if [[ -d "${dict['target_dir']}" ]]
     then
-        dict[target_dir]="$(koopa_realpath "${dict['target_dir']}")"
+        dict['target_dir']="$(koopa_realpath "${dict['target_dir']}")"
     fi
-    dict[source_dir]="$(koopa_strip_trailing_slash "${dict['source_dir']}")"
-    dict[target_dir]="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+    dict['source_dir']="$(koopa_strip_trailing_slash "${dict['source_dir']}")"
+    dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
     rsync_args+=("${dict['source_dir']}/" "${dict['target_dir']}/")
     "${app['rsync']}" "${rsync_args[@]}"
     return 0

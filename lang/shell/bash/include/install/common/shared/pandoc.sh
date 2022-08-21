@@ -29,13 +29,13 @@ main() {
         [stack_root]="$(koopa_init_dir 'stack')"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://hackage.haskell.org/package/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://hackage.haskell.org/package/\
 ${dict['name']}-${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    dict[zlib]="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     stack_args=(
         "--jobs=${dict['jobs']}"
         "--stack-root=${dict['stack_root']}"
