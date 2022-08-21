@@ -370,6 +370,27 @@
   "jupyterlab": [
     "jupyter-lab"
   ],
+  "kallisto": [
+    "kallisto"
+  ],
+  "lame": [
+    "lame"
+  ],
+  "latch": [
+    "latch"
+  ],
+  "less": [
+    "less"
+  ],
+  "lesspipe": [
+    "lesspipe.sh"
+  ],
+  "libxml2": [
+    "xml2-config"
+  ],
+  "make": [
+    "make"
+  ],
   "rust": [
     "cargo",
     "cargo-clippy",
