@@ -19,7 +19,7 @@ koopa_perl_package_version() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
-    [[ -x "${app[perl]}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || return 1
     for pkg in "$@"
     do
         local dict
@@ -27,12 +27,12 @@ koopa_perl_package_version() {
         dict[pkg]="$pkg"
         # Note that there cannot be a space after '-M' here.
         dict[str]="$( \
-            "${app[perl]}" \
-                -M"${dict[pkg]}" \
-                -e "print \$${dict[pkg]}::VERSION .\"\n\";" \
+            "${app['perl']}" \
+                -M"${dict['pkg']}" \
+                -e "print \$${dict['pkg']}::VERSION .\"\n\";" \
         )"
-        [[ -n "${dict[str]}" ]] || return 1
-        koopa_print "${dict[str]}"
+        [[ -n "${dict['str']}" ]] || return 1
+        koopa_print "${dict['str']}"
     done
     return 0
 }

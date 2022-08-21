@@ -17,9 +17,9 @@ koopa_find_dotfiles() {
         [basename]="$(koopa_locate_basename)"
         [xargs]="$(koopa_locate_xargs)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[basename]}" ]] || return 1
-    [[ -x "${app[xargs]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['basename']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
         [type]="${1:?}"
         [header]="${2:?}"
@@ -32,12 +32,12 @@ koopa_find_dotfiles() {
             --prefix="${HOME:?}" \
             --print0 \
             --sort \
-            --type="${dict[type]}" \
-        | "${app[xargs]}" -0 -n 1 "${app[basename]}" \
-        | "${app[awk]}" '{print "    -",$0}' \
+            --type="${dict['type']}" \
+        | "${app['xargs']}" -0 -n 1 "${app['basename']}" \
+        | "${app['awk']}" '{print "    -",$0}' \
     )"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_h2 "${dict[header]}:"
-    koopa_print "${dict[str]}"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_h2 "${dict['header']}:"
+    koopa_print "${dict['str']}"
     return 0
 }

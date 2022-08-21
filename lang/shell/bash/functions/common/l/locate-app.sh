@@ -65,53 +65,53 @@ koopa_locate_app() {
     if [[ "$#" -gt 0 ]]
     then
         koopa_assert_has_args_eq "$#" 1
-        if [[ -n "${dict[app_name]}" ]] || \
-            [[ "${dict[allow_in_path]}" -eq 1 ]]
+        if [[ -n "${dict['app_name']}" ]] || \
+            [[ "${dict['allow_in_path']}" -eq 1 ]]
         then
             koopa_stop "Need to rework locator for '${1:?}'."
         fi
         dict[app]="${1:?}"
-        if [[ -x "${dict[app]}" ]] && koopa_is_installed "${dict[app]}"
+        if [[ -x "${dict['app']}" ]] && koopa_is_installed "${dict['app']}"
         then
-            koopa_print "${dict[app]}"
+            koopa_print "${dict['app']}"
             return 0
         fi
-        koopa_stop "Failed to locate '${dict[app]}'."
+        koopa_stop "Failed to locate '${dict['app']}'."
     fi
-    dict[app]="${dict[bin_prefix]}/${dict[app_name]}"
-    if [[ -x "${dict[app]}" ]]
+    dict[app]="${dict['bin_prefix']}/${dict['app_name']}"
+    if [[ -x "${dict['app']}" ]]
     then
-        koopa_print "${dict[app]}"
+        koopa_print "${dict['app']}"
         return 0
     fi
-    if [[ -n "${dict[opt_name]}" ]]
+    if [[ -n "${dict['opt_name']}" ]]
     then
-        dict[app]="${dict[opt_prefix]}/${dict[opt_name]}/bin/${dict[app_name]}"
-        if [[ -x "${dict[app]}" ]]
+        dict[app]="${dict['opt_prefix']}/${dict['opt_name']}/bin/${dict['app_name']}"
+        if [[ -x "${dict['app']}" ]]
         then
-            koopa_print "${dict[app]}"
+            koopa_print "${dict['app']}"
             return 0
-        elif [[ ! -x "${dict[app]}" ]] && \
-            [[ "${dict[allow_in_path]}" -eq 0 ]] && \
-            [[ "${dict[allow_missing]}" -eq 0 ]]
+        elif [[ ! -x "${dict['app']}" ]] && \
+            [[ "${dict['allow_in_path']}" -eq 0 ]] && \
+            [[ "${dict['allow_missing']}" -eq 0 ]]
         then
-            koopa_stop "Need to install '${dict[opt_name]}' for '${dict[app]}'."
+            koopa_stop "Need to install '${dict['opt_name']}' for '${dict['app']}'."
         fi
     fi
-    if [[ "${dict[allow_in_path]}" -eq 1 ]]
+    if [[ "${dict['allow_in_path']}" -eq 1 ]]
     then
-        dict[app]="$(koopa_which "${dict[app_name]}" || true)"
+        dict[app]="$(koopa_which "${dict['app_name']}" || true)"
     fi
     if { \
-        [[ -n "${dict[app]}" ]] && \
-        [[ -x "${dict[app]}" ]] && \
-        [[ ! -d "${dict[app]}" ]] && \
-        koopa_is_installed "${dict[app]}"; \
+        [[ -n "${dict['app']}" ]] && \
+        [[ -x "${dict['app']}" ]] && \
+        [[ ! -d "${dict['app']}" ]] && \
+        koopa_is_installed "${dict['app']}"; \
     }
     then
-        koopa_print "${dict[app]}"
+        koopa_print "${dict['app']}"
         return 0
     fi
-    [[ "${dict[allow_missing]}" -eq 1 ]] && return 0
-    koopa_stop "Failed to locate '${dict[app_name]}'."
+    [[ "${dict['allow_missing']}" -eq 1 ]] && return 0
+    koopa_stop "Failed to locate '${dict['app_name']}'."
 }

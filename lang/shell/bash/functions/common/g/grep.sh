@@ -126,36 +126,36 @@ koopa_grep() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    if [[ -z "${dict[engine]}" ]]
+    koopa_assert_is_set '--pattern' "${dict['pattern']}"
+    if [[ -z "${dict['engine']}" ]]
     then
         app[grep]="$(koopa_locate_rg --allow-missing)"
-        [[ ! -x "${app[grep]}" ]] && app[grep]="$(koopa_locate_grep)"
-        dict[engine]="$(koopa_basename "${app[grep]}")"
+        [[ ! -x "${app['grep']}" ]] && app[grep]="$(koopa_locate_grep)"
+        dict[engine]="$(koopa_basename "${app['grep']}")"
     else
-        app[grep]="$(koopa_locate_"${dict[engine]}")"
+        app[grep]="$(koopa_locate_"${dict['engine']}")"
     fi
-    [[ -x "${app[grep]}" ]] || return 1
+    [[ -x "${app['grep']}" ]] || return 1
     # Piped input using stdin (string mode).
-    if [[ "${dict[stdin]}" -eq 1 ]]
+    if [[ "${dict['stdin']}" -eq 1 ]]
     then
         dict[string]="$(</dev/stdin)"
     fi
     # Check that user isn't mixing up file and string mode.
-    if [[ -n "${dict[file]}" ]] && [[ -n "${dict[string]}" ]]
+    if [[ -n "${dict['file']}" ]] && [[ -n "${dict['string']}" ]]
     then
         koopa_stop "Use '--file' or '--string', but not both."
     fi
-    grep_cmd=("${app[grep]}")
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    grep_cmd=("${app['grep']}")
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
         grep_cmd=('sudo' "${grep_cmd[@]}")
     fi
     grep_args=()
-    case "${dict[engine]}" in
+    case "${dict['engine']}" in
         'grep')
             # Using short flags for BSD compatibility here.
-            case "${dict[mode]}" in
+            case "${dict['mode']}" in
                 'fixed')
                     grep_args+=('-F')
                     ;;
@@ -163,18 +163,18 @@ koopa_grep() {
                     grep_args+=('-E')
                     ;;
             esac
-            [[ "${dict[invert_match]}" -eq 1 ]] && \
+            [[ "${dict['invert_match']}" -eq 1 ]] && \
                 grep_args+=('-v')  # --invert-match
-            [[ "${dict[only_matching]}" -eq 1 ]] && \
+            [[ "${dict['only_matching']}" -eq 1 ]] && \
                 grep_args+=('-o')  # --only-matching
-            [[ "${dict[boolean]}" -eq 1 ]] && \
+            [[ "${dict['boolean']}" -eq 1 ]] && \
                 grep_args+=('-q')  # --quiet
             ;;
         'rg')
             grep_args+=(
                 '--case-sensitive'
             )
-            if [[ -n "${dict[file]}" ]]
+            if [[ -n "${dict['file']}" ]]
             then
                 grep_args+=(
                     '--no-config'
@@ -182,7 +182,7 @@ koopa_grep() {
                     '--one-file-system'
                 )
             fi
-            case "${dict[mode]}" in
+            case "${dict['mode']}" in
                 'fixed')
                     grep_args+=('--fixed-strings')
                     ;;
@@ -190,25 +190,25 @@ koopa_grep() {
                     grep_args+=('--engine' 'default')
                     ;;
             esac
-            [[ "${dict[invert_match]}" -eq 1 ]] && \
+            [[ "${dict['invert_match']}" -eq 1 ]] && \
                 grep_args+=('--invert-match')
-            [[ "${dict[only_matching]}" -eq 1 ]] && \
+            [[ "${dict['only_matching']}" -eq 1 ]] && \
                 grep_args+=('--only-matching')
-            [[ "${dict[boolean]}" -eq 1 ]] && \
+            [[ "${dict['boolean']}" -eq 1 ]] && \
                 grep_args+=('--quiet')
             ;;
         *)
             koopa_stop 'Invalid grep engine.'
             ;;
     esac
-    grep_args+=("${dict[pattern]}")
-    if [[ -n "${dict[file]}" ]]
+    grep_args+=("${dict['pattern']}")
+    if [[ -n "${dict['file']}" ]]
     then
         # File mode.
-        koopa_assert_is_file "${dict[file]}"
-        koopa_assert_is_readable "${dict[file]}"
-        grep_args+=("${dict[file]}")
-        if [[ "${dict[boolean]}" -eq 1 ]]
+        koopa_assert_is_file "${dict['file']}"
+        koopa_assert_is_readable "${dict['file']}"
+        grep_args+=("${dict['file']}")
+        if [[ "${dict['boolean']}" -eq 1 ]]
         then
             "${grep_cmd[@]}" "${grep_args[@]}" >/dev/null
         else
@@ -216,12 +216,12 @@ koopa_grep() {
         fi
     else
         # String mode.
-        if [[ "${dict[boolean]}" -eq 1 ]]
+        if [[ "${dict['boolean']}" -eq 1 ]]
         then
-            koopa_print "${dict[string]}" \
+            koopa_print "${dict['string']}" \
                 | "${grep_cmd[@]}" "${grep_args[@]}" >/dev/null
         else
-            koopa_print "${dict[string]}" \
+            koopa_print "${dict['string']}" \
                 | "${grep_cmd[@]}" "${grep_args[@]}"
         fi
     fi

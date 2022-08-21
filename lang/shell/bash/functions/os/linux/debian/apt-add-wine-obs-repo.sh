@@ -21,27 +21,27 @@ Emulators:/Wine:/Debian"
         [name]='wine-obs'
         [os_string]="$(koopa_os_string)"
     )
-    case "${dict[os_string]}" in
+    case "${dict['os_string']}" in
         'debian-10')
-            dict[url]="${dict[base_url]}/Debian_10/"
+            dict[url]="${dict['base_url']}/Debian_10/"
             ;;
         'debian-11')
-            dict[url]="${dict[base_url]}/Debian_11/"
+            dict[url]="${dict['base_url']}/Debian_11/"
             ;;
         'ubuntu-18')
-            dict[url]="${dict[base_url]}/xUbuntu_18.04/"
+            dict[url]="${dict['base_url']}/xUbuntu_18.04/"
             ;;
         'ubuntu-20')
-            dict[url]="${dict[base_url]}/xUbuntu_20.04/"
+            dict[url]="${dict['base_url']}/xUbuntu_20.04/"
             ;;
         *)
-            koopa_stop "Unsupported OS: '${dict[os_string]}'."
+            koopa_stop "Unsupported OS: '${dict['os_string']}'."
             ;;
     esac
     koopa_debian_apt_add_wine_obs_key
     koopa_debian_apt_add_repo \
-        --distribution="${dict[distribution]}" \
-        --name="${dict[name]}" \
-        --url="${dict[url]}"
+        --distribution="${dict['distribution']}" \
+        --name="${dict['name']}" \
+        --url="${dict['url']}"
     return 0
 }

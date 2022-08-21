@@ -10,7 +10,7 @@ koopa_find_user_profile() {
     declare -A dict=(
         [shell]="$(koopa_shell_name)"
     )
-    case "${dict[shell]}" in
+    case "${dict['shell']}" in
         'bash')
             dict[file]="${HOME}/.bashrc"
             ;;
@@ -21,7 +21,7 @@ koopa_find_user_profile() {
             dict[file]="${HOME}/.profile"
             ;;
     esac
-    [[ -n "${dict[file]}" ]] || return 1
-    koopa_print "${dict[file]}"
+    [[ -n "${dict['file']}" ]] || return 1
+    koopa_print "${dict['file']}"
     return 0
 }

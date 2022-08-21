@@ -90,7 +90,7 @@ koopa_cli_system() {
             ;;
     esac
     # Platform specific.
-    if [[ -z "${dict[key]}" ]]
+    if [[ -z "${dict['key']}" ]]
     then
         if koopa_is_linux
         then
@@ -123,12 +123,12 @@ koopa_cli_system() {
             esac
         fi
     fi
-    [[ -z "${dict[key]}" ]] && koopa_cli_invalid_arg "$@"
-    dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
-    if ! koopa_is_function "${dict[fun]}"
+    [[ -z "${dict['key']}" ]] && koopa_cli_invalid_arg "$@"
+    dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+    if ! koopa_is_function "${dict['fun']}"
     then
         koopa_stop 'Unsupported command.'
     fi
-    "${dict[fun]}" "$@"
+    "${dict['fun']}" "$@"
     return 0
 }

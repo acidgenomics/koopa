@@ -21,10 +21,10 @@ koopa_docker_push() {
         [sort]="$(koopa_locate_sort)"
         [tr]="$(koopa_locate_tr)"
     )
-    [[ -x "${app[docker]}" ]] || return 1
-    [[ -x "${app[sed]}" ]] || return 1
-    [[ -x "${app[sort]}" ]] || return 1
-    [[ -x "${app[tr]}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['tr']}" ]] || return 1
     declare -A dict=(
         # Consider allowing user to define, so we can support quay.io.
         [server]='docker.io'
@@ -36,31 +36,31 @@ koopa_docker_push() {
             [pattern]="$pattern"
         )
         koopa_assert_is_matching_regex \
-            --string="${dict2[pattern]}" \
+            --string="${dict2['pattern']}" \
             --pattern='^.+/.+$'
         dict2[json]="$( \
-            "${app[docker]}" inspect \
+            "${app['docker']}" inspect \
                 --format="{{json .RepoTags}}" \
-                "${dict2[pattern]}" \
+                "${dict2['pattern']}" \
         )"
         # Convert JSON to lines.
         readarray -t images <<< "$( \
-            koopa_print "${dict2[json]}" \
-                | "${app[tr]}" ',' '\n' \
-                | "${app[sed]}" 's/^\[//' \
-                | "${app[sed]}" 's/\]$//' \
-                | "${app[sed]}" 's/^\"//g' \
-                | "${app[sed]}" 's/\"$//g' \
-                | "${app[sort]}" \
+            koopa_print "${dict2['json']}" \
+                | "${app['tr']}" ',' '\n' \
+                | "${app['sed']}" 's/^\[//' \
+                | "${app['sed']}" 's/\]$//' \
+                | "${app['sed']}" 's/^\"//g' \
+                | "${app['sed']}" 's/\"$//g' \
+                | "${app['sort']}" \
         )"
         if koopa_is_array_empty "${images[@]:-}"
         then
-            koopa_stop "Failed to match any images with '${dict2[pattern]}'."
+            koopa_stop "Failed to match any images with '${dict2['pattern']}'."
         fi
         for image in "${images[@]}"
         do
-            koopa_alert "Pushing '${image}' to '${dict[server]}'."
-            "${app[docker]}" push "${dict[server]}/${image}"
+            koopa_alert "Pushing '${image}' to '${dict['server']}'."
+            "${app['docker']}" push "${dict['server']}/${image}"
         done
     done
     return 0

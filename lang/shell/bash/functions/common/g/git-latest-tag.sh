@@ -13,7 +13,7 @@ koopa_git_latest_tag() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -26,8 +26,8 @@ koopa_git_latest_tag() {
             local rev tag
             koopa_cd "$repo"
             koopa_is_git_repo || return 1
-            rev="$("${app[git]}" rev-list --tags --max-count=1)"
-            tag="$("${app[git]}" describe --tags "$rev")"
+            rev="$("${app['git']}" rev-list --tags --max-count=1)"
+            tag="$("${app['git']}" describe --tags "$rev")"
             [[ -n "$tag" ]] || return 1
             koopa_print "$tag"
         done

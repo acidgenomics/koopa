@@ -11,16 +11,16 @@ koopa_man_version() {
         [grep]="$(koopa_locate_grep)"
         [man]="${1:-}"
     )
-    [[ -z "${app[man]}" ]] && app[man]="$(koopa_locate_man)"
-    [[ -x "${app[grep]}" ]] || return 1
-    [[ -x "${app[man]}" ]] || return 1
+    [[ -z "${app['man']}" ]] && app[man]="$(koopa_locate_man)"
+    [[ -x "${app['grep']}" ]] || return 1
+    [[ -x "${app['man']}" ]] || return 1
     str="$( \
-        "${app[grep]}" \
+        "${app['grep']}" \
             --extended-regexp \
             --only-matching \
             --text \
             'lib/man-db/libmandb-[.0-9]+\.dylib' \
-            "${app[man]}" \
+            "${app['man']}" \
     )"
     [[ -n "$str" ]] || return 1
     koopa_extract_version "$str"

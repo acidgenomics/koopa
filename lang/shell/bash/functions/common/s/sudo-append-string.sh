@@ -15,8 +15,8 @@ koopa_sudo_append_string() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         [file]=''
         [string]=''
@@ -48,18 +48,18 @@ koopa_sudo_append_string() {
         esac
     done
     koopa_assert_is_set \
-        '--file' "${dict[file]}" \
-        '--string' "${dict[string]}"
-    dict[parent_dir]="$(koopa_dirname "${dict[file]}")"
-    if [[ ! -d "${dict[parent_dir]}" ]]
+        '--file' "${dict['file']}" \
+        '--string' "${dict['string']}"
+    dict[parent_dir]="$(koopa_dirname "${dict['file']}")"
+    if [[ ! -d "${dict['parent_dir']}" ]]
     then
-        koopa_mkdir --sudo "${dict[parent_dir]}"
+        koopa_mkdir --sudo "${dict['parent_dir']}"
     fi
-    if [[ ! -f "${dict[file]}" ]]
+    if [[ ! -f "${dict['file']}" ]]
     then
-        koopa_touch --sudo "${dict[file]}"
+        koopa_touch --sudo "${dict['file']}"
     fi
-    koopa_print "${dict[string]}" \
-        | "${app[sudo]}" "${app[tee]}" -a "${dict[file]}" >/dev/null
+    koopa_print "${dict['string']}" \
+        | "${app['sudo']}" "${app['tee']}" -a "${dict['file']}" >/dev/null
     return 0
 }

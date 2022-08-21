@@ -55,14 +55,14 @@ koopa_find_symlinks() {
         esac
     done
     koopa_assert_is_set \
-        '--source-prefix' "${dict[source_prefix]}" \
-        '--target-prefix' "${dict[target_prefix]}"
-    koopa_assert_is_dir "${dict[source_prefix]}" "${dict[target_prefix]}"
-    dict[source_prefix]="$(koopa_realpath "${dict[source_prefix]}")"
-    dict[target_prefix]="$(koopa_realpath "${dict[target_prefix]}")"
+        '--source-prefix' "${dict['source_prefix']}" \
+        '--target-prefix' "${dict['target_prefix']}"
+    koopa_assert_is_dir "${dict['source_prefix']}" "${dict['target_prefix']}"
+    dict[source_prefix]="$(koopa_realpath "${dict['source_prefix']}")"
+    dict[target_prefix]="$(koopa_realpath "${dict['target_prefix']}")"
     readarray -t symlinks <<< "$(
         koopa_find \
-            --prefix="${dict[target_prefix]}" \
+            --prefix="${dict['target_prefix']}" \
             --sort \
             --type='l' \
     )"
@@ -71,10 +71,10 @@ koopa_find_symlinks() {
         local symlink_real
         symlink_real="$(koopa_realpath "$symlink")"
         if koopa_str_detect_regex \
-            --pattern="^${dict[source_prefix]}/" \
+            --pattern="^${dict['source_prefix']}/" \
             --string="$symlink_real"
         then
-            if [[ "${dict[verbose]}" -eq 1 ]]
+            if [[ "${dict['verbose']}" -eq 1 ]]
             then
                 koopa_warn "${symlink} -> ${symlink_real}"
             fi

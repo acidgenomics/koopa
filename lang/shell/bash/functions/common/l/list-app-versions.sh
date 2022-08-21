@@ -10,20 +10,20 @@ koopa_list_app_versions() {
     declare -A dict=(
         [prefix]="$(koopa_app_prefix)"
     )
-    if [[ ! -d "${dict[prefix]}" ]]
+    if [[ ! -d "${dict['prefix']}" ]]
     then
-        koopa_alert_note "No apps are installed in '${dict[prefix]}'."
+        koopa_alert_note "No apps are installed in '${dict['prefix']}'."
         return 0
     fi
     dict[str]="$( \
         koopa_find \
             --max-depth=2 \
             --min-depth=2 \
-            --prefix="${dict[prefix]}" \
+            --prefix="${dict['prefix']}" \
             --sort \
             --type='d' \
     )"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_print "${dict[str]}"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }

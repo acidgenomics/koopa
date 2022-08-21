@@ -10,7 +10,7 @@ koopa_view_latest_tmp_log_file() {
     declare -A app=(
         [tail]="$(koopa_locate_tail)"
     )
-    [[ -x "${app[tail]}" ]] || return 1
+    [[ -x "${app['tail']}" ]] || return 1
     declare -A dict=(
         [tmp_dir]="${TMPDIR:-/tmp}"
         [user_id]="$(koopa_user_id)"
@@ -19,18 +19,18 @@ koopa_view_latest_tmp_log_file() {
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
-            --pattern="koopa-${dict[user_id]}-*" \
-            --prefix="${dict[tmp_dir]}" \
+            --pattern="koopa-${dict['user_id']}-*" \
+            --prefix="${dict['tmp_dir']}" \
             --sort \
             --type='f' \
-        | "${app[tail]}" -n 1 \
+        | "${app['tail']}" -n 1 \
     )"
-    if [[ ! -f "${dict[log_file]}" ]]
+    if [[ ! -f "${dict['log_file']}" ]]
     then
-        koopa_stop "No koopa log file detected in '${dict[tmp_dir]}'."
+        koopa_stop "No koopa log file detected in '${dict['tmp_dir']}'."
     fi
-    koopa_alert "Viewing '${dict[log_file]}'."
+    koopa_alert "Viewing '${dict['log_file']}'."
     # The use of '+G' flag here forces pager to return at end of line.
-    koopa_pager +G "${dict[log_file]}"
+    koopa_pager +G "${dict['log_file']}"
     return 0
 }

@@ -9,14 +9,14 @@ koopa_aws_batch_list_jobs() {
     local -A app=(
         [aws]="$(koopa_locate_aws)"
     )
-    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || return 1
     local -A dict=(
         [account_id]="${AWS_BATCH_ACCOUNT_ID:-}"
         [profile]="${AWS_PROFILE:-}"
         [queue]="${AWS_BATCH_QUEUE:-}"
         [region]="${AWS_BATCH_REGION:-}"
     )
-    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     while (("$#"))
     do
         case "$1" in
@@ -60,18 +60,18 @@ koopa_aws_batch_list_jobs() {
         esac
     done
     koopa_assert_is_set \
-        '--account-id or AWS_BATCH_ACCOUNT_ID' "${dict[account_id]:-}" \
-        '--queue or AWS_BATCH_QUEUE' "${dict[queue]:-}" \
-        '--region or AWS_BATCH_REGION' "${dict[region]:-}" \
-        '--profile or AWS_PROFILE' "${dict[profile]:-}"
-    koopa_h1 "Checking AWS Batch job status for '${dict[profile]}' profile."
+        '--account-id or AWS_BATCH_ACCOUNT_ID' "${dict['account_id']:-}" \
+        '--queue or AWS_BATCH_QUEUE' "${dict['queue']:-}" \
+        '--region or AWS_BATCH_REGION' "${dict['region']:-}" \
+        '--profile or AWS_PROFILE' "${dict['profile']:-}"
+    koopa_h1 "Checking AWS Batch job status for '${dict['profile']}' profile."
     job_queue_array=(
         'arn'
         'aws'
         'batch'
-        "${dict[region]}"
-        "${dict[account_id]}"
-        "job-queue/${dict[queue]}"
+        "${dict['region']}"
+        "${dict['account_id']}"
+        "job-queue/${dict['queue']}"
     )
     status_array=(
         'SUBMITTED'
@@ -86,9 +86,9 @@ koopa_aws_batch_list_jobs() {
     for status in "${status_array[@]}"
     do
         koopa_h2 "$status"
-        "${app[aws]}" --profile="${dict[profile]}" \
+        "${app['aws']}" --profile="${dict['profile']}" \
             batch list-jobs \
-                --job-queue "${dict[job_queue]}" \
+                --job-queue "${dict['job_queue']}" \
                 --job-status "$status"
     done
     return 0

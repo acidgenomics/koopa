@@ -24,8 +24,8 @@ koopa_macos_brew_cask_outdated() {
         [brew]="$(koopa_locate_brew)"
         [cut]="$(koopa_locate_cut)"
     )
-    [[ -x "${app[brew]}" ]] || return 1
-    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
     declare -A dict
     # Whether we want to keep unversioned 'latest' casks returned with
     # '--greedy'. This tends to include font casks and the Google Cloud SDK,
@@ -34,22 +34,22 @@ koopa_macos_brew_cask_outdated() {
     dict[keep_latest]=0
     # This approach keeps the version information, which we can parse.
     dict[tmp_file]="$(koopa_tmp_file)"
-    script -q "${dict[tmp_file]}" \
-        "${app[brew]}" outdated --cask --greedy >/dev/null
-    if [[ "${dict[keep_latest]}" -eq 1 ]]
+    script -q "${dict['tmp_file']}" \
+        "${app['brew']}" outdated --cask --greedy >/dev/null
+    if [[ "${dict['keep_latest']}" -eq 1 ]]
     then
-        dict[str]="$("${app[cut]}" -d ' ' -f '1' < "${dict[tmp_file]}")"
+        dict[str]="$("${app['cut']}" -d ' ' -f '1' < "${dict['tmp_file']}")"
     else
         dict[str]="$( \
             koopa_grep \
-                --file="${dict[tmp_file]}" \
+                --file="${dict['tmp_file']}" \
                 --invert-match \
                 --pattern='(latest)' \
-            | "${app[cut]}" -d ' ' -f '1' \
+            | "${app['cut']}" -d ' ' -f '1' \
         )"
     fi
-    koopa_rm "${dict[tmp_file]}"
-    [[ -n "${dict[str]}" ]] || return 0
-    koopa_print "${dict[str]}"
+    koopa_rm "${dict['tmp_file']}"
+    [[ -n "${dict['str']}" ]] || return 0
+    koopa_print "${dict['str']}"
     return 0
 }

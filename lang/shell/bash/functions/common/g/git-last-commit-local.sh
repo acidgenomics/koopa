@@ -17,7 +17,7 @@ koopa_git_last_commit_local() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         [ref]='HEAD'
     )
@@ -33,7 +33,7 @@ koopa_git_last_commit_local() {
             local x
             koopa_cd "$repo"
             koopa_is_git_repo || return 1
-            x="$("${app[git]}" rev-parse "${dict[ref]}" 2>/dev/null || true)"
+            x="$("${app['git']}" rev-parse "${dict['ref']}" 2>/dev/null || true)"
             [[ -n "$x" ]] || return 1
             koopa_print "$x"
         done

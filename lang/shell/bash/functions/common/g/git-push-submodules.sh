@@ -9,7 +9,7 @@ koopa_git_push_submodules() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -20,9 +20,9 @@ koopa_git_push_submodules() {
         for repo in "${repos[@]}"
         do
             koopa_cd "$repo"
-            "${app[git]}" submodule update --remote --merge
-            "${app[git]}" commit -m 'Update submodules.'
-            "${app[git]}" push
+            "${app['git']}" submodule update --remote --merge
+            "${app['git']}" commit -m 'Update submodules.'
+            "${app['git']}" push
         done
     )
     return 0

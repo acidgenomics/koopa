@@ -6,7 +6,7 @@ koopa_git_commit_date() {
     # @note Updated 2022-08-04.
     #
     # Alternative approach:
-    # > "${app[git]}" log -1 --format='%cd'
+    # > "${app['git']}" log -1 --format='%cd'
     #
     # @examples
     # > koopa_git_last_commit_local "${HOME}/git/monorepo"
@@ -18,9 +18,9 @@ koopa_git_commit_date() {
         [git]="$(koopa_locate_git)"
         [xargs]="$(koopa_locate_xargs)"
     )
-    [[ -x "${app[date]}" ]] || return 1
-    [[ -x "${app[git]}" ]] || return 1
-    [[ -x "${app[xargs]}" ]] || return 1
+    [[ -x "${app['date']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -34,9 +34,9 @@ koopa_git_commit_date() {
             koopa_cd "$repo"
             koopa_is_git_repo || return 1
             x="$( \
-                "${app[git]}" log -1 --format='%at' \
-                    | "${app[xargs]}" -I '{}' \
-                        "${app[date]}" -d '@{}' '+%Y-%m-%d' \
+                "${app['git']}" log -1 --format='%at' \
+                    | "${app['xargs']}" -I '{}' \
+                        "${app['date']}" -d '@{}' '+%Y-%m-%d' \
                     2>/dev/null || true \
             )"
             [[ -n "$x" ]] || return 1

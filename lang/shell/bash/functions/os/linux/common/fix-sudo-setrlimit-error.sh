@@ -20,7 +20,7 @@ koopa_linux_fix_sudo_setrlimit_error() {
         [string]='Set disable_coredump false'
     )
     koopa_sudo_append_string \
-        --file="${dict[file]}" \
-        --string="${dict[string]}"
+        --file="${dict['file']}" \
+        --string="${dict['string']}"
     return 0
 }

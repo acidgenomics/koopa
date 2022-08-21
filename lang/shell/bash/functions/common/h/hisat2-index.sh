@@ -31,7 +31,7 @@ koopa_hisat2_index() {
     declare -A app=(
         [hisat2_build]="$(koopa_locate_hisat2_build)"
     )
-    [[ -x "${app[hisat2_build]}" ]] || return 1
+    [[ -x "${app['hisat2_build']}" ]] || return 1
     declare -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         [genome_fasta_file]=''
@@ -69,30 +69,30 @@ koopa_hisat2_index() {
         esac
     done
     koopa_assert_is_set \
-        '--genome-fasta-file' "${dict[genome_fasta_file]}" \
-        '--output-dir' "${dict[output_dir]}"
-    dict[ht2_base]="${dict[output_dir]}/index"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--output-dir' "${dict['output_dir']}"
+    dict[ht2_base]="${dict['output_dir']}/index"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "'hisat2-build' requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "'hisat2-build' requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_file "${dict[genome_fasta_file]}"
+    koopa_assert_is_file "${dict['genome_fasta_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.fa\.gz$' \
-        --string="${dict[genome_fasta_file]}"
-    koopa_assert_is_not_dir "${dict[output_dir]}"
-    koopa_alert "Generating HISAT2 index at '${dict[output_dir]}'."
+        --string="${dict['genome_fasta_file']}"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    koopa_alert "Generating HISAT2 index at '${dict['output_dir']}'."
     index_args+=(
         # FIXME Need to set '--ss' here.
         # FIXME Need to set '--exons' here.
-        '--seed' "${dict[seed]}"
+        '--seed' "${dict['seed']}"
         '-f'
-        '-p' "${dict[threads]}"
-        "${dict[genome_fasta_file]}"
-        "${dict[ht2_base]}"
+        '-p' "${dict['threads']}"
+        "${dict['genome_fasta_file']}"
+        "${dict['ht2_base']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    "${app[hisat2_build]}" "${index_args[@]}"
-    koopa_alert_success "HISAT2 index created at '${dict[output_dir]}'."
+    "${app['hisat2_build']}" "${index_args[@]}"
+    koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
 }

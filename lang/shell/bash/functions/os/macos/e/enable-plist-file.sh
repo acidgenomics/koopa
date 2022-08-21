@@ -11,8 +11,8 @@ koopa_macos_enable_plist_file() {
         [launchctl]="$(koopa_macos_locate_launchctl)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[launchctl]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['launchctl']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     koopa_assert_is_not_file "$@"
     for file in "$@"
     do
@@ -22,40 +22,40 @@ koopa_macos_enable_plist_file() {
             [enabled_file]="$file"
             [sudo]=1
         )
-        dict[disabled_file]="$(koopa_dirname "${dict[enabled_file]}")/\
-disabled/$(koopa_basename "${dict[enabled_file]}")"
-        koopa_alert "Enabling '${dict[enabled_file]}'."
+        dict[disabled_file]="$(koopa_dirname "${dict['enabled_file']}")/\
+disabled/$(koopa_basename "${dict['enabled_file']}")"
+        koopa_alert "Enabling '${dict['enabled_file']}'."
         if koopa_str_detect_fixed \
-            --string="${dict[enabled_file]}" \
+            --string="${dict['enabled_file']}" \
             --pattern='/LaunchDaemons/'
         then
             dict[daemon]=1
         fi
         if koopa_str_detect_regex \
-            --string="${dict[enabled_file]}" \
+            --string="${dict['enabled_file']}" \
             --pattern="^${HOME:?}"
         then
             dict[sudo]=0
         fi
-        case "${dict[sudo]}" in
+        case "${dict['sudo']}" in
             '0')
                 koopa_mv \
-                    "${dict[disabled_file]}" \
-                    "${dict[enabled_file]}"
-                if [[ "${dict[daemon]}" -eq 1 ]]
+                    "${dict['disabled_file']}" \
+                    "${dict['enabled_file']}"
+                if [[ "${dict['daemon']}" -eq 1 ]]
                 then
-                    "${app[launchctl]}" \
-                        load "${dict[enabled_file]}"
+                    "${app['launchctl']}" \
+                        load "${dict['enabled_file']}"
                 fi
                 ;;
             '1')
                 koopa_mv --sudo \
-                    "${dict[disabled_file]}" \
-                    "${dict[enabled_file]}"
-                if [[ "${dict[daemon]}" -eq 1 ]]
+                    "${dict['disabled_file']}" \
+                    "${dict['enabled_file']}"
+                if [[ "${dict['daemon']}" -eq 1 ]]
                 then
-                    "${app[sudo]}" "${app[launchctl]}" \
-                        load "${dict[enabled_file]}"
+                    "${app['sudo']}" "${app['launchctl']}" \
+                        load "${dict['enabled_file']}"
                 fi
                 ;;
         esac

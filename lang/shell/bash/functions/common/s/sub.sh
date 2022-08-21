@@ -22,7 +22,7 @@ koopa_sub() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
-    [[ -x "${app[perl]}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
         [global]=0
         [pattern]=''
@@ -75,22 +75,22 @@ koopa_sub() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--pattern' "${dict[pattern]}"
+    koopa_assert_is_set '--pattern' "${dict['pattern']}"
     if [[ "${#pos[@]}" -eq 0 ]]
     then
         readarray -t pos <<< "$(</dev/stdin)"
     fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    [[ "${dict[global]}" -eq 1 ]] && dict[perl_tail]='g'
-    if [[ "${dict[regex]}" -eq 1 ]]
+    [[ "${dict['global']}" -eq 1 ]] && dict[perl_tail]='g'
+    if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict[expr]="s/${dict[pattern]}/${dict[replacement]}/${dict[perl_tail]}"
+        dict[expr]="s/${dict['pattern']}/${dict['replacement']}/${dict['perl_tail']}"
     else
         dict[expr]=" \
-            \$pattern = quotemeta '${dict[pattern]}'; \
-            \$replacement = '${dict[replacement]}'; \
-            s/\$pattern/\$replacement/${dict[perl_tail]}; \
+            \$pattern = quotemeta '${dict['pattern']}'; \
+            \$replacement = '${dict['replacement']}'; \
+            s/\$pattern/\$replacement/${dict['perl_tail']}; \
         "
     fi
     # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
@@ -98,6 +98,6 @@ koopa_sub() {
     # locale issues on machines with non-standard configurations, such as the
     # current biocontainers Docker image.
     printf '%s' "$@" | \
-        LANG=C "${app[perl]}" -p -e "${dict[expr]}"
+        LANG=C "${app['perl']}" -p -e "${dict['expr']}"
     return 0
 }

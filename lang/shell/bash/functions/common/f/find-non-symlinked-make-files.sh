@@ -13,7 +13,7 @@ koopa_find_non_symlinked_make_files() {
     )
     find_args=(
         '--min-depth' 1
-        '--prefix' "${dict[make_prefix]}"
+        '--prefix' "${dict['make_prefix']}"
         '--sort'
         '--type' 'f'
     )
@@ -32,7 +32,7 @@ koopa_find_non_symlinked_make_files() {
             '--exclude' 'texlive/**'
         )
     fi
-    if [[ "${dict[brew_prefix]}" == "${dict[make_prefix]}" ]]
+    if [[ "${dict['brew_prefix']}" == "${dict['make_prefix']}" ]]
     then
         find_args+=(
             '--exclude' 'Caskroom/**'
@@ -42,6 +42,6 @@ koopa_find_non_symlinked_make_files() {
         )
     fi
     dict[out]="$(koopa_find "${find_args[@]}")"
-    koopa_print "${dict[out]}"
+    koopa_print "${dict['out']}"
     return 0
 }

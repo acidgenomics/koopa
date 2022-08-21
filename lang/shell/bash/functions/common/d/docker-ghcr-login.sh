@@ -12,16 +12,16 @@ koopa_docker_ghcr_login() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
-    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
         [pat]="${GHCR_PAT:?}"
         [server]='ghcr.io'
         [user]="${GHCR_USER:?}"
     )
-    koopa_print "${dict[pat]}" \
-        | "${app[docker]}" login \
-            "${dict[server]}" \
-            -u "${dict[user]}" \
+    koopa_print "${dict['pat']}" \
+        | "${app['docker']}" login \
+            "${dict['server']}" \
+            -u "${dict['user']}" \
             --password-stdin
     return 0
 }

@@ -32,23 +32,23 @@ koopa_conda_activate_env() {
         [env_name]="${1:?}"
         [nounset]="$(koopa_boolean_nounset)"
     )
-    dict[env_prefix]="$(koopa_conda_env_prefix "${dict[env_name]}" || true)"
-    if [[ ! -d "${dict[env_prefix]}" ]]
+    dict[env_prefix]="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
+    if [[ ! -d "${dict['env_prefix']}" ]]
     then
         koopa_alert_info "Attempting to install missing conda \
-environment '${dict[env_name]}'."
-        koopa_conda_create_env "${dict[env_name]}"
-        dict[env_prefix]="$(koopa_conda_env_prefix "${dict[env_name]}" || true)"
+environment '${dict['env_name']}'."
+        koopa_conda_create_env "${dict['env_name']}"
+        dict[env_prefix]="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
     fi
-    if [[ ! -d "${dict[env_prefix]}" ]]
+    if [[ ! -d "${dict['env_prefix']}" ]]
     then
-        koopa_stop "'${dict[env_name]}' conda environment is not installed."
+        koopa_stop "'${dict['env_name']}' conda environment is not installed."
     fi
-    [[ "${dict[nounset]}" -eq 1 ]] && set +o nounset
+    [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
     koopa_is_conda_env_active && koopa_conda_deactivate
     koopa_activate_conda
     koopa_assert_is_function 'conda'
-    conda activate "${dict[env_prefix]}"
-    [[ "${dict[nounset]}" -eq 1 ]] && set -o nounset
+    conda activate "${dict['env_prefix']}"
+    [[ "${dict['nounset']}" -eq 1 ]] && set -o nounset
     return 0
 }

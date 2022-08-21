@@ -13,12 +13,12 @@ koopa_r_package_version() {
     declare -A app=(
         [rscript]="$(koopa_locate_rscript)"
     )
-    [[ -x "${app[rscript]}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || return 1
     pkgs=("$@")
     koopa_is_r_package_installed "${pkgs[@]}" || return 1
     vec="$(koopa_r_paste_to_vector "${pkgs[@]}")"
     str="$( \
-        "${app[rscript]}" -e " \
+        "${app['rscript']}" -e " \
             cat(vapply( \
                 X = ${vec}, \
                 FUN = function(x) { \

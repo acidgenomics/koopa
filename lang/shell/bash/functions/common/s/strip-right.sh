@@ -42,7 +42,7 @@ koopa_strip_right() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--pattern' "${dict[pattern]}"
+    koopa_assert_is_set '--pattern' "${dict['pattern']}"
     if [[ "${#pos[@]}" -eq 0 ]]
     then
         readarray -t pos <<< "$(</dev/stdin)"
@@ -50,7 +50,7 @@ koopa_strip_right() {
     set -- "${pos[@]}"
     for str in "$@"
     do
-        printf '%s\n' "${str%%"${dict[pattern]}"}"
+        printf '%s\n' "${str%%"${dict['pattern']}"}"
     done
     return 0
 }

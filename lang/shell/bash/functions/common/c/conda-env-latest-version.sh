@@ -12,17 +12,17 @@ koopa_conda_env_latest_version() {
         [conda]="$(koopa_locate_mamba_or_conda)"
         [tail]="$(koopa_locate_tail)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[conda]}" ]] || return 1
-    [[ -x "${app[tail]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['conda']}" ]] || return 1
+    [[ -x "${app['tail']}" ]] || return 1
     declare -A dict=(
         [env_name]="${1:?}"
     )
     # shellcheck disable=SC2016
     str="$( \
-        "${app[conda]}" search --quiet "${dict[env_name]}" \
-            | "${app[tail]}" -n 1 \
-            | "${app[awk]}" '{print $2}'
+        "${app['conda']}" search --quiet "${dict['env_name']}" \
+            | "${app['tail']}" -n 1 \
+            | "${app['awk']}" '{print $2}'
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

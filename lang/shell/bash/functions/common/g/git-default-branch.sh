@@ -7,8 +7,8 @@ koopa_git_default_branch() {
     #
     # Alternate approach:
     # > x="$( \
-    # >     "${app[git]}" symbolic-ref "refs/remotes/${remote}/HEAD" \
-    # >         | "${app[sed]}" "s@^refs/remotes/${remote}/@@" \
+    # >     "${app['git']}" symbolic-ref "refs/remotes/${remote}/HEAD" \
+    # >         | "${app['sed']}" "s@^refs/remotes/${remote}/@@" \
     # > )"
     #
     # @seealso
@@ -23,8 +23,8 @@ koopa_git_default_branch() {
         [git]="$(koopa_locate_git)"
         [sed]="$(koopa_locate_sed)"
     )
-    [[ -x "${app[git]}" ]] || return 1
-    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
         [remote]='origin'
     )
@@ -41,9 +41,9 @@ koopa_git_default_branch() {
             koopa_cd "$repo"
             koopa_is_git_repo || return 1
             x="$( \
-                "${app[git]}" remote show "${dict[remote]}" \
+                "${app['git']}" remote show "${dict['remote']}" \
                     | koopa_grep --pattern='HEAD branch' \
-                    | "${app[sed]}" 's/.*: //' \
+                    | "${app['sed']}" 's/.*: //' \
             )"
             [[ -n "$x" ]] || return 1
             koopa_print "$x"

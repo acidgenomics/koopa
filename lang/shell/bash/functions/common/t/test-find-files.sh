@@ -27,7 +27,7 @@ koopa_test_find_files() {
             --exclude='opt/**' \
             --exclude='tests/**' \
             --exclude='todo.org' \
-            --prefix="${dict[prefix]}" \
+            --prefix="${dict['prefix']}" \
             --type='f' \
     )"
     if koopa_is_array_empty "${files[@]:-}"

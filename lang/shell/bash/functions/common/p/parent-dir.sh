@@ -11,7 +11,7 @@ koopa_parent_dir() {
     declare -A app=(
         [sed]="$(koopa_locate_sed)"
     )
-    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
         [cd_tail]=''
         [n]=1
@@ -42,20 +42,20 @@ koopa_parent_dir() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    [[ "${dict[n]}" -ge 1 ]] || dict[n]=1
-    if [[ "${dict[n]}" -ge 2 ]]
+    [[ "${dict['n']}" -ge 1 ]] || dict[n]=1
+    if [[ "${dict['n']}" -ge 2 ]]
     then
         dict[n]="$((dict[n]-1))"
         dict[cd_tail]="$( \
-            printf "%${dict[n]}s" \
-            | "${app[sed]}" 's| |/..|g' \
+            printf "%${dict['n']}s" \
+            | "${app['sed']}" 's| |/..|g' \
         )"
     fi
     for file in "$@"
     do
         [[ -e "$file" ]] || return 1
         parent="$(koopa_dirname "$file")"
-        parent="${parent}${dict[cd_tail]}"
+        parent="${parent}${dict['cd_tail']}"
         parent="$(koopa_cd "$parent" && pwd -P)"
         koopa_print "$parent"
     done

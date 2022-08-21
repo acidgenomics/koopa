@@ -10,7 +10,7 @@ koopa_gpg_reload() {
     declare -A app=(
         [gpg_connect_agent]="$(koopa_locate_gpg_connect_agent)"
     )
-    [[ -x "${app[gpg_connect_agent]}" ]] || return 1
-    "${app[gpg_connect_agent]}" reloadagent '/bye'
+    [[ -x "${app['gpg_connect_agent']}" ]] || return 1
+    "${app['gpg_connect_agent']}" reloadagent '/bye'
     return 0
 }

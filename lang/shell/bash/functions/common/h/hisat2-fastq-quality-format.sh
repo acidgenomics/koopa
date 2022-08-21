@@ -12,9 +12,9 @@ koopa_hisat2_fastq_quality_format() {
     declare -A dict=(
         [fastq_file]="${1:?}"
     )
-    koopa_assert_is_file "${dict[fastq_file]}"
-    dict[format]="$(koopa_fastq_detect_quality_format "${dict[fastq_file]}")"
-    case "${dict[format]}" in
+    koopa_assert_is_file "${dict['fastq_file']}"
+    dict[format]="$(koopa_fastq_detect_quality_format "${dict['fastq_file']}")"
+    case "${dict['format']}" in
         'Phread+33')
             dict[flag]='--phred33'
             ;;
@@ -25,6 +25,6 @@ koopa_hisat2_fastq_quality_format() {
             return 0
             ;;
     esac
-    koopa_print "${dict[flag]}"
+    koopa_print "${dict['flag']}"
     return 0
 }

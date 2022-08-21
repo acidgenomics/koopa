@@ -38,13 +38,13 @@ koopa_write_string() {
         esac
     done
     koopa_assert_is_set \
-        '--file' "${dict[file]}" \
-        '--string' "${dict[string]}"
-    dict[parent_dir]="$(koopa_dirname "${dict[file]}")"
-    if [[ ! -d "${dict[parent_dir]}" ]]
+        '--file' "${dict['file']}" \
+        '--string' "${dict['string']}"
+    dict[parent_dir]="$(koopa_dirname "${dict['file']}")"
+    if [[ ! -d "${dict['parent_dir']}" ]]
     then
-        koopa_mkdir "${dict[parent_dir]}"
+        koopa_mkdir "${dict['parent_dir']}"
     fi
-    koopa_print "${dict[string]}" > "${dict[file]}"
+    koopa_print "${dict['string']}" > "${dict['file']}"
     return 0
 }

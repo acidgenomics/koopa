@@ -13,28 +13,28 @@ koopa_variable() {
         [cut]="$(koopa_locate_cut)"
         [head]="$(koopa_locate_head)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
-    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
         [key]="${1:?}"
         [include_prefix]="$(koopa_include_prefix)"
     )
-    dict[file]="${dict[include_prefix]}/variables.txt"
-    koopa_assert_is_file "${dict[file]}"
+    dict[file]="${dict['include_prefix']}/variables.txt"
+    koopa_assert_is_file "${dict['file']}"
     dict[str]="$( \
         koopa_grep \
-            --file="${dict[file]}" \
+            --file="${dict['file']}" \
             --only-matching \
-            --pattern="^${dict[key]}=\"[^\"]+\"" \
+            --pattern="^${dict['key']}=\"[^\"]+\"" \
             --regex \
     )"
-    [[ -n "${dict[str]}" ]] || return 1
+    [[ -n "${dict['str']}" ]] || return 1
     dict[str]="$( \
-        koopa_print "${dict[str]}" \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d '"' -f '2' \
+        koopa_print "${dict['str']}" \
+            | "${app['head']}" -n 1 \
+            | "${app['cut']}" -d '"' -f '2' \
     )"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_print "${dict[str]}"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }

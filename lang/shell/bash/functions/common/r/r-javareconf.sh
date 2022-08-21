@@ -34,45 +34,45 @@ koopa_r_javareconf() {
         [r]="${1:?}"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[r]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [java_home]="$(koopa_java_prefix)"
     )
-    if [[ ! -d "${dict[java_home]}" ]]
+    if [[ ! -d "${dict['java_home']}" ]]
     then
         koopa_alert_note 'Skipping R Java configuration.'
         return 0
     fi
-    dict[java_home]="$(koopa_realpath "${dict[java_home]}")"
-    dict[jar]="${dict[java_home]}/bin/jar"
-    dict[java]="${dict[java_home]}/bin/java"
-    dict[javac]="${dict[java_home]}/bin/javac"
+    dict[java_home]="$(koopa_realpath "${dict['java_home']}")"
+    dict[jar]="${dict['java_home']}/bin/jar"
+    dict[java]="${dict['java_home']}/bin/java"
+    dict[javac]="${dict['java_home']}/bin/javac"
     # javah was deprecated in JDK 9 in favor if 'javac -h', but this approach
     # doesn't currently work with R.
-    # > dict[javah]="${dict[javac]} -h"
+    # > dict[javah]="${dict['javac']} -h"
     dict[javah]=''
     koopa_alert 'Updating R Java configuration.'
     koopa_dl \
-        'JAR' "${dict[jar]}" \
-        'JAVA' "${dict[java]}" \
-        'JAVAC' "${dict[javac]}" \
-        'JAVAH' "${dict[javah]}" \
-        'JAVA_HOME' "${dict[java_home]}" \
-        'R' "${app[r]}"
-    if koopa_is_koopa_app "${app[r]}"
+        'JAR' "${dict['jar']}" \
+        'JAVA' "${dict['java']}" \
+        'JAVAC' "${dict['javac']}" \
+        'JAVAH' "${dict['javah']}" \
+        'JAVA_HOME' "${dict['java_home']}" \
+        'R' "${app['r']}"
+    if koopa_is_koopa_app "${app['r']}"
     then
-        r_cmd=("${app[r]}")
+        r_cmd=("${app['r']}")
     else
         koopa_assert_is_admin
-        r_cmd=("${app[sudo]}" "${app[r]}")
+        r_cmd=("${app['sudo']}" "${app['r']}")
     fi
     java_args=(
-        "JAR=${dict[jar]}"
-        "JAVA=${dict[java]}"
-        "JAVAC=${dict[javac]}"
-        "JAVAH=${dict[javah]}"
-        "JAVA_HOME=${dict[java_home]}"
+        "JAR=${dict['jar']}"
+        "JAVA=${dict['java']}"
+        "JAVAC=${dict['javac']}"
+        "JAVAH=${dict['javah']}"
+        "JAVA_HOME=${dict['java_home']}"
     )
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     return 0

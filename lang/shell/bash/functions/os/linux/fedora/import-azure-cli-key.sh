@@ -12,11 +12,11 @@ koopa_fedora_import_azure_cli_key() {
         [rpm]="$(koopa_fedora_locate_rpm)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[rpm]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['rpm']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [key]='https://packages.microsoft.com/keys/microsoft.asc'
     )
-    "${app[sudo]}" "${app[rpm]}" --import "${dict[key]}"
+    "${app['sudo']}" "${app['rpm']}" --import "${dict['key']}"
     return 0
 }

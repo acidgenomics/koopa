@@ -41,15 +41,15 @@ __koopa_unlink_in_dir() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    koopa_assert_is_set '--prefix' "${dict[prefix]}"
-    koopa_assert_is_dir "${dict[prefix]}"
-    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
+    koopa_assert_is_set '--prefix' "${dict['prefix']}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
     names=("$@")
     for name in "${names[@]}"
     do
         local file
-        file="${dict[prefix]}/${name}"
-        if [[ "${dict[allow_missing]}" -eq 1 ]]
+        file="${dict['prefix']}/${name}"
+        if [[ "${dict['allow_missing']}" -eq 1 ]]
         then
             if [[ -L "$file" ]]
             then

@@ -34,23 +34,23 @@ koopa_extract() {
                 case "$file" in
                     *'.bz2')
                         app[cmd2]="$(koopa_locate_bzip2)"
-                        [[ -x "${app[cmd2]}" ]] || return 1
+                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
-                            "$(koopa_dirname "${app[cmd2]}")"
+                            "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
                     *'.gz')
                         app[cmd2]="$(koopa_locate_gzip)"
-                        [[ -x "${app[cmd2]}" ]] || return 1
+                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
-                            "$(koopa_dirname "${app[cmd2]}")"
+                            "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
                         ;;
                     *'.xz')
                         app[cmd2]="$(koopa_locate_xz)"
-                        [[ -x "${app[cmd2]}" ]] || return 1
+                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
-                            "$(koopa_dirname "${app[cmd2]}")"
+                            "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-J') # '--xz'.
                         ;;
                 esac
@@ -119,9 +119,9 @@ koopa_extract() {
                 koopa_stop "Unsupported extension: '${file}'."
                 ;;
         esac
-        [[ -x "${app[cmd]}" ]] || return 1
-        "${app[cmd]}" "${cmd_args[@]}"
+        [[ -x "${app['cmd']}" ]] || return 1
+        "${app['cmd']}" "${cmd_args[@]}"
     done
-    export PATH="${dict[orig_path]}"
+    export PATH="${dict['orig_path']}"
     return 0
 }

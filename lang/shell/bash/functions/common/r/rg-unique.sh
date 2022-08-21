@@ -11,21 +11,21 @@ koopa_rg_unique() {
         [rg]="$(koopa_locate_rg)"
         [sort]="$(koopa_locate_sort)"
     )
-    [[ -x "${app[rg]}" ]] || return 1
-    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app['rg']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
         [pattern]="${1:?}"
     )
     dict[str]="$( \
-        "${app[rg]}" \
+        "${app['rg']}" \
             --no-filename \
             --no-line-number \
             --only-matching \
             --sort 'none' \
-            "${dict[pattern]}" \
-        | "${app[sort]}" --unique \
+            "${dict['pattern']}" \
+        | "${app['sort']}" --unique \
     )"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_print "${dict[str]}"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }

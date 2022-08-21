@@ -11,11 +11,11 @@ koopa_imagemagick_version() {
         [cut]="$(koopa_locate_cut)"
         [magick_core_config]="$(koopa_locate_magick_core_config)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
-    [[ -x "${app[magick_core_config]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['magick_core_config']}" ]] || return 1
     str="$( \
-        "${app[magick_core_config]}" --version \
-            | "${app[cut]}" -d ' ' -f 1 \
+        "${app['magick_core_config']}" --version \
+            | "${app['cut']}" -d ' ' -f 1 \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
