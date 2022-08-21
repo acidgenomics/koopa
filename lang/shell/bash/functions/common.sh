@@ -7428,7 +7428,7 @@ koopa_enable_shell_for_all_users() {
     done
     if [[ "$#" -eq 1 ]]
     then
-        koopa_alert_info "Run 'chsh -s ${apps['0']} ${dict['user']}' to change \
+        koopa_alert_info "Run 'chsh -s ${apps[0]} ${dict['user']}' to change \
 the default shell."
     fi
     return 0
@@ -14053,7 +14053,7 @@ koopa_is_array_non_empty() {
     [[ "$#" -gt 0 ]] || return 1
     arr=("$@")
     [[ "${#arr[@]}" -gt 0 ]] || return 1
-    [[ -n "${arr['0']}" ]] || return 1
+    [[ -n "${arr[0]}" ]] || return 1
     return 0
 }
 
