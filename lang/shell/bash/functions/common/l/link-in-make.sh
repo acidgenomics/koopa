@@ -74,7 +74,7 @@ koopa_link_in_make() {
     then
         for i in "${!include_arr[@]}"
         do
-            files_arr['i']="${dict['app_prefix']}/${include_arr['i']}"
+            files_arr[$i]="${dict['app_prefix']}/${include_arr[$i]}"
         done
     else
         find_args=(
@@ -88,7 +88,7 @@ koopa_link_in_make() {
         then
             for i in "${!exclude_arr[@]}"
             do
-                find_args+=("--exclude=${exclude_arr['i']}")
+                find_args+=("--exclude=${exclude_arr[$i]}")
             done
         fi
         readarray -t files_arr <<< "$(koopa_find "${find_args[@]}")"
