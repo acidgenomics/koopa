@@ -16,6 +16,6 @@ main() {
     declare -A dict=(
         [prefix]="${UPDATE_PREFIX:?}"
     )
-    koopa_git_pull "${dict[prefix]}"
+    koopa_git_pull "${dict['prefix']}"
     return 0
 }

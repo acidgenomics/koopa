@@ -12,10 +12,10 @@ main() {
         [sudo]="$(koopa_locate_sudo)"
         [tlmgr]="$(koopa_locate_tlmgr)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tlmgr]}" ]] || return 1
-    "${app[sudo]}" "${app[tlmgr]}" update --self
-    "${app[sudo]}" "${app[tlmgr]}" update --list
-    "${app[sudo]}" "${app[tlmgr]}" update --all
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tlmgr']}" ]] || return 1
+    "${app['sudo']}" "${app['tlmgr']}" update --self
+    "${app['sudo']}" "${app['tlmgr']}" update --list
+    "${app['sudo']}" "${app['tlmgr']}" update --all
     return 0
 }
