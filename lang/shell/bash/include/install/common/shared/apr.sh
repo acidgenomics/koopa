@@ -20,13 +20,13 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     if koopa_is_macos
     then
         app[autoreconf]="$(koopa_locate_autoreconf)"
         app[patch]="$(koopa_locate_patch)"
-        [[ -x "${app[autoreconf]}" ]] || return 1
-        [[ -x "${app[patch]}" ]] || return 1
+        [[ -x "${app['autoreconf']}" ]] || return 1
+        [[ -x "${app['patch']}" ]] || return 1
     fi
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
@@ -34,23 +34,23 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
-    dict[url]="https://archive.apache.org/dist/${dict[name]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.bz2"
+    dict[url]="https://archive.apache.org/dist/${dict['name']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
     )
     if koopa_is_macos
     then
         # Apply r1871981 which fixes a compile error on macOS 11.0.
-        koopa_cd "${dict[name]}-${dict[version]}"
+        koopa_cd "${dict['name']}-${dict['version']}"
         koopa_download \
             "https://raw.githubusercontent.com/Homebrew/\
 formula-patches/7e2246542543bbd3111a4ec29f801e6e4d538f88/\
 apr/r1871981-macos11.patch" \
             'patch1.patch'
-        "${app[patch]}" -p0 --input='patch1.patch'
+        "${app['patch']}" -p0 --input='patch1.patch'
         # Apply r1882980+1882981 to fix implicit exit() declaration
         # Remove with the next release, along with autoconf dependency.
         koopa_cd ..
@@ -59,17 +59,17 @@ apr/r1871981-macos11.patch" \
 formula-patches/fa29e2e398c638ece1a72e7a4764de108bd09617/apr/\
 r1882980%2B1882981-configure.patch" \
             'patch2.patch'
-        "${app[patch]}" -p0 --input='patch2.patch'
-        koopa_cd "${dict[name]}-${dict[version]}"
+        "${app['patch']}" -p0 --input='patch2.patch'
+        koopa_cd "${dict['name']}-${dict['version']}"
         koopa_rm 'configure'
         # This step requires autoconf, automake, and libtool.
-        "${app[autoreconf]}" --install
+        "${app['autoreconf']}" --install
         koopa_cd ..
     fi
-    koopa_cd "${dict[name]}-${dict[version]}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

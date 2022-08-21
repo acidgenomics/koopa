@@ -17,8 +17,8 @@ main() {
         [url]='https://github.com/syl20bnr/spacemacs.git'
     )
     koopa_git_clone \
-        --branch="${dict[branch]}" \
-        --prefix="${dict[prefix]}" \
-        --url="${dict[url]}"
+        --branch="${dict['branch']}" \
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}"
     return 0
 }

@@ -28,7 +28,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [prefix]="${INSTALL_PREFIX:?}"
@@ -36,36 +36,36 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--enable-shared'
         '--enable-threads'
         '--enable-64bit'
     )
-    dict[tcl_file]="tcl${dict[version]}-src.tar.gz"
-    dict[tcl_url]="${dict[url_stem]}/${dict[tcl_file]}"
-    koopa_download "${dict[tcl_url]}" "${dict[tcl_file]}"
-    koopa_extract "${dict[tcl_file]}"
+    dict[tcl_file]="tcl${dict['version']}-src.tar.gz"
+    dict[tcl_url]="${dict['url_stem']}/${dict['tcl_file']}"
+    koopa_download "${dict['tcl_url']}" "${dict['tcl_file']}"
+    koopa_extract "${dict['tcl_file']}"
     (
-        koopa_cd "tcl${dict[version]}/unix"
+        koopa_cd "tcl${dict['version']}/unix"
         ./configure --help
         ./configure "${conf_args[@]}"
-        "${app[make]}" --jobs="${dict[jobs]}"
-        # > "${app[make]}" test
-        "${app[make]}" install
-        "${app[make]}" install-private-headers
+        "${app['make']}" --jobs="${dict['jobs']}"
+        # > "${app['make']}" test
+        "${app['make']}" install
+        "${app['make']}" install-private-headers
     )
-    dict[tk_file]="tk${dict[version]}-src.tar.gz"
-    dict[tk_url]="${dict[url_stem]}/${dict[tk_file]}"
-    koopa_download "${dict[tk_url]}" "${dict[tk_file]}"
-    koopa_extract "${dict[tk_file]}"
+    dict[tk_file]="tk${dict['version']}-src.tar.gz"
+    dict[tk_url]="${dict['url_stem']}/${dict['tk_file']}"
+    koopa_download "${dict['tk_url']}" "${dict['tk_file']}"
+    koopa_extract "${dict['tk_file']}"
     (
-        koopa_cd "tk${dict[version]}/unix"
+        koopa_cd "tk${dict['version']}/unix"
         ./configure --help
         ./configure "${conf_args[@]}"
-        "${app[make]}" --jobs="${dict[jobs]}"
-        # > "${app[make]}" test
-        "${app[make]}" install
-        "${app[make]}" install-private-headers
+        "${app['make']}" --jobs="${dict['jobs']}"
+        # > "${app['make']}" test
+        "${app['make']}" install
+        "${app['make']}" install-private-headers
     )
     return 0
 }

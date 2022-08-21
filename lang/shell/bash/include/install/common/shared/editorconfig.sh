@@ -24,8 +24,8 @@ main() {
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [name]='editorconfig-core-c'
         [pcre2]="$(koopa_app_prefix 'pcre2')"
@@ -33,28 +33,28 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict[version]}.tar.gz"
-    dict[url]="https://github.com/editorconfig/${dict[name]}/\
-archive/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="v${dict['version']}.tar.gz"
+    dict[url]="https://github.com/editorconfig/${dict['name']}/\
+archive/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    dict[pcre2_include_dir]="${dict[pcre2]}/include"
-    dict[pcre2_library]="${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
-    koopa_assert_is_dir "${dict[pcre2_include_dir]}"
-    koopa_assert_is_file "${dict[pcre2_library]}"
+    dict[pcre2_include_dir]="${dict['pcre2']}/include"
+    dict[pcre2_library]="${dict['pcre2']}/lib/libpcre2-8.${dict['shared_ext']}"
+    koopa_assert_is_dir "${dict['pcre2_include_dir']}"
+    koopa_assert_is_file "${dict['pcre2_library']}"
     cmake_args=(
         '-DCMAKE_INSTALL_LIBDIR=lib'
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
-        "-DCMAKE_LIBRARY_PATH=${dict[pcre2]}/lib"
-        "-DPCRE2_INCLUDE_DIR=${dict[pcre2_include_dir]}"
-        "-DPCRE2_LIBRARY=${dict[pcre2_library]}"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        "-DCMAKE_LIBRARY_PATH=${dict['pcre2']}/lib"
+        "-DPCRE2_INCLUDE_DIR=${dict['pcre2_include_dir']}"
+        "-DPCRE2_LIBRARY=${dict['pcre2_library']}"
     )
     koopa_print "${cmake_args[@]}"
-    "${app[cmake]}" .. "${cmake_args[@]}"
-    "${app[make]}" install
+    "${app['cmake']}" .. "${cmake_args[@]}"
+    "${app['make']}" install
     return 0
 }

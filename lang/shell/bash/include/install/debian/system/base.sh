@@ -33,8 +33,8 @@ main() {
         [dpkg]="$(koopa_debian_locate_dpkg)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[dpkg]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['dpkg']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [apt_enabled_repos]="$(koopa_debian_apt_enabled_repos)"
     )
@@ -263,10 +263,10 @@ main() {
     koopa_rm --sudo \
         '/var/cache/apt/'* \
         '/var/lib/dpkg/available'
-    "${app[sudo]}" "${app[dpkg]}" --clear-avail
+    "${app['sudo']}" "${app['dpkg']}" --clear-avail
     if koopa_is_ubuntu && \
         ! koopa_str_detect_fixed \
-            --string="${dict[apt_enabled_repos]}" \
+            --string="${dict['apt_enabled_repos']}" \
             --pattern='universe'
     then
         koopa_stop \

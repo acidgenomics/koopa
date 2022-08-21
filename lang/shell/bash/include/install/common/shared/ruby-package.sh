@@ -6,10 +6,10 @@ main() {
     # @note Updated 2022-07-11.
     #
     # Alternative approach using gem:
-    # > "${app[gem]}" install \
-    # >     "${dict[name]}" \
-    # >     --version "${dict[version]}" \
-    # >     --install-dir "${dict[prefix]}"
+    # > "${app['gem']}" install \
+    # >     "${dict['name']}" \
+    # >     --version "${dict['version']}" \
+    # >     --install-dir "${dict['prefix']}"
     #
     # @seealso
     # - 'gem pristine --all'
@@ -28,9 +28,9 @@ main() {
         [bundle]="$(koopa_locate_bundle)"
         [ruby]="$(koopa_locate_ruby)"
     )
-    [[ -x "${app[bundle]}" ]] || return 1
-    [[ -x "${app[ruby]}" ]] || return 1
-    app[ruby]="$(koopa_realpath "${app[ruby]}")"
+    [[ -x "${app['bundle']}" ]] || return 1
+    [[ -x "${app['ruby']}" ]] || return 1
+    app[ruby]="$(koopa_realpath "${app['ruby']}")"
     declare -A dict=(
         [gemfile]='Gemfile'
         [jobs]="$(koopa_cpu_count)"
@@ -40,25 +40,25 @@ main() {
     )
     read -r -d '' "dict[gemfile_string]" << END || true
 source "https://rubygems.org"
-gem "${dict[name]}", "${dict[version]}"
+gem "${dict['name']}", "${dict['version']}"
 END
-    dict[libexec]="${dict[prefix]}/libexec"
-    koopa_mkdir "${dict[libexec]}"
+    dict[libexec]="${dict['prefix']}/libexec"
+    koopa_mkdir "${dict['libexec']}"
     unset -v GEM_HOME GEM_PATH
     (
-        koopa_cd "${dict[libexec]}"
+        koopa_cd "${dict['libexec']}"
         koopa_write_string \
-            --file="${dict[gemfile]}" \
-            --string="${dict[gemfile_string]}"
-        "${app[bundle]}" install \
-            --gemfile="${dict[gemfile]}" \
-            --jobs="${dict[jobs]}" \
+            --file="${dict['gemfile']}" \
+            --string="${dict['gemfile_string']}"
+        "${app['bundle']}" install \
+            --gemfile="${dict['gemfile']}" \
+            --jobs="${dict['jobs']}" \
             --retry=3 \
             --standalone
-        "${app[bundle]}" binstubs \
-            "${dict[name]}" \
-            --path="${dict[prefix]}/bin" \
-            --shebang="${app[ruby]}" \
+        "${app['bundle']}" binstubs \
+            "${dict['name']}" \
+            --path="${dict['prefix']}/bin" \
+            --shebang="${app['ruby']}" \
             --standalone
     )
     return 0

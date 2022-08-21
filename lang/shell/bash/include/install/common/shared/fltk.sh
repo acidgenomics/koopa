@@ -31,22 +31,22 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='fltk'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}-source.tar.gz"
-    dict[url]="https://www.${dict[name]}.org/pub/${dict[name]}/\
-${dict[version]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="${dict['name']}-${dict['version']}-source.tar.gz"
+    dict[url]="https://www.${dict['name']}.org/pub/${dict['name']}/\
+${dict['version']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     dict[x11]="$(koopa_app_prefix 'xorg-libx11')"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--disable-cairo'
         '--disable-xft'
         '--enable-shared'
@@ -56,8 +56,8 @@ ${dict[version]}/${dict[file]}"
     then
         conf_args+=(
             '--enable-x11'
-            "--x-includes=${dict[x11]}/include"
-            "--x-libraries=${dict[x11]}/lib"
+            "--x-includes=${dict['x11']}/include"
+            "--x-libraries=${dict['x11']}/lib"
         )
     elif koopa_is_macos
     then
@@ -65,7 +65,7 @@ ${dict[version]}/${dict[file]}"
     fi
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

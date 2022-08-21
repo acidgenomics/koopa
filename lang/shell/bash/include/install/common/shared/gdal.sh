@@ -56,8 +56,8 @@ main() {
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [make_prefix]="$(koopa_make_prefix)"
@@ -66,12 +66,12 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://github.com/OSGeo/${dict[name]}/releases/download/\
-v${dict[version]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
+    dict[url]="https://github.com/OSGeo/${dict['name']}/releases/download/\
+v${dict['version']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     dict[curl]="$(koopa_app_prefix 'curl')"
@@ -86,8 +86,8 @@ v${dict[version]}/${dict[file]}"
         '-DBUILD_PYTHON_BINDINGS=ON'
         '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         '-DGDAL_USE_ARMADILLO=OFF'
         '-DGDAL_USE_ARROW=OFF'
         '-DGDAL_USE_BLOSC=OFF'
@@ -160,24 +160,24 @@ v${dict[version]}/${dict[file]}"
         '-DGDAL_USE_ZSTD=ON'
         # Required dependency paths.
         # CMake installer currently warns when this is set:
-        # > "-DPROJ_INCLUDE_DIR=${dict[proj]}/include"
-        # > "-DPROJ_LIBRARY_RELEASE=${dict[proj]}/lib/\
-        # > libproj.${dict[shared_ext]}"
+        # > "-DPROJ_INCLUDE_DIR=${dict['proj']}/include"
+        # > "-DPROJ_LIBRARY_RELEASE=${dict['proj']}/lib/\
+        # > libproj.${dict['shared_ext']}"
         # Optional dependency paths.
-        "-DCURL_INCLUDE_DIR=${dict[curl]}/include"
-        "-DCURL_LIBRARY=${dict[curl]}/lib/libcurl.${dict[shared_ext]}"
-        "-DHDF5_ROOT=${dict[hdf5]}"
-        "-DLIBXML2_INCLUDE_DIR=${dict[libxml2]}/include"
-        "-DLIBXML2_LIBRARY=${dict[libxml2]}/lib/libxml2.${dict[shared_ext]}"
-        "-DPCRE2_INCLUDE_DIR=${dict[pcre2]}/include"
-        "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
-        "-DPython_ROOT=${dict[python]}"
-        "-DSQLite3_INCLUDE_DIR=${dict[sqlite]}/include"
-        "-DSQLite3_LIBRARY=${dict[sqlite]}/lib/libsqlite3.${dict[shared_ext]}"
+        "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
+        "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
+        "-DHDF5_ROOT=${dict['hdf5']}"
+        "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
+        "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
+        "-DPCRE2_INCLUDE_DIR=${dict['pcre2']}/include"
+        "-DPCRE2_LIBRARY=${dict['pcre2']}/lib/libpcre2-8.${dict['shared_ext']}"
+        "-DPython_ROOT=${dict['python']}"
+        "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
+        "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/libsqlite3.${dict['shared_ext']}"
     )
-    koopa_mkdir "${dict[prefix]}/include"
-    "${app[cmake]}" .. "${cmake_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    koopa_mkdir "${dict['prefix']}/include"
+    "${app['cmake']}" .. "${cmake_args[@]}"
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

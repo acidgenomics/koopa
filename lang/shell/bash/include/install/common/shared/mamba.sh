@@ -10,15 +10,15 @@ main() {
     declare -A app=(
         [conda]="$(koopa_locate_conda)"
     )
-    [[ -x "${app[conda]}" ]] || return 1
+    [[ -x "${app['conda']}" ]] || return 1
     declare -A dict=(
         [name]='mamba'
         [version]="${INSTALL_VERSION:?}"
     )
-    "${app[conda]}" install \
+    "${app['conda']}" install \
         --yes \
         --name='base' \
         --channel='conda-forge' \
-        "${dict[name]}==${dict[version]}"
+        "${dict['name']}==${dict['version']}"
     return 0
 }

@@ -14,18 +14,18 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [name]='utf8proc'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict[version]}.tar.gz"
-    dict[url]="https://github.com/JuliaStrings/${dict[name]}/\
-archive/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
-    "${app[make]}" install prefix="${dict[prefix]}"
+    dict[file]="v${dict['version']}.tar.gz"
+    dict[url]="https://github.com/JuliaStrings/${dict['name']}/\
+archive/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
+    "${app['make']}" install prefix="${dict['prefix']}"
     return 0
 }

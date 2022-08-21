@@ -19,32 +19,32 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='apr-util'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
-    dict[url]="https://archive.apache.org/dist/apr/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.bz2"
+    dict[url]="https://archive.apache.org/dist/apr/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     dict[apr]="$(koopa_app_prefix 'apr')"
     dict[expat]="$(koopa_app_prefix 'expat')"
     dict[openssl]="$(koopa_app_prefix 'openssl3')"
     conf_args=(
-        "--prefix=${dict[prefix]}"
-        "--with-apr=${dict[apr]}/bin/apr-1-config"
-        "--with-expat=${dict[expat]}"
-        "--with-openssl=${dict[openssl]}"
+        "--prefix=${dict['prefix']}"
+        "--with-apr=${dict['apr']}/bin/apr-1-config"
+        "--with-expat=${dict['expat']}"
+        "--with-openssl=${dict['openssl']}"
         '--with-crypto'
         '--without-pgsql'
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

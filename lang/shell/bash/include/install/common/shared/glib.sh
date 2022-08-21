@@ -28,30 +28,30 @@ main() {
         [meson]="$(koopa_locate_meson)"
         [ninja]="$(koopa_locate_ninja)"
     )
-    [[ -x "${app[meson]}" ]] || return 1
-    [[ -x "${app[ninja]}" ]] || return 1
+    [[ -x "${app['meson']}" ]] || return 1
+    [[ -x "${app['ninja']}" ]] || return 1
     declare -A dict=(
         [name]='glib'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
-    dict[file]="${dict[name]}-${dict[version]}.tar.xz"
-    dict[url]="https://download.gnome.org/sources/${dict[name]}/\
-${dict[maj_min_ver]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
+    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
+    dict[url]="https://download.gnome.org/sources/${dict['name']}/\
+${dict['maj_min_ver']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     meson_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--buildtype=release'
         # > '-Dgtk_doc=true'
         # > '-Dman=true'
     )
-    "${app[meson]}" "${meson_args[@]}" ..
-    "${app[ninja]}" -v
-    "${app[ninja]}" install -v
+    "${app['meson']}" "${meson_args[@]}" ..
+    "${app['ninja']}" -v
+    "${app['ninja']}" install -v
     return 0
 }

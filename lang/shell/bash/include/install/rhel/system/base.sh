@@ -25,7 +25,7 @@ main() {
     fi
     if ! koopa_is_rhel_ubi
     then
-        koopa_fedora_dnf config-manager --set-enabled "${dict[powertools]}"
+        koopa_fedora_dnf config-manager --set-enabled "${dict['powertools']}"
     fi
     return 0
 }

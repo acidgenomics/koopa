@@ -14,22 +14,22 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [name]='tree'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tgz"
-    dict[url]="http://mama.indstate.edu/users/ice/${dict[name]}/src/\
-${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
-    "${app[make]}"
-    "${app[make]}" \
-        PREFIX="${dict[prefix]}" \
-        MANDIR="${dict[prefix]}/share/man" \
+    dict[file]="${dict['name']}-${dict['version']}.tgz"
+    dict[url]="http://mama.indstate.edu/users/ice/${dict['name']}/src/\
+${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
+    "${app['make']}"
+    "${app['make']}" \
+        PREFIX="${dict['prefix']}" \
+        MANDIR="${dict['prefix']}/share/man" \
         install
     return 0
 }

@@ -19,8 +19,8 @@ main() {
         [apk]="$(koopa_alpine_locate_apk)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[apk]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['apk']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     pkgs=(
         # > R-dev
         # > R-doc
@@ -61,8 +61,8 @@ main() {
         'xz'
         'zsh'
     )
-    "${app[sudo]}" "${app[apk]}" --no-cache update
-    "${app[sudo]}" "${app[apk]}" --no-cache upgrade
-    "${app[sudo]}" "${app[apk]}" --no-cache add "${pkgs[@]}"
+    "${app['sudo']}" "${app['apk']}" --no-cache update
+    "${app['sudo']}" "${app['apk']}" --no-cache upgrade
+    "${app['sudo']}" "${app['apk']}" --no-cache add "${pkgs[@]}"
     return 0
 }

@@ -17,8 +17,8 @@ main() {
         [sudo]="$(koopa_locate_sudo)"
         [tar]="$(koopa_locate_tar)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tar]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         [name]='openmp'
         [platform]='darwin'
@@ -26,7 +26,7 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
 
-    case "${dict[version]}" in
+    case "${dict['version']}" in
         '13.0.0')
             dict[platform_version]='21'
             ;;
@@ -41,14 +41,14 @@ main() {
             dict[platform_version]='17'
             ;;
         *)
-            koopa_stop "Unsupported version: '${dict[version]}'."
+            koopa_stop "Unsupported version: '${dict['version']}'."
             ;;
     esac
-    dict[file]="${dict[name]}-${dict[version]}-\
-${dict[platform]}${dict[platform_version]}-${dict[release]}.tar.gz"
-    dict[url]="https://mac.r-project.org/${dict[name]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    "${app[sudo]}" "${app[tar]}" -vxz -f "${dict[file]}" -C /
+    dict[file]="${dict['name']}-${dict['version']}-\
+${dict['platform']}${dict['platform_version']}-${dict['release']}.tar.gz"
+    dict[url]="https://mac.r-project.org/${dict['name']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    "${app['sudo']}" "${app['tar']}" -vxz -f "${dict['file']}" -C /
     koopa_assert_is_file \
         '/usr/local/include/omp-tools.h' \
         '/usr/local/include/omp.h' \

@@ -15,27 +15,27 @@ main() {
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         [name]='zstd'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict[version]}.tar.gz"
-    dict[url]="https://github.com/facebook/${dict[name]}/archive/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="v${dict['version']}.tar.gz"
+    dict[url]="https://github.com/facebook/${dict['name']}/archive/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
         '-S' 'build/cmake'
         '-B' 'builddir'
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         '-DZSTD_BUILD_CONTRIB=ON'
         '-DZSTD_LEGACY_SUPPORT=ON'
     )
-    "${app[cmake]}" "${cmake_args[@]}"
-    "${app[cmake]}" --build 'builddir'
-    "${app[cmake]}" --install 'builddir'
+    "${app['cmake']}" "${cmake_args[@]}"
+    "${app['cmake']}" --build 'builddir'
+    "${app['cmake']}" --install 'builddir'
     return 0
 }

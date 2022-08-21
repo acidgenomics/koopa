@@ -27,60 +27,60 @@ main() {
     declare -A app=(
         [python]="$(koopa_locate_python)"
     )
-    [[ -x "${app[python]}" ]] || return 1
+    [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[install_dir]="${dict[prefix]}/install"
-    dict[tools_dir]="${dict[prefix]}/tools"
+    dict[install_dir]="${dict['prefix']}/install"
+    dict[tools_dir]="${dict['prefix']}/tools"
     dict[file]='bcbio_nextgen_install.py'
     dict[url]="https://raw.github.com/bcbio/bcbio-nextgen/master/\
-scripts/${dict[file]}"
+scripts/${dict['file']}"
     koopa_alert_coffee_time
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_mkdir "${dict[prefix]}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_mkdir "${dict['prefix']}"
     install_args=(
-        "${dict[install_dir]}"
+        "${dict['install_dir']}"
         '--datatarget' 'rnaseq'
         '--isolate'
         '--mamba'
         '--nodata'
-        '--tooldir' "${dict[tools_dir]}"
+        '--tooldir' "${dict['tools_dir']}"
         '--upgrade' 'stable'
     )
     koopa_dl 'Install args' "${install_args[*]}"
-    "${app[python]}" "${dict[file]}" "${install_args[@]}"
+    "${app['python']}" "${dict['file']}" "${install_args[@]}"
     # Version-specific hotfixes.
-    case "${dict[version]}" in
+    case "${dict['version']}" in
         '1.2.9')
             koopa_alert_info 'Fixing bcftools and samtools.'
-            app[mamba]="${dict[install_dir]}/anaconda/bin/mamba"
-            "${app[mamba]}" install --yes \
+            app[mamba]="${dict['install_dir']}/anaconda/bin/mamba"
+            "${app['mamba']}" install --yes \
                 --name 'base' \
                 'bcftools==1.15' \
                 'samtools==1.15'
             # bcftools / samtools (htslib) are also currently messed up
             # in these other conda environments:
-            # > "${app[mamba]}" install --yes \
+            # > "${app['mamba']}" install --yes \
             # >     --name 'bwakit' \
             # >     'samtools==1.15'
-            # > "${app[mamba]}" install --yes \
+            # > "${app['mamba']}" install --yes \
             # >     --name 'htslib1.12_py3.9' \
             # >     'samtools==1.15'
-            # > "${app[mamba]}" install --yes \
+            # > "${app['mamba']}" install --yes \
             # >     --name 'python2' \
             # >     'bcftools==1.15' 'samtools==1.15'
-            # > "${app[mamba]}" install --yes \
+            # > "${app['mamba']}" install --yes \
             # >     --name 'python3.6' \
             # >     'samtools==1.15'
             ;;
     esac
     if koopa_is_docker
     then
-        app[conda]="${dict[install_dir]}/anaconda/bin/conda"
-        koopa_assert_is_installed "${app[conda]}"
-        "${app[conda]}" clean --yes --tarballs
+        app[conda]="${dict['install_dir']}/anaconda/bin/conda"
+        koopa_assert_is_installed "${app['conda']}"
+        "${app['conda']}" clean --yes --tarballs
     fi
     return 0
 }

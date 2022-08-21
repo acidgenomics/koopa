@@ -21,8 +21,8 @@ main() {
         [cat]="$(koopa_locate_cat)"
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[cat]}" ]] || return 1
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='bzip2'
@@ -30,18 +30,18 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://sourceware.org/pub/${dict[name]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
-    dict[makefile_shared]="Makefile-libbz2_${dict[shared_ext]}"
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
+    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
+    dict[url]="https://sourceware.org/pub/${dict['name']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
+    dict[makefile_shared]="Makefile-libbz2_${dict['shared_ext']}"
     if koopa_is_macos
     then
         dict[makefile_shared]='Makefile-libbz2_dylib'
-        "${app[cat]}" > "${dict[makefile_shared]}" << END
-PKG_VERSION=${dict[version]}
+        "${app['cat']}" > "${dict['makefile_shared']}" << END
+PKG_VERSION=${dict['version']}
 
 SHELL=/bin/sh
 CC=gcc
@@ -78,37 +78,37 @@ bzlib.o: bzlib.c
 	\$(CC) \$(CFLAGS) -c bzlib.c
 END
     fi
-    koopa_assert_is_file "${dict[makefile_shared]}"
-    "${app[make]}" install "PREFIX=${dict[prefix]}"
-    "${app[make]}" -f "${dict[makefile_shared]}" 'clean'
-    "${app[make]}" -f "${dict[makefile_shared]}"
+    koopa_assert_is_file "${dict['makefile_shared']}"
+    "${app['make']}" install "PREFIX=${dict['prefix']}"
+    "${app['make']}" -f "${dict['makefile_shared']}" 'clean'
+    "${app['make']}" -f "${dict['makefile_shared']}"
     if koopa_is_linux
     then
         koopa_cp \
-            --target-directory="${dict[prefix]}/lib" \
-            "libbz2.${dict[shared_ext]}.${dict[version]}"
+            --target-directory="${dict['prefix']}/lib" \
+            "libbz2.${dict['shared_ext']}.${dict['version']}"
         (
-            koopa_cd "${dict[prefix]}/lib"
+            koopa_cd "${dict['prefix']}/lib"
             koopa_ln \
-                "libbz2.${dict[shared_ext]}.${dict[version]}" \
-                "libbz2.${dict[shared_ext]}.${dict[maj_min_ver]}"
+                "libbz2.${dict['shared_ext']}.${dict['version']}" \
+                "libbz2.${dict['shared_ext']}.${dict['maj_min_ver']}"
             koopa_ln \
-                "libbz2.${dict[shared_ext]}.${dict[version]}" \
-                "libbz2.${dict[shared_ext]}"
+                "libbz2.${dict['shared_ext']}.${dict['version']}" \
+                "libbz2.${dict['shared_ext']}"
         )
     elif koopa_is_macos
     then
         koopa_cp \
-            --target-directory="${dict[prefix]}/lib" \
-            "libbz2.${dict[version]}.${dict[shared_ext]}"
+            --target-directory="${dict['prefix']}/lib" \
+            "libbz2.${dict['version']}.${dict['shared_ext']}"
         (
-            koopa_cd "${dict[prefix]}/lib"
+            koopa_cd "${dict['prefix']}/lib"
             koopa_ln \
-                "libbz2.${dict[version]}.${dict[shared_ext]}" \
-                "libbz2.${dict[maj_min_ver]}.${dict[shared_ext]}"
+                "libbz2.${dict['version']}.${dict['shared_ext']}" \
+                "libbz2.${dict['maj_min_ver']}.${dict['shared_ext']}"
             koopa_ln \
-                "libbz2.${dict[version]}.${dict[shared_ext]}" \
-                "libbz2.${dict[shared_ext]}"
+                "libbz2.${dict['version']}.${dict['shared_ext']}" \
+                "libbz2.${dict['shared_ext']}"
         )
     fi
     return 0

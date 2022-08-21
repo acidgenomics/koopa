@@ -16,8 +16,8 @@ main() {
         [url]='https://github.com/bbatsov/prelude.git'
     )
     koopa_git_clone \
-        --branch="${dict[branch]}" \
-        --prefix="${dict[prefix]}" \
-        --url="${dict[url]}"
+        --branch="${dict['branch']}" \
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}"
     return 0
 }

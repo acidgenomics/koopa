@@ -20,29 +20,29 @@ main() {
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         [name]='armadillo'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.xz"
-    dict[url]="http://sourceforge.net/projects/arma/files/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
+    dict[url]="http://sourceforge.net/projects/arma/files/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
         # > '-DCMAKE_BUILD_TYPE=MinSizeRel'
         # > '-DCMAKE_INSTALL_LIBDIR=lib'
-        "-DCMAKE_INSTALL_PREFIX:PATH=${dict[prefix]}"
+        "-DCMAKE_INSTALL_PREFIX:PATH=${dict['prefix']}"
         '-DDETECT_HDF5=ON'
     )
     if koopa_is_macos
     then
         cmake_args+=('-DALLOW_OPENBLAS_MACOS=ON')
     fi
-    "${app[cmake]}" -B 'build' "${cmake_args[@]}"
-    "${app[cmake]}" --build 'build'
-    "${app[cmake]}" --install 'build'
+    "${app['cmake']}" -B 'build' "${cmake_args[@]}"
+    "${app['cmake']}" --build 'build'
+    "${app['cmake']}" --install 'build'
     return 0
 }
