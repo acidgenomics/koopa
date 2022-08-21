@@ -14,8 +14,8 @@ main() {
     local app
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [doom]="$(koopa_locate_doom)"
-        [emacs]="$(koopa_locate_emacs)"
+        ['doom']="$(koopa_locate_doom)"
+        ['emacs']="$(koopa_locate_emacs)"
     )
     [[ -x "${app['doom']}" ]] || return 1
     [[ -x "${app['emacs']}" ]] || return 1
