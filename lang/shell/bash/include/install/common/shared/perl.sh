@@ -24,10 +24,10 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     # All Perl 5 releases are currently organized under '5.0'.
-    dict[src_maj_min_ver]="$(koopa_major_version "${dict['version']}").0"
-    dict[url]="https://www.cpan.org/src/${dict['src_maj_min_ver']}/${dict['file']}"
+    dict['src_maj_min_ver']="$(koopa_major_version "${dict['version']}").0"
+    dict['url']="https://www.cpan.org/src/${dict['src_maj_min_ver']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

@@ -76,27 +76,27 @@ koopa_aws_s3_sync() {
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--source-prefix='*)
-                dict[source_prefix]="${1#*=}"
+                dict['source_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--source-prefix')
-                dict[source_prefix]="${2:?}"
+                dict['source_prefix']="${2:?}"
                 shift 2
                 ;;
             '--target-prefix='*)
-                dict[target_prefix]="${1#*=}"
+                dict['target_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--target-prefix')
-                dict[target_prefix]="${2:?}"
+                dict['target_prefix']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------

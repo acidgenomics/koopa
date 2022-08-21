@@ -44,13 +44,13 @@ main() {
     # Edge case handling of name variants on crates.io.
     case "${dict['name']}" in
         'delta')
-            dict[cargo_name]='git-delta'
+            dict['cargo_name']='git-delta'
             ;;
         'ripgrep-all')
-            dict[cargo_name]='ripgrep_all'
+            dict['cargo_name']='ripgrep_all'
             ;;
         *)
-            dict[cargo_name]="${dict['name']}"
+            dict['cargo_name']="${dict['name']}"
             ;;
     esac
     install_args+=("${dict['cargo_name']}")
@@ -64,7 +64,7 @@ main() {
         'ripgrep-all')
             case "${dict['version']}" in
                 '0.9.7')
-                    dict[commit]='9e933ca7'
+                    dict['commit']='9e933ca7'
                     ;;
                 *)
                     koopa_stop 'Unsupported version.'

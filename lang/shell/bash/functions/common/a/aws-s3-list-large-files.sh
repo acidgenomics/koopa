@@ -35,27 +35,27 @@ koopa_aws_s3_list_large_files() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--bucket='*)
-                dict[bucket]="${1#*=}"
+                dict['bucket']="${1#*=}"
                 shift 1
                 ;;
             '--bucket')
-                dict[bucket]="${2:?}"
+                dict['bucket']="${2:?}"
                 shift 2
                 ;;
             '--num='*)
-                dict[num]="${1#*=}"
+                dict['num']="${1#*=}"
                 shift 1
                 ;;
             '--num')
-                dict[num]="${2:?}"
+                dict['num']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -71,15 +71,15 @@ koopa_aws_s3_list_large_files() {
     koopa_assert_is_matching_regex \
         --pattern='^s3://.+/$' \
         --string="${dict['bucket']}"
-    dict[bucket]="$( \
+    dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
             --replacement='' \
             "${dict['bucket']}" \
     )"
-    dict[bucket]="$(koopa_strip_trailing_slash "${dict['bucket']}")"
+    dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
     # shellcheck disable=SC2016
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['aws']}" --profile="${dict['profile']}" \
             s3api list-object-versions --bucket "${dict['bucket']}" \
             | "${app['jq']}" \

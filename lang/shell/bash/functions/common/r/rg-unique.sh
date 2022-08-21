@@ -16,7 +16,7 @@ koopa_rg_unique() {
     declare -A dict=(
         [pattern]="${1:?}"
     )
-    dict[str]="$( \
+    dict['str']="$( \
         "${app['rg']}" \
             --no-filename \
             --no-line-number \

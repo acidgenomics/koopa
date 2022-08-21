@@ -42,17 +42,17 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://github.com/OSGeo/PROJ/releases/download/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/OSGeo/PROJ/releases/download/\
 ${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    dict[curl]="$(koopa_app_prefix 'curl')"
-    dict[libtiff]="$(koopa_app_prefix 'libtiff')"
-    dict[sqlite]="$(koopa_app_prefix 'sqlite')"
+    dict['curl']="$(koopa_app_prefix 'curl')"
+    dict['libtiff']="$(koopa_app_prefix 'libtiff')"
+    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
         '-DBUILD_APPS=ON'
         '-DBUILD_SHARED_LIBS=ON'

@@ -19,35 +19,35 @@ koopa_locate_conda_app() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--app-name='*)
-                dict[app_name]="${1#*=}"
+                dict['app_name']="${1#*=}"
                 shift 1
                 ;;
             '--app-name')
-                dict[app_name]="${2:?}"
+                dict['app_name']="${2:?}"
                 shift 2
                 ;;
             '--conda-prefix='*)
-                dict[conda_prefix]="${1#*=}"
+                dict['conda_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--conda-prefix')
-                dict[conda_prefix]="${2:?}"
+                dict['conda_prefix']="${2:?}"
                 shift 2
                 ;;
             '--env-name='*)
-                dict[env_name]="${1#*=}"
+                dict['env_name']="${1#*=}"
                 shift 1
                 ;;
             '--env-name')
-                dict[env_name]="${2:?}"
+                dict['env_name']="${2:?}"
                 shift 2
                 ;;
             '--env-version='*)
-                dict[env_version]="${1#*=}"
+                dict['env_version']="${1#*=}"
                 shift 1
                 ;;
             '--env-version')
-                dict[env_version]="${2:?}"
+                dict['env_version']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -66,15 +66,15 @@ koopa_locate_conda_app() {
     if [[ -z "${dict['app_name']}" ]]
     then
         koopa_assert_has_args_eq "$#" 1
-        dict[app_name]="${1:?}"
+        dict['app_name']="${1:?}"
     fi
     if [[ -z "${dict['env_name']}" ]]
     then
-        dict[env_name]="${dict['app_name']}"
+        dict['env_name']="${dict['app_name']}"
     fi
     if [[ -z "${dict['env_version']}" ]]
     then
-        dict[env_version]="$(koopa_variable "conda-${dict['env_name']}")"
+        dict['env_version']="$(koopa_variable "conda-${dict['env_name']}")"
         # Slower approach that isn't version pinned:
         # > dict[env_version]="$( \
         # >     koopa_conda_env_latest_version "${dict['env_name']}" \
@@ -85,7 +85,7 @@ koopa_locate_conda_app() {
         '--conda-prefix' "${dict['conda_prefix']}" \
         '--env-name' "${dict['env_name']}" \
         '--env-version' "${dict['env_version']}"
-    dict[app_path]="${dict['conda_prefix']}/envs/\
+    dict['app_path']="${dict['conda_prefix']}/envs/\
 ${dict['env_name']}@${dict['env_version']}/bin/${dict['app_name']}"
     koopa_assert_is_executable "${dict['app_path']}"
     koopa_print "${dict['app_path']}"

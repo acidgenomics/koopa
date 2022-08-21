@@ -20,19 +20,19 @@ koopa_git_checkout_recursive() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--branch='*)
-                dict[branch]="${1#*=}"
+                dict['branch']="${1#*=}"
                 shift 1
                 ;;
             '--branch')
-                dict[branch]="${2:?}"
+                dict['branch']="${2:?}"
                 shift 2
                 ;;
             '--origin='*)
-                dict[origin]="${1#*=}"
+                dict['origin']="${1#*=}"
                 shift 1
                 ;;
             '--origin')
-                dict[origin]="${2:?}"
+                dict['origin']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -76,11 +76,11 @@ koopa_git_checkout_recursive() {
                 declare -A dict2
                 koopa_h2 "$repo"
                 koopa_cd "$repo"
-                dict2[branch]="${dict['branch']}"
-                dict2[default_branch]="$(koopa_git_default_branch)"
+                dict2['branch']="${dict['branch']}"
+                dict2['default_branch']="$(koopa_git_default_branch)"
                 if [[ -z "${dict2['branch']}" ]]
                 then
-                    dict2[branch]="${dict2['default_branch']}"
+                    dict2['branch']="${dict2['default_branch']}"
                 fi
                 if [[ -n "${dict['origin']}" ]]
                 then

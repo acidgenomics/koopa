@@ -23,8 +23,8 @@ main() {
         [version]="${INSTALL_VERSION:?}"
         [version_file]='VERSION'
     )
-    dict[file]="v${dict['version']}.tar.gz"
-    dict[url]="https://github.com/apptainer/${dict['name']}/archive/refs/\
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/apptainer/${dict['name']}/archive/refs/\
 tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

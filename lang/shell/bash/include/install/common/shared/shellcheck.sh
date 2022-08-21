@@ -15,13 +15,13 @@ main() {
     )
     if koopa_is_macos
     then
-        dict[os_id]='darwin'
+        dict['os_id']='darwin'
     else
-        dict[os_id]='linux'
+        dict['os_id']='linux'
     fi
-    dict[file]="${dict['name']}-v${dict['version']}.${dict['os_id']}.\
+    dict['file']="${dict['name']}-v${dict['version']}.${dict['os_id']}.\
 ${dict['arch']}.tar.xz"
-    dict[url]="https://github.com/koalaman/${dict['name']}/releases/download/\
+    dict['url']="https://github.com/koalaman/${dict['name']}/releases/download/\
 v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

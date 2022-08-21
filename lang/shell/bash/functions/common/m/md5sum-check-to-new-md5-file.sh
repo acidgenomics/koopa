@@ -16,7 +16,7 @@ koopa_md5sum_check_to_new_md5_file() {
     declare -A dict=(
         [datetime]="$(koopa_datetime)"
     )
-    dict[log_file]="md5sum-${dict['datetime']}.md5"
+    dict['log_file']="md5sum-${dict['datetime']}.md5"
     koopa_assert_is_not_file "${dict['log_file']}"
     koopa_assert_is_file "$@"
     "${app['md5sum']}" "$@" 2>&1 | "${app['tee']}" "${dict['log_file']}"

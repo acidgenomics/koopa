@@ -6,6 +6,6 @@ koopa_locate_rscript() {
         [r]="$(koopa_locate_r)"
     )
     [[ -x "${app['r']}" ]] || return 1
-    app[rscript]="${app['r']}script"
+    app['rscript']="${app['r']}script"
     koopa_locate_app "${app['rscript']}"
 }

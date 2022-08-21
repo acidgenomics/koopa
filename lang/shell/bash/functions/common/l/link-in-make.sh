@@ -54,11 +54,11 @@ koopa_link_in_make() {
                 shift 2
                 ;;
             '--prefix='*)
-                dict[app_prefix]="${1#*=}"
+                dict['app_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[app_prefix]="${2:?}"
+                dict['app_prefix']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -69,12 +69,12 @@ koopa_link_in_make() {
     done
     koopa_assert_is_set '--prefix' "${dict['app_prefix']}"
     koopa_assert_is_dir "${dict['app_prefix']}" "${dict['make_prefix']}"
-    dict[app_prefix]="$(koopa_realpath "${dict['app_prefix']}")"
+    dict['app_prefix']="$(koopa_realpath "${dict['app_prefix']}")"
     if koopa_is_array_non_empty "${include_arr[@]:-}"
     then
         for i in "${!include_arr[@]}"
         do
-            files_arr[i]="${dict['app_prefix']}/${include_arr['i']}"
+            files_arr['i']="${dict['app_prefix']}/${include_arr['i']}"
         done
     else
         find_args=(

@@ -37,15 +37,15 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
-    dict[patch_base_url]="https://ftp.gnu.org/gnu/${dict['name']}/\
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['patch_base_url']="https://ftp.gnu.org/gnu/${dict['name']}/\
 ${dict['name']}-${dict['maj_min_ver']}-patches"
-    dict[n_patches]="$( \
+    dict['n_patches']="$( \
         koopa_major_minor_patch_version "${dict['version']}" \
         | "${app['cut']}" -d '.' -f '3' \
     )"
-    dict[file]="${dict['name']}-${dict['maj_min_ver']}.tar.gz"
-    dict[url]="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"
+    dict['file']="${dict['name']}-${dict['maj_min_ver']}.tar.gz"
+    dict['url']="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['maj_min_ver']}"
@@ -60,12 +60,12 @@ ${dict['name']}-${dict['maj_min_ver']}-patches"
             --suffix=" from '${dict['patch_base_url']}'." \
         )"
         # mmv_tr: trimmed major minor version.
-        dict[mmv_tr]="$( \
+        dict['mmv_tr']="$( \
             koopa_print "${dict['maj_min_ver']}" \
             | "${app['tr']}" --delete '.' \
         )"
-        dict[patch_range]="$(printf '%03d-%03d' '1' "${dict['n_patches']}")"
-        dict[patch_request_urls]="${dict['patch_base_url']}/\
+        dict['patch_range']="$(printf '%03d-%03d' '1' "${dict['n_patches']}")"
+        dict['patch_request_urls']="${dict['patch_base_url']}/\
 ${dict['name']}${dict['mmv_tr']}-[${dict['patch_range']}]"
         koopa_mkdir "${dict['patch_prefix']}"
         (

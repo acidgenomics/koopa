@@ -30,7 +30,7 @@ main() {
     )
     [[ -x "${app['bundle']}" ]] || return 1
     [[ -x "${app['ruby']}" ]] || return 1
-    app[ruby]="$(koopa_realpath "${app['ruby']}")"
+    app['ruby']="$(koopa_realpath "${app['ruby']}")"
     declare -A dict=(
         [gemfile]='Gemfile'
         [jobs]="$(koopa_cpu_count)"
@@ -42,7 +42,7 @@ main() {
 source "https://rubygems.org"
 gem "${dict['name']}", "${dict['version']}"
 END
-    dict[libexec]="${dict['prefix']}/libexec"
+    dict['libexec']="${dict['prefix']}/libexec"
     koopa_mkdir "${dict['libexec']}"
     unset -v GEM_HOME GEM_PATH
     (

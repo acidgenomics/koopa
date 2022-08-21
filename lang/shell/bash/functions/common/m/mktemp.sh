@@ -31,7 +31,7 @@ koopa_mktemp() {
         [date_id]="$(koopa_datetime)"
         [user_id]="$(koopa_user_id)"
     )
-    dict[template]="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"
+    dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"
     mktemp_args=(
         "$@"
         '-t' "${dict['template']}"

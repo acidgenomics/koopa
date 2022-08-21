@@ -19,7 +19,7 @@ koopa_docker_ghcr_push() {
         [server]='ghcr.io'
         [version]="${3:?}"
     )
-    dict[url]="${dict['server']}/${dict['owner']}/\
+    dict['url']="${dict['server']}/${dict['owner']}/\
 ${dict['image_name']}:${dict['version']}"
     koopa_docker_ghcr_login
     "${app['docker']}" push "${dict['url']}"

@@ -20,12 +20,12 @@ koopa_tar_multiple_dirs() {
         case "$1" in
             # Flags ------------------------------------------------------------
             '--delete')
-                dict[delete]=1
+                dict['delete']=1
                 shift 1
                 ;;
             '--no-delete' | \
             '--keep')
-                dict[delete]=0
+                dict['delete']=0
                 shift 1
                 ;;
             # Other ------------------------------------------------------------

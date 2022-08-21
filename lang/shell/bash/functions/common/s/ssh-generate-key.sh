@@ -34,11 +34,11 @@ koopa_ssh_generate_key() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--key-name='*)
-                dict[key_name]="${1#*=}"
+                dict['key_name']="${1#*=}"
                 shift 1
                 ;;
             '--key-name')
-                dict[key_name]="${2:?}"
+                dict['key_name']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

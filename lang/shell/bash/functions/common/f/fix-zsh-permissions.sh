@@ -16,7 +16,7 @@ koopa_fix_zsh_permissions() {
     )
     if koopa_is_shared_install
     then
-        dict[stat_user]="$( \
+        dict['stat_user']="$( \
             koopa_stat_user "${dict['koopa_prefix']}/lang/shell/zsh" \
         )"
         if [[ "${dict['stat_user']}" != 'root' ]]

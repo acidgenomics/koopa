@@ -19,10 +19,10 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[lua_version]="$(koopa_get_version "${app['lua']}")"
-    dict[lua_maj_min_ver]="$(koopa_major_minor_version "${dict['lua_version']}")"
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://luarocks.org/releases/${dict['file']}"
+    dict['lua_version']="$(koopa_get_version "${app['lua']}")"
+    dict['lua_maj_min_ver']="$(koopa_major_minor_version "${dict['lua_version']}")"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://luarocks.org/releases/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
@@ -35,7 +35,7 @@ main() {
     ./configure "${conf_args[@]}"
     "${app['make']}" build
     "${app['make']}" install
-    app[luarocks]="${dict['prefix']}/bin/luarocks"
+    app['luarocks']="${dict['prefix']}/bin/luarocks"
     koopa_assert_is_installed "${app['luarocks']}"
     (
         koopa_cd "${dict['prefix']}"

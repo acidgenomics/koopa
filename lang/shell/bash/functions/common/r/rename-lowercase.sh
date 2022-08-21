@@ -24,7 +24,7 @@ koopa_rename_lowercase() {
     do
         case "$1" in
             '--recursive')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '-'*)
@@ -40,7 +40,7 @@ koopa_rename_lowercase() {
     if [[ "${dict['recursive']}" -eq 1 ]]
     then
         koopa_assert_has_args_le "$#" 1
-        dict[prefix]="${1:-.}"
+        dict['prefix']="${1:-.}"
         koopa_assert_is_dir "${dict['prefix']}"
         # Rename files.
         koopa_find \

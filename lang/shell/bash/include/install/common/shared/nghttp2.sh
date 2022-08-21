@@ -32,7 +32,7 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    app[python]="$(koopa_realpath "${app['python']}")"
+    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         [boost]="$(koopa_app_prefix 'boost')"
         [jobs]="$(koopa_cpu_count)"
@@ -40,8 +40,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://github.com/${dict['name']}/${dict['name']}/releases/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\
 download/v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

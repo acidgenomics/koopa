@@ -23,8 +23,8 @@ main() {
     [[ -x "${app['lua']}" ]] || return 1
     [[ -x "${app['luarocks']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
-    app[lua]="$(koopa_realpath "${app['lua']}")"
-    app[luarocks]="$(koopa_realpath "${app['luarocks']}")"
+    app['lua']="$(koopa_realpath "${app['lua']}")"
+    app['luarocks']="$(koopa_realpath "${app['luarocks']}")"
     declare -A dict=(
         [make_prefix]="$(koopa_make_prefix)"
         [name2]='Lmod'
@@ -32,10 +32,10 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[apps_dir]="${dict['prefix']}/apps"
-    dict[data_dir]="${dict['prefix']}/moduleData"
-    dict[file]="${dict['version']}.tar.gz"
-    dict[url]="https://github.com/TACC/${dict['name2']}/archive/${dict['file']}"
+    dict['apps_dir']="${dict['prefix']}/apps"
+    dict['data_dir']="${dict['prefix']}/moduleData"
+    dict['file']="${dict['version']}.tar.gz"
+    dict['url']="https://github.com/TACC/${dict['name2']}/archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name2']}-${dict['version']}"

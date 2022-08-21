@@ -51,27 +51,27 @@ koopa_debian_apt_add_key() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--url='*)
-                dict[url]="${1#*=}"
+                dict['url']="${1#*=}"
                 shift 1
                 ;;
             '--url')
-                dict[url]="${2:?}"
+                dict['url']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -81,7 +81,7 @@ koopa_debian_apt_add_key() {
         esac
     done
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[file]="${dict['prefix']}/koopa-${dict['name']}.gpg"
+    dict['file']="${dict['prefix']}/koopa-${dict['name']}.gpg"
     [[ -f "${dict['file']}" ]] && return 0
     koopa_alert "Adding '${dict['name']}' key at '${dict['file']}'."
     koopa_parse_url --insecure "${dict['url']}" \

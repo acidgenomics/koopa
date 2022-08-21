@@ -13,11 +13,11 @@ koopa_ip_address() {
     do
         case "$1" in
             '--local')
-                dict[type]='local'
+                dict['type']='local'
                 shift 1
                 ;;
             '--public')
-                dict[type]='public'
+                dict['type']='public'
                 shift 1
                 ;;
             *)

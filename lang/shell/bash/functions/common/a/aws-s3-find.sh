@@ -43,44 +43,44 @@ koopa_aws_s3_find() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--exclude='*)
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--exclude')
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${2:?}")
                 shift 2
                 ;;
             '--include='*)
-                dict[include]=1
+                dict['include']=1
                 include_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--include')
-                dict[include]=1
+                dict['include']=1
                 include_arr+=("${2:?}")
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--recursive')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------

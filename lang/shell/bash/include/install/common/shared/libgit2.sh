@@ -34,15 +34,15 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict['version']}.tar.gz"
-    dict[url]="https://github.com/${dict['name']}/${dict['name']}/\
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
 archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    dict[openssl]="$(koopa_app_prefix 'openssl3')"
-    dict[pcre]="$(koopa_app_prefix 'pcre')"
-    dict[zlib]="$(koopa_app_prefix 'zlib')"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['pcre']="$(koopa_app_prefix 'pcre')"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"

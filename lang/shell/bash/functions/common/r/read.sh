@@ -8,8 +8,8 @@ koopa_read() {
     local dict read_args
     koopa_assert_has_args_eq "$#" 2
     declare -A dict
-    dict[default]="${2:?}"
-    dict[prompt]="${1:?} [${dict['default']}]: "
+    dict['default']="${2:?}"
+    dict['prompt']="${1:?} [${dict['default']}]: "
     read_args=(
         -e
         -i "${dict['default']}"

@@ -25,7 +25,7 @@ koopa_find_dotfiles() {
         [header]="${2:?}"
     )
     # shellcheck disable=SC2016
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_find \
             --max-depth=1 \
             --pattern='.*' \

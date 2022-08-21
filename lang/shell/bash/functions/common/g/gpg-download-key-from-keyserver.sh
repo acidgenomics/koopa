@@ -18,38 +18,38 @@ koopa_gpg_download_key_from_keyserver() {
         [sudo]=0
         [tmp_dir]="$(koopa_tmp_dir)"
     )
-    dict[tmp_file]="${dict['tmp_dir']}/export.gpg"
+    dict['tmp_file']="${dict['tmp_dir']}/export.gpg"
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--key='*)
-                dict[key]="${1#*=}"
+                dict['key']="${1#*=}"
                 shift 1
                 ;;
             '--key')
-                dict[key]="${2:?}"
+                dict['key']="${2:?}"
                 shift 2
                 ;;
             '--keyserver='*)
-                dict[keyserver]="${1#*=}"
+                dict['keyserver']="${1#*=}"
                 shift 1
                 ;;
             '--keyserver')
-                dict[keyserver]="${2:?}"
+                dict['keyserver']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------

@@ -94,7 +94,7 @@ koopa_r_configure_environ() {
         [system]=0
         [tmp_file]="$(koopa_tmp_file)"
     )
-    dict[file]="${dict['r_prefix']}/etc/Renviron.site"
+    dict['file']="${dict['r_prefix']}/etc/Renviron.site"
     ! koopa_is_koopa_app "${app['r']}" && dict[system]=1
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
@@ -152,19 +152,19 @@ koopa_r_configure_environ() {
     )
     for key in "${keys[@]}"
     do
-        pkgconfig_arr[$key]="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
+        pkgconfig_arr['$key']="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
     done
     for i in "${!pkgconfig_arr[@]}"
     do
-        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/lib"
+        pkgconfig_arr['$i']="${pkgconfig_arr[$i]}/lib"
     done
     if koopa_is_linux
     then
-        pkgconfig_arr[harfbuzz]="${pkgconfig_arr['harfbuzz']}64"
+        pkgconfig_arr['harfbuzz']="${pkgconfig_arr['harfbuzz']}64"
     fi
     for i in "${!pkgconfig_arr[@]}"
     do
-        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/pkgconfig"
+        pkgconfig_arr['$i']="${pkgconfig_arr[$i]}/pkgconfig"
     done
     lines+=(
         "PAGER=\${PAGER:-less}"
@@ -207,7 +207,7 @@ koopa_r_configure_environ() {
     )
     # reticulate
     # --------------------------------------------------------------------------
-    dict[conda]="$(koopa_realpath "${dict['opt_prefix']}/conda")"
+    dict['conda']="$(koopa_realpath "${dict['opt_prefix']}/conda")"
     lines+=(
         # Ensure the default location of Miniconda is standardized.
         "RETICULATE_MINICONDA_PATH=${dict['conda']}"
@@ -235,15 +235,15 @@ koopa_r_configure_environ() {
     # units
     # --------------------------------------------------------------------------
     # The units package requires udunits2 to be installed.
-    dict[udunits2]="$(koopa_realpath "${dict['opt_prefix']}/udunits")"
+    dict['udunits2']="$(koopa_realpath "${dict['opt_prefix']}/udunits")"
     lines+=(
         "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
         "UDUNITS2_LIBS=${dict['udunits2']}/lib"
     )
     if koopa_is_fedora_like
     then
-        dict[oracle_ver]="$(koopa_variable 'oracle-instant-client')"
-        dict[oracle_ver]="$(koopa_major_minor_version "${dict['oracle_ver']}")"
+        dict['oracle_ver']="$(koopa_variable 'oracle-instant-client')"
+        dict['oracle_ver']="$(koopa_major_minor_version "${dict['oracle_ver']}")"
         # ROracle
         # ----------------------------------------------------------------------
         # This requires installation of the Oracle Database Instant Client.
@@ -304,7 +304,7 @@ abort,verbose"
 -Werror=format-security -Wdate-time"
         )
     fi
-    dict[string]="$(koopa_print "${lines[@]}" | "${app['sort']}")"
+    dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     case "${dict['system']}" in
         '0')
             koopa_rm "${dict['file']}"

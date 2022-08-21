@@ -32,10 +32,10 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[install_dir]="${dict['prefix']}/install"
-    dict[tools_dir]="${dict['prefix']}/tools"
-    dict[file]='bcbio_nextgen_install.py'
-    dict[url]="https://raw.github.com/bcbio/bcbio-nextgen/master/\
+    dict['install_dir']="${dict['prefix']}/install"
+    dict['tools_dir']="${dict['prefix']}/tools"
+    dict['file']='bcbio_nextgen_install.py'
+    dict['url']="https://raw.github.com/bcbio/bcbio-nextgen/master/\
 scripts/${dict['file']}"
     koopa_alert_coffee_time
     koopa_download "${dict['url']}" "${dict['file']}"
@@ -55,7 +55,7 @@ scripts/${dict['file']}"
     case "${dict['version']}" in
         '1.2.9')
             koopa_alert_info 'Fixing bcftools and samtools.'
-            app[mamba]="${dict['install_dir']}/anaconda/bin/mamba"
+            app['mamba']="${dict['install_dir']}/anaconda/bin/mamba"
             "${app['mamba']}" install --yes \
                 --name 'base' \
                 'bcftools==1.15' \
@@ -78,7 +78,7 @@ scripts/${dict['file']}"
     esac
     if koopa_is_docker
     then
-        app[conda]="${dict['install_dir']}/anaconda/bin/conda"
+        app['conda']="${dict['install_dir']}/anaconda/bin/conda"
         koopa_assert_is_installed "${app['conda']}"
         "${app['conda']}" clean --yes --tarballs
     fi

@@ -17,8 +17,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="cacert-${dict['version']}.pem"
-    dict[url]="https://curl.se/ca/${dict['file']}"
+    dict['file']="cacert-${dict['version']}.pem"
+    dict['url']="https://curl.se/ca/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_cp \
         "${dict['file']}" \

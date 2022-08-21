@@ -36,19 +36,19 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     # e.g. '21.1.0.0.0-1' to '211000'.
-    dict[version2]="$( \
+    dict['version2']="$( \
         koopa_sub \
             --pattern='-[0-9]+$' \
             --replacement='' \
             "${dict['version']}" \
     )"
-    dict[version2]="$( \
+    dict['version2']="$( \
         koopa_gsub \
             --pattern='\.' \
             --replacement='' \
             "${dict['version2']}" \
     )"
-    dict[url_prefix]="https://download.oracle.com/otn_software/\
+    dict['url_prefix']="https://download.oracle.com/otn_software/\
 ${dict['platform']}/instantclient/${dict['version2']}"
     koopa_fedora_dnf_install 'libaio-devel'
     stems=('basic' 'devel' 'sqlplus' 'jdbc' 'odbc')

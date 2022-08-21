@@ -74,18 +74,18 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    app[stack]="${dict['prefix']}/bin/stack"
+    app['stack']="${dict['prefix']}/bin/stack"
     if koopa_is_linux
     then
-        dict[platform]='linux'
+        dict['platform']='linux'
     elif koopa_is_macos
     then
-        dict[platform]='osx'
+        dict['platform']='osx'
     fi
-    dict[root]="${dict['prefix']}/libexec"
-    dict[file]="${dict['name']}-${dict['version']}-${dict['platform']}-\
+    dict['root']="${dict['prefix']}/libexec"
+    dict['file']="${dict['name']}-${dict['version']}-${dict['platform']}-\
 ${dict['arch']}-bin"
-    dict[url]="https://github.com/commercialhaskell/${dict['name']}/releases/\
+    dict['url']="https://github.com/commercialhaskell/${dict['name']}/releases/\
 download/v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_chmod 'u+x' "${dict['file']}"

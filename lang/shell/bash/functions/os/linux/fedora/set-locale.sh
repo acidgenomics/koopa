@@ -21,7 +21,7 @@ koopa_fedora_set_locale() {
         [country]='US'
         [charset]='UTF-8'
     )
-    dict[lang_string]="${dict['lang']}_${dict['country']}.${dict['charset']}"
+    dict['lang_string']="${dict['lang']}_${dict['country']}.${dict['charset']}"
     koopa_alert "Setting locale to '${dict['lang_string']}'."
     "${app['sudo']}" "${app['localedef']}" \
         -i "${dict['lang']}_${dict['country']}" \

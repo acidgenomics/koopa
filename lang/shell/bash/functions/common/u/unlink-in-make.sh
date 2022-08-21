@@ -20,9 +20,9 @@ koopa_unlink_in_make() {
     koopa_assert_is_dir "${dict['make_prefix']}"
     for app_prefix in "$@"
     do
-        dict[app_prefix]="$app_prefix"
+        dict['app_prefix']="$app_prefix"
         koopa_assert_is_dir "${dict['app_prefix']}"
-        dict[app_prefix]="$(koopa_realpath "${dict['app_prefix']}")"
+        dict['app_prefix']="$(koopa_realpath "${dict['app_prefix']}")"
         readarray -t files <<< "$( \
             koopa_find_symlinks \
                 --source-prefix="${dict['app_prefix']}" \

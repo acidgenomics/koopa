@@ -44,81 +44,81 @@ koopa_grep() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--engine='*)
-                dict[engine]="${1#*=}"
+                dict['engine']="${1#*=}"
                 shift 1
                 ;;
             '--engine')
-                dict[engine]="${2:?}"
+                dict['engine']="${2:?}"
                 shift 2
                 ;;
             '--file='*)
-                dict[file]="${1#*=}"
-                dict[stdin]=0
+                dict['file']="${1#*=}"
+                dict['stdin']=0
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
-                dict[stdin]=0
+                dict['file']="${2:?}"
+                dict['stdin']=0
                 shift 2
                 ;;
             '--mode='*)
-                dict[mode]="${1#*=}"
+                dict['mode']="${1#*=}"
                 shift 1
                 ;;
             '--mode')
-                dict[mode]="${2:?}"
+                dict['mode']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
-                dict[stdin]=0
+                dict['string']="${1#*=}"
+                dict['stdin']=0
                 shift 1
                 ;;
             '--string')
                 # Allowing empty string to propagate here.
-                dict[string]="${2:-}"
-                dict[stdin]=0
+                dict['string']="${2:-}"
+                dict['stdin']=0
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--boolean' | \
             '--quiet')
-                dict[boolean]=1
+                dict['boolean']=1
                 shift 1
                 ;;
             '--regex' | \
             '--extended-regexp')
-                dict[mode]='regex'
+                dict['mode']='regex'
                 shift 1
                 ;;
             '--fixed' | \
             '--fixed-strings')
-                dict[mode]='fixed'
+                dict['mode']='fixed'
                 shift 1
                 ;;
             '--invert-match')
-                dict[invert_match]=1
+                dict['invert_match']=1
                 shift 1
                 ;;
             '--only-matching')
-                dict[only_matching]=1
+                dict['only_matching']=1
                 shift 1
                 ;;
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
             '-')
-                dict[stdin]=1
+                dict['stdin']=1
                 shift 1
                 ;;
             *)
@@ -129,17 +129,17 @@ koopa_grep() {
     koopa_assert_is_set '--pattern' "${dict['pattern']}"
     if [[ -z "${dict['engine']}" ]]
     then
-        app[grep]="$(koopa_locate_rg --allow-missing)"
+        app['grep']="$(koopa_locate_rg --allow-missing)"
         [[ ! -x "${app['grep']}" ]] && app[grep]="$(koopa_locate_grep)"
-        dict[engine]="$(koopa_basename "${app['grep']}")"
+        dict['engine']="$(koopa_basename "${app['grep']}")"
     else
-        app[grep]="$(koopa_locate_"${dict['engine']}")"
+        app['grep']="$(koopa_locate_"${dict['engine']}")"
     fi
     [[ -x "${app['grep']}" ]] || return 1
     # Piped input using stdin (string mode).
     if [[ "${dict['stdin']}" -eq 1 ]]
     then
-        dict[string]="$(</dev/stdin)"
+        dict['string']="$(</dev/stdin)"
     fi
     # Check that user isn't mixing up file and string mode.
     if [[ -n "${dict['file']}" ]] && [[ -n "${dict['string']}" ]]

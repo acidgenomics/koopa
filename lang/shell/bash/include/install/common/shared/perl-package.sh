@@ -41,13 +41,13 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[name2]="${dict['name']}"
-    dict[version2]="${dict['version']}"
+    dict['name2']="${dict['name']}"
+    dict['version2']="${dict['version']}"
     case "${dict['name']}" in
         'ack')
             # App::Ack.
-            dict[author]='PETDANCE'
-            dict[version2]="v${dict['version']}"
+            dict['author']='PETDANCE'
+            dict['version2']="v${dict['version']}"
             ;;
         # > 'cpanminus')
         # >     # App::cpanminus.
@@ -56,20 +56,20 @@ main() {
         # >     ;;
         'exiftool')
             # Image::ExifTool.
-            dict[author]='EXIFTOOL'
-            dict[name2]='Image-ExifTool'
+            dict['author']='EXIFTOOL'
+            dict['name2']='Image-ExifTool'
             ;;
         'rename')
             # File::Rename.
-            dict[author]='RMBARKER'
-            dict[name2]='File-Rename'
+            dict['author']='RMBARKER'
+            dict['name2']='File-Rename'
             ;;
         *)
             koopa_stop "Unsupported Perl package: '${dict['name']}'."
             ;;
     esac
-    dict[file]="${dict['name2']}-${dict['version2']}.tar.gz"
-    dict[url]="https://cpan.metacpan.org/authors/id/\
+    dict['file']="${dict['name2']}-${dict['version2']}.tar.gz"
+    dict['url']="https://cpan.metacpan.org/authors/id/\
 ${dict['author']:0:1}/${dict['author']:0:2}/${dict['author']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
@@ -81,9 +81,9 @@ ${dict['author']:0:1}/${dict['author']:0:2}/${dict['author']}/${dict['file']}"
         PERL_LOCAL_LIB_ROOT \
         PERL_MB_OPT \
         PERL_MM_OPT
-    dict[perl_ver]="$(koopa_get_version "${app['perl']}")"
-    dict[perl_maj_ver]="$(koopa_major_version "${dict['perl_ver']}")"
-    dict[lib_prefix]="${dict['prefix']}/lib/perl${dict['perl_maj_ver']}"
+    dict['perl_ver']="$(koopa_get_version "${app['perl']}")"
+    dict['perl_maj_ver']="$(koopa_major_version "${dict['perl_ver']}")"
+    dict['lib_prefix']="${dict['prefix']}/lib/perl${dict['perl_maj_ver']}"
     case "${dict['name']}" in
         'ack')
             # Install 'File::Next' dependency.
@@ -102,7 +102,7 @@ ${dict['author']:0:1}/${dict['author']:0:2}/${dict['author']}/${dict['file']}"
     # Ensure we burn Perl library path into executables. This will add a line
     # directly under the shebang.
     # > dict[lib_string]="BEGIN { unshift @INC, \"${dict['lib_prefix']}\"; }"
-    dict[lib_string]="use lib \"${dict['lib_prefix']}\";"
+    dict['lib_string']="use lib \"${dict['lib_prefix']}\";"
     readarray -t bin_files <<< "$( \
         koopa_find \
             --max-depth=1 \

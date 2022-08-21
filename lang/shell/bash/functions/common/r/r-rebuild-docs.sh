@@ -19,18 +19,18 @@ koopa_r_rebuild_docs() {
         [r]="${1:?}"
     )
     koopa_assert_is_installed "${app['r']}"
-    app[rscript]="${app['r']}script"
+    app['rscript']="${app['r']}script"
     koopa_assert_is_installed "${app['rscript']}"
     koopa_is_koopa_app "${app['rscript']}" || return 0
     declare -A dict
     koopa_alert 'Updating HTML package index.'
     rscript_args=('--vanilla')
-    dict[doc_dir]="$( \
+    dict['doc_dir']="$( \
         "${app['rscript']}" "${rscript_args[@]}" -e 'cat(R.home("doc"))' \
     )"
-    dict[html_dir]="${dict['doc_dir']}/html"
-    dict[pkg_index]="${dict['html_dir']}/packages.html"
-    dict[r_css]="${dict['html_dir']}/R.css"
+    dict['html_dir']="${dict['doc_dir']}/html"
+    dict['pkg_index']="${dict['html_dir']}/packages.html"
+    dict['r_css']="${dict['html_dir']}/R.css"
     if [[ ! -d "${dict['html_dir']}" ]]
     then
         koopa_mkdir "${dict['html_dir']}"

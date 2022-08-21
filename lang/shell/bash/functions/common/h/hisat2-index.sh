@@ -47,19 +47,19 @@ koopa_hisat2_index() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -71,7 +71,7 @@ koopa_hisat2_index() {
     koopa_assert_is_set \
         '--genome-fasta-file' "${dict['genome_fasta_file']}" \
         '--output-dir' "${dict['output_dir']}"
-    dict[ht2_base]="${dict['output_dir']}/index"
+    dict['ht2_base']="${dict['output_dir']}/index"
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "'hisat2-build' requires ${dict['mem_gb_cutoff']} GB of RAM."

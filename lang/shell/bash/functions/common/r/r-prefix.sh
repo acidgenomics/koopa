@@ -15,10 +15,10 @@ koopa_r_prefix() {
     )
     [[ -z "${app['r']}" ]] && app[r]="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    app[rscript]="${app['r']}script"
+    app['rscript']="${app['r']}script"
     [[ -x "${app['rscript']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$( \
+    dict['prefix']="$( \
         "${app['rscript']}" \
             --vanilla \
             -e 'cat(normalizePath(Sys.getenv("R_HOME")))' \

@@ -19,9 +19,9 @@ koopa_variable() {
         [key]="${1:?}"
         [include_prefix]="$(koopa_include_prefix)"
     )
-    dict[file]="${dict['include_prefix']}/variables.txt"
+    dict['file']="${dict['include_prefix']}/variables.txt"
     koopa_assert_is_file "${dict['file']}"
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_grep \
             --file="${dict['file']}" \
             --only-matching \
@@ -29,7 +29,7 @@ koopa_variable() {
             --regex \
     )"
     [[ -n "${dict['str']}" ]] || return 1
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_print "${dict['str']}" \
             | "${app['head']}" -n 1 \
             | "${app['cut']}" -d '"' -f '2' \

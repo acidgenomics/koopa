@@ -32,11 +32,11 @@ koopa_system_info() {
     )
     if koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
     then
-        dict[git_remote]="$(koopa_git_remote_url "${dict['koopa_prefix']}")"
-        dict[git_commit]="$( \
+        dict['git_remote']="$(koopa_git_remote_url "${dict['koopa_prefix']}")"
+        dict['git_commit']="$( \
             koopa_git_last_commit_local "${dict['koopa_prefix']}" \
         )"
-        dict[git_date]="$(koopa_git_commit_date "${dict['koopa_prefix']}")"
+        dict['git_date']="$(koopa_git_commit_date "${dict['koopa_prefix']}")"
         info+=(
             ''
             'Git repo'
@@ -58,18 +58,18 @@ koopa_system_info() {
     )
     if koopa_is_macos
     then
-        app[sw_vers]="$(koopa_macos_locate_sw_vers)"
+        app['sw_vers']="$(koopa_macos_locate_sw_vers)"
         [[ -x "${app['sw_vers']}" ]] || return 1
-        dict[os]="$( \
+        dict['os']="$( \
             printf '%s %s (%s)\n' \
                 "$("${app['sw_vers']}" -productName)" \
                 "$("${app['sw_vers']}" -productVersion)" \
                 "$("${app['sw_vers']}" -buildVersion)" \
         )"
     else
-        app[uname]="$(koopa_locate_uname)"
+        app['uname']="$(koopa_locate_uname)"
         [[ -x "${app['uname']}" ]] || return 1
-        dict[os]="$("${app['uname']}" --all)"
+        dict['os']="$("${app['uname']}" --all)"
         # Alternate approach using Python:
         # > app[python]="$(koopa_locate_python)"
         # > [[ -x "${app['python']}" ]] || return 1
@@ -85,7 +85,7 @@ koopa_system_info() {
     )
     if koopa_is_installed 'neofetch'
     then
-        app[neofetch]="$(koopa_locate_neofetch)"
+        app['neofetch']="$(koopa_locate_neofetch)"
         [[ -x "${app['neofetch']}" ]] || return 1
         readarray -t nf_info <<< "$("${app['neofetch']}" --stdout)"
         info+=(

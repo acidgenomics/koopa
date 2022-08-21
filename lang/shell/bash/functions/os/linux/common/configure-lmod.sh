@@ -13,7 +13,7 @@ koopa_linux_configure_lmod() {
         [prefix]="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_lmod_prefix)"
-    dict[init_dir]="${dict['prefix']}/apps/lmod/lmod/init"
+    dict['init_dir']="${dict['prefix']}/apps/lmod/lmod/init"
     koopa_assert_is_dir "${dict['init_dir']}"
     if [[ ! -d "${dict['etc_dir']}" ]]
     then
@@ -30,7 +30,7 @@ koopa_linux_configure_lmod() {
     # fish
     if koopa_is_installed 'fish'
     then
-        dict[fish_etc_dir]='/etc/fish/conf.d'
+        dict['fish_etc_dir']='/etc/fish/conf.d'
         koopa_alert "Updating Fish configuration in '${dict['fish_etc_dir']}'."
         if [[ ! -d "${dict['fish_etc_dir']}" ]]
         then

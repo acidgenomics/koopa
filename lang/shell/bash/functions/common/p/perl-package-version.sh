@@ -24,9 +24,9 @@ koopa_perl_package_version() {
     do
         local dict
         declare -A dict
-        dict[pkg]="$pkg"
+        dict['pkg']="$pkg"
         # Note that there cannot be a space after '-M' here.
-        dict[str]="$( \
+        dict['str']="$( \
             "${app['perl']}" \
                 -M"${dict['pkg']}" \
                 -e "print \$${dict['pkg']}::VERSION .\"\n\";" \

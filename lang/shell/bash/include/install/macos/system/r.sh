@@ -39,19 +39,19 @@ main() {
         [url_stem]='https://cran.r-project.org/bin/macosx'
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_version]="$(koopa_major_minor_version "${dict['version']}")"
-    dict[prefix]="${dict['framework_prefix']}/Versions/\
+    dict['maj_min_version']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['prefix']="${dict['framework_prefix']}/Versions/\
 ${dict['maj_min_version']}/Resources"
     case "${dict['arch']}" in
         'aarch64')
-            dict[arch2]='arm64'
-            dict[pkg_file]="R-${dict['version']}-${dict['arch2']}.pkg"
-            dict[url]="${dict['url_stem']}/${dict['os']}-${dict['arch2']}/\
+            dict['arch2']='arm64'
+            dict['pkg_file']="R-${dict['version']}-${dict['arch2']}.pkg"
+            dict['url']="${dict['url_stem']}/${dict['os']}-${dict['arch2']}/\
 base/${dict['pkg_file']}"
             ;;
         'x86_64')
-            dict[pkg_file]="R-${dict['version']}.pkg"
-            dict[url]="${dict['url_stem']}/base/${dict['pkg_file']}"
+            dict['pkg_file']="R-${dict['version']}.pkg"
+            dict['url']="${dict['url_stem']}/base/${dict['pkg_file']}"
             ;;
         *)
             koopa_stop "Unsupported architecture: '${dict['arch']}'."
@@ -63,7 +63,7 @@ base/${dict['pkg_file']}"
     koopa_macos_install_system_r_openmp
     koopa_install_system_tex
     koopa_install_system_tex_packages
-    app[r]="${dict['prefix']}/bin/R"
+    app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
     koopa_configure_r "${app['r']}"
     return 0

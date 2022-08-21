@@ -30,35 +30,35 @@ koopa_uninstall_app() {
     do
         case "$1" in
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--platform='*)
-                dict[platform]="${1#*=}"
+                dict['platform']="${1#*=}"
                 shift 1
                 ;;
             '--platform')
-                dict[platform]="${2:?}"
+                dict['platform']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--uninstaller='*)
-                dict[uninstaller_bn]="${1#*=}"
+                dict['uninstaller_bn']="${1#*=}"
                 shift 1
                 ;;
             '--uninstaller')
-                dict[uninstaller_bn]="${2:?}"
+                dict['uninstaller_bn']="${2:?}"
                 shift 2
                 ;;
             '--unlink-in-bin='*)
@@ -71,23 +71,23 @@ koopa_uninstall_app() {
                 ;;
             # Flags ------------------------------------------------------------
             '--no-unlink-in-opt')
-                bool[unlink_in_opt]=0
+                bool['unlink_in_opt']=0
                 shift 1
                 ;;
             '--quiet')
-                bool[quiet]=1
+                bool['quiet']=1
                 shift 1
                 ;;
             '--system')
-                dict[mode]='system'
+                dict['mode']='system'
                 shift 1
                 ;;
             '--user')
-                dict[mode]='user'
+                dict['mode']='user'
                 shift 1
                 ;;
             '--verbose')
-                bool[verbose]=1
+                bool['verbose']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -100,24 +100,24 @@ koopa_uninstall_app() {
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     case "${dict['mode']}" in
         'shared')
-            bool[unlink_in_opt]=1
+            bool['unlink_in_opt']=1
             if [[ -z "${dict['prefix']}" ]]
             then
-                dict[prefix]="${dict['app_prefix']}/${dict['name']}"
+                dict['prefix']="${dict['app_prefix']}/${dict['name']}"
             fi
             ;;
         'system')
             koopa_assert_is_admin
-            bool[unlink_in_opt]=0
+            bool['unlink_in_opt']=0
             ;;
         'user')
-            bool[unlink_in_opt]=0
+            bool['unlink_in_opt']=0
             ;;
     esac
     if koopa_is_array_non_empty "${bin_arr[@]:-}"
     then
-        bool[unlink_in_bin]=1
-        bool[unlink_in_man]=1
+        bool['unlink_in_bin']=1
+        bool['unlink_in_man']=1
     fi
     if [[ -n "${dict['prefix']}" ]]
     then
@@ -126,7 +126,7 @@ koopa_uninstall_app() {
             koopa_alert_is_not_installed "${dict['name']}" "${dict['prefix']}"
             return 1
         fi
-        dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
@@ -138,11 +138,11 @@ koopa_uninstall_app() {
         fi
     fi
     [[ -z "${dict['uninstaller_bn']}" ]] && dict[uninstaller_bn]="${dict['name']}"
-    dict[uninstaller_file]="${dict['koopa_prefix']}/lang/shell/bash/include/\
+    dict['uninstaller_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     if [[ -f "${dict['uninstaller_file']}" ]]
     then
-        dict[tmp_dir]="$(koopa_tmp_dir)"
+        dict['tmp_dir']="$(koopa_tmp_dir)"
         (
             koopa_cd "${dict['tmp_dir']}"
             # shellcheck source=/dev/null

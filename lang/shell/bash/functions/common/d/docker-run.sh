@@ -31,19 +31,19 @@ koopa_docker_run() {
         case "$1" in
             # Flags ------------------------------------------------------------
             '--arm')
-                dict[arm]=1
+                dict['arm']=1
                 shift 1
                 ;;
             '--bash')
-                dict[bash]=1
+                dict['bash']=1
                 shift 1
                 ;;
             '--bind')
-                dict[bind]=1
+                dict['bind']=1
                 shift 1
                 ;;
             '--x86')
-                dict[x86]=1
+                dict['x86']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -58,7 +58,7 @@ koopa_docker_run() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
-    dict[image]="${1:?}"
+    dict['image']="${1:?}"
     "${app['docker']}" pull "${dict['image']}"
     run_args=(
         '--interactive'

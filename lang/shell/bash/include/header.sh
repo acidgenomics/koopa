@@ -193,7 +193,7 @@ __koopa_bash_header() {
         [[ "${dict['dev']}" -eq 0 ]] && \
         [[ "${dict['test']}" -eq 0 ]]
     then
-        dict['checks']=0
+        dict[''checks'']=0
     fi
     if [[ "${dict['activate']}" -eq 0 ]]
     then
@@ -295,10 +295,10 @@ __koopa_bash_header() {
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        dict['header_path']="${BASH_SOURCE[0]}"
+        dict[''header_path'']="${BASH_SOURCE[0]}"
         if [[ -L "${dict['header_path']}" ]]
         then
-            dict['header_path']="$(__koopa_realpath "${dict['header_path']}")"
+            dict[''header_path'']="$(__koopa_realpath "${dict['header_path']}")"
         fi
         KOOPA_PREFIX="$( \
             cd "$(dirname "${dict['header_path']}")/../../../.." \
@@ -324,10 +324,10 @@ __koopa_bash_header() {
     if [[ "${dict['activate']}" -eq 0 ]] || [[ "${dict['dev']}" -eq 1 ]]
     then
         __koopa_source_functions 'common'
-        dict['os_id']="$(koopa_os_id)"
+        dict[''os_id'']="$(koopa_os_id)"
         if koopa_is_linux
         then
-            dict['linux_prefix']='os/linux'
+            dict[''linux_prefix'']='os/linux'
             __koopa_source_functions "${dict['linux_prefix']}/common"
             if koopa_is_debian_like
             then

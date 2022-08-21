@@ -23,8 +23,8 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     export GOPATH="${dict['gopath']}"
-    dict[file]="v${dict['version']}.tar.gz"
-    dict[url]="https://github.com/mikefarah/yq/archive/${dict['file']}"
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/mikefarah/yq/archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

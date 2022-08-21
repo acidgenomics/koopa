@@ -24,23 +24,23 @@ koopa_boost_version() {
     gcc_args=()
     if koopa_is_macos
     then
-        dict[brew_prefix]="$(koopa_homebrew_prefix)"
+        dict['brew_prefix']="$(koopa_homebrew_prefix)"
         gcc_args+=("-I${dict['brew_prefix']}/opt/boost/include")
     fi
     gcc_args+=(
         '-x' 'c++'
         '-E' '-'
     )
-    dict[version]="$( \
+    dict['version']="$( \
         koopa_print '#include <boost/version.hpp>\nBOOST_VERSION' \
         | "${app['gcc']}" "${gcc_args[@]}" \
         | koopa_grep --pattern='^[0-9]+$' --regex \
     )"
     [[ -n "${dict['version']}" ]] || return 1
     # Convert '107500' to '1.75.0', for example.
-    dict[major]="$(koopa_print "${dict['version']} / 100000" | "${app['bc']}")"
-    dict[minor]="$(koopa_print "${dict['version']} / 100 % 1000" | "${app['bc']}")"
-    dict[patch]="$(koopa_print "${dict['version']} % 100" | "${app['bc']}")"
+    dict['major']="$(koopa_print "${dict['version']} / 100000" | "${app['bc']}")"
+    dict['minor']="$(koopa_print "${dict['version']} / 100 % 1000" | "${app['bc']}")"
+    dict['patch']="$(koopa_print "${dict['version']} % 100" | "${app['bc']}")"
     koopa_print "${dict['major']}.${dict['minor']}.${dict['patch']}"
     return 0
 }

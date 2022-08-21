@@ -29,27 +29,27 @@ __koopa_link_in_dir() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--name='*)
-                dict['name']="${1#*=}"
+                dict[''name'']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict['name']="${2:?}"
+                dict[''name'']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict['prefix']="${1#*=}"
+                dict[''prefix'']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict['prefix']="${2:?}"
+                dict[''prefix'']="${2:?}"
                 shift 2
                 ;;
             '--source='*)
-                dict['source']="${1#*=}"
+                dict[''source'']="${1#*=}"
                 shift 1
                 ;;
             '--source')
-                dict['source']="${2:?}"
+                dict[''source'']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -63,8 +63,8 @@ __koopa_link_in_dir() {
         '--prefix' "${dict['prefix']}" \
         '--source' "${dict['source']}"
     [[ ! -d "${dict['prefix']}" ]] && koopa_mkdir "${dict['prefix']}"
-    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    dict['target']="${dict['prefix']}/${dict['name']}"
+    dict[''prefix'']="$(koopa_realpath "${dict['prefix']}")"
+    dict[''target'']="${dict['prefix']}/${dict['name']}"
     koopa_assert_is_existing "${dict['source']}"
     koopa_alert "Linking '${dict['source']}' -> '${dict['target']}'."
     koopa_sys_ln "${dict['source']}" "${dict['target']}"

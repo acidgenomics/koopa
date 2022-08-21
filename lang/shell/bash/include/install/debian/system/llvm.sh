@@ -21,7 +21,7 @@ main() {
     declare -A dict=(
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_ver]="$(koopa_major_version "${dict['version']}")"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     koopa_debian_apt_add_llvm_repo
     pkgs=(
         "clang-${dict['maj_ver']}"

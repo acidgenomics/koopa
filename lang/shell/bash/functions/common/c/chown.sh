@@ -22,22 +22,22 @@ koopa_chown() {
             # Flags ------------------------------------------------------------
             '--dereference' | \
             '-H')
-                dict[dereference]=1
+                dict['dereference']=1
                 shift 1
                 ;;
             '--no-dereference' | \
             '-h')
-                dict[dereference]=0
+                dict['dereference']=0
                 shift 1
                 ;;
             '--recursive' | \
             '-R')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -54,7 +54,7 @@ koopa_chown() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         chown=("${app['sudo']}" "${app['chown']}")
     else

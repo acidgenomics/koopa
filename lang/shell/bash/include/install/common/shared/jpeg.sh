@@ -20,8 +20,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="jpegsrc.v${dict['version']}.tar.gz"
-    dict[url]="https://www.ijg.org/files/${dict['file']}"
+    dict['file']="jpegsrc.v${dict['version']}.tar.gz"
+    dict['url']="https://www.ijg.org/files/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

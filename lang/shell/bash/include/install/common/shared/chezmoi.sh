@@ -24,14 +24,14 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict['version']}.tar.gz"
-    dict[url]="https://github.com/twpayne/chezmoi/archive/\
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/twpayne/chezmoi/archive/\
 refs/tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     export GOPATH="${dict['gopath']}"
-    dict[ldflags]="-X main.version=${dict['version']}"
+    dict['ldflags']="-X main.version=${dict['version']}"
     "${app['go']}" build -ldflags "${dict['ldflags']}"
     koopa_cp --target-directory="${dict['prefix']}/bin" 'chezmoi'
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"

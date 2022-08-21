@@ -34,7 +34,7 @@ koopa_configure_dotfiles() {
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_dotfiles_prefix)"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[script]="${dict['prefix']}/install"
+    dict['script']="${dict['prefix']}/install"
     koopa_assert_is_file "${dict['script']}"
     koopa_ln "${dict['prefix']}" "${dict['cm_prefix']}"
     koopa_add_config_link "${dict['prefix']}" "${dict['name']}"

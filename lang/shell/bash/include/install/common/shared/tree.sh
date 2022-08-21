@@ -20,8 +20,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tgz"
-    dict[url]="http://mama.indstate.edu/users/ice/${dict['name']}/src/\
+    dict['file']="${dict['name']}-${dict['version']}.tgz"
+    dict['url']="http://mama.indstate.edu/users/ice/${dict['name']}/src/\
 ${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

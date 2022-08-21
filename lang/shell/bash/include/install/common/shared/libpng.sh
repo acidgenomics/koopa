@@ -24,16 +24,16 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     # Convert '1.6.37' to '16'.
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
-    dict[version2]="$( \
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['version2']="$( \
         koopa_gsub \
             --fixed \
             --pattern='.' \
             --replacement='' \
             "${dict['maj_min_ver']}" \
     )"
-    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
-    dict[url]="https://downloads.sourceforge.net/project/${dict['name']}/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+    dict['url']="https://downloads.sourceforge.net/project/${dict['name']}/\
 ${dict['name']}${dict['version2']}/${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

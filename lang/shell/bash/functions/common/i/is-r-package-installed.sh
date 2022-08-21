@@ -15,7 +15,7 @@ koopa_is_r_package_installed() {
     )
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$(koopa_r_packages_prefix "${app['r']}")"
+    dict['prefix']="$(koopa_r_packages_prefix "${app['r']}")"
     for pkg in "$@"
     do
         [[ -d "${dict['prefix']}/${pkg}" ]] || return 1

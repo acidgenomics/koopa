@@ -13,7 +13,7 @@ koopa_python_get_pkg_versions() {
         pkg="${pkgs[$i]}"
         pkg_lower="$(koopa_lowercase "$pkg")"
         version="$(koopa_variable "python-${pkg_lower}")"
-        pkgs[$i]="${pkg}==${version}"
+        pkgs['$i']="${pkg}==${version}"
     done
     koopa_print "${pkgs[@]}"
     return 0

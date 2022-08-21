@@ -17,8 +17,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-v${dict['version']}-${dict['arch']}.tar.gz"
-    dict[url]="https://github.com/docker/docker-credential-helpers/releases/\
+    dict['file']="${dict['name']}-v${dict['version']}-${dict['arch']}.tar.gz"
+    dict['url']="https://github.com/docker/docker-credential-helpers/releases/\
 download/v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

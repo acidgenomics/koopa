@@ -23,16 +23,16 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://${dict['name']}.freedesktop.org/releases/${dict['file']}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://${dict['name']}.freedesktop.org/releases/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    dict[sys_inc]='/usr/include'
+    dict['sys_inc']='/usr/include'
     if koopa_is_macos
     then
-        dict[sdk_prefix]="$(koopa_macos_sdk_prefix)"
-        dict[sys_inc]="${dict['sdk_prefix']}/${dict['sys_inc']}"
+        dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
+        dict['sys_inc']="${dict['sdk_prefix']}/${dict['sys_inc']}"
     fi
     koopa_assert_is_dir "${dict['sys_inc']}"
     conf_args=(
@@ -44,7 +44,7 @@ main() {
     )
     if koopa_is_macos
     then
-        dict[pc_path]='/usr/lib/pkgconfig'
+        dict['pc_path']='/usr/lib/pkgconfig'
         conf_args+=("--with-pc-path=${dict['pc_path']}")
     fi
     ./configure --help

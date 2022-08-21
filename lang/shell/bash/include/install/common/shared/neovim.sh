@@ -42,22 +42,22 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['version']}.tar.gz"
+    dict['file']="${dict['version']}.tar.gz"
     case "${dict['version']}" in
         'nightly')
             ;;
         *)
-            dict[file]="v${dict['file']}"
+            dict['file']="v${dict['file']}"
             ;;
     esac
-    dict[url]="https://github.com/${dict['name']}/${dict['name']}/archive/\
+    dict['url']="https://github.com/${dict['name']}/${dict['name']}/archive/\
 refs/tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     # Need to create g-prefixed libtools symlinks, otherwise the build will
     # fail on macOS.
-    dict[libtool]="$(koopa_app_prefix 'libtool')"
-    dict[bin_extra]="$(koopa_init_dir 'bin-extra')"
+    dict['libtool']="$(koopa_app_prefix 'libtool')"
+    dict['bin_extra']="$(koopa_init_dir 'bin-extra')"
     koopa_ln \
         "${dict['libtool']}/bin/libtool" \
         "${dict['bin_extra']}/glibtool"
@@ -69,11 +69,11 @@ refs/tags/${dict['file']}"
     # Temporary fix for neovim installer hard-coded to Homebrew path.
     if koopa_is_macos
     then
-        dict[link_gettext]=0
-        dict[gettext]="$(koopa_app_prefix 'gettext')"
+        dict['link_gettext']=0
+        dict['gettext']="$(koopa_app_prefix 'gettext')"
         if [[ ! -d '/usr/local/opt/gettext' ]]
         then
-            dict[link_gettext]=1
+            dict['link_gettext']=1
             koopa_ln "${dict['gettext']}" '/usr/local/opt/gettext'
         fi
     fi

@@ -27,19 +27,19 @@ koopa_aws_s3_mv_to_parent() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -54,7 +54,7 @@ koopa_aws_s3_mv_to_parent() {
     koopa_assert_is_matching_regex \
         --pattern='^s3://.+/$' \
         --string="${dict['prefix']}"
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_aws_s3_ls \
             --prefix="${dict['prefix']}" \
             --profile="${dict['profile']}" \
@@ -71,8 +71,8 @@ koopa_aws_s3_mv_to_parent() {
             [bn]="$(koopa_basename "$file")"
             [dn1]="$(koopa_dirname "$file")"
         )
-        dict2[dn2]="$(koopa_dirname "${dict2['dn1']}")"
-        dict2[target]="${dict2['dn2']}/${dict2['bn']}"
+        dict2['dn2']="$(koopa_dirname "${dict2['dn1']}")"
+        dict2['target']="${dict2['dn2']}/${dict2['bn']}"
         "${app['aws']}" --profile="${dict['profile']}" \
             s3 mv \
                 --recursive \

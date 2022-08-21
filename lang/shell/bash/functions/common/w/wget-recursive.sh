@@ -34,27 +34,27 @@ koopa_wget_recursive() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--password='*)
-                dict[password]="${1#*=}"
+                dict['password']="${1#*=}"
                 shift 1
                 ;;
             '--password')
-                dict[password]="${2:?}"
+                dict['password']="${2:?}"
                 shift 2
                 ;;
             '--url='*)
-                dict[url]="${1#*=}"
+                dict['url']="${1#*=}"
                 shift 1
                 ;;
             '--url')
-                dict[url]="${2:?}"
+                dict['url']="${2:?}"
                 shift 2
                 ;;
             '--user='*)
-                dict[user]="${1#*=}"
+                dict['user']="${1#*=}"
                 shift 1
                 ;;
             '--user')
-                dict[user]="${2:?}"
+                dict['user']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -67,8 +67,8 @@ koopa_wget_recursive() {
         '--password' "${dict['password']}" \
         '--url' "${dict['url']}" \
         '--user' "${dict['user']}"
-    dict[log_file]="wget-${dict['datetime']}.log"
-    dict[password]="${dict['password']@Q}"
+    dict['log_file']="wget-${dict['datetime']}.log"
+    dict['password']="${dict['password']@Q}"
     wget_args=(
         "--output-file=${dict['log_file']}"
         "--password=${dict['password']}"
