@@ -25,11 +25,11 @@ main() {
     do
         case "$1" in
             '--no-reset')
-                dict[''reset'']=0
+                dict['reset']=0
                 shift 1
                 ;;
             '--reset')
-                dict[''reset'']=1
+                dict['reset']=1
                 shift 1
                 ;;
             *)
