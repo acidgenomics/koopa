@@ -3,7 +3,7 @@
 koopa_locate_python() {
     local dict
     declare -A dict=(
-        [name]='python'
+        ['name']='python'
     )
     dict['version']="$(koopa_variable "${dict['name']}")"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"

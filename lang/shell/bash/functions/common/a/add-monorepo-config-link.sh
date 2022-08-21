@@ -9,7 +9,7 @@ koopa_add_monorepo_config_link() {
     koopa_assert_has_args "$#"
     koopa_assert_has_monorepo
     declare -A dict=(
-        [prefix]="$(koopa_monorepo_prefix)"
+        ['prefix']="$(koopa_monorepo_prefix)"
     )
     for subdir in "$@"
     do

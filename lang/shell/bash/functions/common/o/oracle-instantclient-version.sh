@@ -8,7 +8,7 @@ koopa_oracle_instantclient_version() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [sqlplus]="$(koopa_locate_sqlplus)"
+        ['sqlplus']="$(koopa_locate_sqlplus)"
     )
     [[ -x "${app['sqlplus']}" ]] || return 1
     str="$( \

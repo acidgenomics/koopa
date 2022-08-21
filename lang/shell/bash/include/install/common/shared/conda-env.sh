@@ -14,15 +14,15 @@ main() {
     local app bin_names dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [jq]="$(koopa_locate_jq)"
+        ['cut']="$(koopa_locate_cut)"
+        ['jq']="$(koopa_locate_jq)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     declare -A dict=(
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     koopa_conda_create_env \

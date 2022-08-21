@@ -11,7 +11,7 @@ koopa_cli() {
     local dict
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [nested]=0
+        ['nested']=0
     )
     case "${1:?}" in
         '--help' | \

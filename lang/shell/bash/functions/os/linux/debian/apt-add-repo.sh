@@ -60,14 +60,14 @@ koopa_debian_apt_add_repo() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A dict=(
-        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
-        [distribution]=''
-        [key_name]=''
-        [key_prefix]="$(koopa_debian_apt_key_prefix)"
-        [name]=''
-        [prefix]="$(koopa_debian_apt_sources_prefix)"
-        [signed_by]=''
-        [url]=''
+        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+        ['distribution']=''
+        ['key_name']=''
+        ['key_prefix']="$(koopa_debian_apt_key_prefix)"
+        ['name']=''
+        ['prefix']="$(koopa_debian_apt_sources_prefix)"
+        ['signed_by']=''
+        ['url']=''
     )
     components=()
     while (("$#"))

@@ -68,11 +68,11 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A app
     declare -A dict=(
-        [arch]="$(koopa_arch)" # e.g. 'x86_64'.
-        [jobs]="$(koopa_cpu_count)"
-        [name]='stack'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='stack'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     app['stack']="${dict['prefix']}/bin/stack"
     if koopa_is_linux

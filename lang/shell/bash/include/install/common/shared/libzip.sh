@@ -21,17 +21,17 @@ main() {
         'perl' \
         'zstd'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
-        [make]="$(koopa_locate_make)"
+        ['cmake']="$(koopa_locate_cmake)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='libzip'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [shared_ext]="$(koopa_shared_ext)"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='libzip'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://libzip.org/download/${dict['file']}"

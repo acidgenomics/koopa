@@ -11,8 +11,8 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [file]='pivpn.sh'
-        [url]='https://install.pivpn.io'
+        ['file']='pivpn.sh'
+        ['url']='https://install.pivpn.io'
     )
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_chmod 'u+x' "${dict['file']}"

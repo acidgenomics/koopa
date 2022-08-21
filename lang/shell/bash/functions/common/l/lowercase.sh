@@ -17,7 +17,7 @@ koopa_lowercase() {
     # """
     local app str
     declare -A app=(
-        [tr]="$(koopa_locate_tr)"
+        ['tr']="$(koopa_locate_tr)"
     )
     [[ -x "${app['tr']}" ]] || return 1
     if [[ "$#" -eq 0 ]]

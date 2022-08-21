@@ -8,7 +8,7 @@ koopa_download_cran_latest() {
     local app file name pattern url
     koopa_assert_has_args "$#"
     declare -A app=(
-        [head]="$(koopa_locate_head)"
+        ['head']="$(koopa_locate_head)"
     )
     [[ -x "${app['head']}" ]] || return 1
     for name in "$@"

@@ -13,15 +13,15 @@ koopa_install_app_from_binary_package() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [tar]="$(koopa_locate_tar)"
+        ['tar']="$(koopa_locate_tar)"
     )
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
-        [binary_prefix]='/opt/koopa'
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [os_string]="$(koopa_os_string)"
-        [url_stem]="$(koopa_koopa_url)/app"
+        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+        ['binary_prefix']='/opt/koopa'
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['os_string']="$(koopa_os_string)"
+        ['url_stem']="$(koopa_koopa_url)/app"
     )
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
     then

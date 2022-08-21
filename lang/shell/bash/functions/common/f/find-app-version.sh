@@ -8,14 +8,14 @@ koopa_find_app_version() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [sort]="$(koopa_locate_sort)"
-        [tail]="$(koopa_locate_tail)"
+        ['sort']="$(koopa_locate_sort)"
+        ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['tail']}" ]] || return 1
     declare -A dict=(
-        [app_prefix]="$(koopa_app_prefix)"
-        [name]="${1:?}"
+        ['app_prefix']="$(koopa_app_prefix)"
+        ['name']="${1:?}"
     )
     dict['prefix']="${dict['app_prefix']}/${dict['name']}"
     koopa_assert_is_dir "${dict['prefix']}"

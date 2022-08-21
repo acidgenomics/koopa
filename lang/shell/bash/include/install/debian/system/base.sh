@@ -30,13 +30,13 @@ main() {
     # """
     local app dict pkgs
     declare -A app=(
-        [dpkg]="$(koopa_debian_locate_dpkg)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['dpkg']="$(koopa_debian_locate_dpkg)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['dpkg']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [apt_enabled_repos]="$(koopa_debian_apt_enabled_repos)"
+        ['apt_enabled_repos']="$(koopa_debian_apt_enabled_repos)"
     )
     pkgs=(
         # > 'alien'

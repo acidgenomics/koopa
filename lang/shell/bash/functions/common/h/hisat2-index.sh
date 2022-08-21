@@ -29,17 +29,17 @@ koopa_hisat2_index() {
     # """
     local app dict index_args
     declare -A app=(
-        [hisat2_build]="$(koopa_locate_hisat2_build)"
+        ['hisat2_build']="$(koopa_locate_hisat2_build)"
     )
     [[ -x "${app['hisat2_build']}" ]] || return 1
     declare -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
-        [genome_fasta_file]=''
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=200
-        [output_dir]=''
-        [seed]=42
-        [threads]="$(koopa_cpu_count)"
+        ['genome_fasta_file']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=200
+        ['output_dir']=''
+        ['seed']=42
+        ['threads']="$(koopa_cpu_count)"
     )
     index_args=()
     while (("$#"))

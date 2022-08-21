@@ -12,13 +12,13 @@ koopa_debian_apt_is_key_imported() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [apt_key]="$(koopa_debian_locate_apt_key)"
-        [sed]="$(koopa_locate_sed)"
+        ['apt_key']="$(koopa_debian_locate_apt_key)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['apt_key']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
-        [key]="${1:?}"
+        ['key']="${1:?}"
     )
     dict['key_pattern']="$( \
         koopa_print "${dict['key']}" \

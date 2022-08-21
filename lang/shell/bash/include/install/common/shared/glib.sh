@@ -25,15 +25,15 @@ main() {
         'libffi' \
         'pcre'
     declare -A app=(
-        [meson]="$(koopa_locate_meson)"
-        [ninja]="$(koopa_locate_ninja)"
+        ['meson']="$(koopa_locate_meson)"
+        ['ninja']="$(koopa_locate_ninja)"
     )
     [[ -x "${app['meson']}" ]] || return 1
     [[ -x "${app['ninja']}" ]] || return 1
     declare -A dict=(
-        [name]='glib'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='glib'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"

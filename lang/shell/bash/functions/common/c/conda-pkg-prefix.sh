@@ -11,8 +11,8 @@ koopa_conda_pkg_cache_prefix() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [conda]="$(koopa_locate_conda)"
-        [jq]="$(koopa_locate_jq)"
+        ['conda']="$(koopa_locate_conda)"
+        ['jq']="$(koopa_locate_jq)"
     )
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1

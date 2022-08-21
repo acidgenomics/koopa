@@ -13,14 +13,14 @@ koopa_r_link_files_in_etc() {
     local app dict file files
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [r]="${1:?}"
+        ['r']="${1:?}"
     )
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
-        [r_etc_source]="$(koopa_koopa_prefix)/etc/R"
-        [r_prefix]="$(koopa_r_prefix "${app['r']}")"
-        [sudo]=0
-        [version]="$(koopa_r_version "${app['r']}")"
+        ['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
+        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+        ['sudo']=0
+        ['version']="$(koopa_r_version "${app['r']}")"
     )
     koopa_assert_is_dir "${dict['r_etc_source']}" "${dict['r_prefix']}"
     if koopa_is_linux && \

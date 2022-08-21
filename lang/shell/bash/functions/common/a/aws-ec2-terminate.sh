@@ -9,12 +9,12 @@ koopa_aws_ec2_terminate() {
     # """
     local app dict
     declare -A app=(
-        [aws]="$(koopa_locate_aws)"
+        ['aws']="$(koopa_locate_aws)"
     )
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
-        [id]="$(koopa_aws_ec2_instance_id)"
-        [profile]="${AWS_PROFILE:-}"
+        ['id']="$(koopa_aws_ec2_instance_id)"
+        ['profile']="${AWS_PROFILE:-}"
     )
     [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     while (("$#"))

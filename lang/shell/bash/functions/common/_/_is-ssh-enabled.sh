@@ -12,12 +12,12 @@ __koopa_is_ssh_enabled() {
     local app dict
     koopa_assert_has_args_eq "$#" 2
     declare -A app=(
-        [ssh]="$(koopa_locate_ssh)"
+        ['ssh']="$(koopa_locate_ssh)"
     )
     [[ -x "${app['ssh']}" ]] || return 1
     declare -A dict=(
-        [url]="${1:?}"
-        [pattern]="${2:?}"
+        ['url']="${1:?}"
+        ['pattern']="${2:?}"
     )
     dict['str']="$( \
         "${app['ssh']}" -T \

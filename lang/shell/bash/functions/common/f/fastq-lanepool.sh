@@ -10,13 +10,13 @@ koopa_fastq_lanepool() {
     # """
     local app basenames dict fastq_files head i out tail
     declare -A app=(
-        [cat]="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(
-        [prefix]='lanepool'
-        [source_dir]="${PWD:?}"
-        [target_dir]="${PWD:?}"
+        ['prefix']='lanepool'
+        ['source_dir']="${PWD:?}"
+        ['target_dir']="${PWD:?}"
     )
     while (("$#"))
     do

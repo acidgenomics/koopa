@@ -5,7 +5,7 @@ koopa_activate_bash_aliases() {
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        [user_aliases_file]="${HOME}/.bash_aliases"
+        ['user_aliases_file']="${HOME}/.bash_aliases"
     )
     if [[ -f "${dict['user_aliases_file']}" ]]
     then
@@ -18,8 +18,8 @@ koopa_activate_bash_completion() {
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        [make_prefix]="$(koopa_make_prefix)"
-        [nounset]="$(koopa_boolean_nounset)"
+        ['make_prefix']="$(koopa_make_prefix)"
+        ['nounset']="$(koopa_boolean_nounset)"
     )
     dict['script']="${dict['make_prefix']}/etc/profile.d/bash_completion.sh"
     [[ -r "${dict['script']}" ]] || return 0
@@ -69,7 +69,7 @@ koopa_activate_bash_readline() {
     [[ "$#" -eq 0 ]] || return 1
     [[ -n "${INPUTRC:-}" ]] && return 0
     declare -A dict=(
-        [input_rc_file]="${HOME}/.inputrc"
+        ['input_rc_file']="${HOME}/.inputrc"
     )
     [[ -r "${dict['input_rc_file']}" ]] || return 0
     export INPUTRC="${dict['input_rc_file']}"
@@ -85,19 +85,19 @@ koopa_bash_prompt_string() {
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        [conda]="\$(koopa_prompt_conda)"
-        [conda_color]=33
-        [git]="\$(koopa_prompt_git)"
-        [git_color]=32
-        [newline]='\n'
-        [prompt]='\$'
-        [prompt_color]=35
-        [user]="$(koopa_user)@$(koopa_hostname)"
-        [user_color]=36
-        [venv]="\$(koopa_prompt_python_venv)"
-        [venv_color]=33
-        [wd]='\w'
-        [wd_color]=34
+        ['conda']="\$(koopa_prompt_conda)"
+        ['conda_color']=33
+        ['git']="\$(koopa_prompt_git)"
+        ['git_color']=32
+        ['newline']='\n'
+        ['prompt']='\$'
+        ['prompt_color']=35
+        ['user']="$(koopa_user)@$(koopa_hostname)"
+        ['user_color']=36
+        ['venv']="\$(koopa_prompt_python_venv)"
+        ['venv_color']=33
+        ['wd']='\w'
+        ['wd_color']=34
     )
     printf '%s%s%s%s%s%s%s%s%s ' \
         "${dict['newline']}" \

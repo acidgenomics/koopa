@@ -12,9 +12,9 @@ koopa_debian_apt_space_used_by_grep() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [apt_get]="$(koopa_debian_locate_apt_get)"
-        [cut]="$(koopa_locate_cut)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['apt_get']="$(koopa_debian_locate_apt_get)"
+        ['cut']="$(koopa_locate_cut)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['apt_get']}" ]] || return 1
     [[ -x "${app['cut']}" ]] || return 1

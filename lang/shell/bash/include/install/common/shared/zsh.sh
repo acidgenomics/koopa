@@ -33,15 +33,15 @@ main() {
         'pcre' \
         'texinfo'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [bin_prefix]="$(koopa_bin_prefix)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]='zsh'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['bin_prefix']="$(koopa_bin_prefix)"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='zsh'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://downloads.sourceforge.net/project/\

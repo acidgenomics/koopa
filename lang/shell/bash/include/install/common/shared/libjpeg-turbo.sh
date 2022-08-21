@@ -17,16 +17,16 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
-        [make]="$(koopa_locate_make)"
+        ['cmake']="$(koopa_locate_cmake)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='libjpeg-turbo'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='libjpeg-turbo'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://downloads.sourceforge.net/project/${dict['name']}/\

@@ -15,14 +15,14 @@ koopa_kallisto_quant_single_end() {
     koopa_assert_has_args "$#"
     declare -A dict=(
         # e.g. 'fastq'
-        [fastq_dir]=''
+        ['fastq_dir']=''
         # e.g. "_001.fastq.gz'.
-        [fastq_tail]=''
+        ['fastq_tail']=''
         # e.g. 'kallisto-index'.
-        [index_dir]=''
-        [mode]='single-end'
+        ['index_dir']=''
+        ['mode']='single-end'
         # e.g. 'kallisto'.
-        [output_dir]=''
+        ['output_dir']=''
     )
     while (("$#"))
     do

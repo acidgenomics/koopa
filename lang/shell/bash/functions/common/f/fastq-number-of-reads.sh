@@ -13,8 +13,8 @@ koopa_fastq_number_of_reads() {
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [wc]="$(koopa_locate_wc)"
+        ['awk']="$(koopa_locate_awk)"
+        ['wc']="$(koopa_locate_wc)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['wc']}" ]] || return 1

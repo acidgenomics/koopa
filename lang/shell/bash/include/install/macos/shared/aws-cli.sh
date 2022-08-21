@@ -13,15 +13,15 @@ main() {
     # """
     local app dict
     declare -A app=(
-        [cat]="$(koopa_locate_cat)"
-        [installer]="$(koopa_macos_locate_installer)"
+        ['cat']="$(koopa_locate_cat)"
+        ['installer']="$(koopa_macos_locate_installer)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['installer']}" ]] || return 1
     declare -A dict=(
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
-        [xml_file]='choices.xml'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
+        ['xml_file']='choices.xml'
     )
     dict['libexec_prefix']="${dict['prefix']}/libexec"
     koopa_mkdir "${dict['libexec_prefix']}"

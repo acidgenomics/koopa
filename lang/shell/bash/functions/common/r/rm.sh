@@ -7,11 +7,11 @@ koopa_rm() {
     # """
     local app dict pos rm rm_args
     declare -A app=(
-        [rm]="$(koopa_locate_rm)"
+        ['rm']="$(koopa_locate_rm)"
     )
     [[ -x "${app['rm']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))

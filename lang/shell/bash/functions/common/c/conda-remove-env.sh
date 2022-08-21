@@ -15,11 +15,11 @@ koopa_conda_remove_env() {
     local app dict name
     koopa_assert_has_args "$#"
     declare -A app=(
-        [conda]="$(koopa_locate_mamba_or_conda)"
+        ['conda']="$(koopa_locate_mamba_or_conda)"
     )
     [[ -x "${app['conda']}" ]] || return 1
     declare -A dict=(
-        [nounset]="$(koopa_boolean_nounset)"
+        ['nounset']="$(koopa_boolean_nounset)"
     )
     [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
     for name in "$@"

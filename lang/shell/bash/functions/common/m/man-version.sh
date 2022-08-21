@@ -8,8 +8,8 @@ koopa_man_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [grep]="$(koopa_locate_grep)"
-        [man]="${1:-}"
+        ['grep']="$(koopa_locate_grep)"
+        ['man']="${1:-}"
     )
     [[ -z "${app['man']}" ]] && app[man]="$(koopa_locate_man)"
     [[ -x "${app['grep']}" ]] || return 1

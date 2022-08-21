@@ -11,9 +11,9 @@ koopa_sys_set_permissions() {
     koopa_assert_has_args "$#"
     local arg chmod_args chown_args dict pos
     declare -A dict=(
-        [dereference]=1
-        [recursive]=0
-        [shared]=1
+        ['dereference']=1
+        ['recursive']=0
+        ['shared']=1
     )
     chmod_args=()
     chown_args=()

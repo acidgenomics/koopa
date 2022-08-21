@@ -31,9 +31,9 @@ main() {
     local dict stems
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [platform]='linux'
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['platform']='linux'
+        ['version']="${INSTALL_VERSION:?}"
     )
     # e.g. '21.1.0.0.0-1' to '211000'.
     dict['version2']="$( \

@@ -8,8 +8,8 @@ koopa_brew_reset_core_repo() {
     local app branch origin prefix repo
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
-        [git]="$(koopa_locate_git)"
+        ['brew']="$(koopa_locate_brew)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1

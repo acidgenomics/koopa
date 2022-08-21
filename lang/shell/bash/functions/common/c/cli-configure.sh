@@ -14,7 +14,7 @@ koopa_cli_configure() {
     do
         local dict
         declare -A dict=(
-            [key]="configure-${app}"
+            ['key']="configure-${app}"
         )
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"

@@ -13,11 +13,11 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [aspera_user_prefix]="${HOME}/.aspera"
-        [name]='ibm-aspera-connect'
-        [platform]='linux'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['aspera_user_prefix']="${HOME}/.aspera"
+        ['name']='ibm-aspera-connect'
+        ['platform']='linux'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['file']="${dict['name']}_${dict['version']}_${dict['platform']}.tar.gz"

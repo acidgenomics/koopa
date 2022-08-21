@@ -26,14 +26,14 @@ main() {
             'xorg-libx11'
     fi
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [url_stem]='https://prdownloads.sourceforge.net/tcl'
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['url_stem']='https://prdownloads.sourceforge.net/tcl'
+        ['version']="${INSTALL_VERSION:?}"
     )
     conf_args=(
         "--prefix=${dict['prefix']}"

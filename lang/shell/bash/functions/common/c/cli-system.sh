@@ -7,7 +7,7 @@ koopa_cli_system() {
     # """
     local dict
     declare -A dict=(
-        [key]=''
+        ['key']=''
     )
     # Platform independent.
     case "${1:-}" in

@@ -56,8 +56,8 @@ main() {
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
-        [cat]="$(koopa_locate_cat)"
-        [make]="$(koopa_locate_make)"
+        ['cat']="$(koopa_locate_cat)"
+        ['make']="$(koopa_locate_make)"
         # > [python]="$(koopa_locate_python)"
     )
     [[ -x "${app['cat']}" ]] || return 1
@@ -65,10 +65,10 @@ main() {
     # > [[ -x "${app['python']}" ]] || return 1
     # > app[python]="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='julia'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='julia'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}-full.tar.gz"
     dict['url']="https://github.com/JuliaLang/julia/releases/download/\

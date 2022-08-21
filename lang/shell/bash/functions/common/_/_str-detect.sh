@@ -20,11 +20,11 @@ __koopa_str_detect() {
     local dict grep_args
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [mode]=''
-        [pattern]=''
-        [stdin]=1
-        [string]=''
-        [sudo]=0
+        ['mode']=''
+        ['pattern']=''
+        ['stdin']=1
+        ['string']=''
+        ['sudo']=0
     )
     while (("$#"))
     do

@@ -16,9 +16,9 @@ koopa_check_shared_object() {
     koopa_assert_has_args "$#"
     declare -A app
     declare -A dict=(
-        [file]=''
-        [name]=''
-        [prefix]=''
+        ['file']=''
+        ['name']=''
+        ['prefix']=''
     )
     while (("$#"))
     do

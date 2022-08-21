@@ -12,10 +12,10 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
-        [name]='docker-credential-pass'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+        ['name']='docker-credential-pass'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-v${dict['version']}-${dict['arch']}.tar.gz"
     dict['url']="https://github.com/docker/docker-credential-helpers/releases/\

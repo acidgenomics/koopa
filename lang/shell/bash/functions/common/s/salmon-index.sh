@@ -33,24 +33,24 @@ koopa_salmon_index() {
     local app dict index_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [salmon]="$(koopa_locate_salmon)"
+        ['salmon']="$(koopa_locate_salmon)"
     )
     [[ -x "${app['salmon']}" ]] || return 1
     declare -A dict=(
-        [decoys]=1
-        [fasta_pattern]='\.fa(sta)?'
-        [gencode]=0
+        ['decoys']=1
+        ['fasta_pattern']='\.fa(sta)?'
+        ['gencode']=0
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'.
-        [genome_fasta_file]=''
-        [kmer_length]=31
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['genome_fasta_file']=''
+        ['kmer_length']=31
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'salmon-index'.
-        [output_dir]=''
-        [threads]="$(koopa_cpu_count)"
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
         # e.g. 'gencode.v39.transcripts.fa.gz'.
-        [transcriptome_fasta_file]=''
-        [type]='puff'
+        ['transcriptome_fasta_file']=''
+        ['type']='puff'
     )
     index_args=()
     while (("$#"))

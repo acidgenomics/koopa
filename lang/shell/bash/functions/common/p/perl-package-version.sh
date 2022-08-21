@@ -17,7 +17,7 @@ koopa_perl_package_version() {
     local app pkg
     koopa_assert_has_args "$#"
     declare -A app=(
-        [perl]="$(koopa_locate_perl)"
+        ['perl']="$(koopa_locate_perl)"
     )
     [[ -x "${app['perl']}" ]] || return 1
     for pkg in "$@"

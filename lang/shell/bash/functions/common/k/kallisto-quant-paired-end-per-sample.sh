@@ -47,23 +47,23 @@ koopa_kallisto_quant_paired_end_per_sample() {
     local app dict quant_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [kallisto]="$(koopa_locate_kallisto)"
+        ['kallisto']="$(koopa_locate_kallisto)"
     )
     [[ -x "${app['kallisto']}" ]] || return 1
     declare -A dict=(
         # Current recommendation in bcbio-nextgen.
-        [bootstraps]=30
+        ['bootstraps']=30
         # e.g. 'sample1_R1_001.fastq.gz'
-        [fastq_r1_file]=''
+        ['fastq_r1_file']=''
         # e.g. '_R1_001.fastq.gz'.
-        [fastq_r1_tail]=''
+        ['fastq_r1_tail']=''
         # e.g. 'sample1_R2_001.fastq.gz'.
-        [fastq_r2_file]=''
+        ['fastq_r2_file']=''
         # e.g. '_R2_001.fastq.gz'.
-        [fastq_r2_tail]=''
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
-        [threads]="$(koopa_cpu_count)"
+        ['fastq_r2_tail']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
+        ['threads']="$(koopa_cpu_count)"
     )
     quant_args=()
     while (("$#"))

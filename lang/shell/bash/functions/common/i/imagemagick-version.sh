@@ -8,8 +8,8 @@ koopa_imagemagick_version() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [magick_core_config]="$(koopa_locate_magick_core_config)"
+        ['cut']="$(koopa_locate_cut)"
+        ['magick_core_config']="$(koopa_locate_magick_core_config)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['magick_core_config']}" ]] || return 1

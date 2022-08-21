@@ -11,11 +11,11 @@ koopa_bowtie2_align() {
     koopa_assert_has_args "$#"
     koopa_assert_is_installed 'bowtie2'
     declare -A app=(
-        [tee]="$(koopa_locate_tee)"
+        ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        [threads]="$(koopa_cpu_count)"
+        ['threads']="$(koopa_cpu_count)"
     )
     while (("$#"))
     do

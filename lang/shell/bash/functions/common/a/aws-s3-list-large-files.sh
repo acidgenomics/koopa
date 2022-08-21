@@ -14,11 +14,11 @@ koopa_aws_s3_list_large_files() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [aws]="$(koopa_locate_aws)"
-        [jq]="$(koopa_locate_jq)"
-        [sort]="$(koopa_locate_sort)"
-        [tail]="$(koopa_locate_tail)"
+        ['awk']="$(koopa_locate_awk)"
+        ['aws']="$(koopa_locate_aws)"
+        ['jq']="$(koopa_locate_jq)"
+        ['sort']="$(koopa_locate_sort)"
+        ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['aws']}" ]] || return 1
@@ -26,9 +26,9 @@ koopa_aws_s3_list_large_files() {
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['tail']}" ]] || return 1
     declare -A dict=(
-        [bucket]=''
-        [num]='20'
-        [profile]='acidgenomics'
+        ['bucket']=''
+        ['num']='20'
+        ['profile']='acidgenomics'
     )
     while (("$#"))
     do

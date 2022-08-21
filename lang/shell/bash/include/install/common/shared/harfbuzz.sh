@@ -34,16 +34,16 @@ main() {
         'freetype' \
         'icu4c'
     declare -A app=(
-        [meson]="$(koopa_locate_meson)"
-        [ninja]="$(koopa_locate_ninja)"
+        ['meson']="$(koopa_locate_meson)"
+        ['ninja']="$(koopa_locate_ninja)"
     )
     [[ -x "${app['meson']}" ]] || return 1
     [[ -x "${app['ninja']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='harfbuzz'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='harfbuzz'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\

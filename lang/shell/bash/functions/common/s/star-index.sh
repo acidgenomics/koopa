@@ -23,20 +23,20 @@ koopa_star_index() {
     # """
     local app dict index_args
     declare -A app=(
-        [star]="$(koopa_locate_star)"
+        ['star']="$(koopa_locate_star)"
     )
     [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
-        [genome_fasta_file]=''
+        ['genome_fasta_file']=''
         # e.g. 'gencode.v39.annotation.gtf.gz'
-        [gtf_file]=''
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=62
+        ['gtf_file']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=62
         # e.g. 'star-index'.
-        [output_dir]=''
-        [threads]="$(koopa_cpu_count)"
-        [tmp_dir]="$(koopa_tmp_dir)"
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
+        ['tmp_dir']="$(koopa_tmp_dir)"
     )
     index_args=()
     while (("$#"))

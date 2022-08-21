@@ -22,15 +22,15 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [xcode_select]="$(koopa_macos_locate_xcode_select)"
-        [xcodebuild]="$(koopa_macos_locate_xcodebuild)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['xcode_select']="$(koopa_macos_locate_xcode_select)"
+        ['xcodebuild']="$(koopa_macos_locate_xcodebuild)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['xcode_select']}" ]] || return 1
     [[ -x "${app['xcodebuild']}" ]] || return 1
     declare -A dict=(
-        [prefix]="$("${app['xcode_select']}" -p 2>/dev/null || true)"
+        ['prefix']="$("${app['xcode_select']}" -p 2>/dev/null || true)"
     )
     if [[ -d "${dict['prefix']}" ]]
     then

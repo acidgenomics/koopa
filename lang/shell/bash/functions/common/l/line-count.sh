@@ -10,9 +10,9 @@ koopa_line_count() {
     local app file str
     koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [wc]="$(koopa_locate_wc)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['cut']="$(koopa_locate_cut)"
+        ['wc']="$(koopa_locate_wc)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['wc']}" ]] || return 1

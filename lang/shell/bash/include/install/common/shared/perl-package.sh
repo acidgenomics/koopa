@@ -29,17 +29,17 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'perl'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
-        [perl]="$(koopa_locate_perl)"
-        [yes]="$(koopa_locate_yes)"
+        ['make']="$(koopa_locate_make)"
+        ['perl']="$(koopa_locate_perl)"
+        ['yes']="$(koopa_locate_yes)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
     [[ -x "${app['yes']}" ]] || return 1
     declare -A dict=(
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['name2']="${dict['name']}"
     dict['version2']="${dict['version']}"

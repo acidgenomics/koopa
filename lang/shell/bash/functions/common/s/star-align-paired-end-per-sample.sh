@@ -27,25 +27,25 @@ koopa_star_align_paired_end_per_sample() {
     # """
     local align_args app dict
     declare -A app=(
-        [star]="$(koopa_locate_star)"
+        ['star']="$(koopa_locate_star)"
     )
     [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
         # e.g. 'sample1_R1_001.fastq.gz'.
-        [fastq_r1_file]=''
+        ['fastq_r1_file']=''
         # e.g. '_R1_001.fastq.gz'.
-        [fastq_r1_tail]=''
+        ['fastq_r1_tail']=''
         # e.g. 'sample1_R2_001.fastq.gz'.
-        [fastq_r2_file]=''
+        ['fastq_r2_file']=''
         # e.g. '_R2_001.fastq.gz'.
-        [fastq_r2_tail]=''
+        ['fastq_r2_tail']=''
         # e.g. 'star-index'.
-        [index_dir]=''
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['index_dir']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'star'.
-        [output_dir]=''
-        [threads]="$(koopa_cpu_count)"
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
     )
     align_args=()
     while (("$#"))

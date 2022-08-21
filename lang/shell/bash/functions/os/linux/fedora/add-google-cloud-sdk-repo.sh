@@ -18,17 +18,17 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [tee]="$(koopa_locate_tee)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [enabled]=1
-        [file]='/etc/yum.repos.d/google-cloud-sdk.repo'
-        [gpgcheck]=1
-        [repo_gpgcheck]=0
+        ['arch']="$(koopa_arch)"
+        ['enabled']=1
+        ['file']='/etc/yum.repos.d/google-cloud-sdk.repo'
+        ['gpgcheck']=1
+        ['repo_gpgcheck']=0
     )
     case "${dict['arch']}" in
         'x86_64')

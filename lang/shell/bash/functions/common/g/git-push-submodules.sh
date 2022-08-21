@@ -7,7 +7,7 @@ koopa_git_push_submodules() {
     # """
     local app repos
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")

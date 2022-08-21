@@ -8,7 +8,7 @@ koopa_r_koopa() {
     local app code header_file fun pos rscript_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [rscript]="$(koopa_locate_rscript)"
+        ['rscript']="$(koopa_locate_rscript)"
     )
     [[ -x "${app['rscript']}" ]] || return 1
     rscript_args=()

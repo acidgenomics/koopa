@@ -16,7 +16,7 @@ koopa_r_rebuild_docs() {
     # """
     local app doc_dir html_dir pkg_index rscript_args
     declare -A app=(
-        [r]="${1:?}"
+        ['r']="${1:?}"
     )
     koopa_assert_is_installed "${app['r']}"
     app['rscript']="${app['r']}script"

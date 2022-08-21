@@ -29,11 +29,11 @@ koopa_aws_s3_find() {
     local dict exclude_arr include_arr ls_args pattern str
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [exclude]=0
-        [include]=0
-        [prefix]=''
-        [profile]="${AWS_PROFILE:-}"
-        [recursive]=0
+        ['exclude']=0
+        ['include']=0
+        ['prefix']=''
+        ['profile']="${AWS_PROFILE:-}"
+        ['recursive']=0
     )
     [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     exclude_arr=()

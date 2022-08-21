@@ -32,22 +32,22 @@ koopa_docker_build() {
     local app dict pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [date]="$(koopa_locate_date)"
-        [docker]="$(koopa_locate_docker)"
-        [sort]="$(koopa_locate_sort)"
+        ['cut']="$(koopa_locate_cut)"
+        ['date']="$(koopa_locate_date)"
+        ['docker']="$(koopa_locate_docker)"
+        ['sort']="$(koopa_locate_sort)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['date']}" ]] || return 1
     [[ -x "${app['docker']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
-        [docker_dir]="$(koopa_docker_prefix)"
-        [delete]=0
-        [memory]=''
-        [push]=1
-        [server]='docker.io'
-        [tag]='latest'
+        ['docker_dir']="$(koopa_docker_prefix)"
+        ['delete']=0
+        ['memory']=''
+        ['push']=1
+        ['server']='docker.io'
+        ['tag']='latest'
     )
     pos=()
     while (("$#"))

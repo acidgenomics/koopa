@@ -8,7 +8,7 @@ koopa_list_app_versions() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [prefix]="$(koopa_app_prefix)"
+        ['prefix']="$(koopa_app_prefix)"
     )
     if [[ ! -d "${dict['prefix']}" ]]
     then

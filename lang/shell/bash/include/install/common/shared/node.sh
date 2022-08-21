@@ -49,24 +49,24 @@ main() {
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
-        [make]="$(koopa_locate_make)"
-        [python]="$(koopa_locate_python)"
+        ['make']="$(koopa_locate_make)"
+        ['python']="$(koopa_locate_python)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         # > [brotli]="$(koopa_app_prefix 'brotli')"
-        [ca_certificates]="$(koopa_app_prefix 'ca-certificates')"
+        ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
         # > [cares]="$(koopa_app_prefix 'c-ares')"
-        [jobs]="$(koopa_cpu_count)"
-        [libuv]="$(koopa_app_prefix 'libuv')"
-        [name]='node'
+        ['jobs']="$(koopa_cpu_count)"
+        ['libuv']="$(koopa_app_prefix 'libuv')"
+        ['name']='node'
         # > [nghttp2]="$(koopa_app_prefix 'nghttp2')"
-        [openssl]="$(koopa_app_prefix 'openssl3')"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
-        [zlib]="$(koopa_app_prefix 'zlib')"
+        ['openssl']="$(koopa_app_prefix 'openssl3')"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
+        ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     dict['cacerts']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict['cacerts']}"

@@ -17,7 +17,7 @@ koopa_git_rm_submodule() {
     koopa_assert_has_args "$#"
     koopa_assert_is_git_repo
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['git']}" ]] || return 1
     for module in "$@"

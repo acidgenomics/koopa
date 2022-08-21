@@ -27,18 +27,18 @@ main() {
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
-        [make]="$(koopa_locate_make)"
-        [python]="$(koopa_locate_python)"
+        ['make']="$(koopa_locate_make)"
+        ['python']="$(koopa_locate_python)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
-        [boost]="$(koopa_app_prefix 'boost')"
-        [jobs]="$(koopa_cpu_count)"
-        [name]='nghttp2'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['boost']="$(koopa_app_prefix 'boost')"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='nghttp2'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\

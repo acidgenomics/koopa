@@ -29,8 +29,8 @@ koopa_conda_activate_env() {
     local dict
     koopa_assert_has_args_eq "$#" 1
     declare -A dict=(
-        [env_name]="${1:?}"
-        [nounset]="$(koopa_boolean_nounset)"
+        ['env_name']="${1:?}"
+        ['nounset']="$(koopa_boolean_nounset)"
     )
     dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
     if [[ ! -d "${dict['env_prefix']}" ]]

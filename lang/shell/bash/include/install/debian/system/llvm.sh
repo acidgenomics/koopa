@@ -19,7 +19,7 @@ main() {
     local dict pkgs
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [version]="${INSTALL_VERSION:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     koopa_debian_apt_add_llvm_repo

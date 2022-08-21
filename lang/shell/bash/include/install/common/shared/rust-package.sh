@@ -24,15 +24,15 @@ main() {
         'pkg-config' \
         'rust'
     declare -A app=(
-        [cargo]="$(koopa_locate_cargo)"
+        ['cargo']="$(koopa_locate_cargo)"
     )
     [[ -x "${app['cargo']}" ]] || return 1
     declare -A dict=(
-        [cargo_home]="$(koopa_init_dir 'cargo')"
-        [jobs]="$(koopa_cpu_count)"
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['cargo_home']="$(koopa_init_dir 'cargo')"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(

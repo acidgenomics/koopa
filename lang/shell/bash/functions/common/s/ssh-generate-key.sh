@@ -20,14 +20,14 @@ koopa_ssh_generate_key() {
     # """
     local app dict ssh_args
     declare -A app=(
-        [ssh_keygen]="$(koopa_locate_ssh_keygen)"
+        ['ssh_keygen']="$(koopa_locate_ssh_keygen)"
     )
     [[ -x "${app['ssh_keygen']}" ]] || return 1
     declare -A dict=(
-        [hostname]="$(koopa_hostname)"
-        [key_name]='id_rsa' # or 'id_ed25519'.
-        [prefix]="${HOME:?}/.ssh"
-        [user]="$(koopa_user)"
+        ['hostname']="$(koopa_hostname)"
+        ['key_name']='id_rsa' # or 'id_ed25519'.
+        ['prefix']="${HOME:?}/.ssh"
+        ['user']="$(koopa_user)"
     )
     while (("$#"))
     do

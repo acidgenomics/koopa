@@ -18,11 +18,11 @@ __koopa_file_detect() {
     local dict grep_args
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [file]=''
-        [mode]=''
-        [pattern]=''
-        [stdin]=1
-        [sudo]=0
+        ['file']=''
+        ['mode']=''
+        ['pattern']=''
+        ['stdin']=1
+        ['sudo']=0
     )
     while (("$#"))
     do

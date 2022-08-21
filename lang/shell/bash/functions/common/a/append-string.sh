@@ -8,8 +8,8 @@ koopa_append_string() {
     local dict
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [file]=''
-        [string]=''
+        ['file']=''
+        ['string']=''
     )
     while (("$#"))
     do

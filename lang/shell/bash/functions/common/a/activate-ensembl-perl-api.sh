@@ -10,7 +10,7 @@ koopa_activate_ensembl_perl_api() {
     # """
     local dict
     declare -A dict=(
-        [prefix]="$(koopa_ensembl_perl_api_prefix)"
+        ['prefix']="$(koopa_ensembl_perl_api_prefix)"
     )
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_add_to_path_start "${dict['prefix']}/ensembl-git-tools/bin"

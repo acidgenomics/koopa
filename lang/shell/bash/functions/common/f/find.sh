@@ -38,20 +38,20 @@ koopa_find() {
     local app dict exclude_arg exclude_arr find find_args results sorted_results
     declare -A app
     declare -A dict=(
-        [days_modified_gt]=''
-        [days_modified_lt]=''
-        [empty]=0
-        [engine]="${KOOPA_FIND_ENGINE:-}"
-        [exclude]=0
-        [max_depth]=''
-        [min_depth]=1
-        [pattern]=''
-        [print0]=0
-        [size]=''
-        [sort]=0
-        [sudo]=0
-        [type]=''
-        [verbose]=0
+        ['days_modified_gt']=''
+        ['days_modified_lt']=''
+        ['empty']=0
+        ['engine']="${KOOPA_FIND_ENGINE:-}"
+        ['exclude']=0
+        ['max_depth']=''
+        ['min_depth']=1
+        ['pattern']=''
+        ['print0']=0
+        ['size']=''
+        ['sort']=0
+        ['sudo']=0
+        ['type']=''
+        ['verbose']=0
     )
     exclude_arr=()
     while (("$#"))

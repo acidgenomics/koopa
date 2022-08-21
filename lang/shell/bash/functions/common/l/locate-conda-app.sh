@@ -8,10 +8,10 @@ koopa_locate_conda_app() {
     local dict pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [app_name]=''
-        [conda_prefix]="$(koopa_conda_prefix)"
-        [env_name]=''
-        [env_version]=''
+        ['app_name']=''
+        ['conda_prefix']="$(koopa_conda_prefix)"
+        ['env_name']=''
+        ['env_version']=''
     )
     pos=()
     while (("$#"))

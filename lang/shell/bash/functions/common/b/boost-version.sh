@@ -15,8 +15,8 @@ koopa_boost_version() {
     local app dict gcc_args
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [bc]="$(koopa_locate_bc)"
-        [gcc]="$(koopa_locate_gcc)"
+        ['bc']="$(koopa_locate_bc)"
+        ['gcc']="$(koopa_locate_gcc)"
     )
     [[ -x "${app['bc']}" ]] || return 1
     [[ -x "${app['gcc']}" ]] || return 1

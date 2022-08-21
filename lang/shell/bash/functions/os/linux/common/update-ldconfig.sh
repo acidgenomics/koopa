@@ -12,14 +12,14 @@ koopa_linux_update_ldconfig() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [ldconfig]="$(koopa_linux_locate_ldconfig)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['ldconfig']="$(koopa_linux_locate_ldconfig)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['ldconfig']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [distro_prefix]="$(koopa_distro_prefix)"
-        [target_prefix]='/etc/ld.so.conf.d'
+        ['distro_prefix']="$(koopa_distro_prefix)"
+        ['target_prefix']='/etc/ld.so.conf.d'
     )
     [[ -d "${dict['target_prefix']}" ]] || return 0
     dict['conf_source']="${dict['distro_prefix']}${dict['target_prefix']}"

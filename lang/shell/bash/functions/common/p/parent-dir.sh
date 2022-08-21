@@ -9,12 +9,12 @@ koopa_parent_dir() {
     # """
     local app dict file parent pos
     declare -A app=(
-        [sed]="$(koopa_locate_sed)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
-        [cd_tail]=''
-        [n]=1
+        ['cd_tail']=''
+        ['n']=1
     )
     pos=()
     while (("$#"))

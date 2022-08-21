@@ -15,16 +15,16 @@ koopa_salmon_quant_single_end() {
     koopa_assert_has_args "$#"
     declare -A dict=(
         # e.g. 'fastq'.
-        [fastq_dir]=''
+        ['fastq_dir']=''
         # e.g. '.fastq.gz'.
-        [fastq_tail]=''
+        ['fastq_tail']=''
         # e.g. 'salmon-index'.
-        [index_dir]=''
+        ['index_dir']=''
         # Detect library fragment type (strandedness) automatically.
-        [lib_type]='A'
-        [mode]='single-end'
+        ['lib_type']='A'
+        ['mode']='single-end'
         # e.g. 'salmon'.
-        [output_dir]=''
+        ['output_dir']=''
     )
     while (("$#"))
     do

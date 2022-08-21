@@ -11,9 +11,9 @@ koopa_macos_app_version() {
     local app x
     koopa_assert_has_args "$#"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [plutil]="$(koopa_macos_locate_plutil)"
-        [tr]="$(koopa_locate_tr)"
+        ['awk']="$(koopa_locate_awk)"
+        ['plutil']="$(koopa_macos_locate_plutil)"
+        ['tr']="$(koopa_locate_tr)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['plutil']}" ]] || return 1

@@ -13,9 +13,9 @@ koopa_disk_gb_free() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        [df]="$(koopa_locate_df)"
-        [head]="$(koopa_locate_head)"
-        [sed]="$(koopa_locate_sed)"
+        ['df']="$(koopa_locate_df)"
+        ['head']="$(koopa_locate_head)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1

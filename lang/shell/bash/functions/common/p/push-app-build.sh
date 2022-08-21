@@ -15,19 +15,19 @@ koopa_push_app_build() {
     local app dict name
     koopa_assert_has_args "$#"
     declare -A app=(
-        [aws]="$(koopa_locate_aws)"
-        [tar]="$(koopa_locate_tar)"
+        ['aws']="$(koopa_locate_aws)"
+        ['tar']="$(koopa_locate_tar)"
     )
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
-        [distribution_id]="${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:?}"
-        [opt_prefix]="$(koopa_opt_prefix)"
-        [os_string]="$(koopa_os_string)"
-        [profile]='acidgenomics'
-        [s3_bucket]='s3://koopa.acidgenomics.com'
-        [tmp_dir]="$(koopa_tmp_dir)"
+        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+        ['distribution_id']="${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:?}"
+        ['opt_prefix']="$(koopa_opt_prefix)"
+        ['os_string']="$(koopa_os_string)"
+        ['profile']='acidgenomics'
+        ['s3_bucket']='s3://koopa.acidgenomics.com'
+        ['tmp_dir']="$(koopa_tmp_dir)"
     )
     # Attempt to avoid retry errors (default = 2) for CloudFront.
     export AWS_MAX_ATTEMPTS=5

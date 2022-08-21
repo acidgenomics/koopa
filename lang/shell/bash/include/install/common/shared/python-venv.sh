@@ -8,15 +8,15 @@ main() {
     local app bin_name bin_names dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [python]="$(koopa_locate_python)"
+        ['cut']="$(koopa_locate_cut)"
+        ['python']="$(koopa_locate_python)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
-        [name]="${INSTALL_NAME:?}"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']="${INSTALL_NAME:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['libexec']="${dict['prefix']}/libexec"
     # NOTE Consider reworking the case-sensitivity edge case handling here.

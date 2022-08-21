@@ -18,17 +18,17 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cat]="$(koopa_locate_cat)"
-        [make]="$(koopa_locate_make)"
+        ['cat']="$(koopa_locate_cat)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='bzip2'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [shared_ext]="$(koopa_shared_ext)"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='bzip2'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"

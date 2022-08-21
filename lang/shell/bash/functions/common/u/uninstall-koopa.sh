@@ -7,8 +7,8 @@ koopa_uninstall_koopa() {
     # """
     local dict
     declare -A dict=(
-        [config_prefix]="$(koopa_config_prefix)"
-        [koopa_prefix]="$(koopa_koopa_prefix)"
+        ['config_prefix']="$(koopa_config_prefix)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
     )
     if koopa_is_linux && koopa_is_shared_install
     then

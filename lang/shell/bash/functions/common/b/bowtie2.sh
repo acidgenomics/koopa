@@ -11,11 +11,11 @@ koopa_bowtie2() {
     # """
     local dict fastq_r1_file fastq_r1_files
     declare -A dict=(
-        [fastq_dir]=''
-        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
-        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
-        [genome_fasta_file]=''
-        [output_dir]=''
+        ['fastq_dir']=''
+        ['fastq_r1_tail']='' # '_R1_001.fastq.gz'
+        ['fastq_r2_tail']='' # '_R2_001.fastq.gz'
+        ['genome_fasta_file']=''
+        ['output_dir']=''
     )
     while (("$#"))
     do

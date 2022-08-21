@@ -8,7 +8,7 @@ koopa_convert_utf8_nfd_to_nfc() {
     local app
     koopa_assert_has_args "$#"
     declare -A app=(
-        [convmv]="$(koopa_locate_convmv)"
+        ['convmv']="$(koopa_locate_convmv)"
     )
     [[ -x "${app['convmv']}" ]] || return 1
     koopa_assert_is_file "$@"

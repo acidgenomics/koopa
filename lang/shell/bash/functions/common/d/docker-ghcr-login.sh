@@ -10,13 +10,13 @@ koopa_docker_ghcr_login() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [docker]="$(koopa_locate_docker)"
+        ['docker']="$(koopa_locate_docker)"
     )
     [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
-        [pat]="${GHCR_PAT:?}"
-        [server]='ghcr.io'
-        [user]="${GHCR_USER:?}"
+        ['pat']="${GHCR_PAT:?}"
+        ['server']='ghcr.io'
+        ['user']="${GHCR_USER:?}"
     )
     koopa_print "${dict['pat']}" \
         | "${app['docker']}" login \

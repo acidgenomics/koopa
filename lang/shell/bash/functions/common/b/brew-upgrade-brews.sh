@@ -8,7 +8,7 @@ koopa_brew_upgrade_brews() {
     local app brew brews
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
+        ['brew']="$(koopa_locate_brew)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     readarray -t brews <<< "$(koopa_brew_outdated)"

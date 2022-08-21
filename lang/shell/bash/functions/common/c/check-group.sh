@@ -8,8 +8,8 @@ koopa_check_group() {
     local dict
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [file]="${1:?}"
-        [code]="${2:?}"
+        ['file']="${1:?}"
+        ['code']="${2:?}"
     )
     if [[ ! -e "${dict['file']}" ]]
     then
