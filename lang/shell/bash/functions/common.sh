@@ -7907,8 +7907,8 @@ koopa_fastq_lanepool() {
     for i in "${!out[@]}"
     do
         "${app['cat']}" \
-            "${dict['source_dir']}/${head['i']}_L00"[1-9]"_${tail['i']}" \
-            > "${out['i']}"
+            "${dict['source_dir']}/${head[$i]}_L00"[1-9]"_${tail[$i]}" \
+            > "${out[$i]}"
     done
     return 0
 }
@@ -8673,7 +8673,7 @@ koopa_find() {
                         for i in "${!globs1[@]}"
                         do
                             globs2+=(
-                                "-name ${globs1['i']}"
+                                "-name ${globs1[$i]}"
                             )
                         done
                         str="( $(koopa_paste --sep=' -o ' "${globs2[@]}") )"
@@ -11729,7 +11729,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         do
             local dict2
             declare -A dict2
-            dict2['name']="${bin_arr['i']}"
+            dict2['name']="${bin_arr[$i]}"
             dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
             koopa_link_in_bin \
                 --name="${dict2['name']}" \
@@ -11742,7 +11742,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         do
             local dict2
             declare -A dict2
-            dict2['name']="${bin_arr['i']}.1"
+            dict2['name']="${bin_arr[$i]}.1"
             dict2['manfile1']="${dict['prefix']}/share/man/man1/${dict2['name']}"
             dict2['manfile2']="${dict['prefix']}/man/man1/${dict2['name']}"
             if [[ -f "${dict2['manfile1']}" ]]
@@ -15325,7 +15325,7 @@ koopa_link_in_make() {
     then
         for i in "${!include_arr[@]}"
         do
-            files_arr['i']="${dict['app_prefix']}/${include_arr['i']}"
+            files_arr[$i]="${dict['app_prefix']}/${include_arr[$i]}"
         done
     else
         find_args=(
@@ -15339,7 +15339,7 @@ koopa_link_in_make() {
         then
             for i in "${!exclude_arr[@]}"
             do
-                find_args+=("--exclude=${exclude_arr['i']}")
+                find_args+=("--exclude=${exclude_arr[$i]}")
             done
         fi
         readarray -t files_arr <<< "$(koopa_find "${find_args[@]}")"
@@ -18378,7 +18378,7 @@ koopa_r_configure_makevars() {
         flibs=()
         for i in "${!libs[@]}"
         do
-            flibs+=("-L${libs['i']}")
+            flibs+=("-L${libs[$i]}")
         done
         flibs+=('-lgfortran')
         case "${dict['arch']}" in
