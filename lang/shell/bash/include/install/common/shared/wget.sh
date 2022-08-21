@@ -25,7 +25,7 @@ main() {
         --name='wget' \
         -D '--disable-debug' \
         -D '--with-ssl=openssl' \
-        -D "--with-libssl-prefix=${dict[ssl]}" \
+        -D "--with-libssl-prefix=${dict['ssl']}" \
         -D '--without-included-regex' \
         -D '--without-libpsl' \
         "$@"

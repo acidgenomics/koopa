@@ -13,12 +13,12 @@ main() {
         [apt_get]="$(koopa_debian_locate_apt_get)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[apt_get]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[apt_get]}" --yes remove \
+    [[ -x "${app['apt_get']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['apt_get']}" --yes remove \
         '^clang-[0-9]+.*' \
         '^llvm-[0-9]+.*'
-    "${app[sudo]}" "${app[apt_get]}" --yes autoremove
+    "${app['sudo']}" "${app['apt_get']}" --yes autoremove
     koopa_rm --sudo '/etc/apt/sources.list.d/llvm.list'
     return 0
 }

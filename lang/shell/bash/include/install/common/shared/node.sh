@@ -52,9 +52,9 @@ main() {
         [make]="$(koopa_locate_make)"
         [python]="$(koopa_locate_python)"
     )
-    [[ -x "${app[make]}" ]] || return 1
-    [[ -x "${app[python]}" ]] || return 1
-    app[python]="$(koopa_realpath "${app[python]}")"
+    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || return 1
+    app[python]="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         # > [brotli]="$(koopa_app_prefix 'brotli')"
         [ca_certificates]="$(koopa_app_prefix 'ca-certificates')"
@@ -68,44 +68,44 @@ main() {
         [version]="${INSTALL_VERSION:?}"
         [zlib]="$(koopa_app_prefix 'zlib')"
     )
-    dict[cacerts]="${dict[ca_certificates]}/share/ca-certificates/cacert.pem"
-    koopa_assert_is_file "${dict[cacerts]}"
-    dict[file]="${dict[name]}-v${dict[version]}.tar.xz"
-    dict[url]="https://nodejs.org/dist/v${dict[version]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-v${dict[version]}"
+    dict[cacerts]="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
+    koopa_assert_is_file "${dict['cacerts']}"
+    dict[file]="${dict['name']}-v${dict['version']}.tar.xz"
+    dict[url]="https://nodejs.org/dist/v${dict['version']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-v${dict['version']}"
     export LDFLAGS_host="${LDFLAGS:?}"
-    export PYTHON="${app[python]}"
+    export PYTHON="${app['python']}"
     # conda-forge currently uses shared libuv, openssl, and zlib, but not
     # brotli, c-cares, and nghttp2.
     conf_args=(
         # > '--cross-compiling'
         # > '--enable-lto'
         # > '--error-on-warn'
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--ninja'
-        "--openssl-system-ca-path=${dict[cacerts]}"
+        "--openssl-system-ca-path=${dict['cacerts']}"
         '--openssl-use-def-ca-store'
         '--shared'
         # > '--shared-brotli'
-        # > "--shared-brotli-includes=${dict[brotli]}/include"
-        # > "--shared-brotli-libpath=${dict[brotli]}/lib"
+        # > "--shared-brotli-includes=${dict['brotli']}/include"
+        # > "--shared-brotli-libpath=${dict['brotli']}/lib"
         # > '--shared-cares'
-        # > "--shared-cares-includes=${dict[cares]}/include"
-        # > "--shared-cares-libpath=${dict[cares]}/lib"
+        # > "--shared-cares-includes=${dict['cares']}/include"
+        # > "--shared-cares-libpath=${dict['cares']}/lib"
         '--shared-libuv'
-        "--shared-libuv-includes=${dict[libuv]}/include"
-        "--shared-libuv-libpath=${dict[libuv]}/lib"
+        "--shared-libuv-includes=${dict['libuv']}/include"
+        "--shared-libuv-libpath=${dict['libuv']}/lib"
         # > '--shared-nghttp2'
-        # > "--shared-nghttp2-includes=${dict[nghttp2]}/include"
-        # > "--shared-nghttp2-libpath=${dict[nghttp2]}/lib"
+        # > "--shared-nghttp2-includes=${dict['nghttp2']}/include"
+        # > "--shared-nghttp2-libpath=${dict['nghttp2']}/lib"
         '--shared-openssl'
-        "--shared-openssl-includes=${dict[openssl]}/include"
-        "--shared-openssl-libpath=${dict[openssl]}/lib"
+        "--shared-openssl-includes=${dict['openssl']}/include"
+        "--shared-openssl-libpath=${dict['openssl']}/lib"
         '--shared-zlib'
-        "--shared-zlib-includes=${dict[zlib]}/include"
-        "--shared-zlib-libpath=${dict[zlib]}/lib"
+        "--shared-zlib-includes=${dict['zlib']}/include"
+        "--shared-zlib-libpath=${dict['zlib']}/lib"
         '--with-intl=system-icu'
         '--without-corepack'
         '--without-node-snapshot'
@@ -113,7 +113,7 @@ main() {
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

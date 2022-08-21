@@ -13,29 +13,29 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='xz'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
+    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
     dict[url]="https://downloads.sourceforge.net/project/\
-lzmautils/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+lzmautils/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--disable-debug'
         '--disable-dependency-tracking'
         '--disable-silent-rules'
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" check
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    # > "${app['make']}" check
+    "${app['make']}" install
     return 0
 }

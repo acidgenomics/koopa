@@ -19,14 +19,14 @@ main() {
     else
         dict[os_id]='linux'
     fi
-    dict[file]="${dict[name]}-v${dict[version]}.${dict[os_id]}.\
-${dict[arch]}.tar.xz"
-    dict[url]="https://github.com/koalaman/${dict[name]}/releases/download/\
-v${dict[version]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
+    dict[file]="${dict['name']}-v${dict['version']}.${dict['os_id']}.\
+${dict['arch']}.tar.xz"
+    dict[url]="https://github.com/koalaman/${dict['name']}/releases/download/\
+v${dict['version']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
     koopa_cp \
-        "${dict[name]}-v${dict[version]}/${dict[name]}" \
-        "${dict[prefix]}/bin/${dict[name]}"
+        "${dict['name']}-v${dict['version']}/${dict['name']}" \
+        "${dict['prefix']}/bin/${dict['name']}"
     return 0
 }

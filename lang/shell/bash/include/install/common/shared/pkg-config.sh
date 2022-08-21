@@ -16,40 +16,40 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='pkg-config'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://${dict[name]}.freedesktop.org/releases/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
+    dict[url]="https://${dict['name']}.freedesktop.org/releases/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     dict[sys_inc]='/usr/include'
     if koopa_is_macos
     then
         dict[sdk_prefix]="$(koopa_macos_sdk_prefix)"
-        dict[sys_inc]="${dict[sdk_prefix]}/${dict[sys_inc]}"
+        dict[sys_inc]="${dict['sdk_prefix']}/${dict['sys_inc']}"
     fi
-    koopa_assert_is_dir "${dict[sys_inc]}"
+    koopa_assert_is_dir "${dict['sys_inc']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--disable-debug'
         '--disable-host-tool'
         '--with-internal-glib'
-        "--with-system-include-path=${dict[sys_inc]}"
+        "--with-system-include-path=${dict['sys_inc']}"
     )
     if koopa_is_macos
     then
         dict[pc_path]='/usr/lib/pkgconfig'
-        conf_args+=("--with-pc-path=${dict[pc_path]}")
+        conf_args+=("--with-pc-path=${dict['pc_path']}")
     fi
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

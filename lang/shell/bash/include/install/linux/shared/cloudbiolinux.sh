@@ -13,8 +13,8 @@ main() {
         [url]='https://github.com/chapmanb/cloudbiolinux.git'
     )
     koopa_git_clone \
-        --commit="${dict[commit]}" \
-        --prefix="${dict[prefix]}" \
-        --url="${dict[url]}"
+        --commit="${dict['commit']}" \
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}"
     return 0
 }

@@ -28,30 +28,30 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='graphviz'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.xz"
+    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
     dict[url]="https://gitlab.com/api/v4/projects/4207231/packages/generic/\
-${dict[name]}-releases/${dict[version]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+${dict['name']}-releases/${dict['version']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--disable-debug'
         '--disable-man-pdfs'
         '--enable-shared'
         '--enable-static'
     )
-    koopa_mkdir "${dict[prefix]}/lib"
+    koopa_mkdir "${dict['prefix']}/lib"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

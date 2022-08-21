@@ -17,31 +17,31 @@ main() {
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='lapack'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict[version]}.tar.gz"
-    dict[url]="https://github.com/Reference-LAPACK/${dict[name]}/archive/\
-refs/tags/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="v${dict['version']}.tar.gz"
+    dict[url]="https://github.com/Reference-LAPACK/${dict['name']}/archive/\
+refs/tags/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DBUILD_SHARED_LIBS:BOOL=ON'
         '-DLAPACKE:BOOL=ON'
     )
-    "${app[cmake]}" \
+    "${app['cmake']}" \
         -S '.' \
         -B 'build' \
         "${cmake_args[@]}"
-    "${app[cmake]}" \
+    "${app['cmake']}" \
         --build 'build' \
-        --parallel "${dict[jobs]}"
-    "${app[cmake]}" --install 'build'
+        --parallel "${dict['jobs']}"
+    "${app['cmake']}" --install 'build'
     return 0
 }

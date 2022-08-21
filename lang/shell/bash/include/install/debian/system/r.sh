@@ -30,10 +30,10 @@ main() {
     # >     '/etc/R' \
     # >     '/usr/lib/R/etc' \
     # >     '/usr/local/lib/R'
-    koopa_debian_apt_add_r_repo "${dict[version]}"
+    koopa_debian_apt_add_r_repo "${dict['version']}"
     pkgs=('r-base' 'r-base-dev')
     koopa_debian_apt_install "${pkgs[@]}"
-    koopa_assert_is_installed "${app[r]}"
-    koopa_configure_r "${app[r]}"
+    koopa_assert_is_installed "${app['r']}"
+    koopa_configure_r "${app['r']}"
     return 0
 }

@@ -13,9 +13,9 @@ main() {
         [url]='https://github.com/plexus/chemacs2.git'
     )
     koopa_git_clone \
-        --commit="${dict[commit]}" \
-        --prefix="${dict[prefix]}" \
-        --url="${dict[url]}"
-    koopa_configure_chemacs "${dict[prefix]}"
+        --commit="${dict['commit']}" \
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}"
+    koopa_configure_chemacs "${dict['prefix']}"
     return 0
 }

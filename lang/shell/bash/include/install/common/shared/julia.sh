@@ -60,31 +60,31 @@ main() {
         [make]="$(koopa_locate_make)"
         # > [python]="$(koopa_locate_python)"
     )
-    [[ -x "${app[cat]}" ]] || return 1
-    [[ -x "${app[make]}" ]] || return 1
-    # > [[ -x "${app[python]}" ]] || return 1
-    # > app[python]="$(koopa_realpath "${app[python]}")"
+    [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
+    # > [[ -x "${app['python']}" ]] || return 1
+    # > app[python]="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='julia'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}-full.tar.gz"
+    dict[file]="${dict['name']}-${dict['version']}-full.tar.gz"
     dict[url]="https://github.com/JuliaLang/julia/releases/download/\
-v${dict[version]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+v${dict['version']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     # If set, this will interfere with internal LLVM build required for
     # Julia. See 'build.md' file for LLVM details.
     unset -v LLVM_CONFIG
     # Customize the 'Make.user' file.
     # Need to ensure we configure internal LLVM build here.
-    "${app[cat]}" > 'Make.user' << END
-prefix=${dict[prefix]}
-libexecdir=${dict[prefix]}/lib
-sysconfdir=${dict[prefix]}/etc
+    "${app['cat']}" > 'Make.user' << END
+prefix=${dict['prefix']}
+libexecdir=${dict['prefix']}/lib
+sysconfdir=${dict['prefix']}/etc
 
 VERBOSE=1
 
@@ -128,10 +128,10 @@ VERBOSE=1
 # > LLVM_VER=\${LLVM_VER}
 
 # NOTE This doesn't seem to pick up our Python correctly.
-# > PYTHON=\${app[python]}
+# > PYTHON=\${app['python']}
 END
-    "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" test
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    # > "${app['make']}" test
+    "${app['make']}" install
     return 0
 }
