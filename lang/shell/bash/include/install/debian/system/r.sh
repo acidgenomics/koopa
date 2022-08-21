@@ -19,10 +19,10 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [r]='/usr/bin/R'
+        ['r']='/usr/bin/R'
     )
     declare -A dict=(
-        [version]="${INSTALL_VERSION:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     # These removal steps will mess up existing installation, unless we run
     # 'sudo apt purge r-base-core' first.

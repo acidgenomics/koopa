@@ -23,9 +23,9 @@ main() {
     local app pkgs
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [pacman]="$(koopa_arch_locate_pacman)"
-        [pacman_db_upgrade]="$(koopa_arch_locate_pacman_db_upgrade)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['pacman']="$(koopa_arch_locate_pacman)"
+        ['pacman_db_upgrade']="$(koopa_arch_locate_pacman_db_upgrade)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['pacman']}" ]] || return 1
     [[ -x "${app['pacman_db_upgrade']}" ]] || return 1

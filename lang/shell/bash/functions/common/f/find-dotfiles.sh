@@ -13,16 +13,16 @@ koopa_find_dotfiles() {
     local app dict
     koopa_assert_has_args_eq "$#" 2
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [basename]="$(koopa_locate_basename)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['awk']="$(koopa_locate_awk)"
+        ['basename']="$(koopa_locate_basename)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['basename']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
-        [type]="${1:?}"
-        [header]="${2:?}"
+        ['type']="${1:?}"
+        ['header']="${2:?}"
     )
     # shellcheck disable=SC2016
     dict['str']="$( \

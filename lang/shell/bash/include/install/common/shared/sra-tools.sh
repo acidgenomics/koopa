@@ -36,20 +36,20 @@ main() {
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
-        [python]="$(koopa_locate_python)"
+        ['cmake']="$(koopa_locate_cmake)"
+        ['python']="$(koopa_locate_python)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
-        [base_url]='https://github.com/ncbi'
-        [hdf5]="$(koopa_app_prefix 'hdf5')"
-        [java_home]="$(koopa_java_prefix)"
-        [libxml2]="$(koopa_app_prefix 'libxml2')"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [shared_ext]="$(koopa_shared_ext)"
-        [version]="${INSTALL_VERSION:?}"
+        ['base_url']='https://github.com/ncbi'
+        ['hdf5']="$(koopa_app_prefix 'hdf5')"
+        ['java_home']="$(koopa_java_prefix)"
+        ['libxml2']="$(koopa_app_prefix 'libxml2')"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
+        ['version']="${INSTALL_VERSION:?}"
     )
     # Ensure we define Java location, otherwise install can hit warnings during
     # ngs-tools install.

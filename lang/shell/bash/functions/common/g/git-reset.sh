@@ -13,7 +13,7 @@ koopa_git_reset() {
     # """
     local app repos
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")

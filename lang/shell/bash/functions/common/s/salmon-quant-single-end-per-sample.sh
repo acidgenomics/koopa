@@ -22,24 +22,24 @@ koopa_salmon_quant_single_end_per_sample() {
     local app dict quant_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [salmon]="$(koopa_locate_salmon)"
+        ['salmon']="$(koopa_locate_salmon)"
     )
     [[ -x "${app['salmon']}" ]] || return 1
     declare -A dict=(
-        [bootstraps]=30
+        ['bootstraps']=30
         # e.g. 'sample1.fastq.gz'.
-        [fastq_file]=''
+        ['fastq_file']=''
         # e.g. '.fastq.gz'.
-        [fastq_tail]=''
+        ['fastq_tail']=''
         # e.g. 'salmon-index'.
-        [index_dir]=''
+        ['index_dir']=''
         # Detect library fragment type (strandedness) automatically.
-        [lib_type]='A'
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['lib_type']='A'
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'salmon'.
-        [output_dir]=''
-        [threads]="$(koopa_cpu_count)"
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
     )
     quant_args=()
     while (("$#"))

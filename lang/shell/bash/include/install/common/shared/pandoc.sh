@@ -19,15 +19,15 @@ main() {
     koopa_activate_build_opt_prefix 'haskell-stack'
     koopa_activate_opt_prefix 'zlib'
     declare -A app=(
-        [stack]="$(koopa_locate_stack)"
+        ['stack']="$(koopa_locate_stack)"
     )
     [[ -x "${app['stack']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='pandoc'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [stack_root]="$(koopa_init_dir 'stack')"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='pandoc'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['stack_root']="$(koopa_init_dir 'stack')"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://hackage.haskell.org/package/\

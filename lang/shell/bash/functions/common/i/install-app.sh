@@ -12,50 +12,50 @@ koopa_install_app() {
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
-        [tee]="$(koopa_locate_tee)"
+        ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['tee']}" ]] || return 1
     declare -A bool=(
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
-        [auto_prefix]=0
+        ['auto_prefix']=0
         # Download pre-built binary from our S3 bucket. Inspired by the
         # Homebrew bottle approach.
-        [binary]=0
-        [copy_log_file]=0
+        ['binary']=0
+        ['copy_log_file']=0
         # Will any individual programs be linked into koopa 'bin/'?
-        [link_in_bin]=0
+        ['link_in_bin']=0
         # Link corresponding man1 documentation files for app in bin.
-        [link_in_man]=0
+        ['link_in_man']=0
         # Create an unversioned symlink in koopa 'opt/' directory.
-        [link_in_opt]=1
+        ['link_in_opt']=1
         # This override is useful for app packages configuration.
-        [prefix_check]=1
+        ['prefix_check']=1
         # Push completed build to AWS S3 bucket.
-        [push]=0
+        ['push']=0
         # This is useful for avoiding duplicate alert messages inside of
         # nested install calls (e.g. Emacs installer handoff to GNU app).
-        [quiet]=0
-        [reinstall]=0
-        [restrict_path]=1
-        [update_ldconfig]=0
-        [verbose]=0
+        ['quiet']=0
+        ['reinstall']=0
+        ['restrict_path']=1
+        ['update_ldconfig']=0
+        ['verbose']=0
         # When enabled, shortens git commit to 8 characters.
-        [version_is_git_commit]=0
+        ['version_is_git_commit']=0
     )
     declare -A dict=(
-        [app_prefix]="$(koopa_app_prefix)"
-        [installer_bn]=''
-        [installer_fun]='main'
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [log_file]="$(koopa_tmp_log_file)"
-        [mode]='shared'
-        [name]=''
-        [platform]='common'
-        [prefix]=''
-        [tmp_dir]="$(koopa_tmp_dir)"
-        [version]=''
-        [version_key]=''
+        ['app_prefix']="$(koopa_app_prefix)"
+        ['installer_bn']=''
+        ['installer_fun']='main'
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['log_file']="$(koopa_tmp_log_file)"
+        ['mode']='shared'
+        ['name']=''
+        ['platform']='common'
+        ['prefix']=''
+        ['tmp_dir']="$(koopa_tmp_dir)"
+        ['version']=''
+        ['version_key']=''
     )
     bin_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')

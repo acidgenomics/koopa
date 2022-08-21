@@ -25,12 +25,12 @@ main() {
     local app dict install_args
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [python]="$(koopa_locate_python)"
+        ['python']="$(koopa_locate_python)"
     )
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['install_dir']="${dict['prefix']}/install"
     dict['tools_dir']="${dict['prefix']}/tools"

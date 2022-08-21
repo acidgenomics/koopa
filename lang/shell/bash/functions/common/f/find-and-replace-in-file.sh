@@ -36,14 +36,14 @@ koopa_find_and_replace_in_file() {
     local app dict flags pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [perl]="$(koopa_locate_perl)"
+        ['perl']="$(koopa_locate_perl)"
     )
     [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
-        [multiline]=0
-        [pattern]=''
-        [regex]=0
-        [replacement]=''
+        ['multiline']=0
+        ['pattern']=''
+        ['regex']=0
+        ['replacement']=''
     )
     pos=()
     while (("$#"))

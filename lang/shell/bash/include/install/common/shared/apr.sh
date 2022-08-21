@@ -18,7 +18,7 @@ main() {
     fi
     koopa_activate_opt_prefix 'sqlite'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     if koopa_is_macos
@@ -29,10 +29,10 @@ main() {
         [[ -x "${app['patch']}" ]] || return 1
     fi
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='apr'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='apr'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://archive.apache.org/dist/${dict['name']}/${dict['file']}"

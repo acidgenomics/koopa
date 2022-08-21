@@ -13,7 +13,7 @@ koopa_make_build_string() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa_arch)"
+        ['arch']="$(koopa_arch)"
     )
     if koopa_is_linux
     then

@@ -8,9 +8,9 @@ koopa_configure_chemacs() {
     local dict
     koopa_assert_has_args_le "$#" 1
     declare -A dict=(
-        [source_prefix]="${1:-}"
-        [opt_prefix]="$(koopa_opt_prefix)"
-        [target_prefix]="${HOME:?}/.emacs.d"
+        ['source_prefix']="${1:-}"
+        ['opt_prefix']="$(koopa_opt_prefix)"
+        ['target_prefix']="${HOME:?}/.emacs.d"
     )
     if [[ -z "${dict['source_prefix']}" ]]
     then

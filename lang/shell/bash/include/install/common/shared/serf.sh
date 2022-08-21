@@ -29,17 +29,17 @@ main() {
         'openssl3' \
         'scons'
     declare -A app=(
-        [cat]="$(koopa_locate_cat)"
-        [patch]="$(koopa_locate_patch)"
-        [scons]="$(koopa_locate_scons)"
+        ['cat']="$(koopa_locate_cat)"
+        ['patch']="$(koopa_locate_patch)"
+        ['scons']="$(koopa_locate_scons)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['patch']}" ]] || return 1
     [[ -x "${app['scons']}" ]] || return 1
     declare -A dict=(
-        [name]='serf'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='serf'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://www.apache.org/dist/${dict['name']}/${dict['file']}"

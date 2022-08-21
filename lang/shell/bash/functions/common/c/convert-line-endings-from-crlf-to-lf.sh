@@ -17,7 +17,7 @@ koopa_convert_line_endings_from_crlf_to_lf() {
     local app file
     koopa_assert_has_args "$#"
     declare -A app=(
-        [perl]="$(koopa_locate_perl)"
+        ['perl']="$(koopa_locate_perl)"
     )
     [[ -x "${app['perl']}" ]] || return 1
     for file in "$@"

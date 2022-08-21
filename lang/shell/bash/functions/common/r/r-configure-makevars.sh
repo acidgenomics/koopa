@@ -8,10 +8,10 @@ koopa_r_configure_makevars() {
     local app cppflags dict flibs i ldflags libs lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [dirname]="$(koopa_locate_dirname)"
-        [r]="${1:?}"
-        [sort]="$(koopa_locate_sort)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['dirname']="$(koopa_locate_dirname)"
+        ['r']="${1:?}"
+        ['sort']="$(koopa_locate_sort)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['dirname']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
@@ -19,8 +19,8 @@ koopa_r_configure_makevars() {
     [[ -x "${app['xargs']}" ]] || return 1
     koopa_is_koopa_app "${app['r']}" && return 0
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [r_prefix]="$(koopa_r_prefix "${app['r']}")"
+        ['arch']="$(koopa_arch)"
+        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     )
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     koopa_alert "Configuring '${dict['file']}'."

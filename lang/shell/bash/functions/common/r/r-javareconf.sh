@@ -31,13 +31,13 @@ koopa_r_javareconf() {
     local app dict java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [r]="${1:?}"
-        [sudo]="$(koopa_locate_sudo)"
+        ['r']="${1:?}"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [java_home]="$(koopa_java_prefix)"
+        ['java_home']="$(koopa_java_prefix)"
     )
     if [[ ! -d "${dict['java_home']}" ]]
     then

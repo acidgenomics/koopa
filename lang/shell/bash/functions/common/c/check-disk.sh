@@ -8,8 +8,8 @@ koopa_check_disk() {
     local dict
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [limit]=90
-        [used]="$(koopa_disk_pct_used "$@")"
+        ['limit']=90
+        ['used']="$(koopa_disk_pct_used "$@")"
     )
     if [[ "${dict['used']}" -gt "${dict['limit']}" ]]
     then

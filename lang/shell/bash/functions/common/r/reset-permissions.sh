@@ -11,15 +11,15 @@ koopa_reset_permissions() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [chmod]="$(koopa_locate_chmod)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['chmod']="$(koopa_locate_chmod)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['chmod']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
-        [group]="$(koopa_group)"
-        [prefix]="${1:?}"
-        [user]="$(koopa_user)"
+        ['group']="$(koopa_group)"
+        ['prefix']="${1:?}"
+        ['user']="$(koopa_user)"
     )
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"

@@ -14,7 +14,7 @@ koopa_mem_gb() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [awk]='awk'
+        ['awk']='awk'
     )
     declare -A dict
     if koopa_is_macos

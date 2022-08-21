@@ -13,14 +13,14 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [branch]='master'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [url]='https://github.com/SpaceVim/SpaceVim.git'
-        [xdg_data_home]="$(koopa_xdg_data_home)"
+        ['branch']='master'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['url']='https://github.com/SpaceVim/SpaceVim.git'
+        ['xdg_data_home']="$(koopa_xdg_data_home)"
     )
     # Symlink the font cache, to avoid unnecessary copy step.
     if koopa_is_macos

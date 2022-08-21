@@ -22,13 +22,13 @@ koopa_ngettext() {
     local dict
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [middle]=' '
-        [msg1]=''
-        [msg2]=''
-        [num]=''
-        [prefix]=''
-        [str]=''
-        [suffix]=''
+        ['middle']=' '
+        ['msg1']=''
+        ['msg2']=''
+        ['num']=''
+        ['prefix']=''
+        ['str']=''
+        ['suffix']=''
     )
     while (("$#"))
     do

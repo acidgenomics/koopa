@@ -8,7 +8,7 @@ koopa_find_user_profile() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [shell]="$(koopa_shell_name)"
+        ['shell']="$(koopa_shell_name)"
     )
     case "${dict['shell']}" in
         'bash')

@@ -8,16 +8,16 @@ koopa_vim_version() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [head]="$(koopa_locate_head)"
-        [vim]="${1:-}"
+        ['cut']="$(koopa_locate_cut)"
+        ['head']="$(koopa_locate_head)"
+        ['vim']="${1:-}"
     )
     [[ -z "${app['vim']}" ]] && app[vim]="$(koopa_locate_vim)"
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['vim']}" ]] || return 1
     declare -A dict=(
-        [str]="$("${app['vim']}" --version 2>/dev/null)"
+        ['str']="$("${app['vim']}" --version 2>/dev/null)"
     )
     dict['maj_min']="$( \
         koopa_print "${dict['str']}" \

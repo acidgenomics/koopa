@@ -12,17 +12,17 @@ koopa_current_gencode_version() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [curl]="$(koopa_locate_curl)"
-        [cut]="$(koopa_locate_cut)"
-        [grep]="$(koopa_locate_grep)"
-        [head]="$(koopa_locate_head)"
+        ['curl']="$(koopa_locate_curl)"
+        ['cut']="$(koopa_locate_cut)"
+        ['grep']="$(koopa_locate_grep)"
+        ['head']="$(koopa_locate_head)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['curl']}" ]] || return 1
     [[ -x "${app['grep']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
-        [organism]="${1:-}"
+        ['organism']="${1:-}"
     )
     [[ -z "${dict['organism']}" ]] && dict[organism]='Homo sapiens'
     case "${dict['organism']}" in

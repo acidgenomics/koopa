@@ -27,11 +27,11 @@ koopa_download() {
     local app dict download_args pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [decompress]=0
-        [extract]=0
-        [engine]='curl'
-        [file]="${2:-}"
-        [url]="${1:?}"
+        ['decompress']=0
+        ['extract']=0
+        ['engine']='curl'
+        ['file']="${2:-}"
+        ['url']="${1:?}"
     )
     # > koopa_is_qemu && dict[engine]='wget'
     pos=()
@@ -69,7 +69,7 @@ koopa_download() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
     declare -A app=(
-        [download]="$("koopa_locate_${dict['engine']}")"
+        ['download']="$("koopa_locate_${dict['engine']}")"
     )
     [[ -x "${app['download']}" ]] || return 1
     if [[ -z "${dict['file']}" ]]

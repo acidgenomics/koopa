@@ -5,8 +5,8 @@ koopa_linux_add_user_to_etc_passwd() {
     local dict
     koopa_assert_has_args_le "$#" 1
     declare -A dict=(
-        [passwd_file]='/etc/passwd'
-        [user]="${1:-}"
+        ['passwd_file']='/etc/passwd'
+        ['user']="${1:-}"
     )
     koopa_assert_is_file "${dict['passwd_file']}"
     [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
@@ -33,14 +33,14 @@ koopa_linux_add_user_to_group() {
     koopa_assert_has_args_le "$#" 2
     koopa_assert_is_admin
     declare -A app=(
-        [gpasswd]="$(koopa_linux_locate_gpasswd)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['gpasswd']="$(koopa_linux_locate_gpasswd)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['gpasswd']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [group]="${1:?}"
-        [user]="${2:-}"
+        ['group']="${1:?}"
+        ['user']="${2:-}"
     )
     [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
     koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
@@ -53,21 +53,21 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
-        [bcbio_setup_genome]='bcbio_setup_genome.py'
-        [sed]="$(koopa_locate_sed)"
-        [touch]="$(koopa_locate_touch)"
+        ['bcbio_setup_genome']='bcbio_setup_genome.py'
+        ['sed']="$(koopa_locate_sed)"
+        ['touch']="$(koopa_locate_touch)"
     )
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['touch']}" ]] || return 1
     declare -A dict=(
-        [cores]="$(koopa_cpu_count)"
-        [fasta_file]=''
-        [genome_build]=''
-        [gtf_file]=''
-        [organism]=''
-        [organism_pattern]='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
-        [provider]='Ensembl'
-        [release]=''
+        ['cores']="$(koopa_cpu_count)"
+        ['fasta_file']=''
+        ['genome_build']=''
+        ['gtf_file']=''
+        ['organism']=''
+        ['organism_pattern']='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
+        ['provider']='Ensembl'
+        ['release']=''
     )
     indexes=()
     while (("$#"))
@@ -177,10 +177,10 @@ koopa_linux_bcbio_nextgen_add_genome() {
     koopa_assert_has_args "$#"
     genomes=("$@")
     declare -A app=(
-        [bcbio]="$(koopa_linux_locate_bcbio)"
+        ['bcbio']="$(koopa_linux_locate_bcbio)"
     )
     declare -A dict=(
-        [cores]="$(koopa_cpu_count)"
+        ['cores']="$(koopa_cpu_count)"
     )
     bcbio_args=(
         "--cores=${dict['cores']}"
@@ -201,15 +201,15 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     local app cache_files dict
     koopa_assert_has_no_envs
     declare -A app=(
-        [bcbio_python]='bcbio_python'
-        [tee]="$(koopa_locate_tee)"
+        ['bcbio_python']='bcbio_python'
+        ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        [git_dir]="${HOME:?}/git/bcbio-nextgen"
-        [install_dir]=''
-        [name]='bcbio-nextgen'
-        [tmp_log_file]="$(koopa_tmp_log_file)"
+        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
+        ['install_dir']=''
+        ['name']='bcbio-nextgen'
+        ['tmp_log_file']="$(koopa_tmp_log_file)"
     )
     while (("$#"))
     do
@@ -290,9 +290,9 @@ koopa_linux_bcbio_nextgen_patch_devel() {
 koopa_linux_bcbio_nextgen_run_tests() {
     local dict test tests
     declare -A dict=(
-        [git_dir]="${HOME:?}/git/bcbio-nextgen"
-        [output_dir]="${PWD:?}/bcbio-tests"
-        [tools_dir]="$(koopa_bcbio_nextgen_tools_prefix)"
+        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
+        ['output_dir']="${PWD:?}/bcbio-tests"
+        ['tools_dir']="$(koopa_bcbio_nextgen_tools_prefix)"
     )
     while (("$#"))
     do
@@ -355,13 +355,13 @@ koopa_linux_bcl2fastq_indrops() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [bcl2fastq]="$(koopa_linux_locate_bcl2fastq)"
-        [tee]="$(koopa_locate_tee)"
+        ['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
+        ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['bcl2fastq']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        [log_file]='bcl2fastq-indrops.log'
+        ['log_file']='bcl2fastq-indrops.log'
     )
     "${app['bcl2fastq']}" \
         --use-bases-mask 'y*,y*,y*,y*' \
@@ -376,8 +376,8 @@ koopa_linux_configure_lmod() {
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
     declare -A dict=(
-        [etc_dir]='/etc/profile.d'
-        [prefix]="${1:-}"
+        ['etc_dir']='/etc/profile.d'
+        ['prefix']="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_lmod_prefix)"
     dict['init_dir']="${dict['prefix']}/apps/lmod/lmod/init"
@@ -430,8 +430,8 @@ koopa_linux_fix_sudo_setrlimit_error() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [file]='/etc/sudo.conf'
-        [string]='Set disable_coredump false'
+        ['file']='/etc/sudo.conf'
+        ['string']='Set disable_coredump false'
     )
     koopa_sudo_append_string \
         --file="${dict['file']}" \
@@ -547,15 +547,15 @@ koopa_linux_java_update_alternatives() {
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [update_alternatives]="$(koopa_linux_locate_update_alternatives)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['update_alternatives']="$(koopa_linux_locate_update_alternatives)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['update_alternatives']}" ]] || return 1
     declare -A dict=(
-        [alt_prefix]='/var/lib/alternatives'
-        [prefix]="$(koopa_realpath "${1:?}")"
-        [priority]=100
+        ['alt_prefix']='/var/lib/alternatives'
+        ['prefix']="$(koopa_realpath "${1:?}")"
+        ['priority']=100
     )
     koopa_rm --sudo \
         "${dict['alt_prefix']}/java" \
@@ -671,7 +671,7 @@ koopa_linux_os_version() {
     local app x
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [uname]="$(koopa_locate_uname)"
+        ['uname']="$(koopa_locate_uname)"
     )
     [[ -x "${app['uname']}" ]] || return 1
     x="$("${app['uname']}" -r)"
@@ -705,14 +705,14 @@ koopa_linux_remove_user_from_group() {
     koopa_assert_has_args_le "$#" 2
     koopa_assert_is_admin
     declare -A app=(
-        [gpasswd]="$(koopa_linux_locate_gpasswd)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['gpasswd']="$(koopa_linux_locate_gpasswd)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['gpasswd']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [group]="${1:?}"
-        [user]="${2:-}"
+        ['group']="${1:?}"
+        ['user']="${2:-}"
     )
     [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
     "${app['sudo']}" "${app['gpasswd']}" --delete "${dict['user']}" "${dict['group']}"
@@ -800,8 +800,8 @@ koopa_linux_update_etc_profile_d() {
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
     declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [file]='/etc/profile.d/zzz-koopa.sh'
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['file']='/etc/profile.d/zzz-koopa.sh'
     )
     if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]
     then
@@ -828,14 +828,14 @@ koopa_linux_update_ldconfig() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [ldconfig]="$(koopa_linux_locate_ldconfig)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['ldconfig']="$(koopa_linux_locate_ldconfig)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['ldconfig']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [distro_prefix]="$(koopa_distro_prefix)"
-        [target_prefix]='/etc/ld.so.conf.d'
+        ['distro_prefix']="$(koopa_distro_prefix)"
+        ['target_prefix']='/etc/ld.so.conf.d'
     )
     [[ -d "${dict['target_prefix']}" ]] || return 0
     dict['conf_source']="${dict['distro_prefix']}${dict['target_prefix']}"
@@ -856,9 +856,9 @@ koopa_linux_update_system_sshd_config() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [source_file]="$(koopa_koopa_prefix)/os/linux/common/etc/ssh/\
+        ['source_file']="$(koopa_koopa_prefix)/os/linux/common/etc/ssh/\
 sshd_config.d/koopa.conf"
-        [target_file]='/etc/ssh/sshd_config.d/koopa.conf'
+        ['target_file']='/etc/ssh/sshd_config.d/koopa.conf'
     )
     koopa_ln --sudo "${dict['source_file']}" "${dict['target_file']}"
     return 0

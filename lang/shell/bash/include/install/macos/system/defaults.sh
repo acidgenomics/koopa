@@ -36,15 +36,15 @@ main() {
     local app app_name dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [chflags]="$(koopa_locate_chflags)"
-        [defaults]="$(koopa_macos_locate_defaults)"
-        [kill_all]="$(koopa_macos_locate_kill_all)"
-        [lsregister]="$(koopa_macos_locate_lsregister)"
-        [nvram]="$(koopa_macos_locate_nvram)"
-        [plistbuddy]="$(koopa_macos_locate_plistbuddy)"
-        [pmset]="$(koopa_macos_locate_pmset)"
-        [scutil]="$(koopa_macos_locate_scutil)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['chflags']="$(koopa_locate_chflags)"
+        ['defaults']="$(koopa_macos_locate_defaults)"
+        ['kill_all']="$(koopa_macos_locate_kill_all)"
+        ['lsregister']="$(koopa_macos_locate_lsregister)"
+        ['nvram']="$(koopa_macos_locate_nvram)"
+        ['plistbuddy']="$(koopa_macos_locate_plistbuddy)"
+        ['pmset']="$(koopa_macos_locate_pmset)"
+        ['scutil']="$(koopa_macos_locate_scutil)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['chflags']}" ]] || return 1
     [[ -x "${app['defaults']}" ]] || return 1
@@ -56,7 +56,7 @@ main() {
     [[ -x "${app['scutil']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [screenshots_dir]="${HOME}/Documents/screenshots"
+        ['screenshots_dir']="${HOME}/Documents/screenshots"
     )
     # General UI/UX {{{2
     # --------------------------------------------------------------------------

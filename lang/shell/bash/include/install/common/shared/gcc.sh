@@ -63,19 +63,19 @@ main() {
         'mpfr' \
         'mpc'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [gmp]="$(koopa_app_prefix 'gmp')"
-        [gnu_mirror]="$(koopa_gnu_mirror_url)"
-        [jobs]="$(koopa_cpu_count)"
-        [mpc]="$(koopa_app_prefix 'mpc')"
-        [mpfr]="$(koopa_app_prefix 'mpfr')"
-        [name]='gcc'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['gmp']="$(koopa_app_prefix 'gmp')"
+        ['gnu_mirror']="$(koopa_gnu_mirror_url)"
+        ['jobs']="$(koopa_cpu_count)"
+        ['mpc']="$(koopa_app_prefix 'mpc')"
+        ['mpfr']="$(koopa_app_prefix 'mpfr')"
+        ['name']='gcc'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="${dict['gnu_mirror']}/${dict['name']}/\

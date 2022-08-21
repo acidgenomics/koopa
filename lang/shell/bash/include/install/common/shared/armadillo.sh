@@ -18,13 +18,13 @@ main() {
     koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
     koopa_activate_opt_prefix 'hdf5'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
+        ['cmake']="$(koopa_locate_cmake)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
-        [name]='armadillo'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='armadillo'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="http://sourceforge.net/projects/arma/files/${dict['file']}"

@@ -17,11 +17,11 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'patch'
     declare -A app=(
-        [curl]="$(koopa_locate_curl)"
-        [cut]="$(koopa_locate_cut)"
-        [make]="$(koopa_locate_make)"
-        [patch]="$(koopa_locate_patch)"
-        [tr]="$(koopa_locate_tr)"
+        ['curl']="$(koopa_locate_curl)"
+        ['cut']="$(koopa_locate_cut)"
+        ['make']="$(koopa_locate_make)"
+        ['patch']="$(koopa_locate_patch)"
+        ['tr']="$(koopa_locate_tr)"
     )
     [[ -x "${app['curl']}" ]] || return 1
     [[ -x "${app['cut']}" ]] || return 1
@@ -29,13 +29,13 @@ main() {
     [[ -x "${app['patch']}" ]] || return 1
     [[ -x "${app['tr']}" ]] || return 1
     declare -A dict=(
-        [bin_prefix]="$(koopa_bin_prefix)"
-        [gnu_mirror]="$(koopa_gnu_mirror_url)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]='bash'
-        [patch_prefix]='patches'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['bin_prefix']="$(koopa_bin_prefix)"
+        ['gnu_mirror']="$(koopa_gnu_mirror_url)"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='bash'
+        ['patch_prefix']='patches'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['patch_base_url']="https://ftp.gnu.org/gnu/${dict['name']}/\

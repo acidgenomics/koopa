@@ -7,13 +7,13 @@ koopa_chown() {
     # """
     local app chown dict pos
     declare -A app=(
-        [chown]="$(koopa_locate_chown)"
+        ['chown']="$(koopa_locate_chown)"
     )
     [[ -x "${app['chown']}" ]] || return 1
     declare -A dict=(
-        [dereference]=1
-        [recursive]=0
-        [sudo]=0
+        ['dereference']=1
+        ['recursive']=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))

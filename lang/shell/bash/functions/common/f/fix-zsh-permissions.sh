@@ -11,8 +11,8 @@ koopa_fix_zsh_permissions() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [app_prefix]="$(koopa_app_prefix)"
-        [koopa_prefix]="$(koopa_koopa_prefix)"
+        ['app_prefix']="$(koopa_app_prefix)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
     )
     if koopa_is_shared_install
     then

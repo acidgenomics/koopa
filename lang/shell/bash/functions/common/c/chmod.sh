@@ -7,12 +7,12 @@ koopa_chmod() {
     # """
     local app chmod dict pos
     declare -A app=(
-        [chmod]="$(koopa_locate_chmod)"
+        ['chmod']="$(koopa_locate_chmod)"
     )
     [[ -x "${app['chmod']}" ]] || return 1
     declare -A dict=(
-        [recursive]=0
-        [sudo]=0
+        ['recursive']=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))

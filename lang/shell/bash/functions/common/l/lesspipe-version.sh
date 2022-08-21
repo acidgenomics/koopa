@@ -8,9 +8,9 @@ koopa_lesspipe_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [cat]="$(koopa_locate_cat)"
-        [lesspipe]="${1:-}"
-        [sed]="$(koopa_locate_sed)"
+        ['cat']="$(koopa_locate_cat)"
+        ['lesspipe']="${1:-}"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -z "${app['lesspipe']}" ]] && app[lesspipe]="$(koopa_locate_lesspipe)"
     [[ -x "${app['cat']}" ]] || return 1

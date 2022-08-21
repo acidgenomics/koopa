@@ -8,9 +8,9 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [name]='rmate'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='rmate'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/aurora/${dict['name']}/archive/${dict['file']}"

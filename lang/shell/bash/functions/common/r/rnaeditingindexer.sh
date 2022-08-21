@@ -24,18 +24,18 @@ koopa_rnaeditingindexer() {
     # """
     local app dict run_args
     declare -A app=(
-        [docker]="$(koopa_locate_docker)"
+        ['docker']="$(koopa_locate_docker)"
     )
     [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
-        [bam_suffix]='.Aligned.sortedByCoord.out.bam'
-        [docker_image]='acidgenomics/rnaeditingindexer'
-        [example]=0
-        [genome]='hg38'
-        [local_bam_dir]='bam'
-        [local_output_dir]='rnaedit'
-        [mnt_bam_dir]='/mnt/bam'
-        [mnt_output_dir]='/mnt/output'
+        ['bam_suffix']='.Aligned.sortedByCoord.out.bam'
+        ['docker_image']='acidgenomics/rnaeditingindexer'
+        ['example']=0
+        ['genome']='hg38'
+        ['local_bam_dir']='bam'
+        ['local_output_dir']='rnaedit'
+        ['mnt_bam_dir']='/mnt/bam'
+        ['mnt_output_dir']='/mnt/output'
     )
     while (("$#"))
     do

@@ -8,8 +8,8 @@ __koopa_unlink_in_dir() {
     local dict name names pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [allow_missing]=0
-        [prefix]=''
+        ['allow_missing']=0
+        ['prefix']=''
     )
     pos=()
     while (("$#"))

@@ -7,8 +7,8 @@ koopa_git_submodule_init() {
     # """
     local app repos
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [git]="$(koopa_locate_git)"
+        ['awk']="$(koopa_locate_awk)"
+        ['git']="$(koopa_locate_git)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
@@ -23,7 +23,7 @@ koopa_git_submodule_init() {
         do
             local dict lines string
             declare -A dict=(
-                [module_file]='.gitmodules'
+                ['module_file']='.gitmodules'
             )
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Initializing submodules in '${repo}'."

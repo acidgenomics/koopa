@@ -8,7 +8,7 @@ koopa_brew_dump_brewfile() {
     local app today
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
+        ['brew']="$(koopa_locate_brew)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     today="$(koopa_today)"

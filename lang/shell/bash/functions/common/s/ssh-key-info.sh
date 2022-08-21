@@ -10,14 +10,14 @@ koopa_ssh_key_info() {
     # """
     local app dict keyfile
     declare -A app=(
-        [ssh_keygen]="$(koopa_locate_ssh_keygen)"
-        [uniq]="$(koopa_locate_uniq)"
+        ['ssh_keygen']="$(koopa_locate_ssh_keygen)"
+        ['uniq']="$(koopa_locate_uniq)"
     )
     [[ -x "${app['ssh_keygen']}" ]] || return 1
     [[ -x "${app['uniq']}" ]] || return 1
     declare -A dict=(
-        [prefix]="${HOME:?}/.ssh"
-        [stem]='id_'
+        ['prefix']="${HOME:?}/.ssh"
+        ['stem']='id_'
     )
     for keyfile in "${dict['prefix']}/${dict['stem']}"*
     do

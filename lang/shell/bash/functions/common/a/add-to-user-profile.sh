@@ -8,7 +8,7 @@ koopa_add_to_user_profile() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [file]="$(koopa_find_user_profile)"
+        ['file']="$(koopa_find_user_profile)"
     )
     koopa_alert "Adding koopa activation to '${dict['file']}'."
     read -r -d '' "dict[string]" << END || true

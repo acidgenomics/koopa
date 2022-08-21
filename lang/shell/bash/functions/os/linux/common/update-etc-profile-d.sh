@@ -10,8 +10,8 @@ koopa_linux_update_etc_profile_d() {
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
     declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [file]='/etc/profile.d/zzz-koopa.sh'
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['file']='/etc/profile.d/zzz-koopa.sh'
     )
     # Early return if file exists and is not a symlink.
     # Previous verisons of koopa prior to 2020-05-09 created a symlink here.

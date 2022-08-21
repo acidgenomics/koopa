@@ -13,8 +13,8 @@ koopa_anaconda_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [conda]="${1:-}"
+        ['awk']="$(koopa_locate_awk)"
+        ['conda']="${1:-}"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -z "${app['conda']}" ]] && app[conda]="$(koopa_locate_anaconda)"

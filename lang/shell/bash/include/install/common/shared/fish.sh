@@ -13,16 +13,16 @@ main() {
     koopa_activate_build_opt_prefix 'cmake'
     koopa_activate_opt_prefix 'ncurses'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
+        ['cmake']="$(koopa_locate_cmake)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
-        [bin_prefix]="$(koopa_bin_prefix)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]='fish'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [shared_ext]="$(koopa_shared_ext)"
-        [version]="${INSTALL_VERSION:?}"
+        ['bin_prefix']="$(koopa_bin_prefix)"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='fish'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"

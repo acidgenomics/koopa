@@ -14,12 +14,12 @@ koopa_aws_s3_mv_to_parent() {
     local file files prefix
     koopa_assert_has_args "$#"
     declare -A app=(
-        [aws]="$(koopa_locate_aws)"
+        ['aws']="$(koopa_locate_aws)"
     )
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
-        [prefix]=''
-        [profile]="${AWS_PROFILE:-}"
+        ['prefix']=''
+        ['profile']="${AWS_PROFILE:-}"
     )
     [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     while (("$#"))
@@ -68,8 +68,8 @@ koopa_aws_s3_mv_to_parent() {
     do
         local dict2
         declare -A dict2=(
-            [bn]="$(koopa_basename "$file")"
-            [dn1]="$(koopa_dirname "$file")"
+            ['bn']="$(koopa_basename "$file")"
+            ['dn1']="$(koopa_dirname "$file")"
         )
         dict2['dn2']="$(koopa_dirname "${dict2['dn1']}")"
         dict2['target']="${dict2['dn2']}/${dict2['bn']}"

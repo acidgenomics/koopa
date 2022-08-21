@@ -14,7 +14,7 @@ koopa_current_bcbio_nextgen_version() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     str="$( \

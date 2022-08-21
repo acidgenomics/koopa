@@ -15,21 +15,21 @@ koopa_star_align_single_end_per_sample() {
     local align_args app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [star]="$(koopa_locate_star)"
+        ['star']="$(koopa_locate_star)"
     )
     [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
         # e.g. 'fastq'.
-        [fastq_file]=''
+        ['fastq_file']=''
         # e.g. '_001.fastq.gz'.
-        [fastq_tail]=''
+        ['fastq_tail']=''
         # e.g. 'star-index'.
-        [index_dir]=''
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['index_dir']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'star'.
-        [output_dir]=''
-        [threads]="$(koopa_cpu_count)"
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
     )
     align_args=()
     while (("$#"))

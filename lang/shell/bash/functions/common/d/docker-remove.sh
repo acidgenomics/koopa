@@ -13,9 +13,9 @@ koopa_docker_remove() {
     local app pattern
     koopa_assert_has_args "$#"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [docker]="$(koopa_locate_docker)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['awk']="$(koopa_locate_awk)"
+        ['docker']="$(koopa_locate_docker)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['docker']}" ]] || return 1

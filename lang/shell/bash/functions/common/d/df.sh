@@ -7,7 +7,7 @@ koopa_df() {
     # """
     local app
     declare -A app=(
-        [df]="$(koopa_locate_df)"
+        ['df']="$(koopa_locate_df)"
     )
     [[ -x "${app['df']}" ]] || return 1
     "${app['df']}" \

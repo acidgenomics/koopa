@@ -17,13 +17,13 @@ koopa_macos_uninstall_brewfile_casks() {
     local app cask casks dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
-        [cut]="$(koopa_locate_cut)"
+        ['brew']="$(koopa_locate_brew)"
+        ['cut']="$(koopa_locate_cut)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
-        [brewfile]="${1:?}"
+        ['brewfile']="${1:?}"
     )
     readarray -t casks <<< "$( \
         koopa_grep \

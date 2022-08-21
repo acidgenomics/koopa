@@ -34,16 +34,16 @@ main() {
         'serf' \
         'sqlite'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         # > [mirror]='https://mirrors.ocf.berkeley.edu/apache'
-        [mirror]='https://archive.apache.org/dist'
-        [jobs]="$(koopa_cpu_count)"
-        [name]='subversion'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['mirror']='https://archive.apache.org/dist'
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='subversion'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     # FIXME What about expat here?
     dict['apr']="$(koopa_app_prefix 'apr')"

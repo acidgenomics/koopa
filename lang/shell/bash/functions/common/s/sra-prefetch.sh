@@ -16,15 +16,15 @@ koopa_sra_prefetch() {
     # """
     local app cmd dict
     declare -A app=(
-        [parallel]="$(koopa_locate_parallel)"
-        [prefetch]="$(koopa_locate_prefetch)"
+        ['parallel']="$(koopa_locate_parallel)"
+        ['prefetch']="$(koopa_locate_prefetch)"
     )
     [[ -x "${app['parallel']}" ]] || return 1
     [[ -x "${app['prefetch']}" ]] || return 1
     declare -A dict=(
-        [acc_file]=''
-        [jobs]="$(koopa_cpu_count)"
-        [output_dir]='sra'
+        ['acc_file']=''
+        ['jobs']="$(koopa_cpu_count)"
+        ['output_dir']='sra'
     )
     while (("$#"))
     do

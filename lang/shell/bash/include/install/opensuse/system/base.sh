@@ -11,8 +11,8 @@ main() {
     local app pkgs
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [zypper]="$(koopa_locate_zypper)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['zypper']="$(koopa_locate_zypper)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['zypper']}" ]] || return 1

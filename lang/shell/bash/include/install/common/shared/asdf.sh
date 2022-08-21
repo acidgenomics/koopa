@@ -9,9 +9,9 @@ main() {
     # """
     local dict
     declare -A dict=(
-        [name]='asdf'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='asdf'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/asdf-vm/${dict['name']}/archive/refs/\

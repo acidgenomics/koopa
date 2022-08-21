@@ -23,7 +23,7 @@ koopa_cli_uninstall() {
     do
         local dict
         declare -A dict=(
-            [key]="${stem}-${app}"
+            ['key']="${stem}-${app}"
         )
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"

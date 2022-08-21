@@ -14,8 +14,8 @@ koopa_unlink_in_make() {
     local app_prefix dict files
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [app_prefix]=''
-        [make_prefix]="$(koopa_make_prefix)"
+        ['app_prefix']=''
+        ['make_prefix']="$(koopa_make_prefix)"
     )
     koopa_assert_is_dir "${dict['make_prefix']}"
     for app_prefix in "$@"

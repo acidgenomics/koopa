@@ -8,9 +8,9 @@ __koopa_status() {
     local dict string
     koopa_assert_has_args_ge "$#" 3
     declare -A dict=(
-        [label]="$(printf '%10s\n' "${1:?}")"
-        [color]="$(__koopa_ansi_escape "${2:?}")"
-        [nocolor]="$(__koopa_ansi_escape 'nocolor')"
+        ['label']="$(printf '%10s\n' "${1:?}")"
+        ['color']="$(__koopa_ansi_escape "${2:?}")"
+        ['nocolor']="$(__koopa_ansi_escape 'nocolor')"
     )
     shift 2
     for string in "$@"

@@ -11,7 +11,7 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [prefix]='/Library/Developer/CommandLineTools'
+        ['prefix']='/Library/Developer/CommandLineTools'
     )
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_rm --sudo "${dict['prefix']}"

@@ -13,7 +13,7 @@ koopa_ruby_api_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [ruby]="${1:-}"
+        ['ruby']="${1:-}"
     )
     [[ -z "${app['ruby']}" ]] && app[ruby]="$(koopa_locate_ruby)"
     [[ -x "${app['ruby']}" ]] || return 1

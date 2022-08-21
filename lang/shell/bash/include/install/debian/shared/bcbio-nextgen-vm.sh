@@ -18,13 +18,13 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [bash]="$(koopa_locate_bash)"
+        ['bash']="$(koopa_locate_bash)"
     )
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     # ARM is not yet supported. Check for Intel x86.
     case "${dict['arch']}" in

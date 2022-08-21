@@ -70,29 +70,29 @@ koopa_salmon_quant_paired_end_per_sample() {
     local app dict quant_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [salmon]="$(koopa_locate_salmon)"
+        ['salmon']="$(koopa_locate_salmon)"
     )
     [[ -x "${app['salmon']}" ]] || return 1
     declare -A dict=(
         # Current recommendation in bcbio-nextgen.
-        [bootstraps]=30
+        ['bootstraps']=30
         # e.g. 'sample1_R1_001.fastq.gz'.
-        [fastq_r1_file]=''
+        ['fastq_r1_file']=''
         # e.g. '_R1_001.fastq.gz'.
-        [fastq_r1_tail]=''
+        ['fastq_r1_tail']=''
         # e.g. 'sample1_R2_001.fastq.gz'.
-        [fastq_r2_file]=''
+        ['fastq_r2_file']=''
         # e.g. '_R2_001.fastq.gz'.
-        [fastq_r2_tail]=''
+        ['fastq_r2_tail']=''
         # e.g. 'salmon-index'.
-        [index_dir]=''
+        ['index_dir']=''
         # Detect library fragment type (strandedness) automatically.
-        [lib_type]='A'
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['lib_type']='A'
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'salmon'.
-        [output_dir]=''
-        [threads]="$(koopa_cpu_count)"
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
     )
     quant_args=()
     while (("$#"))

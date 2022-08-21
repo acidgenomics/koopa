@@ -10,14 +10,14 @@ koopa_variable() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [head]="$(koopa_locate_head)"
+        ['cut']="$(koopa_locate_cut)"
+        ['head']="$(koopa_locate_head)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
-        [key]="${1:?}"
-        [include_prefix]="$(koopa_include_prefix)"
+        ['key']="${1:?}"
+        ['include_prefix']="$(koopa_include_prefix)"
     )
     dict['file']="${dict['include_prefix']}/variables.txt"
     koopa_assert_is_file "${dict['file']}"

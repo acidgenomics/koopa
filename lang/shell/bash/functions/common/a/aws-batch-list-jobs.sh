@@ -7,14 +7,14 @@ koopa_aws_batch_list_jobs() {
     # """
     local app dict job_queue_array status status_array
     local -A app=(
-        [aws]="$(koopa_locate_aws)"
+        ['aws']="$(koopa_locate_aws)"
     )
     [[ -x "${app['aws']}" ]] || return 1
     local -A dict=(
-        [account_id]="${AWS_BATCH_ACCOUNT_ID:-}"
-        [profile]="${AWS_PROFILE:-}"
-        [queue]="${AWS_BATCH_QUEUE:-}"
-        [region]="${AWS_BATCH_REGION:-}"
+        ['account_id']="${AWS_BATCH_ACCOUNT_ID:-}"
+        ['profile']="${AWS_PROFILE:-}"
+        ['queue']="${AWS_BATCH_QUEUE:-}"
+        ['region']="${AWS_BATCH_REGION:-}"
     )
     [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     while (("$#"))

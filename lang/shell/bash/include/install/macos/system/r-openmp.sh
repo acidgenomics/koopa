@@ -14,16 +14,16 @@ main() {
     local app
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [tar]="$(koopa_locate_tar)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['tar']="$(koopa_locate_tar)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
-        [name]='openmp'
-        [platform]='darwin'
-        [release]='Release' # or 'Debug'.
-        [version]="${INSTALL_VERSION:?}"
+        ['name']='openmp'
+        ['platform']='darwin'
+        ['release']='Release' # or 'Debug'.
+        ['version']="${INSTALL_VERSION:?}"
     )
 
     case "${dict['version']}" in

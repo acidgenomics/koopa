@@ -8,15 +8,15 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     local app cache_files dict
     koopa_assert_has_no_envs
     declare -A app=(
-        [bcbio_python]='bcbio_python'
-        [tee]="$(koopa_locate_tee)"
+        ['bcbio_python']='bcbio_python'
+        ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        [git_dir]="${HOME:?}/git/bcbio-nextgen"
-        [install_dir]=''
-        [name]='bcbio-nextgen'
-        [tmp_log_file]="$(koopa_tmp_log_file)"
+        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
+        ['install_dir']=''
+        ['name']='bcbio-nextgen'
+        ['tmp_log_file']="$(koopa_tmp_log_file)"
     )
     while (("$#"))
     do

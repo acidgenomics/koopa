@@ -13,15 +13,15 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'go' 'pkg-config'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [gopath]="$(koopa_init_dir 'go')"
-        [name]='apptainer'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
-        [version_file]='VERSION'
+        ['gopath']="$(koopa_init_dir 'go')"
+        ['name']='apptainer'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
+        ['version_file']='VERSION'
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/apptainer/${dict['name']}/archive/refs/\

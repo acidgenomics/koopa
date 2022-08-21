@@ -7,8 +7,8 @@ __koopa_list_path_priority_unique() {
     # """
     local app str
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [tac]="$(koopa_locate_tac)"
+        ['awk']="$(koopa_locate_awk)"
+        ['tac']="$(koopa_locate_tac)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['tac']}" ]] || return 1

@@ -15,16 +15,16 @@ koopa_hisat2_align_single_end() {
     koopa_assert_has_args "$#"
     declare -A dict=(
         # e.g. 'fastq'
-        [fastq_dir]=''
+        ['fastq_dir']=''
         # e.g. '.fastq.gz'
-        [fastq_tail]=''
+        ['fastq_tail']=''
         # e.g. 'hisat2-index'.
-        [index_dir]=''
+        ['index_dir']=''
         # Using salmon fragment library type conventions here.
-        [lib_type]='A'
-        [mode]='single-end'
+        ['lib_type']='A'
+        ['mode']='single-end'
         # e.g. 'hisat2'.
-        [output_dir]=''
+        ['output_dir']=''
     )
     while (("$#"))
     do

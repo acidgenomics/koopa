@@ -20,15 +20,15 @@ koopa_sub() {
     # """
     local app dict pos
     declare -A app=(
-        [perl]="$(koopa_locate_perl)"
+        ['perl']="$(koopa_locate_perl)"
     )
     [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
-        [global]=0
-        [pattern]=''
-        [perl_tail]=''
-        [regex]=0
-        [replacement]=''
+        ['global']=0
+        ['pattern']=''
+        ['perl_tail']=''
+        ['regex']=0
+        ['replacement']=''
     )
     pos=()
     while (("$#"))

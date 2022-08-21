@@ -21,17 +21,17 @@ koopa_conda_env_prefix() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [conda]="$(koopa_locate_conda)"
-        [jq]="$(koopa_locate_jq)"
-        [sed]="$(koopa_locate_sed)"
-        [tail]="$(koopa_locate_tail)"
+        ['conda']="$(koopa_locate_conda)"
+        ['jq']="$(koopa_locate_jq)"
+        ['sed']="$(koopa_locate_sed)"
+        ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['tail']}" ]] || return 1
     declare -A dict=(
-        [env_name]="${1:-}"
+        ['env_name']="${1:-}"
     )
     dict['env_prefix']="$( \
         "${app['conda']}" info --json | \

@@ -16,18 +16,18 @@ koopa_salmon_quant_paired_end() {
     koopa_assert_has_args "$#"
     declare -A dict=(
         # e.g. 'fastq'.
-        [fastq_dir]=''
+        ['fastq_dir']=''
         # e.g. '_R1_001.fastq.gz'.
-        [fastq_r1_tail]=''
+        ['fastq_r1_tail']=''
         # e.g. "_R2_001.fastq.gz'.
-        [fastq_r2_tail]=''
+        ['fastq_r2_tail']=''
         # e.g. 'salmon-index'.
-        [index_dir]=''
+        ['index_dir']=''
         # Detect library fragment type (strandedness) automatically.
-        [lib_type]='A'
-        [mode]='paired-end'
+        ['lib_type']='A'
+        ['mode']='paired-end'
         # e.g. 'salmon'.
-        [output_dir]=''
+        ['output_dir']=''
     )
     while (("$#"))
     do

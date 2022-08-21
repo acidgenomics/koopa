@@ -19,16 +19,16 @@ koopa_python_create_venv() {
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
-        [python]="$(koopa_locate_python)"
+        ['python']="$(koopa_locate_python)"
     )
     [[ -x "${app['python']}" ]] || return 1
     # This helps improve path definition in 'pyvenv.cfg' output file.
     app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
-        [name]=''
-        [pip]=1
-        [prefix]=''
-        [system_site_packages]=1
+        ['name']=''
+        ['pip']=1
+        ['prefix']=''
+        ['system_site_packages']=1
     )
     pos=()
     while (("$#"))

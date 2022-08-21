@@ -28,8 +28,8 @@ koopa_link_in_make() {
     local cp_args dict exclude_arr files_arr find_args i include_arr
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [app_prefix]=''
-        [make_prefix]="$(koopa_make_prefix)"
+        ['app_prefix']=''
+        ['make_prefix']="$(koopa_make_prefix)"
     )
     exclude_arr=('libexec')
     include_arr=()

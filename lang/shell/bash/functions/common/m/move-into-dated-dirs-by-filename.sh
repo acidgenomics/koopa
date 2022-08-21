@@ -21,7 +21,7 @@ koopa_move_into_dated_dirs_by_filename() {
     do
         local dict
         declare -A dict=(
-            [file]="$file"
+            ['file']="$file"
         )
         # NOTE Don't quote '$grep_string' here.
         if [[ "${dict['file']}" =~ $grep_string ]]

@@ -3,7 +3,7 @@
 koopa_locate_gcc() {
     local dict
     declare -A dict=(
-        [name]='gcc'
+        ['name']='gcc'
     )
     dict['version']="$(koopa_variable "${dict['name']}")"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"

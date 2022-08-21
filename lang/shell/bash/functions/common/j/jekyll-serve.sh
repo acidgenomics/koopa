@@ -8,11 +8,11 @@ koopa_jekyll_serve() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [bundle]="$(koopa_locate_bundle)"
+        ['bundle']="$(koopa_locate_bundle)"
     )
     [[ -x "${app['bundle']}" ]] || return 1
     declare -A dict=(
-        [prefix]="${1:-}"
+        ['prefix']="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict[prefix]="${PWD:?}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"

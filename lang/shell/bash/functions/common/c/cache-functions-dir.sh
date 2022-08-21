@@ -13,8 +13,8 @@ koopa_cache_functions_dir() {
     local app prefix
     koopa_assert_has_args "$#"
     declare -A app=(
-        [grep]="$(koopa_locate_grep)"
-        [perl]="$(koopa_locate_perl)"
+        ['grep']="$(koopa_locate_grep)"
+        ['perl']="$(koopa_locate_perl)"
     )
     [[ -x "${app['grep']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
@@ -22,7 +22,7 @@ koopa_cache_functions_dir() {
     do
         local dict file files
         declare -A dict=(
-            [prefix]="$prefix"
+            ['prefix']="$prefix"
         )
         koopa_assert_is_dir "${dict['prefix']}"
         dict['target_file']="${dict['prefix']}.sh"

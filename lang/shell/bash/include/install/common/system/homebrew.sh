@@ -21,7 +21,7 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict

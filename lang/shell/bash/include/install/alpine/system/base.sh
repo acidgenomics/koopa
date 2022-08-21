@@ -16,8 +16,8 @@ main() {
     local app pkgs
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [apk]="$(koopa_alpine_locate_apk)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['apk']="$(koopa_alpine_locate_apk)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['apk']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
