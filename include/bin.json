@@ -347,6 +347,29 @@
     "pkgdata",
     "uconv"
   ],
+  "imagemagick": [
+    "magick",
+    "Magick++-config",
+    "MagickCore-config",
+    "MagickWand-config",
+    "magick",
+    "magick-script"
+  ],
+  "ipython": [
+    "ipython"
+  ],
+  "isort": [
+    "isort"
+  ],
+  "jq": [
+    "jq"
+  ],
+  "julia": [
+    "julia"
+  ],
+  "jupyterlab": [
+    "jupyter-lab"
+  ],
   "rust": [
     "cargo",
     "cargo-clippy",
