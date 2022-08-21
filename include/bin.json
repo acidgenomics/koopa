@@ -271,6 +271,82 @@
   "ghostscript": [
     "gs"
   ],
+  "git": [
+    "git"
+  ],
+  "glances": [
+    "glances"
+  ],
+  "go": [
+    "go"
+  ],
+  "google-cloud-sdk": [
+    "gloud"
+  ],
+  "grep": [
+    "egrep",
+    "fgrep",
+    "grep"
+  ],
+  "groff": [
+    "groff"
+  ],
+  "gseapy": [
+    "gseapy"
+  ],
+  "gtop": [
+    "gtop"
+  ],
+  "hadolint": [
+    "hadolint"
+  ],
+  "haskell-stack": [
+    "stack"
+  ],
+  "hdf5": [
+    "gif2h5",
+    "h52gif",
+    "h5c++",
+    "h5cc",
+    "h5clear",
+    "h5copy",
+    "h5debug",
+    "h5diff",
+    "h5dump",
+    "h5fc",
+    "h5format_convert",
+    "h5import",
+    "h5jam",
+    "h5ls",
+    "h5mkgrp",
+    "h5perf_serial",
+    "h5redeploy",
+    "h5repack",
+    "h5repart",
+    "h5stat",
+    "h5unjam",
+    "h5watch"
+  ],
+  "hisat2": [
+    "hisat2"
+  ],
+  "hyperfine": [
+    "hyperfine"
+  ],
+  "icu4c": [
+    "derb",
+    "genbrk",
+    "gencfu",
+    "gencnval",
+    "gendict",
+    "genrb",
+    "icu-config",
+    "icuexportdata",
+    "icuinfo",
+    "makeconv",
+    "pkgdata",
+    "uconv"
+  ],
   "rust": [
     "cargo",
     "cargo-clippy",
