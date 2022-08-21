@@ -17,16 +17,16 @@ __koopa_unlink_in_dir() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--allow-missing')
-                dict[allow_missing]=1
+                dict['allow_missing']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -43,7 +43,7 @@ __koopa_unlink_in_dir() {
     koopa_assert_has_args "$#"
     koopa_assert_is_set '--prefix' "${dict['prefix']}"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     names=("$@")
     for name in "${names[@]}"
     do

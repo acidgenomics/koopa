@@ -76,27 +76,27 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
+                dict['fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--fasta-file')
-                dict[fasta_file]="${2:?}"
+                dict['fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--genome-build='*)
-                dict[genome_build]="${1#*=}"
+                dict['genome_build']="${1#*=}"
                 shift 1
                 ;;
             '--genome-build')
-                dict[genome_build]="${2:?}"
+                dict['genome_build']="${2:?}"
                 shift 2
                 ;;
             '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
+                dict['gtf_file']="${1#*=}"
                 shift 1
                 ;;
             '--gtf-file')
-                dict[gtf_file]="${2:?}"
+                dict['gtf_file']="${2:?}"
                 shift 2
                 ;;
             '--indexes='*)
@@ -108,19 +108,19 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
                 shift 2
                 ;;
             '--organism='*)
-                dict[organism]="${1#*=}"
+                dict['organism']="${1#*=}"
                 shift 1
                 ;;
             '--organism')
-                dict[organism]="${2:?}"
+                dict['organism']="${2:?}"
                 shift 2
                 ;;
             '--release='*)
-                dict[release]="${1#*=}"
+                dict['release']="${1#*=}"
                 shift 1
                 ;;
             '--release')
-                dict[release]="${2:?}"
+                dict['release']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -141,8 +141,8 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # FIXME Rework this step.
     koopa_assert_is_installed "${app['bcbio_setup_genome']}"
     koopa_assert_is_file "${dict['fasta_file']}" "${dict['gtf_file']}"
-    dict[fasta_file]="$(koopa_realpath "${dict['fasta_file']}")"
-    dict[gtf_file]="$(koopa_realpath "${dict['gtf_file']}")"
+    dict['fasta_file']="$(koopa_realpath "${dict['fasta_file']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     # Check for valid organism input.
     if ! koopa_str_detect_regex \
         --string="${dict['organism']}" \
@@ -151,21 +151,21 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         koopa_stop "Invalid organism: '${dict['organism']}'."
     fi
     # e.g. "Ensembl 102".
-    dict[build_version]="${dict['provider']}_${dict['release']}"
+    dict['build_version']="${dict['provider']}_${dict['release']}"
     # e.g. "GRCh38_Ensembl_102".
-    dict[bcbio_genome_name]="${dict['build']} ${dict['provider']} ${dict['release']}"
-    dict[bcbio_genome_name]="${dict['bcbio_genome_name']// /_}"
+    dict['bcbio_genome_name']="${dict['build']} ${dict['provider']} ${dict['release']}"
+    dict['bcbio_genome_name']="${dict['bcbio_genome_name']// /_}"
     koopa_alert_install_start "${dict['bcbio_genome_name']}"
     # e.g. 'Hsapiens'.
-    dict[bcbio_species_dir]="$( \
+    dict['bcbio_species_dir']="$( \
         koopa_print "${dict['organism']// /_}" \
             | "${app['sed']}" -E 's/^([A-Z])[a-z]+_([a-z]+)$/\1\2/g' \
     )"
     # Ensure Galaxy is configured correctly for a clean bcbio install.
     # Recursive up from 'install/anaconda/bin/bcbio_setup_genome.py'.
-    dict[install_prefix]="$(koopa_parent_dir --num=3 "${dict['script']}")"
+    dict['install_prefix']="$(koopa_parent_dir --num=3 "${dict['script']}")"
     # If the 'sam_fa_indices.loc' file is missing, the script will error.
-    dict[tool_data_prefix]="${dict['install_prefix']}/galaxy/tool-data"
+    dict['tool_data_prefix']="${dict['install_prefix']}/galaxy/tool-data"
     koopa_mkdir "${dict['tool_data_prefix']}"
     "${app['touch']}" "${dict['tool_data_prefix']}/sam_fa_indices.log"
     # This step will download cloudbiolinux, so migrating to a temporary

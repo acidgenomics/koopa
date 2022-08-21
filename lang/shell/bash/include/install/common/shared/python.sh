@@ -78,10 +78,10 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[openssl]="$(koopa_app_prefix 'openssl3')"
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
-    dict[file]="Python-${dict['version']}.tar.xz"
-    dict[url]="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['file']="Python-${dict['version']}.tar.xz"
+    dict['url']="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
 ${dict['file']}"
     koopa_mkdir \
         "${dict['prefix']}/bin" \
@@ -116,7 +116,7 @@ ${dict['file']}"
     # > "${app['make']}" test
     # Use 'altinstall' here instead?
     "${app['make']}" install
-    app[python]="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
+    app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
     koopa_check_shared_object --file="${app['python']}"
     return 0

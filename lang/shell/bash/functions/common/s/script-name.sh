@@ -16,12 +16,12 @@ koopa_script_name() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict
-    dict[file]="$( \
+    dict['file']="$( \
         caller \
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '2' \
     )"
-    dict[bn]="$(koopa_basename "${dict['file']}")"
+    dict['bn']="$(koopa_basename "${dict['file']}")"
     [[ -n "${dict['bn']}" ]] || return 0
     koopa_print "${dict['bn']}"
     return 0

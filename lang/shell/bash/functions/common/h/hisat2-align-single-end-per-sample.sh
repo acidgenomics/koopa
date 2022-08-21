@@ -44,43 +44,43 @@ koopa_hisat2_align_single_end_per_sample() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--fastq-file='*)
-                dict[fastq_file]="${1#*=}"
+                dict['fastq_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-file')
-                dict[fastq_file]="${2:?}"
+                dict['fastq_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-tail='*)
-                dict[fastq_tail]="${1#*=}"
+                dict['fastq_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-tail')
-                dict[fastq_tail]="${2:?}"
+                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -100,22 +100,22 @@ koopa_hisat2_align_single_end_per_sample() {
         koopa_stop "HISAT2 align requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
-    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict[fastq_file]="$(koopa_realpath "${dict['fastq_file']}")"
-    dict[fastq_bn]="$(koopa_basename "${dict['fastq_file']}")"
-    dict[fastq_bn]="${dict['fastq_bn']/${dict['tail']}/}"
-    dict[id]="${dict['fastq_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
+    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
+    dict['id']="${dict['fastq_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
-    dict[hisat2_idx]="${dict['index_dir']}/index"
-    dict[sam_file]="${dict['output_dir']}/${dict['id']}.sam"
+    dict['hisat2_idx']="${dict['index_dir']}/index"
+    dict['sam_file']="${dict['output_dir']}/${dict['id']}.sam"
     align_args+=(
         '-S' "${dict['sam_file']}"
         '-U' "${dict['fastq_file']}"
@@ -124,12 +124,12 @@ koopa_hisat2_align_single_end_per_sample() {
         '--new-summary'
         '--threads' "${dict['threads']}"
     )
-    dict[lib_type]="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
         align_args+=('--rna-strandedness' "${dict['lib_type']}")
     fi
-    dict[quality_flag]="$( \
+    dict['quality_flag']="$( \
         koopa_hisat2_fastq_quality_format "${dict['fastq_r1_file']}" \
     )"
     if [[ -n "${dict['quality_flag']}" ]]

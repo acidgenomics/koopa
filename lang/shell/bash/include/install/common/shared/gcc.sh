@@ -77,8 +77,8 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
-    dict[url]="${dict['gnu_mirror']}/${dict['name']}/\
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+    dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
 ${dict['name']}-${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
@@ -97,12 +97,12 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     )
     if koopa_is_macos
     then
-        app[uname]="$(koopa_locate_uname)"
+        app['uname']="$(koopa_locate_uname)"
         [[ -x "${app['uname']}" ]] || return 1
         # e.g. '21.4.0' for macOS 12.3.1.
-        dict[kernel_version]="$("${app['uname']}" -r)"
-        dict[kernel_maj_ver]="$(koopa_major_version "${dict['kernel_version']}")"
-        dict[sdk_prefix]="$(koopa_macos_sdk_prefix)"
+        dict['kernel_version']="$("${app['uname']}" -r)"
+        dict['kernel_maj_ver']="$(koopa_major_version "${dict['kernel_version']}")"
+        dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
         conf_args+=(
             "--build=${dict['arch']}-apple-darwin${dict['kernel_maj_ver']}"
             '--disable-multilib'

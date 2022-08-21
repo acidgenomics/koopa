@@ -41,7 +41,7 @@ koopa_find_non_symlinked_make_files() {
             '--exclude' 'var/homebrew/**'
         )
     fi
-    dict[out]="$(koopa_find "${find_args[@]}")"
+    dict['out']="$(koopa_find "${find_args[@]}")"
     koopa_print "${dict['out']}"
     return 0
 }

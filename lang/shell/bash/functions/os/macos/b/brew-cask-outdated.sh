@@ -31,16 +31,16 @@ koopa_macos_brew_cask_outdated() {
     # '--greedy'. This tends to include font casks and the Google Cloud SDK,
     # which are annoying to have reinstall with each update, so disabling
     # here by default.
-    dict[keep_latest]=0
+    dict['keep_latest']=0
     # This approach keeps the version information, which we can parse.
-    dict[tmp_file]="$(koopa_tmp_file)"
+    dict['tmp_file']="$(koopa_tmp_file)"
     script -q "${dict['tmp_file']}" \
         "${app['brew']}" outdated --cask --greedy >/dev/null
     if [[ "${dict['keep_latest']}" -eq 1 ]]
     then
-        dict[str]="$("${app['cut']}" -d ' ' -f '1' < "${dict['tmp_file']}")"
+        dict['str']="$("${app['cut']}" -d ' ' -f '1' < "${dict['tmp_file']}")"
     else
-        dict[str]="$( \
+        dict['str']="$( \
             koopa_grep \
                 --file="${dict['tmp_file']}" \
                 --invert-match \

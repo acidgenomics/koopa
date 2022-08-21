@@ -28,21 +28,21 @@ koopa_current_gencode_version() {
     case "${dict['organism']}" in
         'Homo sapiens' | \
         'human')
-            dict[short_name]='human'
-            dict[pattern]='Release [0-9]+'
+            dict['short_name']='human'
+            dict['pattern']='Release [0-9]+'
             ;;
         'Mus musculus' | \
         'mouse')
-            dict[short_name]='mouse'
-            dict[pattern]='Release M[0-9]+'
+            dict['short_name']='mouse'
+            dict['pattern']='Release M[0-9]+'
             ;;
         *)
             koopa_stop "Unsupported organism: '${dict['organism']}'."
             ;;
     esac
-    dict[base_url]='https://www.gencodegenes.org'
-    dict[url]="${dict['base_url']}/${dict['short_name']}/"
-    dict[str]="$( \
+    dict['base_url']='https://www.gencodegenes.org'
+    dict['url']="${dict['base_url']}/${dict['short_name']}/"
+    dict['str']="$( \
         koopa_parse_url "${dict['url']}" \
         | koopa_grep \
             --only-matching \

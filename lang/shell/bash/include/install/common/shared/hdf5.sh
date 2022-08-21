@@ -21,9 +21,9 @@ main() {
         [version]="${INSTALL_VERSION:?}"
         [zlib]="$(koopa_app_prefix 'zlib')"
     )
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
-    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
-    dict[url]="https://support.hdfgroup.org/ftp/HDF5/releases/\
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://support.hdfgroup.org/ftp/HDF5/releases/\
 ${dict['name']}-${dict['maj_min_ver']}/${dict['name']}-${dict['version']}/\
 src/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

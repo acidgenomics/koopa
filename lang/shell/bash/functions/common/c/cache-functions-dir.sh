@@ -25,7 +25,7 @@ koopa_cache_functions_dir() {
             [prefix]="$prefix"
         )
         koopa_assert_is_dir "${dict['prefix']}"
-        dict[target_file]="${dict['prefix']}.sh"
+        dict['target_file']="${dict['prefix']}.sh"
         koopa_alert "Caching functions at '${dict['prefix']}' \
 in '${dict['target_file']}'."
         readarray -t files <<< "$( \
@@ -47,7 +47,7 @@ in '${dict['target_file']}'."
                 "$file" \
             >> "${dict['target_file']}"
         done
-        dict[tmp_target_file]="${dict['target_file']}.tmp"
+        dict['tmp_target_file']="${dict['target_file']}.tmp"
         "${app['perl']}" \
             -0pe 's/\n\n\n+/\n\n/g' \
             "${dict['target_file']}" \

@@ -38,11 +38,11 @@ koopa_sra_download_accession_list() {
                 shift 2
                 ;;
             '--srp-id='*)
-                dict[srp_id]="${1#*=}"
+                dict['srp_id']="${1#*=}"
                 shift 1
                 ;;
             '--srp-id')
-                dict[srp_id]="${2:?}"
+                dict['srp_id']="${2:?}"
                 shift 2
                 ;;
             # Invalid ----------------------------------------------------------
@@ -55,7 +55,7 @@ koopa_sra_download_accession_list() {
     koopa_assert_is_set '--srp-id' "${dict['srp_id']}"
     if [[ -z "${dict['acc_file']}" ]]
     then
-        dict[acc_file]="$(koopa_lowercase "${dict['srp_id']}")-\
+        dict['acc_file']="$(koopa_lowercase "${dict['srp_id']}")-\
 accession-list.txt"
     fi
     koopa_alert "Downloading SRA accession list for '${dict['srp_id']}' \

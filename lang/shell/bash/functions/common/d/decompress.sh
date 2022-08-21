@@ -39,7 +39,7 @@ koopa_decompress() {
         case "$1" in
             # Flags ------------------------------------------------------------
             '--stdout')
-                dict[stdout]=1
+                dict['stdout']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -54,14 +54,14 @@ koopa_decompress() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    dict[source_file]="${1:?}"
-    dict[target_file]="${2:-}"
+    dict['source_file']="${1:?}"
+    dict['target_file']="${2:-}"
     koopa_assert_is_file "${dict['source_file']}"
     case "${dict['stdout']}" in
         '0')
             if [[ -z "${dict['target_file']}" ]]
             then
-                dict[target_file]="$( \
+                dict['target_file']="$( \
                     koopa_sub \
                         --pattern="${dict['compress_ext_pattern']}" \
                         --replacement='' \

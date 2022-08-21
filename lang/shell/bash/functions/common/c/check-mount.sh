@@ -21,7 +21,7 @@ koopa_check_mount() {
         koopa_warn "'${dict['prefix']}' is not a readable directory."
         return 1
     fi
-    dict[nfiles]="$( \
+    dict['nfiles']="$( \
         koopa_find \
             --prefix="${dict['prefix']}" \
             --min-depth=1 \

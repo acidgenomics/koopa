@@ -21,15 +21,15 @@ koopa_link_dotfile() {
     do
         case "$1" in
             '--into-xdg-config-home')
-                dict[into_xdg_config_home]=1
+                dict['into_xdg_config_home']=1
                 shift 1
                 ;;
             '--overwrite')
-                dict[overwrite]=1
+                dict['overwrite']=1
                 shift 1
                 ;;
             '--private')
-                dict[private]=1
+                dict['private']=1
                 shift 1
                 ;;
             '-'*)
@@ -43,32 +43,32 @@ koopa_link_dotfile() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    dict[source_subdir]="${1:?}"
-    dict[symlink_basename]="${2:-}"
+    dict['source_subdir']="${1:?}"
+    dict['symlink_basename']="${2:-}"
     if [[ -z "${dict['symlink_basename']}" ]]
     then
-        dict[symlink_basename]="$(koopa_basename "${dict['source_subdir']}")"
+        dict['symlink_basename']="$(koopa_basename "${dict['source_subdir']}")"
     fi
     if [[ "${dict['private']}" -eq 1 ]]
     then
-        dict[source_prefix]="${dict['dotfiles_private_prefix']}"
+        dict['source_prefix']="${dict['dotfiles_private_prefix']}"
     else
-        dict[source_prefix]="${dict['dotfiles_config_link']}"
+        dict['source_prefix']="${dict['dotfiles_config_link']}"
         if [[ ! -L "${dict['source_prefix']}" ]]
         then
             koopa_ln "${dict['dotfiles_prefix']}" "${dict['source_prefix']}"
         fi
     fi
-    dict[source_path]="${dict['source_prefix']}/${dict['source_subdir']}"
+    dict['source_path']="${dict['source_prefix']}/${dict['source_subdir']}"
     koopa_assert_is_existing "${dict['source_path']}"
     if [[ "${dict['into_xdg_config_home']}" -eq 1 ]]
     then
-        dict[symlink_prefix]="${dict['xdg_config_home']}"
+        dict['symlink_prefix']="${dict['xdg_config_home']}"
     else
-        dict[symlink_prefix]="${HOME:?}"
-        dict[symlink_basename]=".${dict['symlink_basename']}"
+        dict['symlink_prefix']="${HOME:?}"
+        dict['symlink_basename']=".${dict['symlink_basename']}"
     fi
-    dict[symlink_path]="${dict['symlink_prefix']}/${dict['symlink_basename']}"
+    dict['symlink_path']="${dict['symlink_prefix']}/${dict['symlink_basename']}"
     if [[ "${dict['overwrite']}" -eq 1 ]] ||
         { [[ -L "${dict['symlink_path']}" ]] && \
             [[ ! -e "${dict['symlink_path']}" ]]; }
@@ -83,7 +83,7 @@ koopa_link_dotfile() {
     fi
     koopa_alert "Linking dotfile from '${dict['source_path']}' \
 to '${dict['symlink_path']}'."
-    dict[symlink_dirname]="$(koopa_dirname "${dict['symlink_path']}")"
+    dict['symlink_dirname']="$(koopa_dirname "${dict['symlink_path']}")"
     if [[ "${dict['symlink_dirname']}" != "${HOME:?}" ]]
     then
         koopa_mkdir "${dict['symlink_dirname']}"

@@ -25,27 +25,27 @@ koopa_check_shared_object() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--file='*)
-                dict[file]="${1#*=}"
+                dict['file']="${1#*=}"
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
+                dict['file']="${2:?}"
                 shift 2
                 ;;
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -60,21 +60,21 @@ koopa_check_shared_object() {
             '--prefix' "${dict['prefix']}"
         if koopa_is_linux
         then
-            dict[shared_ext]='so'
+            dict['shared_ext']='so'
         elif koopa_is_macos
         then
-            dict[shared_ext]='dylib'
+            dict['shared_ext']='dylib'
         fi
-        dict[file]="${dict['prefix']}/${dict['name']}.${dict['shared_ext']}"
+        dict['file']="${dict['prefix']}/${dict['name']}.${dict['shared_ext']}"
     fi
     koopa_assert_is_file "${dict['file']}"
     tool_args=()
     if koopa_is_linux
     then
-        app[tool]="$(koopa_locate_ldd)"
+        app['tool']="$(koopa_locate_ldd)"
     elif koopa_is_macos
     then
-        app[tool]="$(koopa_macos_locate_otool)"
+        app['tool']="$(koopa_macos_locate_otool)"
         tool_args+=('-L')
     fi
     [[ -x "${app['tool']}" ]] || return 1

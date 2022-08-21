@@ -14,10 +14,10 @@ koopa_opt_version() {
         [name]="${1:?}"
         [opt_prefix]="$(koopa_opt_prefix)"
     )
-    dict[symlink]="${dict['opt_prefix']}/${dict['name']}"
+    dict['symlink']="${dict['opt_prefix']}/${dict['name']}"
     koopa_assert_is_symlink "${dict['symlink']}"
-    dict[realpath]="$(koopa_realpath "${dict['symlink']}")"
-    dict[version]="$(koopa_basename "${dict['realpath']}")"
+    dict['realpath']="$(koopa_realpath "${dict['symlink']}")"
+    dict['version']="$(koopa_basename "${dict['realpath']}")"
     koopa_print "${dict['version']}"
     return 0
 }

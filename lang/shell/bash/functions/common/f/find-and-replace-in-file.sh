@@ -51,33 +51,33 @@ koopa_find_and_replace_in_file() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--replacement='*)
-                dict[replacement]="${1#*=}"
+                dict['replacement']="${1#*=}"
                 shift 1
                 ;;
             '--replacement')
                 # Allowing empty string passthrough here.
-                dict[replacement]="${2:-}"
+                dict['replacement']="${2:-}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--fixed')
-                dict[regex]=0
+                dict['regex']=0
                 shift 1
                 ;;
             '--multiline')
-                dict[multiline]=1
+                dict['multiline']=1
                 shift 1
                 ;;
             '--regex')
-                dict[regex]=1
+                dict['regex']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -100,9 +100,9 @@ koopa_find_and_replace_in_file() {
     koopa_assert_is_file "$@"
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict[expr]="s/${dict['pattern']}/${dict['replacement']}/g"
+        dict['expr']="s/${dict['pattern']}/${dict['replacement']}/g"
     else
-        dict[expr]=" \
+        dict['expr']=" \
             \$pattern = quotemeta '${dict['pattern']}'; \
             \$replacement = '${dict['replacement']}'; \
             s/\$pattern/\$replacement/g; \

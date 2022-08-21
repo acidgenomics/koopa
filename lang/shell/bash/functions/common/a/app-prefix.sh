@@ -14,15 +14,15 @@ koopa_app_prefix() {
     local dict
     koopa_assert_has_args_le "$#" 1
     declare -A dict
-    dict[name]="${1:-}"
+    dict['name']="${1:-}"
     if [[ -n "${dict['name']}" ]]
     then
-        dict[opt_prefix]="$(koopa_opt_prefix)"
-        dict[str]="${dict['opt_prefix']}/${dict['name']}"
+        dict['opt_prefix']="$(koopa_opt_prefix)"
+        dict['str']="${dict['opt_prefix']}/${dict['name']}"
         [[ -d "${dict['str']}" ]] || return 1
-        dict[str]="$(koopa_realpath "${dict['str']}")"
+        dict['str']="$(koopa_realpath "${dict['str']}")"
     else
-        dict[str]="$(koopa_koopa_prefix)/app"
+        dict['str']="$(koopa_koopa_prefix)/app"
     fi
     koopa_print "${dict['str']}"
     return 0

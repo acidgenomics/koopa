@@ -38,13 +38,13 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict['name']}-${dict['version']}-source.tar.gz"
-    dict[url]="https://www.${dict['name']}.org/pub/${dict['name']}/\
+    dict['file']="${dict['name']}-${dict['version']}-source.tar.gz"
+    dict['url']="https://www.${dict['name']}.org/pub/${dict['name']}/\
 ${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    dict[x11]="$(koopa_app_prefix 'xorg-libx11')"
+    dict['x11']="$(koopa_app_prefix 'xorg-libx11')"
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-cairo'

@@ -26,19 +26,19 @@ koopa_fasta_generate_chromosomes_file() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-file='*)
-                dict[output_file]="${1#*=}"
+                dict['output_file']="${1#*=}"
                 shift 1
                 ;;
             '--output-file')
-                dict[output_file]="${2:?}"
+                dict['output_file']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

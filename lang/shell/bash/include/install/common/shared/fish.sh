@@ -24,9 +24,9 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[ncurses]="$(koopa_app_prefix 'ncurses')"
-    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
-    dict[url]="https://github.com/${dict['name']}-shell/${dict['name']}-shell/\
+    dict['ncurses']="$(koopa_app_prefix 'ncurses')"
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+    dict['url']="https://github.com/${dict['name']}-shell/${dict['name']}-shell/\
 releases/download/${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"

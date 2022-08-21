@@ -34,15 +34,15 @@ default '${dict['binary_prefix']}' location."
     do
         local dict2
         declare -A dict2
-        dict2[prefix]="$(koopa_realpath "$prefix")"
-        dict2[name]="$( \
+        dict2['prefix']="$(koopa_realpath "$prefix")"
+        dict2['name']="$( \
             koopa_print "${dict2['prefix']}" \
                 | koopa_dirname \
                 | koopa_basename \
         )"
-        dict2[version]="$(koopa_basename "$prefix")"
-        dict2[tar_file]="${dict2['name']}-${dict2['version']}.tar.gz"
-        dict2[tar_url]="${dict['url_stem']}/${dict['os_string']}/${dict['arch']}/\
+        dict2['version']="$(koopa_basename "$prefix")"
+        dict2['tar_file']="${dict2['name']}-${dict2['version']}.tar.gz"
+        dict2['tar_url']="${dict['url_stem']}/${dict['os_string']}/${dict['arch']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
         if ! koopa_is_url_active "${dict2['tar_url']}"
         then

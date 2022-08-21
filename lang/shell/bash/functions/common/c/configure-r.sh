@@ -28,10 +28,10 @@ koopa_configure_r() {
     if ! koopa_is_koopa_app "${app['r']}"
     then
         koopa_assert_is_admin
-        dict[system]=1
+        dict['system']=1
     fi
-    dict[r_prefix]="$(koopa_r_prefix "${app['r']}")"
-    dict[site_library]="${dict['r_prefix']}/site-library"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['site_library']="${dict['r_prefix']}/site-library"
     koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     koopa_r_link_files_in_etc "${app['r']}"
@@ -51,8 +51,8 @@ koopa_configure_r() {
             then
                 koopa_macos_install_system_r_openmp
             fi
-            dict[group]="$(koopa_admin_group)"
-            dict[user]="$(koopa_user)"
+            dict['group']="$(koopa_admin_group)"
+            dict['user']="$(koopa_user)"
             if [[ -L "${dict['site_library']}" ]]
             then
                 koopa_rm --sudo "${dict['site_library']}"

@@ -63,7 +63,7 @@ koopa_activate_opt_prefix() {
         case "$1" in
             # Flags ------------------------------------------------------------
             '--build-only')
-                dict[build_only]=1
+                dict['build_only']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------

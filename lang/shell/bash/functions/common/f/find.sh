@@ -59,106 +59,106 @@ koopa_find() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--days-modified-before='*)
-                dict[days_modified_gt]="${1#*=}"
+                dict['days_modified_gt']="${1#*=}"
                 shift 1
                 ;;
             '--days-modified-before')
-                dict[days_modified_gt]="${2:?}"
+                dict['days_modified_gt']="${2:?}"
                 shift 2
                 ;;
             '--days-modified-within='*)
-                dict[days_modified_lt]="${1#*=}"
+                dict['days_modified_lt']="${1#*=}"
                 shift 1
                 ;;
             '--days-modified-within')
-                dict[days_modified_lt]="${2:?}"
+                dict['days_modified_lt']="${2:?}"
                 shift 2
                 ;;
             '--engine='*)
-                dict[engine]="${1#*=}"
+                dict['engine']="${1#*=}"
                 shift 1
                 ;;
             '--engine')
-                dict[engine]="${2:?}"
+                dict['engine']="${2:?}"
                 shift 2
                 ;;
             '--exclude='*)
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--exclude')
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${2:?}")
                 shift 2
                 ;;
             '--max-depth='*)
-                dict[max_depth]="${1#*=}"
+                dict['max_depth']="${1#*=}"
                 shift 1
                 ;;
             '--max-depth')
-                dict[max_depth]="${2:?}"
+                dict['max_depth']="${2:?}"
                 shift 2
                 ;;
             '--min-depth='*)
-                dict[min_depth]="${1#*=}"
+                dict['min_depth']="${1#*=}"
                 shift 1
                 ;;
             '--min-depth')
-                dict[min_depth]="${2:?}"
+                dict['min_depth']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--size='*)
-                dict[size]="${1#*=}"
+                dict['size']="${1#*=}"
                 shift 1
                 ;;
             '--size')
-                dict[size]="${2:?}"
+                dict['size']="${2:?}"
                 shift 2
                 ;;
             '--type='*)
-                dict[type]="${1#*=}"
+                dict['type']="${1#*=}"
                 shift 1
                 ;;
             '--type')
-                dict[type]="${2:?}"
+                dict['type']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--empty')
-                dict[empty]=1
+                dict['empty']=1
                 shift 1
                 ;;
             '--print0')
-                dict[print0]=1
+                dict['print0']=1
                 shift 1
                 ;;
             '--sort')
-                dict[sort]=1
+                dict['sort']=1
                 shift 1
                 ;;
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             '--verbose')
-                dict[verbose]=1
+                dict['verbose']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -168,20 +168,20 @@ koopa_find() {
         esac
     done
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     if [[ -z "${dict['engine']}" ]]
     then
-        app[find]="$(koopa_locate_fd --allow-missing)"
+        app['find']="$(koopa_locate_fd --allow-missing)"
         [[ ! -x "${app['find']}" ]] && app[find]="$(koopa_locate_find)"
-        dict[engine]="$(koopa_basename "${app['find']}")"
+        dict['engine']="$(koopa_basename "${app['find']}")"
     else
-        app[find]="$(koopa_locate_"${dict['engine']}")"
+        app['find']="$(koopa_locate_"${dict['engine']}")"
     fi
     [[ -x "${app['find']}" ]] || return 1
     find=()
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || return 1
         find+=("${app['sudo']}")
     fi
@@ -211,13 +211,13 @@ koopa_find() {
             then
                 case "${dict['type']}" in
                     'd')
-                        dict[type]='directory'
+                        dict['type']='directory'
                         ;;
                     'f')
-                        dict[type]='file'
+                        dict['type']='file'
                         ;;
                     'l')
-                        dict[type]='symlink'
+                        dict['type']='symlink'
                         ;;
                     *)
                         koopa_stop 'Invalid type argument for Rust fd.'
@@ -254,7 +254,7 @@ koopa_find() {
             if [[ -n "${dict['size']}" ]]
             then
                 # Convert GNU find 'c' for bytes into 'b' convention here.
-                dict[size]="$( \
+                dict['size']="$( \
                     koopa_sub \
                         --pattern='c$' \
                         --replacement='b' \
@@ -381,7 +381,7 @@ koopa_find() {
     fi
     if [[ "${dict['sort']}" -eq 1 ]]
     then
-        app[sort]="$(koopa_locate_sort)"
+        app['sort']="$(koopa_locate_sort)"
         [[ -x "${app['sort']}" ]] || return 1
     fi
     if [[ "${dict['print0']}" -eq 1 ]]

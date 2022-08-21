@@ -37,7 +37,7 @@ main() {
         --branch="${dict['branch']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"
-    app[doom]="${dict['prefix']}/bin/doom"
+    app['doom']="${dict['prefix']}/bin/doom"
     koopa_assert_is_installed "${app['doom']}"
     install_args=(
         # > '--no-config'

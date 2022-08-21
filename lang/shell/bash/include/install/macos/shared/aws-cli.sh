@@ -23,11 +23,11 @@ main() {
         [version]="${INSTALL_VERSION:?}"
         [xml_file]='choices.xml'
     )
-    dict[libexec_prefix]="${dict['prefix']}/libexec"
+    dict['libexec_prefix']="${dict['prefix']}/libexec"
     koopa_mkdir "${dict['libexec_prefix']}"
-    dict[maj_ver]="$(koopa_major_version "${dict['version']}")"
-    dict[file]="AWSCLIV${dict['maj_ver']}-${dict['version']}.pkg"
-    dict[url]="https://awscli.amazonaws.com/${dict['file']}"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+    dict['file']="AWSCLIV${dict['maj_ver']}-${dict['version']}.pkg"
+    dict['url']="https://awscli.amazonaws.com/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     "${app['cat']}" > "${dict['xml_file']}" << END
 <?xml version="1.0" encoding="UTF-8"?>

@@ -23,52 +23,52 @@ koopa_bowtie2_align() {
             # Key-value pairs --------------------------------------------------
             # FIXME Indicate that this is a file more clearly.
             '--fastq-r1='*)
-                dict[fastq_r1]="${1#*=}"
+                dict['fastq_r1']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1')
-                dict[fastq_r1]="${2:?}"
+                dict['fastq_r1']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2='*)
-                dict[fastq_r2]="${1#*=}"
+                dict['fastq_r2']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2')
-                dict[fastq_r2]="${2:?}"
+                dict['fastq_r2']="${2:?}"
                 shift 2
                 ;;
             '--index-base='*)
-                dict[index_base]="${1#*=}"
+                dict['index_base']="${1#*=}"
                 shift 1
                 ;;
             '--index-base')
-                dict[index_base]="${2:?}"
+                dict['index_base']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # FIXME Work on including 'fastq' in variable here.
             '--r1-tail='*)
-                dict[r1_tail]="${1#*=}"
+                dict['r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--r1-tail')
-                dict[r1_tail]="${2:?}"
+                dict['r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--r2-tail='*)
-                dict[r2_tail]="${1#*=}"
+                dict['r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--r2-tail')
-                dict[r2_tail]="${2:?}"
+                dict['r2_tail']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -78,13 +78,13 @@ koopa_bowtie2_align() {
         esac
     done
     koopa_assert_is_file "${dict['fastq_r1']}" "${dict['fastq_r2']}"
-    dict[fastq_r1_bn]="$(koopa_basename "${dict['fastq_r1']}")"
-    dict[fastq_r1_bn]="${dict['fastq_r1_bn']/${dict['r1_tail']}/}"
-    dict[fastq_r2_bn]="$(koopa_basename "${dict['fastq_r2']}")"
-    dict[fastq_r2_bn]="${dict['fastq_r2_bn']/${dict['r2_tail']}/}"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1']}")"
+    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['r1_tail']}/}"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2']}")"
+    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
     id="${dict['fastq_r1_bn']}"
-    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."

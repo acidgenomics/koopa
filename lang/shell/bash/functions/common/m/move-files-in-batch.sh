@@ -35,27 +35,27 @@ koopa_move_files_in_batch() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--num='*)
-                dict[num]="${1#*=}"
+                dict['num']="${1#*=}"
                 shift 1
                 ;;
             '--num')
-                dict[num]="${2:?}"
+                dict['num']="${2:?}"
                 shift 2
                 ;;
             '--source-dir='*)
-                dict[source_dir]="${1#*=}"
+                dict['source_dir']="${1#*=}"
                 shift 1
                 ;;
             '--source-dir')
-                dict[source_dir]="${2:?}"
+                dict['source_dir']="${2:?}"
                 shift 2
                 ;;
             '--target-dir='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-dir')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -69,7 +69,7 @@ koopa_move_files_in_batch() {
         '--source-dir' "${dict['source_dir']}" \
         '--target-dir' "${dict['target_dir']}"
     koopa_assert_is_dir "${dict['target_dir']}"
-    dict[target_dir]="$(koopa_init_dir "${dict['target_dir']}")"
+    dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     readarray -t files <<< "$( \
         koopa_find \
             --max-depth=1 \

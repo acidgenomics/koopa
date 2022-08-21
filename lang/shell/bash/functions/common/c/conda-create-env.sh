@@ -28,21 +28,21 @@ koopa_conda_create_env() {
         case "$1" in
             # Key value pairs --------------------------------------------------
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--force' | \
             '--reinstall')
-                dict[force]=1
+                dict['force']=1
                 shift 1
                 ;;
             '--latest')
-                dict[latest]=1
+                dict['latest']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -74,7 +74,7 @@ koopa_conda_create_env() {
         declare -A dict2
         # Note that we're using 'salmon@1.4.0' for the environment name but
         # must use 'salmon=1.4.0' in the call to conda below.
-        dict2[env_string]="${string//@/=}"
+        dict2['env_string']="${string//@/=}"
         if [[ "${dict['latest']}" -eq 1 ]]
         then
             if koopa_str_detect_fixed \
@@ -84,16 +84,16 @@ koopa_conda_create_env() {
                 koopa_stop "Don't specify version when using '--latest'."
             fi
             koopa_alert "Obtaining latest version for '${dict2['env_string']}'."
-            dict2[env_version]="$( \
+            dict2['env_version']="$( \
                 koopa_conda_env_latest_version "${dict2['env_string']}" \
             )"
             [[ -n "${dict2['env_version']}" ]] || return 1
-            dict2[env_string]="${dict2['env_string']}=${dict2['env_version']}"
+            dict2['env_string']="${dict2['env_string']}=${dict2['env_version']}"
         elif ! koopa_str_detect_fixed \
             --string="${dict2['env_string']}" \
             --pattern='='
         then
-            dict2[env_version]="$( \
+            dict2['env_version']="$( \
                 koopa_variable "${dict2['env_string']}" \
                 || true \
             )"
@@ -101,14 +101,14 @@ koopa_conda_create_env() {
             then
                 koopa_stop 'Pinned environment version not defined in koopa.'
             fi
-            dict2[env_string]="${dict2['env_string']}=${dict2['env_version']}"
+            dict2['env_string']="${dict2['env_string']}=${dict2['env_version']}"
         fi
         # Ensure we handle edge case of '<NAME>=<VERSION>=<BUILD>' here.
-        dict2[env_name]="$( \
+        dict2['env_name']="$( \
             koopa_print "${dict2['env_string']//=/@}" \
             | "${app['cut']}" -d '@' -f '1-2' \
         )"
-        dict2[env_prefix]="${dict['env_prefix']}/${dict2['env_name']}"
+        dict2['env_prefix']="${dict['env_prefix']}/${dict2['env_name']}"
         if [[ -d "${dict2['env_prefix']}" ]]
         then
             if [[ "${dict['force']}" -eq 1 ]]

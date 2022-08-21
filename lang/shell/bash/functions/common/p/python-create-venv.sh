@@ -23,7 +23,7 @@ koopa_python_create_venv() {
     )
     [[ -x "${app['python']}" ]] || return 1
     # This helps improve path definition in 'pyvenv.cfg' output file.
-    app[python]="$(koopa_realpath "${app['python']}")"
+    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         [name]=''
         [pip]=1
@@ -36,27 +36,27 @@ koopa_python_create_venv() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--python='*)
-                app[python]="${1#*=}"
+                app['python']="${1#*=}"
                 shift 1
                 ;;
             '--python')
-                app[python]="${2:?}"
+                app['python']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -73,15 +73,15 @@ koopa_python_create_venv() {
     pkgs=("$@")
     koopa_assert_is_set --python "${app['python']}"
     koopa_assert_is_installed "${app['python']}"
-    dict[py_version]="$(koopa_get_version "${app['python']}")"
-    dict[py_maj_min_ver]="$(koopa_major_minor_version "${dict['py_version']}")"
+    dict['py_version']="$(koopa_get_version "${app['python']}")"
+    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_version']}")"
     if [[ -z "${dict['prefix']}" ]]
     then
         koopa_assert_is_set --name "${dict['name']}"
-        dict[venv_prefix]="$(koopa_python_virtualenvs_prefix)"
-        dict[prefix]="${dict['venv_prefix']}/${dict['name']}"
-        dict[app_bn]="$(koopa_basename "${dict['venv_prefix']}")"
-        dict[app_prefix]="$(koopa_app_prefix)/${dict['app_bn']}/\
+        dict['venv_prefix']="$(koopa_python_virtualenvs_prefix)"
+        dict['prefix']="${dict['venv_prefix']}/${dict['name']}"
+        dict['app_bn']="$(koopa_basename "${dict['venv_prefix']}")"
+        dict['app_prefix']="$(koopa_app_prefix)/${dict['app_bn']}/\
 ${dict['py_maj_min_ver']}"
         if [[ ! -d "${dict['app_prefix']}" ]]
         then
@@ -108,22 +108,22 @@ ${dict['py_maj_min_ver']}"
     fi
     venv_args+=("${dict['prefix']}")
     "${app['python']}" -m venv "${venv_args[@]}"
-    app[venv_python]="${dict['prefix']}/bin/python${dict['py_maj_min_ver']}"
+    app['venv_python']="${dict['prefix']}/bin/python${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${dict['pip']}" -eq 1 ]]
     then
         case "${dict['py_version']}" in
             '3.10.6')
                 # 2022-08-09.
-                dict[pip_version]='22.2.2'
-                dict[setuptools_version]='63.4.2'
-                dict[wheel_version]='0.37.1'
+                dict['pip_version']='22.2.2'
+                dict['setuptools_version']='63.4.2'
+                dict['wheel_version']='0.37.1'
                 ;;
             '3.10.5' | \
             '3.10.'*)
-                dict[pip_version]='22.1.2'
-                dict[setuptools_version]='63.1.0'
-                dict[wheel_version]='0.37.1'
+                dict['pip_version']='22.1.2'
+                dict['setuptools_version']='63.1.0'
+                dict['wheel_version']='0.37.1'
                 ;;
             *)
                 koopa_stop "Unsupported Python: ${dict['py_version']}."

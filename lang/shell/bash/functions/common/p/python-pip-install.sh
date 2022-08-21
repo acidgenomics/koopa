@@ -26,19 +26,19 @@ koopa_python_pip_install() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--python='*)
-                app[python]="${1#*=}"
+                app['python']="${1#*=}"
                 shift 1
                 ;;
             '--python')
-                app[python]="${2:?}"
+                app['python']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

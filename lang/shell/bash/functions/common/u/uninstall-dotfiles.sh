@@ -15,7 +15,7 @@ koopa_uninstall_dotfiles() {
         [name]='dotfiles'
         [prefix]="$(koopa_dotfiles_prefix)"
     )
-    dict[script]="${dict['prefix']}/uninstall"
+    dict['script']="${dict['prefix']}/uninstall"
     koopa_assert_is_file "${dict['script']}"
     "${app['bash']}" "${dict['script']}"
     koopa_uninstall_app \

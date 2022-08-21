@@ -14,10 +14,10 @@ koopa_configure_chemacs() {
     )
     if [[ -z "${dict['source_prefix']}" ]]
     then
-        dict[source_prefix]="${dict['opt_prefix']}/chemacs"
+        dict['source_prefix']="${dict['opt_prefix']}/chemacs"
     fi
     koopa_assert_is_dir "${dict['source_prefix']}"
-    dict[source_prefix]="$(koopa_realpath "${dict['source_prefix']}")"
+    dict['source_prefix']="$(koopa_realpath "${dict['source_prefix']}")"
     koopa_ln "${dict['source_prefix']}" "${dict['target_prefix']}"
     return 0
 }

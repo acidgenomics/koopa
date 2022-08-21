@@ -38,15 +38,15 @@ koopa_macos_brew_cask_outdated() {
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict
-    dict[keep_latest]=0
-    dict[tmp_file]="$(koopa_tmp_file)"
+    dict['keep_latest']=0
+    dict['tmp_file']="$(koopa_tmp_file)"
     script -q "${dict['tmp_file']}" \
         "${app['brew']}" outdated --cask --greedy >/dev/null
     if [[ "${dict['keep_latest']}" -eq 1 ]]
     then
-        dict[str]="$("${app['cut']}" -d ' ' -f '1' < "${dict['tmp_file']}")"
+        dict['str']="$("${app['cut']}" -d ' ' -f '1' < "${dict['tmp_file']}")"
     else
-        dict[str]="$( \
+        dict['str']="$( \
             koopa_grep \
                 --file="${dict['tmp_file']}" \
                 --invert-match \
@@ -108,7 +108,7 @@ koopa_macos_brew_upgrade_casks() {
             'openjdk' | \
             'r' | \
             'temurin')
-                app[r]="$(koopa_macos_r_prefix)/bin/R"
+                app['r']="$(koopa_macos_r_prefix)/bin/R"
                 koopa_configure_r "${app['r']}"
                 ;;
             'google-'*)
@@ -163,9 +163,9 @@ koopa_macos_create_dmg() {
         [srcfolder]="${1:?}"
     )
     koopa_assert_is_dir "${dict['srcfolder']}"
-    dict[srcfolder]="$(koopa_realpath "${dict['srcfolder']}")"
-    dict[volname]="$(koopa_basename "${dict['volname']}")"
-    dict[ov]="${dict['volname']}.dmg"
+    dict['srcfolder']="$(koopa_realpath "${dict['srcfolder']}")"
+    dict['volname']="$(koopa_basename "${dict['volname']}")"
+    dict['ov']="${dict['volname']}.dmg"
     "${app['hdiutil']}" create \
         -ov "${dict['ov']}" \
         -srcfolder "${dict['srcfolder']}" \
@@ -221,20 +221,20 @@ koopa_macos_disable_plist_file() {
             [enabled_file]="$file"
             [sudo]=1
         )
-        dict[disabled_file]="$(koopa_dirname "${dict['enabled_file']}")/\
+        dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
 disabled/$(koopa_basename "${dict['enabled_file']}")"
         koopa_alert "Disabling '${dict['enabled_file']}'."
         if koopa_str_detect_fixed \
             --string="${dict['enabled_file']}" \
             --pattern='/LaunchDaemons/'
         then
-            dict[daemon]=1
+            dict['daemon']=1
         fi
         if koopa_str_detect_regex \
             --string="${dict['enabled_file']}" \
             --pattern="^${HOME:?}"
         then
-            dict[sudo]=0
+            dict['sudo']=0
         fi
         case "${dict['sudo']}" in
             '0')
@@ -272,7 +272,7 @@ koopa_macos_disable_privileged_helper_tool() {
         declare -A dict=(
             [enabled_file]="/Library/PrivilegedHelperTools/${bn}"
         )
-        dict[disabled_file]="$(koopa_dirname "${dict['enabled_file']}")/\
+        dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
 disabled/$(koopa_basename "${dict['enabled_file']}")"
         koopa_assert_is_file "${dict['enabled_file']}"
         koopa_assert_is_not_file "${dict['disabled_file']}"
@@ -396,20 +396,20 @@ koopa_macos_enable_plist_file() {
             [enabled_file]="$file"
             [sudo]=1
         )
-        dict[disabled_file]="$(koopa_dirname "${dict['enabled_file']}")/\
+        dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
 disabled/$(koopa_basename "${dict['enabled_file']}")"
         koopa_alert "Enabling '${dict['enabled_file']}'."
         if koopa_str_detect_fixed \
             --string="${dict['enabled_file']}" \
             --pattern='/LaunchDaemons/'
         then
-            dict[daemon]=1
+            dict['daemon']=1
         fi
         if koopa_str_detect_regex \
             --string="${dict['enabled_file']}" \
             --pattern="^${HOME:?}"
         then
-            dict[sudo]=0
+            dict['sudo']=0
         fi
         case "${dict['sudo']}" in
             '0')
@@ -447,7 +447,7 @@ koopa_macos_enable_privileged_helper_tool() {
         declare -A dict=(
             [enabled_file]="/Library/PrivilegedHelperTools/${bn}"
         )
-        dict[disabled_file]="$(koopa_dirname "${dict['enabled_file']}")/\
+        dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
 disabled/$(koopa_basename "${dict['enabled_file']}")"
         koopa_assert_is_not_file "${dict['enabled_file']}"
         koopa_assert_is_file "${dict['disabled_file']}"
@@ -549,8 +549,8 @@ koopa_macos_force_eject() {
     [[ -x "${app['diskutil']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict
-    dict[name]="${1:?}"
-    dict[mount]="/Volumes/${dict['name']}"
+    dict['name']="${1:?}"
+    dict['mount']="/Volumes/${dict['name']}"
     koopa_assert_is_dir "${dict['mount']}"
     "${app['sudo']}" "${app['diskutil']}" unmount force "${dict['mount']}"
     return 0
@@ -685,7 +685,7 @@ koopa_macos_link_homebrew() {
     koopa_link_in_bin \
         --name='emacs' \
         --source='/Applications/Emacs.app/Contents/MacOS/Emacs'
-    dict[r]="$(koopa_macos_r_prefix)"
+    dict['r']="$(koopa_macos_r_prefix)"
     koopa_link_in_bin \
         --name='R' \
         --source="${dict['r']}/bin/R"

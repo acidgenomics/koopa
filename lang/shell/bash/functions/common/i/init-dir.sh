@@ -16,7 +16,7 @@ koopa_init_dir() {
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -31,12 +31,12 @@ koopa_init_dir() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
-    dict[dir]="${1:?}"
+    dict['dir']="${1:?}"
     if koopa_str_detect_regex \
         --string="${dict['dir']}" \
         --pattern='^~'
     then
-        dict[dir]="$( \
+        dict['dir']="$( \
             koopa_sub \
                 --pattern='^~' \
                 --replacement="${HOME:?}" \
@@ -49,7 +49,7 @@ koopa_init_dir() {
     then
         "${mkdir[@]}" "${dict['dir']}"
     fi
-    dict[realdir]="$(koopa_realpath "${dict['dir']}")"
+    dict['realdir']="$(koopa_realpath "${dict['dir']}")"
     koopa_print "${dict['realdir']}"
     return 0
 }

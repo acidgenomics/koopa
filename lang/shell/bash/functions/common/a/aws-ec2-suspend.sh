@@ -20,11 +20,11 @@ koopa_aws_ec2_suspend() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

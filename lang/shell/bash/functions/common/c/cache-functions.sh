@@ -10,7 +10,7 @@ koopa_cache_functions() {
     declare -A dict=(
         [koopa_prefix]="$(koopa_koopa_prefix)"
     )
-    dict[shell_prefix]="${dict['koopa_prefix']}/lang/shell"
+    dict['shell_prefix']="${dict['koopa_prefix']}/lang/shell"
     koopa_cache_functions_dir \
         "${dict['shell_prefix']}/bash/functions/activate" \
         "${dict['shell_prefix']}/bash/functions/common" \

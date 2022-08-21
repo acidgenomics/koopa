@@ -26,30 +26,30 @@ koopa_test_grep() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--ignore='*)
-                dict[ignore]="${1#*=}"
+                dict['ignore']="${1#*=}"
                 shift 1
                 ;;
             '--ignore' | \
             '-i')
-                dict[ignore]="${2:?}"
+                dict['ignore']="${2:?}"
                 shift 2
                 ;;
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name' | \
             '-n')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern' | \
             '-p')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

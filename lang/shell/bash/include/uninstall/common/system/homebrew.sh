@@ -34,8 +34,8 @@ main() {
     declare -A dict=(
         [user]="$(koopa_user)"
     )
-    dict[file]='uninstall.sh'
-    dict[url]="https://raw.githubusercontent.com/Homebrew/install/\
+    dict['file']='uninstall.sh'
+    dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
 master/${dict['file']}"
     # Important! Homebrew uninstaller will currently attempt to delete the
     # parent directory containing 'brew', so make sure we remove our symlink

@@ -16,7 +16,7 @@ koopa_check_access_human() {
         koopa_warn "'${dict['file']}' does not exist."
         return 1
     fi
-    dict[access]="$(koopa_stat_access_human "${dict['file']}")"
+    dict['access']="$(koopa_stat_access_human "${dict['file']}")"
     if [[ "${dict['access']}" != "${dict['code']}" ]]
     then
         koopa_warn "'${dict['file']}' current access '${dict['access']}' \

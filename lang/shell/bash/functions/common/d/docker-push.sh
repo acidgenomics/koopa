@@ -38,7 +38,7 @@ koopa_docker_push() {
         koopa_assert_is_matching_regex \
             --string="${dict2['pattern']}" \
             --pattern='^.+/.+$'
-        dict2[json]="$( \
+        dict2['json']="$( \
             "${app['docker']}" inspect \
                 --format="{{json .RepoTags}}" \
                 "${dict2['pattern']}" \

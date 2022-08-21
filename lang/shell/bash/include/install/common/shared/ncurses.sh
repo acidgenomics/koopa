@@ -20,9 +20,9 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_ver]="$(koopa_major_version "${dict['version']}")"
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
-    dict[pkgconfig_dir]="${dict['prefix']}/lib/pkgconfig"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['pkgconfig_dir']="${dict['prefix']}/lib/pkgconfig"
     koopa_mkdir "${dict['pkgconfig_dir']}"
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
     koopa_install_app_internal \

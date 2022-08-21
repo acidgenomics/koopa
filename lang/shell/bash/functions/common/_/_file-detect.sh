@@ -29,39 +29,39 @@ __koopa_file_detect() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--file='*)
-                dict[file]="${1#*=}"
-                dict[stdin]=0
+                dict['file']="${1#*=}"
+                dict['stdin']=0
                 shift 1
                 ;;
             '--file')
-                dict[file]="${2:?}"
-                dict[stdin]=0
+                dict['file']="${2:?}"
+                dict['stdin']=0
                 shift 2
                 ;;
             '--mode='*)
-                dict[mode]="${1#*=}"
+                dict['mode']="${1#*=}"
                 shift 1
                 ;;
             '--mode')
-                dict[mode]="${2:?}"
+                dict['mode']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
             '-')
-                dict[stdin]=1
+                dict['stdin']=1
                 shift 1
                 ;;
             *)
@@ -72,7 +72,7 @@ __koopa_file_detect() {
     # Piped input using stdin (file mode).
     if [[ "${dict['stdin']}" -eq 1 ]]
     then
-        dict[file]="$(</dev/stdin)"
+        dict['file']="$(</dev/stdin)"
     fi
     koopa_assert_is_set \
         '--file' "${dict['file']}" \

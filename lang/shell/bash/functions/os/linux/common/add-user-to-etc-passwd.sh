@@ -28,7 +28,7 @@ koopa_linux_add_user_to_etc_passwd() {
     then
         koopa_alert "Updating '${dict['passwd_file']}' to \
 include '${dict['user']}'."
-        dict[user_string]="$(getent passwd "${dict['user']}")"
+        dict['user_string']="$(getent passwd "${dict['user']}")"
         koopa_sudo_append_string \
             --file="${dict['passwd_file']}" \
             --string="${dict['user_string']}"

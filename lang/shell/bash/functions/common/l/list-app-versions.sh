@@ -15,7 +15,7 @@ koopa_list_app_versions() {
         koopa_alert_note "No apps are installed in '${dict['prefix']}'."
         return 0
     fi
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_find \
             --max-depth=2 \
             --min-depth=2 \

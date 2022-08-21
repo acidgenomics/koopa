@@ -62,32 +62,32 @@ koopa_aws_s3_ls() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--type='*)
-                dict[type]="${1#*=}"
+                dict['type']="${1#*=}"
                 shift 1
                 ;;
             '--type')
-                dict[type]="${2:?}"
+                dict['type']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--recursive')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -104,16 +104,16 @@ koopa_aws_s3_ls() {
         --string="${dict['prefix']}"
     case "${dict['type']}" in
         '')
-            dict[dirs]=1
-            dict[files]=1
+            dict['dirs']=1
+            dict['files']=1
             ;;
         'd')
-            dict[dirs]=1
-            dict[files]=0
+            dict['dirs']=1
+            dict['files']=0
             ;;
         'f')
-            dict[dirs]=0
-            dict[files]=1
+            dict['dirs']=0
+            dict['files']=1
             ;;
         *)
             koopa_stop "Unsupported type: '${dict['type']}'."
@@ -136,7 +136,7 @@ koopa_aws_s3_ls() {
     # Recursive mode, which only returns files.
     if [[ "${dict['recursive']}" -eq 1 ]]
     then
-        dict[bucket_prefix]="$( \
+        dict['bucket_prefix']="$( \
             koopa_grep \
                 --only-matching \
                 --pattern='^s3://[^/]+' \

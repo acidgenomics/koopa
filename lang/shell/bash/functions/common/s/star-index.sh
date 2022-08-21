@@ -44,27 +44,27 @@ koopa_star_index() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
+                dict['gtf_file']="${1#*=}"
                 shift 1
                 ;;
             '--gtf-file')
-                dict[gtf_file]="${2:?}"
+                dict['gtf_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------

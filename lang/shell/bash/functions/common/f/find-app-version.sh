@@ -17,9 +17,9 @@ koopa_find_app_version() {
         [app_prefix]="$(koopa_app_prefix)"
         [name]="${1:?}"
     )
-    dict[prefix]="${dict['app_prefix']}/${dict['name']}"
+    dict['prefix']="${dict['app_prefix']}/${dict['name']}"
     koopa_assert_is_dir "${dict['prefix']}"
-    dict[hit]="$( \
+    dict['hit']="$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
@@ -29,7 +29,7 @@ koopa_find_app_version() {
         | "${app['tail']}" -n 1 \
     )"
     [[ -d "${dict['hit']}" ]] || return 1
-    dict[hit_bn]="$(koopa_basename "${dict['hit']}")"
+    dict['hit_bn']="$(koopa_basename "${dict['hit']}")"
     koopa_print "${dict['hit_bn']}"
     return 0
 }

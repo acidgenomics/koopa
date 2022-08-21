@@ -41,8 +41,8 @@ main() {
         '--enable-threads'
         '--enable-64bit'
     )
-    dict[tcl_file]="tcl${dict['version']}-src.tar.gz"
-    dict[tcl_url]="${dict['url_stem']}/${dict['tcl_file']}"
+    dict['tcl_file']="tcl${dict['version']}-src.tar.gz"
+    dict['tcl_url']="${dict['url_stem']}/${dict['tcl_file']}"
     koopa_download "${dict['tcl_url']}" "${dict['tcl_file']}"
     koopa_extract "${dict['tcl_file']}"
     (
@@ -54,8 +54,8 @@ main() {
         "${app['make']}" install
         "${app['make']}" install-private-headers
     )
-    dict[tk_file]="tk${dict['version']}-src.tar.gz"
-    dict[tk_url]="${dict['url_stem']}/${dict['tk_file']}"
+    dict['tk_file']="tk${dict['version']}-src.tar.gz"
+    dict['tk_url']="${dict['url_stem']}/${dict['tk_file']}"
     koopa_download "${dict['tk_url']}" "${dict['tk_file']}"
     koopa_extract "${dict['tk_file']}"
     (

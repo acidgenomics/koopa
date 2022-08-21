@@ -18,8 +18,8 @@ koopa_macos_force_eject() {
     [[ -x "${app['diskutil']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict
-    dict[name]="${1:?}"
-    dict[mount]="/Volumes/${dict['name']}"
+    dict['name']="${1:?}"
+    dict['mount']="/Volumes/${dict['name']}"
     koopa_assert_is_dir "${dict['mount']}"
     "${app['sudo']}" "${app['diskutil']}" unmount force "${dict['mount']}"
     return 0

@@ -18,7 +18,7 @@ koopa_cli_install() {
     )
     case "${1:-}" in
         'koopa')
-            dict[allow_custom]=1
+            dict['allow_custom']=1
             ;;
         '--all')
             koopa_install_all_apps
@@ -40,7 +40,7 @@ koopa_cli_install() {
             '-'*)
                 if [[ "${dict['allow_custom']}" -eq 1 ]]
                 then
-                    dict[custom_enabled]=1
+                    dict['custom_enabled']=1
                     pos+=("$1")
                     shift 1
                 else
@@ -57,17 +57,17 @@ koopa_cli_install() {
     case "${1:-}" in
         'system' | \
         'user')
-            dict[stem]="${dict['stem']}-${1:?}"
+            dict['stem']="${dict['stem']}-${1:?}"
             shift 1
             ;;
     esac
     koopa_assert_has_args "$#"
     if [[ "${dict['custom_enabled']}" -eq 1 ]]
     then
-        dict[app]="${1:?}"
+        dict['app']="${1:?}"
         shift 1
-        dict[key]="${dict['stem']}-${dict['app']}"
-        dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+        dict['key']="${dict['stem']}-${dict['app']}"
+        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then
             koopa_stop "Unsupported app: '${dict['app']}'."
@@ -79,9 +79,9 @@ koopa_cli_install() {
     do
         local dict2
         declare -A dict2
-        dict2[app]="$app"
-        dict2[key]="${dict['stem']}-${dict2['app']}"
-        dict2[fun]="$(koopa_which_function "${dict2['key']}" || true)"
+        dict2['app']="$app"
+        dict2['key']="${dict['stem']}-${dict2['app']}"
+        dict2['fun']="$(koopa_which_function "${dict2['key']}" || true)"
         if ! koopa_is_function "${dict2['fun']}"
         then
             koopa_stop "Unsupported app: '${dict2['app']}'."
