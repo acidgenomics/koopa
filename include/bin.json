@@ -464,6 +464,71 @@
     "pcre2grep",
     "pcre2test"
   ],
+  "perl": [
+    "cpan",
+    "perl",
+    "perlbug",
+    "perldoc",
+    "perlivp",
+    "perlthanks",
+    "piconv",
+    "pl2pm",
+    "pod2html",
+    "pod2man",
+    "pod2text",
+    "pod2usage",
+    "podchecker",
+    "prove",
+    "ptar",
+    "ptardiff",
+    "ptargrep"
+  ],
+  "pipx": [
+    "pipx"
+  ],
+  "pkg-config": [
+    "pkg-config"
+  ],
+  "poetry": [
+    "poetry"
+  ],
+  "prettier": [
+    "prettier"
+  ],
+  "procs": [
+    "procs"
+  ],
+  "proj": [
+    "projinfo"
+  ],
+  "pyenv": [
+    "pyenv"
+  ],
+  "pyflakes": [
+    "pyflakes"
+  ],
+  "pygments": [
+    "pygments"
+  ],
+  "pylint": [
+    "pylint"
+  ],
+  "pytaglib": [
+    "pyprinttags"
+  ],
+  "pytest": [
+    "pytest"
+  ],
+  "python": [
+    "python3"
+  ],
+  "r": [
+    "R",
+    "Rscript"
+  ],
+  "ranger-fm": [
+    "ranger"
+  ],
   "rust": [
     "cargo",
     "cargo-clippy",
