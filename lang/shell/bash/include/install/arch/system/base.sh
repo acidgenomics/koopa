@@ -27,9 +27,9 @@ main() {
         [pacman_db_upgrade]="$(koopa_arch_locate_pacman_db_upgrade)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[pacman]}" ]] || return 1
-    [[ -x "${app[pacman_db_upgrade]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['pacman']}" ]] || return 1
+    [[ -x "${app['pacman_db_upgrade']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     pkgs=(
         'awk'
         'base-devel'
@@ -59,9 +59,9 @@ main() {
     # is non-standard and can cause koopa's application link script to break.
     # > [[ -L '/usr/local/share/man' ]] && \
     # >     koopa_rm --sudo '/usr/local/share/man'
-    "${app[sudo]}" "${app[pacman]}" -Syyu --noconfirm
-    "${app[sudo]}" "${app[pacman]}" -Syy --noconfirm
-    "${app[sudo]}" "${app[pacman_db_upgrade]}"
-    "${app[sudo]}" "${app[pacman]}" -S --noconfirm "${pkgs[@]}"
+    "${app['sudo']}" "${app['pacman']}" -Syyu --noconfirm
+    "${app['sudo']}" "${app['pacman']}" -Syy --noconfirm
+    "${app['sudo']}" "${app['pacman_db_upgrade']}"
+    "${app['sudo']}" "${app['pacman']}" -S --noconfirm "${pkgs[@]}"
     return 0
 }

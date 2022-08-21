@@ -15,9 +15,9 @@ main() {
         [sudo]="$(koopa_locate_sudo)"
         [tlmgr]="$(koopa_locate_tlmgr)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tlmgr]}" ]] || return 1
-    "${app[sudo]}" "${app[tlmgr]}" update --self
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tlmgr']}" ]] || return 1
+    "${app['sudo']}" "${app['tlmgr']}" update --self
     packages=(
         # Priority ----
         'collection-fontsrecommended'
@@ -56,7 +56,7 @@ main() {
     for package in "${packages[@]}"
     do
         koopa_alert "$package"
-        "${app[sudo]}" "${app[tlmgr]}" install "$package"
+        "${app['sudo']}" "${app['tlmgr']}" install "$package"
     done
     return 0
 }

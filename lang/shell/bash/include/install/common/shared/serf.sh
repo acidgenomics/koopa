@@ -33,22 +33,22 @@ main() {
         [patch]="$(koopa_locate_patch)"
         [scons]="$(koopa_locate_scons)"
     )
-    [[ -x "${app[cat]}" ]] || return 1
-    [[ -x "${app[patch]}" ]] || return 1
-    [[ -x "${app[scons]}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['patch']}" ]] || return 1
+    [[ -x "${app['scons']}" ]] || return 1
     declare -A dict=(
         [name]='serf'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
-    dict[url]="https://www.apache.org/dist/${dict[name]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.bz2"
+    dict[url]="https://www.apache.org/dist/${dict['name']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     # Patch diff created with:
     # > diff -u 'SConstruct' 'SConstruct-1' > 'patch-sconstruct-1.patch'
-    "${app[cat]}" << END > 'patch-sconstruct-1.patch'
+    "${app['cat']}" << END > 'patch-sconstruct-1.patch'
 --- SConstruct	2022-07-13 08:31:30.000000000 -0400
 +++ SConstruct-1	2022-07-13 08:33:39.000000000 -0400
 @@ -152,7 +152,7 @@
@@ -83,12 +83,12 @@ main() {
  apr = str(env['APR'])
  apu = str(env['APU'])
 END
-    "${app[patch]}" -u 'SConstruct' -i 'patch-sconstruct-1.patch'
+    "${app['patch']}" -u 'SConstruct' -i 'patch-sconstruct-1.patch'
     if koopa_is_linux
     then
         # Patch diff created with:
         # > diff -u 'SConstruct-1' 'SConstruct-2' > 'patch-sconstruct-2.patch'
-        "${app[cat]}" << END > 'patch-sconstruct-2.patch'
+        "${app['cat']}" << END > 'patch-sconstruct-2.patch'
 --- SConstruct-1	2022-07-13 08:33:39.000000000 -0400
 +++ SConstruct-2	2022-07-13 08:34:21.000000000 -0400
 @@ -372,6 +372,8 @@
@@ -101,12 +101,12 @@ END
  
  # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
 END
-        "${app[patch]}" -u 'SConstruct' 'patch-sconstruct-2.patch'
+        "${app['patch']}" -u 'SConstruct' 'patch-sconstruct-2.patch'
     fi
     # Apply OpenSSL compatibility patch.
     # https://www.linuxfromscratch.org/patches/blfs/svn/
     #   serf-1.3.9-openssl3_fixes-1.patch
-    "${app[cat]}" << END > 'patch-openssl3.patch'
+    "${app['cat']}" << END > 'patch-openssl3.patch'
 Submitted By:            Douglas R. Reno <renodr at linuxfromscratch dot org>
 Date:                    2021-12-30
 Initial Package Version: 1.3.9
@@ -149,26 +149,26 @@ diff -Naurp serf-1.3.9.orig/buckets/ssl_buckets.c serf-1.3.9/buckets/ssl_buckets
  {
      serf_ssl_context_t *ctx = SSL_get_app_data(ssl);
 END
-    "${app[patch]}" -Np1 -i 'patch-openssl3.patch'
+    "${app['patch']}" -Np1 -i 'patch-openssl3.patch'
     # Refer to 'SConstruct' file for supported arguments.
     dict[apr]="$(koopa_app_prefix 'apr')"
     dict[apu]="$(koopa_app_prefix 'apr-util')"
     dict[cflags]="${CFLAGS:-}"
-    dict[libdir]="${dict[prefix]}/lib"
+    dict[libdir]="${dict['prefix']}/lib"
     dict[linkflags]="${LDFLAGS:-}"
     dict[openssl]="$(koopa_app_prefix 'openssl3')"
     dict[zlib]="$(koopa_app_prefix 'zlib')"
     scons_args=(
-        "APR=${dict[apr]}"
-        "APU=${dict[apu]}"
-        "CFLAGS=${dict[cflags]}"
-        "LIBDIR=${dict[libdir]}"
-        "LINKFLAGS=${dict[linkflags]}"
-        "OPENSSL=${dict[openssl]}"
-        "PREFIX=${dict[prefix]}"
-        "ZLIB=${dict[zlib]}"
+        "APR=${dict['apr']}"
+        "APU=${dict['apu']}"
+        "CFLAGS=${dict['cflags']}"
+        "LIBDIR=${dict['libdir']}"
+        "LINKFLAGS=${dict['linkflags']}"
+        "OPENSSL=${dict['openssl']}"
+        "PREFIX=${dict['prefix']}"
+        "ZLIB=${dict['zlib']}"
     )
-    "${app[scons]}" "${scons_args[@]}"
-    "${app[scons]}" "${scons_args[@]}" install
+    "${app['scons']}" "${scons_args[@]}"
+    "${app['scons']}" "${scons_args[@]}" install
     return 0
 }

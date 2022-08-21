@@ -17,23 +17,23 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [name]='zlib'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://www.zlib.net/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
+    dict[url]="https://www.zlib.net/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
         # > '--enable-static=no'
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" install
+    "${app['make']}" install
     return 0
 }

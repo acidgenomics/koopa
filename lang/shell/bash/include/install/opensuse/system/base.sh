@@ -14,8 +14,8 @@ main() {
         [sudo]="$(koopa_locate_sudo)"
         [zypper]="$(koopa_locate_zypper)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[zypper]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['zypper']}" ]] || return 1
     pkgs=(
         # > 'R-base'
         # > 'R-base-devel'
@@ -60,10 +60,10 @@ main() {
         'zlib-devel'
         'zsh'
     )
-    "${app[sudo]}" "${app[zypper]}" refresh
-    "${app[sudo]}" "${app[zypper]}" --non-interactive update
-    "${app[sudo]}" "${app[zypper]}" install -y "${pkgs[@]}"
-    "${app[sudo]}" "${app[zypper]}" clean
+    "${app['sudo']}" "${app['zypper']}" refresh
+    "${app['sudo']}" "${app['zypper']}" --non-interactive update
+    "${app['sudo']}" "${app['zypper']}" install -y "${pkgs[@]}"
+    "${app['sudo']}" "${app['zypper']}" clean
     return 0
 }
 

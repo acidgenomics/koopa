@@ -15,8 +15,8 @@ main() {
         [file]='pihole.sh'
         [url]='https://install.pi-hole.net'
     )
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_chmod 'u+x' "${dict[file]}"
-    "./${dict[file]}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_chmod 'u+x' "${dict['file']}"
+    "./${dict['file']}"
     return 0
 }

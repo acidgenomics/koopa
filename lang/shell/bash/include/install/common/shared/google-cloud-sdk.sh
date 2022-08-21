@@ -29,20 +29,20 @@ main() {
     then
         dict[os]='darwin'
     fi
-    case "${dict[arch]}" in
+    case "${dict['arch']}" in
         'aarch64')
             dict[arch2]='arm'
             ;;
         *)
-            dict[arch2]="${dict[arch]}"
+            dict[arch2]="${dict['arch']}"
             ;;
     esac
-    dict[file]="google-cloud-cli-${dict[version]}-${dict[os]}-\
-${dict[arch2]}.tar.gz"
+    dict[file]="google-cloud-cli-${dict['version']}-${dict['os']}-\
+${dict['arch2']}.tar.gz"
     dict[url]="https://dl.google.com/dl/cloudsdk/channels/rapid/\
-downloads/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cp 'google-cloud-sdk' "${dict[prefix]}"
+downloads/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cp 'google-cloud-sdk' "${dict['prefix']}"
     return 0
 }

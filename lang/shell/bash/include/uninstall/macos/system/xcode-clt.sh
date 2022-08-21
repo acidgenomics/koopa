@@ -13,7 +13,7 @@ main() {
     declare -A dict=(
         [prefix]='/Library/Developer/CommandLineTools'
     )
-    koopa_assert_is_dir "${dict[prefix]}"
-    koopa_rm --sudo "${dict[prefix]}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    koopa_rm --sudo "${dict['prefix']}"
     return 0
 }

@@ -25,13 +25,13 @@ main() {
     else
         dict[os_id]='linux'
     fi
-    dict[file]="${dict[name]}${dict[version]}.${dict[os_id]}-\
-${dict[arch]}.tar.gz"
-    dict[url]="https://dl.google.com/${dict[name]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cp --target-directory="${dict[prefix]}" "${dict[name]}/"*
-    app[go]="${dict[prefix]}/bin/go"
-    koopa_assert_is_installed "${app[go]}"
+    dict[file]="${dict['name']}${dict['version']}.${dict['os_id']}-\
+${dict['arch']}.tar.gz"
+    dict[url]="https://dl.google.com/${dict['name']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cp --target-directory="${dict['prefix']}" "${dict['name']}/"*
+    app[go]="${dict['prefix']}/bin/go"
+    koopa_assert_is_installed "${app['go']}"
     return 0
 }

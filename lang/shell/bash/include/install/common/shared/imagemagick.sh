@@ -83,24 +83,24 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[mmp_ver]="$(koopa_major_minor_patch_version "${dict[version]}")"
-    dict[file]="ImageMagick-${dict[version]}.tar.xz"
-    dict[url]="https://imagemagick.org/archive/releases/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "ImageMagick-${dict[mmp_ver]}"
+    dict[mmp_ver]="$(koopa_major_minor_patch_version "${dict['version']}")"
+    dict[file]="ImageMagick-${dict['version']}.tar.xz"
+    dict[url]="https://imagemagick.org/archive/releases/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "ImageMagick-${dict['mmp_ver']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--with-modules'
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}"
-    "${app[make]}" install
+    "${app['make']}"
+    "${app['make']}" install
     return 0
 }

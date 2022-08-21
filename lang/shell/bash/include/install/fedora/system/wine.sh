@@ -17,19 +17,19 @@ main() {
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
     declare -A dict
     dict[version]="$( \
         koopa_grep \
             --file='/etc/os-release' \
             --pattern='VERSION_ID=' \
-        | "${app[cut]}" -d '=' -f '2' \
+        | "${app['cut']}" -d '=' -f '2' \
     )"
     dict[repo_url]="https://dl.winehq.org/wine-builds/fedora/\
-${dict[version]}/winehq.repo"
+${dict['version']}/winehq.repo"
     koopa_fedora_dnf update
     koopa_fedora_dnf_install 'dnf-plugins-core'
-    koopa_fedora_dnf config-manager --add-repo "${dict[repo_url]}"
+    koopa_fedora_dnf config-manager --add-repo "${dict['repo_url']}"
     koopa_fedora_dnf_install \
         'winehq-stable' \
         'xorg-x11-apps' \

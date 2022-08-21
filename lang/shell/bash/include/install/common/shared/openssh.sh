@@ -28,25 +28,25 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='openssh'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
+    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
     dict[url]="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
-portable/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+portable/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     dict[ssl]="$(koopa_app_prefix 'openssl3')"
     conf_args=(
         # > '--with-security-key-builtin' # libfido2
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--with-libedit'
-        "--with-ssl-dir=${dict[ssl]}"
+        "--with-ssl-dir=${dict['ssl']}"
         '--without-kerberos5'
         '--without-ldns'
         '--without-pam'
@@ -54,12 +54,12 @@ portable/${dict[file]}"
     if koopa_is_linux
     then
         conf_args+=(
-            "--with-privsep-path=${dict[prefix]}/var/lib/sshd"
+            "--with-privsep-path=${dict['prefix']}/var/lib/sshd"
         )
     fi
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

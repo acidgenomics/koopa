@@ -14,7 +14,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [name]='expat'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -25,18 +25,18 @@ main() {
             --fixed \
             --pattern='.' \
             --replacement='_' \
-            "${dict[version]}" \
+            "${dict['version']}" \
     )"
-    dict[file]="${dict[name]}-${dict[version]}.tar.xz"
+    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
     dict[url]="https://github.com/libexpat/libexpat/releases/download/\
-R_${dict[version2]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
-    conf_args=("--prefix=${dict[prefix]}")
+R_${dict['version2']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
+    conf_args=("--prefix=${dict['prefix']}")
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}"
-    "${app[make]}" install
+    "${app['make']}"
+    "${app['make']}" install
     return 0
 }

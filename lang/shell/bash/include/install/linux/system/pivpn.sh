@@ -14,8 +14,8 @@ main() {
         [file]='pivpn.sh'
         [url]='https://install.pivpn.io'
     )
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_chmod 'u+x' "${dict[file]}"
-    "./${dict[file]}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_chmod 'u+x' "${dict['file']}"
+    "./${dict['file']}"
     return 0
 }

@@ -20,28 +20,28 @@ main() {
         [cmake]="$(koopa_locate_cmake)"
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='libjpeg-turbo'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://downloads.sourceforge.net/project/${dict[name]}/\
-${dict[version]}/${dict[name]}-${dict[version]}.tar.gz"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
+    dict[url]="https://downloads.sourceforge.net/project/${dict['name']}/\
+${dict['version']}/${dict['name']}-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_BUILD_TYPE=Release'
         '-DWITH_JPEG8=1'
     )
-    "${app[cmake]}" '.' "${cmake_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" test
-    "${app[make]}" install
+    "${app['cmake']}" '.' "${cmake_args[@]}"
+    "${app['make']}" --jobs="${dict['jobs']}"
+    # > "${app['make']}" test
+    "${app['make']}" install
     return 0
 }

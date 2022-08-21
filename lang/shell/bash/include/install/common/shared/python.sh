@@ -71,7 +71,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='python'
@@ -79,19 +79,19 @@ main() {
         [version]="${INSTALL_VERSION:?}"
     )
     dict[openssl]="$(koopa_app_prefix 'openssl3')"
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
-    dict[file]="Python-${dict[version]}.tar.xz"
-    dict[url]="https://www.python.org/ftp/${dict[name]}/${dict[version]}/\
-${dict[file]}"
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
+    dict[file]="Python-${dict['version']}.tar.xz"
+    dict[url]="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
+${dict['file']}"
     koopa_mkdir \
-        "${dict[prefix]}/bin" \
-        "${dict[prefix]}/lib"
-    koopa_add_to_path_start "${dict[prefix]}/bin"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "Python-${dict[version]}"
+        "${dict['prefix']}/bin" \
+        "${dict['prefix']}/lib"
+    koopa_add_to_path_start "${dict['prefix']}/bin"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "Python-${dict['version']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
@@ -99,7 +99,7 @@ ${dict[file]}"
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip'
         '--with-lto'
-        "--with-openssl=${dict[openssl]}"
+        "--with-openssl=${dict['openssl']}"
         '--with-openssl-rpath=auto'
     )
     if koopa_is_macos
@@ -109,15 +109,15 @@ ${dict[file]}"
             '--with-dtrace'
         )
     fi
-    koopa_add_rpath_to_ldflags "${dict[prefix]}/lib"
+    koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" test
+    "${app['make']}" --jobs="${dict['jobs']}"
+    # > "${app['make']}" test
     # Use 'altinstall' here instead?
-    "${app[make]}" install
-    app[python]="${dict[prefix]}/bin/${dict[name]}${dict[maj_min_ver]}"
-    koopa_assert_is_installed "${app[python]}"
-    koopa_check_shared_object --file="${app[python]}"
+    "${app['make']}" install
+    app[python]="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
+    koopa_assert_is_installed "${app['python']}"
+    koopa_check_shared_object --file="${app['python']}"
     return 0
 }

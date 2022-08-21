@@ -27,7 +27,7 @@ main() {
     declare -A app=(
         [make]="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         [ca_certificates]="$(koopa_app_prefix 'ca-certificates')"
         [jobs]="$(koopa_cpu_count)"
@@ -38,28 +38,28 @@ main() {
         [zlib]="$(koopa_app_prefix 'zlib')"
         [zstd]="$(koopa_app_prefix 'zstd')"
     )
-    dict[cacert]="${dict[ca_certificates]}/share/ca-certificates/cacert.pem"
-    koopa_assert_is_file "${dict[cacert]}"
-    dict[file]="${dict[name]}-${dict[version]}.tar.xz"
-    dict[version2]="${dict[version]//./_}"
-    dict[url]="https://github.com/${dict[name]}/${dict[name]}/releases/\
-download/${dict[name]}-${dict[version2]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[cacert]="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
+    koopa_assert_is_file "${dict['cacert']}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.xz"
+    dict[version2]="${dict['version']//./_}"
+    dict[url]="https://github.com/${dict['name']}/${dict['name']}/releases/\
+download/${dict['name']}-${dict['version2']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--enable-versioned-symbols'
-        "--with-ca-bundle=${dict[cacert]}"
-        "--with-ssl=${dict[ssl]}"
-        "--with-zlib=${dict[zlib]}"
-        "--with-zstd=${dict[zstd]}"
+        "--with-ca-bundle=${dict['cacert']}"
+        "--with-ssl=${dict['ssl']}"
+        "--with-zlib=${dict['zlib']}"
+        "--with-zstd=${dict['zstd']}"
         '--without-ca-path'
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" test
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    # > "${app['make']}" test
+    "${app['make']}" install
     return 0
 }

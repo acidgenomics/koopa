@@ -26,7 +26,7 @@ main() {
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         [jobs]="$(koopa_cpu_count)"
         [name]='libgit2'
@@ -34,34 +34,34 @@ main() {
         [shared_ext]="$(koopa_shared_ext)"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict[version]}.tar.gz"
-    dict[url]="https://github.com/${dict[name]}/${dict[name]}/\
-archive/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="v${dict['version']}.tar.gz"
+    dict[url]="https://github.com/${dict['name']}/${dict['name']}/\
+archive/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     dict[openssl]="$(koopa_app_prefix 'openssl3')"
     dict[pcre]="$(koopa_app_prefix 'pcre')"
     dict[zlib]="$(koopa_app_prefix 'zlib')"
-    koopa_add_rpath_to_ldflags "${dict[openssl]}/lib"
+    koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
     cmake_args=(
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_BUILD_TYPE=Release'
         '-DBUILD_TESTS=OFF'
         '-DUSE_BUNDLED_ZLIB=OFF'
         '-DUSE_SSH=YES'
-        "-DPCRE_INCLUDE_DIR=${dict[pcre]}/include"
-        "-DPCRE_LIBRARY=${dict[pcre]}/lib/libpcre.${dict[shared_ext]}"
-        "-DZLIB_INCLUDE_DIR=${dict[zlib]}/include"
-        "-DZLIB_LIBRARY=${dict[zlib]}/lib/libz.${dict[shared_ext]}"
+        "-DPCRE_INCLUDE_DIR=${dict['pcre']}/include"
+        "-DPCRE_LIBRARY=${dict['pcre']}/lib/libpcre.${dict['shared_ext']}"
+        "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
+        "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
-    "${app[cmake]}" \
+    "${app['cmake']}" \
         -S '.' \
         -B 'build' \
         "${cmake_args[@]}"
-    "${app[cmake]}" \
+    "${app['cmake']}" \
         --build 'build' \
-        --parallel "${dict[jobs]}"
-    "${app[cmake]}" --install 'build'
+        --parallel "${dict['jobs']}"
+    "${app['cmake']}" --install 'build'
     return 0
 }

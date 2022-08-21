@@ -23,11 +23,11 @@ main() {
         [patch]="$(koopa_locate_patch)"
         [tr]="$(koopa_locate_tr)"
     )
-    [[ -x "${app[curl]}" ]] || return 1
-    [[ -x "${app[cut]}" ]] || return 1
-    [[ -x "${app[make]}" ]] || return 1
-    [[ -x "${app[patch]}" ]] || return 1
-    [[ -x "${app[tr]}" ]] || return 1
+    [[ -x "${app['curl']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['patch']}" ]] || return 1
+    [[ -x "${app['tr']}" ]] || return 1
     declare -A dict=(
         [bin_prefix]="$(koopa_bin_prefix)"
         [gnu_mirror]="$(koopa_gnu_mirror_url)"
@@ -37,48 +37,48 @@ main() {
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
-    dict[patch_base_url]="https://ftp.gnu.org/gnu/${dict[name]}/\
-${dict[name]}-${dict[maj_min_ver]}-patches"
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict['version']}")"
+    dict[patch_base_url]="https://ftp.gnu.org/gnu/${dict['name']}/\
+${dict['name']}-${dict['maj_min_ver']}-patches"
     dict[n_patches]="$( \
-        koopa_major_minor_patch_version "${dict[version]}" \
-        | "${app[cut]}" -d '.' -f '3' \
+        koopa_major_minor_patch_version "${dict['version']}" \
+        | "${app['cut']}" -d '.' -f '3' \
     )"
-    dict[file]="${dict[name]}-${dict[maj_min_ver]}.tar.gz"
-    dict[url]="${dict[gnu_mirror]}/${dict[name]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[maj_min_ver]}"
+    dict[file]="${dict['name']}-${dict['maj_min_ver']}.tar.gz"
+    dict[url]="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['maj_min_ver']}"
     # Apply patches, if necessary.
-    if [[ "${dict[n_patches]}" -gt 0 ]]
+    if [[ "${dict['n_patches']}" -gt 0 ]]
     then
         koopa_alert "$(koopa_ngettext \
             --prefix='Applying ' \
-            --num="${dict[n_patches]}" \
+            --num="${dict['n_patches']}" \
             --msg1='patch' \
             --msg2='patches' \
-            --suffix=" from '${dict[patch_base_url]}'." \
+            --suffix=" from '${dict['patch_base_url']}'." \
         )"
         # mmv_tr: trimmed major minor version.
         dict[mmv_tr]="$( \
-            koopa_print "${dict[maj_min_ver]}" \
-            | "${app[tr]}" --delete '.' \
+            koopa_print "${dict['maj_min_ver']}" \
+            | "${app['tr']}" --delete '.' \
         )"
-        dict[patch_range]="$(printf '%03d-%03d' '1' "${dict[n_patches]}")"
-        dict[patch_request_urls]="${dict[patch_base_url]}/\
-${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
-        koopa_mkdir "${dict[patch_prefix]}"
+        dict[patch_range]="$(printf '%03d-%03d' '1' "${dict['n_patches']}")"
+        dict[patch_request_urls]="${dict['patch_base_url']}/\
+${dict['name']}${dict['mmv_tr']}-[${dict['patch_range']}]"
+        koopa_mkdir "${dict['patch_prefix']}"
         (
-            koopa_cd "${dict[patch_prefix]}"
-            "${app[curl]}" "${dict[patch_request_urls]}" -O
+            koopa_cd "${dict['patch_prefix']}"
+            "${app['curl']}" "${dict['patch_request_urls']}" -O
             koopa_cd ..
-            for file in "${dict[patch_prefix]}/"*
+            for file in "${dict['patch_prefix']}/"*
             do
-                "${app[patch]}" -p0 --ignore-whitespace --input="$file"
+                "${app['patch']}" -p0 --ignore-whitespace --input="$file"
             done
         )
     fi
-    conf_args=("--prefix=${dict[prefix]}")
+    conf_args=("--prefix=${dict['prefix']}")
     if koopa_is_alpine
     then
         # musl does not implement brk/sbrk (they simply return -ENOMEM).
@@ -104,12 +104,12 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
     fi
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    # > "${app[make]}" test
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    # > "${app['make']}" test
+    "${app['make']}" install
     if koopa_is_shared_install
     then
-        koopa_enable_shell_for_all_users "${dict[bin_prefix]}/${dict[name]}"
+        koopa_enable_shell_for_all_users "${dict['bin_prefix']}/${dict['name']}"
     fi
     return 0
 }

@@ -15,23 +15,23 @@ main() {
     declare -A app=(
         [cmake]="$(koopa_locate_cmake)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         [name]='c-ares'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://c-ares.org/download/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict[file]="${dict['name']}-${dict['version']}.tar.gz"
+    dict[url]="https://c-ares.org/download/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
     )
-    "${app[cmake]}" -S . -B 'build' "${cmake_args[@]}"
-    "${app[cmake]}" --build 'build'
-    "${app[cmake]}" --install 'build'
+    "${app['cmake']}" -S . -B 'build' "${cmake_args[@]}"
+    "${app['cmake']}" --build 'build'
+    "${app['cmake']}" --install 'build'
     return 0
 }
