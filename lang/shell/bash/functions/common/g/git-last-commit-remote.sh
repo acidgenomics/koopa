@@ -20,9 +20,9 @@ koopa_git_last_commit_remote() {
         [git]="$(koopa_locate_git)"
         [head]="$(koopa_locate_head)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[git]}" ]] || return 1
-    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
         [ref]='HEAD'
     )
@@ -31,9 +31,9 @@ koopa_git_last_commit_remote() {
         local x
         # shellcheck disable=SC2016
         x="$( \
-            "${app[git]}" ls-remote --quiet "$url" "${dict[ref]}" \
-            | "${app[head]}" -n 1 \
-            | "${app[awk]}" '{ print $1 }' \
+            "${app['git']}" ls-remote --quiet "$url" "${dict['ref']}" \
+            | "${app['head']}" -n 1 \
+            | "${app['awk']}" '{ print $1 }' \
         )"
         [[ -n "$x" ]] || return 1
         koopa_print "$x"

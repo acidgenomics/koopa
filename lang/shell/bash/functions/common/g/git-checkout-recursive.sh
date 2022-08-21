@@ -9,7 +9,7 @@ koopa_git_checkout_recursive() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         [branch]=''
         [origin]=''
@@ -76,27 +76,27 @@ koopa_git_checkout_recursive() {
                 declare -A dict2
                 koopa_h2 "$repo"
                 koopa_cd "$repo"
-                dict2[branch]="${dict[branch]}"
+                dict2[branch]="${dict['branch']}"
                 dict2[default_branch]="$(koopa_git_default_branch)"
-                if [[ -z "${dict2[branch]}" ]]
+                if [[ -z "${dict2['branch']}" ]]
                 then
-                    dict2[branch]="${dict2[default_branch]}"
+                    dict2[branch]="${dict2['default_branch']}"
                 fi
-                if [[ -n "${dict[origin]}" ]]
+                if [[ -n "${dict['origin']}" ]]
                 then
-                    "${app[git]}" fetch --all
-                    if [[ "${dict2[branch]}" != "${dict2[default_branch]}" ]]
+                    "${app['git']}" fetch --all
+                    if [[ "${dict2['branch']}" != "${dict2['default_branch']}" ]]
                     then
-                        "${app[git]}" checkout "${dict2[default_branch]}"
-                        "${app[git]}" branch -D "${dict2[branch]}" || true
+                        "${app['git']}" checkout "${dict2['default_branch']}"
+                        "${app['git']}" branch -D "${dict2['branch']}" || true
                     fi
-                    "${app[git]}" checkout \
-                        -B "${dict2[branch]}" \
-                        "${dict[origin]}"
+                    "${app['git']}" checkout \
+                        -B "${dict2['branch']}" \
+                        "${dict['origin']}"
                 else
-                    "${app[git]}" checkout "${dict2[branch]}"
+                    "${app['git']}" checkout "${dict2['branch']}"
                 fi
-                "${app[git]}" branch -vv
+                "${app['git']}" branch -vv
             done
         done
     )

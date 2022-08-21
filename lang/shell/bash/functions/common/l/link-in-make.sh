@@ -67,20 +67,20 @@ koopa_link_in_make() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--prefix' "${dict[app_prefix]}"
-    koopa_assert_is_dir "${dict[app_prefix]}" "${dict[make_prefix]}"
-    dict[app_prefix]="$(koopa_realpath "${dict[app_prefix]}")"
+    koopa_assert_is_set '--prefix' "${dict['app_prefix']}"
+    koopa_assert_is_dir "${dict['app_prefix']}" "${dict['make_prefix']}"
+    dict[app_prefix]="$(koopa_realpath "${dict['app_prefix']}")"
     if koopa_is_array_non_empty "${include_arr[@]:-}"
     then
         for i in "${!include_arr[@]}"
         do
-            files_arr[i]="${dict[app_prefix]}/${include_arr[i]}"
+            files_arr[i]="${dict['app_prefix']}/${include_arr['i']}"
         done
     else
         find_args=(
             '--max-depth=1'
             '--min-depth=1'
-            "--prefix=${dict[app_prefix]}"
+            "--prefix=${dict['app_prefix']}"
             '--sort'
             '--type=d'
         )
@@ -88,24 +88,24 @@ koopa_link_in_make() {
         then
             for i in "${!exclude_arr[@]}"
             do
-                find_args+=("--exclude=${exclude_arr[i]}")
+                find_args+=("--exclude=${exclude_arr['i']}")
             done
         fi
         readarray -t files_arr <<< "$(koopa_find "${find_args[@]}")"
     fi
     if koopa_is_array_empty "${files_arr[@]:-}"
     then
-        koopa_stop "No files from '${dict[app_prefix]}' to link \
-into '${dict[make_prefix]}'."
+        koopa_stop "No files from '${dict['app_prefix']}' to link \
+into '${dict['make_prefix']}'."
     fi
     koopa_assert_is_existing "${files_arr[@]}"
-    koopa_alert "Linking '${dict[app_prefix]}' in '${dict[make_prefix]}'."
-    koopa_sys_set_permissions --recursive "${dict[app_prefix]}"
-    koopa_delete_broken_symlinks "${dict[app_prefix]}"
+    koopa_alert "Linking '${dict['app_prefix']}' in '${dict['make_prefix']}'."
+    koopa_sys_set_permissions --recursive "${dict['app_prefix']}"
+    koopa_delete_broken_symlinks "${dict['app_prefix']}"
     cp_args=('--symbolic-link')
     koopa_is_shared_install && cp_args+=('--sudo')
     cp_args+=(
-        "--target-directory=${dict[make_prefix]}"
+        "--target-directory=${dict['make_prefix']}"
         "${files_arr[@]}"
     )
     koopa_cp "${cp_args[@]}"

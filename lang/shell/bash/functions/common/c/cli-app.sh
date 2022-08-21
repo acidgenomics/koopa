@@ -281,12 +281,12 @@ koopa_cli_app() {
             koopa_cli_invalid_arg "$@"
             ;;
     esac
-    [[ -z "${dict[key]}" ]] && koopa_cli_invalid_arg "$@"
-    dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
-    if ! koopa_is_function "${dict[fun]}"
+    [[ -z "${dict['key']}" ]] && koopa_cli_invalid_arg "$@"
+    dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+    if ! koopa_is_function "${dict['fun']}"
     then
         koopa_stop 'Unsupported command.'
     fi
-    "${dict[fun]}" "$@"
+    "${dict['fun']}" "$@"
     return 0
 }

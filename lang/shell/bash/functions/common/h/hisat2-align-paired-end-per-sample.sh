@@ -24,7 +24,7 @@ koopa_hisat2_align_paired_end_per_sample() {
     declare -A app=(
         [hisat2]="$(koopa_locate_hisat2)"
     )
-    [[ -x "${app[hisat2]}" ]] || return 1
+    [[ -x "${app['hisat2']}" ]] || return 1
     declare -A dict=(
         # e.g. 'sample1_R1_001.fastq.gz'.
         [fastq_r1_file]=''
@@ -112,61 +112,61 @@ koopa_hisat2_align_paired_end_per_sample() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-r1-file' "${dict[fastq_r1_file]}" \
-        '--fastq-r1-tail' "${dict[fastq_r1_tail]}" \
-        '--fastq-r2-file' "${dict[fastq_r2_file]}" \
-        '--fastq-r2-tail' "${dict[fastq_r2_tail]}" \
-        '--index-dir' "${dict[index_dir]}" \
-        '--lib-type' "${dict[lib_type]}" \
-        '--output-dir' "${dict[output_dir]}"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--fastq-r1-file' "${dict['fastq_r1_file']}" \
+        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
+        '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "HISAT2 align requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "HISAT2 align requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_dir "${dict[index_dir]}"
-    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
-    koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
-    dict[fastq_r1_file]="$(koopa_realpath "${dict[fastq_r1_file]}")"
-    dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
-    dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
-    dict[fastq_r2_file]="$(koopa_realpath "${dict[fastq_r2_file]}")"
-    dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
-    dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[fastq_r2_tail]}/}"
-    koopa_assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
-    dict[id]="${dict[fastq_r1_bn]}"
-    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
-    if [[ -d "${dict[output_dir]}" ]]
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
+    dict[fastq_r1_file]="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict[fastq_r1_bn]="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict[fastq_r1_bn]="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
+    dict[fastq_r2_file]="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict[fastq_r2_bn]="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict[fastq_r2_bn]="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
+    koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
+    dict[id]="${dict['fastq_r1_bn']}"
+    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    if [[ -d "${dict['output_dir']}" ]]
     then
-        koopa_alert_note "Skipping '${dict[id]}'."
+        koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
-    dict[hisat2_idx]="${dict[index_dir]}/index"
-    dict[sam_file]="${dict[output_dir]}/${dict[id]}.sam"
+    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    dict[hisat2_idx]="${dict['index_dir']}/index"
+    dict[sam_file]="${dict['output_dir']}/${dict['id']}.sam"
     align_args+=(
-        '-1' "${dict[fastq_r1_file]}"
-        '-2' "${dict[fastq_r2_file]}"
-        '-S' "${dict[sam_file]}"
+        '-1' "${dict['fastq_r1_file']}"
+        '-2' "${dict['fastq_r2_file']}"
+        '-S' "${dict['sam_file']}"
         '-q'
-        '-x' "${dict[hisat2_idx]}"
+        '-x' "${dict['hisat2_idx']}"
         '--new-summary'
-        '--threads' "${dict[threads]}"
+        '--threads' "${dict['threads']}"
     )
-    dict[lib_type]="$(koopa_hisat2_fastq_library_type "${dict[lib_type]}")"
-    if [[ -n "${dict[lib_type]}" ]]
+    dict[lib_type]="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
+    if [[ -n "${dict['lib_type']}" ]]
     then
-        align_args+=('--rna-strandedness' "${dict[lib_type]}")
+        align_args+=('--rna-strandedness' "${dict['lib_type']}")
     fi
     dict[quality_flag]="$( \
-        koopa_hisat2_fastq_quality_format "${dict[fastq_r1_file]}" \
+        koopa_hisat2_fastq_quality_format "${dict['fastq_r1_file']}" \
     )"
-    if [[ -n "${dict[quality_flag]}" ]]
+    if [[ -n "${dict['quality_flag']}" ]]
     then
-        align_args+=("${dict[quality_flag]}")
+        align_args+=("${dict['quality_flag']}")
     fi
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app[star]}" "${align_args[@]}"
+    "${app['star']}" "${align_args[@]}"
     # FIXME Convert the SAM file to BAM file here.
     return 0
 }

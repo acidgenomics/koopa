@@ -8,22 +8,22 @@ koopa_linux_add_user_to_etc_passwd() {
         [passwd_file]='/etc/passwd'
         [user]="${1:-}"
     )
-    koopa_assert_is_file "${dict[passwd_file]}"
-    [[ -z "${dict[user]}" ]] && dict[user]="$(koopa_user)"
+    koopa_assert_is_file "${dict['passwd_file']}"
+    [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
     if ! koopa_file_detect_fixed \
-        --file="${dict[passwd_file]}" \
-        --pattern="${dict[user]}" \
+        --file="${dict['passwd_file']}" \
+        --pattern="${dict['user']}" \
         --sudo
     then
-        koopa_alert "Updating '${dict[passwd_file]}' to \
-include '${dict[user]}'."
-        dict[user_string]="$(getent passwd "${dict[user]}")"
+        koopa_alert "Updating '${dict['passwd_file']}' to \
+include '${dict['user']}'."
+        dict[user_string]="$(getent passwd "${dict['user']}")"
         koopa_sudo_append_string \
-            --file="${dict[passwd_file]}" \
-            --string="${dict[user_string]}"
+            --file="${dict['passwd_file']}" \
+            --string="${dict['user_string']}"
     else
-        koopa_alert_note "'${dict[user]}' already defined \
-in '${dict[passwd_file]}'."
+        koopa_alert_note "'${dict['user']}' already defined \
+in '${dict['passwd_file']}'."
     fi
     return 0
 }
@@ -36,15 +36,15 @@ koopa_linux_add_user_to_group() {
         [gpasswd]="$(koopa_linux_locate_gpasswd)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[gpasswd]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['gpasswd']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [group]="${1:?}"
         [user]="${2:-}"
     )
-    [[ -z "${dict[user]}" ]] && dict[user]="$(koopa_user)"
-    koopa_alert "Adding user '${dict[user]}' to group '${dict[group]}'."
-    "${app[sudo]}" "${app[gpasswd]}" --add "${dict[user]}" "${dict[group]}"
+    [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
+    koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
+    "${app['sudo']}" "${app['gpasswd']}" --add "${dict['user']}" "${dict['group']}"
     return 0
 }
 
@@ -57,8 +57,8 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         [sed]="$(koopa_locate_sed)"
         [touch]="$(koopa_locate_touch)"
     )
-    [[ -x "${app[sed]}" ]] || return 1
-    [[ -x "${app[touch]}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['touch']}" ]] || return 1
     declare -A dict=(
         [cores]="$(koopa_cpu_count)"
         [fasta_file]=''
@@ -127,48 +127,48 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         esac
     done
     koopa_assert_is_set \
-        '--fasta-file' "${dict[fasta_file]}" \
-        '--genome-build' "${dict[genome_build]}" \
-        '--gtf-file' "${dict[gtf_file]}" \
+        '--fasta-file' "${dict['fasta_file']}" \
+        '--genome-build' "${dict['genome_build']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
         '--index' "${indexes[*]}" \
-        '--organism' "${dict[organism]}" \
-        '--release' "${dict[release]}"
+        '--organism' "${dict['organism']}" \
+        '--release' "${dict['release']}"
     koopa_activate_bcbio_nextgen
-    koopa_assert_is_installed "${app[bcbio_setup_genome]}"
-    koopa_assert_is_file "${dict[fasta_file]}" "${dict[gtf_file]}"
-    dict[fasta_file]="$(koopa_realpath "${dict[fasta_file]}")"
-    dict[gtf_file]="$(koopa_realpath "${dict[gtf_file]}")"
+    koopa_assert_is_installed "${app['bcbio_setup_genome']}"
+    koopa_assert_is_file "${dict['fasta_file']}" "${dict['gtf_file']}"
+    dict[fasta_file]="$(koopa_realpath "${dict['fasta_file']}")"
+    dict[gtf_file]="$(koopa_realpath "${dict['gtf_file']}")"
     if ! koopa_str_detect_regex \
-        --string="${dict[organism]}" \
-        --pattern="${dict[organism_pattern]}"
+        --string="${dict['organism']}" \
+        --pattern="${dict['organism_pattern']}"
     then
-        koopa_stop "Invalid organism: '${dict[organism]}'."
+        koopa_stop "Invalid organism: '${dict['organism']}'."
     fi
-    dict[build_version]="${dict[provider]}_${dict[release]}"
-    dict[bcbio_genome_name]="${dict[build]} ${dict[provider]} ${dict[release]}"
-    dict[bcbio_genome_name]="${dict[bcbio_genome_name]// /_}"
-    koopa_alert_install_start "${dict[bcbio_genome_name]}"
+    dict[build_version]="${dict['provider']}_${dict['release']}"
+    dict[bcbio_genome_name]="${dict['build']} ${dict['provider']} ${dict['release']}"
+    dict[bcbio_genome_name]="${dict['bcbio_genome_name']// /_}"
+    koopa_alert_install_start "${dict['bcbio_genome_name']}"
     dict[bcbio_species_dir]="$( \
-        koopa_print "${dict[organism]// /_}" \
-            | "${app[sed]}" -E 's/^([A-Z])[a-z]+_([a-z]+)$/\1\2/g' \
+        koopa_print "${dict['organism']// /_}" \
+            | "${app['sed']}" -E 's/^([A-Z])[a-z]+_([a-z]+)$/\1\2/g' \
     )"
-    dict[install_prefix]="$(koopa_parent_dir --num=3 "${dict[script]}")"
-    dict[tool_data_prefix]="${dict[install_prefix]}/galaxy/tool-data"
-    koopa_mkdir "${dict[tool_data_prefix]}"
-    "${app[touch]}" "${dict[tool_data_prefix]}/sam_fa_indices.log"
+    dict[install_prefix]="$(koopa_parent_dir --num=3 "${dict['script']}")"
+    dict[tool_data_prefix]="${dict['install_prefix']}/galaxy/tool-data"
+    koopa_mkdir "${dict['tool_data_prefix']}"
+    "${app['touch']}" "${dict['tool_data_prefix']}/sam_fa_indices.log"
     koopa_dl \
-        'FASTA file' "${dict[fasta_file]}" \
-        'GTF file' "${dict[gtf_file]}" \
+        'FASTA file' "${dict['fasta_file']}" \
+        'GTF file' "${dict['gtf_file']}" \
         'Indexes' "${indexes[*]}"
-    "${app[bcbio_setup_genome]}" \
-        --build "${dict[bcbio_genome_name]}" \
-        --buildversion "${dict[build_version]}" \
-        --cores "${dict[cores]}" \
-        --fasta "${dict[fasta_file]}" \
-        --gtf "${dict[gtf_file]}" \
+    "${app['bcbio_setup_genome']}" \
+        --build "${dict['bcbio_genome_name']}" \
+        --buildversion "${dict['build_version']}" \
+        --cores "${dict['cores']}" \
+        --fasta "${dict['fasta_file']}" \
+        --gtf "${dict['gtf_file']}" \
         --indexes "${indexes[@]}" \
-        --name "${dict[bcbio_species_dir]}"
-    koopa_alert_install_success "${dict[bcbio_genome_name]}"
+        --name "${dict['bcbio_species_dir']}"
+    koopa_alert_install_success "${dict['bcbio_genome_name']}"
     return 0
 }
 
@@ -183,7 +183,7 @@ koopa_linux_bcbio_nextgen_add_genome() {
         [cores]="$(koopa_cpu_count)"
     )
     bcbio_args=(
-        "--cores=${dict[cores]}"
+        "--cores=${dict['cores']}"
         '--upgrade=skip'
     )
     for genome in "${genomes[@]}"
@@ -193,7 +193,7 @@ koopa_linux_bcbio_nextgen_add_genome() {
     koopa_dl \
         'Genomes' "$(koopa_to_string "${genomes[@]}")" \
         'Args' "${bcbio_args[@]}"
-    "${app[bcbio]}" upgrade "${bcbio_args[@]}"
+    "${app['bcbio']}" upgrade "${bcbio_args[@]}"
     return 0
 }
 
@@ -204,7 +204,7 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         [bcbio_python]='bcbio_python'
         [tee]="$(koopa_locate_tee)"
     )
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         [git_dir]="${HOME:?}/git/bcbio-nextgen"
         [install_dir]=''
@@ -243,47 +243,47 @@ koopa_linux_bcbio_nextgen_patch_devel() {
                 ;;
         esac
     done
-    koopa_assert_is_dir "${dict[git_dir]}"
-    if [[ ! -x "${app[bcbio_python]}" ]]
+    koopa_assert_is_dir "${dict['git_dir']}"
+    if [[ ! -x "${app['bcbio_python']}" ]]
     then
-        koopa_locate_app "${app[bcbio_python]}"
+        koopa_locate_app "${app['bcbio_python']}"
     fi
-    app[bcbio_python]="$(koopa_realpath "${app[bcbio_python]}")"
-    koopa_assert_is_installed "${app[bcbio_python]}"
-    if [[ -z "${dict[install_dir]}" ]]
+    app[bcbio_python]="$(koopa_realpath "${app['bcbio_python']}")"
+    koopa_assert_is_installed "${app['bcbio_python']}"
+    if [[ -z "${dict['install_dir']}" ]]
     then
-        dict[install_dir]="$(koopa_parent_dir --num=3 "${app[bcbio_python]}")"
+        dict[install_dir]="$(koopa_parent_dir --num=3 "${app['bcbio_python']}")"
     fi
-    koopa_assert_is_dir "${dict[install_dir]}"
-    koopa_h1 "Patching '${dict[name]}' installation at '${dict[install_dir]}'."
+    koopa_assert_is_dir "${dict['install_dir']}"
+    koopa_h1 "Patching '${dict['name']}' installation at '${dict['install_dir']}'."
     koopa_dl  \
-        'Git dir' "${dict[git_dir]}" \
-        'Install dir' "${dict[install_dir]}" \
-        'bcbio_python' "${app[bcbio_python]}"
-    koopa_alert "Removing Python cache in '${dict[git_dir]}'."
+        'Git dir' "${dict['git_dir']}" \
+        'Install dir' "${dict['install_dir']}" \
+        'bcbio_python' "${app['bcbio_python']}"
+    koopa_alert "Removing Python cache in '${dict['git_dir']}'."
     readarray -t cache_files <<< "$( \
         koopa_find \
             --pattern='*.pyc' \
-            --prefix="${dict[git_dir]}" \
+            --prefix="${dict['git_dir']}" \
             --type='f'
     )"
     koopa_rm "${cache_files[@]}"
     readarray -t cache_files <<< "$( \
         koopa_find \
             --pattern='__pycache__' \
-            --prefix="${dict[git_dir]}" \
+            --prefix="${dict['git_dir']}" \
             --type='d'
     )"
     koopa_rm "${cache_files[@]}"
     koopa_alert "Removing Python installer cruft inside 'anaconda/lib/'."
-    koopa_rm "${dict[install_dir]}/anaconda/lib/python"*'/site-packages/bcbio'*
+    koopa_rm "${dict['install_dir']}/anaconda/lib/python"*'/site-packages/bcbio'*
     (
-        koopa_cd "${dict[git_dir]}"
+        koopa_cd "${dict['git_dir']}"
         koopa_rm 'tests/test_automated_output'
         koopa_alert "Patching installation via 'setup.py' script."
-        "${app[bcbio_python]}" setup.py install
-    ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
-    koopa_alert_success "Patching of '${dict[name]}' was successful."
+        "${app['bcbio_python']}" setup.py install
+    ) 2>&1 | "${app['tee']}" "${dict['tmp_log_file']}"
+    koopa_alert_success "Patching of '${dict['name']}' was successful."
     return 0
 }
 
@@ -326,11 +326,11 @@ koopa_linux_bcbio_nextgen_run_tests() {
                 ;;
         esac
     done
-    koopa_assert_is_dir "${dict[git_dir]}" "${dict[tools_dir]}"
-    koopa_mkdir "${dict[output_dir]}"
+    koopa_assert_is_dir "${dict['git_dir']}" "${dict['tools_dir']}"
+    koopa_mkdir "${dict['output_dir']}"
     (
-        koopa_add_to_path_start "${dict[tools_dir]}/bin"
-        koopa_cd "${dict[git_dir]}/tests"
+        koopa_add_to_path_start "${dict['tools_dir']}/bin"
+        koopa_cd "${dict['git_dir']}/tests"
         tests=(
             'fastrnaseq'
             'star'
@@ -343,11 +343,11 @@ koopa_linux_bcbio_nextgen_run_tests() {
         )
         for test in "${tests[@]}"
         do
-            export BCBIO_TEST_DIR="${dict[output_dir]}/${test}"
+            export BCBIO_TEST_DIR="${dict['output_dir']}/${test}"
             ./run_tests.sh "$test" --keep-test-dir
         done
     )
-    koopa_alert_success "Unit tests passed for '${dict[tools_dir]}'."
+    koopa_alert_success "Unit tests passed for '${dict['tools_dir']}'."
     return 0
 }
 
@@ -358,16 +358,16 @@ koopa_linux_bcl2fastq_indrops() {
         [bcl2fastq]="$(koopa_linux_locate_bcl2fastq)"
         [tee]="$(koopa_locate_tee)"
     )
-    [[ -x "${app[bcl2fastq]}" ]] || return 1
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['bcl2fastq']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         [log_file]='bcl2fastq-indrops.log'
     )
-    "${app[bcl2fastq]}" \
+    "${app['bcl2fastq']}" \
         --use-bases-mask 'y*,y*,y*,y*' \
         --mask-short-adapter-reads 0 \
         --minimum-trimmed-read-length 0 \
-        2>&1 | "${app[tee]}" "${dict[log_file]}"
+        2>&1 | "${app['tee']}" "${dict['log_file']}"
     return 0
 }
 
@@ -379,30 +379,30 @@ koopa_linux_configure_lmod() {
         [etc_dir]='/etc/profile.d'
         [prefix]="${1:-}"
     )
-    [[ -z "${dict[prefix]}" ]] && dict[prefix]="$(koopa_lmod_prefix)"
-    dict[init_dir]="${dict[prefix]}/apps/lmod/lmod/init"
-    koopa_assert_is_dir "${dict[init_dir]}"
-    if [[ ! -d "${dict[etc_dir]}" ]]
+    [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_lmod_prefix)"
+    dict[init_dir]="${dict['prefix']}/apps/lmod/lmod/init"
+    koopa_assert_is_dir "${dict['init_dir']}"
+    if [[ ! -d "${dict['etc_dir']}" ]]
     then
-        koopa_mkdir --sudo "${dict[etc_dir]}"
+        koopa_mkdir --sudo "${dict['etc_dir']}"
     fi
     koopa_ln --sudo \
-        "${dict[init_dir]}/profile" \
-        "${dict[etc_dir]}/z00_lmod.sh"
+        "${dict['init_dir']}/profile" \
+        "${dict['etc_dir']}/z00_lmod.sh"
     koopa_ln --sudo \
-        "${dict[init_dir]}/cshrc" \
-        "${dict[etc_dir]}/z00_lmod.csh"
+        "${dict['init_dir']}/cshrc" \
+        "${dict['etc_dir']}/z00_lmod.csh"
     if koopa_is_installed 'fish'
     then
         dict[fish_etc_dir]='/etc/fish/conf.d'
-        koopa_alert "Updating Fish configuration in '${dict[fish_etc_dir]}'."
-        if [[ ! -d "${dict[fish_etc_dir]}" ]]
+        koopa_alert "Updating Fish configuration in '${dict['fish_etc_dir']}'."
+        if [[ ! -d "${dict['fish_etc_dir']}" ]]
         then
-            koopa_mkdir --sudo "${dict[fish_etc_dir]}"
+            koopa_mkdir --sudo "${dict['fish_etc_dir']}"
         fi
         koopa_ln --sudo \
-            "${dict[init_dir]}/profile.fish" \
-            "${dict[fish_etc_dir]}/z00_lmod.fish"
+            "${dict['init_dir']}/profile.fish" \
+            "${dict['fish_etc_dir']}/z00_lmod.fish"
     fi
     return 0
 }
@@ -434,8 +434,8 @@ koopa_linux_fix_sudo_setrlimit_error() {
         [string]='Set disable_coredump false'
     )
     koopa_sudo_append_string \
-        --file="${dict[file]}" \
-        --string="${dict[string]}"
+        --file="${dict['file']}" \
+        --string="${dict['string']}"
     return 0
 }
 
@@ -550,44 +550,44 @@ koopa_linux_java_update_alternatives() {
         [sudo]="$(koopa_locate_sudo)"
         [update_alternatives]="$(koopa_linux_locate_update_alternatives)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[update_alternatives]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['update_alternatives']}" ]] || return 1
     declare -A dict=(
         [alt_prefix]='/var/lib/alternatives'
         [prefix]="$(koopa_realpath "${1:?}")"
         [priority]=100
     )
     koopa_rm --sudo \
-        "${dict[alt_prefix]}/java" \
-        "${dict[alt_prefix]}/javac" \
-        "${dict[alt_prefix]}/jar"
-    "${app[sudo]}" "${app[update_alternatives]}" --install \
+        "${dict['alt_prefix']}/java" \
+        "${dict['alt_prefix']}/javac" \
+        "${dict['alt_prefix']}/jar"
+    "${app['sudo']}" "${app['update_alternatives']}" --install \
         '/usr/bin/java' \
         'java' \
-        "${dict[prefix]}/bin/java" \
-        "${dict[priority]}"
-    "${app[sudo]}" "${app[update_alternatives]}" --install \
+        "${dict['prefix']}/bin/java" \
+        "${dict['priority']}"
+    "${app['sudo']}" "${app['update_alternatives']}" --install \
         '/usr/bin/javac' \
         'javac' \
-        "${dict[prefix]}/bin/javac" \
-        "${dict[priority]}"
-    "${app[sudo]}" "${app[update_alternatives]}" --install \
+        "${dict['prefix']}/bin/javac" \
+        "${dict['priority']}"
+    "${app['sudo']}" "${app['update_alternatives']}" --install \
         '/usr/bin/jar' \
         'jar' \
-        "${dict[prefix]}/bin/jar" \
-        "${dict[priority]}"
-    "${app[sudo]}" "${app[update_alternatives]}" --set \
+        "${dict['prefix']}/bin/jar" \
+        "${dict['priority']}"
+    "${app['sudo']}" "${app['update_alternatives']}" --set \
         'java' \
-        "${dict[prefix]}/bin/java"
-    "${app[sudo]}" "${app[update_alternatives]}" --set \
+        "${dict['prefix']}/bin/java"
+    "${app['sudo']}" "${app['update_alternatives']}" --set \
         'javac' \
-        "${dict[prefix]}/bin/javac"
-    "${app[sudo]}" "${app[update_alternatives]}" --set \
+        "${dict['prefix']}/bin/javac"
+    "${app['sudo']}" "${app['update_alternatives']}" --set \
         'jar' \
-        "${dict[prefix]}/bin/jar"
-    "${app[update_alternatives]}" --display 'java'
-    "${app[update_alternatives]}" --display 'javac'
-    "${app[update_alternatives]}" --display 'jar'
+        "${dict['prefix']}/bin/jar"
+    "${app['update_alternatives']}" --display 'java'
+    "${app['update_alternatives']}" --display 'javac'
+    "${app['update_alternatives']}" --display 'jar'
     return 0
 }
 
@@ -673,8 +673,8 @@ koopa_linux_os_version() {
     declare -A app=(
         [uname]="$(koopa_locate_uname)"
     )
-    [[ -x "${app[uname]}" ]] || return 1
-    x="$("${app[uname]}" -r)"
+    [[ -x "${app['uname']}" ]] || return 1
+    x="$("${app['uname']}" -r)"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"
     return 0
@@ -708,14 +708,14 @@ koopa_linux_remove_user_from_group() {
         [gpasswd]="$(koopa_linux_locate_gpasswd)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[gpasswd]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['gpasswd']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [group]="${1:?}"
         [user]="${2:-}"
     )
-    [[ -z "${dict[user]}" ]] && dict[user]="$(koopa_user)"
-    "${app[sudo]}" "${app[gpasswd]}" --delete "${dict[user]}" "${dict[group]}"
+    [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
+    "${app['sudo']}" "${app['gpasswd']}" --delete "${dict['user']}" "${dict['group']}"
     return 0
 }
 
@@ -803,24 +803,24 @@ koopa_linux_update_etc_profile_d() {
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [file]='/etc/profile.d/zzz-koopa.sh'
     )
-    if [[ -f "${dict[file]}" ]] && [[ ! -L "${dict[file]}" ]]
+    if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]
     then
         return 0
     fi
-    koopa_alert "Adding koopa activation to '${dict[file]}'."
-    koopa_rm --sudo "${dict[file]}"
+    koopa_alert "Adding koopa activation to '${dict['file']}'."
+    koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
 
 __koopa_activate_shared_profile() {
-    . "${dict[koopa_prefix]}/activate"
+    . "${dict['koopa_prefix']}/activate"
     return 0
 }
 
 __koopa_activate_shared_profile
 END
     koopa_sudo_write_string \
-        --file="${dict[file]}" \
-        --string="${dict[string]}"
+        --file="${dict['file']}" \
+        --string="${dict['string']}"
 }
 
 koopa_linux_update_ldconfig() {
@@ -831,24 +831,24 @@ koopa_linux_update_ldconfig() {
         [ldconfig]="$(koopa_linux_locate_ldconfig)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[ldconfig]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['ldconfig']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [distro_prefix]="$(koopa_distro_prefix)"
         [target_prefix]='/etc/ld.so.conf.d'
     )
-    [[ -d "${dict[target_prefix]}" ]] || return 0
-    dict[conf_source]="${dict[distro_prefix]}${dict[target_prefix]}"
-    [[ -d "${dict[conf_source]}" ]] || return 0
-    koopa_alert "Updating ldconfig in '${dict[target_prefix]}'."
-    for source_file in "${dict[conf_source]}/"*".conf"
+    [[ -d "${dict['target_prefix']}" ]] || return 0
+    dict[conf_source]="${dict['distro_prefix']}${dict['target_prefix']}"
+    [[ -d "${dict['conf_source']}" ]] || return 0
+    koopa_alert "Updating ldconfig in '${dict['target_prefix']}'."
+    for source_file in "${dict['conf_source']}/"*".conf"
     do
         local target_bn target_file
         target_bn="koopa-$(koopa_basename "$source_file")"
-        target_file="${dict[target_prefix]}/${target_bn}"
+        target_file="${dict['target_prefix']}/${target_bn}"
         koopa_ln --sudo "$source_file" "$target_file"
     done
-    "${app[sudo]}" "${app[ldconfig]}" || true
+    "${app['sudo']}" "${app['ldconfig']}" || true
     return 0
 }
 
@@ -860,6 +860,6 @@ koopa_linux_update_system_sshd_config() {
 sshd_config.d/koopa.conf"
         [target_file]='/etc/ssh/sshd_config.d/koopa.conf'
     )
-    koopa_ln --sudo "${dict[source_file]}" "${dict[target_file]}"
+    koopa_ln --sudo "${dict['source_file']}" "${dict['target_file']}"
     return 0
 }

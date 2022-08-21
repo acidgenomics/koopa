@@ -14,13 +14,13 @@ koopa_stat() {
     declare -A app=(
         [stat]="$(koopa_locate_stat)"
     )
-    [[ -x "${app[stat]}" ]] || return 1
+    [[ -x "${app['stat']}" ]] || return 1
     declare -A dict=(
         [format]="${1:?}"
     )
     shift 1
-    dict[out]="$("${app[stat]}" --format="${dict[format]}" "$@")"
-    [[ -n "${dict[out]}" ]] || return 1
-    koopa_print "${dict[out]}"
+    dict[out]="$("${app['stat']}" --format="${dict['format']}" "$@")"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
     return 0
 }

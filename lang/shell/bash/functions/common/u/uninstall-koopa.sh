@@ -16,7 +16,7 @@ koopa_uninstall_koopa() {
     fi
     koopa_uninstall_dotfiles
     koopa_rm \
-        "${dict[config_prefix]}" \
-        "${dict[koopa_prefix]}"
+        "${dict['config_prefix']}" \
+        "${dict['koopa_prefix']}"
     return 0
 }

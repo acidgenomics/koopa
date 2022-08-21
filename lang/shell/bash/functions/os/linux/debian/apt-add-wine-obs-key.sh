@@ -11,7 +11,7 @@ koopa_debian_apt_add_wine_obs_key() {
         [name]='wine-obs'
         [os_string]="$(koopa_os_string)"
     )
-    case "${dict[os_string]}" in
+    case "${dict['os_string']}" in
         'debian-10')
             dict[subdir]='Debian_10'
             ;;
@@ -25,13 +25,13 @@ koopa_debian_apt_add_wine_obs_key() {
             dict[subdir]='xUbuntu_20.04'
             ;;
         *)
-            koopa_stop "Unsupported OS: '${dict[os_string]}'."
+            koopa_stop "Unsupported OS: '${dict['os_string']}'."
             ;;
     esac
     dict[url]="https://download.opensuse.org/repositories/\
-Emulators:/Wine:/Debian/${dict[subdir]}/Release.key"
+Emulators:/Wine:/Debian/${dict['subdir']}/Release.key"
     koopa_debian_apt_add_key \
-        --name="${dict[name]}" \
-        --url="${dict[url]}"
+        --name="${dict['name']}" \
+        --url="${dict['url']}"
     return 0
 }

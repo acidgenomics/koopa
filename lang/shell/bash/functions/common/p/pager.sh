@@ -14,9 +14,9 @@ koopa_pager() {
     declare -A app=(
         [less]="$(koopa_locate_less)"
     )
-    [[ -x "${app[less]}" ]] || return 1
+    [[ -x "${app['less']}" ]] || return 1
     args=("$@")
     koopa_assert_is_file "${args[-1]}"
-    "${app[less]}" -R "${args[@]}"
+    "${app['less']}" -R "${args[@]}"
     return 0
 }

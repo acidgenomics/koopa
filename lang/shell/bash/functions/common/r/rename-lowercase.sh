@@ -13,8 +13,8 @@ koopa_rename_lowercase() {
         [rename]="$(koopa_locate_rename)"
         [xargs]="$(koopa_locate_xargs)"
     )
-    [[ -x "${app[rename]}" ]] || return 1
-    [[ -x "${app[xargs]}" ]] || return 1
+    [[ -x "${app['rename']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
         [pattern]='y/A-Z/a-z/'
         [recursive]=0
@@ -37,45 +37,45 @@ koopa_rename_lowercase() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "${dict[recursive]}" -eq 1 ]]
+    if [[ "${dict['recursive']}" -eq 1 ]]
     then
         koopa_assert_has_args_le "$#" 1
         dict[prefix]="${1:-.}"
-        koopa_assert_is_dir "${dict[prefix]}"
+        koopa_assert_is_dir "${dict['prefix']}"
         # Rename files.
         koopa_find \
             --exclude='.*' \
             --min-depth=1 \
             --pattern='*[A-Z]*' \
-            --prefix="${dict[prefix]}" \
+            --prefix="${dict['prefix']}" \
             --print0 \
             --sort \
             --type='f' \
-        | "${app[xargs]}" -0 -I {} \
-            "${app[rename]}" \
+        | "${app['xargs']}" -0 -I {} \
+            "${app['rename']}" \
                 --force \
                 --verbose \
-                "${dict[pattern]}" \
+                "${dict['pattern']}" \
                 {}
         # Rename directories.
         koopa_find \
             --exclude='.*' \
             --min-depth=1 \
             --pattern='*[A-Z]*' \
-            --prefix="${dict[prefix]}" \
+            --prefix="${dict['prefix']}" \
             --print0 \
             --type='d' \
-        | "${app[xargs]}" -0 -I {} \
-            "${app[rename]}" \
+        | "${app['xargs']}" -0 -I {} \
+            "${app['rename']}" \
                 --force \
                 --verbose \
-                "${dict[pattern]}" \
+                "${dict['pattern']}" \
                 {}
     else
-        "${app[rename]}" \
+        "${app['rename']}" \
             --force \
             --verbose \
-            "${dict[pattern]}" \
+            "${dict['pattern']}" \
             "$@"
     fi
     return 0

@@ -63,7 +63,7 @@ koopa_samtools_convert_sam_to_bam() {
     koopa_assert_is_file "$input_sam"
     threads="$(koopa_cpu_count)"
     koopa_dl 'Threads' "$threads"
-    "${app[samtools]}" view \
+    "${app['samtools']}" view \
         -@ "$threads" \
         -b \
         -h \

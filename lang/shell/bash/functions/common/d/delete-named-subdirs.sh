@@ -13,8 +13,8 @@ koopa_delete_named_subdirs() {
     )
     readarray -t matches <<< "$( \
         koopa_find \
-            --pattern="${dict[subdir_name]}" \
-            --prefix="${dict[prefix]}" \
+            --pattern="${dict['subdir_name']}" \
+            --prefix="${dict['prefix']}" \
             --type='d' \
     )"
     koopa_is_array_non_empty "${matches[@]:-}" || return 1

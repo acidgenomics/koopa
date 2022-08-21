@@ -27,7 +27,7 @@ koopa_debian_apt_add_r_key() {
         [keyserver]='keyserver.ubuntu.com'
         [prefix]="$(koopa_debian_apt_key_prefix)"
     )
-    dict[file]="${dict[prefix]}/koopa-${dict[key_name]}.gpg"
+    dict[file]="${dict['prefix']}/koopa-${dict['key_name']}.gpg"
     if koopa_is_ubuntu_like
     then
         # Ubuntu release is signed by Michael Rutter <marutter@gmail.com>.
@@ -36,11 +36,11 @@ koopa_debian_apt_add_r_key() {
         # Debian release is signed by Johannes Ranke <jranke@uni-bremen.de>.
         dict[key]='95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
     fi
-    [[ -f "${dict[file]}" ]] && return 0
+    [[ -f "${dict['file']}" ]] && return 0
     koopa_gpg_download_key_from_keyserver \
-        --file="${dict[file]}" \
-        --key="${dict[key]}" \
-        --keyserver="${dict[keyserver]}" \
+        --file="${dict['file']}" \
+        --key="${dict['key']}" \
+        --keyserver="${dict['keyserver']}" \
         --sudo
     return 0
 }

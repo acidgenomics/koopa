@@ -13,27 +13,27 @@ koopa_debian_apt_disable_deb_src() {
         [sed]="$(koopa_locate_sed)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[apt_get]}" ]] || return 1
-    [[ -x "${app[sed]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [file]="${1:-}"
     )
-    [[ -z "${dict[file]}" ]] && dict[file]="$(koopa_debian_apt_sources_file)"
-    koopa_assert_is_file "${dict[file]}"
-    koopa_alert "Disabling Debian sources in '${dict[file]}'."
+    [[ -z "${dict['file']}" ]] && dict[file]="$(koopa_debian_apt_sources_file)"
+    koopa_assert_is_file "${dict['file']}"
+    koopa_alert "Disabling Debian sources in '${dict['file']}'."
     if ! koopa_file_detect_regex \
-        --file="${dict[file]}" \
+        --file="${dict['file']}" \
         --pattern='^deb-src '
     then
-        koopa_alert_note "No lines to comment in '${dict[file]}'."
+        koopa_alert_note "No lines to comment in '${dict['file']}'."
         return 0
     fi
-    "${app[sudo]}" "${app[sed]}" \
+    "${app['sudo']}" "${app['sed']}" \
         -E \
         -i.bak \
         's/^deb-src /# deb-src /' \
-        "${dict[file]}"
-    "${app[sudo]}" "${app[apt_get]}" update
+        "${dict['file']}"
+    "${app['sudo']}" "${app['apt_get']}" update
     return 0
 }

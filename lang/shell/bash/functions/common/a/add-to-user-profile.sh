@@ -10,7 +10,7 @@ koopa_add_to_user_profile() {
     declare -A dict=(
         [file]="$(koopa_find_user_profile)"
     )
-    koopa_alert "Adding koopa activation to '${dict[file]}'."
+    koopa_alert "Adding koopa activation to '${dict['file']}'."
     read -r -d '' "dict[string]" << END || true
 __koopa_activate_user_profile() {
     # """
@@ -38,7 +38,7 @@ __koopa_activate_user_profile() {
 __koopa_activate_user_profile
 END
     koopa_append_string \
-        --file="${dict[file]}" \
-        --string="\n${dict[string]}"
+        --file="${dict['file']}" \
+        --string="\n${dict['string']}"
     return 0
 }

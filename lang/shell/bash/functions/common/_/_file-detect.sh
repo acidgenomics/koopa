@@ -70,20 +70,20 @@ __koopa_file_detect() {
         esac
     done
     # Piped input using stdin (file mode).
-    if [[ "${dict[stdin]}" -eq 1 ]]
+    if [[ "${dict['stdin']}" -eq 1 ]]
     then
         dict[file]="$(</dev/stdin)"
     fi
     koopa_assert_is_set \
-        '--file' "${dict[file]}" \
-        '--mode' "${dict[mode]}" \
-        '--pattern' "${dict[pattern]}"
+        '--file' "${dict['file']}" \
+        '--mode' "${dict['mode']}" \
+        '--pattern' "${dict['pattern']}"
     grep_args=(
         '--boolean'
-        '--file' "${dict[file]}"
-        '--mode' "${dict[mode]}"
-        '--pattern' "${dict[pattern]}"
+        '--file' "${dict['file']}"
+        '--mode' "${dict['mode']}"
+        '--pattern' "${dict['pattern']}"
     )
-    [[ "${dict[sudo]}" -eq 1 ]] && grep_args+=('--sudo')
+    [[ "${dict['sudo']}" -eq 1 ]] && grep_args+=('--sudo')
     koopa_grep "${grep_args[@]}"
 }

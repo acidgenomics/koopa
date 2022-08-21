@@ -16,17 +16,17 @@ koopa_update_koopa() {
         [prefix]="$(koopa_koopa_prefix)"
         [user]="$(koopa_user)"
     )
-    if ! koopa_is_git_repo_top_level "${dict[prefix]}"
+    if ! koopa_is_git_repo_top_level "${dict['prefix']}"
     then
-        koopa_alert_note "Pinned release detected at '${dict[prefix]}'."
+        koopa_alert_note "Pinned release detected at '${dict['prefix']}'."
         return 1
     fi
     if koopa_is_shared_install
     then
-        koopa_chown --recursive --sudo "${dict[user]}" "${dict[prefix]}"
+        koopa_chown --recursive --sudo "${dict['user']}" "${dict['prefix']}"
     fi
-    koopa_git_pull "${dict[prefix]}"
-    koopa_sys_set_permissions --recursive "${dict[prefix]}"
+    koopa_git_pull "${dict['prefix']}"
+    koopa_sys_set_permissions --recursive "${dict['prefix']}"
     koopa_fix_zsh_permissions
     return 0
 }

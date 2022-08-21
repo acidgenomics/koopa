@@ -12,13 +12,13 @@ koopa_fedora_add_azure_cli_repo() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         [file]='/etc/yum.repos.d/azure-cli.repo'
     )
-    [[ -f "${dict[file]}" ]] && return 0
-    "${app[sudo]}" "${app[tee]}" "${dict[file]}" >/dev/null << END
+    [[ -f "${dict['file']}" ]] && return 0
+    "${app['sudo']}" "${app['tee']}" "${dict['file']}" >/dev/null << END
 [azure-cli]
 name=Azure CLI
 baseurl=https://packages.microsoft.com/yumrepos/azure-cli

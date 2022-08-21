@@ -12,12 +12,12 @@ koopa_docker_prune_all_images() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
-    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
     koopa_alert 'Pruning Docker images.'
-    "${app[docker]}" system prune --all --force || true
-    "${app[docker]}" images
+    "${app['docker']}" system prune --all --force || true
+    "${app['docker']}" images
     koopa_alert 'Pruning Docker buildx.'
-    "${app[docker]}" buildx prune --all --force || true
-    "${app[docker]}" buildx ls
+    "${app['docker']}" buildx prune --all --force || true
+    "${app['docker']}" buildx ls
     return 0
 }

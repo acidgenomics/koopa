@@ -12,7 +12,7 @@ __koopa_h() {
         [level]="${1:?}"
     )
     shift 1
-    case "${dict[level]}" in
+    case "${dict['level']}" in
         '1')
             koopa_print ''
             dict[prefix]='#'
@@ -39,6 +39,6 @@ __koopa_h() {
             koopa_stop 'Invalid header level.'
             ;;
     esac
-    __koopa_msg 'magenta' 'default' "${dict[emoji]} ${dict[prefix]}" "$@"
+    __koopa_msg 'magenta' 'default' "${dict['emoji']} ${dict['prefix']}" "$@"
     return 0
 }

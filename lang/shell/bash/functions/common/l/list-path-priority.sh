@@ -9,7 +9,7 @@ koopa_list_path_priority() {
     declare -A app=(
         [awk]="$(koopa_locate_awk)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
     declare -A dict
     readarray -t all_arr <<< "$( \
         __koopa_list_path_priority "$@" \
@@ -18,16 +18,16 @@ koopa_list_path_priority() {
     # shellcheck disable=SC2016
     readarray -t unique_arr <<< "$( \
         koopa_print "${all_arr[@]}" \
-            | "${app[awk]}" '!a[$0]++' \
+            | "${app['awk']}" '!a[$0]++' \
     )"
     koopa_is_array_non_empty "${unique_arr[@]:-}" || return 1
     dict[n_all]="${#all_arr[@]}"
     dict[n_unique]="${#unique_arr[@]}"
     dict[n_dupes]="$((dict[n_all] - dict[n_unique]))"
-    if [[ "${dict[n_dupes]}" -gt 0 ]]
+    if [[ "${dict['n_dupes']}" -gt 0 ]]
     then
         koopa_alert_note "$(koopa_ngettext \
-            --num="${dict[n_dupes]}" \
+            --num="${dict['n_dupes']}" \
             --msg1='duplicate' \
             --msg2='duplicates' \
             --suffix=' detected.' \

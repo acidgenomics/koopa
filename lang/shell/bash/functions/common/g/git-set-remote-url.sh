@@ -17,11 +17,11 @@ koopa_git_set_remote_url() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         [url]="${1:?}"
         [origin]='origin'
     )
-    "${app[git]}" remote set-url "${dict[origin]}" "${dict[url]}"
+    "${app['git']}" remote set-url "${dict['origin']}" "${dict['url']}"
     return 0
 }

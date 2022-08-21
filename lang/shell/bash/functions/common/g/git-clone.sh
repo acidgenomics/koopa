@@ -16,7 +16,7 @@ koopa_git_clone() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         [branch]=''
         [commit]=''
@@ -75,20 +75,20 @@ koopa_git_clone() {
         esac
     done
     koopa_assert_is_set \
-        '--prefix' "${dict[prefix]}" \
-        '--url' "${dict[url]}"
-    if [[ -d "${dict[prefix]}" ]]
+        '--prefix' "${dict['prefix']}" \
+        '--url' "${dict['url']}"
+    if [[ -d "${dict['prefix']}" ]]
     then
-        koopa_rm "${dict[prefix]}"
+        koopa_rm "${dict['prefix']}"
     fi
     # Check if user has sufficient permissions.
     if koopa_str_detect_fixed \
-        --string="${dict[url]}" \
+        --string="${dict['url']}" \
         --pattern='git@github.com'
     then
         koopa_assert_is_github_ssh_enabled
     elif koopa_str_detect_fixed \
-        --string="${dict[url]}" \
+        --string="${dict['url']}" \
         --pattern='git@gitlab.com'
     then
         koopa_assert_is_gitlab_ssh_enabled
@@ -97,13 +97,13 @@ koopa_git_clone() {
         '--quiet'
         # > '--recursive'
     )
-    if [[ -n "${dict[branch]}" ]]
+    if [[ -n "${dict['branch']}" ]]
     then
         clone_args+=(
             # Shallow clone.
             '--depth=1'
             '--single-branch'
-            "--branch=${dict[branch]}"
+            "--branch=${dict['branch']}"
         )
     else
         clone_args+=(
@@ -113,21 +113,21 @@ koopa_git_clone() {
             # > '--filter=tree:0'
         )
     fi
-    clone_args+=("${dict[url]}" "${dict[prefix]}")
-    "${app[git]}" clone "${clone_args[@]}"
-    if [[ -n "${dict[commit]}" ]]
+    clone_args+=("${dict['url']}" "${dict['prefix']}")
+    "${app['git']}" clone "${clone_args[@]}"
+    if [[ -n "${dict['commit']}" ]]
     then
         (
-            koopa_cd "${dict[prefix]}"
-            "${app[git]}" checkout --quiet "${dict[commit]}"
+            koopa_cd "${dict['prefix']}"
+            "${app['git']}" checkout --quiet "${dict['commit']}"
         )
-    elif [[ -n "${dict[tag]}" ]]
+    elif [[ -n "${dict['tag']}" ]]
     then
         (
-            koopa_cd "${dict[prefix]}"
-            "${app[git]}" fetch --quiet --tags
+            koopa_cd "${dict['prefix']}"
+            "${app['git']}" fetch --quiet --tags
             # This will put repo into a detached HEAD state.
-            "${app[git]}" checkout --quiet "tags/${dict[tag]}"
+            "${app['git']}" checkout --quiet "tags/${dict['tag']}"
         )
     fi
     return 0

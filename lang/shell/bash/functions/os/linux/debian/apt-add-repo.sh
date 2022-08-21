@@ -144,33 +144,33 @@ koopa_debian_apt_add_repo() {
                 ;;
         esac
     done
-    if [[ -z "${dict[key_name]:-}" ]]
+    if [[ -z "${dict['key_name']:-}" ]]
     then
-        dict[key_name]="${dict[name]}"
+        dict[key_name]="${dict['name']}"
     fi
     koopa_assert_is_set \
-        '--distribution' "${dict[distribution]}" \
-        '--key-name' "${dict[key_name]}" \
-        '--key-prefix' "${dict[key_prefix]}" \
-        '--name' "${dict[name]}" \
-        '--prefix' "${dict[prefix]}" \
-        '--url' "${dict[url]}"
+        '--distribution' "${dict['distribution']}" \
+        '--key-name' "${dict['key_name']}" \
+        '--key-prefix' "${dict['key_prefix']}" \
+        '--name' "${dict['name']}" \
+        '--prefix' "${dict['prefix']}" \
+        '--url' "${dict['url']}"
     koopa_assert_is_dir \
-        "${dict[key_prefix]}" \
-        "${dict[prefix]}"
-    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
-    koopa_assert_is_file "${dict[signed_by]}"
-    dict[file]="${dict[prefix]}/koopa-${dict[name]}.list"
-    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
-${dict[url]} ${dict[distribution]} ${components[*]}"
-    if [[ -f "${dict[file]}" ]]
+        "${dict['key_prefix']}" \
+        "${dict['prefix']}"
+    dict[signed_by]="${dict['key_prefix']}/koopa-${dict['key_name']}.gpg"
+    koopa_assert_is_file "${dict['signed_by']}"
+    dict[file]="${dict['prefix']}/koopa-${dict['name']}.list"
+    dict[string]="deb [arch=${dict['arch']} signed-by=${dict['signed_by']}] \
+${dict['url']} ${dict['distribution']} ${components[*]}"
+    if [[ -f "${dict['file']}" ]]
     then
-        koopa_alert_info "'${dict[name]}' repo exists at '${dict[file]}'."
+        koopa_alert_info "'${dict['name']}' repo exists at '${dict['file']}'."
         return 0
     fi
-    koopa_alert "Adding '${dict[name]}' repo at '${dict[file]}'."
+    koopa_alert "Adding '${dict['name']}' repo at '${dict['file']}'."
     koopa_sudo_write_string \
-        --file="${dict[file]}" \
-        --string="${dict[string]}"
+        --file="${dict['file']}" \
+        --string="${dict['string']}"
     return 0
 }

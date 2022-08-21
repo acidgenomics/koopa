@@ -10,8 +10,8 @@ koopa_macos_list_launch_agents() {
     declare -A app=(
         [ls]="$(koopa_locate_ls)"
     )
-    [[ -x "${app[ls]}" ]] || return 1
-    "${app[ls]}" \
+    [[ -x "${app['ls']}" ]] || return 1
+    "${app['ls']}" \
         --ignore='disabled' \
         "${HOME}/Library/LaunchAgents" \
         '/Library/LaunchAgents' \

@@ -17,27 +17,27 @@ koopa_aws_batch_fetch_and_run() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
-    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         [file]="$(koopa_tmp_file)"
         [profile]="${AWS_PROFILE:-}"
         [url]="${BATCH_FILE_URL:?}"
     )
-    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
-    case "${dict[url]}" in
+    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
+    case "${dict['url']}" in
         'ftp://'* | \
         'http://'*)
-            koopa_download "${dict[url]}" "${dict[file]}"
+            koopa_download "${dict['url']}" "${dict['file']}"
             ;;
         's3://'*)
-            "${app[aws]}" --profile="${dict[profile]}" \
-                s3 cp "${dict[url]}" "${dict[file]}"
+            "${app['aws']}" --profile="${dict['profile']}" \
+                s3 cp "${dict['url']}" "${dict['file']}"
             ;;
         *)
-            koopa_stop "Unsupported URL: '${dict[url]}'."
+            koopa_stop "Unsupported URL: '${dict['url']}'."
             ;;
     esac
-    koopa_chmod 'u+x' "${dict[file]}"
-    "${dict[file]}"
+    koopa_chmod 'u+x' "${dict['file']}"
+    "${dict['file']}"
     return 0
 }

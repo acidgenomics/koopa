@@ -96,14 +96,14 @@ koopa_uninstall_app() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--name' "${dict[name]}"
-    [[ "${bool[verbose]}" -eq 1 ]] && set -o xtrace
-    case "${dict[mode]}" in
+    koopa_assert_is_set '--name' "${dict['name']}"
+    [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
+    case "${dict['mode']}" in
         'shared')
             bool[unlink_in_opt]=1
-            if [[ -z "${dict[prefix]}" ]]
+            if [[ -z "${dict['prefix']}" ]]
             then
-                dict[prefix]="${dict[app_prefix]}/${dict[name]}"
+                dict[prefix]="${dict['app_prefix']}/${dict['name']}"
             fi
             ;;
         'system')
@@ -119,55 +119,55 @@ koopa_uninstall_app() {
         bool[unlink_in_bin]=1
         bool[unlink_in_man]=1
     fi
-    if [[ -n "${dict[prefix]}" ]]
+    if [[ -n "${dict['prefix']}" ]]
     then
-        if [[ ! -d "${dict[prefix]}" ]]
+        if [[ ! -d "${dict['prefix']}" ]]
         then
-            koopa_alert_is_not_installed "${dict[name]}" "${dict[prefix]}"
+            koopa_alert_is_not_installed "${dict['name']}" "${dict['prefix']}"
             return 1
         fi
-        dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
+        dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
     fi
-    if [[ "${bool[quiet]}" -eq 0 ]]
+    if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict[prefix]}" ]]
+        if [[ -n "${dict['prefix']}" ]]
         then
-            koopa_alert_uninstall_start "${dict[name]}" "${dict[prefix]}"
+            koopa_alert_uninstall_start "${dict['name']}" "${dict['prefix']}"
         else
-            koopa_alert_uninstall_start "${dict[name]}"
+            koopa_alert_uninstall_start "${dict['name']}"
         fi
     fi
-    [[ -z "${dict[uninstaller_bn]}" ]] && dict[uninstaller_bn]="${dict[name]}"
-    dict[uninstaller_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
-uninstall/${dict[platform]}/${dict[mode]}/${dict[uninstaller_bn]}.sh"
-    if [[ -f "${dict[uninstaller_file]}" ]]
+    [[ -z "${dict['uninstaller_bn']}" ]] && dict[uninstaller_bn]="${dict['name']}"
+    dict[uninstaller_file]="${dict['koopa_prefix']}/lang/shell/bash/include/\
+uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
+    if [[ -f "${dict['uninstaller_file']}" ]]
     then
         dict[tmp_dir]="$(koopa_tmp_dir)"
         (
-            koopa_cd "${dict[tmp_dir]}"
+            koopa_cd "${dict['tmp_dir']}"
             # shellcheck source=/dev/null
-            source "${dict[uninstaller_file]}"
-            koopa_assert_is_function "${dict[uninstaller_fun]}"
-            "${dict[uninstaller_fun]}"
+            source "${dict['uninstaller_file']}"
+            koopa_assert_is_function "${dict['uninstaller_fun']}"
+            "${dict['uninstaller_fun']}"
         )
-        koopa_rm "${dict[tmp_dir]}"
+        koopa_rm "${dict['tmp_dir']}"
     fi
-    if [[ -d "${dict[prefix]}" ]]
+    if [[ -d "${dict['prefix']}" ]]
     then
-        case "${dict[mode]}" in
+        case "${dict['mode']}" in
             'system')
-                koopa_rm --sudo "${dict[prefix]}"
+                koopa_rm --sudo "${dict['prefix']}"
                 ;;
             *)
-                koopa_rm "${dict[prefix]}"
+                koopa_rm "${dict['prefix']}"
                 ;;
         esac
     fi
-    if [[ "${bool[unlink_in_bin]}" -eq 1 ]]
+    if [[ "${bool['unlink_in_bin']}" -eq 1 ]]
     then
         koopa_unlink_in_bin "${bin_arr[@]}"
     fi
-    if [[ "${bool[unlink_in_man]}" -eq 1 ]]
+    if [[ "${bool['unlink_in_man']}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
         do
@@ -175,18 +175,18 @@ uninstall/${dict[platform]}/${dict[mode]}/${dict[uninstaller_bn]}.sh"
         done
         koopa_unlink_in_man1 "${man_arr[@]}"
     fi
-    if [[ "${bool[unlink_in_opt]}" -eq 1 ]]
+    if [[ "${bool['unlink_in_opt']}" -eq 1 ]]
     then
-        koopa_unlink_in_opt "${dict[name]}"
+        koopa_unlink_in_opt "${dict['name']}"
     fi
-    if [[ "${bool[quiet]}" -eq 0 ]]
+    if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict[prefix]}" ]]
+        if [[ -n "${dict['prefix']}" ]]
         then
             koopa_alert_uninstall_success \
-                "${dict[name]}" "${dict[prefix]}"
+                "${dict['name']}" "${dict['prefix']}"
         else
-            koopa_alert_uninstall_success "${dict[name]}"
+            koopa_alert_uninstall_success "${dict['name']}"
         fi
     fi
     return 0

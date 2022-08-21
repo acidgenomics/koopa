@@ -15,19 +15,19 @@ koopa_macos_app_version() {
         [plutil]="$(koopa_macos_locate_plutil)"
         [tr]="$(koopa_locate_tr)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[plutil]}" ]] || return 1
-    [[ -x "${app[tr]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['plutil']}" ]] || return 1
+    [[ -x "${app['tr']}" ]] || return 1
     for app in "$@"
     do
         plist="/Applications/${app}.app/Contents/Info.plist"
         [[ -f "$plist" ]] || return 1
         # shellcheck disable=SC2016
         x="$( \
-            "${app[plutil]}" -p "$plist" \
+            "${app['plutil']}" -p "$plist" \
                 | koopa_grep --pattern='CFBundleShortVersionString' - \
-                | "${app[awk]}" -F ' => ' '{print $2}' \
-                | "${app[tr]}" --delete '\"' \
+                | "${app['awk']}" -F ' => ' '{print $2}' \
+                | "${app['tr']}" --delete '\"' \
         )"
         [[ -n "$x" ]] || return 1
         koopa_print "$x"

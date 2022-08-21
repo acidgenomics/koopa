@@ -19,7 +19,7 @@ koopa_stat_modified() {
     declare -A app=(
         [date]="$(koopa_locate_date)"
     )
-    [[ -x "${app[date]}" ]] || return 1
+    [[ -x "${app['date']}" ]] || return 1
     declare -A dict=(
         [format]="${1:?}"
     )
@@ -27,7 +27,7 @@ koopa_stat_modified() {
     readarray -t timestamps <<< "$(koopa_stat '%Y' "$@")"
     for timestamp in "${timestamps[@]}"
     do
-        x="$("${app[date]}" -d "@${timestamp}" +"${dict[format]}")"
+        x="$("${app['date']}" -d "@${timestamp}" +"${dict['format']}")"
         [[ -n "$x" ]] || return 1
         koopa_print "$x"
     done

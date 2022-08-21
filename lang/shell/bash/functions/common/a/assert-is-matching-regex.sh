@@ -36,13 +36,13 @@ koopa_assert_is_matching_regex() {
         esac
     done
     koopa_assert_is_set \
-        '--pattern' "${dict[pattern]}" \
-        '--string' "${dict[string]}"
+        '--pattern' "${dict['pattern']}" \
+        '--string' "${dict['string']}"
     if ! koopa_str_detect_regex \
-        --pattern="${dict[pattern]}" \
-        --string="${dict[string]}"
+        --pattern="${dict['pattern']}" \
+        --string="${dict['string']}"
     then
-        koopa_stop "'${dict[string]}' doesn't match regex '${dict[pattern]}'."
+        koopa_stop "'${dict['string']}' doesn't match regex '${dict['pattern']}'."
     fi
     return 0
 }

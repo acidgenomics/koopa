@@ -17,9 +17,9 @@ koopa_docker_is_build_recent() {
         [docker]="$(koopa_locate_docker)"
         [sed]="$(koopa_locate_sed)"
     )
-    [[ -x "${app[date]}" ]] || return 1
-    [[ -x "${app[docker]}" ]] || return 1
-    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app['date']}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
         [days]=7
     )
@@ -54,29 +54,29 @@ koopa_docker_is_build_recent() {
     do
         local dict2
         declare -A dict2=(
-            [current]="$("${app[date]}" -u '+%s')"
+            [current]="$("${app['date']}" -u '+%s')"
             [image]="$image"
         )
-        "${app[docker]}" pull "${dict2[image]}" >/dev/null
+        "${app['docker']}" pull "${dict2['image']}" >/dev/null
         dict2[json]="$( \
-            "${app[docker]}" inspect \
+            "${app['docker']}" inspect \
                 --format='{{json .Created}}' \
-                "${dict2[image]}" \
+                "${dict2['image']}" \
         )"
         dict2[created]="$( \
             koopa_grep \
                 --only-matching \
                 --pattern='[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
                 --regex \
-                --string="${dict2[json]}" \
-            | "${app[sed]}" 's/T/ /' \
-            | "${app[sed]}" 's/\$/ UTC/'
+                --string="${dict2['json']}" \
+            | "${app['sed']}" 's/T/ /' \
+            | "${app['sed']}" 's/\$/ UTC/'
         )"
         dict2[created]="$( \
-            "${app[date]}" --utc --date="${dict2[created]}" '+%s' \
+            "${app['date']}" --utc --date="${dict2['created']}" '+%s' \
         )"
         dict2[diff]=$((dict2[current] - dict2[created]))
-        [[ "${dict2[diff]}" -le "${dict[seconds]}" ]] && continue
+        [[ "${dict2['diff']}" -le "${dict['seconds']}" ]] && continue
         return 1
     done
     return 0

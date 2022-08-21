@@ -194,7 +194,7 @@ koopa_configure_system() {
         esac
     done
     # Automatically set internal variables, based on user input.
-    case "${dict[mode]}" in
+    case "${dict['mode']}" in
         'default' | \
         'minimal')
             ;;
@@ -296,7 +296,7 @@ koopa_configure_system() {
             koopa_stop 'Invalid mode.'
             ;;
     esac
-    if [[ "${dict[docker]}" -eq 1 ]]
+    if [[ "${dict['docker']}" -eq 1 ]]
     then
         dict[delete_cache]=1
         dict[ssh_key]=0
@@ -316,7 +316,7 @@ koopa_configure_system() {
     export PYTHONDONTWRITEBYTECODE=1
     # Root user and sudo fixes {{{3
     # --------------------------------------------------------------------------
-    if [[ "${dict[passwordless_sudo]}" -eq 1 ]]
+    if [[ "${dict['passwordless_sudo']}" -eq 1 ]]
     then
         koopa_enable_passwordless_sudo
         koopa_linux_fix_sudo_setrlimit_error
@@ -326,13 +326,13 @@ koopa_configure_system() {
     # Delete default user-specific skeleton configuration files. This in
     # particular helps keep shell configuration consistent, especialy for
     # Ubuntu, which sets a lot of config in bashrc.
-    if [[ "${dict[delete_skel]}" -eq 1 ]]
+    if [[ "${dict['delete_skel']}" -eq 1 ]]
     then
         koopa_rm --sudo '/etc/skel'
     fi
     # Early return in minimal mode {{{3
     # --------------------------------------------------------------------------
-    if [[ "${dict[mode]}" == 'minimal' ]]
+    if [[ "${dict['mode']}" == 'minimal' ]]
     then
         koopa_alert_success 'Minimal configuration was successful.'
         return 0
@@ -341,7 +341,7 @@ koopa_configure_system() {
     # --------------------------------------------------------------------------
     koopa_alert 'Installing base system.'
     koopa_linux_update_etc_profile_d
-    koopa install base-system "${dict[install_base_system_args]}"
+    koopa install base-system "${dict['install_base_system_args']}"
     # Consider requiring: gfortran, xml2-config.
     koopa_assert_is_installed \
         'autoconf' \
@@ -503,169 +503,169 @@ koopa_configure_system() {
     # - spacemacs
     # - spacevim
 
-    [[ "${dict[install_dotfiles]}" -eq 1 ]] && \
+    [[ "${dict['install_dotfiles']}" -eq 1 ]] && \
         koopa install 'dotfiles'
-    [[ "${dict[install_homebrew]}" -eq 1 ]] && \
+    [[ "${dict['install_homebrew']}" -eq 1 ]] && \
         koopa install 'homebrew'
-    [[ "${dict[install_homebrew_bundle]}" -eq 1 ]] && \
+    [[ "${dict['install_homebrew_bundle']}" -eq 1 ]] && \
         koopa install 'homebrew-bundle'
-    [[ "${dict[install_llvm]}" -eq 1 ]] && \
+    [[ "${dict['install_llvm']}" -eq 1 ]] && \
         koopa install 'llvm'
-    [[ "${dict[install_openjdk]}" -eq 1 ]] && \
+    [[ "${dict['install_openjdk']}" -eq 1 ]] && \
         koopa install 'openjdk'
-    [[ "${dict[install_python]}" -eq 1 ]] && \
-        koopa install 'python' --version="${dict[python_version]}"
-    [[ "${dict[install_conda]}" -eq 1 ]] && \
-        koopa install "${dict[which_conda]}"
-    [[ "${dict[install_gcc]}" -eq 1 ]] && \
+    [[ "${dict['install_python']}" -eq 1 ]] && \
+        koopa install 'python' --version="${dict['python_version']}"
+    [[ "${dict['install_conda']}" -eq 1 ]] && \
+        koopa install "${dict['which_conda']}"
+    [[ "${dict['install_gcc']}" -eq 1 ]] && \
         koopa install 'gcc'
-    [[ "${dict[install_curl]}" -eq 1 ]] && \
+    [[ "${dict['install_curl']}" -eq 1 ]] && \
         koopa install 'curl'
-    [[ "${dict[install_wget]}" -eq 1 ]] && \
+    [[ "${dict['install_wget']}" -eq 1 ]] && \
         koopa install 'wget'
-    [[ "${dict[install_cmake]}" -eq 1 ]] && \
+    [[ "${dict['install_cmake']}" -eq 1 ]] && \
         koopa install 'cmake'
-    [[ "${dict[install_make]}" -eq 1 ]] && \
+    [[ "${dict['install_make']}" -eq 1 ]] && \
         koopa install 'make'
-    [[ "${dict[install_autoconf]}" -eq 1 ]] && \
+    [[ "${dict['install_autoconf']}" -eq 1 ]] && \
         koopa install 'autoconf'
-    [[ "${dict[install_automake]}" -eq 1 ]] && \
+    [[ "${dict['install_automake']}" -eq 1 ]] && \
         koopa install 'automake'
-    [[ "${dict[install_libtool]}" -eq 1 ]] && \
+    [[ "${dict['install_libtool']}" -eq 1 ]] && \
         koopa install 'libtool'
-    [[ "${dict[install_texinfo]}" -eq 1 ]] && \
+    [[ "${dict['install_texinfo']}" -eq 1 ]] && \
         koopa install 'texinfo'
-    [[ "${dict[install_binutils]}" -eq 1 ]] && \
+    [[ "${dict['install_binutils']}" -eq 1 ]] && \
         koopa install 'binutils'
-    [[ "${dict[install_coreutils]}" -eq 1 ]] && \
+    [[ "${dict['install_coreutils']}" -eq 1 ]] && \
         koopa install 'coreutils'
-    [[ "${dict[install_findutils]}" -eq 1 ]] && \
+    [[ "${dict['install_findutils']}" -eq 1 ]] && \
         koopa install 'findutils'
-    [[ "${dict[install_patch]}" -eq 1 ]] && \
+    [[ "${dict['install_patch']}" -eq 1 ]] && \
         koopa install 'patch'
-    [[ "${dict[install_pkg_config]}" -eq 1 ]] && \
+    [[ "${dict['install_pkg_config']}" -eq 1 ]] && \
         koopa install 'pkg-config'
-    [[ "${dict[install_ncurses]}" -eq 1 ]] && \
+    [[ "${dict['install_ncurses']}" -eq 1 ]] && \
         koopa install 'ncurses'
-    [[ "${dict[install_gnupg]}" -eq 1 ]] && \
+    [[ "${dict['install_gnupg']}" -eq 1 ]] && \
         koopa install 'gnupg'
-    [[ "${dict[install_grep]}" -eq 1 ]] && \
+    [[ "${dict['install_grep']}" -eq 1 ]] && \
         koopa install 'grep'
-    [[ "${dict[install_gawk]}" -eq 1 ]] && \
+    [[ "${dict['install_gawk']}" -eq 1 ]] && \
         koopa install 'gawk'
-    [[ "${dict[install_parallel]}" -eq 1 ]] && \
+    [[ "${dict['install_parallel']}" -eq 1 ]] && \
         koopa install 'parallel'
-    [[ "${dict[install_rsync]}" -eq 1 ]] && \
+    [[ "${dict['install_rsync']}" -eq 1 ]] && \
         koopa install 'rsync'
-    [[ "${dict[install_sed]}" -eq 1 ]] && \
+    [[ "${dict['install_sed']}" -eq 1 ]] && \
         koopa install 'sed'
-    [[ "${dict[install_libevent]}" -eq 1 ]] && \
+    [[ "${dict['install_libevent']}" -eq 1 ]] && \
         koopa install 'libevent'
-    [[ "${dict[install_taglib]}" -eq 1 ]] && \
+    [[ "${dict['install_taglib']}" -eq 1 ]] && \
         koopa install 'taglib'
-    [[ "${dict[install_zsh]}" -eq 1 ]] && \
+    [[ "${dict['install_zsh']}" -eq 1 ]] && \
         koopa install 'zsh'
-    [[ "${dict[install_bash]}" -eq 1 ]] && \
+    [[ "${dict['install_bash']}" -eq 1 ]] && \
         koopa install 'bash'
-    [[ "${dict[install_fish]}" -eq 1 ]] && \
+    [[ "${dict['install_fish']}" -eq 1 ]] && \
         koopa install 'fish'
-    [[ "${dict[install_git]}" -eq 1 ]] && \
+    [[ "${dict['install_git']}" -eq 1 ]] && \
         koopa install 'git'
-    [[ "${dict[install_openssh]}" -eq 1 ]] && \
+    [[ "${dict['install_openssh']}" -eq 1 ]] && \
         koopa install 'openssh'
-    [[ "${dict[install_perl]}" -eq 1 ]] && \
+    [[ "${dict['install_perl']}" -eq 1 ]] && \
         koopa install 'perl'
-    # > [[ "${dict[install_geos]}" -eq 1 ]] && \
+    # > [[ "${dict['install_geos']}" -eq 1 ]] && \
     # >     koopa install geos
-    [[ "${dict[install_sqlite]}" -eq 1 ]] && \
+    [[ "${dict['install_sqlite']}" -eq 1 ]] && \
         koopa install 'sqlite'
-    # > [[ "${dict[install_proj]}" -eq 1 ]] && \
+    # > [[ "${dict['install_proj']}" -eq 1 ]] && \
     # >     koopa install proj
-    # > [[ "${dict[install_gdal]}" -eq 1 ]] && \
+    # > [[ "${dict['install_gdal']}" -eq 1 ]] && \
     # >     koopa install gdal
-    [[ "${dict[install_hdf5]}" -eq 1 ]] && \
+    [[ "${dict['install_hdf5']}" -eq 1 ]] && \
         koopa install 'hdf5'
-    [[ "${dict[install_gsl]}" -eq 1 ]] && \
+    [[ "${dict['install_gsl']}" -eq 1 ]] && \
         koopa install 'gsl'
-    [[ "${dict[install_udunits]}" -eq 1 ]] && \
+    [[ "${dict['install_udunits']}" -eq 1 ]] && \
         koopa install 'udunits'
-    [[ "${dict[install_subversion]}" -eq 1 ]] && \
+    [[ "${dict['install_subversion']}" -eq 1 ]] && \
         koopa install 'subversion'
-    [[ "${dict[install_go]}" -eq 1 ]] && \
+    [[ "${dict['install_go']}" -eq 1 ]] && \
         koopa install 'go'
-    [[ "${dict[install_ruby]}" -eq 1 ]] && \
+    [[ "${dict['install_ruby']}" -eq 1 ]] && \
         koopa install 'ruby'
-    [[ "${dict[install_rust]}" -eq 1 ]] && \
+    [[ "${dict['install_rust']}" -eq 1 ]] && \
         koopa install 'rust'
-    [[ "${dict[install_neofetch]}" -eq 1 ]] && \
+    [[ "${dict['install_neofetch']}" -eq 1 ]] && \
         koopa install 'neofetch'
-    [[ "${dict[install_fzf]}" -eq 1 ]] && \
+    [[ "${dict['install_fzf']}" -eq 1 ]] && \
         koopa install 'fzf'
-    [[ "${dict[install_tmux]}" -eq 1 ]] && \
+    [[ "${dict['install_tmux']}" -eq 1 ]] && \
         koopa install 'tmux'
-    [[ "${dict[install_vim]}" -eq 1 ]] && \
+    [[ "${dict['install_vim']}" -eq 1 ]] && \
         koopa install 'vim'
-    [[ "${dict[install_shellcheck]}" -eq 1 ]] && \
+    [[ "${dict['install_shellcheck']}" -eq 1 ]] && \
         koopa install 'shellcheck'
-    [[ "${dict[install_shunit2]}" -eq 1 ]] && \
+    [[ "${dict['install_shunit2']}" -eq 1 ]] && \
         koopa install 'shunit2'
-    [[ "${dict[install_aws_cli]}" -eq 1 ]] && \
+    [[ "${dict['install_aws_cli']}" -eq 1 ]] && \
         koopa install 'aws-cli'
-    [[ "${dict[install_azure_cli]}" -eq 1 ]] && \
+    [[ "${dict['install_azure_cli']}" -eq 1 ]] && \
         koopa install 'azure-cli'
-    [[ "${dict[install_docker]}" -eq 1 ]] && \
+    [[ "${dict['install_docker']}" -eq 1 ]] && \
         koopa install 'docker'
-    [[ "${dict[install_google_cloud_sdk]}" -eq 1 ]] && \
+    [[ "${dict['install_google_cloud_sdk']}" -eq 1 ]] && \
         koopa install 'google-cloud-sdk'
-    [[ "${dict[install_password_store]}" -eq 1 ]] && \
+    [[ "${dict['install_password_store']}" -eq 1 ]] && \
         koopa install 'password-store'
-    [[ "${dict[install_docker_credential_pass]}" -eq 1 ]] && \
+    [[ "${dict['install_docker_credential_pass']}" -eq 1 ]] && \
         koopa install 'docker-credential-pass'
-    [[ "${dict[install_neovim]}" -eq 1 ]] && \
+    [[ "${dict['install_neovim']}" -eq 1 ]] && \
         koopa install 'neovim'
-    [[ "${dict[install_emacs]}" -eq 1 ]] && \
+    [[ "${dict['install_emacs']}" -eq 1 ]] && \
         koopa install 'emacs'
-    [[ "${dict[install_julia]}" -eq 1 ]] && \
+    [[ "${dict['install_julia']}" -eq 1 ]] && \
         koopa install 'julia'
-    [[ "${dict[install_lua]}" -eq 1 ]] && \
+    [[ "${dict['install_lua']}" -eq 1 ]] && \
         koopa install 'lua'
-    [[ "${dict[install_luarocks]}" -eq 1 ]] && \
+    [[ "${dict['install_luarocks']}" -eq 1 ]] && \
         koopa install 'luarocks'
-    [[ "${dict[install_lmod]}" -eq 1 ]] && \
+    [[ "${dict['install_lmod']}" -eq 1 ]] && \
         koopa install 'lmod'
-    [[ "${dict[install_htop]}" -eq 1 ]] && \
+    [[ "${dict['install_htop']}" -eq 1 ]] && \
         koopa install 'htop'
     # Install R.
-    if [[ "${dict[install_r]}" -eq 1 ]]
+    if [[ "${dict['install_r']}" -eq 1 ]]
     then
-        if [[ "${dict[r_version]}" == 'devel' ]]
+        if [[ "${dict['r_version']}" == 'devel' ]]
         then
             koopa install 'r-devel'
         else
             if koopa_is_debian
             then
-                koopa install 'r-binary' --version="${dict[r_version]}"
+                koopa install 'r-binary' --version="${dict['r_version']}"
             elif koopa_is_fedora
             then
                 koopa_assert_is_installed 'R'
                 koopa_configure_r
             else
-                koopa install 'r' --version="${dict[r_version]}"
+                koopa install 'r' --version="${dict['r_version']}"
             fi
         fi
     fi
     # Install RStudio software.
-    [[ "${dict[install_rstudio_server]}" -eq 1 ]] && \
+    [[ "${dict['install_rstudio_server']}" -eq 1 ]] && \
         koopa install 'rstudio-server'
-    [[  "${dict[install_shiny_server]}" -eq 1 ]] && \
+    [[  "${dict['install_shiny_server']}" -eq 1 ]] && \
         koopa install 'shiny-server'
     # Ensure shared library configuration is current.
-    [[ "${dict[install_lmod]}" -eq 1 ]] && \
+    [[ "${dict['install_lmod']}" -eq 1 ]] && \
         koopa_configure_lmod
     koopa_linux_update_ldconfig
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------
-    if [[ "${dict[install_python_packages]}" -eq 1 ]]
+    if [[ "${dict['install_python_packages']}" -eq 1 ]]
     then
         koopa install 'black'
         koopa install 'bpytop'
@@ -678,20 +678,20 @@ koopa_configure_system() {
         koopa install 'pytest'
         koopa install 'ranger-fm'
     fi
-    if [[ "${dict[install_r_packages]}" -eq 1 ]]
+    if [[ "${dict['install_r_packages']}" -eq 1 ]]
     then
         koopa install 'r-packages'
     fi
-    if [[ "${dict[install_perl_packages]}" -eq 1 ]]
+    if [[ "${dict['install_perl_packages']}" -eq 1 ]]
     then
         # FIXME Need to split this out into individual packages.
         koopa install 'perl-packages'
     fi
-    if [[ "${dict[install_ruby_packages]}" -eq 1 ]]
+    if [[ "${dict['install_ruby_packages']}" -eq 1 ]]
     then
         koopa install 'ruby-packages'
     fi
-    if [[ "${dict[install_rust_packages]}" -eq 1 ]]
+    if [[ "${dict['install_rust_packages']}" -eq 1 ]]
     then
         koopa install 'bat'
         koopa install 'broot'
@@ -709,14 +709,14 @@ koopa_configure_system() {
     fi
     # Bioinformatics tools {{{2
     # --------------------------------------------------------------------------
-    [[ "${dict[install_aspera_connect]}" -eq 1 ]] && \
+    [[ "${dict['install_aspera_connect']}" -eq 1 ]] && \
         koopa install 'aspera-connect'
-    [[ "${dict[install_conda_envs]}" -eq 1 ]] && \
+    [[ "${dict['install_conda_envs']}" -eq 1 ]] && \
         koopa app conda create-bioinfo-envs
     # Final steps {{{2
     # --------------------------------------------------------------------------
     # Generate an SSH key.
-    [[ "${dict[ssh_key]}" -eq 1 ]] && \
+    [[ "${dict['ssh_key']}" -eq 1 ]] && \
         koopa_ssh_generate_key
     # Clean up and fix permissions {{{3
     # --------------------------------------------------------------------------
@@ -726,7 +726,7 @@ koopa_configure_system() {
     # > koopa_fix_pyenv_permissions
     # > koopa_fix_rbenv_permissions
     koopa_fix_zsh_permissions
-    if [[ "${dict[delete_cache]}" -eq 1 ]]
+    if [[ "${dict['delete_cache']}" -eq 1 ]]
     then
         koopa_linux_delete_cache
     fi

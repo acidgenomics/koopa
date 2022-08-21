@@ -18,18 +18,18 @@ koopa_xcode_clt_version() {
         [awk]="$(koopa_locate_awk)"
         [pkgutil]="$(koopa_macos_locate_pkgutil)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[pkgutil]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['pkgutil']}" ]] || return 1
     declare -A dict=(
         [pkg]='com.apple.pkg.CLTools_Executables'
     )
-    "${app[pkgutil]}" --pkgs="${dict[pkg]}" >/dev/null || return 1
+    "${app['pkgutil']}" --pkgs="${dict['pkg']}" >/dev/null || return 1
     # shellcheck disable=SC2016
     dict[str]="$( \
-        "${app[pkgutil]}" --pkg-info="${dict[pkg]}" \
-            | "${app[awk]}" '/version:/ {print $2}' \
+        "${app['pkgutil']}" --pkg-info="${dict['pkg']}" \
+            | "${app['awk']}" '/version:/ {print $2}' \
     )"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_print "${dict[str]}"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }

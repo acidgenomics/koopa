@@ -38,7 +38,7 @@ koopa_find_and_replace_in_file() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
-    [[ -x "${app[perl]}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
         [multiline]=0
         [pattern]=''
@@ -90,7 +90,7 @@ koopa_find_and_replace_in_file() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--pattern' "${dict[pattern]}"
+    koopa_assert_is_set '--pattern' "${dict['pattern']}"
     if [[ "${#pos[@]}" -eq 0 ]]
     then
         readarray -t pos <<< "$(</dev/stdin)"
@@ -98,20 +98,20 @@ koopa_find_and_replace_in_file() {
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    if [[ "${dict[regex]}" -eq 1 ]]
+    if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict[expr]="s/${dict[pattern]}/${dict[replacement]}/g"
+        dict[expr]="s/${dict['pattern']}/${dict['replacement']}/g"
     else
         dict[expr]=" \
-            \$pattern = quotemeta '${dict[pattern]}'; \
-            \$replacement = '${dict[replacement]}'; \
+            \$pattern = quotemeta '${dict['pattern']}'; \
+            \$replacement = '${dict['replacement']}'; \
             s/\$pattern/\$replacement/g; \
         "
     fi
     flags=('-i' '-p')
     # Multi-line matching is disabled by default, because it makes regular
     # expression matching end of line break.
-    [[ "${dict[multiline]}" -eq 1 ]] && flags+=('-0')
-    "${app[perl]}" "${flags[@]}" -e "${dict[expr]}" "$@"
+    [[ "${dict['multiline']}" -eq 1 ]] && flags+=('-0')
+    "${app['perl']}" "${flags[@]}" -e "${dict['expr']}" "$@"
     return 0
 }

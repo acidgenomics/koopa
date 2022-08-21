@@ -25,7 +25,7 @@ koopa_is_recent() {
     declare -A app=(
         [find]="$(koopa_locate_find)"
     )
-    [[ -x "${app[find]}" ]] || return 1
+    [[ -x "${app['find']}" ]] || return 1
     declare -A dict=(
         [days]=14
     )
@@ -34,10 +34,10 @@ koopa_is_recent() {
         local exists
         [[ -e "$file" ]] || return 1
         exists="$( \
-            "${app[find]}" "$file" \
+            "${app['find']}" "$file" \
                 -mindepth 0 \
                 -maxdepth 0 \
-                -mtime "-${dict[days]}" \
+                -mtime "-${dict['days']}" \
             2>/dev/null \
         )"
         [[ -n "$exists" ]] || return 1

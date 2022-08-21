@@ -12,10 +12,10 @@ koopa_activate_bash_aliases() {
     declare -A dict=(
         [user_aliases_file]="${HOME}/.bash_aliases"
     )
-    if [[ -f "${dict[user_aliases_file]}" ]]
+    if [[ -f "${dict['user_aliases_file']}" ]]
     then
         # shellcheck source=/dev/null
-        source "${dict[user_aliases_file]}"
+        source "${dict['user_aliases_file']}"
     fi
     return 0
 }

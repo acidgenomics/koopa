@@ -17,7 +17,7 @@ koopa_cli() {
         '--help' | \
         '-h')
             dict[manfile]="$(koopa_man_prefix)/man1/koopa.1"
-            koopa_help "${dict[manfile]}"
+            koopa_help "${dict['manfile']}"
             return 0
             ;;
         '--version' | \
@@ -47,17 +47,17 @@ koopa_cli() {
             ;;
     esac
     # Evaluate nested CLI runner function and reset positional arguments.
-    if [[ "${dict[nested]}"  -eq 1 ]]
+    if [[ "${dict['nested']}"  -eq 1 ]]
     then
-        dict[fun]="koopa_${dict[key]//-/_}"
-        koopa_assert_is_function "${dict[fun]}"
+        dict[fun]="koopa_${dict['key']//-/_}"
+        koopa_assert_is_function "${dict['fun']}"
     else
-        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
+        dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
     fi
-    if ! koopa_is_function "${dict[fun]}"
+    if ! koopa_is_function "${dict['fun']}"
     then
         koopa_stop 'Unsupported command.'
     fi
-    "${dict[fun]}" "$@"
+    "${dict['fun']}" "$@"
     return 0
 }

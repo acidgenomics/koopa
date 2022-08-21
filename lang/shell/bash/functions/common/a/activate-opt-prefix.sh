@@ -85,7 +85,7 @@ koopa_activate_opt_prefix() {
     do
         # FIXME Rework this using a dict approach.
         local current_ver expected_ver pkgconfig_dirs prefix
-        prefix="${dict[opt_prefix]}/${name}"
+        prefix="${dict['opt_prefix']}/${name}"
         koopa_assert_is_dir "$prefix"
         current_ver="$(koopa_opt_version "$name")"
         expected_ver="$(koopa_variable "$name")"
@@ -106,7 +106,7 @@ koopa_activate_opt_prefix() {
             koopa_stop "'${prefix}' is empty."
         fi
         prefix="$(koopa_realpath "$prefix")"
-        if [[ "${dict[build_only]}" -eq 1 ]]
+        if [[ "${dict['build_only']}" -eq 1 ]]
         then
             koopa_alert "Activating '${prefix}' (build only)."
         else
@@ -129,11 +129,11 @@ koopa_activate_opt_prefix() {
         then
             koopa_add_to_pkg_config_path "${pkgconfig_dirs[@]}"
         fi
-        [[ "${dict[build_only]}" -eq 1 ]] && continue
+        [[ "${dict['build_only']}" -eq 1 ]] && continue
         if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
         then
             local cflags ldflags ldlibs pc_files
-            if [[ ! -x "${app[pkg_config]}" ]]
+            if [[ ! -x "${app['pkg_config']}" ]]
             then
                 koopa_stop "'pkg-config' is not installed."
             fi
@@ -147,13 +147,13 @@ koopa_activate_opt_prefix() {
                     --sort \
             )"
             # Set 'CPPFLAGS' variable.
-            cflags="$("${app[pkg_config]}" --cflags "${pc_files[@]}")"
+            cflags="$("${app['pkg_config']}" --cflags "${pc_files[@]}")"
             [[ -n "$cflags" ]] && CPPFLAGS="${CPPFLAGS:-} ${cflags}"
             # Set 'LDFLAGS' variable.
-            ldflags="$("${app[pkg_config]}" --libs-only-L "${pc_files[@]}")"
+            ldflags="$("${app['pkg_config']}" --libs-only-L "${pc_files[@]}")"
             [[ -n "$ldflags" ]] && LDFLAGS="${LDFLAGS:-} ${ldflags}"
             # Set 'LDLIBS' variable. Can use '--libs-only-other' here.
-            ldlibs="$("${app[pkg_config]}" --libs-only-l "${pc_files[@]}")"
+            ldlibs="$("${app['pkg_config']}" --libs-only-l "${pc_files[@]}")"
             [[ -n "$ldlibs" ]] && LDLIBS="${LDLIBS:-} ${ldlibs}"
         else
             # FIXME Recursively search for lib/lib64 and include dirs.

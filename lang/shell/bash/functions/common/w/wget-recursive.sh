@@ -22,7 +22,7 @@ koopa_wget_recursive() {
     declare -A app=(
         [wget]="$(koopa_locate_wget)"
     )
-    [[ -x "${app[wget]}" ]] || return 1
+    [[ -x "${app['wget']}" ]] || return 1
     declare -A dict=(
         [datetime]="$(koopa_datetime)"
         [password]=''
@@ -64,21 +64,21 @@ koopa_wget_recursive() {
         esac
     done
     koopa_assert_is_set \
-        '--password' "${dict[password]}" \
-        '--url' "${dict[url]}" \
-        '--user' "${dict[user]}"
-    dict[log_file]="wget-${dict[datetime]}.log"
-    dict[password]="${dict[password]@Q}"
+        '--password' "${dict['password']}" \
+        '--url' "${dict['url']}" \
+        '--user' "${dict['user']}"
+    dict[log_file]="wget-${dict['datetime']}.log"
+    dict[password]="${dict['password']@Q}"
     wget_args=(
-        "--output-file=${dict[log_file]}"
-        "--password=${dict[password]}"
-        "--user=${dict[user]}"
+        "--output-file=${dict['log_file']}"
+        "--password=${dict['password']}"
+        "--user=${dict['user']}"
         '--continue'
         '--debug'
         '--no-parent'
         '--recursive'
-        "${dict[url]}"/*
+        "${dict['url']}"/*
     )
-    "${app[wget]}" "${wget_args[@]}"
+    "${app['wget']}" "${wget_args[@]}"
     return 0
 }

@@ -11,9 +11,9 @@ koopa_check_disk() {
         [limit]=90
         [used]="$(koopa_disk_pct_used "$@")"
     )
-    if [[ "${dict[used]}" -gt "${dict[limit]}" ]]
+    if [[ "${dict['used']}" -gt "${dict['limit']}" ]]
     then
-        koopa_warn "Disk usage is ${dict[used]}%."
+        koopa_warn "Disk usage is ${dict['used']}%."
         return 1
     fi
     return 0

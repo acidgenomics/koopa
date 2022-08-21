@@ -13,7 +13,7 @@ koopa_extract_version() {
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
-    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
         [pattern]="$(koopa_version_pattern)"
     )
@@ -29,10 +29,10 @@ koopa_extract_version() {
         str="$( \
             koopa_grep \
                 --only-matching \
-                --pattern="${dict[pattern]}" \
+                --pattern="${dict['pattern']}" \
                 --regex \
                 --string="$arg" \
-            | "${app[head]}" -n 1 \
+            | "${app['head']}" -n 1 \
         )"
         [[ -n "$str" ]] || return 1
         koopa_print "$str"

@@ -14,7 +14,7 @@ koopa_debian_apt_delete_repo() {
     for name in "$@"
     do
         local file
-        file="${dict[prefix]}/koopa-${name}.list"
+        file="${dict['prefix']}/koopa-${name}.list"
         if [[ ! -f "$file" ]]
         then
             koopa_alert_note "File does not exist: '${file}'."

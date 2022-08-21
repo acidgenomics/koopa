@@ -16,20 +16,20 @@ koopa_r_configure_ldpaths() {
     declare -A app=(
         [r]="${1:?}"
     )
-    [[ -x "${app[r]}" ]] || return 1
-    koopa_is_koopa_app "${app[r]}" && return 0
+    [[ -x "${app['r']}" ]] || return 1
+    koopa_is_koopa_app "${app['r']}" && return 0
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [opt_prefix]="$(koopa_opt_prefix)"
-        [r_prefix]="$(koopa_r_prefix "${app[r]}")"
+        [r_prefix]="$(koopa_r_prefix "${app['r']}")"
     )
-    dict[file]="${dict[r_prefix]}/etc/ldpaths"
-    dict[java_home]="$(koopa_realpath "${dict[opt_prefix]}/openjdk")"
-    koopa_alert "Configuring '${dict[file]}'."
+    dict[file]="${dict['r_prefix']}/etc/ldpaths"
+    dict[java_home]="$(koopa_realpath "${dict['opt_prefix']}/openjdk")"
+    koopa_alert "Configuring '${dict['file']}'."
     lines=()
     lines+=(
-        ": \${JAVA_HOME=${dict[java_home]}}"
+        ": \${JAVA_HOME=${dict['java_home']}}"
         ": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/libexec/lib/server}"
     )
     declare -A ld_lib_app_arr
@@ -49,7 +49,7 @@ koopa_r_configure_ldpaths() {
     ld_lib_arr=()
     if koopa_is_linux
     then
-        ld_lib_arr+=("/usr/lib/${dict[arch]}-linux-gnu")
+        ld_lib_arr+=("/usr/lib/${dict['arch']}-linux-gnu")
     fi
     ld_lib_arr+=(
         "\${R_HOME}/lib"
@@ -70,7 +70,7 @@ koopa_r_configure_ldpaths() {
     dict[string]="$(koopa_print "${lines[@]}")"
     # This should only apply to R CRAN binary, not source install.
     koopa_sudo_write_string \
-        --file="${dict[file]}" \
-        --string="${dict[string]}"
+        --file="${dict['file']}" \
+        --string="${dict['string']}"
     return 0
 }

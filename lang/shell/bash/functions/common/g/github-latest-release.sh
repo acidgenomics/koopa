@@ -14,22 +14,22 @@ koopa_github_latest_release() {
         [cut]="$(koopa_locate_cut)"
         [sed]="$(koopa_locate_sed)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
-    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
     for repo in "$@"
     do
         local dict
         declare -A dict
         dict[repo]="$repo"
-        dict[url]="https://api.github.com/repos/${dict[repo]}/releases/latest"
+        dict[url]="https://api.github.com/repos/${dict['repo']}/releases/latest"
         dict[str]="$( \
-            koopa_parse_url "${dict[url]}" \
+            koopa_parse_url "${dict['url']}" \
                 | koopa_grep --pattern='"tag_name":' \
-                | "${app[cut]}" -d '"' -f '4' \
-                | "${app[sed]}" 's/^v//' \
+                | "${app['cut']}" -d '"' -f '4' \
+                | "${app['sed']}" 's/^v//' \
         )"
-        [[ -n "${dict[str]}" ]] || return 1
-        koopa_print "${dict[str]}"
+        [[ -n "${dict['str']}" ]] || return 1
+        koopa_print "${dict['str']}"
     done
     return 0
 }

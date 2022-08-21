@@ -18,7 +18,7 @@ koopa_build_all_apps() {
     declare -A app=(
         [koopa]="$(koopa_locate_koopa)"
     )
-    [[ -x "${app[koopa]}" ]] || return 1
+    [[ -x "${app['koopa']}" ]] || return 1
     declare -A dict=(
         [opt_prefix]="$(koopa_opt_prefix)"
     )
@@ -361,8 +361,8 @@ koopa_build_all_apps() {
     fi
     for pkg in "${pkgs[@]}"
     do
-        koopa_is_symlink "${dict[opt_prefix]}/${pkg}" && continue
-        "${app[koopa]}" install "$pkg"
+        koopa_is_symlink "${dict['opt_prefix']}/${pkg}" && continue
+        "${app['koopa']}" install "$pkg"
     done
     koopa_push_all_app_builds
     return 0

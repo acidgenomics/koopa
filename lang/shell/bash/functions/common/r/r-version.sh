@@ -11,12 +11,12 @@ koopa_r_version() {
         [head]="$(koopa_locate_head)"
         [r]="${1:-}"
     )
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
-    [[ -x "${app[head]}" ]] || return 1
-    [[ -x "${app[r]}" ]] || return 1
+    [[ -z "${app['r']}" ]] && app[r]="$(koopa_locate_r)"
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || return 1
     str="$( \
-        "${app[r]}" --version 2>/dev/null \
-        | "${app[head]}" -n 1 \
+        "${app['r']}" --version 2>/dev/null \
+        | "${app['head']}" -n 1 \
     )"
     if koopa_str_detect_fixed \
         --string="$str" \

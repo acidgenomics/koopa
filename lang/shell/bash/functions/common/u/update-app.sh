@@ -102,13 +102,13 @@ koopa_update_app() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--name' "${dict[name]}"
-    [[ "${bool[verbose]}" -eq 1 ]] && set -o xtrace
-    case "${dict[mode]}" in
+    koopa_assert_is_set '--name' "${dict['name']}"
+    [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
+    case "${dict['mode']}" in
         'shared')
-            if [[ -z "${dict[prefix]}" ]]
+            if [[ -z "${dict['prefix']}" ]]
             then
-                dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
+                dict[prefix]="${dict['opt_prefix']}/${dict['name']}"
             fi
             ;;
         'system')
@@ -116,34 +116,34 @@ koopa_update_app() {
             koopa_is_linux && bool[update_ldconfig]=1
             ;;
     esac
-    if [[ -n "${dict[prefix]}" ]]
+    if [[ -n "${dict['prefix']}" ]]
     then
-        if [[ ! -d "${dict[prefix]}" ]] && \
-            [[ "${bool[prefix_check]}" -eq 1 ]]
+        if [[ ! -d "${dict['prefix']}" ]] && \
+            [[ "${bool['prefix_check']}" -eq 1 ]]
         then
-            koopa_alert_is_not_installed "${dict[name]}" "${dict[prefix]}"
+            koopa_alert_is_not_installed "${dict['name']}" "${dict['prefix']}"
             return 1
         fi
-        dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
+        dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
     fi
-    [[ -z "${dict[updater_bn]}" ]] && dict[updater_bn]="${dict[name]}"
-    dict[updater_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
-update/${dict[platform]}/${dict[mode]}/${dict[updater_bn]}.sh"
-    koopa_assert_is_file "${dict[updater_file]}"
+    [[ -z "${dict['updater_bn']}" ]] && dict[updater_bn]="${dict['name']}"
+    dict[updater_file]="${dict['koopa_prefix']}/lang/shell/bash/include/\
+update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
+    koopa_assert_is_file "${dict['updater_file']}"
     # shellcheck source=/dev/null
-    source "${dict[updater_file]}"
-    koopa_assert_is_function "${dict[updater_fun]}"
-    if [[ "${bool[quiet]}" -eq 0 ]]
+    source "${dict['updater_file']}"
+    koopa_assert_is_function "${dict['updater_fun']}"
+    if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -d "${dict[prefix]}" ]]
+        if [[ -d "${dict['prefix']}" ]]
         then
-            koopa_alert_update_start "${dict[name]}" "${dict[prefix]}"
+            koopa_alert_update_start "${dict['name']}" "${dict['prefix']}"
         else
-            koopa_alert_update_start "${dict[name]}"
+            koopa_alert_update_start "${dict['name']}"
         fi
     fi
     (
-        koopa_cd "${dict[tmp_dir]}"
+        koopa_cd "${dict['tmp_dir']}"
         unset -v \
             CFLAGS \
             CPPFLAGS \
@@ -159,40 +159,40 @@ update/${dict[platform]}/${dict[mode]}/${dict[updater_bn]}.sh"
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
         fi
-        if [[ "${bool[update_ldconfig]}" -eq 1 ]]
+        if [[ "${bool['update_ldconfig']}" -eq 1 ]]
         then
             koopa_linux_update_ldconfig
         fi
         # shellcheck disable=SC2030
-        export UPDATE_PREFIX="${dict[prefix]}"
-        "${dict[updater_fun]}"
+        export UPDATE_PREFIX="${dict['prefix']}"
+        "${dict['updater_fun']}"
     )
-    koopa_rm "${dict[tmp_dir]}"
-    if [[ -d "${dict[prefix]}" ]] && \
-        [[ "${bool[set_permissions]}" -eq 1 ]]
+    koopa_rm "${dict['tmp_dir']}"
+    if [[ -d "${dict['prefix']}" ]] && \
+        [[ "${bool['set_permissions']}" -eq 1 ]]
     then
-        case "${dict[mode]}" in
+        case "${dict['mode']}" in
             'shared')
                 koopa_sys_set_permissions \
-                    --recursive "${dict[prefix]}"
+                    --recursive "${dict['prefix']}"
                 ;;
             # > 'user')
             # >     koopa_sys_set_permissions \
-            # >         --recursive --user "${dict[prefix]}"
+            # >         --recursive --user "${dict['prefix']}"
             # >     ;;
         esac
     fi
-    if [[ "${bool[update_ldconfig]}" -eq 1 ]]
+    if [[ "${bool['update_ldconfig']}" -eq 1 ]]
     then
         koopa_linux_update_ldconfig
     fi
-    if [[ "${bool[quiet]}" -eq 0 ]]
+    if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -d "${dict[prefix]}" ]]
+        if [[ -d "${dict['prefix']}" ]]
         then
-            koopa_alert_update_success "${dict[name]}" "${dict[prefix]}"
+            koopa_alert_update_success "${dict['name']}" "${dict['prefix']}"
         else
-            koopa_alert_update_success "${dict[name]}"
+            koopa_alert_update_success "${dict['name']}"
         fi
     fi
     return 0

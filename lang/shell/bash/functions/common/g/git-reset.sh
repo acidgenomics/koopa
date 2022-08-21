@@ -15,7 +15,7 @@ koopa_git_reset() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -29,15 +29,15 @@ koopa_git_reset() {
             koopa_alert "Resetting repo at '${repo}'."
             koopa_cd "$repo"
             koopa_assert_is_git_repo
-            "${app[git]}" clean -dffx
+            "${app['git']}" clean -dffx
             if [[ -s '.gitmodules' ]]
             then
                 koopa_git_submodule_init
-                "${app[git]}" submodule --quiet foreach --recursive \
-                    "${app[git]}" clean -dffx
-                "${app[git]}" reset --hard --quiet
-                "${app[git]}" submodule --quiet foreach --recursive \
-                    "${app[git]}" reset --hard --quiet
+                "${app['git']}" submodule --quiet foreach --recursive \
+                    "${app['git']}" clean -dffx
+                "${app['git']}" reset --hard --quiet
+                "${app['git']}" submodule --quiet foreach --recursive \
+                    "${app['git']}" reset --hard --quiet
             fi
         done
     )

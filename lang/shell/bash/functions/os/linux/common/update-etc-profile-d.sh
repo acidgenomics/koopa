@@ -15,12 +15,12 @@ koopa_linux_update_etc_profile_d() {
     )
     # Early return if file exists and is not a symlink.
     # Previous verisons of koopa prior to 2020-05-09 created a symlink here.
-    if [[ -f "${dict[file]}" ]] && [[ ! -L "${dict[file]}" ]]
+    if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]
     then
         return 0
     fi
-    koopa_alert "Adding koopa activation to '${dict[file]}'."
-    koopa_rm --sudo "${dict[file]}"
+    koopa_alert "Adding koopa activation to '${dict['file']}'."
+    koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
 #!/bin/sh
 
@@ -32,13 +32,13 @@ __koopa_activate_shared_profile() {
     # - https://koopa.acidgenomics.com/
     # """
     # shellcheck source=/dev/null
-    . "${dict[koopa_prefix]}/activate"
+    . "${dict['koopa_prefix']}/activate"
     return 0
 }
 
 __koopa_activate_shared_profile
 END
     koopa_sudo_write_string \
-        --file="${dict[file]}" \
-        --string="${dict[string]}"
+        --file="${dict['file']}" \
+        --string="${dict['string']}"
 }

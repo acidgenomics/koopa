@@ -10,7 +10,7 @@ koopa_r_koopa() {
     declare -A app=(
         [rscript]="$(koopa_locate_rscript)"
     )
-    [[ -x "${app[rscript]}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || return 1
     rscript_args=()
     pos=()
     while (("$#"))
@@ -48,6 +48,6 @@ koopa_r_koopa() {
     fi
     # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
-    "${app[rscript]}" "${rscript_args[@]}" -e "${code[*]}" "${pos[@]@Q}"
+    "${app['rscript']}" "${rscript_args[@]}" -e "${code[*]}" "${pos[@]@Q}"
     return 0
 }

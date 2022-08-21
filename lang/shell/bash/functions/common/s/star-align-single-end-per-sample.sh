@@ -17,7 +17,7 @@ koopa_star_align_single_end_per_sample() {
     declare -A app=(
         [star]="$(koopa_locate_star)"
     )
-    [[ -x "${app[star]}" ]] || return 1
+    [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
         # e.g. 'fastq'.
         [fastq_file]=''
@@ -75,40 +75,40 @@ koopa_star_align_single_end_per_sample() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-file' "${dict[fastq_file]}" \
-        '--fastq-tail' "${dict[fastq_tail]}" \
-        '--index-dir' "${dict[index_dir]}" \
-        '--output-dir' "${dict[output_dir]}"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--fastq-file' "${dict['fastq_file']}" \
+        '--fastq-tail' "${dict['fastq_tail']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "STAR 'alignReads' mode requires ${dict[mem_gb_cutoff]} \
+        koopa_stop "STAR 'alignReads' mode requires ${dict['mem_gb_cutoff']} \
 GB of RAM."
     fi
-    koopa_assert_is_dir "${dict[index_dir]}"
-    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
-    koopa_assert_is_file "${dict[fastq_file]}"
-    dict[fastq_file]="$(koopa_realpath "${dict[fastq_file]}")"
-    dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
-    dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
-    dict[id]="${dict[fastq_bn]}"
-    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
-    if [[ -d "${dict[output_dir]}" ]]
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    koopa_assert_is_file "${dict['fastq_file']}"
+    dict[fastq_file]="$(koopa_realpath "${dict['fastq_file']}")"
+    dict[fastq_bn]="$(koopa_basename "${dict['fastq_file']}")"
+    dict[fastq_bn]="${dict['fastq_bn']/${dict['tail']}/}"
+    dict[id]="${dict['fastq_bn']}"
+    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    if [[ -d "${dict['output_dir']}" ]]
     then
-        koopa_alert_note "Skipping '${dict[id]}'."
+        koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
+    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     align_args+=(
-        '--genomeDir' "${dict[index_dir]}"
-        '--outFileNamePrefix' "${dict[output_dir]}/"
+        '--genomeDir' "${dict['index_dir']}"
+        '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--runMode' 'alignReads'
-        '--runThreadN' "${dict[threads]}"
+        '--runThreadN' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app[star]}" "${align_args[@]}" \
+    "${app['star']}" "${align_args[@]}" \
         --readFilesIn \
-            <(koopa_decompress --stdout "${dict[fastq_file]}")
+            <(koopa_decompress --stdout "${dict['fastq_file']}")
     return 0
 }

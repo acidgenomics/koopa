@@ -10,8 +10,8 @@ koopa_linux_os_version() {
     declare -A app=(
         [uname]="$(koopa_locate_uname)"
     )
-    [[ -x "${app[uname]}" ]] || return 1
-    x="$("${app[uname]}" -r)"
+    [[ -x "${app['uname']}" ]] || return 1
+    x="$("${app['uname']}" -r)"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"
     return 0

@@ -18,17 +18,17 @@ koopa_tex_version() {
         [head]="$(koopa_locate_head)"
         [tex]="${1:-}"
     )
-    [[ -z "${app[tex]}" ]] && app[tex]="$(koopa_locate_tex)"
-    [[ -x "${app[cut]}" ]] || return 1
-    [[ -x "${app[head]}" ]] || return 1
-    [[ -x "${app[tex]}" ]] || return 1
+    [[ -z "${app['tex']}" ]] && app[tex]="$(koopa_locate_tex)"
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['tex']}" ]] || return 1
     str="$( \
-        "${app[tex]}" --version \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d '(' -f '2' \
-            | "${app[cut]}" -d ')' -f '1' \
-            | "${app[cut]}" -d ' ' -f '3' \
-            | "${app[cut]}" -d '/' -f '1' \
+        "${app['tex']}" --version \
+            | "${app['head']}" -n 1 \
+            | "${app['cut']}" -d '(' -f '2' \
+            | "${app['cut']}" -d ')' -f '1' \
+            | "${app['cut']}" -d ' ' -f '3' \
+            | "${app['cut']}" -d '/' -f '1' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

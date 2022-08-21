@@ -10,7 +10,7 @@ koopa_get_version_from_pkg_config() {
     declare -A app=(
         [pkg_config]="$(koopa_locate_pkg_config)"
     )
-    [[ -x "${app[pkg_config]}" ]] || return 1
+    [[ -x "${app['pkg_config']}" ]] || return 1
     declare -A dict=(
         [opt_name]=''
         [opt_prefix]="$(koopa_opt_prefix)"
@@ -43,13 +43,13 @@ koopa_get_version_from_pkg_config() {
         esac
     done
     koopa_assert_is_set \
-        '--opt-name' "${dict[opt_name]}" \
-        '--pc-name' "${dict[pc_name]}"
-    dict[pc_file]="${dict[opt_prefix]}/${dict[opt_name]}/lib/\
-pkgconfig/${dict[pc_name]}.pc"
-    koopa_assert_is_file "${dict[pc_file]}"
-    dict[str]="$("${app[pkg_config]}" --modversion "${dict[pc_file]}")"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_print "${dict[str]}"
+        '--opt-name' "${dict['opt_name']}" \
+        '--pc-name' "${dict['pc_name']}"
+    dict[pc_file]="${dict['opt_prefix']}/${dict['opt_name']}/lib/\
+pkgconfig/${dict['pc_name']}.pc"
+    koopa_assert_is_file "${dict['pc_file']}"
+    dict[str]="$("${app['pkg_config']}" --modversion "${dict['pc_file']}")"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }

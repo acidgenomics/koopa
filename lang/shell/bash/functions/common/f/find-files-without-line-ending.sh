@@ -14,7 +14,7 @@ koopa_find_files_without_line_ending() {
     declare -A app=(
         [pcregrep]="$(koopa_locate_pcregrep)"
     )
-    [[ -x "${app[pcregrep]}" ]] || return 1
+    [[ -x "${app['pcregrep']}" ]] || return 1
     for prefix in "$@"
     do
         local str
@@ -26,7 +26,7 @@ koopa_find_files_without_line_ending() {
                 --type='f' \
         )"
         koopa_is_array_non_empty "${files[@]:-}" || continue
-        str="$("${app[pcregrep]}" -LMr '\n$' "${files[@]}")"
+        str="$("${app['pcregrep']}" -LMr '\n$' "${files[@]}")"
         [[ -n "$str" ]] || continue
         koopa_print "$str"
     done

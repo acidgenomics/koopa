@@ -22,7 +22,7 @@ koopa_cp() {
         [mkdir]='koopa_mkdir'
         [rm]='koopa_rm'
     )
-    [[ -x "${app[cp]}" ]] || return 1
+    [[ -x "${app['cp']}" ]] || return 1
     declare -A dict=(
         [sudo]=0
         [symlink]=0
@@ -66,43 +66,43 @@ koopa_cp() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
-        [[ -x "${app[sudo]}" ]] || return 1
-        cp=("${app[sudo]}" "${app[cp]}")
-        mkdir=("${app[mkdir]}" '--sudo')
-        rm=("${app[rm]}" '--sudo')
+        [[ -x "${app['sudo']}" ]] || return 1
+        cp=("${app['sudo']}" "${app['cp']}")
+        mkdir=("${app['mkdir']}" '--sudo')
+        rm=("${app['rm']}" '--sudo')
     else
-        cp=("${app[cp]}")
-        mkdir=("${app[mkdir]}")
-        rm=("${app[rm]}")
+        cp=("${app['cp']}")
+        mkdir=("${app['mkdir']}")
+        rm=("${app['rm']}")
     fi
     cp_args=('-af')
-    [[ "${dict[symlink]}" -eq 1 ]] && cp_args+=('-s')
+    [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
     cp_args+=("$@")
-    if [[ -n "${dict[target_dir]}" ]]
+    if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict[target_dir]="$(koopa_strip_trailing_slash "${dict[target_dir]}")"
-        if [[ ! -d "${dict[target_dir]}" ]]
+        dict[target_dir]="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        if [[ ! -d "${dict['target_dir']}" ]]
         then
-            "${mkdir[@]}" "${dict[target_dir]}"
+            "${mkdir[@]}" "${dict['target_dir']}"
         fi
-        cp_args+=("${dict[target_dir]}")
+        cp_args+=("${dict['target_dir']}")
     else
         koopa_assert_has_args_eq "$#" 2
         dict[source_file]="${1:?}"
-        koopa_assert_is_existing "${dict[source_file]}"
+        koopa_assert_is_existing "${dict['source_file']}"
         dict[target_file]="${2:?}"
-        if [[ -e "${dict[target_file]}" ]]
+        if [[ -e "${dict['target_file']}" ]]
         then
-            "${rm[@]}" "${dict[target_file]}"
+            "${rm[@]}" "${dict['target_file']}"
         fi
-        dict[target_parent]="$(koopa_dirname "${dict[target_file]}")"
-        if [[ ! -d "${dict[target_parent]}" ]]
+        dict[target_parent]="$(koopa_dirname "${dict['target_file']}")"
+        if [[ ! -d "${dict['target_parent']}" ]]
         then
-            "${mkdir[@]}" "${dict[target_parent]}"
+            "${mkdir[@]}" "${dict['target_parent']}"
         fi
     fi
     "${cp[@]}" "${cp_args[@]}"

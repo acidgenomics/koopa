@@ -63,31 +63,31 @@ koopa_locate_conda_app() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 1
     # Allow simple input using a single positional argument for name.
-    if [[ -z "${dict[app_name]}" ]]
+    if [[ -z "${dict['app_name']}" ]]
     then
         koopa_assert_has_args_eq "$#" 1
         dict[app_name]="${1:?}"
     fi
-    if [[ -z "${dict[env_name]}" ]]
+    if [[ -z "${dict['env_name']}" ]]
     then
-        dict[env_name]="${dict[app_name]}"
+        dict[env_name]="${dict['app_name']}"
     fi
-    if [[ -z "${dict[env_version]}" ]]
+    if [[ -z "${dict['env_version']}" ]]
     then
-        dict[env_version]="$(koopa_variable "conda-${dict[env_name]}")"
+        dict[env_version]="$(koopa_variable "conda-${dict['env_name']}")"
         # Slower approach that isn't version pinned:
         # > dict[env_version]="$( \
-        # >     koopa_conda_env_latest_version "${dict[env_name]}" \
+        # >     koopa_conda_env_latest_version "${dict['env_name']}" \
         # > )"
     fi
     koopa_assert_is_set \
-        '--app-name' "${dict[app_name]}" \
-        '--conda-prefix' "${dict[conda_prefix]}" \
-        '--env-name' "${dict[env_name]}" \
-        '--env-version' "${dict[env_version]}"
-    dict[app_path]="${dict[conda_prefix]}/envs/\
-${dict[env_name]}@${dict[env_version]}/bin/${dict[app_name]}"
-    koopa_assert_is_executable "${dict[app_path]}"
-    koopa_print "${dict[app_path]}"
+        '--app-name' "${dict['app_name']}" \
+        '--conda-prefix' "${dict['conda_prefix']}" \
+        '--env-name' "${dict['env_name']}" \
+        '--env-version' "${dict['env_version']}"
+    dict[app_path]="${dict['conda_prefix']}/envs/\
+${dict['env_name']}@${dict['env_version']}/bin/${dict['app_name']}"
+    koopa_assert_is_executable "${dict['app_path']}"
+    koopa_print "${dict['app_path']}"
     return 0
 }

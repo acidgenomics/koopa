@@ -12,18 +12,18 @@ koopa_debian_apt_add_llvm_repo() {
         [os]="$(koopa_os_codename)"
         [version]="${1:-}"
     )
-    if [[ -z "${dict[version]}" ]]
+    if [[ -z "${dict['version']}" ]]
     then
-        dict[version]="$(koopa_variable "${dict[name]}")"
+        dict[version]="$(koopa_variable "${dict['name']}")"
     fi
-    dict[url]="http://apt.llvm.org/${dict[os]}/"
-    dict[version2]="$(koopa_major_version "${dict[version]}")"
-    dict[distribution]="llvm-toolchain-${dict[os]}-${dict[version2]}"
+    dict[url]="http://apt.llvm.org/${dict['os']}/"
+    dict[version2]="$(koopa_major_version "${dict['version']}")"
+    dict[distribution]="llvm-toolchain-${dict['os']}-${dict['version2']}"
     koopa_debian_apt_add_llvm_key
     koopa_debian_apt_add_repo \
-        --component="${dict[component]}" \
-        --distribution="${dict[distribution]}" \
-        --name="${dict[name]}" \
-        --url="${dict[url]}"
+        --component="${dict['component']}" \
+        --distribution="${dict['distribution']}" \
+        --name="${dict['name']}" \
+        --url="${dict['url']}"
     return 0
 }

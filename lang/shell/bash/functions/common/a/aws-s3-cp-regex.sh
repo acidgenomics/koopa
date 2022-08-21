@@ -15,7 +15,7 @@ koopa_aws_s3_cp_regex() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
-    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         [bucket_pattern]='^s3://.+/$'
         [pattern]=''
@@ -23,7 +23,7 @@ koopa_aws_s3_cp_regex() {
         [source_prefix]=''
         [target_prefix]=''
     )
-    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     while (("$#"))
     do
         case "$1" in
@@ -67,26 +67,26 @@ koopa_aws_s3_cp_regex() {
         esac
     done
     koopa_assert_is_set \
-        '--pattern' "${dict[pattern]}" \
-        '--profile or AWS_PROFILE' "${dict[profile]}" \
-        '--source-prefix' "${dict[source_prefix]}" \
-        '--target-prefix' "${dict[target_prefix]}"
+        '--pattern' "${dict['pattern']}" \
+        '--profile or AWS_PROFILE' "${dict['profile']}" \
+        '--source-prefix' "${dict['source_prefix']}" \
+        '--target-prefix' "${dict['target_prefix']}"
     if ! koopa_str_detect_regex \
-            --pattern="${dict[bucket_pattern]}" \
-            --string "${dict[source_prefix]}" &&
+            --pattern="${dict['bucket_pattern']}" \
+            --string "${dict['source_prefix']}" &&
         ! koopa_str_detect_regex \
-            --pattern="${dict[bucket_pattern]}" \
-            --string "${dict[target_prefix]}"
+            --pattern="${dict['bucket_pattern']}" \
+            --string "${dict['target_prefix']}"
     then
-        koopa_stop "Souce and or/target must match '${dict[bucket_pattern]}'."
+        koopa_stop "Souce and or/target must match '${dict['bucket_pattern']}'."
     fi
-    "${app[aws]}" --profile="${dict[profile]}" \
+    "${app['aws']}" --profile="${dict['profile']}" \
         s3 cp \
             --exclude='*' \
             --follow-symlinks \
-            --include="${dict[pattern]}" \
+            --include="${dict['pattern']}" \
             --recursive \
-            "${dict[source_prefix]}" \
-            "${dict[target_prefix]}"
+            "${dict['source_prefix']}" \
+            "${dict['target_prefix']}"
     return 0
 }

@@ -6,7 +6,7 @@ koopa_linux_add_user_to_group() {
     # @note Updated 2021-11-16.
     #
     # Alternate approach:
-    # > "${app[usermod]}" -a -G group user
+    # > "${app['usermod']}" -a -G group user
     #
     # @examples
     # > koopa_linux_add_user_to_group 'docker'
@@ -18,14 +18,14 @@ koopa_linux_add_user_to_group() {
         [gpasswd]="$(koopa_linux_locate_gpasswd)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[gpasswd]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['gpasswd']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [group]="${1:?}"
         [user]="${2:-}"
     )
-    [[ -z "${dict[user]}" ]] && dict[user]="$(koopa_user)"
-    koopa_alert "Adding user '${dict[user]}' to group '${dict[group]}'."
-    "${app[sudo]}" "${app[gpasswd]}" --add "${dict[user]}" "${dict[group]}"
+    [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
+    koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
+    "${app['sudo']}" "${app['gpasswd']}" --add "${dict['user']}" "${dict['group']}"
     return 0
 }

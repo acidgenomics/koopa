@@ -11,8 +11,8 @@ koopa_test_find_files_by_shebang() {
         [head]="$(koopa_locate_head)"
         [tr]="$(koopa_locate_tr)"
     )
-    [[ -x "${app[head]}" ]] || return 1
-    [[ -x "${app[tr]}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['tr']}" ]] || return 1
     declare -A dict=(
         [pattern]="${1:?}"
     )
@@ -24,13 +24,13 @@ koopa_test_find_files_by_shebang() {
         [[ -s "$file" ]] || continue
         # Avoid 'command substitution: ignored null byte in input' warning.
         shebang="$( \
-            "${app[tr]}" --delete '\0' < "$file" \
-                | "${app[head]}" -n 1 \
+            "${app['tr']}" --delete '\0' < "$file" \
+                | "${app['head']}" -n 1 \
         )"
         [[ -n "$shebang" ]] || continue
         if koopa_str_detect_regex \
             --string="$shebang" \
-            --pattern="${dict[pattern]}"
+            --pattern="${dict['pattern']}"
         then
             shebang_files+=("$file")
         fi

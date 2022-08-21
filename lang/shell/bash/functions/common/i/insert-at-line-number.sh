@@ -8,7 +8,7 @@ koopa_insert_at_line_number() {
     declare -A app=(
         [perl]="$(koopa_locate_perl)"
     )
-    [[ -x "${app[perl]}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
         [file]=''
         [line_number]=''
@@ -49,11 +49,11 @@ koopa_insert_at_line_number() {
         esac
     done
     koopa_assert_is_set \
-        '--file' "${dict[file]}" \
-        '--line-number' "${dict[line_number]}" \
-        '--string' "${dict[string]}"
-    koopa_assert_is_file "${dict[file]}"
-    dict[perl_cmd]="print '${dict[string]}' if \$. == ${dict[line_number]}"
-    "${app[perl]}" -i -l -p -e "${dict[perl_cmd]}" "${dict[file]}"
+        '--file' "${dict['file']}" \
+        '--line-number' "${dict['line_number']}" \
+        '--string' "${dict['string']}"
+    koopa_assert_is_file "${dict['file']}"
+    dict[perl_cmd]="print '${dict['string']}' if \$. == ${dict['line_number']}"
+    "${app['perl']}" -i -l -p -e "${dict['perl_cmd']}" "${dict['file']}"
     return 0
 }

@@ -21,8 +21,8 @@ koopa_fedora_add_google_cloud_sdk_repo() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [enabled]=1
@@ -30,7 +30,7 @@ koopa_fedora_add_google_cloud_sdk_repo() {
         [gpgcheck]=1
         [repo_gpgcheck]=0
     )
-    case "${dict[arch]}" in
+    case "${dict['arch']}" in
         'x86_64')
             ;;
         *)
@@ -48,15 +48,15 @@ koopa_fedora_add_google_cloud_sdk_repo() {
         koopa_stop 'Unsupported platform.'
     fi
     dict[baseurl]="https://packages.cloud.google.com/yum/repos/\
-cloud-sdk-${dict[platform]}-${dict[arch]}"
-    [[ -f "${dict[file]}" ]] && return 0
-    "${app[sudo]}" "${app[tee]}" "${dict[file]}" >/dev/null << END
+cloud-sdk-${dict['platform']}-${dict['arch']}"
+    [[ -f "${dict['file']}" ]] && return 0
+    "${app['sudo']}" "${app['tee']}" "${dict['file']}" >/dev/null << END
 [google-cloud-sdk]
 name=Google Cloud SDK
-baseurl=${dict[baseurl]}
-enabled=${dict[enabled]}
-gpgcheck=${dict[gpgcheck]}
-repo_gpgcheck=${dict[repo_gpgcheck]}
+baseurl=${dict['baseurl']}
+enabled=${dict['enabled']}
+gpgcheck=${dict['gpgcheck']}
+repo_gpgcheck=${dict['repo_gpgcheck']}
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 END

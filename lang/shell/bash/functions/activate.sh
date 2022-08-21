@@ -7,9 +7,9 @@ koopa_activate_bash_aliases() {
     declare -A dict=(
         [user_aliases_file]="${HOME}/.bash_aliases"
     )
-    if [[ -f "${dict[user_aliases_file]}" ]]
+    if [[ -f "${dict['user_aliases_file']}" ]]
     then
-        source "${dict[user_aliases_file]}"
+        source "${dict['user_aliases_file']}"
     fi
     return 0
 }
@@ -21,15 +21,15 @@ koopa_activate_bash_completion() {
         [make_prefix]="$(koopa_make_prefix)"
         [nounset]="$(koopa_boolean_nounset)"
     )
-    dict[script]="${dict[make_prefix]}/etc/profile.d/bash_completion.sh"
-    [[ -r "${dict[script]}" ]] || return 0
-    if [[ "${dict[nounset]}" -eq 1 ]]
+    dict[script]="${dict['make_prefix']}/etc/profile.d/bash_completion.sh"
+    [[ -r "${dict['script']}" ]] || return 0
+    if [[ "${dict['nounset']}" -eq 1 ]]
     then
         set +o errexit
         set +o nounset
     fi
-    source "${dict[script]}"
-    if [[ "${dict[nounset]}" -eq 1 ]]
+    source "${dict['script']}"
+    if [[ "${dict['nounset']}" -eq 1 ]]
     then
         set -o errexit
         set -o nounset
@@ -71,8 +71,8 @@ koopa_activate_bash_readline() {
     declare -A dict=(
         [input_rc_file]="${HOME}/.inputrc"
     )
-    [[ -r "${dict[input_rc_file]}" ]] || return 0
-    export INPUTRC="${dict[input_rc_file]}"
+    [[ -r "${dict['input_rc_file']}" ]] || return 0
+    export INPUTRC="${dict['input_rc_file']}"
     return 0
 }
 
@@ -100,14 +100,14 @@ koopa_bash_prompt_string() {
         [wd_color]=34
     )
     printf '%s%s%s%s%s%s%s%s%s ' \
-        "${dict[newline]}" \
-        "\[\033[${dict[user_color]}m\]${dict[user]}\[\033[00m\]" \
-        "\[\033[${dict[conda_color]}m\]${dict[conda]}\[\033[00m\]" \
-        "\[\033[${dict[venv_color]}m\]${dict[venv]}\[\033[00m\]" \
-        "${dict[newline]}" \
-        "\[\033[${dict[wd_color]}m\]${dict[wd]}\[\033[00m\]" \
-        "\[\033[${dict[git_color]}m\]${dict[git]}\[\033[00m\]" \
-        "${dict[newline]}" \
-        "\[\033[${dict[prompt_color]}m\]${dict[prompt]}\[\033[00m\]"
+        "${dict['newline']}" \
+        "\[\033[${dict['user_color']}m\]${dict['user']}\[\033[00m\]" \
+        "\[\033[${dict['conda_color']}m\]${dict['conda']}\[\033[00m\]" \
+        "\[\033[${dict['venv_color']}m\]${dict['venv']}\[\033[00m\]" \
+        "${dict['newline']}" \
+        "\[\033[${dict['wd_color']}m\]${dict['wd']}\[\033[00m\]" \
+        "\[\033[${dict['git_color']}m\]${dict['git']}\[\033[00m\]" \
+        "${dict['newline']}" \
+        "\[\033[${dict['prompt_color']}m\]${dict['prompt']}\[\033[00m\]"
     return 0
 }

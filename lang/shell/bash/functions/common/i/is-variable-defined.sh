@@ -24,7 +24,7 @@ koopa_is_variable_defined() {
     declare -A dict=(
         [nounset]="$(koopa_boolean_nounset)"
     )
-    [[ "${dict[nounset]}" -eq 1 ]] && set +o nounset
+    [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
     for var
     do
         local x value
@@ -35,6 +35,6 @@ koopa_is_variable_defined() {
         value="${!var}"
         [[ -n "${value:-}" ]] || return 1
     done
-    [[ "${dict[nounset]}" -eq 1 ]] && set -o nounset
+    [[ "${dict['nounset']}" -eq 1 ]] && set -o nounset
     return 0
 }

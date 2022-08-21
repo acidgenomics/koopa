@@ -15,9 +15,9 @@ koopa_ruby_api_version() {
     declare -A app=(
         [ruby]="${1:-}"
     )
-    [[ -z "${app[ruby]}" ]] && app[ruby]="$(koopa_locate_ruby)"
-    [[ -x "${app[ruby]}" ]] || return 1
-    str="$("${app[ruby]}" -e 'print Gem.ruby_api_version')"
+    [[ -z "${app['ruby']}" ]] && app[ruby]="$(koopa_locate_ruby)"
+    [[ -x "${app['ruby']}" ]] || return 1
+    str="$("${app['ruby']}" -e 'print Gem.ruby_api_version')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
     return 0

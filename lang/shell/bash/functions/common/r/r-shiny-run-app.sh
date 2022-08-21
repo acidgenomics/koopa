@@ -9,17 +9,17 @@ koopa_r_shiny_run_app() {
     declare -A app=(
         [r]="$(koopa_locate_r)"
     )
-    [[ -x "${app[r]}" ]] || return 1
+    [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
         [prefix]="${1:-}"
     )
-    [[ -z "${dict[prefix]}" ]] && dict[prefix]="${PWD:?}"
-    koopa_assert_is_dir "${dict[prefix]}"
-    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
-    "${app[r]}" \
+    [[ -z "${dict['prefix']}" ]] && dict[prefix]="${PWD:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict[prefix]="$(koopa_realpath "${dict['prefix']}")"
+    "${app['r']}" \
         --no-restore \
         --no-save \
         --quiet \
-        -e "shiny::runApp('${dict[prefix]}')"
+        -e "shiny::runApp('${dict['prefix']}')"
     return 0
 }

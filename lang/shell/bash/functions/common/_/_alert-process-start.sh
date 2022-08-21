@@ -21,16 +21,16 @@ __koopa_alert_process_start() {
         dict[version]="${2:?}"
         dict[prefix]="${3:?}"
     fi
-    if [[ -n "${dict[prefix]}" ]] && [[ -n "${dict[version]}" ]]
+    if [[ -n "${dict['prefix']}" ]] && [[ -n "${dict['version']}" ]]
     then
-        dict[out]="${dict[word]} '${dict[name]}' ${dict[version]} \
-at '${dict[prefix]}'."
-    elif [[ -n "${dict[prefix]}" ]]
+        dict[out]="${dict['word']} '${dict['name']}' ${dict['version']} \
+at '${dict['prefix']}'."
+    elif [[ -n "${dict['prefix']}" ]]
     then
-        dict[out]="${dict[word]} '${dict[name]}' at '${dict[prefix]}'."
+        dict[out]="${dict['word']} '${dict['name']}' at '${dict['prefix']}'."
     else
-        dict[out]="${dict[word]} '${dict[name]}'."
+        dict[out]="${dict['word']} '${dict['name']}'."
     fi
-    koopa_alert "${dict[out]}"
+    koopa_alert "${dict['out']}"
     return 0
 }

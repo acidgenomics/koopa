@@ -38,13 +38,13 @@ koopa_append_string() {
         esac
     done
     koopa_assert_is_set \
-        '--file' "${dict[file]}" \
-        '--string' "${dict[string]}"
-    if [[ ! -f "${dict[file]}" ]]
+        '--file' "${dict['file']}" \
+        '--string' "${dict['string']}"
+    if [[ ! -f "${dict['file']}" ]]
     then
-        koopa_mkdir "$(koopa_dirname "${dict[file]}")"
-        koopa_touch "${dict[file]}"
+        koopa_mkdir "$(koopa_dirname "${dict['file']}")"
+        koopa_touch "${dict['file']}"
     fi
-    koopa_print "${dict[string]}" >> "${dict[file]}"
+    koopa_print "${dict['string']}" >> "${dict['file']}"
     return 0
 }

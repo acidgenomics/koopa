@@ -44,11 +44,11 @@ koopa_aws_s3_sync() {
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
     )
-    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         [profile]="${AWS_PROFILE:-}"
     )
-    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     # Include common file system and Git cruft that we don't want on S3.
     # FIXME Only set this if the user doesn't pass in exclude?
     exclude_patterns=(
@@ -130,8 +130,8 @@ koopa_aws_s3_sync() {
         sync_args+=("$@")
     else
         sync_args+=(
-            "${dict[source_prefix]}"
-            "${dict[target_prefix]}"
+            "${dict['source_prefix']}"
+            "${dict['target_prefix']}"
         )
     fi
     exclude_args=()
@@ -142,7 +142,7 @@ koopa_aws_s3_sync() {
             "--exclude=*/${pattern}"
         )
     done
-    "${app[aws]}" --profile="${dict[profile]}" \
+    "${app['aws']}" --profile="${dict['profile']}" \
         s3 sync \
             "${exclude_args[@]}" \
             "${sync_args[@]}"

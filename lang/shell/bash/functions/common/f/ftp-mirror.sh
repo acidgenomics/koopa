@@ -10,7 +10,7 @@ koopa_ftp_mirror() {
     declare -A app=(
         [wget]="$(koopa_locate_wget)"
     )
-    [[ -x "${app[wget]}" ]] || return 1
+    [[ -x "${app['wget']}" ]] || return 1
     declare -A dict=(
         [dir]=''
         [host]=''
@@ -51,17 +51,17 @@ koopa_ftp_mirror() {
         esac
     done
     koopa_assert_is_set \
-        '--host' "${dict[host]}" \
-        '--user' "${dict[user]}"
-    if [[ -n "${dict[dir]}" ]]
+        '--host' "${dict['host']}" \
+        '--user' "${dict['user']}"
+    if [[ -n "${dict['dir']}" ]]
     then
-        dict[dir]="${dict[host]}/${dict[dir]}"
+        dict[dir]="${dict['host']}/${dict['dir']}"
     else
-        dict[dir]="${dict[host]}"
+        dict[dir]="${dict['host']}"
     fi
-    "${app[wget]}" \
+    "${app['wget']}" \
         --ask-password \
         --mirror \
-        "ftp://${dict[user]}@${dict[dir]}/"*
+        "ftp://${dict['user']}@${dict['dir']}/"*
     return 0
 }

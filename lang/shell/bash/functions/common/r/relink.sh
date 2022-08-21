@@ -35,9 +35,9 @@ koopa_relink() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 2
-    ln=("${app[ln]}")
-    rm=("${app[rm]}")
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    ln=("${app['ln']}")
+    rm=("${app['rm']}")
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
         ln+=('--sudo')
         rm+=('--sudo')
@@ -45,9 +45,9 @@ koopa_relink() {
     dict[source_file]="${1:?}"
     dict[dest_file]="${2:?}"
     # Keep this check relaxed (i.e. in case dotfiles haven't been cloned).
-    [[ -e "${dict[source_file]}" ]] || return 0
-    [[ -L "${dict[dest_file]}" ]] && return 0
-    "${rm[@]}" "${dict[dest_file]}"
-    "${ln[@]}" "${dict[source_file]}" "${dict[dest_file]}"
+    [[ -e "${dict['source_file']}" ]] || return 0
+    [[ -L "${dict['dest_file']}" ]] && return 0
+    "${rm[@]}" "${dict['dest_file']}"
+    "${ln[@]}" "${dict['source_file']}" "${dict['dest_file']}"
     return 0
 }

@@ -15,6 +15,6 @@ koopa_is_array_non_empty() {
     [[ "$#" -gt 0 ]] || return 1
     arr=("$@")
     [[ "${#arr[@]}" -gt 0 ]] || return 1
-    [[ -n "${arr[0]}" ]] || return 1
+    [[ -n "${arr['0']}" ]] || return 1
     return 0
 }

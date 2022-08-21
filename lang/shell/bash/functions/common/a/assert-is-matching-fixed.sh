@@ -37,13 +37,13 @@ koopa_assert_is_matching_fixed() {
         esac
     done
     koopa_assert_is_set \
-        '--pattern' "${dict[pattern]}" \
-        '--string' "${dict[string]}"
+        '--pattern' "${dict['pattern']}" \
+        '--string' "${dict['string']}"
     if ! koopa_str_detect_fixed \
-        --pattern="${dict[pattern]}" \
-        --string="${dict[string]}"
+        --pattern="${dict['pattern']}" \
+        --string="${dict['string']}"
     then
-        koopa_stop "'${dict[string]}' doesn't match '${dict[pattern]}'."
+        koopa_stop "'${dict['string']}' doesn't match '${dict['pattern']}'."
     fi
     return 0
 }

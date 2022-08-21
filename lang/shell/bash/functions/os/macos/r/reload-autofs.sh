@@ -12,8 +12,8 @@ koopa_macos_reload_autofs() {
         [automount]="$(koopa_macos_locate_automount)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[automount]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[automount]}" -vc
+    [[ -x "${app['automount']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['automount']}" -vc
     return 0
 }

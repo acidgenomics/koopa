@@ -13,7 +13,7 @@ koopa_git_remote_url() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -26,7 +26,7 @@ koopa_git_remote_url() {
             local x
             koopa_cd "$repo"
             koopa_is_git_repo || return 1
-            x="$("${app[git]}" config --get 'remote.origin.url' || true)"
+            x="$("${app['git']}" config --get 'remote.origin.url' || true)"
             [[ -n "$x" ]] || return 1
             koopa_print "$x"
         done

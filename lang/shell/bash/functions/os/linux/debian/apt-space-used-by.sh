@@ -14,8 +14,8 @@ koopa_debian_apt_space_used_by() {
         [apt_get]="$(koopa_debian_locate_apt_get)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[apt_get]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[apt_get]}" --assume-no autoremove "$@"
+    [[ -x "${app['apt_get']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['apt_get']}" --assume-no autoremove "$@"
     return 0
 }

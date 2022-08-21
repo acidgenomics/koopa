@@ -15,6 +15,6 @@ koopa_linux_update_system_sshd_config() {
 sshd_config.d/koopa.conf"
         [target_file]='/etc/ssh/sshd_config.d/koopa.conf'
     )
-    koopa_ln --sudo "${dict[source_file]}" "${dict[target_file]}"
+    koopa_ln --sudo "${dict['source_file']}" "${dict['target_file']}"
     return 0
 }

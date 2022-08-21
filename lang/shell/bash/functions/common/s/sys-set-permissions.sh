@@ -53,7 +53,7 @@ koopa_sys_set_permissions() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    case "${dict[shared]}" in
+    case "${dict['shared']}" in
         '0')
             dict[group]="$(koopa_group)"
             dict[user]="$(koopa_user)"
@@ -64,7 +64,7 @@ koopa_sys_set_permissions() {
             ;;
     esac
     chown_args+=('--no-dereference')
-    if [[ "${dict[recursive]}" -eq 1 ]]
+    if [[ "${dict['recursive']}" -eq 1 ]]
     then
         chmod_args+=('--recursive')
         chown_args+=('--recursive')
@@ -75,10 +75,10 @@ koopa_sys_set_permissions() {
     else
         chmod_args+=('u+rw,g+r,g-w,o+r,o-w')
     fi
-    chown_args+=("${dict[user]}:${dict[group]}")
+    chown_args+=("${dict['user']}:${dict['group']}")
     for arg in "$@"
     do
-        if [[ "${dict[dereference]}" -eq 1 ]] && [[ -L "$arg" ]]
+        if [[ "${dict['dereference']}" -eq 1 ]] && [[ -L "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"
         fi

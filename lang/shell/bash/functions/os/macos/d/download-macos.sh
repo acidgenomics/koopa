@@ -20,8 +20,8 @@ koopa_macos_download_macos() {
     declare -A dict=(
         [version]="${1:?}"
     )
-    "${app[softwareupdate]}" \
+    "${app['softwareupdate']}" \
         --fetch-full-installer \
-        --full-installer-version "${dict[version]}"
+        --full-installer-version "${dict['version']}"
     return 0
 }

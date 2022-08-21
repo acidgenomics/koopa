@@ -15,8 +15,8 @@ koopa_sra_download_run_info_table() {
         [efetch]="$(koopa_locate_efetch)"
         [esearch]="$(koopa_locate_esearch)"
     )
-    [[ -x "${app[efetch]}" ]] || return 1
-    [[ -x "${app[esearch]}" ]] || return 1
+    [[ -x "${app['efetch']}" ]] || return 1
+    [[ -x "${app['esearch']}" ]] || return 1
     declare -A dict=(
         [run_info_file]=''
         [srp_id]=''
@@ -48,16 +48,16 @@ koopa_sra_download_run_info_table() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--srp-id' "${dict[srp_id]}"
-    if [[ -z "${dict[run_info_file]}" ]]
+    koopa_assert_is_set '--srp-id' "${dict['srp_id']}"
+    if [[ -z "${dict['run_info_file']}" ]]
     then
-        dict[run_info_file]="$(koopa_lowercase "${dict[srp_id]}")-\
+        dict[run_info_file]="$(koopa_lowercase "${dict['srp_id']}")-\
 run-info-table.csv"
     fi
-    koopa_alert "Downloading SRA run info table for '${dict[srp_id]}' \
-to '${dict[run_info_file]}'."
-    "${app[esearch]}" -db 'sra' -query "${dict[srp_id]}" \
-        | "${app[efetch]}" -format 'runinfo' \
-        > "${dict[run_info_file]}"
+    koopa_alert "Downloading SRA run info table for '${dict['srp_id']}' \
+to '${dict['run_info_file']}'."
+    "${app['esearch']}" -db 'sra' -query "${dict['srp_id']}" \
+        | "${app['efetch']}" -format 'runinfo' \
+        > "${dict['run_info_file']}"
     return 0
 }

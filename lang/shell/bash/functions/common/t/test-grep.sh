@@ -14,7 +14,7 @@ koopa_test_grep() {
     declare -A app=(
         [grep]="$(koopa_locate_grep)"
     )
-    [[ -x "${app[grep]}" ]] || return 1
+    [[ -x "${app['grep']}" ]] || return 1
     declare -A dict=(
         [ignore]=''
         [name]=''
@@ -65,27 +65,27 @@ koopa_test_grep() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_set \
-        '--name' "${dict[name]}" \
-        '--pattern' "${dict[pattern]}"
+        '--name' "${dict['name']}" \
+        '--pattern' "${dict['pattern']}"
     failures=()
     for file in "$@"
     do
         local x
         # Skip ignored files.
-        if [[ -n "${dict[ignore]}" ]]
+        if [[ -n "${dict['ignore']}" ]]
         then
-            if "${app[grep]}" -Pq \
+            if "${app['grep']}" -Pq \
                 --binary-files='without-match' \
-                "^# koopa nolint=${dict[ignore]}$" \
+                "^# koopa nolint=${dict['ignore']}$" \
                 "$file"
             then
                 continue
             fi
         fi
         x="$(
-            "${app[grep]}" -HPn \
+            "${app['grep']}" -HPn \
                 --binary-files='without-match' \
-                "${dict[pattern]}" \
+                "${dict['pattern']}" \
                 "$file" \
             || true \
         )"
@@ -93,10 +93,10 @@ koopa_test_grep() {
     done
     if [[ "${#failures[@]}" -gt 0 ]]
     then
-        koopa_status_fail "${dict[name]} [${#failures[@]}]"
+        koopa_status_fail "${dict['name']} [${#failures[@]}]"
         printf '%s\n' "${failures[@]}"
         return 1
     fi
-    koopa_status_ok "${dict[name]} [${#}]"
+    koopa_status_ok "${dict['name']} [${#}]"
     return 0
 }

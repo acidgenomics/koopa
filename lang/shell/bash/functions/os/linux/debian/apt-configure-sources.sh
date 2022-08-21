@@ -84,56 +84,56 @@ koopa_debian_apt_configure_sources() {
         [head]="$(koopa_locate_head)"
         [tee]="$(koopa_locate_tee)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
-    [[ -x "${app[head]}" ]] || return 1
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         [os_codename]="$(koopa_os_codename)"
         [os_id]="$(koopa_os_id)"
         [sources_list]="$(koopa_debian_apt_sources_file)"
         [sources_list_d]="$(koopa_debian_apt_sources_prefix)"
     )
-    koopa_alert "Configuring apt sources in '${dict[sources_list]}'."
-    koopa_assert_is_file "${dict[sources_list]}"
+    koopa_alert "Configuring apt sources in '${dict['sources_list']}'."
+    koopa_assert_is_file "${dict['sources_list']}"
     declare -A codenames=(
-        [main]="${dict[os_codename]}"
-        [security]="${dict[os_codename]}-security"
-        [updates]="${dict[os_codename]}-updates"
+        [main]="${dict['os_codename']}"
+        [security]="${dict['os_codename']}-security"
+        [updates]="${dict['os_codename']}-updates"
     )
     declare -A urls=(
         [main]="$( \
             koopa_grep \
-                --file="${dict[sources_list]}" \
+                --file="${dict['sources_list']}" \
                 --pattern='^deb\s' \
                 --regex \
             | koopa_grep \
                 --fixed \
-                --pattern=" ${codenames[main]} main" \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d ' ' -f '2' \
+                --pattern=" ${codenames['main']} main" \
+            | "${app['head']}" -n 1 \
+            | "${app['cut']}" -d ' ' -f '2' \
         )"
         [security]="$( \
             koopa_grep \
-                --file="${dict[sources_list]}" \
+                --file="${dict['sources_list']}" \
                 --pattern='^deb\s' \
                 --regex \
             | koopa_grep \
                 --fixed \
-                --pattern=" ${codenames[security]} main" \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d ' ' -f '2' \
+                --pattern=" ${codenames['security']} main" \
+            | "${app['head']}" -n 1 \
+            | "${app['cut']}" -d ' ' -f '2' \
         )"
     )
-    if [[ -z "${urls[main]}" ]]
+    if [[ -z "${urls['main']}" ]]
     then
         koopa_stop 'Failed to extract apt main URL.'
     fi
-    if [[ -z "${urls[security]}" ]]
+    if [[ -z "${urls['security']}" ]]
     then
         koopa_stop 'Failed to extract apt security URL.'
     fi
-    urls[updates]="${urls[main]}"
-    case "${dict[os_id]}" in
+    urls[updates]="${urls['main']}"
+    case "${dict['os_id']}" in
         'debian')
             # Can consider including 'backports' here.
             repos=('main')
@@ -143,27 +143,27 @@ koopa_debian_apt_configure_sources() {
             repos=('main' 'restricted' 'universe')
             ;;
         *)
-            koopa_stop "Unsupported OS: '${dict[os_id]}'."
+            koopa_stop "Unsupported OS: '${dict['os_id']}'."
             ;;
     esac
     # Configure primary apt sources.
-    if [[ -L "${dict[sources_list]}" ]]
+    if [[ -L "${dict['sources_list']}" ]]
     then
-        koopa_rm --sudo "${dict[sources_list]}"
+        koopa_rm --sudo "${dict['sources_list']}"
     fi
-    sudo "${app[tee]}" "${dict[sources_list]}" >/dev/null << END
-deb ${urls[main]} ${codenames[main]} ${repos[*]}
-deb ${urls[security]} ${codenames[security]} ${repos[*]}
-deb ${urls[updates]} ${codenames[updates]} ${repos[*]}
+    sudo "${app['tee']}" "${dict['sources_list']}" >/dev/null << END
+deb ${urls['main']} ${codenames['main']} ${repos[*]}
+deb ${urls['security']} ${codenames['security']} ${repos[*]}
+deb ${urls['updates']} ${codenames['updates']} ${repos[*]}
 END
     # Configure secondary apt sources.
-    if [[ -L "${dict[sources_list_d]}" ]]
+    if [[ -L "${dict['sources_list_d']}" ]]
     then
-        koopa_rm --sudo "${dict[sources_list_d]}"
+        koopa_rm --sudo "${dict['sources_list_d']}"
     fi
-    if [[ ! -d "${dict[sources_list_d]}" ]]
+    if [[ ! -d "${dict['sources_list_d']}" ]]
     then
-        koopa_mkdir --sudo "${dict[sources_list_d]}"
+        koopa_mkdir --sudo "${dict['sources_list_d']}"
     fi
     return 0
 }

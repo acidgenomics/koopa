@@ -15,7 +15,7 @@ __koopa_status() {
     shift 2
     for string in "$@"
     do
-        string="${dict[color]}${dict[label]}${dict[nocolor]} | ${string}"
+        string="${dict['color']}${dict['label']}${dict['nocolor']} | ${string}"
         koopa_print "$string"
     done
     return 0
