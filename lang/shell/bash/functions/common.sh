@@ -13030,14 +13030,6 @@ koopa_install_make() {
         "$@"
 }
 
-koopa_install_mamba() {
-    koopa_install_app \
-        --link-in-bin='mamba' \
-        --name='mamba' \
-        --no-prefix-check \
-        "$@"
-}
-
 koopa_install_man_db() {
     koopa_install_app \
         --link-in-bin='man' \
