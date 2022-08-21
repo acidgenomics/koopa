@@ -15,21 +15,21 @@ main() {
     # """
     local app dict
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
+        ['brew']="$(koopa_locate_brew)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     declare -A dict=(
-        [reset]=0
+        ['reset']=0
     )
     while (("$#"))
     do
         case "$1" in
             '--no-reset')
-                dict[reset]=0
+                dict['reset']=0
                 shift 1
                 ;;
             '--reset')
-                dict[reset]=1
+                dict['reset']=1
                 shift 1
                 ;;
             *)
