@@ -53,11 +53,11 @@ koopa_check_shared_object() {
                 ;;
         esac
     done
-    if [[ -z "${dict[file]}" ]]
+    if [[ -z "${dict['file']}" ]]
     then
         koopa_assert_is_set \
-            '--name' "${dict[name]}" \
-            '--prefix' "${dict[prefix]}"
+            '--name' "${dict['name']}" \
+            '--prefix' "${dict['prefix']}"
         if koopa_is_linux
         then
             dict[shared_ext]='so'
@@ -65,9 +65,9 @@ koopa_check_shared_object() {
         then
             dict[shared_ext]='dylib'
         fi
-        dict[file]="${dict[prefix]}/${dict[name]}.${dict[shared_ext]}"
+        dict[file]="${dict['prefix']}/${dict['name']}.${dict['shared_ext']}"
     fi
-    koopa_assert_is_file "${dict[file]}"
+    koopa_assert_is_file "${dict['file']}"
     tool_args=()
     if koopa_is_linux
     then
@@ -77,8 +77,8 @@ koopa_check_shared_object() {
         app[tool]="$(koopa_macos_locate_otool)"
         tool_args+=('-L')
     fi
-    [[ -x "${app[tool]}" ]] || return 1
-    tool_args+=("${dict[file]}")
-    "${app[tool]}" "${tool_args[@]}"
+    [[ -x "${app['tool']}" ]] || return 1
+    tool_args+=("${dict['file']}")
+    "${app['tool']}" "${tool_args[@]}"
     return 0
 }

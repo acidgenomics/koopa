@@ -89,23 +89,23 @@ koopa_ngettext() {
         esac
     done
     koopa_assert_is_set \
-        '--middle' "${dict[middle]}"  \
-        '--msg1' "${dict[msg1]}"  \
-        '--msg2' "${dict[msg2]}"  \
-        '--num' "${dict[num]}"
+        '--middle' "${dict['middle']}"  \
+        '--msg1' "${dict['msg1']}"  \
+        '--msg2' "${dict['msg2']}"  \
+        '--num' "${dict['num']}"
     # Pad the prefix and suffix automatically, if desired.
-    # > [[ -n "${dict[prefix]}" ]] && dict[prefix]="${dict[prefix]} "
-    # > [[ -n "${dict[suffix]}" ]] && dict[suffix]=" ${dict[suffix]}"
-    case "${dict[num]}" in
+    # > [[ -n "${dict['prefix']}" ]] && dict[prefix]="${dict['prefix']} "
+    # > [[ -n "${dict['suffix']}" ]] && dict[suffix]=" ${dict['suffix']}"
+    case "${dict['num']}" in
         '1')
-            dict[msg]="${dict[msg1]}"
+            dict[msg]="${dict['msg1']}"
             ;;
         *)
-            dict[msg]="${dict[msg2]}"
+            dict[msg]="${dict['msg2']}"
             ;;
     esac
-    dict[str]="${dict[prefix]}${dict[num]}${dict[middle]}\
-${dict[msg]}${dict[suffix]}"
-    koopa_print "${dict[str]}"
+    dict[str]="${dict['prefix']}${dict['num']}${dict['middle']}\
+${dict['msg']}${dict['suffix']}"
+    koopa_print "${dict['str']}"
     return 0
 }

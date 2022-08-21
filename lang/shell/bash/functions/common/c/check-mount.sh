@@ -16,21 +16,21 @@ koopa_check_mount() {
     declare -A dict=(
         [prefix]="${1:?}"
     )
-    if [[ ! -r "${dict[prefix]}" ]] || [[ ! -d "${dict[prefix]}" ]]
+    if [[ ! -r "${dict['prefix']}" ]] || [[ ! -d "${dict['prefix']}" ]]
     then
-        koopa_warn "'${dict[prefix]}' is not a readable directory."
+        koopa_warn "'${dict['prefix']}' is not a readable directory."
         return 1
     fi
     dict[nfiles]="$( \
         koopa_find \
-            --prefix="${dict[prefix]}" \
+            --prefix="${dict['prefix']}" \
             --min-depth=1 \
             --max-depth=1 \
-        | "${app[wc]}" -l \
+        | "${app['wc']}" -l \
     )"
-    if [[ "${dict[nfiles]}" -eq 0 ]]
+    if [[ "${dict['nfiles']}" -eq 0 ]]
     then
-        koopa_warn "'${dict[prefix]}' is unmounted and/or empty."
+        koopa_warn "'${dict['prefix']}' is unmounted and/or empty."
         return 1
     fi
     return 0

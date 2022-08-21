@@ -19,10 +19,10 @@ koopa_spell() {
         [aspell]="$(koopa_locate_aspell)"
         [tail]="$(koopa_locate_tail)"
     )
-    [[ -x "${app[aspell]}" ]] || return 1
-    [[ -x "${app[tail]}" ]] || return 1
+    [[ -x "${app['aspell']}" ]] || return 1
+    [[ -x "${app['tail']}" ]] || return 1
     koopa_print "$@" \
-        | "${app[aspell]}" pipe \
-        | "${app[tail]}" -n '+2'
+        | "${app['aspell']}" pipe \
+        | "${app['tail']}" -n '+2'
     return 0
 }

@@ -35,7 +35,7 @@ koopa_kallisto_quant_single_end_per_sample() {
     declare -A app=(
         [kallisto]="$(koopa_locate_kallisto)"
     )
-    [[ -x "${app[kallisto]}" ]] || return 1
+    [[ -x "${app['kallisto']}" ]] || return 1
     declare -A dict=(
         # Current recommendation in bcbio-nextgen.
         [bootstraps]=30
@@ -106,43 +106,43 @@ koopa_kallisto_quant_single_end_per_sample() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-file' "${dict[fastq_file]}" \
-        '--fastq-tail' "${dict[fastq_tail]}" \
-        '--fragment-length' "${dict[fragment_length]}" \
-        '--index-dir' "${dict[index_dir]}" \
-        '--output-dir' "${dict[output_dir]}"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--fastq-file' "${dict['fastq_file']}" \
+        '--fastq-tail' "${dict['fastq_tail']}" \
+        '--fragment-length' "${dict['fragment_length']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "kallisto quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_dir "${dict[index_dir]}"
-    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
-    dict[index_file]="${dict[index_dir]}/kallisto.idx"
-    koopa_assert_is_file "${dict[fastq_file]}" "${dict[index_file]}"
-    dict[fastq_file]="$(koopa_realpath "${dict[fastq_file]}")"
-    dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
-    dict[fastq_bn]="${dict[fastq_bn]/${dict[fastq_tail]}/}"
-    dict[id]="${dict[fastq_bn]}"
-    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
-    if [[ -d "${dict[output_dir]}" ]]
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    dict[index_file]="${dict['index_dir']}/kallisto.idx"
+    koopa_assert_is_file "${dict['fastq_file']}" "${dict['index_file']}"
+    dict[fastq_file]="$(koopa_realpath "${dict['fastq_file']}")"
+    dict[fastq_bn]="$(koopa_basename "${dict['fastq_file']}")"
+    dict[fastq_bn]="${dict['fastq_bn']/${dict['fastq_tail']}/}"
+    dict[id]="${dict['fastq_bn']}"
+    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    if [[ -d "${dict['output_dir']}" ]]
     then
-        koopa_alert_note "Skipping '${dict[id]}'."
+        koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_alert "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
+    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
     quant_args+=(
-        "--bootstrap-samples=${dict[bootstraps]}"
-        "--fragment-length=${dict[fragment_length]}"
-        "--index=${dict[index_file]}"
-        "--output-dir=${dict[output_dir]}"
-        "--sd=${dict[sd]}"
+        "--bootstrap-samples=${dict['bootstraps']}"
+        "--fragment-length=${dict['fragment_length']}"
+        "--index=${dict['index_file']}"
+        "--output-dir=${dict['output_dir']}"
+        "--sd=${dict['sd']}"
         '--single'
-        "--threads=${dict[threads]}"
+        "--threads=${dict['threads']}"
         '--verbose'
     )
     quant_args+=("$fastq_file")
     koopa_dl 'Quant args' "${quant_args[*]}"
-    "${app[kallisto]}" quant "${quant_args[@]}"
+    "${app['kallisto']}" quant "${quant_args[@]}"
     return 0
 }

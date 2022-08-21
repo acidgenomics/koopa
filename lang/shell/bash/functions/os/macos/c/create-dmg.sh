@@ -13,13 +13,13 @@ koopa_macos_create_dmg() {
     declare -A dict=(
         [srcfolder]="${1:?}"
     )
-    koopa_assert_is_dir "${dict[srcfolder]}"
-    dict[srcfolder]="$(koopa_realpath "${dict[srcfolder]}")"
-    dict[volname]="$(koopa_basename "${dict[volname]}")"
-    dict[ov]="${dict[volname]}.dmg"
-    "${app[hdiutil]}" create \
-        -ov "${dict[ov]}" \
-        -srcfolder "${dict[srcfolder]}" \
-        -volname "${dict[volname]}"
+    koopa_assert_is_dir "${dict['srcfolder']}"
+    dict[srcfolder]="$(koopa_realpath "${dict['srcfolder']}")"
+    dict[volname]="$(koopa_basename "${dict['volname']}")"
+    dict[ov]="${dict['volname']}.dmg"
+    "${app['hdiutil']}" create \
+        -ov "${dict['ov']}" \
+        -srcfolder "${dict['srcfolder']}" \
+        -volname "${dict['volname']}"
     return 0
 }

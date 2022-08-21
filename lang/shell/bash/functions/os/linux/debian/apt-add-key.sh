@@ -20,9 +20,9 @@ koopa_debian_apt_add_key() {
     #
     # @section Alternative approach using tee:
     #
-    # > koopa_parse_url --insecure "${dict[url]}" \
-    # >     | "${app[gpg]}" --dearmor \
-    # >     | "${app[sudo]}" "${app[tee]}" "${dict[file]}" \
+    # > koopa_parse_url --insecure "${dict['url']}" \
+    # >     | "${app['gpg']}" --dearmor \
+    # >     | "${app['sudo']}" "${app['tee']}" "${dict['file']}" \
     # >         >/dev/null 2>&1 \
     # >     || true
     #
@@ -39,8 +39,8 @@ koopa_debian_apt_add_key() {
         [gpg]='/usr/bin/gpg'
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[gpg]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['gpg']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [name]=''
         [prefix]="$(koopa_debian_apt_key_prefix)"
@@ -80,16 +80,16 @@ koopa_debian_apt_add_key() {
                 ;;
         esac
     done
-    koopa_assert_is_dir "${dict[prefix]}"
-    dict[file]="${dict[prefix]}/koopa-${dict[name]}.gpg"
-    [[ -f "${dict[file]}" ]] && return 0
-    koopa_alert "Adding '${dict[name]}' key at '${dict[file]}'."
-    koopa_parse_url --insecure "${dict[url]}" \
-        | "${app[sudo]}" "${app[gpg]}" \
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict[file]="${dict['prefix']}/koopa-${dict['name']}.gpg"
+    [[ -f "${dict['file']}" ]] && return 0
+    koopa_alert "Adding '${dict['name']}' key at '${dict['file']}'."
+    koopa_parse_url --insecure "${dict['url']}" \
+        | "${app['sudo']}" "${app['gpg']}" \
             --dearmor \
-            --output "${dict[file]}" \
+            --output "${dict['file']}" \
             >/dev/null 2>&1 \
         || true
-    koopa_assert_is_file "${dict[file]}"
+    koopa_assert_is_file "${dict['file']}"
     return 0
 }

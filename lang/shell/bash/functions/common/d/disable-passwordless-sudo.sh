@@ -10,8 +10,8 @@ koopa_disable_passwordless_sudo() {
     koopa_assert_is_admin
     declare -A dict
     dict[group]="$(koopa_admin_group)"
-    dict[file]="/etc/sudoers.d/koopa-${dict[group]}"
-    if [[ -f "${dict[file]}" ]]
+    dict[file]="/etc/sudoers.d/koopa-${dict['group']}"
+    if [[ -f "${dict['file']}" ]]
     then
         koopa_alert "Removing sudo permission file at '${file}'."
         koopa_rm --sudo "$file"

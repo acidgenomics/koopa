@@ -10,7 +10,7 @@ koopa_download_cran_latest() {
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
-    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     for name in "$@"
     do
         url="https://cran.r-project.org/web/packages/${name}/"
@@ -21,7 +21,7 @@ koopa_download_cran_latest() {
                 --only-matching \
                 --pattern="$pattern" \
                 --regex \
-            | "${app[head]}" -n 1 \
+            | "${app['head']}" -n 1 \
         )"
         koopa_download "https://cran.r-project.org/src/contrib/${file}"
     done

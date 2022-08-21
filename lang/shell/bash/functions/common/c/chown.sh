@@ -9,7 +9,7 @@ koopa_chown() {
     declare -A app=(
         [chown]="$(koopa_locate_chown)"
     )
-    [[ -x "${app[chown]}" ]] || return 1
+    [[ -x "${app['chown']}" ]] || return 1
     declare -A dict=(
         [dereference]=1
         [recursive]=0
@@ -52,19 +52,19 @@ koopa_chown() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
-        [[ -x "${app[sudo]}" ]] || return 1
-        chown=("${app[sudo]}" "${app[chown]}")
+        [[ -x "${app['sudo']}" ]] || return 1
+        chown=("${app['sudo']}" "${app['chown']}")
     else
-        chown=("${app[chown]}")
+        chown=("${app['chown']}")
     fi
-    if [[ "${dict[recursive]}" -eq 1 ]]
+    if [[ "${dict['recursive']}" -eq 1 ]]
     then
         chown+=('-R')
     fi
-    if [[ "${dict[dereference]}" -eq 0 ]]
+    if [[ "${dict['dereference']}" -eq 0 ]]
     then
         chown+=('-h')
     fi

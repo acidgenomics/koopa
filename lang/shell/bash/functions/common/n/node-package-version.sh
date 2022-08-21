@@ -17,21 +17,21 @@ koopa_node_package_version() {
         [jq]="$(koopa_locate_jq)"
         [npm]="$(koopa_locate_npm)"
     )
-    [[ -x "${app[jq]}" ]] || return 1
-    [[ -x "${app[npm]}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    [[ -x "${app['npm']}" ]] || return 1
     for pkg in "$@"
     do
         local dict
         declare -A dict
         dict[pkg]="$pkg"
         dict[str]="$( \
-            "${app[npm]}" --global --json list "${dict[pkg]}" \
-            | "${app[jq]}" \
+            "${app['npm']}" --global --json list "${dict['pkg']}" \
+            | "${app['jq']}" \
                 --raw-output \
-                ".dependencies.${dict[pkg]}.version" \
+                ".dependencies.${dict['pkg']}.version" \
         )"
-        [[ -n "${dict[str]}" ]] || return 1
-        koopa_print "${dict[str]}"
+        [[ -n "${dict['str']}" ]] || return 1
+        koopa_print "${dict['str']}"
     done
     return 0
 }

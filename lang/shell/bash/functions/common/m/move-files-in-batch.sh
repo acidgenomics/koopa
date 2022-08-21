@@ -24,7 +24,7 @@ koopa_move_files_in_batch() {
     declare -A app=(
         [head]="$(koopa_locate_head)"
     )
-    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
         [num]=''
         [source_dir]=''
@@ -65,21 +65,21 @@ koopa_move_files_in_batch() {
         esac
     done
     koopa_assert_is_set \
-        '--num' "${dict[num]}" \
-        '--source-dir' "${dict[source_dir]}" \
-        '--target-dir' "${dict[target_dir]}"
-    koopa_assert_is_dir "${dict[target_dir]}"
-    dict[target_dir]="$(koopa_init_dir "${dict[target_dir]}")"
+        '--num' "${dict['num']}" \
+        '--source-dir' "${dict['source_dir']}" \
+        '--target-dir' "${dict['target_dir']}"
+    koopa_assert_is_dir "${dict['target_dir']}"
+    dict[target_dir]="$(koopa_init_dir "${dict['target_dir']}")"
     readarray -t files <<< "$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
-            --prefix="${dict[source_dir]}" \
+            --prefix="${dict['source_dir']}" \
             --sort \
             --type='f' \
-        | "${app[head]}" -n "${dict[num]}" \
+        | "${app['head']}" -n "${dict['num']}" \
     )"
     koopa_is_array_non_empty "${files[@]:-}" || return 1
-    koopa_mv --target-directory="${dict[target_dir]}" "${files[@]}"
+    koopa_mv --target-directory="${dict['target_dir']}" "${files[@]}"
     return 0
 }

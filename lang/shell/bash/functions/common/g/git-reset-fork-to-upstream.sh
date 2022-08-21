@@ -9,7 +9,7 @@ koopa_git_reset_fork_to_upstream() {
     declare -A app=(
         [git]="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -27,10 +27,10 @@ koopa_git_reset_fork_to_upstream() {
                 [origin]='origin'
                 [upstream]='upstream'
             )
-            "${app[git]}" checkout "${dict[branch]}"
-            "${app[git]}" fetch "${dict[upstream]}"
-            "${app[git]}" reset --hard "${dict[upstream]}/${dict[branch]}"
-            "${app[git]}" push "${dict[origin]}" "${dict[branch]}" --force
+            "${app['git']}" checkout "${dict['branch']}"
+            "${app['git']}" fetch "${dict['upstream']}"
+            "${app['git']}" reset --hard "${dict['upstream']}/${dict['branch']}"
+            "${app['git']}" push "${dict['origin']}" "${dict['branch']}" --force
         done
     )
     return 0

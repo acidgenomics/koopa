@@ -29,15 +29,15 @@ koopa_python_activate_venv() {
         [nounset]="$(koopa_boolean_nounset)"
         [prefix]="$(koopa_python_virtualenvs_prefix)"
     )
-    dict[script]="${dict[prefix]}/${dict[name]}/bin/activate"
-    koopa_assert_is_readable "${dict[script]}"
-    if [[ -n "${dict[active_env]}" ]]
+    dict[script]="${dict['prefix']}/${dict['name']}/bin/activate"
+    koopa_assert_is_readable "${dict['script']}"
+    if [[ -n "${dict['active_env']}" ]]
     then
-        koopa_python_deactivate_venv "${dict[active_env]}"
+        koopa_python_deactivate_venv "${dict['active_env']}"
     fi
-    [[ "${dict[nounset]}" -eq 1 ]] && set +o nounset
+    [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
     # shellcheck source=/dev/null
-    source "${dict[script]}"
-    [[ "${dict[nounset]}" -eq 1 ]] && set -o nounset
+    source "${dict['script']}"
+    [[ "${dict['nounset']}" -eq 1 ]] && set -o nounset
     return 0
 }

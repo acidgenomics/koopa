@@ -24,13 +24,13 @@ koopa_install_julia_packages() {
     declare -A app=(
         [julia]="$(koopa_locate_julia)"
     )
-    [[ -x "${app[julia]}" ]] || return 1
+    [[ -x "${app['julia']}" ]] || return 1
     declare -A dict=(
         [script_prefix]="$(koopa_julia_script_prefix)"
     )
-    dict[script]="${dict[script_prefix]}/install-packages.jl"
-    koopa_assert_is_file "${dict[script]}"
+    dict[script]="${dict['script_prefix']}/install-packages.jl"
+    koopa_assert_is_file "${dict['script']}"
     koopa_activate_julia
-    "${app[julia]}" "${dict[script]}"
+    "${app['julia']}" "${dict['script']}"
     return 0
 }

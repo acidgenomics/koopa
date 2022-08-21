@@ -33,23 +33,23 @@ koopa_init_dir() {
     koopa_assert_has_args_eq "$#" 1
     dict[dir]="${1:?}"
     if koopa_str_detect_regex \
-        --string="${dict[dir]}" \
+        --string="${dict['dir']}" \
         --pattern='^~'
     then
         dict[dir]="$( \
             koopa_sub \
                 --pattern='^~' \
                 --replacement="${HOME:?}" \
-                "${dict[dir]}" \
+                "${dict['dir']}" \
         )"
     fi
     mkdir=('koopa_mkdir')
-    [[ "${dict[sudo]}" -eq 1 ]] && mkdir+=('--sudo')
-    if [[ ! -d "${dict[dir]}" ]]
+    [[ "${dict['sudo']}" -eq 1 ]] && mkdir+=('--sudo')
+    if [[ ! -d "${dict['dir']}" ]]
     then
-        "${mkdir[@]}" "${dict[dir]}"
+        "${mkdir[@]}" "${dict['dir']}"
     fi
-    dict[realdir]="$(koopa_realpath "${dict[dir]}")"
-    koopa_print "${dict[realdir]}"
+    dict[realdir]="$(koopa_realpath "${dict['dir']}")"
+    koopa_print "${dict['realdir']}"
     return 0
 }

@@ -17,10 +17,10 @@ koopa_sra_download_accession_list() {
         [esearch]="$(koopa_locate_esearch)"
         [sed]="$(koopa_locate_sed)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
-    [[ -x "${app[efetch]}" ]] || return 1
-    [[ -x "${app[esearch]}" ]] || return 1
-    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['efetch']}" ]] || return 1
+    [[ -x "${app['esearch']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
         [acc_file]=''
         [srp_id]=''
@@ -52,18 +52,18 @@ koopa_sra_download_accession_list() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--srp-id' "${dict[srp_id]}"
-    if [[ -z "${dict[acc_file]}" ]]
+    koopa_assert_is_set '--srp-id' "${dict['srp_id']}"
+    if [[ -z "${dict['acc_file']}" ]]
     then
-        dict[acc_file]="$(koopa_lowercase "${dict[srp_id]}")-\
+        dict[acc_file]="$(koopa_lowercase "${dict['srp_id']}")-\
 accession-list.txt"
     fi
-    koopa_alert "Downloading SRA accession list for '${dict[srp_id]}' \
-to '${dict[acc_file]}'."
-    "${app[esearch]}" -db 'sra' -query "${dict[srp_id]}" \
-        | "${app[efetch]}" -format 'runinfo' \
-        | "${app[sed]}" '1d' \
-        | "${app[cut]}" -d ',' -f '1' \
-        > "${dict[acc_file]}"
+    koopa_alert "Downloading SRA accession list for '${dict['srp_id']}' \
+to '${dict['acc_file']}'."
+    "${app['esearch']}" -db 'sra' -query "${dict['srp_id']}" \
+        | "${app['efetch']}" -format 'runinfo' \
+        | "${app['sed']}" '1d' \
+        | "${app['cut']}" -d ',' -f '1' \
+        > "${dict['acc_file']}"
     return 0
 }

@@ -13,16 +13,16 @@ koopa_script_name() {
         [cut]="$(koopa_locate_cut)"
         [head]="$(koopa_locate_head)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
-    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     declare -A dict
     dict[file]="$( \
         caller \
-        | "${app[head]}" -n 1 \
-        | "${app[cut]}" -d ' ' -f '2' \
+        | "${app['head']}" -n 1 \
+        | "${app['cut']}" -d ' ' -f '2' \
     )"
-    dict[bn]="$(koopa_basename "${dict[file]}")"
-    [[ -n "${dict[bn]}" ]] || return 0
-    koopa_print "${dict[bn]}"
+    dict[bn]="$(koopa_basename "${dict['file']}")"
+    [[ -n "${dict['bn']}" ]] || return 0
+    koopa_print "${dict['bn']}"
     return 0
 }

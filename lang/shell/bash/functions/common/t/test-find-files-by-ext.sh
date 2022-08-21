@@ -10,19 +10,19 @@ koopa_test_find_files_by_ext() {
     declare -A dict=(
         [ext]="${1:?}"
     )
-    dict[pattern]="\.${dict[ext]}$"
+    dict[pattern]="\.${dict['ext']}$"
     readarray -t all_files <<< "$(koopa_test_find_files)"
     dict[files]="$( \
         koopa_print "${all_files[@]}" \
         | koopa_grep \
-            --pattern="${dict[pattern]}" \
+            --pattern="${dict['pattern']}" \
             --regex \
         || true \
     )"
-    if [[ -z "${dict[files]}" ]]
+    if [[ -z "${dict['files']}" ]]
     then
-        koopa_stop "Failed to find test files with extension '${dict[ext]}'."
+        koopa_stop "Failed to find test files with extension '${dict['ext']}'."
     fi
-    koopa_print "${dict[files]}"
+    koopa_print "${dict['files']}"
     return 0
 }

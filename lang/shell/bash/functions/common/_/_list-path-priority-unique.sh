@@ -10,14 +10,14 @@ __koopa_list_path_priority_unique() {
         [awk]="$(koopa_locate_awk)"
         [tac]="$(koopa_locate_tac)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[tac]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['tac']}" ]] || return 1
     # shellcheck disable=SC2016
     str="$( \
         __koopa_list_path_priority "$@" \
-            | "${app[tac]}" \
-            | "${app[awk]}" '!a[$0]++' \
-            | "${app[tac]}" \
+            | "${app['tac']}" \
+            | "${app['awk']}" '!a[$0]++' \
+            | "${app['tac']}" \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

@@ -13,12 +13,12 @@ koopa_hdf5_version() {
         [h5cc]="$(koopa_locate_h5cc)"
         [sed]="$(koopa_locate_sed)"
     )
-    [[ -x "${app[h5cc]}" ]] || return 1
-    [[ -x "${app[sed]}" ]] || return 1
+    [[ -x "${app['h5cc']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
     str="$( \
-        "${app[h5cc]}" -showconfig \
+        "${app['h5cc']}" -showconfig \
             | koopa_grep --pattern='HDF5 Version:' \
-            | "${app[sed]}" -E 's/^(.+): //' \
+            | "${app['sed']}" -E 's/^(.+): //' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

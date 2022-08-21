@@ -11,15 +11,15 @@ koopa_help() {
         [head]="$(koopa_locate_head)"
         [man]="$(koopa_locate_man)"
     )
-    [[ -x "${app[head]}" ]] || return 1
-    [[ -x "${app[man]}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['man']}" ]] || return 1
     declare -A dict=(
         [man_file]="${1:?}"
     )
-    [[ -f "${dict[man_file]}" ]] || return 1
-    "${app[head]}" -n 10 "${dict[man_file]}" \
+    [[ -f "${dict['man_file']}" ]] || return 1
+    "${app['head']}" -n 10 "${dict['man_file']}" \
         | koopa_str_detect_fixed --pattern='.TH ' \
         || return 1
-    "${app[man]}" "${dict[man_file]}"
+    "${app['man']}" "${dict['man_file']}"
     exit 0
 }

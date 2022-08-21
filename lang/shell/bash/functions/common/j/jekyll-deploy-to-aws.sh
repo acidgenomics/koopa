@@ -11,15 +11,15 @@ koopa_jekyll_deploy_to_aws() {
         [aws]="$(koopa_locate_aws)"
         [bundle]="$(koopa_locate_bundle)"
     )
-    [[ -x "${app[aws]}" ]] || return 1
-    [[ -x "${app[bundle]}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['bundle']}" ]] || return 1
     declare -A dict=(
         [bucket_prefix]=''
         [distribution_id]=''
         [local_prefix]='_site'
         [profile]="${AWS_PROFILE:-}"
     )
-    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
     while (("$#"))
     do
         case "$1" in
@@ -55,29 +55,29 @@ koopa_jekyll_deploy_to_aws() {
         esac
     done
     koopa_assert_is_set \
-        '--bucket' "${dict[bucket_prefix]:-}" \
-        '--distribution-id' "${dict[distribution_id]:-}" \
-        '--profile' "${dict[profile]:-}"
+        '--bucket' "${dict['bucket_prefix']:-}" \
+        '--distribution-id' "${dict['distribution_id']:-}" \
+        '--profile' "${dict['profile']:-}"
     dict[bucket_prefix]="$( \
-        koopa_strip_trailing_slash "${dict[bucket_prefix]}" \
+        koopa_strip_trailing_slash "${dict['bucket_prefix']}" \
     )"
     dict[local_prefix]="$( \
-        koopa_strip_trailing_slash "${dict[local_prefix]}" \
+        koopa_strip_trailing_slash "${dict['local_prefix']}" \
     )"
     koopa_assert_is_file 'Gemfile'
     [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
-    "${app[bundle]}" install
-    "${app[bundle]}" exec jekyll build
-    koopa_aws_s3_sync --profile="${dict[profile]}" \
-        "${dict[local_prefix]}/" \
-        "${dict[bucket_prefix]}/"
+    "${app['bundle']}" install
+    "${app['bundle']}" exec jekyll build
+    koopa_aws_s3_sync --profile="${dict['profile']}" \
+        "${dict['local_prefix']}/" \
+        "${dict['bucket_prefix']}/"
     # Using 'yes' here to avoid pager invocation.
-    koopa_alert "Invalidating CloudFront cache at '${dict[distribution_id]}'."
+    koopa_alert "Invalidating CloudFront cache at '${dict['distribution_id']}'."
     # The '--paths' variable should only be called once, using space-separated
     # variables. Consider adding '/css/*' here if necessary.
-    "${app[aws]}" --profile="${dict[profile]}" \
+    "${app['aws']}" --profile="${dict['profile']}" \
         cloudfront create-invalidation \
-            --distribution-id="${dict[distribution_id]}" \
+            --distribution-id="${dict['distribution_id']}" \
             --paths='/*' \
             >/dev/null
     [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'

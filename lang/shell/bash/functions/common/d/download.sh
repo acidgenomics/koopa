@@ -69,16 +69,16 @@ koopa_download() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
     declare -A app=(
-        [download]="$("koopa_locate_${dict[engine]}")"
+        [download]="$("koopa_locate_${dict['engine']}")"
     )
-    [[ -x "${app[download]}" ]] || return 1
-    if [[ -z "${dict[file]}" ]]
+    [[ -x "${app['download']}" ]] || return 1
+    if [[ -z "${dict['file']}" ]]
     then
-        dict[file]="$(koopa_basename "${dict[url]}")"
-        if koopa_str_detect_fixed --string="${dict[file]}" --pattern='%'
+        dict[file]="$(koopa_basename "${dict['url']}")"
+        if koopa_str_detect_fixed --string="${dict['file']}" --pattern='%'
         then
             dict[file]="$( \
-                koopa_print "${dict[file]}" \
+                koopa_print "${dict['file']}" \
                 | koopa_gsub \
                     --fixed \
                     --pattern='%2D' \
@@ -99,40 +99,40 @@ koopa_download() {
         fi
     fi
     if ! koopa_str_detect_fixed \
-        --string="${dict[file]}" \
+        --string="${dict['file']}" \
         --pattern='/'
     then
-        dict[file]="${PWD:?}/${dict[file]}"
+        dict[file]="${PWD:?}/${dict['file']}"
     fi
     download_args=()
-    case "${dict[engine]}" in
+    case "${dict['engine']}" in
         'curl')
             download_args+=(
                 '--disable' # Ignore '~/.curlrc'. Must come first.
                 '--create-dirs'
                 '--fail'
                 '--location'
-                '--output' "${dict[file]}"
+                '--output' "${dict['file']}"
                 '--retry' 5
                 '--show-error'
             )
             ;;
         'wget')
             download_args+=(
-                "--output-document=${dict[file]}"
+                "--output-document=${dict['file']}"
                 '--no-verbose'
             )
             ;;
     esac
-    download_args+=("${dict[url]}")
-    koopa_alert "Downloading '${dict[url]}' to '${dict[file]}'."
-    "${app[download]}" "${download_args[@]}"
-    if [[ "${dict[decompress]}" -eq 1 ]]
+    download_args+=("${dict['url']}")
+    koopa_alert "Downloading '${dict['url']}' to '${dict['file']}'."
+    "${app['download']}" "${download_args[@]}"
+    if [[ "${dict['decompress']}" -eq 1 ]]
     then
-        koopa_decompress "${dict[file]}"
-    elif [[ "${dict[extract]}" -eq 1 ]]
+        koopa_decompress "${dict['file']}"
+    elif [[ "${dict['extract']}" -eq 1 ]]
     then
-        koopa_extract "${dict[file]}"
+        koopa_extract "${dict['file']}"
     fi
     return 0
 }

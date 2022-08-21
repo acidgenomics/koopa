@@ -10,13 +10,13 @@ koopa_python_system_packages_prefix() {
     declare -A app=(
         [python]="${1:-}"
     )
-    [[ -z "${app[python]}" ]] && app[python]="$(koopa_locate_python)"
-    [[ -x "${app[python]}" ]] || return 1
+    [[ -z "${app['python']}" ]] && app[python]="$(koopa_locate_python)"
+    [[ -x "${app['python']}" ]] || return 1
     declare -A dict
     dict[prefix]="$( \
-        "${app[python]}" -c 'import site; print(site.getsitepackages()[0])' \
+        "${app['python']}" -c 'import site; print(site.getsitepackages()[0])' \
     )"
-    koopa_assert_is_dir "${dict[prefix]}"
-    koopa_print "${dict[prefix]}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    koopa_print "${dict['prefix']}"
     return 0
 }

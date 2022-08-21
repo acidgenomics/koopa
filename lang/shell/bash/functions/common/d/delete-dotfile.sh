@@ -35,9 +35,9 @@ koopa_delete_dotfile() {
     for name in "$@"
     do
         local filepath
-        if [[ "${dict[config]}" -eq 1 ]]
+        if [[ "${dict['config']}" -eq 1 ]]
         then
-            filepath="${dict[xdg_config_home]}/${name}"
+            filepath="${dict['xdg_config_home']}/${name}"
         else
             filepath="${HOME:?}/.${name}"
         fi

@@ -24,15 +24,15 @@ koopa_move_into_dated_dirs_by_filename() {
             [file]="$file"
         )
         # NOTE Don't quote '$grep_string' here.
-        if [[ "${dict[file]}" =~ $grep_string ]]
+        if [[ "${dict['file']}" =~ $grep_string ]]
         then
             dict[year]="${BASH_REMATCH[1]}"
             dict[month]="${BASH_REMATCH[3]}"
             dict[day]="${BASH_REMATCH[5]}"
-            dict[subdir]="${dict[year]}/${dict[month]}/${dict[day]}"
-            koopa_mv --target-directory="${dict[subdir]}" "${dict[file]}"
+            dict[subdir]="${dict['year']}/${dict['month']}/${dict['day']}"
+            koopa_mv --target-directory="${dict['subdir']}" "${dict['file']}"
         else
-            koopa_stop "Does not contain date: '${dict[file]}'."
+            koopa_stop "Does not contain date: '${dict['file']}'."
         fi
     done
     return 0

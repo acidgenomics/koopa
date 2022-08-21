@@ -72,7 +72,7 @@ koopa_salmon_quant_paired_end_per_sample() {
     declare -A app=(
         [salmon]="$(koopa_locate_salmon)"
     )
-    [[ -x "${app[salmon]}" ]] || return 1
+    [[ -x "${app['salmon']}" ]] || return 1
     declare -A dict=(
         # Current recommendation in bcbio-nextgen.
         [bootstraps]=30
@@ -162,50 +162,50 @@ koopa_salmon_quant_paired_end_per_sample() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-r1-file' "${dict[fastq_r1_file]}" \
-        '--fastq-r1-tail' "${dict[fastq_r1_tail]}" \
-        '--fastq-r2-file' "${dict[fastq_r2_file]}" \
-        '--fastq-r2-tail' "${dict[fastq_r2_tail]}" \
-        '--index-dir' "${dict[index_dir]}" \
-        '--lib-type' "${dict[lib_type]}" \
-        '--output-dir' "${dict[output_dir]}"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--fastq-r1-file' "${dict['fastq_r1_file']}" \
+        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
+        '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_dir "${dict[index_dir]}"
-    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
-    koopa_assert_is_file "${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}"
-    dict[fastq_r1_file]="$(koopa_realpath "${dict[fastq_r1_file]}")"
-    dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
-    dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
-    dict[fastq_r2_file]="$(koopa_realpath "${dict[fastq_r2_file]}")"
-    dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
-    dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[fastq_r2_tail]}/}"
-    koopa_assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
-    dict[id]="${dict[fastq_r1_bn]}"
-    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
-    if [[ -d "${dict[output_dir]}" ]]
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
+    dict[fastq_r1_file]="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict[fastq_r1_bn]="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict[fastq_r1_bn]="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
+    dict[fastq_r2_file]="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict[fastq_r2_bn]="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict[fastq_r2_bn]="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
+    koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
+    dict[id]="${dict['fastq_r1_bn']}"
+    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    if [[ -d "${dict['output_dir']}" ]]
     then
-        koopa_alert_note "Skipping '${dict[id]}'."
+        koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
+    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     quant_args+=(
         '--gcBias' # Recommended for DESeq2.
-        "--index=${dict[index_dir]}"
-        "--libType=${dict[lib_type]}"
-        "--mates1=${dict[fastq_r1_file]}"
-        "--mates2=${dict[fastq_r2_file]}"
+        "--index=${dict['index_dir']}"
+        "--libType=${dict['lib_type']}"
+        "--mates1=${dict['fastq_r1_file']}"
+        "--mates2=${dict['fastq_r2_file']}"
         '--no-version-check'
-        "--numBootstraps=${dict[bootstraps]}"
-        "--output=${dict[output_dir]}"
+        "--numBootstraps=${dict['bootstraps']}"
+        "--output=${dict['output_dir']}"
         '--seqBias'
-        "--threads=${dict[threads]}"
+        "--threads=${dict['threads']}"
         '--useVBOpt'
     )
     koopa_dl 'Quant args' "${quant_args[*]}"
-    "${app[salmon]}" quant "${quant_args[@]}"
+    "${app['salmon']}" quant "${quant_args[@]}"
     return 0
 }

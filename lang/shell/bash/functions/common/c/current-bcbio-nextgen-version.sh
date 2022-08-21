@@ -16,12 +16,12 @@ koopa_current_bcbio_nextgen_version() {
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
     str="$( \
         koopa_parse_url "https://raw.githubusercontent.com/bcbio/\
 bcbio-nextgen/master/requirements-conda.txt" \
             | koopa_grep --pattern='bcbio-nextgen=' \
-            | "${app[cut]}" -d '=' -f '2' \
+            | "${app['cut']}" -d '=' -f '2' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

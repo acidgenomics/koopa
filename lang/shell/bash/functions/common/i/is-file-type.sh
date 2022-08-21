@@ -37,7 +37,7 @@ koopa_is_file_type() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--ext' "${dict[ext]}"
+    koopa_assert_is_set '--ext' "${dict['ext']}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     for file in "$@"
@@ -45,7 +45,7 @@ koopa_is_file_type() {
         [[ -f "$file" ]] || return 1
         koopa_str_detect_regex \
             --string="$file" \
-            --pattern="\.${dict[ext]}$" \
+            --pattern="\.${dict['ext']}$" \
         || return 1
     done
     return 0

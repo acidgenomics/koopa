@@ -20,11 +20,11 @@ koopa_aws_s3_list_large_files() {
         [sort]="$(koopa_locate_sort)"
         [tail]="$(koopa_locate_tail)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[aws]}" ]] || return 1
-    [[ -x "${app[jq]}" ]] || return 1
-    [[ -x "${app[sort]}" ]] || return 1
-    [[ -x "${app[tail]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['tail']}" ]] || return 1
     declare -A dict=(
         [bucket]=''
         [num]='20'
@@ -65,31 +65,31 @@ koopa_aws_s3_list_large_files() {
         esac
     done
     koopa_assert_is_set \
-        '--bucket' "${dict[bucket]}" \
-        '--num' "${dict[num]}" \
-        '--profile or AWS_PROFILE' "${dict[profile]}"
+        '--bucket' "${dict['bucket']}" \
+        '--num' "${dict['num']}" \
+        '--profile or AWS_PROFILE' "${dict['profile']}"
     koopa_assert_is_matching_regex \
         --pattern='^s3://.+/$' \
-        --string="${dict[bucket]}"
+        --string="${dict['bucket']}"
     dict[bucket]="$( \
         koopa_sub \
             --pattern='s3://' \
             --replacement='' \
-            "${dict[bucket]}" \
+            "${dict['bucket']}" \
     )"
-    dict[bucket]="$(koopa_strip_trailing_slash "${dict[bucket]}")"
+    dict[bucket]="$(koopa_strip_trailing_slash "${dict['bucket']}")"
     # shellcheck disable=SC2016
     dict[str]="$( \
-        "${app[aws]}" --profile="${dict[profile]}" \
-            s3api list-object-versions --bucket "${dict[bucket]}" \
-            | "${app[jq]}" \
+        "${app['aws']}" --profile="${dict['profile']}" \
+            s3api list-object-versions --bucket "${dict['bucket']}" \
+            | "${app['jq']}" \
                 --raw-output \
                 '.Versions[] | "\(.Key)\t \(.Size)"' \
-            | "${app[sort]}" --key=2 --numeric-sort \
-            | "${app[awk]}" '{ print $1 }' \
-            | "${app[tail]}" -n "${dict[num]}" \
+            | "${app['sort']}" --key=2 --numeric-sort \
+            | "${app['awk']}" '{ print $1 }' \
+            | "${app['tail']}" -n "${dict['num']}" \
     )"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_print "${dict[str]}"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }

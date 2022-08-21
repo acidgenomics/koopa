@@ -11,7 +11,7 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         [bcbio_python]='bcbio_python'
         [tee]="$(koopa_locate_tee)"
     )
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         [git_dir]="${HOME:?}/git/bcbio-nextgen"
         [install_dir]=''
@@ -52,46 +52,46 @@ koopa_linux_bcbio_nextgen_patch_devel() {
                 ;;
         esac
     done
-    koopa_assert_is_dir "${dict[git_dir]}"
-    if [[ ! -x "${app[bcbio_python]}" ]]
+    koopa_assert_is_dir "${dict['git_dir']}"
+    if [[ ! -x "${app['bcbio_python']}" ]]
     then
-        koopa_locate_app "${app[bcbio_python]}"
+        koopa_locate_app "${app['bcbio_python']}"
     fi
-    app[bcbio_python]="$(koopa_realpath "${app[bcbio_python]}")"
-    koopa_assert_is_installed "${app[bcbio_python]}"
-    if [[ -z "${dict[install_dir]}" ]]
+    app[bcbio_python]="$(koopa_realpath "${app['bcbio_python']}")"
+    koopa_assert_is_installed "${app['bcbio_python']}"
+    if [[ -z "${dict['install_dir']}" ]]
     then
-        dict[install_dir]="$(koopa_parent_dir --num=3 "${app[bcbio_python]}")"
+        dict[install_dir]="$(koopa_parent_dir --num=3 "${app['bcbio_python']}")"
     fi
-    koopa_assert_is_dir "${dict[install_dir]}"
-    koopa_h1 "Patching '${dict[name]}' installation at '${dict[install_dir]}'."
+    koopa_assert_is_dir "${dict['install_dir']}"
+    koopa_h1 "Patching '${dict['name']}' installation at '${dict['install_dir']}'."
     koopa_dl  \
-        'Git dir' "${dict[git_dir]}" \
-        'Install dir' "${dict[install_dir]}" \
-        'bcbio_python' "${app[bcbio_python]}"
-    koopa_alert "Removing Python cache in '${dict[git_dir]}'."
+        'Git dir' "${dict['git_dir']}" \
+        'Install dir' "${dict['install_dir']}" \
+        'bcbio_python' "${app['bcbio_python']}"
+    koopa_alert "Removing Python cache in '${dict['git_dir']}'."
     readarray -t cache_files <<< "$( \
         koopa_find \
             --pattern='*.pyc' \
-            --prefix="${dict[git_dir]}" \
+            --prefix="${dict['git_dir']}" \
             --type='f'
     )"
     koopa_rm "${cache_files[@]}"
     readarray -t cache_files <<< "$( \
         koopa_find \
             --pattern='__pycache__' \
-            --prefix="${dict[git_dir]}" \
+            --prefix="${dict['git_dir']}" \
             --type='d'
     )"
     koopa_rm "${cache_files[@]}"
     koopa_alert "Removing Python installer cruft inside 'anaconda/lib/'."
-    koopa_rm "${dict[install_dir]}/anaconda/lib/python"*'/site-packages/bcbio'*
+    koopa_rm "${dict['install_dir']}/anaconda/lib/python"*'/site-packages/bcbio'*
     (
-        koopa_cd "${dict[git_dir]}"
+        koopa_cd "${dict['git_dir']}"
         koopa_rm 'tests/test_automated_output'
         koopa_alert "Patching installation via 'setup.py' script."
-        "${app[bcbio_python]}" setup.py install
-    ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
-    koopa_alert_success "Patching of '${dict[name]}' was successful."
+        "${app['bcbio_python']}" setup.py install
+    ) 2>&1 | "${app['tee']}" "${dict['tmp_log_file']}"
+    koopa_alert_success "Patching of '${dict['name']}' was successful."
     return 0
 }

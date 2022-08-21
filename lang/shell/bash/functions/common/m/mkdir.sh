@@ -9,7 +9,7 @@ koopa_mkdir() {
     declare -A app=(
         [mkdir]="$(koopa_locate_mkdir)"
     )
-    [[ -x "${app[mkdir]}" ]] || return 1
+    [[ -x "${app['mkdir']}" ]] || return 1
     declare -A dict=(
         [sudo]=0
     )
@@ -36,13 +36,13 @@ koopa_mkdir() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     mkdir_args=('-p')
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app[sudo]="$(koopa_locate_sudo)"
-        [[ -x "${app[sudo]}" ]] || return 1
-        mkdir=("${app[sudo]}" "${app[mkdir]}")
+        [[ -x "${app['sudo']}" ]] || return 1
+        mkdir=("${app['sudo']}" "${app['mkdir']}")
     else
-        mkdir=("${app[mkdir]}")
+        mkdir=("${app['mkdir']}")
     fi
     "${mkdir[@]}" "${mkdir_args[@]}" "$@"
     return 0

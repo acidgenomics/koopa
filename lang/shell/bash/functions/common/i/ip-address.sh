@@ -25,7 +25,7 @@ koopa_ip_address() {
                 ;;
         esac
     done
-    case "${dict[type]}" in
+    case "${dict['type']}" in
         'local')
             koopa_local_ip_address
             ;;

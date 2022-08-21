@@ -9,13 +9,13 @@ koopa_fedora_add_azure_cli_repo() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         [file]='/etc/yum.repos.d/azure-cli.repo'
     )
-    [[ -f "${dict[file]}" ]] && return 0
-    "${app[sudo]}" "${app[tee]}" "${dict[file]}" >/dev/null << END
+    [[ -f "${dict['file']}" ]] && return 0
+    "${app['sudo']}" "${app['tee']}" "${dict['file']}" >/dev/null << END
 [azure-cli]
 name=Azure CLI
 baseurl=https://packages.microsoft.com/yumrepos/azure-cli
@@ -34,8 +34,8 @@ koopa_fedora_add_google_cloud_sdk_repo() {
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         [arch]="$(koopa_arch)"
         [enabled]=1
@@ -43,7 +43,7 @@ koopa_fedora_add_google_cloud_sdk_repo() {
         [gpgcheck]=1
         [repo_gpgcheck]=0
     )
-    case "${dict[arch]}" in
+    case "${dict['arch']}" in
         'x86_64')
             ;;
         *)
@@ -60,15 +60,15 @@ koopa_fedora_add_google_cloud_sdk_repo() {
         koopa_stop 'Unsupported platform.'
     fi
     dict[baseurl]="https://packages.cloud.google.com/yum/repos/\
-cloud-sdk-${dict[platform]}-${dict[arch]}"
-    [[ -f "${dict[file]}" ]] && return 0
-    "${app[sudo]}" "${app[tee]}" "${dict[file]}" >/dev/null << END
+cloud-sdk-${dict['platform']}-${dict['arch']}"
+    [[ -f "${dict['file']}" ]] && return 0
+    "${app['sudo']}" "${app['tee']}" "${dict['file']}" >/dev/null << END
 [google-cloud-sdk]
 name=Google Cloud SDK
-baseurl=${dict[baseurl]}
-enabled=${dict[enabled]}
-gpgcheck=${dict[gpgcheck]}
-repo_gpgcheck=${dict[repo_gpgcheck]}
+baseurl=${dict['baseurl']}
+enabled=${dict['enabled']}
+gpgcheck=${dict['gpgcheck']}
+repo_gpgcheck=${dict['repo_gpgcheck']}
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 END
@@ -101,9 +101,9 @@ koopa_fedora_dnf() {
         [dnf]="$(koopa_fedora_locate_dnf)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[dnf]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[dnf]}" -y "$@"
+    [[ -x "${app['dnf']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['dnf']}" -y "$@"
     return 0
 }
 
@@ -115,12 +115,12 @@ koopa_fedora_import_azure_cli_key() {
         [rpm]="$(koopa_fedora_locate_rpm)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[rpm]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['rpm']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [key]='https://packages.microsoft.com/keys/microsoft.asc'
     )
-    "${app[sudo]}" "${app[rpm]}" --import "${dict[key]}"
+    "${app['sudo']}" "${app['rpm']}" --import "${dict['key']}"
     return 0
 }
 
@@ -139,9 +139,9 @@ koopa_fedora_install_from_rpm() {
         [rpm]="$(koopa_fedora_locate_rpm)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[rpm]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[rpm]}" -v \
+    [[ -x "${app['rpm']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['rpm']}" -v \
         --force \
         --install \
         "$@"
@@ -213,22 +213,22 @@ koopa_fedora_set_locale() {
         [localedef]="$(koopa_locate_localedef)"
         [sudo]="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[locale]}" ]] || return 1
-    [[ -x "${app[localedef]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['locale']}" ]] || return 1
+    [[ -x "${app['localedef']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         [lang]='en'
         [country]='US'
         [charset]='UTF-8'
     )
-    dict[lang_string]="${dict[lang]}_${dict[country]}.${dict[charset]}"
-    koopa_alert "Setting locale to '${dict[lang_string]}'."
-    "${app[sudo]}" "${app[localedef]}" \
-        -i "${dict[lang]}_${dict[country]}" \
-        -f "${dict[charset]}" \
-        "${dict[lang_string]}"
-    "${app[locale]}"
-    koopa_alert_success "Locale is defined as '${dict[lang_string]}'."
+    dict[lang_string]="${dict['lang']}_${dict['country']}.${dict['charset']}"
+    koopa_alert "Setting locale to '${dict['lang_string']}'."
+    "${app['sudo']}" "${app['localedef']}" \
+        -i "${dict['lang']}_${dict['country']}" \
+        -f "${dict['charset']}" \
+        "${dict['lang_string']}"
+    "${app['locale']}"
+    koopa_alert_success "Locale is defined as '${dict['lang_string']}'."
     return 0
 }
 

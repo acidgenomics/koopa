@@ -38,7 +38,7 @@ koopa_cli_install() {
                 shift 1
                 ;;
             '-'*)
-                if [[ "${dict[allow_custom]}" -eq 1 ]]
+                if [[ "${dict['allow_custom']}" -eq 1 ]]
                 then
                     dict[custom_enabled]=1
                     pos+=("$1")
@@ -57,22 +57,22 @@ koopa_cli_install() {
     case "${1:-}" in
         'system' | \
         'user')
-            dict[stem]="${dict[stem]}-${1:?}"
+            dict[stem]="${dict['stem']}-${1:?}"
             shift 1
             ;;
     esac
     koopa_assert_has_args "$#"
-    if [[ "${dict[custom_enabled]}" -eq 1 ]]
+    if [[ "${dict['custom_enabled']}" -eq 1 ]]
     then
         dict[app]="${1:?}"
         shift 1
-        dict[key]="${dict[stem]}-${dict[app]}"
-        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
-        if ! koopa_is_function "${dict[fun]}"
+        dict[key]="${dict['stem']}-${dict['app']}"
+        dict[fun]="$(koopa_which_function "${dict['key']}" || true)"
+        if ! koopa_is_function "${dict['fun']}"
         then
-            koopa_stop "Unsupported app: '${dict[app]}'."
+            koopa_stop "Unsupported app: '${dict['app']}'."
         fi
-        "${dict[fun]}" "$@"
+        "${dict['fun']}" "$@"
         return 0
     fi
     for app in "$@"
@@ -80,17 +80,17 @@ koopa_cli_install() {
         local dict2
         declare -A dict2
         dict2[app]="$app"
-        dict2[key]="${dict[stem]}-${dict2[app]}"
-        dict2[fun]="$(koopa_which_function "${dict2[key]}" || true)"
-        if ! koopa_is_function "${dict2[fun]}"
+        dict2[key]="${dict['stem']}-${dict2['app']}"
+        dict2[fun]="$(koopa_which_function "${dict2['key']}" || true)"
+        if ! koopa_is_function "${dict2['fun']}"
         then
-            koopa_stop "Unsupported app: '${dict2[app]}'."
+            koopa_stop "Unsupported app: '${dict2['app']}'."
         fi
         if koopa_is_array_non_empty "${flags[@]:-}"
         then
-            "${dict2[fun]}" "${flags[@]:-}"
+            "${dict2['fun']}" "${flags[@]:-}"
         else
-            "${dict2[fun]}"
+            "${dict2['fun']}"
         fi
     done
     return 0

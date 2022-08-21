@@ -73,20 +73,20 @@ __koopa_str_detect() {
         esac
     done
     # Piped input using stdin (string mode).
-    if [[ "${dict[stdin]}" -eq 1 ]]
+    if [[ "${dict['stdin']}" -eq 1 ]]
     then
         dict[string]="$(</dev/stdin)"
     fi
     # Note that we're allowing empty string input here.
     koopa_assert_is_set \
-        '--mode' "${dict[mode]}" \
-        '--pattern' "${dict[pattern]}"
+        '--mode' "${dict['mode']}" \
+        '--pattern' "${dict['pattern']}"
     grep_args=(
         '--boolean'
-        '--mode' "${dict[mode]}"
-        '--pattern' "${dict[pattern]}"
-        '--string' "${dict[string]}"
+        '--mode' "${dict['mode']}"
+        '--pattern' "${dict['pattern']}"
+        '--string' "${dict['string']}"
     )
-    [[ "${dict[sudo]}" -eq 1 ]] && grep_args+=('--sudo')
+    [[ "${dict['sudo']}" -eq 1 ]] && grep_args+=('--sudo')
     koopa_grep "${grep_args[@]}"
 }

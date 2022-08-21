@@ -23,27 +23,27 @@ koopa_debian_set_locale() {
         [sudo]="$(koopa_locate_sudo)"
         [update_locale]="$(koopa_debian_locate_update_locale)" 
     )
-    [[ -x "${app[dpkg_reconfigure]}" ]] || return 1
-    [[ -x "${app[locale]}" ]] || return 1
-    [[ -x "${app[locale_gen]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[update_locale]}" ]] || return 1
+    [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
+    [[ -x "${app['locale']}" ]] || return 1
+    [[ -x "${app['locale_gen']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['update_locale']}" ]] || return 1
     declare -A dict=(
         [charset]='UTF-8'
         [country]='US'
         [lang]='en'
         [locale_file]='/etc/locale.gen'
     )
-    dict[lang_string]="${dict[lang]}_${dict[country]}.${dict[charset]}"
-    koopa_alert "Setting locale to '${dict[lang_string]}'."
+    dict[lang_string]="${dict['lang']}_${dict['country']}.${dict['charset']}"
+    koopa_alert "Setting locale to '${dict['lang_string']}'."
     koopa_sudo_write_string \
-        --file="${dict[locale_file]}" \
-        --string="${dict[lang_string]} ${dict[charset]}"
-    "${app[sudo]}" "${app[locale_gen]}" --purge
-    "${app[sudo]}" "${app[dpkg_reconfigure]}" \
+        --file="${dict['locale_file']}" \
+        --string="${dict['lang_string']} ${dict['charset']}"
+    "${app['sudo']}" "${app['locale_gen']}" --purge
+    "${app['sudo']}" "${app['dpkg_reconfigure']}" \
         --frontend='noninteractive' \
         'locales'
-    "${app[sudo]}" "${app[update_locale]}" LANG="${dict[lang_string]}"
-    "${app[locale]}" -a
+    "${app['sudo']}" "${app['update_locale']}" LANG="${dict['lang_string']}"
+    "${app['locale']}" -a
     return 0
 }

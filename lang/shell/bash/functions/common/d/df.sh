@@ -9,8 +9,8 @@ koopa_df() {
     declare -A app=(
         [df]="$(koopa_locate_df)"
     )
-    [[ -x "${app[df]}" ]] || return 1
-    "${app[df]}" \
+    [[ -x "${app['df']}" ]] || return 1
+    "${app['df']}" \
         --portability \
         --print-type \
         --si \

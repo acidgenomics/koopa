@@ -17,14 +17,14 @@ koopa_docker_prune_old_images() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
-    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
     koopa_alert 'Pruning Docker images older than 3 months.'
-    "${app[docker]}" image prune \
+    "${app['docker']}" image prune \
         --all \
         --filter 'until=2160h' \
         --force \
         || true
     # Clean any remaining dangling images.
-    "${app[docker]}" image prune --force || true
+    "${app['docker']}" image prune --force || true
     return 0
 }

@@ -14,7 +14,7 @@ koopa_add_monorepo_config_link() {
     for subdir in "$@"
     do
         koopa_add_config_link \
-            "${dict[prefix]}/${subdir}" \
+            "${dict['prefix']}/${subdir}" \
             "$subdir"
     done
     return 0

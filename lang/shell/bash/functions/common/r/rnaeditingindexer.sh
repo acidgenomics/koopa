@@ -26,7 +26,7 @@ koopa_rnaeditingindexer() {
     declare -A app=(
         [docker]="$(koopa_locate_docker)"
     )
-    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
         [bam_suffix]='.Aligned.sortedByCoord.out.bam'
         [docker_image]='acidgenomics/rnaeditingindexer'
@@ -77,32 +77,32 @@ koopa_rnaeditingindexer() {
         esac
     done
     run_args=()
-    if [[ "${dict[example]}" -eq 1 ]]
+    if [[ "${dict['example']}" -eq 1 ]]
     then
         dict[bam_suffix]="_sampled_with_0.1.Aligned.sortedByCoord.out.\
 bam.AluChr1Only.bam"
         dict[local_bam_dir]=''
         dict[mnt_bam_dir]='/bin/AEI/RNAEditingIndexer/TestResources/BAMs'
     else
-        koopa_assert_is_dir "${dict[local_bam_dir]}"
-        dict[local_bam_dir]="$(koopa_realpath "${dict[local_bam_dir]}")"
-        koopa_rm "${dict[local_output_dir]}"
-        dict[local_output_dir]="$(koopa_init_dir "${dict[local_output_dir]}")"
+        koopa_assert_is_dir "${dict['local_bam_dir']}"
+        dict[local_bam_dir]="$(koopa_realpath "${dict['local_bam_dir']}")"
+        koopa_rm "${dict['local_output_dir']}"
+        dict[local_output_dir]="$(koopa_init_dir "${dict['local_output_dir']}")"
         run_args+=(
-            -v "${dict[local_bam_dir]}:${dict[mnt_bam_dir]}:ro"
-            -v "${dict[local_output_dir]}:${dict[mnt_output_dir]}:rw"
+            -v "${dict['local_bam_dir']}:${dict['mnt_bam_dir']}:ro"
+            -v "${dict['local_output_dir']}:${dict['mnt_output_dir']}:rw"
         )
     fi
-    run_args+=("${dict[docker_image]}")
-    "${app[docker]}" run "${run_args[@]}" \
+    run_args+=("${dict['docker_image']}")
+    "${app['docker']}" run "${run_args[@]}" \
         RNAEditingIndex \
-            --genome "${dict[genome]}" \
+            --genome "${dict['genome']}" \
             --keep_cmpileup \
             --verbose \
-            -d "${dict[mnt_bam_dir]}" \
-            -f "${dict[bam_suffix]}" \
-            -l "${dict[mnt_output_dir]}/logs" \
-            -o "${dict[mnt_output_dir]}/cmpileups" \
-            -os "${dict[mnt_output_dir]}/summary"
+            -d "${dict['mnt_bam_dir']}" \
+            -f "${dict['bam_suffix']}" \
+            -l "${dict['mnt_output_dir']}/logs" \
+            -o "${dict['mnt_output_dir']}/cmpileups" \
+            -os "${dict['mnt_output_dir']}/summary"
     return 0
 }

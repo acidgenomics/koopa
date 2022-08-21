@@ -38,14 +38,14 @@ koopa_bash_prompt_string() {
         [wd_color]=34
     )
     printf '%s%s%s%s%s%s%s%s%s ' \
-        "${dict[newline]}" \
-        "\[\033[${dict[user_color]}m\]${dict[user]}\[\033[00m\]" \
-        "\[\033[${dict[conda_color]}m\]${dict[conda]}\[\033[00m\]" \
-        "\[\033[${dict[venv_color]}m\]${dict[venv]}\[\033[00m\]" \
-        "${dict[newline]}" \
-        "\[\033[${dict[wd_color]}m\]${dict[wd]}\[\033[00m\]" \
-        "\[\033[${dict[git_color]}m\]${dict[git]}\[\033[00m\]" \
-        "${dict[newline]}" \
-        "\[\033[${dict[prompt_color]}m\]${dict[prompt]}\[\033[00m\]"
+        "${dict['newline']}" \
+        "\[\033[${dict['user_color']}m\]${dict['user']}\[\033[00m\]" \
+        "\[\033[${dict['conda_color']}m\]${dict['conda']}\[\033[00m\]" \
+        "\[\033[${dict['venv_color']}m\]${dict['venv']}\[\033[00m\]" \
+        "${dict['newline']}" \
+        "\[\033[${dict['wd_color']}m\]${dict['wd']}\[\033[00m\]" \
+        "\[\033[${dict['git_color']}m\]${dict['git']}\[\033[00m\]" \
+        "${dict['newline']}" \
+        "\[\033[${dict['prompt_color']}m\]${dict['prompt']}\[\033[00m\]"
     return 0
 }

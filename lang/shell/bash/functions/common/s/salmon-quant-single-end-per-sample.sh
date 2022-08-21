@@ -24,7 +24,7 @@ koopa_salmon_quant_single_end_per_sample() {
     declare -A app=(
         [salmon]="$(koopa_locate_salmon)"
     )
-    [[ -x "${app[salmon]}" ]] || return 1
+    [[ -x "${app['salmon']}" ]] || return 1
     declare -A dict=(
         [bootstraps]=30
         # e.g. 'sample1.fastq.gz'.
@@ -93,43 +93,43 @@ koopa_salmon_quant_single_end_per_sample() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-file' "${dict[fastq_file]}" \
-        '--fastq-tail' "${dict[fastq_tail]}" \
-        '--index-dir' "${dict[index_dir]}" \
-        '--lib-type' "${dict[lib_type]}" \
-        '--output-dir' "${dict[output_dir]}"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--fastq-file' "${dict['fastq_file']}" \
+        '--fastq-tail' "${dict['fastq_tail']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "salmon quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_dir "${dict[index_dir]}"
-    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
-    koopa_assert_is_file "${dict[fastq_file]}"
-    dict[fastq_file]="$(koopa_realpath "${dict[fastq_file]}")"
-    dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
-    dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
-    dict[id]="${dict[fastq_bn]}"
-    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
-    if [[ -d "${dict[output_dir]}" ]]
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict[index_dir]="$(koopa_realpath "${dict['index_dir']}")"
+    koopa_assert_is_file "${dict['fastq_file']}"
+    dict[fastq_file]="$(koopa_realpath "${dict['fastq_file']}")"
+    dict[fastq_bn]="$(koopa_basename "${dict['fastq_file']}")"
+    dict[fastq_bn]="${dict['fastq_bn']/${dict['tail']}/}"
+    dict[id]="${dict['fastq_bn']}"
+    dict[output_dir]="${dict['output_dir']}/${dict['id']}"
+    if [[ -d "${dict['output_dir']}" ]]
     then
-        koopa_alert_note "Skipping '${dict[id]}'."
+        koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
+    dict[output_dir]="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     # Don't set '--gcBias' here.
     quant_args+=(
-        "--index=${dict[index_dir]}"
-        "--libType=${dict[lib_type]}"
-        "--numBootstraps=${dict[bootstraps]}"
+        "--index=${dict['index_dir']}"
+        "--libType=${dict['lib_type']}"
+        "--numBootstraps=${dict['bootstraps']}"
         '--no-version-check'
-        "--output=${dict[output_dir]}"
+        "--output=${dict['output_dir']}"
         '--seqBias'
-        "--threads=${dict[threads]}"
-        "--unmatedReads=${dict[fastq]}"
+        "--threads=${dict['threads']}"
+        "--unmatedReads=${dict['fastq']}"
         '--useVBOpt'
     )
     koopa_dl 'Quant args' "${quant_args[*]}"
-    "${app[salmon]}" quant "${quant_args[@]}"
+    "${app['salmon']}" quant "${quant_args[@]}"
     return 0
 }

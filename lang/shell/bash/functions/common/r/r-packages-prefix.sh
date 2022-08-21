@@ -20,12 +20,12 @@ koopa_r_packages_prefix() {
     declare -A dict
     dict[app_prefix]="$(koopa_app_prefix)"
     dict[name]='r-packages'
-    dict[version]="$(koopa_r_version "${app[r]}")"
-    if [[ "${dict[version]}" != 'devel' ]]
+    dict[version]="$(koopa_r_version "${app['r']}")"
+    if [[ "${dict['version']}" != 'devel' ]]
     then
-        dict[version]="$(koopa_major_minor_version "${dict[version]}")"
+        dict[version]="$(koopa_major_minor_version "${dict['version']}")"
     fi
-    dict[str]="${dict[app_prefix]}/${dict[name]}/${dict[version]}"
-    koopa_print "${dict[str]}"
+    dict[str]="${dict['app_prefix']}/${dict['name']}/${dict['version']}"
+    koopa_print "${dict['str']}"
     return 0
 }
