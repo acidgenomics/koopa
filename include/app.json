@@ -189,7 +189,7 @@
   },
   "cmake": {
     "bin": ["cmake"],
-    "conservative": true,
+    "conservative": false,
     "url": ["https://cmake.org/download/"],
     "version": "3.24.0"
   },
@@ -601,7 +601,11 @@
     "url": ["https://gitlab.gnome.org/GNOME/glib"],
     "version": "2.72.3"
   },
-  "gmp": {},
+  "gmp": {
+    "conservative": true,
+    "url": ["https://gmplib.org/"],
+    "version": "6.2.1"
+  },
   "gnupg": {},
   "gnutls": {},
   "go": {
@@ -610,8 +614,17 @@
   "google-cloud-sdk": {
     "bin": ["gloud"]
   },
-  "gperf": {},
-  "graphviz": {},
+  "gperf": {
+    "conservative": true,
+    "url": ["https://www.gnu.org/software/gperf"],
+    "version": "3.1"
+  },
+  "graphviz": {
+    "conservative": true,
+    "outdated": true,
+    "url": ["https://www.graphviz.org/"],
+    "version": "5.0.0"
+  },
   "grep": {
     "bin": ["egrep", "fgrep", "grep"],
     "man1": ["egrep.1", "fgrep.1", "grep.1"]
@@ -623,7 +636,11 @@
   "gseapy": {
     "bin": ["gseapy"]
   },
-  "gsl": {},
+  "gsl": {
+    "conservative": true,
+    "url": ["https://www.gnu.org/software/gsl/"],
+    "version": "2.7.1"
+  },
   "gtop": {
     "bin": ["gtop"]
   },
@@ -643,14 +660,37 @@
       "zless",
       "zmore",
       "znew"
-    ]
+    ],
+    "conservative": false,
+    "man1": [
+      "gunzip.1",
+      "gzexe.1",
+      "gzip.1",
+      "zcat.1",
+      "zcmp.1",
+      "zdiff.1",
+      "zforce.1",
+      "zgrep.1",
+      "zless.1",
+      "zmore.1",
+      "znew.1"
+    ],
+    "url": ["https://www.gnu.org/software/gzip/"],
+    "version": "1.12"
   },
   "hadolint": {
     "bin": ["hadolint"]
   },
-  "harfbuzz": {},
+  "harfbuzz": {
+    "conservative": true,
+    "url": ["https://github.com/harfbuzz/harfbuzz/"],
+    "version": "5.1.0"
+  },
   "haskell-stack": {
-    "bin": ["stack"]
+    "bin": ["stack"],
+    "conservative": false,
+    "url": ["https://haskellstack.org/"],
+    "version": "2.7.5"
   },
   "hdf5": {
     "bin": [
@@ -676,7 +716,10 @@
       "h5stat",
       "h5unjam",
       "h5watch"
-    ]
+    ],
+    "conservative": true,
+    "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
+    "version": "1.12.2"
   },
   "hisat2": {
     "bin": ["hisat2"]
@@ -702,7 +745,23 @@
       "makeconv",
       "pkgdata",
       "uconv"
-    ]
+    ],
+    "conservative": true,
+    "man1": [
+      "derb.1",
+      "genbrk.1",
+      "gencfu.1",
+      "gencnval.1",
+      "gendict.1",
+      "genrb.1",
+      "icu-config.1",
+      "icuexportdata.1",
+      "makeconv.1",
+      "pkgdata.1",
+      "uconv.1"
+    ],
+    "url": ["http://site.icu-project.org/"],
+    "version": "71.1"
   },
   "imagemagick": {
     "bin": [
@@ -712,6 +771,7 @@
       "magick",
       "magick-script"
     ],
+    "conservative": true,
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -719,7 +779,9 @@
       "MagickWand-config.1",
       "magick.1",
       "magick-script.1"
-    ]
+    ],
+    "url": ["https://imagemagick.org/"],
+    "version": "7.1.0-45"
   },
   "ipython": {
     "bin": ["ipython"]
@@ -727,8 +789,16 @@
   "isort": {
     "bin": ["isort"]
   },
-  "jemalloc": {},
-  "jpeg": {},
+  "jemalloc": {
+    "conservative": true,
+    "url": ["http://jemalloc.net/"],
+    "version": "5.3.0"
+  },
+  "jpeg": {
+    "conservative": true,
+    "url": ["https://www.ijg.org/"],
+    "version": "9e"
+  },
   "jq": {
     "bin": ["jq"],
     "man1": ["jq.1"]
@@ -746,7 +816,11 @@
     "bin": ["lame"],
     "man1": ["lame.1"]
   },
-  "lapack": {},
+  "lapack": {
+    "conservative": true,
+    "url": ["https://www.netlib.org/lapack/"],
+    "version": "3.10.1"
+  },
   "latch": {
     "bin": ["latch"]
   },
@@ -877,6 +951,7 @@
   "pandoc": {
     "bin": ["pandoc"],
     "conservative": false,
+    "date": "2022-08-22",
     "version": "2.19.2"
   },
   "parallel": {
