@@ -529,6 +529,33 @@
   "ranger-fm": [
     "ranger"
   ],
+  "rbenv": [
+    "rbenv"
+  ],
+  "rename": [
+    "rename"
+  ],
+  "ripgrep-all": [
+    "rga"
+  ],
+  "ripgrep": [
+    "rg"
+  ],
+  "rmate": [
+    "rmate"
+  ],
+  "ronn": [
+    "ronn"
+  ],
+  "rsync": [
+    "rsync"
+  ],
+  "ruby": [
+    "bundle",
+    "bundler",
+    "gem",
+    "ruby"
+  ],
   "rust": [
     "cargo",
     "cargo-clippy",
@@ -540,8 +567,124 @@
     "rustc",
     "rustdoc",
     "rustfmt"
-  ]
+  ],
+  "salmon": [
+    "salmon"
+  ],
+  "sambamba": [
+    "sambamba"
+  ],
+  "samtools": [
+    "samtools"
+  ],
+  "sed": [
+    "sed"
+  ],
+  "shellcheck": [
+    "shellcheck"
+  ],
+  "shunit2": [
+    "shunit2"
+  ],
+  "snakemake": [
+    "snakemake"
+  ],
+  "sox": [
+    "sox"
+  ],
+  "sqlite": [
+    "sqlite3"
+  ],
+  "sra-tools": [
+    "fasterq-dump",
+    "vdb-config"
+  ],
+  "star": [
+    "STAR"
+  ],
+  "starship": [
+    "starship"
+  ],
+  "stow": [
+    "stow"
+  ],
+  "subversion": [
+    "svn"
+  ],
+  "tar": [
+    "tar"
+  ],
+  "tealdeer": [
+    "tldr"
+  ],
+  "texinfo": [
+    "pdftexi2dvi",
+    "pod2texi",
+    "texi2any",
+    "texi2dvi",
+    "texi2pdf",
+    "texindex"
+  ],
+  "tokei": [
+    "tokei"
+  ],
+  "tree": [
+    "tree"
+  ],
+  "tuc": [
+    "tuc"
+  ],
+  "udunits": [
+    "udunits2"
+  ],
+  "units": [
+    "units"
+  ],
+  "vim": [
+    "vim",
+    "vimdiff"
+  ],
+  "visidata": [
+    "vd",
+    "visidata"
+  ],
+  "wget": [
+    "wget"
+  ],
+  "which": [
+    "which"
+  ],
+  "xsv": [
+    "xsv"
+  ],
+  "xz": [
+    "xz"
+  ],
   "yarn": [
     "yarn"
+  ],
+  "yq": [
+    "yq"
+  ],
+  "yt-dlp": [
+    "yt-dlp"
+  ],
+  "zellij": [
+    "zellij"
+  ],
+  "zoxide": [
+    "zoxide"
+  ],
+  "zsh": [
+    "zsh"
+  ],
+  "zstd": [
+    "pzstd",
+    "unzstd",
+    "zstd",
+    "zstdcat",
+    "zstdgrep",
+    "zstdless",
+    "zstdmt"
   ]
 }
