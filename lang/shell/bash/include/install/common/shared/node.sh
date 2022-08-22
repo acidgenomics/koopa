@@ -5,6 +5,8 @@ main() {
     # Install Node.js.
     # @note Updated 2022-08-21.
     #
+    # Inclusion of shared brotli currently causes the installer to error.
+    #
     # @seealso
     # - https://github.com/nodejs/node/blob/main/BUILDING.md
     # - https://github.com/nodejs/node/blob/main/doc/contributing/
