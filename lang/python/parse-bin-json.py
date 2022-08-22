@@ -16,8 +16,12 @@ def parse_bin_json(file, app_name):
     """
     with open(file, encoding="utf-8") as con:
         data = json.load(con)
-        for i in data[app_name]:
-            print(i)
+        keys = data.keys()
+        if app_name not in keys:
+            return False
+        for val in data[app_name]:
+            print(val)
+        return True
 
 
 parser = argparse.ArgumentParser()
