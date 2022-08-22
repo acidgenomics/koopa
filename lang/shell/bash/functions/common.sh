@@ -13925,6 +13925,13 @@ koopa_install_zsh() {
 
 koopa_install_zstd() {
     koopa_install_app \
+        --link-in-bin='pzstd' \
+        --link-in-bin='unzstd' \
+        --link-in-bin='zstd' \
+        --link-in-bin='zstdcat' \
+        --link-in-bin='zstdgrep' \
+        --link-in-bin='zstdless' \
+        --link-in-bin='zstdmt' \
         --name='zstd' \
         "$@"
 }
@@ -24451,6 +24458,13 @@ koopa_uninstall_zsh() {
 koopa_uninstall_zstd() {
     koopa_uninstall_app \
         --name='zstd' \
+        --unlink-in-bin='pzstd' \
+        --unlink-in-bin='unzstd' \
+        --unlink-in-bin='zstd' \
+        --unlink-in-bin='zstdcat' \
+        --unlink-in-bin='zstdgrep' \
+        --unlink-in-bin='zstdless' \
+        --unlink-in-bin='zstdmt' \
         "$@"
 }
 
