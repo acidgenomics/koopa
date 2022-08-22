@@ -36,7 +36,8 @@
     "bin": ["bat"]
   },
   "bc": {
-    "bin": ["bc"]
+    "bin": ["bc"],
+    "man1": ["bc.1"]
   },
   "bedtools": {
     "bin": ["bedtools"]
@@ -76,6 +77,16 @@
       "bzip2recover",
       "bzless",
       "bzmore"
+    ],
+    "man1": [
+      "bzcmp.1",
+      "bzdiff.1",
+      "bzegrep.1",
+      "bzfgrep.1",
+      "bzgrep.1",
+      "bzip2.1",
+      "bzless.1",
+      "bzmore.1"
     ]
   },
   "c-ares": {},
@@ -205,13 +216,122 @@
       "who",
       "whoami",
       "yes"
+    ],
+    "man1": [
+      "b2sum.1",
+      "base32.1",
+      "base64.1",
+      "basename.1",
+      "basenc.1",
+      "cat.1",
+      "chcon.1",
+      "chgrp.1",
+      "chmod.1",
+      "chown.1",
+      "chroot.1",
+      "cksum.1",
+      "comm.1",
+      "cp.1",
+      "csplit.1",
+      "cut.1",
+      "date.1",
+      "dd.1",
+      "df.1",
+      "dir.1",
+      "dircolors.1",
+      "dirname.1",
+      "du.1",
+      "echo.1",
+      "env.1",
+      "expand.1",
+      "expr.1",
+      "factor.1",
+      "false.1",
+      "fmt.1",
+      "fold.1",
+      "groups.1",
+      "head.1",
+      "hostid.1",
+      "id.1",
+      "install.1",
+      "join.1",
+      "kill.1",
+      "link.1",
+      "ln.1",
+      "logname.1",
+      "ls.1",
+      "md5sum.1",
+      "mkdir.1",
+      "mkfifo.1",
+      "mknod.1",
+      "mktemp.1",
+      "mv.1",
+      "nice.1",
+      "nl.1",
+      "nohup.1",
+      "nproc.1",
+      "numfmt.1",
+      "od.1",
+      "paste.1",
+      "pathchk.1",
+      "pinky.1",
+      "pr.1",
+      "printenv.1",
+      "printf.1",
+      "ptx.1",
+      "pwd.1",
+      "readlink.1",
+      "realpath.1",
+      "rm.1",
+      "rmdir.1",
+      "runcon.1",
+      "seq.1",
+      "sha1sum.1",
+      "sha224sum.1",
+      "sha256sum.1",
+      "sha384sum.1",
+      "sha512sum.1",
+      "shred.1",
+      "shuf.1",
+      "sleep.1",
+      "sort.1",
+      "split.1",
+      "stat.1",
+      "stdbuf.1",
+      "stty.1",
+      "sum.1",
+      "sync.1",
+      "tac.1",
+      "tail.1",
+      "tee.1",
+      "test.1",
+      "timeout.1",
+      "touch.1",
+      "tr.1",
+      "true.1",
+      "truncate.1",
+      "tsort.1",
+      "tty.1",
+      "uname.1",
+      "unexpand.1",
+      "uniq.1",
+      "unlink.1",
+      "uptime.1",
+      "users.1",
+      "vdir.1",
+      "wc.1",
+      "who.1",
+      "whoami.1",
+      "yes.1"
     ]
   },
   "cpufetch": {
-    "bin": ["cpufetch"]
+    "bin": ["cpufetch"],
+    "man1": ["cpufetch.1"]
   },
   "curl": {
-    "bin": ["curl", "curl-config"]
+    "bin": ["curl", "curl-config"],
+    "man1": ["curl.1", "curl-config.1"]
   },
   "deeptools": {
     "bin": ["deeptools"]
@@ -233,7 +353,14 @@
     "bin": ["editorconfig"]
   },
   "emacs": {
-    "bin": ["emacs"]
+    "bin": ["emacs"],
+    "man1": [
+      "ctags.1.gz",
+      "ebrowse.1.gz",
+      "emacs.1.gz",
+      "emacsclient.1.gz",
+      "etags.1.gz"
+    ]
   },
   "ensembl-perl-api": {},
   "entrez-direct": {
@@ -243,7 +370,8 @@
     "bin": ["exa"]
   },
   "exiftool": {
-    "bin": ["exiftool"]
+    "bin": ["exiftool"],
+    "man1": ["exiftool.1"]
   },
   "expat": {},
   "fastqc": {
@@ -253,13 +381,15 @@
     "bin": ["fd"]
   },
   "ffmpeg": {
-    "bin": ["ffmpeg", "ffprobe"]
+    "bin": ["ffmpeg", "ffprobe"],
+    "man1": ["ffmpeg.1", "ffprobe.1"]
   },
   "ffq": {
     "bin": ["ffq"]
   },
   "findutils": {
-    "bin": ["find", "locate", "updatedb", "xargs"]
+    "bin": ["find", "locate", "updatedb", "xargs"],
+    "man1": ["find.1", "locate.1", "updatedb.1", "xargs.1"]
   },
   "fish": {
     "bin": {
@@ -320,7 +450,8 @@
   "gperf": {},
   "graphviz": {},
   "grep": {
-    "bin": ["egrep", "fgrep", "grep"]
+    "bin": ["egrep", "fgrep", "grep"],
+    "man1": ["egrep.1", "fgrep.1", "grep.1"]
   },
   "groff": {
     "bin": ["groff"]
@@ -441,135 +572,402 @@
   "lame": {
     "bin": ["lame"]
   },
-  "latch": ["latch"],
-  "less": ["less"],
-  "lesspipe": ["lesspipe.sh"],
-  "libxml2": ["xml2-config"],
-  "make": ["make"],
-  "man-db": ["man"],
-  "mcfly": ["mcfly"],
-  "mdcat": ["mdcat"],
-  "meson": ["meson"],
-  "multiqc": ["multiqc"],
-  "ncurses": [
-    "captoinfo",
-    "clear",
-    "infocmp",
-    "infotocap",
-    "reset",
-    "tabs",
-    "tic",
-    "toe",
-    "tput",
-    "tset"
-  ],
-  "neofetch": ["neofetch"],
-  "neovim": ["nvim"],
-  "nextflow": ["nextflow"],
-  "ninja": ["ninja"],
-  "node": ["node", "npm"],
-  "openjdk": ["jar", "java", "javac"],
-  "openssl3": ["openssl"],
-  "pandoc": ["pandoc"],
-  "parallel": ["parallel"],
-  "password-store": ["pass"],
-  "patch": ["patch"],
-  "pcre": ["pcre-config", "pcregrep", "pcretest"],
-  "pcre2": ["pcre2-config", "pcre2grep", "pcre2test"],
-  "perl": [
-    "cpan",
-    "perl",
-    "perlbug",
-    "perldoc",
-    "perlivp",
-    "perlthanks",
-    "piconv",
-    "pl2pm",
-    "pod2html",
-    "pod2man",
-    "pod2text",
-    "pod2usage",
-    "podchecker",
-    "prove",
-    "ptar",
-    "ptardiff",
-    "ptargrep"
-  ],
-  "pipx": ["pipx"],
-  "pkg-config": ["pkg-config"],
-  "poetry": ["poetry"],
-  "prettier": ["prettier"],
-  "procs": ["procs"],
-  "proj": ["projinfo"],
-  "pyenv": ["pyenv"],
-  "pyflakes": ["pyflakes"],
-  "pygments": ["pygments"],
-  "pylint": ["pylint"],
-  "pytaglib": ["pyprinttags"],
-  "pytest": ["pytest"],
-  "python": ["python3"],
-  "r": ["R", "Rscript"],
-  "ranger-fm": ["ranger"],
-  "rbenv": ["rbenv"],
-  "rename": ["rename"],
-  "ripgrep-all": ["rga"],
-  "ripgrep": ["rg"],
-  "rmate": ["rmate"],
-  "ronn": ["ronn"],
-  "rsync": ["rsync"],
-  "ruby": ["bundle", "bundler", "gem", "ruby"],
-  "rust": [
-    "cargo",
-    "cargo-clippy",
-    "cargo-fmt",
-    "clippy-driver",
-    "rust-gdb",
-    "rust-gdbgui",
-    "rust-lldb",
-    "rustc",
-    "rustdoc",
-    "rustfmt"
-  ],
-  "salmon": ["salmon"],
-  "sambamba": ["sambamba"],
-  "samtools": ["samtools"],
-  "sed": ["sed"],
-  "shellcheck": ["shellcheck"],
-  "shunit2": ["shunit2"],
-  "snakemake": ["snakemake"],
-  "sox": ["sox"],
-  "sqlite": ["sqlite3"],
-  "sra-tools": ["fasterq-dump", "vdb-config"],
-  "star": ["STAR"],
-  "starship": ["starship"],
-  "stow": ["stow"],
-  "subversion": ["svn"],
-  "tar": ["tar"],
-  "tealdeer": ["tldr"],
-  "texinfo": [
-    "pdftexi2dvi",
-    "pod2texi",
-    "texi2any",
-    "texi2dvi",
-    "texi2pdf",
-    "texindex"
-  ],
-  "tokei": ["tokei"],
-  "tree": ["tree"],
-  "tuc": ["tuc"],
-  "udunits": ["udunits2"],
-  "units": ["units"],
-  "vim": ["vim", "vimdiff"],
-  "visidata": ["vd", "visidata"],
-  "wget": ["wget"],
-  "which": ["which"],
-  "xsv": ["xsv"],
-  "xz": ["xz"],
-  "yarn": ["yarn"],
-  "yq": ["yq"],
-  "yt-dlp": ["yt-dlp"],
-  "zellij": ["zellij"],
-  "zoxide": ["zoxide"],
+  "lapack": {},
+  "latch": {
+    "bin": ["latch"]
+  },
+  "less": {
+    "bin": ["less"]
+  },
+  "lesspipe": {
+    "bin": ["lesspipe.sh"]
+  },
+  "libassuan": {},
+  "libedit": {},
+  "libev": {},
+  "libevent": {},
+  "libffi": {},
+  "libgcrypt": {},
+  "libgeotiff": {},
+  "libgit2": {},
+  "libgpg-error": {},
+  "libidn": {},
+  "libjpeg-turbo": {},
+  "libksba": {},
+  "libpipeline": {},
+  "libpng": {},
+  "libssh2": {},
+  "libtasn1": {},
+  "libtiff": {},
+  "libtool": {},
+  "libunistring": {},
+  "libuv": {},
+  "libxml2": {
+    "bin": ["xml2-config"]
+  },
+  "libzip": {},
+  "lua": {},
+  "luarocks": {},
+  "lz4": {},
+  "lzo": {},
+  "m4": {},
+  "make": {
+    "bin": ["make"]
+  },
+  "man-db": {
+    "bin": ["man"]
+  },
+  "mcfly": {
+    "bin": ["mcfly"]
+  },
+  "mdcat": {
+    "bin": ["mdcat"]
+  },
+  "meson": {
+    "bin": ["meson"]
+  },
+  "mpc": {},
+  "mpfr": {},
+  "multiqc": {
+    "bin": ["multiqc"]
+  },
+  "ncurses": {
+    "bin": [
+      "captoinfo",
+      "clear",
+      "infocmp",
+      "infotocap",
+      "reset",
+      "tabs",
+      "tic",
+      "toe",
+      "tput",
+      "tset"
+    ],
+    "man1": [
+      "captoinfo.1",
+      "clear.1",
+      "infocmp.1",
+      "infotocap.1",
+      "reset.1",
+      "tabs.1",
+      "tic.1",
+      "toe.1",
+      "tput.1",
+      "tset.1"
+    ]
+  },
+  "neofetch": {
+    "bin": ["neofetch"]
+  },
+  "neovim": {
+    "bin": ["nvim"]
+  },
+  "nettle": {},
+  "nextflow": {
+    "bin": ["nextflow"]
+  },
+  "hghttp2": {},
+  "nim": {},
+  "ninja": {
+    "bin": ["ninja"]
+  },
+  "node": {
+    "bin": ["node", "npm"]
+  },
+  "npth": {},
+  "oniguruma": {},
+  "openblas": {},
+  "openjdk": {
+    "bin": ["jar", "java", "javac"]
+  },
+  "openssh": {},
+  "openssl1": {},
+  "openssl3": {
+    "bin": ["openssl"]
+  },
+  "pandoc": {
+    "bin": ["pandoc"]
+  },
+  "parallel": {
+    "bin": ["parallel"]
+  },
+  "password-store": {
+    "bin": ["pass"]
+  },
+  "patch": {
+    "bin": ["patch"]
+  },
+  "pcre": {
+    "bin": ["pcre-config", "pcregrep", "pcretest"]
+  },
+  "pcre2": {
+    "bin": ["pcre2-config", "pcre2grep", "pcre2test"]
+  },
+  "perl": {
+    "bin": [
+      "cpan",
+      "perl",
+      "perlbug",
+      "perldoc",
+      "perlivp",
+      "perlthanks",
+      "piconv",
+      "pl2pm",
+      "pod2html",
+      "pod2man",
+      "pod2text",
+      "pod2usage",
+      "podchecker",
+      "prove",
+      "ptar",
+      "ptardiff",
+      "ptargrep"
+    ],
+    "man1": [
+      "cpan.1",
+      "perl.1",
+      "perlbug.1",
+      "perldoc.1",
+      "perlivp.1",
+      "perlthanks.1",
+      "piconv.1",
+      "pl2pm.1",
+      "pod2html.1",
+      "pod2man.1",
+      "pod2text.1",
+      "pod2usage.1",
+      "podchecker.1",
+      "prove.1",
+      "ptar.1",
+      "ptardiff.1",
+      "ptargrep.1"
+    ]
+  },
+  "pipx": {
+    "bin": ["pipx"]
+  },
+  "pixman": {},
+  "pkg-config": {
+    "bin": ["pkg-config"]
+  },
+  "poetry": {
+    "bin": ["poetry"]
+  },
+  "prettier": {
+    "bin": ["prettier"]
+  },
+  "procs": {
+    "bin": ["procs"]
+  },
+  "proj": {
+    "bin": ["projinfo"]
+  },
+  "pyenv": {
+    "bin": ["pyenv"]
+  },
+  "pyflakes": {
+    "bin": ["pyflakes"]
+  },
+  "pygments": {
+    "bin": ["pygments"]
+  },
+  "pylint": {
+    "bin": ["pylint"]
+  },
+  "pytaglib": {
+    "bin": ["pyprinttags"]
+  },
+  "pytest": {
+    "bin": ["pytest"]
+  },
+  "python": {
+    "bin": ["idle3", "pip3", "pydoc3", "python3", "python3-config"]
+  },
+  "r": {
+    "bin": ["R", "Rscript"]
+  },
+  "ranger-fm": {
+    "bin": ["ranger"]
+  },
+  "rbenv": {
+    "bin": ["rbenv"]
+  },
+  "readline": {},
+  "rename": {
+    "bin": ["rename"]
+  },
+  "ripgrep-all": {
+    "bin": ["rga"]
+  },
+  "ripgrep": {
+    "bin": ["rg"]
+  },
+  "rmate": {
+    "bin": ["rmate"]
+  },
+  "ronn": {
+    "bin": ["ronn"]
+  },
+  "rsync": {
+    "bin": ["rsync"]
+  },
+  "ruby": {
+    "bin": ["bundle", "bundler", "gem", "ruby"]
+  },
+  "rust": {
+    "bin": [
+      "cargo",
+      "cargo-clippy",
+      "cargo-fmt",
+      "clippy-driver",
+      "rust-gdb",
+      "rust-gdbgui",
+      "rust-lldb",
+      "rustc",
+      "rustdoc",
+      "rustfmt"
+    ]
+  },
+  "salmon": {
+    "bin": ["salmon"]
+  },
+  "sambamba": {
+    "bin": ["sambamba"]
+  },
+  "samtools": {
+    "bin": ["samtools"]
+  },
+  "scons": {},
+  "sed": {
+    "bin": ["sed"]
+  },
+  "serf": {},
+  "shellcheck": {
+    "bin": ["shellcheck"]
+  },
+  "shunit2": {
+    "bin": ["shunit2"]
+  },
+  "snakemake": {
+    "bin": ["snakemake"]
+  },
+  "sox": {
+    "bin": ["sox"]
+  },
+  "sqlite": {
+    "bin": ["sqlite3"]
+  },
+  "sra-tools": {
+    "bin": ["fasterq-dump", "vdb-config"]
+  },
+  "star": {
+    "bin": ["STAR"]
+  },
+  "starship": {
+    "bin": ["starship"]
+  },
+  "stow": {
+    "bin": ["stow"]
+  },
+  "subversion": {
+    "bin": ["svn"]
+  },
+  "taglib": {},
+  "tar": {
+    "bin": ["tar"]
+  },
+  "tcl-tk": {},
+  "tealdeer": {
+    "bin": ["tldr"]
+  },
+  "texinfo": {
+    "bin": [
+      "pdftexi2dvi",
+      "pod2texi",
+      "texi2any",
+      "texi2dvi",
+      "texi2pdf",
+      "texindex"
+    ]
+  },
+  "tmux": {
+    "bin": ["tmux"]
+  },
+  "tokei": {
+    "bin": ["tokei"]
+  },
+  "tree": {
+    "bin": ["tree"]
+  },
+  "tuc": {
+    "bin": ["tuc"]
+  },
+  "udunits": {
+    "bin": ["udunits2"]
+  },
+  "units": {
+    "bin": ["units"]
+  },
+  "utf8proc": {},
+  "vim": {
+    "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
+    "man1": [
+      "ex.1",
+      "rview.1",
+      "rvim.1",
+      "view.1",
+      "vim.1",
+      "vimdiff.1",
+      "vimtutor.1",
+      "xxd.1"
+    ]
+  },
+  "visidata": {
+    "bin": ["vd", "visidata"]
+  },
+  "wget": {
+    "bin": ["wget"]
+  },
+  "which": {
+    "bin": ["which"]
+  },
+  "xorg-libice": {},
+  "xorg-libpthread-stubs": {},
+  "xorg-libsm": {},
+  "xorg-libx11": {},
+  "xorg-libxau": {},
+  "xorg-libxcb": {},
+  "xorg-libxdmcp": {},
+  "xorg-libxext": {},
+  "xorg-libxrandr": {},
+  "xorg-libxrender": {},
+  "xorg-libxt": {},
+  "xorg-xcb-proto": {},
+  "xorg-xorgproto": {},
+  "xorg-xtrans": {},
+  "xsv": {
+    "bin": ["xsv"]
+  },
+  "xxhash": {},
+  "xz": {
+    "bin": ["xz"]
+  },
+  "yarn": {
+    "bin": ["yarn"]
+  },
+  "yq": {
+    "bin": ["yq"]
+  },
+  "yt-dlp": {
+    "bin": ["yt-dlp"]
+  },
+  "zellij": {
+    "bin": ["zellij"]
+  },
+  "zoxide": {
+    "bin": ["zoxide"]
+  },
   "zsh": {
     "bin": ["zsh"]
   },

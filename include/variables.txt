@@ -598,7 +598,7 @@ tree="2.0.2"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="9.0.0150"
+vim="9.0.0200"
 
 # https://yarnpkg.com/
 yarn="1.22.19"
