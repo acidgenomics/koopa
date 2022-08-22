@@ -4,12 +4,18 @@
     "man1": ["ack.1"]
   },
   "anaconda": {},
+  "apptainer": {
+    "platform": "linux"
+  },
   "apr": {},
   "apr-util": {},
   "armadillo": {},
   "aspell": {
     "bin": ["aspell"],
     "man1": ["aspell.1"]
+  },
+  "aspera-connect": {
+    "platform": "linux"
   },
   "autoconf": {},
   "automake": {},
@@ -38,6 +44,14 @@
   "bc": {
     "bin": ["bc"],
     "man1": ["bc.1"]
+  },
+  "bcbio-nextgen": {
+    "check": false,
+    "platform": "linux"
+  },
+  "bcl2fastq": {
+    "check": false,
+    "platform": "linux"
   },
   "bedtools": {
     "bin": ["bedtools"]
@@ -342,6 +356,9 @@
   "difftastic": {
     "bin": ["difft"]
   },
+  "docker-credential-pass": {
+    "platform": "linux"
+  },
   "dog": {
     "bin": ["dog"]
   },
@@ -393,21 +410,24 @@
   },
   "fish": {
     "bin": {
-      "bin": ["fish"]
+      "bin": ["fish"],
+      "man1": ["fish.1"]
     }
   },
   "flac": {
-    "bin": ["flac"]
+    "bin": ["flac"],
+    "man1": ["flac.1"]
   },
   "flake8": {
     "bin": ["flake8"]
   },
   "fltk": {},
   "fontconfig": {},
-  "freebidi": {},
   "freetype": {},
+  "fribidi": {},
   "fzf": {
-    "bin": ["fzf"]
+    "bin": ["fzf"],
+    "man1": ["fzf.1"]
   },
   "gawk": {
     "bin": ["awk", "gawk"],
@@ -415,11 +435,13 @@
   },
   "gcc": {},
   "gdal": {
-    "bin": ["gdal-config"]
+    "bin": ["gdal-config"],
+    "man1": ["gdal-config.1"]
   },
   "gdbm": {},
   "geos": {
-    "bin": ["geos-config"]
+    "bin": ["geos-config"],
+    "man1": ["geos-config.1"]
   },
   "gettext": {},
   "gffutils": {
@@ -429,7 +451,8 @@
     "bin": ["gget"]
   },
   "ghostscript": {
-    "bin": ["gs"]
+    "bin": ["gs"],
+    "man1": ["gs.1"]
   },
   "git": {
     "bin": ["git"]
@@ -454,7 +477,8 @@
     "man1": ["egrep.1", "fgrep.1", "grep.1"]
   },
   "groff": {
-    "bin": ["groff"]
+    "bin": ["groff"],
+    "man1": ["groff.1"]
   },
   "gseapy": {
     "bin": ["gseapy"]
@@ -518,7 +542,8 @@
     "bin": ["hisat2"]
   },
   "htop": {
-    "bin": ["htop"]
+    "bin": ["htop"],
+    "man1": ["htop.1"]
   },
   "hyperfine": {
     "bin": ["hyperfine"]
@@ -541,12 +566,19 @@
   },
   "imagemagick": {
     "bin": [
-      "magick",
       "Magick++-config",
       "MagickCore-config",
       "MagickWand-config",
       "magick",
       "magick-script"
+    ],
+    "man1": [
+      "ImageMagick.1",
+      "Magick++-config.1",
+      "MagickCore-config.1",
+      "MagickWand-config.1",
+      "magick.1",
+      "magick-script.1"
     ]
   },
   "ipython": {
@@ -558,7 +590,8 @@
   "jemalloc": {},
   "jpeg": {},
   "jq": {
-    "bin": ["jq"]
+    "bin": ["jq"],
+    "man1": ["jq.1"]
   },
   "julia": {
     "bin": ["julia"]
@@ -570,14 +603,16 @@
     "bin": ["kallisto"]
   },
   "lame": {
-    "bin": ["lame"]
+    "bin": ["lame"],
+    "man1": ["lame.1"]
   },
   "lapack": {},
   "latch": {
     "bin": ["latch"]
   },
   "less": {
-    "bin": ["less"]
+    "bin": ["less"],
+    "man1": ["less.1"]
   },
   "lesspipe": {
     "bin": ["lesspipe.sh"]
@@ -599,23 +634,32 @@
   "libssh2": {},
   "libtasn1": {},
   "libtiff": {},
-  "libtool": {},
+  "libtool": {
+    "bin": ["glibtool", "glibtoolize", "libtool", "libtoolize"],
+    "man1": ["glibtool.1", "glibtoolize.1", "libtool.1", "libtoolize.1"]
+  },
   "libunistring": {},
   "libuv": {},
   "libxml2": {
-    "bin": ["xml2-config"]
+    "bin": ["xml2-config"],
+    "man1": ["xml2-config.1"]
   },
   "libzip": {},
+  "lmod": {
+    "platform": "linux"
+  },
   "lua": {},
   "luarocks": {},
   "lz4": {},
   "lzo": {},
   "m4": {},
   "make": {
-    "bin": ["make"]
+    "bin": ["make"],
+    "man1": ["make.1"]
   },
   "man-db": {
-    "bin": ["man"]
+    "bin": ["man"],
+    "man1": ["man.1"]
   },
   "mcfly": {
     "bin": ["mcfly"]
@@ -658,10 +702,12 @@
     ]
   },
   "neofetch": {
-    "bin": ["neofetch"]
+    "bin": ["neofetch"],
+    "man1": ["neofetch.1"]
   },
   "neovim": {
-    "bin": ["nvim"]
+    "bin": ["nvim"],
+    "man1": ["nvim.1"]
   },
   "nettle": {},
   "nextflow": {
@@ -673,13 +719,15 @@
     "bin": ["ninja"]
   },
   "node": {
-    "bin": ["node", "npm"]
+    "bin": ["node", "npm", "npx"],
+    "man1": ["node.1", "npm.1", "npx.1"]
   },
   "npth": {},
   "oniguruma": {},
   "openblas": {},
   "openjdk": {
-    "bin": ["jar", "java", "javac"]
+    "bin": ["jar", "java", "javac"],
+    "man1": ["jar.1", "java.1", "javac.1"]
   },
   "openssh": {},
   "openssl1": {},
@@ -690,19 +738,24 @@
     "bin": ["pandoc"]
   },
   "parallel": {
-    "bin": ["parallel"]
+    "bin": ["parallel"],
+    "man1": ["parallel.1"]
   },
   "password-store": {
-    "bin": ["pass"]
+    "bin": ["pass"],
+    "man1": ["pass.1"]
   },
   "patch": {
-    "bin": ["patch"]
+    "bin": ["patch"],
+    "man1": ["patch.1"]
   },
   "pcre": {
-    "bin": ["pcre-config", "pcregrep", "pcretest"]
+    "bin": ["pcre-config", "pcregrep", "pcretest"],
+    "man1": ["pcre-config.1", "pcregrep.1", "pcretest.1"]
   },
   "pcre2": {
-    "bin": ["pcre2-config", "pcre2grep", "pcre2test"]
+    "bin": ["pcre2-config", "pcre2grep", "pcre2test"],
+    "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"]
   },
   "perl": {
     "bin": [
@@ -744,12 +797,16 @@
       "ptargrep.1"
     ]
   },
+  "pinentry": {
+    "platform": "linux"
+  },
   "pipx": {
     "bin": ["pipx"]
   },
   "pixman": {},
   "pkg-config": {
-    "bin": ["pkg-config"]
+    "bin": ["pkg-config"],
+    "man1": ["pkg-config.1"]
   },
   "poetry": {
     "bin": ["poetry"]
@@ -761,10 +818,12 @@
     "bin": ["procs"]
   },
   "proj": {
-    "bin": ["projinfo"]
+    "bin": ["proj", "projinfo"],
+    "man1": ["proj.1", "projinfo.1"]
   },
   "pyenv": {
-    "bin": ["pyenv"]
+    "bin": ["pyenv"],
+    "man1": ["pyenv.1"]
   },
   "pyflakes": {
     "bin": ["pyflakes"]
@@ -782,10 +841,12 @@
     "bin": ["pytest"]
   },
   "python": {
-    "bin": ["idle3", "pip3", "pydoc3", "python3", "python3-config"]
+    "bin": ["idle3", "pip3", "pydoc3", "python3", "python3-config"],
+    "man1": ["idle3.1", "pip3.1", "pydoc3.1", "python3.1", "python3-config.1"]
   },
   "r": {
-    "bin": ["R", "Rscript"]
+    "bin": ["R", "Rscript"],
+    "man1": ["R.1", "Rscript.1"]
   },
   "ranger-fm": {
     "bin": ["ranger"]
@@ -795,7 +856,8 @@
   },
   "readline": {},
   "rename": {
-    "bin": ["rename"]
+    "bin": ["rename"],
+    "man1": ["rename.1"]
   },
   "ripgrep-all": {
     "bin": ["rga"]
@@ -810,10 +872,12 @@
     "bin": ["ronn"]
   },
   "rsync": {
-    "bin": ["rsync"]
+    "bin": ["rsync"],
+    "bin": ["rsync.1"]
   },
   "ruby": {
-    "bin": ["bundle", "bundler", "gem", "ruby"]
+    "bin": ["bundle", "bundler", "gem", "ruby"],
+    "man1": ["bundle.1", "bundler.1", "gem.1", "ruby.1"]
   },
   "rust": {
     "bin": [
@@ -840,7 +904,8 @@
   },
   "scons": {},
   "sed": {
-    "bin": ["sed"]
+    "bin": ["sed"],
+    "man1": ["sed.1"]
   },
   "serf": {},
   "shellcheck": {
@@ -853,10 +918,12 @@
     "bin": ["snakemake"]
   },
   "sox": {
-    "bin": ["sox"]
+    "bin": ["sox"],
+    "man1": ["sox.1"]
   },
   "sqlite": {
-    "bin": ["sqlite3"]
+    "bin": ["sqlite3"],
+    "man1": ["sqlite3.1"]
   },
   "sra-tools": {
     "bin": ["fasterq-dump", "vdb-config"]
@@ -871,11 +938,13 @@
     "bin": ["stow"]
   },
   "subversion": {
-    "bin": ["svn"]
+    "bin": ["svn"],
+    "man1": ["svn.1"]
   },
   "taglib": {},
   "tar": {
-    "bin": ["tar"]
+    "bin": ["tar"],
+    "man1": ["tar.1"]
   },
   "tcl-tk": {},
   "tealdeer": {
@@ -889,16 +958,26 @@
       "texi2dvi",
       "texi2pdf",
       "texindex"
+    ],
+    "man1": [
+      "pdftexi2dvi.1",
+      "pod2texi.1",
+      "texi2any.1",
+      "texi2dvi.1",
+      "texi2pdf.1",
+      "texindex.1"
     ]
   },
   "tmux": {
-    "bin": ["tmux"]
+    "bin": ["tmux"],
+    "man1": ["tmux.1"]
   },
   "tokei": {
     "bin": ["tokei"]
   },
   "tree": {
-    "bin": ["tree"]
+    "bin": ["tree"],
+    "man1": ["tree.1"]
   },
   "tuc": {
     "bin": ["tuc"]
@@ -907,7 +986,8 @@
     "bin": ["udunits2"]
   },
   "units": {
-    "bin": ["units"]
+    "bin": ["units"],
+    "man1": ["units.1"]
   },
   "utf8proc": {},
   "vim": {
@@ -924,10 +1004,12 @@
     ]
   },
   "visidata": {
-    "bin": ["vd", "visidata"]
+    "bin": ["vd", "visidata"],
+    "man1": ["vd.1", "visidata.1"]
   },
   "wget": {
-    "bin": ["wget"]
+    "bin": ["wget"],
+    "man1": ["wget.1"]
   },
   "which": {
     "bin": ["which"]
@@ -951,10 +1033,12 @@
   },
   "xxhash": {},
   "xz": {
-    "bin": ["xz"]
+    "bin": ["xz"],
+    "man1": ["xz.1"]
   },
   "yarn": {
-    "bin": ["yarn"]
+    "bin": ["yarn"],
+    "man1": ["yarn.1"]
   },
   "yq": {
     "bin": ["yq"]
@@ -969,7 +1053,8 @@
     "bin": ["zoxide"]
   },
   "zsh": {
-    "bin": ["zsh"]
+    "bin": ["zsh"],
+    "man1": ["zsh.1"]
   },
   "zstd": {
     "bin": [
