@@ -33,25 +33,8 @@ gnu-mirror-url="https://ftpmirror.gnu.org"
 
 
 
-# https://thrysoee.dk/editline/
-libedit="20210910-3.1"
 
-# http://software.schmorp.de/pkg/libev.html
-libev="4.33"
 
-# https://libevent.org/
-# https://github.com/libevent/libevent/releases
-libevent="2.1.12"
-
-# https://sourceware.org/libffi/
-libffi="3.4.2"
-
-# https://github.com/OSGeo/libgeotiff
-libgeotiff="1.7.1"
-
-# NOTE 1.5.0 has build issues on Ubuntu.
-# https://github.com/libgit2/libgit2
-libgit2="1.4.4"
 
 # https://www.gnu.org/software/libidn/
 libidn="2.3.3"
@@ -489,67 +472,6 @@ zsh="5.9"
 # Conda recipes
 # ==============================================================================
 
-# Linux only:
-# > biobambam="2.0.182" # 2021-04-21 bioconda
-# > bwa-mem2="2.2.1" # 2021-03-17 bioconda
-# > merfishtools="1.5.0" # 2018-10-24 bioconda
-# > ribotaper="1.3.1" # 2020-07-13 bioconda
-
-# Linux and macOS:
-# > alevin-fry="0.6.0" # 2022-06-01 bioconda
-# > arriba="2.2.1" # 2022-01-23 bioconda
-# > atropos="1.1.31" # 2021-07-07 bioconda
-# > bismark="0.23.1" # 2021-07-26 bioconda
-# > bwa="0.7.17" # 2019-12-19 bioconda
-# > cellrank="1.5.1" # 2022-01-14 bioconda
-# > celltypist="0.2.0" # 2022-02-14 bioconda
-# > chromhmm="1.23" # 2021-09-03 bioconda
-# > cromwell="76" # 2022-02-15 conda-forge
-# > ericscript="0.5.5" # 2021-03-26 bioconda
-# > fgbio="2.0.2" # 2022-05-24 bioconda
-# > gatk4="4.2.5.0" # 2022-02-05 bioconda
-# > genrich="0.6.1" # 2021-03-17 bioconda
-# > gffread="0.12.7" # 2021-09-24 bioconda
-# > homer="4.11" # 2020-04-29 bioconda
-# > igvtools="2.5.3" # 2021-03-25 bioconda
-# > kraken2="2.1.2" # 2021-05-10 bioconda
-# > luigi="3.0.3" # 2021-04-16 conda-forge
-# > macs2="2.2.7.1" # 2021-09-22 bioconda
-# > mashmap="2.0" # 2022-01-14 bioconda
-# > meme="5.4.1" # 2022-01-02 bioconda
-# > minimap2="2.24" # 2021-12-27 bioconda
-# > miniwdl="1.5.0" # 2022-02-19 conda-forge
-# > mirdeep2="2.0.1.3" # 2021-07-15 bioconda
-# > mirtop="0.4.24" # 2021-11-12 bioconda
-# > novoalign="3.09.00" # 2018-09-02 bioconda
-# > oncofuse="1.1.1" # 2021-03-27 bioconda
-# > peddy="0.4.8" # 2021-06-02 bioconda
-# > picard="2.26.10" # 2022-01-04 bioconda
-# > pizzly="0.37.3" # 2019-01-17 bioconda
-# > qualimap="2.2.2d" # 2021-03-28 bioconda
-# > r-monocle3="1.0.0" # 2021-06-02 bioconda
-# > r-seurat="4.1.0" # 2022-01-15 conda-forge
-# > r-tailfindr="1.3" # 2021-08-24 bioconda
-# > ribocode="1.2.14" # 2022-03-07 bioconda
-# > ribodiff="0.2.2" # 2019-10-27 bioconda
-# > rsem="1.3.3" # 2022-02-25 bioconda
-# > samblaster="0.1.26" # 2021-03-26 bioconda
-# > scanpy="1.8.2" # 2021-11-04 bioconda
-# > scikit-learn="1.0.2" # 2021-12-25 conda-forge
-# > scrublet="0.2.3" # 2021-04-12 bioconda
-# > seqbuster="3.5" # 2021-03-26 bioconda
-# > seqcluster="1.2.8" # 2021-06-22 bioconda
-# > seqkit="2.2.0" # 2022-03-14 bioconda
-# > seqtk="1.3" # 2019-07-31 bioconda
-# > sicer2="1.0.3" # 2021-03-26 bioconda
-# > snakefmt="0.6.0" # 2022-03-03 bioconda
-# > squid="1.5" # 2021-03-27 bioconda
-# > star-fusion="1.10.0" # 2021-04-15 bioconda
-# > stringtie="2.2.1" # 2022-02-23 bioconda
-# > trimmomatic="0.39" # 2021-03-27 bioconda
-# > umap-learn="0.5.2" # 2021-11-03 bioconda
-# > vardict="2019.06.04" # 2019-06-05 bioconda
-
 bamtools="2.5.2" # 2022-03-14 bioconda
 bedtools="2.30.0" # 2021-08-12 bioconda
 bioawk="1.0" # 2019-10-26 bioconda
@@ -578,17 +500,12 @@ visidata="2.8" # 2022-01-13 conda-forge
 # GnuPG packages
 # ==============================================================================
 
-# https://gnupg.org/download/index.html
-# https://www.gnutls.org/
+https://gnupg.org/download/
 
-gnutls="3.7.7"
-gnupg="2.3.7"
 libgpg-error="1.45"
 libgcrypt="1.10.1"
 libksba="1.6.0"
 libassuan="2.5.5"
-npth="1.6"
-pinentry="1.2.0"
 
 # Go packages
 # ==============================================================================
