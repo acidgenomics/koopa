@@ -1,7 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
-** TODO Add support for these, so we can tighten Node build: brotli, cares, nghttp2
+** TODO Consider improving app support for asdf, bfg, and the-silver-searcher?
 ** TODO Can we improve black, flake8, pylint support for automatic linting in PyCharm?
 ** TODO Ensure coreutils aliases are not activated for root user on Linux.
 ** TODO Consider setting apt to not prompt configuration boxes inside Debian environment.
