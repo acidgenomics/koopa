@@ -63,24 +63,40 @@
   "bustools": {
     "bin": ["bustools"]
   },
-  "bzip2": [
-    "bunzip2",
-    "bzcat",
-    "bzcmp",
-    "bzdiff",
-    "bzegrep",
-    "bzfgrep",
-    "bzgrep",
-    "bzip2",
-    "bzip2recover",
-    "bzless",
-    "bzmore"
-  ],
-  "cheat": ["cheat"],
-  "chezmoi": ["chezmoi"],
-  "cmake": ["cmake"],
-  "colorls": ["colorls"],
-  "conda": ["conda"],
+  "bzip2": {
+    "bin": [
+      "bunzip2",
+      "bzcat",
+      "bzcmp",
+      "bzdiff",
+      "bzegrep",
+      "bzfgrep",
+      "bzgrep",
+      "bzip2",
+      "bzip2recover",
+      "bzless",
+      "bzmore"
+    ]
+  },
+  "c-ares": {},
+  "ca-certificates": {},
+  "cairo": {},
+  "cheat": {
+    "bin": ["cheat"]
+  },
+  "chemacs": {},
+  "chezmoi": {
+    "bin": ["chezmoi"]
+  },
+  "cmake": {
+    "bin": ["cmake"]
+  },
+  "colorls": {
+    "bin": ["colorls"]
+  },
+  "conda": {
+    "bin": ["conda"]
+  },
   "coreutils": {
     "bin": [
       "[",
@@ -191,35 +207,97 @@
       "yes"
     ]
   },
-  "cpufetch": ["cpufetch"],
-  "curl": ["curl", "curl-config"],
-  "deeptools": ["deeptools"],
-  "delta": ["delta"],
-  "difftastic": ["difft"],
-  "dog": ["dog"],
-  "du-dust": ["dust"],
-  "editorconfig": ["editorconfig"],
-  "emacs": ["emacs"],
-  "entrez-direct": ["efetch", "esearch"],
-  "exa": ["exa"],
-  "exiftool": ["exiftool"],
-  "fastqc": ["fastqc"],
-  "fd-find": ["fd"],
-  "ffmpeg": ["ffmpeg", "ffprobe"],
-  "ffq": ["ffq"],
-  "findutils": ["find", "locate", "updatedb", "xargs"],
-  "fish": ["fish"],
-  "flac": ["flac"],
-  "flake8": ["flake8"],
-  "fzf": ["fzf"],
+  "cpufetch": {
+    "bin": ["cpufetch"]
+  },
+  "curl": {
+    "bin": ["curl", "curl-config"]
+  },
+  "deeptools": {
+    "bin": ["deeptools"]
+  },
+  "delta": {
+    "bin": ["delta"]
+  },
+  "difftastic": {
+    "bin": ["difft"]
+  },
+  "dog": {
+    "bin": ["dog"]
+  },
+  "dotfiles": {},
+  "du-dust": {
+    "bin": ["dust"]
+  },
+  "editorconfig": {
+    "bin": ["editorconfig"]
+  },
+  "emacs": {
+    "bin": ["emacs"]
+  },
+  "ensembl-perl-api": {},
+  "entrez-direct": {
+    "bin": ["efetch", "esearch"]
+  },
+  "exa": {
+    "bin": ["exa"]
+  },
+  "exiftool": {
+    "bin": ["exiftool"]
+  },
+  "expat": {},
+  "fastqc": {
+    "bin": ["fastqc"]
+  },
+  "fd-find": {
+    "bin": ["fd"]
+  },
+  "ffmpeg": {
+    "bin": ["ffmpeg", "ffprobe"]
+  },
+  "ffq": {
+    "bin": ["ffq"]
+  },
+  "findutils": {
+    "bin": ["find", "locate", "updatedb", "xargs"]
+  },
+  "fish": {
+    "bin": {
+      "bin": ["fish"]
+    }
+  },
+  "flac": {
+    "bin": ["flac"]
+  },
+  "flake8": {
+    "bin": ["flake8"]
+  },
+  "fltk": {},
+  "fontconfig": {},
+  "freebidi": {},
+  "freetype": {},
+  "fzf": {
+    "bin": ["fzf"]
+  },
   "gawk": {
     "bin": ["awk", "gawk"],
     "man1": ["awk.1", "gawk.1"]
   },
-  "gdal": ["gdal-config"],
-  "geos": ["geos-config"],
-  "gffutils": ["gffutils-cli"],
-  "gget": ["gget"],
+  "gcc": {},
+  "gdal": {
+    "bin": ["gdal-config"]
+  },
+  "gdbm": {},
+  "geos": {
+    "bin": ["geos-config"]
+  },
+  "gettext": {},
+  "gffutils": {
+    "bin": ["gffutils-cli"]
+  },
+  "gget": {
+    "bin": ["gget"]
+  },
   "ghostscript": ["gs"],
   "git": ["git"],
   "glances": ["glances"],
