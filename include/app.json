@@ -449,7 +449,13 @@
     "bin": ["dust"]
   },
   "editorconfig": {
-    "bin": ["editorconfig"]
+    "bin": ["editorconfig"],
+    "conservative": false,
+    "url": [
+      "https://editorconfig.org/",
+      "https://github.com/editorconfig/editorconfig-core-c/"
+    ],
+    "version": "0.12.5"
   },
   "emacs": {
     "bin": ["emacs"],
@@ -472,7 +478,11 @@
     "bin": ["exiftool"],
     "man1": ["exiftool.1"]
   },
-  "expat": {},
+  "expat": {
+    "conservative": true,
+    "url": ["https://libexpat.github.io/"],
+    "version": "2.4.8"
+  },
   "fastqc": {
     "bin": ["fastqc"]
   },
@@ -488,7 +498,10 @@
   },
   "findutils": {
     "bin": ["find", "locate", "updatedb", "xargs"],
-    "man1": ["find.1", "locate.1", "updatedb.1", "xargs.1"]
+    "conservative": false,
+    "man1": ["find.1", "locate.1", "updatedb.1", "xargs.1"],
+    "url": ["https://www.gnu.org/software/findutils/"],
+    "version": "4.9.0"
   },
   "fish": {
     "bin": {
@@ -503,7 +516,11 @@
   "flake8": {
     "bin": ["flake8"]
   },
-  "fltk": {},
+  "fltk": {
+    "conservative": true,
+    "url": ["https://www.fltk.org/"],
+    "version": "1.3.8"
+  },
   "fontconfig": {},
   "freetype": {},
   "fribidi": {},
