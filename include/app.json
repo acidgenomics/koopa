@@ -43,12 +43,12 @@
     "version": "2.5.1"
   },
   "autoconf": {
-    "conservative": true,
+    "conservative": false,
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
   },
   "automake": {
-    "conservative": true,
+    "conservative": false,
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
   },
@@ -446,7 +446,9 @@
   "dog": {
     "bin": ["dog"]
   },
-  "dotfiles": {},
+  "dotfiles": {
+    "conservative": false
+  },
   "du-dust": {
     "bin": ["dust"]
   },
@@ -461,6 +463,7 @@
   },
   "emacs": {
     "bin": ["emacs"],
+    "conservative": false,
     "man1": [
       "ctags.1.gz",
       "ebrowse.1.gz",
@@ -606,8 +609,16 @@
     "url": ["https://gmplib.org/"],
     "version": "6.2.1"
   },
-  "gnupg": {},
-  "gnutls": {},
+  "gnupg": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "gnutls": {
+    "conservative": true,
+    "url": ["https://www.gnutls.org/", "https://gnupg.org/download/index.html"],
+    "version": "3.7.7"
+  },
   "go": {
     "bin": ["go"]
   },
@@ -832,47 +843,149 @@
     "bin": ["lesspipe.sh"]
   },
   "libassuan": {},
-  "libedit": {},
-  "libev": {},
-  "libevent": {},
-  "libffi": {},
-  "libgcrypt": {},
-  "libgeotiff": {},
-  "libgit2": {},
-  "libgpg-error": {},
-  "libidn": {},
-  "libjpeg-turbo": {},
-  "libksba": {},
-  "libpipeline": {},
-  "libpng": {},
-  "libssh2": {},
-  "libtasn1": {},
-  "libtiff": {},
+  "libedit": {
+    "conservative": true,
+    "url": ["https://thrysoee.dk/editline/"],
+    "version": "20210910-3.1"
+  },
+  "libev": {
+    "conservative": true,
+    "url": ["http://software.schmorp.de/pkg/libev.html"],
+    "version": "4.33"
+  },
+  "libevent": {
+    "conservative": true,
+    "url": ["https://libevent.org/", "https://github.com/libevent/libevent/"],
+    "version": "2.1.12"
+  },
+  "libffi": {
+    "conservative": true,
+    "url": ["https://sourceware.org/libffi/"],
+    "version": "3.4.2"
+  },
+  "libgcrypt": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libgeotiff": {
+    "conservative": true,
+    "url": ["https://github.com/OSGeo/libgeotiff/"],
+    "version": "1.7.1"
+  },
+  "libgit2": {
+    "conservative": true,
+    "outdated": true,
+    "url": ["https://github.com/libgit2/libgit2/"],
+    "version": "1.4.4"
+  },
+  "libgpg-error": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libidn": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libjpeg-turbo": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libksba": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libpipeline": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libpng": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libssh2": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libtasn1": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libtiff": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
   "libtool": {
     "bin": ["glibtool", "glibtoolize", "libtool", "libtoolize"],
+    "conservative": false,
     "man1": ["glibtool.1", "glibtoolize.1", "libtool.1", "libtoolize.1"]
   },
-  "libunistring": {},
-  "libuv": {},
+  "libunistring": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "libuv": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
   "libxml2": {
     "bin": ["xml2-config"],
+    "conservative": true,
     "man1": ["xml2-config.1"]
   },
-  "libzip": {},
+  "libzip": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
   "lmod": {
+    "conservative": true,
     "platform": "linux"
   },
-  "lua": {},
-  "luarocks": {},
-  "lz4": {},
-  "lzo": {},
-  "m4": {},
+  "lua": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "luarocks": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "lz4": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "lzo": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "m4": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
   "make": {
     "bin": ["make"],
+    "conservative": false,
     "man1": ["make.1"]
   },
   "man-db": {
     "bin": ["man"],
+    "conservative": false,
     "man1": ["man.1"]
   },
   "mcfly": {
@@ -936,17 +1049,38 @@
     "bin": ["node", "npm", "npx"],
     "man1": ["node.1", "npm.1", "npx.1"]
   },
-  "npth": {},
-  "oniguruma": {},
-  "openblas": {},
+  "npth": {
+    "conservative": true,
+    "url": ["https://gnupg.org/download/"],
+    "version": "1.6"
+  },
+  "oniguruma": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "openblas": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
   "openjdk": {
     "bin": ["jar", "java", "javac"],
     "man1": ["jar.1", "java.1", "javac.1"]
   },
-  "openssh": {},
-  "openssl1": {},
+  "openssh": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
+  "openssl1": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
   "openssl3": {
-    "bin": ["openssl"]
+    "bin": ["openssl"],
+    "conservative": true
   },
   "pandoc": {
     "bin": ["pandoc"],
@@ -1015,12 +1149,19 @@
     ]
   },
   "pinentry": {
-    "platform": "linux"
+    "conservative": true,
+    "platform": "linux",
+    "url": ["https://gnupg.org/download/"],
+    "version": "1.2.0"
   },
   "pipx": {
     "bin": ["pipx"]
   },
-  "pixman": {},
+  "pixman": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
   "pkg-config": {
     "bin": ["pkg-config"],
     "man1": ["pkg-config.1"]
