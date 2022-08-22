@@ -29,35 +29,7 @@ gnu-mirror-url="https://ftpmirror.gnu.org"
 
 
 
-# https://www.freedesktop.org/wiki/Software/fontconfig/
-fontconfig="2.14.0"
 
-# https://www.freetype.org/
-freetype="2.12.1"
-
-# https://github.com/fribidi/fribidi/
-fribidi="1.0.12"
-
-# https://ftp.gnu.org/gnu/gcc/
-gcc="12.1.0"
-
-# https://gdal.org/download.html#current-releases
-gdal="3.5.1"
-
-# https://www.gnu.org/software/gdbm/
-gdbm="1.23"
-
-# https://github.com/libgeos/geos/releases
-geos="3.11.0"
-
-# https://www.gnu.org/software/gettext/
-gettext="0.21"
-
-# https://git-scm.com/
-git="2.37.1"
-
-# https://gitlab.gnome.org/GNOME/glib
-glib="2.72.3"
 
 # https://gmplib.org/
 gmp="6.2.1"
