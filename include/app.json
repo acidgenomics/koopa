@@ -1037,8 +1037,7 @@
     "man1": ["xz.1"]
   },
   "yarn": {
-    "bin": ["yarn"],
-    "man1": ["yarn.1"]
+    "bin": ["yarn"]
   },
   "yq": {
     "bin": ["yq"]
