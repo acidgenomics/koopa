@@ -1,29 +1,65 @@
 {
   "ack": {
     "bin": ["ack"],
+    "conservative": false,
     "man1": ["ack.1"]
   },
-  "anaconda": {},
+  "anaconda": {
+    "conservative": false
+  },
   "apptainer": {
+    "conservative": false,
     "platform": "linux"
   },
-  "apr": {},
-  "apr-util": {},
-  "armadillo": {},
+  "apr": {
+    "conservative": true,
+    "url": ["https://apr.apache.org/"],
+    "version": "1.7.0"
+  },
+  "apr-util": {
+    "conservative": true,
+    "url": ["https://apr.apache.org/"],
+    "version": "1.6.1"
+  },
+  "armadillo": {
+    "conservative": true,
+    "url": ["http://arma.sourceforge.net/download.html"],
+    "version": "11.2.3"
+  },
   "aspell": {
     "bin": ["aspell"],
+    "conservative": false,
     "man1": ["aspell.1"]
   },
   "aspera-connect": {
+    "conservative": false,
     "platform": "linux"
   },
-  "autoconf": {},
-  "automake": {},
+  "attr": {
+    "conservative": true,
+    "platform": "linux",
+    "url": ["https://savannah.nongnu.org/projects/attr"],
+    "version": "2.5.1"
+  },
+  "autoconf": {
+    "conservative": true,
+    "url": ["https://ftp.gnu.org/gnu/autoconf/"],
+    "version": "2.71"
+  },
+  "automake": {
+    "conservative": true,
+    "url": ["https://ftp.gnu.org/gnu/automake/"],
+    "version": "1.16.5"
+  },
   "aws-cli": {
-    "bin": ["aws"]
+    "bin": ["aws"],
+    "conservative": false
   },
   "azure-cli": {
-    "bin": ["az"]
+    "bin": ["az"],
+    "conservative": false,
+    "dependencies": ["python"],
+    "version": "2.39.0"
   },
   "bamtools": {
     "bin": ["bamtools"]
@@ -43,7 +79,10 @@
   },
   "bc": {
     "bin": ["bc"],
-    "man1": ["bc.1"]
+    "conservative": true,
+    "man1": ["bc.1"],
+    "url": ["https://ftp.gnu.org/gnu/bc/"],
+    "version": "1.07.1"
   },
   "bcbio-nextgen": {
     "check": false,
@@ -56,15 +95,30 @@
   "bedtools": {
     "bin": ["bedtools"]
   },
-  "binutils": {},
+  "binutils": {
+    "conservative": true,
+    "url": ["https://ftp.gnu.org/gnu/binutils/"],
+    "version": "2.38"
+  },
   "bioawk": {
     "bin": ["bioawk"]
   },
-  "bison": {},
-  "black": {
-    "bin": ["black"]
+  "bison": {
+    "conservative": true,
+    "url": ["https://www.gnu.org/software/bison/"],
+    "version": "3.8.2"
   },
-  "boost": {},
+  "black": {
+    "bin": ["black"],
+    "conservative": false,
+    "dependencies": ["python"],
+    "version": "22.6.0"
+  },
+  "boost": {
+    "conservative": true,
+    "url": ["https://www.boost.org/"],
+    "version": "1.79.0"
+  },
   "bowtie2": {
     "bin": ["bowtie2"]
   },
@@ -74,7 +128,11 @@
   "broot": {
     "bin": ["broot"]
   },
-  "brotli": {},
+  "brotli": {
+    "conservative": true,
+    "url": ["https://github.com/google/brotli/"],
+    "version": "1.0.9"
+  },
   "bustools": {
     "bin": ["bustools"]
   },
@@ -92,6 +150,7 @@
       "bzless",
       "bzmore"
     ],
+    "conservative": true,
     "man1": [
       "bzcmp.1",
       "bzdiff.1",
@@ -101,7 +160,9 @@
       "bzip2.1",
       "bzless.1",
       "bzmore.1"
-    ]
+    ],
+    "url": ["https://www.sourceware.org/bzip2/"],
+    "version": "1.0.8"
   },
   "c-ares": {},
   "ca-certificates": {},
