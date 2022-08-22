@@ -753,7 +753,7 @@ latch="1.14.1"
 meson="0.63.0"
 ninja="1.10.2.3"
 pipx="1.1.0"
-poetry="1.1.14"
+poetry="1.1.15"
 pyflakes="2.5.0"
 pygments="2.13.0"
 pylint="2.14.5"
@@ -776,7 +776,7 @@ ronn="0.7.3"
 
 bat="0.21.0"
 broot="1.14.2" # br
-difftastic="0.32.0" # difft
+difftastic="0.33.0" # difft
 dog="0.1.0"
 du-dust="0.8.1"
 exa="0.10.1"
