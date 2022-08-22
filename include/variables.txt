@@ -31,43 +31,7 @@ gnu-mirror-url="https://ftpmirror.gnu.org"
 
 
 
-# https://gmplib.org/
-gmp="6.2.1"
 
-# https://www.gnu.org/software/gperf
-gperf="3.1"
-
-# https://www.graphviz.org/
-graphviz="5.0.0"
-
-# https://www.gnu.org/software/gsl/
-gsl="2.7.1"
-
-# https://www.gnu.org/software/gzip/
-gzip="1.12"
-
-harfbuzz="5.1.0"
-
-# https://docs.haskellstack.org/en/stable/install_and_upgrade/
-haskell-stack="2.7.5"
-
-# https://www.hdfgroup.org/downloads/hdf5/
-hdf5="1.12.2"
-
-# http://site.icu-project.org/
-icu4c="71.1"
-
-# https://imagemagick.org/
-imagemagick="7.1.0-45"
-
-# http://jemalloc.net/
-jemalloc="5.3.0"
-
-# https://www.ijg.org/
-jpeg="9e"
-
-# https://www.netlib.org/lapack/
-lapack="3.10.1"
 
 # https://thrysoee.dk/editline/
 libedit="20210910-3.1"
