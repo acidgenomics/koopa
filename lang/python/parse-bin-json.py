@@ -2,7 +2,10 @@
 
 """
 Parse JSON.
-Updated 2022-08-22.
+@note Updated 2022-08-22.
+
+@examples
+./parse-bin-json.py /opt/koopa/include/bin.json coreutils
 """
 
 import argparse
@@ -12,7 +15,7 @@ import json
 def parse_bin_json(file, app_name):
     """
     Parse the koopa 'bin.json' file.
-    Updated 2022-08-22.
+    @note Updated 2022-08-22.
     """
     with open(file, encoding="utf-8") as con:
         data = json.load(con)
