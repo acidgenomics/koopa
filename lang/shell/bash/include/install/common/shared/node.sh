@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-08-21.
+    # @note Updated 2022-08-22.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
@@ -107,5 +107,8 @@ main() {
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs="${dict['jobs']}"
     "${app['make']}" install
+    # FIXME Improve documentation by linking these into 'share/man/man1'.
+    # > lib/node_modules/npm/man/man1/npm.1
+    # > lib/node_modules/npm/man/man1/npx.1
     return 0
 }
