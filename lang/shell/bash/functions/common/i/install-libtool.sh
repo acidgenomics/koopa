@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Do this this in the main installer and link from there instead.
+
 koopa_install_libtool() {
     # """
     # These links are useful for compiling vterm inside of Emacs. Current
