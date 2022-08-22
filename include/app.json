@@ -164,9 +164,21 @@
     "url": ["https://www.sourceware.org/bzip2/"],
     "version": "1.0.8"
   },
-  "c-ares": {},
-  "ca-certificates": {},
-  "cairo": {},
+  "c-ares": {
+    "conservative": true,
+    "url": ["https://c-ares.org/"],
+    "version": "1.18.1"
+  },
+  "ca-certificates": {
+    "conservative": true,
+    "url": ["https://curl.se/docs/caextract.html"],
+    "version": "2022-07-19"
+  },
+  "cairo": {
+    "conservative": true,
+    "url": ["https://cairographics.org/"],
+    "version": "1.16.0"
+  },
   "cheat": {
     "bin": ["cheat"]
   },
@@ -175,7 +187,10 @@
     "bin": ["chezmoi"]
   },
   "cmake": {
-    "bin": ["cmake"]
+    "bin": ["cmake"],
+    "conservative": true,
+    "url": ["https://cmake.org/download/"],
+    "version": "3.24.0"
   },
   "colorls": {
     "bin": ["colorls"]
@@ -292,6 +307,7 @@
       "whoami",
       "yes"
     ],
+    "conservative": false,
     "man1": [
       "b2sum.1",
       "base32.1",
@@ -398,7 +414,9 @@
       "who.1",
       "whoami.1",
       "yes.1"
-    ]
+    ],
+    "url": ["# https://www.gnu.org/software/coreutils/"],
+    "version": "9.1"
   },
   "cpufetch": {
     "bin": ["cpufetch"],
@@ -406,7 +424,10 @@
   },
   "curl": {
     "bin": ["curl", "curl-config"],
-    "man1": ["curl.1", "curl-config.1"]
+    "conservative": true,
+    "man1": ["curl.1", "curl-config.1"],
+    "url": ["https://curl.haxx.se/"],
+    "version": "7.84.0"
   },
   "deeptools": {
     "bin": ["deeptools"]
@@ -796,7 +817,7 @@
     "bin": ["openssl"]
   },
   "pandoc": {
-    "bin": ["pandoc"]
+    "bin": ["pandoc"],
     "conservative": false,
     "version": "2.19.2"
   },

@@ -26,23 +26,9 @@ gnu-mirror-url="https://ftpmirror.gnu.org"
 # Don't update these versions frequently, as other packages depend on them.
 # Consider updating and rebuilding semi-annually.
 
-# https://c-ares.org/
-c-ares="1.18.1"
 
-# https://curl.se/docs/caextract.html
-ca-certificates="2022-07-19"
 
-# https://cairographics.org/
-cairo="1.16.0"
 
-# https://cmake.org/download/
-cmake="3.24.0"
-
-# https://www.gnu.org/software/coreutils/
-coreutils="9.1"
-
-# https://curl.haxx.se/
-curl="7.84.0"
 
 # https://editorconfig.org/
 # https://github.com/editorconfig/editorconfig-core-c/
