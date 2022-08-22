@@ -611,8 +611,8 @@
   },
   "gnupg": {
     "conservative": true,
-    "url": [""],
-    "version": ""
+    "url": ["https://gnupg.org/download/"],
+    "version": "2.3.7"
   },
   "gnutls": {
     "conservative": true,
@@ -842,7 +842,11 @@
   "lesspipe": {
     "bin": ["lesspipe.sh"]
   },
-  "libassuan": {},
+  "libassuan": {
+    "conservative": true,
+    "url": ["https://gnupg.org/download/"],
+    "version": "2.5.5"
+  },
   "libedit": {
     "conservative": true,
     "url": ["https://thrysoee.dk/editline/"],
@@ -865,8 +869,8 @@
   },
   "libgcrypt": {
     "conservative": true,
-    "url": [""],
-    "version": ""
+    "url": ["https://gnupg.org/download/"],
+    "version": "1.10.1"
   },
   "libgeotiff": {
     "conservative": true,
@@ -881,13 +885,13 @@
   },
   "libgpg-error": {
     "conservative": true,
-    "url": [""],
-    "version": ""
+    "url": ["https://gnupg.org/download/"],
+    "version": "1.45"
   },
   "libidn": {
     "conservative": true,
-    "url": [""],
-    "version": ""
+    "url": ["https://www.gnu.org/software/libidn/"],
+    "version": "2.3.3"
   },
   "libjpeg-turbo": {
     "conservative": true,
@@ -896,8 +900,8 @@
   },
   "libksba": {
     "conservative": true,
-    "url": [""],
-    "version": ""
+    "url": ["https://gnupg.org/download/"],
+    "version": "1.6.0"
   },
   "libpipeline": {
     "conservative": true,

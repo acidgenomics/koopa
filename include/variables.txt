@@ -36,9 +36,6 @@ gnu-mirror-url="https://ftpmirror.gnu.org"
 
 
 
-# https://www.gnu.org/software/libidn/
-libidn="2.3.3"
-
 # https://www.libjpeg-turbo.org/
 libjpeg-turbo="2.1.3"
 
@@ -496,16 +493,6 @@ samtools="1.15.1" # 2022-04-07 bioconda; latest: 1.16
 snakemake="7.12.0" # 2022-07-29 bioconda
 star="2.7.10a" # 2022-01-15 bioconda
 visidata="2.8" # 2022-01-13 conda-forge
-
-# GnuPG packages
-# ==============================================================================
-
-https://gnupg.org/download/
-
-libgpg-error="1.45"
-libgcrypt="1.10.1"
-libksba="1.6.0"
-libassuan="2.5.5"
 
 # Go packages
 # ==============================================================================
