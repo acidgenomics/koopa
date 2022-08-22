@@ -1,12 +1,17 @@
 # koopa
 # ==============================================================================
 
+# FIXME can we encode these as functions instead?
 koopa-git-url="https://github.com/acidgenomics/koopa.git"
 koopa-url="https://koopa.acidgenomics.com"
+
+# FIXME Move this out to a single flat file.
 koopa-version="0.13.0a"
 
 # Globals
 # ==============================================================================
+
+# FIXME can we encode these as functions instead?
 
 # GnuPG FTP URL.
 gcrypt-url="https://gnupg.org/ftp/gcrypt"
@@ -20,42 +25,6 @@ gnu-mirror-url="https://ftpmirror.gnu.org"
 
 # Don't update these versions frequently, as other packages depend on them.
 # Consider updating and rebuilding semi-annually.
-
-# https://apr.apache.org/
-apr="1.7.0"
-
-# https://apr.apache.org/
-apr-util="1.6.1"
-
-# http://arma.sourceforge.net/download.html
-armadillo="11.2.3"
-
-# https://savannah.nongnu.org/projects/attr
-attr="2.5.1"
-
-# https://ftp.gnu.org/gnu/autoconf/
-autoconf="2.71"
-
-# https://ftp.gnu.org/gnu/automake/
-automake="1.16.5"
-
-# https://ftp.gnu.org/gnu/bc/
-bc="1.07.1"
-
-# https://ftp.gnu.org/gnu/binutils/
-binutils="2.38"
-
-# https://www.gnu.org/software/bison/
-bison="3.8.2"
-
-# https://www.boost.org/
-boost="1.79.0"
-
-# https://github.com/google/brotli/
-brotli="1.0.9"
-
-# https://www.sourceware.org/bzip2/
-bzip2="1.0.8"
 
 # https://c-ares.org/
 c-ares="1.18.1"
@@ -742,8 +711,6 @@ rename="1.31"
 # Python packages
 # ==============================================================================
 
-azure-cli="2.39.0"
-black="22.6.0"
 bpytop="1.0.68"
 flake8="5.0.4"
 glances="3.2.7"
