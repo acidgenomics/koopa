@@ -488,7 +488,7 @@ nim="1.6.6"
 oracle-instant-client="21.7.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.19.1"
+pandoc="2.19.2"
 
 # https://www.gnu.org/software/parallel/
 parallel="20220722"

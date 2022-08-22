@@ -797,6 +797,8 @@
   },
   "pandoc": {
     "bin": ["pandoc"]
+    "conservative": false,
+    "version": "2.19.2"
   },
   "parallel": {
     "bin": ["parallel"],
