@@ -3,7 +3,7 @@
 main() {
     # """
     # Install rmate.
-    # @note Updated 2022-01-24.
+    # @note Updated 2022-08-22.
     # """
     local dict
     koopa_assert_has_no_args "$#"
@@ -13,7 +13,8 @@ main() {
         ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/aurora/${dict['name']}/archive/${dict['file']}"
+    dict['url']="https://github.com/aurora/${dict['name']}/archive/\
+${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
