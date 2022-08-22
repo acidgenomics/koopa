@@ -713,7 +713,7 @@
   "nextflow": {
     "bin": ["nextflow"]
   },
-  "hghttp2": {},
+  "nghttp2": {},
   "nim": {},
   "ninja": {
     "bin": ["ninja"]
