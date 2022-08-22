@@ -298,72 +298,149 @@
   "gget": {
     "bin": ["gget"]
   },
-  "ghostscript": ["gs"],
-  "git": ["git"],
-  "glances": ["glances"],
-  "go": ["go"],
-  "google-cloud-sdk": ["gloud"],
-  "grep": ["egrep", "fgrep", "grep"],
-  "groff": ["groff"],
-  "gseapy": ["gseapy"],
-  "gtop": ["gtop"],
-  "hadolint": ["hadolint"],
-  "haskell-stack": ["stack"],
-  "hdf5": [
-    "gif2h5",
-    "h52gif",
-    "h5c++",
-    "h5cc",
-    "h5clear",
-    "h5copy",
-    "h5debug",
-    "h5diff",
-    "h5dump",
-    "h5fc",
-    "h5format_convert",
-    "h5import",
-    "h5jam",
-    "h5ls",
-    "h5mkgrp",
-    "h5perf_serial",
-    "h5redeploy",
-    "h5repack",
-    "h5repart",
-    "h5stat",
-    "h5unjam",
-    "h5watch"
-  ],
-  "hisat2": ["hisat2"],
-  "hyperfine": ["hyperfine"],
-  "icu4c": [
-    "derb",
-    "genbrk",
-    "gencfu",
-    "gencnval",
-    "gendict",
-    "genrb",
-    "icu-config",
-    "icuexportdata",
-    "icuinfo",
-    "makeconv",
-    "pkgdata",
-    "uconv"
-  ],
-  "imagemagick": [
-    "magick",
-    "Magick++-config",
-    "MagickCore-config",
-    "MagickWand-config",
-    "magick",
-    "magick-script"
-  ],
-  "ipython": ["ipython"],
-  "isort": ["isort"],
-  "jq": ["jq"],
-  "julia": ["julia"],
-  "jupyterlab": ["jupyter-lab"],
-  "kallisto": ["kallisto"],
-  "lame": ["lame"],
+  "ghostscript": {
+    "bin": ["gs"]
+  },
+  "git": {
+    "bin": ["git"]
+  },
+  "glances": {
+    "bin": ["glances"]
+  },
+  "glib": {},
+  "gmp": {},
+  "gnupg": {},
+  "gnutls": {},
+  "go": {
+    "bin": ["go"]
+  },
+  "google-cloud-sdk": {
+    "bin": ["gloud"]
+  },
+  "gperf": {},
+  "graphviz": {},
+  "grep": {
+    "bin": ["egrep", "fgrep", "grep"]
+  },
+  "groff": {
+    "bin": ["groff"]
+  },
+  "gseapy": {
+    "bin": ["gseapy"]
+  },
+  "gsl": {},
+  "gtop": {
+    "bin": ["gtop"]
+  },
+  "gzip": {
+    "bin": [
+      "gunzip",
+      "gzexe",
+      "gzip",
+      "uncompress",
+      "zcat",
+      "zcmp",
+      "zdiff",
+      "zegrep",
+      "zfgrep",
+      "zforce",
+      "zgrep",
+      "zless",
+      "zmore",
+      "znew"
+    ]
+  },
+  "hadolint": {
+    "bin": ["hadolint"]
+  },
+  "harfbuzz": {},
+  "haskell-stack": {
+    "bin": ["stack"]
+  },
+  "hdf5": {
+    "bin": [
+      "gif2h5",
+      "h52gif",
+      "h5c++",
+      "h5cc",
+      "h5clear",
+      "h5copy",
+      "h5debug",
+      "h5diff",
+      "h5dump",
+      "h5fc",
+      "h5format_convert",
+      "h5import",
+      "h5jam",
+      "h5ls",
+      "h5mkgrp",
+      "h5perf_serial",
+      "h5redeploy",
+      "h5repack",
+      "h5repart",
+      "h5stat",
+      "h5unjam",
+      "h5watch"
+    ]
+  },
+  "hisat2": {
+    "bin": ["hisat2"]
+  },
+  "htop": {
+    "bin": ["htop"]
+  },
+  "hyperfine": {
+    "bin": ["hyperfine"]
+  },
+  "icu4c": {
+    "bin": [
+      "derb",
+      "genbrk",
+      "gencfu",
+      "gencnval",
+      "gendict",
+      "genrb",
+      "icu-config",
+      "icuexportdata",
+      "icuinfo",
+      "makeconv",
+      "pkgdata",
+      "uconv"
+    ]
+  },
+  "imagemagick": {
+    "bin": [
+      "magick",
+      "Magick++-config",
+      "MagickCore-config",
+      "MagickWand-config",
+      "magick",
+      "magick-script"
+    ]
+  },
+  "ipython": {
+    "bin": ["ipython"]
+  },
+  "isort": {
+    "bin": ["isort"]
+  },
+  "jemalloc": {},
+  "jpeg": {},
+  "jq": {
+    "bin": ["jq"]
+  },
+  "julia": {
+    "bin": ["julia"]
+  },
+  "jupyterlab": {
+    "bin": ["jupyter-lab"]
+  },
+  "kallisto": {
+    "bin": ["kallisto"]
+  },
+  "lame": {
+    "bin": ["lame"]
+  },
   "latch": ["latch"],
   "less": ["less"],
   "lesspipe": ["lesspipe.sh"],
