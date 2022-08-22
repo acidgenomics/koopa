@@ -87,33 +87,33 @@ __koopa_warn() {
 __koopa_zsh_header() {
     # """
     # Zsh header.
-    # @note Updated 2022-08-21.
+    # @note Updated 2022-02-25.
     # """
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        ['activate']=0
-        ['checks']=1
-        ['minimal']=0
-        ['test']=0
-        ['verbose']=0
+        [activate]=0
+        [checks]=1
+        [minimal]=0
+        [test]=0
+        [verbose]=0
     )
-    [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict['activate']="$KOOPA_ACTIVATE"
-    [[ -n "${KOOPA_CHECKS:-}" ]] && dict['checks']="$KOOPA_CHECKS"
-    [[ -n "${KOOPA_MINIMAL:-}" ]] && dict['minimal']="$KOOPA_MINIMAL"
-    [[ -n "${KOOPA_TEST:-}" ]] && dict['test']="$KOOPA_TEST"
-    [[ -n "${KOOPA_VERBOSE:-}" ]] && dict['verbose']="$KOOPA_VERBOSE"
-    if [[ "${dict['activate']}" -eq 1 ]] && [[ "${dict['test']}" -eq 0 ]]
+    [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
+    [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_MINIMAL:-}" ]] && dict[minimal]="$KOOPA_MINIMAL"
+    [[ -n "${KOOPA_TEST:-}" ]] && dict[test]="$KOOPA_TEST"
+    [[ -n "${KOOPA_VERBOSE:-}" ]] && dict[verbose]="$KOOPA_VERBOSE"
+    if [[ "${dict[activate]}" -eq 1 ]] && [[ "${dict[test]}" -eq 0 ]]
     then
-        dict['checks']=0
+        dict[checks]=0
     fi
-    if [[ "${dict['verbose']}" -eq 1 ]]
+    if [[ "${dict[verbose]}" -eq 1 ]]
     then
         setopt sourcetrace
         setopt verbose
         setopt xtrace
     fi
-    if [[ "${dict['checks']}" -eq 1 ]]
+    if [[ "${dict[checks]}" -eq 1 ]]
     then
         setopt errexit
         setopt nounset
@@ -121,13 +121,13 @@ __koopa_zsh_header() {
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        dict['header_path']="${(%):-%N}"
-        if [[ -L "${dict['header_path']}" ]]
+        dict[header_path]="${(%):-%N}"
+        if [[ -L "${dict[header_path]}" ]]
         then
-            dict['header_path']="$(__koopa_realpath "${dict['header_path']}")"
+            dict[header_path]="$(__koopa_realpath "${dict[header_path]}")"
         fi
         KOOPA_PREFIX="$( \
-            cd "$(dirname "${dict['header_path']}")/../../../.." \
+            cd "$(dirname "${dict[header_path]}")/../../../.." \
             >/dev/null 2>&1 \
             && pwd -P \
         )"
@@ -138,12 +138,12 @@ __koopa_zsh_header() {
     then
         koopa_duration_start || return 1
     fi
-    if [[ "${dict['activate']}" -eq 1 ]] && [[ "${dict['minimal']}" -eq 0 ]]
+    if [[ "${dict[activate]}" -eq 1 ]] && [[ "${dict[minimal]}" -eq 0 ]]
     then
         source "${KOOPA_PREFIX:?}/lang/shell/zsh/functions/activate.sh"
         koopa_activate_zsh_extras
     fi
-    if [[ "${dict['test']}" -eq 1 ]]
+    if [[ "${dict[test]}" -eq 1 ]]
     then
         koopa_duration_stop 'zsh' || return 1
     fi

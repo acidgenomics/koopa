@@ -16,7 +16,7 @@ koopa_zsh_prompt() {
 koopa_zsh_prompt_string() {
     # """
     # Zsh prompt string (PS1).
-    # @note Updated 2022-08-21.
+    # @note Updated 2022-01-21.
     #
     # This is a modified, lighter version of Pure, by Sindre Sorhus.
     #
@@ -46,30 +46,30 @@ koopa_zsh_prompt_string() {
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        ['conda']="\$(koopa_prompt_conda)"
-        ['conda_color']="${fg['yellow']}"
-        ['git']="\$(koopa_prompt_git)"
-        ['git_color']="${fg['green']}"
-        ['newline']=$'\n'
-        ['prompt']='❯' # default is '%%'.
-        ['prompt_color']="${fg['magenta']}"
-        ['user']="$(koopa_user)@$(koopa_hostname)"
-        ['user_color']="${fg['cyan']}"
-        ['venv']="\$(koopa_prompt_python_venv)"
-        ['venv_color']="${fg['yellow']}"
-        ['wd']='%~'
-        ['wd_color']="${fg['blue']}"
+        [conda]="\$(koopa_prompt_conda)"
+        [conda_color]="${fg[yellow]}"
+        [git]="\$(koopa_prompt_git)"
+        [git_color]="${fg[green]}"
+        [newline]=$'\n'
+        [prompt]='❯' # default is '%%'.
+        [prompt_color]="${fg[magenta]}"
+        [user]="$(koopa_user)@$(koopa_hostname)"
+        [user_color]="${fg[cyan]}"
+        [venv]="\$(koopa_prompt_python_venv)"
+        [venv_color]="${fg[yellow]}"
+        [wd]='%~'
+        [wd_color]="${fg[blue]}"
     )
     printf '%s%s%s%s%s%s%s%s%s ' \
-        "${dict['newline']}" \
-        "%F%{${dict['user_color']}%}${dict['user']}%f" \
-        "%F%{${dict['conda_color']}%}${dict['conda']}%f" \
-        "%F%{${dict['venv_color']}%}${dict['venv']}%f" \
-        "${dict['newline']}" \
-        "%F%{${dict['wd_color']}%}${dict['wd']}%f" \
-        "%F%{${dict['git_color']}%}${dict['git']}%f" \
-        "${dict['newline']}" \
-        "%F%{${dict['prompt_color']}%}${dict['prompt']}%f"
+        "${dict[newline]}" \
+        "%F%{${dict[user_color]}%}${dict[user]}%f" \
+        "%F%{${dict[conda_color]}%}${dict[conda]}%f" \
+        "%F%{${dict[venv_color]}%}${dict[venv]}%f" \
+        "${dict[newline]}" \
+        "%F%{${dict[wd_color]}%}${dict[wd]}%f" \
+        "%F%{${dict[git_color]}%}${dict[git]}%f" \
+        "${dict[newline]}" \
+        "%F%{${dict[prompt_color]}%}${dict[prompt]}%f"
     return 0
 }
 
