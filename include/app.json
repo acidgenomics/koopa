@@ -2,6 +2,7 @@
   "ack": {
     "bin": ["ack"],
     "conservative": false,
+    "dependencies": ["perl"],
     "man1": ["ack.1"]
   },
   "anaconda": {
@@ -196,7 +197,8 @@
     "bin": ["colorls"]
   },
   "conda": {
-    "bin": ["conda"]
+    "bin": ["conda"],
+    "conservative": true
   },
   "coreutils": {
     "bin": [
@@ -514,16 +516,29 @@
     "man1": ["flac.1"]
   },
   "flake8": {
-    "bin": ["flake8"]
+    "bin": ["flake8"],
+    "dependencies": ["python"]
   },
   "fltk": {
     "conservative": true,
     "url": ["https://www.fltk.org/"],
     "version": "1.3.8"
   },
-  "fontconfig": {},
-  "freetype": {},
-  "fribidi": {},
+  "fontconfig": {
+    "conservative": true,
+    "url": ["https://www.freedesktop.org/wiki/Software/fontconfig/"],
+    "version": "2.14.0"
+  },
+  "freetype": {
+    "conservative": true,
+    "url": ["https://www.freetype.org/"],
+    "version": "2.12.1"
+  },
+  "fribidi": {
+    "conservative": true,
+    "url": ["https://github.com/fribidi/fribidi/"],
+    "version": "1.0.12"
+  },
   "fzf": {
     "bin": ["fzf"],
     "man1": ["fzf.1"]
@@ -532,17 +547,35 @@
     "bin": ["awk", "gawk"],
     "man1": ["awk.1", "gawk.1"]
   },
-  "gcc": {},
+  "gcc": {
+    "conservative": true,
+    "outdated": true,
+    "url": ["https://ftp.gnu.org/gnu/gcc/"],
+    "version": "12.1.0"
+  },
   "gdal": {
     "bin": ["gdal-config"],
-    "man1": ["gdal-config.1"]
+    "man1": ["gdal-config.1"],
+    "url": ["https://gdal.org/download.html"],
+    "version": "3.5.1"
   },
-  "gdbm": {},
+  "gdbm": {
+    "conservative": true,
+    "url": ["https://www.gnu.org/software/gdbm/"],
+    "version": "1.23"
+  },
   "geos": {
     "bin": ["geos-config"],
-    "man1": ["geos-config.1"]
+    "conservative": true,
+    "man1": ["geos-config.1"],
+    "url": ["https://github.com/libgeos/geos/"],
+    "version": "3.11.0"
   },
-  "gettext": {},
+  "gettext": {
+    "conservative": true,
+    "url": ["https://www.gnu.org/software/gettext/"],
+    "version": "0.21"
+  },
   "gffutils": {
     "bin": ["gffutils-cli"]
   },
@@ -554,12 +587,20 @@
     "man1": ["gs.1"]
   },
   "git": {
-    "bin": ["git"]
+    "bin": ["git"],
+    "conservative": true,
+    "outdated": true,
+    "url": ["https://git-scm.com/"],
+    "version": "2.37.1"
   },
   "glances": {
     "bin": ["glances"]
   },
-  "glib": {},
+  "glib": {
+    "conservative": true,
+    "url": ["https://gitlab.gnome.org/GNOME/glib"],
+    "version": "2.72.3"
+  },
   "gmp": {},
   "gnupg": {},
   "gnutls": {},
