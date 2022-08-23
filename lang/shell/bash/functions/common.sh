@@ -8898,7 +8898,7 @@ koopa_ftp_mirror() {
 
 koopa_gcrypt_url() {
     koopa_assert_has_no_args "$#"
-    koopa_variable 'gcrypt-url'
+    koopa_print 'https://gnupg.org/ftp/gcrypt'
     return 0
 }
 
@@ -9843,7 +9843,7 @@ koopa_github_latest_release() {
 
 koopa_gnu_mirror_url() {
     koopa_assert_has_no_args "$#"
-    koopa_variable 'gnu-mirror-url'
+    koopa_print 'https://ftpmirror.gnu.org'
     return 0
 }
 
@@ -13380,7 +13380,7 @@ koopa_install_r_packages() {
     [[ -x "${app['rscript']}" ]] || return 1
     koopa_configure_r "${app['r']}"
     declare -A dict=(
-        ['bioc_version']="$(koopa_variable 'bioconductor')"
+        ['bioc_version']='3.15'
     )
     "${app['rscript']}" -e " \
         isInstalled <- function(pkgs) { ; \
@@ -15136,13 +15136,20 @@ koopa_local_ip_address() {
 
 koopa_koopa_url() {
     koopa_assert_has_no_args "$#"
-    koopa_variable 'koopa-url'
+    koopa_print 'https://koopa.acidgenomics.com'
     return 0
 }
 
 koopa_koopa_version() {
+    local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    koopa_variable 'koopa-version'
+    app['cat']="$(koopa_locate_cat)"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['version_file']="${dict['koopa_prefix']}/VERSION"
+    koopa_assert_is_file "${dict['version_file']}"
+    dict['version']="$("${app['cat']}" "${dict['version_file']}")"
+    koopa_print "${dict['version']}"
     return 0
 }
 

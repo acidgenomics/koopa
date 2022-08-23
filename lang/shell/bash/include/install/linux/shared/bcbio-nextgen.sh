@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Link into libexec and install bcbio_nextgen.py into 'bin'.
+
 main() {
     # """
     # Install bcbio-nextgen.

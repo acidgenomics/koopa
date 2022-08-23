@@ -1,63 +1,6 @@
 # koopa
 # ==============================================================================
 
-# FIXME can we encode these as functions instead?
-koopa-git-url="https://github.com/acidgenomics/koopa.git"
-koopa-url="https://koopa.acidgenomics.com"
-
-# FIXME Move this out to a single flat file.
-koopa-version="0.13.0a"
-
-# Globals
-# ==============================================================================
-
-# FIXME can we encode these as functions instead?
-
-# GnuPG FTP URL.
-gcrypt-url="https://gnupg.org/ftp/gcrypt"
-
-# GNU FTP server mirror.
-# https://www.gnu.org/prep/ftp.en.html
-gnu-mirror-url="https://ftpmirror.gnu.org"
-
-# Liberal program versions (a.k.a. "the fun stuff")
-# ==============================================================================
-
-# https://github.com/asdf-vm/asdf/releases
-asdf="0.10.2"
-
-# http://aspell.net/
-aspell="0.60.8"
-
-# https://www.ibm.com/aspera/connect/
-aspera-connect="4.1.3.93"
-
-# https://aws.amazon.com/cli/
-# https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.7.24"
-
-# https://www.gnu.org/software/bash/
-bash="5.1.16"
-
-# https://bcbio-nextgen.readthedocs.io/
-# https://github.com/bcbio/bcbio-nextgen/releases
-bcbio-nextgen="1.2.9"
-
-# https://github.com/bcbio/bcbio-nextgen-vm/releases
-bcbio-nextgen-vm="0.1.6"
-
-# https://support.illumina.com/sequencing/sequencing_software/
-#     bcl2fastq-conversion-software.html
-bcl2fastq="2.20.0.422"
-
-# FIXME Need to add a build script for this.
-# https://rtyley.github.io/bfg-repo-cleaner/
-bfg="1.14.1"
-
-# This is used during 'r-packages' install.
-# https://bioconductor.org/
-bioconductor="3.15"
-
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
 #     pipelines/latest/installation
