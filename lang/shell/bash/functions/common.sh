@@ -19343,7 +19343,8 @@ koopa_rsync() {
             '--delete' | \
             '--delete-before' | \
             '--dry-run' | \
-            '--log-file='*)
+            '--log-file='* | \
+            '‐‐size‐only')
                 rsync_args+=("$1")
                 shift 1
                 ;;
@@ -19370,6 +19371,7 @@ koopa_rsync() {
     dict['source_dir']="$(koopa_strip_trailing_slash "${dict['source_dir']}")"
     dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
     rsync_args+=("${dict['source_dir']}/" "${dict['target_dir']}/")
+    koopa_dl 'rsync args' "${rsync_args[*]}"
     "${app['rsync']}" "${rsync_args[@]}"
     return 0
 }
