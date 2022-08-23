@@ -13,6 +13,7 @@ Parse koopa 'app.json' file.
 from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, join
+import sys
 
 
 def main(json_file, app_name, key):
@@ -21,15 +22,19 @@ def main(json_file, app_name, key):
     @note Updated 2022-08-23.
     """
     with open(json_file, encoding="utf-8") as con:
-        data = load(con)
-        keys = data.keys()
+        json_data = load(con)
+        keys = json_data.keys()
         if app_name not in keys:
-            return False
-        app_dict = data[app_name]
+            sys.exit(1)
+        app_dict = json_data[app_name]
         if key not in app_dict.keys():
-            return False
-        for val in app_dict[key]:
-            print(val)
+            sys.exit(1)
+        value = app_dict[key]
+        if isinstance(value, list):
+            for i in value:
+                print(i)
+        else:
+            print(value)
         return True
 
 
