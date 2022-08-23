@@ -92,13 +92,16 @@ koopa_rsync() {
                 shift 2
                 ;;
             # Passthrough args -------------------------------------------------
+            '--log-file='*)
+                rsync_args+=("$1")
+                shift 1
+                ;;
             '--archive' | \
             '--copy-links' | \
             '--delete' | \
             '--delete-before' | \
             '--dry-run' | \
-            '--size-only' | \
-            '--log-file='*)
+            '--size-only')
                 rsync_args+=("$1")
                 shift 1
                 ;;

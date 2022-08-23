@@ -19336,13 +19336,16 @@ koopa_rsync() {
                 dict['target_dir']="${2:?}"
                 shift 2
                 ;;
+            '--log-file='*)
+                rsync_args+=("$1")
+                shift 1
+                ;;
             '--archive' | \
             '--copy-links' | \
             '--delete' | \
             '--delete-before' | \
             '--dry-run' | \
-            '--size-only' | \
-            '--log-file='*)
+            '--size-only')
                 rsync_args+=("$1")
                 shift 1
                 ;;
