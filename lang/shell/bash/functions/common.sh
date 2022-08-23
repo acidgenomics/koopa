@@ -936,6 +936,21 @@ koopa_anaconda_version() {
     return 0
 }
 
+koopa_app_json_bin() {
+    koopa_assert_has_args_eq "$#" 1
+    koopa_parse_app_json --app-name="${1:?}" --key='bin'
+}
+
+koopa_app_json_man1() {
+    koopa_assert_has_args_eq "$#" 1
+    koopa_parse_app_json --app-name="${1:?}" --key='man1'
+}
+
+koopa_app_json_version() {
+    koopa_assert_has_args_eq "$#" 1
+    koopa_parse_app_json --app-name="${1:?}" --key='version'
+}
+
 koopa_app_prefix() {
     local dict
     koopa_assert_has_args_le "$#" 1
@@ -17541,6 +17556,14 @@ koopa_parent_dir() {
         koopa_print "$parent"
     done
     return 0
+}
+
+koopa_parse_app_json() {
+    local cmd
+    koopa_assert_has_args "$#"
+    cmd="$(koopa_koopa_prefix)/lang/python/parse-app-json.py"
+    koopa_assert_is_executable "$cmd"
+    "$cmd" "$@"
 }
 
 koopa_parse_url() {
