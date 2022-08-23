@@ -6,13 +6,13 @@ Parse koopa 'app.json' file.
 
 @examples
 ./parse-app-json.py \
-    --json-file'/opt/koopa/include/app.json' \
     --app-name='coreutils' \
     --key='bin'
 """
 
 from argparse import ArgumentParser
-import json
+from json import load
+from os.path import abspath, dirname, join
 
 
 def main(json_file, app_name, key):
@@ -21,7 +21,7 @@ def main(json_file, app_name, key):
     @note Updated 2022-08-23.
     """
     with open(json_file, encoding="utf-8") as con:
-        data = json.load(con)
+        data = load(con)
         keys = data.keys()
         if app_name not in keys:
             return False
@@ -34,10 +34,10 @@ def main(json_file, app_name, key):
 
 
 parser = ArgumentParser()
-parser.add_argument("--json-file", required=True, type=str)
 parser.add_argument("--app-name", required=True, type=str)
 parser.add_argument("--key", required=True, type=str)
 args = parser.parse_args()
 
+_json_file = abspath(join(dirname(__file__), "../../include/app.json"))
 
-main(json_file=args.json_file, app_name=args.app_name, key=args.key)
+main(json_file=_json_file, app_name=args.app_name, key=args.key)
