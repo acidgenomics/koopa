@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Remove this function, in favor of Python-based JSON parsing approaches
+# on 'include/app.json' file instead.
+
 koopa_variable() {
     # """
     # Return a variable stored 'variables.txt' include file.
