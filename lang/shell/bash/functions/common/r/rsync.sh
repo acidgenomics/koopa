@@ -53,9 +53,7 @@ koopa_rsync() {
     )
     if koopa_is_macos
     then
-        rsync_args+=(
-            '--iconv=utf-8,utf-8-mac'
-        )
+        rsync_args+=('--iconv=utf-8,utf-8-mac')
     fi
     while (("$#"))
     do
