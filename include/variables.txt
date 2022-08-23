@@ -1,15 +1,6 @@
 # https://github.com/cheat/cheat/
 cheat="4.3.0"
 
-# https://github.com/plexus/chemacs2
-chemacs="d722459287566e8c91ae077bf3d65966ebece190"
-
-# https://github.com/chapmanb/cloudbiolinux
-cloudbiolinux="c4c7cf8e508fe947c8b038543c98a2846bb900d6"
-
-# https://repo.anaconda.com/miniconda/
-conda="4.12.0"
-
 # https://github.com/Dr-Noob/cpufetch/releases
 cpufetch="1.02"
 
@@ -21,9 +12,6 @@ docker="20.10.17"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
-
-# https://github.com/acidgenomics/dotfiles
-dotfiles="5d4e24acbd1e02e3bcf47c8928e82d4c76daa461"
 
 # https://www.gnu.org/software/emacs/
 emacs="28.1"
@@ -107,23 +95,11 @@ password-store="1.7.4"
 # https://github.com/pyenv/pyenv
 pyenv="2.2.5"
 
-# https://www.r-project.org/
-# https://cloud.r-project.org/src/base/R-4/
-r="4.2.1"
-
 # https://mac.r-project.org/openmp/
 r-openmp="13.0.0"
 
 # https://mac.r-project.org/
 r-gfortran="8.2"
-
-# https://svn.r-project.org/R/
-# https://stat.ethz.ch/R/daily/
-# https://github.com/r-devel/r-svn/tree/trunk
-# https://developer.r-project.org/SVNtips.html
-# https://developer.r-project.org/blosxom.cgi/R-devel/NEWS
-# This is the SVN revision number.
-r-devel="82673" # 2022-08-04
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.2.0"
@@ -183,9 +159,6 @@ yarn="1.22.19"
 # https://github.com/mikefarah/yq/
 yq="4.27.2"
 
-# http://zsh.sourceforge.net/Arc/source.html
-zsh="5.9"
-
 # Conda recipes
 # ==============================================================================
 
@@ -214,18 +187,6 @@ snakemake="7.12.0" # 2022-07-29 bioconda
 star="2.7.10a" # 2022-01-15 bioconda
 visidata="2.8" # 2022-01-13 conda-forge
 
-# Go packages
-# ==============================================================================
-
-# https://github.com/apptainer/apptainer
-apptainer="1.0.2"
-
-# https://www.chezmoi.io/
-chezmoi="2.20.0"
-
-# https://github.com/junegunn/fzf
-fzf="0.32.1"
-
 # Python packages
 # ==============================================================================
 
@@ -234,7 +195,6 @@ flake8="5.0.4"
 glances="3.2.7"
 ipython="8.4.0"
 isort="5.10.1"
-latch="1.14.1"
 meson="0.63.0"
 ninja="1.10.2.3"
 pipx="1.1.0"
@@ -255,7 +215,6 @@ bat="0.21.0"
 broot="1.14.2" # br
 difftastic="0.33.0" # difft
 dog="0.1.0"
-du-dust="0.8.1"
 exa="0.10.1"
 fd-find="8.4.0"
 hyperfine="1.14.0"
