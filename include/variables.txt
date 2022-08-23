@@ -20,79 +20,8 @@ gcrypt-url="https://gnupg.org/ftp/gcrypt"
 # https://www.gnu.org/prep/ftp.en.html
 gnu-mirror-url="https://ftpmirror.gnu.org"
 
-# Conservative program versions
-# ==============================================================================
-
-# Don't update these versions frequently, as other packages depend on them.
-# Consider updating and rebuilding semi-annually.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Liberal program versions (a.k.a. "the fun stuff")
 # ==============================================================================
-
-# These programs can be updated more regularly without breaking dependencies
-# in any other packages.
-
-# https://repo.continuum.io/archive/
-anaconda="2022.05"
 
 # https://github.com/asdf-vm/asdf/releases
 asdf="0.10.2"
