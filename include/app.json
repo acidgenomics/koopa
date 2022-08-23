@@ -6,7 +6,9 @@
     "man1": ["ack.1"]
   },
   "anaconda": {
-    "conservative": false
+    "conservative": false,
+    "url": ["https://repo.continuum.io/archive/"],
+    "version": "2022.05"
   },
   "apptainer": {
     "conservative": false,
@@ -26,6 +28,12 @@
     "conservative": true,
     "url": ["http://arma.sourceforge.net/download.html"],
     "version": "11.2.3"
+  },
+  "asdf": {
+    "bin": ["asdf"],
+    "conservative": true,
+    "url": ["https://github.com/asdf-vm/asdf/"],
+    "version": "0.10.2"
   },
   "aspell": {
     "bin": ["aspell"],
