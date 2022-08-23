@@ -1154,15 +1154,24 @@
   },
   "patch": {
     "bin": ["patch"],
-    "man1": ["patch.1"]
+    "conservative": false,
+    "man1": ["patch.1"],
+    "url": ["ftp://ftp.gnu.org/gnu/patch"],
+    "version": "2.7.6"
   },
   "pcre": {
     "bin": ["pcre-config", "pcregrep", "pcretest"],
-    "man1": ["pcre-config.1", "pcregrep.1", "pcretest.1"]
+    "conservative": true,
+    "man1": ["pcre-config.1", "pcregrep.1", "pcretest.1"],
+    "url": ["https://sourceforge.net/projects/pcre/"],
+    "version": "8.45"
   },
   "pcre2": {
     "bin": ["pcre2-config", "pcre2grep", "pcre2test"],
-    "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"]
+    "conservative": true,
+    "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"],
+    "url": ["https://www.pcre.org/"],
+    "version": "10.40"
   },
   "perl": {
     "bin": [
@@ -1184,6 +1193,7 @@
       "ptardiff",
       "ptargrep"
     ],
+    "conservative": true,
     "man1": [
       "cpan.1",
       "perl.1",
@@ -1202,7 +1212,9 @@
       "ptar.1",
       "ptardiff.1",
       "ptargrep.1"
-    ]
+    ],
+    "url": ["https://www.perl.org/get.html"],
+    "version": "5.36.0"
   },
   "pinentry": {
     "conservative": true,
@@ -1215,12 +1227,15 @@
   },
   "pixman": {
     "conservative": true,
-    "url": [""],
-    "version": ""
+    "url": ["https://cairographics.org/"],
+    "version": "0.40.0"
   },
   "pkg-config": {
     "bin": ["pkg-config"],
-    "man1": ["pkg-config.1"]
+    "conservative": false,
+    "man1": ["pkg-config.1"],
+    "url": ["https://pkg-config.freedesktop.org/"],
+    "version": "0.29.2"
   },
   "poetry": {
     "bin": ["poetry"]
@@ -1233,7 +1248,15 @@
   },
   "proj": {
     "bin": ["proj", "projinfo"],
-    "man1": ["proj.1", "projinfo.1"]
+    "conservative": true,
+    "man1": ["proj.1", "projinfo.1"],
+    "url": ["https://proj.org/"],
+    "version": "9.0.1"
+  },
+  "pth": {
+    "conservative": true,
+    "url": ["https://ftp.gnu.org/gnu/pth/"],
+    "version": "2.0.7"
   },
   "pyenv": {
     "bin": ["pyenv"],
@@ -1256,10 +1279,14 @@
   },
   "python": {
     "bin": ["idle3", "pip3", "pydoc3", "python3", "python3-config"],
-    "man1": ["idle3.1", "pip3.1", "pydoc3.1", "python3.1", "python3-config.1"]
+    "outdated": true,
+    "man1": ["idle3.1", "pip3.1", "pydoc3.1", "python3.1", "python3-config.1"],
+    "url": ["https://www.python.org/downloads/"],
+    "version": "3.10.6"
   },
   "r": {
     "bin": ["R", "Rscript"],
+    "conservative": false,
     "man1": ["R.1", "Rscript.1"]
   },
   "ranger-fm": {
@@ -1268,7 +1295,11 @@
   "rbenv": {
     "bin": ["rbenv"]
   },
-  "readline": {},
+  "readline": {
+    "conservative": true,
+    "url": ["https://tiswww.cwru.edu/php/chet/readline/rltop.html"],
+    "version": "8.1.2"
+  },
   "rename": {
     "bin": ["rename"],
     "man1": ["rename.1"]
@@ -1291,7 +1322,10 @@
   },
   "ruby": {
     "bin": ["bundle", "bundler", "gem", "ruby"],
-    "man1": ["bundle.1", "bundler.1", "gem.1", "ruby.1"]
+    "conservative": true,
+    "man1": ["bundle.1", "bundler.1", "gem.1", "ruby.1"],
+    "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
+    "version": "3.1.2p20"
   },
   "rust": {
     "bin": [
@@ -1316,12 +1350,20 @@
   "samtools": {
     "bin": ["samtools"]
   },
-  "scons": {},
+  "scons": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
   "sed": {
     "bin": ["sed"],
     "man1": ["sed.1"]
   },
-  "serf": {},
+  "serf": {
+    "conservative": true,
+    "url": ["https://serf.apache.org/download/"],
+    "version": "1.3.9"
+  },
   "shellcheck": {
     "bin": ["shellcheck"]
   },
@@ -1337,7 +1379,10 @@
   },
   "sqlite": {
     "bin": ["sqlite3"],
-    "man1": ["sqlite3.1"]
+    "conservative": false,
+    "man1": ["sqlite3.1"],
+    "url": ["https://www.sqlite.org/download.html"],
+    "version": "3.39.2"
   },
   "sra-tools": {
     "bin": ["fasterq-dump", "vdb-config"]
@@ -1353,14 +1398,28 @@
   },
   "subversion": {
     "bin": ["svn"],
-    "man1": ["svn.1"]
+    "conservative": true,
+    "man1": ["svn.1"],
+    "url": ["https://subversion.apache.org/"],
+    "version": "1.14.2"
   },
-  "taglib": {},
+  "taglib": {
+    "conservative": true,
+    "url": [""],
+    "version": ""
+  },
   "tar": {
     "bin": ["tar"],
-    "man1": ["tar.1"]
+    "conservative": true,
+    "man1": ["tar.1"],
+    "url": ["https://www.gnu.org/software/tar/"],
+    "version": "1.34"
   },
-  "tcl-tk": {},
+  "tcl-tk": {
+    "conservative": true,
+    "url": ["https://www.tcl-lang.org/"],
+    "version": "8.6.12"
+  },
   "tealdeer": {
     "bin": ["tldr"]
   },
@@ -1373,6 +1432,7 @@
       "texi2pdf",
       "texindex"
     ],
+    "conservative": true,
     "man1": [
       "pdftexi2dvi.1",
       "pod2texi.1",
@@ -1380,7 +1440,9 @@
       "texi2dvi.1",
       "texi2pdf.1",
       "texindex.1"
-    ]
+    ],
+    "url": ["https://ftp.gnu.org/gnu/texinfo/"],
+    "version": "6.8"
   },
   "tmux": {
     "bin": ["tmux"],
@@ -1397,13 +1459,23 @@
     "bin": ["tuc"]
   },
   "udunits": {
-    "bin": ["udunits2"]
+    "bin": ["udunits2"],
+    "conservative": true,
+    "url": ["https://www.unidata.ucar.edu/downloads/udunits/"],
+    "version": "2.2.28"
   },
   "units": {
     "bin": ["units"],
-    "man1": ["units.1"]
+    "conservative": true,
+    "man1": ["units.1"],
+    "url": ["https://www.gnu.org/software/units/"],
+    "version": "2.21"
   },
-  "utf8proc": {},
+  "utf8proc": {
+    "conservative": true,
+    "url": ["https://juliastrings.github.io/utf8proc/"],
+    "version": "2.7.0"
+  },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "man1": [
@@ -1423,32 +1495,101 @@
   },
   "wget": {
     "bin": ["wget"],
-    "man1": ["wget.1"]
+    "conservative": false,
+    "man1": ["wget.1"],
+    "url": ["https://www.gnu.org/software/wget/"],
+    "version": "1.21.3"
   },
   "which": {
-    "bin": ["which"]
+    "bin": ["which"],
+    "conservative": true,
+    "url": ["https://ftp.gnu.org/gnu/which/"],
+    "version": "2.21"
   },
-  "xorg-libice": {},
-  "xorg-libpthread-stubs": {},
-  "xorg-libsm": {},
-  "xorg-libx11": {},
-  "xorg-libxau": {},
-  "xorg-libxcb": {},
-  "xorg-libxdmcp": {},
-  "xorg-libxext": {},
-  "xorg-libxrandr": {},
-  "xorg-libxrender": {},
-  "xorg-libxt": {},
-  "xorg-xcb-proto": {},
-  "xorg-xorgproto": {},
-  "xorg-xtrans": {},
+  "xorg-libice": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libice"],
+    "version": "1.0.10"
+  },
+  "xorg-libpthread-stubs": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/pthread-stubs"],
+    "version": "0.4"
+  },
+  "xorg-libsm": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm"],
+    "version": "1.2.3"
+  },
+  "xorg-libx11": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11"],
+    "version": "1.8.1"
+  },
+  "xorg-libxau": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau"],
+    "version": "1.0.9"
+  },
+  "xorg-libxcb": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxcb"],
+    "version": "1.15"
+  },
+  "xorg-libxdmcp": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxdmcp"],
+    "version": "1.1.3"
+  },
+  "xorg-libxext": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxext"],
+    "version": "1.3.4"
+  },
+  "xorg-libxrandr": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrandr"],
+    "version": "1.5.2"
+  },
+  "xorg-libxrender": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrender"],
+    "version": "0.9.10"
+  },
+  "xorg-libxt": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxt"],
+    "version": "1.2.1"
+  },
+  "xorg-xcb-proto": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/proto/xcbproto"],
+    "version": "1.15.2"
+  },
+  "xorg-xorgproto": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/proto/xorgproto"],
+    "version": "2022.1"
+  },
+  "xorg-xtrans": {
+    "conservative": true,
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxtrans"],
+    "version": "1.4.0"
+  },
   "xsv": {
     "bin": ["xsv"]
   },
-  "xxhash": {},
+  "xxhash": {
+    "conservative": true,
+    "url": ["https://github.com/Cyan4973/xxHash/"],
+    "version": "0.8.1"
+  },
   "xz": {
     "bin": ["xz"],
-    "man1": ["xz.1"]
+    "conservative": true,
+    "man1": ["xz.1"],
+    "url": ["https://tukaani.org/xz/"],
+    "version": "5.2.5"
   },
   "yarn": {
     "bin": ["yarn"]
@@ -1461,6 +1602,11 @@
   },
   "zellij": {
     "bin": ["zellij"]
+  },
+  "zlib": {
+    "conservative": true,
+    "url": ["https://www.zlib.net/"],
+    "version": "1.2.12"
   },
   "zoxide": {
     "bin": ["zoxide"]
@@ -1479,6 +1625,9 @@
       "zstdless",
       "zstdmt"
     ],
-    "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"]
+    "conservative": true,
+    "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"],
+    "url": ["https://facebook.github.io/zstd/"],
+    "version": "1.5.2"
   }
 }
