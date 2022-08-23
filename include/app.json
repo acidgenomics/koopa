@@ -38,11 +38,16 @@
   "aspell": {
     "bin": ["aspell"],
     "conservative": false,
-    "man1": ["aspell.1"]
+    "man1": ["aspell.1"],
+    "url": ["http://aspell.net/"],
+    "version": "0.60.8"
   },
   "aspera-connect": {
+    "bin": ["ascp"],
     "conservative": false,
-    "platform": "linux"
+    "platform": "linux",
+    "url": ["https://www.ibm.com/aspera/connect/"],
+    "version": "4.1.3.93"
   },
   "attr": {
     "conservative": true,
@@ -62,7 +67,12 @@
   },
   "aws-cli": {
     "bin": ["aws"],
-    "conservative": false
+    "conservative": false,
+    "url": [
+      "https://aws.amazon.com/cli/",
+      "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
+    ],
+    "version": "2.7.24"
   },
   "azure-cli": {
     "bin": ["az"],
@@ -75,7 +85,10 @@
   },
   "bash": {
     "bin": ["bash"],
-    "man1": ["bash.1"]
+    "conservative": false,
+    "man1": ["bash.1"],
+    "url": ["https://www.gnu.org/software/bash/"],
+    "version": "5.1.16"
   },
   "bash-language-server": {
     "bin": ["bash-language-server"]
@@ -94,15 +107,40 @@
     "version": "1.07.1"
   },
   "bcbio-nextgen": {
+    "bin": ["bcbio_nextgen.py"],
     "check": false,
-    "platform": "linux"
+    "conservative": false,
+    "platform": "linux",
+    "url": [
+      "https://bcbio-nextgen.readthedocs.io/",
+      "https://github.com/bcbio/bcbio-nextgen/"
+    ],
+    "version": "1.2.9"
+  },
+  "bcbio-nextgen-vm": {
+    "check": false,
+    "conservative": false,
+    "platform": "linux",
+    "url": ["https://github.com/bcbio/bcbio-nextgen-vm/"],
+    "version": "0.1.6"
   },
   "bcl2fastq": {
     "check": false,
-    "platform": "linux"
+    "conservative": false,
+    "platform": "linux",
+    "url": [
+      "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html"
+    ],
+    "version": "2.20.0.422"
   },
   "bedtools": {
     "bin": ["bedtools"]
+  },
+  "bfg": {
+    "check": false,
+    "conservative": false,
+    "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
+    "version": "1.14.1"
   },
   "binutils": {
     "conservative": true,
@@ -110,7 +148,8 @@
     "version": "2.38"
   },
   "bioawk": {
-    "bin": ["bioawk"]
+    "bin": ["bioawk"],
+    "conservaitve": false
   },
   "bison": {
     "conservative": true,
