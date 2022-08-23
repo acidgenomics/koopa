@@ -162,7 +162,7 @@ __koopa_warn() {
 __koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2022-08-21.
+    # @note Updated 2022-08-23.
     #
     # @seealso
     # - shopt
@@ -368,6 +368,10 @@ __koopa_bash_header() {
         fi
         # Disable user-defined aliases.
         unalias -a
+    fi
+    if [[ "${dict['dev']}" -eq 1 ]]
+    then
+        export PS1='[koopa] $ '
     fi
     if [[ "${dict['verbose']}" -eq 1 ]]
     then
