@@ -16816,6 +16816,19 @@ koopa_locate_zcat() {
         --opt-name='gzip'
 }
 
+koopa_log_file() {
+    local dict
+    declare -A dict
+    koopa_assert_has_no_args "$#"
+    dict['datetime']="$(koopa_datetime)"
+    dict['hostname']="$(koopa_hostname)"
+    dict['log_file']="${HOME:?}/logs/${dict['hostname']}/\
+${dict['datetime']}.log"
+    koopa_touch "${dict['log_file']}"
+    koopa_print "${dict['log_file']}"
+    return 0
+}
+
 koopa_lowercase() {
     local app str
     declare -A app=(
