@@ -14,7 +14,10 @@
   },
   "apptainer": {
     "conservative": false,
-    "platform": "linux"
+    "dependencies": ["go"],
+    "platform": "linux",
+    "url": ["https://github.com/apptainer/apptainer/"],
+    "version": "1.0.2"
   },
   "apr": {
     "conservative": true,
@@ -54,7 +57,7 @@
   "attr": {
     "conservative": true,
     "platform": "linux",
-    "url": ["https://savannah.nongnu.org/projects/attr"],
+    "url": ["https://savannah.nongnu.org/projects/attr/"],
     "version": "2.5.1"
   },
   "autoconf": {
@@ -97,8 +100,8 @@
     "conservative": false,
     "dependencies": ["node"],
     "url": [
-      "https://github.com/bash-lsp/bash-language-server",
-      "https://www.npmjs.com/package/bash-language-server"
+      "https://github.com/bash-lsp/bash-language-server/",
+      "https://www.npmjs.com/package/bash-language-server/"
     ],
     "version": "3.1.0"
   },
@@ -107,7 +110,7 @@
     "conservative": false,
     "dependencies": ["ruby"],
     "url": [
-      "https://github.com/infertux/bashcov",
+      "https://github.com/infertux/bashcov/",
       "https://rubygems.org/gems/bashcov/"
     ],
     "version": "1.8.2"
@@ -254,9 +257,23 @@
   "cheat": {
     "bin": ["cheat"]
   },
-  "chemacs": {},
+  "chemacs": {
+    "conservative": false,
+    "url": ["https://github.com/plexus/chemacs2/"],
+    "version": "d722459287566e8c91ae077bf3d65966ebece190",
+    "version_is_git_commit": true
+  },
   "chezmoi": {
-    "bin": ["chezmoi"]
+    "bin": ["chezmoi"],
+    "dependencies": ["go"],
+    "url": ["https://www.chezmoi.io/"],
+    "version": "2.20.0"
+  },
+  "cloudbiolinux": {
+    "conservative": false,
+    "url": ["https://github.com/chapmanb/cloudbiolinux/"],
+    "version": "c4c7cf8e508fe947c8b038543c98a2846bb900d6",
+    "version_is_git_commit": true
   },
   "cmake": {
     "bin": ["cmake"],
@@ -269,14 +286,16 @@
     "conservative": false,
     "dependencies": ["ruby"],
     "url": [
-      "https://github.com/athityakumar/colorls",
+      "https://github.com/athityakumar/colorls/",
       "https://rubygems.org/gems/colorls/"
     ],
     "version": "1.4.6"
   },
   "conda": {
     "bin": ["conda"],
-    "conservative": true
+    "conservative": true,
+    "url": ["https://repo.anaconda.com/miniconda/"],
+    "version": "4.12.0"
   },
   "coreutils": {
     "bin": [
@@ -525,10 +544,20 @@
     "bin": ["dog"]
   },
   "dotfiles": {
-    "conservative": false
+    "conservative": false,
+    "url": ["https://github.com/acidgenomics/dotfiles/"],
+    "version": "5d4e24acbd1e02e3bcf47c8928e82d4c76daa461",
+    "version_is_git_commit": true
   },
   "du-dust": {
-    "bin": ["dust"]
+    "bin": ["dust"],
+    "conservative": false,
+    "dependencies": ["rust"],
+    "url": [
+      "https://github.com/bootandy/dust/",
+      "https://crates.io/crates/du-dust/"
+    ],
+    "version": "0.8.2"
   },
   "editorconfig": {
     "bin": ["editorconfig"],
@@ -626,7 +655,11 @@
   },
   "fzf": {
     "bin": ["fzf"],
-    "man1": ["fzf.1"]
+    "conservative": false,
+    "dependencies": ["go"],
+    "man1": ["fzf.1"],
+    "url": ["https://github.com/junegunn/fzf/"],
+    "version": "0.32.1"
   },
   "gawk": {
     "bin": ["awk", "gawk"],
@@ -683,7 +716,7 @@
   },
   "glib": {
     "conservative": true,
-    "url": ["https://gitlab.gnome.org/GNOME/glib"],
+    "url": ["https://gitlab.gnome.org/GNOME/glib/"],
     "version": "2.72.3"
   },
   "gmp": {
@@ -709,7 +742,7 @@
   },
   "gperf": {
     "conservative": true,
-    "url": ["https://www.gnu.org/software/gperf"],
+    "url": ["https://www.gnu.org/software/gperf/"],
     "version": "3.1"
   },
   "graphviz": {
@@ -739,8 +772,8 @@
     "conservative": false,
     "dependencies": ["node"],
     "url": [
-      "https://github.com/aksakalli/gtop",
-      "https://www.npmjs.com/package/gtop"
+      "https://github.com/aksakalli/gtop/",
+      "https://www.npmjs.com/package/gtop/"
     ],
     "version": "1.1.3"
   },
@@ -922,7 +955,15 @@
     "version": "3.10.1"
   },
   "latch": {
-    "bin": ["latch"]
+    "bin": ["latch"],
+    "conservative": false,
+    "dependencies": ["python"],
+    "url": [
+      "https://docs.latch.bio/",
+      "https://github.com/latchbio/latch/",
+      "https://pypi.org/project/latch/"
+    ],
+    "version": "1.15.0"
   },
   "less": {
     "bin": ["less"],
@@ -1034,7 +1075,7 @@
   },
   "libuv": {
     "conservative": true,
-    "url": ["https://github.com/libuv/libuv"],
+    "url": ["https://github.com/libuv/libuv/"],
     "version": "1.44.2"
   },
   "libxml2": {
@@ -1058,7 +1099,7 @@
     "conservative": true,
     "outdated": true,
     "platform": "linux",
-    "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod"],
+    "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
     "version": "8.7"
   },
   "lua": {
@@ -1245,7 +1286,7 @@
     "bin": ["patch"],
     "conservative": false,
     "man1": ["patch.1"],
-    "url": ["ftp://ftp.gnu.org/gnu/patch"],
+    "url": ["ftp://ftp.gnu.org/gnu/patch/"],
     "version": "2.7.6"
   },
   "pcre": {
@@ -1333,7 +1374,7 @@
     "bin": ["prettier"],
     "conservative": false,
     "dependencies": ["node"],
-    "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier"],
+    "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
     "version": "2.7.1"
   },
   "procs": {
@@ -1380,7 +1421,25 @@
   "r": {
     "bin": ["R", "Rscript"],
     "conservative": false,
-    "man1": ["R.1", "Rscript.1"]
+    "man1": ["R.1", "Rscript.1"],
+    "url": [
+      "https://www.r-project.org/",
+      "https://cloud.r-project.org/src/base/R-4/"
+    ],
+    "version": "4.2.1"
+  },
+  "r-devel": {
+    "conservative": false,
+    "date": "2022-08-04",
+    "url": [
+      "https://svn.r-project.org/R/",
+      "https://stat.ethz.ch/R/daily/",
+      "https://github.com/r-devel/r-svn/tree/trunk",
+      "https://developer.r-project.org/SVNtips.html",
+      "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
+    ],
+    "version": "82673",
+    "version_is_svn_commit": true
   },
   "ranger-fm": {
     "bin": ["ranger"]
@@ -1398,7 +1457,7 @@
     "conservative": false,
     "dependencies": ["perl"],
     "man1": ["rename.1"],
-    "url": ["https://metacpan.org/dist/File-Rename"],
+    "url": ["https://metacpan.org/dist/File-Rename/"],
     "version": "1.31"
   },
   "ripgrep-all": {
@@ -1415,7 +1474,7 @@
     "conservative": false,
     "dependencies": ["ruby"],
     "url": [
-      "https://github.com/rtomayko/ronn",
+      "https://github.com/rtomayko/ronn/",
       "https://rubygems.org/gems/ronn/"
     ],
     "version": "0.7.3"
@@ -1613,72 +1672,72 @@
   },
   "xorg-libice": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libice"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libice/"],
     "version": "1.0.10"
   },
   "xorg-libpthread-stubs": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/pthread-stubs"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/pthread-stubs/"],
     "version": "0.4"
   },
   "xorg-libsm": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm/"],
     "version": "1.2.3"
   },
   "xorg-libx11": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/"],
     "version": "1.8.1"
   },
   "xorg-libxau": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau/"],
     "version": "1.0.9"
   },
   "xorg-libxcb": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxcb"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxcb/"],
     "version": "1.15"
   },
   "xorg-libxdmcp": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxdmcp"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxdmcp/"],
     "version": "1.1.3"
   },
   "xorg-libxext": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxext"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxext/"],
     "version": "1.3.4"
   },
   "xorg-libxrandr": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrandr"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrandr/"],
     "version": "1.5.2"
   },
   "xorg-libxrender": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrender"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrender/"],
     "version": "0.9.10"
   },
   "xorg-libxt": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxt"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxt/"],
     "version": "1.2.1"
   },
   "xorg-xcb-proto": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/proto/xcbproto"],
+    "url": ["https://gitlab.freedesktop.org/xorg/proto/xcbproto/"],
     "version": "1.15.2"
   },
   "xorg-xorgproto": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/proto/xorgproto"],
+    "url": ["https://gitlab.freedesktop.org/xorg/proto/xorgproto/"],
     "version": "2022.1"
   },
   "xorg-xtrans": {
     "conservative": true,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxtrans"],
+    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxtrans/"],
     "version": "1.4.0"
   },
   "xsv": {
@@ -1718,7 +1777,10 @@
   },
   "zsh": {
     "bin": ["zsh"],
-    "man1": ["zsh.1"]
+    "conservative": false,
+    "man1": ["zsh.1"],
+    "url": ["http://zsh.sourceforge.net/Arc/source.html"],
+    "version": "5.9"
   },
   "zstd": {
     "bin": [
