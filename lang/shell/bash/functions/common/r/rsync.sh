@@ -97,8 +97,8 @@ koopa_rsync() {
             '--delete' | \
             '--delete-before' | \
             '--dry-run' | \
-            '--log-file='* | \
-            '‐‐size‐only')
+            '--size-only' | \
+            '--log-file='*)
                 rsync_args+=("$1")
                 shift 1
                 ;;
