@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE 1.1.1q currently fails to build on macOS.
+
 main() {
     # """
     # Install OpenSSL.
