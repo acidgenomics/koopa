@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME Move this to separate install script.
+# FIXME Rework Bioconductor version pinnings here. Define based on R version.
+
 koopa_install_r_packages() {
+    # """
+    # Install R packages.
+    # @note Updated 2022-08-23.
+    #
+    # @seealso
+    # - https://bioconductor.org/
+    # """
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
@@ -11,7 +21,8 @@ koopa_install_r_packages() {
     [[ -x "${app['rscript']}" ]] || return 1
     koopa_configure_r "${app['r']}"
     declare -A dict=(
-        ['bioc_version']="$(koopa_variable 'bioconductor')"
+        # FIXME Rework this approach.
+        ['bioc_version']='3.15'
     )
     "${app['rscript']}" -e " \
         isInstalled <- function(pkgs) { ; \
