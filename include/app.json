@@ -514,7 +514,7 @@
       "whoami.1",
       "yes.1"
     ],
-    "url": ["# https://www.gnu.org/software/coreutils/"],
+    "url": ["https://www.gnu.org/software/coreutils/"],
     "version": "9.1"
   },
   "cpufetch": {
