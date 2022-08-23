@@ -24809,6 +24809,15 @@ koopa_update_user_spacevim() {
         "$@"
 }
 
+koopa_validate_json() {
+    local app dict
+    declare -A app dict
+    koopa_assert_has_args_eq "$#" 1
+    app['python']="$(koopa_locate_python)"
+    dict['file']="${1:?}"
+    "${app['python']}" -m 'json.tool' "${dict['file']}" >/dev/null
+}
+
 koopa_variable() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
