@@ -44,7 +44,7 @@ koopa_r_configure_ldpaths() {
     )
     for key in "${keys[@]}"
     do
-        ld_lib_app_arr['$key']="$(koopa_app_prefix "$key")/lib"
+        ld_lib_app_arr[$key]="$(koopa_app_prefix "$key")/lib"
     done
     ld_lib_arr=()
     if koopa_is_linux

@@ -131,7 +131,7 @@ koopa_debian_apt_add_llvm_repo() {
     )
     if [[ -z "${dict['version']}" ]]
     then
-        dict['version']="$(koopa_variable "${dict['name']}")"
+        dict['version']="$(koopa_app_json_version "${dict['name']}")"
     fi
     dict['url']="http://apt.llvm.org/${dict['os']}/"
     dict['version2']="$(koopa_major_version "${dict['version']}")"
@@ -194,7 +194,7 @@ koopa_debian_apt_add_r_repo() {
     fi
     if [[ -z "${dict['version']}" ]]
     then
-        dict['version']="$(koopa_variable "${dict['name']}")"
+        dict['version']="$(koopa_app_json_version "${dict['name']}")"
     fi
     dict['version2']="$(koopa_major_minor_version "${dict['version']}")"
     case "${dict['version2']}" in

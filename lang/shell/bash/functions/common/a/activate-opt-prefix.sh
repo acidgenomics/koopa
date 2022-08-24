@@ -21,7 +21,7 @@
 koopa_activate_opt_prefix() {
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-08-24.
     #
     # Consider using 'pkg-config' to manage 'CPPFLAGS' and 'LDFLAGS':
     # > pkg-config --libs PKG_CONFIG_NAME...
@@ -88,7 +88,7 @@ koopa_activate_opt_prefix() {
         prefix="${dict['opt_prefix']}/${name}"
         koopa_assert_is_dir "$prefix"
         current_ver="$(koopa_opt_version "$name")"
-        expected_ver="$(koopa_variable "$name")"
+        expected_ver="$(koopa_app_json_version "$name")"
         # Sanitize git commit string to 8 characters.
         if [[ "${#expected_ver}" -eq 40 ]]
         then

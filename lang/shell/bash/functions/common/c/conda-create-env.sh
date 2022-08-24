@@ -94,7 +94,7 @@ koopa_conda_create_env() {
             --pattern='='
         then
             dict2['env_version']="$( \
-                koopa_variable "${dict2['env_string']}" \
+                koopa_app_json_version "${dict2['env_string']}" \
                 || true \
             )"
             if [[ -z "${dict2['env_version']}" ]]

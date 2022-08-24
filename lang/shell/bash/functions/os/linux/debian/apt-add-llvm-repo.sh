@@ -3,7 +3,7 @@
 koopa_debian_apt_add_llvm_repo() {
     # """
     # Add LLVM apt repo.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-24.
     # """
     koopa_assert_has_args_le "$#" 1
     declare -A dict=(
@@ -14,7 +14,7 @@ koopa_debian_apt_add_llvm_repo() {
     )
     if [[ -z "${dict['version']}" ]]
     then
-        dict['version']="$(koopa_variable "${dict['name']}")"
+        dict['version']="$(koopa_app_json_version "${dict['name']}")"
     fi
     dict['url']="http://apt.llvm.org/${dict['os']}/"
     dict['version2']="$(koopa_major_version "${dict['version']}")"

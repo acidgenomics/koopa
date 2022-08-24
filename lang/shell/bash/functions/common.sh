@@ -596,7 +596,7 @@ koopa_activate_opt_prefix() {
         prefix="${dict['opt_prefix']}/${name}"
         koopa_assert_is_dir "$prefix"
         current_ver="$(koopa_opt_version "$name")"
-        expected_ver="$(koopa_variable "$name")"
+        expected_ver="$(koopa_app_json_version "$name")"
         if [[ "${#expected_ver}" -eq 40 ]]
         then
             expected_ver="${expected_ver:0:8}"
@@ -4760,7 +4760,7 @@ koopa_conda_create_env() {
             --pattern='='
         then
             dict2['env_version']="$( \
-                koopa_variable "${dict2['env_string']}" \
+                koopa_app_json_version "${dict2['env_string']}" \
                 || true \
             )"
             if [[ -z "${dict2['env_version']}" ]]
@@ -5139,8 +5139,8 @@ koopa_configure_system() {
         ['install_zsh']=0
         ['mode']='default'
         ['passwordless_sudo']=0
-        ['python_version']="$(koopa_variable 'python')"
-        ['r_version']="$(koopa_variable 'r')"
+        ['python_version']="$(koopa_app_json_version 'python')"
+        ['r_version']="$(koopa_app_json_version 'r')"
         ['ssh_key']=1
         ['which_conda']='conda'
     )
@@ -11584,7 +11584,8 @@ koopa_install_app() {
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict['version_key']}" ]] && dict[version_key]="${dict['name']}"
     dict['current_version']="$(\
-        koopa_variable "${dict['version_key']}" 2>/dev/null || true \
+        koopa_app_json_version "${dict['version_key']}" \
+            2>/dev/null || true \
     )"
     [[ -z "${dict['version']}" ]] && dict[version]="${dict['current_version']}"
     if [[ "${dict['version']}" != "${dict['current_version']}" ]]
@@ -15875,7 +15876,9 @@ koopa_locate_conda_app() {
     fi
     if [[ -z "${dict['env_version']}" ]]
     then
-        dict['env_version']="$(koopa_variable "conda-${dict['env_name']}")"
+        dict['env_version']="$( \
+            koopa_app_json_version "conda-${dict['env_name']}" \
+        )"
     fi
     koopa_assert_is_set \
         '--app-name' "${dict['app_name']}" \
@@ -16037,7 +16040,7 @@ koopa_locate_gcc() {
     declare -A dict=(
         ['name']='gcc'
     )
-    dict['version']="$(koopa_variable "${dict['name']}")"
+    dict['version']="$(koopa_app_json_version "${dict['name']}")"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     koopa_locate_app \
         --allow-in-path \
@@ -18050,8 +18053,8 @@ koopa_python_get_pkg_versions() {
     do
         pkg="${pkgs[$i]}"
         pkg_lower="$(koopa_lowercase "$pkg")"
-        version="$(koopa_variable "python-${pkg_lower}")"
-        pkgs['$i']="${pkg}==${version}"
+        version="$(koopa_app_json_version "python-${pkg_lower}")"
+        pkgs[$i]="${pkg}==${version}"
     done
     koopa_print "${pkgs[@]}"
     return 0
@@ -18209,11 +18212,11 @@ koopa_r_configure_environ() {
     )
     for key in "${keys[@]}"
     do
-        pkgconfig_arr['$key']="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
+        pkgconfig_arr[$key]="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
     done
     for i in "${!pkgconfig_arr[@]}"
     do
-        pkgconfig_arr['$i']="${pkgconfig_arr[$i]}/lib"
+        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/lib"
     done
     if koopa_is_linux
     then
@@ -18221,7 +18224,7 @@ koopa_r_configure_environ() {
     fi
     for i in "${!pkgconfig_arr[@]}"
     do
-        pkgconfig_arr['$i']="${pkgconfig_arr[$i]}/pkgconfig"
+        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/pkgconfig"
     done
     lines+=(
         "PAGER=\${PAGER:-less}"
@@ -18267,8 +18270,10 @@ koopa_r_configure_environ() {
     )
     if koopa_is_fedora_like
     then
-        dict['oracle_ver']="$(koopa_variable 'oracle-instant-client')"
-        dict['oracle_ver']="$(koopa_major_minor_version "${dict['oracle_ver']}")"
+        dict['oracle_ver']="$(koopa_app_json_version 'oracle-instant-client')"
+        dict['oracle_ver']="$( \
+            koopa_major_minor_version "${dict['oracle_ver']}" \
+        )"
         lines+=(
             "OCI_VERSION=${dict['oracle_ver']}"
             "ORACLE_HOME=/usr/lib/oracle/\${OCI_VERSION}/client64"
@@ -18351,7 +18356,7 @@ koopa_r_configure_ldpaths() {
     )
     for key in "${keys[@]}"
     do
-        ld_lib_app_arr['$key']="$(koopa_app_prefix "$key")/lib"
+        ld_lib_app_arr[$key]="$(koopa_app_prefix "$key")/lib"
     done
     ld_lib_arr=()
     if koopa_is_linux
@@ -24832,45 +24837,6 @@ koopa_validate_json() {
     app['python']="$(koopa_locate_python)"
     dict['file']="${1:?}"
     "${app['python']}" -m 'json.tool' "${dict['file']}" >/dev/null
-}
-
-koopa_variable() {
-    local app dict
-    koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    declare -A dict=(
-        ['key']="${1:?}"
-        ['include_prefix']="$(koopa_include_prefix)"
-    )
-    dict['file']="${dict['include_prefix']}/variables.txt"
-    koopa_assert_is_file "${dict['file']}"
-    dict['str']="$( \
-        koopa_grep \
-            --file="${dict['file']}" \
-            --only-matching \
-            --pattern="^${dict['key']}=\"[^\"]+\"" \
-            --regex \
-    )"
-    [[ -n "${dict['str']}" ]] || return 1
-    dict['str']="$( \
-        koopa_print "${dict['str']}" \
-            | "${app['head']}" -n 1 \
-            | "${app['cut']}" -d '"' -f '2' \
-    )"
-    [[ -n "${dict['str']}" ]] || return 1
-    koopa_print "${dict['str']}"
-    return 0
-}
-
-koopa_variables() {
-    koopa_assert_has_no_args "$#"
-    "${EDITOR:?}" "$(koopa_include_prefix)/variables.txt"
-    return 0
 }
 
 koopa_version_pattern() {
