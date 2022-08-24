@@ -121,7 +121,8 @@
   },
   "bat": {
     "bin": ["bat"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["rust"]
   },
   "bc": {
     "bin": ["bc"],
@@ -159,7 +160,10 @@
   },
   "bedtools": {
     "bin": ["bedtools"],
-    "conservative": false
+    "conservative": false,
+    "date": "2021-08-12",
+    "depends": ["conda"],
+    "version": "2.30.0"
   },
   "bfg": {
     "check": false,
@@ -174,7 +178,10 @@
   },
   "bioawk": {
     "bin": ["bioawk"],
-    "conservaitve": false
+    "conservaitve": false,
+    "date": "2019-10-26",
+    "depends": ["conda"],
+    "version": "1.0"
   },
   "bison": {
     "conservative": true,
@@ -194,15 +201,18 @@
   },
   "bowtie2": {
     "bin": ["bowtie2"],
+    "depends": ["conda"],
     "conservative": false
   },
   "bpytop": {
     "bin": ["bpytop"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["python"]
   },
   "broot": {
     "bin": ["broot"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["rust"]
   },
   "brotli": {
     "conservative": true,
@@ -211,6 +221,7 @@
   },
   "bustools": {
     "bin": ["bustools"],
+    "depends": ["conda"],
     "conservative": false
   },
   "bzip2": {
@@ -547,7 +558,8 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["conda"]
   },
   "delta": {
     "bin": ["delta"],
@@ -558,6 +570,7 @@
   "difftastic": {
     "bin": ["difft"],
     "conservative": false,
+    "depends": ["rust"],
     "version": "0.33.0"
   },
   "docker-credential-pass": {
@@ -568,7 +581,8 @@
   },
   "dog": {
     "bin": ["dog"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["rust"]
   },
   "dotfiles": {
     "conservative": false,
@@ -615,11 +629,13 @@
   },
   "entrez-direct": {
     "bin": ["efetch", "esearch"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["conda"]
   },
   "exa": {
     "bin": ["exa"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["rust"]
   },
   "exiftool": {
     "bin": ["exiftool"],
@@ -636,11 +652,13 @@
   },
   "fastqc": {
     "bin": ["fastqc"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["conda"]
   },
   "fd-find": {
     "bin": ["fd"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["rust"]
   },
   "ffmpeg": {
     "bin": ["ffmpeg", "ffprobe"],
@@ -651,7 +669,8 @@
   },
   "ffq": {
     "bin": ["ffq"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["conda"]
   },
   "findutils": {
     "bin": ["find", "locate", "updatedb", "xargs"],
@@ -751,15 +770,18 @@
   },
   "gffutils": {
     "bin": ["gffutils-cli"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["conda"]
   },
   "gget": {
     "bin": ["gget"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["conda"]
   },
   "ghostscript": {
     "bin": ["gs"],
     "conservative": false,
+    "depends": ["conda"],
     "man1": ["gs.1"]
   },
   "git": {
@@ -771,7 +793,8 @@
   },
   "glances": {
     "bin": ["glances"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["python"]
   },
   "glib": {
     "conservative": true,
@@ -832,7 +855,8 @@
   },
   "gseapy": {
     "bin": ["gseapy"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["conda"]
   },
   "gsl": {
     "conservative": true,
@@ -931,6 +955,7 @@
   "hisat2": {
     "bin": ["hisat2"],
     "conservative": false
+    "depends": ["conda"]
   },
   "htop": {
     "bin": ["htop"],
@@ -942,6 +967,7 @@
   "hyperfine": {
     "bin": ["hyperfine"],
     "conservative": false
+    "depends": ["rust"]
   },
   "icu4c": {
     "bin": [
@@ -998,10 +1024,12 @@
   "ipython": {
     "bin": ["ipython"],
     "conservative": false
+    "depends": ["python"]
   },
   "isort": {
     "bin": ["isort"],
     "conservative": false
+    "depends": ["python"]
   },
   "jemalloc": {
     "conservative": true,
@@ -1029,10 +1057,12 @@
   "jupyterlab": {
     "bin": ["jupyter-lab"],
     "conservative": false
+    "depends": ["conda"]
   },
   "kallisto": {
     "bin": ["kallisto"],
     "conservative": false
+    "depends": ["conda"]
   },
   "lame": {
     "bin": ["lame"],
@@ -1242,14 +1272,17 @@
   "mcfly": {
     "bin": ["mcfly"],
     "conservative": false
+    "depends": ["rust"]
   },
   "mdcat": {
     "bin": ["mdcat"],
     "conservative": false
+    "depends": ["rust"]
   },
   "meson": {
     "bin": ["meson"],
     "conservative": false
+    "depends": ["python"]
   },
   "mpc": {
     "conservative": true,
@@ -1264,6 +1297,7 @@
   "multiqc": {
     "bin": ["multiqc"],
     "conservative": false
+    "depends": ["conda"]
   },
   "ncurses": {
     "bin": [
@@ -1316,6 +1350,7 @@
   "nextflow": {
     "bin": ["nextflow"],
     "conservative": false
+    "depends": ["conda"]
   },
   "nghttp2": {
     "conservative": true,
@@ -1330,6 +1365,7 @@
   "ninja": {
     "bin": ["ninja"],
     "conservative": false
+    "depends": ["python"]
   },
   "node": {
     "bin": ["node", "npm", "npx"],
@@ -1483,6 +1519,7 @@
   "pipx": {
     "bin": ["pipx"],
     "conservative": false
+    "depends": ["python"]
   },
   "pixman": {
     "conservative": true,
@@ -1499,6 +1536,7 @@
   "poetry": {
     "bin": ["poetry"],
     "conservative": true,
+    "depends": ["python"]
     "version": "1.1.15"
   },
   "prettier": {
@@ -1511,6 +1549,7 @@
   "procs": {
     "bin": ["procs"],
     "conservative": false
+    "depends": ["rust"]
   },
   "proj": {
     "bin": ["proj", "projinfo"],
@@ -1534,22 +1573,27 @@
   "pyflakes": {
     "bin": ["pyflakes"],
     "conservative": false
+    "depends": ["python"]
   },
   "pygments": {
     "bin": ["pygments"],
     "conservative": false
+    "depends": ["python"]
   },
   "pylint": {
     "bin": ["pylint"],
     "conservative": false
+    "depends": ["python"]
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
     "conservative": false
+    "depends": ["python"]
   },
   "pytest": {
     "bin": ["pytest"],
     "conservative": false
+    "depends": ["python"]
   },
   "python": {
     "bin": ["idle3", "pip3", "pydoc3", "python3", "python3-config"],
@@ -1597,6 +1641,7 @@
   "ranger-fm": {
     "bin": ["ranger"],
     "conservative": false
+    "depends": ["python"]
   },
   "rbenv": {
     "bin": ["rbenv"],
@@ -1620,10 +1665,12 @@
   "ripgrep-all": {
     "bin": ["rga"],
     "conservative": false
+    "depends": ["rust"]
   },
   "ripgrep": {
     "bin": ["rg"],
     "conservative": false
+    "depends": ["rust"]
   },
   "rmate": {
     "bin": ["rmate"],
@@ -1681,17 +1728,21 @@
   "salmon": {
     "bin": ["salmon"],
     "conservative": false
+    "depends": ["conda"]
   },
   "sambamba": {
     "bin": ["sambamba"],
     "conservative": false
+    "depends": ["conda"]
   },
   "samtools": {
     "bin": ["samtools"],
     "conservative": false
+    "depends": ["conda"]
   },
   "scons": {
     "conservative": true,
+    "depends": ["python"]
     "url": [""],
     "version": ""
   },
@@ -1728,6 +1779,7 @@
   "snakemake": {
     "bin": ["snakemake"],
     "conservative": false
+    "depends": ["conda"]
   },
   "sox": {
     "bin": ["sox"],
@@ -1751,11 +1803,13 @@
   },
   "star": {
     "bin": ["STAR"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["conda"]
   },
   "starship": {
     "bin": ["starship"],
     "conservative": false
+    "depends": ["rust"]
   },
   "stow": {
     "bin": ["stow"],
@@ -1790,6 +1844,7 @@
   "tealdeer": {
     "bin": ["tldr"],
     "conservative": false
+    "depends": ["rust"]
   },
   "texinfo": {
     "bin": [
@@ -1822,6 +1877,7 @@
   "tokei": {
     "bin": ["tokei"],
     "conservative": false
+    "depends": ["rust"]
   },
   "tree": {
     "bin": ["tree"],
@@ -1833,6 +1889,7 @@
   "tuc": {
     "bin": ["tuc"],
     "conservative": false
+    "depends": ["rust"]
   },
   "udunits": {
     "bin": ["udunits2"],
@@ -1871,6 +1928,7 @@
   "visidata": {
     "bin": ["vd", "visidata"],
     "conservative": false,
+    "depends": ["conda"],
     "man1": ["vd.1", "visidata.1"]
   },
   "wget": {
@@ -1959,6 +2017,7 @@
   "xsv": {
     "bin": ["xsv"],
     "conservative": false
+    "depends": ["rust"]
   },
   "xxhash": {
     "conservative": true,
@@ -1989,10 +2048,12 @@
   "yt-dlp": {
     "bin": ["yt-dlp"],
     "conservative": false
+    "depends": ["python"]
   },
   "zellij": {
     "bin": ["zellij"],
     "conservative": false
+    "depends": ["rust"]
   },
   "zlib": {
     "conservative": true,
@@ -2002,6 +2063,7 @@
   "zoxide": {
     "bin": ["zoxide"],
     "conservative": false
+    "depends": ["rust"]
   },
   "zsh": {
     "bin": ["zsh"],
