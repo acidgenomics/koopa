@@ -1,45 +1,7 @@
-# https://www.gnu.org/software/sed/
-sed="4.8"
-
-# https://github.com/koalaman/shellcheck/releases
-shellcheck="0.8.0"
-
-# https://www.rstudio.com/products/shiny/download-server/
-shiny-server="1.5.18.987"
-
-# https://github.com/kward/shunit2/releases
-shunit2="2.1.8"
-
-# http://sox.sourceforge.net/sox.html
-sox="14.4.2"
-
-# https://github.com/ncbi/sra-tools
-sra-tools="3.0.0"
-
-# https://www.gnu.org/software/stow/
-stow="2.3.1"
-
-# https://github.com/taglib/taglib/
-taglib="1.12"
-
-# https://github.com/tmux/tmux/releases
-tmux="3.3a"
-
-tree="2.0.2"
-
-# https://github.com/vim/vim/releases
-# Homebrew updates every '*.0000' patch release on multiples of 25.
-# https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="9.0.0200"
-
-# https://yarnpkg.com/
-yarn="1.22.19"
-
-# https://github.com/mikefarah/yq/
-yq="4.27.2"
-
 # Conda recipes
 # ==============================================================================
+
+    "depends": ["conda"],
 
 bedtools="2.30.0" # 2021-08-12 bioconda
 bioawk="1.0" # 2019-10-26 bioconda
@@ -68,6 +30,8 @@ visidata="2.8" # 2022-01-13 conda-forge
 # Python packages
 # ==============================================================================
 
+    "depends": ["python"],
+
 bpytop="1.0.68"
 flake8="5.0.4"
 glances="3.2.7"
@@ -88,6 +52,8 @@ yt-dlp="2022.8.19"
 
 # Rust packages
 # ==============================================================================
+
+    "depends": ["rust"],
 
 bat="0.21.0"
 broot="1.14.2" # br
