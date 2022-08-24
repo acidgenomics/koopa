@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Optimize this to look at /opt/koopa/bin/<NAME> first and early
+# return on success without calling opt prefix...
+
 koopa_locate_app() {
     # """
     # Locate file system path to an application.

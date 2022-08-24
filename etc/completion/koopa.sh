@@ -225,6 +225,7 @@ __koopa_complete() {
                         'm4'
                         'make'
                         'man-db'
+                        'markdownlint-cli'
                         'mcfly'
                         'mdcat'
                         'meson'
