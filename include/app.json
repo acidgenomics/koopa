@@ -975,7 +975,7 @@
   "hisat2": {
     "bin": ["hisat2"],
     "conservative": false,
-    "date": "2020-07-24"
+    "date": "2020-07-24",
     "depends": ["conda"],
     "version": "2.2.1"
   },
@@ -1293,10 +1293,11 @@
     "url": ["https://man-db.nongnu.org/"],
     "version": "2.10.2"
   },
-  "markdownlint": {
+  "markdownlint-cli": {
     "bin": ["markdownlint"],
+    "conservative": false,
     "depends": ["node"],
-    "version": "0.11.0"
+    "version": "0.32.2"
   },
   "mcfly": {
     "bin": ["mcfly"],
