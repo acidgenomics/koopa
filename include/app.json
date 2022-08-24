@@ -87,7 +87,10 @@
   },
   "bamtools": {
     "bin": ["bamtools"],
-    "conservative": false
+    "conservative": false,
+    "date": "2022-03-14",
+    "dependencies": ["conda"],
+    "version": "2.5.2"
   },
   "bash": {
     "bin": ["bash"],
@@ -816,12 +819,16 @@
   "grep": {
     "bin": ["egrep", "fgrep", "grep"],
     "conservative": false,
-    "man1": ["egrep.1", "fgrep.1", "grep.1"]
+    "man1": ["egrep.1", "fgrep.1", "grep.1"],
+    "url": ["https://www.gnu.org/software/grep/"],
+    "version": "3.7"
   },
   "groff": {
     "bin": ["groff"],
     "conservative": false,
-    "man1": ["groff.1"]
+    "man1": ["groff.1"],
+    "url": ["https://ftp.gnu.org/gnu/groff/"],
+    "version": "1.22.4"
   },
   "gseapy": {
     "bin": ["gseapy"],
@@ -878,7 +885,8 @@
   },
   "hadolint": {
     "bin": ["hadolint"],
-    "conservative": false
+    "conservative": false,
+    "version": "2.10.0"
   },
   "harfbuzz": {
     "conservative": true,
@@ -927,7 +935,9 @@
   "htop": {
     "bin": ["htop"],
     "conservative": false,
-    "man1": ["htop.1"]
+    "man1": ["htop.1"],
+    "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
+    "version": "3.2.1"
   },
   "hyperfine": {
     "bin": ["hyperfine"],
@@ -1006,11 +1016,15 @@
   "jq": {
     "bin": ["jq"],
     "conservative": false,
-    "man1": ["jq.1"]
+    "man1": ["jq.1"],
+    "url": ["https://github.com/stedolan/jq/releases"],
+    "version": "1.6"
   },
   "julia": {
     "bin": ["julia"],
-    "conservative": false
+    "conservative": false,
+    "url": ["https://github.com/JuliaLang/julia/"],
+    "version": "1.8.0"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
@@ -1023,7 +1037,9 @@
   "lame": {
     "bin": ["lame"],
     "conservative": false,
-    "man1": ["lame.1"]
+    "man1": ["lame.1"],
+    "url": ["https://lame.sourceforge.io/"],
+    "version": ["3.100"]
   },
   "lapack": {
     "conservative": true,
@@ -1044,11 +1060,15 @@
   "less": {
     "bin": ["less"],
     "conservative": false,
-    "man1": ["less.1"]
+    "man1": ["less.1"],
+    "url": ["https://ftp.gnu.org/gnu/less/"],
+    "version": "590"
   },
   "lesspipe": {
     "bin": ["lesspipe.sh"],
-    "conservative": false
+    "conservative": false,
+    "url": ["https://github.com/wofr06/lesspipe/"],
+    "version": "2.06"
   },
   "libassuan": {
     "conservative": true,
@@ -1215,7 +1235,9 @@
   "man-db": {
     "bin": ["man"],
     "conservative": false,
-    "man1": ["man.1"]
+    "man1": ["man.1"],
+    "url": ["https://man-db.nongnu.org/"],
+    "version": "2.10.2"
   },
   "mcfly": {
     "bin": ["mcfly"],
@@ -1275,12 +1297,16 @@
   "neofetch": {
     "bin": ["neofetch"],
     "conservative": false,
-    "man1": ["neofetch.1"]
+    "man1": ["neofetch.1"],
+    "url": ["https://github.com/dylanaraps/neofetch/"],
+    "version": "7.1.0"
   },
   "neovim": {
     "bin": ["nvim"],
     "conservative": false,
-    "man1": ["nvim.1"]
+    "man1": ["nvim.1"],
+    "url": ["https://github.com/neovim/neovim/"],
+    "version": "0.7.2"
   },
   "nettle": {
     "conservative": true,
@@ -1298,8 +1324,8 @@
   },
   "nim": {
     "conservative": false,
-    "url": [""],
-    "version": ""
+    "url": ["https://nim-lang.org/"],
+    "version": "1.6.6"
   },
   "ninja": {
     "bin": ["ninja"],
@@ -1355,21 +1381,34 @@
     "url": ["https://www.openssl.org/source/"],
     "version": "3.0.5"
   },
+  "oracle-instant-client": {
+    "conservative": true,
+    "platform": "linux",
+    "url": [
+      "https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html"
+    ],
+    "version": "21.7.0.0.0-1"
+  },
   "pandoc": {
     "bin": ["pandoc"],
     "conservative": false,
     "date": "2022-08-22",
+    "url": ["https://pandoc.org/"],
     "version": "2.19.2"
   },
   "parallel": {
     "bin": ["parallel"],
     "conservative": false,
-    "man1": ["parallel.1"]
+    "man1": ["parallel.1"],
+    "url": ["https://www.gnu.org/software/parallel/"],
+    "version": "20220722"
   },
   "password-store": {
     "bin": ["pass"],
     "conservative": false,
-    "man1": ["pass.1"]
+    "man1": ["pass.1"],
+    "url": ["https://www.passwordstore.org/"],
+    "version": "1.7.4"
   },
   "patch": {
     "bin": ["patch"],
@@ -1459,7 +1498,7 @@
   },
   "poetry": {
     "bin": ["poetry"],
-    "conservative": false,
+    "conservative": true,
     "version": "1.1.15"
   },
   "prettier": {
@@ -1487,8 +1526,10 @@
   },
   "pyenv": {
     "bin": ["pyenv"],
-    "conservative": false,
-    "man1": ["pyenv.1"]
+    "conservative": true,
+    "man1": ["pyenv.1"],
+    "url": ["https://github.com/pyenv/pyenv"],
+    "version": "2.2.5"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -1541,13 +1582,27 @@
     "version": "82673",
     "version_is_svn_commit": true
   },
+  "r-gfortran": {
+    "conservative": true,
+    "platform": "macos",
+    "url": ["https://mac.r-project.org/"],
+    "version": "8.2"
+  },
+  "r-openmp": {
+    "conservative": true,
+    "platform": "macos",
+    "url": ["https://mac.r-project.org/openmp/"],
+    "version": "13.0.0"
+  },
   "ranger-fm": {
     "bin": ["ranger"],
     "conservative": false
   },
   "rbenv": {
     "bin": ["rbenv"],
-    "conservative": true
+    "conservative": true,
+    "url": ["https://github.com/rbenv/rbenv/"],
+    "version": "1.2.0"
   },
   "readline": {
     "conservative": true,
@@ -1572,7 +1627,9 @@
   },
   "rmate": {
     "bin": ["rmate"],
-    "conservative": false
+    "conservative": false,
+    "url": ["https://github.com/aurora/rmate/"],
+    "version": "1.0.2"
   },
   "ronn": {
     "bin": ["ronn"],
@@ -1584,10 +1641,18 @@
     ],
     "version": "0.7.3"
   },
+  "rstudio-server": {
+    "conservative": false,
+    "platform": "linux",
+    "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
+    "version": "2022.07.1+554"
+  },
   "rsync": {
     "bin": ["rsync"],
     "conservative": false,
-    "man1": ["rsync.1"]
+    "man1": ["rsync.1"],
+    "url": ["https://download.samba.org/pub/rsync/src/"],
+    "version": "3.2.4"
   },
   "ruby": {
     "bin": ["bundle", "bundler", "gem", "ruby"],
@@ -1609,7 +1674,9 @@
       "rustdoc",
       "rustfmt"
     ],
-    "conservative": false
+    "conservative": false,
+    "url": ["https://www.rust-lang.org/"],
+    "version": "1.63.0"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -1631,7 +1698,9 @@
   "sed": {
     "bin": ["sed"],
     "conservative": false,
-    "man1": ["sed.1"]
+    "man1": ["sed.1"],
+    "url": ["https://www.gnu.org/software/sed/"],
+    "version": "4.8"
   },
   "serf": {
     "conservative": true,
@@ -1640,11 +1709,21 @@
   },
   "shellcheck": {
     "bin": ["shellcheck"],
-    "conservative": false
+    "conservative": false,
+    "url": ["https://github.com/koalaman/shellcheck/"],
+    "version": "0.8.0"
+  },
+  "shiny-server": {
+    "conservative": false,
+    "platform": "linux",
+    "url": ["https://www.rstudio.com/products/shiny/download-server/"],
+    "version": "1.5.18.987"
   },
   "shunit2": {
     "bin": ["shunit2"],
-    "conservative": false
+    "conservative": false,
+    "url": ["https://github.com/kward/shunit2/"],
+    "version": "2.1.8"
   },
   "snakemake": {
     "bin": ["snakemake"],
@@ -1653,7 +1732,9 @@
   "sox": {
     "bin": ["sox"],
     "conservative": false,
-    "man1": ["sox.1"]
+    "man1": ["sox.1"],
+    "url": ["http://sox.sourceforge.net/sox.html"],
+    "version": "14.4.2"
   },
   "sqlite": {
     "bin": ["sqlite3"],
@@ -1664,7 +1745,9 @@
   },
   "sra-tools": {
     "bin": ["fasterq-dump", "vdb-config"],
-    "conservative": false
+    "conservative": false,
+    "url": ["https://github.com/ncbi/sra-tools/"],
+    "version": "3.0.0"
   },
   "star": {
     "bin": ["STAR"],
@@ -1676,7 +1759,9 @@
   },
   "stow": {
     "bin": ["stow"],
-    "conservative": false
+    "conservative": false,
+    "url": ["https://www.gnu.org/software/stow/"],
+    "version": "2.3.1"
   },
   "subversion": {
     "bin": ["svn"],
@@ -1687,8 +1772,8 @@
   },
   "taglib": {
     "conservative": true,
-    "url": [""],
-    "version": ""
+    "url": ["https://github.com/taglib/taglib/"],
+    "version": "1.12"
   },
   "tar": {
     "bin": ["tar"],
@@ -1730,7 +1815,9 @@
   "tmux": {
     "bin": ["tmux"],
     "conservative": false,
-    "man1": ["tmux.1"]
+    "man1": ["tmux.1"],
+    "url": ["https://github.com/tmux/tmux/"],
+    "version": "3.3a"
   },
   "tokei": {
     "bin": ["tokei"],
@@ -1739,7 +1826,9 @@
   "tree": {
     "bin": ["tree"],
     "conservative": false,
-    "man1": ["tree.1"]
+    "man1": ["tree.1"],
+    "url": ["https://mama.indstate.edu/users/ice/tree/"],
+    "version": "2.0.2"
   },
   "tuc": {
     "bin": ["tuc"],
@@ -1775,7 +1864,9 @@
       "vimdiff.1",
       "vimtutor.1",
       "xxd.1"
-    ]
+    ],
+    "url": ["https://github.com/vim/vim/"],
+    "version": "9.0.0200"
   },
   "visidata": {
     "bin": ["vd", "visidata"],
@@ -1883,11 +1974,17 @@
   },
   "yarn": {
     "bin": ["yarn"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["node"],
+    "url": ["https://yarnpkg.com/"],
+    "version": "1.22.19"
   },
   "yq": {
     "bin": ["yq"],
-    "conservative": false
+    "conservative": false,
+    "depends": ["go"],
+    "url": ["https://github.com/mikefarah/yq/"],
+    "version": "4.27.2"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
