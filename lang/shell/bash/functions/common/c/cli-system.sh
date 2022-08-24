@@ -3,7 +3,7 @@
 koopa_cli_system() {
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-24.
     # """
     local dict
     declare -A dict=(
