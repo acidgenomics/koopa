@@ -201,8 +201,10 @@
   },
   "bowtie2": {
     "bin": ["bowtie2"],
+    "conservative": false,
+    "date": "2022-02-08",
     "depends": ["conda"],
-    "conservative": false
+    "version": "2.4.5"
   },
   "bpytop": {
     "bin": ["bpytop"],
@@ -221,8 +223,10 @@
   },
   "bustools": {
     "bin": ["bustools"],
+    "conservative": false,
+    "date": "2021-06-25",
     "depends": ["conda"],
-    "conservative": false
+    "version": "0.41.0"
   },
   "bzip2": {
     "bin": [
@@ -559,7 +563,9 @@
   "deeptools": {
     "bin": ["deeptools"],
     "conservative": false,
-    "depends": ["conda"]
+    "date": "2021-03-17",
+    "depends": ["conda"],
+    "version": "3.5.1"
   },
   "delta": {
     "bin": ["delta"],
@@ -587,7 +593,7 @@
   "dotfiles": {
     "conservative": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "5d4e24acbd1e02e3bcf47c8928e82d4c76daa461",
+    "version": "1cb8ddc6f42aac87e88a59aed22d461c50047ceb",
     "version_is_git_commit": true
   },
   "du-dust": {
@@ -630,7 +636,9 @@
   "entrez-direct": {
     "bin": ["efetch", "esearch"],
     "conservative": false,
-    "depends": ["conda"]
+    "date": "2022-06-06",
+    "depends": ["conda"],
+    "version": "16.2"
   },
   "exa": {
     "bin": ["exa"],
@@ -653,7 +661,9 @@
   "fastqc": {
     "bin": ["fastqc"],
     "conservative": false,
-    "depends": ["conda"]
+    "date": "2021-03-25",
+    "depends": ["conda"],
+    "version": "0.11.9"
   },
   "fd-find": {
     "bin": ["fd"],
