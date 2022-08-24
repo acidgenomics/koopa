@@ -86,7 +86,8 @@
     "version": "2.39.0"
   },
   "bamtools": {
-    "bin": ["bamtools"]
+    "bin": ["bamtools"],
+    "conservative": false
   },
   "bash": {
     "bin": ["bash"],
@@ -116,7 +117,8 @@
     "version": "1.8.2"
   },
   "bat": {
-    "bin": ["bat"]
+    "bin": ["bat"],
+    "conservative": false
   },
   "bc": {
     "bin": ["bc"],
@@ -153,7 +155,8 @@
     "version": "2.20.0.422"
   },
   "bedtools": {
-    "bin": ["bedtools"]
+    "bin": ["bedtools"],
+    "conservative": false
   },
   "bfg": {
     "check": false,
@@ -187,13 +190,16 @@
     "version": "1.79.0"
   },
   "bowtie2": {
-    "bin": ["bowtie2"]
+    "bin": ["bowtie2"],
+    "conservative": false
   },
   "bpytop": {
-    "bin": ["bpytop"]
+    "bin": ["bpytop"],
+    "conservative": false
   },
   "broot": {
-    "bin": ["broot"]
+    "bin": ["broot"],
+    "conservative": false
   },
   "brotli": {
     "conservative": true,
@@ -201,7 +207,8 @@
     "version": "1.0.9"
   },
   "bustools": {
-    "bin": ["bustools"]
+    "bin": ["bustools"],
+    "conservative": false
   },
   "bzip2": {
     "bin": [
@@ -255,7 +262,10 @@
     "version": "7.0.0"
   },
   "cheat": {
-    "bin": ["cheat"]
+    "bin": ["cheat"],
+    "conservative": false,
+    "url": ["https://github.com/cheat/cheat/"],
+    "version": "4.3.0"
   },
   "chemacs": {
     "conservative": false,
@@ -265,6 +275,7 @@
   },
   "chezmoi": {
     "bin": ["chezmoi"],
+    "conservative": false,
     "dependencies": ["go"],
     "url": ["https://www.chezmoi.io/"],
     "version": "2.21.0"
@@ -519,7 +530,10 @@
   },
   "cpufetch": {
     "bin": ["cpufetch"],
-    "man1": ["cpufetch.1"]
+    "conservative": false,
+    "man1": ["cpufetch.1"],
+    "url": ["https://github.com/Dr-Noob/cpufetch/"],
+    "version": "1.02"
   },
   "curl": {
     "bin": ["curl", "curl-config"],
@@ -529,20 +543,29 @@
     "version": "7.84.0"
   },
   "deeptools": {
-    "bin": ["deeptools"]
+    "bin": ["deeptools"],
+    "conservative": false
   },
   "delta": {
-    "bin": ["delta"]
+    "bin": ["delta"],
+    "conservative": false,
+    "url": ["https://github.com/dandavison/delta/"],
+    "version": "0.13.0"
   },
   "difftastic": {
     "bin": ["difft"],
+    "conservative": false,
     "version": "0.33.0"
   },
   "docker-credential-pass": {
-    "platform": "linux"
+    "conservative": false,
+    "platform": "linux",
+    "url": ["https://github.com/docker/docker-credential-helpers/"],
+    "version": "0.6.4"
   },
   "dog": {
-    "bin": ["dog"]
+    "bin": ["dog"],
+    "conservative": false
   },
   "dotfiles": {
     "conservative": false,
@@ -578,14 +601,22 @@
       "emacs.1.gz",
       "emacsclient.1.gz",
       "etags.1.gz"
-    ]
+    ],
+    "url": ["https://www.gnu.org/software/emacs/"],
+    "version": "28.1"
   },
-  "ensembl-perl-api": {},
+  "ensembl-perl-api": {
+    "conservative": false,
+    "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
+    "version": "107"
+  },
   "entrez-direct": {
-    "bin": ["efetch", "esearch"]
+    "bin": ["efetch", "esearch"],
+    "conservative": false
   },
   "exa": {
-    "bin": ["exa"]
+    "bin": ["exa"],
+    "conservative": false
   },
   "exiftool": {
     "bin": ["exiftool"],
@@ -601,17 +632,23 @@
     "version": "2.4.8"
   },
   "fastqc": {
-    "bin": ["fastqc"]
+    "bin": ["fastqc"],
+    "conservative": false
   },
   "fd-find": {
-    "bin": ["fd"]
+    "bin": ["fd"],
+    "conservative": false
   },
   "ffmpeg": {
     "bin": ["ffmpeg", "ffprobe"],
-    "man1": ["ffmpeg.1", "ffprobe.1"]
+    "conservative": false,
+    "man1": ["ffmpeg.1", "ffprobe.1"],
+    "url": ["https://ffmpeg.org/"],
+    "version": "5.1"
   },
   "ffq": {
-    "bin": ["ffq"]
+    "bin": ["ffq"],
+    "conservative": false
   },
   "findutils": {
     "bin": ["find", "locate", "updatedb", "xargs"],
@@ -624,14 +661,24 @@
     "bin": {
       "bin": ["fish"],
       "man1": ["fish.1"]
-    }
+    },
+    "conservative": false,
+    "url": [
+      "https://fishshell.com/",
+      "https://github.com/fish-shell/fish-shell/"
+    ],
+    "version": "3.5.1"
   },
   "flac": {
     "bin": ["flac"],
-    "man1": ["flac.1"]
+    "conservative": false,
+    "man1": ["flac.1"],
+    "url": ["https://xiph.org/flac/"],
+    "version": "1.3.4"
   },
   "flake8": {
     "bin": ["flake8"],
+    "conservative": false,
     "dependencies": ["python"]
   },
   "fltk": {
@@ -664,7 +711,10 @@
   },
   "gawk": {
     "bin": ["awk", "gawk"],
-    "man1": ["awk.1", "gawk.1"]
+    "conservative": false,
+    "man1": ["awk.1", "gawk.1"],
+    "url": ["https://ftp.gnu.org/gnu/gawk/"],
+    "version": "5.1.1"
   },
   "gcc": {
     "conservative": true,
@@ -674,6 +724,7 @@
   },
   "gdal": {
     "bin": ["gdal-config"],
+    "conservative": false,
     "man1": ["gdal-config.1"],
     "url": ["https://gdal.org/download.html"],
     "version": "3.5.1"
@@ -696,13 +747,16 @@
     "version": "0.21"
   },
   "gffutils": {
-    "bin": ["gffutils-cli"]
+    "bin": ["gffutils-cli"],
+    "conservative": false
   },
   "gget": {
-    "bin": ["gget"]
+    "bin": ["gget"],
+    "conservative": false
   },
   "ghostscript": {
     "bin": ["gs"],
+    "conservative": false,
     "man1": ["gs.1"]
   },
   "git": {
@@ -713,7 +767,8 @@
     "version": "2.37.1"
   },
   "glances": {
-    "bin": ["glances"]
+    "bin": ["glances"],
+    "conservative": false
   },
   "glib": {
     "conservative": true,
@@ -736,10 +791,16 @@
     "version": "3.7.7"
   },
   "go": {
-    "bin": ["go"]
+    "bin": ["go"],
+    "conservative": false,
+    "url": ["https://golang.org/dl/"],
+    "version": "1.19"
   },
   "google-cloud-sdk": {
-    "bin": ["gloud"]
+    "bin": ["gloud"],
+    "conservative": false,
+    "url": ["https://cloud.google.com/sdk/docs/install"],
+    "version": "396.0.0"
   },
   "gperf": {
     "conservative": true,
@@ -754,14 +815,17 @@
   },
   "grep": {
     "bin": ["egrep", "fgrep", "grep"],
+    "conservative": false,
     "man1": ["egrep.1", "fgrep.1", "grep.1"]
   },
   "groff": {
     "bin": ["groff"],
+    "conservative": false,
     "man1": ["groff.1"]
   },
   "gseapy": {
-    "bin": ["gseapy"]
+    "bin": ["gseapy"],
+    "conservative": false
   },
   "gsl": {
     "conservative": true,
@@ -813,7 +877,8 @@
     "version": "1.12"
   },
   "hadolint": {
-    "bin": ["hadolint"]
+    "bin": ["hadolint"],
+    "conservative": false
   },
   "harfbuzz": {
     "conservative": true,
@@ -856,14 +921,17 @@
     "version": "1.12.2"
   },
   "hisat2": {
-    "bin": ["hisat2"]
+    "bin": ["hisat2"],
+    "conservative": false
   },
   "htop": {
     "bin": ["htop"],
+    "conservative": false,
     "man1": ["htop.1"]
   },
   "hyperfine": {
-    "bin": ["hyperfine"]
+    "bin": ["hyperfine"],
+    "conservative": false
   },
   "icu4c": {
     "bin": [
@@ -918,10 +986,12 @@
     "version": "7.1.0-45"
   },
   "ipython": {
-    "bin": ["ipython"]
+    "bin": ["ipython"],
+    "conservative": false
   },
   "isort": {
-    "bin": ["isort"]
+    "bin": ["isort"],
+    "conservative": false
   },
   "jemalloc": {
     "conservative": true,
@@ -935,19 +1005,24 @@
   },
   "jq": {
     "bin": ["jq"],
+    "conservative": false,
     "man1": ["jq.1"]
   },
   "julia": {
-    "bin": ["julia"]
+    "bin": ["julia"],
+    "conservative": false
   },
   "jupyterlab": {
-    "bin": ["jupyter-lab"]
+    "bin": ["jupyter-lab"],
+    "conservative": false
   },
   "kallisto": {
-    "bin": ["kallisto"]
+    "bin": ["kallisto"],
+    "conservative": false
   },
   "lame": {
     "bin": ["lame"],
+    "conservative": false,
     "man1": ["lame.1"]
   },
   "lapack": {
@@ -968,10 +1043,12 @@
   },
   "less": {
     "bin": ["less"],
+    "conservative": false,
     "man1": ["less.1"]
   },
   "lesspipe": {
-    "bin": ["lesspipe.sh"]
+    "bin": ["lesspipe.sh"],
+    "conservative": false
   },
   "libassuan": {
     "conservative": true,
@@ -1141,13 +1218,16 @@
     "man1": ["man.1"]
   },
   "mcfly": {
-    "bin": ["mcfly"]
+    "bin": ["mcfly"],
+    "conservative": false
   },
   "mdcat": {
-    "bin": ["mdcat"]
+    "bin": ["mdcat"],
+    "conservative": false
   },
   "meson": {
-    "bin": ["meson"]
+    "bin": ["meson"],
+    "conservative": false
   },
   "mpc": {
     "conservative": true,
@@ -1160,7 +1240,8 @@
     "version": "4.1.0"
   },
   "multiqc": {
-    "bin": ["multiqc"]
+    "bin": ["multiqc"],
+    "conservative": false
   },
   "ncurses": {
     "bin": [
@@ -1193,10 +1274,12 @@
   },
   "neofetch": {
     "bin": ["neofetch"],
+    "conservative": false,
     "man1": ["neofetch.1"]
   },
   "neovim": {
     "bin": ["nvim"],
+    "conservative": false,
     "man1": ["nvim.1"]
   },
   "nettle": {
@@ -1205,7 +1288,8 @@
     "version": "3.8.1"
   },
   "nextflow": {
-    "bin": ["nextflow"]
+    "bin": ["nextflow"],
+    "conservative": false
   },
   "nghttp2": {
     "conservative": true,
@@ -1218,7 +1302,8 @@
     "version": ""
   },
   "ninja": {
-    "bin": ["ninja"]
+    "bin": ["ninja"],
+    "conservative": false
   },
   "node": {
     "bin": ["node", "npm", "npx"],
@@ -1246,6 +1331,7 @@
   },
   "openjdk": {
     "bin": ["jar", "java", "javac"],
+    "conservative": true,
     "lts": true,
     "man1": ["jar.1", "java.1", "javac.1"],
     "outdated": true,
@@ -1277,10 +1363,12 @@
   },
   "parallel": {
     "bin": ["parallel"],
+    "conservative": false,
     "man1": ["parallel.1"]
   },
   "password-store": {
     "bin": ["pass"],
+    "conservative": false,
     "man1": ["pass.1"]
   },
   "patch": {
@@ -1354,7 +1442,8 @@
     "version": "1.2.0"
   },
   "pipx": {
-    "bin": ["pipx"]
+    "bin": ["pipx"],
+    "conservative": false
   },
   "pixman": {
     "conservative": true,
@@ -1370,6 +1459,7 @@
   },
   "poetry": {
     "bin": ["poetry"],
+    "conservative": false,
     "version": "1.1.15"
   },
   "prettier": {
@@ -1380,7 +1470,8 @@
     "version": "2.7.1"
   },
   "procs": {
-    "bin": ["procs"]
+    "bin": ["procs"],
+    "conservative": false
   },
   "proj": {
     "bin": ["proj", "projinfo"],
@@ -1396,27 +1487,34 @@
   },
   "pyenv": {
     "bin": ["pyenv"],
+    "conservative": false,
     "man1": ["pyenv.1"]
   },
   "pyflakes": {
-    "bin": ["pyflakes"]
+    "bin": ["pyflakes"],
+    "conservative": false
   },
   "pygments": {
-    "bin": ["pygments"]
+    "bin": ["pygments"],
+    "conservative": false
   },
   "pylint": {
-    "bin": ["pylint"]
+    "bin": ["pylint"],
+    "conservative": false
   },
   "pytaglib": {
-    "bin": ["pyprinttags"]
+    "bin": ["pyprinttags"],
+    "conservative": false
   },
   "pytest": {
-    "bin": ["pytest"]
+    "bin": ["pytest"],
+    "conservative": false
   },
   "python": {
     "bin": ["idle3", "pip3", "pydoc3", "python3", "python3-config"],
-    "outdated": true,
+    "conservative": true,
     "man1": ["idle3.1", "pip3.1", "pydoc3.1", "python3.1", "python3-config.1"],
+    "outdated": true,
     "url": ["https://www.python.org/downloads/"],
     "version": "3.10.6"
   },
@@ -1444,10 +1542,12 @@
     "version_is_svn_commit": true
   },
   "ranger-fm": {
-    "bin": ["ranger"]
+    "bin": ["ranger"],
+    "conservative": false
   },
   "rbenv": {
-    "bin": ["rbenv"]
+    "bin": ["rbenv"],
+    "conservative": true
   },
   "readline": {
     "conservative": true,
@@ -1463,13 +1563,16 @@
     "version": "1.31"
   },
   "ripgrep-all": {
-    "bin": ["rga"]
+    "bin": ["rga"],
+    "conservative": false
   },
   "ripgrep": {
-    "bin": ["rg"]
+    "bin": ["rg"],
+    "conservative": false
   },
   "rmate": {
-    "bin": ["rmate"]
+    "bin": ["rmate"],
+    "conservative": false
   },
   "ronn": {
     "bin": ["ronn"],
@@ -1505,16 +1608,20 @@
       "rustc",
       "rustdoc",
       "rustfmt"
-    ]
+    ],
+    "conservative": false
   },
   "salmon": {
-    "bin": ["salmon"]
+    "bin": ["salmon"],
+    "conservative": false
   },
   "sambamba": {
-    "bin": ["sambamba"]
+    "bin": ["sambamba"],
+    "conservative": false
   },
   "samtools": {
-    "bin": ["samtools"]
+    "bin": ["samtools"],
+    "conservative": false
   },
   "scons": {
     "conservative": true,
@@ -1523,6 +1630,7 @@
   },
   "sed": {
     "bin": ["sed"],
+    "conservative": false,
     "man1": ["sed.1"]
   },
   "serf": {
@@ -1531,36 +1639,44 @@
     "version": "1.3.9"
   },
   "shellcheck": {
-    "bin": ["shellcheck"]
+    "bin": ["shellcheck"],
+    "conservative": false
   },
   "shunit2": {
-    "bin": ["shunit2"]
+    "bin": ["shunit2"],
+    "conservative": false
   },
   "snakemake": {
-    "bin": ["snakemake"]
+    "bin": ["snakemake"],
+    "conservative": false
   },
   "sox": {
     "bin": ["sox"],
+    "conservative": false,
     "man1": ["sox.1"]
   },
   "sqlite": {
     "bin": ["sqlite3"],
-    "conservative": false,
+    "conservative": true,
     "man1": ["sqlite3.1"],
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.39.2"
   },
   "sra-tools": {
-    "bin": ["fasterq-dump", "vdb-config"]
+    "bin": ["fasterq-dump", "vdb-config"],
+    "conservative": false
   },
   "star": {
-    "bin": ["STAR"]
+    "bin": ["STAR"],
+    "conservative": false
   },
   "starship": {
-    "bin": ["starship"]
+    "bin": ["starship"],
+    "conservative": false
   },
   "stow": {
-    "bin": ["stow"]
+    "bin": ["stow"],
+    "conservative": false
   },
   "subversion": {
     "bin": ["svn"],
@@ -1587,7 +1703,8 @@
     "version": "8.6.12"
   },
   "tealdeer": {
-    "bin": ["tldr"]
+    "bin": ["tldr"],
+    "conservative": false
   },
   "texinfo": {
     "bin": [
@@ -1612,17 +1729,21 @@
   },
   "tmux": {
     "bin": ["tmux"],
+    "conservative": false,
     "man1": ["tmux.1"]
   },
   "tokei": {
-    "bin": ["tokei"]
+    "bin": ["tokei"],
+    "conservative": false
   },
   "tree": {
     "bin": ["tree"],
+    "conservative": false,
     "man1": ["tree.1"]
   },
   "tuc": {
-    "bin": ["tuc"]
+    "bin": ["tuc"],
+    "conservative": false
   },
   "udunits": {
     "bin": ["udunits2"],
@@ -1644,6 +1765,7 @@
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
+    "conservative": false,
     "man1": [
       "ex.1",
       "rview.1",
@@ -1657,6 +1779,7 @@
   },
   "visidata": {
     "bin": ["vd", "visidata"],
+    "conservative": false,
     "man1": ["vd.1", "visidata.1"]
   },
   "wget": {
@@ -1743,7 +1866,8 @@
     "version": "1.4.0"
   },
   "xsv": {
-    "bin": ["xsv"]
+    "bin": ["xsv"],
+    "conservative": false
   },
   "xxhash": {
     "conservative": true,
@@ -1758,16 +1882,20 @@
     "version": "5.2.5"
   },
   "yarn": {
-    "bin": ["yarn"]
+    "bin": ["yarn"],
+    "conservative": false
   },
   "yq": {
-    "bin": ["yq"]
+    "bin": ["yq"],
+    "conservative": false
   },
   "yt-dlp": {
-    "bin": ["yt-dlp"]
+    "bin": ["yt-dlp"],
+    "conservative": false
   },
   "zellij": {
-    "bin": ["zellij"]
+    "bin": ["zellij"],
+    "conservative": false
   },
   "zlib": {
     "conservative": true,
@@ -1775,7 +1903,8 @@
     "version": "1.2.12"
   },
   "zoxide": {
-    "bin": ["zoxide"]
+    "bin": ["zoxide"],
+    "conservative": false
   },
   "zsh": {
     "bin": ["zsh"],
