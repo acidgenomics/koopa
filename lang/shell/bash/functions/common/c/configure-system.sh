@@ -127,8 +127,8 @@ koopa_configure_system() {
         ['install_zsh']=0
         ['mode']='default'
         ['passwordless_sudo']=0
-        ['python_version']="$(koopa_variable 'python')"
-        ['r_version']="$(koopa_variable 'r')"
+        ['python_version']="$(koopa_app_json_version 'python')"
+        ['r_version']="$(koopa_app_json_version 'r')"
         ['ssh_key']=1
         ['which_conda']='conda'
     )

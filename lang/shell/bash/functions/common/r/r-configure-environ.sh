@@ -15,7 +15,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-24.
     #
     # @section Package library location:
     #
@@ -152,11 +152,11 @@ koopa_r_configure_environ() {
     )
     for key in "${keys[@]}"
     do
-        pkgconfig_arr['$key']="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
+        pkgconfig_arr[$key]="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
     done
     for i in "${!pkgconfig_arr[@]}"
     do
-        pkgconfig_arr['$i']="${pkgconfig_arr[$i]}/lib"
+        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/lib"
     done
     if koopa_is_linux
     then
@@ -164,7 +164,7 @@ koopa_r_configure_environ() {
     fi
     for i in "${!pkgconfig_arr[@]}"
     do
-        pkgconfig_arr['$i']="${pkgconfig_arr[$i]}/pkgconfig"
+        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/pkgconfig"
     done
     lines+=(
         "PAGER=\${PAGER:-less}"
@@ -242,8 +242,10 @@ koopa_r_configure_environ() {
     )
     if koopa_is_fedora_like
     then
-        dict['oracle_ver']="$(koopa_variable 'oracle-instant-client')"
-        dict['oracle_ver']="$(koopa_major_minor_version "${dict['oracle_ver']}")"
+        dict['oracle_ver']="$(koopa_app_json_version 'oracle-instant-client')"
+        dict['oracle_ver']="$( \
+            koopa_major_minor_version "${dict['oracle_ver']}" \
+        )"
         # ROracle
         # ----------------------------------------------------------------------
         # This requires installation of the Oracle Database Instant Client.
