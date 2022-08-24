@@ -13053,6 +13053,13 @@ koopa_install_man_db() {
         "$@"
 }
 
+koopa_install_markdownlint_cli() {
+    koopa_install_app \
+        --link-in-bin='markdownlint' \
+        --name='markdownlint-cli' \
+        "$@"
+}
+
 koopa_install_mcfly() {
     koopa_install_app \
         --link-in-bin='mcfly' \
@@ -23645,6 +23652,13 @@ koopa_uninstall_man_db() {
     koopa_uninstall_app \
         --name='man-db' \
         --unlink-in-bin='man' \
+        "$@"
+}
+
+koopa_uninstall_markdownlint_cli() {
+    koopa_uninstall_app \
+        --name='markdownlint-cli' \
+        --unlink-in-bin='markdownlint' \
         "$@"
 }
 
