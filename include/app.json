@@ -954,7 +954,7 @@
   },
   "hisat2": {
     "bin": ["hisat2"],
-    "conservative": false
+    "conservative": false,
     "depends": ["conda"]
   },
   "htop": {
@@ -966,7 +966,7 @@
   },
   "hyperfine": {
     "bin": ["hyperfine"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "icu4c": {
@@ -1023,12 +1023,12 @@
   },
   "ipython": {
     "bin": ["ipython"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "isort": {
     "bin": ["isort"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "jemalloc": {
@@ -1056,12 +1056,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "conservative": false
+    "conservative": false,
     "depends": ["conda"]
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "conservative": false
+    "conservative": false,
     "depends": ["conda"]
   },
   "lame": {
@@ -1271,17 +1271,17 @@
   },
   "mcfly": {
     "bin": ["mcfly"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "mdcat": {
     "bin": ["mdcat"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "meson": {
     "bin": ["meson"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "mpc": {
@@ -1296,7 +1296,7 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "conservative": false
+    "conservative": false,
     "depends": ["conda"]
   },
   "ncurses": {
@@ -1349,7 +1349,7 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "conservative": false
+    "conservative": false,
     "depends": ["conda"]
   },
   "nghttp2": {
@@ -1364,7 +1364,7 @@
   },
   "ninja": {
     "bin": ["ninja"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "node": {
@@ -1518,7 +1518,7 @@
   },
   "pipx": {
     "bin": ["pipx"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "pixman": {
@@ -1536,7 +1536,7 @@
   "poetry": {
     "bin": ["poetry"],
     "conservative": true,
-    "depends": ["python"]
+    "depends": ["python"],
     "version": "1.1.15"
   },
   "prettier": {
@@ -1548,7 +1548,7 @@
   },
   "procs": {
     "bin": ["procs"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "proj": {
@@ -1572,27 +1572,27 @@
   },
   "pyflakes": {
     "bin": ["pyflakes"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "pygments": {
     "bin": ["pygments"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "pylint": {
     "bin": ["pylint"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "pytest": {
     "bin": ["pytest"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "python": {
@@ -1640,7 +1640,7 @@
   },
   "ranger-fm": {
     "bin": ["ranger"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "rbenv": {
@@ -1664,12 +1664,12 @@
   },
   "ripgrep-all": {
     "bin": ["rga"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "ripgrep": {
     "bin": ["rg"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "rmate": {
@@ -1727,22 +1727,22 @@
   },
   "salmon": {
     "bin": ["salmon"],
-    "conservative": false
+    "conservative": false,
     "depends": ["conda"]
   },
   "sambamba": {
     "bin": ["sambamba"],
-    "conservative": false
+    "conservative": false,
     "depends": ["conda"]
   },
   "samtools": {
     "bin": ["samtools"],
-    "conservative": false
+    "conservative": false,
     "depends": ["conda"]
   },
   "scons": {
     "conservative": true,
-    "depends": ["python"]
+    "depends": ["python"],
     "url": [""],
     "version": ""
   },
@@ -1778,7 +1778,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "conservative": false
+    "conservative": false,
     "depends": ["conda"]
   },
   "sox": {
@@ -1808,7 +1808,7 @@
   },
   "starship": {
     "bin": ["starship"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "stow": {
@@ -1843,7 +1843,7 @@
   },
   "tealdeer": {
     "bin": ["tldr"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "texinfo": {
@@ -1876,7 +1876,7 @@
   },
   "tokei": {
     "bin": ["tokei"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "tree": {
@@ -1888,7 +1888,7 @@
   },
   "tuc": {
     "bin": ["tuc"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "udunits": {
@@ -2016,7 +2016,7 @@
   },
   "xsv": {
     "bin": ["xsv"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "xxhash": {
@@ -2047,12 +2047,12 @@
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
-    "conservative": false
+    "conservative": false,
     "depends": ["python"]
   },
   "zellij": {
     "bin": ["zellij"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "zlib": {
@@ -2062,7 +2062,7 @@
   },
   "zoxide": {
     "bin": ["zoxide"],
-    "conservative": false
+    "conservative": false,
     "depends": ["rust"]
   },
   "zsh": {
