@@ -1,8 +1,6 @@
 # Conda recipes
 # ==============================================================================
 
-hisat2="2.2.1" # 2020-07-24 bioconda
-jupyterlab="3.4.4" # 2022-07-21 conda-forge
 kallisto="0.48.0" # 2022-01-17 bioconda
 multiqc="1.13a" # 2022-06-28 bioconda
 nextflow="22.04.5" # 2022-07-27 bioconda
