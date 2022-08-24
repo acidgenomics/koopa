@@ -186,7 +186,8 @@ koopa_install_app() {
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict['version_key']}" ]] && dict[version_key]="${dict['name']}"
     dict['current_version']="$(\
-        koopa_variable "${dict['version_key']}" 2>/dev/null || true \
+        koopa_app_json_version "${dict['version_key']}" \
+            2>/dev/null || true \
     )"
     [[ -z "${dict['version']}" ]] && dict[version]="${dict['current_version']}"
     if [[ "${dict['version']}" != "${dict['current_version']}" ]]
