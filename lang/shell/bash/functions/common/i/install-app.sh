@@ -21,11 +21,11 @@ koopa_install_app() {
         ['binary']=0
         ['copy_log_file']=0
         # Will any individual programs be linked into koopa 'bin/'?
-        ['link_in_bin']=0
+        ['link_in_bin']=''
         # Link corresponding man1 documentation files for app in bin.
-        ['link_in_man1']=0
+        ['link_in_man1']=''
         # Create an unversioned symlink in koopa 'opt/' directory.
-        ['link_in_opt']=0
+        ['link_in_opt']=''
         # This override is useful for app packages configuration.
         ['prefix_check']=1
         # Push completed build to AWS S3 bucket.
@@ -124,6 +124,14 @@ koopa_install_app() {
                 shift 1
                 ;;
             # Internal flags ---------------------------------------------------
+            '--no-link-in-bin')
+                bool['link_in_bin']=0
+                shift 1
+                ;;
+            '--no-link-in-man1')
+                bool['link_in_man1']=0
+                shift 1
+                ;;
             '--no-link-in-opt')
                 bool['link_in_opt']=0
                 shift 1
@@ -193,23 +201,35 @@ ${dict['version2']}"
                 bool['link_in_man1']=0
                 bool['link_in_opt']=0
             else
-                bool['link_in_opt']=1
-                readarray -t bin_arr <<< "$( \
-                    koopa_app_json_bin "${dict['name']}" \
-                        2>/dev/null || true \
-                )"
-                if koopa_is_array_non_empty "${bin_arr[@]:-}"
+                # FIXME Move this down and attempt later?
+                if [[ -z "${bool['link_in_bin']}" ]]
                 then
-                    bool['link_in_bin']=1
+                    readarray -t bin_arr <<< "$( \
+                        koopa_app_json_bin "${dict['name']}" \
+                            2>/dev/null || true \
+                    )"
+                    if koopa_is_array_non_empty "${bin_arr[@]:-}"
+                    then
+                        bool['link_in_bin']=1
+                    else
+                        bool['link_in_bin']=0
+                    fi
                 fi
-                readarray -t man1_arr <<< "$( \
-                    koopa_app_json_man1 "${dict['name']}" \
-                        2>/dev/null || true \
-                )"
-                if koopa_is_array_non_empty "${man1_arr[@]:-}"
+                # FIXME Move this down and attempt later?
+                if [[ -z "${bool['link_in_man1']}" ]]
                 then
-                    bool['link_in_man1']=1
+                    readarray -t man1_arr <<< "$( \
+                        koopa_app_json_man1 "${dict['name']}" \
+                            2>/dev/null || true \
+                    )"
+                    if koopa_is_array_non_empty "${man1_arr[@]:-}"
+                    then
+                        bool['link_in_man1']=1
+                    else
+                        bool['link_in_man1']=0
+                    fi
                 fi
+                [[ -z "${bool['link_in_opt']}" ]] && bool['link_in_opt']=1
             fi
             ;;
         'system')
@@ -307,10 +327,14 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
         fi
-        if [[ "${bool['update_ldconfig']}" -eq 1 ]]
-        then
-            koopa_linux_update_ldconfig
-        fi
+        case "${dict['mode']}" in
+            'system')
+                if [[ "${bool['update_ldconfig']}" -eq 1 ]]
+                then
+                    koopa_linux_update_ldconfig
+                fi
+                ;;
+        esac
         # shellcheck disable=SC2030
         export INSTALL_NAME="${dict['name']}"
         # shellcheck disable=SC2030
@@ -336,56 +360,59 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
                 koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
             fi
             koopa_sys_set_permissions --recursive "${dict['prefix']}"
+            if [[ "${bool['link_in_opt']}" -eq 1 ]]
+            then
+                koopa_link_in_opt \
+                    --name="${dict['name']}" \
+                    --source="${dict['prefix']}"
+            fi
+            if [[ "${bool['link_in_bin']}" -eq 1 ]]
+            then
+                for i in "${!bin_arr[@]}"
+                do
+                    local dict2
+                    declare -A dict2
+                    dict2['name']="${bin_arr[$i]}"
+                    dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
+                    koopa_link_in_bin \
+                        --name="${dict2['name']}" \
+                        --source="${dict2['source']}"
+                done
+            fi
+            if [[ "${bool['link_in_man1']}" -eq 1 ]]
+            then
+                for i in "${!man1_arr[@]}"
+                do
+                    local dict2
+                    declare -A dict2
+                    dict2['name']="${man1_arr[$i]}"
+                    dict2['mf1']="${dict['prefix']}/share/man/\
+man1/${dict2['name']}"
+                    dict2['mf2']="${dict['prefix']}/man/man1/${dict2['name']}"
+                    if [[ -f "${dict2['mf1']}" ]]
+                    then
+                        koopa_link_in_man1 \
+                            --name="${dict2['name']}" \
+                            --source="${dict2['mf1']}"
+                    elif [[ -f "${dict2['mf2']}" ]]
+                    then
+                        koopa_link_in_man1 \
+                            --name="${dict2['name']}" \
+                            --source="${dict2['mf2']}"
+                    fi
+                done
+            fi
+            ;;
+        'system')
+            if [[ "${bool['update_ldconfig']}" -eq 1 ]]
+            then
+                koopa_linux_update_ldconfig
+            fi
             ;;
         'user')
             koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
             ;;
     esac
-    if [[ "${bool['link_in_opt']}" -eq 1 ]]
-    then
-        koopa_link_in_opt \
-            --name="${dict['name']}" \
-            --source="${dict['prefix']}"
-    fi
-    if [[ "${bool['link_in_bin']}" -eq 1 ]]
-    then
-        for i in "${!bin_arr[@]}"
-        do
-            local dict2
-            declare -A dict2
-            dict2['name']="${bin_arr[$i]}"
-            dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
-            koopa_link_in_bin \
-                --name="${dict2['name']}" \
-                --source="${dict2['source']}"
-        done
-    fi
-    if [[ "${bool['link_in_man1']}" -eq 1 ]]
-    then
-        for i in "${!man1_arr[@]}"
-        do
-            local dict2
-            declare -A dict2
-            dict2['name']="${man1_arr[$i]}"
-            dict2['mf1']="${dict['prefix']}/share/man/man1/${dict2['name']}"
-            dict2['mf2']="${dict['prefix']}/man/man1/${dict2['name']}"
-            if [[ -f "${dict2['mf1']}" ]]
-            then
-                koopa_link_in_man1 \
-                    --name="${dict2['name']}" \
-                    --source="${dict2['mf1']}"
-            elif [[ -f "${dict2['mf2']}" ]]
-            then
-                koopa_link_in_man1 \
-                    --name="${dict2['name']}" \
-                    --source="${dict2['mf2']}"
-            fi
-        done
-    fi
-    if [[ "${bool['update_ldconfig']}" -eq 1 ]]
-    then
-        koopa_linux_update_ldconfig
-    fi
     if [[ "${bool['push']}" -eq 1 ]]
     then
         [[ "${dict['mode']}" == 'shared' ]] || return 1
