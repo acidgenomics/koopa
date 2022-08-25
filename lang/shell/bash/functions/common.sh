@@ -22216,6 +22216,10 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     fi
     case "${dict['mode']}" in
         'shared')
+            if [[ "${bool['unlink_in_opt']}" -eq 1 ]]
+            then
+                koopa_unlink_in_opt "${dict['name']}"
+            fi
             if [[ "${bool['unlink_in_bin']}" -eq 1 ]]
             then
                 readarray -t bin_arr <<< "$( \
@@ -22237,10 +22241,6 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
                 then
                     koopa_unlink_in_man1 "${man1_arr[@]}"
                 fi
-            fi
-            if [[ "${bool['unlink_in_opt']}" -eq 1 ]]
-            then
-                koopa_unlink_in_opt "${dict['name']}"
             fi
             ;;
     esac
