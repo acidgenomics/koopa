@@ -19,7 +19,7 @@ koopa_configure_r() {
     declare -A app=(
         ['r']="${1:-}"
     )
-    [[ -z "${app['r']}" ]] && app[r]="$(koopa_locate_r)"
+    [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
         ['name']='r'

@@ -10,7 +10,7 @@ koopa_python_system_packages_prefix() {
     declare -A app=(
         ['python']="${1:-}"
     )
-    [[ -z "${app['python']}" ]] && app[python]="$(koopa_locate_python)"
+    [[ -z "${app['python']}" ]] && app['python']="$(koopa_locate_python)"
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict
     dict['prefix']="$( \

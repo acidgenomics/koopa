@@ -16,7 +16,7 @@ koopa_aws_batch_list_jobs() {
         ['queue']="${AWS_BATCH_QUEUE:-}"
         ['region']="${AWS_BATCH_REGION:-}"
     )
-    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in

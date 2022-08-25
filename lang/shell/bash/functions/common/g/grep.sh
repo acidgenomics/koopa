@@ -130,7 +130,7 @@ koopa_grep() {
     if [[ -z "${dict['engine']}" ]]
     then
         app['grep']="$(koopa_locate_rg --allow-missing)"
-        [[ ! -x "${app['grep']}" ]] && app[grep]="$(koopa_locate_grep)"
+        [[ ! -x "${app['grep']}" ]] && app['grep']="$(koopa_locate_grep)"
         dict['engine']="$(koopa_basename "${app['grep']}")"
     else
         app['grep']="$(koopa_locate_"${dict['engine']}")"

@@ -13,7 +13,7 @@ koopa_r_shiny_run_app() {
     declare -A dict=(
         ['prefix']="${1:-}"
     )
-    [[ -z "${dict['prefix']}" ]] && dict[prefix]="${PWD:?}"
+    [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     "${app['r']}" \

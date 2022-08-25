@@ -12,7 +12,7 @@ koopa_linux_configure_lmod() {
         ['etc_dir']='/etc/profile.d'
         ['prefix']="${1:-}"
     )
-    [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_lmod_prefix)"
+    [[ -z "${dict['prefix']}" ]] && dict['prefix']="$(koopa_lmod_prefix)"
     dict['init_dir']="${dict['prefix']}/apps/lmod/lmod/init"
     koopa_assert_is_dir "${dict['init_dir']}"
     if [[ ! -d "${dict['etc_dir']}" ]]

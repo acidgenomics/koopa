@@ -24,7 +24,7 @@ koopa_current_gencode_version() {
     declare -A dict=(
         ['organism']="${1:-}"
     )
-    [[ -z "${dict['organism']}" ]] && dict[organism]='Homo sapiens'
+    [[ -z "${dict['organism']}" ]] && dict['organism']='Homo sapiens'
     case "${dict['organism']}" in
         'Homo sapiens' | \
         'human')

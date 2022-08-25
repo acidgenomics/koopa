@@ -23,7 +23,7 @@ koopa_aws_batch_fetch_and_run() {
         ['profile']="${AWS_PROFILE:-}"
         ['url']="${BATCH_FILE_URL:?}"
     )
-    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     case "${dict['url']}" in
         'ftp://'* | \
         'http://'*)

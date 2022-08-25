@@ -95,7 +95,7 @@ koopa_r_configure_environ() {
         ['tmp_file']="$(koopa_tmp_file)"
     )
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
-    ! koopa_is_koopa_app "${app['r']}" && dict[system]=1
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
     lines+=(

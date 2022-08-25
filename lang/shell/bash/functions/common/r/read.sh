@@ -18,7 +18,7 @@ koopa_read() {
     )
     # shellcheck disable=SC2162
     read "${read_args[@]}" "dict[choice]"
-    [[ -z "${dict['choice']}" ]] && dict[choice]="${dict['default']}"
+    [[ -z "${dict['choice']}" ]] && dict['choice']="${dict['default']}"
     koopa_print "${dict['choice']}"
     return 0
 }
