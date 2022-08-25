@@ -6,7 +6,6 @@ koopa_locate_tlmgr() {
         koopa_locate_app '/Library/TeX/texbin/tlmgr'
     else
         koopa_locate_app \
-            --allow-in-path \
-            --app-name='tlmgr'
+                --app-name='tlmgr'
     fi
 }

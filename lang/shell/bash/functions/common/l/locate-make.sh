@@ -2,7 +2,6 @@
 
 koopa_locate_make() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='make' \
+        --app-name='gmake' \
         --opt-name='make'
 }

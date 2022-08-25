@@ -69,10 +69,11 @@ __koopa_print() {
     return 0
 }
 
+# FIXME Improve consistency of this.
 __koopa_realpath() {
     # """
     # Resolve file path.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-08-25.
     # """
     local readlink x
     readlink='readlink'

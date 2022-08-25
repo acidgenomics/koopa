@@ -2,7 +2,6 @@
 
 koopa_locate_groups() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='groups' \
+        --app-name='ggroups' \
         --opt-name='coreutils'
 }

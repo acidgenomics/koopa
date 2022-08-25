@@ -2,7 +2,6 @@
 
 koopa_locate_cp() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='cp' \
+        --app-name='gcp' \
         --opt-name='coreutils'
 }

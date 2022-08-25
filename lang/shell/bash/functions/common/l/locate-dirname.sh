@@ -2,7 +2,6 @@
 
 koopa_locate_dirname() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='dirname' \
+        --app-name='gdirname' \
         --opt-name='coreutils'
 }
