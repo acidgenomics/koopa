@@ -5,5 +5,6 @@ main() {
     koopa_install_app_internal \
         --installer='gnu-app' \
         --name='libtool' \
+        -D '--program-prefix=g' \
         "$@"
 }
