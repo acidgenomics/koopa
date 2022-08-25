@@ -5,7 +5,7 @@ koopa_uninstall_app() {
     # Uninstall an application.
     # @note Updated 2022-08-25.
     # """
-    local bin_arr bool dict i man1_arr
+    local bin_arr bool dict man1_arr
     declare -A bool=(
         ['quiet']=0
         ['unlink_in_bin']=''
@@ -161,24 +161,38 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
                 ;;
         esac
     fi
-    # FIXME Rework the JSON parsing step as a new 'koopa_unlink_in_bin' function.
-    if [[ "${bool['unlink_in_bin']}" -eq 1 ]]
-    then
-        koopa_unlink_in_bin "${bin_arr[@]}"
-    fi
-    # FIXME Rework the JSON parsing step as a new 'koopa_unlink_in_man1' function.
-    if [[ "${bool['unlink_in_man1']}" -eq 1 ]]
-    then
-        for i in "${!bin_arr[@]}"
-        do
-            man1_arr+=("${bin_arr[$i]}.1")
-        done
-        koopa_unlink_in_man1 "${man1_arr[@]}"
-    fi
-    if [[ "${bool['unlink_in_opt']}" -eq 1 ]]
-    then
-        koopa_unlink_in_opt "${dict['name']}"
-    fi
+    case "${dict['mode']}" in
+        'shared')
+            # FIXME Rework this as a function.
+            if [[ "${bool['unlink_in_bin']}" -eq 1 ]]
+            then
+                readarray -t bin_arr <<< "$( \
+                    koopa_app_json_bin "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${bin_arr[@]:-}"
+                then
+                    koopa_unlink_in_bin "${bin_arr[@]}"
+                fi
+            fi
+            # FIXME Rework this as a function.
+            if [[ "${bool['unlink_in_man1']}" -eq 1 ]]
+            then
+                readarray -t man1_arr <<< "$( \
+                    koopa_app_json_man1 "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${man1_arr[@]:-}"
+                then
+                    koopa_unlink_in_man1 "${man1_arr[@]}"
+                fi
+            fi
+            if [[ "${bool['unlink_in_opt']}" -eq 1 ]]
+            then
+                koopa_unlink_in_opt "${dict['name']}"
+            fi
+            ;;
+    esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
         if [[ -n "${dict['prefix']}" ]]
