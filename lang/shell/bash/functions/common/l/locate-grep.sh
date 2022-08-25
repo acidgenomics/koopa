@@ -2,7 +2,7 @@
 
 koopa_locate_grep() {
     koopa_locate_app \
-        --app-name='grep' \
+        --app-name='ggrep' \
         --opt-name='grep' \
         "$@"
 }

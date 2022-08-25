@@ -438,6 +438,7 @@
       "gyes"
     ],
     "conservative": false,
+    "date": "2022-08-25",
     "man1": [
       "gb2sum.1",
       "gbase32.1",
@@ -689,9 +690,10 @@
     "version": "0.2.1"
   },
   "findutils": {
-    "bin": ["find", "locate", "updatedb", "xargs"],
+    "bin": ["gfind", "glocate", "gupdatedb", "gxargs"],
     "conservative": false,
-    "man1": ["find.1", "locate.1", "updatedb.1", "xargs.1"],
+    "date": "2022-08-25",
+    "man1": ["gfind.1", "glocate.1", "gupdatedb.1", "gxargs.1"],
     "url": ["https://www.gnu.org/software/findutils/"],
     "version": "4.9.0"
   },
@@ -862,9 +864,9 @@
     "version": "5.0.0"
   },
   "grep": {
-    "bin": ["egrep", "fgrep", "grep"],
+    "bin": ["gegrep", "gfgrep", "ggrep"],
     "conservative": false,
-    "man1": ["egrep.1", "fgrep.1", "grep.1"],
+    "man1": ["gegrep.1", "gfgrep.1", "ggrep.1"],
     "url": ["https://www.gnu.org/software/grep/"],
     "version": "3.7"
   },
@@ -1224,9 +1226,9 @@
     "version": "4.4.0"
   },
   "libtool": {
-    "bin": ["glibtool", "glibtoolize", "libtool", "libtoolize"],
+    "bin": ["glibtool", "glibtoolize"],
     "conservative": false,
-    "man1": ["glibtool.1", "glibtoolize.1", "libtool.1", "libtoolize.1"],
+    "man1": ["glibtool.1", "glibtoolize.1"],
     "url": ["https://ftp.gnu.org/gnu/libtool/"],
     "version": "2.4.7"
   },
@@ -1291,9 +1293,10 @@
     "version": "1.4.19"
   },
   "make": {
-    "bin": ["make"],
+    "bin": ["gmake"],
     "conservative": false,
-    "man1": ["make.1"],
+    "date": "2022-08-25",
+    "man1": ["gmake.1"],
     "url": ["https://ftp.gnu.org/gnu/make/"],
     "version": "4.3"
   },
@@ -1817,9 +1820,10 @@
     "version": "4.4.0"
   },
   "sed": {
-    "bin": ["sed"],
+    "bin": ["gsed"],
     "conservative": false,
-    "man1": ["sed.1"],
+    "date": "2022-08-25",
+    "man1": ["gsed.1"],
     "url": ["https://www.gnu.org/software/sed/"],
     "version": "4.8"
   },
@@ -1976,9 +1980,10 @@
     "version": "2.2.28"
   },
   "units": {
-    "bin": ["units"],
+    "bin": ["gunits"],
     "conservative": true,
-    "man1": ["units.1"],
+    "date": "2022-08-25",
+    "man1": ["gunits.1"],
     "url": ["https://www.gnu.org/software/units/"],
     "version": "2.21"
   },
