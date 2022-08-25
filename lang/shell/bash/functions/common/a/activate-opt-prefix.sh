@@ -89,10 +89,10 @@ koopa_activate_opt_prefix() {
         koopa_assert_is_dir "$prefix"
         current_ver="$(koopa_opt_version "$name")"
         expected_ver="$(koopa_app_json_version "$name")"
-        # Sanitize git commit string to 8 characters.
+        # Shorten git commit string to 7 characters.
         if [[ "${#expected_ver}" -eq 40 ]]
         then
-            expected_ver="${expected_ver:0:8}"
+            expected_ver="${expected_ver:0:7}"
         fi
         if [[ "$current_ver" != "$expected_ver" ]]
         then
