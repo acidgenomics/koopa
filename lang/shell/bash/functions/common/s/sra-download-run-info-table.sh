@@ -26,11 +26,11 @@ koopa_sra_download_run_info_table() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--file='*)
-                dict[run_info_file]+=("${1#*=}")
+                dict['run_info_file']+=("${1#*=}")
                 shift 1
                 ;;
             '--file')
-                dict[run_info_file]+=("${2:?}")
+                dict['run_info_file']+=("${2:?}")
                 shift 2
                 ;;
             '--srp-id='*)

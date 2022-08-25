@@ -18,7 +18,7 @@ koopa_docker_tag() {
         ['server']='docker.io'
         ['source_tag']="${2:?}"
     )
-    [[ -z "${dict['dest_tag']}" ]] && dict[dest_tag]='latest'
+    [[ -z "${dict['dest_tag']}" ]] && dict['dest_tag']='latest'
     # Assume acidgenomics recipe by default.
     if ! koopa_str_detect_fixed \
         --string="${dict['image']}" \

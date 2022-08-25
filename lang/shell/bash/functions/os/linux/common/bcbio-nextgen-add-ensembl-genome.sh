@@ -31,10 +31,10 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # >     [genome_dir]='homo-sapiens-grch38-ensembl-102'
     # > )
     # # bcbio expects the genome FASTA, not the transcriptome.
-    # > dict2[fasta_file]="${genome_dir}/genome/
+    # > dict2['fasta_file']="${genome_dir}/genome/
     # >     Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
     # # GTF is easier to parse than GFF3.
-    # > dict2[gtf_file]="${genome_dir}/annotation/gtf/
+    # > dict2['gtf_file']="${genome_dir}/annotation/gtf/
     # >     Homo_sapiens.GRCh38.102.gtf.gz"
     # # Now we're ready to call the install script.
     # > koopa_linux_bcbio_nextgen_add_ensembl_genome \

@@ -51,8 +51,8 @@ main() {
             ;;
         # > 'cpanminus')
         # >     # App::cpanminus.
-        # >     dict[author]='MIYAGAWA'
-        # >     dict[name2]='App-cpanminus'
+        # >     dict['author']='MIYAGAWA'
+        # >     dict['name2']='App-cpanminus'
         # >     ;;
         'exiftool')
             # Image::ExifTool.
@@ -101,7 +101,7 @@ ${dict['author']:0:1}/${dict['author']:0:2}/${dict['author']}/${dict['file']}"
     koopa_assert_is_dir "${dict['lib_prefix']}"
     # Ensure we burn Perl library path into executables. This will add a line
     # directly under the shebang.
-    # > dict[lib_string]="BEGIN { unshift @INC, \"${dict['lib_prefix']}\"; }"
+    # > dict['lib_string']="BEGIN { unshift @INC, \"${dict['lib_prefix']}\"; }"
     dict['lib_string']="use lib \"${dict['lib_prefix']}\";"
     readarray -t bin_files <<< "$( \
         koopa_find \
