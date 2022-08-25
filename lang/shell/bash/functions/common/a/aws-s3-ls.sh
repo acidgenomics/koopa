@@ -55,7 +55,7 @@ koopa_aws_s3_ls() {
         ['recursive']=0
         ['type']=''
     )
-    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     ls_args=()
     while (("$#"))
     do

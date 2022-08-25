@@ -12,7 +12,7 @@ koopa_parallel_version() {
         ['head']="$(koopa_locate_head)"
         ['parallel']="${1:-}"
     )
-    [[ -z "${app['parallel']}" ]] && app[parallel]="$(koopa_locate_parallel)"
+    [[ -z "${app['parallel']}" ]] && app['parallel']="$(koopa_locate_parallel)"
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['parallel']}" ]] || return 1

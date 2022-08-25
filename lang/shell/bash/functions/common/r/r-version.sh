@@ -11,7 +11,7 @@ koopa_r_version() {
         ['head']="$(koopa_locate_head)"
         ['r']="${1:-}"
     )
-    [[ -z "${app['r']}" ]] && app[r]="$(koopa_locate_r)"
+    [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     str="$( \

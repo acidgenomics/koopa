@@ -32,7 +32,7 @@ koopa_install_koopa() {
     )
     dict['koopa_prefix_system']='/opt/koopa'
     dict['koopa_prefix_user']="${dict['xdg_data_home']}/koopa"
-    koopa_is_admin && bool[shared]=1
+    koopa_is_admin && bool['shared']=1
     while (("$#"))
     do
         case "$1" in

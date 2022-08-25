@@ -11,7 +11,7 @@ koopa_man_version() {
         ['grep']="$(koopa_locate_grep)"
         ['man']="${1:-}"
     )
-    [[ -z "${app['man']}" ]] && app[man]="$(koopa_locate_man)"
+    [[ -z "${app['man']}" ]] && app['man']="$(koopa_locate_man)"
     [[ -x "${app['grep']}" ]] || return 1
     [[ -x "${app['man']}" ]] || return 1
     str="$( \

@@ -16,7 +16,7 @@ koopa_aws_ec2_terminate() {
         ['id']="$(koopa_aws_ec2_instance_id)"
         ['profile']="${AWS_PROFILE:-}"
     )
-    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in

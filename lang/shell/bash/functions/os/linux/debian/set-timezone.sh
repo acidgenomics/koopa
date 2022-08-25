@@ -21,7 +21,7 @@ koopa_debian_set_timezone() {
     declare -A dict=(
         ['tz']="${1:-}"
     )
-    [[ -z "${dict['tz']}" ]] && dict[tz]='America/New_York'
+    [[ -z "${dict['tz']}" ]] && dict['tz']='America/New_York'
     koopa_alert "Setting local timezone to '${dict['tz']}'."
     "${app['sudo']}" "${app['timedatectl']}" set-timezone "${dict['tz']}"
     return 0
