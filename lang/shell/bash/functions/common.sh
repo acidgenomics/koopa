@@ -11398,12 +11398,10 @@ koopa_install_app_internal() {
     while (("$#"))
     do
         case "$1" in
-            '--link-in-bin' | \
-            '--link-in-bin='* | \
             '--no-link-in-opt' | \
             '--no-prefix-check' | \
-            '--quiet' | \
-            '--no-restrict-path')
+            '--no-restrict-path' | \
+            '--quiet')
                 koopa_invalid_arg "$1"
                 ;;
             *)
@@ -11434,9 +11432,9 @@ koopa_install_app() {
         ['auto_prefix']=0
         ['binary']=0
         ['copy_log_file']=0
-        ['link_in_bin']=0
-        ['link_in_man1']=0
-        ['link_in_opt']=0
+        ['link_in_bin']=''
+        ['link_in_man1']=''
+        ['link_in_opt']=''
         ['prefix_check']=1
         ['push']=0
         ['quiet']=0
@@ -11528,6 +11526,14 @@ koopa_install_app() {
                 bool['verbose']=1
                 shift 1
                 ;;
+            '--no-link-in-bin')
+                bool['link_in_bin']=0
+                shift 1
+                ;;
+            '--no-link-in-man1')
+                bool['link_in_man1']=0
+                shift 1
+                ;;
             '--no-link-in-opt')
                 bool['link_in_opt']=0
                 shift 1
@@ -11593,23 +11599,9 @@ ${dict['version2']}"
                 bool['link_in_man1']=0
                 bool['link_in_opt']=0
             else
-                bool['link_in_opt']=1
-                readarray -t bin_arr <<< "$( \
-                    koopa_app_json_bin "${dict['name']}" \
-                        2>/dev/null || true \
-                )"
-                if koopa_is_array_non_empty "${bin_arr[@]:-}"
-                then
-                    bool['link_in_bin']=1
-                fi
-                readarray -t man1_arr <<< "$( \
-                    koopa_app_json_man1 "${dict['name']}" \
-                        2>/dev/null || true \
-                )"
-                if koopa_is_array_non_empty "${man1_arr[@]:-}"
-                then
-                    bool['link_in_man1']=1
-                fi
+                [[ -z "${bool['link_in_bin']}" ]] && bool['link_in_bin']=1
+                [[ -z "${bool['link_in_man1']}" ]] && bool['link_in_man1']=1
+                [[ -z "${bool['link_in_opt']}" ]] && bool['link_in_opt']=1
             fi
             ;;
         'system')
@@ -11637,6 +11629,10 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     then
         if [[ -d "${dict['prefix']}" ]]
         then
+            if koopa_is_empty_dir "${dict['prefix']}"
+            then
+                bool['reinstall']=1
+            fi
             if [[ "${bool['reinstall']}" -eq 1 ]]
             then
                 if [[ "${bool['quiet']}" -eq 0 ]]
@@ -11706,10 +11702,14 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
             koopa_add_to_pkg_config_path_2 \
                 '/usr/bin/pkg-config'
         fi
-        if [[ "${bool['update_ldconfig']}" -eq 1 ]]
-        then
-            koopa_linux_update_ldconfig
-        fi
+        case "${dict['mode']}" in
+            'system')
+                if [[ "${bool['update_ldconfig']}" -eq 1 ]]
+                then
+                    koopa_linux_update_ldconfig
+                fi
+                ;;
+        esac
         export INSTALL_NAME="${dict['name']}"
         export INSTALL_PREFIX="${dict['prefix']}"
         export INSTALL_VERSION="${dict['version']}"
@@ -11732,56 +11732,74 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
                 koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
             fi
             koopa_sys_set_permissions --recursive "${dict['prefix']}"
+            if [[ "${bool['link_in_opt']}" -eq 1 ]]
+            then
+                koopa_link_in_opt \
+                    --name="${dict['name']}" \
+                    --source="${dict['prefix']}"
+            fi
+            if [[ "${bool['link_in_bin']}" -eq 1 ]]
+            then
+                readarray -t bin_arr <<< "$( \
+                    koopa_app_json_bin "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${bin_arr[@]:-}"
+                then
+                    for i in "${!bin_arr[@]}"
+                    do
+                        local dict2
+                        declare -A dict2
+                        dict2['name']="${bin_arr[$i]}"
+                        dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
+                        koopa_link_in_bin \
+                            --name="${dict2['name']}" \
+                            --source="${dict2['source']}"
+                    done
+                fi
+            fi
+            if [[ "${bool['link_in_man1']}" -eq 1 ]]
+            then
+                readarray -t man1_arr <<< "$( \
+                    koopa_app_json_man1 "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${man1_arr[@]:-}"
+                then
+                    for i in "${!man1_arr[@]}"
+                    do
+                        local dict2
+                        declare -A dict2
+                        dict2['name']="${man1_arr[$i]}"
+                        dict2['mf1']="${dict['prefix']}/share/man/\
+man1/${dict2['name']}"
+                        dict2['mf2']="${dict['prefix']}/man/\
+man1/${dict2['name']}"
+                        if [[ -f "${dict2['mf1']}" ]]
+                        then
+                            koopa_link_in_man1 \
+                                --name="${dict2['name']}" \
+                                --source="${dict2['mf1']}"
+                        elif [[ -f "${dict2['mf2']}" ]]
+                        then
+                            koopa_link_in_man1 \
+                                --name="${dict2['name']}" \
+                                --source="${dict2['mf2']}"
+                        fi
+                    done
+                fi
+            fi
+            ;;
+        'system')
+            if [[ "${bool['update_ldconfig']}" -eq 1 ]]
+            then
+                koopa_linux_update_ldconfig
+            fi
             ;;
         'user')
             koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
             ;;
     esac
-    if [[ "${bool['link_in_opt']}" -eq 1 ]]
-    then
-        koopa_link_in_opt \
-            --name="${dict['name']}" \
-            --source="${dict['prefix']}"
-    fi
-    if [[ "${bool['link_in_bin']}" -eq 1 ]]
-    then
-        for i in "${!bin_arr[@]}"
-        do
-            local dict2
-            declare -A dict2
-            dict2['name']="${bin_arr[$i]}"
-            dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
-            koopa_link_in_bin \
-                --name="${dict2['name']}" \
-                --source="${dict2['source']}"
-        done
-    fi
-    if [[ "${bool['link_in_man1']}" -eq 1 ]]
-    then
-        for i in "${!man1_arr[@]}"
-        do
-            local dict2
-            declare -A dict2
-            dict2['name']="${man1_arr[$i]}"
-            dict2['mf1']="${dict['prefix']}/share/man/man1/${dict2['name']}"
-            dict2['mf2']="${dict['prefix']}/man/man1/${dict2['name']}"
-            if [[ -f "${dict2['mf1']}" ]]
-            then
-                koopa_link_in_man1 \
-                    --name="${dict2['name']}" \
-                    --source="${dict2['mf1']}"
-            elif [[ -f "${dict2['mf2']}" ]]
-            then
-                koopa_link_in_man1 \
-                    --name="${dict2['name']}" \
-                    --source="${dict2['mf2']}"
-            fi
-        done
-    fi
-    if [[ "${bool['update_ldconfig']}" -eq 1 ]]
-    then
-        koopa_linux_update_ldconfig
-    fi
     if [[ "${bool['push']}" -eq 1 ]]
     then
         [[ "${dict['mode']}" == 'shared' ]] || return 1
@@ -12077,7 +12095,10 @@ koopa_install_emacs() {
     install_args=('--name=emacs')
     if ! koopa_is_macos
     then
-        install_args+=('--link-in-bin=emacs')
+        install_args+=(
+            '--no-link-in-bin'
+            '--no-link-in-man1'
+        )
     fi
     koopa_install_app "${install_args[@]}" "$@"
 }
@@ -22040,12 +22061,12 @@ koopa_uninstall_anaconda() {
 }
 
 koopa_uninstall_app() {
-    local bin_arr bool dict i man_arr
+    local bin_arr bool dict man1_arr
     declare -A bool=(
         ['quiet']=0
-        ['unlink_in_bin']=0
-        ['unlink_in_man']=0
-        ['unlink_in_opt']=1
+        ['unlink_in_bin']=''
+        ['unlink_in_man1']=''
+        ['unlink_in_opt']=''
         ['verbose']=0
     )
     declare -A dict=(
@@ -22059,8 +22080,6 @@ koopa_uninstall_app() {
         ['uninstaller_bn']=''
         ['uninstaller_fun']='main'
     )
-    bin_arr=()
-    man_arr=()
     while (("$#"))
     do
         case "$1" in
@@ -22096,13 +22115,13 @@ koopa_uninstall_app() {
                 dict['uninstaller_bn']="${2:?}"
                 shift 2
                 ;;
-            '--unlink-in-bin='*)
-                bin_arr+=("${1#*=}")
+            '--no-unlink-in-bin')
+                bool['unlink_in_bin']=0
                 shift 1
                 ;;
-            '--unlink-in-bin')
-                bin_arr+=("${2:?}")
-                shift 2
+            '--no-unlink-in-man1')
+                bool['unlink_in_man1']=0
+                shift 1
                 ;;
             '--no-unlink-in-opt')
                 bool['unlink_in_opt']=0
@@ -22133,25 +22152,24 @@ koopa_uninstall_app() {
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     case "${dict['mode']}" in
         'shared')
-            bool['unlink_in_opt']=1
-            if [[ -z "${dict['prefix']}" ]]
-            then
+            [[ -z "${dict['prefix']}" ]] && \
                 dict['prefix']="${dict['app_prefix']}/${dict['name']}"
-            fi
+            [[ -z "${bool['unlink_in_bin']}" ]] && bool['unlink_in_bin']=1
+            [[ -z "${bool['unlink_in_man1']}" ]] && bool['unlink_in_man1']=1
+            [[ -z "${bool['unlink_in_opt']}" ]] && bool['unlink_in_opt']=1
             ;;
         'system')
             koopa_assert_is_admin
+            bool['unlink_in_bin']=0
+            bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
             ;;
         'user')
+            bool['unlink_in_bin']=0
+            bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
             ;;
     esac
-    if koopa_is_array_non_empty "${bin_arr[@]:-}"
-    then
-        bool['unlink_in_bin']=1
-        bool['unlink_in_man']=1
-    fi
     if [[ -n "${dict['prefix']}" ]]
     then
         if [[ ! -d "${dict['prefix']}" ]]
@@ -22170,7 +22188,8 @@ koopa_uninstall_app() {
             koopa_alert_uninstall_start "${dict['name']}"
         fi
     fi
-    [[ -z "${dict['uninstaller_bn']}" ]] && dict['uninstaller_bn']="${dict['name']}"
+    [[ -z "${dict['uninstaller_bn']}" ]] && \
+        dict['uninstaller_bn']="${dict['name']}"
     dict['uninstaller_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     if [[ -f "${dict['uninstaller_file']}" ]]
@@ -22195,22 +22214,36 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
                 ;;
         esac
     fi
-    if [[ "${bool['unlink_in_bin']}" -eq 1 ]]
-    then
-        koopa_unlink_in_bin "${bin_arr[@]}"
-    fi
-    if [[ "${bool['unlink_in_man']}" -eq 1 ]]
-    then
-        for i in "${!bin_arr[@]}"
-        do
-            man_arr+=("${bin_arr[$i]}.1")
-        done
-        koopa_unlink_in_man1 "${man_arr[@]}"
-    fi
-    if [[ "${bool['unlink_in_opt']}" -eq 1 ]]
-    then
-        koopa_unlink_in_opt "${dict['name']}"
-    fi
+    case "${dict['mode']}" in
+        'shared')
+            if [[ "${bool['unlink_in_bin']}" -eq 1 ]]
+            then
+                readarray -t bin_arr <<< "$( \
+                    koopa_app_json_bin "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${bin_arr[@]:-}"
+                then
+                    koopa_unlink_in_bin "${bin_arr[@]}"
+                fi
+            fi
+            if [[ "${bool['unlink_in_man1']}" -eq 1 ]]
+            then
+                readarray -t man1_arr <<< "$( \
+                    koopa_app_json_man1 "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${man1_arr[@]:-}"
+                then
+                    koopa_unlink_in_man1 "${man1_arr[@]}"
+                fi
+            fi
+            if [[ "${bool['unlink_in_opt']}" -eq 1 ]]
+            then
+                koopa_unlink_in_opt "${dict['name']}"
+            fi
+            ;;
+    esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
         if [[ -n "${dict['prefix']}" ]]
@@ -22441,117 +22474,7 @@ koopa_uninstall_conda() {
 }
 
 koopa_uninstall_coreutils() {
-    local uninstall_args
-    uninstall_args=(
-        '--name=coreutils'
-        '--unlink-in-bin=['
-        '--unlink-in-bin=b2sum'
-        '--unlink-in-bin=base32'
-        '--unlink-in-bin=base64'
-        '--unlink-in-bin=basename'
-        '--unlink-in-bin=basenc'
-        '--unlink-in-bin=cat'
-        '--unlink-in-bin=chcon'
-        '--unlink-in-bin=chgrp'
-        '--unlink-in-bin=chmod'
-        '--unlink-in-bin=chown'
-        '--unlink-in-bin=chroot'
-        '--unlink-in-bin=cksum'
-        '--unlink-in-bin=comm'
-        '--unlink-in-bin=cp'
-        '--unlink-in-bin=csplit'
-        '--unlink-in-bin=cut'
-        '--unlink-in-bin=date'
-        '--unlink-in-bin=dd'
-        '--unlink-in-bin=df'
-        '--unlink-in-bin=dir'
-        '--unlink-in-bin=dircolors'
-        '--unlink-in-bin=dirname'
-        '--unlink-in-bin=du'
-        '--unlink-in-bin=echo'
-        '--unlink-in-bin=env'
-        '--unlink-in-bin=expand'
-        '--unlink-in-bin=expr'
-        '--unlink-in-bin=factor'
-        '--unlink-in-bin=false'
-        '--unlink-in-bin=fmt'
-        '--unlink-in-bin=fold'
-        '--unlink-in-bin=groups'
-        '--unlink-in-bin=head'
-        '--unlink-in-bin=hostid'
-        '--unlink-in-bin=id'
-        '--unlink-in-bin=install'
-        '--unlink-in-bin=join'
-        '--unlink-in-bin=kill'
-        '--unlink-in-bin=link'
-        '--unlink-in-bin=ln'
-        '--unlink-in-bin=logname'
-        '--unlink-in-bin=ls'
-        '--unlink-in-bin=md5sum'
-        '--unlink-in-bin=mkdir'
-        '--unlink-in-bin=mkfifo'
-        '--unlink-in-bin=mknod'
-        '--unlink-in-bin=mktemp'
-        '--unlink-in-bin=mv'
-        '--unlink-in-bin=nice'
-        '--unlink-in-bin=nl'
-        '--unlink-in-bin=nohup'
-        '--unlink-in-bin=nproc'
-        '--unlink-in-bin=numfmt'
-        '--unlink-in-bin=od'
-        '--unlink-in-bin=paste'
-        '--unlink-in-bin=pathchk'
-        '--unlink-in-bin=pinky'
-        '--unlink-in-bin=pr'
-        '--unlink-in-bin=printenv'
-        '--unlink-in-bin=printf'
-        '--unlink-in-bin=ptx'
-        '--unlink-in-bin=pwd'
-        '--unlink-in-bin=readlink'
-        '--unlink-in-bin=realpath'
-        '--unlink-in-bin=rm'
-        '--unlink-in-bin=rmdir'
-        '--unlink-in-bin=runcon'
-        '--unlink-in-bin=seq'
-        '--unlink-in-bin=sha1sum'
-        '--unlink-in-bin=sha224sum'
-        '--unlink-in-bin=sha256sum'
-        '--unlink-in-bin=sha384sum'
-        '--unlink-in-bin=sha512sum'
-        '--unlink-in-bin=shred'
-        '--unlink-in-bin=shuf'
-        '--unlink-in-bin=sleep'
-        '--unlink-in-bin=sort'
-        '--unlink-in-bin=split'
-        '--unlink-in-bin=stat'
-        '--unlink-in-bin=stdbuf'
-        '--unlink-in-bin=stty'
-        '--unlink-in-bin=sum'
-        '--unlink-in-bin=sync'
-        '--unlink-in-bin=tac'
-        '--unlink-in-bin=tail'
-        '--unlink-in-bin=tee'
-        '--unlink-in-bin=test'
-        '--unlink-in-bin=timeout'
-        '--unlink-in-bin=touch'
-        '--unlink-in-bin=tr'
-        '--unlink-in-bin=true'
-        '--unlink-in-bin=truncate'
-        '--unlink-in-bin=tsort'
-        '--unlink-in-bin=tty'
-        '--unlink-in-bin=uname'
-        '--unlink-in-bin=unexpand'
-        '--unlink-in-bin=uniq'
-        '--unlink-in-bin=unlink'
-        '--unlink-in-bin=uptime'
-        '--unlink-in-bin=users'
-        '--unlink-in-bin=vdir'
-        '--unlink-in-bin=wc'
-        '--unlink-in-bin=who'
-        '--unlink-in-bin=whoami'
-        '--unlink-in-bin=yes'
-    )
-    koopa_uninstall_app "${uninstall_args[@]}" "$@"
+    koopa_uninstall_app --name='coreutils' "$@"
 }
 
 koopa_uninstall_cpufetch() {
@@ -22690,15 +22613,7 @@ koopa_uninstall_ffq() {
 }
 
 koopa_uninstall_findutils() {
-    local uninstall_args
-    uninstall_args=(
-        '--name=findutils'
-        '--unlink-in-bin=find'
-        '--unlink-in-bin=locate'
-        '--unlink-in-bin=updatedb'
-        '--unlink-in-bin=xargs'
-    )
-    koopa_uninstall_app "${uninstall_args[@]}" "$@"
+    koopa_uninstall_app --name='findutils' "$@"
 }
 
 koopa_uninstall_fish() {
@@ -23356,9 +23271,6 @@ koopa_uninstall_openjdk() {
     local uninstall_args
     uninstall_args=(
         '--name=openjdk'
-        '--unlink-in-bin=jar'
-        '--unlink-in-bin=java'
-        '--unlink-in-bin=javac'
     )
     if koopa_is_linux
     then
