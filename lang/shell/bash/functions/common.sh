@@ -7560,28 +7560,35 @@ koopa_extract() {
             *'.tar.bz2' | \
             *'.tar.gz' | \
             *'.tar.xz')
-                app['cmd']="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 case "$file" in
                     *'.bz2')
-                        app['cmd2']="$(koopa_locate_bzip2)"
+                        app['cmd2']="$(koopa_locate_bzip2 --allow-missing)"
+                        [[ -z "${app['cmd2']}" ]] \
+                            && app['cmd2']='/usr/bin/bzip2'
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
                     *'.gz')
-                        app['cmd2']="$(koopa_locate_gzip)"
+                        app['cmd2']="$(koopa_locate_gzip --allow-missing)"
+                        [[ -z "${app['cmd2']}" ]] \
+                            && app['cmd2']='/usr/bin/gzip'
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
                         ;;
                     *'.xz')
-                        app['cmd2']="$(koopa_locate_xz)"
+                        app['cmd2']="$(koopa_locate_xz --allow-missing)"
+                        [[ -z "${app['cmd2']}" ]] \
+                            && app['cmd2']='/usr/bin/xz'
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
@@ -7590,25 +7597,29 @@ koopa_extract() {
                 esac
                 ;;
             *'.bz2')
-                app['cmd']="$(koopa_locate_bunzip2)"
+                app['cmd']="$(koopa_locate_bunzip2 --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/bunzip2'
                 cmd_args=("$file")
                 ;;
             *'.gz')
-                app['cmd']="$(koopa_locate_gzip)"
+                app['cmd']="$(koopa_locate_gzip --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/gzip'
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                 )
                 ;;
             *'.tar')
-                app['cmd']="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 ;;
             *'.tbz2')
-                app['cmd']="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-j' # '--bzip2'.
@@ -7616,7 +7627,8 @@ koopa_extract() {
                 )
                 ;;
             *'.tgz')
-                app['cmd']="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
@@ -7624,21 +7636,24 @@ koopa_extract() {
                 )
                 ;;
             *'.xz')
-                app['cmd']="$(koopa_locate_xz)"
+                app['cmd']="$(koopa_locate_xz --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/xz'
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                     )
                 ;;
             *'.zip')
-                app['cmd']="$(koopa_locate_unzip)"
+                app['cmd']="$(koopa_locate_unzip --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/unzip'
                 cmd_args=(
                     '-qq'
                     "$file"
                 )
                 ;;
             *'.Z')
-                app['cmd']="$(koopa_locate_uncompress)"
+                app['cmd']="$(koopa_locate_uncompress --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/uncompress'
                 cmd_args=("$file")
                 ;;
             *'.7z')
@@ -15451,10 +15466,11 @@ koopa_locate_bundle() {
         --opt-name='ruby-packages'
 }
 
-koopa_locate_bzip2() {
+koopa_locate_bunzip2() {
     koopa_locate_app \
-        --app-name='bzip2' \
-        --opt-name='bzip2'
+        --app-name='bunzip2' \
+        --opt-name='bzip2' \
+        "$@"
 }
 
 koopa_locate_cargo() {
@@ -15821,7 +15837,8 @@ koopa_locate_gsl_config() {
 koopa_locate_gzip() {
     koopa_locate_app \
         --app-name='gzip' \
-        --opt-name='gzip'
+        --opt-name='gzip' \
+        "$@"
 }
 
 koopa_locate_h5cc() {
@@ -15897,7 +15914,7 @@ koopa_locate_lesspipe() {
 
 koopa_locate_libtoolize() {
     koopa_locate_app \
-        --app-name='libtoolize' \
+        --app-name='glibtoolize' \
         --opt-name='libtool'
 }
 
@@ -15971,7 +15988,7 @@ koopa_locate_mamba() {
 
 koopa_locate_man() {
     koopa_locate_app \
-        --app-name='man' \
+        --app-name='gman' \
         --opt-name='man-db'
 }
 
@@ -16347,8 +16364,9 @@ koopa_locate_tail() {
 
 koopa_locate_tar() {
     koopa_locate_app \
-        --app-name='tar' \
-        --opt-name='tar'
+        --app-name='gtar' \
+        --opt-name='tar' \
+        "$@"
 }
 
 koopa_locate_tee() {
@@ -16393,7 +16411,8 @@ koopa_locate_uname() {
 koopa_locate_uncompress() {
     koopa_locate_app \
         --app-name='uncompress' \
-        --opt-name='gzip'
+        --opt-name='gzip' \
+        "$@"
 }
 
 koopa_locate_uniq() {
@@ -16404,7 +16423,8 @@ koopa_locate_uniq() {
 
 koopa_locate_unzip() {
     koopa_locate_app \
-        --app-name='unzip'
+        --app-name='unzip' \
+        "$@"
 }
 
 koopa_locate_vim() {
@@ -16440,7 +16460,8 @@ koopa_locate_xargs() {
 koopa_locate_xz() {
     koopa_locate_app \
         --app-name='xz' \
-        --opt-name='xz'
+        --opt-name='xz' \
+        "$@"
 }
 
 koopa_locate_yes() {
