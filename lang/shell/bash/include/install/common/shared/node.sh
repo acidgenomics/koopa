@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to improve documentation linkage of node.1, npm.1 and npx.1?
+
 main() {
     # """
     # Install Node.js.

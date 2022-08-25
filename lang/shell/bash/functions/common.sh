@@ -11828,7 +11828,6 @@ koopa_install_asdf() {
 
 koopa_install_aspell() {
     koopa_install_app \
-        --link-in-bin='aspell' \
         --name='aspell' \
         "$@"
 }
@@ -11847,56 +11846,48 @@ koopa_install_automake() {
 
 koopa_install_azure_cli() {
     koopa_install_app \
-        --link-in-bin='az' \
         --name='azure-cli' \
         "$@"
 }
 
 koopa_install_bamtools() {
     koopa_install_app \
-        --link-in-bin='bamtools' \
         --name='bamtools' \
         "$@"
 }
 
 koopa_install_bash_language_server() {
     koopa_install_app \
-        --link-in-bin='bash-language-server' \
         --name='bash-language-server' \
         "$@"
 }
 
 koopa_install_bash() {
     koopa_install_app \
-        --link-in-bin='bash' \
         --name='bash' \
         "$@"
 }
 
 koopa_install_bashcov() {
     koopa_install_app \
-        --link-in-bin='bashcov' \
         --name='bashcov' \
         "$@"
 }
 
 koopa_install_bat() {
     koopa_install_app \
-        --link-in-bin='bat' \
         --name='bat' \
         "$@"
 }
 
 koopa_install_bc() {
     koopa_install_app \
-        --link-in-bin='bc' \
         --name='bc' \
         "$@"
 }
 
 koopa_install_bedtools() {
     koopa_install_app \
-        --link-in-bin='bedtools' \
         --name='bedtools' \
         "$@"
 }
@@ -11909,7 +11900,6 @@ koopa_install_binutils() {
 
 koopa_install_bioawk() {
     koopa_install_app \
-        --link-in-bin='bioawk' \
         --name='bioawk' \
         "$@"
 }
@@ -11922,7 +11912,6 @@ koopa_install_bison() {
 
 koopa_install_black() {
     koopa_install_app \
-        --link-in-bin='black' \
         --name='black' \
         "$@"
 }
@@ -11935,21 +11924,18 @@ koopa_install_boost() {
 
 koopa_install_bowtie2() {
     koopa_install_app \
-        --link-in-bin='bowtie2' \
         --name='bowtie2' \
         "$@"
 }
 
 koopa_install_bpytop() {
     koopa_install_app \
-        --link-in-bin='bpytop' \
         --name='bpytop' \
         "$@"
 }
 
 koopa_install_broot() {
     koopa_install_app \
-        --link-in-bin='broot' \
         --name='broot' \
         "$@"
 }
@@ -11962,24 +11948,12 @@ koopa_install_brotli() {
 
 koopa_install_bustools() {
     koopa_install_app \
-        --link-in-bin='bustools' \
         --name='bustools' \
         "$@"
 }
 
 koopa_install_bzip2() {
     koopa_install_app \
-        --link-in-bin='bunzip2' \
-        --link-in-bin='bzcat' \
-        --link-in-bin='bzcmp' \
-        --link-in-bin='bzdiff' \
-        --link-in-bin='bzegrep' \
-        --link-in-bin='bzfgrep' \
-        --link-in-bin='bzgrep' \
-        --link-in-bin='bzip2' \
-        --link-in-bin='bzip2recover' \
-        --link-in-bin='bzless' \
-        --link-in-bin='bzmore' \
         --name='bzip2' \
         "$@"
 }
@@ -12004,7 +11978,6 @@ koopa_install_cairo() {
 
 koopa_install_cheat() {
     koopa_install_app \
-        --link-in-bin='cheat' \
         --name='cheat' \
         "$@"
 }
@@ -12023,176 +11996,60 @@ koopa_install_chezmoi() {
 
 koopa_install_cmake() {
     koopa_install_app \
-        --link-in-bin='cmake' \
         --name='cmake' \
         "$@"
 }
 
 koopa_install_colorls() {
     koopa_install_app \
-        --link-in-bin='colorls' \
         --name='colorls' \
         "$@"
 }
 
 koopa_install_conda() {
     koopa_install_app \
-        --link-in-bin='conda' \
         --name='conda' \
         "$@"
 }
 
 koopa_install_coreutils() {
     koopa_install_app \
-        --link-in-bin='[' \
-        --link-in-bin='b2sum' \
-        --link-in-bin='base32' \
-        --link-in-bin='base64' \
-        --link-in-bin='basename' \
-        --link-in-bin='basenc' \
-        --link-in-bin='cat' \
-        --link-in-bin='chcon' \
-        --link-in-bin='chgrp' \
-        --link-in-bin='chmod' \
-        --link-in-bin='chown' \
-        --link-in-bin='chroot' \
-        --link-in-bin='cksum' \
-        --link-in-bin='comm' \
-        --link-in-bin='cp' \
-        --link-in-bin='csplit' \
-        --link-in-bin='cut' \
-        --link-in-bin='date' \
-        --link-in-bin='dd' \
-        --link-in-bin='df' \
-        --link-in-bin='dir' \
-        --link-in-bin='dircolors' \
-        --link-in-bin='dirname' \
-        --link-in-bin='du' \
-        --link-in-bin='echo' \
-        --link-in-bin='env' \
-        --link-in-bin='expand' \
-        --link-in-bin='expr' \
-        --link-in-bin='factor' \
-        --link-in-bin='false' \
-        --link-in-bin='fmt' \
-        --link-in-bin='fold' \
-        --link-in-bin='groups' \
-        --link-in-bin='head' \
-        --link-in-bin='hostid' \
-        --link-in-bin='id' \
-        --link-in-bin='install' \
-        --link-in-bin='join' \
-        --link-in-bin='kill' \
-        --link-in-bin='link' \
-        --link-in-bin='ln' \
-        --link-in-bin='logname' \
-        --link-in-bin='ls' \
-        --link-in-bin='md5sum' \
-        --link-in-bin='mkdir' \
-        --link-in-bin='mkfifo' \
-        --link-in-bin='mknod' \
-        --link-in-bin='mktemp' \
-        --link-in-bin='mv' \
-        --link-in-bin='nice' \
-        --link-in-bin='nl' \
-        --link-in-bin='nohup' \
-        --link-in-bin='nproc' \
-        --link-in-bin='numfmt' \
-        --link-in-bin='od' \
-        --link-in-bin='paste' \
-        --link-in-bin='pathchk' \
-        --link-in-bin='pinky' \
-        --link-in-bin='pr' \
-        --link-in-bin='printenv' \
-        --link-in-bin='printf' \
-        --link-in-bin='ptx' \
-        --link-in-bin='pwd' \
-        --link-in-bin='readlink' \
-        --link-in-bin='realpath' \
-        --link-in-bin='rm' \
-        --link-in-bin='rmdir' \
-        --link-in-bin='runcon' \
-        --link-in-bin='seq' \
-        --link-in-bin='sha1sum' \
-        --link-in-bin='sha224sum' \
-        --link-in-bin='sha256sum' \
-        --link-in-bin='sha384sum' \
-        --link-in-bin='sha512sum' \
-        --link-in-bin='shred' \
-        --link-in-bin='shuf' \
-        --link-in-bin='sleep' \
-        --link-in-bin='sort' \
-        --link-in-bin='split' \
-        --link-in-bin='stat' \
-        --link-in-bin='stdbuf' \
-        --link-in-bin='stty' \
-        --link-in-bin='sum' \
-        --link-in-bin='sync' \
-        --link-in-bin='tac' \
-        --link-in-bin='tail' \
-        --link-in-bin='tee' \
-        --link-in-bin='test' \
-        --link-in-bin='timeout' \
-        --link-in-bin='touch' \
-        --link-in-bin='tr' \
-        --link-in-bin='true' \
-        --link-in-bin='truncate' \
-        --link-in-bin='tsort' \
-        --link-in-bin='tty' \
-        --link-in-bin='uname' \
-        --link-in-bin='unexpand' \
-        --link-in-bin='uniq' \
-        --link-in-bin='unlink' \
-        --link-in-bin='uptime' \
-        --link-in-bin='users' \
-        --link-in-bin='vdir' \
-        --link-in-bin='wc' \
-        --link-in-bin='who' \
-        --link-in-bin='whoami' \
-        --link-in-bin='yes' \
         --name='coreutils' \
         "$@"
 }
 
 koopa_install_cpufetch() {
     koopa_install_app \
-        --link-in-bin='cpufetch' \
         --name='cpufetch' \
         "$@"
 }
 
 koopa_install_curl() {
     koopa_install_app \
-        --link-in-bin='curl' \
-        --link-in-bin='curl-config' \
         --name='curl' \
         "$@"
 }
 
 koopa_install_deeptools() {
     koopa_install_app \
-        --link-in-bin='deeptools' \
         --name='deeptools' \
         "$@"
 }
 
 koopa_install_delta() {
     koopa_install_app \
-        --link-in-bin='delta' \
         --name='delta' \
         "$@"
 }
 
 koopa_install_difftastic() {
     koopa_install_app \
-        --link-in-bin='difft' \
         --name='difftastic' \
         "$@"
 }
 
 koopa_install_dog() {
     koopa_install_app \
-        --link-in-bin='dog' \
         --name='dog' \
         "$@"
 }
@@ -12211,7 +12068,6 @@ koopa_install_du_dust() {
 
 koopa_install_editorconfig() {
     koopa_install_app \
-        --link-in-bin='editorconfig' \
         --name='editorconfig' \
         "$@"
 }
@@ -12234,22 +12090,18 @@ koopa_install_ensembl_perl_api() {
 
 koopa_install_entrez_direct() {
     koopa_install_app \
-        --link-in-bin='efetch' \
-        --link-in-bin='esearch' \
         --name='entrez-direct' \
         "$@"
 }
 
 koopa_install_exa() {
     koopa_install_app \
-        --link-in-bin='exa' \
         --name='exa' \
         "$@"
 }
 
 koopa_install_exiftool() {
     koopa_install_app \
-        --link-in-bin='exiftool' \
         --name='exiftool' \
         "$@"
 }
@@ -12262,60 +12114,48 @@ koopa_install_expat() {
 
 koopa_install_fastqc() {
     koopa_install_app \
-        --link-in-bin='fastqc' \
         --name='fastqc' \
         "$@"
 }
 
 koopa_install_fd_find() {
     koopa_install_app \
-        --link-in-bin='fd' \
         --name='fd-find' \
         "$@"
 }
 
 koopa_install_ffmpeg() {
     koopa_install_app \
-        --link-in-bin='ffmpeg' \
-        --link-in-bin='ffprobe' \
         --name='ffmpeg' \
         "$@"
 }
 
 koopa_install_ffq() {
     koopa_install_app \
-        --link-in-bin='ffq' \
         --name='ffq' \
         "$@"
 }
 
 koopa_install_findutils() {
     koopa_install_app \
-        --link-in-bin='find' \
-        --link-in-bin='locate' \
-        --link-in-bin='updatedb' \
-        --link-in-bin='xargs' \
         --name='findutils' \
         "$@"
 }
 
 koopa_install_fish() {
     koopa_install_app \
-        --link-in-bin='fish' \
         --name='fish' \
         "$@"
 }
 
 koopa_install_flac() {
     koopa_install_app \
-        --link-in-bin='flac' \
         --name='flac' \
         "$@"
 }
 
 koopa_install_flake8() {
     koopa_install_app \
-        --link-in-bin='flake8' \
         --name='flake8' \
         "$@"
 }
@@ -12346,15 +12186,12 @@ koopa_install_fribidi() {
 
 koopa_install_fzf() {
     koopa_install_app \
-        --link-in-bin='fzf' \
         --name='fzf' \
         "$@"
 }
 
 koopa_install_gawk() {
     koopa_install_app \
-        --link-in-bin='awk' \
-        --link-in-bin='gawk' \
         --name='gawk' \
         "$@"
     (
@@ -12372,7 +12209,6 @@ koopa_install_gcc() {
 
 koopa_install_gdal() {
     koopa_install_app \
-        --link-in-bin='gdal-config' \
         --name='gdal' \
         "$@"
 }
@@ -12385,7 +12221,6 @@ koopa_install_gdbm() {
 
 koopa_install_geos() {
     koopa_install_app \
-        --link-in-bin='geos-config' \
         --name='geos' \
         "$@"
 }
@@ -12398,21 +12233,18 @@ koopa_install_gettext() {
 
 koopa_install_gffutils() {
     koopa_install_app \
-        --link-in-bin='gffutils-cli' \
         --name='gffutils' \
         "$@"
 }
 
 koopa_install_gget() {
     koopa_install_app \
-        --link-in-bin='gget' \
         --name='gget' \
         "$@"
 }
 
 koopa_install_ghostscript() {
     koopa_install_app \
-        --link-in-bin='gs' \
         --name='ghostscript' \
         "$@"
 }
@@ -12434,7 +12266,6 @@ koopa_install_git() {
 
 koopa_install_glances() {
     koopa_install_app \
-        --link-in-bin='glances' \
         --name='glances' \
         "$@"
 }
@@ -12465,14 +12296,12 @@ koopa_install_gnutls() {
 
 koopa_install_go() {
     koopa_install_app \
-        --link-in-bin='go' \
         --name='go' \
         "$@"
 }
 
 koopa_install_google_cloud_sdk() {
     koopa_install_app \
-        --link-in-bin='gcloud' \
         --name='google-cloud-sdk' \
         "$@"
 }
@@ -12491,23 +12320,18 @@ koopa_install_graphviz() {
 
 koopa_install_grep() {
     koopa_install_app \
-        --link-in-bin='egrep' \
-        --link-in-bin='fgrep' \
-        --link-in-bin='grep' \
         --name='grep' \
         "$@"
 }
 
 koopa_install_groff() {
     koopa_install_app \
-        --link-in-bin='groff' \
         --name='groff' \
         "$@"
 }
 
 koopa_install_gseapy() {
     koopa_install_app \
-        --link-in-bin='gseapy' \
         --name='gseapy' \
         "$@"
 }
@@ -12520,7 +12344,6 @@ koopa_install_gsl() {
 
 koopa_install_gtop() {
     koopa_install_app \
-        --link-in-bin='gtop' \
         --name='gtop' \
         "$@"
 }
@@ -12533,7 +12356,6 @@ koopa_install_gzip() {
 
 koopa_install_hadolint() {
     koopa_install_app \
-        --link-in-bin='hadolint' \
         --name='hadolint' \
         "$@"
 }
@@ -12558,21 +12380,18 @@ koopa_install_hdf5() {
 
 koopa_install_hisat2() {
     koopa_install_app \
-        --link-in-bin='hisat2' \
         --name='hisat2' \
         "$@"
 }
 
 koopa_install_htop() {
     koopa_install_app \
-        --link-in-bin='htop' \
         --name='htop' \
         "$@"
 }
 
 koopa_install_hyperfine() {
     koopa_install_app \
-        --link-in-bin='hyperfine' \
         --name='hyperfine' \
         "$@"
 }
@@ -12585,21 +12404,18 @@ koopa_install_icu4c() {
 
 koopa_install_imagemagick() {
     koopa_install_app \
-        --link-in-bin='magick' \
         --name='imagemagick' \
         "$@"
 }
 
 koopa_install_ipython() {
     koopa_install_app \
-        --link-in-bin='ipython' \
         --name='ipython' \
         "$@"
 }
 
 koopa_install_isort() {
     koopa_install_app \
-        --link-in-bin='isort' \
         --name='isort' \
         "$@"
 }
@@ -12618,7 +12434,6 @@ koopa_install_jpeg() {
 
 koopa_install_jq() {
     koopa_install_app \
-        --link-in-bin='jq' \
         --name='jq' \
         "$@"
 }
@@ -12642,21 +12457,18 @@ koopa_install_julia_packages() {
 
 koopa_install_julia() {
     koopa_install_app \
-        --link-in-bin='julia' \
         --name='julia' \
         "$@"
 }
 
 koopa_install_jupyterlab() {
     koopa_install_app \
-        --link-in-bin='jupyter-lab' \
         --name='jupyterlab' \
         "$@"
 }
 
 koopa_install_kallisto() {
     koopa_install_app \
-        --link-in-bin='kallisto' \
         --name='kallisto' \
         "$@"
 }
@@ -12835,7 +12647,6 @@ koopa_install_koopa() {
 
 koopa_install_lame() {
     koopa_install_app \
-        --link-in-bin='lame' \
         --name='lame' \
         "$@"
 }
@@ -12854,14 +12665,12 @@ koopa_install_latch() {
 
 koopa_install_less() {
     koopa_install_app \
-        --link-in-bin='less' \
         --name='less' \
         "$@"
 }
 
 koopa_install_lesspipe() {
     koopa_install_app \
-        --link-in-bin='lesspipe.sh' \
         --name='lesspipe' \
         "$@"
 }
@@ -12946,8 +12755,6 @@ koopa_install_libpipeline() {
 
 koopa_install_libpng() {
     koopa_install_app \
-        --link-in-bin='libpng-config' \
-        --link-in-bin='libpng16-config' \
         --name='libpng' \
         "$@"
 }
@@ -12972,8 +12779,6 @@ koopa_install_libtiff() {
 
 koopa_install_libtool() {
     koopa_install_app \
-        --link-in-bin='libtool' \
-        --link-in-bin='libtoolize' \
         --name='libtool' \
         "$@"
     (
@@ -12997,7 +12802,6 @@ koopa_install_libuv() {
 
 koopa_install_libxml2() {
     koopa_install_app \
-        --link-in-bin='xml2-config' \
         --name='libxml2' \
         "$@"
 }
@@ -13040,35 +12844,30 @@ koopa_install_m4() {
 
 koopa_install_make() {
     koopa_install_app \
-        --link-in-bin='make' \
         --name='make' \
         "$@"
 }
 
 koopa_install_man_db() {
     koopa_install_app \
-        --link-in-bin='man' \
         --name='man-db' \
         "$@"
 }
 
 koopa_install_markdownlint_cli() {
     koopa_install_app \
-        --link-in-bin='markdownlint' \
         --name='markdownlint-cli' \
         "$@"
 }
 
 koopa_install_mcfly() {
     koopa_install_app \
-        --link-in-bin='mcfly' \
         --name='mcfly' \
         "$@"
 }
 
 koopa_install_mdcat() {
     koopa_install_app \
-        --link-in-bin='mdcat' \
         --name='mdcat' \
         "$@"
 }
@@ -13093,37 +12892,24 @@ koopa_install_mpfr() {
 
 koopa_install_multiqc() {
     koopa_install_app \
-        --link-in-bin='multiqc' \
         --name='multiqc' \
         "$@"
 }
 
 koopa_install_ncurses() {
     koopa_install_app \
-        --link-in-bin='captoinfo' \
-        --link-in-bin='clear' \
-        --link-in-bin='infocmp' \
-        --link-in-bin='infotocap' \
-        --link-in-bin='reset' \
-        --link-in-bin='tabs' \
-        --link-in-bin='tic' \
-        --link-in-bin='toe' \
-        --link-in-bin='tput' \
-        --link-in-bin='tset' \
         --name='ncurses' \
         "$@"
 }
 
 koopa_install_neofetch() {
     koopa_install_app \
-        --link-in-bin='neofetch' \
         --name='neofetch' \
         "$@"
 }
 
 koopa_install_neovim() {
     koopa_install_app \
-        --link-in-bin='nvim' \
         --name='neovim' \
         "$@"
 }
@@ -13136,7 +12922,6 @@ koopa_install_nettle() {
 
 koopa_install_nextflow() {
     koopa_install_app \
-        --link-in-bin='nextflow' \
         --name='nextflow' \
         "$@"
 }
@@ -13149,7 +12934,6 @@ koopa_install_nghttp2() {
 
 koopa_install_nim() {
     koopa_install_app \
-        --link-in-bin='nim' \
         --name='nim' \
         "$@"
 }
@@ -13162,8 +12946,6 @@ koopa_install_ninja() {
 
 koopa_install_node() {
     koopa_install_app \
-        --link-in-bin='node' \
-        --link-in-bin='npm' \
         --name='node' \
         "$@"
 }
@@ -13188,9 +12970,6 @@ koopa_install_openblas() {
 
 koopa_install_openjdk() {
     koopa_install_app \
-        --link-in-bin='jar' \
-        --link-in-bin='java' \
-        --link-in-bin='javac' \
         --name='openjdk' \
         "$@"
 }
@@ -13209,83 +12988,54 @@ koopa_install_openssl1() {
 
 koopa_install_openssl3() {
     koopa_install_app \
-        --link-in-bin='openssl' \
         --name='openssl3' \
         "$@"
 }
 
 koopa_install_pandoc() {
     koopa_install_app \
-        --link-in-bin='pandoc' \
         --name='pandoc' \
         "$@"
 }
 
 koopa_install_parallel() {
     koopa_install_app \
-        --link-in-bin='parallel' \
         --name='parallel' \
         "$@"
 }
 
 koopa_install_password_store() {
     koopa_install_app \
-        --link-in-bin='pass' \
         --name='password-store' \
         "$@"
 }
 
 koopa_install_patch() {
     koopa_install_app \
-        --link-in-bin='patch' \
         --name='patch' \
         "$@"
 }
 
 koopa_install_pcre() {
     koopa_install_app \
-        --link-in-bin='pcre-config' \
-        --link-in-bin='pcregrep' \
-        --link-in-bin='pcretest' \
         --name='pcre' \
         "$@"
 }
 
 koopa_install_pcre2() {
     koopa_install_app \
-        --link-in-bin='pcre2-config' \
-        --link-in-bin='pcre2grep' \
-        --link-in-bin='pcre2test' \
         --name='pcre2' \
         "$@"
 }
 
 koopa_install_perl() {
     koopa_install_app \
-        --link-in-bin='cpan' \
-        --link-in-bin='perl' \
-        --link-in-bin='perlbug' \
-        --link-in-bin='perldoc' \
-        --link-in-bin='perlivp' \
-        --link-in-bin='perlthanks' \
-        --link-in-bin='piconv' \
-        --link-in-bin='pl2pm' \
-        --link-in-bin='pod2html' \
-        --link-in-bin='pod2man' \
-        --link-in-bin='pod2text' \
-        --link-in-bin='pod2usage' \
-        --link-in-bin='podchecker' \
-        --link-in-bin='prove' \
-        --link-in-bin='ptar' \
-        --link-in-bin='ptardiff' \
-        --link-in-bin='ptargrep' \
         --name='perl' \
         "$@"
 }
 
 koopa_install_pipx() {
     koopa_install_app \
-        --link-in-bin='pipx' \
         --name='pipx' \
         "$@"
 }
@@ -13298,28 +13048,24 @@ koopa_install_pixman() {
 
 koopa_install_pkg_config() {
     koopa_install_app \
-        --link-in-bin='pkg-config' \
         --name='pkg-config' \
         "$@"
 }
 
 koopa_install_poetry() {
     koopa_install_app \
-        --link-in-bin='poetry' \
         --name='poetry' \
         "$@"
 }
 
 koopa_install_prettier() {
     koopa_install_app \
-        --link-in-bin='prettier' \
         --name='prettier' \
         "$@"
 }
 
 koopa_install_procs() {
     koopa_install_app \
-        --link-in-bin='procs' \
         --name='procs' \
         "$@"
 }
@@ -13332,49 +13078,42 @@ koopa_install_proj() {
 
 koopa_install_pyenv() {
     koopa_install_app \
-        --link-in-bin='pyenv' \
         --name='pyenv' \
         "$@"
 }
 
 koopa_install_pyflakes() {
     koopa_install_app \
-        --link-in-bin='pyflakes' \
         --name='pyflakes' \
         "$@"
 }
 
 koopa_install_pygments() {
     koopa_install_app \
-        --link-in-bin='pygmentize' \
         --name='pygments' \
         "$@"
 }
 
 koopa_install_pylint() {
     koopa_install_app \
-        --link-in-bin='pylint' \
         --name='pylint' \
         "$@"
 }
 
 koopa_install_pytaglib() {
     koopa_install_app \
-        --link-in-bin='pyprinttags' \
         --name='pytaglib' \
         "$@"
 }
 
 koopa_install_pytest() {
     koopa_install_app \
-        --link-in-bin='pytest' \
         --name='pytest' \
         "$@"
 }
 
 koopa_install_python() {
     koopa_install_app \
-        --link-in-bin='python3' \
         --name='python' \
         "$@"
 }
@@ -13433,14 +13172,12 @@ koopa_install_r() {
 
 koopa_install_ranger_fm() {
     koopa_install_app \
-        --link-in-bin='ranger' \
         --name='ranger-fm' \
         "$@"
 }
 
 koopa_install_rbenv() {
     koopa_install_app \
-        --link-in-bin='rbenv' \
         --name='rbenv' \
         "$@"
 }
@@ -13453,52 +13190,42 @@ koopa_install_readline() {
 
 koopa_install_rename() {
     koopa_install_app \
-        --link-in-bin='rename' \
         --name='rename' \
         "$@"
 }
 
 koopa_install_ripgrep_all() {
     koopa_install_app \
-        --link-in-bin='rga' \
         --name='ripgrep-all' \
         "$@"
 }
 
 koopa_install_ripgrep() {
     koopa_install_app \
-        --link-in-bin='rg' \
         --name='ripgrep' \
         "$@"
 }
 
 koopa_install_rmate() {
     koopa_install_app \
-        --link-in-bin='rmate' \
         --name='rmate' \
         "$@"
 }
 
 koopa_install_ronn() {
     koopa_install_app \
-        --link-in-bin='ronn' \
         --name='ronn' \
         "$@"
 }
 
 koopa_install_rsync() {
     koopa_install_app \
-        --link-in-bin='rsync' \
         --name='rsync' \
         "$@"
 }
 
 koopa_install_ruby() {
     koopa_install_app \
-        --link-in-bin='bundle' \
-        --link-in-bin='bundler' \
-        --link-in-bin='gem' \
-        --link-in-bin='ruby' \
         --name='ruby' \
         "$@"
 }
@@ -13511,21 +13238,18 @@ koopa_install_rust() {
 
 koopa_install_salmon() {
     koopa_install_app \
-        --link-in-bin='salmon' \
         --name='salmon' \
         "$@"
 }
 
 koopa_install_sambamba() {
     koopa_install_app \
-        --link-in-bin='sambamba' \
         --name='sambamba' \
         "$@"
 }
 
 koopa_install_samtools() {
     koopa_install_app \
-        --link-in-bin='samtools' \
         --name='samtools' \
         "$@"
 }
@@ -13538,7 +13262,6 @@ koopa_install_scons() {
 
 koopa_install_sed() {
     koopa_install_app \
-        --link-in-bin='sed' \
         --name='sed' \
         "$@"
 }
@@ -13551,71 +13274,60 @@ koopa_install_serf() {
 
 koopa_install_shellcheck() {
     koopa_install_app \
-        --link-in-bin='shellcheck' \
         --name='shellcheck' \
         "$@"
 }
 
 koopa_install_shunit2() {
     koopa_install_app \
-        --link-in-bin='shunit2' \
         --name='shunit2' \
         "$@"
 }
 
 koopa_install_snakemake() {
     koopa_install_app \
-        --link-in-bin='snakemake' \
         --name='snakemake' \
         "$@"
 }
 
 koopa_install_sox() {
     koopa_install_app \
-        --link-in-bin='sox' \
         --name='sox' \
         "$@"
 }
 
 koopa_install_sqlite() {
     koopa_install_app \
-        --link-in-bin='sqlite3' \
         --name='sqlite' \
         "$@"
 }
 
 koopa_install_sra_tools() {
     koopa_install_app \
-        --link-in-bin='fasterq-dump' \
-        --link-in-bin='vdb-config' \
         --name='sra-tools' \
         "$@"
 }
 
 koopa_install_star() {
     koopa_install_app \
-        --link-in-bin='STAR' \
         --name='star' \
         "$@"
 }
 
 koopa_install_starship() {
     koopa_install_app \
-        --link-in-bin='starship' \
         --name='starship' \
         "$@"
 }
 
 koopa_install_stow() {
     koopa_install_app \
-        --link-in-bin='stow' \
         --name='stow' \
         "$@"
 }
 
 koopa_install_subversion() {
     koopa_install_app \
-        --link-in-bin='svn' \
         --name='subversion' \
         "$@"
 }
@@ -13651,7 +13363,6 @@ koopa_install_taglib() {
 
 koopa_install_tar() {
     koopa_install_app \
-        --link-in-bin='tar' \
         --name='tar' \
         "$@"
 }
@@ -13664,61 +13375,48 @@ koopa_install_tcl_tk() {
 
 koopa_install_tealdeer() {
     koopa_install_app \
-        --link-in-bin='tldr' \
         --name='tealdeer' \
         "$@"
 }
 
 koopa_install_texinfo() {
     koopa_install_app \
-        --link-in-bin='pdftexi2dvi' \
-        --link-in-bin='pod2texi' \
-        --link-in-bin='texi2any' \
-        --link-in-bin='texi2dvi' \
-        --link-in-bin='texi2pdf' \
-        --link-in-bin='texindex' \
         --name='texinfo' \
         "$@"
 }
 
 koopa_install_tmux() {
     koopa_install_app \
-        --link-in-bin='tmux' \
         --name='tmux' \
         "$@"
 }
 
 koopa_install_tokei() {
     koopa_install_app \
-        --link-in-bin='tokei' \
         --name='tokei' \
         "$@"
 }
 
 koopa_install_tree() {
     koopa_install_app \
-        --link-in-bin='tree' \
         --name='tree' \
         "$@"
 }
 
 koopa_install_tuc() {
     koopa_install_app \
-        --link-in-bin='tuc' \
         --name='tuc' \
         "$@"
 }
 
 koopa_install_udunits() {
     koopa_install_app \
-        --link-in-bin='udunits2' \
         --name='udunits' \
         "$@"
 }
 
 koopa_install_units() {
     koopa_install_app \
-        --link-in-bin='units' \
         --name='units' \
         "$@"
 }
@@ -13763,16 +13461,12 @@ koopa_install_utf8proc() {
 
 koopa_install_vim() {
     koopa_install_app \
-        --link-in-bin='vim' \
-        --link-in-bin='vimdiff' \
         --name='vim' \
         "$@"
 }
 
 koopa_install_visidata() {
     koopa_install_app \
-        --link-in-bin='vd' \
-        --link-in-bin='visidata' \
         --name='visidata' \
         "$@"
 }
@@ -13780,13 +13474,11 @@ koopa_install_visidata() {
 koopa_install_wget() {
     koopa_install_app \
         --name='wget' \
-        --link-in-bin='wget' \
         "$@"
 }
 
 koopa_install_which() {
     koopa_install_app \
-        --link-in-bin='which' \
         --name='which' \
         "$@"
 }
@@ -13877,7 +13569,6 @@ koopa_install_xorg_xtrans() {
 
 koopa_install_xsv() {
     koopa_install_app \
-        --link-in-bin='xsv' \
         --name='xsv' \
         "$@"
 }
@@ -13890,35 +13581,30 @@ koopa_install_xxhash() {
 
 koopa_install_xz() {
     koopa_install_app \
-        --link-in-bin='xz' \
         --name='xz' \
         "$@"
 }
 
 koopa_install_yarn() {
     koopa_install_app \
-        --link-in-bin='yarn' \
         --name='yarn' \
         "$@"
 }
 
 koopa_install_yq() {
     koopa_install_app \
-        --link-in-bin='yq' \
         --name='yq' \
         "$@"
 }
 
 koopa_install_yt_dlp() {
     koopa_install_app \
-        --link-in-bin='yt-dlp' \
         --name='yt-dlp' \
         "$@"
 }
 
 koopa_install_zellij() {
     koopa_install_app \
-        --link-in-bin='zellij' \
         --name='zellij' \
         "$@"
 }
@@ -13931,14 +13617,12 @@ koopa_install_zlib() {
 
 koopa_install_zoxide() {
     koopa_install_app \
-        --link-in-bin='zoxide' \
         --name='zoxide' \
         "$@"
 }
 
 koopa_install_zsh() {
     koopa_install_app \
-        --link-in-bin='zsh' \
         --name='zsh' \
         "$@"
     koopa_fix_zsh_permissions
@@ -13947,13 +13631,6 @@ koopa_install_zsh() {
 
 koopa_install_zstd() {
     koopa_install_app \
-        --link-in-bin='pzstd' \
-        --link-in-bin='unzstd' \
-        --link-in-bin='zstd' \
-        --link-in-bin='zstdcat' \
-        --link-in-bin='zstdgrep' \
-        --link-in-bin='zstdless' \
-        --link-in-bin='zstdmt' \
         --name='zstd' \
         "$@"
 }

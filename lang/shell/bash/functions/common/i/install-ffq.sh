@@ -2,7 +2,6 @@
 
 koopa_install_ffq() {
     koopa_install_app \
-        --link-in-bin='ffq' \
         --name='ffq' \
         "$@"
 }

@@ -3,6 +3,5 @@
 koopa_install_wget() {
     koopa_install_app \
         --name='wget' \
-        --link-in-bin='wget' \
         "$@"
 }
