@@ -696,11 +696,9 @@
     "version": "4.9.0"
   },
   "fish": {
-    "bin": {
-      "bin": ["fish"],
-      "man1": ["fish.1"]
-    },
+    "bin": ["fish"],
     "conservative": false,
+    "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
@@ -1612,6 +1610,7 @@
     "version": "9.0.1"
   },
   "pth": {
+    "check": false,
     "conservative": true,
     "url": ["https://ftp.gnu.org/gnu/pth/"],
     "version": "2.0.7"
