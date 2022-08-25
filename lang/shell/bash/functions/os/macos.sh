@@ -612,7 +612,6 @@ koopa_macos_ifactive() {
 
 koopa_macos_install_aws_cli() {
     koopa_install_app \
-        --link-in-bin='aws' \
         --name='aws-cli' \
         --platform='macos' \
         "$@"

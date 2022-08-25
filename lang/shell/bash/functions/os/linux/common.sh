@@ -441,7 +441,6 @@ koopa_linux_fix_sudo_setrlimit_error() {
 
 koopa_linux_install_apptainer() {
     koopa_install_app \
-        --link-in-bin='apptainer' \
         --name='apptainer' \
         --platform='linux' \
         "$@"
@@ -449,7 +448,6 @@ koopa_linux_install_apptainer() {
 
 koopa_linux_install_aspera_connect() {
     koopa_install_app \
-        --link-in-bin='ascp' \
         --name='aspera-connect' \
         --platform='linux' \
         "$@"
@@ -464,7 +462,6 @@ koopa_linux_install_attr() {
 
 koopa_linux_install_aws_cli() {
     koopa_install_app \
-        --link-in-bin='aws' \
         --name='aws-cli' \
         --platform='linux' \
         "$@"
@@ -472,7 +469,6 @@ koopa_linux_install_aws_cli() {
 
 koopa_linux_install_bcbio_nextgen() {
     koopa_install_app \
-        --link-in-bin='tools/bin/bcbio_nextgen.py' \
         --name='bcbio-nextgen' \
         --platform='linux' \
         --version="$(koopa_current_bcbio_nextgen_version)" \
@@ -481,7 +477,6 @@ koopa_linux_install_bcbio_nextgen() {
 
 koopa_linux_install_bcl2fastq() {
     koopa_install_app \
-        --link-in-bin='bcl2fastq' \
         --name='bcl2fastq' \
         --platform='linux' \
         "$@"
@@ -489,7 +484,6 @@ koopa_linux_install_bcl2fastq() {
 
 koopa_linux_install_cellranger() {
     koopa_install_app \
-        --link-in-bin='cellranger' \
         --name='cellranger' \
         --platform='linux' \
         "$@"
@@ -505,7 +499,6 @@ koopa_linux_install_cloudbiolinux() {
 
 koopa_linux_install_docker_credential_pass() {
     koopa_install_app \
-        --link-in-bin='docker-credential-pass' \
         --name='docker-credential-pass' \
         --platform='linux' \
         "$@"

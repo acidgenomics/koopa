@@ -8,8 +8,6 @@ koopa_install_libtool() {
     # make formula only looks for 'glibtool'.
     # """
     koopa_install_app \
-        --link-in-bin='libtool' \
-        --link-in-bin='libtoolize' \
         --name='libtool' \
         "$@"
     (

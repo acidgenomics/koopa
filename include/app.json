@@ -1202,6 +1202,7 @@
     "version": "1.5.6"
   },
   "libpng": {
+    "bin": ["libpng-config", "libpng16-config"],
     "conservative": true,
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
     "version": "1.6.37"
@@ -1684,14 +1685,18 @@
     "version_is_svn_commit": true
   },
   "r-gfortran": {
+    "check": false,
     "conservative": true,
     "platform": "macos",
+    "system": true,
     "url": ["https://mac.r-project.org/"],
     "version": "8.2"
   },
   "r-openmp": {
+    "check": false,
     "conservative": true,
     "platform": "macos",
+    "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
     "version": "13.0.0"
   },
