@@ -715,7 +715,6 @@ koopa_linux_remove_user_from_group() {
 koopa_linux_uninstall_apptainer() {
     koopa_uninstall_app \
         --name='apptainer' \
-        --unlink-in-bin='apptainer' \
         "$@"
 }
 
@@ -723,7 +722,6 @@ koopa_linux_uninstall_aspera_connect() {
     koopa_uninstall_app \
         --name='aspera-connect' \
         --platform='linux' \
-        --unlink-in-bin='ascp' \
         "$@"
 }
 
@@ -738,7 +736,6 @@ koopa_linux_uninstall_bcbio_nextgen() {
     koopa_uninstall_app \
         --name='bcbio-nextgen' \
         --platform='linux' \
-        --unlink-in-bin='bcbio_nextgen.py' \
         "$@"
 }
 
@@ -746,7 +743,6 @@ koopa_linux_uninstall_bcl2fastq() {
     koopa_uninstall_app \
         --name='bcl2fastq' \
         --platform='linux' \
-        --unlink-in-bin='bcl2fastq' \
         "$@"
 }
 
@@ -754,7 +750,6 @@ koopa_linux_uninstall_cellranger() {
     koopa_uninstall_app \
         --name='cellranger' \
         --platform='linux' \
-        --unlink-in-bin='cellranger' \
         "$@"
 }
 
@@ -769,7 +764,6 @@ koopa_linux_uninstall_docker_credential_pass() {
     koopa_uninstall_app \
         --name='docker-credential-pass' \
         --platform='linux' \
-        --unlink-in-bin='docker-credential-pass' \
         "$@"
 }
 

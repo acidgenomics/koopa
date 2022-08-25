@@ -3,6 +3,5 @@
 koopa_uninstall_bamtools() {
     koopa_uninstall_app \
         --name='bamtools' \
-        --unlink-in-bin='bamtools' \
         "$@"
 }

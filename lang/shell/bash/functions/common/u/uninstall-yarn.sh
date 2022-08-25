@@ -3,6 +3,5 @@
 koopa_uninstall_yarn() {
     koopa_uninstall_app \
         --name='yarn' \
-        --unlink-in-bin='yarn' \
         "$@"
 }

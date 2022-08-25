@@ -3,6 +3,5 @@
 koopa_uninstall_ronn() {
     koopa_uninstall_app \
         --name='ronn' \
-        --unlink-in-bin='ronn' \
         "$@"
 }
