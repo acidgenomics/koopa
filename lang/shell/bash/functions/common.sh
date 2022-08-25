@@ -12017,7 +12017,6 @@ koopa_install_chemacs() {
 
 koopa_install_chezmoi() {
     koopa_install_app \
-        --link-in-bin='chezmoi' \
         --name='chezmoi' \
         "$@"
 }
@@ -22773,7 +22772,6 @@ koopa_uninstall_chemacs() {
 koopa_uninstall_chezmoi() {
     koopa_uninstall_app \
         --name='chezmoi' \
-        --unlink-in-bin='chezmoi' \
         "$@"
 }
 
