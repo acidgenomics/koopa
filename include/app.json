@@ -301,6 +301,7 @@
     "version": "2.21.0"
   },
   "cloudbiolinux": {
+    "check": false,
     "conservative": false,
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
     "version": "c4c7cf8e508fe947c8b038543c98a2846bb900d6"
@@ -1253,6 +1254,7 @@
     "version": "1.9.2"
   },
   "llvm": {
+    "check": false,
     "conservative": true,
     "url": ["https://releases.llvm.org/"],
     "version": "14.0.6"
