@@ -845,7 +845,7 @@
     "version": "1.19"
   },
   "google-cloud-sdk": {
-    "bin": ["gloud"],
+    "bin": ["gcloud"],
     "conservative": false,
     "url": ["https://cloud.google.com/sdk/docs/install"],
     "version": "396.0.0"
