@@ -532,46 +532,47 @@ local({  # nolint
     ## - https://github.com/gadenbuie/rsthemes
     ## - https://github.com/gadenbuie/rsthemes/issues/6
     ## These values are currently defined in secrets file.
-    dict[["theme_dark"]] <- Sys.getenv("RSTUDIO_THEME_DARK")
-    dict[["theme_light"]] <- Sys.getenv("RSTUDIO_THEME_LIGHT")
-    if (
-        isTRUE(flag[["interactive"]]) &&
-        isTRUE(flag[["rstudio"]]) &&
-        isTRUE(flag[["macos"]]) &&
-        isTRUE(nzchar(dict[["theme_dark"]])) &&
-        isTRUE(nzchar(dict[["theme_light"]])) &&
-        all(isInstalled(c("later", "rstudioapi")))
-    ) {
-        autoDark <- function() {
-            themes <- c(
-                "dark" = dict[["theme_dark"]],
-                "light" = dict[["theme_light"]]
-            )
-            ## This returns "Dark" for Dark Mode; errors for Light Mode.
-            colorMode <- try({
-                suppressWarnings({
-                    system2(
-                        command = "defaults",
-                        args = c(
-                            "read",
-                            "NSGlobalDomain",
-                            "AppleInterfaceStyle"
-                        ),
-                        stdout = TRUE,
-                        stderr = FALSE
-                    )
-                })
-            })
-            colorMode <- ifelse(
-                test = identical(colorMode, "Dark"),
-                yes = "dark",
-                no = "light"
-            )
-            rstudioapi::applyTheme(themes[[colorMode]])
-            invisible(colorMode)
-        }
-        later::later(func = autoDark, delay = 1L)
-    }
+    ## FIXME Is this causing cli theme warnings inside RStudio?
+    ## > dict[["theme_dark"]] <- Sys.getenv("RSTUDIO_THEME_DARK")
+    ## > dict[["theme_light"]] <- Sys.getenv("RSTUDIO_THEME_LIGHT")
+    ## > if (
+    ## >     isTRUE(flag[["interactive"]]) &&
+    ## >     isTRUE(flag[["rstudio"]]) &&
+    ## >     isTRUE(flag[["macos"]]) &&
+    ## >     isTRUE(nzchar(dict[["theme_dark"]])) &&
+    ## >     isTRUE(nzchar(dict[["theme_light"]])) &&
+    ## >     all(isInstalled(c("later", "rstudioapi")))
+    ## > ) {
+    ## >     autoDark <- function() {
+    ## >         themes <- c(
+    ## >             "dark" = dict[["theme_dark"]],
+    ## >             "light" = dict[["theme_light"]]
+    ## >         )
+    ## >         ## This returns "Dark" for Dark Mode; errors for Light Mode.
+    ## >         colorMode <- try({
+    ## >             suppressWarnings({
+    ## >                 system2(
+    ## >                     command = "defaults",
+    ## >                     args = c(
+    ## >                         "read",
+    ## >                         "NSGlobalDomain",
+    ## >                         "AppleInterfaceStyle"
+    ## >                     ),
+    ## >                     stdout = TRUE,
+    ## >                     stderr = FALSE
+    ## >                 )
+    ## >             })
+    ## >         })
+    ## >         colorMode <- ifelse(
+    ## >             test = identical(colorMode, "Dark"),
+    ## >             yes = "dark",
+    ## >             no = "light"
+    ## >         )
+    ## >         rstudioapi::applyTheme(themes[[colorMode]])
+    ## >         invisible(colorMode)
+    ## >     }
+    ## >     later::later(func = autoDark, delay = 1L)
+    ## > }
     ## Session info {{{2
     ## -------------------------------------------------------------------------
     ## Only display session information when R is running interactively
