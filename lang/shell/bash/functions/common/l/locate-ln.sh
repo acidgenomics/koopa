@@ -2,7 +2,6 @@
 
 koopa_locate_ln() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='ln' \
+        --app-name='gln' \
         --opt-name='coreutils'
 }

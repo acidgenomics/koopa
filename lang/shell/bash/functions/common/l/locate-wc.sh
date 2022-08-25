@@ -2,7 +2,6 @@
 
 koopa_locate_wc() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='wc' \
+        --app-name='gwc' \
         --opt-name='coreutils'
 }

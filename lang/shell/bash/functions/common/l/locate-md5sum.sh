@@ -2,6 +2,6 @@
 
 koopa_locate_md5sum() {
     koopa_locate_app \
-        --app-name='md5sum' \
+        --app-name='gmd5sum' \
         --opt-name='coreutils'
 }

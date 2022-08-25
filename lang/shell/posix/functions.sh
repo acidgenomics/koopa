@@ -2081,7 +2081,7 @@ koopa_realpath() {
     if ! koopa_is_installed "$readlink"
     then
         local brew_readlink koopa_readlink
-        koopa_readlink="$(koopa_opt_prefix)/coreutils/bin/readlink"
+        koopa_readlink="$(koopa_bin_prefix)/readlink"
         brew_readlink="$(koopa_homebrew_opt_prefix)/coreutils/libexec/\
 gnubin/readlink"
         if [ -x "$koopa_readlink" ]
