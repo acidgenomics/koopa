@@ -3,6 +3,5 @@
 koopa_uninstall_fastqc() {
     koopa_uninstall_app \
         --name='fastqc' \
-        --unlink-in-bin='fastqc' \
         "$@"
 }

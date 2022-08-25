@@ -5,6 +5,5 @@
 koopa_uninstall_bash() {
     koopa_uninstall_app \
         --name='bash' \
-        --unlink-in-bin='bash' \
         "$@"
 }

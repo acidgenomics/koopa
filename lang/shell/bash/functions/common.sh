@@ -22251,7 +22251,6 @@ koopa_uninstall_asdf() {
 koopa_uninstall_aspell() {
     koopa_uninstall_app \
         --name='aspell' \
-        --unlink-in-bin='aspell' \
         "$@"
 }
 
@@ -22270,63 +22269,54 @@ koopa_uninstall_automake() {
 koopa_uninstall_aws_cli() {
     koopa_uninstall_app \
         --name='aws-cli' \
-        --unlink-in-bin='aws' \
         "$@"
 }
 
 koopa_uninstall_azure_cli() {
     koopa_uninstall_app \
         --name='azure-cli' \
-        --unlink-in-bin='az' \
         "$@"
 }
 
 koopa_uninstall_bamtools() {
     koopa_uninstall_app \
         --name='bamtools' \
-        --unlink-in-bin='bamtools' \
         "$@"
 }
 
 koopa_uninstall_bash_language_server() {
     koopa_uninstall_app \
         --name='bash-language-server' \
-        --unlink-in-bin='bash-language-server' \
         "$@"
 }
 
 koopa_uninstall_bash() {
     koopa_uninstall_app \
         --name='bash' \
-        --unlink-in-bin='bash' \
         "$@"
 }
 
 koopa_uninstall_bashcov() {
     koopa_uninstall_app \
         --name='bashcov' \
-        --unlink-in-bin='bashcov' \
         "$@"
 }
 
 koopa_uninstall_bat() {
     koopa_uninstall_app \
         --name='bat' \
-        --unlink-in-bin='bat' \
         "$@"
 }
 
 koopa_uninstall_bc() {
     koopa_uninstall_app \
         --name='bc' \
-        --unlink-in-bin='bc' \
         "$@"
 }
 
 koopa_uninstall_bedtools() {
     koopa_uninstall_app \
         --name='bedtools' \
-        --unlink-in-bin='bedtools' \
         "$@"
 }
 
@@ -22339,7 +22329,6 @@ koopa_uninstall_binutils() {
 koopa_uninstall_bioawk() {
     koopa_uninstall_app \
         --name='bioawk' \
-        --unlink-in-bin='bioawk' \
         "$@"
 }
 
@@ -22352,7 +22341,6 @@ koopa_uninstall_bison() {
 koopa_uninstall_black() {
     koopa_uninstall_app \
         --name='black' \
-        --unlink-in-bin='black' \
         "$@"
 }
 
@@ -22365,21 +22353,18 @@ koopa_uninstall_boost() {
 koopa_uninstall_bowtie2() {
     koopa_uninstall_app \
         --name='bowtie2' \
-        --unlink-in-bin='bowtie2' \
         "$@"
 }
 
 koopa_uninstall_bpytop() {
     koopa_uninstall_app \
         --name='bpytop' \
-        --unlink-in-bin='bpytop' \
         "$@"
 }
 
 koopa_uninstall_broot() {
     koopa_uninstall_app \
         --name='broot' \
-        --unlink-in-bin='broot' \
         "$@"
 }
 
@@ -22392,24 +22377,12 @@ koopa_uninstall_brotli() {
 koopa_uninstall_bustools() {
     koopa_uninstall_app \
         --name='bustools' \
-        --unlink-in-bin='bustools' \
         "$@"
 }
 
 koopa_uninstall_bzip2() {
     koopa_uninstall_app \
         --name='bzip2' \
-        --unlink-in-bin='bunzip2' \
-        --unlink-in-bin='bzcat' \
-        --unlink-in-bin='bzcmp' \
-        --unlink-in-bin='bzdiff' \
-        --unlink-in-bin='bzegrep' \
-        --unlink-in-bin='bzfgrep' \
-        --unlink-in-bin='bzgrep' \
-        --unlink-in-bin='bzip2' \
-        --unlink-in-bin='bzip2recover' \
-        --unlink-in-bin='bzless' \
-        --unlink-in-bin='bzmore' \
         "$@"
 }
 
@@ -22434,7 +22407,6 @@ koopa_uninstall_cairo() {
 koopa_uninstall_cheat() {
     koopa_uninstall_app \
         --name='cheat' \
-        --unlink-in-bin='cheat' \
         "$@"
 }
 
@@ -22453,21 +22425,18 @@ koopa_uninstall_chezmoi() {
 koopa_uninstall_cmake() {
     koopa_uninstall_app \
         --name='cmake' \
-        --unlink-in-bin='cmake' \
         "$@"
 }
 
 koopa_uninstall_colorls() {
     koopa_uninstall_app \
         --name='colorls' \
-        --unlink-in-bin='colorls' \
         "$@"
 }
 
 koopa_uninstall_conda() {
     koopa_uninstall_app \
         --name='conda' \
-        --unlink-in-bin='conda' \
         "$@"
 }
 
@@ -22588,43 +22557,36 @@ koopa_uninstall_coreutils() {
 koopa_uninstall_cpufetch() {
     koopa_uninstall_app \
         --name='cpufetch' \
-        --unlink-in-bin='cpufetch' \
         "$@"
 }
 
 koopa_uninstall_curl() {
     koopa_uninstall_app \
         --name='curl' \
-        --unlink-in-bin='curl' \
-        --unlink-in-bin='curl-config' \
         "$@"
 }
 
 koopa_uninstall_deeptools() {
     koopa_uninstall_app \
         --name='deeptools' \
-        --unlink-in-bin='deeptools' \
         "$@"
 }
 
 koopa_uninstall_delta() {
     koopa_uninstall_app \
         --name='delta' \
-        --unlink-in-bin='delta' \
         "$@"
 }
 
 koopa_uninstall_difftastic() {
     koopa_uninstall_app \
         --name='difftastic' \
-        --unlink-in-bin='difft' \
         "$@"
 }
 
 koopa_uninstall_dog() {
     koopa_uninstall_app \
         --name='dog' \
-        --unlink-in-bin='dog' \
         "$@"
 }
 
@@ -22658,7 +22620,6 @@ koopa_uninstall_du_dust() {
 koopa_uninstall_editorconfig() {
     koopa_uninstall_app \
         --name='editorconfig' \
-        --unlink-in-bin='editorconfig' \
         "$@"
 }
 
@@ -22683,22 +22644,18 @@ koopa_uninstall_ensembl_perl_api() {
 koopa_uninstall_entrez_direct() {
     koopa_install_app \
         --name='entrez-direct' \
-        --unlink-in-bin='efetch' \
-        --unlink-in-bin='esearch' \
         "$@"
 }
 
 koopa_uninstall_exa() {
     koopa_uninstall_app \
         --name='exa' \
-        --unlink-in-bin='exa' \
         "$@"
 }
 
 koopa_uninstall_exiftool() {
     koopa_uninstall_app \
         --name='exiftool' \
-        --unlink-in-bin='exiftool' \
         "$@"
 }
 
@@ -22711,13 +22668,11 @@ koopa_uninstall_expat() {
 koopa_uninstall_fastqc() {
     koopa_uninstall_app \
         --name='fastqc' \
-        --unlink-in-bin='fastqc' \
         "$@"
 }
 
 koopa_uninstall_fd_find() {
     koopa_uninstall_app \
-        --unlink-in-bin='fd' \
         --name='fd-find' \
         "$@"
 }
@@ -22725,8 +22680,6 @@ koopa_uninstall_fd_find() {
 koopa_uninstall_ffmpeg() {
     koopa_uninstall_app \
         --name='ffmpeg' \
-        --unlink-in-bin='ffmpeg' \
-        --unlink-in-bin='ffprobe' \
         "$@"
 }
 
@@ -22751,21 +22704,18 @@ koopa_uninstall_findutils() {
 koopa_uninstall_fish() {
     koopa_uninstall_app \
         --name='fish' \
-        --unlink-in-bin='fish' \
         "$@"
 }
 
 koopa_uninstall_flac() {
     koopa_uninstall_app \
         --name='flac' \
-        --unlink-in-bin='flac' \
         "$@"
 }
 
 koopa_uninstall_flake8() {
     koopa_uninstall_app \
         --name='flake8' \
-        --unlink-in-bin='flake8' \
         "$@"
 }
 
@@ -22796,15 +22746,12 @@ koopa_uninstall_fribidi() {
 koopa_uninstall_fzf() {
     koopa_uninstall_app \
         --name='fzf' \
-        --unlink-in-bin='fzf' \
         "$@"
 }
 
 koopa_uninstall_gawk() {
     koopa_uninstall_app \
         --name='gawk' \
-        --unlink-in-bin='awk' \
-        --unlink-in-bin='gawk' \
         "$@"
 }
 
@@ -22817,7 +22764,6 @@ koopa_uninstall_gcc() {
 koopa_uninstall_gdal() {
     koopa_uninstall_app \
         --name='gdal' \
-        --unlink-in-bin='gdal-config' \
         "$@"
 }
 
@@ -22830,7 +22776,6 @@ koopa_uninstall_gdbm() {
 koopa_uninstall_geos() {
     koopa_uninstall_app \
         --name='geos' \
-        --unlink-in-bin='geos-config' \
         "$@"
 }
 
@@ -22843,7 +22788,6 @@ koopa_uninstall_gettext() {
 koopa_uninstall_gffutils() {
     koopa_uninstall_app \
         --name='gffutils' \
-        --unlink-in-bin='gffutils-cli' \
         "$@"
 }
 
@@ -22856,7 +22800,6 @@ koopa_uninstall_gget() {
 koopa_uninstall_ghostscript() {
     koopa_uninstall_app \
         --name='ghostscript' \
-        --unlink-in-bin='gs' \
         "$@"
 }
 
@@ -22878,7 +22821,6 @@ koopa_uninstall_git() {
 koopa_uninstall_glances() {
     koopa_uninstall_app \
         --name='glances' \
-        --unlink-in-bin='glances' \
         "$@"
 }
 
@@ -22909,14 +22851,12 @@ koopa_uninstall_gnutls() {
 koopa_uninstall_go() {
     koopa_uninstall_app \
         --name='go' \
-        --unlink-in-bin='go' \
         "$@"
 }
 
 koopa_uninstall_google_cloud_sdk() {
     koopa_uninstall_app \
         --name='google-cloud-sdk' \
-        --unlink-in-bin='gcloud' \
         "$@"
 }
 
@@ -22935,23 +22875,18 @@ koopa_uninstall_graphviz() {
 koopa_uninstall_grep() {
     koopa_uninstall_app \
         --name='grep' \
-        --unlink-in-bin='egrep' \
-        --unlink-in-bin='fgrep' \
-        --unlink-in-bin='grep' \
         "$@"
 }
 
 koopa_uninstall_groff() {
     koopa_uninstall_app \
         --name='groff' \
-        --unlink-in-bin='groff' \
         "$@"
 }
 
 koopa_uninstall_gseapy() {
     koopa_uninstall_app \
         --name='gseapy' \
-        --unlink-in-bin='gseapy' \
         "$@"
 }
 
@@ -22964,7 +22899,6 @@ koopa_uninstall_gsl() {
 koopa_uninstall_gtop() {
     koopa_uninstall_app \
         --name='gtop' \
-        --unlink-in-bin='gtop' \
         "$@"
 }
 
@@ -22977,7 +22911,6 @@ koopa_uninstall_gzip() {
 koopa_uninstall_hadolint() {
     koopa_uninstall_app \
         --name='hadolint' \
-        --unlink-in-bin='hadolint' \
         "$@"
 }
 
@@ -23002,21 +22935,18 @@ koopa_uninstall_hdf5() {
 koopa_uninstall_hisat2() {
     koopa_uninstall_app \
         --name='hisat2' \
-        --unlink-in-bin='hisat2' \
         "$@"
 }
 
 koopa_uninstall_htop() {
     koopa_uninstall_app \
         --name='htop' \
-        --unlink-in-bin='htop' \
         "$@"
 }
 
 koopa_uninstall_hyperfine() {
     koopa_uninstall_app \
         --name='hyperfine' \
-        --unlink-in-bin='hyperfine' \
         "$@"
 }
 
@@ -23029,21 +22959,18 @@ koopa_uninstall_icu4c() {
 koopa_uninstall_imagemagick() {
     koopa_uninstall_app \
         --name='imagemagick' \
-        --unlink-in-bin='magick' \
         "$@"
 }
 
 koopa_uninstall_ipython() {
     koopa_uninstall_app \
         --name='ipython' \
-        --unlink-in-bin='ipython' \
         "$@"
 }
 
 koopa_uninstall_isort() {
     koopa_uninstall_app \
         --name='isort' \
-        --unlink-in-bin='isort' \
         "$@"
 }
 
@@ -23062,7 +22989,6 @@ koopa_uninstall_jpeg() {
 koopa_uninstall_jq() {
     koopa_uninstall_app \
         --name='jq' \
-        --unlink-in-bin='jq' \
         "$@"
 }
 
@@ -23076,21 +23002,18 @@ koopa_uninstall_julia_packages() {
 koopa_uninstall_julia() {
     koopa_uninstall_app \
         --name='julia' \
-        --unlink-in-bin='julia' \
         "$@"
 }
 
 koopa_uninstall_jupyterlab() {
     koopa_uninstall_app \
         --name='jupyterlab' \
-        --unlink-in-bin='jupyter-lab' \
         "$@"
 }
 
 koopa_uninstall_kallisto() {
     koopa_uninstall_app \
         --name='kallisto' \
-        --unlink-in-bin='kallisto' \
         "$@"
 }
 
@@ -23114,7 +23037,6 @@ koopa_uninstall_koopa() {
 koopa_uninstall_lame() {
     koopa_uninstall_app \
         --name='lame' \
-        --unlink-in-bin='lame' \
         "$@"
 }
 
@@ -23133,14 +23055,12 @@ koopa_uninstall_latch() {
 koopa_uninstall_less() {
     koopa_uninstall_app \
         --name='autoconf' \
-        --unlink-in-bin='less' \
         "$@"
 }
 
 koopa_uninstall_lesspipe() {
     koopa_uninstall_app \
         --name='lesspipe' \
-        --unlink-in-bin='lesspipe.sh' \
         "$@"
 }
 
@@ -23225,8 +23145,6 @@ koopa_uninstall_libpipeline() {
 koopa_uninstall_libpng() {
     koopa_uninstall_app \
         --name='libpng' \
-        --unlink-in-bin='libpng-config' \
-        --unlink-in-bin='libpng16-config' \
         "$@"
 }
 
@@ -23251,10 +23169,6 @@ koopa_uninstall_libtiff() {
 koopa_uninstall_libtool() {
     koopa_uninstall_app \
         --name='libtool' \
-        --unlink-in-bin='glibtool' \
-        --unlink-in-bin='glibtoolize' \
-        --unlink-in-bin='libtool' \
-        --unlink-in-bin='libtoolize' \
         "$@"
 }
 
@@ -23273,7 +23187,6 @@ koopa_uninstall_libuv() {
 koopa_uninstall_libxml2() {
     koopa_uninstall_app \
         --name='libxml2' \
-        --unlink-in-bin='xml2-config' \
         "$@"
 }
 
@@ -23316,35 +23229,30 @@ koopa_uninstall_m4() {
 koopa_uninstall_make() {
     koopa_uninstall_app \
         --name='make' \
-        --unlink-in-bin='make' \
         "$@"
 }
 
 koopa_uninstall_man_db() {
     koopa_uninstall_app \
         --name='man-db' \
-        --unlink-in-bin='man' \
         "$@"
 }
 
 koopa_uninstall_markdownlint_cli() {
     koopa_uninstall_app \
         --name='markdownlint-cli' \
-        --unlink-in-bin='markdownlint' \
         "$@"
 }
 
 koopa_uninstall_mcfly() {
     koopa_uninstall_app \
         --name='mcfly' \
-        --unlink-in-bin='mcfly' \
         "$@"
 }
 
 koopa_uninstall_mdcat() {
     koopa_uninstall_app \
         --name='mdcat' \
-        --unlink-in-bin='mdcat' \
         "$@"
 }
 
@@ -23369,37 +23277,24 @@ koopa_uninstall_mpfr() {
 koopa_uninstall_multiqc() {
     koopa_uninstall_app \
         --name='multiqc' \
-        --unlink-in-bin='multiqc' \
         "$@"
 }
 
 koopa_uninstall_ncurses() {
     koopa_uninstall_app \
         --name='ncurses' \
-        --unlink-in-bin='captoinfo' \
-        --unlink-in-bin='clear' \
-        --unlink-in-bin='infocmp' \
-        --unlink-in-bin='infotocap' \
-        --unlink-in-bin='reset' \
-        --unlink-in-bin='tabs' \
-        --unlink-in-bin='tic' \
-        --unlink-in-bin='toe' \
-        --unlink-in-bin='tput' \
-        --unlink-in-bin='tset' \
         "$@"
 }
 
 koopa_uninstall_neofetch() {
     koopa_uninstall_app \
         --name='neofetch' \
-        --unlink-in-bin='neofetch' \
         "$@"
 }
 
 koopa_uninstall_neovim() {
     koopa_uninstall_app \
         --name='neovim' \
-        --unlink-in-bin='nvim' \
         "$@"
 }
 
@@ -23412,7 +23307,6 @@ koopa_uninstall_nettle() {
 koopa_uninstall_nextflow() {
     koopa_uninstall_app \
         --name='nextflow' \
-        --unlink-in-bin='nextflow' \
         "$@"
 }
 
@@ -23425,7 +23319,6 @@ koopa_uninstall_nghttp2() {
 koopa_uninstall_nim() {
     koopa_uninstall_app \
         --name='nim' \
-        --unlink-in-bin='nim' \
         "$@"
 }
 
@@ -23438,8 +23331,6 @@ koopa_uninstall_ninja() {
 koopa_uninstall_node() {
     koopa_uninstall_app \
         --name='node' \
-        --unlink-in-bin='node' \
-        --unlink-in-bin='npm' \
         "$@"
 }
 
@@ -23492,52 +23383,41 @@ koopa_uninstall_openssl1() {
 koopa_uninstall_openssl3() {
     koopa_uninstall_app \
         --name='openssl3' \
-        --unlink-in-bin='openssl' \
         "$@"
 }
 
 koopa_uninstall_pandoc() {
     koopa_uninstall_app \
         --name='pandoc' \
-        --unlink-in-bin='pandoc' \
         "$@"
 }
 
 koopa_uninstall_parallel() {
     koopa_uninstall_app \
         --name='parallel' \
-        --unlink-in-bin='parallel' \
         "$@"
 }
 
 koopa_uninstall_password_store() {
     koopa_uninstall_app \
         --name='password-store' \
-        --unlink-in-bin='pass' \
         "$@"
 }
 
 koopa_uninstall_patch() {
     koopa_uninstall_app \
         --name='patch' \
-        --unlink-in-bin='patch' \
         "$@"
 }
 
 koopa_uninstall_pcre() {
     koopa_uninstall_app \
-        --unlink-in-bin='pcre-config' \
-        --unlink-in-bin='pcregrep' \
-        --unlink-in-bin='pcretest' \
         --name='pcre' \
         "$@"
 }
 
 koopa_uninstall_pcre2() {
     koopa_uninstall_app \
-        --unlink-in-bin='pcre2-config' \
-        --unlink-in-bin='pcre2grep' \
-        --unlink-in-bin='pcre2test' \
         --name='pcre2' \
         "$@"
 }
@@ -23545,30 +23425,12 @@ koopa_uninstall_pcre2() {
 koopa_uninstall_perl() {
     koopa_uninstall_app \
         --name='perl' \
-        --unlink-in-bin='cpan' \
-        --unlink-in-bin='perl' \
-        --unlink-in-bin='perlbug' \
-        --unlink-in-bin='perldoc' \
-        --unlink-in-bin='perlivp' \
-        --unlink-in-bin='perlthanks' \
-        --unlink-in-bin='piconv' \
-        --unlink-in-bin='pl2pm' \
-        --unlink-in-bin='pod2html' \
-        --unlink-in-bin='pod2man' \
-        --unlink-in-bin='pod2text' \
-        --unlink-in-bin='pod2usage' \
-        --unlink-in-bin='podchecker' \
-        --unlink-in-bin='prove' \
-        --unlink-in-bin='ptar' \
-        --unlink-in-bin='ptardiff' \
-        --unlink-in-bin='ptargrep' \
         "$@"
 }
 
 koopa_uninstall_pipx() {
     koopa_uninstall_app \
         --name='pipx' \
-        --unlink-in-bin='pipx' \
         "$@"
 }
 
@@ -23581,28 +23443,24 @@ koopa_uninstall_pixman() {
 koopa_uninstall_pkg_config() {
     koopa_uninstall_app \
         --name='pkg-config' \
-        --unlink-in-bin='pkg-config' \
         "$@"
 }
 
 koopa_uninstall_poetry() {
     koopa_uninstall_app \
         --name='poetry' \
-        --unlink-in-bin='poetry' \
         "$@"
 }
 
 koopa_uninstall_prettier() {
     koopa_uninstall_app \
         --name='prettier' \
-        --unlink-in-bin='prettier' \
         "$@"
 }
 
 koopa_uninstall_procs() {
     koopa_uninstall_app \
         --name='procs' \
-        --unlink-in-bin='procs' \
         "$@"
 }
 
@@ -23615,28 +23473,24 @@ koopa_uninstall_proj() {
 koopa_uninstall_pyenv() {
     koopa_uninstall_app \
         --name='pyenv' \
-        --unlink-in-bin='pyenv' \
         "$@"
 }
 
 koopa_uninstall_pyflakes() {
     koopa_uninstall_app \
         --name='pyflakes' \
-        --unlink-in-bin='pyflakes' \
         "$@"
 }
 
 koopa_uninstall_pygments() {
     koopa_uninstall_app \
         --name='pygments' \
-        --unlink-in-bin='pygmentize' \
         "$@"
 }
 
 koopa_uninstall_pylint() {
     koopa_uninstall_app \
         --name='pylint' \
-        --unlink-in-bin='pylint' \
         "$@"
 }
 
@@ -23650,21 +23504,18 @@ koopa_uninstall_pytaglib() {
 koopa_uninstall_pytest() {
     koopa_uninstall_app \
         --name='pytest' \
-        --unlink-in-bin='pytest' \
         "$@"
 }
 
 koopa_uninstall_python() {
     koopa_uninstall_app \
         --name='python' \
-        --unlink-in-bin='python3' \
         "$@"
 }
 
 koopa_uninstall_r_devel() {
     koopa_uninstall_app \
         --name='r-devel' \
-        --unlink-in-bin='R-devel' \
         "$@"
 }
 
@@ -23691,14 +23542,12 @@ koopa_uninstall_r() {
 koopa_uninstall_ranger_fm() {
     koopa_uninstall_app \
         --name='ranger-fm' \
-        --unlink-in-bin='ranger' \
         "$@"
 }
 
 koopa_uninstall_rbenv() {
     koopa_uninstall_app \
         --name='rbenv' \
-        --unlink-in-bin='rbenv' \
         "$@"
 }
 
@@ -23711,20 +23560,17 @@ koopa_uninstall_readline() {
 koopa_uninstall_rename() {
     koopa_uninstall_app \
         --name='rename' \
-        --unlink-in-bin='rename' \
         "$@"
 }
 
 koopa_uninstall_ripgrep_all() {
     koopa_uninstall_app \
-        --unlink-in-bin='rga' \
         --name='ripgrep-all' \
         "$@"
 }
 
 koopa_uninstall_ripgrep() {
     koopa_uninstall_app \
-        --unlink-in-bin='rg' \
         --name='ripgrep' \
         "$@"
 }
@@ -23732,31 +23578,24 @@ koopa_uninstall_ripgrep() {
 koopa_uninstall_rmate() {
     koopa_uninstall_app \
         --name='rmate' \
-        --unlink-in-bin='rmate' \
         "$@"
 }
 
 koopa_uninstall_ronn() {
     koopa_uninstall_app \
         --name='ronn' \
-        --unlink-in-bin='ronn' \
         "$@"
 }
 
 koopa_uninstall_rsync() {
     koopa_uninstall_app \
         --name='rsync' \
-        --unlink-in-bin='rsync' \
         "$@"
 }
 
 koopa_uninstall_ruby() {
     koopa_uninstall_app \
         --name='ruby' \
-        --unlink-in-bin='bundle' \
-        --unlink-in-bin='bundler' \
-        --unlink-in-bin='gem' \
-        --unlink-in-bin='ruby' \
         "$@"
 }
 
@@ -23769,21 +23608,18 @@ koopa_uninstall_rust() {
 koopa_uninstall_salmon() {
     koopa_uninstall_app \
         --name='salmon' \
-        --unlink-in-bin='salmon' \
         "$@"
 }
 
 koopa_uninstall_sambamba() {
     koopa_uninstall_app \
         --name='sambamba' \
-        --unlink-in-bin='sambamba' \
         "$@"
 }
 
 koopa_uninstall_samtools() {
     koopa_uninstall_app \
         --name='samtools' \
-        --unlink-in-bin='samtools' \
         "$@"
 }
 
@@ -23796,7 +23632,6 @@ koopa_uninstall_scons() {
 koopa_uninstall_sed() {
     koopa_uninstall_app \
         --name='sed' \
-        --unlink-in-bin='sed' \
         "$@"
 }
 
@@ -23809,14 +23644,12 @@ koopa_uninstall_serf() {
 koopa_uninstall_shellcheck() {
     koopa_uninstall_app \
         --name='shellcheck' \
-        --unlink-in-bin='shellcheck' \
         "$@"
 }
 
 koopa_uninstall_shunit2() {
     koopa_uninstall_app \
         --name='shunit2' \
-        --unlink-in-bin='shunit2' \
         "$@"
 }
 
@@ -23829,35 +23662,29 @@ koopa_uninstall_snakemake() {
 koopa_uninstall_sox() {
     koopa_uninstall_app \
         --name='sox' \
-        --unlink-in-bin='sox' \
         "$@"
 }
 
 koopa_uninstall_sqlite() {
     koopa_uninstall_app \
         --name='sqlite' \
-        --unlink-in-bin='sqlite3' \
         "$@"
 }
 
 koopa_uninstall_sra_tools() {
     koopa_uninstall_app \
         --name='sra-tools' \
-        --unlink-in-bin='fasterq-dump' \
-        --unlink-in-bin='vdb-config' \
         "$@"
 }
 
 koopa_uninstall_star() {
     koopa_uninstall_app \
         --name='star' \
-        --unlink-in-bin='STAR' \
         "$@"
 }
 
 koopa_uninstall_starship() {
     koopa_uninstall_app \
-        --unlink-in-bin='starship' \
         --name='starship' \
         "$@"
 }
@@ -23865,14 +23692,12 @@ koopa_uninstall_starship() {
 koopa_uninstall_stow() {
     koopa_uninstall_app \
         --name='stow' \
-        --unlink-in-bin='stow' \
         "$@"
 }
 
 koopa_uninstall_subversion() {
     koopa_uninstall_app \
         --name='subversion' \
-        --unlink-in-bin='svn' \
         "$@"
 }
 
@@ -23892,7 +23717,6 @@ koopa_uninstall_taglib() {
 koopa_uninstall_tar() {
     koopa_uninstall_app \
         --name='tar' \
-        --unlink-in-bin='tar' \
         "$@"
 }
 
@@ -23904,7 +23728,6 @@ koopa_uninstall_tcl_tk() {
 
 koopa_uninstall_tealdeer() {
     koopa_uninstall_app \
-        --unlink-in-bin='tldr' \
         --name='tealdeer' \
         "$@"
 }
@@ -23912,25 +23735,17 @@ koopa_uninstall_tealdeer() {
 koopa_uninstall_texinfo() {
     koopa_uninstall_app \
         --name='texinfo' \
-        --unlink-in-bin='pdftexi2dvi' \
-        --unlink-in-bin='pod2texi' \
-        --unlink-in-bin='texi2any' \
-        --unlink-in-bin='texi2dvi' \
-        --unlink-in-bin='texi2pdf' \
-        --unlink-in-bin='texindex' \
         "$@"
 }
 
 koopa_uninstall_tmux() {
     koopa_uninstall_app \
         --name='tmux' \
-        --unlink-in-bin='tmux' \
         "$@"
 }
 
 koopa_uninstall_tokei() {
     koopa_uninstall_app \
-        --unlink-in-bin='tokei' \
         --name='tokei' \
         "$@"
 }
@@ -23938,13 +23753,11 @@ koopa_uninstall_tokei() {
 koopa_uninstall_tree() {
     koopa_uninstall_app \
         --name='tree' \
-        --unlink-in-bin='tree' \
         "$@"
 }
 
 koopa_uninstall_tuc() {
     koopa_uninstall_app \
-        --unlink-in-bin='tuc' \
         --name='tuc' \
         "$@"
 }
@@ -23952,14 +23765,12 @@ koopa_uninstall_tuc() {
 koopa_uninstall_udunits() {
     koopa_uninstall_app \
         --name='udunits' \
-        --unlink-in-bin='udunits2' \
         "$@"
 }
 
 koopa_uninstall_units() {
     koopa_uninstall_app \
         --name='units' \
-        --unlink-in-bin='units' \
         "$@"
 }
 
@@ -24004,30 +23815,24 @@ koopa_uninstall_utf8proc() {
 koopa_uninstall_vim() {
     koopa_uninstall_app \
         --name='vim' \
-        --unlink-in-bin='vim' \
-        --unlink-in-bin='vimdiff' \
         "$@"
 }
 
 koopa_uninstall_visidata() {
     koopa_uninstall_app \
         --name='visidata' \
-        --unlink-in-bin='vd' \
-        --unlink-in-bin='visidata' \
         "$@"
 }
 
 koopa_uninstall_wget() {
     koopa_uninstall_app \
         --name='wget' \
-        --unlink-in-bin='wget' \
         "$@"
 }
 
 koopa_uninstall_which() {
     koopa_uninstall_app \
         --name='which' \
-        --unlink-in-bin='which' \
         "$@"
 }
 
@@ -24117,7 +23922,6 @@ koopa_uninstall_xorg_xtrans() {
 
 koopa_uninstall_xsv() {
     koopa_uninstall_app \
-        --unlink-in-bin='xsv' \
         --name='xsv' \
         "$@"
 }
@@ -24131,34 +23935,29 @@ koopa_uninstall_xxhash() {
 koopa_uninstall_xz() {
     koopa_uninstall_app \
         --name='xz' \
-        --unlink-in-bin='xz' \
         "$@"
 }
 
 koopa_uninstall_yarn() {
     koopa_uninstall_app \
         --name='yarn' \
-        --unlink-in-bin='yarn' \
         "$@"
 }
 
 koopa_uninstall_yq() {
     koopa_uninstall_app \
         --name='yq' \
-        --unlink-in-bin='yq' \
         "$@"
 }
 
 koopa_uninstall_yt_dlp() {
     koopa_uninstall_app \
         --name='yt-dlp' \
-        --unlink-in-bin='yt-dlp' \
         "$@"
 }
 
 koopa_uninstall_zellij() {
     koopa_uninstall_app \
-        --unlink-in-bin='zellij' \
         --name='zellij' \
         "$@"
 }
@@ -24171,7 +23970,6 @@ koopa_uninstall_zlib() {
 
 koopa_uninstall_zoxide() {
     koopa_uninstall_app \
-        --unlink-in-bin='zoxide' \
         --name='zoxide' \
         "$@"
 }
@@ -24179,20 +23977,12 @@ koopa_uninstall_zoxide() {
 koopa_uninstall_zsh() {
     koopa_uninstall_app \
         --name='zsh' \
-        --unlink-in-bin='zsh' \
         "$@"
 }
 
 koopa_uninstall_zstd() {
     koopa_uninstall_app \
         --name='zstd' \
-        --unlink-in-bin='pzstd' \
-        --unlink-in-bin='unzstd' \
-        --unlink-in-bin='zstd' \
-        --unlink-in-bin='zstdcat' \
-        --unlink-in-bin='zstdgrep' \
-        --unlink-in-bin='zstdless' \
-        --unlink-in-bin='zstdmt' \
         "$@"
 }
 
