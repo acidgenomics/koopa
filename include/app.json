@@ -1228,6 +1228,7 @@
   "libtool": {
     "bin": ["glibtool", "glibtoolize"],
     "conservative": false,
+    "date": "2022-08-25",
     "man1": ["glibtool.1", "glibtoolize.1"],
     "url": ["https://ftp.gnu.org/gnu/libtool/"],
     "version": "2.4.7"
@@ -1301,9 +1302,10 @@
     "version": "4.3"
   },
   "man-db": {
-    "bin": ["man"],
+    "bin": ["gman"],
     "conservative": false,
-    "man1": ["man.1"],
+    "date": "2022-08-25",
+    "man1": ["gman.1"],
     "url": ["https://man-db.nongnu.org/"],
     "version": "2.10.2"
   },
@@ -1909,9 +1911,9 @@
     "version": "1.12"
   },
   "tar": {
-    "bin": ["tar"],
+    "bin": ["gtar"],
     "conservative": true,
-    "man1": ["tar.1"],
+    "man1": ["gtar.1"],
     "url": ["https://www.gnu.org/software/tar/"],
     "version": "1.34"
   },
@@ -2024,8 +2026,10 @@
     "version": "1.21.3"
   },
   "which": {
-    "bin": ["which"],
+    "bin": ["gwhich"],
     "conservative": true,
+    "date": "2022-08-25",
+    "man1": ["gwhich.1"],
     "url": ["https://ftp.gnu.org/gnu/which/"],
     "version": "2.21"
   },
@@ -2113,6 +2117,7 @@
   "xz": {
     "bin": ["xz"],
     "conservative": true,
+    "date": "2022-08-25",
     "man1": ["xz.1"],
     "url": ["https://tukaani.org/xz/"],
     "version": "5.2.5"
