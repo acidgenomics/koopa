@@ -12205,7 +12205,6 @@ koopa_install_dotfiles() {
 
 koopa_install_du_dust() {
     koopa_install_app \
-        --link-in-bin='dust' \
         --name='du-dust' \
         "$@"
 }
@@ -12849,7 +12848,6 @@ koopa_install_lapack() {
 
 koopa_install_latch() {
     koopa_install_app \
-        --link-in-bin='latch' \
         --name='latch' \
         "$@"
 }
@@ -22977,7 +22975,6 @@ koopa_uninstall_dotfiles() {
 koopa_uninstall_du_dust() {
     koopa_uninstall_app \
         --name='du-dust' \
-        --unlink-in-bin='dust' \
         "$@"
 }
 
@@ -23453,7 +23450,6 @@ koopa_uninstall_lapack() {
 koopa_uninstall_latch() {
     koopa_uninstall_app \
         --name='latch' \
-        --unlink-in-bin='latch' \
         "$@"
 }
 
