@@ -113,7 +113,7 @@ koopa_update_app() {
             ;;
         'system')
             koopa_assert_is_admin
-            koopa_is_linux && bool[update_ldconfig]=1
+            koopa_is_linux && bool['update_ldconfig']=1
             ;;
     esac
     if [[ -n "${dict['prefix']}" ]]
@@ -126,7 +126,7 @@ koopa_update_app() {
         fi
         dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     fi
-    [[ -z "${dict['updater_bn']}" ]] && dict[updater_bn]="${dict['name']}"
+    [[ -z "${dict['updater_bn']}" ]] && dict['updater_bn']="${dict['name']}"
     dict['updater_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
     koopa_assert_is_file "${dict['updater_file']}"

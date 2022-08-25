@@ -3,7 +3,7 @@
 koopa_list_path_priority() {
     # """
     # List path priority.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-08-25.
     # """
     local all_arr app dict unique_arr
     declare -A app=(
@@ -23,7 +23,7 @@ koopa_list_path_priority() {
     koopa_is_array_non_empty "${unique_arr[@]:-}" || return 1
     dict['n_all']="${#all_arr[@]}"
     dict['n_unique']="${#unique_arr[@]}"
-    dict['n_dupes']="$((dict[n_all] - dict[n_unique]))"
+    dict['n_dupes']="$((dict['n_all'] - dict['n_unique']))"
     if [[ "${dict['n_dupes']}" -gt 0 ]]
     then
         koopa_alert_note "$(koopa_ngettext \

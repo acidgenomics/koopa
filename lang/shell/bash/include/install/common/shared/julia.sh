@@ -63,7 +63,7 @@ main() {
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     # > [[ -x "${app['python']}" ]] || return 1
-    # > app[python]="$(koopa_realpath "${app['python']}")"
+    # > app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='julia'

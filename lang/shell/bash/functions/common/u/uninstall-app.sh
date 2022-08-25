@@ -3,14 +3,14 @@
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2022-08-15.
+    # @note Updated 2022-08-25.
     # """
-    local bin_arr bool dict i man_arr
+    local bin_arr bool dict i man1_arr
     declare -A bool=(
         ['quiet']=0
-        ['unlink_in_bin']=0
-        ['unlink_in_man']=0
-        ['unlink_in_opt']=1
+        ['unlink_in_bin']=''
+        ['unlink_in_man1']=''
+        ['unlink_in_opt']=''
         ['verbose']=0
     )
     declare -A dict=(
@@ -24,8 +24,6 @@ koopa_uninstall_app() {
         ['uninstaller_bn']=''
         ['uninstaller_fun']='main'
     )
-    bin_arr=()
-    man_arr=()
     while (("$#"))
     do
         case "$1" in
@@ -61,15 +59,15 @@ koopa_uninstall_app() {
                 dict['uninstaller_bn']="${2:?}"
                 shift 2
                 ;;
-            '--unlink-in-bin='*)
-                bin_arr+=("${1#*=}")
+            # Flags ------------------------------------------------------------
+            '--no-unlink-in-bin')
+                bool['unlink_in_bin']=0
                 shift 1
                 ;;
-            '--unlink-in-bin')
-                bin_arr+=("${2:?}")
-                shift 2
+            '--no-unlink-in-man1')
+                bool['unlink_in_man1']=0
+                shift 1
                 ;;
-            # Flags ------------------------------------------------------------
             '--no-unlink-in-opt')
                 bool['unlink_in_opt']=0
                 shift 1
@@ -100,25 +98,24 @@ koopa_uninstall_app() {
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     case "${dict['mode']}" in
         'shared')
-            bool['unlink_in_opt']=1
-            if [[ -z "${dict['prefix']}" ]]
-            then
+            [[ -z "${dict['prefix']}" ]] && \
                 dict['prefix']="${dict['app_prefix']}/${dict['name']}"
-            fi
+            [[ -z "${bool['unlink_in_bin']}" ]] && bool['unlink_in_bin']=1
+            [[ -z "${bool['unlink_in_man1']}" ]] && bool['unlink_in_man1']=1
+            [[ -z "${bool['unlink_in_opt']}" ]] && bool['unlink_in_opt']=1
             ;;
         'system')
             koopa_assert_is_admin
+            bool['unlink_in_bin']=0
+            bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
             ;;
         'user')
+            bool['unlink_in_bin']=0
+            bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
             ;;
     esac
-    if koopa_is_array_non_empty "${bin_arr[@]:-}"
-    then
-        bool['unlink_in_bin']=1
-        bool['unlink_in_man']=1
-    fi
     if [[ -n "${dict['prefix']}" ]]
     then
         if [[ ! -d "${dict['prefix']}" ]]
@@ -137,7 +134,8 @@ koopa_uninstall_app() {
             koopa_alert_uninstall_start "${dict['name']}"
         fi
     fi
-    [[ -z "${dict['uninstaller_bn']}" ]] && dict[uninstaller_bn]="${dict['name']}"
+    [[ -z "${dict['uninstaller_bn']}" ]] && \
+        dict['uninstaller_bn']="${dict['name']}"
     dict['uninstaller_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     if [[ -f "${dict['uninstaller_file']}" ]]
@@ -163,17 +161,19 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
                 ;;
         esac
     fi
+    # FIXME Rework the JSON parsing step as a new 'koopa_unlink_in_bin' function.
     if [[ "${bool['unlink_in_bin']}" -eq 1 ]]
     then
         koopa_unlink_in_bin "${bin_arr[@]}"
     fi
-    if [[ "${bool['unlink_in_man']}" -eq 1 ]]
+    # FIXME Rework the JSON parsing step as a new 'koopa_unlink_in_man1' function.
+    if [[ "${bool['unlink_in_man1']}" -eq 1 ]]
     then
         for i in "${!bin_arr[@]}"
         do
-            man_arr+=("${bin_arr[$i]}.1")
+            man1_arr+=("${bin_arr[$i]}.1")
         done
-        koopa_unlink_in_man1 "${man_arr[@]}"
+        koopa_unlink_in_man1 "${man1_arr[@]}"
     fi
     if [[ "${bool['unlink_in_opt']}" -eq 1 ]]
     then

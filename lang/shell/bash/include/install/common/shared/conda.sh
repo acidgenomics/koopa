@@ -83,7 +83,7 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}-${dict['arch2']}
     koopa_ln \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
-    app[conda]="$(koopa_locate_conda)"
+    app['conda']="$(koopa_locate_conda)"
     # Optionally, install mamba into base environment.
     # > [[ -x "${app['conda']}" ]] || return 1
     # > case "${dict['version']}" in

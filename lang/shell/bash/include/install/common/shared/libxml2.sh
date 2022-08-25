@@ -30,7 +30,7 @@ ${dict['maj_min_ver']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    # > dict[python]="$(koopa_app_prefix 'python')"
+    # > dict['python']="$(koopa_app_prefix 'python')"
     conf_args=(
         # > '--with-history'
         # > "--with-python=${dict['python']}/bin/python3"

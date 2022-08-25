@@ -71,9 +71,9 @@ koopa_system_info() {
         [[ -x "${app['uname']}" ]] || return 1
         dict['os']="$("${app['uname']}" --all)"
         # Alternate approach using Python:
-        # > app[python]="$(koopa_locate_python)"
+        # > app['python']="$(koopa_locate_python)"
         # > [[ -x "${app['python']}" ]] || return 1
-        # > dict[os]="$("${app['python']}" -mplatform)"
+        # > dict['os']="$("${app['python']}" -mplatform)"
     fi
     info+=(
         ''

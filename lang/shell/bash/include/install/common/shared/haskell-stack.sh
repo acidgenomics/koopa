@@ -99,7 +99,7 @@ download/v${dict['version']}/${dict['file']}"
     )
     "${app['stack']}" "${stack_args[@]}" setup
     # Can install a specific GHC version here with:
-    # > app[stack]="${dict['prefix']}/bin/stack"
+    # > app['stack']="${dict['prefix']}/bin/stack"
     # > koopa_assert_is_installed "${app['stack']}"
     # > "${app['stack']}" install 'ghc-9.0.2'
     return 0

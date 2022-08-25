@@ -82,7 +82,7 @@ koopa_sub() {
     fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    [[ "${dict['global']}" -eq 1 ]] && dict[perl_tail]='g'
+    [[ "${dict['global']}" -eq 1 ]] && dict['perl_tail']='g'
     if [[ "${dict['regex']}" -eq 1 ]]
     then
         dict['expr']="s/${dict['pattern']}/${dict['replacement']}/${dict['perl_tail']}"

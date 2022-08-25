@@ -78,7 +78,7 @@ koopa_locate_conda_app() {
             koopa_app_json_version "conda-${dict['env_name']}" \
         )"
         # Slower approach that isn't version pinned:
-        # > dict[env_version]="$( \
+        # > dict['env_version']="$( \
         # >     koopa_conda_env_latest_version "${dict['env_name']}" \
         # > )"
     fi

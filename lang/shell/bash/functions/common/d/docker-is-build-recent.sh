@@ -75,7 +75,7 @@ koopa_docker_is_build_recent() {
         dict2['created']="$( \
             "${app['date']}" --utc --date="${dict2['created']}" '+%s' \
         )"
-        dict2['diff']=$((dict2[current] - dict2[created]))
+        dict2['diff']=$((dict2['current'] - dict2['created']))
         [[ "${dict2['diff']}" -le "${dict['seconds']}" ]] && continue
         return 1
     done

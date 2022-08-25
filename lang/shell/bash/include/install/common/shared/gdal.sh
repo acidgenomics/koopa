@@ -78,7 +78,7 @@ v${dict['version']}/${dict['file']}"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
-    # > dict[proj]="$(koopa_app_prefix 'proj')"
+    # > dict['proj']="$(koopa_app_prefix 'proj')"
     dict['python']="$(koopa_app_prefix 'python')"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
