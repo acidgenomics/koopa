@@ -9,8 +9,9 @@ koopa_install_app() {
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
-        ['tee']="$(koopa_locate_tee)"
+        ['tee']="$(koopa_locate_tee --allow-missing)"
     )
+    [[ -z "${app['tee']}" ]] && app['tee']='/usr/bin/tee'
     [[ -x "${app['tee']}" ]] || return 1
     declare -A bool=(
         # When enabled, this will change permissions on the top level directory

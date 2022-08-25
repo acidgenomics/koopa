@@ -2,6 +2,6 @@
 
 koopa_locate_xargs() {
     koopa_locate_app \
-        --app-name='xargs' \
+        --app-name='gxargs' \
         --opt-name='findutils'
 }
