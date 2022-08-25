@@ -2,7 +2,6 @@
 
 koopa_locate_head() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='head' \
+        --app-name='ghead' \
         --opt-name='coreutils'
 }

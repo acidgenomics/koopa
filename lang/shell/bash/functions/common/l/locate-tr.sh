@@ -2,7 +2,6 @@
 
 koopa_locate_tr() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='tr' \
+        --app-name='gtr' \
         --opt-name='coreutils'
 }

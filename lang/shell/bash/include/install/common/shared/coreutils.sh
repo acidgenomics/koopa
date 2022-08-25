@@ -10,6 +10,7 @@ main() {
     koopa_install_app_internal \
         --installer='gnu-app' \
         --name='coreutils' \
+        -D '--program-prefix=g' \
         -D '--with-gmp' \
         -D '--without-selinux' \
         "$@"

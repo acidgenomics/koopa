@@ -2,7 +2,6 @@
 
 koopa_locate_yes() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='yes' \
+        --app-name='gyes' \
         --opt-name='coreutils'
 }

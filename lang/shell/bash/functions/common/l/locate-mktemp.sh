@@ -2,7 +2,6 @@
 
 koopa_locate_mktemp() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='mktemp' \
+        --app-name='gmktemp' \
         --opt-name='coreutils'
 }

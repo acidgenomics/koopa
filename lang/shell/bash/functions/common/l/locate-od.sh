@@ -2,6 +2,6 @@
 
 koopa_locate_od() {
     koopa_locate_app \
-        --app-name='od' \
+        --app-name='god' \
         --opt-name='coreutils'
 }

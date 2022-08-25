@@ -2,7 +2,6 @@
 
 koopa_locate_rm() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='rm' \
+        --app-name='grm' \
         --opt-name='coreutils'
 }

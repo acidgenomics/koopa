@@ -2,7 +2,6 @@
 
 koopa_locate_date() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='date' \
+        --app-name='gdate' \
         --opt-name='coreutils'
 }

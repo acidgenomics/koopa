@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 # """
 # Bootstrap core dependencies on macOS.
-# @note Updated 2022-07-12.
+# @note Updated 2022-08-25.
 # """
 
 TMPDIR="${TMPDIR:-/tmp}"
@@ -41,7 +41,9 @@ install_coreutils() {
     curl "$url" -o "$file"
     tar -xzvf "$file"
     cd "${name}-${version}"
-    ./configure --prefix="$PREFIX"
+    ./configure \
+        --prefix="$PREFIX" \
+        --program-prefix='g'
     make --jobs="$JOBS"
     make install
     rm -fr "$tmp_dir"

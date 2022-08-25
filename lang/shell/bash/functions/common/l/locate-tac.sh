@@ -2,6 +2,6 @@
 
 koopa_locate_tac() {
     koopa_locate_app \
-        --app-name='tac' \
+        --app-name='gtac' \
         --opt-name='coreutils'
 }

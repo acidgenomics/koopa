@@ -15286,7 +15286,6 @@ koopa_locate_anaconda() {
 koopa_locate_app() {
     local dict pos
     declare -A dict=(
-        ['allow_in_path']=0
         ['allow_missing']=0
         ['app_name']=''
         ['bin_prefix']="$(koopa_bin_prefix)"
@@ -15313,10 +15312,6 @@ koopa_locate_app() {
                 dict['opt_name']="${2:?}"
                 shift 2
                 ;;
-            '--allow-in-path')
-                dict['allow_in_path']=1
-                shift 1
-                ;;
             '--allow-missing')
                 dict['allow_missing']=1
                 shift 1
@@ -15334,11 +15329,6 @@ koopa_locate_app() {
     if [[ "$#" -gt 0 ]]
     then
         koopa_assert_has_args_eq "$#" 1
-        if [[ -n "${dict['app_name']}" ]] || \
-            [[ "${dict['allow_in_path']}" -eq 1 ]]
-        then
-            koopa_stop "Need to rework locator for '${1:?}'."
-        fi
         dict['app']="${1:?}"
         if [[ -x "${dict['app']}" ]] && koopa_is_installed "${dict['app']}"
         then
@@ -15361,15 +15351,10 @@ koopa_locate_app() {
             koopa_print "${dict['app']}"
             return 0
         elif [[ ! -x "${dict['app']}" ]] && \
-            [[ "${dict['allow_in_path']}" -eq 0 ]] && \
             [[ "${dict['allow_missing']}" -eq 0 ]]
         then
             koopa_stop "Need to install '${dict['opt_name']}' for '${dict['app']}'."
         fi
-    fi
-    if [[ "${dict['allow_in_path']}" -eq 1 ]]
-    then
-        dict['app']="$(koopa_which "${dict['app_name']}" || true)"
     fi
     if { \
         [[ -n "${dict['app']}" ]] && \
@@ -15417,20 +15402,18 @@ koopa_locate_aws() {
 
 koopa_locate_basename() {
     koopa_locate_app \
-        --app-name='basename' \
+        --app-name='gbasename' \
         --opt-name='coreutils'
 }
 
 koopa_locate_bash() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='bash' \
         --opt-name='bash'
 }
 
 koopa_locate_bc() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='bc' \
         --opt-name='bc'
 }
@@ -15461,7 +15444,6 @@ koopa_locate_bundle() {
 
 koopa_locate_bzip2() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='bzip2' \
         --opt-name='bzip2'
 }
@@ -15474,8 +15456,7 @@ koopa_locate_cargo() {
 
 koopa_locate_cat() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='cat' \
+        --app-name='gcat' \
         --opt-name='coreutils'
 }
 
@@ -15609,8 +15590,7 @@ koopa_locate_convmv() {
 
 koopa_locate_cp() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='cp' \
+        --app-name='gcp' \
         --opt-name='coreutils'
 }
 
@@ -15622,28 +15602,25 @@ koopa_locate_cpan() {
 
 koopa_locate_curl() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='curl' \
         --opt-name='curl'
 }
 
 koopa_locate_cut() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='cut' \
+        --app-name='gcut' \
         --opt-name='coreutils'
 }
 
 koopa_locate_date() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='date' \
+        --app-name='gdate' \
         --opt-name='coreutils'
 }
 
 koopa_locate_df() {
     koopa_locate_app \
-        --app-name='df' \
+        --app-name='gdf' \
         --opt-name='coreutils'
 }
 
@@ -15656,14 +15633,12 @@ koopa_locate_dig() {
 
 koopa_locate_dirname() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='dirname' \
+        --app-name='gdirname' \
         --opt-name='coreutils'
 }
 
 koopa_locate_docker() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='docker'
 }
 
@@ -15673,13 +15648,13 @@ koopa_locate_doom() {
 
 koopa_locate_du() {
     koopa_locate_app \
-        --app-name='du' \
+        --app-name='gdu' \
         --opt-name='coreutils'
 }
 
 koopa_locate_echo() {
     koopa_locate_app \
-        --app-name='echo' \
+        --app-name='gecho' \
         --opt-name='coreutils'
 }
 
@@ -15691,7 +15666,6 @@ koopa_locate_efetch() {
 
 koopa_locate_emacs() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='emacs'
 }
 
@@ -15728,7 +15702,6 @@ koopa_locate_ffmpeg() {
 
 koopa_locate_find() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='find' \
         --opt-name='findutils'
 }
@@ -15747,14 +15720,12 @@ koopa_locate_gcc() {
     dict['version']="$(koopa_app_json_version "${dict['name']}")"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     koopa_locate_app \
-        --allow-in-path \
         --app-name="${dict['name']}-${dict['maj_ver']}" \
         --opt-name="${dict['name']}@${dict['maj_ver']}"
 }
 
 koopa_locate_gcloud() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='gcloud'
 }
 
@@ -15778,7 +15749,6 @@ koopa_locate_geos_config() {
 
 koopa_locate_git() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='git' \
         --opt-name='git'
 }
@@ -15803,7 +15773,6 @@ koopa_locate_gpg_connect_agent() {
 
 koopa_locate_gpg() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='gpg' \
         --opt-name='gnupg'
 }
@@ -15816,7 +15785,6 @@ koopa_locate_gpgconf() {
 
 koopa_locate_grep() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='grep' \
         --opt-name='grep' \
         "$@"
@@ -15824,8 +15792,7 @@ koopa_locate_grep() {
 
 koopa_locate_groups() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='groups' \
+        --app-name='ggroups' \
         --opt-name='coreutils'
 }
 
@@ -15843,7 +15810,6 @@ koopa_locate_gsl_config() {
 
 koopa_locate_gzip() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='gzip' \
         --opt-name='gzip'
 }
@@ -15856,8 +15822,7 @@ koopa_locate_h5cc() {
 
 koopa_locate_head() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='head' \
+        --app-name='ghead' \
         --opt-name='coreutils'
 }
 
@@ -15873,7 +15838,7 @@ koopa_locate_icu_config() {
 
 koopa_locate_id() {
     koopa_locate_app \
-        --app-name='id' \
+        --app-name='gid' \
         --opt-name='coreutils'
 }
 
@@ -15905,7 +15870,6 @@ koopa_locate_koopa() {
 
 koopa_locate_ldd() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='ldd'
 }
 
@@ -15929,8 +15893,7 @@ koopa_locate_libtoolize() {
 
 koopa_locate_ln() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='ln' \
+        --app-name='gln' \
         --opt-name='coreutils'
 }
 
@@ -15949,7 +15912,7 @@ koopa_locate_localedef() {
 
 koopa_locate_ls() {
     koopa_locate_app \
-        --app-name='ls' \
+        --app-name='gls' \
         --opt-name='coreutils'
 }
 
@@ -15973,8 +15936,7 @@ koopa_locate_magick_core_config() {
 
 koopa_locate_make() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='make' \
+        --app-name='gmake' \
         --opt-name='make'
 }
 
@@ -15998,14 +15960,13 @@ koopa_locate_mamba() {
 
 koopa_locate_man() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='man' \
         --opt-name='man-db'
 }
 
 koopa_locate_md5sum() {
     koopa_locate_app \
-        --app-name='md5sum' \
+        --app-name='gmd5sum' \
         --opt-name='coreutils'
 }
 
@@ -16017,22 +15978,19 @@ koopa_locate_meson() {
 
 koopa_locate_mkdir() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='mkdir' \
+        --app-name='gmkdir' \
         --opt-name='coreutils'
 }
 
 koopa_locate_mktemp() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='mktemp' \
+        --app-name='gmktemp' \
         --opt-name='coreutils'
 }
 
 koopa_locate_mv() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='mv' \
+        --app-name='gmv' \
         --opt-name='coreutils'
 }
 
@@ -16078,20 +16036,20 @@ koopa_locate_npm() {
 
 koopa_locate_nproc() {
     koopa_locate_app \
-        --app-name='nproc' \
+        --app-name='gnproc' \
         --opt-name='coreutils' \
         "$@"
 }
 
 koopa_locate_numfmt() {
     koopa_locate_app \
-        --app-name='numfmt' \
+        --app-name='gnumfmt' \
         --opt-name='coreutils'
 }
 
 koopa_locate_od() {
     koopa_locate_app \
-        --app-name='od' \
+        --app-name='god' \
         --opt-name='coreutils'
 }
 
@@ -16103,7 +16061,7 @@ koopa_locate_openssl() {
 
 koopa_locate_parallel() {
     koopa_locate_app \
-        --app-name='parallel' \
+        --app-name='gparallel' \
         --opt-name='coreutils'
 }
 
@@ -16113,7 +16071,7 @@ koopa_locate_passwd() {
 
 koopa_locate_paste() {
     koopa_locate_app \
-        --app-name='paste' \
+        --app-name='gpaste' \
         --opt-name='coreutils'
 }
 
@@ -16137,7 +16095,6 @@ koopa_locate_pcregrep() {
 
 koopa_locate_perl() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='perl' \
         --opt-name='perl'
 }
@@ -16169,7 +16126,6 @@ koopa_locate_pyenv() {
 
 koopa_locate_python() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='python3' \
         --opt-name='python' \
         "$@"
@@ -16177,7 +16133,6 @@ koopa_locate_python() {
 
 koopa_locate_r() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='R' \
         --opt-name='r'
 }
@@ -16188,15 +16143,13 @@ koopa_locate_rbenv() {
 
 koopa_locate_readlink() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='readlink' \
+        --app-name='greadlink' \
         --opt-name='coreutils'
 }
 
 koopa_locate_realpath() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='realpath' \
+        --app-name='grealpath' \
         --opt-name='coreutils'
 }
 
@@ -16215,8 +16168,7 @@ koopa_locate_rg() {
 
 koopa_locate_rm() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='rm' \
+        --app-name='grm' \
         --opt-name='coreutils'
 }
 
@@ -16274,7 +16226,6 @@ koopa_locate_scons() {
 
 koopa_locate_scp() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='scp' \
         --opt-name='openssh'
 }
@@ -16299,8 +16250,7 @@ koopa_locate_shunit2() {
 
 koopa_locate_sort() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='sort' \
+        --app-name='gsort' \
         --opt-name='coreutils'
 }
 
@@ -16312,7 +16262,6 @@ koopa_locate_sox() {
 
 koopa_locate_sqlplus() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='sqlplus'
 }
 
@@ -16341,7 +16290,6 @@ koopa_locate_ssh() {
 
 koopa_locate_sshfs() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='sshfs'
 }
 
@@ -16359,8 +16307,7 @@ koopa_locate_star() {
 
 koopa_locate_stat() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='stat' \
+        --app-name='gstat' \
         --opt-name='coreutils'
 }
 
@@ -16376,34 +16323,30 @@ koopa_locate_svn() {
 
 koopa_locate_tac() {
     koopa_locate_app \
-        --app-name='tac' \
+        --app-name='gtac' \
         --opt-name='coreutils'
 }
 
 koopa_locate_tail() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='tail' \
+        --app-name='gtail' \
         --opt-name='coreutils'
 }
 
 koopa_locate_tar() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='tar' \
         --opt-name='tar'
 }
 
 koopa_locate_tee() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='tee' \
+        --app-name='gtee' \
         --opt-name='coreutils'
 }
 
 koopa_locate_tex() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='tex'
 }
 
@@ -16413,29 +16356,25 @@ koopa_locate_tlmgr() {
         koopa_locate_app '/Library/TeX/texbin/tlmgr'
     else
         koopa_locate_app \
-            --allow-in-path \
-            --app-name='tlmgr'
+                --app-name='tlmgr'
     fi
 }
 
 koopa_locate_touch() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='touch' \
+        --app-name='gtouch' \
         --opt-name='coreutils'
 }
 
 koopa_locate_tr() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='tr' \
+        --app-name='gtr' \
         --opt-name='coreutils'
 }
 
 koopa_locate_uname() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='uname' \
+        --app-name='guname' \
         --opt-name='coreutils'
 }
 
@@ -16447,13 +16386,12 @@ koopa_locate_uncompress() {
 
 koopa_locate_uniq() {
     koopa_locate_app \
-        --app-name='uniq' \
+        --app-name='guniq' \
         --opt-name='coreutils'
 }
 
 koopa_locate_unzip() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='unzip'
 }
 
@@ -16465,43 +16403,37 @@ koopa_locate_vim() {
 
 koopa_locate_wc() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='wc' \
+        --app-name='gwc' \
         --opt-name='coreutils'
 }
 
 koopa_locate_wget() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='wget' \
         --opt-name='wget'
 }
 
 koopa_locate_whoami() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='whoami' \
+        --app-name='gwhoami' \
         --opt-name='coreutils'
 }
 
 koopa_locate_xargs() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='xargs' \
         --opt-name='findutils'
 }
 
 koopa_locate_xz() {
     koopa_locate_app \
-        --allow-in-path \
         --app-name='xz' \
         --opt-name='xz'
 }
 
 koopa_locate_yes() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='yes' \
+        --app-name='gyes' \
         --opt-name='coreutils'
 }
 

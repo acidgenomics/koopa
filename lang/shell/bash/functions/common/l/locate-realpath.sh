@@ -2,7 +2,6 @@
 
 koopa_locate_realpath() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='realpath' \
+        --app-name='grealpath' \
         --opt-name='coreutils'
 }

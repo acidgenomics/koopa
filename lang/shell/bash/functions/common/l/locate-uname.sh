@@ -2,7 +2,6 @@
 
 koopa_locate_uname() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='uname' \
+        --app-name='guname' \
         --opt-name='coreutils'
 }

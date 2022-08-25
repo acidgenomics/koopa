@@ -2,7 +2,6 @@
 
 koopa_locate_tail() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='tail' \
+        --app-name='gtail' \
         --opt-name='coreutils'
 }

@@ -1,11 +1,12 @@
 #!/bin/sh
 
 # NOTE Consider using GNU 'realpath' as top priority, if installed.
+# FIXME Look for greadlink here.
 
 koopa_realpath() {
     # """
     # Real path to file/directory on disk.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-08-25.
     #
     # Note that 'readlink -f' only works with GNU coreutils but not BSD
     # (i.e. macOS) variant.
@@ -25,7 +26,7 @@ koopa_realpath() {
     if ! koopa_is_installed "$readlink"
     then
         local brew_readlink koopa_readlink
-        koopa_readlink="$(koopa_opt_prefix)/coreutils/bin/readlink"
+        koopa_readlink="$(koopa_bin_prefix)/readlink"
         brew_readlink="$(koopa_homebrew_opt_prefix)/coreutils/libexec/\
 gnubin/readlink"
         if [ -x "$koopa_readlink" ]

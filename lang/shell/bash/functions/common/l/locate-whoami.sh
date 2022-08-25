@@ -2,7 +2,6 @@
 
 koopa_locate_whoami() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='whoami' \
+        --app-name='gwhoami' \
         --opt-name='coreutils'
 }
