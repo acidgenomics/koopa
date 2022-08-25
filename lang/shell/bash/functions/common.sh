@@ -6970,7 +6970,7 @@ koopa_docker_is_build_recent() {
         dict2['created']="$( \
             "${app['date']}" --utc --date="${dict2['created']}" '+%s' \
         )"
-        dict2['diff']=$((dict2[current] - dict2[created]))
+        dict2['diff']=$((dict2['current'] - dict2['created']))
         [[ "${dict2['diff']}" -le "${dict['seconds']}" ]] && continue
         return 1
     done
@@ -7186,7 +7186,7 @@ koopa_docker_tag() {
         ['server']='docker.io'
         ['source_tag']="${2:?}"
     )
-    [[ -z "${dict['dest_tag']}" ]] && dict[dest_tag]='latest'
+    [[ -z "${dict['dest_tag']}" ]] && dict['dest_tag']='latest'
     if ! koopa_str_detect_fixed \
         --string="${dict['image']}" \
         --pattern='/'
@@ -15134,7 +15134,7 @@ koopa_list_path_priority() {
     koopa_is_array_non_empty "${unique_arr[@]:-}" || return 1
     dict['n_all']="${#all_arr[@]}"
     dict['n_unique']="${#unique_arr[@]}"
-    dict['n_dupes']="$((dict[n_all] - dict[n_unique]))"
+    dict['n_dupes']="$((dict['n_all'] - dict['n_unique']))"
     if [[ "${dict['n_dupes']}" -gt 0 ]]
     then
         koopa_alert_note "$(koopa_ngettext \
@@ -17237,7 +17237,7 @@ koopa_parent_dir() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    [[ "${dict['n']}" -ge 1 ]] || dict[n]=1
+    [[ "${dict['n']}" -ge 1 ]] || dict['n']=1
     if [[ "${dict['n']}" -ge 2 ]]
     then
         dict['n']="$((dict[n]-1))"
@@ -19278,7 +19278,7 @@ koopa_salmon_index() {
     koopa_assert_is_set \
         '--output-dir' "${dict['output_dir']}" \
         '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
-    [[ "${dict['decoys']}" -eq 1 ]] && dict[mem_gb_cutoff]=30
+    [[ "${dict['decoys']}" -eq 1 ]] && dict['mem_gb_cutoff']=30
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "salmon index requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -20152,11 +20152,11 @@ koopa_sra_download_accession_list() {
     do
         case "$1" in
             '--file='*)
-                dict[acc_file]+=("${1#*=}")
+                dict['acc_file']+=("${1#*=}")
                 shift 1
                 ;;
             '--file')
-                dict[acc_file]+=("${2:?}")
+                dict['acc_file']+=("${2:?}")
                 shift 2
                 ;;
             '--srp-id='*)
@@ -20206,11 +20206,11 @@ koopa_sra_download_run_info_table() {
     do
         case "$1" in
             '--file='*)
-                dict[run_info_file]+=("${1#*=}")
+                dict['run_info_file']+=("${1#*=}")
                 shift 1
                 ;;
             '--file')
-                dict[run_info_file]+=("${2:?}")
+                dict['run_info_file']+=("${2:?}")
                 shift 2
                 ;;
             '--srp-id='*)
@@ -21258,7 +21258,7 @@ koopa_sub() {
     fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    [[ "${dict['global']}" -eq 1 ]] && dict[perl_tail]='g'
+    [[ "${dict['global']}" -eq 1 ]] && dict['perl_tail']='g'
     if [[ "${dict['regex']}" -eq 1 ]]
     then
         dict['expr']="s/${dict['pattern']}/${dict['replacement']}/${dict['perl_tail']}"
@@ -22170,7 +22170,7 @@ koopa_uninstall_app() {
             koopa_alert_uninstall_start "${dict['name']}"
         fi
     fi
-    [[ -z "${dict['uninstaller_bn']}" ]] && dict[uninstaller_bn]="${dict['name']}"
+    [[ -z "${dict['uninstaller_bn']}" ]] && dict['uninstaller_bn']="${dict['name']}"
     dict['uninstaller_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     if [[ -f "${dict['uninstaller_file']}" ]]
@@ -24152,7 +24152,7 @@ koopa_update_app() {
             ;;
         'system')
             koopa_assert_is_admin
-            koopa_is_linux && bool[update_ldconfig]=1
+            koopa_is_linux && bool['update_ldconfig']=1
             ;;
     esac
     if [[ -n "${dict['prefix']}" ]]
@@ -24165,7 +24165,7 @@ koopa_update_app() {
         fi
         dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     fi
-    [[ -z "${dict['updater_bn']}" ]] && dict[updater_bn]="${dict['name']}"
+    [[ -z "${dict['updater_bn']}" ]] && dict['updater_bn']="${dict['name']}"
     dict['updater_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
     koopa_assert_is_file "${dict['updater_file']}"

@@ -39,7 +39,7 @@ download/${dict['version']}/${dict['file']}"
     "${app['make']}" --jobs="${dict['jobs']}"
     "${app['make']}" install
     # This can kill system tmux server, so keep disabled.
-    # > app[tmux]="${dict['prefix']}/bin/tmux"
+    # > app['tmux']="${dict['prefix']}/bin/tmux"
     # > koopa_assert_is_installed "${app['tmux']}"
     # > "${app['tmux']}" kill-server &>/dev/null || true
     return 0

@@ -50,7 +50,7 @@ koopa_r_javareconf() {
     dict['javac']="${dict['java_home']}/bin/javac"
     # javah was deprecated in JDK 9 in favor if 'javac -h', but this approach
     # doesn't currently work with R.
-    # > dict[javah]="${dict['javac']} -h"
+    # > dict['javah']="${dict['javac']} -h"
     dict['javah']=''
     koopa_alert 'Updating R Java configuration.'
     koopa_dl \

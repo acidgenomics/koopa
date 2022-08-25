@@ -201,34 +201,8 @@ ${dict['version2']}"
                 bool['link_in_man1']=0
                 bool['link_in_opt']=0
             else
-                # FIXME Move this down and attempt later?
-                if [[ -z "${bool['link_in_bin']}" ]]
-                then
-                    readarray -t bin_arr <<< "$( \
-                        koopa_app_json_bin "${dict['name']}" \
-                            2>/dev/null || true \
-                    )"
-                    if koopa_is_array_non_empty "${bin_arr[@]:-}"
-                    then
-                        bool['link_in_bin']=1
-                    else
-                        bool['link_in_bin']=0
-                    fi
-                fi
-                # FIXME Move this down and attempt later?
-                if [[ -z "${bool['link_in_man1']}" ]]
-                then
-                    readarray -t man1_arr <<< "$( \
-                        koopa_app_json_man1 "${dict['name']}" \
-                            2>/dev/null || true \
-                    )"
-                    if koopa_is_array_non_empty "${man1_arr[@]:-}"
-                    then
-                        bool['link_in_man1']=1
-                    else
-                        bool['link_in_man1']=0
-                    fi
-                fi
+                [[ -z "${bool['link_in_bin']}" ]] && bool['link_in_bin']=1
+                [[ -z "${bool['link_in_man1']}" ]] && bool['link_in_man1']=1
                 [[ -z "${bool['link_in_opt']}" ]] && bool['link_in_opt']=1
             fi
             ;;
@@ -258,6 +232,10 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     then
         if [[ -d "${dict['prefix']}" ]]
         then
+            if koopa_is_empty_dir "${dict['prefix']}"
+            then
+                bool['reinstall']=1
+            fi
             if [[ "${bool['reinstall']}" -eq 1 ]]
             then
                 if [[ "${bool['quiet']}" -eq 0 ]]
@@ -368,39 +346,56 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
             fi
             if [[ "${bool['link_in_bin']}" -eq 1 ]]
             then
-                for i in "${!bin_arr[@]}"
-                do
-                    local dict2
-                    declare -A dict2
-                    dict2['name']="${bin_arr[$i]}"
-                    dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
-                    koopa_link_in_bin \
-                        --name="${dict2['name']}" \
-                        --source="${dict2['source']}"
-                done
+                # FIXME Rework this as a function.
+                readarray -t bin_arr <<< "$( \
+                    koopa_app_json_bin "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${bin_arr[@]:-}"
+                then
+                    for i in "${!bin_arr[@]}"
+                    do
+                        local dict2
+                        declare -A dict2
+                        dict2['name']="${bin_arr[$i]}"
+                        dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
+                        koopa_link_in_bin \
+                            --name="${dict2['name']}" \
+                            --source="${dict2['source']}"
+                    done
+                fi
             fi
             if [[ "${bool['link_in_man1']}" -eq 1 ]]
             then
-                for i in "${!man1_arr[@]}"
-                do
-                    local dict2
-                    declare -A dict2
-                    dict2['name']="${man1_arr[$i]}"
-                    dict2['mf1']="${dict['prefix']}/share/man/\
+                # FIXME Rework this as a function.
+                readarray -t man1_arr <<< "$( \
+                    koopa_app_json_man1 "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${man1_arr[@]:-}"
+                then
+                    for i in "${!man1_arr[@]}"
+                    do
+                        local dict2
+                        declare -A dict2
+                        dict2['name']="${man1_arr[$i]}"
+                        dict2['mf1']="${dict['prefix']}/share/man/\
 man1/${dict2['name']}"
-                    dict2['mf2']="${dict['prefix']}/man/man1/${dict2['name']}"
-                    if [[ -f "${dict2['mf1']}" ]]
-                    then
-                        koopa_link_in_man1 \
-                            --name="${dict2['name']}" \
-                            --source="${dict2['mf1']}"
-                    elif [[ -f "${dict2['mf2']}" ]]
-                    then
-                        koopa_link_in_man1 \
-                            --name="${dict2['name']}" \
-                            --source="${dict2['mf2']}"
-                    fi
-                done
+                        dict2['mf2']="${dict['prefix']}/man/\
+man1/${dict2['name']}"
+                        if [[ -f "${dict2['mf1']}" ]]
+                        then
+                            koopa_link_in_man1 \
+                                --name="${dict2['name']}" \
+                                --source="${dict2['mf1']}"
+                        elif [[ -f "${dict2['mf2']}" ]]
+                        then
+                            koopa_link_in_man1 \
+                                --name="${dict2['name']}" \
+                                --source="${dict2['mf2']}"
+                        fi
+                    done
+                fi
             fi
             ;;
         'system')

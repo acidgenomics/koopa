@@ -42,7 +42,7 @@ koopa_parent_dir() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    [[ "${dict['n']}" -ge 1 ]] || dict[n]=1
+    [[ "${dict['n']}" -ge 1 ]] || dict['n']=1
     if [[ "${dict['n']}" -ge 2 ]]
     then
         dict['n']="$((dict[n]-1))"

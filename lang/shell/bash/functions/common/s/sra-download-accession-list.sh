@@ -30,11 +30,11 @@ koopa_sra_download_accession_list() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--file='*)
-                dict[acc_file]+=("${1#*=}")
+                dict['acc_file']+=("${1#*=}")
                 shift 1
                 ;;
             '--file')
-                dict[acc_file]+=("${2:?}")
+                dict['acc_file']+=("${2:?}")
                 shift 2
                 ;;
             '--srp-id='*)

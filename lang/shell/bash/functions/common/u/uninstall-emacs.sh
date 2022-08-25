@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to enable '--no-link-in-bin' and '--no-link-in-man1'
+
 koopa_uninstall_emacs() {
     local uninstall_args
     uninstall_args=(

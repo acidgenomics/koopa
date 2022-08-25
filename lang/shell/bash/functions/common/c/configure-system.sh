@@ -199,8 +199,8 @@ koopa_configure_system() {
         'minimal')
             ;;
         'base-image')
-            # > dict[install_bash]=1
-            # > dict[install_zsh]=1
+            # > dict['install_bash']=1
+            # > dict['install_zsh']=1
             dict['install_base_system_args']='--base-image'
             ;;
         'bioconductor')
@@ -228,8 +228,8 @@ koopa_configure_system() {
             dict['install_fish']=1
             dict['install_fzf']=1
             dict['install_gawk']=1
-            # > dict[install_gdal]=1
-            # > dict[install_geos]=1
+            # > dict['install_gdal']=1
+            # > dict['install_geos']=1
             dict['install_git']=1
             dict['install_gnupg']=1
             dict['install_go']=1
@@ -257,7 +257,7 @@ koopa_configure_system() {
             dict['install_perl']=1
             dict['install_perl_packages']=1
             dict['install_pkg_config']=1
-            # > dict[install_proj]=1
+            # > dict['install_proj']=1
             dict['install_python_packages']=1
             dict['install_r_packages']=1
             dict['install_rstudio_server']=1
