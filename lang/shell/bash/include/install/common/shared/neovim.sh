@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Neovim.
-    # @note Updated 2022-04-15.
+    # @note Updated 2022-08-25.
     #
     # Homebrew is currently required for this to build on macOS.
     #
@@ -54,17 +54,6 @@ main() {
 refs/tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    # Need to create g-prefixed libtools symlinks, otherwise the build will
-    # fail on macOS.
-    dict['libtool']="$(koopa_app_prefix 'libtool')"
-    dict['bin_extra']="$(koopa_init_dir 'bin-extra')"
-    koopa_ln \
-        "${dict['libtool']}/bin/libtool" \
-        "${dict['bin_extra']}/glibtool"
-    koopa_ln \
-        "${dict['libtool']}/bin/libtoolize" \
-        "${dict['bin_extra']}/glibtoolize"
-    koopa_add_to_path_start "${dict['bin_extra']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     # Temporary fix for neovim installer hard-coded to Homebrew path.
     if koopa_is_macos

@@ -3,7 +3,7 @@
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2022-02-24.
+    # @note Updated 2022-08-25.
     #
     # @section Supported regex types for GNU find:
     #
@@ -169,15 +169,28 @@ koopa_find() {
     done
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    if [[ -z "${dict['engine']}" ]]
-    then
-        app['find']="$(koopa_locate_fd --allow-missing)"
-        [[ ! -x "${app['find']}" ]] && app['find']="$(koopa_locate_find)"
-        dict['engine']="$(koopa_basename "${app['find']}")"
-    else
-        app['find']="$(koopa_locate_"${dict['engine']}")"
-    fi
-    [[ -x "${app['find']}" ]] || return 1
+    case "${dict['engine']}" in
+        '')
+            app['find']="$(koopa_locate_fd --allow-missing)"
+            [[ -x "${app['find']}" ]] && dict['engine']='fd'
+            if [[ -z "${dict['engine']}" ]]
+            then
+                dict['engine']='find'
+                app['find']="$(koopa_locate_find --allow-missing)"
+                [[ -x "${app['find']}" ]] && app['find']='/usr/bin/find'
+                [[ -x "${app['find']}" ]] || return 1
+            fi
+            ;;
+        'fd')
+            app['find']="$(koopa_locate_fd)"
+            [[ -x "${app['find']}" ]] || return 1
+            ;;
+        'find')
+            app['find']="$(koopa_locate_find --allow-missing)"
+            [[ -z "${app['find']}" ]] && app['find']='/usr/bin/find'
+            [[ -x "${app['find']}" ]] || return 1
+            ;;
+    esac
     find=()
     if [[ "${dict['sudo']}" -eq 1 ]]
     then

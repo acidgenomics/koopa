@@ -8558,15 +8558,28 @@ koopa_find() {
     done
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    if [[ -z "${dict['engine']}" ]]
-    then
-        app['find']="$(koopa_locate_fd --allow-missing)"
-        [[ ! -x "${app['find']}" ]] && app['find']="$(koopa_locate_find)"
-        dict['engine']="$(koopa_basename "${app['find']}")"
-    else
-        app['find']="$(koopa_locate_"${dict['engine']}")"
-    fi
-    [[ -x "${app['find']}" ]] || return 1
+    case "${dict['engine']}" in
+        '')
+            app['find']="$(koopa_locate_fd --allow-missing)"
+            [[ -x "${app['find']}" ]] && dict['engine']='fd'
+            if [[ -z "${dict['engine']}" ]]
+            then
+                dict['engine']='find'
+                app['find']="$(koopa_locate_find --allow-missing)"
+                [[ -x "${app['find']}" ]] && app['find']='/usr/bin/find'
+                [[ -x "${app['find']}" ]] || return 1
+            fi
+            ;;
+        'fd')
+            app['find']="$(koopa_locate_fd)"
+            [[ -x "${app['find']}" ]] || return 1
+            ;;
+        'find')
+            app['find']="$(koopa_locate_find --allow-missing)"
+            [[ -z "${app['find']}" ]] && app['find']='/usr/bin/find'
+            [[ -x "${app['find']}" ]] || return 1
+            ;;
+    esac
     find=()
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
@@ -11425,8 +11438,9 @@ koopa_install_app() {
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
-        ['tee']="$(koopa_locate_tee)"
+        ['tee']="$(koopa_locate_tee --allow-missing)"
     )
+    [[ -z "${app['tee']}" ]] && app['tee']='/usr/bin/tee'
     [[ -x "${app['tee']}" ]] || return 1
     declare -A bool=(
         ['auto_prefix']=0
@@ -12802,11 +12816,6 @@ koopa_install_libtool() {
     koopa_install_app \
         --name='libtool' \
         "$@"
-    (
-        koopa_cd "$(koopa_bin_prefix)"
-        koopa_ln 'libtool' 'glibtool'
-        koopa_ln 'libtoolize' 'glibtoolize'
-    )
 }
 
 koopa_install_libunistring() {
@@ -15702,8 +15711,9 @@ koopa_locate_ffmpeg() {
 
 koopa_locate_find() {
     koopa_locate_app \
-        --app-name='find' \
-        --opt-name='findutils'
+        --app-name='gfind' \
+        --opt-name='findutils' \
+        "$@"
 }
 
 koopa_locate_fish() {
@@ -15785,7 +15795,7 @@ koopa_locate_gpgconf() {
 
 koopa_locate_grep() {
     koopa_locate_app \
-        --app-name='grep' \
+        --app-name='ggrep' \
         --opt-name='grep' \
         "$@"
 }
@@ -15937,7 +15947,8 @@ koopa_locate_magick_core_config() {
 koopa_locate_make() {
     koopa_locate_app \
         --app-name='gmake' \
-        --opt-name='make'
+        --opt-name='make' \
+        "$@"
 }
 
 koopa_locate_mamba_or_conda() {
@@ -16232,8 +16243,9 @@ koopa_locate_scp() {
 
 koopa_locate_sed() {
     koopa_locate_app \
-        --app-name='sed' \
-        --opt-name='sed'
+        --app-name='gsed' \
+        --opt-name='sed' \
+        "$@"
 }
 
 koopa_locate_shellcheck() {
@@ -16421,7 +16433,7 @@ koopa_locate_whoami() {
 
 koopa_locate_xargs() {
     koopa_locate_app \
-        --app-name='xargs' \
+        --app-name='gxargs' \
         --opt-name='findutils'
 }
 

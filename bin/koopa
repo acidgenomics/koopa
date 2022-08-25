@@ -5,6 +5,8 @@ set -o errtrace  # -E
 set -o nounset  # -u
 set -o pipefail
 
+# FIXME Need to ensure that KOOPA_BIN is in PATH.
+
 __koopa_is_installed() { # {{{1
     # """
     # Are all of the requested programs installed?

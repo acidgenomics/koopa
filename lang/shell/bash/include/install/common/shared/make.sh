@@ -4,5 +4,6 @@ main() {
     koopa_install_app_internal \
         --installer='gnu-app' \
         --name='make' \
+        -D '--program-prefix=g' \
         "$@"
 }
