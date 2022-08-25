@@ -367,18 +367,18 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
             local dict2
             declare -A dict2
             dict2['name']="${man1_arr[$i]}"
-            dict2['manfile1']="${dict['prefix']}/share/man/man1/${dict2['name']}"
-            dict2['manfile2']="${dict['prefix']}/man/man1/${dict2['name']}"
-            if [[ -f "${dict2['manfile1']}" ]]
+            dict2['mf1']="${dict['prefix']}/share/man/man1/${dict2['name']}"
+            dict2['mf2']="${dict['prefix']}/man/man1/${dict2['name']}"
+            if [[ -f "${dict2['mf1']}" ]]
             then
                 koopa_link_in_man1 \
                     --name="${dict2['name']}" \
-                    --source="${dict2['manfile1']}"
-            elif [[ -f "${dict2['manfile2']}" ]]
+                    --source="${dict2['mf1']}"
+            elif [[ -f "${dict2['mf2']}" ]]
             then
                 koopa_link_in_man1 \
                     --name="${dict2['name']}" \
-                    --source="${dict2['manfile2']}"
+                    --source="${dict2['mf2']}"
             fi
         done
     fi
