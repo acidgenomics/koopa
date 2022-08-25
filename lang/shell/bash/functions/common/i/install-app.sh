@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Rework bin man linkage using 'app-links.json' file and jq.
-# > jq '.coreutils.bin[]' --raw-output /opt/koopa/include/app-links.json
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-08-15.
+    # @note Updated 2022-08-25.
     # """
-    local app bin_arr bool clean_path_arr dict i pos
+    local app bin_arr bool clean_path_arr dict i man1_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app=(
@@ -26,9 +23,9 @@ koopa_install_app() {
         # Will any individual programs be linked into koopa 'bin/'?
         ['link_in_bin']=0
         # Link corresponding man1 documentation files for app in bin.
-        ['link_in_man']=0
+        ['link_in_man1']=0
         # Create an unversioned symlink in koopa 'opt/' directory.
-        ['link_in_opt']=1
+        ['link_in_opt']=0
         # This override is useful for app packages configuration.
         ['prefix_check']=1
         # Push completed build to AWS S3 bucket.
@@ -40,8 +37,6 @@ koopa_install_app() {
         ['restrict_path']=1
         ['update_ldconfig']=0
         ['verbose']=0
-        # When enabled, shortens git commit to 8 characters.
-        ['version_is_git_commit']=0
     )
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
@@ -57,7 +52,6 @@ koopa_install_app() {
         ['version']=''
         ['version_key']=''
     )
-    bin_arr=()
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     pos=()
     while (("$#"))
@@ -70,14 +64,6 @@ koopa_install_app() {
                 ;;
             '--installer')
                 dict['installer_bn']="${2:?}"
-                shift 2
-                ;;
-            '--link-in-bin='*)
-                bin_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--link-in-bin')
-                bin_arr+=("${2:?}")
                 shift 2
                 ;;
             '--name='*)
@@ -162,10 +148,6 @@ koopa_install_app() {
                 dict['mode']='user'
                 shift 1
                 ;;
-            '--version-is-git-commit')
-                bool['version_is_git_commit']=1
-                shift 1
-                ;;
             # Configuration passthrough support --------------------------------
             # Inspired by CMake approach using '-D' prefix.
             '-D')
@@ -184,48 +166,68 @@ koopa_install_app() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict['name']}"
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
-    [[ -z "${dict['version_key']}" ]] && dict[version_key]="${dict['name']}"
+    [[ -z "${dict['version_key']}" ]] && dict['version_key']="${dict['name']}"
     dict['current_version']="$(\
         koopa_app_json_version "${dict['version_key']}" \
             2>/dev/null || true \
     )"
-    [[ -z "${dict['version']}" ]] && dict[version]="${dict['current_version']}"
-    if [[ "${dict['version']}" != "${dict['current_version']}" ]]
-    then
-        bool['link_in_bin']=0
-        bool['link_in_opt']=0
-    fi
+    [[ -z "${dict['version']}" ]] && \
+        dict['version']="${dict['current_version']}"
     case "${dict['mode']}" in
         'shared')
             if [[ -z "${dict['prefix']}" ]]
             then
                 bool['auto_prefix']=1
                 dict['version2']="${dict['version']}"
-                if [[ "${bool['version_is_git_commit']}" -eq 1 ]]
+                # Shorten git commit to 7 characters.
+                if [[ "${#dict['version']}" == 40 ]]
                 then
-                    dict['version2']="${dict['version2']:0:8}"
+                    dict['version2']="${dict['version2']:0:7}"
                 fi
                 dict['prefix']="${dict['app_prefix']}/${dict['name']}/\
 ${dict['version2']}"
             fi
+            if [[ "${dict['version']}" != "${dict['current_version']}" ]]
+            then
+                bool['link_in_bin']=0
+                bool['link_in_man1']=0
+                bool['link_in_opt']=0
+            else
+                bool['link_in_opt']=1
+                readarray -t bin_arr <<< "$( \
+                    koopa_app_json_bin "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${bin_arr[@]:-}"
+                then
+                    bool['link_in_bin']=1
+                fi
+                readarray -t man1_arr <<< "$( \
+                    koopa_app_json_man1 "${dict['name']}" \
+                        2>/dev/null || true \
+                )"
+                if koopa_is_array_non_empty "${man1_arr[@]:-}"
+                then
+                    bool['link_in_man1']=1
+                fi
+            fi
             ;;
         'system')
             koopa_assert_is_admin
+            bool['link_in_bin']=0
+            bool['link_in_man1']=0
             bool['link_in_opt']=0
-            koopa_is_linux && bool[update_ldconfig]=1
+            koopa_is_linux && bool['update_ldconfig']=1
             ;;
         'user')
+            bool['link_in_bin']=0
+            bool['link_in_man1']=0
             bool['link_in_opt']=0
             ;;
     esac
-    if koopa_is_array_non_empty "${bin_arr[@]:-}"
-    then
-        bool['link_in_bin']=1
-        bool['link_in_man']=1
-    fi
     [[ -d "${dict['prefix']}" ]] && \
         dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    [[ -z "${dict['installer_bn']}" ]] && dict[installer_bn]="${dict['name']}"
+    [[ -z "${dict['installer_bn']}" ]] && dict['installer_bn']="${dict['name']}"
     dict['installer_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     koopa_assert_is_file "${dict['installer_file']}"
@@ -358,13 +360,13 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
                 --source="${dict2['source']}"
         done
     fi
-    if [[ "${bool['link_in_man']}" -eq 1 ]]
+    if [[ "${bool['link_in_man1']}" -eq 1 ]]
     then
-        for i in "${!bin_arr[@]}"
+        for i in "${!man1_arr[@]}"
         do
             local dict2
             declare -A dict2
-            dict2['name']="${bin_arr[$i]}.1"
+            dict2['name']="${man1_arr[$i]}"
             dict2['manfile1']="${dict['prefix']}/share/man/man1/${dict2['name']}"
             dict2['manfile2']="${dict['prefix']}/man/man1/${dict2['name']}"
             if [[ -f "${dict2['manfile1']}" ]]
