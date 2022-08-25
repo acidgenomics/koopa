@@ -1103,7 +1103,7 @@
     "conservative": false,
     "man1": ["lame.1"],
     "url": ["https://lame.sourceforge.io/"],
-    "version": ["3.100"]
+    "version": "3.100"
   },
   "lapack": {
     "conservative": true,
