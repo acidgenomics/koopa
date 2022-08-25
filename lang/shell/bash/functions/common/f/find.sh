@@ -172,7 +172,7 @@ koopa_find() {
     if [[ -z "${dict['engine']}" ]]
     then
         app['find']="$(koopa_locate_fd --allow-missing)"
-        [[ ! -x "${app['find']}" ]] && app[find]="$(koopa_locate_find)"
+        [[ ! -x "${app['find']}" ]] && app['find']="$(koopa_locate_find)"
         dict['engine']="$(koopa_basename "${app['find']}")"
     else
         app['find']="$(koopa_locate_"${dict['engine']}")"

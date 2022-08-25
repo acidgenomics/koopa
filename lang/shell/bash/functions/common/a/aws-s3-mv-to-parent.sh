@@ -21,7 +21,7 @@ koopa_aws_s3_mv_to_parent() {
         ['prefix']=''
         ['profile']="${AWS_PROFILE:-}"
     )
-    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in

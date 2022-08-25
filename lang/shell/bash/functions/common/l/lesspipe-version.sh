@@ -12,7 +12,7 @@ koopa_lesspipe_version() {
         ['lesspipe']="${1:-}"
         ['sed']="$(koopa_locate_sed)"
     )
-    [[ -z "${app['lesspipe']}" ]] && app[lesspipe]="$(koopa_locate_lesspipe)"
+    [[ -z "${app['lesspipe']}" ]] && app['lesspipe']="$(koopa_locate_lesspipe)"
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['lesspipe']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1

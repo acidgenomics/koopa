@@ -14,7 +14,7 @@ koopa_jekyll_serve() {
     declare -A dict=(
         ['prefix']="${1:-}"
     )
-    [[ -z "${dict['prefix']}" ]] && dict[prefix]="${PWD:?}"
+    [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     koopa_alert "Serving Jekyll website in '${dict['prefix']}'."
     (

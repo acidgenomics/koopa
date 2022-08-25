@@ -32,7 +32,7 @@ koopa_configure_dotfiles() {
         ['name']='dotfiles'
         ['prefix']="${1:-}"
     )
-    [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_dotfiles_prefix)"
+    [[ -z "${dict['prefix']}" ]] && dict['prefix']="$(koopa_dotfiles_prefix)"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['script']="${dict['prefix']}/install"
     koopa_assert_is_file "${dict['script']}"

@@ -9,7 +9,7 @@ koopa_linux_add_user_to_etc_passwd() {
         ['user']="${1:-}"
     )
     koopa_assert_is_file "${dict['passwd_file']}"
-    [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
+    [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user)"
     if ! koopa_file_detect_fixed \
         --file="${dict['passwd_file']}" \
         --pattern="${dict['user']}" \
@@ -42,7 +42,7 @@ koopa_linux_add_user_to_group() {
         ['group']="${1:?}"
         ['user']="${2:-}"
     )
-    [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
+    [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user)"
     koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
     "${app['sudo']}" "${app['gpasswd']}" --add "${dict['user']}" "${dict['group']}"
     return 0
@@ -379,7 +379,7 @@ koopa_linux_configure_lmod() {
         ['etc_dir']='/etc/profile.d'
         ['prefix']="${1:-}"
     )
-    [[ -z "${dict['prefix']}" ]] && dict[prefix]="$(koopa_lmod_prefix)"
+    [[ -z "${dict['prefix']}" ]] && dict['prefix']="$(koopa_lmod_prefix)"
     dict['init_dir']="${dict['prefix']}/apps/lmod/lmod/init"
     koopa_assert_is_dir "${dict['init_dir']}"
     if [[ ! -d "${dict['etc_dir']}" ]]
@@ -714,7 +714,7 @@ koopa_linux_remove_user_from_group() {
         ['group']="${1:?}"
         ['user']="${2:-}"
     )
-    [[ -z "${dict['user']}" ]] && dict[user]="$(koopa_user)"
+    [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user)"
     "${app['sudo']}" "${app['gpasswd']}" --delete "${dict['user']}" "${dict['group']}"
     return 0
 }

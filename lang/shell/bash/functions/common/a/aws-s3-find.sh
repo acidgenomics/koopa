@@ -35,7 +35,7 @@ koopa_aws_s3_find() {
         ['profile']="${AWS_PROFILE:-}"
         ['recursive']=0
     )
-    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     exclude_arr=()
     include_arr=()
     while (("$#"))

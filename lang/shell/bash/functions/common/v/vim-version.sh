@@ -12,7 +12,7 @@ koopa_vim_version() {
         ['head']="$(koopa_locate_head)"
         ['vim']="${1:-}"
     )
-    [[ -z "${app['vim']}" ]] && app[vim]="$(koopa_locate_vim)"
+    [[ -z "${app['vim']}" ]] && app['vim']="$(koopa_locate_vim)"
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['vim']}" ]] || return 1

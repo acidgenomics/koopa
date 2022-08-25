@@ -94,8 +94,8 @@ koopa_ngettext() {
         '--msg2' "${dict['msg2']}"  \
         '--num' "${dict['num']}"
     # Pad the prefix and suffix automatically, if desired.
-    # > [[ -n "${dict['prefix']}" ]] && dict[prefix]="${dict['prefix']} "
-    # > [[ -n "${dict['suffix']}" ]] && dict[suffix]=" ${dict['suffix']}"
+    # > [[ -n "${dict['prefix']}" ]] && dict['prefix']="${dict['prefix']} "
+    # > [[ -n "${dict['suffix']}" ]] && dict['suffix']=" ${dict['suffix']}"
     case "${dict['num']}" in
         '1')
             dict['msg']="${dict['msg1']}"

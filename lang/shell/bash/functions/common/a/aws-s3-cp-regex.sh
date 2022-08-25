@@ -23,7 +23,7 @@ koopa_aws_s3_cp_regex() {
         ['source_prefix']=''
         ['target_prefix']=''
     )
-    [[ -z "${dict['profile']}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
