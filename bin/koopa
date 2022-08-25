@@ -52,7 +52,7 @@ __koopa_realpath() { # {{{1
     then
         __koopa_warn "Not installed: '${readlink}'."
         __koopa_is_macos && \
-            __koopa_warn 'Install Homebrew and GNU coreutils to resolve.'
+            __koopa_warn 'Install GNU coreutils to resolve.'
         return 1
     fi
     x="$("$readlink" -f "$@")"
