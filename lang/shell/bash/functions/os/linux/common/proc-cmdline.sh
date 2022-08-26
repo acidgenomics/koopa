@@ -26,4 +26,3 @@ koopa_linux_proc_cmdline() {
         | "${app['xargs']}" -0 "${app['echo']}"
     return 0
 }
-
