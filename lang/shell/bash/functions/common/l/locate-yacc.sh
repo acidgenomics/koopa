@@ -2,7 +2,7 @@
 
 koopa_locate_yacc() {
     koopa_locate_app \
-        --app-name='yacc' \
-        --opt-name='bison' \
+        --app-name='bison' \
+        --bin-name='yacc' \
         "$@"
 }
