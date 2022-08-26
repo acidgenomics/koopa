@@ -9,7 +9,7 @@ koopa_conda_env_latest_version() {
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['awk']="$(koopa_locate_awk)"
-        ['conda']="$(koopa_locate_mamba_or_conda)"
+        ['conda']="$(koopa_locate_conda)"
         ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['awk']}" ]] || return 1
