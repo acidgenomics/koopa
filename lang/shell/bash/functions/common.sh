@@ -913,29 +913,6 @@ koopa_alert() {
     return 0
 }
 
-koopa_anaconda_version() {
-    local app str
-    koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['conda']="${1:-}"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -z "${app['conda']}" ]] && app['conda']="$(koopa_locate_anaconda)"
-    [[ -x "${app['conda']}" ]] || return 1
-    koopa_is_anaconda "${app['conda']}" || return 1
-    str="$( \
-        "${app['conda']}" list 'anaconda' \
-            | koopa_grep \
-                --pattern='^anaconda ' \
-                --regex \
-            | "${app['awk']}" '{print $2}' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
 koopa_app_json_bin() {
     koopa_assert_has_args_eq "$#" 1
     koopa_parse_app_json --app-name="${1:?}" --key='bin'
@@ -2669,39 +2646,6 @@ koopa_bioconda_autobump_recipe() {
     return 0
 }
 
-koopa_boost_version() {
-    local app dict gcc_args
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['bc']="$(koopa_locate_bc)"
-        ['gcc']="$(koopa_locate_gcc)"
-    )
-    [[ -x "${app['bc']}" ]] || return 1
-    [[ -x "${app['gcc']}" ]] || return 1
-    declare -A dict
-    gcc_args=()
-    if koopa_is_macos
-    then
-        dict['brew_prefix']="$(koopa_homebrew_prefix)"
-        gcc_args+=("-I${dict['brew_prefix']}/opt/boost/include")
-    fi
-    gcc_args+=(
-        '-x' 'c++'
-        '-E' '-'
-    )
-    dict['version']="$( \
-        koopa_print '#include <boost/version.hpp>\nBOOST_VERSION' \
-        | "${app['gcc']}" "${gcc_args[@]}" \
-        | koopa_grep --pattern='^[0-9]+$' --regex \
-    )"
-    [[ -n "${dict['version']}" ]] || return 1
-    dict['major']="$(koopa_print "${dict['version']} / 100000" | "${app['bc']}")"
-    dict['minor']="$(koopa_print "${dict['version']} / 100 % 1000" | "${app['bc']}")"
-    dict['patch']="$(koopa_print "${dict['version']} % 100" | "${app['bc']}")"
-    koopa_print "${dict['major']}.${dict['minor']}.${dict['patch']}"
-    return 0
-}
-
 koopa_bowtie2_align() {
     local app dict
     koopa_assert_has_args "$#"
@@ -2965,26 +2909,6 @@ with '${dict['r1_tail']}'."
             --r2-tail="${dict['r2_tail']}"
     done
     koopa_alert_success 'bowtie2 alignment completed successfully.'
-    return 0
-}
-
-koopa_bpytop_version() {
-    local app str
-    koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['bpytop']="${1:-}"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -z "${app['bpytop']}" ]] && app['bpytop']="$(koopa_locate_bpytop)"
-    [[ -x "${app['bpytop']}" ]] || return 1
-    str="$( \
-        "${app['bpytop']}" --version \
-            | koopa_grep --pattern='bpytop version:' \
-            | "${app['awk']}" '{ print $NF }' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
     return 0
 }
 
@@ -10199,25 +10123,6 @@ koopa_has_passwordless_sudo() {
     return 1
 }
 
-koopa_hdf5_version() {
-    local app str
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['h5cc']="$(koopa_locate_h5cc)"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['h5cc']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['h5cc']}" -showconfig \
-            | koopa_grep --pattern='HDF5 Version:' \
-            | "${app['sed']}" -E 's/^(.+): //' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
 koopa_header() {
     local dict
     koopa_assert_has_args_eq "$#" 1
@@ -14804,28 +14709,6 @@ koopa_koopa_version() {
     return 0
 }
 
-koopa_lesspipe_version() {
-    local app str
-    koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
-        ['lesspipe']="${1:-}"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -z "${app['lesspipe']}" ]] && app['lesspipe']="$(koopa_locate_lesspipe)"
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['lesspipe']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['cat']}" "${app['lesspipe']}" \
-            | "${app['sed']}" -n '2p' \
-            | koopa_extract_version \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
 koopa_line_count() {
     local app file str
     koopa_assert_has_args "$#"
@@ -15108,15 +14991,6 @@ koopa_list_programs() {
 
 koopa_lmod_prefix() {
     koopa_print "$(koopa_opt_prefix)/lmod"
-}
-
-koopa_lmod_version() {
-    local str
-    koopa_assert_has_no_args "$#"
-    str="${LMOD_VERSION:-}"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
 }
 
 koopa_ln() {
@@ -16245,12 +16119,6 @@ koopa_locate_sox() {
         "$@"
 }
 
-koopa_locate_sqlplus() {
-    koopa_locate_app \
-        '/usr/bin/sqlplus' \
-        "$@"
-}
-
 koopa_locate_ssh_add() {
     local args
     args=()
@@ -16544,29 +16412,6 @@ koopa_make_build_string() {
 
 koopa_man_prefix() {
     koopa_print "$(koopa_koopa_prefix)/share/man"
-    return 0
-}
-
-koopa_man_version() {
-    local app str
-    koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['grep']="$(koopa_locate_grep)"
-        ['man']="${1:-}"
-    )
-    [[ -z "${app['man']}" ]] && app['man']="$(koopa_locate_man)"
-    [[ -x "${app['grep']}" ]] || return 1
-    [[ -x "${app['man']}" ]] || return 1
-    str="$( \
-        "${app['grep']}" \
-            --extended-regexp \
-            --only-matching \
-            --text \
-            'lib/man-db/libmandb-[.0-9]+\.dylib' \
-            "${app['man']}" \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_extract_version "$str"
     return 0
 }
 
@@ -17045,54 +16890,6 @@ ${dict['msg']}${dict['suffix']}"
     return 0
 }
 
-koopa_node_package_version() {
-    local app pkg
-    koopa_assert_has_args "$#"
-    declare -A app=(
-        ['jq']="$(koopa_locate_jq)"
-        ['npm']="$(koopa_locate_npm)"
-    )
-    [[ -x "${app['jq']}" ]] || return 1
-    [[ -x "${app['npm']}" ]] || return 1
-    for pkg in "$@"
-    do
-        local dict
-        declare -A dict
-        dict['pkg']="$pkg"
-        dict['str']="$( \
-            "${app['npm']}" --global --json list "${dict['pkg']}" \
-            | "${app['jq']}" \
-                --raw-output \
-                ".dependencies.${dict['pkg']}.version" \
-        )"
-        [[ -n "${dict['str']}" ]] || return 1
-        koopa_print "${dict['str']}"
-    done
-    return 0
-}
-
-koopa_openjdk_version() {
-    local app str
-    koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
-        ['java']="${1:-}"
-    )
-    [[ -z "${app['java']}" ]] && app['java']="$(koopa_locate_java)"
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['java']}" ]] || return 1
-    str="$( \
-        "${app['java']}" --version \
-            | "${app['head']}" -n 1 \
-            | "${app['cut']}" -d ' ' -f '2' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
 koopa_opt_version() {
     local dict
     koopa_assert_has_args_eq "$#" 1
@@ -17105,23 +16902,6 @@ koopa_opt_version() {
     dict['realpath']="$(koopa_realpath "${dict['symlink']}")"
     dict['version']="$(koopa_basename "${dict['realpath']}")"
     koopa_print "${dict['version']}"
-    return 0
-}
-
-koopa_oracle_instantclient_version() {
-    local app str
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['sqlplus']="$(koopa_locate_sqlplus)"
-    )
-    [[ -x "${app['sqlplus']}" ]] || return 1
-    str="$( \
-        "${app['sqlplus']}" -v \
-            | koopa_grep --pattern='^Version' --regex \
-            | koopa_extract_version \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
     return 0
 }
 
@@ -17168,28 +16948,6 @@ koopa_pager() {
     args=("$@")
     koopa_assert_is_file "${args[-1]}"
     "${app['less']}" -R "${args[@]}"
-    return 0
-}
-
-koopa_parallel_version() {
-    local app str
-    koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
-        ['parallel']="${1:-}"
-    )
-    [[ -z "${app['parallel']}" ]] && app['parallel']="$(koopa_locate_parallel)"
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['parallel']}" ]] || return 1
-    str="$( \
-        "${app['parallel']}" --version \
-            | "${app['head']}" -n 1 \
-            | "${app['cut']}" -d ' ' -f '3' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
     return 0
 }
 
@@ -17327,34 +17085,6 @@ koopa_paste() {
 
 koopa_paste0() {
     koopa_paste --sep='' "$@"
-}
-
-koopa_perl_file_rename_version() {
-    koopa_assert_has_no_args "$#"
-    koopa_perl_package_version 'File::Rename'
-}
-
-koopa_perl_package_version() {
-    local app pkg
-    koopa_assert_has_args "$#"
-    declare -A app=(
-        ['perl']="$(koopa_locate_perl)"
-    )
-    [[ -x "${app['perl']}" ]] || return 1
-    for pkg in "$@"
-    do
-        local dict
-        declare -A dict
-        dict['pkg']="$pkg"
-        dict['str']="$( \
-            "${app['perl']}" \
-                -M"${dict['pkg']}" \
-                -e "print \$${dict['pkg']}::VERSION .\"\n\";" \
-        )"
-        [[ -n "${dict['str']}" ]] || return 1
-        koopa_print "${dict['str']}"
-    done
-    return 0
 }
 
 koopa_print_black_bold() {
@@ -17715,21 +17445,6 @@ koopa_python_deactivate_venv() {
     fi
     koopa_remove_from_path "${dict['prefix']}/bin"
     unset -v VIRTUAL_ENV
-    return 0
-}
-
-koopa_python_get_pkg_versions() {
-    local i pkg pkgs pkg_lower version
-    koopa_assert_has_args "$#"
-    pkgs=("$@")
-    for i in "${!pkgs[@]}"
-    do
-        pkg="${pkgs[$i]}"
-        pkg_lower="$(koopa_lowercase "$pkg")"
-        version="$(koopa_app_json_version "python-${pkg_lower}")"
-        pkgs[$i]="${pkg}==${version}"
-    done
-    koopa_print "${pkgs[@]}"
     return 0
 }
 
@@ -19073,20 +18788,6 @@ koopa_rsync() {
     rsync_args+=("${dict['source_dir']}/" "${dict['target_dir']}/")
     koopa_dl 'rsync args' "${rsync_args[*]}"
     "${app['rsync']}" "${rsync_args[@]}"
-    return 0
-}
-
-koopa_ruby_api_version() {
-    local app str
-    koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['ruby']="${1:-}"
-    )
-    [[ -z "${app['ruby']}" ]] && app['ruby']="$(koopa_locate_ruby)"
-    [[ -x "${app['ruby']}" ]] || return 1
-    str="$("${app['ruby']}" -e 'print Gem.ruby_api_version')"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
     return 0
 }
 
@@ -24237,43 +23938,6 @@ koopa_view_latest_tmp_log_file() {
     fi
     koopa_alert "Viewing '${dict['log_file']}'."
     koopa_pager +G "${dict['log_file']}"
-    return 0
-}
-
-koopa_vim_version() {
-    local app dict
-    koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
-        ['vim']="${1:-}"
-    )
-    [[ -z "${app['vim']}" ]] && app['vim']="$(koopa_locate_vim)"
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['vim']}" ]] || return 1
-    declare -A dict=(
-        ['str']="$("${app['vim']}" --version 2>/dev/null)"
-    )
-    dict['maj_min']="$( \
-        koopa_print "${dict['str']}" \
-            | "${app['head']}" -n 1 \
-            | "${app['cut']}" -d ' ' -f '5' \
-    )"
-    dict['out']="${dict['maj_min']}"
-    if koopa_str_detect_fixed \
-        --string="${dict['str']}" \
-        --pattern='Included patches:'
-    then
-        dict['patch']="$( \
-            koopa_print "${dict['str']}" \
-                | koopa_grep --pattern='Included patches:' \
-                | "${app['cut']}" -d '-' -f '2' \
-                | "${app['cut']}" -d ',' -f '1' \
-        )"
-        dict['out']="${dict['out']}.${dict['patch']}"
-    fi
-    koopa_print "${dict['out']}"
     return 0
 }
 
