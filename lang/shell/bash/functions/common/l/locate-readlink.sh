@@ -3,6 +3,6 @@
 koopa_locate_readlink() {
     koopa_locate_app \
         --app-name='coreutils' \
-        --bin-name='greadlink'
+        --bin-name='greadlink' \
         "$@" \
 }

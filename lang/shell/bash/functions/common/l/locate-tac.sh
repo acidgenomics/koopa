@@ -3,6 +3,6 @@
 koopa_locate_tac() {
     koopa_locate_app \
         --app-name='coreutils' \
-        --bin-name='gtac'
+        --bin-name='gtac' \
         "$@" \
 }

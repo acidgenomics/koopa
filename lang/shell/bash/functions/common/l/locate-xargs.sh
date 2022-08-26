@@ -3,6 +3,6 @@
 koopa_locate_xargs() {
     koopa_locate_app \
         --app-name='findutils' \
-        --bin-name='gxargs'
+        --bin-name='gxargs' \
         "$@" \
 }
