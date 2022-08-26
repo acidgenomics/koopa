@@ -3,5 +3,5 @@
 koopa_locate_curl() {
     koopa_locate_app \
         --app-name='curl' \
-        --opt-name='curl'
+        --bin-name='curl'
 }

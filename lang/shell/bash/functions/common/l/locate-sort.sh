@@ -2,6 +2,6 @@
 
 koopa_locate_sort() {
     koopa_locate_app \
-        --app-name='gsort' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gsort'
 }

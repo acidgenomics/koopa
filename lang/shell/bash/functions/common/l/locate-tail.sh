@@ -2,6 +2,6 @@
 
 koopa_locate_tail() {
     koopa_locate_app \
-        --app-name='gtail' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gtail'
 }

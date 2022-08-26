@@ -2,6 +2,6 @@
 
 koopa_locate_paste() {
     koopa_locate_app \
-        --app-name='gpaste' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gpaste'
 }

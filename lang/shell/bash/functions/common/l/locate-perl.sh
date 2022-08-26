@@ -3,5 +3,5 @@
 koopa_locate_perl() {
     koopa_locate_app \
         --app-name='perl' \
-        --opt-name='perl'
+        --bin-name='perl'
 }

@@ -2,6 +2,6 @@
 
 koopa_locate_cargo() {
     koopa_locate_app \
-        --app-name='cargo' \
-        --opt-name='rust'
+        --app-name='rust' \
+        --bin-name='cargo'
 }

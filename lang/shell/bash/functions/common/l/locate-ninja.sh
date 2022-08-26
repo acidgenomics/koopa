@@ -3,5 +3,5 @@
 koopa_locate_ninja() {
     koopa_locate_app \
         --app-name='ninja' \
-        --opt-name='ninja'
+        --bin-name='ninja'
 }
