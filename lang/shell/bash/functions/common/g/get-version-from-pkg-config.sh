@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this to use '--app-name' instead of '.--opt-name'
-
 koopa_get_version_from_pkg_config() {
     # """
     # Get a library version via 'pkg-config'.
-    # @note Updated 2022-06-15.
+    # @note Updated 2022-08-26.
     # """
     local app dict
     koopa_assert_has_args "$#"
@@ -14,7 +12,7 @@ koopa_get_version_from_pkg_config() {
     )
     [[ -x "${app['pkg_config']}" ]] || return 1
     declare -A dict=(
-        ['opt_name']=''
+        ['app_name']=''
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['pc_name']=''
     )
@@ -22,12 +20,12 @@ koopa_get_version_from_pkg_config() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--opt-name='*)
-                dict['opt_name']="${1#*=}"
+            '--app-name='*)
+                dict['app_name']="${1#*=}"
                 shift 1
                 ;;
-            '--opt-name')
-                dict['opt_name']="${2:?}"
+            '--app-name')
+                dict['app_name']="${2:?}"
                 shift 2
                 ;;
             '--pc-name='*)
@@ -45,9 +43,9 @@ koopa_get_version_from_pkg_config() {
         esac
     done
     koopa_assert_is_set \
-        '--opt-name' "${dict['opt_name']}" \
+        '--app-name' "${dict['app_name']}" \
         '--pc-name' "${dict['pc_name']}"
-    dict['pc_file']="${dict['opt_prefix']}/${dict['opt_name']}/lib/\
+    dict['pc_file']="${dict['opt_prefix']}/${dict['app_name']}/lib/\
 pkgconfig/${dict['pc_name']}.pc"
     koopa_assert_is_file "${dict['pc_file']}"
     dict['str']="$("${app['pkg_config']}" --modversion "${dict['pc_file']}")"
