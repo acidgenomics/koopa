@@ -5,4 +5,3 @@ koopa_uninstall_bzip2() {
         --name='bzip2' \
         "$@"
 }
-

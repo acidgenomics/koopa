@@ -50,4 +50,3 @@ koopa_is_file_type() {
     done
     return 0
 }
-

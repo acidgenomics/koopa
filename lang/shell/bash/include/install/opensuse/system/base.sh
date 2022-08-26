@@ -66,4 +66,3 @@ main() {
     "${app['sudo']}" "${app['zypper']}" clean
     return 0
 }
-
