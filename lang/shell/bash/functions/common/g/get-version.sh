@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to use '--app-name' and '--bin-name', similar to our
+# koopa_locate_app function.
+
+# FIXME Need to simplify this program to only take executable file as input.
+# Construct internal runners that that can extract the version...need to
+# rename these (e.g. koopa_vim_version, koopa_cairo_version, etc...)
+
 koopa_get_version() {
     # """
     # Get the version of an installed program.
