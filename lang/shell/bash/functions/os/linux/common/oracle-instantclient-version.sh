@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME This is Linux specific.
-
-koopa_oracle_instantclient_version() {
+koopa_linux_oracle_instantclient_version() {
     # """
     # Oracle InstantClient version.
-    # @note Updated 2022-02-27.
+    # @note Updated 2022-08-26.
     # """
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['sqlplus']="$(koopa_locate_sqlplus)"
+        ['sqlplus']="$(koopa_linux_locate_sqlplus)"
     )
     [[ -x "${app['sqlplus']}" ]] || return 1
     str="$( \

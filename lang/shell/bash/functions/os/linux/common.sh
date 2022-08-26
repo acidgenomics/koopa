@@ -643,6 +643,12 @@ koopa_linux_locate_shiny_server() {
         "$@"
 }
 
+koopa_linux_locate_sqlplus() {
+    koopa_locate_app \
+        '/usr/bin/sqlplus' \
+        "$@"
+}
+
 koopa_linux_locate_systemctl() {
     local args
     args=()
@@ -679,6 +685,23 @@ koopa_linux_locate_usermod() {
     koopa_locate_app \
         '/usr/sbin/usermod' \
         "$@"
+}
+
+koopa_linux_oracle_instantclient_version() {
+    local app str
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        ['sqlplus']="$(koopa_linux_locate_sqlplus)"
+    )
+    [[ -x "${app['sqlplus']}" ]] || return 1
+    str="$( \
+        "${app['sqlplus']}" -v \
+            | koopa_grep --pattern='^Version' --regex \
+            | koopa_extract_version \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
 }
 
 koopa_linux_os_version() {
