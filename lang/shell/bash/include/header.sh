@@ -69,46 +69,15 @@ __koopa_print() {
     return 0
 }
 
-# FIXME Improve consistency of this.
 __koopa_realpath() {
     # """
     # Resolve file path.
-    # @note Updated 2022-08-25.
+    # @note Updated 2022-08-26.
+    #
+    # macOS/BSD readlink now supports '-f' flag. Added in 2022?
     # """
-    local readlink x
-    readlink='readlink'
-    if ! __koopa_is_installed "$readlink"
-    then
-        local brew_readlink_1 brew_readlink_2 koopa_readlink
-        local make_readlink_1 make_readlink_2
-        brew_readlink_1='/opt/homebrew/opt/coreutils/libexec/bin/readlink'
-        brew_readlink_2='/usr/local/opt/coreutils/libexec/bin/readlink'
-        koopa_readlink='/opt/koopa/opt/coreutils/bin/readlink'
-        make_readlink_1='/usr/local/bin/readlink'
-        make_readlink_2='/usr/local/bin/greadlink'
-        if [[ -x "$koopa_readlink" ]]
-        then
-            readlink="$koopa_readlink"
-        elif [[ -x "$make_readlink_1" ]]
-        then
-            readlink="$make_readlink_1"
-        elif [[ -x "$make_readlink_2" ]]
-        then
-            readlink="$make_readlink_2"
-        elif [[ -x "$brew_readlink_1" ]]
-        then
-            readlink="$brew_readlink_1"
-        elif [[ -x "$brew_readlink_2" ]]
-        then
-            readlink="$brew_readlink_2"
-        else
-            __koopa_warn \
-                "Not installed: '${readlink}'." \
-                'Install GNU coreutils to resolve.'
-            return 1
-        fi
-    fi
-    x="$("$readlink" -f "$@")"
+    local x
+    x="$(readlink -f "$@")"
     [[ -n "$x" ]] || return 1
     __koopa_print "$x"
     return 0
