@@ -3,6 +3,6 @@
 koopa_locate_mktemp() {
     koopa_locate_app \
         --app-name='coreutils' \
-        --bin-name='gmktemp'
+        --bin-name='gmktemp' \
         "$@" \
 }
