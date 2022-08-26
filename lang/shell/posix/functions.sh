@@ -259,23 +259,17 @@ koopa_activate_conda() {
 }
 
 koopa_activate_coreutils_aliases() {
-    [ -x "$(koopa_bin_prefix)/cp" ] || return 0
-    local cp cp_args ln ln_args mkdir mkdir_args mv mv_args rm rm_args
-    cp='cp'
-    ln='ln'
-    mkdir='mkdir'
-    mv='mv'
-    rm='rm'
-    cp_args='-Riv' # '--interactive --recursive --verbose'.
-    ln_args='-insv' # '--interactive --no-dereference --symbolic --verbose'.
-    mkdir_args='-pv' # '--parents --verbose'.
-    mv_args='-iv' # '--interactive --verbose'
-    rm_args='-iv' # '--interactive=once --verbose'.
-    alias cp="${cp} ${cp_args}"
-    alias ln="${ln} ${ln_args}"
-    alias mkdir="${mkdir} ${mkdir_args}"
-    alias mv="${mv} ${mv_args}"
-    alias rm="${rm} ${rm_args}"
+    [ -x "$(koopa_bin_prefix)/gcp" ] || return 0
+    alias gcp='gcp --interactive --recursive --verbose'
+    alias gln='gln --interactive --no-dereference --symbolic --verbose'
+    alias gmkdir='gmkdir --parents --verbose'
+    alias gmv='gmv --interactive --verbose'
+    alias grm='grm --interactive-once --verbose'
+    alias cp='gcp'
+    alias ln='gln'
+    alias mkdir='gmkdir'
+    alias mv='gmv'
+    alias rm='grm'
     return 0
 }
 
@@ -323,6 +317,12 @@ koopa_activate_dircolors() {
     alias ggrep='ggrep --color=auto'
     alias gls='gls --color=auto'
     alias gvdir='gvdir --color=auto'
+    alias dir='gdir'
+    alias egrep='gegrep'
+    alias frep='gfgrep'
+    alias grep='ggrep'
+    alias ls='gls'
+    alias vdir='gvdir'
     return 0
 }
 
