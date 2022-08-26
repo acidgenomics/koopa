@@ -3,6 +3,7 @@
 * High priority
 ** TODO Consider linking koopa into /usr/local/bin.
 ** TODO Consider linking bash into /usr/local/bin on macOS (only if Homebrew doesn't have one there).
+    This improves compatibility with RStudio `system2` calls, which currently hardcode `/usr/local` and ignore `/opt/koopa`.
 ** TODO Add shell activation support for asdf.
 ** TODO Can we improve black, flake8, pylint support for automatic linting in PyCharm?
 ** TODO Ensure coreutils aliases are not activated for root user on Linux.
