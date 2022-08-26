@@ -2,6 +2,6 @@
 
 koopa_locate_date() {
     koopa_locate_app \
-        --app-name='gdate' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gdate'
 }

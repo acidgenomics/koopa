@@ -2,6 +2,6 @@
 
 koopa_locate_bpytop() {
     koopa_locate_app \
-        --app-name='bpytop' \
-        --opt-name='python-packages'
+        --app-name='python-packages' \
+        --bin-name='bpytop'
 }

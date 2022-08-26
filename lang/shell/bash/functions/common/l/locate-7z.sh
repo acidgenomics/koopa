@@ -2,6 +2,6 @@
 
 koopa_locate_7z() {
     koopa_locate_app \
-        --app-name='7z' \
-        --opt-name='p7zip'
+        --app-name='p7zip' \
+        --bin-name='7z'
 }

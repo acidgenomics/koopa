@@ -2,6 +2,6 @@
 
 koopa_locate_uname() {
     koopa_locate_app \
-        --app-name='guname' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='guname'
 }

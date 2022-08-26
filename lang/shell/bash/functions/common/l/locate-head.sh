@@ -2,6 +2,6 @@
 
 koopa_locate_head() {
     koopa_locate_app \
-        --app-name='ghead' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='ghead'
 }

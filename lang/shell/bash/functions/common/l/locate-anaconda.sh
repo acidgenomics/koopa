@@ -2,6 +2,6 @@
 
 koopa_locate_anaconda() {
     koopa_locate_app \
-        --app-name='conda' \
-        --opt-name='anaconda'
+        --app-name='anaconda' \
+        --bin-name='conda'
 }

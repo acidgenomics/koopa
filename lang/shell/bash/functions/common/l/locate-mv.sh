@@ -2,6 +2,6 @@
 
 koopa_locate_mv() {
     koopa_locate_app \
-        --app-name='gmv' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gmv'
 }

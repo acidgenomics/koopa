@@ -3,5 +3,5 @@
 koopa_locate_ronn() {
     koopa_locate_app \
         --app-name='ronn' \
-        --opt-name='ronn'
+        --bin-name='ronn'
 }
