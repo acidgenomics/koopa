@@ -2,6 +2,6 @@
 
 koopa_locate_mktemp() {
     koopa_locate_app \
-        --app-name='gmktemp' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gmktemp'
 }

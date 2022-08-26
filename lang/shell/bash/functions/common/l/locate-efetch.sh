@@ -2,6 +2,6 @@
 
 koopa_locate_efetch() {
     koopa_locate_app \
-        --app-name='efetch' \
-        --opt-name='entrez-direct'
+        --app-name='entrez-direct' \
+        --bin-name='efetch'
 }
