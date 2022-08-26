@@ -1005,51 +1005,75 @@ koopa_debian_install_system_wine() {
 }
 
 koopa_debian_locate_apt_get() {
-    koopa_locate_app '/usr/bin/apt-get'
+    koopa_locate_app \
+        '/usr/bin/apt-get' \
+        "$@"
 }
 
 koopa_debian_locate_apt_key() {
-    koopa_locate_app '/usr/bin/apt-key'
+    koopa_locate_app \
+        '/usr/bin/apt-key' \
+        "$@"
 }
 
 koopa_debian_locate_apt() {
-    koopa_locate_app '/usr/bin/apt'
+    koopa_locate_app \
+        '/usr/bin/apt' \
+        "$@"
 }
 
 koopa_debian_locate_debconf_set_selections() {
-    koopa_locate_app '/usr/bin/debconf-set-selections'
+    koopa_locate_app \
+        '/usr/bin/debconf-set-selections' \
+        "$@"
 }
 
 koopa_debian_locate_dpkg_reconfigure() {
-    koopa_locate_app '/usr/sbin/dpkg-reconfigure'
+    koopa_locate_app \
+        '/usr/sbin/dpkg-reconfigure' \
+        "$@"
 }
 
 koopa_debian_locate_dpkg() {
-    koopa_locate_app '/usr/bin/dpkg'
+    koopa_locate_app \
+        '/usr/bin/dpkg' \
+        "$@"
 }
 
 koopa_debian_locate_gdebi() {
-    koopa_locate_app '/usr/bin/gdebi'
+    koopa_locate_app \
+        '/usr/bin/gdebi' \
+        "$@"
 }
 
 koopa_debian_locate_locale_gen() {
-    koopa_locate_app '/usr/sbin/locale-gen'
+    koopa_locate_app \
+        '/usr/sbin/locale-gen' \
+        "$@"
 }
 
 koopa_debian_locate_service() {
-    koopa_locate_app '/usr/sbin/service'
+    koopa_locate_app \
+        '/usr/sbin/service' \
+        "$@"
 }
 
 koopa_debian_locate_timedatectl() {
-    koopa_locate_app '/usr/bin/timedatectl'
+    koopa_locate_app \
+        '/usr/bin/timedatectl' \
+        "$@"
 }
 
 koopa_debian_locate_unattended_upgrades() {
-    koopa_locate_app '/usr/bin/unattended-upgrades'
+    koopa_locate_app \
+        '/usr/bin/unattended-upgrades' \
+        "$@"
 }
 
 koopa_debian_locate_update_locale() {
-    koopa_locate_app '/usr/sbin/update-locale'
+    koopa_locate_app \
+        '/usr/sbin/update-locale' \
+        "$@"
 }
 
 koopa_debian_set_locale() {

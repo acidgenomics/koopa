@@ -2,5 +2,7 @@
 
 koopa_locate_emacs() {
     koopa_locate_app \
-        --app-name='emacs'
+        --app-name='emacs' \
+        --bin-name='emacs' \
+        "$@"
 }

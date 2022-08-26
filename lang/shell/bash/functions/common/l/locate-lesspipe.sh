@@ -2,6 +2,7 @@
 
 koopa_locate_lesspipe() {
     koopa_locate_app \
-        --app-name='lesspipe.sh' \
-        --opt-name='lesspipe'
+        --app-name='lesspipe' \
+        --bin-name='lesspipe.sh' \
+        "$@"
 }

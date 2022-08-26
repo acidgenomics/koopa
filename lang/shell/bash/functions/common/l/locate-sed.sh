@@ -2,7 +2,7 @@
 
 koopa_locate_sed() {
     koopa_locate_app \
-        --app-name='gsed' \
-        --opt-name='sed' \
+        --app-name='sed' \
+        --bin-name='gsed' \
         "$@"
 }
