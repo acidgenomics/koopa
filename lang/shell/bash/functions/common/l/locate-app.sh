@@ -1,26 +1,29 @@
 #!/usr/bin/env bash
 
-# FIXME Optimize this to look at /opt/koopa/bin/<NAME> first and early
-# return on success without calling opt prefix...
-
 koopa_locate_app() {
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-08-25.
+    # @note Updated 2022-08-26.
+    #
+    # Mode 1: direct executable file path input.
+    # Mode 2: '--app-name' and '--bin-name' input.
     #
     # App locator prioritization:
-    # 1. Allow for direct input of an executable.
-    # 2. Check in koopa bin.
-    # 2. Check in koopa opt.
+    # 1. Direct file path input of an executable.
+    # 2. Check for linked program in koopa bin.
+    # 3. Check for linked program in in koopa opt.
     #
     # Resolving the full executable path can cause BusyBox coreutils to error.
     # """
-    local dict pos
-    declare -A dict=(
+    local bool dict pos
+    declare -A bool=(
         ['allow_missing']=0
+        ['realpath']=0
+    )
+    declare -A dict=(
         ['app_name']=''
+        ['bin_name']=''
         ['bin_prefix']="$(koopa_bin_prefix)"
-        ['opt_name']=''
         ['opt_prefix']="$(koopa_opt_prefix)"
     )
     pos=()
@@ -36,17 +39,21 @@ koopa_locate_app() {
                 dict['app_name']="${2:?}"
                 shift 2
                 ;;
-            '--opt-name='*)
-                dict['opt_name']="${1#*=}"
+            '--bin-name='*)
+                dict['bin_name']="${1#*=}"
                 shift 1
                 ;;
-            '--opt-name')
-                dict['opt_name']="${2:?}"
+            '--bin-name')
+                dict['bin_name']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--allow-missing')
-                dict['allow_missing']=1
+                bool['allow_missing']=1
+                shift 1
+                ;;
+            '--realpath')
+                bool['realpath']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -59,47 +66,47 @@ koopa_locate_app() {
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -gt 0 ]]
+    if [[ "${#pos[@]}" -gt 0 ]]
     then
-        koopa_assert_has_args_eq "$#" 1
+        set -- "${pos[@]}"
+        [[ "$#" -eq 1 ]] || return 1
         dict['app']="${1:?}"
-        if [[ -x "${dict['app']}" ]] && koopa_is_installed "${dict['app']}"
+        if [[ -x "${dict['app']}" ]] && \
+            koopa_is_installed "${dict['app']}"
         then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(koopa_realpath "${dict['app']}")"
+            fi
             koopa_print "${dict['app']}"
             return 0
         fi
+        [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
         koopa_stop "Failed to locate '${dict['app']}'."
     fi
-    dict['app']="${dict['bin_prefix']}/${dict['app_name']}"
+    [[ -n "${dict['app_name']}" ]] || return 1
+    [[ -n "${dict['bin_name']}" ]] || return 1
+    dict['app']="${dict['bin_prefix']}/${dict['bin_name']}"
     if [[ -x "${dict['app']}" ]]
     then
-        koopa_print "${dict['app']}"
-        return 0
-    fi
-    if [[ -n "${dict['opt_name']}" ]]
-    then
-        dict['app']="${dict['opt_prefix']}/${dict['opt_name']}/bin/${dict['app_name']}"
-        if [[ -x "${dict['app']}" ]]
+        if [[ "${bool['realpath']}" -eq 1 ]]
         then
-            koopa_print "${dict['app']}"
-            return 0
-        elif [[ ! -x "${dict['app']}" ]] && \
-            [[ "${dict['allow_missing']}" -eq 0 ]]
-        then
-            koopa_stop "Need to install '${dict['opt_name']}' for '${dict['app']}'."
+            dict['app']="$(koopa_realpath "${dict['app']}")"
         fi
-    fi
-    if { \
-        [[ -n "${dict['app']}" ]] && \
-        [[ -x "${dict['app']}" ]] && \
-        [[ ! -d "${dict['app']}" ]] && \
-        koopa_is_installed "${dict['app']}"; \
-    }
-    then
         koopa_print "${dict['app']}"
         return 0
     fi
-    [[ "${dict['allow_missing']}" -eq 1 ]] && return 0
-    koopa_stop "Failed to locate '${dict['app_name']}'."
+    dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
+bin/${dict['bin_name']}"
+    if [[ -x "${dict['app']}" ]]
+    then
+        if [[ "${bool['realpath']}" -eq 1 ]]
+        then
+            dict['app']="$(koopa_realpath "${dict['app']}")"
+        fi
+        koopa_print "${dict['app']}"
+        return 0
+    fi
+    [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
+    koopa_stop "Failed to locate '${dict['bin_name']}'."
 }

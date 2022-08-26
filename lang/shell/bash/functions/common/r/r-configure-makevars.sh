@@ -3,20 +3,33 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-08-18.
+    # @note Updated 2022-08-26.
     # """
     local app cppflags dict flibs i ldflags libs lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
+        ['ar']="$(koopa_locate_ar)"
         ['dirname']="$(koopa_locate_dirname)"
+        ['echo']="$(koopa_locate_echo)"
         ['r']="${1:?}"
+        ['sed']="$(koopa_locate_sed)"
         ['sort']="$(koopa_locate_sort)"
         ['xargs']="$(koopa_locate_xargs)"
+        ['yacc']="$(koopa_locate_yacc)"
     )
+    [[ -x "${app['ar']}" ]] || return 1
     [[ -x "${app['dirname']}" ]] || return 1
+    [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['yacc']}" ]] || return 1
+    app['ar']="$(koopa_realpath "${app['ar']}")"
+    app['bash']="$(koopa_realpath "${app['bash']}")"
+    app['echo']="$(koopa_realpath "${app['echo']}")"
+    app['sed']="$(koopa_realpath "${app['sed']}")"
+    app['yacc']="$(koopa_realpath "${app['yacc']}")"
     koopa_is_koopa_app "${app['r']}" && return 0
     declare -A dict=(
         ['arch']="$(koopa_arch)"
@@ -78,17 +91,12 @@ koopa_r_configure_makevars() {
             "LDFLAGS += ${dict['ldflags']}"
         )
     fi
-    dict['bash']="$(koopa_app_prefix 'bash')"
-    dict['binutils']="$(koopa_app_prefix 'binutils')"
-    dict['bison']="$(koopa_app_prefix 'bison')"
-    dict['coreutils']="$(koopa_app_prefix 'coreutils')"
-    dict['sed']="$(koopa_app_prefix 'sed')"
     lines+=(
-        "AR = ${dict['binutils']}/bin/ar"
-        "ECHO = ${dict['coreutils']}/bin/echo"
-        "SED = ${dict['sed']}/bin/sed"
-        "SHELL = ${dict['bash']}/bin/bash"
-        "YACC = ${dict['bison']}/bin/yacc"
+        "AR = ${app['ar']}"
+        "ECHO = ${app['echo']}"
+        "SED = ${app['sed']}"
+        "SHELL = ${app['bash']}"
+        "YACC = ${app['yacc']}"
     )
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_sudo_write_string \
