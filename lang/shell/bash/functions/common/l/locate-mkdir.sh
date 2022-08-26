@@ -3,6 +3,6 @@
 koopa_locate_mkdir() {
     koopa_locate_app \
         --app-name='coreutils' \
-        --bin-name='gmkdir'
+        --bin-name='gmkdir' \
         "$@" \
 }

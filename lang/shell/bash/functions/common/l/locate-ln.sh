@@ -3,6 +3,6 @@
 koopa_locate_ln() {
     koopa_locate_app \
         --app-name='coreutils' \
-        --bin-name='gln'
+        --bin-name='gln' \
         "$@" \
 }

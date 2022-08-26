@@ -3,6 +3,6 @@
 koopa_locate_du() {
     koopa_locate_app \
         --app-name='coreutils' \
-        --bin-name='gdu'
+        --bin-name='gdu' \
         "$@" \
 }
