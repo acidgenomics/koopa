@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to use '--app-name' instead of '.--opt-name'
+
 koopa_get_version_from_pkg_config() {
     # """
     # Get a library version via 'pkg-config'.
