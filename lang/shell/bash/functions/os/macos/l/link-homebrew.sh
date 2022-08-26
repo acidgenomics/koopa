@@ -30,4 +30,3 @@ koopa_macos_link_homebrew() {
         --source="/Applications/Visual Studio Code.app/Contents/Resources/\
 app/bin/code"
 }
-

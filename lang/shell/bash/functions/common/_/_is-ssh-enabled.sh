@@ -29,4 +29,3 @@ __koopa_is_ssh_enabled() {
         --string="${dict['str']}" \
         --pattern="${dict['pattern']}"
 }
-

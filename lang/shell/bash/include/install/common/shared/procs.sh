@@ -6,4 +6,3 @@ main() {
         --name='procs' \
         "$@"
 }
-
