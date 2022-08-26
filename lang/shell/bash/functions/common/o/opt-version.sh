@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename this, consolidate as 'koopa_app_version'.
+
 koopa_opt_version() {
     # """
     # Get the current version of linked app in opt.

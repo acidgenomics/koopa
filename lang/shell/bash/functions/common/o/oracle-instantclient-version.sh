@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is Linux specific.
+
 koopa_oracle_instantclient_version() {
     # """
     # Oracle InstantClient version.
