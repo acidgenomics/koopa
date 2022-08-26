@@ -5,8 +5,6 @@ set -o errtrace  # -E
 set -o nounset  # -u
 set -o pipefail
 
-# FIXME Need to ensure that KOOPA_BIN is in PATH.
-
 __koopa_is_installed() { # {{{1
     # """
     # Are all of the requested programs installed?
@@ -42,23 +40,13 @@ __koopa_print() { # {{{1
     return 0
 }
 
-# FIXME Improve consistency of this.
 __koopa_realpath() { # {{{1
     # """
     # Resolve file path.
     # @note Updated 2021-05-20.
     # """
-    local readlink x
-    readlink='readlink'
-    __koopa_is_macos && readlink='greadlink'
-    if ! __koopa_is_installed "$readlink"
-    then
-        __koopa_warn "Not installed: '${readlink}'."
-        __koopa_is_macos && \
-            __koopa_warn 'Install GNU coreutils to resolve.'
-        return 1
-    fi
-    x="$("$readlink" -f "$@")"
+    local x
+    x="$(readlink -f "$@")"
     [[ -n "$x" ]] || return 1
     __koopa_print "$x"
     return 0
