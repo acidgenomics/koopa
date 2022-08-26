@@ -10,5 +10,7 @@ koopa_opensuse_install_system_base() {
 }
 
 koopa_opensuse_locate_zypper() {
-    koopa_locate_app '/usr/bin/zypper'
+    koopa_locate_app \
+        '/usr/bin/zypper' \
+        "$@"
 }

@@ -10,9 +10,13 @@ koopa_arch_install_system_base() {
 }
 
 koopa_arch_locate_pacman_db_upgrade() {
-    koopa_locate_app '/usr/sbin/pacman-db-upgrade'
+    koopa_locate_app \
+        '/usr/sbin/pacman-db-upgrade' \
+        "$@"
 }
 
 koopa_arch_locate_pacman() {
-    koopa_locate_app '/usr/sbin/pacman'
+    koopa_locate_app \
+        '/usr/sbin/pacman' \
+        "$@"
 }

@@ -3,6 +3,6 @@
 koopa_locate_xz() {
     koopa_locate_app \
         --app-name='xz' \
-        --opt-name='xz' \
+        --bin-name='xz' \
         "$@"
 }

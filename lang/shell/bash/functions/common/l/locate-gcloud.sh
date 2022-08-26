@@ -2,5 +2,7 @@
 
 koopa_locate_gcloud() {
     koopa_locate_app \
-        --app-name='gcloud'
+        --app-name='google-cloud-sdk' \
+        --bin-name='gcloud' \
+        "$@"
 }
