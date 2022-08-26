@@ -3,7 +3,7 @@
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2022-07-28.
+    # @note Updated 2022-08-26.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -11,7 +11,7 @@ koopa_conda_create_env() {
     local app dict pos string
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['conda']="$(koopa_locate_mamba_or_conda)"
+        ['conda']="$(koopa_locate_conda)"
         ['cut']="$(koopa_locate_cut)"
     )
     [[ -x "${app['conda']}" ]] || return 1

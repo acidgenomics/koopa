@@ -3,7 +3,7 @@
 koopa_conda_remove_env() {
     # """
     # Remove conda environment.
-    # @note Updated 2022-01-17.
+    # @note Updated 2022-08-26.
     #
     # @seealso
     # - conda env list --verbose
@@ -15,7 +15,7 @@ koopa_conda_remove_env() {
     local app dict name
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['conda']="$(koopa_locate_mamba_or_conda)"
+        ['conda']="$(koopa_locate_conda)"
     )
     [[ -x "${app['conda']}" ]] || return 1
     declare -A dict=(

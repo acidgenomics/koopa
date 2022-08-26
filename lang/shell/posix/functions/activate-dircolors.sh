@@ -25,5 +25,12 @@ koopa_activate_dircolors() {
     alias ggrep='ggrep --color=auto'
     alias gls='gls --color=auto'
     alias gvdir='gvdir --color=auto'
+    # Ensure we mask system utils.
+    alias dir='gdir'
+    alias egrep='gegrep'
+    alias frep='gfgrep'
+    alias grep='ggrep'
+    alias ls='gls'
+    alias vdir='gvdir'
     return 0
 }
