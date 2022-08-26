@@ -3,7 +3,7 @@
 koopa_activate_dircolors() {
     # """
     # Activate directory colors.
-    # @note Updated 2022-05-12.
+    # @note Updated 2022-08-26.
     #
     # This will set the 'LS_COLORS' environment variable.
     #
@@ -11,7 +11,7 @@ koopa_activate_dircolors() {
     # """
     [ -n "${SHELL:-}" ] || return 0
     local dircolors
-    dircolors="$(koopa_bin_prefix)/dircolors"
+    dircolors="$(koopa_bin_prefix)/gdircolors"
     [ -x "$dircolors" ] || return 0
     local color_mode config_prefix dircolors_file
     config_prefix="$(koopa_xdg_config_home)/dircolors"
@@ -19,11 +19,11 @@ koopa_activate_dircolors() {
     dircolors_file="${config_prefix}/dircolors-${color_mode}"
     [ -f "$dircolors_file" ] || return 0
     eval "$("$dircolors" "$dircolors_file")"
-    alias dir='dir --color=auto'
-    alias egrep='egrep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias grep='grep --color=auto'
-    alias ls='ls --color=auto'
-    alias vdir='vdir --color=auto'
+    alias gdir='gdir --color=auto'
+    alias gegrep='gegrep --color=auto'
+    alias gfgrep='gfgrep --color=auto'
+    alias ggrep='ggrep --color=auto'
+    alias gls='gls --color=auto'
+    alias gvdir='gvdir --color=auto'
     return 0
 }
