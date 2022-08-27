@@ -181,6 +181,7 @@ __koopa_complete() {
                         'hdf5'
                         'hisat2'
                         'htop'
+                        'htseq'
                         'hyperfine'
                         'icu4c'
                         'imagemagick'
