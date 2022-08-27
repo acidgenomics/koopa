@@ -1000,6 +1000,13 @@
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
     "version": "3.2.1"
   },
+  "htseq": {
+    "bin": ["htseq-count"],
+    "conservative": false,
+    "date": "2022-07-02",
+    "depends": ["conda"],
+    "version": "2.0.2"
+  },
   "hyperfine": {
     "bin": ["hyperfine"],
     "conservative": false,
