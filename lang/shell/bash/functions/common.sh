@@ -3663,7 +3663,7 @@ koopa_check_shared_object() {
     tool_args=()
     if koopa_is_linux
     then
-        app['tool']="$(koopa_locate_ldd)"
+        app['tool']="$(koopa_linux_locate_ldd)"
     elif koopa_is_macos
     then
         app['tool']="$(koopa_macos_locate_otool)"

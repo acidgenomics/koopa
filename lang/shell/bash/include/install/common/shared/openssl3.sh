@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2022-08-16.
+    # @note Updated 2022-08-27.
     #
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
@@ -66,17 +66,6 @@ main() {
     app['openssl']="${dict['prefix']}/bin/openssl"
     koopa_assert_is_installed "${app['openssl']}"
     "${app['openssl']}" version -d
-    # FIXME Rework this as a function.
-    if koopa_is_linux
-    then
-        app['ldd']="$(koopa_locate_ldd)"
-        [[ -x "${app['ldd']}" ]] || return 1
-        "${app['ldd']}" "${dict['prefix']}/bin/openssl"
-    elif koopa_is_macos
-    then
-        app['otool']="$(koopa_macos_locate_otool)"
-        [[ -x "${app['otool']}" ]] || return 1
-        "${app['otool']}" -L "${dict['prefix']}/bin/openssl"
-    fi
+    koopa_check_shared_object --file="${dict['prefix']}/bin/openssl"
     return 0
 }
