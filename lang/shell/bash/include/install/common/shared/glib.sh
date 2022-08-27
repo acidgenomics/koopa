@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting this Meson build error on macOS:
-# > Checking if "GCC size_t typedef is long long" compiles: NO
-
 main() {
     # """
     # Install glib.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-27.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
