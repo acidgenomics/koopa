@@ -15,7 +15,7 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        ['name']="${INSTALL_NAME:?}"
+        ['name']='convmv'
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
     )
