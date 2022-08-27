@@ -184,6 +184,13 @@
     "depends": ["conda"],
     "version": "1.0"
   },
+  "bioconda-utils": {
+    "bin": ["bioconda-utils"],
+    "conservaitve": false,
+    "date": "2022-08-01",
+    "depends": ["conda"],
+    "version": "1.0.1"
+  },
   "bison": {
     "conservative": true,
     "url": ["https://www.gnu.org/software/bison/"],
