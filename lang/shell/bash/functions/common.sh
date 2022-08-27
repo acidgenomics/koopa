@@ -11838,6 +11838,12 @@ koopa_install_conda() {
         "$@"
 }
 
+koopa_install_convmv() {
+    koopa_install_app \
+        --name='convmv' \
+        "$@"
+}
+
 koopa_install_coreutils() {
     koopa_install_app \
         --name='coreutils' \
@@ -22121,6 +22127,12 @@ koopa_uninstall_colorls() {
 koopa_uninstall_conda() {
     koopa_uninstall_app \
         --name='conda' \
+        "$@"
+}
+
+koopa_uninstall_convmv() {
+    koopa_uninstall_app \
+        --name='convmv' \
         "$@"
 }
 
