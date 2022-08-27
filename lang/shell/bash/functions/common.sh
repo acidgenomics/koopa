@@ -11724,6 +11724,12 @@ koopa_install_bioawk() {
         "$@"
 }
 
+koopa_install_bioconda_utils() {
+    koopa_install_app \
+        --name='bioconda-utils' \
+        "$@"
+}
+
 koopa_install_bison() {
     koopa_install_app \
         --name='bison' \
@@ -21995,6 +22001,12 @@ koopa_uninstall_binutils() {
 koopa_uninstall_bioawk() {
     koopa_uninstall_app \
         --name='bioawk' \
+        "$@"
+}
+
+koopa_uninstall_bioconda_utils() {
+    koopa_uninstall_app \
+        --name='bioconda-utils' \
         "$@"
 }
 
