@@ -631,6 +631,12 @@ koopa_linux_locate_ldconfig() {
     koopa_locate_app "${args[@]}" "$@"
 }
 
+koopa_linux_locate_ldd() {
+    koopa_locate_app \
+        '/usr/bin/ldd' \
+        "$@"
+}
+
 koopa_linux_locate_rstudio_server() {
     koopa_locate_app \
         '/usr/sbin/rstudio-server' \

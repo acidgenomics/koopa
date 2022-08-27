@@ -15639,12 +15639,6 @@ koopa_locate_koopa() {
         "$@"
 }
 
-koopa_locate_ldd() {
-    koopa_locate_app \
-        '/usr/bin/ldd' \
-        "$@"
-}
-
 koopa_locate_less() {
     koopa_locate_app \
         --app-name='less' \
