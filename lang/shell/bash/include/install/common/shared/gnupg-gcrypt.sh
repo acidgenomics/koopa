@@ -5,7 +5,7 @@
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-27.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -111,12 +111,15 @@ main() {
             dict['check_key']=0
             ;;
         'gnutls')
-            dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+            dict['maj_min_ver']="$( \
+                koopa_major_minor_version "${dict['version']}" \
+            )"
             dict['base_url']="${dict['base_url']}/v${dict['maj_min_ver']}"
             dict['compress_ext']='xz'
             ;;
     esac
-    dict['tar_file']="${dict['name']}-${dict['version']}.tar.${dict['compress_ext']}"
+    dict['tar_file']="${dict['name']}-${dict['version']}.\
+tar.${dict['compress_ext']}"
     dict['tar_url']="${dict['base_url']}/${dict['tar_file']}"
     koopa_download "${dict['tar_url']}" "${dict['tar_file']}"
     if [[ "${dict['check_key']}" -eq 1 ]] && \
