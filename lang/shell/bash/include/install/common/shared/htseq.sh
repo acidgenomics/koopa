@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Add install support for htseq
-# https://htseq.readthedocs.io/en/master/
+main() {
+    koopa_install_app_internal \
+        --installer='conda-env' \
+        --name='htseq' \
+        "$@"
+}
