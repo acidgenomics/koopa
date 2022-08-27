@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for bioconda-utils
+main() {
+    koopa_install_app_internal \
+        --installer='conda-env' \
+        --name='bioconda-utils' \
+        "$@"
+}

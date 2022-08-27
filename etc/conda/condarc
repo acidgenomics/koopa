@@ -1,6 +1,6 @@
 # """
 # Conda configuration.
-# @note Updated 2022-07-28.
+# @note Updated 2022-08-27.
 #
 # @seealso
 # - 'conda config --json --show' and 'conda config --json --show-sources'.
@@ -24,9 +24,9 @@ channels:
   - bioconda
   # > - defaults
 channel_priority: strict
-disallow:
-  - anaconda
-  - conda
+# > disallow:
+# >   - anaconda
+# >   - conda
 envs_dirs:
   - ~/.conda/envs
 notify_outdated_conda: False
