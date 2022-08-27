@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve documentation linkage of node.1, npm.1 and npx.1?
+# FIXME Need to improve documentation linkage of node.1, npm.1 and npx.1.
 
 main() {
     # """
