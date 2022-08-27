@@ -297,6 +297,7 @@ __koopa_complete() {
                         'sox'
                         'sqlite'
                         'sra-tools'
+                        'sshfs'
                         'star'
                         'starship'
                         'stow'
