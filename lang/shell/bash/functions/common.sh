@@ -13144,6 +13144,12 @@ koopa_install_sra_tools() {
         "$@"
 }
 
+koopa_install_sshfs() {
+    koopa_install_app \
+        --name='sshfs' \
+        "$@"
+}
+
 koopa_install_star() {
     koopa_install_app \
         --name='star' \
@@ -23255,6 +23261,12 @@ koopa_uninstall_sqlite() {
 koopa_uninstall_sra_tools() {
     koopa_uninstall_app \
         --name='sra-tools' \
+        "$@"
+}
+
+koopa_uninstall_sshfs() {
+    koopa_uninstall_app \
+        --name='sshfs' \
         "$@"
 }
 
