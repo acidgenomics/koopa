@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure we link koopa R and Rscript on macOS.
+
 koopa_install_r() {
     # ""
     # Assume we're linking R CRAN binary on macOS instead.
