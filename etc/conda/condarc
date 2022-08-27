@@ -24,9 +24,6 @@ channels:
   - bioconda
   # > - defaults
 channel_priority: strict
-# > disallow:
-# >   - anaconda
-# >   - conda
 envs_dirs:
   - ~/.conda/envs
 notify_outdated_conda: False
@@ -35,5 +32,4 @@ pkgs_dirs:
   - ~/.conda/pkgs
 report_errors: True
 show_channel_urls: True
-ssl_verify: True
 update_dependencies: False
