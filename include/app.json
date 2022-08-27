@@ -336,6 +336,12 @@
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "4.12.0"
   },
+  "convmv": {
+    "bin": ["convmv"],
+    "conservative": false,
+    "url": "https://www.j3e.de/linux/convmv/",
+    "version": "2.05"
+  },
   "coreutils": {
     "bin": [
       "g[",
