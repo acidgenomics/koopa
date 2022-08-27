@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for simple direct file input.
-
 koopa_check_shared_object() {
     # """
     # Check shared object file.
     # @note Updated 2022-08-27.
     #
     # @examples
+    # > koopa_check_shared_object \
+    # >     --file='/opt/koopa/bin/openssl'
     # > koopa_check_shared_object \
     # >     --name='libR' \
     # >     --prefix='/opt/koopa/opt/r/lib/R/lib'
