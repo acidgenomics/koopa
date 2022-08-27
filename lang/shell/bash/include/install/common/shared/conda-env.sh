@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME This also needs to handle man1 linkage.
-# e.g. can try this for hisat2.
-# FIXME Most of the man1 files are for coreutils and Python, not specific
-# informatics tools...see if we can find a case of a tool having man1
-# documentation.
+# NOTE Consider adding man1 support for some apps (e.g. hisat2).
 
 main() {
     # """
