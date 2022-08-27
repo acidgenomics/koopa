@@ -3,7 +3,7 @@
 koopa_activate_coreutils_aliases() {
     # """
     # Activate GNU coreutils aliases.
-    # @note Updated 2022-08-26.
+    # @note Updated 2022-08-27.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -18,7 +18,7 @@ koopa_activate_coreutils_aliases() {
     alias gln='gln --interactive --no-dereference --symbolic --verbose'
     alias gmkdir='gmkdir --parents --verbose'
     alias gmv='gmv --interactive --verbose'
-    alias grm='grm --interactive-once --verbose'
+    alias grm='grm --interactive=once --verbose'
     # Ensure we mask system coreutils.
     alias cp='gcp'
     alias ln='gln'
