@@ -264,7 +264,7 @@ koopa_activate_coreutils_aliases() {
     alias gln='gln --interactive --no-dereference --symbolic --verbose'
     alias gmkdir='gmkdir --parents --verbose'
     alias gmv='gmv --interactive --verbose'
-    alias grm='grm --interactive-once --verbose'
+    alias grm='grm --interactive=once --verbose'
     alias cp='gcp'
     alias ln='gln'
     alias mkdir='gmkdir'
