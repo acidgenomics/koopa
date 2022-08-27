@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework to install from source.
-
 main() {
     # """
     # Install Go.
