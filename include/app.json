@@ -285,8 +285,9 @@
   "cheat": {
     "bin": ["cheat"],
     "conservative": false,
+    "date": "2022-08-27",
     "url": ["https://github.com/cheat/cheat/"],
-    "version": "4.3.0"
+    "version": "4.3.2"
   },
   "chemacs": {
     "conservative": false,
