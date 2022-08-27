@@ -242,6 +242,7 @@ __koopa_complete() {
                         'nghttp2'
                         'nim'
                         'ninja'
+                        'nmap'
                         'node'
                         'npth'
                         'oniguruma'

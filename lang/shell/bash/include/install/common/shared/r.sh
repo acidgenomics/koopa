@@ -6,7 +6,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2022-08-12.
+    # @note Updated 2022-08-27.
     #
     # @section gfortran configuration on macOS:
     #
@@ -185,7 +185,7 @@ main() {
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['jobs']="$(koopa_cpu_count)"
-        ['name']="${INSTALL_NAME:?}"
+        ['name']='r'
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
     )

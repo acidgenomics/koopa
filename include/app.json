@@ -1217,6 +1217,11 @@
     "url": ["https://gnupg.org/download/"],
     "version": "1.6.0"
   },
+  "liblinear": {
+    "conservative": true,
+    "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
+    "version": "2.45"
+  },
   "libpipeline": {
     "conservative": true,
     "url": ["https://libpipeline.nongnu.org/"],
@@ -1441,6 +1446,12 @@
     "conservative": false,
     "depends": ["python"],
     "version": "1.10.2.3"
+  },
+  "nmap": {
+    "bin": ["nmap"],
+    "conservative": false,
+    "url": "https://nmap.org/",
+    "version": "7.92"
   },
   "node": {
     "bin": ["node", "npm", "npx"],

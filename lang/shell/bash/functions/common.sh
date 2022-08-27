@@ -12588,6 +12588,12 @@ koopa_install_libksba() {
         "$@"
 }
 
+koopa_install_liblinear() {
+    koopa_install_app \
+        --name='liblinear' \
+        "$@"
+}
+
 koopa_install_libpipeline() {
     koopa_install_app \
         --name='libpipeline' \
@@ -12777,6 +12783,12 @@ koopa_install_nim() {
 koopa_install_ninja() {
     koopa_install_app \
         --name='ninja' \
+        "$@"
+}
+
+koopa_install_nmap() {
+    koopa_install_app \
+        --name='nmap' \
         "$@"
 }
 
@@ -13141,12 +13153,6 @@ koopa_install_sqlite() {
 koopa_install_sra_tools() {
     koopa_install_app \
         --name='sra-tools' \
-        "$@"
-}
-
-koopa_install_sshfs() {
-    koopa_install_app \
-        --name='sshfs' \
         "$@"
 }
 
@@ -15266,6 +15272,13 @@ koopa_locate_bunzip2() {
         "$@"
 }
 
+koopa_locate_bzip2() {
+    koopa_locate_app \
+        --app-name='bzip2' \
+        --bin-name='bzip2' \
+        "$@"
+}
+
 koopa_locate_cargo() {
     koopa_locate_app \
         --app-name='rust' \
@@ -16124,13 +16137,6 @@ koopa_locate_ssh() {
     koopa_locate_app \
         --app-name='openssh' \
         --bin-name='ssh' \
-        "$@"
-}
-
-koopa_locate_sshfs() {
-    koopa_locate_app \
-        --app-name='sshfs' \
-        --bin-name='sshfs' \
         "$@"
 }
 
@@ -22726,6 +22732,12 @@ koopa_uninstall_libksba() {
         "$@"
 }
 
+koopa_uninstall_liblinear() {
+    koopa_uninstall_app \
+        --name='liblinear' \
+        "$@"
+}
+
 koopa_uninstall_libpipeline() {
     koopa_uninstall_app \
         --name='libpipeline' \
@@ -22915,6 +22927,12 @@ koopa_uninstall_nim() {
 koopa_uninstall_ninja() {
     koopa_uninstall_app \
         --name='ninja' \
+        "$@"
+}
+
+koopa_uninstall_nmap() {
+    koopa_uninstall_app \
+        --name='nmap' \
         "$@"
 }
 
@@ -23261,12 +23279,6 @@ koopa_uninstall_sqlite() {
 koopa_uninstall_sra_tools() {
     koopa_uninstall_app \
         --name='sra-tools' \
-        "$@"
-}
-
-koopa_uninstall_sshfs() {
-    koopa_uninstall_app \
-        --name='sshfs' \
         "$@"
 }
 
