@@ -5,7 +5,7 @@
 koopa_check_shared_object() {
     # """
     # Check shared object file.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-08-27.
     #
     # @examples
     # > koopa_check_shared_object \
@@ -71,7 +71,7 @@ koopa_check_shared_object() {
     tool_args=()
     if koopa_is_linux
     then
-        app['tool']="$(koopa_locate_ldd)"
+        app['tool']="$(koopa_linux_locate_ldd)"
     elif koopa_is_macos
     then
         app['tool']="$(koopa_macos_locate_otool)"
