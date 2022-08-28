@@ -200,6 +200,7 @@ main() {
     declare -A conf_dict
     declare -A dict=(
         ['arch']="$(koopa_arch)"
+        ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['gcc']="$(koopa_app_prefix 'gcc')"
         ['jobs']="$(koopa_cpu_count)"
         ['lapack']="$(koopa_app_prefix 'lapack')"
@@ -448,7 +449,9 @@ R-${dict['maj_ver']}/${dict['file']}"
     # Setting the time zone used to be required for build to complete.
     # > export TZ='America/New_York'
     # Need to burn LAPACK in rpath, otherwise grDevices can fail to build.
-    koopa_add_rpath_to_ldflags "${dict['lapack']}/lib"
+    koopa_add_rpath_to_ldflags \
+        "${dict['bzip2']}/lib" \
+        "${dict['lapack']}/lib"
     ./configure --help
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure "${conf_args[@]}"
