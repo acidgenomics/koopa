@@ -7,12 +7,12 @@ koopa_chmod() {
     # """
     local app chmod dict pos
     declare -A app=(
-        [chmod]="$(koopa_locate_chmod)"
+        ['chmod']="$(koopa_locate_chmod)"
     )
-    [[ -x "${app[chmod]}" ]] || return 1
+    [[ -x "${app['chmod']}" ]] || return 1
     declare -A dict=(
-        [recursive]=0
-        [sudo]=0
+        ['recursive']=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))
@@ -21,12 +21,12 @@ koopa_chmod() {
             # Flags ------------------------------------------------------------
             '--recursive' | \
             '-R')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -41,15 +41,15 @@ koopa_chmod() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
-        [[ -x "${app[sudo]}" ]] || return 1
-        chmod=("${app[sudo]}" "${app[chmod]}")
+        app['sudo']="$(koopa_locate_sudo)"
+        [[ -x "${app['sudo']}" ]] || return 1
+        chmod=("${app['sudo']}" "${app['chmod']}")
     else
-        chmod=("${app[chmod]}")
+        chmod=("${app['chmod']}")
     fi
-    if [[ "${dict[recursive]}" -eq 1 ]]
+    if [[ "${dict['recursive']}" -eq 1 ]]
     then
         chmod+=('-R')
     fi

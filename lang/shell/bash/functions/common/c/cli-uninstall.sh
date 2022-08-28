@@ -23,14 +23,14 @@ koopa_cli_uninstall() {
     do
         local dict
         declare -A dict=(
-            [key]="${stem}-${app}"
+            ['key']="${stem}-${app}"
         )
-        dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
-        if ! koopa_is_function "${dict[fun]}"
+        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
+        if ! koopa_is_function "${dict['fun']}"
         then
             koopa_stop "Unsupported app: '${app}'."
         fi
-        "${dict[fun]}"
+        "${dict['fun']}"
     done
     return 0
 }

@@ -8,9 +8,9 @@ koopa_parse_url() {
     local app curl_args pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [curl]="$(koopa_locate_curl)"
+        ['curl']="$(koopa_locate_curl)"
     )
-    [[ -x "${app[curl]}" ]] || return 1
+    [[ -x "${app['curl']}" ]] || return 1
     curl_args=(
         '--disable' # Ignore '~/.curlrc'. Must come first.
         '--fail'
@@ -44,6 +44,6 @@ koopa_parse_url() {
     curl_args+=("${1:?}")
     # NOTE Don't use 'koopa_print' here, since we need to pass binary output
     # in some cases for GPG key configuration.
-    "${app[curl]}" "${curl_args[@]}"
+    "${app['curl']}" "${curl_args[@]}"
     return 0
 }

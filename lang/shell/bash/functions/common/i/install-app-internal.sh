@@ -3,7 +3,7 @@
 koopa_install_app_internal() {
     # """
     # Internal runner to install an application.
-    # @note Updated 2022-08-12.
+    # @note Updated 2022-08-25.
     # """
     local pos
     koopa_assert_has_args "$#"
@@ -11,12 +11,10 @@ koopa_install_app_internal() {
     while (("$#"))
     do
         case "$1" in
-            '--link-in-bin' | \
-            '--link-in-bin='* | \
             '--no-link-in-opt' | \
             '--no-prefix-check' | \
-            '--quiet' | \
-            '--no-restrict-path')
+            '--no-restrict-path' | \
+            '--quiet')
                 koopa_invalid_arg "$1"
                 ;;
             *)

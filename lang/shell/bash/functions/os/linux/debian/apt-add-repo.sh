@@ -60,14 +60,14 @@ koopa_debian_apt_add_repo() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A dict=(
-        [arch]="$(koopa_arch2)" # e.g. 'amd64'.
-        [distribution]=''
-        [key_name]=''
-        [key_prefix]="$(koopa_debian_apt_key_prefix)"
-        [name]=''
-        [prefix]="$(koopa_debian_apt_sources_prefix)"
-        [signed_by]=''
-        [url]=''
+        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+        ['distribution']=''
+        ['key_name']=''
+        ['key_prefix']="$(koopa_debian_apt_key_prefix)"
+        ['name']=''
+        ['prefix']="$(koopa_debian_apt_sources_prefix)"
+        ['signed_by']=''
+        ['url']=''
     )
     components=()
     while (("$#"))
@@ -83,59 +83,59 @@ koopa_debian_apt_add_repo() {
                 shift 2
                 ;;
             '--distribution='*)
-                dict[distribution]="${1#*=}"
+                dict['distribution']="${1#*=}"
                 shift 1
                 ;;
             '--distribution')
-                dict[distribution]="${2:?}"
+                dict['distribution']="${2:?}"
                 shift 2
                 ;;
             '--key-name='*)
-                dict[key_name]="${1#*=}"
+                dict['key_name']="${1#*=}"
                 shift 1
                 ;;
             '--key-name')
-                dict[key_name]="${2:?}"
+                dict['key_name']="${2:?}"
                 shift 2
                 ;;
             '--key-prefix='*)
-                dict[key_prefix]="${1#*=}"
+                dict['key_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--key-prefix')
-                dict[key_prefix]="${2:?}"
+                dict['key_prefix']="${2:?}"
                 shift 2
                 ;;
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--signed-by='*)
-                dict[signed_by]="${1#*=}"
+                dict['signed_by']="${1#*=}"
                 shift 1
                 ;;
             '--signed-by')
-                dict[signed_by]="${2:?}"
+                dict['signed_by']="${2:?}"
                 shift 2
                 ;;
             '--url='*)
-                dict[url]="${1#*=}"
+                dict['url']="${1#*=}"
                 shift 1
                 ;;
             '--url')
-                dict[url]="${2:?}"
+                dict['url']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -144,33 +144,33 @@ koopa_debian_apt_add_repo() {
                 ;;
         esac
     done
-    if [[ -z "${dict[key_name]:-}" ]]
+    if [[ -z "${dict['key_name']:-}" ]]
     then
-        dict[key_name]="${dict[name]}"
+        dict['key_name']="${dict['name']}"
     fi
     koopa_assert_is_set \
-        '--distribution' "${dict[distribution]}" \
-        '--key-name' "${dict[key_name]}" \
-        '--key-prefix' "${dict[key_prefix]}" \
-        '--name' "${dict[name]}" \
-        '--prefix' "${dict[prefix]}" \
-        '--url' "${dict[url]}"
+        '--distribution' "${dict['distribution']}" \
+        '--key-name' "${dict['key_name']}" \
+        '--key-prefix' "${dict['key_prefix']}" \
+        '--name' "${dict['name']}" \
+        '--prefix' "${dict['prefix']}" \
+        '--url' "${dict['url']}"
     koopa_assert_is_dir \
-        "${dict[key_prefix]}" \
-        "${dict[prefix]}"
-    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
-    koopa_assert_is_file "${dict[signed_by]}"
-    dict[file]="${dict[prefix]}/koopa-${dict[name]}.list"
-    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
-${dict[url]} ${dict[distribution]} ${components[*]}"
-    if [[ -f "${dict[file]}" ]]
+        "${dict['key_prefix']}" \
+        "${dict['prefix']}"
+    dict['signed_by']="${dict['key_prefix']}/koopa-${dict['key_name']}.gpg"
+    koopa_assert_is_file "${dict['signed_by']}"
+    dict['file']="${dict['prefix']}/koopa-${dict['name']}.list"
+    dict['string']="deb [arch=${dict['arch']} signed-by=${dict['signed_by']}] \
+${dict['url']} ${dict['distribution']} ${components[*]}"
+    if [[ -f "${dict['file']}" ]]
     then
-        koopa_alert_info "'${dict[name]}' repo exists at '${dict[file]}'."
+        koopa_alert_info "'${dict['name']}' repo exists at '${dict['file']}'."
         return 0
     fi
-    koopa_alert "Adding '${dict[name]}' repo at '${dict[file]}'."
+    koopa_alert "Adding '${dict['name']}' repo at '${dict['file']}'."
     koopa_sudo_write_string \
-        --file="${dict[file]}" \
-        --string="${dict[string]}"
+        --file="${dict['file']}" \
+        --string="${dict['string']}"
     return 0
 }

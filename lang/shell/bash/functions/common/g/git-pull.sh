@@ -16,9 +16,9 @@ koopa_git_pull() {
     # """
     local app repos
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_assert_is_dir "${repos[@]}"
     # Using a single subshell here to avoid performance hit during looping.
@@ -30,8 +30,8 @@ koopa_git_pull() {
             koopa_alert "Pulling repo at '${repo}'."
             koopa_cd "$repo"
             koopa_assert_is_git_repo
-            "${app[git]}" fetch --all --quiet
-            "${app[git]}" pull --all --no-rebase --recurse-submodules
+            "${app['git']}" fetch --all --quiet
+            "${app['git']}" pull --all --no-rebase --recurse-submodules
         done
     )
     return 0

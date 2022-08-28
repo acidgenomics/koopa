@@ -7,9 +7,9 @@ koopa_git_reset_fork_to_upstream() {
     # """
     local app repos
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -23,14 +23,14 @@ koopa_git_reset_fork_to_upstream() {
             koopa_cd "$repo"
             koopa_assert_is_git_repo
             declare -A dict=(
-                [branch]="$(koopa_git_default_branch)"
-                [origin]='origin'
-                [upstream]='upstream'
+                ['branch']="$(koopa_git_default_branch)"
+                ['origin']='origin'
+                ['upstream']='upstream'
             )
-            "${app[git]}" checkout "${dict[branch]}"
-            "${app[git]}" fetch "${dict[upstream]}"
-            "${app[git]}" reset --hard "${dict[upstream]}/${dict[branch]}"
-            "${app[git]}" push "${dict[origin]}" "${dict[branch]}" --force
+            "${app['git']}" checkout "${dict['branch']}"
+            "${app['git']}" fetch "${dict['upstream']}"
+            "${app['git']}" reset --hard "${dict['upstream']}/${dict['branch']}"
+            "${app['git']}" push "${dict['origin']}" "${dict['branch']}" --force
         done
     )
     return 0

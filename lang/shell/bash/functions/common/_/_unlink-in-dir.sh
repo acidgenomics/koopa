@@ -8,8 +8,8 @@ __koopa_unlink_in_dir() {
     local dict name names pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [allow_missing]=0
-        [prefix]=''
+        ['allow_missing']=0
+        ['prefix']=''
     )
     pos=()
     while (("$#"))
@@ -17,16 +17,16 @@ __koopa_unlink_in_dir() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--allow-missing')
-                dict[allow_missing]=1
+                dict['allow_missing']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -41,15 +41,15 @@ __koopa_unlink_in_dir() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    koopa_assert_is_set '--prefix' "${dict[prefix]}"
-    koopa_assert_is_dir "${dict[prefix]}"
-    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
+    koopa_assert_is_set '--prefix' "${dict['prefix']}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     names=("$@")
     for name in "${names[@]}"
     do
         local file
-        file="${dict[prefix]}/${name}"
-        if [[ "${dict[allow_missing]}" -eq 1 ]]
+        file="${dict['prefix']}/${name}"
+        if [[ "${dict['allow_missing']}" -eq 1 ]]
         then
             if [[ -L "$file" ]]
             then

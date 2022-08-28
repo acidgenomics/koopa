@@ -24,29 +24,29 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'chemacs'
     declare -A app=(
-        [emacs]="$(koopa_locate_emacs)"
+        ['emacs']="$(koopa_locate_emacs)"
     )
-    [[ -x "${app[emacs]}" ]] || return 1
+    [[ -x "${app['emacs']}" ]] || return 1
     declare -A dict=(
-        [branch]='master'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [url]='https://github.com/hlissner/doom-emacs.git'
+        ['branch']='master'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['url']='https://github.com/hlissner/doom-emacs.git'
     )
-    koopa_add_to_path_start "$(koopa_dirname "${app[emacs]}")"
+    koopa_add_to_path_start "$(koopa_dirname "${app['emacs']}")"
     koopa_git_clone \
-        --branch="${dict[branch]}" \
-        --prefix="${dict[prefix]}" \
-        --url="${dict[url]}"
-    app[doom]="${dict[prefix]}/bin/doom"
-    koopa_assert_is_installed "${app[doom]}"
+        --branch="${dict['branch']}" \
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}"
+    app['doom']="${dict['prefix']}/bin/doom"
+    koopa_assert_is_installed "${app['doom']}"
     install_args=(
         # > '--no-config'
         # > '--no-install'
         '--no-env'
         '--no-fonts'
     )
-    "${app[doom]}" --force install "${install_args[@]}"
-    "${app[doom]}" --force sync
-    # > "${app[doom]}" --force doctor
+    "${app['doom']}" --force install "${install_args[@]}"
+    "${app['doom']}" --force sync
+    # > "${app['doom']}" --force doctor
     return 0
 }

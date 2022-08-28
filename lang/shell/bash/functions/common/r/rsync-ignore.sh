@@ -11,22 +11,22 @@ koopa_rsync_ignore() {
     local dict rsync_args
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [ignore_local]='.gitignore'
-        [ignore_global]="${HOME}/.gitignore"
+        ['ignore_local']='.gitignore'
+        ['ignore_global']="${HOME}/.gitignore"
     )
     rsync_args=(
         '--archive'
         '--exclude=.*'
     )
-    if [[ -f "${dict[ignore_local]}" ]]
+    if [[ -f "${dict['ignore_local']}" ]]
     then
         rsync_args+=(
-            "--filter=dir-merge,- ${dict[ignore_local]}"
+            "--filter=dir-merge,- ${dict['ignore_local']}"
         )
     fi
-    if [[ -f "${dict[ignore_global]}" ]]
+    if [[ -f "${dict['ignore_global']}" ]]
     then
-        rsync_args+=("--filter=dir-merge,- ${dict[ignore_global]}")
+        rsync_args+=("--filter=dir-merge,- ${dict['ignore_global']}")
     fi
     koopa_rsync "${rsync_args[@]}" "$@"
     return 0

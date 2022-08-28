@@ -14,31 +14,31 @@ koopa_unlink_in_make() {
     local app_prefix dict files
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [app_prefix]=''
-        [make_prefix]="$(koopa_make_prefix)"
+        ['app_prefix']=''
+        ['make_prefix']="$(koopa_make_prefix)"
     )
-    koopa_assert_is_dir "${dict[make_prefix]}"
+    koopa_assert_is_dir "${dict['make_prefix']}"
     for app_prefix in "$@"
     do
-        dict[app_prefix]="$app_prefix"
-        koopa_assert_is_dir "${dict[app_prefix]}"
-        dict[app_prefix]="$(koopa_realpath "${dict[app_prefix]}")"
+        dict['app_prefix']="$app_prefix"
+        koopa_assert_is_dir "${dict['app_prefix']}"
+        dict['app_prefix']="$(koopa_realpath "${dict['app_prefix']}")"
         readarray -t files <<< "$( \
             koopa_find_symlinks \
-                --source-prefix="${dict[app_prefix]}" \
-                --target-prefix="${dict[make_prefix]}" \
+                --source-prefix="${dict['app_prefix']}" \
+                --target-prefix="${dict['make_prefix']}" \
                 --verbose \
         )"
         if koopa_is_array_empty "${files[@]:-}"
         then
-            koopa_stop "No files from '${dict[app_prefix]}' detected."
+            koopa_stop "No files from '${dict['app_prefix']}' detected."
         fi
         koopa_alert "$(koopa_ngettext \
             --prefix='Unlinking ' \
             --num="${#files[@]}" \
             --msg1='file' \
             --msg2='files' \
-            --suffix=" from '${dict[app_prefix]}' in '${dict[make_prefix]}'." \
+            --suffix=" from '${dict['app_prefix']}' in '${dict['make_prefix']}'." \
         )"
         for file in "${files[@]}"
         do

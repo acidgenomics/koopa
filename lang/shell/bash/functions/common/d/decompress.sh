@@ -30,8 +30,8 @@ koopa_decompress() {
     local cmd cmd_args dict pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [compress_ext_pattern]="$(koopa_compress_ext_pattern)"
-        [stdout]=0
+        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+        ['stdout']=0
     )
     pos=()
     while (("$#"))
@@ -39,7 +39,7 @@ koopa_decompress() {
         case "$1" in
             # Flags ------------------------------------------------------------
             '--stdout')
-                dict[stdout]=1
+                dict['stdout']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -54,32 +54,32 @@ koopa_decompress() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    dict[source_file]="${1:?}"
-    dict[target_file]="${2:-}"
-    koopa_assert_is_file "${dict[source_file]}"
-    case "${dict[stdout]}" in
+    dict['source_file']="${1:?}"
+    dict['target_file']="${2:-}"
+    koopa_assert_is_file "${dict['source_file']}"
+    case "${dict['stdout']}" in
         '0')
-            if [[ -z "${dict[target_file]}" ]]
+            if [[ -z "${dict['target_file']}" ]]
             then
-                dict[target_file]="$( \
+                dict['target_file']="$( \
                     koopa_sub \
-                        --pattern="${dict[compress_ext_pattern]}" \
+                        --pattern="${dict['compress_ext_pattern']}" \
                         --replacement='' \
-                        "${dict[source_file]}" \
+                        "${dict['source_file']}" \
                 )"
             fi
-            if [[ "${dict[source_file]}" == "${dict[target_file]}" ]]
+            if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
             then
                 return 0
             fi
             ;;
         '1')
-            [[ -z "${dict[target_file]}" ]] || return 1
+            [[ -z "${dict['target_file']}" ]] || return 1
             ;;
     esac
-    case "${dict[source_file]}" in
+    case "${dict['source_file']}" in
         *'.bz2' | *'.gz' | *'.xz')
-            case "${dict[source_file]}" in
+            case "${dict['source_file']}" in
                 *'.bz2')
                     cmd="$(koopa_locate_bzip2)"
                     ;;
@@ -96,11 +96,11 @@ koopa_decompress() {
                 '-d' # '--decompress'.
                 '-f' # '--force'.
                 '-k' # '--keep'.
-                "${dict[source_file]}"
+                "${dict['source_file']}"
             )
-            case "${dict[stdout]}" in
+            case "${dict['stdout']}" in
                 '0')
-                    "$cmd" "${cmd_args[@]}" > "${dict[target_file]}"
+                    "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
                     ;;
                 '1')
                     "$cmd" "${cmd_args[@]}" || true
@@ -108,21 +108,21 @@ koopa_decompress() {
             esac
             ;;
         *)
-            case "${dict[stdout]}" in
+            case "${dict['stdout']}" in
                 '0')
-                    koopa_cp "${dict[source_file]}" "${dict[target_file]}"
+                    koopa_cp "${dict['source_file']}" "${dict['target_file']}"
                     ;;
                 '1')
                     cmd="$(koopa_locate_cat)"
                     [[ -x "$cmd" ]] || return 1
-                    "$cmd" "${dict[source_file]}" || true
+                    "$cmd" "${dict['source_file']}" || true
                     ;;
             esac
             ;;
     esac
-    if [[ "${dict[stdout]}" -eq 0 ]]
+    if [[ "${dict['stdout']}" -eq 0 ]]
     then
-        koopa_assert_is_file "${dict[target_file]}"
+        koopa_assert_is_file "${dict['target_file']}"
     fi
     return 0
 }

@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Does this require sbin on Linux?
+
 koopa_locate_tlmgr() {
+    local args
+    args=()
     if koopa_is_macos
     then
-        koopa_locate_app '/Library/TeX/texbin/tlmgr'
+        args+=('/Library/TeX/texbin/tlmgr')
     else
-        koopa_locate_app \
-            --allow-in-path \
-            --app-name='tlmgr'
+        args+=('/usr/bin/tlmgr')
     fi
+    koopa_locate_app "${args[@]}" "$@"
 }

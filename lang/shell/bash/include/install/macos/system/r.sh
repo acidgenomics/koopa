@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-08-27.
     #
     # @section Intel:
     #
@@ -27,44 +27,42 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [installer]="$(koopa_macos_locate_installer)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['installer']="$(koopa_macos_locate_installer)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[installer]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['installer']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [framework_prefix]='/Library/Frameworks/R.framework'
-        [os]="$(koopa_kebab_case_simple "$(koopa_os_codename)")"
-        [url_stem]='https://cran.r-project.org/bin/macosx'
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['framework_prefix']='/Library/Frameworks/R.framework'
+        ['os']="$(koopa_kebab_case_simple "$(koopa_os_codename)")"
+        ['url_stem']='https://cran.r-project.org/bin/macosx'
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[maj_min_version]="$(koopa_major_minor_version "${dict[version]}")"
-    dict[prefix]="${dict[framework_prefix]}/Versions/\
-${dict[maj_min_version]}/Resources"
-    case "${dict[arch]}" in
+    dict['maj_min_version']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['prefix']="${dict['framework_prefix']}/Versions/\
+${dict['maj_min_version']}/Resources"
+    case "${dict['arch']}" in
         'aarch64')
-            dict[arch2]='arm64'
-            dict[pkg_file]="R-${dict[version]}-${dict[arch2]}.pkg"
-            dict[url]="${dict[url_stem]}/${dict[os]}-${dict[arch2]}/\
-base/${dict[pkg_file]}"
+            dict['arch2']='arm64'
+            dict['pkg_file']="R-${dict['version']}-${dict['arch2']}.pkg"
+            dict['url']="${dict['url_stem']}/${dict['os']}-${dict['arch2']}/\
+base/${dict['pkg_file']}"
             ;;
         'x86_64')
-            dict[pkg_file]="R-${dict[version]}.pkg"
-            dict[url]="${dict[url_stem]}/base/${dict[pkg_file]}"
+            dict['pkg_file']="R-${dict['version']}.pkg"
+            dict['url']="${dict['url_stem']}/base/${dict['pkg_file']}"
             ;;
         *)
-            koopa_stop "Unsupported architecture: '${dict[arch]}'."
+            koopa_stop "Unsupported architecture: '${dict['arch']}'."
             ;;
     esac
-    koopa_download "${dict[url]}"
-    "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
-    koopa_assert_is_dir "${dict[prefix]}"
+    koopa_download "${dict['url']}"
+    "${app['sudo']}" "${app['installer']}" -pkg "${dict['pkg_file']}" -target '/'
+    koopa_assert_is_dir "${dict['prefix']}"
     koopa_macos_install_system_r_openmp
-    koopa_install_system_tex
-    koopa_install_system_tex_packages
-    app[r]="${dict[prefix]}/bin/R"
-    koopa_assert_is_installed "${app[r]}"
-    koopa_configure_r "${app[r]}"
+    app['r']="${dict['prefix']}/bin/R"
+    koopa_assert_is_installed "${app['r']}"
+    koopa_configure_r "${app['r']}"
     return 0
 }

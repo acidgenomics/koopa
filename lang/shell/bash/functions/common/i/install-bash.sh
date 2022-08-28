@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# NOTE This can cause shell to error when reinstalling current linked version.
-
 koopa_install_bash() {
+    # """
+    # This can cause shell to hang when reinstalling current version.
+    # """
     koopa_install_app \
-        --link-in-bin='bash' \
         --name='bash' \
         "$@"
 }

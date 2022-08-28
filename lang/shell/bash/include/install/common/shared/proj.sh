@@ -29,52 +29,52 @@ main() {
         'python' \
         'sqlite'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
-        [make]="$(koopa_locate_make)"
+        ['cmake']="$(koopa_locate_cmake)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [make_prefix]="$(koopa_make_prefix)"
-        [name]='proj'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [shared_ext]="$(koopa_shared_ext)"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['make_prefix']="$(koopa_make_prefix)"
+        ['name']='proj'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://github.com/OSGeo/PROJ/releases/download/\
-${dict[version]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/OSGeo/PROJ/releases/download/\
+${dict['version']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    dict[curl]="$(koopa_app_prefix 'curl')"
-    dict[libtiff]="$(koopa_app_prefix 'libtiff')"
-    dict[sqlite]="$(koopa_app_prefix 'sqlite')"
+    dict['curl']="$(koopa_app_prefix 'curl')"
+    dict['libtiff']="$(koopa_app_prefix 'libtiff')"
+    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
         '-DBUILD_APPS=ON'
         '-DBUILD_SHARED_LIBS=ON'
         '-DBUILD_TESTING=OFF'
         '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         '-DENABLE_CURL=ON'
         '-DENABLE_TIFF=ON'
         # Required dependency paths.
-        "-DEXE_SQLITE3=${dict[sqlite]}/bin/sqlite3"
-        "-DSQLITE3_INCLUDE_DIR=${dict[sqlite]}/include"
-        "-DSQLITE3_LIBRARY=${dict[sqlite]}/lib/libsqlite3.${dict[shared_ext]}"
+        "-DEXE_SQLITE3=${dict['sqlite']}/bin/sqlite3"
+        "-DSQLITE3_INCLUDE_DIR=${dict['sqlite']}/include"
+        "-DSQLITE3_LIBRARY=${dict['sqlite']}/lib/libsqlite3.${dict['shared_ext']}"
         # Optional dependency paths.
-        "-DCURL_INCLUDE_DIR=${dict[curl]}/include"
-        "-DCURL_LIBRARY=${dict[curl]}/lib/libcurl.${dict[shared_ext]}"
-        "-DTIFF_INCLUDE_DIR=${dict[libtiff]}/include"
-        "-DTIFF_LIBRARY_RELEASE=${dict[libtiff]}/lib/\
-libtiff.${dict[shared_ext]}"
+        "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
+        "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
+        "-DTIFF_INCLUDE_DIR=${dict['libtiff']}/include"
+        "-DTIFF_LIBRARY_RELEASE=${dict['libtiff']}/lib/\
+libtiff.${dict['shared_ext']}"
     )
-    "${app[cmake]}" .. "${cmake_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['cmake']}" .. "${cmake_args[@]}"
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

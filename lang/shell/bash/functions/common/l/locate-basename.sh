@@ -2,6 +2,7 @@
 
 koopa_locate_basename() {
     koopa_locate_app \
-        --app-name='basename' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gbasename' \
+        "$@"
 }

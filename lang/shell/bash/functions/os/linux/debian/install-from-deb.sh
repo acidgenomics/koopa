@@ -9,14 +9,14 @@ koopa_debian_install_from_deb() {
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_admin
     declare -A app=(
-        [gdebi]="$(koopa_debian_locate_gdebi)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['gdebi']="$(koopa_debian_locate_gdebi)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[gdebi]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['gdebi']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        [file]="${1:?}"
+        ['file']="${1:?}"
     )
-    "${app[sudo]}" "${app[gdebi]}" --non-interactive "${dict[file]}"
+    "${app['sudo']}" "${app['gdebi']}" --non-interactive "${dict['file']}"
     return 0
 }

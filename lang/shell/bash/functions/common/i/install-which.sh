@@ -2,7 +2,6 @@
 
 koopa_install_which() {
     koopa_install_app \
-        --link-in-bin='which' \
         --name='which' \
         "$@"
 }

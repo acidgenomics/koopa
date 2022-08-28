@@ -5,6 +5,5 @@
 koopa_uninstall_fish() {
     koopa_uninstall_app \
         --name='fish' \
-        --unlink-in-bin='fish' \
         "$@"
 }

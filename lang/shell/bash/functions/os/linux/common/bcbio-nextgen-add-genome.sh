@@ -12,13 +12,13 @@ koopa_linux_bcbio_nextgen_add_genome() {
     koopa_assert_has_args "$#"
     genomes=("$@")
     declare -A app=(
-        [bcbio]="$(koopa_linux_locate_bcbio)"
+        ['bcbio']="$(koopa_linux_locate_bcbio)"
     )
     declare -A dict=(
-        [cores]="$(koopa_cpu_count)"
+        ['cores']="$(koopa_cpu_count)"
     )
     bcbio_args=(
-        "--cores=${dict[cores]}"
+        "--cores=${dict['cores']}"
         '--upgrade=skip'
     )
     for genome in "${genomes[@]}"
@@ -28,6 +28,6 @@ koopa_linux_bcbio_nextgen_add_genome() {
     koopa_dl \
         'Genomes' "$(koopa_to_string "${genomes[@]}")" \
         'Args' "${bcbio_args[@]}"
-    "${app[bcbio]}" upgrade "${bcbio_args[@]}"
+    "${app['bcbio']}" upgrade "${bcbio_args[@]}"
     return 0
 }

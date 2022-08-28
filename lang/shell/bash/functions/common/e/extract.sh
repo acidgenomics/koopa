@@ -3,7 +3,7 @@
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-25.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -15,7 +15,7 @@ koopa_extract() {
     declare -A app
     declare -A dict
     # Ensure modifications to 'PATH' are temporary during this function call.
-    dict[orig_path]="${PATH:-}"
+    dict['orig_path']="${PATH:-}"
     for file in "$@"
     do
         koopa_assert_is_file "$file"
@@ -26,56 +26,67 @@ koopa_extract() {
             *'.tar.bz2' | \
             *'.tar.gz' | \
             *'.tar.xz')
-                app[cmd]="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 case "$file" in
                     *'.bz2')
-                        app[cmd2]="$(koopa_locate_bzip2)"
-                        [[ -x "${app[cmd2]}" ]] || return 1
+                        app['cmd2']="$(koopa_locate_bzip2 --allow-missing)"
+                        [[ -z "${app['cmd2']}" ]] \
+                            && app['cmd2']='/usr/bin/bzip2'
+                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
-                            "$(koopa_dirname "${app[cmd2]}")"
+                            "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
                     *'.gz')
-                        app[cmd2]="$(koopa_locate_gzip)"
-                        [[ -x "${app[cmd2]}" ]] || return 1
+                        app['cmd2']="$(koopa_locate_gzip --allow-missing)"
+                        [[ -z "${app['cmd2']}" ]] \
+                            && app['cmd2']='/usr/bin/gzip'
+                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
-                            "$(koopa_dirname "${app[cmd2]}")"
+                            "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
                         ;;
                     *'.xz')
-                        app[cmd2]="$(koopa_locate_xz)"
-                        [[ -x "${app[cmd2]}" ]] || return 1
+                        app['cmd2']="$(koopa_locate_xz --allow-missing)"
+                        [[ -z "${app['cmd2']}" ]] \
+                            && app['cmd2']='/usr/bin/xz'
+                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
-                            "$(koopa_dirname "${app[cmd2]}")"
+                            "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-J') # '--xz'.
                         ;;
                 esac
                 ;;
             # Single extension.
             *'.bz2')
-                app[cmd]="$(koopa_locate_bunzip2)"
+                app['cmd']="$(koopa_locate_bunzip2 --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/bunzip2'
                 cmd_args=("$file")
                 ;;
             *'.gz')
-                app[cmd]="$(koopa_locate_gzip)"
+                app['cmd']="$(koopa_locate_gzip --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/gzip'
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                 )
                 ;;
             *'.tar')
-                app[cmd]="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 ;;
             *'.tbz2')
-                app[cmd]="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-j' # '--bzip2'.
@@ -83,7 +94,8 @@ koopa_extract() {
                 )
                 ;;
             *'.tgz')
-                app[cmd]="$(koopa_locate_tar)"
+                app['cmd']="$(koopa_locate_tar --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
@@ -91,25 +103,28 @@ koopa_extract() {
                 )
                 ;;
             *'.xz')
-                app[cmd]="$(koopa_locate_xz)"
+                app['cmd']="$(koopa_locate_xz --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/xz'
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                     )
                 ;;
             *'.zip')
-                app[cmd]="$(koopa_locate_unzip)"
+                app['cmd']="$(koopa_locate_unzip --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/unzip'
                 cmd_args=(
                     '-qq'
                     "$file"
                 )
                 ;;
             *'.Z')
-                app[cmd]="$(koopa_locate_uncompress)"
+                app['cmd']="$(koopa_locate_uncompress --allow-missing)"
+                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/uncompress'
                 cmd_args=("$file")
                 ;;
             *'.7z')
-                app[cmd]="$(koopa_locate_7z)"
+                app['cmd']="$(koopa_locate_7z)"
                 cmd_args=(
                     '-x'
                     "$file"
@@ -119,9 +134,9 @@ koopa_extract() {
                 koopa_stop "Unsupported extension: '${file}'."
                 ;;
         esac
-        [[ -x "${app[cmd]}" ]] || return 1
-        "${app[cmd]}" "${cmd_args[@]}"
+        [[ -x "${app['cmd']}" ]] || return 1
+        "${app['cmd']}" "${cmd_args[@]}"
     done
-    export PATH="${dict[orig_path]}"
+    export PATH="${dict['orig_path']}"
     return 0
 }

@@ -10,25 +10,25 @@ koopa_header() {
     local dict
     koopa_assert_has_args_eq "$#" 1
     declare -A dict=(
-        [lang]="$(koopa_lowercase "${1:?}")"
-        [prefix]="$(koopa_koopa_prefix)/lang"
+        ['lang']="$(koopa_lowercase "${1:?}")"
+        ['prefix']="$(koopa_koopa_prefix)/lang"
     )
-    case "${dict[lang]}" in
+    case "${dict['lang']}" in
         'bash' | \
         'posix' | \
         'zsh')
-            dict[prefix]="${dict[prefix]}/shell"
-            dict[ext]='sh'
+            dict['prefix']="${dict['prefix']}/shell"
+            dict['ext']='sh'
             ;;
         'r')
-            dict[ext]='R'
+            dict['ext']='R'
             ;;
         *)
-            koopa_invalid_arg "${dict[lang]}"
+            koopa_invalid_arg "${dict['lang']}"
             ;;
     esac
-    dict[file]="${dict[prefix]}/${dict[lang]}/include/header.${dict[ext]}"
-    koopa_assert_is_file "${dict[file]}"
-    koopa_print "${dict[file]}"
+    dict['file']="${dict['prefix']}/${dict['lang']}/include/header.${dict['ext']}"
+    koopa_assert_is_file "${dict['file']}"
+    koopa_print "${dict['file']}"
     return 0
 }

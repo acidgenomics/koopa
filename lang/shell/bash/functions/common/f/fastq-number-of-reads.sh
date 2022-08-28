@@ -13,19 +13,19 @@ koopa_fastq_number_of_reads() {
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [wc]="$(koopa_locate_wc)"
+        ['awk']="$(koopa_locate_awk)"
+        ['wc']="$(koopa_locate_wc)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[wc]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['wc']}" ]] || return 1
     for file in "$@"
     do
         local num
         # shellcheck disable=SC2016
         num="$( \
-            "${app[wc]}" -l \
+            "${app['wc']}" -l \
                 <(koopa_decompress --stdout "$file") \
-            | "${app[awk]}" '{print $1/4}' \
+            | "${app['awk']}" '{print $1/4}' \
         )"
         [[ -n "$num" ]] || return 1
         koopa_print "$num"

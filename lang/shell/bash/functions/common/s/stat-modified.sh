@@ -17,17 +17,17 @@ koopa_stat_modified() {
     local app dict timestamp timestamps x
     koopa_assert_has_args_ge "$#" 2
     declare -A app=(
-        [date]="$(koopa_locate_date)"
+        ['date']="$(koopa_locate_date)"
     )
-    [[ -x "${app[date]}" ]] || return 1
+    [[ -x "${app['date']}" ]] || return 1
     declare -A dict=(
-        [format]="${1:?}"
+        ['format']="${1:?}"
     )
     shift 1
     readarray -t timestamps <<< "$(koopa_stat '%Y' "$@")"
     for timestamp in "${timestamps[@]}"
     do
-        x="$("${app[date]}" -d "@${timestamp}" +"${dict[format]}")"
+        x="$("${app['date']}" -d "@${timestamp}" +"${dict['format']}")"
         [[ -n "$x" ]] || return 1
         koopa_print "$x"
     done

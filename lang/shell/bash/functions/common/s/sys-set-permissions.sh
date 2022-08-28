@@ -11,9 +11,9 @@ koopa_sys_set_permissions() {
     koopa_assert_has_args "$#"
     local arg chmod_args chown_args dict pos
     declare -A dict=(
-        [dereference]=1
-        [recursive]=0
-        [shared]=1
+        ['dereference']=1
+        ['recursive']=0
+        ['shared']=1
     )
     chmod_args=()
     chown_args=()
@@ -23,23 +23,23 @@ koopa_sys_set_permissions() {
         case "$1" in
             '--dereference' | \
             '-H')
-                dict[dereference]=1
+                dict['dereference']=1
                 shift 1
                 ;;
             '--no-dereference' | \
             '-h')
-                dict[dereference]=0
+                dict['dereference']=0
                 shift 1
                 ;;
             '--recursive' | \
             '-R' | \
             '-r')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '--user' | \
             '-u')
-                dict[shared]=0
+                dict['shared']=0
                 shift 1
                 ;;
             '-'*)
@@ -53,18 +53,18 @@ koopa_sys_set_permissions() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    case "${dict[shared]}" in
+    case "${dict['shared']}" in
         '0')
-            dict[group]="$(koopa_group)"
-            dict[user]="$(koopa_user)"
+            dict['group']="$(koopa_group)"
+            dict['user']="$(koopa_user)"
             ;;
         '1')
-            dict[group]="$(koopa_sys_group)"
-            dict[user]="$(koopa_sys_user)"
+            dict['group']="$(koopa_sys_group)"
+            dict['user']="$(koopa_sys_user)"
             ;;
     esac
     chown_args+=('--no-dereference')
-    if [[ "${dict[recursive]}" -eq 1 ]]
+    if [[ "${dict['recursive']}" -eq 1 ]]
     then
         chmod_args+=('--recursive')
         chown_args+=('--recursive')
@@ -75,10 +75,10 @@ koopa_sys_set_permissions() {
     else
         chmod_args+=('u+rw,g+r,g-w,o+r,o-w')
     fi
-    chown_args+=("${dict[user]}:${dict[group]}")
+    chown_args+=("${dict['user']}:${dict['group']}")
     for arg in "$@"
     do
-        if [[ "${dict[dereference]}" -eq 1 ]] && [[ -L "$arg" ]]
+        if [[ "${dict['dereference']}" -eq 1 ]] && [[ -L "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"
         fi

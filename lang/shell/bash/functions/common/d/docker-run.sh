@@ -15,15 +15,15 @@ koopa_docker_run() {
     local app dict pos run_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [docker]="$(koopa_locate_docker)"
+        ['docker']="$(koopa_locate_docker)"
     )
-    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
-        [arm]=0
-        [bash]=0
-        [bind]=0
-        [workdir]='/mnt/work'
-        [x86]=0
+        ['arm']=0
+        ['bash']=0
+        ['bind']=0
+        ['workdir']='/mnt/work'
+        ['x86']=0
     )
     pos=()
     while (("$#"))
@@ -31,19 +31,19 @@ koopa_docker_run() {
         case "$1" in
             # Flags ------------------------------------------------------------
             '--arm')
-                dict[arm]=1
+                dict['arm']=1
                 shift 1
                 ;;
             '--bash')
-                dict[bash]=1
+                dict['bash']=1
                 shift 1
                 ;;
             '--bind')
-                dict[bind]=1
+                dict['bind']=1
                 shift 1
                 ;;
             '--x86')
-                dict[x86]=1
+                dict['x86']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -58,15 +58,15 @@ koopa_docker_run() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
-    dict[image]="${1:?}"
-    "${app[docker]}" pull "${dict[image]}"
+    dict['image']="${1:?}"
+    "${app['docker']}" pull "${dict['image']}"
     run_args=(
         '--interactive'
         '--tty'
     )
     # Legacy bind mounts approach, now disabled by default.
     # Useful for quickly checking whether a local script will run.
-    if [[ "${dict[bind]}" -eq 1 ]]
+    if [[ "${dict['bind']}" -eq 1 ]]
     then
         # This check helps prevent Docker from chewing up a bunch of CPU.
         if [[ "${HOME:?}" == "${PWD:?}" ]]
@@ -74,24 +74,24 @@ koopa_docker_run() {
             koopa_stop "Do not set '--bind' when running at HOME."
         fi
         run_args+=(
-            "--volume=${PWD:?}:${dict[workdir]}"
-            "--workdir=${dict[workdir]}"
+            "--volume=${PWD:?}:${dict['workdir']}"
+            "--workdir=${dict['workdir']}"
         )
     fi
     # Manually override the platform, if desired.
-    if [[ "${dict[arm]}" -eq 1 ]]
+    if [[ "${dict['arm']}" -eq 1 ]]
     then
         run_args+=('--platform=linux/arm64')
-    elif [[ "${dict[x86]}" -eq 1 ]]
+    elif [[ "${dict['x86']}" -eq 1 ]]
     then
         run_args+=('--platform=linux/amd64')
     fi
-    run_args+=("${dict[image]}")
+    run_args+=("${dict['image']}")
     # Enable an interactive Bash login session, if desired.
-    if [[ "${dict[bash]}" -eq 1 ]]
+    if [[ "${dict['bash']}" -eq 1 ]]
     then
         run_args+=('bash' '-il')
     fi
-    "${app[docker]}" run "${run_args[@]}"
+    "${app['docker']}" run "${run_args[@]}"
     return 0
 }

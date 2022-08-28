@@ -16,33 +16,33 @@ main() {
     local app brewfile brewfiles dict install_args
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
+        ['brew']="$(koopa_locate_brew)"
     )
-    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || return 1
     declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [local_brewfile]="$(koopa_xdg_config_home)/homebrew/brewfile"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['local_brewfile']="$(koopa_xdg_config_home)/homebrew/brewfile"
     )
     brewfiles=()
     if koopa_is_linux
     then
         brewfiles+=(
-            "${dict[koopa_prefix]}/os/linux/common/etc/homebrew/brewfile"
+            "${dict['koopa_prefix']}/os/linux/common/etc/homebrew/brewfile"
         )
     elif koopa_is_macos
     then
         brewfiles+=(
-            "${dict[koopa_prefix]}/os/macos/etc/homebrew/brewfile"
+            "${dict['koopa_prefix']}/os/macos/etc/homebrew/brewfile"
         )
     fi
     brewfiles+=(
-        "${dict[koopa_prefix]}/etc/homebrew/brewfile"
+        "${dict['koopa_prefix']}/etc/homebrew/brewfile"
     )
-    if [[ -f "${dict[local_brewfile]}" ]]
+    if [[ -f "${dict['local_brewfile']}" ]]
     then
-        brewfiles+=("${dict[local_brewfile]}")
+        brewfiles+=("${dict['local_brewfile']}")
     fi
-    "${app[brew]}" analytics off
+    "${app['brew']}" analytics off
     # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
     # variable, which is defined in our main Homebrew activation function.
     install_args=(
@@ -56,7 +56,7 @@ main() {
     do
         [[ -f "$brewfile" ]] || continue
         koopa_dl 'Brewfile' "$brewfile"
-        "${app[brew]}" bundle install \
+        "${app['brew']}" bundle install \
             "${install_args[@]}" \
             --file="${brewfile}"
     done

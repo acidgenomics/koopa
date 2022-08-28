@@ -7,13 +7,13 @@ koopa_chown() {
     # """
     local app chown dict pos
     declare -A app=(
-        [chown]="$(koopa_locate_chown)"
+        ['chown']="$(koopa_locate_chown)"
     )
-    [[ -x "${app[chown]}" ]] || return 1
+    [[ -x "${app['chown']}" ]] || return 1
     declare -A dict=(
-        [dereference]=1
-        [recursive]=0
-        [sudo]=0
+        ['dereference']=1
+        ['recursive']=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))
@@ -22,22 +22,22 @@ koopa_chown() {
             # Flags ------------------------------------------------------------
             '--dereference' | \
             '-H')
-                dict[dereference]=1
+                dict['dereference']=1
                 shift 1
                 ;;
             '--no-dereference' | \
             '-h')
-                dict[dereference]=0
+                dict['dereference']=0
                 shift 1
                 ;;
             '--recursive' | \
             '-R')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -52,19 +52,19 @@ koopa_chown() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
-        [[ -x "${app[sudo]}" ]] || return 1
-        chown=("${app[sudo]}" "${app[chown]}")
+        app['sudo']="$(koopa_locate_sudo)"
+        [[ -x "${app['sudo']}" ]] || return 1
+        chown=("${app['sudo']}" "${app['chown']}")
     else
-        chown=("${app[chown]}")
+        chown=("${app['chown']}")
     fi
-    if [[ "${dict[recursive]}" -eq 1 ]]
+    if [[ "${dict['recursive']}" -eq 1 ]]
     then
         chown+=('-R')
     fi
-    if [[ "${dict[dereference]}" -eq 0 ]]
+    if [[ "${dict['dereference']}" -eq 0 ]]
     then
         chown+=('-h')
     fi

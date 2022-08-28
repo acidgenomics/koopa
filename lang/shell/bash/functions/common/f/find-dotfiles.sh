@@ -13,31 +13,31 @@ koopa_find_dotfiles() {
     local app dict
     koopa_assert_has_args_eq "$#" 2
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [basename]="$(koopa_locate_basename)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['awk']="$(koopa_locate_awk)"
+        ['basename']="$(koopa_locate_basename)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[basename]}" ]] || return 1
-    [[ -x "${app[xargs]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['basename']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
-        [type]="${1:?}"
-        [header]="${2:?}"
+        ['type']="${1:?}"
+        ['header']="${2:?}"
     )
     # shellcheck disable=SC2016
-    dict[str]="$( \
+    dict['str']="$( \
         koopa_find \
             --max-depth=1 \
             --pattern='.*' \
             --prefix="${HOME:?}" \
             --print0 \
             --sort \
-            --type="${dict[type]}" \
-        | "${app[xargs]}" -0 -n 1 "${app[basename]}" \
-        | "${app[awk]}" '{print "    -",$0}' \
+            --type="${dict['type']}" \
+        | "${app['xargs']}" -0 -n 1 "${app['basename']}" \
+        | "${app['awk']}" '{print "    -",$0}' \
     )"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_h2 "${dict[header]}:"
-    koopa_print "${dict[str]}"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_h2 "${dict['header']}:"
+    koopa_print "${dict['str']}"
     return 0
 }

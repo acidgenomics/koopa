@@ -24,56 +24,56 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     if koopa_is_macos
     then
-        dict[platform]='mac'
+        dict['platform']='mac'
     else
-        dict[platform]='linux'
+        dict['platform']='linux'
     fi
-    case "${dict[arch]}" in
+    case "${dict['arch']}" in
         'x86_64')
-            dict[arch2]='x64'
+            dict['arch2']='x64'
             ;;
         *)
             # e.g. 'aarch64'.
-            dict[arch2]="${dict[arch]}"
+            dict['arch2']="${dict['arch']}"
     esac
-    dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     # e.g. '17.0.3+7' to '17.0.3_7'.
-    dict[version2]="$( \
+    dict['version2']="$( \
         koopa_sub \
             --fixed \
             --pattern='+' \
             --replacement='_' \
-            "${dict[version]}" \
+            "${dict['version']}" \
     )"
     # e.g. '17.0.3+7' to '17.0.3%2B7'.
-    dict[version3]="$( \
+    dict['version3']="$( \
         koopa_sub \
             --fixed \
             --pattern='+' \
             --replacement='%2B' \
-            "${dict[version]}" \
+            "${dict['version']}" \
     )"
     # Need to support these:
     # - OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.3_7.tar.gz
     # - OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.3_7.tar.gz
     # - OpenJDK17U-jdk_x64_linux_hotspot_17.0.3_7.tar.gz
     # - OpenJDK17U-jdk_x64_mac_hotspot_17.0.3_7.tar.gz
-    dict[file]="OpenJDK${dict[maj_ver]}U-jdk_${dict[arch2]}_\
-${dict[platform]}_hotspot_${dict[version2]}.tar.gz"
-    dict[url]="https://github.com/adoptium/temurin${dict[maj_ver]}-binaries/\
-releases/download/jdk-${dict[version3]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cp "jdk-${dict[version]}" "${dict[prefix]}/libexec"
+    dict['file']="OpenJDK${dict['maj_ver']}U-jdk_${dict['arch2']}_\
+${dict['platform']}_hotspot_${dict['version2']}.tar.gz"
+    dict['url']="https://github.com/adoptium/temurin${dict['maj_ver']}-binaries/\
+releases/download/jdk-${dict['version3']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cp "jdk-${dict['version']}" "${dict['prefix']}/libexec"
     (
         local libexec name names
-        koopa_cd "${dict[prefix]}"
+        koopa_cd "${dict['prefix']}"
         if koopa_is_macos
         then
             libexec='libexec/Contents/Home'
@@ -88,7 +88,7 @@ releases/download/jdk-${dict[version3]}/${dict[file]}"
     )
     # > if koopa_is_shared_install && koopa_is_linux
     # > then
-    # >     koopa_linux_java_update_alternatives "${dict[prefix]}"
+    # >     koopa_linux_java_update_alternatives "${dict['prefix']}"
     # > fi
     return 0
 }

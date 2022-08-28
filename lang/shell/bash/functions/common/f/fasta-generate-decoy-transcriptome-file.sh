@@ -30,40 +30,40 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [cat]="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat)"
     )
-    [[ -x "${app[cat]}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(
-        [genome_fasta_file]=''
-        [output_file]='' # 'gentrome.fa.gz'
-        [transcriptome_fasta_file]=''
+        ['genome_fasta_file']=''
+        ['output_file']='' # 'gentrome.fa.gz'
+        ['transcriptome_fasta_file']=''
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-file='*)
-                dict[output_file]="${1#*=}"
+                dict['output_file']="${1#*=}"
                 shift 1
                 ;;
             '--output-file')
-                dict[output_file]="${2:?}"
+                dict['output_file']="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
+                dict['transcriptome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
+                dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -73,35 +73,35 @@ koopa_fasta_generate_decoy_transcriptome_file() {
         esac
     done
     koopa_assert_is_set \
-        '--genome-fasta-file' "${dict[genome_fasta_file]}" \
-        '--output-file' "${dict[output_file]}" \
-        '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
-    koopa_assert_is_not_file "${dict[output_file]}"
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--output-file' "${dict['output_file']}" \
+        '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
+    koopa_assert_is_not_file "${dict['output_file']}"
     koopa_assert_is_file \
-        "${dict[genome_fasta_file]}" \
-        "${dict[transcriptome_fasta_file]}"
-    dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
-    dict[transcriptome_fasta_file]="$( \
-        koopa_realpath "${dict[transcriptome_fasta_file]}" \
+        "${dict['genome_fasta_file']}" \
+        "${dict['transcriptome_fasta_file']}"
+    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+    dict['transcriptome_fasta_file']="$( \
+        koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
         --pattern='\.gz$' \
-        --string="${dict[genome_fasta_file]}"
+        --string="${dict['genome_fasta_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.gz$' \
-        --string="${dict[transcriptome_fasta_file]}"
+        --string="${dict['transcriptome_fasta_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.gz$' \
-        --string="${dict[output_file]}"
+        --string="${dict['output_file']}"
     koopa_alert "Generating decoy-aware transcriptome \
-at '${dict[output_file]}'."
+at '${dict['output_file']}'."
     koopa_dl \
-        'Genome FASTA file' "${dict[genome_fasta_file]}" \
-        'Transcriptome FASTA file' "${dict[transcriptome_fasta_file]}"
-    "${app[cat]}" \
-        "${dict[transcriptome_fasta_file]}" \
-        "${dict[genome_fasta_file]}" \
-        > "${dict[output_file]}"
-    koopa_assert_is_file "${dict[output_file]}"
+        'Genome FASTA file' "${dict['genome_fasta_file']}" \
+        'Transcriptome FASTA file' "${dict['transcriptome_fasta_file']}"
+    "${app['cat']}" \
+        "${dict['transcriptome_fasta_file']}" \
+        "${dict['genome_fasta_file']}" \
+        > "${dict['output_file']}"
+    koopa_assert_is_file "${dict['output_file']}"
     return 0
 }

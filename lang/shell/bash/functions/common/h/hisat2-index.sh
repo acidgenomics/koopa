@@ -29,17 +29,17 @@ koopa_hisat2_index() {
     # """
     local app dict index_args
     declare -A app=(
-        [hisat2_build]="$(koopa_locate_hisat2_build)"
+        ['hisat2_build']="$(koopa_locate_hisat2_build)"
     )
-    [[ -x "${app[hisat2_build]}" ]] || return 1
+    [[ -x "${app['hisat2_build']}" ]] || return 1
     declare -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
-        [genome_fasta_file]=''
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=200
-        [output_dir]=''
-        [seed]=42
-        [threads]="$(koopa_cpu_count)"
+        ['genome_fasta_file']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=200
+        ['output_dir']=''
+        ['seed']=42
+        ['threads']="$(koopa_cpu_count)"
     )
     index_args=()
     while (("$#"))
@@ -47,19 +47,19 @@ koopa_hisat2_index() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -69,30 +69,30 @@ koopa_hisat2_index() {
         esac
     done
     koopa_assert_is_set \
-        '--genome-fasta-file' "${dict[genome_fasta_file]}" \
-        '--output-dir' "${dict[output_dir]}"
-    dict[ht2_base]="${dict[output_dir]}/index"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--output-dir' "${dict['output_dir']}"
+    dict['ht2_base']="${dict['output_dir']}/index"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "'hisat2-build' requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "'hisat2-build' requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_file "${dict[genome_fasta_file]}"
+    koopa_assert_is_file "${dict['genome_fasta_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.fa\.gz$' \
-        --string="${dict[genome_fasta_file]}"
-    koopa_assert_is_not_dir "${dict[output_dir]}"
-    koopa_alert "Generating HISAT2 index at '${dict[output_dir]}'."
+        --string="${dict['genome_fasta_file']}"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    koopa_alert "Generating HISAT2 index at '${dict['output_dir']}'."
     index_args+=(
         # FIXME Need to set '--ss' here.
         # FIXME Need to set '--exons' here.
-        '--seed' "${dict[seed]}"
+        '--seed' "${dict['seed']}"
         '-f'
-        '-p' "${dict[threads]}"
-        "${dict[genome_fasta_file]}"
-        "${dict[ht2_base]}"
+        '-p' "${dict['threads']}"
+        "${dict['genome_fasta_file']}"
+        "${dict['ht2_base']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    "${app[hisat2_build]}" "${index_args[@]}"
-    koopa_alert_success "HISAT2 index created at '${dict[output_dir]}'."
+    "${app['hisat2_build']}" "${index_args[@]}"
+    koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
 }

@@ -4,7 +4,6 @@
 
 koopa_install_neovim() {
     koopa_install_app \
-        --link-in-bin='nvim' \
         --name='neovim' \
         "$@"
 }

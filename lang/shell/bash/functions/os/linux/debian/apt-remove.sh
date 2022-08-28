@@ -9,12 +9,12 @@ koopa_debian_apt_remove() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [apt_get]="$(koopa_debian_locate_apt_get)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['apt_get']="$(koopa_debian_locate_apt_get)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[apt_get]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[apt_get]}" --yes remove --purge "$@"
+    [[ -x "${app['apt_get']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['apt_get']}" --yes remove --purge "$@"
     koopa_debian_apt_clean
     return 0
 }

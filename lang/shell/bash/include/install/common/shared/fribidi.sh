@@ -11,23 +11,23 @@ main() {
     # """
     local app conf_args dict
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='fribidi'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='fribidi'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.xz"
-    dict[url]="https://github.com/${dict[name]}/${dict[name]}/releases/\
-download/v${dict[version]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+    dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\
+download/v${dict['version']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--disable-debug'
         '--disable-dependency-tracking'
         '--disable-silent-rules'
@@ -35,7 +35,7 @@ download/v${dict[version]}/${dict[file]}"
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

@@ -3,20 +3,20 @@
 koopa_cli_system() {
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-24.
     # """
     local dict
     declare -A dict=(
-        [key]=''
+        ['key']=''
     )
     # Platform independent.
     case "${1:-}" in
         'check')
-            dict[key]='check-system'
+            dict['key']='check-system'
             shift 1
             ;;
         'info')
-            dict[key]='system-info'
+            dict['key']='system-info'
             shift 1
             ;;
         'list')
@@ -26,37 +26,37 @@ koopa_cli_system() {
                 'launch-agents' | \
                 'path-priority' | \
                 'programs')
-                    dict[key]="${1:?}-${2:?}"
+                    dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
             esac
             ;;
         'log')
-            dict[key]='view-latest-tmp-log-file'
+            dict['key']='view-latest-tmp-log-file'
             shift 1
             ;;
         'prefix')
             case "${2:-}" in
                 '')
-                    dict[key]='koopa-prefix'
+                    dict['key']='koopa-prefix'
                     shift 1
                     ;;
                 'koopa')
-                    dict[key]='koopa-prefix'
+                    dict['key']='koopa-prefix'
                     shift 2
                     ;;
                 *)
-                    dict[key]="${2}-prefix"
+                    dict['key']="${2}-prefix"
                     shift 2
                     ;;
             esac
             ;;
         'version')
-            dict[key]='get-version'
+            dict['key']='get-version'
             shift 1
             ;;
         'which')
-            dict[key]='which-realpath'
+            dict['key']='which-realpath'
             shift 1
             ;;
         'brew-dump-brewfile' | \
@@ -78,7 +78,7 @@ koopa_cli_system() {
         'test' | \
         'variable' | \
         'variables')
-            dict[key]="${1:?}"
+            dict['key']="${1:?}"
             shift 1
             ;;
         # Defunct --------------------------------------------------------------
@@ -90,14 +90,14 @@ koopa_cli_system() {
             ;;
     esac
     # Platform specific.
-    if [[ -z "${dict[key]}" ]]
+    if [[ -z "${dict['key']}" ]]
     then
         if koopa_is_linux
         then
             case "${1:-}" in
                 'delete-cache' | \
                 'fix-sudo-setrlimit-error')
-                    dict[key]="${1:?}"
+                    dict['key']="${1:?}"
                     shift 1
                     ;;
             esac
@@ -105,7 +105,7 @@ koopa_cli_system() {
         then
             case "${1:-}" in
                 'spotlight')
-                    dict[key]='spotlight-find'
+                    dict['key']='spotlight-find'
                     shift 1
                     ;;
                 'clean-launch-services' | \
@@ -117,18 +117,18 @@ koopa_cli_system() {
                 'ifactive' | \
                 'list-launch-agents' | \
                 'reload-autofs')
-                    dict[key]="${1:?}"
+                    dict['key']="${1:?}"
                     shift 1
                     ;;
             esac
         fi
     fi
-    [[ -z "${dict[key]}" ]] && koopa_cli_invalid_arg "$@"
-    dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
-    if ! koopa_is_function "${dict[fun]}"
+    [[ -z "${dict['key']}" ]] && koopa_cli_invalid_arg "$@"
+    dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
+    if ! koopa_is_function "${dict['fun']}"
     then
         koopa_stop 'Unsupported command.'
     fi
-    "${dict[fun]}" "$@"
+    "${dict['fun']}" "$@"
     return 0
 }

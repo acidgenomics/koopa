@@ -3,6 +3,5 @@
 koopa_uninstall_units() {
     koopa_uninstall_app \
         --name='units' \
-        --unlink-in-bin='units' \
         "$@"
 }

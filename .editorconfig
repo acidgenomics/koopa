@@ -1,0 +1,43 @@
+# """
+# EditorConfig
+#
+# @note Updated 2022-08-18.
+#
+# @seealso
+# - https://editorconfig.org
+# - https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
+# """
+
+root=true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+
+[Makefile]
+indent_style = tab
+
+[*.R]
+ident_size = 4
+indent_style = space
+max_line_length = 80
+tab_width = 4
+
+[*.{Rmd,md}]
+ident_size = 4
+indent_style = space
+max_line_length = 80
+tab_width = 4
+trim_trailing_whitespace = false
+
+[*.{json,yaml,yml}]
+ident_size = 2
+indent_style = space
+tab_width = 2
+
+[*.py]
+ident_size = 4
+indent_style = space
+max_line_length = 79
+tab_width = 4

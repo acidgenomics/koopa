@@ -2,6 +2,7 @@
 
 koopa_locate_openssl() {
     koopa_locate_app \
-        --app-name='openssl' \
-        --opt-name='openssl3'
+        --app-name='openssl3' \
+        --bin-name='openssl' \
+        "$@"
 }

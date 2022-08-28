@@ -12,9 +12,9 @@ koopa_current_wormbase_version() {
     local app str url
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
     url="ftp://ftp.wormbase.org/pub/wormbase/\
 releases/current-production-release"
     str="$( \
@@ -23,7 +23,7 @@ releases/current-production-release"
                 --only-matching \
                 --pattern='letter.WS[0-9]+' \
                 --regex \
-            | "${app[cut]}" -d '.' -f '2' \
+            | "${app['cut']}" -d '.' -f '2' \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

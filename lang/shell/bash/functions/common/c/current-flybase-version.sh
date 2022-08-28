@@ -12,17 +12,17 @@ koopa_current_flybase_version() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [head]="$(koopa_locate_head)"
-        [tail]="$(koopa_locate_tail)"
+        ['cut']="$(koopa_locate_cut)"
+        ['head']="$(koopa_locate_head)"
+        ['tail']="$(koopa_locate_tail)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
-    [[ -x "${app[head]}" ]] || return 1
-    [[ -x "${app[tail]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['tail']}" ]] || return 1
     str="$( \
         koopa_parse_url --list-only "ftp://ftp.flybase.net/releases/" \
         | koopa_grep --pattern='^FB[0-9]{4}_[0-9]{2}$' --regex \
-        | "${app[tail]}" -n 1 \
+        | "${app['tail']}" -n 1 \
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

@@ -10,18 +10,18 @@ koopa_docker_ghcr_push() {
     local app dict
     koopa_assert_has_args_eq "$#" 3
     declare -A app=(
-        [docker]="$(koopa_locate_docker)"
+        ['docker']="$(koopa_locate_docker)"
     )
-    [[ -x "${app[docker]}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
-        [image_name]="${2:?}"
-        [owner]="${1:?}"
-        [server]='ghcr.io'
-        [version]="${3:?}"
+        ['image_name']="${2:?}"
+        ['owner']="${1:?}"
+        ['server']='ghcr.io'
+        ['version']="${3:?}"
     )
-    dict[url]="${dict[server]}/${dict[owner]}/\
-${dict[image_name]}:${dict[version]}"
+    dict['url']="${dict['server']}/${dict['owner']}/\
+${dict['image_name']}:${dict['version']}"
     koopa_docker_ghcr_login
-    "${app[docker]}" push "${dict[url]}"
+    "${app['docker']}" push "${dict['url']}"
     return 0
 }
