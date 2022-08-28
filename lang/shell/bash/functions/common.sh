@@ -4898,7 +4898,6 @@ koopa_configure_dotfiles() {
 }
 
 koopa_configure_r() {
-    set -x # FIXME
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
@@ -11992,6 +11991,12 @@ koopa_install_flac() {
 koopa_install_flake8() {
     koopa_install_app \
         --name='flake8' \
+        "$@"
+}
+
+koopa_install_flex() {
+    koopa_install_app \
+        --name='flex' \
         "$@"
 }
 
@@ -22297,6 +22302,12 @@ koopa_uninstall_flac() {
 koopa_uninstall_flake8() {
     koopa_uninstall_app \
         --name='flake8' \
+        "$@"
+}
+
+koopa_uninstall_flex() {
+    koopa_uninstall_app \
+        --name='flex' \
         "$@"
 }
 

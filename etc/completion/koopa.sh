@@ -145,6 +145,7 @@ __koopa_complete() {
                         'fish'
                         'flac'
                         'flake8'
+                        'flex'
                         'fltk'
                         'fontconfig'
                         'freetype'
