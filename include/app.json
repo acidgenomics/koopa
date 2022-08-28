@@ -775,6 +775,7 @@
     "version": "5.1.1"
   },
   "gcc": {
+    "bin": ["gfortran"],
     "conservative": true,
     "outdated": true,
     "url": ["https://ftp.gnu.org/gnu/gcc/"],
