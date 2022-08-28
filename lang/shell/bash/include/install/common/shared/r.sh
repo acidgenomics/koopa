@@ -3,6 +3,9 @@
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
+# FIXME This isn't configuring OpenMP correctly...need to rework to improve
+# consistency with R CRAN binary.
+
 main() {
     # """
     # Install R.

@@ -27,7 +27,7 @@ koopa_r_configure_makevars() {
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
-    koopa_is_koopa_app "${app['r']}" && return 0
+    # > koopa_is_koopa_app "${app['r']}" && return 0
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
