@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2022-08-12.
+    # @note Updated 2022-08-27.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -12,9 +12,6 @@ main() {
     #
     # CMake configuration will pick up Python Framework on macOS unless we
     # set the desired target manually.
-    #
-    # Linking to our bzip2 and zlib libraries is currently problematic,
-    # and will result in build issues on Linux.
     #
     # @seealso
     # - https://github.com/ncbi/sra-tools/wiki/
@@ -30,6 +27,8 @@ main() {
     deps=()
     koopa_is_linux && deps+=('gcc')
     deps+=(
+        'bison'
+        'flex'
         'hdf5'
         'libxml2'
         'python'
