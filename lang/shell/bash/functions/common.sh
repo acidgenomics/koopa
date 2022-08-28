@@ -17836,19 +17836,24 @@ koopa_r_configure_makevars() {
         esac
         flibs+=('-lm')
         dict['flibs']="${flibs[*]}"
-        cppflags=('-Xclang' '-fopenmp')
-        dict['cppflags']="${cppflags[*]}"
-        ldflags=(
-            "-I${dict['gettext']}/include"
-            "-L${dict['gettext']}/lib"
-            '-lomp'
-        )
-        dict['ldflags']="${ldflags[*]}"
         lines+=(
-            "CPPFLAGS += ${dict['cppflags']}"
             "FC = ${app['fc']}"
             "FLIBS = ${dict['flibs']}"
+        )
+        ldflags=()
+        case "${dict['system']}" in
+            '1')
+                ldflags+=(
+                    "-I${dict['gettext']}/include"
+                    "-L${dict['gettext']}/lib"
+                )
+                ;;
+        esac
+        ldflags+=('-lomp')
+        dict['ldflags']="${ldflags[*]}"
+        lines+=(
             "LDFLAGS += ${dict['ldflags']}"
+            'SHLIB_OPENMP_CFLAGS += -Xclang -fopenmp'
         )
     fi
     lines+=(

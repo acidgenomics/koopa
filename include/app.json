@@ -778,7 +778,7 @@
     "bin": ["gfortran"],
     "conservative": true,
     "outdated": true,
-    "url": ["https://ftp.gnu.org/gnu/gcc/"],
+    "url": ["https://gcc.gnu.org/"],
     "version": "12.1.0"
   },
   "gdal": {
