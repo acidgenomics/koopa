@@ -263,17 +263,20 @@ main() {
         conf_dict['cxx']="${dict['gcc']}/bin/g++"
     fi
     conf_dict['ar']='/usr/bin/ar'
+    conf_dict['awk']="$(koopa_locate_awk --realpath)"
     conf_dict['echo']="$(koopa_locate_echo --realpath)"
     conf_dict['fc']="$(koopa_locate_gfortran --realpath)"
     conf_dict['jar']="$(koopa_locate_jar --realpath)"
     conf_dict['java']="$(koopa_locate_java --realpath)"
     conf_dict['javac']="$(koopa_locate_javac --realpath)"
+    conf_dict['perl']="$(koopa_locate_perl --realpath)"
     conf_dict['r_shell']="$(koopa_locate_bash --realpath)"
     conf_dict['sed']="$(koopa_locate_sed --realpath)"
     # Alternatively, can use 'bison -y' for YACC.
     conf_dict['yacc']="$(koopa_locate_yacc --realpath)"
     koopa_assert_is_installed \
         "${conf_dict['ar']}" \
+        "${conf_dict['awk']}" \
         "${conf_dict['cc']}" \
         "${conf_dict['cxx']}" \
         "${conf_dict['echo']}" \
@@ -281,6 +284,7 @@ main() {
         "${conf_dict['jar']}" \
         "${conf_dict['java']}" \
         "${conf_dict['javac']}" \
+        "${conf_dict['perl']}" \
         "${conf_dict['r_shell']}" \
         "${conf_dict['sed']}" \
         "${conf_dict['yacc']}"
@@ -322,9 +326,7 @@ main() {
     flibs+=('-lm')
     conf_dict['flibs']="${flibs[*]}"
     # Consider also setting these, based on rocker Dockerfile.
-    # > 'AWK=<AWK>'
     # > 'PAGER=<PAGER>'
-    # > 'PERL=<PERL>'
     # > 'R_UNZIPCMD=<UNZIP>'
     # > 'R_ZIPCMD=<ZIP>'
     conf_args+=(
@@ -351,6 +353,7 @@ main() {
         '--with-static-cairo=no'
         '--with-x'
         "AR=${conf_dict['ar']}"
+        "AWK=${conf_dict['awk']}"
         "CC=${conf_dict['cc']}"
         "CXX=${conf_dict['cxx']}"
         "ECHO=${conf_dict['echo']}"
@@ -365,6 +368,7 @@ main() {
         'LIBnn=lib'
         "OBJC=${conf_dict['objc']}"
         "OBJCXX=${conf_dict['objcxx']}"
+        "PERL=${conf_dict['perl']}"
         'R_BATCHSAVE=--no-save --no-restore'
         'R_PAPERSIZE=letter'
         "R_SHELL=${conf_dict['r_shell']}"
