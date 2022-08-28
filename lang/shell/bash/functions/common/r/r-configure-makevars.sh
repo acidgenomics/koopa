@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-08-28.
     # """
     local app cppflags dict flibs i ldflags libs lines
     koopa_assert_has_args_eq "$#" 1
@@ -27,12 +27,13 @@ koopa_r_configure_makevars() {
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
-    # > koopa_is_koopa_app "${app['r']}" && return 0
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+        ['system']=0
     )
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
     if koopa_is_linux
@@ -96,8 +97,19 @@ koopa_r_configure_makevars() {
         "YACC = ${app['yacc']}"
     )
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
-    koopa_sudo_write_string \
-        --file="${dict['file']}" \
-        --string="${dict['string']}"
+    case "${dict['system']}" in
+        '0')
+            koopa_rm "${dict['file']}"
+            koopa_write_string \
+                --file="${dict['file']}" \
+                --string="${dict['string']}"
+            ;;
+        '1')
+            koopa_rm --sudo "${dict['file']}"
+            koopa_sudo_write_string \
+                --file="${dict['file']}" \
+                --string="${dict['string']}"
+            ;;
+    esac
     return 0
 }
