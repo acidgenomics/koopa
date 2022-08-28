@@ -12,11 +12,9 @@ main() {
     #   https://github.com/nmap/nmap/tree/master/liblua
     # """
     local app conf_args dict
-    # FIXME May need flex for this.
-    # > koopa_activate_build_opt_prefix \
-    # >     'bison' \
-    # >     'flex'
-    # FIXME May need liblinear here.
+    koopa_activate_build_opt_prefix \
+        'bison' \
+        'flex'
     koopa_activate_opt_prefix \
         'zlib' \
         'openssl3' \
