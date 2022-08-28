@@ -6,7 +6,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-08-28.
     #
     # @section gfortran configuration on macOS:
     #
@@ -354,6 +354,7 @@ main() {
         "--with-tk-config=${conf_dict['with_tk_config']}"
         '--with-static-cairo=no'
         '--with-x'
+        '--without-recommended-packages'
         "AR=${conf_dict['ar']}"
         "AWK=${conf_dict['awk']}"
         "CC=${conf_dict['cc']}"
@@ -386,7 +387,8 @@ main() {
     fi
     if koopa_is_macos
     then
-        conf_args+=('--without-aqua')
+        # This is required for plotting support in RStudio.
+        conf_args+=('--with-aqua')
         export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
     else
         # Ensure that OpenMP is enabled. Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS'
@@ -400,10 +402,7 @@ main() {
     fi
     if [[ "${dict['name']}" == 'r-devel' ]]
     then
-        conf_args+=(
-            '--program-suffix=dev'
-            '--without-recommended-packages'
-        )
+        conf_args+=('--program-suffix=dev')
         app['svn']="$(koopa_locate_svn)"
         [[ -x "${app['svn']}" ]] || return 1
         dict['rtop']="$(koopa_init_dir 'svn/r')"
@@ -421,7 +420,6 @@ main() {
         koopa_cd "${dict['rtop']}"
         koopa_print "Revision: ${dict['version']}" > 'SVNINFO'
     else
-        conf_args+=('--with-recommended-packages')
         dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
         dict['file']="R-${dict['version']}.tar.gz"
         dict['url']="https://cloud.r-project.org/src/base/\
