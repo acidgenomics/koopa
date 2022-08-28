@@ -294,7 +294,7 @@
     "conservative": false,
     "date": "2022-08-27",
     "url": ["https://github.com/cheat/cheat/"],
-    "version": "4.3.2"
+    "version": "4.3.3"
   },
   "chemacs": {
     "conservative": false,
@@ -594,7 +594,7 @@
     "bin": ["difft"],
     "conservative": false,
     "depends": ["rust"],
-    "version": "0.33.0"
+    "version": "0.34.0"
   },
   "docker-credential-pass": {
     "conservative": false,
