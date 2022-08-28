@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-08-27.
     #
     # @section Intel:
     #
@@ -61,8 +61,6 @@ base/${dict['pkg_file']}"
     "${app['sudo']}" "${app['installer']}" -pkg "${dict['pkg_file']}" -target '/'
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_macos_install_system_r_openmp
-    koopa_install_system_tex
-    koopa_install_system_tex_packages
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
     koopa_configure_r "${app['r']}"
