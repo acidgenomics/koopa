@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 koopa_linux_locate_ldconfig() {
-    local os_id str
-    os_id="$(koopa_os_id)"
-    case "$os_id" in
+    local args
+    args=()
+    case "$(koopa_os_id)" in
         'alpine' | \
         'debian')
-            str='/sbin/ldconfig'
+            args+=('/sbin/ldconfig')
             ;;
         *)
-            str='/usr/sbin/ldconfig'
+            args+=('/usr/sbin/ldconfig')
             ;;
     esac
-    koopa_locate_app "$str"
+    koopa_locate_app "${args[@]}" "$@"
 }

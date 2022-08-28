@@ -8,10 +8,10 @@ koopa_macos_finder_unhide() {
     local app
     koopa_assert_has_args "$#"
     declare -A app=(
-        [setfile]="$(koopa_macos_locate_setfile)"
+        ['setfile']="$(koopa_macos_locate_setfile)"
     )
-    [[ -x "${app[setfile]}" ]] || return 1
+    [[ -x "${app['setfile']}" ]] || return 1
     koopa_assert_is_existing "$@"
-    "${app[setfile]}" -a v "$@"
+    "${app['setfile']}" -a v "$@"
     return 0
 }

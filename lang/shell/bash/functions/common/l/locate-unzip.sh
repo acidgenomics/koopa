@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add install support for this.
+
 koopa_locate_unzip() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='unzip'
+        --app-name='unzip' \
+        --bin-name='unzip' \
+        "$@"
 }

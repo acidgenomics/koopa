@@ -16,17 +16,17 @@ koopa_kallisto_index() {
     local app dict index_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [kallisto]="$(koopa_locate_kallisto)"
+        ['kallisto']="$(koopa_locate_kallisto)"
     )
-    [[ -x "${app[kallisto]}" ]] || return 1
+    [[ -x "${app['kallisto']}" ]] || return 1
     declare -A dict=(
-        [kmer_size]=31
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['kmer_size']=31
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'kallisto-index'.
-        [output_dir]=''
+        ['output_dir']=''
         # e.g. 'gencode.v39.transcripts.fa.gz'.
-        [transcriptome_fasta_file]=''
+        ['transcriptome_fasta_file']=''
     )
     index_args=()
     while (("$#"))
@@ -34,19 +34,19 @@ koopa_kallisto_index() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
+                dict['transcriptome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
+                dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -56,31 +56,31 @@ koopa_kallisto_index() {
         esac
     done
     koopa_assert_is_set \
-        '--output-dir' "${dict[output_dir]}" \
-        '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--output-dir' "${dict['output_dir']}" \
+        '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "kallisto index requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "kallisto index requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_file "${dict[transcriptome_fasta_file]}"
-    dict[transcriptome_fasta_file]="$( \
-        koopa_realpath "${dict[transcriptome_fasta_file]}" \
+    koopa_assert_is_file "${dict['transcriptome_fasta_file']}"
+    dict['transcriptome_fasta_file']="$( \
+        koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
         --pattern='\.fa(sta)?' \
-        --string="${dict[transcriptome_fasta_file]}"
-    koopa_assert_is_not_dir "${dict[output_dir]}"
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    dict[index_file]="${dict[output_dir]}/kallisto.idx"
-    koopa_alert "Generating kallisto index at '${dict[output_dir]}'."
+        --string="${dict['transcriptome_fasta_file']}"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['index_file']="${dict['output_dir']}/kallisto.idx"
+    koopa_alert "Generating kallisto index at '${dict['output_dir']}'."
     index_args+=(
-        "--index=${dict[index_file]}"
-        "--kmer-size=${dict[kmer_size]}"
+        "--index=${dict['index_file']}"
+        "--kmer-size=${dict['kmer_size']}"
         '--make-unique'
-        "${dict[transcriptome_fasta_file]}"
+        "${dict['transcriptome_fasta_file']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    "${app[kallisto]}" index "${index_args[@]}"
-    koopa_alert_success "kallisto index created at '${dict[output_dir]}'."
+    "${app['kallisto']}" index "${index_args[@]}"
+    koopa_alert_success "kallisto index created at '${dict['output_dir']}'."
     return 0
 }

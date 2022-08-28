@@ -14,11 +14,11 @@ koopa_python_pip_install() {
     local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [python]="$(koopa_locate_python)"
+        ['python']="$(koopa_locate_python)"
     )
-    [[ -x "${app[python]}" ]] || return 1
+    [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
-        [prefix]=''
+        ['prefix']=''
     )
     pos=()
     while (("$#"))
@@ -26,19 +26,19 @@ koopa_python_pip_install() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--python='*)
-                app[python]="${1#*=}"
+                app['python']="${1#*=}"
                 shift 1
                 ;;
             '--python')
-                app[python]="${2:?}"
+                app['python']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -61,22 +61,22 @@ koopa_python_pip_install() {
         '--no-warn-script-location'
     )
     dl_args=(
-        'Python' "${app[python]}"
+        'Python' "${app['python']}"
         'Packages' "$(koopa_to_string "${pkgs[*]}")"
     )
-    if [[ -n "${dict[prefix]}" ]]
+    if [[ -n "${dict['prefix']}" ]]
     then
         install_args+=(
-            "--target=${dict[prefix]}"
+            "--target=${dict['prefix']}"
             '--upgrade'
         )
-        dl_args+=('Target' "${dict[prefix]}")
+        dl_args+=('Target' "${dict['prefix']}")
     fi
     koopa_dl "${dl_args[@]}"
     # > unset -v PYTHONPATH
     export PIP_REQUIRE_VIRTUALENV='false'
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
-    "${app[python]}" -m pip --isolated \
+    "${app['python']}" -m pip --isolated \
         install "${install_args[@]}" "${pkgs[@]}"
     return 0
 }

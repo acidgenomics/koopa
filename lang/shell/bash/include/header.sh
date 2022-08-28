@@ -72,43 +72,12 @@ __koopa_print() {
 __koopa_realpath() {
     # """
     # Resolve file path.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-08-26.
+    #
+    # macOS/BSD readlink now supports '-f' flag. Added in 2022?
     # """
-    local readlink x
-    readlink='readlink'
-    if ! __koopa_is_installed "$readlink"
-    then
-        local brew_readlink_1 brew_readlink_2
-        local koopa_readlink
-        local make_readlink_1 make_readlink_2
-        brew_readlink_1='/opt/homebrew/opt/coreutils/libexec/bin/readlink'
-        brew_readlink_2='/usr/local/opt/coreutils/libexec/bin/readlink'
-        koopa_readlink='/opt/koopa/opt/coreutils/bin/readlink'
-        make_readlink_1='/usr/local/bin/readlink'
-        make_readlink_2='/usr/local/bin/greadlink'
-        if [[ -x "$koopa_readlink" ]]
-        then
-            readlink="$koopa_readlink"
-        elif [[ -x "$make_readlink_1" ]]
-        then
-            readlink="$make_readlink_1"
-        elif [[ -x "$make_readlink_2" ]]
-        then
-            readlink="$make_readlink_2"
-        elif [[ -x "$brew_readlink_1" ]]
-        then
-            readlink="$brew_readlink_1"
-        elif [[ -x "$brew_readlink_2" ]]
-        then
-            readlink="$brew_readlink_2"
-        else
-            __koopa_warn \
-                "Not installed: '${readlink}'." \
-                'Install GNU coreutils to resolve.'
-            return 1
-        fi
-    fi
-    x="$("$readlink" -f "$@")"
+    local x
+    x="$(readlink -f "$@")"
     [[ -n "$x" ]] || return 1
     __koopa_print "$x"
     return 0
@@ -125,7 +94,6 @@ __koopa_source_functions() {
     local cache_file file files prefix
     prefix="$(koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
-
     cache_file="${prefix}.sh"
     if [[ -f "$cache_file" ]]
     then
@@ -164,14 +132,13 @@ __koopa_warn() {
 __koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2022-08-09.
+    # @note Updated 2022-08-23.
     #
     # @seealso
     # - shopt
     #   https://www.gnu.org/software/bash/manual/
     #     html_node/The-Shopt-Builtin.html
     # """
-    # Check for Bash 4+.
     case "${BASH_VERSION:-}" in
         '1.'* | '2.'* | '3.'*)
             return 1
@@ -179,26 +146,26 @@ __koopa_bash_header() {
     esac
     local dict
     declare -A dict=(
-        [activate]=0
-        [checks]=1
-        [dev]=0
-        [minimal]=0
-        [test]=0
-        [verbose]=0
+        ['activate']=0
+        ['checks']=1
+        ['dev']=0
+        ['minimal']=0
+        ['test']=0
+        ['verbose']=0
     )
-    [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
-    [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
-    [[ -n "${KOOPA_DEV:-}" ]] && dict[dev]="$KOOPA_DEV"
-    [[ -n "${KOOPA_MINIMAL:-}" ]] && dict[minimal]="$KOOPA_MINIMAL"
-    [[ -n "${KOOPA_TEST:-}" ]] && dict[test]="$KOOPA_TEST"
-    [[ -n "${KOOPA_VERBOSE:-}" ]] && dict[verbose]="$KOOPA_VERBOSE"
-    if [[ "${dict[activate]}" -eq 1 ]] && \
-        [[ "${dict[dev]}" -eq 0 ]] && \
-        [[ "${dict[test]}" -eq 0 ]]
+    [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict['activate']="$KOOPA_ACTIVATE"
+    [[ -n "${KOOPA_CHECKS:-}" ]] && dict['checks']="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_DEV:-}" ]] && dict['dev']="$KOOPA_DEV"
+    [[ -n "${KOOPA_MINIMAL:-}" ]] && dict['minimal']="$KOOPA_MINIMAL"
+    [[ -n "${KOOPA_TEST:-}" ]] && dict['test']="$KOOPA_TEST"
+    [[ -n "${KOOPA_VERBOSE:-}" ]] && dict['verbose']="$KOOPA_VERBOSE"
+    if [[ "${dict['activate']}" -eq 1 ]] && \
+        [[ "${dict['dev']}" -eq 0 ]] && \
+        [[ "${dict['test']}" -eq 0 ]]
     then
-        dict[checks]=0
+        dict['checks']=0
     fi
-    if [[ "${dict[activate]}" -eq 0 ]]
+    if [[ "${dict['activate']}" -eq 0 ]]
     then
         trap __koopa_exit_trap EXIT
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
@@ -206,11 +173,11 @@ __koopa_bash_header() {
         #   The-confusing-Bash-configuration-files.html
         [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
     fi
-    if [[ "${dict[activate]}" -eq 0 ]] || [[ "${dict[dev]}" -eq 1 ]]
+    if [[ "${dict['activate']}" -eq 0 ]] || [[ "${dict['dev']}" -eq 1 ]]
     then
         unalias -a
     fi
-    if [[ "${dict[checks]}" -eq 1 ]]
+    if [[ "${dict['checks']}" -eq 1 ]]
     then
         # Compare with current values defined in '~/.bashrc'.
         # Check all values with 'set +o'.
@@ -291,20 +258,20 @@ __koopa_bash_header() {
                 ;;
         esac
     fi
-    if [[ "${dict[verbose]}" -eq 1 ]]
+    if [[ "${dict['verbose']}" -eq 1 ]]
     then
         set -o verbose # -v
         set -o xtrace # -x
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        dict[header_path]="${BASH_SOURCE[0]}"
-        if [[ -L "${dict[header_path]}" ]]
+        dict['header_path']="${BASH_SOURCE[0]}"
+        if [[ -L "${dict['header_path']}" ]]
         then
-            dict[header_path]="$(__koopa_realpath "${dict[header_path]}")"
+            dict['header_path']="$(__koopa_realpath "${dict['header_path']}")"
         fi
         KOOPA_PREFIX="$( \
-            cd "$(dirname "${dict[header_path]}")/../../../.." \
+            cd "$(dirname "${dict['header_path']}")/../../../.." \
             &>/dev/null \
             && pwd -P \
         )"
@@ -312,41 +279,41 @@ __koopa_bash_header() {
     fi
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
-    if [[ "${dict[test]}" -eq 1 ]]
+    if [[ "${dict['test']}" -eq 1 ]]
     then
         koopa_duration_start || return 1
     fi
-    if [[ "${dict[activate]}" -eq 1 ]]
+    if [[ "${dict['activate']}" -eq 1 ]]
     then
         __koopa_source_functions 'activate'
-        if [[ "${dict[minimal]}" -eq 0 ]]
+        if [[ "${dict['minimal']}" -eq 0 ]]
         then
             koopa_activate_bash_extras
         fi
     fi
-    if [[ "${dict[activate]}" -eq 0 ]] || \
-        [[ "${dict[dev]}" -eq 1 ]]
+    if [[ "${dict['activate']}" -eq 0 ]] || [[ "${dict['dev']}" -eq 1 ]]
     then
         __koopa_source_functions 'common'
-        dict[os_id]="$(koopa_os_id)"
+        dict['os_id']="$(koopa_os_id)"
         if koopa_is_linux
         then
-            dict[linux_prefix]='os/linux'
-            __koopa_source_functions "${dict[linux_prefix]}/common"
+            dict['linux_prefix']='os/linux'
+            __koopa_source_functions "${dict['linux_prefix']}/common"
             if koopa_is_debian_like
             then
-                __koopa_source_functions "${dict[linux_prefix]}/debian"
+                __koopa_source_functions "${dict['linux_prefix']}/debian"
                 # > koopa_is_ubuntu_like && \
-                # >     __koopa_source_functions "${dict[linux_prefix]}/ubuntu"
+                # >     __koopa_source_functions \
+                # >         "${dict['linux_prefix']}/ubuntu"
             elif koopa_is_fedora_like
             then
-                __koopa_source_functions "${dict[linux_prefix]}/fedora"
+                __koopa_source_functions "${dict['linux_prefix']}/fedora"
                 koopa_is_rhel_like && \
-                    __koopa_source_functions "${dict[linux_prefix]}/rhel"
+                    __koopa_source_functions "${dict['linux_prefix']}/rhel"
             fi
-            __koopa_source_functions "${dict[linux_prefix]}/${dict[os_id]}"
+            __koopa_source_functions "${dict['linux_prefix']}/${dict['os_id']}"
         else
-            __koopa_source_functions "os/${dict[os_id]}"
+            __koopa_source_functions "os/${dict['os_id']}"
         fi
         # Check if user is requesting help documentation.
         case "${1:-}" in
@@ -372,7 +339,11 @@ __koopa_bash_header() {
         # Disable user-defined aliases.
         unalias -a
     fi
-    if [[ "${dict[verbose]}" -eq 1 ]]
+    if [[ "${dict['dev']}" -eq 1 ]]
+    then
+        export PS1='[koopa] $ '
+    fi
+    if [[ "${dict['verbose']}" -eq 1 ]]
     then
         koopa_alert_info 'Shell options'
         set +o
@@ -389,7 +360,7 @@ __koopa_bash_header() {
             locale
         fi
     fi
-    if [[ "${dict[test]}" -eq 1 ]]
+    if [[ "${dict['test']}" -eq 1 ]]
     then
         koopa_duration_stop 'bash' || return 1
     fi

@@ -29,13 +29,13 @@ koopa_aws_s3_find() {
     local dict exclude_arr include_arr ls_args pattern str
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [exclude]=0
-        [include]=0
-        [prefix]=''
-        [profile]="${AWS_PROFILE:-}"
-        [recursive]=0
+        ['exclude']=0
+        ['include']=0
+        ['prefix']=''
+        ['profile']="${AWS_PROFILE:-}"
+        ['recursive']=0
     )
-    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     exclude_arr=()
     include_arr=()
     while (("$#"))
@@ -43,44 +43,44 @@ koopa_aws_s3_find() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--exclude='*)
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--exclude')
-                dict[exclude]=1
+                dict['exclude']=1
                 exclude_arr+=("${2:?}")
                 shift 2
                 ;;
             '--include='*)
-                dict[include]=1
+                dict['include']=1
                 include_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--include')
-                dict[include]=1
+                dict['include']=1
                 include_arr+=("${2:?}")
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--recursive')
-                dict[recursive]=1
+                dict['recursive']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -90,21 +90,21 @@ koopa_aws_s3_find() {
         esac
     done
     koopa_assert_is_set \
-        '--prefix' "${dict[prefix]}" \
-        '--profile or AWS_PROFILE' "${dict[profile]}"
+        '--prefix' "${dict['prefix']}" \
+        '--profile or AWS_PROFILE' "${dict['profile']}"
     koopa_assert_is_matching_regex \
         --pattern='^s3://.+/$' \
-        --string="${dict[prefix]}"
+        --string="${dict['prefix']}"
     ls_args=(
-        '--prefix' "${dict[prefix]}"
-        '--profile' "${dict[profile]}"
+        '--prefix' "${dict['prefix']}"
+        '--profile' "${dict['profile']}"
         '--type' 'f'
     )
-    [[ "${dict[recursive]}" -eq 1 ]] && ls_args+=('--recursive')
+    [[ "${dict['recursive']}" -eq 1 ]] && ls_args+=('--recursive')
     str="$(koopa_aws_s3_ls "${ls_args[@]}")"
     [[ -n "$str" ]] || return 1
     # Exclude pattern.
-    if [[ "${dict[exclude]}" -eq 1 ]]
+    if [[ "${dict['exclude']}" -eq 1 ]]
     then
         for pattern in "${exclude_arr[@]}"
         do
@@ -118,7 +118,7 @@ koopa_aws_s3_find() {
                         --replacement='' \
                         "$pattern" \
                 )"
-                pattern="${dict[prefix]}${pattern}"
+                pattern="${dict['prefix']}${pattern}"
             fi
             str="$( \
                 koopa_grep \
@@ -131,7 +131,7 @@ koopa_aws_s3_find() {
         done
     fi
     # Include pattern.
-    if [[ "${dict[include]}" -eq 1 ]]
+    if [[ "${dict['include']}" -eq 1 ]]
     then
         for pattern in "${include_arr[@]}"
         do
@@ -145,7 +145,7 @@ koopa_aws_s3_find() {
                         --replacement='' \
                         "$pattern" \
                 )"
-                pattern="${dict[prefix]}${pattern}"
+                pattern="${dict['prefix']}${pattern}"
             fi
             str="$( \
                 koopa_grep \

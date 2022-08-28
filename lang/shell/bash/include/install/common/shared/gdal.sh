@@ -53,41 +53,41 @@ main() {
         'xz' \
         'zstd'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
-        [make]="$(koopa_locate_make)"
+        ['cmake']="$(koopa_locate_cmake)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [make_prefix]="$(koopa_make_prefix)"
-        [name]='gdal'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [shared_ext]="$(koopa_shared_ext)"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['make_prefix']="$(koopa_make_prefix)"
+        ['name']='gdal'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://github.com/OSGeo/${dict[name]}/releases/download/\
-v${dict[version]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/OSGeo/${dict['name']}/releases/download/\
+v${dict['version']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
-    dict[curl]="$(koopa_app_prefix 'curl')"
-    dict[hdf5]="$(koopa_app_prefix 'hdf5')"
-    dict[libxml2]="$(koopa_app_prefix 'libxml2')"
-    dict[pcre2]="$(koopa_app_prefix 'pcre2')"
-    # > dict[proj]="$(koopa_app_prefix 'proj')"
-    dict[python]="$(koopa_app_prefix 'python')"
-    dict[sqlite]="$(koopa_app_prefix 'sqlite')"
+    dict['curl']="$(koopa_app_prefix 'curl')"
+    dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+    # > dict['proj']="$(koopa_app_prefix 'proj')"
+    dict['python']="$(koopa_app_prefix 'python')"
+    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
         '-DBUILD_APPS=ON'
         '-DBUILD_PYTHON_BINDINGS=ON'
         '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_INSTALL_PREFIX=${dict[prefix]}"
-        "-DCMAKE_INSTALL_RPATH=${dict[prefix]}/lib"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         '-DGDAL_USE_ARMADILLO=OFF'
         '-DGDAL_USE_ARROW=OFF'
         '-DGDAL_USE_BLOSC=OFF'
@@ -160,24 +160,24 @@ v${dict[version]}/${dict[file]}"
         '-DGDAL_USE_ZSTD=ON'
         # Required dependency paths.
         # CMake installer currently warns when this is set:
-        # > "-DPROJ_INCLUDE_DIR=${dict[proj]}/include"
-        # > "-DPROJ_LIBRARY_RELEASE=${dict[proj]}/lib/\
-        # > libproj.${dict[shared_ext]}"
+        # > "-DPROJ_INCLUDE_DIR=${dict['proj']}/include"
+        # > "-DPROJ_LIBRARY_RELEASE=${dict['proj']}/lib/\
+        # > libproj.${dict['shared_ext']}"
         # Optional dependency paths.
-        "-DCURL_INCLUDE_DIR=${dict[curl]}/include"
-        "-DCURL_LIBRARY=${dict[curl]}/lib/libcurl.${dict[shared_ext]}"
-        "-DHDF5_ROOT=${dict[hdf5]}"
-        "-DLIBXML2_INCLUDE_DIR=${dict[libxml2]}/include"
-        "-DLIBXML2_LIBRARY=${dict[libxml2]}/lib/libxml2.${dict[shared_ext]}"
-        "-DPCRE2_INCLUDE_DIR=${dict[pcre2]}/include"
-        "-DPCRE2_LIBRARY=${dict[pcre2]}/lib/libpcre2-8.${dict[shared_ext]}"
-        "-DPython_ROOT=${dict[python]}"
-        "-DSQLite3_INCLUDE_DIR=${dict[sqlite]}/include"
-        "-DSQLite3_LIBRARY=${dict[sqlite]}/lib/libsqlite3.${dict[shared_ext]}"
+        "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
+        "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
+        "-DHDF5_ROOT=${dict['hdf5']}"
+        "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
+        "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
+        "-DPCRE2_INCLUDE_DIR=${dict['pcre2']}/include"
+        "-DPCRE2_LIBRARY=${dict['pcre2']}/lib/libpcre2-8.${dict['shared_ext']}"
+        "-DPython_ROOT=${dict['python']}"
+        "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
+        "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/libsqlite3.${dict['shared_ext']}"
     )
-    koopa_mkdir "${dict[prefix]}/include"
-    "${app[cmake]}" .. "${cmake_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    koopa_mkdir "${dict['prefix']}/include"
+    "${app['cmake']}" .. "${cmake_args[@]}"
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

@@ -2,8 +2,8 @@
 
 koopa_activate_coreutils_aliases() {
     # """
-    # Activate BSD/GNU coreutils aliases.
-    # @note Updated 2022-08-12.
+    # Activate GNU coreutils aliases.
+    # @note Updated 2022-08-27.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -11,32 +11,19 @@ koopa_activate_coreutils_aliases() {
     # apply to interactive use at the command prompt.
     #
     # macOS ships with BSD coreutils, which don't support all GNU options.
-    # gmv on macOS currently has issues on NFS shares.
+    # gmv on macOS can run into issues on NFS shares.
     # """
-    [ -x "$(koopa_bin_prefix)/cp" ] || return 0
-    local cp cp_args ln ln_args mkdir mkdir_args mv mv_args rm rm_args
-    cp='cp'
-    ln='ln'
-    mkdir='mkdir'
-    mv='mv'
-    rm='rm'
-    cp_args='-Riv' # '--interactive --recursive --verbose'.
-    ln_args='-insv' # '--interactive --no-dereference --symbolic --verbose'.
-    mkdir_args='-pv' # '--parents --verbose'.
-    mv_args='-iv' # '--interactive --verbose'
-    # Problematic on some file systems: '--dir', '--preserve-root'.
-    # Don't enable '--recursive' here by default, to provide against
-    # accidental deletion of an important directory.
-    rm_args='-iv' # '--interactive=once --verbose'.
-    # shellcheck disable=SC2139
-    alias cp="${cp} ${cp_args}"
-    # shellcheck disable=SC2139
-    alias ln="${ln} ${ln_args}"
-    # shellcheck disable=SC2139
-    alias mkdir="${mkdir} ${mkdir_args}"
-    # shellcheck disable=SC2139
-    alias mv="${mv} ${mv_args}"
-    # shellcheck disable=SC2139
-    alias rm="${rm} ${rm_args}"
+    [ -x "$(koopa_bin_prefix)/gcp" ] || return 0
+    alias gcp='gcp --interactive --recursive --verbose'
+    alias gln='gln --interactive --no-dereference --symbolic --verbose'
+    alias gmkdir='gmkdir --parents --verbose'
+    alias gmv='gmv --interactive --verbose'
+    alias grm='grm --interactive=once --verbose'
+    # Ensure we mask system coreutils.
+    alias cp='gcp'
+    alias ln='gln'
+    alias mkdir='gmkdir'
+    alias mv='gmv'
+    alias rm='grm'
     return 0
 }

@@ -9,13 +9,13 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'curl' 'gnupg' 'wget'
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [tlmgr]="$(koopa_locate_tlmgr)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['tlmgr']="$(koopa_locate_tlmgr)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tlmgr]}" ]] || return 1
-    "${app[sudo]}" "${app[tlmgr]}" update --self
-    "${app[sudo]}" "${app[tlmgr]}" update --list
-    "${app[sudo]}" "${app[tlmgr]}" update --all
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tlmgr']}" ]] || return 1
+    "${app['sudo']}" "${app['tlmgr']}" update --self
+    "${app['sudo']}" "${app['tlmgr']}" update --list
+    "${app['sudo']}" "${app['tlmgr']}" update --all
     return 0
 }

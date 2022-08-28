@@ -16,36 +16,36 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [bash]="$(koopa_locate_bash)"
+        ['bash']="$(koopa_locate_bash)"
     )
-    [[ -x "${app[bash]}" ]] || return 1
+    [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [os_type]="$(koopa_os_type)"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [py_maj_ver]='3'
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['os_type']="$(koopa_os_type)"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['py_maj_ver']='3'
+        ['version']="${INSTALL_VERSION:?}"
     )
-    case "${dict[os_type]}" in
+    case "${dict['os_type']}" in
         'darwin'*)
-            dict[os_type]='MacOSX'
+            dict['os_type']='MacOSX'
             ;;
         'linux'*)
-            dict[os_type]='Linux'
+            dict['os_type']='Linux'
             ;;
         *)
-            koopa_stop "'${dict[os_type]}' is not supported."
+            koopa_stop "'${dict['os_type']}' is not supported."
             ;;
     esac
-    dict[file]="Anaconda${dict[py_maj_ver]}-${dict[version]}-\
-${dict[os_type]}-${dict[arch]}.sh"
-    dict[url]="https://repo.anaconda.com/archive/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
+    dict['file']="Anaconda${dict['py_maj_ver']}-${dict['version']}-\
+${dict['os_type']}-${dict['arch']}.sh"
+    dict['url']="https://repo.anaconda.com/archive/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
     unset -v PYTHONHOME PYTHONPATH
-    "${app[bash]}" "${dict[file]}" -bf -p "${dict[prefix]}"
+    "${app['bash']}" "${dict['file']}" -bf -p "${dict['prefix']}"
     koopa_ln \
-        "${dict[koopa_prefix]}/etc/conda/condarc" \
-        "${dict[prefix]}/.condarc"
+        "${dict['koopa_prefix']}/etc/conda/condarc" \
+        "${dict['prefix']}/.condarc"
     return 0
 }

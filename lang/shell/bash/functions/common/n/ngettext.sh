@@ -22,64 +22,64 @@ koopa_ngettext() {
     local dict
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [middle]=' '
-        [msg1]=''
-        [msg2]=''
-        [num]=''
-        [prefix]=''
-        [str]=''
-        [suffix]=''
+        ['middle']=' '
+        ['msg1']=''
+        ['msg2']=''
+        ['num']=''
+        ['prefix']=''
+        ['str']=''
+        ['suffix']=''
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--middle='*)
-                dict[middle]="${1#*=}"
+                dict['middle']="${1#*=}"
                 shift 1
                 ;;
             '--middle')
-                dict[middle]="${2:?}"
+                dict['middle']="${2:?}"
                 shift 2
                 ;;
             '--msg1='*)
-                dict[msg1]="${1#*=}"
+                dict['msg1']="${1#*=}"
                 shift 1
                 ;;
             '--msg1')
-                dict[msg1]="${2:?}"
+                dict['msg1']="${2:?}"
                 shift 2
                 ;;
             '--msg2='*)
-                dict[msg2]="${1#*=}"
+                dict['msg2']="${1#*=}"
                 shift 1
                 ;;
             '--msg2')
-                dict[msg2]="${2:?}"
+                dict['msg2']="${2:?}"
                 shift 2
                 ;;
             '--num='*)
-                dict[num]="${1#*=}"
+                dict['num']="${1#*=}"
                 shift 1
                 ;;
             '--num')
-                dict[num]="${2:?}"
+                dict['num']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                dict[prefix]="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                dict[prefix]="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--suffix='*)
-                dict[suffix]="${1#*=}"
+                dict['suffix']="${1#*=}"
                 shift 1
                 ;;
             '--suffix')
-                dict[suffix]="${2:?}"
+                dict['suffix']="${2:?}"
                 shift 2
                 ;;
             # Invalid ----------------------------------------------------------
@@ -89,23 +89,23 @@ koopa_ngettext() {
         esac
     done
     koopa_assert_is_set \
-        '--middle' "${dict[middle]}"  \
-        '--msg1' "${dict[msg1]}"  \
-        '--msg2' "${dict[msg2]}"  \
-        '--num' "${dict[num]}"
+        '--middle' "${dict['middle']}"  \
+        '--msg1' "${dict['msg1']}"  \
+        '--msg2' "${dict['msg2']}"  \
+        '--num' "${dict['num']}"
     # Pad the prefix and suffix automatically, if desired.
-    # > [[ -n "${dict[prefix]}" ]] && dict[prefix]="${dict[prefix]} "
-    # > [[ -n "${dict[suffix]}" ]] && dict[suffix]=" ${dict[suffix]}"
-    case "${dict[num]}" in
+    # > [[ -n "${dict['prefix']}" ]] && dict['prefix']="${dict['prefix']} "
+    # > [[ -n "${dict['suffix']}" ]] && dict['suffix']=" ${dict['suffix']}"
+    case "${dict['num']}" in
         '1')
-            dict[msg]="${dict[msg1]}"
+            dict['msg']="${dict['msg1']}"
             ;;
         *)
-            dict[msg]="${dict[msg2]}"
+            dict['msg']="${dict['msg2']}"
             ;;
     esac
-    dict[str]="${dict[prefix]}${dict[num]}${dict[middle]}\
-${dict[msg]}${dict[suffix]}"
-    koopa_print "${dict[str]}"
+    dict['str']="${dict['prefix']}${dict['num']}${dict['middle']}\
+${dict['msg']}${dict['suffix']}"
+    koopa_print "${dict['str']}"
     return 0
 }

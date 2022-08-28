@@ -17,69 +17,69 @@ koopa_hisat2_align_paired_end() {
     koopa_assert_has_args "$#"
     declare -A dict=(
         # e.g. 'fastq'.
-        [fastq_dir]=''
+        ['fastq_dir']=''
         # e.g. '_R1_001.fastq.gz'.
-        [fastq_r1_tail]=''
+        ['fastq_r1_tail']=''
         # e.g. '_R2_001.fastq.gz'.
-        [fastq_r2_tail]=''
+        ['fastq_r2_tail']=''
         # e.g. 'hisat2-index'.
-        [index_dir]=''
+        ['index_dir']=''
         # Using salmon fragment library type conventions here.
-        [lib_type]='A'
-        [mode]='paired-end'
+        ['lib_type']='A'
+        ['mode']='paired-end'
         # e.g. 'hisat2'.
-        [output_dir]=''
+        ['output_dir']=''
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
+                dict['fastq_dir']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-dir')
-                dict[fastq_dir]="${2:?}"
+                dict['fastq_dir']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -89,36 +89,36 @@ koopa_hisat2_align_paired_end() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-dir' "${dict[fastq_dir]}" \
-        '--fastq-r1-tail' "${dict[fastq_r1_tail]}" \
-        '--fastq-r2-tail' "${dict[fastq_r1_tail]}" \
-        '--index-dir' "${dict[index_dir]}" \
-        '--lib-type' "${dict[lib_type]}" \
-        '--output-dir' "${dict[output_dir]}"
-    koopa_assert_is_dir "${dict[fastq_dir]}" "${dict[index_dir]}"
-    dict[fastq_dir]="$(koopa_realpath "${dict[fastq_dir]}")"
-    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
+        '--fastq-dir' "${dict['fastq_dir']}" \
+        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
+        '--fastq-r2-tail' "${dict['fastq_r1_tail']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}"
+    koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running HISAT2 aligner.'
     koopa_dl \
-        'Mode' "${dict[mode]}" \
-        'Index dir' "${dict[index_dir]}" \
-        'FASTQ dir' "${dict[fastq_dir]}" \
-        'FASTQ R1 tail' "${dict[fastq_r1_tail]}" \
-        'FASTQ R2 tail' "${dict[fastq_r2_tail]}" \
-        'Output dir' "${dict[output_dir]}"
+        'Mode' "${dict['mode']}" \
+        'Index dir' "${dict['index_dir']}" \
+        'FASTQ dir' "${dict['fastq_dir']}" \
+        'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
+        'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
+        'Output dir' "${dict['output_dir']}"
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
-            --pattern="*${dict[fastq_r1_tail]}" \
-            --prefix="${dict[fastq_dir]}" \
+            --pattern="*${dict['fastq_r1_tail']}" \
+            --prefix="${dict['fastq_dir']}" \
             --sort \
             --type='f' \
     )"
     if koopa_is_array_empty "${fastq_r1_files[@]:-}"
     then
-        koopa_stop "No FASTQs ending with '${dict[fastq_r1_tail]}'."
+        koopa_stop "No FASTQs ending with '${dict['fastq_r1_tail']}'."
     fi
     koopa_alert_info "$(koopa_ngettext \
         --num="${#fastq_r1_files[@]}" \
@@ -129,15 +129,15 @@ koopa_hisat2_align_paired_end() {
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
         fastq_r2_file="${fastq_r1_file/\
-${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
+${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         koopa_hisat2_align_paired_end_per_sample \
             --fastq-r1-file="$fastq_r1_file" \
-            --fastq-r1-tail="${dict[fastq_r1_tail]}" \
+            --fastq-r1-tail="${dict['fastq_r1_tail']}" \
             --fastq-r2-file="$fastq_r2_file" \
-            --fastq-r2-tail="${dict[fastq_r2_tail]}" \
-            --index-dir="${dict[index_dir]}" \
-            --lib-type="${dict[lib_type]}" \
-            --output-dir="${dict[output_dir]}"
+            --fastq-r2-tail="${dict['fastq_r2_tail']}" \
+            --index-dir="${dict['index_dir']}" \
+            --lib-type="${dict['lib_type']}" \
+            --output-dir="${dict['output_dir']}"
     done
     koopa_alert_success 'HISAT2 alignment was successful.'
     return 0

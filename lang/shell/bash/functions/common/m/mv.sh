@@ -17,20 +17,20 @@ koopa_mv() {
     # """
     local app dict mkdir mv mv_args pos rm
     declare -A app=(
-        [mkdir]='koopa_mkdir'
-        [rm]='koopa_rm'
+        ['mkdir']='koopa_mkdir'
+        ['rm']='koopa_rm'
     )
     # macOS gmv currently has issues on NFS shares.
     if koopa_is_macos
     then
-        app[mv]='/bin/mv'
+        app['mv']='/bin/mv'
     else
-        app[mv]="$(koopa_locate_mv)"
+        app['mv']="$(koopa_locate_mv)"
     fi
-    [[ -x "${app[mv]}" ]] || return 1
+    [[ -x "${app['mv']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
-        [target_dir]=''
+        ['sudo']=0
+        ['target_dir']=''
     )
     pos=()
     while (("$#"))
@@ -38,18 +38,18 @@ koopa_mv() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--target-directory='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-directory' | \
             '-t')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -64,41 +64,41 @@ koopa_mv() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
-        mkdir=("${app[mkdir]}" '--sudo')
-        mv=("${app[sudo]}" "${app[mv]}")
-        rm=("${app[rm]}" '--sudo')
+        app['sudo']="$(koopa_locate_sudo)"
+        mkdir=("${app['mkdir']}" '--sudo')
+        mv=("${app['sudo']}" "${app['mv']}")
+        rm=("${app['rm']}" '--sudo')
     else
-        mkdir=("${app[mkdir]}")
-        mv=("${app[mv]}")
-        rm=("${app[rm]}")
+        mkdir=("${app['mkdir']}")
+        mv=("${app['mv']}")
+        rm=("${app['rm']}")
     fi
     mv_args=('-f')
     mv_args+=("$@")
-    if [[ -n "${dict[target_dir]}" ]]
+    if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict[target_dir]="$(koopa_strip_trailing_slash "${dict[target_dir]}")"
-        if [[ ! -d "${dict[target_dir]}" ]]
+        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        if [[ ! -d "${dict['target_dir']}" ]]
         then
-            "${mkdir[@]}" "${dict[target_dir]}"
+            "${mkdir[@]}" "${dict['target_dir']}"
         fi
-        mv_args+=("${dict[target_dir]}")
+        mv_args+=("${dict['target_dir']}")
     else
         koopa_assert_has_args_eq "$#" 2
-        dict[source_file]="$(koopa_strip_trailing_slash "${1:?}")"
-        koopa_assert_is_existing "${dict[source_file]}"
-        dict[target_file]="$(koopa_strip_trailing_slash "${2:?}")"
-        if [[ -e "${dict[target_file]}" ]]
+        dict['source_file']="$(koopa_strip_trailing_slash "${1:?}")"
+        koopa_assert_is_existing "${dict['source_file']}"
+        dict['target_file']="$(koopa_strip_trailing_slash "${2:?}")"
+        if [[ -e "${dict['target_file']}" ]]
         then
-            "${rm[@]}" "${dict[target_file]}"
+            "${rm[@]}" "${dict['target_file']}"
         fi
-        dict[target_parent]="$(koopa_dirname "${dict[target_file]}")"
-        if [[ ! -d "${dict[target_parent]}" ]]
+        dict['target_parent']="$(koopa_dirname "${dict['target_file']}")"
+        if [[ ! -d "${dict['target_parent']}" ]]
         then
-            "${mkdir[@]}" "${dict[target_parent]}"
+            "${mkdir[@]}" "${dict['target_parent']}"
         fi
     fi
     "${mv[@]}" "${mv_args[@]}"

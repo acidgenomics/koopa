@@ -15,19 +15,19 @@ koopa_move_files_up_1_level() {
     local dict files
     koopa_assert_has_args_le "$#" 1
     declare -A dict=(
-        [prefix]="${1:-}"
+        ['prefix']="${1:-}"
     )
-    [[ -z "${dict[prefix]}" ]] && dict[prefix]="${PWD:?}"
-    koopa_assert_is_dir "${dict[prefix]}"
-    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
+    [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     readarray -t files <<< "$( \
         koopa_find \
             --max-depth=2 \
             --min-depth=2 \
-            --prefix="${dict[prefix]}" \
+            --prefix="${dict['prefix']}" \
             --type='f' \
     )"
     koopa_is_array_non_empty "${files[@]:-}" || return 1
-    koopa_mv --target-directory="${dict[prefix]}" "${files[@]}"
+    koopa_mv --target-directory="${dict['prefix']}" "${files[@]}"
     return 0
 }

@@ -8,8 +8,8 @@ koopa_delete_dotfile() {
     local dict name pos
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [config]=0
-        [xdg_config_home]="$(koopa_xdg_config_home)"
+        ['config']=0
+        ['xdg_config_home']="$(koopa_xdg_config_home)"
     )
     pos=()
     while (("$#"))
@@ -17,7 +17,7 @@ koopa_delete_dotfile() {
         case "$1" in
             # Flags ------------------------------------------------------------
             '--config')
-                dict[config]=1
+                dict['config']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -35,9 +35,9 @@ koopa_delete_dotfile() {
     for name in "$@"
     do
         local filepath
-        if [[ "${dict[config]}" -eq 1 ]]
+        if [[ "${dict['config']}" -eq 1 ]]
         then
-            filepath="${dict[xdg_config_home]}/${name}"
+            filepath="${dict['xdg_config_home']}/${name}"
         else
             filepath="${HOME:?}/.${name}"
         fi

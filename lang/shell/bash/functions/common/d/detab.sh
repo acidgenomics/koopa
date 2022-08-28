@@ -8,13 +8,13 @@ koopa_detab() {
     local app file
     koopa_assert_has_args "$#"
     declare -A app=(
-        [vim]="$(koopa_locate_vim)"
+        ['vim']="$(koopa_locate_vim)"
     )
-    [[ -x "${app[vim]}" ]] || return 1
+    [[ -x "${app['vim']}" ]] || return 1
     koopa_assert_is_file "$@"
     for file in "$@"
     do
-        "${app[vim]}" \
+        "${app['vim']}" \
             -c 'set expandtab tabstop=4 shiftwidth=4' \
             -c ':%retab' \
             -c ':wq' \

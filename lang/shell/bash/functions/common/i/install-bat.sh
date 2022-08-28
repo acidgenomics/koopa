@@ -2,7 +2,6 @@
 
 koopa_install_bat() {
     koopa_install_app \
-        --link-in-bin='bat' \
         --name='bat' \
         "$@"
 }

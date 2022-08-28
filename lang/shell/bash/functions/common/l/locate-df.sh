@@ -2,6 +2,7 @@
 
 koopa_locate_df() {
     koopa_locate_app \
-        --app-name='df' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gdf' \
+        "$@"
 }

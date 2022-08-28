@@ -8,24 +8,24 @@ koopa_rg_unique() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [rg]="$(koopa_locate_rg)"
-        [sort]="$(koopa_locate_sort)"
+        ['rg']="$(koopa_locate_rg)"
+        ['sort']="$(koopa_locate_sort)"
     )
-    [[ -x "${app[rg]}" ]] || return 1
-    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app['rg']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
-        [pattern]="${1:?}"
+        ['pattern']="${1:?}"
     )
-    dict[str]="$( \
-        "${app[rg]}" \
+    dict['str']="$( \
+        "${app['rg']}" \
             --no-filename \
             --no-line-number \
             --only-matching \
             --sort 'none' \
-            "${dict[pattern]}" \
-        | "${app[sort]}" --unique \
+            "${dict['pattern']}" \
+        | "${app['sort']}" --unique \
     )"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_print "${dict[str]}"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }

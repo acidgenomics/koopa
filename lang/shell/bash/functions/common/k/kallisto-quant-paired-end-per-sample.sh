@@ -47,23 +47,23 @@ koopa_kallisto_quant_paired_end_per_sample() {
     local app dict quant_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [kallisto]="$(koopa_locate_kallisto)"
+        ['kallisto']="$(koopa_locate_kallisto)"
     )
-    [[ -x "${app[kallisto]}" ]] || return 1
+    [[ -x "${app['kallisto']}" ]] || return 1
     declare -A dict=(
         # Current recommendation in bcbio-nextgen.
-        [bootstraps]=30
+        ['bootstraps']=30
         # e.g. 'sample1_R1_001.fastq.gz'
-        [fastq_r1_file]=''
+        ['fastq_r1_file']=''
         # e.g. '_R1_001.fastq.gz'.
-        [fastq_r1_tail]=''
+        ['fastq_r1_tail']=''
         # e.g. 'sample1_R2_001.fastq.gz'.
-        [fastq_r2_file]=''
+        ['fastq_r2_file']=''
         # e.g. '_R2_001.fastq.gz'.
-        [fastq_r2_tail]=''
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
-        [threads]="$(koopa_cpu_count)"
+        ['fastq_r2_tail']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
+        ['threads']="$(koopa_cpu_count)"
     )
     quant_args=()
     while (("$#"))
@@ -71,59 +71,59 @@ koopa_kallisto_quant_paired_end_per_sample() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--fastq-r1-file='*)
-                dict[fastq_r1_file]="${1#*=}"
+                dict['fastq_r1_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-file')
-                dict[fastq_r1_file]="${2:?}"
+                dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r1-tail='*)
-                dict[fastq_r1_tail]="${1#*=}"
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r1-tail')
-                dict[fastq_r1_tail]="${2:?}"
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-file='*)
-                dict[fastq_r2_file]="${1#*=}"
+                dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
-                dict[fastq_r2_file]="${2:?}"
+                dict['fastq_r2_file']="${2:?}"
                 shift 2
                 ;;
             '--fastq-r2-tail='*)
-                dict[fastq_r2_tail]="${1#*=}"
+                dict['fastq_r2_tail']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-tail')
-                dict[fastq_r2_tail]="${2:?}"
+                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
-                dict[index_dir]="${1#*=}"
+                dict['index_dir']="${1#*=}"
                 shift 1
                 ;;
             '--index-dir')
-                dict[index_dir]="${2:?}"
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
-                dict[lib_type]="${1#*=}"
+                dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
             '--lib-type')
-                dict[lib_type]="${2:?}"
+                dict['lib_type']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -133,55 +133,55 @@ koopa_kallisto_quant_paired_end_per_sample() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-r1-file' "${dict[fastq_r1_file]}" \
-        '--fastq-r1-tail' "${dict[fastq_r1_tail]}" \
-        '--fastq-r2-file' "${dict[fastq_r2_file]}" \
-        '--fastq-r2-tail' "${dict[fastq_r2_tail]}" \
-        '--index-dir' "${dict[index_dir]}" \
-        '--lib-type' "${dict[lib_type]}" \
-        '--output-dir' "${dict[output_dir]}"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--fastq-r1-file' "${dict['fastq_r1_file']}" \
+        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
+        '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "kallisto quant requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_dir "${dict[index_dir]}"
-    dict[index_dir]="$(koopa_realpath "${dict[index_dir]}")"
-    dict[index_file]="${dict[index_dir]}/kallisto.idx"
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['index_file']="${dict['index_dir']}/kallisto.idx"
     koopa_assert_is_file \
-        "${dict[fastq_r1_file]}" \
-        "${dict[fastq_r2_file]}" \
-        "${dict[index_file]}"
-    dict[fastq_r1_file]="$(koopa_realpath "${dict[fastq_r1_file]}")"
-    dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
-    dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
-    dict[fastq_r2_file]="$(koopa_realpath "${dict[fastq_r2_file]}")"
-    dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
-    dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[fastq_r2_tail]}/}"
-    koopa_assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
-    dict[id]="${dict[fastq_r1_bn]}"
-    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
-    if [[ -d "${dict[output_dir]}" ]]
+        "${dict['fastq_r1_file']}" \
+        "${dict['fastq_r2_file']}" \
+        "${dict['index_file']}"
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
+    koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
+    dict['id']="${dict['fastq_r1_bn']}"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
+    if [[ -d "${dict['output_dir']}" ]]
     then
-        koopa_alert_note "Skipping '${dict[id]}'."
+        koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_alert "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
     quant_args+=(
-        "--bootstrap-samples=${dict[bootstraps]}"
-        "--index=${dict[index_file]}"
-        "--output-dir=${dict[output_dir]}"
-        "--threads=${dict[threads]}"
+        "--bootstrap-samples=${dict['bootstraps']}"
+        "--index=${dict['index_file']}"
+        "--output-dir=${dict['output_dir']}"
+        "--threads=${dict['threads']}"
         '--bias'
         '--verbose'
     )
-    dict[lib_type]="$(koopa_kallisto_fastq_library_type "${dict[lib_type]}")"
-    if [[ -n "${dict[lib_type]}" ]]
+    dict['lib_type']="$(koopa_kallisto_fastq_library_type "${dict['lib_type']}")"
+    if [[ -n "${dict['lib_type']}" ]]
     then
-        quant_args+=("${dict[lib_type]}")
+        quant_args+=("${dict['lib_type']}")
     fi
-    quant_args+=("${dict[fastq_r1_file]}" "${dict[fastq_r2_file]}")
+    quant_args+=("${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}")
     koopa_dl 'Quant args' "${quant_args[*]}"
-    "${app[kallisto]}" quant "${quant_args[@]}"
+    "${app['kallisto']}" quant "${quant_args[@]}"
     return 0
 }

@@ -11,7 +11,7 @@ koopa_is_url_active() {
     #
     # @section wget approach:
     #
-    # > "${app[wget]}" --spider "$url" 2>/dev/null || return 1
+    # > "${app['wget']}" --spider "$url" 2>/dev/null || return 1
     #
     # @seealso
     # - https://stackoverflow.com/questions/12199059/
@@ -26,19 +26,19 @@ koopa_is_url_active() {
     local app url
     koopa_assert_has_args "$#"
     declare -A app=(
-        [curl]="$(koopa_locate_curl)"
+        ['curl']="$(koopa_locate_curl)"
     )
-    [[ -x "${app[curl]}" ]] || return 1
+    [[ -x "${app['curl']}" ]] || return 1
     declare -A dict=(
-        [url_pattern]='://'
+        ['url_pattern']='://'
     )
     for url in "$@"
     do
         koopa_str_detect_fixed \
-            --pattern="${dict[url_pattern]}" \
+            --pattern="${dict['url_pattern']}" \
             --string="$url" \
             || return 1
-        "${app[curl]}" \
+        "${app['curl']}" \
             --disable \
             --fail \
             --head \

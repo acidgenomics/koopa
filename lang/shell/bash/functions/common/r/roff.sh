@@ -8,16 +8,16 @@ koopa_roff() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [ronn]="$(koopa_locate_ronn)"
+        ['ronn']="$(koopa_locate_ronn)"
     )
-    [[ -x "${app[ronn]}" ]] || return 1
+    [[ -x "${app['ronn']}" ]] || return 1
     declare -A dict=(
-        [man_prefix]="$(koopa_man_prefix)"
+        ['man_prefix']="$(koopa_man_prefix)"
     )
     (
-        koopa_cd "${dict[man_prefix]}/man1-ronn"
-        "${app[ronn]}" --roff ./*'.ronn'
-        koopa_mv --target-directory="${dict[man_prefix]}/man1" ./*'.1'
+        koopa_cd "${dict['man_prefix']}/man1-ronn"
+        "${app['ronn']}" --roff ./*'.ronn'
+        koopa_mv --target-directory="${dict['man_prefix']}/man1" ./*'.1'
     )
     return 0
 }

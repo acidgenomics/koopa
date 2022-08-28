@@ -2,7 +2,7 @@
 
 koopa_locate_cat() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='cat' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gcat' \
+        "$@"
 }

@@ -10,9 +10,9 @@ koopa_gpg_prompt() {
     local app
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [gpg]="$(koopa_locate_gpg)"
+        ['gpg']="$(koopa_locate_gpg)"
     )
-    [[ -x "${app[gpg]}" ]] || return 1
-    printf '' | "${app[gpg]}" -s
+    [[ -x "${app['gpg']}" ]] || return 1
+    printf '' | "${app['gpg']}" -s
     return 0
 }

@@ -11,10 +11,10 @@ koopa_linux_update_system_sshd_config() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [source_file]="$(koopa_koopa_prefix)/os/linux/common/etc/ssh/\
+        ['source_file']="$(koopa_koopa_prefix)/os/linux/common/etc/ssh/\
 sshd_config.d/koopa.conf"
-        [target_file]='/etc/ssh/sshd_config.d/koopa.conf'
+        ['target_file']='/etc/ssh/sshd_config.d/koopa.conf'
     )
-    koopa_ln --sudo "${dict[source_file]}" "${dict[target_file]}"
+    koopa_ln --sudo "${dict['source_file']}" "${dict['target_file']}"
     return 0
 }

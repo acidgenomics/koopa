@@ -23,20 +23,20 @@ koopa_star_index() {
     # """
     local app dict index_args
     declare -A app=(
-        [star]="$(koopa_locate_star)"
+        ['star']="$(koopa_locate_star)"
     )
-    [[ -x "${app[star]}" ]] || return 1
+    [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
-        [genome_fasta_file]=''
+        ['genome_fasta_file']=''
         # e.g. 'gencode.v39.annotation.gtf.gz'
-        [gtf_file]=''
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=62
+        ['gtf_file']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=62
         # e.g. 'star-index'.
-        [output_dir]=''
-        [threads]="$(koopa_cpu_count)"
-        [tmp_dir]="$(koopa_tmp_dir)"
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
+        ['tmp_dir']="$(koopa_tmp_dir)"
     )
     index_args=()
     while (("$#"))
@@ -44,27 +44,27 @@ koopa_star_index() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
+                dict['gtf_file']="${1#*=}"
                 shift 1
                 ;;
             '--gtf-file')
-                dict[gtf_file]="${2:?}"
+                dict['gtf_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -74,34 +74,34 @@ koopa_star_index() {
         esac
     done
     koopa_assert_is_set \
-        '--genome-fasta-file' "${dict[genome_fasta_file]}" \
-        '--gtf-file' "${dict[gtf_file]}" \
-        '--output-dir' "${dict[output_dir]}"
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "STAR 'genomeGenerate' mode requires ${dict[mem_gb_cutoff]} \
+        koopa_stop "STAR 'genomeGenerate' mode requires ${dict['mem_gb_cutoff']} \
 GB of RAM."
     fi
     koopa_assert_is_file \
-        "${dict[genome_fasta_file]}" \
-        "${dict[gtf_file]}"
-    koopa_assert_is_not_dir "${dict[output_dir]}"
-    koopa_alert "Generating STAR index at '${dict[output_dir]}'."
+        "${dict['genome_fasta_file']}" \
+        "${dict['gtf_file']}"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    koopa_alert "Generating STAR index at '${dict['output_dir']}'."
     index_args+=(
-        '--genomeDir' "${dict[output_dir]}/"
+        '--genomeDir' "${dict['output_dir']}/"
         '--runMode' 'genomeGenerate'
-        '--runThreadN' "${dict[threads]}"
+        '--runThreadN' "${dict['threads']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
-        koopa_cd "${dict[tmp_dir]}"
-        "${app[star]}" "${index_args[@]}" \
+        koopa_cd "${dict['tmp_dir']}"
+        "${app['star']}" "${index_args[@]}" \
             --genomeFastaFiles \
-                <(koopa_decompress --stdout "${dict[genome_fasta_file]}") \
+                <(koopa_decompress --stdout "${dict['genome_fasta_file']}") \
             --sjdbGTFfile \
-                <(koopa_decompress --stdout "${dict[gtf_file]}")
+                <(koopa_decompress --stdout "${dict['gtf_file']}")
     )
-    koopa_rm "${dict[tmp_dir]}"
-    koopa_alert_success "STAR index created at '${dict[output_dir]}'."
+    koopa_rm "${dict['tmp_dir']}"
+    koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
 }

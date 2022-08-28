@@ -2,7 +2,6 @@
 
 koopa_install_pandoc() {
     koopa_install_app \
-        --link-in-bin='pandoc' \
         --name='pandoc' \
         "$@"
 }

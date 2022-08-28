@@ -13,14 +13,14 @@ koopa_make_build_string() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa_arch)"
+        ['arch']="$(koopa_arch)"
     )
     if koopa_is_linux
     then
-        dict[os_type]='linux-gnu'
+        dict['os_type']='linux-gnu'
     else
-        dict[os_type]="$(koopa_os_type)"
+        dict['os_type']="$(koopa_os_type)"
     fi
-    koopa_print "${dict[arch]}-${dict[os_type]}"
+    koopa_print "${dict['arch']}-${dict['os_type']}"
     return 0
 }

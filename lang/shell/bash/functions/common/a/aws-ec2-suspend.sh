@@ -7,24 +7,24 @@ koopa_aws_ec2_suspend() {
     # """
     local app dict
     declare -A app=(
-        [aws]="$(koopa_locate_aws)"
+        ['aws']="$(koopa_locate_aws)"
     )
-    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
-        [id]="$(koopa_aws_ec2_instance_id)"
-        [profile]="${AWS_PROFILE:-}"
+        ['id']="$(koopa_aws_ec2_instance_id)"
+        ['profile']="${AWS_PROFILE:-}"
     )
-    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -33,9 +33,9 @@ koopa_aws_ec2_suspend() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict[profile]:-}"
-    "${app[aws]}" --profile="${dict[profile]}" \
-        ec2 stop-instances --instance-id "${dict[id]}" \
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']:-}"
+    "${app['aws']}" --profile="${dict['profile']}" \
+        ec2 stop-instances --instance-id "${dict['id']}" \
         >/dev/null
     return 0
 }

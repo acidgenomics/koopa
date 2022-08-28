@@ -7,7 +7,7 @@ koopa_init_dir() {
     # """
     local dict mkdir pos
     declare -A dict=(
-        [sudo]=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))
@@ -16,7 +16,7 @@ koopa_init_dir() {
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -31,25 +31,25 @@ koopa_init_dir() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
-    dict[dir]="${1:?}"
+    dict['dir']="${1:?}"
     if koopa_str_detect_regex \
-        --string="${dict[dir]}" \
+        --string="${dict['dir']}" \
         --pattern='^~'
     then
-        dict[dir]="$( \
+        dict['dir']="$( \
             koopa_sub \
                 --pattern='^~' \
                 --replacement="${HOME:?}" \
-                "${dict[dir]}" \
+                "${dict['dir']}" \
         )"
     fi
     mkdir=('koopa_mkdir')
-    [[ "${dict[sudo]}" -eq 1 ]] && mkdir+=('--sudo')
-    if [[ ! -d "${dict[dir]}" ]]
+    [[ "${dict['sudo']}" -eq 1 ]] && mkdir+=('--sudo')
+    if [[ ! -d "${dict['dir']}" ]]
     then
-        "${mkdir[@]}" "${dict[dir]}"
+        "${mkdir[@]}" "${dict['dir']}"
     fi
-    dict[realdir]="$(koopa_realpath "${dict[dir]}")"
-    koopa_print "${dict[realdir]}"
+    dict['realdir']="$(koopa_realpath "${dict['dir']}")"
+    koopa_print "${dict['realdir']}"
     return 0
 }

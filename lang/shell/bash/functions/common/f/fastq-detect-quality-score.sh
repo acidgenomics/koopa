@@ -22,25 +22,25 @@ koopa_fastq_detect_quality_score() {
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [head]="$(koopa_locate_head)"
-        [od]="$(koopa_locate_od)"
+        ['awk']="$(koopa_locate_awk)"
+        ['head']="$(koopa_locate_head)"
+        ['od']="$(koopa_locate_od)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[head]}" ]] || return 1
-    [[ -x "${app[od]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['od']}" ]] || return 1
     for file in "$@"
     do
         local str
         # shellcheck disable=SC2016
         str="$( \
-            "${app[head]}" -n 1000 \
+            "${app['head']}" -n 1000 \
                 <(koopa_decompress --stdout "$file") \
-            | "${app[awk]}" '{if(NR%4==0) printf("%s",$0);}' \
-            | "${app[od]}" \
+            | "${app['awk']}" '{if(NR%4==0) printf("%s",$0);}' \
+            | "${app['od']}" \
                 --address-radix='n' \
                 --format='u1' \
-            | "${app[awk]}" 'BEGIN{min=100;max=0;} \
+            | "${app['awk']}" 'BEGIN{min=100;max=0;} \
                 {for(i=1;i<=NF;i++) \
                     {if($i>max) max=$i; \
                         if($i<min) min=$i;}}END \

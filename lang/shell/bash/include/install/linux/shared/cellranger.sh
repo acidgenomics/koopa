@@ -14,15 +14,15 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [installers_url]="$(koopa_koopa_installers_url)"
-        [name]='cellranger'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['installers_url']="$(koopa_koopa_installers_url)"
+        ['name']='cellranger'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="${dict[installers_url]}/cellranger/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_mv "${dict[name]}-${dict[version]}" "${dict[prefix]}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="${dict['installers_url']}/cellranger/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_mv "${dict['name']}-${dict['version']}" "${dict['prefix']}"
     return 0
 }
