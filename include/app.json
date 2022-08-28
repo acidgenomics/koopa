@@ -734,6 +734,11 @@
     "dependencies": ["python"],
     "version": "5.0.4"
   },
+  "flex": {
+    "conservative": true,
+    "url": ["https://github.com/westes/flex/"],
+    "version": "2.6.4"
+  },
   "fltk": {
     "conservative": true,
     "url": ["https://www.fltk.org/"],

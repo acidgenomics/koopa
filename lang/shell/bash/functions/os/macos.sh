@@ -104,10 +104,7 @@ koopa_macos_brew_upgrade_casks() {
         esac
         "${app['brew']}" reinstall --cask --force "$cask" || true
         case "$cask" in
-            'adoptopenjdk' | \
-            'openjdk' | \
-            'r' | \
-            'temurin')
+            'r')
                 app['r']="$(koopa_macos_r_prefix)/bin/R"
                 koopa_configure_r "${app['r']}"
                 ;;
