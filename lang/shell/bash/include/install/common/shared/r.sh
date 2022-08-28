@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+
+
+# FIXME Now running into annoying bzip2 issue on 2022-08-27:
+#
+# checking whether bzip2 support suffices... configure: error: bzip2 library and headers are required
+#
+# https://trac.macports.org/ticket/60976
+# https://trac.macports.org/ticket/61013
+#
+# https://github.com/macports/macports-ports/blob/master/math/R/Portfile
+# https://github.com/wch/r-source/commit/9ba9c7e8651465721f9ac42a731ae4abb9b1ab7d
+# https://github.com/macports/macports-ports/pull/8458
+
+
+
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
@@ -36,6 +51,7 @@ main() {
     # - https://stat.ethz.ch/R-manual/R-devel/library/base/
     #     html/capabilities.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/r.rb
+    # - https://github.com/macports/macports-ports/blob/master/math/R/Portfile
     # - https://developer.r-project.org/
     # - https://svn.r-project.org/R/
     # - https://www.gnu.org/software/make/manual/make.html#Using-Implicit
