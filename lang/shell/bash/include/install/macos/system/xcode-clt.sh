@@ -22,27 +22,27 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [xcode_select]="$(koopa_macos_locate_xcode_select)"
-        [xcodebuild]="$(koopa_macos_locate_xcodebuild)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['xcode_select']="$(koopa_macos_locate_xcode_select)"
+        ['xcodebuild']="$(koopa_macos_locate_xcodebuild)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[xcode_select]}" ]] || return 1
-    [[ -x "${app[xcodebuild]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['xcode_select']}" ]] || return 1
+    [[ -x "${app['xcodebuild']}" ]] || return 1
     declare -A dict=(
-        [prefix]="$("${app[xcode_select]}" -p 2>/dev/null || true)"
+        ['prefix']="$("${app['xcode_select']}" -p 2>/dev/null || true)"
     )
-    if [[ -d "${dict[prefix]}" ]]
+    if [[ -d "${dict['prefix']}" ]]
     then
-        koopa_alert "Removing previous install at '${dict[prefix]}'."
-        koopa_rm --sudo "${dict[prefix]}"
+        koopa_alert "Removing previous install at '${dict['prefix']}'."
+        koopa_rm --sudo "${dict['prefix']}"
     fi
     # This step will prompt interactively, which is annoying. See above for
     # alternative workarounds that are more complicated, but may improve this.
-    "${app[xcode_select]}" --install
-    "${app[sudo]}" "${app[xcodebuild]}" -license 'accept'
-    "${app[sudo]}" "${app[xcode_select]}" -r
-    prefix="$("${app[xcode_select]}" -p)"
-    koopa_assert_is_dir "${dict[prefix]}"
+    "${app['xcode_select']}" --install
+    "${app['sudo']}" "${app['xcodebuild']}" -license 'accept'
+    "${app['sudo']}" "${app['xcode_select']}" -r
+    prefix="$("${app['xcode_select']}" -p)"
+    koopa_assert_is_dir "${dict['prefix']}"
     return 0
 }

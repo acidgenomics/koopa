@@ -3,7 +3,7 @@
 koopa_rsync() {
     # """
     # GNU rsync wrapper.
-    # @note Updated 2022-08-14.
+    # @note Updated 2022-08-23.
     #
     # Useful arguments:
     #     --delete-before         receiver deletes before xfer, not during
@@ -35,12 +35,12 @@ koopa_rsync() {
     local app dict rsync_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [rsync]="$(koopa_locate_rsync)"
+        ['rsync']="$(koopa_locate_rsync)"
     )
-    [[ -x "${app[rsync]}" ]] || return 1
+    [[ -x "${app['rsync']}" ]] || return 1
     declare -A dict=(
-        [source_dir]=''
-        [target_dir]=''
+        ['source_dir']=''
+        ['target_dir']=''
     )
     rsync_args=(
         # > '--one-file-system'
@@ -53,9 +53,7 @@ koopa_rsync() {
     )
     if koopa_is_macos
     then
-        rsync_args+=(
-            '--iconv=utf-8,utf-8-mac'
-        )
+        rsync_args+=('--iconv=utf-8,utf-8-mac')
     fi
     while (("$#"))
     do
@@ -78,28 +76,32 @@ koopa_rsync() {
                 shift 2
                 ;;
             '--source-dir='*)
-                dict[source_dir]="${1#*=}"
+                dict['source_dir']="${1#*=}"
                 shift 1
                 ;;
             '--source-dir')
-                dict[source_dir]="${2:?}"
+                dict['source_dir']="${2:?}"
                 shift 2
                 ;;
             '--target-dir='*)
-                dict[target_dir]="${1#*=}"
+                dict['target_dir']="${1#*=}"
                 shift 1
                 ;;
             '--target-dir')
-                dict[target_dir]="${2:?}"
+                dict['target_dir']="${2:?}"
                 shift 2
                 ;;
             # Passthrough args -------------------------------------------------
+            '--log-file='*)
+                rsync_args+=("$1")
+                shift 1
+                ;;
             '--archive' | \
             '--copy-links' | \
             '--delete' | \
             '--delete-before' | \
             '--dry-run' | \
-            '--log-file='*)
+            '--size-only')
                 rsync_args+=("$1")
                 shift 1
                 ;;
@@ -114,19 +116,20 @@ koopa_rsync() {
         esac
     done
     koopa_assert_is_set \
-        '--source-dir' "${dict[source_dir]}" \
-        '--target-dir' "${dict[target_dir]}"
-    if [[ -d "${dict[source_dir]}" ]]
+        '--source-dir' "${dict['source_dir']}" \
+        '--target-dir' "${dict['target_dir']}"
+    if [[ -d "${dict['source_dir']}" ]]
     then
-        dict[source_dir]="$(koopa_realpath "${dict[source_dir]}")"
+        dict['source_dir']="$(koopa_realpath "${dict['source_dir']}")"
     fi
-    if [[ -d "${dict[target_dir]}" ]]
+    if [[ -d "${dict['target_dir']}" ]]
     then
-        dict[target_dir]="$(koopa_realpath "${dict[target_dir]}")"
+        dict['target_dir']="$(koopa_realpath "${dict['target_dir']}")"
     fi
-    dict[source_dir]="$(koopa_strip_trailing_slash "${dict[source_dir]}")"
-    dict[target_dir]="$(koopa_strip_trailing_slash "${dict[target_dir]}")"
-    rsync_args+=("${dict[source_dir]}/" "${dict[target_dir]}/")
-    "${app[rsync]}" "${rsync_args[@]}"
+    dict['source_dir']="$(koopa_strip_trailing_slash "${dict['source_dir']}")"
+    dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+    rsync_args+=("${dict['source_dir']}/" "${dict['target_dir']}/")
+    koopa_dl 'rsync args' "${rsync_args[*]}"
+    "${app['rsync']}" "${rsync_args[@]}"
     return 0
 }

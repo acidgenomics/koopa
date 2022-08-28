@@ -11,8 +11,8 @@ koopa_assert_is_set() {
     # >     [bbb]='BBB'
     # > )
     # > koopa_assert_is_set \
-    # >     '--aaa' "${dict[aaa]:-}" \
-    # >     '--bbb' "${dict[bbb]:-}"
+    # >     '--aaa' "${dict['aaa']:-}" \
+    # >     '--bbb' "${dict['bbb']:-}"
     # """
     local name value
     koopa_assert_has_args_ge "$#" 2

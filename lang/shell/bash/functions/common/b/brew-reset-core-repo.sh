@@ -8,22 +8,22 @@ koopa_brew_reset_core_repo() {
     local app branch origin prefix repo
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
-        [git]="$(koopa_locate_git)"
+        ['brew']="$(koopa_locate_brew)"
+        ['git']="$(koopa_locate_git)"
     )
-    [[ -x "${app[brew]}" ]] || return 1
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repo='homebrew/core'
     origin='origin'
     (
-        prefix="$("${app[brew]}" --repo "$repo")"
+        prefix="$("${app['brew']}" --repo "$repo")"
         koopa_assert_is_dir "$prefix"
         koopa_cd "$prefix"
         branch="$(koopa_git_default_branch)"
-        "${app[git]}" checkout -q "$branch"
-        "${app[git]}" branch -q "$branch" -u "${origin}/${branch}"
-        "${app[git]}" reset -q --hard "${origin}/${branch}"
-        "${app[git]}" branch -vv
+        "${app['git']}" checkout -q "$branch"
+        "${app['git']}" branch -q "$branch" -u "${origin}/${branch}"
+        "${app['git']}" reset -q --hard "${origin}/${branch}"
+        "${app['git']}" branch -vv
     )
     return 0
 }

@@ -21,12 +21,12 @@ koopa_public_ip_address() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [dig]="$(koopa_locate_dig --allow-missing)"
+        ['dig']="$(koopa_locate_dig --allow-missing)"
     )
-    if koopa_is_installed "${app[dig]}"
+    if koopa_is_installed "${app['dig']}"
     then
         str="$( \
-            "${app[dig]}" +short \
+            "${app['dig']}" +short \
                 'myip.opendns.com' \
                 '@resolver1.opendns.com' \
                 -4 \

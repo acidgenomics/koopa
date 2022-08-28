@@ -12,11 +12,11 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [file]='pihole.sh'
-        [url]='https://install.pi-hole.net'
+        ['file']='pihole.sh'
+        ['url']='https://install.pi-hole.net'
     )
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_chmod 'u+x' "${dict[file]}"
-    "./${dict[file]}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_chmod 'u+x' "${dict['file']}"
+    "./${dict['file']}"
     return 0
 }

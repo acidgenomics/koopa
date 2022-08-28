@@ -8,11 +8,11 @@ koopa_tar_multiple_dirs() {
     local app dict dir dirs pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [tar]="$(koopa_locate_tar)"
+        ['tar']="$(koopa_locate_tar)"
     )
-    [[ -x "${app[tar]}" ]] || return 1
+    [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
-        [delete]=0
+        ['delete']=0
     )
     pos=()
     while (("$#"))
@@ -20,12 +20,12 @@ koopa_tar_multiple_dirs() {
         case "$1" in
             # Flags ------------------------------------------------------------
             '--delete')
-                dict[delete]=1
+                dict['delete']=1
                 shift 1
                 ;;
             '--no-delete' | \
             '--keep')
-                dict[delete]=0
+                dict['delete']=0
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -48,8 +48,8 @@ koopa_tar_multiple_dirs() {
             bn="$(koopa_basename "$dir")"
             koopa_alert "Compressing '${dir}'."
             koopa_cd "$(koopa_dirname "$dir")"
-            "${app[tar]}" -czf "${bn}.tar.gz" "${bn}/"
-            [[ "${dict[delete]}" -eq 1 ]] && koopa_rm "$dir"
+            "${app['tar']}" -czf "${bn}.tar.gz" "${bn}/"
+            [[ "${dict['delete']}" -eq 1 ]] && koopa_rm "$dir"
         done
     )
     return 0

@@ -8,17 +8,17 @@ koopa_r_library_prefix() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [r]="${1:-}"
+        ['r']="${1:-}"
     )
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
-    [[ -x "${app[r]}" ]] || return 1
-    app[rscript]="${app[r]}script"
-    [[ -x "${app[rscript]}" ]] || return 1
+    [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
+    [[ -x "${app['r']}" ]] || return 1
+    app['rscript']="${app['r']}script"
+    [[ -x "${app['rscript']}" ]] || return 1
     declare -A dict
-    dict[prefix]="$( \
-        "${app[rscript]}" -e 'cat(normalizePath(.libPaths()[[1L]]))' \
+    dict['prefix']="$( \
+        "${app['rscript']}" -e 'cat(normalizePath(.libPaths()[[1L]]))' \
     )"
-    koopa_assert_is_dir "${dict[prefix]}"
-    koopa_print "${dict[prefix]}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    koopa_print "${dict['prefix']}"
     return 0
 }

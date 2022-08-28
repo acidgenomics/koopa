@@ -9,13 +9,13 @@ koopa_debian_apt_space_used_by_no_deps() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [apt]="$(koopa_debian_locate_apt)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['apt']="$(koopa_debian_locate_apt)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[apt]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
+    [[ -x "${app['apt']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
     x="$( \
-        "${app[sudo]}" "${app[apt]}" show "$@" 2>/dev/null \
+        "${app['sudo']}" "${app['apt']}" show "$@" 2>/dev/null \
             | koopa_grep --pattern='Size' \
     )"
     [[ -n "$x" ]] || return 1

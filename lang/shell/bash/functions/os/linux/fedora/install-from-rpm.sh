@@ -10,12 +10,12 @@ koopa_fedora_install_from_rpm() {
     local app
     koopa_assert_has_args "$#"
     declare -A app=(
-        [rpm]="$(koopa_fedora_locate_rpm)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['rpm']="$(koopa_fedora_locate_rpm)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[rpm]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[rpm]}" -v \
+    [[ -x "${app['rpm']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['rpm']}" -v \
         --force \
         --install \
         "$@"

@@ -13,9 +13,9 @@ koopa_has_passwordless_sudo() {
     koopa_is_root && return 0
     koopa_is_installed 'sudo' || return 1
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" -n true 2>/dev/null && return 0
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" -n true 2>/dev/null && return 0
     return 1
 }

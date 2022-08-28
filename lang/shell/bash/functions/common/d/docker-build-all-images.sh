@@ -8,18 +8,18 @@ koopa_docker_build_all_images() {
     local app build_args image images
     local pos repo repos
     declare -A app=(
-        [basename]="$(koopa_locate_basename)"
-        [docker]="$(koopa_locate_docker)"
-        [xargs]="$(koopa_locate_xargs)"
+        ['basename']="$(koopa_locate_basename)"
+        ['docker']="$(koopa_locate_docker)"
+        ['xargs']="$(koopa_locate_xargs)"
     )
-    [[ -x "${app[basename]}" ]] || return 1
-    [[ -x "${app[docker]}" ]] || return 1
-    [[ -x "${app[xargs]}" ]] || return 1
+    [[ -x "${app['basename']}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
-        [days]=7
-        [docker_dir]="$(koopa_docker_prefix)"
-        [force]=0
-        [prune]=0
+        ['days']=7
+        ['docker_dir']="$(koopa_docker_prefix)"
+        ['force']=0
+        ['prune']=0
     )
     pos=()
     while (("$#"))
@@ -27,28 +27,28 @@ koopa_docker_build_all_images() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--days='*)
-                dict[days]="${1#*=}"
+                dict['days']="${1#*=}"
                 shift 1
                 ;;
             '--days')
-                dict[days]="${2:?}"
+                dict['days']="${2:?}"
                 shift 2
                 ;;
             '--docker-dir='*)
-                dict[docker_dir]="${1#*=}"
+                dict['docker_dir']="${1#*=}"
                 shift 1
                 ;;
             '--docker-dir')
-                dict[docker_dir]="${2:?}"
+                dict['docker_dir']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--force')
-                dict[force]=1
+                dict['force']=1
                 shift 1
                 ;;
             '--prune')
-                dict[prune]=1
+                dict['prune']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -62,8 +62,8 @@ koopa_docker_build_all_images() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    build_args=("--days=${dict[days]}")
-    if [[ "${dict[force]}" -eq 1 ]]
+    build_args=("--days=${dict['days']}")
+    if [[ "${dict['force']}" -eq 1 ]]
     then
         build_args+=('--force')
     fi
@@ -71,14 +71,14 @@ koopa_docker_build_all_images() {
     then
         repos=("$@")
     else
-        repos=("${dict[docker_dir]}/acidgenomics")
+        repos=("${dict['docker_dir']}/acidgenomics")
     fi
     koopa_assert_is_dir "${repos[@]}"
-    if [[ "${dict[prune]}" -eq 1 ]]
+    if [[ "${dict['prune']}" -eq 1 ]]
     then
         koopa_docker_prune_all_images
     fi
-    "${app[docker]}" login
+    "${app['docker']}" login
     for repo in "${repos[@]}"
     do
         local build_file repo_name
@@ -102,7 +102,7 @@ koopa_docker_build_all_images() {
                     --print0 \
                     --sort \
                     --type='d' \
-                | "${app[xargs]}" -0 -n 1 "${app[basename]}" \
+                | "${app['xargs']}" -0 -n 1 "${app['basename']}" \
             )"
         fi
         koopa_assert_is_array_non_empty "${images[@]:-}"
@@ -113,7 +113,7 @@ koopa_docker_build_all_images() {
         do
             image="${repo_name}/${image}"
             # Skip image if pushed recently.
-            if [[ "${dict[force]}" -eq 0 ]]
+            if [[ "${dict['force']}" -eq 0 ]]
             then
                 # NOTE This step currently pulls the image and checks the
                 # timestamp locally. We likely can speed this step up
@@ -121,7 +121,7 @@ koopa_docker_build_all_images() {
                 # Refer to 'docker-prune-stale-tags' approach for example code,
                 # which is currently written in R instead of Bash.
                 if koopa_docker_is_build_recent \
-                    --days="${dict[days]}" \
+                    --days="${dict['days']}" \
                     "$image"
                 then
                     koopa_alert_note "'${image}' was built recently. Skipping."
@@ -131,7 +131,7 @@ koopa_docker_build_all_images() {
             koopa_docker_build_all_tags "${build_args[@]}" "$image"
         done
     done
-    [[ "${dict[prune]}" -eq 1 ]] && koopa_docker_prune_all_images
+    [[ "${dict['prune']}" -eq 1 ]] && koopa_docker_prune_all_images
     koopa_alert_success 'All Docker images built successfully.'
     return 0
 }

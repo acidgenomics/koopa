@@ -20,51 +20,51 @@ __koopa_str_detect() {
     local dict grep_args
     koopa_assert_has_args "$#"
     declare -A dict=(
-        [mode]=''
-        [pattern]=''
-        [stdin]=1
-        [string]=''
-        [sudo]=0
+        ['mode']=''
+        ['pattern']=''
+        ['stdin']=1
+        ['string']=''
+        ['sudo']=0
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--mode='*)
-                dict[mode]="${1#*=}"
+                dict['mode']="${1#*=}"
                 shift 1
                 ;;
             '--mode')
-                dict[mode]="${2:?}"
+                dict['mode']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
-                dict[stdin]=0
+                dict['string']="${1#*=}"
+                dict['stdin']=0
                 shift 1
                 ;;
             '--string')
                 # Allowing empty string to propagate here.
-                dict[string]="${2:-}"
-                dict[stdin]=0
+                dict['string']="${2:-}"
+                dict['stdin']=0
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--sudo')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
             '-')
-                dict[stdin]=1
+                dict['stdin']=1
                 shift 1
                 ;;
             *)
@@ -73,20 +73,20 @@ __koopa_str_detect() {
         esac
     done
     # Piped input using stdin (string mode).
-    if [[ "${dict[stdin]}" -eq 1 ]]
+    if [[ "${dict['stdin']}" -eq 1 ]]
     then
-        dict[string]="$(</dev/stdin)"
+        dict['string']="$(</dev/stdin)"
     fi
     # Note that we're allowing empty string input here.
     koopa_assert_is_set \
-        '--mode' "${dict[mode]}" \
-        '--pattern' "${dict[pattern]}"
+        '--mode' "${dict['mode']}" \
+        '--pattern' "${dict['pattern']}"
     grep_args=(
         '--boolean'
-        '--mode' "${dict[mode]}"
-        '--pattern' "${dict[pattern]}"
-        '--string' "${dict[string]}"
+        '--mode' "${dict['mode']}"
+        '--pattern' "${dict['pattern']}"
+        '--string' "${dict['string']}"
     )
-    [[ "${dict[sudo]}" -eq 1 ]] && grep_args+=('--sudo')
+    [[ "${dict['sudo']}" -eq 1 ]] && grep_args+=('--sudo')
     koopa_grep "${grep_args[@]}"
 }

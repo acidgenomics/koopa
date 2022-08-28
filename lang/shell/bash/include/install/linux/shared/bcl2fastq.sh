@@ -16,43 +16,43 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [installers_url]="$(koopa_koopa_installers_url)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]='bcl2fastq'
-        [platform]='linux-gnu'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['arch']="$(koopa_arch)"
+        ['installers_url']="$(koopa_koopa_installers_url)"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='bcl2fastq'
+        ['platform']='linux-gnu'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[maj_ver]="$(koopa_major_version "${dict[version]}")"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     # e.g. '2.20.0.422' to '2-20-0'.
-    dict[version2]="$( \
+    dict['version2']="$( \
         koopa_sub \
             --pattern='\.[0-9]+$' \
             --regex \
             --replacement='' \
-            "${dict[version]}" \
+            "${dict['version']}" \
     )"
-    dict[version2]="$(koopa_kebab_case_simple "${dict[version2]}")"
-    dict[file]="${dict[name]}${dict[maj_ver]}-v${dict[version2]}-tar.zip"
-    dict[url]="${dict[installers_url]}/${dict[name]}/source/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_extract "${dict[name]}${dict[maj_ver]}-v${dict[version]}-\
+    dict['version2']="$(koopa_kebab_case_simple "${dict['version2']}")"
+    dict['file']="${dict['name']}${dict['maj_ver']}-v${dict['version2']}-tar.zip"
+    dict['url']="${dict['installers_url']}/${dict['name']}/source/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_extract "${dict['name']}${dict['maj_ver']}-v${dict['version']}-\
 Source.tar.gz"
-    koopa_cd "${dict[name]}"
-    koopa_mkdir "${dict[name]}-build"
-    koopa_cd "${dict[name]}-build"
+    koopa_cd "${dict['name']}"
+    koopa_mkdir "${dict['name']}-build"
+    koopa_cd "${dict['name']}-build"
     # Fix for missing '/usr/include/x86_64-linux-gnu/sys/stat.h'.
-    export C_INCLUDE_PATH="/usr/include/${dict[arch]}-${dict[platform]}"
-    ../src/configure --prefix="${dict[prefix]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    export C_INCLUDE_PATH="/usr/include/${dict['arch']}-${dict['platform']}"
+    ../src/configure --prefix="${dict['prefix']}"
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     # For some reason bcl2fastq creates an empty test directory.
-    koopa_rm "${dict[prefix]}/bin/test"
+    koopa_rm "${dict['prefix']}/bin/test"
     return 0
 }

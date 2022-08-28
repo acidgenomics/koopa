@@ -16,16 +16,16 @@ koopa_file_ext_2() {
     local app file x
     koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut)"
     )
-    [[ -x "${app[cut]}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
     for file in "$@"
     do
         if koopa_has_file_ext "$file"
         then
             x="$( \
                 koopa_print "$file" \
-                | "${app[cut]}" -d '.' -f '2-' \
+                | "${app['cut']}" -d '.' -f '2-' \
             )"
         else
             x=''

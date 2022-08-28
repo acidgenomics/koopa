@@ -11,11 +11,11 @@ koopa_debian_apt_space_used_by() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [apt_get]="$(koopa_debian_locate_apt_get)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['apt_get']="$(koopa_debian_locate_apt_get)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[apt_get]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[apt_get]}" --assume-no autoremove "$@"
+    [[ -x "${app['apt_get']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['apt_get']}" --assume-no autoremove "$@"
     return 0
 }

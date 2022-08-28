@@ -11,33 +11,33 @@ koopa_nfiletypes() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [sed]="$(koopa_locate_sed)"
-        [sort]="$(koopa_locate_sort)"
-        [uniq]="$(koopa_locate_uniq)"
+        ['sed']="$(koopa_locate_sed)"
+        ['sort']="$(koopa_locate_sort)"
+        ['uniq']="$(koopa_locate_uniq)"
     )
-    [[ -x "${app[sed]}" ]] || return 1
-    [[ -x "${app[sort]}" ]] || return 1
-    [[ -x "${app[uniq]}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['uniq']}" ]] || return 1
     declare -A dict=(
-        [prefix]="${1:?}"
+        ['prefix']="${1:?}"
     )
-    koopa_assert_is_dir "${dict[prefix]}"
-    dict[out]="$( \
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['out']="$( \
         koopa_find \
             --exclude='.*' \
             --max-depth=1 \
             --min-depth=1 \
             --pattern='*.*' \
-            --prefix="${dict[prefix]}" \
+            --prefix="${dict['prefix']}" \
             --type='f' \
-        | "${app[sed]}" 's/.*\.//' \
-        | "${app[sort]}" \
-        | "${app[uniq]}" --count \
-        | "${app[sort]}" --numeric-sort \
-        | "${app[sed]}" 's/^ *//g' \
-        | "${app[sed]}" 's/ /\t/g' \
+        | "${app['sed']}" 's/.*\.//' \
+        | "${app['sort']}" \
+        | "${app['uniq']}" --count \
+        | "${app['sort']}" --numeric-sort \
+        | "${app['sed']}" 's/^ *//g' \
+        | "${app['sed']}" 's/ /\t/g' \
     )"
-    [[ -n "${dict[out]}" ]] || return 1
-    koopa_print "${dict[out]}"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
     return 0
 }

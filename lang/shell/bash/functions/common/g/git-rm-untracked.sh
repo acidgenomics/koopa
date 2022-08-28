@@ -7,9 +7,9 @@ koopa_git_rm_untracked() {
     # """
     local app repos
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -23,7 +23,7 @@ koopa_git_rm_untracked() {
             koopa_alert "Removing untracked files in '${repo}'."
             koopa_cd "$repo"
             koopa_assert_is_git_repo
-            "${app[git]}" clean -dfx
+            "${app['git']}" clean -dfx
         done
     )
     return 0

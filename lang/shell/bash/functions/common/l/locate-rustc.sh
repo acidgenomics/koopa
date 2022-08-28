@@ -2,6 +2,7 @@
 
 koopa_locate_rustc() {
     koopa_locate_app \
-        --app-name='rustc' \
-        --opt-name='rust'
+        --app-name='rust' \
+        --bin-name='rustc' \
+        "$@"
 }

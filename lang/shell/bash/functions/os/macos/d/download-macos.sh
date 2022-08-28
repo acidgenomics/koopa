@@ -15,13 +15,13 @@ koopa_macos_download_macos() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [softwareupdate]="$(koopa_macos_locate_softwareupdate)"
+        ['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
     )
     declare -A dict=(
-        [version]="${1:?}"
+        ['version']="${1:?}"
     )
-    "${app[softwareupdate]}" \
+    "${app['softwareupdate']}" \
         --fetch-full-installer \
-        --full-installer-version "${dict[version]}"
+        --full-installer-version "${dict['version']}"
     return 0
 }

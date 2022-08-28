@@ -19,21 +19,21 @@ main() {
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix 'libjpeg-turbo' 'zstd'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[file]="tiff-${dict[version]}.tar.gz"
-    dict[url]="http://download.osgeo.org/libtiff/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "tiff-${dict[version]}"
+    dict['file']="tiff-${dict['version']}.tar.gz"
+    dict['url']="http://download.osgeo.org/libtiff/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "tiff-${dict['version']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--disable-dependency-tracking'
         '--disable-lzma'
         '--disable-webp'
@@ -43,7 +43,7 @@ main() {
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

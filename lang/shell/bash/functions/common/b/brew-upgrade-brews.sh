@@ -8,9 +8,9 @@ koopa_brew_upgrade_brews() {
     local app brew brews
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
+        ['brew']="$(koopa_locate_brew)"
     )
-    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || return 1
     readarray -t brews <<< "$(koopa_brew_outdated)"
     koopa_is_array_non_empty "${brews[@]:-}" || return 0
     koopa_dl \
@@ -23,7 +23,7 @@ koopa_brew_upgrade_brews() {
         "$(koopa_to_string "${brews[@]}")"
     for brew in "${brews[@]}"
     do
-        "${app[brew]}" reinstall --force "$brew" || true
+        "${app['brew']}" reinstall --force "$brew" || true
         # Ensure specific brews are properly linked on macOS.
         if koopa_is_macos
         then
@@ -32,7 +32,7 @@ koopa_brew_upgrade_brews() {
                 'gpg' | \
                 'python@3.9' | \
                 'vim')
-                    "${app[brew]}" link --overwrite "$brew" || true
+                    "${app['brew']}" link --overwrite "$brew" || true
                     ;;
             esac
         fi

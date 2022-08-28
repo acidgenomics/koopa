@@ -42,13 +42,13 @@ koopa_aws_s3_sync() {
     local aws dict exclude_args exclude_patterns pattern pos sync_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [aws]="$(koopa_locate_aws)"
+        ['aws']="$(koopa_locate_aws)"
     )
-    [[ -x "${app[aws]}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
-        [profile]="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-}"
     )
-    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     # Include common file system and Git cruft that we don't want on S3.
     # FIXME Only set this if the user doesn't pass in exclude?
     exclude_patterns=(
@@ -76,27 +76,27 @@ koopa_aws_s3_sync() {
                 shift 2
                 ;;
             '--profile='*)
-                dict[profile]="${1#*=}"
+                dict['profile']="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                dict[profile]="${2:?}"
+                dict['profile']="${2:?}"
                 shift 2
                 ;;
             '--source-prefix='*)
-                dict[source_prefix]="${1#*=}"
+                dict['source_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--source-prefix')
-                dict[source_prefix]="${2:?}"
+                dict['source_prefix']="${2:?}"
                 shift 2
                 ;;
             '--target-prefix='*)
-                dict[target_prefix]="${1#*=}"
+                dict['target_prefix']="${1#*=}"
                 shift 1
                 ;;
             '--target-prefix')
-                dict[target_prefix]="${2:?}"
+                dict['target_prefix']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
@@ -130,8 +130,8 @@ koopa_aws_s3_sync() {
         sync_args+=("$@")
     else
         sync_args+=(
-            "${dict[source_prefix]}"
-            "${dict[target_prefix]}"
+            "${dict['source_prefix']}"
+            "${dict['target_prefix']}"
         )
     fi
     exclude_args=()
@@ -142,7 +142,7 @@ koopa_aws_s3_sync() {
             "--exclude=*/${pattern}"
         )
     done
-    "${app[aws]}" --profile="${dict[profile]}" \
+    "${app['aws']}" --profile="${dict['profile']}" \
         s3 sync \
             "${exclude_args[@]}" \
             "${sync_args[@]}"

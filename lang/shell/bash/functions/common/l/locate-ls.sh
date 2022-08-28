@@ -2,6 +2,7 @@
 
 koopa_locate_ls() {
     koopa_locate_app \
-        --app-name='ls' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gls' \
+        "$@"
 }

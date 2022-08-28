@@ -2,6 +2,7 @@
 
 koopa_locate_magick_core_config() {
     koopa_locate_app \
-        --app-name='MagickCore-config' \
-        --opt-name='imagemagick'
+        --app-name='imagemagick' \
+        --bin-name='MagickCore-config' \
+        "$@"
 }

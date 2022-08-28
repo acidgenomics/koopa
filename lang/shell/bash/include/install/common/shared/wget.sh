@@ -18,14 +18,14 @@ main() {
         'pcre2' \
         'gnutls'
     declare -A dict=(
-        [ssl]="$(koopa_app_prefix 'openssl3')"
+        ['ssl']="$(koopa_app_prefix 'openssl3')"
     )
     koopa_install_app_internal \
         --installer='gnu-app' \
         --name='wget' \
         -D '--disable-debug' \
         -D '--with-ssl=openssl' \
-        -D "--with-libssl-prefix=${dict[ssl]}" \
+        -D "--with-libssl-prefix=${dict['ssl']}" \
         -D '--without-included-regex' \
         -D '--without-libpsl' \
         "$@"

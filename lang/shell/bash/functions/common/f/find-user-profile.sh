@@ -8,20 +8,20 @@ koopa_find_user_profile() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [shell]="$(koopa_shell_name)"
+        ['shell']="$(koopa_shell_name)"
     )
-    case "${dict[shell]}" in
+    case "${dict['shell']}" in
         'bash')
-            dict[file]="${HOME}/.bashrc"
+            dict['file']="${HOME}/.bashrc"
             ;;
         'zsh')
-            dict[file]="${HOME}/.zshrc"
+            dict['file']="${HOME}/.zshrc"
             ;;
         *)
-            dict[file]="${HOME}/.profile"
+            dict['file']="${HOME}/.profile"
             ;;
     esac
-    [[ -n "${dict[file]}" ]] || return 1
-    koopa_print "${dict[file]}"
+    [[ -n "${dict['file']}" ]] || return 1
+    koopa_print "${dict['file']}"
     return 0
 }

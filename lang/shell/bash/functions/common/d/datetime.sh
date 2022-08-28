@@ -8,10 +8,10 @@ koopa_datetime() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [date]="$(koopa_locate_date)"
+        ['date']="$(koopa_locate_date)"
     )
-    [[ -x "${app[date]}" ]] || return 1
-    str="$("${app[date]}" '+%Y%m%d-%H%M%S')"
+    [[ -x "${app['date']}" ]] || return 1
+    str="$("${app['date']}" '+%Y%m%d-%H%M%S')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
     return 0

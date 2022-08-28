@@ -16,34 +16,34 @@ koopa_sra_prefetch() {
     # """
     local app cmd dict
     declare -A app=(
-        [parallel]="$(koopa_locate_parallel)"
-        [prefetch]="$(koopa_locate_prefetch)"
+        ['parallel']="$(koopa_locate_parallel)"
+        ['prefetch']="$(koopa_locate_prefetch)"
     )
-    [[ -x "${app[parallel]}" ]] || return 1
-    [[ -x "${app[prefetch]}" ]] || return 1
+    [[ -x "${app['parallel']}" ]] || return 1
+    [[ -x "${app['prefetch']}" ]] || return 1
     declare -A dict=(
-        [acc_file]=''
-        [jobs]="$(koopa_cpu_count)"
-        [output_dir]='sra'
+        ['acc_file']=''
+        ['jobs']="$(koopa_cpu_count)"
+        ['output_dir']='sra'
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--accession-file='*)
-                dict[acc_file]="${1#*=}"
+                dict['acc_file']="${1#*=}"
                 shift 1
                 ;;
             '--accession-file')
-                dict[acc_file]="${2:?}"
+                dict['acc_file']="${2:?}"
                 shift 2
                 ;;
             '--output-directory='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-directory')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             # Invalid ----------------------------------------------------------
@@ -54,15 +54,15 @@ koopa_sra_prefetch() {
         esac
     done
     koopa_assert_is_set \
-        '--accession-file' "${dict[acc_file]}" \
-        '--output-directory' "${dict[output_dir]}"
-    koopa_assert_is_file "${dict[acc_file]}"
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_alert "Prefetching SRA files to '${dict[output_dir]}'."
+        '--accession-file' "${dict['acc_file']}" \
+        '--output-directory' "${dict['output_dir']}"
+    koopa_assert_is_file "${dict['acc_file']}"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Prefetching SRA files to '${dict['output_dir']}'."
     cmd=(
-        "${app[prefetch]}"
+        "${app['prefetch']}"
         '--force' 'no'
-        '--output-directory' "${dict[output_dir]}"
+        '--output-directory' "${dict['output_dir']}"
         '--progress'
         '--resume' 'yes'
         '--type' 'sra'
@@ -70,11 +70,11 @@ koopa_sra_prefetch() {
         '--verify' 'yes'
         '{}'
     )
-    "${app[parallel]}" \
-        --arg-file "${dict[acc_file]}" \
+    "${app['parallel']}" \
+        --arg-file "${dict['acc_file']}" \
         --bar \
         --eta \
-        --jobs "${dict[jobs]}" \
+        --jobs "${dict['jobs']}" \
         --progress \
         --will-cite \
         "${cmd[*]}"

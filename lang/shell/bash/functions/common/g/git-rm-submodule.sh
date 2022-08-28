@@ -17,22 +17,22 @@ koopa_git_rm_submodule() {
     koopa_assert_has_args "$#"
     koopa_assert_is_git_repo
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     for module in "$@"
     do
         # Remove the submodule entry from '.git/config'.
-        "${app[git]}" submodule deinit -f "$module"
+        "${app['git']}" submodule deinit -f "$module"
         # Remove the submodule directory from the superproject's '.git/modules'
         # directory.
         koopa_rm ".git/modules/${module}"
         # Remove the entry in '.gitmodules' and remove the submodule directory
         # located at 'path/to/submodule'.
-        "${app[git]}" rm -f "$module"
+        "${app['git']}" rm -f "$module"
         # Update gitmodules file and commit.
-        "${app[git]}" add '.gitmodules'
-        "${app[git]}" commit -m "Removed submodule '${module}'."
+        "${app['git']}" add '.gitmodules'
+        "${app['git']}" commit -m "Removed submodule '${module}'."
     done
     return 0
 }

@@ -15,7 +15,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-24.
     #
     # @section Package library location:
     #
@@ -80,23 +80,23 @@ koopa_r_configure_environ() {
     local app dict i key keys lines path_arr pkgconfig_arr
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        [cat]="$(koopa_locate_cat)"
-        [r]="${1:?}"
-        [sort]="$(koopa_locate_sort)"
+        ['cat']="$(koopa_locate_cat)"
+        ['r']="${1:?}"
+        ['sort']="$(koopa_locate_sort)"
     )
-    [[ -x "${app[cat]}" ]] || return 1
-    [[ -x "${app[r]}" ]] || return 1
-    [[ -x "${app[sort]}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
-        [koopa_prefix]="$(koopa_koopa_prefix)"
-        [opt_prefix]="$(koopa_opt_prefix)"
-        [r_prefix]="$(koopa_r_prefix "${app[r]}")"
-        [system]=0
-        [tmp_file]="$(koopa_tmp_file)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['opt_prefix']="$(koopa_opt_prefix)"
+        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+        ['system']=0
+        ['tmp_file']="$(koopa_tmp_file)"
     )
-    dict[file]="${dict[r_prefix]}/etc/Renviron.site"
-    ! koopa_is_koopa_app "${app[r]}" && dict[system]=1
-    koopa_alert "Configuring '${dict[file]}'."
+    dict['file']="${dict['r_prefix']}/etc/Renviron.site"
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    koopa_alert "Configuring '${dict['file']}'."
     lines=()
     lines+=(
         "R_LIBS_SITE=\${R_HOME}/site-library"
@@ -107,7 +107,7 @@ koopa_r_configure_environ() {
     # inside RStudio.
     path_arr=()
     path_arr+=(
-        "${dict[koopa_prefix]}/bin"
+        "${dict['koopa_prefix']}/bin"
         '/usr/bin'
         '/bin'
     )
@@ -152,7 +152,7 @@ koopa_r_configure_environ() {
     )
     for key in "${keys[@]}"
     do
-        pkgconfig_arr[$key]="$(koopa_realpath "${dict[opt_prefix]}/${key}")"
+        pkgconfig_arr[$key]="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
     done
     for i in "${!pkgconfig_arr[@]}"
     do
@@ -160,7 +160,7 @@ koopa_r_configure_environ() {
     done
     if koopa_is_linux
     then
-        pkgconfig_arr[harfbuzz]="${pkgconfig_arr[harfbuzz]}64"
+        pkgconfig_arr['harfbuzz']="${pkgconfig_arr['harfbuzz']}64"
     fi
     for i in "${!pkgconfig_arr[@]}"
     do
@@ -207,10 +207,10 @@ koopa_r_configure_environ() {
     )
     # reticulate
     # --------------------------------------------------------------------------
-    dict[conda]="$(koopa_realpath "${dict[opt_prefix]}/conda")"
+    dict['conda']="$(koopa_realpath "${dict['opt_prefix']}/conda")"
     lines+=(
         # Ensure the default location of Miniconda is standardized.
-        "RETICULATE_MINICONDA_PATH=${dict[conda]}"
+        "RETICULATE_MINICONDA_PATH=${dict['conda']}"
         # Default path to virtual environments.
         # Check with 'virtualenv_list()'.
         # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
@@ -235,21 +235,23 @@ koopa_r_configure_environ() {
     # units
     # --------------------------------------------------------------------------
     # The units package requires udunits2 to be installed.
-    dict[udunits2]="$(koopa_realpath "${dict[opt_prefix]}/udunits")"
+    dict['udunits2']="$(koopa_realpath "${dict['opt_prefix']}/udunits")"
     lines+=(
-        "UDUNITS2_INCLUDE=${dict[udunits2]}/include"
-        "UDUNITS2_LIBS=${dict[udunits2]}/lib"
+        "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
+        "UDUNITS2_LIBS=${dict['udunits2']}/lib"
     )
     if koopa_is_fedora_like
     then
-        dict[oracle_ver]="$(koopa_variable 'oracle-instant-client')"
-        dict[oracle_ver]="$(koopa_major_minor_version "${dict[oracle_ver]}")"
+        dict['oracle_ver']="$(koopa_app_json_version 'oracle-instant-client')"
+        dict['oracle_ver']="$( \
+            koopa_major_minor_version "${dict['oracle_ver']}" \
+        )"
         # ROracle
         # ----------------------------------------------------------------------
         # This requires installation of the Oracle Database Instant Client.
         # Install with 'koopa install system oracle-instant-client'.
         lines+=(
-            "OCI_VERSION=${dict[oracle_ver]}"
+            "OCI_VERSION=${dict['oracle_ver']}"
             "ORACLE_HOME=/usr/lib/oracle/\${OCI_VERSION}/client64"
             "OCI_INC=/usr/include/oracle/\${OCI_VERSION}/client64"
             "OCI_LIB=\${ORACLE_HOME}/lib"
@@ -304,19 +306,19 @@ abort,verbose"
 -Werror=format-security -Wdate-time"
         )
     fi
-    dict[string]="$(koopa_print "${lines[@]}" | "${app[sort]}")"
-    case "${dict[system]}" in
+    dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
+    case "${dict['system']}" in
         '0')
-            koopa_rm "${dict[file]}"
+            koopa_rm "${dict['file']}"
             koopa_write_string \
-                --file="${dict[file]}" \
-                --string="${dict[string]}"
+                --file="${dict['file']}" \
+                --string="${dict['string']}"
             ;;
         '1')
-            koopa_rm --sudo "${dict[file]}"
+            koopa_rm --sudo "${dict['file']}"
             koopa_sudo_write_string \
-                --file="${dict[file]}" \
-                --string="${dict[string]}"
+                --file="${dict['file']}" \
+                --string="${dict['string']}"
             ;;
     esac
     return 0

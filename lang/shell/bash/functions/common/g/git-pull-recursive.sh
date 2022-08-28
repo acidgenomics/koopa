@@ -7,9 +7,9 @@ koopa_git_pull_recursive() {
     # """
     local app dirs
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")
     koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     koopa_assert_is_dir "${dirs[@]}"
@@ -44,9 +44,9 @@ koopa_git_pull_recursive() {
             do
                 koopa_h2 "$repo"
                 koopa_cd "$repo"
-                "${app[git]}" fetch --all
-                "${app[git]}" pull --all
-                "${app[git]}" status
+                "${app['git']}" fetch --all
+                "${app['git']}" pull --all
+                "${app['git']}" status
             done
         done
     )

@@ -2,6 +2,7 @@
 
 koopa_locate_parallel() {
     koopa_locate_app \
-        --app-name='parallel' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gparallel' \
+        "$@"
 }

@@ -226,6 +226,7 @@ __koopa_print() {
     return 0
 }
 
+# FIXME Improve consistency of this.
 __koopa_realpath() {
     # """
     # Resolve file path.

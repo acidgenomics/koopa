@@ -33,24 +33,24 @@ koopa_salmon_index() {
     local app dict index_args
     koopa_assert_has_args "$#"
     declare -A app=(
-        [salmon]="$(koopa_locate_salmon)"
+        ['salmon']="$(koopa_locate_salmon)"
     )
-    [[ -x "${app[salmon]}" ]] || return 1
+    [[ -x "${app['salmon']}" ]] || return 1
     declare -A dict=(
-        [decoys]=1
-        [fasta_pattern]='\.fa(sta)?'
-        [gencode]=0
+        ['decoys']=1
+        ['fasta_pattern']='\.fa(sta)?'
+        ['gencode']=0
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'.
-        [genome_fasta_file]=''
-        [kmer_length]=31
-        [mem_gb]="$(koopa_mem_gb)"
-        [mem_gb_cutoff]=14
+        ['genome_fasta_file']=''
+        ['kmer_length']=31
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         # e.g. 'salmon-index'.
-        [output_dir]=''
-        [threads]="$(koopa_cpu_count)"
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
         # e.g. 'gencode.v39.transcripts.fa.gz'.
-        [transcriptome_fasta_file]=''
-        [type]='puff'
+        ['transcriptome_fasta_file']=''
+        ['type']='puff'
     )
     index_args=()
     while (("$#"))
@@ -58,40 +58,40 @@ koopa_salmon_index() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
+                dict['genome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
+                dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict['output_dir']="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
+                dict['transcriptome_fasta_file']="${1#*=}"
                 shift 1
                 ;;
             '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
+                dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--decoys')
-                dict[decoys]=1
+                dict['decoys']=1
                 shift 1
                 ;;
             '--gencode')
-                dict[gencode]=1
+                dict['gencode']=1
                 shift 1
                 ;;
             '--no-decoys')
-                dict[decoys]=0
+                dict['decoys']=0
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -101,80 +101,80 @@ koopa_salmon_index() {
         esac
     done
     koopa_assert_is_set \
-        '--output-dir' "${dict[output_dir]}" \
-        '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
+        '--output-dir' "${dict['output_dir']}" \
+        '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
     # Currently seeing that decoy-aware transcriptome indexing uses about 20 GB
     # of RAM with Homo sapiens GRCh38 GENCODE 41.
-    [[ "${dict[decoys]}" -eq 1 ]] && dict[mem_gb_cutoff]=30
-    if [[ "${dict[mem_gb]}" -lt "${dict[mem_gb_cutoff]}" ]]
+    [[ "${dict['decoys']}" -eq 1 ]] && dict['mem_gb_cutoff']=30
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "salmon index requires ${dict[mem_gb_cutoff]} GB of RAM."
+        koopa_stop "salmon index requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_file "${dict[transcriptome_fasta_file]}"
-    dict[transcriptome_fasta_file]="$( \
-        koopa_realpath "${dict[transcriptome_fasta_file]}" \
+    koopa_assert_is_file "${dict['transcriptome_fasta_file']}"
+    dict['transcriptome_fasta_file']="$( \
+        koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
-        --pattern="${dict[fasta_pattern]}" \
-        --string="${dict[transcriptome_fasta_file]}"
-    koopa_assert_is_not_dir "${dict[output_dir]}"
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
-    koopa_alert "Generating salmon index at '${dict[output_dir]}'."
-    if [[ "${dict[gencode]}" -eq 0 ]] && \
+        --pattern="${dict['fasta_pattern']}" \
+        --string="${dict['transcriptome_fasta_file']}"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Generating salmon index at '${dict['output_dir']}'."
+    if [[ "${dict['gencode']}" -eq 0 ]] && \
         koopa_str_detect_regex \
-            --string="$(koopa_basename "${dict[transcriptome_fasta_file]}")" \
+            --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
             --pattern='^gencode\.'
     then
-        dict[gencode]=1
+        dict['gencode']=1
     fi
-    if [[ "${dict[gencode]}" -eq 1 ]]
+    if [[ "${dict['gencode']}" -eq 1 ]]
     then
         koopa_alert_info 'Indexing against GENCODE reference genome.'
         index_args+=('--gencode')
     fi
-    if [[ "${dict[decoys]}" -eq 1 ]]
+    if [[ "${dict['decoys']}" -eq 1 ]]
     then
         koopa_alert 'Preparing decoy-aware reference transcriptome.'
         koopa_assert_is_set \
-            '--genome-fasta-file' "${dict[genome_fasta_file]}"
-        koopa_assert_is_file "${dict[genome_fasta_file]}"
-        dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
+            '--genome-fasta-file' "${dict['genome_fasta_file']}"
+        koopa_assert_is_file "${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
         koopa_assert_is_matching_regex \
-            --pattern="${dict[fasta_pattern]}" \
-            --string="${dict[genome_fasta_file]}"
+            --pattern="${dict['fasta_pattern']}" \
+            --string="${dict['genome_fasta_file']}"
         koopa_assert_is_matching_regex \
-            --pattern="${dict[fasta_pattern]}" \
-            --string="${dict[transcriptome_fasta_file]}"
-        dict[tmp_dir]="$(koopa_tmp_dir)"
-        dict[decoys_file]="${dict[tmp_dir]}/decoys.txt"
-        dict[gentrome_fasta_file]="${dict[tmp_dir]}/gentrome.fa.gz"
+            --pattern="${dict['fasta_pattern']}" \
+            --string="${dict['transcriptome_fasta_file']}"
+        dict['tmp_dir']="$(koopa_tmp_dir)"
+        dict['decoys_file']="${dict['tmp_dir']}/decoys.txt"
+        dict['gentrome_fasta_file']="${dict['tmp_dir']}/gentrome.fa.gz"
         koopa_fasta_generate_chromosomes_file \
-            --genome-fasta-file="${dict[genome_fasta_file]}" \
-            --output-file="${dict[decoys_file]}"
-        koopa_assert_is_file "${dict[decoys_file]}"
+            --genome-fasta-file="${dict['genome_fasta_file']}" \
+            --output-file="${dict['decoys_file']}"
+        koopa_assert_is_file "${dict['decoys_file']}"
         koopa_fasta_generate_decoy_transcriptome_file \
-            --genome-fasta-file="${dict[genome_fasta_file]}" \
-            --output-file="${dict[gentrome_fasta_file]}" \
-            --transcriptome-fasta-file="${dict[transcriptome_fasta_file]}"
-        koopa_assert_is_file "${dict[gentrome_fasta_file]}"
+            --genome-fasta-file="${dict['genome_fasta_file']}" \
+            --output-file="${dict['gentrome_fasta_file']}" \
+            --transcriptome-fasta-file="${dict['transcriptome_fasta_file']}"
+        koopa_assert_is_file "${dict['gentrome_fasta_file']}"
         index_args+=(
-            "--decoys=${dict[decoys_file]}"
-            "--transcripts=${dict[gentrome_fasta_file]}"
+            "--decoys=${dict['decoys_file']}"
+            "--transcripts=${dict['gentrome_fasta_file']}"
         )
     else
         index_args+=(
-            "--transcripts=${dict[transcriptome_fasta_file]}"
+            "--transcripts=${dict['transcriptome_fasta_file']}"
         )
     fi
     index_args+=(
-        "--index=${dict[output_dir]}"
-        "--kmerLen=${dict[kmer_length]}"
+        "--index=${dict['output_dir']}"
+        "--kmerLen=${dict['kmer_length']}"
         '--no-version-check'
-        "--threads=${dict[threads]}"
-        "--type=${dict[type]}"
+        "--threads=${dict['threads']}"
+        "--type=${dict['type']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    "${app[salmon]}" index "${index_args[@]}"
-    koopa_alert_success "salmon index created at '${dict[output_dir]}'."
+    "${app['salmon']}" index "${index_args[@]}"
+    koopa_alert_success "salmon index created at '${dict['output_dir']}'."
     return 0
 }

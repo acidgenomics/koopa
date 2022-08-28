@@ -8,13 +8,13 @@ koopa_delete_named_subdirs() {
     local dict matches
     koopa_assert_has_args_eq "$#" 2
     declare -A dict=(
-        [prefix]="${1:?}"
-        [subdir_name]="${2:?}"
+        ['prefix']="${1:?}"
+        ['subdir_name']="${2:?}"
     )
     readarray -t matches <<< "$( \
         koopa_find \
-            --pattern="${dict[subdir_name]}" \
-            --prefix="${dict[prefix]}" \
+            --pattern="${dict['subdir_name']}" \
+            --prefix="${dict['prefix']}" \
             --type='d' \
     )"
     koopa_is_array_non_empty "${matches[@]:-}" || return 1

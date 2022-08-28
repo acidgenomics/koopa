@@ -17,7 +17,7 @@ koopa_strip_right() {
     # """
     local dict pos str
     declare -A dict=(
-        [pattern]=''
+        ['pattern']=''
     )
     pos=()
     while (("$#"))
@@ -25,11 +25,11 @@ koopa_strip_right() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -42,7 +42,7 @@ koopa_strip_right() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--pattern' "${dict[pattern]}"
+    koopa_assert_is_set '--pattern' "${dict['pattern']}"
     if [[ "${#pos[@]}" -eq 0 ]]
     then
         readarray -t pos <<< "$(</dev/stdin)"
@@ -50,7 +50,7 @@ koopa_strip_right() {
     set -- "${pos[@]}"
     for str in "$@"
     do
-        printf '%s\n' "${str%%"${dict[pattern]}"}"
+        printf '%s\n' "${str%%"${dict['pattern']}"}"
     done
     return 0
 }

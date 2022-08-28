@@ -2,6 +2,7 @@
 
 koopa_locate_fasterq_dump() {
     koopa_locate_app \
-        --app-name='fasterq-dump' \
-        --opt-name='sra-tools'
+        --app-name='sra-tools' \
+        --bin-name='fasterq-dump' \
+        "$@"
 }

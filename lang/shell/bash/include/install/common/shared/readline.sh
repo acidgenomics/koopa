@@ -22,23 +22,23 @@ main() {
     koopa_activate_build_opt_prefix 'pkg-config'
     koopa_activate_opt_prefix 'ncurses'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [gnu_mirror]="$(koopa_gnu_mirror_url)"
-        [jobs]="$(koopa_cpu_count)"
-        [name]='readline'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['gnu_mirror']="$(koopa_gnu_mirror_url)"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='readline'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="${dict[gnu_mirror]}/${dict[name]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
+    dict['url']="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--enable-shared'
         '--enable-static'
         '--with-curses'
@@ -55,10 +55,10 @@ main() {
     ./configure --help
     ./configure "${conf_args[@]}"
     make_args=('SHLIB_LIBS=-lncursesw')
-    "${app[make]}" "${make_args[@]}" --jobs="${dict[jobs]}"
-    "${app[make]}" "${make_args[@]}" install
+    "${app['make']}" "${make_args[@]}" --jobs="${dict['jobs']}"
+    "${app['make']}" "${make_args[@]}" install
     koopa_check_shared_object \
         --name='libreadline' \
-        --prefix="${dict[prefix]}/lib"
+        --prefix="${dict['prefix']}/lib"
     return 0
 }

@@ -34,48 +34,48 @@ main() {
         'serf' \
         'sqlite'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         # > [mirror]='https://mirrors.ocf.berkeley.edu/apache'
-        [mirror]='https://archive.apache.org/dist'
-        [jobs]="$(koopa_cpu_count)"
-        [name]='subversion'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['mirror']='https://archive.apache.org/dist'
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='subversion'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
     # FIXME What about expat here?
-    dict[apr]="$(koopa_app_prefix 'apr')"
-    dict[apr_util]="$(koopa_app_prefix 'apr-util')"
-    dict[serf]="$(koopa_app_prefix 'serf')"
-    dict[sqlite]="$(koopa_app_prefix 'sqlite')"
+    dict['apr']="$(koopa_app_prefix 'apr')"
+    dict['apr_util']="$(koopa_app_prefix 'apr-util')"
+    dict['serf']="$(koopa_app_prefix 'serf')"
+    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     conf_args=(
-        "--prefix=${dict[prefix]}"
+        "--prefix=${dict['prefix']}"
         '--disable-debug'
         '--disable-mod-activation'
         '--disable-plaintext-password-storage'
         '--enable-optimize'
-        "--with-apr=${dict[apr]}"
-        "--with-apr-util=${dict[apr_util]}"
+        "--with-apr=${dict['apr']}"
+        "--with-apr-util=${dict['apr_util']}"
         '--with-apxs=no'
         '--with-lz4=internal'
-        "--with-serf=${dict[serf]}" # HTTPS
-        "--with-sqlite=${dict[sqlite]}"
+        "--with-serf=${dict['serf']}" # HTTPS
+        "--with-sqlite=${dict['sqlite']}"
         '--with-utf8proc=internal'
         '--without-apache-libexecdir'
         '--without-berkeley-db'
         '--without-gpg-agent'
         '--without-jikes'
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.bz2"
-    dict[url]="${dict[mirror]}/${dict[name]}/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
+    dict['url']="${dict['mirror']}/${dict['name']}/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
-    "${app[make]}" install
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }

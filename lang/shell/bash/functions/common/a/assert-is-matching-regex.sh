@@ -6,27 +6,27 @@ koopa_assert_is_matching_regex() {
     # @note Updated 2022-02-27.
     # """
     declare -A dict=(
-        [pattern]=''
-        [string]=''
+        ['pattern']=''
+        ['string']=''
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--string='*)
-                dict[string]="${1#*=}"
+                dict['string']="${1#*=}"
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                dict['string']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -36,13 +36,13 @@ koopa_assert_is_matching_regex() {
         esac
     done
     koopa_assert_is_set \
-        '--pattern' "${dict[pattern]}" \
-        '--string' "${dict[string]}"
+        '--pattern' "${dict['pattern']}" \
+        '--string' "${dict['string']}"
     if ! koopa_str_detect_regex \
-        --pattern="${dict[pattern]}" \
-        --string="${dict[string]}"
+        --pattern="${dict['pattern']}" \
+        --string="${dict['string']}"
     then
-        koopa_stop "'${dict[string]}' doesn't match regex '${dict[pattern]}'."
+        koopa_stop "'${dict['string']}' doesn't match regex '${dict['pattern']}'."
     fi
     return 0
 }

@@ -23,21 +23,21 @@ koopa_is_recent() {
     local app dict file
     koopa_assert_has_args "$#"
     declare -A app=(
-        [find]="$(koopa_locate_find)"
+        ['find']="$(koopa_locate_find)"
     )
-    [[ -x "${app[find]}" ]] || return 1
+    [[ -x "${app['find']}" ]] || return 1
     declare -A dict=(
-        [days]=14
+        ['days']=14
     )
     for file in "$@"
     do
         local exists
         [[ -e "$file" ]] || return 1
         exists="$( \
-            "${app[find]}" "$file" \
+            "${app['find']}" "$file" \
                 -mindepth 0 \
                 -maxdepth 0 \
-                -mtime "-${dict[days]}" \
+                -mtime "-${dict['days']}" \
             2>/dev/null \
         )"
         [[ -n "$exists" ]] || return 1

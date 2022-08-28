@@ -3,6 +3,5 @@
 koopa_uninstall_geos() {
     koopa_uninstall_app \
         --name='geos' \
-        --unlink-in-bin='geos-config' \
         "$@"
 }

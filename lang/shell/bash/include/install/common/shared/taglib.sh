@@ -26,30 +26,30 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
     declare -A app=(
-        [cmake]="$(koopa_locate_cmake)"
+        ['cmake']="$(koopa_locate_cmake)"
     )
-    [[ -x "${app[cmake]}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
-        [jobs]="$(koopa_cpu_count)"
-        [name]='taglib'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='taglib'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[file]="v${dict[version]}.tar.gz"
-    dict[url]="https://github.com/${dict[name]}/${dict[name]}/archive/refs/\
-tags/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
-    "${app[cmake]}" \
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/${dict['name']}/${dict['name']}/archive/refs/\
+tags/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
+    "${app['cmake']}" \
         -S . \
         -B 'build' \
         -DCMAKE_BUILD_TYPE='Release' \
         -DCMAKE_CXX_FLAGS='-fpic' \
-        -DCMAKE_INSTALL_PREFIX="${dict[prefix]}"
-    "${app[cmake]}" \
+        -DCMAKE_INSTALL_PREFIX="${dict['prefix']}"
+    "${app['cmake']}" \
         --build 'build' \
-        --parallel "${dict[jobs]}"
-    "${app[cmake]}" --install 'build'
+        --parallel "${dict['jobs']}"
+    "${app['cmake']}" --install 'build'
     return 0
 }

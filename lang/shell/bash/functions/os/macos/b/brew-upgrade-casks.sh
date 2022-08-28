@@ -3,7 +3,7 @@
 koopa_macos_brew_upgrade_casks() {
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2022-04-24.
+    # @note Updated 2022-08-27.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
@@ -12,9 +12,9 @@ koopa_macos_brew_upgrade_casks() {
     local app cask casks
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa_locate_brew)"
+        ['brew']="$(koopa_locate_brew)"
     )
-    [[ -x "${app[brew]}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || return 1
     readarray -t casks <<< "$(koopa_macos_brew_cask_outdated)"
     koopa_is_array_non_empty "${casks[@]:-}" || return 0
     koopa_dl \
@@ -34,18 +34,15 @@ koopa_macos_brew_upgrade_casks() {
                 cask='homebrew/cask/macvim'
                 ;;
         esac
-        "${app[brew]}" reinstall --cask --force "$cask" || true
+        "${app['brew']}" reinstall --cask --force "$cask" || true
         case "$cask" in
-            'adoptopenjdk' | \
-            'openjdk' | \
-            'r' | \
-            'temurin')
-                app[r]="$(koopa_macos_r_prefix)/bin/R"
-                koopa_configure_r "${app[r]}"
+            'r')
+                app['r']="$(koopa_macos_r_prefix)/bin/R"
+                koopa_configure_r "${app['r']}"
                 ;;
             # > 'emacs')
-            # >     "${app[brew]}" unlink 'emacs'
-            # >     "${app[brew]}" link 'emacs'
+            # >     "${app['brew']}" unlink 'emacs'
+            # >     "${app['brew']}" link 'emacs'
             # >     ;;
             'google-'*)
                 # Currently in 'google-chrome' and 'google-drive' recipes.
@@ -55,8 +52,8 @@ koopa_macos_brew_upgrade_casks() {
                 koopa_macos_disable_gpg_updater
                 ;;
             'macvim')
-                "${app[brew]}" unlink 'vim'
-                "${app[brew]}" link 'vim'
+                "${app['brew']}" unlink 'vim'
+                "${app['brew']}" link 'vim'
                 ;;
             'microsoft-teams')
                 koopa_macos_disable_microsoft_teams_updater

@@ -8,12 +8,12 @@ koopa_touch() {
     local app mkdir pos touch
     koopa_assert_has_args "$#"
     declare -A app=(
-        [mkdir]='koopa_mkdir'
-        [touch]="$(koopa_locate_touch)"
+        ['mkdir']='koopa_mkdir'
+        ['touch']="$(koopa_locate_touch)"
     )
-    [[ -x "${app[touch]}" ]] || return 1
+    [[ -x "${app['touch']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))
@@ -22,7 +22,7 @@ koopa_touch() {
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -37,14 +37,14 @@ koopa_touch() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    mkdir=("${app[mkdir]}")
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    mkdir=("${app['mkdir']}")
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
+        app['sudo']="$(koopa_locate_sudo)"
         mkdir+=('--sudo')
-        touch=("${app[sudo]}" "${app[touch]}")
+        touch=("${app['sudo']}" "${app['touch']}")
     else
-        touch=("${app[touch]}")
+        touch=("${app['touch']}")
     fi
     for file in "$@"
     do

@@ -18,19 +18,19 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [tee]="$(koopa_locate_tee)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['tee']="$(koopa_locate_tee)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[tee]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        [arch]="$(koopa_arch)"
-        [enabled]=1
-        [file]='/etc/yum.repos.d/google-cloud-sdk.repo'
-        [gpgcheck]=1
-        [repo_gpgcheck]=0
+        ['arch']="$(koopa_arch)"
+        ['enabled']=1
+        ['file']='/etc/yum.repos.d/google-cloud-sdk.repo'
+        ['gpgcheck']=1
+        ['repo_gpgcheck']=0
     )
-    case "${dict[arch]}" in
+    case "${dict['arch']}" in
         'x86_64')
             ;;
         *)
@@ -40,23 +40,23 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     # NOTE May need to harden against unsupported RHEL 9 here.
     if koopa_is_fedora || koopa_is_rhel_8_like
     then
-        dict[platform]='el8'
+        dict['platform']='el8'
     elif koopa_is_rhel_7_like
     then
-        dict[platform]='el7'
+        dict['platform']='el7'
     else
         koopa_stop 'Unsupported platform.'
     fi
-    dict[baseurl]="https://packages.cloud.google.com/yum/repos/\
-cloud-sdk-${dict[platform]}-${dict[arch]}"
-    [[ -f "${dict[file]}" ]] && return 0
-    "${app[sudo]}" "${app[tee]}" "${dict[file]}" >/dev/null << END
+    dict['baseurl']="https://packages.cloud.google.com/yum/repos/\
+cloud-sdk-${dict['platform']}-${dict['arch']}"
+    [[ -f "${dict['file']}" ]] && return 0
+    "${app['sudo']}" "${app['tee']}" "${dict['file']}" >/dev/null << END
 [google-cloud-sdk]
 name=Google Cloud SDK
-baseurl=${dict[baseurl]}
-enabled=${dict[enabled]}
-gpgcheck=${dict[gpgcheck]}
-repo_gpgcheck=${dict[repo_gpgcheck]}
+baseurl=${dict['baseurl']}
+enabled=${dict['enabled']}
+gpgcheck=${dict['gpgcheck']}
+repo_gpgcheck=${dict['repo_gpgcheck']}
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 END

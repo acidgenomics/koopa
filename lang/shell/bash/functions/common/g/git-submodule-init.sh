@@ -7,11 +7,11 @@ koopa_git_submodule_init() {
     # """
     local app repos
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [git]="$(koopa_locate_git)"
+        ['awk']="$(koopa_locate_awk)"
+        ['git']="$(koopa_locate_git)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
@@ -23,17 +23,17 @@ koopa_git_submodule_init() {
         do
             local dict lines string
             declare -A dict=(
-                [module_file]='.gitmodules'
+                ['module_file']='.gitmodules'
             )
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Initializing submodules in '${repo}'."
             koopa_cd "$repo"
             koopa_assert_is_git_repo
-            koopa_assert_is_nonzero_file "${dict[module_file]}"
-            "${app[git]}" submodule init
+            koopa_assert_is_nonzero_file "${dict['module_file']}"
+            "${app['git']}" submodule init
             readarray -t lines <<< "$(
-                "${app[git]}" config \
-                    --file "${dict[module_file]}" \
+                "${app['git']}" config \
+                    --file "${dict['module_file']}" \
                     --get-regexp '^submodule\..*\.path$' \
             )"
             if koopa_is_array_empty "${lines[@]:-}"
@@ -45,26 +45,26 @@ koopa_git_submodule_init() {
                 local dict2
                 declare -A dict2
                 # shellcheck disable=SC2016
-                dict2[target_key]="$( \
+                dict2['target_key']="$( \
                     koopa_print "$string" \
-                    | "${app[awk]}" '{ print $1 }' \
+                    | "${app['awk']}" '{ print $1 }' \
                 )"
                 # shellcheck disable=SC2016
-                dict2[target]="$( \
+                dict2['target']="$( \
                     koopa_print "$string" \
-                    | "${app[awk]}" '{ print $2 }' \
+                    | "${app['awk']}" '{ print $2 }' \
                 )"
-                dict2[url_key]="${dict2[target_key]//\.path/.url}"
-                dict2[url]="$( \
-                    "${app[git]}" config \
-                        --file "${dict[module_file]}" \
-                        --get "${dict2[url_key]}" \
+                dict2['url_key']="${dict2['target_key']//\.path/.url}"
+                dict2['url']="$( \
+                    "${app['git']}" config \
+                        --file "${dict['module_file']}" \
+                        --get "${dict2['url_key']}" \
                 )"
-                koopa_dl "${dict2[target]}" "${dict2[url]}"
-                if [[ ! -d "${dict2[target]}" ]]
+                koopa_dl "${dict2['target']}" "${dict2['url']}"
+                if [[ ! -d "${dict2['target']}" ]]
                 then
-                    "${app[git]}" submodule add --force \
-                        "${dict2[url]}" "${dict2[target]}" > /dev/null
+                    "${app['git']}" submodule add --force \
+                        "${dict2['url']}" "${dict2['target']}" > /dev/null
                 fi
             done
         done

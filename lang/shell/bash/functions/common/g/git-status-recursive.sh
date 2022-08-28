@@ -7,9 +7,9 @@ koopa_git_status_recursive() {
     # """
     local app dirs
     declare -A app=(
-        [git]="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git)"
     )
-    [[ -x "${app[git]}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")
     koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     # Using a single subshell here to avoid performance hit during looping.
@@ -43,7 +43,7 @@ koopa_git_status_recursive() {
             do
                 koopa_h2 "$repo"
                 koopa_cd "$repo"
-                "${app[git]}" status
+                "${app['git']}" status
             done
         done
     )

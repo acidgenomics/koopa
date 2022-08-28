@@ -20,15 +20,15 @@ koopa_sub() {
     # """
     local app dict pos
     declare -A app=(
-        [perl]="$(koopa_locate_perl)"
+        ['perl']="$(koopa_locate_perl)"
     )
-    [[ -x "${app[perl]}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
-        [global]=0
-        [pattern]=''
-        [perl_tail]=''
-        [regex]=0
-        [replacement]=''
+        ['global']=0
+        ['pattern']=''
+        ['perl_tail']=''
+        ['regex']=0
+        ['replacement']=''
     )
     pos=()
     while (("$#"))
@@ -36,33 +36,33 @@ koopa_sub() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             '--replacement='*)
-                dict[replacement]="${1#*=}"
+                dict['replacement']="${1#*=}"
                 shift 1
                 ;;
             '--replacement')
                 # Allowing empty string passthrough here.
-                dict[replacement]="${2:-}"
+                dict['replacement']="${2:-}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--fixed')
-                dict[regex]=0
+                dict['regex']=0
                 shift 1
                 ;;
             '--global')
-                dict[global]=1
+                dict['global']=1
                 shift 1
                 ;;
             '--regex')
-                dict[regex]=1
+                dict['regex']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -75,22 +75,22 @@ koopa_sub() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--pattern' "${dict[pattern]}"
+    koopa_assert_is_set '--pattern' "${dict['pattern']}"
     if [[ "${#pos[@]}" -eq 0 ]]
     then
         readarray -t pos <<< "$(</dev/stdin)"
     fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    [[ "${dict[global]}" -eq 1 ]] && dict[perl_tail]='g'
-    if [[ "${dict[regex]}" -eq 1 ]]
+    [[ "${dict['global']}" -eq 1 ]] && dict['perl_tail']='g'
+    if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict[expr]="s/${dict[pattern]}/${dict[replacement]}/${dict[perl_tail]}"
+        dict['expr']="s/${dict['pattern']}/${dict['replacement']}/${dict['perl_tail']}"
     else
-        dict[expr]=" \
-            \$pattern = quotemeta '${dict[pattern]}'; \
-            \$replacement = '${dict[replacement]}'; \
-            s/\$pattern/\$replacement/${dict[perl_tail]}; \
+        dict['expr']=" \
+            \$pattern = quotemeta '${dict['pattern']}'; \
+            \$replacement = '${dict['replacement']}'; \
+            s/\$pattern/\$replacement/${dict['perl_tail']}; \
         "
     fi
     # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
@@ -98,6 +98,6 @@ koopa_sub() {
     # locale issues on machines with non-standard configurations, such as the
     # current biocontainers Docker image.
     printf '%s' "$@" | \
-        LANG=C "${app[perl]}" -p -e "${dict[expr]}"
+        LANG=C "${app['perl']}" -p -e "${dict['expr']}"
     return 0
 }

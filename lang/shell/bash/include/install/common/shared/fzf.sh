@@ -14,32 +14,32 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'go'
     declare -A app=(
-        [make]="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app[make]}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        [gopath]="$(koopa_init_dir 'go')"
-        [jobs]="$(koopa_cpu_count)"
-        [name]='fzf'
-        [prefix]="${INSTALL_PREFIX:?}"
-        [version]="${INSTALL_VERSION:?}"
+        ['gopath']="$(koopa_init_dir 'go')"
+        ['jobs']="$(koopa_cpu_count)"
+        ['name']='fzf'
+        ['prefix']="${INSTALL_PREFIX:?}"
+        ['version']="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[version]}.tar.gz"
-    dict[url]="https://github.com/junegunn/${dict[name]}/archive/${dict[file]}"
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_extract "${dict[file]}"
-    koopa_cd "${dict[name]}-${dict[version]}"
+    dict['file']="${dict['version']}.tar.gz"
+    dict['url']="https://github.com/junegunn/${dict['name']}/archive/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     export FZF_REVISION='tarball'
-    export FZF_VERSION="${dict[version]}"
-    export GOPATH="${dict[gopath]}"
-    "${app[make]}" --jobs="${dict[jobs]}"
+    export FZF_VERSION="${dict['version']}"
+    export GOPATH="${dict['gopath']}"
+    "${app['make']}" --jobs="${dict['jobs']}"
     # This will copy fzf binary from 'target/' to 'bin/'.
-    "${app[make]}" install
+    "${app['make']}" install
     # > ./install --help
     ./install --bin --no-update-rc
     koopa_cp \
-        --target-directory="${dict[prefix]}" \
+        --target-directory="${dict['prefix']}" \
         'bin' 'doc' 'man' 'plugin' 'shell'
-    koopa_chmod --recursive 'u+rw' "${dict[gopath]}"
+    koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }

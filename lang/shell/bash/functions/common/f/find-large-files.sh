@@ -17,9 +17,9 @@ koopa_find_large_files() {
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
     declare -A app=(
-        [head]="$(koopa_locate_head)"
+        ['head']="$(koopa_locate_head)"
     )
-    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     for prefix in "$@"
     do
         str="$( \
@@ -29,7 +29,7 @@ koopa_find_large_files() {
                 --size='+100000000c' \
                 --sort \
                 --type='f' \
-            | "${app[head]}" -n 50 \
+            | "${app['head']}" -n 50 \
         )"
         [[ -n "$str" ]] || continue
         koopa_print "$str"

@@ -2,7 +2,7 @@
 
 koopa_locate_touch() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='touch' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gtouch' \
+        "$@"
 }

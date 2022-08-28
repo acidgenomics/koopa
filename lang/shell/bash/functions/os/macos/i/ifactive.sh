@@ -7,14 +7,14 @@ koopa_macos_ifactive() {
     # """
     local app x
     declare -A app=(
-        [ifconfig]="$(koopa_macos_locate_ifconfig)"
-        [pcregrep]="$(koopa_locate_pcregrep)"
+        ['ifconfig']="$(koopa_macos_locate_ifconfig)"
+        ['pcregrep']="$(koopa_locate_pcregrep)"
     )
-    [[ -x "${app[ifconfig]}" ]] || return 1
-    [[ -x "${app[pcregrep]}" ]] || return 1
+    [[ -x "${app['ifconfig']}" ]] || return 1
+    [[ -x "${app['pcregrep']}" ]] || return 1
     x="$( \
-        "${app[ifconfig]}" \
-            | "${app[pcregrep]}" -M -o '^[^\t:]+:([^\n]|\n\t)*status: active' \
+        "${app['ifconfig']}" \
+            | "${app['pcregrep']}" -M -o '^[^\t:]+:([^\n]|\n\t)*status: active' \
     )"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"

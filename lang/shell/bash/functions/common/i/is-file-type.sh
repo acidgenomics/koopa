@@ -12,7 +12,7 @@ koopa_is_file_type() {
     # """
     local dict file pos
     declare -A dict=(
-        [ext]=''
+        ['ext']=''
     )
     pos=()
     while (("$#"))
@@ -20,11 +20,11 @@ koopa_is_file_type() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--ext='*)
-                dict[ext]="${1#*=}"
+                dict['ext']="${1#*=}"
                 shift 1
                 ;;
             '--ext')
-                dict[ext]="${2:?}"
+                dict['ext']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -37,7 +37,7 @@ koopa_is_file_type() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--ext' "${dict[ext]}"
+    koopa_assert_is_set '--ext' "${dict['ext']}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     for file in "$@"
@@ -45,9 +45,8 @@ koopa_is_file_type() {
         [[ -f "$file" ]] || return 1
         koopa_str_detect_regex \
             --string="$file" \
-            --pattern="\.${dict[ext]}$" \
+            --pattern="\.${dict['ext']}$" \
         || return 1
     done
     return 0
 }
-

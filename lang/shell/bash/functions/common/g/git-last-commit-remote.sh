@@ -16,24 +16,24 @@ koopa_git_last_commit_remote() {
     local app dict url
     koopa_assert_has_args "$#"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [git]="$(koopa_locate_git)"
-        [head]="$(koopa_locate_head)"
+        ['awk']="$(koopa_locate_awk)"
+        ['git']="$(koopa_locate_git)"
+        ['head']="$(koopa_locate_head)"
     )
-    [[ -x "${app[awk]}" ]] || return 1
-    [[ -x "${app[git]}" ]] || return 1
-    [[ -x "${app[head]}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
-        [ref]='HEAD'
+        ['ref']='HEAD'
     )
     for url in "$@"
     do
         local x
         # shellcheck disable=SC2016
         x="$( \
-            "${app[git]}" ls-remote --quiet "$url" "${dict[ref]}" \
-            | "${app[head]}" -n 1 \
-            | "${app[awk]}" '{ print $1 }' \
+            "${app['git']}" ls-remote --quiet "$url" "${dict['ref']}" \
+            | "${app['head']}" -n 1 \
+            | "${app['awk']}" '{ print $1 }' \
         )"
         [[ -n "$x" ]] || return 1
         koopa_print "$x"

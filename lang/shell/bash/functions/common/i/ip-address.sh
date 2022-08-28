@@ -7,17 +7,17 @@ koopa_ip_address() {
     # """
     local dict
     declare -A dict=(
-        [type]='public'
+        ['type']='public'
     )
     while (("$#"))
     do
         case "$1" in
             '--local')
-                dict[type]='local'
+                dict['type']='local'
                 shift 1
                 ;;
             '--public')
-                dict[type]='public'
+                dict['type']='public'
                 shift 1
                 ;;
             *)
@@ -25,7 +25,7 @@ koopa_ip_address() {
                 ;;
         esac
     done
-    case "${dict[type]}" in
+    case "${dict['type']}" in
         'local')
             koopa_local_ip_address
             ;;

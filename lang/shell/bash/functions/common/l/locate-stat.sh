@@ -2,7 +2,7 @@
 
 koopa_locate_stat() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='stat' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gstat' \
+        "$@"
 }

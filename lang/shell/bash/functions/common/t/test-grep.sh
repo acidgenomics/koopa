@@ -12,13 +12,13 @@ koopa_test_grep() {
     local app dict failures file pos
     koopa_assert_has_args "$#"
     declare -A app=(
-        [grep]="$(koopa_locate_grep)"
+        ['grep']="$(koopa_locate_grep)"
     )
-    [[ -x "${app[grep]}" ]] || return 1
+    [[ -x "${app['grep']}" ]] || return 1
     declare -A dict=(
-        [ignore]=''
-        [name]=''
-        [pattern]=''
+        ['ignore']=''
+        ['name']=''
+        ['pattern']=''
     )
     pos=()
     while (("$#"))
@@ -26,30 +26,30 @@ koopa_test_grep() {
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--ignore='*)
-                dict[ignore]="${1#*=}"
+                dict['ignore']="${1#*=}"
                 shift 1
                 ;;
             '--ignore' | \
             '-i')
-                dict[ignore]="${2:?}"
+                dict['ignore']="${2:?}"
                 shift 2
                 ;;
             '--name='*)
-                dict[name]="${1#*=}"
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
             '--name' | \
             '-n')
-                dict[name]="${2:?}"
+                dict['name']="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                dict[pattern]="${1#*=}"
+                dict['pattern']="${1#*=}"
                 shift 1
                 ;;
             '--pattern' | \
             '-p')
-                dict[pattern]="${2:?}"
+                dict['pattern']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -65,27 +65,27 @@ koopa_test_grep() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_set \
-        '--name' "${dict[name]}" \
-        '--pattern' "${dict[pattern]}"
+        '--name' "${dict['name']}" \
+        '--pattern' "${dict['pattern']}"
     failures=()
     for file in "$@"
     do
         local x
         # Skip ignored files.
-        if [[ -n "${dict[ignore]}" ]]
+        if [[ -n "${dict['ignore']}" ]]
         then
-            if "${app[grep]}" -Pq \
+            if "${app['grep']}" -Pq \
                 --binary-files='without-match' \
-                "^# koopa nolint=${dict[ignore]}$" \
+                "^# koopa nolint=${dict['ignore']}$" \
                 "$file"
             then
                 continue
             fi
         fi
         x="$(
-            "${app[grep]}" -HPn \
+            "${app['grep']}" -HPn \
                 --binary-files='without-match' \
-                "${dict[pattern]}" \
+                "${dict['pattern']}" \
                 "$file" \
             || true \
         )"
@@ -93,10 +93,10 @@ koopa_test_grep() {
     done
     if [[ "${#failures[@]}" -gt 0 ]]
     then
-        koopa_status_fail "${dict[name]} [${#failures[@]}]"
+        koopa_status_fail "${dict['name']} [${#failures[@]}]"
         printf '%s\n' "${failures[@]}"
         return 1
     fi
-    koopa_status_ok "${dict[name]} [${#}]"
+    koopa_status_ok "${dict['name']} [${#}]"
     return 0
 }

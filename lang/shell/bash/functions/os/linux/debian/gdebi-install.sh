@@ -9,11 +9,11 @@ koopa_debian_gdebi_install() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        [gdebi]="$(koopa_debian_locate_gdebi)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['gdebi']="$(koopa_debian_locate_gdebi)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[gdebi]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[gdebi]}" --non-interactive "$@"
+    [[ -x "${app['gdebi']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['gdebi']}" --non-interactive "$@"
     return 0
 }

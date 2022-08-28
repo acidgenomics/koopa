@@ -3,10 +3,13 @@
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
+# FIXME This isn't configuring OpenMP correctly...need to rework to improve
+# consistency with R CRAN binary.
+
 main() {
     # """
     # Install R.
-    # @note Updated 2022-08-12.
+    # @note Updated 2022-08-28.
     #
     # @section gfortran configuration on macOS:
     #
@@ -36,6 +39,7 @@ main() {
     # - https://stat.ethz.ch/R-manual/R-devel/library/base/
     #     html/capabilities.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/r.rb
+    # - https://github.com/macports/macports-ports/blob/master/math/R/Portfile
     # - https://developer.r-project.org/
     # - https://svn.r-project.org/R/
     # - https://www.gnu.org/software/make/manual/make.html#Using-Implicit
@@ -184,9 +188,14 @@ main() {
     declare -A conf_dict
     declare -A dict=(
         ['arch']="$(koopa_arch)"
+        ['bzip2']="$(koopa_app_prefix 'bzip2')"
+        ['gcc']="$(koopa_app_prefix 'gcc')"
         ['jobs']="$(koopa_cpu_count)"
-        ['name']="${INSTALL_NAME:?}"
+        ['lapack']="$(koopa_app_prefix 'lapack')"
+        ['name']='r'
+        ['openjdk']="$(koopa_app_prefix 'openjdk')"
         ['prefix']="${INSTALL_PREFIX:?}"
+        ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
         ['version']="${INSTALL_VERSION:?}"
     )
     if koopa_is_macos
@@ -194,14 +203,6 @@ main() {
         dict['texbin']='/Library/TeX/texbin'
         koopa_add_to_path_start "${dict['texbin']}"
     fi
-    dict['bash']="$(koopa_app_prefix 'bash')"
-    dict['bison']="$(koopa_app_prefix 'bison')"
-    dict['coreutils']="$(koopa_app_prefix 'coreutils')"
-    dict['gcc']="$(koopa_app_prefix 'gcc')"
-    dict['lapack']="$(koopa_app_prefix 'lapack')"
-    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
-    dict['sed']="$(koopa_app_prefix 'sed')"
-    dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
     conf_dict['with_blas']="$( \
         "${app['pkg_config']}" --libs 'openblas' \
     )"
@@ -266,21 +267,21 @@ main() {
         conf_dict['cc']="${dict['gcc']}/bin/gcc"
         conf_dict['cxx']="${dict['gcc']}/bin/g++"
     fi
-    # Usage of binutils ar on macOS results in this error:
-    # # symbol not found in flat namespace (_R_gmtime_r)
-    # > conf_dict['ar']="${dict['binutils']}/bin/ar"
     conf_dict['ar']='/usr/bin/ar'
-    conf_dict['echo']="${dict['coreutils']}/bin/echo"
-    conf_dict['fc']="${dict['gcc']}/bin/gfortran"
-    conf_dict['jar']="${dict['openjdk']}/bin/jar"
-    conf_dict['java']="${dict['openjdk']}/bin/java"
-    conf_dict['javac']="${dict['openjdk']}/bin/javac"
-    conf_dict['r_shell']="${dict['bash']}/bin/bash"
-    conf_dict['sed']="${dict['sed']}/bin/sed"
+    conf_dict['awk']="$(koopa_locate_awk --realpath)"
+    conf_dict['echo']="$(koopa_locate_echo --realpath)"
+    conf_dict['fc']="$(koopa_locate_gfortran --realpath)"
+    conf_dict['jar']="$(koopa_locate_jar --realpath)"
+    conf_dict['java']="$(koopa_locate_java --realpath)"
+    conf_dict['javac']="$(koopa_locate_javac --realpath)"
+    conf_dict['perl']="$(koopa_locate_perl --realpath)"
+    conf_dict['r_shell']="$(koopa_locate_bash --realpath)"
+    conf_dict['sed']="$(koopa_locate_sed --realpath)"
     # Alternatively, can use 'bison -y' for YACC.
-    conf_dict['yacc']="${dict['bison']}/bin/yacc"
+    conf_dict['yacc']="$(koopa_locate_yacc --realpath)"
     koopa_assert_is_installed \
         "${conf_dict['ar']}" \
+        "${conf_dict['awk']}" \
         "${conf_dict['cc']}" \
         "${conf_dict['cxx']}" \
         "${conf_dict['echo']}" \
@@ -288,6 +289,7 @@ main() {
         "${conf_dict['jar']}" \
         "${conf_dict['java']}" \
         "${conf_dict['javac']}" \
+        "${conf_dict['perl']}" \
         "${conf_dict['r_shell']}" \
         "${conf_dict['sed']}" \
         "${conf_dict['yacc']}"
@@ -328,19 +330,10 @@ main() {
     # macOS CRAN binary build config.
     flibs+=('-lm')
     conf_dict['flibs']="${flibs[*]}"
-    # FIXME Consider also setting these, based on rocker Dockerfile.
-    # > 'AWK=/usr/bin/awk'
-    # > "CFLAGS=$(R CMD config CFLAGS)"
-    # > "CXXFLAGS=$(R CMD config CXXFLAGS)"
-    # > 'LIBnn=lib'
-    # > 'PAGER=/usr/bin/pager'
-    # > 'PERL=/usr/bin/perl'
-    # > 'R_BATCHSAVE=--no-save --no-restore'
-    # > 'R_BROWSER=xdg-open'
-    # > 'R_PAPERSIZE=letter'
-    # > 'R_PRINTCMD=/usr/bin/lpr'
-    # > 'R_UNZIPCMD=/usr/bin/unzip'
-    # > 'R_ZIPCMD=/usr/bin/zip'
+    # Consider also setting these, based on rocker Dockerfile.
+    # > 'PAGER=<PAGER>'
+    # > 'R_UNZIPCMD=<UNZIP>'
+    # > 'R_ZIPCMD=<ZIP>'
     conf_args+=(
         "--prefix=${dict['prefix']}"
         '--enable-R-profiling'
@@ -364,7 +357,9 @@ main() {
         "--with-tk-config=${conf_dict['with_tk_config']}"
         '--with-static-cairo=no'
         '--with-x'
+        '--without-recommended-packages'
         "AR=${conf_dict['ar']}"
+        "AWK=${conf_dict['awk']}"
         "CC=${conf_dict['cc']}"
         "CXX=${conf_dict['cxx']}"
         "ECHO=${conf_dict['echo']}"
@@ -376,15 +371,27 @@ main() {
         "JAVAC=${conf_dict['javac']}"
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
+        'LIBnn=lib'
         "OBJC=${conf_dict['objc']}"
         "OBJCXX=${conf_dict['objcxx']}"
+        "PERL=${conf_dict['perl']}"
+        'R_BATCHSAVE=--no-save --no-restore'
+        'R_PAPERSIZE=letter'
         "R_SHELL=${conf_dict['r_shell']}"
         "SED=${conf_dict['sed']}"
         "YACC=${conf_dict['yacc']}"
     )
+    if koopa_is_linux
+    then
+        conf_args+=(
+            'R_BROWSER=xdg-open'
+            'R_PRINTCMD=lpr'
+        )
+    fi
     if koopa_is_macos
     then
-        conf_args+=('--without-aqua')
+        # This is required for plotting support in RStudio.
+        conf_args+=('--with-aqua')
         export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
     else
         # Ensure that OpenMP is enabled. Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS'
@@ -398,10 +405,7 @@ main() {
     fi
     if [[ "${dict['name']}" == 'r-devel' ]]
     then
-        conf_args+=(
-            '--program-suffix=dev'
-            '--without-recommended-packages'
-        )
+        conf_args+=('--program-suffix=dev')
         app['svn']="$(koopa_locate_svn)"
         [[ -x "${app['svn']}" ]] || return 1
         dict['rtop']="$(koopa_init_dir 'svn/r')"
@@ -417,10 +421,8 @@ main() {
                 "${dict['svn_url']}" \
                 "${dict['rtop']}"
         koopa_cd "${dict['rtop']}"
-        # FIXME Does this help avoid SVN build issue on Ubuntu? See above.
         koopa_print "Revision: ${dict['version']}" > 'SVNINFO'
     else
-        conf_args+=('--with-recommended-packages')
         dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
         dict['file']="R-${dict['version']}.tar.gz"
         dict['url']="https://cloud.r-project.org/src/base/\
@@ -443,7 +445,7 @@ R-${dict['maj_ver']}/${dict['file']}"
     "${app['make']}" 'info'
     "${app['make']}" install
     app['r']="${dict['prefix']}/bin/R"
-    app['rscript']="${app['r']}script"
+    app['rscript']="${dict['prefix']}/bin/Rscript"
     koopa_assert_is_installed "${app['r']}" "${app['rscript']}"
     koopa_configure_r "${app['r']}"
     # NOTE libxml is now expected to return FALSE as of R 4.2.

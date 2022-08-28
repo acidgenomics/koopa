@@ -7,11 +7,11 @@ koopa_rm() {
     # """
     local app dict pos rm rm_args
     declare -A app=(
-        [rm]="$(koopa_locate_rm)"
+        ['rm']="$(koopa_locate_rm)"
     )
-    [[ -x "${app[rm]}" ]] || return 1
+    [[ -x "${app['rm']}" ]] || return 1
     declare -A dict=(
-        [sudo]=0
+        ['sudo']=0
     )
     pos=()
     while (("$#"))
@@ -20,7 +20,7 @@ koopa_rm() {
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                dict[sudo]=1
+                dict['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -36,13 +36,13 @@ koopa_rm() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     rm_args=('-fr')
-    if [[ "${dict[sudo]}" -eq 1 ]]
+    if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app[sudo]="$(koopa_locate_sudo)"
-        [[ -x "${app[sudo]}" ]] || return 1
-        rm+=("${app[sudo]}" "${app[rm]}")
+        app['sudo']="$(koopa_locate_sudo)"
+        [[ -x "${app['sudo']}" ]] || return 1
+        rm+=("${app['sudo']}" "${app['rm']}")
     else
-        rm=("${app[rm]}")
+        rm=("${app['rm']}")
     fi
     "${rm[@]}" "${rm_args[@]}" "$@"
     return 0

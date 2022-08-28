@@ -259,23 +259,17 @@ koopa_activate_conda() {
 }
 
 koopa_activate_coreutils_aliases() {
-    [ -x "$(koopa_bin_prefix)/cp" ] || return 0
-    local cp cp_args ln ln_args mkdir mkdir_args mv mv_args rm rm_args
-    cp='cp'
-    ln='ln'
-    mkdir='mkdir'
-    mv='mv'
-    rm='rm'
-    cp_args='-Riv' # '--interactive --recursive --verbose'.
-    ln_args='-insv' # '--interactive --no-dereference --symbolic --verbose'.
-    mkdir_args='-pv' # '--parents --verbose'.
-    mv_args='-iv' # '--interactive --verbose'
-    rm_args='-iv' # '--interactive=once --verbose'.
-    alias cp="${cp} ${cp_args}"
-    alias ln="${ln} ${ln_args}"
-    alias mkdir="${mkdir} ${mkdir_args}"
-    alias mv="${mv} ${mv_args}"
-    alias rm="${rm} ${rm_args}"
+    [ -x "$(koopa_bin_prefix)/gcp" ] || return 0
+    alias gcp='gcp --interactive --recursive --verbose'
+    alias gln='gln --interactive --no-dereference --symbolic --verbose'
+    alias gmkdir='gmkdir --parents --verbose'
+    alias gmv='gmv --interactive --verbose'
+    alias grm='grm --interactive=once --verbose'
+    alias cp='gcp'
+    alias ln='gln'
+    alias mkdir='gmkdir'
+    alias mv='gmv'
+    alias rm='grm'
     return 0
 }
 
@@ -309,7 +303,7 @@ koopa_activate_difftastic() {
 koopa_activate_dircolors() {
     [ -n "${SHELL:-}" ] || return 0
     local dircolors
-    dircolors="$(koopa_bin_prefix)/dircolors"
+    dircolors="$(koopa_bin_prefix)/gdircolors"
     [ -x "$dircolors" ] || return 0
     local color_mode config_prefix dircolors_file
     config_prefix="$(koopa_xdg_config_home)/dircolors"
@@ -317,12 +311,18 @@ koopa_activate_dircolors() {
     dircolors_file="${config_prefix}/dircolors-${color_mode}"
     [ -f "$dircolors_file" ] || return 0
     eval "$("$dircolors" "$dircolors_file")"
-    alias dir='dir --color=auto'
-    alias egrep='egrep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias grep='grep --color=auto'
-    alias ls='ls --color=auto'
-    alias vdir='vdir --color=auto'
+    alias gdir='gdir --color=auto'
+    alias gegrep='gegrep --color=auto'
+    alias gfgrep='gfgrep --color=auto'
+    alias ggrep='ggrep --color=auto'
+    alias gls='gls --color=auto'
+    alias gvdir='gvdir --color=auto'
+    alias dir='gdir'
+    alias egrep='gegrep'
+    alias frep='gfgrep'
+    alias grep='ggrep'
+    alias ls='gls'
+    alias vdir='gvdir'
     return 0
 }
 
@@ -1737,7 +1737,6 @@ koopa_locate_shell() {
 
 koopa_macos_activate_cli_colors() {
     [ -z "${CLICOLOR:-}" ] && export CLICOLOR=1
-    [ -z "${LSCOLORS:-}" ] && export LSCOLORS='Gxfxcxdxbxegedabagacad'
     return 0
 }
 
@@ -2076,25 +2075,8 @@ koopa_rbenv_prefix() {
 }
 
 koopa_realpath() {
-    local readlink x
-    readlink='readlink'
-    if ! koopa_is_installed "$readlink"
-    then
-        local brew_readlink koopa_readlink
-        koopa_readlink="$(koopa_opt_prefix)/coreutils/bin/readlink"
-        brew_readlink="$(koopa_homebrew_opt_prefix)/coreutils/libexec/\
-gnubin/readlink"
-        if [ -x "$koopa_readlink" ]
-        then
-            readlink="$koopa_readlink"
-        elif [ -x "$brew_readlink" ]
-        then
-            readlink="$brew_readlink"
-        else
-            return 1
-        fi
-    fi
-    x="$("$readlink" -f "$@")"
+    local x
+    x="$(readlink -f "$@")"
     [ -n "$x" ] || return 1
     koopa_print "$x"
     return 0

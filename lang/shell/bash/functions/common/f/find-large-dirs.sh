@@ -14,25 +14,25 @@ koopa_find_large_dirs() {
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
     declare -A app=(
-        [du]="$(koopa_locate_du)"
-        [sort]="$(koopa_locate_sort)"
-        [tail]="$(koopa_locate_tail)"
+        ['du']="$(koopa_locate_du)"
+        ['sort']="$(koopa_locate_sort)"
+        ['tail']="$(koopa_locate_tail)"
     )
-    [[ -x "${app[du]}" ]] || return 1
-    [[ -x "${app[sort]}" ]] || return 1
-    [[ -x "${app[tail]}" ]] || return 1
+    [[ -x "${app['du']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['tail']}" ]] || return 1
     for prefix in "$@"
     do
         local str
         prefix="$(koopa_realpath "$prefix")"
         str="$( \
-            "${app[du]}" \
+            "${app['du']}" \
                 --max-depth=10 \
                 --threshold=100000000 \
                 "${prefix}"/* \
                 2>/dev/null \
-            | "${app[sort]}" --numeric-sort \
-            | "${app[tail]}" -n 50 \
+            | "${app['sort']}" --numeric-sort \
+            | "${app['tail']}" -n 50 \
             || true \
         )"
         [[ -n "$str" ]] || continue

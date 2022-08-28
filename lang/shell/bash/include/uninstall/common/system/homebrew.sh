@@ -26,17 +26,17 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [sudo]="$(koopa_locate_sudo)"
-        [yes]="$(koopa_locate_yes)"
+        ['sudo']="$(koopa_locate_sudo)"
+        ['yes']="$(koopa_locate_yes)"
     )
-    [[ -x "${app[sudo]}" ]] || return 1
-    [[ -x "${app[yes]}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['yes']}" ]] || return 1
     declare -A dict=(
-        [user]="$(koopa_user)"
+        ['user']="$(koopa_user)"
     )
-    dict[file]='uninstall.sh'
-    dict[url]="https://raw.githubusercontent.com/Homebrew/install/\
-master/${dict[file]}"
+    dict['file']='uninstall.sh'
+    dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
+master/${dict['file']}"
     # Important! Homebrew uninstaller will currently attempt to delete the
     # parent directory containing 'brew', so make sure we remove our symlink
     # in koopa first.
@@ -44,12 +44,12 @@ master/${dict[file]}"
     # > if koopa_is_macos
     # > then
     # >     koopa_alert 'Changing default shell to system Zsh.'
-    # >     chsh -s '/bin/zsh' "${dict[user]}"
+    # >     chsh -s '/bin/zsh' "${dict['user']}"
     # > fi
-    koopa_download "${dict[url]}" "${dict[file]}"
-    koopa_chmod 'u+x' "${dict[file]}"
-    "${app[sudo]}" -v
-    "${app[yes]}" | "./${dict[file]}" || true
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_chmod 'u+x' "${dict['file']}"
+    "${app['sudo']}" -v
+    "${app['yes']}" | "./${dict['file']}" || true
     if koopa_is_linux
     then
         if [[ -d '/home/linuxbrew' ]]

@@ -1,17 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Consider symlinking '/opt/koopa/bin/R' to '/usr/local/bin/R'
+# on macOS, so RStudio works.
+
 koopa_install_r() {
-    # ""
-    # Assume we're linking R CRAN binary on macOS instead.
-    # """
-    local install_args
-    install_args=('--name=r')
-    if koopa_is_linux && [[ ! -x '/usr/bin/R' ]]
-    then
-        install_args+=(
-            '--link-in-bin=R'
-            '--link-in-bin=Rscript'
-        )
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --name='r' \
+        "$@"
 }

@@ -9,11 +9,11 @@ koopa_fedora_dnf() {
     # """
     local app
     declare -A app=(
-        [dnf]="$(koopa_fedora_locate_dnf)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['dnf']="$(koopa_fedora_locate_dnf)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[dnf]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[dnf]}" -y "$@"
+    [[ -x "${app['dnf']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['dnf']}" -y "$@"
     return 0
 }

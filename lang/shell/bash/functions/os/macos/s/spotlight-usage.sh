@@ -9,11 +9,11 @@ koopa_macos_spotlight_usage() {
     # sound like a jet engine.
     # """
     declare -A app=(
-        [fs_usage]="$(koopa_macos_locate_fs_usage)"
-        [sudo]="$(koopa_locate_sudo)"
+        ['fs_usage']="$(koopa_macos_locate_fs_usage)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app[fs_usage]}" ]] || return 1
-    [[ -x "${app[sudo]}" ]] || return 1
-    "${app[sudo]}" "${app[fs_usage]}" -w -f filesys mds
+    [[ -x "${app['fs_usage']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    "${app['sudo']}" "${app['fs_usage']}" -w -f filesys mds
     return 0
 }

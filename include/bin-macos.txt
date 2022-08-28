@@ -1,0 +1,3 @@
+bbedit
+code
+git-credentials

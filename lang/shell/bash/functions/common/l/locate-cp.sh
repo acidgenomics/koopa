@@ -2,7 +2,7 @@
 
 koopa_locate_cp() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='cp' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gcp' \
+        "$@"
 }

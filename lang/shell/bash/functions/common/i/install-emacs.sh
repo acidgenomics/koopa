@@ -8,7 +8,10 @@ koopa_install_emacs() {
     install_args=('--name=emacs')
     if ! koopa_is_macos
     then
-        install_args+=('--link-in-bin=emacs')
+        install_args+=(
+            '--no-link-in-bin'
+            '--no-link-in-man1'
+        )
     fi
     koopa_install_app "${install_args[@]}" "$@"
 }

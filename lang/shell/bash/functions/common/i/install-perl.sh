@@ -21,23 +21,6 @@ koopa_install_perl() {
     # - zipdetails
     # """
     koopa_install_app \
-        --link-in-bin='cpan' \
-        --link-in-bin='perl' \
-        --link-in-bin='perlbug' \
-        --link-in-bin='perldoc' \
-        --link-in-bin='perlivp' \
-        --link-in-bin='perlthanks' \
-        --link-in-bin='piconv' \
-        --link-in-bin='pl2pm' \
-        --link-in-bin='pod2html' \
-        --link-in-bin='pod2man' \
-        --link-in-bin='pod2text' \
-        --link-in-bin='pod2usage' \
-        --link-in-bin='podchecker' \
-        --link-in-bin='prove' \
-        --link-in-bin='ptar' \
-        --link-in-bin='ptardiff' \
-        --link-in-bin='ptargrep' \
         --name='perl' \
         "$@"
 }

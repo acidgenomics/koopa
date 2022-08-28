@@ -2,8 +2,6 @@
 
 koopa_install_gawk() {
     koopa_install_app \
-        --link-in-bin='awk' \
-        --link-in-bin='gawk' \
         --name='gawk' \
         "$@"
     (

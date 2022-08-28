@@ -2,7 +2,7 @@
 
 koopa_locate_mkdir() {
     koopa_locate_app \
-        --allow-in-path \
-        --app-name='mkdir' \
-        --opt-name='coreutils'
+        --app-name='coreutils' \
+        --bin-name='gmkdir' \
+        "$@"
 }

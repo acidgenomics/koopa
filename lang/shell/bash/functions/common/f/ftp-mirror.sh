@@ -8,40 +8,40 @@ koopa_ftp_mirror() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [wget]="$(koopa_locate_wget)"
+        ['wget']="$(koopa_locate_wget)"
     )
-    [[ -x "${app[wget]}" ]] || return 1
+    [[ -x "${app['wget']}" ]] || return 1
     declare -A dict=(
-        [dir]=''
-        [host]=''
-        [user]=''
+        ['dir']=''
+        ['host']=''
+        ['user']=''
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--dir='*)
-                dict[dir]="${1#*=}"
+                dict['dir']="${1#*=}"
                 shift 1
                 ;;
             '--dir')
-                dict[dir]="${2:?}"
+                dict['dir']="${2:?}"
                 shift 2
                 ;;
             '--host='*)
-                dict[host]="${1#*=}"
+                dict['host']="${1#*=}"
                 shift 1
                 ;;
             '--host')
-                dict[host]="${2:?}"
+                dict['host']="${2:?}"
                 shift 2
                 ;;
             '--user='*)
-                dict[user]="${1#*=}"
+                dict['user']="${1#*=}"
                 shift 1
                 ;;
             '--user')
-                dict[user]="${2:?}"
+                dict['user']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -51,17 +51,17 @@ koopa_ftp_mirror() {
         esac
     done
     koopa_assert_is_set \
-        '--host' "${dict[host]}" \
-        '--user' "${dict[user]}"
-    if [[ -n "${dict[dir]}" ]]
+        '--host' "${dict['host']}" \
+        '--user' "${dict['user']}"
+    if [[ -n "${dict['dir']}" ]]
     then
-        dict[dir]="${dict[host]}/${dict[dir]}"
+        dict['dir']="${dict['host']}/${dict['dir']}"
     else
-        dict[dir]="${dict[host]}"
+        dict['dir']="${dict['host']}"
     fi
-    "${app[wget]}" \
+    "${app['wget']}" \
         --ask-password \
         --mirror \
-        "ftp://${dict[user]}@${dict[dir]}/"*
+        "ftp://${dict['user']}@${dict['dir']}/"*
     return 0
 }
