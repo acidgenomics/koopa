@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-08-05.
+#' @note Updated 2022-08-28.
 #'
 #' @section Restarting R:
 #'
@@ -153,22 +153,20 @@ local({  # nolint
                 sep = "\n"
             ))
         }
-        if (isTRUE(flag[["cranBinary"]])) {
-            if (isFALSE(all(file.exists(file.path(
-                "", "usr", "local",
-                c(
-                    file.path("include", "omp-tools.h"),
-                    file.path("include", "omp.h"),
-                    file.path("include", "ompt.h"),
-                    file.path("lib", "libomp.dylib")
-                )
-            ))))) {
-                stop(paste(
-                    "OpenMP for Xcode is not installed.",
-                    "Run 'koopa install system r-openmp' to resolve.",
-                    sep = "\n"
-                ))
-            }
+        if (isFALSE(all(file.exists(file.path(
+            "", "usr", "local",
+            c(
+                file.path("include", "omp-tools.h"),
+                file.path("include", "omp.h"),
+                file.path("include", "ompt.h"),
+                file.path("lib", "libomp.dylib")
+            )
+        ))))) {
+            stop(paste(
+                "OpenMP for Xcode is not installed.",
+                "Run 'koopa install system r-openmp' to resolve.",
+                sep = "\n"
+            ))
         }
     }
     ## Package installation {{{2
