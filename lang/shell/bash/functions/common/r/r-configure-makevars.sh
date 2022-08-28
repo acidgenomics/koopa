@@ -74,19 +74,36 @@ koopa_r_configure_makevars() {
         # default macOS build config.
         flibs+=('-lm')
         dict['flibs']="${flibs[*]}"
-        cppflags=('-Xclang' '-fopenmp')
-        dict['cppflags']="${cppflags[*]}"
-        ldflags=(
-            "-I${dict['gettext']}/include"
-            "-L${dict['gettext']}/lib"
-            '-lomp'
-        )
-        dict['ldflags']="${ldflags[*]}"
+        # FIXME Work on setting these in our install script.
         lines+=(
-            "CPPFLAGS += ${dict['cppflags']}"
             "FC = ${app['fc']}"
             "FLIBS = ${dict['flibs']}"
+        )
+        ldflags=()
+        case "${dict['system']}" in
+            '1')
+                ldflags+=(
+                    "-I${dict['gettext']}/include"
+                    "-L${dict['gettext']}/lib"
+                )
+                ;;
+        esac
+        ldflags+=('-lomp')
+        dict['ldflags']="${ldflags[*]}"
+        # FIXME See if we can optimize config using this as reference:
+        # https://firas.io/post/data.table_openmp/
+        # https://gist.githubusercontent.com/btskinner/98f0501ceb21e1c8e7ff9dbaa5bf7b96/raw/8762011b3c79980b07b2cbe3921805c3fb5c1a7f/Makevars
+        lines+=(
             "LDFLAGS += ${dict['ldflags']}"
+            # FIXME Setting this returns: unknown argument: '-fPIC
+            'SHLIB_OPENMP_CFLAGS += -Xclang -fopenmp'
+            #'SHLIB_OPENMP_CXX11FLAGS += -fopenmp'
+            #'SHLIB_OPENMP_CXX14FLAGS += -fopenmp'
+            #'SHLIB_OPENMP_CXX17FLAGS +=-fopenmp'
+            #'SHLIB_OPENMP_CXX98FLAGS += -fopenmp'
+            #'SHLIB_OPENMP_CXXFLAGS += -fopenmp'
+            #'SHLIB_OPENMP_FCFLAGS += -fopenmp'
+            #'SHLIB_OPENMP_FFLAGS += -fopenmp'
         )
     fi
     lines+=(
