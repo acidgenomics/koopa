@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME This needs to create a symlink into koopa bin when missing.
-# This can happen if user installs R directly from Homebrew.
-# FIXME Link R and Rscript into koopa bin if not currently defined.
-# FIXME Consider reworking R_SHELL to improve cross-platform consistency.
-
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-08-26.
+    # @note Updated 2022-08-27.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
-    set -x # FIXME
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
