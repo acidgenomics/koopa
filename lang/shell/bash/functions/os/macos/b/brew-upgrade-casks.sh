@@ -3,7 +3,7 @@
 koopa_macos_brew_upgrade_casks() {
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2022-04-24.
+    # @note Updated 2022-08-27.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
@@ -36,10 +36,7 @@ koopa_macos_brew_upgrade_casks() {
         esac
         "${app['brew']}" reinstall --cask --force "$cask" || true
         case "$cask" in
-            'adoptopenjdk' | \
-            'openjdk' | \
-            'r' | \
-            'temurin')
+            'r')
                 app['r']="$(koopa_macos_r_prefix)/bin/R"
                 koopa_configure_r "${app['r']}"
                 ;;
