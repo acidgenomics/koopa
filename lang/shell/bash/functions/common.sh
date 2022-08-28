@@ -13005,16 +13005,9 @@ koopa_install_r_packages() {
 }
 
 koopa_install_r() {
-    local install_args
-    install_args=('--name=r')
-    if koopa_is_linux && [[ ! -x '/usr/bin/R' ]]
-    then
-        install_args+=(
-            '--link-in-bin=R'
-            '--link-in-bin=Rscript'
-        )
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --name='r' \
+        "$@"
 }
 
 koopa_install_ranger_fm() {
@@ -23148,17 +23141,9 @@ koopa_uninstall_r_packages() {
 }
 
 koopa_uninstall_r() {
-    local uninstall_args
-    uninstall_args=('--name=r')
-    if koopa_is_linux && [[ ! -x '/usr/bin/R' ]]
-    then
-        uninstall_args+=(
-            '--unlink-in-bin=R'
-            '--unlink-in-bin=Rscript'
-        )
-    fi
-    koopa_uninstall_app "${uninstall_args[@]}" "$@"
-    return 0
+    koopa_uninstall_app \
+        --name='r' \
+        "$@"
 }
 
 koopa_uninstall_ranger_fm() {
