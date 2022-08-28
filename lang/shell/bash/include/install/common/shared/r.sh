@@ -1,20 +1,5 @@
 #!/usr/bin/env bash
 
-
-
-# FIXME Now running into annoying bzip2 issue on 2022-08-27:
-#
-# checking whether bzip2 support suffices... configure: error: bzip2 library and headers are required
-#
-# https://trac.macports.org/ticket/60976
-# https://trac.macports.org/ticket/61013
-#
-# https://github.com/macports/macports-ports/blob/master/math/R/Portfile
-# https://github.com/wch/r-source/commit/9ba9c7e8651465721f9ac42a731ae4abb9b1ab7d
-# https://github.com/macports/macports-ports/pull/8458
-
-
-
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
@@ -449,9 +434,7 @@ R-${dict['maj_ver']}/${dict['file']}"
     # Setting the time zone used to be required for build to complete.
     # > export TZ='America/New_York'
     # Need to burn LAPACK in rpath, otherwise grDevices can fail to build.
-    koopa_add_rpath_to_ldflags \
-        "${dict['bzip2']}/lib" \
-        "${dict['lapack']}/lib"
+    koopa_add_rpath_to_ldflags "${dict['lapack']}/lib"
     ./configure --help
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure "${conf_args[@]}"
