@@ -4918,8 +4918,15 @@ koopa_configure_r() {
     dict['site_library']="${dict['r_prefix']}/site-library"
     koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
+    if koopa_is_macos && \
+        [[ ! -f '/usr/local/include/omp.h' ]]
+    then
+        koopa_assert_is_admin
+        koopa_macos_install_system_r_openmp
+    fi
     koopa_r_link_files_in_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
+    koopa_r_configure_makevars "${app['r']}"
     case "${dict['system']}" in
         '0')
             if [[ -L "${dict['site_library']}" ]]
@@ -4929,11 +4936,6 @@ koopa_configure_r() {
             koopa_sys_mkdir "${dict['site_library']}"
             ;;
         '1')
-            if koopa_is_macos && \
-                [[ ! -f '/usr/local/include/omp.h' ]]
-            then
-                koopa_macos_install_system_r_openmp
-            fi
             dict['group']="$(koopa_admin_group)"
             dict['user']="$(koopa_user)"
             if [[ -L "${dict['site_library']}" ]]
@@ -4945,9 +4947,8 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
-            koopa_r_configure_ldpaths "${app['r']}"
-            koopa_r_configure_makevars "${app['r']}"
             koopa_r_javareconf "${app['r']}"
+            koopa_r_configure_ldpaths "${app['r']}"
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
@@ -17795,7 +17796,6 @@ koopa_r_configure_makevars() {
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
-    koopa_is_koopa_app "${app['r']}" && return 0
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
