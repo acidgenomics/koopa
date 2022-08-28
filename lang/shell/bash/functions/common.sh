@@ -15530,6 +15530,13 @@ koopa_locate_geos_config() {
         "$@"
 }
 
+koopa_locate_gfortran() {
+    koopa_locate_app \
+        --app-name='gcc' \
+        --bin-name='gfortran' \
+        "$@"
+}
+
 koopa_locate_git() {
     koopa_locate_app \
         --app-name='git' \
@@ -15641,10 +15648,24 @@ koopa_locate_id() {
         "$@"
 }
 
+koopa_locate_jar() {
+    koopa_locate_app \
+        --app-name='openjdk' \
+        --bin-name='jar' \
+        "$@"
+}
+
 koopa_locate_java() {
     koopa_locate_app \
         --app-name='openjdk' \
         --bin-name='java' \
+        "$@"
+}
+
+koopa_locate_javac() {
+    koopa_locate_app \
+        --app-name='openjdk' \
+        --bin-name='javac' \
         "$@"
 }
 
