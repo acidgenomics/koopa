@@ -130,7 +130,7 @@ koopa_grep() {
     case "${dict['engine']}" in
         '')
             app['grep']="$(koopa_locate_rg --allow-missing)"
-            [[ -x "${app['grep']}" ]] && dict['engine']='fd'
+            [[ -x "${app['grep']}" ]] && dict['engine']='rg'
             if [[ -z "${dict['engine']}" ]]
             then
                 dict['engine']='grep'
