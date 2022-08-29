@@ -1,30 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
-# package in R, which bundles a very old version (2.28.0) currently.
-
 main() {
     # """
     # Install R.
     # @note Updated 2022-08-29.
-    #
-    # @section gfortran configuration on macOS:
-    #
-    # - https://mac.r-project.org
-    # - https://github.com/fxcoudert/gfortran-for-macOS/releases
-    # - https://github.com/Rdatatable/data.table/wiki/Installation/
-    # - https://developer.r-project.org/Blog/public/2020/11/02/
-    #     will-r-work-on-apple-silicon/index.html
-    # - https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
-    #
-    # @section R-spatial evolution:
-    #
-    # R-spatial packages are being reworked. rgdal, rgeos, and maptools will be
-    # retired in 2023 in favor of more modern packages, such as sf. When this
-    # occurs, it may be possible to remove the geospatial libraries (geos, proj,
-    # gdal) as dependencies here.
-    #
-    # https://r-spatial.org/r/2022/04/12/evolution.html
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -359,6 +338,8 @@ main() {
         '--with-static-cairo=no'
         '--with-x'
         '--without-recommended-packages'
+
+        # FIXME Set these in our Makevars instead.
         "AR=${conf_dict['ar']}"
         "AWK=${conf_dict['awk']}"
         "CC=${conf_dict['cc']}"
@@ -393,16 +374,6 @@ main() {
     then
         # This is required for plotting support in RStudio.
         conf_args+=('--with-aqua')
-        export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
-    else
-        # Ensure that OpenMP is enabled. Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS'
-        # (but not 'FCFLAGS') get defined in Makeconf' file.
-        # https://stackoverflow.com/a/12307488/3911732
-        conf_args+=(
-            'SHLIB_OPENMP_CFLAGS=-fopenmp'
-            'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
-            'SHLIB_OPENMP_FFLAGS=-fopenmp'
-        )
     fi
     if [[ "${dict['name']}" == 'r-devel' ]]
     then
@@ -432,9 +403,6 @@ R-${dict['maj_ver']}/${dict['file']}"
         koopa_extract "${dict['file']}"
         koopa_cd "R-${dict['version']}"
     fi
-    unset -v R_HOME
-    # Setting the time zone used to be required for build to complete.
-    # > export TZ='America/New_York'
     # Need to burn LAPACK in rpath, otherwise grDevices can fail to build.
     koopa_add_rpath_to_ldflags "${dict['lapack']}/lib"
     ./configure --help

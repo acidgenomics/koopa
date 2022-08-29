@@ -85,7 +85,9 @@ koopa_sub() {
     [[ "${dict['global']}" -eq 1 ]] && dict['perl_tail']='g'
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict['expr']="s/${dict['pattern']}/${dict['replacement']}/${dict['perl_tail']}"
+        # FIXME Need to improve the regex escaping here.
+        dict['expr']="s|${dict['pattern']}|${dict['replacement']}|\
+${dict['perl_tail']}"
     else
         dict['expr']=" \
             \$pattern = quotemeta '${dict['pattern']}'; \

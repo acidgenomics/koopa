@@ -4,19 +4,25 @@ koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
     # @note Updated 2022-08-29.
-
-    # Consider removing '/usr/local' paths in 'CPPFLAGS', 'LDFLAGS', and 'LIBS'
-    # for R CRAN binary. This helps avoid unwanted conflicts with Homebrew.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
-    # configuration.
-
+    # configuration in the future.
+    #
+    # @section gfortran configuration on macOS:
+    #
+    # - https://mac.r-project.org
+    # - https://github.com/fxcoudert/gfortran-for-macOS/releases
+    # - https://github.com/Rdatatable/data.table/wiki/Installation/
+    # - https://developer.r-project.org/Blog/public/2020/11/02/
+    #     will-r-work-on-apple-silicon/index.html
+    # - https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
+    #
     # @seealso
     # - /opt/koopa/opt/r/lib/R/etc/Makeconf
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
     local app conf_dict dict i
-    local blas_libs cppflags flibs gcc_libs ldflags lines
+    local cppflags flibs gcc_libs ldflags lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['ar']='/usr/bin/ar'
@@ -24,9 +30,7 @@ koopa_r_configure_makevars() {
         ['dirname']="$(koopa_locate_dirname)"
         ['echo']="$(koopa_locate_echo --realpath)"
         ['fc']="$(koopa_locate_gfortran --realpath)"
-        ['jar']="$(koopa_locate_jar --realpath)"
-        ['java']="$(koopa_locate_java --realpath)"
-        ['javac']="$(koopa_locate_javac --realpath)"
+        ['pkg_config']="$(koopa_locate_pkg_config)"
         ['r']="${1:?}"
         ['ranlib']='/usr/bin/ranlib'
         ['sed']="$(koopa_locate_sed --realpath)"
@@ -35,11 +39,16 @@ koopa_r_configure_makevars() {
         ['xargs']="$(koopa_locate_xargs)"
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
-    # FIXME Need to link to GCC on Linux.
+    # The system clang compiler stack is preferred on macOS. If you attempt to
+    # build with GCC, you'll run into a lot of compilation issues with
+    # Posit/RStudio packages, which are only optimized for clang currently.
     if koopa_is_macos
     then
         app['cc']='/usr/bin/clang'
         app['cxx']='/usr/bin/clang++'
+    else
+        app['cc']="$(koopa_locate_gcc --realpath)"
+        app['cxx']="$(koopa_locate_gcxx --realpath)"
     fi
     [[ -x "${app['ar']}" ]] || return 1
     [[ -x "${app['bash']}" ]] || return 1
@@ -48,9 +57,7 @@ koopa_r_configure_makevars() {
     [[ -x "${app['dirname']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['fc']}" ]] || return 1
-    [[ -x "${app['jar']}" ]] || return 1
-    [[ -x "${app['java']}" ]] || return 1
-    [[ -x "${app['javac']}" ]] || return 1
+    [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['ranlib']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -63,8 +70,9 @@ koopa_r_configure_makevars() {
         ['freetype']="$(koopa_app_prefix 'freetype')"
         ['gcc']="$(koopa_app_prefix 'gcc')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
+        ['lapack']="$(koopa_app_prefix 'lapack')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
-        ['openjdk']="$(koopa_app_prefix 'openjdk')"
+        ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
     )
@@ -72,26 +80,21 @@ koopa_r_configure_makevars() {
         "${dict['freetype']}" \
         "${dict['gcc']}" \
         "${dict['gettext']}" \
+        "${dict['lapack']}" \
         "${dict['openblas']}" \
-        "${dict['openjdk']}" \
+        "${dict['pcre2']}" \
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
-    blas_libs=()
+    koopa_add_to_pkg_config_path \
+        "${dict['freetype']}/lib/pkgconfig" \
+        "${dict['lapack']}/lib/pkgconfig" \
+        "${dict['openblas']}/lib/pkgconfig"
     cppflags=()
     flibs=()
     ldflags=()
-    # > local libs
-    # > libs=()
     lines=()
-    # FIXME We should set this from openblas pkgconfig instead.
-    blas_libs=(
-        # > '-L"$(R_HOME)/lib$(R_ARCH)"'
-        # > '-lRblas' 
-        "-L${dict['openblas']}/lib"
-        '-lopenblas'
-    )
     # Locate gfortran library paths (from GCC). This will cover 'lib' and
     # 'lib64' subdirs. See also 'gcc --print-search-dirs'.
     readarray -t gcc_libs <<< "$( \
@@ -118,31 +121,22 @@ koopa_r_configure_makevars() {
             ;;
     esac
     cppflags+=(
-        # > '-I/usr/local/include'
-        "-I${dict['freetype']}/include/freetype2"
+        "$("${app['pkg_config']}" --cflags 'freetype2')"
     )
-    # FIXME What if we set LIBINTL instead? Can we then remove the GETTEXT
-    # Call here?
-    # gettext is needed to resolve clang '-lintl' warning.
-    ldflags+=(
-        # > '-L/usr/local/lib'
-        "-I${dict['gettext']}/include"
-        "-L${dict['gettext']}/lib"
-        '-lomp'
-    )
-    libs+=(
-        # > '-L/usr/local/lib'
-        '-lpcre2-8'
-        '-llzma'
-        '-lbz2'
-        '-lz'
-        '-licucore'
-        '-ldl'
-        '-lm'
-        '-liconv'
-    )
+    # gettext is needed to resolve clang '-lintl' warning. Can we avoid this
+    # issue by setting 'LIBINTL' instead?
+    case "${dict['system']}" in
+        '1')
+            ldflags+=(
+                "-I${dict['gettext']}/include"
+                "-L${dict['gettext']}/lib"
+            )
+            ;;
+    esac
+    ldflags+=('-lomp')
+    declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
-    conf_dict['blas_libs']="${blas_libs[*]}"
+    conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
     conf_dict['cc']="${app['cc']}"
     # NOTE Consider using '-O3' instead of '-O2' here.
     conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
@@ -154,12 +148,8 @@ koopa_r_configure_makevars() {
     conf_dict['fc']="${app['fc']}"
     conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
     conf_dict['flibs']="${flibs[*]}"
-    conf_dict['jar']="${app['jar']}"
-    conf_dict['java']="${app['java']}"
-    conf_dict['java_home']="${dict['openjdk']}"
-    conf_dict['javac']="${app['javac']}"
+    conf_dict['lapack_libs']="$("${app['pkg_config']}" --libs 'lapack')"
     conf_dict['ldflags']="${ldflags[*]}"
-    conf_dict['libs']="${libs[*]}"
     conf_dict['objc_libs']='-lobjc'
     conf_dict['objcflags']="-Wall -g -O2 -fobjc-exceptions \$(LTO)"
     conf_dict['ranlib']="${app['ranlib']}"
@@ -170,32 +160,16 @@ koopa_r_configure_makevars() {
     conf_dict['strip_static_lib']="${app['strip']} -S"
     # Alternatively, can use 'bison -y'.
     conf_dict['yacc']="${app['yacc']}"
-
-    # FIXME Use pkg-config to configure:
-    # pkg-config --libs /opt/koopa/app/lapack/3.10.1/lib/pkgconfig/lapack.pc
-    conf_dict['lapack_libs']="-L/opt/koopa/app/lapack/3.10.1/lib -llapack"
-
-    # FIXME Use pkg-config to configure:
-    # pkg-config --libs /opt/koopa/app/tcl-tk/8.6.12/lib/pkgconfig/tcl.pc
-    # -L/opt/koopa/app/tcl-tk/8.6.12/lib -ltcl8.6 -ltclstub8.6
-    # FIXME Note that this requires tcl.pc to be in path.
-    # pkg-config --libs /opt/koopa/app/tcl-tk/8.6.12/lib/pkgconfig/tk.pc
-    # Refer to Libs.private value in tk.pc.
-    # NOTE Our build from source doesn't include '-ltclstub8.6'.
-    # FIXME Consider installing tcl and tk separately.
-    conf_dict['tcltk_cppflags']="-I/opt/koopa/app/tcl-tk/8.6.12/include -I/opt/koopa/app/tcl-tk/8.6.12/include  -I/usr/X11R6/include"
-    conf_dict['tcltk_libs']="-L/opt/koopa/app/tcl-tk/8.6.12/lib -ltcl8.6 -L/opt/koopa/app/tcl-tk/8.6.12/lib -ltk8.6 -L/usr/X11R6/lib -lX11 -Wl,-weak-lXss -lXext"
-
     # These are values that inherit from other values in the dictionary.
     conf_dict['cxx11']="${conf_dict['cxx']}"
-    conf_dict['cxx11flags']="${conf_dict['cxxflags']}"
     conf_dict['cxx14']="${conf_dict['cxx']}"
-    conf_dict['cxx14flags']="${conf_dict['cxxflags']}"
     conf_dict['cxx17']="${conf_dict['cxx']}"
-    conf_dict['cxx17flags']="${conf_dict['cxxflags']}"
     conf_dict['cxx20']="${conf_dict['cxx']}"
-    conf_dict['cxx20flags']="${conf_dict['cxxflags']}"
     conf_dict['cxxflags']="${conf_dict['cflags']}"
+    conf_dict['cxx11flags']="${conf_dict['cxxflags']}"
+    conf_dict['cxx14flags']="${conf_dict['cxxflags']}"
+    conf_dict['cxx17flags']="${conf_dict['cxxflags']}"
+    conf_dict['cxx20flags']="${conf_dict['cxxflags']}"
     conf_dict['fcflags']="${conf_dict['fflags']}"
     conf_dict['objc']="${conf_dict['cc']}"
     conf_dict['objcxx']="${conf_dict['cxx']}"
@@ -229,13 +203,8 @@ koopa_r_configure_makevars() {
         "FCFLAGS = ${conf_dict['fcflags']}"
         "FFLAGS = ${conf_dict['fflags']}"
         "FLIBS = ${conf_dict['flibs']}"
-        "JAR = ${conf_dict['jar']}"
-        "JAVA = ${conf_dict['java']}"
-        "JAVAC = ${conf_dict['javac']}"
-        "JAVA_HOME = ${conf_dict['java_home']}"
         "LAPACK_LIBS = ${conf_dict['lapack_libs']}"
         "LDFLAGS ${conf_dict['op']} ${conf_dict['ldflags']}"
-        "LIBS = ${conf_dict['libs']}"
         "OBJC = ${conf_dict['objc']}"
         "OBJCFLAGS = ${conf_dict['objcflags']}"
         "OBJCXX = ${conf_dict['objcxx']}"
@@ -246,20 +215,23 @@ koopa_r_configure_makevars() {
         "SHELL = ${conf_dict['shell']}"
         "STRIP_SHARED_LIB = ${conf_dict['strip_shared_lib']}"
         "STRIP_STATIC_LIB = ${conf_dict['strip_static_lib']}"
-        "TCLTK_CPPFLAGS = ${conf_dict['tcltk_cppflags']}"
-        "TCLTK_LIBS = ${conf_dict['tcltk_libs']}"
         "YACC = ${conf_dict['yacc']}"
     )
     if koopa_is_macos
     then
-        # FIXME Can we get this from gettext pkgconfig instead?
-        conf_dict['libintl']='-lintl -liconv -Wl,-framework -Wl,CoreFoundation'
+        # > local libintl
+        # > libintl=(
+        # >     '-lintl'
+        # >     '-liconv'
+        # >     '-Wl,-framework'
+        # >     '-Wl,CoreFoundation'
+        # > )
+        # > conf_dict['libintl']="${libintl[*]}"
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=(
-            "LIBINTL = ${conf_dict['libintl']}"
+            # > "LIBINTL = ${conf_dict['libintl']}"
+            # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
             "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
-            # > 'SHLIB_OPENMP_CXXFLAGS ='
-            # > 'SHLIB_OPENMP_FFLAGS ='
         )
     fi
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
@@ -277,5 +249,6 @@ koopa_r_configure_makevars() {
                 --string="${dict['string']}"
             ;;
     esac
+    unset -v PKG_CONFIG_PATH
     return 0
 }

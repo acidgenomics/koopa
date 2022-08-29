@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
+# package in R, which bundles a very old version (2.28.0) currently.
+
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
@@ -10,6 +13,15 @@ koopa_r_configure_ldpaths() {
     #
     # Usage of ': ${KEY=VALUE}' here stores the variable internally, but does
     # not export into R session, and is not accessible with 'Sys.getenv()'.
+    #
+    # @section R-spatial evolution:
+    #
+    # R-spatial packages are being reworked. rgdal, rgeos, and maptools will be
+    # retired in 2023 in favor of more modern packages, such as sf. When this
+    # occurs, it may be possible to remove the geospatial libraries (geos, proj,
+    # gdal) as dependencies here.
+    #
+    # https://r-spatial.org/r/2022/04/12/evolution.html
     # """
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
@@ -43,6 +55,7 @@ koopa_r_configure_ldpaths() {
         'hdf5'
         'imagemagick'
         'libgit2'
+        'pcre2'
         'proj'
     )
     for key in "${keys[@]}"

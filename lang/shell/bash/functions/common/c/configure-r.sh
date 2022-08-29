@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework edge case handling of R installed in Docker.
+# We don't want to link to any koopa installers in this edge case...
+
 koopa_configure_r() {
     # """
     # Update R configuration.
@@ -58,7 +61,8 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
-            koopa_r_javareconf "${app['r']}"
+            koopa_r_configure_makeconf "${app['r']}"
+            koopa_r_configure_java "${app['r']}"
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
