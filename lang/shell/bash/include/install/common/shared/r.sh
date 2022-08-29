@@ -340,12 +340,8 @@ main() {
         "SED=${conf_dict['sed']}"
         "YACC=${conf_dict['yacc']}"
     )
-    if koopa_is_macos
-    then
-        conf_args+=('--with-aqua')
-        # FIXME Consider putting this in our Makevars.site file.
-        # > export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
-    fi
+    # This is required to use R with RStudio on macOS.
+    koopa_is_macos && conf_args+=('--with-aqua')
     if [[ "${dict['name']}" == 'r-devel' ]]
     then
         conf_args+=('--program-suffix=dev')

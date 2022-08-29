@@ -108,5 +108,7 @@ bin/${dict['bin_name']}"
         return 0
     fi
     [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
-    koopa_stop "Failed to locate '${dict['bin_name']}'."
+    koopa_stop \
+        "Failed to locate '${dict['bin_name']}' (from '${dict['app_name']}')." \
+        "Running 'koopa install '${dict['app_name']}' may resolve the issue."
 }
