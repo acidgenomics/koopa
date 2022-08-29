@@ -42,7 +42,11 @@ __koopa_posix_header() {
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         koopa_activate_path_helper || return 1
-        koopa_activate_make_paths || return 1
+        koopa_add_to_path_start \
+            '/usr/local/bin'
+        koopa_add_to_manpath_start \
+            '/usr/local/man' \
+            '/usr/local/share/man'
     fi
     koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
     koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
