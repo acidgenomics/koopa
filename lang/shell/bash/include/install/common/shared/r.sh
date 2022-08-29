@@ -150,31 +150,39 @@ main() {
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['bash']="$(koopa_locate_bash --realpath)"
-        ['dirname']="$(koopa_locate_dirname)"
+        ['gfortran']="$(koopa_locate_gfortran --realpath)"
         ['jar']="$(koopa_locate_jar --realpath)"
         ['java']="$(koopa_locate_java --realpath)"
         ['javac']="$(koopa_locate_javac --realpath)"
         ['make']="$(koopa_locate_make)"
         ['perl']="$(koopa_locate_perl --realpath)"
         ['pkg_config']="$(koopa_locate_pkg_config)"
-        ['sort']="$(koopa_locate_sort)"
-        ['xargs']="$(koopa_locate_xargs)"
     )
+    # The system clang compiler stack is preferred on macOS. If you attempt to
+    # build with GCC, you'll run into a lot of compilation issues with
+    # Posit/RStudio packages, which are only optimized for clang currently.
+    if koopa_is_macos
+    then
+        app['cc']='/usr/bin/clang'
+        app['cxx']='/usr/bin/clang++'
+    else
+        app['cc']="$(koopa_locate_gcc --realpath)"
+        app['cxx']="$(koopa_locate_gcxx --realpath)"
+    fi
     [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['dirname']}" ]] || return 1
+    [[ -x "${app['cc']}" ]] || return 1
+    [[ -x "${app['cxx']}" ]] || return 1
+    [[ -x "${app['gfortran']}" ]] || return 1
     [[ -x "${app['jar']}" ]] || return 1
     [[ -x "${app['java']}" ]] || return 1
     [[ -x "${app['javac']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
     declare -A conf_dict
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['gcc']="$(koopa_app_prefix 'gcc')"
         ['jobs']="$(koopa_cpu_count)"
         ['lapack']="$(koopa_app_prefix 'lapack')"
         ['name']='r'
@@ -185,7 +193,6 @@ main() {
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
-        "${dict['gcc']}" \
         "${dict['lapack']}" \
         "${dict['openjdk']}" \
         "${dict['tcl_tk']}"
@@ -247,6 +254,11 @@ main() {
     koopa_assert_is_file \
         "${conf_dict['with_tcl_config']}" \
         "${conf_dict['with_tk_config']}"
+    conf_dict['cc']="${app['cc']}"
+    conf_dict['cxx']="${app['cxx']}"
+    conf_dict['f77']="${app['gfortran']}"
+    conf_dict['fc']="${app['gfortran']}"
+    conf_dict['flibs']="$(koopa_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
     conf_dict['java_home']="${dict['openjdk']}"
@@ -278,6 +290,11 @@ main() {
         '--with-static-cairo=no'
         '--with-x'
         '--without-recommended-packages'
+        "CC=${conf_dict['cc']}"
+        "CXX=${conf_dict['cxx']}"
+        "F77=${conf_dict['f77']}"
+        "FC=${conf_dict['FC']}"
+        "FLIBS=${conf_dict['FLIBS']}"
         "JAR=${conf_dict['jar']}"
         "JAVA=${conf_dict['java']}"
         "JAVAC=${conf_dict['javac']}"
@@ -289,7 +306,6 @@ main() {
     )
     if koopa_is_macos
     then
-        # This is required for plotting support in RStudio.
         conf_args+=('--with-aqua')
     fi
     if [[ "${dict['name']}" == 'r-devel' ]]

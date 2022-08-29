@@ -8909,6 +8909,44 @@ koopa_get_version() {
     return 0
 }
 
+koopa_gfortran_libs() {
+    local app dict flibs gcc_libs i
+    declare -A app=(
+        ['dirname']="$(koopa_locate_dirname)"
+        ['sort']="$(koopa_locate_sort)"
+        ['xargs']="$(koopa_locate_xargs)"
+    )
+    [[ -x "${app['dirname']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
+    declare -A dict=(
+        ['arch']="$(koopa_arch)"
+        ['gcc']="$(koopa_app_prefix 'gcc')"
+    )
+    koopa_assert_is_dir "${dict['gcc']}"
+    readarray -t gcc_libs <<< "$( \
+        koopa_find \
+            --prefix="${dict['gcc']}" \
+            --pattern='*.a' \
+            --type 'f' \
+        | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
+        | "${app['sort']}" --unique \
+    )"
+    koopa_assert_is_array_non_empty "${gcc_libs[@]:-}"
+    for i in "${!gcc_libs[@]}"
+    do
+        flibs+=("-L${gcc_libs[$i]}")
+    done
+    flibs+=('-lgfortran' '-lm')
+    case "${dict['arch']}" in
+        'x86_64')
+            flibs+=('-lquadmath')
+            ;;
+    esac
+    koopa_print "${flibs[*]}"
+    return 0
+}
+
 koopa_git_checkout_recursive() {
     local app dict dirs pos
     declare -A app=(
@@ -17906,23 +17944,20 @@ koopa_r_configure_makeconf() {
 }
 
 koopa_r_configure_makevars() {
-    local app conf_dict dict i
-    local cppflags flibs gcc_libs ldflags lines
+    local app conf_dict dict
+    local cppflags ldflags lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['ar']='/usr/bin/ar'
         ['awk']="$(koopa_locate_awk --realpath)"
         ['bash']="$(koopa_locate_bash --realpath)"
-        ['dirname']="$(koopa_locate_dirname)"
         ['echo']="$(koopa_locate_echo --realpath)"
         ['fc']="$(koopa_locate_gfortran --realpath)"
         ['pkg_config']="$(koopa_locate_pkg_config)"
         ['r']="${1:?}"
         ['ranlib']='/usr/bin/ranlib'
         ['sed']="$(koopa_locate_sed --realpath)"
-        ['sort']="$(koopa_locate_sort)"
         ['strip']='/usr/bin/strip'
-        ['xargs']="$(koopa_locate_xargs)"
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
     if koopa_is_macos
@@ -17938,21 +17973,17 @@ koopa_r_configure_makevars() {
     [[ -x "${app['bash']}" ]] || return 1
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
-    [[ -x "${app['dirname']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['fc']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['ranlib']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['strip']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['freetype']="$(koopa_app_prefix 'freetype')"
-        ['gcc']="$(koopa_app_prefix 'gcc')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
@@ -17962,7 +17993,6 @@ koopa_r_configure_makevars() {
     )
     koopa_assert_is_dir \
         "${dict['freetype']}" \
-        "${dict['gcc']}" \
         "${dict['gettext']}" \
         "${dict['lapack']}" \
         "${dict['openblas']}" \
@@ -17976,28 +18006,8 @@ koopa_r_configure_makevars() {
         "${dict['lapack']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     cppflags=()
-    flibs=()
     ldflags=()
     lines=()
-    readarray -t gcc_libs <<< "$( \
-        koopa_find \
-            --prefix="${dict['gcc']}" \
-            --pattern='*.a' \
-            --type 'f' \
-        | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
-        | "${app['sort']}" --unique \
-    )"
-    koopa_assert_is_array_non_empty "${gcc_libs[@]:-}"
-    for i in "${!gcc_libs[@]}"
-    do
-        flibs+=("-L${gcc_libs[$i]}")
-    done
-    flibs+=('-lgfortran' '-lm')
-    case "${dict['arch']}" in
-        'x86_64')
-            flibs+=('-lquadmath')
-            ;;
-    esac
     cppflags+=(
         "$("${app['pkg_config']}" --cflags 'freetype2')"
     )
@@ -18023,7 +18033,7 @@ koopa_r_configure_makevars() {
     conf_dict['echo']="${app['echo']}"
     conf_dict['fc']="${app['fc']}"
     conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
-    conf_dict['flibs']="${flibs[*]}"
+    conf_dict['flibs']="$(koopa_gfortran_libs)"
     conf_dict['lapack_libs']="$("${app['pkg_config']}" --libs 'lapack')"
     conf_dict['ldflags']="${ldflags[*]}"
     conf_dict['objc_libs']='-lobjc'
