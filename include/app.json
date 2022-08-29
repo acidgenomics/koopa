@@ -63,11 +63,13 @@
   },
   "autoconf": {
     "conservative": false,
+    "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
   },
   "automake": {
     "conservative": false,
+    "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
   },
@@ -96,6 +98,7 @@
   "bash": {
     "bin": ["bash"],
     "conservative": false,
+    "date": "2022-08-29",
     "man1": ["bash.1"],
     "url": ["https://www.gnu.org/software/bash/"],
     "version": "5.1.16"
@@ -194,6 +197,7 @@
   },
   "bison": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/bison/"],
     "version": "3.8.2"
   },
@@ -453,7 +457,7 @@
       "gyes"
     ],
     "conservative": false,
-    "date": "2022-08-25",
+    "date": "2022-08-29",
     "man1": [
       "gb2sum.1",
       "gbase32.1",
@@ -707,7 +711,7 @@
   "findutils": {
     "bin": ["gfind", "glocate", "gupdatedb", "gxargs"],
     "conservative": false,
-    "date": "2022-08-25",
+    "date": "2022-08-29",
     "man1": ["gfind.1", "glocate.1", "gupdatedb.1", "gxargs.1"],
     "url": ["https://www.gnu.org/software/findutils/"],
     "version": "4.9.0"
@@ -779,7 +783,6 @@
     "bin": ["gfortran"],
     "conservative": true,
     "date": "2022-08-29",
-    "outdated": true,
     "url": ["https://gcc.gnu.org/"],
     "version": "12.2.0"
   },
@@ -1264,7 +1267,7 @@
   "libtool": {
     "bin": ["glibtool", "glibtoolize"],
     "conservative": false,
-    "date": "2022-08-25",
+    "date": "2022-08-29",
     "man1": ["glibtool.1", "glibtoolize.1"],
     "url": ["https://ftp.gnu.org/gnu/libtool/"],
     "version": "2.4.7"
@@ -1403,6 +1406,7 @@
       "tset"
     ],
     "conservative": true,
+    "date": "2022-08-29",
     "man1": [
       "captoinfo.1",
       "clear.1",
@@ -1871,7 +1875,7 @@
   "sed": {
     "bin": ["gsed"],
     "conservative": false,
-    "date": "2022-08-25",
+    "date": "2022-08-29",
     "man1": ["gsed.1"],
     "url": ["https://www.gnu.org/software/sed/"],
     "version": "4.8"
