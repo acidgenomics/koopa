@@ -7238,9 +7238,11 @@ koopa_download() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
     declare -A app
-    app['download']="$("koopa_locate_${dict['engine']}")"
+    koopa_warn 'FIXME 1'
+    app['download']="$("koopa_locate_${dict['engine']}" --allow-missing)"
     [[ ! -x "${app['download']}" ]] && app['download']='/usr/bin/curl'
     [[ -x "${app['download']}" ]] || return 1
+    koopa_warn 'FIXME 2'
     if [[ -z "${dict['file']}" ]]
     then
         dict['file']="$(koopa_basename "${dict['url']}")"
