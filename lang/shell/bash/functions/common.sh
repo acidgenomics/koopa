@@ -17952,7 +17952,7 @@ koopa_r_configure_makevars() {
         ['awk']="$(koopa_locate_awk --realpath)"
         ['bash']="$(koopa_locate_bash --realpath)"
         ['echo']="$(koopa_locate_echo --realpath)"
-        ['fc']="$(koopa_locate_gfortran --realpath)"
+        ['gfortran']="$(koopa_locate_gfortran --realpath)"
         ['pkg_config']="$(koopa_locate_pkg_config)"
         ['r']="${1:?}"
         ['ranlib']='/usr/bin/ranlib'
@@ -17975,7 +17975,7 @@ koopa_r_configure_makevars() {
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['fc']}" ]] || return 1
+    [[ -x "${app['gfortran']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['ranlib']}" ]] || return 1
@@ -18028,12 +18028,11 @@ koopa_r_configure_makevars() {
     conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
     conf_dict['cc']="${app['cc']}"
     conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
-    conf_dict['cpicflags']='-fPIC'
     conf_dict['cppflags']="${cppflags[*]}"
-    conf_dict['c_visibility']=''
     conf_dict['cxx']="${app['cxx']} -std=gnu++14"
     conf_dict['echo']="${app['echo']}"
-    conf_dict['fc']="${app['fc']}"
+    conf_dict['f77']="${app['gfortran']}"
+    conf_dict['fc']="${app['gfortran']}"
     conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
     conf_dict['flibs']="$(koopa_gfortran_libs)"
     conf_dict['lapack_libs']="$("${app['pkg_config']}" --libs 'lapack')"
@@ -18056,7 +18055,6 @@ koopa_r_configure_makevars() {
     conf_dict['cxx14flags']="${conf_dict['cxxflags']}"
     conf_dict['cxx17flags']="${conf_dict['cxxflags']}"
     conf_dict['cxx20flags']="${conf_dict['cxxflags']}"
-    conf_dict['f77']="${conf_dict['fc']}"
     conf_dict['f77flags']="${conf_dict['fflags']}"
     conf_dict['fcflags']="${conf_dict['fflags']}"
     conf_dict['objc']="${conf_dict['cc']}"
