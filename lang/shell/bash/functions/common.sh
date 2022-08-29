@@ -15046,10 +15046,11 @@ koopa_lmod_prefix() {
 koopa_ln() {
     local app dict ln ln_args mkdir pos rm
     declare -A app=(
-        ['ln']="$(koopa_locate_ln)"
+        ['ln']="$(koopa_locate_ln --allow-missing)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
+    [[ ! -x "${app['ln']}" ]] && app['ln']='/usr/bin/ln'
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
@@ -15231,7 +15232,9 @@ bin/${dict['bin_name']}"
         return 0
     fi
     [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
-    koopa_stop "Failed to locate '${dict['bin_name']}'."
+    koopa_stop \
+        "Failed to locate '${dict['bin_name']}' (from '${dict['app_name']}')." \
+        "Running 'koopa install '${dict['app_name']}' may resolve the issue."
 }
 
 koopa_locate_ar() {
