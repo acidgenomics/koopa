@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Need to reduce the number of rpath dependencies here, and offload to
+#      ldpaths instead.
 # NOTE Consider adding an assert check for libomp in /usr/local.
 
 main() {
@@ -165,6 +167,11 @@ main() {
     # Posit/RStudio packages, which are only optimized for clang currently.
     if koopa_is_macos
     then
+        if [[ ! -f '/usr/local/include/omp.h' ]]
+        then
+            koopa_assert_is_admin
+            koopa_macos_install_system_r_openmp
+        fi
         app['cc']='/usr/bin/clang'
         app['cxx']='/usr/bin/clang++'
     else
@@ -308,7 +315,10 @@ main() {
     )
     if koopa_is_macos
     then
-        conf_args+=('--with-aqua')
+        # FIXME Argh this is now failing when enabled. We need this to be
+        # active to get RStudio to work...
+        conf_args+=('--without-aqua')
+        # > export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
     fi
     if [[ "${dict['name']}" == 'r-devel' ]]
     then
