@@ -67,6 +67,7 @@ koopa_r_configure_makevars() {
         ['arch']="$(koopa_arch)"
         ['freetype']="$(koopa_app_prefix 'freetype')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
+        ['jpeg']="$(koopa_app_prefix 'jpeg')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
         ['pcre2']="$(koopa_app_prefix 'pcre2')"
@@ -76,6 +77,7 @@ koopa_r_configure_makevars() {
     koopa_assert_is_dir \
         "${dict['freetype']}" \
         "${dict['gettext']}" \
+        "${dict['jpeg']}" \
         "${dict['lapack']}" \
         "${dict['openblas']}" \
         "${dict['pcre2']}" \
@@ -85,13 +87,14 @@ koopa_r_configure_makevars() {
     koopa_alert "Configuring '${dict['file']}'."
     koopa_add_to_pkg_config_path \
         "${dict['freetype']}/lib/pkgconfig" \
+        "${dict['jpeg']}/lib/pkgconfig" \
         "${dict['lapack']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     cppflags=()
     ldflags=()
     lines=()
     cppflags+=(
-        "$("${app['pkg_config']}" --cflags 'freetype2')"
+        "$("${app['pkg_config']}" --cflags 'freetype2' 'libjpeg')"
     )
     # gettext is needed to resolve clang '-lintl' warning. Can we avoid this
     # issue by setting 'LIBINTL' instead?
