@@ -3,8 +3,9 @@
 koopa_cp() {
     # """
     # Hardened version of coreutils cp (copy).
-    # @note Updated 2022-01-19.
-    # @note '-t' flag is not directly supported for BSD variant.
+    # @note Updated 2022-08-29.
+    #
+    # Note that '-t' flag is not directly supported for BSD variant.
     #
     # @seealso
     # - GNU cp man:
@@ -18,10 +19,11 @@ koopa_cp() {
     # """
     local app cp cp_args dict mkdir pos rm
     declare -A app=(
-        ['cp']="$(koopa_locate_cp)"
+        ['cp']="$(koopa_locate_cp --allow-missing)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
+    [[ ! -x "${app['cp']}" ]] && app['cp']='/usr/bin/cp'
     [[ -x "${app['cp']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0

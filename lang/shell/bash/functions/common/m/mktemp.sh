@@ -3,7 +3,7 @@
 koopa_mktemp() {
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-08-29.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -23,9 +23,14 @@ koopa_mktemp() {
     # - https://gist.github.com/earthgecko/3089509
     # """
     local app dict mktemp_args str
-    declare -A app=(
-        ['mktemp']="$(koopa_locate_mktemp)"
-    )
+    declare -A app
+    if koopa_is_macos
+    then
+        app['mktemp']="$(koopa_locate_mktemp)"
+    else
+        app['mktemp']="$(koopa_locate_mktemp --allow-missing)"
+        [[ ! -x "${app['mktemp']}" ]] && app['mktemp']='/usr/bin/mktemp'
+    fi
     [[ -x "${app['mktemp']}" ]] || return 1
     declare -A dict=(
         ['date_id']="$(koopa_datetime)"

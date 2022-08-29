@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2022-06-24.
+    # @note Updated 2022-08-29.
     #
     # @section curl:
     #
@@ -68,9 +68,9 @@ koopa_download() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    declare -A app=(
-        ['download']="$("koopa_locate_${dict['engine']}")"
-    )
+    declare -A app
+    app['download']="$("koopa_locate_${dict['engine']}" --allow-missing)"
+    [[ ! -x "${app['download']}" ]] && app['download']='/usr/bin/curl'
     [[ -x "${app['download']}" ]] || return 1
     if [[ -z "${dict['file']}" ]]
     then

@@ -3,15 +3,17 @@
 koopa_ln() {
     # """
     # Hardened version of coreutils ln (symbolic link generator).
-    # @note Updated 2021-10-29.
-    # @note '-t' flag is not directly supported for BSD variant.
+    # @note Updated 2022-08-29.
+    #
+    # Note that '-t' flag is not directly supported for BSD variant.
     # """
     local app dict ln ln_args mkdir pos rm
     declare -A app=(
-        ['ln']="$(koopa_locate_ln)"
+        ['ln']="$(koopa_locate_ln --allow-missing)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
+    [[ ! -x "${app['ln']}" ]] && app['ln']='/usr/bin/ln'
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
