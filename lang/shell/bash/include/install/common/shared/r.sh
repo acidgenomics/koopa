@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding an assert check for libomp in /usr/local.
+
 main() {
     # """
     # Install R.
