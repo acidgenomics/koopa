@@ -6,8 +6,14 @@ koopa_app_json_man1() {
     # @note Updated 2022-08-23.
     #
     # @examples
-    # > koopa_app_json_man1 'coreutils'
+    # > koopa_app_json_man1 'coreutils' 'binutils'
     # """
-    koopa_assert_has_args_eq "$#" 1
-    koopa_parse_app_json --app-name="${1:?}" --key='man1'
+    local app_name
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        koopa_parse_app_json \
+            --app-name="$app_name" \
+            --key='man1'
+    done
 }
