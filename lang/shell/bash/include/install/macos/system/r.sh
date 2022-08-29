@@ -62,9 +62,12 @@ base/${dict['pkg_file']}"
         -pkg "${dict['pkg_file']}" \
         -target '/'
     koopa_assert_is_dir "${dict['prefix']}"
-    koopa_macos_install_system_r_openmp
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
+    if [[ ! -f '/usr/local/include/omp.h' ]]
+    then
+        koopa_macos_install_system_r_openmp
+    fi
     koopa_configure_r "${app['r']}"
     return 0
 }
