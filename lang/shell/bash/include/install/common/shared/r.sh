@@ -153,7 +153,10 @@ main() {
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
+        ['ar']='/usr/bin/ar'
+        ['awk']="$(koopa_locate_awk --realpath)"
         ['bash']="$(koopa_locate_bash --realpath)"
+        ['echo']="$(koopa_locate_echo --realpath)"
         ['gfortran']="$(koopa_locate_gfortran --realpath)"
         ['jar']="$(koopa_locate_jar --realpath)"
         ['java']="$(koopa_locate_java --realpath)"
@@ -161,6 +164,8 @@ main() {
         ['make']="$(koopa_locate_make)"
         ['perl']="$(koopa_locate_perl --realpath)"
         ['pkg_config']="$(koopa_locate_pkg_config)"
+        ['sed']="$(koopa_locate_sed --realpath)"
+        ['yacc']="$(koopa_locate_yacc --realpath)"
     )
     # The system clang compiler stack is preferred on macOS. If you attempt to
     # build with GCC, you'll run into a lot of compilation issues with
@@ -179,9 +184,12 @@ main() {
         app['cc']="$(koopa_locate_gcc --realpath)"
         app['cxx']="$(koopa_locate_gcxx --realpath)"
     fi
+    [[ -x "${app['ar']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['bash']}" ]] || return 1
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
+    [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['gfortran']}" ]] || return 1
     [[ -x "${app['jar']}" ]] || return 1
     [[ -x "${app['java']}" ]] || return 1
@@ -189,6 +197,8 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['yacc']}" ]] || return 1
     declare -A conf_dict
     declare -A dict=(
         ['arch']="$(koopa_arch)"
@@ -264,8 +274,11 @@ main() {
     koopa_assert_is_file \
         "${conf_dict['with_tcl_config']}" \
         "${conf_dict['with_tk_config']}"
+    conf_dict['ar']="${app['ar']}"
+    conf_dict['awk']="${app['awk']}"
     conf_dict['cc']="${app['cc']}"
     conf_dict['cxx']="${app['cxx']}"
+    conf_dict['echo']="${app['echo']}"
     conf_dict['f77']="${app['gfortran']}"
     conf_dict['fc']="${app['gfortran']}"
     conf_dict['flibs']="$(koopa_gfortran_libs)"
@@ -274,8 +287,14 @@ main() {
     conf_dict['java_home']="${dict['openjdk']}"
     conf_dict['javac']="${app['javac']}"
     conf_dict['javah']=''
+    conf_dict['libnn']='lib'
+    conf_dict['objc']="${app['cc']}"
+    conf_dict['objcxx']="${app['cxx']}"
     conf_dict['perl']="${app['perl']}"
     conf_dict['r_shell']="${app['bash']}"
+    conf_dict['sed']="${app['sed']}"
+    # Alternatively, can use 'bison -y'.
+    conf_dict['yacc']="${app['yacc']}"
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--enable-R-profiling'
@@ -300,8 +319,11 @@ main() {
         '--with-static-cairo=no'
         '--with-x'
         '--without-recommended-packages'
+        "AR=${conf_dict['ar']}"
+        "AWK=${conf_dict['awk']}"
         "CC=${conf_dict['cc']}"
         "CXX=${conf_dict['cxx']}"
+        "ECHO=${conf_dict['echo']}"
         "F77=${conf_dict['f77']}"
         "FC=${conf_dict['fc']}"
         "FLIBS=${conf_dict['flibs']}"
@@ -310,15 +332,18 @@ main() {
         "JAVAC=${conf_dict['javac']}"
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
-        'LIBnn=lib'
+        "LIBnn=${conf_dict['libnn']}"
+        "OBJC=${conf_dict['objc']}"
+        "OBJCXX=${conf_dict['objcxx']}"
         "PERL=${conf_dict['perl']}"
         "R_SHELL=${conf_dict['r_shell']}"
+        "SED=${conf_dict['sed']}"
+        "YACC=${conf_dict['yacc']}"
     )
     if koopa_is_macos
     then
-        # FIXME Argh this is now failing when enabled. We need this to be
-        # active to get RStudio to work...
-        conf_args+=('--without-aqua')
+        conf_args+=('--with-aqua')
+        # FIXME Consider putting this in our Makevars.site file.
         # > export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
     fi
     if [[ "${dict['name']}" == 'r-devel' ]]
