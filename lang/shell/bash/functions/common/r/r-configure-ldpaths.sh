@@ -3,6 +3,10 @@
 # NOTE For some reason, LD_LIBRARY_PATH doesn't get sorted alphabetically
 # correctly on macOS.
 
+# FIXME Also set this for install from source.
+# FIXME Include libuv and PROJ/GDAL/GEOS stuff here.
+# FIXME Remove PROJ/GDAL/GEOS stuff from installer rpath.
+
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
