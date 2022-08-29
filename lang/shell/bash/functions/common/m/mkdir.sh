@@ -3,12 +3,12 @@
 koopa_mkdir() {
     # """
     # Create directories with parents automatically.
-    # @note Updated 2021-10-29.
+    # @note Updated 2022-08-29.
     # """
     local app dict mkdir mkdir_args pos
-    declare -A app=(
-        ['mkdir']="$(koopa_locate_mkdir)"
-    )
+    declare -A app
+    app['mkdir']="$(koopa_locate_mkdir --allow-missing)"
+    [[ ! -x "${app['mkdir']}" ]] || app['mkdir']='/usr/bin/mkdir'
     [[ -x "${app['mkdir']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
