@@ -3,16 +3,20 @@
 main() {
     # """
     # Install libxml2.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-08-29.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
     # """
-    local app conf_args dict
+    local app conf_args deps dict
     koopa_assert_has_no_args "$#"
-    # NOTE May need Python here.
     koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'icu4c' 'readline'
+    deps=(
+        'icu4c'
+        'readline'
+        # > 'python'
+    )
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )
@@ -21,6 +25,7 @@ main() {
         ['jobs']="$(koopa_cpu_count)"
         ['name']='libxml2'
         ['prefix']="${INSTALL_PREFIX:?}"
+        # > ['python']="$(koopa_app_version 'python')"
         ['version']="${INSTALL_VERSION:?}"
     )
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
@@ -36,6 +41,7 @@ ${dict['maj_min_ver']}/${dict['file']}"
         # > "--with-python=${dict['python']}/bin/python3"
         "--prefix=${dict['prefix']}"
         '--enable-static'
+        '--without-python'
     )
     ./configure --help
     ./configure "${conf_args[@]}"
