@@ -18066,22 +18066,31 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    cppflags+=(
-        "$( \
-            "${app['pkg_config']}" --cflags \
-                'freetype2' \
-                'libjpeg' \
-                'libpng' \
-                'libtiff-4' \
-                'libzstd' \
-                'zlib' \
-        )"
-    )
+    cppflags+=("-I${dict['gettext']}/include")
+    ldflags+=("-L${dict['gettext']}/lib")
     case "${dict['system']}" in
         '1')
+            cppflags+=(
+                "$( \
+                    "${app['pkg_config']}" --cflags \
+                        'freetype2' \
+                        'libjpeg' \
+                        'libpng' \
+                        'libtiff-4' \
+                        'libzstd' \
+                        'zlib' \
+                )"
+            )
             ldflags+=(
-                "-I${dict['gettext']}/include"
-                "-L${dict['gettext']}/lib"
+                "$( \
+                    "${app['pkg_config']}" --libs \
+                        'freetype2' \
+                        'libjpeg' \
+                        'libpng' \
+                        'libtiff-4' \
+                        'libzstd' \
+                        'zlib' \
+                )"
             )
             ;;
     esac
