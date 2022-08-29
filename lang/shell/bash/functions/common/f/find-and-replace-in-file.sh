@@ -3,7 +3,7 @@
 koopa_find_and_replace_in_file() {
     # """
     # Find and replace inside files.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-29.
     #
     # Parameterized, supporting multiple files.
     #
@@ -33,7 +33,7 @@ koopa_find_and_replace_in_file() {
     # >     --replacement='YYY' \
     # >     'file1' 'file2' 'file3'
     # """
-    local app dict flags pos
+    local app dict flags perl_cmd pos
     koopa_assert_has_args "$#"
     declare -A app=(
         ['perl']="$(koopa_locate_perl)"
@@ -44,6 +44,7 @@ koopa_find_and_replace_in_file() {
         ['pattern']=''
         ['regex']=0
         ['replacement']=''
+        ['sudo']=0
     )
     pos=()
     while (("$#"))
@@ -80,6 +81,10 @@ koopa_find_and_replace_in_file() {
                 dict['regex']=1
                 shift 1
                 ;;
+            '--sudo')
+                dict['sudo']=1
+                shift 1
+                ;;
             # Other ------------------------------------------------------------
             '-'*)
                 koopa_invalid_arg "$1"
@@ -100,7 +105,8 @@ koopa_find_and_replace_in_file() {
     koopa_assert_is_file "$@"
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict['expr']="s/${dict['pattern']}/${dict['replacement']}/g"
+        # FIXME Need to improve the regex escaping here.
+        dict['expr']="s|${dict['pattern']}|${dict['replacement']}|g"
     else
         dict['expr']=" \
             \$pattern = quotemeta '${dict['pattern']}'; \
@@ -112,6 +118,15 @@ koopa_find_and_replace_in_file() {
     # Multi-line matching is disabled by default, because it makes regular
     # expression matching end of line break.
     [[ "${dict['multiline']}" -eq 1 ]] && flags+=('-0')
-    "${app['perl']}" "${flags[@]}" -e "${dict['expr']}" "$@"
+    if [[ "${dict['sudo']}" -eq 1 ]]
+    then
+        koopa_assert_is_admin
+        app['sudo']="$(koopa_locate_sudo)"
+        [[ -x "${app['sudo']}" ]] || return 1
+        perl_cmd+=("${app['sudo']}" "${app['perl']}")
+    else
+        perl_cmd=("${app['perl']}")
+    fi
+    "${perl_cmd[@]}" "${flags[@]}" -e "${dict['expr']}" "$@"
     return 0
 }

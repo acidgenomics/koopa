@@ -15,7 +15,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-08-24.
+    # @note Updated 2022-08-29.
     #
     # @section Package library location:
     #
@@ -172,10 +172,14 @@ koopa_r_configure_environ() {
         "PKG_CONFIG_PATH=$(printf '%s:' "${pkgconfig_arr[@]}")"
         "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
         "TZ=\${TZ:-America/New_York}"
+        'R_BATCHSAVE=--no-save --no-restore'
         'R_PAPERSIZE=letter'
+        'R_UNZIPCMD=/usr/bin/unzip'
+        'R_ZIPCMD=/usr/bin/zip'
     )
     if koopa_is_linux
     then
+        # FIXME Harden the path here.
         lines+=(
             'R_BROWSER=xdg-open'
             'R_PRINTCMD=lpr'

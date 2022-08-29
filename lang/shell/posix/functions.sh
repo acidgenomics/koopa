@@ -7,7 +7,7 @@ __koopa_add_to_path_string_end() {
     dir="${2:?}"
     if koopa_str_detect_posix "$str" ":${dir}"
     then
-        str="$(__koopa_remove_from_path_string "$str" ":${dir}")"
+        str="$(__koopa_remove_from_path_string "$str" "${dir}")"
     fi
     if [ -z "$str" ]
     then
@@ -25,7 +25,7 @@ __koopa_add_to_path_string_start() {
     dir="${2:?}"
     if koopa_str_detect_posix "$str" "${dir}:"
     then
-        str="$(__koopa_remove_from_path_string "$str" "${dir}:")"
+        str="$(__koopa_remove_from_path_string "$str" "${dir}")"
     fi
     if [ -z "$str" ]
     then
@@ -46,14 +46,18 @@ __koopa_id() {
 }
 
 __koopa_remove_from_path_string() {
-    local dir str
-    str="${1:?}"
+    local dir str1 str2
+    str1="${1:?}"
     dir="${2:?}"
-    koopa_print "$str" \
-        | sed \
-            -e "s|^${dir}:||g" \
-            -e "s|:${dir}:|:|g" \
-            -e "s|:${dir}\$||g"
+    str2="$( \
+        koopa_print "$str1" \
+            | sed \
+                -e "s|^${dir}:||g" \
+                -e "s|:${dir}:|:|g" \
+                -e "s|:${dir}\$||g" \
+        )"
+    [ -n "$str2" ] || return 1
+    koopa_print "$str2"
     return 0
 }
 
@@ -414,29 +418,6 @@ koopa_activate_lesspipe() {
     export LESS_ADVANCED_PREPROCESSOR=1
     export LESSANSIMIDCHARS="0123456789;[?!\"'#%()*+ SetMark"
     [ -z "${LESSCHARSET:-}" ] && export LESSCHARSET='utf-8'
-    return 0
-}
-
-koopa_activate_make_paths() {
-    local make_prefix_1 make_prefix_2
-    make_prefix_1='/usr/local'
-    make_prefix_2="$(koopa_make_prefix)"
-    if [ -d "$make_prefix_1" ]
-    then
-        koopa_add_to_path_start \
-            "${make_prefix_1}/bin"
-        koopa_add_to_manpath_start \
-            "${make_prefix_1}/man" \
-            "${make_prefix_1}/share/man"
-    fi
-    if [ "$make_prefix_2" != "$make_prefix_1" ] && [ -d "$make_prefix_2" ]
-    then
-        koopa_add_to_path_start \
-            "${make_prefix_2}/bin"
-        koopa_add_to_manpath_start \
-            "${make_prefix_2}/man" \
-            "${make_prefix_2}/share/man"
-    fi
     return 0
 }
 

@@ -3,99 +3,211 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-08-28.
+    # @note Updated 2022-08-29.
+    #
+    # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
+    # configuration in the future.
+    #
+    # @section gfortran configuration on macOS:
+    #
+    # - https://mac.r-project.org
+    # - https://github.com/fxcoudert/gfortran-for-macOS/releases
+    # - https://github.com/Rdatatable/data.table/wiki/Installation/
+    # - https://developer.r-project.org/Blog/public/2020/11/02/
+    #     will-r-work-on-apple-silicon/index.html
+    # - https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
+    #
+    # @seealso
+    # - /opt/koopa/opt/r/lib/R/etc/Makeconf
+    # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
-    local app cppflags dict flibs i ldflags libs lines
+    local app conf_dict dict
+    local cppflags ldflags lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['ar']="$(koopa_locate_ar --realpath)"
+        ['ar']='/usr/bin/ar'
+        ['awk']="$(koopa_locate_awk --realpath)"
         ['bash']="$(koopa_locate_bash --realpath)"
-        ['dirname']="$(koopa_locate_dirname)"
         ['echo']="$(koopa_locate_echo --realpath)"
+        ['gfortran']="$(koopa_locate_gfortran --realpath)"
+        ['pkg_config']="$(koopa_locate_pkg_config)"
         ['r']="${1:?}"
+        ['ranlib']='/usr/bin/ranlib'
         ['sed']="$(koopa_locate_sed --realpath)"
         ['sort']="$(koopa_locate_sort)"
-        ['xargs']="$(koopa_locate_xargs)"
+        ['strip']='/usr/bin/strip'
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
+    # The system clang compiler stack is preferred on macOS. If you attempt to
+    # build with GCC, you'll run into a lot of compilation issues with
+    # Posit/RStudio packages, which are only optimized for clang currently.
+    if koopa_is_macos
+    then
+        app['cc']='/usr/bin/clang'
+        app['cxx']='/usr/bin/clang++'
+    else
+        app['cc']="$(koopa_locate_gcc --realpath)"
+        app['cxx']="$(koopa_locate_gcxx --realpath)"
+    fi
     [[ -x "${app['ar']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['dirname']}" ]] || return 1
+    [[ -x "${app['cc']}" ]] || return 1
+    [[ -x "${app['cxx']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
+    [[ -x "${app['gfortran']}" ]] || return 1
+    [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['ranlib']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['strip']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
+        ['freetype']="$(koopa_app_prefix 'freetype')"
+        ['gettext']="$(koopa_app_prefix 'gettext')"
+        ['lapack']="$(koopa_app_prefix 'lapack')"
+        ['openblas']="$(koopa_app_prefix 'openblas')"
+        ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
     )
+    koopa_assert_is_dir \
+        "${dict['freetype']}" \
+        "${dict['gettext']}" \
+        "${dict['lapack']}" \
+        "${dict['openblas']}" \
+        "${dict['pcre2']}" \
+        "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
+    koopa_add_to_pkg_config_path \
+        "${dict['freetype']}/lib/pkgconfig" \
+        "${dict['lapack']}/lib/pkgconfig" \
+        "${dict['openblas']}/lib/pkgconfig"
+    cppflags=()
+    ldflags=()
     lines=()
-    if koopa_is_linux
+    cppflags+=(
+        "$("${app['pkg_config']}" --cflags 'freetype2')"
+    )
+    # gettext is needed to resolve clang '-lintl' warning. Can we avoid this
+    # issue by setting 'LIBINTL' instead?
+    case "${dict['system']}" in
+        '1')
+            ldflags+=(
+                "-I${dict['gettext']}/include"
+                "-L${dict['gettext']}/lib"
+            )
+            ;;
+    esac
+    ldflags+=('-lomp')
+    declare -A conf_dict
+    conf_dict['ar']="${app['ar']}"
+    conf_dict['awk']="${app['awk']}"
+    conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
+    conf_dict['cc']="${app['cc']}"
+    # NOTE Consider using '-O3' instead of '-O2' here.
+    conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
+    conf_dict['cppflags']="${cppflags[*]}"
+    conf_dict['cxx']="${app['cxx']} -std=gnu++14"
+    conf_dict['echo']="${app['echo']}"
+    conf_dict['f77']="${app['gfortran']}"
+    conf_dict['fc']="${app['gfortran']}"
+    conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
+    conf_dict['flibs']="$(koopa_gfortran_libs)"
+    conf_dict['lapack_libs']="$("${app['pkg_config']}" --libs 'lapack')"
+    conf_dict['ldflags']="${ldflags[*]}"
+    conf_dict['objc_libs']='-lobjc'
+    conf_dict['objcflags']="-Wall -g -O2 -fobjc-exceptions \$(LTO)"
+    conf_dict['ranlib']="${app['ranlib']}"
+    conf_dict['safe_fflags']='-Wall -g -O2 -msse2 -mfpmath=sse'
+    conf_dict['sed']="${app['sed']}"
+    conf_dict['shell']="${app['bash']}"
+    conf_dict['strip_shared_lib']="${app['strip']} -x"
+    conf_dict['strip_static_lib']="${app['strip']} -S"
+    # Alternatively, can use 'bison -y'.
+    conf_dict['yacc']="${app['yacc']}"
+    # These are values that inherit from other values in the dictionary.
+    conf_dict['cxx11']="${conf_dict['cxx']}"
+    conf_dict['cxx14']="${conf_dict['cxx']}"
+    conf_dict['cxx17']="${conf_dict['cxx']}"
+    conf_dict['cxx20']="${conf_dict['cxx']}"
+    conf_dict['cxxflags']="${conf_dict['cflags']}"
+    conf_dict['cxx11flags']="${conf_dict['cxxflags']}"
+    conf_dict['cxx14flags']="${conf_dict['cxxflags']}"
+    conf_dict['cxx17flags']="${conf_dict['cxxflags']}"
+    conf_dict['cxx20flags']="${conf_dict['cxxflags']}"
+    conf_dict['f77flags']="${conf_dict['fflags']}"
+    conf_dict['fcflags']="${conf_dict['fflags']}"
+    conf_dict['objc']="${conf_dict['cc']}"
+    conf_dict['objcxx']="${conf_dict['cxx']}"
+    # This operator is needed to harden library paths for R CRAN binary.
+    case "${dict['system']}" in
+        '0')
+            conf_dict['op']='+='
+            ;;
+        '1')
+            conf_dict['op']='='
+            ;;
+    esac
+    lines+=(
+        "AR = ${conf_dict['ar']}"
+        "AWK = ${conf_dict['awk']}"
+        "BLAS_LIBS = ${conf_dict['blas_libs']}"
+        "CC = ${conf_dict['cc']}"
+        "CFLAGS = ${conf_dict['cflags']}"
+        "CPPFLAGS ${conf_dict['op']} ${conf_dict['cppflags']}"
+        "CXX = ${conf_dict['cxx']}"
+        "CXX11 = ${conf_dict['cxx11']}"
+        "CXX11FLAGS = ${conf_dict['cxx11flags']}"
+        "CXX14 = ${conf_dict['cxx14']}"
+        "CXX14FLAGS = ${conf_dict['cxx14flags']}"
+        "CXX17 = ${conf_dict['cxx17']}"
+        "CXX17FLAGS = ${conf_dict['cxx17flags']}"
+        "CXX20 = ${conf_dict['cxx20']}"
+        "CXX20FLAGS = ${conf_dict['cxx20flags']}"
+        "CXXFLAGS = ${conf_dict['cxxflags']}"
+        "ECHO = ${conf_dict['echo']}"
+        "F77 = ${conf_dict['f77']}"
+        "F77FLAGS = ${conf_dict['f77flags']}"
+        "FC = ${conf_dict['fc']}"
+        "FCFLAGS = ${conf_dict['fcflags']}"
+        "FFLAGS = ${conf_dict['fflags']}"
+        "FLIBS = ${conf_dict['flibs']}"
+        "LAPACK_LIBS = ${conf_dict['lapack_libs']}"
+        "LDFLAGS ${conf_dict['op']} ${conf_dict['ldflags']}"
+        "OBJC = ${conf_dict['objc']}"
+        "OBJCFLAGS = ${conf_dict['objcflags']}"
+        "OBJCXX = ${conf_dict['objcxx']}"
+        "OBJC_LIBS = ${conf_dict['objc_libs']}"
+        "RANLIB = ${conf_dict['ranlib']}"
+        "SAFE_FFLAGS = ${conf_dict['safe_fflags']}"
+        "SED = ${conf_dict['sed']}"
+        "SHELL = ${conf_dict['shell']}"
+        "STRIP_SHARED_LIB = ${conf_dict['strip_shared_lib']}"
+        "STRIP_STATIC_LIB = ${conf_dict['strip_static_lib']}"
+        "YACC = ${conf_dict['yacc']}"
+    )
+    if koopa_is_macos
     then
-        dict['freetype']="$(koopa_app_prefix 'freetype')"
-        lines+=("CPPFLAGS += -I${dict['freetype']}/include/freetype2")
-    elif koopa_is_macos
-    then
-        dict['gcc']="$(koopa_app_prefix 'gcc')"
-        # gettext is needed to resolve clang '-lintl' warning.
-        dict['gettext']="$(koopa_app_prefix 'gettext')"
-        app['fc']="${dict['gcc']}/bin/gfortran"
-        # This will cover 'lib' and 'lib64' subdirs.
-        # See also 'gcc --print-search-dirs'.
-        readarray -t libs <<< "$( \
-            koopa_find \
-                --prefix="${dict['gcc']}" \
-                --pattern='*.a' \
-                --type 'f' \
-            | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
-            | "${app['sort']}" --unique \
-        )"
-        koopa_assert_is_array_non_empty "${libs[@]:-}"
-        flibs=()
-        for i in "${!libs[@]}"
-        do
-            flibs+=("-L${libs[$i]}")
-        done
-        flibs+=('-lgfortran')
-        # quadmath not yet supported for aarch64.
-        # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96016
-        case "${dict['arch']}" in
-            'x86_64')
-                flibs+=('-lquadmath')
-                ;;
-        esac
-        # Consider also including '-lemutls_w' here, which is recommended by
-        # default macOS build config.
-        flibs+=('-lm')
-        dict['flibs']="${flibs[*]}"
-        cppflags=('-Xclang' '-fopenmp')
-        dict['cppflags']="${cppflags[*]}"
-        ldflags=(
-            "-I${dict['gettext']}/include"
-            "-L${dict['gettext']}/lib"
-            '-lomp'
-        )
-        dict['ldflags']="${ldflags[*]}"
+        # > local libintl
+        # > libintl=(
+        # >     '-lintl'
+        # >     '-liconv'
+        # >     '-Wl,-framework'
+        # >     '-Wl,CoreFoundation'
+        # > )
+        # > conf_dict['libintl']="${libintl[*]}"
+        conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=(
-            "CPPFLAGS += ${dict['cppflags']}"
-            "FC = ${app['fc']}"
-            "FLIBS = ${dict['flibs']}"
-            "LDFLAGS += ${dict['ldflags']}"
+            # > "LIBINTL = ${conf_dict['libintl']}"
+            # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
+            "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
         )
     fi
-    lines+=(
-        "AR = ${app['ar']}"
-        "ECHO = ${app['echo']}"
-        "SED = ${app['sed']}"
-        "SHELL = ${app['bash']}"
-        "YACC = ${app['yacc']}"
-    )
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     case "${dict['system']}" in
         '0')
@@ -111,5 +223,6 @@ koopa_r_configure_makevars() {
                 --string="${dict['string']}"
             ;;
     esac
+    unset -v PKG_CONFIG_PATH
     return 0
 }

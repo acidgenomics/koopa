@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework edge case handling of R installed in Docker.
+# We don't want to link to any koopa installers in this edge case...
+
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-08-28.
+    # @note Updated 2022-08-29.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -28,15 +31,16 @@ koopa_configure_r() {
     koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     # On macOS, ensure we've installed OpenMP.
-    if koopa_is_macos && \
-        [[ ! -f '/usr/local/include/omp.h' ]]
+    if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
-        koopa_assert_is_admin
-        koopa_macos_install_system_r_openmp
+        koopa_stop \
+            "'libomp' is not installed." \
+            "Run 'koopa install system r-openmp' to resolve."
     fi
     koopa_r_link_files_in_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
+    # > koopa_r_configure_ldpaths "${app['r']}"
     case "${dict['system']}" in
         '0')
             if [[ -L "${dict['site_library']}" ]]
@@ -57,8 +61,8 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
-            koopa_r_javareconf "${app['r']}"
-            koopa_r_configure_ldpaths "${app['r']}"
+            koopa_r_configure_makeconf "${app['r']}"
+            koopa_r_configure_java "${app['r']}"
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
