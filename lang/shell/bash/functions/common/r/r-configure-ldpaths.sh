@@ -54,6 +54,7 @@ koopa_r_configure_ldpaths() {
         'geos'
         'hdf5'
         'imagemagick'
+        'jpeg'
         'libgit2'
         'pcre2'
         'proj'
