@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-08-29.
     #
     # @section Intel:
     #
@@ -63,7 +63,6 @@ base/${dict['pkg_file']}"
     koopa_macos_install_system_r_openmp
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
-    # FIXME Re-enable this after fs package debugging.
-    # > koopa_configure_r "${app['r']}"
+    koopa_configure_r "${app['r']}"
     return 0
 }

@@ -4947,7 +4947,8 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
-            koopa_r_javareconf "${app['r']}"
+            koopa_r_configure_makeconf "${app['r']}"
+            koopa_r_configure_java "${app['r']}"
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
@@ -7956,7 +7957,7 @@ koopa_find_and_move_in_sequence() {
 }
 
 koopa_find_and_replace_in_file() {
-    local app dict flags pos
+    local app dict flags perl_cmd pos
     koopa_assert_has_args "$#"
     declare -A app=(
         ['perl']="$(koopa_locate_perl)"
@@ -7967,6 +7968,7 @@ koopa_find_and_replace_in_file() {
         ['pattern']=''
         ['regex']=0
         ['replacement']=''
+        ['sudo']=0
     )
     pos=()
     while (("$#"))
@@ -8000,6 +8002,10 @@ koopa_find_and_replace_in_file() {
                 dict['regex']=1
                 shift 1
                 ;;
+            '--sudo')
+                dict['sudo']=1
+                shift 1
+                ;;
             '-'*)
                 koopa_invalid_arg "$1"
                 ;;
@@ -8019,7 +8025,7 @@ koopa_find_and_replace_in_file() {
     koopa_assert_is_file "$@"
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict['expr']="s/${dict['pattern']}/${dict['replacement']}/g"
+        dict['expr']="s|${dict['pattern']}|${dict['replacement']}|g"
     else
         dict['expr']=" \
             \$pattern = quotemeta '${dict['pattern']}'; \
@@ -8029,7 +8035,16 @@ koopa_find_and_replace_in_file() {
     fi
     flags=('-i' '-p')
     [[ "${dict['multiline']}" -eq 1 ]] && flags+=('-0')
-    "${app['perl']}" "${flags[@]}" -e "${dict['expr']}" "$@"
+    if [[ "${dict['sudo']}" -eq 1 ]]
+    then
+        koopa_assert_is_admin
+        app['sudo']="$(koopa_locate_sudo)"
+        [[ -x "${app['sudo']}" ]] || return 1
+        perl_cmd+=("${app['sudo']}" "${app['perl']}")
+    else
+        perl_cmd=("${app['perl']}")
+    fi
+    "${perl_cmd[@]}" "${flags[@]}" -e "${dict['expr']}" "$@"
     return 0
 }
 
@@ -15502,6 +15517,13 @@ koopa_locate_gcloud() {
         "$@"
 }
 
+koopa_locate_gcxx() {
+    koopa_locate_app \
+        --app-name='gcc' \
+        --bin-name='g++' \
+        "$@"
+}
+
 koopa_locate_gdal_config() {
     koopa_locate_app \
         --app-name='gdal' \
@@ -17708,6 +17730,48 @@ abort,verbose"
     return 0
 }
 
+koopa_r_configure_java() {
+    local app conf_dict dict java_args
+    koopa_assert_has_args_eq "$#" 1
+    declare -A app
+    app['r']="${1:?}"
+    [[ -x "${app['r']}" ]] || return 1
+    koopa_is_koopa_app "${app['r']}" && return 0
+    declare -A dict
+    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+    if [[ ! -d "${dict['openjdk']}" ]]
+    then
+        koopa_alert_note 'Skipping R Java configuration.'
+        return 0
+    fi
+    koopa_alert 'Updating R Java configuration.'
+    koopa_assert_is_admin
+    app['sudo']="$(koopa_locate_sudo)"
+    app['jar']="$(koopa_locate_jar --realpath)"
+    app['java']="$(koopa_locate_java --realpath)"
+    app['javac']="$(koopa_locate_javac --realpath)"
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['jar']}" ]] || return 1
+    [[ -x "${app['java']}" ]] || return 1
+    [[ -x "${app['javac']}" ]] || return 1
+    declare -A conf_dict=(
+        ['java_home']="${dict['openjdk']}"
+        ['jar']="${app['jar']}"
+        ['java']="${app['java']}"
+        ['javac']="${app['javac']}"
+        ['javah']=''
+    )
+    java_args=(
+        "JAR=${conf_dict['jar']}"
+        "JAVA=${conf_dict['java']}"
+        "JAVAC=${conf_dict['javac']}"
+        "JAVAH=${conf_dict['javah']}"
+        "JAVA_HOME=${conf_dict['java_home']}"
+    )
+    "${app['sudo']}" "${app['r']}" --vanilla CMD javareconf "${java_args[@]}"
+    return 0
+}
+
 koopa_r_configure_ldpaths() {
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
@@ -17740,6 +17804,7 @@ koopa_r_configure_ldpaths() {
         'hdf5'
         'imagemagick'
         'libgit2'
+        'pcre2'
         'proj'
     )
     for key in "${keys[@]}"
@@ -17794,8 +17859,52 @@ koopa_r_configure_ldpaths() {
     return 0
 }
 
+koopa_r_configure_makeconf() {
+    local app dict libs
+    declare -A app
+    app['r']="${1:?}"
+    [[ -x "${app['r']}" ]] || return 1
+    koopa_is_koopa_app "${app['r']}" && return 0
+    app['pkg_config']="$(koopa_locate_pkg_config)"
+    [[ -x "${app['pkg_config']}" ]] || return 1
+    declare -A dict=(
+        ['pcre2']="$(koopa_app_prefix 'pcre2')"
+        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    )
+    dict['file']="${dict['r_prefix']}/etc/Makeconf"
+    koopa_assert_is_dir \
+        "${dict['pcre2']}" \
+        "${dict['r_prefix']}"
+    koopa_alert "Updating ${dict['file']}"
+    koopa_assert_is_admin
+    koopa_assert_is_file "${dict['file']}"
+    koopa_add_to_pkg_config_path \
+        "${dict['pcre2']}/lib/pkgconfig"
+    libs=(
+        "$("${app['pkg_config']}" --libs 'libpcre2-8')"
+        '-llzma'
+        '-lbz2'
+        '-lz'
+        '-licucore'
+        '-ldl'
+        '-lm'
+        '-liconv'
+    )
+    dict['pattern']='^LIBS = .+$'
+    dict['replacement']="LIBS = ${libs[*]}"
+    koopa_find_and_replace_in_file \
+        --sudo \
+        --pattern="${dict['pattern']}" \
+        --replacement="${dict['replacement']}" \
+        --regex \
+        "${dict['file']}"
+    unset -v PKG_CONFIG_PATH
+    return 0
+}
+
 koopa_r_configure_makevars() {
-    local app cppflags dict flibs gcc_libs i ldflags lines
+    local app conf_dict dict i
+    local cppflags flibs gcc_libs ldflags lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['ar']='/usr/bin/ar'
@@ -17803,22 +17912,36 @@ koopa_r_configure_makevars() {
         ['dirname']="$(koopa_locate_dirname)"
         ['echo']="$(koopa_locate_echo --realpath)"
         ['fc']="$(koopa_locate_gfortran --realpath)"
+        ['pkg_config']="$(koopa_locate_pkg_config)"
         ['r']="${1:?}"
         ['ranlib']='/usr/bin/ranlib'
         ['sed']="$(koopa_locate_sed --realpath)"
         ['sort']="$(koopa_locate_sort)"
+        ['strip']='/usr/bin/strip'
         ['xargs']="$(koopa_locate_xargs)"
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
+    if koopa_is_macos
+    then
+        app['cc']='/usr/bin/clang'
+        app['cxx']='/usr/bin/clang++'
+    else
+        app['cc']="$(koopa_locate_gcc --realpath)"
+        app['cxx']="$(koopa_locate_gcxx --realpath)"
+    fi
     [[ -x "${app['ar']}" ]] || return 1
     [[ -x "${app['bash']}" ]] || return 1
+    [[ -x "${app['cc']}" ]] || return 1
+    [[ -x "${app['cxx']}" ]] || return 1
     [[ -x "${app['dirname']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['fc']}" ]] || return 1
+    [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['ranlib']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['strip']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(
@@ -17826,12 +17949,27 @@ koopa_r_configure_makevars() {
         ['freetype']="$(koopa_app_prefix 'freetype')"
         ['gcc']="$(koopa_app_prefix 'gcc')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
+        ['lapack']="$(koopa_app_prefix 'lapack')"
+        ['openblas']="$(koopa_app_prefix 'openblas')"
+        ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
     )
+    koopa_assert_is_dir \
+        "${dict['freetype']}" \
+        "${dict['gcc']}" \
+        "${dict['gettext']}" \
+        "${dict['lapack']}" \
+        "${dict['openblas']}" \
+        "${dict['pcre2']}" \
+        "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
+    koopa_add_to_pkg_config_path \
+        "${dict['freetype']}/lib/pkgconfig" \
+        "${dict['lapack']}/lib/pkgconfig" \
+        "${dict['openblas']}/lib/pkgconfig"
     cppflags=()
     flibs=()
     ldflags=()
@@ -17856,31 +17994,102 @@ koopa_r_configure_makevars() {
             ;;
     esac
     cppflags+=(
-        "-I${dict['freetype']}/include/freetype2"
+        "$("${app['pkg_config']}" --cflags 'freetype2')"
     )
-    ldflags+=(
-        "-I${dict['gettext']}/include"
-        "-L${dict['gettext']}/lib"
-        '-lomp'
-    )
-    dict['cppflags']="${cppflags[*]}"
-    dict['flibs']="${flibs[*]}"
-    dict['ldflags']="${ldflags[*]}"
+    case "${dict['system']}" in
+        '1')
+            ldflags+=(
+                "-I${dict['gettext']}/include"
+                "-L${dict['gettext']}/lib"
+            )
+            ;;
+    esac
+    ldflags+=('-lomp')
+    declare -A conf_dict
+    conf_dict['ar']="${app['ar']}"
+    conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
+    conf_dict['cc']="${app['cc']}"
+    conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
+    conf_dict['cpicflags']='-fPIC'
+    conf_dict['cppflags']="${cppflags[*]}"
+    conf_dict['c_visibility']=''
+    conf_dict['cxx']="${app['cxx']} -std=gnu++14"
+    conf_dict['echo']="${app['echo']}"
+    conf_dict['fc']="${app['fc']}"
+    conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
+    conf_dict['flibs']="${flibs[*]}"
+    conf_dict['lapack_libs']="$("${app['pkg_config']}" --libs 'lapack')"
+    conf_dict['ldflags']="${ldflags[*]}"
+    conf_dict['objc_libs']='-lobjc'
+    conf_dict['objcflags']="-Wall -g -O2 -fobjc-exceptions \$(LTO)"
+    conf_dict['ranlib']="${app['ranlib']}"
+    conf_dict['safe_fflags']='-Wall -g -O2 -msse2 -mfpmath=sse'
+    conf_dict['sed']="${app['sed']}"
+    conf_dict['shell']="${app['bash']}"
+    conf_dict['strip_shared_lib']="${app['strip']} -x"
+    conf_dict['strip_static_lib']="${app['strip']} -S"
+    conf_dict['yacc']="${app['yacc']}"
+    conf_dict['cxx11']="${conf_dict['cxx']}"
+    conf_dict['cxx14']="${conf_dict['cxx']}"
+    conf_dict['cxx17']="${conf_dict['cxx']}"
+    conf_dict['cxx20']="${conf_dict['cxx']}"
+    conf_dict['cxxflags']="${conf_dict['cflags']}"
+    conf_dict['cxx11flags']="${conf_dict['cxxflags']}"
+    conf_dict['cxx14flags']="${conf_dict['cxxflags']}"
+    conf_dict['cxx17flags']="${conf_dict['cxxflags']}"
+    conf_dict['cxx20flags']="${conf_dict['cxxflags']}"
+    conf_dict['fcflags']="${conf_dict['fflags']}"
+    conf_dict['objc']="${conf_dict['cc']}"
+    conf_dict['objcxx']="${conf_dict['cxx']}"
+    case "${dict['system']}" in
+        '0')
+            conf_dict['op']='+='
+            ;;
+        '1')
+            conf_dict['op']='='
+            ;;
+    esac
     lines+=(
-        "AR = ${app['ar']}"
-        "CPPFLAGS += ${dict['cppflags']}"
-        "ECHO = ${app['echo']}"
-        "FC = ${app['fc']}"
-        "FLIBS = ${dict['flibs']}"
-        "LDFLAGS += ${dict['ldflags']}"
-        "RANLIB = ${app['ranlib']}"
-        "SED = ${app['sed']}"
-        "SHELL = ${app['bash']}"
-        "YACC = ${app['yacc']}"
+        "AR = ${conf_dict['ar']}"
+        "BLAS_LIBS = ${conf_dict['blas_libs']}"
+        "CC = ${conf_dict['cc']}"
+        "CFLAGS = ${conf_dict['cflags']}"
+        "CPPFLAGS ${conf_dict['op']} ${conf_dict['cppflags']}"
+        "CXX = ${conf_dict['cxx']}"
+        "CXX11 = ${conf_dict['cxx11']}"
+        "CXX11FLAGS = ${conf_dict['cxx11flags']}"
+        "CXX14 = ${conf_dict['cxx14']}"
+        "CXX14FLAGS = ${conf_dict['cxx14flags']}"
+        "CXX17 = ${conf_dict['cxx17']}"
+        "CXX17FLAGS = ${conf_dict['cxx17flags']}"
+        "CXX20 = ${conf_dict['cxx20']}"
+        "CXX20FLAGS = ${conf_dict['cxx20flags']}"
+        "CXXFLAGS = ${conf_dict['cxxflags']}"
+        "ECHO = ${conf_dict['echo']}"
+        "FC = ${conf_dict['fc']}"
+        "FCFLAGS = ${conf_dict['fcflags']}"
+        "FFLAGS = ${conf_dict['fflags']}"
+        "FLIBS = ${conf_dict['flibs']}"
+        "LAPACK_LIBS = ${conf_dict['lapack_libs']}"
+        "LDFLAGS ${conf_dict['op']} ${conf_dict['ldflags']}"
+        "OBJC = ${conf_dict['objc']}"
+        "OBJCFLAGS = ${conf_dict['objcflags']}"
+        "OBJCXX = ${conf_dict['objcxx']}"
+        "OBJC_LIBS = ${conf_dict['objc_libs']}"
+        "RANLIB = ${conf_dict['ranlib']}"
+        "SAFE_FFLAGS = ${conf_dict['safe_fflags']}"
+        "SED = ${conf_dict['sed']}"
+        "SHELL = ${conf_dict['shell']}"
+        "STRIP_SHARED_LIB = ${conf_dict['strip_shared_lib']}"
+        "STRIP_STATIC_LIB = ${conf_dict['strip_static_lib']}"
+        "YACC = ${conf_dict['yacc']}"
     )
     if koopa_is_macos
     then
-        lines+=('SHLIB_OPENMP_CFLAGS += -Xclang -fopenmp')
+        conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
+        lines+=(
+            "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
+        )
     fi
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     case "${dict['system']}" in
@@ -17897,54 +18106,7 @@ koopa_r_configure_makevars() {
                 --string="${dict['string']}"
             ;;
     esac
-    return 0
-}
-
-koopa_r_javareconf() {
-    local app dict java_args r_cmd
-    koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['r']="${1:?}"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    declare -A dict=(
-        ['java_home']="$(koopa_java_prefix)"
-    )
-    if [[ ! -d "${dict['java_home']}" ]]
-    then
-        koopa_alert_note 'Skipping R Java configuration.'
-        return 0
-    fi
-    dict['java_home']="$(koopa_realpath "${dict['java_home']}")"
-    dict['jar']="${dict['java_home']}/bin/jar"
-    dict['java']="${dict['java_home']}/bin/java"
-    dict['javac']="${dict['java_home']}/bin/javac"
-    dict['javah']=''
-    koopa_alert 'Updating R Java configuration.'
-    koopa_dl \
-        'JAR' "${dict['jar']}" \
-        'JAVA' "${dict['java']}" \
-        'JAVAC' "${dict['javac']}" \
-        'JAVAH' "${dict['javah']}" \
-        'JAVA_HOME' "${dict['java_home']}" \
-        'R' "${app['r']}"
-    if koopa_is_koopa_app "${app['r']}"
-    then
-        r_cmd=("${app['r']}")
-    else
-        koopa_assert_is_admin
-        r_cmd=("${app['sudo']}" "${app['r']}")
-    fi
-    java_args=(
-        "JAR=${dict['jar']}"
-        "JAVA=${dict['java']}"
-        "JAVAC=${dict['javac']}"
-        "JAVAH=${dict['javah']}"
-        "JAVA_HOME=${dict['java_home']}"
-    )
-    "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
+    unset -v PKG_CONFIG_PATH
     return 0
 }
 
@@ -20992,7 +21154,8 @@ koopa_sub() {
     [[ "${dict['global']}" -eq 1 ]] && dict['perl_tail']='g'
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        dict['expr']="s/${dict['pattern']}/${dict['replacement']}/${dict['perl_tail']}"
+        dict['expr']="s|${dict['pattern']}|${dict['replacement']}|\
+${dict['perl_tail']}"
     else
         dict['expr']=" \
             \$pattern = quotemeta '${dict['pattern']}'; \
