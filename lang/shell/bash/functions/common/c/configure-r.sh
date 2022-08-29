@@ -31,8 +31,7 @@ koopa_configure_r() {
     koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     # On macOS, ensure we've installed OpenMP.
-    if koopa_is_macos && \
-        [[ ! -f '/usr/local/include/omp.h' ]]
+    if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
         koopa_assert_is_admin
         koopa_macos_install_system_r_openmp
