@@ -16561,9 +16561,9 @@ koopa_missing_arg() {
 
 koopa_mkdir() {
     local app dict mkdir mkdir_args pos
-    declare -A app=(
-        ['mkdir']="$(koopa_locate_mkdir)"
-    )
+    declare -A app
+    app['mkdir']="$(koopa_locate_mkdir --allow-missing)"
+    [[ ! -x "${app['mkdir']}" ]] || app['mkdir']='/usr/bin/mkdir'
     [[ -x "${app['mkdir']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
