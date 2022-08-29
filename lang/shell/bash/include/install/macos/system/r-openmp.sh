@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenMP library.
-    # @note Updated 2022-04-13.
+    # @note Updated 2022-08-29.
     #
     # Useful for optimizing performance of 'data.table' package.
     #
@@ -13,6 +13,11 @@ main() {
     # """
     local app
     koopa_assert_has_no_args "$#"
+    if [[ -f '/usr/local/include/omp.h' ]]
+    then
+        koopa_alert_note "libomp is already installed in '/usr/local'."
+        return 0
+    fi
     declare -A app=(
         ['sudo']="$(koopa_locate_sudo)"
         ['tar']="$(koopa_locate_tar)"

@@ -1,33 +1,13 @@
 #!/usr/bin/env bash
 
-# NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
-# package in R, which bundles a very old version (2.28.0) currently.
-
-# FIXME This isn't configuring OpenMP correctly...need to rework to improve
-# consistency with R CRAN binary.
+# NOTE Need to reduce the number of rpath dependencies here, and offload to
+#      ldpaths instead.
+# NOTE Consider adding an assert check for libomp in /usr/local.
 
 main() {
     # """
     # Install R.
-    # @note Updated 2022-08-28.
-    #
-    # @section gfortran configuration on macOS:
-    #
-    # - https://mac.r-project.org
-    # - https://github.com/fxcoudert/gfortran-for-macOS/releases
-    # - https://github.com/Rdatatable/data.table/wiki/Installation/
-    # - https://developer.r-project.org/Blog/public/2020/11/02/
-    #     will-r-work-on-apple-silicon/index.html
-    # - https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
-    #
-    # @section R-spatial evolution:
-    #
-    # R-spatial packages are being reworked. rgdal, rgeos, and maptools will be
-    # retired in 2023 in favor of more modern packages, such as sf. When this
-    # occurs, it may be possible to remove the geospatial libraries (geos, proj,
-    # gdal) as dependencies here.
-    #
-    # https://r-spatial.org/r/2022/04/12/evolution.html
+    # @note Updated 2022-08-29.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -57,7 +37,7 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
     # """
-    local app conf_args conf_dict deps dict flibs i libs
+    local app conf_args conf_dict deps dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     deps=(
@@ -144,14 +124,14 @@ main() {
         # python deps: zlib, libffi, openssl3.
         'python'
         # hdf5 deps: gcc.
-        'hdf5'
+        # > 'hdf5'
         # geos deps: none.
-        'geos'
+        # > 'geos'
         # proj deps: curl, libtiff, python, sqlite.
-        'proj'
+        # > 'proj'
         # gdal deps: curl, geos, hdf5, libxml2, openssl3, pcre2, sqlite,
         # libtiff, proj, xz, zstd.
-        'gdal'
+        # > 'gdal'
         # X11.
         'xorg-xorgproto'
         'xorg-xcb-proto'
@@ -173,23 +153,56 @@ main() {
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
-        ['dirname']="$(koopa_locate_dirname)"
+        ['ar']='/usr/bin/ar'
+        ['awk']="$(koopa_locate_awk --realpath)"
+        ['bash']="$(koopa_locate_bash --realpath)"
+        ['echo']="$(koopa_locate_echo --realpath)"
+        ['gfortran']="$(koopa_locate_gfortran --realpath)"
+        ['jar']="$(koopa_locate_jar --realpath)"
+        ['java']="$(koopa_locate_java --realpath)"
+        ['javac']="$(koopa_locate_javac --realpath)"
         ['make']="$(koopa_locate_make)"
+        ['perl']="$(koopa_locate_perl --realpath)"
         ['pkg_config']="$(koopa_locate_pkg_config)"
-        ['sort']="$(koopa_locate_sort)"
-        ['xargs']="$(koopa_locate_xargs)"
+        ['sed']="$(koopa_locate_sed --realpath)"
+        ['yacc']="$(koopa_locate_yacc --realpath)"
     )
-    [[ -x "${app['dirname']}" ]] || return 1
+    # The system clang compiler stack is preferred on macOS. If you attempt to
+    # build with GCC, you'll run into a lot of compilation issues with
+    # Posit/RStudio packages, which are only optimized for clang currently.
+    if koopa_is_macos
+    then
+        if [[ ! -f '/usr/local/include/omp.h' ]]
+        then
+            koopa_stop \
+                "'libomp' is not installed." \
+                "Run 'koopa install system r-openmp' to resolve."
+        fi
+        app['cc']='/usr/bin/clang'
+        app['cxx']='/usr/bin/clang++'
+    else
+        app['cc']="$(koopa_locate_gcc --realpath)"
+        app['cxx']="$(koopa_locate_gcxx --realpath)"
+    fi
+    [[ -x "${app['ar']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['bash']}" ]] || return 1
+    [[ -x "${app['cc']}" ]] || return 1
+    [[ -x "${app['cxx']}" ]] || return 1
+    [[ -x "${app['echo']}" ]] || return 1
+    [[ -x "${app['gfortran']}" ]] || return 1
+    [[ -x "${app['jar']}" ]] || return 1
+    [[ -x "${app['java']}" ]] || return 1
+    [[ -x "${app['javac']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
-    conf_args=()
+    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['yacc']}" ]] || return 1
     declare -A conf_dict
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['gcc']="$(koopa_app_prefix 'gcc')"
         ['jobs']="$(koopa_cpu_count)"
         ['lapack']="$(koopa_app_prefix 'lapack')"
         ['name']='r'
@@ -198,9 +211,15 @@ main() {
         ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
         ['version']="${INSTALL_VERSION:?}"
     )
+    koopa_assert_is_dir \
+        "${dict['bzip2']}" \
+        "${dict['lapack']}" \
+        "${dict['openjdk']}" \
+        "${dict['tcl_tk']}"
     if koopa_is_macos
     then
         dict['texbin']='/Library/TeX/texbin'
+        koopa_assert_is_dir "${dict['texbin']}"
         koopa_add_to_path_start "${dict['texbin']}"
     fi
     conf_dict['with_blas']="$( \
@@ -255,86 +274,28 @@ main() {
     koopa_assert_is_file \
         "${conf_dict['with_tcl_config']}" \
         "${conf_dict['with_tk_config']}"
-    if koopa_is_macos
-    then
-        # Clang tends to compile a number of tricky RStudio packages better.
-        conf_dict['cc']='/usr/bin/clang'
-        conf_dict['cxx']='/usr/bin/clang++'
-    else
-        # Alternatively, can use system GCC here.
-        # > conf_dict['cc']='/usr/bin/gcc'
-        # > conf_dict['cxx']='/usr/bin/g++'
-        conf_dict['cc']="${dict['gcc']}/bin/gcc"
-        conf_dict['cxx']="${dict['gcc']}/bin/g++"
-    fi
-    conf_dict['ar']='/usr/bin/ar'
-    conf_dict['awk']="$(koopa_locate_awk --realpath)"
-    conf_dict['echo']="$(koopa_locate_echo --realpath)"
-    conf_dict['fc']="$(koopa_locate_gfortran --realpath)"
-    conf_dict['jar']="$(koopa_locate_jar --realpath)"
-    conf_dict['java']="$(koopa_locate_java --realpath)"
-    conf_dict['javac']="$(koopa_locate_javac --realpath)"
-    conf_dict['perl']="$(koopa_locate_perl --realpath)"
-    conf_dict['r_shell']="$(koopa_locate_bash --realpath)"
-    conf_dict['sed']="$(koopa_locate_sed --realpath)"
-    # Alternatively, can use 'bison -y' for YACC.
-    conf_dict['yacc']="$(koopa_locate_yacc --realpath)"
-    koopa_assert_is_installed \
-        "${conf_dict['ar']}" \
-        "${conf_dict['awk']}" \
-        "${conf_dict['cc']}" \
-        "${conf_dict['cxx']}" \
-        "${conf_dict['echo']}" \
-        "${conf_dict['fc']}" \
-        "${conf_dict['jar']}" \
-        "${conf_dict['java']}" \
-        "${conf_dict['javac']}" \
-        "${conf_dict['perl']}" \
-        "${conf_dict['r_shell']}" \
-        "${conf_dict['sed']}" \
-        "${conf_dict['yacc']}"
-    conf_dict['f77']="${conf_dict['fc']}"
+    conf_dict['ar']="${app['ar']}"
+    conf_dict['awk']="${app['awk']}"
+    conf_dict['cc']="${app['cc']}"
+    conf_dict['cxx']="${app['cxx']}"
+    conf_dict['echo']="${app['echo']}"
+    conf_dict['f77']="${app['gfortran']}"
+    conf_dict['fc']="${app['gfortran']}"
+    conf_dict['flibs']="$(koopa_gfortran_libs)"
+    conf_dict['jar']="${app['jar']}"
+    conf_dict['java']="${app['java']}"
     conf_dict['java_home']="${dict['openjdk']}"
-    # > conf_dict['javah']="${conf_dict['javac']} -h"
+    conf_dict['javac']="${app['javac']}"
     conf_dict['javah']=''
-    conf_dict['objc']="${conf_dict['cc']}"
-    conf_dict['objcxx']="${conf_dict['cxx']}"
-    if koopa_is_linux
-    then
-        conf_dict['cc']="${conf_dict['cc']} -fopenmp"
-    fi
-    # Configure fortran FLIBS to link GCC correctly.
-    readarray -t libs <<< "$( \
-        koopa_find \
-            --prefix="${dict['gcc']}" \
-            --pattern='*.a' \
-            --type 'f' \
-        | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
-        | "${app['sort']}" --unique \
-    )"
-    koopa_assert_is_array_non_empty "${libs[@]:-}"
-    flibs=()
-    for i in "${!libs[@]}"
-    do
-        flibs+=("-L${libs[$i]}")
-    done
-    flibs+=('-lgfortran')
-    # quadmath is not yet supported for ARM.
-    # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96016
-    case "${dict['arch']}" in
-        'x86_64')
-            flibs+=('-lquadmath')
-            ;;
-    esac
-    # Consider also including '-lemutls_w' here, which is recommended by
-    # macOS CRAN binary build config.
-    flibs+=('-lm')
-    conf_dict['flibs']="${flibs[*]}"
-    # Consider also setting these, based on rocker Dockerfile.
-    # > 'PAGER=<PAGER>'
-    # > 'R_UNZIPCMD=<UNZIP>'
-    # > 'R_ZIPCMD=<ZIP>'
-    conf_args+=(
+    conf_dict['libnn']='lib'
+    conf_dict['objc']="${app['cc']}"
+    conf_dict['objcxx']="${app['cxx']}"
+    conf_dict['perl']="${app['perl']}"
+    conf_dict['r_shell']="${app['bash']}"
+    conf_dict['sed']="${app['sed']}"
+    # Alternatively, can use 'bison -y'.
+    conf_dict['yacc']="${app['yacc']}"
+    conf_args=(
         "--prefix=${dict['prefix']}"
         '--enable-R-profiling'
         '--enable-R-shlib'
@@ -371,37 +332,19 @@ main() {
         "JAVAC=${conf_dict['javac']}"
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
-        'LIBnn=lib'
+        "LIBnn=${conf_dict['libnn']}"
         "OBJC=${conf_dict['objc']}"
         "OBJCXX=${conf_dict['objcxx']}"
         "PERL=${conf_dict['perl']}"
-        'R_BATCHSAVE=--no-save --no-restore'
-        'R_PAPERSIZE=letter'
         "R_SHELL=${conf_dict['r_shell']}"
         "SED=${conf_dict['sed']}"
         "YACC=${conf_dict['yacc']}"
     )
-    if koopa_is_linux
-    then
-        conf_args+=(
-            'R_BROWSER=xdg-open'
-            'R_PRINTCMD=lpr'
-        )
-    fi
     if koopa_is_macos
     then
-        # This is required for plotting support in RStudio.
         conf_args+=('--with-aqua')
-        export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
-    else
-        # Ensure that OpenMP is enabled. Only 'CFLAGS', 'CXXFLAGS', and 'FFLAGS'
-        # (but not 'FCFLAGS') get defined in Makeconf' file.
-        # https://stackoverflow.com/a/12307488/3911732
-        conf_args+=(
-            'SHLIB_OPENMP_CFLAGS=-fopenmp'
-            'SHLIB_OPENMP_CXXFLAGS=-fopenmp'
-            'SHLIB_OPENMP_FFLAGS=-fopenmp'
-        )
+        # FIXME Consider putting this in our Makevars.site file.
+        # > export CFLAGS="-Wno-error=implicit-function-declaration ${CFLAGS:-}"
     fi
     if [[ "${dict['name']}" == 'r-devel' ]]
     then
@@ -431,9 +374,6 @@ R-${dict['maj_ver']}/${dict['file']}"
         koopa_extract "${dict['file']}"
         koopa_cd "R-${dict['version']}"
     fi
-    unset -v R_HOME
-    # Setting the time zone used to be required for build to complete.
-    # > export TZ='America/New_York'
     # Need to burn LAPACK in rpath, otherwise grDevices can fail to build.
     koopa_add_rpath_to_ldflags "${dict['lapack']}/lib"
     ./configure --help
@@ -441,7 +381,7 @@ R-${dict['maj_ver']}/${dict['file']}"
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs="${dict['jobs']}"
     # > "${app['make']}" check
-    # > "${app['make']}" 'pdf'
+    # > "${app['make']}" pdf
     "${app['make']}" 'info'
     "${app['make']}" install
     app['r']="${dict['prefix']}/bin/R"

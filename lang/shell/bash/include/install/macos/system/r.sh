@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-08-29.
     #
     # @section Intel:
     #
@@ -58,7 +58,9 @@ base/${dict['pkg_file']}"
             ;;
     esac
     koopa_download "${dict['url']}"
-    "${app['sudo']}" "${app['installer']}" -pkg "${dict['pkg_file']}" -target '/'
+    "${app['sudo']}" "${app['installer']}" \
+        -pkg "${dict['pkg_file']}" \
+        -target '/'
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_macos_install_system_r_openmp
     app['r']="${dict['prefix']}/bin/R"
