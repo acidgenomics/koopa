@@ -3,7 +3,7 @@
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-08-28.
+    # @note Updated 2022-08-29.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -37,6 +37,7 @@ koopa_configure_r() {
     koopa_r_link_files_in_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
+    # > koopa_r_configure_ldpaths "${app['r']}"
     case "${dict['system']}" in
         '0')
             if [[ -L "${dict['site_library']}" ]]
@@ -58,7 +59,6 @@ koopa_configure_r() {
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
             koopa_r_javareconf "${app['r']}"
-            koopa_r_configure_ldpaths "${app['r']}"
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
