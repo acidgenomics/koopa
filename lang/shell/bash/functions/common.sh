@@ -4920,8 +4920,9 @@ koopa_configure_r() {
     koopa_assert_is_dir "${dict['r_prefix']}"
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
-        koopa_assert_is_admin
-        koopa_macos_install_system_r_openmp
+        koopa_stop \
+            "'libomp' is not installed." \
+            "Run 'koopa install system r-openmp' to resolve."
     fi
     koopa_r_link_files_in_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
@@ -17956,6 +17957,7 @@ koopa_r_configure_makevars() {
         ['r']="${1:?}"
         ['ranlib']='/usr/bin/ranlib'
         ['sed']="$(koopa_locate_sed --realpath)"
+        ['sort']="$(koopa_locate_sort)"
         ['strip']='/usr/bin/strip'
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
@@ -17978,6 +17980,7 @@ koopa_r_configure_makevars() {
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['ranlib']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['strip']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(
