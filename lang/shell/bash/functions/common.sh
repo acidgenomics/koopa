@@ -17671,6 +17671,7 @@ koopa_r_configure_environ() {
         'libpng'
         'libssh2'
         'libtiff'
+        'libuv'
         'openblas'
         'openssl3'
         'pcre2'
@@ -17864,14 +17865,29 @@ koopa_r_configure_ldpaths() {
     keys=(
         'fontconfig'
         'freetype'
+        'fribidi'
         'gdal'
         'geos'
-        'hdf5'
+        'graphviz'
+        'harfbuzz'
+        'icu4c'
         'imagemagick'
         'jpeg'
+        'lapack'
         'libgit2'
+        'libjpeg-turbo'
+        'libpng'
+        'libssh2'
+        'libtiff'
+        'libuv'
+        'openblas'
+        'openssl3'
         'pcre2'
         'proj'
+        'readline'
+        'xz'
+        'zlib'
+        'zstd'
     )
     for key in "${keys[@]}"
     do
@@ -18014,19 +18030,27 @@ koopa_r_configure_makevars() {
         ['gettext']="$(koopa_app_prefix 'gettext')"
         ['jpeg']="$(koopa_app_prefix 'jpeg')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
+        ['libpng']="$(koopa_app_prefix 'libpng')"
+        ['libtiff']="$(koopa_app_prefix 'libtiff')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
         ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
+        ['zlib']="$(koopa_app_prefix 'zlib')"
+        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
         "${dict['freetype']}" \
         "${dict['gettext']}" \
         "${dict['jpeg']}" \
         "${dict['lapack']}" \
+        "${dict['libpng']}" \
+        "${dict['libtiff']}" \
         "${dict['openblas']}" \
         "${dict['pcre2']}" \
-        "${dict['r_prefix']}"
+        "${dict['r_prefix']}" \
+        "${dict['zlib']}" \
+        "${dict['zstd']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
@@ -18034,12 +18058,24 @@ koopa_r_configure_makevars() {
         "${dict['freetype']}/lib/pkgconfig" \
         "${dict['jpeg']}/lib/pkgconfig" \
         "${dict['lapack']}/lib/pkgconfig" \
-        "${dict['openblas']}/lib/pkgconfig"
+        "${dict['libpng']}/lib/pkgconfig" \
+        "${dict['libtiff']}/lib/pkgconfig" \
+        "${dict['openblas']}/lib/pkgconfig" \
+        "${dict['zlib']}/lib/pkgconfig" \
+        "${dict['zstd']}/lib/pkgconfig"
     cppflags=()
     ldflags=()
     lines=()
     cppflags+=(
-        "$("${app['pkg_config']}" --cflags 'freetype2' 'libjpeg')"
+        "$( \
+            "${app['pkg_config']}" --cflags \
+                'freetype2' \
+                'libjpeg' \
+                'libpng' \
+                'libtiff-4' \
+                'libzstd' \
+                'zlib' \
+        )"
     )
     case "${dict['system']}" in
         '1')

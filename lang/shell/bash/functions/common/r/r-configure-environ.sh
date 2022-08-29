@@ -142,6 +142,7 @@ koopa_r_configure_environ() {
         'libpng'
         'libssh2'
         'libtiff'
+        'libuv'
         'openblas'
         'openssl3'
         'pcre2'

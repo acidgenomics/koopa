@@ -47,17 +47,31 @@ koopa_r_configure_ldpaths() {
     )
     declare -A ld_lib_app_arr
     keys=(
-        # > 'libuv' # fs uses bundled copy.
         'fontconfig'
         'freetype'
+        'fribidi'
         'gdal'
         'geos'
-        'hdf5'
+        'graphviz'
+        'harfbuzz'
+        'icu4c'
         'imagemagick'
         'jpeg'
+        'lapack'
         'libgit2'
+        'libjpeg-turbo'
+        'libpng'
+        'libssh2'
+        'libtiff'
+        'libuv'
+        'openblas'
+        'openssl3'
         'pcre2'
         'proj'
+        'readline'
+        'xz'
+        'zlib'
+        'zstd'
     )
     for key in "${keys[@]}"
     do
