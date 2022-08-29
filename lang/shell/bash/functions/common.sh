@@ -9972,15 +9972,28 @@ koopa_grep() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict['pattern']}"
-    if [[ -z "${dict['engine']}" ]]
-    then
-        app['grep']="$(koopa_locate_rg --allow-missing)"
-        [[ ! -x "${app['grep']}" ]] && app['grep']="$(koopa_locate_grep)"
-        dict['engine']="$(koopa_basename "${app['grep']}")"
-    else
-        app['grep']="$(koopa_locate_"${dict['engine']}")"
-    fi
-    [[ -x "${app['grep']}" ]] || return 1
+    case "${dict['engine']}" in
+        '')
+            app['grep']="$(koopa_locate_rg --allow-missing)"
+            [[ -x "${app['grep']}" ]] && dict['engine']='fd'
+            if [[ -z "${dict['engine']}" ]]
+            then
+                dict['engine']='grep'
+                app['grep']="$(koopa_locate_grep --allow-missing)"
+                [[ -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+                [[ -x "${app['grep']}" ]] || return 1
+            fi
+            ;;
+        'grep')
+            app['grep']="$(koopa_locate_grep --allow-missing)"
+            [[ -z "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+            [[ -x "${app['grep']}" ]] || return 1
+            ;;
+        'rg')
+            app['grep']="$(koopa_locate_ripgrep)"
+            [[ -x "${app['grep']}" ]] || return 1
+            ;;
+    esac
     if [[ "${dict['stdin']}" -eq 1 ]]
     then
         dict['string']="$(</dev/stdin)"
