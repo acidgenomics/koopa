@@ -56,6 +56,7 @@
   },
   "attr": {
     "conservative": true,
+    "date": "2022-08-29",
     "platform": "linux",
     "url": ["https://savannah.nongnu.org/projects/attr/"],
     "version": "2.5.1"
@@ -1328,7 +1329,7 @@
   "make": {
     "bin": ["gmake"],
     "conservative": false,
-    "date": "2022-08-25",
+    "date": "2022-08-29",
     "man1": ["gmake.1"],
     "url": ["https://ftp.gnu.org/gnu/make/"],
     "version": "4.3"
@@ -1541,6 +1542,7 @@
   "patch": {
     "bin": ["patch"],
     "conservative": false,
+    "date": "2022-08-29",
     "man1": ["patch.1"],
     "url": ["ftp://ftp.gnu.org/gnu/patch/"],
     "version": "2.7.6"
