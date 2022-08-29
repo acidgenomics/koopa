@@ -914,35 +914,60 @@ koopa_alert() {
 }
 
 koopa_app_json_bin() {
-    koopa_assert_has_args_eq "$#" 1
-    koopa_parse_app_json --app-name="${1:?}" --key='bin'
+    local app_name
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        koopa_parse_app_json \
+            --app-name="$app_name" \
+            --key='bin'
+    done
 }
 
 koopa_app_json_man1() {
-    koopa_assert_has_args_eq "$#" 1
-    koopa_parse_app_json --app-name="${1:?}" --key='man1'
+    local app_name
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        koopa_parse_app_json \
+            --app-name="$app_name" \
+            --key='man1'
+    done
 }
 
 koopa_app_json_version() {
-    koopa_assert_has_args_eq "$#" 1
-    koopa_parse_app_json --app-name="${1:?}" --key='version'
+    local app_name
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        koopa_parse_app_json \
+            --app-name="$app_name" \
+            --key='version'
+    done
 }
 
 koopa_app_prefix() {
     local dict
-    koopa_assert_has_args_le "$#" 1
-    declare -A dict
-    dict['name']="${1:-}"
-    if [[ -n "${dict['name']}" ]]
+    declare -A dict=(
+        ['app_prefix']="$(koopa_koopa_prefix)/app"
+    )
+    if [[ "$#" -eq 0 ]]
     then
-        dict['opt_prefix']="$(koopa_opt_prefix)"
-        dict['str']="${dict['opt_prefix']}/${dict['name']}"
-        [[ -d "${dict['str']}" ]] || return 1
-        dict['str']="$(koopa_realpath "${dict['str']}")"
-    else
-        dict['str']="$(koopa_koopa_prefix)/app"
+        koopa_print "${dict['app_prefix']}"
+        return 0
     fi
-    koopa_print "${dict['str']}"
+    for app_name in "$@"
+    do
+        local prefix version
+        version="$(koopa_app_json_version "$app_name" || true)"
+        if [[ -z "$version" ]]
+        then
+            koopa_stop "Unsupported app: '${app_name}'."
+        fi
+        prefix="${dict['app_prefix']}/${app_name}/${version}"
+        koopa_assert_is_dir "$prefix"
+        koopa_print "$prefix"
+    done
     return 0
 }
 
