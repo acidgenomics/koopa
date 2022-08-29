@@ -778,9 +778,10 @@
   "gcc": {
     "bin": ["gfortran"],
     "conservative": true,
+    "date": "2022-08-29",
     "outdated": true,
     "url": ["https://gcc.gnu.org/"],
-    "version": "12.1.0"
+    "version": "12.2.0"
   },
   "gdal": {
     "bin": ["gdal-config"],
@@ -876,6 +877,7 @@
   },
   "gperf": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/gperf/"],
     "version": "3.1"
   },
@@ -1370,11 +1372,13 @@
   },
   "mpc": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["http://www.multiprecision.org/mpc/"],
     "version": "1.2.1"
   },
   "mpfr": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.mpfr.org/"],
     "version": "4.1.0"
   },
