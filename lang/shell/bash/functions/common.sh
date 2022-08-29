@@ -17640,7 +17640,10 @@ koopa_r_configure_environ() {
         "PKG_CONFIG_PATH=$(printf '%s:' "${pkgconfig_arr[@]}")"
         "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
         "TZ=\${TZ:-America/New_York}"
+        'R_BATCHSAVE=--no-save --no-restore'
         'R_PAPERSIZE=letter'
+        'R_UNZIPCMD=/usr/bin/unzip'
+        'R_ZIPCMD=/usr/bin/zip'
     )
     if koopa_is_linux
     then
@@ -17908,6 +17911,7 @@ koopa_r_configure_makevars() {
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['ar']='/usr/bin/ar'
+        ['awk']="$(koopa_locate_awk --realpath)"
         ['bash']="$(koopa_locate_bash --realpath)"
         ['dirname']="$(koopa_locate_dirname)"
         ['echo']="$(koopa_locate_echo --realpath)"
@@ -17930,6 +17934,7 @@ koopa_r_configure_makevars() {
         app['cxx']="$(koopa_locate_gcxx --realpath)"
     fi
     [[ -x "${app['ar']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['bash']}" ]] || return 1
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
@@ -18007,6 +18012,7 @@ koopa_r_configure_makevars() {
     ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
+    conf_dict['awk']="${app['awk']}"
     conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
     conf_dict['cc']="${app['cc']}"
     conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
@@ -18038,6 +18044,8 @@ koopa_r_configure_makevars() {
     conf_dict['cxx14flags']="${conf_dict['cxxflags']}"
     conf_dict['cxx17flags']="${conf_dict['cxxflags']}"
     conf_dict['cxx20flags']="${conf_dict['cxxflags']}"
+    conf_dict['f77']="${conf_dict['fc']}"
+    conf_dict['f77flags']="${conf_dict['fflags']}"
     conf_dict['fcflags']="${conf_dict['fflags']}"
     conf_dict['objc']="${conf_dict['cc']}"
     conf_dict['objcxx']="${conf_dict['cxx']}"
@@ -18051,6 +18059,7 @@ koopa_r_configure_makevars() {
     esac
     lines+=(
         "AR = ${conf_dict['ar']}"
+        "AWK = ${conf_dict['awk']}"
         "BLAS_LIBS = ${conf_dict['blas_libs']}"
         "CC = ${conf_dict['cc']}"
         "CFLAGS = ${conf_dict['cflags']}"
@@ -18066,6 +18075,8 @@ koopa_r_configure_makevars() {
         "CXX20FLAGS = ${conf_dict['cxx20flags']}"
         "CXXFLAGS = ${conf_dict['cxxflags']}"
         "ECHO = ${conf_dict['echo']}"
+        "F77 = ${conf_dict['f77']}"
+        "F77FLAGS = ${conf_dict['f77flags']}"
         "FC = ${conf_dict['fc']}"
         "FCFLAGS = ${conf_dict['fcflags']}"
         "FFLAGS = ${conf_dict['fflags']}"
