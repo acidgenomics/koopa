@@ -34,6 +34,7 @@ koopa_r_configure_makevars() {
         ['r']="${1:?}"
         ['ranlib']='/usr/bin/ranlib'
         ['sed']="$(koopa_locate_sed --realpath)"
+        ['sort']="$(koopa_locate_sort)"
         ['strip']='/usr/bin/strip'
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
@@ -59,6 +60,7 @@ koopa_r_configure_makevars() {
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['ranlib']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['strip']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(

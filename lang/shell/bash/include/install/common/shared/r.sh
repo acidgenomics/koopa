@@ -169,8 +169,9 @@ main() {
     then
         if [[ ! -f '/usr/local/include/omp.h' ]]
         then
-            koopa_assert_is_admin
-            koopa_macos_install_system_r_openmp
+            koopa_stop \
+                "'libomp' is not installed." \
+                "Run 'koopa install system r-openmp' to resolve."
         fi
         app['cc']='/usr/bin/clang'
         app['cxx']='/usr/bin/clang++'

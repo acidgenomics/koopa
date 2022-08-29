@@ -33,8 +33,9 @@ koopa_configure_r() {
     # On macOS, ensure we've installed OpenMP.
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
-        koopa_assert_is_admin
-        koopa_macos_install_system_r_openmp
+        koopa_stop \
+            "'libomp' is not installed." \
+            "Run 'koopa install system r-openmp' to resolve."
     fi
     koopa_r_link_files_in_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
