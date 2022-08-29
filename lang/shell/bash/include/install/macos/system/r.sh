@@ -63,6 +63,7 @@ base/${dict['pkg_file']}"
     koopa_macos_install_system_r_openmp
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
-    koopa_configure_r "${app['r']}"
+    # FIXME Re-enable this after fs package debugging.
+    # > koopa_configure_r "${app['r']}"
     return 0
 }
