@@ -2164,10 +2164,10 @@
   "xz": {
     "bin": ["xz"],
     "conservative": true,
-    "date": "2022-08-25",
+    "date": "2022-08-29",
     "man1": ["xz.1"],
     "url": ["https://tukaani.org/xz/"],
-    "version": "5.2.5"
+    "version": "5.2.6"
   },
   "yarn": {
     "bin": ["yarn"],
