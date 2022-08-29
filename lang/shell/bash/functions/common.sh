@@ -4927,6 +4927,7 @@ koopa_configure_r() {
     koopa_r_link_files_in_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
+    koopa_r_configure_ldpaths "${app['r']}"
     case "${dict['system']}" in
         '0')
             if [[ -L "${dict['site_library']}" ]]
