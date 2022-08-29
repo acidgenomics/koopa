@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME What if we just set these in Makevars.site instead?
+# This would avoid the sudo call and improve cross-platform configuration
+# consistency?
+
 koopa_r_javareconf() {
     # """
     # Update R Java configuration.
