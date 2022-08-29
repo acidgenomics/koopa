@@ -848,6 +848,7 @@
   },
   "gmp": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://gmplib.org/"],
     "version": "6.2.1"
   },
@@ -1323,6 +1324,7 @@
   },
   "m4": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/m4/"],
     "version": "1.4.19"
   },
