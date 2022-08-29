@@ -11972,16 +11972,9 @@ koopa_install_editorconfig() {
 }
 
 koopa_install_emacs() {
-    local install_args
-    install_args=('--name=emacs')
-    if ! koopa_is_macos
-    then
-        install_args+=(
-            '--no-link-in-bin'
-            '--no-link-in-man1'
-        )
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --name='emacs' \
+        "$@"
 }
 
 koopa_install_ensembl_perl_api() {
@@ -12158,18 +12151,9 @@ koopa_install_ghostscript() {
 }
 
 koopa_install_git() {
-    local install_args
-    install_args=(
-        '--link-in-bin=git'
-        '--name=git'
-    )
-    if koopa_is_macos
-    then
-        install_args+=(
-            '--link-in-bin=git-credential-osxkeychain'
-        )
-    fi
-    koopa_install_app "${install_args[@]}" "$@"
+    koopa_install_app \
+        --name='git' \
+        "$@"
 }
 
 koopa_install_glances() {
@@ -22526,15 +22510,7 @@ koopa_uninstall_editorconfig() {
 }
 
 koopa_uninstall_emacs() {
-    local uninstall_args
-    uninstall_args=(
-        '--name=emacs'
-    )
-    if ! koopa_is_macos
-    then
-        uninstall_args+=('--unlink-in-bin=emacs')
-    fi
-    koopa_uninstall_app "${uninstall_args[@]}" "$@"
+    koopa_uninstall_app --name='emacs' "$@"
 }
 
 koopa_uninstall_ensembl_perl_api() {
@@ -22704,18 +22680,7 @@ koopa_uninstall_ghostscript() {
 }
 
 koopa_uninstall_git() {
-    local uninstall_args
-    uninstall_args=(
-        '--name=git'
-        '--unlink-in-bin=git'
-    )
-    if koopa_is_macos
-    then
-        uninstall_args+=(
-            '--unlink-in-bin=git-credential-osxkeychain'
-        )
-    fi
-    koopa_uninstall_app "${uninstall_args[@]}" "$@"
+    koopa_uninstall_app --name='git' "$@"
 }
 
 koopa_uninstall_glances() {
