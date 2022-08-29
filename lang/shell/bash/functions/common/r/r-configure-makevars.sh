@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Still hitting this issue when attempting to install ragg:
+# ld: library not found for -lzstd
+
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
@@ -105,25 +108,34 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    # May need to add support for '-lbz2'.
-    cppflags+=(
-        "$( \
-            "${app['pkg_config']}" --cflags \
-                'freetype2' \
-                'libjpeg' \
-                'libpng' \
-                'libtiff-4' \
-                'libzstd' \
-                'zlib' \
-        )"
-    )
     # gettext is needed to resolve clang '-lintl' warning. Can we avoid this
     # issue by setting 'LIBINTL' instead?
+    cppflags+=("-I${dict['gettext']}/include")
+    ldflags+=("-L${dict['gettext']}/lib")
     case "${dict['system']}" in
         '1')
+            # May need to add support for '-lbz2', at least on Linux.
+            cppflags+=(
+                "$( \
+                    "${app['pkg_config']}" --cflags \
+                        'freetype2' \
+                        'libjpeg' \
+                        'libpng' \
+                        'libtiff-4' \
+                        'libzstd' \
+                        'zlib' \
+                )"
+            )
             ldflags+=(
-                "-I${dict['gettext']}/include"
-                "-L${dict['gettext']}/lib"
+                "$( \
+                    "${app['pkg_config']}" --libs \
+                        'freetype2' \
+                        'libjpeg' \
+                        'libpng' \
+                        'libtiff-4' \
+                        'libzstd' \
+                        'zlib' \
+                )"
             )
             ;;
     esac
