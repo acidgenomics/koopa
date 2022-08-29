@@ -3,12 +3,10 @@
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
-# FIXME Need to include libuv here, otherwise fs won't install correctly.
-
 main() {
     # """
     # Install R.
-    # @note Updated 2022-08-28.
+    # @note Updated 2022-08-29.
     #
     # @section gfortran configuration on macOS:
     #
@@ -143,14 +141,14 @@ main() {
         # python deps: zlib, libffi, openssl3.
         'python'
         # hdf5 deps: gcc.
-        'hdf5'
+        # > 'hdf5'
         # geos deps: none.
-        'geos'
+        # > 'geos'
         # proj deps: curl, libtiff, python, sqlite.
-        'proj'
+        # > 'proj'
         # gdal deps: curl, geos, hdf5, libxml2, openssl3, pcre2, sqlite,
         # libtiff, proj, xz, zstd.
-        'gdal'
+        # > 'gdal'
         # X11.
         'xorg-xorgproto'
         'xorg-xcb-proto'
@@ -298,6 +296,10 @@ main() {
     conf_dict['javah']=''
     conf_dict['objc']="${conf_dict['cc']}"
     conf_dict['objcxx']="${conf_dict['cxx']}"
+
+
+    # FIXME Set these during the configuration step instead.
+
     if koopa_is_linux
     then
         conf_dict['cc']="${conf_dict['cc']} -fopenmp"
