@@ -5659,10 +5659,11 @@ koopa_convert_utf8_nfd_to_nfc() {
 koopa_cp() {
     local app cp cp_args dict mkdir pos rm
     declare -A app=(
-        ['cp']="$(koopa_locate_cp)"
+        ['cp']="$(koopa_locate_cp --allow-missing)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
+    [[ ! -x "${app['cp']}" ]] && app['cp']='/usr/bin/cp'
     [[ -x "${app['cp']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
@@ -5897,9 +5898,9 @@ releases/current-production-release"
 koopa_datetime() {
     local app str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['date']="$(koopa_locate_date)"
-    )
+    declare -A app
+    app['date']="$(koopa_locate_date --allow-missing)"
+    [[ ! -x "${app['date']}" ]] && app['date']='/usr/bin/date'
     [[ -x "${app['date']}" ]] || return 1
     str="$("${app['date']}" '+%Y%m%d-%H%M%S')"
     [[ -n "$str" ]] || return 1
@@ -7236,9 +7237,9 @@ koopa_download() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    declare -A app=(
-        ['download']="$("koopa_locate_${dict['engine']}")"
-    )
+    declare -A app
+    app['download']="$("koopa_locate_${dict['engine']}" --allow-missing)"
+    [[ ! -x "${app['download']}" ]] && app['download']='/usr/bin/curl'
     [[ -x "${app['download']}" ]] || return 1
     if [[ -z "${dict['file']}" ]]
     then
@@ -9972,15 +9973,28 @@ koopa_grep() {
         esac
     done
     koopa_assert_is_set '--pattern' "${dict['pattern']}"
-    if [[ -z "${dict['engine']}" ]]
-    then
-        app['grep']="$(koopa_locate_rg --allow-missing)"
-        [[ ! -x "${app['grep']}" ]] && app['grep']="$(koopa_locate_grep)"
-        dict['engine']="$(koopa_basename "${app['grep']}")"
-    else
-        app['grep']="$(koopa_locate_"${dict['engine']}")"
-    fi
-    [[ -x "${app['grep']}" ]] || return 1
+    case "${dict['engine']}" in
+        '')
+            app['grep']="$(koopa_locate_rg --allow-missing)"
+            [[ -x "${app['grep']}" ]] && dict['engine']='rg'
+            if [[ -z "${dict['engine']}" ]]
+            then
+                dict['engine']='grep'
+                app['grep']="$(koopa_locate_grep --allow-missing)"
+                [[ -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+                [[ -x "${app['grep']}" ]] || return 1
+            fi
+            ;;
+        'grep')
+            app['grep']="$(koopa_locate_grep --allow-missing)"
+            [[ -z "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+            [[ -x "${app['grep']}" ]] || return 1
+            ;;
+        'rg')
+            app['grep']="$(koopa_locate_ripgrep)"
+            [[ -x "${app['grep']}" ]] || return 1
+            ;;
+    esac
     if [[ "${dict['stdin']}" -eq 1 ]]
     then
         dict['string']="$(</dev/stdin)"
@@ -15032,10 +15046,11 @@ koopa_lmod_prefix() {
 koopa_ln() {
     local app dict ln ln_args mkdir pos rm
     declare -A app=(
-        ['ln']="$(koopa_locate_ln)"
+        ['ln']="$(koopa_locate_ln --allow-missing)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
+    [[ ! -x "${app['ln']}" ]] && app['ln']='/usr/bin/ln'
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
@@ -15217,7 +15232,9 @@ bin/${dict['bin_name']}"
         return 0
     fi
     [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
-    koopa_stop "Failed to locate '${dict['bin_name']}'."
+    koopa_stop \
+        "Failed to locate '${dict['bin_name']}' (from '${dict['app_name']}')." \
+        "Running 'koopa install '${dict['app_name']}' may resolve the issue."
 }
 
 koopa_locate_ar() {
@@ -16548,9 +16565,9 @@ koopa_missing_arg() {
 
 koopa_mkdir() {
     local app dict mkdir mkdir_args pos
-    declare -A app=(
-        ['mkdir']="$(koopa_locate_mkdir)"
-    )
+    declare -A app
+    app['mkdir']="$(koopa_locate_mkdir --allow-missing)"
+    [[ ! -x "${app['mkdir']}" ]] && app['mkdir']='/usr/bin/mkdir'
     [[ -x "${app['mkdir']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
@@ -16590,9 +16607,14 @@ koopa_mkdir() {
 
 koopa_mktemp() {
     local app dict mktemp_args str
-    declare -A app=(
-        ['mktemp']="$(koopa_locate_mktemp)"
-    )
+    declare -A app
+    if koopa_is_macos
+    then
+        app['mktemp']="$(koopa_locate_mktemp)"
+    else
+        app['mktemp']="$(koopa_locate_mktemp --allow-missing)"
+        [[ ! -x "${app['mktemp']}" ]] && app['mktemp']='/usr/bin/mktemp'
+    fi
     [[ -x "${app['mktemp']}" ]] || return 1
     declare -A dict=(
         ['date_id']="$(koopa_datetime)"
@@ -18741,9 +18763,9 @@ koopa_rg_unique() {
 
 koopa_rm() {
     local app dict pos rm rm_args
-    declare -A app=(
-        ['rm']="$(koopa_locate_rm)"
-    )
+    declare -A app
+    app['rm']="$(koopa_locate_rm --allow-missing)"
+    [[ ! -x "${app['rm']}" ]] && app['rm']='/usr/bin/rm'
     [[ -x "${app['rm']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0

@@ -56,6 +56,7 @@
   },
   "attr": {
     "conservative": true,
+    "date": "2022-08-29",
     "platform": "linux",
     "url": ["https://savannah.nongnu.org/projects/attr/"],
     "version": "2.5.1"
@@ -777,9 +778,10 @@
   "gcc": {
     "bin": ["gfortran"],
     "conservative": true,
+    "date": "2022-08-29",
     "outdated": true,
     "url": ["https://gcc.gnu.org/"],
-    "version": "12.1.0"
+    "version": "12.2.0"
   },
   "gdal": {
     "bin": ["gdal-config"],
@@ -847,6 +849,7 @@
   },
   "gmp": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://gmplib.org/"],
     "version": "6.2.1"
   },
@@ -874,6 +877,7 @@
   },
   "gperf": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/gperf/"],
     "version": "3.1"
   },
@@ -1322,13 +1326,14 @@
   },
   "m4": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/m4/"],
     "version": "1.4.19"
   },
   "make": {
     "bin": ["gmake"],
     "conservative": false,
-    "date": "2022-08-25",
+    "date": "2022-08-29",
     "man1": ["gmake.1"],
     "url": ["https://ftp.gnu.org/gnu/make/"],
     "version": "4.3"
@@ -1367,11 +1372,13 @@
   },
   "mpc": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["http://www.multiprecision.org/mpc/"],
     "version": "1.2.1"
   },
   "mpfr": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.mpfr.org/"],
     "version": "4.1.0"
   },
@@ -1541,6 +1548,7 @@
   "patch": {
     "bin": ["patch"],
     "conservative": false,
+    "date": "2022-08-29",
     "man1": ["patch.1"],
     "url": ["ftp://ftp.gnu.org/gnu/patch/"],
     "version": "2.7.6"
@@ -1622,6 +1630,7 @@
   "pkg-config": {
     "bin": ["pkg-config"],
     "conservative": false,
+    "date": "2022-08-29",
     "man1": ["pkg-config.1"],
     "url": ["https://pkg-config.freedesktop.org/"],
     "version": "0.29.2"
@@ -2161,10 +2170,10 @@
   "xz": {
     "bin": ["xz"],
     "conservative": true,
-    "date": "2022-08-25",
+    "date": "2022-08-29",
     "man1": ["xz.1"],
     "url": ["https://tukaani.org/xz/"],
-    "version": "5.2.5"
+    "version": "5.2.6"
   },
   "yarn": {
     "bin": ["yarn"],
