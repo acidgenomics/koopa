@@ -3,12 +3,12 @@
 koopa_rm() {
     # """
     # Remove files/directories quietly with GNU rm.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-08-29.
     # """
     local app dict pos rm rm_args
-    declare -A app=(
-        ['rm']="$(koopa_locate_rm)"
-    )
+    declare -A app
+    app['rm']="$(koopa_locate_rm --allow-missing)"
+    [[ ! -x "${app['rm']}" ]] && app['rm']='/usr/bin/rm'
     [[ -x "${app['rm']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0

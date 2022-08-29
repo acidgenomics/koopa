@@ -5659,10 +5659,11 @@ koopa_convert_utf8_nfd_to_nfc() {
 koopa_cp() {
     local app cp cp_args dict mkdir pos rm
     declare -A app=(
-        ['cp']="$(koopa_locate_cp)"
+        ['cp']="$(koopa_locate_cp --allow-missing)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
+    [[ ! -x "${app['cp']}" ]] && app['cp']='/usr/bin/cp'
     [[ -x "${app['cp']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
@@ -18759,9 +18760,9 @@ koopa_rg_unique() {
 
 koopa_rm() {
     local app dict pos rm rm_args
-    declare -A app=(
-        ['rm']="$(koopa_locate_rm)"
-    )
+    declare -A app
+    app['rm']="$(koopa_locate_rm --allow-missing)"
+    [[ ! -x "${app['rm']}" ]] && app['rm']='/usr/bin/rm'
     [[ -x "${app['rm']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
