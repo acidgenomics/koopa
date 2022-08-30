@@ -18140,8 +18140,12 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    cppflags+=("-I${dict['gettext']}/include")
-    ldflags+=("-L${dict['gettext']}/lib")
+    cppflags+=(
+        "-I${dict['gettext']}/include"
+    )
+    ldflags+=(
+        "-L${dict['gettext']}/lib"
+    )
     case "${dict['system']}" in
         '1')
             cppflags+=(
@@ -18157,7 +18161,7 @@ koopa_r_configure_makevars() {
             )
             ldflags+=(
                 "$( \
-                    "${app['pkg_config']}" --libs \
+                    "${app['pkg_config']}" --libs-only-L \
                         'freetype2' \
                         'libjpeg' \
                         'libpng' \
