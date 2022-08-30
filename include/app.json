@@ -1820,10 +1820,12 @@
     "bin": ["R", "Rscript"],
     "conservative": false,
     "deps": [
+      "conda",
       "coreutils",
       "gawk",
       "libuv",
-      "sed"
+      "sed",
+      "udunits"
     ],
     "man1": ["R.1", "Rscript.1"],
     "url": [
