@@ -3,7 +3,7 @@
 koopa_lowercase() {
     # """
     # Transform string to lowercase.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-30.
     #
     # awk alternative:
     # > koopa_print "$str" | "${app['awk']}" '{print tolower($0)}'
@@ -16,9 +16,9 @@ koopa_lowercase() {
     # # hello world
     # """
     local app str
-    declare -A app=(
-        ['tr']="$(koopa_locate_tr)"
-    )
+    declare -A app
+    app['tr']="$(koopa_locate_tr --allow-missing)"
+    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
     [[ -x "${app['tr']}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then

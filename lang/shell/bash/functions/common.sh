@@ -3477,9 +3477,9 @@ koopa_camel_case() {
 
 koopa_capitalize() {
     local app str
-    declare -A app=(
-        ['tr']="$(koopa_locate_tr)"
-    )
+    declare -A app
+    app['tr']="$(koopa_locate_tr --allow-missing)"
+    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
     [[ -x "${app['tr']}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
@@ -7218,9 +7218,11 @@ koopa_download_github_latest() {
     local api_url app repo tag tarball_url
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['tr']="$(koopa_locate_tr)"
+        ['cut']="$(koopa_locate_cut --allow-missing)"
+        ['tr']="$(koopa_locate_tr --allow-missing)"
     )
+    [[ ! -x "${app['cut']}" ]] && app['cut']='/usr/bin/cut'
+    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['tr']}" ]] || return 1
     for repo in "$@"
@@ -16526,9 +16528,9 @@ ${dict['datetime']}.log"
 
 koopa_lowercase() {
     local app str
-    declare -A app=(
-        ['tr']="$(koopa_locate_tr)"
-    )
+    declare -A app
+    app['tr']="$(koopa_locate_tr --allow-missing)"
+    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
     [[ -x "${app['tr']}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
