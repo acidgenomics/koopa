@@ -263,56 +263,64 @@ koopa_build_all_apps() {
         'pygments'
         'ranger-fm'
         'yt-dlp'
+        'pylint'
         'libedit'
-        'openssh' # deps: libedit
+        # deps: libedit.
+        'openssh'
+        'c-ares'
+        'jemalloc'
+        'libev'
+        # deps: jemalloc, libev.
+        'nghttp2'
+        # deps: c-ares, nghttp2.
         'node'
-        'bash-language-server' # deps: node
-        'gtop' # deps: node
-        'prettier' # deps: node
-        # Install Perl packages.
-        'ack' # deps: perl
-        'rename' # deps: perl
-        # Install Ruby packages.
-        'bashcov' # deps: ruby
-        'colorls' # deps: ruby
-        'ronn' # deps: ruby
-        'rust' # deps: ruby
+        'rust'
+        'julia'
+        # Install Rust packages.
         'bat' # deps: rust
         'broot' # deps: rust
         'delta' # deps: rust
         'difftastic' # deps: rust
-        # > 'dog' # deps: rust
-        'du-dust' # deps: rust
-        'exa' # deps: rust
-        'fd-find' # deps: rust
-        'hyperfine' # deps: rust
-        'mcfly' # deps: rust
-        'mdcat' # deps: rust
-        'procs' # deps: rust
-        'ripgrep' # deps: rust
-        'ripgrep-all' # deps: rust
-        'starship' # deps: rust
-        'tealdeer' # deps: rust
-        'tokei' # deps: rust
-        'tuc' # deps: rust
-        'xsv' # deps: rust
-        'zellij' # deps: rust
-        'zoxide' # deps: rust
-        # FIXME 1.8.0 is currently very hard to build.
-        # > 'julia'
-        'ffq' # deps: conda
-        'ensembl-perl-api' # deps: none.
+        'dog' # deps: rust
+        'du-dust'
+        'exa'
+        'fd-find'
+        'hyperfine'
+        'mcfly'
+        'mdcat'
+        'procs'
+        'ripgrep'
+        'ripgrep-all'
+        'starship'
+        'tealdeer'
+        'tokei'
+        'tuc'
+        'xsv'
+        'zellij'
+        'zoxide'
+        # Install Go packages.
+        'chemacs'
+        'cheat'
+        'yq'
+        # Install node packages.
+        'bash-language-server'
+        'gtop'
+        'prettier'
+        # Install Perl packages.
+        'ack'
+        'rename'
+        # Install Ruby packages.
+        'bashcov'
+        'colorls'
+        'ronn'
         'pyenv' # deps: none.
         'rbenv' # deps: none.
-        'cheat' # deps: go.
-        'pylint' # deps: python.
-        'yq' # deps: go.
+        'dotfiles'
+        'ensembl-perl-api' # deps: none.
         # deps: cmake, gcc, hdf5, libxml2, python.
         'sra-tools'
-        # deps: go.
-        'chemacs'
-        # deps: chemacs (to configure).
-        'dotfiles'
+        # Install conda packages.
+        'ffq' # deps: conda
     )
     if ! koopa_is_aarch64
     then
