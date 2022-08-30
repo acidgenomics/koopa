@@ -1478,8 +1478,9 @@
   "ninja": {
     "bin": ["ninja"],
     "conservative": false,
+    "date": "2022-08-29",
     "depends": ["python"],
-    "version": "1.10.2.3"
+    "version": "1.11.0"
   },
   "nmap": {
     "bin": ["nmap"],
