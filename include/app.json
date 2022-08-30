@@ -1086,6 +1086,7 @@
       "magick-script"
     ],
     "conservative": true,
+    "date": "2022-08-29",
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -1095,7 +1096,7 @@
       "magick-script.1"
     ],
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.0-45"
+    "version": "7.1.0-46"
   },
   "ipython": {
     "bin": ["ipython"],
@@ -1116,6 +1117,7 @@
   },
   "jpeg": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.ijg.org/"],
     "version": "9e"
   },
@@ -1224,7 +1226,6 @@
   "libgit2": {
     "conservative": true,
     "date": "2022-08-29",
-    "outdated": true,
     "url": ["https://github.com/libgit2/libgit2/"],
     "version": "1.5.0"
   },
@@ -1314,6 +1315,7 @@
   },
   "libzip": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://libzip.org/"],
     "version": "1.9.2"
   },
@@ -1463,6 +1465,7 @@
   },
   "nettle": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/nettle/"],
     "version": "3.8.1"
   },
