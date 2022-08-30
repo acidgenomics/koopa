@@ -76,7 +76,7 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        ['bzip2']="$(koopa_app_version 'bzip2')"
+        ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='python'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
