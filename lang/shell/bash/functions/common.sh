@@ -21121,9 +21121,9 @@ koopa_stat_user() {
 koopa_stat() {
     local app dict
     koopa_assert_has_args_ge "$#" 2
-    declare -A app=(
-        ['stat']="$(koopa_locate_stat)"
-    )
+    declare -A app
+    app['stat']="$(koopa_locate_stat --allow-missing)"
+    [[ ! -x "${app['stat']}" ]] && app['stat']='/usr/bin/stat'
     [[ -x "${app['stat']}" ]] || return 1
     declare -A dict=(
         ['format']="${1:?}"
