@@ -23,7 +23,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-30.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
