@@ -3,6 +3,8 @@
 # FIXME Need to rework edge case handling of R installed in Docker.
 # We don't want to link to any koopa installers in this edge case...
 
+# FIXME Remove recommended packages from system R library.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
