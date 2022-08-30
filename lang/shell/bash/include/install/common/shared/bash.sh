@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Bash.
-    # @note Updated 2022-08-03.
+    # @note Updated 2022-08-29.
     #
     # @section Applying patches:
     #
@@ -17,17 +17,17 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'patch'
     declare -A app=(
-        ['curl']="$(koopa_locate_curl)"
-        ['cut']="$(koopa_locate_cut)"
+        ['curl']="$(koopa_locate_curl --allow-missing)"
+        ['cut']="$(koopa_locate_cut --allow-missing)"
         ['make']="$(koopa_locate_make)"
         ['patch']="$(koopa_locate_patch)"
-        ['tr']="$(koopa_locate_tr)"
     )
+    [[ ! -x "${app['curl']}" ]] && app['curl']='/usr/bin/curl'
     [[ -x "${app['curl']}" ]] || return 1
+    [[ ! -x "${app['cut']}" ]] && app['cut']='/usr/bin/cut'
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['patch']}" ]] || return 1
-    [[ -x "${app['tr']}" ]] || return 1
     declare -A dict=(
         ['bin_prefix']="$(koopa_bin_prefix)"
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
@@ -61,8 +61,11 @@ ${dict['name']}-${dict['maj_min_ver']}-patches"
         )"
         # mmv_tr: trimmed major minor version.
         dict['mmv_tr']="$( \
-            koopa_print "${dict['maj_min_ver']}" \
-            | "${app['tr']}" --delete '.' \
+            koopa_gsub \
+                --fixed \
+                --pattern='.' \
+                --replacement='' \
+                "${dict['maj_min_ver']}" \
         )"
         dict['patch_range']="$(printf '%03d-%03d' '1' "${dict['n_patches']}")"
         dict['patch_request_urls']="${dict['patch_base_url']}/\

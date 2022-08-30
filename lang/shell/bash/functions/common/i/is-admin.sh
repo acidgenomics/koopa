@@ -3,7 +3,7 @@
 koopa_is_admin() {
     # """
     # Check that current user has administrator permissions.
-    # @note Updated 2022-05-16.
+    # @note Updated 2022-08-29.
     #
     # This check can hang on some systems with domain user accounts.
     #
@@ -44,9 +44,9 @@ koopa_is_admin() {
     koopa_has_passwordless_sudo && return 0
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.
-    declare -A app=(
-        ['groups']="$(koopa_locate_groups)"
-    )
+    declare -A app
+    app['groups']="$(koopa_locate_groups --allow-missing)"
+    [[ ! -x "${app['groups']}" ]] && app['groups']='/usr/bin/groups'
     [[ -x "${app['groups']}" ]] || return 1
     declare -A dict=(
         ['groups']="$("${app['groups']}")"

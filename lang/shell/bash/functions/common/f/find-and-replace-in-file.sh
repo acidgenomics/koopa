@@ -38,6 +38,7 @@ koopa_find_and_replace_in_file() {
     declare -A app=(
         ['perl']="$(koopa_locate_perl)"
     )
+    [[ ! -x "${app['perl']}" ]] && app['perl']='/usr/bin/perl'
     [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
         ['multiline']=0

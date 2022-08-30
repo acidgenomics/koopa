@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Still hitting this issue when attempting to install ragg:
-# ld: library not found for -lzstd
-
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.

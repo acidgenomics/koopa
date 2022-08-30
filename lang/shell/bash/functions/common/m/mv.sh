@@ -3,7 +3,7 @@
 koopa_mv() {
     # """
     # Move a file or directory with GNU mv.
-    # @note Updated 2022-08-15.
+    # @note Updated 2022-08-29.
     #
     # The '-t' flag is not supported for BSD variant.
     #
@@ -17,15 +17,21 @@ koopa_mv() {
     # """
     local app dict mkdir mv mv_args pos rm
     declare -A app=(
+        ['mv']="$(koopa_locate_mv --allow-missing)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
     # macOS gmv currently has issues on NFS shares.
-    if koopa_is_macos
+    koopa_is_macos && app['mv']='/bin/mv'
+    if [[ ! -x "${app['mv']}" ]]
     then
-        app['mv']='/bin/mv'
-    else
-        app['mv']="$(koopa_locate_mv)"
+        if [[ -x '/usr/bin/mv' ]]
+        then
+            app['mv']='/usr/bin/mv'
+        elif [[ -x '/bin/mv' ]]
+        then
+            app['mv']='/bin/mv'
+        fi
     fi
     [[ -x "${app['mv']}" ]] || return 1
     declare -A dict=(

@@ -3,11 +3,19 @@
 koopa_app_json_version() {
     # """
     # Get app version from 'app.json' file.
-    # @note Updated 2022-08-23.
+    # @note Updated 2022-08-29.
     #
     # @examples
-    # > koopa_app_json_version 'coreutils'
+    # > koopa_app_json_version 'coreutils' 'binutils'
+    # # 9.1
+    # # 2.38
     # """
-    koopa_assert_has_args_eq "$#" 1
-    koopa_parse_app_json --app-name="${1:?}" --key='version'
+    local app_name
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        koopa_parse_app_json \
+            --app-name="$app_name" \
+            --key='version'
+    done
 }

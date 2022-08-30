@@ -3,7 +3,7 @@
 koopa_sub() {
     # """
     # Single substitution.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-29.
     #
     # @seealso
     # - https://perldoc.perl.org/functions/quotemeta
@@ -19,9 +19,9 @@ koopa_sub() {
     # # |\|/\|
     # """
     local app dict pos
-    declare -A app=(
-        ['perl']="$(koopa_locate_perl)"
-    )
+    declare -A app
+    app['perl']="$(koopa_locate_perl --allow-missing)"
+    [[ ! -x "${app['perl']}" ]] && app['perl']='/usr/bin/perl'
     [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
         ['global']=0

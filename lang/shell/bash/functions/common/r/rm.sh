@@ -8,7 +8,16 @@ koopa_rm() {
     local app dict pos rm rm_args
     declare -A app
     app['rm']="$(koopa_locate_rm --allow-missing)"
-    [[ ! -x "${app['rm']}" ]] && app['rm']='/usr/bin/rm'
+    if [[ ! -x "${app['rm']}" ]]
+    then
+        if [[ -x '/usr/bin/rm' ]]
+        then
+            app['rm']='/usr/bin/rm'
+        elif [[ -x '/bin/rm' ]]
+        then
+            app['rm']='/bin/rm'
+        fi
+    fi
     [[ -x "${app['rm']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
