@@ -215,6 +215,7 @@
   },
   "boost": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://www.boost.org/"],
     "version": "1.79.0"
   },
@@ -713,6 +714,7 @@
   "ffmpeg": {
     "bin": ["ffmpeg", "ffprobe"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "url": ["https://ffmpeg.org/"],
     "version": "5.1"
@@ -735,6 +737,7 @@
   "fish": {
     "bin": ["fish"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
@@ -745,6 +748,7 @@
   "flac": {
     "bin": ["flac"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["flac.1"],
     "url": ["https://xiph.org/flac/"],
     "version": "1.3.4"
@@ -762,6 +766,7 @@
   },
   "fltk": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://www.fltk.org/"],
     "version": "1.3.8"
   },
@@ -794,6 +799,7 @@
   "gawk": {
     "bin": ["awk", "gawk"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["awk.1", "gawk.1"],
     "url": ["https://ftp.gnu.org/gnu/gawk/"],
     "version": "5.1.1"
@@ -915,6 +921,7 @@
   "grep": {
     "bin": ["gegrep", "gfgrep", "ggrep"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["gegrep.1", "gfgrep.1", "ggrep.1"],
     "url": ["https://www.gnu.org/software/grep/"],
     "version": "3.7"
@@ -922,6 +929,7 @@
   "groff": {
     "bin": ["groff"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["groff.1"],
     "url": ["https://ftp.gnu.org/gnu/groff/"],
     "version": "1.22.4"
@@ -935,6 +943,7 @@
   },
   "gsl": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/gsl/"],
     "version": "2.7.1"
   },
@@ -966,6 +975,7 @@
       "znew"
     ],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": [
       "gunzip.1",
       "gzexe.1",
@@ -1040,6 +1050,7 @@
   "htop": {
     "bin": ["htop"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["htop.1"],
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
     "version": "3.2.1"
@@ -1137,6 +1148,7 @@
   "jq": {
     "bin": ["jq"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["jq.1"],
     "url": ["https://github.com/stedolan/jq/releases"],
     "version": "1.6"
@@ -1165,6 +1177,7 @@
   "lame": {
     "bin": ["lame"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["lame.1"],
     "url": ["https://lame.sourceforge.io/"],
     "version": "3.100"
@@ -1190,6 +1203,7 @@
   "less": {
     "bin": ["less"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["less.1"],
     "url": ["https://ftp.gnu.org/gnu/less/"],
     "version": "590"
@@ -1197,6 +1211,7 @@
   "lesspipe": {
     "bin": ["lesspipe.sh"],
     "conservative": false,
+    "date": "2022-08-30",
     "url": ["https://github.com/wofr06/lesspipe/"],
     "version": "2.06"
   },
@@ -1217,6 +1232,7 @@
   },
   "libevent": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://libevent.org/", "https://github.com/libevent/libevent/"],
     "version": "2.1.12"
   },
@@ -1248,7 +1264,11 @@
     "version": "1.45"
   },
   "libidn": {
+    "aliases": {
+      "homebrew": "libidn2"
+    },
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/libidn/"],
     "version": "2.3.3"
   },
@@ -1270,6 +1290,7 @@
   },
   "libpipeline": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://libpipeline.nongnu.org/"],
     "version": "1.5.6"
   },
@@ -1533,6 +1554,7 @@
   },
   "oniguruma": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://github.com/kkos/oniguruma/"],
     "version": "6.9.8"
   },
@@ -1600,6 +1622,9 @@
     "version": "1.7.4"
   },
   "patch": {
+    "aliases": {
+      "homebrew": "gpatch"
+    },
     "bin": ["patch"],
     "conservative": false,
     "date": "2022-08-29",
@@ -1928,6 +1953,9 @@
     "version": "4.4.0"
   },
   "sed": {
+    "aliases": {
+      "homebrew": "gnu-sed"
+    },
     "bin": ["gsed"],
     "conservative": false,
     "date": "2022-08-29",
@@ -2023,6 +2051,9 @@
     "version": "1.12"
   },
   "tar": {
+    "aliases": {
+      "homebrew": "gnu-tar"
+    },
     "bin": ["gtar"],
     "conservative": true,
     "man1": ["gtar.1"],
@@ -2066,6 +2097,7 @@
   "tmux": {
     "bin": ["tmux"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["tmux.1"],
     "url": ["https://github.com/tmux/tmux/"],
     "version": "3.3a"
@@ -2096,6 +2128,9 @@
     "version": "2.2.28"
   },
   "units": {
+    "aliases": {
+      "homebrew": "gnu-units"
+    },
     "bin": ["gunits"],
     "conservative": true,
     "date": "2022-08-25",
@@ -2105,6 +2140,7 @@
   },
   "utf8proc": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://juliastrings.github.io/utf8proc/"],
     "version": "2.7.0"
   },
