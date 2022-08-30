@@ -1,6 +1,11 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Should only flags (e.g. '-lbz2') go into R LDFLAGS config?
+    When we build from source, it also includes some library links with '-L'.
+    Double check that this is the best way to define with pkg-config.
+** TODO Binary installs also need to ensure that dependency packages are also installed.
+    We can manage this using our app.json in a future update.
 ** TODO Improve Bash / coreutils bootstrapping on macOS, automatically installing missing dependencies.
     Need to run something like this:
     PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}" \
