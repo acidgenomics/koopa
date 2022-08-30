@@ -1822,6 +1822,7 @@
     "deps": [
       "coreutils",
       "gawk",
+      "libuv",
       "sed"
     ],
     "man1": ["R.1", "Rscript.1"],
