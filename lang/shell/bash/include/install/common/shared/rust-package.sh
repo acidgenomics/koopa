@@ -26,6 +26,7 @@ main() {
     local app dict install_args
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix \
+        'git' \
         'pkg-config' \
         'rust'
     declare -A app=(
