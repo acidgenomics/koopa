@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-30.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -42,16 +42,16 @@ __koopa_posix_header() {
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         koopa_activate_path_helper || return 1
-        koopa_add_to_path_start \
-            '/usr/local/bin'
-        koopa_add_to_manpath_start \
-            '/usr/local/man' \
-            '/usr/local/share/man'
     fi
     koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
     koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
+        koopa_add_to_path_start \
+            '/usr/local/bin'
+        koopa_add_to_manpath_start \
+            '/usr/local/man' \
+            '/usr/local/share/man'
         # > koopa_umask || return 1
         koopa_export_koopa_cpu_count || return 1
         koopa_export_koopa_shell || return 1
