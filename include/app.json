@@ -896,9 +896,9 @@
   },
   "graphviz": {
     "conservative": true,
-    "outdated": true,
+    "date": "2022-08-29",
     "url": ["https://www.graphviz.org/"],
-    "version": "5.0.0"
+    "version": "5.0.1"
   },
   "grep": {
     "bin": ["gegrep", "gfgrep", "ggrep"],
