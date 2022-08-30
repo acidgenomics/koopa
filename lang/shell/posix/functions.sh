@@ -270,6 +270,10 @@ koopa_activate_coreutils_aliases() {
         alias gcp='gcp --interactive --recursive --verbose'
         alias cp='gcp'
     fi
+    if [ -x "${bin_prefix}/gcut" ]
+    then
+        alias cut='gcut'
+    fi
     if [ -x "${bin_prefix}/gdir" ]
     then
         alias dir='gdir'
@@ -313,6 +317,18 @@ koopa_activate_coreutils_aliases() {
     then
         alias grm='grm --interactive=once --verbose'
         alias rm='grm'
+    fi
+    if [ -x "${bin_prefix}/gsed" ]
+    then
+        alias sed='gsed'
+    fi
+    if [ -x "${bin_prefix}/gtr" ]
+    then
+        alias tr='gtr'
+    fi
+    if [ -x "${bin_prefix}/gxargs" ]
+    then
+        alias xargs='gxargs'
     fi
     return 0
 }
