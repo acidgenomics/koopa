@@ -3,14 +3,15 @@
 koopa_linux_bcbio_nextgen_patch_devel() {
     # """
     # Patch bcbio-nextgen development install.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-29.
     # """
     local app cache_files dict
     koopa_assert_has_no_envs
     declare -A app=(
         ['bcbio_python']='bcbio_python'
-        ['tee']="$(koopa_locate_tee)"
+        ['tee']="$(koopa_locate_tee --allow-missing)"
     )
+    [[ ! -x "${app['tee']}" ]] && app['tee']='/usr/bin/tee'
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         ['git_dir']="${HOME:?}/git/bcbio-nextgen"
