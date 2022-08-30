@@ -116,10 +116,10 @@ ${dict['file']}"
             '--with-dtrace'
         )
     fi
-    conf_args+=(
-        "CFLAGS=${CFLAGS:-}"
-        "LDFLAGS=${LDFLAGS:-}"
-    )
+    # > conf_args+=(
+    # >     "CFLAGS=${CFLAGS:-}"
+    # >     "LDFLAGS=${LDFLAGS:-}"
+    # > )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
         "${dict['bzip2']}/lib"
