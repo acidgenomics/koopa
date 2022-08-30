@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This regex match doesn't work argh...
-# → Updating /Library/Frameworks/R.framework/Versions/4.2/Resources/etc/Makeconf
-# Unknown regexp modifier "/t" at -e line 1, at end of line
-# Execution of -e aborted due to compilation errors.
-
 koopa_r_configure_makeconf() {
     # """
     # Modify the 'Makeconf' file to ensure correct configuration.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-08-30.
     #
     # @seealso
     # - /opt/koopa/opt/r/lib/R/etc/Makeconf
