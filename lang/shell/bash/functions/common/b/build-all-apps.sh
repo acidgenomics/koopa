@@ -317,6 +317,7 @@ koopa_build_all_apps() {
         'rbenv' # deps: none.
         'dotfiles'
         'ensembl-perl-api' # deps: none.
+        'flex'
         # deps: cmake, gcc, hdf5, libxml2, python.
         'sra-tools'
         # Install conda packages.
