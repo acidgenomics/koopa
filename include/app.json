@@ -1338,6 +1338,7 @@
   },
   "libuv": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://github.com/libuv/libuv/"],
     "version": "1.44.2"
   },
@@ -1382,8 +1383,9 @@
   },
   "lz4": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://lz4.github.io/lz4/"],
-    "version": "1.9.3"
+    "version": "1.9.4"
   },
   "lzo": {
     "conservative": true,
@@ -1489,6 +1491,7 @@
   },
   "neofetch": {
     "bin": ["neofetch"],
+    "date": "2022-08-30",
     "conservative": false,
     "man1": ["neofetch.1"],
     "url": ["https://github.com/dylanaraps/neofetch/"],
@@ -1522,6 +1525,7 @@
   },
   "nim": {
     "conservative": false,
+    "date": "2022-08-30",
     "url": ["https://nim-lang.org/"],
     "version": "1.6.6"
   },
@@ -1610,13 +1614,18 @@
   "parallel": {
     "bin": ["parallel"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["parallel.1"],
     "url": ["https://www.gnu.org/software/parallel/"],
-    "version": "20220722"
+    "version": "20220822"
   },
   "password-store": {
+    "aliases": {
+      "homebrew": "pass"
+    },
     "bin": ["pass"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["pass.1"],
     "url": ["https://www.passwordstore.org/"],
     "version": "1.7.4"
@@ -1897,9 +1906,10 @@
   "rsync": {
     "bin": ["rsync"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["rsync.1"],
     "url": ["https://download.samba.org/pub/rsync/src/"],
-    "version": "3.2.4"
+    "version": "3.2.5"
   },
   "ruby": {
     "bin": ["bundle", "bundler", "gem", "ruby"],
@@ -2047,6 +2057,7 @@
   },
   "taglib": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://github.com/taglib/taglib/"],
     "version": "1.12"
   },
@@ -2262,6 +2273,7 @@
   },
   "xxhash": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://github.com/Cyan4973/xxHash/"],
     "version": "0.8.1"
   },
