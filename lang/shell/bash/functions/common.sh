@@ -21592,9 +21592,20 @@ koopa_system_info() {
     local app dict info nf_info
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['bash']="$(koopa_locate_bash)"
-        ['cat']="$(koopa_locate_cat)"
+        ['bash']="$(koopa_locate_bash --allow-missing)"
+        ['cat']="$(koopa_locate_cat --allow-missing)"
     )
+    [[ ! -x "${app['bash']}" ]] && app['bash']='/usr/bin/bash'
+    if [[ ! -x "${app['cat']}" ]]
+    then
+        if [[ -x '/usr/bin/cat' ]]
+        then
+            app['cat']='/usr/bin/cat'
+        elif [[ -x '/bin/cat' ]]
+        then
+            app['cat']='/bin/cat'
+        fi
+    fi
     [[ -x "${app['bash']}" ]] || return 1
     [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(
