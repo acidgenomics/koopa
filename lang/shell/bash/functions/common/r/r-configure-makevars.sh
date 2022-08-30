@@ -143,6 +143,7 @@ koopa_r_configure_makevars() {
             )
             ;;
     esac
+    # libomp is installed at '/usr/local/lib' for macOS.
     ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
