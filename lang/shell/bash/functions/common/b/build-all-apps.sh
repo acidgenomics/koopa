@@ -362,7 +362,7 @@ koopa_build_all_apps() {
     for pkg in "${pkgs[@]}"
     do
         koopa_is_symlink "${dict['opt_prefix']}/${pkg}" && continue
-        PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}" \
+        PATH="${TMPDIR:-/tmp}/koopa-bootstrap/bin:${PATH:-}" \
             "${app['koopa']}" install "$pkg"
     done
     koopa_push_all_app_builds
