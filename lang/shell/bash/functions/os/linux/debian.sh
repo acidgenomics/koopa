@@ -447,12 +447,15 @@ koopa_debian_apt_configure_sources() {
     local app codenames repos urls
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
-        ['tee']="$(koopa_locate_tee)"
+        ['cut']="$(koopa_locate_cut --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-missing)"
+        ['tee']="$(koopa_locate_tee --allow-missing)"
     )
+    [[ ! -x "${app['cut']}" ]] && app['cut']='/usr/bin/cut'
     [[ -x "${app['cut']}" ]] || return 1
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
     [[ -x "${app['head']}" ]] || return 1
+    [[ ! -x "${app['tee']}" ]] && app['tee']='/usr/bin/tee'
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         ['os_codename']="$(koopa_os_codename)"
