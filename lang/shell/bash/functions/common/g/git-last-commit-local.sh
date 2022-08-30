@@ -3,7 +3,7 @@
 koopa_git_last_commit_local() {
     # """
     # Last git commit of local repository.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-08-30.
     #
     # Alternate approach:
     # Can use '%h' for abbreviated commit identifier.
@@ -14,9 +14,9 @@ koopa_git_last_commit_local() {
     # # 9b7217c27858dd7ebffdf5a8ba66a6ea56ac5e1d
     # """
     local app dict repos
-    declare -A app=(
-        ['git']="$(koopa_locate_git)"
-    )
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-missing)"
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['ref']='HEAD'
