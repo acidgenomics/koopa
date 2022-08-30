@@ -78,17 +78,22 @@
     "version": "1.16.5"
   },
   "aws-cli": {
+    "aliases": {
+      "homebrew": "awscli"
+    },
     "bin": ["aws"],
     "conservative": false,
+    "date": "2022-08-30",
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.7.24"
+    "version": "2.7.27"
   },
   "azure-cli": {
     "bin": ["az"],
     "conservative": false,
+    "date": "2022-08-30",
     "dependencies": ["python"],
     "version": "2.39.0"
   },
@@ -317,8 +322,10 @@
   },
   "chezmoi": {
     "bin": ["chezmoi"],
+    "build_dependencies": ["go"],
     "conservative": false,
-    "dependencies": ["go"],
+    "date": "2022-08-30",
+    "dependencies": [],
     "url": ["https://www.chezmoi.io/"],
     "version": "2.21.0"
   },
@@ -790,8 +797,10 @@
   },
   "fzf": {
     "bin": ["fzf"],
+    "build_dependencies": ["go"],
     "conservative": false,
-    "dependencies": ["go"],
+    "date": "2022-08-30",
+    "dependencies": [],
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
     "version": "0.32.1"
@@ -897,14 +906,16 @@
   "go": {
     "bin": ["go"],
     "conservative": false,
+    "date": "2022-08-30",
     "url": ["https://golang.org/dl/"],
     "version": "1.19"
   },
   "google-cloud-sdk": {
     "bin": ["gcloud"],
     "conservative": false,
-    "url": ["https://cloud.google.com/sdk/docs/install"],
-    "version": "396.0.0"
+    "date": "2022-08-30",
+    "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
+    "version": "399.0.0"
   },
   "gperf": {
     "conservative": true,
@@ -1249,6 +1260,7 @@
   },
   "libgeotiff": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://github.com/OSGeo/libgeotiff/"],
     "version": "1.7.1"
   },
@@ -2150,6 +2162,7 @@
   "udunits": {
     "bin": ["udunits2"],
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://www.unidata.ucar.edu/downloads/udunits/"],
     "version": "2.2.28"
   },
@@ -2198,11 +2211,15 @@
   "wget": {
     "bin": ["wget"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["wget.1"],
     "url": ["https://www.gnu.org/software/wget/"],
     "version": "1.21.3"
   },
   "which": {
+    "aliases": {
+      "homebrew": "gnu-which"
+    },
     "bin": ["gwhich"],
     "conservative": true,
     "date": "2022-08-25",
