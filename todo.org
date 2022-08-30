@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Create a recipe solver that walks across the JSON file and puts all apps in order of installation automatically.
 ** TODO grep alias is messing up if grep isn't installed.
     only alias grep if ggrep is installed
 ** TODO Don't let app install proceed unless all build and other dependencies defined in app JSON are present, with the current version.
