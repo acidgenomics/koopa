@@ -1823,7 +1823,6 @@
       "conda",
       "coreutils",
       "gawk",
-      "libuv",
       "sed",
       "udunits"
     ],
