@@ -3174,8 +3174,11 @@ koopa_build_all_apps() {
         'gdal'
         'fribidi'
         'harfbuzz'
-        'r'
+        'gawk'
+        'libuv'
         'conda'
+        'udunits'
+        'r'
         'apr'
         'apr-util'
         'armadillo'
@@ -3200,7 +3203,6 @@ koopa_build_all_apps() {
         'boost'
         'fish'
         'zsh'
-        'gawk'
         'lame'
         'ffmpeg'
         'flac'
@@ -3224,7 +3226,6 @@ koopa_build_all_apps() {
         'lesspipe'
         'libidn'
         'libpipeline'
-        'libuv'
         'lz4'
         'man-db'
         'neofetch'
@@ -3247,7 +3248,6 @@ koopa_build_all_apps() {
         'stow'
         'tar'
         'tree'
-        'udunits'
         'units'
         'wget'
         'which'
@@ -17684,12 +17684,17 @@ koopa_r_configure_environ() {
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
+        ['conda']="$(koopa_app_prefix 'conda')"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
         ['tmp_file']="$(koopa_tmp_file)"
+        ['udunits2']="$(koopa_app_prefix 'udunits')"
     )
+    koopa_assert_is_dir \
+        "${dict['conda']}" \
+        "${dict['r_prefix']}" \
+        "${dict['udunits2']}"
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
@@ -17743,7 +17748,10 @@ koopa_r_configure_environ() {
     )
     for key in "${keys[@]}"
     do
-        pkgconfig_arr[$key]="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
+        local prefix
+        prefix="$(koopa_app_prefix "$key")"
+        koopa_assert_is_dir "$prefix"
+        pkgconfig_arr[$key]="$prefix"
     done
     for i in "${!pkgconfig_arr[@]}"
     do
@@ -17757,6 +17765,7 @@ koopa_r_configure_environ() {
     do
         pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/pkgconfig"
     done
+    koopa_assert_is_dir "${pkgconfig_arr[@]}"
     lines+=(
         "PAGER=\${PAGER:-less}"
         "PATH=$(printf '%s:' "${path_arr[@]}")"
@@ -17784,7 +17793,6 @@ koopa_r_configure_environ() {
         'R_REMOTES_STANDALONE=true'
         'R_REMOTES_UPGRADE=always'
     )
-    dict['conda']="$(koopa_realpath "${dict['opt_prefix']}/conda")"
     lines+=(
         "RETICULATE_MINICONDA_PATH=${dict['conda']}"
         "WORKON_HOME=\${HOME}/.virtualenvs"
@@ -17797,7 +17805,6 @@ koopa_r_configure_environ() {
         "R_USER_CONFIG_DIR=\${HOME}/.config"
         "R_USER_DATA_DIR=\${HOME}/.local/share"
     )
-    dict['udunits2']="$(koopa_realpath "${dict['opt_prefix']}/udunits")"
     lines+=(
         "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
         "UDUNITS2_LIBS=${dict['udunits2']}/lib"
@@ -17864,7 +17871,7 @@ koopa_r_configure_java() {
     [[ -x "${app['r']}" ]] || return 1
     koopa_is_koopa_app "${app['r']}" && return 0
     declare -A dict
-    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+    dict['openjdk']="$(koopa_app_prefix 'openjdk' || true)"
     if [[ ! -d "${dict['openjdk']}" ]]
     then
         koopa_alert_note 'Skipping R Java configuration.'
@@ -17901,19 +17908,20 @@ koopa_r_configure_java() {
 koopa_r_configure_ldpaths() {
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['r']="${1:?}"
-    )
+    declare -A app
+    app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
+        ['java_home']="$(koopa_app_prefix 'openjdk')"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
     )
+    koopa_assert_is_dir \
+        "${dict['java_home']}" \
+        "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    dict['java_home']="$(koopa_realpath "${dict['opt_prefix']}/openjdk")"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
