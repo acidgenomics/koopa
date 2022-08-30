@@ -284,6 +284,7 @@
   },
   "cairo": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://cairographics.org/"],
     "version": "1.16.0"
   },
@@ -756,11 +757,13 @@
   },
   "fontconfig": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.freedesktop.org/wiki/Software/fontconfig/"],
     "version": "2.14.0"
   },
   "freetype": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.freetype.org/"],
     "version": "2.12.1"
   },
@@ -853,6 +856,7 @@
   },
   "glib": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://gitlab.gnome.org/GNOME/glib/"],
     "version": "2.72.3"
   },
@@ -1008,6 +1012,7 @@
       "h5watch"
     ],
     "conservative": true,
+    "date": "2022-08-29",
     "deps": ["zlib", "gcc"],
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.12.2"
@@ -1218,9 +1223,10 @@
   },
   "libgit2": {
     "conservative": true,
+    "date": "2022-08-29",
     "outdated": true,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.4.4"
+    "version": "1.5.0"
   },
   "libgpg-error": {
     "conservative": true,
@@ -1262,6 +1268,7 @@
   },
   "libssh2": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.libssh2.org/"],
     "version": "1.10.0"
   },
@@ -1340,6 +1347,7 @@
   },
   "lzo": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://www.oberhumer.com/opensource/lzo/"],
     "version": "2.10"
   },
@@ -1652,6 +1660,7 @@
   },
   "pixman": {
     "conservative": true,
+    "date": "2022-08-29",
     "url": ["https://cairographics.org/"],
     "version": "0.40.0"
   },
