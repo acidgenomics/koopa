@@ -8,6 +8,7 @@ main() {
     # @seealso
     # - https://www.sourceware.org/bzip2/
     # - https://gitlab.com/federicomenaquintero/bzip2
+    # - https://github.com/conda-forge/bzip2-feedstock/blob/main/recipe/build.sh
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bzip2.rb
     # - https://github.com/macports/macports-ports/blob/master/archivers/
     #     bzip2/Portfile
@@ -37,6 +38,7 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['makefile_shared']="Makefile-libbz2_${dict['shared_ext']}"
     # NOTE The macOS dylib Makefile is a work in progress. Refer to MacPorts
     # recipe for an alternative approach. Note that Homebrew doesn't currently
@@ -84,39 +86,55 @@ main() {
     "${app['make']}" install "PREFIX=${dict['prefix']}"
     if [[ -f "${dict['makefile_shared']}" ]]
     then
-        dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
         "${app['make']}" -f "${dict['makefile_shared']}" 'clean'
         "${app['make']}" -f "${dict['makefile_shared']}"
-        if koopa_is_linux
-        then
-            koopa_cp \
-                --target-directory="${dict['prefix']}/lib" \
-                "libbz2.${dict['shared_ext']}.${dict['version']}"
-            (
-                koopa_cd "${dict['prefix']}/lib"
-                koopa_ln \
-                    "libbz2.${dict['shared_ext']}.${dict['version']}" \
-                    "libbz2.${dict['shared_ext']}.${dict['maj_min_ver']}"
-                koopa_ln \
-                    "libbz2.${dict['shared_ext']}.${dict['version']}" \
-                    "libbz2.${dict['shared_ext']}"
-            )
-        fi
-        # > elif koopa_is_macos
-        # > then
-        # >     koopa_cp \
-        # >         --target-directory="${dict['prefix']}/lib" \
-        # >         "libbz2.${dict['version']}.${dict['shared_ext']}"
-        # >     (
-        # >         koopa_cd "${dict['prefix']}/lib"
-        # >         koopa_ln \
-        # >             "libbz2.${dict['version']}.${dict['shared_ext']}" \
-        # >             "libbz2.${dict['maj_min_ver']}.${dict['shared_ext']}"
-        # >         koopa_ln \
-        # >             "libbz2.${dict['version']}.${dict['shared_ext']}" \
-        # >             "libbz2.${dict['shared_ext']}"
-        # >     )
-        # > fi
+    elif koopa_is_macos
+    then
+        # This is the approach used by conda-forge recipe.
+        # FIXME Do we need to use GCC instead?
+        app['cc']='/usr/bin/clang'
+        "${app['cc']}" \
+            -shared \
+            '-Wl,-install_name' \
+            "-Wl,libbz2.${dict['shared_ext']}" \
+            -o "libbz2.${dict['version']}.${dict['shared_ext']}" \
+            'blocksort.o' \
+            'huffman.o' \
+            'crctable.o' \
+            'randtable.o' \
+            'compress.o' \
+            'decompress.o' \
+            'bzlib.o' \
+            "${LDFLAGS:-}"
+    fi
+    if koopa_is_linux
+    then
+        koopa_cp \
+            --target-directory="${dict['prefix']}/lib" \
+            "libbz2.${dict['shared_ext']}.${dict['version']}"
+        (
+            koopa_cd "${dict['prefix']}/lib"
+            koopa_ln \
+                "libbz2.${dict['shared_ext']}.${dict['version']}" \
+                "libbz2.${dict['shared_ext']}.${dict['maj_min_ver']}"
+            koopa_ln \
+                "libbz2.${dict['shared_ext']}.${dict['version']}" \
+                "libbz2.${dict['shared_ext']}"
+        )
+    elif koopa_is_macos
+    then
+        koopa_cp \
+            --target-directory="${dict['prefix']}/lib" \
+            "libbz2.${dict['version']}.${dict['shared_ext']}"
+        (
+            koopa_cd "${dict['prefix']}/lib"
+            koopa_ln \
+                "libbz2.${dict['version']}.${dict['shared_ext']}" \
+                "libbz2.${dict['maj_min_ver']}.${dict['shared_ext']}"
+            koopa_ln \
+                "libbz2.${dict['version']}.${dict['shared_ext']}" \
+                "libbz2.${dict['shared_ext']}"
+        )
     fi
     return 0
 }
