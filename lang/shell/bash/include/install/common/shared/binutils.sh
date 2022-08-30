@@ -6,6 +6,21 @@
 # # configure: error: Building gprofng requires bison 3.0.4 or later.
 
 main() {
+    # """
+    # Potentially include:
+    # -D '--disable-debug' \
+    # -D '--disable-dependency-tracking' \
+    # -D '--disable-nls' \
+    # -D '--disable-werror' \
+    # -D '--enable-64-bit-bfd' \
+    # -D '--enable-deterministic-archives' \
+    # -D '--enable-gold' \
+    # -D '--enable-interwork' \
+    # -D '--enable-multilib' \
+    # -D '--enable-plugins' \
+    # -D '--enable-targets=all' \
+    # -D '--with-system-zlib' \
+    # """
     koopa_activate_build_opt_prefix 'bison'
     koopa_activate_opt_prefix 'zlib' 'texinfo'
     koopa_install_app_internal \
@@ -15,13 +30,5 @@ main() {
         -D '--disable-dependency-tracking' \
         -D '--disable-nls' \
         -D '--disable-werror' \
-        -D '--enable-64-bit-bfd' \
-        -D '--enable-deterministic-archives' \
-        -D '--enable-gold' \
-        -D '--enable-interwork' \
-        -D '--enable-multilib' \
-        -D '--enable-plugins' \
-        -D '--enable-targets=all' \
-        -D '--with-system-zlib' \
         "$@"
 }
