@@ -85,10 +85,10 @@ koopa_debian_apt_configure_sources() {
         ['tee']="$(koopa_locate_tee --allow-missing)"
     )
     [[ ! -x "${app['cut']}" ]] && app['cut']='/usr/bin/cut'
-    [[ -x "${app['cut']}" ]] || return 1
     [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
-    [[ -x "${app['head']}" ]] || return 1
     [[ ! -x "${app['tee']}" ]] && app['tee']='/usr/bin/tee'
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         ['os_codename']="$(koopa_os_codename)"
