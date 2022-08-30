@@ -118,32 +118,25 @@ koopa_r_configure_makevars() {
     # NOTE Custom LDFLAGS here appear to be incompatible with these packages:
     # fs, httpuv, igraph, nloptr. May need to add support for bzip2, at least
     # on Linux.
-    case "${dict['system']}" in
-        '1')
-            cppflags+=(
-                "$( \
-                    "${app['pkg_config']}" --cflags \
-                        'freetype2' \
-                        'libjpeg' \
-                        'libpng' \
-                        'libtiff-4' \
-                        'libzstd' \
-                        'zlib' \
-                )"
-            )
-            ldflags+=(
-                "$( \
-                    "${app['pkg_config']}" --libs-only-L \
-                        'freetype2' \
-                        'libjpeg' \
-                        'libpng' \
-                        'libtiff-4' \
-                        'libzstd' \
-                        'zlib' \
-                )"
-            )
-            ;;
-    esac
+    # > case "${dict['system']}" in
+    # >     '1')
+    # >         local pkg_config
+    # >         pkg_config=(
+    # >             'freetype2'
+    # >             'libjpeg'
+    # >             'libpng'
+    # >             'libtiff-4'
+    # >             'libzstd'
+    # >             'zlib'
+    # >         )
+    # >         cppflags+=(
+    # >             "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
+    # >         )
+    # >         ldflags+=(
+    # >             "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
+    # >         )
+    # >         ;;
+    # > esac
     # libomp is installed at '/usr/local/lib' for macOS.
     # This is problematic for nloptr but required for data.table.
     ldflags+=('-lomp')
