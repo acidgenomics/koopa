@@ -3317,6 +3317,7 @@ koopa_build_all_apps() {
         'rbenv' # deps: none.
         'dotfiles'
         'ensembl-perl-api' # deps: none.
+        'flex'
         'sra-tools'
         'ffq' # deps: conda
     )
