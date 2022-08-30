@@ -187,6 +187,7 @@
     "version": "1.14.1"
   },
   "binutils": {
+    "check": false,
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
