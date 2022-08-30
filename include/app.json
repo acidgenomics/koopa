@@ -653,6 +653,7 @@
   "emacs": {
     "bin": ["emacs"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": [
       "ctags.1.gz",
       "ebrowse.1.gz",
@@ -883,6 +884,7 @@
   },
   "gnutls": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://www.gnutls.org/", "https://gnupg.org/download/index.html"],
     "version": "3.7.7"
   },
@@ -2106,6 +2108,7 @@
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": [
       "ex.1",
       "rview.1",
@@ -2117,7 +2120,7 @@
       "xxd.1"
     ],
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.0200"
+    "version": "9.0.0250"
   },
   "visidata": {
     "bin": ["vd", "visidata"],
