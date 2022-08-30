@@ -263,17 +263,81 @@ koopa_activate_conda() {
 }
 
 koopa_activate_coreutils_aliases() {
-    [ -x "$(koopa_bin_prefix)/gcp" ] || return 0
-    alias gcp='gcp --interactive --recursive --verbose'
-    alias gln='gln --interactive --no-dereference --symbolic --verbose'
-    alias gmkdir='gmkdir --parents --verbose'
-    alias gmv='gmv --interactive --verbose'
-    alias grm='grm --interactive=once --verbose'
-    alias cp='gcp'
-    alias ln='gln'
-    alias mkdir='gmkdir'
-    alias mv='gmv'
-    alias rm='grm'
+    local bin_prefix
+    bin_prefix="$(koopa_bin_prefix)"
+    if [ -x "${bin_prefix}/gcp" ]
+    then
+        alias gcp='gcp --interactive --recursive --verbose'
+        alias cp='gcp'
+    fi
+    if [ -x "${bin_prefix}/gcut" ]
+    then
+        alias cut='gcut'
+    fi
+    if [ -x "${bin_prefix}/gdir" ]
+    then
+        alias dir='gdir'
+    fi
+    if [ -x "${bin_prefix}/gegrep" ]
+    then
+        alias egrep='gegrep'
+    fi
+    if [ -x "${bin_prefix}/gfgrep" ]
+    then
+        alias fgrep='gfgrep'
+    fi
+    if [ -x "${bin_prefix}/gfind" ]
+    then
+        alias find='gfind'
+    fi
+    if [ -x "${bin_prefix}/ggrep" ]
+    then
+        alias grep='ggrep'
+    fi
+    if [ -x "${bin_prefix}/gln" ]
+    then
+        alias gln='gln --interactive --no-dereference --symbolic --verbose'
+        alias ln='gln'
+    fi
+    if [ -x "${bin_prefix}/ghead" ]
+    then
+        alias head='ghead'
+    fi
+    if [ -x "${bin_prefix}/gls" ]
+    then
+        alias ls='gls'
+    fi
+    if [ -x "${bin_prefix}/gmkdir" ]
+    then
+        alias gmkdir='gmkdir --parents --verbose'
+        alias mkdir='gmkdir'
+    fi
+    if [ -x "${bin_prefix}/gmv" ]
+    then
+        alias gmv='gmv --interactive --verbose'
+        alias mv='gmv'
+    fi
+    if [ -x "${bin_prefix}/grm" ]
+    then
+        alias grm='grm --interactive=once --verbose'
+        alias rm='grm'
+    fi
+    if [ -x "${bin_prefix}/gsed" ]
+    then
+        alias sed='gsed'
+    fi
+    if [ -x "${bin_prefix}/gtail" ]
+    then
+        alias tail='gtail'
+    fi
+    if [ -x "${bin_prefix}/gtr" ]
+    then
+        alias tr='gtr'
+    fi
+    if [ -x "${bin_prefix}/gxargs" ]
+    then
+        alias xargs='gxargs'
+    fi
     return 0
 }
 
@@ -321,12 +385,6 @@ koopa_activate_dircolors() {
     alias ggrep='ggrep --color=auto'
     alias gls='gls --color=auto'
     alias gvdir='gvdir --color=auto'
-    alias dir='gdir'
-    alias egrep='gegrep'
-    alias frep='gfgrep'
-    alias grep='ggrep'
-    alias ls='gls'
-    alias vdir='gvdir'
     return 0
 }
 
@@ -812,7 +870,8 @@ koopa_alias_doom_emacs() {
     local prefix
     prefix="$(koopa_doom_emacs_prefix)"
     [ -d "$prefix" ] || return 1
-    emacs --with-profile 'doom' "$@"
+    "$(koopa_alias_emacs --with-profile 'doom' "$@")"
+    return 0
 }
 
 koopa_alias_emacs_vanilla() {
@@ -820,15 +879,20 @@ koopa_alias_emacs_vanilla() {
 }
 
 koopa_alias_emacs() {
-    local prefix
+    local emacs prefix
     prefix="${HOME:?}/.emacs.d"
     [ -f "${prefix}/chemacs.el" ] || return 1
-    if [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] && koopa_is_macos
+    emacs='emacs'
+    if koopa_is_macos
     then
-        TERM='xterm-24bit' emacs --no-window-system "$@"
+        emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
+        [ -e "$emacs" ] || return 1
+        [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] || return 1
+        TERM='xterm-24bit' "$emacs" "$@"
     else
-        emacs --no-window-system "$@"
+        "$emacs" --no-window-system "$@"
     fi
+    return 0
 }
 
 koopa_alias_glances() {
@@ -918,7 +982,8 @@ koopa_alias_spacemacs() {
     local prefix
     prefix="$(koopa_spacemacs_prefix)"
     [ -d "$prefix" ] || return 1
-    emacs --with-profile 'spacemacs' "$@"
+    "$(koopa_alias_emacs --with-profile 'spacemacs' "$@")"
+    return 0
 }
 
 koopa_alias_spacevim() {
