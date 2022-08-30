@@ -8,6 +8,9 @@
 # sed: /opt/koopa/app/libxml2/2.9.14/lib/libxml2.la: No such file or directory
 # libtool:   error: '/opt/koopa/app/libxml2/2.9.14/lib/libxml2.la' is not a valid libtool archive
 
+# FIXME May only want to include bzip2 as a dependency for Linux.
+# bzip2 comes preinstalled with macOS.
+
 main() {
     # """
     # Install ImageMagick.

@@ -70,6 +70,7 @@ koopa_r_configure_ldpaths() {
         'pcre2'
         'proj'
         'readline'
+        'sqlite'
         'xz'
         'zlib'
         'zstd'

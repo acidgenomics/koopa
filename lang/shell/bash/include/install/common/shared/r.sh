@@ -120,7 +120,7 @@ main() {
         # libtool deps: m4.
         'libtool'
         # imagemagick deps: libtool.
-        'imagemagick'
+        # > 'imagemagick'
         # FIXME OK to remove this?
         # libssh2 deps: openssl3.
         'libssh2'
