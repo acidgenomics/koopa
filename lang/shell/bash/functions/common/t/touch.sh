@@ -3,14 +3,15 @@
 koopa_touch() {
     # """
     # Touch (create) a file on disk.
-    # @note Updated 2022-05-16.
+    # @note Updated 2022-08-30.
     # """
     local app mkdir pos touch
     koopa_assert_has_args "$#"
     declare -A app=(
         ['mkdir']='koopa_mkdir'
-        ['touch']="$(koopa_locate_touch)"
+        ['touch']="$(koopa_locate_touch --allow-missing)"
     )
+    [[ ! -x "${app['touch']}" ]] && app['touch']='/usr/bin/touch'
     [[ -x "${app['touch']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
