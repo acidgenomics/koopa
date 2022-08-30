@@ -126,10 +126,10 @@ main() {
         'libssh2'
         # FIXME OK to remove this?
         # libgit2 deps: openssl3, libssh2.
-        'libgit2'
+        # > 'libgit2'
         # FIXME OK to remove this?
         # sqlite deps: readline.
-        'sqlite'
+        # > 'sqlite'
         # python deps: zlib, libffi, openssl3.
         'python'
         # hdf5 deps: gcc.
