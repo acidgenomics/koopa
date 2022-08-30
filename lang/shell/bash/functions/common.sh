@@ -18146,32 +18146,6 @@ koopa_r_configure_makevars() {
     ldflags+=(
         "-L${dict['gettext']}/lib"
     )
-    case "${dict['system']}" in
-        '1')
-            cppflags+=(
-                "$( \
-                    "${app['pkg_config']}" --cflags \
-                        'freetype2' \
-                        'libjpeg' \
-                        'libpng' \
-                        'libtiff-4' \
-                        'libzstd' \
-                        'zlib' \
-                )"
-            )
-            ldflags+=(
-                "$( \
-                    "${app['pkg_config']}" --libs-only-L \
-                        'freetype2' \
-                        'libjpeg' \
-                        'libpng' \
-                        'libtiff-4' \
-                        'libzstd' \
-                        'zlib' \
-                )"
-            )
-            ;;
-    esac
     ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
