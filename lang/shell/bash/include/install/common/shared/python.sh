@@ -127,6 +127,7 @@ ${dict['file']}"
     "${app['make']}" install
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
+    "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
     return 0
 }
