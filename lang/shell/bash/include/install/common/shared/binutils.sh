@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Hitting this cryptic error on Ubuntu 22:
+# NOTE Hitting this cryptic error with 2.39 on Ubuntu 22:
 # # checking for bison... bison
 # # checking for bison 3.0.4 or newer... 3.8.2, bad
 # # configure: error: Building gprofng requires bison 3.0.4 or later.
