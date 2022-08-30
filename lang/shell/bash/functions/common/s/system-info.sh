@@ -87,7 +87,8 @@ koopa_system_info() {
                 "$("${app['sw_vers']}" -buildVersion)" \
         )"
     else
-        app['uname']="$(koopa_locate_uname)"
+        app['uname']="$(koopa_locate_uname --allow-missing)"
+        [[ ! -x "${app['uname']}" ]] && app['uname']='/usr/bin/uname'
         [[ -x "${app['uname']}" ]] || return 1
         dict['os']="$("${app['uname']}" --all)"
         # Alternate approach using Python:
