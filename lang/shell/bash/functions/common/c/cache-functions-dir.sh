@@ -3,7 +3,7 @@
 koopa_cache_functions_dir() {
     # """
     # Cache a koopa function library directory.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-08-30.
     #
     # @section Alternate tr approach for duplicate newlines removal:
     # > "${app['tr']}" -s '\n' '\n' \
@@ -30,7 +30,6 @@ koopa_cache_functions_dir() {
         dict['target_file']="${dict['prefix']}.sh"
         koopa_alert "Caching functions at '${dict['prefix']}' \
 in '${dict['target_file']}'."
-        # FIXME This isn't detecting any files.
         readarray -t files <<< "$( \
             koopa_find \
                 --pattern='*.sh' \
@@ -43,7 +42,7 @@ in '${dict['target_file']}'."
             --string='#!/bin/sh\n# shellcheck disable=all'
         for file in "${files[@]}"
         do
-            # FIXME Can we use koopa_grep here instead?
+            # FIXME Switch to using koopa_grep here.
             "${app['grep']}" -Eiv '^(\s+)?#' "$file" \
             >> "${dict['target_file']}"
         done

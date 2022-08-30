@@ -3,7 +3,7 @@
 koopa_grep() {
     # """
     # grep matching: print lines that match patterns in a string or file.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-08-30.
     #
     # Uses ripgrep instead of grep when possible (faster).
     # Consider passing short flags to 'grep' for BSD compatibility.
@@ -135,13 +135,13 @@ koopa_grep() {
             then
                 dict['engine']='grep'
                 app['grep']="$(koopa_locate_grep --allow-missing)"
-                [[ -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+                [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
                 [[ -x "${app['grep']}" ]] || return 1
             fi
             ;;
         'grep')
             app['grep']="$(koopa_locate_grep --allow-missing)"
-            [[ -z "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+            [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
             [[ -x "${app['grep']}" ]] || return 1
             ;;
         'rg')
