@@ -65,43 +65,30 @@ koopa_r_configure_makevars() {
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
-        ['freetype']="$(koopa_app_prefix 'freetype')"
+        # > ['freetype']="$(koopa_app_prefix 'freetype')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
-        ['jpeg']="$(koopa_app_prefix 'jpeg')"
+        # > ['jpeg']="$(koopa_app_prefix 'jpeg')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
-        ['libpng']="$(koopa_app_prefix 'libpng')"
-        ['libtiff']="$(koopa_app_prefix 'libtiff')"
+        # > ['libpng']="$(koopa_app_prefix 'libpng')"
+        # > ['libtiff']="$(koopa_app_prefix 'libtiff')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
-        ['pcre2']="$(koopa_app_prefix 'pcre2')"
+        # > ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
+        # > ['zlib']="$(koopa_app_prefix 'zlib')"
+        # > ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
-        "${dict['freetype']}" \
         "${dict['gettext']}" \
-        "${dict['jpeg']}" \
         "${dict['lapack']}" \
-        "${dict['libpng']}" \
-        "${dict['libtiff']}" \
         "${dict['openblas']}" \
-        "${dict['pcre2']}" \
-        "${dict['r_prefix']}" \
-        "${dict['zlib']}" \
-        "${dict['zstd']}"
+        "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     koopa_add_to_pkg_config_path \
-        "${dict['freetype']}/lib/pkgconfig" \
-        "${dict['jpeg']}/lib/pkgconfig" \
         "${dict['lapack']}/lib/pkgconfig" \
-        "${dict['libpng']}/lib/pkgconfig" \
-        "${dict['libtiff']}/lib/pkgconfig" \
-        "${dict['openblas']}/lib/pkgconfig" \
-        "${dict['zlib']}/lib/pkgconfig" \
-        "${dict['zstd']}/lib/pkgconfig"
+        "${dict['openblas']}/lib/pkgconfig"
     cppflags=()
     ldflags=()
     lines=()
@@ -139,7 +126,7 @@ koopa_r_configure_makevars() {
     # > esac
     # libomp is installed at '/usr/local/lib' for macOS.
     # This is problematic for nloptr but required for data.table.
-    ldflags+=('-lomp')
+    koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"

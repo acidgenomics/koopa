@@ -30,22 +30,26 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='libgit2'
+        ['openssl']="$(koopa_app_prefix 'openssl3')"
+        ['pcre']="$(koopa_app_prefix 'pcre')"
         ['prefix']="${INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${INSTALL_VERSION:?}"
+        ['zlib']="$(koopa_app_prefix 'zlib')"
     )
+    koopa_assert_is_dir \
+        "${dict['openssl']}" \
+        "${dict['pcre']}" \
+        "${dict['zlib']}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
 archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
-    dict['pcre']="$(koopa_app_prefix 'pcre')"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
-    koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
         '-DCMAKE_BUILD_TYPE=Release'
         '-DBUILD_TESTS=OFF'
         '-DUSE_BUNDLED_ZLIB=OFF'
@@ -55,6 +59,7 @@ archive/${dict['file']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
+    # > koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
     "${app['cmake']}" \
         -S '.' \
         -B 'build' \

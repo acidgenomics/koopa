@@ -55,8 +55,11 @@ main() {
         # > 'mpc'
         # gcc deps: gmp, mpfr, mpc.
         'gcc'
-        # bzip2 deps: none.
-        'bzip2'
+    )
+    # bzip2 deps: none.
+    # R currently has configuration issues with libbz2.dylib on macOS.
+    koopa_is_linux && deps+=('bzip2')
+    deps+=(
         # icu4c deps: none.
         'icu4c'
         # ncurses deps: none.
@@ -120,16 +123,16 @@ main() {
         # libtool deps: m4.
         'libtool'
         # imagemagick deps: libtool.
-        'imagemagick'
+        # > 'imagemagick'
         # FIXME OK to remove this?
         # libssh2 deps: openssl3.
         'libssh2'
         # FIXME OK to remove this?
         # libgit2 deps: openssl3, libssh2.
-        'libgit2'
+        # > 'libgit2'
         # FIXME OK to remove this?
         # sqlite deps: readline.
-        'sqlite'
+        # > 'sqlite'
         # python deps: zlib, libffi, openssl3.
         'python'
         # hdf5 deps: gcc.
@@ -211,7 +214,7 @@ main() {
     declare -A conf_dict
     declare -A dict=(
         ['arch']="$(koopa_arch)"
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
+        # > ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['jobs']="$(koopa_cpu_count)"
         ['lapack']="$(koopa_app_prefix 'lapack')"
         ['name']="${INSTALL_NAME:?}"
@@ -221,7 +224,6 @@ main() {
         ['version']="${INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
-        "${dict['bzip2']}" \
         "${dict['lapack']}" \
         "${dict['openjdk']}" \
         "${dict['tcl_tk']}"

@@ -70,20 +70,27 @@ koopa_r_configure_ldpaths() {
         'pcre2'
         'proj'
         'readline'
+        'sqlite'
         'xz'
         'zlib'
         'zstd'
     )
     for key in "${keys[@]}"
     do
-        local dict2
-        declare -A dict2
-        dict2['prefix']="$(koopa_app_prefix "$key")"
-        koopa_assert_is_dir "${dict2['prefix']}"
-        dict2['libdir']="${dict2['prefix']}/lib"
-        koopa_assert_is_dir "${dict2['libdir']}"
-        ld_lib_app_arr[$key]="${dict2['libdir']}"
+        local prefix
+        prefix="$(koopa_app_prefix "$key")"
+        koopa_assert_is_dir "$prefix"
+        ld_lib_app_arr[$key]="$prefix"
     done
+    for i in "${!ld_lib_app_arr[@]}"
+    do
+        ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+    done
+    if koopa_is_linux
+    then
+        ld_lib_app_arr['harfbuzz']="${ld_lib_app_arr['harfbuzz']}64"
+    fi
+    koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
     if koopa_is_linux
     then

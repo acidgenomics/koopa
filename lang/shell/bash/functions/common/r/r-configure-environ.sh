@@ -153,6 +153,7 @@ koopa_r_configure_environ() {
         'pcre2'
         'proj'
         'readline'
+        'sqlite'
         'xz'
         'zlib'
         'zstd'

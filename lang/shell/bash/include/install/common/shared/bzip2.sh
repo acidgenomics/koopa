@@ -3,11 +3,12 @@
 main() {
     # """
     # Install bzip2.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-08-30.
     #
     # @seealso
     # - https://www.sourceware.org/bzip2/
     # - https://gitlab.com/federicomenaquintero/bzip2
+    # - https://github.com/conda-forge/bzip2-feedstock/blob/main/recipe/build.sh
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bzip2.rb
     # - https://github.com/macports/macports-ports/blob/master/archivers/
     #     bzip2/Portfile
@@ -29,6 +30,7 @@ main() {
     declare -A dict=(
         ['name']='bzip2'
         ['prefix']="${INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
@@ -36,6 +38,102 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['makefile_shared']="Makefile-libbz2_${dict['shared_ext']}"
+    # NOTE The macOS dylib Makefile is a work in progress. Refer to MacPorts
+    # recipe for an alternative approach. Note that Homebrew doesn't currently
+    # bundle dylib file.
+    # > if koopa_is_macos
+    # > then
+    # >     "${app['cat']}" > "${dict['makefile_shared']}" << END
+# > PKG_VERSION=${dict['version']}
+# >
+# > SHELL=/bin/sh
+# > CC=gcc
+# > BIGFILES=-D_FILE_OFFSET_BITS=64
+# > CFLAGS=-fpic -fPIC -Wall -Winline -O2 -g \$(BIGFILES)
+# >
+# > OBJS= blocksort.o  \
+# > 	  huffman.o    \
+# > 	  crctable.o   \
+# > 	  randtable.o  \
+# > 	  compress.o   \
+# > 	  decompress.o \
+# > 	  bzlib.o
+# >
+# > all: \$(OBJS)
+# > 	\$(CC) -shared -Wl,-install_name -Wl,libbz2.dylib -o libbz2.\${PKG_VERSION}.dylib \$(OBJS)
+# >
+# > clean:
+# > 	rm -f libbz2.dylib libbz2.\${PKG_VERSION}.dylib
+# >
+# > blocksort.o: blocksort.c
+# > 	\$(CC) \$(CFLAGS) -c blocksort.c
+# > huffman.o: huffman.c
+# > 	\$(CC) \$(CFLAGS) -c huffman.c
+# > crctable.o: crctable.c
+# > 	\$(CC) \$(CFLAGS) -c crctable.c
+# > randtable.o: randtable.c
+# > 	\$(CC) \$(CFLAGS) -c randtable.c
+# > compress.o: compress.c
+# > 	\$(CC) \$(CFLAGS) -c compress.c
+# > decompress.o: decompress.c
+# > 	\$(CC) \$(CFLAGS) -c decompress.c
+# > bzlib.o: bzlib.c
+# > 	\$(CC) \$(CFLAGS) -c bzlib.c
+# > END
+    # > fi
     "${app['make']}" install "PREFIX=${dict['prefix']}"
+    if [[ -f "${dict['makefile_shared']}" ]]
+    then
+        "${app['make']}" -f "${dict['makefile_shared']}" 'clean'
+        "${app['make']}" -f "${dict['makefile_shared']}"
+    elif koopa_is_macos
+    then
+        # This is the approach used by conda-forge recipe.
+        app['cc']='gcc'
+        "${app['cc']}" \
+            '-shared' \
+            '-Wl,-install_name' \
+            "-Wl,libbz2.${dict['shared_ext']}" \
+            -o "libbz2.${dict['version']}.${dict['shared_ext']}" \
+            'blocksort.o' \
+            'huffman.o' \
+            'crctable.o' \
+            'randtable.o' \
+            'compress.o' \
+            'decompress.o' \
+            'bzlib.o'
+            # > "${LDFLAGS:-}"
+    fi
+    if koopa_is_linux
+    then
+        koopa_cp \
+            --target-directory="${dict['prefix']}/lib" \
+            "libbz2.${dict['shared_ext']}.${dict['version']}"
+        (
+            koopa_cd "${dict['prefix']}/lib"
+            koopa_ln \
+                "libbz2.${dict['shared_ext']}.${dict['version']}" \
+                "libbz2.${dict['shared_ext']}.${dict['maj_min_ver']}"
+            koopa_ln \
+                "libbz2.${dict['shared_ext']}.${dict['version']}" \
+                "libbz2.${dict['shared_ext']}"
+        )
+    elif koopa_is_macos
+    then
+        koopa_cp \
+            --target-directory="${dict['prefix']}/lib" \
+            "libbz2.${dict['version']}.${dict['shared_ext']}"
+        (
+            koopa_cd "${dict['prefix']}/lib"
+            koopa_ln \
+                "libbz2.${dict['version']}.${dict['shared_ext']}" \
+                "libbz2.${dict['maj_min_ver']}.${dict['shared_ext']}"
+            koopa_ln \
+                "libbz2.${dict['version']}.${dict['shared_ext']}" \
+                "libbz2.${dict['shared_ext']}"
+        )
+    fi
     return 0
 }
