@@ -263,17 +263,57 @@ koopa_activate_conda() {
 }
 
 koopa_activate_coreutils_aliases() {
-    [ -x "$(koopa_bin_prefix)/gcp" ] || return 0
-    alias gcp='gcp --interactive --recursive --verbose'
-    alias gln='gln --interactive --no-dereference --symbolic --verbose'
-    alias gmkdir='gmkdir --parents --verbose'
-    alias gmv='gmv --interactive --verbose'
-    alias grm='grm --interactive=once --verbose'
-    alias cp='gcp'
-    alias ln='gln'
-    alias mkdir='gmkdir'
-    alias mv='gmv'
-    alias rm='grm'
+    local bin_prefix
+    bin_prefix="$(koopa_bin_prefix)"
+    if [ -x "${bin_prefix}/gcp" ]
+    then
+        alias gcp='gcp --interactive --recursive --verbose'
+        alias cp='gcp'
+    fi
+    if [ -x "${bin_prefix}/gdir" ]
+    then
+        alias dir='gdir'
+    fi
+    if [ -x "${bin_prefix}/gegrep" ]
+    then
+        alias egrep='gegrep'
+    fi
+    if [ -x "${bin_prefix}/gfgrep" ]
+    then
+        alias fgrep='gfgrep'
+    fi
+    if [ -x "${bin_prefix}/gfind" ]
+    then
+        alias find='gfind'
+    fi
+    if [ -x "${bin_prefix}/ggrep" ]
+    then
+        alias grep='ggrep'
+    fi
+    if [ -x "${bin_prefix}/gln" ]
+    then
+        alias gln='gln --interactive --no-dereference --symbolic --verbose'
+        alias ln='gln'
+    fi
+    if [ -x "${bin_prefix}/gls" ]
+    then
+        alias ls='gls'
+    fi
+    if [ -x "${bin_prefix}/gmkdir" ]
+    then
+        alias gmkdir='gmkdir --parents --verbose'
+        alias mkdir='gmkdir'
+    fi
+    if [ -x "${bin_prefix}/gmv" ]
+    then
+        alias gmv='gmv --interactive --verbose'
+        alias mv='gmv'
+    fi
+    if [ -x "${bin_prefix}/grm" ]
+    then
+        alias grm='grm --interactive=once --verbose'
+        alias rm='grm'
+    fi
     return 0
 }
 
