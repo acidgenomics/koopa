@@ -21596,7 +21596,16 @@ koopa_system_info() {
         ['bash']="$(koopa_locate_bash --allow-missing)"
         ['cat']="$(koopa_locate_cat --allow-missing)"
     )
-    [[ ! -x "${app['bash']}" ]] && app['bash']='/usr/bin/bash'
+    if [[ ! -x "${app['bash']}" ]]
+    then
+        if [[ -x '/usr/bin/bash' ]]
+        then
+            app['bash']='/usr/bin/bash'
+        elif [[ -x '/bin/bash' ]]
+        then
+            app['bash']='/bin/bash'
+        fi
+    fi
     if [[ ! -x "${app['cat']}" ]]
     then
         if [[ -x '/usr/bin/cat' ]]
