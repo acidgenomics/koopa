@@ -320,13 +320,19 @@ koopa_build_all_apps() {
         'flex'
         # deps: cmake, gcc, hdf5, libxml2, python.
         'sra-tools'
-        # Install conda packages.
-        'ffq' # deps: conda
+        'yarn'
+        'asdf'
+        'convmv'
+        'editorconfig'
+        'markdownlint-cli'
+        'nmap'
+        'rmate'
     )
     if ! koopa_is_aarch64
     then
         pkgs+=(
             'anaconda'
+            'bioconda-utils' # deps: conda
             'haskell-stack'
             'hadolint' # deps: haskell-stack
             'pandoc' # deps: haskell-stack
@@ -338,11 +344,13 @@ koopa_build_all_apps() {
             'deeptools' # deps: conda
             'entrez-direct' # deps: conda
             'fastqc' # deps: conda
+            'ffq' # deps: conda
             'gffutils' # deps: conda
             'gget' # deps: conda
             'ghostscript' # deps: conda
             'gseapy' # deps: conda
             'hisat2' # deps: conda
+            'htseq' # deps: conda
             'jupyterlab' # deps: conda
             'kallisto' # deps: conda
             'multiqc' # deps: conda
