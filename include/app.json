@@ -637,7 +637,7 @@
   "dotfiles": {
     "conservative": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "947bd5f01adb1a6d0dcf3e935395623f670d1dc5"
+    "version": "93fa2bc4f0cc71f7e1572f4494486e797474f271"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -1839,8 +1839,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "82774",
-    "version_is_svn_commit": true
+    "version": "82774"
   },
   "r-gfortran": {
     "check": false,
