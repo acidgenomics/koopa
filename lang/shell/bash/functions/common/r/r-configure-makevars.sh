@@ -123,6 +123,9 @@ koopa_r_configure_makevars() {
                         'zlib' \
                 )"
             )
+            # FIXME Inclusion of these LDFLAGS appears to be incompatible with
+            # these packages: httpuv, fs. Both attempt to install the libuv
+            # library internally.
             ldflags+=(
                 "$( \
                     "${app['pkg_config']}" --libs \
