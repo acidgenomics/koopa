@@ -60,9 +60,5 @@ main() {
             "${install_args[@]}" \
             --file="${brewfile}"
     done
-    if koopa_is_macos
-    then
-        koopa_macos_link_homebrew
-    fi
     return 0
 }
