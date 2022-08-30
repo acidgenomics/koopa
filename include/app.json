@@ -327,7 +327,7 @@
     "date": "2022-08-30",
     "dependencies": [],
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.21.0"
+    "version": "2.21.1"
   },
   "cloudbiolinux": {
     "check": false,
@@ -619,6 +619,7 @@
   "difftastic": {
     "bin": ["difft"],
     "conservative": false,
+    "date": "2022-08-30",
     "depends": ["rust"],
     "version": "0.34.0"
   },
@@ -803,7 +804,7 @@
     "dependencies": [],
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.32.1"
+    "version": "0.33.0"
   },
   "gawk": {
     "bin": ["awk", "gawk"],
@@ -2333,9 +2334,10 @@
   "yq": {
     "bin": ["yq"],
     "conservative": false,
+    "date": "2022-08-30",
     "depends": ["go"],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.27.2"
+    "version": "4.27.3"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
