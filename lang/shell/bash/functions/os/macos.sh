@@ -671,29 +671,6 @@ koopa_macos_install_system_xcode_clt() {
         "$@"
 }
 
-koopa_macos_link_homebrew() {
-    local dict
-    declare -A dict
-    koopa_assert_has_no_args "$#"
-    koopa_link_in_bin \
-        --name='bbedit' \
-        --source='/Applications/BBEdit.app/Contents/Helpers/bbedit_tool'
-    koopa_link_in_bin \
-        --name='emacs' \
-        --source='/Applications/Emacs.app/Contents/MacOS/Emacs'
-    dict['r']="$(koopa_macos_r_prefix)"
-    koopa_link_in_bin \
-        --name='R' \
-        --source="${dict['r']}/bin/R"
-    koopa_link_in_bin \
-        --name='Rscript' \
-        --source="${dict['r']}/bin/Rscript"
-    koopa_link_in_bin \
-        --name='code' \
-        --source="/Applications/Visual Studio Code.app/Contents/Resources/\
-app/bin/code"
-}
-
 koopa_macos_list_launch_agents() {
     local app
     koopa_assert_has_no_args "$#"
@@ -1071,17 +1048,6 @@ koopa_macos_uninstall_system_xcode_clt() {
         --platform='macos' \
         --system \
         "$@"
-}
-
-koopa_macos_unlink_homebrew() {
-    koopa_assert_has_no_args "$#"
-    koopa_unlink_in_bin \
-        'bbedit' \
-        'code' \
-        'emacs' \
-        'gcloud' \
-        'julia'
-    return 0
 }
 
 koopa_macos_xcode_clt_version() {

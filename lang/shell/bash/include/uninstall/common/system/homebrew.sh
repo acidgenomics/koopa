@@ -56,9 +56,6 @@ master/${dict['file']}"
         then
             koopa_rm --sudo '/home/linuxbrew'
         fi
-    elif koopa_is_macos
-    then
-        koopa_macos_unlink_homebrew
     fi
     return 0
 }
