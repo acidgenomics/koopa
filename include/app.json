@@ -1309,6 +1309,7 @@
   },
   "libunistring": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/libunistring/"],
     "version": "1.0"
   },
