@@ -21,16 +21,19 @@
   },
   "apr": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://apr.apache.org/"],
     "version": "1.7.0"
   },
   "apr-util": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://apr.apache.org/"],
     "version": "1.6.1"
   },
   "armadillo": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["http://arma.sourceforge.net/download.html"],
     "version": "11.2.3"
   },
@@ -43,6 +46,7 @@
   "aspell": {
     "bin": ["aspell"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["aspell.1"],
     "url": ["http://aspell.net/"],
     "version": "0.60.8"
@@ -132,6 +136,7 @@
   "bc": {
     "bin": ["bc"],
     "conservative": true,
+    "date": "2022-08-30",
     "man1": ["bc.1"],
     "url": ["https://ftp.gnu.org/gnu/bc/"],
     "version": "1.07.1"
@@ -178,8 +183,9 @@
   },
   "binutils": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
-    "version": "2.38"
+    "version": "2.39"
   },
   "bioawk": {
     "bin": ["bioawk"],
@@ -342,6 +348,7 @@
   "conda": {
     "bin": ["conda"],
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "4.12.0"
   },
