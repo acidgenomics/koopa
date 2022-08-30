@@ -294,14 +294,14 @@ koopa_activate_coreutils_aliases() {
     then
         alias grep='ggrep'
     fi
+    if [ -x "${bin_prefix}/ghead" ]
+    then
+        alias head='ghead'
+    fi
     if [ -x "${bin_prefix}/gln" ]
     then
         alias gln='gln --interactive --no-dereference --symbolic --verbose'
         alias ln='gln'
-    fi
-    if [ -x "${bin_prefix}/ghead" ]
-    then
-        alias head='ghead'
     fi
     if [ -x "${bin_prefix}/gls" ]
     then
@@ -325,6 +325,10 @@ koopa_activate_coreutils_aliases() {
     if [ -x "${bin_prefix}/gsed" ]
     then
         alias sed='gsed'
+    fi
+    if [ -x "${bin_prefix}/gstat" ]
+    then
+        alias stat='gstat'
     fi
     if [ -x "${bin_prefix}/gtail" ]
     then
