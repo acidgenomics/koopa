@@ -714,9 +714,9 @@ koopa_linux_oracle_instantclient_version() {
 koopa_linux_os_version() {
     local app x
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['uname']="$(koopa_locate_uname)"
-    )
+    declare -A app
+    app['uname']="$(koopa_locate_uname)"
+    [[ ! -x "${app['uname']}" ]] && app['uname']='/usr/bin/uname'
     [[ -x "${app['uname']}" ]] || return 1
     x="$("${app['uname']}" -r)"
     [[ -n "$x" ]] || return 1
