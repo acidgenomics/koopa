@@ -64,7 +64,7 @@ koopa_r_configure_ldpaths() {
         'libpng'
         'libssh2'
         'libtiff'
-        'libuv'
+        # > 'libuv'
         'openblas'
         'openssl3'
         'pcre2'
