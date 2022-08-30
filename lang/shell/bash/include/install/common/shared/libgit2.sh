@@ -59,7 +59,7 @@ archive/${dict['file']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
-    koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
+    # > koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
     "${app['cmake']}" \
         -S '.' \
         -B 'build' \
