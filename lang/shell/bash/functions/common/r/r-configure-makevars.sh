@@ -116,7 +116,8 @@ koopa_r_configure_makevars() {
         "-L${dict['gettext']}/lib"
     )
     # NOTE Custom LDFLAGS here appear to be incompatible with these packages:
-    # fs, httpuv, igraph. May need to add support for bzip2, at least on Linux.
+    # fs, httpuv, igraph, nloptr. May need to add support for bzip2, at least
+    # on Linux.
     case "${dict['system']}" in
         '1')
             cppflags+=(
@@ -130,6 +131,7 @@ koopa_r_configure_makevars() {
                         'zlib' \
                 )"
             )
+            # Alternatively, can use '--libs' instead.
             ldflags+=(
                 "$( \
                     "${app['pkg_config']}" --libs-only-L \
