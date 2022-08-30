@@ -8,8 +8,6 @@
 main() {
     # """
     # Potentially include:
-    # -D '--disable-debug' \
-    # -D '--disable-dependency-tracking' \
     # -D '--disable-nls' \
     # -D '--disable-werror' \
     # -D '--enable-64-bit-bfd' \
@@ -28,7 +26,5 @@ main() {
         --name='binutils' \
         -D '--disable-debug' \
         -D '--disable-dependency-tracking' \
-        -D '--disable-nls' \
-        -D '--disable-werror' \
         "$@"
 }
