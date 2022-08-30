@@ -3,7 +3,7 @@
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2022-08-25.
+    # @note Updated 2022-08-29.
     #
     # @section Supported regex types for GNU find:
     #
@@ -177,7 +177,7 @@ koopa_find() {
             then
                 dict['engine']='find'
                 app['find']="$(koopa_locate_find --allow-missing)"
-                [[ -x "${app['find']}" ]] && app['find']='/usr/bin/find'
+                [[ ! -x "${app['find']}" ]] && app['find']='/usr/bin/find'
                 [[ -x "${app['find']}" ]] || return 1
             fi
             ;;
@@ -187,7 +187,7 @@ koopa_find() {
             ;;
         'find')
             app['find']="$(koopa_locate_find --allow-missing)"
-            [[ -z "${app['find']}" ]] && app['find']='/usr/bin/find'
+            [[ ! -x "${app['find']}" ]] && app['find']='/usr/bin/find'
             [[ -x "${app['find']}" ]] || return 1
             ;;
     esac
@@ -394,7 +394,8 @@ koopa_find() {
     fi
     if [[ "${dict['sort']}" -eq 1 ]]
     then
-        app['sort']="$(koopa_locate_sort)"
+        app['sort']="$(koopa_locate_sort --allow-missing)"
+        [[ ! -x "${app['sort']}" ]] && app['sort']='/usr/bin/sort'
         [[ -x "${app['sort']}" ]] || return 1
     fi
     if [[ "${dict['print0']}" -eq 1 ]]

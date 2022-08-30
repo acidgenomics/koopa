@@ -324,6 +324,7 @@
     "bin": ["cmake"],
     "conservative": false,
     "date": "2022-08-29",
+    "deps": ["ncurses", "openssl3"],
     "url": ["https://cmake.org/download/"],
     "version": "3.24.1"
   },
@@ -1007,6 +1008,7 @@
       "h5watch"
     ],
     "conservative": true,
+    "deps": ["zlib", "gcc"],
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.12.2"
   },
@@ -1122,6 +1124,7 @@
   "julia": {
     "bin": ["julia"],
     "conservative": false,
+    "deps": ["gcc"],
     "url": ["https://github.com/JuliaLang/julia/"],
     "version": "1.8.0"
   },
@@ -1149,6 +1152,7 @@
   "lapack": {
     "conservative": true,
     "date": "2022-08-29",
+    "deps": ["gcc"],
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.10.1"
   },
