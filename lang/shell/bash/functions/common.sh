@@ -3176,8 +3176,9 @@ koopa_build_all_apps() {
         'harfbuzz'
         'gawk'
         'libuv'
-        'r'
         'conda'
+        'udunits'
+        'r'
         'apr'
         'apr-util'
         'armadillo'
@@ -3247,7 +3248,6 @@ koopa_build_all_apps() {
         'stow'
         'tar'
         'tree'
-        'udunits'
         'units'
         'wget'
         'which'
@@ -17684,11 +17684,17 @@ koopa_r_configure_environ() {
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
+        ['conda']="$(koopa_app_prefix 'conda')"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
         ['tmp_file']="$(koopa_tmp_file)"
+        ['udunits2']="$(koopa_app_prefix 'udunits')"
     )
+    koopa_assert_is_dir \
+        "${dict['conda']}" \
+        "${dict['r_prefix']}" \
+        "${dict['udunits2']}"
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
@@ -17787,7 +17793,6 @@ koopa_r_configure_environ() {
         'R_REMOTES_STANDALONE=true'
         'R_REMOTES_UPGRADE=always'
     )
-    dict['conda']="$(koopa_realpath "${dict['opt_prefix']}/conda")"
     lines+=(
         "RETICULATE_MINICONDA_PATH=${dict['conda']}"
         "WORKON_HOME=\${HOME}/.virtualenvs"
@@ -17800,7 +17805,6 @@ koopa_r_configure_environ() {
         "R_USER_CONFIG_DIR=\${HOME}/.config"
         "R_USER_DATA_DIR=\${HOME}/.local/share"
     )
-    dict['udunits2']="$(koopa_realpath "${dict['opt_prefix']}/udunits")"
     lines+=(
         "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
         "UDUNITS2_LIBS=${dict['udunits2']}/lib"
