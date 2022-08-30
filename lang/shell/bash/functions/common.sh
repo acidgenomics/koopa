@@ -3319,12 +3319,19 @@ koopa_build_all_apps() {
         'ensembl-perl-api' # deps: none.
         'flex'
         'sra-tools'
-        'ffq' # deps: conda
+        'yarn'
+        'asdf'
+        'convmv'
+        'editorconfig'
+        'markdownlint-cli'
+        'nmap'
+        'rmate'
     )
     if ! koopa_is_aarch64
     then
         pkgs+=(
             'anaconda'
+            'bioconda-utils' # deps: conda
             'haskell-stack'
             'hadolint' # deps: haskell-stack
             'pandoc' # deps: haskell-stack
@@ -3336,11 +3343,13 @@ koopa_build_all_apps() {
             'deeptools' # deps: conda
             'entrez-direct' # deps: conda
             'fastqc' # deps: conda
+            'ffq' # deps: conda
             'gffutils' # deps: conda
             'gget' # deps: conda
             'ghostscript' # deps: conda
             'gseapy' # deps: conda
             'hisat2' # deps: conda
+            'htseq' # deps: conda
             'jupyterlab' # deps: conda
             'kallisto' # deps: conda
             'multiqc' # deps: conda
@@ -17819,6 +17828,7 @@ koopa_r_configure_environ() {
         'pcre2'
         'proj'
         'readline'
+        'sqlite'
         'xz'
         'zlib'
         'zstd'
@@ -18037,20 +18047,27 @@ koopa_r_configure_ldpaths() {
         'pcre2'
         'proj'
         'readline'
+        'sqlite'
         'xz'
         'zlib'
         'zstd'
     )
     for key in "${keys[@]}"
     do
-        local dict2
-        declare -A dict2
-        dict2['prefix']="$(koopa_app_prefix "$key")"
-        koopa_assert_is_dir "${dict2['prefix']}"
-        dict2['libdir']="${dict2['prefix']}/lib"
-        koopa_assert_is_dir "${dict2['libdir']}"
-        ld_lib_app_arr[$key]="${dict2['libdir']}"
+        local prefix
+        prefix="$(koopa_app_prefix "$key")"
+        koopa_assert_is_dir "$prefix"
+        ld_lib_app_arr[$key]="$prefix"
     done
+    for i in "${!ld_lib_app_arr[@]}"
+    do
+        ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+    done
+    if koopa_is_linux
+    then
+        ld_lib_app_arr['harfbuzz']="${ld_lib_app_arr['harfbuzz']}64"
+    fi
+    koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
     if koopa_is_linux
     then
@@ -18178,43 +18195,23 @@ koopa_r_configure_makevars() {
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
-        ['freetype']="$(koopa_app_prefix 'freetype')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
-        ['jpeg']="$(koopa_app_prefix 'jpeg')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
-        ['libpng']="$(koopa_app_prefix 'libpng')"
-        ['libtiff']="$(koopa_app_prefix 'libtiff')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
-        ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
-        "${dict['freetype']}" \
         "${dict['gettext']}" \
-        "${dict['jpeg']}" \
         "${dict['lapack']}" \
-        "${dict['libpng']}" \
-        "${dict['libtiff']}" \
         "${dict['openblas']}" \
-        "${dict['pcre2']}" \
-        "${dict['r_prefix']}" \
-        "${dict['zlib']}" \
-        "${dict['zstd']}"
+        "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     koopa_add_to_pkg_config_path \
-        "${dict['freetype']}/lib/pkgconfig" \
-        "${dict['jpeg']}/lib/pkgconfig" \
         "${dict['lapack']}/lib/pkgconfig" \
-        "${dict['libpng']}/lib/pkgconfig" \
-        "${dict['libtiff']}/lib/pkgconfig" \
-        "${dict['openblas']}/lib/pkgconfig" \
-        "${dict['zlib']}/lib/pkgconfig" \
-        "${dict['zstd']}/lib/pkgconfig"
+        "${dict['openblas']}/lib/pkgconfig"
     cppflags=()
     ldflags=()
     lines=()
@@ -18224,7 +18221,7 @@ koopa_r_configure_makevars() {
     ldflags+=(
         "-L${dict['gettext']}/lib"
     )
-    ldflags+=('-lomp')
+    koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"

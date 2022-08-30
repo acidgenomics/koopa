@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can we set 'lib' instead of 'lib64' on Linux?
+
 # Consider adding support for:
 # - cairo
 # - gobject-introspection
