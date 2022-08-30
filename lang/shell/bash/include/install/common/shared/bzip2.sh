@@ -91,10 +91,9 @@ main() {
     elif koopa_is_macos
     then
         # This is the approach used by conda-forge recipe.
-        # FIXME Do we need to use GCC instead?
-        app['cc']='/usr/bin/clang'
+        app['cc']='gcc'
         "${app['cc']}" \
-            -shared \
+            '-shared' \
             '-Wl,-install_name' \
             "-Wl,libbz2.${dict['shared_ext']}" \
             -o "libbz2.${dict['version']}.${dict['shared_ext']}" \
@@ -104,8 +103,8 @@ main() {
             'randtable.o' \
             'compress.o' \
             'decompress.o' \
-            'bzlib.o' \
-            "${LDFLAGS:-}"
+            'bzlib.o'
+            # > "${LDFLAGS:-}"
     fi
     if koopa_is_linux
     then
