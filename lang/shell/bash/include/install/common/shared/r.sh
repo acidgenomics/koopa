@@ -7,7 +7,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-08-30.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -85,6 +85,7 @@ main() {
         'libtiff'
         # openblas deps: gcc.
         'openblas'
+        # FIXME OK to remove this?
         # openjdk deps: none.
         'openjdk'
         # pcre deps: zlib, bzip2.
@@ -99,26 +100,34 @@ main() {
         'glib'
         # freetype deps: none.
         'freetype'
+        # FIXME OK to remove this?
         # gperf deps: none.
         'gperf'
         # fontconfig deps: gperf, freetype, libxml2.
         'fontconfig'
+        # FIXME OK to remove this?
         # lzo deps: none.
         'lzo'
+        # FIXME OK to remove this?
         # pixman deps: none.
         'pixman'
+        # FIXME OK to remove this?
         # fribidi deps: none.
         'fribidi'
+        # FIXME OK to remove this?
         # harfbuzz deps: freetype, icu4c.
         'harfbuzz'
         # libtool deps: m4.
         'libtool'
         # imagemagick deps: libtool.
         'imagemagick'
+        # FIXME OK to remove this?
         # libssh2 deps: openssl3.
         'libssh2'
+        # FIXME OK to remove this?
         # libgit2 deps: openssl3, libssh2.
         'libgit2'
+        # FIXME OK to remove this?
         # sqlite deps: readline.
         'sqlite'
         # python deps: zlib, libffi, openssl3.
@@ -205,7 +214,7 @@ main() {
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['jobs']="$(koopa_cpu_count)"
         ['lapack']="$(koopa_app_prefix 'lapack')"
-        ['name']='r'
+        ['name']="${INSTALL_NAME:?}"
         ['openjdk']="$(koopa_app_prefix 'openjdk')"
         ['prefix']="${INSTALL_PREFIX:?}"
         ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
