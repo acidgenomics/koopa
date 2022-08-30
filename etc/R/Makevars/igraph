@@ -1,0 +1,11 @@
+# """
+# igraph package.
+# Updated 2022-08-30.
+#
+# Inclusion of gettext is needed to resolve '-lintl' linkage issue with system
+# clang compiler (macOS 12.5.1).
+# """
+
+CC=/usr/bin/clang
+CFLAGS=
+LDFLAGS = -L/opt/koopa/app/gettext/0.21/lib
