@@ -144,6 +144,7 @@ koopa_r_configure_makevars() {
             ;;
     esac
     # libomp is installed at '/usr/local/lib' for macOS.
+    # This is problematic for nloptr but required for data.table.
     ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
