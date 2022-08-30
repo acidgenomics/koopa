@@ -20,8 +20,9 @@ main() {
     fi
     declare -A app=(
         ['sudo']="$(koopa_locate_sudo)"
-        ['tar']="$(koopa_locate_tar)"
+        ['tar']="$(koopa_locate_tar --allow-missing)"
     )
+    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
