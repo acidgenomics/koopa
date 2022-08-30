@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this cryptic error on Ubuntu 22:
+# NOTE Hitting this cryptic error on Ubuntu 22:
 # # checking for bison... bison
 # # checking for bison 3.0.4 or newer... 3.8.2, bad
 # # configure: error: Building gprofng requires bison 3.0.4 or later.
@@ -8,16 +8,21 @@
 main() {
     # """
     # Potentially include:
-    # -D '--disable-nls' \
-    # -D '--disable-werror' \
-    # -D '--enable-64-bit-bfd' \
-    # -D '--enable-deterministic-archives' \
-    # -D '--enable-gold' \
-    # -D '--enable-interwork' \
-    # -D '--enable-multilib' \
-    # -D '--enable-plugins' \
-    # -D '--enable-targets=all' \
-    # -D '--with-system-zlib' \
+    # * '--disable-nls'
+    # * '--disable-werror'
+    # * '--enable-64-bit-bfd'
+    # * '--enable-deterministic-archives'
+    # * '--enable-gold'
+    # * '--enable-interwork'
+    # * '--enable-multilib'
+    # * '--enable-plugins'
+    # * '--enable-targets=all'
+    # * '--with-system-zlib'
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
+    #     binutils.rb
+    # - https://git.alpinelinux.org/aports/tree/main/binutils/APKBUILD
     # """
     koopa_activate_build_opt_prefix 'bison'
     koopa_activate_opt_prefix 'zlib' 'texinfo'

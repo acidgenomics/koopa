@@ -170,7 +170,7 @@ koopa_build_all_apps() {
         'armadillo'
         'aspell'
         'bc'
-        'binutils'
+        # > 'binutils'
         'cpufetch'
         'exiftool'
         'libtasn1'

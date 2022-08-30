@@ -3184,7 +3184,6 @@ koopa_build_all_apps() {
         'armadillo'
         'aspell'
         'bc'
-        'binutils'
         'cpufetch'
         'exiftool'
         'libtasn1'
@@ -15370,13 +15369,6 @@ bin/${dict['bin_name']}"
     koopa_stop \
         "Failed to locate '${dict['bin_name']}' (from '${dict['app_name']}')." \
         "Running 'koopa install '${dict['app_name']}' may resolve the issue."
-}
-
-koopa_locate_ar() {
-    koopa_locate_app \
-        --app-name='binutils' \
-        --bin-name='ar' \
-        "$@"
 }
 
 koopa_locate_ascp() {
