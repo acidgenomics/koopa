@@ -2,10 +2,14 @@
 
 # FIXME Need to improve documentation linkage of node.1, npm.1 and npx.1.
 
+# FIXME Configuration issue on Ubuntu22:
+# bzip2 -> python -> node
+# ModuleNotFoundError: No module named '_bz2'
+
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-08-22.
+    # @note Updated 2022-08-30.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
@@ -33,6 +37,7 @@ main() {
     deps=(
         'ca-certificates'
         'zlib'
+        'bzip2'
         'icu4c'
         'libuv'
         'openssl3'
