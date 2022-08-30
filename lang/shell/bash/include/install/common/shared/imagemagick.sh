@@ -3,18 +3,10 @@
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
-# FIXME Now hitting this error with libxml2:
-# grep: /opt/koopa/app/libxml2/2.9.14/lib/libxml2.la: No such file or directory
-# sed: /opt/koopa/app/libxml2/2.9.14/lib/libxml2.la: No such file or directory
-# libtool:   error: '/opt/koopa/app/libxml2/2.9.14/lib/libxml2.la' is not a valid libtool archive
-
-# FIXME May only want to include bzip2 as a dependency for Linux.
-# bzip2 comes preinstalled with macOS.
-
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2022-07-28.
+    # @note Updated 2022-07-30.
     #
     # Also consider requiring:
     # - ghostscript
