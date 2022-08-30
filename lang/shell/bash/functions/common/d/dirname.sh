@@ -3,12 +3,17 @@
 koopa_dirname() {
     # """
     # Extract the file dirname.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-30.
     #
     # Parameterized, supporting multiple basename extractions.
     #
     # @seealso
     # - https://stackoverflow.com/questions/22401091/
+    #
+    # @examples
+    # > koopa_dirname '/usr/local/bin' '/tmp/xxx/yyy'
+    # # /usr/local
+    # # /tmp/xxx
     # """
     local arg
     if [[ "$#" -eq 0 ]]

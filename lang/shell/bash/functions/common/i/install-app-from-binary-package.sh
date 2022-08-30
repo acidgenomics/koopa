@@ -3,7 +3,7 @@
 koopa_install_app_from_binary_package() {
     # """
     # Install app from pre-built binary package.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-08-30.
     #
     # @examples
     # > koopa_install_app_from_binary_package \
@@ -12,9 +12,9 @@ koopa_install_app_from_binary_package() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['tar']="$(koopa_locate_tar)"
-    )
+    declare -A app
+    app['tar']="$(koopa_locate_tar --allow-missing)"
+    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.

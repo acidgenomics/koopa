@@ -1,6 +1,14 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Use app json during koopa_activate_opt_prefix (rename to app_prefix) usage.
+    Can we retire the usage of opt_prefix entirely in our configuration scripts?
+** TODO Binary installs also need to ensure that dependency packages are also installed.
+    We can manage this using our app.json in a future update.
+** TODO Improve Bash / coreutils bootstrapping on macOS, automatically installing missing dependencies.
+    Need to run something like this:
+    PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}" \
+        koopa install --all
 ** TODO Consider linking koopa into /usr/local/bin.
 ** TODO Consider linking bash into /usr/local/bin on macOS (only if Homebrew doesn't have one there).
     This improves compatibility with RStudio `system2` calls, which currently hardcode `/usr/local` and ignore `/opt/koopa`.

@@ -5757,7 +5757,9 @@ koopa_cp() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$( \
+            koopa_strip_trailing_slash "${dict['target_dir']}" \
+        )"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"
@@ -9082,9 +9084,9 @@ koopa_git_checkout_recursive() {
 koopa_git_clone() {
     local app clone_args dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['git']="$(koopa_locate_git)"
-    )
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-missing)"
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']=''
@@ -9196,10 +9198,22 @@ koopa_git_clone() {
 koopa_git_commit_date() {
     local app repos
     declare -A app=(
-        ['date']="$(koopa_locate_date)"
-        ['git']="$(koopa_locate_git)"
-        ['xargs']="$(koopa_locate_xargs)"
+        ['date']="$(koopa_locate_date --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-missing)"
+        ['xargs']="$(koopa_locate_xargs --allow-missing)"
     )
+    if [[ ! -x "${app['date']}" ]]
+    then
+        if [[ -x '/usr/bin/date' ]]
+        then
+            app['date']='/usr/bin/date'
+        elif [[ -x '/bin/date' ]]
+        then
+            app['date']='/bin/date'
+        fi
+    fi
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    [[ ! -x "${app['xargs']}" ]] && app['xargs']='/usr/bin/xargs'
     [[ -x "${app['date']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
@@ -9229,9 +9243,11 @@ koopa_git_commit_date() {
 koopa_git_default_branch() {
     local app dict repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
-        ['sed']="$(koopa_locate_sed)"
+        ['git']="$(koopa_locate_git --allow-missing)"
+        ['sed']="$(koopa_locate_sed --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    [[ ! -x "${app['sed']}" ]] && app['sed']='/usr/bin/sed'
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
@@ -9261,9 +9277,9 @@ koopa_git_default_branch() {
 
 koopa_git_last_commit_local() {
     local app dict repos
-    declare -A app=(
-        ['git']="$(koopa_locate_git)"
-    )
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-missing)"
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['ref']='HEAD'
@@ -9290,10 +9306,13 @@ koopa_git_last_commit_remote() {
     local app dict url
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['git']="$(koopa_locate_git)"
-        ['head']="$(koopa_locate_head)"
+        ['awk']="$(koopa_locate_awk --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-missing)"
     )
+    [[ ! -x "${app['awk']}" ]] && app['awk']='/usr/bin/awk'
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
@@ -9478,8 +9497,9 @@ koopa_git_push_submodules() {
 koopa_git_remote_url() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
@@ -9651,8 +9671,9 @@ koopa_git_set_remote_url() {
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_git_repo
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['url']="${1:?}"
@@ -10017,13 +10038,13 @@ koopa_grep() {
             then
                 dict['engine']='grep'
                 app['grep']="$(koopa_locate_grep --allow-missing)"
-                [[ -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+                [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
                 [[ -x "${app['grep']}" ]] || return 1
             fi
             ;;
         'grep')
             app['grep']="$(koopa_locate_grep --allow-missing)"
-            [[ -z "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+            [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
             [[ -x "${app['grep']}" ]] || return 1
             ;;
         'rg')
@@ -11251,9 +11272,9 @@ koopa_install_anaconda() {
 koopa_install_app_from_binary_package() {
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['tar']="$(koopa_locate_tar)"
-    )
+    declare -A app
+    app['tar']="$(koopa_locate_tar --allow-missing)"
+    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
@@ -17363,8 +17384,9 @@ koopa_push_app_build() {
     koopa_assert_has_args "$#"
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
-        ['tar']="$(koopa_locate_tar)"
+        ['tar']="$(koopa_locate_tar --allow-missing)"
     )
+    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
@@ -21425,8 +21447,9 @@ koopa_switch_to_develop() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']='develop'
@@ -21664,9 +21687,9 @@ koopa_system_info() {
 koopa_tar_multiple_dirs() {
     local app dict dir dirs pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['tar']="$(koopa_locate_tar)"
-    )
+    declare -A app
+    app['tar']="$(koopa_locate_tar --allow-missing)"
+    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['delete']=0
@@ -22542,24 +22565,9 @@ koopa_uninstall_dog() {
 }
 
 koopa_uninstall_dotfiles() {
-    local app dict
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['bash']="$(koopa_locate_bash)"
-    )
-    [[ -x "${app['bash']}" ]] || return 1
-    declare -A dict=(
-        ['name']='dotfiles'
-        ['prefix']="$(koopa_dotfiles_prefix)"
-    )
-    dict['script']="${dict['prefix']}/uninstall"
-    koopa_assert_is_file "${dict['script']}"
-    "${app['bash']}" "${dict['script']}"
     koopa_uninstall_app \
-        --name="${dict['name']}" \
-        --prefix="${dict['prefix']}" \
+        --name='dotfiles' \
         "$@"
-    return 0
 }
 
 koopa_uninstall_du_dust() {
