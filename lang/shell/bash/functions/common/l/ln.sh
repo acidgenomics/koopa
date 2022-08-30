@@ -13,7 +13,16 @@ koopa_ln() {
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
-    [[ ! -x "${app['ln']}" ]] && app['ln']='/usr/bin/ln'
+    if [[ ! -x "${app['ln']}" ]]
+    then
+        if [[ -x '/usr/bin/ln' ]]
+        then
+            app['ln']='/usr/bin/ln'
+        elif [[ -x '/bin/ln' ]]
+        then
+            app['ln']='/bin/ln'
+        fi
+    fi
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0

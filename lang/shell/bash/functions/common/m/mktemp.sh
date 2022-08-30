@@ -24,13 +24,8 @@ koopa_mktemp() {
     # """
     local app dict mktemp_args str
     declare -A app
-    if koopa_is_macos
-    then
-        app['mktemp']="$(koopa_locate_mktemp)"
-    else
-        app['mktemp']="$(koopa_locate_mktemp --allow-missing)"
-        [[ ! -x "${app['mktemp']}" ]] && app['mktemp']='/usr/bin/mktemp'
-    fi
+    app['mktemp']="$(koopa_locate_mktemp --allow-missing)"
+    [[ ! -x "${app['mktemp']}" ]] && app['mktemp']='/usr/bin/mktemp'
     [[ -x "${app['mktemp']}" ]] || return 1
     declare -A dict=(
         ['date_id']="$(koopa_datetime)"
