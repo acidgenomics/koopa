@@ -18206,7 +18206,7 @@ koopa_r_configure_makevars() {
     ldflags+=(
         "-L${dict['gettext']}/lib"
     )
-    ldflags+=('-lomp')
+    koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
