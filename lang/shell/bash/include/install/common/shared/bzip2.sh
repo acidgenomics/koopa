@@ -84,6 +84,7 @@ main() {
     "${app['make']}" install "PREFIX=${dict['prefix']}"
     if [[ -f "${dict['makefile_shared']}" ]]
     then
+        dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
         "${app['make']}" -f "${dict['makefile_shared']}" 'clean'
         "${app['make']}" -f "${dict['makefile_shared']}"
         if koopa_is_linux
