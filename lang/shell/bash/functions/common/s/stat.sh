@@ -3,7 +3,7 @@
 koopa_stat() {
     # """
     # Display file or file system status.
-    # @note Updated 2022-02-28.
+    # @note Updated 2022-08-30.
     #
     # @examples
     # > koopa_stat '%A' '/tmp/'
@@ -11,9 +11,9 @@ koopa_stat() {
     # """
     local app dict
     koopa_assert_has_args_ge "$#" 2
-    declare -A app=(
-        ['stat']="$(koopa_locate_stat)"
-    )
+    declare -A app
+    app['stat']="$(koopa_locate_stat --allow-missing)"
+    [[ ! -x "${app['stat']}" ]] && app['stat']='/usr/bin/stat'
     [[ -x "${app['stat']}" ]] || return 1
     declare -A dict=(
         ['format']="${1:?}"
