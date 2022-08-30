@@ -1785,7 +1785,7 @@
     "version": "2.5.0"
   },
   "pygments": {
-    "bin": ["pygments"],
+    "bin": ["pygmentize"],
     "conservative": false,
     "depends": ["python"],
     "version": "2.13.0"
