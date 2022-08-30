@@ -25,19 +25,20 @@ koopa_r_configure_ldpaths() {
     # """
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['r']="${1:?}"
-    )
+    declare -A app
+    app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
+        ['java_home']="$(koopa_app_prefix 'openjdk')"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
     )
+    koopa_assert_is_dir \
+        "${dict['java_home']}" \
+        "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    dict['java_home']="$(koopa_realpath "${dict['opt_prefix']}/openjdk")"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     lines=()

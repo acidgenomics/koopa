@@ -17685,7 +17685,6 @@ koopa_r_configure_environ() {
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
         ['tmp_file']="$(koopa_tmp_file)"
@@ -17743,7 +17742,10 @@ koopa_r_configure_environ() {
     )
     for key in "${keys[@]}"
     do
-        pkgconfig_arr[$key]="$(koopa_realpath "${dict['opt_prefix']}/${key}")"
+        local prefix
+        prefix="$(koopa_app_prefix "$key")"
+        koopa_assert_is_dir "$prefix"
+        pkgconfig_arr[$key]="$prefix"
     done
     for i in "${!pkgconfig_arr[@]}"
     do
@@ -17757,6 +17759,7 @@ koopa_r_configure_environ() {
     do
         pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/pkgconfig"
     done
+    koopa_assert_is_dir "${pkgconfig_arr[@]}"
     lines+=(
         "PAGER=\${PAGER:-less}"
         "PATH=$(printf '%s:' "${path_arr[@]}")"
@@ -17864,7 +17867,7 @@ koopa_r_configure_java() {
     [[ -x "${app['r']}" ]] || return 1
     koopa_is_koopa_app "${app['r']}" && return 0
     declare -A dict
-    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+    dict['openjdk']="$(koopa_app_prefix 'openjdk' || true)"
     if [[ ! -d "${dict['openjdk']}" ]]
     then
         koopa_alert_note 'Skipping R Java configuration.'
@@ -17901,19 +17904,20 @@ koopa_r_configure_java() {
 koopa_r_configure_ldpaths() {
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['r']="${1:?}"
-    )
+    declare -A app
+    app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
+        ['java_home']="$(koopa_app_prefix 'openjdk')"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
     )
+    koopa_assert_is_dir \
+        "${dict['java_home']}" \
+        "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    dict['java_home']="$(koopa_realpath "${dict['opt_prefix']}/openjdk")"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
