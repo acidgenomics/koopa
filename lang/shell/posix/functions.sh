@@ -299,6 +299,10 @@ koopa_activate_coreutils_aliases() {
         alias gln='gln --interactive --no-dereference --symbolic --verbose'
         alias ln='gln'
     fi
+    if [ -x "${bin_prefix}/ghead" ]
+    then
+        alias head='ghead'
+    fi
     if [ -x "${bin_prefix}/gls" ]
     then
         alias ls='gls'
@@ -321,6 +325,10 @@ koopa_activate_coreutils_aliases() {
     if [ -x "${bin_prefix}/gsed" ]
     then
         alias sed='gsed'
+    fi
+    if [ -x "${bin_prefix}/gtail" ]
+    then
+        alias tail='gtail'
     fi
     if [ -x "${bin_prefix}/gtr" ]
     then
