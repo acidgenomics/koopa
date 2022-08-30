@@ -1819,6 +1819,11 @@
   "r": {
     "bin": ["R", "Rscript"],
     "conservative": false,
+    "deps": [
+      "coreutils",
+      "gawk",
+      "sed"
+    ],
     "man1": ["R.1", "Rscript.1"],
     "url": [
       "https://www.r-project.org/",
