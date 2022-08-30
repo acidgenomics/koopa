@@ -1265,11 +1265,12 @@
     "url": ["https://github.com/OSGeo/libgeotiff/"],
     "version": "1.7.1"
   },
+  // FIXME 1.5.0 has build issues on Linux.
   "libgit2": {
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.5.0"
+    "version": "1.4.4"
   },
   "libgpg-error": {
     "conservative": true,
