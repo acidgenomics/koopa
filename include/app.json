@@ -187,7 +187,6 @@
     "version": "1.14.1"
   },
   "binutils": {
-    "check": false,
     "conservative": true,
     "date": "2022-08-30",
     "notes": ["2.39 has build issues on Ubuntu 22 due to bison detection."],
