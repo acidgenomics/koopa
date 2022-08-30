@@ -327,7 +327,7 @@
     "date": "2022-08-30",
     "dependencies": [],
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.21.0"
+    "version": "2.21.1"
   },
   "cloudbiolinux": {
     "check": false,
@@ -619,6 +619,7 @@
   "difftastic": {
     "bin": ["difft"],
     "conservative": false,
+    "date": "2022-08-30",
     "depends": ["rust"],
     "version": "0.34.0"
   },
@@ -637,7 +638,7 @@
   "dotfiles": {
     "conservative": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "a2f48c69bc2f403c13617a9ff263d48cd7681d34"
+    "version": "f9aef0d016bb088e0e94938f3ee1eca0f108e871"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -803,7 +804,7 @@
     "dependencies": [],
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.32.1"
+    "version": "0.33.0"
   },
   "gawk": {
     "bin": ["awk", "gawk"],
@@ -1209,7 +1210,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "1.15.0"
+    "version": "1.16.0"
   },
   "less": {
     "bin": ["less"],
@@ -2333,9 +2334,10 @@
   "yq": {
     "bin": ["yq"],
     "conservative": false,
+    "date": "2022-08-30",
     "depends": ["go"],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.27.2"
+    "version": "4.27.3"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],

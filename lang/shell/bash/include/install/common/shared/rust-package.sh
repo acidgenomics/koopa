@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Consider reworking cargo_home to ~/.cargo, to put less strain on index download.
+# Can hit these errors otherwise:
+# warning: spurious network error (2 tries remaining):
+# SecureTransport error: connection closed via error; class=Net (12)
+
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-08-16.
+    # @note Updated 2022-08-30.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -21,6 +26,7 @@ main() {
     local app dict install_args
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix \
+        'git' \
         'pkg-config' \
         'rust'
     declare -A app=(
@@ -28,7 +34,7 @@ main() {
     )
     [[ -x "${app['cargo']}" ]] || return 1
     declare -A dict=(
-        ['cargo_home']="$(koopa_init_dir 'cargo')"
+        ['cargo_home']="${HOME:?}/.cargo"
         ['jobs']="$(koopa_cpu_count)"
         ['name']="${INSTALL_NAME:?}"
         ['prefix']="${INSTALL_PREFIX:?}"
@@ -116,6 +122,7 @@ main() {
             esac
             ;;
     esac
+    dict['cargo_home']="$(koopa_init_dir "${dict['cargo_home']}")"
     export CARGO_HOME="${dict['cargo_home']}"
     "${app['cargo']}" install "${install_args[@]}"
     return 0

@@ -3,7 +3,7 @@
 koopa_find_and_replace_in_file() {
     # """
     # Find and replace inside files.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-08-30.
     #
     # Parameterized, supporting multiple files.
     #
@@ -35,9 +35,8 @@ koopa_find_and_replace_in_file() {
     # """
     local app dict flags perl_cmd pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['perl']="$(koopa_locate_perl)"
-    )
+    declare -A app
+    app['perl']="$(koopa_locate_perl --allow-missing)"
     [[ ! -x "${app['perl']}" ]] && app['perl']='/usr/bin/perl'
     [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(

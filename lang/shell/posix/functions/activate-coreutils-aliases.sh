@@ -3,7 +3,7 @@
 koopa_activate_coreutils_aliases() {
     # """
     # Activate GNU coreutils aliases.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-08-30.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -13,17 +13,80 @@ koopa_activate_coreutils_aliases() {
     # macOS ships with BSD coreutils, which don't support all GNU options.
     # gmv on macOS can run into issues on NFS shares.
     # """
-    [ -x "$(koopa_bin_prefix)/gcp" ] || return 0
-    alias gcp='gcp --interactive --recursive --verbose'
-    alias gln='gln --interactive --no-dereference --symbolic --verbose'
-    alias gmkdir='gmkdir --parents --verbose'
-    alias gmv='gmv --interactive --verbose'
-    alias grm='grm --interactive=once --verbose'
-    # Ensure we mask system coreutils.
-    alias cp='gcp'
-    alias ln='gln'
-    alias mkdir='gmkdir'
-    alias mv='gmv'
-    alias rm='grm'
+    local bin_prefix
+    bin_prefix="$(koopa_bin_prefix)"
+    if [ -x "${bin_prefix}/gcp" ]
+    then
+        alias gcp='gcp --interactive --recursive --verbose'
+        alias cp='gcp'
+    fi
+    if [ -x "${bin_prefix}/gcut" ]
+    then
+        alias cut='gcut'
+    fi
+    if [ -x "${bin_prefix}/gdir" ]
+    then
+        alias dir='gdir'
+    fi
+    if [ -x "${bin_prefix}/gegrep" ]
+    then
+        alias egrep='gegrep'
+    fi
+    if [ -x "${bin_prefix}/gfgrep" ]
+    then
+        alias fgrep='gfgrep'
+    fi
+    if [ -x "${bin_prefix}/gfind" ]
+    then
+        alias find='gfind'
+    fi
+    if [ -x "${bin_prefix}/ggrep" ]
+    then
+        alias grep='ggrep'
+    fi
+    if [ -x "${bin_prefix}/gln" ]
+    then
+        alias gln='gln --interactive --no-dereference --symbolic --verbose'
+        alias ln='gln'
+    fi
+    if [ -x "${bin_prefix}/ghead" ]
+    then
+        alias head='ghead'
+    fi
+    if [ -x "${bin_prefix}/gls" ]
+    then
+        alias ls='gls'
+    fi
+    if [ -x "${bin_prefix}/gmkdir" ]
+    then
+        alias gmkdir='gmkdir --parents --verbose'
+        alias mkdir='gmkdir'
+    fi
+    if [ -x "${bin_prefix}/gmv" ]
+    then
+        alias gmv='gmv --interactive --verbose'
+        alias mv='gmv'
+    fi
+    if [ -x "${bin_prefix}/grm" ]
+    then
+        alias grm='grm --interactive=once --verbose'
+        alias rm='grm'
+    fi
+    if [ -x "${bin_prefix}/gsed" ]
+    then
+        alias sed='gsed'
+    fi
+    if [ -x "${bin_prefix}/gtail" ]
+    then
+        alias tail='gtail'
+    fi
+    if [ -x "${bin_prefix}/gtr" ]
+    then
+        alias tr='gtr'
+    fi
+    if [ -x "${bin_prefix}/gxargs" ]
+    then
+        alias xargs='gxargs'
+    fi
     return 0
 }

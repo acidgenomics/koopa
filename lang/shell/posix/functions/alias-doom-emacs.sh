@@ -8,5 +8,6 @@ koopa_alias_doom_emacs() {
     local prefix
     prefix="$(koopa_doom_emacs_prefix)"
     [ -d "$prefix" ] || return 1
-    emacs --with-profile 'doom' "$@"
+    "$(koopa_alias_emacs --with-profile 'doom' "$@")"
+    return 0
 }
