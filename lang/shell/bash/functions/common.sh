@@ -5757,7 +5757,9 @@ koopa_cp() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$( \
+            koopa_strip_trailing_slash "${dict['target_dir']}" \
+        )"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"
@@ -10017,13 +10019,13 @@ koopa_grep() {
             then
                 dict['engine']='grep'
                 app['grep']="$(koopa_locate_grep --allow-missing)"
-                [[ -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+                [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
                 [[ -x "${app['grep']}" ]] || return 1
             fi
             ;;
         'grep')
             app['grep']="$(koopa_locate_grep --allow-missing)"
-            [[ -z "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+            [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
             [[ -x "${app['grep']}" ]] || return 1
             ;;
         'rg')
