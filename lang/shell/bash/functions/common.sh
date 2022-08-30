@@ -3184,6 +3184,8 @@ koopa_build_all_apps() {
         'armadillo'
         'aspell'
         'bc'
+        'flex'
+        'binutils'
         'cpufetch'
         'exiftool'
         'libtasn1'
@@ -3316,7 +3318,6 @@ koopa_build_all_apps() {
         'rbenv' # deps: none.
         'dotfiles'
         'ensembl-perl-api' # deps: none.
-        'flex'
         'sra-tools'
         'yarn'
         'asdf'
