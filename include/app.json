@@ -1776,6 +1776,8 @@
   "pyenv": {
     "bin": ["pyenv"],
     "conservative": true,
+    "date": "2022-08-30",
+    "dependencies": [],
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv"],
     "version": "2.2.5"
@@ -1821,13 +1823,7 @@
   "r": {
     "bin": ["R", "Rscript"],
     "conservative": false,
-    "deps": [
-      "conda",
-      "coreutils",
-      "gawk",
-      "sed",
-      "udunits"
-    ],
+    "deps": ["conda", "coreutils", "gawk", "sed", "udunits"],
     "man1": ["R.1", "Rscript.1"],
     "url": [
       "https://www.r-project.org/",
@@ -1875,6 +1871,8 @@
   "rbenv": {
     "bin": ["rbenv"],
     "conservative": true,
+    "date": "2022-08-30",
+    "dependencies": [],
     "url": ["https://github.com/rbenv/rbenv/"],
     "version": "1.2.0"
   },
