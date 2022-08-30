@@ -9084,9 +9084,9 @@ koopa_git_checkout_recursive() {
 koopa_git_clone() {
     local app clone_args dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['git']="$(koopa_locate_git)"
-    )
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-missing)"
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']=''
@@ -9198,10 +9198,22 @@ koopa_git_clone() {
 koopa_git_commit_date() {
     local app repos
     declare -A app=(
-        ['date']="$(koopa_locate_date)"
-        ['git']="$(koopa_locate_git)"
-        ['xargs']="$(koopa_locate_xargs)"
+        ['date']="$(koopa_locate_date --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-missing)"
+        ['xargs']="$(koopa_locate_xargs --allow-missing)"
     )
+    if [[ ! -x "${app['date']}" ]]
+    then
+        if [[ -x '/usr/bin/date' ]]
+        then
+            app['date']='/usr/bin/date'
+        elif [[ -x '/bin/date' ]]
+        then
+            app['date']='/bin/date'
+        fi
+    fi
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    [[ ! -x "${app['xargs']}" ]] && app['xargs']='/usr/bin/xargs'
     [[ -x "${app['date']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
@@ -9231,9 +9243,11 @@ koopa_git_commit_date() {
 koopa_git_default_branch() {
     local app dict repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
-        ['sed']="$(koopa_locate_sed)"
+        ['git']="$(koopa_locate_git --allow-missing)"
+        ['sed']="$(koopa_locate_sed --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    [[ ! -x "${app['sed']}" ]] && app['sed']='/usr/bin/sed'
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
@@ -9263,9 +9277,9 @@ koopa_git_default_branch() {
 
 koopa_git_last_commit_local() {
     local app dict repos
-    declare -A app=(
-        ['git']="$(koopa_locate_git)"
-    )
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-missing)"
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['ref']='HEAD'
@@ -9292,10 +9306,13 @@ koopa_git_last_commit_remote() {
     local app dict url
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['git']="$(koopa_locate_git)"
-        ['head']="$(koopa_locate_head)"
+        ['awk']="$(koopa_locate_awk --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-missing)"
     )
+    [[ ! -x "${app['awk']}" ]] && app['awk']='/usr/bin/awk'
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
@@ -9480,8 +9497,9 @@ koopa_git_push_submodules() {
 koopa_git_remote_url() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
@@ -21427,8 +21445,9 @@ koopa_switch_to_develop() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']='develop'
