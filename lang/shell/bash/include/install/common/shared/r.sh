@@ -55,8 +55,11 @@ main() {
         # > 'mpc'
         # gcc deps: gmp, mpfr, mpc.
         'gcc'
-        # bzip2 deps: none.
-        'bzip2'
+    )
+    # bzip2 deps: none.
+    # R currently has configuration issues with libbz2.dylib on macOS.
+    koopa_is_linux && deps+=('bzip2')
+    deps+=(
         # icu4c deps: none.
         'icu4c'
         # ncurses deps: none.
@@ -211,7 +214,7 @@ main() {
     declare -A conf_dict
     declare -A dict=(
         ['arch']="$(koopa_arch)"
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
+        # > ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['jobs']="$(koopa_cpu_count)"
         ['lapack']="$(koopa_app_prefix 'lapack')"
         ['name']="${INSTALL_NAME:?}"
@@ -221,7 +224,6 @@ main() {
         ['version']="${INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
-        "${dict['bzip2']}" \
         "${dict['lapack']}" \
         "${dict['openjdk']}" \
         "${dict['tcl_tk']}"
