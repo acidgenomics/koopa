@@ -37,7 +37,7 @@ main() {
     deps=(
         'ca-certificates'
         'zlib'
-        'bzip2'
+        # > 'bzip2'
         'icu4c'
         'libuv'
         'openssl3'
