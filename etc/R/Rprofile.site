@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-08-29.
+#' @note Updated 2022-08-30.
 #'
 #' @section Restarting R:
 #'
@@ -250,15 +250,13 @@ local({  # nolint
     }
     ## Allow binary install on macOS for CRAN R. Otherwise default to installing
     ## from source. Note that RSPM doesn't currently support macOS binaries.
-    ## FIXME Consider re-enabling this after we can tell if our system
-    ## config compiles everything we want.
-    ## > if (isTRUE(flag[["macos"]]) && isTRUE(flag[["cranBinary"]])) {
-    ## >     cran <- "https://cloud.r-project.org"
-    ## >     options(
-    ## >         "pkgType" = "both",
-    ## >         "install.packages.compile.from.source" = "never"
-    ## >     )
-    ## > }
+    if (isTRUE(flag[["macos"]]) && isTRUE(flag[["cranBinary"]])) {
+        cran <- "https://cloud.r-project.org"
+        options(
+            "pkgType" = "both",
+            "install.packages.compile.from.source" = "never"
+        )
+    }
     repos <- getOption("repos")
     repos[["CRAN"]] <- cran
     ## Configure the RSPM Bioconductor mirror repo.

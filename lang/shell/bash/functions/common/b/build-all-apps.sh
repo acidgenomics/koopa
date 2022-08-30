@@ -367,6 +367,7 @@ koopa_build_all_apps() {
         PATH="${TMPDIR:-/tmp}/koopa-bootstrap/bin:${PATH:-}" \
             "${app['koopa']}" install "$pkg"
     done
-    koopa_push_all_app_builds
+    # FIXME Re-enable this after we check our recipe.
+    # > koopa_push_all_app_builds
     return 0
 }
