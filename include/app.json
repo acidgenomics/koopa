@@ -1349,11 +1349,13 @@
   },
   "lua": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
     "version": "5.4.4"
   },
   "luarocks": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://github.com/luarocks/luarocks/"],
     "version": "3.9.1"
   },
@@ -1474,6 +1476,7 @@
   "neovim": {
     "bin": ["nvim"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
     "version": "0.7.2"
