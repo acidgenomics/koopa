@@ -3,7 +3,7 @@
 koopa_git_default_branch() {
     # """
     # Default branch of Git repository.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-08-30.
     #
     # Alternate approach:
     # > x="$( \
@@ -20,9 +20,11 @@ koopa_git_default_branch() {
     # """
     local app dict repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
-        ['sed']="$(koopa_locate_sed)"
+        ['git']="$(koopa_locate_git --allow-missing)"
+        ['sed']="$(koopa_locate_sed --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    [[ ! -x "${app['sed']}" ]] && app['sed']='/usr/bin/sed'
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(

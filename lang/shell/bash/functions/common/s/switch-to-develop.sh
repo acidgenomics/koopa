@@ -3,7 +3,7 @@
 koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-08-30.
     #
     # @seealso
     # - https://stackoverflow.com/questions/49297153/
@@ -11,8 +11,9 @@ koopa_switch_to_develop() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']='develop'

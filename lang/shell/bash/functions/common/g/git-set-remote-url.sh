@@ -3,7 +3,7 @@
 koopa_git_set_remote_url() {
     # """
     # Set (or change) the remote URL of a git repo.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-08-30.
     #
     # @examples
     # > repo='/opt/koopa'
@@ -15,8 +15,9 @@ koopa_git_set_remote_url() {
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_git_repo
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['url']="${1:?}"

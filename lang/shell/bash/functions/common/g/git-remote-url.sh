@@ -3,7 +3,7 @@
 koopa_git_remote_url() {
     # """
     # Return the Git remote URL for origin.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-08-30.
     #
     # @examples
     # > koopa_git_remote_url '/opt/koopa'
@@ -11,8 +11,9 @@ koopa_git_remote_url() {
     # """
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"

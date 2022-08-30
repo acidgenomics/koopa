@@ -3,7 +3,7 @@
 koopa_git_clone() {
     # """
     # Quietly clone a git repository.
-    # @note Updated 2022-07-14.
+    # @note Updated 2022-08-30.
     #
     # @seealso
     # - https://github.blog/2020-12-21-get-up-to-speed-with-partial-clone-
@@ -13,9 +13,9 @@ koopa_git_clone() {
     # """
     local app clone_args dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['git']="$(koopa_locate_git)"
-    )
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-missing)"
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']=''

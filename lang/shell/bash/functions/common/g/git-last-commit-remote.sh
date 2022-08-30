@@ -3,7 +3,7 @@
 koopa_git_last_commit_remote() {
     # """
     # Last git commit of remote repository.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-08-30.
     #
     # @examples
     # > url='https://github.com/acidgenomics/koopa.git'
@@ -16,10 +16,13 @@ koopa_git_last_commit_remote() {
     local app dict url
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['git']="$(koopa_locate_git)"
-        ['head']="$(koopa_locate_head)"
+        ['awk']="$(koopa_locate_awk --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-missing)"
     )
+    [[ ! -x "${app['awk']}" ]] && app['awk']='/usr/bin/awk'
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1

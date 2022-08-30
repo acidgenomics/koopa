@@ -3,7 +3,7 @@
 koopa_git_commit_date() {
     # """
     # Date of last git commit.
-    # @note Updated 2022-08-04.
+    # @note Updated 2022-08-30.
     #
     # Alternative approach:
     # > "${app['git']}" log -1 --format='%cd'
@@ -14,10 +14,22 @@ koopa_git_commit_date() {
     # """
     local app repos
     declare -A app=(
-        ['date']="$(koopa_locate_date)"
-        ['git']="$(koopa_locate_git)"
-        ['xargs']="$(koopa_locate_xargs)"
+        ['date']="$(koopa_locate_date --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-missing)"
+        ['xargs']="$(koopa_locate_xargs --allow-missing)"
     )
+    if [[ ! -x "${app['date']}" ]]
+    then
+        if [[ -x '/usr/bin/date' ]]
+        then
+            app['date']='/usr/bin/date'
+        elif [[ -x '/bin/date' ]]
+        then
+            app['date']='/bin/date'
+        fi
+    fi
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    [[ ! -x "${app['xargs']}" ]] && app['xargs']='/usr/bin/xargs'
     [[ -x "${app['date']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
