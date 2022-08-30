@@ -3,7 +3,7 @@
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-08-16.
+    # @note Updated 2022-08-29.
     #
     # The approach calling 'koopa_cli_install' internally on pkgs array
     # can run into weird compilation issues on macOS.
@@ -362,7 +362,8 @@ koopa_build_all_apps() {
     for pkg in "${pkgs[@]}"
     do
         koopa_is_symlink "${dict['opt_prefix']}/${pkg}" && continue
-        "${app['koopa']}" install "$pkg"
+        PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}" \
+            "${app['koopa']}" install "$pkg"
     done
     koopa_push_all_app_builds
     return 0
