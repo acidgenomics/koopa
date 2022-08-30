@@ -35,7 +35,7 @@ koopa_r_configure_java() {
     [[ -x "${app['r']}" ]] || return 1
     koopa_is_koopa_app "${app['r']}" && return 0
     declare -A dict
-    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+    dict['openjdk']="$(koopa_app_prefix 'openjdk' || true)"
     if [[ ! -d "${dict['openjdk']}" ]]
     then
         koopa_alert_note 'Skipping R Java configuration.'
