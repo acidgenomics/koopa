@@ -9671,8 +9671,9 @@ koopa_git_set_remote_url() {
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_git_repo
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-missing)"
     )
+    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['url']="${1:?}"
@@ -11271,9 +11272,9 @@ koopa_install_anaconda() {
 koopa_install_app_from_binary_package() {
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['tar']="$(koopa_locate_tar)"
-    )
+    declare -A app
+    app['tar']="$(koopa_locate_tar --allow-missing)"
+    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
@@ -17383,8 +17384,9 @@ koopa_push_app_build() {
     koopa_assert_has_args "$#"
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
-        ['tar']="$(koopa_locate_tar)"
+        ['tar']="$(koopa_locate_tar --allow-missing)"
     )
+    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
@@ -21685,9 +21687,9 @@ koopa_system_info() {
 koopa_tar_multiple_dirs() {
     local app dict dir dirs pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['tar']="$(koopa_locate_tar)"
-    )
+    declare -A app
+    app['tar']="$(koopa_locate_tar --allow-missing)"
+    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['delete']=0
