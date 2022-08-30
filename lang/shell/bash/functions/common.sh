@@ -6035,7 +6035,17 @@ koopa_decompress() {
                     koopa_cp "${dict['source_file']}" "${dict['target_file']}"
                     ;;
                 '1')
-                    cmd="$(koopa_locate_cat)"
+                    cmd="$(koopa_locate_cat --allow-missing)"
+                    if [[ ! -x "$cmd" ]]
+                    then
+                        if [[ -x '/usr/bin/cat' ]]
+                        then
+                            cmd='/usr/bin/cat'
+                        elif [[ -x '/bin/cat' ]]
+                        then
+                            cmd='/bin/cat'
+                        fi
+                    fi
                     [[ -x "$cmd" ]] || return 1
                     "$cmd" "${dict['source_file']}" || true
                     ;;
@@ -14796,7 +14806,18 @@ koopa_koopa_version() {
     local app dict
     declare -A app dict
     koopa_assert_has_no_args "$#"
-    app['cat']="$(koopa_locate_cat)"
+    app['cat']="$(koopa_locate_cat --allow-missing)"
+    if [[ ! -x "${app['cat']}" ]]
+    then
+        if [[ -x '/usr/bin/cat' ]]
+        then
+            app['cat']='/usr/bin/cat'
+        elif [[ -x '/bin/cat' ]]
+        then
+            app['cat']='/bin/cat'
+        fi
+    fi
+    [[ -x "${app['cat']}" ]] || return 1
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['version_file']="${dict['koopa_prefix']}/VERSION"
     koopa_assert_is_file "${dict['version_file']}"
@@ -17054,9 +17075,11 @@ koopa_os_type() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['tr']="$(koopa_locate_tr)"
-        ['uname']="$(koopa_locate_uname)"
+        ['tr']="$(koopa_locate_tr --allow-missing)"
+        ['uname']="$(koopa_locate_uname --allow-missing)"
     )
+    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
+    [[ ! -x "${app['uname']}" ]] && app['uname']='/usr/bin/uname'
     [[ -x "${app['tr']}" ]] || return 1
     [[ -x "${app['uname']}" ]] || return 1
     str="$( \
@@ -21672,7 +21695,8 @@ koopa_system_info() {
                 "$("${app['sw_vers']}" -buildVersion)" \
         )"
     else
-        app['uname']="$(koopa_locate_uname)"
+        app['uname']="$(koopa_locate_uname --allow-missing)"
+        [[ ! -x "${app['uname']}" ]] && app['uname']='/usr/bin/uname'
         [[ -x "${app['uname']}" ]] || return 1
         dict['os']="$("${app['uname']}" --all)"
     fi
