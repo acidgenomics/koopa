@@ -4952,6 +4952,7 @@ koopa_configure_r() {
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
     koopa_r_configure_ldpaths "${app['r']}"
+    koopa_r_configure_java "${app['r']}"
     case "${dict['system']}" in
         '0')
             if [[ -L "${dict['site_library']}" ]]
@@ -4973,7 +4974,6 @@ koopa_configure_r() {
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
             koopa_r_configure_makeconf "${app['r']}"
-            koopa_r_configure_java "${app['r']}"
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
@@ -17736,7 +17736,6 @@ koopa_r_configure_environ() {
         'libpng'
         'libssh2'
         'libtiff'
-        'libuv'
         'openblas'
         'openssl3'
         'pcre2'
@@ -17864,29 +17863,28 @@ abort,verbose"
 }
 
 koopa_r_configure_java() {
-    local app conf_dict dict java_args
+    local app conf_dict dict java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
-    app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || return 1
-    koopa_is_koopa_app "${app['r']}" && return 0
-    declare -A dict
-    dict['openjdk']="$(koopa_app_prefix 'openjdk' || true)"
-    if [[ ! -d "${dict['openjdk']}" ]]
-    then
-        koopa_alert_note 'Skipping R Java configuration.'
-        return 0
-    fi
-    koopa_alert 'Updating R Java configuration.'
-    koopa_assert_is_admin
-    app['sudo']="$(koopa_locate_sudo)"
-    app['jar']="$(koopa_locate_jar --realpath)"
-    app['java']="$(koopa_locate_java --realpath)"
-    app['javac']="$(koopa_locate_javac --realpath)"
-    [[ -x "${app['sudo']}" ]] || return 1
+    declare -A app=(
+        ['jar']="$(koopa_locate_jar --realpath)"
+        ['java']="$(koopa_locate_java --realpath)"
+        ['javac']="$(koopa_locate_javac --realpath)"
+        ['r']="${1:?}"
+        ['sudo']="$(koopa_locate_sudo)"
+    )
     [[ -x "${app['jar']}" ]] || return 1
     [[ -x "${app['java']}" ]] || return 1
     [[ -x "${app['javac']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    declare -A dict=(
+        ['openjdk']="$(koopa_app_prefix 'openjdk')"
+        ['system']=0
+    )
+    koopa_assert_is_dir \
+        "${dict['openjdk']}"
+    koopa_alert 'Updating R Java configuration.'
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     declare -A conf_dict=(
         ['java_home']="${dict['openjdk']}"
         ['jar']="${app['jar']}"
@@ -17901,7 +17899,16 @@ koopa_r_configure_java() {
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
     )
-    "${app['sudo']}" "${app['r']}" --vanilla CMD javareconf "${java_args[@]}"
+    case "${dict[system]}" in
+        '0')
+            r_cmd=("${app['r']}")
+            ;;
+        '1')
+            koopa_assert_is_admin
+            r_cmd=("${app['sudo']}" "${app['r']}")
+            ;;
+    esac
+    "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     return 0
 }
 
@@ -17947,7 +17954,6 @@ koopa_r_configure_ldpaths() {
         'libpng'
         'libssh2'
         'libtiff'
-        'libuv'
         'openblas'
         'openssl3'
         'pcre2'
@@ -18134,8 +18140,12 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    cppflags+=("-I${dict['gettext']}/include")
-    ldflags+=("-L${dict['gettext']}/lib")
+    cppflags+=(
+        "-I${dict['gettext']}/include"
+    )
+    ldflags+=(
+        "-L${dict['gettext']}/lib"
+    )
     case "${dict['system']}" in
         '1')
             cppflags+=(
@@ -18151,7 +18161,7 @@ koopa_r_configure_makevars() {
             )
             ldflags+=(
                 "$( \
-                    "${app['pkg_config']}" --libs \
+                    "${app['pkg_config']}" --libs-only-L \
                         'freetype2' \
                         'libjpeg' \
                         'libpng' \

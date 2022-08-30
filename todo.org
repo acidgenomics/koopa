@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO grep alias is messing up if grep isn't installed.
+    only alias grep if ggrep is installed
 ** TODO Don't let app install proceed unless all build and other dependencies defined in app JSON are present, with the current version.
 ** TODO Use app json during koopa_activate_opt_prefix (rename to app_prefix) usage.
     Can we retire the usage of opt_prefix entirely in our configuration scripts?

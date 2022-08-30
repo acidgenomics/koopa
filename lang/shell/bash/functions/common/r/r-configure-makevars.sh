@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-08-30.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -107,11 +107,19 @@ koopa_r_configure_makevars() {
     lines=()
     # gettext is needed to resolve clang '-lintl' warning. Can we avoid this
     # issue by setting 'LIBINTL' instead?
-    cppflags+=("-I${dict['gettext']}/include")
-    ldflags+=("-L${dict['gettext']}/lib")
+    cppflags+=(
+        # > '-I/usr/local/include'
+        "-I${dict['gettext']}/include"
+    )
+    ldflags+=(
+        # > '-L/usr/local/lib'
+        "-L${dict['gettext']}/lib"
+    )
+    # NOTE Custom LDFLAGS here appear to be incompatible with these packages:
+    # fs, httpuv, igraph, nloptr. May need to add support for bzip2, at least
+    # on Linux.
     case "${dict['system']}" in
         '1')
-            # May need to add support for '-lbz2', at least on Linux.
             cppflags+=(
                 "$( \
                     "${app['pkg_config']}" --cflags \
@@ -125,7 +133,7 @@ koopa_r_configure_makevars() {
             )
             ldflags+=(
                 "$( \
-                    "${app['pkg_config']}" --libs \
+                    "${app['pkg_config']}" --libs-only-L \
                         'freetype2' \
                         'libjpeg' \
                         'libpng' \
@@ -136,6 +144,8 @@ koopa_r_configure_makevars() {
             )
             ;;
     esac
+    # libomp is installed at '/usr/local/lib' for macOS.
+    # This is problematic for nloptr but required for data.table.
     ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
