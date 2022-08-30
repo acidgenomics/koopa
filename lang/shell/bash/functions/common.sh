@@ -6371,10 +6371,22 @@ koopa_disk_gb_free() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df)"
-        ['head']="$(koopa_locate_head)"
-        ['sed']="$(koopa_locate_sed)"
+        ['df']="$(koopa_locate_df --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-missing)"
+        ['sed']="$(koopa_locate_sed --allow-missing)"
     )
+    if [[ ! -x "${app['df']}" ]]
+    then
+        if [[ -x '/usr/bin/df' ]]
+        then
+            app['df']='/usr/bin/df'
+        elif [[ -x '/bin/df' ]]
+        then
+            app['df']='/bin/df'
+        fi
+    fi
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
+    [[ ! -x "${app['sed']}" ]] && app['head']='/usr/bin/sed'
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -6401,10 +6413,22 @@ koopa_disk_gb_total() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df)"
-        ['head']="$(koopa_locate_head)"
-        ['sed']="$(koopa_locate_sed)"
+        ['df']="$(koopa_locate_df --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-missing)"
+        ['sed']="$(koopa_locate_sed --allow-missing)"
     )
+    if [[ ! -x "${app['df']}" ]]
+    then
+        if [[ -x '/usr/bin/df' ]]
+        then
+            app['df']='/usr/bin/df'
+        elif [[ -x '/bin/df' ]]
+        then
+            app['df']='/bin/df'
+        fi
+    fi
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
+    [[ ! -x "${app['sed']}" ]] && app['head']='/usr/bin/sed'
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -6430,10 +6454,22 @@ koopa_disk_gb_used() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df)"
-        ['head']="$(koopa_locate_head)"
-        ['sed']="$(koopa_locate_sed)"
+        ['df']="$(koopa_locate_df --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-missing)"
+        ['sed']="$(koopa_locate_sed --allow-missing)"
     )
+    if [[ ! -x "${app['df']}" ]]
+    then
+        if [[ -x '/usr/bin/df' ]]
+        then
+            app['df']='/usr/bin/df'
+        elif [[ -x '/bin/df' ]]
+        then
+            app['df']='/bin/df'
+        fi
+    fi
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
+    [[ ! -x "${app['sed']}" ]] && app['head']='/usr/bin/sed'
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -6471,10 +6507,22 @@ koopa_disk_pct_used() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df)"
-        ['head']="$(koopa_locate_head)"
-        ['sed']="$(koopa_locate_sed)"
+        ['df']="$(koopa_locate_df --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-missing)"
+        ['sed']="$(koopa_locate_sed --allow-missing)"
     )
+    if [[ ! -x "${app['df']}" ]]
+    then
+        if [[ -x '/usr/bin/df' ]]
+        then
+            app['df']='/usr/bin/df'
+        elif [[ -x '/bin/df' ]]
+        then
+            app['df']='/bin/df'
+        fi
+    fi
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
+    [[ ! -x "${app['sed']}" ]] && app['head']='/usr/bin/sed'
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -7481,9 +7529,9 @@ koopa_extract_all() {
 
 koopa_extract_version() {
     local app arg dict
-    declare -A app=(
-        ['head']="$(koopa_locate_head)"
-    )
+    declare -A app
+    app['head']="$(koopa_locate_head --allow-missing)"
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
         ['pattern']="$(koopa_version_pattern)"
@@ -8267,9 +8315,8 @@ koopa_find_large_files() {
     local app prefix str
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
-    declare -A app=(
-        ['head']="$(koopa_locate_head)"
-    )
+    declare -A app
+    app['head']="$(koopa_locate_head)"
     [[ -x "${app['head']}" ]] || return 1
     for prefix in "$@"
     do
@@ -10267,16 +10314,17 @@ man1/${dict['script_name']}.1"
 koopa_help() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
+    declare -A dict
+    dict['man_file']="${1:?}"
+    [[ -f "${dict['man_file']}" ]] || return 1
     declare -A app=(
-        ['head']="$(koopa_locate_head)"
-        ['man']="$(koopa_locate_man)"
+        ['head']="$(koopa_locate_head --allow-missing)"
+        ['man']="$(koopa_locate_man --allow-missing)"
     )
+    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
+    [[ ! -x "${app['man']}" ]] && app['man']='/usr/bin/man'
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['man']}" ]] || return 1
-    declare -A dict=(
-        ['man_file']="${1:?}"
-    )
-    [[ -f "${dict['man_file']}" ]] || return 1
     "${app['head']}" -n 10 "${dict['man_file']}" \
         | koopa_str_detect_fixed --pattern='.TH ' \
         || return 1

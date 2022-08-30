@@ -278,6 +278,10 @@ koopa_activate_coreutils_aliases() {
     then
         alias cut='gcut'
     fi
+    if [ -x "${bin_prefix}/gdf" ]
+    then
+        alias df='gdf'
+    fi
     if [ -x "${bin_prefix}/gdir" ]
     then
         alias dir='gdir'
