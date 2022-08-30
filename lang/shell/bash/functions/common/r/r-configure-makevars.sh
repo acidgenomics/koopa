@@ -131,7 +131,6 @@ koopa_r_configure_makevars() {
                         'zlib' \
                 )"
             )
-            # Alternatively, can use '--libs' instead.
             ldflags+=(
                 "$( \
                     "${app['pkg_config']}" --libs-only-L \
