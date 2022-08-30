@@ -3,14 +3,16 @@
 koopa_download_github_latest() {
     # """
     # Download GitHub latest release.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-08-30.
     # """
     local api_url app repo tag tarball_url
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['tr']="$(koopa_locate_tr)"
+        ['cut']="$(koopa_locate_cut --allow-missing)"
+        ['tr']="$(koopa_locate_tr --allow-missing)"
     )
+    [[ ! -x "${app['cut']}" ]] && app['cut']='/usr/bin/cut'
+    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['tr']}" ]] || return 1
     for repo in "$@"

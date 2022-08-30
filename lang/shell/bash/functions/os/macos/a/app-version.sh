@@ -3,7 +3,7 @@
 koopa_macos_app_version() {
     # """
     # Extract the version of a macOS application.
-    # @note Updated 2022-05-19.
+    # @note Updated 2022-08-30.
     #
     # @examples
     # > koopa_macos_app_version 'BBEdit'
@@ -11,10 +11,12 @@ koopa_macos_app_version() {
     local app x
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
+        ['awk']="$(koopa_locate_awk --allow-missing)"
         ['plutil']="$(koopa_macos_locate_plutil)"
-        ['tr']="$(koopa_locate_tr)"
+        ['tr']="$(koopa_locate_tr --allow-missing)"
     )
+    [[ ! -x "${app['awk']}" ]] && app['awk']='/usr/bin/awk'
+    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['plutil']}" ]] || return 1
     [[ -x "${app['tr']}" ]] || return 1
