@@ -3271,48 +3271,54 @@ koopa_build_all_apps() {
         'pygments'
         'ranger-fm'
         'yt-dlp'
+        'pylint'
         'libedit'
-        'openssh' # deps: libedit
+        'openssh'
+        'c-ares'
+        'jemalloc'
+        'libev'
+        'nghttp2'
         'node'
-        'bash-language-server' # deps: node
-        'gtop' # deps: node
-        'prettier' # deps: node
-        'ack' # deps: perl
-        'rename' # deps: perl
-        'bashcov' # deps: ruby
-        'colorls' # deps: ruby
-        'ronn' # deps: ruby
-        'rust' # deps: ruby
+        'rust'
+        'julia'
         'bat' # deps: rust
         'broot' # deps: rust
         'delta' # deps: rust
         'difftastic' # deps: rust
-        'du-dust' # deps: rust
-        'exa' # deps: rust
-        'fd-find' # deps: rust
-        'hyperfine' # deps: rust
-        'mcfly' # deps: rust
-        'mdcat' # deps: rust
-        'procs' # deps: rust
-        'ripgrep' # deps: rust
-        'ripgrep-all' # deps: rust
-        'starship' # deps: rust
-        'tealdeer' # deps: rust
-        'tokei' # deps: rust
-        'tuc' # deps: rust
-        'xsv' # deps: rust
-        'zellij' # deps: rust
-        'zoxide' # deps: rust
-        'ffq' # deps: conda
-        'ensembl-perl-api' # deps: none.
+        'dog' # deps: rust
+        'du-dust'
+        'exa'
+        'fd-find'
+        'hyperfine'
+        'mcfly'
+        'mdcat'
+        'procs'
+        'ripgrep'
+        'ripgrep-all'
+        'starship'
+        'tealdeer'
+        'tokei'
+        'tuc'
+        'xsv'
+        'zellij'
+        'zoxide'
+        'chemacs'
+        'cheat'
+        'yq'
+        'bash-language-server'
+        'gtop'
+        'prettier'
+        'ack'
+        'rename'
+        'bashcov'
+        'colorls'
+        'ronn'
         'pyenv' # deps: none.
         'rbenv' # deps: none.
-        'cheat' # deps: go.
-        'pylint' # deps: python.
-        'yq' # deps: go.
-        'sra-tools'
-        'chemacs'
         'dotfiles'
+        'ensembl-perl-api' # deps: none.
+        'sra-tools'
+        'ffq' # deps: conda
     )
     if ! koopa_is_aarch64
     then
