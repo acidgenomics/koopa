@@ -582,6 +582,7 @@
   "cpufetch": {
     "bin": ["cpufetch"],
     "conservative": false,
+    "date": "2022-08-30",
     "man1": ["cpufetch.1"],
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
     "version": "1.02"
@@ -683,6 +684,7 @@
   "exiftool": {
     "bin": ["exiftool"],
     "conservative": false,
+    "date": "2022-08-30",
     "dependencies": ["perl"],
     "man1": ["exiftool.1"],
     "url": ["https://exiftool.org/"],
@@ -1284,8 +1286,9 @@
   },
   "libtasn1": {
     "conservative": true,
+    "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/libtasn1/"],
-    "version": "4.18.0"
+    "version": "4.19.0"
   },
   "libtiff": {
     "conservative": true,
