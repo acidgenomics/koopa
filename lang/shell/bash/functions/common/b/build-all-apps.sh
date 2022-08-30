@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# NOTE All conservative apps should be built before the liberal ones.
+
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-08-30.
     #
     # The approach calling 'koopa_cli_install' internally on pkgs array
     # can run into weird compilation issues on macOS.
