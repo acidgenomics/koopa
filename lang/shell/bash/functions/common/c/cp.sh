@@ -3,7 +3,7 @@
 koopa_cp() {
     # """
     # Hardened version of coreutils cp (copy).
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-08-30.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     #
@@ -95,7 +95,9 @@ koopa_cp() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$( \
+            koopa_strip_trailing_slash "${dict['target_dir']}" \
+        )"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"
