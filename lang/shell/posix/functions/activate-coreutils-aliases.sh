@@ -15,6 +15,10 @@ koopa_activate_coreutils_aliases() {
     # """
     local bin_prefix
     bin_prefix="$(koopa_bin_prefix)"
+    if [ -x "${bin_prefix}/gcat" ]
+    then
+        alias cat='gcat'
+    fi
     if [ -x "${bin_prefix}/gcp" ]
     then
         alias gcp='gcp --interactive --recursive --verbose'
@@ -83,6 +87,14 @@ koopa_activate_coreutils_aliases() {
     if [ -x "${bin_prefix}/gtail" ]
     then
         alias tail='gtail'
+    fi
+    if [ -x "${bin_prefix}/gtar" ]
+    then
+        alias tar='gtar'
+    fi
+    if [ -x "${bin_prefix}/gtouch" ]
+    then
+        alias touch='gtouch'
     fi
     if [ -x "${bin_prefix}/gtr" ]
     then
