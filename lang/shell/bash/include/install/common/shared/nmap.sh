@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# NOTE May need to include liblinear here.
+
+# FIXME This is currently failing to build on Ubuntu 22.
+# lmathlib.c:(.text+0x663): undefined reference to `cos'
+# /usr/bin/ld: /opt/koopa/app/lua/5.4.4/lib/liblua.a(lmathlib.o): in function `math_atan':
+# lmathlib.c:(.text+0x6c0): undefined reference to `atan2'
+# /usr/bin/ld: /opt/koopa/app/lua/5.4.4/lib/liblua.a(lmathlib.o): in function `math_asin':
+# lmathlib.c:(.text+0x6f3): undefined reference to `asin'
+# /usr/bin/ld: /opt/koopa/app/lua/5.4.4/lib/liblua.a(lmathlib.o): in function `math_acos':
+# lmathlib.c:(.text+0x723): undefined reference to `acos'
+
 main() {
     # """
     # Install nmap.
@@ -26,6 +37,7 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
+        ['jobs']="$(koopa_cpu_count)"
         ['lua']="$(koopa_app_prefix 'lua')"
         ['name']='nmap'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
@@ -48,7 +60,7 @@ main() {
         '--without-zenmap'
     )
     ./configure "${conf_args[@]}"
-    "${app['make']}"
+    "${app['make']}" --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }
