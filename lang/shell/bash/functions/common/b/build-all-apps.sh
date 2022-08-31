@@ -325,7 +325,9 @@ koopa_build_all_apps() {
         'convmv'
         'editorconfig'
         'markdownlint-cli'
-        'nmap'
+        # FIXME Currently problematic on Ubuntu 22.
+        # May need to include libpcap and liblinear here first.
+        # > 'nmap'
         'rmate'
     )
     if ! koopa_is_aarch64
