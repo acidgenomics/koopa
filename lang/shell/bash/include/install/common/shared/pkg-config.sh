@@ -14,9 +14,8 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['make']="$(koopa_locate_make --allow-missing)"
+        ['make']="$(koopa_locate_make --allow-system)"
     )
-    [[ ! -x "${app['make']}" ]] && app['make']='/usr/bin/make'
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"

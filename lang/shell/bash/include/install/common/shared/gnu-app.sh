@@ -3,20 +3,12 @@
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-08-25.
+    # @note Updated 2022-08-31.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
     local app conf_args dict
     koopa_activate_build_opt_prefix 'pkg-config'
-    declare -A app=(
-        ['make']="$(koopa_locate_make --allow-missing)"
-    )
-    if [[ -z "${app['make']}" ]]
-    then
-        app['make']='/usr/bin/make'
-    fi
-    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
         ['jobs']="$(koopa_cpu_count)"
@@ -24,6 +16,16 @@ main() {
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
     )
+    declare -A app
+    case "${app['name']}" in
+        'make')
+            app['make']="$(koopa_locate_make --allow-system)"
+            ;;
+        *)
+            app['make']="$(koopa_locate_make)"
+            ;;
+    esac
+    [[ -x "${app['make']}" ]] || return 1
     dict['name2']="${dict['name']}"
     conf_args=("--prefix=${dict['prefix']}" "$@")
     case "${dict['name']}" in

@@ -14,22 +14,10 @@ koopa_git_commit_date() {
     # """
     local app repos
     declare -A app=(
-        ['date']="$(koopa_locate_date --allow-missing)"
-        ['git']="$(koopa_locate_git --allow-missing)"
-        ['xargs']="$(koopa_locate_xargs --allow-missing)"
+        ['date']="$(koopa_locate_date --allow-system)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['xargs']="$(koopa_locate_xargs --allow-system)"
     )
-    if [[ ! -x "${app['date']}" ]]
-    then
-        if [[ -x '/usr/bin/date' ]]
-        then
-            app['date']='/usr/bin/date'
-        elif [[ -x '/bin/date' ]]
-        then
-            app['date']='/bin/date'
-        fi
-    fi
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
-    [[ ! -x "${app['xargs']}" ]] && app['xargs']='/usr/bin/xargs'
     [[ -x "${app['date']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1

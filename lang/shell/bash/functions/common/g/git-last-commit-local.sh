@@ -15,8 +15,7 @@ koopa_git_last_commit_local() {
     # """
     local app dict repos
     declare -A app
-    app['git']="$(koopa_locate_git --allow-missing)"
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['ref']='HEAD'

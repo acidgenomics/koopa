@@ -3390,12 +3390,10 @@ koopa_cache_functions_dir() {
     local app prefix
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['grep']="$(koopa_locate_grep --allow-missing)"
-        ['perl']="$(koopa_locate_perl --allow-missing)"
+        ['grep']="$(koopa_locate_grep --allow-system)"
+        ['perl']="$(koopa_locate_perl --allow-system)"
     )
-    [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
     [[ -x "${app['grep']}" ]] || return 1
-    [[ ! -x "${app['perl']}" ]] && app['perl']='/usr/bin/perl'
     [[ -x "${app['perl']}" ]] || return 1
     for prefix in "$@"
     do
@@ -3488,8 +3486,7 @@ koopa_camel_case() {
 koopa_capitalize() {
     local app str
     declare -A app
-    app['tr']="$(koopa_locate_tr --allow-missing)"
-    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
+    app['tr']="$(koopa_locate_tr --allow-system)"
     [[ -x "${app['tr']}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
@@ -5700,20 +5697,10 @@ koopa_convert_utf8_nfd_to_nfc() {
 koopa_cp() {
     local app cp cp_args dict mkdir pos rm
     declare -A app=(
-        ['cp']="$(koopa_locate_cp --allow-missing)"
+        ['cp']="$(koopa_locate_cp --allow-system)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
-    if [[ ! -x "${app['cp']}" ]]
-    then
-        if [[ -x '/usr/bin/cp' ]]
-        then
-            app['cp']='/usr/bin/cp'
-        elif [[ -x '/bin/cp' ]]
-        then
-            app['cp']='/bin/cp'
-        fi
-    fi
     [[ -x "${app['cp']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
@@ -5951,8 +5938,7 @@ koopa_datetime() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app
-    app['date']="$(koopa_locate_date --allow-missing)"
-    [[ ! -x "${app['date']}" ]] && app['date']='/usr/bin/date'
+    app['date']="$(koopa_locate_date --allow-system)"
     [[ -x "${app['date']}" ]] || return 1
     str="$("${app['date']}" '+%Y%m%d-%H%M%S')"
     [[ -n "$str" ]] || return 1
@@ -6045,17 +6031,7 @@ koopa_decompress() {
                     koopa_cp "${dict['source_file']}" "${dict['target_file']}"
                     ;;
                 '1')
-                    cmd="$(koopa_locate_cat --allow-missing)"
-                    if [[ ! -x "$cmd" ]]
-                    then
-                        if [[ -x '/usr/bin/cat' ]]
-                        then
-                            cmd='/usr/bin/cat'
-                        elif [[ -x '/bin/cat' ]]
-                        then
-                            cmd='/bin/cat'
-                        fi
-                    fi
+                    cmd="$(koopa_locate_cat --allow-system)"
                     [[ -x "$cmd" ]] || return 1
                     "$cmd" "${dict['source_file']}" || true
                     ;;
@@ -6381,22 +6357,10 @@ koopa_disk_gb_free() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-missing)"
-        ['head']="$(koopa_locate_head --allow-missing)"
-        ['sed']="$(koopa_locate_sed --allow-missing)"
+        ['df']="$(koopa_locate_df --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    if [[ ! -x "${app['df']}" ]]
-    then
-        if [[ -x '/usr/bin/df' ]]
-        then
-            app['df']='/usr/bin/df'
-        elif [[ -x '/bin/df' ]]
-        then
-            app['df']='/bin/df'
-        fi
-    fi
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
-    [[ ! -x "${app['sed']}" ]] && app['head']='/usr/bin/sed'
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -6423,22 +6387,10 @@ koopa_disk_gb_total() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-missing)"
-        ['head']="$(koopa_locate_head --allow-missing)"
-        ['sed']="$(koopa_locate_sed --allow-missing)"
+        ['df']="$(koopa_locate_df --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    if [[ ! -x "${app['df']}" ]]
-    then
-        if [[ -x '/usr/bin/df' ]]
-        then
-            app['df']='/usr/bin/df'
-        elif [[ -x '/bin/df' ]]
-        then
-            app['df']='/bin/df'
-        fi
-    fi
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
-    [[ ! -x "${app['sed']}" ]] && app['head']='/usr/bin/sed'
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -6464,22 +6416,10 @@ koopa_disk_gb_used() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-missing)"
-        ['head']="$(koopa_locate_head --allow-missing)"
-        ['sed']="$(koopa_locate_sed --allow-missing)"
+        ['df']="$(koopa_locate_df --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    if [[ ! -x "${app['df']}" ]]
-    then
-        if [[ -x '/usr/bin/df' ]]
-        then
-            app['df']='/usr/bin/df'
-        elif [[ -x '/bin/df' ]]
-        then
-            app['df']='/bin/df'
-        fi
-    fi
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
-    [[ ! -x "${app['sed']}" ]] && app['head']='/usr/bin/sed'
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -6517,22 +6457,10 @@ koopa_disk_pct_used() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-missing)"
-        ['head']="$(koopa_locate_head --allow-missing)"
-        ['sed']="$(koopa_locate_sed --allow-missing)"
+        ['df']="$(koopa_locate_df --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    if [[ ! -x "${app['df']}" ]]
-    then
-        if [[ -x '/usr/bin/df' ]]
-        then
-            app['df']='/usr/bin/df'
-        elif [[ -x '/bin/df' ]]
-        then
-            app['df']='/bin/df'
-        fi
-    fi
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
-    [[ ! -x "${app['sed']}" ]] && app['head']='/usr/bin/sed'
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -7276,11 +7204,9 @@ koopa_download_github_latest() {
     local api_url app repo tag tarball_url
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-missing)"
-        ['tr']="$(koopa_locate_tr --allow-missing)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
+        ['tr']="$(koopa_locate_tr --allow-system)"
     )
-    [[ ! -x "${app['cut']}" ]] && app['cut']='/usr/bin/cut'
-    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['tr']}" ]] || return 1
     for repo in "$@"
@@ -7350,8 +7276,7 @@ koopa_download() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
     declare -A app
-    app['download']="$("koopa_locate_${dict['engine']}" --allow-missing)"
-    [[ ! -x "${app['download']}" ]] && app['download']='/usr/bin/curl'
+    app['download']="$("koopa_locate_${dict['engine']}" --allow-system)"
     [[ -x "${app['download']}" ]] || return 1
     if [[ -z "${dict['file']}" ]]
     then
@@ -7540,8 +7465,7 @@ koopa_extract_all() {
 koopa_extract_version() {
     local app arg dict
     declare -A app
-    app['head']="$(koopa_locate_head --allow-missing)"
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
+    app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
         ['pattern']="$(koopa_version_pattern)"
@@ -7584,35 +7508,28 @@ koopa_extract() {
             *'.tar.bz2' | \
             *'.tar.gz' | \
             *'.tar.xz')
-                app['cmd']="$(koopa_locate_tar --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
+                app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 case "$file" in
                     *'.bz2')
-                        app['cmd2']="$(koopa_locate_bzip2 --allow-missing)"
-                        [[ -z "${app['cmd2']}" ]] \
-                            && app['cmd2']='/usr/bin/bzip2'
+                        app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
                     *'.gz')
-                        app['cmd2']="$(koopa_locate_gzip --allow-missing)"
-                        [[ -z "${app['cmd2']}" ]] \
-                            && app['cmd2']='/usr/bin/gzip'
+                        app['cmd2']="$(koopa_locate_gzip --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
                         ;;
                     *'.xz')
-                        app['cmd2']="$(koopa_locate_xz --allow-missing)"
-                        [[ -z "${app['cmd2']}" ]] \
-                            && app['cmd2']='/usr/bin/xz'
+                        app['cmd2']="$(koopa_locate_xz --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
@@ -7621,29 +7538,25 @@ koopa_extract() {
                 esac
                 ;;
             *'.bz2')
-                app['cmd']="$(koopa_locate_bunzip2 --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/bunzip2'
+                app['cmd']="$(koopa_locate_bunzip2 --allow-system)"
                 cmd_args=("$file")
                 ;;
             *'.gz')
-                app['cmd']="$(koopa_locate_gzip --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/gzip'
+                app['cmd']="$(koopa_locate_gzip --allow-system)"
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                 )
                 ;;
             *'.tar')
-                app['cmd']="$(koopa_locate_tar --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
+                app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 ;;
             *'.tbz2')
-                app['cmd']="$(koopa_locate_tar --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
+                app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-j' # '--bzip2'.
@@ -7651,8 +7564,7 @@ koopa_extract() {
                 )
                 ;;
             *'.tgz')
-                app['cmd']="$(koopa_locate_tar --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
+                app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
@@ -7660,24 +7572,21 @@ koopa_extract() {
                 )
                 ;;
             *'.xz')
-                app['cmd']="$(koopa_locate_xz --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/xz'
+                app['cmd']="$(koopa_locate_xz --allow-system)"
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                     )
                 ;;
             *'.zip')
-                app['cmd']="$(koopa_locate_unzip --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/unzip'
+                app['cmd']="$(koopa_locate_unzip --allow-system)"
                 cmd_args=(
                     '-qq'
                     "$file"
                 )
                 ;;
             *'.Z')
-                app['cmd']="$(koopa_locate_uncompress --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/uncompress'
+                app['cmd']="$(koopa_locate_uncompress --allow-system)"
                 cmd_args=("$file")
                 ;;
             *'.7z')
@@ -8073,8 +7982,7 @@ koopa_find_and_replace_in_file() {
     local app dict flags perl_cmd pos
     koopa_assert_has_args "$#"
     declare -A app
-    app['perl']="$(koopa_locate_perl --allow-missing)"
-    [[ ! -x "${app['perl']}" ]] && app['perl']='/usr/bin/perl'
+    app['perl']="$(koopa_locate_perl --allow-system)"
     [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
         ['multiline']=0
@@ -8617,8 +8525,7 @@ koopa_find() {
             if [[ -z "${dict['engine']}" ]]
             then
                 dict['engine']='find'
-                app['find']="$(koopa_locate_find --allow-missing)"
-                [[ ! -x "${app['find']}" ]] && app['find']='/usr/bin/find'
+                app['find']="$(koopa_locate_find --allow-system)"
                 [[ -x "${app['find']}" ]] || return 1
             fi
             ;;
@@ -8627,8 +8534,7 @@ koopa_find() {
             [[ -x "${app['find']}" ]] || return 1
             ;;
         'find')
-            app['find']="$(koopa_locate_find --allow-missing)"
-            [[ ! -x "${app['find']}" ]] && app['find']='/usr/bin/find'
+            app['find']="$(koopa_locate_find --allow-system)"
             [[ -x "${app['find']}" ]] || return 1
             ;;
     esac
@@ -8828,8 +8734,7 @@ koopa_find() {
     fi
     if [[ "${dict['sort']}" -eq 1 ]]
     then
-        app['sort']="$(koopa_locate_sort --allow-missing)"
-        [[ ! -x "${app['sort']}" ]] && app['sort']='/usr/bin/sort'
+        app['sort']="$(koopa_locate_sort --allow-system)"
         [[ -x "${app['sort']}" ]] || return 1
     fi
     if [[ "${dict['print0']}" -eq 1 ]]
@@ -9159,8 +9064,7 @@ koopa_git_clone() {
     local app clone_args dict
     koopa_assert_has_args "$#"
     declare -A app
-    app['git']="$(koopa_locate_git --allow-missing)"
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']=''
@@ -9272,22 +9176,10 @@ koopa_git_clone() {
 koopa_git_commit_date() {
     local app repos
     declare -A app=(
-        ['date']="$(koopa_locate_date --allow-missing)"
-        ['git']="$(koopa_locate_git --allow-missing)"
-        ['xargs']="$(koopa_locate_xargs --allow-missing)"
+        ['date']="$(koopa_locate_date --allow-system)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['xargs']="$(koopa_locate_xargs --allow-system)"
     )
-    if [[ ! -x "${app['date']}" ]]
-    then
-        if [[ -x '/usr/bin/date' ]]
-        then
-            app['date']='/usr/bin/date'
-        elif [[ -x '/bin/date' ]]
-        then
-            app['date']='/bin/date'
-        fi
-    fi
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
-    [[ ! -x "${app['xargs']}" ]] && app['xargs']='/usr/bin/xargs'
     [[ -x "${app['date']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
@@ -9317,11 +9209,9 @@ koopa_git_commit_date() {
 koopa_git_default_branch() {
     local app dict repos
     declare -A app=(
-        ['git']="$(koopa_locate_git --allow-missing)"
-        ['sed']="$(koopa_locate_sed --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
-    [[ ! -x "${app['sed']}" ]] && app['sed']='/usr/bin/sed'
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
@@ -9352,8 +9242,7 @@ koopa_git_default_branch() {
 koopa_git_last_commit_local() {
     local app dict repos
     declare -A app
-    app['git']="$(koopa_locate_git --allow-missing)"
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['ref']='HEAD'
@@ -9380,13 +9269,10 @@ koopa_git_last_commit_remote() {
     local app dict url
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['awk']="$(koopa_locate_awk --allow-missing)"
-        ['git']="$(koopa_locate_git --allow-missing)"
-        ['head']="$(koopa_locate_head --allow-missing)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
     )
-    [[ ! -x "${app['awk']}" ]] && app['awk']='/usr/bin/awk'
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
@@ -9570,10 +9456,8 @@ koopa_git_push_submodules() {
 
 koopa_git_remote_url() {
     local app repos
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-missing)"
-    )
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
@@ -9744,10 +9628,8 @@ koopa_git_set_remote_url() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_git_repo
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-missing)"
-    )
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['url']="${1:?}"
@@ -10111,14 +9993,12 @@ koopa_grep() {
             if [[ -z "${dict['engine']}" ]]
             then
                 dict['engine']='grep'
-                app['grep']="$(koopa_locate_grep --allow-missing)"
-                [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+                app['grep']="$(koopa_locate_grep --allow-system)"
                 [[ -x "${app['grep']}" ]] || return 1
             fi
             ;;
         'grep')
-            app['grep']="$(koopa_locate_grep --allow-missing)"
-            [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+            app['grep']="$(koopa_locate_grep --allow-system)"
             [[ -x "${app['grep']}" ]] || return 1
             ;;
         'rg')
@@ -10328,11 +10208,9 @@ koopa_help() {
     dict['man_file']="${1:?}"
     [[ -f "${dict['man_file']}" ]] || return 1
     declare -A app=(
-        ['head']="$(koopa_locate_head --allow-missing)"
-        ['man']="$(koopa_locate_man --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['man']="$(koopa_locate_man --allow-system)"
     )
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
-    [[ ! -x "${app['man']}" ]] && app['man']='/usr/bin/man'
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['man']}" ]] || return 1
     "${app['head']}" -n 10 "${dict['man_file']}" \
@@ -11348,8 +11226,7 @@ koopa_install_app_from_binary_package() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app
-    app['tar']="$(koopa_locate_tar --allow-missing)"
-    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
+    app['tar']="$(koopa_locate_tar --allow-system)"
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
@@ -11423,10 +11300,8 @@ koopa_install_app() {
     local app bin_arr bool clean_path_arr dict i man1_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    declare -A app=(
-        ['tee']="$(koopa_locate_tee --allow-missing)"
-    )
-    [[ -z "${app['tee']}" ]] && app['tee']='/usr/bin/tee'
+    declare -A app
+    app['tee']="$(koopa_locate_tee --allow-system)"
     [[ -x "${app['tee']}" ]] || return 1
     declare -A bool=(
         ['auto_prefix']=0
@@ -13735,8 +13610,7 @@ koopa_is_admin() {
     koopa_is_installed 'sudo' || return 1
     koopa_has_passwordless_sudo && return 0
     declare -A app
-    app['groups']="$(koopa_locate_groups --allow-missing)"
-    [[ ! -x "${app['groups']}" ]] && app['groups']='/usr/bin/groups'
+    app['groups']="$(koopa_locate_groups --allow-system)"
     [[ -x "${app['groups']}" ]] || return 1
     declare -A dict=(
         ['groups']="$("${app['groups']}")"
@@ -14866,17 +14740,7 @@ koopa_koopa_version() {
     local app dict
     declare -A app dict
     koopa_assert_has_no_args "$#"
-    app['cat']="$(koopa_locate_cat --allow-missing)"
-    if [[ ! -x "${app['cat']}" ]]
-    then
-        if [[ -x '/usr/bin/cat' ]]
-        then
-            app['cat']='/usr/bin/cat'
-        elif [[ -x '/bin/cat' ]]
-        then
-            app['cat']='/bin/cat'
-        fi
-    fi
+    app['cat']="$(koopa_locate_cat --allow-system)"
     [[ -x "${app['cat']}" ]] || return 1
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['version_file']="${dict['koopa_prefix']}/VERSION"
@@ -15173,20 +15037,10 @@ koopa_lmod_prefix() {
 koopa_ln() {
     local app dict ln ln_args mkdir pos rm
     declare -A app=(
-        ['ln']="$(koopa_locate_ln --allow-missing)"
+        ['ln']="$(koopa_locate_ln --allow-system)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
-    if [[ ! -x "${app['ln']}" ]]
-    then
-        if [[ -x '/usr/bin/ln' ]]
-        then
-            app['ln']='/usr/bin/ln'
-        elif [[ -x '/bin/ln' ]]
-        then
-            app['ln']='/bin/ln'
-        fi
-    fi
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
@@ -15281,6 +15135,7 @@ koopa_locate_app() {
     local bool dict pos
     declare -A bool=(
         ['allow_missing']=0
+        ['allow_system']=0
         ['realpath']=0
     )
     declare -A dict=(
@@ -15288,6 +15143,7 @@ koopa_locate_app() {
         ['bin_name']=''
         ['bin_prefix']="$(koopa_bin_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"
+        ['system_bin_name']=''
     )
     pos=()
     while (("$#"))
@@ -15309,8 +15165,20 @@ koopa_locate_app() {
                 dict['bin_name']="${2:?}"
                 shift 2
                 ;;
+            '--system-bin-name='*)
+                dict['system_bin_name']="${1#*=}"
+                shift 1
+                ;;
+            '--system-bin-name')
+                dict['system_bin_name']="${2:?}"
+                shift 2
+                ;;
             '--allow-missing')
                 bool['allow_missing']=1
+                shift 1
+                ;;
+            '--allow-system')
+                bool['allow_system']=1
                 shift 1
                 ;;
             '--realpath')
@@ -15358,6 +15226,19 @@ koopa_locate_app() {
     fi
     dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
 bin/${dict['bin_name']}"
+    if [[ ! -x "${dict['app']}" ]] && \
+        [[ "${bool['allow_system']}" -eq 1 ]]
+    then
+        [[ -z "${dict['system_bin_name']}" ]] && \
+            dict['system_bin_name']="${dict['bin_name']}"
+        if [[ -x "/usr/bin/${dict['system_bin_name']}" ]]
+        then
+            dict['app']="/usr/bin/${dict['system_bin_name']}"
+        elif [[ -x "/bin/${dict['system_bin_name']}" ]]
+        then
+            dict['app']="/bin/${dict['system_bin_name']}"
+        fi
+    fi
     if [[ -x "${dict['app']}" ]]
     then
         if [[ "${bool['realpath']}" -eq 1 ]]
@@ -15369,8 +15250,8 @@ bin/${dict['bin_name']}"
     fi
     [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
     koopa_stop \
-        "Failed to locate '${dict['bin_name']}' (from '${dict['app_name']}')." \
-        "Running 'koopa install '${dict['app_name']}' may resolve the issue."
+        "Failed to locate '${dict['bin_name']}'." \
+        "Run 'koopa install '${dict['app_name']}' to resolve."
 }
 
 koopa_locate_ascp() {
@@ -15481,6 +15362,7 @@ koopa_locate_cat() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gcat' \
+        --system-bin-name='cat' \
         "$@"
 }
 
@@ -15540,6 +15422,7 @@ koopa_locate_cp() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gcp' \
+        --system-bin-name='cp' \
         "$@"
 }
 
@@ -15568,6 +15451,7 @@ koopa_locate_date() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gdate' \
+        --system-bin-name='date' \
         "$@"
 }
 
@@ -15575,6 +15459,7 @@ koopa_locate_df() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gdf' \
+        --system-bin-name='df' \
         "$@"
 }
 
@@ -15677,6 +15562,7 @@ koopa_locate_find() {
     koopa_locate_app \
         --app-name='findutils' \
         --bin-name='gfind' \
+        --system-bin-name='find' \
         "$@"
 }
 
@@ -15782,6 +15668,7 @@ koopa_locate_grep() {
     koopa_locate_app \
         --app-name='grep' \
         --bin-name='ggrep' \
+        --system-bin-name='grep' \
         "$@"
 }
 
@@ -15789,6 +15676,7 @@ koopa_locate_groups() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='ggroups' \
+        --system-bin-name='groups' \
         "$@"
 }
 
@@ -15824,6 +15712,7 @@ koopa_locate_head() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='ghead' \
+        --system-bin-name='head' \
         "$@"
 }
 
@@ -15920,6 +15809,7 @@ koopa_locate_ln() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gln' \
+        --system-bin-name='ln' \
         "$@"
 }
 
@@ -15972,6 +15862,7 @@ koopa_locate_make() {
     koopa_locate_app \
         --app-name='make' \
         --bin-name='gmake' \
+        --system-bin-name='make' \
         "$@"
 }
 
@@ -15986,6 +15877,7 @@ koopa_locate_man() {
     koopa_locate_app \
         --app-name='man-db' \
         --bin-name='gman' \
+        --system-bin-name='man' \
         "$@"
 }
 
@@ -16007,6 +15899,7 @@ koopa_locate_mkdir() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gmkdir' \
+        --system-bin-name='mkdir' \
         "$@"
 }
 
@@ -16014,6 +15907,7 @@ koopa_locate_mktemp() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gmktemp' \
+        --system-bin-name='mktemp' \
         "$@"
 }
 
@@ -16021,6 +15915,7 @@ koopa_locate_mv() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gmv' \
+        --system-bin-name='mv' \
         "$@"
 }
 
@@ -16229,6 +16124,7 @@ koopa_locate_rm() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='grm' \
+        --system-bin-name='rm' \
         "$@"
 }
 
@@ -16299,6 +16195,7 @@ koopa_locate_sed() {
     koopa_locate_app \
         --app-name='sed' \
         --bin-name='gsed' \
+        --system-bin-name='sed' \
         "$@"
 }
 
@@ -16320,6 +16217,7 @@ koopa_locate_sort() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gsort' \
+        --system-bin-name='sort' \
         "$@"
 }
 
@@ -16377,6 +16275,7 @@ koopa_locate_stat() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gstat' \
+        --system-bin-name='stat' \
         "$@"
 }
 
@@ -16404,6 +16303,7 @@ koopa_locate_tail() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gtail' \
+        --system-bin-name='tail' \
         "$@"
 }
 
@@ -16411,6 +16311,7 @@ koopa_locate_tar() {
     koopa_locate_app \
         --app-name='tar' \
         --bin-name='gtar' \
+        --system-bin-name='tar' \
         "$@"
 }
 
@@ -16418,6 +16319,7 @@ koopa_locate_tee() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gtee' \
+        --system-bin-name='tee' \
         "$@"
 }
 
@@ -16449,6 +16351,7 @@ koopa_locate_touch() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gtouch' \
+        --system-bin-name='touch' \
         "$@"
 }
 
@@ -16456,6 +16359,7 @@ koopa_locate_tr() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gtr' \
+        --system-bin-name='tr' \
         "$@"
 }
 
@@ -16463,6 +16367,7 @@ koopa_locate_uname() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='guname' \
+        --system-bin-name='uname' \
         "$@"
 }
 
@@ -16483,7 +16388,8 @@ koopa_locate_uniq() {
 koopa_locate_unzip() {
     koopa_locate_app \
         --app-name='unzip' \
-        --bin-name='unzip' \
+        --bin-name='gunzip' \
+        --system-bin-name='unzip' \
         "$@"
 }
 
@@ -16519,6 +16425,7 @@ koopa_locate_xargs() {
     koopa_locate_app \
         --app-name='findutils' \
         --bin-name='gxargs' \
+        --system-bin-name='xargs' \
         "$@"
 }
 
@@ -16580,8 +16487,7 @@ ${dict['datetime']}.log"
 koopa_lowercase() {
     local app str
     declare -A app
-    app['tr']="$(koopa_locate_tr --allow-missing)"
-    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
+    app['tr']="$(koopa_locate_tr --allow-system)"
     [[ -x "${app['tr']}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then
@@ -16695,21 +16601,10 @@ koopa_missing_arg() {
 koopa_mkdir() {
     local app dict mkdir mkdir_args pos
     declare -A app
-    app['mkdir']="$(koopa_locate_mkdir --allow-missing)"
-    if [[ ! -x "${app['mkdir']}" ]]
-    then
-        if [[ -x '/usr/bin/mkdir' ]]
-        then
-            app['mkdir']='/usr/bin/mkdir'
-        elif [[ -x '/bin/mkdir' ]]
-        then
-            app['mkdir']='/bin/mkdir'
-        fi
-    fi
+    app['mkdir']="$(koopa_locate_mkdir --allow-system)"
     [[ -x "${app['mkdir']}" ]] || return 1
-    declare -A dict=(
-        ['sudo']=0
-    )
+    declare -A dict
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -16746,8 +16641,7 @@ koopa_mkdir() {
 koopa_mktemp() {
     local app dict mktemp_args str
     declare -A app
-    app['mktemp']="$(koopa_locate_mktemp --allow-missing)"
-    [[ ! -x "${app['mktemp']}" ]] && app['mktemp']='/usr/bin/mktemp'
+    app['mktemp']="$(koopa_locate_mktemp --allow-system)"
     [[ -x "${app['mktemp']}" ]] || return 1
     declare -A dict=(
         ['date_id']="$(koopa_datetime)"
@@ -16897,21 +16791,11 @@ koopa_move_into_dated_dirs_by_timestamp() {
 koopa_mv() {
     local app dict mkdir mv mv_args pos rm
     declare -A app=(
-        ['mv']="$(koopa_locate_mv --allow-missing)"
+        ['mv']="$(koopa_locate_mv --allow-system)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
     koopa_is_macos && app['mv']='/bin/mv'
-    if [[ ! -x "${app['mv']}" ]]
-    then
-        if [[ -x '/usr/bin/mv' ]]
-        then
-            app['mv']='/usr/bin/mv'
-        elif [[ -x '/bin/mv' ]]
-        then
-            app['mv']='/bin/mv'
-        fi
-    fi
     [[ -x "${app['mv']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
@@ -17128,11 +17012,9 @@ koopa_os_type() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['tr']="$(koopa_locate_tr --allow-missing)"
-        ['uname']="$(koopa_locate_uname --allow-missing)"
+        ['tr']="$(koopa_locate_tr --allow-system)"
+        ['uname']="$(koopa_locate_uname --allow-system)"
     )
-    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
-    [[ ! -x "${app['uname']}" ]] && app['uname']='/usr/bin/uname'
     [[ -x "${app['tr']}" ]] || return 1
     [[ -x "${app['uname']}" ]] || return 1
     str="$( \
@@ -17411,10 +17293,9 @@ koopa_prune_apps() {
 koopa_public_ip_address() {
     local app str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['dig']="$(koopa_locate_dig --allow-missing)"
-    )
-    if koopa_is_installed "${app['dig']}"
+    declare -A app
+    app['dig']="$(koopa_locate_dig --allow-missing)"
+    if [[ -x "${app['dig']}" ]]
     then
         str="$( \
             "${app['dig']}" +short \
@@ -17465,9 +17346,8 @@ koopa_push_app_build() {
     koopa_assert_has_args "$#"
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
-        ['tar']="$(koopa_locate_tar --allow-missing)"
+        ['tar']="$(koopa_locate_tar --allow-system)"
     )
-    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
@@ -18962,21 +18842,10 @@ koopa_rg_unique() {
 koopa_rm() {
     local app dict pos rm rm_args
     declare -A app
-    app['rm']="$(koopa_locate_rm --allow-missing)"
-    if [[ ! -x "${app['rm']}" ]]
-    then
-        if [[ -x '/usr/bin/rm' ]]
-        then
-            app['rm']='/usr/bin/rm'
-        elif [[ -x '/bin/rm' ]]
-        then
-            app['rm']='/bin/rm'
-        fi
-    fi
+    app['rm']="$(koopa_locate_rm --allow-system)"
     [[ -x "${app['rm']}" ]] || return 1
-    declare -A dict=(
-        ['sudo']=0
-    )
+    declare -A dict
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -21213,8 +21082,7 @@ koopa_stat() {
     local app dict
     koopa_assert_has_args_ge "$#" 2
     declare -A app
-    app['stat']="$(koopa_locate_stat --allow-missing)"
-    [[ ! -x "${app['stat']}" ]] && app['stat']='/usr/bin/stat'
+    app['stat']="$(koopa_locate_stat --allow-system)"
     [[ -x "${app['stat']}" ]] || return 1
     declare -A dict=(
         ['format']="${1:?}"
@@ -21343,8 +21211,7 @@ koopa_strip_trailing_slash() {
 koopa_sub() {
     local app dict pos
     declare -A app
-    app['perl']="$(koopa_locate_perl --allow-missing)"
-    [[ ! -x "${app['perl']}" ]] && app['perl']='/usr/bin/perl'
+    app['perl']="$(koopa_locate_perl --allow-system)"
     [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
         ['global']=0
@@ -21424,10 +21291,9 @@ koopa_sudo_append_string() {
     koopa_assert_is_admin
     declare -A app=(
         ['sudo']="$(koopa_locate_sudo)"
-        ['tee']="$(koopa_locate_tee --allow-missing)"
+        ['tee']="$(koopa_locate_tee --allow-system)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
-    [[ ! -x "${app['tee']}" ]] && app['tee']='/usr/bin/tee'
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         ['file']=''
@@ -21480,10 +21346,9 @@ koopa_sudo_write_string() {
     koopa_assert_is_admin
     declare -A app=(
         ['sudo']="$(koopa_locate_sudo)"
-        ['tee']="$(koopa_locate_tee --allow-missing)"
+        ['tee']="$(koopa_locate_tee --allow-system)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
-    [[ ! -x "${app['tee']}" ]] && app['tee']='/usr/bin/tee'
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         ['file']=''
@@ -21534,9 +21399,8 @@ koopa_switch_to_develop() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['git']="$(koopa_locate_git --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']='develop'
@@ -21683,29 +21547,9 @@ koopa_system_info() {
     local app dict info nf_info
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['bash']="$(koopa_locate_bash --allow-missing)"
-        ['cat']="$(koopa_locate_cat --allow-missing)"
+        ['bash']="$(koopa_locate_bash --allow-system)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
     )
-    if [[ ! -x "${app['bash']}" ]]
-    then
-        if [[ -x '/usr/bin/bash' ]]
-        then
-            app['bash']='/usr/bin/bash'
-        elif [[ -x '/bin/bash' ]]
-        then
-            app['bash']='/bin/bash'
-        fi
-    fi
-    if [[ ! -x "${app['cat']}" ]]
-    then
-        if [[ -x '/usr/bin/cat' ]]
-        then
-            app['cat']='/usr/bin/cat'
-        elif [[ -x '/bin/cat' ]]
-        then
-            app['cat']='/bin/cat'
-        fi
-    fi
     [[ -x "${app['bash']}" ]] || return 1
     [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(
@@ -21762,8 +21606,7 @@ koopa_system_info() {
                 "$("${app['sw_vers']}" -buildVersion)" \
         )"
     else
-        app['uname']="$(koopa_locate_uname --allow-missing)"
-        [[ ! -x "${app['uname']}" ]] && app['uname']='/usr/bin/uname'
+        app['uname']="$(koopa_locate_uname --allow-system)"
         [[ -x "${app['uname']}" ]] || return 1
         dict['os']="$("${app['uname']}" --all)"
     fi
@@ -21796,8 +21639,7 @@ koopa_tar_multiple_dirs() {
     local app dict dir dirs pos
     koopa_assert_has_args "$#"
     declare -A app
-    app['tar']="$(koopa_locate_tar --allow-missing)"
-    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
+    app['tar']="$(koopa_locate_tar --allow-system)"
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['delete']=0
@@ -22122,9 +21964,8 @@ koopa_touch() {
     koopa_assert_has_args "$#"
     declare -A app=(
         ['mkdir']='koopa_mkdir'
-        ['touch']="$(koopa_locate_touch --allow-missing)"
+        ['touch']="$(koopa_locate_touch --allow-system)"
     )
-    [[ ! -x "${app['touch']}" ]] && app['touch']='/usr/bin/touch'
     [[ -x "${app['touch']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0

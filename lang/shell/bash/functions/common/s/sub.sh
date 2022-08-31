@@ -20,8 +20,7 @@ koopa_sub() {
     # """
     local app dict pos
     declare -A app
-    app['perl']="$(koopa_locate_perl --allow-missing)"
-    [[ ! -x "${app['perl']}" ]] && app['perl']='/usr/bin/perl'
+    app['perl']="$(koopa_locate_perl --allow-system)"
     [[ -x "${app['perl']}" ]] || return 1
     declare -A dict=(
         ['global']=0
