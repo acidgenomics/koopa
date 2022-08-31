@@ -400,5 +400,6 @@ R-${dict['maj_ver']}/${dict['file']}"
     koopa_check_shared_object \
         --name='libR' \
         --prefix="${dict['prefix']}/lib/R/lib"
+    # FIXME Consider installing r-koopa here.
     return 0
 }
