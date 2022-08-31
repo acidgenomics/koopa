@@ -1,22 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently failing to build on Ubuntu 22.
-# lmathlib.c:(.text+0x663): undefined reference to `cos'
-# /usr/bin/ld: /opt/koopa/app/lua/5.4.4/lib/liblua.a(lmathlib.o): in function `math_atan':
-# lmathlib.c:(.text+0x6c0): undefined reference to `atan2'
-# /usr/bin/ld: /opt/koopa/app/lua/5.4.4/lib/liblua.a(lmathlib.o): in function `math_asin':
-# lmathlib.c:(.text+0x6f3): undefined reference to `asin'
-# /usr/bin/ld: /opt/koopa/app/lua/5.4.4/lib/liblua.a(lmathlib.o): in function `math_acos':
-# lmathlib.c:(.text+0x723): undefined reference to `acos'
-
-# FIXME Now build is hitting this cryptic error on Ubuntu:
-# Nping compiled successfully!
-# gmake[2]: Leaving directory '/tmp/koopa-1000-20220831-052903-oexvM4tUgS/nmap-7.92/nping'
-
-# FIXME Yeah looks like we need libpcap.
-# When setting '--without-libpcap':
-# FPEngine.cc:361:8: error: ‘nsock_pcap_open’ was not declared in this scope
-
 main() {
     # """
     # Install nmap.
