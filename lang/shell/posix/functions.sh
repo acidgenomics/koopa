@@ -97,6 +97,7 @@ koopa_activate_aliases() {
     alias ..='cd ..'
     alias :q='exit'
     alias R='R --no-restore --no-save --quiet'
+    alias asdf='koopa_alias_asdf'
     alias black='black --line-length=79'
     alias br-size='br --sort-by-size'
     alias br='koopa_alias_broot'
@@ -150,6 +151,21 @@ koopa_activate_aliases() {
     [ -f "$file" ] && . "$file"
     file="${HOME:?}/.aliases-private"
     [ -f "$file" ] && . "$file"
+    return 0
+}
+
+koopa_activate_asdf() {
+    local nounset prefix
+    prefix="${1:-}"
+    [ -z "$prefix" ] && prefix="$(koopa_asdf_prefix)"
+    [ -d "$prefix" ] || return 0
+    script="${prefix}/libexec/asdf.sh"
+    [ -r "$script" ] || return 0
+    koopa_is_alias 'asdf' && unalias 'asdf'
+    nounset="$(koopa_boolean_nounset)"
+    [ "$nounset" -eq 1 ] && set +o nounset
+    . "$script"
+    [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
 
@@ -848,6 +864,12 @@ koopa_add_to_path_start() {
     return 0
 }
 
+koopa_alias_asdf() {
+    koopa_is_alias 'asdf' && unalias 'asdf'
+    koopa_activate_asdf
+    asdf "$@"
+}
+
 koopa_alias_broot() {
     koopa_is_alias 'br' && unalias 'br'
     koopa_activate_broot
@@ -1060,6 +1082,11 @@ koopa_arch() {
     x="$(uname -m)"
     [ -n "$x" ] || return 1
     koopa_print "$x"
+    return 0
+}
+
+koopa_asdf_prefix() {
+    koopa_print "$(koopa_opt_prefix)/asdf"
     return 0
 }
 
