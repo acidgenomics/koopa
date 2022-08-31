@@ -12,8 +12,7 @@ koopa_stat() {
     local app dict
     koopa_assert_has_args_ge "$#" 2
     declare -A app
-    app['stat']="$(koopa_locate_stat --allow-missing)"
-    [[ ! -x "${app['stat']}" ]] && app['stat']='/usr/bin/stat'
+    app['stat']="$(koopa_locate_stat --allow-system)"
     [[ -x "${app['stat']}" ]] || return 1
     declare -A dict=(
         ['format']="${1:?}"

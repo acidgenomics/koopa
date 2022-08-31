@@ -176,8 +176,7 @@ koopa_find() {
             if [[ -z "${dict['engine']}" ]]
             then
                 dict['engine']='find'
-                app['find']="$(koopa_locate_find --allow-missing)"
-                [[ ! -x "${app['find']}" ]] && app['find']='/usr/bin/find'
+                app['find']="$(koopa_locate_find --allow-system)"
                 [[ -x "${app['find']}" ]] || return 1
             fi
             ;;
@@ -186,8 +185,7 @@ koopa_find() {
             [[ -x "${app['find']}" ]] || return 1
             ;;
         'find')
-            app['find']="$(koopa_locate_find --allow-missing)"
-            [[ ! -x "${app['find']}" ]] && app['find']='/usr/bin/find'
+            app['find']="$(koopa_locate_find --allow-system)"
             [[ -x "${app['find']}" ]] || return 1
             ;;
     esac
@@ -394,8 +392,7 @@ koopa_find() {
     fi
     if [[ "${dict['sort']}" -eq 1 ]]
     then
-        app['sort']="$(koopa_locate_sort --allow-missing)"
-        [[ ! -x "${app['sort']}" ]] && app['sort']='/usr/bin/sort'
+        app['sort']="$(koopa_locate_sort --allow-system)"
         [[ -x "${app['sort']}" ]] || return 1
     fi
     if [[ "${dict['print0']}" -eq 1 ]]

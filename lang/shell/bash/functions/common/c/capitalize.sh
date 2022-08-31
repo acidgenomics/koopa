@@ -16,8 +16,7 @@ koopa_capitalize() {
     # """
     local app str
     declare -A app
-    app['tr']="$(koopa_locate_tr --allow-missing)"
-    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
+    app['tr']="$(koopa_locate_tr --allow-system)"
     [[ -x "${app['tr']}" ]] || return 1
     if [[ "$#" -eq 0 ]]
     then

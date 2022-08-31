@@ -11,11 +11,9 @@ koopa_help() {
     dict['man_file']="${1:?}"
     [[ -f "${dict['man_file']}" ]] || return 1
     declare -A app=(
-        ['head']="$(koopa_locate_head --allow-missing)"
-        ['man']="$(koopa_locate_man --allow-missing)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['man']="$(koopa_locate_man --allow-system)"
     )
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
-    [[ ! -x "${app['man']}" ]] && app['man']='/usr/bin/man'
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['man']}" ]] || return 1
     "${app['head']}" -n 10 "${dict['man_file']}" \

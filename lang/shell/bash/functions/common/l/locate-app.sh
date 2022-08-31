@@ -26,6 +26,7 @@ koopa_locate_app() {
         ['bin_name']=''
         ['bin_prefix']="$(koopa_bin_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"
+        ['system_bin_name']=''
     )
     pos=()
     while (("$#"))
@@ -46,6 +47,14 @@ koopa_locate_app() {
                 ;;
             '--bin-name')
                 dict['bin_name']="${2:?}"
+                shift 2
+                ;;
+            '--system-bin-name='*)
+                dict['system_bin_name']="${1#*=}"
+                shift 1
+                ;;
+            '--system-bin-name')
+                dict['system_bin_name']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
@@ -106,12 +115,14 @@ bin/${dict['bin_name']}"
     if [[ ! -x "${dict['app']}" ]] && \
         [[ "${bool['allow_system']}" -eq 1 ]]
     then
-        if [[ -x "/usr/bin/${dict['app_name']}" ]]
+        [[ -z "${dict['system_bin_name']}" ]] && \
+            dict['system_bin_name']="${dict['bin_name']}"
+        if [[ -x "/usr/bin/${dict['system_bin_name']}" ]]
         then
-            dict['app']="/usr/bin/${dict['app_name']}"
-        elif [[ -x "/bin/${dict['app_name']}" ]]
+            dict['app']="/usr/bin/${dict['system_bin_name']}"
+        elif [[ -x "/bin/${dict['system_bin_name']}" ]]
         then
-            dict['app']="/bin/${dict['app_name']}"
+            dict['app']="/bin/${dict['system_bin_name']}"
         fi
     fi
     if [[ -x "${dict['app']}" ]]
