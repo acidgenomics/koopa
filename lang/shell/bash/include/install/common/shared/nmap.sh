@@ -32,29 +32,32 @@ main() {
     # - Check supported Lua version at:
     #   https://github.com/nmap/nmap/tree/master/liblua
     # """
-    local app conf_args dict
+    local app conf_args deps dict
     koopa_activate_build_opt_prefix \
         'bison' \
         'flex'
-    koopa_activate_opt_prefix \
-        'zlib' \
-        'openssl3' \
-        'libssh2' \
-        'pcre' \
-        'lua'
+    deps=(
+        # > 'zlib'
+        'openssl3'
+        # > 'libssh2'
+        # > 'pcre'
+        # > 'lua'
+    )
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        ['libssh2']="$(koopa_app_prefix 'libssh2')"
-        ['lua']="$(koopa_app_prefix 'lua')"
+        ['jobs']="$(koopa_cpu_count)"
+        # > ['libssh2']="$(koopa_app_prefix 'libssh2')"
+        # > ['lua']="$(koopa_app_prefix 'lua')"
         ['name']='nmap'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
-        ['pcre']="$(koopa_app_prefix 'pcre')"
+        # > ['pcre']="$(koopa_app_prefix 'pcre')"
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
+        # > ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://nmap.org/dist/${dict['file']}"
@@ -63,21 +66,28 @@ main() {
     koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
         # > '--disable-universal'
-        # > '--without-nmap-update'
         "--prefix=${dict['prefix']}"
-        "--with-liblua=${dict['lua']}"
-        "--with-libpcre=${dict['pcre']}"
-        "--with-libssh2=${dict['libssh2']}"
-        "--with-libz=${dict['zlib']}"
+        '--with-libdnet=included'
+        '--with-liblinear=included'
+        # > "--with-liblua=${dict['lua']}"
+        '--with-liblua=included'
+        '--with-libpcap=included'
+        # > "--with-libpcre=${dict['pcre']}"
+        '--with-libpcre=included'
+        # > "--with-libssh2=${dict['libssh2']}"
+        '--with-libssh2=included'
+        # > "--with-libz=${dict['zlib']}"
+        '--with-libz=included'
         "--with-openssl=${dict['openssl']}"
-        '--without-liblinear'
+        '--without-ncat'
+        '--without-ndiff'
+        # > '--without-nmap-update'
+        '--without-nping'
         '--without-zenmap'
-        # NOTE Setting this causes build to break on Ubuntu.
-        # > '--without-libpcap'
     )
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs=1
+    "${app['make']}" --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }
