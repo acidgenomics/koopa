@@ -1745,8 +1745,9 @@
   "poetry": {
     "bin": ["poetry"],
     "conservative": true,
+    "date": "2022-08-31",
     "depends": ["python"],
-    "version": "1.1.15"
+    "version": "1.2.0"
   },
   "prettier": {
     "bin": ["prettier"],
