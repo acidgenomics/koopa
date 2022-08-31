@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME _bz2 import is failing on Ubuntu 22.
+# Need to resolve this without installing system package.
+
 # NOTE It looks like Python includes '/usr/local' in '-I' and '-L' compilation
 # arguments by default. We should work on restricting this in a future build.
 
@@ -23,7 +26,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-08-30.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -73,12 +76,16 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
+        ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='python'
+        ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
     )
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    koopa_assert_is_dir \
+        "${dict['bzip2']}" \
+        "${dict['openssl']}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="Python-${dict['version']}.tar.xz"
     dict['url']="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
@@ -109,7 +116,13 @@ ${dict['file']}"
             '--with-dtrace'
         )
     fi
-    koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
+    # > conf_args+=(
+    # >     "CFLAGS=${CFLAGS:-}"
+    # >     "LDFLAGS=${LDFLAGS:-}"
+    # > )
+    koopa_add_rpath_to_ldflags \
+        "${dict['prefix']}/lib" \
+        "${dict['bzip2']}/lib"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs="${dict['jobs']}"
@@ -118,6 +131,7 @@ ${dict['file']}"
     "${app['make']}" install
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
+    "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
     return 0
 }

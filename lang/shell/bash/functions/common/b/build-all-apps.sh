@@ -170,6 +170,7 @@ koopa_build_all_apps() {
         'armadillo'
         'aspell'
         'bc'
+        'flex'
         'binutils'
         'cpufetch'
         'exiftool'
@@ -317,7 +318,6 @@ koopa_build_all_apps() {
         'rbenv' # deps: none.
         'dotfiles'
         'ensembl-perl-api' # deps: none.
-        'flex'
         # deps: cmake, gcc, hdf5, libxml2, python.
         'sra-tools'
         'yarn'
@@ -384,7 +384,6 @@ koopa_build_all_apps() {
         PATH="${TMPDIR:-/tmp}/koopa-bootstrap/bin:${PATH:-}" \
             "${app['koopa']}" install "$pkg"
     done
-    # FIXME Re-enable this after we check our recipe.
-    # > koopa_push_all_app_builds
+    koopa_push_all_app_builds
     return 0
 }
