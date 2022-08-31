@@ -3,7 +3,7 @@
 koopa_alias_doom_emacs() {
     # """
     # Doom Emacs.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-08-31.
     # """
     local prefix
     prefix="$(koopa_doom_emacs_prefix)"

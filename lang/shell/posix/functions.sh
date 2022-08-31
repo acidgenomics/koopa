@@ -118,6 +118,7 @@ koopa_activate_aliases() {
     alias k='koopa_alias_k'
     alias kb='koopa_alias_kb'
     alias kdev='koopa_alias_kdev'
+    alias kp='koopa_alias_kp'
     alias l.='l -d .*'
     alias l1='l -1'
     alias l='koopa_alias_l'
@@ -927,7 +928,7 @@ koopa_alias_emacs() {
     emacs='emacs'
     if koopa_is_macos
     then
-        emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
+        emacs="$(koopa_macos_emacs)"
         [ -e "$emacs" ] || return 1
         [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] || return 1
         TERM='xterm-24bit' "$emacs" "$@"
@@ -963,6 +964,10 @@ koopa_alias_kdev() {
     export KOOPA_DEV=1; bash -il
 }
 
+koopa_alias_kp() {
+    cd "$(koopa_koopa_prefix)/lang/shell/posix" || return 1
+}
+
 koopa_alias_l() {
     if koopa_is_installed 'exa'
     then
@@ -996,7 +1001,8 @@ koopa_alias_prelude_emacs() {
     local prefix
     prefix="$(koopa_prelude_emacs_prefix)"
     [ -d "$prefix" ] || return 1
-    emacs --with-profile 'prelude' "$@"
+    "$(koopa_alias_emacs --with-profile 'prelude' "$@")"
+    return 0
 }
 
 koopa_alias_pyenv() {
@@ -1830,6 +1836,11 @@ koopa_locate_shell() {
 
 koopa_macos_activate_cli_colors() {
     [ -z "${CLICOLOR:-}" ] && export CLICOLOR=1
+    return 0
+}
+
+koopa_macos_emacs() {
+    koopa_print '/Applications/Emacs.app/Contents/MacOS/Emacs'
     return 0
 }
 

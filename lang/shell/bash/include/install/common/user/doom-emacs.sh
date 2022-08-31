@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Doom Emacs.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-08-31.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -23,9 +23,13 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'chemacs'
-    declare -A app=(
-        ['emacs']="$(koopa_locate_emacs)"
-    )
+    declare -A app
+    if koopa_is_macos
+    then
+        app['emacs']="$(koopa_macos_emacs)"
+    else
+        app['emacs']="$(koopa_locate_emacs)"
+    fi
     [[ -x "${app['emacs']}" ]] || return 1
     declare -A dict=(
         ['branch']='master'

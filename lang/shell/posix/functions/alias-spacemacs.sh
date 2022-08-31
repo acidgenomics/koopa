@@ -3,7 +3,7 @@
 koopa_alias_spacemacs() {
     # """
     # Spacemacs.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-08-31.
     # """
     local prefix
     prefix="$(koopa_spacemacs_prefix)"
