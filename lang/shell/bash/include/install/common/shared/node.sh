@@ -6,6 +6,9 @@
 # bzip2 -> python -> node
 # ModuleNotFoundError: No module named '_bz2'
 
+# FIXME Need to resolve this on Ubuntu 22:
+# FileNotFoundError: [Errno 2] No such file or directory: 'out/Release/libnode.so.93'
+
 main() {
     # """
     # Install Node.js.
@@ -113,9 +116,21 @@ main() {
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs="${dict['jobs']}"
+    # Need to fix installer path for 'libnode.so.93' on Ubuntu 22.
+    # https://github.com/nodejs/node/issues/30111
+    if koopa_is_linux && [[ -f 'out/Release/lib/libnode.so.93' ]]
+    then
+        koopa_ln \
+            'out/Release/lib/libnode.so.93' \
+            'out/Release/libnode.so.93'
+    fi
     "${app['make']}" install
-    # FIXME Improve documentation by linking these into 'share/man/man1'.
-    # > lib/node_modules/npm/man/man1/npm.1
-    # > lib/node_modules/npm/man/man1/npx.1
+    (
+        koopa_cd "${dict['prefix']}"
+        koopa_ln \
+            --target-directory='share/man/man1' \
+            'lib/node_modules/npm/man/man1/npm.1' \
+            'lib/node_modules/npm/man/man1/npx.1'
+    )
     return 0
 }
