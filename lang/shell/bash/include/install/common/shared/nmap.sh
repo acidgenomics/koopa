@@ -70,9 +70,10 @@ main() {
         "--with-libssh2=${dict['libssh2']}"
         "--with-libz=${dict['zlib']}"
         "--with-openssl=${dict['openssl']}"
-        # NOTE May need to enable this on Ubuntu?
+        '--without-liblinear'
+        '--without-zenmap'
+        # NOTE Setting this causes build to break on Ubuntu.
         # > '--without-libpcap'
-        # > '--without-zenmap'
     )
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs=1
