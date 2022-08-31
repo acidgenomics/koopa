@@ -17,13 +17,13 @@
 # When setting '--without-libpcap':
 # FPEngine.cc:361:8: error: ‘nsock_pcap_open’ was not declared in this scope
 
-# FIXME Attempting to bundle pcre fails on macOS.
-# FIXME Attempting to bundle zlib fails on Linux.
-
 main() {
     # """
     # Install nmap.
     # @note Updated 2022-08-31.
+    #
+    # Attempting to bundle zlib fails on Ubuntu.
+    # Attempting to bundle pcre fails on macOS.
     #
     # May need to include libcap and liblinear here.
     # 
@@ -43,7 +43,7 @@ main() {
         'zlib'
         'openssl3'
         # > 'libssh2'
-        # > 'pcre'
+        'pcre'
         # > 'lua'
     )
     koopa_activate_opt_prefix "${deps[@]}"
@@ -57,7 +57,7 @@ main() {
         # > ['lua']="$(koopa_app_prefix 'lua')"
         ['name']='nmap'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
-        # > ['pcre']="$(koopa_app_prefix 'pcre')"
+        ['pcre']="$(koopa_app_prefix 'pcre')"
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
@@ -74,8 +74,9 @@ main() {
         '--with-liblinear=included'
         # > "--with-liblua=${dict['lua']}"
         '--with-liblua=included'
-        '--with-libpcap=included'
-        # > "--with-libpcre=${dict['pcre']}"
+        # NOTE May only want to link PCRE on macOS.
+        # > '--with-libpcap=included'
+        "--with-libpcre=${dict['pcre']}"
         '--with-libpcre=included'
         # > "--with-libssh2=${dict['libssh2']}"
         '--with-libssh2=included'
