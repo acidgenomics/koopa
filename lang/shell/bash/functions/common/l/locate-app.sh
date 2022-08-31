@@ -3,7 +3,7 @@
 koopa_locate_app() {
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-08-26.
+    # @note Updated 2022-08-31.
     #
     # Mode 1: direct executable file path input.
     # Mode 2: '--app-name' and '--bin-name' input.
@@ -18,6 +18,7 @@ koopa_locate_app() {
     local bool dict pos
     declare -A bool=(
         ['allow_missing']=0
+        ['allow_system']=0
         ['realpath']=0
     )
     declare -A dict=(
@@ -50,6 +51,10 @@ koopa_locate_app() {
             # Flags ------------------------------------------------------------
             '--allow-missing')
                 bool['allow_missing']=1
+                shift 1
+                ;;
+            '--allow-system')
+                bool['allow_system']=1
                 shift 1
                 ;;
             '--realpath')
@@ -98,6 +103,17 @@ koopa_locate_app() {
     fi
     dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
 bin/${dict['bin_name']}"
+    if [[ ! -x "${dict['app']}" ]] && \
+        [[ "${bool['allow_system']}" -eq 1 ]]
+    then
+        if [[ -x "/usr/bin/${dict['app_name']}" ]]
+        then
+            dict['app']="/usr/bin/${dict['app_name']}"
+        elif [[ -x "/bin/${dict['app_name']}" ]]
+        then
+            dict['app']="/bin/${dict['app_name']}"
+        fi
+    fi
     if [[ -x "${dict['app']}" ]]
     then
         if [[ "${bool['realpath']}" -eq 1 ]]
@@ -109,6 +125,6 @@ bin/${dict['bin_name']}"
     fi
     [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
     koopa_stop \
-        "Failed to locate '${dict['bin_name']}' (from '${dict['app_name']}')." \
-        "Running 'koopa install '${dict['app_name']}' may resolve the issue."
+        "Failed to locate '${dict['bin_name']}'." \
+        "Run 'koopa install '${dict['app_name']}' to resolve."
 }
