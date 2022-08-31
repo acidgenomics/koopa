@@ -75,6 +75,7 @@ main() {
         # NOTE Setting this causes build to break on Ubuntu.
         # > '--without-libpcap'
     )
+    ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs=1
     "${app['make']}" install
