@@ -13,22 +13,10 @@ koopa_disk_gb_free() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-missing)"
-        ['head']="$(koopa_locate_head --allow-missing)"
-        ['sed']="$(koopa_locate_sed --allow-missing)"
+        ['df']="$(koopa_locate_df --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    if [[ ! -x "${app['df']}" ]]
-    then
-        if [[ -x '/usr/bin/df' ]]
-        then
-            app['df']='/usr/bin/df'
-        elif [[ -x '/bin/df' ]]
-        then
-            app['df']='/bin/df'
-        fi
-    fi
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
-    [[ ! -x "${app['sed']}" ]] && app['head']='/usr/bin/sed'
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1

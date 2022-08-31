@@ -3,7 +3,7 @@
 koopa_public_ip_address() {
     # """
     # Public (remote) IP address.
-    # @note Updated 2022-04-06.
+    # @note Updated 2022-08-31.
     #
     # @section BIND's Domain Information Groper (dig) tool:
     #
@@ -20,10 +20,9 @@ koopa_public_ip_address() {
     # """
     local app str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['dig']="$(koopa_locate_dig --allow-missing)"
-    )
-    if koopa_is_installed "${app['dig']}"
+    declare -A app
+    app['dig']="$(koopa_locate_dig --allow-missing)"
+    if [[ -x "${app['dig']}" ]]
     then
         str="$( \
             "${app['dig']}" +short \

@@ -13,10 +13,9 @@ koopa_sudo_append_string() {
     koopa_assert_is_admin
     declare -A app=(
         ['sudo']="$(koopa_locate_sudo)"
-        ['tee']="$(koopa_locate_tee --allow-missing)"
+        ['tee']="$(koopa_locate_tee --allow-system)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
-    [[ ! -x "${app['tee']}" ]] && app['tee']='/usr/bin/tee'
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
         ['file']=''
