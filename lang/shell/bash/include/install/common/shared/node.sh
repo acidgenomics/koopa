@@ -126,11 +126,13 @@ main() {
     fi
     "${app['make']}" install
     (
-        koopa_cd "${dict['prefix']}"
+        koopa_cd "${dict['prefix']}/share/man/man1"
         koopa_ln \
-            --target-directory='share/man/man1' \
-            'lib/node_modules/npm/man/man1/npm.1' \
-            'lib/node_modules/npm/man/man1/npx.1'
+            ../../../'lib/node_modules/npm/man/man1/npm.1' \
+            'npm.1'
+        koopa_ln \
+            ../../../'lib/node_modules/npm/man/man1/npx.1' \
+            'npx.1'
     )
     return 0
 }
