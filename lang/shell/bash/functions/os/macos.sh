@@ -5,12 +5,10 @@ koopa_macos_app_version() {
     local app x
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['awk']="$(koopa_locate_awk --allow-missing)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
         ['plutil']="$(koopa_macos_locate_plutil)"
-        ['tr']="$(koopa_locate_tr --allow-missing)"
+        ['tr']="$(koopa_locate_tr --allow-system)"
     )
-    [[ ! -x "${app['awk']}" ]] && app['awk']='/usr/bin/awk'
-    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['plutil']}" ]] || return 1
     [[ -x "${app['tr']}" ]] || return 1

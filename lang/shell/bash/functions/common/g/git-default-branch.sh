@@ -20,11 +20,9 @@ koopa_git_default_branch() {
     # """
     local app dict repos
     declare -A app=(
-        ['git']="$(koopa_locate_git --allow-missing)"
-        ['sed']="$(koopa_locate_sed --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
-    [[ ! -x "${app['sed']}" ]] && app['sed']='/usr/bin/sed'
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(

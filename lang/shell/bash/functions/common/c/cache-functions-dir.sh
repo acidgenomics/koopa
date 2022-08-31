@@ -13,12 +13,10 @@ koopa_cache_functions_dir() {
     local app prefix
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['grep']="$(koopa_locate_grep --allow-missing)"
-        ['perl']="$(koopa_locate_perl --allow-missing)"
+        ['grep']="$(koopa_locate_grep --allow-system)"
+        ['perl']="$(koopa_locate_perl --allow-system)"
     )
-    [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
     [[ -x "${app['grep']}" ]] || return 1
-    [[ ! -x "${app['perl']}" ]] && app['perl']='/usr/bin/perl'
     [[ -x "${app['perl']}" ]] || return 1
     for prefix in "$@"
     do

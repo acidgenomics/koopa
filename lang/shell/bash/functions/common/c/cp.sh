@@ -19,20 +19,10 @@ koopa_cp() {
     # """
     local app cp cp_args dict mkdir pos rm
     declare -A app=(
-        ['cp']="$(koopa_locate_cp --allow-missing)"
+        ['cp']="$(koopa_locate_cp --allow-system)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
-    if [[ ! -x "${app['cp']}" ]]
-    then
-        if [[ -x '/usr/bin/cp' ]]
-        then
-            app['cp']='/usr/bin/cp'
-        elif [[ -x '/bin/cp' ]]
-        then
-            app['cp']='/bin/cp'
-        fi
-    fi
     [[ -x "${app['cp']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0

@@ -24,8 +24,7 @@ koopa_mktemp() {
     # """
     local app dict mktemp_args str
     declare -A app
-    app['mktemp']="$(koopa_locate_mktemp --allow-missing)"
-    [[ ! -x "${app['mktemp']}" ]] && app['mktemp']='/usr/bin/mktemp'
+    app['mktemp']="$(koopa_locate_mktemp --allow-system)"
     [[ -x "${app['mktemp']}" ]] || return 1
     declare -A dict=(
         ['date_id']="$(koopa_datetime)"
