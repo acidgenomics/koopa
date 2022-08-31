@@ -189,8 +189,9 @@
   "binutils": {
     "conservative": true,
     "date": "2022-08-30",
+    "notes": ["2.39 has build issues on Ubuntu 22 due to bison detection."],
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
-    "version": "2.39"
+    "version": "2.38"
   },
   "bioawk": {
     "bin": ["bioawk"],

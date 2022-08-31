@@ -92,16 +92,16 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
+    case "${dict['system']}" in
+        '1')
+            cppflags+=('-I/usr/local/include')
+            ldflags+=('-L/usr/local/lib')
+            ;;
+    esac
     # gettext is needed to resolve clang '-lintl' warning. Can we avoid this
     # issue by setting 'LIBINTL' instead?
-    cppflags+=(
-        # > '-I/usr/local/include'
-        "-I${dict['gettext']}/include"
-    )
-    ldflags+=(
-        # > '-L/usr/local/lib'
-        "-L${dict['gettext']}/lib"
-    )
+    cppflags+=("-I${dict['gettext']}/include")
+    ldflags+=("-L${dict['gettext']}/lib")
     # NOTE Custom LDFLAGS here appear to be incompatible with these packages:
     # fs, httpuv, igraph, nloptr. May need to add support for bzip2, at least
     # on Linux.

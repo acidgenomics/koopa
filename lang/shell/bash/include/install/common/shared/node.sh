@@ -2,10 +2,17 @@
 
 # FIXME Need to improve documentation linkage of node.1, npm.1 and npx.1.
 
+# FIXME Configuration issue on Ubuntu22:
+# bzip2 -> python -> node
+# ModuleNotFoundError: No module named '_bz2'
+
+# FIXME Need to resolve this on Ubuntu 22:
+# FileNotFoundError: [Errno 2] No such file or directory: 'out/Release/libnode.so.93'
+
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-08-22.
+    # @note Updated 2022-08-30.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
@@ -33,6 +40,7 @@ main() {
     deps=(
         'ca-certificates'
         'zlib'
+        # > 'bzip2'
         'icu4c'
         'libuv'
         'openssl3'
@@ -108,9 +116,23 @@ main() {
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs="${dict['jobs']}"
+    # Need to fix installer path for 'libnode.so.93' on Ubuntu 22.
+    # https://github.com/nodejs/node/issues/30111
+    if koopa_is_linux && [[ -f 'out/Release/lib/libnode.so.93' ]]
+    then
+        koopa_ln \
+            'out/Release/lib/libnode.so.93' \
+            'out/Release/libnode.so.93'
+    fi
     "${app['make']}" install
-    # FIXME Improve documentation by linking these into 'share/man/man1'.
-    # > lib/node_modules/npm/man/man1/npm.1
-    # > lib/node_modules/npm/man/man1/npx.1
+    (
+        koopa_cd "${dict['prefix']}/share/man/man1"
+        koopa_ln \
+            ../../../'lib/node_modules/npm/man/man1/npm.1' \
+            'npm.1'
+        koopa_ln \
+            ../../../'lib/node_modules/npm/man/man1/npx.1' \
+            'npx.1'
+    )
     return 0
 }
