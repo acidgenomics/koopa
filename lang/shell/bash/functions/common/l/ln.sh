@@ -9,20 +9,10 @@ koopa_ln() {
     # """
     local app dict ln ln_args mkdir pos rm
     declare -A app=(
-        ['ln']="$(koopa_locate_ln --allow-missing)"
+        ['ln']="$(koopa_locate_ln --allow-system)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
-    if [[ ! -x "${app['ln']}" ]]
-    then
-        if [[ -x '/usr/bin/ln' ]]
-        then
-            app['ln']='/usr/bin/ln'
-        elif [[ -x '/bin/ln' ]]
-        then
-            app['ln']='/bin/ln'
-        fi
-    fi
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0

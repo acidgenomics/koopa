@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Bash.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-08-31.
     #
     # @section Applying patches:
     #
@@ -17,14 +17,11 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'patch'
     declare -A app=(
-        ['curl']="$(koopa_locate_curl --allow-missing)"
-        ['cut']="$(koopa_locate_cut --allow-missing)"
+        ['curl']="$(koopa_locate_curl)"
+        ['cut']="$(koopa_locate_cut)"
         ['make']="$(koopa_locate_make)"
         ['patch']="$(koopa_locate_patch)"
     )
-    [[ ! -x "${app['curl']}" ]] && app['curl']='/usr/bin/curl'
-    [[ -x "${app['curl']}" ]] || return 1
-    [[ ! -x "${app['cut']}" ]] && app['cut']='/usr/bin/cut'
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['patch']}" ]] || return 1

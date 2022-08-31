@@ -8,8 +8,7 @@ koopa_datetime() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app
-    app['date']="$(koopa_locate_date --allow-missing)"
-    [[ ! -x "${app['date']}" ]] && app['date']='/usr/bin/date'
+    app['date']="$(koopa_locate_date --allow-system)"
     [[ -x "${app['date']}" ]] || return 1
     str="$("${app['date']}" '+%Y%m%d-%H%M%S')"
     [[ -n "$str" ]] || return 1

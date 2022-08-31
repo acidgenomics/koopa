@@ -26,35 +26,28 @@ koopa_extract() {
             *'.tar.bz2' | \
             *'.tar.gz' | \
             *'.tar.xz')
-                app['cmd']="$(koopa_locate_tar --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
+                app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 case "$file" in
                     *'.bz2')
-                        app['cmd2']="$(koopa_locate_bzip2 --allow-missing)"
-                        [[ -z "${app['cmd2']}" ]] \
-                            && app['cmd2']='/usr/bin/bzip2'
+                        app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
                     *'.gz')
-                        app['cmd2']="$(koopa_locate_gzip --allow-missing)"
-                        [[ -z "${app['cmd2']}" ]] \
-                            && app['cmd2']='/usr/bin/gzip'
+                        app['cmd2']="$(koopa_locate_gzip --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
                         ;;
                     *'.xz')
-                        app['cmd2']="$(koopa_locate_xz --allow-missing)"
-                        [[ -z "${app['cmd2']}" ]] \
-                            && app['cmd2']='/usr/bin/xz'
+                        app['cmd2']="$(koopa_locate_xz --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
@@ -64,29 +57,25 @@ koopa_extract() {
                 ;;
             # Single extension.
             *'.bz2')
-                app['cmd']="$(koopa_locate_bunzip2 --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/bunzip2'
+                app['cmd']="$(koopa_locate_bunzip2 --allow-system)"
                 cmd_args=("$file")
                 ;;
             *'.gz')
-                app['cmd']="$(koopa_locate_gzip --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/gzip'
+                app['cmd']="$(koopa_locate_gzip --allow-system)"
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                 )
                 ;;
             *'.tar')
-                app['cmd']="$(koopa_locate_tar --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
+                app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
                 ;;
             *'.tbz2')
-                app['cmd']="$(koopa_locate_tar --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
+                app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-j' # '--bzip2'.
@@ -94,8 +83,7 @@ koopa_extract() {
                 )
                 ;;
             *'.tgz')
-                app['cmd']="$(koopa_locate_tar --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/tar'
+                app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
@@ -103,24 +91,21 @@ koopa_extract() {
                 )
                 ;;
             *'.xz')
-                app['cmd']="$(koopa_locate_xz --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/xz'
+                app['cmd']="$(koopa_locate_xz --allow-system)"
                 cmd_args=(
                     '-d' # '--decompress'.
                     "$file"
                     )
                 ;;
             *'.zip')
-                app['cmd']="$(koopa_locate_unzip --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/unzip'
+                app['cmd']="$(koopa_locate_unzip --allow-system)"
                 cmd_args=(
                     '-qq'
                     "$file"
                 )
                 ;;
             *'.Z')
-                app['cmd']="$(koopa_locate_uncompress --allow-missing)"
-                [[ -z "${app['cmd']}" ]] && app['cmd']='/usr/bin/uncompress'
+                app['cmd']="$(koopa_locate_uncompress --allow-system)"
                 cmd_args=("$file")
                 ;;
             *'.7z')

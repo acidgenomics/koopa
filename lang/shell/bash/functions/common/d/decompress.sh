@@ -113,17 +113,7 @@ koopa_decompress() {
                     koopa_cp "${dict['source_file']}" "${dict['target_file']}"
                     ;;
                 '1')
-                    cmd="$(koopa_locate_cat --allow-missing)"
-                    if [[ ! -x "$cmd" ]]
-                    then
-                        if [[ -x '/usr/bin/cat' ]]
-                        then
-                            cmd='/usr/bin/cat'
-                        elif [[ -x '/bin/cat' ]]
-                        then
-                            cmd='/bin/cat'
-                        fi
-                    fi
+                    cmd="$(koopa_locate_cat --allow-system)"
                     [[ -x "$cmd" ]] || return 1
                     "$cmd" "${dict['source_file']}" || true
                     ;;

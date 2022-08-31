@@ -10,10 +10,8 @@ koopa_git_remote_url() {
     # # https://github.com/acidgenomics/koopa.git
     # """
     local app repos
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-missing)"
-    )
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"

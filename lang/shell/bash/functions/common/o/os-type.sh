@@ -8,11 +8,9 @@ koopa_os_type() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['tr']="$(koopa_locate_tr --allow-missing)"
-        ['uname']="$(koopa_locate_uname --allow-missing)"
+        ['tr']="$(koopa_locate_tr --allow-system)"
+        ['uname']="$(koopa_locate_uname --allow-system)"
     )
-    [[ ! -x "${app['tr']}" ]] && app['tr']='/usr/bin/tr'
-    [[ ! -x "${app['uname']}" ]] && app['uname']='/usr/bin/uname'
     [[ -x "${app['tr']}" ]] || return 1
     [[ -x "${app['uname']}" ]] || return 1
     str="$( \
