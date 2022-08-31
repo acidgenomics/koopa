@@ -3,7 +3,7 @@
 koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-08-09.
+    # @note Updated 2022-08-31.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -14,6 +14,7 @@ koopa_activate_aliases() {
     alias ..='cd ..'
     alias :q='exit'
     alias R='R --no-restore --no-save --quiet'
+    alias asdf='koopa_alias_asdf'
     alias black='black --line-length=79'
     alias br-size='br --sort-by-size'
     alias br='koopa_alias_broot'
