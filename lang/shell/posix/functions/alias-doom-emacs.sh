@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# FIXME Now seeing this warning/error when using macOS Emacs absolute path
+# to binary, rather than symlinking into koopa bin:
+# koopa_alias_doom_emacs:4: permission denied:
+
 koopa_alias_doom_emacs() {
     # """
     # Doom Emacs.
