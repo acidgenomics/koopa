@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE May need to include liblinear here.
-
 # FIXME This is currently failing to build on Ubuntu 22.
 # lmathlib.c:(.text+0x663): undefined reference to `cos'
 # /usr/bin/ld: /opt/koopa/app/lua/5.4.4/lib/liblua.a(lmathlib.o): in function `math_atan':
@@ -11,14 +9,22 @@
 # /usr/bin/ld: /opt/koopa/app/lua/5.4.4/lib/liblua.a(lmathlib.o): in function `math_acos':
 # lmathlib.c:(.text+0x723): undefined reference to `acos'
 
+# FIXME Now build is hitting this cryptic error on Ubuntu:
+# Nping compiled successfully!
+# gmake[2]: Leaving directory '/tmp/koopa-1000-20220831-052903-oexvM4tUgS/nmap-7.92/nping'
+
 main() {
     # """
     # Install nmap.
     # @note Updated 2022-08-27.
+    #
+    # May need to include libcap and liblinear here.
     # 
     # @seealso
     # - https://nmap.org/
+    # - https://svn.nmap.org/nmap/
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nmap.rb
+    # - https://git.alpinelinux.org/aports/tree/main/nmap/APKBUILD
     # - Check supported Lua version at:
     #   https://github.com/nmap/nmap/tree/master/liblua
     # """
@@ -37,13 +43,14 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
+        ['libssh2']="$(koopa_app_prefix 'libssh2')"
         ['lua']="$(koopa_app_prefix 'lua')"
         ['name']='nmap'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['pcre']="$(koopa_app_prefix 'pcre')"
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
+        ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://nmap.org/dist/${dict['file']}"
@@ -51,16 +58,20 @@ main() {
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
+        # > '--disable-universal'
+        # > '--without-nmap-update'
         "--prefix=${dict['prefix']}"
-        '--disable-universal'
         "--with-liblua=${dict['lua']}"
         "--with-libpcre=${dict['pcre']}"
+        "--with-libssh2=${dict['libssh2']}"
+        "--with-libz=${dict['zlib']}"
         "--with-openssl=${dict['openssl']}"
-        '--without-nmap-update'
+        # NOTE May need to enable this on Ubuntu?
+        '--without-libpcap'
         '--without-zenmap'
     )
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" --jobs=1
     "${app['make']}" install
     return 0
 }
