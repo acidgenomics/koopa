@@ -66,10 +66,10 @@ main() {
         "--with-libz=${dict['zlib']}"
         # > '--with-libz=included'
         "--with-openssl=${dict['openssl']}"
-        '--without-ncat'
-        '--without-ndiff'
+        # > '--without-ncat'
+        # > '--without-ndiff'
         # > '--without-nmap-update'
-        '--without-nping'
+        # > '--without-nping'
         '--without-zenmap'
     )
     ./configure --help
