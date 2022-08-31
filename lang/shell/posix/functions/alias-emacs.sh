@@ -3,7 +3,7 @@
 koopa_alias_emacs() {
     # """
     # Emacs alias that provides 24-bit color support.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-08-31.
     #
     # Check that configuration is correct with 'infocmp xterm-24bit'.
     #
@@ -17,7 +17,7 @@ koopa_alias_emacs() {
     emacs='emacs'
     if koopa_is_macos
     then
-        emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
+        emacs="$(koopa_macos_emacs)"
         [ -e "$emacs" ] || return 1
         [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] || return 1
         TERM='xterm-24bit' "$emacs" "$@"
