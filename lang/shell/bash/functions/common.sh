@@ -3184,6 +3184,7 @@ koopa_build_all_apps() {
         'armadillo'
         'aspell'
         'bc'
+        'flex'
         'binutils'
         'cpufetch'
         'exiftool'
@@ -3317,7 +3318,6 @@ koopa_build_all_apps() {
         'rbenv' # deps: none.
         'dotfiles'
         'ensembl-perl-api' # deps: none.
-        'flex'
         'sra-tools'
         'yarn'
         'asdf'
@@ -3382,6 +3382,7 @@ koopa_build_all_apps() {
         PATH="${TMPDIR:-/tmp}/koopa-bootstrap/bin:${PATH:-}" \
             "${app['koopa']}" install "$pkg"
     done
+    koopa_push_all_app_builds
     return 0
 }
 
@@ -15372,13 +15373,6 @@ bin/${dict['bin_name']}"
         "Running 'koopa install '${dict['app_name']}' may resolve the issue."
 }
 
-koopa_locate_ar() {
-    koopa_locate_app \
-        --app-name='binutils' \
-        --bin-name='ar' \
-        "$@"
-}
-
 koopa_locate_ascp() {
     koopa_locate_app \
         --app-name='aspera-connect' \
@@ -17760,14 +17754,17 @@ koopa_python_system_packages_prefix() {
 }
 
 koopa_r_configure_environ() {
-    local app dict i key keys lines path_arr pkgconfig_arr
+    local app conf_dict dict i key keys lines path_arr
+    local app_pc_path_arr pc_path_arr sys_pc_path_arr
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['cat']="$(koopa_locate_cat)"
+        ['pkg_config']="$(koopa_locate_pkg_config)"
         ['r']="${1:?}"
         ['sort']="$(koopa_locate_sort)"
     )
     [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
@@ -17785,12 +17782,18 @@ koopa_r_configure_environ() {
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
+    declare -A conf_dict
     lines=()
     lines+=(
         "R_LIBS_SITE=\${R_HOME}/site-library"
         "R_LIBS_USER=\${R_LIBS_SITE}"
     )
     path_arr=()
+    case "${dict['system']}" in
+        '1')
+            path_arr+=('/usr/local/bin')
+            ;;
+    esac
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -17805,7 +17808,7 @@ koopa_r_configure_environ() {
             '/opt/X11/bin'
         )
     fi
-    declare -A pkgconfig_arr
+    declare -A app_pc_path_arr
     keys=(
         'fontconfig'
         'freetype'
@@ -17838,37 +17841,52 @@ koopa_r_configure_environ() {
         local prefix
         prefix="$(koopa_app_prefix "$key")"
         koopa_assert_is_dir "$prefix"
-        pkgconfig_arr[$key]="$prefix"
+        app_pc_path_arr[$key]="$prefix"
     done
-    for i in "${!pkgconfig_arr[@]}"
+    for i in "${!app_pc_path_arr[@]}"
     do
-        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/lib"
+        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib"
     done
     if koopa_is_linux
     then
-        pkgconfig_arr['harfbuzz']="${pkgconfig_arr['harfbuzz']}64"
+        app_pc_path_arr['harfbuzz']="${app_pc_path_arr['harfbuzz']}64"
     fi
-    for i in "${!pkgconfig_arr[@]}"
+    for i in "${!app_pc_path_arr[@]}"
     do
-        pkgconfig_arr[$i]="${pkgconfig_arr[$i]}/pkgconfig"
+        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/pkgconfig"
     done
-    koopa_assert_is_dir "${pkgconfig_arr[@]}"
+    koopa_assert_is_dir "${app_pc_path_arr[@]}"
+    pc_path_arr=()
+    if [[ "${dict['system']}" -eq 1 ]]
+    then
+        pc_path_arr+=('/usr/local/lib/pkgconfig')
+    fi
+    pc_path_arr+=("${app_pc_path_arr[@]}")
+    if [[ "${dict['system']}" -eq 1 ]]
+    then
+        readarray -t sys_pc_path_arr <<< "$( \
+            "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
+        )"
+        pc_path_arr+=("${sys_pc_path_arr[@]}")
+    fi
+    conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
+    conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
     lines+=(
         "PAGER=\${PAGER:-less}"
-        "PATH=$(printf '%s:' "${path_arr[@]}")"
-        "PKG_CONFIG_PATH=$(printf '%s:' "${pkgconfig_arr[@]}")"
-        "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
+        "PATH=${conf_dict['path']}"
+        "PKG_CONFIG_PATH=${conf_dict['pkg_config_path']}"
         "TZ=\${TZ:-America/New_York}"
         'R_BATCHSAVE=--no-save --no-restore'
         'R_PAPERSIZE=letter'
+        "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
         'R_UNZIPCMD=/usr/bin/unzip'
         'R_ZIPCMD=/usr/bin/zip'
     )
     if koopa_is_linux
     then
         lines+=(
-            'R_BROWSER=xdg-open'
-            'R_PRINTCMD=lpr'
+            'R_BROWSER=/usr/bin/xdg-open'
+            'R_PRINTCMD=/usr/bin/lpr'
         )
     elif koopa_is_macos
     then
@@ -18215,12 +18233,14 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    cppflags+=(
-        "-I${dict['gettext']}/include"
-    )
-    ldflags+=(
-        "-L${dict['gettext']}/lib"
-    )
+    case "${dict['system']}" in
+        '1')
+            cppflags+=('-I/usr/local/include')
+            ldflags+=('-L/usr/local/lib')
+            ;;
+    esac
+    cppflags+=("-I${dict['gettext']}/include")
+    ldflags+=("-L${dict['gettext']}/lib")
     koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
