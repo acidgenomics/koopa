@@ -2029,9 +2029,9 @@
   "snakemake": {
     "bin": ["snakemake"],
     "conservative": false,
-    "date": "2022-07-29",
+    "date": "2022-08-30",
     "depends": ["conda"],
-    "version": "7.12.0"
+    "version": "7.14.0"
   },
   "sox": {
     "bin": ["sox"],
@@ -2214,6 +2214,7 @@
     "date": "2022-01-13",
     "depends": ["conda"],
     "man1": ["vd.1", "visidata.1"],
+    "outdated": true,
     "version": "2.8"
   },
   "wget": {
