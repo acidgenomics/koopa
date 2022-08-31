@@ -3324,6 +3324,7 @@ koopa_build_all_apps() {
         'convmv'
         'editorconfig'
         'markdownlint-cli'
+        'nmap'
         'rmate'
     )
     if ! koopa_is_aarch64
