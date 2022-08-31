@@ -11,9 +11,8 @@ koopa_switch_to_develop() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['git']="$(koopa_locate_git --allow-missing)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']='develop'

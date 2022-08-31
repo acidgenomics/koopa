@@ -14,10 +14,8 @@ koopa_git_set_remote_url() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_git_repo
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-missing)"
-    )
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['url']="${1:?}"

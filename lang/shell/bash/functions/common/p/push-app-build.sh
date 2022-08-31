@@ -16,9 +16,8 @@ koopa_push_app_build() {
     koopa_assert_has_args "$#"
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
-        ['tar']="$(koopa_locate_tar --allow-missing)"
+        ['tar']="$(koopa_locate_tar --allow-system)"
     )
-    [[ ! -x "${app['tar']}" ]] && app['tar']='/usr/bin/tar'
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(

@@ -16,13 +16,10 @@ koopa_git_last_commit_remote() {
     local app dict url
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['awk']="$(koopa_locate_awk --allow-missing)"
-        ['git']="$(koopa_locate_git --allow-missing)"
-        ['head']="$(koopa_locate_head --allow-missing)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
     )
-    [[ ! -x "${app['awk']}" ]] && app['awk']='/usr/bin/awk'
-    [[ ! -x "${app['git']}" ]] && app['git']='/usr/bin/git'
-    [[ ! -x "${app['head']}" ]] && app['head']='/usr/bin/head'
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1

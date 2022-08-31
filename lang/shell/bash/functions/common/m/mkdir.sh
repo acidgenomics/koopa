@@ -7,21 +7,10 @@ koopa_mkdir() {
     # """
     local app dict mkdir mkdir_args pos
     declare -A app
-    app['mkdir']="$(koopa_locate_mkdir --allow-missing)"
-    if [[ ! -x "${app['mkdir']}" ]]
-    then
-        if [[ -x '/usr/bin/mkdir' ]]
-        then
-            app['mkdir']='/usr/bin/mkdir'
-        elif [[ -x '/bin/mkdir' ]]
-        then
-            app['mkdir']='/bin/mkdir'
-        fi
-    fi
+    app['mkdir']="$(koopa_locate_mkdir --allow-system)"
     [[ -x "${app['mkdir']}" ]] || return 1
-    declare -A dict=(
-        ['sudo']=0
-    )
+    declare -A dict
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do

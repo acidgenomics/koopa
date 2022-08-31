@@ -134,14 +134,12 @@ koopa_grep() {
             if [[ -z "${dict['engine']}" ]]
             then
                 dict['engine']='grep'
-                app['grep']="$(koopa_locate_grep --allow-missing)"
-                [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+                app['grep']="$(koopa_locate_grep --allow-system)"
                 [[ -x "${app['grep']}" ]] || return 1
             fi
             ;;
         'grep')
-            app['grep']="$(koopa_locate_grep --allow-missing)"
-            [[ ! -x "${app['grep']}" ]] && app['grep']='/usr/bin/grep'
+            app['grep']="$(koopa_locate_grep --allow-system)"
             [[ -x "${app['grep']}" ]] || return 1
             ;;
         'rg')
