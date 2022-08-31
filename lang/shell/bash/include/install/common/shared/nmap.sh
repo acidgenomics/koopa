@@ -13,6 +13,10 @@
 # Nping compiled successfully!
 # gmake[2]: Leaving directory '/tmp/koopa-1000-20220831-052903-oexvM4tUgS/nmap-7.92/nping'
 
+# FIXME Yeah looks like we need libpcap.
+# When setting '--without-libpcap':
+# FPEngine.cc:361:8: error: ‘nsock_pcap_open’ was not declared in this scope
+
 main() {
     # """
     # Install nmap.
@@ -67,8 +71,8 @@ main() {
         "--with-libz=${dict['zlib']}"
         "--with-openssl=${dict['openssl']}"
         # NOTE May need to enable this on Ubuntu?
-        '--without-libpcap'
-        '--without-zenmap'
+        # > '--without-libpcap'
+        # > '--without-zenmap'
     )
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs=1
