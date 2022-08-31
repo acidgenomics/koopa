@@ -17,10 +17,13 @@
 # When setting '--without-libpcap':
 # FPEngine.cc:361:8: error: ‘nsock_pcap_open’ was not declared in this scope
 
+# FIXME Attempting to bundle pcre fails on macOS.
+# FIXME Attempting to bundle zlib fails on Linux.
+
 main() {
     # """
     # Install nmap.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-08-31.
     #
     # May need to include libcap and liblinear here.
     # 
@@ -37,7 +40,7 @@ main() {
         'bison' \
         'flex'
     deps=(
-        # > 'zlib'
+        'zlib'
         'openssl3'
         # > 'libssh2'
         # > 'pcre'
@@ -57,7 +60,7 @@ main() {
         # > ['pcre']="$(koopa_app_prefix 'pcre')"
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
-        # > ['zlib']="$(koopa_app_prefix 'zlib')"
+        ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://nmap.org/dist/${dict['file']}"
@@ -76,8 +79,8 @@ main() {
         '--with-libpcre=included'
         # > "--with-libssh2=${dict['libssh2']}"
         '--with-libssh2=included'
-        # > "--with-libz=${dict['zlib']}"
-        '--with-libz=included'
+        "--with-libz=${dict['zlib']}"
+        # > '--with-libz=included'
         "--with-openssl=${dict['openssl']}"
         '--without-ncat'
         '--without-ndiff'
