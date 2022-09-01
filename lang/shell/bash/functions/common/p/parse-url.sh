@@ -3,13 +3,12 @@
 koopa_parse_url() {
     # """
     # Parse a URL using cURL.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-09-01.
     # """
     local app curl_args pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['curl']="$(koopa_locate_curl)"
-    )
+    declare -A app
+    app['curl']="$(koopa_locate_curl --allow-system)"
     [[ -x "${app['curl']}" ]] || return 1
     curl_args=(
         '--disable' # Ignore '~/.curlrc'. Must come first.
