@@ -3,32 +3,37 @@
 koopa_disk_pct_used() {
     # """
     # Disk usage percentage (on main drive).
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-01.
+    #
+    # @examples
+    # koopa_disk_pct_used '/'
+    # 52
     # """
-    local app disk str
+    local app dict
     koopa_assert_has_args_eq "$#" 1
-    disk="${1:?}"
-    koopa_assert_is_readable "$disk"
     declare -A app=(
+        ['awk']="$(koopa_locate_awk --allow-system)"
         ['df']="$(koopa_locate_df --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['df']}" "$disk" \
+    declare -A dict
+    dict['disk']="${1:?}"
+    koopa_assert_is_readable "${dict['disk']}"
+    # shellcheck disable=SC2016
+    dict['str']="$( \
+        POSIXLY_CORRECT=1 \
+        "${app['df']}" "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | koopa_grep \
-                --only-matching \
-                --pattern='([.0-9]+%)' \
-                --regex \
-            | "${app['head']}" -n 1 \
+            | "${app['awk']}" '{print $5}' \
             | "${app['sed']}" 's/%$//' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }

@@ -6413,6 +6413,7 @@ koopa_disk_gb_free() {
         ['head']="$(koopa_locate_head)"
         ['sed']="$(koopa_locate_sed)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -6441,6 +6442,7 @@ koopa_disk_gb_total() {
         ['head']="$(koopa_locate_head)"
         ['sed']="$(koopa_locate_sed)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
@@ -6461,32 +6463,31 @@ koopa_disk_gb_total() {
 }
 
 koopa_disk_gb_used() {
-    local app disk str
+    local app dict
     koopa_assert_has_args_eq "$#" 1
-    disk="${1:?}"
-    koopa_assert_is_readable "$disk"
     declare -A app=(
+        ['awk']="$(koopa_locate_awk)"
         ['df']="$(koopa_locate_df)"
         ['head']="$(koopa_locate_head)"
         ['sed']="$(koopa_locate_sed)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['df']}" --block-size='G' "$disk" \
+    declare -A dict
+    dict['disk']="${1:?}"
+    koopa_assert_is_readable "${dict['disk']}"
+    dict['str']="$( \
+        POSIXLY_CORRECT=0 \
+        "${app['df']}" --block-size='G' "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | koopa_grep \
-                --only-matching \
-                --pattern='(\b[.0-9]+G\b)' \
-                --regex \
-            | "${app['head']}" -n 2 \
-            | "${app['sed']}" -n '2p' \
+            | "${app['awk']}" '{print $3}' \
             | "${app['sed']}" 's/G$//' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
@@ -6502,31 +6503,31 @@ koopa_disk_pct_free() {
 }
 
 koopa_disk_pct_used() {
-    local app disk str
+    local app dict
     koopa_assert_has_args_eq "$#" 1
-    disk="${1:?}"
-    koopa_assert_is_readable "$disk"
     declare -A app=(
+        ['awk']="$(koopa_locate_awk --allow-system)"
         ['df']="$(koopa_locate_df --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['df']}" "$disk" \
+    declare -A dict
+    dict['disk']="${1:?}"
+    koopa_assert_is_readable "${dict['disk']}"
+    dict['str']="$( \
+        POSIXLY_CORRECT=1 \
+        "${app['df']}" "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | koopa_grep \
-                --only-matching \
-                --pattern='([.0-9]+%)' \
-                --regex \
-            | "${app['head']}" -n 1 \
+            | "${app['awk']}" '{print $5}' \
             | "${app['sed']}" 's/%$//' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 

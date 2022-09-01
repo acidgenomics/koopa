@@ -17,6 +17,7 @@ koopa_disk_gb_free() {
         ['head']="$(koopa_locate_head)"
         ['sed']="$(koopa_locate_sed)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
