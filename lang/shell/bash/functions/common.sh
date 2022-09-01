@@ -11010,6 +11010,7 @@ koopa_install_all_apps() {
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
     pkgs=()
     pkgs+=(
+        'zlib'
         'openssl1'
         'openssl3'
         'curl'
@@ -11242,7 +11243,6 @@ koopa_install_all_apps() {
         'yq'
         'yt-dlp'
         'zellij'
-        'zlib'
         'zoxide'
         'zsh'
         'zstd'
