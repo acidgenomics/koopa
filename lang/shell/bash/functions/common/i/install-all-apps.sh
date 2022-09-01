@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to parse app.json file instead.
+
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-09-01.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -26,8 +28,10 @@ koopa_install_all_apps() {
         'apr'
         'apr-util'
         'armadillo'
+        'asdf'
         'aspell'
         'autoconf'
+        'autoflake'
         'automake'
         'aws-cli'
         'azure-cli'
@@ -40,6 +44,7 @@ koopa_install_all_apps() {
         'bedtools'
         'binutils'
         'bioawk'
+        'bioconda-utils'
         'bison'
         'black'
         'boost'
@@ -48,6 +53,7 @@ koopa_install_all_apps() {
         'broot'
         'bustools'
         'bzip2'
+        'c-ares'
         'ca-certificates'
         'cairo'
         'cheat'
@@ -56,14 +62,17 @@ koopa_install_all_apps() {
         'cmake'
         'colorls'
         'conda'
+        'convmv'
         'coreutils'
         'cpufetch'
         # > 'curl'
         'deeptools'
         'delta'
         'difftastic'
+        'dog'
         'dotfiles'
         'du-dust'
+        'editorconfig'
         'emacs'
         'ensembl-perl-api'
         'entrez-direct'
@@ -78,6 +87,7 @@ koopa_install_all_apps() {
         'fish'
         'flac'
         'flake8'
+        'flex'
         'fltk'
         'fontconfig'
         'freetype'
@@ -114,11 +124,13 @@ koopa_install_all_apps() {
         'hdf5'
         'hisat2'
         'htop'
+        'htseq'
         'hyperfine'
         'icu4c'
         'imagemagick'
         'ipython'
         'isort'
+        'jemalloc'
         'jpeg'
         'jq'
         'julia'
@@ -131,6 +143,7 @@ koopa_install_all_apps() {
         'lesspipe'
         'libassuan'
         'libedit'
+        'libev'
         'libevent'
         'libffi'
         'libgcrypt'
@@ -157,13 +170,10 @@ koopa_install_all_apps() {
         'm4'
         'make'
         'man-db'
+        'markdownlint-cli'
         'mcfly'
         'mdcat'
         'meson'
-        # FIXME This step is currently problematic because install recipes
-        # requires mpfr to be installed first...need to rework install approach
-        # to not include '--activate-opt' in the main install command, so we
-        # don't hit issues when installing binary packages.
         'mpc'
         'mpfr'
         'multiqc'
@@ -172,8 +182,10 @@ koopa_install_all_apps() {
         'neovim'
         'nettle'
         'nextflow'
+        'nghttp2'
         'nim'
         'ninja'
+        'nmap'
         'node'
         'npth'
         'oniguruma'
@@ -196,6 +208,7 @@ koopa_install_all_apps() {
         'prettier'
         'procs'
         'proj'
+        'pycodestyle'
         'pyenv'
         'pyflakes'
         'pygments'
@@ -210,9 +223,12 @@ koopa_install_all_apps() {
         'readline'
         'rename'
         'ripgrep'
+        'ripgrep-all'
+        'rmate'
         'ronn'
         'rsync'
         'ruby'
+        'ruff'
         'rust'
         'salmon'
         'sambamba'
@@ -241,6 +257,7 @@ koopa_install_all_apps() {
         'tuc'
         'udunits'
         'units'
+        'unzip'
         'utf8proc'
         'vim'
         'visidata'
@@ -263,6 +280,7 @@ koopa_install_all_apps() {
         'xsv'
         'xxhash'
         'xz'
+        'yarn'
         'yq'
         'yt-dlp'
         'zellij'
@@ -283,7 +301,7 @@ koopa_install_all_apps() {
     fi
     for pkg in "${pkgs[@]}"
     do
-        koopa install --binary "$pkg"
+        koopa install --binary "$pkg" || true
     done
     return 0
 }
