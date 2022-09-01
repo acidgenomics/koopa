@@ -216,8 +216,9 @@
   "black": {
     "bin": ["black"],
     "conservative": false,
+    "date": "2022-09-01",
     "dependencies": ["python"],
-    "version": "22.6.0"
+    "version": "22.8.0"
   },
   "boost": {
     "conservative": true,
@@ -614,8 +615,9 @@
   "delta": {
     "bin": ["delta"],
     "conservative": false,
+    "date": "2022-09-01",
     "url": ["https://github.com/dandavison/delta/"],
-    "version": "0.13.0"
+    "version": "0.14.0"
   },
   "difftastic": {
     "bin": ["difft"],
@@ -639,17 +641,18 @@
   "dotfiles": {
     "conservative": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "f9aef0d016bb088e0e94938f3ee1eca0f108e871"
+    "version": "492f10fa2c7e7eef78f0802deb344cb827a0adda"
   },
   "du-dust": {
     "bin": ["dust"],
     "conservative": false,
+    "date": "2022-09-01",
     "dependencies": ["rust"],
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "0.8.2"
+    "version": "0.8.3"
   },
   "editorconfig": {
     "bin": ["editorconfig"],
@@ -857,9 +860,9 @@
   "gget": {
     "bin": ["gget"],
     "conservative": false,
-    "date": "2022-08-09",
+    "date": "2022-09-01",
     "depends": ["conda"],
-    "version": "0.3.7"
+    "version": "0.3.9"
   },
   "ghostscript": {
     "bin": ["gs"],

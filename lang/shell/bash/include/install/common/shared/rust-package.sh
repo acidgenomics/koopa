@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider reworking cargo_home to ~/.cargo, to put less strain on index download.
-# Can hit these errors otherwise:
-# warning: spurious network error (2 tries remaining):
-# SecureTransport error: connection closed via error; class=Net (12)
-
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-01.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -67,6 +62,13 @@ main() {
                 '--tag' "v${dict['version']}"
             )
             ;;
+        'du-dust')
+            # Currently outdated on crates.io.
+            install_args+=(
+                '--git' 'https://github.com/bootandy/dust.git'
+                '--tag' "v${dict['version']}"
+            )
+            ;;
         'ripgrep-all')
             case "${dict['version']}" in
                 '0.9.7')
@@ -81,13 +83,6 @@ main() {
                 '--rev' "${dict['commit']}"
             )
             ;;
-        # > 'du-dust')
-        # >     # Currently outdated on crates.io.
-        # >     install_args+=(
-        # >         '--git' 'https://github.com/bootandy/dust.git'
-        # >         '--tag' "v${dict['version']}"
-        # >     )
-        # >     ;;
         # > 'exa')
         # >     # Current 0.10.1 crate on crates.io fails with Rust 1.61.
         # >     install_args+=(
