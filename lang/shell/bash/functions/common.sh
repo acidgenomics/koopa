@@ -6376,62 +6376,87 @@ koopa_disable_passwordless_sudo() {
     return 0
 }
 
-koopa_disk_gb_free() {
-    local app disk str
+koopa_disk_512k_blocks() {
+    local app dict
     koopa_assert_has_args_eq "$#" 1
-    disk="${1:?}"
-    koopa_assert_is_readable "$disk"
     declare -A app=(
+        ['awk']="$(koopa_locate_awk --allow-system)"
         ['df']="$(koopa_locate_df --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['df']}" --block-size='G' "$disk" \
+    declare -A dict=(
+        ['disk']="${1:?}"
+    )
+    dict['str']="$( \
+        POSIXLY_CORRECT=1 \
+        "${app['df']}" -P "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | koopa_grep \
-                --only-matching \
-                --pattern='(\b[.0-9]+G\b)' \
-                --regex \
-            | "${app['head']}" -n 3 \
-            | "${app['sed']}" -n '3p' \
+            | "${app['awk']}" '{print $2}' \
+    )"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
+    return 0
+}
+
+koopa_disk_gb_free() {
+    local app dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A app=(
+        ['awk']="$(koopa_locate_awk)"
+        ['df']="$(koopa_locate_df)"
+        ['head']="$(koopa_locate_head)"
+        ['sed']="$(koopa_locate_sed)"
+    )
+    [[ -x "${app['df']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
+    declare -A dict
+    dict['disk']="${1:?}"
+    koopa_assert_is_readable "${dict['disk']}"
+    dict['str']="$( \
+        POSIXLY_CORRECT=0 \
+        "${app['df']}" --block-size='G' "${dict['disk']}" \
+            | "${app['head']}" -n 2 \
+            | "${app['sed']}" -n '2p' \
+            | "${app['awk']}" '{print $4}' \
             | "${app['sed']}" 's/G$//' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
 koopa_disk_gb_total() {
-    local app disk str
+    local app dict
     koopa_assert_has_args_eq "$#" 1
-    disk="${1:?}"
-    koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
+        ['awk']="$(koopa_locate_awk)"
+        ['df']="$(koopa_locate_df)"
+        ['head']="$(koopa_locate_head)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['df']}" --block-size='G' "$disk" \
+    declare -A dict
+    dict['disk']="${1:?}"
+    koopa_assert_is_readable "${dict['disk']}"
+    dict['str']="$( \
+        POSIXLY_CORRECT=0 \
+        "${app['df']}" --block-size='G' "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | koopa_grep \
-                --only-matching \
-                --pattern='(\b[.0-9]+G\b)' \
-                --regex \
-            | "${app['head']}" -n 1 \
+            | "${app['awk']}" '{print $2}' \
             | "${app['sed']}" 's/G$//' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
@@ -6441,9 +6466,9 @@ koopa_disk_gb_used() {
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
+        ['df']="$(koopa_locate_df)"
+        ['head']="$(koopa_locate_head)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
@@ -10975,7 +11000,20 @@ koopa_install_ack() {
 }
 
 koopa_install_all_apps() {
-    local pkgs
+    local app dict pkgs
+    declare -A app dict
+
+    app['awk']="$(koopa_locate_cut --allow-system)"
+    app['df']="$(koopa_locate_df --allow-system)"
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['df']}" ]] || return 1
+    dict['512k_blocks']="$( \
+        POSIXLY_CORRECT=1 \
+        "${app['df']}" -P '/' \
+            | "${app['cut']}" -d ' ' -f 2 \
+    )"
+    koopa_print "${dict['512k_blocks']}"
+    return 0
     koopa_assert_has_no_args "$#"
     pkgs=(
         'openssl1'

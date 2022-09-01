@@ -3,16 +3,16 @@
 koopa_disk_gb_used() {
     # """
     # Used disk space in GB.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-01.
     # """
     local app disk str
     koopa_assert_has_args_eq "$#" 1
     disk="${1:?}"
     koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
+        ['df']="$(koopa_locate_df)"
+        ['head']="$(koopa_locate_head)"
+        ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1

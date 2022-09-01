@@ -12,7 +12,21 @@ koopa_install_all_apps() {
     #
     # Need to install PCRE libraries before grep.
     # """
-    local pkgs
+    local app dict pkgs
+    declare -A app dict
+
+    # FIXME Rework this using koopa_disk_512k_blocks
+    app['awk']="$(koopa_locate_cut --allow-system)"
+    app['df']="$(koopa_locate_df --allow-system)"
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['df']}" ]] || return 1
+    dict['512k_blocks']="$( \
+        POSIXLY_CORRECT=1 \
+        "${app['df']}" -P '/' \
+            | "${app['cut']}" -d ' ' -f 2 \
+    )"
+    koopa_print "${dict['512k_blocks']}"
+    return 0
     koopa_assert_has_no_args "$#"
     pkgs=(
         # Priority -------------------------------------------------------------
