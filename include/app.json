@@ -2189,9 +2189,10 @@
     "version": "2.21"
   },
   "unzip": {
-    "bin": ["unzip"],
+    "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
     "conservative": true,
     "date": "2022-09-01",
+    "man1": ["funzip.1", "unzip.1", "unzipsfx.1", "zipgrep.1", "zipinfo.1"],
     "url": ["http://infozip.sourceforge.net/UnZip.html"],
     "version": "6.0"
   },
