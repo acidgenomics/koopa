@@ -11001,16 +11001,16 @@ koopa_install_ack() {
 }
 
 koopa_install_all_apps() {
-    local dict pkgs
+    local app_name apps dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         ['blocks']="$(koopa_disk_512k_blocks '/')"
         ['large']=0
     )
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
-    pkgs=()
-    koopa_is_linux && pkgs+=('attr')
-    pkgs+=(
+    apps=()
+    koopa_is_linux && apps+=('attr')
+    apps+=(
         'zlib'
         'zstd'
         'bzip2'
@@ -11027,7 +11027,7 @@ koopa_install_all_apps() {
         'grep'
         'sed'
     )
-    pkgs+=(
+    apps+=(
         'ack'
         'apr'
         'apr-util'
@@ -11249,7 +11249,7 @@ koopa_install_all_apps() {
     )
     if koopa_is_linux
     then
-        pkgs+=(
+        apps+=(
             'apptainer'
             'aspera-connect'
             'docker-credential-pass'
@@ -11259,7 +11259,7 @@ koopa_install_all_apps() {
     fi
     if [[ "${dict['large']}" -eq 1 ]]
     then
-        pkgs+=(
+        apps+=(
             'anaconda'
             'azure-cli'
             'bamtools'
@@ -11294,10 +11294,10 @@ koopa_install_all_apps() {
             'star'
         )
     fi
-    for pkg in "${pkgs[@]}"
+    for app_name in "${apps[@]}"
     do
         PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
-            koopa install --binary "$pkg" || true
+            koopa install --binary "$app_name"
     done
     return 0
 }
@@ -11617,7 +11617,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
                     koopa_alert_is_installed \
                         "${dict['name']}" "${dict['prefix']}"
                 fi
-                return 1
+                return 0
             fi
         fi
         case "${dict['mode']}" in

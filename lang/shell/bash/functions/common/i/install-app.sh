@@ -258,7 +258,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
                     koopa_alert_is_installed \
                         "${dict['name']}" "${dict['prefix']}"
                 fi
-                return 1
+                return 0
             fi
         fi
         case "${dict['mode']}" in

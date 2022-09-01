@@ -12,17 +12,17 @@ koopa_install_all_apps() {
     #
     # Need to install PCRE libraries before grep.
     # """
-    local dict pkgs
+    local app_name apps dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         ['blocks']="$(koopa_disk_512k_blocks '/')"
         ['large']=0
     )
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
-    pkgs=()
+    apps=()
     # Priority -----------------------------------------------------------------
-    koopa_is_linux && pkgs+=('attr')
-    pkgs+=(
+    koopa_is_linux && apps+=('attr')
+    apps+=(
         'zlib'
         'zstd'
         'bzip2'
@@ -40,7 +40,7 @@ koopa_install_all_apps() {
         'sed'
     )
     # Alphabetical -------------------------------------------------------------
-    pkgs+=(
+    apps+=(
         'ack'
         'apr'
         'apr-util'
@@ -263,7 +263,7 @@ koopa_install_all_apps() {
     # Platform-specific --------------------------------------------------------
     if koopa_is_linux
     then
-        pkgs+=(
+        apps+=(
             'apptainer'
             'aspera-connect'
             'docker-credential-pass'
@@ -275,7 +275,7 @@ koopa_install_all_apps() {
     # NOTE Consider defining these in app.json.
     if [[ "${dict['large']}" -eq 1 ]]
     then
-        pkgs+=(
+        apps+=(
             'anaconda'
             'azure-cli'
             'bamtools'
@@ -310,10 +310,10 @@ koopa_install_all_apps() {
             'star'
         )
     fi
-    for pkg in "${pkgs[@]}"
+    for app_name in "${apps[@]}"
     do
         PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
-            koopa install --binary "$pkg" || true
+            koopa install --binary "$app_name"
     done
     return 0
 }
