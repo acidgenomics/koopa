@@ -14028,13 +14028,10 @@ koopa_is_symlink() {
 koopa_is_url_active() {
     local app url
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['curl']="$(koopa_locate_curl)"
-    )
+    declare -A app dict
+    app['curl']="$(koopa_locate_curl --allow-system)"
     [[ -x "${app['curl']}" ]] || return 1
-    declare -A dict=(
-        ['url_pattern']='://'
-    )
+    dict['url_pattern']='://'
     for url in "$@"
     do
         koopa_str_detect_fixed \
@@ -17228,9 +17225,8 @@ koopa_parse_app_json() {
 koopa_parse_url() {
     local app curl_args pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['curl']="$(koopa_locate_curl)"
-    )
+    declare -A app
+    app['curl']="$(koopa_locate_curl --allow-system)"
     [[ -x "${app['curl']}" ]] || return 1
     curl_args=(
         '--disable' # Ignore '~/.curlrc'. Must come first.
