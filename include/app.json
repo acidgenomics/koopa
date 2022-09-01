@@ -2188,6 +2188,13 @@
     "url": ["https://www.gnu.org/software/units/"],
     "version": "2.21"
   },
+  "unzip": {
+    "bin": ["unzip"],
+    "conservative": true,
+    "date": "2022-09-01",
+    "url": ["http://infozip.sourceforge.net/UnZip.html"],
+    "version": "6.0"
+  },
   "utf8proc": {
     "conservative": true,
     "date": "2022-08-30",
