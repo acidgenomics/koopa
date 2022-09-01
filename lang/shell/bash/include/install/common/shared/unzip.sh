@@ -61,10 +61,11 @@ ${dict['file']}"
         '-DUTF8_MAYBE_NATIVE'
     )
     make_args=(
-      'CC=gcc'
-      "LOC=${loc_macros[*]}"
-      'D_USE_BZ2=-DUSE_BZIP2'
-      'L_BZ2=-lbz2'
+        "prefix=${dict['prefix']}"
+        'CC=gcc'
+        "LOC=${loc_macros[*]}"
+        'D_USE_BZ2=-DUSE_BZIP2'
+        'L_BZ2=-lbz2'
     )
     if koopa_is_macos
     then
@@ -72,8 +73,11 @@ ${dict['file']}"
             'LFLAGS1=-liconv'
             'macosx'
         )
+    else
+        make_args+=('generic')
     fi
     "${app['make']}" -f 'unix/Makefile' "${make_args[@]}"
+    "${app['make']}" check
     "${app['make']}" \
         "prefix=${dict['prefix']}" \
         "MANDIR=${dict['prefix']}/share/man1" \
