@@ -71,6 +71,13 @@
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
   },
+  "autoflake": {
+    "bin": ["autoflake"],
+    "conservative": false,
+    "date": "2022-09-01",
+    "dependencies": ["python"],
+    "version": "1.5.3"
+  },
   "automake": {
     "conservative": false,
     "date": "2022-08-29",
@@ -1778,6 +1785,13 @@
     "url": ["https://ftp.gnu.org/gnu/pth/"],
     "version": "2.0.7"
   },
+  "pycodestyle": {
+    "bin": ["pycodestyle"],
+    "conservative": false,
+    "date": "2022-09-01",
+    "dependencies": ["python"],
+    "version": "2.9.1"
+  },
   "pyenv": {
     "bin": ["pyenv"],
     "conservative": true,
@@ -1944,6 +1958,13 @@
     "man1": ["bundle.1", "bundler.1", "gem.1", "ruby.1"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.1.2p20"
+  },
+  "ruff": {
+    "bin": ["ruff"],
+    "conservative": false,
+    "date": "2022-09-01",
+    "dependencies": ["python"],
+    "version": "0.0.23"
   },
   "rust": {
     "bin": [
