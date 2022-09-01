@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This check is breaking when bootstrapping koopa.
+
 koopa_is_url_active() {
     # """
     # Check if input is a URL and is active.
