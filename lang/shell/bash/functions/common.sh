@@ -11001,30 +11001,24 @@ koopa_install_ack() {
 }
 
 koopa_install_all_apps() {
-    local app dict pkgs
-    declare -A app dict
-
-    app['awk']="$(koopa_locate_cut --allow-system)"
-    app['df']="$(koopa_locate_df --allow-system)"
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['df']}" ]] || return 1
-    dict['512k_blocks']="$( \
-        POSIXLY_CORRECT=1 \
-        "${app['df']}" -P '/' \
-            | "${app['cut']}" -d ' ' -f 2 \
-    )"
-    koopa_print "${dict['512k_blocks']}"
-    return 0
+    local dict pkgs
     koopa_assert_has_no_args "$#"
-    pkgs=(
+    declare -A dict=(
+        ['blocks']="$(koopa_disk_512k_blocks '/')"
+        ['large']=0
+    )
+    [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
+    pkgs=()
+    pkgs+=(
         'openssl1'
         'openssl3'
         'curl'
         'pcre'
         'pcre2'
         'grep'
+    )
+    pkgs+=(
         'ack'
-        'anaconda'
         'apr'
         'apr-util'
         'armadillo'
@@ -11034,24 +11028,17 @@ koopa_install_all_apps() {
         'autoflake'
         'automake'
         'aws-cli'
-        'azure-cli'
-        'bamtools'
         'bash'
         'bash-language-server'
         'bashcov'
         'bat'
         'bc'
-        'bedtools'
         'binutils'
-        'bioawk'
-        'bioconda-utils'
         'bison'
         'black'
         'boost'
-        'bowtie2'
         'bpytop'
         'broot'
-        'bustools'
         'bzip2'
         'c-ares'
         'ca-certificates'
@@ -11065,7 +11052,6 @@ koopa_install_all_apps() {
         'convmv'
         'coreutils'
         'cpufetch'
-        'deeptools'
         'delta'
         'difftastic'
         'dog'
@@ -11078,7 +11064,6 @@ koopa_install_all_apps() {
         'exa'
         'exiftool'
         'expat'
-        'fastqc'
         'fd-find'
         'ffmpeg'
         'ffq'
@@ -11098,8 +11083,6 @@ koopa_install_all_apps() {
         'gdbm'
         'geos'
         'gettext'
-        'gffutils'
-        'gget'
         'ghostscript'
         'git'
         'glances'
@@ -11107,22 +11090,16 @@ koopa_install_all_apps() {
         'gmp'
         'gnupg'
         'gnutls'
-        'go'
-        'google-cloud-sdk'
         'gperf'
         'graphviz'
         'groff'
-        'gseapy'
         'gsl'
         'gtop'
         'gzip'
         'hadolint'
         'harfbuzz'
-        'haskell-stack'
         'hdf5'
-        'hisat2'
         'htop'
-        'htseq'
         'hyperfine'
         'icu4c'
         'imagemagick'
@@ -11131,12 +11108,9 @@ koopa_install_all_apps() {
         'jemalloc'
         'jpeg'
         'jq'
-        'julia'
         'jupyterlab'
-        'kallisto'
         'lame'
         'lapack'
-        'latch'
         'less'
         'lesspipe'
         'libassuan'
@@ -11174,14 +11148,11 @@ koopa_install_all_apps() {
         'meson'
         'mpc'
         'mpfr'
-        'multiqc'
         'ncurses'
         'neofetch'
         'neovim'
         'nettle'
-        'nextflow'
         'nghttp2'
-        'nim'
         'ninja'
         'nmap'
         'node'
@@ -11223,20 +11194,13 @@ koopa_install_all_apps() {
         'rsync'
         'ruby'
         'ruff'
-        'rust'
-        'salmon'
-        'sambamba'
-        'samtools'
         'scons'
         'sed'
         'serf'
         'shellcheck'
         'shunit2'
-        'snakemake'
         'sox'
         'sqlite'
-        'sra-tools'
-        'star'
         'starship'
         'stow'
         'subversion'
@@ -11291,6 +11255,42 @@ koopa_install_all_apps() {
             'docker-credential-pass'
             'lmod'
             'pinentry'
+        )
+    fi
+    if [[ "${dict['large']}" -eq 1 ]]
+    then
+        pkgs+=(
+            'anaconda'
+            'sambamba'
+            'samtools'
+            'salmon'
+            'bamtools'
+            'bedtools'
+            'htseq'
+            'julia'
+            'multiqc'
+            'nextflow'
+            'star'
+            'bioawk'
+            'bustools'
+            'gffutils'
+            'kallisto'
+            'azure-cli'
+            'bioconda-utils'
+            'bowtie2'
+            'deeptools'
+            'fastqc'
+            'gget'
+            'go'
+            'google-cloud-sdk'
+            'gseapy'
+            'haskell-stack'
+            'hisat2'
+            'latch'
+            'nim'
+            'rust'
+            'snakemake'
+            'sra-tools'
         )
     fi
     for pkg in "${pkgs[@]}"
