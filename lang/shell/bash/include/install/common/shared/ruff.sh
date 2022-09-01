@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Add install support.
+main() {
+    koopa_install_app_internal \
+        --installer='python-venv' \
+        --name='ruff' \
+        "$@"
+}
