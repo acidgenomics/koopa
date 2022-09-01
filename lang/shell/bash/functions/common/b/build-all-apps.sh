@@ -470,7 +470,7 @@ koopa_build_all_apps() {
     then
         for app_name in "${push_apps[@]}"
         do
-            koopa_push_app_build "$app_name"
+            koopa_push_app_build "$app_name" || true
         done
     fi
     return 0
