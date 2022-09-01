@@ -11731,6 +11731,12 @@ koopa_install_autoconf() {
         "$@"
 }
 
+koopa_install_autoflake() {
+    koopa_install_app \
+        --name='autoflake' \
+        "$@"
+}
+
 koopa_install_automake() {
     koopa_install_app \
         --name='automake' \
@@ -12981,6 +12987,12 @@ koopa_install_proj() {
         "$@"
 }
 
+koopa_install_pycodestyle() {
+    koopa_install_app \
+        --name='pycodestyle' \
+        "$@"
+}
+
 koopa_install_pyenv() {
     koopa_install_app \
         --name='pyenv' \
@@ -13125,6 +13137,12 @@ koopa_install_rsync() {
 koopa_install_ruby() {
     koopa_install_app \
         --name='ruby' \
+        "$@"
+}
+
+koopa_install_ruff() {
+    koopa_install_app \
+        --name='ruff' \
         "$@"
 }
 
@@ -22288,6 +22306,12 @@ koopa_uninstall_autoconf() {
         "$@"
 }
 
+koopa_uninstall_autoflake() {
+    koopa_uninstall_app \
+        --name='autoflake' \
+        "$@"
+}
+
 koopa_uninstall_automake() {
     koopa_uninstall_app \
         --name='automake' \
@@ -23373,6 +23397,12 @@ koopa_uninstall_proj() {
         "$@"
 }
 
+koopa_uninstall_pycodestyle() {
+    koopa_uninstall_app \
+        --name='pycodestyle' \
+        "$@"
+}
+
 koopa_uninstall_pyenv() {
     koopa_uninstall_app \
         --name='pyenv' \
@@ -23491,6 +23521,12 @@ koopa_uninstall_rsync() {
 koopa_uninstall_ruby() {
     koopa_uninstall_app \
         --name='ruby' \
+        "$@"
+}
+
+koopa_uninstall_ruff() {
+    koopa_uninstall_app \
+        --name='ruff' \
         "$@"
 }
 
