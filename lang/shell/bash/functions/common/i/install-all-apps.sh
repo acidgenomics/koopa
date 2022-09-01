@@ -22,6 +22,7 @@ koopa_install_all_apps() {
     pkgs=()
     # Priority -----------------------------------------------------------------
     pkgs+=(
+        'zlib'
         'openssl1'
         'openssl3'
         'curl'
@@ -255,7 +256,6 @@ koopa_install_all_apps() {
         'yq'
         'yt-dlp'
         'zellij'
-        'zlib'
         'zoxide'
         'zsh'
         'zstd'
