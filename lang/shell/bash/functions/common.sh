@@ -11012,6 +11012,7 @@ koopa_install_all_apps() {
     pkgs+=(
         'zlib'
         'zstd'
+        'ca-certificates'
         'openssl1'
         'openssl3'
         'curl'
@@ -11043,7 +11044,6 @@ koopa_install_all_apps() {
         'broot'
         'bzip2'
         'c-ares'
-        'ca-certificates'
         'cairo'
         'cheat'
         'chemacs'
