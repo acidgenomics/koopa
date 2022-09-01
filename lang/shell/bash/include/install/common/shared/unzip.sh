@@ -77,7 +77,7 @@ ${dict['file']}"
     fi
     "${app['make']}" -f 'unix/Makefile' "${make_args[@]}"
     "${app['make']}" -f 'unix/Makefile' check
-    "${app['make']}" \
+    "${app['make']}" -f 'unix/Makefile' \
         "prefix=${dict['prefix']}" \
         "MANDIR=${dict['prefix']}/share/man1" \
         install
