@@ -979,15 +979,10 @@ koopa_app_prefix() {
     do
         local prefix version
         version="$(koopa_app_json_version "$app_name" || true)"
-        if [[ -z "$version" ]]
-        then
-            koopa_stop "Unsupported app: '${app_name}'."
-        fi
+        [[ -z "$version" ]] && koopa_stop "Unsupported app: '${app_name}'."
+        [[ "${#version}" == 40 ]] && version="${version:0:7}"
         prefix="${dict['app_prefix']}/${app_name}/${version}"
-        if [[ "${dict['allow_missing']}" -eq 0 ]]
-        then
-            koopa_assert_is_dir "$prefix"
-        fi
+        [[ "${dict['allow_missing']}" -eq 0 ]] && koopa_assert_is_dir "$prefix"
         koopa_print "$prefix"
     done
     return 0
@@ -3401,6 +3396,7 @@ koopa_build_all_apps() {
     do
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        koopa_alert "$prefix"
         [[ -d "$prefix" ]] && continue
         PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
             "$koopa" install "$app_name"
