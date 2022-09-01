@@ -947,8 +947,9 @@ koopa_app_json_version() {
 }
 
 koopa_app_prefix() {
-    local dict
+    local dict pos
     declare -A dict=(
+        ['allow_missing']=0
         ['app_prefix']="$(koopa_koopa_prefix)/app"
     )
     if [[ "$#" -eq 0 ]]
@@ -956,6 +957,24 @@ koopa_app_prefix() {
         koopa_print "${dict['app_prefix']}"
         return 0
     fi
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--allow-missing')
+                dict['allow_missing']=1
+                shift 1
+                ;;
+            '--'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     for app_name in "$@"
     do
         local prefix version
@@ -965,7 +984,10 @@ koopa_app_prefix() {
             koopa_stop "Unsupported app: '${app_name}'."
         fi
         prefix="${dict['app_prefix']}/${app_name}/${version}"
-        koopa_assert_is_dir "$prefix"
+        if [[ "${dict['allow_missing']}" -eq 0 ]]
+        then
+            koopa_assert_is_dir "$prefix"
+        fi
         koopa_print "$prefix"
     done
     return 0
@@ -3074,25 +3096,20 @@ koopa_brew_upgrade_brews() {
 }
 
 koopa_build_all_apps() {
-    local app dict pkg pkgs push_pkgs
+    local app_name apps koopa push_apps
     koopa_assert_has_no_args "$#"
     [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
-    declare -A app=(
-        ['koopa']="$(koopa_locate_koopa)"
-    )
-    [[ -x "${app['koopa']}" ]] || return 1
-    declare -A dict=(
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
-    pkgs=()
-    pkgs+=(
+    koopa="$(koopa_locate_koopa)"
+    [[ -x "$koopa" ]] || return 1
+    apps=()
+    apps+=(
         'pkg-config'
         'make'
     )
-    koopa_is_linux && pkgs+=(
+    koopa_is_linux && apps+=(
         'attr'
     )
-    pkgs+=(
+    apps+=(
         'patch'
         'xz'
         'm4'
@@ -3214,8 +3231,8 @@ koopa_build_all_apps() {
         'libksba'
         'npth'
     )
-    koopa_is_linux && pkgs+=('pinentry')
-    pkgs+=(
+    koopa_is_linux && apps+=('pinentry')
+    apps+=(
         'gnupg'
         'grep'
         'groff'
@@ -3333,7 +3350,7 @@ koopa_build_all_apps() {
     )
     if ! koopa_is_aarch64
     then
-        pkgs+=(
+        apps+=(
             'anaconda'
             'haskell-stack'
             'hadolint'
@@ -3368,30 +3385,32 @@ koopa_build_all_apps() {
     fi
     if koopa_is_linux
     then
-        pkgs+=(
+        apps+=(
             'apptainer'
             'lmod'
         )
         if ! koopa_is_aarch64
         then
-            pkgs+=(
+            apps+=(
                 'aspera-connect'
                 'docker-credential-pass'
             )
         fi
     fi
-    for pkg in "${pkgs[@]}"
+    for app_name in "${apps[@]}"
     do
-        koopa_is_symlink "${dict['opt_prefix']}/${pkg}" && continue
-        PATH="${TMPDIR:-/tmp}/koopa-bootstrap/bin:${PATH:-}" \
-            "${app['koopa']}" install "$pkg"
-        push_pkgs+=("$pkg")
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        [[ -d "$prefix" ]] && continue
+        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
+            "$koopa" install "$app_name"
+        push_apps+=("$app_name")
     done
-    if koopa_is_array_non_empty "${push_pkgs[@]:-}"
+    if koopa_is_array_non_empty "${push_apps[@]:-}"
     then
-        for pkg in "${push_pkgs[@]}"
+        for app_name in "${push_apps[@]}"
         do
-            koopa_push_app_build "$pkg"
+            koopa_push_app_build "$app_name"
         done
     fi
     return 0
