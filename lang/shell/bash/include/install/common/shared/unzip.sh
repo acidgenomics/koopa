@@ -15,19 +15,18 @@ main() {
     # - https://git.alpinelinux.org/aports/tree/main/unzip
     # """
     local app dict loc_macros make_args
-    if koopa_is_linux
-    then
-        koopa_activate_opt_prefix 'bzip2'
-    fi
+    koopa_activate_opt_prefix 'bzip2'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
+        ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['name']='unzip'
         ['prefix']="${INSTALL_PREFIX:?}"
         ['version']="${INSTALL_VERSION:?}"
     )
+    koopa_assert_is_dir "${dict['bzip2']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['version2']="$( \
         koopa_gsub \
@@ -65,7 +64,7 @@ ${dict['file']}"
         'CC=gcc'
         "LOC=${loc_macros[*]}"
         'D_USE_BZ2=-DUSE_BZIP2'
-        'L_BZ2=-lbz2'
+        "L_BZ2=-L${dict['bzip2']}/lib -lbz2"
     )
     if koopa_is_macos
     then
