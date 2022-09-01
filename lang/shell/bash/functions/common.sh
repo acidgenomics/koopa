@@ -11295,7 +11295,8 @@ koopa_install_all_apps() {
     fi
     for pkg in "${pkgs[@]}"
     do
-        koopa install --binary "$pkg" || true
+        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
+            koopa install --binary "$pkg" || true
     done
     return 0
 }
