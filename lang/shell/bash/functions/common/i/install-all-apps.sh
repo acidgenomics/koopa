@@ -21,16 +21,23 @@ koopa_install_all_apps() {
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
     pkgs=()
     # Priority -----------------------------------------------------------------
+    koopa_is_linux && pkgs+=('attr')
     pkgs+=(
         'zlib'
         'zstd'
+        'bzip2'
         'ca-certificates'
         'openssl1'
         'openssl3'
         'curl'
+        'm4'
+        'gmp'
+        'coreutils'
+        'findutils'
         'pcre'
         'pcre2'
         'grep'
+        'sed'
     )
     # Alphabetical -------------------------------------------------------------
     pkgs+=(
@@ -55,7 +62,6 @@ koopa_install_all_apps() {
         'boost'
         'bpytop'
         'broot'
-        'bzip2'
         'c-ares'
         'cairo'
         'cheat'
@@ -65,7 +71,6 @@ koopa_install_all_apps() {
         'colorls'
         'conda'
         'convmv'
-        'coreutils'
         'cpufetch'
         'delta'
         'difftastic'
@@ -82,7 +87,6 @@ koopa_install_all_apps() {
         'fd-find'
         'ffmpeg'
         'ffq'
-        'findutils'
         'fish'
         'flac'
         'flake8'
@@ -102,7 +106,6 @@ koopa_install_all_apps() {
         'git'
         'glances'
         'glib'
-        'gmp'
         'gnupg'
         'gnutls'
         'gperf'
@@ -154,7 +157,6 @@ koopa_install_all_apps() {
         'luarocks'
         'lz4'
         'lzo'
-        'm4'
         'make'
         'man-db'
         'markdownlint-cli'
@@ -210,7 +212,6 @@ koopa_install_all_apps() {
         'ruby'
         'ruff'
         'scons'
-        'sed'
         'serf'
         'shellcheck'
         'shunit2'
