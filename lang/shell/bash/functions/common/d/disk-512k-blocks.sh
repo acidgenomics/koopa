@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-koopa_disk_pct_used() {
+koopa_disk_512k_blocks() {
     # """
-    # Disk usage percentage (on main drive).
+    # Get POSIX standardized 512k byte blocks for a drive.
     # @note Updated 2022-09-01.
     #
     # @examples
-    # koopa_disk_pct_used '/'
-    # 52
+    # > koopa_disk_512k_blocks '/'
+    # # 976490576 (for 512 GB SSD)
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
@@ -21,17 +21,16 @@ koopa_disk_pct_used() {
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    declare -A dict
-    dict['disk']="${1:?}"
-    koopa_assert_is_readable "${dict['disk']}"
+    declare -A dict=(
+        ['disk']="${1:?}"
+    )
     # shellcheck disable=SC2016
     dict['str']="$( \
         POSIXLY_CORRECT=1 \
-        "${app['df']}" "${dict['disk']}" \
+        "${app['df']}" -P "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | "${app['awk']}" '{print $5}' \
-            | "${app['sed']}" 's/%$//' \
+            | "${app['awk']}" '{print $2}' \
     )"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"

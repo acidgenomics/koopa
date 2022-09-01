@@ -1,41 +1,34 @@
 #!/usr/bin/env bash
 
-# NOTE All conservative apps should be built before the liberal ones.
+# FIXME All conservative apps should be built before the liberal ones.
+# FIXME Improve labeling of dependencies here and in app.json.
+# FIXME Rework this install recipe as an algorithm that uses app.json.
 
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-01.
     #
-    # The approach calling 'koopa_cli_install' internally on pkgs array
+    # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
-    #
-    # @section Bootstrap workaround for macOS:
-    # > /opt/koopa/include/bootstrap.sh
-    # > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
     # """
-    local app dict pkg pkgs
+    local app_name apps koopa push_apps
     koopa_assert_has_no_args "$#"
     [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
-    declare -A app=(
-        ['koopa']="$(koopa_locate_koopa)"
-    )
-    [[ -x "${app['koopa']}" ]] || return 1
-    declare -A dict=(
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
-    pkgs=()
-    pkgs+=(
+    koopa="$(koopa_locate_koopa)"
+    [[ -x "$koopa" ]] || return 1
+    apps=()
+    apps+=(
         # deps: make (system).
         'pkg-config'
         # deps: make (system).
         'make'
     )
-    koopa_is_linux && pkgs+=(
+    koopa_is_linux && apps+=(
         # deps: make, pkg-config.
         'attr'
     )
-    pkgs+=(
+    apps+=(
         # deps: attr (linux), make.
         'patch'
         # deps: make, pkg-config.
@@ -202,8 +195,8 @@ koopa_build_all_apps() {
         'libksba'
         'npth'
     )
-    koopa_is_linux && pkgs+=('pinentry')
-    pkgs+=(
+    koopa_is_linux && apps+=('pinentry')
+    apps+=(
         'gnupg'
         'grep'
         'groff'
@@ -250,21 +243,40 @@ koopa_build_all_apps() {
         'aws-cli'
         'azure-cli'
         'google-cloud-sdk'
-        # Install Python packages.
+        # deps: python.
+        'autoflake'
+        # deps: python.
         'black'
+        # deps: python.
         'bpytop'
+        # deps: python.
         'flake8'
+        # deps: python.
         'glances'
+        # deps: python.
         'ipython'
+        # deps: python.
         'isort'
+        # deps: python.
         'latch'
-        'poetry'
+        # deps: python.
         'pipx'
+        # deps: python.
+        'poetry'
+        # deps: python.
+        'pycodestyle'
+        # deps: python.
         'pyflakes'
+        # deps: python.
         'pygments'
-        'ranger-fm'
-        'yt-dlp'
+        # deps: python.
         'pylint'
+        # deps: python.
+        'ranger-fm'
+        # deps: python.
+        'ruff'
+        # deps: python.
+        'yt-dlp'
         'libedit'
         # deps: libedit.
         'openssh'
@@ -277,47 +289,78 @@ koopa_build_all_apps() {
         'node'
         'rust'
         'julia'
-        # Install Rust packages.
-        'bat' # deps: rust
-        'broot' # deps: rust
-        'delta' # deps: rust
-        'difftastic' # deps: rust
-        'dog' # deps: rust
+        # deps: rust.
+        'bat'
+        # deps: rust.
+        'broot'
+        # deps: rust.
+        'delta'
+        # deps: rust.
+        'difftastic'
+        # deps: rust.
+        'dog'
+        # deps: rust.
         'du-dust'
+        # deps: rust.
         'exa'
+        # deps: rust.
         'fd-find'
+        # deps: rust.
         'hyperfine'
+        # deps: rust.
         'mcfly'
+        # deps: rust.
         'mdcat'
+        # deps: rust.
         'procs'
+        # deps: rust.
         'ripgrep'
+        # deps: rust.
         'ripgrep-all'
+        # deps: rust.
         'starship'
+        # deps: rust.
         'tealdeer'
+        # deps: rust.
         'tokei'
+        # deps: rust.
         'tuc'
+        # deps: rust.
         'xsv'
+        # deps: rust.
         'zellij'
+        # deps: rust.
         'zoxide'
-        # Install Go packages.
+        # deps: go.
         'chemacs'
+        # deps: go.
         'cheat'
+        # deps: go.
         'yq'
-        # Install node packages.
+        # deps: node.
         'bash-language-server'
+        # deps: node.
         'gtop'
+        # deps: node.
         'prettier'
-        # Install Perl packages.
+        # deps: perl.
         'ack'
+        # deps: perl.
         'rename'
-        # Install Ruby packages.
+        # deps: ruby.
         'bashcov'
+        # deps: ruby.
         'colorls'
+        # deps: ruby.
         'ronn'
-        'pyenv' # deps: none.
-        'rbenv' # deps: none.
+        # deps: none.
+        'pyenv'
+        # deps: none.
+        'rbenv'
+        # deps: none.
         'dotfiles'
-        'ensembl-perl-api' # deps: none.
+        # deps: none.
+        'ensembl-perl-api'
         # deps: cmake, gcc, hdf5, libxml2, python.
         'sra-tools'
         'yarn'
@@ -325,67 +368,110 @@ koopa_build_all_apps() {
         'convmv'
         'editorconfig'
         'markdownlint-cli'
-        # FIXME Currently problematic on Ubuntu 22.
-        # May need to include libpcap and liblinear here first.
         'nmap'
         'rmate'
+        # deps: bzip2.
+        'unzip'
     )
     if ! koopa_is_aarch64
     then
-        pkgs+=(
+        apps+=(
+            # deps: none.
             'anaconda'
-            'bioconda-utils' # deps: conda
+            # deps: none.
             'haskell-stack'
-            'hadolint' # deps: haskell-stack
-            'pandoc' # deps: haskell-stack
-            'bamtools' # deps: conda
-            'bedtools' # deps: conda
-            'bioawk' # deps: conda
-            'bowtie2' # deps: conda
-            'bustools' # deps: conda
-            'deeptools' # deps: conda
-            'entrez-direct' # deps: conda
-            'fastqc' # deps: conda
-            'ffq' # deps: conda
-            'gffutils' # deps: conda
-            'gget' # deps: conda
-            'ghostscript' # deps: conda
-            'gseapy' # deps: conda
-            'hisat2' # deps: conda
-            'htseq' # deps: conda
-            'jupyterlab' # deps: conda
-            'kallisto' # deps: conda
-            'multiqc' # deps: conda
-            'nextflow' # deps: conda
-            'salmon' # deps: conda
-            'sambamba' # deps: conda
-            'samtools' # deps: conda
-            'snakemake' # deps: conda
-            'star' # deps: conda
-            'visidata' # deps: conda
+            # deps: haskell-stack.
+            'hadolint'
+            # deps: haskell-stack.
+            'pandoc'
+            # deps: conda.
+            'bioconda-utils'
+            # deps: conda.
+            'bamtools'
+            # deps: conda.
+            'bedtools'
+            # deps: conda.
+            'bioawk'
+            # deps: conda.
+            'bowtie2'
+            # deps: conda.
+            'bustools'
+            # deps: conda.
+            'deeptools'
+            # deps: conda.
+            'entrez-direct'
+            # deps: conda.
+            'fastqc'
+            # deps: conda.
+            'ffq'
+            # deps: conda.
+            'gffutils'
+            # deps: conda.
+            'gget'
+            # deps: conda.
+            'ghostscript'
+            # deps: conda.
+            'gseapy'
+            # deps: conda.
+            'hisat2'
+            # deps: conda.
+            'htseq'
+            # deps: conda.
+            'jupyterlab'
+            # deps: conda.
+            'kallisto'
+            # deps: conda.
+            'multiqc'
+            # deps: conda.
+            'nextflow'
+            # deps: conda.
+            'salmon'
+            # deps: conda.
+            'sambamba'
+            # deps: conda.
+            'samtools'
+            # deps: conda.
+            'snakemake'
+            # deps: conda.
+            'star'
+            # deps: conda.
+            'visidata'
         )
     fi
     if koopa_is_linux
     then
-        pkgs+=(
+        apps+=(
+            # deps: go, pkg-config.
             'apptainer'
+            # deps: lua, luarocks, pkg-config, tcl-tk, zlib.
             'lmod'
         )
         if ! koopa_is_aarch64
         then
-            pkgs+=(
+            apps+=(
+                # deps: none.
                 'aspera-connect'
-                # FIXME Rename this to 'docker-credential-helpers'.
+                # deps: none.
                 'docker-credential-pass'
             )
         fi
     fi
-    for pkg in "${pkgs[@]}"
+    for app_name in "${apps[@]}"
     do
-        koopa_is_symlink "${dict['opt_prefix']}/${pkg}" && continue
-        PATH="${TMPDIR:-/tmp}/koopa-bootstrap/bin:${PATH:-}" \
-            "${app['koopa']}" install "$pkg"
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        koopa_alert "$prefix"
+        [[ -d "$prefix" ]] && continue
+        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
+            "$koopa" install "$app_name"
+        push_apps+=("$app_name")
     done
-    koopa_push_all_app_builds
+    if koopa_is_array_non_empty "${push_apps[@]:-}"
+    then
+        for app_name in "${push_apps[@]}"
+        do
+            koopa_push_app_build "$app_name" || true
+        done
+    fi
     return 0
 }

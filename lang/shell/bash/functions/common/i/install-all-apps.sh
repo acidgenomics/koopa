@@ -1,54 +1,68 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to parse app.json file instead.
+
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-09-01.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
     #
     # Need to install PCRE libraries before grep.
     # """
-    local pkgs
+    local app_name apps dict
     koopa_assert_has_no_args "$#"
-    pkgs=(
-        # Priority -------------------------------------------------------------
+    declare -A dict=(
+        ['blocks']="$(koopa_disk_512k_blocks '/')"
+        ['large']=0
+    )
+    [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
+    apps=()
+    # Priority -----------------------------------------------------------------
+    koopa_is_linux && apps+=('attr')
+    apps+=(
+        'zlib'
+        'zstd'
+        'bzip2'
+        'ca-certificates'
         'openssl1'
         'openssl3'
         'curl'
+        'm4'
+        'gmp'
+        'coreutils'
+        'findutils'
         'pcre'
         'pcre2'
         'grep'
-        # Alphabetical ---------------------------------------------------------
+        'sed'
+    )
+    # Alphabetical -------------------------------------------------------------
+    apps+=(
         'ack'
-        'anaconda'
         'apr'
         'apr-util'
         'armadillo'
+        'asdf'
         'aspell'
         'autoconf'
+        'autoflake'
         'automake'
         'aws-cli'
-        'azure-cli'
-        'bamtools'
         'bash'
         'bash-language-server'
         'bashcov'
         'bat'
         'bc'
-        'bedtools'
         'binutils'
-        'bioawk'
         'bison'
         'black'
         'boost'
-        'bowtie2'
         'bpytop'
         'broot'
-        'bustools'
-        'bzip2'
-        'ca-certificates'
+        'c-ares'
         'cairo'
         'cheat'
         'chemacs'
@@ -56,28 +70,26 @@ koopa_install_all_apps() {
         'cmake'
         'colorls'
         'conda'
-        'coreutils'
+        'convmv'
         'cpufetch'
-        # > 'curl'
-        'deeptools'
         'delta'
         'difftastic'
+        'dog'
         'dotfiles'
         'du-dust'
+        'editorconfig'
         'emacs'
         'ensembl-perl-api'
         'entrez-direct'
         'exa'
         'exiftool'
         'expat'
-        'fastqc'
         'fd-find'
         'ffmpeg'
-        'ffq'
-        'findutils'
         'fish'
         'flac'
         'flake8'
+        'flex'
         'fltk'
         'fontconfig'
         'freetype'
@@ -89,48 +101,38 @@ koopa_install_all_apps() {
         'gdbm'
         'geos'
         'gettext'
-        'gffutils'
-        'gget'
         'ghostscript'
         'git'
         'glances'
         'glib'
-        'gmp'
         'gnupg'
         'gnutls'
-        'go'
-        'google-cloud-sdk'
         'gperf'
         'graphviz'
-        # > 'grep'
         'groff'
-        'gseapy'
         'gsl'
         'gtop'
         'gzip'
         'hadolint'
         'harfbuzz'
-        'haskell-stack'
         'hdf5'
-        'hisat2'
         'htop'
         'hyperfine'
         'icu4c'
         'imagemagick'
         'ipython'
         'isort'
+        'jemalloc'
         'jpeg'
         'jq'
-        'julia'
         'jupyterlab'
-        'kallisto'
         'lame'
         'lapack'
-        'latch'
         'less'
         'lesspipe'
         'libassuan'
         'libedit'
+        'libev'
         'libevent'
         'libffi'
         'libgcrypt'
@@ -154,40 +156,31 @@ koopa_install_all_apps() {
         'luarocks'
         'lz4'
         'lzo'
-        'm4'
         'make'
         'man-db'
+        'markdownlint-cli'
         'mcfly'
         'mdcat'
         'meson'
-        # FIXME This step is currently problematic because install recipes
-        # requires mpfr to be installed first...need to rework install approach
-        # to not include '--activate-opt' in the main install command, so we
-        # don't hit issues when installing binary packages.
         'mpc'
         'mpfr'
-        'multiqc'
         'ncurses'
         'neofetch'
         'neovim'
         'nettle'
-        'nextflow'
-        'nim'
+        'nghttp2'
         'ninja'
+        'nmap'
         'node'
         'npth'
         'oniguruma'
         'openblas'
         'openjdk'
-        # > 'openssl1'
-        # > 'openssl3'
         'openssh'
         'pandoc'
         'parallel'
         'password-store'
         'patch'
-        # > 'pcre'
-        # > 'pcre2'
         'perl'
         'pipx'
         'pixman'
@@ -196,6 +189,7 @@ koopa_install_all_apps() {
         'prettier'
         'procs'
         'proj'
+        'pycodestyle'
         'pyenv'
         'pyflakes'
         'pygments'
@@ -210,23 +204,18 @@ koopa_install_all_apps() {
         'readline'
         'rename'
         'ripgrep'
+        'ripgrep-all'
+        'rmate'
         'ronn'
         'rsync'
         'ruby'
-        'rust'
-        'salmon'
-        'sambamba'
-        'samtools'
+        'ruff'
         'scons'
-        'sed'
         'serf'
         'shellcheck'
         'shunit2'
-        'snakemake'
         'sox'
         'sqlite'
-        'sra-tools'
-        'star'
         'starship'
         'stow'
         'subversion'
@@ -241,6 +230,7 @@ koopa_install_all_apps() {
         'tuc'
         'udunits'
         'units'
+        'unzip'
         'utf8proc'
         'vim'
         'visidata'
@@ -263,17 +253,17 @@ koopa_install_all_apps() {
         'xsv'
         'xxhash'
         'xz'
+        'yarn'
         'yq'
         'yt-dlp'
         'zellij'
-        'zlib'
         'zoxide'
         'zsh'
-        'zstd'
     )
+    # Platform-specific --------------------------------------------------------
     if koopa_is_linux
     then
-        pkgs+=(
+        apps+=(
             'apptainer'
             'aspera-connect'
             'docker-credential-pass'
@@ -281,9 +271,49 @@ koopa_install_all_apps() {
             'pinentry'
         )
     fi
-    for pkg in "${pkgs[@]}"
+    # Large machines only ------------------------------------------------------
+    # NOTE Consider defining these in app.json.
+    if [[ "${dict['large']}" -eq 1 ]]
+    then
+        apps+=(
+            'anaconda'
+            'azure-cli'
+            'bamtools'
+            'bedtools'
+            'bioawk'
+            'bioconda-utils'
+            'bowtie2'
+            'bustools'
+            'deeptools'
+            'fastqc'
+            'ffq'
+            'gffutils'
+            'gget'
+            'go'
+            'google-cloud-sdk'
+            'gseapy'
+            'haskell-stack'
+            'hisat2'
+            'htseq'
+            'julia'
+            'kallisto'
+            'latch'
+            'multiqc'
+            'nextflow'
+            'nim'
+            'rust'
+            'salmon'
+            'sambamba'
+            'samtools'
+            'snakemake'
+            'sra-tools'
+            'star'
+        )
+    fi
+    for app_name in "${apps[@]}"
     do
-        koopa install --binary "$pkg"
+        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
+            koopa install --binary "$app_name"
     done
     return 0
 }

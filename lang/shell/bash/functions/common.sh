@@ -947,8 +947,9 @@ koopa_app_json_version() {
 }
 
 koopa_app_prefix() {
-    local dict
+    local dict pos
     declare -A dict=(
+        ['allow_missing']=0
         ['app_prefix']="$(koopa_koopa_prefix)/app"
     )
     if [[ "$#" -eq 0 ]]
@@ -956,16 +957,32 @@ koopa_app_prefix() {
         koopa_print "${dict['app_prefix']}"
         return 0
     fi
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--allow-missing')
+                dict['allow_missing']=1
+                shift 1
+                ;;
+            '--'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     for app_name in "$@"
     do
         local prefix version
         version="$(koopa_app_json_version "$app_name" || true)"
-        if [[ -z "$version" ]]
-        then
-            koopa_stop "Unsupported app: '${app_name}'."
-        fi
+        [[ -z "$version" ]] && koopa_stop "Unsupported app: '${app_name}'."
+        [[ "${#version}" == 40 ]] && version="${version:0:7}"
         prefix="${dict['app_prefix']}/${app_name}/${version}"
-        koopa_assert_is_dir "$prefix"
+        [[ "${dict['allow_missing']}" -eq 0 ]] && koopa_assert_is_dir "$prefix"
         koopa_print "$prefix"
     done
     return 0
@@ -3074,25 +3091,20 @@ koopa_brew_upgrade_brews() {
 }
 
 koopa_build_all_apps() {
-    local app dict pkg pkgs
+    local app_name apps koopa push_apps
     koopa_assert_has_no_args "$#"
     [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
-    declare -A app=(
-        ['koopa']="$(koopa_locate_koopa)"
-    )
-    [[ -x "${app['koopa']}" ]] || return 1
-    declare -A dict=(
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
-    pkgs=()
-    pkgs+=(
+    koopa="$(koopa_locate_koopa)"
+    [[ -x "$koopa" ]] || return 1
+    apps=()
+    apps+=(
         'pkg-config'
         'make'
     )
-    koopa_is_linux && pkgs+=(
+    koopa_is_linux && apps+=(
         'attr'
     )
-    pkgs+=(
+    apps+=(
         'patch'
         'xz'
         'm4'
@@ -3214,8 +3226,8 @@ koopa_build_all_apps() {
         'libksba'
         'npth'
     )
-    koopa_is_linux && pkgs+=('pinentry')
-    pkgs+=(
+    koopa_is_linux && apps+=('pinentry')
+    apps+=(
         'gnupg'
         'grep'
         'groff'
@@ -3259,6 +3271,7 @@ koopa_build_all_apps() {
         'aws-cli'
         'azure-cli'
         'google-cloud-sdk'
+        'autoflake'
         'black'
         'bpytop'
         'flake8'
@@ -3266,13 +3279,15 @@ koopa_build_all_apps() {
         'ipython'
         'isort'
         'latch'
-        'poetry'
         'pipx'
+        'poetry'
+        'pycodestyle'
         'pyflakes'
         'pygments'
-        'ranger-fm'
-        'yt-dlp'
         'pylint'
+        'ranger-fm'
+        'ruff'
+        'yt-dlp'
         'libedit'
         'openssh'
         'c-ares'
@@ -3282,11 +3297,11 @@ koopa_build_all_apps() {
         'node'
         'rust'
         'julia'
-        'bat' # deps: rust
-        'broot' # deps: rust
-        'delta' # deps: rust
-        'difftastic' # deps: rust
-        'dog' # deps: rust
+        'bat'
+        'broot'
+        'delta'
+        'difftastic'
+        'dog'
         'du-dust'
         'exa'
         'fd-find'
@@ -3314,10 +3329,10 @@ koopa_build_all_apps() {
         'bashcov'
         'colorls'
         'ronn'
-        'pyenv' # deps: none.
-        'rbenv' # deps: none.
+        'pyenv'
+        'rbenv'
         'dotfiles'
-        'ensembl-perl-api' # deps: none.
+        'ensembl-perl-api'
         'sra-tools'
         'yarn'
         'asdf'
@@ -3326,63 +3341,74 @@ koopa_build_all_apps() {
         'markdownlint-cli'
         'nmap'
         'rmate'
+        'unzip'
     )
     if ! koopa_is_aarch64
     then
-        pkgs+=(
+        apps+=(
             'anaconda'
-            'bioconda-utils' # deps: conda
             'haskell-stack'
-            'hadolint' # deps: haskell-stack
-            'pandoc' # deps: haskell-stack
-            'bamtools' # deps: conda
-            'bedtools' # deps: conda
-            'bioawk' # deps: conda
-            'bowtie2' # deps: conda
-            'bustools' # deps: conda
-            'deeptools' # deps: conda
-            'entrez-direct' # deps: conda
-            'fastqc' # deps: conda
-            'ffq' # deps: conda
-            'gffutils' # deps: conda
-            'gget' # deps: conda
-            'ghostscript' # deps: conda
-            'gseapy' # deps: conda
-            'hisat2' # deps: conda
-            'htseq' # deps: conda
-            'jupyterlab' # deps: conda
-            'kallisto' # deps: conda
-            'multiqc' # deps: conda
-            'nextflow' # deps: conda
-            'salmon' # deps: conda
-            'sambamba' # deps: conda
-            'samtools' # deps: conda
-            'snakemake' # deps: conda
-            'star' # deps: conda
-            'visidata' # deps: conda
+            'hadolint'
+            'pandoc'
+            'bioconda-utils'
+            'bamtools'
+            'bedtools'
+            'bioawk'
+            'bowtie2'
+            'bustools'
+            'deeptools'
+            'entrez-direct'
+            'fastqc'
+            'ffq'
+            'gffutils'
+            'gget'
+            'ghostscript'
+            'gseapy'
+            'hisat2'
+            'htseq'
+            'jupyterlab'
+            'kallisto'
+            'multiqc'
+            'nextflow'
+            'salmon'
+            'sambamba'
+            'samtools'
+            'snakemake'
+            'star'
+            'visidata'
         )
     fi
     if koopa_is_linux
     then
-        pkgs+=(
+        apps+=(
             'apptainer'
             'lmod'
         )
         if ! koopa_is_aarch64
         then
-            pkgs+=(
+            apps+=(
                 'aspera-connect'
                 'docker-credential-pass'
             )
         fi
     fi
-    for pkg in "${pkgs[@]}"
+    for app_name in "${apps[@]}"
     do
-        koopa_is_symlink "${dict['opt_prefix']}/${pkg}" && continue
-        PATH="${TMPDIR:-/tmp}/koopa-bootstrap/bin:${PATH:-}" \
-            "${app['koopa']}" install "$pkg"
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        koopa_alert "$prefix"
+        [[ -d "$prefix" ]] && continue
+        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
+            "$koopa" install "$app_name"
+        push_apps+=("$app_name")
     done
-    koopa_push_all_app_builds
+    if koopa_is_array_non_empty "${push_apps[@]:-}"
+    then
+        for app_name in "${push_apps[@]}"
+        do
+            koopa_push_app_build "$app_name" || true
+        done
+    fi
     return 0
 }
 
@@ -4390,7 +4416,6 @@ koopa_cli_system() {
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
-        'push-all-app-builds' | \
         'push-app-build' | \
         'reload-shell' | \
         'roff' | \
@@ -6351,92 +6376,118 @@ koopa_disable_passwordless_sudo() {
     return 0
 }
 
-koopa_disk_gb_free() {
-    local app disk str
+koopa_disk_512k_blocks() {
+    local app dict
     koopa_assert_has_args_eq "$#" 1
-    disk="${1:?}"
-    koopa_assert_is_readable "$disk"
     declare -A app=(
+        ['awk']="$(koopa_locate_awk --allow-system)"
         ['df']="$(koopa_locate_df --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['df']}" --block-size='G' "$disk" \
+    declare -A dict=(
+        ['disk']="${1:?}"
+    )
+    dict['str']="$( \
+        POSIXLY_CORRECT=1 \
+        "${app['df']}" -P "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | koopa_grep \
-                --only-matching \
-                --pattern='(\b[.0-9]+G\b)' \
-                --regex \
-            | "${app['head']}" -n 3 \
-            | "${app['sed']}" -n '3p' \
+            | "${app['awk']}" '{print $2}' \
+    )"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
+    return 0
+}
+
+koopa_disk_gb_free() {
+    local app dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A app=(
+        ['awk']="$(koopa_locate_awk)"
+        ['df']="$(koopa_locate_df)"
+        ['head']="$(koopa_locate_head)"
+        ['sed']="$(koopa_locate_sed)"
+    )
+    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['df']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
+    declare -A dict
+    dict['disk']="${1:?}"
+    koopa_assert_is_readable "${dict['disk']}"
+    dict['str']="$( \
+        POSIXLY_CORRECT=0 \
+        "${app['df']}" --block-size='G' "${dict['disk']}" \
+            | "${app['head']}" -n 2 \
+            | "${app['sed']}" -n '2p' \
+            | "${app['awk']}" '{print $4}' \
             | "${app['sed']}" 's/G$//' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
 koopa_disk_gb_total() {
-    local app disk str
+    local app dict
     koopa_assert_has_args_eq "$#" 1
-    disk="${1:?}"
-    koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
+        ['awk']="$(koopa_locate_awk)"
+        ['df']="$(koopa_locate_df)"
+        ['head']="$(koopa_locate_head)"
+        ['sed']="$(koopa_locate_sed)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['df']}" --block-size='G' "$disk" \
+    declare -A dict
+    dict['disk']="${1:?}"
+    koopa_assert_is_readable "${dict['disk']}"
+    dict['str']="$( \
+        POSIXLY_CORRECT=0 \
+        "${app['df']}" --block-size='G' "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | koopa_grep \
-                --only-matching \
-                --pattern='(\b[.0-9]+G\b)' \
-                --regex \
-            | "${app['head']}" -n 1 \
+            | "${app['awk']}" '{print $2}' \
             | "${app['sed']}" 's/G$//' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
 koopa_disk_gb_used() {
-    local app disk str
+    local app dict
     koopa_assert_has_args_eq "$#" 1
-    disk="${1:?}"
-    koopa_assert_is_readable "$disk"
     declare -A app=(
-        ['df']="$(koopa_locate_df --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
+        ['awk']="$(koopa_locate_awk)"
+        ['df']="$(koopa_locate_df)"
+        ['head']="$(koopa_locate_head)"
+        ['sed']="$(koopa_locate_sed)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['df']}" --block-size='G' "$disk" \
+    declare -A dict
+    dict['disk']="${1:?}"
+    koopa_assert_is_readable "${dict['disk']}"
+    dict['str']="$( \
+        POSIXLY_CORRECT=0 \
+        "${app['df']}" --block-size='G' "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | koopa_grep \
-                --only-matching \
-                --pattern='(\b[.0-9]+G\b)' \
-                --regex \
-            | "${app['head']}" -n 2 \
-            | "${app['sed']}" -n '2p' \
+            | "${app['awk']}" '{print $3}' \
             | "${app['sed']}" 's/G$//' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
@@ -6452,31 +6503,31 @@ koopa_disk_pct_free() {
 }
 
 koopa_disk_pct_used() {
-    local app disk str
+    local app dict
     koopa_assert_has_args_eq "$#" 1
-    disk="${1:?}"
-    koopa_assert_is_readable "$disk"
     declare -A app=(
+        ['awk']="$(koopa_locate_awk --allow-system)"
         ['df']="$(koopa_locate_df --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
+    [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    str="$( \
-        "${app['df']}" "$disk" \
+    declare -A dict
+    dict['disk']="${1:?}"
+    koopa_assert_is_readable "${dict['disk']}"
+    dict['str']="$( \
+        POSIXLY_CORRECT=1 \
+        "${app['df']}" "${dict['disk']}" \
             | "${app['head']}" -n 2 \
             | "${app['sed']}" -n '2p' \
-            | koopa_grep \
-                --only-matching \
-                --pattern='([.0-9]+%)' \
-                --regex \
-            | "${app['head']}" -n 1 \
+            | "${app['awk']}" '{print $5}' \
             | "${app['sed']}" 's/%$//' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
@@ -10950,43 +11001,55 @@ koopa_install_ack() {
 }
 
 koopa_install_all_apps() {
-    local pkgs
+    local app_name apps dict
     koopa_assert_has_no_args "$#"
-    pkgs=(
+    declare -A dict=(
+        ['blocks']="$(koopa_disk_512k_blocks '/')"
+        ['large']=0
+    )
+    [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
+    apps=()
+    koopa_is_linux && apps+=('attr')
+    apps+=(
+        'zlib'
+        'zstd'
+        'bzip2'
+        'ca-certificates'
         'openssl1'
         'openssl3'
         'curl'
+        'm4'
+        'gmp'
+        'coreutils'
+        'findutils'
         'pcre'
         'pcre2'
         'grep'
+        'sed'
+    )
+    apps+=(
         'ack'
-        'anaconda'
         'apr'
         'apr-util'
         'armadillo'
+        'asdf'
         'aspell'
         'autoconf'
+        'autoflake'
         'automake'
         'aws-cli'
-        'azure-cli'
-        'bamtools'
         'bash'
         'bash-language-server'
         'bashcov'
         'bat'
         'bc'
-        'bedtools'
         'binutils'
-        'bioawk'
         'bison'
         'black'
         'boost'
-        'bowtie2'
         'bpytop'
         'broot'
-        'bustools'
-        'bzip2'
-        'ca-certificates'
+        'c-ares'
         'cairo'
         'cheat'
         'chemacs'
@@ -10994,27 +11057,26 @@ koopa_install_all_apps() {
         'cmake'
         'colorls'
         'conda'
-        'coreutils'
+        'convmv'
         'cpufetch'
-        'deeptools'
         'delta'
         'difftastic'
+        'dog'
         'dotfiles'
         'du-dust'
+        'editorconfig'
         'emacs'
         'ensembl-perl-api'
         'entrez-direct'
         'exa'
         'exiftool'
         'expat'
-        'fastqc'
         'fd-find'
         'ffmpeg'
-        'ffq'
-        'findutils'
         'fish'
         'flac'
         'flake8'
+        'flex'
         'fltk'
         'fontconfig'
         'freetype'
@@ -11026,47 +11088,38 @@ koopa_install_all_apps() {
         'gdbm'
         'geos'
         'gettext'
-        'gffutils'
-        'gget'
         'ghostscript'
         'git'
         'glances'
         'glib'
-        'gmp'
         'gnupg'
         'gnutls'
-        'go'
-        'google-cloud-sdk'
         'gperf'
         'graphviz'
         'groff'
-        'gseapy'
         'gsl'
         'gtop'
         'gzip'
         'hadolint'
         'harfbuzz'
-        'haskell-stack'
         'hdf5'
-        'hisat2'
         'htop'
         'hyperfine'
         'icu4c'
         'imagemagick'
         'ipython'
         'isort'
+        'jemalloc'
         'jpeg'
         'jq'
-        'julia'
         'jupyterlab'
-        'kallisto'
         'lame'
         'lapack'
-        'latch'
         'less'
         'lesspipe'
         'libassuan'
         'libedit'
+        'libev'
         'libevent'
         'libffi'
         'libgcrypt'
@@ -11090,22 +11143,21 @@ koopa_install_all_apps() {
         'luarocks'
         'lz4'
         'lzo'
-        'm4'
         'make'
         'man-db'
+        'markdownlint-cli'
         'mcfly'
         'mdcat'
         'meson'
         'mpc'
         'mpfr'
-        'multiqc'
         'ncurses'
         'neofetch'
         'neovim'
         'nettle'
-        'nextflow'
-        'nim'
+        'nghttp2'
         'ninja'
+        'nmap'
         'node'
         'npth'
         'oniguruma'
@@ -11124,6 +11176,7 @@ koopa_install_all_apps() {
         'prettier'
         'procs'
         'proj'
+        'pycodestyle'
         'pyenv'
         'pyflakes'
         'pygments'
@@ -11138,23 +11191,18 @@ koopa_install_all_apps() {
         'readline'
         'rename'
         'ripgrep'
+        'ripgrep-all'
+        'rmate'
         'ronn'
         'rsync'
         'ruby'
-        'rust'
-        'salmon'
-        'sambamba'
-        'samtools'
+        'ruff'
         'scons'
-        'sed'
         'serf'
         'shellcheck'
         'shunit2'
-        'snakemake'
         'sox'
         'sqlite'
-        'sra-tools'
-        'star'
         'starship'
         'stow'
         'subversion'
@@ -11169,6 +11217,7 @@ koopa_install_all_apps() {
         'tuc'
         'udunits'
         'units'
+        'unzip'
         'utf8proc'
         'vim'
         'visidata'
@@ -11191,17 +11240,16 @@ koopa_install_all_apps() {
         'xsv'
         'xxhash'
         'xz'
+        'yarn'
         'yq'
         'yt-dlp'
         'zellij'
-        'zlib'
         'zoxide'
         'zsh'
-        'zstd'
     )
     if koopa_is_linux
     then
-        pkgs+=(
+        apps+=(
             'apptainer'
             'aspera-connect'
             'docker-credential-pass'
@@ -11209,9 +11257,47 @@ koopa_install_all_apps() {
             'pinentry'
         )
     fi
-    for pkg in "${pkgs[@]}"
+    if [[ "${dict['large']}" -eq 1 ]]
+    then
+        apps+=(
+            'anaconda'
+            'azure-cli'
+            'bamtools'
+            'bedtools'
+            'bioawk'
+            'bioconda-utils'
+            'bowtie2'
+            'bustools'
+            'deeptools'
+            'fastqc'
+            'ffq'
+            'gffutils'
+            'gget'
+            'go'
+            'google-cloud-sdk'
+            'gseapy'
+            'haskell-stack'
+            'hisat2'
+            'htseq'
+            'julia'
+            'kallisto'
+            'latch'
+            'multiqc'
+            'nextflow'
+            'nim'
+            'rust'
+            'salmon'
+            'sambamba'
+            'samtools'
+            'snakemake'
+            'sra-tools'
+            'star'
+        )
+    fi
+    for app_name in "${apps[@]}"
     do
-        koopa install --binary "$pkg"
+        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
+            koopa install --binary "$app_name"
     done
     return 0
 }
@@ -11728,6 +11814,12 @@ koopa_install_aspell() {
 koopa_install_autoconf() {
     koopa_install_app \
         --name='autoconf' \
+        "$@"
+}
+
+koopa_install_autoflake() {
+    koopa_install_app \
+        --name='autoflake' \
         "$@"
 }
 
@@ -12981,6 +13073,12 @@ koopa_install_proj() {
         "$@"
 }
 
+koopa_install_pycodestyle() {
+    koopa_install_app \
+        --name='pycodestyle' \
+        "$@"
+}
+
 koopa_install_pyenv() {
     koopa_install_app \
         --name='pyenv' \
@@ -13125,6 +13223,12 @@ koopa_install_rsync() {
 koopa_install_ruby() {
     koopa_install_app \
         --name='ruby' \
+        "$@"
+}
+
+koopa_install_ruff() {
+    koopa_install_app \
+        --name='ruff' \
         "$@"
 }
 
@@ -13316,6 +13420,12 @@ koopa_install_udunits() {
 koopa_install_units() {
     koopa_install_app \
         --name='units' \
+        "$@"
+}
+
+koopa_install_unzip() {
+    koopa_install_app \
+        --name='unzip' \
         "$@"
 }
 
@@ -13919,13 +14029,10 @@ koopa_is_symlink() {
 koopa_is_url_active() {
     local app url
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['curl']="$(koopa_locate_curl)"
-    )
+    declare -A app dict
+    app['curl']="$(koopa_locate_curl --allow-system)"
     [[ -x "${app['curl']}" ]] || return 1
-    declare -A dict=(
-        ['url_pattern']='://'
-    )
+    dict['url_pattern']='://'
     for url in "$@"
     do
         koopa_str_detect_fixed \
@@ -17119,9 +17226,8 @@ koopa_parse_app_json() {
 koopa_parse_url() {
     local app curl_args pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['curl']="$(koopa_locate_curl)"
-    )
+    declare -A app
+    app['curl']="$(koopa_locate_curl --allow-system)"
     [[ -x "${app['curl']}" ]] || return 1
     curl_args=(
         '--disable' # Ignore '~/.curlrc'. Must come first.
@@ -17308,36 +17414,6 @@ koopa_public_ip_address() {
     fi
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
-    return 0
-}
-
-koopa_push_all_app_builds() {
-    local app dict names
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['basename']="$(koopa_locate_basename)"
-        ['grep']="$(koopa_locate_grep)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['basename']}" ]] || return 1
-    [[ -x "${app['grep']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
-    declare -A dict=(
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
-    readarray -t names <<< "$( \
-        koopa_find \
-            --max-depth=1 \
-            --min-depth=1 \
-            --prefix="${dict['opt_prefix']}" \
-            --print0 \
-            --sort \
-            --type='l' \
-        | "${app['xargs']}" -0 -n 1 "${app['basename']}" \
-        | "${app['grep']}" -Ev '^.+-packages$' \
-    )"
-    koopa_assert_is_array_non_empty "${names[@]:-}"
-    koopa_push_app_build "${names[@]}"
     return 0
 }
 
@@ -22282,6 +22358,12 @@ koopa_uninstall_autoconf() {
         "$@"
 }
 
+koopa_uninstall_autoflake() {
+    koopa_uninstall_app \
+        --name='autoflake' \
+        "$@"
+}
+
 koopa_uninstall_automake() {
     koopa_uninstall_app \
         --name='automake' \
@@ -23367,6 +23449,12 @@ koopa_uninstall_proj() {
         "$@"
 }
 
+koopa_uninstall_pycodestyle() {
+    koopa_uninstall_app \
+        --name='pycodestyle' \
+        "$@"
+}
+
 koopa_uninstall_pyenv() {
     koopa_uninstall_app \
         --name='pyenv' \
@@ -23485,6 +23573,12 @@ koopa_uninstall_rsync() {
 koopa_uninstall_ruby() {
     koopa_uninstall_app \
         --name='ruby' \
+        "$@"
+}
+
+koopa_uninstall_ruff() {
+    koopa_uninstall_app \
+        --name='ruff' \
         "$@"
 }
 
@@ -23660,6 +23754,12 @@ koopa_uninstall_udunits() {
 koopa_uninstall_units() {
     koopa_uninstall_app \
         --name='units' \
+        "$@"
+}
+
+koopa_uninstall_unzip() {
+    koopa_uninstall_app \
+        --name='unzip' \
         "$@"
 }
 

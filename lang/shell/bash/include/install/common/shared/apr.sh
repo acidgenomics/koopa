@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apache Portable Runtime (APR) library.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-09-01.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/apr.rb
@@ -50,7 +50,10 @@ main() {
 formula-patches/7e2246542543bbd3111a4ec29f801e6e4d538f88/\
 apr/r1871981-macos11.patch" \
             'patch1.patch'
-        "${app['patch']}" -p0 --input='patch1.patch'
+        "${app['patch']}" \
+            --input='patch1.patch' \
+            --strip=0 \
+            --verbose
         # Apply r1882980+1882981 to fix implicit exit() declaration
         # Remove with the next release, along with autoconf dependency.
         koopa_cd ..
@@ -59,7 +62,10 @@ apr/r1871981-macos11.patch" \
 formula-patches/fa29e2e398c638ece1a72e7a4764de108bd09617/apr/\
 r1882980%2B1882981-configure.patch" \
             'patch2.patch'
-        "${app['patch']}" -p0 --input='patch2.patch'
+        "${app['patch']}" \
+            --input='patch2.patch' \
+            --strip=0 \
+            --verbose
         koopa_cd "${dict['name']}-${dict['version']}"
         koopa_rm 'configure'
         # This step requires autoconf, automake, and libtool.

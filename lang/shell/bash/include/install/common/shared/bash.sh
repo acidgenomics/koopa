@@ -74,7 +74,11 @@ ${dict['name']}${dict['mmv_tr']}-[${dict['patch_range']}]"
             koopa_cd ..
             for file in "${dict['patch_prefix']}/"*
             do
-                "${app['patch']}" -p0 --ignore-whitespace --input="$file"
+                "${app['patch']}" \
+                    --ignore-whitespace \
+                    --input="$file" \
+                    --strip=0 \
+                    --verbose
             done
         )
     fi

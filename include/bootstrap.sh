@@ -3,12 +3,12 @@ set -Eeuo pipefail
 
 # """
 # Bootstrap core dependencies on macOS.
-# @note Updated 2022-08-25.
+# @note Updated 2022-09-01.
 # """
 
-TMPDIR="${TMPDIR:-/tmp}"
-PREFIX="${TMPDIR}/koopa-bootstrap"
 JOBS=8
+PREFIX="$(dirname "${BASH_SOURCE[0]}")/../bootstrap"
+TMPDIR="${TMPDIR:-/tmp}"
 
 install_bash() {
     local file name tmp_dir url version
@@ -51,6 +51,7 @@ install_coreutils() {
 }
 
 main() {
+    rm -fr "${PREFIX:?}"
     install_coreutils
     install_bash
 }

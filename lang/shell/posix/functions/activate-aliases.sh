@@ -36,6 +36,7 @@ koopa_activate_aliases() {
     alias k='koopa_alias_k'
     alias kb='koopa_alias_kb'
     alias kdev='koopa_alias_kdev'
+    alias kp='koopa_alias_kp'
     alias l.='l -d .*'
     alias l1='l -1'
     alias l='koopa_alias_l'

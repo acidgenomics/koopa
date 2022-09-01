@@ -3,7 +3,11 @@
 koopa_disk_pct_free() {
     # """
     # Free disk space percentage (on main drive).
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-09-01.
+    #
+    # @examples
+    # > koopa_disk_pct_free '/'
+    # # 48
     # """
     local disk pct_free pct_used
     koopa_assert_has_args_eq "$#" 1
