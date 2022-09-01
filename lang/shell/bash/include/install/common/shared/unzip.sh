@@ -124,7 +124,10 @@ ${dict['name']}/${dict['file']}"
         koopa_cd "${dict['name']}${dict['version2']}"
         for file in '../debian/patches/'*'.patch'
         do
-            "${app['patch']}" --input="$file" --strip=1
+            "${app['patch']}" \
+                --input="$file" \
+                --strip=1 \
+                --verbose
         done
     )
     return 0
