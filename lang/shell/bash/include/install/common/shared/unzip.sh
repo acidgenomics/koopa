@@ -79,7 +79,7 @@ ${dict['file']}"
     "${app['make']}" -f 'unix/Makefile' check
     "${app['make']}" -f 'unix/Makefile' \
         "prefix=${dict['prefix']}" \
-        "MANDIR=${dict['prefix']}/share/man1" \
+        "MANDIR=${dict['prefix']}/share/man/man1" \
         install
     return 0
 }
