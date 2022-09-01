@@ -11011,6 +11011,7 @@ koopa_install_all_apps() {
     pkgs=()
     pkgs+=(
         'zlib'
+        'zstd'
         'openssl1'
         'openssl3'
         'curl'
@@ -11245,7 +11246,6 @@ koopa_install_all_apps() {
         'zellij'
         'zoxide'
         'zsh'
-        'zstd'
     )
     if koopa_is_linux
     then
