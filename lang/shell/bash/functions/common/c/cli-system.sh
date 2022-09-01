@@ -69,7 +69,6 @@ koopa_cli_system() {
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
-        'push-all-app-builds' | \
         'push-app-build' | \
         'reload-shell' | \
         'roff' | \

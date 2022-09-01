@@ -3,7 +3,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-08-25.
+    # @note Updated 2022-09-01.
     # """
     local app bin_arr bool clean_path_arr dict i man1_arr pos
     koopa_assert_has_args "$#"
@@ -258,7 +258,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
                     koopa_alert_is_installed \
                         "${dict['name']}" "${dict['prefix']}"
                 fi
-                return 0
+                return 1
             fi
         fi
         case "${dict['mode']}" in

@@ -3074,7 +3074,7 @@ koopa_brew_upgrade_brews() {
 }
 
 koopa_build_all_apps() {
-    local app dict pkg pkgs
+    local app dict pkg pkgs push_pkgs
     koopa_assert_has_no_args "$#"
     [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
     declare -A app=(
@@ -3259,6 +3259,7 @@ koopa_build_all_apps() {
         'aws-cli'
         'azure-cli'
         'google-cloud-sdk'
+        'autoflake'
         'black'
         'bpytop'
         'flake8'
@@ -3266,13 +3267,15 @@ koopa_build_all_apps() {
         'ipython'
         'isort'
         'latch'
-        'poetry'
         'pipx'
+        'poetry'
+        'pycodestyle'
         'pyflakes'
         'pygments'
-        'ranger-fm'
-        'yt-dlp'
         'pylint'
+        'ranger-fm'
+        'ruff'
+        'yt-dlp'
         'libedit'
         'openssh'
         'c-ares'
@@ -3282,11 +3285,11 @@ koopa_build_all_apps() {
         'node'
         'rust'
         'julia'
-        'bat' # deps: rust
-        'broot' # deps: rust
-        'delta' # deps: rust
-        'difftastic' # deps: rust
-        'dog' # deps: rust
+        'bat'
+        'broot'
+        'delta'
+        'difftastic'
+        'dog'
         'du-dust'
         'exa'
         'fd-find'
@@ -3314,10 +3317,10 @@ koopa_build_all_apps() {
         'bashcov'
         'colorls'
         'ronn'
-        'pyenv' # deps: none.
-        'rbenv' # deps: none.
+        'pyenv'
+        'rbenv'
         'dotfiles'
-        'ensembl-perl-api' # deps: none.
+        'ensembl-perl-api'
         'sra-tools'
         'yarn'
         'asdf'
@@ -3326,40 +3329,41 @@ koopa_build_all_apps() {
         'markdownlint-cli'
         'nmap'
         'rmate'
+        'unzip'
     )
     if ! koopa_is_aarch64
     then
         pkgs+=(
             'anaconda'
-            'bioconda-utils' # deps: conda
             'haskell-stack'
-            'hadolint' # deps: haskell-stack
-            'pandoc' # deps: haskell-stack
-            'bamtools' # deps: conda
-            'bedtools' # deps: conda
-            'bioawk' # deps: conda
-            'bowtie2' # deps: conda
-            'bustools' # deps: conda
-            'deeptools' # deps: conda
-            'entrez-direct' # deps: conda
-            'fastqc' # deps: conda
-            'ffq' # deps: conda
-            'gffutils' # deps: conda
-            'gget' # deps: conda
-            'ghostscript' # deps: conda
-            'gseapy' # deps: conda
-            'hisat2' # deps: conda
-            'htseq' # deps: conda
-            'jupyterlab' # deps: conda
-            'kallisto' # deps: conda
-            'multiqc' # deps: conda
-            'nextflow' # deps: conda
-            'salmon' # deps: conda
-            'sambamba' # deps: conda
-            'samtools' # deps: conda
-            'snakemake' # deps: conda
-            'star' # deps: conda
-            'visidata' # deps: conda
+            'hadolint'
+            'pandoc'
+            'bioconda-utils'
+            'bamtools'
+            'bedtools'
+            'bioawk'
+            'bowtie2'
+            'bustools'
+            'deeptools'
+            'entrez-direct'
+            'fastqc'
+            'ffq'
+            'gffutils'
+            'gget'
+            'ghostscript'
+            'gseapy'
+            'hisat2'
+            'htseq'
+            'jupyterlab'
+            'kallisto'
+            'multiqc'
+            'nextflow'
+            'salmon'
+            'sambamba'
+            'samtools'
+            'snakemake'
+            'star'
+            'visidata'
         )
     fi
     if koopa_is_linux
@@ -3381,8 +3385,15 @@ koopa_build_all_apps() {
         koopa_is_symlink "${dict['opt_prefix']}/${pkg}" && continue
         PATH="${TMPDIR:-/tmp}/koopa-bootstrap/bin:${PATH:-}" \
             "${app['koopa']}" install "$pkg"
+        push_pkgs+=("$pkg")
     done
-    koopa_push_all_app_builds
+    if koopa_is_array_non_empty "${push_pkgs[@]:-}"
+    then
+        for pkg in "${push_pkgs[@]}"
+        do
+            koopa_push_app_build "$pkg"
+        done
+    fi
     return 0
 }
 
@@ -4390,7 +4401,6 @@ koopa_cli_system() {
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
-        'push-all-app-builds' | \
         'push-app-build' | \
         'reload-shell' | \
         'roff' | \
@@ -11531,7 +11541,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
                     koopa_alert_is_installed \
                         "${dict['name']}" "${dict['prefix']}"
                 fi
-                return 0
+                return 1
             fi
         fi
         case "${dict['mode']}" in
@@ -17332,36 +17342,6 @@ koopa_public_ip_address() {
     fi
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
-    return 0
-}
-
-koopa_push_all_app_builds() {
-    local app dict names
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['basename']="$(koopa_locate_basename)"
-        ['grep']="$(koopa_locate_grep)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['basename']}" ]] || return 1
-    [[ -x "${app['grep']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
-    declare -A dict=(
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
-    readarray -t names <<< "$( \
-        koopa_find \
-            --max-depth=1 \
-            --min-depth=1 \
-            --prefix="${dict['opt_prefix']}" \
-            --print0 \
-            --sort \
-            --type='l' \
-        | "${app['xargs']}" -0 -n 1 "${app['basename']}" \
-        | "${app['grep']}" -Ev '^.+-packages$' \
-    )"
-    koopa_assert_is_array_non_empty "${names[@]:-}"
-    koopa_push_app_build "${names[@]}"
     return 0
 }
 
