@@ -71,6 +71,13 @@
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
   },
+  "autoflake": {
+    "bin": ["autoflake"],
+    "conservative": false,
+    "date": "2022-09-01",
+    "dependencies": ["python"],
+    "version": "1.5.3"
+  },
   "automake": {
     "conservative": false,
     "date": "2022-08-29",
@@ -216,8 +223,9 @@
   "black": {
     "bin": ["black"],
     "conservative": false,
+    "date": "2022-09-01",
     "dependencies": ["python"],
-    "version": "22.6.0"
+    "version": "22.8.0"
   },
   "boost": {
     "conservative": true,
@@ -614,8 +622,9 @@
   "delta": {
     "bin": ["delta"],
     "conservative": false,
+    "date": "2022-09-01",
     "url": ["https://github.com/dandavison/delta/"],
-    "version": "0.13.0"
+    "version": "0.14.0"
   },
   "difftastic": {
     "bin": ["difft"],
@@ -639,17 +648,18 @@
   "dotfiles": {
     "conservative": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "f9aef0d016bb088e0e94938f3ee1eca0f108e871"
+    "version": "01a5a258cd9e1ca254864a5d6168c097469c45a2"
   },
   "du-dust": {
     "bin": ["dust"],
     "conservative": false,
+    "date": "2022-09-01",
     "dependencies": ["rust"],
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "0.8.2"
+    "version": "0.8.3"
   },
   "editorconfig": {
     "bin": ["editorconfig"],
@@ -857,9 +867,9 @@
   "gget": {
     "bin": ["gget"],
     "conservative": false,
-    "date": "2022-08-09",
+    "date": "2022-09-01",
     "depends": ["conda"],
-    "version": "0.3.7"
+    "version": "0.3.9"
   },
   "ghostscript": {
     "bin": ["gs"],
@@ -1775,6 +1785,13 @@
     "url": ["https://ftp.gnu.org/gnu/pth/"],
     "version": "2.0.7"
   },
+  "pycodestyle": {
+    "bin": ["pycodestyle"],
+    "conservative": false,
+    "date": "2022-09-01",
+    "dependencies": ["python"],
+    "version": "2.9.1"
+  },
   "pyenv": {
     "bin": ["pyenv"],
     "conservative": true,
@@ -1941,6 +1958,13 @@
     "man1": ["bundle.1", "bundler.1", "gem.1", "ruby.1"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.1.2p20"
+  },
+  "ruff": {
+    "bin": ["ruff"],
+    "conservative": false,
+    "date": "2022-09-01",
+    "dependencies": ["python"],
+    "version": "0.0.23"
   },
   "rust": {
     "bin": [
@@ -2185,6 +2209,16 @@
     "url": ["https://www.gnu.org/software/units/"],
     "version": "2.21"
   },
+  "unzip": {
+    "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
+    "build_dependencies": ["make"],
+    "conservative": true,
+    "date": "2022-09-01",
+    "dependencies": ["bzip2"],
+    "man1": ["funzip.1", "unzip.1", "unzipsfx.1", "zipgrep.1", "zipinfo.1"],
+    "url": ["http://infozip.sourceforge.net/UnZip.html"],
+    "version": "6.0"
+  },
   "utf8proc": {
     "conservative": true,
     "date": "2022-08-30",
@@ -2345,7 +2379,7 @@
     "bin": ["yt-dlp"],
     "conservative": false,
     "depends": ["python"],
-    "version": "2022.8.19"
+    "version": "2022.9.1"
   },
   "zellij": {
     "bin": ["zellij"],

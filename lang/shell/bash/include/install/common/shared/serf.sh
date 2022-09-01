@@ -83,7 +83,11 @@ main() {
  apr = str(env['APR'])
  apu = str(env['APU'])
 END
-    "${app['patch']}" -u 'SConstruct' -i 'patch-sconstruct-1.patch'
+    "${app['patch']}" \
+        --unified \
+        --verbose \
+        'SConstruct' \
+        'patch-sconstruct-1.patch'
     if koopa_is_linux
     then
         # Patch diff created with:
@@ -101,7 +105,11 @@ END
  
  # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
 END
-        "${app['patch']}" -u 'SConstruct' 'patch-sconstruct-2.patch'
+        "${app['patch']}" \
+            --unified \
+            --verbose \
+            'SConstruct' \
+            'patch-sconstruct-2.patch'
     fi
     # Apply OpenSSL compatibility patch.
     # https://www.linuxfromscratch.org/patches/blfs/svn/
@@ -149,7 +157,11 @@ diff -Naurp serf-1.3.9.orig/buckets/ssl_buckets.c serf-1.3.9/buckets/ssl_buckets
  {
      serf_ssl_context_t *ctx = SSL_get_app_data(ssl);
 END
-    "${app['patch']}" -Np1 -i 'patch-openssl3.patch'
+    "${app['patch']}" \
+        --forward \
+        --input='patch-openssl3.patch' \
+        --strip=1 \
+        --verbose
     # Refer to 'SConstruct' file for supported arguments.
     dict['apr']="$(koopa_app_prefix 'apr')"
     dict['apu']="$(koopa_app_prefix 'apr-util')"

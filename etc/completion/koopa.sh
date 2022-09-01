@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-08-28.
+    # Updated 2022-09-01.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -91,6 +91,7 @@ __koopa_complete() {
                         'aspell'
                         'attr'
                         'autoconf'
+                        'autoflake'
                         'automake'
                         'aws-cli'
                         'azure-cli'
@@ -266,6 +267,7 @@ __koopa_complete() {
                         'prettier'
                         'procs'
                         'proj'
+                        'pycodestyle'
                         'pyenv'
                         'pyflakes'
                         'pygments'
@@ -286,6 +288,7 @@ __koopa_complete() {
                         'rsync'
                         'ruby'
                         'ruby-packages'
+                        'ruff'
                         'rust'
                         'salmon'
                         'sambamba'
@@ -315,6 +318,7 @@ __koopa_complete() {
                         'tuc'
                         'udunits'
                         'units'
+                        'unzip'
                         'user'
                         'utf8proc'
                         'vim'
@@ -381,7 +385,6 @@ __koopa_complete() {
                         'log'
                         'os-string'
                         'prefix'
-                        'push-all-app-builds'
                         'push-app-build'
                         'reload-shell'
                         'roff'
