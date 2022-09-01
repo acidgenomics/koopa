@@ -1775,7 +1775,9 @@
   "proj": {
     "bin": ["proj", "projinfo"],
     "conservative": true,
+    "date": "2022-09-01",
     "man1": ["proj.1", "projinfo.1"],
+    "outdated": true,
     "url": ["https://proj.org/"],
     "version": "9.0.1"
   },
