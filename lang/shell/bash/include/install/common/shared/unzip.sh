@@ -76,7 +76,7 @@ ${dict['file']}"
         make_args+=('generic')
     fi
     "${app['make']}" -f 'unix/Makefile' "${make_args[@]}"
-    "${app['make']}" check
+    "${app['make']}" -f 'unix/Makefile' check
     "${app['make']}" \
         "prefix=${dict['prefix']}" \
         "MANDIR=${dict['prefix']}/share/man1" \
