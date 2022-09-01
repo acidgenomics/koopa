@@ -333,10 +333,10 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-01",
     "dependencies": [],
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.21.1"
+    "version": "2.22.0"
   },
   "cloudbiolinux": {
     "check": false,
