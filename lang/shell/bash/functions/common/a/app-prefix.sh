@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to trim git commit to 7 characters.
+
 koopa_app_prefix() {
     # """
     # Application prefix.
@@ -46,15 +48,11 @@ koopa_app_prefix() {
     do
         local prefix version
         version="$(koopa_app_json_version "$app_name" || true)"
-        if [[ -z "$version" ]]
-        then
-            koopa_stop "Unsupported app: '${app_name}'."
-        fi
+        [[ -z "$version" ]] && koopa_stop "Unsupported app: '${app_name}'."
+        # Shorten git commit to 7 characters.
+        [[ "${#version}" == 40 ]] && version="${version:0:7}"
         prefix="${dict['app_prefix']}/${app_name}/${version}"
-        if [[ "${dict['allow_missing']}" -eq 0 ]]
-        then
-            koopa_assert_is_dir "$prefix"
-        fi
+        [[ "${dict['allow_missing']}" -eq 0 ]] && koopa_assert_is_dir "$prefix"
         koopa_print "$prefix"
     done
     return 0

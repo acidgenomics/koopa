@@ -648,7 +648,7 @@
   "dotfiles": {
     "conservative": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "492f10fa2c7e7eef78f0802deb344cb827a0adda"
+    "version": "01a5a258cd9e1ca254864a5d6168c097469c45a2"
   },
   "du-dust": {
     "bin": ["dust"],
