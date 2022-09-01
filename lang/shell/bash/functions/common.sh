@@ -13319,6 +13319,12 @@ koopa_install_units() {
         "$@"
 }
 
+koopa_install_unzip() {
+    koopa_install_app \
+        --name='unzip' \
+        "$@"
+}
+
 koopa_install_user_doom_emacs() {
     koopa_install_app \
         --name='doom-emacs' \
@@ -23660,6 +23666,12 @@ koopa_uninstall_udunits() {
 koopa_uninstall_units() {
     koopa_uninstall_app \
         --name='units' \
+        "$@"
+}
+
+koopa_uninstall_unzip() {
+    koopa_uninstall_app \
+        --name='unzip' \
         "$@"
 }
 
