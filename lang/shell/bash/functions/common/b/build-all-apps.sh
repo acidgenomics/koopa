@@ -9,35 +9,26 @@ koopa_build_all_apps() {
     # Build and install all koopa apps from source.
     # @note Updated 2022-09-01.
     #
-    # The approach calling 'koopa_cli_install' internally on pkgs array
+    # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
-    #
-    # @section Bootstrap workaround for macOS:
-    # > /opt/koopa/include/bootstrap.sh
-    # > PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}"
     # """
-    local app dict pkg pkgs push_pkgs
+    local app_name apps koopa push_apps
     koopa_assert_has_no_args "$#"
     [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
-    declare -A app=(
-        ['koopa']="$(koopa_locate_koopa)"
-    )
-    [[ -x "${app['koopa']}" ]] || return 1
-    declare -A dict=(
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
-    pkgs=()
-    pkgs+=(
+    koopa="$(koopa_locate_koopa)"
+    [[ -x "$koopa" ]] || return 1
+    apps=()
+    apps+=(
         # deps: make (system).
         'pkg-config'
         # deps: make (system).
         'make'
     )
-    koopa_is_linux && pkgs+=(
+    koopa_is_linux && apps+=(
         # deps: make, pkg-config.
         'attr'
     )
-    pkgs+=(
+    apps+=(
         # deps: attr (linux), make.
         'patch'
         # deps: make, pkg-config.
@@ -204,8 +195,8 @@ koopa_build_all_apps() {
         'libksba'
         'npth'
     )
-    koopa_is_linux && pkgs+=('pinentry')
-    pkgs+=(
+    koopa_is_linux && apps+=('pinentry')
+    apps+=(
         'gnupg'
         'grep'
         'groff'
@@ -384,7 +375,7 @@ koopa_build_all_apps() {
     )
     if ! koopa_is_aarch64
     then
-        pkgs+=(
+        apps+=(
             # deps: none.
             'anaconda'
             # deps: none.
@@ -449,7 +440,7 @@ koopa_build_all_apps() {
     fi
     if koopa_is_linux
     then
-        pkgs+=(
+        apps+=(
             # deps: go, pkg-config.
             'apptainer'
             # deps: lua, luarocks, pkg-config, tcl-tk, zlib.
@@ -457,7 +448,7 @@ koopa_build_all_apps() {
         )
         if ! koopa_is_aarch64
         then
-            pkgs+=(
+            apps+=(
                 # deps: none.
                 'aspera-connect'
                 # deps: none.
@@ -465,18 +456,21 @@ koopa_build_all_apps() {
             )
         fi
     fi
-    for pkg in "${pkgs[@]}"
+    for app_name in "${apps[@]}"
     do
-        koopa_is_symlink "${dict['opt_prefix']}/${pkg}" && continue
-        PATH="${TMPDIR:-/tmp}/koopa-bootstrap/bin:${PATH:-}" \
-            "${app['koopa']}" install "$pkg"
-        push_pkgs+=("$pkg")
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        koopa_alert "$prefix"
+        [[ -d "$prefix" ]] && continue
+        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
+            "$koopa" install "$app_name"
+        push_apps+=("$app_name")
     done
-    if koopa_is_array_non_empty "${push_pkgs[@]:-}"
+    if koopa_is_array_non_empty "${push_apps[@]:-}"
     then
-        for pkg in "${push_pkgs[@]}"
+        for app_name in "${push_apps[@]}"
         do
-            koopa_push_app_build "$pkg"
+            koopa_push_app_build "$app_name"
         done
     fi
     return 0

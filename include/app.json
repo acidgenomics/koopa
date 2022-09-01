@@ -2379,7 +2379,7 @@
     "bin": ["yt-dlp"],
     "conservative": false,
     "depends": ["python"],
-    "version": "2022.8.19"
+    "version": "2022.9.1"
   },
   "zellij": {
     "bin": ["zellij"],
