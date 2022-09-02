@@ -8,6 +8,8 @@ koopa_rm() {
     local app dict pos rm rm_args
     declare -A app
     app['rm']="$(koopa_locate_rm --allow-system)"
+    # macOS grm currently has issues with directory deletion.
+    koopa_is_macos && app['mv']='/bin/rm'
     [[ -x "${app['rm']}" ]] || return 1
     declare -A dict
     dict['sudo']=0
