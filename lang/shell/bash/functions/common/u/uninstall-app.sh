@@ -150,6 +150,8 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
         )
         koopa_rm "${dict['tmp_dir']}"
     fi
+    # FIXME This isn't working correctly on macOS clean install with binary
+    # apps...what's up?
     if [[ -d "${dict['prefix']}" ]]
     then
         case "${dict['mode']}" in
@@ -157,6 +159,7 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
                 koopa_rm --sudo "${dict['prefix']}"
                 ;;
             *)
+                set -x # FIXME
                 koopa_rm "${dict['prefix']}"
                 ;;
         esac
