@@ -33,7 +33,9 @@ __koopa_posix_header() {
     fi
     if [ "${KOOPA_ACTIVATE:-0}" -eq 0 ]
     then
-        export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
+        # Intentionally not including '/usr/local/bin' here.
+        # Consider including koopa bootstrap bin for macOS.
+        export PATH='/usr/bin:/bin'
     fi
     # Ensure these are never set (e.g. inside RStudio terminal).
     # > unset -v \
