@@ -36,8 +36,15 @@ __koopa_posix_header() {
             # Intentionally not including '/usr/local/bin' here.
             # Consider including koopa bootstrap bin for macOS.
             export PATH='/usr/bin:/bin'
-            # Ensure these are never set (e.g. inside RStudio terminal).
-            unset -v LD_LIBRARY_PATH PYTHONPATH
+            unset -v \
+                CC \
+                CFLAGS \
+                CPPFLAGS \
+                CXX \
+                LDFLAGS \
+                LD_LIBRARY_PATH \
+                PKG_CONFIG_PATH \
+                PYTHONPATH
             ;;
         '1')
             __koopa_activate_koopa || return 1
