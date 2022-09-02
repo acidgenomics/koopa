@@ -37,7 +37,7 @@ main() {
     local app app_name dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['chflags']="$(koopa_locate_chflags)"
+        ['chflags']="$(koopa_macos_locate_chflags)"
         ['defaults']="$(koopa_macos_locate_defaults)"
         ['kill_all']="$(koopa_macos_locate_kill_all)"
         ['lsregister']="$(koopa_macos_locate_lsregister)"
