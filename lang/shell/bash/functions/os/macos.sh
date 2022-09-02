@@ -671,6 +671,14 @@ koopa_macos_install_system_xcode_clt() {
         "$@"
 }
 
+koopa_macos_install_user_defaults() {
+    koopa_install_app \
+        --name='defaults' \
+        --platform='macos' \
+        --user \
+        "$@"
+}
+
 koopa_macos_list_launch_agents() {
     local app
     koopa_assert_has_no_args "$#"
