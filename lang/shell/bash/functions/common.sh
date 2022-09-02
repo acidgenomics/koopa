@@ -3370,6 +3370,7 @@ koopa_build_all_apps() {
             'salmon'
             'sambamba'
             'samtools'
+            'snakefmt'
             'snakemake'
             'star'
             'visidata'
@@ -11286,6 +11287,7 @@ koopa_install_all_apps() {
             'salmon'
             'sambamba'
             'samtools'
+            'snakefmt'
             'snakemake'
             'sra-tools'
             'star'
@@ -13279,6 +13281,12 @@ koopa_install_shellcheck() {
 koopa_install_shunit2() {
     koopa_install_app \
         --name='shunit2' \
+        "$@"
+}
+
+koopa_install_snakefmt() {
+    koopa_install_app \
+        --name='snakefmt' \
         "$@"
 }
 
@@ -23626,6 +23634,12 @@ koopa_uninstall_shellcheck() {
 koopa_uninstall_shunit2() {
     koopa_uninstall_app \
         --name='shunit2' \
+        "$@"
+}
+
+koopa_uninstall_snakefmt() {
+    koopa_uninstall_app \
+        --name='snakefmt' \
         "$@"
 }
 

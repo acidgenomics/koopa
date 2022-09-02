@@ -2052,6 +2052,13 @@
     "url": ["https://github.com/kward/shunit2/"],
     "version": "2.1.8"
   },
+  "snakefmt": {
+    "bin": ["snakefmt"],
+    "conservative": false,
+    "date": "2022-09-02",
+    "dependencies": ["conda"],
+    "version": "0.6.1"
+  },
   "snakemake": {
     "bin": ["snakemake"],
     "conservative": false,

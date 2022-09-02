@@ -5,7 +5,7 @@
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-09-01.
+    # @note Updated 2022-09-02.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -305,6 +305,7 @@ koopa_install_all_apps() {
             'salmon'
             'sambamba'
             'samtools'
+            'snakefmt'
             'snakemake'
             'sra-tools'
             'star'
