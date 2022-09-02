@@ -22269,7 +22269,6 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
                 koopa_rm --sudo "${dict['prefix']}"
                 ;;
             *)
-                set -x # FIXME
                 koopa_rm "${dict['prefix']}"
                 ;;
         esac
