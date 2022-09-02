@@ -444,21 +444,17 @@ local({  # nolint
             "mc.cores" = cores
         )
     }
-    if (isInstalled("pipette")) {
-        ## Ensure we load and save RDS files from a nested dated directory
-        ## by default.
-        options(
-            "acid.save.ext" = "rds"
-        )
-        options(
-            "acid.save.dir" = file.path(
-                getOption("acid.save.ext"), Sys.Date()
-            )
-        )
-        options(
-            "acid.load.dir" = getOption("acid.save.dir")
-        )
-    }
+    ## > if (isInstalled("pipette")) {
+    ## >     ## Ensure we load and save RDS files from a nested dated
+    ## >     ## directory by default.
+    ## >     options("acid.save.ext" = "rds")
+    ## >     options(
+    ## >         "acid.save.dir" = file.path(
+    ## >             getOption("acid.save.ext"), Sys.Date()
+    ## >         )
+    ## >     )
+    ## >     options("acid.load.dir" = getOption("acid.save.dir"))
+    ## > }
     if (isInstalled("readr")) {
         options(
             "readr.num_columns" = 0L,

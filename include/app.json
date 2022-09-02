@@ -333,10 +333,10 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-01",
     "dependencies": [],
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.21.1"
+    "version": "2.22.0"
   },
   "cloudbiolinux": {
     "check": false,
@@ -1775,7 +1775,9 @@
   "proj": {
     "bin": ["proj", "projinfo"],
     "conservative": true,
+    "date": "2022-09-01",
     "man1": ["proj.1", "projinfo.1"],
+    "outdated": true,
     "url": ["https://proj.org/"],
     "version": "9.0.1"
   },
@@ -2049,6 +2051,13 @@
     "date": "2022-08-30",
     "url": ["https://github.com/kward/shunit2/"],
     "version": "2.1.8"
+  },
+  "snakefmt": {
+    "bin": ["snakefmt"],
+    "conservative": false,
+    "date": "2022-09-02",
+    "dependencies": ["conda"],
+    "version": "0.6.1"
   },
   "snakemake": {
     "bin": ["snakemake"],

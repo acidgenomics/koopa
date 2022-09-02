@@ -615,7 +615,7 @@ koopa_macos_install_aws_cli() {
 }
 
 koopa_macos_install_system_defaults() {
-    koopa_update_app \
+    koopa_install_app \
         --name='defaults' \
         --platform='macos' \
         --system \
@@ -671,6 +671,14 @@ koopa_macos_install_system_xcode_clt() {
         "$@"
 }
 
+koopa_macos_install_user_defaults() {
+    koopa_install_app \
+        --name='defaults' \
+        --platform='macos' \
+        --user \
+        "$@"
+}
+
 koopa_macos_list_launch_agents() {
     local app
     koopa_assert_has_no_args "$#"
@@ -690,6 +698,12 @@ koopa_macos_list_launch_agents() {
 koopa_macos_locate_automount() {
     koopa_locate_app \
         '/usr/sbin/automount' \
+        "$@"
+}
+
+koopa_macos_locate_chflags() {
+    koopa_locate_app \
+        '/usr/bin/chflags' \
         "$@"
 }
 
@@ -751,6 +765,12 @@ koopa_macos_locate_lsregister() {
     koopa_locate_app \
         "/System/Library/Frameworks/CoreServices.framework\
 /Frameworks/LaunchServices.framework/Support/lsregister" \
+        "$@"
+}
+
+koopa_macos_locate_mdutil() {
+    koopa_locate_app \
+        '/usr/bin/mdutil' \
         "$@"
 }
 
@@ -835,6 +855,18 @@ koopa_macos_locate_sw_vers() {
 koopa_macos_locate_sysctl() {
     koopa_locate_app \
         '/usr/sbin/sysctl' \
+        "$@"
+}
+
+koopa_macos_locate_systemsetup() {
+    koopa_locate_app \
+        '/usr/sbin/systemsetup' \
+        "$@"
+}
+
+koopa_macos_locate_tmutil() {
+    koopa_locate_app \
+        '/usr/bin/tmutil' \
         "$@"
 }
 
