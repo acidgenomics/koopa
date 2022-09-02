@@ -44,13 +44,14 @@ main() {
     # >     NetBIOSName -string "$comp_name"
     koopa_alert 'Disabling startup chime on boot.'
     "${app['sudo']}" "${app['nvram']}" SystemAudioVolume=' '
+    # NOTE This doesn't appear to work in 12.5+, so disabling.
     # Reveal IP address, hostname, OS version, etc. when clicking the clock
     # in the login window.
-    koopa_alert 'Enabling admin mode for lock screen (click on the clock).'
-    "${app['sudo']}" "${app['defaults']}" write \
-        '/Library/Preferences/com.apple.loginwindow' \
-        'AdminHostInfo'\
-        'HostName'
+    # > koopa_alert 'Enabling admin mode for lock screen (click on the clock).'
+    # > "${app['sudo']}" "${app['defaults']}" write \
+    # >     '/Library/Preferences/com.apple.loginwindow' \
+    # >     'AdminHostInfo'\
+    # >     'HostName'
     # Locale {{{2
     # --------------------------------------------------------------------------
     # Set the timezone.
