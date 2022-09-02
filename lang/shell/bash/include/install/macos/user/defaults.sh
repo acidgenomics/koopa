@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Tell the user what we're doing here more clearly.
-
 main() {
     # """
     # Install macOS user defaults.
@@ -50,6 +48,9 @@ main() {
     [[ -x "${app['plistbuddy']}" ]] || return 1
     declare -A dict
     dict['screenshots_dir']="${HOME}/Documents/screenshots"
+    koopa_alert_note "If you encounter permission errors when attempting to \
+write defaults, ensure that your terminal app has full disk access enabled." \
+    'System Preferences > Security & Privacy > Privacy > Full Disk Access'
     # General UI/UX {{{2
     # --------------------------------------------------------------------------
     koopa_alert 'General UI/UX'
@@ -1414,13 +1415,15 @@ WebKit2AllowsInlineMediaPlayback" \
         -bool false
     # Final steps {{{2
     # --------------------------------------------------------------------------
-    koopa_alert "Removing duplicates in the 'Open With' menu."
+    # This step is CPU intensive and can cause the fans to kick on for old
+    # Intel Macs, so disabling.
+    # > koopa_alert "Removing duplicates in the 'Open With' menu."
     # See also 'lscleanup' alias.
-    "${app['lsregister']}" \
-        -kill -r \
-        -domain 'local' \
-        -domain 'system' \
-        -domain 'user'
+    # > "${app['lsregister']}" \
+    # >     -kill -r \
+    # >     -domain 'local' \
+    # >     -domain 'system' \
+    # >     -domain 'user'
     # Kill affected apps.
     apps=(
         # > 'Activity Monitor'
