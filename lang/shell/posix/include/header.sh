@@ -40,7 +40,7 @@ __koopa_posix_header() {
             unset -v LD_LIBRARY_PATH PYTHONPATH
             ;;
         '1')
-            __koopa_activate_koopa
+            __koopa_activate_koopa || return 1
             ;;
     esac
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
