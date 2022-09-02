@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-09-01.
+    # Updated 2022-09-02.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -484,6 +484,10 @@ __koopa_complete() {
                                 'spacemacs'
                                 'spacevim'
                             )
+                            if koopa_is_macos
+                            then
+                                args+=('defaults')
+                            fi
                             ;;
                         esac
                         ;;
