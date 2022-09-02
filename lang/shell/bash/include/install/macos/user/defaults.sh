@@ -52,6 +52,7 @@ main() {
     dict['screenshots_dir']="${HOME}/Documents/screenshots"
     # General UI/UX {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'General UI/UX'
     # Reduce motion.
     "${app['defaults']}" write \
         'com.apple.universalaccess' \
@@ -215,6 +216,7 @@ main() {
         '.001'
     # Dock, Dashboard, and hot corners {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Dock, Dashboard, and hot corners'
     # Enable highlight hover effect for the grid view of a stack (Dock).
     "${app['defaults']}" write \
         'com.apple.dock' \
@@ -372,6 +374,7 @@ main() {
         -int 0
     # Keyboard, mouse, trackpad, and other input {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Keyboard, mouse, trackpad, and other input'
     # Tracking speed {{{3
     # --------------------------------------------------------------------------
     # Set the tracking speed.
@@ -683,6 +686,7 @@ main() {
     # >     -int 40
     # Screen {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Screen'
     # Require password immediately after sleep or screen saver begins.
     "${app['defaults']}" write \
         'com.apple.screensaver' \
@@ -705,6 +709,7 @@ main() {
         -int 0
     # Screenshots {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Screenshots'
     # Set the default screenshot name prefix.
     "${app['defaults']}" write \
         'com.apple.screencapture' \
@@ -748,6 +753,7 @@ main() {
         -bool false
     # Finder {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Finder'
     # Allow the Finder to quit. Doing so will also hide desktop icons.
     # > "${app['defaults']}" write \
     # >     'com.apple.finder' \
@@ -953,6 +959,7 @@ main() {
             'Privileges' -bool true
     # Mac App Store {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Mac App Store'
     # Enable the WebKit Developer Tools in the Mac App Store.
     "${app['defaults']}" write \
         'com.apple.appstore' \
@@ -1000,6 +1007,7 @@ main() {
         -int 7
     # Activity Monitor {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Activity Monitor'
     # Show the main window when launching Activity Monitor.
     "${app['defaults']}" write \
         'com.apple.ActivityMonitor' \
@@ -1026,6 +1034,7 @@ main() {
         -int 0
     # Disk Utility {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Disk Utility'
     # Enable the debug menu in Disk Utility.
     "${app['defaults']}" write \
         'com.apple.DiskUtility' \
@@ -1037,6 +1046,7 @@ main() {
         -bool true
     # Time Machine {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Time Machine'
     # Prevent Time Machine from prompting to use new hard drives as backup.
     "${app['defaults']}" write \
         'com.apple.TimeMachine' \
@@ -1044,6 +1054,7 @@ main() {
         -bool true
     # Safari {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Safari'
     # Check the defaults with 'defaults read -app Safari'.
     # Privacy: don't send search queries to Apple.
     "${app['defaults']}" write \
@@ -1229,6 +1240,7 @@ WebKit2AllowsInlineMediaPlayback" \
         -bool false
     # Mail {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Mail'
     # Disable send and reply animations in Mail.app.
     "${app['defaults']}" write \
         'com.apple.mail' \
@@ -1274,6 +1286,7 @@ WebKit2AllowsInlineMediaPlayback" \
         -string 'NoSpellCheckingEnabled'
     # Terminal {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Terminal'
     # Only use UTF-8 in Terminal.app.
     "${app['defaults']}" write \
         'com.apple.terminal' \
@@ -1290,15 +1303,9 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.apple.Terminal' \
         'ShowLineMarks' \
         -int 0
-    # iTerm {{{2
-    # --------------------------------------------------------------------------
-    # Don't display the annoying prompt when quitting iTerm.
-    "${app['defaults']}" write \
-        'com.googlecode.iterm2' \
-        'PromptOnQuit' \
-        -bool false
     # Messages {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Messages'
     # Disable automatic emoji substitution (i.e. use plain text smileys).
     "${app['defaults']}" write \
         'com.apple.messageshelper.MessageController' \
@@ -1319,6 +1326,7 @@ WebKit2AllowsInlineMediaPlayback" \
         -bool false
     # Photos {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Photos'
     # Prevent Photos from opening automatically when devices are plugged in.
     "${app['defaults']}" -currentHost write \
         'com.apple.ImageCapture' \
@@ -1326,6 +1334,7 @@ WebKit2AllowsInlineMediaPlayback" \
         -bool true
     # TextEdit {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'TextEdit'
     # Use plain text mode for new TextEdit documents.
     "${app['defaults']}" write \
         'com.apple.TextEdit' \
@@ -1340,8 +1349,9 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.apple.TextEdit' \
         'PlainTextEncodingForWrite' \
         -int 4
-    # Google Chrome and Google Chrome Canary {{{2
+    # Google Chrome (and Google Chrome Canary) {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Google Chrome'
     # Disable the all too sensitive backswipe on trackpads.
     "${app['defaults']}" write \
         'com.google.Chrome' \
@@ -1380,6 +1390,7 @@ WebKit2AllowsInlineMediaPlayback" \
         -bool true
     # GPGMail {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'GPGMail'
     # Disable signing emails by default.
     "${app['defaults']}" write \
         "${HOME}/Library/Preferences/org.gpgtools.gpgmail" \
@@ -1387,14 +1398,24 @@ WebKit2AllowsInlineMediaPlayback" \
         -bool false
     # Tweetbot {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Tweetbot'
     # Bypass the annoyingly slow t.co URL shortener.
     "${app['defaults']}" write \
         'com.tapbots.TweetbotMac' \
         'OpenURLsDirectly' \
         -bool true
+    # iTerm {{{2
+    # --------------------------------------------------------------------------
+    koopa_alert 'iTerm'
+    # Don't display the annoying prompt when quitting iTerm.
+    "${app['defaults']}" write \
+        'com.googlecode.iterm2' \
+        'PromptOnQuit' \
+        -bool false
     # Final steps {{{2
     # --------------------------------------------------------------------------
-    # Remove duplicates in the 'Open With' menu (also see 'lscleanup' alias).
+    koopa_alert "Removing duplicates in the 'Open With' menu."
+    # See also 'lscleanup' alias.
     "${app['lsregister']}" \
         -kill -r \
         -domain 'local' \
@@ -1402,14 +1423,24 @@ WebKit2AllowsInlineMediaPlayback" \
         -domain 'user'
     # Kill affected apps.
     apps=(
+        # > 'Activity Monitor'
+        # > 'Disk Utility'
+        # > 'GPGMail'
         # > 'Google Chrome'
+        # > 'Mail'
+        # > 'Messages'
+        # > 'Photos'
+        # > 'Safari'
+        # > 'Terminal'
+        # > 'Time Machine'
         # > 'Tweetbot'
-        'Activity Monitor'
+        # > 'iTerm'
         'Dock'
         'Finder'
         'SystemUIServer'
         'cfprefsd'
     )
+    koopa_alert "Reloading affected apps: $(koopa_to_string "${apps[@]}")"
     for app_name in "${apps[@]}"
     do
         "${app['kill_all']}" "${app_name}" &>/dev/null || true
