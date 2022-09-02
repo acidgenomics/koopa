@@ -81,12 +81,6 @@ main() {
     "${app['sudo']}" "${app['chflags']}" nohidden '/Volumes'
     # Spotlight {{{2
     # --------------------------------------------------------------------------
-    # Disable Spotlight indexing for any volume that gets mounted and has not
-    # yet been indexed before.
-    "${app['sudo']}" "${app['defaults']}" write \
-        '/.Spotlight-V100/VolumeConfiguration' \
-        'Exclusions' \
-        -array '/Volumes'
     # Load new settings before rebuilding the index.
     # > "${app['killall']" 'mds' > /dev/null 2>&1
     # Ensure indexing is disabled for the main volume.
