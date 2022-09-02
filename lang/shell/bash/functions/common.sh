@@ -22126,6 +22126,7 @@ koopa_uninstall_anaconda() {
 }
 
 koopa_uninstall_app() {
+    set -x # FIXME
     local bin_arr bool dict man1_arr
     declare -A bool=(
         ['quiet']=0
