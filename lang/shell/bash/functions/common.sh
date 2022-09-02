@@ -11066,7 +11066,6 @@ koopa_install_all_apps() {
         'du-dust'
         'editorconfig'
         'emacs'
-        'ensembl-perl-api'
         'entrez-direct'
         'exa'
         'exiftool'
@@ -11269,6 +11268,7 @@ koopa_install_all_apps() {
             'bowtie2'
             'bustools'
             'deeptools'
+            'ensembl-perl-api'
             'fastqc'
             'ffq'
             'gffutils'
@@ -18950,6 +18950,7 @@ koopa_rm() {
     else
         rm=("${app['rm']}")
     fi
+    set -x # FIXME
     "${rm[@]}" "${rm_args[@]}" "$@"
     return 0
 }

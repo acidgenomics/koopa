@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This now isn't working because of lack of '-fr' flag to koopa_rm?
+
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
