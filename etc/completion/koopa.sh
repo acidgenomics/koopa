@@ -298,6 +298,7 @@ __koopa_complete() {
                         'serf'
                         'shellcheck'
                         'shunit2'
+                        'snakefmt'
                         'snakemake'
                         'sox'
                         'sqlite'
