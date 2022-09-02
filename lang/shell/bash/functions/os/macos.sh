@@ -844,6 +844,18 @@ koopa_macos_locate_sysctl() {
         "$@"
 }
 
+koopa_macos_locate_systemsetup() {
+    koopa_locate_app \
+        '/usr/sbin/systemsetup' \
+        "$@"
+}
+
+koopa_macos_locate_tmutil() {
+    koopa_locate_app \
+        '/usr/bin/tmutil' \
+        "$@"
+}
+
 koopa_macos_locate_xattr() {
     koopa_locate_app \
         '/usr/bin/xattr' \
