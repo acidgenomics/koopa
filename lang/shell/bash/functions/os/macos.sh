@@ -615,7 +615,7 @@ koopa_macos_install_aws_cli() {
 }
 
 koopa_macos_install_system_defaults() {
-    koopa_update_app \
+    koopa_install_app \
         --name='defaults' \
         --platform='macos' \
         --system \
@@ -690,6 +690,12 @@ koopa_macos_list_launch_agents() {
 koopa_macos_locate_automount() {
     koopa_locate_app \
         '/usr/sbin/automount' \
+        "$@"
+}
+
+koopa_macos_locate_chflags() {
+    koopa_locate_app \
+        '/usr/bin/chflags' \
         "$@"
 }
 
