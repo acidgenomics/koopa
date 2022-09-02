@@ -3,7 +3,7 @@
 koopa_ln() {
     # """
     # Hardened version of coreutils ln (symbolic link generator).
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-09-02.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     # """
@@ -62,7 +62,7 @@ koopa_ln() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    ln_args=('-fns')
+    ln_args=('-fnsv')
     ln_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then

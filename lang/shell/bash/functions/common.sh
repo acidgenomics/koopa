@@ -5779,7 +5779,7 @@ koopa_cp() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    cp_args=('-af')
+    cp_args=('-afv')
     [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
     cp_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
@@ -15193,7 +15193,7 @@ koopa_ln() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    ln_args=('-fns')
+    ln_args=('-fnsv')
     ln_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
@@ -16947,7 +16947,7 @@ koopa_mv() {
         mv=("${app['mv']}")
         rm=("${app['rm']}")
     fi
-    mv_args=('-f')
+    mv_args=('-fv')
     mv_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
@@ -18941,7 +18941,7 @@ koopa_rm() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    rm_args=('-fr')
+    rm_args=('-frv')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
