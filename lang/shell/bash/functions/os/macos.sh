@@ -768,6 +768,12 @@ koopa_macos_locate_lsregister() {
         "$@"
 }
 
+koopa_macos_locate_mdutil() {
+    koopa_locate_app \
+        '/usr/bin/mdutil' \
+        "$@"
+}
+
 koopa_macos_locate_mount_nfs() {
     koopa_locate_app \
         '/sbin/mount_nfs' \

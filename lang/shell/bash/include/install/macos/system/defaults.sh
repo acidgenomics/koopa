@@ -14,22 +14,24 @@ main() {
         ['chflags']="$(koopa_macos_locate_chflags)"
         ['defaults']="$(koopa_macos_locate_defaults)"
         ['kill_all']="$(koopa_macos_locate_kill_all)"
+        ['mdutil']="$(koopa_macos_locate_mdutil)"
         ['nvram']="$(koopa_macos_locate_nvram)"
         ['pmset']="$(koopa_macos_locate_pmset)"
         # > ['scutil']="$(koopa_macos_locate_scutil)"
         ['sudo']="$(koopa_locate_sudo)"
         # > ['systemsetup']="$(koopa_macos_locate_systemsetup)"
-        # > ['tmutil']="$(koopa_macos_locate_tmutil)"
+        ['tmutil']="$(koopa_macos_locate_tmutil)"
     )
     [[ -x "${app['chflags']}" ]] || return 1
     [[ -x "${app['defaults']}" ]] || return 1
     [[ -x "${app['kill_all']}" ]] || return 1
+    [[ -x "${app['mdutil']}" ]] || return 1
     [[ -x "${app['nvram']}" ]] || return 1
     [[ -x "${app['pmset']}" ]] || return 1
     # > [[ -x "${app['scutil']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     # > [[ -x "${app['systemsetup']}" ]] || return 1
-    # > [[ -x "${app['tmutil']}" ]] || return 1
+    [[ -x "${app['tmutil']}" ]] || return 1
     # Startup and Lock Screen {{{2
     # --------------------------------------------------------------------------
     # For reference, here's how to set computer name from the command line.
@@ -40,10 +42,11 @@ main() {
     # > "${app['sudo']}" "${app['defaults']}" write \
     # >     /Library/Preferences/SystemConfiguration/com.apple.smb.server \
     # >     NetBIOSName -string "$comp_name"
-    # Disable the chime on boot.
+    koopa_alert 'Disabling startup chime on boot.'
     "${app['sudo']}" "${app['nvram']}" SystemAudioVolume=' '
     # Reveal IP address, hostname, OS version, etc. when clicking the clock
     # in the login window.
+    koopa_alert 'Enabling admin mode for lock screen (click on the clock).'
     "${app['sudo']}" "${app['defaults']}" write \
         '/Library/Preferences/com.apple.loginwindow' \
         'AdminHostInfo'\
@@ -62,6 +65,7 @@ main() {
     # >     -bool true
     # Power management {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Configuring power management.'
     # How to restore power management defaults.
     # > "${app['pmset']}" -c 2 -b 1 -u 1
     # Sleep the display after 15 minutes when connected to power.
@@ -77,23 +81,26 @@ main() {
     # >     -bool true
     # Finder {{{2
     # --------------------------------------------------------------------------
-    # Show the '/Volumes' folder.
+    koopa_alert "Enabling visibility of '/Volumes' in Finder."
     "${app['sudo']}" "${app['chflags']}" nohidden '/Volumes'
     # Spotlight {{{2
     # --------------------------------------------------------------------------
+    koopa_alert 'Disabling Spotlight.'
     # Load new settings before rebuilding the index.
     # > "${app['killall']" 'mds' > /dev/null 2>&1
     # Ensure indexing is disabled for the main volume.
     "${app['sudo']}" "${app['mdutil']}" -i off '/'
     # For reference, how to rebuild the index from scratch.
-    # > "${app['sudo']}" "${app['mdutil']}" -E '/' > /dev/null
+    # > "${app['sudo']}" "${app['mdutil']}" -E '/'
+    # > "${app['mdutil']}" -s '/'
     # Hide Spotlight tray-icon (and subsequent helper).
     # > koopa_chmod --sudo '0600' \
     # >     '/System/Library/CoreServices/Search.bundle/Contents/MacOS/Search'
     # Time Machine {{{2
     # --------------------------------------------------------------------------
-    # Disable local Time Machine backups.
-    "${app['sudo']}" "${app['tmutil']}" disablelocal
+    koopa_alert 'Disabling Time Machine backups.'
+    "${app['sudo']}" "${app['tmutil']}" disable
+    "${app['tmutil']}" listlocalsnapshotdates '/'
     koopa_alert_note 'Some of these changes require logout to take effect.'
     return 0
 }
