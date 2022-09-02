@@ -3,7 +3,7 @@
 koopa_mv() {
     # """
     # Move a file or directory with GNU mv.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-09-03.
     #
     # The '-t' flag is not supported for BSD variant.
     #
@@ -71,7 +71,7 @@ koopa_mv() {
         mv=("${app['mv']}")
         rm=("${app['rm']}")
     fi
-    mv_args=('-f')
+    mv_args=('-fv')
     mv_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then

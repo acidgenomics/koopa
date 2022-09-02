@@ -53,12 +53,12 @@ __koopa_unlink_in_dir() {
         then
             if [[ -L "$file" ]]
             then
-                koopa_alert "Unlinking '${file}'."
+                # > koopa_alert "Unlinking '${file}'."
                 koopa_rm "$file"
             fi
         else
             koopa_assert_is_symlink "$file"
-            koopa_alert "Unlinking '${file}'."
+            # > koopa_alert "Unlinking '${file}'."
             koopa_rm "$file"
         fi
     done

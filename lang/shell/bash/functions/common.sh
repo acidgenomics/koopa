@@ -329,7 +329,6 @@ __koopa_link_in_dir() {
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     dict['target']="${dict['prefix']}/${dict['name']}"
     koopa_assert_is_existing "${dict['source']}"
-    koopa_alert "Linking '${dict['source']}' -> '${dict['target']}'."
     koopa_sys_ln "${dict['source']}" "${dict['target']}"
     return 0
 }
@@ -521,12 +520,10 @@ __koopa_unlink_in_dir() {
         then
             if [[ -L "$file" ]]
             then
-                koopa_alert "Unlinking '${file}'."
                 koopa_rm "$file"
             fi
         else
             koopa_assert_is_symlink "$file"
-            koopa_alert "Unlinking '${file}'."
             koopa_rm "$file"
         fi
     done
@@ -3373,6 +3370,7 @@ koopa_build_all_apps() {
             'salmon'
             'sambamba'
             'samtools'
+            'snakefmt'
             'snakemake'
             'star'
             'visidata'
@@ -5779,7 +5777,7 @@ koopa_cp() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    cp_args=('-af')
+    cp_args=('-afv')
     [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
     cp_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
@@ -11066,7 +11064,6 @@ koopa_install_all_apps() {
         'du-dust'
         'editorconfig'
         'emacs'
-        'ensembl-perl-api'
         'entrez-direct'
         'exa'
         'exiftool'
@@ -11269,6 +11266,7 @@ koopa_install_all_apps() {
             'bowtie2'
             'bustools'
             'deeptools'
+            'ensembl-perl-api'
             'fastqc'
             'ffq'
             'gffutils'
@@ -11289,6 +11287,7 @@ koopa_install_all_apps() {
             'salmon'
             'sambamba'
             'samtools'
+            'snakefmt'
             'snakemake'
             'sra-tools'
             'star'
@@ -11750,6 +11749,10 @@ man1/${dict2['name']}"
                     done
                 fi
             fi
+            if [[ "${bool['push']}" -eq 1 ]]
+            then
+                koopa_push_app_build "${dict['name']}"
+            fi
             ;;
         'system')
             if [[ "${bool['update_ldconfig']}" -eq 1 ]]
@@ -11758,17 +11761,12 @@ man1/${dict2['name']}"
             fi
             ;;
         'user')
-            koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
+            if [[ -d "${dict['prefix']}" ]]
+            then
+                koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
+            fi
             ;;
     esac
-    if [[ "${bool['push']}" -eq 1 ]]
-    then
-        [[ "${dict['mode']}" == 'shared' ]] || return 1
-        koopa_assert_is_set \
-            '--name' "${dict['name']}" \
-            '--prefix' "${dict['prefix']}"
-        koopa_push_app_build "${dict['name']}"
-    fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
         if [[ -n "${dict['prefix']}" ]]
@@ -13283,6 +13281,12 @@ koopa_install_shellcheck() {
 koopa_install_shunit2() {
     koopa_install_app \
         --name='shunit2' \
+        "$@"
+}
+
+koopa_install_snakefmt() {
+    koopa_install_app \
+        --name='snakefmt' \
         "$@"
 }
 
@@ -14958,8 +14962,6 @@ koopa_link_dotfile() {
         koopa_alert_note "Exists and not symlink: '${dict['symlink_path']}'."
         return 0
     fi
-    koopa_alert "Linking dotfile from '${dict['source_path']}' \
-to '${dict['symlink_path']}'."
     dict['symlink_dirname']="$(koopa_dirname "${dict['symlink_path']}")"
     if [[ "${dict['symlink_dirname']}" != "${HOME:?}" ]]
     then
@@ -15046,7 +15048,6 @@ koopa_link_in_make() {
 into '${dict['make_prefix']}'."
     fi
     koopa_assert_is_existing "${files_arr[@]}"
-    koopa_alert "Linking '${dict['app_prefix']}' in '${dict['make_prefix']}'."
     koopa_sys_set_permissions --recursive "${dict['app_prefix']}"
     koopa_delete_broken_symlinks "${dict['app_prefix']}"
     cp_args=('--symbolic-link')
@@ -15194,7 +15195,7 @@ koopa_ln() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    ln_args=('-fns')
+    ln_args=('-fnsv')
     ln_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
@@ -16948,7 +16949,7 @@ koopa_mv() {
         mv=("${app['mv']}")
         rm=("${app['rm']}")
     fi
-    mv_args=('-f')
+    mv_args=('-fv')
     mv_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
@@ -22625,7 +22626,7 @@ koopa_uninstall_ensembl_perl_api() {
 }
 
 koopa_uninstall_entrez_direct() {
-    koopa_install_app \
+    koopa_uninstall_app \
         --name='entrez-direct' \
         "$@"
 }
@@ -23633,6 +23634,12 @@ koopa_uninstall_shellcheck() {
 koopa_uninstall_shunit2() {
     koopa_uninstall_app \
         --name='shunit2' \
+        "$@"
+}
+
+koopa_uninstall_snakefmt() {
+    koopa_uninstall_app \
+        --name='snakefmt' \
         "$@"
 }
 
