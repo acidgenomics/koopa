@@ -7,7 +7,7 @@
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-09-01.
+    # @note Updated 2022-09-02.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -430,6 +430,8 @@ koopa_build_all_apps() {
             'sambamba'
             # deps: conda.
             'samtools'
+            # deps: conda.
+            'snakefmt'
             # deps: conda.
             'snakemake'
             # deps: conda.

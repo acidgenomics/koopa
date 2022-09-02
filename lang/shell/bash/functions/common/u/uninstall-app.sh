@@ -3,7 +3,7 @@
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2022-08-25.
+    # @note Updated 2022-09-02.
     # """
     local bin_arr bool dict man1_arr
     declare -A bool=(

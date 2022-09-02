@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Need to get koopa to install from scratch on macOS using bootstrap script.
+    Consider putting the bootstrap bin path in koopa bash header.
+** TODO Consider hardening PATH in koopa bash header to /usr/bin and /bin only.
 ** TODO Create a recipe solver that walks across the JSON file and puts all apps in order of installation automatically.
 ** TODO grep alias is messing up if grep isn't installed.
     only alias grep if ggrep is installed
