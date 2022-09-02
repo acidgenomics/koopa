@@ -7,6 +7,7 @@ koopa_uninstall_app() {
     # Uninstall an application.
     # @note Updated 2022-08-25.
     # """
+    set -x # FIXME
     local bin_arr bool dict man1_arr
     declare -A bool=(
         ['quiet']=0
