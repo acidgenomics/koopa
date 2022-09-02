@@ -42,7 +42,6 @@ koopa_rm() {
     else
         rm=("${app['rm']}")
     fi
-    set -x # FIXME
     "${rm[@]}" "${rm_args[@]}" "$@"
     return 0
 }
