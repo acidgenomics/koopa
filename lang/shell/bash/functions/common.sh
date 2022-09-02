@@ -18912,7 +18912,7 @@ koopa_rm() {
     local app dict pos rm rm_args
     declare -A app
     app['rm']="$(koopa_locate_rm --allow-system)"
-    koopa_is_macos && app['mv']='/bin/rm'
+    koopa_is_macos && app['rm']='/bin/rm'
     [[ -x "${app['rm']}" ]] || return 1
     declare -A dict
     dict['sudo']=0
