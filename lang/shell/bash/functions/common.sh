@@ -11750,6 +11750,10 @@ man1/${dict2['name']}"
                     done
                 fi
             fi
+            if [[ "${bool['push']}" -eq 1 ]]
+            then
+                koopa_push_app_build "${dict['name']}"
+            fi
             ;;
         'system')
             if [[ "${bool['update_ldconfig']}" -eq 1 ]]
@@ -11758,17 +11762,12 @@ man1/${dict2['name']}"
             fi
             ;;
         'user')
-            koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
+            if [[ -d "${dict['prefix']}" ]]
+            then
+                koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
+            fi
             ;;
     esac
-    if [[ "${bool['push']}" -eq 1 ]]
-    then
-        [[ "${dict['mode']}" == 'shared' ]] || return 1
-        koopa_assert_is_set \
-            '--name' "${dict['name']}" \
-            '--prefix' "${dict['prefix']}"
-        koopa_push_app_build "${dict['name']}"
-    fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
         if [[ -n "${dict['prefix']}" ]]
