@@ -81,8 +81,8 @@ koopa_link_dotfile() {
         koopa_alert_note "Exists and not symlink: '${dict['symlink_path']}'."
         return 0
     fi
-    koopa_alert "Linking dotfile from '${dict['source_path']}' \
-to '${dict['symlink_path']}'."
+    # > koopa_alert "Linking dotfile from '${dict['source_path']}' \
+# > to '${dict['symlink_path']}'."
     dict['symlink_dirname']="$(koopa_dirname "${dict['symlink_path']}")"
     if [[ "${dict['symlink_dirname']}" != "${HOME:?}" ]]
     then
