@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Can we write a default to organize System Preferences alphabetically.
+# This likely will break in the macOS 13 release.
+
 main() {
     # """
     # Install macOS user defaults.
