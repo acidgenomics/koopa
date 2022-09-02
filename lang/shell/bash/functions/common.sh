@@ -329,7 +329,6 @@ __koopa_link_in_dir() {
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     dict['target']="${dict['prefix']}/${dict['name']}"
     koopa_assert_is_existing "${dict['source']}"
-    koopa_alert "Linking '${dict['source']}' -> '${dict['target']}'."
     koopa_sys_ln "${dict['source']}" "${dict['target']}"
     return 0
 }
@@ -521,12 +520,10 @@ __koopa_unlink_in_dir() {
         then
             if [[ -L "$file" ]]
             then
-                koopa_alert "Unlinking '${file}'."
                 koopa_rm "$file"
             fi
         else
             koopa_assert_is_symlink "$file"
-            koopa_alert "Unlinking '${file}'."
             koopa_rm "$file"
         fi
     done
@@ -14957,8 +14954,6 @@ koopa_link_dotfile() {
         koopa_alert_note "Exists and not symlink: '${dict['symlink_path']}'."
         return 0
     fi
-    koopa_alert "Linking dotfile from '${dict['source_path']}' \
-to '${dict['symlink_path']}'."
     dict['symlink_dirname']="$(koopa_dirname "${dict['symlink_path']}")"
     if [[ "${dict['symlink_dirname']}" != "${HOME:?}" ]]
     then
@@ -15045,7 +15040,6 @@ koopa_link_in_make() {
 into '${dict['make_prefix']}'."
     fi
     koopa_assert_is_existing "${files_arr[@]}"
-    koopa_alert "Linking '${dict['app_prefix']}' in '${dict['make_prefix']}'."
     koopa_sys_set_permissions --recursive "${dict['app_prefix']}"
     koopa_delete_broken_symlinks "${dict['app_prefix']}"
     cp_args=('--symbolic-link')
