@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
-# FIXME This now isn't working because of lack of '-fr' flag to koopa_rm?
-
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2022-08-25.
+    # @note Updated 2022-09-02.
     # """
-    set -x # FIXME
     local bin_arr bool dict man1_arr
     declare -A bool=(
         ['quiet']=0

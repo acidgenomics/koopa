@@ -18950,7 +18950,6 @@ koopa_rm() {
     else
         rm=("${app['rm']}")
     fi
-    set -x # FIXME
     "${rm[@]}" "${rm_args[@]}" "$@"
     return 0
 }
@@ -22126,7 +22125,6 @@ koopa_uninstall_anaconda() {
 }
 
 koopa_uninstall_app() {
-    set -x # FIXME
     local bin_arr bool dict man1_arr
     declare -A bool=(
         ['quiet']=0
@@ -22626,7 +22624,7 @@ koopa_uninstall_ensembl_perl_api() {
 }
 
 koopa_uninstall_entrez_direct() {
-    koopa_install_app \
+    koopa_uninstall_app \
         --name='entrez-direct' \
         "$@"
 }
