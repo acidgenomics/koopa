@@ -3,13 +3,12 @@
 koopa_rm() {
     # """
     # Remove files/directories quietly with GNU rm.
-    # @note Updated 2022-08-31.
+    # @note Updated 2022-09-02.
     # """
     local app dict pos rm rm_args
     declare -A app
     app['rm']="$(koopa_locate_rm --allow-system)"
-    # macOS grm currently has issues with directory deletion.
-    koopa_is_macos && app['rm']='/bin/rm'
+    # > koopa_is_macos && app['rm']='/bin/rm'
     [[ -x "${app['rm']}" ]] || return 1
     declare -A dict
     dict['sudo']=0
@@ -35,7 +34,8 @@ koopa_rm() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    rm_args=('-frv')
+    # Usage of '-v' is too verbose.
+    rm_args=('-fr')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"

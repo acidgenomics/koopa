@@ -18912,7 +18912,6 @@ koopa_rm() {
     local app dict pos rm rm_args
     declare -A app
     app['rm']="$(koopa_locate_rm --allow-system)"
-    koopa_is_macos && app['rm']='/bin/rm'
     [[ -x "${app['rm']}" ]] || return 1
     declare -A dict
     dict['sudo']=0
@@ -18936,7 +18935,7 @@ koopa_rm() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    rm_args=('-frv')
+    rm_args=('-fr')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
