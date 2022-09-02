@@ -3,7 +3,7 @@
 main() {
     # """
     # Install macOS defaults.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-09-02.
     #
     # Tested to work on macOS Big Sur.
     #
@@ -32,6 +32,7 @@ main() {
     # - https://apple.stackexchange.com/questions/14001/
     # - https://github.com/tech-otaku/macos-config-big-sur/blob/
     #       main/macos-config.sh
+    # - https://github.com/hkloudou/macstarter/blob/main/system/screenshot.sh
     # """
     local app app_name dict
     koopa_assert_has_no_args "$#"
@@ -386,11 +387,11 @@ main() {
     "${app['defaults']}" write 'com.apple.dock' \
         'wvous-tr-modifier' \
         -int 0
-    # Bottom left screen corner: Put display to sleep.
+    # Bottom left screen corner: Lock Screen.
     "${app['defaults']}" write \
         'com.apple.dock' \
         'wvous-bl-corner' \
-        -int 10
+        -int 13
     "${app['defaults']}" write \
         'com.apple.dock' \
         'wvous-bl-modifier' \
@@ -750,32 +751,54 @@ main() {
         'NSGlobalDomain' \
         'AppleFontSmoothing' \
         -int 0
-    # Set the default screenshot name prefix.
-    "${app['defaults']}" write \
-        'com.apple.screencapture' \
-        'name' \
-        -string 'Screenshot'
-    # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF).
-    "${app['defaults']}" write \
-        'com.apple.screencapture' \
-        'type' \
-        -string 'png'
-    # Disable shadow in screenshots.
-    "${app['defaults']}" write \
-        'com.apple.screencapture' \
-        'disable-shadow' \
-        -bool true
-    # Save screenshots into Documents, instead of Desktop.
-    koopa_mkdir "${dict['screenshots_dir']}"
-    "${app['defaults']}" write \
-        'com.apple.screencapture' \
-        'location' \
-        "${dict['screenshots_dir']}"
     # Enable HiDPI display modes (requires restart).
     # > sudo defaults write \
     # >     '/Library/Preferences/com.apple.windowserver' \
     # >     'DisplayResolutionEnabled' \
     # >     -bool true
+    # Screenshots {{{2
+    # --------------------------------------------------------------------------
+    # Set the default screenshot name prefix.
+    "${app['defaults']}" write \
+        'com.apple.screencapture' \
+        'name' \
+        -string 'Screenshot'
+    # Include date in screenshot file name. There's no way to customize
+    # currently (e.g. to 'YYYY-MM-DD-HH-MM-SS'). The current default
+    # ('YYYY-MM-DD at hh:mm:ss a') is not ideal.
+    "${app['defaults']}" write \
+        'com.apple.screencapture' \
+        'include-date' \
+        -bool true
+    # Don't clutter the desktop with screenshots.
+    koopa_mkdir "${dict['screenshots_dir']}"
+    "${app['defaults']}" write \
+        'com.apple.screencapture' \
+        'location' \
+        "${dict['screenshots_dir']}"
+    # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF).
+    "${app['defaults']}" write \
+        'com.apple.screencapture' \
+        'type' \
+        -string 'png'
+    # Hide the mouse pointer in screenshots.
+    "${app['defaults']}" write \
+        'com.apple.screencapture' \
+        'showsCursor' \
+        -bool false
+    # Disable shadow in screenshots.
+    "${app['defaults']}" write \
+        'com.apple.screencapture' \
+        'disable-shadow' \
+        -bool true
+    # Disable the floating thumbnail preview in bottom corner of screen.
+    # Incredibly annoying default brought over from iOS. If this plist setting
+    # breaks in the future, here's how to disable using the GUI:
+    # CMD + SHIFT + 5 > click 'Options' > uncheck 'Show Floating Thumbnail'.
+    "${app['defaults']}" write \
+        'com.apple.screencapture' \
+        'show-thumbnail' \
+        -bool false
     # Finder {{{2
     # --------------------------------------------------------------------------
     # Allow the Finder to quit. Doing so will also hide desktop icons.
