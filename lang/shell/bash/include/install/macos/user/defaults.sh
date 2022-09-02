@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Tell the user what we're doing here more clearly.
+
 main() {
     # """
     # Install macOS user defaults.

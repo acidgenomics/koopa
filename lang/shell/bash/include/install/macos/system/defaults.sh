@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Many of these settings are user specific, so we should consider
-# reorganizing this in koopa CLI under 'user' instead of 'system'.
+# FIXME Tell the user what we're doing here more clearly.
 
 main() {
     # """
