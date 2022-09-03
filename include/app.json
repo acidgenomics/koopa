@@ -629,9 +629,9 @@
   "difftastic": {
     "bin": ["difft"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-03",
     "depends": ["rust"],
-    "version": "0.34.0"
+    "version": "0.35.0"
   },
   "docker-credential-pass": {
     "conservative": false,
@@ -960,9 +960,9 @@
   "gseapy": {
     "bin": ["gseapy"],
     "conservative": false,
-    "date": "2022-08-14",
+    "date": "2022-09-03",
     "depends": ["conda"],
-    "version": "0.12.0"
+    "version": "0.13.0"
   },
   "gsl": {
     "conservative": true,
@@ -1966,7 +1966,7 @@
     "conservative": false,
     "date": "2022-09-01",
     "dependencies": ["python"],
-    "version": "0.0.23"
+    "version": "0.0.24"
   },
   "rust": {
     "bin": [
