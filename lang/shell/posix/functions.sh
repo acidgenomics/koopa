@@ -112,6 +112,7 @@ koopa_activate_aliases() {
     alias emacs='koopa_alias_emacs'
     alias fd='fd --case-sensitive --no-ignore'
     alias fvim='vim "$(fzf)"'
+    alias g='git'
     alias glances='koopa_alias_glances'
     alias h='history'
     alias j='z'
@@ -518,7 +519,6 @@ koopa_activate_lesspipe() {
 
 koopa_activate_mcfly() {
     local nounset shell
-    [ "${KOOPA_DEV:-0}" -eq 1 ] && return 0
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     [ -x "$(koopa_bin_prefix)/mcfly" ] || return 0
     koopa_is_root && return 0
@@ -961,7 +961,22 @@ koopa_alias_kb() {
 }
 
 koopa_alias_kdev() {
-    export KOOPA_DEV=1; bash -il
+    local bash env
+    bash="$(koopa_bin_prefix)/bash"
+    env='/usr/bin/env'
+    [ -x "$bash" ] || return 1
+    [ -x "$env" ] || return 1
+    "$env" -i \
+        HOME="${HOME:?}" \
+        KOOPA_ACTIVATE=0 \
+        TERM_PROGRAM="${TERM_PROGRAM:-}" \
+        "$bash" \
+            -il \
+            -o errexit \
+            -o errtrace \
+            -o nounset \
+            -o pipefail
+    return 0
 }
 
 koopa_alias_kp() {
