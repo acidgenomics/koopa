@@ -3,7 +3,7 @@
 koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-08-31.
+    # @note Updated 2022-09-03.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -30,6 +30,7 @@ koopa_activate_aliases() {
     # Consider including '--hidden'.
     alias fd='fd --case-sensitive --no-ignore'
     alias fvim='vim "$(fzf)"'
+    alias g='git'
     alias glances='koopa_alias_glances'
     alias h='history'
     alias j='z'
