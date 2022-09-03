@@ -1,13 +1,18 @@
-#!/usr/bin/env bash
-set -Eeuo pipefail
+#!/bin/sh
+set -euo pipefail
 
 # """
-# Bootstrap core dependencies on macOS.
-# @note Updated 2022-09-01.
+# Bootstrap core dependencies.
+# @note Updated 2022-09-03.
 # """
+
+KOOPA_PREFIX="$(cd -- "$(dirname -- "$0")/.." && pwd)"
+PREFIX="${KOOPA_PREFIX:?}/bootstrap"
+
+PATH='/usr/bin:/bin'
+export PATH
 
 JOBS=8
-PREFIX="$(dirname "${BASH_SOURCE[0]}")/../bootstrap"
 TMPDIR="${TMPDIR:-/tmp}"
 
 install_bash() {
@@ -52,7 +57,7 @@ install_coreutils() {
 
 main() {
     rm -fr "${PREFIX:?}"
-    install_coreutils
+    # > install_coreutils
     install_bash
 }
 
