@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Split this out and call env -i bash to harden the subshell?
+
 koopa_update_app() {
     # """
     # Update application.
-    # @note Updated 2022-08-15.
+    # @note Updated 2022-09-04.
     # """
     local bool clean_path_arr dict
     koopa_assert_has_args "$#"
@@ -156,7 +158,7 @@ update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
         if koopa_is_linux && \
             [[ -x '/usr/bin/pkg-config' ]]
         then
-            koopa_add_to_pkg_config_path_2 \
+            koopa_activate_pkg_config \
                 '/usr/bin/pkg-config'
         fi
         if [[ "${bool['update_ldconfig']}" -eq 1 ]]
