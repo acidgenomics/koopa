@@ -867,9 +867,9 @@
   "gget": {
     "bin": ["gget"],
     "conservative": false,
-    "date": "2022-09-01",
+    "date": "2022-09-03",
     "depends": ["conda"],
-    "version": "0.3.9"
+    "version": "0.3.10"
   },
   "ghostscript": {
     "bin": ["gs"],
