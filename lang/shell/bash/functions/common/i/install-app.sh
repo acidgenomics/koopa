@@ -3,14 +3,11 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-09-01.
+    # @note Updated 2022-09-03.
     # """
-    local app bin_arr bool clean_path_arr dict i man1_arr pos
+    local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    declare -A app
-    app['tee']="$(koopa_locate_tee --allow-system)"
-    [[ -x "${app['tee']}" ]] || return 1
     declare -A bool=(
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
@@ -18,7 +15,6 @@ koopa_install_app() {
         # Download pre-built binary from our S3 bucket. Inspired by the
         # Homebrew bottle approach.
         ['binary']=0
-        ['copy_log_file']=0
         # Will any individual programs be linked into koopa 'bin/'?
         ['link_in_bin']=''
         # Link corresponding man1 documentation files for app in bin.
@@ -33,36 +29,30 @@ koopa_install_app() {
         # nested install calls (e.g. Emacs installer handoff to GNU app).
         ['quiet']=0
         ['reinstall']=0
-        ['restrict_path']=1
         ['update_ldconfig']=0
         ['verbose']=0
     )
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
-        ['installer_bn']=''
-        ['installer_fun']='main'
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['log_file']="$(koopa_tmp_log_file)"
+        ['installer']=''
         ['mode']='shared'
         ['name']=''
         ['platform']='common'
         ['prefix']=''
-        ['tmp_dir']="$(koopa_tmp_dir)"
         ['version']=''
         ['version_key']=''
     )
-    clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--installer='*)
-                dict['installer_bn']="${1#*=}"
+                dict['installer']="${1#*=}"
                 shift 1
                 ;;
             '--installer')
-                dict['installer_bn']="${2:?}"
+                dict['installer']="${2:?}"
                 shift 2
                 ;;
             '--name='*)
@@ -139,10 +129,6 @@ koopa_install_app() {
                 bool['prefix_check']=0
                 shift 1
                 ;;
-            '--no-restrict-path')
-                bool['restrict_path']=0
-                shift 1
-                ;;
             '--quiet')
                 bool['quiet']=1
                 shift 1
@@ -187,10 +173,8 @@ koopa_install_app() {
                 bool['auto_prefix']=1
                 dict['version2']="${dict['version']}"
                 # Shorten git commit to 7 characters.
-                if [[ "${#dict['version']}" == 40 ]]
-                then
+                [[ "${#dict['version']}" == 40 ]] && \
                     dict['version2']="${dict['version2']:0:7}"
-                fi
                 dict['prefix']="${dict['app_prefix']}/${dict['name']}/\
 ${dict['version2']}"
             fi
@@ -220,28 +204,16 @@ ${dict['version2']}"
     esac
     [[ -d "${dict['prefix']}" ]] && \
         dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    [[ -z "${dict['installer_bn']}" ]] && dict['installer_bn']="${dict['name']}"
-    dict['installer_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
-install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
-    koopa_assert_is_file "${dict['installer_file']}"
-    # shellcheck source=/dev/null
-    source "${dict['installer_file']}"
-    koopa_assert_is_function "${dict['installer_fun']}"
     if [[ -n "${dict['prefix']}" ]] && [[ "${bool['prefix_check']}" -eq 1 ]]
     then
         if [[ -d "${dict['prefix']}" ]]
         then
-            if koopa_is_empty_dir "${dict['prefix']}"
-            then
-                bool['reinstall']=1
-            fi
+            koopa_is_empty_dir "${dict['prefix']}" && bool['reinstall']=1
             if [[ "${bool['reinstall']}" -eq 1 ]]
             then
-                if [[ "${bool['quiet']}" -eq 0 ]]
-                then
+                [[ "${bool['quiet']}" -eq 0 ]] && \
                     koopa_alert_uninstall_start \
                         "${dict['name']}" "${dict['prefix']}"
-                fi
                 case "${dict['mode']}" in
                     'system')
                         koopa_rm --sudo "${dict['prefix']}"
@@ -253,11 +225,9 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
             fi
             if [[ -d "${dict['prefix']}" ]]
             then
-                if [[ "${bool['quiet']}" -eq 0 ]]
-                then
+                [[ "${bool['quiet']}" -eq 0 ]] && \
                     koopa_alert_is_installed \
                         "${dict['name']}" "${dict['prefix']}"
-                fi
                 return 0
             fi
         fi
@@ -270,79 +240,62 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
                 ;;
         esac
     fi
-    if [[ "${bool['binary']}" -eq 0 ]] && \
-        [[ -d "${dict['prefix']}" ]] && \
-        [[ "${dict['mode']}" != 'system' ]]
-    then
-        bool['copy_log_file']=1
-    fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
         if [[ -n "${dict['prefix']}" ]]
         then
+            # FIXME Rework this to support empty prefix.
             koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
         else
             koopa_alert_install_start "${dict['name']}"
         fi
     fi
-    (
-        koopa_cd "${dict['tmp_dir']}"
-        if [[ "${bool['binary']}" -eq 1 ]]
-        then
+    case "${bool['binary']}" in
+        '0')
+            local app
+            declare -A app
+            app['bash']="$(koopa_locate_bash --allow-system)"
+            app['env']="$(koopa_locate_env --allow-system)"
+            app['koopa']="$(koopa_locate_koopa)"
+            [[ -x "${app['bash']}" ]] || return 1
+            [[ -x "${app['env']}" ]] || return 1
+            [[ -x "${app['koopa']}" ]] || return 1
+            /usr/bin/env -i \
+                HOME="${HOME:?}" \
+                KOOPA_ACTIVATE=0 \
+                PATH="${KOOPA_PREFIX}/bin:${KOOPA_PREFIX}/bootstrap/bin:/usr/bin:/bin" \
+                "${app['bash']}" \
+                    --noprofile \
+                    --norc \
+                    -o errexit \
+                    -o errtrace \
+                    -o nounset \
+                    -o pipefail \
+                    -c "source \"\$(${app['koopa']} header bash)\"; \
+                        koopa_install_app_subshell \
+                            --installer=${dict['installer']} \
+                            --mode=${dict['mode']} \
+                            --name=${dict['name']} \
+                            --platform=${dict['platform']} \
+                            --prefix=${dict['prefix']} \
+                            --version=${dict['version']} \
+                            ${*}"
+            ;;
+        '1')
+            [[ "${dict['mode']}" == 'shared' ]] || return 1
             [[ -n "${dict['prefix']}" ]] || return 1
             koopa_install_app_from_binary_package "${dict['prefix']}"
-            return 0
-        fi
-        if [[ "${bool['restrict_path']}" -eq 1 ]]
-        then
-            PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
-            export PATH
-        fi
-        if koopa_is_linux && \
-            [[ -x '/usr/bin/pkg-config' ]]
-        then
-            koopa_add_to_pkg_config_path_2 \
-                '/usr/bin/pkg-config'
-        fi
-        case "${dict['mode']}" in
-            'system')
-                if [[ "${bool['update_ldconfig']}" -eq 1 ]]
-                then
-                    koopa_linux_update_ldconfig
-                fi
-                ;;
-        esac
-        # shellcheck disable=SC2030
-        export INSTALL_NAME="${dict['name']}"
-        # shellcheck disable=SC2030
-        export INSTALL_PREFIX="${dict['prefix']}"
-        # shellcheck disable=SC2030
-        export INSTALL_VERSION="${dict['version']}"
-        [[ "${bool['verbose']}" -eq 1 ]] && declare -x
-        "${dict['installer_fun']}" "$@"
-        [[ "${bool['verbose']}" -eq 1 ]] && declare -x
-        return 0
-    ) 2>&1 | "${app['tee']}" "${dict['log_file']}"
-    if [[ "${bool['copy_log_file']}" -eq 1 ]]
-    then
-        koopa_cp \
-            "${dict['log_file']}" \
-            "${dict['prefix']}/.koopa-install.log"
-    fi
-    koopa_rm "${dict['tmp_dir']}"
+            ;;
+    esac
     case "${dict['mode']}" in
         'shared')
-            if [[ "${bool['auto_prefix']}" -eq 1 ]]
-            then
+            [[ "${bool['auto_prefix']}" -eq 1 ]] && \
                 koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
-            fi
             koopa_sys_set_permissions --recursive "${dict['prefix']}"
-            if [[ "${bool['link_in_opt']}" -eq 1 ]]
-            then
+            [[ "${bool['link_in_opt']}" -eq 1 ]] && \
                 koopa_link_in_opt \
                     --name="${dict['name']}" \
                     --source="${dict['prefix']}"
-            fi
             if [[ "${bool['link_in_bin']}" -eq 1 ]]
             then
                 # FIXME Rework this as a function.
@@ -396,28 +349,23 @@ man1/${dict2['name']}"
                     done
                 fi
             fi
-            if [[ "${bool['push']}" -eq 1 ]]
-            then
+            [[ "${bool['push']}" -eq 1 ]] && \
                 koopa_push_app_build "${dict['name']}"
-            fi
             ;;
         'system')
-            if [[ "${bool['update_ldconfig']}" -eq 1 ]]
-            then
+            [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
                 koopa_linux_update_ldconfig
-            fi
             ;;
         'user')
-            if [[ -d "${dict['prefix']}" ]]
-            then
+            [[ -d "${dict['prefix']}" ]] && \
                 koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
-            fi
             ;;
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
         if [[ -n "${dict['prefix']}" ]]
         then
+            # FIXME Rework this to support empty prefix.
             koopa_alert_install_success "${dict['name']}" "${dict['prefix']}"
         else
             koopa_alert_install_success "${dict['name']}"
