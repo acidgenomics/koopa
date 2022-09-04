@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Consider renaming this to 'koopa_install_app_passthrough'.
+
 koopa_install_app_internal() {
     # """
     # Internal runner to install an application.
-    # @note Updated 2022-08-25.
+    # @note Updated 2022-09-03.
     # """
     local pos
     koopa_assert_has_args "$#"
@@ -13,7 +15,6 @@ koopa_install_app_internal() {
         case "$1" in
             '--no-link-in-opt' | \
             '--no-prefix-check' | \
-            '--no-restrict-path' | \
             '--quiet')
                 koopa_invalid_arg "$1"
                 ;;
@@ -28,7 +29,6 @@ koopa_install_app_internal() {
     koopa_install_app \
         --no-link-in-opt \
         --no-prefix-check \
-        --no-restrict-path \
         --quiet \
         "$@"
 }
