@@ -34,9 +34,8 @@ __koopa_posix_header() {
     case "${KOOPA_ACTIVATE:-0}" in
         '0')
             unalias -a
-            # Intentionally not including '/usr/local/bin' here.
-            # Consider including koopa bootstrap bin for macOS.
-            export PATH='/usr/bin:/bin'
+            PATH='/usr/bin:/bin'
+            export PATH
             ;;
         '1')
             __koopa_activate_koopa || return 1

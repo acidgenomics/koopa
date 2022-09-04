@@ -226,7 +226,7 @@ __koopa_print() {
     return 0
 }
 
-# FIXME Improve consistency of this.
+# FIXME Improve consistency of this with other functions.
 __koopa_realpath() {
     # """
     # Resolve file path.
@@ -324,7 +324,7 @@ __koopa_zsh_source() {
 __koopa_activate() {
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-09-02.
     # """
     case "${1:-}" in
         '--help' | '-h')
@@ -335,7 +335,8 @@ __koopa_activate() {
     __koopa_preflight || return 0
     __koopa_export_koopa_subshell || return 1
     __koopa_export_koopa_prefix || return 1
-    export KOOPA_ACTIVATE=1
+    KOOPA_ACTIVATE="${KOOPA_ACTIVATE:-1}"
+    export KOOPA_ACTIVATE
     # shellcheck source=/dev/null
     . "$(__koopa_header)" || return 1
     unset -v KOOPA_ACTIVATE
