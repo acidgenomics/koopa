@@ -1199,8 +1199,10 @@
   "julia": {
     "bin": ["julia"],
     "conservative": false,
+    "date": "2022-09-06",
     "deps": ["gcc"],
     "large": true,
+    "outdated": true,
     "url": ["https://github.com/JuliaLang/julia/"],
     "version": "1.8.0"
   },
