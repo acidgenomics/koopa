@@ -3,15 +3,14 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2022-08-24.
+    # @note Updated 2022-09-06.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba
     # """
     local app dict
-    declare -A app=(
-        ['bash']="$(koopa_locate_bash --allow-system)"
-    )
+    declare -A app
+    app['bash']="$(koopa_locate_bash --allow-system)"
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
@@ -83,7 +82,8 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}-${dict['arch2']}
     koopa_ln \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
-    app['conda']="$(koopa_locate_conda)"
+    # > app['conda']="${dict['prefix']}/bin/conda"
+    # > koopa_assert_is_installed "${app['conda']}"
     # Optionally, install mamba into base environment.
     # > [[ -x "${app['conda']}" ]] || return 1
     # > case "${dict['version']}" in
