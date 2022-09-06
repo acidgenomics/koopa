@@ -4938,7 +4938,7 @@ koopa_configure_dotfiles() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        ['bash']="$(koopa_locate_bash)"
+        ['bash']="$(koopa_locate_bash --allow-system)"
     )
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
@@ -15320,6 +15320,7 @@ koopa_locate_app() {
         ['app_name']=''
         ['bin_name']=''
         ['bin_prefix']="$(koopa_bin_prefix)"
+        ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['system_bin_name']=''
     )
@@ -15404,6 +15405,11 @@ koopa_locate_app() {
     fi
     dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
 bin/${dict['bin_name']}"
+    if [[ ! -x "${dict['app']}" ]] && \
+        [[ -x "${dict['bs_bin_prefix']}/${dict['bin_name']}" ]]
+    then
+            dict['app']="${dict['bs_bin_prefix']}/${dict['system_bin_name']}"
+    fi
     if [[ ! -x "${dict['app']}" ]] && \
         [[ "${bool['allow_system']}" -eq 1 ]]
     then
