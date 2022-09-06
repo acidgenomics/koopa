@@ -963,12 +963,18 @@ koopa_alias_kb() {
 koopa_alias_kdev() {
     local bash env
     bash="$(koopa_bin_prefix)/bash"
-    env='/usr/bin/env'
+    if [ ! -x "$bash" ] && ! koopa_is_macos
+    then
+        bash='/usr/bin/bash'
+    fi
     [ -x "$bash" ] || return 1
+    env='/usr/bin/env'
     [ -x "$env" ] || return 1
     "$env" -i \
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
+        SUDO_PS1="${SUDO_PS1:-}" \
+        SUDO_USER="${SUDO_USER:-}" \
         TERM_PROGRAM="${TERM_PROGRAM:-}" \
         "$bash" \
             -il \
@@ -1135,6 +1141,11 @@ koopa_boolean_nounset() {
         bool=0
     fi
     koopa_print "$bool"
+    return 0
+}
+
+koopa_bootstrap_bin_prefix() {
+    koopa_print "$(koopa_koopa_prefix)/bootstrap/bin"
     return 0
 }
 

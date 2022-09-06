@@ -11,13 +11,12 @@
 main() {
     # """
     # Install full Anaconda distribution.
-    # @note Updated 2022-03-16.
+    # @note Updated 2022-09-06.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['bash']="$(koopa_locate_bash)"
-    )
+    declare -A app
+    app['bash']="$(koopa_locate_bash --allow-system)"
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
