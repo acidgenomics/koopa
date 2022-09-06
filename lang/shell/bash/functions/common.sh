@@ -3744,7 +3744,7 @@ koopa_check_system() {
     then
         koopa_install_r_koopa
     fi
-    koopa_r_koopa --vanilla 'cliCheckSystem'
+    koopa_r_koopa 'cliCheckSystem'
     koopa_alert_success 'System passed all checks.'
     return 0
 }
@@ -15200,12 +15200,6 @@ koopa_list_path_priority() {
         )"
     fi
     koopa_print "${all_arr[@]}"
-    return 0
-}
-
-koopa_list_programs() {
-    koopa_assert_has_no_args "$#"
-    koopa_r_koopa --vanilla 'cliListPrograms'
     return 0
 }
 
