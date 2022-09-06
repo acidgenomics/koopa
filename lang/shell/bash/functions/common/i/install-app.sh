@@ -363,7 +363,7 @@ man1/${dict2['name']}"
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict['prefix']}" ]]
+        if [[ -d "${dict['prefix']}" ]]
         then
             # FIXME Rework this to support empty prefix.
             koopa_alert_install_success "${dict['name']}" "${dict['prefix']}"

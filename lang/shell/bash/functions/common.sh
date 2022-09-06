@@ -11827,7 +11827,7 @@ man1/${dict2['name']}"
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict['prefix']}" ]]
+        if [[ -d "${dict['prefix']}" ]]
         then
             koopa_alert_install_success "${dict['name']}" "${dict['prefix']}"
         else
@@ -24108,13 +24108,12 @@ koopa_unlink_in_opt() {
 }
 
 koopa_update_app() {
-    local bool clean_path_arr dict
+    local bool dict
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A bool=(
         ['prefix_check']=1
         ['quiet']=0
-        ['set_permissions']=1
         ['update_ldconfig']=0
         ['verbose']=0
     )
@@ -24130,7 +24129,6 @@ koopa_update_app() {
         ['updater_fun']='main'
         ['version']=''
     )
-    clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     while (("$#"))
     do
         case "$1" in
@@ -24176,10 +24174,6 @@ koopa_update_app() {
                 ;;
             '--no-prefix-check')
                 bool['prefix_check']=0
-                shift 1
-                ;;
-            '--no-set-permissions')
-                bool['set_permissions']=0
                 shift 1
                 ;;
             '--quiet')
@@ -24244,14 +24238,7 @@ update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
     fi
     (
         koopa_cd "${dict['tmp_dir']}"
-        unset -v \
-            CFLAGS \
-            CPPFLAGS \
-            LDFLAGS \
-            LDLIBS \
-            LD_LIBRARY_PATH \
-            PKG_CONFIG_PATH
-        PATH="$(koopa_paste --sep=':' "${clean_path_arr[@]}")"
+        PATH='/usr/bin:/bin'
         export PATH
         if koopa_is_linux && \
             [[ -x '/usr/bin/pkg-config' ]]
@@ -24259,28 +24246,26 @@ update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
             koopa_activate_pkg_config \
                 '/usr/bin/pkg-config'
         fi
-        if [[ "${bool['update_ldconfig']}" -eq 1 ]]
-        then
-            koopa_linux_update_ldconfig
-        fi
         export UPDATE_PREFIX="${dict['prefix']}"
         "${dict['updater_fun']}"
     )
     koopa_rm "${dict['tmp_dir']}"
-    if [[ -d "${dict['prefix']}" ]] && \
-        [[ "${bool['set_permissions']}" -eq 1 ]]
-    then
-        case "${dict['mode']}" in
-            'shared')
+    case "${dict['mode']}" in
+        'shared')
+            [[ -d "${dict['prefix']}" ]] && \
                 koopa_sys_set_permissions \
                     --recursive "${dict['prefix']}"
-                ;;
-        esac
-    fi
-    if [[ "${bool['update_ldconfig']}" -eq 1 ]]
-    then
-        koopa_linux_update_ldconfig
-    fi
+            ;;
+        'system')
+            [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
+                koopa_linux_update_ldconfig
+            ;;
+        'user')
+            [[ -d "${dict['prefix']}" ]] && \
+                koopa_sys_set_permissions \
+                    --recursive --user "${dict['prefix']}"
+            ;;
+    esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
         if [[ -d "${dict['prefix']}" ]]
