@@ -226,45 +226,13 @@ __koopa_print() {
     return 0
 }
 
-# FIXME Improve consistency of this.
 __koopa_realpath() {
     # """
     # Resolve file path.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-09-06.
     # """
-    local readlink x
-    readlink='readlink'
-    if ! __koopa_is_installed "$readlink"
-    then
-        local brew_readlink_1 brew_readlink_2
-        local koopa_readlink
-        local make_readlink_1 make_readlink_2
-        brew_readlink_1='/opt/homebrew/opt/coreutils/libexec/bin/readlink'
-        brew_readlink_2='/usr/local/opt/coreutils/libexec/bin/readlink'
-        koopa_readlink='/opt/koopa/opt/coreutils/bin/readlink'
-        make_readlink_1='/usr/local/bin/readlink'
-        make_readlink_2='/usr/local/bin/greadlink'
-        if [ -x "$koopa_readlink" ]
-        then
-            readlink="$koopa_readlink"
-        elif [ -x "$make_readlink_1" ]
-        then
-            readlink="$make_readlink_1"
-        elif [ -x "$make_readlink_2" ]
-        then
-            readlink="$make_readlink_2"
-        elif [ -x "$brew_readlink_1" ]
-        then
-            readlink="$brew_readlink_1"
-        elif [ -x "$brew_readlink_2" ]
-        then
-            readlink="$brew_readlink_2"
-        else
-            __koopa_warn 'GNU coreutils is required.'
-            return 1
-        fi
-    fi
-    x="$("$readlink" -f "$@")"
+    local x
+    x="$(readlink -f "$@")"
     [ -n "$x" ] || return 1
     __koopa_print "$x"
     return 0
@@ -324,7 +292,7 @@ __koopa_zsh_source() {
 __koopa_activate() {
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-09-02.
     # """
     case "${1:-}" in
         '--help' | '-h')
@@ -335,7 +303,8 @@ __koopa_activate() {
     __koopa_preflight || return 0
     __koopa_export_koopa_subshell || return 1
     __koopa_export_koopa_prefix || return 1
-    export KOOPA_ACTIVATE=1
+    KOOPA_ACTIVATE="${KOOPA_ACTIVATE:-1}"
+    export KOOPA_ACTIVATE
     # shellcheck source=/dev/null
     . "$(__koopa_header)" || return 1
     unset -v KOOPA_ACTIVATE

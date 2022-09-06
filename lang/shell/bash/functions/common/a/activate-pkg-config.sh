@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-koopa_add_to_pkg_config_path_2() {
+koopa_activate_pkg_config() {
     # """
     # Force add to start of 'PKG_CONFIG_PATH' using 'pc_path' variable
     # lookup from 'pkg-config' program.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-09-04.
     #
     # @examples
-    # koopa_add_to_pkg_config_path_2 '/opt/koopa/bin/pkg-config'
-    # echo $PKG_CONFIG_PATH
+    # > koopa_activate_pkg_config '/opt/koopa/bin/pkg-config'
+    # > echo "$PKG_CONFIG_PATH"
     # """
     local app str
     koopa_assert_has_args "$#"

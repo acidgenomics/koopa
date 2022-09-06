@@ -629,9 +629,9 @@
   "difftastic": {
     "bin": ["difft"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-03",
     "depends": ["rust"],
-    "version": "0.34.0"
+    "version": "0.35.0"
   },
   "docker-credential-pass": {
     "conservative": false,
@@ -867,9 +867,9 @@
   "gget": {
     "bin": ["gget"],
     "conservative": false,
-    "date": "2022-09-01",
+    "date": "2022-09-03",
     "depends": ["conda"],
-    "version": "0.3.9"
+    "version": "0.3.10"
   },
   "ghostscript": {
     "bin": ["gs"],
@@ -960,9 +960,9 @@
   "gseapy": {
     "bin": ["gseapy"],
     "conservative": false,
-    "date": "2022-08-14",
+    "date": "2022-09-03",
     "depends": ["conda"],
-    "version": "0.12.0"
+    "version": "0.13.0"
   },
   "gsl": {
     "conservative": true,
@@ -1215,13 +1215,14 @@
   "latch": {
     "bin": ["latch"],
     "conservative": false,
+    "date": "2022-09-03",
     "dependencies": ["python"],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "1.16.0"
+    "version": "1.17.0"
   },
   "less": {
     "bin": ["less"],
@@ -1461,9 +1462,9 @@
   "meson": {
     "bin": ["meson"],
     "conservative": false,
-    "date": "2022-08-29",
+    "date": "2022-09-03",
     "depends": ["python"],
-    "version": "0.63.1"
+    "version": "0.63.2"
   },
   "mpc": {
     "conservative": true,
@@ -1797,11 +1798,11 @@
   "pyenv": {
     "bin": ["pyenv"],
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2022-09-03",
     "dependencies": [],
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv"],
-    "version": "2.2.5"
+    "version": "2.3.4"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -1964,9 +1965,9 @@
   "ruff": {
     "bin": ["ruff"],
     "conservative": false,
-    "date": "2022-09-01",
+    "date": "2022-09-03",
     "dependencies": ["python"],
-    "version": "0.0.23"
+    "version": "0.0.25"
   },
   "rust": {
     "bin": [

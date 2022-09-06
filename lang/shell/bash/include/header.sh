@@ -128,7 +128,7 @@ __koopa_warn() {
 __koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2022-08-23.
+    # @note Updated 2022-09-02.
     #
     # @seealso
     # - shopt
@@ -140,41 +140,34 @@ __koopa_bash_header() {
             return 1
             ;;
     esac
-    local dict
-    declare -A dict=(
-        ['activate']=0
-        ['checks']=1
-        ['dev']=0
-        ['minimal']=0
-        ['test']=0
-        ['verbose']=0
-    )
-    [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict['activate']="$KOOPA_ACTIVATE"
-    [[ -n "${KOOPA_CHECKS:-}" ]] && dict['checks']="$KOOPA_CHECKS"
-    [[ -n "${KOOPA_DEV:-}" ]] && dict['dev']="$KOOPA_DEV"
-    [[ -n "${KOOPA_MINIMAL:-}" ]] && dict['minimal']="$KOOPA_MINIMAL"
-    [[ -n "${KOOPA_TEST:-}" ]] && dict['test']="$KOOPA_TEST"
-    [[ -n "${KOOPA_VERBOSE:-}" ]] && dict['verbose']="$KOOPA_VERBOSE"
-    if [[ "${dict['activate']}" -eq 1 ]] && \
-        [[ "${dict['dev']}" -eq 0 ]] && \
-        [[ "${dict['test']}" -eq 0 ]]
+    local app bool dict
+    declare -A app bool dict
+    bool['activate']=0
+    bool['checks']=1
+    bool['minimal']=0
+    bool['test']=0
+    bool['verbose']=0
+    [[ -n "${KOOPA_ACTIVATE:-}" ]] && bool['activate']="$KOOPA_ACTIVATE"
+    [[ -n "${KOOPA_CHECKS:-}" ]] && bool['checks']="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_MINIMAL:-}" ]] && bool['minimal']="$KOOPA_MINIMAL"
+    [[ -n "${KOOPA_TEST:-}" ]] && bool['test']="$KOOPA_TEST"
+    [[ -n "${KOOPA_VERBOSE:-}" ]] && bool['verbose']="$KOOPA_VERBOSE"
+    if [[ "${bool['activate']}" -eq 1 ]] && [[ "${bool['test']}" -eq 0 ]]
     then
-        dict['checks']=0
+        bool['checks']=0
     fi
-    if [[ "${dict['activate']}" -eq 0 ]]
+    if [[ "${bool['activate']}" -eq 0 ]]
     then
         trap __koopa_exit_trap EXIT
+        # Disable all user-defined aliases.
+        unalias -a
+    fi
+    if [[ "${bool['checks']}" -eq 1 ]]
+    then
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
         [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
-    fi
-    if [[ "${dict['activate']}" -eq 0 ]] || [[ "${dict['dev']}" -eq 1 ]]
-    then
-        unalias -a
-    fi
-    if [[ "${dict['checks']}" -eq 1 ]]
-    then
         # Compare with current values defined in '~/.bashrc'.
         # Check all values with 'set +o'.
         # Note that '+o' here means disable, '-o' means enable.
@@ -254,7 +247,7 @@ __koopa_bash_header() {
                 ;;
         esac
     fi
-    if [[ "${dict['verbose']}" -eq 1 ]]
+    if [[ "${bool['verbose']}" -eq 1 ]]
     then
         set -o verbose # -v
         set -o xtrace # -x
@@ -275,19 +268,19 @@ __koopa_bash_header() {
     fi
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
-    if [[ "${dict['test']}" -eq 1 ]]
+    if [[ "${bool['test']}" -eq 1 ]]
     then
         koopa_duration_start || return 1
     fi
-    if [[ "${dict['activate']}" -eq 1 ]]
+    if [[ "${bool['activate']}" -eq 1 ]]
     then
         __koopa_source_functions 'activate'
-        if [[ "${dict['minimal']}" -eq 0 ]]
+        if [[ "${bool['minimal']}" -eq 0 ]]
         then
             koopa_activate_bash_extras
         fi
     fi
-    if [[ "${dict['activate']}" -eq 0 ]] || [[ "${dict['dev']}" -eq 1 ]]
+    if [[ "${bool['activate']}" -eq 0 ]]
     then
         __koopa_source_functions 'common'
         dict['os_id']="$(koopa_os_id)"
@@ -332,15 +325,11 @@ __koopa_bash_header() {
         then
             koopa_assert_is_admin
         fi
-        # Disable user-defined aliases.
-        unalias -a
+        export PS1='[koopa] '
     fi
-    if [[ "${dict['dev']}" -eq 1 ]]
+    if [[ "${bool['verbose']}" -eq 1 ]]
     then
-        export PS1='[koopa] $ '
-    fi
-    if [[ "${dict['verbose']}" -eq 1 ]]
-    then
+        app['locale']="$(koopa_locate_locale --allow-missing --allow-system)"
         koopa_alert_info 'Shell options'
         set +o
         shopt
@@ -350,13 +339,13 @@ __koopa_bash_header() {
             '-' "${-}" \
             'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
             'SHELL' "${SHELL:-}"
-        if koopa_is_installed 'locale'
+        if [[ -x "${app['locale']}" ]]
         then
             koopa_alert_info 'Locale'
-            locale
+            "${app['locale']}"
         fi
     fi
-    if [[ "${dict['test']}" -eq 1 ]]
+    if [[ "${bool['test']}" -eq 1 ]]
     then
         koopa_duration_stop 'bash' || return 1
     fi
