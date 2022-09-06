@@ -963,8 +963,12 @@ koopa_alias_kb() {
 koopa_alias_kdev() {
     local bash env
     bash="$(koopa_bin_prefix)/bash"
-    env='/usr/bin/env'
+    if [ ! -x "$bash" ] && ! koopa_is_macos
+    then
+        bash='/usr/bin/bash'
+    fi
     [ -x "$bash" ] || return 1
+    env='/usr/bin/env'
     [ -x "$env" ] || return 1
     "$env" -i \
         HOME="${HOME:?}" \
