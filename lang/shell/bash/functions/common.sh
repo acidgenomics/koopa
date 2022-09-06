@@ -18640,8 +18640,9 @@ koopa_r_version() {
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     str="$( \
+        R_HOME='' \
         "${app['r']}" --version 2>/dev/null \
-        | "${app['head']}" -n 1 \
+            | "${app['head']}" -n 1 \
     )"
     if koopa_str_detect_fixed \
         --string="$str" \
