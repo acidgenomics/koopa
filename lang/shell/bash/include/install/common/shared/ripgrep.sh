@@ -2,7 +2,7 @@
 
 main() {
     koopa_activate_opt_prefix 'pcre2'
-    koopa_install_app_internal \
+    koopa_install_app_passthrough \
         --installer='rust-package' \
         --name='ripgrep' \
         "$@"

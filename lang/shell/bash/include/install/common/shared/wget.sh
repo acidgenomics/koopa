@@ -20,7 +20,7 @@ main() {
     declare -A dict=(
         ['ssl']="$(koopa_app_prefix 'openssl3')"
     )
-    koopa_install_app_internal \
+    koopa_install_app_passthrough \
         --installer='gnu-app' \
         --name='wget' \
         -D '--disable-debug' \

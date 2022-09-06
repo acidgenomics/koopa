@@ -5,7 +5,7 @@ main() {
     then
         koopa_activate_opt_prefix 'ncurses' 'libxml2'
     fi
-    koopa_install_app_internal \
+    koopa_install_app_passthrough \
         --installer='gnu-app' \
         --name='gettext' \
         "$@"
