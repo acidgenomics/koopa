@@ -21562,8 +21562,13 @@ koopa_switch_to_develop() {
         ['branch']='develop'
         ['origin']='origin'
         ['prefix']="$(koopa_koopa_prefix)"
+        ['user']="$(koopa_user)"
     )
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
+    if koopa_is_shared_install
+    then
+        koopa_chown --recursive --sudo "${dict['user']}" "${dict['prefix']}"
+    fi
     koopa_sys_set_permissions --recursive "${dict['prefix']}"
     (
         koopa_cd "${dict['prefix']}"
