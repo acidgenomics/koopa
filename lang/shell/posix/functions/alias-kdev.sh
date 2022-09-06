@@ -3,7 +3,7 @@
 koopa_alias_kdev() {
     # """
     # Koopa 'kdev' shortcut alias.
-    # @note Updated 2022-09-03.
+    # @note Updated 2022-09-06.
     #
     # Alternative approach:
     # > export KOOPA_ACTIVATE=0
@@ -21,12 +21,18 @@ koopa_alias_kdev() {
     # """
     local bash env
     bash="$(koopa_bin_prefix)/bash"
-    env='/usr/bin/env'
+    if [ ! -x "$bash" ] && ! koopa_is_macos
+    then
+        bash='/usr/bin/bash'
+    fi
     [ -x "$bash" ] || return 1
+    env='/usr/bin/env'
     [ -x "$env" ] || return 1
     "$env" -i \
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
+        SUDO_PS1="${SUDO_PS1:-}" \
+        SUDO_USER="${SUDO_USER:-}" \
         TERM_PROGRAM="${TERM_PROGRAM:-}" \
         "$bash" \
             -il \
