@@ -20,7 +20,7 @@ main() {
     declare -A dict=(
         ['prefix']="${INSTALL_PREFIX:?}"
     )
-    koopa_install_app_internal \
+    koopa_install_app_passthrough \
         --installer='gnu-app' \
         --name='man-db' \
         -D '--disable-cache-owner' \

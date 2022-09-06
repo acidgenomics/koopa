@@ -253,6 +253,7 @@
     "version": "1.14.2"
   },
   "brotli": {
+    "check": false,
     "conservative": true,
     "url": ["https://github.com/google/brotli/"],
     "version": "1.0.9"
@@ -847,7 +848,6 @@
   "geos": {
     "bin": ["geos-config"],
     "conservative": true,
-    "man1": ["geos-config.1"],
     "url": ["https://github.com/libgeos/geos/"],
     "version": "3.11.0"
   },
@@ -1310,6 +1310,7 @@
     "version": "1.6.0"
   },
   "liblinear": {
+    "check": false,
     "conservative": true,
     "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
     "version": "2.45"
@@ -1501,14 +1502,14 @@
     "conservative": true,
     "date": "2022-08-29",
     "man1": [
-      "captoinfo.1",
+      "captoinfo.1m",
       "clear.1",
-      "infocmp.1",
-      "infotocap.1",
+      "infocmp.1m",
+      "infotocap.1m",
       "reset.1",
       "tabs.1",
-      "tic.1",
-      "toe.1",
+      "tic.1m",
+      "toe.1m",
       "tput.1",
       "tset.1"
     ],
@@ -1835,9 +1836,22 @@
     "version": "7.1.2"
   },
   "python": {
-    "bin": ["idle3", "pip3", "pydoc3", "python3", "python3-config"],
+    "bin": [
+      "2to3",
+      "2to3-3.10",
+      "idle3",
+      "idle3.10",
+      "pip3",
+      "pip3.10",
+      "pydoc3",
+      "pydoc3.10",
+      "python3",
+      "python3-config",
+      "python3.10",
+      "python3.10-config"
+    ],
     "conservative": true,
-    "man1": ["idle3.1", "pip3.1", "pydoc3.1", "python3.1", "python3-config.1"],
+    "man1": ["python3.1", "python3.10.1"],
     "outdated": true,
     "url": ["https://www.python.org/downloads/"],
     "version": "3.10.6"
@@ -1958,7 +1972,7 @@
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "conservative": true,
     "date": "2022-08-30",
-    "man1": ["bundle.1", "bundler.1", "gem.1", "ruby.1"],
+    "man1": ["ruby.1"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.1.2p20"
   },
@@ -2087,12 +2101,6 @@
     "conservative": false,
     "url": ["https://github.com/ncbi/sra-tools/"],
     "version": "3.0.0"
-  },
-  "sshfs": {
-    "bin": ["sshfs"],
-    "conservative": false,
-    "url": "https://github.com/libfuse/sshfs/",
-    "version": "3.7.3"
   },
   "star": {
     "bin": ["STAR"],

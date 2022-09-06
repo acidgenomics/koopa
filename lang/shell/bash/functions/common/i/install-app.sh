@@ -3,7 +3,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-09-03.
+    # @note Updated 2022-09-06.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
@@ -35,6 +35,7 @@ koopa_install_app() {
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['installer']=''
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['mode']='shared'
         ['name']=''
         ['platform']='common'
@@ -252,7 +253,7 @@ ${dict['version2']}"
     fi
     case "${bool['binary']}" in
         '0')
-            local app
+            local app path_arr
             declare -A app
             app['bash']="$(koopa_locate_bash --allow-system)"
             app['env']="$(koopa_locate_env --allow-system)"
@@ -260,10 +261,16 @@ ${dict['version2']}"
             [[ -x "${app['bash']}" ]] || return 1
             [[ -x "${app['env']}" ]] || return 1
             [[ -x "${app['koopa']}" ]] || return 1
+            path_arr=(
+                "${dict['koopa_prefix']}/bin"
+                "${dict['koopa_prefix']}/bootstrap/bin"
+                '/usr/bin'
+                '/bin'
+            )
             /usr/bin/env -i \
                 HOME="${HOME:?}" \
                 KOOPA_ACTIVATE=0 \
-                PATH="${KOOPA_PREFIX}/bin:${KOOPA_PREFIX}/bootstrap/bin:/usr/bin:/bin" \
+                PATH="$(koopa_paste --sep=':' "${path_arr[@]}")" \
                 "${app['bash']}" \
                     --noprofile \
                     --norc \

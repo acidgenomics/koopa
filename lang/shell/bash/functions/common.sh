@@ -3744,7 +3744,7 @@ koopa_check_system() {
     then
         koopa_install_r_koopa
     fi
-    koopa_r_koopa --vanilla 'cliCheckSystem'
+    koopa_r_koopa 'cliCheckSystem'
     koopa_alert_success 'System passed all checks.'
     return 0
 }
@@ -11319,6 +11319,7 @@ koopa_install_app_from_binary_package() {
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_string']="$(koopa_os_string)"
         ['url_stem']="$(koopa_koopa_url)/app"
+        ['tmp_dir']="$(koopa_tmp_dir)"
     )
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
     then
@@ -11327,32 +11328,36 @@ install located at '${dict['koopa_prefix']}'. Koopa must be installed at \
 default '${dict['binary_prefix']}' location."
     fi
     koopa_assert_is_dir "$@"
-    for prefix in "$@"
-    do
-        local dict2
-        declare -A dict2
-        dict2['prefix']="$(koopa_realpath "$prefix")"
-        dict2['name']="$( \
-            koopa_print "${dict2['prefix']}" \
-                | koopa_dirname \
-                | koopa_basename \
-        )"
-        dict2['version']="$(koopa_basename "$prefix")"
-        dict2['tar_file']="${dict2['name']}-${dict2['version']}.tar.gz"
-        dict2['tar_url']="${dict['url_stem']}/${dict['os_string']}/${dict['arch']}/\
-${dict2['name']}/${dict2['version']}.tar.gz"
-        if ! koopa_is_url_active "${dict2['tar_url']}"
-        then
-            koopa_stop "No package at '${dict2['tar_url']}'."
-        fi
-        koopa_download "${dict2['tar_url']}" "${dict2['tar_file']}"
-        "${app['tar']}" -Pxzf "${dict2['tar_file']}"
-        koopa_touch "${prefix}/.koopa-binary"
-    done
+    (
+        koopa_cd "${dict['tmp_dir']}"
+        for prefix in "$@"
+        do
+            local dict2
+            declare -A dict2
+            dict2['prefix']="$(koopa_realpath "$prefix")"
+            dict2['name']="$( \
+                koopa_print "${dict2['prefix']}" \
+                    | koopa_dirname \
+                    | koopa_basename \
+            )"
+            dict2['version']="$(koopa_basename "$prefix")"
+            dict2['tar_file']="${dict2['name']}-${dict2['version']}.tar.gz"
+            dict2['tar_url']="${dict['url_stem']}/${dict['os_string']}/\
+${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
+            if ! koopa_is_url_active "${dict2['tar_url']}"
+            then
+                koopa_stop "No package at '${dict2['tar_url']}'."
+            fi
+            koopa_download "${dict2['tar_url']}" "${dict2['tar_file']}"
+            "${app['tar']}" -Pxzf "${dict2['tar_file']}"
+            koopa_touch "${prefix}/.koopa-binary"
+        done
+    )
+    koopa_rm "${dict['tmp_dir']}"
     return 0
 }
 
-koopa_install_app_internal() {
+koopa_install_app_passthrough() {
     local pos
     koopa_assert_has_args "$#"
     pos=()
@@ -11476,7 +11481,13 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
         "${dict['installer_fun']}" "$@"
-        declare -x
+        case "${dict['mode']}" in
+            'shared')
+                declare -x
+                ;;
+            *)
+                ;;
+        esac
         return 0
     ) 2>&1 | "${app['tee']}" "${dict['log_file']}"
     if [[ "${bool['copy_log_file']}" -eq 1 ]]
@@ -11509,6 +11520,7 @@ koopa_install_app() {
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['installer']=''
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['mode']='shared'
         ['name']=''
         ['platform']='common'
@@ -11718,7 +11730,7 @@ ${dict['version2']}"
     fi
     case "${bool['binary']}" in
         '0')
-            local app
+            local app path_arr
             declare -A app
             app['bash']="$(koopa_locate_bash --allow-system)"
             app['env']="$(koopa_locate_env --allow-system)"
@@ -11726,10 +11738,16 @@ ${dict['version2']}"
             [[ -x "${app['bash']}" ]] || return 1
             [[ -x "${app['env']}" ]] || return 1
             [[ -x "${app['koopa']}" ]] || return 1
+            path_arr=(
+                "${dict['koopa_prefix']}/bin"
+                "${dict['koopa_prefix']}/bootstrap/bin"
+                '/usr/bin'
+                '/bin'
+            )
             /usr/bin/env -i \
                 HOME="${HOME:?}" \
                 KOOPA_ACTIVATE=0 \
-                PATH="${KOOPA_PREFIX}/bin:${KOOPA_PREFIX}/bootstrap/bin:/usr/bin:/bin" \
+                PATH="$(koopa_paste --sep=':' "${path_arr[@]}")" \
                 "${app['bash']}" \
                     --noprofile \
                     --norc \
@@ -15190,12 +15208,6 @@ koopa_list_path_priority() {
     return 0
 }
 
-koopa_list_programs() {
-    koopa_assert_has_no_args "$#"
-    koopa_r_koopa --vanilla 'cliListPrograms'
-    return 0
-}
-
 koopa_lmod_prefix() {
     koopa_print "$(koopa_opt_prefix)/lmod"
 }
@@ -18640,8 +18652,9 @@ koopa_r_version() {
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     str="$( \
+        R_HOME='' \
         "${app['r']}" --version 2>/dev/null \
-        | "${app['head']}" -n 1 \
+            | "${app['head']}" -n 1 \
     )"
     if koopa_str_detect_fixed \
         --string="$str" \
