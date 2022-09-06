@@ -253,6 +253,7 @@
     "version": "1.14.2"
   },
   "brotli": {
+    "check": false,
     "conservative": true,
     "url": ["https://github.com/google/brotli/"],
     "version": "1.0.9"
@@ -1310,6 +1311,7 @@
     "version": "1.6.0"
   },
   "liblinear": {
+    "check": false,
     "conservative": true,
     "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
     "version": "2.45"
