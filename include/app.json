@@ -2088,12 +2088,6 @@
     "url": ["https://github.com/ncbi/sra-tools/"],
     "version": "3.0.0"
   },
-  "sshfs": {
-    "bin": ["sshfs"],
-    "conservative": false,
-    "url": "https://github.com/libfuse/sshfs/",
-    "version": "3.7.3"
-  },
   "star": {
     "bin": ["STAR"],
     "conservative": false,
