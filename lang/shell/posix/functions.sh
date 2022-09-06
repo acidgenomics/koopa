@@ -973,6 +973,7 @@ koopa_alias_kdev() {
     "$env" -i \
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
+        SUDO_USER="${SUDO_USER:-}" \
         TERM_PROGRAM="${TERM_PROGRAM:-}" \
         "$bash" \
             -il \
