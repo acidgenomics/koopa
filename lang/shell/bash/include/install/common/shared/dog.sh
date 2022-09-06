@@ -14,7 +14,7 @@ main() {
     )
     export OPENSSL_DIR="${dict['openssl']}"
     koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
-    koopa_install_app_internal \
+    koopa_install_app_passthrough \
         --name='dog' \
         --installer='rust-package' \
         "$@"
