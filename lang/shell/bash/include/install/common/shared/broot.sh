@@ -15,7 +15,7 @@ main() {
     # - https://dystroy.org/broot/install/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/broot.rb
     # """
-    koopa_install_app_internal \
+    koopa_install_app_passthrough \
         --installer='rust-package' \
         --name='broot' \
         "$@"

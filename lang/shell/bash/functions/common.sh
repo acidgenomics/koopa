@@ -11352,7 +11352,7 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
     return 0
 }
 
-koopa_install_app_internal() {
+koopa_install_app_passthrough() {
     local pos
     koopa_assert_has_args "$#"
     pos=()
@@ -11476,7 +11476,13 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
         "${dict['installer_fun']}" "$@"
-        declare -x
+        case "${dict['mode']}" in
+            'shared')
+                declare -x
+                ;;
+            *)
+                ;;
+        esac
         return 0
     ) 2>&1 | "${app['tee']}" "${dict['log_file']}"
     if [[ "${bool['copy_log_file']}" -eq 1 ]]
@@ -11509,6 +11515,7 @@ koopa_install_app() {
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['installer']=''
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['mode']='shared'
         ['name']=''
         ['platform']='common'
@@ -11718,7 +11725,7 @@ ${dict['version2']}"
     fi
     case "${bool['binary']}" in
         '0')
-            local app
+            local app path_arr
             declare -A app
             app['bash']="$(koopa_locate_bash --allow-system)"
             app['env']="$(koopa_locate_env --allow-system)"
@@ -11726,10 +11733,16 @@ ${dict['version2']}"
             [[ -x "${app['bash']}" ]] || return 1
             [[ -x "${app['env']}" ]] || return 1
             [[ -x "${app['koopa']}" ]] || return 1
+            path_arr=(
+                "${dict['koopa_prefix']}/bin"
+                "${dict['koopa_prefix']}/bootstrap/bin"
+                '/usr/bin'
+                '/bin'
+            )
             /usr/bin/env -i \
                 HOME="${HOME:?}" \
                 KOOPA_ACTIVATE=0 \
-                PATH="${KOOPA_PREFIX}/bin:${KOOPA_PREFIX}/bootstrap/bin:/usr/bin:/bin" \
+                PATH="$(koopa_paste --sep=':' "${path_arr[@]}")" \
                 "${app['bash']}" \
                     --noprofile \
                     --norc \

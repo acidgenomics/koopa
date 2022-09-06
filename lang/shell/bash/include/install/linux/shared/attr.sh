@@ -6,7 +6,7 @@ main() {
     # - https://savannah.nongnu.org/projects/attr
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/attr.rb
     # """
-    koopa_install_app_internal \
+    koopa_install_app_passthrough \
         --installer='gnu-app' \
         --name='attr' \
        -D '--disable-debug' \
