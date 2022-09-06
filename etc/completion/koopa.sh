@@ -382,7 +382,6 @@ __koopa_complete() {
                         'fix-zsh-permissions'
                         'host-id'
                         'info'
-                        'list'
                         'log'
                         'os-string'
                         'prefix'

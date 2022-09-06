@@ -3,7 +3,7 @@
 koopa_check_system() {
     # """
     # Check system.
-    # @note Updated 2022-05-06.
+    # @note Updated 2022-09-06.
     # """
     koopa_assert_has_no_args "$#"
     koopa_check_exports || return 1
@@ -12,7 +12,7 @@ koopa_check_system() {
     then
         koopa_install_r_koopa
     fi
-    koopa_r_koopa --vanilla 'cliCheckSystem'
+    koopa_r_koopa 'cliCheckSystem'
     koopa_alert_success 'System passed all checks.'
     return 0
 }

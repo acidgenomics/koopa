@@ -10,7 +10,7 @@ main() {
     # - https://gist.github.com/morgant/1753095
     # """
     koopa_activate_opt_prefix 'gmp' 'm4'
-    koopa_install_app_internal \
+    koopa_install_app_passthrough \
         --installer='gnu-app' \
         --name='nettle' \
         -D '--disable-dependency-tracking' \

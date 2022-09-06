@@ -1,29 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Should we rename this to 'koopa_build_app'?
-# FIXME Need to migrate clean_path_arr, or rework.
-# FIXME We should launch with a clean env -i bash approach instead
-# of subshell, which inherits environment variables.
-# FIXME We should always restrict path...disable this override.
-# FIXME Sunset this in favor of env -i bash approach...
-# FIXME Use tmp_dir here.
-# FIXME Rethink the restrict_path approach.
-# FIXME Pass in name and prefix here
-# Positional arguments pass to install script.
-# FIXME Rework '--installer-file' to just '--installer' here.
-
-# FIXME These are the supported input options:
-# - installer
-# - mode
-# - name
-# - prefix
-# - version
-# - passthrough positional args.
-
 koopa_install_app_subshell() {
     # """
     # Install an application in a hardened subshell.
-    # @note Updated 2022-09-03.
+    # @note Updated 2022-09-06.
     # """
     local app bool dict pos
     declare -A app=(
@@ -127,7 +107,13 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
         "${dict['installer_fun']}" "$@"
-        declare -x
+        case "${dict['mode']}" in
+            'shared')
+                declare -x
+                ;;
+            *)
+                ;;
+        esac
         return 0
     ) 2>&1 | "${app['tee']}" "${dict['log_file']}"
     if [[ "${bool['copy_log_file']}" -eq 1 ]]
