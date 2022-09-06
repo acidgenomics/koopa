@@ -9,6 +9,7 @@
   },
   "anaconda": {
     "conservative": false,
+    "large": true,
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2022.05"
   },
@@ -102,6 +103,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": ["python"],
+    "large": true,
     "version": "2.39.0"
   },
   "bamtools": {
@@ -109,6 +111,7 @@
     "conservative": false,
     "date": "2022-03-14",
     "dependencies": ["conda"],
+    "large": true,
     "version": "2.5.2"
   },
   "bash": {
@@ -185,6 +188,7 @@
     "conservative": false,
     "date": "2021-08-12",
     "depends": ["conda"],
+    "large": true,
     "version": "2.30.0"
   },
   "bfg": {
@@ -205,6 +209,7 @@
     "conservaitve": false,
     "date": "2019-10-26",
     "depends": ["conda"],
+    "large": true,
     "version": "1.0"
   },
   "bioconda-utils": {
@@ -212,6 +217,7 @@
     "conservaitve": false,
     "date": "2022-08-01",
     "depends": ["conda"],
+    "large": true,
     "version": "1.0.1"
   },
   "bison": {
@@ -238,6 +244,7 @@
     "conservative": false,
     "date": "2022-02-08",
     "depends": ["conda"],
+    "large": true,
     "version": "2.4.5"
   },
   "bpytop": {
@@ -263,6 +270,7 @@
     "conservative": false,
     "date": "2021-06-25",
     "depends": ["conda"],
+    "large": true,
     "version": "0.41.0"
   },
   "bzip2": {
@@ -618,6 +626,7 @@
     "conservative": false,
     "date": "2021-03-17",
     "depends": ["conda"],
+    "large": true,
     "version": "3.5.1"
   },
   "delta": {
@@ -687,6 +696,7 @@
   },
   "ensembl-perl-api": {
     "conservative": false,
+    "large": true,
     "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
     "version": "107"
   },
@@ -723,6 +733,7 @@
     "conservative": false,
     "date": "2021-03-25",
     "depends": ["conda"],
+    "large": true,
     "version": "0.11.9"
   },
   "fd-find": {
@@ -744,6 +755,7 @@
     "conservative": false,
     "date": "2022-05-05",
     "depends": ["conda"],
+    "large": true,
     "version": "0.2.1"
   },
   "findutils": {
@@ -862,6 +874,7 @@
     "conservative": false,
     "date": "2022-06-05",
     "depends": ["conda"],
+    "large": true,
     "version": "0.11.0"
   },
   "gget": {
@@ -869,6 +882,7 @@
     "conservative": false,
     "date": "2022-09-03",
     "depends": ["conda"],
+    "large": true,
     "version": "0.3.10"
   },
   "ghostscript": {
@@ -919,6 +933,7 @@
     "bin": ["go"],
     "conservative": false,
     "date": "2022-08-30",
+    "large": true,
     "url": ["https://golang.org/dl/"],
     "version": "1.19"
   },
@@ -926,6 +941,7 @@
     "bin": ["gcloud"],
     "conservative": false,
     "date": "2022-08-30",
+    "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
     "version": "399.0.0"
   },
@@ -962,6 +978,7 @@
     "conservative": false,
     "date": "2022-09-03",
     "depends": ["conda"],
+    "large": true,
     "version": "0.13.0"
   },
   "gsl": {
@@ -1029,6 +1046,7 @@
   "haskell-stack": {
     "bin": ["stack"],
     "conservative": false,
+    "large": true,
     "url": ["https://haskellstack.org/"],
     "version": "2.7.5"
   },
@@ -1068,6 +1086,7 @@
     "conservative": false,
     "date": "2020-07-24",
     "depends": ["conda"],
+    "large": true,
     "version": "2.2.1"
   },
   "htop": {
@@ -1083,6 +1102,7 @@
     "conservative": false,
     "date": "2022-07-02",
     "depends": ["conda"],
+    "large": true,
     "version": "2.0.2"
   },
   "hyperfine": {
@@ -1180,6 +1200,7 @@
     "bin": ["julia"],
     "conservative": false,
     "deps": ["gcc"],
+    "large": true,
     "url": ["https://github.com/JuliaLang/julia/"],
     "version": "1.8.0"
   },
@@ -1195,6 +1216,7 @@
     "conservative": false,
     "date": "2022-01-17",
     "depends": ["conda"],
+    "large": true,
     "version": "0.48.0"
   },
   "lame": {
@@ -1217,6 +1239,7 @@
     "conservative": false,
     "date": "2022-09-03",
     "dependencies": ["python"],
+    "large": true,
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
@@ -1484,6 +1507,7 @@
     "conservative": false,
     "date": "2022-06-28",
     "depends": ["conda"],
+    "large": true,
     "version": "1.13a"
   },
   "ncurses": {
@@ -1543,6 +1567,7 @@
     "conservative": false,
     "date": "2022-07-27",
     "depends": ["conda"],
+    "large": true,
     "version": "22.04.5"
   },
   "nghttp2": {
@@ -1553,6 +1578,7 @@
   "nim": {
     "conservative": false,
     "date": "2022-08-30",
+    "large": true,
     "url": ["https://nim-lang.org/"],
     "version": "1.6.6"
   },
@@ -1997,6 +2023,7 @@
       "rustfmt"
     ],
     "conservative": false,
+    "large": true,
     "url": ["https://www.rust-lang.org/"],
     "version": "1.63.0"
   },
@@ -2005,6 +2032,7 @@
     "conservative": false,
     "date": "2022-06-23",
     "depends": ["conda"],
+    "large": true,
     "version": "1.9.0"
   },
   "sambamba": {
@@ -2012,6 +2040,7 @@
     "conservative": false,
     "date": "2021-01-02",
     "depends": ["conda"],
+    "large": true,
     "version": "0.8.0"
   },
   "samtools": {
@@ -2019,6 +2048,7 @@
     "conservative": false,
     "date": "2022-04-07",
     "depends": ["conda"],
+    "large": true,
     "version": "1.15.1"
   },
   "scons": {
@@ -2072,6 +2102,7 @@
     "conservative": false,
     "date": "2022-09-02",
     "dependencies": ["conda"],
+    "large": true,
     "version": "0.6.1"
   },
   "snakemake": {
@@ -2079,6 +2110,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "depends": ["conda"],
+    "large": true,
     "version": "7.14.0"
   },
   "sox": {
@@ -2099,6 +2131,7 @@
   "sra-tools": {
     "bin": ["fasterq-dump", "vdb-config"],
     "conservative": false,
+    "large": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
     "version": "3.0.0"
   },
@@ -2107,6 +2140,7 @@
     "conservative": false,
     "date": "2022-01-15",
     "depends": ["conda"],
+    "large": true,
     "version": "2.7.10a"
   },
   "starship": {
