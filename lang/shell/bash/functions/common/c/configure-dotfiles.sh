@@ -24,7 +24,7 @@ koopa_configure_dotfiles() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        ['bash']="$(koopa_locate_bash)"
+        ['bash']="$(koopa_locate_bash --allow-system)"
     )
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
