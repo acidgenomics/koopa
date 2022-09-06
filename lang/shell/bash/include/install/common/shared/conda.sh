@@ -10,7 +10,7 @@ main() {
     # """
     local app dict
     declare -A app=(
-        ['bash']="$(koopa_locate_bash)"
+        ['bash']="$(koopa_locate_bash --allow-system)"
     )
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
