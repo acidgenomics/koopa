@@ -16,7 +16,7 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['bash']="$(koopa_locate_bash)"
+        ['bash']="$(koopa_locate_bash --allow-system)"
     )
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
