@@ -14,7 +14,7 @@ main() {
         'nettle' \
         'texinfo' \
         'gnutls'
-    koopa_install_app_internal \
+    koopa_install_app_passthrough \
         --installer='gnu-app' \
         --name='emacs' \
         '-D' '--with-modules' \
