@@ -3,7 +3,7 @@
 koopa_activate_coreutils_aliases() {
     # """
     # Activate GNU coreutils aliases.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-07.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -35,6 +35,10 @@ koopa_activate_coreutils_aliases() {
     if [ -x "${bin_prefix}/gdir" ]
     then
         alias dir='gdir'
+    fi
+    if [ -x "${bin_prefix}/gecho" ]
+    then
+        alias echo='gecho'
     fi
     if [ -x "${bin_prefix}/gegrep" ]
     then
@@ -75,6 +79,14 @@ koopa_activate_coreutils_aliases() {
         alias gmv='gmv --interactive --verbose'
         alias mv='gmv'
     fi
+    if [ -x "${bin_prefix}/greadlink" ]
+    then
+        alias readlink='greadlink'
+    fi
+    if [ -x "${bin_prefix}/grealpath" ]
+    then
+        alias realpath='grealpath'
+    fi
     if [ -x "${bin_prefix}/grm" ]
     then
         alias grm='grm --interactive=once --verbose'
@@ -103,6 +115,10 @@ koopa_activate_coreutils_aliases() {
     if [ -x "${bin_prefix}/gtr" ]
     then
         alias tr='gtr'
+    fi
+    if [ -x "${bin_prefix}/gwhich" ]
+    then
+        alias which='gwhich'
     fi
     if [ -x "${bin_prefix}/gxargs" ]
     then
