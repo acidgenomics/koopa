@@ -75,6 +75,10 @@ koopa_activate_coreutils_aliases() {
         alias gmv='gmv --interactive --verbose'
         alias mv='gmv'
     fi
+    if [ -x "${bin_prefix}/greadlink" ]
+    then
+        alias readlink='greadlink'
+    fi
     if [ -x "${bin_prefix}/grealpath" ]
     then
         alias realpath='grealpath'
