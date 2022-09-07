@@ -3278,6 +3278,7 @@ koopa_build_all_apps() {
         'latch'
         'pipx'
         'poetry'
+        'py-spy'
         'pycodestyle'
         'pyflakes'
         'pygments'
@@ -3305,6 +3306,7 @@ koopa_build_all_apps() {
         'hyperfine'
         'mcfly'
         'mdcat'
+        'nushell'
         'procs'
         'ripgrep'
         'ripgrep-all'
@@ -11157,6 +11159,7 @@ koopa_install_all_apps() {
         'nmap'
         'node'
         'npth'
+        'nushell'
         'oniguruma'
         'openblas'
         'openjdk'
@@ -11173,6 +11176,7 @@ koopa_install_all_apps() {
         'prettier'
         'procs'
         'proj'
+        'py-spy'
         'pycodestyle'
         'pyenv'
         'pyflakes'
@@ -13024,6 +13028,12 @@ koopa_install_node() {
 koopa_install_npth() {
     koopa_install_app \
         --name='npth' \
+        "$@"
+}
+
+koopa_install_nushell() {
+    koopa_install_app \
+        --name='nushell' \
         "$@"
 }
 
@@ -23416,6 +23426,12 @@ koopa_uninstall_node() {
 koopa_uninstall_npth() {
     koopa_uninstall_app \
         --name='npth' \
+        "$@"
+}
+
+koopa_uninstall_nushell() {
+    koopa_uninstall_app \
+        --name='nushell' \
         "$@"
 }
 
