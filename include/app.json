@@ -145,8 +145,9 @@
   "bat": {
     "bin": ["bat"],
     "conservative": false,
+    "date": "2022-09-07",
     "depends": ["rust"],
-    "version": "0.21.0"
+    "version": "0.22.0"
   },
   "bc": {
     "bin": ["bc"],
@@ -1108,8 +1109,9 @@
   "hyperfine": {
     "bin": ["hyperfine"],
     "conservative": false,
+    "date": "2022-09-07",
     "depends": ["rust"],
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   "icu4c": {
     "bin": [
@@ -1199,7 +1201,7 @@
   "julia": {
     "bin": ["julia"],
     "conservative": false,
-    "date": "2022-09-06",
+    "date": "2022-09-07",
     "deps": ["gcc"],
     "large": true,
     "outdated": true,
@@ -2007,9 +2009,9 @@
   "ruff": {
     "bin": ["ruff"],
     "conservative": false,
-    "date": "2022-09-03",
+    "date": "2022-09-07",
     "dependencies": ["python"],
-    "version": "0.0.25"
+    "version": "0.0.29"
   },
   "rust": {
     "bin": [
