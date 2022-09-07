@@ -318,6 +318,8 @@ koopa_install_all_apps() {
             'star'
         )
     fi
+    # FIXME On macOS, run the bootstrap installer if we haven't already.
+    # /opt/koopa/include/bootstrap.sh
     for app_name in "${apps[@]}"
     do
         # FIXME Switch to bootstrap bin prefix here in the future.
