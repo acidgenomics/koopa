@@ -247,6 +247,7 @@ __koopa_complete() {
                         'nmap'
                         'node'
                         'npth'
+                        'nushell'
                         'oniguruma'
                         'openblas'
                         'openjdk'

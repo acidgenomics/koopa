@@ -13027,6 +13027,12 @@ koopa_install_npth() {
         "$@"
 }
 
+koopa_install_nushell() {
+    koopa_install_app \
+        --name='nushell' \
+        "$@"
+}
+
 koopa_install_oniguruma() {
     koopa_install_app \
         --name='oniguruma' \
@@ -23416,6 +23422,12 @@ koopa_uninstall_node() {
 koopa_uninstall_npth() {
     koopa_uninstall_app \
         --name='npth' \
+        "$@"
+}
+
+koopa_uninstall_nushell() {
+    koopa_uninstall_app \
+        --name='nushell' \
         "$@"
 }
 
