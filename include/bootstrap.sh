@@ -57,7 +57,7 @@ install_coreutils() {
 
 main() {
     rm -fr "${PREFIX:?}"
-    install_coreutils
+    # > install_coreutils
     install_bash
 }
 
