@@ -3,7 +3,7 @@
 koopa_activate_coreutils_aliases() {
     # """
     # Activate GNU coreutils aliases.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-07.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -74,6 +74,10 @@ koopa_activate_coreutils_aliases() {
     then
         alias gmv='gmv --interactive --verbose'
         alias mv='gmv'
+    fi
+    if [ -x "${bin_prefix}/grealpath" ]
+    then
+        alias realpath='grealpath'
     fi
     if [ -x "${bin_prefix}/grm" ]
     then
