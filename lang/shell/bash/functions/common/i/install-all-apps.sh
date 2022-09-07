@@ -317,7 +317,8 @@ koopa_install_all_apps() {
     fi
     for app_name in "${apps[@]}"
     do
-        "${app['koopa']}" install --binary "$app_name"
+        PATH="${dict['bs_bin_prefix']}:${PATH:-}" \
+            "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
