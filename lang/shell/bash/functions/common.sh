@@ -11003,13 +11003,12 @@ koopa_install_ack() {
 koopa_install_all_apps() {
     local app_name apps dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['koopa']="$(koopa_locate_koopa)"
-    )
+    declare -A app
+    app['koopa']="$(koopa_locate_koopa)"
     [[ -x "${app['koopa']}" ]] || return 1
     declare -A dict=(
         ['blocks']="$(koopa_disk_512k_blocks '/')"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['large']=0
     )
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
@@ -11304,7 +11303,7 @@ koopa_install_all_apps() {
     fi
     for app_name in "${apps[@]}"
     do
-        PATH="${dict['koopa_prefix']}/bootstrap/bin:${PATH:-}" \
+        PATH="${dict['bs_bin_prefix']}:${PATH:-}" \
             "${app['koopa']}" install --binary "$app_name"
     done
     return 0
