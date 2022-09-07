@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-09-01.
+    # @note Updated 2022-09-07.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -46,6 +46,9 @@ main() {
     case "${dict['name']}" in
         'delta')
             dict['cargo_name']='git-delta'
+            ;;
+        'nushell')
+            dict['cargo_name']='nu'
             ;;
         'ripgrep-all')
             dict['cargo_name']='ripgrep_all'
@@ -107,14 +110,17 @@ main() {
         *)
             # Packages available on crates.io.
             install_args+=('--version' "${dict['version']}")
-            case "${dict['name']}" in
-                'ripgrep')
-                    install_args+=('--features' 'pcre2')
-                    ;;
-                'tuc')
-                    install_args+=('--features' 'regex')
-                    ;;
-            esac
+            ;;
+    esac
+    case "${dict['name']}" in
+        'nushell')
+            install_args+=('--features' 'extra')
+            ;;
+        'ripgrep')
+            install_args+=('--features' 'pcre2')
+            ;;
+        'tuc')
+            install_args+=('--features' 'regex')
             ;;
     esac
     dict['cargo_home']="$(koopa_init_dir "${dict['cargo_home']}")"

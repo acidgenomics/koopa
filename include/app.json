@@ -1614,6 +1614,13 @@
     "url": ["https://gnupg.org/download/"],
     "version": "1.6"
   },
+  "nushell": {
+    "bin": ["nu"],
+    "conservative": false,
+    "date": "2022-09-07",
+    "dependencies": ["openssl", "rust"],
+    "version": "0.68.0"
+  },
   "oniguruma": {
     "conservative": true,
     "date": "2022-08-30",
