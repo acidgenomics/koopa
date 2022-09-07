@@ -1819,6 +1819,13 @@
     "url": ["https://ftp.gnu.org/gnu/pth/"],
     "version": "2.0.7"
   },
+  "py-spy": {
+    "bin": ["py-spy"],
+    "conservative": false,
+    "date": "2022-09-05",
+    "depends": ["python"],
+    "version": "0.3.13"
+  },
   "pycodestyle": {
     "bin": ["pycodestyle"],
     "conservative": false,
