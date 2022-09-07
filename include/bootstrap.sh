@@ -3,7 +3,7 @@ set -euo pipefail
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2022-09-03.
+# @note Updated 2022-09-07.
 # """
 
 KOOPA_PREFIX="$(cd -- "$(dirname -- "$0")/.." && pwd)"
@@ -57,7 +57,7 @@ install_coreutils() {
 
 main() {
     rm -fr "${PREFIX:?}"
-    # > install_coreutils
+    install_coreutils
     install_bash
 }
 
