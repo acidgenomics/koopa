@@ -343,6 +343,10 @@ koopa_activate_coreutils_aliases() {
         alias gmv='gmv --interactive --verbose'
         alias mv='gmv'
     fi
+    if [ -x "${bin_prefix}/grealpath" ]
+    then
+        alias realpath='grealpath'
+    fi
     if [ -x "${bin_prefix}/grm" ]
     then
         alias grm='grm --interactive=once --verbose'
