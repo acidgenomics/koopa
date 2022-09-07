@@ -145,8 +145,9 @@
   "bat": {
     "bin": ["bat"],
     "conservative": false,
+    "date": "2022-09-07",
     "depends": ["rust"],
-    "version": "0.21.0"
+    "version": "0.22.0"
   },
   "bc": {
     "bin": ["bc"],
@@ -657,8 +658,9 @@
   },
   "dotfiles": {
     "conservative": false,
+    "date": "2022-09-07",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "01a5a258cd9e1ca254864a5d6168c097469c45a2"
+    "version": "269e843e5aa0f9005ab3322a74a4568bb9da393e"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -1108,8 +1110,9 @@
   "hyperfine": {
     "bin": ["hyperfine"],
     "conservative": false,
+    "date": "2022-09-07",
     "depends": ["rust"],
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   "icu4c": {
     "bin": [
@@ -1199,7 +1202,7 @@
   "julia": {
     "bin": ["julia"],
     "conservative": false,
-    "date": "2022-09-06",
+    "date": "2022-09-07",
     "deps": ["gcc"],
     "large": true,
     "outdated": true,
@@ -1817,6 +1820,13 @@
     "url": ["https://ftp.gnu.org/gnu/pth/"],
     "version": "2.0.7"
   },
+  "py-spy": {
+    "bin": ["py-spy"],
+    "conservative": false,
+    "date": "2022-09-05",
+    "depends": ["python"],
+    "version": "0.3.13"
+  },
   "pycodestyle": {
     "bin": ["pycodestyle"],
     "conservative": false,
@@ -2007,9 +2017,9 @@
   "ruff": {
     "bin": ["ruff"],
     "conservative": false,
-    "date": "2022-09-03",
+    "date": "2022-09-07",
     "dependencies": ["python"],
-    "version": "0.0.25"
+    "version": "0.0.29"
   },
   "rust": {
     "bin": [

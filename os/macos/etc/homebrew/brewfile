@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-08-17.
+# Updated 2022-09-06.
 #
 # @section Cask reinstallation:
 #
@@ -66,7 +66,7 @@ cask "boop"
 cask "brave-browser"
 cask "carbon-copy-cloner"
 cask "coconutbattery"
-cask "docker"
+cask "docker" # large
 cask "easyfind"
 cask "emacs"
 cask "firefox"
@@ -104,11 +104,11 @@ cask "font-jetbrains-mono-nerd-font"
 cask "font-victor-mono"
 cask "font-victor-mono-nerd-font"
 cask "github"
-cask "gitkraken"
-cask "google-drive"
+cask "gitkraken" # large
+cask "google-drive" # large
 cask "gpg-suite-no-mail"
 cask "hazel"
-cask "ibm-aspera-connect"
+cask "ibm-aspera-connect" # large
 cask "igv"
 cask "iterm2-beta"
 cask "julia"
@@ -117,8 +117,9 @@ cask "kitty"
 cask "libreoffice"
 cask "little-snitch"
 cask "macvim"
-cask "museeks"
-cask "neovide"
+cask "microsoft-teams"
+# > cask "museeks"
+# > cask "neovide"
 cask "netnewswire"
 cask "nightfall"
 cask "omnidisksweeper"
@@ -138,7 +139,7 @@ cask "vanilla"
 cask "visual-studio-code"
 cask "vlc"
 cask "vscodium"
-cask "webex"
+cask "webex" # large
 cask "xld"
 cask "xquartz"
 cask "zoom"

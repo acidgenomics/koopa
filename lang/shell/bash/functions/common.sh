@@ -13147,6 +13147,12 @@ koopa_install_proj() {
         "$@"
 }
 
+koopa_install_py_spy() {
+    koopa_install_app \
+        --name='py-spy' \
+        "$@"
+}
+
 koopa_install_pycodestyle() {
     koopa_install_app \
         --name='pycodestyle' \
@@ -23537,6 +23543,12 @@ koopa_uninstall_procs() {
 koopa_uninstall_proj() {
     koopa_uninstall_app \
         --name='proj' \
+        "$@"
+}
+
+koopa_uninstall_py_spy() {
+    koopa_uninstall_app \
+        --name='py_spy' \
         "$@"
 }
 
