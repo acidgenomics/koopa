@@ -5,7 +5,7 @@
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-09-02.
+    # @note Updated 2022-09-07.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -172,6 +172,7 @@ koopa_install_all_apps() {
         'nmap'
         'node'
         'npth'
+        'nushell'
         'oniguruma'
         'openblas'
         'openjdk'
@@ -188,6 +189,7 @@ koopa_install_all_apps() {
         'prettier'
         'procs'
         'proj'
+        'py-spy'
         'pycodestyle'
         'pyenv'
         'pyflakes'

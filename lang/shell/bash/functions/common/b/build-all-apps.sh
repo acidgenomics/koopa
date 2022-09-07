@@ -7,7 +7,7 @@
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-09-02.
+    # @note Updated 2022-09-07.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -264,6 +264,8 @@ koopa_build_all_apps() {
         # deps: python.
         'poetry'
         # deps: python.
+        'py-spy'
+        # deps: python.
         'pycodestyle'
         # deps: python.
         'pyflakes'
@@ -311,6 +313,8 @@ koopa_build_all_apps() {
         'mcfly'
         # deps: rust.
         'mdcat'
+        # deps: rust.
+        'nushell'
         # deps: rust.
         'procs'
         # deps: rust.
