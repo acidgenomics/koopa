@@ -3,7 +3,7 @@
 koopa_alias_kdev() {
     # """
     # Koopa 'kdev' shortcut alias.
-    # @note Updated 2022-09-06.
+    # @note Updated 2022-09-08.
     #
     # Alternative approach:
     # > export KOOPA_ACTIVATE=0
@@ -34,6 +34,7 @@ koopa_alias_kdev() {
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \
         TERM_PROGRAM="${TERM_PROGRAM:-}" \
+        TMPDIR="${TMPDIR:-}" \
         "$bash" \
             -il \
             -o errexit \

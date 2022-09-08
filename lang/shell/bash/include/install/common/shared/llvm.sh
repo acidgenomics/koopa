@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This still seems to be problematic on macOS:
+# -- Found FFI: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libffi.tbd  
+
 main() {
     # """
     # Install LLVM (clang).
@@ -162,13 +165,12 @@ libncursesw.${dict['shared_ext']}"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
     # Additional Python binding fixes.
-    # Likely need to set these to detect 'Python.h' correctly during LLDB install.
-    # FIXME If these approaches don't work, just disable Python for time being.
     cmake_args+=(
         "-DCLANG_PYTHON_BINDINGS_VERSIONS=${dict['py_maj_min_ver']}"
-        # FIXME Does just using absolute path work here?
-        "-DLLDB_PYTHON_EXE_RELATIVE_PATH=${app['python']}"
-        "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/site-packages"
+        "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/\
+bin/python${dict['py_maj_min_ver']}"
+        "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/\
+site-packages"
     )
     if koopa_is_macos
     then
