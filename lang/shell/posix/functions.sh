@@ -479,6 +479,7 @@ koopa_activate_homebrew() {
     [ -x "${prefix}/bin/brew" ] || return 0
     export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
     export HOMEBREW_INSTALL_CLEANUP=1
+    export HOMEBREW_INSTALL_FROM_API=1
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_NO_AUTO_UPDATE=1
     export HOMEBREW_NO_ENV_HINTS=1
@@ -992,6 +993,7 @@ koopa_alias_kdev() {
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \
         TERM_PROGRAM="${TERM_PROGRAM:-}" \
+        TMPDIR="${TMPDIR:-}" \
         "$bash" \
             -il \
             -o errexit \

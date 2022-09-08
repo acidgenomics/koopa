@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this to parse app.json file instead.
-
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-09-07.
+    # @note Updated 2022-09-08.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -14,8 +12,12 @@ koopa_install_all_apps() {
     # """
     local app_name apps dict
     koopa_assert_has_no_args "$#"
+    declare -A app
+    app['koopa']="$(koopa_locate_koopa)"
+    [[ -x "${app['koopa']}" ]] || return 1
     declare -A dict=(
         ['blocks']="$(koopa_disk_512k_blocks '/')"
+        ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['large']=0
     )
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
@@ -151,6 +153,7 @@ koopa_install_all_apps() {
         'libuv'
         'libxml2'
         'libzip'
+        'llvm'
         'lua'
         'luarocks'
         'lz4'
@@ -220,6 +223,7 @@ koopa_install_all_apps() {
         'starship'
         'stow'
         'subversion'
+        'swig'
         'taglib'
         'tar'
         'tcl-tk'
@@ -315,8 +319,8 @@ koopa_install_all_apps() {
     fi
     for app_name in "${apps[@]}"
     do
-        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
-            koopa install --binary "$app_name"
+        PATH="${dict['bs_bin_prefix']}:${PATH:-}" \
+            "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
