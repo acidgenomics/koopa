@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting this Python header issue:
+# /tmp/koopa-501-20220908-111445-Abi2KCK4fV/llvm-project-15.0.0.src/lldb/source/Plugins/ScriptInterpreter/Python/lldb-python.h:49:10: fatal error: 'Python.h' file not found
+#include <Python.h>
+         ^~~~~~~~~~
+# 1 error generated.
+
 main() {
     # """
     # Install LLVM (clang).
@@ -153,7 +159,7 @@ libedit.${dict['shared_ext']}"
 libxml2.${dict['shared_ext']}"
         "-DPANEL_LIBRARIES=${dict['ncurses']}/lib/\
 libpanelw.${dict['shared_ext']}"
-        "-DPERL_EXECUTABLE=${app['git']}"
+        "-DPERL_EXECUTABLE=${app['perl']}"
         "-DPython3_EXECUTABLE=${app['python']}"
         "-DPython3_INCLUDE_DIRS=${dict['python']}/include"
         "-DPython3_LIBRARIES=${dict['python']}/lib/\
