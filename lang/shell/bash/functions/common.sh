@@ -11754,12 +11754,13 @@ ${dict['version2']}"
                 "${env_vars[@]}" \
                 "${app['bash']}" \
                     --noprofile \
-                    --rcfile "${dict['koopa_prefix']}/lang/shell/bash/include/header.sh" \
+                    --norc \
                     -o errexit \
                     -o errtrace \
                     -o nounset \
                     -o pipefail \
-                    -c "koopa_install_app_subshell \
+                    -c "source \"\$(${app['koopa']} header bash)\"; \
+                        koopa_install_app_subshell \
                             --installer=${dict['installer']} \
                             --mode=${dict['mode']} \
                             --name=${dict['name']} \
