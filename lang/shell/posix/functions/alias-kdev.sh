@@ -50,7 +50,6 @@ koopa_alias_kdev() {
         XDG_DATA_DIRS="${XDG_DATA_DIRS:-}" \
         "$bash" \
             --login \
-            --norc \
             -o errexit \
             -o errtrace \
             -o nounset \

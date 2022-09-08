@@ -11717,15 +11717,11 @@ ${dict['version2']}"
             declare -A app
             app['bash']="$(koopa_locate_bash --allow-system)"
             app['env']="$(koopa_locate_env --allow-system)"
-            app['koopa']="$(koopa_locate_koopa)"
             app['tee']="$(koopa_locate_tee --allow-system)"
             [[ -x "${app['bash']}" ]] || return 1
             [[ -x "${app['env']}" ]] || return 1
-            [[ -x "${app['koopa']}" ]] || return 1
             [[ -x "${app['tee']}" ]] || return 1
             path_arr=(
-                "${dict['koopa_prefix']}/bin"
-                "${dict['koopa_prefix']}/bootstrap/bin"
                 '/usr/bin'
                 '/bin'
             )
@@ -11763,7 +11759,7 @@ ${dict['version2']}"
                     -o errtrace \
                     -o nounset \
                     -o pipefail \
-                    -c "source \"\$(${app['koopa']} header bash)\"; \
+                    -c "source '${dict['koopa_prefix']}/lang/shell/bash/include/header.sh'; \
                         koopa_install_app_subshell \
                             --installer=${dict['installer']} \
                             --mode=${dict['mode']} \
