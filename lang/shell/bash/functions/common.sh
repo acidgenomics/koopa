@@ -10881,6 +10881,28 @@ koopa_hisat2_index() {
     return 0
 }
 
+koopa_homebrew_brew_version() {
+    local app brew
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        ['brew']="$(koopa_locate_brew)"
+        ['jq']="$(koopa_locate_jq)"
+    )
+    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    for brew in "$@"
+    do
+        local str
+        str="$( \
+            "${app['brew']}" info --json "$brew" \
+                | "${app['jq']}" --raw-output '.[].versions.stable'
+        )"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
+    done
+    return 0
+}
+
 koopa_info_box() {
     koopa_assert_has_args "$#"
     local array

@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Consider adding support for '--strip-components=1' type approach here.
+# Perhaps we should extract into temporary directory and then copy in this
+# case, but it can be slow across network file systems.
+
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
