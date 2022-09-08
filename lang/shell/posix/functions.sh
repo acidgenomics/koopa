@@ -1010,7 +1010,9 @@ koopa_alias_kdev() {
             -o errexit \
             -o errtrace \
             -o nounset \
-            -o pipefail
+            -o pipefail \
+            -o verbose \
+            -o xtrace
     return 0
 }
 
