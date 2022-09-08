@@ -7243,16 +7243,6 @@ koopa_download_cran_latest() {
     return 0
 }
 
-koopa_download_ensembl_genome() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliDownloadEnsemblGenome' "$@"
-}
-
-koopa_download_gencode_genome() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliDownloadGencodeGenome' "$@"
-}
-
 koopa_download_github_latest() {
     local api_url app repo tag tarball_url
     koopa_assert_has_args "$#"
@@ -7275,16 +7265,6 @@ koopa_download_github_latest() {
         koopa_download "$tarball_url" "${tag}.tar.gz"
     done
     return 0
-}
-
-koopa_download_refseq_genome() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliDownloadRefseqGenome' "$@"
-}
-
-koopa_download_ucsc_genome() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliDownloadUCSCGenome' "$@"
 }
 
 koopa_download() {
