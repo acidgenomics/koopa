@@ -3262,6 +3262,8 @@ koopa_build_all_apps() {
         'wget'
         'which'
         'libgeotiff'
+        'swig'
+        'llvm'
         'go'
         'chezmoi' # deps: go
         'fzf' # deps: go
@@ -11142,6 +11144,7 @@ koopa_install_all_apps() {
         'libuv'
         'libxml2'
         'libzip'
+        'llvm'
         'lua'
         'luarocks'
         'lz4'
@@ -11211,6 +11214,7 @@ koopa_install_all_apps() {
         'starship'
         'stow'
         'subversion'
+        'swig'
         'taglib'
         'tar'
         'tcl-tk'
@@ -13437,6 +13441,12 @@ koopa_install_stow() {
 koopa_install_subversion() {
     koopa_install_app \
         --name='subversion' \
+        "$@"
+}
+
+koopa_install_swig() {
+    koopa_install_app \
+        --name='swig' \
         "$@"
 }
 
@@ -23822,6 +23832,12 @@ koopa_uninstall_stow() {
 koopa_uninstall_subversion() {
     koopa_uninstall_app \
         --name='subversion' \
+        "$@"
+}
+
+koopa_uninstall_swig() {
+    koopa_uninstall_app \
+        --name='swig' \
         "$@"
 }
 
