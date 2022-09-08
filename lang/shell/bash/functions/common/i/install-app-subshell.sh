@@ -5,14 +5,7 @@ koopa_install_app_subshell() {
     # Install an application in a hardened subshell.
     # @note Updated 2022-09-08.
     # """
-    local bool dict pos
-    declare -A bool
-    if [[ -n "${INSTALL_NAME:-}" ]]
-    then
-        bool['passthrough']=1
-    else
-        bool['passthrough']=0
-    fi
+    local dict pos
     declare -A dict=(
         ['installer_bn']=''
         ['installer_fun']='main'
@@ -109,6 +102,8 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         # shellcheck disable=SC2030
         export INSTALL_PREFIX="${dict['prefix']}"
         # shellcheck disable=SC2030
+        export INSTALL_SCRIPT="${dict['installer_file']}"
+        # shellcheck disable=SC2030
         export INSTALL_VERSION="${dict['version']}"
         # shellcheck source=/dev/null
         source "${dict['installer_file']}"
@@ -116,6 +111,8 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         "${dict['installer_fun']}" "$@"
         case "${dict['mode']}" in
             'shared')
+                koopa_alert_info "Environment variables for \
+'$(koopa_basename "${dict['installer_file']}")'."
                 declare -x
                 ;;
             *)

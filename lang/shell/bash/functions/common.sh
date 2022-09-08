@@ -11448,9 +11448,6 @@ koopa_install_app_subshell() {
                 pos+=("${2:?}")
                 shift 2
                 ;;
-            '')
-                shift 1
-                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -11464,12 +11461,15 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         koopa_cd "${dict['tmp_dir']}"
         export INSTALL_NAME="${dict['name']}"
         export INSTALL_PREFIX="${dict['prefix']}"
+        export INSTALL_SCRIPT="${dict['installer_file']}"
         export INSTALL_VERSION="${dict['version']}"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
         "${dict['installer_fun']}" "$@"
         case "${dict['mode']}" in
             'shared')
+                koopa_alert_info "Environment variables for \
+'$(koopa_basename "${dict['installer_file']}")'."
                 declare -x
                 ;;
             *)
@@ -11608,7 +11608,7 @@ koopa_install_app() {
                 shift 1
                 ;;
             '-D')
-                pos+=("${2:?}")
+                pos+=("${1:?}" "${2:?}")
                 shift 2
                 ;;
             '')
