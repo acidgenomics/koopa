@@ -11778,10 +11778,11 @@ ${dict['version2']}"
                 '/usr/bin'
                 '/bin'
             )
-            /usr/bin/env -i \
+            "${app['env']}" -i \
                 HOME="${HOME:?}" \
                 KOOPA_ACTIVATE=0 \
                 PATH="$(koopa_paste --sep=':' "${path_arr[@]}")" \
+                TMPDIR="${TMPDIR:-}" \
                 "${app['bash']}" \
                     --noprofile \
                     --norc \

@@ -993,6 +993,7 @@ koopa_alias_kdev() {
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \
         TERM_PROGRAM="${TERM_PROGRAM:-}" \
+        TMPDIR="${TMPDIR:-}" \
         "$bash" \
             -il \
             -o errexit \
