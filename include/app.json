@@ -1412,10 +1412,10 @@
     "version": "1.9.2"
   },
   "llvm": {
-    "check": false,
     "conservative": true,
+    "date": "2022-09-07",
     "url": ["https://releases.llvm.org/"],
-    "version": "14.0.6"
+    "version": "15.0.0"
   },
   "lmod": {
     "conservative": true,
