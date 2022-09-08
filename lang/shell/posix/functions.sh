@@ -990,15 +990,15 @@ koopa_alias_kdev() {
     "$env" -i \
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
-        LC_ALL="${LC_ALL:-C}" \
+        LC_ALL="${LC_ALL:-}" \
         LC_BYOBU="${LC_BYOBU:-}" \
-        LC_COLLATE="${LC_COLLATE:-C}" \
-        LC_CTYPE="${LC_CTYPE:-C}" \
-        LC_MESSAGES="${LC_MESSAGES:-C}" \
-        LC_MONETARY="${LC_MONETARY:-C}" \
-        LC_NUMERIC="${LC_NUMERIC:-C}" \
+        LC_COLLATE="${LC_COLLATE:-}" \
+        LC_CTYPE="${LC_CTYPE:-}" \
+        LC_MESSAGES="${LC_MESSAGES:-}" \
+        LC_MONETARY="${LC_MONETARY:-}" \
+        LC_NUMERIC="${LC_NUMERIC:-}" \
         LC_TERMTYPE="${LC_TERMTYPE:-}" \
-        LC_TIME="${LC_TIME:-C}" \
+        LC_TIME="${LC_TIME:-}" \
         LOGNAME="${LOGNAME:-}" \
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \
@@ -1006,13 +1006,12 @@ koopa_alias_kdev() {
         TMPDIR="${TMPDIR:-}" \
         XDG_DATA_DIRS="${XDG_DATA_DIRS:-}" \
         "$bash" \
-            -il \
+            --login \
+            --norc \
             -o errexit \
             -o errtrace \
             -o nounset \
-            -o pipefail \
-            -o verbose \
-            -o xtrace
+            -o pipefail
     return 0
 }
 
