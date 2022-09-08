@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this.
-# FIXME This command needs to be run at end of 'koopa install r'.
-# Need to include: processx, rlang.
-
-# LANG=""
-# LC_ALL=
-# LC_COLLATE="C"
-# LC_CTYPE="C"
-# LC_MESSAGES="C"
-# LC_MONETARY="C"
-# LC_NUMERIC="C"
-# LC_TIME="C"
-
 koopa_install_r_koopa() {
     # """
     # Install koopa R package.
