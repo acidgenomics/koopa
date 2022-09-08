@@ -3,7 +3,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-09-06.
+    # @note Updated 2022-09-08.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
@@ -253,7 +253,7 @@ ${dict['version2']}"
     fi
     case "${bool['binary']}" in
         '0')
-            local app path_arr
+            local app env_vars path_arr
             declare -A app
             app['bash']="$(koopa_locate_bash --allow-system)"
             app['env']="$(koopa_locate_env --allow-system)"
@@ -267,11 +267,23 @@ ${dict['version2']}"
                 '/usr/bin'
                 '/bin'
             )
+            # Refer to 'locale' for desired LC settings.
+            env_vars=(
+                "HOME=${HOME:?}"
+                'KOOPA_ACTIVATE=0'
+                "LANG=${LANG:-}"
+                "LC_ALL=${LC_ALL:-}"
+                "LC_COLLATE=${LC_COLLATE:-C}"
+                "LC_CTYPE=${LC_CTYPE:-C}"
+                "LC_MESSAGES=${LC_MESSAGES:-C}"
+                "LC_MONETARY=${LC_MONETARY:-C}"
+                "LC_NUMERIC=${LC_NUMERIC:-C}"
+                "LC_TIME=${LC_TIME:-C}"
+                "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+                "TMPDIR=${TMPDIR:-}"
+            )
             "${app['env']}" -i \
-                HOME="${HOME:?}" \
-                KOOPA_ACTIVATE=0 \
-                PATH="$(koopa_paste --sep=':' "${path_arr[@]}")" \
-                TMPDIR="${TMPDIR:-}" \
+                "${env_vars[@]}" \
                 "${app['bash']}" \
                     --noprofile \
                     --norc \
