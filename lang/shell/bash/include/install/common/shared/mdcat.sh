@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_passthrough \
-        --name='mdcat' \
+    koopa_install_app_subshell \
         --installer='rust-package' \
+        --name='mdcat' \
         "$@"
 }

@@ -20,7 +20,7 @@ main() {
         ['lang_base_url']='https://ftp.gnu.org/gnu/aspell/dict'
         ['prefix']="${INSTALL_PREFIX:?}"
     )
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='aspell'
     app['aspell']="${dict['prefix']}/bin/aspell"
