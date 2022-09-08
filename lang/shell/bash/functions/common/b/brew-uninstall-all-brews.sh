@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Make this accessible in the CLI.
+
 koopa_brew_uninstall_all_brews() {
     # """
     # Uninstall all Homebrew formulae.
