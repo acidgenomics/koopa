@@ -8,7 +8,7 @@
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2022-09-07.
+    # @note Updated 2022-09-08.
     #
     # @seealso
     # - https://llvm.org/docs/GettingStarted.html
@@ -80,11 +80,6 @@ main() {
     dict['file']="${dict['name']}-${dict['version']}.src.tar.xz"
     dict['url']="https://github.com/llvm/${dict['name']}/releases/download/\
 llvmorg-${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}.src"
-    koopa_mkdir 'build'
-    koopa_cd 'build'
     projects=(
         # > 'bolt'
         # > 'cross-project-tests'
@@ -192,6 +187,11 @@ libncursesw.${dict['shared_ext']}"
             '-DLLVM_LINK_LLVM_DYLIB=ON'
         )
     fi
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}.src"
+    koopa_mkdir 'build'
+    koopa_cd 'build'
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -G 'Ninja' "${cmake_args[@]}" ../llvm
     "${app['cmake']}" --build .
