@@ -7,7 +7,7 @@ main() {
         ['mpfr']="$(koopa_app_prefix 'mpfr')"
     )
     koopa_activate_opt_prefix 'gmp' 'mpfr'
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='mpc' \
         -D "--with-gmp=${dict['gmp']}" \

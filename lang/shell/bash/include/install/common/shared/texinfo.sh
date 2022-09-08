@@ -8,7 +8,7 @@ main() {
             'ncurses' \
             'perl'
     fi
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='texinfo' \
         -D '--disable-dependency-tracking' \

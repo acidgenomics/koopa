@@ -2165,8 +2165,9 @@
   "starship": {
     "bin": ["starship"],
     "conservative": false,
+    "date": "2022-09-08",
     "depends": ["rust"],
-    "version": "1.10.2"
+    "version": "1.10.3"
   },
   "stow": {
     "bin": ["stow"],

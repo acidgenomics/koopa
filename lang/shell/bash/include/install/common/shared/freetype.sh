@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='freetype' \
         -D '--enable-freetype-config' \
