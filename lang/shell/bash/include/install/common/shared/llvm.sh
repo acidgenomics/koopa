@@ -1,31 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve these on macOS:
-# -- Found Git: /usr/bin/git (found version "2.32.1 (Apple Git-133)")
-#
-# FIXME FFI_INCLUDE_DIRS and FFI_LIBRARIES is incorrect.
-#
-# FIXME Need to resolve this:
-# -- SWIG 3 or later is required for Python support in LLDB but could not be found
-#
-# FIXME Improve this:
-# -- Found Perl: /usr/bin/perl (found version "5.30.3")
-#
-# FIXME Installer is attempting to find wrong curses:
-# -- Found CursesAndPanel: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include
-#
-# FIXME Consider improving these:
-# -- Could NOT find LibLZMA (missing: LIBLZMA_INCLUDE_DIR)
-# -- Enable LZMA compression support in LLDB: FALSE
-# -- Could NOT find SWIG (missing: SWIG_EXECUTABLE SWIG_DIR) (Required is at least version "3.0")
-# -- SWIG 3 or later is required for Lua support in LLDB but could not be found
-# -- Could NOT find LuaAndSwig (missing: LUA_LIBRARIES LUA_INCLUDE_DIR SWIG_EXECUTABLE)
-# -- Enable Lua scripting support in LLDB: FALSE
-# -- Could NOT find SWIG (missing: SWIG_EXECUTABLE SWIG_DIR) (Required is at least version "3.0")
-# -- SWIG 3 or later is required for Python support in LLDB but could not be found
-# -- Could NOT find PythonAndSwig (missing: Python3_LIBRARIES Python3_INCLUDE_DIRS SWIG_EXECUTABLE)
-# -- Enable Python scripting support in LLDB: FALSE
-
 main() {
     # """
     # Install LLVM (clang).

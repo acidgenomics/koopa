@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-09-07.
+    # @note Updated 2022-09-08.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -153,6 +153,7 @@ koopa_install_all_apps() {
         'libuv'
         'libxml2'
         'libzip'
+        'llvm'
         'lua'
         'luarocks'
         'lz4'
@@ -222,6 +223,7 @@ koopa_install_all_apps() {
         'starship'
         'stow'
         'subversion'
+        'swig'
         'taglib'
         'tar'
         'tcl-tk'

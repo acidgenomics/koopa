@@ -310,6 +310,7 @@ __koopa_complete() {
                         'starship'
                         'stow'
                         'subversion'
+                        'swig'
                         'system'
                         'taglib'
                         'tar'
