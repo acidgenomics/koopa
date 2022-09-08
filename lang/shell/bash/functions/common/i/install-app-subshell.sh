@@ -5,20 +5,24 @@ koopa_install_app_subshell() {
     # Install an application in a hardened subshell.
     # @note Updated 2022-09-08.
     # """
-    local app bool dict pos
-    declare -A app=(
-        ['tee']="$(koopa_locate_tee --allow-system)"
-    )
-    [[ -x "${app['tee']}" ]] || return 1
-    declare -A bool=(
-        ['copy_log_file']=0
-    )
+    local bool dict pos
+    declare -A bool
+    if [[ -n "${INSTALL_NAME:-}" ]]
+    then
+        bool['passthrough']=1
+    else
+        bool['passthrough']=0
+    fi
     declare -A dict=(
         ['installer_bn']=''
         ['installer_fun']='main'
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['log_file']="$(koopa_tmp_log_file)"
+        ['mode']='shared'
+        ['name']="${INSTALL_NAME:-}"
+        ['platform']='common'
+        ['prefix']="${INSTALL_PREFIX:-}"
         ['tmp_dir']="$(koopa_tmp_dir)"
+        ['version']="${INSTALL_VERSION:-}"
     )
     pos=()
     while (("$#"))
@@ -73,30 +77,33 @@ koopa_install_app_subshell() {
                 dict['version']="${2:?}"
                 shift 2
                 ;;
+            # Internal flags ---------------------------------------------------
+            '--system')
+                dict['mode']='system'
+                shift 1
+                ;;
+            '--user')
+                dict['mode']='user'
+                shift 1
+                ;;
+            # Configuration passthrough support --------------------------------
+            # Inspired by CMake approach using '-D' prefix.
+            '-D')
+                pos+=("${2:?}")
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -z "${dict['installer_bn']}" ]] && dict['installer_bn']="${dict['name']}"
     dict['installer_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     koopa_assert_is_file "${dict['installer_file']}"
-    if [[ -d "${dict['prefix']}" ]] && [[ "${dict['mode']}" != 'system' ]]
-    then
-        bool['copy_log_file']=1
-    fi
     (
         koopa_cd "${dict['tmp_dir']}"
-        PATH='/usr/bin:/bin'
-        export PATH
-        if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
-        then
-            koopa_activate_pkg_config '/usr/bin/pkg-config'
-        fi
         # shellcheck disable=SC2030
         export INSTALL_NAME="${dict['name']}"
         # shellcheck disable=SC2030
@@ -115,13 +122,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
                 ;;
         esac
         return 0
-    ) 2>&1 | "${app['tee']}" "${dict['log_file']}"
-    if [[ "${bool['copy_log_file']}" -eq 1 ]]
-    then
-        koopa_cp \
-            "${dict['log_file']}" \
-            "${dict['prefix']}/.koopa-install.log"
-    fi
+    )
     koopa_rm "${dict['tmp_dir']}"
     return 0
 }

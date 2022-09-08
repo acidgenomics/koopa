@@ -10,8 +10,8 @@ main() {
     # - https://crates.io/crates/nu
     # """
     koopa_activate_opt_prefix 'zlib' 'openssl3'
-    koopa_install_app_passthrough \
-        --name='nushell' \
+    koopa_install_app_subshell \
         --installer='rust-package' \
+        --name='nushell' \
         "$@"
 }

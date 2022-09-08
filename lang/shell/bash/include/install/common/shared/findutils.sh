@@ -13,7 +13,7 @@ main() {
         #     msg00051.html
         export CFLAGS='-D__nonnull\(params\)='
     fi
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='findutils' \
         -D '--program-prefix=g' \
