@@ -978,35 +978,23 @@ koopa_alias_kb() {
 }
 
 koopa_alias_kdev() {
-    local bash env
-    bash="$(koopa_bin_prefix)/bash"
-    if [ ! -x "$bash" ] && ! koopa_is_macos
-    then
-        bash='/usr/bin/bash'
-    fi
+    local bash bin_prefix env koopa_prefix
+    bin_prefix="$(koopa_bin_prefix)"
+    koopa_prefix="$(koopa_koopa_prefix)"
+    bash="${bin_prefix}/bash"
+    env="${bin_prefix}/genv"
+    [ ! -x "$bash" ] && bash='/usr/bin/bash'
+    [ ! -x "$env" ] && env='/usr/bin/env'
     [ -x "$bash" ] || return 1
-    env='/usr/bin/env'
     [ -x "$env" ] || return 1
     "$env" -i \
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
-        LC_ALL="${LC_ALL:-}" \
-        LC_BYOBU="${LC_BYOBU:-}" \
-        LC_COLLATE="${LC_COLLATE:-}" \
-        LC_CTYPE="${LC_CTYPE:-}" \
-        LC_MESSAGES="${LC_MESSAGES:-}" \
-        LC_MONETARY="${LC_MONETARY:-}" \
-        LC_NUMERIC="${LC_NUMERIC:-}" \
-        LC_TERMTYPE="${LC_TERMTYPE:-}" \
-        LC_TIME="${LC_TIME:-}" \
-        LOGNAME="${LOGNAME:-}" \
-        SUDO_PS1="${SUDO_PS1:-}" \
-        SUDO_USER="${SUDO_USER:-}" \
-        TERM_PROGRAM="${TERM_PROGRAM:-}" \
+        PATH='/usr/bin:/bin' \
         TMPDIR="${TMPDIR:-}" \
-        XDG_DATA_DIRS="${XDG_DATA_DIRS:-}" \
         "$bash" \
-            --login \
+            --noprofile \
+            --rcfile "${koopa_prefix}/lang/shell/bash/include/header.sh" \
             -o errexit \
             -o errtrace \
             -o nounset \
