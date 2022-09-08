@@ -280,6 +280,7 @@ __koopa_complete() {
                         'python'
                         'r'
                         'r-devel'
+                        'r-koopa'
                         'r-packages'
                         'ranger-fm'
                         'rbenv'
