@@ -222,6 +222,7 @@ __koopa_complete() {
                         'libuv'
                         'libxml2'
                         'libzip'
+                        'llvm'
                         'lua'
                         'luarocks'
                         'lz4'
