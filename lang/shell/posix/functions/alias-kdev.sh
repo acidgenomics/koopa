@@ -31,6 +31,13 @@ koopa_alias_kdev() {
     "$env" -i \
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
+        LC_ALL="${LC_ALL:-}" \
+        LC_COLLATE="${LC_COLLATE:-C}" \
+        LC_CTYPE="${LC_CTYPE:-C}" \
+        LC_MESSAGES="${LC_MESSAGES:-C}" \
+        LC_MONETARY="${LC_MONETARY:-C}" \
+        LC_NUMERIC="${LC_NUMERIC:-C}" \
+        LC_TIME="${LC_TIME:-C}" \
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \
         TERM_PROGRAM="${TERM_PROGRAM:-}" \

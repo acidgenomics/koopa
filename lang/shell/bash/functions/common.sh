@@ -11764,7 +11764,7 @@ ${dict['version2']}"
     fi
     case "${bool['binary']}" in
         '0')
-            local app path_arr
+            local app env_vars path_arr
             declare -A app
             app['bash']="$(koopa_locate_bash --allow-system)"
             app['env']="$(koopa_locate_env --allow-system)"
@@ -11778,11 +11778,22 @@ ${dict['version2']}"
                 '/usr/bin'
                 '/bin'
             )
+            env_vars=(
+                "HOME=${HOME:?}"
+                'KOOPA_ACTIVATE=0'
+                "LANG=${LANG:-}"
+                "LC_ALL=${LC_ALL:-}"
+                "LC_COLLATE=${LC_COLLATE:-C}"
+                "LC_CTYPE=${LC_CTYPE:-C}"
+                "LC_MESSAGES=${LC_MESSAGES:-C}"
+                "LC_MONETARY=${LC_MONETARY:-C}"
+                "LC_NUMERIC=${LC_NUMERIC:-C}"
+                "LC_TIME=${LC_TIME:-C}"
+                "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+                "TMPDIR=${TMPDIR:-}"
+            )
             "${app['env']}" -i \
-                HOME="${HOME:?}" \
-                KOOPA_ACTIVATE=0 \
-                PATH="$(koopa_paste --sep=':' "${path_arr[@]}")" \
-                TMPDIR="${TMPDIR:-}" \
+                "${env_vars[@]}" \
                 "${app['bash']}" \
                     --noprofile \
                     --norc \
@@ -13255,8 +13266,27 @@ koopa_install_r_devel() {
 }
 
 koopa_install_r_koopa() {
-    koopa_assert_has_no_args "$#"
-    koopa_r_koopa 'header'
+    local app
+    koopa_assert_has_args_le "$#" 1
+    declare -A app
+    app['r']="${1:-}"
+    [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
+    app['rscript']="${app['r']}script"
+    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || return 1
+    "${app['rscript']}" -e " \
+        if (!requireNamespace('BiocManager', quietly = TRUE)) { ; \
+            install.packages('BiocManager') ; \
+        } ; \
+        install.packages(
+            pkgs = 'koopa',
+            repos = c(
+                'https://r.acidgenomics.com',
+                BiocManager::repositories()
+            ),
+            dependencies = TRUE
+        ); \
+    "
     return 0
 }
 
