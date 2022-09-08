@@ -256,8 +256,6 @@ ${dict['version2']}"
     fi
     case "${bool['binary']}" in
         '0')
-            # FIXME Rethink the order here, passing to subshell.
-            # FIXME This needs to be 2 separate functions...
             local app env_vars path_arr
             declare -A app
             app['bash']="$(koopa_locate_bash --allow-system)"
@@ -286,7 +284,7 @@ ${dict['version2']}"
                 "HOME=${HOME:?}"
                 'KOOPA_ACTIVATE=0'
                 "LANG=${LANG:-}"
-                "LC_ALL=${LC_ALL:-}"
+                "LC_ALL=${LC_ALL:-C}"
                 "LC_COLLATE=${LC_COLLATE:-C}"
                 "LC_CTYPE=${LC_CTYPE:-C}"
                 "LC_MESSAGES=${LC_MESSAGES:-C}"
