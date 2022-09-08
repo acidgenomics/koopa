@@ -7,7 +7,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-08.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -400,6 +400,9 @@ R-${dict['maj_ver']}/${dict['file']}"
     koopa_check_shared_object \
         --name='libR' \
         --prefix="${dict['prefix']}/lib/R/lib"
-    # FIXME Consider installing r-koopa here.
+    if [[ "${dict['name']}" != 'r-devel' ]]
+    then
+        koopa_install_r_koopa "${app['r']}"
+    fi
     return 0
 }
