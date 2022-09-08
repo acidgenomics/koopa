@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME This still seems to be problematic on macOS:
-# -- Found FFI: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libffi.tbd  
+# NOTE This still seems to be problematic on macOS:
+# -- Found FFI: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libffi.tbd
 
 main() {
     # """
@@ -36,8 +36,8 @@ main() {
         'libffi'
         'libxml2'
         'ncurses'
-        'python'
-        'swig'
+        # > 'python'
+        # > 'swig'
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
@@ -45,15 +45,15 @@ main() {
         ['git']="$(koopa_locate_git --realpath)"
         ['ninja']="$(koopa_locate_ninja)"
         ['perl']="$(koopa_locate_perl --realpath)"
-        ['python']="$(koopa_locate_python --realpath)"
-        ['swig']="$(koopa_locate_swig --realpath)"
+        # > ['python']="$(koopa_locate_python --realpath)"
+        # > ['swig']="$(koopa_locate_swig --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['ninja']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
-    [[ -x "${app['swig']}" ]] || return 1
+    # > [[ -x "${app['python']}" ]] || return 1
+    # > [[ -x "${app['swig']}" ]] || return 1
     declare -A dict=(
         ['libedit']="$(koopa_app_prefix 'libedit')"
         ['libffi']="$(koopa_app_prefix 'libffi')"
@@ -61,7 +61,7 @@ main() {
         ['name']='llvm-project'
         ['ncurses']="$(koopa_app_prefix 'ncurses')"
         ['prefix']="${INSTALL_PREFIX:?}"
-        ['python']="$(koopa_app_prefix 'python')"
+        # > ['python']="$(koopa_app_prefix 'python')"
         ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
@@ -71,10 +71,9 @@ main() {
         "${dict['libffi']}" \
         "${dict['libxml2']}" \
         "${dict['ncurses']}" \
-        "${dict['python']}" \
         "${dict['zlib']}"
-    dict['py_ver']="$(koopa_get_version "${app['python']}")"
-    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
+    # > dict['py_ver']="$(koopa_get_version "${app['python']}")"
+    # > dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
     dict['file']="${dict['name']}-${dict['version']}.src.tar.xz"
     dict['url']="https://github.com/llvm/${dict['name']}/releases/download/\
 llvmorg-${dict['version']}/${dict['file']}"
@@ -115,7 +114,7 @@ llvmorg-${dict['version']}/${dict['file']}"
         '-DLLDB_ENABLE_CURSES=ON'
         '-DLLDB_ENABLE_LUA=OFF'
         '-DLLDB_ENABLE_LZMA=OFF'
-        '-DLLDB_ENABLE_PYTHON=ON'
+        '-DLLDB_ENABLE_PYTHON=OFF'
         '-DLLDB_USE_SYSTEM_DEBUGSERVER=ON'
         '-DLIBOMP_INSTALL_ALIASES=OFF'
         '-DLLVM_BUILD_EXTERNAL_COMPILER_RT=ON'
@@ -153,25 +152,22 @@ libxml2.${dict['shared_ext']}"
         "-DPANEL_LIBRARIES=${dict['ncurses']}/lib/\
 libpanelw.${dict['shared_ext']}"
         "-DPERL_EXECUTABLE=${app['perl']}"
-        "-DPython3_EXECUTABLE=${app['python']}"
-        "-DPython3_INCLUDE_DIRS=${dict['python']}/include"
-        "-DPython3_LIBRARIES=${dict['python']}/lib/\
-libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
-        "-DPython3_ROOT_DIR=${dict['python']}"
-        "-DSWIG_EXECUTABLE=${app['swig']}"
+        # > "-DPython3_EXECUTABLE=${app['python']}"
+        # > "-DPython3_INCLUDE_DIRS=${dict['python']}/include"
+        # > "-DPython3_LIBRARIES=${dict['python']}/lib/libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
+        # > "-DPython3_ROOT_DIR=${dict['python']}"
+        # > "-DSWIG_EXECUTABLE=${app['swig']}"
         "-DTerminfo_LIBRARIES=${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
-    # Additional Python binding fixes.
-    cmake_args+=(
-        "-DCLANG_PYTHON_BINDINGS_VERSIONS=${dict['py_maj_min_ver']}"
-        "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/\
-bin/python${dict['py_maj_min_ver']}"
-        "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/\
-site-packages"
-    )
+# > # Additional Python binding fixes.
+# > cmake_args+=(
+# >     "-DCLANG_PYTHON_BINDINGS_VERSIONS=${dict['py_maj_min_ver']}"
+# >     "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/bin/python${dict['py_maj_min_ver']}"
+# >     "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/site-packages"
+# > )
     if koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
