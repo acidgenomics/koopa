@@ -11940,7 +11940,7 @@ koopa_install_bash() {
     koopa_install_app \
         --name='bash' \
         "$@"
-    koopa_enable_shell_for_all_users 'bash'
+    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/bash"
     return 0
 }
 
@@ -12230,7 +12230,7 @@ koopa_install_fish() {
     koopa_install_app \
         --name='fish' \
         "$@"
-    koopa_enable_shell_for_all_users 'fish'
+    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/fish"
     return 0
 }
 
@@ -13056,7 +13056,7 @@ koopa_install_nushell() {
     koopa_install_app \
         --name='nushell' \
         "$@"
-    koopa_enable_shell_for_all_users 'nu'
+    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/nu"
     return 0
 }
 
@@ -13774,7 +13774,7 @@ koopa_install_zsh() {
         --name='zsh' \
         "$@"
     koopa_fix_zsh_permissions
-    koopa_enable_shell_for_all_users 'zsh'
+    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/zsh"
     return 0
 }
 
