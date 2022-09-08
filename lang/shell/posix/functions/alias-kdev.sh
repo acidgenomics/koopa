@@ -38,6 +38,7 @@ koopa_alias_kdev() {
         LC_MESSAGES="${LC_MESSAGES:-C}" \
         LC_MONETARY="${LC_MONETARY:-C}" \
         LC_NUMERIC="${LC_NUMERIC:-C}" \
+        LC_TERMTYPE="${LC_TERMTYPE:-}" \
         LC_TIME="${LC_TIME:-C}" \
         LOGNAME="${LOGNAME:-}" \
         SUDO_PS1="${SUDO_PS1:-}" \
