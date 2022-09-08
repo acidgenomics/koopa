@@ -307,7 +307,7 @@ ${dict['version2']}"
                     -o errtrace \
                     -o nounset \
                     -o pipefail \
-                    -c "source \"\$(${app['koopa']} header bash)\"; \
+                    -c "source '${dict['koopa_prefix']}/lang/shell/bash/include/header.sh'; \
                         koopa_install_app_subshell \
                             --installer=${dict['installer']} \
                             --mode=${dict['mode']} \
