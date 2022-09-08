@@ -11738,7 +11738,7 @@ ${dict['version2']}"
                 "HOME=${HOME:?}"
                 'KOOPA_ACTIVATE=0'
                 "LANG=${LANG:-}"
-                "LC_ALL=${LC_ALL:-}"
+                "LC_ALL=${LC_ALL:-C}"
                 "LC_COLLATE=${LC_COLLATE:-C}"
                 "LC_CTYPE=${LC_CTYPE:-C}"
                 "LC_MESSAGES=${LC_MESSAGES:-C}"
