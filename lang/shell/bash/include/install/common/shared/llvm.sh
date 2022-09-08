@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Hitting this Python header issue:
-# /tmp/koopa-501-20220908-111445-Abi2KCK4fV/llvm-project-15.0.0.src/lldb/source/Plugins/ScriptInterpreter/Python/lldb-python.h:49:10: fatal error: 'Python.h' file not found
-#include <Python.h>
-         ^~~~~~~~~~
+# llvm-project-15.0.0.src/lldb/source/Plugins/ScriptInterpreter/Python/lldb-python.h:49:10: fatal error: 'Python.h' file not found
+# include <Python.h>
 # 1 error generated.
 
 main() {
@@ -23,6 +22,7 @@ main() {
     #     modules/FindPythonAndSwig.cmake
     # - https://github.com/llvm/llvm-project/blob/main/llvm/cmake/\
     #     modules/FindFFI.cmake
+    # - https://github.com/llvm/llvm-project/blob/main/lldb/CMakeLists.txt
     # """
     local app build_deps cmake_args dict deps projects
     build_deps=(
@@ -76,7 +76,7 @@ main() {
         "${dict['python']}" \
         "${dict['zlib']}"
     dict['py_ver']="$(koopa_get_version "${app['python']}")"
-    dict['py_min_maj_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
+    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
     dict['file']="${dict['name']}-${dict['version']}.src.tar.xz"
     dict['url']="https://github.com/llvm/${dict['name']}/releases/download/\
 llvmorg-${dict['version']}/${dict['file']}"
@@ -163,13 +163,22 @@ libpanelw.${dict['shared_ext']}"
         "-DPython3_EXECUTABLE=${app['python']}"
         "-DPython3_INCLUDE_DIRS=${dict['python']}/include"
         "-DPython3_LIBRARIES=${dict['python']}/lib/\
-libpython${dict['py_min_maj_ver']}.${dict['shared_ext']}"
+libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
         "-DPython3_ROOT_DIR=${dict['python']}"
         "-DSWIG_EXECUTABLE=${app['swig']}"
         "-DTerminfo_LIBRARIES=${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    )
+    # Additional Python binding fixes.
+    # Likely need to set these to detect 'Python.h' correctly during LLDB install.
+    # FIXME If these approaches don't work, just disable Python for time being.
+    cmake_args+=(
+        "-DCLANG_PYTHON_BINDINGS_VERSIONS=${dict['py_maj_min_ver']}"
+        # FIXME Does just using absolute path work here?
+        "-DLLDB_PYTHON_EXE_RELATIVE_PATH=${app['python']}"
+        "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/site-packages"
     )
     if koopa_is_macos
     then
