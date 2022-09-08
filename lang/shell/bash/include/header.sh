@@ -164,10 +164,6 @@ __koopa_bash_header() {
     fi
     if [[ "${bool['checks']}" -eq 1 ]]
     then
-        # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
-        # https://100things.wzzrd.com/2018/07/11/
-        #   The-confusing-Bash-configuration-files.html
-        [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
         # Compare with current values defined in '~/.bashrc'.
         # Check all values with 'set +o'.
         # Note that '+o' here means disable, '-o' means enable.
