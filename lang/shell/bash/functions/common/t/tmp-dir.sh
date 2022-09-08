@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This is now localizing incorrectly to /tmp on macOS.
+# FIXME We may need to use $TMPDIR differently here.
+
 koopa_tmp_dir() {
     # """
     # Create temporary directory.

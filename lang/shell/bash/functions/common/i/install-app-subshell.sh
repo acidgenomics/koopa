@@ -3,7 +3,7 @@
 koopa_install_app_subshell() {
     # """
     # Install an application in a hardened subshell.
-    # @note Updated 2022-09-06.
+    # @note Updated 2022-09-08.
     # """
     local app bool dict pos
     declare -A app=(

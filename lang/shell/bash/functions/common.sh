@@ -3262,6 +3262,8 @@ koopa_build_all_apps() {
         'wget'
         'which'
         'libgeotiff'
+        'swig'
+        'llvm'
         'go'
         'chezmoi' # deps: go
         'fzf' # deps: go
@@ -10879,6 +10881,28 @@ koopa_hisat2_index() {
     return 0
 }
 
+koopa_homebrew_brew_version() {
+    local app brew
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        ['brew']="$(koopa_locate_brew)"
+        ['jq']="$(koopa_locate_jq)"
+    )
+    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    for brew in "$@"
+    do
+        local str
+        str="$( \
+            "${app['brew']}" info --json "$brew" \
+                | "${app['jq']}" --raw-output '.[].versions.stable'
+        )"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
+    done
+    return 0
+}
+
 koopa_info_box() {
     koopa_assert_has_args "$#"
     local array
@@ -11003,8 +11027,12 @@ koopa_install_ack() {
 koopa_install_all_apps() {
     local app_name apps dict
     koopa_assert_has_no_args "$#"
+    declare -A app
+    app['koopa']="$(koopa_locate_koopa)"
+    [[ -x "${app['koopa']}" ]] || return 1
     declare -A dict=(
         ['blocks']="$(koopa_disk_512k_blocks '/')"
+        ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['large']=0
     )
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
@@ -11138,6 +11166,7 @@ koopa_install_all_apps() {
         'libuv'
         'libxml2'
         'libzip'
+        'llvm'
         'lua'
         'luarocks'
         'lz4'
@@ -11207,6 +11236,7 @@ koopa_install_all_apps() {
         'starship'
         'stow'
         'subversion'
+        'swig'
         'taglib'
         'tar'
         'tcl-tk'
@@ -11299,8 +11329,8 @@ koopa_install_all_apps() {
     fi
     for app_name in "${apps[@]}"
     do
-        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
-            koopa install --binary "$app_name"
+        PATH="${dict['bs_bin_prefix']}:${PATH:-}" \
+            "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
@@ -11748,10 +11778,11 @@ ${dict['version2']}"
                 '/usr/bin'
                 '/bin'
             )
-            /usr/bin/env -i \
+            "${app['env']}" -i \
                 HOME="${HOME:?}" \
                 KOOPA_ACTIVATE=0 \
                 PATH="$(koopa_paste --sep=':' "${path_arr[@]}")" \
+                TMPDIR="${TMPDIR:-}" \
                 "${app['bash']}" \
                     --noprofile \
                     --norc \
@@ -12881,6 +12912,12 @@ koopa_install_libzip() {
         "$@"
 }
 
+koopa_install_llvm() {
+    koopa_install_app \
+        --name='llvm' \
+        "$@"
+}
+
 koopa_install_lua() {
     koopa_install_app \
         --name='lua' \
@@ -13427,6 +13464,12 @@ koopa_install_stow() {
 koopa_install_subversion() {
     koopa_install_app \
         --name='subversion' \
+        "$@"
+}
+
+koopa_install_swig() {
+    koopa_install_app \
+        --name='swig' \
         "$@"
 }
 
@@ -16497,6 +16540,13 @@ koopa_locate_svn() {
     koopa_locate_app \
         --app-name='subversion' \
         --bin-name='svn' \
+        "$@"
+}
+
+koopa_locate_swig() {
+    koopa_locate_app \
+        --app-name='swig' \
+        --bin-name='swig' \
         "$@"
 }
 
@@ -23279,6 +23329,12 @@ koopa_uninstall_libzip() {
         "$@"
 }
 
+koopa_uninstall_llvm() {
+    koopa_uninstall_app \
+        --name='llvm' \
+        "$@"
+}
+
 koopa_uninstall_lua() {
     koopa_uninstall_app \
         --name='lua' \
@@ -23806,6 +23862,12 @@ koopa_uninstall_stow() {
 koopa_uninstall_subversion() {
     koopa_uninstall_app \
         --name='subversion' \
+        "$@"
+}
+
+koopa_uninstall_swig() {
+    koopa_uninstall_app \
+        --name='swig' \
         "$@"
 }
 

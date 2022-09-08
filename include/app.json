@@ -1412,10 +1412,10 @@
     "version": "1.9.2"
   },
   "llvm": {
-    "check": false,
     "conservative": true,
+    "date": "2022-09-08",
     "url": ["https://releases.llvm.org/"],
-    "version": "14.0.6"
+    "version": "15.0.0"
   },
   "lmod": {
     "conservative": true,
@@ -2182,6 +2182,13 @@
     "man1": ["svn.1"],
     "url": ["https://subversion.apache.org/"],
     "version": "1.14.2"
+  },
+  "swig": {
+    "bin": ["swig"],
+    "conservative": true,
+    "date": "2022-09-08",
+    "url": ["http://www.swig.org/"],
+    "version": "4.0.2"
   },
   "taglib": {
     "conservative": true,
