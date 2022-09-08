@@ -57,7 +57,7 @@ main() {
         ['name']='llvm-project'
         ['ncurses']="$(koopa_app_prefix 'ncurses')"
         ['prefix']="${INSTALL_PREFIX:?}"
-        # > ['python']="$(koopa_app_prefix 'python')"
+        ['python']="$(koopa_app_prefix 'python')"
         ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
@@ -67,6 +67,7 @@ main() {
         "${dict['libffi']}" \
         "${dict['libxml2']}" \
         "${dict['ncurses']}" \
+        "${dict['python']}" \
         "${dict['zlib']}"
     dict['py_ver']="$(koopa_get_version "${app['python']}")"
     dict['py_min_maj_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
@@ -158,7 +159,7 @@ libpanelw.${dict['shared_ext']}"
         "-DPython3_LIBRARIES=${dict['python']}/lib/\
 libpython${dict['py_min_maj_ver']}.${dict['shared_ext']}"
         "-DPython3_ROOT_DIR=${dict['python']}"
-        "-DSWIG_EXECUTABLE=${dict['app']}/swig"
+        "-DSWIG_EXECUTABLE=${app['swig']}"
         "-DTerminfo_LIBRARIES=${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
