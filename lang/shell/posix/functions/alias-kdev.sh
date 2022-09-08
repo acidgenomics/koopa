@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME This isn't working on our Ubuntu 22 dev machine.
+
 koopa_alias_kdev() {
     # """
     # Koopa 'kdev' shortcut alias.
