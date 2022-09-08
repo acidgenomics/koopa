@@ -34,7 +34,7 @@ koopa_alias_kdev() {
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
         PATH='/usr/bin:/bin' \
-        TMPDIR="${TMPDIR:-}" \
+        TMPDIR="${TMPDIR:-/tmp}" \
         "$bash" \
             --noprofile \
             --rcfile "${koopa_prefix}/lang/shell/bash/include/header.sh" \
