@@ -7,7 +7,7 @@ main() {
     koopa_is_linux && deps+=('attr')
     deps+=('gmp')
     koopa_activate_opt_prefix "${deps[@]}"
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='coreutils' \
         -D '--program-prefix=g' \

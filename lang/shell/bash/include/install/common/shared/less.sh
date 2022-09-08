@@ -2,7 +2,7 @@
 
 main() {
     koopa_activate_opt_prefix 'ncurses' 'pcre2'
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='less' \
         "$@"

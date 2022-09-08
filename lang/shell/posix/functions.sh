@@ -978,24 +978,23 @@ koopa_alias_kb() {
 }
 
 koopa_alias_kdev() {
-    local bash env
-    bash="$(koopa_bin_prefix)/bash"
-    if [ ! -x "$bash" ] && ! koopa_is_macos
-    then
-        bash='/usr/bin/bash'
-    fi
+    local bash bin_prefix env koopa_prefix
+    bin_prefix="$(koopa_bin_prefix)"
+    koopa_prefix="$(koopa_koopa_prefix)"
+    bash="${bin_prefix}/bash"
+    env="${bin_prefix}/genv"
+    [ ! -x "$bash" ] && bash='/usr/bin/bash'
+    [ ! -x "$env" ] && env='/usr/bin/env'
     [ -x "$bash" ] || return 1
-    env='/usr/bin/env'
     [ -x "$env" ] || return 1
     "$env" -i \
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
-        SUDO_PS1="${SUDO_PS1:-}" \
-        SUDO_USER="${SUDO_USER:-}" \
-        TERM_PROGRAM="${TERM_PROGRAM:-}" \
-        TMPDIR="${TMPDIR:-}" \
+        PATH='/usr/bin:/bin' \
+        TMPDIR="${TMPDIR:-/tmp}" \
         "$bash" \
-            -il \
+            --noprofile \
+            --rcfile "${koopa_prefix}/lang/shell/bash/include/header.sh" \
             -o errexit \
             -o errtrace \
             -o nounset \
