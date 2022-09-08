@@ -2,6 +2,7 @@
 
 # FIXME Move this to separate install script.
 # FIXME Rework Bioconductor version pinnings here. Define based on R version.
+# FIXME Allow the user to specify which R.
 
 koopa_install_r_packages() {
     # """
