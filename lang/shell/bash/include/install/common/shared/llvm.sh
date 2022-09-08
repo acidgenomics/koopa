@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this Python header issue:
-# llvm-project-15.0.0.src/lldb/source/Plugins/ScriptInterpreter/Python/lldb-python.h:49:10: fatal error: 'Python.h' file not found
-# include <Python.h>
-# 1 error generated.
-
 main() {
     # """
     # Install LLVM (clang).
