@@ -26,7 +26,7 @@ main() {
     # """
     koopa_activate_build_opt_prefix 'bison' 'flex'
     koopa_activate_opt_prefix 'zlib' 'texinfo'
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='binutils' \
         -D '--disable-debug' \

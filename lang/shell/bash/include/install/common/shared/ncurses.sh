@@ -25,7 +25,7 @@ main() {
     dict['pkgconfig_dir']="${dict['prefix']}/lib/pkgconfig"
     koopa_mkdir "${dict['pkgconfig_dir']}"
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='ncurses' \
         -D '--enable-pc-files' \

@@ -5,7 +5,7 @@ main() {
         'gettext' \
         'mpfr' \
         'readline'
-    koopa_install_app_passthrough \
+    koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='gawk' \
         "$@"
