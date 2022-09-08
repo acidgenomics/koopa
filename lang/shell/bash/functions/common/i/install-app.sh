@@ -291,7 +291,7 @@ ${dict['version2']}"
                 "LC_TIME=${LC_TIME:-}"
                 "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
                 "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
-                "TMPDIR=${TMPDIR:-}"
+                "TMPDIR=${TMPDIR:-/tmp}"
             )
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
