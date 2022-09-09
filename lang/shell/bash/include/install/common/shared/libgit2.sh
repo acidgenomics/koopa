@@ -32,9 +32,9 @@ main() {
         ['name']='libgit2'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['pcre']="$(koopa_app_prefix 'pcre')"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     koopa_assert_is_dir \

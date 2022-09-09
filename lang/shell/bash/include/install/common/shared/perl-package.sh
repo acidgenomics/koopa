@@ -37,9 +37,9 @@ main() {
     [[ -x "${app['perl']}" ]] || return 1
     [[ -x "${app['yes']}" ]] || return 1
     declare -A dict=(
-        ['name']="${INSTALL_NAME:?}"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['name2']="${dict['name']}"
     dict['version2']="${dict['version']}"

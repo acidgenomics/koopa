@@ -16,8 +16,8 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='password-store'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://git.zx2c4.com/${dict['name']}/snapshot/${dict['file']}"

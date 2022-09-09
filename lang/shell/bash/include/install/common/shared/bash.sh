@@ -31,8 +31,8 @@ main() {
         ['jobs']="$(koopa_cpu_count)"
         ['name']='bash'
         ['patch_prefix']='patches'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['patch_base_url']="https://ftp.gnu.org/gnu/${dict['name']}/\

@@ -17,9 +17,9 @@ main() {
     [[ -x "${app['nim']}" ]] || return 1
     [[ -x "${app['nimble']}" ]] || return 1
     declare -A dict=(
-        ['name']="${INSTALL_NAME:?}"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     export NIMBLE_DIR="${dict['prefix']}"
     "${app['nimble']}" \

@@ -20,8 +20,8 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='icu4c'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['kebab_version']="$(koopa_kebab_case_simple "${dict['version']}")"
     dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"

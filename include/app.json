@@ -116,7 +116,7 @@
   },
   "bash": {
     "bin": ["bash"],
-    "conservative": false,
+    "conservative": true,
     "date": "2022-08-29",
     "man1": ["bash.1"],
     "url": ["https://www.gnu.org/software/bash/"],
@@ -494,7 +494,7 @@
       "gwhoami",
       "gyes"
     ],
-    "conservative": false,
+    "conservative": true,
     "date": "2022-08-29",
     "man1": [
       "gb2sum.1",
@@ -681,6 +681,13 @@
       "https://github.com/editorconfig/editorconfig-core-c/"
     ],
     "version": "0.12.5"
+  },
+  "elfutils": {
+    "conservative": true,
+    "date": "2022-09-08",
+    "platform": "linux",
+    "url": ["https://fedorahosted.org/elfutils/"],
+    "version": "0.187"
   },
   "emacs": {
     "bin": ["emacs"],
@@ -1317,6 +1324,12 @@
     "url": ["https://gnupg.org/download/"],
     "version": "1.45"
   },
+  "libiconv": {
+    "conservative": true,
+    "date": "2022-09-08",
+    "url": ["https://www.gnu.org/software/libiconv/"],
+    "version": "1.17"
+  },
   "libidn": {
     "aliases": {
       "homebrew": "libidn2"
@@ -1414,6 +1427,7 @@
   "llvm": {
     "conservative": true,
     "date": "2022-09-08",
+    "large": true,
     "url": ["https://releases.llvm.org/"],
     "version": "15.0.0"
   },
@@ -2449,10 +2463,10 @@
   "yq": {
     "bin": ["yq"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-09",
     "depends": ["go"],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.27.3"
+    "version": "4.27.5"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
@@ -2463,8 +2477,9 @@
   "zellij": {
     "bin": ["zellij"],
     "conservative": false,
+    "date": "2022-09-09",
     "depends": ["rust"],
-    "version": "0.31.2"
+    "version": "0.31.4"
   },
   "zlib": {
     "conservative": true,

@@ -24,9 +24,9 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='libxml2'
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         # > ['python']="$(koopa_app_version 'python')"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"

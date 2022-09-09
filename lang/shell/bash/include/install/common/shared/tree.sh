@@ -17,8 +17,8 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='tree'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tgz"
     dict['url']="http://mama.indstate.edu/users/ice/${dict['name']}/src/\

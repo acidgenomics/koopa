@@ -37,7 +37,7 @@ main() {
         ['framework_prefix']='/Library/Frameworks/R.framework'
         ['os']="$(koopa_kebab_case_simple "$(koopa_os_codename)")"
         ['url_stem']='https://cran.r-project.org/bin/macosx'
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_min_version']="$(koopa_major_minor_version "${dict['version']}")"
     dict['prefix']="${dict['framework_prefix']}/Versions/\
