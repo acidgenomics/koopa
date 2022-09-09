@@ -51,7 +51,8 @@ refs/tags/${dict['file']}"
 #!/bin/sh
 set -euo pipefail
 
-PREFIX="\$(cd -- "\$(dirname -- "\$0")/.." && pwd)"
+SCRIPT_PATH="\$(readlink -f "\$0")"
+PREFIX="\$(cd -- "\$(dirname -- "\$SCRIPT_PATH")/.." && pwd)"
 
 main() {
     "\${PREFIX}/libexec/conda/bin/python3" \
