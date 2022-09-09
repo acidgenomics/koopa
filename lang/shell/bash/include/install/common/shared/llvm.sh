@@ -119,8 +119,8 @@ main() {
             "${dict['binutils']}" \
             "${dict['elfutils']}"
     fi
-    # > dict['py_ver']="$(koopa_get_version "${app['python']}")"
-    # > dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
+    dict['py_ver']="$(koopa_get_version "${app['python']}")"
+    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
     projects=(
         # > 'bolt'
         # > 'cross-project-tests'
