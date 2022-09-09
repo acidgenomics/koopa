@@ -16,8 +16,8 @@ main() {
     declare -A dict=(
         ['installers_url']="$(koopa_koopa_installers_url)"
         ['name']='cellranger'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="${dict['installers_url']}/cellranger/${dict['file']}"

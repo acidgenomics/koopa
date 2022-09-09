@@ -20,9 +20,9 @@ main() {
     [[ -x "${app['npm']}" ]] || return 1
     app['node']="$(koopa_realpath "${app['node']}")"
     declare -A dict=(
-        ['name']="${INSTALL_NAME:?}"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_add_to_path_start "$(koopa_dirname "${app['node']}")"
     export NPM_CONFIG_PREFIX="${dict['prefix']}"

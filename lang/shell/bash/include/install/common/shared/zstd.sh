@@ -18,8 +18,8 @@ main() {
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         ['name']='zstd'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/facebook/${dict['name']}/archive/${dict['file']}"

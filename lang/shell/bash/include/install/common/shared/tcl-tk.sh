@@ -31,9 +31,9 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url_stem']='https://prdownloads.sourceforge.net/tcl'
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     conf_args=(
         "--prefix=${dict['prefix']}"

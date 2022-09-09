@@ -35,8 +35,8 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='fltk'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}-source.tar.gz"
     dict['url']="https://www.${dict['name']}.org/pub/${dict['name']}/\

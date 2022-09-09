@@ -16,8 +16,8 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='luarocks'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['lua_version']="$(koopa_get_version "${app['lua']}")"
     dict['lua_maj_min_ver']="$(koopa_major_minor_version "${dict['lua_version']}")"

@@ -20,11 +20,11 @@ main() {
         ['check_key']=1
         ['compress_ext']='bz2'
         ['gcrypt_url']="$(koopa_gcrypt_url)"
-        ['import_gpg_keys']="${INSTALL_IMPORT_GPG_KEYS:-0}"
+        ['import_gpg_keys']="${KOOPA_INSTALL_IMPORT_GPG_KEYS:-0}"
         ['jobs']="$(koopa_cpu_count)"
-        ['name']="${INSTALL_NAME:?}"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     conf_args=(
         # > '--enable-maintainer-mode'

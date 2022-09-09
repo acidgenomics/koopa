@@ -42,8 +42,8 @@ main() {
         ['mirror']='https://archive.apache.org/dist'
         ['jobs']="$(koopa_cpu_count)"
         ['name']='subversion'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     # FIXME What about expat here?
     dict['apr']="$(koopa_app_prefix 'apr')"

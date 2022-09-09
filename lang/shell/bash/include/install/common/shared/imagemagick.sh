@@ -85,8 +85,8 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
     dict['file']="ImageMagick-${dict['version']}.tar.xz"

@@ -25,8 +25,8 @@ main() {
         ['jobs']="$(koopa_cpu_count)"
         ['libiconv']="$(koopa_app_prefix 'libiconv')"
         ['name']='elfutils'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
         "${dict['gettext']}" \

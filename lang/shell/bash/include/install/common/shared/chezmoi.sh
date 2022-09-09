@@ -21,8 +21,8 @@ main() {
     declare -A dict=(
         ['gopath']="$(koopa_init_dir 'go')"
         ['name']='chezmoi'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/twpayne/chezmoi/archive/\
