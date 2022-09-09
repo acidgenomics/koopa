@@ -1,17 +1,25 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for these:
-# - libtermkey
-# - libvterm
-# - unibilium
-# - libnsl (linux)
-
-# FIXME Need to add support for:
-# UNIBILIUM_INCLUDE_DIR=<not found>
-# UNIBILIUM_LIBRARY=<not found>
-
-# FIXME Need to specify LIBINTL to our gettext?
-# FIXME Need to specify LIBICONV to our libiconv
+# FIXME Now hitting this Lua package error:
+#
+# -- Checking Lua interpreter: /opt/koopa/app/lua/5.4.4/bin/lua
+#/opt/koopa/app/lua/5.4.4/bin/lua: module 'lpeg' not found:
+#	no field package.preload['lpeg']
+#	no file '/usr/local/share/lua/5.4/lpeg.lua'
+#	no file '/usr/local/share/lua/5.4/lpeg/init.lua'
+#	no file '/usr/local/lib/lua/5.4/lpeg.lua'
+#	no file '/usr/local/lib/lua/5.4/lpeg/init.lua'
+#	no file './lpeg.lua'
+#	no file './lpeg/init.lua'
+#	no file '/usr/local/lib/lua/5.4/lpeg.so'
+#	no file '/usr/local/lib/lua/5.4/loadall.so'
+#	no file './lpeg.so'
+#stack traceback:
+#	[C]: in function 'require'
+#	[C]: in ?
+#-- [/opt/koopa/app/lua/5.4.4/bin/lua] The 'lpeg' lua package is required for building Neovim
+#CMake Error at CMakeLists.txt:576 (message):
+#  Failed to find a Lua 5.1-compatible interpreter
 
 main() {
     # """
@@ -28,6 +36,7 @@ main() {
     #     ubuntu-20-04-lts-524b3a91b4c4
     # - https://github.com/neovim/neovim/blob/master/cmake/FindLibIntl.cmake
     # - https://github.com/facebook/hhvm/blob/master/CMake/FindLibIntl.cmake
+    # - https://www.leonerd.org.uk/code/libvterm/
     # """
     local app cmake_args deps dict
     koopa_assert_has_no_args "$#"
@@ -48,6 +57,9 @@ main() {
         'ncurses'
         'python'
         'tree-sitter'
+        'unibilium'
+        'libtermkey'
+        'libvterm'
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
@@ -55,34 +67,39 @@ main() {
     )
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
+        ['gettext']="$(koopa_app_prefix 'gettext')"
         ['jobs']="$(koopa_cpu_count)"
+        ['libiconv']="$(koopa_app_prefix 'libiconv')"
         ['libluv']="$(koopa_app_prefix 'libluv')"
+        ['libtermkey']="$(koopa_app_prefix 'libtermkey')"
         ['libuv']="$(koopa_app_prefix 'libuv')"
-        ['lua']="$(koopa_app_prefix 'lua')"
+        ['libvterm']="$(koopa_app_prefix 'libvterm')"
         ['luajit']="$(koopa_app_prefix 'luajit')"
         ['msgpack']="$(koopa_app_prefix 'msgpack')"
         ['name']='neovim'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
         ['tree_sitter']="$(koopa_app_prefix 'tree-sitter')"
+        ['unibilium']="$(koopa_app_prefix 'unibilium')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
+        "${dict['gettext']}" \
+        "${dict['libiconv']}" \
         "${dict['libluv']}" \
+        "${dict['libtermkey']}" \
         "${dict['libuv']}" \
-        "${dict['lua']}" \
+        "${dict['libvterm']}" \
         "${dict['luajit']}" \
         "${dict['msgpack']}" \
-        "${dict['tree_sitter']}"
+        "${dict['tree_sitter']}" \
+        "${dict['unibilium']}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
 archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    # Lua no longer builds with pkg-config support by default.
-    CFLAGS="-I${dict['lua']}/include ${CFLAGS:-}"
-    export CFLAGS
     cmake_args=(
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
@@ -94,10 +111,23 @@ archive/${dict['file']}"
         '-DENABLE_LIBICONV=ON'
         '-DENABLE_LIBINTL=ON'
         '-DENABLE_LTO=ON'
+        # Prefer LuaJIT instead of Lua.
+        '-DPREFER_LUA=OFF'
+        "-DICONV_INCLUDE_DIRS=${dict['libiconv']}/include"
+        "-DICONV_LIBRARIES=${dict['libiconv']}/lib/\
+libiconv.${dict['shared_ext']}"
+        "-DLibIntl_INCLUDE_DIR=${dict['gettext']}/include"
+        "-DLibIntl_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}"
         "-DLIBLUV_INCLUDE_DIR=${dict['libluv']}/include"
         "-DLIBLUV_LIBRARY=${dict['libluv']}/lib/libluv.${dict['shared_ext']}"
+        "-DLIBTERMKEY_INCLUDE_DIR=${dict['libtermkey']}/include"
+        "-DLIBTERMKEY_LIBRARY=${dict['libtermkey']}/lib/\
+libtermkey.${dict['shared_ext']}"
         "-DLIBUV_INCLUDE_DIR=${dict['libuv']}/include"
         "-DLIBUV_LIBRARY=${dict['libuv']}/lib/libuv.${dict['shared_ext']}"
+        "-DLIBVTERM_INCLUDE_DIR=${dict['libvterm']}/include"
+        "-DLIBVTERM_LIBRARY=${dict['libvterm']}/lib/\
+libvterm.${dict['shared_ext']}"
         "-DLUAJIT_INCLUDE_DIR=${dict['luajit']}/include"
         "-DLUAJIT_LIBRARY=${dict['luajit']}/lib/\
 libluajit.${dict['shared_ext']}"
@@ -107,6 +137,9 @@ libmsgpackc.${dict['shared_ext']}"
         "-DTreeSitter_INCLUDE_DIR=${dict['tree_sitter']}/include"
         "-DTreeSitter_LIBRARY=${dict['tree_sitter']}/lib/\
 libtree-sitter.${dict['shared_ext']}"
+        "-DUNIBILIUM_INCLUDE_DIR=${dict['unibilium']}/include"
+        "-DUNIBILIUM_LIBRARY=${dict['unibilium']}/lib/\
+libunibilium.${dict['shared_ext']}"
     )
     "${app['cmake']}" -LH -S . -B 'build' "${cmake_args[@]}"
     "${app['cmake']}" --build 'build'

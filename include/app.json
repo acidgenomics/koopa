@@ -1392,6 +1392,12 @@
     "url": ["https://www.gnu.org/software/libtasn1/"],
     "version": "4.19.0"
   },
+  "libtermkey": {
+    "conservative": true,
+    "date": "2022-09-09",
+    "url": ["https://www.leonerd.org.uk/code/libtermkey/"],
+    "version": "0.22"
+  },
   "libtiff": {
     "conservative": true,
     "date": "2022-08-29",
@@ -1420,6 +1426,12 @@
     "date": "2022-08-30",
     "url": ["https://github.com/libuv/libuv/"],
     "version": "1.44.2"
+  },
+  "libvterm": {
+    "conservative": true,
+    "date": "2022-09-09",
+    "url": ["https://www.leonerd.org.uk/code/libvterm/"],
+    "version": "0.2"
   },
   "libxml2": {
     "bin": ["xml2-config"],
@@ -2329,6 +2341,12 @@
     "date": "2022-08-30",
     "url": ["https://www.unidata.ucar.edu/downloads/udunits/"],
     "version": "2.2.28"
+  },
+  "unibilium": {
+      "conservative": true,
+      "date": "2022-09-09",
+      "url": ["https://github.com/neovim/unibilium/"],
+      "version": "2.1.1"
   },
   "units": {
     "aliases": {
