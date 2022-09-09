@@ -42,7 +42,7 @@ main() {
         deps+=(
             # Needed for 'gold'.
             'binutils'
-            'zstd'
+            # > 'zstd' # may be required for elfutils
             # OpenMP requires 'gelf.h'.
             'elfutils'
         )
@@ -188,10 +188,10 @@ libncursesw.${dict['shared_ext']}"
 # > )
     if koopa_is_linux
     then
-        # FIXME Need to locate ELF and binutils.
+        # FIXME Need to locate binutils components (e.g. gold) here?
         cmake_args+=(
             "-DELF_INCLUDE_DIRS=${dict['elfutils']}/include"
-            "-DELF_LIBRARIES=${dict['elfutils']}/lib/FIXME.${dict['shared_ext']}"
+            "-DELF_LIBRARIES=${dict['elfutils']}/lib/libelf.${dict['shared_ext']}"
         )
     elif koopa_is_macos
     then

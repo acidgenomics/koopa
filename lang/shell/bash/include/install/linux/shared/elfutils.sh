@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting a cryptic permission issue with make-debug-archive.
-
 main() {
     # """
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/elfutils.rb
     # """
-    local app conf_args dict
+    local app conf_args deps dict
     koopa_activate_build_opt_prefix 'm4'
-    koopa_activate_opt_prefix \
-        'bzip2' \
-        'xz' \
-        'zlib' \
-        'zstd' \
-        'gettext' \
+    deps=(
+        'bzip2'
+        'xz'
+        'zlib'
+        # > 'zstd'
+        'gettext'
         'libiconv'
+    )
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )
@@ -46,8 +46,8 @@ main() {
         "--with-libiconv-prefix=${dict['libiconv']}"
         "--with-libintl-prefix=${dict['gettext']}"
         '--with-zlib'
-        '--with-zstd'
         '--without-lzma'
+        '--without-zstd'
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://sourceware.org/elfutils/ftp/0.187/${dict['file']}"
