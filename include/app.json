@@ -1324,6 +1324,12 @@
     "url": ["https://gnupg.org/download/"],
     "version": "1.45"
   },
+  "libiconv": {
+    "conservative": true,
+    "date": "2022-09-08",
+    "url": ["https://www.gnu.org/software/libiconv/"],
+    "version": "1.17"
+  },
   "libidn": {
     "aliases": {
       "homebrew": "libidn2"
