@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE This still seems to be problematic on macOS:
-# -- Found FFI: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libffi.tbd
-# -- Could NOT find LibXml2 (missing: LIBXML2_INCLUDE_DIR)
-
 # FIXME Need to improve OpenMP config:
 #-- Could NOT find LIBOMPTARGET_DEP_LIBELF (missing: LIBOMPTARGET_DEP_LIBELF_LIBRARIES LIBOMPTARGET_DEP_LIBELF_INCLUDE_DIRS)
 #-- Could NOT find LIBOMPTARGET_DEP_LIBFFI (missing: LIBOMPTARGET_DEP_LIBFFI_LIBRARIES LIBOMPTARGET_DEP_LIBFFI_INCLUDE_DIRS)
