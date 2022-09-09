@@ -46,14 +46,14 @@ main() {
         ['git']="$(koopa_locate_git --realpath)"
         ['ninja']="$(koopa_locate_ninja)"
         ['perl']="$(koopa_locate_perl --realpath)"
-        # > ['python']="$(koopa_locate_python --realpath)"
+        ['python']="$(koopa_locate_python --realpath)"
         # > ['swig']="$(koopa_locate_swig --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['ninja']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
-    # > [[ -x "${app['python']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || return 1
     # > [[ -x "${app['swig']}" ]] || return 1
     declare -A dict=(
         ['libedit']="$(koopa_app_prefix 'libedit')"
@@ -158,7 +158,7 @@ libxml2.${dict['shared_ext']}"
         "-DPANEL_LIBRARIES=${dict['ncurses']}/lib/\
 libpanelw.${dict['shared_ext']}"
         "-DPERL_EXECUTABLE=${app['perl']}"
-        # > "-DPython3_EXECUTABLE=${app['python']}"
+        "-DPython3_EXECUTABLE=${app['python']}"
         # > "-DPython3_INCLUDE_DIRS=${dict['python']}/include"
         # > "-DPython3_LIBRARIES=${dict['python']}/lib/libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
         # > "-DPython3_ROOT_DIR=${dict['python']}"
