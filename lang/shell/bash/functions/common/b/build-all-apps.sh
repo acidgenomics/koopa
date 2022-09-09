@@ -235,6 +235,11 @@ koopa_build_all_apps() {
         'which'
         'libgeotiff'
         'swig'
+        'libiconv'
+    )
+    koopa_is_linux && apps+=('elfutils')
+    apps+=(
+        # deps: elfutils (linux), swig.
         'llvm'
         # FIXME Need to finish out recipe here.
         # Install Go packages.
