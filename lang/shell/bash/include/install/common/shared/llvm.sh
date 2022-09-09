@@ -82,6 +82,11 @@ main() {
         "${dict['libxml2']}" \
         "${dict['ncurses']}" \
         "${dict['zlib']}"
+    if koopa_is_linux
+    then
+        dict['elfutils']="$(koopa_app_prefix 'elfutils')"
+        koopa_assert_is_dir "${dict['elfutils']}"
+    fi
     # > dict['py_ver']="$(koopa_get_version "${app['python']}")"
     # > dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
     projects=(
@@ -181,7 +186,14 @@ libncursesw.${dict['shared_ext']}"
 # >     "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/bin/python${dict['py_maj_min_ver']}"
 # >     "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/site-packages"
 # > )
-    if koopa_is_macos
+    if koopa_is_linux
+    then
+        cmake_args+=(
+            "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIRS=${dict['elfutils']}/include"
+            "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/\
+libelf.${dict['shared_ext']}"
+        )
+    elif koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
         koopa_assert_is_dir "${dict['sysroot']}"
