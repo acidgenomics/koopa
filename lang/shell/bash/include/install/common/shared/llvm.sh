@@ -1,22 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve OpenMP config:
-#-- Could NOT find LIBOMPTARGET_DEP_LIBELF (missing: LIBOMPTARGET_DEP_LIBELF_LIBRARIES LIBOMPTARGET_DEP_LIBELF_INCLUDE_DIRS)
-#-- Could NOT find LIBOMPTARGET_DEP_LIBFFI (missing: LIBOMPTARGET_DEP_LIBFFI_LIBRARIES LIBOMPTARGET_DEP_LIBFFI_INCLUDE_DIRS)
-#-- Could NOT find LIBOMPTARGET_DEP_CUDA_DRIVER (missing: LIBOMPTARGET_DEP_CUDA_DRIVER_LIBRARIES)
-#-- Could NOT find LIBOMPTARGET_DEP_VEO (missing: LIBOMPTARGET_DEP_VEO_LIBRARIES LIBOMPTARGET_DEP_VEOSINFO_LIBRARIES LIBOMPTARGET_DEP_VEO_INCLUDE_DIRS)
-#-- LIBOMPTARGET: Building offloading runtime library libomptarget.
-#-- LIBOMPTARGET: Not building aarch64 offloading plugin: machine not found in the system.
-#-- LIBOMPTARGET: Not building AMDGPU plugin: LIBELF not found
-#-- LIBOMPTARGET: Not building CUDA offloading plugin: libelf dependency not found.
-#-- LIBOMPTARGET: Not building PPC64 offloading plugin: machine not found in the system.
-#-- LIBOMPTARGET: Not building PPC64le offloading plugin: machine not found in the system.
-#-- LIBOMPTARGET: Not building nec-aurora plugin: libveo or libveosinfo not found.
-#-- LIBOMPTARGET: Not building x86_64 offloading plugin: libelf dependency not found.
-#-- LIBOMPTARGET: Building DeviceRTL. Using clang from in-tree build
-#-- LIBOMPTARGET: Building the llvm-omp-device-info tool
-#-- check-libomptarget does nothing.
-
 main() {
     # """
     # Install LLVM (clang).
@@ -206,12 +189,8 @@ libncursesw.${dict['shared_ext']}"
     then
         # FIXME Need to locate ELF and binutils.
         cmake_args+=(
-
-
-        "-DELF_INCLUDE_DIRS=${dict['libedit']}/include"
-        "-DELF_LIBRARIES=${dict['libedit']}/lib/\
-libedit.${dict['shared_ext']}"
-
+            "-DELF_INCLUDE_DIRS=${dict['elfutils']}/include"
+            "-DELF_LIBRARIES=${dict['elfutils']}/lib/FIXME.${dict['shared_ext']}"
         )
     elif koopa_is_macos
     then
