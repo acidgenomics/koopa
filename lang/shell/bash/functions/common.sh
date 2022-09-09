@@ -13073,6 +13073,12 @@ koopa_install_oniguruma() {
         "$@"
 }
 
+koopa_install_openbb() {
+    koopa_install_app \
+        --name='openbb' \
+        "$@"
+}
+
 koopa_install_openblas() {
     koopa_install_app \
         --name='openblas' \
@@ -15374,17 +15380,20 @@ koopa_locate_anaconda() {
     koopa_locate_app \
         --app-name='anaconda' \
         --bin-name='conda' \
+        --no-allow-koopa-bin \
         "$@"
 }
 
 koopa_locate_app() {
     local bool dict pos
     declare -A bool=(
+        ['allow_koopa_bin']=1
         ['allow_missing']=0
         ['allow_system']=0
         ['realpath']=0
     )
     declare -A dict=(
+        ['app']=''
         ['app_name']=''
         ['bin_name']=''
         ['bin_prefix']="$(koopa_bin_prefix)"
@@ -15428,6 +15437,10 @@ koopa_locate_app() {
                 bool['allow_system']=1
                 shift 1
                 ;;
+            '--no-allow-koopa-bin')
+                bool['allow_koopa_bin']=0
+                shift 1
+                ;;
             '--realpath')
                 bool['realpath']=1
                 shift 1
@@ -15461,7 +15474,10 @@ koopa_locate_app() {
     fi
     [[ -n "${dict['app_name']}" ]] || return 1
     [[ -n "${dict['bin_name']}" ]] || return 1
-    dict['app']="${dict['bin_prefix']}/${dict['bin_name']}"
+    if [[ "${bool['allow_koopa_bin']}" -eq 1 ]]
+    then
+        dict['app']="${dict['bin_prefix']}/${dict['bin_name']}"
+    fi
     if [[ -x "${dict['app']}" ]]
     then
         if [[ "${bool['realpath']}" -eq 1 ]]
@@ -23509,6 +23525,12 @@ koopa_uninstall_nushell() {
 koopa_uninstall_oniguruma() {
     koopa_uninstall_app \
         --name='oniguruma' \
+        "$@"
+}
+
+koopa_uninstall_openbb() {
+    koopa_uninstall_app \
+        --name='openbb' \
         "$@"
 }
 
