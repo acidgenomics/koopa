@@ -3207,7 +3207,7 @@ koopa_build_all_apps() {
         'luajit'
         'luarocks'
         'msgpack'
-        'neovim'
+        
         'libevent'
         'utf8proc'
         'tmux'
@@ -3321,6 +3321,7 @@ koopa_build_all_apps() {
         'starship'
         'tealdeer'
         'tokei'
+        'tree-sitter'
         'tuc'
         'xsv'
         'zellij'
@@ -3349,6 +3350,7 @@ koopa_build_all_apps() {
         'nmap'
         'rmate'
         'unzip'
+        'neovim'
     )
     if ! koopa_is_aarch64
     then
@@ -13570,6 +13572,12 @@ koopa_install_tmux() {
 koopa_install_tokei() {
     koopa_install_app \
         --name='tokei' \
+        "$@"
+}
+
+koopa_install_tree_sitter() {
+    koopa_install_app \
+        --name='tree-sitter' \
         "$@"
 }
 
@@ -23993,6 +24001,12 @@ koopa_uninstall_tmux() {
 koopa_uninstall_tokei() {
     koopa_uninstall_app \
         --name='tokei' \
+        "$@"
+}
+
+koopa_uninstall_tree_sitter() {
+    koopa_uninstall_app \
+        --name='tree-sitter' \
         "$@"
 }
 

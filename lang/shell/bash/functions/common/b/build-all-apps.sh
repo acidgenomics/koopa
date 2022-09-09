@@ -177,7 +177,7 @@ koopa_build_all_apps() {
         'luajit'
         'luarocks'
         'msgpack'
-        'neovim'
+        
         # NOTE Consider moving these up in the install order.
         'libevent'
         'utf8proc'
@@ -337,6 +337,8 @@ koopa_build_all_apps() {
         # deps: rust.
         'tokei'
         # deps: rust.
+        'tree-sitter'
+        # deps: rust.
         'tuc'
         # deps: rust.
         'xsv'
@@ -385,6 +387,9 @@ koopa_build_all_apps() {
         'rmate'
         # deps: bzip2.
         'unzip'
+        # FIXME Check luajit, other deps needed for this.
+        # deps: libluv, libuv, tree-sitter.
+        'neovim'
     )
     if ! koopa_is_aarch64
     then
