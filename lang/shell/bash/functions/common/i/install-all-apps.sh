@@ -233,6 +233,7 @@ koopa_install_all_apps() {
         'tmux'
         'tokei'
         'tree'
+        'tree-sitter'
         'tuc'
         'udunits'
         'units'

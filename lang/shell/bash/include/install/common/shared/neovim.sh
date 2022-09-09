@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for TreeSitter.
-#
-#CMake Error at cmake/LibFindMacros.cmake:263 (message):
-#  REQUIRED PACKAGE NOT FOUND
-#
-#  We could not find development headers for TreeSitter.  Do you have the
-#  necessary dev package installed? This package is REQUIRED and you need to
-#  install it or adjust CMake configuration in order to continue building
-#  nvim.
-#
-#  Relevant CMake configuration variables:
-#
-#    TreeSitter_INCLUDE_DIR=<not found>
-#    TreeSitter_LIBRARY=<not found>
+# FIXME Need to add support for these:
+# - libtermkey
+# - libvterm
+# - unibilium
+# - libnsl (linux)
+
+# FIXME Need to add support for:
+# UNIBILIUM_INCLUDE_DIR=<not found>
+# UNIBILIUM_LIBRARY=<not found>
+
+# FIXME Need to specify LIBINTL to our gettext?
+# FIXME Need to specify LIBICONV to our libiconv
 
 main() {
     # """
@@ -44,10 +42,12 @@ main() {
         'libuv'
         'libluv'
         'lua'
+        'luajit'
         'luarocks'
         'msgpack'
         'ncurses'
         'python'
+        'tree-sitter'
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
@@ -58,21 +58,31 @@ main() {
         ['jobs']="$(koopa_cpu_count)"
         ['libluv']="$(koopa_app_prefix 'libluv')"
         ['libuv']="$(koopa_app_prefix 'libuv')"
+        ['lua']="$(koopa_app_prefix 'lua')"
+        ['luajit']="$(koopa_app_prefix 'luajit')"
         ['msgpack']="$(koopa_app_prefix 'msgpack')"
         ['name']='neovim'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
+        ['tree_sitter']="$(koopa_app_prefix 'tree-sitter')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
+        "${dict['libluv']}" \
         "${dict['libuv']}" \
-        "${dict['msgpack']}"
+        "${dict['lua']}" \
+        "${dict['luajit']}" \
+        "${dict['msgpack']}" \
+        "${dict['tree_sitter']}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
 archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    # Lua no longer builds with pkg-config support by default.
+    CFLAGS="-I${dict['lua']}/include ${CFLAGS:-}"
+    export CFLAGS
     cmake_args=(
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
@@ -88,9 +98,15 @@ archive/${dict['file']}"
         "-DLIBLUV_LIBRARY=${dict['libluv']}/lib/libluv.${dict['shared_ext']}"
         "-DLIBUV_INCLUDE_DIR=${dict['libuv']}/include"
         "-DLIBUV_LIBRARY=${dict['libuv']}/lib/libuv.${dict['shared_ext']}"
+        "-DLUAJIT_INCLUDE_DIR=${dict['luajit']}/include"
+        "-DLUAJIT_LIBRARY=${dict['luajit']}/lib/\
+libluajit.${dict['shared_ext']}"
         "-DMSGPACK_INCLUDE_DIR=${dict['msgpack']}/include"
         "-DMSGPACK_LIBRARY=${dict['msgpack']}/lib/\
 libmsgpackc.${dict['shared_ext']}"
+        "-DTreeSitter_INCLUDE_DIR=${dict['tree_sitter']}/include"
+        "-DTreeSitter_LIBRARY=${dict['tree_sitter']}/lib/\
+libtree-sitter.${dict['shared_ext']}"
     )
     "${app['cmake']}" -LH -S . -B 'build' "${cmake_args[@]}"
     "${app['cmake']}" --build 'build'
