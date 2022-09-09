@@ -16,9 +16,9 @@ main() {
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_type']="$(koopa_os_type)"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['py_version']="$(koopa_app_json_version 'python')"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['arch2']="${dict['arch']}"
     case "${dict['os_type']}" in

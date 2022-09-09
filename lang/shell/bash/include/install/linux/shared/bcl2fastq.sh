@@ -25,8 +25,8 @@ main() {
         ['jobs']="$(koopa_cpu_count)"
         ['name']='bcl2fastq'
         ['platform']='linux-gnu'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     # e.g. '2.20.0.422' to '2-20-0'.

@@ -22,7 +22,7 @@ main() {
         ['r']='/usr/bin/R'
     )
     declare -A dict=(
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     # These removal steps will mess up existing installation, unless we run
     # 'sudo apt purge r-base-core' first.

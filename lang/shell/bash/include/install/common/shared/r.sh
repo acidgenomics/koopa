@@ -217,11 +217,11 @@ main() {
         # > ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['jobs']="$(koopa_cpu_count)"
         ['lapack']="$(koopa_app_prefix 'lapack')"
-        ['name']="${INSTALL_NAME:?}"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
         ['openjdk']="$(koopa_app_prefix 'openjdk')"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
         "${dict['lapack']}" \

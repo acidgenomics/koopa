@@ -23,8 +23,8 @@ main() {
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     # ARM is not yet supported. Check for Intel x86.
     case "${dict['arch']}" in

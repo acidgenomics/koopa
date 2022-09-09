@@ -8,8 +8,8 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        ['commit']="${INSTALL_VERSION:?}"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['commit']="${KOOPA_INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url']='https://github.com/plexus/chemacs2.git'
     )
     koopa_git_clone \

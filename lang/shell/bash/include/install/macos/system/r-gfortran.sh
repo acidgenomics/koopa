@@ -23,8 +23,8 @@ main() {
         ['arch']="$(koopa_arch)"
         ['make_prefix']="$(koopa_make_prefix)"
         ['name']='gfortran'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     case "${dict['arch']}" in
         'aarch64')

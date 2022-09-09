@@ -16,9 +16,9 @@ main() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     declare -A dict=(
-        ['name']="${INSTALL_NAME:?}"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     koopa_conda_create_env \

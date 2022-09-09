@@ -16,8 +16,8 @@ main() {
         ['aspera_user_prefix']="${HOME}/.aspera"
         ['name']='ibm-aspera-connect'
         ['platform']='linux'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['file']="${dict['name']}_${dict['version']}_${dict['platform']}.tar.gz"

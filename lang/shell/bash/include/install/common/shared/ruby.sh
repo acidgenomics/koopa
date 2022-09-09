@@ -19,8 +19,8 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='ruby'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     # Ensure '2.7.1p83' becomes '2.7.1' here, for example.
     dict['version']="$(koopa_sanitize_version "${dict['version']}")"

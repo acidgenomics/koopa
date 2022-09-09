@@ -41,8 +41,8 @@ main() {
         ['name']='nmap'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['pcre']="$(koopa_app_prefix 'pcre')"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"

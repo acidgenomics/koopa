@@ -14,8 +14,8 @@ main() {
     # """
     local dict
     declare -A dict=(
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="cacert-${dict['version']}.pem"
     dict['url']="https://curl.se/ca/${dict['file']}"

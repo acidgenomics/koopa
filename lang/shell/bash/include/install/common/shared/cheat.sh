@@ -19,8 +19,8 @@ main() {
     declare -A dict=(
         ['gopath']="$(koopa_init_dir 'go')"
         ['name']='cheat'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/cheat/cheat/archive/refs/tags/${dict['file']}"

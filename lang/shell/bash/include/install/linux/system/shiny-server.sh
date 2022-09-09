@@ -22,7 +22,7 @@ main() {
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         ['arch2']="$(koopa_arch2)" # e.g. 'amd64'.
         ['name']='shiny-server'
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     if koopa_is_debian_like
     then

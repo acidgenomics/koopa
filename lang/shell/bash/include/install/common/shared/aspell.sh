@@ -18,7 +18,7 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['lang_base_url']='https://ftp.gnu.org/gnu/aspell/dict'
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     )
     koopa_install_app_subshell \
         --installer='gnu-app' \

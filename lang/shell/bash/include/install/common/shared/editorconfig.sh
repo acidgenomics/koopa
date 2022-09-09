@@ -29,9 +29,9 @@ main() {
     declare -A dict=(
         ['name']='editorconfig-core-c'
         ['pcre2']="$(koopa_app_prefix 'pcre2')"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/editorconfig/${dict['name']}/\

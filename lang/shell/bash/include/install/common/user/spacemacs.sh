@@ -13,7 +13,7 @@ main() {
     koopa_activate_build_opt_prefix 'chemacs'
     declare -A dict=(
         ['branch']='develop'
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url']='https://github.com/syl20bnr/spacemacs.git'
     )
     koopa_git_clone \

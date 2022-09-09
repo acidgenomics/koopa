@@ -19,8 +19,8 @@ main() {
     koopa_activate_build_opt_prefix 'python'
     declare -A dict=(
         ['arch']="$(koopa_arch)"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     if koopa_is_linux
     then

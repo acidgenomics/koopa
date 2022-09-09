@@ -23,8 +23,8 @@ main() {
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         ['name']='armadillo'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="http://sourceforge.net/projects/arma/files/${dict['file']}"

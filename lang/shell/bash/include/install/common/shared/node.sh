@@ -66,8 +66,8 @@ main() {
         ['name']='node'
         [nghttp2]="$(koopa_app_prefix 'nghttp2')"
         ['openssl']="$(koopa_app_prefix 'openssl3')"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     dict['cacerts']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
