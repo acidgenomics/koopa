@@ -507,7 +507,7 @@ koopa_linux_install_docker_credential_pass() {
 koopa_linux_install_elfutils() {
     koopa_install_app \
         --name='elfutils' \
-        --platform='linux'
+        --platform='linux' \
         "$@"
 }
 
