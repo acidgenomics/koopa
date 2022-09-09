@@ -98,11 +98,13 @@ main() {
         "${dict['libxml2']}" \
         "${dict['ncurses']}" \
         "${dict['zlib']}"
+    if koopa_is_linux
+    then
+        dict['elfutils']="$(koopa_app_prefix 'elfutils')"
+        koopa_assert_is_dir "${dict['elfutils']}"
+    fi
     # > dict['py_ver']="$(koopa_get_version "${app['python']}")"
     # > dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
-    dict['file']="${dict['name']}-${dict['version']}.src.tar.xz"
-    dict['url']="https://github.com/llvm/${dict['name']}/releases/download/\
-llvmorg-${dict['version']}/${dict['file']}"
     projects=(
         # > 'bolt'
         # > 'cross-project-tests'
@@ -200,7 +202,18 @@ libncursesw.${dict['shared_ext']}"
 # >     "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/bin/python${dict['py_maj_min_ver']}"
 # >     "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/site-packages"
 # > )
-    if koopa_is_macos
+    if koopa_is_linux
+    then
+        # FIXME Need to locate ELF and binutils.
+        cmake_args+=(
+
+
+        "-DELF_INCLUDE_DIRS=${dict['libedit']}/include"
+        "-DELF_LIBRARIES=${dict['libedit']}/lib/\
+libedit.${dict['shared_ext']}"
+
+        )
+    elif koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
         koopa_assert_is_dir "${dict['sysroot']}"
@@ -212,6 +225,9 @@ libncursesw.${dict['shared_ext']}"
             '-DLLVM_LINK_LLVM_DYLIB=ON'
         )
     fi
+    dict['file']="${dict['name']}-${dict['version']}.src.tar.xz"
+    dict['url']="https://github.com/llvm/${dict['name']}/releases/download/\
+llvmorg-${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}.src"
