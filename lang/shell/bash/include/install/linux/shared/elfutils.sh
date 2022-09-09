@@ -32,7 +32,7 @@ main() {
         "${dict['gettext']}" \
         "${dict['libiconv']}"
     conf_args=(
-        # > '--program-prefix=elfutils-'
+        # > '--enable-install-elfh'
         # > '--with-biarch'
         # > '--with-valgrind'
         "--prefix=${dict['prefix']}"
@@ -41,7 +41,7 @@ main() {
         '--disable-dependency-tracking'
         '--disable-libdebuginfod'
         '--disable-silent-rules'
-        '--enable-install-elfh'
+        '--program-prefix=eu-'
         '--with-bzlib'
         "--with-libiconv-prefix=${dict['libiconv']}"
         "--with-libintl-prefix=${dict['gettext']}"
