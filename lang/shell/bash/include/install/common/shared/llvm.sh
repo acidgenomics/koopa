@@ -69,10 +69,10 @@ main() {
         ['libxml2']="$(koopa_app_prefix 'libxml2')"
         ['name']='llvm-project'
         ['ncurses']="$(koopa_app_prefix 'ncurses')"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         # > ['python']="$(koopa_app_prefix 'python')"
         ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     koopa_assert_is_dir \

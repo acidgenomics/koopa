@@ -21,8 +21,8 @@ main() {
         ['gopath']="$(koopa_init_dir 'go')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='fzf'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/junegunn/${dict['name']}/archive/${dict['file']}"

@@ -30,8 +30,8 @@ main() {
     declare -A dict=(
         ['name']='fontconfig'
         ['jobs']="$(koopa_cpu_count)"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://www.freedesktop.org/software/${dict['name']}/\

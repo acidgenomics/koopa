@@ -14,8 +14,8 @@ main() {
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. "amd64".
         ['name']='go'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     if koopa_is_macos
     then

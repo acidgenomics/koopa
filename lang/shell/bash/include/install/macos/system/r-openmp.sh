@@ -28,7 +28,7 @@ main() {
         ['name']='openmp'
         ['platform']='darwin'
         ['release']='Release' # or 'Debug'.
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
 
     case "${dict['version']}" in

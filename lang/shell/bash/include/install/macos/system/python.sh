@@ -17,7 +17,7 @@ main() {
         ['framework_prefix']='/Library/Frameworks/Python.framework'
         ['macos_version']="$(koopa_macos_os_version)"
         ['name']='python'
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     case "${dict['macos_version']}" in
         '11'* | \
