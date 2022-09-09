@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-09-08.
+    # Updated 2022-09-09.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -326,6 +326,7 @@ __koopa_complete() {
                         'tmux'
                         'tokei'
                         'tree'
+                        'tree-sitter'
                         'tuc'
                         'udunits'
                         'units'
