@@ -18,7 +18,7 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['branch']='master'
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url']='https://github.com/SpaceVim/SpaceVim.git'
         ['xdg_data_home']="$(koopa_xdg_data_home)"
     )

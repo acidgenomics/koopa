@@ -22,8 +22,8 @@ main() {
         ['jobs']="$(koopa_cpu_count)"
         ['name1']='oniguruma'
         ['name2']='onig'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['version2']="$(koopa_major_minor_patch_version "${dict['version']}")"
     dict['file']="${dict['name2']}-${dict['version']}.tar.gz"

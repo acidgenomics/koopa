@@ -22,8 +22,8 @@ main() {
     declare -A dict=(
         ['name']='OpenBLAS'
         ['jobs']="$(koopa_cpu_count)"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/xianyi/${dict['name']}/archive/${dict['file']}"

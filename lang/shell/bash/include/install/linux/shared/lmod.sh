@@ -29,8 +29,8 @@ main() {
         ['make_prefix']="$(koopa_make_prefix)"
         ['name2']='Lmod'
         ['name']='lmod'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['apps_dir']="${dict['prefix']}/apps"
     dict['data_dir']="${dict['prefix']}/moduleData"

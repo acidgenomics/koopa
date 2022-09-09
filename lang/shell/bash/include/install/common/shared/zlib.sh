@@ -20,8 +20,8 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='zlib'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://www.zlib.net/${dict['file']}"

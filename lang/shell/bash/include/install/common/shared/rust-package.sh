@@ -31,9 +31,9 @@ main() {
     declare -A dict=(
         ['cargo_home']="${HOME:?}/.cargo"
         ['jobs']="$(koopa_cpu_count)"
-        ['name']="${INSTALL_NAME:?}"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(

@@ -38,9 +38,9 @@ main() {
         ['jobs']="$(koopa_cpu_count)"
         ['make_prefix']="$(koopa_make_prefix)"
         ['name']='proj'
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://github.com/OSGeo/PROJ/releases/download/\

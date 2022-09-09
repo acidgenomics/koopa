@@ -32,8 +32,8 @@ main() {
     [[ -x "${app['r']}" ]] || return 1
     app['r']="$(koopa_realpath "${app['r']}")"
     declare -A dict=(
-        ['name']="${INSTALL_NAME:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     if koopa_is_debian_like
     then

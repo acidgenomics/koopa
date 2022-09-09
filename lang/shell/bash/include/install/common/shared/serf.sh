@@ -38,8 +38,8 @@ main() {
     [[ -x "${app['scons']}" ]] || return 1
     declare -A dict=(
         ['name']='serf'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://www.apache.org/dist/${dict['name']}/${dict['file']}"

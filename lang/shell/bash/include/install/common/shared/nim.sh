@@ -16,8 +16,8 @@ main() {
     declare -A app
     declare -A dict=(
         ['name']='nim'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://nim-lang.org/download/${dict['file']}"

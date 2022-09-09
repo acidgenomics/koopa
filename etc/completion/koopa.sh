@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-09-07.
+    # Updated 2022-09-08.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -210,6 +210,7 @@ __koopa_complete() {
                         'libgeotiff'
                         'libgit2'
                         'libgpg-error'
+                        'libiconv'
                         'libjpeg-turbo'
                         'libksba'
                         'libpipeline'
@@ -367,6 +368,7 @@ __koopa_complete() {
                             'cellranger'
                             'cloudbiolinux'
                             'docker-credential-pass'
+                            'elfutils'
                             'lmod'
                             'pinentry'
                         )

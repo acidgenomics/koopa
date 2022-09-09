@@ -18,7 +18,7 @@ main() {
         'libpipeline' \
         'gdbm'
     declare -A dict=(
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     )
     koopa_install_app_subshell \
         --installer='gnu-app' \

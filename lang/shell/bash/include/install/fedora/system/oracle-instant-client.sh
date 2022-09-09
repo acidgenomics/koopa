@@ -31,7 +31,7 @@ main() {
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['platform']='linux'
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     # e.g. '21.1.0.0.0-1' to '211000'.
     dict['version2']="$( \

@@ -19,8 +19,8 @@ main() {
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['installer']}" ]] || return 1
     declare -A dict=(
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['xml_file']='choices.xml'
     )
     dict['libexec_prefix']="${dict['prefix']}/libexec"

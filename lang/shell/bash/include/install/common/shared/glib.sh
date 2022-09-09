@@ -29,8 +29,8 @@ main() {
     [[ -x "${app['ninja']}" ]] || return 1
     declare -A dict=(
         ['name']='glib'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"

@@ -32,8 +32,8 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='graphviz'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://gitlab.com/api/v4/projects/4207231/packages/generic/\

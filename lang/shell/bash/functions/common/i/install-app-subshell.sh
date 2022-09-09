@@ -11,11 +11,11 @@ koopa_install_app_subshell() {
         ['installer_fun']='main'
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['mode']='shared'
-        ['name']="${INSTALL_NAME:-}"
+        ['name']="${KOOPA_INSTALL_NAME:-}"
         ['platform']='common'
-        ['prefix']="${INSTALL_PREFIX:-}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:-}"
         ['tmp_dir']="$(koopa_tmp_dir)"
-        ['version']="${INSTALL_VERSION:-}"
+        ['version']="${KOOPA_INSTALL_VERSION:-}"
     )
     pos=()
     while (("$#"))
@@ -98,13 +98,11 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     (
         koopa_cd "${dict['tmp_dir']}"
         # shellcheck disable=SC2030
-        export INSTALL_NAME="${dict['name']}"
+        export KOOPA_INSTALL_NAME="${dict['name']}"
         # shellcheck disable=SC2030
-        export INSTALL_PREFIX="${dict['prefix']}"
+        export KOOPA_INSTALL_PREFIX="${dict['prefix']}"
         # shellcheck disable=SC2030
-        export INSTALL_SCRIPT="${dict['installer_file']}"
-        # shellcheck disable=SC2030
-        export INSTALL_VERSION="${dict['version']}"
+        export KOOPA_INSTALL_VERSION="${dict['version']}"
         # shellcheck source=/dev/null
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"

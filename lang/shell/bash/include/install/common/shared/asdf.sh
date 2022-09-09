@@ -12,8 +12,8 @@ main() {
     local dict
     declare -A dict=(
         ['name']='asdf'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['libexec']="${dict['prefix']}/libexec"
     dict['file']="v${dict['version']}.tar.gz"

@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-09-08.
+    # @note Updated 2022-09-09.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -140,6 +140,7 @@ koopa_install_all_apps() {
         'libgeotiff'
         'libgit2'
         'libgpg-error'
+        'libiconv'
         'libidn'
         'libjpeg-turbo'
         'libksba'
@@ -153,7 +154,6 @@ koopa_install_all_apps() {
         'libuv'
         'libxml2'
         'libzip'
-        'llvm'
         'lua'
         'luarocks'
         'lz4'
@@ -272,6 +272,7 @@ koopa_install_all_apps() {
             'apptainer'
             'aspera-connect'
             'docker-credential-pass'
+            'elfutils'
             'lmod'
             'pinentry'
         )
@@ -304,6 +305,7 @@ koopa_install_all_apps() {
             'julia'
             'kallisto'
             'latch'
+            'llvm'
             'multiqc'
             'nextflow'
             'nim'

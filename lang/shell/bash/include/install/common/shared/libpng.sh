@@ -20,8 +20,8 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='libpng'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     # Convert '1.6.37' to '16'.
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"

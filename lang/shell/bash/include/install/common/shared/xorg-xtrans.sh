@@ -20,8 +20,8 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='xtrans'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://www.x.org/archive/individual/lib/${dict['file']}"

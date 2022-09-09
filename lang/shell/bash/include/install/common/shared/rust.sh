@@ -14,9 +14,9 @@ main() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['tmp_prefix']='rustup'
-        ['version']="${INSTALL_VERSION:?}" # or 'stable' toolchain
+        ['version']="${KOOPA_INSTALL_VERSION:?}" # or 'stable' toolchain
     )
     dict['cargo_home']="${dict['tmp_prefix']}"
     dict['rustup_home']="${dict['tmp_prefix']}"

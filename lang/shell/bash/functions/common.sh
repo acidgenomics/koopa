@@ -3263,6 +3263,10 @@ koopa_build_all_apps() {
         'which'
         'libgeotiff'
         'swig'
+        'libiconv'
+    )
+    koopa_is_linux && apps+=('elfutils')
+    apps+=(
         'llvm'
         'go'
         'chezmoi' # deps: go
@@ -11133,6 +11137,7 @@ koopa_install_all_apps() {
         'libgeotiff'
         'libgit2'
         'libgpg-error'
+        'libiconv'
         'libidn'
         'libjpeg-turbo'
         'libksba'
@@ -11146,7 +11151,6 @@ koopa_install_all_apps() {
         'libuv'
         'libxml2'
         'libzip'
-        'llvm'
         'lua'
         'luarocks'
         'lz4'
@@ -11264,6 +11268,7 @@ koopa_install_all_apps() {
             'apptainer'
             'aspera-connect'
             'docker-credential-pass'
+            'elfutils'
             'lmod'
             'pinentry'
         )
@@ -11294,6 +11299,7 @@ koopa_install_all_apps() {
             'julia'
             'kallisto'
             'latch'
+            'llvm'
             'multiqc'
             'nextflow'
             'nim'
@@ -11378,11 +11384,11 @@ koopa_install_app_subshell() {
         ['installer_fun']='main'
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['mode']='shared'
-        ['name']="${INSTALL_NAME:-}"
+        ['name']="${KOOPA_INSTALL_NAME:-}"
         ['platform']='common'
-        ['prefix']="${INSTALL_PREFIX:-}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:-}"
         ['tmp_dir']="$(koopa_tmp_dir)"
-        ['version']="${INSTALL_VERSION:-}"
+        ['version']="${KOOPA_INSTALL_VERSION:-}"
     )
     pos=()
     while (("$#"))
@@ -11459,10 +11465,9 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     koopa_assert_is_file "${dict['installer_file']}"
     (
         koopa_cd "${dict['tmp_dir']}"
-        export INSTALL_NAME="${dict['name']}"
-        export INSTALL_PREFIX="${dict['prefix']}"
-        export INSTALL_SCRIPT="${dict['installer_file']}"
-        export INSTALL_VERSION="${dict['version']}"
+        export KOOPA_INSTALL_NAME="${dict['name']}"
+        export KOOPA_INSTALL_PREFIX="${dict['prefix']}"
+        export KOOPA_INSTALL_VERSION="${dict['version']}"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
         "${dict['installer_fun']}" "$@"
@@ -12811,6 +12816,12 @@ koopa_install_libgit2() {
 koopa_install_libgpg_error() {
     koopa_install_app \
         --name='libgpg-error' \
+        "$@"
+}
+
+koopa_install_libiconv() {
+    koopa_install_app \
+        --name='libiconv' \
         "$@"
 }
 
@@ -23246,6 +23257,12 @@ koopa_uninstall_libgit2() {
 koopa_uninstall_libgpg_error() {
     koopa_uninstall_app \
         --name='libgpg-error' \
+        "$@"
+}
+
+koopa_uninstall_libiconv() {
+    koopa_uninstall_app \
+        --name='libiconv' \
         "$@"
 }
 

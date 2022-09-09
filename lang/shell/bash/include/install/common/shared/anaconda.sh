@@ -22,9 +22,9 @@ main() {
         ['arch']="$(koopa_arch)"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_type']="$(koopa_os_type)"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['py_maj_ver']='3'
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     case "${dict['os_type']}" in
         'darwin'*)

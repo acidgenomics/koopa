@@ -16,9 +16,9 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"

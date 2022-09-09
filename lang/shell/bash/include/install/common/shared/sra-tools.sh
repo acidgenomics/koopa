@@ -46,9 +46,9 @@ main() {
         ['hdf5']="$(koopa_app_prefix 'hdf5')"
         ['java_home']="$(koopa_java_prefix)"
         ['libxml2']="$(koopa_app_prefix 'libxml2')"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     # Ensure we define Java location, otherwise install can hit warnings during
     # ngs-tools install.

@@ -23,8 +23,8 @@ main() {
     declare -A dict=(
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['name']='unzip'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir "${dict['bzip2']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
@@ -96,7 +96,7 @@ apply_ubuntu_patch_set() {
     [[ -x "${app['patch']}" ]] || return 1
     declare -A dict=(
         ['name']='unzip'
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     case "${dict['version']}" in
         '6.0')

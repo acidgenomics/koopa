@@ -14,8 +14,8 @@ main() {
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
         ['name']='docker-credential-pass'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-v${dict['version']}-${dict['arch']}.tar.gz"
     dict['url']="https://github.com/docker/docker-credential-helpers/releases/\

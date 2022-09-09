@@ -32,9 +32,9 @@ main() {
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='curl'
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['ssl']="$(koopa_app_prefix 'openssl3')"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
         ['zstd']="$(koopa_app_prefix 'zstd')"
     )

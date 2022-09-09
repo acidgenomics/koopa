@@ -1,12 +1,34 @@
 #!/usr/bin/env bash
 
-# FIXME This still seems to be problematic on macOS:
-# -- Found FFI: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libffi.tbd  
+# FIXME Need to resolve 'Python.h' linkage issues when enabling Python
+# for LLDB. How do we get the installer to pick up Python 'include' dir?
+# Is CPATH the answer?
+
+# FIXME Maybe we can use these to link Python correctly.
+# args << "-DCMAKE_C_FLAGS=#{cflags.join(" ")}"
+# args << "-DCMAKE_CXX_FLAGS=#{cxxflags.join(" ")}"
+
+# FIXME For ld library paths, may need to use:
+# args << "-DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags.join(" ")}"
+# args << "-DCMAKE_MODULE_LINKER_FLAGS=#{linux_linker_flags.join(" ")}"
+# args << "-DCMAKE_SHARED_LINKER_FLAGS=#{linux_linker_flags.join(" ")}"
+
+# FIXME May need to use this for Python:
+# > runtimes_cmake_args << "-DCMAKE_INSTALL_RPATH=#{rpath}"
+
+# FIXME Alternatively may be able to set LIBELF location in CPATH
+# environment variable.
 
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2022-09-08.
+    # @note Updated 2022-09-09.
+    #
+    # Useful CMake linker variables:
+    # - CMAKE_EXE_LINKER_FLAGS
+    # - CMAKE_MODULE_LINKER_FLAGS
+    # - CMAKE_SHARED_LINKER_FLAGS
+    # - CMAKE_STATIC_LINKER_FLAGS
     #
     # @seealso
     # - https://llvm.org/docs/GettingStarted.html
@@ -21,6 +43,9 @@ main() {
     # - https://github.com/llvm/llvm-project/blob/main/llvm/cmake/\
     #     modules/FindFFI.cmake
     # - https://github.com/llvm/llvm-project/blob/main/lldb/CMakeLists.txt
+    # - https://github.com/llvm-mirror/openmp/blob/master/libomptarget/cmake/
+    #     Modules/LibomptargetGetDependencies.cmake
+    # - https://stackoverflow.com/questions/6077414/
     # """
     local app build_deps cmake_args dict deps projects
     build_deps=(
@@ -28,6 +53,7 @@ main() {
         'git'
         'ninja'
         'perl'
+        'pkg-config'
     )
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     deps=(
@@ -39,12 +65,23 @@ main() {
         'python'
         'swig'
     )
+    if koopa_is_linux
+    then
+        deps+=(
+            # Needed for 'gold'.
+            'binutils'
+            # > 'zstd' # may be required for elfutils
+            # OpenMP requires 'gelf.h'.
+            'elfutils'
+        )
+    fi
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['git']="$(koopa_locate_git --realpath)"
         ['ninja']="$(koopa_locate_ninja)"
         ['perl']="$(koopa_locate_perl --realpath)"
+        ['pkg_config']="$(koopa_locate_pkg_config --realpath)"
         ['python']="$(koopa_locate_python --realpath)"
         ['swig']="$(koopa_locate_swig --realpath)"
     )
@@ -52,6 +89,7 @@ main() {
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['ninja']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
+    [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     [[ -x "${app['swig']}" ]] || return 1
     declare -A dict=(
@@ -60,10 +98,10 @@ main() {
         ['libxml2']="$(koopa_app_prefix 'libxml2')"
         ['name']='llvm-project'
         ['ncurses']="$(koopa_app_prefix 'ncurses')"
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['python']="$(koopa_app_prefix 'python')"
         ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     koopa_assert_is_dir \
@@ -73,11 +111,16 @@ main() {
         "${dict['ncurses']}" \
         "${dict['python']}" \
         "${dict['zlib']}"
+    if koopa_is_linux
+    then
+        dict['binutils']="$(koopa_app_prefix 'binutils')"
+        dict['elfutils']="$(koopa_app_prefix 'elfutils')"
+        koopa_assert_is_dir \
+            "${dict['binutils']}" \
+            "${dict['elfutils']}"
+    fi
     dict['py_ver']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
-    dict['file']="${dict['name']}-${dict['version']}.src.tar.xz"
-    dict['url']="https://github.com/llvm/${dict['name']}/releases/download/\
-llvmorg-${dict['version']}/${dict['file']}"
     projects=(
         # > 'bolt'
         # > 'cross-project-tests'
@@ -99,19 +142,17 @@ llvmorg-${dict['version']}/${dict['file']}"
         'libcxxabi'
         'libunwind'
     )
-    # This is used in the Homebrew LLVM 14 recipe.
-    # > if koopa_is_macos
-    # > then
-    # >     runtimes+=('openmp')
-    # > else
-    # >     projects+=('openmp')
-    # > fi
     dict['projects']="$(printf '%s;' "${projects[@]}")"
     dict['runtimes']="$(printf '%s;' "${runtimes[@]}")"
     cmake_args=(
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DLLDB_ENABLE_CURSES=ON'
         '-DLLDB_ENABLE_LUA=OFF'
         '-DLLDB_ENABLE_LZMA=OFF'
@@ -147,16 +188,20 @@ libncursesw.${dict['shared_ext']}"
         "-DLibEdit_INCLUDE_DIRS=${dict['libedit']}/include"
         "-DLibEdit_LIBRARIES=${dict['libedit']}/lib/\
 libedit.${dict['shared_ext']}"
-        "-DLIBXML2_INCLUDE_DIRS=${dict['libxml2']}/include"
-        "-DLIBXML2_LIBRARIES=${dict['libxml2']}/lib/\
+        # FIXME Can we remove duplication of these here?
+        "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
+        # > "-DLIBXML2_INCLUDE_DIRS=${dict['libxml2']}/include"
+        "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/\
 libxml2.${dict['shared_ext']}"
+        # > "-DLIBXML2_LIBRARIES=${dict['libxml2']}/lib/\
+# > libxml2.${dict['shared_ext']}"
         "-DPANEL_LIBRARIES=${dict['ncurses']}/lib/\
 libpanelw.${dict['shared_ext']}"
         "-DPERL_EXECUTABLE=${app['perl']}"
+        "-DPKG_CONFIG_EXECUTABLE=${app['pkg_config']}"
         "-DPython3_EXECUTABLE=${app['python']}"
         "-DPython3_INCLUDE_DIRS=${dict['python']}/include"
-        "-DPython3_LIBRARIES=${dict['python']}/lib/\
-libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
+        "-DPython3_LIBRARIES=${dict['python']}/lib/libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
         "-DPython3_ROOT_DIR=${dict['python']}"
         "-DSWIG_EXECUTABLE=${app['swig']}"
         "-DTerminfo_LIBRARIES=${dict['ncurses']}/lib/\
@@ -167,23 +212,33 @@ libncursesw.${dict['shared_ext']}"
     # Additional Python binding fixes.
     cmake_args+=(
         "-DCLANG_PYTHON_BINDINGS_VERSIONS=${dict['py_maj_min_ver']}"
-        "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/\
-bin/python${dict['py_maj_min_ver']}"
-        "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/\
-site-packages"
+        "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/bin/python${dict['py_maj_min_ver']}"
+        "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/site-packages"
     )
-    if koopa_is_macos
+    if koopa_is_linux
+    then
+        cmake_args+=(
+            # Ensure OpenMP picks up ELF.
+            "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR=${dict['elfutils']}/include"
+            "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/libelf.${dict['shared_ext']}"
+            # Enable llvm gold plugin for LTO.
+            "-DLLVM_BINUTILS_INCDIR=${dict['binutils']}/include"
+        )
+    elif koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
         koopa_assert_is_dir "${dict['sysroot']}"
         cmake_args+=(
+            # > '-DLLVM_BUILD_LLVM_C_DYLIB=ON'
+            # > '-DLLVM_ENABLE_LIBCXX=ON'
+            # > '-DLLVM_LINK_LLVM_DYLIB=ON'
             "-DDEFAULT_SYSROOT=${dict['sysroot']}"
-            '-DLLVM_BUILD_LLVM_C_DYLIB=ON'
             '-DLLVM_CREATE_XCODE_TOOLCHAIN=OFF'
-            '-DLLVM_ENABLE_LIBCXX=ON'
-            '-DLLVM_LINK_LLVM_DYLIB=ON'
         )
     fi
+    dict['file']="${dict['name']}-${dict['version']}.src.tar.xz"
+    dict['url']="https://github.com/llvm/${dict['name']}/releases/download/\
+llvmorg-${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}.src"
@@ -192,5 +247,6 @@ site-packages"
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -G 'Ninja' "${cmake_args[@]}" ../llvm
     "${app['cmake']}" --build .
+    "${app['cmake']}" --build . --target 'install'
     return 0
 }
