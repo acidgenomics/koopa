@@ -1427,6 +1427,7 @@
   "llvm": {
     "conservative": true,
     "date": "2022-09-08",
+    "large": true,
     "url": ["https://releases.llvm.org/"],
     "version": "15.0.0"
   },
