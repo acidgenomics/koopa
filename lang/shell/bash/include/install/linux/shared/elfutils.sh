@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting a cryptic permission issue with make-debug-archive.
+
 main() {
     # """
     # @seealso
@@ -54,7 +56,7 @@ main() {
     koopa_cd "${dict['name']}-${dict['version']}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" --jobs="${dict['jobs']}" VERBOSE=1
     "${app['make']}" install
     return 0
 }
