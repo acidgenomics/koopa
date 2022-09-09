@@ -41,7 +41,7 @@ main() {
         '--disable-silent-rules'
         '--enable-install-elfh'
         '--with-bzlib'
-        "--with-libiconv-prefix${dict['libiconv']}"
+        "--with-libiconv-prefix=${dict['libiconv']}"
         "--with-libintl-prefix=${dict['gettext']}"
         '--with-zlib'
         '--with-zstd'
