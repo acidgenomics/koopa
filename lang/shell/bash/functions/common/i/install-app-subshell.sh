@@ -102,8 +102,6 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         # shellcheck disable=SC2030
         export INSTALL_PREFIX="${dict['prefix']}"
         # shellcheck disable=SC2030
-        export INSTALL_SCRIPT="${dict['installer_file']}"
-        # shellcheck disable=SC2030
         export INSTALL_VERSION="${dict['version']}"
         # shellcheck source=/dev/null
         source "${dict['installer_file']}"
