@@ -174,7 +174,9 @@ koopa_build_all_apps() {
         'emacs'
         'vim'
         'lua'
+        'luajit'
         'luarocks'
+        'msgpack'
         'neovim'
         # NOTE Consider moving these up in the install order.
         'libevent'
