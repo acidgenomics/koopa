@@ -11234,6 +11234,7 @@ koopa_install_all_apps() {
         'tmux'
         'tokei'
         'tree'
+        'tree-sitter'
         'tuc'
         'udunits'
         'units'
@@ -12878,6 +12879,12 @@ koopa_install_libtasn1() {
         "$@"
 }
 
+koopa_install_libtermkey() {
+    koopa_install_app \
+        --name='libtermkey' \
+        "$@"
+}
+
 koopa_install_libtiff() {
     koopa_install_app \
         --name='libtiff' \
@@ -12899,6 +12906,12 @@ koopa_install_libunistring() {
 koopa_install_libuv() {
     koopa_install_app \
         --name='libuv' \
+        "$@"
+}
+
+koopa_install_libvterm() {
+    koopa_install_app \
+        --name='libvterm' \
         "$@"
 }
 
@@ -13596,6 +13609,12 @@ koopa_install_tuc() {
 koopa_install_udunits() {
     koopa_install_app \
         --name='udunits' \
+        "$@"
+}
+
+koopa_install_unibilium() {
+    koopa_install_app \
+        --name='unibilium' \
         "$@"
 }
 
@@ -23359,6 +23378,12 @@ koopa_uninstall_libtasn1() {
         "$@"
 }
 
+koopa_uninstall_libtermkey() {
+    koopa_uninstall_app \
+        --name='libtermkey' \
+        "$@"
+}
+
 koopa_uninstall_libtiff() {
     koopa_uninstall_app \
         --name='libtiff' \
@@ -23380,6 +23405,12 @@ koopa_uninstall_libunistring() {
 koopa_uninstall_libuv() {
     koopa_uninstall_app \
         --name='libuv' \
+        "$@"
+}
+
+koopa_uninstall_libvterm() {
+    koopa_uninstall_app \
+        --name='libvterm' \
         "$@"
 }
 
@@ -24025,6 +24056,12 @@ koopa_uninstall_tuc() {
 koopa_uninstall_udunits() {
     koopa_uninstall_app \
         --name='udunits' \
+        "$@"
+}
+
+koopa_uninstall_unibilium() {
+    koopa_uninstall_app \
+        --name='unibilium' \
         "$@"
 }
 
