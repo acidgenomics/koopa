@@ -2,6 +2,7 @@
 
 # NOTE This still seems to be problematic on macOS:
 # -- Found FFI: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libffi.tbd
+# -- Could NOT find LibXml2 (missing: LIBXML2_INCLUDE_DIR)
 
 main() {
     # """
@@ -146,8 +147,13 @@ libncursesw.${dict['shared_ext']}"
         "-DLibEdit_INCLUDE_DIRS=${dict['libedit']}/include"
         "-DLibEdit_LIBRARIES=${dict['libedit']}/lib/\
 libedit.${dict['shared_ext']}"
+        # FIXME Do these work on macOS but not Linux?
         "-DLIBXML2_INCLUDE_DIRS=${dict['libxml2']}/include"
         "-DLIBXML2_LIBRARIES=${dict['libxml2']}/lib/\
+libxml2.${dict['shared_ext']}"
+        # FIXME Need to use these on Linux:
+        "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
+        "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/\
 libxml2.${dict['shared_ext']}"
         "-DPANEL_LIBRARIES=${dict['ncurses']}/lib/\
 libpanelw.${dict['shared_ext']}"
