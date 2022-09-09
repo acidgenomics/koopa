@@ -4,6 +4,23 @@
 # -- Found FFI: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libffi.tbd
 # -- Could NOT find LibXml2 (missing: LIBXML2_INCLUDE_DIR)
 
+# FIXME Need to improve OpenMP config:
+#-- Could NOT find LIBOMPTARGET_DEP_LIBELF (missing: LIBOMPTARGET_DEP_LIBELF_LIBRARIES LIBOMPTARGET_DEP_LIBELF_INCLUDE_DIRS)
+#-- Could NOT find LIBOMPTARGET_DEP_LIBFFI (missing: LIBOMPTARGET_DEP_LIBFFI_LIBRARIES LIBOMPTARGET_DEP_LIBFFI_INCLUDE_DIRS)
+#-- Could NOT find LIBOMPTARGET_DEP_CUDA_DRIVER (missing: LIBOMPTARGET_DEP_CUDA_DRIVER_LIBRARIES)
+#-- Could NOT find LIBOMPTARGET_DEP_VEO (missing: LIBOMPTARGET_DEP_VEO_LIBRARIES LIBOMPTARGET_DEP_VEOSINFO_LIBRARIES LIBOMPTARGET_DEP_VEO_INCLUDE_DIRS)
+#-- LIBOMPTARGET: Building offloading runtime library libomptarget.
+#-- LIBOMPTARGET: Not building aarch64 offloading plugin: machine not found in the system.
+#-- LIBOMPTARGET: Not building AMDGPU plugin: LIBELF not found
+#-- LIBOMPTARGET: Not building CUDA offloading plugin: libelf dependency not found.
+#-- LIBOMPTARGET: Not building PPC64 offloading plugin: machine not found in the system.
+#-- LIBOMPTARGET: Not building PPC64le offloading plugin: machine not found in the system.
+#-- LIBOMPTARGET: Not building nec-aurora plugin: libveo or libveosinfo not found.
+#-- LIBOMPTARGET: Not building x86_64 offloading plugin: libelf dependency not found.
+#-- LIBOMPTARGET: Building DeviceRTL. Using clang from in-tree build
+#-- LIBOMPTARGET: Building the llvm-omp-device-info tool
+#-- check-libomptarget does nothing.
+
 main() {
     # """
     # Install LLVM (clang).
@@ -29,6 +46,7 @@ main() {
         'git'
         'ninja'
         'perl'
+        'pkg-config'
     )
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     deps=(
@@ -40,12 +58,22 @@ main() {
         # > 'python'
         # > 'swig'
     )
+    if koopa_is_linux
+    then
+        deps+=(
+            # Needed for 'gold'.
+            'binutils'
+            # OpenMP requires 'gelf.h'.
+            'elfutils'
+        )
+    fi
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['git']="$(koopa_locate_git --realpath)"
         ['ninja']="$(koopa_locate_ninja)"
         ['perl']="$(koopa_locate_perl --realpath)"
+        ['pkg_config']="$(koopa_locate_pkg_config --realpath)"
         ['python']="$(koopa_locate_python --realpath)"
         # > ['swig']="$(koopa_locate_swig --realpath)"
     )
@@ -53,6 +81,7 @@ main() {
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['ninja']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
+    [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     # > [[ -x "${app['swig']}" ]] || return 1
     declare -A dict=(
@@ -158,6 +187,7 @@ libxml2.${dict['shared_ext']}"
         "-DPANEL_LIBRARIES=${dict['ncurses']}/lib/\
 libpanelw.${dict['shared_ext']}"
         "-DPERL_EXECUTABLE=${app['perl']}"
+        "-DPKG_CONFIG_EXECUTABLE=${app['pkg_config']}"
         "-DPython3_EXECUTABLE=${app['python']}"
         # > "-DPython3_INCLUDE_DIRS=${dict['python']}/include"
         # > "-DPython3_LIBRARIES=${dict['python']}/lib/libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
