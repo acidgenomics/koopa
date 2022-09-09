@@ -46,6 +46,7 @@ refs/tags/${dict['file']}"
     koopa_conda_deactivate
     koopa_cp ./* --target-directory="${dict['python_prefix']}"
     dict['bin_file']="${dict['prefix']}/bin/openbb"
+    koopa_touch "${dict['bin_file']}"
     "${app['cat']}" > "${dict['bin_file']}" << END
 #!/bin/sh
 set -euo pipefail
