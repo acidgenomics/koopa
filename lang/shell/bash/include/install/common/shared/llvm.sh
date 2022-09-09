@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Still have these OpenMP configuration issues on Linux:
+# -- Could NOT find LIBOMPTARGET_DEP_LIBELF (missing: LIBOMPTARGET_DEP_LIBELF_INCLUDE_DIRS)
+# -- Could NOT find LIBOMPTARGET_DEP_CUDA_DRIVER (missing: LIBOMPTARGET_DEP_CUDA_DRIVER_LIBRARIES)
+# -- Could NOT find LIBOMPTARGET_DEP_VEO (missing: LIBOMPTARGET_DEP_VEO_LIBRARIES LIBOMPTARGET_DEP_VEOSINFO_LIBRARIES LIBOMPTARGET_DEP_VEO_INCLUDE_DIRS)
+
 main() {
     # """
     # Install LLVM (clang).
@@ -18,6 +23,8 @@ main() {
     # - https://github.com/llvm/llvm-project/blob/main/llvm/cmake/\
     #     modules/FindFFI.cmake
     # - https://github.com/llvm/llvm-project/blob/main/lldb/CMakeLists.txt
+    # - https://github.com/llvm-mirror/openmp/blob/master/libomptarget/cmake/
+    #     Modules/LibomptargetGetDependencies.cmake
     # """
     local app build_deps cmake_args dict deps projects
     build_deps=(
@@ -84,8 +91,11 @@ main() {
         "${dict['zlib']}"
     if koopa_is_linux
     then
+        dict['binutils']="$(koopa_app_prefix 'binutils')"
         dict['elfutils']="$(koopa_app_prefix 'elfutils')"
-        koopa_assert_is_dir "${dict['elfutils']}"
+        koopa_assert_is_dir \
+            "${dict['binutils']}" \
+            "${dict['elfutils']}"
     fi
     # > dict['py_ver']="$(koopa_get_version "${app['python']}")"
     # > dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
@@ -188,10 +198,14 @@ libncursesw.${dict['shared_ext']}"
 # > )
     if koopa_is_linux
     then
+        # FIXME Alternatively may be able to set LIBELF location in CPATH
+        # environment variable.
         cmake_args+=(
-            "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIRS=${dict['elfutils']}/include"
-            "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/\
-libelf.${dict['shared_ext']}"
+            # Ensure OpenMP picks up ELF.
+            "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR=${dict['elfutils']}/include"
+            "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/libelf.${dict['shared_ext']}"
+            # Enable llvm gold plugin for LTO.
+            "-DLLVM_BINUTILS_INCDIR=${dict['binutils']}/include"
         )
     elif koopa_is_macos
     then
