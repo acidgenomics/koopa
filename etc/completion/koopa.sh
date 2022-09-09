@@ -251,6 +251,7 @@ __koopa_complete() {
                         'npth'
                         'nushell'
                         'oniguruma'
+                        'openbb'
                         'openblas'
                         'openjdk'
                         'openssh'

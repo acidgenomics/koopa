@@ -1641,6 +1641,14 @@
     "url": ["https://github.com/kkos/oniguruma/"],
     "version": "6.9.8"
   },
+  "openbb": {
+    "bin": ["openbb"],
+    "conservative": false,
+    "date": "2022-09-09",
+    "dependencies": ["anaconda"],
+    "url": ["https://openbb.co/"],
+    "version": "1.8.0"
+  },
   "openblas": {
     "conservative": true,
     "date": "2022-08-29",
