@@ -20,9 +20,9 @@ main() {
         ['bin_prefix']="$(koopa_bin_prefix)"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='fish'
-        ['prefix']="${INSTALL_PREFIX:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"

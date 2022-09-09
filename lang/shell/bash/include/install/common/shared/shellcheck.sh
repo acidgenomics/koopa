@@ -10,8 +10,8 @@ main() {
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['name']='shellcheck'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     if koopa_is_macos
     then

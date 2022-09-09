@@ -15,7 +15,7 @@ main() {
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)"
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['name']='pandoc'
     )
     dict['file']="${dict['name']}-${dict['version']}-1-${dict['arch']}.deb"

@@ -34,9 +34,9 @@ main() {
     declare -A dict=(
         ['gemfile']='Gemfile'
         ['jobs']="$(koopa_cpu_count)"
-        ['name']="${INSTALL_NAME:?}"
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     read -r -d '' "dict[gemfile_string]" << END || true
 source "https://rubygems.org"

@@ -39,7 +39,7 @@ main() {
     [[ -x "${app['localedef']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict=(
-        ['version']="${INSTALL_VERSION:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['base_url']="https://github.com/sgerrand/alpine-pkg-glibc/\
 releases/download/${dict['version']}"
         ['apk_key_prefix']='/etc/apk/keys'

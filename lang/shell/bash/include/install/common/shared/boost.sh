@@ -18,8 +18,8 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='boost'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"
     dict['file']="${dict['name']}_${dict['snake_version']}.tar.bz2"

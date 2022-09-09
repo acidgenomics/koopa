@@ -12,8 +12,8 @@ main() {
         ['installers_url']="$(koopa_koopa_installers_url)"
         ['name']='bcl2fastq'
         ['platform']='linux'
-        ['prefix']="${INSTALL_PREFIX:?}"
-        ['version']="${INSTALL_VERSION:?}"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['arch2']="$(koopa_kebab_case_simple "${dict['arch']}")"
     dict['platform2']="$(koopa_capitalize "${dict['platform']}")"
