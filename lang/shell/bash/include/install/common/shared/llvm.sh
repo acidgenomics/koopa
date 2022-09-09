@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Still have these OpenMP configuration issues on Linux:
-# -- Could NOT find LIBOMPTARGET_DEP_LIBELF (missing: LIBOMPTARGET_DEP_LIBELF_INCLUDE_DIRS)
-# -- Could NOT find LIBOMPTARGET_DEP_CUDA_DRIVER (missing: LIBOMPTARGET_DEP_CUDA_DRIVER_LIBRARIES)
-# -- Could NOT find LIBOMPTARGET_DEP_VEO (missing: LIBOMPTARGET_DEP_VEO_LIBRARIES LIBOMPTARGET_DEP_VEOSINFO_LIBRARIES LIBOMPTARGET_DEP_VEO_INCLUDE_DIRS)
+# FIXME Need to resolve 'Python.h' linkage issues when enabling Python
+# for LLDB. How do we get the installer to pick up Python 'include' dir?
+# Is CPATH the answer?
 
 main() {
     # """

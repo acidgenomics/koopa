@@ -3263,6 +3263,10 @@ koopa_build_all_apps() {
         'which'
         'libgeotiff'
         'swig'
+        'libiconv'
+    )
+    koopa_is_linux && apps+=('elfutils')
+    apps+=(
         'llvm'
         'go'
         'chezmoi' # deps: go
@@ -11133,6 +11137,7 @@ koopa_install_all_apps() {
         'libgeotiff'
         'libgit2'
         'libgpg-error'
+        'libiconv'
         'libidn'
         'libjpeg-turbo'
         'libksba'
@@ -11146,7 +11151,6 @@ koopa_install_all_apps() {
         'libuv'
         'libxml2'
         'libzip'
-        'llvm'
         'lua'
         'luarocks'
         'lz4'
@@ -11264,6 +11268,7 @@ koopa_install_all_apps() {
             'apptainer'
             'aspera-connect'
             'docker-credential-pass'
+            'elfutils'
             'lmod'
             'pinentry'
         )
@@ -11294,6 +11299,7 @@ koopa_install_all_apps() {
             'julia'
             'kallisto'
             'latch'
+            'llvm'
             'multiqc'
             'nextflow'
             'nim'
