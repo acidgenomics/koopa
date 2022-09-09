@@ -12814,6 +12814,12 @@ koopa_install_libgpg_error() {
         "$@"
 }
 
+koopa_install_libiconv() {
+    koopa_install_app \
+        --name='libiconv' \
+        "$@"
+}
+
 koopa_install_libidn() {
     koopa_install_app \
         --name='libidn' \
@@ -23246,6 +23252,12 @@ koopa_uninstall_libgit2() {
 koopa_uninstall_libgpg_error() {
     koopa_uninstall_app \
         --name='libgpg-error' \
+        "$@"
+}
+
+koopa_uninstall_libiconv() {
+    koopa_uninstall_app \
+        --name='libiconv' \
         "$@"
 }
 

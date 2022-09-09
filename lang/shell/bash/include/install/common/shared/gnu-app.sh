@@ -3,7 +3,7 @@
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-08-31.
+    # @note Updated 2022-09-08.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -17,7 +17,7 @@ main() {
         ['version']="${INSTALL_VERSION:?}"
     )
     declare -A app
-    case "${app['name']}" in
+    case "${dict['name']}" in
         'make')
             app['make']="$(koopa_locate_make --allow-system)"
             ;;
@@ -48,6 +48,7 @@ main() {
         'gsl' | \
         'gzip' | \
         'less' | \
+        'libiconv' | \
         'libidn' | \
         'libpipeline' | \
         'libtasn1' | \

@@ -210,6 +210,7 @@ __koopa_complete() {
                         'libgeotiff'
                         'libgit2'
                         'libgpg-error'
+                        'libiconv'
                         'libjpeg-turbo'
                         'libksba'
                         'libpipeline'
