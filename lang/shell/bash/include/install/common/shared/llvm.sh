@@ -190,8 +190,8 @@ libncursesw.${dict['shared_ext']}"
     then
         # FIXME Need to locate binutils components (e.g. gold) here?
         cmake_args+=(
-            "-DELF_INCLUDE_DIRS=${dict['elfutils']}/include"
-            "-DELF_LIBRARIES=${dict['elfutils']}/lib/libelf.${dict['shared_ext']}"
+            "-DELF_INCLUDE_DIR=${dict['elfutils']}/include"
+            "-DELF_LIBRARY=${dict['elfutils']}/lib/libelf.${dict['shared_ext']}"
         )
     elif koopa_is_macos
     then
