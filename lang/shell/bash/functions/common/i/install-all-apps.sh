@@ -166,6 +166,7 @@ koopa_install_all_apps() {
         'meson'
         'mpc'
         'mpfr'
+        'msgpack'
         'ncurses'
         'neofetch'
         'neovim'

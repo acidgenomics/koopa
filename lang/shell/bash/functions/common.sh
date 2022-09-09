@@ -3204,7 +3204,9 @@ koopa_build_all_apps() {
         'emacs'
         'vim'
         'lua'
+        'luajit'
         'luarocks'
+        'msgpack'
         'neovim'
         'libevent'
         'utf8proc'
@@ -11163,6 +11165,7 @@ koopa_install_all_apps() {
         'meson'
         'mpc'
         'mpfr'
+        'msgpack'
         'ncurses'
         'neofetch'
         'neovim'
@@ -12843,6 +12846,12 @@ koopa_install_libksba() {
         "$@"
 }
 
+koopa_install_libluv() {
+    koopa_install_app \
+        --name='libluv' \
+        "$@"
+}
+
 koopa_install_libpipeline() {
     koopa_install_app \
         --name='libpipeline' \
@@ -12915,6 +12924,12 @@ koopa_install_lua() {
         "$@"
 }
 
+koopa_install_luajit() {
+    koopa_install_app \
+        --name='luajit' \
+        "$@"
+}
+
 koopa_install_luarocks() {
     koopa_install_app \
         --name='luarocks' \
@@ -12984,6 +12999,12 @@ koopa_install_mpc() {
 koopa_install_mpfr() {
     koopa_install_app \
         --name='mpfr' \
+        "$@"
+}
+
+koopa_install_msgpack() {
+    koopa_install_app \
+        --name='msgpack' \
         "$@"
 }
 
@@ -23300,6 +23321,12 @@ koopa_uninstall_libksba() {
         "$@"
 }
 
+koopa_uninstall_libluv() {
+    koopa_uninstall_app \
+        --name='libluv' \
+        "$@"
+}
+
 koopa_uninstall_libpipeline() {
     koopa_uninstall_app \
         --name='libpipeline' \
@@ -23372,6 +23399,12 @@ koopa_uninstall_lua() {
         "$@"
 }
 
+koopa_uninstall_luajit() {
+    koopa_uninstall_app \
+        --name='luajit' \
+        "$@"
+}
+
 koopa_uninstall_luarocks() {
     koopa_uninstall_app \
         --name='luarocks' \
@@ -23441,6 +23474,12 @@ koopa_uninstall_mpc() {
 koopa_uninstall_mpfr() {
     koopa_uninstall_app \
         --name='mpfr' \
+        "$@"
+}
+
+koopa_uninstall_msgpack() {
+    koopa_uninstall_app \
+        --name='msgpack' \
         "$@"
 }
 

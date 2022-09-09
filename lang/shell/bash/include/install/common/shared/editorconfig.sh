@@ -3,7 +3,7 @@
 main() {
     # """
     # Install EditorConfig.
-    # @note Updated 2022-08-18.
+    # @note Updated 2022-09-09.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
@@ -46,14 +46,18 @@ archive/${dict['file']}"
     koopa_assert_is_dir "${dict['pcre2_include_dir']}"
     koopa_assert_is_file "${dict['pcre2_library']}"
     cmake_args=(
+        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_INSTALL_LIBDIR=lib'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_LIBRARY_PATH=${dict['pcre2']}/lib"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DPCRE2_INCLUDE_DIR=${dict['pcre2_include_dir']}"
         "-DPCRE2_LIBRARY=${dict['pcre2_library']}"
     )
-    koopa_print "${cmake_args[@]}"
     "${app['cmake']}" .. "${cmake_args[@]}"
     "${app['make']}" install
     return 0

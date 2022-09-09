@@ -1356,6 +1356,17 @@
     "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
     "version": "2.45"
   },
+  "libluv": {
+    "aliases": {
+      "homebrew": "luv"
+    },
+    "build_dependencies": ["cmake", "lua", "luajit"],
+    "conservative": true,
+    "date": "2022-09-09",
+    "dependencies": ["libuv"],
+    "url": ["https://github.com/luvit/luv"],
+    "version": "1.44.2-1"
+  },
   "libpipeline": {
     "conservative": true,
     "date": "2022-08-30",
@@ -1444,6 +1455,12 @@
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
     "version": "5.4.4"
   },
+  "luajit": {
+    "conservative": true,
+    "date": "2022-09-09",
+    "url": ["https://luajit.org/"],
+    "version": "2.1.0-beta3"
+  },
   "luarocks": {
     "conservative": true,
     "date": "2022-08-30",
@@ -1521,6 +1538,13 @@
     "url": ["https://www.mpfr.org/"],
     "version": "4.1.0"
   },
+  "msgpack": {
+    "conservative": true,
+    "date": "2022-09-09",
+    "dependencies": [],
+    "url": ["https://msgpack.org/"],
+    "version": "4.0.0"
+  },
   "multiqc": {
     "bin": ["multiqc"],
     "conservative": false,
@@ -1571,6 +1595,7 @@
     "bin": ["nvim"],
     "conservative": false,
     "date": "2022-08-30",
+    "dependencies": ["libuv", "msgpack"],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
     "version": "0.7.2"

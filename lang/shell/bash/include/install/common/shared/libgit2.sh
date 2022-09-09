@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2022-08-03.
+    # @note Updated 2022-09-09.
     #
     # @seealso
     # - https://libgit2.org/docs/guides/build-and-link/
@@ -48,10 +48,15 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        '-DBUILD_TESTS=OFF'
+        '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
-        '-DCMAKE_BUILD_TYPE=Release'
-        '-DBUILD_TESTS=OFF'
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DUSE_BUNDLED_ZLIB=OFF'
         '-DUSE_SSH=YES'
         "-DPCRE_INCLUDE_DIR=${dict['pcre']}/include"

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Brotli.
-    # @note Updated 2022-08-19.
+    # @note Updated 2022-09-09.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/brotli.rb
