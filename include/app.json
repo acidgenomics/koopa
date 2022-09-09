@@ -116,7 +116,7 @@
   },
   "bash": {
     "bin": ["bash"],
-    "conservative": false,
+    "conservative": true,
     "date": "2022-08-29",
     "man1": ["bash.1"],
     "url": ["https://www.gnu.org/software/bash/"],
@@ -494,7 +494,7 @@
       "gwhoami",
       "gyes"
     ],
-    "conservative": false,
+    "conservative": true,
     "date": "2022-08-29",
     "man1": [
       "gb2sum.1",
@@ -2463,10 +2463,10 @@
   "yq": {
     "bin": ["yq"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-09",
     "depends": ["go"],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.27.3"
+    "version": "4.27.5"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
@@ -2477,8 +2477,9 @@
   "zellij": {
     "bin": ["zellij"],
     "conservative": false,
+    "date": "2022-09-09",
     "depends": ["rust"],
-    "version": "0.31.2"
+    "version": "0.31.4"
   },
   "zlib": {
     "conservative": true,
