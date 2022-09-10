@@ -1,23 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Consider disabling Homebrew with '-DHOMEBREW_PROG='
-
-# FIXME How to address this warning?
-# /opt/koopa/app/luajit/2.1.0-beta3/bin/luajit-2.1.0-beta3: module 'jit.bcsave' not found:
-# Correct file path is at:
-# /opt/koopa/app/luajit/2.1.0-beta3/share/luajit-2.1.0-beta3/jit/bcsave.lua
-
-# FIXME Now hitting a cryptic 'terminal.c' build error.
-# https://github.com/neovim/neovim/issues/16217
-
-# FIXME Need to address 'bcsave.lua' linkage issue.
-# Correct path: /opt/koopa/app/luajit/2.1.0-beta3/share/luajit-2.1.0-beta3/jit/bcsave.lua
-
-# Hitting a libluv linker issue at the end:
-# 100%] Generating doc/tags
-#dyld[48129]: Library not loaded: 'libluv.1.dylib'
-#  Referenced from: '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220910-081109-Uee6oASjTm/neovim-0.7.2/build/bin/nvim'
-#  Reason: tried: 'libluv.1.dylib' (no such file), '/usr/local/lib/libluv.1.dylib' (no such file), '/usr/lib/libluv.1.dylib' (no such file), '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220910-081109-Uee6oASjTm/neovim-0.7.2/build/runtime/libluv.1.dylib' (no such file), '/usr/local/lib/libluv.1.dylib' (no such file), '/usr/lib/libluv.1.dylib' (no such file)
+# FIXME Temporarily create libluv dylib links in /usr/local/lib,
+# otherwise neovim installer will fail.
+# FIXME Alternatively, what if we link libluv.1.dylib into neovim-0.7.2/build/runtime/libluv.1.dylib...
 
 main() {
     # """
@@ -210,17 +195,19 @@ archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    # FIXME Can we increase verbosity here using '--verbose'?
     "${app['cmake']}" -LH -S . -B 'build' "${cmake_args[@]}"
     "${app['cmake']}" \
         --build 'build' \
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}" \
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}" \
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}" \
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-    "${app['cmake']}" --install 'build' \
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}" \
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}" \
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}" \
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        --verbose \
+        -- \
+        CFLAGS="${CFLAGS:-}" \
+        LDFLAGS="${LDFLAGS:-}"
+    "${app['cmake']}" \
+        --install 'build' \
+        --verbose \
+        -- \
+        CFLAGS="${CFLAGS:-}" \
+        LDFLAGS="${LDFLAGS:-}"
     return 0
 }
