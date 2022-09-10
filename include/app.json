@@ -1462,18 +1462,21 @@
     "version": "8.7"
   },
   "lua": {
+    "bin": ["lua", "luac"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
     "version": "5.4.4"
   },
   "luajit": {
+    "bin": ["luajit"],
     "conservative": true,
     "date": "2022-09-09",
     "url": ["https://luajit.org/"],
     "version": "2.1.0-beta3"
   },
   "luarocks": {
+    "bin": ["luarocks"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/luarocks/luarocks/"],
