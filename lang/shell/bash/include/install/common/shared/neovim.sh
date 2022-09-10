@@ -55,8 +55,8 @@ main() {
         'gettext'
         'libiconv'
         'libuv'
-        'libluv'
         'luajit'
+        'libluv'
         'luarocks'
         'msgpack'
         'ncurses'
@@ -118,7 +118,11 @@ main() {
         # This fix is needed for Lua mpack rock to build.
         CFLAGS="-D_DARWIN_C_SOURCE ${CFLAGS:-}"
     fi
-    rocks=('lpeg' 'mpack')
+    rocks=(
+        'lpeg'
+        # > 'luv'
+        'mpack'
+    )
     for rock in "${rocks[@]}"
     do
         "${app['luarocks']}" \
@@ -153,8 +157,9 @@ main() {
     koopa_dl \
         'LUA_PATH' "${LUA_PATH:?}" \
         'LUA_CPATH' "${LUA_CPATH:?}"
-    # FIXME Does this help our issue with libluv?
-    koopa_add_rpath_to_ldflags "${dict['libluv']}/lib"
+    # FIXME This doesn't make libluv accessible in linker during final build
+    # steps...not sure how to address this.
+    # > koopa_add_rpath_to_ldflags "${dict['libluv']}/lib"
     cmake_args=(
         # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         # > '-DUSE_BUNDLED=OFF'
@@ -206,7 +211,16 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     "${app['cmake']}" -LH -S . -B 'build' "${cmake_args[@]}"
-    "${app['cmake']}" --build 'build'
-    "${app['cmake']}" --install 'build'
+    "${app['cmake']}" \
+        --build 'build' \
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}" \
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}" \
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}" \
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+    "${app['cmake']}" --install 'build' \
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}" \
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}" \
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}" \
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
     return 0
 }
