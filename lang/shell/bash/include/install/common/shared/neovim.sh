@@ -2,11 +2,22 @@
 
 # FIXME Consider disabling Homebrew with '-DHOMEBREW_PROG='
 
-# FIXME Need to clean this up:
+# FIXME How to address this warning?
 # /opt/koopa/app/luajit/2.1.0-beta3/bin/luajit-2.1.0-beta3: module 'jit.bcsave' not found:
+# Correct file path is at:
+# /opt/koopa/app/luajit/2.1.0-beta3/share/luajit-2.1.0-beta3/jit/bcsave.lua
 
 # FIXME Now hitting a cryptic 'terminal.c' build error.
 # https://github.com/neovim/neovim/issues/16217
+
+# FIXME Need to address 'bcsave.lua' linkage issue.
+# Correct path: /opt/koopa/app/luajit/2.1.0-beta3/share/luajit-2.1.0-beta3/jit/bcsave.lua
+
+# Hitting a libluv linker issue at the end:
+# 100%] Generating doc/tags
+#dyld[48129]: Library not loaded: 'libluv.1.dylib'
+#  Referenced from: '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220910-081109-Uee6oASjTm/neovim-0.7.2/build/bin/nvim'
+#  Reason: tried: 'libluv.1.dylib' (no such file), '/usr/local/lib/libluv.1.dylib' (no such file), '/usr/lib/libluv.1.dylib' (no such file), '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220910-081109-Uee6oASjTm/neovim-0.7.2/build/runtime/libluv.1.dylib' (no such file), '/usr/local/lib/libluv.1.dylib' (no such file), '/usr/lib/libluv.1.dylib' (no such file)
 
 main() {
     # """
@@ -30,6 +41,8 @@ main() {
     # - Notes on 'terminal.c' build failure:
     #   https://github.com/neovim/neovim/issues/16217
     #   https://github.com/neovim/neovim/pull/17329
+    # - Issues related to libluv linkage:
+    #   https://github.com/NixOS/nixpkgs/issues/81206
     # """
     local app cmake_args deps dict rock rocks
     koopa_assert_has_no_args "$#"
@@ -94,6 +107,7 @@ main() {
     koopa_mkdir "${dict['libexec']}"
     # Install LuaJIT dependency rocks.
     dict['luajit_ver']="$(koopa_get_version "${app['luajit']}")"
+    dict['luajit_ver2']="$(koopa_basename "${dict['luajit']}")"
     dict['luajit_maj_min_ver']="$( \
         koopa_major_minor_version "${dict['luajit_ver']}" \
     )"
@@ -105,7 +119,6 @@ main() {
         CFLAGS="-D_DARWIN_C_SOURCE ${CFLAGS:-}"
     fi
     rocks=('lpeg' 'mpack')
-    # FIXME Need to include 'jit.bcsave'?
     for rock in "${rocks[@]}"
     do
         "${app['luarocks']}" \
@@ -119,21 +132,33 @@ main() {
         CFLAGS="$CFLAGS_BAK"
     fi
     # This step sets 'LUA_PATH' and 'LUA_CPATH' environment variables.
-    eval "$( \
-        "${app['luarocks']}" \
-            --lua-dir="${dict['luajit']}" \
-            path \
-    )"
-    # FIXME Can we get this programatically from LuaJIT, rather than hard coding?
+    # But it also puts '/usr/local' into path, so disabling this approach.
+    # > eval "$( \
+    # >     "${app['luarocks']}" \
+    # >         --lua-dir="${dict['luajit']}" \
+    # >         path \
+    # > )"
     dict['lua_compat_ver']='5.1'
-    LUA_PATH="${dict['libexec']}/share/lua/${dict['lua_compat_ver']}/?.lua;${LUA_PATH:-}"
-    LUA_CPATH="${dict['libexec']}/lib/lua/${dict['lua_compat_ver']}/?.so;${LUA_CPATH:-}"
+    lua_path_arr=(
+        "${dict['libexec']}/share/lua/${dict['lua_compat_ver']}/?.lua"
+        "${dict['luajit']}/share/luajit-${dict['luajit_ver2']}/?.lua"
+    )
+    lua_cpath_arr=(
+        "${dict['libexec']}/lib/lua/${dict['lua_compat_ver']}/?.so"
+        "${dict['luajit']}/lib/lua/${dict['lua_compat_ver']}/?.so"
+    )
+    LUA_PATH="$(printf '%s;' "${lua_path_arr[@]}")"
+    LUA_CPATH="$(printf '%s;' "${lua_cpath_arr[@]}")"
+    export LUA_PATH LUA_CPATH
     koopa_dl \
         'LUA_PATH' "${LUA_PATH:?}" \
         'LUA_CPATH' "${LUA_CPATH:?}"
+    # FIXME Does this help our issue with libluv?
+    koopa_add_rpath_to_ldflags "${dict['libluv']}/lib"
     cmake_args=(
-        '-DCMAKE_BUILD_TYPE=Release'
         # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        # > '-DUSE_BUNDLED=OFF'
+        '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
@@ -143,7 +168,7 @@ main() {
         '-DENABLE_LIBINTL=ON'
         '-DENABLE_LTO=ON'
         '-DPREFER_LUA=OFF'
-        # > '-DUSE_BUNDLED=OFF'
+        '-DHOMEBREW_PROG='
         "-DICONV_INCLUDE_DIR=${dict['libiconv']}/include"
         "-DICONV_LIBRARY=${dict['libiconv']}/lib/\
 libiconv.${dict['shared_ext']}"

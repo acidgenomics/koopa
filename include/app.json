@@ -1430,8 +1430,10 @@
   "libvterm": {
     "conservative": true,
     "date": "2022-09-09",
+    "notes": ["0.2.0 is incompatible with neovim."],
+    "outdated": true,
     "url": ["https://www.leonerd.org.uk/code/libvterm/"],
-    "version": "0.2"
+    "version": "0.1.4"
   },
   "libxml2": {
     "bin": ["xml2-config"],
