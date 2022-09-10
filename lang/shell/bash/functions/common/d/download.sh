@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-09-10.
     #
     # @section curl:
     #
@@ -24,11 +24,14 @@ koopa_download() {
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # """
-    local app dict download_args pos
+    local app bool dict download_args pos
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    declare -A bool=(
         ['decompress']=0
         ['extract']=0
+        ['progress']=0
+    )
+    declare -A dict=(
         ['engine']='curl'
         ['file']="${2:-}"
         ['url']="${1:?}"
@@ -49,11 +52,15 @@ koopa_download() {
                 ;;
             # Flags ------------------------------------------------------------
             '--decompress')
-                dict['decompress']=1
+                bool['decompress']=1
                 shift 1
                 ;;
             '--extract')
-                dict['extract']=1
+                bool['extract']=1
+                shift 1
+                ;;
+            '--progress')
+                bool['progress']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -106,6 +113,7 @@ koopa_download() {
     download_args=()
     case "${dict['engine']}" in
         'curl')
+            # Inclusion of '--progress' shows a simple progress bar.
             download_args+=(
                 '--disable' # Ignore '~/.curlrc'. Must come first.
                 '--create-dirs'
@@ -115,21 +123,30 @@ koopa_download() {
                 '--retry' 5
                 '--show-error'
             )
+            if [[ "${bool['progress']}" -eq 0 ]]
+            then
+                # Alternatively, can use '--no-progress-meter'.
+                download_args+=('--silent')
+            fi
             ;;
         'wget')
             download_args+=(
                 "--output-document=${dict['file']}"
                 '--no-verbose'
             )
+            if [[ "${bool['progress']}" -eq 0 ]]
+            then
+                download_args+=('--quiet')
+            fi
             ;;
     esac
     download_args+=("${dict['url']}")
     koopa_alert "Downloading '${dict['url']}' to '${dict['file']}'."
     "${app['download']}" "${download_args[@]}"
-    if [[ "${dict['decompress']}" -eq 1 ]]
+    if [[ "${bool['decompress']}" -eq 1 ]]
     then
         koopa_decompress "${dict['file']}"
-    elif [[ "${dict['extract']}" -eq 1 ]]
+    elif [[ "${bool['extract']}" -eq 1 ]]
     then
         koopa_extract "${dict['file']}"
     fi
