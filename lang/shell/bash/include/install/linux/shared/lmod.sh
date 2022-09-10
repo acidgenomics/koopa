@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to install isolated luarocks: luafilesystem, luaposix.
+
 main() {
     # """
     # Install Lmod.
@@ -16,15 +18,13 @@ main() {
         'luarocks' \
         'tcl-tk'
     declare -A app=(
-        ['lua']="$(koopa_locate_lua)"
-        ['luarocks']="$(koopa_locate_luarocks)"
+        ['lua']="$(koopa_locate_lua --realpath)"
+        ['luarocks']="$(koopa_locate_luarocks --realpath)"
         ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['lua']}" ]] || return 1
     [[ -x "${app['luarocks']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
-    app['lua']="$(koopa_realpath "${app['lua']}")"
-    app['luarocks']="$(koopa_realpath "${app['luarocks']}")"
     declare -A dict=(
         ['make_prefix']="$(koopa_make_prefix)"
         ['name2']='Lmod'

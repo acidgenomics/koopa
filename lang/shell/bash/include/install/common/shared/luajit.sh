@@ -65,10 +65,11 @@ main() {
     dict['llj_min_maj_ver']="$( \
         "${app['pkg_config']}" --variable='abiver' "${dict['pc_file']}" \
     )"
-    # > (
-    # >     koopa_cd "${dict['prefix']}/bin"
-    # >     koopa_ln "luajit-${dict['version']}" 'luajit'
-    # > )
+    (
+        [[ -x "${dict['prefix']}/bin/luajit" ]] && return 0
+        koopa_cd "${dict['prefix']}/bin"
+        koopa_ln "luajit-${dict['version']}" 'luajit'
+    )
     (
         koopa_cd "${dict['prefix']}/lib"
         koopa_ln \
