@@ -1,8 +1,21 @@
 #!/usr/bin/env bash
 
+# Neovim is a such a pain to install...sheesh.
+#
 # FIXME Temporarily create libluv dylib links in /usr/local/lib,
 # otherwise neovim installer will fail.
 # FIXME Alternatively, what if we link libluv.1.dylib into neovim-0.7.2/build/runtime/libluv.1.dylib...
+# Same applies to unibilium...
+#
+# FIXME Now ending with a cryptic lua error, argh.
+# E970: Failed to initialize lua interpreter
+# make[2]: *** [runtime/doc/tags] Error 1
+# make[1]: *** [runtime/CMakeFiles/runtime.dir/all] Error 2
+# make: *** [all] Error 2
+#
+# May need to patch runtime.dir CMakeFiles to get this to work.
+# FIXME Ensure we remove any of our files from /usr/local/lib before
+# pushing this updated recipe.
 
 main() {
     # """
