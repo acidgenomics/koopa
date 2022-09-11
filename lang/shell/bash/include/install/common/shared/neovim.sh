@@ -47,13 +47,13 @@ main() {
         'zlib'
         'gettext'
         'libiconv'
+        'ncurses'
+        'python'
         # > 'libuv'
         # > 'luajit'
         # > 'libluv'
         # > 'luarocks'
         # > 'msgpack'
-        # > 'ncurses'
-        # > 'python'
         # > 'tree-sitter'
         # > 'unibilium'
         # > 'libtermkey'
@@ -197,24 +197,7 @@ archive/${dict['file']}"
     # 'cmake.deps/cmake/UnibiliumCMakeLists.txt'
 
 
-    # FIXME This is currently required for build on macOS but this is really hacky.
-    #if koopa_is_macos
-    #then
-    #    koopa_ln \
-    #        "${dict['libuv']}/lib/libuv.1.${dict['shared_ext']}" \
-    #        "build/runtime/pack/dist/opt/matchit/libluv.1.${dict['shared_ext']}"
-    #    koopa_ln \
-    #        "${dict['libuv']}/lib/libuv.1.${dict['shared_ext']}" \
-    #        "build/runtime/pack/dist/opt/vimball/libluv.1.${dict['shared_ext']}"
-    #fi
-    # > koopa ln --sudo \
-    # >     "${dict['libuv']}/lib/libuv.1.${dict['shared_ext']}" \
-    # >     "/usr/local/lib/libuv.1.${dict['shared_ext']}"
-    # FIXME Patch the CMake file in the final version.
-    #koopa_ln --sudo \
-    #    "${dict['unibilium']}/lib/libunibilium.4.dylib" \
-    #    "/usr/local/lib/libunibilium.4.dylib" \
-    # > "${app['make']}" distclean
+    "${app['make']}" distclean
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
