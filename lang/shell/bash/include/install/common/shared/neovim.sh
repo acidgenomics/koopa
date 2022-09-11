@@ -26,6 +26,7 @@ main() {
     #
     # @seealso
     # - https://github.com/neovim/neovim/wiki/Building-Neovim
+    # - https://github.com/neovim/neovim/wiki/Installing-Neovim
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/neovim.rb
     # - https://github.com/neovim/neovim/issues/11192
     # - https://carlosahs.medium.com/how-to-install-neovim-from-source-on-
@@ -161,7 +162,7 @@ main() {
     cmake_args=(
         # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         # > '-DUSE_BUNDLED=OFF'
-        '-DCMAKE_BUILD_TYPE=Release'
+        '-DCMAKE_BUILD_TYPE=RelWithDebInfo' # or 'Release'
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
