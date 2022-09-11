@@ -20,7 +20,7 @@
 main() {
     # """
     # Install Neovim.
-    # @note Updated 2022-09-10.
+    # @note Updated 2022-09-11.
     #
     # Homebrew is currently required for this to build on macOS.
     #
@@ -43,7 +43,7 @@ main() {
     # - Issues related to libluv linkage:
     #   https://github.com/NixOS/nixpkgs/issues/81206
     # """
-    local app cmake_args deps dict rock rocks
+    local app deps dict local_mk rock rocks
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix \
         'cmake' \
@@ -67,13 +67,13 @@ main() {
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
         ['luajit']="$(koopa_locate_luajit --realpath)"
         ['luarocks']="$(koopa_locate_luarocks --realpath)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['luajit']}" ]] || return 1
     [[ -x "${app['luarocks']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['gettext']="$(koopa_app_prefix 'gettext')"
         ['jobs']="$(koopa_cpu_count)"
@@ -156,52 +156,37 @@ main() {
     koopa_dl \
         'LUA_PATH' "${LUA_PATH:?}" \
         'LUA_CPATH' "${LUA_CPATH:?}"
-    # FIXME This doesn't make libluv accessible in linker during final build
-    # steps...not sure how to address this.
-    # > koopa_add_rpath_to_ldflags "${dict['libluv']}/lib"
-    cmake_args=(
-        # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        # > '-DUSE_BUNDLED=OFF'
-        '-DCMAKE_BUILD_TYPE=RelWithDebInfo' # or 'Release'
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DENABLE_LIBICONV=ON'
-        '-DENABLE_LIBINTL=ON'
-        '-DENABLE_LTO=ON'
-        '-DPREFER_LUA=OFF'
-        '-DHOMEBREW_PROG='
-        "-DICONV_INCLUDE_DIR=${dict['libiconv']}/include"
-        "-DICONV_LIBRARY=${dict['libiconv']}/lib/\
-libiconv.${dict['shared_ext']}"
-        "-DLibIntl_INCLUDE_DIR=${dict['gettext']}/include"
-        "-DLibIntl_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}"
-        "-DLIBLUV_INCLUDE_DIR=${dict['libluv']}/include"
-        "-DLIBLUV_LIBRARY=${dict['libluv']}/lib/libluv.${dict['shared_ext']}"
-        "-DLIBTERMKEY_INCLUDE_DIR=${dict['libtermkey']}/include"
-        "-DLIBTERMKEY_LIBRARY=${dict['libtermkey']}/lib/\
-libtermkey.${dict['shared_ext']}"
-        "-DLIBUV_INCLUDE_DIR=${dict['libuv']}/include"
-        "-DLIBUV_LIBRARY=${dict['libuv']}/lib/libuv.${dict['shared_ext']}"
-        "-DLIBVTERM_INCLUDE_DIR=${dict['libvterm']}/include"
-        "-DLIBVTERM_LIBRARY=${dict['libvterm']}/lib/\
-libvterm.${dict['shared_ext']}"
-        "-DLUA_PRG=${app['luajit']}"
-        "-DLUAJIT_INCLUDE_DIR=${dict['luajit']}/include/\
-luajit-${dict['luajit_maj_min_ver']}"
-        "-DLUAJIT_LIBRARY=${dict['luajit']}/lib/\
-libluajit.${dict['shared_ext']}"
-        "-DMSGPACK_INCLUDE_DIR=${dict['msgpack']}/include"
-        "-DMSGPACK_LIBRARY=${dict['msgpack']}/lib/\
-libmsgpackc.${dict['shared_ext']}"
-        "-DTreeSitter_INCLUDE_DIR=${dict['tree_sitter']}/include"
-        "-DTreeSitter_LIBRARY=${dict['tree_sitter']}/lib/\
-libtree-sitter.${dict['shared_ext']}"
-        "-DUNIBILIUM_INCLUDE_DIR=${dict['unibilium']}/include"
-        "-DUNIBILIUM_LIBRARY=${dict['unibilium']}/lib/\
-libunibilium.${dict['shared_ext']}"
+    local_mk=(
+        # > "CMAKE_EXTRA_FLAGS += \"-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}\""
+        'CMAKE_BUILD_TYPE := RelWithDebInfo'
+        "DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=OFF"
+        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"\"
+        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_C_FLAGS=${CFLAGS:-}\""
+        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}\""
+        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}\""
+        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}\""
+
+        "CMAKE_EXTRA_FLAGS += \"-DICONV_INCLUDE_DIR=${dict['libiconv']}/include\""
+        "CMAKE_EXTRA_FLAGS += \"-DICONV_LIBRARY=${dict['libiconv']}/lib/libiconv.${dict['shared_ext']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DLibIntl_INCLUDE_DIR=${dict['gettext']}/include\""
+        "CMAKE_EXTRA_FLAGS += \"-DLibIntl_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DLIBLUV_INCLUDE_DIR=${dict['libluv']}/include\""
+        "CMAKE_EXTRA_FLAGS += \"-DLIBLUV_LIBRARY=${dict['libluv']}/lib/libluv.${dict['shared_ext']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DLIBTERMKEY_INCLUDE_DIR=${dict['libtermkey']}/include\""
+        "CMAKE_EXTRA_FLAGS += \"-DLIBTERMKEY_LIBRARY=${dict['libtermkey']}/lib/libtermkey.${dict['shared_ext']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DLIBUV_INCLUDE_DIR=${dict['libuv']}/include\""
+        "CMAKE_EXTRA_FLAGS += \"-DLIBUV_LIBRARY=${dict['libuv']}/lib/libuv.${dict['shared_ext']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DLIBVTERM_INCLUDE_DIR=${dict['libvterm']}/include\""
+        "CMAKE_EXTRA_FLAGS += \"-DLIBVTERM_LIBRARY=${dict['libvterm']}/lib/libvterm.${dict['shared_ext']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DLUA_PRG=${app['luajit']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DLUAJIT_INCLUDE_DIR=${dict['luajit']}/include/luajit-${dict['luajit_maj_min_ver']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DLUAJIT_LIBRARY=${dict['luajit']}/lib/libluajit.${dict['shared_ext']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DMSGPACK_INCLUDE_DIR=${dict['msgpack']}/include\""
+        "CMAKE_EXTRA_FLAGS += \"-DMSGPACK_LIBRARY=${dict['msgpack']}/lib/libmsgpackc.${dict['shared_ext']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DTreeSitter_INCLUDE_DIR=${dict['tree_sitter']}/include\""
+        "CMAKE_EXTRA_FLAGS += \"-DTreeSitter_LIBRARY=${dict['tree_sitter']}/lib/libtree-sitter.${dict['shared_ext']}\""
+        "CMAKE_EXTRA_FLAGS += \"-DUNIBILIUM_INCLUDE_DIR=${dict['unibilium']}/include\""
+        "CMAKE_EXTRA_FLAGS += \"-DUNIBILIUM_LIBRARY=${dict['unibilium']}/lib/libunibilium.${dict['shared_ext']}\""
     )
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
@@ -209,19 +194,11 @@ archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    # FIXME Can we increase verbosity here using '--verbose'?
-    "${app['cmake']}" -LH -S . -B 'build' "${cmake_args[@]}"
-    "${app['cmake']}" \
-        --build 'build' \
-        --verbose \
-        -- \
-        CFLAGS="${CFLAGS:-}" \
-        LDFLAGS="${LDFLAGS:-}"
-    "${app['cmake']}" \
-        --install 'build' \
-        --verbose \
-        -- \
-        CFLAGS="${CFLAGS:-}" \
-        LDFLAGS="${LDFLAGS:-}"
+    koopa_write_string \
+        --file='local.mk' \
+        --string="$(koopa_print "${local_mk[@]}")"
+    "${app['make']}" distclean
+    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }
