@@ -41,6 +41,8 @@ main() {
         '--enable-threads'
         '--enable-64bit'
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     dict['tcl_file']="tcl${dict['version']}-src.tar.gz"
     dict['tcl_url']="${dict['url_stem']}/${dict['tcl_file']}"
     koopa_download "${dict['tcl_url']}" "${dict['tcl_file']}"
@@ -49,7 +51,7 @@ main() {
         koopa_cd "tcl${dict['version']}/unix"
         ./configure --help
         ./configure "${conf_args[@]}"
-        "${app['make']}" --jobs="${dict['jobs']}"
+        "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
         # > "${app['make']}" test
         "${app['make']}" install
         "${app['make']}" install-private-headers
@@ -62,7 +64,7 @@ main() {
         koopa_cd "tk${dict['version']}/unix"
         ./configure --help
         ./configure "${conf_args[@]}"
-        "${app['make']}" --jobs="${dict['jobs']}"
+        "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
         # > "${app['make']}" test
         "${app['make']}" install
         "${app['make']}" install-private-headers

@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Lmod.
-    # @note Updated 2022-07-25.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
@@ -26,6 +26,7 @@ main() {
     [[ -x "${app['luarocks']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
+        ['jobs']="$(koopa_cpu_count)"
         ['make_prefix']="$(koopa_make_prefix)"
         ['name2']='Lmod'
         ['name']='lmod'
@@ -39,6 +40,10 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name2']}-${dict['version']}"
+    # FIXME Need to install isolated luaposix and luafilesystem here.
+    # Refer to our draft neovim recipe for inspiration.
+    # FIXME Don't use this approach, as it can put unwanted lua scripts
+    # into the path coming from /usr/local...
     eval "$("${app['luarocks']}" path)"
     koopa_dl \
         'LUA_PATH' "${LUA_PATH:?}" \
@@ -51,9 +56,11 @@ main() {
         "--with-spiderCacheDir=${dict['data_dir']}/cacheDir"
         "--with-updateSystemFn=${dict['data_dir']}/system.txt"
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     if koopa_is_admin
     then

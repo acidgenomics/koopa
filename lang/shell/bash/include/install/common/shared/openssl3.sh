@@ -52,6 +52,8 @@ main() {
     # The '-fPIC' flag is required for non-prefixed configuration arguments,
     # such as 'no-shared' or 'shared' to be detected correctly.
     export CPPFLAGS="${CPPFLAGS:-} -fPIC"
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./config --help
     ./config "${conf_args[@]}"
     "${app['make']}" --jobs="${dict['jobs']}"

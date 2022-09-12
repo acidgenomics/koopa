@@ -46,7 +46,8 @@ v${dict['version']}/${dict['file']}"
         "-DCMAKE_PREFIX_PATH=${dict['openssl']}"
     )
     ./bootstrap "${bootstrap_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    koopa_print_env
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

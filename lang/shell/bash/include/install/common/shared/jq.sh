@@ -65,9 +65,11 @@ download/${dict['name']}-${dict['version']}/${dict['file']}"
     )
     "${app['libtoolize']}"
     "${app['autoreconf']}" -iv
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

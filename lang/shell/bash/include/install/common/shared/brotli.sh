@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Brotli.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/brotli.rb
@@ -18,6 +18,7 @@ main() {
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
+        ['jobs']="$(koopa_cpu_count)"
         ['name']='brotli'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -30,8 +31,10 @@ main() {
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
     )
-    "${app['cmake']}" . "${cmake_args[@]}"
-    "${app['make']}" VERBOSE=1
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH -S . "${cmake_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

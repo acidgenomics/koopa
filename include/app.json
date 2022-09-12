@@ -145,9 +145,9 @@
   "bat": {
     "bin": ["bat"],
     "conservative": false,
-    "date": "2022-09-07",
+    "date": "2022-09-12",
     "depends": ["rust"],
-    "version": "0.22.0"
+    "version": "0.22.1"
   },
   "bc": {
     "bin": ["bc"],
@@ -690,20 +690,10 @@
     "version": "0.187"
   },
   "emacs": {
-    "bin": [
-      "ebrowse",
-      "emacs",
-      "emacsclient",
-      "etags"
-    ],
+    "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "conservative": false,
     "date": "2022-09-12",
-    "man1": [
-      "ebrowse.1.gz",
-      "emacs.1.gz",
-      "emacsclient.1.gz",
-      "etags.1.gz"
-    ],
+    "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
     "url": ["https://www.gnu.org/software/emacs/"],
     "version": "28.2"
   },
@@ -1365,6 +1355,7 @@
       "homebrew": "luv"
     },
     "build_dependencies": ["cmake", "lua", "luajit"],
+    "check": false,
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": ["libuv"],
@@ -1397,6 +1388,7 @@
     "version": "4.19.0"
   },
   "libtermkey": {
+    "check": false,
     "conservative": true,
     "date": "2022-09-09",
     "url": ["https://www.leonerd.org.uk/code/libtermkey/"],
@@ -1432,6 +1424,7 @@
     "version": "1.44.2"
   },
   "libvterm": {
+    "check": false,
     "conservative": true,
     "date": "2022-09-09",
     "notes": ["0.2.0 is incompatible with neovim."],
@@ -1476,6 +1469,7 @@
   },
   "luajit": {
     "bin": ["luajit"],
+    "check": false,
     "conservative": true,
     "date": "2022-09-09",
     "url": ["https://luajit.org/"],
@@ -1560,6 +1554,7 @@
     "version": "4.1.0"
   },
   "msgpack": {
+    "check": false,
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": [],
@@ -1617,9 +1612,17 @@
   },
   "neovim": {
     "bin": ["nvim"],
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "cmake",
+      "libtool",
+      "ninja",
+      "pkg-config"
+    ],
     "conservative": false,
     "date": "2022-08-30",
-    "dependencies": ["libluv", "libuv", "msgpack", "tree-sitter"],
+    "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python"],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
     "version": "0.7.2"
@@ -2095,9 +2098,9 @@
   "ruff": {
     "bin": ["ruff"],
     "conservative": false,
-    "date": "2022-09-07",
+    "date": "2022-09-12",
     "dependencies": ["python"],
-    "version": "0.0.29"
+    "version": "0.0.36"
   },
   "rust": {
     "bin": [
@@ -2336,6 +2339,7 @@
     "version": "2.0.3"
   },
   "tree-sitter": {
+    "check": false,
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": ["rust"],
@@ -2355,6 +2359,7 @@
     "version": "2.2.28"
   },
   "unibilium": {
+    "check": false,
     "conservative": true,
     "date": "2022-09-09",
     "url": ["https://github.com/neovim/unibilium/"],
@@ -2390,7 +2395,7 @@
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-12",
     "man1": [
       "ex.1",
       "rview.1",
@@ -2402,7 +2407,7 @@
       "xxd.1"
     ],
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.0250"
+    "version": "9.0.0350"
   },
   "visidata": {
     "bin": ["vd", "visidata"],

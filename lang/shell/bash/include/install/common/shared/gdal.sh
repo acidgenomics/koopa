@@ -11,7 +11,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # Use 'configure --help' for build options.
     #
@@ -181,8 +181,10 @@ v${dict['version']}/${dict['file']}"
         "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/libsqlite3.${dict['shared_ext']}"
     )
     koopa_mkdir "${dict['prefix']}/include"
-    "${app['cmake']}" .. "${cmake_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH -S .. "${cmake_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

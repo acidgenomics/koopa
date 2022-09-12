@@ -3,7 +3,7 @@
 main() {
     # """
     # Install readline.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-09-12.
     #
     # Check linkage on Linux with:
     # ldd -r /opt/koopa/opt/readline/lib/libreadline.so
@@ -52,9 +52,14 @@ main() {
         --pattern='^(Requires.private: .*)$' \
         --replacement='# \1' \
         'readline.pc.in'
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    make_args=('SHLIB_LIBS=-lncursesw')
+    make_args=(
+        'SHLIB_LIBS=-lncursesw'
+        'VERBOSE=1'
+    )
     "${app['make']}" "${make_args[@]}" --jobs="${dict['jobs']}"
     "${app['make']}" "${make_args[@]}" install
     koopa_check_shared_object \

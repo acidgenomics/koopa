@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libluv.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # Currently only using this in Neovim installer with LuaJIT.
     #
@@ -78,10 +78,12 @@ deps/lua-compat-5.3" \
         "-DLIBUV_INCLUDE_DIR=${dict['libuv']}/include"
         "-DLIBUV_LIBRARIES=${dict['libuv']}/lib/libuv.${dict['shared_ext']}"
     )
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
     # Lua support.
     # NOTE May want to link to shared object instead of 'liblua.a' in the
     # future, but this requires an update to the Lua install script.
-    # > "${app['cmake']}" -HL -S . -B 'buildlua' \
+    # > "${app['cmake']}" -LH -S . -B 'buildlua' \
     # >     "${cmake_args[@]}" \
     # >     '-DBUILD_SHARED_LIBS=OFF' \
     # >     '-DBUILD_STATIC_LIBS=OFF' \
@@ -91,7 +93,7 @@ deps/lua-compat-5.3" \
     # > "${app['cmake']}" --build 'buildlua'
     # > "${app['cmake']}" --install 'buildlua'
     # LuaJIT support (for neovim).
-    "${app['cmake']}" -HL -S . -B 'buildjit' \
+    "${app['cmake']}" -LH -S . -B 'buildjit' \
         "${cmake_args[@]}" \
         '-DBUILD_SHARED_LIBS=ON' \
         '-DBUILD_STATIC_LIBS=ON' \

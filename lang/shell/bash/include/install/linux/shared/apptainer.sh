@@ -41,6 +41,7 @@ tags/${dict['file']}"
         '-v'
     )
     export GOPATH="${dict['gopath']}"
+    koopa_print_env
     ./mconfig "${conf_args[@]}"
     "${app['make']}" -C 'builddir'
     "${app['make']}" -C 'builddir' install

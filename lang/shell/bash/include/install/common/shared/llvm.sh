@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # Useful CMake linker variables:
     # - CMAKE_CXX_FLAGS
@@ -227,6 +227,7 @@ llvmorg-${dict['version']}/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}.src"
     koopa_mkdir 'build'
     koopa_cd 'build'
+    koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
         -G 'Ninja' \

@@ -24,6 +24,7 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    koopa_print_env
     PREFIX="${dict['prefix']}" "${app['make']}" install
     return 0
 }

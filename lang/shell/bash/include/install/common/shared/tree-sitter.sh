@@ -27,6 +27,7 @@ archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    koopa_print_env
     "${app['make']}" AMALGAMATED=1
     "${app['make']}" install PREFIX="${dict['prefix']}"
     return 0

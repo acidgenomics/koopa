@@ -33,9 +33,11 @@ download/v${dict['version']}/${dict['file']}"
         '--disable-silent-rules'
         '--enable-static'
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

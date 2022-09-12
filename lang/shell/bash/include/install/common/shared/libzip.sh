@@ -6,7 +6,7 @@
 main() {
     # """
     # Install libzip.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://libzip.org/download/
@@ -73,8 +73,10 @@ main() {
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH -S .. "${cmake_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

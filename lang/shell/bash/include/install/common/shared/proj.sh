@@ -3,7 +3,7 @@
 main() {
     # """
     # Install PROJ.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-09-12.
     #
     # Alternative approach for SQLite3 dependency:
     # > -DCMAKE_PREFIX_PATH='/opt/koopa/opt/sqlite'
@@ -55,11 +55,17 @@ ${dict['version']}/${dict['file']}"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
         '-DBUILD_APPS=ON'
+        '-DBUILD_FRAMEWORKS_AND_BUNDLE=OFF'
         '-DBUILD_SHARED_LIBS=ON'
         '-DBUILD_TESTING=OFF'
         '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DENABLE_CURL=ON'
         '-DENABLE_TIFF=ON'
         # Required dependency paths.
@@ -73,8 +79,10 @@ ${dict['version']}/${dict['file']}"
         "-DTIFF_LIBRARY_RELEASE=${dict['libtiff']}/lib/\
 libtiff.${dict['shared_ext']}"
     )
-    "${app['cmake']}" .. "${cmake_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH -S .. "${cmake_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }
