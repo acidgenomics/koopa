@@ -3,10 +3,11 @@
 main() {
     # """
     # Install Luarocks.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-09-10.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'unzip'
     koopa_activate_opt_prefix 'lua'
     declare -A app=(
         ['lua']="$(koopa_locate_lua)"
@@ -20,7 +21,9 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['lua_version']="$(koopa_get_version "${app['lua']}")"
-    dict['lua_maj_min_ver']="$(koopa_major_minor_version "${dict['lua_version']}")"
+    dict['lua_maj_min_ver']="$( \
+        koopa_major_minor_version "${dict['lua_version']}" \
+    )"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://luarocks.org/releases/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
@@ -29,18 +32,10 @@ main() {
     conf_args=(
         "--prefix=${dict['prefix']}"
         "--lua-version=${dict['lua_maj_min_ver']}"
-        '--versioned-rocks-dir'
     )
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" build
     "${app['make']}" install
-    app['luarocks']="${dict['prefix']}/bin/luarocks"
-    koopa_assert_is_installed "${app['luarocks']}"
-    (
-        koopa_cd "${dict['prefix']}"
-        "${app['luarocks']}" install 'luaposix'
-        "${app['luarocks']}" install 'luafilesystem'
-    )
     return 0
 }

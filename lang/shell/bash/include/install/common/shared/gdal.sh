@@ -11,7 +11,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-09-09.
     #
     # Use 'configure --help' for build options.
     #
@@ -86,8 +86,13 @@ v${dict['version']}/${dict['file']}"
         '-DBUILD_PYTHON_BINDINGS=ON'
         '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DGDAL_USE_ARMADILLO=OFF'
         '-DGDAL_USE_ARROW=OFF'
         '-DGDAL_USE_BLOSC=OFF'

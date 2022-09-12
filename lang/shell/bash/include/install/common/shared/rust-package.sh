@@ -125,6 +125,7 @@ main() {
     esac
     dict['cargo_home']="$(koopa_init_dir "${dict['cargo_home']}")"
     export CARGO_HOME="${dict['cargo_home']}"
+    koopa_print_env
     "${app['cargo']}" install "${install_args[@]}"
     return 0
 }

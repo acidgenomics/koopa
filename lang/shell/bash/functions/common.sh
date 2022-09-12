@@ -3204,8 +3204,10 @@ koopa_build_all_apps() {
         'emacs'
         'vim'
         'lua'
+        'luajit'
         'luarocks'
-        'neovim'
+        'msgpack'
+        
         'libevent'
         'utf8proc'
         'tmux'
@@ -3319,6 +3321,7 @@ koopa_build_all_apps() {
         'starship'
         'tealdeer'
         'tokei'
+        'tree-sitter'
         'tuc'
         'xsv'
         'zellij'
@@ -3347,6 +3350,7 @@ koopa_build_all_apps() {
         'nmap'
         'rmate'
         'unzip'
+        'neovim'
     )
     if ! koopa_is_aarch64
     then
@@ -7272,11 +7276,14 @@ koopa_download_github_latest() {
 }
 
 koopa_download() {
-    local app dict download_args pos
+    local app bool dict download_args pos
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    declare -A bool=(
         ['decompress']=0
         ['extract']=0
+        ['progress']=0
+    )
+    declare -A dict=(
         ['engine']='curl'
         ['file']="${2:-}"
         ['url']="${1:?}"
@@ -7294,11 +7301,15 @@ koopa_download() {
                 shift 2
                 ;;
             '--decompress')
-                dict['decompress']=1
+                bool['decompress']=1
                 shift 1
                 ;;
             '--extract')
-                dict['extract']=1
+                bool['extract']=1
+                shift 1
+                ;;
+            '--progress')
+                bool['progress']=1
                 shift 1
                 ;;
             '-'*)
@@ -7359,21 +7370,29 @@ koopa_download() {
                 '--retry' 5
                 '--show-error'
             )
+            if [[ "${bool['progress']}" -eq 0 ]]
+            then
+                download_args+=('--silent')
+            fi
             ;;
         'wget')
             download_args+=(
                 "--output-document=${dict['file']}"
                 '--no-verbose'
             )
+            if [[ "${bool['progress']}" -eq 0 ]]
+            then
+                download_args+=('--quiet')
+            fi
             ;;
     esac
     download_args+=("${dict['url']}")
     koopa_alert "Downloading '${dict['url']}' to '${dict['file']}'."
     "${app['download']}" "${download_args[@]}"
-    if [[ "${dict['decompress']}" -eq 1 ]]
+    if [[ "${bool['decompress']}" -eq 1 ]]
     then
         koopa_decompress "${dict['file']}"
-    elif [[ "${dict['extract']}" -eq 1 ]]
+    elif [[ "${bool['extract']}" -eq 1 ]]
     then
         koopa_extract "${dict['file']}"
     fi
@@ -11163,6 +11182,7 @@ koopa_install_all_apps() {
         'meson'
         'mpc'
         'mpfr'
+        'msgpack'
         'ncurses'
         'neofetch'
         'neovim'
@@ -11229,6 +11249,7 @@ koopa_install_all_apps() {
         'tmux'
         'tokei'
         'tree'
+        'tree-sitter'
         'tuc'
         'udunits'
         'units'
@@ -11459,6 +11480,7 @@ koopa_install_app_subshell() {
                 ;;
         esac
     done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -z "${dict['installer_bn']}" ]] && dict['installer_bn']="${dict['name']}"
     dict['installer_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
@@ -11471,15 +11493,6 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
         "${dict['installer_fun']}" "$@"
-        case "${dict['mode']}" in
-            'shared')
-                koopa_alert_info "Environment variables for \
-'$(koopa_basename "${dict['installer_file']}")'."
-                declare -x
-                ;;
-            *)
-                ;;
-        esac
         return 0
     )
     koopa_rm "${dict['tmp_dir']}"
@@ -11493,7 +11506,7 @@ koopa_install_app() {
     declare -A bool=(
         ['auto_prefix']=0
         ['binary']=0
-        ['copy_log_file']=0
+        ['copy_log_files']=0
         ['link_in_bin']=''
         ['link_in_man1']=''
         ['link_in_opt']=''
@@ -11508,7 +11521,8 @@ koopa_install_app() {
         ['app_prefix']="$(koopa_app_prefix)"
         ['installer']=''
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['log_file']="$(koopa_tmp_log_file)"
+        ['stderr_file']="$(koopa_tmp_log_file)"
+        ['stdout_file']="$(koopa_tmp_log_file)"
         ['mode']='shared'
         ['name']=''
         ['platform']='common'
@@ -11753,7 +11767,7 @@ ${dict['version2']}"
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
             then
-                bool['copy_log_file']=1
+                bool['copy_log_files']=1
             fi
             "${app['env']}" -i \
                 "${env_vars[@]}" \
@@ -11773,12 +11787,16 @@ ${dict['version2']}"
                             --prefix=${dict['prefix']} \
                             --version=${dict['version']} \
                             ${*}" \
-                2>&1 | "${app['tee']}" "${dict['log_file']}"
-            if [[ "${bool['copy_log_file']}" -eq 1 ]]
+                > >("${app['tee']}" "${dict['stdout_file']}") \
+                2> >("${app['tee']}" "${dict['stderr_file']}" >&2)
+            if [[ "${bool['copy_log_files']}" -eq 1 ]]
             then
                 koopa_cp \
-                    "${dict['log_file']}" \
-                    "${dict['prefix']}/.koopa-install.log"
+                    "${dict['stdout_file']}" \
+                    "${dict['prefix']}/.koopa-install-stdout.log"
+                koopa_cp \
+                    "${dict['stderr_file']}" \
+                    "${dict['prefix']}/.koopa-install-stderr.log"
             fi
             ;;
         '1')
@@ -12843,6 +12861,12 @@ koopa_install_libksba() {
         "$@"
 }
 
+koopa_install_libluv() {
+    koopa_install_app \
+        --name='libluv' \
+        "$@"
+}
+
 koopa_install_libpipeline() {
     koopa_install_app \
         --name='libpipeline' \
@@ -12864,6 +12888,12 @@ koopa_install_libssh2() {
 koopa_install_libtasn1() {
     koopa_install_app \
         --name='libtasn1' \
+        "$@"
+}
+
+koopa_install_libtermkey() {
+    koopa_install_app \
+        --name='libtermkey' \
         "$@"
 }
 
@@ -12891,6 +12921,12 @@ koopa_install_libuv() {
         "$@"
 }
 
+koopa_install_libvterm() {
+    koopa_install_app \
+        --name='libvterm' \
+        "$@"
+}
+
 koopa_install_libxml2() {
     koopa_install_app \
         --name='libxml2' \
@@ -12912,6 +12948,12 @@ koopa_install_llvm() {
 koopa_install_lua() {
     koopa_install_app \
         --name='lua' \
+        "$@"
+}
+
+koopa_install_luajit() {
+    koopa_install_app \
+        --name='luajit' \
         "$@"
 }
 
@@ -12984,6 +13026,12 @@ koopa_install_mpc() {
 koopa_install_mpfr() {
     koopa_install_app \
         --name='mpfr' \
+        "$@"
+}
+
+koopa_install_msgpack() {
+    koopa_install_app \
+        --name='msgpack' \
         "$@"
 }
 
@@ -13070,6 +13118,12 @@ koopa_install_nushell() {
 koopa_install_oniguruma() {
     koopa_install_app \
         --name='oniguruma' \
+        "$@"
+}
+
+koopa_install_openbb() {
+    koopa_install_app \
+        --name='openbb' \
         "$@"
 }
 
@@ -13546,6 +13600,12 @@ koopa_install_tokei() {
         "$@"
 }
 
+koopa_install_tree_sitter() {
+    koopa_install_app \
+        --name='tree-sitter' \
+        "$@"
+}
+
 koopa_install_tree() {
     koopa_install_app \
         --name='tree' \
@@ -13561,6 +13621,12 @@ koopa_install_tuc() {
 koopa_install_udunits() {
     koopa_install_app \
         --name='udunits' \
+        "$@"
+}
+
+koopa_install_unibilium() {
+    koopa_install_app \
+        --name='unibilium' \
         "$@"
 }
 
@@ -15374,17 +15440,20 @@ koopa_locate_anaconda() {
     koopa_locate_app \
         --app-name='anaconda' \
         --bin-name='conda' \
+        --no-allow-koopa-bin \
         "$@"
 }
 
 koopa_locate_app() {
     local bool dict pos
     declare -A bool=(
+        ['allow_koopa_bin']=1
         ['allow_missing']=0
         ['allow_system']=0
         ['realpath']=0
     )
     declare -A dict=(
+        ['app']=''
         ['app_name']=''
         ['bin_name']=''
         ['bin_prefix']="$(koopa_bin_prefix)"
@@ -15428,6 +15497,10 @@ koopa_locate_app() {
                 bool['allow_system']=1
                 shift 1
                 ;;
+            '--no-allow-koopa-bin')
+                bool['allow_koopa_bin']=0
+                shift 1
+                ;;
             '--realpath')
                 bool['realpath']=1
                 shift 1
@@ -15461,7 +15534,10 @@ koopa_locate_app() {
     fi
     [[ -n "${dict['app_name']}" ]] || return 1
     [[ -n "${dict['bin_name']}" ]] || return 1
-    dict['app']="${dict['bin_prefix']}/${dict['bin_name']}"
+    if [[ "${bool['allow_koopa_bin']}" -eq 1 ]]
+    then
+        dict['app']="${dict['bin_prefix']}/${dict['bin_name']}"
+    fi
     if [[ -x "${dict['app']}" ]]
     then
         if [[ "${bool['realpath']}" -eq 1 ]]
@@ -16101,6 +16177,13 @@ koopa_locate_lua() {
     koopa_locate_app \
         --app-name='lua' \
         --bin-name='lua' \
+        "$@"
+}
+
+koopa_locate_luajit() {
+    koopa_locate_app \
+        --app-name='luajit' \
+        --bin-name='luajit' \
         "$@"
 }
 
@@ -17493,6 +17576,11 @@ koopa_print_default_bold() {
 
 koopa_print_default() {
     __koopa_print_ansi 'default' "$@"
+    return 0
+}
+
+koopa_print_env() {
+    export -p
     return 0
 }
 
@@ -23284,6 +23372,12 @@ koopa_uninstall_libksba() {
         "$@"
 }
 
+koopa_uninstall_libluv() {
+    koopa_uninstall_app \
+        --name='libluv' \
+        "$@"
+}
+
 koopa_uninstall_libpipeline() {
     koopa_uninstall_app \
         --name='libpipeline' \
@@ -23305,6 +23399,12 @@ koopa_uninstall_libssh2() {
 koopa_uninstall_libtasn1() {
     koopa_uninstall_app \
         --name='libtasn1' \
+        "$@"
+}
+
+koopa_uninstall_libtermkey() {
+    koopa_uninstall_app \
+        --name='libtermkey' \
         "$@"
 }
 
@@ -23332,6 +23432,12 @@ koopa_uninstall_libuv() {
         "$@"
 }
 
+koopa_uninstall_libvterm() {
+    koopa_uninstall_app \
+        --name='libvterm' \
+        "$@"
+}
+
 koopa_uninstall_libxml2() {
     koopa_uninstall_app \
         --name='libxml2' \
@@ -23353,6 +23459,12 @@ koopa_uninstall_llvm() {
 koopa_uninstall_lua() {
     koopa_uninstall_app \
         --name='lua' \
+        "$@"
+}
+
+koopa_uninstall_luajit() {
+    koopa_uninstall_app \
+        --name='luajit' \
         "$@"
 }
 
@@ -23425,6 +23537,12 @@ koopa_uninstall_mpc() {
 koopa_uninstall_mpfr() {
     koopa_uninstall_app \
         --name='mpfr' \
+        "$@"
+}
+
+koopa_uninstall_msgpack() {
+    koopa_uninstall_app \
+        --name='msgpack' \
         "$@"
 }
 
@@ -23509,6 +23627,12 @@ koopa_uninstall_nushell() {
 koopa_uninstall_oniguruma() {
     koopa_uninstall_app \
         --name='oniguruma' \
+        "$@"
+}
+
+koopa_uninstall_openbb() {
+    koopa_uninstall_app \
+        --name='openbb' \
         "$@"
 }
 
@@ -23935,6 +24059,12 @@ koopa_uninstall_tokei() {
         "$@"
 }
 
+koopa_uninstall_tree_sitter() {
+    koopa_uninstall_app \
+        --name='tree-sitter' \
+        "$@"
+}
+
 koopa_uninstall_tree() {
     koopa_uninstall_app \
         --name='tree' \
@@ -23950,6 +24080,12 @@ koopa_uninstall_tuc() {
 koopa_uninstall_udunits() {
     koopa_uninstall_app \
         --name='udunits' \
+        "$@"
+}
+
+koopa_uninstall_unibilium() {
+    koopa_uninstall_app \
+        --name='unibilium' \
         "$@"
 }
 
