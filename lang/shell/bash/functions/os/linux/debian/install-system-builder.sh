@@ -36,10 +36,11 @@ koopa_debian_install_system_builder_base() {
         DEBCONF_NONINTERACTIVE_SEEN='true' \
         DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" upgrade --yes
-    "${app['sudo']}" \
-        DEBCONF_NONINTERACTIVE_SEEN='true' \
-        DEBIAN_FRONTEND='noninteractive' \
-        "${app['apt_get']}" dist-upgrade --yes
+    # Using 'dist-upgrade' can be too aggressive.
+    # > "${app['sudo']}" \
+    # >     DEBCONF_NONINTERACTIVE_SEEN='true' \
+    # >     DEBIAN_FRONTEND='noninteractive' \
+    # >     "${app['apt_get']}" dist-upgrade --yes
     "${app['cat']}" << END \
         | "${app['sudo']}" "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
