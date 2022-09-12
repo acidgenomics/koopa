@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Consider adding support for '--file' argument here.
+# Currently used in openbb installer.
+# FIXME Allow the user to define which conda -- allow anaconda usage here.
+
 koopa_conda_create_env() {
     # """
     # Create a conda environment.

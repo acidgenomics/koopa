@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Armadillo.
-    # @note Updated 2022-08-19.
+    # @note Updated 2022-09-09.
     #
     # @seealso
     # - http://arma.sourceforge.net/download.html
@@ -35,6 +35,11 @@ main() {
         # > '-DCMAKE_BUILD_TYPE=MinSizeRel'
         # > '-DCMAKE_INSTALL_LIBDIR=lib'
         "-DCMAKE_INSTALL_PREFIX:PATH=${dict['prefix']}"
+        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DDETECT_HDF5=ON'
     )
     if koopa_is_macos

@@ -1,30 +1,13 @@
 #!/usr/bin/env bash
 
-# FIXME Need to resolve 'Python.h' linkage issues when enabling Python
-# for LLDB. How do we get the installer to pick up Python 'include' dir?
-# Is CPATH the answer?
-
-# FIXME Maybe we can use these to link Python correctly.
-# args << "-DCMAKE_C_FLAGS=#{cflags.join(" ")}"
-# args << "-DCMAKE_CXX_FLAGS=#{cxxflags.join(" ")}"
-
-# FIXME For ld library paths, may need to use:
-# args << "-DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags.join(" ")}"
-# args << "-DCMAKE_MODULE_LINKER_FLAGS=#{linux_linker_flags.join(" ")}"
-# args << "-DCMAKE_SHARED_LINKER_FLAGS=#{linux_linker_flags.join(" ")}"
-
-# FIXME May need to use this for Python:
-# > runtimes_cmake_args << "-DCMAKE_INSTALL_RPATH=#{rpath}"
-
-# FIXME Alternatively may be able to set LIBELF location in CPATH
-# environment variable.
-
 main() {
     # """
     # Install LLVM (clang).
     # @note Updated 2022-09-09.
     #
     # Useful CMake linker variables:
+    # - CMAKE_CXX_FLAGS
+    # - CMAKE_C_FLAGS
     # - CMAKE_EXE_LINKER_FLAGS
     # - CMAKE_MODULE_LINKER_FLAGS
     # - CMAKE_SHARED_LINKER_FLAGS
@@ -245,7 +228,10 @@ llvmorg-${dict['version']}/${dict['file']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -G 'Ninja' "${cmake_args[@]}" ../llvm
+    "${app['cmake']}" -LH \
+        -G 'Ninja' \
+        -S ../llvm \
+        "${cmake_args[@]}"
     "${app['cmake']}" --build .
     "${app['cmake']}" --build . --target 'install'
     return 0
