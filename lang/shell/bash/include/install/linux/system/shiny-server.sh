@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Shiny Server binary.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-09-12.
     #
     # Currently Debian/Ubuntu and Fedora/RHEL are supported.
     # Currently only "amd64" (x86) architecture is supported here.
@@ -15,7 +15,7 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['r']="$(koopa_locate_r)"
+        ['r']="$(koopa_locate_system_r)"
     )
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
