@@ -130,6 +130,7 @@ VERBOSE=1
 # NOTE This doesn't seem to pick up our Python correctly.
 # > PYTHON=\${app['python']}
 END
+    koopa_print_env
     "${app['make']}" --jobs="${dict['jobs']}"
     # > "${app['make']}" test
     "${app['make']}" install

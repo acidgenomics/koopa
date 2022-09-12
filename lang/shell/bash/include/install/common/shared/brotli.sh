@@ -18,6 +18,7 @@ main() {
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
+        ['jobs']="$(koopa_cpu_count)"
         ['name']='brotli'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -33,7 +34,7 @@ main() {
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH -S . "${cmake_args[@]}"
-    "${app['make']}" VERBOSE=1
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

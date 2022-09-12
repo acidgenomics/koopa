@@ -36,9 +36,11 @@ ${dict['maj_min_ver']}/${dict['file']}"
     # - https://github.com/rbenv/ruby-build/issues/729
     # > export RUBY_CONFIGURE_OPTS='--disable-install-doc'
     conf_args=("--prefix=${dict['prefix']}")
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

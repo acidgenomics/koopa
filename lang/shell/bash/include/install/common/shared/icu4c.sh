@@ -41,9 +41,11 @@ release-${dict['kebab_version']}/${dict['file']}"
         '--with-library-bits=64'
     )
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     # Can check configuration success with:
     # > app['icuinfo']="${dict['prefix']}/bin/icuinfo"

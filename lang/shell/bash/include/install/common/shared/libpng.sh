@@ -45,9 +45,11 @@ ${dict['name']}${dict['version2']}/${dict['version']}/${dict['file']}"
         '--enable-shared=yes'
         '--enable-static=yes'
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

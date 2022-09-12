@@ -49,8 +49,9 @@ Source.tar.gz"
     koopa_cd "${dict['name']}-build"
     # Fix for missing '/usr/include/x86_64-linux-gnu/sys/stat.h'.
     export C_INCLUDE_PATH="/usr/include/${dict['arch']}-${dict['platform']}"
+    koopa_print_env
     ../src/configure --prefix="${dict['prefix']}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     # For some reason bcl2fastq creates an empty test directory.
     koopa_rm "${dict['prefix']}/bin/test"

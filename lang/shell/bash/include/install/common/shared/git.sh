@@ -46,11 +46,15 @@ main() {
         "--prefix=${dict['prefix']}"
         '--without-tcltk'
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
     # Additional features here require 'asciidoc' to be installed.
-    "${app['make']}" --jobs="${dict['jobs']}" # 'all' 'doc' 'info'
-    "${app['make']}" install # 'install-doc' 'install-html' 'install-info'
+    # Consider adding: all, doc, info.
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    # Consider adding: install-doc, install-html, install-info.
+    "${app['make']}" install
     # Install the macOS keychain credential helper.
     if koopa_is_macos
     then
