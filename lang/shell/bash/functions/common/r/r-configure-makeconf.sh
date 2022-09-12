@@ -24,7 +24,7 @@ koopa_r_configure_makeconf() {
     declare -A dict=(
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['icu4c']="$(koopa_app_prefix 'icu4c')"
-        ['bzip2']="$(koopa_app_prefix 'libiconv')"
+        ['libiconv']="$(koopa_app_prefix 'libiconv')"
         ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['zlib']="$(koopa_app_prefix 'zlib')"
@@ -33,6 +33,7 @@ koopa_r_configure_makeconf() {
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
         "${dict['icu4c']}" \
+        "${dict['libiconv']}" \
         "${dict['pcre2']}" \
         "${dict['r_prefix']}" \
         "${dict['zlib']}"
