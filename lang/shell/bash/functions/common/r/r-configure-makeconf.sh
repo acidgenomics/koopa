@@ -10,6 +10,8 @@ koopa_r_configure_makeconf() {
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
     local app dict libs
+    # FIXME Keeping this macOS only for the moment.
+    koopa_is_macos || return 0
     declare -A app
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
