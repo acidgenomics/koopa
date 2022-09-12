@@ -17,6 +17,7 @@
 # FIXME Also consider setting CFLAGS here.
 # https://libgit2.org/docs/guides/build-and-link/
 # > CFLAGS = $(shell pkg-config --cflags libgit2)
+# FIXME Consider setting LD_RUN_PATH here?
 
 koopa_activate_opt_prefix() {
     # """

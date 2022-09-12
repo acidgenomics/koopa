@@ -1,32 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this install error on macOS:
-#
-# BUILDVM   jit/vmdef.lua
-#DYNLINK   libluajit.so
-#ld: warning: -seg1addr not 16384 byte aligned, rounding up
-#LINK      luajit
-#Undefined symbols for architecture x86_64:
-#  "__Unwind_DeleteException", referenced from:
-#      _lj_err_unwind_dwarf in libluajit.a(lj_err.o)
-#  "__Unwind_GetCFA", referenced from:
-#      _lj_err_unwind_dwarf in libluajit.a(lj_err.o)
-#  "__Unwind_RaiseException", referenced from:
-#      _lj_err_throw in libluajit.a(lj_err.o)
-#  "__Unwind_SetGR", referenced from:
-#      _lj_err_unwind_dwarf in libluajit.a(lj_err.o)
-#  "__Unwind_SetIP", referenced from:
-#      _lj_err_unwind_dwarf in libluajit.a(lj_err.o)
-#ld: symbol(s) not found for architecture x86_64
-#clang: error: linker command failed with exit code 1 (use -v to see invocation)
-#gmake[1]: *** [Makefile:712: luajit] Error 1
-#gmake[1]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220909-154453-irEx7INYWY/LuaJIT-2.1.0-beta3/src'
-#gmake: *** [Makefile:113: default] Error 2
-
 main() {
     # """
     # Install LuaJIT.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://luajit.org/download.html
@@ -73,12 +50,35 @@ main() {
     )
     (
         koopa_cd "${dict['prefix']}/lib"
+        # e.g. 'libluajit-5.1.a' to 'libluajit.a'.
         koopa_ln \
             "libluajit-${dict['llj_min_maj_ver']}.a" \
             'libluajit.a'
-        koopa_ln \
-            "libluajit-${dict['llj_min_maj_ver']}.${dict['shared_ext']}" \
-            "libluajit.${dict['shared_ext']}"
+        if koopa_is_macos
+        then
+            # e.g. 'libluajit-5.1.dylib' to 'libluajit.dylib'.
+            koopa_ln \
+                "libluajit-${dict['llj_min_maj_ver']}.${dict['shared_ext']}" \
+                "libluajit.${dict['shared_ext']}"
+        else
+            dict['majver']="$( \
+                "${app['pkg_config']}" --variable='majver' "${dict['pc_file']}" \
+            )"
+            dict['minver']="$( \
+                "${app['pkg_config']}" --variable='minver' "${dict['pc_file']}" \
+            )"
+            dict['relver']="$( \
+                "${app['pkg_config']}" --variable='relver' "${dict['pc_file']}" \
+            )"
+            # e.g. 'libluajit-5.1.so.2.1.0' to 'libluajit-5.1.so'.
+            koopa_ln \
+                "libluajit-${dict['llj_min_maj_ver']}.${dict['shared_ext']}.${dict['majver']}.${dict['minver']}.${dict['relver']}" \
+                "libluajit-${dict['llj_min_maj_ver']}.${dict['shared_ext']}"
+            # e.g. 'libluajit-5.1.so' to 'libluajit.so'.
+            koopa_ln \
+                "libluajit-${dict['llj_min_maj_ver']}.${dict['shared_ext']}" \
+                "libluajit.${dict['shared_ext']}"
+        fi
     )
     return 0
 }

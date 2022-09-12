@@ -660,7 +660,7 @@
     "conservative": false,
     "date": "2022-09-07",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "269e843e5aa0f9005ab3322a74a4568bb9da393e"
+    "version": "606e1a2e0428ad21926d001594883f73c9bcdefe"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -850,8 +850,9 @@
   },
   "gdal": {
     "bin": ["gdal-config"],
-    "conservative": false,
+    "conservative": true,
     "man1": ["gdal-config.1"],
+    "outdated": true,
     "url": ["https://gdal.org/download.html"],
     "version": "3.5.1"
   },
@@ -1587,15 +1588,15 @@
     "conservative": true,
     "date": "2022-08-29",
     "man1": [
-      "captoinfo.1m",
+      "captoinfo.1",
       "clear.1",
-      "infocmp.1m",
-      "infotocap.1m",
+      "infocmp.1",
+      "infotocap.1",
       "ncursesw6-config.1",
       "reset.1",
       "tabs.1",
-      "tic.1m",
-      "toe.1m",
+      "tic.1",
+      "toe.1",
       "tput.1",
       "tset.1"
     ],
@@ -1695,6 +1696,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
+    "check": false,
     "conservative": false,
     "date": "2022-09-09",
     "dependencies": ["anaconda"],

@@ -102,4 +102,14 @@ main() {
             koopa_ln "${name}w.pc" "${name}.pc"
         done
     )
+    (
+        koopa_is_macos || return 0
+        koopa_cd "${dict['prefix']}/share/man/man1"
+        koopa_ln 'captoinfo.1m' 'captoinfo.1'
+        koopa_ln 'infocmp.1m' 'infocmp.1'
+        koopa_ln 'infotocap.1m' 'infotocap.1'
+        koopa_ln 'tic.1m' 'tic.1'
+        koopa_ln 'toe.1m' 'toe.1'
+    )
+    return 0
 }

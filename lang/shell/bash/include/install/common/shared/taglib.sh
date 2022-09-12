@@ -51,7 +51,7 @@ tags/${dict['file']}"
     "${app['cmake']}" -LH \
         -S . \
         -B 'build' \
-        "${cmake_args[*]}"
+        "${cmake_args[@]}"
     "${app['cmake']}" \
         --build 'build' \
         --parallel "${dict['jobs']}"
