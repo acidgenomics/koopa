@@ -1,7 +1,25 @@
 #!/bin/sh
-set -euo pipefail
+
+set -o errexit
+set -o nounset
+
+# FIXME Inform the user if gcc is not installed.
+# Debian: sudo apt install build-essential
 
 # FIXME Consider adding: curl, git.
+
+
+# FIXME Hitting this error on Ubuntu:
+# gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"x86_64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"x86_64-pc-linux-gnu"' -DCONF_VENDOR='"pc"' -DLOCALEDIR='"/opt/koopa/bootstrap/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   -I.  -I. -I./include -I./lib    -g -O2 -Wno-parentheses -Wno-format-security -c list.c
+# bashline.c:65:10: fatal error: builtins/builtext.h: No such file or directory
+#    65 | #include "builtins/builtext.h"          /* for read_builtin */
+#       |          ^~~~~~~~~~~~~~~~~~~~~
+# compilation terminated.
+# make: *** [Makefile:101: bashline.o] Error 1
+# make: *** Waiting for unfinished jobs....
+
+
+
 
 # """
 # Bootstrap core dependencies.
@@ -14,7 +32,7 @@ PREFIX="${KOOPA_PREFIX:?}/bootstrap"
 PATH='/usr/bin:/bin'
 export PATH
 
-JOBS=8
+JOBS=2
 TMPDIR="${TMPDIR:-/tmp}"
 
 install_bash() {

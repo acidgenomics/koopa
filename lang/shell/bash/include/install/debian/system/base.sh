@@ -274,7 +274,8 @@ main() {
             "Check '/etc/apt/sources.list'."
     fi
     koopa_debian_apt_get 'upgrade'
-    koopa_debian_apt_get 'dist-upgrade'
+    # This can be too aggressive and break some Debian systems.
+    # > koopa_debian_apt_get 'dist-upgrade'
     koopa_debian_apt_install "${pkgs[@]}"
     koopa_debian_apt_configure_sources
     koopa_debian_apt_clean

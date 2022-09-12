@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Shiny Server binary.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-09-12.
     #
     # Currently Debian/Ubuntu and Fedora/RHEL are supported.
     # Currently only "amd64" (x86) architecture is supported here.
@@ -14,10 +14,11 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['r']="$(koopa_locate_r)"
-    )
+    declare -A app
+    app['r']="$(koopa_locate_system_r)"
+    app['rscript']="${app['r']}script"
     [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         ['arch2']="$(koopa_arch2)" # e.g. 'amd64'.
@@ -46,11 +47,7 @@ ${dict['file_arch']}.${dict['file_ext']}"
 ${dict['arch']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_configure_r "${app['r']}"
-    if ! koopa_is_r_package_installed 'shiny'
-    then
-        koopa_alert 'Installing shiny R package.'
-        "${app['r']}" -e 'install.packages("shiny")'
-    fi
+    "${app['rscript']}" -e 'install.packages("shiny")'
     "${app['fun']}" "${dict['file']}"
     return 0
 }

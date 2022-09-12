@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-09-12.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -75,6 +75,10 @@ koopa_r_configure_ldpaths() {
         'zlib'
         'zstd'
     )
+    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+    then
+        keys+=('gettext')
+    fi
     for key in "${keys[@]}"
     do
         local prefix
