@@ -69,6 +69,8 @@ koopa_build_all_apps() {
         'readline'
         # deps: icu4c, make, pkg-config, readline.
         'libxml2'
+        # FIXME Need to ensure bison, libiconv, libunistring install before
+        # gettext now.
         # deps: libxml2, make, ncurses, pkg-config.
         'gettext'
         # deps: make, pkg-config.
@@ -391,6 +393,8 @@ koopa_build_all_apps() {
         # > 'msgpack'
         # > 'tree-sitter'
         # > 'unibilium'
+        # FIXME Ensure we install yarn before this, as a number of plugins
+        # depend on it (e.g. for coc, prettier).
         'neovim'
     )
     if ! koopa_is_aarch64
