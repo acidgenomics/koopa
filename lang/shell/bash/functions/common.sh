@@ -11865,34 +11865,26 @@ man1/${dict2['name']}"
                 koopa_push_app_build "${dict['name']}"
             ;;
         'system')
-            dict['tmp_dir']="$(koopa_tmp_dir)"
-            (
-                koopa_cd "${dict['tmp_dir']}"
-                koopa_install_app_subshell \
-                    --installer="${dict['installer']}" \
-                    --mode="${dict['mode']}" \
-                    --name="${dict['name']}" \
-                    --platform="${dict['platform']}" \
-                    --prefix="${dict['prefix']}" \
-                    --version="${dict['version']}" \
-                    "$@"
-            )
+            koopa_install_app_subshell \
+                --installer="${dict['installer']}" \
+                --mode="${dict['mode']}" \
+                --name="${dict['name']}" \
+                --platform="${dict['platform']}" \
+                --prefix="${dict['prefix']}" \
+                --version="${dict['version']}" \
+                "$@"
             [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
                 koopa_linux_update_ldconfig
             ;;
         'user')
-            dict['tmp_dir']="$(koopa_tmp_dir)"
-            (
-                koopa_cd "${dict['tmp_dir']}"
-                koopa_install_app_subshell \
-                    --installer="${dict['installer']}" \
-                    --mode="${dict['mode']}" \
-                    --name="${dict['name']}" \
-                    --platform="${dict['platform']}" \
-                    --prefix="${dict['prefix']}" \
-                    --version="${dict['version']}" \
-                    "$@"
-            )
+            koopa_install_app_subshell \
+                --installer="${dict['installer']}" \
+                --mode="${dict['mode']}" \
+                --name="${dict['name']}" \
+                --platform="${dict['platform']}" \
+                --prefix="${dict['prefix']}" \
+                --version="${dict['version']}" \
+                "$@"
             [[ -d "${dict['prefix']}" ]] && \
                 koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
             ;;
@@ -15370,6 +15362,7 @@ koopa_ln() {
     )
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
+        ['quiet']=0
         ['sudo']=0
         ['target_dir']=''
     )
@@ -15385,6 +15378,10 @@ koopa_ln() {
             '-t')
                 dict['target_dir']="${2:?}"
                 shift 2
+                ;;
+            '--quiet')
+                dict['quiet']=1
+                shift 1
                 ;;
             '--sudo' | \
             '-S')
@@ -15414,7 +15411,8 @@ koopa_ln() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    ln_args=('-fnsv')
+    ln_args=('-fns')
+    [[ "${dict['quiet']}" -eq 0 ]] && ln_args+=('-v')
     ln_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
