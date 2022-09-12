@@ -69,7 +69,7 @@ koopa_build_all_apps() {
         'readline'
         # deps: icu4c, make, pkg-config, readline.
         'libxml2'
-        # deps: libxml2 (linux), make, ncurses (linux), pkg-config.
+        # deps: libxml2, make, ncurses, pkg-config.
         'gettext'
         # deps: make, pkg-config.
         'zlib'
