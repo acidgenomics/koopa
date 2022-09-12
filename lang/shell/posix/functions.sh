@@ -410,7 +410,7 @@ koopa_activate_delta() {
         target_link_bn="$(readlink "$target_file")"
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
-    echo 'FIXME THIS IS TOO VERBOSE'.
+    koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$source_file" "$target_file"
     return 0
 }
@@ -517,6 +517,7 @@ koopa_activate_kitty() {
         target_link_bn="$(readlink "$target_file")"
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
+    koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$source_file" "$target_file"
     return 0
 }
@@ -739,6 +740,8 @@ koopa_activate_today_bucket() {
     then
         return 0
     fi
+    koopa_is_alias 'ln' && unalias 'ln'
+    koopa_is_alias 'mkdir' && unalias 'mkdir'
     mkdir -p "${bucket_dir}/${today_bucket}"
     ln -fns "${bucket_dir}/${today_bucket}" "$today_link"
     return 0
@@ -793,6 +796,9 @@ koopa_activate_zoxide() {
 koopa_add_config_link() {
     local config_prefix dest_file dest_name source_file
     config_prefix="$(koopa_config_prefix)"
+    koopa_is_alias 'ln' && unalias 'ln'
+    koopa_is_alias 'mkdir' && unalias 'mkdir'
+    koopa_is_alias 'rm' && unalias 'rm'
     while [ "$#" -ge 2 ]
     do
         source_file="${1:?}"
