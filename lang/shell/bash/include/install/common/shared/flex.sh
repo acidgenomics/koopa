@@ -5,7 +5,7 @@
 main() {
     # """
     # Install flex.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://github.com/westes/flex/
@@ -38,8 +38,11 @@ v${dict['version']}/${dict['file']}"
         '--disable-silent-rules'
         '--enable-shared'
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
+    ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
 }

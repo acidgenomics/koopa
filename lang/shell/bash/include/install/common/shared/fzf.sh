@@ -32,7 +32,8 @@ main() {
     export FZF_REVISION='tarball'
     export FZF_VERSION="${dict['version']}"
     export GOPATH="${dict['gopath']}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    koopa_print_env
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # This will copy fzf binary from 'target/' to 'bin/'.
     "${app['make']}" install
     # > ./install --help

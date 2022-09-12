@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Armadillo.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - http://arma.sourceforge.net/download.html
@@ -46,7 +46,12 @@ main() {
     then
         cmake_args+=('-DALLOW_OPENBLAS_MACOS=ON')
     fi
-    "${app['cmake']}" -B 'build' "${cmake_args[@]}"
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH \
+        -S . \
+        -B 'build' \
+        "${cmake_args[@]}"
     "${app['cmake']}" --build 'build'
     "${app['cmake']}" --install 'build'
     return 0

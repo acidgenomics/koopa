@@ -174,10 +174,8 @@ koopa_build_all_apps() {
         'emacs'
         'vim'
         'lua'
-        'luajit'
+        # > 'luajit'
         'luarocks'
-        'msgpack'
-        
         # NOTE Consider moving these up in the install order.
         'libevent'
         'utf8proc'
@@ -387,8 +385,12 @@ koopa_build_all_apps() {
         'rmate'
         # deps: bzip2.
         'unzip'
-        # FIXME Check luajit, other deps needed for this.
-        # deps: libluv, libuv, tree-sitter.
+        # > 'libluv'
+        # > 'libtermkey'
+        # > 'libvterm'
+        # > 'msgpack'
+        # > 'tree-sitter'
+        # > 'unibilium'
         'neovim'
     )
     if ! koopa_is_aarch64

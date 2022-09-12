@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GEOS.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.
@@ -60,8 +60,10 @@ archive/${dict['file']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         '-DGEOS_ENABLE_TESTS=OFF'
     )
-    "${app['cmake']}" .. "${cmake_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH -S .. "${cmake_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # > "${app['make']}" test
     "${app['make']}" install
     return 0
