@@ -18,6 +18,8 @@ main() {
     declare -A dict=(
         ['libxml2']="$(koopa_app_prefix 'libxml2')"
         ['ncurses']="$(koopa_app_prefix 'ncurses')"
+        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
     )
     koopa_install_app_subshell \
         --installer='gnu-app' \
@@ -40,4 +42,10 @@ main() {
         -D '--without-git' \
         -D '--without-xz' \
         "$@"
+    koopa_assert_is_file \
+        "${dict['prefix']}/include/libintl.h" \
+        "${dict['prefix']}/lib/libintl.a" \
+        "${dict['prefix']}/lib/libintl.la" \
+        "${dict['prefix']}/lib/libintl.${dict['shared_ext']}"
+    return 0
 }
