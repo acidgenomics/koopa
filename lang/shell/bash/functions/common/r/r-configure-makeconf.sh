@@ -3,7 +3,7 @@
 koopa_r_configure_makeconf() {
     # """
     # Modify the 'Makeconf' file to ensure correct configuration.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - /opt/koopa/opt/r/lib/R/etc/Makeconf
@@ -29,16 +29,23 @@ koopa_r_configure_makeconf() {
     koopa_assert_is_file "${dict['file']}"
     koopa_add_to_pkg_config_path \
         "${dict['pcre2']}/lib/pkgconfig"
+    # FIXME Consider reworking these, they might not be optimal. Refer to
+    # default Ubuntu configuration for recommendations.
     libs=(
         "$("${app['pkg_config']}" --libs 'libpcre2-8')"
-        '-llzma'
         '-lbz2'
         '-lz'
-        '-licucore'
         '-ldl'
         '-lm'
         '-liconv'
     )
+    if koopa_is_macos
+    then
+        libs+=(
+            '-licucore'
+            '-llzma'
+        )
+    fi
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
     koopa_find_and_replace_in_file \
