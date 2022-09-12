@@ -33,6 +33,7 @@ main() {
         ['es']='aspell6-es-1.11-2'
         ['fr']='aspell-fr-0.50-3'
     )
+    koopa_print_env
     for key in "${!lang[@]}"
     do
         local conf_args dict2
@@ -49,9 +50,10 @@ main() {
             "ASPELL=${app['aspell']}"
             "PREZIP=${app['prezip']}"
         )
+        koopa_dl 'configure args' "${conf_args[*]}"
         ./configure --help
         ./configure "${conf_args[@]}"
-        "${app['make']}" install
+        "${app['make']}" VERBOSE=1 install
     done
     "${app['aspell']}" dump dicts
     return 0

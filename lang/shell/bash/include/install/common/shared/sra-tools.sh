@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-09-12.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -21,7 +21,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/sratoolkit.rb
     # """
-    local app deps dict
+    local app deps dict shared_cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
     deps=()
@@ -56,6 +56,20 @@ main() {
     export JAVA_HOME="${dict['java_home']}"
     # Need to use HDF5 1.10 API.
     export CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
+    koopa_print_env
+    shared_cmake_args=(
+        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DPython3_EXECUTABLE=${app['python']}"
+        "-DHDF5_ROOT=${dict['hdf5']}"
+        "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
+        "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
+    )
     # Build NCBI VDB Software Development Kit (no install).
     (
         local cmake_args dict2
@@ -69,14 +83,9 @@ ${dict['version']}.tar.gz"
         koopa_mv \
             "${dict2['name']}-${dict['version']}" \
             "${dict2['name']}-source"
-        cmake_args=(
-            "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-            "-DPython3_EXECUTABLE=${app['python']}"
-            "-DHDF5_ROOT=${dict['hdf5']}"
-            "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
-            "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
-        )
-        "${app['cmake']}" \
+        cmake_args=("${shared_cmake_args[@]}")
+        koopa_dl 'CMake args' "${cmake_args[*]}"
+        "${app['cmake']}" -LH \
             -S "${dict2['name']}-source" \
             -B "${dict2['name']}-build" \
             "${cmake_args[@]}"
@@ -111,16 +120,13 @@ ${dict['version']}.tar.gz"
             --replacement='/ngs/ngs-java/' \
             "${dict2['name']}-source/ngs/ngs-java/CMakeLists.txt"
         cmake_args=(
-            "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-            "-DPython3_EXECUTABLE=${app['python']}"
-            "-DHDF5_ROOT=${dict['hdf5']}"
-            "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
-            "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
+            "${shared_cmake_args[@]}"
             "-DVDB_BINDIR=${dict['ncbi_vdb_build']}"
             "-DVDB_INCDIR=${dict['ncbi_vdb_source']}/interfaces"
             "-DVDB_LIBDIR=${dict['ncbi_vdb_build']}/lib"
         )
-        "${app['cmake']}" \
+        koopa_dl 'CMake args' "${cmake_args[*]}"
+        "${app['cmake']}" -LH \
             -S "${dict2['name']}-source" \
             -B "${dict2['name']}-build" \
             "${cmake_args[@]}"

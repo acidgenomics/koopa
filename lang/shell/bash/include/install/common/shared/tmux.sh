@@ -34,9 +34,11 @@ download/${dict['version']}/${dict['file']}"
         "--prefix=${dict['prefix']}"
         '--enable-utf8proc'
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     # This can kill system tmux server, so keep disabled.
     # > app['tmux']="${dict['prefix']}/bin/tmux"
