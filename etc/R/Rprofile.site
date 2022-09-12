@@ -65,7 +65,7 @@ local({  # nolint
     if (isTRUE(flag[["linux"]])) {
         flag[["cranBinary"]] <- identical(
             x = R.home(),
-            y = file.path("", "usr", "lib" "R")
+            y = file.path("", "usr", "lib", "R")
         )
     } else if (isTRUE(flag[["macos"]])) {
         flag[["cranBinary"]] <- identical(
