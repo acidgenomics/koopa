@@ -18362,6 +18362,7 @@ koopa_r_configure_ldpaths() {
 
 koopa_r_configure_makeconf() {
     local app dict libs
+    koopa_is_macos || return 0
     declare -A app
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
