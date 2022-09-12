@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Bash.
-    # @note Updated 2022-08-31.
+    # @note Updated 2022-09-12.
     #
     # @section Applying patches:
     #
@@ -106,14 +106,12 @@ ${dict['name']}${dict['mmv_tr']}-[${dict['patch_range']}]"
         )
         conf_args+=("CFLAGS=${cflags[*]}")
     fi
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # > "${app['make']}" test
     "${app['make']}" install
-    if koopa_is_shared_install
-    then
-        koopa_enable_shell_for_all_users "${dict['bin_prefix']}/${dict['name']}"
-    fi
     return 0
 }

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-09-12.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -56,6 +56,7 @@ main() {
     export JAVA_HOME="${dict['java_home']}"
     # Need to use HDF5 1.10 API.
     export CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
+    koopa_print_env
     # Build NCBI VDB Software Development Kit (no install).
     (
         local cmake_args dict2
@@ -76,7 +77,8 @@ ${dict['version']}.tar.gz"
             "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
             "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
         )
-        "${app['cmake']}" \
+        koopa_dl 'CMake args' "${cmake_args[*]}"
+        "${app['cmake']}" -LH \
             -S "${dict2['name']}-source" \
             -B "${dict2['name']}-build" \
             "${cmake_args[@]}"
@@ -120,7 +122,8 @@ ${dict['version']}.tar.gz"
             "-DVDB_INCDIR=${dict['ncbi_vdb_source']}/interfaces"
             "-DVDB_LIBDIR=${dict['ncbi_vdb_build']}/lib"
         )
-        "${app['cmake']}" \
+        koopa_dl 'CMake args' "${cmake_args[*]}"
+        "${app['cmake']}" -LH \
             -S "${dict2['name']}-source" \
             -B "${dict2['name']}-build" \
             "${cmake_args[@]}"

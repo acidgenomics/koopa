@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libjpeg-turbo.
-    # @note Updated 2022-08-16.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://libjpeg-turbo.org/
@@ -39,8 +39,10 @@ ${dict['version']}/${dict['name']}-${dict['version']}.tar.gz"
         '-DCMAKE_BUILD_TYPE=Release'
         '-DWITH_JPEG8=1'
     )
-    "${app['cmake']}" '.' "${cmake_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH -S '.' "${cmake_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # > "${app['make']}" test
     "${app['make']}" install
     return 0

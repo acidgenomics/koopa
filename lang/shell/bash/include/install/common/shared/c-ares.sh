@@ -3,7 +3,7 @@
 main() {
     # """
     # Install c-ares.
-    # @note Updated 2022-08-19.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://c-ares.org/
@@ -30,7 +30,12 @@ main() {
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
     )
-    "${app['cmake']}" -S . -B 'build' "${cmake_args[@]}"
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH \
+        -S . \
+        -B 'build' \
+        "${cmake_args[@]}"
     "${app['cmake']}" --build 'build'
     "${app['cmake']}" --install 'build'
     return 0
