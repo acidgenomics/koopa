@@ -410,6 +410,7 @@ koopa_activate_delta() {
         target_link_bn="$(readlink "$target_file")"
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
+    echo 'FIXME THIS IS TOO VERBOSE'.
     ln -fns "$source_file" "$target_file"
     return 0
 }
