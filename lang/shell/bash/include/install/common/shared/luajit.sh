@@ -61,9 +61,18 @@ main() {
                 "libluajit-${dict['llj_min_maj_ver']}.${dict['shared_ext']}" \
                 "libluajit.${dict['shared_ext']}"
         else
+            dict['majver']="$( \
+                "${app['pkg_config']}" --variable='majver' "${dict['pc_file']}" \
+            )"
+            dict['minver']="$( \
+                "${app['pkg_config']}" --variable='minver' "${dict['pc_file']}" \
+            )"
+            dict['relver']="$( \
+                "${app['pkg_config']}" --variable='relver' "${dict['pc_file']}" \
+            )"
             # e.g. 'libluajit-5.1.so.2.1.0' to 'libluajit-5.1.so'.
             koopa_ln \
-                "libluajit-${dict['llj_min_maj_ver']}.${dict['shared_ext']}.${dict['version']}" \
+                "libluajit-${dict['llj_min_maj_ver']}.${dict['shared_ext']}.${dict['majver']}.${dict['minver']}.${dict['relver']}" \
                 "libluajit-${dict['llj_min_maj_ver']}.${dict['shared_ext']}"
             # e.g. 'libluajit-5.1.so' to 'libluajit.so'.
             koopa_ln \
