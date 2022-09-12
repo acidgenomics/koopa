@@ -3,7 +3,7 @@
 koopa_activate_today_bucket() {
     # """
     # Create a dated file today bucket.
-    # @note Updated 2022-04-10.
+    # @note Updated 2022-09-12.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -33,6 +33,8 @@ koopa_activate_today_bucket() {
     then
         return 0
     fi
+    koopa_is_alias 'ln' && unalias 'ln'
+    koopa_is_alias 'mkdir' && unalias 'mkdir'
     mkdir -p "${bucket_dir}/${today_bucket}"
     ln -fns "${bucket_dir}/${today_bucket}" "$today_link"
     return 0
