@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME We may not want to include gettext for Ubuntu system R...
-# We can run into compiler issues with GCC.
-
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
@@ -111,13 +108,8 @@ koopa_r_configure_makevars() {
             ldflags+=('-L/usr/local/lib')
             ;;
     esac
-    # gettext is needed to resolve clang '-lintl' warning. Can we avoid this
-    # issue by setting 'LIBINTL' instead?
-    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
-    then
-        cppflags+=("-I${dict['gettext']}/include")
-        ldflags+=("-L${dict['gettext']}/lib")
-    fi
+    cppflags+=("-I${dict['gettext']}/include")
+    ldflags+=("-L${dict['gettext']}/lib")
     # NOTE Custom LDFLAGS here appear to be incompatible with these packages:
     # fs, httpuv, igraph, nloptr. May need to add support for bzip2, at least
     # on Linux.
