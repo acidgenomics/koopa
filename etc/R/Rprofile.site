@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-09-01.
+#' @note Updated 2022-09-12.
 #'
 #' @section Restarting R:
 #'
@@ -217,14 +217,8 @@ local({  # nolint
     )
     options("install.packages.compile.from.source" = "always")
     ## Configure the Ubuntu RSPM binary CRAN snapshot.
-
-
-    # FIXME This isn't picking up R CRAN binary for Ubuntu correctly.
-    print(dict)
-
-
     if (
-        isTRUE(dict[["cranBinary"]]) &&
+        isTRUE(flag[["cranBinary"]]) &&
         isTRUE(grepl(pattern = "Ubuntu", x = dict[["osVersion"]], fixed = TRUE))
     ) {
         x <- strsplit(
