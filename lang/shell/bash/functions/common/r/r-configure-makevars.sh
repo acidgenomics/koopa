@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME We may not want to include gettext for Ubuntu system R...
+# We can run into compiler issues with GCC.
+
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-12.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -38,22 +41,9 @@ koopa_r_configure_makevars() {
         ['strip']='/usr/bin/strip'
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
-    # The system clang compiler stack is preferred on macOS. If you attempt to
-    # build with GCC, you'll run into a lot of compilation issues with
-    # Posit/RStudio packages, which are only optimized for clang currently.
-    if koopa_is_macos
-    then
-        app['cc']='/usr/bin/clang'
-        app['cxx']='/usr/bin/clang++'
-    else
-        app['cc']="$(koopa_locate_gcc --realpath)"
-        app['cxx']="$(koopa_locate_gcxx --realpath)"
-    fi
     [[ -x "${app['ar']}" ]] || return 1
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['cc']}" ]] || return 1
-    [[ -x "${app['cxx']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['gfortran']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
@@ -85,6 +75,29 @@ koopa_r_configure_makevars() {
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if koopa_is_macos
+    then
+        # The system clang compiler stack is preferred on macOS. If you attempt
+        # to build with GCC, you'll run into a lot of compilation issues with
+        # Posit/RStudio packages, which are only optimized for clang currently.
+        app['cc']='/usr/bin/clang'
+        app['cxx']='/usr/bin/clang++'
+    else
+        # Some Bioconductor packages (e.g. DiffBind) currently fail to compile
+        # unless we use the system GCC stack.
+        case "${dict['system']}" in
+            '0')
+                app['cc']="$(koopa_locate_gcc --realpath)"
+                app['cxx']="$(koopa_locate_gcxx --realpath)"
+                ;;
+            '1')
+                app['cc']='/usr/bin/gcc'
+                app['cxx']='/usr/bin/g++'
+                ;;
+        esac
+    fi
+    [[ -x "${app['cc']}" ]] || return 1
+    [[ -x "${app['cxx']}" ]] || return 1
     koopa_alert "Configuring '${dict['file']}'."
     koopa_add_to_pkg_config_path \
         "${dict['lapack']}/lib/pkgconfig" \
@@ -100,8 +113,11 @@ koopa_r_configure_makevars() {
     esac
     # gettext is needed to resolve clang '-lintl' warning. Can we avoid this
     # issue by setting 'LIBINTL' instead?
-    cppflags+=("-I${dict['gettext']}/include")
-    ldflags+=("-L${dict['gettext']}/lib")
+    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+    then
+        cppflags+=("-I${dict['gettext']}/include")
+        ldflags+=("-L${dict['gettext']}/lib")
+    fi
     # NOTE Custom LDFLAGS here appear to be incompatible with these packages:
     # fs, httpuv, igraph, nloptr. May need to add support for bzip2, at least
     # on Linux.

@@ -3,7 +3,7 @@
 koopa_activate_delta() {
     # """
     # Activate delta (git-delta) diff tool.
-    # @note Updated 2022-05-12.
+    # @note Updated 2022-09-12.
     #
     # This function dynamically updates dark/light color mode.
     # """
@@ -21,6 +21,7 @@ koopa_activate_delta() {
         target_link_bn="$(readlink "$target_file")"
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
+    koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$source_file" "$target_file"
     return 0
 }

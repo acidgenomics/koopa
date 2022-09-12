@@ -3,7 +3,7 @@
 koopa_ln() {
     # """
     # Hardened version of coreutils ln (symbolic link generator).
-    # @note Updated 2022-09-02.
+    # @note Updated 2022-09-12.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     # """
@@ -15,6 +15,7 @@ koopa_ln() {
     )
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
+        ['quiet']=0
         ['sudo']=0
         ['target_dir']=''
     )
@@ -33,6 +34,10 @@ koopa_ln() {
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--quiet')
+                dict['quiet']=1
+                shift 1
+                ;;
             '--sudo' | \
             '-S')
                 dict['sudo']=1
@@ -62,7 +67,8 @@ koopa_ln() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    ln_args=('-fnsv')
+    ln_args=('-fns')
+    [[ "${dict['quiet']}" -eq 0 ]] && ln_args+=('-v')
     ln_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then

@@ -3,7 +3,7 @@
 koopa_activate_kitty() {
     # """
     # Activate Kitty terminal client.
-    # @note Updated 2022-05-06.
+    # @note Updated 2022-09-12.
     #
     # This function dynamically updates dark/light color mode.
     #
@@ -24,6 +24,7 @@ koopa_activate_kitty() {
         target_link_bn="$(readlink "$target_file")"
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
+    koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$source_file" "$target_file"
     return 0
 }

@@ -9,7 +9,6 @@
   },
   "anaconda": {
     "conservative": false,
-    "large": true,
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2022.05"
   },
@@ -1246,7 +1245,6 @@
     "conservative": false,
     "date": "2022-09-07",
     "dependencies": ["python"],
-    "large": true,
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
@@ -1978,10 +1976,8 @@
     "version": "3.10.6"
   },
   "r": {
-    "bin": ["R", "Rscript"],
     "conservative": false,
     "deps": ["conda", "coreutils", "gawk", "sed", "udunits"],
-    "man1": ["R.1", "Rscript.1"],
     "url": [
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
@@ -2127,7 +2123,6 @@
     "conservative": false,
     "date": "2022-06-23",
     "depends": ["conda"],
-    "large": true,
     "version": "1.9.0"
   },
   "sambamba": {
