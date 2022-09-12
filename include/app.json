@@ -690,7 +690,12 @@
     "version": "0.187"
   },
   "emacs": {
-    "bin": ["emacs"],
+    "bin": [
+      "ebrowse",
+      "emacs",
+      "emacsclient",
+      "etags"
+    ],
     "conservative": false,
     "date": "2022-09-12",
     "man1": [
