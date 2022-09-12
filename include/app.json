@@ -1978,10 +1978,8 @@
     "version": "3.10.6"
   },
   "r": {
-    "bin": ["R", "Rscript"],
     "conservative": false,
     "deps": ["conda", "coreutils", "gawk", "sed", "udunits"],
-    "man1": ["R.1", "Rscript.1"],
     "url": [
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
