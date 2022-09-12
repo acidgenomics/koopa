@@ -32,9 +32,11 @@ ${dict['version']}/${dict['file']}"
         '--disable-debug'
         '--with-jemalloc-prefix='
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # > "${app['make']}" check
     "${app['make']}" install
     return 0

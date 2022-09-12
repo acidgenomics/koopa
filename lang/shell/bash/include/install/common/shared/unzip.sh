@@ -75,6 +75,7 @@ ${dict['file']}"
     else
         make_args+=('generic')
     fi
+    koopa_print_env
     "${app['make']}" -f 'unix/Makefile' "${make_args[@]}"
     "${app['make']}" -f 'unix/Makefile' check
     "${app['make']}" -f 'unix/Makefile' \

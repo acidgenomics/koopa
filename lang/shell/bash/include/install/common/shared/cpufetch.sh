@@ -23,6 +23,7 @@ tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    koopa_print_env
     # Installer doesn't currently support 'configure' script.
     PREFIX="${dict['prefix']}" "${app['make']}" --jobs="${dict['jobs']}"
     # The 'make install' step is currently problematic on macOS.
