@@ -3,7 +3,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-09-08.
+    # @note Updated 2022-09-12.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"

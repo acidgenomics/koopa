@@ -694,7 +694,6 @@
     "conservative": false,
     "date": "2022-09-12",
     "man1": [
-      "ctags.1.gz",
       "ebrowse.1.gz",
       "emacs.1.gz",
       "emacsclient.1.gz",
