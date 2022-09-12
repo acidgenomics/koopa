@@ -15,6 +15,8 @@ export PATH
 JOBS=8
 TMPDIR="${TMPDIR:-/tmp}"
 
+# FIXME Consider adding curl here.
+
 install_bash() {
     local file name tmp_dir url version
     name='bash'
