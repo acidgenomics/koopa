@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Consider splitting these out to 3 apps:
+# - koopa_install_shared_app
+# - koopa_install_system_app
+# - koopa_install_user_app
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
@@ -31,6 +36,7 @@ koopa_install_app() {
         # nested install calls (e.g. Emacs installer handoff to GNU app).
         ['quiet']=0
         ['reinstall']=0
+        ['subshell']=1
         ['update_ldconfig']=0
         ['verbose']=0
     )
@@ -132,6 +138,10 @@ koopa_install_app() {
                 ;;
             '--no-prefix-check')
                 bool['prefix_check']=0
+                shift 1
+                ;;
+            '--no-subshell')
+                bool['subshell']=0
                 shift 1
                 ;;
             '--quiet')
@@ -255,88 +265,89 @@ ${dict['version2']}"
             koopa_alert_install_start "${dict['name']}"
         fi
     fi
-    case "${bool['binary']}" in
-        '0')
-            local app env_vars path_arr
-            declare -A app
-            app['bash']="$(koopa_locate_bash --allow-system)"
-            app['env']="$(koopa_locate_env --allow-system)"
-            app['tee']="$(koopa_locate_tee --allow-system)"
-            [[ -x "${app['bash']}" ]] || return 1
-            [[ -x "${app['env']}" ]] || return 1
-            [[ -x "${app['tee']}" ]] || return 1
-            # Configure 'PATH' string.
-            path_arr=(
-                # > "${dict['koopa_prefix']}/bin"
-                # > "${dict['koopa_prefix']}/bootstrap/bin"
-                '/usr/bin'
-                '/bin'
-            )
-            # Configure 'PKG_CONFIG_PATH' string.
-            PKG_CONFIG_PATH=''
-            if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
-            then
-                koopa_activate_pkg_config '/usr/bin/pkg-config'
-            fi
-            # Refer to 'locale' for desired LC settings.
-            env_vars=(
-                "HOME=${HOME:?}"
-                'KOOPA_ACTIVATE=0'
-                "LANG=${LANG:-}"
-                "LC_ALL=${LC_ALL:-}"
-                "LC_COLLATE=${LC_COLLATE:-}"
-                "LC_CTYPE=${LC_CTYPE:-}"
-                "LC_MESSAGES=${LC_MESSAGES:-}"
-                "LC_MONETARY=${LC_MONETARY:-}"
-                "LC_NUMERIC=${LC_NUMERIC:-}"
-                "LC_TIME=${LC_TIME:-}"
-                "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
-                "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
-                "TMPDIR=${TMPDIR:-/tmp}"
-            )
-            if [[ -d "${dict['prefix']}" ]] && \
-                [[ "${dict['mode']}" != 'system' ]]
-            then
-                bool['copy_log_files']=1
-            fi
-            "${app['env']}" -i \
-                "${env_vars[@]}" \
-                "${app['bash']}" \
-                    --noprofile \
-                    --norc \
-                    -o errexit \
-                    -o errtrace \
-                    -o nounset \
-                    -o pipefail \
-                    -c "source '${dict['koopa_prefix']}/lang/shell/bash/include/header.sh'; \
-                        koopa_install_app_subshell \
-                            --installer=${dict['installer']} \
-                            --mode=${dict['mode']} \
-                            --name=${dict['name']} \
-                            --platform=${dict['platform']} \
-                            --prefix=${dict['prefix']} \
-                            --version=${dict['version']} \
-                            ${*}" \
-                > >("${app['tee']}" "${dict['stdout_file']}") \
-                2> >("${app['tee']}" "${dict['stderr_file']}" >&2)
-            if [[ "${bool['copy_log_files']}" -eq 1 ]]
-            then
-                koopa_cp \
-                    "${dict['stdout_file']}" \
-                    "${dict['prefix']}/.koopa-install-stdout.log"
-                koopa_cp \
-                    "${dict['stderr_file']}" \
-                    "${dict['prefix']}/.koopa-install-stderr.log"
-            fi
-            ;;
-        '1')
-            [[ "${dict['mode']}" == 'shared' ]] || return 1
-            [[ -n "${dict['prefix']}" ]] || return 1
-            koopa_install_app_from_binary_package "${dict['prefix']}"
-            ;;
-    esac
+    # FIXME Split these out into 3 separate runner functions...too complicated.
     case "${dict['mode']}" in
         'shared')
+            case "${bool['binary']}" in
+                '0')
+                    local app env_vars path_arr
+                    declare -A app
+                    app['bash']="$(koopa_locate_bash --allow-system)"
+                    app['env']="$(koopa_locate_env --allow-system)"
+                    app['tee']="$(koopa_locate_tee --allow-system)"
+                    [[ -x "${app['bash']}" ]] || return 1
+                    [[ -x "${app['env']}" ]] || return 1
+                    [[ -x "${app['tee']}" ]] || return 1
+                    # Configure 'PATH' string.
+                    path_arr=(
+                        # > "${dict['koopa_prefix']}/bin"
+                        # > "${dict['koopa_prefix']}/bootstrap/bin"
+                        '/usr/bin'
+                        '/bin'
+                    )
+                    # Configure 'PKG_CONFIG_PATH' string.
+                    PKG_CONFIG_PATH=''
+                    if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
+                    then
+                        koopa_activate_pkg_config '/usr/bin/pkg-config'
+                    fi
+                    # Refer to 'locale' for desired LC settings.
+                    env_vars=(
+                        "HOME=${HOME:?}"
+                        'KOOPA_ACTIVATE=0'
+                        "LANG=${LANG:-}"
+                        "LC_ALL=${LC_ALL:-}"
+                        "LC_COLLATE=${LC_COLLATE:-}"
+                        "LC_CTYPE=${LC_CTYPE:-}"
+                        "LC_MESSAGES=${LC_MESSAGES:-}"
+                        "LC_MONETARY=${LC_MONETARY:-}"
+                        "LC_NUMERIC=${LC_NUMERIC:-}"
+                        "LC_TIME=${LC_TIME:-}"
+                        "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+                        "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
+                        "TMPDIR=${TMPDIR:-/tmp}"
+                    )
+                    if [[ -d "${dict['prefix']}" ]] && \
+                        [[ "${dict['mode']}" != 'system' ]]
+                    then
+                        bool['copy_log_files']=1
+                    fi
+                    "${app['env']}" -i \
+                        "${env_vars[@]}" \
+                        "${app['bash']}" \
+                            --noprofile \
+                            --norc \
+                            -o errexit \
+                            -o errtrace \
+                            -o nounset \
+                            -o pipefail \
+                            -c "source '${dict['koopa_prefix']}/lang/shell/bash/include/header.sh'; \
+                                koopa_install_app_subshell \
+                                    --installer=${dict['installer']} \
+                                    --mode=${dict['mode']} \
+                                    --name=${dict['name']} \
+                                    --platform=${dict['platform']} \
+                                    --prefix=${dict['prefix']} \
+                                    --version=${dict['version']} \
+                                    ${*}" \
+                        > >("${app['tee']}" "${dict['stdout_file']}") \
+                        2> >("${app['tee']}" "${dict['stderr_file']}" >&2)
+                    if [[ "${bool['copy_log_files']}" -eq 1 ]]
+                    then
+                        koopa_cp \
+                            "${dict['stdout_file']}" \
+                            "${dict['prefix']}/.koopa-install-stdout.log"
+                        koopa_cp \
+                            "${dict['stderr_file']}" \
+                            "${dict['prefix']}/.koopa-install-stderr.log"
+                    fi
+                    ;;
+                '1')
+                    [[ "${dict['mode']}" == 'shared' ]] || return 1
+                    [[ -n "${dict['prefix']}" ]] || return 1
+                    koopa_install_app_from_binary_package "${dict['prefix']}"
+                    ;;
+            esac
             [[ "${bool['auto_prefix']}" -eq 1 ]] && \
                 koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
             koopa_sys_set_permissions --recursive "${dict['prefix']}"
@@ -401,10 +412,34 @@ man1/${dict2['name']}"
                 koopa_push_app_build "${dict['name']}"
             ;;
         'system')
+            dict['tmp_dir']="$(koopa_tmp_dir)"
+            (
+                koopa_cd "${dict['tmp_dir']}"
+                koopa_install_app_subshell \
+                    --installer="${dict['installer']}" \
+                    --mode="${dict['mode']}" \
+                    --name="${dict['name']}" \
+                    --platform="${dict['platform']}" \
+                    --prefix="${dict['prefix']}" \
+                    --version="${dict['version']}" \
+                    "$@"
+            )
             [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
                 koopa_linux_update_ldconfig
             ;;
         'user')
+            dict['tmp_dir']="$(koopa_tmp_dir)"
+            (
+                koopa_cd "${dict['tmp_dir']}"
+                koopa_install_app_subshell \
+                    --installer="${dict['installer']}" \
+                    --mode="${dict['mode']}" \
+                    --name="${dict['name']}" \
+                    --platform="${dict['platform']}" \
+                    --prefix="${dict['prefix']}" \
+                    --version="${dict['version']}" \
+                    "$@"
+            )
             [[ -d "${dict['prefix']}" ]] && \
                 koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
             ;;
