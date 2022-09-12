@@ -18277,7 +18277,6 @@ koopa_r_configure_ldpaths() {
         'fribidi'
         'gdal'
         'geos'
-        'gettext'
         'graphviz'
         'harfbuzz'
         'icu4c'
@@ -18299,6 +18298,10 @@ koopa_r_configure_ldpaths() {
         'zlib'
         'zstd'
     )
+    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+    then
+        keys+=('gettext')
+    fi
     for key in "${keys[@]}"
     do
         local prefix
@@ -18476,8 +18479,11 @@ koopa_r_configure_makevars() {
             ldflags+=('-L/usr/local/lib')
             ;;
     esac
-    cppflags+=("-I${dict['gettext']}/include")
-    ldflags+=("-L${dict['gettext']}/lib")
+    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+    then
+        cppflags+=("-I${dict['gettext']}/include")
+        ldflags+=("-L${dict['gettext']}/lib")
+    fi
     koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
