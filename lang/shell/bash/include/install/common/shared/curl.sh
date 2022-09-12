@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cURL.
-    # @note Updated 2022-08-16.
+    # @note Updated 2022-09-12.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -56,9 +56,11 @@ download/${dict['name']}-${dict['version2']}/${dict['file']}"
         "--with-zstd=${dict['zstd']}"
         '--without-ca-path'
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # > "${app['make']}" test
     "${app['make']}" install
     return 0

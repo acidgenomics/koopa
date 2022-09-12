@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Fish shell.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
@@ -42,7 +42,9 @@ releases/download/${dict['version']}/${dict['file']}"
         "-DCURSES_LIBRARY=${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
     )
-    "${app['cmake']}" \
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH \
         -S '.' \
         -B 'build' \
         "${cmake_args[@]}"
@@ -50,9 +52,5 @@ libncursesw.${dict['shared_ext']}"
         --build 'build' \
         --parallel "${dict['jobs']}"
     "${app['cmake']}" --install 'build'
-    if koopa_is_shared_install
-    then
-        koopa_enable_shell_for_all_users "${dict['bin_prefix']}/${dict['name']}"
-    fi
     return 0
 }
