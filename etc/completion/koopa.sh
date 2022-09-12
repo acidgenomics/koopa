@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-09-08.
+    # Updated 2022-09-09.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -213,18 +213,22 @@ __koopa_complete() {
                         'libiconv'
                         'libjpeg-turbo'
                         'libksba'
+                        'libluv'
                         'libpipeline'
                         'libpng'
                         'libssh2'
                         'libtasn1'
+                        'libtermkey'
                         'libtiff'
                         'libtool'
                         'libunistring'
                         'libuv'
+                        'libvterm'
                         'libxml2'
                         'libzip'
                         'llvm'
                         'lua'
+                        'luajit'
                         'luarocks'
                         'lz4'
                         'lzo'
@@ -237,6 +241,7 @@ __koopa_complete() {
                         'meson'
                         'mpc'
                         'mpfr'
+                        'msgpack'
                         'multiqc'
                         'ncurses'
                         'neofetch'
@@ -251,6 +256,7 @@ __koopa_complete() {
                         'npth'
                         'nushell'
                         'oniguruma'
+                        'openbb'
                         'openblas'
                         'openjdk'
                         'openssh'
@@ -322,8 +328,10 @@ __koopa_complete() {
                         'tmux'
                         'tokei'
                         'tree'
+                        'tree-sitter'
                         'tuc'
                         'udunits'
+                        'unibilium'
                         'units'
                         'unzip'
                         'user'

@@ -3,7 +3,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-09-08.
+    # @note Updated 2022-09-12.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
@@ -15,8 +15,8 @@ koopa_install_app() {
         # Download pre-built binary from our S3 bucket. Inspired by the
         # Homebrew bottle approach.
         ['binary']=0
-        # Should we copy the log file into the install prefix?
-        ['copy_log_file']=0
+        # Should we copy the log files into the install prefix?
+        ['copy_log_files']=0
         # Will any individual programs be linked into koopa 'bin/'?
         ['link_in_bin']=''
         # Link corresponding man1 documentation files for app in bin.
@@ -38,7 +38,8 @@ koopa_install_app() {
         ['app_prefix']="$(koopa_app_prefix)"
         ['installer']=''
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['log_file']="$(koopa_tmp_log_file)"
+        ['stderr_file']="$(koopa_tmp_log_file)"
+        ['stdout_file']="$(koopa_tmp_log_file)"
         ['mode']='shared'
         ['name']=''
         ['platform']='common'
@@ -296,7 +297,7 @@ ${dict['version2']}"
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
             then
-                bool['copy_log_file']=1
+                bool['copy_log_files']=1
             fi
             "${app['env']}" -i \
                 "${env_vars[@]}" \
@@ -316,12 +317,16 @@ ${dict['version2']}"
                             --prefix=${dict['prefix']} \
                             --version=${dict['version']} \
                             ${*}" \
-                2>&1 | "${app['tee']}" "${dict['log_file']}"
-            if [[ "${bool['copy_log_file']}" -eq 1 ]]
+                > >("${app['tee']}" "${dict['stdout_file']}") \
+                2> >("${app['tee']}" "${dict['stderr_file']}" >&2)
+            if [[ "${bool['copy_log_files']}" -eq 1 ]]
             then
                 koopa_cp \
-                    "${dict['log_file']}" \
-                    "${dict['prefix']}/.koopa-install.log"
+                    "${dict['stdout_file']}" \
+                    "${dict['prefix']}/.koopa-install-stdout.log"
+                koopa_cp \
+                    "${dict['stderr_file']}" \
+                    "${dict['prefix']}/.koopa-install-stderr.log"
             fi
             ;;
         '1')

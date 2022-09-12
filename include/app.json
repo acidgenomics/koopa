@@ -690,18 +690,22 @@
     "version": "0.187"
   },
   "emacs": {
-    "bin": ["emacs"],
+    "bin": [
+      "ebrowse",
+      "emacs",
+      "emacsclient",
+      "etags"
+    ],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-12",
     "man1": [
-      "ctags.1.gz",
       "ebrowse.1.gz",
       "emacs.1.gz",
       "emacsclient.1.gz",
       "etags.1.gz"
     ],
     "url": ["https://www.gnu.org/software/emacs/"],
-    "version": "28.1"
+    "version": "28.2"
   },
   "ensembl-perl-api": {
     "conservative": false,
@@ -1356,6 +1360,17 @@
     "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
     "version": "2.45"
   },
+  "libluv": {
+    "aliases": {
+      "homebrew": "luv"
+    },
+    "build_dependencies": ["cmake", "lua", "luajit"],
+    "conservative": true,
+    "date": "2022-09-09",
+    "dependencies": ["libuv"],
+    "url": ["https://github.com/luvit/luv"],
+    "version": "1.44.2-1"
+  },
   "libpipeline": {
     "conservative": true,
     "date": "2022-08-30",
@@ -1380,6 +1395,12 @@
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/libtasn1/"],
     "version": "4.19.0"
+  },
+  "libtermkey": {
+    "conservative": true,
+    "date": "2022-09-09",
+    "url": ["https://www.leonerd.org.uk/code/libtermkey/"],
+    "version": "0.22"
   },
   "libtiff": {
     "conservative": true,
@@ -1410,6 +1431,14 @@
     "url": ["https://github.com/libuv/libuv/"],
     "version": "1.44.2"
   },
+  "libvterm": {
+    "conservative": true,
+    "date": "2022-09-09",
+    "notes": ["0.2.0 is incompatible with neovim."],
+    "outdated": true,
+    "url": ["https://www.leonerd.org.uk/code/libvterm/"],
+    "version": "0.1.4"
+  },
   "libxml2": {
     "bin": ["xml2-config"],
     "conservative": true,
@@ -1439,12 +1468,21 @@
     "version": "8.7"
   },
   "lua": {
+    "bin": ["lua", "luac"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
     "version": "5.4.4"
   },
+  "luajit": {
+    "bin": ["luajit"],
+    "conservative": true,
+    "date": "2022-09-09",
+    "url": ["https://luajit.org/"],
+    "version": "2.1.0-beta3"
+  },
   "luarocks": {
+    "bin": ["luarocks"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/luarocks/luarocks/"],
@@ -1521,6 +1559,13 @@
     "url": ["https://www.mpfr.org/"],
     "version": "4.1.0"
   },
+  "msgpack": {
+    "conservative": true,
+    "date": "2022-09-09",
+    "dependencies": [],
+    "url": ["https://msgpack.org/"],
+    "version": "4.0.0"
+  },
   "multiqc": {
     "bin": ["multiqc"],
     "conservative": false,
@@ -1535,6 +1580,8 @@
       "clear",
       "infocmp",
       "infotocap",
+      "ncurses6-config",
+      "ncursesw6-config",
       "reset",
       "tabs",
       "tic",
@@ -1549,6 +1596,7 @@
       "clear.1",
       "infocmp.1m",
       "infotocap.1m",
+      "ncursesw6-config.1",
       "reset.1",
       "tabs.1",
       "tic.1m",
@@ -1571,6 +1619,7 @@
     "bin": ["nvim"],
     "conservative": false,
     "date": "2022-08-30",
+    "dependencies": ["libluv", "libuv", "msgpack", "tree-sitter"],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
     "version": "0.7.2"
@@ -1640,6 +1689,14 @@
     "date": "2022-08-30",
     "url": ["https://github.com/kkos/oniguruma/"],
     "version": "6.9.8"
+  },
+  "openbb": {
+    "bin": ["openbb"],
+    "conservative": false,
+    "date": "2022-09-09",
+    "dependencies": ["anaconda"],
+    "url": ["https://openbb.co/"],
+    "version": "1.8.0"
   },
   "openblas": {
     "conservative": true,
@@ -2278,6 +2335,12 @@
     "url": ["https://mama.indstate.edu/users/ice/tree/"],
     "version": "2.0.3"
   },
+  "tree-sitter": {
+    "conservative": true,
+    "date": "2022-09-09",
+    "dependencies": ["rust"],
+    "version": "0.20.7"
+  },
   "tuc": {
     "bin": ["tuc"],
     "conservative": false,
@@ -2290,6 +2353,12 @@
     "date": "2022-08-30",
     "url": ["https://www.unidata.ucar.edu/downloads/udunits/"],
     "version": "2.2.28"
+  },
+  "unibilium": {
+    "conservative": true,
+    "date": "2022-09-09",
+    "url": ["https://github.com/neovim/unibilium/"],
+    "version": "2.1.1"
   },
   "units": {
     "aliases": {
