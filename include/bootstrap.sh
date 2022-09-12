@@ -1,6 +1,8 @@
 #!/bin/sh
 set -euo pipefail
 
+# FIXME Consider adding: curl, git.
+
 # """
 # Bootstrap core dependencies.
 # @note Updated 2022-09-07.
@@ -14,8 +16,6 @@ export PATH
 
 JOBS=8
 TMPDIR="${TMPDIR:-/tmp}"
-
-# FIXME Consider adding curl here.
 
 install_bash() {
     local file name tmp_dir url version
