@@ -9,7 +9,6 @@
   },
   "anaconda": {
     "conservative": false,
-    "large": true,
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2022.05"
   },
