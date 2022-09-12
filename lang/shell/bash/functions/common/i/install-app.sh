@@ -412,34 +412,26 @@ man1/${dict2['name']}"
                 koopa_push_app_build "${dict['name']}"
             ;;
         'system')
-            dict['tmp_dir']="$(koopa_tmp_dir)"
-            (
-                koopa_cd "${dict['tmp_dir']}"
-                koopa_install_app_subshell \
-                    --installer="${dict['installer']}" \
-                    --mode="${dict['mode']}" \
-                    --name="${dict['name']}" \
-                    --platform="${dict['platform']}" \
-                    --prefix="${dict['prefix']}" \
-                    --version="${dict['version']}" \
-                    "$@"
-            )
+            koopa_install_app_subshell \
+                --installer="${dict['installer']}" \
+                --mode="${dict['mode']}" \
+                --name="${dict['name']}" \
+                --platform="${dict['platform']}" \
+                --prefix="${dict['prefix']}" \
+                --version="${dict['version']}" \
+                "$@"
             [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
                 koopa_linux_update_ldconfig
             ;;
         'user')
-            dict['tmp_dir']="$(koopa_tmp_dir)"
-            (
-                koopa_cd "${dict['tmp_dir']}"
-                koopa_install_app_subshell \
-                    --installer="${dict['installer']}" \
-                    --mode="${dict['mode']}" \
-                    --name="${dict['name']}" \
-                    --platform="${dict['platform']}" \
-                    --prefix="${dict['prefix']}" \
-                    --version="${dict['version']}" \
-                    "$@"
-            )
+            koopa_install_app_subshell \
+                --installer="${dict['installer']}" \
+                --mode="${dict['mode']}" \
+                --name="${dict['name']}" \
+                --platform="${dict['platform']}" \
+                --prefix="${dict['prefix']}" \
+                --version="${dict['version']}" \
+                "$@"
             [[ -d "${dict['prefix']}" ]] && \
                 koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
             ;;
