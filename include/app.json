@@ -1695,6 +1695,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
+    "check": false,
     "conservative": false,
     "date": "2022-09-09",
     "dependencies": ["anaconda"],
