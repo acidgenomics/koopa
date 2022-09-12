@@ -18390,19 +18390,9 @@ koopa_r_configure_makevars() {
         ['strip']='/usr/bin/strip'
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
-    if koopa_is_macos
-    then
-        app['cc']='/usr/bin/clang'
-        app['cxx']='/usr/bin/clang++'
-    else
-        app['cc']="$(koopa_locate_gcc --realpath)"
-        app['cxx']="$(koopa_locate_gcxx --realpath)"
-    fi
     [[ -x "${app['ar']}" ]] || return 1
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['cc']}" ]] || return 1
-    [[ -x "${app['cxx']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['gfortran']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
@@ -18427,6 +18417,24 @@ koopa_r_configure_makevars() {
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if koopa_is_macos
+    then
+        app['cc']='/usr/bin/clang'
+        app['cxx']='/usr/bin/clang++'
+    else
+        case "${dict['system']}" in
+            '0')
+                app['cc']="$(koopa_locate_gcc --realpath)"
+                app['cxx']="$(koopa_locate_gcxx --realpath)"
+                ;;
+            '1')
+                app['cc']='/usr/bin/gcc'
+                app['cxx']='/usr/bin/g++'
+                ;;
+        esac
+    fi
+    [[ -x "${app['cc']}" ]] || return 1
+    [[ -x "${app['cxx']}" ]] || return 1
     koopa_alert "Configuring '${dict['file']}'."
     koopa_add_to_pkg_config_path \
         "${dict['lapack']}/lib/pkgconfig" \
