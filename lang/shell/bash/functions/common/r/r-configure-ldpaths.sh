@@ -53,6 +53,7 @@ koopa_r_configure_ldpaths() {
         'fribidi'
         'gdal'
         'geos'
+        'gettext'
         'graphviz'
         'harfbuzz'
         'icu4c'
@@ -75,10 +76,6 @@ koopa_r_configure_ldpaths() {
         'zlib'
         'zstd'
     )
-    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
-    then
-        keys+=('gettext')
-    fi
     for key in "${keys[@]}"
     do
         local prefix
