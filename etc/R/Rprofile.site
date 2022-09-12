@@ -65,11 +65,7 @@ local({  # nolint
     if (isTRUE(flag[["linux"]])) {
         flag[["cranBinary"]] <- identical(
             x = R.home(),
-            y = file.path(
-                "",
-                "bin",
-                "R"
-            )
+            y = file.path("", "usr", "lib" "R")
         )
     } else if (isTRUE(flag[["macos"]])) {
         flag[["cranBinary"]] <- identical(
@@ -217,15 +213,6 @@ local({  # nolint
     )
     options("install.packages.compile.from.source" = "always")
     ## Configure the Ubuntu RSPM binary CRAN snapshot.
-
-
-    ## FIXME Still not working correctly.
-    print(flag)
-    print(dict)
-
-
-
-
     if (
         isTRUE(flag[["cranBinary"]]) &&
         isTRUE(grepl(pattern = "Ubuntu", x = dict[["osVersion"]], fixed = TRUE))
