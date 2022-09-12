@@ -18277,6 +18277,7 @@ koopa_r_configure_ldpaths() {
         'fribidi'
         'gdal'
         'geos'
+        'gettext'
         'graphviz'
         'harfbuzz'
         'icu4c'
