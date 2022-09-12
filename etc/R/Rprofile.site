@@ -217,6 +217,15 @@ local({  # nolint
     )
     options("install.packages.compile.from.source" = "always")
     ## Configure the Ubuntu RSPM binary CRAN snapshot.
+
+
+    ## FIXME Still not working correctly.
+    print(flag)
+    print(dict)
+
+
+
+
     if (
         isTRUE(flag[["cranBinary"]]) &&
         isTRUE(grepl(pattern = "Ubuntu", x = dict[["osVersion"]], fixed = TRUE))
