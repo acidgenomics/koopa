@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# FIXME Now seeing this in terminal:
+# koopa_alias_spacemacs:4: permission denied:
+
 koopa_alias_spacemacs() {
     # """
     # Spacemacs.
