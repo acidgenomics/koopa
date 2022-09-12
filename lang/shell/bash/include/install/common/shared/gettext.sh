@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for bison.
-
 main() {
     # Install gettext.
     # @note Updated 2022-09-12.
     #
     # Note that 'libintl.h' is included with glibc.
+    #
+    # Potentially useful configuration options:
+    # * '--with-included-glib'?
+    # * '--with-included-libxml'
+    # * '--with-libtermcap-prefix[=DIR]'
+    # * '--with-libtextstyle-prefix[=DIR]'
+    # * '--without-libintl-prefix'
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gettext.rb
@@ -14,8 +19,16 @@ main() {
     #     cc1-undefined-reference-to-libintl-textdomain
     # """
     local dict
-    koopa_activate_opt_prefix 'ncurses' 'libxml2'
+    koopa_activate_opt_prefix \
+        'bison' \
+        'libiconv' \
+        'libunistring' \
+        'ncurses' \
+        'libxml2'
     declare -A dict=(
+        ['bison']="$(koopa_app_prefix 'bison')"
+        ['libiconv']="$(koopa_app_prefix 'libiconv')"
+        ['libunistring']="$(koopa_app_prefix 'libunistring')"
         ['libxml2']="$(koopa_app_prefix 'libxml2')"
         ['ncurses']="$(koopa_app_prefix 'ncurses')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -31,16 +44,12 @@ main() {
         -D '--disable-silent-rules' \
         -D '--enable-nls' \
         -D '--with-emacs' \
-        -D "--with-libxml2-prefix=${dict['libxml2']}" \
-        -D "--with-ncurses-prefix=${dict['ncurses']}" \
         -D "--with-included-gettext" \
-        -D '--with-included-glib' \
-        -D '--with-included-libcroco' \
-        -D '--with-included-libunistring' \
-        -D '--with-included-libxml' \
-        -D '--without-cvs' \
-        -D '--without-git' \
-        -D '--without-xz' \
+        -D "--with-bison-prefix=${dict['bison']}" \
+        -D "--with-libiconv-prefix=${dict['libiconv']}" \
+        -D "--with-libncurses-prefix=${dict['ncurses']}" \
+        -D "--with-libunistring-prefix=${dict['libunistring']}" \
+        -D "--with-libxml2-prefix=${dict['libxml2']}" \
         "$@"
     koopa_assert_is_file \
         "${dict['prefix']}/include/libintl.h" \
