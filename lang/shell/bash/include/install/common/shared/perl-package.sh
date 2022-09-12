@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Perl package.
-    # @note Updated 2022-06-21.
+    # @note Updated 2022-09-12.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -93,6 +93,7 @@ ${dict['author']:0:1}/${dict['author']:0:2}/${dict['author']}/${dict['file']}"
                 || true
             ;;
     esac
+    koopa_print_env
     koopa_assert_is_file 'Makefile.PL'
     "${app['perl']}" 'Makefile.PL' INSTALL_BASE="${dict['prefix']}"
     "${app['make']}"

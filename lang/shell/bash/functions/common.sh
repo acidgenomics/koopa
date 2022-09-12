@@ -11480,6 +11480,7 @@ koopa_install_app_subshell() {
                 ;;
         esac
     done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -z "${dict['installer_bn']}" ]] && dict['installer_bn']="${dict['name']}"
     dict['installer_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
@@ -11492,15 +11493,6 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
         "${dict['installer_fun']}" "$@"
-        case "${dict['mode']}" in
-            'shared')
-                koopa_alert_info "Environment variables for \
-'$(koopa_basename "${dict['installer_file']}")'."
-                declare -x
-                ;;
-            *)
-                ;;
-        esac
         return 0
     )
     koopa_rm "${dict['tmp_dir']}"
@@ -17584,6 +17576,11 @@ koopa_print_default_bold() {
 
 koopa_print_default() {
     __koopa_print_ansi 'default' "$@"
+    return 0
+}
+
+koopa_print_env() {
+    export -p
     return 0
 }
 
