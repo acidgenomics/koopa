@@ -18383,14 +18383,19 @@ koopa_r_configure_makeconf() {
         "${dict['pcre2']}/lib/pkgconfig"
     libs=(
         "$("${app['pkg_config']}" --libs 'libpcre2-8')"
-        '-llzma'
         '-lbz2'
         '-lz'
-        '-licucore'
         '-ldl'
         '-lm'
         '-liconv'
     )
+    if koopa_is_macos
+    then
+        libs+=(
+            '-licucore'
+            '-llzma'
+        )
+    fi
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
     koopa_find_and_replace_in_file \
