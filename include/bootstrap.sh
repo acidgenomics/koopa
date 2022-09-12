@@ -32,7 +32,7 @@ PREFIX="${KOOPA_PREFIX:?}/bootstrap"
 PATH='/usr/bin:/bin'
 export PATH
 
-JOBS=1
+JOBS=2
 TMPDIR="${TMPDIR:-/tmp}"
 
 install_bash() {
