@@ -108,8 +108,11 @@ koopa_r_configure_makevars() {
             ldflags+=('-L/usr/local/lib')
             ;;
     esac
-    cppflags+=("-I${dict['gettext']}/include")
-    ldflags+=("-L${dict['gettext']}/lib")
+    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+    then
+        cppflags+=("-I${dict['gettext']}/include")
+        ldflags+=("-L${dict['gettext']}/lib")
+    fi
     # NOTE Custom LDFLAGS here appear to be incompatible with these packages:
     # fs, httpuv, igraph, nloptr. May need to add support for bzip2, at least
     # on Linux.
