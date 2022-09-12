@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Zsh.
-    # @note Updated 2022-07-28.
+    # @note Updated 2022-09-12.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -68,14 +68,12 @@ ${dict['name']}/${dict['name']}/${dict['version']}/${dict['file']}"
         CFLAGS="-Wno-implicit-function-declaration ${CFLAGS:-}"
         export CFLAGS
     fi
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     "${app['make']}" install.info
-    if koopa_is_shared_install
-    then
-        koopa_enable_shell_for_all_users "${dict['bin_prefix']}/${dict['name']}"
-    fi
     return 0
 }

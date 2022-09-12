@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for GTest here.
+
 main() {
     # """
     # Install msgpack.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # - @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/msgpack.rb
@@ -30,10 +32,17 @@ c-${dict['version']}/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH -S . -B 'build' "${cmake_args[@]}"
     "${app['cmake']}" --build 'build'
     "${app['cmake']}" --install 'build'

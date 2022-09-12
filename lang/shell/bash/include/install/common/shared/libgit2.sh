@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://libgit2.org/docs/guides/build-and-link/
@@ -65,7 +65,9 @@ archive/${dict['file']}"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
     # > koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
-    "${app['cmake']}" \
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH \
         -S '.' \
         -B 'build' \
         "${cmake_args[@]}"

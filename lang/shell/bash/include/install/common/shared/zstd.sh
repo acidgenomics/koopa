@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zstd.
-    # @note Updated 2022-04-28.
+    # @note Updated 2022-09-12.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
@@ -17,6 +17,7 @@ main() {
     )
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
+        ['jobs']="$(koopa_cpu_count)"
         ['name']='zstd'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -27,15 +28,20 @@ main() {
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
-        '-S' 'build/cmake'
-        '-B' 'builddir'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         '-DZSTD_BUILD_CONTRIB=ON'
         '-DZSTD_LEGACY_SUPPORT=ON'
     )
-    "${app['cmake']}" "${cmake_args[@]}"
-    "${app['cmake']}" --build 'builddir'
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH \
+        '-S' 'build/cmake' \
+        '-B' 'builddir' \
+        "${cmake_args[@]}"
+    "${app['cmake']}" \
+        --build 'builddir' \
+        --parallel "${dict['jobs']}"
     "${app['cmake']}" --install 'builddir'
     return 0
 }
