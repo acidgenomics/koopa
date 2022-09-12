@@ -1,6 +1,8 @@
 #!/bin/sh
 set -euo pipefail
 
+# FIXME Consider adding: curl, git.
+
 # """
 # Bootstrap core dependencies.
 # @note Updated 2022-09-07.
