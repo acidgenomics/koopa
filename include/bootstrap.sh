@@ -3,6 +3,9 @@
 set -o errexit
 set -o nounset
 
+# FIXME Inform the user if gcc is not installed.
+# Debian: sudo apt install build-essential
+
 # FIXME Consider adding: curl, git.
 
 # """
