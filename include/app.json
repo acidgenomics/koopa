@@ -850,8 +850,9 @@
   },
   "gdal": {
     "bin": ["gdal-config"],
-    "conservative": false,
+    "conservative": true,
     "man1": ["gdal-config.1"],
+    "outdated": true,
     "url": ["https://gdal.org/download.html"],
     "version": "3.5.1"
   },
