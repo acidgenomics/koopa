@@ -1245,7 +1245,6 @@
     "conservative": false,
     "date": "2022-09-07",
     "dependencies": ["python"],
-    "large": true,
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
