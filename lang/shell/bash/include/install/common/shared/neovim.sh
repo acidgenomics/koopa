@@ -88,6 +88,7 @@ archive/${dict['file']}"
     koopa_write_string \
         --file='local.mk' \
         --string="$(koopa_print "${local_mk[@]}")"
+    koopa_print_env
     "${app['make']}" distclean
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install

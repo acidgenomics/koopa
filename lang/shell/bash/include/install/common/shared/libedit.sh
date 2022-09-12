@@ -32,6 +32,8 @@ main() {
         '--disable-dependency-tracking'
         '--disable-silent-rules'
     )
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" install

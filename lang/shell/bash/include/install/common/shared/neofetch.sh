@@ -23,6 +23,7 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir "${dict['prefix']}"
+    koopa_print_env
     "${app['make']}" PREFIX="${dict['prefix']}" install
     return 0
 }

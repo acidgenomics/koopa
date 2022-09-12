@@ -31,8 +31,9 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    koopa_print_env
     ./Configure -des -Dprefix="${dict['prefix']}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # The installer will warn when you skip this step.
     # > "${app['make']}" test
     "${app['make']}" install

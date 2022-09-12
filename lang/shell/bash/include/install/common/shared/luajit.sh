@@ -58,6 +58,7 @@ main() {
         MACOSX_DEPLOYMENT_TARGET="${dict['macos_version']}"
         export MACOSX_DEPLOYMENT_TARGET
     fi
+    koopa_print_env
     "${app['make']}" PREFIX="${dict['prefix']}"
     "${app['make']}" install PREFIX="${dict['prefix']}"
     dict['pc_file']="${dict['prefix']}/lib/pkgconfig/luajit.pc"

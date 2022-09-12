@@ -83,6 +83,7 @@ main() {
 # > 	\$(CC) \$(CFLAGS) -c bzlib.c
 # > END
     # > fi
+    koopa_print_env
     "${app['make']}" install "PREFIX=${dict['prefix']}"
     if [[ -f "${dict['makefile_shared']}" ]]
     then
