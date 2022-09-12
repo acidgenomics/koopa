@@ -2123,7 +2123,6 @@
     "conservative": false,
     "date": "2022-06-23",
     "depends": ["conda"],
-    "large": true,
     "version": "1.9.0"
   },
   "sambamba": {
