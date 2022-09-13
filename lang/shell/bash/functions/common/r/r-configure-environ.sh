@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't setting fontconfig include correctly on Ubuntu (e.g. 'ft2build.h').
+# FIXME This is required for systemfonts to install correctly.
+
 # NOTE RStudio PATH is now inconsistent with R due to breaking changes in
 # internal 'SessionPath.cpp'.
 #
