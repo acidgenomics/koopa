@@ -257,7 +257,7 @@
     "bin": ["broot"],
     "conservative": false,
     "depends": ["rust"],
-    "version": "1.14.2"
+    "version": "1.14.3"
   },
   "brotli": {
     "check": false,
@@ -1459,6 +1459,12 @@
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
     "version": "8.7"
   },
+  "lsd": {
+    "bin": ["lsd"],
+    "conservative": false,
+    "dependencies": ["rust"],
+    "version": "0.23.1"
+  },
   "lua": {
     "bin": ["lua", "luac"],
     "conservative": true,
@@ -2096,9 +2102,9 @@
   "ruff": {
     "bin": ["ruff"],
     "conservative": false,
-    "date": "2022-09-12",
+    "date": "2022-09-13",
     "dependencies": ["python"],
-    "version": "0.0.36"
+    "version": "0.0.37"
   },
   "rust": {
     "bin": [
@@ -2114,7 +2120,6 @@
       "rustfmt"
     ],
     "conservative": false,
-    "large": true,
     "url": ["https://www.rust-lang.org/"],
     "version": "1.63.0"
   },
