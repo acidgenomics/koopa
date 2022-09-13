@@ -18725,6 +18725,10 @@ koopa_r_link_files_in_etc() {
     return 0
 }
 
+koopa_r_migrate_recommended_packages() {
+    return 0
+}
+
 koopa_r_package_version() {
     local app str vec
     koopa_assert_has_args "$#"
