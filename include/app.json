@@ -657,9 +657,9 @@
   },
   "dotfiles": {
     "conservative": false,
-    "date": "2022-09-07",
+    "date": "2022-09-13",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "606e1a2e0428ad21926d001594883f73c9bcdefe"
+    "version": "4c5c4b07a8665b2d29916da24d808cab13a2e4c3"
   },
   "du-dust": {
     "bin": ["dust"],
