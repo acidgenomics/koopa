@@ -143,6 +143,7 @@ koopa_r_configure_environ() {
     # Set the 'PKG_CONFIG_PATH' string.
     declare -A app_pc_path_arr
     keys=(
+        'curl'
         'fontconfig'
         'freetype'
         'fribidi'
