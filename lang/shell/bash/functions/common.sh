@@ -3309,6 +3309,7 @@ koopa_build_all_apps() {
         'exa'
         'fd-find'
         'hyperfine'
+        'lsd'
         'mcfly'
         'mdcat'
         'nushell'
@@ -11163,6 +11164,7 @@ koopa_install_all_apps() {
         'libuv'
         'libxml2'
         'libzip'
+        'lsd'
         'lua'
         'luarocks'
         'lz4'
@@ -12949,6 +12951,12 @@ koopa_install_libzip() {
 koopa_install_llvm() {
     koopa_install_app \
         --name='llvm' \
+        "$@"
+}
+
+koopa_install_lsd() {
+    koopa_install_app \
+        --name='lsd' \
         "$@"
 }
 
@@ -18054,6 +18062,7 @@ koopa_r_configure_environ() {
         'libpng'
         'libssh2'
         'libtiff'
+        'libxml2'
         'openblas'
         'openssl3'
         'pcre2'
@@ -18369,28 +18378,44 @@ koopa_r_configure_makeconf() {
     app['pkg_config']="$(koopa_locate_pkg_config)"
     [[ -x "${app['pkg_config']}" ]] || return 1
     declare -A dict=(
+        ['bzip2']="$(koopa_app_prefix 'bzip2')"
+        ['icu4c']="$(koopa_app_prefix 'icu4c')"
+        ['libiconv']="$(koopa_app_prefix 'libiconv')"
         ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+        ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     dict['file']="${dict['r_prefix']}/etc/Makeconf"
     koopa_assert_is_dir \
+        "${dict['bzip2']}" \
+        "${dict['icu4c']}" \
+        "${dict['libiconv']}" \
         "${dict['pcre2']}" \
-        "${dict['r_prefix']}"
+        "${dict['r_prefix']}" \
+        "${dict['zlib']}"
     koopa_alert "Updating ${dict['file']}"
     koopa_assert_is_admin
     koopa_assert_is_file "${dict['file']}"
     koopa_add_to_pkg_config_path \
-        "${dict['pcre2']}/lib/pkgconfig"
+        "${dict['icu4c']}/lib/pkgconfig" \
+        "${dict['pcre2']}/lib/pkgconfig" \
+        "${dict['zlib']}/lib/pkgconfig"
     libs=(
-        "$("${app['pkg_config']}" --libs 'libpcre2-8')"
-        '-llzma'
-        '-lbz2'
-        '-lz'
-        '-licucore'
+        "$("${app['pkg_config']}" --libs \
+            'libpcre2-8' \
+            'icu-i18n' \
+            'icu-uc' \
+            'zlib' \
+        )"
+        "-L${dict['bzip2']}/lib"
+        "-L${dict['libiconv']}/lib"
         '-ldl'
         '-lm'
-        '-liconv'
     )
+    if koopa_is_linux
+    then
+        libs+=('-ltirpc' '-lrt')
+    fi
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
     koopa_find_and_replace_in_file \
@@ -18435,17 +18460,39 @@ koopa_r_configure_makevars() {
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
+        ['bzip2']="$(koopa_app_prefix 'bzip2')"
+        ['fontconfig']="$(koopa_app_prefix 'fontconfig')"
+        ['freetype']="$(koopa_app_prefix 'freetype')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
+        ['icu4c']="$(koopa_app_prefix 'icu4c')"
+        ['jpeg']="$(koopa_app_prefix 'jpeg')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
+        ['libpng']="$(koopa_app_prefix 'libpng')"
+        ['libtiff']="$(koopa_app_prefix 'libtiff')"
+        ['libxml2']="$(koopa_app_prefix 'libxml2')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
+        ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
+        ['zlib']="$(koopa_app_prefix 'zlib')"
+        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
+        "${dict['bzip2']}" \
+        "${dict['fontconfig']}" \
+        "${dict['freetype']}" \
         "${dict['gettext']}" \
+        "${dict['icu4c']}" \
+        "${dict['jpeg']}" \
         "${dict['lapack']}" \
+        "${dict['libpng']}" \
+        "${dict['libtiff']}" \
+        "${dict['libxml2']}" \
         "${dict['openblas']}" \
-        "${dict['r_prefix']}"
+        "${dict['pcre2']}" \
+        "${dict['r_prefix']}" \
+        "${dict['zlib']}" \
+        "${dict['zstd']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if koopa_is_macos
@@ -18468,8 +18515,18 @@ koopa_r_configure_makevars() {
     [[ -x "${app['cxx']}" ]] || return 1
     koopa_alert "Configuring '${dict['file']}'."
     koopa_add_to_pkg_config_path \
+        "${dict['fontconfig']}/lib/pkgconfig" \
+        "${dict['freetype']}/lib/pkgconfig" \
+        "${dict['icu4c']}/lib/pkgconfig" \
+        "${dict['jpeg']}/lib/pkgconfig" \
         "${dict['lapack']}/lib/pkgconfig" \
-        "${dict['openblas']}/lib/pkgconfig"
+        "${dict['libpng']}/lib/pkgconfig" \
+        "${dict['libtiff']}/lib/pkgconfig" \
+        "${dict['libxml2']}/lib/pkgconfig" \
+        "${dict['openblas']}/lib/pkgconfig" \
+        "${dict['pcre2']}/lib/pkgconfig" \
+        "${dict['zlib']}/lib/pkgconfig" \
+        "${dict['zstd']}/lib/pkgconfig"
     cppflags=()
     ldflags=()
     lines=()
@@ -18479,11 +18536,43 @@ koopa_r_configure_makevars() {
             ldflags+=('-L/usr/local/lib')
             ;;
     esac
-    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+    if koopa_is_macos
     then
         cppflags+=("-I${dict['gettext']}/include")
         ldflags+=("-L${dict['gettext']}/lib")
     fi
+    if koopa_is_linux
+    then
+        case "${dict['system']}" in
+            '1')
+                local pkg_config
+                pkg_config=(
+                    'fontconfig'
+                    'freetype2'
+                    'icu-i18n'
+                    'icu-uc'
+                    'libjpeg'
+                    'libpcre2-8'
+                    'libpng'
+                    'libtiff-4'
+                    'libzstd'
+                    'zlib'
+                )
+                cppflags+=(
+                    "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
+                )
+                ldflags+=(
+                    "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
+                )
+                ;;
+        esac
+    fi
+    cppflags+=(
+        "-I${dict['bzip2']}/include"
+    )
+    ldflags+=(
+        "-L${dict['bzip2']}/lib"
+    )
     koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
@@ -18698,6 +18787,10 @@ koopa_r_link_files_in_etc() {
                 "${dict['r_etc_target']}/${file}"
         fi
     done
+    return 0
+}
+
+koopa_r_migrate_recommended_packages() {
     return 0
 }
 
@@ -23492,6 +23585,12 @@ koopa_uninstall_libzip() {
 koopa_uninstall_llvm() {
     koopa_uninstall_app \
         --name='llvm' \
+        "$@"
+}
+
+koopa_uninstall_lsd() {
+    koopa_uninstall_app \
+        --name='lsd' \
         "$@"
 }
 

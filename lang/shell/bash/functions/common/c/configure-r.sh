@@ -5,6 +5,9 @@
 
 # FIXME Remove recommended packages from system R library.
 
+# FIXME Need to address this permission issue with Ubuntu system R:
+# cannot create file '/usr/share/R/doc/html/packages.html', reason 'Permission denied'
+
 koopa_configure_r() {
     # """
     # Update R configuration.
