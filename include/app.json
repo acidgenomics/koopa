@@ -257,7 +257,7 @@
     "bin": ["broot"],
     "conservative": false,
     "depends": ["rust"],
-    "version": "1.14.2"
+    "version": "1.14.3"
   },
   "brotli": {
     "check": false,
@@ -1458,6 +1458,12 @@
     "platform": "linux",
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
     "version": "8.7"
+  },
+  "lsd": {
+    "bin": ["lsd"],
+    "conservative": false,
+    "dependencies": ["rust"],
+    "version": "0.23.1"
   },
   "lua": {
     "bin": ["lua", "luac"],
