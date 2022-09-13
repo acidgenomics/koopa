@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to describe the LIBS flags in use here.
+# - * '-ldl'
+# - * '-lm'
+# - * '-lrt' (Linux)
+# - * '-ltirpc' (Linux)
+
 koopa_r_configure_makeconf() {
     # """
     # Modify the 'Makeconf' file to ensure correct configuration.
