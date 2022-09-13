@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider setting bzip2 here.
-
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
@@ -56,26 +54,35 @@ koopa_r_configure_makevars() {
         ['arch']="$(koopa_arch)"
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['fontconfig']="$(koopa_app_prefix 'fontconfig')"
-        # > ['freetype']="$(koopa_app_prefix 'freetype')"
+        ['freetype']="$(koopa_app_prefix 'freetype')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
-        # > ['jpeg']="$(koopa_app_prefix 'jpeg')"
+        ['icu4c']="$(koopa_app_prefix 'icu4c')"
+        ['jpeg']="$(koopa_app_prefix 'jpeg')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
-        # > ['libpng']="$(koopa_app_prefix 'libpng')"
-        # > ['libtiff']="$(koopa_app_prefix 'libtiff')"
+        ['libpng']="$(koopa_app_prefix 'libpng')"
+        ['libtiff']="$(koopa_app_prefix 'libtiff')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
-        # > ['pcre2']="$(koopa_app_prefix 'pcre2')"
+        ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
-        # > ['zlib']="$(koopa_app_prefix 'zlib')"
-        # > ['zstd']="$(koopa_app_prefix 'zstd')"
+        ['zlib']="$(koopa_app_prefix 'zlib')"
+        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
         "${dict['fontconfig']}" \
+        "${dict['freetype']}" \
         "${dict['gettext']}" \
+        "${dict['icu4c']}" \
+        "${dict['jpeg']}" \
         "${dict['lapack']}" \
+        "${dict['libpng']}" \
+        "${dict['libtiff']}" \
         "${dict['openblas']}" \
-        "${dict['r_prefix']}"
+        "${dict['pcre2']}" \
+        "${dict['r_prefix']}" \
+        "${dict['zlib']}" \
+        "${dict['zstd']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if koopa_is_macos
@@ -104,8 +111,16 @@ koopa_r_configure_makevars() {
     koopa_alert "Configuring '${dict['file']}'."
     koopa_add_to_pkg_config_path \
         "${dict['fontconfig']}/lib/pkgconfig" \
+        "${dict['freetype']}/lib/pkgconfig" \
+        "${dict['icu4c']}/lib/pkgconfig" \
+        "${dict['jpeg']}/lib/pkgconfig" \
         "${dict['lapack']}/lib/pkgconfig" \
-        "${dict['openblas']}/lib/pkgconfig"
+        "${dict['libpng']}/lib/pkgconfig" \
+        "${dict['libtiff']}/lib/pkgconfig" \
+        "${dict['openblas']}/lib/pkgconfig" \
+        "${dict['pcre2']}/lib/pkgconfig" \
+        "${dict['zlib']}/lib/pkgconfig" \
+        "${dict['zstd']}/lib/pkgconfig"
     cppflags=()
     ldflags=()
     lines=()
@@ -130,7 +145,10 @@ koopa_r_configure_makevars() {
                 pkg_config=(
                     'fontconfig'
                     'freetype2'
+                    'icu-i18n'
+                    'icu-uc'
                     'libjpeg'
+                    'libpcre2-8'
                     'libpng'
                     'libtiff-4'
                     'libzstd'
