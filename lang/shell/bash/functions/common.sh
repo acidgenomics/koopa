@@ -18062,6 +18062,7 @@ koopa_r_configure_environ() {
         'libpng'
         'libssh2'
         'libtiff'
+        'libxml2'
         'openblas'
         'openssl3'
         'pcre2'
@@ -18468,6 +18469,7 @@ koopa_r_configure_makevars() {
         ['lapack']="$(koopa_app_prefix 'lapack')"
         ['libpng']="$(koopa_app_prefix 'libpng')"
         ['libtiff']="$(koopa_app_prefix 'libtiff')"
+        ['libxml2']="$(koopa_app_prefix 'libxml2')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
         ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
@@ -18485,6 +18487,7 @@ koopa_r_configure_makevars() {
         "${dict['lapack']}" \
         "${dict['libpng']}" \
         "${dict['libtiff']}" \
+        "${dict['libxml2']}" \
         "${dict['openblas']}" \
         "${dict['pcre2']}" \
         "${dict['r_prefix']}" \
@@ -18519,6 +18522,7 @@ koopa_r_configure_makevars() {
         "${dict['lapack']}/lib/pkgconfig" \
         "${dict['libpng']}/lib/pkgconfig" \
         "${dict['libtiff']}/lib/pkgconfig" \
+        "${dict['libxml2']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig" \
         "${dict['pcre2']}/lib/pkgconfig" \
         "${dict['zlib']}/lib/pkgconfig" \

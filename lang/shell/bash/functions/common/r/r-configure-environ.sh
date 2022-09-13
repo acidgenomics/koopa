@@ -18,7 +18,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-13.
     #
     # @section Package library location:
     #
@@ -160,6 +160,7 @@ koopa_r_configure_environ() {
         'libssh2'
         'libtiff'
         # > 'libuv'
+        'libxml2'
         'openblas'
         'openssl3'
         'pcre2'
