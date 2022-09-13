@@ -2120,7 +2120,6 @@
       "rustfmt"
     ],
     "conservative": false,
-    "large": true,
     "url": ["https://www.rust-lang.org/"],
     "version": "1.63.0"
   },
