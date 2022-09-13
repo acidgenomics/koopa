@@ -2102,9 +2102,9 @@
   "ruff": {
     "bin": ["ruff"],
     "conservative": false,
-    "date": "2022-09-12",
+    "date": "2022-09-13",
     "dependencies": ["python"],
-    "version": "0.0.36"
+    "version": "0.0.37"
   },
   "rust": {
     "bin": [
