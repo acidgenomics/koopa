@@ -12952,6 +12952,12 @@ koopa_install_llvm() {
         "$@"
 }
 
+koopa_install_lsd() {
+    koopa_install_app \
+        --name='lsd' \
+        "$@"
+}
+
 koopa_install_lua() {
     koopa_install_app \
         --name='lua' \
@@ -23508,6 +23514,12 @@ koopa_uninstall_libzip() {
 koopa_uninstall_llvm() {
     koopa_uninstall_app \
         --name='llvm' \
+        "$@"
+}
+
+koopa_uninstall_lsd() {
+    koopa_uninstall_app \
+        --name='lsd' \
         "$@"
 }
 
