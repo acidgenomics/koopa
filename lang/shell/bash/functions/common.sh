@@ -18046,6 +18046,7 @@ koopa_r_configure_environ() {
     fi
     declare -A app_pc_path_arr
     keys=(
+        'curl'
         'fontconfig'
         'freetype'
         'fribidi'
@@ -18461,38 +18462,14 @@ koopa_r_configure_makevars() {
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['fontconfig']="$(koopa_app_prefix 'fontconfig')"
-        ['freetype']="$(koopa_app_prefix 'freetype')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
-        ['icu4c']="$(koopa_app_prefix 'icu4c')"
-        ['jpeg']="$(koopa_app_prefix 'jpeg')"
-        ['lapack']="$(koopa_app_prefix 'lapack')"
-        ['libpng']="$(koopa_app_prefix 'libpng')"
-        ['libtiff']="$(koopa_app_prefix 'libtiff')"
-        ['libxml2']="$(koopa_app_prefix 'libxml2')"
-        ['openblas']="$(koopa_app_prefix 'openblas')"
-        ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
-        "${dict['fontconfig']}" \
-        "${dict['freetype']}" \
         "${dict['gettext']}" \
-        "${dict['icu4c']}" \
-        "${dict['jpeg']}" \
-        "${dict['lapack']}" \
-        "${dict['libpng']}" \
-        "${dict['libtiff']}" \
-        "${dict['libxml2']}" \
-        "${dict['openblas']}" \
-        "${dict['pcre2']}" \
-        "${dict['r_prefix']}" \
-        "${dict['zlib']}" \
-        "${dict['zstd']}"
+        "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if koopa_is_macos
@@ -18514,19 +18491,6 @@ koopa_r_configure_makevars() {
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
     koopa_alert "Configuring '${dict['file']}'."
-    koopa_add_to_pkg_config_path \
-        "${dict['fontconfig']}/lib/pkgconfig" \
-        "${dict['freetype']}/lib/pkgconfig" \
-        "${dict['icu4c']}/lib/pkgconfig" \
-        "${dict['jpeg']}/lib/pkgconfig" \
-        "${dict['lapack']}/lib/pkgconfig" \
-        "${dict['libpng']}/lib/pkgconfig" \
-        "${dict['libtiff']}/lib/pkgconfig" \
-        "${dict['libxml2']}/lib/pkgconfig" \
-        "${dict['openblas']}/lib/pkgconfig" \
-        "${dict['pcre2']}/lib/pkgconfig" \
-        "${dict['zlib']}/lib/pkgconfig" \
-        "${dict['zstd']}/lib/pkgconfig"
     cppflags=()
     ldflags=()
     lines=()
@@ -18536,21 +18500,42 @@ koopa_r_configure_makevars() {
             ldflags+=('-L/usr/local/lib')
             ;;
     esac
-    if koopa_is_macos
-    then
-        cppflags+=("-I${dict['gettext']}/include")
-        ldflags+=("-L${dict['gettext']}/lib")
-    fi
     if koopa_is_linux
     then
         case "${dict['system']}" in
             '1')
+                dict['fontconfig']="$(koopa_app_prefix 'fontconfig')"
+                dict['freetype']="$(koopa_app_prefix 'freetype')"
+                dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+                dict['jpeg']="$(koopa_app_prefix 'jpeg')"
+                dict['lapack']="$(koopa_app_prefix 'lapack')"
+                dict['libpng']="$(koopa_app_prefix 'libpng')"
+                dict['libtiff']="$(koopa_app_prefix 'libtiff')"
+                dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+                dict['openblas']="$(koopa_app_prefix 'openblas')"
+                dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+                dict['zlib']="$(koopa_app_prefix 'zlib')"
+                dict['zstd']="$(koopa_app_prefix 'zstd')"
+                koopa_add_to_pkg_config_path \
+                    "${dict['fontconfig']}/lib/pkgconfig" \
+                    "${dict['freetype']}/lib/pkgconfig" \
+                    "${dict['icu4c']}/lib/pkgconfig" \
+                    "${dict['jpeg']}/lib/pkgconfig" \
+                    "${dict['lapack']}/lib/pkgconfig" \
+                    "${dict['libpng']}/lib/pkgconfig" \
+                    "${dict['libtiff']}/lib/pkgconfig" \
+                    "${dict['libxml2']}/lib/pkgconfig" \
+                    "${dict['openblas']}/lib/pkgconfig" \
+                    "${dict['pcre2']}/lib/pkgconfig" \
+                    "${dict['zlib']}/lib/pkgconfig" \
+                    "${dict['zstd']}/lib/pkgconfig"
                 local pkg_config
                 pkg_config=(
                     'fontconfig'
                     'freetype2'
                     'icu-i18n'
                     'icu-uc'
+                    'libcurl'
                     'libjpeg'
                     'libpcre2-8'
                     'libpng'
@@ -18567,12 +18552,13 @@ koopa_r_configure_makevars() {
                 ;;
         esac
     fi
-    cppflags+=(
-        "-I${dict['bzip2']}/include"
-    )
-    ldflags+=(
-        "-L${dict['bzip2']}/lib"
-    )
+    cppflags+=("-I${dict['bzip2']}/include")
+    ldflags+=("-L${dict['bzip2']}/lib")
+    if koopa_is_macos
+    then
+        cppflags+=("-I${dict['gettext']}/include")
+        ldflags+=("-L${dict['gettext']}/lib")
+    fi
     koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
