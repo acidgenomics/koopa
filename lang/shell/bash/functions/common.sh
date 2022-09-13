@@ -18463,13 +18463,20 @@ koopa_r_configure_makevars() {
         ['arch']="$(koopa_arch)"
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
+        ['lapack']="$(koopa_app_prefix 'lapack')"
+        ['openblas']="$(koopa_app_prefix 'openblas')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
         "${dict['gettext']}" \
+        "${dict['lapack']}" \
+        "${dict['openblas']}" \
         "${dict['r_prefix']}"
+    koopa_add_to_pkg_config_path \
+        "${dict['lapack']}/lib/pkgconfig" \
+        "${dict['openblas']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if koopa_is_macos
@@ -18508,11 +18515,9 @@ koopa_r_configure_makevars() {
                 dict['freetype']="$(koopa_app_prefix 'freetype')"
                 dict['icu4c']="$(koopa_app_prefix 'icu4c')"
                 dict['jpeg']="$(koopa_app_prefix 'jpeg')"
-                dict['lapack']="$(koopa_app_prefix 'lapack')"
                 dict['libpng']="$(koopa_app_prefix 'libpng')"
                 dict['libtiff']="$(koopa_app_prefix 'libtiff')"
                 dict['libxml2']="$(koopa_app_prefix 'libxml2')"
-                dict['openblas']="$(koopa_app_prefix 'openblas')"
                 dict['pcre2']="$(koopa_app_prefix 'pcre2')"
                 dict['zlib']="$(koopa_app_prefix 'zlib')"
                 dict['zstd']="$(koopa_app_prefix 'zstd')"
@@ -18521,11 +18526,9 @@ koopa_r_configure_makevars() {
                     "${dict['freetype']}/lib/pkgconfig" \
                     "${dict['icu4c']}/lib/pkgconfig" \
                     "${dict['jpeg']}/lib/pkgconfig" \
-                    "${dict['lapack']}/lib/pkgconfig" \
                     "${dict['libpng']}/lib/pkgconfig" \
                     "${dict['libtiff']}/lib/pkgconfig" \
                     "${dict['libxml2']}/lib/pkgconfig" \
-                    "${dict['openblas']}/lib/pkgconfig" \
                     "${dict['pcre2']}/lib/pkgconfig" \
                     "${dict['zlib']}/lib/pkgconfig" \
                     "${dict['zstd']}/lib/pkgconfig"
