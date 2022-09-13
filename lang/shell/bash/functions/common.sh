@@ -18459,6 +18459,8 @@ koopa_r_configure_makevars() {
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
+        ['bzip2']="$(koopa_app_prefix 'bzip2')"
+        ['fontconfig']="$(koopa_app_prefix 'fontconfig')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
@@ -18466,6 +18468,8 @@ koopa_r_configure_makevars() {
         ['system']=0
     )
     koopa_assert_is_dir \
+        "${dict['bzip2']}" \
+        "${dict['fontconfig']}" \
         "${dict['gettext']}" \
         "${dict['lapack']}" \
         "${dict['openblas']}" \
@@ -18492,6 +18496,7 @@ koopa_r_configure_makevars() {
     [[ -x "${app['cxx']}" ]] || return 1
     koopa_alert "Configuring '${dict['file']}'."
     koopa_add_to_pkg_config_path \
+        "${dict['fontconfig']}/lib/pkgconfig" \
         "${dict['lapack']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     cppflags=()
@@ -18503,11 +18508,40 @@ koopa_r_configure_makevars() {
             ldflags+=('-L/usr/local/lib')
             ;;
     esac
-    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+    if koopa_is_macos
     then
         cppflags+=("-I${dict['gettext']}/include")
         ldflags+=("-L${dict['gettext']}/lib")
     fi
+    if koopa_is_linux
+    then
+        case "${dict['system']}" in
+            '1')
+                local pkg_config
+                pkg_config=(
+                    'fontconfig'
+                    'freetype2'
+                    'libjpeg'
+                    'libpng'
+                    'libtiff-4'
+                    'libzstd'
+                    'zlib'
+                )
+                cppflags+=(
+                    "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
+                )
+                ldflags+=(
+                    "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
+                )
+                ;;
+        esac
+    fi
+    cppflags+=(
+        "-I${dict['bzip2']}/include"
+    )
+    ldflags+=(
+        "-L${dict['bzip2']}/lib"
+    )
     koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
