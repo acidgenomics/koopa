@@ -3,7 +3,7 @@
 koopa_aws_s3_list_large_files() {
     # """
     # List large files in an S3 bucket.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-09-14.
     #
     # @examples
     # > koopa_aws_s3_list_large_files \
@@ -28,7 +28,7 @@ koopa_aws_s3_list_large_files() {
     declare -A dict=(
         ['bucket']=''
         ['num']='20'
-        ['profile']='acidgenomics'
+        ['profile']='default'
     )
     while (("$#"))
     do
