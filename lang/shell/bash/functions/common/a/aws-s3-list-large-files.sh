@@ -9,7 +9,9 @@ koopa_aws_s3_list_large_files() {
     # > koopa_aws_s3_list_large_files \
     # >     --profile='acidgenomics' \
     # >     --bucket='s3://r.acidgenomics.com/' \
-    # >     --num=10
+    # >     --num=2
+    # # testdata/bcbiornaseq/v0.5/bcb.rda
+    # # testdata/bcbiornaseq/v0.5/gse65267.rds
     # """
     local app dict
     koopa_assert_has_args "$#"
