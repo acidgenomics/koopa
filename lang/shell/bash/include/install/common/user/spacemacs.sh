@@ -8,8 +8,12 @@ main() {
     # Installation is not entirely non-interactive, and currently asks to
     # compile vterm. Not sure how to improve this.
     # """
-    local dict
+    local app dict
     koopa_assert_has_no_args "$#"
+    declare -A app=(
+        ['yes']="$(koopa_locate_yes --allow-system)"
+    )
+    [[ -x "${app['yes']}" ]] || return 1
     koopa_activate_build_opt_prefix 'chemacs'
     declare -A dict=(
         ['commit']="${KOOPA_INSTALL_VERSION:?}"
@@ -20,6 +24,6 @@ main() {
         --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"
-    koopa_spacemacs --no-window-system
+    "${app['yes']}" | koopa_spacemacs --no-window-system
     return 0
 }
