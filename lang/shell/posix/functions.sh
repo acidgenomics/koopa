@@ -1890,7 +1890,7 @@ koopa_macos_activate_cli_colors() {
 }
 
 koopa_macos_emacs() {
-    koopa_print '/Applications/Emacs.app/Contents/MacOS/Emacs'
+    koopa_print '/usr/local/bin/emacs'
     return 0
 }
 

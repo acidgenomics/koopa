@@ -3,7 +3,7 @@
 main() {
     # """
     # Update Doom Emacs.
-    # @note Updated 2022-08-31.
+    # @note Updated 2022-09-16.
     #
     # NOTE Consider warning or erroring if user hasn't set up doom configuration
     # using our dotfiles configuration.
@@ -24,9 +24,9 @@ main() {
     [[ -x "${app['doom']}" ]] || return 1
     [[ -x "${app['emacs']}" ]] || return 1
     koopa_add_to_path_start "$(koopa_dirname "${app['emacs']}")"
-    # > "${app['doom']}" --force sync
-    "${app['doom']}" --force upgrade
-    "${app['doom']}" --force sync
-    # > "${app['doom']}" --force doctor
+    # > "${app['doom']}" sync
+    "${app['doom']}" upgrade
+    "${app['doom']}" sync
+    # > "${app['doom']}" doctor
     return 0
 }
