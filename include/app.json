@@ -658,7 +658,7 @@
   "doom-emacs": {
     "check": false,
     "url": ["https://github.com/doomemacs/doomemacs/"],
-    "version": "511f0ca38fbdda782813e9f311ad027103ecdb22"
+    "version": "42e5763782fdc1aabb9f2624d468248d6978abe2"
   },
   "dotfiles": {
     "conservative": false,
