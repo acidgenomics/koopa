@@ -937,29 +937,12 @@ koopa_alias_doom_emacs() {
     local prefix
     prefix="$(koopa_doom_emacs_prefix)"
     [ -d "$prefix" ] || return 1
-    "$(koopa_alias_emacs --with-profile 'doom' "$@")"
+    koopa_emacs --with-profile 'doom'
     return 0
 }
 
 koopa_alias_emacs_vanilla() {
     emacs --no-init-file --no-window-system "$@"
-}
-
-koopa_alias_emacs() {
-    local emacs prefix
-    prefix="${HOME:?}/.emacs.d"
-    [ -f "${prefix}/chemacs.el" ] || return 1
-    emacs='emacs'
-    if koopa_is_macos
-    then
-        emacs="$(koopa_macos_emacs)"
-        [ -e "$emacs" ] || return 1
-        [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] || return 1
-        TERM='xterm-24bit' "$emacs" "$@"
-    else
-        "$emacs" --no-window-system "$@"
-    fi
-    return 0
 }
 
 koopa_alias_glances() {
@@ -1046,7 +1029,7 @@ koopa_alias_prelude_emacs() {
     local prefix
     prefix="$(koopa_prelude_emacs_prefix)"
     [ -d "$prefix" ] || return 1
-    "$(koopa_alias_emacs --with-profile 'prelude' "$@")"
+    koopa_emacs --with-profile 'prelude'
     return 0
 }
 
@@ -1075,7 +1058,7 @@ koopa_alias_spacemacs() {
     local prefix
     prefix="$(koopa_spacemacs_prefix)"
     [ -d "$prefix" ] || return 1
-    "$(koopa_alias_emacs --with-profile 'spacemacs' "$@")"
+    koopa_emacs --with-profile 'spacemacs'
     return 0
 }
 
@@ -1335,6 +1318,23 @@ koopa_duration_stop() {
 
 koopa_emacs_prefix() {
     koopa_print "${HOME:?}/.emacs.d"
+    return 0
+}
+
+koopa_emacs() {
+    local emacs prefix
+    prefix="${HOME:?}/.emacs.d"
+    [ -f "${prefix}/chemacs.el" ] || return 1
+    emacs='emacs'
+    if koopa_is_macos
+    then
+        emacs="$(koopa_macos_emacs)"
+        [ -e "$emacs" ] || return 1
+        [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] || return 1
+        TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
+    else
+        "$emacs" --no-window-system "$@" >/dev/null 2>&1
+    fi
     return 0
 }
 

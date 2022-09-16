@@ -89,6 +89,8 @@ koopa_aws_s3_list_large_files() {
             | "${app['awk']}" '{ print $1 }' \
             | "${app['tail']}" -n "${dict['num']}" \
     )"
+    # FIXME Need to add a step here to reverse sort, to show the largest files
+    # at the top.
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
     return 0
