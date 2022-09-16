@@ -49,8 +49,8 @@ main() {
         '--no-env'
         '--no-fonts'
     )
-    "${app['doom']}" --force install "${install_args[@]}"
-    "${app['doom']}" --force sync
-    # > "${app['doom']}" --force doctor
+    "${app['doom']}" install "${install_args[@]}"
+    "${app['doom']}" sync
+    # > "${app['doom']}" doctor
     return 0
 }
