@@ -2111,7 +2111,7 @@ koopa_aws_s3_list_large_files() {
     declare -A dict=(
         ['bucket']=''
         ['num']='20'
-        ['profile']='acidgenomics'
+        ['profile']="${AWS_PROFILE:-default}"
     )
     while (("$#"))
     do
