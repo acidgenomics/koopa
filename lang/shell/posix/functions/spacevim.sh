@@ -1,9 +1,9 @@
 #!/bin/sh
 
-koopa_alias_spacevim() {
+koopa_spacevim() {
     # """
     # SpaceVim alias.
-    # @note Updated 2022-04-08.
+    # @note Updated 2022-09-16.
     # """
     local gvim prefix vim vimrc
     vim='vim'
