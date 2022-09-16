@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Prelude Emacs.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-09-16.
     #
     # @seealso
     # - https://prelude.emacsredux.com/en/latest/
@@ -11,13 +11,14 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        ['branch']='master'
+        ['commit']="${KOOPA_INSTALL_VERSION:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url']='https://github.com/bbatsov/prelude.git'
     )
     koopa_git_clone \
-        --branch="${dict['branch']}" \
+        --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"
+    koopa_prelude_emacs --no-window-system
     return 0
 }

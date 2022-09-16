@@ -657,6 +657,7 @@
   },
   "doom-emacs": {
     "check": false,
+    "date": "2022-09-16",
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "version": "42e5763782fdc1aabb9f2624d468248d6978abe2"
   },
@@ -1884,6 +1885,12 @@
     "depends": ["python"],
     "version": "1.2.0"
   },
+  "prelude-emacs": {
+    "check": false,
+    "date": "2022-09-16",
+    "url": ["https://github.com/bbatsov/prelude/"],
+    "version": "261600daa691f46289657d6de6c3a5a92c6fedd2"
+  },
   "prettier": {
     "bin": ["prettier"],
     "conservative": false,
@@ -2220,6 +2227,18 @@
     "man1": ["sox.1"],
     "url": ["http://sox.sourceforge.net/sox.html"],
     "version": "14.4.2"
+  },
+  "spacemacs": {
+    "check": false,
+    "date": "2022-09-16",
+    "url": ["https://github.com/syl20bnr/spacemacs/"],
+    "version": "9cdf97f87e89b3f5045da84e181057e82bfc13aa"
+  },
+  "spacevim": {
+    "check": false,
+    "date": "2022-09-16",
+    "url": ["https://github.com/SpaceVim/SpaceVim/"],
+    "version": "4baafa275025f71102eb747fdc636285a96a7082"
   },
   "sqlite": {
     "bin": ["sqlite3"],

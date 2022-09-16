@@ -106,7 +106,7 @@ koopa_activate_aliases() {
     alias cls='koopa_alias_colorls'
     alias cm='chezmoi'
     alias d='clear; cd -; l'
-    alias doom-emacs='koopa_alias_doom_emacs'
+    alias doom-emacs='koopa_doom_emacs'
     alias e='exit'
     alias emacs-vanilla='koopa_alias_emacs_vanilla'
     alias emacs='koopa_alias_emacs'
@@ -130,7 +130,7 @@ koopa_activate_aliases() {
     alias mamba='koopa_alias_mamba'
     alias nvim-fzf='koopa_alias_nvim_fzf'
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
-    alias prelude-emacs='koopa_alias_prelude_emacs'
+    alias prelude-emacs='koopa_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
     alias python='koopa_alias_python'
     alias q='exit'
@@ -138,8 +138,8 @@ koopa_activate_aliases() {
     alias rg='rg --case-sensitive --no-ignore'
     alias ronn='ronn --roff'
     alias sha256='koopa_alias_sha256'
-    alias spacemacs='koopa_alias_spacemacs'
-    alias spacevim='koopa_alias_spacevim'
+    alias spacemacs='koopa_spacemacs'
+    alias spacevim='koopa_spacevim'
     alias tmux-vanilla='koopa_alias_tmux_vanilla'
     alias today='koopa_alias_today'
     alias u='clear; cd ../; pwd; l'
@@ -933,14 +933,6 @@ koopa_alias_conda() {
     conda "$@"
 }
 
-koopa_alias_doom_emacs() {
-    local prefix
-    prefix="$(koopa_doom_emacs_prefix)"
-    [ -d "$prefix" ] || return 1
-    koopa_emacs --with-profile 'doom'
-    return 0
-}
-
 koopa_alias_emacs_vanilla() {
     emacs --no-init-file --no-window-system "$@"
 }
@@ -1025,14 +1017,6 @@ koopa_alias_nvim_vanilla() {
     nvim -u 'NONE' "$@"
 }
 
-koopa_alias_prelude_emacs() {
-    local prefix
-    prefix="$(koopa_prelude_emacs_prefix)"
-    [ -d "$prefix" ] || return 1
-    koopa_emacs --with-profile 'prelude'
-    return 0
-}
-
 koopa_alias_pyenv() {
     koopa_is_alias 'pyenv' && unalias 'pyenv'
     koopa_activate_pyenv
@@ -1052,32 +1036,6 @@ koopa_alias_rbenv() {
 
 koopa_alias_sha256() {
     shasum -a 256 "$@"
-}
-
-koopa_alias_spacemacs() {
-    local prefix
-    prefix="$(koopa_spacemacs_prefix)"
-    [ -d "$prefix" ] || return 1
-    koopa_emacs --with-profile 'spacemacs'
-    return 0
-}
-
-koopa_alias_spacevim() {
-    local gvim prefix vim vimrc
-    vim='vim'
-    if koopa_is_macos
-    then
-        gvim='/Applications/MacVim.app/Contents/bin/gvim'
-        if [ -x "$gvim" ]
-        then
-            vim="$gvim"
-        fi
-    fi
-    prefix="$(koopa_spacevim_prefix)"
-    vimrc="${prefix}/vimrc"
-    [ -f "$vimrc" ] || return 1
-    koopa_is_alias 'vim' && unalias 'vim'
-    "$vim" -u "$vimrc" "$@"
 }
 
 koopa_alias_tmux_vanilla() {
@@ -1272,6 +1230,14 @@ koopa_doom_emacs_prefix() {
     return 0
 }
 
+koopa_doom_emacs() {
+    local prefix
+    prefix="$(koopa_doom_emacs_prefix)"
+    [ -d "$prefix" ] || return 1
+    koopa_emacs --with-profile 'doom' "$@"
+    return 0
+}
+
 koopa_dotfiles_prefix() {
     koopa_print "$(koopa_opt_prefix)/dotfiles"
     return 0
@@ -1326,14 +1292,13 @@ koopa_emacs() {
     prefix="${HOME:?}/.emacs.d"
     [ -f "${prefix}/chemacs.el" ] || return 1
     emacs='emacs'
-    if koopa_is_macos
+    koopa_is_macos && emacs="$(koopa_macos_emacs)"
+    [ -e "$emacs" ] || return 1
+    if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]
     then
-        emacs="$(koopa_macos_emacs)"
-        [ -e "$emacs" ] || return 1
-        [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] || return 1
         TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
     else
-        "$emacs" --no-window-system "$@" >/dev/null 2>&1
+        "$emacs" "$@" >/dev/null 2>&1
     fi
     return 0
 }
@@ -2159,6 +2124,14 @@ koopa_prelude_emacs_prefix() {
     return 0
 }
 
+koopa_prelude_emacs() {
+    local prefix
+    prefix="$(koopa_prelude_emacs_prefix)"
+    [ -d "$prefix" ] || return 1
+    koopa_emacs --with-profile 'prelude' "$@"
+    return 0
+}
+
 koopa_print() {
     local string
     if [ "$#" -eq 0 ]
@@ -2260,9 +2233,35 @@ koopa_spacemacs_prefix() {
     return 0
 }
 
+koopa_spacemacs() {
+    local prefix
+    prefix="$(koopa_spacemacs_prefix)"
+    [ -d "$prefix" ] || return 1
+    koopa_emacs --with-profile 'spacemacs' "$@"
+    return 0
+}
+
 koopa_spacevim_prefix() {
     koopa_print "$(koopa_xdg_data_home)/spacevim"
     return 0
+}
+
+koopa_spacevim() {
+    local gvim prefix vim vimrc
+    vim='vim'
+    if koopa_is_macos
+    then
+        gvim='/Applications/MacVim.app/Contents/bin/gvim'
+        if [ -x "$gvim" ]
+        then
+            vim="$gvim"
+        fi
+    fi
+    prefix="$(koopa_spacevim_prefix)"
+    vimrc="${prefix}/vimrc"
+    [ -f "$vimrc" ] || return 1
+    koopa_is_alias 'vim' && unalias 'vim'
+    "$vim" -u "$vimrc" "$@"
 }
 
 koopa_str_detect_posix() {

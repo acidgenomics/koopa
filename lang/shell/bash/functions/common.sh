@@ -24713,38 +24713,6 @@ koopa_update_system_tex_packages() {
         "$@"
 }
 
-koopa_update_user_doom_emacs() {
-    koopa_update_app \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_update_user_prelude_emacs() {
-    koopa_update_app \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_update_user_spacemacs() {
-    koopa_update_app \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_update_user_spacevim() {
-    koopa_update_app \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
-        --user \
-        "$@"
-}
-
 koopa_validate_json() {
     local app dict
     declare -A app dict
