@@ -431,7 +431,6 @@ __koopa_complete() {
                         'koopa'
                         'r-packages'
                         'system'
-                        'user'
                     )
                     ;;
                 *)
@@ -514,14 +513,6 @@ __koopa_complete() {
                                 'homebrew'
                                 'homebrew-bundle'
                                 'tex-packages'
-                            )
-                            ;;
-                        'user')
-                            args+=(
-                                'doom-emacs'
-                                'prelude-emacs'
-                                'spacemacs'
-                                'spacevim'
                             )
                             ;;
                         esac

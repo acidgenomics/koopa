@@ -3,22 +3,23 @@
 main() {
     # """
     # Install Spacemacs.
-    # @note Updated 2022-07-14.
+    # @note Updated 2022-09-16.
     #
-    # Note that master branch is ancient and way behind current codebase.
-    # Switching to more recent code on develop branch.
+    # Installation is not entirely non-interactive, and currently asks to
+    # compile vterm. Not sure how to improve this.
     # """
     local dict
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'chemacs'
     declare -A dict=(
-        ['branch']='develop'
+        ['commit']="${KOOPA_INSTALL_VERSION:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url']='https://github.com/syl20bnr/spacemacs.git'
     )
     koopa_git_clone \
-        --branch="${dict['branch']}" \
+        --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"
+    koopa_spacemacs --no-window-system
     return 0
 }

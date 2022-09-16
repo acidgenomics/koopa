@@ -1,13 +1,13 @@
 #!/bin/sh
 
-koopa_alias_spacemacs() {
+koopa_doom_emacs() {
     # """
-    # Spacemacs.
+    # Doom Emacs.
     # @note Updated 2022-09-16.
     # """
     local prefix
-    prefix="$(koopa_spacemacs_prefix)"
+    prefix="$(koopa_doom_emacs_prefix)"
     [ -d "$prefix" ] || return 1
-    koopa_emacs --with-profile 'spacemacs'
+    koopa_emacs --with-profile 'doom' "$@"
     return 0
 }
