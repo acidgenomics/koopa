@@ -47,15 +47,20 @@ default '${dict['binary_prefix']}' location."
                     | koopa_basename \
             )"
             dict2['version']="$(koopa_basename "$prefix")"
-            dict2['tar_file']="${dict2['name']}-${dict2['version']}.tar.gz"
-            dict2['tar_url']="${dict['url_stem']}/${dict['os_string']}/\
+            dict2['tar_file']="${dict['tmp_dir']}/\
+${dict2['name']}-${dict2['version']}.tar.gz"
+            dict2['tar_url']="${dict['s3_bucket']}/${dict['os_string']}/\
 ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
-            if ! koopa_is_url_active "${dict2['tar_url']}"
-            then
-                koopa_stop "No package at '${dict2['tar_url']}'."
-            fi
-            aws --profile="${dict['aws_profile']}" \
-                s3 cp "${dict2['tar_url']}" "${dict2['tar_file']}"
+            # > if ! koopa_is_url_active "${dict2['tar_url']}"
+            # > then
+            # >     koopa_stop "No package at '${dict2['tar_url']}'."
+            # > fi
+            "${app['aws']}" --profile="${dict['aws_profile']}" \
+                s3 cp \
+                    --only-show-errors \
+                    "${dict2['tar_url']}" \
+                    "${dict2['tar_file']}"
+            koopa_assert_is_file "${dict2['tar_file']}"
             "${app['tar']}" -Pxzf "${dict2['tar_file']}"
             koopa_touch "${prefix}/.koopa-binary"
         done
