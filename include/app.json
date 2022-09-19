@@ -1052,12 +1052,21 @@
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "5.1.0"
   },
+  "haskell-ghcup": {
+    "bin": ["ghcup"],
+    "conservative": false,
+    "date": "2022-09-19",
+    "large": true,
+    "url": ["https://www.haskell.org/ghcup/"],
+    "version": "0.1.18.0"
+  },
   "haskell-stack": {
     "bin": ["stack"],
     "conservative": false,
+    "date": "2022-09-19",
     "large": true,
     "url": ["https://haskellstack.org/"],
-    "version": "2.7.5"
+    "version": "2.9.1"
   },
   "hdf5": {
     "bin": [

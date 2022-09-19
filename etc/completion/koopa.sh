@@ -179,6 +179,7 @@ __koopa_complete() {
                         'gzip'
                         'hadolint'
                         'harfbuzz'
+                        'haskell-ghcup'
                         'haskell-stack'
                         'hdf5'
                         'hisat2'
