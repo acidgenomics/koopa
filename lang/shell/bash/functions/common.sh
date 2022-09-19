@@ -3354,6 +3354,7 @@ koopa_build_all_apps() {
     then
         apps+=(
             'anaconda'
+            'haskell-ghcup'
             'haskell-stack'
             'hadolint'
             'pandoc'
@@ -11307,6 +11308,7 @@ koopa_install_all_apps() {
             'go'
             'google-cloud-sdk'
             'gseapy'
+            'haskell-ghcup'
             'haskell-stack'
             'hisat2'
             'htseq'

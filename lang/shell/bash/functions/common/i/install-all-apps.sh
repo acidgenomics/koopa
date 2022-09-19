@@ -307,6 +307,7 @@ koopa_install_all_apps() {
             'go'
             'google-cloud-sdk'
             'gseapy'
+            'haskell-ghcup'
             'haskell-stack'
             'hisat2'
             'htseq'

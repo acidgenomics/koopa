@@ -1054,6 +1054,7 @@
   },
   "haskell-ghcup": {
     "bin": ["ghcup"],
+    "build_dependencies": ["curl"],
     "conservative": false,
     "date": "2022-09-19",
     "large": true,
