@@ -257,8 +257,8 @@ koopa_r_configure_makevars() {
         # > LIBINTL = -Wl,-framework -Wl,CoreFoundation
         local libintl
         libintl=(
-            '-lintl'
-            '-liconv'
+            # > '-lintl'
+            # > '-liconv'
             '-Wl,-framework'
             '-Wl,CoreFoundation'
         )

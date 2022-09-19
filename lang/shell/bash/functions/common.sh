@@ -18302,6 +18302,7 @@ koopa_r_configure_ldpaths() {
         'jpeg'
         'lapack'
         'libgit2'
+        'libiconv'
         'libjpeg-turbo'
         'libpng'
         'libssh2'
@@ -18316,10 +18317,6 @@ koopa_r_configure_ldpaths() {
         'zlib'
         'zstd'
     )
-    if koopa_is_linux
-    then
-        keys+=('libiconv')
-    fi
     if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
     then
         keys+=('gettext')
@@ -18421,20 +18418,11 @@ koopa_r_configure_makeconf() {
             'zlib' \
         )"
         "-L${dict['bzip2']}/lib"
+        "-L${dict['libiconv']}/lib"
         '-ldl'
         '-lm'
     )
-    if koopa_is_linux
-    then
-        libs+=(
-            "-L${dict['libiconv']}/lib"
-            '-lrt'
-            '-ltirpc'
-        )
-    elif koopa_is_macos
-    then
-        libs+=('-liconv')
-    fi
+    koopa_is_linux && libs+=('-lrt' '-ltirpc')
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
     koopa_find_and_replace_in_file \
@@ -18668,8 +18656,6 @@ koopa_r_configure_makevars() {
     then
         local libintl
         libintl=(
-            '-lintl'
-            '-liconv'
             '-Wl,-framework'
             '-Wl,CoreFoundation'
         )
