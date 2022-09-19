@@ -3,6 +3,10 @@
 # NOTE Consider adding an assert check for libomp in /usr/local for macOS.
 # NOTE Need to reduce the number of rpath dependencies here, and offload to
 #      ldpaths instead.
+# NOTE Now seeing this ld warning popping up on macOS:
+#      ld: warning: -undefined dynamic_lookup may not work with chained fixups
+#      Potentially related:
+#      https://github.com/ziglang/zig/issues/8180
 
 main() {
     # """
@@ -37,9 +41,10 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
     # """
-    local app conf_args conf_dict deps dict
+    local app build_deps conf_args conf_dict deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config'
+    build_deps=('pkg-config')
+    koopa_activate_build_opt_prefix "${build_deps[@]}"
     deps=(
         # zlib deps: none.
         'zlib'
@@ -147,10 +152,11 @@ main() {
         ['jar']="$(koopa_locate_jar --realpath)"
         ['java']="$(koopa_locate_java --realpath)"
         ['javac']="$(koopa_locate_javac --realpath)"
-        ['make']="$(koopa_locate_make)"
+        ['make']="$(koopa_locate_make --realpath)"
         ['perl']="$(koopa_locate_perl --realpath)"
         ['pkg_config']="$(koopa_locate_pkg_config)"
         ['sed']="$(koopa_locate_sed --realpath)"
+        ['tar']="$(koopa_locate_tar --realpath)"
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
     # The system clang compiler stack is preferred on macOS. If you attempt to
@@ -273,11 +279,13 @@ main() {
     conf_dict['javac']="${app['javac']}"
     conf_dict['javah']=''
     conf_dict['libnn']='lib'
+    conf_dict['make']="${app['make']}"
     conf_dict['objc']="${app['cc']}"
     conf_dict['objcxx']="${app['cxx']}"
     conf_dict['perl']="${app['perl']}"
     conf_dict['r_shell']="${app['bash']}"
     conf_dict['sed']="${app['sed']}"
+    conf_dict['tar']="${app['tar']}"
     # Alternatively, can use 'bison -y'.
     conf_dict['yacc']="${app['yacc']}"
     conf_args=(
@@ -318,11 +326,13 @@ main() {
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
         "LIBnn=${conf_dict['libnn']}"
+        "MAKE=${conf_dict['make']}"
         "OBJC=${conf_dict['objc']}"
         "OBJCXX=${conf_dict['objcxx']}"
         "PERL=${conf_dict['perl']}"
         "R_SHELL=${conf_dict['r_shell']}"
         "SED=${conf_dict['sed']}"
+        "TAR=${conf_dict['tar']}"
         "YACC=${conf_dict['yacc']}"
     )
     # This is required to use R with RStudio on macOS.
