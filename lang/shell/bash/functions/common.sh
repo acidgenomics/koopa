@@ -18302,7 +18302,6 @@ koopa_r_configure_ldpaths() {
         'jpeg'
         'lapack'
         'libgit2'
-        'libiconv'
         'libjpeg-turbo'
         'libpng'
         'libssh2'
@@ -18317,6 +18316,10 @@ koopa_r_configure_ldpaths() {
         'zlib'
         'zstd'
     )
+    if koopa_is_linux
+    then
+        keys+=('libiconv')
+    fi
     if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
     then
         keys+=('gettext')
@@ -18418,13 +18421,19 @@ koopa_r_configure_makeconf() {
             'zlib' \
         )"
         "-L${dict['bzip2']}/lib"
-        "-L${dict['libiconv']}/lib"
         '-ldl'
         '-lm'
     )
     if koopa_is_linux
     then
-        libs+=('-ltirpc' '-lrt')
+        libs+=(
+            "-L${dict['libiconv']}/lib"
+            '-lrt'
+            '-ltirpc'
+        )
+    elif koopa_is_macos
+    then
+        libs+=('-liconv')
     fi
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
@@ -18657,8 +18666,17 @@ koopa_r_configure_makevars() {
     )
     if koopa_is_macos
     then
+        local libintl
+        libintl=(
+            '-lintl'
+            '-liconv'
+            '-Wl,-framework'
+            '-Wl,CoreFoundation'
+        )
+        conf_dict['libintl']="${libintl[*]}"
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=(
+            "LIBINTL = ${conf_dict['libintl']}"
             "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
         )
     fi

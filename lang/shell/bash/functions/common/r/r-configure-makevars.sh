@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-09-13.
+    # @note Updated 2022-09-19.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -253,17 +253,19 @@ koopa_r_configure_makevars() {
     )
     if koopa_is_macos
     then
-        # > local libintl
-        # > libintl=(
-        # >     '-lintl'
-        # >     '-liconv'
-        # >     '-Wl,-framework'
-        # >     '-Wl,CoreFoundation'
-        # > )
-        # > conf_dict['libintl']="${libintl[*]}"
+        # R CRAN binary has 'Makeconf' containing (no '-lintl'):
+        # > LIBINTL = -Wl,-framework -Wl,CoreFoundation
+        local libintl
+        libintl=(
+            '-lintl'
+            '-liconv'
+            '-Wl,-framework'
+            '-Wl,CoreFoundation'
+        )
+        conf_dict['libintl']="${libintl[*]}"
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=(
-            # > "LIBINTL = ${conf_dict['libintl']}"
+            "LIBINTL = ${conf_dict['libintl']}"
             # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
             "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
         )
