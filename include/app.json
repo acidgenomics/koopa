@@ -90,12 +90,12 @@
     },
     "bin": ["aws"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-19",
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.7.27"
+    "version": "2.7.31"
   },
   "azure-cli": {
     "bin": ["az"],
