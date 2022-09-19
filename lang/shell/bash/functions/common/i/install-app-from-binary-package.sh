@@ -3,7 +3,7 @@
 koopa_install_app_from_binary_package() {
     # """
     # Install app from pre-built binary package.
-    # @note Updated 2022-09-06.
+    # @note Updated 2022-09-19.
     #
     # @examples
     # > koopa_install_app_from_binary_package \
@@ -12,15 +12,19 @@ koopa_install_app_from_binary_package() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app
-    app['tar']="$(koopa_locate_tar --allow-system)"
+    declare -A app=(
+        ['aws']="$(koopa_locate_aws --allow-system)"
+        ['tar']="$(koopa_locate_tar --allow-system)"
+    )
+    [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+        ['aws_profile']="${AWS_PROFILE:-acidgenomics}"
         ['binary_prefix']='/opt/koopa'
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_string']="$(koopa_os_string)"
-        ['url_stem']="$(koopa_koopa_url)/app"
+        ['s3_bucket']="s3://app.koopa.acidgenomics.com"
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
@@ -43,14 +47,20 @@ default '${dict['binary_prefix']}' location."
                     | koopa_basename \
             )"
             dict2['version']="$(koopa_basename "$prefix")"
-            dict2['tar_file']="${dict2['name']}-${dict2['version']}.tar.gz"
-            dict2['tar_url']="${dict['url_stem']}/${dict['os_string']}/\
+            dict2['tar_file']="${dict['tmp_dir']}/\
+${dict2['name']}-${dict2['version']}.tar.gz"
+            dict2['tar_url']="${dict['s3_bucket']}/${dict['os_string']}/\
 ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
-            if ! koopa_is_url_active "${dict2['tar_url']}"
-            then
-                koopa_stop "No package at '${dict2['tar_url']}'."
-            fi
-            koopa_download "${dict2['tar_url']}" "${dict2['tar_file']}"
+            # > if ! koopa_is_url_active "${dict2['tar_url']}"
+            # > then
+            # >     koopa_stop "No package at '${dict2['tar_url']}'."
+            # > fi
+            "${app['aws']}" --profile="${dict['aws_profile']}" \
+                s3 cp \
+                    --only-show-errors \
+                    "${dict2['tar_url']}" \
+                    "${dict2['tar_file']}"
+            koopa_assert_is_file "${dict2['tar_file']}"
             "${app['tar']}" -Pxzf "${dict2['tar_file']}"
             koopa_touch "${prefix}/.koopa-binary"
         done

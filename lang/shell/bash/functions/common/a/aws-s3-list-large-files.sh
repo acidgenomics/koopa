@@ -3,13 +3,15 @@
 koopa_aws_s3_list_large_files() {
     # """
     # List large files in an S3 bucket.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-09-14.
     #
     # @examples
     # > koopa_aws_s3_list_large_files \
     # >     --profile='acidgenomics' \
     # >     --bucket='s3://r.acidgenomics.com/' \
-    # >     --num=10
+    # >     --num=2
+    # # testdata/bcbiornaseq/v0.5/bcb.rda
+    # # testdata/bcbiornaseq/v0.5/gse65267.rds
     # """
     local app dict
     koopa_assert_has_args "$#"
@@ -28,7 +30,7 @@ koopa_aws_s3_list_large_files() {
     declare -A dict=(
         ['bucket']=''
         ['num']='20'
-        ['profile']='acidgenomics'
+        ['profile']="${AWS_PROFILE:-default}"
     )
     while (("$#"))
     do
@@ -89,6 +91,8 @@ koopa_aws_s3_list_large_files() {
             | "${app['awk']}" '{ print $1 }' \
             | "${app['tail']}" -n "${dict['num']}" \
     )"
+    # FIXME Need to add a step here to reverse sort, to show the largest files
+    # at the top.
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
     return 0

@@ -2111,7 +2111,7 @@ koopa_aws_s3_list_large_files() {
     declare -A dict=(
         ['bucket']=''
         ['num']='20'
-        ['profile']='acidgenomics'
+        ['profile']="${AWS_PROFILE:-default}"
     )
     while (("$#"))
     do
@@ -3354,6 +3354,7 @@ koopa_build_all_apps() {
     then
         apps+=(
             'anaconda'
+            'haskell-ghcup'
             'haskell-stack'
             'hadolint'
             'pandoc'
@@ -11307,6 +11308,7 @@ koopa_install_all_apps() {
             'go'
             'google-cloud-sdk'
             'gseapy'
+            'haskell-ghcup'
             'haskell-stack'
             'hisat2'
             'htseq'
@@ -11344,15 +11346,19 @@ koopa_install_anaconda() {
 koopa_install_app_from_binary_package() {
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app
-    app['tar']="$(koopa_locate_tar --allow-system)"
+    declare -A app=(
+        ['aws']="$(koopa_locate_aws --allow-system)"
+        ['tar']="$(koopa_locate_tar --allow-system)"
+    )
+    [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+        ['aws_profile']="${AWS_PROFILE:-acidgenomics}"
         ['binary_prefix']='/opt/koopa'
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_string']="$(koopa_os_string)"
-        ['url_stem']="$(koopa_koopa_url)/app"
+        ['s3_bucket']="s3://app.koopa.acidgenomics.com"
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
@@ -11375,14 +11381,16 @@ default '${dict['binary_prefix']}' location."
                     | koopa_basename \
             )"
             dict2['version']="$(koopa_basename "$prefix")"
-            dict2['tar_file']="${dict2['name']}-${dict2['version']}.tar.gz"
-            dict2['tar_url']="${dict['url_stem']}/${dict['os_string']}/\
+            dict2['tar_file']="${dict['tmp_dir']}/\
+${dict2['name']}-${dict2['version']}.tar.gz"
+            dict2['tar_url']="${dict['s3_bucket']}/${dict['os_string']}/\
 ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
-            if ! koopa_is_url_active "${dict2['tar_url']}"
-            then
-                koopa_stop "No package at '${dict2['tar_url']}'."
-            fi
-            koopa_download "${dict2['tar_url']}" "${dict2['tar_file']}"
+            "${app['aws']}" --profile="${dict['aws_profile']}" \
+                s3 cp \
+                    --only-show-errors \
+                    "${dict2['tar_url']}" \
+                    "${dict2['tar_file']}"
+            koopa_assert_is_file "${dict2['tar_file']}"
             "${app['tar']}" -Pxzf "${dict2['tar_file']}"
             koopa_touch "${prefix}/.koopa-binary"
         done
@@ -12474,6 +12482,12 @@ koopa_install_hadolint() {
 koopa_install_harfbuzz() {
     koopa_install_app \
         --name='harfbuzz' \
+        "$@"
+}
+
+koopa_install_haskell_ghcup() {
+    koopa_install_app \
+        --name='haskell-ghcup' \
         "$@"
 }
 
@@ -17708,26 +17722,25 @@ koopa_push_app_build() {
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['distribution_id']="${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:?}"
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['os_string']="$(koopa_os_string)"
         ['profile']='acidgenomics'
-        ['s3_bucket']='s3://koopa.acidgenomics.com'
+        ['s3_bucket']='s3://app.koopa.acidgenomics.com'
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
-    export AWS_MAX_ATTEMPTS=5
-    export AWS_RETRY_MODE='standard'
     for name in "$@"
     do
         local dict2
         declare -A dict2
         dict2['name']="$name"
-        dict2['prefix']="$(koopa_realpath "${dict['opt_prefix']}/${dict2['name']}")"
+        dict2['prefix']="$( \
+            koopa_realpath "${dict['opt_prefix']}/${dict2['name']}" \
+        )"
         koopa_assert_is_dir "${dict2['prefix']}"
         dict2['version']="$(koopa_basename "${dict2['prefix']}")"
         dict2['local_tar']="${dict['tmp_dir']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
-        dict2['s3_rel_path']="/app/${dict['os_string']}/${dict['arch']}/\
+        dict2['s3_rel_path']="/${dict['os_string']}/${dict['arch']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
         dict2['remote_tar']="${dict['s3_bucket']}${dict2['s3_rel_path']}"
         koopa_alert "Pushing '${dict2['prefix']}' to '${dict2['remote_tar']}'."
@@ -17735,12 +17748,6 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         "${app['tar']}" -Pczf "${dict2['local_tar']}" "${dict2['prefix']}/"
         "${app['aws']}" --profile="${dict['profile']}" \
             s3 cp "${dict2['local_tar']}" "${dict2['remote_tar']}"
-        "${app['aws']}" --profile="${dict['profile']}" \
-            cloudfront create-invalidation \
-                --distribution-id="${dict['distribution_id']}" \
-                --paths="${dict2['s3_rel_path']}" \
-                >/dev/null \
-            || true
     done
     koopa_rm "${dict['tmp_dir']}"
     return 0
@@ -18046,6 +18053,7 @@ koopa_r_configure_environ() {
     fi
     declare -A app_pc_path_arr
     keys=(
+        'curl'
         'fontconfig'
         'freetype'
         'fribidi'
@@ -18461,38 +18469,21 @@ koopa_r_configure_makevars() {
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['fontconfig']="$(koopa_app_prefix 'fontconfig')"
-        ['freetype']="$(koopa_app_prefix 'freetype')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
-        ['icu4c']="$(koopa_app_prefix 'icu4c')"
-        ['jpeg']="$(koopa_app_prefix 'jpeg')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
-        ['libpng']="$(koopa_app_prefix 'libpng')"
-        ['libtiff']="$(koopa_app_prefix 'libtiff')"
-        ['libxml2']="$(koopa_app_prefix 'libxml2')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
-        ['pcre2']="$(koopa_app_prefix 'pcre2')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['system']=0
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
-        "${dict['fontconfig']}" \
-        "${dict['freetype']}" \
         "${dict['gettext']}" \
-        "${dict['icu4c']}" \
-        "${dict['jpeg']}" \
         "${dict['lapack']}" \
-        "${dict['libpng']}" \
-        "${dict['libtiff']}" \
-        "${dict['libxml2']}" \
         "${dict['openblas']}" \
-        "${dict['pcre2']}" \
-        "${dict['r_prefix']}" \
-        "${dict['zlib']}" \
-        "${dict['zstd']}"
+        "${dict['r_prefix']}"
+    koopa_add_to_pkg_config_path \
+        "${dict['lapack']}/lib/pkgconfig" \
+        "${dict['openblas']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if koopa_is_macos
@@ -18514,19 +18505,6 @@ koopa_r_configure_makevars() {
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
     koopa_alert "Configuring '${dict['file']}'."
-    koopa_add_to_pkg_config_path \
-        "${dict['fontconfig']}/lib/pkgconfig" \
-        "${dict['freetype']}/lib/pkgconfig" \
-        "${dict['icu4c']}/lib/pkgconfig" \
-        "${dict['jpeg']}/lib/pkgconfig" \
-        "${dict['lapack']}/lib/pkgconfig" \
-        "${dict['libpng']}/lib/pkgconfig" \
-        "${dict['libtiff']}/lib/pkgconfig" \
-        "${dict['libxml2']}/lib/pkgconfig" \
-        "${dict['openblas']}/lib/pkgconfig" \
-        "${dict['pcre2']}/lib/pkgconfig" \
-        "${dict['zlib']}/lib/pkgconfig" \
-        "${dict['zstd']}/lib/pkgconfig"
     cppflags=()
     ldflags=()
     lines=()
@@ -18536,21 +18514,38 @@ koopa_r_configure_makevars() {
             ldflags+=('-L/usr/local/lib')
             ;;
     esac
-    if koopa_is_macos
-    then
-        cppflags+=("-I${dict['gettext']}/include")
-        ldflags+=("-L${dict['gettext']}/lib")
-    fi
     if koopa_is_linux
     then
         case "${dict['system']}" in
             '1')
+                dict['fontconfig']="$(koopa_app_prefix 'fontconfig')"
+                dict['freetype']="$(koopa_app_prefix 'freetype')"
+                dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+                dict['jpeg']="$(koopa_app_prefix 'jpeg')"
+                dict['libpng']="$(koopa_app_prefix 'libpng')"
+                dict['libtiff']="$(koopa_app_prefix 'libtiff')"
+                dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+                dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+                dict['zlib']="$(koopa_app_prefix 'zlib')"
+                dict['zstd']="$(koopa_app_prefix 'zstd')"
+                koopa_add_to_pkg_config_path \
+                    "${dict['fontconfig']}/lib/pkgconfig" \
+                    "${dict['freetype']}/lib/pkgconfig" \
+                    "${dict['icu4c']}/lib/pkgconfig" \
+                    "${dict['jpeg']}/lib/pkgconfig" \
+                    "${dict['libpng']}/lib/pkgconfig" \
+                    "${dict['libtiff']}/lib/pkgconfig" \
+                    "${dict['libxml2']}/lib/pkgconfig" \
+                    "${dict['pcre2']}/lib/pkgconfig" \
+                    "${dict['zlib']}/lib/pkgconfig" \
+                    "${dict['zstd']}/lib/pkgconfig"
                 local pkg_config
                 pkg_config=(
                     'fontconfig'
                     'freetype2'
                     'icu-i18n'
                     'icu-uc'
+                    'libcurl'
                     'libjpeg'
                     'libpcre2-8'
                     'libpng'
@@ -18567,12 +18562,13 @@ koopa_r_configure_makevars() {
                 ;;
         esac
     fi
-    cppflags+=(
-        "-I${dict['bzip2']}/include"
-    )
-    ldflags+=(
-        "-L${dict['bzip2']}/lib"
-    )
+    cppflags+=("-I${dict['bzip2']}/include")
+    ldflags+=("-L${dict['bzip2']}/lib")
+    if koopa_is_macos
+    then
+        cppflags+=("-I${dict['gettext']}/include")
+        ldflags+=("-L${dict['gettext']}/lib")
+    fi
     koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
@@ -23276,6 +23272,12 @@ koopa_uninstall_harfbuzz() {
         "$@"
 }
 
+koopa_uninstall_haskell_ghcup() {
+    koopa_uninstall_app \
+        --name='haskell-ghcup' \
+        "$@"
+}
+
 koopa_uninstall_haskell_stack() {
     koopa_uninstall_app \
         --name='haskell-stack' \
@@ -24721,38 +24723,6 @@ koopa_update_system_tex_packages() {
     koopa_update_app \
         --name='tex-packages' \
         --system \
-        "$@"
-}
-
-koopa_update_user_doom_emacs() {
-    koopa_update_app \
-        --name='doom-emacs' \
-        --prefix="$(koopa_doom_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_update_user_prelude_emacs() {
-    koopa_update_app \
-        --name='prelude-emacs' \
-        --prefix="$(koopa_prelude_emacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_update_user_spacemacs() {
-    koopa_update_app \
-        --name='spacemacs' \
-        --prefix="$(koopa_spacemacs_prefix)" \
-        --user \
-        "$@"
-}
-
-koopa_update_user_spacevim() {
-    koopa_update_app \
-        --name='spacevim' \
-        --prefix="$(koopa_spacevim_prefix)" \
-        --user \
         "$@"
 }
 

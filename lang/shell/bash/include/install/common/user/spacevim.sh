@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SpaceVim.
-    # @note Updated 2022-07-14.
+    # @note Updated 2022-09-16.
     #
     # @seealso
     # - https://spacevim.org
@@ -17,7 +17,7 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        ['branch']='master'
+        ['commit']="${KOOPA_INSTALL_VERSION:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url']='https://github.com/SpaceVim/SpaceVim.git'
         ['xdg_data_home']="$(koopa_xdg_data_home)"
@@ -28,7 +28,7 @@ main() {
         koopa_ln "${HOME:?}/Library/Fonts" "${dict['xdg_data_home']}/fonts"
     fi
     koopa_git_clone \
-        --branch="${dict['branch']}" \
+        --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"
     # Bug fix for vimproc error.

@@ -90,12 +90,12 @@
     },
     "bin": ["aws"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-19",
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.7.27"
+    "version": "2.7.31"
   },
   "azure-cli": {
     "bin": ["az"],
@@ -342,10 +342,10 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-09-01",
+    "date": "2022-09-19",
     "dependencies": [],
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.22.0"
+    "version": "2.23.0"
   },
   "cloudbiolinux": {
     "check": false,
@@ -639,9 +639,9 @@
   "difftastic": {
     "bin": ["difft"],
     "conservative": false,
-    "date": "2022-09-03",
+    "date": "2022-09-19",
     "depends": ["rust"],
-    "version": "0.35.0"
+    "version": "0.36.1"
   },
   "docker-credential-pass": {
     "conservative": false,
@@ -655,11 +655,17 @@
     "depends": ["rust"],
     "version": "0.1.0"
   },
+  "doom-emacs": {
+    "check": false,
+    "date": "2022-09-16",
+    "url": ["https://github.com/doomemacs/doomemacs/"],
+    "version": "42e5763782fdc1aabb9f2624d468248d6978abe2"
+  },
   "dotfiles": {
     "conservative": false,
-    "date": "2022-09-07",
+    "date": "2022-09-13",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "606e1a2e0428ad21926d001594883f73c9bcdefe"
+    "version": "4c5c4b07a8665b2d29916da24d808cab13a2e4c3"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -943,10 +949,10 @@
   "google-cloud-sdk": {
     "bin": ["gcloud"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-19",
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "399.0.0"
+    "version": "402.0.0"
   },
   "gperf": {
     "conservative": true,
@@ -1043,15 +1049,26 @@
   "harfbuzz": {
     "conservative": true,
     "date": "2022-08-29",
+    "outdated": true,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "5.1.0"
+  },
+  "haskell-ghcup": {
+    "bin": ["ghcup"],
+    "build_dependencies": ["curl"],
+    "conservative": false,
+    "date": "2022-09-19",
+    "large": true,
+    "url": ["https://www.haskell.org/ghcup/"],
+    "version": "0.1.18.0"
   },
   "haskell-stack": {
     "bin": ["stack"],
     "conservative": false,
+    "date": "2022-09-19",
     "large": true,
     "url": ["https://haskellstack.org/"],
-    "version": "2.7.5"
+    "version": "2.9.1"
   },
   "hdf5": {
     "bin": [
@@ -1291,6 +1308,7 @@
   "libffi": {
     "conservative": true,
     "date": "2022-08-29",
+    "outdated": true,
     "url": ["https://sourceware.org/libffi/"],
     "version": "3.4.2"
   },
@@ -1874,10 +1892,16 @@
   },
   "poetry": {
     "bin": ["poetry"],
-    "conservative": true,
-    "date": "2022-08-31",
+    "conservative": false,
+    "date": "2022-09-19",
     "depends": ["python"],
-    "version": "1.2.0"
+    "version": "1.2.1"
+  },
+  "prelude-emacs": {
+    "check": false,
+    "date": "2022-09-16",
+    "url": ["https://github.com/bbatsov/prelude/"],
+    "version": "261600daa691f46289657d6de6c3a5a92c6fedd2"
   },
   "prettier": {
     "bin": ["prettier"],
@@ -2102,9 +2126,9 @@
   "ruff": {
     "bin": ["ruff"],
     "conservative": false,
-    "date": "2022-09-13",
+    "date": "2022-09-19",
     "dependencies": ["python"],
-    "version": "0.0.37"
+    "version": "0.0.40"
   },
   "rust": {
     "bin": [
@@ -2215,6 +2239,18 @@
     "man1": ["sox.1"],
     "url": ["http://sox.sourceforge.net/sox.html"],
     "version": "14.4.2"
+  },
+  "spacemacs": {
+    "check": false,
+    "date": "2022-09-16",
+    "url": ["https://github.com/syl20bnr/spacemacs/"],
+    "version": "9cdf97f87e89b3f5045da84e181057e82bfc13aa"
+  },
+  "spacevim": {
+    "check": false,
+    "date": "2022-09-16",
+    "url": ["https://github.com/SpaceVim/SpaceVim/"],
+    "version": "4baafa275025f71102eb747fdc636285a96a7082"
   },
   "sqlite": {
     "bin": ["sqlite3"],
