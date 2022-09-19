@@ -29,11 +29,11 @@ v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-v${dict['version']}"
+    # > export BOOTSTRAP_HASKELL_INSTALL_HLS=1
+    # > export BOOTSTRAP_HASKELL_INSTALL_STACK=1
     export BOOTSTRAP_HASKELL_CABAL_VERSION='recommended'
     export BOOTSTRAP_HASKELL_DOWNLOADER='curl'
     export BOOTSTRAP_HASKELL_GHC_VERSION='recommended'
-    export BOOTSTRAP_HASKELL_INSTALL_HLS=1
-    export BOOTSTRAP_HASKELL_INSTALL_STACK=1
     export BOOTSTRAP_HASKELL_NONINTERACTIVE=1
     export BOOTSTRAP_HASKELL_NO_UPGRADE=1
     export BOOTSTRAP_HASKELL_VERBOSE=1
