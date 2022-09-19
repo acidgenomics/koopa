@@ -29,7 +29,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-09-13.
+    # @note Updated 2022-09-19.
     #
     # @section Package library location:
     #
@@ -177,6 +177,7 @@ koopa_r_configure_environ() {
         'openssl3'
         'pcre2'
         'proj'
+        'python'
         'readline'
         'sqlite'
         'xz'
