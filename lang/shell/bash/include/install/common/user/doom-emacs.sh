@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Doom Emacs.
-    # @note Updated 2022-08-31.
+    # @note Updated 2022-09-16.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -32,25 +32,25 @@ main() {
     fi
     [[ -x "${app['emacs']}" ]] || return 1
     declare -A dict=(
-        ['branch']='master'
+        ['commit']="${KOOPA_INSTALL_VERSION:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url']='https://github.com/hlissner/doom-emacs.git'
     )
-    koopa_add_to_path_start "$(koopa_dirname "${app['emacs']}")"
     koopa_git_clone \
-        --branch="${dict['branch']}" \
+        --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"
     app['doom']="${dict['prefix']}/bin/doom"
     koopa_assert_is_installed "${app['doom']}"
+    koopa_add_to_path_start "$(koopa_dirname "${app['emacs']}")"
     install_args=(
         # > '--no-config'
         # > '--no-install'
         '--no-env'
         '--no-fonts'
     )
-    "${app['doom']}" --force install "${install_args[@]}"
-    "${app['doom']}" --force sync
-    # > "${app['doom']}" --force doctor
+    "${app['doom']}" install "${install_args[@]}"
+    "${app['doom']}" sync
+    # > "${app['doom']}" doctor
     return 0
 }

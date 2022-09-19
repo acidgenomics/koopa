@@ -179,6 +179,7 @@ __koopa_complete() {
                         'gzip'
                         'hadolint'
                         'harfbuzz'
+                        'haskell-ghcup'
                         'haskell-stack'
                         'hdf5'
                         'hisat2'
@@ -431,7 +432,6 @@ __koopa_complete() {
                         'koopa'
                         'r-packages'
                         'system'
-                        'user'
                     )
                     ;;
                 *)
@@ -514,14 +514,6 @@ __koopa_complete() {
                                 'homebrew'
                                 'homebrew-bundle'
                                 'tex-packages'
-                            )
-                            ;;
-                        'user')
-                            args+=(
-                                'doom-emacs'
-                                'prelude-emacs'
-                                'spacemacs'
-                                'spacevim'
                             )
                             ;;
                         esac

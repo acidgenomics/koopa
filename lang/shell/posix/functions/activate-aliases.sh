@@ -3,7 +3,7 @@
 koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-09-03.
+    # @note Updated 2022-09-16.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -23,7 +23,7 @@ koopa_activate_aliases() {
     alias cls='koopa_alias_colorls'
     alias cm='chezmoi'
     alias d='clear; cd -; l'
-    alias doom-emacs='koopa_alias_doom_emacs'
+    alias doom-emacs='koopa_doom_emacs'
     alias e='exit'
     alias emacs-vanilla='koopa_alias_emacs_vanilla'
     alias emacs='koopa_alias_emacs'
@@ -48,7 +48,7 @@ koopa_activate_aliases() {
     alias mamba='koopa_alias_mamba'
     alias nvim-fzf='koopa_alias_nvim_fzf'
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
-    alias prelude-emacs='koopa_alias_prelude_emacs'
+    alias prelude-emacs='koopa_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
     alias python='koopa_alias_python'
     alias q='exit'
@@ -57,8 +57,8 @@ koopa_activate_aliases() {
     alias rg='rg --case-sensitive --no-ignore'
     alias ronn='ronn --roff'
     alias sha256='koopa_alias_sha256'
-    alias spacemacs='koopa_alias_spacemacs'
-    alias spacevim='koopa_alias_spacevim'
+    alias spacemacs='koopa_spacemacs'
+    alias spacevim='koopa_spacevim'
     alias tmux-vanilla='koopa_alias_tmux_vanilla'
     alias today='koopa_alias_today'
     alias u='clear; cd ../; pwd; l'
