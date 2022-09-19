@@ -342,10 +342,10 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-09-01",
+    "date": "2022-09-19",
     "dependencies": [],
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.22.0"
+    "version": "2.23.0"
   },
   "cloudbiolinux": {
     "check": false,
@@ -639,9 +639,9 @@
   "difftastic": {
     "bin": ["difft"],
     "conservative": false,
-    "date": "2022-09-03",
+    "date": "2022-09-19",
     "depends": ["rust"],
-    "version": "0.35.0"
+    "version": "0.36.1"
   },
   "docker-credential-pass": {
     "conservative": false,
@@ -1049,6 +1049,7 @@
   "harfbuzz": {
     "conservative": true,
     "date": "2022-08-29",
+    "outdated": true,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "5.1.0"
   },
@@ -1890,10 +1891,10 @@
   },
   "poetry": {
     "bin": ["poetry"],
-    "conservative": true,
-    "date": "2022-08-31",
+    "conservative": false,
+    "date": "2022-09-19",
     "depends": ["python"],
-    "version": "1.2.0"
+    "version": "1.2.1"
   },
   "prelude-emacs": {
     "check": false,
@@ -2124,9 +2125,9 @@
   "ruff": {
     "bin": ["ruff"],
     "conservative": false,
-    "date": "2022-09-13",
+    "date": "2022-09-19",
     "dependencies": ["python"],
-    "version": "0.0.37"
+    "version": "0.0.40"
   },
   "rust": {
     "bin": [
