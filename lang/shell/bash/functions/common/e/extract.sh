@@ -7,7 +7,7 @@
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2022-08-25.
+    # @note Updated 2022-09-19.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
