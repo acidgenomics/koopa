@@ -16784,7 +16784,7 @@ koopa_locate_uniq() {
 koopa_locate_unzip() {
     koopa_locate_app \
         --app-name='unzip' \
-        --bin-name='gunzip' \
+        --bin-name='unzip' \
         --system-bin-name='unzip' \
         "$@"
 }
@@ -18075,6 +18075,7 @@ koopa_r_configure_environ() {
         'openssl3'
         'pcre2'
         'proj'
+        'python'
         'readline'
         'sqlite'
         'xz'
@@ -18289,6 +18290,7 @@ koopa_r_configure_ldpaths() {
     )
     declare -A ld_lib_app_arr
     keys=(
+        'bzip2'
         'fontconfig'
         'freetype'
         'fribidi'
@@ -18301,6 +18303,7 @@ koopa_r_configure_ldpaths() {
         'jpeg'
         'lapack'
         'libgit2'
+        'libiconv'
         'libjpeg-turbo'
         'libpng'
         'libssh2'
@@ -18309,6 +18312,7 @@ koopa_r_configure_ldpaths() {
         'openssl3'
         'pcre2'
         'proj'
+        'python'
         'readline'
         'sqlite'
         'xz'
@@ -18420,10 +18424,7 @@ koopa_r_configure_makeconf() {
         '-ldl'
         '-lm'
     )
-    if koopa_is_linux
-    then
-        libs+=('-ltirpc' '-lrt')
-    fi
+    koopa_is_linux && libs+=('-lrt' '-ltirpc')
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
     koopa_find_and_replace_in_file \
@@ -18655,8 +18656,15 @@ koopa_r_configure_makevars() {
     )
     if koopa_is_macos
     then
+        local libintl
+        libintl=(
+            '-Wl,-framework'
+            '-Wl,CoreFoundation'
+        )
+        conf_dict['libintl']="${libintl[*]}"
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=(
+            "LIBINTL = ${conf_dict['libintl']}"
             "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
         )
     fi

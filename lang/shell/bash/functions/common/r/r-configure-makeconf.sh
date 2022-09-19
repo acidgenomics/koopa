@@ -62,10 +62,7 @@ koopa_r_configure_makeconf() {
         '-ldl'
         '-lm'
     )
-    if koopa_is_linux
-    then
-        libs+=('-ltirpc' '-lrt')
-    fi
+    koopa_is_linux && libs+=('-lrt' '-ltirpc')
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
     koopa_find_and_replace_in_file \
