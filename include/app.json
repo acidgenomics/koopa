@@ -949,10 +949,10 @@
   "google-cloud-sdk": {
     "bin": ["gcloud"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-19",
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "399.0.0"
+    "version": "402.0.0"
   },
   "gperf": {
     "conservative": true,
