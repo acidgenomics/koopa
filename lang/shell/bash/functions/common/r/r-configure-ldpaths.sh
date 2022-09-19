@@ -71,6 +71,7 @@ koopa_r_configure_ldpaths() {
         'openssl3'
         'pcre2'
         'proj'
+        'python'
         'readline'
         'sqlite'
         'xz'
