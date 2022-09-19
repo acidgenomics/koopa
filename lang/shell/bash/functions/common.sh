@@ -18289,6 +18289,7 @@ koopa_r_configure_ldpaths() {
     )
     declare -A ld_lib_app_arr
     keys=(
+        'bzip2'
         'fontconfig'
         'freetype'
         'fribidi'
@@ -18301,6 +18302,7 @@ koopa_r_configure_ldpaths() {
         'jpeg'
         'lapack'
         'libgit2'
+        'libiconv'
         'libjpeg-turbo'
         'libpng'
         'libssh2'
