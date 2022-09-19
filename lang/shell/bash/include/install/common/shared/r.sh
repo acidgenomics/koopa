@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding an assert check for libomp in /usr/local for macOS.
 # NOTE Need to reduce the number of rpath dependencies here, and offload to
 #      ldpaths instead.
-# NOTE Consider adding an assert check for libomp in /usr/local.
 
 main() {
     # """
     # Install R.
-    # @note Updated 2022-09-08.
+    # @note Updated 2022-09-19.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -60,90 +60,64 @@ main() {
     # R currently has configuration issues with libbz2.dylib on macOS.
     koopa_is_linux && deps+=('bzip2')
     deps+=(
-        # icu4c deps: none.
+        # deps: none.
         'icu4c'
-        # ncurses deps: none.
+        # deps: none.
         'ncurses'
-        # readline deps: ncurses.
+        # deps: ncurses.
         'readline'
-        # libxml2 deps: icu4c, readline.
+        # deps: icu4c, readline.
         'libxml2'
-        # gettext deps: ncurses, libxml2.
+        # deps: none.
+        'libiconv'
+        # deps: bison, libiconv, libunistring, ncurses, libxml2.
         'gettext'
-        # xz deps: none.
+        # deps: none.
         'xz'
-        # openssl3 deps: zlib.
+        # deps: zlib.
         'openssl3'
-        # curl deps: openssl3.
+        # deps: openssl3.
         'curl'
-        # lapack deps: gcc.
+        # deps: gcc.
         'lapack'
-        # libffi deps: none.
+        # deps: none.
         'libffi'
-        # libjpeg-turbo deps: none.
+        # deps: none.
         'libjpeg-turbo'
-        # libpng deps: zlib.
+        # deps: zlib.
         'libpng'
-        # libtiff deps: libjpeg-turbo, zstd.
+        # deps: libjpeg-turbo, zstd.
         'libtiff'
-        # openblas deps: gcc.
+        # deps: gcc.
         'openblas'
-        # FIXME OK to remove this?
-        # openjdk deps: none.
+        # deps: none.
         'openjdk'
-        # pcre deps: zlib, bzip2.
+        # deps: zlib, bzip2.
         'pcre'
-        # pcre2 deps: zlib, bzip2.
+        # deps: zlib, bzip2.
         'pcre2'
-        # perl deps: none.
+        # deps: none.
         'perl'
-        # texinfo deps: gettext, ncurses, perl.
+        # deps: gettext, ncurses, perl.
         'texinfo'
-        # glib deps: zlib, gettext, libffi, pcre.
+        # deps: zlib, gettext, libffi, pcre.
         'glib'
-        # freetype deps: none.
+        # deps: none.
         'freetype'
-        # FIXME OK to remove this?
-        # gperf deps: none.
+        # deps: none.
         'gperf'
-        # fontconfig deps: gperf, freetype, libxml2.
+        # deps: gperf, freetype, libxml2.
         'fontconfig'
-        # FIXME OK to remove this?
-        # lzo deps: none.
+        # deps: none.
         'lzo'
-        # FIXME OK to remove this?
-        # pixman deps: none.
+        # deps: none.
         'pixman'
-        # FIXME OK to remove this?
-        # fribidi deps: none.
+        # deps: none.
         'fribidi'
-        # FIXME OK to remove this?
-        # harfbuzz deps: freetype, icu4c.
+        # deps: freetype, icu4c.
         'harfbuzz'
-        # libtool deps: m4.
+        # deps: m4.
         'libtool'
-        # imagemagick deps: libtool.
-        # > 'imagemagick'
-        # FIXME OK to remove this?
-        # libssh2 deps: openssl3.
-        'libssh2'
-        # FIXME OK to remove this?
-        # libgit2 deps: openssl3, libssh2.
-        # > 'libgit2'
-        # FIXME OK to remove this?
-        # sqlite deps: readline.
-        # > 'sqlite'
-        # python deps: zlib, libffi, openssl3.
-        'python'
-        # hdf5 deps: gcc.
-        # > 'hdf5'
-        # geos deps: none.
-        # > 'geos'
-        # proj deps: curl, libtiff, python, sqlite.
-        # > 'proj'
-        # gdal deps: curl, geos, hdf5, libxml2, openssl3, pcre2, sqlite,
-        # libtiff, proj, xz, zstd.
-        # > 'gdal'
         # X11.
         'xorg-xorgproto'
         'xorg-xcb-proto'
@@ -157,10 +131,10 @@ main() {
         'xorg-libxext'
         'xorg-libxrender'
         'xorg-libxt'
-        # cairo deps: gettext, freetype, libxml2, fontconfig, libffi,
-        # pcre, glib, libpng, lzo, pixman, X11.
+        # deps: gettext, freetype, libxml2, fontconfig, libffi, pcre, glib,
+        # libpng, lzo, pixman, X11.
         'cairo'
-        # tcl-tk deps: X11.
+        # deps: X11.
         'tcl-tk'
     )
     koopa_activate_opt_prefix "${deps[@]}"

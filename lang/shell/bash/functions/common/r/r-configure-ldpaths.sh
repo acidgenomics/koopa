@@ -61,6 +61,7 @@ koopa_r_configure_ldpaths() {
         'jpeg'
         'lapack'
         'libgit2'
+        'libiconv'
         'libjpeg-turbo'
         'libpng'
         'libssh2'
@@ -76,10 +77,6 @@ koopa_r_configure_ldpaths() {
         'zlib'
         'zstd'
     )
-    if koopa_is_linux
-    then
-        keys+=('libiconv')
-    fi
     if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
     then
         keys+=('gettext')

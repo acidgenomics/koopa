@@ -58,20 +58,11 @@ koopa_r_configure_makeconf() {
             'zlib' \
         )"
         "-L${dict['bzip2']}/lib"
+        "-L${dict['libiconv']}/lib"
         '-ldl'
         '-lm'
     )
-    if koopa_is_linux
-    then
-        libs+=(
-            "-L${dict['libiconv']}/lib"
-            '-lrt'
-            '-ltirpc'
-        )
-    elif koopa_is_macos
-    then
-        libs+=('-liconv')
-    fi
+    koopa_is_linux && libs+=('-lrt' '-ltirpc')
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
     koopa_find_and_replace_in_file \
