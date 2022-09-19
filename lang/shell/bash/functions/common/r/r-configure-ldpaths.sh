@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-09-19.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -48,6 +48,7 @@ koopa_r_configure_ldpaths() {
     )
     declare -A ld_lib_app_arr
     keys=(
+        'bzip2'
         'fontconfig'
         'freetype'
         'fribidi'
@@ -60,6 +61,7 @@ koopa_r_configure_ldpaths() {
         'jpeg'
         'lapack'
         'libgit2'
+        'libiconv'
         'libjpeg-turbo'
         'libpng'
         'libssh2'
