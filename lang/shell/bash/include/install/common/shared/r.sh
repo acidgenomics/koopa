@@ -3,6 +3,8 @@
 # NOTE Consider adding an assert check for libomp in /usr/local for macOS.
 # NOTE Need to reduce the number of rpath dependencies here, and offload to
 #      ldpaths instead.
+# NOTE Now seeing this ld warning popping up on macOS:
+#      ld: warning: -undefined dynamic_lookup may not work with chained fixups
 
 main() {
     # """
