@@ -11346,15 +11346,19 @@ koopa_install_anaconda() {
 koopa_install_app_from_binary_package() {
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app
-    app['tar']="$(koopa_locate_tar --allow-system)"
+    declare -A app=(
+        ['aws']="$(koopa_locate_aws --allow-system)"
+        ['tar']="$(koopa_locate_tar --allow-system)"
+    )
+    [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+        ['aws_profile']="${AWS_PROFILE:-acidgenomics}"
         ['binary_prefix']='/opt/koopa'
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_string']="$(koopa_os_string)"
-        ['url_stem']="$(koopa_koopa_url)/app"
+        ['s3_bucket']="s3://app.koopa.acidgenomics.com"
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
@@ -11384,7 +11388,8 @@ ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
             then
                 koopa_stop "No package at '${dict2['tar_url']}'."
             fi
-            koopa_download "${dict2['tar_url']}" "${dict2['tar_file']}"
+            aws --profile="${dict['aws_profile']}" \
+                s3 cp "${dict2['tar_url']}" "${dict2['tar_file']}"
             "${app['tar']}" -Pxzf "${dict2['tar_file']}"
             koopa_touch "${prefix}/.koopa-binary"
         done
@@ -17716,26 +17721,25 @@ koopa_push_app_build() {
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['distribution_id']="${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:?}"
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['os_string']="$(koopa_os_string)"
         ['profile']='acidgenomics'
-        ['s3_bucket']='s3://koopa.acidgenomics.com'
+        ['s3_bucket']='s3://app.koopa.acidgenomics.com'
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
-    export AWS_MAX_ATTEMPTS=5
-    export AWS_RETRY_MODE='standard'
     for name in "$@"
     do
         local dict2
         declare -A dict2
         dict2['name']="$name"
-        dict2['prefix']="$(koopa_realpath "${dict['opt_prefix']}/${dict2['name']}")"
+        dict2['prefix']="$( \
+            koopa_realpath "${dict['opt_prefix']}/${dict2['name']}" \
+        )"
         koopa_assert_is_dir "${dict2['prefix']}"
         dict2['version']="$(koopa_basename "${dict2['prefix']}")"
         dict2['local_tar']="${dict['tmp_dir']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
-        dict2['s3_rel_path']="/app/${dict['os_string']}/${dict['arch']}/\
+        dict2['s3_rel_path']="/${dict['os_string']}/${dict['arch']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
         dict2['remote_tar']="${dict['s3_bucket']}${dict2['s3_rel_path']}"
         koopa_alert "Pushing '${dict2['prefix']}' to '${dict2['remote_tar']}'."
@@ -17743,12 +17747,6 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         "${app['tar']}" -Pczf "${dict2['local_tar']}" "${dict2['prefix']}/"
         "${app['aws']}" --profile="${dict['profile']}" \
             s3 cp "${dict2['local_tar']}" "${dict2['remote_tar']}"
-        "${app['aws']}" --profile="${dict['profile']}" \
-            cloudfront create-invalidation \
-                --distribution-id="${dict['distribution_id']}" \
-                --paths="${dict2['s3_rel_path']}" \
-                >/dev/null \
-            || true
     done
     koopa_rm "${dict['tmp_dir']}"
     return 0
