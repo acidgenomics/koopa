@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't setting fontconfig include correctly on Ubuntu (e.g. 'ft2build.h').
-# FIXME This is required for systemfonts to install correctly.
+# FIXME Work on hardening these:
+# > MAKE=${MAKE-'make'}
+# > PAGER=${PAGER-'/usr/bin/less'}
+# > R_BROWSER=${R_BROWSER-'/usr/bin/open'}
+# > R_BZIPCMD=${R_BZIPCMD-'/usr/bin/bzip2'}
+# > R_GZIPCMD=${R_GZIPCMD-'/usr/bin/gzip'}
+# > R_PDFVIEWER=${R_PDFVIEWER-'/usr/bin/open'}
+# > R_PRINTCMD=${R_PRINTCMD-'lpr'}
+# > R_TEXI2DVICMD=${R_TEXI2DVICMD-${TEXI2DVI-'/usr/local/bin/texi2dvi'}}
+# > R_UNZIPCMD=${R_UNZIPCMD-'/usr/bin/unzip'}
+# > R_ZIPCMD=${R_ZIPCMD-'/usr/bin/zip'}
+# > SED=${SED-'/usr/bin/sed'}
+# > TAR=${TAR-'/usr/bin/tar'}
 
 # NOTE RStudio PATH is now inconsistent with R due to breaking changes in
 # internal 'SessionPath.cpp'.
