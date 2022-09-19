@@ -1,32 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE ARM support currently requires LLVM. Refer to Homebrew recipe
-# for details.
-#
-# Details regarding ARM build for stack 2.7.5:
-#
-# All ghc versions before 9.2.1 requires LLVM Code Generator as a backend on
-# ARM. GHC 8.10.7 user manual recommend use LLVM 9 through 12 and we met some
-# unknown issue with LLVM 13 before so conservatively use LLVM 12 here.
-#
-# References:
-#   https://downloads.haskell.org/~ghc/8.10.7/docs/html/users_guide/8.10.7-notes.html
-#   https://gitlab.haskell.org/ghc/ghc/-/issues/20559
-
-# NOTE Consider using cabal, which appears to support ARM.
-# - https://www.haskell.org/cabal/
-# - https://www.reddit.com/r/haskell/comments/tqzxy1/
-#     now_that_stackage_supports_ghc_92_is_it_easy_to/
-# - https://stackoverflow.com/questions/30913145/
-#     what-is-the-difference-between-cabal-and-stack
-
-# NOTE GHC binary links (including ARM) are here:
-# https://downloads.haskell.org/~ghc/9.2.3/
-
 main() {
     # """
     # Install Haskell Stack.
-    # @note Updated 2022-08-09.
+    # @note Updated 2022-09-19.
     #
     # @section Required system dependencies:
     #
@@ -90,8 +67,7 @@ download/v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_chmod 'u+x' "${dict['file']}"
     koopa_cp "${dict['file']}" "${app['stack']}"
-    unset -v STACK_ROOT
-    koopa_rm "${HOME:?}/.stack"
+    # > koopa_rm "${HOME:?}/.stack"
     stack_args=(
         "--jobs=${dict['jobs']}"
         "--stack-root=${dict['root']}"

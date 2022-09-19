@@ -12477,6 +12477,12 @@ koopa_install_harfbuzz() {
         "$@"
 }
 
+koopa_install_haskell_ghcup() {
+    koopa_install_app \
+        --name='haskell-ghcup' \
+        "$@"
+}
+
 koopa_install_haskell_stack() {
     koopa_install_app \
         --name='haskell-stack' \
@@ -23262,6 +23268,12 @@ koopa_uninstall_hadolint() {
 koopa_uninstall_harfbuzz() {
     koopa_uninstall_app \
         --name='harfbuzz' \
+        "$@"
+}
+
+koopa_uninstall_haskell_ghcup() {
+    koopa_uninstall_app \
+        --name='haskell-ghcup' \
         "$@"
 }
 
