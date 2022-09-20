@@ -105,10 +105,13 @@ koopa_r_configure_ldpaths() {
     fi
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
-    ld_lib_arr+=(
-        "\${R_HOME}/lib"
-        "${ld_lib_app_arr[@]}"
-    )
+    ld_lib_arr+=("\${R_HOME}/lib")
+    case "${dict['system']}" in
+        '1')
+            ld_lib_arr+=('/usr/local/lib')
+            ;;
+    esac
+    ld_lib_arr+=("${ld_lib_app_arr[@]}")
     if koopa_is_linux
     then
         local sys_libdir
