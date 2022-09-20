@@ -18534,6 +18534,8 @@ koopa_r_configure_makevars() {
                 dict['curl']="$(koopa_app_prefix 'curl')"
                 dict['fontconfig']="$(koopa_app_prefix 'fontconfig')"
                 dict['freetype']="$(koopa_app_prefix 'freetype')"
+                dict['fribidi']="$(koopa_app_prefix 'fribidi')"
+                dict['harfbuzz']="$(koopa_app_prefix 'harfbuzz')"
                 dict['icu4c']="$(koopa_app_prefix 'icu4c')"
                 dict['jpeg']="$(koopa_app_prefix 'jpeg')"
                 dict['libpng']="$(koopa_app_prefix 'libpng')"
@@ -18546,6 +18548,8 @@ koopa_r_configure_makevars() {
                     "${dict['curl']}/lib/pkgconfig" \
                     "${dict['fontconfig']}/lib/pkgconfig" \
                     "${dict['freetype']}/lib/pkgconfig" \
+                    "${dict['fribidi']}/lib/pkgconfig" \
+                    "${dict['harfbuzz']}/lib/pkgconfig" \
                     "${dict['icu4c']}/lib/pkgconfig" \
                     "${dict['jpeg']}/lib/pkgconfig" \
                     "${dict['libpng']}/lib/pkgconfig" \
@@ -18558,6 +18562,8 @@ koopa_r_configure_makevars() {
                 pkg_config=(
                     'fontconfig'
                     'freetype2'
+                    'fribidi'
+                    'harfbuzz'
                     'icu-i18n'
                     'icu-uc'
                     'libcurl'
