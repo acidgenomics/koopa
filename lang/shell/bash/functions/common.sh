@@ -18059,6 +18059,7 @@ koopa_r_configure_environ() {
         'fribidi'
         'gdal'
         'geos'
+        'glib'
         'graphviz'
         'harfbuzz'
         'icu4c'
@@ -18095,6 +18096,7 @@ koopa_r_configure_environ() {
     done
     if koopa_is_linux
     then
+        app_pc_path_arr['glib']="${app_pc_path_arr['glib']}64"
         app_pc_path_arr['harfbuzz']="${app_pc_path_arr['harfbuzz']}64"
     fi
     for i in "${!app_pc_path_arr[@]}"
@@ -18542,6 +18544,7 @@ koopa_r_configure_makevars() {
             'fribidi'
             'gdal'
             'geos'
+            'glib'
             'graphviz'
             'harfbuzz'
             'icu4c'
@@ -18578,6 +18581,7 @@ koopa_r_configure_makevars() {
         done
         if koopa_is_linux
         then
+            app_pc_path_arr['glib']="${app_pc_path_arr['glib']}64"
             app_pc_path_arr['harfbuzz']="${app_pc_path_arr['harfbuzz']}64"
         fi
         for i in "${!app_pc_path_arr[@]}"
