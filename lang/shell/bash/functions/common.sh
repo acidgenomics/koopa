@@ -17998,7 +17998,7 @@ koopa_python_system_packages_prefix() {
 
 koopa_r_configure_environ() {
     local app conf_dict dict i key keys lines path_arr
-    local app_pc_path_arr pc_path_arr sys_pc_path_arr
+    local app_pc_path_arr pc_path_arr
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['cat']="$(koopa_locate_cat)"
@@ -18032,11 +18032,6 @@ koopa_r_configure_environ() {
         "R_LIBS_USER=\${R_LIBS_SITE}"
     )
     path_arr=()
-    case "${dict['system']}" in
-        '1')
-            path_arr+=('/usr/local/bin')
-            ;;
-    esac
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -18106,18 +18101,7 @@ koopa_r_configure_environ() {
     done
     koopa_assert_is_dir "${app_pc_path_arr[@]}"
     pc_path_arr=()
-    if [[ "${dict['system']}" -eq 1 ]]
-    then
-        pc_path_arr+=('/usr/local/lib/pkgconfig')
-    fi
     pc_path_arr+=("${app_pc_path_arr[@]}")
-    if [[ "${dict['system']}" -eq 1 ]]
-    then
-        readarray -t sys_pc_path_arr <<< "$( \
-            "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
-        )"
-        pc_path_arr+=("${sys_pc_path_arr[@]}")
-    fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
     lines+=(
@@ -18536,12 +18520,6 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    case "${dict['system']}" in
-        '1')
-            cppflags+=('-I/usr/local/include')
-            ldflags+=('-L/usr/local/lib')
-            ;;
-    esac
     if koopa_is_linux
     then
         local app_pc_path_arr i key keys pkg_config
