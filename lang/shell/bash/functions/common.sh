@@ -18102,6 +18102,14 @@ koopa_r_configure_environ() {
     koopa_assert_is_dir "${app_pc_path_arr[@]}"
     pc_path_arr=()
     pc_path_arr+=("${app_pc_path_arr[@]}")
+    if [[ "${dict['system']}" -eq 1 ]]
+    then
+        local sys_pc_path_arr
+        readarray -t sys_pc_path_arr <<< "$( \
+            "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
+        )"
+        pc_path_arr+=("${sys_pc_path_arr[@]}")
+    fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
     lines+=(
@@ -18344,7 +18352,10 @@ koopa_r_configure_ldpaths() {
         koopa_assert_is_dir "$sys_libdir"
         ld_lib_arr+=("$sys_libdir")
     fi
-    ld_lib_arr+=("\${R_JAVA_LD_LIBRARY_PATH}")
+    ld_lib_arr+=(
+        '/usr/lib'
+        "\${R_JAVA_LD_LIBRARY_PATH}"
+    )
     lines+=(
         "LD_LIBRARY_PATH=\"$(printf '%s:' "${ld_lib_arr[@]}")\""
         'export LD_LIBRARY_PATH'

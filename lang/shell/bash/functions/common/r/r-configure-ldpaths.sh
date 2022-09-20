@@ -116,7 +116,10 @@ koopa_r_configure_ldpaths() {
         koopa_assert_is_dir "$sys_libdir"
         ld_lib_arr+=("$sys_libdir")
     fi
-    ld_lib_arr+=("\${R_JAVA_LD_LIBRARY_PATH}")
+    ld_lib_arr+=(
+        '/usr/lib'
+        "\${R_JAVA_LD_LIBRARY_PATH}"
+    )
     lines+=(
         "LD_LIBRARY_PATH=\"$(printf '%s:' "${ld_lib_arr[@]}")\""
         'export LD_LIBRARY_PATH'
