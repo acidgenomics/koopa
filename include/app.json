@@ -1913,8 +1913,9 @@
   "procs": {
     "bin": ["procs"],
     "conservative": false,
+    "date": "2022-09-20",
     "depends": ["rust"],
-    "version": "0.13.0"
+    "version": "0.13.1"
   },
   "proj": {
     "bin": ["proj", "projinfo"],
