@@ -115,7 +115,6 @@ __koopa_activate_koopa() {
     koopa_add_to_path_start \
         "$(koopa_scripts_private_prefix)/bin" \
         || return 1
-    koopa_activate_aliases || return 1
     if ! koopa_is_subshell
     then
         koopa_add_config_link \
@@ -125,6 +124,7 @@ __koopa_activate_koopa() {
             || return 1
         koopa_activate_today_bucket || return 1
     fi
+    koopa_activate_aliases || return 1
     return 0
 }
 
