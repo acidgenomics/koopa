@@ -137,6 +137,7 @@ koopa_r_configure_makevars() {
             'libxml2'
             'openblas'
             'openssl3'
+            'pcre'
             'pcre2'
             'proj'
             'python'
@@ -169,6 +170,8 @@ koopa_r_configure_makevars() {
         koopa_assert_is_dir "${app_pc_path_arr[@]}"
         koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
         pkg_config=(
+            # > 'libglib-2.0'
+            # > 'libpcre'
             'fontconfig'
             'freetype2'
             'fribidi'
