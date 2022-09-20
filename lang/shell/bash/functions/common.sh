@@ -18002,10 +18002,12 @@ koopa_r_configure_environ() {
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['cat']="$(koopa_locate_cat)"
+        ['pkg_config']="$(koopa_locate_pkg_config)"
         ['r']="${1:?}"
         ['sort']="$(koopa_locate_sort)"
     )
     [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
