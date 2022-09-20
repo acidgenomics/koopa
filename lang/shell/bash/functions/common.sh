@@ -18531,6 +18531,7 @@ koopa_r_configure_makevars() {
     then
         case "${dict['system']}" in
             '1')
+                dict['curl']="$(koopa_app_prefix 'curl')"
                 dict['fontconfig']="$(koopa_app_prefix 'fontconfig')"
                 dict['freetype']="$(koopa_app_prefix 'freetype')"
                 dict['icu4c']="$(koopa_app_prefix 'icu4c')"
@@ -18542,6 +18543,7 @@ koopa_r_configure_makevars() {
                 dict['zlib']="$(koopa_app_prefix 'zlib')"
                 dict['zstd']="$(koopa_app_prefix 'zstd')"
                 koopa_add_to_pkg_config_path \
+                    "${dict['curl']}/lib/pkgconfig" \
                     "${dict['fontconfig']}/lib/pkgconfig" \
                     "${dict['freetype']}/lib/pkgconfig" \
                     "${dict['icu4c']}/lib/pkgconfig" \
