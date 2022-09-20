@@ -165,6 +165,7 @@ koopa_r_configure_environ() {
         'jpeg'
         'lapack'
         'libgit2'
+        'libhdf5'
         'libjpeg-turbo'
         'libpng'
         'libssh2'
