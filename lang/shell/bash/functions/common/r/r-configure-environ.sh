@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME Work on hardening these:
-# > MAKE=${MAKE-'make'}
 # > PAGER=${PAGER-'/usr/bin/less'}
 # > R_BROWSER=${R_BROWSER-'/usr/bin/open'}
 # > R_BZIPCMD=${R_BZIPCMD-'/usr/bin/bzip2'}
@@ -11,8 +10,6 @@
 # > R_TEXI2DVICMD=${R_TEXI2DVICMD-${TEXI2DVI-'/usr/local/bin/texi2dvi'}}
 # > R_UNZIPCMD=${R_UNZIPCMD-'/usr/bin/unzip'}
 # > R_ZIPCMD=${R_ZIPCMD-'/usr/bin/zip'}
-# > SED=${SED-'/usr/bin/sed'}
-# > TAR=${TAR-'/usr/bin/tar'}
 
 # NOTE RStudio PATH is now inconsistent with R due to breaking changes in
 # internal 'SessionPath.cpp'.
@@ -29,7 +26,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-09-19.
+    # @note Updated 2022-09-20.
     #
     # @section Package library location:
     #
@@ -96,12 +93,10 @@ koopa_r_configure_environ() {
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['cat']="$(koopa_locate_cat)"
-        ['pkg_config']="$(koopa_locate_pkg_config)"
         ['r']="${1:?}"
         ['sort']="$(koopa_locate_sort)"
     )
     [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(

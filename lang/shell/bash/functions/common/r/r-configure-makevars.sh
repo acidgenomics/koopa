@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Should we set MAKE and TAR variables here?
-
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
@@ -32,12 +30,14 @@ koopa_r_configure_makevars() {
         ['bash']="$(koopa_locate_bash --realpath)"
         ['echo']="$(koopa_locate_echo --realpath)"
         ['gfortran']="$(koopa_locate_gfortran --realpath)"
+        ['make']="$(koopa_locate_make --realpath)"
         ['pkg_config']="$(koopa_locate_pkg_config)"
         ['r']="${1:?}"
         ['ranlib']='/usr/bin/ranlib'
         ['sed']="$(koopa_locate_sed --realpath)"
         ['sort']="$(koopa_locate_sort)"
         ['strip']='/usr/bin/strip'
+        ['tar']="$(koopa_locate_tar --realpath)"
         ['yacc']="$(koopa_locate_yacc --realpath)"
     )
     [[ -x "${app['ar']}" ]] || return 1
@@ -45,12 +45,14 @@ koopa_r_configure_makevars() {
     [[ -x "${app['bash']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1
     [[ -x "${app['gfortran']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['ranlib']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['strip']}" ]] || return 1
+    [[ -x "${app['tar']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
@@ -109,60 +111,82 @@ koopa_r_configure_makevars() {
     # packages: fs, httpuv, igraph, nloptr.
     if koopa_is_linux
     then
-        case "${dict['system']}" in
-            '1')
-                # FIXME Work on simplifying this using a loop on array.
-                dict['curl']="$(koopa_app_prefix 'curl')"
-                dict['fontconfig']="$(koopa_app_prefix 'fontconfig')"
-                dict['freetype']="$(koopa_app_prefix 'freetype')"
-                dict['fribidi']="$(koopa_app_prefix 'fribidi')"
-                dict['harfbuzz']="$(koopa_app_prefix 'harfbuzz')"
-                dict['icu4c']="$(koopa_app_prefix 'icu4c')"
-                dict['jpeg']="$(koopa_app_prefix 'jpeg')"
-                dict['libpng']="$(koopa_app_prefix 'libpng')"
-                dict['libtiff']="$(koopa_app_prefix 'libtiff')"
-                dict['libxml2']="$(koopa_app_prefix 'libxml2')"
-                dict['pcre2']="$(koopa_app_prefix 'pcre2')"
-                dict['zlib']="$(koopa_app_prefix 'zlib')"
-                dict['zstd']="$(koopa_app_prefix 'zstd')"
-                koopa_add_to_pkg_config_path \
-                    "${dict['curl']}/lib/pkgconfig" \
-                    "${dict['fontconfig']}/lib/pkgconfig" \
-                    "${dict['freetype']}/lib/pkgconfig" \
-                    "${dict['fribidi']}/lib/pkgconfig" \
-                    "${dict['harfbuzz']}/lib/pkgconfig" \
-                    "${dict['icu4c']}/lib/pkgconfig" \
-                    "${dict['jpeg']}/lib/pkgconfig" \
-                    "${dict['libpng']}/lib/pkgconfig" \
-                    "${dict['libtiff']}/lib/pkgconfig" \
-                    "${dict['libxml2']}/lib/pkgconfig" \
-                    "${dict['pcre2']}/lib/pkgconfig" \
-                    "${dict['zlib']}/lib/pkgconfig" \
-                    "${dict['zstd']}/lib/pkgconfig"
-                local pkg_config
-                pkg_config=(
-                    'fontconfig'
-                    'freetype2'
-                    'fribidi'
-                    'harfbuzz'
-                    'icu-i18n'
-                    'icu-uc'
-                    'libcurl'
-                    'libjpeg'
-                    'libpcre2-8'
-                    'libpng'
-                    'libtiff-4'
-                    'libzstd'
-                    'zlib'
-                )
-                cppflags+=(
-                    "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
-                )
-                ldflags+=(
-                    "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
-                )
-                ;;
-        esac
+        # Ensure these values are in sync with Renviron.site file.
+        local app_pc_path_arr i key keys pkg_config
+        declare -A app_pc_path_arr
+        keys=(
+            'curl'
+            'fontconfig'
+            'freetype'
+            'fribidi'
+            'gdal'
+            'geos'
+            'graphviz'
+            'harfbuzz'
+            'icu4c'
+            'imagemagick'
+            'jpeg'
+            'lapack'
+            'libgit2'
+            'libjpeg-turbo'
+            'libpng'
+            'libssh2'
+            'libtiff'
+            # > 'libuv'
+            'libxml2'
+            'openblas'
+            'openssl3'
+            'pcre2'
+            'proj'
+            'python'
+            'readline'
+            'sqlite'
+            'xz'
+            'zlib'
+            'zstd'
+        )
+        for key in "${keys[@]}"
+        do
+            local prefix
+            prefix="$(koopa_app_prefix "$key")"
+            koopa_assert_is_dir "$prefix"
+            app_pc_path_arr[$key]="$prefix"
+        done
+        for i in "${!app_pc_path_arr[@]}"
+        do
+            app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib"
+        done
+        if koopa_is_linux
+        then
+            app_pc_path_arr['harfbuzz']="${app_pc_path_arr['harfbuzz']}64"
+        fi
+        for i in "${!app_pc_path_arr[@]}"
+        do
+            app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/pkgconfig"
+        done
+        koopa_assert_is_dir "${app_pc_path_arr[@]}"
+        koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
+        pkg_config=(
+            'fontconfig'
+            'freetype2'
+            'fribidi'
+            'harfbuzz'
+            'icu-i18n'
+            'icu-uc'
+            'libcurl'
+            'libjpeg'
+            'libpcre2-8'
+            'libpng'
+            'libtiff-4'
+            'libzstd'
+            'zlib'
+        )
+        cppflags+=(
+            "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
+        )
+        ldflags+=(
+            "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
+        )
     fi
     cppflags+=("-I${dict['bzip2']}/include")
     ldflags+=("-L${dict['bzip2']}/lib")
@@ -190,6 +214,7 @@ koopa_r_configure_makevars() {
     conf_dict['flibs']="$(koopa_gfortran_libs)"
     conf_dict['lapack_libs']="$("${app['pkg_config']}" --libs 'lapack')"
     conf_dict['ldflags']="${ldflags[*]}"
+    conf_dict['make']="${app['make']}"
     conf_dict['objc_libs']='-lobjc'
     conf_dict['objcflags']="-Wall -g -O2 -fobjc-exceptions \$(LTO)"
     conf_dict['ranlib']="${app['ranlib']}"
@@ -198,6 +223,7 @@ koopa_r_configure_makevars() {
     conf_dict['shell']="${app['bash']}"
     conf_dict['strip_shared_lib']="${app['strip']} -x"
     conf_dict['strip_static_lib']="${app['strip']} -S"
+    conf_dict['tar']="${app['tar']}"
     # Alternatively, can use 'bison -y'.
     conf_dict['yacc']="${app['yacc']}"
     # These are values that inherit from other values in the dictionary.
@@ -249,6 +275,7 @@ koopa_r_configure_makevars() {
         "FLIBS = ${conf_dict['flibs']}"
         "LAPACK_LIBS = ${conf_dict['lapack_libs']}"
         "LDFLAGS ${conf_dict['op']} ${conf_dict['ldflags']}"
+        "MAKE = ${conf_dict['make']}"
         "OBJC = ${conf_dict['objc']}"
         "OBJCFLAGS = ${conf_dict['objcflags']}"
         "OBJCXX = ${conf_dict['objcxx']}"
@@ -259,6 +286,7 @@ koopa_r_configure_makevars() {
         "SHELL = ${conf_dict['shell']}"
         "STRIP_SHARED_LIB = ${conf_dict['strip_shared_lib']}"
         "STRIP_STATIC_LIB = ${conf_dict['strip_static_lib']}"
+        "TAR = ${conf_dict['tar']}"
         "YACC = ${conf_dict['yacc']}"
     )
     if koopa_is_macos
