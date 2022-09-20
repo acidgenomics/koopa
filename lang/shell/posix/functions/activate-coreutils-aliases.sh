@@ -3,7 +3,7 @@
 koopa_activate_coreutils_aliases() {
     # """
     # Activate GNU coreutils aliases.
-    # @note Updated 2022-09-07.
+    # @note Updated 2022-09-20.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -68,6 +68,10 @@ koopa_activate_coreutils_aliases() {
     if [ -x "${bin_prefix}/gls" ]
     then
         alias ls='gls'
+    fi
+    if [ -x "${bin_prefix}/gmd5sum" ]
+    then
+        alias md5sum='gmd5sum'
     fi
     if [ -x "${bin_prefix}/gmkdir" ]
     then
