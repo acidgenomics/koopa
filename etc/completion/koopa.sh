@@ -61,10 +61,10 @@ __koopa_complete() {
                     ;;
                 'configure')
                     args=(
+                        # > 'julia'
+                        # > 'r'
                         'chemacs'
                         'dotfiles'
-                        'julia'
-                        'r'
                     )
                     ;;
                 'header')
