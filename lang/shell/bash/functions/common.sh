@@ -18604,6 +18604,7 @@ koopa_r_configure_makevars() {
             'libpcre2-8'
             'libpng'
             'libtiff-4'
+            'libxml2'
             'libzstd'
             'zlib'
         )
