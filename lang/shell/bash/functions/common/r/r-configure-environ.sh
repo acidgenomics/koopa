@@ -210,15 +210,15 @@ koopa_r_configure_environ() {
     # >     pc_path_arr+=('/usr/local/lib/pkgconfig')
     # > fi
     pc_path_arr+=("${app_pc_path_arr[@]}")
-    # > if [[ "${dict['system']}" -eq 1 ]]
-    # > then
-    # >     local sys_pc_path_arr
-    # >     # NOTE Likely want to include '/usr/bin/pkg-config' here also.
-    # >     readarray -t sys_pc_path_arr <<< "$( \
-    # >         "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
-    # >     )"
-    # >     pc_path_arr+=("${sys_pc_path_arr[@]}")
-    # > fi
+    if [[ "${dict['system']}" -eq 1 ]]
+    then
+        local sys_pc_path_arr
+        # NOTE Likely want to include '/usr/bin/pkg-config' here also.
+        readarray -t sys_pc_path_arr <<< "$( \
+            "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
+        )"
+        pc_path_arr+=("${sys_pc_path_arr[@]}")
+    fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
     lines+=(
