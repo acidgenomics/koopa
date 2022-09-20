@@ -185,12 +185,10 @@ koopa_r_configure_makevars() {
             'libpcre2-8'
             'libpng'
             'libtiff-4'
-            'libxml2'
+            'libxml-2.0'
             'libzstd'
             'zlib'
         )
-        koopa_warn 'FIXME HELLO THERE'
-        koopa_print "FIXME ${PKG_CONFIG_PATH:-}"
         cppflags+=(
             "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
         )
