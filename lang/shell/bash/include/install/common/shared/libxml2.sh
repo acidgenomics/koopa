@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to link to zlib here (at least on Linux).
+
 main() {
     # """
     # Install libxml2.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-09-20.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
@@ -12,9 +14,9 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'pkg-config'
     deps=(
+        'zlib'
         'icu4c'
         'readline'
-        # > 'python'
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
@@ -25,7 +27,6 @@ main() {
         ['jobs']="$(koopa_cpu_count)"
         ['name']='libxml2'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        # > ['python']="$(koopa_app_version 'python')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
@@ -35,12 +36,12 @@ ${dict['maj_min_ver']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    # > dict['python']="$(koopa_app_prefix 'python')"
     conf_args=(
-        # > '--with-history'
-        # > "--with-python=${dict['python']}/bin/python3"
         "--prefix=${dict['prefix']}"
-        '--enable-static'
+        '--disable-dependency-tracking'
+        '--with-history'
+        '--with-icu'
+        '--without-lzma'
         '--without-python'
     )
     koopa_print_env

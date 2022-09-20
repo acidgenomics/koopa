@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME Work on hardening these:
-# > MAKE=${MAKE-'make'}
 # > PAGER=${PAGER-'/usr/bin/less'}
 # > R_BROWSER=${R_BROWSER-'/usr/bin/open'}
 # > R_BZIPCMD=${R_BZIPCMD-'/usr/bin/bzip2'}
@@ -11,8 +10,6 @@
 # > R_TEXI2DVICMD=${R_TEXI2DVICMD-${TEXI2DVI-'/usr/local/bin/texi2dvi'}}
 # > R_UNZIPCMD=${R_UNZIPCMD-'/usr/bin/unzip'}
 # > R_ZIPCMD=${R_ZIPCMD-'/usr/bin/zip'}
-# > SED=${SED-'/usr/bin/sed'}
-# > TAR=${TAR-'/usr/bin/tar'}
 
 # NOTE RStudio PATH is now inconsistent with R due to breaking changes in
 # internal 'SessionPath.cpp'.
@@ -29,7 +26,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-09-19.
+    # @note Updated 2022-09-20.
     #
     # @section Package library location:
     #
@@ -92,7 +89,7 @@ koopa_r_configure_environ() {
     # - https://cran.r-project.org/bin/macosx/tools/
     # """
     local app conf_dict dict i key keys lines path_arr
-    local app_pc_path_arr pc_path_arr sys_pc_path_arr
+    local app_pc_path_arr pc_path_arr
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['cat']="$(koopa_locate_cat)"
@@ -129,11 +126,11 @@ koopa_r_configure_environ() {
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
     path_arr=()
-    case "${dict['system']}" in
-        '1')
-            path_arr+=('/usr/local/bin')
-            ;;
-    esac
+    # > case "${dict['system']}" in
+    # >     '1')
+    # >         path_arr+=('/usr/local/bin')
+    # >         ;;
+    # > esac
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -160,6 +157,7 @@ koopa_r_configure_environ() {
         'fribidi'
         'gdal'
         'geos'
+        'glib'
         'graphviz'
         'harfbuzz'
         'icu4c'
@@ -175,6 +173,7 @@ koopa_r_configure_environ() {
         'libxml2'
         'openblas'
         'openssl3'
+        'pcre'
         'pcre2'
         'proj'
         'python'
@@ -197,6 +196,7 @@ koopa_r_configure_environ() {
     done
     if koopa_is_linux
     then
+        app_pc_path_arr['glib']="${app_pc_path_arr['glib']}64"
         app_pc_path_arr['harfbuzz']="${app_pc_path_arr['harfbuzz']}64"
     fi
     for i in "${!app_pc_path_arr[@]}"
@@ -205,13 +205,14 @@ koopa_r_configure_environ() {
     done
     koopa_assert_is_dir "${app_pc_path_arr[@]}"
     pc_path_arr=()
-    if [[ "${dict['system']}" -eq 1 ]]
-    then
-        pc_path_arr+=('/usr/local/lib/pkgconfig')
-    fi
+    # > if [[ "${dict['system']}" -eq 1 ]]
+    # > then
+    # >     pc_path_arr+=('/usr/local/lib/pkgconfig')
+    # > fi
     pc_path_arr+=("${app_pc_path_arr[@]}")
     if [[ "${dict['system']}" -eq 1 ]]
     then
+        local sys_pc_path_arr
         # NOTE Likely want to include '/usr/bin/pkg-config' here also.
         readarray -t sys_pc_path_arr <<< "$( \
             "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
