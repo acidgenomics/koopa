@@ -103,12 +103,12 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    case "${dict['system']}" in
-        '1')
-            cppflags+=('-I/usr/local/include')
-            ldflags+=('-L/usr/local/lib')
-            ;;
-    esac
+    # > case "${dict['system']}" in
+    # >     '1')
+    # >         cppflags+=('-I/usr/local/include')
+    # >         ldflags+=('-L/usr/local/lib')
+    # >         ;;
+    # > esac
     # Custom pkg-config flags here are incompatible for macOS clang with these
     # packages: fs, httpuv, igraph, nloptr.
     if koopa_is_linux

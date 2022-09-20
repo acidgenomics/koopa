@@ -89,7 +89,7 @@ koopa_r_configure_environ() {
     # - https://cran.r-project.org/bin/macosx/tools/
     # """
     local app conf_dict dict i key keys lines path_arr
-    local app_pc_path_arr pc_path_arr sys_pc_path_arr
+    local app_pc_path_arr pc_path_arr
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
         ['cat']="$(koopa_locate_cat)"
@@ -126,11 +126,11 @@ koopa_r_configure_environ() {
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
     path_arr=()
-    case "${dict['system']}" in
-        '1')
-            path_arr+=('/usr/local/bin')
-            ;;
-    esac
+    # > case "${dict['system']}" in
+    # >     '1')
+    # >         path_arr+=('/usr/local/bin')
+    # >         ;;
+    # > esac
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -205,19 +205,20 @@ koopa_r_configure_environ() {
     done
     koopa_assert_is_dir "${app_pc_path_arr[@]}"
     pc_path_arr=()
-    if [[ "${dict['system']}" -eq 1 ]]
-    then
-        pc_path_arr+=('/usr/local/lib/pkgconfig')
-    fi
+    # > if [[ "${dict['system']}" -eq 1 ]]
+    # > then
+    # >     pc_path_arr+=('/usr/local/lib/pkgconfig')
+    # > fi
     pc_path_arr+=("${app_pc_path_arr[@]}")
-    if [[ "${dict['system']}" -eq 1 ]]
-    then
-        # NOTE Likely want to include '/usr/bin/pkg-config' here also.
-        readarray -t sys_pc_path_arr <<< "$( \
-            "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
-        )"
-        pc_path_arr+=("${sys_pc_path_arr[@]}")
-    fi
+    # > if [[ "${dict['system']}" -eq 1 ]]
+    # > then
+    # >     local sys_pc_path_arr
+    # >     # NOTE Likely want to include '/usr/bin/pkg-config' here also.
+    # >     readarray -t sys_pc_path_arr <<< "$( \
+    # >         "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
+    # >     )"
+    # >     pc_path_arr+=("${sys_pc_path_arr[@]}")
+    # > fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
     lines+=(
