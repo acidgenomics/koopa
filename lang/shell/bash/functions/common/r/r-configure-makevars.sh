@@ -169,6 +169,7 @@ koopa_r_configure_makevars() {
         done
         koopa_assert_is_dir "${app_pc_path_arr[@]}"
         koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
+        # FIXME Consider adding libxml here, to harden config.
         pkg_config=(
             # > 'libglib-2.0'
             # > 'libpcre'
