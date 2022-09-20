@@ -18616,6 +18616,8 @@ koopa_r_configure_makevars() {
             'libzstd'
             'zlib'
         )
+        koopa_warn 'FIXME HELLO THERE'
+        koopa_print "FIXME ${PKG_CONFIG_PATH:-}"
         cppflags+=(
             "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
         )
