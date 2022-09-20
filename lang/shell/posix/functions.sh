@@ -337,6 +337,10 @@ koopa_activate_coreutils_aliases() {
     then
         alias ls='gls'
     fi
+    if [ -x "${bin_prefix}/gmd5sum" ]
+    then
+        alias md5sum='gmd5sum'
+    fi
     if [ -x "${bin_prefix}/gmkdir" ]
     then
         alias gmkdir='gmkdir --parents --verbose'
