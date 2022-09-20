@@ -129,6 +129,7 @@ koopa_r_configure_makevars() {
             'jpeg'
             'lapack'
             'libgit2'
+            'libhdf5'
             'libjpeg-turbo'
             'libpng'
             'libssh2'
@@ -194,6 +195,7 @@ koopa_r_configure_makevars() {
             "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
         )
     fi
+    # FIXME Consider adding libiconv here.
     cppflags+=("-I${dict['bzip2']}/include")
     ldflags+=("-L${dict['bzip2']}/lib")
     if koopa_is_macos

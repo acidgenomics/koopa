@@ -18067,6 +18067,7 @@ koopa_r_configure_environ() {
         'jpeg'
         'lapack'
         'libgit2'
+        'libhdf5'
         'libjpeg-turbo'
         'libpng'
         'libssh2'
@@ -18294,11 +18295,13 @@ koopa_r_configure_ldpaths() {
     declare -A ld_lib_app_arr
     keys=(
         'bzip2'
+        'curl'
         'fontconfig'
         'freetype'
         'fribidi'
         'gdal'
         'geos'
+        'glib'
         'graphviz'
         'harfbuzz'
         'icu4c'
@@ -18306,13 +18309,16 @@ koopa_r_configure_ldpaths() {
         'jpeg'
         'lapack'
         'libgit2'
+        'libhdf5'
         'libiconv'
         'libjpeg-turbo'
         'libpng'
         'libssh2'
         'libtiff'
+        'libxml2'
         'openblas'
         'openssl3'
+        'pcre'
         'pcre2'
         'proj'
         'python'
@@ -18339,6 +18345,7 @@ koopa_r_configure_ldpaths() {
     done
     if koopa_is_linux
     then
+        ld_lib_app_arr['glib']="${ld_lib_app_arr['glib']}64"
         ld_lib_app_arr['harfbuzz']="${ld_lib_app_arr['harfbuzz']}64"
     fi
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
@@ -18553,6 +18560,7 @@ koopa_r_configure_makevars() {
             'jpeg'
             'lapack'
             'libgit2'
+            'libhdf5'
             'libjpeg-turbo'
             'libpng'
             'libssh2'
