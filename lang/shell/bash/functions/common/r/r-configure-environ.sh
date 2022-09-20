@@ -126,11 +126,11 @@ koopa_r_configure_environ() {
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
     path_arr=()
-    # > case "${dict['system']}" in
-    # >     '1')
-    # >         path_arr+=('/usr/local/bin')
-    # >         ;;
-    # > esac
+    case "${dict['system']}" in
+        '1')
+            path_arr+=('/usr/local/bin')
+            ;;
+    esac
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -205,10 +205,10 @@ koopa_r_configure_environ() {
     done
     koopa_assert_is_dir "${app_pc_path_arr[@]}"
     pc_path_arr=()
-    # > if [[ "${dict['system']}" -eq 1 ]]
-    # > then
-    # >     pc_path_arr+=('/usr/local/lib/pkgconfig')
-    # > fi
+    if [[ "${dict['system']}" -eq 1 ]]
+    then
+        pc_path_arr+=('/usr/local/lib/pkgconfig')
+    fi
     pc_path_arr+=("${app_pc_path_arr[@]}")
     if [[ "${dict['system']}" -eq 1 ]]
     then
