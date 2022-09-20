@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Julia (from source).
-    # @note Updated 2022-07-18.
+    # @note Updated 2022-09-20.
     #
     # @seealso
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
@@ -76,9 +76,7 @@ v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    # If set, this will interfere with internal LLVM build required for
-    # Julia. See 'build.md' file for LLVM details.
-    unset -v LLVM_CONFIG
+    # FIXME Switch to using 'koopa_write_string' approach here instead.
     # Customize the 'Make.user' file.
     # Need to ensure we configure internal LLVM build here.
     "${app['cat']}" > 'Make.user' << END
