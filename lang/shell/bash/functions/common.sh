@@ -18062,7 +18062,6 @@ koopa_r_configure_environ() {
         'glib'
         'graphviz'
         'harfbuzz'
-        'hdf5'
         'icu4c'
         'imagemagick'
         'jpeg'
@@ -18497,6 +18496,7 @@ koopa_r_configure_makevars() {
         ['arch']="$(koopa_arch)"
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['gettext']="$(koopa_app_prefix 'gettext')"
+        ['hdf5']="$(koopa_app_prefix 'hdf5')"
         ['lapack']="$(koopa_app_prefix 'lapack')"
         ['openblas']="$(koopa_app_prefix 'openblas')"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
@@ -18505,6 +18505,7 @@ koopa_r_configure_makevars() {
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
         "${dict['gettext']}" \
+        "${dict['hdf5']}" \
         "${dict['lapack']}" \
         "${dict['openblas']}" \
         "${dict['r_prefix']}"
@@ -18555,7 +18556,6 @@ koopa_r_configure_makevars() {
             'glib'
             'graphviz'
             'harfbuzz'
-            'hdf5'
             'icu4c'
             'imagemagick'
             'jpeg'
@@ -18623,8 +18623,14 @@ koopa_r_configure_makevars() {
             "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
         )
     fi
-    cppflags+=("-I${dict['bzip2']}/include")
-    ldflags+=("-L${dict['bzip2']}/lib")
+    cppflags+=(
+        "-I${dict['bzip2']}/include"
+        "-I${dict['hdf5']}/include"
+    )
+    ldflags+=(
+        "-L${dict['bzip2']}/lib"
+        "-L${dict['hdf5']}/lib"
+    )
     if koopa_is_macos
     then
         cppflags+=("-I${dict['gettext']}/include")
