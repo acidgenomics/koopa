@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2022-09-19.
+    # @note Updated 2022-09-20.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -49,13 +49,16 @@ koopa_r_configure_ldpaths() {
     declare -A ld_lib_app_arr
     keys=(
         'bzip2'
+        'curl'
         'fontconfig'
         'freetype'
         'fribidi'
         'gdal'
         'geos'
+        'glib'
         'graphviz'
         'harfbuzz'
+        'hdf5'
         'icu4c'
         'imagemagick'
         'jpeg'
@@ -67,8 +70,10 @@ koopa_r_configure_ldpaths() {
         'libssh2'
         'libtiff'
         # > 'libuv'
+        'libxml2'
         'openblas'
         'openssl3'
+        'pcre'
         'pcre2'
         'proj'
         'python'
@@ -95,10 +100,15 @@ koopa_r_configure_ldpaths() {
     done
     if koopa_is_linux
     then
+        ld_lib_app_arr['glib']="${ld_lib_app_arr['glib']}64"
         ld_lib_app_arr['harfbuzz']="${ld_lib_app_arr['harfbuzz']}64"
     fi
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
+    ld_lib_arr+=(
+        "\${R_HOME}/lib"
+        "${ld_lib_app_arr[@]}"
+    )
     if koopa_is_linux
     then
         local sys_libdir
@@ -107,8 +117,7 @@ koopa_r_configure_ldpaths() {
         ld_lib_arr+=("$sys_libdir")
     fi
     ld_lib_arr+=(
-        "\${R_HOME}/lib"
-        "${ld_lib_app_arr[@]}"
+        '/usr/lib'
         "\${R_JAVA_LD_LIBRARY_PATH}"
     )
     lines+=(
