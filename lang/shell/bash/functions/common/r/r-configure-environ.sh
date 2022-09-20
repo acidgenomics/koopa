@@ -173,6 +173,7 @@ koopa_r_configure_environ() {
         'libxml2'
         'openblas'
         'openssl3'
+        'pcre'
         'pcre2'
         'proj'
         'python'
