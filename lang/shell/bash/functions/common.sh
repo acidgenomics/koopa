@@ -18032,6 +18032,11 @@ koopa_r_configure_environ() {
         "R_LIBS_USER=\${R_LIBS_SITE}"
     )
     path_arr=()
+    case "${dict['system']}" in
+        '1')
+            path_arr+=('/usr/local/bin')
+            ;;
+    esac
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -18101,6 +18106,10 @@ koopa_r_configure_environ() {
     done
     koopa_assert_is_dir "${app_pc_path_arr[@]}"
     pc_path_arr=()
+    if [[ "${dict['system']}" -eq 1 ]]
+    then
+        pc_path_arr+=('/usr/local/lib/pkgconfig')
+    fi
     pc_path_arr+=("${app_pc_path_arr[@]}")
     if [[ "${dict['system']}" -eq 1 ]]
     then
@@ -18341,10 +18350,13 @@ koopa_r_configure_ldpaths() {
     fi
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
-    ld_lib_arr+=(
-        "\${R_HOME}/lib"
-        "${ld_lib_app_arr[@]}"
-    )
+    ld_lib_arr+=("\${R_HOME}/lib")
+    case "${dict['system']}" in
+        '1')
+            ld_lib_arr+=('/usr/local/lib')
+            ;;
+    esac
+    ld_lib_arr+=("${ld_lib_app_arr[@]}")
     if koopa_is_linux
     then
         local sys_libdir
@@ -18531,6 +18543,12 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
+    case "${dict['system']}" in
+        '1')
+            cppflags+=('-I/usr/local/include')
+            ldflags+=('-L/usr/local/lib')
+            ;;
+    esac
     if koopa_is_linux
     then
         local app_pc_path_arr i key keys pkg_config
