@@ -1967,24 +1967,51 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     local app dict i keys version_ids
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
-        ['cut']="$(koopa_locate_cut)"
         ['jq']="$(koopa_locate_jq)"
     )
     [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     declare -A dict=(
         ['bucket']=''
         ['profile']="${AWS_PROFILE:-default}"
         ['region']="${AWS_REGION:-us-east-1}"
     )
-    dict['bucket']='28-7tx-data' # FIXME
-    dict['profile']='28-7tx' # FIXME
-    dict['region']='us-east-1' # FIXME
+    while (("$#"))
+    do
+        case "$1" in
+            '--bucket='*)
+                dict['bucket']="${1#*=}"
+                shift 1
+                ;;
+            '--bucket')
+                dict['bucket']="${2:?}"
+                shift 2
+                ;;
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            '--region='*)
+                dict['region']="${1#*=}"
+                shift 1
+                ;;
+            '--region')
+                dict['region']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
     koopa_assert_is_set \
         '--bucket' "${dict['bucket']}" \
-        '--profile' "${dict['profile']}" \
-        '--region' "${dict['region']}"
+        '--profile or AWS_PROFILE' "${dict['profile']}" \
+        '--region or AWS_REGION' "${dict['region']}"
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
             --bucket "${dict['bucket']}" \
@@ -4060,6 +4087,7 @@ koopa_cli_app() {
                     ;;
                 's3')
                     case "${3:-}" in
+                        'delete-versioned-glacier-objects' \
                         'find' | \
                         'list-large-files' | \
                         'ls' | \
