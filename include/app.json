@@ -2603,8 +2603,9 @@
   "zoxide": {
     "bin": ["zoxide"],
     "conservative": false,
+    "date": "2022-09-20",
     "depends": ["rust"],
-    "version": "0.8.2"
+    "version": "0.8.3"
   },
   "zsh": {
     "bin": ["zsh"],
