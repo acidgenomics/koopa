@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider setting region support here too.
+
 koopa_aws_s3_list_large_files() {
     # """
     # List large files in an S3 bucket.

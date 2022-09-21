@@ -1963,6 +1963,69 @@ koopa_aws_s3_cp_regex() {
     return 0
 }
 
+koopa_aws_s3_delete_versioned_glacier_objects() {
+    local app dict i keys version_ids
+    declare -A app=(
+        ['aws']="$(koopa_locate_aws)"
+        ['cut']="$(koopa_locate_cut)"
+        ['jq']="$(koopa_locate_jq)"
+    )
+    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    declare -A dict=(
+        ['bucket']=''
+        ['profile']="${AWS_PROFILE:-default}"
+        ['region']="${AWS_REGION:-us-east-1}"
+    )
+    dict['bucket']='28-7tx-data' # FIXME
+    dict['profile']='28-7tx' # FIXME
+    dict['region']='us-east-1' # FIXME
+    koopa_assert_is_set \
+        '--bucket' "${dict['bucket']}" \
+        '--profile' "${dict['profile']}" \
+        '--region' "${dict['region']}"
+    dict['json']="$( \
+        "${app['aws']}" s3api list-object-versions \
+            --bucket "${dict['bucket']}" \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+            --query "Versions[?StorageClass=='GLACIER']" \
+            --region "${dict['region']}" \
+    )"
+    if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
+    then
+        koopa_stop "No versioned Glacier objects found in '${dict['bucket']}'."
+    fi
+    koopa_alert "Deleting versioned Glacier objects in '${dict['bucket']}'."
+    readarray -t keys <<< "$( \
+        koopa_print "${dict['json']}" \
+            | "${app['jq']}" --raw-output '.[].Key' \
+    )"
+    readarray -t version_ids <<< "$( \
+        koopa_print "${dict['json']}" \
+            | "${app['jq']}" --raw-output '.[].VersionId' \
+    )"
+    for i in "${!keys[@]}"
+    do
+        local dict2
+        declare -A dict2=(
+            ['key']="${keys[$i]}"
+            ['version_id']="${version_ids[$i]}"
+        )
+        koopa_alert "Deleting '${dict2['key']}' (${dict2['version_id']})."
+        "${app['aws']}" s3api delete-object \
+            --bucket "${dict['bucket']}" \
+            --key "${dict2['key']}" \
+            --profile "${dict['profile']}" \
+            --region "${dict['region']}" \
+            --version-id "${dict2['version_id']}" \
+            > /dev/null
+
+    done
+    return 0
+}
+
 koopa_aws_s3_find() {
     local dict exclude_arr include_arr ls_args pattern str
     koopa_assert_has_args "$#"
