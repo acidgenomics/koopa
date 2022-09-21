@@ -2457,6 +2457,12 @@
     "outdated": true,
     "version": "2.8"
   },
+  "vulture": {
+    "bin": ["vulture"],
+    "conservative": false,
+    "depends": ["python"],
+    "version": "2.6"
+  },
   "wget": {
     "bin": ["wget"],
     "conservative": false,

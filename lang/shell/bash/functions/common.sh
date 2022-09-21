@@ -13721,6 +13721,12 @@ koopa_install_visidata() {
         "$@"
 }
 
+koopa_install_vulture() {
+    koopa_install_app \
+        --name='vulture' \
+        "$@"
+}
+
 koopa_install_wget() {
     koopa_install_app \
         --name='wget' \
@@ -24373,6 +24379,12 @@ koopa_uninstall_vim() {
 koopa_uninstall_visidata() {
     koopa_uninstall_app \
         --name='visidata' \
+        "$@"
+}
+
+koopa_uninstall_vulture() {
+    koopa_uninstall_app \
+        --name='vulture' \
         "$@"
 }
 
