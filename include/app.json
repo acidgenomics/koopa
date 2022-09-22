@@ -192,10 +192,14 @@
     "version": "2.30.0"
   },
   "bfg": {
+    "bin": ["bfg"],
     "check": false,
     "conservative": false,
+    "date": "2022-09-22",
+    "dependencies": ["openjdk"],
+    "outdated": true,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
-    "version": "1.14.1"
+    "version": "1.14.0"
   },
   "binutils": {
     "conservative": true,
