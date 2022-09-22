@@ -1963,6 +1963,96 @@ koopa_aws_s3_cp_regex() {
     return 0
 }
 
+koopa_aws_s3_delete_versioned_glacier_objects() {
+    local app dict i keys version_ids
+    declare -A app=(
+        ['aws']="$(koopa_locate_aws)"
+        ['jq']="$(koopa_locate_jq)"
+    )
+    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    declare -A dict=(
+        ['bucket']=''
+        ['profile']="${AWS_PROFILE:-default}"
+        ['region']="${AWS_REGION:-us-east-1}"
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            '--bucket='*)
+                dict['bucket']="${1#*=}"
+                shift 1
+                ;;
+            '--bucket')
+                dict['bucket']="${2:?}"
+                shift 2
+                ;;
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            '--region='*)
+                dict['region']="${1#*=}"
+                shift 1
+                ;;
+            '--region')
+                dict['region']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--bucket' "${dict['bucket']}" \
+        '--profile or AWS_PROFILE' "${dict['profile']}" \
+        '--region or AWS_REGION' "${dict['region']}"
+    dict['json']="$( \
+        "${app['aws']}" s3api list-object-versions \
+            --bucket "${dict['bucket']}" \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+            --query "Versions[?StorageClass=='GLACIER']" \
+            --region "${dict['region']}" \
+    )"
+    if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
+    then
+        koopa_stop "No versioned Glacier objects found in '${dict['bucket']}'."
+    fi
+    koopa_alert "Deleting versioned Glacier objects in '${dict['bucket']}'."
+    readarray -t keys <<< "$( \
+        koopa_print "${dict['json']}" \
+            | "${app['jq']}" --raw-output '.[].Key' \
+    )"
+    readarray -t version_ids <<< "$( \
+        koopa_print "${dict['json']}" \
+            | "${app['jq']}" --raw-output '.[].VersionId' \
+    )"
+    for i in "${!keys[@]}"
+    do
+        local dict2
+        declare -A dict2=(
+            ['key']="${keys[$i]}"
+            ['version_id']="${version_ids[$i]}"
+        )
+        koopa_alert "Deleting '${dict2['key']}' (${dict2['version_id']})."
+        "${app['aws']}" s3api delete-object \
+            --bucket "${dict['bucket']}" \
+            --key "${dict2['key']}" \
+            --profile "${dict['profile']}" \
+            --region "${dict['region']}" \
+            --version-id "${dict2['version_id']}" \
+            > /dev/null
+
+    done
+    return 0
+}
+
 koopa_aws_s3_find() {
     local dict exclude_arr include_arr ls_args pattern str
     koopa_assert_has_args "$#"
@@ -3997,6 +4087,7 @@ koopa_cli_app() {
                     ;;
                 's3')
                     case "${3:-}" in
+                        'delete-versioned-glacier-objects' | \
                         'find' | \
                         'list-large-files' | \
                         'ls' | \
@@ -12009,6 +12100,12 @@ koopa_install_bedtools() {
         "$@"
 }
 
+koopa_install_bfg() {
+    koopa_install_app \
+        --name='bfg' \
+        "$@"
+}
+
 koopa_install_binutils() {
     koopa_install_app \
         --name='binutils' \
@@ -13718,6 +13815,12 @@ koopa_install_vim() {
 koopa_install_visidata() {
     koopa_install_app \
         --name='visidata' \
+        "$@"
+}
+
+koopa_install_vulture() {
+    koopa_install_app \
+        --name='vulture' \
         "$@"
 }
 
@@ -22891,6 +22994,12 @@ koopa_uninstall_bedtools() {
         "$@"
 }
 
+koopa_uninstall_bfg() {
+    koopa_uninstall_app \
+        --name='bfg' \
+        "$@"
+}
+
 koopa_uninstall_binutils() {
     koopa_uninstall_app \
         --name='binutils' \
@@ -23024,7 +23133,9 @@ koopa_uninstall_convmv() {
 }
 
 koopa_uninstall_coreutils() {
-    koopa_uninstall_app --name='coreutils' "$@"
+    koopa_uninstall_app \
+        --name='coreutils' \
+        "$@"
 }
 
 koopa_uninstall_cpufetch() {
@@ -23082,7 +23193,9 @@ koopa_uninstall_editorconfig() {
 }
 
 koopa_uninstall_emacs() {
-    koopa_uninstall_app --name='emacs' "$@"
+    koopa_uninstall_app \
+        --name='emacs' \
+        "$@"
 }
 
 koopa_uninstall_ensembl_perl_api() {
@@ -23140,7 +23253,9 @@ koopa_uninstall_ffq() {
 }
 
 koopa_uninstall_findutils() {
-    koopa_uninstall_app --name='findutils' "$@"
+    koopa_uninstall_app \
+        --name='findutils' \
+        "$@"
 }
 
 koopa_uninstall_fish() {
@@ -23252,7 +23367,9 @@ koopa_uninstall_ghostscript() {
 }
 
 koopa_uninstall_git() {
-    koopa_uninstall_app --name='git' "$@"
+    koopa_uninstall_app \
+        --name='git' \
+        "$@"
 }
 
 koopa_uninstall_glances() {
@@ -24373,6 +24490,12 @@ koopa_uninstall_vim() {
 koopa_uninstall_visidata() {
     koopa_uninstall_app \
         --name='visidata' \
+        "$@"
+}
+
+koopa_uninstall_vulture() {
+    koopa_uninstall_app \
+        --name='vulture' \
         "$@"
 }
 

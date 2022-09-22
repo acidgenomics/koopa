@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-koopa_uninstall_emacs() {
+koopa_uninstall_vulture() {
     koopa_uninstall_app \
-        --name='emacs' \
+        --name='vulture' \
         "$@"
 }

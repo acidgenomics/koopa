@@ -368,6 +368,10 @@ koopa_activate_coreutils_aliases() {
     then
         alias sed='gsed'
     fi
+    if [ -x "${bin_prefix}/gsha256sum" ]
+    then
+        alias sha256sum='gsha256sum'
+    fi
     if [ -x "${bin_prefix}/gstat" ]
     then
         alias stat='gstat'

@@ -192,10 +192,14 @@
     "version": "2.30.0"
   },
   "bfg": {
+    "bin": ["bfg"],
     "check": false,
     "conservative": false,
+    "date": "2022-09-22",
+    "dependencies": ["openjdk"],
+    "outdated": true,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
-    "version": "1.14.1"
+    "version": "1.14.0"
   },
   "binutils": {
     "conservative": true,
@@ -2457,6 +2461,12 @@
     "outdated": true,
     "version": "2.8"
   },
+  "vulture": {
+    "bin": ["vulture"],
+    "conservative": false,
+    "depends": ["python"],
+    "version": "2.6"
+  },
   "wget": {
     "bin": ["wget"],
     "conservative": false,
@@ -2603,8 +2613,9 @@
   "zoxide": {
     "bin": ["zoxide"],
     "conservative": false,
+    "date": "2022-09-20",
     "depends": ["rust"],
-    "version": "0.8.2"
+    "version": "0.8.3"
   },
   "zsh": {
     "bin": ["zsh"],
