@@ -12100,6 +12100,12 @@ koopa_install_bedtools() {
         "$@"
 }
 
+koopa_install_bfg() {
+    koopa_install_app \
+        --name='bfg' \
+        "$@"
+}
+
 koopa_install_binutils() {
     koopa_install_app \
         --name='binutils' \
@@ -22988,6 +22994,12 @@ koopa_uninstall_bedtools() {
         "$@"
 }
 
+koopa_uninstall_bfg() {
+    koopa_uninstall_app \
+        --name='bfg' \
+        "$@"
+}
+
 koopa_uninstall_binutils() {
     koopa_uninstall_app \
         --name='binutils' \
@@ -23121,7 +23133,9 @@ koopa_uninstall_convmv() {
 }
 
 koopa_uninstall_coreutils() {
-    koopa_uninstall_app --name='coreutils' "$@"
+    koopa_uninstall_app \
+        --name='coreutils' \
+        "$@"
 }
 
 koopa_uninstall_cpufetch() {
@@ -23179,7 +23193,9 @@ koopa_uninstall_editorconfig() {
 }
 
 koopa_uninstall_emacs() {
-    koopa_uninstall_app --name='emacs' "$@"
+    koopa_uninstall_app \
+        --name='emacs' \
+        "$@"
 }
 
 koopa_uninstall_ensembl_perl_api() {
@@ -23237,7 +23253,9 @@ koopa_uninstall_ffq() {
 }
 
 koopa_uninstall_findutils() {
-    koopa_uninstall_app --name='findutils' "$@"
+    koopa_uninstall_app \
+        --name='findutils' \
+        "$@"
 }
 
 koopa_uninstall_fish() {
@@ -23349,7 +23367,9 @@ koopa_uninstall_ghostscript() {
 }
 
 koopa_uninstall_git() {
-    koopa_uninstall_app --name='git' "$@"
+    koopa_uninstall_app \
+        --name='git' \
+        "$@"
 }
 
 koopa_uninstall_glances() {
