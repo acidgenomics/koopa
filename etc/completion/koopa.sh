@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-09-13.
+    # Updated 2022-09-22.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -102,6 +102,7 @@ __koopa_complete() {
                         'bat'
                         'bc'
                         'bedtools'
+                        'bfg'
                         'binutils'
                         'bioawk'
                         'bioconda-utils'
@@ -340,6 +341,7 @@ __koopa_complete() {
                         'utf8proc'
                         'vim'
                         'visidata'
+                        'vulture'
                         'wget'
                         'which'
                         'xorg-libice'
@@ -663,6 +665,7 @@ __koopa_complete() {
                                     ;;
                                 's3')
                                     args=(
+                                        'delete-versioned-glacier-objects'
                                         'find'
                                         'list-large-files'
                                         'ls'
