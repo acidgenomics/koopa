@@ -2149,8 +2149,9 @@
       "rustfmt"
     ],
     "conservative": false,
+    "date": "2022-09-22",
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.63.0"
+    "version": "1.64.0"
   },
   "salmon": {
     "bin": ["salmon"],
