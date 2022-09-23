@@ -12254,6 +12254,18 @@ koopa_install_cpufetch() {
         "$@"
 }
 
+koopa_install_csvkit() {
+    koopa_install_app \
+        --name='csvkit' \
+        "$@"
+}
+
+koopa_install_csvtk() {
+    koopa_install_app \
+        --name='csvtk' \
+        "$@"
+}
+
 koopa_install_curl() {
     koopa_install_app \
         --name='curl' \
@@ -23151,6 +23163,18 @@ koopa_uninstall_coreutils() {
 koopa_uninstall_cpufetch() {
     koopa_uninstall_app \
         --name='cpufetch' \
+        "$@"
+}
+
+koopa_uninstall_csvkit() {
+    koopa_uninstall_app \
+        --name='csvkit' \
+        "$@"
+}
+
+koopa_uninstall_csvtk() {
+    koopa_uninstall_app \
+        --name='csvtk' \
         "$@"
 }
 

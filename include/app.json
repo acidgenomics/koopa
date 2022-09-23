@@ -617,6 +617,21 @@
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
     "version": "1.02"
   },
+  "csvkit": {
+    "conservative": false,
+    "date": "2022-09-23",
+    "dependencies": ["python"],
+    "url": ["https://csvkit.readthedocs.io/"],
+    "version": "1.0.7"
+  },
+  "csvtk": {
+    "bin": ["csvtk"],
+    "build_dependencies": ["go"],
+    "conservative": false,
+    "date": "2022-09-23",
+    "url": ["https://github.com/shenwei356/csvtk"],
+    "version": "0.25.0"
+  },
   "curl": {
     "bin": ["curl", "curl-config"],
     "conservative": true,

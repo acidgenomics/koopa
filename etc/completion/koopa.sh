@@ -126,6 +126,8 @@ __koopa_complete() {
                         'conda'
                         'coreutils'
                         'cpufetch'
+                        'csvkit'
+                        'csvtk'
                         'curl'
                         'deeptools'
                         'delta'
