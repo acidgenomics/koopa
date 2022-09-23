@@ -32,7 +32,7 @@ tags/${dict['file']}"
     dict['ldflags']='-s -w'
     "${app['go']}" build \
         -ldflags "${dict['ldflags']}" \
-        -o "${dict['prefix']}/bin/csvtk" \
+        -o "${dict['prefix']}/bin/${dict['name']}" \
         ./csvtk
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
