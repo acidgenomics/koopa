@@ -1264,14 +1264,14 @@
   "latch": {
     "bin": ["latch"],
     "conservative": false,
-    "date": "2022-09-07",
+    "date": "2022-09-23",
     "dependencies": ["python"],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "less": {
     "bin": ["less"],
