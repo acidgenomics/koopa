@@ -3416,6 +3416,7 @@ koopa_build_all_apps() {
         'zoxide'
         'chemacs'
         'cheat'
+        'gum'
         'yq'
         'bash-language-server'
         'gtop'
@@ -3432,6 +3433,7 @@ koopa_build_all_apps() {
         'sra-tools'
         'yarn'
         'asdf'
+        'bfg'
         'convmv'
         'editorconfig'
         'markdownlint-cli'
@@ -11160,6 +11162,7 @@ koopa_install_all_apps() {
         'bashcov'
         'bat'
         'bc'
+        'bfg'
         'binutils'
         'bison'
         'black'
@@ -11215,6 +11218,7 @@ koopa_install_all_apps() {
         'groff'
         'gsl'
         'gtop'
+        'gum'
         'gzip'
         'hadolint'
         'harfbuzz'
@@ -12561,6 +12565,12 @@ koopa_install_gsl() {
 koopa_install_gtop() {
     koopa_install_app \
         --name='gtop' \
+        "$@"
+}
+
+koopa_install_gum() {
+    koopa_install_app \
+        --name='gum' \
         "$@"
 }
 
@@ -23453,6 +23463,12 @@ koopa_uninstall_gsl() {
 koopa_uninstall_gtop() {
     koopa_uninstall_app \
         --name='gtop' \
+        "$@"
+}
+
+koopa_uninstall_gum() {
+    koopa_uninstall_app \
+        --name='gum' \
         "$@"
 }
 
