@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cheat.
-    # @note Updated 2022-08-08.
+    # @note Updated 2022-09-23.
     #
     # @seealso
     # - https://github.com/cheat/cheat/
@@ -23,13 +23,16 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['version']}.tar.gz"
-    dict['url']="https://github.com/cheat/cheat/archive/refs/tags/${dict['file']}"
+    dict['url']="https://github.com/cheat/cheat/archive/refs/\
+tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     export GOPATH="${dict['gopath']}"
-    "${app['go']}" build -mod 'vendor' -o 'bin/cheat' './cmd/cheat'
-    koopa_cp --target-directory="${dict['prefix']}" 'bin'
+    "${app['go']}" build \
+        -mod 'vendor' \
+        -o "${dict['prefix']}/bin/${dict['name']}" \
+        './cmd/cheat'
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }
