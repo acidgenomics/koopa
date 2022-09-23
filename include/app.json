@@ -1264,14 +1264,14 @@
   "latch": {
     "bin": ["latch"],
     "conservative": false,
-    "date": "2022-09-07",
+    "date": "2022-09-23",
     "dependencies": ["python"],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "less": {
     "bin": ["less"],
@@ -2110,7 +2110,7 @@
     "conservative": false,
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2022.07.1+554"
+    "version": "2022.07.2+576"
   },
   "rsync": {
     "bin": ["rsync"],
@@ -2149,8 +2149,9 @@
       "rustfmt"
     ],
     "conservative": false,
+    "date": "2022-09-22",
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.63.0"
+    "version": "1.64.0"
   },
   "salmon": {
     "bin": ["salmon"],
