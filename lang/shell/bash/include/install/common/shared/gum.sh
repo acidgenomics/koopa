@@ -30,9 +30,10 @@ archive/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     export GOPATH="${dict['gopath']}"
     dict['ldflags']="-s -w -X main.Version=${dict['version']}"
-    "${app['go']}" build -ldflags "${dict['ldflags']}"
-    koopa_cp --target-directory="${dict['prefix']}/bin" 'gum'
     app['gum']="${dict['prefix']}/bin/gum"
+    "${app['go']}" build \
+        -ldflags "${dict['ldflags']}" \
+        -o "${app['gum']}"
     dict['bash_c']="${dict['prefix']}/etc/bash_completion.d/gum"
     dict['fish_c']="${dict['prefix']}/share/fish/vendor_completions.d/gum.fish"
     dict['zsh_c']="${dict['prefix']}/share/zsh/site-functions/_gum"
