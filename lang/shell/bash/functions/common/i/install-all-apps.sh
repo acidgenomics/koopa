@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-09-13.
+    # @note Updated 2022-09-23.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -58,6 +58,7 @@ koopa_install_all_apps() {
         'bashcov'
         'bat'
         'bc'
+        'bfg'
         'binutils'
         'bison'
         'black'
@@ -113,6 +114,7 @@ koopa_install_all_apps() {
         'groff'
         'gsl'
         'gtop'
+        'gum'
         'gzip'
         'hadolint'
         'harfbuzz'
