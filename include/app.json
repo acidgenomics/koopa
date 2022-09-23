@@ -618,6 +618,22 @@
     "version": "1.02"
   },
   "csvkit": {
+    "bin": [
+      "csvclean",
+      "csvcut",
+      "csvformat",
+      "csvgrep",
+      "csvjoin",
+      "csvjson",
+      "csvlook",
+      "csvpy",
+      "csvsort",
+      "csvsql",
+      "csvstack",
+      "csvstat",
+      "in2csv",
+      "sql2csv"
+    ],
     "conservative": false,
     "date": "2022-09-23",
     "dependencies": ["python"],
