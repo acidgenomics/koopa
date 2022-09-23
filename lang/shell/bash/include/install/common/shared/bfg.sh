@@ -27,7 +27,7 @@ ${dict['name']}/${dict['version']}/${dict['file']}"
     dict['bin_file']="${dict['prefix']}/bin/bfg"
     koopa_touch "${dict['bin_file']}"
     "${app['cat']}" > "${dict['bin_file']}" << END
-#!/usr/bin/env bash
+#!/bin/sh
 
 ${app['java']} -jar "${dict['libexec']}/${dict['file']}" "\$@"
 END
