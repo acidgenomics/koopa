@@ -2110,7 +2110,7 @@
     "conservative": false,
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2022.07.1+554"
+    "version": "2022.07.2+576"
   },
   "rsync": {
     "bin": ["rsync"],
