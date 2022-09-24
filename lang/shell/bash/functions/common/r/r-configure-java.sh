@@ -30,7 +30,8 @@ koopa_r_configure_java() {
     # """
     local app conf_dict dict java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
-    declare -A app dict
+    declare -A app
+    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     dict['system']=0
