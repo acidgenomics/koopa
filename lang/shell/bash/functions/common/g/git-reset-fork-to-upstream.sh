@@ -3,11 +3,11 @@
 koopa_git_reset_fork_to_upstream() {
     # """
     # Reset Git fork to upstream.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-09-24.
     # """
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")

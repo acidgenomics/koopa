@@ -7,7 +7,7 @@ koopa_git_checkout_recursive() {
     # """
     local app dict dirs pos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(

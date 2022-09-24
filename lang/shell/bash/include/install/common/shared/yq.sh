@@ -3,7 +3,7 @@
 main() {
     # """
     # Install yq.
-    # @note Updated 2022-07-28.
+    # @note Updated 2022-09-23.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/yq.rb
@@ -28,8 +28,8 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    "${app['go']}" build
-    koopa_cp --target-directory="${dict['prefix']}/bin" 'yq'
+    "${app['go']}" build \
+        -o "${dict['prefix']}/bin/yq"
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }

@@ -3,7 +3,7 @@
 koopa_git_rename_master_to_main() {
     # """
     # Rename default branch from "master" to "main".
-    # @note Updated 2022-03-03.
+    # @note Updated 2022-09-24.
     #
     # @seealso
     # - https://hackernoon.com/how-to-rename-your-git-repositories-
@@ -17,7 +17,7 @@ koopa_git_rename_master_to_main() {
     # """
     local app dict repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
