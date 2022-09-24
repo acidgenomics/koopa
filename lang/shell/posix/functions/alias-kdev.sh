@@ -34,6 +34,7 @@ koopa_alias_kdev() {
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
         PATH='/usr/bin:/bin' \
+        SUDO_USER="${SUDO_USER:-}" \
         TMPDIR="${TMPDIR:-/tmp}" \
         "$bash" \
             --noprofile \
