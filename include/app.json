@@ -617,6 +617,37 @@
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
     "version": "1.02"
   },
+  "csvkit": {
+    "bin": [
+      "csvclean",
+      "csvcut",
+      "csvformat",
+      "csvgrep",
+      "csvjoin",
+      "csvjson",
+      "csvlook",
+      "csvpy",
+      "csvsort",
+      "csvsql",
+      "csvstack",
+      "csvstat",
+      "in2csv",
+      "sql2csv"
+    ],
+    "conservative": false,
+    "date": "2022-09-23",
+    "dependencies": ["python"],
+    "url": ["https://csvkit.readthedocs.io/"],
+    "version": "1.0.7"
+  },
+  "csvtk": {
+    "bin": ["csvtk"],
+    "build_dependencies": ["go"],
+    "conservative": false,
+    "date": "2022-09-23",
+    "url": ["https://github.com/shenwei356/csvtk"],
+    "version": "0.25.0"
+  },
   "curl": {
     "bin": ["curl", "curl-config"],
     "conservative": true,
@@ -1009,6 +1040,15 @@
       "https://www.npmjs.com/package/gtop/"
     ],
     "version": "1.1.3"
+  },
+  "gum": {
+    "bin": ["gum"],
+    "build_dependencies": ["go"],
+    "conservative": false,
+    "date": "2022-09-23",
+    "man1": ["gum.1"],
+    "url": ["https://github.com/charmbracelet/gum/"],
+    "version": "0.6.0"
   },
   "gzip": {
     "bin": [

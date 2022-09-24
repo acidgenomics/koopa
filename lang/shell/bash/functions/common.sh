@@ -2750,8 +2750,8 @@ koopa_bioconda_autobump_recipe() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
-        ['vim']="$(koopa_locate_vim)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['vim']="$(koopa_locate_vim --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['vim']}" ]] || return 1
@@ -3085,7 +3085,7 @@ koopa_brew_reset_core_repo() {
     koopa_assert_has_no_args "$#"
     declare -A app=(
         ['brew']="$(koopa_locate_brew)"
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
@@ -3416,6 +3416,7 @@ koopa_build_all_apps() {
         'zoxide'
         'chemacs'
         'cheat'
+        'gum'
         'yq'
         'bash-language-server'
         'gtop'
@@ -3432,6 +3433,7 @@ koopa_build_all_apps() {
         'sra-tools'
         'yarn'
         'asdf'
+        'bfg'
         'convmv'
         'editorconfig'
         'markdownlint-cli'
@@ -9110,7 +9112,7 @@ koopa_gfortran_libs() {
 koopa_git_checkout_recursive() {
     local app dict dirs pos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
@@ -9438,7 +9440,7 @@ koopa_git_last_commit_remote() {
 koopa_git_latest_tag() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9463,7 +9465,7 @@ koopa_git_latest_tag() {
 koopa_git_pull_recursive() {
     local app dirs
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")
@@ -9510,7 +9512,7 @@ koopa_git_pull_recursive() {
 koopa_git_pull() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9532,7 +9534,7 @@ koopa_git_pull() {
 koopa_git_push_recursive() {
     local app dirs
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")
@@ -9577,7 +9579,7 @@ koopa_git_push_recursive() {
 koopa_git_push_submodules() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9622,7 +9624,7 @@ koopa_git_remote_url() {
 koopa_git_rename_master_to_main() {
     local app dict repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
@@ -9665,7 +9667,7 @@ koopa_git_rename_master_to_main() {
 koopa_git_reset_fork_to_upstream() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9695,7 +9697,7 @@ koopa_git_reset_fork_to_upstream() {
 koopa_git_reset() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9729,7 +9731,7 @@ koopa_git_rm_submodule() {
     koopa_assert_has_args "$#"
     koopa_assert_is_git_repo
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     for module in "$@"
@@ -9746,7 +9748,7 @@ koopa_git_rm_submodule() {
 koopa_git_rm_untracked() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9784,7 +9786,7 @@ koopa_git_set_remote_url() {
 koopa_git_status_recursive() {
     local app dirs
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")
@@ -9828,8 +9830,8 @@ koopa_git_status_recursive() {
 koopa_git_submodule_init() {
     local app repos
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['git']="$(koopa_locate_git)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
@@ -11160,6 +11162,7 @@ koopa_install_all_apps() {
         'bashcov'
         'bat'
         'bc'
+        'bfg'
         'binutils'
         'bison'
         'black'
@@ -11215,6 +11218,7 @@ koopa_install_all_apps() {
         'groff'
         'gsl'
         'gtop'
+        'gum'
         'gzip'
         'hadolint'
         'harfbuzz'
@@ -12250,6 +12254,18 @@ koopa_install_cpufetch() {
         "$@"
 }
 
+koopa_install_csvkit() {
+    koopa_install_app \
+        --name='csvkit' \
+        "$@"
+}
+
+koopa_install_csvtk() {
+    koopa_install_app \
+        --name='csvtk' \
+        "$@"
+}
+
 koopa_install_curl() {
     koopa_install_app \
         --name='curl' \
@@ -12561,6 +12577,12 @@ koopa_install_gsl() {
 koopa_install_gtop() {
     koopa_install_app \
         --name='gtop' \
+        "$@"
+}
+
+koopa_install_gum() {
+    koopa_install_app \
+        --name='gum' \
         "$@"
 }
 
@@ -23144,6 +23166,18 @@ koopa_uninstall_cpufetch() {
         "$@"
 }
 
+koopa_uninstall_csvkit() {
+    koopa_uninstall_app \
+        --name='csvkit' \
+        "$@"
+}
+
+koopa_uninstall_csvtk() {
+    koopa_uninstall_app \
+        --name='csvtk' \
+        "$@"
+}
+
 koopa_uninstall_curl() {
     koopa_uninstall_app \
         --name='curl' \
@@ -23453,6 +23487,12 @@ koopa_uninstall_gsl() {
 koopa_uninstall_gtop() {
     koopa_uninstall_app \
         --name='gtop' \
+        "$@"
+}
+
+koopa_uninstall_gum() {
+    koopa_uninstall_app \
+        --name='gum' \
         "$@"
 }
 
@@ -24905,9 +24945,11 @@ koopa_update_koopa() {
     fi
     if koopa_is_shared_install
     then
+        koopa_alert "Resetting permissions at '${dict['prefix']}'."
         koopa_chown --recursive --sudo "${dict['user']}" "${dict['prefix']}"
     fi
     koopa_git_pull "${dict['prefix']}"
+    koopa_alert "Resetting permissions at '${dict['prefix']}'."
     koopa_sys_set_permissions --recursive "${dict['prefix']}"
     koopa_fix_zsh_permissions
     return 0
