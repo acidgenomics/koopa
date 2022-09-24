@@ -3,7 +3,7 @@
 koopa_git_rm_submodule() {
     # """
     # Remove a git submodule from current repository.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-09-24.
     #
     # @seealso
     # - https://stackoverflow.com/questions/1260748/
@@ -17,7 +17,7 @@ koopa_git_rm_submodule() {
     koopa_assert_has_args "$#"
     koopa_assert_is_git_repo
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     for module in "$@"

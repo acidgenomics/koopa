@@ -11,7 +11,7 @@ koopa_git_latest_tag() {
     # """
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")

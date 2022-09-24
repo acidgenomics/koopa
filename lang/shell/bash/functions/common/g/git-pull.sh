@@ -3,7 +3,7 @@
 koopa_git_pull() {
     # """
     # Pull (update) a git repository.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-09-24.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
@@ -16,7 +16,7 @@ koopa_git_pull() {
     # """
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")

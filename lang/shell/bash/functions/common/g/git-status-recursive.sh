@@ -3,11 +3,11 @@
 koopa_git_status_recursive() {
     # """
     # Get the status of multiple Git repos recursively.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-09-24.
     # """
     local app dirs
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")

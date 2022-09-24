@@ -3,7 +3,7 @@
 koopa_git_reset() {
     # """
     # Clean and reset a git repo and its submodules.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-09-24.
     #
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
@@ -13,7 +13,7 @@ koopa_git_reset() {
     # """
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
