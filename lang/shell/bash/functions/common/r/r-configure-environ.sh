@@ -92,10 +92,10 @@ koopa_r_configure_environ() {
     local app_pc_path_arr pc_path_arr
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
-        ['pkg_config']="$(koopa_locate_pkg_config)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
+        ['pkg_config']="$(koopa_locate_pkg_config --allow-system)"
         ['r']="${1:?}"
-        ['sort']="$(koopa_locate_sort)"
+        ['sort']="$(koopa_locate_sort --allow-system)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1

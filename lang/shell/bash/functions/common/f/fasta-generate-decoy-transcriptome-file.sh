@@ -30,7 +30,7 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(

@@ -10,7 +10,7 @@ koopa_fastq_lanepool() {
     # """
     local app basenames dict fastq_files head i out tail
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(

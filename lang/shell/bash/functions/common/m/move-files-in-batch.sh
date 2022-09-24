@@ -22,7 +22,7 @@ koopa_move_files_in_batch() {
     local app dict files
     koopa_assert_has_args_eq "$#" 3
     declare -A app=(
-        ['head']="$(koopa_locate_head)"
+        ['head']="$(koopa_locate_head --allow-system)"
     )
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(

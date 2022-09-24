@@ -12,10 +12,10 @@ koopa_current_gencode_version() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        ['curl']="$(koopa_locate_curl)"
-        ['cut']="$(koopa_locate_cut)"
-        ['grep']="$(koopa_locate_grep)"
-        ['head']="$(koopa_locate_head)"
+        ['curl']="$(koopa_locate_curl --allow-system)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
+        ['grep']="$(koopa_locate_grep --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['curl']}" ]] || return 1
