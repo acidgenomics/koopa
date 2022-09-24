@@ -2750,8 +2750,8 @@ koopa_bioconda_autobump_recipe() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
-        ['vim']="$(koopa_locate_vim)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['vim']="$(koopa_locate_vim --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['vim']}" ]] || return 1
@@ -3085,7 +3085,7 @@ koopa_brew_reset_core_repo() {
     koopa_assert_has_no_args "$#"
     declare -A app=(
         ['brew']="$(koopa_locate_brew)"
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
@@ -9112,7 +9112,7 @@ koopa_gfortran_libs() {
 koopa_git_checkout_recursive() {
     local app dict dirs pos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
@@ -9440,7 +9440,7 @@ koopa_git_last_commit_remote() {
 koopa_git_latest_tag() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9465,7 +9465,7 @@ koopa_git_latest_tag() {
 koopa_git_pull_recursive() {
     local app dirs
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")
@@ -9512,7 +9512,7 @@ koopa_git_pull_recursive() {
 koopa_git_pull() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9534,7 +9534,7 @@ koopa_git_pull() {
 koopa_git_push_recursive() {
     local app dirs
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")
@@ -9579,7 +9579,7 @@ koopa_git_push_recursive() {
 koopa_git_push_submodules() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9624,7 +9624,7 @@ koopa_git_remote_url() {
 koopa_git_rename_master_to_main() {
     local app dict repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
@@ -9667,7 +9667,7 @@ koopa_git_rename_master_to_main() {
 koopa_git_reset_fork_to_upstream() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9697,7 +9697,7 @@ koopa_git_reset_fork_to_upstream() {
 koopa_git_reset() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9731,7 +9731,7 @@ koopa_git_rm_submodule() {
     koopa_assert_has_args "$#"
     koopa_assert_is_git_repo
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     for module in "$@"
@@ -9748,7 +9748,7 @@ koopa_git_rm_submodule() {
 koopa_git_rm_untracked() {
     local app repos
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     repos=("$@")
@@ -9786,7 +9786,7 @@ koopa_git_set_remote_url() {
 koopa_git_status_recursive() {
     local app dirs
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")
@@ -9830,8 +9830,8 @@ koopa_git_status_recursive() {
 koopa_git_submodule_init() {
     local app repos
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['git']="$(koopa_locate_git)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1

@@ -3,12 +3,12 @@
 koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-09-24.
     # """
     local app repos
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['git']="$(koopa_locate_git)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
