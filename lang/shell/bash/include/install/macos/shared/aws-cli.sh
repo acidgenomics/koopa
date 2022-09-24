@@ -13,7 +13,7 @@ main() {
     # """
     local app dict
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
         ['installer']="$(koopa_macos_locate_installer)"
     )
     [[ -x "${app['cat']}" ]] || return 1

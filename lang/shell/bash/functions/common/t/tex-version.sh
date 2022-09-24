@@ -14,8 +14,8 @@ koopa_tex_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
         ['tex']="${1:-}"
     )
     [[ -z "${app['tex']}" ]] && app['tex']="$(koopa_locate_tex)"
