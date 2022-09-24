@@ -3,7 +3,7 @@
 koopa_update_koopa() {
     # """
     # Update koopa installation.
-    # @note Updated 2022-07-22.
+    # @note Updated 2022-09-23.
     #
     # Update of pinned stable releases is intentionally not supported.
     #
@@ -23,9 +23,11 @@ koopa_update_koopa() {
     fi
     if koopa_is_shared_install
     then
+        koopa_alert "Resetting permissions at '${dict['prefix']}'."
         koopa_chown --recursive --sudo "${dict['user']}" "${dict['prefix']}"
     fi
     koopa_git_pull "${dict['prefix']}"
+    koopa_alert "Resetting permissions at '${dict['prefix']}'."
     koopa_sys_set_permissions --recursive "${dict['prefix']}"
     koopa_fix_zsh_permissions
     return 0

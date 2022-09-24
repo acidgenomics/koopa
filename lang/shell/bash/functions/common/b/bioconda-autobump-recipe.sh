@@ -3,13 +3,13 @@
 koopa_bioconda_autobump_recipe() {
     # """
     # Edit a Bioconda autobump recipe.
-    # @note Updated 2022-04-15.
+    # @note Updated 2022-09-24.
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
-        ['vim']="$(koopa_locate_vim)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['vim']="$(koopa_locate_vim --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['vim']}" ]] || return 1

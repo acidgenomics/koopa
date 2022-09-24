@@ -3,11 +3,11 @@
 koopa_git_push_recursive() {
     # """
     # Push multiple Git repositories recursively.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-09-24.
     # """
     local app dirs
     declare -A app=(
-        ['git']="$(koopa_locate_git)"
+        ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     dirs=("$@")
