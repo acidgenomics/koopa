@@ -6,7 +6,8 @@
 # FIXME Need to address this permission issue with Ubuntu system R:
 # cannot create file '/usr/share/R/doc/html/packages.html', reason 'Permission denied'
 # FIXME This is now problematic for minimal system R install inside Docker...
-# FIXME Add a Docker override here...
+
+# FIXME Inside Docker image, trying to write to: /usr/local/lib/R/site-library
 
 koopa_configure_r() {
     # """
@@ -67,11 +68,20 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
+            # Ensure default site-library for Debian/Ubuntu is writable.
+            dict['site_library_2']='/usr/local/lib/R/site-library'
+            if [[ -d "${dict['site_library_2']}" ]]
+            then
+                koopa_chmod --sudo '0775' "${dict['site_library_2']}"
+                koopa_chown --sudo --recursive \
+                    "${dict['user']}:${dict['group']}" \
+                    "${dict['site_library_2']}"
+            fi
             koopa_r_configure_makeconf "${app['r']}"
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
-    koopa_sys_set_permissions --recursive "${dict['site_library']}"
+    # > koopa_sys_set_permissions --recursive "${dict['site_library']}"
     koopa_alert_configure_success "${dict['name']}" "${dict['r_prefix']}"
     return 0
 }
