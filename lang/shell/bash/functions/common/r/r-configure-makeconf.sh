@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to describe the LIBS flags in use here.
+# Need to describe the LIBS flags in use here.
 # - * '-ldl'
 # - * '-lm'
 # - * '-lrt' (Linux)
@@ -9,7 +9,7 @@
 koopa_r_configure_makeconf() {
     # """
     # Modify the 'Makeconf' file to ensure correct configuration.
-    # @note Updated 2022-09-19.
+    # @note Updated 2022-09-24.
     #
     # Default LIBS:
     # - macOS: -lpcre2-8 -llzma -lbz2 -lz -licucore -ldl -lm -liconv
@@ -21,22 +21,23 @@ koopa_r_configure_makeconf() {
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
     local app dict libs
-    declare -A app=(
-        ['pkg_config']="$(koopa_locate_pkg_config)"
-        ['r']="${1:?}"
-    )
-    [[ -x "${app['pkg_config']}" ]] || return 1
+    declare -A app dict
+    app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['icu4c']="$(koopa_app_prefix 'icu4c')"
-        ['libiconv']="$(koopa_app_prefix 'libiconv')"
-        ['pcre2']="$(koopa_app_prefix 'pcre2')"
-        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        ['system']=0
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-    )
+    dict['system']=0
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    then
+        return 0
+    fi
+    app['pkg_config']="$(koopa_locate_pkg_config)"
+    [[ -x "${app['pkg_config']}" ]] || return 1
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['file']="${dict['r_prefix']}/etc/Makeconf"
     koopa_assert_is_dir \
         "${dict['bzip2']}" \

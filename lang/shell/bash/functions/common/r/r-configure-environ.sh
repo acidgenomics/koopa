@@ -26,7 +26,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-09-20.
+    # @note Updated 2022-09-24.
     #
     # @section Package library location:
     #
@@ -91,30 +91,31 @@ koopa_r_configure_environ() {
     local app conf_dict dict i key keys lines path_arr
     local app_pc_path_arr pc_path_arr
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-        ['pkg_config']="$(koopa_locate_pkg_config --allow-system)"
-        ['r']="${1:?}"
-        ['sort']="$(koopa_locate_sort --allow-system)"
-    )
+    declare -A app dict
+    app['r']="${1:?}"
+    [[ -x "${app['r']}" ]] || return 1
+    dict['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    then
+        return 0
+    fi
+    app['cat']="$(koopa_locate_cat)"
+    app['pkg_config']="$(koopa_locate_pkg_config)"
+    app['sort']="$(koopa_locate_sort)"
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
-    declare -A dict=(
-        ['conda']="$(koopa_app_prefix 'conda')"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        ['system']=0
-        ['tmp_file']="$(koopa_tmp_file)"
-        ['udunits2']="$(koopa_app_prefix 'udunits')"
-    )
+    dict['conda']="$(koopa_app_prefix 'conda')"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['tmp_file']="$(koopa_tmp_file)"
+    dict['udunits2']="$(koopa_app_prefix 'udunits')"
     koopa_assert_is_dir \
         "${dict['conda']}" \
         "${dict['r_prefix']}" \
         "${dict['udunits2']}"
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     declare -A conf_dict
     lines=()

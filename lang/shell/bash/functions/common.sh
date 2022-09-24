@@ -18125,30 +18125,31 @@ koopa_r_configure_environ() {
     local app conf_dict dict i key keys lines path_arr
     local app_pc_path_arr pc_path_arr
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-        ['pkg_config']="$(koopa_locate_pkg_config --allow-system)"
-        ['r']="${1:?}"
-        ['sort']="$(koopa_locate_sort --allow-system)"
-    )
+    declare -A app dict
+    app['r']="${1:?}"
+    [[ -x "${app['r']}" ]] || return 1
+    dict['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    then
+        return 0
+    fi
+    app['cat']="$(koopa_locate_cat)"
+    app['pkg_config']="$(koopa_locate_pkg_config)"
+    app['sort']="$(koopa_locate_sort)"
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
-    declare -A dict=(
-        ['conda']="$(koopa_app_prefix 'conda')"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        ['system']=0
-        ['tmp_file']="$(koopa_tmp_file)"
-        ['udunits2']="$(koopa_app_prefix 'udunits')"
-    )
+    dict['conda']="$(koopa_app_prefix 'conda')"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['tmp_file']="$(koopa_tmp_file)"
+    dict['udunits2']="$(koopa_app_prefix 'udunits')"
     koopa_assert_is_dir \
         "${dict['conda']}" \
         "${dict['r_prefix']}" \
         "${dict['udunits2']}"
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     declare -A conf_dict
     lines=()
@@ -18346,26 +18347,26 @@ abort,verbose"
 koopa_r_configure_java() {
     local app conf_dict dict java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['jar']="$(koopa_locate_jar --realpath)"
-        ['java']="$(koopa_locate_java --realpath)"
-        ['javac']="$(koopa_locate_javac --realpath)"
-        ['r']="${1:?}"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    declare -A app dict
+    app['r']="${1:?}"
+    [[ -x "${app['r']}" ]] || return 1
+    dict['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    then
+        return 0
+    fi
+    app['jar']="$(koopa_locate_jar --realpath)"
+    app['java']="$(koopa_locate_java --realpath)"
+    app['javac']="$(koopa_locate_javac --realpath)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['jar']}" ]] || return 1
     [[ -x "${app['java']}" ]] || return 1
     [[ -x "${app['javac']}" ]] || return 1
-    [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    declare -A dict=(
-        ['openjdk']="$(koopa_app_prefix 'openjdk')"
-        ['system']=0
-    )
-    koopa_assert_is_dir \
-        "${dict['openjdk']}"
+    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+    koopa_assert_is_dir "${dict['openjdk']}"
     koopa_alert 'Updating R Java configuration.'
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     declare -A conf_dict=(
         ['java_home']="${dict['openjdk']}"
         ['jar']="${app['jar']}"
@@ -18396,21 +18397,23 @@ koopa_r_configure_java() {
 koopa_r_configure_ldpaths() {
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
+    declare -A app dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['java_home']="$(koopa_app_prefix 'openjdk')"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        ['system']=0
-    )
+    dict['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    then
+        return 0
+    fi
+    dict['arch']="$(koopa_arch)"
+    dict['java_home']="$(koopa_app_prefix 'openjdk')"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
         "${dict['java_home']}" \
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
     lines+=(
@@ -18524,22 +18527,23 @@ koopa_r_configure_ldpaths() {
 
 koopa_r_configure_makeconf() {
     local app dict libs
-    declare -A app=(
-        ['pkg_config']="$(koopa_locate_pkg_config)"
-        ['r']="${1:?}"
-    )
-    [[ -x "${app['pkg_config']}" ]] || return 1
+    declare -A app dict
+    app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['icu4c']="$(koopa_app_prefix 'icu4c')"
-        ['libiconv']="$(koopa_app_prefix 'libiconv')"
-        ['pcre2']="$(koopa_app_prefix 'pcre2')"
-        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        ['system']=0
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-    )
+    dict['system']=0
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    then
+        return 0
+    fi
+    app['pkg_config']="$(koopa_locate_pkg_config)"
+    [[ -x "${app['pkg_config']}" ]] || return 1
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['file']="${dict['r_prefix']}/etc/Makeconf"
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
@@ -18594,22 +18598,28 @@ koopa_r_configure_makevars() {
     local app conf_dict dict
     local cppflags ldflags lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['ar']='/usr/bin/ar'
-        ['awk']="$(koopa_locate_awk --realpath)"
-        ['bash']="$(koopa_locate_bash --realpath)"
-        ['echo']="$(koopa_locate_echo --realpath)"
-        ['gfortran']="$(koopa_locate_gfortran --realpath)"
-        ['make']="$(koopa_locate_make --realpath)"
-        ['pkg_config']="$(koopa_locate_pkg_config)"
-        ['r']="${1:?}"
-        ['ranlib']='/usr/bin/ranlib'
-        ['sed']="$(koopa_locate_sed --realpath)"
-        ['sort']="$(koopa_locate_sort)"
-        ['strip']='/usr/bin/strip'
-        ['tar']="$(koopa_locate_tar --realpath)"
-        ['yacc']="$(koopa_locate_yacc --realpath)"
-    )
+    declare -A app dict
+    app['r']="${1:?}"
+    [[ -x "${app['r']}" ]] || return 1
+    dict['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    then
+        return 0
+    fi
+    app['ar']='/usr/bin/ar'
+    app['awk']="$(koopa_locate_awk --realpath)"
+    app['bash']="$(koopa_locate_bash --realpath)"
+    app['echo']="$(koopa_locate_echo --realpath)"
+    app['gfortran']="$(koopa_locate_gfortran --realpath)"
+    app['make']="$(koopa_locate_make --realpath)"
+    app['pkg_config']="$(koopa_locate_pkg_config)"
+    app['ranlib']='/usr/bin/ranlib'
+    app['sed']="$(koopa_locate_sed --realpath)"
+    app['sort']="$(koopa_locate_sort)"
+    app['strip']='/usr/bin/strip'
+    app['tar']="$(koopa_locate_tar --realpath)"
+    app['yacc']="$(koopa_locate_yacc --realpath)"
     [[ -x "${app['ar']}" ]] || return 1
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['bash']}" ]] || return 1
@@ -18617,23 +18627,19 @@ koopa_r_configure_makevars() {
     [[ -x "${app['gfortran']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['ranlib']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['strip']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['gettext']="$(koopa_app_prefix 'gettext')"
-        ['hdf5']="$(koopa_app_prefix 'hdf5')"
-        ['lapack']="$(koopa_app_prefix 'lapack')"
-        ['openblas']="$(koopa_app_prefix 'openblas')"
-        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        ['system']=0
-    )
+    dict['arch']="$(koopa_arch)"
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['gettext']="$(koopa_app_prefix 'gettext')"
+    dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    dict['lapack']="$(koopa_app_prefix 'lapack')"
+    dict['openblas']="$(koopa_app_prefix 'openblas')"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
         "${dict['gettext']}" \
@@ -18645,7 +18651,6 @@ koopa_r_configure_makevars() {
         "${dict['lapack']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if koopa_is_macos
     then
         app['cc']='/usr/bin/clang'

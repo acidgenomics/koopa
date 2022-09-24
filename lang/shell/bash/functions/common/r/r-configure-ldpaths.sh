@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2022-09-20.
+    # @note Updated 2022-09-24.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -25,21 +25,23 @@ koopa_r_configure_ldpaths() {
     # """
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
+    declare -A app dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['java_home']="$(koopa_app_prefix 'openjdk')"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        ['system']=0
-    )
+    dict['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    then
+        return 0
+    fi
+    dict['arch']="$(koopa_arch)"
+    dict['java_home']="$(koopa_app_prefix 'openjdk')"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
         "${dict['java_home']}" \
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     koopa_alert "Configuring '${dict['file']}'."
     lines=()
     lines+=(
