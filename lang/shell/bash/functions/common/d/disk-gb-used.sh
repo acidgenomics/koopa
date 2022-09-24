@@ -12,10 +12,10 @@ koopa_disk_gb_used() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['df']="$(koopa_locate_df)"
-        ['head']="$(koopa_locate_head)"
-        ['sed']="$(koopa_locate_sed)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['df']="$(koopa_locate_df --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1

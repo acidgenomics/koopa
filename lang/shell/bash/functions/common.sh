@@ -5964,9 +5964,9 @@ koopa_current_flybase_version() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
-        ['tail']="$(koopa_locate_tail)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['tail']="$(koopa_locate_tail --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
@@ -5985,10 +5985,10 @@ koopa_current_gencode_version() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        ['curl']="$(koopa_locate_curl)"
-        ['cut']="$(koopa_locate_cut)"
-        ['grep']="$(koopa_locate_grep)"
-        ['head']="$(koopa_locate_head)"
+        ['curl']="$(koopa_locate_curl --allow-system)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
+        ['grep']="$(koopa_locate_grep --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['curl']}" ]] || return 1
@@ -6510,10 +6510,10 @@ koopa_disk_gb_free() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['df']="$(koopa_locate_df)"
-        ['head']="$(koopa_locate_head)"
-        ['sed']="$(koopa_locate_sed)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['df']="$(koopa_locate_df --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
@@ -6539,10 +6539,10 @@ koopa_disk_gb_total() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['df']="$(koopa_locate_df)"
-        ['head']="$(koopa_locate_head)"
-        ['sed']="$(koopa_locate_sed)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['df']="$(koopa_locate_df --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
@@ -6568,10 +6568,10 @@ koopa_disk_gb_used() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['df']="$(koopa_locate_df)"
-        ['head']="$(koopa_locate_head)"
-        ['sed']="$(koopa_locate_sed)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['df']="$(koopa_locate_df --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['df']}" ]] || return 1
@@ -7323,7 +7323,7 @@ koopa_download_cran_latest() {
     local app file name pattern url
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['head']="$(koopa_locate_head)"
+        ['head']="$(koopa_locate_head --allow-system)"
     )
     [[ -x "${app['head']}" ]] || return 1
     for name in "$@"
@@ -7813,7 +7813,7 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(
@@ -7892,9 +7892,9 @@ koopa_fastq_detect_quality_score() {
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['head']="$(koopa_locate_head)"
-        ['od']="$(koopa_locate_od)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['od']="$(koopa_locate_od --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
@@ -7931,7 +7931,7 @@ koopa_fastq_detect_quality_score() {
 koopa_fastq_lanepool() {
     local app basenames dict fastq_files head i out tail
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(
@@ -8378,7 +8378,7 @@ koopa_find_large_files() {
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
     declare -A app
-    app['head']="$(koopa_locate_head)"
+    app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['head']}" ]] || return 1
     for prefix in "$@"
     do
@@ -15173,9 +15173,9 @@ koopa_local_ip_address() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['head']="$(koopa_locate_head)"
-        ['tail']="$(koopa_locate_tail)"
+        ['awk']="$(koopa_locate_awk --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['tail']="$(koopa_locate_tail --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
@@ -17183,7 +17183,7 @@ koopa_move_files_in_batch() {
     local app dict files
     koopa_assert_has_args_eq "$#" 3
     declare -A app=(
-        ['head']="$(koopa_locate_head)"
+        ['head']="$(koopa_locate_head --allow-system)"
     )
     [[ -x "${app['head']}" ]] || return 1
     declare -A dict=(
@@ -18126,10 +18126,10 @@ koopa_r_configure_environ() {
     local app_pc_path_arr pc_path_arr
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
-        ['pkg_config']="$(koopa_locate_pkg_config)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
+        ['pkg_config']="$(koopa_locate_pkg_config --allow-system)"
         ['r']="${1:?}"
-        ['sort']="$(koopa_locate_sort)"
+        ['sort']="$(koopa_locate_sort --allow-system)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
@@ -19152,7 +19152,7 @@ koopa_r_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        ['head']="$(koopa_locate_head)"
+        ['head']="$(koopa_locate_head --allow-system)"
         ['r']="${1:-}"
     )
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
@@ -20702,8 +20702,8 @@ koopa_script_name() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
@@ -22574,8 +22574,8 @@ koopa_tex_version() {
     local app str
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
         ['tex']="${1:-}"
     )
     [[ -z "${app['tex']}" ]] && app['tex']="$(koopa_locate_tex)"
