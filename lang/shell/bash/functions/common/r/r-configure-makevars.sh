@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-09-20.
+    # @note Updated 2022-09-24.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -24,22 +24,28 @@ koopa_r_configure_makevars() {
     local app conf_dict dict
     local cppflags ldflags lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['ar']='/usr/bin/ar'
-        ['awk']="$(koopa_locate_awk --realpath)"
-        ['bash']="$(koopa_locate_bash --realpath)"
-        ['echo']="$(koopa_locate_echo --realpath)"
-        ['gfortran']="$(koopa_locate_gfortran --realpath)"
-        ['make']="$(koopa_locate_make --realpath)"
-        ['pkg_config']="$(koopa_locate_pkg_config)"
-        ['r']="${1:?}"
-        ['ranlib']='/usr/bin/ranlib'
-        ['sed']="$(koopa_locate_sed --realpath)"
-        ['sort']="$(koopa_locate_sort)"
-        ['strip']='/usr/bin/strip'
-        ['tar']="$(koopa_locate_tar --realpath)"
-        ['yacc']="$(koopa_locate_yacc --realpath)"
-    )
+    declare -A app dict
+    app['r']="${1:?}"
+    [[ -x "${app['r']}" ]] || return 1
+    dict['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    then
+        return 0
+    fi
+    app['ar']='/usr/bin/ar'
+    app['awk']="$(koopa_locate_awk --realpath)"
+    app['bash']="$(koopa_locate_bash --realpath)"
+    app['echo']="$(koopa_locate_echo --realpath)"
+    app['gfortran']="$(koopa_locate_gfortran --realpath)"
+    app['make']="$(koopa_locate_make --realpath)"
+    app['pkg_config']="$(koopa_locate_pkg_config)"
+    app['ranlib']='/usr/bin/ranlib'
+    app['sed']="$(koopa_locate_sed --realpath)"
+    app['sort']="$(koopa_locate_sort)"
+    app['strip']='/usr/bin/strip'
+    app['tar']="$(koopa_locate_tar --realpath)"
+    app['yacc']="$(koopa_locate_yacc --realpath)"
     [[ -x "${app['ar']}" ]] || return 1
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['bash']}" ]] || return 1
@@ -47,23 +53,19 @@ koopa_r_configure_makevars() {
     [[ -x "${app['gfortran']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['ranlib']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['strip']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
     [[ -x "${app['yacc']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['gettext']="$(koopa_app_prefix 'gettext')"
-        ['hdf5']="$(koopa_app_prefix 'hdf5')"
-        ['lapack']="$(koopa_app_prefix 'lapack')"
-        ['openblas']="$(koopa_app_prefix 'openblas')"
-        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        ['system']=0
-    )
+    dict['arch']="$(koopa_arch)"
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['gettext']="$(koopa_app_prefix 'gettext')"
+    dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    dict['lapack']="$(koopa_app_prefix 'lapack')"
+    dict['openblas']="$(koopa_app_prefix 'openblas')"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
         "${dict['gettext']}" \
@@ -75,7 +77,6 @@ koopa_r_configure_makevars() {
         "${dict['lapack']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if koopa_is_macos
     then
         # The system clang compiler stack is preferred on macOS. If you attempt

@@ -2,16 +2,16 @@
 
 # FIXME Need to rework edge case handling of R installed in Docker.
 # We don't want to link to any koopa installers in this edge case...
-
 # FIXME Remove recommended packages from system R library.
-
 # FIXME Need to address this permission issue with Ubuntu system R:
 # cannot create file '/usr/share/R/doc/html/packages.html', reason 'Permission denied'
+# FIXME This is now problematic for minimal system R install inside Docker...
+# FIXME Add a Docker override here...
 
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-24.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """

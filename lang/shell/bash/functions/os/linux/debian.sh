@@ -865,12 +865,12 @@ koopa_debian_install_system_builder_base() {
     local app
     declare -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
-        ['cat']="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
         ['debconf_set_selections']="$( \
             koopa_debian_locate_debconf_set_selections \
         )"
-        ['echo']="$(koopa_locate_echo)"
-        ['sudo']="$(koopa_locate_sudo)"
+        ['echo']="$(koopa_locate_echo --allow-system)"
+        ['sudo']="$(koopa_locate_sudo --allow-system)"
     )
     [[ -x "${app['apt_get']}" ]] || return 1
     [[ -x "${app['cat']}" ]] || return 1
