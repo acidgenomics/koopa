@@ -25,7 +25,8 @@ koopa_r_configure_ldpaths() {
     # """
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app dict
+    declare -A app
+    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     dict['system']=0
