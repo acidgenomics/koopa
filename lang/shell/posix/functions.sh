@@ -1608,7 +1608,10 @@ koopa_is_debian() {
 }
 
 koopa_is_docker() {
-    [ -f '/.dockerenv' ]
+    [ "${KOOPA_IS_DOCKER:-0}" -eq 1 ] && return 0
+    [ -f '/.dockerenv' ] && return 0
+    [ -f '/proc/1/cgroup' ] || return 1
+    return 1
 }
 
 koopa_is_fedora_like() {

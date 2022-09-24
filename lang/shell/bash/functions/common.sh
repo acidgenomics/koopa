@@ -14397,7 +14397,8 @@ koopa_is_symlink() {
 koopa_is_url_active() {
     local app url
     koopa_assert_has_args "$#"
-    declare -A app dict
+    declare -A app
+    declare -A dict
     app['curl']="$(koopa_locate_curl --allow-system)"
     [[ -x "${app['curl']}" ]] || return 1
     dict['url_pattern']='://'
@@ -15213,7 +15214,8 @@ koopa_koopa_url() {
 
 koopa_koopa_version() {
     local app dict
-    declare -A app dict
+    declare -A app
+    declare -A dict
     koopa_assert_has_no_args "$#"
     app['cat']="$(koopa_locate_cat --allow-system)"
     [[ -x "${app['cat']}" ]] || return 1
@@ -18125,7 +18127,8 @@ koopa_r_configure_environ() {
     local app conf_dict dict i key keys lines path_arr
     local app_pc_path_arr pc_path_arr
     koopa_assert_has_args_eq "$#" 1
-    declare -A app dict
+    declare -A app
+    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     dict['system']=0
@@ -18347,7 +18350,8 @@ abort,verbose"
 koopa_r_configure_java() {
     local app conf_dict dict java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
-    declare -A app dict
+    declare -A app
+    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     dict['system']=0
@@ -18397,7 +18401,8 @@ koopa_r_configure_java() {
 koopa_r_configure_ldpaths() {
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app dict
+    declare -A app
+    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     dict['system']=0
@@ -18527,7 +18532,8 @@ koopa_r_configure_ldpaths() {
 
 koopa_r_configure_makeconf() {
     local app dict libs
-    declare -A app dict
+    declare -A app
+    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     dict['system']=0
@@ -18598,7 +18604,8 @@ koopa_r_configure_makevars() {
     local app conf_dict dict
     local cppflags ldflags lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app dict
+    declare -A app
+    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
     dict['system']=0
@@ -24983,7 +24990,8 @@ koopa_update_system_tex_packages() {
 
 koopa_validate_json() {
     local app dict
-    declare -A app dict
+    declare -A app
+    declare -A dict
     koopa_assert_has_args_eq "$#" 1
     app['python']="$(koopa_locate_python)"
     dict['file']="${1:?}"
