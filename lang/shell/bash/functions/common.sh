@@ -9928,7 +9928,7 @@ koopa_gpg_download_key_from_keyserver() {
     local app cp dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['gpg']="$(koopa_locate_gpg)"
+        ['gpg']="$(koopa_locate_gpg --allow-system)"
     )
     [[ -x "${app['gpg']}" ]] || return 1
     declare -A dict=(
@@ -10001,7 +10001,7 @@ koopa_gpg_prompt() {
     local app
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['gpg']="$(koopa_locate_gpg)"
+        ['gpg']="$(koopa_locate_gpg --allow-system)"
     )
     [[ -x "${app['gpg']}" ]] || return 1
     printf '' | "${app['gpg']}" -s
