@@ -734,9 +734,9 @@ koopa_linux_proc_cmdline() {
     local app pid
     koopa_assert_has_args_eq "$#" 1
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
-        ['echo']="$(koopa_locate_echo)"
-        ['xargs']="$(koopa_locate_xargs)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
+        ['echo']="$(koopa_locate_echo --allow-system)"
+        ['xargs']="$(koopa_locate_xargs --allow-system)"
     )
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['echo']}" ]] || return 1

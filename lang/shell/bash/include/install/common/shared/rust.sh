@@ -3,13 +3,13 @@
 main() {
     # """
     # Install Rust (via rustup).
-    # @note Updated 2022-04-15.
+    # @note Updated 2022-09-24.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['head']="$(koopa_locate_head)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
