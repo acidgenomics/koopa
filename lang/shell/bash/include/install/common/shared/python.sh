@@ -58,7 +58,7 @@ main() {
         # unzip deps: none.
         'unzip'
     )
-    # Inclusion of readline is currently causing a cryptic build error on
+    # NOTE Inclusion of readline is currently causing a cryptic build error on
     # macOS that is difficult to debug.
     if koopa_is_linux
     then
