@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Hardened installer is now failing.
+
 # FIXME _bz2 import is failing on Ubuntu 22.
 # Need to resolve this without installing system package.
 
@@ -113,7 +115,7 @@ ${dict['file']}"
     then
         conf_args+=(
             '--disable-framework'
-            '--with-dtrace'
+            '--with-dtrace=/usr/sbin/dtrace'
         )
     fi
     # > conf_args+=(
