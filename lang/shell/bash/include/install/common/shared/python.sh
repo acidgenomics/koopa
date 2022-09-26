@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Hardened installer is now failing.
+# FIXME Consider including mpdecimal for macOS.
 #
 # FIXME _bz2 import is failing on Ubuntu 22.
 # Need to resolve this without installing system package. 
@@ -10,6 +10,8 @@
 # - mpdecimal
 # - unzip
 #
+# FIXME Consider including libnsl on Linux.
+#
 # NOTE Consider cleaning this up on macOS:
 # clang: warning: argument unused during compilation:
 # '-fno-semantic-interposition' [-Wunused-command-line-argument]
@@ -18,24 +20,6 @@
 # > inreplace "configure",
 # >     'CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"',
 # >     "CPPFLAGS=\"$CPPFLAGS -I#{Formula["ncurses"].opt_include}\""
-#
-# NOTE Now seeing this warning:
-# > warning: "_XOPEN_SOURCE" redefined
-#
-# FIXME May need to suppress this on macOS:
-# ld: warning: -undefined dynamic_lookup may not work with chained fixups
-#
-# FIXME Now seeing this error on macOS:
-# Is this due to an unwanted CLT update?
-# gmake[3]: *** [Makefile:637: sharedmods] Hangup: 1
-# gmake[2]: *** [Makefile:531: build_all_generate_profile] Hangup: 1
-# gmake[1]: *** [Makefile:507: profile-gen-stamp] Hangup: 1
-# gmake: *** [Makefile:519: profile-run-stamp] Hangup: 1
-# koopa_macos_xcode_clt_version
-# 14.1.0.0.1.1662869207
-#
-# FIXME Yep still hitting this issue on macOS, argh:
-# gmake: *** [Makefile:637: sharedmods] Hangup: 1
 
 main() {
     # """
@@ -69,19 +53,20 @@ main() {
         # zlib deps: none.
         'zlib'
         # bzip2 deps: none.
-        # > 'bzip2'
+        'bzip2'
         # expat deps: none.
-        #'expat'
+        'expat'
         # libffi deps: none.
-        #'libffi'
+        'libffi'
         # ncurses deps: none.
-        #'ncurses'
+        'ncurses'
         # openssl3 deps: none.
-        #'openssl3'
+        'openssl3'
         # xz deps: none.
-        #'xz'
+        'xz'
+        # FIXME Inclusion of readline is currently causing a build error on macOS.s
         # readline deps: ncurses.
-        #'readline'
+        # > 'readline'
         # gdbm deps: readline.
         #'gdbm'
         # sqlite deps: readline.
@@ -115,37 +100,49 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "Python-${dict['version']}"
     conf_args=(
+        # > '--with-system-libmpdec'
         "--prefix=${dict['prefix']}"
-        #'--enable-ipv6'
-        #'--enable-loadable-sqlite-extensions'
-        #'--enable-optimizations'
-        #'--enable-shared'
-        #'--with-dbmliborder=gdbm:ndbm'
-        #'--with-ensurepip'
-        #'--with-lto'
-        #"--with-openssl=${dict['openssl']}"
-        #'--with-openssl-rpath=auto'
+        '--enable-ipv6'
+        '--enable-shared'
+        # FIXME Is this the problem on macOS??
+        # > '--enable-loadable-sqlite-extensions'
+        '--enable-optimizations'
+        # > '--with-dbmliborder=gdbm:ndbm'
+        '--with-ensurepip'
+        '--with-lto'
+        "--with-openssl=${dict['openssl']}"
+        '--with-openssl-rpath=auto'
+        '--with-system-expat'
+        '--with-system-ffi'
     )
-    #if koopa_is_macos
-    #then
-    #    conf_args+=(
-    #        '--disable-framework'
-    #        '--with-dtrace=/usr/sbin/dtrace'
-    #    )
-    #fi
-    # > conf_args+=(
-    # >     "CFLAGS=${CFLAGS:-}"
-    # >     "LDFLAGS=${LDFLAGS:-}"
-    # > )
+    if koopa_is_macos
+    then
+        # FIXME What if we enable the framework?
+        conf_args+=(
+            '--enable-framework'
+            '--with-dtrace=/usr/sbin/dtrace'
+        )
+    fi
+    # NOTE May need to set 'CFLAGS_NODIST' and 'LDFLAGS_NODIST' here.
+    conf_args+=(
+        "CFLAGS=${CFLAGS:-}"
+        "CPPFLAGS=${CPPFLAGS:-}"
+        "LDFLAGS=${LDFLAGS:-}"
+    )
     koopa_add_rpath_to_ldflags \
-        "${dict['prefix']}/lib"
-        # > "${dict['bzip2']}/lib"
+        "${dict['prefix']}/lib" \
+        "${dict['bzip2']}/lib"
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # > "${app['make']}" test
+    
+    # FIXME May need to do this for macOS.
+    # > system "make", "install", "PYTHONAPPSDIR=#{prefix}"
+    # > system "make", "frameworkinstallextras", "PYTHONAPPSDIR=#{pkgshare}" if OS.mac?
+    
     # Use 'altinstall' here instead?
     "${app['make']}" install
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
