@@ -100,12 +100,16 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "Python-${dict['version']}"
     conf_args=(
+        # > --with-cxx-main='g++' # FIXME
+        # > --with-tcltk-includes='-I...'
+        # > --with-tcltk-libs='-L...'
         "--prefix=${dict['prefix']}"
+        '--disable-test-modules'
         '--enable-ipv6'
         # > '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
         # > '--with-dbmliborder=gdbm:ndbm'
-        '--with-ensurepip'
+        '--with-ensurepip=install' # upgrade
         '--with-lto'
         "--with-openssl=${dict['openssl']}"
         '--with-openssl-rpath=auto'
@@ -115,11 +119,7 @@ ${dict['file']}"
     )
     if koopa_is_macos
     then
-        conf_args+=(
-            # FIXME Can we specify the prefix here?
-            '--enable-framework'
-            '--with-dtrace=/usr/sbin/dtrace'
-        )
+        conf_args+=("--enable-framework=${dict['prefix']}")
     else
         conf_args+=('--enable-shared')
     fi
