@@ -100,11 +100,8 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "Python-${dict['version']}"
     conf_args=(
-        # > '--with-system-libmpdec'
         "--prefix=${dict['prefix']}"
         '--enable-ipv6'
-        '--enable-shared'
-        # FIXME Is this the problem on macOS??
         # > '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
         # > '--with-dbmliborder=gdbm:ndbm'
@@ -114,14 +111,17 @@ ${dict['file']}"
         '--with-openssl-rpath=auto'
         '--with-system-expat'
         '--with-system-ffi'
+        # > '--with-system-libmpdec'
     )
     if koopa_is_macos
     then
-        # FIXME What if we enable the framework?
         conf_args+=(
+            # FIXME Can we specify the prefix here?
             '--enable-framework'
             '--with-dtrace=/usr/sbin/dtrace'
         )
+    else
+        conf_args+=('--enable-shared')
     fi
     # NOTE May need to set 'CFLAGS_NODIST' and 'LDFLAGS_NODIST' here.
     conf_args+=(
@@ -137,14 +137,16 @@ ${dict['file']}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    # > "${app['make']}" test
-    
-    # FIXME May need to do this for macOS.
-    # > system "make", "install", "PYTHONAPPSDIR=#{prefix}"
-    # > system "make", "frameworkinstallextras", "PYTHONAPPSDIR=#{pkgshare}" if OS.mac?
-    
-    # Use 'altinstall' here instead?
-    "${app['make']}" install
+    if koopa_is_macos
+    then
+        "${app['make']}" install \
+            PYTHONAPPSDIR="${dict['prefix']}"
+        "${app['make']}" frameworkinstallextras \
+            PYTHONAPPSDIR="${dict['prefix']}"
+    else
+        # > "${app['make']}" test
+        "${app['make']}" install
+    fi
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
     "${app['python']}" -m sysconfig
