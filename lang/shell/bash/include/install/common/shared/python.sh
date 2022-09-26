@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider including mpdecimal for macOS.
-#
+# FIXME Need to ensure that lib links into framework on macOS.
 # FIXME _bz2 import is failing on Ubuntu 22.
 # Need to resolve this without installing system package. 
-#
-# NOTE Consider including support for:
-# - libxcrypt
-# - mpdecimal
-# - unzip
-#
+# FIXME Consider including support for libxcrypt.
 # FIXME Consider including libnsl on Linux.
 #
 # NOTE Consider cleaning this up on macOS:
@@ -58,12 +52,16 @@ main() {
         'expat'
         # libffi deps: none.
         'libffi'
+        # mpdecimal deps: none.
+        'mpdecimal'
         # ncurses deps: none.
         'ncurses'
         # openssl3 deps: none.
         'openssl3'
         # xz deps: none.
         'xz'
+        # unzip deps: none.
+        'unzip'
         # FIXME Inclusion of readline is currently causing a build error on macOS.s
         # readline deps: ncurses.
         # > 'readline'
@@ -104,7 +102,6 @@ ${dict['file']}"
         # > --with-tcltk-includes='-I...'
         # > --with-tcltk-libs='-L...'
         "--prefix=${dict['prefix']}"
-        '--disable-test-modules'
         '--enable-ipv6'
         # > '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
@@ -115,15 +112,17 @@ ${dict['file']}"
         '--with-openssl-rpath=auto'
         '--with-system-expat'
         '--with-system-ffi'
-        # > '--with-system-libmpdec'
+        '--with-system-libmpdec'
     )
     if koopa_is_macos
     then
-        conf_args+=("--enable-framework=${dict['prefix']}")
+        dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+        dict['framework']="${dict['libexec']}"
+        conf_args+=("--enable-framework=${dict['framework']}")
     else
         conf_args+=('--enable-shared')
     fi
-    # NOTE May need to set 'CFLAGS_NODIST' and 'LDFLAGS_NODIST' here.
+    # May need to set 'CFLAGS_NODIST' and 'LDFLAGS_NODIST' here.
     conf_args+=(
         "CFLAGS=${CFLAGS:-}"
         "CPPFLAGS=${CPPFLAGS:-}"
@@ -140,9 +139,9 @@ ${dict['file']}"
     if koopa_is_macos
     then
         "${app['make']}" install \
-            PYTHONAPPSDIR="${dict['prefix']}"
+            PYTHONAPPSDIR="${dict['framework']}"
         "${app['make']}" frameworkinstallextras \
-            PYTHONAPPSDIR="${dict['prefix']}"
+            PYTHONAPPSDIR="${dict['prefix']}/lib/pkgconfig"
     else
         # > "${app['make']}" test
         "${app['make']}" install

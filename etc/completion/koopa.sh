@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-09-23.
+    # Updated 2022-09-26.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -246,6 +246,7 @@ __koopa_complete() {
                         'mdcat'
                         'meson'
                         'mpc'
+                        'mpdecimal'
                         'mpfr'
                         'msgpack'
                         'multiqc'
