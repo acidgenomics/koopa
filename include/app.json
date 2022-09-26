@@ -1,6 +1,7 @@
 {
   "ack": {
     "bin": ["ack"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["perl"],
     "man1": ["ack.1"],
@@ -8,57 +9,72 @@
     "version": "3.6.0"
   },
   "anaconda": {
+    "build_dependencies": [],
     "conservative": false,
+    "dependencies": [],
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2022.05"
   },
   "apptainer": {
+    "build_dependencies": [],
     "conservative": false,
-    "dependencies": ["go"],
+    "build_dependencies": ["go"],
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
     "version": "1.0.2"
   },
-  "apr": {
-    "conservative": true,
-    "date": "2022-08-30",
-    "url": ["https://apr.apache.org/"],
-    "version": "1.7.0"
-  },
   "apr-util": {
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-08-30",
+    "dependencies": ["apr", "expat", "openssl3"],
     "url": ["https://apr.apache.org/"],
     "version": "1.6.1"
   },
-  "armadillo": {
+  "apr": {
+    "build_dependencies": ["autoconf", "automake", "libtool", "make"],
     "conservative": true,
     "date": "2022-08-30",
+    "dependencies": ["sqlite"],
+    "url": ["https://apr.apache.org/"],
+    "version": "1.7.0"
+  },
+  "armadillo": {
+    "build_dependencies": ["cmake", "pkg-config"],
+    "conservative": true,
+    "date": "2022-08-30",
+    "dependencies": ["hdf5"],
     "url": ["http://arma.sourceforge.net/download.html"],
     "version": "11.2.3"
   },
   "asdf": {
     "bin": ["asdf"],
+    "build_dependencies": [],
     "conservative": true,
+    "dependencies": [],
     "url": ["https://github.com/asdf-vm/asdf/"],
     "version": "0.10.2"
   },
   "aspell": {
     "bin": ["aspell"],
+    "build_dependencies": ["make"],
     "conservative": false,
     "date": "2022-08-30",
+    "dependencies": [],
     "man1": ["aspell.1"],
     "url": ["http://aspell.net/"],
     "version": "0.60.8"
   },
   "aspera-connect": {
     "bin": ["ascp"],
+    "build_dependencies": [],
     "conservative": false,
     "platform": "linux",
     "url": ["https://www.ibm.com/aspera/connect/"],
     "version": "4.1.3.93"
   },
   "attr": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "platform": "linux",
@@ -66,6 +82,7 @@
     "version": "2.5.1"
   },
   "autoconf": {
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
@@ -73,12 +90,14 @@
   },
   "autoflake": {
     "bin": ["autoflake"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-01",
     "dependencies": ["python"],
     "version": "1.5.3"
   },
   "automake": {
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/automake/"],
@@ -89,6 +108,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-19",
     "url": [
@@ -99,6 +119,7 @@
   },
   "azure-cli": {
     "bin": ["az"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": ["python"],
@@ -107,6 +128,7 @@
   },
   "bamtools": {
     "bin": ["bamtools"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-03-14",
     "dependencies": ["conda"],
@@ -115,6 +137,7 @@
   },
   "bash": {
     "bin": ["bash"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": ["bash.1"],
@@ -123,6 +146,7 @@
   },
   "bash-language-server": {
     "bin": ["bash-language-server"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["node"],
     "url": [
@@ -133,6 +157,7 @@
   },
   "bashcov": {
     "bin": ["bashcov"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["ruby"],
     "url": [
@@ -143,6 +168,7 @@
   },
   "bat": {
     "bin": ["bat"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-12",
     "depends": ["rust"],
@@ -150,6 +176,7 @@
   },
   "bc": {
     "bin": ["bc"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "man1": ["bc.1"],
@@ -158,6 +185,7 @@
   },
   "bcbio-nextgen": {
     "bin": ["bcbio_nextgen.py"],
+    "build_dependencies": [],
     "check": false,
     "conservative": false,
     "platform": "linux",
@@ -168,6 +196,7 @@
     "version": "1.2.9"
   },
   "bcbio-nextgen-vm": {
+    "build_dependencies": [],
     "check": false,
     "conservative": false,
     "platform": "linux",
@@ -175,6 +204,7 @@
     "version": "0.1.6"
   },
   "bcl2fastq": {
+    "build_dependencies": [],
     "check": false,
     "conservative": false,
     "platform": "linux",
@@ -185,6 +215,7 @@
   },
   "bedtools": {
     "bin": ["bedtools"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2021-08-12",
     "depends": ["conda"],
@@ -193,6 +224,7 @@
   },
   "bfg": {
     "bin": ["bfg"],
+    "build_dependencies": [],
     "check": false,
     "conservative": false,
     "date": "2022-09-22",
@@ -202,6 +234,7 @@
     "version": "1.14.0"
   },
   "binutils": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "notes": ["2.39 has build issues on Ubuntu 22 due to bison detection."],
@@ -210,6 +243,7 @@
   },
   "bioawk": {
     "bin": ["bioawk"],
+    "build_dependencies": [],
     "conservaitve": false,
     "date": "2019-10-26",
     "depends": ["conda"],
@@ -218,6 +252,7 @@
   },
   "bioconda-utils": {
     "bin": ["bioconda-utils"],
+    "build_dependencies": [],
     "conservaitve": false,
     "date": "2022-08-01",
     "depends": ["conda"],
@@ -225,6 +260,7 @@
     "version": "1.0.1"
   },
   "bison": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/bison/"],
@@ -232,12 +268,14 @@
   },
   "black": {
     "bin": ["black"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-01",
     "dependencies": ["python"],
     "version": "22.8.0"
   },
   "boost": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.boost.org/"],
@@ -245,6 +283,7 @@
   },
   "bowtie2": {
     "bin": ["bowtie2"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-02-08",
     "depends": ["conda"],
@@ -253,17 +292,20 @@
   },
   "bpytop": {
     "bin": ["bpytop"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "1.0.68"
   },
   "broot": {
     "bin": ["broot"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "1.14.3"
   },
   "brotli": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "url": ["https://github.com/google/brotli/"],
@@ -271,6 +313,7 @@
   },
   "bustools": {
     "bin": ["bustools"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2021-06-25",
     "depends": ["conda"],
@@ -291,6 +334,7 @@
       "bzless",
       "bzmore"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "man1": [
       "bzcmp.1",
@@ -306,23 +350,27 @@
     "version": "1.0.8"
   },
   "c-ares": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://c-ares.org/"],
     "version": "1.18.1"
   },
   "ca-certificates": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://curl.se/docs/caextract.html"],
     "version": "2022-07-19"
   },
   "cairo": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://cairographics.org/"],
     "version": "1.16.0"
   },
   "cellranger": {
+    "build_dependencies": [],
     "conservative": false,
     "platform": "linux",
     "url": [
@@ -332,12 +380,14 @@
   },
   "cheat": {
     "bin": ["cheat"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-27",
     "url": ["https://github.com/cheat/cheat/"],
     "version": "4.3.3"
   },
   "chemacs": {
+    "build_dependencies": [],
     "conservative": false,
     "url": ["https://github.com/plexus/chemacs2/"],
     "version": "d722459287566e8c91ae077bf3d65966ebece190"
@@ -352,6 +402,7 @@
     "version": "2.23.0"
   },
   "cloudbiolinux": {
+    "build_dependencies": [],
     "check": false,
     "conservative": false,
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
@@ -359,6 +410,7 @@
   },
   "cmake": {
     "bin": ["cmake"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
     "deps": ["ncurses", "openssl3"],
@@ -367,6 +419,7 @@
   },
   "colorls": {
     "bin": ["colorls"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["ruby"],
     "url": [
@@ -377,6 +430,7 @@
   },
   "conda": {
     "bin": ["conda"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://repo.anaconda.com/miniconda/"],
@@ -384,6 +438,7 @@
   },
   "convmv": {
     "bin": ["convmv"],
+    "build_dependencies": [],
     "conservative": false,
     "url": "https://www.j3e.de/linux/convmv/",
     "version": "2.05"
@@ -497,6 +552,7 @@
       "gwhoami",
       "gyes"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": [
@@ -611,6 +667,7 @@
   },
   "cpufetch": {
     "bin": ["cpufetch"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["cpufetch.1"],
@@ -634,6 +691,7 @@
       "in2csv",
       "sql2csv"
     ],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-23",
     "dependencies": ["python"],
@@ -650,6 +708,7 @@
   },
   "curl": {
     "bin": ["curl", "curl-config"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": ["curl.1", "curl-config.1"],
@@ -658,6 +717,7 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2021-03-17",
     "depends": ["conda"],
@@ -666,6 +726,7 @@
   },
   "delta": {
     "bin": ["delta"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-01",
     "url": ["https://github.com/dandavison/delta/"],
@@ -673,12 +734,14 @@
   },
   "difftastic": {
     "bin": ["difft"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-19",
     "depends": ["rust"],
     "version": "0.36.1"
   },
   "docker-credential-pass": {
+    "build_dependencies": [],
     "conservative": false,
     "platform": "linux",
     "url": ["https://github.com/docker/docker-credential-helpers/"],
@@ -686,17 +749,20 @@
   },
   "dog": {
     "bin": ["dog"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "0.1.0"
   },
   "doom-emacs": {
+    "build_dependencies": [],
     "check": false,
     "date": "2022-09-16",
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "version": "42e5763782fdc1aabb9f2624d468248d6978abe2"
   },
   "dotfiles": {
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-13",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
@@ -704,6 +770,7 @@
   },
   "du-dust": {
     "bin": ["dust"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-01",
     "dependencies": ["rust"],
@@ -715,6 +782,7 @@
   },
   "editorconfig": {
     "bin": ["editorconfig"],
+    "build_dependencies": [],
     "conservative": false,
     "url": [
       "https://editorconfig.org/",
@@ -723,6 +791,7 @@
     "version": "0.12.5"
   },
   "elfutils": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-08",
     "platform": "linux",
@@ -731,6 +800,7 @@
   },
   "emacs": {
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-12",
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
@@ -738,6 +808,7 @@
     "version": "28.2"
   },
   "ensembl-perl-api": {
+    "build_dependencies": [],
     "conservative": false,
     "large": true,
     "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
@@ -745,6 +816,7 @@
   },
   "entrez-direct": {
     "bin": ["efetch", "esearch"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-06-06",
     "depends": ["conda"],
@@ -752,12 +824,14 @@
   },
   "exa": {
     "bin": ["exa"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "0.10.1"
   },
   "exiftool": {
     "bin": ["exiftool"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": ["perl"],
@@ -766,6 +840,7 @@
     "version": "12.42"
   },
   "expat": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://libexpat.github.io/"],
@@ -773,6 +848,7 @@
   },
   "fastqc": {
     "bin": ["fastqc"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2021-03-25",
     "depends": ["conda"],
@@ -781,12 +857,14 @@
   },
   "fd-find": {
     "bin": ["fd"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "8.4.0"
   },
   "ffmpeg": {
     "bin": ["ffmpeg", "ffprobe"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["ffmpeg.1", "ffprobe.1"],
@@ -795,6 +873,7 @@
   },
   "ffq": {
     "bin": ["ffq"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-05-05",
     "depends": ["conda"],
@@ -803,6 +882,7 @@
   },
   "findutils": {
     "bin": ["gfind", "glocate", "gupdatedb", "gxargs"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
     "man1": ["gfind.1", "glocate.1", "gupdatedb.1", "gxargs.1"],
@@ -811,6 +891,7 @@
   },
   "fish": {
     "bin": ["fish"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["fish.1"],
@@ -822,6 +903,7 @@
   },
   "flac": {
     "bin": ["flac"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["flac.1"],
@@ -830,34 +912,40 @@
   },
   "flake8": {
     "bin": ["flake8"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["python"],
     "version": "5.0.4"
   },
   "flex": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://github.com/westes/flex/"],
     "version": "2.6.4"
   },
   "fltk": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.fltk.org/"],
     "version": "1.3.8"
   },
   "fontconfig": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.freedesktop.org/wiki/Software/fontconfig/"],
     "version": "2.14.0"
   },
   "freetype": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.freetype.org/"],
     "version": "2.12.1"
   },
   "fribidi": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://github.com/fribidi/fribidi/"],
@@ -875,6 +963,7 @@
   },
   "gawk": {
     "bin": ["awk", "gawk"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["awk.1", "gawk.1"],
@@ -883,6 +972,7 @@
   },
   "gcc": {
     "bin": ["gfortran"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://gcc.gnu.org/"],
@@ -890,6 +980,7 @@
   },
   "gdal": {
     "bin": ["gdal-config"],
+    "build_dependencies": [],
     "conservative": true,
     "man1": ["gdal-config.1"],
     "outdated": true,
@@ -897,17 +988,20 @@
     "version": "3.5.1"
   },
   "gdbm": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://www.gnu.org/software/gdbm/"],
     "version": "1.23"
   },
   "geos": {
     "bin": ["geos-config"],
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://github.com/libgeos/geos/"],
     "version": "3.11.0"
   },
   "gettext": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/gettext/"],
@@ -915,6 +1009,7 @@
   },
   "gffutils": {
     "bin": ["gffutils-cli"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-06-05",
     "depends": ["conda"],
@@ -923,6 +1018,7 @@
   },
   "gget": {
     "bin": ["gget"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-03",
     "depends": ["conda"],
@@ -931,6 +1027,7 @@
   },
   "ghostscript": {
     "bin": ["gs"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2021-05-14",
     "depends": ["conda"],
@@ -939,6 +1036,7 @@
   },
   "git": {
     "bin": ["git"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://git-scm.com/"],
@@ -946,28 +1044,33 @@
   },
   "glances": {
     "bin": ["glances"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "3.2.7"
   },
   "glib": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://gitlab.gnome.org/GNOME/glib/"],
     "version": "2.72.3"
   },
   "gmp": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://gmplib.org/"],
     "version": "6.2.1"
   },
   "gnupg": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gnupg.org/download/"],
     "version": "2.3.7"
   },
   "gnutls": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.gnutls.org/", "https://gnupg.org/download/index.html"],
@@ -975,6 +1078,7 @@
   },
   "go": {
     "bin": ["go"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "large": true,
@@ -983,6 +1087,7 @@
   },
   "google-cloud-sdk": {
     "bin": ["gcloud"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-19",
     "large": true,
@@ -990,12 +1095,14 @@
     "version": "402.0.0"
   },
   "gperf": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/gperf/"],
     "version": "3.1"
   },
   "graphviz": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.graphviz.org/"],
@@ -1003,6 +1110,7 @@
   },
   "grep": {
     "bin": ["gegrep", "gfgrep", "ggrep"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["gegrep.1", "gfgrep.1", "ggrep.1"],
@@ -1011,6 +1119,7 @@
   },
   "groff": {
     "bin": ["groff"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["groff.1"],
@@ -1019,6 +1128,7 @@
   },
   "gseapy": {
     "bin": ["gseapy"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-03",
     "depends": ["conda"],
@@ -1026,6 +1136,7 @@
     "version": "0.13.0"
   },
   "gsl": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/gsl/"],
@@ -1033,6 +1144,7 @@
   },
   "gtop": {
     "bin": ["gtop"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["node"],
     "url": [
@@ -1067,6 +1179,7 @@
       "zmore",
       "znew"
     ],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": [
@@ -1087,10 +1200,12 @@
   },
   "hadolint": {
     "bin": ["hadolint"],
+    "build_dependencies": [],
     "conservative": false,
     "version": "2.10.0"
   },
   "harfbuzz": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "outdated": true,
@@ -1108,6 +1223,7 @@
   },
   "haskell-stack": {
     "bin": ["stack"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-19",
     "large": true,
@@ -1139,6 +1255,7 @@
       "h5unjam",
       "h5watch"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "deps": ["zlib", "gcc"],
@@ -1147,6 +1264,7 @@
   },
   "hisat2": {
     "bin": ["hisat2"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2020-07-24",
     "depends": ["conda"],
@@ -1155,6 +1273,7 @@
   },
   "htop": {
     "bin": ["htop"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["htop.1"],
@@ -1163,6 +1282,7 @@
   },
   "htseq": {
     "bin": ["htseq-count"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-07-02",
     "depends": ["conda"],
@@ -1171,6 +1291,7 @@
   },
   "hyperfine": {
     "bin": ["hyperfine"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-07",
     "depends": ["rust"],
@@ -1191,6 +1312,7 @@
       "pkgdata",
       "uconv"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": [
@@ -1217,6 +1339,7 @@
       "magick",
       "magick-script"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": [
@@ -1232,22 +1355,26 @@
   },
   "ipython": {
     "bin": ["ipython"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "8.4.0"
   },
   "isort": {
     "bin": ["isort"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "5.10.1"
   },
   "jemalloc": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["http://jemalloc.net/"],
     "version": "5.3.0"
   },
   "jpeg": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.ijg.org/"],
@@ -1255,6 +1382,7 @@
   },
   "jq": {
     "bin": ["jq"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["jq.1"],
@@ -1263,6 +1391,7 @@
   },
   "julia": {
     "bin": ["julia"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-07",
     "deps": ["gcc"],
@@ -1273,6 +1402,7 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-07-21",
     "depends": ["conda"],
@@ -1280,6 +1410,7 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-01-17",
     "depends": ["conda"],
@@ -1288,6 +1419,7 @@
   },
   "lame": {
     "bin": ["lame"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["lame.1"],
@@ -1295,6 +1427,7 @@
     "version": "3.100"
   },
   "lapack": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "deps": ["gcc"],
@@ -1303,6 +1436,7 @@
   },
   "latch": {
     "bin": ["latch"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-23",
     "dependencies": ["python"],
@@ -1315,6 +1449,7 @@
   },
   "less": {
     "bin": ["less"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["less.1"],
@@ -1323,33 +1458,39 @@
   },
   "lesspipe": {
     "bin": ["lesspipe.sh"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "url": ["https://github.com/wofr06/lesspipe/"],
     "version": "2.06"
   },
   "libassuan": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gnupg.org/download/"],
     "version": "2.5.5"
   },
   "libedit": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://thrysoee.dk/editline/"],
     "version": "20210910-3.1"
   },
   "libev": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["http://software.schmorp.de/pkg/libev.html"],
     "version": "4.33"
   },
   "libevent": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://libevent.org/", "https://github.com/libevent/libevent/"],
     "version": "2.1.12"
   },
   "libffi": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "outdated": true,
@@ -1357,17 +1498,20 @@
     "version": "3.4.2"
   },
   "libgcrypt": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gnupg.org/download/"],
     "version": "1.10.1"
   },
   "libgeotiff": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/OSGeo/libgeotiff/"],
     "version": "1.7.1"
   },
   "libgit2": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "notes": ["1.5.0 fails to build on Ubuntu."],
@@ -1375,11 +1519,13 @@
     "version": "1.4.4"
   },
   "libgpg-error": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gnupg.org/download/"],
     "version": "1.45"
   },
   "libiconv": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-08",
     "url": ["https://www.gnu.org/software/libiconv/"],
@@ -1389,23 +1535,27 @@
     "aliases": {
       "homebrew": "libidn2"
     },
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/libidn/"],
     "version": "2.3.3"
   },
   "libjpeg-turbo": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.libjpeg-turbo.org/"],
     "version": "2.1.4"
   },
   "libksba": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gnupg.org/download/"],
     "version": "1.6.0"
   },
   "liblinear": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
@@ -1424,6 +1574,7 @@
     "version": "1.44.2-1"
   },
   "libpipeline": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://libpipeline.nongnu.org/"],
@@ -1431,24 +1582,28 @@
   },
   "libpng": {
     "bin": ["libpng-config", "libpng16-config"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
     "version": "1.6.37"
   },
   "libssh2": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.libssh2.org/"],
     "version": "1.10.0"
   },
   "libtasn1": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/libtasn1/"],
     "version": "4.19.0"
   },
   "libtermkey": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "date": "2022-09-09",
@@ -1456,6 +1611,7 @@
     "version": "0.22"
   },
   "libtiff": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": [
@@ -1466,6 +1622,7 @@
   },
   "libtool": {
     "bin": ["glibtool", "glibtoolize"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
     "man1": ["glibtool.1", "glibtoolize.1"],
@@ -1473,18 +1630,21 @@
     "version": "2.4.7"
   },
   "libunistring": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/libunistring/"],
     "version": "1.0"
   },
   "libuv": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/libuv/libuv/"],
     "version": "1.44.2"
   },
   "libvterm": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "date": "2022-09-09",
@@ -1495,6 +1655,7 @@
   },
   "libxml2": {
     "bin": ["xml2-config"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": ["xml2-config.1"],
@@ -1502,12 +1663,14 @@
     "version": "2.10.1"
   },
   "libzip": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://libzip.org/"],
     "version": "1.9.2"
   },
   "llvm": {
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-20",
     "large": true,
@@ -1515,6 +1678,7 @@
     "version": "15.0.1"
   },
   "lmod": {
+    "build_dependencies": [],
     "conservative": true,
     "outdated": true,
     "platform": "linux",
@@ -1523,12 +1687,14 @@
   },
   "lsd": {
     "bin": ["lsd"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["rust"],
     "version": "0.23.1"
   },
   "lua": {
     "bin": ["lua", "luac"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
@@ -1536,6 +1702,7 @@
   },
   "luajit": {
     "bin": ["luajit"],
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "date": "2022-09-09",
@@ -1544,24 +1711,28 @@
   },
   "luarocks": {
     "bin": ["luarocks"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/luarocks/luarocks/"],
     "version": "3.9.1"
   },
   "lz4": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://lz4.github.io/lz4/"],
     "version": "1.9.4"
   },
   "lzo": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.oberhumer.com/opensource/lzo/"],
     "version": "2.10"
   },
   "m4": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/m4/"],
@@ -1569,6 +1740,7 @@
   },
   "make": {
     "bin": ["gmake"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
     "man1": ["gmake.1"],
@@ -1577,6 +1749,7 @@
   },
   "man-db": {
     "bin": ["gman"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-25",
     "man1": ["gman.1"],
@@ -1585,42 +1758,49 @@
   },
   "markdownlint-cli": {
     "bin": ["markdownlint"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["node"],
     "version": "0.32.2"
   },
   "mcfly": {
     "bin": ["mcfly"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "0.6.1"
   },
   "mdcat": {
     "bin": ["mdcat"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "0.28.0"
   },
   "meson": {
     "bin": ["meson"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-03",
     "depends": ["python"],
     "version": "0.63.2"
   },
   "mpc": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["http://www.multiprecision.org/mpc/"],
     "version": "1.2.1"
   },
   "mpfr": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.mpfr.org/"],
     "version": "4.1.0"
   },
   "msgpack": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "date": "2022-09-09",
@@ -1630,6 +1810,7 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-06-28",
     "depends": ["conda"],
@@ -1651,6 +1832,7 @@
       "tput",
       "tset"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": [
@@ -1671,6 +1853,7 @@
   },
   "neofetch": {
     "bin": ["neofetch"],
+    "build_dependencies": [],
     "date": "2022-08-30",
     "conservative": false,
     "man1": ["neofetch.1"],
@@ -1695,6 +1878,7 @@
     "version": "0.7.2"
   },
   "nettle": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/nettle/"],
@@ -1702,6 +1886,7 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-07-27",
     "depends": ["conda"],
@@ -1709,11 +1894,13 @@
     "version": "22.04.5"
   },
   "nghttp2": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://nghttp2.org/"],
     "version": "1.48.0"
   },
   "nim": {
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "large": true,
@@ -1722,6 +1909,7 @@
   },
   "ninja": {
     "bin": ["ninja"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "depends": ["python"],
@@ -1729,12 +1917,14 @@
   },
   "nmap": {
     "bin": ["nmap"],
+    "build_dependencies": [],
     "conservative": false,
     "url": "https://nmap.org/",
     "version": "7.92"
   },
   "node": {
     "bin": ["node", "npm", "npx"],
+    "build_dependencies": [],
     "conservative": true,
     "lts": true,
     "man1": ["node.1", "npm.1", "npx.1"],
@@ -1743,18 +1933,21 @@
     "version": "16.17.0"
   },
   "npth": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gnupg.org/download/"],
     "version": "1.6"
   },
   "nushell": {
     "bin": ["nu"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-07",
     "dependencies": ["openssl", "rust"],
     "version": "0.68.0"
   },
   "oniguruma": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/kkos/oniguruma/"],
@@ -1762,6 +1955,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
+    "build_dependencies": [],
     "check": false,
     "conservative": false,
     "date": "2022-09-09",
@@ -1770,6 +1964,7 @@
     "version": "1.8.0"
   },
   "openblas": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.openblas.net/"],
@@ -1777,6 +1972,7 @@
   },
   "openjdk": {
     "bin": ["jar", "java", "javac"],
+    "build_dependencies": [],
     "conservative": true,
     "lts": true,
     "man1": ["jar.1", "java.1", "javac.1"],
@@ -1785,11 +1981,13 @@
     "version": "17.0.4+8"
   },
   "openssh": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://www.openssh.com/"],
     "version": "9.0p1"
   },
   "openssl1": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "outdated": true,
@@ -1798,12 +1996,14 @@
   },
   "openssl3": {
     "bin": ["openssl"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.openssl.org/source/"],
     "version": "3.0.5"
   },
   "oracle-instant-client": {
+    "build_dependencies": [],
     "conservative": true,
     "platform": "linux",
     "url": [
@@ -1813,6 +2013,7 @@
   },
   "pandoc": {
     "bin": ["pandoc"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-22",
     "url": ["https://pandoc.org/"],
@@ -1820,6 +2021,7 @@
   },
   "parallel": {
     "bin": ["parallel"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["parallel.1"],
@@ -1831,6 +2033,7 @@
       "homebrew": "pass"
     },
     "bin": ["pass"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["pass.1"],
@@ -1842,6 +2045,7 @@
       "homebrew": "gpatch"
     },
     "bin": ["patch"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
     "man1": ["patch.1"],
@@ -1850,6 +2054,7 @@
   },
   "pcre": {
     "bin": ["pcre-config", "pcregrep", "pcretest"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": ["pcre-config.1", "pcregrep.1", "pcretest.1"],
@@ -1858,6 +2063,7 @@
   },
   "pcre2": {
     "bin": ["pcre2-config", "pcre2grep", "pcre2test"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"],
@@ -1884,6 +2090,7 @@
       "ptardiff",
       "ptargrep"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": [
@@ -1909,6 +2116,7 @@
     "version": "5.36.0"
   },
   "pinentry": {
+    "build_dependencies": [],
     "conservative": true,
     "platform": "linux",
     "url": ["https://gnupg.org/download/"],
@@ -1916,11 +2124,13 @@
   },
   "pipx": {
     "bin": ["pipx"],
+    "build_dependencies": [],
     "conservative": true,
     "depends": ["python"],
     "version": "1.1.0"
   },
   "pixman": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://cairographics.org/"],
@@ -1928,6 +2138,7 @@
   },
   "pkg-config": {
     "bin": ["pkg-config"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
     "man1": ["pkg-config.1"],
@@ -1936,12 +2147,14 @@
   },
   "poetry": {
     "bin": ["poetry"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-19",
     "depends": ["python"],
     "version": "1.2.1"
   },
   "prelude-emacs": {
+    "build_dependencies": [],
     "check": false,
     "date": "2022-09-16",
     "url": ["https://github.com/bbatsov/prelude/"],
@@ -1949,6 +2162,7 @@
   },
   "prettier": {
     "bin": ["prettier"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
@@ -1956,6 +2170,7 @@
   },
   "procs": {
     "bin": ["procs"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-20",
     "depends": ["rust"],
@@ -1963,6 +2178,7 @@
   },
   "proj": {
     "bin": ["proj", "projinfo"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-01",
     "man1": ["proj.1", "projinfo.1"],
@@ -1971,6 +2187,7 @@
     "version": "9.0.1"
   },
   "pth": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "url": ["https://ftp.gnu.org/gnu/pth/"],
@@ -1978,6 +2195,7 @@
   },
   "py-spy": {
     "bin": ["py-spy"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-05",
     "depends": ["python"],
@@ -1985,6 +2203,7 @@
   },
   "pycodestyle": {
     "bin": ["pycodestyle"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-01",
     "dependencies": ["python"],
@@ -1992,6 +2211,7 @@
   },
   "pyenv": {
     "bin": ["pyenv"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-03",
     "dependencies": [],
@@ -2001,30 +2221,35 @@
   },
   "pyflakes": {
     "bin": ["pyflakes"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "2.5.0"
   },
   "pygments": {
     "bin": ["pygmentize"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "2.13.0"
   },
   "pylint": {
     "bin": ["pylint"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "2.14.5"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "1.5.0"
   },
   "pytest": {
     "bin": ["pytest"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "7.1.2"
@@ -2044,6 +2269,7 @@
       "python3.10",
       "python3.10-config"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "man1": ["python3.1", "python3.10.1"],
     "outdated": true,
@@ -2051,6 +2277,7 @@
     "version": "3.10.6"
   },
   "r": {
+    "build_dependencies": [],
     "conservative": false,
     "deps": ["conda", "coreutils", "gawk", "sed", "udunits"],
     "url": [
@@ -2064,6 +2291,7 @@
       "homebrew": false
     },
     "conservative": false,
+    "build_dependencies": [],
     "date": "2022-08-30",
     "url": [
       "https://svn.r-project.org/R/",
@@ -2075,6 +2303,7 @@
     "version": "82774"
   },
   "r-gfortran": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "platform": "macos",
@@ -2083,6 +2312,7 @@
     "version": "8.2"
   },
   "r-openmp": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "platform": "macos",
@@ -2092,12 +2322,14 @@
   },
   "ranger-fm": {
     "bin": ["ranger"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "1.9.3"
   },
   "rbenv": {
     "bin": ["rbenv"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
@@ -2105,6 +2337,7 @@
     "version": "1.2.0"
   },
   "readline": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://tiswww.cwru.edu/php/chet/readline/rltop.html"],
@@ -2112,6 +2345,7 @@
   },
   "rename": {
     "bin": ["rename"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["perl"],
     "man1": ["rename.1"],
@@ -2120,24 +2354,28 @@
   },
   "ripgrep-all": {
     "bin": ["rga"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "0.9.7"
   },
   "ripgrep": {
     "bin": ["rg"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "13.0.0"
   },
   "rmate": {
     "bin": ["rmate"],
+    "build_dependencies": [],
     "conservative": false,
     "url": ["https://github.com/aurora/rmate/"],
     "version": "1.0.2"
   },
   "ronn": {
     "bin": ["ronn"],
+    "build_dependencies": [],
     "conservative": false,
     "dependencies": ["ruby"],
     "url": [
@@ -2147,6 +2385,7 @@
     "version": "0.7.3"
   },
   "rstudio-server": {
+    "build_dependencies": [],
     "conservative": false,
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
@@ -2154,6 +2393,7 @@
   },
   "rsync": {
     "bin": ["rsync"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["rsync.1"],
@@ -2162,6 +2402,7 @@
   },
   "ruby": {
     "bin": ["bundle", "bundler", "gem", "ruby"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "man1": ["ruby.1"],
@@ -2170,6 +2411,7 @@
   },
   "ruff": {
     "bin": ["ruff"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-19",
     "dependencies": ["python"],
@@ -2188,6 +2430,7 @@
       "rustdoc",
       "rustfmt"
     ],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-22",
     "url": ["https://www.rust-lang.org/"],
@@ -2195,6 +2438,7 @@
   },
   "salmon": {
     "bin": ["salmon"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-06-23",
     "depends": ["conda"],
@@ -2202,6 +2446,7 @@
   },
   "sambamba": {
     "bin": ["sambamba"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2021-01-02",
     "depends": ["conda"],
@@ -2210,6 +2455,7 @@
   },
   "samtools": {
     "bin": ["samtools"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-04-07",
     "depends": ["conda"],
@@ -2217,6 +2463,7 @@
     "version": "1.15.1"
   },
   "scons": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "depends": ["python"],
@@ -2228,6 +2475,7 @@
       "homebrew": "gnu-sed"
     },
     "bin": ["gsed"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
     "man1": ["gsed.1"],
@@ -2238,18 +2486,21 @@
     "aliases": {
       "homebrew": false
     },
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://serf.apache.org/download/"],
     "version": "1.3.9"
   },
   "shellcheck": {
     "bin": ["shellcheck"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "url": ["https://github.com/koalaman/shellcheck/"],
     "version": "0.8.0"
   },
   "shiny-server": {
+    "build_dependencies": [],
     "conservative": false,
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/shiny/download-server/"],
@@ -2257,6 +2508,7 @@
   },
   "shunit2": {
     "bin": ["shunit2"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "url": ["https://github.com/kward/shunit2/"],
@@ -2264,6 +2516,7 @@
   },
   "snakefmt": {
     "bin": ["snakefmt"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-02",
     "dependencies": ["conda"],
@@ -2272,6 +2525,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "depends": ["conda"],
@@ -2280,6 +2534,7 @@
   },
   "sox": {
     "bin": ["sox"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["sox.1"],
@@ -2287,12 +2542,14 @@
     "version": "14.4.2"
   },
   "spacemacs": {
+    "build_dependencies": [],
     "check": false,
     "date": "2022-09-16",
     "url": ["https://github.com/syl20bnr/spacemacs/"],
     "version": "9cdf97f87e89b3f5045da84e181057e82bfc13aa"
   },
   "spacevim": {
+    "build_dependencies": [],
     "check": false,
     "date": "2022-09-16",
     "url": ["https://github.com/SpaceVim/SpaceVim/"],
@@ -2300,6 +2557,7 @@
   },
   "sqlite": {
     "bin": ["sqlite3"],
+    "build_dependencies": [],
     "conservative": true,
     "man1": ["sqlite3.1"],
     "url": ["https://www.sqlite.org/download.html"],
@@ -2307,6 +2565,7 @@
   },
   "sra-tools": {
     "bin": ["fasterq-dump", "vdb-config"],
+    "build_dependencies": [],
     "conservative": false,
     "large": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
@@ -2314,6 +2573,7 @@
   },
   "star": {
     "bin": ["STAR"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-01-15",
     "depends": ["conda"],
@@ -2322,6 +2582,7 @@
   },
   "starship": {
     "bin": ["starship"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-08",
     "depends": ["rust"],
@@ -2329,6 +2590,7 @@
   },
   "stow": {
     "bin": ["stow"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/stow/"],
@@ -2336,6 +2598,7 @@
   },
   "subversion": {
     "bin": ["svn"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "man1": ["svn.1"],
@@ -2344,12 +2607,14 @@
   },
   "swig": {
     "bin": ["swig"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-08",
     "url": ["http://www.swig.org/"],
     "version": "4.0.2"
   },
   "taglib": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/taglib/taglib/"],
@@ -2360,6 +2625,7 @@
       "homebrew": "gnu-tar"
     },
     "bin": ["gtar"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "man1": ["gtar.1"],
@@ -2367,6 +2633,7 @@
     "version": "1.34"
   },
   "tcl-tk": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.tcl-lang.org/"],
@@ -2374,6 +2641,7 @@
   },
   "tealdeer": {
     "bin": ["tldr"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "1.5.0"
@@ -2387,6 +2655,7 @@
       "texi2pdf",
       "texindex"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": [
@@ -2402,6 +2671,7 @@
   },
   "tmux": {
     "bin": ["tmux"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["tmux.1"],
@@ -2410,12 +2680,14 @@
   },
   "tokei": {
     "bin": ["tokei"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "12.1.2"
   },
   "tree": {
     "bin": ["tree"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["tree.1"],
@@ -2423,6 +2695,7 @@
     "version": "2.0.3"
   },
   "tree-sitter": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "date": "2022-09-09",
@@ -2431,18 +2704,21 @@
   },
   "tuc": {
     "bin": ["tuc"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "0.11.0"
   },
   "udunits": {
     "bin": ["udunits2"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.unidata.ucar.edu/downloads/udunits/"],
     "version": "2.2.28"
   },
   "unibilium": {
+    "build_dependencies": [],
     "check": false,
     "conservative": true,
     "date": "2022-09-09",
@@ -2454,6 +2730,7 @@
       "homebrew": "gnu-units"
     },
     "bin": ["gunits"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-25",
     "man1": ["gunits.1"],
@@ -2471,6 +2748,7 @@
     "version": "6.0"
   },
   "utf8proc": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://juliastrings.github.io/utf8proc/"],
@@ -2478,6 +2756,7 @@
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-12",
     "man1": [
@@ -2495,6 +2774,7 @@
   },
   "visidata": {
     "bin": ["vd", "visidata"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-01-13",
     "depends": ["conda"],
@@ -2504,12 +2784,14 @@
   },
   "vulture": {
     "bin": ["vulture"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "2.6"
   },
   "wget": {
     "bin": ["wget"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-30",
     "man1": ["wget.1"],
@@ -2521,6 +2803,7 @@
       "homebrew": "gnu-which"
     },
     "bin": ["gwhich"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-25",
     "man1": ["gwhich.1"],
@@ -2528,82 +2811,98 @@
     "version": "2.21"
   },
   "xorg-libice": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libice/"],
     "version": "1.0.10"
   },
   "xorg-libpthread-stubs": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/pthread-stubs/"],
     "version": "0.4"
   },
   "xorg-libsm": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm/"],
     "version": "1.2.3"
   },
   "xorg-libx11": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/"],
     "version": "1.8.1"
   },
   "xorg-libxau": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau/"],
     "version": "1.0.9"
   },
   "xorg-libxcb": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxcb/"],
     "version": "1.15"
   },
   "xorg-libxdmcp": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxdmcp/"],
     "version": "1.1.3"
   },
   "xorg-libxext": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxext/"],
     "version": "1.3.4"
   },
   "xorg-libxrandr": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrandr/"],
     "version": "1.5.2"
   },
   "xorg-libxrender": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrender/"],
     "version": "0.9.10"
   },
   "xorg-libxt": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxt/"],
     "version": "1.2.1"
   },
   "xorg-xcb-proto": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/proto/xcbproto/"],
     "version": "1.15.2"
   },
   "xorg-xorgproto": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/proto/xorgproto/"],
     "version": "2022.1"
   },
   "xorg-xtrans": {
+    "build_dependencies": [],
     "conservative": true,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxtrans/"],
     "version": "1.4.0"
   },
   "xsv": {
     "bin": ["xsv"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["rust"],
     "version": "0.13.0"
   },
   "xxhash": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/Cyan4973/xxHash/"],
@@ -2611,6 +2910,7 @@
   },
   "xz": {
     "bin": ["xz"],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": ["xz.1"],
@@ -2619,6 +2919,7 @@
   },
   "yarn": {
     "bin": ["yarn"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["node"],
     "url": ["https://yarnpkg.com/"],
@@ -2626,6 +2927,7 @@
   },
   "yq": {
     "bin": ["yq"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-09",
     "depends": ["go"],
@@ -2634,18 +2936,21 @@
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
+    "build_dependencies": [],
     "conservative": false,
     "depends": ["python"],
     "version": "2022.9.1"
   },
   "zellij": {
     "bin": ["zellij"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-09",
     "depends": ["rust"],
     "version": "0.31.4"
   },
   "zlib": {
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.zlib.net/"],
@@ -2653,6 +2958,7 @@
   },
   "zoxide": {
     "bin": ["zoxide"],
+    "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-20",
     "depends": ["rust"],
@@ -2660,6 +2966,7 @@
   },
   "zsh": {
     "bin": ["zsh"],
+    "build_dependencies": [],
     "conservative": false,
     "man1": ["zsh.1"],
     "url": ["http://zsh.sourceforge.net/Arc/source.html"],
@@ -2675,6 +2982,7 @@
       "zstdless",
       "zstdmt"
     ],
+    "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"],
