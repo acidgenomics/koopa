@@ -2177,6 +2177,16 @@
     "url": ["http://www.multiprecision.org/mpc/"],
     "version": "1.2.1"
   },
+  "mpdecimal": {
+    "bin": [],
+    "build_dependencies": ["make"],
+    "conservative": true,
+    "date": "2022-09-26",
+    "dependencies": [],
+    "man1": [],
+    "url": ["https://www.bytereef.org/mpdecimal/"],
+    "version": "2.5.1"
+  },
   "mpfr": {
     "bin": [],
     "build_dependencies": [],
