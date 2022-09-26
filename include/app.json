@@ -2756,14 +2756,28 @@
       "python3.10",
       "python3.10-config"
     ],
-    "build_dependencies": [],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-26",
-    "dependencies": [],
+    "dependencies": [
+      "bzip2",
+      "expat",
+      "gdbm",
+      "libffi",
+      "mpdecimal",
+      "ncurses",
+      "openssl3",
+      "readline",
+      "sqlite",
+      "tcl-tk",
+      "unzip",
+      "xz",
+      "zlib"
+    ],
     "man1": ["python3.1", "python3.10.1"],
     "outdated": true,
     "url": ["https://www.python.org/downloads/"],
-    "version": "3.10.6"
+    "version": "3.10.7"
   },
   "r": {
     "bin": [],
