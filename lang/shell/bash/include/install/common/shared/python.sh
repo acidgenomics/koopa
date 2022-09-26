@@ -1,19 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME Need to ensure that lib links into framework on macOS.
-# FIXME _bz2 import is failing on Ubuntu 22.
-# Need to resolve this without installing system package. 
-# FIXME Consider including support for libxcrypt.
-# FIXME Consider including libnsl on Linux.
+# FIXME Seeing this warning on macOS, likely need to tweak config:
+# # Failed to build these modules:
+# # _decimal              _tkinter
 #
-# NOTE Consider cleaning this up on macOS:
-# clang: warning: argument unused during compilation:
-# '-fno-semantic-interposition' [-Wunused-command-line-argument]
+# FIXME Now seeing lots of this warning on macOS:
+# ld: warning: -undefined dynamic_lookup may not work with chained fixups
 #
-# NOTE Likely need to implement this to fix ncurses location on Linux:
-# > inreplace "configure",
-# >     'CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"',
-# >     "CPPFLAGS=\"$CPPFLAGS -I#{Formula["ncurses"].opt_include}\""
+# FIXME Still seeing this warning on macOS:
+# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
 
 main() {
     # """
@@ -62,13 +57,22 @@ main() {
         'xz'
         # unzip deps: none.
         'unzip'
-        # FIXME Inclusion of readline is currently causing a build error on macOS.s
-        # readline deps: ncurses.
-        # > 'readline'
+    )
+    # Inclusion of readline is currently causing a cryptic build error on
+    # macOS that is difficult to debug.
+    if koopa_is_linux
+    then
+        deps+=(
+            # readline deps: ncurses.
+            'readline'
+        )
+    fi
+    deps+=(
         # gdbm deps: readline.
-        #'gdbm'
+        'gdbm'
         # sqlite deps: readline.
-        #'sqlite'
+        'sqlite'
+        'tcl-tk'
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
@@ -81,11 +85,13 @@ main() {
         ['name']='python'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
-        "${dict['openssl']}"
+        "${dict['openssl']}" \
+        "${dict['tcl_tk']}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="Python-${dict['version']}.tar.xz"
     dict['url']="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
@@ -98,31 +104,34 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "Python-${dict['version']}"
     conf_args=(
-        # > --with-cxx-main='g++' # FIXME
-        # > --with-tcltk-includes='-I...'
-        # > --with-tcltk-libs='-L...'
         "--prefix=${dict['prefix']}"
         '--enable-ipv6'
-        # > '--enable-loadable-sqlite-extensions'
+        '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
-        # > '--with-dbmliborder=gdbm:ndbm'
-        '--with-ensurepip=install' # upgrade
+        '--with-dbmliborder=gdbm:ndbm'
+        '--with-ensurepip=install' # or 'upgrade'.
         '--with-lto'
         "--with-openssl=${dict['openssl']}"
         '--with-openssl-rpath=auto'
         '--with-system-expat'
         '--with-system-ffi'
         '--with-system-libmpdec'
+        "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
+        "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
     )
     if koopa_is_macos
     then
+        app['dtrace']='/usr/sbin/dtrace'
+        [[ -x "${app['dtrace']}" ]] || return 1
         dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-        dict['framework']="${dict['libexec']}"
-        conf_args+=("--enable-framework=${dict['framework']}")
+        conf_args+=(
+            "--enable-framework=${dict['libexec']}"
+            "--with-dtrace=${app['dtrace']}"
+        )
     else
         conf_args+=('--enable-shared')
     fi
-    # May need to set 'CFLAGS_NODIST' and 'LDFLAGS_NODIST' here.
+    # Can also set 'CFLAGS_NODIST', 'LDFLAGS_NODIST' here.
     conf_args+=(
         "CFLAGS=${CFLAGS:-}"
         "CPPFLAGS=${CPPFLAGS:-}"
@@ -138,10 +147,17 @@ ${dict['file']}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     if koopa_is_macos
     then
-        "${app['make']}" install \
-            PYTHONAPPSDIR="${dict['framework']}"
-        "${app['make']}" frameworkinstallextras \
-            PYTHONAPPSDIR="${dict['prefix']}/lib/pkgconfig"
+        "${app['make']}" install PYTHONAPPSDIR="${dict['libexec']}"
+        (
+            local framework
+            koopa_cd "${dict['prefix']}"
+            framework="libexec/Python.framework/Versions/${dict['maj_min_ver']}"
+            koopa_assert_is_dir "$framework"
+            koopa_ln "${framework}/bin" 'bin'
+            koopa_ln "${framework}/include" 'include'
+            koopa_ln "${framework}/lib" 'lib'
+            koopa_ln "${framework}/share" 'share'
+        )
     else
         # > "${app['make']}" test
         "${app['make']}" install
