@@ -13178,6 +13178,12 @@ koopa_install_mpc() {
         "$@"
 }
 
+koopa_install_mpdecimal() {
+    koopa_install_app \
+        --name='mpdecimal' \
+        "$@"
+}
+
 koopa_install_mpfr() {
     koopa_install_app \
         --name='mpfr' \
@@ -23932,6 +23938,12 @@ koopa_uninstall_meson() {
 koopa_uninstall_mpc() {
     koopa_uninstall_app \
         --name='mpc' \
+        "$@"
+}
+
+koopa_uninstall_mpdecimal() {
+    koopa_uninstall_app \
+        --name='mpdecimal' \
         "$@"
 }
 
