@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 
-# NOTE This currently requires user interaction, and may error inside of the
-# subshell approach currently used in 'koopa_install_app' handoff.
-
 main() {
     # """
     # Install Xcode CLT.
-    # @note Updated 2021-10-30.
+    # @note Updated 2022-09-26.
+    #
+    # This currently requires user interaction.
     #
     # @seealso
     # - https://apple.stackexchange.com/questions/93573/
+    # - https://download.developer.apple.com/Developer_Tools/
+    #   Command_Line_Tools_for_Xcode_13.4/Command_Line_Tools_for_Xcode_13.4.dmg
+    # - https://download.developer.apple.com/Developer_Tools/
+    #   Command_Line_Tools_for_Xcode_14/Command_Line_Tools_for_Xcode_14.dmg
     #
     # Alternative minimal approach (used previously for Homebrew):
     # > xcode-select --install &>/dev/null || true
