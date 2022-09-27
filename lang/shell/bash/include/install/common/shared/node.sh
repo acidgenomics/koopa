@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve documentation linkage of node.1, npm.1 and npx.1.
-
-# FIXME Configuration issue on Ubuntu22:
-# bzip2 -> python -> node
-# ModuleNotFoundError: No module named '_bz2'
-
-# FIXME Need to resolve this on Ubuntu 22:
-# FileNotFoundError: [Errno 2] No such file or directory: 'out/Release/libnode.so.93'
-
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-27.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
@@ -52,19 +43,18 @@ main() {
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python)"
+        ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         # > [brotli]="$(koopa_app_prefix 'brotli')"
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-        [cares]="$(koopa_app_prefix 'c-ares')"
+        ['cares']="$(koopa_app_prefix 'c-ares')"
         ['jobs']="$(koopa_cpu_count)"
         ['libuv']="$(koopa_app_prefix 'libuv')"
         ['name']='node'
-        [nghttp2]="$(koopa_app_prefix 'nghttp2')"
+        ['nghttp2']="$(koopa_app_prefix 'nghttp2')"
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -113,6 +103,9 @@ main() {
         '--without-node-snapshot'
         '--verbose'
     )
+    # This is needed to put sysctl into PATH.
+    koopa_is_macos && koopa_add_to_path_end '/usr/sbin'
+    koopa_print_env
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs="${dict['jobs']}"
