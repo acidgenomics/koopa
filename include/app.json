@@ -2344,12 +2344,11 @@
     "bin": ["node", "npm", "npx"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-09-27",
     "dependencies": [],
     "man1": ["node.1", "npm.1", "npx.1"],
-    "outdated": true,
     "url": ["https://nodejs.org/"],
-    "version": "16.17.0"
+    "version": "16.17.1"
   },
   "npth": {
     "bin": [],
@@ -2786,11 +2785,11 @@
       "glib",
       "google-cloud-sdk",
       "htop",
+      "subversion",
       "nghttp2",
+      "neovim",
       "node",
       "sra-tools",
-      "subversion",
-      "neovim",
       "proj",
       "gdal",
       "r",
