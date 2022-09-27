@@ -2781,7 +2781,7 @@
       "zlib"
     ],
     "man1": ["python3.1", "python3.10.1"],
-    "outdated": true,
+    "outdated": false,
     "reverse_dependencies": [
       "meson",
       "ninja",
@@ -2828,6 +2828,7 @@
     "date": "2022-08-30",
     "dependencies": [],
     "man1": [],
+    "outdated": true,
     "url": [
       "https://svn.r-project.org/R/",
       "https://stat.ethz.ch/R/daily/",
@@ -3157,6 +3158,7 @@
     "date": "2022-09-26",
     "dependencies": [],
     "man1": ["sqlite3.1"],
+    "outdated": true,
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.39.2"
   },
