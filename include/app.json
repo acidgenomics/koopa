@@ -2347,6 +2347,13 @@
     "date": "2022-09-27",
     "dependencies": [],
     "man1": ["node.1", "npm.1", "npx.1"],
+    "reverse_dependencies": [
+      "bash-language-server",
+      "gtop",
+      "markdownlint-cli",
+      "prettier",
+      "yarn"
+    ],
     "url": ["https://nodejs.org/"],
     "version": "16.17.1"
   },
