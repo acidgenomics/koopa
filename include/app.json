@@ -410,6 +410,7 @@
     "conservative": false,
     "date": "2022-02-08",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "2.4.5"
@@ -420,6 +421,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "version": "1.0.68"
   },
@@ -429,6 +431,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "1.14.3"
   },
@@ -439,6 +442,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/google/brotli/"],
     "version": "1.0.9"
@@ -449,6 +453,7 @@
     "conservative": false,
     "date": "2021-06-25",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "0.41.0"
@@ -471,6 +476,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [
       "bzcmp.1",
       "bzdiff.1",
@@ -490,6 +496,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://c-ares.org/"],
     "version": "1.18.1"
@@ -500,6 +507,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://curl.se/docs/caextract.html"],
     "version": "2022-07-19"
@@ -510,6 +518,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://cairographics.org/"],
     "version": "1.16.0"
@@ -520,6 +529,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "platform": "linux",
     "url": [
@@ -533,6 +543,7 @@
     "conservative": false,
     "date": "2022-08-27",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/cheat/cheat/"],
     "version": "4.3.3"
@@ -543,6 +554,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://github.com/plexus/chemacs2/"],
     "version": "d722459287566e8c91ae077bf3d65966ebece190"
@@ -553,6 +565,7 @@
     "conservative": false,
     "date": "2022-09-19",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.chezmoi.io/"],
     "version": "2.23.0"
@@ -564,6 +577,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
     "version": "c4c7cf8e508fe947c8b038543c98a2846bb900d6"
