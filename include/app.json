@@ -19,6 +19,16 @@
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2022.05"
   },
+  "apache-spark": {
+    "bin": ["pyspark", "sparkR"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-09-27",
+    "dependencies": ["openjdk"],
+    "man1": [],
+    "url": ["https://spark.apache.org/"],
+    "version": "3.3.0"
+  },
   "apptainer": {
     "bin": [],
     "build_dependencies": [],
