@@ -305,7 +305,7 @@
     "date": "2022-09-22",
     "dependencies": ["openjdk"],
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
     "version": "1.14.0"
   },
@@ -1211,12 +1211,13 @@
     "bin": ["gdal-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-09-28",
     "dependencies": [],
     "man1": ["gdal-config.1"],
-    "outdated": true,
+    "outdated": false,
+    "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
-    "version": "3.5.1"
+    "version": "3.5.2"
   },
   "gdbm": {
     "bin": [],
@@ -1504,12 +1505,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-09-28",
     "dependencies": [],
     "man1": [],
-    "outdated": true,
+    "outdated": false,
+    "reverse_dependencies": ["freetype", "r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "5.1.0"
+    "version": "5.2.0"
   },
   "haskell-ghcup": {
     "bin": ["ghcup"],
@@ -1715,13 +1717,13 @@
     "bin": ["julia"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-07",
+    "date": "2022-09-28",
     "dependencies": ["gcc"],
     "large": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://github.com/JuliaLang/julia/"],
-    "version": "1.8.0"
+    "version": "1.8.1"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
@@ -1840,12 +1842,21 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-09-28",
     "dependencies": [],
     "man1": [],
-    "outdated": true,
+    "outdated": false,
+    "reverse_dependencies": [
+      "cairo",
+      "glib",
+      "harfbuzz",
+      "python",
+      "r",
+      "r-devel",
+      "llvm"
+    ],
     "url": ["https://sourceware.org/libffi/"],
-    "version": "3.4.2"
+    "version": "3.4.3"
   },
   "libgcrypt": {
     "bin": [],
@@ -2106,13 +2117,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-09-28",
     "dependencies": [],
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "platform": "linux",
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7"
+    "version": "8.7.13"
   },
   "lsd": {
     "bin": ["lsd"],
@@ -2509,6 +2520,7 @@
     "date": "2022-08-29",
     "dependencies": [],
     "man1": [],
+    "notes": ["1.1.1q fails to build on macOS."],
     "outdated": true,
     "url": ["https://www.openssl.org/source/"],
     "version": "1.1.1p"
@@ -2520,6 +2532,7 @@
     "date": "2022-08-29",
     "dependencies": [],
     "man1": [],
+    "outdated": false,
     "url": ["https://www.openssl.org/source/"],
     "version": "3.0.5"
   },
@@ -2730,12 +2743,12 @@
     "bin": ["proj", "projinfo"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-01",
+    "date": "2022-09-28",
     "dependencies": [],
     "man1": ["proj.1", "projinfo.1"],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://proj.org/"],
-    "version": "9.0.1"
+    "version": "9.1.0"
   },
   "pth": {
     "bin": [],
@@ -3650,10 +3663,10 @@
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-01-13",
-    "dependencies": ["conda"],
+    "dependencies": ["python"],
     "man1": ["vd.1", "visidata.1"],
     "outdated": true,
-    "version": "2.8"
+    "version": "2.10.1"
   },
   "vulture": {
     "bin": ["vulture"],
