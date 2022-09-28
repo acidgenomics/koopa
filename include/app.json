@@ -2870,6 +2870,7 @@
       "proj",
       "gdal",
       "r",
+      "r-devel",
       "node",
       "llvm"
     ],
