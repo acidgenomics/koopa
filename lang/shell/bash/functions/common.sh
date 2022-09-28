@@ -11445,6 +11445,12 @@ koopa_install_anaconda() {
         "$@"
 }
 
+koopa_install_apache_airflow() {
+    koopa_install_app \
+        --name='apache-airflow' \
+        "$@"
+}
+
 koopa_install_apache_spark() {
     koopa_install_app \
         --name='apache-spark' \
@@ -22745,6 +22751,12 @@ koopa_uninstall_ack() {
 koopa_uninstall_anaconda() {
     koopa_uninstall_app \
         --name='anaconda' \
+        "$@"
+}
+
+koopa_uninstall_apache_airflow() {
+    koopa_uninstall_app \
+        --name='apache-airflow' \
         "$@"
 }
 
