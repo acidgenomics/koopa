@@ -276,6 +276,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "platform": "linux",
     "url": [
@@ -291,6 +292,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "platform": "linux",
     "url": ["https://github.com/bcbio/bcbio-nextgen-vm/"],
@@ -303,6 +305,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "platform": "linux",
     "url": [
@@ -316,6 +319,7 @@
     "conservative": false,
     "date": "2021-08-12",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "2.30.0"
@@ -327,6 +331,7 @@
     "conservative": false,
     "date": "2022-09-22",
     "dependencies": ["openjdk"],
+    "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
@@ -336,12 +341,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "notes": ["2.39 has build issues on Ubuntu 22 due to bison detection."],
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
-    "version": "2.38"
+    "version": "2.39"
   },
   "bioawk": {
     "bin": ["bioawk"],
