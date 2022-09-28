@@ -1151,11 +1151,11 @@
     "bin": ["fzf"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-28",
     "dependencies": [],
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.33.0"
+    "version": "0.34.0"
   },
   "gawk": {
     "bin": ["awk", "gawk"],
