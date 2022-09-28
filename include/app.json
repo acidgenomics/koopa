@@ -3381,10 +3381,10 @@
     "bin": ["sqlite3"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-09-28",
     "dependencies": [],
     "man1": ["sqlite3.1"],
-    "outdated": true,
+    "outdated": false,
     "reverse_dependencies": [
       "apr",
       "gdal",
@@ -3397,7 +3397,7 @@
       "subversion"
     ],
     "url": ["https://www.sqlite.org/download.html"],
-    "version": "3.39.2"
+    "version": "3.39.3"
   },
   "sra-tools": {
     "bin": ["fasterq-dump", "vdb-config"],
