@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-09-23.
+    # Updated 2022-09-27.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -84,6 +84,8 @@ __koopa_complete() {
                         # > 'zip'
                         'ack'
                         'anaconda'
+                        'apache-airflow'
+                        'apache-spark'
                         'apr'
                         'apr-util'
                         'armadillo'
@@ -246,6 +248,7 @@ __koopa_complete() {
                         'mdcat'
                         'meson'
                         'mpc'
+                        'mpdecimal'
                         'mpfr'
                         'msgpack'
                         'multiqc'
