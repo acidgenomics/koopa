@@ -84,6 +84,7 @@ __koopa_complete() {
                         # > 'zip'
                         'ack'
                         'anaconda'
+                        'apache-airflow'
                         'apache-spark'
                         'apr'
                         'apr-util'
