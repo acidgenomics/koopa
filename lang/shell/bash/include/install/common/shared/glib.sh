@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME This now has a cryptic build error on Ubuntu 22.
+# This seems related to gettext.
+
 main() {
     # """
     # Install glib.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-09-28.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
@@ -41,6 +44,7 @@ ${dict['maj_min_ver']}/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
+    koopa_print_env
     meson_args=(
         "--prefix=${dict['prefix']}"
         '--buildtype=release'
