@@ -13,17 +13,22 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/glib.rb
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/glib2.html
     # """
-    local app meson_args dict
-    koopa_activate_build_opt_prefix \
-        'pkg-config' \
-        'python' \
-        'meson' \
+    local app build_deps deps meson_args dict
+    build_deps=(
+        'pkg-config'
+        'python'
+        'meson'
         'ninja'
-    koopa_activate_opt_prefix \
-        'zlib' \
-        'gettext' \
-        'libffi' \
+    )
+    deps=(
+        'zlib'
+        # FIXME This seems to be causing a build fail on Ubuntu.
+        # > 'gettext'
+        'libffi'
         'pcre'
+    )
+    koopa_activate_build_opt_prefix "${build_deps[@]}"
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['meson']="$(koopa_locate_meson)"
         ['ninja']="$(koopa_locate_ninja)"
