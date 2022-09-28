@@ -1386,7 +1386,7 @@
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
-    "dependencies": [],
+    "dependencies": ["openjdk"],
     "man1": [],
     "url": ["https://www.graphviz.org/"],
     "version": "5.0.1"
@@ -2484,13 +2484,13 @@
     "bin": ["jar", "java", "javac"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-09-28",
     "dependencies": [],
     "man1": ["jar.1", "java.1", "javac.1"],
-    "outdated": true,
-    "reverse_dependencies": ["apache-spark", "r"],
+    "outdated": false,
+    "reverse_dependencies": ["apache-spark", "bfg", "graphviz", "r"],
     "url": ["https://adoptium.net/"],
-    "version": "17.0.4+8"
+    "version": "17.0.4.1+1"
   },
   "openssh": {
     "bin": [],
@@ -2946,6 +2946,7 @@
       "lzo",
       "ncurses",
       "openblas",
+      "openjdk",
       "openssl3",
       "pcre",
       "pcre2",
@@ -3023,6 +3024,7 @@
       "lzo",
       "ncurses",
       "openblas",
+      "openjdk",
       "openssl3",
       "pcre",
       "pcre2",
