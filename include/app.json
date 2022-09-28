@@ -346,8 +346,9 @@
     "homebrew": true,
     "man1": [],
     "notes": ["2.39 has build issues on Ubuntu 22 due to bison detection."],
+    "outdated": true,
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
-    "version": "2.39"
+    "version": "2.38"
   },
   "bioawk": {
     "bin": ["bioawk"],
@@ -355,6 +356,7 @@
     "conservaitve": false,
     "date": "2019-10-26",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "1.0"
@@ -365,6 +367,7 @@
     "conservaitve": false,
     "date": "2022-08-01",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "1.0.1"
@@ -375,6 +378,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/bison/"],
     "version": "3.8.2"
@@ -385,6 +389,7 @@
     "conservative": false,
     "date": "2022-09-01",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "version": "22.8.0"
   },
@@ -392,11 +397,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.boost.org/"],
-    "version": "1.79.0"
+    "version": "1.80.0"
   },
   "bowtie2": {
     "bin": ["bowtie2"],
