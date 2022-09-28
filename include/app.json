@@ -588,6 +588,7 @@
     "conservative": false,
     "date": "2022-08-29",
     "dependencies": ["ncurses", "openssl3"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://cmake.org/download/"],
     "version": "3.24.1"
@@ -598,6 +599,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["ruby"],
+    "homebrew": false,
     "man1": [],
     "url": [
       "https://github.com/athityakumar/colorls/",
@@ -611,6 +613,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": false,
     "reverse_dependencies": [
       "bamtools",
       "bedtools",
@@ -649,6 +652,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "url": "https://www.j3e.de/linux/convmv/",
     "version": "2.05"
   },
@@ -765,6 +769,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [
       "gb2sum.1",
       "gbase32.1",
@@ -881,6 +886,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["cpufetch.1"],
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
     "version": "1.02"
@@ -906,6 +912,7 @@
     "conservative": false,
     "date": "2022-09-23",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://csvkit.readthedocs.io/"],
     "version": "1.0.7"
@@ -916,6 +923,7 @@
     "conservative": false,
     "date": "2022-09-23",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://github.com/shenwei356/csvtk"],
     "version": "0.25.0"
@@ -924,11 +932,11 @@
     "bin": ["curl", "curl-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-09-28",
     "dependencies": [],
     "man1": ["curl.1", "curl-config.1"],
     "url": ["https://curl.haxx.se/"],
-    "version": "7.84.0"
+    "version": "7.85.0"
   },
   "deeptools": {
     "bin": ["deeptools"],
