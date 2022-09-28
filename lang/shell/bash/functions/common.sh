@@ -11445,6 +11445,12 @@ koopa_install_anaconda() {
         "$@"
 }
 
+koopa_install_apache_spark() {
+    koopa_install_app \
+        --name='apache-spark' \
+        "$@"
+}
+
 koopa_install_app_from_binary_package() {
     local app dict
     koopa_assert_has_args "$#"
@@ -22739,6 +22745,12 @@ koopa_uninstall_ack() {
 koopa_uninstall_anaconda() {
     koopa_uninstall_app \
         --name='anaconda' \
+        "$@"
+}
+
+koopa_uninstall_apache_spark() {
+    koopa_uninstall_app \
+        --name='apache-spark' \
         "$@"
 }
 
