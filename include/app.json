@@ -19,12 +19,24 @@
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2022.05"
   },
+  "apache-airflow": {
+    "bin": ["airflow"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-09-28",
+    "dependencies": ["python"],
+    "large": true,
+    "man1": [],
+    "url": ["https://airflow.apache.org/"],
+    "version": "2.4.0"
+  },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-27",
     "dependencies": ["openjdk"],
+    "large": true,
     "man1": [],
     "url": ["https://spark.apache.org/"],
     "version": "3.3.0"
