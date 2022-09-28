@@ -3387,14 +3387,14 @@
     "outdated": false,
     "reverse_dependencies": [
       "apr",
-      "gdal",
       "gnupg",
       "libgeotiff",
       "proj",
+      "gdal",
       "python",
+      "subversion",
       "r",
-      "r-devel",
-      "subversion"
+      "r-devel"
     ],
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.39.3"
