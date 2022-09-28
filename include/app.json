@@ -3392,6 +3392,8 @@
       "libgeotiff",
       "proj",
       "python",
+      "r",
+      "r-devel",
       "subversion"
     ],
     "url": ["https://www.sqlite.org/download.html"],
