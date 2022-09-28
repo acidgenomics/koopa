@@ -1,26 +1,25 @@
 #!/usr/bin/env bash
 
+# FIXME This now has a cryptic build error on Ubuntu 22.
+# This seems related to gettext.
+
 main() {
     # """
     # Install glib.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-09-28.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/glib.rb
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/glib2.html
     # """
-    local app meson_args dict
-    koopa_activate_build_opt_prefix \
-        'pkg-config' \
-        'python' \
-        'meson' \
-        'ninja'
-    koopa_activate_opt_prefix \
-        'zlib' \
-        'gettext' \
-        'libffi' \
-        'pcre'
+    local app build_deps deps meson_args dict
+    build_deps=('meson' 'ninja' 'pkg-config' 'python')
+    deps=('zlib')
+    koopa_is_macos && deps+=('gettext')
+    deps+=('libffi' 'pcre')
+    koopa_activate_build_opt_prefix "${build_deps[@]}"
+    koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['meson']="$(koopa_locate_meson)"
         ['ninja']="$(koopa_locate_ninja)"
@@ -41,6 +40,7 @@ ${dict['maj_min_ver']}/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
+    koopa_print_env
     meson_args=(
         "--prefix=${dict['prefix']}"
         '--buildtype=release'

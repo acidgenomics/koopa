@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve documentation linkage of node.1, npm.1 and npx.1.
-
-# FIXME Configuration issue on Ubuntu22:
-# bzip2 -> python -> node
-# ModuleNotFoundError: No module named '_bz2'
-
-# FIXME Need to resolve this on Ubuntu 22:
-# FileNotFoundError: [Errno 2] No such file or directory: 'out/Release/libnode.so.93'
-
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-09-28.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
@@ -34,9 +25,12 @@ main() {
     #     recipe/build.sh
     # - https://github.com/nodejs/gyp-next/actions/runs/711098809/workflow
     # """
-    local app conf_args deps dict
+    local app build_deps conf_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config' 'ninja'
+    build_deps=(
+        'pkg-config'
+        'ninja'
+    )
     deps=(
         'ca-certificates'
         'zlib'
@@ -49,22 +43,22 @@ main() {
         'nghttp2'
         # > 'brotli'
     )
+    koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python)"
+        ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         # > [brotli]="$(koopa_app_prefix 'brotli')"
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-        [cares]="$(koopa_app_prefix 'c-ares')"
+        ['cares']="$(koopa_app_prefix 'c-ares')"
         ['jobs']="$(koopa_cpu_count)"
         ['libuv']="$(koopa_app_prefix 'libuv')"
         ['name']='node'
-        [nghttp2]="$(koopa_app_prefix 'nghttp2')"
+        ['nghttp2']="$(koopa_app_prefix 'nghttp2')"
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -113,6 +107,9 @@ main() {
         '--without-node-snapshot'
         '--verbose'
     )
+    # This is needed to put sysctl into PATH.
+    koopa_is_macos && koopa_add_to_path_end '/usr/sbin'
+    koopa_print_env
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs="${dict['jobs']}"
@@ -120,9 +117,10 @@ main() {
     # https://github.com/nodejs/node/issues/30111
     if koopa_is_linux && [[ -f 'out/Release/lib/libnode.so.93' ]]
     then
-        koopa_ln \
-            'out/Release/lib/libnode.so.93' \
-            'out/Release/libnode.so.93'
+        (
+            koopa_cd 'out/Release'
+            koopa_ln 'lib/libnode.so.93' 'libnode.so.93'
+        )
     fi
     "${app['make']}" install
     (

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-09-26.
     # """
     local app bin_name bin_names dict
     koopa_assert_has_no_args "$#"
@@ -36,6 +36,7 @@ main() {
     esac
     dict['py_version']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_version']}")"
+    koopa_print_env
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
         "${dict['pkg_name']}==${dict['version']}"

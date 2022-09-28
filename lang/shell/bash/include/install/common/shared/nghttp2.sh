@@ -5,7 +5,7 @@
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2022-08-19.
+    # @note Updated 2022-09-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -23,16 +23,15 @@ main() {
         'openssl3'
         'zlib'
         'boost'
-        'python'
+        # > 'python'
     )
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python)"
+        ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         ['boost']="$(koopa_app_prefix 'boost')"
         ['jobs']="$(koopa_cpu_count)"
@@ -47,12 +46,12 @@ download/v${dict['version']}/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        # > '--disable-python-bindings'
         "--prefix=${dict['prefix']}"
-        '--disable-silent-rules'
-        '--enable-app'
         '--disable-examples'
         '--disable-hpack-tools'
+        '--disable-python-bindings'
+        '--disable-silent-rules'
+        '--enable-app'
         "--with-boost=${dict['boost']}"
         '--with-jemalloc'
         '--with-libcares'
