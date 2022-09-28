@@ -14,19 +14,10 @@ main() {
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/glib2.html
     # """
     local app build_deps deps meson_args dict
-    build_deps=(
-        'pkg-config'
-        'python'
-        'meson'
-        'ninja'
-    )
-    deps=(
-        'zlib'
-        # FIXME This seems to be causing a build fail on Ubuntu.
-        # > 'gettext'
-        'libffi'
-        'pcre'
-    )
+    build_deps=('meson' 'ninja' 'pkg-config' 'python')
+    deps=('zlib')
+    koopa_is_macos && deps+=('gettext')
+    deps+=('libffi' 'pcre')
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
