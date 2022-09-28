@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cheat.
-    # @note Updated 2022-09-23.
+    # @note Updated 2022-09-26.
     #
     # @seealso
     # - https://github.com/cheat/cheat/
@@ -29,6 +29,7 @@ tags/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     export GOPATH="${dict['gopath']}"
+    koopa_print_env
     "${app['go']}" build \
         -mod 'vendor' \
         -o "${dict['prefix']}/bin/${dict['name']}" \

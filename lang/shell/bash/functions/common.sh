@@ -11445,6 +11445,18 @@ koopa_install_anaconda() {
         "$@"
 }
 
+koopa_install_apache_airflow() {
+    koopa_install_app \
+        --name='apache-airflow' \
+        "$@"
+}
+
+koopa_install_apache_spark() {
+    koopa_install_app \
+        --name='apache-spark' \
+        "$@"
+}
+
 koopa_install_app_from_binary_package() {
     local app dict
     koopa_assert_has_args "$#"
@@ -13175,6 +13187,12 @@ koopa_install_meson() {
 koopa_install_mpc() {
     koopa_install_app \
         --name='mpc' \
+        "$@"
+}
+
+koopa_install_mpdecimal() {
+    koopa_install_app \
+        --name='mpdecimal' \
         "$@"
 }
 
@@ -22736,6 +22754,18 @@ koopa_uninstall_anaconda() {
         "$@"
 }
 
+koopa_uninstall_apache_airflow() {
+    koopa_uninstall_app \
+        --name='apache-airflow' \
+        "$@"
+}
+
+koopa_uninstall_apache_spark() {
+    koopa_uninstall_app \
+        --name='apache-spark' \
+        "$@"
+}
+
 koopa_uninstall_app() {
     local bin_arr bool dict man1_arr
     declare -A bool=(
@@ -23932,6 +23962,12 @@ koopa_uninstall_meson() {
 koopa_uninstall_mpc() {
     koopa_uninstall_app \
         --name='mpc' \
+        "$@"
+}
+
+koopa_uninstall_mpdecimal() {
+    koopa_uninstall_app \
+        --name='mpdecimal' \
         "$@"
 }
 
