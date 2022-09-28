@@ -11,7 +11,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-09-28.
     #
     # Use 'configure --help' for build options.
     #
@@ -175,7 +175,7 @@ v${dict['version']}/${dict['file']}"
         "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
         "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
         "-DPCRE2_INCLUDE_DIR=${dict['pcre2']}/include"
-        "-DPCRE2_LIBRARY=${dict['pcre2']}/lib/libpcre2-8.${dict['shared_ext']}"
+        "-DPCRE2-8_LIBRARY=${dict['pcre2']}/lib/libpcre2-8.${dict['shared_ext']}"
         "-DPython_ROOT=${dict['python']}"
         "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
         "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/libsqlite3.${dict['shared_ext']}"

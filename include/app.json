@@ -934,6 +934,7 @@
     "conservative": true,
     "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["curl.1", "curl-config.1"],
     "url": ["https://curl.haxx.se/"],
     "version": "7.85.0"
@@ -944,16 +945,21 @@
     "conservative": false,
     "date": "2021-03-17",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "3.5.1"
   },
   "delta": {
+    "aliases": {
+      "homebrew": "git-delta"
+    },
     "bin": ["delta"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-01",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/dandavison/delta/"],
     "version": "0.14.0"
@@ -964,15 +970,20 @@
     "conservative": false,
     "date": "2022-09-19",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.36.1"
   },
   "docker-credential-pass": {
+    "aliases": {
+      "homebrew": "docker-credential-helper"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "platform": "linux",
     "url": ["https://github.com/docker/docker-credential-helpers/"],
@@ -984,6 +995,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.1.0"
   },
@@ -993,6 +1005,7 @@
     "check": false,
     "date": "2022-09-16",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "version": "42e5763782fdc1aabb9f2624d468248d6978abe2"
@@ -1003,6 +1016,7 @@
     "conservative": false,
     "date": "2022-09-13",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
     "version": "4c5c4b07a8665b2d29916da24d808cab13a2e4c3"
