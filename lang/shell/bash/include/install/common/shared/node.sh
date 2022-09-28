@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-09-27.
+    # @note Updated 2022-09-28.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
@@ -25,9 +25,12 @@ main() {
     #     recipe/build.sh
     # - https://github.com/nodejs/gyp-next/actions/runs/711098809/workflow
     # """
-    local app conf_args deps dict
+    local app build_deps conf_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config' 'ninja'
+    build_deps=(
+        'pkg-config'
+        'ninja'
+    )
     deps=(
         'ca-certificates'
         'zlib'
@@ -40,6 +43,7 @@ main() {
         'nghttp2'
         # > 'brotli'
     )
+    koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
@@ -113,9 +117,10 @@ main() {
     # https://github.com/nodejs/node/issues/30111
     if koopa_is_linux && [[ -f 'out/Release/lib/libnode.so.93' ]]
     then
-        koopa_ln \
-            'out/Release/lib/libnode.so.93' \
-            'out/Release/libnode.so.93'
+        (
+            koopa_cd 'out/Release'
+            koopa_ln 'lib/libnode.so.93' 'libnode.so.93'
+        )
     fi
     "${app['make']}" install
     (
