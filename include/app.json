@@ -5,6 +5,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["perl"],
+    "homebrew": true,
     "man1": ["ack.1"],
     "url": ["https://beyondgrep.com/"],
     "version": "3.6.0"
@@ -15,6 +16,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "reverse_dependencies": ["openbb"],
     "url": ["https://repo.continuum.io/archive/"],
@@ -26,6 +28,7 @@
     "conservative": false,
     "date": "2022-09-28",
     "dependencies": ["python"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "url": ["https://airflow.apache.org/"],
@@ -37,6 +40,7 @@
     "conservative": false,
     "date": "2022-09-27",
     "dependencies": ["openjdk", "python", "r"],
+    "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://spark.apache.org/"],
@@ -49,6 +53,7 @@
     "build_dependencies": ["go"],
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
@@ -60,6 +65,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": ["apr", "expat", "openssl3"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://apr.apache.org/"],
     "version": "1.6.1"
@@ -70,6 +76,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": ["sqlite"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://apr.apache.org/"],
     "version": "1.7.0"
@@ -80,6 +87,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": ["hdf5"],
+    "homebrew": true,
     "man1": [],
     "url": ["http://arma.sourceforge.net/download.html"],
     "version": "11.2.3"
@@ -90,6 +98,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/asdf-vm/asdf/"],
     "version": "0.10.2"
@@ -100,16 +109,21 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["aspell.1"],
     "url": ["http://aspell.net/"],
     "version": "0.60.8"
   },
   "aspera-connect": {
+    "aliases": {
+      "homebrew": "ibm-aspera-connect"
+    },
     "bin": ["ascp"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "platform": "linux",
     "url": ["https://www.ibm.com/aspera/connect/"],
@@ -142,6 +156,7 @@
     "conservative": false,
     "date": "2022-09-01",
     "dependencies": ["python"],
+    "homebrew": false,
     "man1": [],
     "version": "1.5.3"
   },
@@ -162,14 +177,15 @@
     "bin": ["aws"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-19",
+    "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.7.31"
+    "version": "2.7.35"
   },
   "azure-cli": {
     "bin": ["az"],
@@ -177,9 +193,10 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": ["python"],
+    "homebrew": true,
     "large": true,
     "man1": [],
-    "version": "2.39.0"
+    "version": "2.40.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -187,6 +204,7 @@
     "conservative": false,
     "date": "2022-03-14",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "2.5.2"
@@ -197,6 +215,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["bash.1"],
     "url": ["https://www.gnu.org/software/bash/"],
     "version": "5.1.16"
@@ -207,6 +226,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["node"],
+    "homebrew": true,
     "man1": [],
     "url": [
       "https://github.com/bash-lsp/bash-language-server/",
@@ -220,6 +240,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["ruby"],
+    "homebrew": false,
     "man1": [],
     "url": [
       "https://github.com/infertux/bashcov/",
@@ -233,6 +254,7 @@
     "conservative": false,
     "date": "2022-09-12",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.22.1"
   },
@@ -242,6 +264,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["bc.1"],
     "url": ["https://ftp.gnu.org/gnu/bc/"],
     "version": "1.07.1"
@@ -1715,7 +1738,7 @@
   },
   "julia": {
     "bin": ["julia"],
-    "build_dependencies": [],
+    "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
     "conservative": false,
     "date": "2022-09-28",
     "dependencies": ["gcc"],
@@ -1886,6 +1909,7 @@
     "dependencies": [],
     "man1": [],
     "notes": ["1.5.0 fails to build on Ubuntu."],
+    "outdated": true,
     "url": ["https://github.com/libgit2/libgit2/"],
     "version": "1.4.4"
   },
@@ -3665,7 +3689,7 @@
     "date": "2022-01-13",
     "dependencies": ["python"],
     "man1": ["vd.1", "visidata.1"],
-    "outdated": true,
+    "outdated": false,
     "version": "2.10.1"
   },
   "vulture": {
