@@ -1044,6 +1044,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": [
       "https://editorconfig.org/",
@@ -1057,6 +1058,7 @@
     "conservative": true,
     "date": "2022-09-08",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "platform": "linux",
     "url": ["https://fedorahosted.org/elfutils/"],
@@ -1068,6 +1070,7 @@
     "conservative": false,
     "date": "2022-09-12",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
     "url": ["https://www.gnu.org/software/emacs/"],
     "version": "28.2"
@@ -1078,6 +1081,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
@@ -1089,6 +1093,7 @@
     "conservative": false,
     "date": "2022-06-06",
     "dependencies": ["conda"],
+    "homebrew": false,
     "man1": [],
     "version": "16.2"
   },
@@ -1098,6 +1103,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.10.1"
   },
@@ -1107,6 +1113,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": ["perl"],
+    "homebrew": true,
     "man1": ["exiftool.1"],
     "url": ["https://exiftool.org/"],
     "version": "12.42"
@@ -1115,11 +1122,21 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
+    "reverse_dependencies": [
+      "apr-util",
+      "fontconfig",
+      "graphviz",
+      "perl",
+      "python",
+      "subversion",
+      "udunits"
+    ],
     "url": ["https://libexpat.github.io/"],
-    "version": "2.4.8"
+    "version": "2.4.9"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1127,16 +1144,21 @@
     "conservative": false,
     "date": "2021-03-25",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "0.11.9"
   },
   "fd-find": {
+    "aliases": {
+      "homebrew": "fd"
+    },
     "bin": ["fd"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "8.4.0"
   },
@@ -1144,11 +1166,12 @@
     "bin": ["ffmpeg", "ffprobe"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "url": ["https://ffmpeg.org/"],
-    "version": "5.1"
+    "version": "5.1.2"
   },
   "ffq": {
     "bin": ["ffq"],
@@ -1156,6 +1179,7 @@
     "conservative": false,
     "date": "2022-05-05",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "0.2.1"
@@ -1166,6 +1190,7 @@
     "conservative": false,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gfind.1", "glocate.1", "gupdatedb.1", "gxargs.1"],
     "url": ["https://www.gnu.org/software/findutils/"],
     "version": "4.9.0"
@@ -1176,6 +1201,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
@@ -1187,11 +1213,12 @@
     "bin": ["flac"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["flac.1"],
     "url": ["https://xiph.org/flac/"],
-    "version": "1.3.4"
+    "version": "1.4.1"
   },
   "flake8": {
     "bin": ["flake8"],
@@ -1199,6 +1226,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "version": "5.0.4"
   },
@@ -1208,6 +1236,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/westes/flex/"],
     "version": "2.6.4"
@@ -1218,6 +1247,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.fltk.org/"],
     "version": "1.3.8"
@@ -1228,6 +1258,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.freedesktop.org/wiki/Software/fontconfig/"],
     "version": "2.14.0"
@@ -1238,6 +1269,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.freetype.org/"],
     "version": "2.12.1"
@@ -1248,6 +1280,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/fribidi/fribidi/"],
     "version": "1.0.12"
@@ -1258,6 +1291,7 @@
     "conservative": false,
     "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
     "version": "0.34.0"
@@ -1268,6 +1302,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["awk.1", "gawk.1"],
     "url": ["https://ftp.gnu.org/gnu/gawk/"],
     "version": "5.1.1"
@@ -1278,6 +1313,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gcc.gnu.org/"],
     "version": "12.2.0"
@@ -1288,6 +1324,7 @@
     "conservative": true,
     "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gdal-config.1"],
     "outdated": false,
     "reverse_dependencies": ["r", "r-devel"],
@@ -1300,6 +1337,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/gdbm/"],
     "version": "1.23"
@@ -1310,6 +1348,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/libgeos/geos/"],
     "version": "3.11.0"
@@ -1320,6 +1359,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/gettext/"],
     "version": "0.21"
@@ -1330,6 +1370,7 @@
     "conservative": false,
     "date": "2022-06-05",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "0.11.0"
@@ -1340,6 +1381,7 @@
     "conservative": false,
     "date": "2022-09-03",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "0.3.10"
@@ -1350,6 +1392,8 @@
     "conservative": false,
     "date": "2021-05-14",
     "dependencies": ["conda"],
+    "homebrew": true,
+    "outdated": true,
     "man1": ["gs.1"],
     "version": "9.54.0"
   },
@@ -1357,11 +1401,13 @@
     "bin": ["git"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.37.2"
+    "version": "2.37.3"
   },
   "glances": {
     "bin": ["glances"],
@@ -1369,6 +1415,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "version": "3.2.7"
   },
@@ -1376,11 +1423,12 @@
     "bin": [],
     "build_dependencies": ["meson", "ninja", "pkg-config", "python"],
     "conservative": true,
-    "date": "2022-09-28",
+    "date": "2022-09-29",
     "dependencies": ["zlib", "gettext", "libffi", "pcre"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.gnome.org/GNOME/glib/"],
-    "version": "2.72.3"
+    "version": "2.74.0"
   },
   "gmp": {
     "bin": [],
@@ -1388,6 +1436,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gmplib.org/"],
     "version": "6.2.1"
@@ -1411,6 +1460,7 @@
       "libksba",
       "npth"
     ],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gnupg.org/download/"],
     "version": "2.3.7"
@@ -1419,22 +1469,24 @@
     "bin": [],
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2022-09-29",
     "dependencies": ["gmp", "libtasn1", "libunistring", "nettle"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnutls.org/", "https://gnupg.org/download/index.html"],
-    "version": "3.7.7"
+    "version": "3.7.8"
   },
   "go": {
     "bin": ["go"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://golang.org/dl/"],
-    "version": "1.19"
+    "version": "1.19.1"
   },
   "google-cloud-sdk": {
     "bin": ["gcloud"],
@@ -1442,6 +1494,7 @@
     "conservative": false,
     "date": "2022-09-19",
     "dependencies": [],
+    "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
@@ -1453,6 +1506,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/gperf/"],
     "version": "3.1"
@@ -1461,21 +1515,23 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-09-29",
     "dependencies": ["openjdk"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.graphviz.org/"],
-    "version": "5.0.1"
+    "version": "6.0.1"
   },
   "grep": {
     "bin": ["gegrep", "gfgrep", "ggrep"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gegrep.1", "gfgrep.1", "ggrep.1"],
     "url": ["https://www.gnu.org/software/grep/"],
-    "version": "3.7"
+    "version": "3.8"
   },
   "groff": {
     "bin": ["groff"],
@@ -1483,6 +1539,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["groff.1"],
     "url": ["https://ftp.gnu.org/gnu/groff/"],
     "version": "1.22.4"
@@ -1493,6 +1550,7 @@
     "conservative": false,
     "date": "2022-09-03",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "0.13.0"
@@ -1503,6 +1561,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/gsl/"],
     "version": "2.7.1"
@@ -1513,6 +1572,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["node"],
+    "homebrew": true,
     "man1": [],
     "url": [
       "https://github.com/aksakalli/gtop/",
@@ -1526,6 +1586,7 @@
     "conservative": false,
     "date": "2022-09-23",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
     "version": "0.6.0"
@@ -1551,6 +1612,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [
       "gunzip.1",
       "gzexe.1",
