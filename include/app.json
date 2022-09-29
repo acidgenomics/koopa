@@ -1635,6 +1635,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "version": "2.10.0"
   },
@@ -1644,6 +1645,7 @@
     "conservative": true,
     "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "outdated": false,
     "reverse_dependencies": ["freetype", "r", "r-devel"],
@@ -1651,11 +1653,15 @@
     "version": "5.2.0"
   },
   "haskell-ghcup": {
+    "aliases": {
+      "homebrew": "ghcup"
+    },
     "bin": ["ghcup"],
     "build_dependencies": ["curl"],
     "conservative": false,
     "date": "2022-09-19",
     "dependencies": [],
+    "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://www.haskell.org/ghcup/"],
@@ -1667,6 +1673,7 @@
     "conservative": false,
     "date": "2022-09-19",
     "dependencies": [],
+    "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://haskellstack.org/"],
@@ -1701,6 +1708,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": ["zlib", "gcc"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.12.2"
@@ -1711,6 +1719,7 @@
     "conservative": false,
     "date": "2020-07-24",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "2.2.1"
@@ -1721,6 +1730,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["htop.1"],
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
     "version": "3.2.1"
@@ -1731,6 +1741,7 @@
     "conservative": false,
     "date": "2022-07-02",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "2.0.2"
@@ -1741,6 +1752,7 @@
     "conservative": false,
     "date": "2022-09-07",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "1.15.0"
   },
@@ -1763,6 +1775,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [
       "derb.1",
       "genbrk.1",
@@ -1789,8 +1802,9 @@
     ],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -1800,7 +1814,7 @@
       "magick-script.1"
     ],
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.0-46"
+    "version": "7.1.0-49"
   },
   "ipython": {
     "bin": ["ipython"],
