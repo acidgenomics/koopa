@@ -3177,6 +3177,28 @@ koopa_brew_upgrade_brews() {
     return 0
 }
 
+koopa_brew_version() {
+    local app brew
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        ['brew']="$(koopa_locate_brew)"
+        ['jq']="$(koopa_locate_jq)"
+    )
+    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    for brew in "$@"
+    do
+        local str
+        str="$( \
+            "${app['brew']}" info --json "$brew" \
+                | "${app['jq']}" --raw-output '.[].versions.stable'
+        )"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
+    done
+    return 0
+}
+
 koopa_build_all_apps() {
     local app_name apps koopa push_apps
     koopa_assert_has_no_args "$#"
@@ -4131,6 +4153,24 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
+        'brew')
+            case "${2:-}" in
+                'cleanup' | \
+                'dump-brewfile' | \
+                'outdated' | \
+                'reset-core-repo' | \
+                'reset-permissions' | \
+                'uninstall-all-brews' | \
+                'upgrade-brews' | \
+                'version')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
         'conda')
             case "${2:-}" in
                 'create-env' | \
@@ -4508,8 +4548,6 @@ koopa_cli_system() {
             dict['key']='which-realpath'
             shift 1
             ;;
-        'brew-dump-brewfile' | \
-        'brew-outdated' | \
         'build-all-apps' | \
         'cache-functions' | \
         'disable-passwordless-sudo' | \
@@ -10976,28 +11014,6 @@ koopa_hisat2_index() {
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['hisat2_build']}" "${index_args[@]}"
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
-    return 0
-}
-
-koopa_homebrew_brew_version() {
-    local app brew
-    koopa_assert_has_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['jq']="$(koopa_locate_jq)"
-    )
-    [[ -x "${app['brew']}" ]] || return 1
-    [[ -x "${app['jq']}" ]] || return 1
-    for brew in "$@"
-    do
-        local str
-        str="$( \
-            "${app['brew']}" info --json "$brew" \
-                | "${app['jq']}" --raw-output '.[].versions.stable'
-        )"
-        [[ -n "$str" ]] || return 1
-        koopa_print "$str"
-    done
     return 0
 }
 
