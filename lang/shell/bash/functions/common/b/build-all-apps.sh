@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rename this to 'koopa_install_all_apps'.
 # FIXME All conservative apps should be built before the liberal ones.
 # FIXME Improve labeling of dependencies here and in app.json.
 # FIXME Rework this install recipe as an algorithm that uses app.json.
