@@ -1820,10 +1820,11 @@
     "bin": ["ipython"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-09-29",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
-    "version": "8.4.0"
+    "version": "8.5.0"
   },
   "isort": {
     "bin": ["isort"],
@@ -1831,6 +1832,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "version": "5.10.1"
   },
@@ -1840,6 +1842,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["http://jemalloc.net/"],
     "version": "5.3.0"
@@ -1850,6 +1853,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.ijg.org/"],
     "version": "9e"
@@ -1860,6 +1864,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["jq.1"],
     "url": ["https://github.com/stedolan/jq/releases"],
     "version": "1.6"
@@ -1870,6 +1875,7 @@
     "conservative": false,
     "date": "2022-09-28",
     "dependencies": ["gcc"],
+    "homebrew": true,
     "large": true,
     "man1": [],
     "outdated": false,
@@ -1882,6 +1888,7 @@
     "conservative": false,
     "date": "2022-07-21",
     "dependencies": ["conda"],
+    "homebrew": false,
     "man1": [],
     "version": "3.4.4"
   },
@@ -1891,6 +1898,7 @@
     "conservative": false,
     "date": "2022-01-17",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "0.48.0"
@@ -1901,6 +1909,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["lame.1"],
     "url": ["https://lame.sourceforge.io/"],
     "version": "3.100"
@@ -1911,6 +1920,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": ["gcc"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.10.1"
@@ -1921,6 +1931,7 @@
     "conservative": false,
     "date": "2022-09-23",
     "dependencies": ["python"],
+    "homebrew": false,
     "man1": [],
     "url": [
       "https://docs.latch.bio/",
@@ -1933,11 +1944,12 @@
     "bin": ["less"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["less.1"],
     "url": ["https://ftp.gnu.org/gnu/less/"],
-    "version": "590"
+    "version": "608"
   },
   "lesspipe": {
     "bin": ["lesspipe.sh"],
@@ -1945,6 +1957,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/wofr06/lesspipe/"],
     "version": "2.06"
@@ -1955,6 +1968,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": ["libgpg-error"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gnupg.org/download/"],
     "version": "2.5.5"
@@ -1965,6 +1979,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://thrysoee.dk/editline/"],
     "version": "20210910-3.1"
@@ -1975,6 +1990,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["http://software.schmorp.de/pkg/libev.html"],
     "version": "4.33"
@@ -1985,6 +2001,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://libevent.org/", "https://github.com/libevent/libevent/"],
     "version": "2.1.12"
@@ -1995,6 +2012,7 @@
     "conservative": true,
     "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "outdated": false,
     "reverse_dependencies": [
@@ -2015,6 +2033,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": ["libgpg-error"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gnupg.org/download/"],
     "version": "1.10.1"
@@ -2025,6 +2044,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/OSGeo/libgeotiff/"],
     "version": "1.7.1"
@@ -2035,6 +2055,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "notes": ["1.5.0 fails to build on Ubuntu."],
     "outdated": true,
@@ -2047,6 +2068,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gnupg.org/download/"],
     "version": "1.45"
@@ -2057,6 +2079,7 @@
     "conservative": true,
     "date": "2022-09-08",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/libiconv/"],
     "version": "1.17"
@@ -2070,6 +2093,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/libidn/"],
     "version": "2.3.3"
@@ -2080,6 +2104,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.libjpeg-turbo.org/"],
     "version": "2.1.4"
@@ -2088,11 +2113,12 @@
     "bin": [],
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-09-29",
     "dependencies": ["libgpg-error"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gnupg.org/download/"],
-    "version": "1.6.0"
+    "version": "1.6.1"
   },
   "liblinear": {
     "bin": [],
@@ -2101,6 +2127,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
     "version": "2.45"
