@@ -3,6 +3,32 @@
 # FIXME This now has a cryptic build error on Ubuntu 22.
 # This seems related to gettext.
 
+# FIXME Need to rework using CMake-based build config.
+# Now hitting this issue with package trying to install pcre2...
+#
+# r "sys/syscall.h" has symbol "SYS_sched_getattr" : NO
+# Checking if "pthread_setname_np(const char*)" with dependency threads: links: YES
+# Checking if "stack grows check" runs: NO (1)
+# Run-time dependency iconv found: YES
+# Found pkg-config: /opt/koopa/app/pkg-config/0.29.2/bin/pkg-config (0.29.2)
+# Did not find CMake 'cmake'
+# Found CMake: NO
+# Run-time dependency libpcre2-8 found: NO (tried pkgconfig, framework and cmake)
+# Run-time dependency libpcre2-8 found: NO (tried pkgconfig, framework and cmake)
+# Looking for a fallback subproject for the dependency libpcre2-8
+# Downloading pcre2 source from https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2
+# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
+# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
+# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
+# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
+# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
+# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
+# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
+# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
+# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
+# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
+# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
+
 main() {
     # """
     # Install glib.
