@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to use pcre2 here instead.
+
 # FIXME This now has a cryptic build error on Ubuntu 22.
 # This seems related to gettext.
 
@@ -32,7 +34,7 @@
 main() {
     # """
     # Install glib.
-    # @note Updated 2022-09-28.
+    # @note Updated 2022-09-29.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
@@ -40,10 +42,10 @@ main() {
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/glib2.html
     # """
     local app build_deps deps meson_args dict
-    build_deps=('meson' 'ninja' 'pkg-config' 'python')
+    build_deps=('cmake' 'meson' 'ninja' 'pkg-config' 'python')
     deps=('zlib')
     koopa_is_macos && deps+=('gettext')
-    deps+=('libffi' 'pcre')
+    deps+=('libffi' 'pcre2')
     koopa_activate_build_opt_prefix "${build_deps[@]}"
     koopa_activate_opt_prefix "${deps[@]}"
     declare -A app=(
@@ -70,11 +72,22 @@ ${dict['maj_min_ver']}/${dict['file']}"
     meson_args=(
         "--prefix=${dict['prefix']}"
         '--buildtype=release'
+        # Consider enabling these:
+        # > "--localstatedir=#{var}"
+        # > "-Dgio_module_dir=#{HOMEBREW_PREFIX}/lib/gio/modules"
+        # > '--default-library=both'
+        # > '-Dbsymbolic_functions=false'
+        # > '-Ddtrace=false'
         # > '-Dgtk_doc=true'
+        # > '-Diconv=auto'
         # > '-Dman=true'
     )
     "${app['meson']}" "${meson_args[@]}" ..
     "${app['ninja']}" -v
     "${app['ninja']}" install -v
+    # Alternative approach used by Homebrew:
+    # > "${app['meson']}" setup build "${meson_args[@]}"
+    # > "${app['meson']}" compile -C build --verbose
+    # > "${app['meson']}" install -C build
     return 0
 }
