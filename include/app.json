@@ -2434,6 +2434,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.6.1"
   },
@@ -2443,6 +2444,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.28.0"
   },
@@ -2452,15 +2454,20 @@
     "conservative": false,
     "date": "2022-09-03",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "version": "0.63.2"
   },
   "mpc": {
+    "aliases": {
+      "homebrew": "libmpc"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["http://www.multiprecision.org/mpc/"],
     "version": "1.2.1"
@@ -2471,6 +2478,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.bytereef.org/mpdecimal/"],
     "version": "2.5.1"
@@ -2481,6 +2489,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.mpfr.org/"],
     "version": "4.1.0"
@@ -2492,6 +2501,7 @@
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://msgpack.org/"],
     "version": "4.0.0"
@@ -2500,11 +2510,12 @@
     "bin": ["multiqc"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-06-28",
+    "date": "2022-09-09",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
-    "version": "1.13a"
+    "version": "1.13"
   },
   "ncurses": {
     "bin": [
