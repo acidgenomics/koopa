@@ -1022,11 +1022,15 @@
     "version": "4c5c4b07a8665b2d29916da24d808cab13a2e4c3"
   },
   "du-dust": {
+    "aliases": {
+      "homebrew": "dust"
+    },
     "bin": ["dust"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-01",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "url": [
       "https://github.com/bootandy/dust/",
