@@ -2536,6 +2536,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [
       "captoinfo.1",
       "clear.1",
@@ -2558,6 +2559,7 @@
     "date": "2022-08-30",
     "dependencies": [],
     "conservative": false,
+    "homebrew": true,
     "man1": ["neofetch.1"],
     "url": ["https://github.com/dylanaraps/neofetch/"],
     "version": "7.1.0"
