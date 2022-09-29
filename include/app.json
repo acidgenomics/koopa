@@ -2142,6 +2142,7 @@
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": ["libuv"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/luvit/luv"],
     "version": "1.44.2-1"
@@ -2152,6 +2153,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://libpipeline.nongnu.org/"],
     "version": "1.5.6"
@@ -2160,11 +2162,12 @@
     "bin": ["libpng-config", "libpng16-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
-    "version": "1.6.37"
+    "version": "1.6.38"
   },
   "libssh2": {
     "bin": [],
@@ -2172,6 +2175,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.libssh2.org/"],
     "version": "1.10.0"
@@ -2182,6 +2186,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/libtasn1/"],
     "version": "4.19.0"
@@ -2193,6 +2198,7 @@
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.leonerd.org.uk/code/libtermkey/"],
     "version": "0.22"
@@ -2203,6 +2209,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": [
       "https://download.osgeo.org/libtiff/",
@@ -2216,6 +2223,7 @@
     "conservative": false,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["glibtool.1", "glibtoolize.1"],
     "url": ["https://ftp.gnu.org/gnu/libtool/"],
     "version": "2.4.7"
@@ -2226,6 +2234,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/libunistring/"],
     "version": "1.0"
@@ -2236,6 +2245,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/libuv/libuv/"],
     "version": "1.44.2"
@@ -2245,8 +2255,9 @@
     "build_dependencies": [],
     "check": false,
     "conservative": true,
-    "date": "2022-09-09",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "notes": ["0.2.0 is incompatible with neovim."],
     "outdated": true,
@@ -2257,11 +2268,12 @@
     "bin": ["xml2-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["xml2-config.1"],
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
-    "version": "2.10.1"
+    "version": "2.10.2"
   },
   "libzip": {
     "bin": [],
@@ -2269,6 +2281,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://libzip.org/"],
     "version": "1.9.2"
@@ -2287,6 +2300,7 @@
       "python",
       "swig"
     ],
+    "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://releases.llvm.org/"],
@@ -2298,6 +2312,7 @@
     "conservative": true,
     "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "outdated": false,
     "platform": "linux",
@@ -2310,6 +2325,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.23.1"
   },
@@ -2319,6 +2335,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
     "version": "5.4.4"
@@ -2330,6 +2347,7 @@
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://luajit.org/"],
     "version": "2.1.0-beta3"
@@ -2340,6 +2358,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/luarocks/luarocks/"],
     "version": "3.9.1"
@@ -2350,6 +2369,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://lz4.github.io/lz4/"],
     "version": "1.9.4"
@@ -2360,6 +2380,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.oberhumer.com/opensource/lzo/"],
     "version": "2.10"
@@ -2370,6 +2391,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/m4/"],
     "version": "1.4.19"
@@ -2380,6 +2402,7 @@
     "conservative": false,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gmake.1"],
     "url": ["https://ftp.gnu.org/gnu/make/"],
     "version": "4.3"
@@ -2390,6 +2413,7 @@
     "conservative": false,
     "date": "2022-08-25",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gman.1"],
     "url": ["https://man-db.nongnu.org/"],
     "version": "2.10.2"
@@ -2400,6 +2424,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["node"],
+    "homebrew": true,
     "man1": [],
     "version": "0.32.2"
   },
