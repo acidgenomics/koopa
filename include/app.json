@@ -1873,7 +1873,7 @@
     "bin": ["julia"],
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
     "conservative": false,
-    "date": "2022-09-28",
+    "date": "2022-09-30",
     "dependencies": ["gcc"],
     "homebrew": true,
     "large": true,
@@ -1881,7 +1881,7 @@
     "notes": ["1.8.1 installer is currently failing on macOS."],
     "outdated": false,
     "url": ["https://github.com/JuliaLang/julia/"],
-    "version": "1.8.0"
+    "version": "1.8.2"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
