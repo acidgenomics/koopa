@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-09-29.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -25,7 +25,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_build_opt_prefix 'cmake'
     deps=()
-    koopa_is_linux && deps+=('gcc')
+    # > koopa_is_linux && deps+=('gcc')
     deps+=(
         'bison'
         'flex'
@@ -44,16 +44,19 @@ main() {
     declare -A dict=(
         ['base_url']='https://github.com/ncbi'
         ['hdf5']="$(koopa_app_prefix 'hdf5')"
-        ['java_home']="$(koopa_java_prefix)"
         ['libxml2']="$(koopa_app_prefix 'libxml2')"
+        ['openjdk']="$(koopa_app_prefix 'openjdk')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    koopa_assert_is_dir \
+        "${dict['hdf5']}" \
+        "${dict['libxml2']}" \
+        "${dict['openjdk']}"
     # Ensure we define Java location, otherwise install can hit warnings during
     # ngs-tools install.
-    koopa_assert_is_dir "${dict['java_home']}"
-    export JAVA_HOME="${dict['java_home']}"
+    export JAVA_HOME="${dict['openjdk']}"
     # Need to use HDF5 1.10 API.
     export CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
     koopa_print_env

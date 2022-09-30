@@ -59,8 +59,6 @@ koopa_cli_system() {
             dict['key']='which-realpath'
             shift 1
             ;;
-        'brew-dump-brewfile' | \
-        'brew-outdated' | \
         'build-all-apps' | \
         'cache-functions' | \
         'disable-passwordless-sudo' | \

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename this to 'koopa_install_all_binary_apps'.
+
 koopa_install_all_apps() {
     # ""
     # Install all shared apps as binary packages.

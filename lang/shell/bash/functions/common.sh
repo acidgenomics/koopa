@@ -3177,6 +3177,28 @@ koopa_brew_upgrade_brews() {
     return 0
 }
 
+koopa_brew_version() {
+    local app brew
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        ['brew']="$(koopa_locate_brew)"
+        ['jq']="$(koopa_locate_jq)"
+    )
+    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    for brew in "$@"
+    do
+        local str
+        str="$( \
+            "${app['brew']}" info --json "$brew" \
+                | "${app['jq']}" --raw-output '.[].versions.stable'
+        )"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
+    done
+    return 0
+}
+
 koopa_build_all_apps() {
     local app_name apps koopa push_apps
     koopa_assert_has_no_args "$#"
@@ -4131,6 +4153,24 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
+        'brew')
+            case "${2:-}" in
+                'cleanup' | \
+                'dump-brewfile' | \
+                'outdated' | \
+                'reset-core-repo' | \
+                'reset-permissions' | \
+                'uninstall-all-brews' | \
+                'upgrade-brews' | \
+                'version')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
         'conda')
             case "${2:-}" in
                 'create-env' | \
@@ -4508,8 +4548,6 @@ koopa_cli_system() {
             dict['key']='which-realpath'
             shift 1
             ;;
-        'brew-dump-brewfile' | \
-        'brew-outdated' | \
         'build-all-apps' | \
         'cache-functions' | \
         'disable-passwordless-sudo' | \
@@ -10979,28 +11017,6 @@ koopa_hisat2_index() {
     return 0
 }
 
-koopa_homebrew_brew_version() {
-    local app brew
-    koopa_assert_has_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['jq']="$(koopa_locate_jq)"
-    )
-    [[ -x "${app['brew']}" ]] || return 1
-    [[ -x "${app['jq']}" ]] || return 1
-    for brew in "$@"
-    do
-        local str
-        str="$( \
-            "${app['brew']}" info --json "$brew" \
-                | "${app['jq']}" --raw-output '.[].versions.stable'
-        )"
-        [[ -n "$str" ]] || return 1
-        koopa_print "$str"
-    done
-    return 0
-}
-
 koopa_info_box() {
     koopa_assert_has_args "$#"
     local array
@@ -14471,33 +14487,6 @@ koopa_is_xcode_clt_installed() {
     koopa_is_macos || return 1
     [[ -d '/Library/Developer/CommandLineTools/usr/bin' ]] || return 1
     return 0
-}
-
-koopa_java_prefix() {
-    local prefix
-    if [[ -n "${JAVA_HOME:-}" ]]
-    then
-        koopa_print "$JAVA_HOME"
-        return 0
-    fi
-    if [[ -d "$(koopa_openjdk_prefix)" ]]
-    then
-        koopa_print "$(koopa_openjdk_prefix)"
-        return 0
-    fi
-    if [[ -x '/usr/libexec/java_home' ]]
-    then
-        prefix="$('/usr/libexec/java_home' || true)"
-        [ -n "$prefix" ] || return 1
-        koopa_print "$prefix"
-        return 0
-    fi
-    if [[ -d "$(koopa_homebrew_opt_prefix)/openjdk" ]]
-    then
-        koopa_print "$(koopa_homebrew_opt_prefix)/openjdk"
-        return 0
-    fi
-    return 1
 }
 
 koopa_jekyll_deploy_to_aws() {
@@ -18022,15 +18011,9 @@ ${dict['py_maj_min_ver']}"
     if [[ "${dict['pip']}" -eq 1 ]]
     then
         case "${dict['py_version']}" in
-            '3.10.6')
-                dict['pip_version']='22.2.2'
-                dict['setuptools_version']='63.4.2'
-                dict['wheel_version']='0.37.1'
-                ;;
-            '3.10.5' | \
             '3.10.'*)
-                dict['pip_version']='22.1.2'
-                dict['setuptools_version']='63.1.0'
+                dict['pip_version']='22.2.2'
+                dict['setuptools_version']='65.4.1'
                 dict['wheel_version']='0.37.1'
                 ;;
             *)

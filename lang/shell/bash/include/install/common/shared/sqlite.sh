@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SQLite.
-    # @note Updated 2022-08-16.
+    # @note Updated 2022-09-28.
     #
     # Use autoconf instead of amalgamation.
     #
@@ -36,9 +36,9 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     case "${dict['version']}" in
+        '3.39.3' | \
         '3.39.2' | \
-        '3.38.5' | \
-        '3.38.2' | \
+        '3.38.'* | \
         '3.37.2')
             dict['year']='2022'
             ;;

@@ -3,7 +3,7 @@
 koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-09-21.
+    # @note Updated 2022-09-29.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -82,6 +82,24 @@ koopa_cli_app() {
             case "${2:-}" in
                 'align' | \
                 'index')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
+        'brew')
+            case "${2:-}" in
+                'cleanup' | \
+                'dump-brewfile' | \
+                'outdated' | \
+                'reset-core-repo' | \
+                'reset-permissions' | \
+                'uninstall-all-brews' | \
+                'upgrade-brews' | \
+                'version')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;

@@ -2,7 +2,7 @@
 
 main() {
     koopa_install_app_subshell \
-        --installer='conda-env' \
+        --installer='python-venv' \
         --name='visidata' \
         "$@"
 }

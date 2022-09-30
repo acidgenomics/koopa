@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_homebrew_brew_version() {
+koopa_brew_version() {
     # """
     # Get the version of a Homebrew brew from JSON.
-    # @note Updated 2022-09-08.
+    # @note Updated 2022-09-29.
     #
     # @examples
     # > koopa_homebrew_brew_version 'coreutils' 'findutils'

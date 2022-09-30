@@ -35,13 +35,16 @@ main() {
             ;;
     esac
     dict['py_version']="$(koopa_get_version "${app['python']}")"
-    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_version']}")"
+    dict['py_maj_min_ver']="$( \
+        koopa_major_minor_version "${dict['py_version']}" \
+    )"
     koopa_print_env
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
         "${dict['pkg_name']}==${dict['version']}"
-    dict['record_file']="${dict['libexec']}/lib/python${dict['py_maj_min_ver']}/\
-site-packages/${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
+    dict['record_file']="${dict['libexec']}/lib/\
+python${dict['py_maj_min_ver']}/site-packages/\
+${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
     koopa_assert_is_file "${dict['record_file']}"
     # Ensure we exclude any nested subdirectories in libexec bin, which is
     # known to happen with some conda recipes (e.g. bowtie2).
