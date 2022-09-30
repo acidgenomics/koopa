@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-09-27.
+    # Updated 2022-09-29.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -45,6 +45,7 @@ __koopa_complete() {
                         'aws'
                         'bioconda'
                         'bowtie2'
+                        'brew'
                         'conda'
                         'docker'
                         'ftp'
@@ -394,8 +395,6 @@ __koopa_complete() {
                     ;;
                 'system')
                     args=(
-                        'brew-dump-brewfile'
-                        'brew-outdated'
                         'build-all-apps'
                         'cache-functions'
                         'check'
@@ -561,6 +560,18 @@ __koopa_complete() {
                             args=(
                                 'align'
                                 'index'
+                            )
+                            ;;
+                        'brew')
+                            args=(
+                                'cleanup'
+                                'dump-brewfile'
+                                'outdated'
+                                'reset-core-repo'
+                                'reset-permissions'
+                                'uninstall-all-brews'
+                                'upgrade-brews'
+                                'version'
                             )
                             ;;
                         'conda')
