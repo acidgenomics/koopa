@@ -3453,6 +3453,7 @@
     "conservative": false,
     "date": "2022-09-30",
     "dependencies": ["ruby"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/textmate/rmate"],
     "version": "1.5.8"
@@ -3463,6 +3464,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["ruby"],
+    "homebrew": true,
     "man1": [],
     "url": [
       "https://github.com/rtomayko/ronn/",
@@ -3476,6 +3478,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
@@ -3485,11 +3488,12 @@
     "bin": ["rsync"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["rsync.1"],
     "url": ["https://download.samba.org/pub/rsync/src/"],
-    "version": "3.2.5"
+    "version": "3.2.6"
   },
   "ruby": {
     "bin": ["bundle", "bundler", "gem", "ruby"],
@@ -3497,6 +3501,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["ruby.1"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.1.2p20"
@@ -3507,6 +3512,7 @@
     "conservative": false,
     "date": "2022-09-19",
     "dependencies": ["python"],
+    "homebrew": false,
     "man1": [],
     "version": "0.0.40"
   },
@@ -3527,6 +3533,7 @@
     "conservative": false,
     "date": "2022-09-22",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.rust-lang.org/"],
     "version": "1.64.0"
@@ -3537,6 +3544,7 @@
     "conservative": false,
     "date": "2022-06-23",
     "dependencies": ["conda"],
+    "homebrew": false,
     "man1": [],
     "version": "1.9.0"
   },
@@ -3546,6 +3554,7 @@
     "conservative": false,
     "date": "2021-01-02",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "0.8.0"
@@ -3556,6 +3565,7 @@
     "conservative": false,
     "date": "2022-04-07",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "1.15.1"
@@ -3566,6 +3576,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://scons.org/"],
     "version": "4.4.0"
@@ -3579,6 +3590,7 @@
     "conservative": false,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gsed.1"],
     "url": ["https://www.gnu.org/software/sed/"],
     "version": "4.8"
@@ -3592,6 +3604,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://serf.apache.org/download/"],
     "version": "1.3.9"
@@ -3602,6 +3615,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/koalaman/shellcheck/"],
     "version": "0.8.0"
@@ -3612,6 +3626,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/shiny/download-server/"],
@@ -3623,6 +3638,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/kward/shunit2/"],
     "version": "2.1.8"
@@ -3633,6 +3649,7 @@
     "conservative": false,
     "date": "2022-09-02",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "0.6.1"
@@ -3643,6 +3660,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "7.14.0"
@@ -3653,6 +3671,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["sox.1"],
     "url": ["http://sox.sourceforge.net/sox.html"],
     "version": "14.4.2"
@@ -3663,6 +3682,7 @@
     "check": false,
     "date": "2022-09-16",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://github.com/syl20bnr/spacemacs/"],
     "version": "9cdf97f87e89b3f5045da84e181057e82bfc13aa"
@@ -3673,6 +3693,7 @@
     "check": false,
     "date": "2022-09-16",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://github.com/SpaceVim/SpaceVim/"],
     "version": "4baafa275025f71102eb747fdc636285a96a7082"
@@ -3683,6 +3704,7 @@
     "conservative": true,
     "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["sqlite3.1"],
     "outdated": false,
     "reverse_dependencies": [
@@ -3700,11 +3722,15 @@
     "version": "3.39.3"
   },
   "sra-tools": {
+    "aliases": {
+      "homebrew": "sratoolkit"
+    },
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://github.com/ncbi/sra-tools/"],
@@ -3716,6 +3742,7 @@
     "conservative": false,
     "date": "2022-01-15",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "2.7.10a"
@@ -3726,6 +3753,7 @@
     "conservative": false,
     "date": "2022-09-08",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "1.10.3"
   },
@@ -3735,6 +3763,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/stow/"],
     "version": "2.3.1"
@@ -3745,6 +3774,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["svn.1"],
     "url": ["https://subversion.apache.org/"],
     "version": "1.14.2"
@@ -3755,6 +3785,7 @@
     "conservative": true,
     "date": "2022-09-08",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["http://www.swig.org/"],
     "version": "4.0.2"
@@ -3765,6 +3796,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/taglib/taglib/"],
     "version": "1.12"
@@ -3778,6 +3810,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gtar.1"],
     "url": ["https://www.gnu.org/software/tar/"],
     "version": "1.34"
@@ -3788,6 +3821,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.tcl-lang.org/"],
     "version": "8.6.12"
@@ -3798,6 +3832,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "1.5.0"
   },
@@ -3813,6 +3848,7 @@
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
+    "homebrew": true,
     "man1": [
       "pdftexi2dvi.1",
       "pod2texi.1",
@@ -3830,6 +3866,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["tmux.1"],
     "url": ["https://github.com/tmux/tmux/"],
     "version": "3.3a"
@@ -3840,6 +3877,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "12.1.2"
   },
@@ -3847,11 +3885,12 @@
     "bin": ["tree"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["tree.1"],
     "url": ["https://mama.indstate.edu/users/ice/tree/"],
-    "version": "2.0.3"
+    "version": "2.0.4"
   },
   "tree-sitter": {
     "bin": [],
@@ -3860,15 +3899,17 @@
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.20.7"
   },
   "tuc": {
     "bin": ["tuc"],
-    "build_dependencies": [],
+    "build_dependencies": ["rust"],
     "conservative": false,
     "date": "2022-09-26",
-    "dependencies": ["rust"],
+    "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "version": "0.11.0"
   },
@@ -3878,6 +3919,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.unidata.ucar.edu/downloads/udunits/"],
     "version": "2.2.28"
@@ -3889,6 +3931,7 @@
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/neovim/unibilium/"],
     "version": "2.1.1"
@@ -3900,11 +3943,12 @@
     "bin": ["gunits"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-25",
+    "date": "2022-09-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gunits.1"],
     "url": ["https://www.gnu.org/software/units/"],
-    "version": "2.21"
+    "version": "2.22"
   },
   "unzip": {
     "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
@@ -3912,6 +3956,7 @@
     "conservative": true,
     "date": "2022-09-01",
     "dependencies": ["bzip2"],
+    "homebrew": true,
     "man1": ["funzip.1", "unzip.1", "unzipsfx.1", "zipgrep.1", "zipinfo.1"],
     "url": ["http://infozip.sourceforge.net/UnZip.html"],
     "version": "6.0"
@@ -3922,6 +3967,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://juliastrings.github.io/utf8proc/"],
     "version": "2.7.0"
@@ -3932,6 +3978,7 @@
     "conservative": false,
     "date": "2022-09-12",
     "dependencies": [],
+    "homebrew": true,
     "man1": [
       "ex.1",
       "rview.1",
@@ -3951,6 +3998,7 @@
     "conservative": false,
     "date": "2022-01-13",
     "dependencies": ["python"],
+    "homebrew": false,
     "man1": ["vd.1", "visidata.1"],
     "outdated": false,
     "version": "2.10.1"
@@ -3961,6 +4009,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "version": "2.6"
   },
@@ -3970,6 +4019,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["wget.1"],
     "url": ["https://www.gnu.org/software/wget/"],
     "version": "1.21.3"
@@ -3983,146 +4033,203 @@
     "conservative": true,
     "date": "2022-08-25",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["gwhich.1"],
     "url": ["https://ftp.gnu.org/gnu/which/"],
     "version": "2.21"
   },
   "xorg-libice": {
+    "aliases": {
+      "homebrew": "libice"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libice/"],
     "version": "1.0.10"
   },
   "xorg-libpthread-stubs": {
+    "aliases": {
+      "homebrew": "libpthread-stubs"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/pthread-stubs/"],
     "version": "0.4"
   },
   "xorg-libsm": {
+    "aliases": {
+      "homebrew": "libsm"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm/"],
     "version": "1.2.3"
   },
   "xorg-libx11": {
+    "aliases": {
+      "homebrew": "libx11"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/"],
     "version": "1.8.1"
   },
   "xorg-libxau": {
+    "aliases": {
+      "homebrew": "libxau"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-09-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau/"],
-    "version": "1.0.9"
+    "version": "1.0.10"
   },
   "xorg-libxcb": {
+    "aliases": {
+      "homebrew": "libxcb"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxcb/"],
     "version": "1.15"
   },
   "xorg-libxdmcp": {
+    "aliases": {
+      "homebrew": "libxdmcp"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxdmcp/"],
     "version": "1.1.3"
   },
   "xorg-libxext": {
+    "aliases": {
+      "homebrew": "libxext"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxext/"],
     "version": "1.3.4"
   },
   "xorg-libxrandr": {
+    "aliases": {
+      "homebrew": "libxrandr"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrandr/"],
     "version": "1.5.2"
   },
   "xorg-libxrender": {
+    "aliases": {
+      "homebrew": "libxrender"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrender/"],
     "version": "0.9.10"
   },
   "xorg-libxt": {
+    "aliases": {
+      "homebrew": "libxt"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxt/"],
     "version": "1.2.1"
   },
   "xorg-xcb-proto": {
+    "aliases": {
+      "homebrew": "xcb-proto"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/proto/xcbproto/"],
     "version": "1.15.2"
   },
   "xorg-xorgproto": {
+    "aliases": {
+      "homebrew": "xorgproto"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-09-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/proto/xorgproto/"],
-    "version": "2022.1"
+    "version": "2022.2"
   },
   "xorg-xtrans": {
+    "aliases": {
+      "homebrew": "xtrans"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxtrans/"],
     "version": "1.4.0"
@@ -4133,6 +4240,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.13.0"
   },
@@ -4142,6 +4250,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/Cyan4973/xxHash/"],
     "version": "0.8.1"
@@ -4152,6 +4261,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["xz.1"],
     "url": ["https://tukaani.org/xz/"],
     "version": "5.2.6"
@@ -4162,6 +4272,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["node"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://yarnpkg.com/"],
     "version": "1.22.19"
@@ -4172,6 +4283,7 @@
     "conservative": false,
     "date": "2022-09-09",
     "dependencies": ["go"],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/mikefarah/yq/"],
     "version": "4.27.5"
@@ -4182,6 +4294,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "version": "2022.9.1"
   },
@@ -4191,6 +4304,7 @@
     "conservative": false,
     "date": "2022-09-09",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.31.4"
   },
@@ -4200,6 +4314,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.zlib.net/"],
     "version": "1.2.12"
@@ -4210,6 +4325,7 @@
     "conservative": false,
     "date": "2022-09-20",
     "dependencies": ["rust"],
+    "homebrew": true,
     "man1": [],
     "version": "0.8.3"
   },
@@ -4219,6 +4335,7 @@
     "conservative": false,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["zsh.1"],
     "url": ["http://zsh.sourceforge.net/Arc/source.html"],
     "version": "5.9"
@@ -4237,6 +4354,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"],
     "url": ["https://facebook.github.io/zstd/"],
     "version": "1.5.2"
