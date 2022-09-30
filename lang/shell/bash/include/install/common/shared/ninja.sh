@@ -28,15 +28,5 @@ tags/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     "${app['python']}" ./configure.py --bootstrap
     koopa_cp --target-directory="${dict['prefix']}/bin" 'ninja'
-    # FIXME Need to copy ninja to bin.
-    # Alternative CMake approach.
-    # > cmake -Bbuild-cmake
-    # > cmake --build build-cmake
-    # > ./build-cmake/ninja_test
-    # Alternative pip approach.
-    # > koopa_install_app_subshell \
-    # >     --installer='python-venv' \
-    # >     --name='ninja' \
-    # >     "$@"
     return 0
 }
