@@ -1878,9 +1878,10 @@
     "homebrew": true,
     "large": true,
     "man1": [],
+    "notes": ["1.8.1 installer is currently failing on macOS."],
     "outdated": false,
     "url": ["https://github.com/JuliaLang/julia/"],
-    "version": "1.8.1"
+    "version": "1.8.0"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
@@ -2577,6 +2578,7 @@
     "conservative": false,
     "date": "2022-08-30",
     "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python"],
+    "homebrew": true,
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
     "version": "0.7.2"
@@ -2587,6 +2589,7 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://ftp.gnu.org/gnu/nettle/"],
     "version": "3.8.1"
@@ -2597,6 +2600,7 @@
     "conservative": false,
     "date": "2022-07-27",
     "dependencies": ["conda"],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "version": "22.04.5"
@@ -2605,41 +2609,43 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://nghttp2.org/"],
-    "version": "1.48.0"
+    "version": "1.50.0"
   },
   "nim": {
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://nim-lang.org/"],
-    "version": "1.6.6"
+    "version": "1.6.8"
   },
   "ninja": {
     "bin": ["ninja"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-09-29",
     "dependencies": ["python"],
     "man1": [],
-    "version": "1.10.2.3"
+    "version": "1.11.1"
   },
   "nmap": {
     "bin": ["nmap"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-09-29",
     "dependencies": [],
     "man1": [],
     "url": "https://nmap.org/",
-    "version": "7.92"
+    "version": "7.93"
   },
   "node": {
     "bin": ["node", "npm", "npx"],
