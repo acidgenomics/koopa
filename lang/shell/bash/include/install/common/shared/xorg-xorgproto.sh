@@ -3,7 +3,7 @@
 main() {
     # """
     # Install xorgproto.
-    # @note Updated 2022-04-25.
+    # @note Updated 2022-09-30.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -22,7 +22,7 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://xorg.freedesktop.org/archive/individual/\
 proto/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
