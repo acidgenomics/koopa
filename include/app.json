@@ -2634,6 +2634,7 @@
     "conservative": false,
     "date": "2022-09-29",
     "dependencies": ["python"],
+    "homebrew": true,
     "man1": [],
     "version": "1.11.1"
   },
@@ -2643,6 +2644,7 @@
     "conservative": false,
     "date": "2022-09-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": "https://nmap.org/",
     "version": "7.93"
@@ -2653,7 +2655,10 @@
     "conservative": true,
     "date": "2022-09-27",
     "dependencies": [],
+    "homebrew": true,
+    "lts": true,
     "man1": ["node.1", "npm.1", "npx.1"],
+    "outdated": false,
     "reverse_dependencies": [
       "bash-language-server",
       "gtop",
@@ -2670,6 +2675,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://gnupg.org/download/"],
     "version": "1.6"
@@ -2678,10 +2684,11 @@
     "bin": ["nu"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-07",
+    "date": "2022-09-30",
     "dependencies": ["openssl", "rust"],
+    "homebrew": true,
     "man1": [],
-    "version": "0.68.0"
+    "version": "0.69.1"
   },
   "oniguruma": {
     "bin": [],
@@ -2689,6 +2696,7 @@
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://github.com/kkos/oniguruma/"],
     "version": "6.9.8"
@@ -2700,6 +2708,7 @@
     "conservative": false,
     "date": "2022-09-09",
     "dependencies": ["anaconda"],
+    "homebrew": false,
     "man1": [],
     "url": ["https://openbb.co/"],
     "version": "1.8.0"
@@ -2710,16 +2719,22 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://www.openblas.net/"],
     "version": "0.3.21"
   },
   "openjdk": {
+    "aliases": {
+      "homebrew": "temurin"
+    },
     "bin": ["jar", "java", "javac"],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-09-28",
     "dependencies": [],
+    "homebrew": true,
+    "lts": true,
     "man1": ["jar.1", "java.1", "javac.1"],
     "outdated": false,
     "reverse_dependencies": ["apache-spark", "bfg", "graphviz", "r"],
@@ -2732,16 +2747,21 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "url": ["https://www.openssh.com/"],
     "version": "9.0p1"
   },
   "openssl1": {
+    "aliases": {
+      "homebrew": "openssl@1.1"
+    },
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "notes": ["1.1.1q fails to build on macOS."],
     "outdated": true,
@@ -2749,11 +2769,15 @@
     "version": "1.1.1p"
   },
   "openssl3": {
+    "aliases": {
+      "homebrew": "openssl@3"
+    },
     "bin": ["openssl"],
     "build_dependencies": [],
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": [],
+    "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://www.openssl.org/source/"],
@@ -2778,6 +2802,7 @@
     "conservative": false,
     "date": "2022-08-22",
     "dependencies": [],
+    "homebrew": false,
     "man1": [],
     "url": ["https://pandoc.org/"],
     "version": "2.19.2"
