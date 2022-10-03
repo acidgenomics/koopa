@@ -5,10 +5,18 @@
 # FIXME Improve labeling of dependencies here and in app.json.
 # FIXME Rework this install recipe as an algorithm that uses app.json.
 
+# FIXME zlib before libxml2
+# FIXME libiconv before libxml2
+# FIXME gettext before git
+# FIXME libunistring before gettext
+# FIXME mpdecimal before python
+# FIXME unzip before python
+# FIXME tcl-tk before python
+
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-09-23.
+    # @note Updated 2022-10-03.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -54,8 +62,6 @@ koopa_build_all_apps() {
         'libtool'
         # deps: m4, make.
         'bison'
-        # deps: make, patch, pkg-config.
-        'bash'
         # deps: attr (linux), gmp, gperf, make.
         'coreutils'
         # deps: make.
@@ -88,6 +94,8 @@ koopa_build_all_apps() {
         'zstd'
         # deps: ca-certificates, make, openssl3, pkg-config, zlib, zstd.
         'curl'
+        # deps: coreutils, curl, make, patch, pkg-config.
+        'bash'
         # deps: autoconf, curl, gettext, make, openssl3, zlib.
         'git'
         # deps: cmake, gcc, pkg-config.

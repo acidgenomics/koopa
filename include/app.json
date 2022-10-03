@@ -26,13 +26,13 @@
     "bin": ["airflow"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-28",
+    "date": "2022-10-02",
     "dependencies": ["python"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.4.0"
+    "version": "2.4.1"
   },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
@@ -3830,11 +3830,11 @@
     "bin": ["tldr"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-02",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "1.5.0"
+    "version": "1.6.0"
   },
   "texinfo": {
     "bin": [
