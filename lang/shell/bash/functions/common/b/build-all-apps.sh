@@ -12,6 +12,7 @@
 # FIXME mpdecimal before python
 # FIXME unzip before python
 # FIXME tcl-tk before python
+# FIXME tar before r
 
 koopa_build_all_apps() {
     # """
