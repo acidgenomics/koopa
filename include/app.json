@@ -1930,7 +1930,7 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-23",
+    "date": "2022-10-04",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
@@ -1939,7 +1939,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.1.0"
+    "version": "2.4.0"
   },
   "less": {
     "bin": ["less"],
@@ -2304,6 +2304,7 @@
     "homebrew": true,
     "large": true,
     "man1": [],
+    "outdated": true,
     "url": ["https://releases.llvm.org/"],
     "version": "15.0.1"
   },
