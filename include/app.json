@@ -1529,7 +1529,7 @@
     "date": "2022-09-29",
     "dependencies": [],
     "homebrew": true,
-    "man1": ["gegrep.1", "gfgrep.1", "ggrep.1"],
+    "man1": ["ggrep.1"],
     "url": ["https://www.gnu.org/software/grep/"],
     "version": "3.8"
   },
@@ -1584,12 +1584,12 @@
     "bin": ["gum"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-09-23",
+    "date": "2022-10-05",
     "dependencies": [],
     "homebrew": true,
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.6.0"
+    "version": "0.7.0"
   },
   "gzip": {
     "bin": [
