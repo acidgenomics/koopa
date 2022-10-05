@@ -111,6 +111,7 @@ main() {
             dict['check_key']=0
             ;;
         'gnutls')
+            dict['import_gpg_keys']=1 # FIXME
             dict['maj_min_ver']="$( \
                 koopa_major_minor_version "${dict['version']}" \
             )"
