@@ -11158,7 +11158,9 @@ koopa_install_all_binary_apps() {
         ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['large']=0
     )
+    export PATH="${dict['bs_bin_prefix']}:${PATH:-}"
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
+    PATH="$PATH" "${app['koopa']}" install 'aws-cli'
     apps=()
     koopa_is_linux && apps+=('attr')
     apps+=(
@@ -11188,7 +11190,6 @@ koopa_install_all_binary_apps() {
         'autoconf'
         'autoflake'
         'automake'
-        'aws-cli'
         'bash'
         'bash-language-server'
         'bashcov'
@@ -11463,8 +11464,7 @@ koopa_install_all_binary_apps() {
     fi
     for app_name in "${apps[@]}"
     do
-        PATH="${dict['bs_bin_prefix']}:${PATH:-}" \
-            "${app['koopa']}" install --binary "$app_name"
+        PATH="$PATH" "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
