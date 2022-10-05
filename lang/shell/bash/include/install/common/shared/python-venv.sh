@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This needs to link 'libexec/share/man/man1', if defined.
-
 main() {
     # """
     # Install a Python package as a virtual environment application.
