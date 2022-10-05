@@ -395,7 +395,6 @@ __koopa_complete() {
                     ;;
                 'system')
                     args=(
-                        'build-all-apps'
                         'cache-functions'
                         'check'
                         'delete-cache'
