@@ -5,7 +5,7 @@
 main() {
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2022-03-23.
+    # @note Updated 2022-10-05.
     #
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
@@ -26,6 +26,7 @@ main() {
     # """
     local app dict install_args
     koopa_assert_has_no_args "$#"
+    koopa_activate_build_opt_prefix 'bzip2'
     declare -A app=(
         ['python']="$(koopa_locate_python)"
     )
@@ -34,12 +35,11 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    dict['install_dir']="${dict['prefix']}/install"
-    dict['tools_dir']="${dict['prefix']}/tools"
+    dict['install_dir']="${dict['prefix']}/libexec"
+    dict['tools_dir']="${dict['prefix']}/bin"
     dict['file']='bcbio_nextgen_install.py'
     dict['url']="https://raw.github.com/bcbio/bcbio-nextgen/master/\
 scripts/${dict['file']}"
-    koopa_alert_coffee_time
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_mkdir "${dict['prefix']}"
     install_args=(
@@ -54,35 +54,32 @@ scripts/${dict['file']}"
     koopa_dl 'Install args' "${install_args[*]}"
     "${app['python']}" "${dict['file']}" "${install_args[@]}"
     # Version-specific hotfixes.
-    case "${dict['version']}" in
-        '1.2.9')
-            koopa_alert_info 'Fixing bcftools and samtools.'
-            app['mamba']="${dict['install_dir']}/anaconda/bin/mamba"
-            "${app['mamba']}" install --yes \
-                --name 'base' \
-                'bcftools==1.15' \
-                'samtools==1.15'
-            # bcftools / samtools (htslib) are also currently messed up
-            # in these other conda environments:
-            # > "${app['mamba']}" install --yes \
-            # >     --name 'bwakit' \
-            # >     'samtools==1.15'
-            # > "${app['mamba']}" install --yes \
-            # >     --name 'htslib1.12_py3.9' \
-            # >     'samtools==1.15'
-            # > "${app['mamba']}" install --yes \
-            # >     --name 'python2' \
-            # >     'bcftools==1.15' 'samtools==1.15'
-            # > "${app['mamba']}" install --yes \
-            # >     --name 'python3.6' \
-            # >     'samtools==1.15'
-            ;;
-    esac
-    if koopa_is_docker
-    then
-        app['conda']="${dict['install_dir']}/anaconda/bin/conda"
-        koopa_assert_is_installed "${app['conda']}"
-        "${app['conda']}" clean --yes --tarballs
-    fi
+    # > case "${dict['version']}" in
+    # >     '1.2.9')
+    # >         koopa_alert_info 'Fixing bcftools and samtools.'
+    # >         app['mamba']="${dict['install_dir']}/anaconda/bin/mamba"
+    # >         "${app['mamba']}" install --yes \
+    # >             --name 'base' \
+    # >             'bcftools==1.15' \
+    # >             'samtools==1.15'
+    # >         # bcftools / samtools (htslib) are also currently messed up
+    # >         # in these other conda environments:
+    # >         # > "${app['mamba']}" install --yes \
+    # >         # >     --name 'bwakit' \
+    # >         # >     'samtools==1.15'
+    # >         # > "${app['mamba']}" install --yes \
+    # >         # >     --name 'htslib1.12_py3.9' \
+    # >         # >     'samtools==1.15'
+    # >         # > "${app['mamba']}" install --yes \
+    # >         # >     --name 'python2' \
+    # >         # >     'bcftools==1.15' 'samtools==1.15'
+    # >         # > "${app['mamba']}" install --yes \
+    # >         # >     --name 'python3.6' \
+    # >         # >     'samtools==1.15'
+    # >         ;;
+    # > esac
+    app['conda']="${dict['install_dir']}/anaconda/bin/conda"
+    koopa_assert_is_installed "${app['conda']}"
+    "${app['conda']}" clean --yes --tarballs
     return 0
 }
