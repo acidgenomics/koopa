@@ -11211,6 +11211,8 @@ koopa_install_all_binary_apps() {
         'conda'
         'convmv'
         'cpufetch'
+        'csvkit'
+        'csvtk'
         'delta'
         'difftastic'
         'dog'
@@ -11378,6 +11380,7 @@ koopa_install_all_binary_apps() {
         'utf8proc'
         'vim'
         'visidata'
+        'vulture'
         'wget'
         'which'
         'xorg-libice'
@@ -11419,6 +11422,8 @@ koopa_install_all_binary_apps() {
     then
         apps+=(
             'anaconda'
+            'apache-airflow'
+            'apache-spark'
             'azure-cli'
             'bamtools'
             'bedtools'
