@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to link 'libexec/share/man/man1', if defined.
+
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-09-26.
+    # @note Updated 2022-10-05.
     # """
-    local app bin_name bin_names dict
+    local app bin_name bin_names dict man1_name man1_names
     koopa_assert_has_no_args "$#"
     declare -A app=(
         ['cut']="$(koopa_locate_cut)"
@@ -63,5 +65,22 @@ ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
             "${dict['libexec']}/bin/${bin_name}" \
             "${dict['prefix']}/bin/${bin_name}"
     done
+    readarray -t man1_names <<< "$( \
+        koopa_grep \
+            --file="${dict['record_file']}" \
+            --pattern='^\.\./\.\./\.\./share/man/man1/[^/]+,' \
+            --regex \
+        | "${app['cut']}" -d ',' -f '1' \
+        | "${app['cut']}" -d '/' -f '7' \
+    )"
+    if koopa_is_array_non_empty "${man1_names[@]:-}"
+    then
+        for man1_name in "${man1_names[@]}"
+        do
+            koopa_ln \
+                "${dict['libexec']}/share/man/man1/${man1_name}" \
+                "${dict['prefix']}/share/man/man1/${man1_name}"
+        done
+    fi
     return 0
 }
