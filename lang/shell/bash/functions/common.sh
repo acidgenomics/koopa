@@ -3199,342 +3199,6 @@ koopa_brew_version() {
     return 0
 }
 
-koopa_build_all_apps() {
-    local app_name apps koopa push_apps
-    koopa_assert_has_no_args "$#"
-    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
-    koopa="$(koopa_locate_koopa)"
-    [[ -x "$koopa" ]] || return 1
-    apps=()
-    apps+=(
-        'pkg-config'
-        'make'
-    )
-    koopa_is_linux && apps+=(
-        'attr'
-    )
-    apps+=(
-        'patch'
-        'xz'
-        'm4'
-        'gmp'
-        'gperf'
-        'mpfr'
-        'mpc'
-        'gcc'
-        'autoconf'
-        'automake'
-        'libtool'
-        'bison'
-        'bash'
-        'coreutils'
-        'findutils'
-        'sed'
-        'ncurses'
-        'icu4c'
-        'readline'
-        'libxml2'
-        'gettext'
-        'zlib'
-        'ca-certificates'
-        'openssl1'
-        'openssl3'
-        'cmake'
-        'zstd'
-        'curl'
-        'git'
-        'lapack'
-        'libffi'
-        'libjpeg-turbo'
-        'libpng'
-        'libtiff'
-        'openblas'
-        'bzip2'
-        'pcre'
-        'pcre2'
-        'expat'
-        'gdbm'
-        'sqlite'
-        'python'
-        'xorg-xorgproto'
-        'xorg-xcb-proto'
-        'xorg-libpthread-stubs'
-        'xorg-xtrans'
-        'xorg-libice'
-        'xorg-libsm'
-        'xorg-libxau'
-        'xorg-libxdmcp'
-        'xorg-libxcb'
-        'xorg-libx11'
-        'xorg-libxext'
-        'xorg-libxrender'
-        'xorg-libxt'
-        'xorg-libxrandr'
-        'tcl-tk'
-        'perl'
-        'texinfo'
-        'meson'
-        'ninja'
-        'glib'
-        'freetype'
-        'fontconfig'
-        'lzo'
-        'pixman'
-        'cairo'
-        'hdf5'
-        'openjdk'
-        'libssh2'
-        'libgit2'
-        'jpeg'
-        'nettle'
-        'libzip'
-        'imagemagick'
-        'graphviz'
-        'geos'
-        'proj'
-        'gdal'
-        'fribidi'
-        'harfbuzz'
-        'gawk'
-        'libuv'
-        'conda'
-        'udunits'
-        'r'
-        'apr'
-        'apr-util'
-        'armadillo'
-        'aspell'
-        'bc'
-        'flex'
-        'binutils'
-        'cpufetch'
-        'exiftool'
-        'libtasn1'
-        'libunistring'
-        'texinfo'
-        'gnutls'
-        'emacs'
-        'vim'
-        'lua'
-        'luarocks'
-        'libevent'
-        'utf8proc'
-        'tmux'
-        'htop'
-        'boost'
-        'fish'
-        'zsh'
-        'lame'
-        'ffmpeg'
-        'flac'
-        'fltk'
-        'libgpg-error'
-        'libgcrypt'
-        'libassuan'
-        'libksba'
-        'npth'
-    )
-    koopa_is_linux && apps+=('pinentry')
-    apps+=(
-        'gnupg'
-        'grep'
-        'groff'
-        'gsl'
-        'gzip'
-        'oniguruma'
-        'jq'
-        'less'
-        'lesspipe'
-        'libidn'
-        'libpipeline'
-        'lz4'
-        'man-db'
-        'neofetch'
-        'nim'
-        'parallel'
-        'password-store'
-        'taglib'
-        'pytaglib'
-        'pytest'
-        'xxhash'
-        'rsync'
-        'scons'
-        'serf' # deps: scons.
-        'ruby' # deps: openssl3, zlib.
-        'subversion' # deps: ruby, serf.
-        'r-devel' # deps: subversion.
-        'shellcheck'
-        'shunit2'
-        'sox'
-        'stow'
-        'tar'
-        'tree'
-        'units'
-        'wget'
-        'which'
-        'libgeotiff'
-        'swig'
-        'libiconv'
-    )
-    koopa_is_linux && apps+=('elfutils')
-    apps+=(
-        'llvm'
-        'go'
-        'chezmoi' # deps: go
-        'fzf' # deps: go
-        'aws-cli'
-        'azure-cli'
-        'google-cloud-sdk'
-        'autoflake'
-        'black'
-        'bpytop'
-        'flake8'
-        'glances'
-        'ipython'
-        'isort'
-        'latch'
-        'pipx'
-        'poetry'
-        'py-spy'
-        'pycodestyle'
-        'pyflakes'
-        'pygments'
-        'pylint'
-        'ranger-fm'
-        'ruff'
-        'yt-dlp'
-        'libedit'
-        'openssh'
-        'c-ares'
-        'jemalloc'
-        'libev'
-        'nghttp2'
-        'node'
-        'rust'
-        'julia'
-        'bat'
-        'broot'
-        'delta'
-        'difftastic'
-        'dog'
-        'du-dust'
-        'exa'
-        'fd-find'
-        'hyperfine'
-        'lsd'
-        'mcfly'
-        'mdcat'
-        'nushell'
-        'procs'
-        'ripgrep'
-        'ripgrep-all'
-        'starship'
-        'tealdeer'
-        'tokei'
-        'tree-sitter'
-        'tuc'
-        'xsv'
-        'zellij'
-        'zoxide'
-        'chemacs'
-        'cheat'
-        'gum'
-        'yq'
-        'bash-language-server'
-        'gtop'
-        'prettier'
-        'ack'
-        'rename'
-        'bashcov'
-        'colorls'
-        'ronn'
-        'pyenv'
-        'rbenv'
-        'dotfiles'
-        'ensembl-perl-api'
-        'sra-tools'
-        'yarn'
-        'asdf'
-        'bfg'
-        'convmv'
-        'editorconfig'
-        'markdownlint-cli'
-        'nmap'
-        'rmate'
-        'unzip'
-        'neovim'
-    )
-    if ! koopa_is_aarch64
-    then
-        apps+=(
-            'anaconda'
-            'haskell-ghcup'
-            'haskell-stack'
-            'hadolint'
-            'pandoc'
-            'bioconda-utils'
-            'bamtools'
-            'bedtools'
-            'bioawk'
-            'bowtie2'
-            'bustools'
-            'deeptools'
-            'entrez-direct'
-            'fastqc'
-            'ffq'
-            'gffutils'
-            'gget'
-            'ghostscript'
-            'gseapy'
-            'hisat2'
-            'htseq'
-            'jupyterlab'
-            'kallisto'
-            'multiqc'
-            'nextflow'
-            'salmon'
-            'sambamba'
-            'samtools'
-            'snakefmt'
-            'snakemake'
-            'star'
-            'visidata'
-        )
-    fi
-    if koopa_is_linux
-    then
-        apps+=(
-            'apptainer'
-            'lmod'
-        )
-        if ! koopa_is_aarch64
-        then
-            apps+=(
-                'aspera-connect'
-                'docker-credential-pass'
-            )
-        fi
-    fi
-    for app_name in "${apps[@]}"
-    do
-        local prefix
-        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        koopa_alert "$prefix"
-        [[ -d "$prefix" ]] && continue
-        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
-            "$koopa" install "$app_name"
-        push_apps+=("$app_name")
-    done
-    if koopa_is_array_non_empty "${push_apps[@]:-}"
-    then
-        for app_name in "${push_apps[@]}"
-        do
-            koopa_push_app_build "$app_name" || true
-        done
-    fi
-    return 0
-}
-
 koopa_cache_functions_dir() {
     local app prefix
     koopa_assert_has_args "$#"
@@ -4407,6 +4071,10 @@ koopa_cli_install() {
             koopa_install_all_apps
             return 0
             ;;
+        '--all-binary')
+            koopa_install_all_binary_apps
+            return 0
+            ;;
     esac
     flags=()
     pos=()
@@ -4548,7 +4216,6 @@ koopa_cli_system() {
             dict['key']='which-realpath'
             shift 1
             ;;
-        'build-all-apps' | \
         'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
@@ -11139,6 +10806,348 @@ koopa_install_ack() {
 }
 
 koopa_install_all_apps() {
+    local app_name apps koopa push_apps
+    koopa_assert_has_no_args "$#"
+    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
+    koopa="$(koopa_locate_koopa)"
+    [[ -x "$koopa" ]] || return 1
+    apps=()
+    apps+=(
+        'pkg-config'
+        'make'
+    )
+    koopa_is_linux && apps+=(
+        'attr'
+    )
+    apps+=(
+        'zlib'
+        'patch'
+        'tar'
+        'xz'
+        'bzip2'
+        'unzip'
+        'm4'
+        'gmp'
+        'gperf'
+        'mpfr'
+        'mpc'
+        'gcc'
+        'autoconf'
+        'automake'
+        'libtool'
+        'bison'
+        'coreutils'
+        'findutils'
+        'sed'
+        'ncurses'
+        'icu4c'
+        'readline'
+        'libiconv'
+        'libunistring'
+        'libxml2'
+        'gettext'
+        'ca-certificates'
+        'openssl1'
+        'openssl3'
+        'cmake'
+        'zstd'
+        'curl'
+        'bash'
+        'git'
+        'lapack'
+        'libffi'
+        'libjpeg-turbo'
+        'libpng'
+        'libtiff'
+        'openblas'
+        'pcre'
+        'pcre2'
+        'expat'
+        'gdbm'
+        'sqlite'
+        'mpdecimal'
+        'xorg-xorgproto'
+        'xorg-xcb-proto'
+        'xorg-libpthread-stubs'
+        'xorg-xtrans'
+        'xorg-libice'
+        'xorg-libsm'
+        'xorg-libxau'
+        'xorg-libxdmcp'
+        'xorg-libxcb'
+        'xorg-libx11'
+        'xorg-libxext'
+        'xorg-libxrender'
+        'xorg-libxt'
+        'xorg-libxrandr'
+        'tcl-tk'
+        'python'
+        'perl'
+        'texinfo'
+        'meson'
+        'ninja'
+        'glib'
+        'freetype'
+        'fontconfig'
+        'lzo'
+        'pixman'
+        'cairo'
+        'hdf5'
+        'openjdk'
+        'libssh2'
+        'libgit2'
+        'jpeg'
+        'nettle'
+        'libzip'
+        'imagemagick'
+        'graphviz'
+        'geos'
+        'proj'
+        'gdal'
+        'fribidi'
+        'harfbuzz'
+        'gawk'
+        'libuv'
+        'conda'
+        'udunits'
+        'r'
+        'apr'
+        'apr-util'
+        'armadillo'
+        'aspell'
+        'bc'
+        'flex'
+        'binutils'
+        'cpufetch'
+        'exiftool'
+        'libtasn1'
+        'texinfo'
+        'gnutls'
+        'emacs'
+        'vim'
+        'lua'
+        'luarocks'
+        'libevent'
+        'utf8proc'
+        'tmux'
+        'htop'
+        'boost'
+        'fish'
+        'zsh'
+        'lame'
+        'ffmpeg'
+        'flac'
+        'fltk'
+        'libgpg-error'
+        'libgcrypt'
+        'libassuan'
+        'libksba'
+        'npth'
+    )
+    koopa_is_linux && apps+=('pinentry')
+    apps+=(
+        'gnupg'
+        'grep'
+        'groff'
+        'gsl'
+        'gzip'
+        'oniguruma'
+        'jq'
+        'less'
+        'lesspipe'
+        'libidn'
+        'libpipeline'
+        'lz4'
+        'man-db'
+        'neofetch'
+        'nim'
+        'parallel'
+        'password-store'
+        'taglib'
+        'pytaglib'
+        'pytest'
+        'xxhash'
+        'rsync'
+        'scons'
+        'serf'
+        'ruby'
+        'subversion'
+        'r-devel'
+        'shellcheck'
+        'shunit2'
+        'sox'
+        'stow'
+        'tree'
+        'units'
+        'wget'
+        'which'
+        'libgeotiff'
+        'swig'
+    )
+    koopa_is_linux && apps+=('elfutils')
+    apps+=(
+        'llvm'
+        'go'
+        'chezmoi'
+        'fzf'
+        'aws-cli'
+        'azure-cli'
+        'google-cloud-sdk'
+        'autoflake'
+        'black'
+        'bpytop'
+        'flake8'
+        'glances'
+        'ipython'
+        'isort'
+        'latch'
+        'pipx'
+        'poetry'
+        'py-spy'
+        'pycodestyle'
+        'pyflakes'
+        'pygments'
+        'pylint'
+        'ranger-fm'
+        'ruff'
+        'yt-dlp'
+        'libedit'
+        'openssh'
+        'c-ares'
+        'jemalloc'
+        'libev'
+        'nghttp2'
+        'node'
+        'rust'
+        'julia'
+        'bat'
+        'broot'
+        'delta'
+        'difftastic'
+        'dog'
+        'du-dust'
+        'exa'
+        'fd-find'
+        'hyperfine'
+        'lsd'
+        'mcfly'
+        'mdcat'
+        'nushell'
+        'procs'
+        'ripgrep'
+        'ripgrep-all'
+        'starship'
+        'tealdeer'
+        'tokei'
+        'tree-sitter'
+        'tuc'
+        'xsv'
+        'zellij'
+        'zoxide'
+        'chemacs'
+        'cheat'
+        'gum'
+        'yq'
+        'bash-language-server'
+        'gtop'
+        'prettier'
+        'ack'
+        'rename'
+        'bashcov'
+        'colorls'
+        'ronn'
+        'pyenv'
+        'rbenv'
+        'dotfiles'
+        'ensembl-perl-api'
+        'sra-tools'
+        'yarn'
+        'asdf'
+        'bfg'
+        'convmv'
+        'editorconfig'
+        'markdownlint-cli'
+        'nmap'
+        'rmate'
+        'neovim'
+        'apache-airflow'
+        'apache-spark'
+        'csvkit'
+        'csvtk'
+        'vulture'
+    )
+    if ! koopa_is_aarch64
+    then
+        apps+=(
+            'haskell-ghcup'
+            'haskell-stack'
+            'hadolint'
+            'pandoc'
+            'anaconda'
+            'bioconda-utils'
+            'bamtools'
+            'bedtools'
+            'bioawk'
+            'bowtie2'
+            'bustools'
+            'deeptools'
+            'entrez-direct'
+            'fastqc'
+            'ffq'
+            'gffutils'
+            'gget'
+            'ghostscript'
+            'gseapy'
+            'hisat2'
+            'htseq'
+            'jupyterlab'
+            'kallisto'
+            'multiqc'
+            'nextflow'
+            'salmon'
+            'sambamba'
+            'samtools'
+            'snakefmt'
+            'snakemake'
+            'star'
+            'visidata'
+        )
+    fi
+    if koopa_is_linux
+    then
+        apps+=(
+            'apptainer'
+            'lmod'
+        )
+        if ! koopa_is_aarch64
+        then
+            apps+=(
+                'aspera-connect'
+                'docker-credential-pass'
+            )
+        fi
+    fi
+    for app_name in "${apps[@]}"
+    do
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        koopa_alert "$prefix"
+        [[ -d "$prefix" ]] && continue
+        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
+            "$koopa" install "$app_name"
+        push_apps+=("$app_name")
+    done
+    if koopa_is_array_non_empty "${push_apps[@]:-}"
+    then
+        for app_name in "${push_apps[@]}"
+        do
+            koopa_push_app_build "$app_name" || true
+        done
+    fi
+    return 0
+}
+
+koopa_install_all_binary_apps() {
     local app_name apps dict
     koopa_assert_has_no_args "$#"
     declare -A app
@@ -11149,7 +11158,9 @@ koopa_install_all_apps() {
         ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['large']=0
     )
+    export PATH="${dict['bs_bin_prefix']}:${PATH:-}"
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
+    PATH="$PATH" "${app['koopa']}" install 'aws-cli'
     apps=()
     koopa_is_linux && apps+=('attr')
     apps+=(
@@ -11179,7 +11190,6 @@ koopa_install_all_apps() {
         'autoconf'
         'autoflake'
         'automake'
-        'aws-cli'
         'bash'
         'bash-language-server'
         'bashcov'
@@ -11202,6 +11212,8 @@ koopa_install_all_apps() {
         'conda'
         'convmv'
         'cpufetch'
+        'csvkit'
+        'csvtk'
         'delta'
         'difftastic'
         'dog'
@@ -11369,6 +11381,7 @@ koopa_install_all_apps() {
         'utf8proc'
         'vim'
         'visidata'
+        'vulture'
         'wget'
         'which'
         'xorg-libice'
@@ -11410,6 +11423,8 @@ koopa_install_all_apps() {
     then
         apps+=(
             'anaconda'
+            'apache-airflow'
+            'apache-spark'
             'azure-cli'
             'bamtools'
             'bedtools'
@@ -11449,8 +11464,7 @@ koopa_install_all_apps() {
     fi
     for app_name in "${apps[@]}"
     do
-        PATH="${dict['bs_bin_prefix']}:${PATH:-}" \
-            "${app['koopa']}" install --binary "$app_name"
+        PATH="$PATH" "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
@@ -11872,9 +11886,16 @@ ${dict['version2']}"
                 '0')
                     local app env_vars path_arr
                     declare -A app
-                    app['bash']="$(koopa_locate_bash --allow-system)"
                     app['env']="$(koopa_locate_env --allow-system)"
                     app['tee']="$(koopa_locate_tee --allow-system)"
+                    if koopa_is_macos
+                    then
+                        dict['bs_bin']="${dict['koopa_prefix']}/bootstrap/bin"
+                        koopa_assert_is_dir "${dict['bs_bin']}"
+                        app['bash']="${dict['bs_bin']}/bash"
+                    else
+                        app['bash']="$(koopa_locate_bash --allow-system)"
+                    fi
                     [[ -x "${app['bash']}" ]] || return 1
                     [[ -x "${app['env']}" ]] || return 1
                     [[ -x "${app['tee']}" ]] || return 1

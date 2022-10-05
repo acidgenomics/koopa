@@ -10,7 +10,7 @@
 main() {
     # """
     # Install HarfBuzz.
-    # @note Updated 2022-07-24.
+    # @note Updated 2022-10-03.
     #
     # @seealso
     # - https://harfbuzz.github.io/building.html
@@ -31,7 +31,7 @@ main() {
         'zlib' \
         'gettext' \
         'libffi' \
-        'pcre' \
+        'pcre2' \
         'glib' \
         'freetype' \
         'icu4c'

@@ -3,7 +3,7 @@
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2022-07-22.
+    # @note Updated 2022-10-05.
     #
     # @examples
     # > koopa_cli_install --binary --reinstall --verbose 'python' 'tmux'
@@ -22,6 +22,10 @@ koopa_cli_install() {
             ;;
         '--all')
             koopa_install_all_apps
+            return 0
+            ;;
+        '--all-binary')
+            koopa_install_all_binary_apps
             return 0
             ;;
     esac

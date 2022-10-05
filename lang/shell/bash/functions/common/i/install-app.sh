@@ -272,9 +272,16 @@ ${dict['version2']}"
                 '0')
                     local app env_vars path_arr
                     declare -A app
-                    app['bash']="$(koopa_locate_bash --allow-system)"
                     app['env']="$(koopa_locate_env --allow-system)"
                     app['tee']="$(koopa_locate_tee --allow-system)"
+                    if koopa_is_macos
+                    then
+                        dict['bs_bin']="${dict['koopa_prefix']}/bootstrap/bin"
+                        koopa_assert_is_dir "${dict['bs_bin']}"
+                        app['bash']="${dict['bs_bin']}/bash"
+                    else
+                        app['bash']="$(koopa_locate_bash --allow-system)"
+                    fi
                     [[ -x "${app['bash']}" ]] || return 1
                     [[ -x "${app['env']}" ]] || return 1
                     [[ -x "${app['tee']}" ]] || return 1

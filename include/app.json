@@ -26,13 +26,13 @@
     "bin": ["airflow"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-28",
+    "date": "2022-10-02",
     "dependencies": ["python"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.4.0"
+    "version": "2.4.1"
   },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
@@ -1930,7 +1930,7 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-23",
+    "date": "2022-10-04",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
@@ -1939,7 +1939,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.1.0"
+    "version": "2.4.0"
   },
   "less": {
     "bin": ["less"],
@@ -2304,6 +2304,7 @@
     "homebrew": true,
     "large": true,
     "man1": [],
+    "outdated": true,
     "url": ["https://releases.llvm.org/"],
     "version": "15.0.1"
   },
@@ -3658,12 +3659,12 @@
     "bin": ["snakemake"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-10-05",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "version": "7.14.0"
+    "version": "7.15.1"
   },
   "sox": {
     "bin": ["sox"],
@@ -3830,11 +3831,11 @@
     "bin": ["tldr"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-02",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "1.5.0"
+    "version": "1.6.0"
   },
   "texinfo": {
     "bin": [
