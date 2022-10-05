@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to update recipe to include new apps.
-
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
@@ -77,6 +75,8 @@ koopa_install_all_binary_apps() {
         'conda'
         'convmv'
         'cpufetch'
+        'csvkit'
+        'csvtk'
         'delta'
         'difftastic'
         'dog'
@@ -251,6 +251,7 @@ koopa_install_all_binary_apps() {
         'utf8proc'
         'vim'
         'visidata'
+        'vulture'
         'wget'
         'which'
         'xorg-libice'
@@ -295,6 +296,8 @@ koopa_install_all_binary_apps() {
     then
         apps+=(
             'anaconda'
+            'apache-airflow'
+            'apache-spark'
             'azure-cli'
             'bamtools'
             'bedtools'
