@@ -14,10 +14,16 @@
 # FIXME tcl-tk before python
 # FIXME tar before r
 
+#  FAIL | apache-airflow
+#  FAIL | apache-spark
+#  FAIL | csvkit
+#  FAIL | csvtk
+#  FAIL | vulture
+
 koopa_build_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-10-03.
+    # @note Updated 2022-10-04.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -409,9 +415,14 @@ koopa_build_all_apps() {
         # > 'msgpack'
         # > 'tree-sitter'
         # > 'unibilium'
-        # FIXME Ensure we install yarn before this, as a number of plugins
-        # depend on it (e.g. for coc, prettier).
+        # Ensure we install yarn before prettier, as a number of plugins depend
+        # on it (e.g. for coc, prettier).
         'neovim'
+        'apache-airflow'
+        'apache-spark'
+        'csvkit'
+        'csvtk'
+        'vulture'
     )
     if ! koopa_is_aarch64
     then
