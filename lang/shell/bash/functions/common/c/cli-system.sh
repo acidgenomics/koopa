@@ -59,7 +59,6 @@ koopa_cli_system() {
             dict['key']='which-realpath'
             shift 1
             ;;
-        'build-all-apps' | \
         'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
