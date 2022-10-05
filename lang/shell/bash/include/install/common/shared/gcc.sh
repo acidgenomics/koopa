@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME This currently fails to build with Xcode CLT 14
+# https://github.com/iains/gcc-12-branch/issues/6
+
 main() {
     # """
     # Install GCC.
-    # @note Updated 2022-08-16.
+    # @note Updated 2022-10-01.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -77,6 +80,10 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    koopa_assert_is_dir \
+        "${dict['gmp']}" \
+        "${dict['mpc']}" \
+        "${dict['mpfr']}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
 ${dict['name']}-${dict['version']}/${dict['file']}"
@@ -97,11 +104,13 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     )
     if koopa_is_macos
     then
-        app['uname']="$(koopa_locate_uname)"
+        app['uname']="$(koopa_locate_uname --allow-system)"
         [[ -x "${app['uname']}" ]] || return 1
         # e.g. '21.4.0' for macOS 12.3.1.
         dict['kernel_version']="$("${app['uname']}" -r)"
-        dict['kernel_maj_ver']="$(koopa_major_version "${dict['kernel_version']}")"
+        dict['kernel_maj_ver']="$( \
+            koopa_major_version "${dict['kernel_version']}" \
+        )"
         dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
         conf_args+=(
             "--build=${dict['arch']}-apple-darwin${dict['kernel_maj_ver']}"
