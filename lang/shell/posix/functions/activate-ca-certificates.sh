@@ -3,9 +3,14 @@
 koopa_activate_ca_certificates() {
     # """
     # Activate CA certificates for OpenSSL.
-    # @note Updated 2022-08-01.
+    # @note Updated 2022-10-05.
     #
     # This step is currently necessary for Latch SDK on macOS.
+    #
+    # @seealso
+    # - REQUESTS_CA_BUNDLE
+    # - SSL_CERT_FILE
+    # - https://stackoverflow.com/questions/51925384/
     # """
     local prefix ssl_cert_file
     prefix="$(koopa_opt_prefix)/ca-certificates"
