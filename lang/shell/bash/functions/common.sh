@@ -11127,14 +11127,14 @@ koopa_install_all_apps() {
             )
         fi
     fi
+    koopa_add_to_path_start "${KOOPA_PREFIX:?}/bootstrap/bin"
     for app_name in "${apps[@]}"
     do
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
         koopa_alert "$prefix"
         [[ -d "$prefix" ]] && continue
-        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
-            "$koopa" install "$app_name"
+        PATH="${PATH:?}" "$koopa" install "$app_name"
         push_apps+=("$app_name")
     done
     if koopa_is_array_non_empty "${push_apps[@]:-}"
@@ -11158,9 +11158,9 @@ koopa_install_all_binary_apps() {
         ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['large']=0
     )
-    export PATH="${dict['bs_bin_prefix']}:${PATH:-}"
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
-    PATH="$PATH" "${app['koopa']}" install 'aws-cli'
+    koopa_add_to_path_start "${dict['bs_bin_prefix']}"
+    PATH="${PATH:?}" "${app['koopa']}" install 'aws-cli'
     apps=()
     koopa_is_linux && apps+=('attr')
     apps+=(
