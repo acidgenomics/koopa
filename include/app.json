@@ -17,6 +17,7 @@
     "date": "2022-09-26",
     "dependencies": [],
     "homebrew": false,
+    "large": true,
     "man1": [],
     "reverse_dependencies": ["openbb"],
     "url": ["https://repo.continuum.io/archive/"],
@@ -1930,7 +1931,7 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-04",
+    "date": "2022-10-05",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
@@ -1939,7 +1940,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.4.0"
+    "version": "2.4.1"
   },
   "less": {
     "bin": ["less"],
@@ -3535,6 +3536,7 @@
     "date": "2022-09-22",
     "dependencies": [],
     "homebrew": true,
+    "large": true,
     "man1": [],
     "url": ["https://www.rust-lang.org/"],
     "version": "1.64.0"
@@ -3546,6 +3548,7 @@
     "date": "2022-06-23",
     "dependencies": ["conda"],
     "homebrew": false,
+    "large": true,
     "man1": [],
     "version": "1.9.0"
   },

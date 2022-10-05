@@ -10,20 +10,16 @@ koopa_install_all_binary_apps() {
     #
     # Need to install PCRE libraries before grep.
     # """
-    local app_name apps dict
+    local app app_name apps dict
     koopa_assert_has_no_args "$#"
     declare -A app
     app['koopa']="$(koopa_locate_koopa)"
     [[ -x "${app['koopa']}" ]] || return 1
     declare -A dict=(
         ['blocks']="$(koopa_disk_512k_blocks '/')"
-        ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['large']=0
     )
-    export PATH="${dict['bs_bin_prefix']}:${PATH:-}"
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
-    # FIXME Need to rework this approach for Linux.
-    PATH="$PATH" "${app['koopa']}" install 'aws-cli'
     apps=()
     # Priority -----------------------------------------------------------------
     koopa_is_linux && apps+=('attr')
@@ -135,6 +131,7 @@ koopa_install_all_binary_apps() {
         'jupyterlab'
         'lame'
         'lapack'
+        'latch'
         'less'
         'lesspipe'
         'libassuan'
@@ -176,6 +173,7 @@ koopa_install_all_binary_apps() {
         'mdcat'
         'meson'
         'mpc'
+        'mpdecimal'
         'mpfr'
         # > 'msgpack'
         'ncurses'
@@ -322,7 +320,6 @@ koopa_install_all_binary_apps() {
             'htseq'
             'julia'
             'kallisto'
-            'latch'
             'llvm'
             'multiqc'
             'nextflow'
@@ -337,9 +334,11 @@ koopa_install_all_binary_apps() {
             'star'
         )
     fi
+    koopa_add_to_path_start "$(koopa_bootstrap_bin_prefix)"
+    PATH="${PATH:?}" "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do
-        PATH="$PATH" "${app['koopa']}" install --binary "$app_name"
+        PATH="${PATH:?}" "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }

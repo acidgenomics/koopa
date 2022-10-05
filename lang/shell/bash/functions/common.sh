@@ -10806,11 +10806,11 @@ koopa_install_ack() {
 }
 
 koopa_install_all_apps() {
-    local app_name apps koopa push_apps
+    local app app_name apps koopa push_apps
     koopa_assert_has_no_args "$#"
-    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
-    koopa="$(koopa_locate_koopa)"
-    [[ -x "$koopa" ]] || return 1
+    declare -A app
+    app['koopa']="$(koopa_locate_koopa)"
+    [[ -x "${app['koopa']}" ]] || return 1
     apps=()
     apps+=(
         'pkg-config'
@@ -11127,40 +11127,38 @@ koopa_install_all_apps() {
             )
         fi
     fi
+    koopa_add_to_path_start "$(koopa_bootstrap_bin_prefix)"
     for app_name in "${apps[@]}"
     do
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
         koopa_alert "$prefix"
         [[ -d "$prefix" ]] && continue
-        PATH="${KOOPA_PREFIX:?}/bootstrap/bin:${PATH:-}" \
-            "$koopa" install "$app_name"
+        PATH="${PATH:?}" "${app['koopa']}" install "$app_name"
         push_apps+=("$app_name")
     done
-    if koopa_is_array_non_empty "${push_apps[@]:-}"
+    if [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] && \
+        koopa_is_array_non_empty "${push_apps[@]:-}"
     then
         for app_name in "${push_apps[@]}"
         do
-            koopa_push_app_build "$app_name" || true
+            koopa_push_app_build "$app_name"
         done
     fi
     return 0
 }
 
 koopa_install_all_binary_apps() {
-    local app_name apps dict
+    local app app_name apps dict
     koopa_assert_has_no_args "$#"
     declare -A app
     app['koopa']="$(koopa_locate_koopa)"
     [[ -x "${app['koopa']}" ]] || return 1
     declare -A dict=(
         ['blocks']="$(koopa_disk_512k_blocks '/')"
-        ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['large']=0
     )
-    export PATH="${dict['bs_bin_prefix']}:${PATH:-}"
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
-    PATH="$PATH" "${app['koopa']}" install 'aws-cli'
     apps=()
     koopa_is_linux && apps+=('attr')
     apps+=(
@@ -11270,6 +11268,7 @@ koopa_install_all_binary_apps() {
         'jupyterlab'
         'lame'
         'lapack'
+        'latch'
         'less'
         'lesspipe'
         'libassuan'
@@ -11307,6 +11306,7 @@ koopa_install_all_binary_apps() {
         'mdcat'
         'meson'
         'mpc'
+        'mpdecimal'
         'mpfr'
         'ncurses'
         'neofetch'
@@ -11447,7 +11447,6 @@ koopa_install_all_binary_apps() {
             'htseq'
             'julia'
             'kallisto'
-            'latch'
             'llvm'
             'multiqc'
             'nextflow'
@@ -11462,9 +11461,11 @@ koopa_install_all_binary_apps() {
             'star'
         )
     fi
+    koopa_add_to_path_start "$(koopa_bootstrap_bin_prefix)"
+    PATH="${PATH:?}" "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do
-        PATH="$PATH" "${app['koopa']}" install --binary "$app_name"
+        PATH="${PATH:?}" "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
