@@ -1529,7 +1529,7 @@
     "date": "2022-09-29",
     "dependencies": [],
     "homebrew": true,
-    "man1": ["gegrep.1", "gfgrep.1", "ggrep.1"],
+    "man1": ["ggrep.1"],
     "url": ["https://www.gnu.org/software/grep/"],
     "version": "3.8"
   },
@@ -1584,12 +1584,12 @@
     "bin": ["gum"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-09-23",
+    "date": "2022-10-05",
     "dependencies": [],
     "homebrew": true,
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.6.0"
+    "version": "0.7.0"
   },
   "gzip": {
     "bin": [
@@ -2291,7 +2291,7 @@
     "bin": [],
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "conservative": false,
-    "date": "2022-09-20",
+    "date": "2022-10-05",
     "dependencies": [
       "zlib",
       "libedit",
@@ -2306,7 +2306,7 @@
     "man1": [],
     "outdated": true,
     "url": ["https://releases.llvm.org/"],
-    "version": "15.0.1"
+    "version": "15.0.2"
   },
   "lmod": {
     "bin": [],
@@ -2997,11 +2997,11 @@
     "bin": ["procs"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-20",
+    "date": "2022-10-05",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "0.13.1"
+    "version": "0.13.2"
   },
   "proj": {
     "bin": ["proj", "projinfo"],
@@ -3511,11 +3511,11 @@
     "bin": ["ruff"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-19",
+    "date": "2022-10-05",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
-    "version": "0.0.40"
+    "version": "0.0.55"
   },
   "rust": {
     "bin": [
@@ -4282,12 +4282,12 @@
     "bin": ["yq"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-09",
+    "date": "2022-10-05",
     "dependencies": ["go"],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.27.5"
+    "version": "4.28.1"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
