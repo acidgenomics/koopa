@@ -51,6 +51,8 @@ scripts/${dict['file']}"
         '--tooldir' "${dict['tools_dir']}"
         '--upgrade' 'stable'
     )
+    koopa_activate_ca_certificates
+    koopa_print_env
     koopa_dl 'Install args' "${install_args[*]}"
     "${app['python']}" "${dict['file']}" "${install_args[@]}"
     # Version-specific hotfixes.
