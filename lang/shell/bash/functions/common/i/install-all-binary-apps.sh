@@ -20,10 +20,9 @@ koopa_install_all_binary_apps() {
         ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['large']=0
     )
-    export PATH="${dict['bs_bin_prefix']}:${PATH:-}"
     [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
-    # FIXME Need to rework this approach for Linux.
-    PATH="$PATH" "${app['koopa']}" install 'aws-cli'
+    koopa_add_to_path_start "${dict['bs_bin_prefix']}"
+    PATH="${PATH:?}" "${app['koopa']}" install 'aws-cli'
     apps=()
     # Priority -----------------------------------------------------------------
     koopa_is_linux && apps+=('attr')
