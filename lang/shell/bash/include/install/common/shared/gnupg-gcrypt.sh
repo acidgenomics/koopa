@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Consider building GnuPG with gnutls and sqlite3.
-
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-10-05.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -101,9 +99,6 @@ main() {
     esac
     dict['base_url']="${dict['gcrypt_url']}/${dict['name']}"
     case "${dict['name']}" in
-        'libgpg-error')
-            dict['import_gpg_keys']=1
-            ;;
         'dirmngr' | \
         'npth')
             # nPth uses expired 'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6' key.
@@ -111,12 +106,12 @@ main() {
             dict['check_key']=0
             ;;
         'gnutls')
-            dict['import_gpg_keys']=1 # FIXME
+            dict['compress_ext']='xz'
+            dict['import_gpg_keys']=1
             dict['maj_min_ver']="$( \
                 koopa_major_minor_version "${dict['version']}" \
             )"
             dict['base_url']="${dict['base_url']}/v${dict['maj_min_ver']}"
-            dict['compress_ext']='xz'
             ;;
     esac
     dict['tar_file']="${dict['name']}-${dict['version']}.\
