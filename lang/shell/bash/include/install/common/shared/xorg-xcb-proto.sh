@@ -3,7 +3,7 @@
 main() {
     # """
     # Install xcb-proto.
-    # @note Updated 2022-04-26.
+    # @note Updated 2022-10-05.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -11,7 +11,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config' 'python'
+    koopa_activate_build_opt_prefix 'pkg-config'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )
@@ -31,7 +31,7 @@ proto/${dict['file']}"
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-silent-rules'
-        'PYTHON=python3'
+        # > 'PYTHON=python3'
     )
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
