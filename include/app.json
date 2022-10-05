@@ -3659,12 +3659,12 @@
     "bin": ["snakemake"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-10-05",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "version": "7.14.0"
+    "version": "7.15.1"
   },
   "sox": {
     "bin": ["sox"],
