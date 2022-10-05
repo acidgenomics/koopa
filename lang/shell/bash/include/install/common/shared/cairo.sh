@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Cairo.
-    # @note Updated 2022-08-10.
+    # @note Updated 2022-10-03.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
@@ -20,7 +20,7 @@ main() {
         'libxml2'
         'fontconfig'
         'libffi'
-        'pcre'
+        'pcre2'
         'glib'
         'libpng'
         'lzo'

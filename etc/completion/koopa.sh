@@ -80,9 +80,6 @@ __koopa_complete() {
                 'reinstall' | \
                 'uninstall')
                     args=(
-                        # > 'ripgrep-all'
-                        # > 'unzip'
-                        # > 'zip'
                         'ack'
                         'anaconda'
                         'apache-airflow'
@@ -304,6 +301,7 @@ __koopa_complete() {
                         'readline'
                         'rename'
                         'ripgrep'
+                        'ripgrep-all'
                         'rmate'
                         'ronn'
                         'rsync'
@@ -392,10 +390,17 @@ __koopa_complete() {
                             'pinentry'
                         )
                     fi
+                    case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        'install')
+                            args+=(
+                                '--all'
+                                '--all-binary'
+                            )
+                            ;;
+                    esac
                     ;;
                 'system')
                     args=(
-                        'build-all-apps'
                         'cache-functions'
                         'check'
                         'delete-cache'
