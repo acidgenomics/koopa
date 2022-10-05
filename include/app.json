@@ -2455,11 +2455,11 @@
     "bin": ["meson"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-03",
+    "date": "2022-10-05",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
-    "version": "0.63.2"
+    "version": "0.63.3"
   },
   "mpc": {
     "aliases": {
