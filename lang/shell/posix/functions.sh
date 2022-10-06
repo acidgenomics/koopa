@@ -1525,11 +1525,6 @@ koopa_hostname() {
     return 0
 }
 
-koopa_include_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/include"
-    return 0
-}
-
 koopa_is_aarch64() {
     [ "$(koopa_arch)" = 'aarch64' ]
 }
