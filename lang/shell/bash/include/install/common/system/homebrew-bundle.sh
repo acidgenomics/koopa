@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2022-07-21.
+    # @note Updated 2022-10-06.
     #
     # Custom brewfile is supported using a positional argument.
     #
@@ -13,36 +13,14 @@ main() {
     # - ranger
     # - vim
     # """
-    local app brewfile brewfiles dict install_args
+    local app dict install_args
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
+    declare -A app
+    declare -A dict
+    app['brew']="$(koopa_locate_brew)"
     [[ -x "${app['brew']}" ]] || return 1
-    declare -A dict=(
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['local_brewfile']="$(koopa_xdg_config_home)/homebrew/brewfile"
-    )
-    brewfiles=()
-    if koopa_is_linux
-    then
-        brewfiles+=(
-            "${dict['koopa_prefix']}/os/linux/common/etc/homebrew/brewfile"
-        )
-    elif koopa_is_macos
-    then
-        brewfiles+=(
-            "${dict['koopa_prefix']}/os/macos/etc/homebrew/brewfile"
-        )
-    fi
-    brewfiles+=(
-        "${dict['koopa_prefix']}/etc/homebrew/brewfile"
-    )
-    if [[ -f "${dict['local_brewfile']}" ]]
-    then
-        brewfiles+=("${dict['local_brewfile']}")
-    fi
-    "${app['brew']}" analytics off
+    dict['brewfile']="$(koopa_xdg_config_home)/homebrew/brewfile"
+    koopa_assert_is_file "${dict['brewfile']}"
     # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
     # variable, which is defined in our main Homebrew activation function.
     install_args=(
@@ -51,14 +29,10 @@ main() {
         '--force'
         '--no-lock'
         '--no-upgrade'
+        "--file=${dict['brewfile']}"
     )
-    for brewfile in "${brewfiles[@]}"
-    do
-        [[ -f "$brewfile" ]] || continue
-        koopa_dl 'Brewfile' "$brewfile"
-        "${app['brew']}" bundle install \
-            "${install_args[@]}" \
-            --file="${brewfile}"
-    done
+    koopa_dl 'Brewfile' "${dict['brewfile']}"
+    "${app['brew']}" analytics off
+    "${app['brew']}" bundle install "${install_args[@]}"
     return 0
 }

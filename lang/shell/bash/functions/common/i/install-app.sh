@@ -319,6 +319,8 @@ ${dict['version2']}"
                     then
                         bool['copy_log_files']=1
                     fi
+                    dict['header_file']="${dict['koopa_prefix']}/lang/shell/\
+bash/include/header.sh"
                     "${app['env']}" -i \
                         "${env_vars[@]}" \
                         "${app['bash']}" \
@@ -328,7 +330,7 @@ ${dict['version2']}"
                             -o errtrace \
                             -o nounset \
                             -o pipefail \
-                            -c "source '${dict['koopa_prefix']}/lang/shell/bash/include/header.sh'; \
+                            -c "source '${dict['header_file']}'; \
                                 koopa_install_app_subshell \
                                     --installer=${dict['installer']} \
                                     --mode=${dict['mode']} \
