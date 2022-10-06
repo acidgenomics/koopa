@@ -10794,7 +10794,8 @@ koopa_insert_at_line_number() {
         '--line-number' "${dict['line_number']}" \
         '--string' "${dict['string']}"
     koopa_assert_is_file "${dict['file']}"
-    dict['perl_cmd']="print '${dict['string']}' if \$. == ${dict['line_number']}"
+    dict['perl_cmd']="print '${dict['string']}' \
+if \$. == ${dict['line_number']}"
     "${app['perl']}" -i -l -p -e "${dict['perl_cmd']}" "${dict['file']}"
     return 0
 }
@@ -11929,6 +11930,8 @@ ${dict['version2']}"
                     then
                         bool['copy_log_files']=1
                     fi
+                    dict['header_file']="${dict['koopa_prefix']}/lang/shell/\
+bash/include/header.sh"
                     "${app['env']}" -i \
                         "${env_vars[@]}" \
                         "${app['bash']}" \
@@ -11938,7 +11941,7 @@ ${dict['version2']}"
                             -o errtrace \
                             -o nounset \
                             -o pipefail \
-                            -c "source '${dict['koopa_prefix']}/lang/shell/bash/include/header.sh'; \
+                            -c "source '${dict['header_file']}'; \
                                 koopa_install_app_subshell \
                                     --installer=${dict['installer']} \
                                     --mode=${dict['mode']} \
@@ -22460,19 +22463,16 @@ koopa_test_find_files() {
     )
     readarray -t files <<< "$( \
         koopa_find \
-            --exclude='**/etc/R/**' \
-            --exclude='*.1' \
-            --exclude='*.md' \
-            --exclude='*.ronn' \
             --exclude='*.swp' \
             --exclude='.*' \
             --exclude='.git/**' \
             --exclude='app/**' \
+            --exclude='bootstrap/**' \
+            --exclude='common.sh' \
             --exclude='coverage/**' \
-            --exclude='etc/R/**' \
+            --exclude='etc/**' \
             --exclude='opt/**' \
-            --exclude='tests/**' \
-            --exclude='todo.org' \
+            --exclude='share/**' \
             --prefix="${dict['prefix']}" \
             --type='f' \
     )"
@@ -24798,7 +24798,8 @@ koopa_unlink_in_make() {
             --num="${#files[@]}" \
             --msg1='file' \
             --msg2='files' \
-            --suffix=" from '${dict['app_prefix']}' in '${dict['make_prefix']}'." \
+            --suffix=" from '${dict['app_prefix']}' in \
+'${dict['make_prefix']}'." \
         )"
         for file in "${files[@]}"
         do
