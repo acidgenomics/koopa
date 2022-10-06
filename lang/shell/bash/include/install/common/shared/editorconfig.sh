@@ -42,7 +42,8 @@ archive/${dict['file']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     dict['pcre2_include_dir']="${dict['pcre2']}/include"
-    dict['pcre2_library']="${dict['pcre2']}/lib/libpcre2-8.${dict['shared_ext']}"
+    dict['pcre2_library']="${dict['pcre2']}/lib/\
+libpcre2-8.${dict['shared_ext']}"
     koopa_assert_is_dir "${dict['pcre2_include_dir']}"
     koopa_assert_is_file "${dict['pcre2_library']}"
     cmake_args=(
