@@ -53,7 +53,8 @@ koopa_insert_at_line_number() {
         '--line-number' "${dict['line_number']}" \
         '--string' "${dict['string']}"
     koopa_assert_is_file "${dict['file']}"
-    dict['perl_cmd']="print '${dict['string']}' if \$. == ${dict['line_number']}"
+    dict['perl_cmd']="print '${dict['string']}' \
+if \$. == ${dict['line_number']}"
     "${app['perl']}" -i -l -p -e "${dict['perl_cmd']}" "${dict['file']}"
     return 0
 }

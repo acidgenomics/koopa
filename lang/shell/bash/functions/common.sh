@@ -10794,7 +10794,8 @@ koopa_insert_at_line_number() {
         '--line-number' "${dict['line_number']}" \
         '--string' "${dict['string']}"
     koopa_assert_is_file "${dict['file']}"
-    dict['perl_cmd']="print '${dict['string']}' if \$. == ${dict['line_number']}"
+    dict['perl_cmd']="print '${dict['string']}' \
+if \$. == ${dict['line_number']}"
     "${app['perl']}" -i -l -p -e "${dict['perl_cmd']}" "${dict['file']}"
     return 0
 }
@@ -10986,6 +10987,7 @@ koopa_install_all_apps() {
     )
     koopa_is_linux && apps+=('elfutils')
     apps+=(
+        'libedit'
         'llvm'
         'go'
         'chezmoi'
@@ -11011,7 +11013,6 @@ koopa_install_all_apps() {
         'ranger-fm'
         'ruff'
         'yt-dlp'
-        'libedit'
         'openssh'
         'c-ares'
         'jemalloc'
@@ -11929,6 +11930,8 @@ ${dict['version2']}"
                     then
                         bool['copy_log_files']=1
                     fi
+                    dict['header_file']="${dict['koopa_prefix']}/lang/shell/\
+bash/include/header.sh"
                     "${app['env']}" -i \
                         "${env_vars[@]}" \
                         "${app['bash']}" \
@@ -11938,7 +11941,7 @@ ${dict['version2']}"
                             -o errtrace \
                             -o nounset \
                             -o pipefail \
-                            -c "source '${dict['koopa_prefix']}/lang/shell/bash/include/header.sh'; \
+                            -c "source '${dict['header_file']}'; \
                                 koopa_install_app_subshell \
                                     --installer=${dict['installer']} \
                                     --mode=${dict['mode']} \
@@ -16375,6 +16378,13 @@ koopa_locate_lua() {
     koopa_locate_app \
         --app-name='lua' \
         --bin-name='lua' \
+        "$@"
+}
+
+koopa_locate_luac() {
+    koopa_locate_app \
+        --app-name='lua' \
+        --bin-name='luac' \
         "$@"
 }
 
@@ -22266,7 +22276,6 @@ koopa_system_info() {
         ['app_prefix']="$(koopa_app_prefix)"
         ['arch']="$(koopa_arch)"
         ['arch2']="$(koopa_arch2)"
-        ['ascii_turtle_file']="$(koopa_include_prefix)/ascii-turtle.txt"
         ['bash_version']="$(koopa_get_version "${app['bash']}")"
         ['config_prefix']="$(koopa_config_prefix)"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
@@ -22275,6 +22284,9 @@ koopa_system_info() {
         ['make_prefix']="$(koopa_make_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"
     )
+    dict['ascii_turtle_file']="${dict['koopa_prefix']}/etc/\
+koopa/ascii-turtle.txt"
+    koopa_assert_is_file "${dict['ascii_turtle_file']}"
     info=(
         "koopa ${dict['koopa_version']}"
         "URL: ${dict['koopa_url']}"
@@ -22458,19 +22470,16 @@ koopa_test_find_files() {
     )
     readarray -t files <<< "$( \
         koopa_find \
-            --exclude='**/etc/R/**' \
-            --exclude='*.1' \
-            --exclude='*.md' \
-            --exclude='*.ronn' \
             --exclude='*.swp' \
             --exclude='.*' \
             --exclude='.git/**' \
             --exclude='app/**' \
+            --exclude='bootstrap/**' \
+            --exclude='common.sh' \
             --exclude='coverage/**' \
-            --exclude='etc/R/**' \
+            --exclude='etc/**' \
             --exclude='opt/**' \
-            --exclude='tests/**' \
-            --exclude='todo.org' \
+            --exclude='share/**' \
             --prefix="${dict['prefix']}" \
             --type='f' \
     )"
@@ -22608,7 +22617,7 @@ koopa_test() {
 }
 
 koopa_tests_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/tests"
+    koopa_print "$(koopa_koopa_prefix)/etc/koopa/tests"
     return 0
 }
 
@@ -24796,7 +24805,8 @@ koopa_unlink_in_make() {
             --num="${#files[@]}" \
             --msg1='file' \
             --msg2='files' \
-            --suffix=" from '${dict['app_prefix']}' in '${dict['make_prefix']}'." \
+            --suffix=" from '${dict['app_prefix']}' in \
+'${dict['make_prefix']}'." \
         )"
         for file in "${files[@]}"
         do
