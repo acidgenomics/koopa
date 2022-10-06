@@ -567,8 +567,7 @@ koopa_debian_apt_disable_deb_src() {
     declare -A dict=(
         ['file']="${1:-}"
     )
-    [[ -z "${dict['file']}" ]] && \
-        dict['file']="$(koopa_debian_apt_sources_file)"
+    [[ -z "${dict['file']}" ]] && dict['file']="$(koopa_debian_apt_sources_file)"
     koopa_assert_is_file "${dict['file']}"
     koopa_alert "Disabling Debian sources in '${dict['file']}'."
     if ! koopa_file_detect_regex \
