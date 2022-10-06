@@ -1015,12 +1015,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-13",
+    "date": "2022-10-06",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "4c5c4b07a8665b2d29916da24d808cab13a2e4c3"
+    "version": "98878d447cb932d12533b03e45de7814c64e005e"
   },
   "du-dust": {
     "aliases": {
