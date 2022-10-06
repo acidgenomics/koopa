@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+test_linter() {
+    # """
+    # Check that scripts do not contain lints.
+    # Updated 2022-10-06.
+    # """
+    local koopa_prefix linter_prefix
+    koopa_prefix="$(koopa_koopa_prefix)"
+    koopa_h1 'Running linter checks.'
+    koopa_assert_is_file "${koopa_prefix}/."{'lintr','pylintrc'}
+    linter_prefix="${koopa_prefix}/etc/koopa/tests/linter.d"
+    koopa_exec_dir "$linter_prefix"
+    return 0
+}
+
+test_linter "$@"

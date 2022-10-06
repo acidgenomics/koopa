@@ -26,8 +26,8 @@ main() {
     )
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['url']="https://github.com/${dict['name']}-shell/${dict['name']}-shell/\
-releases/download/${dict['version']}/${dict['file']}"
+    dict['url']="https://github.com/${dict['name']}-shell/\
+${dict['name']}-shell/releases/download/${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

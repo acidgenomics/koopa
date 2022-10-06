@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE This appears to fail for Ubuntu 22 running on AWS t3a.xlarge.
-# Attempting to build using t3a.2xlarge to see if we need more compute.
+# FIXME Require 16 GB RAM and 8 cores to build this.
 
 main() {
     # """

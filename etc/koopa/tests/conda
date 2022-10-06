@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+main() {
+    # """
+    # Conda environment test script.
+    # @note Updated 2022-06-03.
+    # """
+    local dict
+    declare -A dict=(
+        [kallisto_version]="$(koopa_variable 'kallisto')"
+        [salmon_version]="$(koopa_variable 'salmon')"
+    )
+    koopa_alert 'Testing conda environment loading.'
+    koopa_conda_create_env "kallisto@${dict[kallisto_version]}"
+    koopa_conda_create_env "salmon@${dict[salmon_version]}"
+    koopa_conda_activate_env 'kallisto'
+    kallisto version
+    koopa_conda_activate_env "kallisto@${dict[kallisto_version]}"
+    kallisto version
+    koopa_conda_activate_env 'salmon'
+    salmon --version
+    koopa_conda_activate_env "salmon@${dict[salmon_version]}"
+    salmon --version
+    koopa_conda_deactivate
+    koopa_alert_success 'Conda environments loaded successfully.'
+    return 0
+}
+
+main "$@"

@@ -3,10 +3,10 @@
 koopa_validate_json() {
     # """
     # Validate that a JSON file doesn't contain any formatting errors.
-    # @note Updated 2022-08-23.
+    # @note Updated 2022-10-06.
     #
     # @examples
-    # koopa_validate_json '/opt/koopa/include/app.json'
+    # koopa_validate_json 'app.json'
     # """
     local app dict
     declare -A app

@@ -1,0 +1,160 @@
+#+TITLE: koopa
+#+STARTUP: content
+* High priority
+** TODO Rework top-level 'os' directory.
+** TODO Rework harfbuzz to install into 'lib' instead of 'lib64' on Linux.
+** TODO Need to get koopa to install from scratch on macOS using bootstrap script.
+    Consider putting the bootstrap bin path in koopa bash header.
+** TODO Consider hardening PATH in koopa bash header to /usr/bin and /bin only.
+** TODO Create a recipe solver that walks across the JSON file and puts all apps in order of installation automatically.
+** TODO grep alias is messing up if grep isn't installed.
+    only alias grep if ggrep is installed
+** TODO Don't let app install proceed unless all build and other dependencies defined in app JSON are present, with the current version.
+** TODO Use app json during koopa_activate_opt_prefix (rename to app_prefix) usage.
+    Can we retire the usage of opt_prefix entirely in our configuration scripts?
+** TODO Binary installs also need to ensure that dependency packages are also installed.
+    We can manage this using our app.json in a future update.
+** TODO Improve Bash / coreutils bootstrapping on macOS, automatically installing missing dependencies.
+    Need to run something like this:
+    PATH="${TMPDIR}/koopa-bootstrap/bin:${PATH}" \
+        koopa install --all
+** TODO Consider linking koopa into /usr/local/bin.
+** TODO Consider linking bash into /usr/local/bin on macOS (only if Homebrew doesn't have one there).
+    This improves compatibility with RStudio `system2` calls, which currently hardcode `/usr/local` and ignore `/opt/koopa`.
+** TODO Add shell activation support for asdf.
+** TODO Can we improve black, flake8, pylint support for automatic linting in PyCharm?
+** TODO Ensure coreutils aliases are not activated for root user on Linux.
+** TODO Consider setting apt to not prompt configuration boxes inside Debian environment.
+** TODO Rework koopa prompt to show 7 character git commit string?
+    Is this too CPU intensive with git?
+    Alternatively, consider removing any git information in default koopa prompt.
+** TODO We need to construct a SHA256 and/or timestamp management approach.
+** TODO Move binary apps to private S3 bucket that requires credential key access, to avoid excess AWS charges.
+** TODO Consider quoting all key names in dict associative arrays, for better syntax highlighting in vim.
+** TODO Consider installing all X11 libraries into a single prefix.
+** TODO For system R, both on Linux and Mac, don't link the site-packages library into koopa opt. Create it inside the system path instead.
+** TODO zsh prompt string (without starship) isn't getting configured for T's MacBook
+** TODO Create a function that combines ldd and otool for linker lookups.
+** TODO Create a function that returns dylib prefix ('.so' on Linux, '.dylib' on macOS).
+    Rework install functions to use this.
+** TODO Move all installer link and unlink operations to 'include/installers' script instead.
+** TODO Ensure that 'koopa install --help' works.
+** TODO Need to add 'koopa update system' support for Linux distros.
+** TODO Reorganize installation of system packages under 'koopa install system XXX'.
+    e.g. update this for Homebrew, etc.
+** TODO Rework koopa install conventions.
+    Use 'koopa install --binary --reinstall XXX YYY' instead of 'koopa install XXX --binary --reinstall'.
+** TODO Can we install RStudio Server and Shiny Server deb packages without using gdebi-core?
+    Apparently apt may support direct installs from a deb file now.
+** TODO Split out node and ruby packages into isolated apps.
+** TODO Need to harden all 'locate_*' (locate_app) calls.
+    Check using '-x' and add return 1 for all.
+** TODO Need to also link (install) and unlink (uninstall) man files, where applicable.
+** TODO Consider adding back support for 'prune'.
+** TODO Need to nest our macOS-specific functions under 'koopa os XXX'.
+** TODO Need to add support for OS-specific link functions.
+** TODO 'koopa app list' shouldn't work any more...
+** TODO Add Debian support for Quarto
+    https://quarto.org/docs/get-started/
+    https://github.com/quarto-dev/quarto-cli/releases/download/v0.9.393/quarto-0.9.393-linux-amd64.deb
+** TODO Consider adding r-cli style inline markup support for CLI messages.
+    https://cli.r-lib.org/reference/inline-markup.html
+    The default theme defines the following inline classes:
+    - 'arg' for a function argument.
+    - 'cls' for an S3, S4, R6 or other class name.
+    - 'code' for a piece of code.
+    - 'dd' is used for the descriptions in a definition list (cli_dl()).
+    - 'dt' is used for the terms in a definition list (cli_dl()).
+    - 'email' for an email address.
+    - 'emph' for emphasized text.
+    - 'envvar' for the name of an environment variable.
+    - 'field' for a generic field, e.g. in a named list.
+    - 'file' for a file name.
+    - 'fun' for a function name.
+    - 'key' for a keyboard key.
+    - 'path' for a path (essentially the same as file).
+    - 'pkg' for a package name.
+    - 'strong' for strong importance.
+    - 'url' for a URL.
+    - 'val' for a generic "value".
+    - 'var' for a variable name.
+** TODO Create a 'compress' function that automatically wraps 'tar -czvf XXX.tar.gz XXX/'
+** TODO Don't rely on Homebrew packages anywhere in our build scripts or R configuration.
+** TODO Improve color and formatting of alert messages, using an r-cli style approach (e.g. '{.var XXX}' rather than just using single quotes.
+** TODO Consider clean up of '/etc/paths.d' and '/etc/manpaths.d' on macOS for Homebrew casks.
+    Ubuntu uses '/etc/environment' for paths configuration.
+    https://towardsdatascience.com/my-path-variable-is-a-mess-e52f22bfa520
+** TODO Consider linking some koopa tools into /opt/koopa/sbin instead of bin.
+** TODO Add install support for new diff tools:
+    https://github.com/Wilfred/difftastic
+    https://github.com/darrenburns/dunk
+** TODO libtool version check is now failing.
+** TODO Work on caching Bash functions into a single file.
+    - Strip comments, for speed (minify).
+    - Ensure shellcheck is disabled on this file.
+    - Need to incude shebang at the top. How to prepend a file in Bash?
+** TODO Can we rework system permissions to only use admin group but not root user?
+** TODO Boost version detection isn't working on Ubuntu.
+** TODO Need to rethink our link approach, putting useful tools in top level bin.
+    This mimics the approach of Homebrew, without linking into /usr/local.
+    Should we not put ANY tools linked into /usr/local?
+** TODO Need to reorganize pre-built app tarballs by processor architecture.
+** TODO Rework our conda-based NGS utilites by locating the programs directly, rather than by activating conda inside a function.
+** TODO Improve consistency of AWS functions.
+    - Ensure that all input consistently requires 's3://' as prefix input.
+    - Ensure that this is consistent for CLI parser to JSON...bucket API one
+** TODO Improve 'koopa uninstall app' to support removal of specific previous versions.
+    - Pass this in with '--version' argument.
+    - Need to support removal of older app versions.
+    - In the case where it's not current link in opt, don't remove the opt link.
+** TODO Need to ensure 0775 permissions on coc packages:
+    /opt/koopa/app/dotfiles/rolling/app/coc/extensions/node_modules
+** TODO Add improved stack trace of error messages.
+** TODO Before pushing changes, ensure sed with '--quiet' change is non breaking.
+** TODO Syntactic naming functions need an option to also convert the extension to lowercase.
+** TODO Shared install isn't setting user permissions recursively correctly.
+    Need to ensure that '/opt/koopa' isn't owned by current user after install.
+    We're seeing this currently on AWS EC2 instances.
+** TODO Confirm that not all bash functions load on interactive session.
+** TODO Rework 'koopa install XXX --reinstall' flag to 'koopa reinstall XXX' instead, similar to approach used in Homebrew.
+** TODO Emacs version check is now failing on old MacBook.
+** TODO texinfo check is now failing again on old MacBook.
+    Seeing 6.7 instead of expected 6.8, due to another program dumping into /usr/local.
+** TODO Need to remove 'install-dotfiles' link from koopa config at '~/.config/koopa'.
+** TODO Improve install instructions on website to provide recommended default
+   packages for Debian (apt) and Fedora (yum).
+** TODO User permissions on Debian 11 clean install are 'admin:admin' instead
+   of 'root:admin', which we're expecting. Need to fix.
+** TODO Dotifles are not installing clean on fresh Debian 11 AMI.
+    > # Installing dotfiles at '/opt/koopa/app/dotfiles/rolling'.
+    > ** Repo already cloned: '/opt/koopa/app/dotfiles/rolling'.
+    > → Deleting '/opt/koopa/app/dotfiles/rolling'.
+    > !! Error: Not directory: '/opt/koopa/app/dotfiles/rolling'.
+    > admin@ip-10-28-99-104:~$
+** TODO Need a simple batch rename utility to convert file extension to
+    lowercase. We may simply add this in a future update to syntactic engine.
+** TODO photos_rename_exiftool needs to error on file input instead of
+    directory more clearly.
+** TODO Ensure that no dict arrays contain '$dict' variable usage inside the
+    initial array call. This doesn't work in Bash. Double check this before
+    merging develop branch.
+* Medium priority
+** TODO Add support for installing Adoptium Temurin OpenJDK 17.0.2 LTS.
+** TODO Consider installing latest stable release by default for Docker images.
+** TODO Consider linking '/etc/shells' on Linux, to enable easier configuration
+    of Linuxbrew Zsh and/or Bash.
+** TODO Add step to generate BAM and/or CRAM files from salmon, kallisto,
+    bowtie2 output.
+** TODO Consider reworking git installs to use shallow clones?
+** TODO Today bucket activation needs to relink if link is broken.
+** TODO Consider removing non-symlinked programs in /usr/local/bin on macOS.
+** TODO Consider prefixing with "command XXX" instead of using "unalias XXX".
+* Low priority
+** TODO Consider putting pipx installs under versioned subdirectory.
+** TODO Update of Bash via Homebrew will cause current session to exit.
+** TODO Add support for fish shell. This involves a lot of work.
+** TODO Add support for nushell. This involves a lot of work.
+** TODO Run BFG to make dotfiles and koopa repos more compact?
+* Documentation
+** TODO Need to systematically check all exported scripts for documentation.
+** TODO Need to explain which programs are automatically supported and get activated by default more clearly.

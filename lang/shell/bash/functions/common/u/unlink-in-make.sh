@@ -3,7 +3,7 @@
 koopa_unlink_in_make() {
     # """
     # Unlink a program symlinked in koopa 'make/' directory.
-    # @note Updated 2022-04-07.
+    # @note Updated 2022-10-06.
     #
     # @examples
     # > koopa_unlink_in_make '/opt/koopa/app/autoconf'
@@ -38,7 +38,8 @@ koopa_unlink_in_make() {
             --num="${#files[@]}" \
             --msg1='file' \
             --msg2='files' \
-            --suffix=" from '${dict['app_prefix']}' in '${dict['make_prefix']}'." \
+            --suffix=" from '${dict['app_prefix']}' in \
+'${dict['make_prefix']}'." \
         )"
         for file in "${files[@]}"
         do
