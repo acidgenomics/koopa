@@ -31,7 +31,7 @@ main() {
         '--no-upgrade'
         "--file=${dict['brewfile']}"
     )
-    koopa_dl 'Brewfile' "$brewfile"
+    koopa_dl 'Brewfile' "${dict['brewfile']}"
     "${app['brew']}" analytics off
     "${app['brew']}" bundle install "${install_args[@]}"
     return 0
