@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to just write the file, rather than using a symbolic link.
+
 koopa_linux_update_system_sshd_config() {
     # """
     # Update sshd configuration.
