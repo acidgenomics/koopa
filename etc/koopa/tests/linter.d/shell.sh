@@ -2,7 +2,7 @@
 # shellcheck disable=SC2119
 
 # shellcheck source=/dev/null
-source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
+source "$(koopa header bash)"
 
 main() {
     # """
