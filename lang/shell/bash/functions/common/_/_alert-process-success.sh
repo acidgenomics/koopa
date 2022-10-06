@@ -3,7 +3,7 @@
 __koopa_alert_process_success() {
     # """
     # Inform the user about the successful completion of a process.
-    # @note Updated 2022-03-09.
+    # @note Updated 2022-10-06.
     # """
     local dict
     declare -A dict
@@ -14,8 +14,8 @@ __koopa_alert_process_success() {
     dict['prefix']="${2:-}"
     if [[ -n "${dict['prefix']}" ]]
     then
-        dict['out']="${dict['word']} of '${dict['name']}' at '${dict['prefix']}' \
-was successful."
+        dict['out']="${dict['word']} of '${dict['name']}' at \
+'${dict['prefix']}' was successful."
     else
         dict['out']="${dict['word']} of '${dict['name']}' was successful."
     fi
