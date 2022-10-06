@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Link into libexec and install bcbio_nextgen.py into 'bin'.
-
 main() {
     # """
     # Install bcbio-nextgen.
@@ -36,7 +34,7 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['install_dir']="${dict['prefix']}/libexec"
-    dict['tools_dir']="${dict['prefix']}/bin"
+    dict['tools_dir']="${dict['prefix']}"
     dict['file']='bcbio_nextgen_install.py'
     dict['url']="https://raw.github.com/bcbio/bcbio-nextgen/master/\
 scripts/${dict['file']}"
