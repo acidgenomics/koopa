@@ -22266,7 +22266,6 @@ koopa_system_info() {
         ['app_prefix']="$(koopa_app_prefix)"
         ['arch']="$(koopa_arch)"
         ['arch2']="$(koopa_arch2)"
-        ['ascii_turtle_file']="$(koopa_include_prefix)/ascii-turtle.txt"
         ['bash_version']="$(koopa_get_version "${app['bash']}")"
         ['config_prefix']="$(koopa_config_prefix)"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
@@ -22275,6 +22274,9 @@ koopa_system_info() {
         ['make_prefix']="$(koopa_make_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"
     )
+    dict['ascii_turtle_file']="${dict['koopa_prefix']}/etc/\
+koopa/ascii-turtle.txt"
+    koopa_assert_is_file "${dict['ascii_turtle_file']}"
     info=(
         "koopa ${dict['koopa_version']}"
         "URL: ${dict['koopa_url']}"
