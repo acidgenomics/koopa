@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # FIXME Consider adding support for '--file' argument here.
-# Currently used in openbb installer.
+#       Currently used in openbb installer.
 # FIXME Allow the user to define which conda -- allow anaconda usage here.
 
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2022-08-26.
+    # @note Updated 2022-10-06.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -124,13 +124,15 @@ exists at '${dict2['env_prefix']}'."
                 continue
             fi
         fi
-        koopa_alert_install_start "${dict2['env_name']}" "${dict2['env_prefix']}"
+        koopa_alert_install_start \
+            "${dict2['env_name']}" "${dict2['env_prefix']}"
         "${app['conda']}" create \
             --name="${dict2['env_name']}" \
             --quiet \
             --yes \
             "${dict2['env_string']}"
-        koopa_alert_install_success "${dict2['env_name']}" "${dict2['env_prefix']}"
+        koopa_alert_install_success \
+            "${dict2['env_name']}" "${dict2['env_prefix']}"
     done
     return 0
 }
