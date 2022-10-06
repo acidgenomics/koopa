@@ -19,6 +19,7 @@ koopa_linux_update_ldconfig() {
     )
     [[ -x "${app['ldconfig']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
+    # FIXME The 'distro_prefix' approach is no longer supported.
     declare -A dict=(
         ['distro_prefix']="$(koopa_distro_prefix)"
         ['target_prefix']='/etc/ld.so.conf.d'
