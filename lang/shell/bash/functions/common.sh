@@ -22610,7 +22610,7 @@ koopa_test() {
 }
 
 koopa_tests_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/tests"
+    koopa_print "$(koopa_koopa_prefix)/etc/koopa/tests"
     return 0
 }
 
