@@ -2,7 +2,7 @@
 
 """
 Parse koopa 'app.json' file.
-@note Updated 2022-08-23.
+@note Updated 2022-10-06.
 
 @examples
 ./parse-app-json.py \
@@ -43,6 +43,6 @@ parser.add_argument("--app-name", required=True, type=str)
 parser.add_argument("--key", required=True, type=str)
 args = parser.parse_args()
 
-_json_file = abspath(join(dirname(__file__), "../../include/app.json"))
+_json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
 main(json_file=_json_file, app_name=args.app_name, key=args.key)
