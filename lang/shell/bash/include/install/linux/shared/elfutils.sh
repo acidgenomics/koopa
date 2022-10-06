@@ -2,6 +2,9 @@
 
 main() {
     # """
+    # Install elfutils.
+    # @note Updated 2022-10-05.
+    #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/elfutils.rb
     # """
@@ -12,7 +15,9 @@ main() {
         'xz'
         'zlib'
         # > 'zstd'
-        'gettext'
+    )
+    koopa_is_macos && deps+=('gettext')
+    deps+=(
         'libiconv'
     )
     koopa_activate_opt_prefix "${deps[@]}"
@@ -44,11 +49,16 @@ main() {
         '--program-prefix=eu-'
         '--with-bzlib'
         "--with-libiconv-prefix=${dict['libiconv']}"
-        "--with-libintl-prefix=${dict['gettext']}"
         '--with-zlib'
         '--without-lzma'
         '--without-zstd'
     )
+    if koopa_is_macos
+    then
+        conf_args+=(
+            "--with-libintl-prefix=${dict['gettext']}"
+        )
+    fi
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://sourceware.org/elfutils/ftp/0.187/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
