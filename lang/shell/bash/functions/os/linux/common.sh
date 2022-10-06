@@ -875,7 +875,7 @@ END
 }
 
 koopa_linux_update_ldconfig() {
-    local app dict source_file
+    local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
@@ -884,21 +884,6 @@ koopa_linux_update_ldconfig() {
     )
     [[ -x "${app['ldconfig']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    declare -A dict=(
-        ['distro_prefix']="$(koopa_distro_prefix)"
-        ['target_prefix']='/etc/ld.so.conf.d'
-    )
-    [[ -d "${dict['target_prefix']}" ]] || return 0
-    dict['conf_source']="${dict['distro_prefix']}${dict['target_prefix']}"
-    [[ -d "${dict['conf_source']}" ]] || return 0
-    koopa_alert "Updating ldconfig in '${dict['target_prefix']}'."
-    for source_file in "${dict['conf_source']}/"*".conf"
-    do
-        local target_bn target_file
-        target_bn="koopa-$(koopa_basename "$source_file")"
-        target_file="${dict['target_prefix']}/${target_bn}"
-        koopa_ln --sudo "$source_file" "$target_file"
-    done
     "${app['sudo']}" "${app['ldconfig']}" || true
     return 0
 }
