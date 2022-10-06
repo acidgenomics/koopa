@@ -28,7 +28,7 @@ main() {
     # - https://github.com/neovim/neovim/blob/master/runtime/CMakeLists.txt
     # - https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_RPATH.html
     # """
-    local app build_deps deps dict local_mk
+    local app build_deps deps dict
     koopa_assert_has_no_args "$#"
     build_deps=(
         'autoconf'
@@ -62,23 +62,23 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
-    local_mk=(
-        'CMAKE_BUILD_TYPE := RelWithDebInfo'
-        'DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON'
-        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"\"
-        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib\""
-        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_C_FLAGS=${CFLAGS:-}\""
-        # > "CMAKE_EXTRA_FLAGS += \"-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}\""
-        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}\""
-        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}\""
-        "CMAKE_EXTRA_FLAGS += \"-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}\""
-        "CMAKE_EXTRA_FLAGS += \"-DICONV_INCLUDE_DIR=${dict['libiconv']}/include\""
-        "CMAKE_EXTRA_FLAGS += \"-DICONV_LIBRARY=${dict['libiconv']}/lib/libiconv.${dict['shared_ext']}\""
-        "CMAKE_EXTRA_FLAGS += \"-DLibIntl_INCLUDE_DIR=${dict['gettext']}/include\""
-        "CMAKE_EXTRA_FLAGS += \"-DLibIntl_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}\""
-        "CMAKE_EXTRA_FLAGS += \"-DZLIB_INCLUDE_DIR=${dict['zlib']}/include\""
-        "CMAKE_EXTRA_FLAGS += \"-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}\""
-    )
+    read -r -d '' "dict[local_mk]" << END || true
+CMAKE_BUILD_TYPE := RelWithDebInfo
+DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON
+CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+CMAKE_EXTRA_FLAGS += "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+# > CMAKE_EXTRA_FLAGS += "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+CMAKE_EXTRA_FLAGS += "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+CMAKE_EXTRA_FLAGS += "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+CMAKE_EXTRA_FLAGS += "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+CMAKE_EXTRA_FLAGS += "-DICONV_INCLUDE_DIR=${dict['libiconv']}/include"
+CMAKE_EXTRA_FLAGS += "-DICONV_LIBRARY=${dict['libiconv']}/lib/libiconv.${dict['shared_ext']}"
+CMAKE_EXTRA_FLAGS += "-DLibIntl_INCLUDE_DIR=${dict['gettext']}/include"
+CMAKE_EXTRA_FLAGS += "-DLibIntl_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}"
+CMAKE_EXTRA_FLAGS += "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
+CMAKE_EXTRA_FLAGS += "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+END
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
 archive/${dict['file']}"
@@ -87,7 +87,7 @@ archive/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_write_string \
         --file='local.mk' \
-        --string="$(koopa_print "${local_mk[@]}")"
+        --string="${dict['local_mk']}"
     koopa_print_env
     "${app['make']}" distclean
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"

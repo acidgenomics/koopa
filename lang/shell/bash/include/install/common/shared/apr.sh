@@ -35,7 +35,8 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
-    dict['url']="https://archive.apache.org/dist/${dict['name']}/${dict['file']}"
+    dict['url']="https://archive.apache.org/dist/\
+${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     conf_args=(
