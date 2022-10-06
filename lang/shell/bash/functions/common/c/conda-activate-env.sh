@@ -3,7 +3,7 @@
 koopa_conda_activate_env() {
     # """
     # Activate a conda environment.
-    # @note Updated 2022-03-16.
+    # @note Updated 2022-10-06.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -38,7 +38,9 @@ koopa_conda_activate_env() {
         koopa_alert_info "Attempting to install missing conda \
 environment '${dict['env_name']}'."
         koopa_conda_create_env "${dict['env_name']}"
-        dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
+        dict['env_prefix']="$( \
+            koopa_conda_env_prefix "${dict['env_name']}" || true \
+        )"
     fi
     if [[ ! -d "${dict['env_prefix']}" ]]
     then

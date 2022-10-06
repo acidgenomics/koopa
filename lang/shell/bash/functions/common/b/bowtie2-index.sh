@@ -3,7 +3,7 @@
 koopa_bowtie2_index() {
     # """
     # Generate bowtie2 index.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-10-06.
     # """
     local app dict index_args
     koopa_assert_has_args "$#"
@@ -62,6 +62,7 @@ koopa_bowtie2_index() {
     )
     koopa_dl 'Index args' "${index_args[*]}"
     # FIXME Need to locate this directly.
-    bowtie2-build "${index_args[@]}" 2>&1 | "${app['tee']}" "${dict['log_file']}"
+    bowtie2-build "${index_args[@]}" 2>&1 \
+        | "${app['tee']}" "${dict['log_file']}"
     return 0
 }
