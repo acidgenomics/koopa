@@ -6,7 +6,7 @@
 koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # """
     # Install bcbio-nextgen genome from Ensembl.
-    # @note Updated 2022-01-28.
+    # @note Updated 2022-10-06.
     #
     # This script can fail on a clean bcbio install if this file is missing:
     # 'install/galaxy/tool-data/sam_fa_indices.loc'.
@@ -153,7 +153,8 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # e.g. "Ensembl 102".
     dict['build_version']="${dict['provider']}_${dict['release']}"
     # e.g. "GRCh38_Ensembl_102".
-    dict['bcbio_genome_name']="${dict['build']} ${dict['provider']} ${dict['release']}"
+    dict['bcbio_genome_name']="${dict['build']} \
+${dict['provider']} ${dict['release']}"
     dict['bcbio_genome_name']="${dict['bcbio_genome_name']// /_}"
     koopa_alert_install_start "${dict['bcbio_genome_name']}"
     # e.g. 'Hsapiens'.

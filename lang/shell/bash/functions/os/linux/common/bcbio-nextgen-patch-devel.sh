@@ -3,7 +3,7 @@
 koopa_linux_bcbio_nextgen_patch_devel() {
     # """
     # Patch bcbio-nextgen development install.
-    # @note Updated 2022-08-29.
+    # @note Updated 2022-10-06.
     # """
     local app cache_files dict
     koopa_assert_has_no_envs
@@ -61,10 +61,13 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     koopa_assert_is_installed "${app['bcbio_python']}"
     if [[ -z "${dict['install_dir']}" ]]
     then
-        dict['install_dir']="$(koopa_parent_dir --num=3 "${app['bcbio_python']}")"
+        dict['install_dir']="$( \
+            koopa_parent_dir --num=3 "${app['bcbio_python']}" \
+        )"
     fi
     koopa_assert_is_dir "${dict['install_dir']}"
-    koopa_h1 "Patching '${dict['name']}' installation at '${dict['install_dir']}'."
+    koopa_h1 "Patching '${dict['name']}' installation \
+at '${dict['install_dir']}'."
     koopa_dl  \
         'Git dir' "${dict['git_dir']}" \
         'Install dir' "${dict['install_dir']}" \
@@ -85,7 +88,8 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     )"
     koopa_rm "${cache_files[@]}"
     koopa_alert "Removing Python installer cruft inside 'anaconda/lib/'."
-    koopa_rm "${dict['install_dir']}/anaconda/lib/python"*'/site-packages/bcbio'*
+    koopa_rm "${dict['install_dir']}/anaconda/lib/python"*'/\
+site-packages/bcbio'*
     (
         koopa_cd "${dict['git_dir']}"
         koopa_rm 'tests/test_automated_output'
