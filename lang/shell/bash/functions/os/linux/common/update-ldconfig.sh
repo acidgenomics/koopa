@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Consider just writing a string here, rather than linking to an
-# external file...
-# FIXME Rework this to no longer use symbolic links defined in top-level
-# 'os/' directory.
-
 koopa_linux_update_ldconfig() {
     # """
     # Update dynamic linker (LD) configuration.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-10-06.
     # """
-    local app dict source_file
+    local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
@@ -19,26 +14,6 @@ koopa_linux_update_ldconfig() {
     )
     [[ -x "${app['ldconfig']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    # FIXME The 'distro_prefix' approach is no longer supported.
-    declare -A dict=(
-        ['distro_prefix']="$(koopa_distro_prefix)"
-        ['target_prefix']='/etc/ld.so.conf.d'
-    )
-    [[ -d "${dict['target_prefix']}" ]] || return 0
-    dict['conf_source']="${dict['distro_prefix']}${dict['target_prefix']}"
-    # Intentionally early return for distros that don't need configuration.
-    [[ -d "${dict['conf_source']}" ]] || return 0
-    # Create symlinks with 'koopa-' prefix.
-    # Note that we're using shell globbing here.
-    # https://unix.stackexchange.com/questions/218816
-    koopa_alert "Updating ldconfig in '${dict['target_prefix']}'."
-    for source_file in "${dict['conf_source']}/"*".conf"
-    do
-        local target_bn target_file
-        target_bn="koopa-$(koopa_basename "$source_file")"
-        target_file="${dict['target_prefix']}/${target_bn}"
-        koopa_ln --sudo "$source_file" "$target_file"
-    done
     "${app['sudo']}" "${app['ldconfig']}" || true
     return 0
 }
