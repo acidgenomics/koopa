@@ -73,7 +73,9 @@ koopa_ln() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$( \
+            koopa_strip_trailing_slash "${dict['target_dir']}" \
+        )"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"

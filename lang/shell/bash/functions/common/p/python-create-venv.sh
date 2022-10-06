@@ -74,7 +74,9 @@ koopa_python_create_venv() {
     koopa_assert_is_set --python "${app['python']}"
     koopa_assert_is_installed "${app['python']}"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
-    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_version']}")"
+    dict['py_maj_min_ver']="$( \
+        koopa_major_minor_version "${dict['py_version']}" \
+    )"
     if [[ -z "${dict['prefix']}" ]]
     then
         koopa_assert_is_set --name "${dict['name']}"
