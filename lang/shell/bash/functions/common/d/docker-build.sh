@@ -147,7 +147,8 @@ koopa_docker_build() {
         else
             dict2['tag']="${dict['tag']}"
         fi
-        dict2['source_image']="${dict['docker_dir']}/${dict2['image']}/${dict2['tag']}"
+        dict2['source_image']="${dict['docker_dir']}/\
+${dict2['image']}/${dict2['tag']}"
         koopa_assert_is_dir "${dict2['source_image']}"
         # Tags.
         dict2['tags_file']="${dict2['source_image']}/tags.txt"
@@ -240,7 +241,8 @@ koopa_docker_build() {
         "${app['docker']}" image ls \
             --filter \
             reference="${dict2['image']}:${dict2['tag']}"
-        koopa_alert_success "Build of '${dict2['source_image']}' was successful."
+        koopa_alert_success "Build of '${dict2['source_image']}' \
+was successful."
     done
     return 0
 }

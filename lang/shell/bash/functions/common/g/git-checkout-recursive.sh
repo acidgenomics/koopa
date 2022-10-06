@@ -85,7 +85,8 @@ koopa_git_checkout_recursive() {
                 if [[ -n "${dict['origin']}" ]]
                 then
                     "${app['git']}" fetch --all
-                    if [[ "${dict2['branch']}" != "${dict2['default_branch']}" ]]
+                    if [[ "${dict2['branch']}" \
+                        != "${dict2['default_branch']}" ]]
                     then
                         "${app['git']}" checkout "${dict2['default_branch']}"
                         "${app['git']}" branch -D "${dict2['branch']}" || true

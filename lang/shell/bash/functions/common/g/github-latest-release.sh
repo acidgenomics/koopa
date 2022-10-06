@@ -21,7 +21,8 @@ koopa_github_latest_release() {
         local dict
         declare -A dict
         dict['repo']="$repo"
-        dict['url']="https://api.github.com/repos/${dict['repo']}/releases/latest"
+        dict['url']="https://api.github.com/repos/${dict['repo']}/\
+releases/latest"
         dict['str']="$( \
             koopa_parse_url "${dict['url']}" \
                 | koopa_grep --pattern='"tag_name":' \
