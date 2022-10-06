@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Rework top-level 'os' directory.
+** TODO Rework harfbuzz to install into 'lib' instead of 'lib64' on Linux.
 ** TODO Need to get koopa to install from scratch on macOS using bootstrap script.
     Consider putting the bootstrap bin path in koopa bash header.
 ** TODO Consider hardening PATH in koopa bash header to /usr/bin and /bin only.
