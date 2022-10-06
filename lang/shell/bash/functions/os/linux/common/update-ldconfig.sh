@@ -2,6 +2,8 @@
 
 # FIXME Consider just writing a string here, rather than linking to an
 # external file...
+# FIXME Rework this to no longer use symbolic links defined in top-level
+# 'os/' directory.
 
 koopa_linux_update_ldconfig() {
     # """
