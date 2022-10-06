@@ -189,6 +189,7 @@ koopa_install_all_apps() {
     )
     koopa_is_linux && apps+=('elfutils')
     apps+=(
+        'libedit'
         'llvm'
         'go'
         'chezmoi'
@@ -214,7 +215,6 @@ koopa_install_all_apps() {
         'ranger-fm'
         'ruff'
         'yt-dlp'
-        'libedit'
         'openssh'
         'c-ares'
         'jemalloc'
