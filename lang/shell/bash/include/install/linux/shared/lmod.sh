@@ -33,7 +33,7 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-    dict['apps_dir']="${dict['libexec']}/apps"
+    dict['apps_dir']="${dict['prefix']}/apps"
     dict['data_dir']="${dict['libexec']}/moduleData"
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/TACC/${dict['name2']}/\
