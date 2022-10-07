@@ -71,7 +71,8 @@ ${dict['version']}/${dict['file']}"
         # Required dependency paths.
         "-DEXE_SQLITE3=${dict['sqlite']}/bin/sqlite3"
         "-DSQLITE3_INCLUDE_DIR=${dict['sqlite']}/include"
-        "-DSQLITE3_LIBRARY=${dict['sqlite']}/lib/libsqlite3.${dict['shared_ext']}"
+        "-DSQLITE3_LIBRARY=${dict['sqlite']}/lib/\
+libsqlite3.${dict['shared_ext']}"
         # Optional dependency paths.
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"

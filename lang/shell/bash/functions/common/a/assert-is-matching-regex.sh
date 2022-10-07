@@ -3,7 +3,7 @@
 koopa_assert_is_matching_regex() {
     # """
     # Assert that input matches a regular expression pattern.
-    # @note Updated 2022-02-27.
+    # @note Updated 2022-10-06.
     # """
     declare -A dict=(
         ['pattern']=''
@@ -42,7 +42,8 @@ koopa_assert_is_matching_regex() {
         --pattern="${dict['pattern']}" \
         --string="${dict['string']}"
     then
-        koopa_stop "'${dict['string']}' doesn't match regex '${dict['pattern']}'."
+        koopa_stop "'${dict['string']}' doesn't match regular expression \
+pattern '${dict['pattern']}'."
     fi
     return 0
 }

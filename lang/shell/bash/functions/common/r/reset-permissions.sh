@@ -23,7 +23,9 @@ koopa_reset_permissions() {
     )
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    koopa_chown --recursive "${dict['user']}:${dict['group']}" "${dict['prefix']}"
+    koopa_chown --recursive \
+        "${dict['user']}:${dict['group']}" \
+        "${dict['prefix']}"
     # Directories.
     koopa_find \
         --prefix="${dict['prefix']}" \

@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Unwanted bzip2 path on macOS:
-# -- Found BZip2: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libbz2.tbd (found version "1.0.8")
-
 main() {
     # """
     # Install libzip.

@@ -99,7 +99,6 @@ koopa_link_in_make() {
 into '${dict['make_prefix']}'."
     fi
     koopa_assert_is_existing "${files_arr[@]}"
-    # > koopa_alert "Linking '${dict['app_prefix']}' in '${dict['make_prefix']}'."
     koopa_sys_set_permissions --recursive "${dict['app_prefix']}"
     koopa_delete_broken_symlinks "${dict['app_prefix']}"
     cp_args=('--symbolic-link')

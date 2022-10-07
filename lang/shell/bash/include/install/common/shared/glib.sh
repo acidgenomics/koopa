@@ -1,40 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to use pcre2 here instead.
-
-# FIXME This now has a cryptic build error on Ubuntu 22.
-# This seems related to gettext.
-
-# FIXME Need to rework using CMake-based build config.
-# Now hitting this issue with package trying to install pcre2...
-#
-# r "sys/syscall.h" has symbol "SYS_sched_getattr" : NO
-# Checking if "pthread_setname_np(const char*)" with dependency threads: links: YES
-# Checking if "stack grows check" runs: NO (1)
-# Run-time dependency iconv found: YES
-# Found pkg-config: /opt/koopa/app/pkg-config/0.29.2/bin/pkg-config (0.29.2)
-# Did not find CMake 'cmake'
-# Found CMake: NO
-# Run-time dependency libpcre2-8 found: NO (tried pkgconfig, framework and cmake)
-# Run-time dependency libpcre2-8 found: NO (tried pkgconfig, framework and cmake)
-# Looking for a fallback subproject for the dependency libpcre2-8
-# Downloading pcre2 source from https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2
-# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
-# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
-# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
-# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
-# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
-# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
-# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
-# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
-# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
-# WARNING: failed to download with error: could not get https://github.com/PhilipHazel/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.bz2 is the internet available?. Trying after a delay...
-# <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
-
 main() {
     # """
     # Install glib.
-    # @note Updated 2022-09-29.
+    # @note Updated 2022-10-06.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
@@ -72,22 +41,9 @@ ${dict['maj_min_ver']}/${dict['file']}"
     meson_args=(
         "--prefix=${dict['prefix']}"
         '--buildtype=release'
-        # Consider enabling these:
-        # > "--localstatedir=#{var}"
-        # > "-Dgio_module_dir=#{HOMEBREW_PREFIX}/lib/gio/modules"
-        # > '--default-library=both'
-        # > '-Dbsymbolic_functions=false'
-        # > '-Ddtrace=false'
-        # > '-Dgtk_doc=true'
-        # > '-Diconv=auto'
-        # > '-Dman=true'
     )
     "${app['meson']}" "${meson_args[@]}" ..
     "${app['ninja']}" -v
     "${app['ninja']}" install -v
-    # Alternative approach used by Homebrew:
-    # > "${app['meson']}" setup build "${meson_args[@]}"
-    # > "${app['meson']}" compile -C build --verbose
-    # > "${app['meson']}" install -C build
     return 0
 }

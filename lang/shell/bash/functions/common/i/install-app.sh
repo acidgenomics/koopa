@@ -302,6 +302,7 @@ ${dict['version2']}"
                     env_vars=(
                         "HOME=${HOME:?}"
                         'KOOPA_ACTIVATE=0'
+                        "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
                         "LANG=${LANG:-}"
                         "LC_ALL=${LC_ALL:-}"
                         "LC_COLLATE=${LC_COLLATE:-}"
