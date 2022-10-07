@@ -597,7 +597,8 @@ koopa_macos_ifactive() {
     [[ -x "${app['pcregrep']}" ]] || return 1
     x="$( \
         "${app['ifconfig']}" \
-            | "${app['pcregrep']}" -M -o '^[^\t:]+:([^\n]|\n\t)*status: active' \
+            | "${app['pcregrep']}" -M -o \
+                '^[^\t:]+:([^\n]|\n\t)*status: active' \
     )"
     [[ -n "$x" ]] || return 1
     koopa_print "$x"

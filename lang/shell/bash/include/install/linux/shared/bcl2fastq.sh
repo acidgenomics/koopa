@@ -38,8 +38,10 @@ main() {
             "${dict['version']}" \
     )"
     dict['version2']="$(koopa_kebab_case_simple "${dict['version2']}")"
-    dict['file']="${dict['name']}${dict['maj_ver']}-v${dict['version2']}-tar.zip"
-    dict['url']="${dict['installers_url']}/${dict['name']}/source/${dict['file']}"
+    dict['file']="${dict['name']}${dict['maj_ver']}-\
+v${dict['version2']}-tar.zip"
+    dict['url']="${dict['installers_url']}/${dict['name']}/\
+source/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_extract "${dict['name']}${dict['maj_ver']}-v${dict['version']}-\
