@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-10-05.
+    # @note Updated 2022-10-07.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -313,6 +313,7 @@ koopa_install_all_apps() {
             'kallisto'
             'multiqc'
             'nextflow'
+            'openbb'
             'salmon'
             'sambamba'
             'samtools'

@@ -324,6 +324,7 @@ koopa_install_all_binary_apps() {
             'multiqc'
             'nextflow'
             'nim'
+            'openbb'
             'rust'
             'salmon'
             'sambamba'
