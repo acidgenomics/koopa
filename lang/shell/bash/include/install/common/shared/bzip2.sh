@@ -40,49 +40,6 @@ main() {
     koopa_cd "${dict['name']}-${dict['version']}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['makefile_shared']="Makefile-libbz2_${dict['shared_ext']}"
-    # NOTE The macOS dylib Makefile is a work in progress. Refer to MacPorts
-    # recipe for an alternative approach. Note that Homebrew doesn't currently
-    # bundle dylib file.
-    # > if koopa_is_macos
-    # > then
-    # >     "${app['cat']}" > "${dict['makefile_shared']}" << END
-# > PKG_VERSION=${dict['version']}
-# >
-# > SHELL=/bin/sh
-# > CC=gcc
-# > BIGFILES=-D_FILE_OFFSET_BITS=64
-# > CFLAGS=-fpic -fPIC -Wall -Winline -O2 -g \$(BIGFILES)
-# >
-# > OBJS= blocksort.o  \
-# > 	  huffman.o    \
-# > 	  crctable.o   \
-# > 	  randtable.o  \
-# > 	  compress.o   \
-# > 	  decompress.o \
-# > 	  bzlib.o
-# >
-# > all: \$(OBJS)
-# > 	\$(CC) -shared -Wl,-install_name -Wl,libbz2.dylib -o libbz2.\${PKG_VERSION}.dylib \$(OBJS)
-# >
-# > clean:
-# > 	rm -f libbz2.dylib libbz2.\${PKG_VERSION}.dylib
-# >
-# > blocksort.o: blocksort.c
-# > 	\$(CC) \$(CFLAGS) -c blocksort.c
-# > huffman.o: huffman.c
-# > 	\$(CC) \$(CFLAGS) -c huffman.c
-# > crctable.o: crctable.c
-# > 	\$(CC) \$(CFLAGS) -c crctable.c
-# > randtable.o: randtable.c
-# > 	\$(CC) \$(CFLAGS) -c randtable.c
-# > compress.o: compress.c
-# > 	\$(CC) \$(CFLAGS) -c compress.c
-# > decompress.o: decompress.c
-# > 	\$(CC) \$(CFLAGS) -c decompress.c
-# > bzlib.o: bzlib.c
-# > 	\$(CC) \$(CFLAGS) -c bzlib.c
-# > END
-    # > fi
     koopa_print_env
     "${app['make']}" install "PREFIX=${dict['prefix']}"
     if [[ -f "${dict['makefile_shared']}" ]]

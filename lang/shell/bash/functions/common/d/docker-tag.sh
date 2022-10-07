@@ -3,7 +3,7 @@
 koopa_docker_tag() {
     # """
     # Add Docker tag.
-    # Updated 2022-01-20.
+    # Updated 2022-10-06.
     # """
     local app dict
     koopa_assert_has_args "$#"
@@ -35,10 +35,12 @@ koopa_docker_tag() {
     koopa_alert "Tagging '${dict['image']}:${dict['source_tag']}' \
 as '${dict['dest_tag']}'."
     "${app['docker']}" login "${dict['server']}"
-    "${app['docker']}" pull "${dict['server']}/${dict['image']}:${dict['source_tag']}"
+    "${app['docker']}" pull \
+        "${dict['server']}/${dict['image']}:${dict['source_tag']}"
     "${app['docker']}" tag \
         "${dict['image']}:${dict['source_tag']}" \
         "${dict['image']}:${dict['dest_tag']}"
-    "${app['docker']}" push "${dict['server']}/${dict['image']}:${dict['dest_tag']}"
+    "${app['docker']}" push \
+        "${dict['server']}/${dict['image']}:${dict['dest_tag']}"
     return 0
 }

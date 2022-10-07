@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# koopa nolint=line-width
 
 main() {
     # """
@@ -134,7 +135,7 @@ diff -Naurp serf-1.3.9.orig/buckets/ssl_buckets.c serf-1.3.9/buckets/ssl_buckets
  {
 -    long ret = 1;
 +    long ret = 0;
- 
+
      switch (cmd) {
      default:
 @@ -415,6 +415,7 @@ static long bio_bucket_ctrl(BIO *bio, in
@@ -148,7 +149,7 @@ diff -Naurp serf-1.3.9.orig/buckets/ssl_buckets.c serf-1.3.9/buckets/ssl_buckets
 @@ -1204,6 +1205,10 @@ static void init_ssl_libraries(void)
      }
  }
- 
+
 +#ifndef ERR_GET_FUNC
 +#define ERR_GET_FUNC(ec) (0)
 +#endif

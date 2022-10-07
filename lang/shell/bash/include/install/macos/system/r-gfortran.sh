@@ -45,9 +45,10 @@ releases/download"
             dict['os']='Mojave'
             dict['file_stem']="${dict['name']}-${dict['version']}-${dict['os']}"
             dict['dmg_file']="${dict['file_stem']}.dmg"
-            dict['url']="${dict['url_stem']}/${dict['version']}/${dict['dmg_file']}"
-            dict['pkg_file']="/Volumes/${dict['file_stem']}/${dict['file_stem']}/\
-${dict['name']}.pkg"
+            dict['url']="${dict['url_stem']}/${dict['version']}/\
+${dict['dmg_file']}"
+            dict['pkg_file']="/Volumes/${dict['file_stem']}/\
+${dict['file_stem']}/${dict['name']}.pkg"
             ;;
         '10.2')
             # Not yet used, still in development.
@@ -66,7 +67,8 @@ ${dict['dmg_file']}"
     koopa_download "${dict['url']}" "${dict['dmg_file']}"
     "${app['hdiutil']}" mount "${dict['dmg_file']}"
     koopa_assert_is_file "${dict['pkg_file']}"
-    "${app['sudo']}" "${app['installer']}" -pkg "${dict['pkg_file']}" -target '/'
+    "${app['sudo']}" "${app['installer']}" \
+        -pkg "${dict['pkg_file']}" -target '/'
     "${app['hdiutil']}" unmount "${dict['mount_point']}"
     koopa_assert_is_dir "${dict['prefix']}"
     # Ensure the installer doesn't link outside of target prefix.

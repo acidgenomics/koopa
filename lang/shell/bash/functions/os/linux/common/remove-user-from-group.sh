@@ -22,6 +22,7 @@ koopa_linux_remove_user_from_group() {
         ['user']="${2:-}"
     )
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user)"
-    "${app['sudo']}" "${app['gpasswd']}" --delete "${dict['user']}" "${dict['group']}"
+    "${app['sudo']}" "${app['gpasswd']}" \
+        --delete "${dict['user']}" "${dict['group']}"
     return 0
 }

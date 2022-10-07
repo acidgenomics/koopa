@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Seeing this warning on macOS, likely need to tweak config:
-# # Failed to build these modules:
-# # _decimal              _tkinter
-#
-# FIXME Now seeing lots of this warning on macOS:
-# ld: warning: -undefined dynamic_lookup may not work with chained fixups
-#
-# FIXME Still seeing this warning on macOS:
-# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
-
 main() {
     # """
     # Install Python.
