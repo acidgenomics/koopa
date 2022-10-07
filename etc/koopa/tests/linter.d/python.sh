@@ -6,12 +6,17 @@ source "$(koopa header bash)"
 main() {
     # """
     # Python script checks.
-    # Updated 2021-02-15.
+    # Updated 2022-10-07.
     # """
     koopa_assert_has_no_args "$#"
     local files
-    readarray -t files <<< \
-        "$(koopa_test_find_files_by_shebang '^#!/.*\bpython(3)?\b$')"
+    readarray -t files <<< "$( \
+        koopa_find \
+            --pattern='*.py' \
+            --prefix="$(koopa_koopa_prefix)/lang/python" \
+            --sort \
+            --type='f' \
+    )"
     koopa_is_array_empty "${files[@]}" && return 0
     test_flake8 "${files[@]}"
     test_pylint "${files[@]}"
@@ -19,16 +24,22 @@ main() {
 }
 
 test_flake8() {
-    koopa_assert_is_installed 'flake8'
-    flake8 --ignore='E402,W503' "$@"
+    local app
+    declare -A app
+    app['flake8']="$(koopa_locate_flake8)"
+    [[ -x "${app['flake8']}" ]] || return 1
+    "${app['flake8']}" --ignore='E402,W503' "$@"
     koopa_status_ok "python-flake8 [${#}]"
     return 0
 }
 
 test_pylint() {
+    local app
+    declare -A app
+    app['pylint']="$(koopa_locate_pylint)"
+    [[ -x "${app['pylint']}" ]] || return 1
     # Note that setting '--jobs=0' flag here enables multicore.
-    koopa_assert_is_installed 'pylint'
-    pylint --jobs=0 --score='n' "$@"
+    "${app['pylint']}" --jobs=0 --score='n' "$@"
     koopa_status_ok "python-pylint [${#}]"
     return 0
 }

@@ -16131,6 +16131,13 @@ koopa_locate_fish() {
         "$@"
 }
 
+koopa_locate_flake8() {
+    koopa_locate_app \
+        --app-name='flake8' \
+        --bin-name='flake8' \
+        "$@"
+}
+
 koopa_locate_gcc() {
     koopa_locate_app \
         --app-name='gcc' \
@@ -16640,6 +16647,13 @@ koopa_locate_pyenv() {
     koopa_locate_app \
         --app-name='pyenv' \
         --bin-name='pyenv' \
+        "$@"
+}
+
+koopa_locate_pylint() {
+    koopa_locate_app \
+        --app-name='pylint' \
+        --bin-name='pylint' \
         "$@"
 }
 
