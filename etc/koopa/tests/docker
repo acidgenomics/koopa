@@ -18,8 +18,8 @@ test_docker() {
     dict['image']="acidgenomics/koopa:${dict['distro']}"
     koopa_alert "Running Docker test in '${dict['image']}' image."
     dict['cmd']="\
-        if [ -d /usr/local/koopa ]; \
-        then sudo rm -fr /usr/local/koopa; \
+        if [ -d '/opt/koopa' ]; \
+        then sudo rm -fr '/opt/koopa'; \
         else rm -fr ~/.local/share/koopa; fi \
      && curl -sSL https://koopa.acidgenomics.com/install \
             | bash -s -- --non-interactive --test"
