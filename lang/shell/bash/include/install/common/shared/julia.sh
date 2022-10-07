@@ -13,7 +13,8 @@ main() {
     # - https://github.com/JuliaLang/julia/blob/master/Make.inc
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/julia.rb
     # - https://ports.macports.org/port/julia/details/
-    # - https://git.alpinelinux.org/aports/tree/community/julia/APKBUILD?h=3.6-stable
+    # - https://git.alpinelinux.org/aports/tree/community/
+    #     julia/APKBUILD?h=3.6-stable
     # """
     local app build_deps dict
     koopa_assert_has_no_args "$#"

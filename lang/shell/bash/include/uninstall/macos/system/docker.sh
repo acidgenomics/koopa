@@ -3,7 +3,7 @@
 main() {
     # """
     # Uninstall Docker.
-    # @note Updated 2022-06-17.
+    # @note Updated 2022-10-07.
     # """
     koopa_rm \
         "${HOME}/Library/Application Scripts/com.docker.helper" \
@@ -18,6 +18,9 @@ main() {
         "${HOME}/Library/Preferences/com.docker.docker.plist" \
         "${HOME}/Library/Preferences/com.electron.docker-frontend.plist" \
         "${HOME}/Library/Preferences/com.electron.dockerdesktop.plist" \
-        "${HOME}/Library/Saved Application State/com.electron.docker-frontend.savedState" \
-        "${HOME}/Library/Saved Application State/com.electron.dockerdesktop.savedState"
+        "${HOME}/Library/Saved Application State/com.electron.\
+docker-frontend.savedState" \
+        "${HOME}/Library/Saved Application State/com.electron.\
+dockerdesktop.savedState"
+    return 0
 }
