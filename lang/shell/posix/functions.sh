@@ -419,7 +419,6 @@ koopa_activate_delta() {
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
     koopa_is_alias 'ln' && unalias 'ln'
-    command -v ln # FIXME
     ln -fns "$source_file" "$target_file" >/dev/null
     return 0
 }
@@ -527,7 +526,7 @@ koopa_activate_kitty() {
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
     koopa_is_alias 'ln' && unalias 'ln'
-    ln -fns "$source_file" "$target_file"
+    ln -fns "$source_file" "$target_file" >/dev/null
     return 0
 }
 
@@ -597,7 +596,11 @@ koopa_activate_pipx() {
     local prefix
     [ -x "$(koopa_bin_prefix)/pipx" ] || return 0
     prefix="$(koopa_pipx_prefix)"
-    [ ! -d "$prefix" ] && mkdir -p "$prefix"
+    if [ ! -d "$prefix" ]
+    then
+        koopa_is_alias 'mkdir' && unalias 'mkdir'
+        mkdir -p "$prefix" >/dev/null
+    fi
     koopa_add_to_path_start "${prefix}/bin"
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
@@ -730,7 +733,8 @@ koopa_activate_tealdeer() {
     fi
     if [ ! -d "${TEALDEER_CACHE_DIR:?}" ]
     then
-        mkdir -p "${TEALDEER_CACHE_DIR:?}"
+        koopa_is_alias 'mkdir' && unalias 'mkdir'
+        mkdir -p "${TEALDEER_CACHE_DIR:?}" >/dev/null
     fi
     export TEALDEER_CACHE_DIR TEALDEER_CONFIG_DIR
     return 0
@@ -751,8 +755,8 @@ koopa_activate_today_bucket() {
     fi
     koopa_is_alias 'ln' && unalias 'ln'
     koopa_is_alias 'mkdir' && unalias 'mkdir'
-    mkdir -p "${bucket_dir}/${today_bucket}"
-    ln -fns "${bucket_dir}/${today_bucket}" "$today_link"
+    mkdir -p "${bucket_dir}/${today_bucket}" >/dev/null
+    ln -fns "${bucket_dir}/${today_bucket}" "$today_link" >/dev/null
     return 0
 }
 
@@ -819,9 +823,9 @@ koopa_add_config_link() {
         then
             continue
         fi
-        mkdir -p "$config_prefix"
-        rm -fr "$dest_file"
-        ln -s "$source_file" "$dest_file"
+        mkdir -p "$config_prefix" >/dev/null
+        rm -fr "$dest_file" >/dev/null
+        ln -fns "$source_file" "$dest_file" >/dev/null
     done
     return 0
 }
