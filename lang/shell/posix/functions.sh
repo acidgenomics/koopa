@@ -419,6 +419,7 @@ koopa_activate_delta() {
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
     koopa_is_alias 'ln' && unalias 'ln'
+    command -v ls # FIXME
     ln -fns "$source_file" "$target_file"
     return 0
 }
