@@ -5,40 +5,6 @@ main() {
     # Install FFmpeg.
     # @note Updated 2022-06-07.
     #
-    # Consider also requiring:
-    # - "aom"
-    # - "dav1d"
-    # - "fontconfig"
-    # - "freetype"
-    # - "frei0r"
-    # - "gnutls"
-    # - "libass"
-    # - "libbluray"
-    # - "librist"
-    # - "libsoxr"
-    # - "libvidstab"
-    # - "libvmaf"
-    # - "libvorbis"
-    # - "libvpx"
-    # - "opencore-amr"
-    # - "openjpeg"
-    # - "opus"
-    # - "rav1e"
-    # - "rubberband"
-    # - "sdl2"
-    # - "snappy"
-    # - "speex"
-    # - "srt"
-    # - "tesseract"
-    # - "theora"
-    # - "webp"
-    # - "x264"
-    # - "x265"
-    # - "xvid"
-    # - "xz"
-    # - "zeromq"
-    # - "zimg"
-    #
     # @seealso
     # - https://ffmpeg.org/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ffmpeg.rb
