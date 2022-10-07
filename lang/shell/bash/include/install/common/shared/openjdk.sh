@@ -66,8 +66,8 @@ main() {
     # - OpenJDK17U-jdk_x64_mac_hotspot_17.0.3_7.tar.gz
     dict['file']="OpenJDK${dict['maj_ver']}U-jdk_${dict['arch2']}_\
 ${dict['platform']}_hotspot_${dict['version2']}.tar.gz"
-    dict['url']="https://github.com/adoptium/temurin${dict['maj_ver']}-binaries/\
-releases/download/jdk-${dict['version3']}/${dict['file']}"
+    dict['url']="https://github.com/adoptium/temurin${dict['maj_ver']}-\
+binaries/releases/download/jdk-${dict['version3']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cp "jdk-${dict['version']}" "${dict['prefix']}/libexec"

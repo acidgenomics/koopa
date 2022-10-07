@@ -33,13 +33,16 @@ main() {
     esac
     dict['major_version']="$(koopa_major_version "${dict['version']}")"
     dict['maj_min_version']="$(koopa_major_minor_version "${dict['version']}")"
-    dict['prefix']="${dict['framework_prefix']}/Versions/${dict['maj_min_version']}"
-    dict['file']="${dict['name']}-${dict['version']}-${dict['macos_string']}.pkg"
+    dict['prefix']="${dict['framework_prefix']}/Versions/\
+${dict['maj_min_version']}"
+    dict['file']="${dict['name']}-${dict['version']}-\
+${dict['macos_string']}.pkg"
     dict['url']="https://www.${dict['name']}.org/ftp/${dict['name']}/\
 ${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     "${app['sudo']}" "${app['installer']}" -pkg "${dict['file']}" -target /
-    app['python']="${dict['prefix']}/bin/${dict['name']}${dict['major_version']}"
+    app['python']="${dict['prefix']}/bin/${dict['name']}\
+${dict['major_version']}"
     koopa_assert_is_installed "${app['python']}"
     return 0
 }
