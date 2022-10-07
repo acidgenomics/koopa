@@ -2619,7 +2619,7 @@
     "version": "1.50.0"
   },
   "nim": {
-    "bin": [],
+    "bin": ["nim"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-29",
