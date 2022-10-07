@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # shellcheck disable=all
 
 __koopa_alert_process_start() {
@@ -3211,10 +3211,9 @@ koopa_cache_functions_dir() {
     [[ -x "${app['perl']}" ]] || return 1
     for prefix in "$@"
     do
-        local dict file files
-        declare -A dict=(
-            ['prefix']="$prefix"
-        )
+        local dict file files header
+        declare -A dict
+        dict['prefix']="$prefix"
         koopa_assert_is_dir "${dict['prefix']}"
         dict['target_file']="${dict['prefix']}.sh"
         koopa_alert "Caching functions at '${dict['prefix']}' \
@@ -3226,9 +3225,20 @@ in '${dict['target_file']}'."
                 --sort \
         )"
         koopa_assert_is_array_non_empty "${files[@]:-}"
+        header=()
+        if koopa_str_detect_fixed \
+            --pattern='/bash/' \
+            --string="${dict['prefix']}"
+        then
+            header+=('#!/usr/bin/env bash')
+        else
+            header+=('#!/bin/sh')
+        fi
+        header+=('# shellcheck disable=all')
+        dict['header_string']="$(printf '%s\n' "${header[@]}")"
         koopa_write_string \
             --file="${dict['target_file']}" \
-            --string='#!/bin/sh\n# shellcheck disable=all'
+            --string="${dict['header_string']}"
         for file in "${files[@]}"
         do
             "${app['grep']}" -Eiv '^(\s+)?#' "$file" \
