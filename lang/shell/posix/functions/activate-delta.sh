@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# FIXME This is too verbose on Ubuntu instance.
-# This alias issue is only seen when using Bash as login shell..
-
 koopa_activate_delta() {
     # """
     # Activate delta (git-delta) diff tool.
@@ -25,7 +22,6 @@ koopa_activate_delta() {
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
     koopa_is_alias 'ln' && unalias 'ln'
-    command -v ln # FIXME
     ln -fns "$source_file" "$target_file" >/dev/null
     return 0
 }
