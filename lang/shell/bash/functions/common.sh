@@ -22485,7 +22485,7 @@ koopa_test_find_files_by_ext() {
 }
 
 koopa_test_find_files_by_shebang() {
-    local all_files app dict file shebang_files
+    local all_files app dict file files
     koopa_assert_has_args "$#"
     declare -A app=(
         ['head']="$(koopa_locate_head)"
@@ -22497,7 +22497,7 @@ koopa_test_find_files_by_shebang() {
         ['pattern']="${1:?}"
     )
     readarray -t all_files <<< "$(koopa_test_find_files)"
-    shebang_files=()
+    files=()
     for file in "${all_files[@]}"
     do
         local shebang
@@ -22505,16 +22505,21 @@ koopa_test_find_files_by_shebang() {
         shebang="$( \
             "${app['tr']}" --delete '\0' < "$file" \
                 | "${app['head']}" -n 1 \
+                || true \
         )"
         [[ -n "$shebang" ]] || continue
         if koopa_str_detect_regex \
             --string="$shebang" \
             --pattern="${dict['pattern']}"
         then
-            shebang_files+=("$file")
+            files+=("$file")
         fi
     done
-    koopa_print "${shebang_files[@]}"
+    if koopa_is_array_empty "${files[@]}"
+    then
+        koopa_stop "Failed to find files with pattern '${dict['pattern']}'."
+    fi
+    koopa_print "${files[@]}"
     return 0
 }
 
@@ -22537,6 +22542,7 @@ koopa_test_find_files() {
             --exclude='opt/**' \
             --exclude='share/**' \
             --prefix="${dict['prefix']}" \
+            --sort \
             --type='f' \
     )"
     if koopa_is_array_empty "${files[@]:-}"
