@@ -186,7 +186,8 @@ libpanelw.${dict['shared_ext']}"
         "-DPKG_CONFIG_EXECUTABLE=${app['pkg_config']}"
         "-DPython3_EXECUTABLE=${app['python']}"
         "-DPython3_INCLUDE_DIRS=${dict['python']}/include"
-        "-DPython3_LIBRARIES=${dict['python']}/lib/libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
+        "-DPython3_LIBRARIES=${dict['python']}/lib/\
+libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
         "-DPython3_ROOT_DIR=${dict['python']}"
         "-DSWIG_EXECUTABLE=${app['swig']}"
         "-DTerminfo_LIBRARIES=${dict['ncurses']}/lib/\
@@ -197,15 +198,18 @@ libncursesw.${dict['shared_ext']}"
     # Additional Python binding fixes.
     cmake_args+=(
         "-DCLANG_PYTHON_BINDINGS_VERSIONS=${dict['py_maj_min_ver']}"
-        "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/bin/python${dict['py_maj_min_ver']}"
-        "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/site-packages"
+        "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/\
+bin/python${dict['py_maj_min_ver']}"
+        "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/\
+site-packages"
     )
     if koopa_is_linux
     then
         cmake_args+=(
             # Ensure OpenMP picks up ELF.
             "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR=${dict['elfutils']}/include"
-            "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/libelf.${dict['shared_ext']}"
+            "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/\
+libelf.${dict['shared_ext']}"
             # Enable llvm gold plugin for LTO.
             "-DLLVM_BINUTILS_INCDIR=${dict['binutils']}/include"
         )
