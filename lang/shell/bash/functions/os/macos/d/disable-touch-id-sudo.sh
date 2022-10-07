@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Define the code in the function here instead.
-
 koopa_macos_disable_touch_id_sudo() {
     # """
     # Disable sudo authentication via Touch ID PAM.

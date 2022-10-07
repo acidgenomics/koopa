@@ -27,7 +27,9 @@ koopa_mem_gb() {
         dict['meminfo']='/proc/meminfo'
         koopa_assert_is_file "${dict['meminfo']}"
         # shellcheck disable=SC2016
-        dict['mem']="$("${app['awk']}" '/MemTotal/ {print $2}' "${dict['meminfo']}")"
+        dict['mem']="$( \
+            "${app['awk']}" '/MemTotal/ {print $2}' "${dict['meminfo']}" \
+        )"
         dict['denom']=1048576  # 1024^2; KB
     else
         koopa_stop 'Unsupported system.'

@@ -24,7 +24,7 @@ main() {
     dict['libexec']="${dict['prefix']}/libexec"
     dict['env_prefix']="${dict['libexec']}/conda"
     dict['python_prefix']="${dict['libexec']}/python"
-    dict['file']="v1.8.0.tar.gz"
+    dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/OpenBB-finance/${dict['name']}/archive/\
 refs/tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

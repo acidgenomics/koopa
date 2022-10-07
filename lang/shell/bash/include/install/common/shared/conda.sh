@@ -74,7 +74,8 @@ main() {
             "$(koopa_major_minor_version "${dict['py_version']}")" \
     )"
     dict['script']="Miniconda${dict['py_major_version']}-\
-py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}-${dict['arch2']}.sh"
+py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
+-${dict['arch2']}.sh"
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
     unset -v PYTHONHOME PYTHONPATH

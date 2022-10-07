@@ -115,7 +115,6 @@ ${dict['author']:0:1}/${dict['author']:0:2}/${dict['author']}/${dict['file']}"
     koopa_assert_is_file "${bin_files[@]}"
     for bin_file in "${bin_files[@]}"
     do
-        koopa_alert "Modifying '${bin_file}' to contain '${dict['lib_prefix']}'."
         koopa_insert_at_line_number \
             --file="$bin_file" \
             --line-number=2 \

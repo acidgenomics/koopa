@@ -3,7 +3,7 @@
 koopa_kallisto_quant_paired_end_per_sample() {
     # """
     # Run kallisto quant on a paired-end sample.
-    # @note Updated 2022-03-25.
+    # @note Updated 2022-10-06.
     #
     # Consider adding support for '--genomebam' and '--pseudobam' output,
     # which requires GTF file input ('--gtf') and chromosome names
@@ -175,7 +175,9 @@ koopa_kallisto_quant_paired_end_per_sample() {
         '--bias'
         '--verbose'
     )
-    dict['lib_type']="$(koopa_kallisto_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$( \
+        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
+    )"
     if [[ -n "${dict['lib_type']}" ]]
     then
         quant_args+=("${dict['lib_type']}")

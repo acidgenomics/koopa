@@ -27,7 +27,8 @@ koopa_header() {
             koopa_invalid_arg "${dict['lang']}"
             ;;
     esac
-    dict['file']="${dict['prefix']}/${dict['lang']}/include/header.${dict['ext']}"
+    dict['file']="${dict['prefix']}/${dict['lang']}/include/\
+header.${dict['ext']}"
     koopa_assert_is_file "${dict['file']}"
     koopa_print "${dict['file']}"
     return 0

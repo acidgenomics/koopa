@@ -138,7 +138,9 @@ koopa_salmon_index() {
         koopa_assert_is_set \
             '--genome-fasta-file' "${dict['genome_fasta_file']}"
         koopa_assert_is_file "${dict['genome_fasta_file']}"
-        dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+        dict['genome_fasta_file']="$( \
+            koopa_realpath "${dict['genome_fasta_file']}" \
+        )"
         koopa_assert_is_matching_regex \
             --pattern="${dict['fasta_pattern']}" \
             --string="${dict['genome_fasta_file']}"

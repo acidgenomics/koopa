@@ -46,7 +46,8 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://download.samba.org/pub/${dict['name']}/src/${dict['file']}"
+    dict['url']="https://download.samba.org/pub/${dict['name']}/src/\
+${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

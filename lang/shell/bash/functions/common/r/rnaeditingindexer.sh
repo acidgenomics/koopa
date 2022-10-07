@@ -3,7 +3,7 @@
 koopa_rnaeditingindexer() {
     # """
     # Run dockerized RNAEditingIndexer pipeline.
-    # @note Updated 2022-03-22.
+    # @note Updated 2022-10-06.
     #
     # Genome must be indexed by BEDGenomeIndexer.
     # Note that '--verbose' flag includes more output in summary CSV.
@@ -87,7 +87,9 @@ bam.AluChr1Only.bam"
         koopa_assert_is_dir "${dict['local_bam_dir']}"
         dict['local_bam_dir']="$(koopa_realpath "${dict['local_bam_dir']}")"
         koopa_rm "${dict['local_output_dir']}"
-        dict['local_output_dir']="$(koopa_init_dir "${dict['local_output_dir']}")"
+        dict['local_output_dir']="$( \
+            koopa_init_dir "${dict['local_output_dir']}" \
+        )"
         run_args+=(
             -v "${dict['local_bam_dir']}:${dict['mnt_bam_dir']}:ro"
             -v "${dict['local_output_dir']}:${dict['mnt_output_dir']}:rw"

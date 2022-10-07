@@ -34,6 +34,7 @@ ${dict['platform']}-${dict['arch2']}.zip"
 ${dict['platform2']}-${dict['arch']}.rpm"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_fedora_install_from_rpm --prefix="${dict['prefix']}" "${dict['file2']}"
+    koopa_fedora_install_from_rpm \
+        --prefix="${dict['prefix']}" "${dict['file2']}"
     return 0
 }
