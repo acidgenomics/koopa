@@ -418,7 +418,13 @@ koopa_activate_delta() {
         target_link_bn="$(readlink "$target_file")"
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
-    koopa_is_alias 'ln' && unalias 'ln'
+    if koopa_is_alias 'ln'
+    then
+        unalias 'ln'
+        echo 'FIXME YES'
+    else
+        echo 'FIXME NO'
+    fi
     command -v ls # FIXME
     ln -fns "$source_file" "$target_file"
     return 0
