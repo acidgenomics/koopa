@@ -40,7 +40,8 @@ main() {
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '1' \
     )"
-    dict['toolchain_prefix']="${dict['tmp_prefix']}/toolchains/${dict['toolchain']}"
+    dict['toolchain_prefix']="${dict['tmp_prefix']}/toolchains/\
+${dict['toolchain']}"
     koopa_assert_is_dir "${dict['toolchain_prefix']}"
     koopa_cp "${dict['toolchain_prefix']}" "${dict['prefix']}"
     return 0

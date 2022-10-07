@@ -13,7 +13,8 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/kward/${dict['name']}/archive/${dict['file']}"
+    dict['url']="https://github.com/kward/${dict['name']}/archive/\
+${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

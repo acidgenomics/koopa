@@ -44,7 +44,8 @@ koopa_linux_add_user_to_group() {
     )
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user)"
     koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
-    "${app['sudo']}" "${app['gpasswd']}" --add "${dict['user']}" "${dict['group']}"
+    "${app['sudo']}" "${app['gpasswd']}" \
+        --add "${dict['user']}" "${dict['group']}"
     return 0
 }
 
@@ -145,7 +146,8 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         koopa_stop "Invalid organism: '${dict['organism']}'."
     fi
     dict['build_version']="${dict['provider']}_${dict['release']}"
-    dict['bcbio_genome_name']="${dict['build']} ${dict['provider']} ${dict['release']}"
+    dict['bcbio_genome_name']="${dict['build']} \
+${dict['provider']} ${dict['release']}"
     dict['bcbio_genome_name']="${dict['bcbio_genome_name']// /_}"
     koopa_alert_install_start "${dict['bcbio_genome_name']}"
     dict['bcbio_species_dir']="$( \
@@ -252,10 +254,13 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     koopa_assert_is_installed "${app['bcbio_python']}"
     if [[ -z "${dict['install_dir']}" ]]
     then
-        dict['install_dir']="$(koopa_parent_dir --num=3 "${app['bcbio_python']}")"
+        dict['install_dir']="$( \
+            koopa_parent_dir --num=3 "${app['bcbio_python']}" \
+        )"
     fi
     koopa_assert_is_dir "${dict['install_dir']}"
-    koopa_h1 "Patching '${dict['name']}' installation at '${dict['install_dir']}'."
+    koopa_h1 "Patching '${dict['name']}' installation \
+at '${dict['install_dir']}'."
     koopa_dl  \
         'Git dir' "${dict['git_dir']}" \
         'Install dir' "${dict['install_dir']}" \
@@ -276,7 +281,8 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     )"
     koopa_rm "${cache_files[@]}"
     koopa_alert "Removing Python installer cruft inside 'anaconda/lib/'."
-    koopa_rm "${dict['install_dir']}/anaconda/lib/python"*'/site-packages/bcbio'*
+    koopa_rm "${dict['install_dir']}/anaconda/lib/python"*'/\
+site-packages/bcbio'*
     (
         koopa_cd "${dict['git_dir']}"
         koopa_rm 'tests/test_automated_output'
@@ -765,7 +771,8 @@ koopa_linux_remove_user_from_group() {
         ['user']="${2:-}"
     )
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user)"
-    "${app['sudo']}" "${app['gpasswd']}" --delete "${dict['user']}" "${dict['group']}"
+    "${app['sudo']}" "${app['gpasswd']}" \
+        --delete "${dict['user']}" "${dict['group']}"
     return 0
 }
 

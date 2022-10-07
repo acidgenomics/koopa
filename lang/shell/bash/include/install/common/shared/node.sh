@@ -64,7 +64,8 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
-    dict['cacerts']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
+    dict['cacerts']="${dict['ca_certificates']}/share/ca-certificates/\
+cacert.pem"
     koopa_assert_is_file "${dict['cacerts']}"
     dict['file']="${dict['name']}-v${dict['version']}.tar.xz"
     dict['url']="https://nodejs.org/dist/v${dict['version']}/${dict['file']}"

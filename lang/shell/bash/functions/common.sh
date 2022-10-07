@@ -42,8 +42,8 @@ __koopa_alert_process_success() {
     dict['prefix']="${2:-}"
     if [[ -n "${dict['prefix']}" ]]
     then
-        dict['out']="${dict['word']} of '${dict['name']}' at '${dict['prefix']}' \
-was successful."
+        dict['out']="${dict['word']} of '${dict['name']}' at \
+'${dict['prefix']}' was successful."
     else
         dict['out']="${dict['word']} of '${dict['name']}' was successful."
     fi
@@ -1442,7 +1442,8 @@ koopa_assert_is_matching_regex() {
         --pattern="${dict['pattern']}" \
         --string="${dict['string']}"
     then
-        koopa_stop "'${dict['string']}' doesn't match regex '${dict['pattern']}'."
+        koopa_stop "'${dict['string']}' doesn't match regular expression \
+pattern '${dict['pattern']}'."
     fi
     return 0
 }
@@ -2933,7 +2934,8 @@ koopa_bowtie2_index() {
         "${dict['index_base']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    bowtie2-build "${index_args[@]}" 2>&1 | "${app['tee']}" "${dict['log_file']}"
+    bowtie2-build "${index_args[@]}" 2>&1 \
+        | "${app['tee']}" "${dict['log_file']}"
     return 0
 }
 
@@ -4442,7 +4444,9 @@ koopa_conda_activate_env() {
         koopa_alert_info "Attempting to install missing conda \
 environment '${dict['env_name']}'."
         koopa_conda_create_env "${dict['env_name']}"
-        dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
+        dict['env_prefix']="$( \
+            koopa_conda_env_prefix "${dict['env_name']}" || true \
+        )"
     fi
     if [[ ! -d "${dict['env_prefix']}" ]]
     then
@@ -4564,13 +4568,15 @@ exists at '${dict2['env_prefix']}'."
                 continue
             fi
         fi
-        koopa_alert_install_start "${dict2['env_name']}" "${dict2['env_prefix']}"
+        koopa_alert_install_start \
+            "${dict2['env_name']}" "${dict2['env_prefix']}"
         "${app['conda']}" create \
             --name="${dict2['env_name']}" \
             --quiet \
             --yes \
             "${dict2['env_string']}"
-        koopa_alert_install_success "${dict2['env_name']}" "${dict2['env_prefix']}"
+        koopa_alert_install_success \
+            "${dict2['env_name']}" "${dict2['env_prefix']}"
     done
     return 0
 }
@@ -6597,7 +6603,8 @@ koopa_docker_build() {
         else
             dict2['tag']="${dict['tag']}"
         fi
-        dict2['source_image']="${dict['docker_dir']}/${dict2['image']}/${dict2['tag']}"
+        dict2['source_image']="${dict['docker_dir']}/\
+${dict2['image']}/${dict2['tag']}"
         koopa_assert_is_dir "${dict2['source_image']}"
         dict2['tags_file']="${dict2['source_image']}/tags.txt"
         if [[ -f "${dict2['tags_file']}" ]]
@@ -6677,7 +6684,8 @@ koopa_docker_build() {
         "${app['docker']}" image ls \
             --filter \
             reference="${dict2['image']}:${dict2['tag']}"
-        koopa_alert_success "Build of '${dict2['source_image']}' was successful."
+        koopa_alert_success "Build of '${dict2['source_image']}' \
+was successful."
     done
     return 0
 }
@@ -7017,11 +7025,13 @@ koopa_docker_tag() {
     koopa_alert "Tagging '${dict['image']}:${dict['source_tag']}' \
 as '${dict['dest_tag']}'."
     "${app['docker']}" login "${dict['server']}"
-    "${app['docker']}" pull "${dict['server']}/${dict['image']}:${dict['source_tag']}"
+    "${app['docker']}" pull \
+        "${dict['server']}/${dict['image']}:${dict['source_tag']}"
     "${app['docker']}" tag \
         "${dict['image']}:${dict['source_tag']}" \
         "${dict['image']}:${dict['dest_tag']}"
-    "${app['docker']}" push "${dict['server']}/${dict['image']}:${dict['dest_tag']}"
+    "${app['docker']}" push \
+        "${dict['server']}/${dict['image']}:${dict['dest_tag']}"
     return 0
 }
 
@@ -8898,7 +8908,8 @@ koopa_git_checkout_recursive() {
                 if [[ -n "${dict['origin']}" ]]
                 then
                     "${app['git']}" fetch --all
-                    if [[ "${dict2['branch']}" != "${dict2['default_branch']}" ]]
+                    if [[ "${dict2['branch']}" \
+                        != "${dict2['default_branch']}" ]]
                     then
                         "${app['git']}" checkout "${dict2['default_branch']}"
                         "${app['git']}" branch -D "${dict2['branch']}" || true
@@ -9113,7 +9124,10 @@ koopa_git_last_commit_local() {
             local x
             koopa_cd "$repo"
             koopa_is_git_repo || return 1
-            x="$("${app['git']}" rev-parse "${dict['ref']}" 2>/dev/null || true)"
+            x="$( \
+                "${app['git']}" rev-parse "${dict['ref']}" \
+                    2>/dev/null || true \
+            )"
             [[ -n "$x" ]] || return 1
             koopa_print "$x"
         done
@@ -9617,7 +9631,8 @@ koopa_github_latest_release() {
         local dict
         declare -A dict
         dict['repo']="$repo"
-        dict['url']="https://api.github.com/repos/${dict['repo']}/releases/latest"
+        dict['url']="https://api.github.com/repos/${dict['repo']}/\
+releases/latest"
         dict['str']="$( \
             koopa_parse_url "${dict['url']}" \
                 | koopa_grep --pattern='"tag_name":' \
@@ -10038,7 +10053,8 @@ koopa_header() {
             koopa_invalid_arg "${dict['lang']}"
             ;;
     esac
-    dict['file']="${dict['prefix']}/${dict['lang']}/include/header.${dict['ext']}"
+    dict['file']="${dict['prefix']}/${dict['lang']}/include/\
+header.${dict['ext']}"
     koopa_assert_is_file "${dict['file']}"
     koopa_print "${dict['file']}"
     return 0
@@ -10602,7 +10618,9 @@ koopa_hisat2_fastq_quality_format() {
         ['fastq_file']="${1:?}"
     )
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict['format']="$(koopa_fastq_detect_quality_format "${dict['fastq_file']}")"
+    dict['format']="$( \
+        koopa_fastq_detect_quality_format "${dict['fastq_file']}" \
+    )"
     case "${dict['format']}" in
         'Phread+33')
             dict['flag']='--phred33'
@@ -11913,6 +11931,7 @@ ${dict['version2']}"
                     env_vars=(
                         "HOME=${HOME:?}"
                         'KOOPA_ACTIVATE=0'
+                        "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
                         "LANG=${LANG:-}"
                         "LC_ALL=${LC_ALL:-}"
                         "LC_COLLATE=${LC_COLLATE:-}"
@@ -14836,7 +14855,9 @@ koopa_kallisto_quant_paired_end_per_sample() {
         '--bias'
         '--verbose'
     )
-    dict['lib_type']="$(koopa_kallisto_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$( \
+        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
+    )"
     if [[ -n "${dict['lib_type']}" ]]
     then
         quant_args+=("${dict['lib_type']}")
@@ -15605,7 +15626,9 @@ koopa_ln() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$( \
+            koopa_strip_trailing_slash "${dict['target_dir']}" \
+        )"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"
@@ -17129,7 +17152,9 @@ koopa_mem_gb() {
     then
         dict['meminfo']='/proc/meminfo'
         koopa_assert_is_file "${dict['meminfo']}"
-        dict['mem']="$("${app['awk']}" '/MemTotal/ {print $2}' "${dict['meminfo']}")"
+        dict['mem']="$( \
+            "${app['awk']}" '/MemTotal/ {print $2}' "${dict['meminfo']}" \
+        )"
         dict['denom']=1048576  # 1024^2; KB
     else
         koopa_stop 'Unsupported system.'
@@ -17415,7 +17440,9 @@ koopa_mv() {
     if [[ -n "${dict['target_dir']}" ]]
     then
         koopa_assert_is_existing "$@"
-        dict['target_dir']="$(koopa_strip_trailing_slash "${dict['target_dir']}")"
+        dict['target_dir']="$( \
+            koopa_strip_trailing_slash "${dict['target_dir']}" \
+        )"
         if [[ ! -d "${dict['target_dir']}" ]]
         then
             "${mkdir[@]}" "${dict['target_dir']}"
@@ -18004,7 +18031,9 @@ koopa_python_create_venv() {
     koopa_assert_is_set --python "${app['python']}"
     koopa_assert_is_installed "${app['python']}"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
-    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_version']}")"
+    dict['py_maj_min_ver']="$( \
+        koopa_major_minor_version "${dict['py_version']}" \
+    )"
     if [[ -z "${dict['prefix']}" ]]
     then
         koopa_assert_is_set --name "${dict['name']}"
@@ -19484,7 +19513,9 @@ koopa_reset_permissions() {
     )
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    koopa_chown --recursive "${dict['user']}:${dict['group']}" "${dict['prefix']}"
+    koopa_chown --recursive \
+        "${dict['user']}:${dict['group']}" \
+        "${dict['prefix']}"
     koopa_find \
         --prefix="${dict['prefix']}" \
         --print0 \
@@ -19657,7 +19688,9 @@ bam.AluChr1Only.bam"
         koopa_assert_is_dir "${dict['local_bam_dir']}"
         dict['local_bam_dir']="$(koopa_realpath "${dict['local_bam_dir']}")"
         koopa_rm "${dict['local_output_dir']}"
-        dict['local_output_dir']="$(koopa_init_dir "${dict['local_output_dir']}")"
+        dict['local_output_dir']="$( \
+            koopa_init_dir "${dict['local_output_dir']}" \
+        )"
         run_args+=(
             -v "${dict['local_bam_dir']}:${dict['mnt_bam_dir']}:ro"
             -v "${dict['local_output_dir']}:${dict['mnt_output_dir']}:rw"
@@ -20038,7 +20071,9 @@ koopa_salmon_index() {
         koopa_assert_is_set \
             '--genome-fasta-file' "${dict['genome_fasta_file']}"
         koopa_assert_is_file "${dict['genome_fasta_file']}"
-        dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+        dict['genome_fasta_file']="$( \
+            koopa_realpath "${dict['genome_fasta_file']}" \
+        )"
         koopa_assert_is_matching_regex \
             --pattern="${dict['fasta_pattern']}" \
             --string="${dict['genome_fasta_file']}"
@@ -21725,8 +21760,8 @@ koopa_star_index() {
         '--output-dir' "${dict['output_dir']}"
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "STAR 'genomeGenerate' mode requires ${dict['mem_gb_cutoff']} \
-GB of RAM."
+        koopa_stop "STAR 'genomeGenerate' mode requires \
+${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_file \
         "${dict['genome_fasta_file']}" \
