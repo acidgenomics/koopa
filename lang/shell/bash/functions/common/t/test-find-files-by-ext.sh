@@ -3,7 +3,12 @@
 koopa_test_find_files_by_ext() {
     # """
     # Find relevant test files by extension.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-10-07.
+    #
+    # @examples
+    # > koopa_test_find_files_by_ext 'sh'
+    # > koopa_test_find_files_by_ext 'py'
+    # > koopa_test_find_files_by_ext 'R'
     # """
     local all_files dict
     koopa_assert_has_args "$#"
