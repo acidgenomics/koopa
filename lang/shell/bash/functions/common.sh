@@ -11909,13 +11909,13 @@ ${dict['version2']}"
                     declare -A app
                     app['env']="$(koopa_locate_env --allow-system)"
                     app['tee']="$(koopa_locate_tee --allow-system)"
-                    if koopa_is_macos
+                    dict['bs_bin']="${dict['koopa_prefix']}/bootstrap/bin"
+                    koopa_is_macos && koopa_assert_is_dir "${dict['bs_bin']}"
+                    if [[ -d "${dict['bs_bin']}" ]]
                     then
-                        dict['bs_bin']="${dict['koopa_prefix']}/bootstrap/bin"
-                        koopa_assert_is_dir "${dict['bs_bin']}"
                         app['bash']="${dict['bs_bin']}/bash"
                     else
-                        app['bash']="$(koopa_locate_bash --allow-system)"
+                        app['bash']='/bin/bash'
                     fi
                     [[ -x "${app['bash']}" ]] || return 1
                     [[ -x "${app['env']}" ]] || return 1
