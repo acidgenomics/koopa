@@ -424,7 +424,7 @@ koopa_activate_delta() {
     else
         echo 'FIXME NO'
     fi
-    command -v ls # FIXME
+    command -v ln # FIXME
     ln -fns "$source_file" "$target_file"
     return 0
 }
