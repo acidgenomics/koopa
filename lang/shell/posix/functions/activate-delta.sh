@@ -6,7 +6,7 @@
 koopa_activate_delta() {
     # """
     # Activate delta (git-delta) diff tool.
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-10-07.
     #
     # This function dynamically updates dark/light color mode.
     # """
@@ -30,7 +30,7 @@ koopa_activate_delta() {
     else
         echo 'FIXME NO'
     fi
-    command -v ls # FIXME
+    command -v ln # FIXME
     ln -fns "$source_file" "$target_file"
     return 0
 }
