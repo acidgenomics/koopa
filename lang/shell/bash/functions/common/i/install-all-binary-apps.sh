@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-10-05.
+    # @note Updated 2022-10-07.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -35,6 +35,8 @@ koopa_install_all_binary_apps() {
         'gmp'
         'coreutils'
         'findutils'
+        'gettext'
+        'libiconv'
         'pcre'
         'pcre2'
         'grep'
@@ -102,7 +104,6 @@ koopa_install_all_binary_apps() {
         'gdal'
         'gdbm'
         'geos'
-        'gettext'
         'ghostscript'
         'git'
         'glances'
@@ -143,7 +144,6 @@ koopa_install_all_binary_apps() {
         'libgeotiff'
         'libgit2'
         'libgpg-error'
-        'libiconv'
         'libidn'
         'libjpeg-turbo'
         'libksba'
@@ -324,6 +324,7 @@ koopa_install_all_binary_apps() {
             'multiqc'
             'nextflow'
             'nim'
+            'openbb'
             'rust'
             'salmon'
             'sambamba'

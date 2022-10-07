@@ -2706,11 +2706,11 @@
   "openbb": {
     "bin": ["openbb"],
     "build_dependencies": [],
-    "check": false,
     "conservative": false,
     "date": "2022-10-07",
     "dependencies": ["anaconda"],
     "homebrew": false,
+    "large": true,
     "man1": [],
     "url": ["https://openbb.co/"],
     "version": "1.9.0"
