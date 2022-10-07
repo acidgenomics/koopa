@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME This is too verbose on Ubuntu instance.
+
 koopa_activate_delta() {
     # """
     # Activate delta (git-delta) diff tool.
