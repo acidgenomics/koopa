@@ -26,8 +26,7 @@ koopa_activate_delta() {
     fi
     if koopa_is_alias 'ln'
     then
-        unalias 'ln'
-        echo 'FIXME YES'
+        unalias ln && echo 'FIXME YES'
     else
         echo 'FIXME NO'
     fi
