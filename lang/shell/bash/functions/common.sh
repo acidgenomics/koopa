@@ -11122,6 +11122,7 @@ koopa_install_all_apps() {
             'kallisto'
             'multiqc'
             'nextflow'
+            'openbb'
             'salmon'
             'sambamba'
             'samtools'
@@ -11469,6 +11470,7 @@ koopa_install_all_binary_apps() {
             'multiqc'
             'nextflow'
             'nim'
+            'openbb'
             'rust'
             'salmon'
             'sambamba'
@@ -13786,6 +13788,13 @@ koopa_install_system_homebrew() {
 koopa_install_system_tex_packages() {
     koopa_install_app \
         --name='tex-packages' \
+        --system \
+        "$@"
+}
+
+koopa_install_system_vscode_server() {
+    koopa_install_app \
+        --name='vscode-server' \
         --system \
         "$@"
 }
@@ -24511,6 +24520,13 @@ koopa_uninstall_swig() {
 koopa_uninstall_system_homebrew() {
     koopa_uninstall_app \
         --name='homebrew' \
+        --system \
+        "$@"
+}
+
+koopa_uninstall_system_vscode_server() {
+    koopa_uninstall_app \
+        --name='vscode-server' \
         --system \
         "$@"
 }
