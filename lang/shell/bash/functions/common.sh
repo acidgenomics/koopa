@@ -1540,8 +1540,7 @@ koopa_assert_is_r_package_installed() {
     koopa_assert_has_args "$#"
     if ! koopa_is_r_package_installed "$@"
     then
-        koopa_dl 'Args' "$*"
-        koopa_stop 'Required R packages missing.'
+        koopa_stop "Required R packages missing: ${*}."
     fi
     return 0
 }
@@ -14416,11 +14415,10 @@ koopa_is_powerful_machine() {
 koopa_is_r_package_installed() {
     local app dict pkg
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['r']="$(koopa_locate_r)"
-    )
-    [[ -x "${app['r']}" ]] || return 1
+    declare -A app
     declare -A dict
+    app['r']="$(koopa_locate_r)"
+    [[ -x "${app['r']}" ]] || return 1
     dict['prefix']="$(koopa_r_packages_prefix "${app['r']}")"
     for pkg in "$@"
     do

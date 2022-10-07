@@ -6,7 +6,7 @@ source "$(koopa header bash)"
 main() {
     # """
     # R script checks.
-    # Updated 2020-07-07.
+    # Updated 2022-10-07.
     # """
     local files merge r_files rscript_files
     koopa_assert_has_no_args "$#"
@@ -32,14 +32,14 @@ main() {
 test_lintr() {
     local app file
     koopa_assert_has_args "$#"
-    declare -A app=(
-        [rscript]="$(koopa_locate_rscript)"
-    )
+    declare -A app
+    app['rscript']="$(koopa_locate_rscript)"
+    [[ -x "${app['rscript']}" ]] || return 1
     for file in "$@"
     do
         # Handle empty string edge case.
         [ -f "$file" ] || continue
-        "${app[rscript]}" -e "lintr::lint(file = '${file}')"
+        "${app['rscript']}" -e "lintr::lint(file = '${file}')"
     done
     koopa_status_ok "r-linter [${#}]"
     return 0

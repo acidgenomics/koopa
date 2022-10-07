@@ -10,7 +10,7 @@ test_linter() {
     # """
     local koopa_prefix linter_prefix
     koopa_prefix="$(koopa_koopa_prefix)"
-    koopa_h1 'Running linter checks.'
+    koopa_alert 'Running linter checks.'
     koopa_assert_is_file "${koopa_prefix}/."{'lintr','pylintrc'}
     linter_prefix="${koopa_prefix}/etc/koopa/tests/linter.d"
     koopa_exec_dir "$linter_prefix"

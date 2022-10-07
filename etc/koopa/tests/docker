@@ -6,24 +6,25 @@ source "$(koopa header bash)"
 test_docker() {
     # """
     # Install and test koopa inside Docker.
-    # Updated 2021-10-29.
+    # Updated 2022-10-07.
     # """
-    local app cmd image
+    local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        [docker]="$(koopa_locate_docker)"
-    )
-    image="${1:-debian}"
-    image="acidgenomics/${image}:minimal"
-    koopa_alert "Running Docker install test in '${image}' image."
-    cmd="\
+    declare -A app
+    declare -A dict
+    app['docker']="$(koopa_locate_docker)"
+    [[ -x "${app['docker']}" ]] || return 1
+    dict['distro']="${1:-debian}"
+    dict['image']="acidgenomics/koopa:${dict['distro']}"
+    koopa_alert "Running Docker test in '${dict['image']}' image."
+    dict['cmd']="\
         if [ -d /usr/local/koopa ]; \
         then sudo rm -fr /usr/local/koopa; \
         else rm -fr ~/.local/share/koopa; fi \
      && curl -sSL https://koopa.acidgenomics.com/install \
             | bash -s -- --non-interactive --test"
-    "${app[docker]}" pull "$image"
-    "${app[docker]}" run -it "$image" bash -c "$cmd"
+    "${app['docker']}" pull "${dict['image']}"
+    "${app['docker']}" run -it "${dict['image']}" bash -c "${dict['cmd']}"
     koopa_alert_success 'Installation test was successful.'
     return 0
 }

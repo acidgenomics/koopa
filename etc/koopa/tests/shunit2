@@ -6,26 +6,29 @@ source "$(koopa header bash)"
 main() {
     # """
     # Run shUnit2 tests.
-    # @note Updated 2022-03-18.
+    # @note Updated 2022-10-07.
     #
     # @seealso
     # - https://github.com/kward/shunit2
     # """
     local app dict
     declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [shunit2]="$(koopa_locate_shunit2)"
-        [sort]="$(koopa_locate_sort)"
+        ['cut']="$(koopa_locate_cut)"
+        ['shunit2']="$(koopa_locate_shunit2)"
+        ['sort']="$(koopa_locate_sort)"
     )
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['shunit2']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
-        [extra]=0
-        [shunit2_dir]="$(koopa_koopa_prefix)/tests/shunit2.d"
+        ['extra']=0
+        ['shunit2_dir']="$(koopa_koopa_prefix)/etc/koopa/tests/shunit2.d"
     )
     while (("$#"))
     do
         case "$1" in
             '--extra')
-                dict[extra]=1
+                dict['extra']=1
                 shift 1
                 ;;
             *)
@@ -37,23 +40,23 @@ main() {
     # Don't exit on errors, which are handled by shunit2.
     set +o errexit
     suite() {
-        koopa_source_dir "${dict[shunit2_dir]}"
-        if [[ "${dict[extra]}" -eq 1 ]]
+        koopa_source_dir "${dict['shunit2_dir']}"
+        if [[ "${dict['extra']}" -eq 1 ]]
         then
-            koopa_source_dir "${dict[shunit2_dir]}/extra"
+            koopa_source_dir "${dict['shunit2_dir']}/extra"
         fi
         readarray -t tests <<< "$( \
             declare -F \
-                | "${app[cut]}" -d ' ' -f '3' \
+                | "${app['cut']}" -d ' ' -f '3' \
                 | koopa_grep --pattern='^test_' --regex \
-                | "${app[sort]}" \
+                | "${app['sort']}" \
         )"
         for test in "${tests[@]}"
         do
             suite_addTest "$test"
         done
     }
-    source "${app[shunit2]}"
+    source "${app['shunit2']}"
     return 0
 }
 
