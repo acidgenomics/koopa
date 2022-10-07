@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This can cause SSH lockout on AWS EC2 instances. Need to rethink.
+
 koopa_linux_update_system_sshd_config() {
     # """
     # Update sshd configuration.
