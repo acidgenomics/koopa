@@ -2520,6 +2520,17 @@
     "man1": [],
     "version": "1.13"
   },
+  "nanopolish": {
+    "bin": ["nanopolish"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-10-11",
+    "dependencies": ["conda"],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "version": "0.14.0"
+  },
   "ncurses": {
     "bin": [
       "captoinfo",
