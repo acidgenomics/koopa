@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This step is currently too slow. Need to speed up.
-
 koopa_link_in_bin() {
     # """
     # Link a program in koopa 'bin/' directory.
