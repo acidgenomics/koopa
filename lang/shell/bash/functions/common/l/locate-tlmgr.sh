@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Does this require sbin on Linux?
-
 koopa_locate_tlmgr() {
     local args
     args=()

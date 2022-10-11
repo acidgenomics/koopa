@@ -576,12 +576,12 @@
     "build_dependencies": [],
     "check": false,
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-11",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
-    "version": "c4c7cf8e508fe947c8b038543c98a2846bb900d6"
+    "version": "92543c4a7acc6550265d90f91cceb4481a448248"
   },
   "cmake": {
     "bin": ["cmake"],
