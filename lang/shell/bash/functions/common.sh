@@ -14541,13 +14541,6 @@ koopa_is_variable_defined() {
     return 0
 }
 
-koopa_is_xcode_clt_installed() {
-    koopa_assert_has_no_args "$#"
-    koopa_is_macos || return 1
-    [[ -d '/Library/Developer/CommandLineTools/usr/bin' ]] || return 1
-    return 0
-}
-
 koopa_jekyll_deploy_to_aws() {
     local app dict
     koopa_assert_has_args "$#"
@@ -24261,16 +24254,9 @@ koopa_uninstall_openblas() {
 }
 
 koopa_uninstall_openjdk() {
-    local uninstall_args
-    uninstall_args=(
-        '--name=openjdk'
-    )
-    if koopa_is_linux
-    then
-        uninstall_args+=('--platform=linux')
-    fi
-    koopa_uninstall_app "${uninstall_args[@]}" "$@"
-    return 0
+    koopa_uninstall_app \
+        --name='openjdk' \
+        "$@"
 }
 
 koopa_uninstall_openssh() {
@@ -25463,28 +25449,5 @@ koopa_write_string() {
         koopa_mkdir "${dict['parent_dir']}"
     fi
     koopa_print "${dict['string']}" > "${dict['file']}"
-    return 0
-}
-
-koopa_xcode_clt_version() {
-    local app dict
-    koopa_assert_has_no_args "$#"
-    koopa_is_xcode_clt_installed || return 1
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['pkgutil']="$(koopa_macos_locate_pkgutil)"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['pkgutil']}" ]] || return 1
-    declare -A dict=(
-        ['pkg']='com.apple.pkg.CLTools_Executables'
-    )
-    "${app['pkgutil']}" --pkgs="${dict['pkg']}" >/dev/null || return 1
-    dict['str']="$( \
-        "${app['pkgutil']}" --pkg-info="${dict['pkg']}" \
-            | "${app['awk']}" '/version:/ {print $2}' \
-    )"
-    [[ -n "${dict['str']}" ]] || return 1
-    koopa_print "${dict['str']}"
     return 0
 }
