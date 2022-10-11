@@ -13249,6 +13249,12 @@ koopa_install_multiqc() {
         "$@"
 }
 
+koopa_install_nanopolish() {
+    koopa_install_app \
+        --name='nanopolish' \
+        "$@"
+}
+
 koopa_install_ncurses() {
     koopa_install_app \
         --name='ncurses' \
@@ -19071,10 +19077,6 @@ koopa_r_link_files_in_etc() {
     return 0
 }
 
-koopa_r_migrate_recommended_packages() {
-    return 0
-}
-
 koopa_r_package_version() {
     local app str vec
     koopa_assert_has_args "$#"
@@ -24121,6 +24123,12 @@ koopa_uninstall_msgpack() {
 koopa_uninstall_multiqc() {
     koopa_uninstall_app \
         --name='multiqc' \
+        "$@"
+}
+
+koopa_uninstall_nanopolish() {
+    koopa_uninstall_app \
+        --name='nanopolish' \
         "$@"
 }
 
