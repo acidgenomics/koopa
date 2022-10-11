@@ -6,7 +6,7 @@ main() {
         ['gmp']="$(koopa_app_prefix 'gmp')"
         ['mpfr']="$(koopa_app_prefix 'mpfr')"
     )
-    koopa_activate_opt_prefix 'gmp' 'mpfr'
+    koopa_activate_app 'gmp' 'mpfr'
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='mpc' \

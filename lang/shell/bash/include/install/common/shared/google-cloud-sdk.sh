@@ -16,7 +16,7 @@ main() {
     #     Casks/google-cloud-sdk.rb
     # """
     local dict
-    koopa_activate_build_opt_prefix 'python'
+    koopa_activate_app --build-only 'python'
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

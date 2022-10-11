@@ -42,7 +42,7 @@ test_all_illegal_strings() {
         '[=|]""$'
         '[“”‘’]'            # no unicode quotes
         '\$path'            # zsh will freak out
-        '\(\) \{$'          # functions should include vim marker
+        # > '\(\) \{$'      # functions should include vim marker
         '\b(EOF|EOL)\b'     # Use 'END' instead.
         '^path='            # can mess up Zsh PATH
         '_exe\b'

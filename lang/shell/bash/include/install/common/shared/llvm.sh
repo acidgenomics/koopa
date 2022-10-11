@@ -40,7 +40,7 @@ main() {
         'perl'
         'pkg-config'
     )
-    koopa_activate_build_opt_prefix "${build_deps[@]}"
+    koopa_activate_app --build-only "${build_deps[@]}"
     deps=(
         'zlib'
         'libedit'
@@ -60,7 +60,7 @@ main() {
             'elfutils'
         )
     fi
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['git']="$(koopa_locate_git --realpath)"

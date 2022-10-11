@@ -16,8 +16,8 @@ main() {
     # - https://github.com/commercialhaskell/stack/issues/342
     # """
     local app dict install_args stack_args
-    koopa_activate_build_opt_prefix 'haskell-stack'
-    koopa_activate_opt_prefix 'zlib'
+    koopa_activate_app --build-only 'haskell-stack'
+    koopa_activate_app 'zlib'
     declare -A app=(
         ['stack']="$(koopa_locate_stack)"
     )

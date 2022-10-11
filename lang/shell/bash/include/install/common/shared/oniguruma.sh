@@ -11,7 +11,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'm4' 'autoconf' 'automake' 'libtool'
+    koopa_activate_app 'm4' 'autoconf' 'automake' 'libtool'
     declare -A app=(
         ['autoreconf']="$(koopa_locate_autoreconf)"
         ['make']="$(koopa_locate_make)"

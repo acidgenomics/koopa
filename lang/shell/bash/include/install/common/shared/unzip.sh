@@ -15,7 +15,7 @@ main() {
     # - https://git.alpinelinux.org/aports/tree/main/unzip
     # """
     local app dict loc_macros make_args
-    koopa_activate_opt_prefix 'bzip2'
+    koopa_activate_app 'bzip2'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

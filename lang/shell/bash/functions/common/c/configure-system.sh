@@ -306,7 +306,7 @@ koopa_configure_system() {
     then
         dict['install_python']=0
     fi
-    # Initial configuration {{{2
+    # Initial configuration
     # --------------------------------------------------------------------------
     koopa_h1 'Configuring system.'
     # Enable useful global variables that make configuration easier.
@@ -314,30 +314,27 @@ koopa_configure_system() {
     export FORCE_UNSAFE_CONFIGURE=1
     export KOOPA_FORCE=1
     export PYTHONDONTWRITEBYTECODE=1
-    # Root user and sudo fixes {{{3
-    # --------------------------------------------------------------------------
+    # Root user and sudo fixes.
     if [[ "${dict['passwordless_sudo']}" -eq 1 ]]
     then
         koopa_enable_passwordless_sudo
         koopa_linux_fix_sudo_setrlimit_error
     fi
-    # Delete skeleton files {{{3
-    # --------------------------------------------------------------------------
-    # Delete default user-specific skeleton configuration files. This in
-    # particular helps keep shell configuration consistent, especialy for
-    # Ubuntu, which sets a lot of config in bashrc.
+    # Delete skeleton files. Delete default user-specific skeleton configuration
+    # files. This in particular helps keep shell configuration consistent,
+    # especialy for Ubuntu, which sets a lot of config in bashrc.
     if [[ "${dict['delete_skel']}" -eq 1 ]]
     then
         koopa_rm --sudo '/etc/skel'
     fi
-    # Early return in minimal mode {{{3
+    # Early return in minimal mode
     # --------------------------------------------------------------------------
     if [[ "${dict['mode']}" == 'minimal' ]]
     then
         koopa_alert_success 'Minimal configuration was successful.'
         return 0
     fi
-    # Base system {{{2
+    # Base system
     # --------------------------------------------------------------------------
     koopa_alert 'Installing base system.'
     koopa_linux_update_etc_profile_d
@@ -358,7 +355,7 @@ koopa_configure_system() {
         'xz'
     koopa_assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
     koopa_linux_update_ldconfig
-    # Programs {{{2
+    # Programs
     # --------------------------------------------------------------------------
 
     # Current working order:
@@ -663,7 +660,7 @@ koopa_configure_system() {
     [[ "${dict['install_lmod']}" -eq 1 ]] && \
         koopa_configure_lmod
     koopa_linux_update_ldconfig
-    # Language-specific packages {{{2
+    # Language-specific packages
     # --------------------------------------------------------------------------
     if [[ "${dict['install_python_packages']}" -eq 1 ]]
     then
@@ -707,19 +704,18 @@ koopa_configure_system() {
         koopa install 'xsv'
         koopa install 'zoxide'
     fi
-    # Bioinformatics tools {{{2
+    # Bioinformatics tools
     # --------------------------------------------------------------------------
     [[ "${dict['install_aspera_connect']}" -eq 1 ]] && \
         koopa install 'aspera-connect'
     [[ "${dict['install_conda_envs']}" -eq 1 ]] && \
         koopa app conda create-bioinfo-envs
-    # Final steps {{{2
+    # Final steps
     # --------------------------------------------------------------------------
     # Generate an SSH key.
     [[ "${dict['ssh_key']}" -eq 1 ]] && \
         koopa_ssh_generate_key
-    # Clean up and fix permissions {{{3
-    # --------------------------------------------------------------------------
+    # Clean up and fix permissions.
     koopa_sys_set_permissions --recursive "${prefixes[@]}"
     koopa_delete_broken_symlinks "${prefixes[@]}"
     # > koopa_delete_empty_dirs "${prefixes[@]}"

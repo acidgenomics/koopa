@@ -11,7 +11,7 @@ main() {
     #     hadolint.rb
     # """
     local app dict install_args stack_args
-    koopa_activate_build_opt_prefix 'haskell-stack'
+    koopa_activate_app --build-only 'haskell-stack'
     declare -A app=(
         ['stack']="$(koopa_locate_stack)"
     )

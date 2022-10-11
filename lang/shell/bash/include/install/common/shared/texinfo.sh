@@ -3,7 +3,7 @@
 main() {
     if ! koopa_is_macos
     then
-        koopa_activate_opt_prefix \
+        koopa_activate_app \
             'gettext' \
             'ncurses' \
             'perl'

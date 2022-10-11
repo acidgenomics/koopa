@@ -19,7 +19,7 @@ main() {
     #     cc1-undefined-reference-to-libintl-textdomain
     # """
     local dict
-    koopa_activate_opt_prefix \
+    koopa_activate_app \
         'bison' \
         'libiconv' \
         'libunistring' \

@@ -10,7 +10,7 @@ main() {
     # """
     local app package packages
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'curl' 'gnupg' 'wget'
+    koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
     declare -A app=(
         ['sudo']="$(koopa_locate_sudo)"
         ['tlmgr']="$(koopa_locate_tlmgr)"

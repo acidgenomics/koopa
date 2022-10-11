@@ -36,11 +36,11 @@ main() {
     # >         '/usr/bin/gdal-config' \
     # >         '/usr/include/gdal'
     # > fi
-    koopa_activate_build_opt_prefix \
+    koopa_activate_app --build-only \
         'cmake' \
         'libtool' \
         'pkg-config'
-    koopa_activate_opt_prefix \
+    koopa_activate_app \
         'curl' \
         'geos' \
         'hdf5' \

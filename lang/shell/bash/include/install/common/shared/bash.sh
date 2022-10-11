@@ -15,7 +15,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'patch'
+    koopa_activate_app --build-only 'patch'
     declare -A app=(
         ['curl']="$(koopa_locate_curl)"
         ['cut']="$(koopa_locate_cut)"

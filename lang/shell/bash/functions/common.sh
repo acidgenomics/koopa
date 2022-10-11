@@ -534,29 +534,8 @@ koopa_acid_emoji() {
     koopa_print '🧪'
 }
 
-koopa_activate_build_opt_prefix() {
-    koopa_activate_opt_prefix --build-only "$@"
-}
-
-koopa_activate_ensembl_perl_api() {
-    local dict
-    declare -A dict=(
-        ['prefix']="$(koopa_ensembl_perl_api_prefix)"
-    )
-    koopa_assert_is_dir "${dict['prefix']}"
-    koopa_add_to_path_start "${dict['prefix']}/ensembl-git-tools/bin"
-    PERL5LIB="${PERL5LIB:-}"
-    PERL5LIB="${PERL5LIB}:${dict['prefix']}/bioperl-1.6.924"
-    PERL5LIB="${PERL5LIB}:${dict['prefix']}/ensembl/modules"
-    PERL5LIB="${PERL5LIB}:${dict['prefix']}/ensembl-compara/modules"
-    PERL5LIB="${PERL5LIB}:${dict['prefix']}/ensembl-variation/modules"
-    PERL5LIB="${PERL5LIB}:${dict['prefix']}/ensembl-funcgen/modules"
-    export PERL5LIB
-    return 0
-}
-
-koopa_activate_opt_prefix() {
-    local app dict name pos
+koopa_activate_app() {
+    local app app_name dict pos
     koopa_assert_has_args "$#"
     declare -A app=(
         ['pkg_config']="$(koopa_locate_pkg_config --allow-missing)"
@@ -587,38 +566,40 @@ koopa_activate_opt_prefix() {
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
-    for name in "$@"
+    for app_name in "$@"
     do
-        local current_ver expected_ver pkgconfig_dirs prefix
-        prefix="${dict['opt_prefix']}/${name}"
-        koopa_assert_is_dir "$prefix"
-        current_ver="$(koopa_opt_version "$name")"
-        expected_ver="$(koopa_app_json_version "$name")"
-        if [[ "${#expected_ver}" -eq 40 ]]
+        local dict2
+        declare -A dict2
+        dict2['app_name']="$app_name"
+        dict2['prefix']="${dict['opt_prefix']}/${dict2['app_name']}"
+        koopa_assert_is_dir "${dict2['prefix']}"
+        dict2['current_ver']="$(koopa_opt_version "${dict2['app_name']}")"
+        dict2['expected_ver']="$(koopa_app_json_version "${dict2['app_name']}")"
+        if [[ "${#dict2['expected_ver']}" -eq 40 ]]
         then
-            expected_ver="${expected_ver:0:7}"
+            dict2['expected_ver']="${dict2['expected_ver']:0:7}"
         fi
-        if [[ "$current_ver" != "$expected_ver" ]]
+        if [[ "${dict2['current_ver']}" != "${dict2['expected_ver']}" ]]
         then
-            koopa_stop "'${name}' version mismatch at '${prefix}' \
-(${current_ver} != ${expected_ver})."
+            koopa_stop "'${dict2['app_name']}' version mismatch at \
+'${dict2['prefix']}' (${dict2['current_ver']} != ${dict2['expected_ver']})."
         fi
-        if koopa_is_empty_dir "$prefix"
+        if koopa_is_empty_dir "${dict2['prefix']}"
         then
-            koopa_stop "'${prefix}' is empty."
+            koopa_stop "'${dict2['prefix']}' is empty."
         fi
-        prefix="$(koopa_realpath "$prefix")"
+        dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
         if [[ "${dict['build_only']}" -eq 1 ]]
         then
             koopa_alert "Activating '${prefix}' (build only)."
         else
             koopa_alert "Activating '${prefix}'."
         fi
-        koopa_add_to_path_start "${prefix}/bin"
+        koopa_add_to_path_start "${dict2['prefix']}/bin"
         readarray -t pkgconfig_dirs <<< "$( \
             koopa_find \
                 --pattern='pkgconfig' \
-                --prefix="$prefix" \
+                --prefix="${dict2['prefix']}" \
                 --sort \
                 --type='d' \
             || true \
@@ -657,10 +638,27 @@ koopa_activate_opt_prefix() {
                 LDFLAGS="${LDFLAGS:-} -L${prefix}/lib64"
         fi
         koopa_add_rpath_to_ldflags \
-            "${prefix}/lib" \
-            "${prefix}/lib64"
+            "${dict2['prefix']}/lib" \
+            "${dict2['prefix']}/lib64"
     done
     export CPPFLAGS LDFLAGS LDLIBS
+    return 0
+}
+
+koopa_activate_ensembl_perl_api() {
+    local dict
+    declare -A dict=(
+        ['prefix']="$(koopa_ensembl_perl_api_prefix)"
+    )
+    koopa_assert_is_dir "${dict['prefix']}"
+    koopa_add_to_path_start "${dict['prefix']}/ensembl-git-tools/bin"
+    PERL5LIB="${PERL5LIB:-}"
+    PERL5LIB="${PERL5LIB}:${dict['prefix']}/bioperl-1.6.924"
+    PERL5LIB="${PERL5LIB}:${dict['prefix']}/ensembl/modules"
+    PERL5LIB="${PERL5LIB}:${dict['prefix']}/ensembl-compara/modules"
+    PERL5LIB="${PERL5LIB}:${dict['prefix']}/ensembl-variation/modules"
+    PERL5LIB="${PERL5LIB}:${dict['prefix']}/ensembl-funcgen/modules"
+    export PERL5LIB
     return 0
 }
 
@@ -974,13 +972,27 @@ koopa_app_prefix() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     for app_name in "$@"
     do
-        local prefix version
-        version="$(koopa_app_json_version "$app_name" || true)"
-        [[ -z "$version" ]] && koopa_stop "Unsupported app: '${app_name}'."
-        [[ "${#version}" == 40 ]] && version="${version:0:7}"
-        prefix="${dict['app_prefix']}/${app_name}/${version}"
-        [[ "${dict['allow_missing']}" -eq 0 ]] && koopa_assert_is_dir "$prefix"
-        koopa_print "$prefix"
+        local dict2
+        declare -A dict2
+        dict2['app_name']="$app_name"
+        dict2['version']="$( \
+            koopa_app_json_version "${dict2['app_name']}" || true \
+        )"
+        if [[ -z "${dict2['version']}" ]]
+        then
+            koopa_stop "Unsupported app: '${dict2['app_name']}'."
+        fi
+        if [[ "${#dict2['version']}" == 40 ]]
+        then
+            dict2['version']="${dict2['version']:0:7}"
+        fi
+        dict2['prefix']="${dict['app_prefix']}/${dict2['app_name']}/\
+${dict2['version']}"
+        if [[ "${dict['allow_missing']}" -eq 0 ]]
+        then
+            koopa_assert_is_dir "${dict2['prefix']}"
+        fi
+        koopa_print "${dict2['prefix']}"
     done
     return 0
 }
@@ -15886,6 +15898,13 @@ koopa_locate_bedtools() {
         "$@"
 }
 
+koopa_locate_bowtie2() {
+    koopa_locate_app \
+        --app-name='bowtie2' \
+        --bin-name='bowtie2' \
+        "$@"
+}
+
 koopa_locate_bpytop() {
     koopa_locate_app \
         --app-name='python-packages' \
@@ -22565,9 +22584,8 @@ koopa_test_find_files() {
 koopa_test_grep() {
     local app dict failures file pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['grep']="$(koopa_locate_grep)"
-    )
+    declare -A app
+    app['grep']="$(koopa_locate_grep)"
     [[ -x "${app['grep']}" ]] || return 1
     declare -A dict=(
         ['ignore']=''
@@ -22582,8 +22600,7 @@ koopa_test_grep() {
                 dict['ignore']="${1#*=}"
                 shift 1
                 ;;
-            '--ignore' | \
-            '-i')
+            '--ignore')
                 dict['ignore']="${2:?}"
                 shift 2
                 ;;
@@ -22591,8 +22608,7 @@ koopa_test_grep() {
                 dict['name']="${1#*=}"
                 shift 1
                 ;;
-            '--name' | \
-            '-n')
+            '--name')
                 dict['name']="${2:?}"
                 shift 2
                 ;;
@@ -22600,8 +22616,7 @@ koopa_test_grep() {
                 dict['pattern']="${1#*=}"
                 shift 1
                 ;;
-            '--pattern' | \
-            '-p')
+            '--pattern')
                 dict['pattern']="${2:?}"
                 shift 2
                 ;;
@@ -22620,6 +22635,7 @@ koopa_test_grep() {
         '--name' "${dict['name']}" \
         '--pattern' "${dict['pattern']}"
     failures=()
+
     for file in "$@"
     do
         local x

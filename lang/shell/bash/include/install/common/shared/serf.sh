@@ -22,8 +22,8 @@ main() {
     # """
     local app dict scons_args
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'patch'
-    koopa_activate_opt_prefix \
+    koopa_activate_app --build-only 'patch'
+    koopa_activate_app \
         'zlib' \
         'apr' \
         'apr-util' \

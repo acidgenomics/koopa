@@ -24,8 +24,8 @@ main() {
     #     binutils.rb
     # - https://git.alpinelinux.org/aports/tree/main/binutils/APKBUILD
     # """
-    koopa_activate_build_opt_prefix 'bison' 'flex'
-    koopa_activate_opt_prefix 'zlib' 'texinfo'
+    koopa_activate_app --build-only 'bison' 'flex'
+    koopa_activate_app 'zlib' 'texinfo'
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='binutils' \
