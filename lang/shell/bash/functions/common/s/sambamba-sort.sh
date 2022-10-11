@@ -1,34 +1,31 @@
 #!/usr/bin/env bash
 
-# FIXME Rework and simplify this wrapper here.
-
 koopa_sambamba_sort() {
     # """
     # Sort multiple BAM files in a directory.
-    # @note Updated 2020-08-13.
+    # @note Updated 2022-10-11.
     # """
-    local bam_file bam_files dir
-    koopa_assert_has_args_le "$#" 1
-    dir="${1:-.}"
-    koopa_assert_is_dir "$dir"
-    dir="$(koopa_realpath "$dir")"
-    # FIXME Rework using 'koopa_find'.
+    local bam_file bam_files dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict
+    dict['prefix']="${1:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
     readarray -t bam_files <<< "$( \
-        find "$dir" \
-            -maxdepth 3 \
-            -mindepth 1 \
-            -type f \
-            -iname '*.bam' \
-            -not -iname '*.filtered.*' \
-            -not -iname '*.sorted.*' \
-            -print \
-        | sort \
+        koopa_find \
+            --exclude='*.filtered.*' \
+            --exclude='*.sorted.*' \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern='*.bam' \
+            --prefix="${dict['prefix']}" \
+            --sort \
+            --type='f' \
     )"
     if ! koopa_is_array_non_empty "${bam_files[@]:-}"
     then
-        koopa_stop "No BAM files detected in '${dir}'."
+        koopa_stop "No BAM files detected in '${dict['prefix']}'."
     fi
-    koopa_alert "Sorting BAM files in '${dir}'."
+    koopa_alert "Sorting BAM files in '${dict['prefix']}'."
     for bam_file in "${bam_files[@]}"
     do
         koopa_sambamba_sort_per_sample "$bam_file"

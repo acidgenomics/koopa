@@ -15,6 +15,9 @@ koopa_sambamba_index() {
     dict['threads']="$(koopa_cpu_count)"
     for bam_file in "$@"
     do
+        koopa_assert_is_matching_regex \
+            --pattern='\.bam$' \
+            --string="$bam_file"
         koopa_alert "Indexing '${bam_file}'."
         "${app['sambamba']}" index \
             --nthreads="${dict['threads']}" \
