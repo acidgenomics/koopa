@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Can we set 'lib' instead of 'lib64' on Linux?
+# FIXME Need to change target from lib64 to lib on Linux.
+# If we change this, need to update R configuration.
+# FIXME Alternatively, can just make a 'lib' symlink on Linux.
 
 # Consider adding support for:
 # - cairo
