@@ -13,7 +13,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     #
     # @examples
     # > koopa_aws_s3_delete_versioned_glacier_objects \
-    # >     --bucket='BUCKET' \
+    # >     --bucket='s3://example-bucket/' \
     # >     --profile='default' \
     # >     --region='us-east-1'
     # """
