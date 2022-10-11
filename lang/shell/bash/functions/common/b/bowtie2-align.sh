@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework 'index-base' to assume that '--index-dir' contains files
-# beginning with bowtie2....
-
 koopa_bowtie2_align() {
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
