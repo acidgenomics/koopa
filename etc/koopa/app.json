@@ -1648,7 +1648,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": false,
+    "outdated": true,
     "reverse_dependencies": ["freetype", "r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "5.2.0"
@@ -3527,6 +3527,7 @@
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
+    "outdated": true,
     "version": "0.0.55"
   },
   "rust": {
