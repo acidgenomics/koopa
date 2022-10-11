@@ -1,39 +1,37 @@
 #!/usr/bin/env bash
 
-# FIXME Need to locate sambamba here.
+# FIXME Rework and simplify this wrapper here.
 
 koopa_sambamba_sort() {
     # """
-    # Sort a BAM file by genomic coordinates.
-    # @note Updated 2020-08-12.
-    #
-    # Sorts by genomic coordinates by default.
-    # Use '-n' flag to sort by read name instead.
-    #
-    # @seealso
-    # - https://lomereiter.github.io/sambamba/docs/sambamba-sort.html
+    # Sort multiple BAM files in a directory.
+    # @note Updated 2020-08-13.
     # """
-    local sorted_bam sorted_bam_bn threads unsorted_bam unsorted_bam_bn
-    koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'sambamba'
-    unsorted_bam="${1:?}"
-    sorted_bam="${unsorted_bam%.bam}.sorted.bam"
-    unsorted_bam_bn="$(koopa_basename "$unsorted_bam")"
-    sorted_bam_bn="$(koopa_basename "$sorted_bam")"
-    if [[ -f "$sorted_bam" ]]
+    local bam_file bam_files dir
+    koopa_assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    koopa_assert_is_dir "$dir"
+    dir="$(koopa_realpath "$dir")"
+    # FIXME Rework using 'koopa_find'.
+    readarray -t bam_files <<< "$( \
+        find "$dir" \
+            -maxdepth 3 \
+            -mindepth 1 \
+            -type f \
+            -iname '*.bam' \
+            -not -iname '*.filtered.*' \
+            -not -iname '*.sorted.*' \
+            -print \
+        | sort \
+    )"
+    if ! koopa_is_array_non_empty "${bam_files[@]:-}"
     then
-        koopa_alert_note "Skipping '${sorted_bam_bn}'."
-        return 0
+        koopa_stop "No BAM files detected in '${dir}'."
     fi
-    koopa_h2 "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
-    koopa_assert_is_file "$unsorted_bam"
-    threads="$(koopa_cpu_count)"
-    koopa_dl 'Threads' "${threads}"
-    sambamba sort \
-        --memory-limit='2GB' \
-        --nthreads="$threads" \
-        --out="$sorted_bam" \
-        --show-progress \
-        "$unsorted_bam"
+    koopa_alert "Sorting BAM files in '${dir}'."
+    for bam_file in "${bam_files[@]}"
+    do
+        koopa_sambamba_sort_per_sample "$bam_file"
+    done
     return 0
 }
