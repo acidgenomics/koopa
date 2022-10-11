@@ -2981,6 +2981,7 @@
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
+    "outdated": true,
     "version": "1.2.1"
   },
   "prelude-emacs": {
