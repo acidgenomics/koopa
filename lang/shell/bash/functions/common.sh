@@ -2732,42 +2732,65 @@ koopa_bioconda_autobump_recipe() {
     return 0
 }
 
-koopa_bowtie2_align() {
+koopa_bowtie2_align_per_sample() {
     local app dict
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'bowtie2'
     declare -A app=(
+        ['bowtie2']="$(koopa_locate_bowtie2)"
         ['tee']="$(koopa_locate_tee)"
     )
+    [[ -x "${app['bowtie2']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
+        ['fastq_r1_file']=''
+        ['fastq_r1_tail']=''
+        ['fastq_r2_file']=''
+        ['fastq_r2_tail']=''
+        ['index_dir']=''
+        ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
     )
     while (("$#"))
     do
         case "$1" in
-            '--fastq-r1='*)
-                dict['fastq_r1']="${1#*=}"
+            '--fastq-r1-file='*)
+                dict['fastq_r1_file']="${1#*=}"
                 shift 1
                 ;;
-            '--fastq-r1')
-                dict['fastq_r1']="${2:?}"
+            '--fastq-r1-file')
+                dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-r2='*)
-                dict['fastq_r2']="${1#*=}"
+            '--fastq-r1-tail='*)
+                dict['fastq_r1_tail']="${1#*=}"
                 shift 1
                 ;;
-            '--fastq-r2')
-                dict['fastq_r2']="${2:?}"
+            '--fastq-r1-tail')
+                dict['fastq_r1_tail']="${2:?}"
                 shift 2
                 ;;
-            '--index-base='*)
-                dict['index_base']="${1#*=}"
+            '--fastq-r2-file='*)
+                dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
-            '--index-base')
-                dict['index_base']="${2:?}"
+            '--fastq-r2-file')
+                dict['fastq_r2_file']="${2:?}"
+                shift 2
+                ;;
+            '--fastq-r2-tail='*)
+                dict['fastq_r2_tail']="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-r2-tail')
+                dict['fastq_r2_tail']="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict['index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
@@ -2778,130 +2801,68 @@ koopa_bowtie2_align() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
-            '--r1-tail='*)
-                dict['r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--r1-tail')
-                dict['r1_tail']="${2:?}"
-                shift 2
-                ;;
-            '--r2-tail='*)
-                dict['r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--r2-tail')
-                dict['r2_tail']="${2:?}"
-                shift 2
-                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa_assert_is_file "${dict['fastq_r1']}" "${dict['fastq_r2']}"
-    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1']}")"
-    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['r1_tail']}/}"
-    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2']}")"
-    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['r2_tail']}/}"
+    koopa_assert_is_set \
+        '--fastq-r1-file' "${dict['fastq_r1_file']}" \
+        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
+        '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--output-dir' "${dict['output_dir']}"
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    id="${dict['fastq_r1_bn']}"
+    dict['id']="${dict['fastq_r1_bn']}"
     dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
-    koopa_h2 "Aligning '${dict['id']}' into '${dict['output_dir']}'."
-    koopa_mkdir "${dict['output_dir']}"
-    sam_file="${dict['output_dir']}/${dict['id']}.sam"
-    log_file="${dict['output_dir']}/align.log"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Aligning '${dict['id']}' in '${dict['output_dir']}'."
+    dict['index_base']="${dict['index_dir']}/bowtie2"
+    dict['sam_file']="${dict['output_dir']}/${dict['id']}.sam"
+    dict['log_file']="${dict['output_dir']}/align.log"
     align_args=(
         '--local'
         '--sensitive-local'
-        '--rg-id' "$id"
+        '--rg-id' "${dict['id']}"
         '--rg' 'PL:illumina'
-        '--rg' "PU:${id}"
-        '--rg' "SM:${id}"
+        '--rg' "PU:${dict['id']}"
+        '--rg' "SM:${dict['id']}"
         '--threads' "${dict['threads']}"
-        '-1' "$fastq_r1"
-        '-2' "$fastq_r2"
-        '-S' "$sam_file"
+        '-1' "${dict['fastq_r1_file']}"
+        '-2' "${dict['fastq_r2_file']}"
+        '-S' "${dict['sam_file']}"
         '-X' 2000
         '-q'
         '-x' "${dict['index_base']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    bowtie2 "${align_args[@]}" 2>&1 | "${app['tee']}" "${dict['log_file']}"
+    "${app['bowtie2']}" "${align_args[@]}" \
+        2>&1 | "${app['tee']}" "${dict['log_file']}"
     return 0
 }
 
-koopa_bowtie2_index() {
-    local app dict index_args
-    koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'bowtie2-build'
-    declare -A app=(
-        ['tee']="$(koopa_locate_tee)"
-    )
-    [[ -x "${app['tee']}" ]] || return 1
-    declare -A dict=(
-        ['threads']="$(koopa_cpu_count)"
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            '--fasta-file='*)
-                dict['fasta_file']="${1#*=}"
-                shift 1
-                ;;
-            '--fasta-file')
-                dict['fasta_file']="${2:?}"
-                shift 2
-                ;;
-            '--output-dir='*)
-                dict['output_dir']="${1#*=}"
-                shift 1
-                ;;
-            '--output-dir')
-                dict['output_dir']="${2:?}"
-                shift 2
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_file "${dict['fasta_file']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note \
-            "bowtie2 genome index exists at '${dict['output_dir']}'." \
-            "Skipping on-the-fly indexing of '${dict['fasta_file']}'."
-        return 0
-    fi
-    koopa_h2 "Generating bowtie2 index at '${dict['output_dir']}'."
-    koopa_mkdir "${dict['output_dir']}"
-    dict['index_base']="${dict['output_dir']}/bowtie2"
-    dict['log_file']="${dict['output_dir']}/index.log"
-    index_args=(
-        "--threads=${dict['threads']}"
-        '--verbose'
-        "${dict['fasta_file']}"
-        "${dict['index_base']}"
-    )
-    koopa_dl 'Index args' "${index_args[*]}"
-    bowtie2-build "${index_args[@]}" 2>&1 \
-        | "${app['tee']}" "${dict['log_file']}"
-    return 0
-}
-
-koopa_bowtie2() {
+koopa_bowtie2_align() {
     local dict fastq_r1_file fastq_r1_files
     declare -A dict=(
         ['fastq_dir']=''
-        ['fastq_r1_tail']='' # '_R1_001.fastq.gz'
-        ['fastq_r2_tail']='' # '_R2_001.fastq.gz'
-        ['genome_fasta_file']=''
+        ['fastq_r1_tail']=''
+        ['fastq_r2_tail']=''
+        ['index_dir']=''
         ['output_dir']=''
     )
     while (("$#"))
@@ -2931,6 +2892,98 @@ koopa_bowtie2() {
                 dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
+            '--index-dir='*)
+                dict['index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict['index_dir']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--fastq-r1-file' "${dict['fastq_r1_file']}" \
+        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
+        '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--output-dir' "${dict['output_dir']}"
+    koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
+    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_h1 'Running bowtie2 align.'
+    koopa_dl \
+        'Index dir' "${dict['index_dir']}" \
+        'FASTQ dir' "${dict['fastq_dir']}" \
+        'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
+        'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
+        'Output dir' "${dict['output_dir']}"
+    readarray -t fastq_r1_files <<< "$( \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --pattern="*${dict['fastq_r1_tail']}" \
+            --prefix="${dict['fastq_dir']}" \
+            --sort \
+            --type='f' \
+    )"
+    if koopa_is_array_empty "${fastq_r1_files[@]:-}"
+    then
+        koopa_stop "No FASTQs ending with '${dict['fastq_r1_tail']}'."
+    fi
+    koopa_alert_info "$(koopa_ngettext \
+        --num="${#fastq_r1_files[@]}" \
+        --msg1='sample' \
+        --msg2='samples' \
+        --suffix=' detected.' \
+    )"
+    for fastq_r1_file in "${fastq_r1_files[@]}"
+    do
+        local fastq_r2_file
+        fastq_r2_file="${fastq_r1_file/\
+${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
+        koopa_bowtie2_align_per_sample \
+            --fastq-r1-file="$fastq_r1_file" \
+            --fastq-r1-tail="${dict['fastq_r1_tail']}" \
+            --fastq-r2-file="$fastq_r2_file" \
+            --fastq-r2-tail="${dict['fastq_r2_tail']}" \
+            --index-dir="${dict['index_dir']}" \
+            --output-dir="${dict['samples_dir']}"
+    done
+    koopa_alert_success 'bowtie2 align was successful.'
+    return 0
+}
+
+koopa_bowtie2_index() {
+    local app dict index_args
+    koopa_assert_has_args "$#"
+    declare -A app=(
+        ['bowtie2_build']="$(koopa_locate_bowtie2_build)"
+        ['tee']="$(koopa_locate_tee)"
+    )
+    [[ -x "${app['bowtie2_build']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || return 1
+    declare -A dict=(
+        ['genome_fasta_file']=''
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
+    )
+    while (("$#"))
+    do
+        case "$1" in
             '--genome-fasta-file='*)
                 dict['genome_fasta_file']="${1#*=}"
                 shift 1
@@ -2952,50 +3005,24 @@ koopa_bowtie2() {
                 ;;
         esac
     done
-    koopa_h1 'Running bowtie2.'
-    koopa_assert_is_file "${dict['fasta_file']}"
-    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    koopa_assert_is_set \
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--output-dir' "${dict['output_dir']}"
+    koopa_assert_is_file "${dict['genome_fasta_file']}"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    dict['index_dir']="${dict['output_dir']}/index"
-    dict['index_base']="${dict['index_dir']}/bowtie2"
-    dict['samples_dir']="${dict['output_dir']}/samples"
-    readarray -t fastq_r1_files <<< "$( \
-        koopa_find \
-            --max-depth=1 \
-            --min-depth=1 \
-            --pattern="*${dict['r1_tail']}" \
-            --prefix="${dict['fastq_dir']}" \
-            --sort \
-            --type='f' \
-    )"
-    if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
-    then
-        koopa_stop "No FASTQ files in '${dict['fastq_dir']}' ending \
-with '${dict['r1_tail']}'."
-    fi
-    koopa_alert_info "$(koopa_ngettext \
-        --num="${#fastq_r1_files[@]}" \
-        --msg1='sample' \
-        --msg2='samples' \
-        --suffix=' detected.' \
-    )"
-    koopa_bowtie2_index \
-        --fasta-file="${dict['fasta_file']}" \
-        --output-dir="${dict['index_dir']}"
-    koopa_assert_is_dir "${dict['index_dir']}"
-    for fastq_r1_file in "${fastq_r1_files[@]}"
-    do
-        local fastq_r2_file
-        fastq_r2_file="${fastq_r1_file/${dict['r1_tail']}/${dict['r2_tail']}}"
-        koopa_bowtie2_align \
-            --fastq-r1="$fastq_r1_file" \
-            --fastq-r2="$fastq_r2_file" \
-            --index-base="${dict['index_base']}" \
-            --output-dir="${dict['samples_dir']}" \
-            --r1-tail="${dict['r1_tail']}" \
-            --r2-tail="${dict['r2_tail']}"
-    done
-    koopa_alert_success 'bowtie2 alignment completed successfully.'
+    koopa_alert "Generating bowtie2 index at '${dict['output_dir']}'."
+    dict['index_base']="${dict['output_dir']}/bowtie2"
+    dict['log_file']="${dict['output_dir']}/index.log"
+    index_args=(
+        "--threads=${dict['threads']}"
+        '--verbose'
+        "${dict['genome_fasta_file']}"
+        "${dict['index_base']}"
+    )
+    koopa_dl 'Index args' "${index_args[*]}"
+    "${app['bowtie2_build']}" "${index_args[@]}" \
+        2>&1 | "${app['tee']}" "${dict['log_file']}"
     return 0
 }
 
@@ -10201,7 +10228,7 @@ koopa_hisat2_align_paired_end_per_sample() {
 }
 
 koopa_hisat2_align_paired_end() {
-    local dict fastq_r1_files fastq_r1_file fastq_r2_file
+    local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
     declare -A dict=(
         ['fastq_dir']=''
@@ -10308,6 +10335,7 @@ koopa_hisat2_align_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
+        local fastq_r2_file
         fastq_r2_file="${fastq_r1_file/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         koopa_hisat2_align_paired_end_per_sample \
@@ -14856,7 +14884,7 @@ koopa_kallisto_quant_paired_end_per_sample() {
 }
 
 koopa_kallisto_quant_paired_end() {
-    local dict fastq_r1_files fastq_r1_file fastq_r2_file
+    local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
     declare -A dict=(
         ['fastq_dir']=''
@@ -14963,6 +14991,7 @@ koopa_kallisto_quant_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
+        local fastq_r2_file
         fastq_r2_file="${fastq_r1_file/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         koopa_kallisto_quant_paired_end_per_sample \
@@ -15853,6 +15882,13 @@ koopa_locate_bedtools() {
     koopa_locate_app \
         --app-name='bedtools' \
         --bin-name='bedtools' \
+        "$@"
+}
+
+koopa_locate_bowtie2_build() {
+    koopa_locate_app \
+        --app-name='bowtie2' \
+        --bin-name='bowtie2-build' \
         "$@"
 }
 
@@ -20245,7 +20281,7 @@ koopa_salmon_quant_paired_end_per_sample() {
 }
 
 koopa_salmon_quant_paired_end() {
-    local dict fastq_r1_files fastq_r1_file fastq_r2_file
+    local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
     declare -A dict=(
         ['fastq_dir']=''
@@ -20352,6 +20388,7 @@ koopa_salmon_quant_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
+        local fastq_r2_file
         fastq_r2_file="${fastq_r1_file/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         koopa_salmon_quant_paired_end_per_sample \
@@ -21487,7 +21524,7 @@ GB of RAM."
 }
 
 koopa_star_align_paired_end() {
-    local dict fastq_r1_files fastq_r1_file fastq_r2_file
+    local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
     declare -A dict=(
         ['fastq_dir']=''
@@ -21584,6 +21621,7 @@ koopa_star_align_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
+        local fastq_r2_file
         fastq_r2_file="${fastq_r1_file/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         koopa_star_align_paired_end_per_sample \

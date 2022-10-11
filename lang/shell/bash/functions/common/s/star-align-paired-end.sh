@@ -3,7 +3,7 @@
 koopa_star_align_paired_end() {
     # """
     # Run STAR aligner on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-03-25.
+    # @note Updated 2022-10-11.
     #
     # @examples
     # > koopa_star_align_paired_end \
@@ -13,7 +13,7 @@ koopa_star_align_paired_end() {
     # >     --index-dir='star-index' \
     # >     --output-dir='star'
     # """
-    local dict fastq_r1_files fastq_r1_file fastq_r2_file
+    local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
     declare -A dict=(
         # e.g. 'fastq'.
@@ -117,6 +117,7 @@ koopa_star_align_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
+        local fastq_r2_file
         fastq_r2_file="${fastq_r1_file/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         koopa_star_align_paired_end_per_sample \

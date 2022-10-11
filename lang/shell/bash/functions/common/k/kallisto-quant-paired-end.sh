@@ -3,7 +3,7 @@
 koopa_kallisto_quant_paired_end() {
     # """
     # Run kallisto quant on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-03-25.
+    # @note Updated 2022-10-11.
     #
     # @examples
     # > koopa_kallisto_quant_paired_end \
@@ -12,7 +12,7 @@ koopa_kallisto_quant_paired_end() {
     # >     --fastq-r2-tail='_R2_001.fastq.gz' \
     # >     --output-dir='kallisto'
     # """
-    local dict fastq_r1_files fastq_r1_file fastq_r2_file
+    local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
     declare -A dict=(
         # e.g. 'fastq'.
@@ -127,6 +127,7 @@ koopa_kallisto_quant_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
+        local fastq_r2_file
         fastq_r2_file="${fastq_r1_file/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         koopa_kallisto_quant_paired_end_per_sample \
