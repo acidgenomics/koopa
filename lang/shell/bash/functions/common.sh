@@ -573,7 +573,7 @@ koopa_activate_app() {
         dict2['app_name']="$app_name"
         dict2['prefix']="${dict['opt_prefix']}/${dict2['app_name']}"
         koopa_assert_is_dir "${dict2['prefix']}"
-        dict2['current_ver']="$(koopa_opt_version "${dict2['app_name']}")"
+        dict2['current_ver']="$(koopa_app_version "${dict2['app_name']}")"
         dict2['expected_ver']="$(koopa_app_json_version "${dict2['app_name']}")"
         if [[ "${#dict2['expected_ver']}" -eq 40 ]]
         then
@@ -994,6 +994,21 @@ ${dict2['version']}"
         fi
         koopa_print "${dict2['prefix']}"
     done
+    return 0
+}
+
+koopa_app_version() {
+    local dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict=(
+        ['name']="${1:?}"
+        ['opt_prefix']="$(koopa_opt_prefix)"
+    )
+    dict['symlink']="${dict['opt_prefix']}/${dict['name']}"
+    koopa_assert_is_symlink "${dict['symlink']}"
+    dict['realpath']="$(koopa_realpath "${dict['symlink']}")"
+    dict['version']="$(koopa_basename "${dict['realpath']}")"
+    koopa_print "${dict['version']}"
     return 0
 }
 
@@ -2632,95 +2647,6 @@ koopa_aws_s3_sync() {
         s3 sync \
             "${exclude_args[@]}" \
             "${sync_args[@]}"
-    return 0
-}
-
-koopa_bam_filter() {
-    local bam_file bam_files dir final_output_bam final_output_tail input_bam
-    local input_tail output_bam output_tail
-    koopa_assert_has_args_le "$#" 1
-    dir="${1:-.}"
-    koopa_assert_is_dir "$dir"
-    dir="$(koopa_realpath "$dir")"
-    readarray -t bam_files <<< "$( \
-        koopa_find \
-            --max-depth=3 \
-            --min-depth=1 \
-            --pattern='*.sorted.bam' \
-            --prefix="$dir" \
-            --sort \
-            --type='f' \
-    )"
-    if ! koopa_is_array_non_empty "${bam_files[@]:-}"
-    then
-        koopa_stop "No BAM files detected in '${dir}'."
-    fi
-    koopa_h1 "Filtering BAM files in '${dir}'."
-    koopa_conda_activate_env 'sambamba'
-    for bam_file in "${bam_files[@]}"
-    do
-        final_output_tail='filtered'
-        final_output_bam="${bam_file%.bam}.${final_output_tail}.bam"
-        if [[ -f "$final_output_bam" ]]
-        then
-            koopa_alert_note "Skipping '${final_output_bam}'."
-            continue
-        fi
-        input_bam="$bam_file"
-        output_tail='filtered-1-no-duplicates'
-        output_bam="${input_bam%.bam}.${output_tail}.bam"
-        koopa_sambamba_filter_duplicates \
-            --input-bam="$input_bam" \
-            --output-bam="$output_bam"
-        input_tail="$output_tail"
-        input_bam="$output_bam"
-        output_tail='filtered-2-no-unmapped'
-        output_bam="${input_bam/${input_tail}/${output_tail}}"
-        koopa_sambamba_filter_unmapped \
-            --input-bam="$input_bam" \
-            --output-bam="$output_bam"
-        input_tail="$output_tail"
-        input_bam="$output_bam"
-        output_tail='filtered-3-no-multimappers'
-        output_bam="${input_bam/${input_tail}/${output_tail}}"
-        koopa_sambamba_filter_multimappers \
-            --input-bam="$input_bam" \
-            --output-bam="$output_bam"
-        koopa_cp "$output_bam" "$final_output_bam"
-        koopa_sambamba_index "$final_output_bam"
-    done
-    koopa_conda_deactivate
-    return 0
-}
-
-koopa_bam_sort() {
-    local bam_file bam_files dir
-    koopa_assert_has_args_le "$#" 1
-    dir="${1:-.}"
-    koopa_assert_is_dir "$dir"
-    dir="$(koopa_realpath "$dir")"
-    readarray -t bam_files <<< "$( \
-        find "$dir" \
-            -maxdepth 3 \
-            -mindepth 1 \
-            -type f \
-            -iname '*.bam' \
-            -not -iname '*.filtered.*' \
-            -not -iname '*.sorted.*' \
-            -print \
-        | sort \
-    )"
-    if ! koopa_is_array_non_empty "${bam_files[@]:-}"
-    then
-        koopa_stop "No BAM files detected in '${dir}'."
-    fi
-    koopa_h1 "Sorting BAM files in '${dir}'."
-    koopa_conda_activate_env 'sambamba'
-    for bam_file in "${bam_files[@]}"
-    do
-        koopa_sambamba_sort "$bam_file"
-    done
-    koopa_conda_deactivate
     return 0
 }
 
@@ -16820,6 +16746,13 @@ koopa_locate_salmon() {
         "$@"
 }
 
+koopa_locate_sambamba() {
+    koopa_locate_app \
+        --app-name='sambamba' \
+        --bin-name='sambamba' \
+        "$@"
+}
+
 koopa_locate_samtools() {
     koopa_locate_app \
         --app-name='samtools' \
@@ -17662,21 +17595,6 @@ koopa_ngettext() {
     dict['str']="${dict['prefix']}${dict['num']}${dict['middle']}\
 ${dict['msg']}${dict['suffix']}"
     koopa_print "${dict['str']}"
-    return 0
-}
-
-koopa_opt_version() {
-    local dict
-    koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
-        ['name']="${1:?}"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
-    dict['symlink']="${dict['opt_prefix']}/${dict['name']}"
-    koopa_assert_is_symlink "${dict['symlink']}"
-    dict['realpath']="$(koopa_realpath "${dict['symlink']}")"
-    dict['version']="$(koopa_basename "${dict['realpath']}")"
-    koopa_print "${dict['version']}"
     return 0
 }
 
@@ -20663,53 +20581,43 @@ koopa_salmon_quant_single_end() {
     return 0
 }
 
-koopa_sambamba_filter_duplicates() {
+koopa_sambamba_filter_per_sample() {
+    local app dict
     koopa_assert_has_args "$#"
-    koopa_sambamba_filter --filter='not duplicate' "$@"
-    return 0
-}
-
-koopa_sambamba_filter_multimappers() {
-    koopa_assert_has_args "$#"
-    koopa_sambamba_filter --filter='[XS] == null' "$@"
-    return 0
-}
-
-koopa_sambamba_filter_unmapped() {
-    koopa_assert_has_args "$#"
-    koopa_sambamba_filter --filter='not unmapped' "$@"
-    return 0
-}
-
-koopa_sambamba_filter() {
-    local filter input_bam input_bam_bn output_bam output_bam_bn threads
-    koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'sambamba'
+    declare -A app
+    app['sambamba']="$(koopa_locate_sambamba)"
+    [[ -x "${app['sambamba']}" ]] || return 1
+    declare -A dict=(
+        ['filter']=''
+        ['input']=''
+        ['output']=''
+        ['threads']="$(koopa_cpu_count)"
+    )
     while (("$#"))
     do
         case "$1" in
             '--filter='*)
-                filter="${1#*=}"
+                dict['filter']="${1#*=}"
                 shift 1
                 ;;
             '--filter')
-                filter="${2:?}"
+                dict['filter']="${2:?}"
                 shift 2
                 ;;
             '--input-bam='*)
-                input_bam="${1#*=}"
+                dict['input']="${1#*=}"
                 shift 1
                 ;;
             '--input-bam')
-                input_bam="${2:?}"
+                dict['input']="${2:?}"
                 shift 2
                 ;;
             '--output-bam='*)
-                output_bam="${1#*=}"
+                dict['output']="${1#*=}"
                 shift 1
                 ;;
             '--output-bam')
-                output_bam="${2:?}"
+                dict['output']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -20718,74 +20626,173 @@ koopa_sambamba_filter() {
         esac
     done
     koopa_assert_is_set \
-        '--filter' "$filter" \
-        '--intput-bam' "$input_bam" \
-        '--output-bam' "$output_bam"
-    koopa_assert_are_not_identical "$input_bam" "$output_bam"
-    input_bam_bn="$(koopa_basename "$input_bam")"
-    output_bam_bn="$(koopa_basename "$output_bam")"
-    if [[ -f "$output_bam" ]]
+        '--filter' "${dict['filter']}" \
+        '--intput-bam' "${dict['input']}" \
+        '--output-bam' "${dict['output']}"
+    koopa_assert_is_file "${dict['input']}"
+    koopa_assert_is_matching_regex \
+        --pattern='\.bam$' \
+        --string="${dict['input']}"
+    koopa_assert_are_not_identical "${dict['input']}" "${dict['output']}"
+    dict['input_bn']="$(koopa_basename "${dict['input']}")"
+    dict['output_bn']="$(koopa_basename "${dict['output']}")"
+    if [[ -f "${dict['output']}" ]]
     then
-        koopa_alert_note "Skipping '${output_bam_bn}'."
+        koopa_alert_note "Skipping '${dict['output_bn']}'."
         return 0
     fi
-    koopa_h2 "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
-    koopa_assert_is_file "$input_bam"
-    koopa_dl 'Filter' "$filter"
-    threads="$(koopa_cpu_count)"
-    koopa_dl 'Threads' "$threads"
-    sambamba view \
-        --filter="$filter" \
+    koopa_alert "Filtering '${dict['input_bn']}' to '${dict['output_bn']}'."
+    koopa_dl 'Filter' "${dict['filter']}"
+    "${app['sambamba']}" view \
+        --filter="${dict['filter']}" \
         --format='bam' \
-        --nthreads="$threads" \
-        --output-filename="$output_bam" \
+        --nthreads="${dict['threads']}" \
+        --output-filename="${dict['output']}" \
         --show-progress \
         --with-header \
-        "$input_bam"
+        "${dict['input']}"
+    return 0
+}
+
+koopa_sambamba_filter() {
+    local bam_file bam_files dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict=(
+        ['pattern']='*.sorted.bam'
+        ['prefix']="${1:?}"
+    )
+    koopa_assert_is_dir "${dict['prefix']}"
+    readarray -t bam_files <<< "$( \
+        koopa_find \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern="${dict['pattern']}" \
+            --prefix="${dict['prefix']}" \
+            --sort \
+            --type='f' \
+    )"
+    if ! koopa_is_array_non_empty "${bam_files[@]:-}"
+    then
+        koopa_stop "No BAM files detected in '${dict['prefix']}' matching \
+pattern '${dict['pattern']}'."
+    fi
+    koopa_alert "Filtering BAM files in '${dict['prefix']}'."
+    for bam_file in "${bam_files[@]}"
+    do
+        local dict2
+        declare -A dict2
+        dict2['input']="$bam_file"
+        dict2['bn']="$(koopa_basename_sans_ext "${dict2['input']}")"
+        dict2['prefix']="$(koopa_parent_dir "${dict['input']}")"
+        dict2['stem']="${dict2['prefix']}/${dict2['bn']}"
+        dict2['output']="${dict2['stem']}.filtered.bam"
+        if [[ -f "${dict2['output']}" ]]
+        then
+            koopa_alert_note "Skipping '${dict2['output']}'."
+            continue
+        fi
+        dict2['file_1']="${dict2['stem']}.filtered-1-no-duplicates.bam"
+        dict2['file_2']="${dict2['stem']}.filtered-2-no-unmapped.bam"
+        dict2['file_3']="${dict2['stem']}.filtered-3-no-multimappers.bam"
+        koopa_sambamba_filter_per_sample \
+            --filter='not duplicate' \
+            --input-bam="${dict2['input']}" \
+            --output-bam="${dict2['file_1']}"
+        koopa_sambamba_filter_per_sample \
+            --filter='not unmapped' \
+            --input-bam="${dict2['file_1']}" \
+            --output-bam="${dict2['file_2']}"
+        koopa_sambamba_filter_per_sample \
+            --filter='[XS] == null' \
+            --input-bam="${dict2['file_2']}" \
+            --output-bam="${dict2['file_3']}"
+        koopa_cp "${dict2['file_3']}" "${dict2['output']}"
+        koopa_sambamba_index "${dict2['output']}"
+    done
     return 0
 }
 
 koopa_sambamba_index() {
-    local bam_file threads
+    local app bam_file dict
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'samtools'
-    threads="$(koopa_cpu_count)"
-    koopa_dl 'Threads' "$threads"
+    koopa_assert_is_file "$@"
+    declare -A app
+    app['sambamba']="$(koopa_locate_sambamba)"
+    [[ -x "${app['sambamba']}" ]] || return 1
+    declare -A dict
+    dict['threads']="$(koopa_cpu_count)"
     for bam_file in "$@"
     do
+        koopa_assert_is_matching_regex \
+            --pattern='\.bam$' \
+            --string="$bam_file"
         koopa_alert "Indexing '${bam_file}'."
-        koopa_assert_is_file "$bam_file"
-        sambamba index \
-            --nthreads="$threads" \
+        "${app['sambamba']}" index \
+            --nthreads="${dict['threads']}" \
             --show-progress \
             "$bam_file"
     done
     return 0
 }
 
-koopa_sambamba_sort() {
-    local sorted_bam sorted_bam_bn threads unsorted_bam unsorted_bam_bn
+koopa_sambamba_sort_per_sample() {
+    local app dict
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'sambamba'
-    unsorted_bam="${1:?}"
-    sorted_bam="${unsorted_bam%.bam}.sorted.bam"
-    unsorted_bam_bn="$(koopa_basename "$unsorted_bam")"
-    sorted_bam_bn="$(koopa_basename "$sorted_bam")"
-    if [[ -f "$sorted_bam" ]]
+    declare -A app
+    app['sambamba']="$(koopa_locate_sambamba)"
+    [[ -x "${app['sambamba']}" ]] || return 1
+    declare -A dict=(
+        ['input']="${1:?}"
+        ['threads']="$(koopa_cpu_count)"
+    )
+    koopa_assert_is_file "${dict['input']}"
+    koopa_assert_is_matching_regex \
+        --pattern='\.bam$' \
+        --string="${dict['input']}"
+    dict['output']="${dict['input']%.bam}.sorted.bam"
+    dict['input_bn']="$(koopa_basename "${dict['input']}")"
+    dict['output_bn']="$(koopa_basename "${dict['output']}")"
+    if [[ -f "${dict['output']}" ]]
     then
-        koopa_alert_note "Skipping '${sorted_bam_bn}'."
+        koopa_alert_note "Skipping '${dict['output_bn']}'."
         return 0
     fi
-    koopa_h2 "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
-    koopa_assert_is_file "$unsorted_bam"
-    threads="$(koopa_cpu_count)"
-    koopa_dl 'Threads' "${threads}"
-    sambamba sort \
+    koopa_alert "Sorting '${dict['input_bn']}' to '${dict['output_bn']}'."
+    "${app['sambamba']}" sort \
         --memory-limit='2GB' \
-        --nthreads="$threads" \
-        --out="$sorted_bam" \
+        --nthreads="${dict['threads']}" \
+        --out="${dict['output']}" \
         --show-progress \
-        "$unsorted_bam"
+        "${dict['input']}"
+    return 0
+}
+
+koopa_sambamba_sort() {
+    local bam_file bam_files dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict
+    dict['prefix']="${1:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    readarray -t bam_files <<< "$( \
+        koopa_find \
+            --exclude='*.filtered.*' \
+            --exclude='*.sorted.*' \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern='*.bam' \
+            --prefix="${dict['prefix']}" \
+            --sort \
+            --type='f' \
+    )"
+    if ! koopa_is_array_non_empty "${bam_files[@]:-}"
+    then
+        koopa_stop "No BAM files detected in '${dict['prefix']}'."
+    fi
+    koopa_alert "Sorting BAM files in '${dict['prefix']}'."
+    for bam_file in "${bam_files[@]}"
+    do
+        koopa_sambamba_sort_per_sample "$bam_file"
+    done
     return 0
 }
 

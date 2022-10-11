@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Rename this, consolidate as 'koopa_app_version'.
-
-koopa_opt_version() {
+koopa_app_version() {
     # """
     # Get the current version of linked app in opt.
-    # @note Updated 2022-06-23.
+    # @note Updated 2022-10-11.
     #
     # @examples
-    # > koopa_opt_version 'vim'
+    # > koopa_app_version 'vim'
     # """
     local dict
     koopa_assert_has_args_eq "$#" 1
