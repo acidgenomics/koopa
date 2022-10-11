@@ -677,6 +677,11 @@ koopa_macos_install_user_defaults() {
         "$@"
 }
 
+koopa_macos_is_xcode_clt_installed() {
+    koopa_assert_has_no_args "$#"
+    [[ -d '/Library/Developer/CommandLineTools/usr/bin' ]]
+}
+
 koopa_macos_list_launch_agents() {
     local app
     koopa_assert_has_no_args "$#"

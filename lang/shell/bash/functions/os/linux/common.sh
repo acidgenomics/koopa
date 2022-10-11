@@ -844,6 +844,13 @@ koopa_linux_uninstall_lmod() {
         "$@"
 }
 
+koopa_linux_uninstall_openjdk() {
+    koopa_uninstall_app \
+        --name='openjdk' \
+        --platform='linux' \
+        "$@"
+}
+
 koopa_linux_uninstall_pinentry() {
     koopa_uninstall_app \
         --name='pinentry' \
