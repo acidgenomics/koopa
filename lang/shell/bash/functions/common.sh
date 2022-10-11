@@ -2210,13 +2210,11 @@ koopa_aws_s3_list_large_files() {
     declare -A app=(
         ['awk']="$(koopa_locate_awk)"
         ['aws']="$(koopa_locate_aws)"
-        ['head']="$(koopa_locate_head)"
         ['jq']="$(koopa_locate_jq)"
         ['sort']="$(koopa_locate_sort)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
@@ -2280,6 +2278,7 @@ koopa_aws_s3_list_large_files() {
             "${dict['bucket']}" \
     )"
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
+    dict['awk_string']="NR<=${dict['num']} {print \$1}"
     dict['str']="$( \
         "${app['aws']}" --profile="${dict['profile']}" \
             s3api list-object-versions \
@@ -2289,9 +2288,7 @@ koopa_aws_s3_list_large_files() {
                 --raw-output \
                 '.Versions[] | "\(.Key)\t \(.Size)"' \
             | "${app['sort']}" --key=2 --numeric-sort --reverse \
-            | "${app['head']}" --lines="${dict['num']}" \
-            | "${app['awk']}" '{ print $1 }' \
-            || koopa_ignore_pipefail "$?" \
+            | "${app['awk']}" "${dict['awk_string']}" \
     )"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"

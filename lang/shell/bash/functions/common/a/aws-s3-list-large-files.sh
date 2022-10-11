@@ -5,11 +5,6 @@ koopa_aws_s3_list_large_files() {
     # List large files in an S3 bucket.
     # @note Updated 2022-10-11.
     #
-    # @seealso
-    # - Exit code 141 issue with head
-    #   https://stackoverflow.com/questions/19120263/
-    # - https://stackoverflow.com/questions/22464786/
-    #
     # @examples
     # > koopa_aws_s3_list_large_files \
     # >     --profile='acidgenomics' \
@@ -23,13 +18,11 @@ koopa_aws_s3_list_large_files() {
     declare -A app=(
         ['awk']="$(koopa_locate_awk)"
         ['aws']="$(koopa_locate_aws)"
-        ['head']="$(koopa_locate_head)"
         ['jq']="$(koopa_locate_jq)"
         ['sort']="$(koopa_locate_sort)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
@@ -95,9 +88,7 @@ koopa_aws_s3_list_large_files() {
             "${dict['bucket']}" \
     )"
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
-    # NOTE We're intentionally suppressing pipefail exit code 141 in head
-    # command step here.
-    # shellcheck disable=SC2016
+    dict['awk_string']="NR<=${dict['num']} {print \$1}"
     dict['str']="$( \
         "${app['aws']}" --profile="${dict['profile']}" \
             s3api list-object-versions \
@@ -107,9 +98,7 @@ koopa_aws_s3_list_large_files() {
                 --raw-output \
                 '.Versions[] | "\(.Key)\t \(.Size)"' \
             | "${app['sort']}" --key=2 --numeric-sort --reverse \
-            | "${app['head']}" --lines="${dict['num']}" \
-            | "${app['awk']}" '{ print $1 }' \
-            || koopa_ignore_pipefail "$?" \
+            | "${app['awk']}" "${dict['awk_string']}" \
     )"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
