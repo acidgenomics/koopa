@@ -2024,6 +2024,16 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
+    koopa_assert_is_matching_regex \
+        --pattern='^s3://.+/$' \
+        --string="${dict['bucket']}"
+    dict['bucket']="$( \
+        koopa_sub \
+            --pattern='s3://' \
+            --replacement='' \
+            "${dict['bucket']}" \
+    )"
+    dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
             --bucket "${dict['bucket']}" \
@@ -2053,14 +2063,13 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
             ['version_id']="${version_ids[$i]}"
         )
         koopa_alert "Deleting '${dict2['key']}' (${dict2['version_id']})."
-        "${app['aws']}" s3api delete-object \
-            --bucket "${dict['bucket']}" \
-            --key "${dict2['key']}" \
-            --profile "${dict['profile']}" \
-            --region "${dict['region']}" \
-            --version-id "${dict2['version_id']}" \
+        "${app['aws']}" --profile "${dict['profile']}" \
+            s3api delete-object \
+                --bucket "${dict['bucket']}" \
+                --key "${dict2['key']}" \
+                --region "${dict['region']}" \
+                --version-id "${dict2['version_id']}" \
             > /dev/null
-
     done
     return 0
 }
@@ -2201,19 +2210,20 @@ koopa_aws_s3_list_large_files() {
     declare -A app=(
         ['awk']="$(koopa_locate_awk)"
         ['aws']="$(koopa_locate_aws)"
+        ['head']="$(koopa_locate_head)"
         ['jq']="$(koopa_locate_jq)"
         ['sort']="$(koopa_locate_sort)"
-        ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['tail']}" ]] || return 1
     declare -A dict=(
         ['bucket']=''
         ['num']='20'
         ['profile']="${AWS_PROFILE:-default}"
+        ['region']="${AWS_REGION:-us-east-1}"
     )
     while (("$#"))
     do
@@ -2242,6 +2252,14 @@ koopa_aws_s3_list_large_files() {
                 dict['profile']="${2:?}"
                 shift 2
                 ;;
+            '--region='*)
+                dict['region']="${1#*=}"
+                shift 1
+                ;;
+            '--region')
+                dict['region']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -2250,7 +2268,8 @@ koopa_aws_s3_list_large_files() {
     koopa_assert_is_set \
         '--bucket' "${dict['bucket']}" \
         '--num' "${dict['num']}" \
-        '--profile or AWS_PROFILE' "${dict['profile']}"
+        '--profile or AWS_PROFILE' "${dict['profile']}" \
+        '--region or AWS_REGION' "${dict['region']}"
     koopa_assert_is_matching_regex \
         --pattern='^s3://.+/$' \
         --string="${dict['bucket']}"
@@ -2263,13 +2282,16 @@ koopa_aws_s3_list_large_files() {
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
     dict['str']="$( \
         "${app['aws']}" --profile="${dict['profile']}" \
-            s3api list-object-versions --bucket "${dict['bucket']}" \
+            s3api list-object-versions \
+                --bucket "${dict['bucket']}" \
+                --region "${dict['region']}" \
             | "${app['jq']}" \
                 --raw-output \
                 '.Versions[] | "\(.Key)\t \(.Size)"' \
-            | "${app['sort']}" --key=2 --numeric-sort \
+            | "${app['sort']}" --key=2 --numeric-sort --reverse \
+            | "${app['head']}" --lines="${dict['num']}" \
             | "${app['awk']}" '{ print $1 }' \
-            | "${app['tail']}" -n "${dict['num']}" \
+            || koopa_ignore_pipefail "$?" \
     )"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
@@ -10721,6 +10743,13 @@ koopa_hisat2_index() {
     "${app['hisat2_build']}" "${index_args[@]}"
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
+}
+
+koopa_ignore_pipefail() {
+    local status
+    status="${1:?}"
+    [[ "$status" -eq 141 ]] && return 0
+    return "$status"
 }
 
 koopa_info_box() {
