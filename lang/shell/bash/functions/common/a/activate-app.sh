@@ -79,7 +79,7 @@ koopa_activate_app() {
         dict2['app_name']="$app_name"
         dict2['prefix']="${dict['opt_prefix']}/${dict2['app_name']}"
         koopa_assert_is_dir "${dict2['prefix']}"
-        dict2['current_ver']="$(koopa_opt_version "${dict2['app_name']}")"
+        dict2['current_ver']="$(koopa_app_version "${dict2['app_name']}")"
         dict2['expected_ver']="$(koopa_app_json_version "${dict2['app_name']}")"
         # Shorten git commit string to 7 characters.
         if [[ "${#dict2['expected_ver']}" -eq 40 ]]
