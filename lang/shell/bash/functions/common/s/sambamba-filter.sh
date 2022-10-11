@@ -2,80 +2,75 @@
 
 koopa_sambamba_filter() {
     # """
-    # Perform filtering on a BAM file with sambamba.
-    # @note Updated 2021-09-21.
-    #
-    # sambamba prints version information into stderr.
+    # Apply multi-step filtering to multiple BAM files in a directory.
+    # @note Updated 2022-10-11.
     #
     # @seealso
-    # - https://lomereiter.github.io/sambamba/docs/sambamba-view.html
-    # - https://github.com/lomereiter/sambamba/wiki/
-    #       %5Bsambamba-view%5D-Filter-expression-syntax
-    # - https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/
-    #       sessionV/lessons/03_align_and_filtering.html
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
+    #     bam/__init__.py
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
+    #       chipseq/__init__.py
     # """
-    local filter input_bam input_bam_bn output_bam output_bam_bn threads
-    koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'sambamba'
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--filter='*)
-                filter="${1#*=}"
-                shift 1
-                ;;
-            '--filter')
-                filter="${2:?}"
-                shift 2
-                ;;
-            '--input-bam='*)
-                input_bam="${1#*=}"
-                shift 1
-                ;;
-            '--input-bam')
-                input_bam="${2:?}"
-                shift 2
-                ;;
-            '--output-bam='*)
-                output_bam="${1#*=}"
-                shift 1
-                ;;
-            '--output-bam')
-                output_bam="${2:?}"
-                shift 2
-                ;;
-            # Other ------------------------------------------------------------
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    # FIXME Rework this.
-    koopa_assert_is_set \
-        '--filter' "$filter" \
-        '--intput-bam' "$input_bam" \
-        '--output-bam' "$output_bam"
-    koopa_assert_are_not_identical "$input_bam" "$output_bam"
-    input_bam_bn="$(koopa_basename "$input_bam")"
-    output_bam_bn="$(koopa_basename "$output_bam")"
-    if [[ -f "$output_bam" ]]
+    local bam_file bam_files dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict=(
+        ['pattern']='*.sorted.bam'
+        ['prefix']="${1:?}"
+    )
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    # We're allowing 3 levels down here to match bcbio-nextgen output.
+    readarray -t bam_files <<< "$( \
+        koopa_find \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern="${dict['pattern']}" \
+            --prefix="${dict['prefix']}" \
+            --sort \
+            --type='f' \
+    )"
+    if ! koopa_is_array_non_empty "${bam_files[@]:-}"
     then
-        koopa_alert_note "Skipping '${output_bam_bn}'."
-        return 0
+        koopa_stop "No BAM files detected in '${dict['prefix']}' matching \
+pattern '${dict['pattern']}'."
     fi
-    koopa_h2 "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
-    koopa_assert_is_file "$input_bam"
-    koopa_dl 'Filter' "$filter"
-    threads="$(koopa_cpu_count)"
-    koopa_dl 'Threads' "$threads"
-    sambamba view \
-        --filter="$filter" \
-        --format='bam' \
-        --nthreads="$threads" \
-        --output-filename="$output_bam" \
-        --show-progress \
-        --with-header \
-        "$input_bam"
+    koopa_alert "Filtering BAM files in '${dict['prefix']}'."
+    for bam_file in "${bam_files[@]}"
+    do
+        local dict2
+        declare -A dict2
+        dict2['input']="$bam_file"
+        dict2['bn']="$(koopa_basename_sans_ext "${dict2['input']}")"
+        dict2['prefix']="$(koopa_parent_dir "${dict['input']}")"
+        dict2['stem']="${dict2['prefix']}/${dict2['bn']}"
+        dict2['output']="${dict2['stem']}.filtered.bam"
+        # Skip processing if final output exists.
+        if [[ -f "${dict2['output']}" ]]
+        then
+            koopa_alert_note "Skipping '${dict2['output']}'."
+            continue
+        fi
+        dict2['file_1']="${dict2['stem']}.filtered-1-no-duplicates.bam"
+        dict2['file_2']="${dict2['stem']}.filtered-2-no-unmapped.bam"
+        dict2['file_3']="${dict2['stem']}.filtered-3-no-multimappers.bam"
+        # 1. Filter duplicate reads.
+        koopa_sambamba_filter_per_sample \
+            --filter='not duplicate' \
+            --input-bam="${dict2['input']}" \
+            --output-bam="${dict2['file_1']}"
+        # 2. Filter unmapped reads.
+        koopa_sambamba_filter_per_sample \
+            --filter='not unmapped' \
+            --input-bam="${dict2['file_1']}" \
+            --output-bam="${dict2['file_2']}"
+        # 3. Filter multimapping reads. Note that this step can overfilter some
+        # samples with with large global changes in chromatin state.
+        koopa_sambamba_filter_per_sample \
+            --filter='[XS] == null' \
+            --input-bam="${dict2['file_2']}" \
+            --output-bam="${dict2['file_3']}"
+        koopa_cp "${dict2['file_3']}" "${dict2['output']}"
+        koopa_sambamba_index "${dict2['output']}"
+    done
     return 0
 }
