@@ -18,7 +18,6 @@ koopa_sambamba_filter() {
         ['prefix']="${1:?}"
     )
     koopa_assert_is_dir "${dict['prefix']}"
-    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     # We're allowing 3 levels down here to match bcbio-nextgen output.
     readarray -t bam_files <<< "$( \
         koopa_find \
