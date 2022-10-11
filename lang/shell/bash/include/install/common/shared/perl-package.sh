@@ -27,7 +27,7 @@ main() {
     # """
     local app bin_file bin_files dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'perl'
+    koopa_activate_app --build-only 'perl'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
         ['perl']="$(koopa_locate_perl)"

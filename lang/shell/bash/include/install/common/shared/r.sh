@@ -44,7 +44,7 @@ main() {
     local app build_deps conf_args conf_dict deps dict
     koopa_assert_has_no_args "$#"
     build_deps=('pkg-config')
-    koopa_activate_build_opt_prefix "${build_deps[@]}"
+    koopa_activate_app --build-only "${build_deps[@]}"
     deps=(
         # zlib deps: none.
         'zlib'
@@ -142,7 +142,7 @@ main() {
         # deps: X11.
         'tcl-tk'
     )
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['ar']='/usr/bin/ar'
         ['awk']="$(koopa_locate_awk --realpath)"

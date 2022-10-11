@@ -19,7 +19,7 @@ main() {
     #   https://github.com/nmap/nmap/tree/master/liblua
     # """
     local app conf_args deps dict
-    koopa_activate_build_opt_prefix \
+    koopa_activate_app --build-only \
         'bison' \
         'flex'
     deps=(
@@ -29,7 +29,7 @@ main() {
         'pcre'
         # > 'lua'
     )
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

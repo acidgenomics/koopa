@@ -11,8 +11,8 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/msgpack.rb
     # """
     local app cmake_args dict
-    koopa_activate_build_opt_prefix 'cmake'
-    koopa_activate_opt_prefix 'zlib'
+    koopa_activate_app --build-only 'cmake'
+    koopa_activate_app 'zlib'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
     )

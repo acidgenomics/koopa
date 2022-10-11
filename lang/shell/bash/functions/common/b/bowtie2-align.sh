@@ -5,7 +5,7 @@
 koopa_bowtie2_align() {
     # """
     # Run bowtie2 alignment on multiple paired-end FASTQ files.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-10-11.
     # """
     local app dict
     koopa_assert_has_args "$#"

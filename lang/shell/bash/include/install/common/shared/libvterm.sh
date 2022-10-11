@@ -10,7 +10,7 @@ main() {
     #    Formula/libvterm.rb
     # """
     local app dict
-    koopa_activate_build_opt_prefix 'libtool' 'pkg-config'
+    koopa_activate_app --build-only 'libtool' 'pkg-config'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

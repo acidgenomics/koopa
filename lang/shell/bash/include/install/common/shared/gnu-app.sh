@@ -8,7 +8,7 @@ main() {
     # Positional arguments are passed to 'conf_args' array.
     # """
     local app conf_args dict
-    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     declare -A dict=(
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
         ['jobs']="$(koopa_cpu_count)"

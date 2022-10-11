@@ -9,7 +9,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nushell.rb
     # - https://crates.io/crates/nu
     # """
-    koopa_activate_opt_prefix 'zlib' 'openssl3'
+    koopa_activate_app 'zlib' 'openssl3'
     koopa_install_app_subshell \
         --installer='rust-package' \
         --name='nushell' \
