@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
+# FIXME This doesn't seem to be picking up '\bFIXME\b' correctly.
+# How to set flags for word boundary detection?
+# FIXME Need to unit test this better for an expected failure.
+# FIXME Allow the user to pass in multiple patterns and include this in the
+# match failure more clearly...
+# FIXME Can we switch to ripgrep for this?
+# FIXME How to calculate array difference.
+# Array3=(`echo ${Array1[@]} ${Array2[@]} | tr ' ' '\n' | sort | uniq -u `)
+
 koopa_test_grep() {
     # """
     # Grep illegal patterns.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-10-07.
     #
     # Requires Perl-compatible regular expression (PCRE) support (-P).
     #
@@ -11,9 +20,8 @@ koopa_test_grep() {
     # """
     local app dict failures file pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['grep']="$(koopa_locate_grep)"
-    )
+    declare -A app
+    app['grep']="$(koopa_locate_grep)"
     [[ -x "${app['grep']}" ]] || return 1
     declare -A dict=(
         ['ignore']=''
@@ -29,8 +37,7 @@ koopa_test_grep() {
                 dict['ignore']="${1#*=}"
                 shift 1
                 ;;
-            '--ignore' | \
-            '-i')
+            '--ignore')
                 dict['ignore']="${2:?}"
                 shift 2
                 ;;
@@ -38,8 +45,7 @@ koopa_test_grep() {
                 dict['name']="${1#*=}"
                 shift 1
                 ;;
-            '--name' | \
-            '-n')
+            '--name')
                 dict['name']="${2:?}"
                 shift 2
                 ;;
@@ -47,8 +53,7 @@ koopa_test_grep() {
                 dict['pattern']="${1#*=}"
                 shift 1
                 ;;
-            '--pattern' | \
-            '-p')
+            '--pattern')
                 dict['pattern']="${2:?}"
                 shift 2
                 ;;
@@ -68,6 +73,9 @@ koopa_test_grep() {
         '--name' "${dict['name']}" \
         '--pattern' "${dict['pattern']}"
     failures=()
+
+    # FIXME How to set the different
+
     for file in "$@"
     do
         local x

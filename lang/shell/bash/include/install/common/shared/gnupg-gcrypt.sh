@@ -7,7 +7,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'autoconf' 'automake' 'pkg-config'
+    koopa_activate_app --build-only 'autoconf' 'automake' 'pkg-config'
     declare -A app=(
         ['gpg']='/usr/bin/gpg'
         ['gpg_agent']='/usr/bin/gpg-agent'
@@ -33,14 +33,14 @@ main() {
         'libassuan' | \
         'libgcrypt' | \
         'libksba')
-            koopa_activate_opt_prefix 'libgpg-error'
+            koopa_activate_app 'libgpg-error'
             dict['libgpg_error']="$(koopa_app_prefix 'libgpg-error')"
             conf_args+=(
                 "--with-libgpg-error-prefix=${dict['libgpg_error']}"
             )
             ;;
         'gnutls')
-            koopa_activate_opt_prefix \
+            koopa_activate_app \
                 'gmp' \
                 'libtasn1' \
                 'libunistring' \
@@ -48,14 +48,14 @@ main() {
             conf_args+=('--without-p11-kit')
             ;;
         'pinentry')
-            koopa_activate_opt_prefix \
+            koopa_activate_app \
                 'fltk' \
                 'ncurses' \
                 'libgpg-error' \
                 'libassuan' \
             ;;
         'gnupg')
-            koopa_activate_opt_prefix \
+            koopa_activate_app \
                 'zlib' \
                 'bzip2' \
                 'readline' \
@@ -90,7 +90,7 @@ main() {
             )
             if koopa_is_linux
             then
-                koopa_activate_opt_prefix 'pinentry'
+                koopa_activate_app 'pinentry'
                 dict['pinentry']="$(koopa_app_prefix 'pinentry')"
                 # FIXME Do we need to point to the pinentry binary here?
                 conf_args+=("--with-pinentry-pgm=${dict['pinentry']}")

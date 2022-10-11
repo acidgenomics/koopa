@@ -15,7 +15,7 @@ main() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'curl'
+    koopa_activate_app --build-only 'curl'
     declare -A dict=(
         ['build_prefix']="$(koopa_init_dir 'build')"
         ['jobs']="$(koopa_cpu_count)"

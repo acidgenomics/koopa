@@ -15,8 +15,8 @@ main() {
         'xorg-xorgproto'
         'xorg-xtrans'
     )
-    koopa_activate_build_opt_prefix "${build_deps[@]}"
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

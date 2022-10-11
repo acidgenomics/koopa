@@ -14,7 +14,7 @@ main() {
         ['yes']="$(koopa_locate_yes --allow-system)"
     )
     [[ -x "${app['yes']}" ]] || return 1
-    koopa_activate_build_opt_prefix 'chemacs'
+    koopa_activate_app --build-only 'chemacs'
     declare -A dict=(
         ['commit']="${KOOPA_INSTALL_VERSION:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

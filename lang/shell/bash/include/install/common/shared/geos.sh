@@ -32,7 +32,7 @@ main() {
     # >         '/usr/include/geos' \
     # >         '/usr/include/geos_c.h'
     # > fi
-    koopa_activate_build_opt_prefix 'cmake'
+    koopa_activate_app --build-only 'cmake'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['make']="$(koopa_locate_make)"

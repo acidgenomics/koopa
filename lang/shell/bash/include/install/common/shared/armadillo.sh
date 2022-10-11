@@ -15,8 +15,8 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
-    koopa_activate_opt_prefix 'hdf5'
+    koopa_activate_app --build-only 'cmake' 'pkg-config'
+    koopa_activate_app 'hdf5'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
     )

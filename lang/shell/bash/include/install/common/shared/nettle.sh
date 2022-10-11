@@ -9,7 +9,7 @@ main() {
     # - https://stackoverflow.com/questions/7965990
     # - https://gist.github.com/morgant/1753095
     # """
-    koopa_activate_opt_prefix 'gmp' 'm4'
+    koopa_activate_app 'gmp' 'm4'
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='nettle' \

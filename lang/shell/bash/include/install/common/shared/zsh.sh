@@ -28,7 +28,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix \
+    koopa_activate_app \
         'ncurses' \
         'pcre' \
         'texinfo'
