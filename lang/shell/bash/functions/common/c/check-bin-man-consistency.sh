@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework this in r-koopa to only check share/man/man1.
-
 koopa_check_bin_man_consistency() {
     # """
     # Check bin and man consistency.
-    # @note Updated 2021-08-14.
+    # @note Updated 2022-10-11.
     # """
     koopa_assert_has_no_args "$#"
     koopa_r_koopa 'cliCheckBinManConsistency' "$@"
