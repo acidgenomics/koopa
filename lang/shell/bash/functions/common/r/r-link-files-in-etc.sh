@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Simpliy this, to take out platform-specific files.
-# In this case, we need to write them per machine.
-
 koopa_r_link_files_in_etc() {
     # """
     # Link R config files inside 'etc/'.
