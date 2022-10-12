@@ -63,7 +63,7 @@ archive/${dict['file']}"
         '-Dgraphite=disabled'
         '-Dicu=enabled'
         '-Dintrospection=disabled'
-        # FIXME Avoid 'lib64' inconsistency on Linux. Does this work?
+        # Avoid 'lib64' inconsistency on Linux.
         '-Dlibdir=lib'
     )
     "${app['meson']}" "${meson_args[@]}" build
