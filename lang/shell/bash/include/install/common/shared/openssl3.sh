@@ -36,7 +36,8 @@ main() {
     # Check supported platforms with:
     # > ./Configure LIST
     conf_args=(
-        '--libdir=lib' # Avoid 'lib64' inconsistency on Linux.
+        # Avoid 'lib64' inconsistency on Linux.
+        '--libdir=lib'
         "--openssldir=${dict['prefix']}"
         "--prefix=${dict['prefix']}"
         "-Wl,-rpath,${dict['prefix']}/lib"
