@@ -370,6 +370,7 @@ __koopa_complete() {
                         'yarn'
                         'yt-dlp'
                         'zellij'
+                        'zip'
                         'zlib'
                         'zoxide'
                         'zsh'

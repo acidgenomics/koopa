@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Work on hardening these:
-# > PAGER=${PAGER-'/usr/bin/less'}
-# > R_BROWSER=${R_BROWSER-'/usr/bin/open'}
-# > R_BZIPCMD=${R_BZIPCMD-'/usr/bin/bzip2'}
-# > R_GZIPCMD=${R_GZIPCMD-'/usr/bin/gzip'}
-# > R_PDFVIEWER=${R_PDFVIEWER-'/usr/bin/open'}
-# > R_PRINTCMD=${R_PRINTCMD-'lpr'}
-# > R_TEXI2DVICMD=${R_TEXI2DVICMD-${TEXI2DVI-'/usr/local/bin/texi2dvi'}}
-# > R_UNZIPCMD=${R_UNZIPCMD-'/usr/bin/unzip'}
-# > R_ZIPCMD=${R_ZIPCMD-'/usr/bin/zip'}
-
 # NOTE RStudio PATH is now inconsistent with R due to breaking changes in
 # internal 'SessionPath.cpp'.
 #
@@ -101,12 +90,28 @@ koopa_r_configure_environ() {
     then
         return 0
     fi
+    app['bzip2']="$(koopa_locate_bzip2)"
     app['cat']="$(koopa_locate_cat)"
+    app['gzip']="$(koopa_locate_gzip)"
+    app['less']="$(koopa_locate_less)"
+    app['lpr']="$(koopa_locate_lpr)"
+    app['open']="$(koopa_locate_open)"
     app['pkg_config']="$(koopa_locate_pkg_config)"
     app['sort']="$(koopa_locate_sort)"
+    app['texi2dvi']="$(koopa_locate_texi2dvi)"
+    app['unzip']="$(koopa_locate_unzip)"
+    app['zip']="$(koopa_locate_zip)"
+    [[ -x "${app['bzip2']}" ]] || return 1
     [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['gzip']}" ]] || return 1
+    [[ -x "${app['less']}" ]] || return 1
+    [[ -x "${app['lpr']}" ]] || return 1
+    [[ -x "${app['open']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['texi2dvi']}" ]] || return 1
+    [[ -x "${app['unzip']}" ]] || return 1
+    [[ -x "${app['zip']}" ]] || return 1
     dict['conda']="$(koopa_app_prefix 'conda')"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
@@ -219,15 +224,21 @@ koopa_r_configure_environ() {
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
     lines+=(
-        "PAGER=\${PAGER:-less}"
+        "PAGER=${app['less']}"
         "PATH=${conf_dict['path']}"
         "PKG_CONFIG_PATH=${conf_dict['pkg_config_path']}"
-        "TZ=\${TZ:-America/New_York}"
         'R_BATCHSAVE=--no-save --no-restore'
+        "R_BROWSER=${app['open']}"
+        "R_BZIPCMD=${app['bzip2']}"
+        "R_GZIPCMD=${app['gzip']}"
         'R_PAPERSIZE=letter'
         "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
-        'R_UNZIPCMD=/usr/bin/unzip'
-        'R_ZIPCMD=/usr/bin/zip'
+        "R_PDFVIEWER=${app['open']}"
+        "R_PRINTCMD=${app['lpr']}"
+        "R_TEXI2DVICMD=${app['texi2dvi']}"
+        "R_UNZIPCMD=${app['unzip']}"
+        "R_ZIPCMD=${app['zip']}"
+        "TZ=\${TZ:-America/New_York}"
     )
     if koopa_is_linux
     then
