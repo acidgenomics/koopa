@@ -1,35 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently building on Linux but failing on macOS, argh.
-# FIXME This currently has build issues on macOS:
-#
-# gcc -c -I. -DUNIX -DBZIP2_SUPPORT -DUIDGID_NOT_16BIT -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT -DNO_RMDIR -DNO_STRCHR -DNO_STRRCHR -DNO_RENAME -DNO_MKTEMP -DNO_MKTIME -DNO_MKSTEMP -DZMEM -DNO_DIR -DHAVE_DIRENT_H -DHAVE_TERMIOS_H zip.c
-# In file included from zip.c:16:
-# ./zip.h:726:10: error: conflicting types for 'memset'
-#    char *memset OF((char *, int, unsigned int));
-#          ^
-# /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/string.h:74:7: note: previous declaration is here
-# void    *memset(void *__b, int __c, size_t __len);
-#          ^
-# In file included from zip.c:16:
-# ./zip.h:727:10: error: conflicting types for 'memcpy'
-#    char *memcpy OF((char *, char *, unsigned int));
-#          ^
-# /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/string.h:72:7: note: previous declaration is here
-# void    *memcpy(void *__dst, const void *__src, size_t __n);
-#          ^
-# In file included from zip.c:16:
-# ./zip.h:728:8: error: conflicting types for 'memcmp'
-#    int memcmp OF((char *, char *, unsigned int));
-#        ^
-# /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/string.h:71:6: note: previous declaration is here
-# int      memcmp(const void *__s1, const void *__s2, size_t __n);
-#          ^
-# 3 errors generated.
-# gmake[1]: *** [unix/Makefile:86: zip.o] Error 1
-# gmake[1]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20221012-095012-tMIP6ntgzm/zip30'
-# gmake: *** [unix/Makefile:202: generic] Error 2
-
 main() {
     # """
     # Install zip.
@@ -44,6 +14,11 @@ main() {
     # - https://git.alpinelinux.org/aports/tree/main/zip
     # """
     local app dict
+    # Currently hitting build issues when using Clang on macOS.
+    if koopa_is_macos
+    then
+        koopa_activate_app --build-only 'gcc'
+    fi
     koopa_activate_app 'bzip2'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
