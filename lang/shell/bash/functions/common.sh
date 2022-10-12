@@ -16428,6 +16428,12 @@ koopa_locate_localedef() {
     fi
 }
 
+koopa_locate_lpr() {
+    koopa_locate_app \
+        '/usr/bin/lpr' \
+        "$@"
+}
+
 koopa_locate_ls() {
     koopa_locate_app \
         --app-name='coreutils' \
@@ -16597,6 +16603,12 @@ koopa_locate_od() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='god' \
+        "$@"
+}
+
+koopa_locate_open() {
+    koopa_locate_app \
+        '/usr/bin/open' \
         "$@"
 }
 
@@ -16979,6 +16991,13 @@ koopa_locate_tex() {
     koopa_locate_app "${args[@]}" "$@"
 }
 
+koopa_locate_emacs() {
+    koopa_locate_app \
+        --app-name='texi2cvi' \
+        --bin-name='texinfo' \
+        "$@"
+}
+
 koopa_locate_tlmgr() {
     local args
     args=()
@@ -17112,6 +17131,12 @@ koopa_locate_zcat() {
     koopa_locate_app \
         --app-name='gzip' \
         --bin-name='zcat' \
+        "$@"
+}
+
+koopa_locate_zip() {
+    koopa_locate_app \
+        '/usr/bin/zip' \
         "$@"
 }
 
@@ -18243,12 +18268,28 @@ koopa_r_configure_environ() {
     then
         return 0
     fi
+    app['bzip2']="$(koopa_locate_bzip2)"
     app['cat']="$(koopa_locate_cat)"
+    app['gzip']="$(koopa_locate_gzip)"
+    app['less']="$(koopa_locate_less)"
+    app['lpr']="$(koopa_locate_lpr)"
+    app['open']="$(koopa_locate_open)"
     app['pkg_config']="$(koopa_locate_pkg_config)"
     app['sort']="$(koopa_locate_sort)"
+    app['texi2dvi']="$(koopa_locate_texi2dvi)"
+    app['unzip']="$(koopa_locate_unzip)"
+    app['zip']="$(koopa_locate_zip)"
+    [[ -x "${app['bzip2']}" ]] || return 1
     [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['gzip']}" ]] || return 1
+    [[ -x "${app['less']}" ]] || return 1
+    [[ -x "${app['lpr']}" ]] || return 1
+    [[ -x "${app['open']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['texi2dvi']}" ]] || return 1
+    [[ -x "${app['unzip']}" ]] || return 1
+    [[ -x "${app['zip']}" ]] || return 1
     dict['conda']="$(koopa_app_prefix 'conda')"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
@@ -18330,11 +18371,6 @@ koopa_r_configure_environ() {
     do
         app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib"
     done
-    if koopa_is_linux
-    then
-        app_pc_path_arr['glib']="${app_pc_path_arr['glib']}64"
-        app_pc_path_arr['harfbuzz']="${app_pc_path_arr['harfbuzz']}64"
-    fi
     for i in "${!app_pc_path_arr[@]}"
     do
         app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/pkgconfig"
@@ -18357,15 +18393,21 @@ koopa_r_configure_environ() {
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
     lines+=(
-        "PAGER=\${PAGER:-less}"
+        "PAGER=${app['less']}"
         "PATH=${conf_dict['path']}"
         "PKG_CONFIG_PATH=${conf_dict['pkg_config_path']}"
-        "TZ=\${TZ:-America/New_York}"
         'R_BATCHSAVE=--no-save --no-restore'
+        "R_BROWSER=${app['open']}"
+        "R_BZIPCMD=${app['bzip2']}"
+        "R_GZIPCMD=${app['gzip']}"
         'R_PAPERSIZE=letter'
         "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
-        'R_UNZIPCMD=/usr/bin/unzip'
-        'R_ZIPCMD=/usr/bin/zip'
+        "R_PDFVIEWER=${app['open']}"
+        "R_PRINTCMD=${app['lpr']}"
+        "R_TEXI2DVICMD=${app['texi2dvi']}"
+        "R_UNZIPCMD=${app['unzip']}"
+        "R_ZIPCMD=${app['zip']}"
+        "TZ=\${TZ:-America/New_York}"
     )
     if koopa_is_linux
     then
@@ -18582,11 +18624,6 @@ koopa_r_configure_ldpaths() {
     do
         ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
     done
-    if koopa_is_linux
-    then
-        ld_lib_app_arr['glib']="${ld_lib_app_arr['glib']}64"
-        ld_lib_app_arr['harfbuzz']="${ld_lib_app_arr['harfbuzz']}64"
-    fi
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
     ld_lib_arr+=("\${R_HOME}/lib")
@@ -18839,11 +18876,6 @@ koopa_r_configure_makevars() {
         do
             app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib"
         done
-        if koopa_is_linux
-        then
-            app_pc_path_arr['glib']="${app_pc_path_arr['glib']}64"
-            app_pc_path_arr['harfbuzz']="${app_pc_path_arr['harfbuzz']}64"
-        fi
         for i in "${!app_pc_path_arr[@]}"
         do
             app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/pkgconfig"
