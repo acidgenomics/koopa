@@ -274,7 +274,7 @@ ${dict['version2']}"
                     declare -A app
                     app['env']="$(koopa_locate_env --allow-system)"
                     app['tee']="$(koopa_locate_tee --allow-system)"
-                    dict['bs_bin']="${dict['koopa_prefix']}/bootstrap/bin"
+                    dict['bs_bin']="$(koopa_bootstrap_bin_prefix)"
                     koopa_is_macos && koopa_assert_is_dir "${dict['bs_bin']}"
                     if [[ -d "${dict['bs_bin']}" ]]
                     then
@@ -287,8 +287,8 @@ ${dict['version2']}"
                     [[ -x "${app['tee']}" ]] || return 1
                     # Configure 'PATH' string.
                     path_arr=(
-                        # > "${dict['koopa_prefix']}/bin"
-                        # > "${dict['koopa_prefix']}/bootstrap/bin"
+                        # > "$(koopa_bin_prefix)"
+                        # > "$(koopa_bootstrap_bin_prefix)"
                         '/usr/bin'
                         '/bin'
                     )

@@ -1125,7 +1125,7 @@ koopa_boolean_nounset() {
 }
 
 koopa_bootstrap_bin_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/bootstrap/bin"
+    koopa_print "$(koopa_koopa_prefix)/libexec/bootstrap/bin"
     return 0
 }
 

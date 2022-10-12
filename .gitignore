@@ -2,7 +2,7 @@
 .koopa-install.log
 /app/
 /bin/
-/bootstrap/
 /coverage/
+/libexec/
 /opt/
 /share/man/man1/
