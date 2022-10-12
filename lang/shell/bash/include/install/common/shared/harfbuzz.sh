@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to change target from lib64 to lib on Linux.
-# If we change this, need to update R configuration.
-# FIXME Alternatively, can just make a 'lib' symlink on Linux.
-
 # Consider adding support for:
 # - cairo
 # - gobject-introspection
@@ -12,7 +8,7 @@
 main() {
     # """
     # Install HarfBuzz.
-    # @note Updated 2022-10-03.
+    # @note Updated 2022-10-12.
     #
     # @seealso
     # - https://harfbuzz.github.io/building.html
@@ -60,13 +56,15 @@ archive/${dict['file']}"
         '--buildtype=release'
         '--default-library=both'
         '-Dcairo=disabled'
-        '-Dcoretext=enabled' # FIXME Check on Linux.
+        '-Dcoretext=enabled'
         '-Dfreetype=enabled'
         '-Dglib=enabled'
         '-Dgobject=disabled'
         '-Dgraphite=disabled'
         '-Dicu=enabled'
         '-Dintrospection=disabled'
+        # FIXME Avoid 'lib64' inconsistency on Linux. Does this work?
+        '-Dlibdir=lib'
     )
     "${app['meson']}" "${meson_args[@]}" build
     # Alternate build approach using meson.

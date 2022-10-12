@@ -537,9 +537,8 @@ koopa_acid_emoji() {
 koopa_activate_app() {
     local app app_name dict pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['pkg_config']="$(koopa_locate_pkg_config --allow-missing)"
-    )
+    declare -A app
+    app['pkg_config']="$(koopa_locate_pkg_config --allow-missing)"
     declare -A dict=(
         ['build_only']=0
         ['opt_prefix']="$(koopa_opt_prefix)"
@@ -611,31 +610,40 @@ koopa_activate_app() {
         [[ "${dict['build_only']}" -eq 1 ]] && continue
         if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
         then
-            local cflags ldflags ldlibs pc_files
             if [[ ! -x "${app['pkg_config']}" ]]
             then
                 koopa_stop "'pkg-config' is not installed."
             fi
+            local pc_files
             readarray -t pc_files <<< "$( \
                 koopa_find \
-                    --prefix="$prefix" \
+                    --prefix="${dict2['prefix']}" \
                     --type='f' \
                     --pattern='*.pc' \
                     --sort \
             )"
-            cflags="$("${app['pkg_config']}" --cflags "${pc_files[@]}")"
-            [[ -n "$cflags" ]] && CPPFLAGS="${CPPFLAGS:-} ${cflags}"
-            ldflags="$("${app['pkg_config']}" --libs-only-L "${pc_files[@]}")"
-            [[ -n "$ldflags" ]] && LDFLAGS="${LDFLAGS:-} ${ldflags}"
-            ldlibs="$("${app['pkg_config']}" --libs-only-l "${pc_files[@]}")"
-            [[ -n "$ldlibs" ]] && LDLIBS="${LDLIBS:-} ${ldlibs}"
+            dict2['cflags']="$( \
+                "${app['pkg_config']}" --cflags "${pc_files[@]}" \
+            )"
+            dict2['ldflags']="$( \
+                "${app['pkg_config']}" --libs-only-L "${pc_files[@]}" \
+            )"
+            dict2['ldlibs']="$( \
+                "${app['pkg_config']}" --libs-only-l "${pc_files[@]}" \
+            )"
+            [[ -n "${dict2['cflags']}" ]] && \
+                CPPFLAGS="${CPPFLAGS:-} ${dict2['cflags']}"
+            [[ -n "${dict2['ldflags']}" ]] && \
+                LDFLAGS="${LDFLAGS:-} ${dict2['ldflags']}"
+            [[ -n "${dict2['ldlibs']}" ]] && \
+                LDLIBS="${LDLIBS:-} ${dict2['ldlibs']}"
         else
-            [[ -d "${prefix}/include" ]] && \
-                CPPFLAGS="${CPPFLAGS:-} -I${prefix}/include"
-            [[ -d "${prefix}/lib" ]] && \
-                LDFLAGS="${LDFLAGS:-} -L${prefix}/lib"
-            [[ -d "${prefix}/lib64" ]] && \
-                LDFLAGS="${LDFLAGS:-} -L${prefix}/lib64"
+            [[ -d "${dict2['prefix']}/include" ]] && \
+                CPPFLAGS="${CPPFLAGS:-} -I${dict2['prefix']}/include"
+            [[ -d "${dict2['prefix']}/lib" ]] && \
+                LDFLAGS="${LDFLAGS:-} -L${dict2['prefix']}/lib"
+            [[ -d "${dict2['prefix']}/lib64" ]] && \
+                LDFLAGS="${LDFLAGS:-} -L${dict2['prefix']}/lib64"
         fi
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
