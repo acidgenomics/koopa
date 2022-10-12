@@ -3,7 +3,7 @@
 main() {
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2022-05-14.
+    # @note Updated 2022-10-12.
     #
     # @seealso
     # - brew linkage --test
@@ -38,7 +38,8 @@ main() {
         esac
     done
     koopa_assert_has_no_args "$#"
-    if ! koopa_is_xcode_clt_installed
+    if koopa_is_macos && \
+        ! koopa_macos_is_xcode_clt_installed
     then
         koopa_stop 'Need to reinstall Xcode CLT.'
     fi
