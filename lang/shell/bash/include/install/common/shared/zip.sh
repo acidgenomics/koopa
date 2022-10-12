@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME This is currently building on Linux but failing on macOS, argh.
 # FIXME This currently has build issues on macOS:
 #
 # gcc -c -I. -DUNIX -DBZIP2_SUPPORT -DUIDGID_NOT_16BIT -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT -DNO_RMDIR -DNO_STRCHR -DNO_STRRCHR -DNO_RENAME -DNO_MKTEMP -DNO_MKTIME -DNO_MKSTEMP -DZMEM -DNO_DIR -DHAVE_DIRENT_H -DHAVE_TERMIOS_H zip.c
@@ -42,7 +43,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zip.rb
     # - https://git.alpinelinux.org/aports/tree/main/zip
     # """
-    local app dict make_args
+    local app dict
     koopa_activate_app 'bzip2'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
@@ -66,21 +67,14 @@ main() {
     dict['file']="${dict['name']}${dict['version2']}.tar.gz"
     dict['url']="https://downloads.sourceforge.net/project/infozip/\
 Zip%20${dict['maj_ver']}.x%20%28latest%29/${dict['version']}/${dict['file']}"
-    # Incorrect:
-    # https://downloads.sourceforge.net/project/infozip/Zip%203.x%20%28latest%29/Zip%203.0/unzip30.tar.gz
-    # Correct:
-    # https://downloads.sourceforge.net/project/infozip/Zip%203.x%20%28latest%29/3.0/zip30.tar.gz
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     apply_debian_patch_set
     koopa_cd "${dict['name']}${dict['version2']}"
-    make_args=(
-        "prefix=${dict['prefix']}"
-        'CC=gcc'
-        'generic'
-    )
     koopa_print_env
-    "${app['make']}" -f 'unix/Makefile' "${make_args[@]}"
+    "${app['make']}" -f 'unix/Makefile' \
+        'CC=gcc' \
+        'generic'
     "${app['make']}" -f 'unix/Makefile' \
         "prefix=${dict['prefix']}" \
         "BINDIR=${dict['prefix']}/bin" \
