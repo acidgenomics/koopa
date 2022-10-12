@@ -11911,7 +11911,7 @@ ${dict['version2']}"
                     declare -A app
                     app['env']="$(koopa_locate_env --allow-system)"
                     app['tee']="$(koopa_locate_tee --allow-system)"
-                    dict['bs_bin']="${dict['koopa_prefix']}/bootstrap/bin"
+                    dict['bs_bin']="$(koopa_bootstrap_bin_prefix)"
                     koopa_is_macos && koopa_assert_is_dir "${dict['bs_bin']}"
                     if [[ -d "${dict['bs_bin']}" ]]
                     then
@@ -22630,10 +22630,10 @@ koopa_test_find_files() {
             --exclude='.*' \
             --exclude='.git/**' \
             --exclude='app/**' \
-            --exclude='bootstrap/**' \
             --exclude='common.sh' \
             --exclude='coverage/**' \
             --exclude='etc/**' \
+            --exclude='libexec/**' \
             --exclude='opt/**' \
             --exclude='share/**' \
             --prefix="${dict['prefix']}" \
