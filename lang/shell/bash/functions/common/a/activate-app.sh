@@ -98,9 +98,9 @@ koopa_activate_app() {
         dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
         if [[ "${dict['build_only']}" -eq 1 ]]
         then
-            koopa_alert "Activating '${prefix}' (build only)."
+            koopa_alert "Activating '${dict2['prefix']}' (build only)."
         else
-            koopa_alert "Activating '${prefix}'."
+            koopa_alert "Activating '${dict2['prefix']}'."
         fi
         # Set 'PATH' variable.
         koopa_add_to_path_start "${dict2['prefix']}/bin"
