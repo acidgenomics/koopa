@@ -35,6 +35,8 @@ main() {
             --replacement='' \
             "${dict['version']}"
     )"
+    # Potential alternative URL:
+    # http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0.orig.tar.gz
     # > dict['file']="${dict['name']}${dict['version2']}.tgz"
     # This FTP server doesn't work currently.
     # > dict['url']="ftp://ftp.info-zip.org/pub/infozip/src/${dict['file']}"
@@ -45,6 +47,8 @@ main() {
     dict['url']="https://downloads.sourceforge.net/project/infozip/\
 UnZip%20${dict['maj_ver']}.x%20%28latest%29/UnZip%20${dict['version']}/\
 ${dict['file']}"
+
+
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     apply_ubuntu_patch_set
@@ -89,7 +93,7 @@ ${dict['file']}"
 apply_ubuntu_patch_set() {
     # """
     # Apply Ubuntu patch set (to 6.0 release).
-    # @note Updated 2022-09-01.
+    # @note Updated 2022-10-12.
     # """
     local app dict file
     declare -A app=(
@@ -100,6 +104,7 @@ apply_ubuntu_patch_set() {
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    # FIXME This needs to take input, as a global variable?
     case "${dict['version']}" in
         '6.0')
             dict['patch_ver']='27'
@@ -123,14 +128,18 @@ ${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_assert_is_dir 'debian/patches'
+    local patch_series
+    readarray -t patch_series < 'debian/patches/series'
     (
         koopa_cd "${dict['name']}${dict['version2']}"
-        # FIXME Can we figure out which patches to apply from a series file?
-        for file in '../debian/patches/'*'.patch'
+        local patch
+        for patch in "${patch_series[@]}"
         do
-            koopa_alert "Applying patch from '${file}'."
+            local input
+            input="$(koopa_realpath .."/debian/patches/${patch}")"
+            koopa_alert "Applying patch from '${input}'."
             "${app['patch']}" \
-                --input="$file" \
+                --input="$input" \
                 --strip=1 \
                 --verbose
         done

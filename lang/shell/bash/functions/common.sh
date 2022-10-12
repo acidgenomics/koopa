@@ -17142,7 +17142,9 @@ koopa_locate_zcat() {
 
 koopa_locate_zip() {
     koopa_locate_app \
-        '/usr/bin/zip' \
+        --app-name='zip' \
+        --bin-name='zip' \
+        --system-bin-name='zip' \
         "$@"
 }
 
