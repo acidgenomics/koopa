@@ -85,6 +85,7 @@ ${dict['file']}"
     return 0
 }
 
+# FIXME Consider generalizing this function.
 apply_ubuntu_patch_set() {
     # """
     # Apply Ubuntu patch set (to 6.0 release).
@@ -96,7 +97,7 @@ apply_ubuntu_patch_set() {
     )
     [[ -x "${app['patch']}" ]] || return 1
     declare -A dict=(
-        ['name']='unzip'
+        ['name']="${KOOPA_INSTALL_NAME:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     case "${dict['version']}" in
@@ -116,6 +117,7 @@ apply_ubuntu_patch_set() {
     )"
     dict['file']="${dict['name']}_${dict['version']}-\
 ${dict['patch_ver']}ubuntu1.debian.tar.xz"
+    # FIXME Get the first letter of the name.
     dict['url']="http://archive.ubuntu.com/ubuntu/pool/main/u/\
 ${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
@@ -123,8 +125,10 @@ ${dict['name']}/${dict['file']}"
     koopa_assert_is_dir 'debian/patches'
     (
         koopa_cd "${dict['name']}${dict['version2']}"
+        # FIXME Can we figure out which patches to apply from a series file?
         for file in '../debian/patches/'*'.patch'
         do
+            koopa_alert "Applying patch from '${file}'."
             "${app['patch']}" \
                 --input="$file" \
                 --strip=1 \

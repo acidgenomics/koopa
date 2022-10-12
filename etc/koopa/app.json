@@ -4325,6 +4325,17 @@
     "man1": [],
     "version": "0.31.4"
   },
+  "zip": {
+    "bin": ["zip"],
+    "build_dependencies": ["make"],
+    "conservative": true,
+    "date": "2022-10-12",
+    "dependencies": ["bzip2"],
+    "homebrew": true,
+    "man1": ["zip.1"],
+    "url": ["http://infozip.sourceforge.net/Zip.html"],
+    "version": "3.0"
+  },
   "zlib": {
     "bin": [],
     "build_dependencies": [],
