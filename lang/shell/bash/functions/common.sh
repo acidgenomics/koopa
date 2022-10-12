@@ -14093,6 +14093,12 @@ koopa_install_zellij() {
         "$@"
 }
 
+koopa_install_zip() {
+    koopa_install_app \
+        --name='zip' \
+        "$@"
+}
+
 koopa_install_zlib() {
     koopa_install_app \
         --name='zlib' \
@@ -24943,6 +24949,12 @@ koopa_uninstall_yt_dlp() {
 koopa_uninstall_zellij() {
     koopa_uninstall_app \
         --name='zellij' \
+        "$@"
+}
+
+koopa_uninstall_zip() {
+    koopa_uninstall_app \
+        --name='zip' \
         "$@"
 }
 
