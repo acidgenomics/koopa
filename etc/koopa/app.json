@@ -1644,14 +1644,14 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-28",
+    "date": "2022-10-12",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": true,
-    "reverse_dependencies": ["freetype", "r", "r-devel"],
+    "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "5.2.0"
+    "version": "5.3.0"
   },
   "haskell-ghcup": {
     "aliases": {
