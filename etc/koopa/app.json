@@ -1424,7 +1424,7 @@
     "bin": [],
     "build_dependencies": ["meson", "ninja", "pkg-config", "python"],
     "conservative": true,
-    "date": "2022-09-29",
+    "date": "2022-10-12",
     "dependencies": ["zlib", "gettext", "libffi", "pcre"],
     "homebrew": true,
     "man1": [],

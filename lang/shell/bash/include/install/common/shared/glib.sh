@@ -3,7 +3,7 @@
 main() {
     # """
     # Install glib.
-    # @note Updated 2022-10-06.
+    # @note Updated 2022-10-12.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
@@ -41,6 +41,8 @@ ${dict['maj_min_ver']}/${dict['file']}"
     meson_args=(
         "--prefix=${dict['prefix']}"
         '--buildtype=release'
+        # Avoid 'lib64' inconsistency on Linux.
+        '-Dlibdir=lib'
     )
     "${app['meson']}" "${meson_args[@]}" ..
     "${app['ninja']}" -v
