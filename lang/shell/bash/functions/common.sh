@@ -18272,8 +18272,8 @@ koopa_r_configure_environ() {
     app['cat']="$(koopa_locate_cat)"
     app['gzip']="$(koopa_locate_gzip)"
     app['less']="$(koopa_locate_less)"
-    app['lpr']="$(koopa_locate_lpr)"
-    app['open']="$(koopa_locate_open)"
+    app['lpr']="$(koopa_locate_lpr --allow-missing)"
+    app['open']="$(koopa_locate_open --allow-missing)"
     app['pkg_config']="$(koopa_locate_pkg_config)"
     app['sort']="$(koopa_locate_sort)"
     app['texi2dvi']="$(koopa_locate_texi2dvi)"
@@ -18283,13 +18283,13 @@ koopa_r_configure_environ() {
     [[ -x "${app['cat']}" ]] || return 1
     [[ -x "${app['gzip']}" ]] || return 1
     [[ -x "${app['less']}" ]] || return 1
-    [[ -x "${app['lpr']}" ]] || return 1
-    [[ -x "${app['open']}" ]] || return 1
     [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     [[ -x "${app['texi2dvi']}" ]] || return 1
     [[ -x "${app['unzip']}" ]] || return 1
     [[ -x "${app['zip']}" ]] || return 1
+    [[ ! -x "${app['lpr']}" ]] && app['lpr']='/usr/bin/lpr'
+    [[ ! -x "${app['open']}" ]] && app['open']='/usr/bin/open'
     dict['conda']="$(koopa_app_prefix 'conda')"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
