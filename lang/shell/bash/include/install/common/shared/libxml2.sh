@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to link to zlib here (at least on Linux).
-
 main() {
     # """
     # Install libxml2.

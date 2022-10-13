@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Something didn't link expat correctly in one of the upstream
-# dependencies...how to deal with that?
-
 main() {
     # """
     # Install Subversion.
@@ -45,7 +42,6 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    # FIXME What about expat here?
     dict['apr']="$(koopa_app_prefix 'apr')"
     dict['apr_util']="$(koopa_app_prefix 'apr-util')"
     dict['serf']="$(koopa_app_prefix 'serf')"

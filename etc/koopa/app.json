@@ -3291,6 +3291,7 @@
     "bin": [],
     "conservative": false,
     "build_dependencies": [],
+    "check": false,
     "date": "2022-10-12",
     "dependencies": [
       "bzip2",

@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Confirm that this no longer errors if the 'koopa-r.list' repo
-# file isn't present.
-
-# FIXME Ensure that this unlinks in koopa bin.
-
 main() {
     # """
     # Uninstall R CRAN binary.
-    # @note Updated 2022-01-28.
+    # @note Updated 2022-10-13.
     # """
     koopa_assert_has_no_args "$#"
     koopa_rm --sudo \
