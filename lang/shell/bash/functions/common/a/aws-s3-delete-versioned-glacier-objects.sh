@@ -13,7 +13,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     #
     # @examples
     # > koopa_aws_s3_delete_versioned_glacier_objects \
-    # >     --bucket='BUCKET' \
+    # >     --bucket='s3://example-bucket/' \
     # >     --profile='default' \
     # >     --region='us-east-1'
     # """
@@ -67,6 +67,16 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
+    koopa_assert_is_matching_regex \
+        --pattern='^s3://.+/$' \
+        --string="${dict['bucket']}"
+    dict['bucket']="$( \
+        koopa_sub \
+            --pattern='s3://' \
+            --replacement='' \
+            "${dict['bucket']}" \
+    )"
+    dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
             --bucket "${dict['bucket']}" \
@@ -96,14 +106,13 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
             ['version_id']="${version_ids[$i]}"
         )
         koopa_alert "Deleting '${dict2['key']}' (${dict2['version_id']})."
-        "${app['aws']}" s3api delete-object \
-            --bucket "${dict['bucket']}" \
-            --key "${dict2['key']}" \
-            --profile "${dict['profile']}" \
-            --region "${dict['region']}" \
-            --version-id "${dict2['version_id']}" \
+        "${app['aws']}" --profile "${dict['profile']}" \
+            s3api delete-object \
+                --bucket "${dict['bucket']}" \
+                --key "${dict2['key']}" \
+                --region "${dict['region']}" \
+                --version-id "${dict2['version_id']}" \
             > /dev/null
-
     done
     return 0
 }

@@ -11,7 +11,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'go'
+    koopa_activate_app --build-only 'go'
     declare -A app=(
         ['go']="$(koopa_locate_go)"
     )

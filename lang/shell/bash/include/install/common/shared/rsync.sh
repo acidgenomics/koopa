@@ -34,7 +34,7 @@ main() {
         'openssl3'
         'xxhash'
     )
-    koopa_activate_opt_prefix  "${deps[@]}"
+    koopa_activate_app  "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

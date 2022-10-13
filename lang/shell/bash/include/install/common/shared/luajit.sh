@@ -10,7 +10,7 @@ main() {
     # - https://luajit.org/install.html
     # """
     local app dict
-    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_assert_has_no_args "$#"
     declare -A app=(
         ['make']="$(koopa_locate_make)"

@@ -13,7 +13,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/man-db.rb
     # """
     local dict
-    koopa_activate_opt_prefix \
+    koopa_activate_app \
         'groff' \
         'libpipeline' \
         'gdbm'

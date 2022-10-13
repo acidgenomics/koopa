@@ -5,7 +5,7 @@ main() {
     declare -A dict=(
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     )
-    koopa_activate_opt_prefix 'm4'
+    koopa_activate_app 'm4'
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='libtool' \

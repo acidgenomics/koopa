@@ -22,7 +22,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'chemacs'
+    koopa_activate_app --build-only 'chemacs'
     declare -A app
     if koopa_is_macos
     then

@@ -214,12 +214,12 @@
     "bin": ["bash"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-10-12",
     "dependencies": [],
     "homebrew": true,
     "man1": ["bash.1"],
     "url": ["https://www.gnu.org/software/bash/"],
-    "version": "5.1.16"
+    "version": "5.2"
   },
   "bash-language-server": {
     "bin": ["bash-language-server"],
@@ -430,11 +430,11 @@
     "bin": ["broot"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-13",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "1.14.3"
+    "version": "1.16.1"
   },
   "brotli": {
     "bin": [],
@@ -564,24 +564,24 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-09-19",
+    "date": "2022-10-13",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.23.0"
+    "version": "2.25.0"
   },
   "cloudbiolinux": {
     "bin": [],
     "build_dependencies": [],
     "check": false,
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-11",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
-    "version": "c4c7cf8e508fe947c8b038543c98a2846bb900d6"
+    "version": "92543c4a7acc6550265d90f91cceb4481a448248"
   },
   "cmake": {
     "bin": ["cmake"],
@@ -1015,12 +1015,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-06",
+    "date": "2022-10-13",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "98878d447cb932d12533b03e45de7814c64e005e"
+    "version": "a77f4fda34ab6aa92d65d76075cfd065503acc44"
   },
   "du-dust": {
     "aliases": {
@@ -1424,7 +1424,7 @@
     "bin": [],
     "build_dependencies": ["meson", "ninja", "pkg-config", "python"],
     "conservative": true,
-    "date": "2022-09-29",
+    "date": "2022-10-12",
     "dependencies": ["zlib", "gettext", "libffi", "pcre"],
     "homebrew": true,
     "man1": [],
@@ -1644,14 +1644,14 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-28",
+    "date": "2022-10-12",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": false,
-    "reverse_dependencies": ["freetype", "r", "r-devel"],
+    "outdated": true,
+    "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "5.2.0"
+    "version": "5.3.0"
   },
   "haskell-ghcup": {
     "aliases": {
@@ -1931,7 +1931,7 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-05",
+    "date": "2022-10-12",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
@@ -1940,7 +1940,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.4.1"
+    "version": "2.4.4"
   },
   "less": {
     "bin": ["less"],
@@ -2520,6 +2520,17 @@
     "man1": [],
     "version": "1.13"
   },
+  "nanopolish": {
+    "bin": ["nanopolish"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-10-11",
+    "dependencies": ["conda"],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "version": "0.14.0"
+  },
   "ncurses": {
     "bin": [
       "captoinfo",
@@ -2970,6 +2981,7 @@
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
+    "outdated": true,
     "version": "1.2.1"
   },
   "prelude-emacs": {
@@ -3279,7 +3291,8 @@
     "bin": [],
     "conservative": false,
     "build_dependencies": [],
-    "date": "2022-09-28",
+    "check": false,
+    "date": "2022-10-12",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -3353,7 +3366,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "82935"
+    "version": "83076"
   },
   "r-gfortran": {
     "bin": [],
@@ -3516,6 +3529,7 @@
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
+    "outdated": true,
     "version": "0.0.55"
   },
   "rust": {
@@ -4311,6 +4325,17 @@
     "homebrew": true,
     "man1": [],
     "version": "0.31.4"
+  },
+  "zip": {
+    "bin": ["zip"],
+    "build_dependencies": ["make"],
+    "conservative": true,
+    "date": "2022-10-12",
+    "dependencies": ["bzip2"],
+    "homebrew": true,
+    "man1": ["zip.1"],
+    "url": ["http://infozip.sourceforge.net/Zip.html"],
+    "version": "3.0"
   },
   "zlib": {
     "bin": [],
