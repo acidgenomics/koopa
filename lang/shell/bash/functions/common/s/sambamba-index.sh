@@ -1,24 +1,26 @@
 #!/usr/bin/env bash
 
-# FIXME Need to locate sambamba and samtools directly here.
-# FIXME Rework using a dict approach.
-
 koopa_sambamba_index() {
     # """
     # Index BAM file with sambamba.
-    # @note Updated 2020-08-12.
+    # @note Updated 2022-10-11.
     # """
-    local bam_file threads
+    local app bam_file dict
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'samtools'
-    threads="$(koopa_cpu_count)"
-    koopa_dl 'Threads' "$threads"
+    koopa_assert_is_file "$@"
+    declare -A app
+    app['sambamba']="$(koopa_locate_sambamba)"
+    [[ -x "${app['sambamba']}" ]] || return 1
+    declare -A dict
+    dict['threads']="$(koopa_cpu_count)"
     for bam_file in "$@"
     do
+        koopa_assert_is_matching_regex \
+            --pattern='\.bam$' \
+            --string="$bam_file"
         koopa_alert "Indexing '${bam_file}'."
-        koopa_assert_is_file "$bam_file"
-        sambamba index \
-            --nthreads="$threads" \
+        "${app['sambamba']}" index \
+            --nthreads="${dict['threads']}" \
             --show-progress \
             "$bam_file"
     done

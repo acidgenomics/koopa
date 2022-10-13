@@ -9,7 +9,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/elfutils.rb
     # """
     local app conf_args deps dict
-    koopa_activate_build_opt_prefix 'm4'
+    koopa_activate_app --build-only 'm4'
     deps=(
         'bzip2'
         'xz'
@@ -20,7 +20,7 @@ main() {
     deps+=(
         'libiconv'
     )
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

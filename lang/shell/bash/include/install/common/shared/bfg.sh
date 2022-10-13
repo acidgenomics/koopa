@@ -6,7 +6,7 @@ main() {
     # @note Updated 2022-09-22.
     # """
     local app dict
-    koopa_activate_opt_prefix 'openjdk'
+    koopa_activate_app 'openjdk'
     declare -A app=(
         ['cat']="$(koopa_locate_cat)"
         ['java']="$(koopa_locate_java)"

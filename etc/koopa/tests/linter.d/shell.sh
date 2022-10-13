@@ -7,7 +7,7 @@ source "$(koopa header bash)"
 main() {
     # """
     # Shell script checks.
-    # Updated 2020-07-20.
+    # Updated 2022-10-07.
     # """
     test_all
     test_posix
@@ -42,7 +42,7 @@ test_all_illegal_strings() {
         '[=|]""$'
         '[“”‘’]'            # no unicode quotes
         '\$path'            # zsh will freak out
-        '\(\) \{$'          # functions should include vim marker
+        # > '\(\) \{$'      # functions should include vim marker
         '\b(EOF|EOL)\b'     # Use 'END' instead.
         '^path='            # can mess up Zsh PATH
         '_exe\b'
@@ -62,7 +62,7 @@ test_all_quoting() {
     array=(
         "'\$.+'"
         ":-['\"]"
-        "^((?!').)*[ =\(]\"[^'\$\"]+\"+$"
+        # > "^((?!').)*[ =\(]\"[^'\$\"]+\"+$"
         # > '\\\"\$'
         # > '\}\\\"'
     )
@@ -83,7 +83,7 @@ test_all_quoting() {
 test_bash() {
     # """
     # Bash shell checks.
-    # @note Updated 2020-07-08.
+    # @note Updated 2022-10-07.
     # """
     local files
     koopa_assert_has_no_args "$#"
@@ -149,7 +149,7 @@ test_posix_illegal_strings() {
 test_zsh() {
     # """
     # Zsh shell checks.
-    # @note Updated 2020-07-08.
+    # @note Updated 2022-10-07.
     # """
     local files
     koopa_assert_has_no_args "$#"
@@ -181,18 +181,18 @@ test_zsh_illegal_strings() {
 test_shellcheck() {
     # """
     # Run ShellCheck.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-10-07.
     #
     # Only Bash and POSIX (but not Zsh) are supported.
     # """
     local app
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        [shellcheck]="$(koopa_locate_shellcheck)"
+        ['shellcheck']="$(koopa_locate_shellcheck)"
     )
     readarray -t files <<< \
         "$(koopa_test_find_files_by_shebang '^#!/.+\b(bash|sh)$')"
-    "${app[shellcheck]}" \
+    "${app['shellcheck']}" \
         --exclude='SC2119,SC2120,SC3040,SC3043' \
         --external-sources \
         "${files[@]}"

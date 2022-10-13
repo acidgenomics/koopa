@@ -12,8 +12,8 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/flex.rb
     # """
     local app conf_args dict
-    koopa_activate_build_opt_prefix 'bison'
-    koopa_activate_opt_prefix \
+    koopa_activate_app --build-only 'bison'
+    koopa_activate_app \
         'gettext' \
         'm4'
     declare -A app=(

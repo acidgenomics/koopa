@@ -7,7 +7,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'zlib' 'pcre'
+    koopa_activate_app 'zlib' 'pcre'
     declare -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1

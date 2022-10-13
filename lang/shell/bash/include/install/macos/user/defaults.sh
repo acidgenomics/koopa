@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Can we write a default to organize System Preferences alphabetically.
-# This likely will break in the macOS 13 release.
-
 main() {
     # """
     # Install macOS user defaults.
-    # @note Updated 2022-09-02.
+    # @note Updated 2022-10-11.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
@@ -54,7 +51,7 @@ main() {
     koopa_alert_note "If you encounter permission errors when attempting to \
 write defaults, ensure that your terminal app has full disk access enabled." \
     'System Preferences > Security & Privacy > Privacy > Full Disk Access'
-    # General UI/UX {{{2
+    # General UI/UX
     # --------------------------------------------------------------------------
     koopa_alert 'General UI/UX'
     # Reduce motion.
@@ -218,7 +215,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'NSGlobalDomain' \
         'NSWindowResizeTime' \
         '.001'
-    # Dock, Dashboard, and hot corners {{{2
+    # Dock, Dashboard, and hot corners
     # --------------------------------------------------------------------------
     koopa_alert 'Dock, Dashboard, and hot corners'
     # Enable highlight hover effect for the grid view of a stack (Dock).
@@ -367,19 +364,19 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'com.apple.dock' \
         'wvous-bl-modifier' \
         -int 0
-    # Bottom right screen corner: None.
+    # Bottom right screen corner: Desktop.
     "${app['defaults']}" write \
         'com.apple.dock' \
         'wvous-br-corner' \
-        -int 0
+        -int 4
     "${app['defaults']}" write \
         'com.apple.dock' \
         'wvous-br-modifier' \
         -int 0
-    # Keyboard, mouse, trackpad, and other input {{{2
+    # Keyboard, mouse, trackpad, and other input
     # --------------------------------------------------------------------------
     koopa_alert 'Keyboard, mouse, trackpad, and other input'
-    # Tracking speed {{{3
+    # Tracking speed
     # --------------------------------------------------------------------------
     # Set the tracking speed.
     # The maximum speed you can access from the System Preferences is 3.0.
@@ -398,7 +395,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
     # Restore to default tracking speed.
     # > "${app['defaults']}" delete -g 'com.apple.mouse.scaling'
     # > "${app['defaults']}" delete -g 'com.apple.trackpad.scaling'
-    # Multi-touch trackpad {{{3
+    # Multi-touch trackpad
     # --------------------------------------------------------------------------
     # Read current settings.
     # > "${app['defaults']}" read \
@@ -688,7 +685,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
     # >     'com.apple.BluetoothAudioAgent' \
     # >     'Apple Bitpool Min (editable)' \
     # >     -int 40
-    # Screen {{{2
+    # Screen
     # --------------------------------------------------------------------------
     koopa_alert 'Screen'
     # Require password immediately after sleep or screen saver begins.
@@ -711,7 +708,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'NSGlobalDomain' \
         'AppleFontSmoothing' \
         -int 0
-    # Screenshots {{{2
+    # Screenshots
     # --------------------------------------------------------------------------
     koopa_alert 'Screenshots'
     # Set the default screenshot name prefix.
@@ -755,7 +752,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'com.apple.screencapture' \
         'show-thumbnail' \
         -bool false
-    # Finder {{{2
+    # Finder
     # --------------------------------------------------------------------------
     koopa_alert 'Finder'
     # Allow the Finder to quit. Doing so will also hide desktop icons.
@@ -961,7 +958,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
             'General' -bool true \
             'OpenWith' -bool true \
             'Privileges' -bool true
-    # Mac App Store {{{2
+    # Mac App Store
     # --------------------------------------------------------------------------
     koopa_alert 'Mac App Store'
     # Enable the WebKit Developer Tools in the Mac App Store.
@@ -1009,7 +1006,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'com.apple.SoftwareUpdate' \
         'ScheduleFrequency' \
         -int 7
-    # Activity Monitor {{{2
+    # Activity Monitor
     # --------------------------------------------------------------------------
     koopa_alert 'Activity Monitor'
     # Show the main window when launching Activity Monitor.
@@ -1036,7 +1033,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'com.apple.ActivityMonitor' \
         'SortDirection' \
         -int 0
-    # Disk Utility {{{2
+    # Disk Utility
     # --------------------------------------------------------------------------
     koopa_alert 'Disk Utility'
     # Enable the debug menu in Disk Utility.
@@ -1048,7 +1045,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'com.apple.DiskUtility' \
         'advanced-image-options' \
         -bool true
-    # Time Machine {{{2
+    # Time Machine
     # --------------------------------------------------------------------------
     koopa_alert 'Time Machine'
     # Prevent Time Machine from prompting to use new hard drives as backup.
@@ -1056,7 +1053,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'com.apple.TimeMachine' \
         'DoNotOfferNewDisksForBackup' \
         -bool true
-    # Safari {{{2
+    # Safari
     # --------------------------------------------------------------------------
     koopa_alert 'Safari'
     # Check the defaults with 'defaults read -app Safari'.
@@ -1242,7 +1239,7 @@ WebKit2AllowsInlineMediaPlayback" \
         "com.apple.Safari.ContentPageGroupIdentifier.\
 WebKit2AllowsInlineMediaPlayback" \
         -bool false
-    # Mail {{{2
+    # Mail
     # --------------------------------------------------------------------------
     koopa_alert 'Mail'
     # Disable send and reply animations in Mail.app.
@@ -1288,7 +1285,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.apple.mail' \
         'SpellCheckingBehavior' \
         -string 'NoSpellCheckingEnabled'
-    # Terminal {{{2
+    # Terminal
     # --------------------------------------------------------------------------
     koopa_alert 'Terminal'
     # Only use UTF-8 in Terminal.app.
@@ -1307,7 +1304,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.apple.Terminal' \
         'ShowLineMarks' \
         -int 0
-    # Messages {{{2
+    # Messages
     # --------------------------------------------------------------------------
     koopa_alert 'Messages'
     # Disable automatic emoji substitution (i.e. use plain text smileys).
@@ -1328,7 +1325,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'SOInputLineSettings' \
         -dict-add 'continuousSpellCheckingEnabled' \
         -bool false
-    # Photos {{{2
+    # Photos
     # --------------------------------------------------------------------------
     koopa_alert 'Photos'
     # Prevent Photos from opening automatically when devices are plugged in.
@@ -1336,7 +1333,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.apple.ImageCapture' \
         'disableHotPlug' \
         -bool true
-    # TextEdit {{{2
+    # TextEdit
     # --------------------------------------------------------------------------
     koopa_alert 'TextEdit'
     # Use plain text mode for new TextEdit documents.
@@ -1353,7 +1350,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.apple.TextEdit' \
         'PlainTextEncodingForWrite' \
         -int 4
-    # Google Chrome (and Google Chrome Canary) {{{2
+    # Google Chrome (and Google Chrome Canary)
     # --------------------------------------------------------------------------
     koopa_alert 'Google Chrome'
     # Disable the all too sensitive backswipe on trackpads.
@@ -1392,7 +1389,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.google.Chrome.canary' \
         'PMPrintingExpandedStateForPrint2' \
         -bool true
-    # GPGMail {{{2
+    # GPGMail
     # --------------------------------------------------------------------------
     koopa_alert 'GPGMail'
     # Disable signing emails by default.
@@ -1400,7 +1397,7 @@ WebKit2AllowsInlineMediaPlayback" \
         "${HOME}/Library/Preferences/org.gpgtools.gpgmail" \
         'SignNewEmailsByDefault' \
         -bool false
-    # Tweetbot {{{2
+    # Tweetbot
     # --------------------------------------------------------------------------
     koopa_alert 'Tweetbot'
     # Bypass the annoyingly slow t.co URL shortener.
@@ -1408,7 +1405,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.tapbots.TweetbotMac' \
         'OpenURLsDirectly' \
         -bool true
-    # iTerm {{{2
+    # iTerm
     # --------------------------------------------------------------------------
     koopa_alert 'iTerm'
     # Don't display the annoying prompt when quitting iTerm.
@@ -1416,7 +1413,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.googlecode.iterm2' \
         'PromptOnQuit' \
         -bool false
-    # Final steps {{{2
+    # Final steps
     # --------------------------------------------------------------------------
     # This step is CPU intensive and can cause the fans to kick on for old
     # Intel Macs, so disabling.

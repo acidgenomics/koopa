@@ -8,7 +8,7 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # """
-    koopa_activate_opt_prefix \
+    koopa_activate_app \
         'gmp' \
         'ncurses' \
         'libtasn1' \

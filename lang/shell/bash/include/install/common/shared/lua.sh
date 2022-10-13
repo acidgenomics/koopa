@@ -13,7 +13,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'pkg-config'
+    koopa_activate_app 'pkg-config'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

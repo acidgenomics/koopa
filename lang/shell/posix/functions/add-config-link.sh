@@ -21,9 +21,9 @@ koopa_add_config_link() {
         then
             continue
         fi
-        mkdir -p "$config_prefix"
-        rm -fr "$dest_file"
-        ln -s "$source_file" "$dest_file"
+        mkdir -p "$config_prefix" >/dev/null
+        rm -fr "$dest_file" >/dev/null
+        ln -fns "$source_file" "$dest_file" >/dev/null
     done
     return 0
 }

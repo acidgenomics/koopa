@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# FIXME This doesn't currently support dark / light mode?
-# FIXME Does this affect fd colors?
-# FIXME This seems to be required for macOS colors...argh.
-
 koopa_macos_activate_cli_colors() {
     # """
     # Activate macOS-specific terminal color settings.

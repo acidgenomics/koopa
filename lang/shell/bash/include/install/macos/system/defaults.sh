@@ -32,7 +32,7 @@ main() {
     [[ -x "${app['sudo']}" ]] || return 1
     # > [[ -x "${app['systemsetup']}" ]] || return 1
     [[ -x "${app['tmutil']}" ]] || return 1
-    # Startup and Lock Screen {{{2
+    # Startup and Lock Screen
     # --------------------------------------------------------------------------
     # For reference, here's how to set computer name from the command line.
     # > local comp_name
@@ -52,7 +52,7 @@ main() {
     # >     '/Library/Preferences/com.apple.loginwindow' \
     # >     'AdminHostInfo'\
     # >     'HostName'
-    # Locale {{{2
+    # Locale
     # --------------------------------------------------------------------------
     # Set the timezone.
     # See 'sudo systemsetup -listtimezones' for other values.
@@ -64,7 +64,7 @@ main() {
     # >     '/Library/Preferences/com.apple.loginwindow' \
     # >     'showInputMenu' \
     # >     -bool true
-    # Power management {{{2
+    # Power management
     # --------------------------------------------------------------------------
     koopa_alert 'Configuring power management.'
     # How to restore power management defaults.
@@ -73,18 +73,18 @@ main() {
     "${app['sudo']}" "${app['pmset']}" -c 'displaysleep' 15
     # Check current settings.
     "${app['pmset']}" -g
-    # Screen {{{2
+    # Screen
     # --------------------------------------------------------------------------
     # Enable HiDPI display modes (requires restart).
     # > "${app['sudo']}" "${app['defaults']}" write \
     # >     '/Library/Preferences/com.apple.windowserver' \
     # >     'DisplayResolutionEnabled' \
     # >     -bool true
-    # Finder {{{2
+    # Finder
     # --------------------------------------------------------------------------
     koopa_alert "Enabling visibility of '/Volumes' in Finder."
     "${app['sudo']}" "${app['chflags']}" nohidden '/Volumes'
-    # Spotlight {{{2
+    # Spotlight
     # --------------------------------------------------------------------------
     koopa_alert 'Disabling Spotlight.'
     # Load new settings before rebuilding the index.
@@ -97,7 +97,7 @@ main() {
     # Hide Spotlight tray-icon (and subsequent helper).
     # > koopa_chmod --sudo '0600' \
     # >     '/System/Library/CoreServices/Search.bundle/Contents/MacOS/Search'
-    # Time Machine {{{2
+    # Time Machine
     # --------------------------------------------------------------------------
     koopa_alert 'Disabling Time Machine backups.'
     "${app['sudo']}" "${app['tmutil']}" disable

@@ -23,7 +23,7 @@ main() {
     # """
     local app deps dict shared_cmake_args
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'cmake'
+    koopa_activate_app --build-only 'cmake'
     deps=()
     # > koopa_is_linux && deps+=('gcc')
     deps+=(
@@ -33,7 +33,7 @@ main() {
         'libxml2'
         'python'
     )
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['python']="$(koopa_locate_python)"

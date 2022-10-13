@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Can we set 'lib' instead of 'lib64' on Linux?
-
 # Consider adding support for:
 # - cairo
 # - gobject-introspection
@@ -10,7 +8,7 @@
 main() {
     # """
     # Install HarfBuzz.
-    # @note Updated 2022-10-03.
+    # @note Updated 2022-10-12.
     #
     # @seealso
     # - https://harfbuzz.github.io/building.html
@@ -21,13 +19,13 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix \
+    koopa_activate_app --build-only \
         'pkg-config' \
         'cmake' \
         'meson' \
         'ninja'
     # glib deps: zlib, gettext, libffi, pcre.
-    koopa_activate_opt_prefix \
+    koopa_activate_app \
         'zlib' \
         'gettext' \
         'libffi' \
@@ -58,13 +56,15 @@ archive/${dict['file']}"
         '--buildtype=release'
         '--default-library=both'
         '-Dcairo=disabled'
-        '-Dcoretext=enabled' # FIXME Check on Linux.
+        '-Dcoretext=enabled'
         '-Dfreetype=enabled'
         '-Dglib=enabled'
         '-Dgobject=disabled'
         '-Dgraphite=disabled'
         '-Dicu=enabled'
         '-Dintrospection=disabled'
+        # Avoid 'lib64' inconsistency on Linux.
+        '-Dlibdir=lib'
     )
     "${app['meson']}" "${meson_args[@]}" build
     # Alternate build approach using meson.

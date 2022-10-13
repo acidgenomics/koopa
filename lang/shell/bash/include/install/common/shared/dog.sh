@@ -8,7 +8,7 @@ main() {
     # Refer to 'https://docs.rs/openssl/latest/openssl/' for details.
     # """
     local dict
-    koopa_activate_opt_prefix 'openssl1'
+    koopa_activate_app 'openssl1'
     declare -A dict=(
         ['openssl']="$(koopa_app_prefix 'openssl1')"
     )

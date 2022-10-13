@@ -18,8 +18,8 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix \
+    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app \
         'zlib' \
         'zstd' \
         'ca-certificates' \

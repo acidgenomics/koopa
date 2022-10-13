@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-09-24.
+    # @note Updated 2022-10-12.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -162,11 +162,6 @@ koopa_r_configure_makevars() {
         do
             app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib"
         done
-        if koopa_is_linux
-        then
-            app_pc_path_arr['glib']="${app_pc_path_arr['glib']}64"
-            app_pc_path_arr['harfbuzz']="${app_pc_path_arr['harfbuzz']}64"
-        fi
         for i in "${!app_pc_path_arr[@]}"
         do
             app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/pkgconfig"
@@ -198,7 +193,7 @@ koopa_r_configure_makevars() {
             "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
         )
     fi
-    # FIXME Consider adding libiconv here.
+    # NOTE Consider adding libiconv here.
     cppflags+=(
         "-I${dict['bzip2']}/include"
         "-I${dict['hdf5']}/include"

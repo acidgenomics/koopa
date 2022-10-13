@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2022-09-24.
+    # @note Updated 2022-10-12.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -101,11 +101,6 @@ koopa_r_configure_ldpaths() {
     do
         ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
     done
-    if koopa_is_linux
-    then
-        ld_lib_app_arr['glib']="${ld_lib_app_arr['glib']}64"
-        ld_lib_app_arr['harfbuzz']="${ld_lib_app_arr['harfbuzz']}64"
-    fi
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
     ld_lib_arr+=("\${R_HOME}/lib")

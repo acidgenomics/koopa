@@ -14,8 +14,8 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'ca-certificates'
+    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app 'ca-certificates'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )
@@ -36,7 +36,8 @@ main() {
     # Check supported platforms with:
     # > ./Configure LIST
     conf_args=(
-        '--libdir=lib' # Avoid 'lib64' inconsistency on Linux.
+        # Avoid 'lib64' inconsistency on Linux.
+        '--libdir=lib'
         "--openssldir=${dict['prefix']}"
         "--prefix=${dict['prefix']}"
         "-Wl,-rpath,${dict['prefix']}/lib"

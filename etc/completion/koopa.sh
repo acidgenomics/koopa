@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-10-07.
+    # Updated 2022-10-12.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -250,6 +250,7 @@ __koopa_complete() {
                         'mpfr'
                         'msgpack'
                         'multiqc'
+                        'nanopolish'
                         'ncurses'
                         'neofetch'
                         'neovim'
@@ -369,6 +370,7 @@ __koopa_complete() {
                         'yarn'
                         'yt-dlp'
                         'zellij'
+                        'zip'
                         'zlib'
                         'zoxide'
                         'zsh'

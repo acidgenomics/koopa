@@ -18,7 +18,7 @@
 koopa_aws_s3_sync() {
     # """
     # Sync an S3 bucket, but ignore some files automatically.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-10-11.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
@@ -51,6 +51,7 @@ koopa_aws_s3_sync() {
     [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     # Include common file system and Git cruft that we don't want on S3.
     # FIXME Only set this if the user doesn't pass in exclude?
+    # FIXME Can we use '**' glob patterns here? Is that the key?
     exclude_patterns=(
         '*.Rproj/*'
         '*.swp'

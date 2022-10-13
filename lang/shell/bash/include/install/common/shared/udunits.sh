@@ -7,7 +7,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'expat'
+    koopa_activate_app 'expat'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

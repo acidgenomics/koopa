@@ -9,7 +9,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/less.rb
     # """
     local app conf_args dict
-    koopa_activate_opt_prefix 'ncurses' 'pcre2'
+    koopa_activate_app 'ncurses' 'pcre2'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

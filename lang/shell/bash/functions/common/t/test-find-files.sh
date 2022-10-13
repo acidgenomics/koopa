@@ -3,7 +3,7 @@
 koopa_test_find_files() {
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2022-10-06.
+    # @note Updated 2022-10-12.
     #
     # Not sorting here can speed the function up.
     # """
@@ -18,13 +18,14 @@ koopa_test_find_files() {
             --exclude='.*' \
             --exclude='.git/**' \
             --exclude='app/**' \
-            --exclude='bootstrap/**' \
             --exclude='common.sh' \
             --exclude='coverage/**' \
             --exclude='etc/**' \
+            --exclude='libexec/**' \
             --exclude='opt/**' \
             --exclude='share/**' \
             --prefix="${dict['prefix']}" \
+            --sort \
             --type='f' \
     )"
     if koopa_is_array_empty "${files[@]:-}"

@@ -11,7 +11,7 @@ main() {
     # """
     local app cmake_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'cmake' 'pkg-config'
+    koopa_activate_app --build-only 'cmake' 'pkg-config'
     deps=(
         'zlib'
         'bzip2'
@@ -20,7 +20,7 @@ main() {
         'openssl3'
         'perl'
     )
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['make']="$(koopa_locate_make)"

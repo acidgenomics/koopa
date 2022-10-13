@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # shellcheck disable=all
 
 koopa_linux_add_user_to_etc_passwd() {
@@ -499,7 +499,6 @@ koopa_linux_install_cloudbiolinux() {
     koopa_install_app \
         --name='cloudbiolinux' \
         --platform='linux' \
-        --version='latest' \
         "$@"
 }
 
@@ -841,6 +840,13 @@ koopa_linux_uninstall_elfutils() {
 koopa_linux_uninstall_lmod() {
     koopa_uninstall_app \
         --name='lmod' \
+        --platform='linux' \
+        "$@"
+}
+
+koopa_linux_uninstall_openjdk() {
+    koopa_uninstall_app \
+        --name='openjdk' \
         --platform='linux' \
         "$@"
 }

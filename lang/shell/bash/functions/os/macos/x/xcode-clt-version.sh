@@ -3,7 +3,11 @@
 koopa_macos_xcode_clt_version() {
     # """
     # Xcode CLT version.
-    # @note Updated 2022-05-19.
+    # @note Updated 2022-10-11.
+    #
+    # @seealso
+    # - https://apple.stackexchange.com/questions/180957
+    # - pkgutil --pkgs=com.apple.pkg.Xcode
     # """
     local app str
     koopa_assert_has_no_args "$#"

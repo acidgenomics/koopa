@@ -5,48 +5,14 @@ main() {
     # Install FFmpeg.
     # @note Updated 2022-06-07.
     #
-    # Consider also requiring:
-    # - "aom"
-    # - "dav1d"
-    # - "fontconfig"
-    # - "freetype"
-    # - "frei0r"
-    # - "gnutls"
-    # - "libass"
-    # - "libbluray"
-    # - "librist"
-    # - "libsoxr"
-    # - "libvidstab"
-    # - "libvmaf"
-    # - "libvorbis"
-    # - "libvpx"
-    # - "opencore-amr"
-    # - "openjpeg"
-    # - "opus"
-    # - "rav1e"
-    # - "rubberband"
-    # - "sdl2"
-    # - "snappy"
-    # - "speex"
-    # - "srt"
-    # - "tesseract"
-    # - "theora"
-    # - "webp"
-    # - "x264"
-    # - "x265"
-    # - "xvid"
-    # - "xz"
-    # - "zeromq"
-    # - "zimg"
-    #
     # @seealso
     # - https://ffmpeg.org/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ffmpeg.rb
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config'
-    koopa_activate_opt_prefix 'lame'
+    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app 'lame'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )
