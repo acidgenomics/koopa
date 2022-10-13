@@ -430,11 +430,11 @@
     "bin": ["broot"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-13",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "1.14.3"
+    "version": "1.16.1"
   },
   "brotli": {
     "bin": [],
