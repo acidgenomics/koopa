@@ -275,6 +275,7 @@ koopa_install_all_binary_apps() {
         'yq'
         'yt-dlp'
         'zellij'
+        'zip'
         'zoxide'
         'zsh'
     )

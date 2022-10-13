@@ -10854,6 +10854,7 @@ koopa_install_all_apps() {
         'xz'
         'bzip2'
         'unzip'
+        'zip'
         'm4'
         'gmp'
         'gperf'
@@ -11434,6 +11435,7 @@ koopa_install_all_binary_apps() {
         'yq'
         'yt-dlp'
         'zellij'
+        'zip'
         'zoxide'
         'zsh'
     )
