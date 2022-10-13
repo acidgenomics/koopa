@@ -3,7 +3,7 @@
 main() {
     # """
     # Install glib.
-    # @note Updated 2022-10-06.
+    # @note Updated 2022-10-12.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
@@ -15,8 +15,8 @@ main() {
     deps=('zlib')
     koopa_is_macos && deps+=('gettext')
     deps+=('libffi' 'pcre2')
-    koopa_activate_build_opt_prefix "${build_deps[@]}"
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['meson']="$(koopa_locate_meson)"
         ['ninja']="$(koopa_locate_ninja)"
@@ -41,6 +41,8 @@ ${dict['maj_min_ver']}/${dict['file']}"
     meson_args=(
         "--prefix=${dict['prefix']}"
         '--buildtype=release'
+        # Avoid 'lib64' inconsistency on Linux.
+        '-Dlibdir=lib'
     )
     "${app['meson']}" "${meson_args[@]}" ..
     "${app['ninja']}" -v

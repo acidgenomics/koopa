@@ -8,7 +8,7 @@ main() {
     declare -A dict=(
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     )
-    koopa_activate_opt_prefix \
+    koopa_activate_app \
         'gettext' \
         'mpfr' \
         'readline'

@@ -10,8 +10,8 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'cmake'
-    koopa_activate_opt_prefix 'ncurses'
+    koopa_activate_app --build-only 'cmake'
+    koopa_activate_app 'ncurses'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
     )

@@ -16,21 +16,24 @@ main() {
     return 0
 }
 
-# NOTE This doesn't seem to be picking up FIXMEs.
+# FIXME The usage of pattern concatenation with '|' sep here is problematic.
+# FIXME Allow usage of multiple patterns to koopa_test_grep_call.
+
 test_illegal_strings() {
     local array pattern
     koopa_assert_has_args "$#"
     array=(
-        '<<<<<<<'
-        '>>>>>>>'
+        # > '<<<<<<<'
+        # > '>>>>>>>'
         '\bFIXME\b'
-        '\bTODO\b'
+        # > '\bTODO\b'
     )
     pattern="$(koopa_paste --sep='|' "${array[@]}")"
+    # FIXME Rework this...
     koopa_test_grep \
         --ignore='illegal-strings' \
         --name='base-illegal-strings' \
-        --pattern="$pattern" \
+        --pattern='FIXME' \
         "$@"
     return 0
 }

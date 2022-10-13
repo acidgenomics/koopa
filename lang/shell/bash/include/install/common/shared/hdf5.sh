@@ -9,7 +9,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_opt_prefix 'zlib' 'gcc'
+    koopa_activate_app 'zlib' 'gcc'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

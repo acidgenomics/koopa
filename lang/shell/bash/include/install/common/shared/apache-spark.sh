@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apache Spark.
-    # @note Updated 2022-09-28.
+    # @note Updated 2022-10-07.
     #
     # Consider including 'JAVA_HOME' in our binary wrappers.
     #
@@ -45,5 +45,7 @@ END
     koopa_write_string \
         --file="${dict['prefix']}/bin/sparkR" \
         --string="${dict['sparkr_string']}"
+    koopa_chmod +x "${dict['prefix']}/bin/pyspark"
+    koopa_chmod +x "${dict['prefix']}/bin/sparkR"
     return 0
 }

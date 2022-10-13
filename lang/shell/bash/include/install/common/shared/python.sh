@@ -27,7 +27,7 @@ main() {
     # """
     local app deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_build_opt_prefix 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     deps=(
         # zlib deps: none.
         'zlib'
@@ -64,7 +64,7 @@ main() {
         'sqlite'
         'tcl-tk'
     )
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

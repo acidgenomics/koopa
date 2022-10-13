@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This needs to trim git commit to 7 characters.
-
 koopa_app_prefix() {
     # """
     # Application prefix.
-    # @note Updated 2022-09-01.
+    # @note Updated 2022-10-11.
     #
     # @examples
     # > koopa_app_prefix
@@ -46,14 +44,28 @@ koopa_app_prefix() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     for app_name in "$@"
     do
-        local prefix version
-        version="$(koopa_app_json_version "$app_name" || true)"
-        [[ -z "$version" ]] && koopa_stop "Unsupported app: '${app_name}'."
+        local dict2
+        declare -A dict2
+        dict2['app_name']="$app_name"
+        dict2['version']="$( \
+            koopa_app_json_version "${dict2['app_name']}" || true \
+        )"
+        if [[ -z "${dict2['version']}" ]]
+        then
+            koopa_stop "Unsupported app: '${dict2['app_name']}'."
+        fi
         # Shorten git commit to 7 characters.
-        [[ "${#version}" == 40 ]] && version="${version:0:7}"
-        prefix="${dict['app_prefix']}/${app_name}/${version}"
-        [[ "${dict['allow_missing']}" -eq 0 ]] && koopa_assert_is_dir "$prefix"
-        koopa_print "$prefix"
+        if [[ "${#dict2['version']}" == 40 ]]
+        then
+            dict2['version']="${dict2['version']:0:7}"
+        fi
+        dict2['prefix']="${dict['app_prefix']}/${dict2['app_name']}/\
+${dict2['version']}"
+        if [[ "${dict['allow_missing']}" -eq 0 ]]
+        then
+            koopa_assert_is_dir "${dict2['prefix']}"
+        fi
+        koopa_print "${dict2['prefix']}"
     done
     return 0
 }

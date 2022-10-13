@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # shellcheck disable=all
 
 koopa_macos_app_version() {
@@ -675,6 +675,11 @@ koopa_macos_install_user_defaults() {
         --platform='macos' \
         --user \
         "$@"
+}
+
+koopa_macos_is_xcode_clt_installed() {
+    koopa_assert_has_no_args "$#"
+    [[ -d '/Library/Developer/CommandLineTools/usr/bin' ]]
 }
 
 koopa_macos_list_launch_agents() {

@@ -1,11 +1,9 @@
 #!/bin/sh
 
-# FIXME This is too verbose on Ubuntu instance.
-
 koopa_activate_delta() {
     # """
     # Activate delta (git-delta) diff tool.
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-10-07.
     #
     # This function dynamically updates dark/light color mode.
     # """
@@ -24,6 +22,6 @@ koopa_activate_delta() {
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
     koopa_is_alias 'ln' && unalias 'ln'
-    ln -fns "$source_file" "$target_file"
+    ln -fns "$source_file" "$target_file" >/dev/null
     return 0
 }

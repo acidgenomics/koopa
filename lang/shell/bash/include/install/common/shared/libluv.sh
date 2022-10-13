@@ -14,13 +14,13 @@ main() {
     # - cmake/Modules/FindLuaJIT.cmake
     # """
     local app cmake_args deps dict
-    koopa_activate_build_opt_prefix 'cmake'
+    koopa_activate_app --build-only 'cmake'
     deps=(
         'libuv'
         # > 'lua'
         'luajit'
     )
-    koopa_activate_opt_prefix "${deps[@]}"
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['luajit']="$(koopa_locate_luajit)"

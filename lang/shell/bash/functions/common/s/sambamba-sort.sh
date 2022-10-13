@@ -1,39 +1,34 @@
 #!/usr/bin/env bash
 
-# FIXME Need to locate sambamba here.
-
 koopa_sambamba_sort() {
     # """
-    # Sort a BAM file by genomic coordinates.
-    # @note Updated 2020-08-12.
-    #
-    # Sorts by genomic coordinates by default.
-    # Use '-n' flag to sort by read name instead.
-    #
-    # @seealso
-    # - https://lomereiter.github.io/sambamba/docs/sambamba-sort.html
+    # Sort multiple BAM files in a directory.
+    # @note Updated 2022-10-11.
     # """
-    local sorted_bam sorted_bam_bn threads unsorted_bam unsorted_bam_bn
-    koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'sambamba'
-    unsorted_bam="${1:?}"
-    sorted_bam="${unsorted_bam%.bam}.sorted.bam"
-    unsorted_bam_bn="$(koopa_basename "$unsorted_bam")"
-    sorted_bam_bn="$(koopa_basename "$sorted_bam")"
-    if [[ -f "$sorted_bam" ]]
+    local bam_file bam_files dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict
+    dict['prefix']="${1:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    readarray -t bam_files <<< "$( \
+        koopa_find \
+            --exclude='*.filtered.*' \
+            --exclude='*.sorted.*' \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern='*.bam' \
+            --prefix="${dict['prefix']}" \
+            --sort \
+            --type='f' \
+    )"
+    if ! koopa_is_array_non_empty "${bam_files[@]:-}"
     then
-        koopa_alert_note "Skipping '${sorted_bam_bn}'."
-        return 0
+        koopa_stop "No BAM files detected in '${dict['prefix']}'."
     fi
-    koopa_h2 "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
-    koopa_assert_is_file "$unsorted_bam"
-    threads="$(koopa_cpu_count)"
-    koopa_dl 'Threads' "${threads}"
-    sambamba sort \
-        --memory-limit='2GB' \
-        --nthreads="$threads" \
-        --out="$sorted_bam" \
-        --show-progress \
-        "$unsorted_bam"
+    koopa_alert "Sorting BAM files in '${dict['prefix']}'."
+    for bam_file in "${bam_files[@]}"
+    do
+        koopa_sambamba_sort_per_sample "$bam_file"
+    done
     return 0
 }
