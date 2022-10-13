@@ -22480,7 +22480,6 @@ koopa_system_info() {
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['koopa_url']="$(koopa_koopa_url)"
         ['koopa_version']="$(koopa_koopa_version)"
-        ['make_prefix']="$(koopa_make_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"
     )
     dict['ascii_turtle_file']="${dict['koopa_prefix']}/etc/\
@@ -22514,7 +22513,6 @@ koopa/ascii-turtle.txt"
         "App Prefix: ${dict['app_prefix']}"
         "Opt Prefix: ${dict['opt_prefix']}"
         "Config Prefix: ${dict['config_prefix']}"
-        "Make Prefix: ${dict['make_prefix']}"
     )
     if koopa_is_macos
     then
