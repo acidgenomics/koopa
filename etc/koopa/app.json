@@ -1298,7 +1298,7 @@
     "version": "0.34.0"
   },
   "gatk": {
-    "bin": [],
+    "bin": ["gatk"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-10-17",
@@ -1307,7 +1307,7 @@
     "large": true,
     "man1": [],
     "url": "https://gatk.broadinstitute.org/",
-    "version": "3.8"
+    "version": "4.3.0.0"
   },
   "gawk": {
     "bin": ["awk", "gawk"],
