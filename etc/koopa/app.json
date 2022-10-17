@@ -1297,6 +1297,18 @@
     "url": ["https://github.com/junegunn/fzf/"],
     "version": "0.34.0"
   },
+  "gatk": {
+    "bin": [],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-10-17",
+    "dependencies": ["conda"],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "url": "https://gatk.broadinstitute.org/",
+    "version": "3.8"
+  },
   "gawk": {
     "bin": ["awk", "gawk"],
     "build_dependencies": [],
