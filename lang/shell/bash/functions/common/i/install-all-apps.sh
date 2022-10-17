@@ -28,6 +28,7 @@ koopa_install_all_apps() {
         'xz'
         'bzip2'
         'unzip'
+        'zip'
         'm4'
         'gmp'
         'gperf'
