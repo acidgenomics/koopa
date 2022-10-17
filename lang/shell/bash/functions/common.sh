@@ -12528,6 +12528,12 @@ koopa_install_fzf() {
         "$@"
 }
 
+koopa_install_gatk() {
+    koopa_install_app \
+        --name='gatk' \
+        "$@"
+}
+
 koopa_install_gawk() {
     koopa_install_app \
         --name='gawk' \
@@ -23608,6 +23614,12 @@ koopa_uninstall_fribidi() {
 koopa_uninstall_fzf() {
     koopa_uninstall_app \
         --name='fzf' \
+        "$@"
+}
+
+koopa_uninstall_gatk() {
+    koopa_uninstall_app \
+        --name='gatk' \
         "$@"
 }
 
