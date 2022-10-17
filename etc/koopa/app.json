@@ -969,11 +969,11 @@
     "bin": ["difft"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-19",
+    "date": "2022-10-17",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "0.36.1"
+    "version": "0.37.0"
   },
   "docker-credential-pass": {
     "aliases": {
@@ -3678,12 +3678,12 @@
     "bin": ["snakemake"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-05",
+    "date": "2022-10-17",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "version": "7.15.1"
+    "version": "7.16.0"
   },
   "sox": {
     "bin": ["sox"],
@@ -3771,11 +3771,11 @@
     "bin": ["starship"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-08",
+    "date": "2022-10-17",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "1.10.3"
+    "version": "1.11.0"
   },
   "stow": {
     "bin": ["stow"],
