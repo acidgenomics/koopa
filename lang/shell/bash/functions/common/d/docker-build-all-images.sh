@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rethink this approach.
+# Currently breaking due to 'docker login' failures.
+
 koopa_docker_build_all_images() {
     # """
     # Build all Docker images.
