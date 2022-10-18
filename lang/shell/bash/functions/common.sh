@@ -18163,8 +18163,8 @@ ${dict['py_maj_min_ver']}"
     then
         case "${dict['py_version']}" in
             '3.10.'*)
-                dict['pip_version']='22.2.2'
-                dict['setuptools_version']='65.4.1'
+                dict['pip_version']='22.3'
+                dict['setuptools_version']='65.5.0'
                 dict['wheel_version']='0.37.1'
                 ;;
             *)
