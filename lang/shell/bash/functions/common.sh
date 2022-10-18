@@ -3299,6 +3299,10 @@ koopa_camel_case() {
     koopa_r_koopa 'cliCamelCase' "$@"
 }
 
+koopa_can_install_binary() {
+    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]]
+}
+
 koopa_capitalize() {
     local app str
     declare -A app
@@ -11170,7 +11174,7 @@ koopa_install_all_apps() {
         PATH="${PATH:?}" "${app['koopa']}" install "$app_name"
         push_apps+=("$app_name")
     done
-    if [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] && \
+    if koopa_can_install_binary && \
         koopa_is_array_non_empty "${push_apps[@]:-}"
     then
         for app_name in "${push_apps[@]}"
@@ -18010,6 +18014,7 @@ koopa_public_ip_address() {
 koopa_push_app_build() {
     local app dict name
     koopa_assert_has_args "$#"
+    koopa_can_install_binary || return 1
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
         ['tar']="$(koopa_locate_tar --allow-system)"
