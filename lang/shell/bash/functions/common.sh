@@ -13619,6 +13619,12 @@ koopa_install_r() {
         "$@"
 }
 
+koopa_install_radian() {
+    koopa_install_app \
+        --name='radian' \
+        "$@"
+}
+
 koopa_install_ranger_fm() {
     koopa_install_app \
         --name='ranger-fm' \
@@ -24503,6 +24509,12 @@ koopa_uninstall_r_packages() {
 koopa_uninstall_r() {
     koopa_uninstall_app \
         --name='r' \
+        "$@"
+}
+
+koopa_uninstall_radian() {
+    koopa_uninstall_app \
+        --name='radian' \
         "$@"
 }
 
