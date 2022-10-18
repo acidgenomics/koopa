@@ -50,7 +50,6 @@ koopa_activate_aliases() {
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
     alias prelude-emacs='koopa_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
-    alias python='koopa_alias_python'
     alias q='exit'
     alias rbenv='koopa_alias_rbenv'
     # Add '--binary' and '--hidden' here to make rg behave like 'grep -r'.
