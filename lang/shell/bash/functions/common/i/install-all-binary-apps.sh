@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-10-07.
+    # @note Updated 2022-10-18.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -121,6 +121,7 @@ koopa_install_all_binary_apps() {
         'harfbuzz'
         'hdf5'
         'htop'
+        'httpie'
         'hyperfine'
         'icu4c'
         'imagemagick'
@@ -213,6 +214,7 @@ koopa_install_all_binary_apps() {
         'python'
         'r'
         'r-devel'
+        'radian'
         'ranger-fm'
         'rbenv'
         'readline'
@@ -310,6 +312,7 @@ koopa_install_all_binary_apps() {
             'ensembl-perl-api'
             'fastqc'
             'ffq'
+            'gatk'
             'gffutils'
             'gget'
             'go'
