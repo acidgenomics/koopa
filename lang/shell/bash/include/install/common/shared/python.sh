@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-09-26.
+    # @note Updated 2022-10-18.
     #
     # Python includes '/usr/local' in '-I' and '-L' compilation arguments by
     # default. We should work on restricting this in a future build.
@@ -154,6 +154,12 @@ ${dict['file']}"
     fi
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
+    # Ensure 'python' symlink exists. Otherwise some programs, such as GATK can
+    # break due to lack of correct 'python' binary in PATH.
+    (
+        koopa_cd "${dict['prefix']}/bin"
+        koopa_ln "${dict['name']}${dict['maj_min_ver']}" "${dict['name']}"
+    )
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
     return 0
