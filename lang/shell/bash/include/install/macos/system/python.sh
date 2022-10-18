@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python framework binary.
-    # @note Updated 2022-03-30.
+    # @note Updated 2022-10-18.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -44,5 +44,14 @@ ${dict['version']}/${dict['file']}"
     app['python']="${dict['prefix']}/bin/${dict['name']}\
 ${dict['major_version']}"
     koopa_assert_is_installed "${app['python']}"
+    # Ensure 'python' symlink exists.
+    (
+        koopa_cd "${dict['prefix']}/bin"
+        koopa_ln --sudo \
+            "${dict['name']}${dict['major_version']}" "${dict['name']}"
+        koopa_cd '/usr/local/bin'
+        koopa_ln --sudo \
+            "${dict['name']}${dict['major_version']}" "${dict['name']}"
+    )
     return 0
 }

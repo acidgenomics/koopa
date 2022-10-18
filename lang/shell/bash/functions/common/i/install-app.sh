@@ -358,6 +358,8 @@ bash/include/header.sh"
                     koopa_install_app_from_binary_package "${dict['prefix']}"
                     ;;
             esac
+            # FIXME This step currently has permissions issue when installing
+            # as another user for shared koopa install. Need to resolve this.
             [[ "${bool['auto_prefix']}" -eq 1 ]] && \
                 koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
             koopa_sys_set_permissions --recursive "${dict['prefix']}"
