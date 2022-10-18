@@ -23,7 +23,6 @@ koopa_push_app_build() {
     [[ -x "${app['tar']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        # > ['distribution_id']="${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:?}"
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['os_string']="$(koopa_os_string)"
         ['profile']='acidgenomics'
