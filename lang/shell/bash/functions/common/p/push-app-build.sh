@@ -3,7 +3,7 @@
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2022-09-19.
+    # @note Updated 2022-10-18.
     #
     # @examples
     # > koopa_push_app_build 'emacs' 'vim'
@@ -14,6 +14,7 @@ koopa_push_app_build() {
     # """
     local app dict name
     koopa_assert_has_args "$#"
+    koopa_can_install_binary || return 1
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
         ['tar']="$(koopa_locate_tar --allow-system)"
@@ -52,13 +53,6 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         "${app['tar']}" -Pczf "${dict2['local_tar']}" "${dict2['prefix']}/"
         "${app['aws']}" --profile="${dict['profile']}" \
             s3 cp "${dict2['local_tar']}" "${dict2['remote_tar']}"
-        # Using 'true' here to harden against 'ServiceUnavailable' errors.
-        # > "${app['aws']}" --profile="${dict['profile']}" \
-        # >     cloudfront create-invalidation \
-        # >         --distribution-id="${dict['distribution_id']}" \
-        # >         --paths="${dict2['s3_rel_path']}" \
-        # >         >/dev/null \
-        # >     || true
     done
     koopa_rm "${dict['tmp_dir']}"
     return 0
