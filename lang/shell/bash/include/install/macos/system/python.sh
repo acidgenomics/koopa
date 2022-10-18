@@ -49,13 +49,9 @@ ${dict['major_version']}"
         koopa_cd "${dict['prefix']}/bin"
         koopa_ln --sudo \
             "${dict['name']}${dict['major_version']}" "${dict['name']}"
-        koopa_chmod --sudo 0775 "${dict['name']}"
-        # FIXME stat should be 0775 here. Need to rework 'koopa_sys_ln' on
-        # macOS to apply this automatically.
         koopa_cd '/usr/local/bin'
         koopa_sys_ln \
             "${dict['name']}${dict['major_version']}" "${dict['name']}"
-        koopa_chmod 0775 "${dict['name']}"
     )
     return 0
 }
