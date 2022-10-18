@@ -3,7 +3,7 @@
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2022-09-30.
+    # @note Updated 2022-10-18.
     #
     # In the future, consider adding support for 'requirements.txt' input.
     #
@@ -116,9 +116,9 @@ ${dict['py_maj_min_ver']}"
     then
         case "${dict['py_version']}" in
             '3.10.'*)
-                # 2022-09-30.
-                dict['pip_version']='22.2.2'
-                dict['setuptools_version']='65.4.1'
+                # 2022-10-18.
+                dict['pip_version']='22.3'
+                dict['setuptools_version']='65.5.0'
                 dict['wheel_version']='0.37.1'
                 ;;
             *)
