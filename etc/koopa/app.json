@@ -3154,6 +3154,7 @@
       "pip3.10",
       "pydoc3",
       "pydoc3.10",
+      "python",
       "python3",
       "python3-config",
       "python3.10",
@@ -3161,7 +3162,7 @@
     ],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-10-18",
     "dependencies": [
       "bzip2",
       "expat",
@@ -3192,6 +3193,7 @@
       "csvkit",
       "flake8",
       "glances",
+      "httpie",
       "ipython",
       "isort",
       "latch",
@@ -3205,6 +3207,7 @@
       "pylint",
       "pytaglib",
       "pytest",
+      "radian",
       "ranger-fm",
       "ruff",
       "scons",
@@ -3229,7 +3232,7 @@
       "llvm"
     ],
     "url": ["https://www.python.org/downloads/"],
-    "version": "3.10.7"
+    "version": "3.10.8"
   },
   "r": {
     "bin": [],
