@@ -3,7 +3,7 @@
 koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-09-16.
+    # @note Updated 2022-10-18.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -51,6 +51,7 @@ koopa_activate_aliases() {
     alias prelude-emacs='koopa_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
     alias q='exit'
+    alias radian='radian --no-restore --no-save --quiet'
     alias rbenv='koopa_alias_rbenv'
     # Add '--binary' and '--hidden' here to make rg behave like 'grep -r'.
     alias rg='rg --case-sensitive --no-ignore'
