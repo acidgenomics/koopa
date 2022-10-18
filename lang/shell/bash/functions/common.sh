@@ -12738,6 +12738,12 @@ koopa_install_htseq() {
         "$@"
 }
 
+koopa_install_httpie() {
+    koopa_install_app \
+        --name='httpie' \
+        "$@"
+}
+
 koopa_install_hyperfine() {
     koopa_install_app \
         --name='hyperfine' \
@@ -23824,6 +23830,12 @@ koopa_uninstall_htop() {
 koopa_uninstall_htseq() {
     koopa_uninstall_app \
         --name='htseq' \
+        "$@"
+}
+
+koopa_uninstall_httpie() {
+    koopa_uninstall_app \
+        --name='httpie' \
         "$@"
 }
 

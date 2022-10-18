@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-10-17.
+    # Updated 2022-10-18.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -190,6 +190,7 @@ __koopa_complete() {
                         'hisat2'
                         'htop'
                         'htseq'
+                        'httpie'
                         'hyperfine'
                         'icu4c'
                         'imagemagick'
