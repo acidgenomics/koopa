@@ -60,7 +60,8 @@ local({  # nolint
         "interactive" = isTRUE(interactive()),
         "linux" = identical(dict[["sysname"]], "Linux"),
         "macos" = identical(dict[["sysname"]], "Darwin"),
-        "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))
+        "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))),
+        "vscode" = isTRUE(nzchar(Sys.getenv("VSCODE_INIT_R")))
     )
     if (isTRUE(flag[["linux"]])) {
         flag[["cranBinary"]] <- identical(
@@ -297,6 +298,21 @@ local({  # nolint
     if (isTRUE(flag[["interactive"]])) {
         ## Turn on auto-completion of installed package names.
         utils::rc.settings(ipck = TRUE)
+    }
+    if (isTRUE(flag[["vscode"]])) {
+        ## Configure graphics for Visual Studio Code.
+        ## https://aeturrell.github.io/markov-wanderer/posts/
+        ##   setting-up-r-in-vscode/
+        if (isInstalled("httpgd")) {
+            options("vsc.plot" = FALSE)
+            options("device" = function(...) {
+                httpgd::hgd(silent = TRUE)
+                .vsc.browser(
+                    httpgd::hgd_url(history = FALSE),
+                    viewer = "Beside"
+                )
+            })
+        }
     }
     ## Debugging {{{2
     ## -------------------------------------------------------------------------
