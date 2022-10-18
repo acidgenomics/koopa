@@ -133,6 +133,7 @@ koopa_activate_aliases() {
     alias prelude-emacs='koopa_prelude_emacs'
     alias pyenv='koopa_alias_pyenv'
     alias q='exit'
+    alias radian='radian --no-restore --no-save --quiet'
     alias rbenv='koopa_alias_rbenv'
     alias rg='rg --case-sensitive --no-ignore'
     alias ronn='ronn --roff'
