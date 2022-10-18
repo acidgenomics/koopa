@@ -938,6 +938,18 @@ koopa_app_json_man1() {
     done
 }
 
+koopa_app_json_revdeps() {
+    local app_name
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        koopa_parse_app_json \
+            --app-name="$app_name" \
+            --key='reverse_dependencies'
+    done
+    return 0
+}
+
 koopa_app_json_version() {
     local app_name
     koopa_assert_has_args "$#"
@@ -4166,6 +4178,13 @@ Check autocompletion of supported arguments with <TAB>."
 }
 
 koopa_cli_reinstall() {
+    case "${1:-}" in
+        '--all-revdeps')
+            shift 1
+            koopa_reinstall_all_revdeps "$@"
+            return 0
+            ;;
+    esac
     koopa_cli_install --reinstall "$@"
 }
 
@@ -19449,6 +19468,16 @@ koopa_read() {
     read "${read_args[@]}" "dict[choice]"
     [[ -z "${dict['choice']}" ]] && dict['choice']="${dict['default']}"
     koopa_print "${dict['choice']}"
+    return 0
+}
+
+koopa_reinstall_all_revdeps() {
+    local app_names
+    koopa_assert_has_args "$#"
+    koopa_can_install_binary || return 1
+    readarray -t app_names <<< "$(koopa_app_json_revdeps "$@")"
+    koopa_assert_is_array_non_empty "${app_names[@]}"
+    koopa_cli_reinstall --push "${app_names[@]}"
     return 0
 }
 

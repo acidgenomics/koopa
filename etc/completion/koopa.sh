@@ -397,10 +397,10 @@ __koopa_complete() {
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'install')
-                            args+=(
-                                '--all'
-                                '--all-binary'
-                            )
+                            args+=('--all' '--all-binary')
+                            ;;
+                        'reinstall')
+                            args+=('--all-revdeps')
                             ;;
                     esac
                     ;;
