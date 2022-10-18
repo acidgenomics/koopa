@@ -50,7 +50,7 @@ ${dict['major_version']}"
         koopa_ln --sudo \
             "${dict['name']}${dict['major_version']}" "${dict['name']}"
         koopa_cd '/usr/local/bin'
-        koopa_sys_ln \
+        koopa_ln --sudo \
             "${dict['name']}${dict['major_version']}" "${dict['name']}"
     )
     return 0
