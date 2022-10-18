@@ -3421,6 +3421,17 @@
     "url": ["https://mac.r-project.org/openmp/"],
     "version": "13.0.0"
   },
+  "radian": {
+    "bin": ["radian"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-10-18",
+    "dependencies": ["python"],
+    "homebrew": false,
+    "man1": [],
+    "url": ["https://github.com/randy3k/radian/"],
+    "version": "0.6.4"
+  },
   "ranger-fm": {
     "aliases": {
       "homebrew": "ranger"

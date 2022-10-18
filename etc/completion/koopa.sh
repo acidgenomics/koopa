@@ -299,6 +299,7 @@ __koopa_complete() {
                         'r-devel'
                         'r-koopa'
                         'r-packages'
+                        'radian'
                         'ranger-fm'
                         'rbenv'
                         'readline'
