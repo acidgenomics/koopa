@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-10-07.
+    # @note Updated 2022-10-18.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -203,6 +203,7 @@ koopa_install_all_apps() {
         'bpytop'
         'flake8'
         'glances'
+        'httpie'
         'ipython'
         'isort'
         'latch'
@@ -213,6 +214,7 @@ koopa_install_all_apps() {
         'pyflakes'
         'pygments'
         'pylint'
+        'radian'
         'ranger-fm'
         'ruff'
         'yt-dlp'
@@ -304,6 +306,7 @@ koopa_install_all_apps() {
             'entrez-direct'
             'fastqc'
             'ffq'
+            'gatk'
             'gffutils'
             'gget'
             'ghostscript'
@@ -348,7 +351,7 @@ koopa_install_all_apps() {
         PATH="${PATH:?}" "${app['koopa']}" install "$app_name"
         push_apps+=("$app_name")
     done
-    if [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] && \
+    if koopa_can_install_binary && \
         koopa_is_array_non_empty "${push_apps[@]:-}"
     then
         for app_name in "${push_apps[@]}"
