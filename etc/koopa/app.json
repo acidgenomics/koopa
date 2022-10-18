@@ -1759,6 +1759,17 @@
     "man1": [],
     "version": "2.0.2"
   },
+  "httpie": {
+    "bin": ["http", "https"],
+    "build_dependencies": [],
+    "date": "2022-10-18",
+    "dependencies": ["python"],
+    "homebrew": true,
+    "large": false,
+    "man1": [],
+    "url": ["https://httpie.io/"],
+    "version": "3.2.1"
+  },
   "hyperfine": {
     "bin": ["hyperfine"],
     "build_dependencies": [],
@@ -2304,7 +2315,7 @@
     "bin": [],
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "conservative": false,
-    "date": "2022-10-05",
+    "date": "2022-10-18",
     "dependencies": [
       "zlib",
       "libedit",
@@ -2317,9 +2328,9 @@
     "homebrew": true,
     "large": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://releases.llvm.org/"],
-    "version": "15.0.2"
+    "version": "15.0.3"
   },
   "lmod": {
     "bin": [],
@@ -3022,11 +3033,11 @@
     "bin": ["procs"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-05",
+    "date": "2022-10-18",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "0.13.2"
+    "version": "0.13.3"
   },
   "proj": {
     "bin": ["proj", "projinfo"],
@@ -3143,6 +3154,7 @@
       "pip3.10",
       "pydoc3",
       "pydoc3.10",
+      "python",
       "python3",
       "python3-config",
       "python3.10",
@@ -3150,7 +3162,7 @@
     ],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-10-18",
     "dependencies": [
       "bzip2",
       "expat",
@@ -3181,6 +3193,7 @@
       "csvkit",
       "flake8",
       "glances",
+      "httpie",
       "ipython",
       "isort",
       "latch",
@@ -3194,6 +3207,7 @@
       "pylint",
       "pytaglib",
       "pytest",
+      "radian",
       "ranger-fm",
       "ruff",
       "scons",
@@ -3218,7 +3232,7 @@
       "llvm"
     ],
     "url": ["https://www.python.org/downloads/"],
-    "version": "3.10.7"
+    "version": "3.10.8"
   },
   "r": {
     "bin": [],
@@ -3409,6 +3423,17 @@
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
     "version": "13.0.0"
+  },
+  "radian": {
+    "bin": ["radian"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-10-18",
+    "dependencies": ["python"],
+    "homebrew": false,
+    "man1": [],
+    "url": ["https://github.com/randy3k/radian/"],
+    "version": "0.6.4"
   },
   "ranger-fm": {
     "aliases": {

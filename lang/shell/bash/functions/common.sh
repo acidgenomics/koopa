@@ -938,6 +938,18 @@ koopa_app_json_man1() {
     done
 }
 
+koopa_app_json_revdeps() {
+    local app_name
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        koopa_parse_app_json \
+            --app-name="$app_name" \
+            --key='reverse_dependencies'
+    done
+    return 0
+}
+
 koopa_app_json_version() {
     local app_name
     koopa_assert_has_args "$#"
@@ -3299,6 +3311,10 @@ koopa_camel_case() {
     koopa_r_koopa 'cliCamelCase' "$@"
 }
 
+koopa_can_install_binary() {
+    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]]
+}
+
 koopa_capitalize() {
     local app str
     declare -A app
@@ -4162,6 +4178,13 @@ Check autocompletion of supported arguments with <TAB>."
 }
 
 koopa_cli_reinstall() {
+    case "${1:-}" in
+        '--all-revdeps')
+            shift 1
+            koopa_reinstall_all_revdeps "$@"
+            return 0
+            ;;
+    esac
     koopa_cli_install --reinstall "$@"
 }
 
@@ -11028,6 +11051,7 @@ koopa_install_all_apps() {
         'bpytop'
         'flake8'
         'glances'
+        'httpie'
         'ipython'
         'isort'
         'latch'
@@ -11038,6 +11062,7 @@ koopa_install_all_apps() {
         'pyflakes'
         'pygments'
         'pylint'
+        'radian'
         'ranger-fm'
         'ruff'
         'yt-dlp'
@@ -11123,6 +11148,7 @@ koopa_install_all_apps() {
             'entrez-direct'
             'fastqc'
             'ffq'
+            'gatk'
             'gffutils'
             'gget'
             'ghostscript'
@@ -11167,7 +11193,7 @@ koopa_install_all_apps() {
         PATH="${PATH:?}" "${app['koopa']}" install "$app_name"
         push_apps+=("$app_name")
     done
-    if [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] && \
+    if koopa_can_install_binary && \
         koopa_is_array_non_empty "${push_apps[@]:-}"
     then
         for app_name in "${push_apps[@]}"
@@ -11288,6 +11314,7 @@ koopa_install_all_binary_apps() {
         'harfbuzz'
         'hdf5'
         'htop'
+        'httpie'
         'hyperfine'
         'icu4c'
         'imagemagick'
@@ -11375,6 +11402,7 @@ koopa_install_all_binary_apps() {
         'python'
         'r'
         'r-devel'
+        'radian'
         'ranger-fm'
         'rbenv'
         'readline'
@@ -11467,6 +11495,7 @@ koopa_install_all_binary_apps() {
             'ensembl-perl-api'
             'fastqc'
             'ffq'
+            'gatk'
             'gffutils'
             'gget'
             'go'
@@ -12738,6 +12767,12 @@ koopa_install_htseq() {
         "$@"
 }
 
+koopa_install_httpie() {
+    koopa_install_app \
+        --name='httpie' \
+        "$@"
+}
+
 koopa_install_hyperfine() {
     koopa_install_app \
         --name='hyperfine' \
@@ -13610,6 +13645,12 @@ koopa_install_r_packages() {
 koopa_install_r() {
     koopa_install_app \
         --name='r' \
+        "$@"
+}
+
+koopa_install_radian() {
+    koopa_install_app \
+        --name='radian' \
         "$@"
 }
 
@@ -17992,6 +18033,7 @@ koopa_public_ip_address() {
 koopa_push_app_build() {
     local app dict name
     koopa_assert_has_args "$#"
+    koopa_can_install_binary || return 1
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
         ['tar']="$(koopa_locate_tar --allow-system)"
@@ -18151,8 +18193,8 @@ ${dict['py_maj_min_ver']}"
     then
         case "${dict['py_version']}" in
             '3.10.'*)
-                dict['pip_version']='22.2.2'
-                dict['setuptools_version']='65.4.1'
+                dict['pip_version']='22.3'
+                dict['setuptools_version']='65.5.0'
                 dict['wheel_version']='0.37.1'
                 ;;
             *)
@@ -19426,6 +19468,16 @@ koopa_read() {
     read "${read_args[@]}" "dict[choice]"
     [[ -z "${dict['choice']}" ]] && dict['choice']="${dict['default']}"
     koopa_print "${dict['choice']}"
+    return 0
+}
+
+koopa_reinstall_all_revdeps() {
+    local app_names
+    koopa_assert_has_args "$#"
+    koopa_can_install_binary || return 1
+    readarray -t app_names <<< "$(koopa_app_json_revdeps "$@")"
+    koopa_assert_is_array_non_empty "${app_names[@]}"
+    koopa_cli_reinstall --push "${app_names[@]}"
     return 0
 }
 
@@ -23827,6 +23879,12 @@ koopa_uninstall_htseq() {
         "$@"
 }
 
+koopa_uninstall_httpie() {
+    koopa_uninstall_app \
+        --name='httpie' \
+        "$@"
+}
+
 koopa_uninstall_hyperfine() {
     koopa_uninstall_app \
         --name='hyperfine' \
@@ -24491,6 +24549,12 @@ koopa_uninstall_r_packages() {
 koopa_uninstall_r() {
     koopa_uninstall_app \
         --name='r' \
+        "$@"
+}
+
+koopa_uninstall_radian() {
+    koopa_uninstall_app \
+        --name='radian' \
         "$@"
 }
 

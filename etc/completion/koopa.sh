@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-10-17.
+    # Updated 2022-10-18.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -190,6 +190,7 @@ __koopa_complete() {
                         'hisat2'
                         'htop'
                         'htseq'
+                        'httpie'
                         'hyperfine'
                         'icu4c'
                         'imagemagick'
@@ -298,6 +299,7 @@ __koopa_complete() {
                         'r-devel'
                         'r-koopa'
                         'r-packages'
+                        'radian'
                         'ranger-fm'
                         'rbenv'
                         'readline'
@@ -395,10 +397,10 @@ __koopa_complete() {
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'install')
-                            args+=(
-                                '--all'
-                                '--all-binary'
-                            )
+                            args+=('--all' '--all-binary')
+                            ;;
+                        'reinstall')
+                            args+=('--all-revdeps')
                             ;;
                     esac
                     ;;

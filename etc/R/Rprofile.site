@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-10-05.
+#' @note Updated 2022-10-18.
 #'
 #' @section Restarting R:
 #'
@@ -60,7 +60,8 @@ local({  # nolint
         "interactive" = isTRUE(interactive()),
         "linux" = identical(dict[["sysname"]], "Linux"),
         "macos" = identical(dict[["sysname"]], "Darwin"),
-        "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))
+        "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))),
+        "vscode" = isTRUE(nzchar(Sys.getenv("VSCODE_INIT_R")))
     )
     if (isTRUE(flag[["linux"]])) {
         flag[["cranBinary"]] <- identical(
@@ -88,8 +89,7 @@ local({  # nolint
     ## Functions {{{2
     ## -------------------------------------------------------------------------
     isInstalled <- function(pkg) {
-        stopifnot(requireNamespace("utils", quietly = TRUE))
-        pkg %in% rownames(utils::installed.packages())
+        pkg %in% .packages(all.available = TRUE)
     }
     ## Seed value {{{2
     ## -------------------------------------------------------------------------
@@ -299,6 +299,25 @@ local({  # nolint
         ## Turn on auto-completion of installed package names.
         utils::rc.settings(ipck = TRUE)
     }
+    ## Configure graphics for Visual Studio Code.
+    ## See also:
+    ## - https://code.visualstudio.com/docs/languages/r
+    ## - https://aeturrell.github.io/markov-wanderer/posts/
+    ##     setting-up-r-in-vscode/
+    ## - https://www.milesmcbain.com/posts/alt-r-with-vscode/
+    ## - https://www.milesmcbain.com/posts/adding-addins-to-vscode/
+    ## > if (isTRUE(flag[["vscode"]])) {
+    ## >     if (isInstalled("httpgd")) {
+    ## >         options("vsc.plot" = FALSE)
+    ## >         options("device" = function(...) {
+    ## >             httpgd::hgd(silent = TRUE)
+    ## >             .vsc.browser(
+    ## >                 httpgd::hgd_url(history = FALSE),
+    ## >                 viewer = "Beside"
+    ## >             )
+    ## >         })
+    ## >     }
+    ## > }
     ## Debugging {{{2
     ## -------------------------------------------------------------------------
     options("warn" = 1L)
