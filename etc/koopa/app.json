@@ -2304,7 +2304,7 @@
     "bin": [],
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "conservative": false,
-    "date": "2022-10-05",
+    "date": "2022-10-18",
     "dependencies": [
       "zlib",
       "libedit",
@@ -2317,9 +2317,9 @@
     "homebrew": true,
     "large": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://releases.llvm.org/"],
-    "version": "15.0.2"
+    "version": "15.0.3"
   },
   "lmod": {
     "bin": [],
@@ -3022,11 +3022,11 @@
     "bin": ["procs"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-05",
+    "date": "2022-10-18",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "0.13.2"
+    "version": "0.13.3"
   },
   "proj": {
     "bin": ["proj", "projinfo"],
