@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-10-05.
+#' @note Updated 2022-10-18.
 #'
 #' @section Restarting R:
 #'
@@ -88,8 +88,7 @@ local({  # nolint
     ## Functions {{{2
     ## -------------------------------------------------------------------------
     isInstalled <- function(pkg) {
-        stopifnot(requireNamespace("utils", quietly = TRUE))
-        pkg %in% rownames(utils::installed.packages())
+        pkg %in% .packages(all.available = TRUE)
     }
     ## Seed value {{{2
     ## -------------------------------------------------------------------------
