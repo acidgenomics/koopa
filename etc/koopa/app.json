@@ -1759,6 +1759,17 @@
     "man1": [],
     "version": "2.0.2"
   },
+  "httpie": {
+    "bin": ["http", "https"],
+    "build_dependencies": [],
+    "date": "2022-10-18",
+    "dependencies": ["python"],
+    "homebrew": true,
+    "large": false,
+    "man1": [],
+    "url": ["https://httpie.io/"],
+    "version": "3.2.1"
+  },
   "hyperfine": {
     "bin": ["hyperfine"],
     "build_dependencies": [],
