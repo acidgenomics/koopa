@@ -92,6 +92,7 @@ __koopa_complete() {
                         'attr'
                         'autoconf'
                         'autodock'
+                        'autodock-adfr'
                         'autodock-vina'
                         'autoflake'
                         'automake'

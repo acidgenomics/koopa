@@ -165,13 +165,15 @@
   },
   "autodock-adfr": {
     "build_dependencies": [],
+    "check": false,
     "conservative": false,
     "date": "2022-10-19",
     "dependencies": [],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "url": ["https://ccsb.scripps.edu/adfr/"]
+    "url": ["https://ccsb.scripps.edu/adfr/"],
+    "version": "1.0"
   },
   "autodock-vina": {
     "bin": ["vina"],
@@ -4377,12 +4379,12 @@
     "bin": ["yq"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-05",
+    "date": "2022-10-19",
     "dependencies": ["go"],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.28.1"
+    "version": "4.28.2"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
