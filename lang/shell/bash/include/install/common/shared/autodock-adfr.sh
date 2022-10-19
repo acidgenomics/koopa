@@ -24,13 +24,13 @@ main() {
     read -r -d '' "dict[string]" << END || true
 # > name: ${dict['name']}
 channels:
-  - conda-forge
   - hcc
-  - anaconda
+  # > - conda-forge
+  # > - anaconda
 dependencies:
-  - python=2.7.3
+  # > - python=2.7.3
   - adfr-suite=${dict['version']}
-  - numpy=1.15.0
+  # > - numpy=1.15.0
 prefix: ${dict['prefix']}
 END
     koopa_write_string \
