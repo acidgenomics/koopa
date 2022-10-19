@@ -4,6 +4,11 @@ koopa_conda_create_env() {
     # """
     # Create a conda environment.
     # @note Updated 2022-10-19.
+    #
+    # @seealso
+    # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
+    #     manage-environments.html#sharing-an-environment
+    # - https://github.com/conda/conda/issues/6827
     # """
     local app dict pos string
     koopa_assert_has_args "$#"
@@ -62,29 +67,32 @@ koopa_conda_create_env() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ -n "${dict['prefix']}" ]]
+    if [[ -n "${dict['yaml_file']}" ]]
     then
-        local create_args
+        koopa_assert_has_no_args "$#"
         koopa_assert_is_dir "${dict['prefix']}"
         [[ "${dict['force']}" -eq 0 ]] || return 1
         [[ "${dict['latest']}" -eq 0 ]] || return 1
-        create_args=(
-            '--prefix' "${dict['prefix']}"
-            '--quiet'
-            '--yes'
-        )
-        if [[ -n "${dict['yaml_file']}" ]]
-        then
-            koopa_assert_has_no_args "$#"
-            koopa_assert_is_file "${dict['yaml_file']}"
-            dict['yaml_file']="$(koopa_realpath "${dict['yaml_file']}")"
-            koopa_dl 'conda recipe file' "${dict['yaml_file']}"
-            create_args+=('--file' "${dict['yaml_file']}")
-        else
-            koopa_assert_has_args "$#"
-            create_args+=("$@")
-        fi
-        "${app['conda']}" create "${create_args[@]}"
+        koopa_assert_is_file "${dict['yaml_file']}"
+        dict['yaml_file']="$(koopa_realpath "${dict['yaml_file']}")"
+        koopa_dl 'conda recipe file' "${dict['yaml_file']}"
+        # Note the usage of 'env create' here instead of 'create'.
+        "${app['conda']}" env create \
+            --file "${dict['yaml_file']}" \
+            --prefix "${dict['prefix']}" \
+            --quiet
+        return 0
+    elif [[ -n "${dict['prefix']}" ]]
+    then
+        koopa_assert_has_args "$#"
+        koopa_assert_is_dir "${dict['prefix']}"
+        [[ "${dict['force']}" -eq 0 ]] || return 1
+        [[ "${dict['latest']}" -eq 0 ]] || return 1
+        "${app['conda']}" create \
+            --prefix "${dict['prefix']}" \
+            --quiet \
+            --yes \
+            "$@"
         return 0
     fi
     koopa_assert_has_args "$#"

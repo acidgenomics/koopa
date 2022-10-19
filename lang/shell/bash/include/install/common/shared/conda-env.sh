@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding man1 support for some apps (e.g. hisat2).
-
 main() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2022-08-02.
+    # @note Updated 2022-10-19.
+    #
+    # Be sure to excluded nested directories that may exist in libexec bin, such
+    # as 'bin/scripts' for bowtie2.
+    #
+    # Consider adding man1 support for relevant apps (e.g. hisat2).
     # """
-    local app bin_names dict
-    koopa_assert_has_no_args "$#"
+    local app bin_names create_args dict pos
     declare -A app=(
         ['cut']="$(koopa_locate_cut)"
         ['jq']="$(koopa_locate_jq)"
@@ -19,11 +21,43 @@ main() {
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
+        ['yaml_file']=''
     )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key value pairs --------------------------------------------------
+            '--file='*)
+                dict['yaml_file']="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict['yaml_file']="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_no_args "$#"
+    create_args=()
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-    koopa_conda_create_env \
-        --prefix="${dict['libexec']}" \
-        "${dict['name']}==${dict['version']}"
+    create_args+=("--prefix=${dict['libexec']}")
+    if [[ -n "${dict['yaml_file']}" ]]
+    then
+        create_args+=("--file=${dict['yaml_file']}")
+    else
+        create_args+=("${dict['name']}==${dict['version']}")
+    fi
+    koopa_conda_create_env "${create_args[@]}"
     dict['json_pattern']="${dict['name']}-${dict['version']}-*.json"
     case "${dict['name']}" in
         'snakemake')
@@ -39,8 +73,6 @@ main() {
             --type='f' \
     )"
     koopa_assert_is_file "${dict['json_file']}"
-    # Be sure to excluded nested directories that may exist in libexec bin, such
-    # as 'bin/scripts' for bowtie2.
     readarray -t bin_names <<< "$( \
         "${app['jq']}" --raw-output '.files[]' "${dict['json_file']}" \
             | koopa_grep --pattern='^bin/[^/]+$' --regex \
