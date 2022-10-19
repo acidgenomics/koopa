@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider adding support for '--file' argument here.
-#       Currently used in openbb installer.
-# FIXME Allow the user to define which conda -- allow anaconda usage here.
-
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2022-10-06.
-    #
-    # Creates a unique environment for each recipe requested.
-    # Supports versioning, which will return as 'star@2.7.5a' for example.
+    # @note Updated 2022-10-19.
     # """
     local app dict pos string
     koopa_assert_has_args "$#"
@@ -25,12 +18,21 @@ koopa_conda_create_env() {
         ['force']=0
         ['latest']=0
         ['prefix']=''
+        ['yaml_file']=''
     )
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key value pairs --------------------------------------------------
+            '--file='*)
+                dict['yaml_file']="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict['yaml_file']="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -60,18 +62,33 @@ koopa_conda_create_env() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
     if [[ -n "${dict['prefix']}" ]]
     then
-        koopa_assert_has_args_eq "$#" 1
+        local create_args
         koopa_assert_is_dir "${dict['prefix']}"
-        "${app['conda']}" create \
-            --prefix "${dict['prefix']}" \
-            --quiet \
-            --yes \
-            "$@"
+        [[ "${dict['force']}" -eq 0 ]] || return 1
+        [[ "${dict['latest']}" -eq 0 ]] || return 1
+        create_args=(
+            '--prefix' "${dict['prefix']}"
+            '--quiet'
+            '--yes'
+        )
+        if [[ -n "${dict['yaml_file']}" ]]
+        then
+            koopa_assert_has_no_args "$#"
+            koopa_assert_is_file "${dict['yaml_file']}"
+            dict['yaml_file']="$(koopa_realpath "${dict['yaml_file']}")"
+            koopa_dl 'conda recipe file' "${dict['yaml_file']}"
+            create_args+=('--file' "${dict['yaml_file']}")
+        else
+            koopa_assert_has_args "$#"
+            create_args+=("$@")
+        fi
+        "${app['conda']}" create "${create_args[@]}"
         return 0
     fi
+    koopa_assert_has_args "$#"
+    [[ -z "${dict['yaml_file']}" ]] || return 1
     for string in "$@"
     do
         local dict2
