@@ -19,6 +19,7 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A app
     app['yes']="$(koopa_locate_yes)"
+    [[ -x "${app['yes']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         ['name']='ADFRsuite'
@@ -58,6 +59,7 @@ _${dict['version']}"
     # Install script options:
     # * -d: Target directory.
     # * -c: How to compile the Python files. Use 0 for .pyc or 1 for .pyo.
+    # NOTE Installer currently fails unless we include 'true' catch here.
     "${app['yes']}" | ./install.sh -d "${dict['libexec']}" -c 0 || true
     (
         koopa_cd "${dict['prefix']}"
