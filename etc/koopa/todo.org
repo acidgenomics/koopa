@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Pruning of all old versions should refer to the 'app.json' file.
 ** TODO Rework top-level 'os' directory.
 ** TODO Rework harfbuzz to install into 'lib' instead of 'lib64' on Linux.
 ** TODO Need to get koopa to install from scratch on macOS using bootstrap script.
