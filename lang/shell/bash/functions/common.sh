@@ -4499,11 +4499,20 @@ koopa_conda_create_env() {
         ['force']=0
         ['latest']=0
         ['prefix']=''
+        ['yaml_file']=''
     )
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--file='*)
+                dict['yaml_file']="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict['yaml_file']="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -4531,11 +4540,26 @@ koopa_conda_create_env() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    if [[ -n "${dict['prefix']}" ]]
+    if [[ -n "${dict['yaml_file']}" ]]
     then
-        koopa_assert_has_args_eq "$#" 1
+        koopa_assert_has_no_args "$#"
         koopa_assert_is_dir "${dict['prefix']}"
+        [[ "${dict['force']}" -eq 0 ]] || return 1
+        [[ "${dict['latest']}" -eq 0 ]] || return 1
+        koopa_assert_is_file "${dict['yaml_file']}"
+        dict['yaml_file']="$(koopa_realpath "${dict['yaml_file']}")"
+        koopa_dl 'conda recipe file' "${dict['yaml_file']}"
+        "${app['conda']}" env create \
+            --file "${dict['yaml_file']}" \
+            --prefix "${dict['prefix']}" \
+            --quiet
+        return 0
+    elif [[ -n "${dict['prefix']}" ]]
+    then
+        koopa_assert_has_args "$#"
+        koopa_assert_is_dir "${dict['prefix']}"
+        [[ "${dict['force']}" -eq 0 ]] || return 1
+        [[ "${dict['latest']}" -eq 0 ]] || return 1
         "${app['conda']}" create \
             --prefix "${dict['prefix']}" \
             --quiet \
@@ -4543,6 +4567,8 @@ koopa_conda_create_env() {
             "$@"
         return 0
     fi
+    koopa_assert_has_args "$#"
+    [[ -z "${dict['yaml_file']}" ]] || return 1
     for string in "$@"
     do
         local dict2
@@ -12160,6 +12186,12 @@ koopa_install_aspell() {
 koopa_install_autoconf() {
     koopa_install_app \
         --name='autoconf' \
+        "$@"
+}
+
+koopa_install_autodock_adfr() {
+    koopa_install_app \
+        --name='autodock-adfr' \
         "$@"
 }
 
@@ -23316,6 +23348,12 @@ koopa_uninstall_aspell() {
 koopa_uninstall_autoconf() {
     koopa_uninstall_app \
         --name='autoconf' \
+        "$@"
+}
+
+koopa_uninstall_autodock_adfr() {
+    koopa_uninstall_app \
+        --name='autodock-adfr' \
         "$@"
 }
 
