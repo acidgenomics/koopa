@@ -14,14 +14,14 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-19",
     "dependencies": [],
     "homebrew": false,
     "large": true,
     "man1": [],
     "reverse_dependencies": ["openbb"],
     "url": ["https://repo.continuum.io/archive/"],
-    "version": "2022.05"
+    "version": "2022.10"
   },
   "apache-airflow": {
     "bin": ["airflow"],
@@ -150,6 +150,33 @@
     "man1": [],
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
+  },
+  "autodock": {
+    "bin": ["autodock4"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-10-19",
+    "dependencies": ["conda"],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "url": ["https://autodock.scripps.edu/"],
+    "version": "4.2.6"
+  },
+  "autodock-vina": {
+    "bin": ["vina"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-10-19",
+    "dependencies": ["conda"],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "url": [
+      "https://vina.scripps.edu/",
+      "https://github.com/ccsb-scripps/AutoDock-Vina/"
+    ],
+    "version": "1.2.3"
   },
   "autoflake": {
     "bin": ["autoflake"],
@@ -616,6 +643,7 @@
     "dependencies": [],
     "homebrew": false,
     "reverse_dependencies": [
+      "autodock",
       "bamtools",
       "bedtools",
       "bioawk",
@@ -642,6 +670,7 @@
       "snakefmt",
       "snakemake",
       "star",
+      "vina",
       "visidata"
     ],
     "url": ["https://repo.anaconda.com/miniconda/"],

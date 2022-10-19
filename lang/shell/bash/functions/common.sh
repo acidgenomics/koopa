@@ -12163,6 +12163,18 @@ koopa_install_autoconf() {
         "$@"
 }
 
+koopa_install_autodock_vina() {
+    koopa_install_app \
+        --name='autodock-vina' \
+        "$@"
+}
+
+koopa_install_autodock() {
+    koopa_install_app \
+        --name='autodock' \
+        "$@"
+}
+
 koopa_install_autoflake() {
     koopa_install_app \
         --name='autoflake' \
@@ -23273,6 +23285,18 @@ koopa_uninstall_aspell() {
 koopa_uninstall_autoconf() {
     koopa_uninstall_app \
         --name='autoconf' \
+        "$@"
+}
+
+koopa_uninstall_autodock_vina() {
+    koopa_uninstall_app \
+        --name='autodock-vina' \
+        "$@"
+}
+
+koopa_uninstall_autodock() {
+    koopa_uninstall_app \
+        --name='autodock' \
         "$@"
 }
 
