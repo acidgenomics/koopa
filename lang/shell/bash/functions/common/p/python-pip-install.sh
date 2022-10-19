@@ -3,7 +3,7 @@
 koopa_python_pip_install() {
     # """
     # Internal pip install command.
-    # @note Updated 2022-07-11.
+    # @note Updated 2022-10-19.
     #
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
@@ -62,7 +62,7 @@ koopa_python_pip_install() {
     )
     dl_args=(
         'Python' "${app['python']}"
-        'Packages' "$(koopa_to_string "${pkgs[*]}")"
+        'Packages' "$(koopa_to_string "${pkgs[@]}")"
     )
     if [[ -n "${dict['prefix']}" ]]
     then
