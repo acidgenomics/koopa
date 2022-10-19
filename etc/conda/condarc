@@ -1,6 +1,6 @@
 # """
 # Conda configuration.
-# @note Updated 2022-08-27.
+# @note Updated 2022-10-19.
 #
 # @seealso
 # - 'conda config --json --show' and 'conda config --json --show-sources'.
@@ -14,7 +14,7 @@
 # - https://bioconda.github.io/#set-up-channels
 # """
 
-allow_other_channels: False
+allow_other_channels: True
 always_yes: True
 auto_activate_base: False
 auto_update_conda: False
