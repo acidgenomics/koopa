@@ -27,13 +27,13 @@
     "bin": ["airflow"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-02",
+    "date": "2022-10-24",
     "dependencies": ["python"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.4.1"
+    "version": "2.4.2"
   },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
@@ -1995,7 +1995,7 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-21",
+    "date": "2022-10-24",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
@@ -2004,7 +2004,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.5.1"
+    "version": "2.6.2"
   },
   "less": {
     "bin": ["less"],
