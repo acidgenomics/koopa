@@ -12,7 +12,6 @@ koopa_test() {
         koopa_cd "$prefix"
         ./linter
         ./shunit2
-        ./check-bin-man-consistency
         # > ./roff
     )
     return 0

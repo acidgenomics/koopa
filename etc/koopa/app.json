@@ -14,26 +14,26 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-19",
     "dependencies": [],
     "homebrew": false,
     "large": true,
     "man1": [],
     "reverse_dependencies": ["openbb"],
     "url": ["https://repo.continuum.io/archive/"],
-    "version": "2022.05"
+    "version": "2022.10"
   },
   "apache-airflow": {
     "bin": ["airflow"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-02",
+    "date": "2022-10-24",
     "dependencies": ["python"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.4.1"
+    "version": "2.4.2"
   },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
@@ -150,6 +150,45 @@
     "man1": [],
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
+  },
+  "autodock": {
+    "bin": ["autodock4"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-10-19",
+    "dependencies": ["conda"],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "url": ["https://autodock.scripps.edu/"],
+    "version": "4.2.6"
+  },
+  "autodock-adfr": {
+    "build_dependencies": [],
+    "check": false,
+    "conservative": false,
+    "date": "2022-10-19",
+    "dependencies": [],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "url": ["https://ccsb.scripps.edu/adfr/"],
+    "version": "1.0"
+  },
+  "autodock-vina": {
+    "bin": ["vina"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-10-19",
+    "dependencies": ["conda"],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "url": [
+      "https://vina.scripps.edu/",
+      "https://github.com/ccsb-scripps/AutoDock-Vina/"
+    ],
+    "version": "1.2.3"
   },
   "autoflake": {
     "bin": ["autoflake"],
@@ -616,6 +655,7 @@
     "dependencies": [],
     "homebrew": false,
     "reverse_dependencies": [
+      "autodock",
       "bamtools",
       "bedtools",
       "bioawk",
@@ -642,6 +682,7 @@
       "snakefmt",
       "snakemake",
       "star",
+      "vina",
       "visidata"
     ],
     "url": ["https://repo.anaconda.com/miniconda/"],
@@ -1015,12 +1056,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-13",
+    "date": "2022-10-24",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "89903acc134f2eec58b6fa40c0d6043255098df6"
+    "version": "73e99ebbfcf16f9c62ff7f75bfff0a75b83a8765"
   },
   "du-dust": {
     "aliases": {
@@ -1954,7 +1995,7 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-17",
+    "date": "2022-10-24",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
@@ -1963,7 +2004,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.4.6"
+    "version": "2.6.2"
   },
   "less": {
     "bin": ["less"],
@@ -2039,7 +2080,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": false,
+    "outdated": true,
     "reverse_dependencies": [
       "cairo",
       "glib",
@@ -2689,7 +2730,7 @@
     "bin": ["node", "npm", "npx"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-27",
+    "date": "2022-10-19",
     "dependencies": [],
     "homebrew": true,
     "lts": true,
@@ -2703,7 +2744,7 @@
       "yarn"
     ],
     "url": ["https://nodejs.org/"],
-    "version": "16.17.1"
+    "version": "16.18.0"
   },
   "npth": {
     "bin": [],
@@ -4338,12 +4379,12 @@
     "bin": ["yq"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-05",
+    "date": "2022-10-19",
     "dependencies": ["go"],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.28.1"
+    "version": "4.28.2"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
