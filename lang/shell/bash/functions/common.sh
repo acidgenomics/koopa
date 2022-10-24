@@ -3387,12 +3387,6 @@ is not '${dict['code']}'."
     return 0
 }
 
-koopa_check_bin_man_consistency() {
-    koopa_assert_has_no_args "$#"
-    koopa_r_koopa 'cliCheckBinManConsistency' "$@"
-    return 0
-}
-
 koopa_check_disk() {
     local dict
     koopa_assert_has_args "$#"
@@ -4499,11 +4493,20 @@ koopa_conda_create_env() {
         ['force']=0
         ['latest']=0
         ['prefix']=''
+        ['yaml_file']=''
     )
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--file='*)
+                dict['yaml_file']="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict['yaml_file']="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -4531,11 +4534,26 @@ koopa_conda_create_env() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    if [[ -n "${dict['prefix']}" ]]
+    if [[ -n "${dict['yaml_file']}" ]]
     then
-        koopa_assert_has_args_eq "$#" 1
+        koopa_assert_has_no_args "$#"
         koopa_assert_is_dir "${dict['prefix']}"
+        [[ "${dict['force']}" -eq 0 ]] || return 1
+        [[ "${dict['latest']}" -eq 0 ]] || return 1
+        koopa_assert_is_file "${dict['yaml_file']}"
+        dict['yaml_file']="$(koopa_realpath "${dict['yaml_file']}")"
+        koopa_dl 'conda recipe file' "${dict['yaml_file']}"
+        "${app['conda']}" env create \
+            --file "${dict['yaml_file']}" \
+            --prefix "${dict['prefix']}" \
+            --quiet
+        return 0
+    elif [[ -n "${dict['prefix']}" ]]
+    then
+        koopa_assert_has_args "$#"
+        koopa_assert_is_dir "${dict['prefix']}"
+        [[ "${dict['force']}" -eq 0 ]] || return 1
+        [[ "${dict['latest']}" -eq 0 ]] || return 1
         "${app['conda']}" create \
             --prefix "${dict['prefix']}" \
             --quiet \
@@ -4543,6 +4561,8 @@ koopa_conda_create_env() {
             "$@"
         return 0
     fi
+    koopa_assert_has_args "$#"
+    [[ -z "${dict['yaml_file']}" ]] || return 1
     for string in "$@"
     do
         local dict2
@@ -12163,6 +12183,24 @@ koopa_install_autoconf() {
         "$@"
 }
 
+koopa_install_autodock_adfr() {
+    koopa_install_app \
+        --name='autodock-adfr' \
+        "$@"
+}
+
+koopa_install_autodock_vina() {
+    koopa_install_app \
+        --name='autodock-vina' \
+        "$@"
+}
+
+koopa_install_autodock() {
+    koopa_install_app \
+        --name='autodock' \
+        "$@"
+}
+
 koopa_install_autoflake() {
     koopa_install_app \
         --name='autoflake' \
@@ -18278,7 +18316,7 @@ koopa_python_pip_install() {
     )
     dl_args=(
         'Python' "${app['python']}"
-        'Packages' "$(koopa_to_string "${pkgs[*]}")"
+        'Packages' "$(koopa_to_string "${pkgs[@]}")"
     )
     if [[ -n "${dict['prefix']}" ]]
     then
@@ -19472,12 +19510,46 @@ koopa_read() {
 }
 
 koopa_reinstall_all_revdeps() {
-    local app_names
+    local app_name flags pos
     koopa_assert_has_args "$#"
-    koopa_can_install_binary || return 1
-    readarray -t app_names <<< "$(koopa_app_json_revdeps "$@")"
-    koopa_assert_is_array_non_empty "${app_names[@]}"
-    koopa_cli_reinstall --push "${app_names[@]}"
+    flags=()
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--'*)
+                flags+=("$1")
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        local install_args revdeps
+        install_args=()
+        if koopa_is_array_non_empty "${flags[@]}"
+        then
+            install_args+=("${flags[@]}")
+        fi
+        install_args+=("$app_name")
+        readarray -t revdeps <<< "$(koopa_app_json_revdeps "$app_name")"
+        if koopa_is_array_non_empty "${revdeps[@]}"
+        then
+            install_args+=("${revdeps[@]}")
+            koopa_dl \
+                "${app_name} reverse dependencies" \
+                "$(koopa_to_string "${revdeps[@]}")"
+        else
+            koopa_alert_note "${app_name} has no reverse dependencies."
+        fi
+        koopa_cli_reinstall "${install_args[@]}"
+    done
     return 0
 }
 
@@ -22871,7 +22943,6 @@ koopa_test() {
         koopa_cd "$prefix"
         ./linter
         ./shunit2
-        ./check-bin-man-consistency
     )
     return 0
 }
@@ -23270,6 +23341,24 @@ koopa_uninstall_aspell() {
 koopa_uninstall_autoconf() {
     koopa_uninstall_app \
         --name='autoconf' \
+        "$@"
+}
+
+koopa_uninstall_autodock_adfr() {
+    koopa_uninstall_app \
+        --name='autodock-adfr' \
+        "$@"
+}
+
+koopa_uninstall_autodock_vina() {
+    koopa_uninstall_app \
+        --name='autodock-vina' \
+        "$@"
+}
+
+koopa_uninstall_autodock() {
+    koopa_uninstall_app \
+        --name='autodock' \
         "$@"
 }
 
