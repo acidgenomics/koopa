@@ -1,17 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Currently seeing this issue on Ubuntu 22 ARM:
-#
-# /opt/koopa/app/anaconda/2022.05/bin/gtk-query-immodules-3.0: error while
-# loading shared libraries: libXi.so.6: cannot open shared object file: No such
-# file or directory
-#
-# This problem is specific to ARM and does not occur on x86 machine.
-
 main() {
     # """
     # Install full Anaconda distribution.
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-10-19.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -42,6 +34,8 @@ ${dict['os_type']}-${dict['arch']}.sh"
     dict['url']="https://repo.anaconda.com/archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     unset -v PYTHONHOME PYTHONPATH
+    # Need to include this on macOS, or we'll fail to locate md5.
+    koopa_add_to_path_end '/sbin'
     koopa_print_env
     "${app['bash']}" "${dict['file']}" -bf -p "${dict['prefix']}"
     koopa_ln \

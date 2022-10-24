@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2022-09-09.
+    # @note Updated 2022-10-19.
     #
     # @seealso
     # - https://github.com/OpenBB-finance/OpenBBTerminal/blob/main/
@@ -37,8 +37,9 @@ refs/tags/${dict['file']}"
     koopa_assert_is_file "${dict['env_file']}"
     koopa_activate_conda "${dict['conda_prefix']}"
     conda env create \
+        --file "${dict['env_file']}" \
         --prefix "${dict['env_prefix']}" \
-        --file "${dict['env_file']}"
+        --yes
     conda activate "${dict['env_prefix']}"
     export PIP_REQUIRE_VIRTUALENV=false
     poetry install

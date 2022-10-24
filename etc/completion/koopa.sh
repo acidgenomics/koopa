@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-10-18.
+    # Updated 2022-10-19.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -91,6 +91,9 @@ __koopa_complete() {
                         'aspell'
                         'attr'
                         'autoconf'
+                        'autodock'
+                        'autodock-adfr'
+                        'autodock-vina'
                         'autoflake'
                         'automake'
                         'aws-cli'
