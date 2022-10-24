@@ -2080,7 +2080,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": false,
+    "outdated": true,
     "reverse_dependencies": [
       "cairo",
       "glib",
