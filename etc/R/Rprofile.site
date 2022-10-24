@@ -511,6 +511,11 @@ local({  # nolint
     ## Quartz {{{2
     ## -------------------------------------------------------------------------
     ## https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/quartz.html
+    ## If you hit this cryptic error with ggplot2 during unit testing:
+    ## > no applicable method for 'depth' applied to an object of class "NULL"
+    ## Refer to this thread on GitHub:
+    ## https://github.com/tidyverse/ggplot2/issues/2514
+    ## May simply need to make the viewport larger.
     if (isTRUE(flag[["macos"]]) && isInstalled("grDevices")) {
         setHook(
             hookName = packageEvent("grDevices", "onLoad"),
