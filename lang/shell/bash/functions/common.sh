@@ -3387,12 +3387,6 @@ is not '${dict['code']}'."
     return 0
 }
 
-koopa_check_bin_man_consistency() {
-    koopa_assert_has_no_args "$#"
-    koopa_r_koopa 'cliCheckBinManConsistency' "$@"
-    return 0
-}
-
 koopa_check_disk() {
     local dict
     koopa_assert_has_args "$#"
@@ -22949,7 +22943,6 @@ koopa_test() {
         koopa_cd "$prefix"
         ./linter
         ./shunit2
-        ./check-bin-man-consistency
     )
     return 0
 }
