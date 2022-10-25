@@ -64,7 +64,7 @@ koopa_r_configure_ldpaths() {
         'hdf5'
         'icu4c'
         'imagemagick'
-        'jpeg'
+        # > 'jpeg'
         'lapack'
         'libgit2'
         'libiconv'
