@@ -53,6 +53,7 @@ main() {
     # Consider adding a system check for zlib in a future update.
     #
     # See also:
+    # - https://devguide.python.org/
     # - https://docs.python.org/3/using/unix.html
     # - https://docs.brew.sh/Homebrew-and-Python
     # - Installing multiple versions:
