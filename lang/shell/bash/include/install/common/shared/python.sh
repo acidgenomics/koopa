@@ -53,6 +53,8 @@ main() {
     # - https://docs.brew.sh/Homebrew-and-Python
     # - Installing multiple versions:
     #   https://github.com/python/cpython#installing-multiple-versions
+    # - Latest configuration recipe:
+    #   https://github.com/python/cpython/blob/3.11/configure
     # - macOS install recipes:
     #   https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/python@3.10.rb
