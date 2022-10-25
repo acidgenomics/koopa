@@ -50,10 +50,13 @@ main() {
     # See also:
     # - https://docs.python.org/3/using/unix.html
     # - https://docs.brew.sh/Homebrew-and-Python
-    # - https://github.com/macports/macports-ports/blob/master/lang/
-    #     python310/Portfile
     # - Installing multiple versions:
     #   https://github.com/python/cpython#installing-multiple-versions
+    # - macOS install recipes:
+    #   https://github.com/Homebrew/homebrew-core/blob/master/
+    #     Formula/python@3.10.rb
+    #   https://github.com/macports/macports-ports/blob/master/lang/
+    #     python310/Portfile
     # - Python lib needs to be in rpath:
     #   https://stackoverflow.com/questions/43333207
     #   https://bugs.python.org/issue36659
