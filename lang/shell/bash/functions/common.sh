@@ -11915,8 +11915,6 @@ ${dict['version2']}"
             bool['link_in_opt']=0
             ;;
     esac
-    [[ -d "${dict['prefix']}" ]] && \
-        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     if [[ -n "${dict['prefix']}" ]] && [[ "${bool['prefix_check']}" -eq 1 ]]
     then
         if [[ -d "${dict['prefix']}" ]]
@@ -18230,6 +18228,11 @@ ${dict['py_maj_min_ver']}"
     if [[ "${dict['pip']}" -eq 1 ]]
     then
         case "${dict['py_version']}" in
+            '3.11.'*)
+                dict['pip_version']='22.3'
+                dict['setuptools_version']='65.5.0'
+                dict['wheel_version']='0.37.1'
+                ;;
             '3.10.'*)
                 dict['pip_version']='22.3'
                 dict['setuptools_version']='65.5.0'
