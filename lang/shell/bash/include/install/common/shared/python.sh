@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME We're seeing ssl detection failure on macOS. Works on Linux though.
+# MODULE__SSL_STATE = "missing"
+
 # FIXME Now hitting this ssl configuration issue with Python 3.11:
 # > WARNING: pip is configured with locations that require TLS/SSL,
 # > however the ssl module in Python is not available.
@@ -13,6 +16,14 @@
 #     import _ssl             # if we can't import it, let the error propagate
 #     ^^^^^^^^^^^
 # ModuleNotFoundError: No module named '_ssl'
+
+# FIXME tcl-tk doesn't seem to be getting picked up correctly.
+# Missing from sysconfig when comparing 3.10 to 3.11:
+# > TCLTK_INCLUDES = "-I/opt/koopa/app/tcl-tk/8.6.12/include"
+# > TCLTK_LIBS = "-L/opt/koopa/app/tcl-tk/8.6.12/lib"
+
+# FIXME See if we should suppress this clang warning on macOS:
+# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
 
 main() {
     # """
@@ -39,6 +50,8 @@ main() {
     # See also:
     # - https://docs.python.org/3/using/unix.html
     # - https://docs.brew.sh/Homebrew-and-Python
+    # - https://github.com/macports/macports-ports/blob/master/lang/
+    #     python310/Portfile
     # - Installing multiple versions:
     #   https://github.com/python/cpython#installing-multiple-versions
     # - Python lib needs to be in rpath:
@@ -72,22 +85,10 @@ main() {
         'xz'
         # unzip deps: none.
         'unzip'
-    )
-    # NOTE Inclusion of readline is currently causing a cryptic build error on
-    # macOS that is difficult to debug.
-    if koopa_is_linux
-    then
-        deps+=(
-            # readline deps: ncurses.
-            'readline'
-        )
-    fi
-    deps+=(
-        # gdbm deps: readline.
-        'gdbm'
+        # libedit deps: ncurses.
+        'libedit'
         # sqlite deps: readline.
         'sqlite'
-        'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
     declare -A app=(
@@ -100,7 +101,6 @@ main() {
         ['name']='python'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
@@ -119,50 +119,40 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "Python-${dict['version']}"
     conf_args=(
+        # > '--enable-ipv6'
+        # > '--enable-loadable-sqlite-extensions'
+        # > '--enable-optimizations'
+        # > '--with-dbmliborder=gdbm:ndbm'
+        # > '--with-lto'
         "--prefix=${dict['prefix']}"
-        '--enable-ipv6'
-        '--enable-loadable-sqlite-extensions'
-        '--enable-optimizations'
-        '--with-dbmliborder=gdbm:ndbm'
+        '--with-computed-gotos'
         '--with-ensurepip=install' # or 'upgrade'.
-        '--with-lto'
         "--with-openssl=${dict['openssl']}"
-        "--with-openssl-rpath=${dict['openssl']}/lib"
-        '--with-ssl-default-suites=openssl' # or 'python'
+        '--with-openssl-rpath=auto'
+        '--with-readline=editline'
         '--with-system-expat'
         '--with-system-ffi'
         '--with-system-libmpdec'
-        # Added to Python 3.11 recipe by Homebrew team.
-        # > '--with-readline=editline'
     )
     if koopa_is_macos
     then
         app['dtrace']='/usr/sbin/dtrace'
         [[ -x "${app['dtrace']}" ]] || return 1
-        dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-        conf_args+=(
-            # > --enable-universalsdk[=SDKDIR]
-            "--enable-framework=${dict['libexec']}"
-            "--with-dtrace=${app['dtrace']}"
-            # Python 3.11 Homebrew recipe suggestion:
-            # > '--with-dbmliborder=ndbm'
-        )
-    else
-        conf_args+=(
-            # Don't set this above, conflicts with '--enable-framework'.
-            '--enable-shared'
-            # Python 3.11 Homebrew recipe suggestion:
-            # > '--with-dbmliborder=bdb'
-        )
+        conf_args+=("--with-dtrace=${app['dtrace']}")
     fi
-    # Can also set 'CFLAGS_NODIST', 'LDFLAGS_NODIST', 'LIBS' here.
-    # FIXME May need to set CFLAGS_NODIST, LDFLAGS_NODIST for Python 3.11?
+    # Consider setting LIBS here?
     conf_args+=(
-        "CFLAGS=${CFLAGS:-}"
-        "CPPFLAGS=${CPPFLAGS:-}"
-        "LDFLAGS=${LDFLAGS:-}"
-        "TCLTK_CFLAGS=-I${dict['tcl_tk']}/include"
-        "TCLTK_LIBS=-L${dict['tcl_tk']}/lib"
+        'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
+        'SETUPTOOLS_USE_DISTUTILS=stdlib'
+        # > "CFLAGS=${CFLAGS:-}"
+        # > "CFLAGS_NODIST=${CFLAGS:-}"
+        # > "CPPFLAGS=${CPPFLAGS:-}"
+        # > "LDFLAGS=${LDFLAGS:-}"
+        # > "LDFLAGS_NODIST=${LDFLAGS:-}"
+        # FIXME Set TCLTK_INCLUDES instead here?
+        # This is what gets returned in Python 3.10 sysconfig.
+        # > "TCLTK_CFLAGS=-I${dict['tcl_tk']}/include"
+        # > "TCLTK_LIBS=-L${dict['tcl_tk']}/lib"
         # Consider setting these, as recommended by Python 3.11 installer:
         # BZIP2_CFLAGS
         # BZIP2_LIBS
@@ -193,23 +183,25 @@ ${dict['file']}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    if koopa_is_macos
-    then
-        "${app['make']}" install PYTHONAPPSDIR="${dict['libexec']}"
-        (
-            local framework
-            koopa_cd "${dict['prefix']}"
-            framework="libexec/Python.framework/Versions/${dict['maj_min_ver']}"
-            koopa_assert_is_dir "$framework"
-            koopa_ln "${framework}/bin" 'bin'
-            koopa_ln "${framework}/include" 'include'
-            koopa_ln "${framework}/lib" 'lib'
-            koopa_ln "${framework}/share" 'share'
-        )
-    else
-        # > "${app['make']}" test
-        "${app['make']}" install
-    fi
+    # FIXME macOS framework approach.
+    # > if koopa_is_macos
+    # > then
+    # >     "${app['make']}" install PYTHONAPPSDIR="${dict['libexec']}"
+    # >     (
+    # >         local framework
+    # >         koopa_cd "${dict['prefix']}"
+    # >         framework="libexec/Python.framework/Versions/${dict['maj_min_ver']}"
+    # >         koopa_assert_is_dir "$framework"
+    # >         koopa_ln "${framework}/bin" 'bin'
+    # >         koopa_ln "${framework}/include" 'include'
+    # >         koopa_ln "${framework}/lib" 'lib'
+    # >         koopa_ln "${framework}/share" 'share'
+    # >     )
+    # > else
+    # >     # > "${app['make']}" test
+    # >     "${app['make']}" install
+    # > fi
+    "${app['make']}" install
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
     # Ensure 'python' symlink exists. Otherwise some programs, such as GATK can
@@ -220,5 +212,9 @@ ${dict['file']}"
     )
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
+    koopa_alert 'Checking OpenSSL configuration of ssl module.'
+    "${app['python']}" -c 'import ssl'
+    koopa_alert 'Checking pip configuration.'
+    "${app['python']}" -m pip --version
     return 0
 }
