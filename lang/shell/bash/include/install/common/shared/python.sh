@@ -105,8 +105,7 @@ main() {
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
-        "${dict['openssl']}" \
-        "${dict['tcl_tk']}"
+        "${dict['openssl']}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="Python-${dict['version']}.tar.xz"
     dict['url']="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
@@ -119,12 +118,12 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "Python-${dict['version']}"
     conf_args=(
-        # > '--enable-ipv6'
-        # > '--enable-loadable-sqlite-extensions'
         # > '--enable-optimizations'
         # > '--with-dbmliborder=gdbm:ndbm'
         # > '--with-lto'
         "--prefix=${dict['prefix']}"
+        '--enable-ipv6'
+        '--enable-loadable-sqlite-extensions'
         '--with-computed-gotos'
         '--with-ensurepip=install' # or 'upgrade'.
         "--with-openssl=${dict['openssl']}"
@@ -138,42 +137,17 @@ ${dict['file']}"
     then
         app['dtrace']='/usr/sbin/dtrace'
         [[ -x "${app['dtrace']}" ]] || return 1
-        conf_args+=("--with-dtrace=${app['dtrace']}")
+        dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+        conf_args+=(
+            "--enable-framework=${dict['libexec']}"
+            "--with-dtrace=${app['dtrace']}"
+        )
+    else
+        conf_args+=('--enable-shared')
     fi
-    # Consider setting LIBS here?
     conf_args+=(
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
         'SETUPTOOLS_USE_DISTUTILS=stdlib'
-        # > "CFLAGS=${CFLAGS:-}"
-        # > "CFLAGS_NODIST=${CFLAGS:-}"
-        # > "CPPFLAGS=${CPPFLAGS:-}"
-        # > "LDFLAGS=${LDFLAGS:-}"
-        # > "LDFLAGS_NODIST=${LDFLAGS:-}"
-        # FIXME Set TCLTK_INCLUDES instead here?
-        # This is what gets returned in Python 3.10 sysconfig.
-        # > "TCLTK_CFLAGS=-I${dict['tcl_tk']}/include"
-        # > "TCLTK_LIBS=-L${dict['tcl_tk']}/lib"
-        # Consider setting these, as recommended by Python 3.11 installer:
-        # BZIP2_CFLAGS
-        # BZIP2_LIBS
-        # GDBM_CFLAGS
-        # GDBM_LIBS
-        # LIBB2_CFLAGS
-        # LIBB2_LIBS
-        # LIBCRYPT_CFLAGS
-        # LIBCRYPT_LIBS
-        # LIBLZMA_CFLAGS
-        # LIBLZMA_LIBS
-        # LIBNSL_CFLAGS
-        # LIBNSL_LIBS
-        # LIBSQLITE3_CFLAGS
-        # LIBSQLITE3_LIBS
-        # LIBUUID_CFLAGS
-        # LIBUUID_LIBS
-        # X11_CFLAGS
-        # X11_LIBS
-        # ZLIB_CFLAGS
-        # ZLIB_LIBS
     )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
@@ -183,25 +157,23 @@ ${dict['file']}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    # FIXME macOS framework approach.
-    # > if koopa_is_macos
-    # > then
-    # >     "${app['make']}" install PYTHONAPPSDIR="${dict['libexec']}"
-    # >     (
-    # >         local framework
-    # >         koopa_cd "${dict['prefix']}"
-    # >         framework="libexec/Python.framework/Versions/${dict['maj_min_ver']}"
-    # >         koopa_assert_is_dir "$framework"
-    # >         koopa_ln "${framework}/bin" 'bin'
-    # >         koopa_ln "${framework}/include" 'include'
-    # >         koopa_ln "${framework}/lib" 'lib'
-    # >         koopa_ln "${framework}/share" 'share'
-    # >     )
-    # > else
-    # >     # > "${app['make']}" test
-    # >     "${app['make']}" install
-    # > fi
-    "${app['make']}" install
+    if koopa_is_macos
+    then
+        "${app['make']}" install PYTHONAPPSDIR="${dict['libexec']}"
+        (
+            local framework
+            koopa_cd "${dict['prefix']}"
+            framework="libexec/Python.framework/Versions/${dict['maj_min_ver']}"
+            koopa_assert_is_dir "$framework"
+            koopa_ln "${framework}/bin" 'bin'
+            koopa_ln "${framework}/include" 'include'
+            koopa_ln "${framework}/lib" 'lib'
+            koopa_ln "${framework}/share" 'share'
+        )
+    else
+        # > "${app['make']}" test
+        "${app['make']}" install
+    fi
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
     # Ensure 'python' symlink exists. Otherwise some programs, such as GATK can
