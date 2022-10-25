@@ -169,7 +169,7 @@ koopa_r_configure_environ() {
         'harfbuzz'
         'icu4c'
         'imagemagick'
-        'jpeg'
+        # > 'jpeg'
         'lapack'
         'libgit2'
         'libjpeg-turbo'
