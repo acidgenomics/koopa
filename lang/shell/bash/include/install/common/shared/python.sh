@@ -2,6 +2,10 @@
 
 # FIXME Python 3.11 is not configuring ssl module correctly on macOS.
 #
+# Here are links to differences in configure script between 3.10 and 3.11:
+# - https://github.com/python/cpython/blob/3.10/configure#L17844
+# - https://github.com/python/cpython/blob/3.11/configure#L23194
+#
 # This is correct on Linux, erroring on macOS...
 # checking whether OpenSSL provides required ssl module APIs... no
 # checking whether OpenSSL provides required hashlib module APIs... no
