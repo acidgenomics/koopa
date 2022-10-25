@@ -5,6 +5,15 @@
 # > however the ssl module in Python is not available.
 # > "Can't connect to HTTPS URL because the SSL module is not available.
 
+# FIXME Need to check that this works at end of install.
+# >>> import ssl
+# Traceback (most recent call last):
+#   File "<stdin>", line 1, in <module>
+#   File "/opt/koopa/app/python/3.11.0/libexec/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 100, in <module>
+#     import _ssl             # if we can't import it, let the error propagate
+#     ^^^^^^^^^^^
+# ModuleNotFoundError: No module named '_ssl'
+
 main() {
     # """
     # Install Python.
@@ -29,6 +38,7 @@ main() {
     #
     # See also:
     # - https://docs.python.org/3/using/unix.html
+    # - https://docs.brew.sh/Homebrew-and-Python
     # - https://github.com/python/cpython#installing-multiple-versions
     # - https://stackoverflow.com/questions/43333207
     # - https://bugs.python.org/issue36659
@@ -109,7 +119,7 @@ ${dict['file']}"
         '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
         '--with-dbmliborder=gdbm:ndbm'
-        '--with-ensurepip=upgrade' # or 'install'.
+        '--with-ensurepip=install' # or 'upgrade'.
         '--with-lto'
         "--with-openssl=${dict['openssl']}"
         "--with-openssl-rpath=${dict['openssl']}/lib"
