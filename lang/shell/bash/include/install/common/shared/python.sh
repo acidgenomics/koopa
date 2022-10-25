@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Now hitting this ssl configuration issue with Python 3.11:
+# > WARNING: pip is configured with locations that require TLS/SSL,
+# > however the ssl module in Python is not available.
+# > "Can't connect to HTTPS URL because the SSL module is not available.
+
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-10-18.
+    # @note Updated 2022-10-25.
     #
     # Python includes '/usr/local' in '-I' and '-L' compilation arguments by
     # default. We should work on restricting this in a future build.
@@ -11,9 +16,11 @@ main() {
     # Check config with:
     # > ldd /usr/local/bin/python3
     #
-    # Warning: 'make install' can overwrite or masquerade the python3 binary.
-    # 'make altinstall' is therefore recommended instead of make install since
-    # it only installs 'exec_prefix/bin/pythonversion'.
+    # 'make altinstall' target prevents the installation of files with only
+    # Python's major version in its name. This allows us to link multiple
+    # versioned Python formulae. 'make install' can overwrite or masquerade the
+    # python3 binary. 'make altinstall' is therefore recommended instead of
+    # 'make install' since it only installs 'exec_prefix/bin/pythonversion'.
     #
     # To customize g++ path, specify 'CXX' environment variable
     # or use '--with-cxx-main=/usr/bin/g++'.
@@ -22,8 +29,11 @@ main() {
     #
     # See also:
     # - https://docs.python.org/3/using/unix.html
+    # - https://github.com/python/cpython#installing-multiple-versions
     # - https://stackoverflow.com/questions/43333207
     # - https://bugs.python.org/issue36659
+    # - https://stackoverflow.com/questions/41328451/
+    # - https://github.com/Homebrew/homebrew-core/pull/113811
     # """
     local app deps dict
     koopa_assert_has_no_args "$#"
@@ -99,15 +109,16 @@ ${dict['file']}"
         '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
         '--with-dbmliborder=gdbm:ndbm'
-        '--with-ensurepip=install' # or 'upgrade'.
+        '--with-ensurepip=upgrade' # or 'install'.
         '--with-lto'
         "--with-openssl=${dict['openssl']}"
-        '--with-openssl-rpath=auto'
+        "--with-openssl-rpath=${dict['openssl']}/lib"
+        '--with-ssl-default-suites=openssl' # or 'python'
         '--with-system-expat'
         '--with-system-ffi'
         '--with-system-libmpdec'
-        "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
-        "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
+        # Added to Python 3.11 recipe by Homebrew team.
+        # > '--with-readline=editline'
     )
     if koopa_is_macos
     then
@@ -115,17 +126,49 @@ ${dict['file']}"
         [[ -x "${app['dtrace']}" ]] || return 1
         dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
         conf_args+=(
+            # > --enable-universalsdk[=SDKDIR]
             "--enable-framework=${dict['libexec']}"
             "--with-dtrace=${app['dtrace']}"
+            # Python 3.11 Homebrew recipe suggestion:
+            # > '--with-dbmliborder=ndbm'
         )
     else
-        conf_args+=('--enable-shared')
+        conf_args+=(
+            # Don't set this above, conflicts with '--enable-framework'.
+            '--enable-shared'
+            # Python 3.11 Homebrew recipe suggestion:
+            # > '--with-dbmliborder=bdb'
+        )
     fi
-    # Can also set 'CFLAGS_NODIST', 'LDFLAGS_NODIST' here.
+    # Can also set 'CFLAGS_NODIST', 'LDFLAGS_NODIST', 'LIBS' here.
+    # FIXME May need to set CFLAGS_NODIST, LDFLAGS_NODIST for Python 3.11?
     conf_args+=(
         "CFLAGS=${CFLAGS:-}"
         "CPPFLAGS=${CPPFLAGS:-}"
         "LDFLAGS=${LDFLAGS:-}"
+        "TCLTK_CFLAGS=-I${dict['tcl_tk']}/include"
+        "TCLTK_LIBS=-L${dict['tcl_tk']}/lib"
+        # Consider setting these, as recommended by Python 3.11 installer:
+        # BZIP2_CFLAGS
+        # BZIP2_LIBS
+        # GDBM_CFLAGS
+        # GDBM_LIBS
+        # LIBB2_CFLAGS
+        # LIBB2_LIBS
+        # LIBCRYPT_CFLAGS
+        # LIBCRYPT_LIBS
+        # LIBLZMA_CFLAGS
+        # LIBLZMA_LIBS
+        # LIBNSL_CFLAGS
+        # LIBNSL_LIBS
+        # LIBSQLITE3_CFLAGS
+        # LIBSQLITE3_LIBS
+        # LIBUUID_CFLAGS
+        # LIBUUID_LIBS
+        # X11_CFLAGS
+        # X11_LIBS
+        # ZLIB_CFLAGS
+        # ZLIB_LIBS
     )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
