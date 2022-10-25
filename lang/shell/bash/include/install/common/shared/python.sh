@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 
-# FIXME We're seeing ssl detection failure on macOS. Works on Linux though.
+# FIXME Python 3.11 is not configuring ssl module correctly on macOS.
+#
+# This is correct on Linux, erroring on macOS...
+# checking whether OpenSSL provides required ssl module APIs... no
+# checking whether OpenSSL provides required hashlib module APIs... no
+#
+# We're seeing ssl detection failure on macOS. Works on Linux though.
 # MODULE__SSL_STATE = "missing"
-
-# FIXME Now hitting this ssl configuration issue with Python 3.11:
+#
 # > WARNING: pip is configured with locations that require TLS/SSL,
 # > however the ssl module in Python is not available.
 # > "Can't connect to HTTPS URL because the SSL module is not available.
-
-# FIXME Need to check that this works at end of install.
+#
 # >>> import ssl
 # Traceback (most recent call last):
 #   File "<stdin>", line 1, in <module>
@@ -17,13 +21,10 @@
 #     ^^^^^^^^^^^
 # ModuleNotFoundError: No module named '_ssl'
 
-# FIXME tcl-tk doesn't seem to be getting picked up correctly.
+# FIXME tcl-tk doesn't seem to be getting picked up correctly for Python 3.11?
 # Missing from sysconfig when comparing 3.10 to 3.11:
 # > TCLTK_INCLUDES = "-I/opt/koopa/app/tcl-tk/8.6.12/include"
 # > TCLTK_LIBS = "-L/opt/koopa/app/tcl-tk/8.6.12/lib"
-
-# FIXME See if we should suppress this clang warning on macOS:
-# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
 
 main() {
     # """
@@ -90,8 +91,11 @@ main() {
         'unzip'
         # libedit deps: ncurses.
         'libedit'
+        # gdbm deps: readline.
+        'gdbm'
         # sqlite deps: readline.
         'sqlite'
+        'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
     declare -A app=(
@@ -104,11 +108,13 @@ main() {
         ['name']='python'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
-        "${dict['openssl']}"
+        "${dict['openssl']}" \
+        "${dict['tcl_tk']}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="Python-${dict['version']}.tar.xz"
     dict['url']="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
@@ -126,14 +132,17 @@ ${dict['file']}"
         '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
         '--with-computed-gotos'
+        '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install' # or 'upgrade'.
         '--with-lto'
         "--with-openssl=${dict['openssl']}"
-        '--with-openssl-rpath=auto'
+        "--with-openssl-rpath=${dict['openssl']}/lib" # or 'auto'.
         '--with-readline=editline'
         '--with-system-expat'
         '--with-system-ffi'
         '--with-system-libmpdec'
+        "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
+        "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
     )
     if koopa_is_macos
     then
@@ -149,7 +158,7 @@ ${dict['file']}"
     fi
     conf_args+=(
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
-        'SETUPTOOLS_USE_DISTUTILS=stdlib'
+        # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
     )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
