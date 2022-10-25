@@ -39,11 +39,16 @@ main() {
     # See also:
     # - https://docs.python.org/3/using/unix.html
     # - https://docs.brew.sh/Homebrew-and-Python
-    # - https://github.com/python/cpython#installing-multiple-versions
-    # - https://stackoverflow.com/questions/43333207
-    # - https://bugs.python.org/issue36659
-    # - https://stackoverflow.com/questions/41328451/
-    # - https://github.com/Homebrew/homebrew-core/pull/113811
+    # - Installing multiple versions:
+    #   https://github.com/python/cpython#installing-multiple-versions
+    # - Python lib needs to be in rpath:
+    #   https://stackoverflow.com/questions/43333207
+    #   https://bugs.python.org/issue36659
+    # - Python 3.11 update:
+    #   https://github.com/Homebrew/homebrew-core/pull/113811
+    # - OpenSSL configuration issues:
+    #   https://stackoverflow.com/questions/45954528/
+    #   https://stackoverflow.com/questions/41328451/
     # """
     local app deps dict
     koopa_assert_has_no_args "$#"
