@@ -121,14 +121,13 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "Python-${dict['version']}"
     conf_args=(
-        # > '--enable-optimizations'
-        # > '--with-dbmliborder=gdbm:ndbm'
-        # > '--with-lto'
         "--prefix=${dict['prefix']}"
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
+        '--enable-optimizations'
         '--with-computed-gotos'
         '--with-ensurepip=install' # or 'upgrade'.
+        '--with-lto'
         "--with-openssl=${dict['openssl']}"
         '--with-openssl-rpath=auto'
         '--with-readline=editline'
