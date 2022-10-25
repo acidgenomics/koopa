@@ -4400,11 +4400,11 @@
     "bin": ["zellij"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-09",
+    "date": "2022-10-25",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "0.31.4"
+    "version": "0.32.0"
   },
   "zip": {
     "bin": ["zip"],
