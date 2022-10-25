@@ -141,7 +141,9 @@ ${dict['file']}"
         '--with-system-expat'
         '--with-system-ffi'
         '--with-system-libmpdec'
+        # NOTE This option has been removed in Python 3.11.
         "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
+        # NOTE This option has been removed in Python 3.11.
         "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
     )
     if koopa_is_macos
