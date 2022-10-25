@@ -3188,18 +3188,18 @@
   "python": {
     "bin": [
       "2to3",
-      "2to3-3.11",
+      "2to3-3.10",
       "idle3",
-      "idle3.11",
+      "idle3.10",
       "pip3",
-      "pip3.11",
+      "pip3.10",
       "pydoc3",
-      "pydoc3.11",
+      "pydoc3.10",
       "python",
       "python3",
       "python3-config",
-      "python3.11",
-      "python3.11-config"
+      "python3.10",
+      "python3.10-config"
     ],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
@@ -3208,11 +3208,11 @@
       "bzip2",
       "expat",
       "gdbm",
+      "libedit",
       "libffi",
       "mpdecimal",
       "ncurses",
       "openssl3",
-      "readline",
       "sqlite",
       "tcl-tk",
       "unzip",
@@ -3220,8 +3220,8 @@
       "zlib"
     ],
     "homebrew": true,
-    "man1": ["python3.1", "python3.11.1"],
-    "outdated": false,
+    "man1": ["python3.1", "python3.10.1"],
+    "outdated": true,
     "reverse_dependencies": [
       "meson",
       "ninja",
@@ -3273,7 +3273,7 @@
       "llvm"
     ],
     "url": ["https://www.python.org/downloads/"],
-    "version": "3.11.0"
+    "version": "3.10.8"
   },
   "r": {
     "bin": [],
