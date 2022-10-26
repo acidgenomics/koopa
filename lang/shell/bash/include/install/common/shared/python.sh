@@ -33,7 +33,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-10-25.
+    # @note Updated 2022-10-26.
     #
     # Python includes '/usr/local' in '-I' and '-L' compilation arguments by
     # default. We should work on restricting this in a future build.
@@ -122,6 +122,7 @@ main() {
         "${dict['bzip2']}" \
         "${dict['openssl']}" \
         "${dict['tcl_tk']}"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="Python-${dict['version']}.tar.xz"
     dict['url']="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
@@ -137,11 +138,11 @@ ${dict['file']}"
         "--prefix=${dict['prefix']}"
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
-        '--enable-optimizations'
+        # FIXME '--enable-optimizations'
         '--with-computed-gotos'
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install' # or 'upgrade'.
-        '--with-lto'
+        # FIXME '--with-lto'
         "--with-openssl=${dict['openssl']}"
         "--with-openssl-rpath=${dict['openssl']}/lib" # or 'auto'.
         '--with-readline=editline'
@@ -149,9 +150,9 @@ ${dict['file']}"
         '--with-system-ffi'
         '--with-system-libmpdec'
         # NOTE This option has been removed in Python 3.11.
-        "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
+        # > "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
         # NOTE This option has been removed in Python 3.11.
-        "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
+        # > "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
     )
     if koopa_is_macos
     then
@@ -167,7 +168,13 @@ ${dict['file']}"
     fi
     conf_args+=(
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
+        # NOTE This is defined in the MacPorts recipe.
         # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
+        # FIXME Do these even get picked up correctly?
+        # FIXME Use TCLTK_CFLAGS or TCLTK_INCLUDES?
+        "TCLTK_CFLAGS=-I${dict['tcl_tk']}/include"
+        "TCLTK_INCLUDES=-I${dict['tcl_tk']}/include"
+        "TCLTK_LIBS=-L${dict['tcl_tk']}/lib"
     )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
@@ -179,7 +186,7 @@ ${dict['file']}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     if koopa_is_macos
     then
-        "${app['make']}" install PYTHONAPPSDIR="${dict['libexec']}"
+        "${app['make']}" altinstall PYTHONAPPSDIR="${dict['libexec']}"
         (
             local framework
             koopa_cd "${dict['prefix']}"
@@ -192,7 +199,7 @@ ${dict['file']}"
         )
     else
         # > "${app['make']}" test
-        "${app['make']}" install
+        "${app['make']}" altinstall
     fi
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
@@ -200,7 +207,12 @@ ${dict['file']}"
     # break due to lack of correct 'python' binary in PATH.
     (
         koopa_cd "${dict['prefix']}/bin"
-        koopa_ln "${dict['name']}${dict['maj_min_ver']}" "${dict['name']}"
+        koopa_ln \
+            "${dict['name']}${dict['maj_min_ver']}" \
+            "${dict['name']}${dict['maj_ver']}"
+        koopa_ln \
+            "${dict['name']}${dict['maj_min_ver']}" \
+            "${dict['name']}"
     )
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
