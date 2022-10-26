@@ -135,13 +135,14 @@ ${dict['file']}"
         "--prefix=${dict['prefix']}"
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
-        '--enable-optimizations'
+        # FIXME '--enable-optimizations'
         '--with-computed-gotos'
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install' # or 'upgrade'.
-        # > '--with-lto'
         "--with-openssl=${dict['openssl']}"
-        "--with-openssl-rpath=${dict['openssl']}/lib" # or 'auto'.
+        # FIXME This currently sets the rpath incorrectly:
+        # ld: unknown option: -rpath=/opt/koopa/app/openssl3/3.0.5/lib
+        # > '--with-openssl-rpath=auto'
         '--with-readline=editline'
         '--with-system-expat'
         '--with-system-ffi'
@@ -155,7 +156,37 @@ ${dict['file']}"
         conf_args+=(
             "--enable-framework=${dict['libexec']}"
             "--with-dtrace=${app['dtrace']}"
+            # FIXME '--with-lto'
         )
+        # Override the auto-detection of libmpdec, which assumes a universal
+        # build. This is currently an inreplace due to:
+        # https://github.com/python/cpython/issues/98557.
+        dict['arch']="$(koopa_arch)"
+        case "${dict['arch']}" in
+            'aarch64')
+                dict['decimal_arch']='uint128'
+                ;;
+            'x86_64')
+                dict['decimal_arch']='x64'
+                ;;
+            *)
+                koopa_stop 'Unsupported architecture.'
+                ;;
+        esac
+        export PYTHON_DECIMAL_WITH_MACHINE="${dict['decimal_arch']}"
+        koopa_find_and_replace_in_file \
+            --fixed \
+            --pattern='libmpdec_machine=universal' \
+            --replacement="libmpdec_machine=${dict['decimal_arch']}" \
+            'configure'
+        # https://github.com/python/cpython/issues/98673
+        # FIXME Can we just define this in config?
+        # > ac_cv_working_openssl_ssl=yes
+        # > koopa_find_and_replace_in_file \
+        # >     --fixed \
+        # >     --pattern='ac_cv_working_openssl_ssl=no' \
+        # >     --replacement='ac_cv_working_openssl_ssl=yes' \
+        # >     'configure'
     else
         conf_args+=('--enable-shared')
     fi
@@ -163,10 +194,15 @@ ${dict['file']}"
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
         # NOTE This is defined in the MacPorts recipe.
         # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
+        # Avoid OpenSSL checks that are problematic for Python 3.11.0.
+        'ac_cv_working_openssl_hashlib=yes'
+        'ac_cv_working_openssl_ssl=yes'
+        'py_cv_module__tkinter=disabled'
     )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
-        "${dict['bzip2']}/lib"
+        "${dict['bzip2']}/lib" \
+        "${dict['openssl']}/lib"
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
@@ -205,6 +241,7 @@ ${dict['file']}"
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
     koopa_alert 'Checking module integrity.'
+    # FIXME Check _hashlib, _ssl ?
     "${app['python']}" -c 'import _ctypes'
     "${app['python']}" -c 'import _decimal'
     "${app['python']}" -c 'import _gdbm'
@@ -213,6 +250,6 @@ ${dict['file']}"
     "${app['python']}" -c 'import ssl'
     "${app['python']}" -c 'import zlib'
     koopa_alert 'Checking pip configuration.'
-    "${app['python']}" -m pip --version
+    "${app['python']}" -m pip list --format='columns'
     return 0
 }
