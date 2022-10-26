@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Python 3.11.0 is creating a weird pip3.10 binary.
+# Consider removing this in an update.
+
 main() {
     # """
     # Install Python.
