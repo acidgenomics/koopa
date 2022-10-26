@@ -26,6 +26,7 @@
 # ModuleNotFoundError: No module named '_ssl'
 
 # FIXME TkInter module isn't building correctly for Python 3.11.0.
+#
 # TkInter module is not configuring correctly.
 # MODULE__TKINTER_STATE=missing
 # python3 -m tkinter
@@ -34,6 +35,22 @@
 # You have probably forgotten to define TKPATH in the Modules/Setup file
 # https://stackoverflow.com/questions/5459444/
 # https://notmatthancock.github.io/2015/06/17/building-python-from-source.html
+
+# FIXME Seeing this tkinter issue with Python 3.10.8 on macOS:
+#
+# RuntimeError: tk.h version (8.6) doesn't match libtk.a version (8.5)
+# https://github.com/actions/setup-python/issues/402
+# The problem is that Python is attempting to use this:
+# /System/Library/Frameworks/Tk.framework
+#
+# Here's how to install tkinter correctly manually.
+# https://formulae.brew.sh/formula/python-tk@3.10
+
+# FIXME Can we manually install ssl module like this if necessary?
+
+# FIXME Disable tkinter in our module list.
+# # Disable _tkinter - this is built in a separate formula python-tk
+# inreplace "setup.py", "DISABLED_MODULE_LIST = []", "DISABLED_MODULE_LIST = ['_tkinter']"
 
 main() {
     # """
@@ -139,25 +156,30 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "Python-${dict['version']}"
     conf_args=(
+        # Enabling LTO on Linux makes 'libpython3.*.a' unusable for anyone whose
+        # GCC install does not match the one in CI exactly (major and minor
+        # version).
+        # https://github.com/orgs/Homebrew/discussions/3734
+        # > '--with-lto'
         "--prefix=${dict['prefix']}"
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
-        # FIXME '--enable-optimizations'
+        '--enable-optimizations'
         '--with-computed-gotos'
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install' # or 'upgrade'.
-        # FIXME '--with-lto'
         "--with-openssl=${dict['openssl']}"
         "--with-openssl-rpath=${dict['openssl']}/lib" # or 'auto'.
         '--with-readline=editline'
         '--with-system-expat'
         '--with-system-ffi'
         '--with-system-libmpdec'
+        # FIXME This isn't configuring correctly on macOS.
         # NOTE This option has been removed in Python 3.11.
         "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
         # NOTE This option has been removed in Python 3.11.
         # Also add LDFLAGS here too (e.g. '-ltcl8.6 -ltk8.6')?
-        "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
+        "--with-tcltk-libs=-L${dict['tcl_tk']}/lib -ltcl8.6 -ltk8.6"
     )
     if koopa_is_macos
     then
@@ -220,8 +242,14 @@ ${dict['file']}"
     )
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
-    koopa_alert 'Checking OpenSSL configuration of ssl module.'
+    koopa_alert 'Checking module integrity.'
+    "${app['python']}" -c 'import _ctypes'
+    "${app['python']}" -c 'import _decimal'
+    "${app['python']}" -c 'import _gdbm'
+    "${app['python']}" -c 'import pyexpat'
+    "${app['python']}" -c 'import sqlite3'
     "${app['python']}" -c 'import ssl'
+    "${app['python']}" -c 'import zlib'
     koopa_alert 'Checking pip configuration.'
     "${app['python']}" -m pip --version
     return 0
