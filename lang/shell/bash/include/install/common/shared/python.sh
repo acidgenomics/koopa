@@ -25,33 +25,6 @@
 #     ^^^^^^^^^^^
 # ModuleNotFoundError: No module named '_ssl'
 
-# FIXME TkInter module isn't building correctly for Python 3.11.0.
-#
-# TkInter module is not configuring correctly.
-# MODULE__TKINTER_STATE=missing
-# python3 -m tkinter
-# https://docs.python.org/3.11/library/tkinter.html
-# https://wiki.python.org/moin/TkInter
-# You have probably forgotten to define TKPATH in the Modules/Setup file
-# https://stackoverflow.com/questions/5459444/
-# https://notmatthancock.github.io/2015/06/17/building-python-from-source.html
-
-# FIXME Seeing this tkinter issue with Python 3.10.8 on macOS:
-#
-# RuntimeError: tk.h version (8.6) doesn't match libtk.a version (8.5)
-# https://github.com/actions/setup-python/issues/402
-# The problem is that Python is attempting to use this:
-# /System/Library/Frameworks/Tk.framework
-#
-# Here's how to install tkinter correctly manually.
-# https://formulae.brew.sh/formula/python-tk@3.10
-
-# FIXME Can we manually install ssl module like this if necessary?
-
-# FIXME Disable tkinter in our module list.
-# # Disable _tkinter - this is built in a separate formula python-tk
-# inreplace "setup.py", "DISABLED_MODULE_LIST = []", "DISABLED_MODULE_LIST = ['_tkinter']"
-
 main() {
     # """
     # Install Python.
@@ -71,6 +44,10 @@ main() {
     # To customize g++ path, specify 'CXX' environment variable
     # or use '--with-cxx-main=/usr/bin/g++'.
     #
+    # Enabling LTO on Linux makes 'libpython3.*.a' unusable for anyone whose
+    # GCC install does not match exactly (major and minor version).
+    # https://github.com/orgs/Homebrew/discussions/3734
+    #
     # Consider adding a system check for zlib in a future update.
     #
     # See also:
@@ -84,6 +61,8 @@ main() {
     # - macOS install recipes:
     #   https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/python@3.10.rb
+    #   https://github.com/Homebrew/homebrew-core/blob/master/
+    #     Formula/python@3.11.rb
     #   https://github.com/macports/macports-ports/blob/master/lang/
     #     python310/Portfile
     # - Python lib needs to be in rpath:
@@ -123,7 +102,6 @@ main() {
         'gdbm'
         # sqlite deps: readline.
         'sqlite'
-        'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
     declare -A app=(
@@ -136,13 +114,11 @@ main() {
         ['name']='python'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
-        "${dict['openssl']}" \
-        "${dict['tcl_tk']}"
+        "${dict['openssl']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="Python-${dict['version']}.tar.xz"
@@ -156,11 +132,6 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "Python-${dict['version']}"
     conf_args=(
-        # Enabling LTO on Linux makes 'libpython3.*.a' unusable for anyone whose
-        # GCC install does not match the one in CI exactly (major and minor
-        # version).
-        # https://github.com/orgs/Homebrew/discussions/3734
-        # > '--with-lto'
         "--prefix=${dict['prefix']}"
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
@@ -168,18 +139,13 @@ ${dict['file']}"
         '--with-computed-gotos'
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install' # or 'upgrade'.
+        # > '--with-lto'
         "--with-openssl=${dict['openssl']}"
         "--with-openssl-rpath=${dict['openssl']}/lib" # or 'auto'.
         '--with-readline=editline'
         '--with-system-expat'
         '--with-system-ffi'
         '--with-system-libmpdec'
-        # FIXME This isn't configuring correctly on macOS.
-        # NOTE This option has been removed in Python 3.11.
-        "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
-        # NOTE This option has been removed in Python 3.11.
-        # Also add LDFLAGS here too (e.g. '-ltcl8.6 -ltk8.6')?
-        "--with-tcltk-libs=-L${dict['tcl_tk']}/lib -ltcl8.6 -ltk8.6"
     )
     if koopa_is_macos
     then
@@ -197,10 +163,6 @@ ${dict['file']}"
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
         # NOTE This is defined in the MacPorts recipe.
         # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
-        # FIXME Need to enable these for Python 3.11.0?
-        # > "TCLTK_CFLAGS=-I${dict['tcl_tk']}/include"
-        # > "TCLTK_INCLUDES=-I${dict['tcl_tk']}/include"
-        # > "TCLTK_LIBS=-L${dict['tcl_tk']}/lib"
     )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
