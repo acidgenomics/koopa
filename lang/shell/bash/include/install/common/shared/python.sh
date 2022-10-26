@@ -163,8 +163,7 @@ ${dict['file']}"
     )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
-        "${dict['bzip2']}/lib" \
-        "${dict['openssl']}/lib"
+        "${dict['bzip2']}/lib"
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
