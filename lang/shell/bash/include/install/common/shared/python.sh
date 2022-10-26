@@ -110,6 +110,9 @@ ${dict['file']}"
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install' # or 'upgrade'.
         "--with-openssl=${dict['openssl']}"
+        # NOTE Currently uses '-Wl,-rpath=' instead of '-Wl,-rpath,' on macOS,
+        # which is incorrect for clang.
+        # '--with-openssl-rpath=auto'
         '--with-readline=editline'
         '--with-system-expat'
         '--with-system-ffi'
