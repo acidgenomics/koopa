@@ -39,13 +39,13 @@
     "bin": ["pyspark", "sparkR"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-27",
+    "date": "2022-10-26",
     "dependencies": ["openjdk", "python", "r"],
     "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://spark.apache.org/"],
-    "version": "3.3.0"
+    "version": "3.3.1"
   },
   "apptainer": {
     "bin": [],
@@ -3186,33 +3186,19 @@
     "version": "7.1.2"
   },
   "python": {
-    "bin": [
-      "2to3",
-      "2to3-3.10",
-      "idle3",
-      "idle3.10",
-      "pip3",
-      "pip3.10",
-      "pydoc3",
-      "pydoc3.10",
-      "python",
-      "python3",
-      "python3-config",
-      "python3.10",
-      "python3.10-config"
-    ],
+    "bin": ["python", "python3", "python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-10-18",
+    "date": "2022-10-26",
     "dependencies": [
       "bzip2",
       "expat",
       "gdbm",
+      "libedit",
       "libffi",
       "mpdecimal",
       "ncurses",
       "openssl3",
-      "readline",
       "sqlite",
       "tcl-tk",
       "unzip",
@@ -3220,8 +3206,8 @@
       "zlib"
     ],
     "homebrew": true,
-    "man1": ["python3.1", "python3.10.1"],
-    "outdated": false,
+    "man1": ["python3.1", "python3.11.1"],
+    "outdated": true,
     "reverse_dependencies": [
       "meson",
       "ninja",
@@ -3273,7 +3259,7 @@
       "llvm"
     ],
     "url": ["https://www.python.org/downloads/"],
-    "version": "3.10.8"
+    "version": "3.11.0"
   },
   "r": {
     "bin": [],
@@ -4400,11 +4386,11 @@
     "bin": ["zellij"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-09",
+    "date": "2022-10-25",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "0.31.4"
+    "version": "0.32.0"
   },
   "zip": {
     "bin": ["zip"],

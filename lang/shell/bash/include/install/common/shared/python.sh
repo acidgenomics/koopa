@@ -3,27 +3,46 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-10-18.
+    # @note Updated 2022-10-26.
+    #
+    # 'make altinstall' target prevents the installation of files with only
+    # Python's major version in its name. This allows us to link multiple
+    # versioned Python formulae. 'make install' can overwrite or masquerade the
+    # python3 binary.
     #
     # Python includes '/usr/local' in '-I' and '-L' compilation arguments by
     # default. We should work on restricting this in a future build.
     #
-    # Check config with:
-    # > ldd /usr/local/bin/python3
-    #
-    # Warning: 'make install' can overwrite or masquerade the python3 binary.
-    # 'make altinstall' is therefore recommended instead of make install since
-    # it only installs 'exec_prefix/bin/pythonversion'.
-    #
     # To customize g++ path, specify 'CXX' environment variable
     # or use '--with-cxx-main=/usr/bin/g++'.
     #
-    # Consider adding a system check for zlib in a future update.
+    # Enabling LTO on Linux makes 'libpython3.*.a' unusable for anyone whose
+    # GCC install does not match exactly (major and minor version).
+    # https://github.com/orgs/Homebrew/discussions/3734
     #
     # See also:
+    # - https://devguide.python.org/
     # - https://docs.python.org/3/using/unix.html
-    # - https://stackoverflow.com/questions/43333207
-    # - https://bugs.python.org/issue36659
+    # - https://docs.brew.sh/Homebrew-and-Python
+    # - Installing multiple versions:
+    #   https://github.com/python/cpython#installing-multiple-versions
+    # - Latest configuration recipe:
+    #   https://github.com/python/cpython/blob/3.11/configure
+    # - macOS install recipes:
+    #   https://github.com/Homebrew/homebrew-core/blob/master/
+    #     Formula/python@3.10.rb
+    #   https://github.com/Homebrew/homebrew-core/blob/master/
+    #     Formula/python@3.11.rb
+    #   https://github.com/macports/macports-ports/blob/master/lang/
+    #     python310/Portfile
+    # - Python lib needs to be in rpath:
+    #   https://stackoverflow.com/questions/43333207
+    #   https://bugs.python.org/issue36659
+    # - Python 3.11 update:
+    #   https://github.com/Homebrew/homebrew-core/pull/113811
+    # - OpenSSL configuration issues:
+    #   https://stackoverflow.com/questions/45954528/
+    #   https://stackoverflow.com/questions/41328451/
     # """
     local app deps dict
     koopa_assert_has_no_args "$#"
@@ -47,22 +66,12 @@ main() {
         'xz'
         # unzip deps: none.
         'unzip'
-    )
-    # NOTE Inclusion of readline is currently causing a cryptic build error on
-    # macOS that is difficult to debug.
-    if koopa_is_linux
-    then
-        deps+=(
-            # readline deps: ncurses.
-            'readline'
-        )
-    fi
-    deps+=(
+        # libedit deps: ncurses.
+        'libedit'
         # gdbm deps: readline.
         'gdbm'
         # sqlite deps: readline.
         'sqlite'
-        'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
     declare -A app=(
@@ -75,13 +84,12 @@ main() {
         ['name']='python'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
-        "${dict['openssl']}" \
-        "${dict['tcl_tk']}"
+        "${dict['openssl']}"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="Python-${dict['version']}.tar.xz"
     dict['url']="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
@@ -98,16 +106,17 @@ ${dict['file']}"
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
+        '--with-computed-gotos'
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install' # or 'upgrade'.
-        '--with-lto'
         "--with-openssl=${dict['openssl']}"
-        '--with-openssl-rpath=auto'
+        # NOTE Currently uses '-Wl,-rpath=' instead of '-Wl,-rpath,' on macOS,
+        # which is incorrect for clang.
+        # '--with-openssl-rpath=auto'
+        '--with-readline=editline'
         '--with-system-expat'
         '--with-system-ffi'
         '--with-system-libmpdec'
-        "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
-        "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
     )
     if koopa_is_macos
     then
@@ -117,15 +126,40 @@ ${dict['file']}"
         conf_args+=(
             "--enable-framework=${dict['libexec']}"
             "--with-dtrace=${app['dtrace']}"
+            '--with-lto'
         )
+        # Override auto-detection of libmpdec, which assumes a universal build.
+        # https://github.com/python/cpython/issues/98557.
+        dict['arch']="$(koopa_arch)"
+        case "${dict['arch']}" in
+            'aarch64')
+                dict['decimal_arch']='uint128'
+                ;;
+            'x86_64')
+                dict['decimal_arch']='x64'
+                ;;
+            *)
+                koopa_stop 'Unsupported architecture.'
+                ;;
+        esac
+        export PYTHON_DECIMAL_WITH_MACHINE="${dict['decimal_arch']}"
+        koopa_find_and_replace_in_file \
+            --fixed \
+            --pattern='libmpdec_machine=universal' \
+            --replacement="libmpdec_machine=${dict['decimal_arch']}" \
+            'configure'
     else
         conf_args+=('--enable-shared')
     fi
-    # Can also set 'CFLAGS_NODIST', 'LDFLAGS_NODIST' here.
     conf_args+=(
-        "CFLAGS=${CFLAGS:-}"
-        "CPPFLAGS=${CPPFLAGS:-}"
-        "LDFLAGS=${LDFLAGS:-}"
+        'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
+        # This is defined in the MacPorts recipe.
+        # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
+        # Avoid OpenSSL checks that are problematic for Python 3.11.0.
+        # https://github.com/python/cpython/issues/98673
+        'ac_cv_working_openssl_hashlib=yes'
+        'ac_cv_working_openssl_ssl=yes'
+        'py_cv_module__tkinter=disabled'
     )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
@@ -137,7 +171,7 @@ ${dict['file']}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     if koopa_is_macos
     then
-        "${app['make']}" install PYTHONAPPSDIR="${dict['libexec']}"
+        "${app['make']}" altinstall PYTHONAPPSDIR="${dict['libexec']}"
         (
             local framework
             koopa_cd "${dict['prefix']}"
@@ -150,7 +184,7 @@ ${dict['file']}"
         )
     else
         # > "${app['make']}" test
-        "${app['make']}" install
+        "${app['make']}" altinstall
     fi
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
@@ -158,9 +192,25 @@ ${dict['file']}"
     # break due to lack of correct 'python' binary in PATH.
     (
         koopa_cd "${dict['prefix']}/bin"
-        koopa_ln "${dict['name']}${dict['maj_min_ver']}" "${dict['name']}"
+        koopa_ln \
+            "${dict['name']}${dict['maj_min_ver']}" \
+            "${dict['name']}${dict['maj_ver']}"
+        koopa_ln \
+            "${dict['name']}${dict['maj_min_ver']}" \
+            "${dict['name']}"
     )
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
+    koopa_alert 'Checking module integrity.'
+    "${app['python']}" -c 'import _ctypes'
+    "${app['python']}" -c 'import _decimal'
+    "${app['python']}" -c 'import _gdbm'
+    "${app['python']}" -c 'import hashlib'
+    "${app['python']}" -c 'import pyexpat'
+    "${app['python']}" -c 'import sqlite3'
+    "${app['python']}" -c 'import ssl'
+    "${app['python']}" -c 'import zlib'
+    koopa_alert 'Checking pip configuration.'
+    "${app['python']}" -m pip list --format='columns'
     return 0
 }
