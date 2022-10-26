@@ -10954,6 +10954,7 @@ koopa_install_all_apps() {
         'xorg-libxrandr'
         'tcl-tk'
         'python'
+        'python3.10'
         'perl'
         'texinfo'
         'meson'
@@ -11420,6 +11421,7 @@ koopa_install_all_binary_apps() {
         'pytaglib'
         'pytest'
         'python'
+        'python3.10'
         'r'
         'r-devel'
         'radian'
@@ -16804,6 +16806,13 @@ koopa_locate_python() {
     koopa_locate_app \
         --app-name='python' \
         --bin-name='python3' \
+        "$@"
+}
+
+koopa_locate_python310() {
+    koopa_locate_app \
+        --app-name='python3.10' \
+        --bin-name='python3.10' \
         "$@"
 }
 
@@ -24627,15 +24636,15 @@ koopa_uninstall_pytest() {
         "$@"
 }
 
-koopa_uninstall_python310() {
-    koopa_uninstall_app \
-        --name='python3.10' \
-        "$@"
-}
-
 koopa_uninstall_python() {
     koopa_uninstall_app \
         --name='python' \
+        "$@"
+}
+
+koopa_uninstall_python310() {
+    koopa_uninstall_app \
+        --name='python3.10' \
         "$@"
 }
 

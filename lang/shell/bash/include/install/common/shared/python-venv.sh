@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for legacy python version, e.g. 3.10.8.
-# FIXME Allow pass-in as '--python=EXE'.
-
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-10-05.
+    # @note Updated 2022-10-26.
     # """
-    local app bin_name bin_names dict man1_name man1_names
-    koopa_assert_has_no_args "$#"
+    local app bin_name bin_names dict man1_name man1_names pos
     declare -A app=(
         ['cut']="$(koopa_locate_cut)"
         ['python']="$(koopa_locate_python)"
@@ -21,6 +17,32 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key value pairs --------------------------------------------------
+            '--python='*)
+                app['python']="${1#*=}"
+                shift 1
+                ;;
+            '--python')
+                app['python']="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ -x "${app['python']}" ]] || return 1
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_no_args "$#"
     dict['libexec']="${dict['prefix']}/libexec"
     # NOTE Consider reworking the case-sensitivity edge case handling here.
     case "${dict['name']}" in
@@ -42,10 +64,9 @@ main() {
         koopa_major_minor_version "${dict['py_version']}" \
     )"
     koopa_print_env
-    # FIXME Need to add support for legacy Python version (e.g. 3.10.8).
-    # FIXME This is required for latch and pytaglib.
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
+        --python="${app['python']}" \
         "${dict['pkg_name']}==${dict['version']}"
     dict['record_file']="${dict['libexec']}/lib/\
 python${dict['py_maj_min_ver']}/site-packages/\

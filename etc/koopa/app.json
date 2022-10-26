@@ -1996,7 +1996,7 @@
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-10-26",
-    "dependencies": ["python"],
+    "dependencies": ["python3.10"],
     "homebrew": false,
     "man1": [],
     "notes": ["Currently failing with Python 3.11.0."],
@@ -3171,10 +3171,9 @@
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-09-26",
-    "dependencies": ["python"],
+    "dependencies": ["python3.10"],
     "homebrew": false,
     "man1": [],
-    "notes": ["Failing to install with Python 3.11.0."],
     "version": "1.5.0"
   },
   "pytest": {
