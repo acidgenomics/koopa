@@ -2,7 +2,6 @@
 
 koopa_uninstall_pytaglib() {
     koopa_uninstall_app \
-        --name='pyprinttags' \
-        --unlink-in-bin
+        --name='pytaglib' \
         "$@"
 }
