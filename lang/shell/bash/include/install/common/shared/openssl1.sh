@@ -5,10 +5,11 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2022-08-27.
+    # @note Updated 2022-10-26.
     #
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
+    # - https://docs.python.org/3/using/unix.html
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/
     #     openssl@1.1.rb
     # - https://stackoverflow.com/questions/4138139/
@@ -33,11 +34,12 @@ main() {
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
+        '--libdir=lib'
         "--openssldir=${dict['prefix']}"
         "--prefix=${dict['prefix']}"
         "-Wl,-rpath,${dict['prefix']}/lib"
-        'no-ssl3'
-        'no-ssl3-method'
+        # > 'no-ssl3'
+        # > 'no-ssl3-method'
         'no-zlib'
         'shared'
     )
@@ -47,9 +49,10 @@ main() {
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./config "${conf_args[@]}"
+    "${app['make']}" --jobs=1 depend
     "${app['make']}" --jobs="${dict['jobs']}"
     # > "${app['make']}" test
-    "${app['make']}" install
+    "${app['make']}" install_sw
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
     dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict['cacert']}"
