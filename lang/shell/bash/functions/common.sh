@@ -10954,6 +10954,7 @@ koopa_install_all_apps() {
         'xorg-libxrandr'
         'tcl-tk'
         'python'
+        'python3.10'
         'perl'
         'texinfo'
         'meson'
@@ -11420,6 +11421,7 @@ koopa_install_all_binary_apps() {
         'pytaglib'
         'pytest'
         'python'
+        'python3.10'
         'r'
         'r-devel'
         'radian'
@@ -13621,6 +13623,13 @@ koopa_install_pytest() {
 koopa_install_python() {
     koopa_install_app \
         --name='python' \
+        "$@"
+}
+
+koopa_install_python310() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.10' \
         "$@"
 }
 
@@ -16797,6 +16806,13 @@ koopa_locate_python() {
     koopa_locate_app \
         --app-name='python' \
         --bin-name='python3' \
+        "$@"
+}
+
+koopa_locate_python310() {
+    koopa_locate_app \
+        --app-name='python3.10' \
+        --bin-name='python3.10' \
         "$@"
 }
 
@@ -24626,6 +24642,12 @@ koopa_uninstall_python() {
         "$@"
 }
 
+koopa_uninstall_python310() {
+    koopa_uninstall_app \
+        --name='python3.10' \
+        "$@"
+}
+
 koopa_uninstall_r_devel() {
     koopa_uninstall_app \
         --name='r-devel' \
@@ -25569,7 +25591,9 @@ koopa_which_function() {
         koopa_print "${dict['input_key']}"
         return 0
     fi
-    dict['key']="${dict['input_key']//-/_}"
+    dict['key']="${dict['input_key']}"
+    dict['key']="${dict['key']//-/_}"
+    dict['key']="${dict['key']//\./}"
     dict['os_id']="$(koopa_os_id)"
     if koopa_is_function "koopa_${dict['os_id']}_${dict['key']}"
     then

@@ -3,7 +3,7 @@
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2022-10-25.
+    # @note Updated 2022-10-26.
     #
     # In the future, consider adding support for 'requirements.txt' input.
     #
