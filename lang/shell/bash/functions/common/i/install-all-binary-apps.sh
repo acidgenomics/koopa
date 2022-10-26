@@ -212,6 +212,7 @@ koopa_install_all_binary_apps() {
         'pytaglib'
         'pytest'
         'python'
+        'python3.10'
         'r'
         'r-devel'
         'radian'
