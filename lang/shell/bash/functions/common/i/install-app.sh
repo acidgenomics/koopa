@@ -8,7 +8,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-10-25.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
@@ -217,8 +217,6 @@ ${dict['version2']}"
             bool['link_in_opt']=0
             ;;
     esac
-    [[ -d "${dict['prefix']}" ]] && \
-        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     if [[ -n "${dict['prefix']}" ]] && [[ "${bool['prefix_check']}" -eq 1 ]]
     then
         if [[ -d "${dict['prefix']}" ]]
