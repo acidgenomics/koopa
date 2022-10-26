@@ -3186,14 +3186,7 @@
     "version": "7.1.2"
   },
   "python": {
-    "bin": [
-      "idle3.10",
-      "pydoc3.10",
-      "python",
-      "python3",
-      "python3.10",
-      "python3.10-config"
-    ],
+    "bin": ["python", "python3", "python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-10-26",
