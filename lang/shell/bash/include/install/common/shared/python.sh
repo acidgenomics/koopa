@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Python 3.11 is not configuring ssl module correctly on macOS.
+# FIXME Python 3.11.0 is not configuring ssl module correctly on macOS.
 #
 # Here are links to differences in configure script between 3.10 and 3.11:
 # - https://github.com/python/cpython/blob/3.10/configure#L17844
@@ -25,10 +25,15 @@
 #     ^^^^^^^^^^^
 # ModuleNotFoundError: No module named '_ssl'
 
-# FIXME tcl-tk doesn't seem to be getting picked up correctly for Python 3.11?
-# Missing from sysconfig when comparing 3.10 to 3.11:
-# > TCLTK_INCLUDES = "-I/opt/koopa/app/tcl-tk/8.6.12/include"
-# > TCLTK_LIBS = "-L/opt/koopa/app/tcl-tk/8.6.12/lib"
+# FIXME TkInter module isn't building correctly for Python 3.11.0.
+# TkInter module is not configuring correctly.
+# MODULE__TKINTER_STATE=missing
+# python3 -m tkinter
+# https://docs.python.org/3.11/library/tkinter.html
+# https://wiki.python.org/moin/TkInter
+# You have probably forgotten to define TKPATH in the Modules/Setup file
+# https://stackoverflow.com/questions/5459444/
+# https://notmatthancock.github.io/2015/06/17/building-python-from-source.html
 
 main() {
     # """
@@ -39,13 +44,12 @@ main() {
     # default. We should work on restricting this in a future build.
     #
     # Check config with:
-    # > ldd /usr/local/bin/python3
+    # > ldd /opt/koopa/bin/python3
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
     # versioned Python formulae. 'make install' can overwrite or masquerade the
-    # python3 binary. 'make altinstall' is therefore recommended instead of
-    # 'make install' since it only installs 'exec_prefix/bin/pythonversion'.
+    # python3 binary.
     #
     # To customize g++ path, specify 'CXX' environment variable
     # or use '--with-cxx-main=/usr/bin/g++'.
@@ -150,9 +154,10 @@ ${dict['file']}"
         '--with-system-ffi'
         '--with-system-libmpdec'
         # NOTE This option has been removed in Python 3.11.
-        # > "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
+        "--with-tcltk-includes=-I${dict['tcl_tk']}/include"
         # NOTE This option has been removed in Python 3.11.
-        # > "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
+        # Also add LDFLAGS here too (e.g. '-ltcl8.6 -ltk8.6')?
+        "--with-tcltk-libs=-L${dict['tcl_tk']}/lib"
     )
     if koopa_is_macos
     then
@@ -170,11 +175,10 @@ ${dict['file']}"
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
         # NOTE This is defined in the MacPorts recipe.
         # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
-        # FIXME Do these even get picked up correctly?
-        # FIXME Use TCLTK_CFLAGS or TCLTK_INCLUDES?
-        "TCLTK_CFLAGS=-I${dict['tcl_tk']}/include"
-        "TCLTK_INCLUDES=-I${dict['tcl_tk']}/include"
-        "TCLTK_LIBS=-L${dict['tcl_tk']}/lib"
+        # FIXME Need to enable these for Python 3.11.0?
+        # > "TCLTK_CFLAGS=-I${dict['tcl_tk']}/include"
+        # > "TCLTK_INCLUDES=-I${dict['tcl_tk']}/include"
+        # > "TCLTK_LIBS=-L${dict['tcl_tk']}/lib"
     )
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
