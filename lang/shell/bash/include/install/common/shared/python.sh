@@ -143,11 +143,15 @@ ${dict['file']}"
                 ;;
         esac
         export PYTHON_DECIMAL_WITH_MACHINE="${dict['decimal_arch']}"
-        koopa_find_and_replace_in_file \
-            --fixed \
-            --pattern='libmpdec_machine=universal' \
-            --replacement="libmpdec_machine=${dict['decimal_arch']}" \
-            'configure'
+        case "${dict['version']}" in
+            '3.11.'*)
+                koopa_find_and_replace_in_file \
+                    --fixed \
+                    --pattern='libmpdec_machine=universal' \
+                    --replacement="libmpdec_machine=${dict['decimal_arch']}" \
+                    'configure'
+                ;;
+        esac
     else
         conf_args+=('--enable-shared')
     fi
@@ -188,9 +192,12 @@ ${dict['file']}"
     fi
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
-    # Ensure 'python' symlink exists. Otherwise some programs, such as GATK can
-    # break due to lack of correct 'python' binary in PATH.
+    # Ensure 'python' symlink exists (for latest version only). Otherwise, some
+    # programs, such as GATK can break due to lack of correct 'python' binary
+    # in PATH.
+    dict['current_version']="$(koopa_app_json_version "${dict['name']}")"
     (
+        [[ "${dict['version']}" == "${dict['current_version']}" ]] || return 0
         koopa_cd "${dict['prefix']}/bin"
         koopa_ln \
             "${dict['name']}${dict['maj_min_ver']}" \

@@ -85,6 +85,7 @@ koopa_install_all_apps() {
         'xorg-libxrandr'
         'tcl-tk'
         'python'
+        'python3.10'
         'perl'
         'texinfo'
         'meson'
