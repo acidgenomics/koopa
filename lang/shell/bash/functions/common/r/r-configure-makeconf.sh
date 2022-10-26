@@ -9,7 +9,7 @@
 koopa_r_configure_makeconf() {
     # """
     # Modify the 'Makeconf' file to ensure correct configuration.
-    # @note Updated 2022-09-24.
+    # @note Updated 2022-10-25.
     #
     # Default LIBS:
     # - macOS: -lpcre2-8 -llzma -lbz2 -lz -licucore -ldl -lm -liconv
@@ -35,6 +35,7 @@ koopa_r_configure_makeconf() {
     [[ -x "${app['pkg_config']}" ]] || return 1
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+    dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
@@ -44,6 +45,7 @@ koopa_r_configure_makeconf() {
         "${dict['bzip2']}" \
         "${dict['icu4c']}" \
         "${dict['libiconv']}" \
+        "${dict['libjpeg']}" \
         "${dict['pcre2']}" \
         "${dict['r_prefix']}" \
         "${dict['zlib']}"
@@ -51,13 +53,15 @@ koopa_r_configure_makeconf() {
     koopa_assert_is_file "${dict['file']}"
     koopa_add_to_pkg_config_path \
         "${dict['icu4c']}/lib/pkgconfig" \
+        "${dict['libjpeg']}/lib/pkgconfig" \
         "${dict['pcre2']}/lib/pkgconfig" \
         "${dict['zlib']}/lib/pkgconfig"
     libs=(
         "$("${app['pkg_config']}" --libs \
-            'libpcre2-8' \
             'icu-i18n' \
             'icu-uc' \
+            'libjpeg' \
+            'libpcre2-8' \
             'zlib' \
         )"
         "-L${dict['bzip2']}/lib"

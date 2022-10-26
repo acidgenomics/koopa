@@ -11915,8 +11915,6 @@ ${dict['version2']}"
             bool['link_in_opt']=0
             ;;
     esac
-    [[ -d "${dict['prefix']}" ]] && \
-        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     if [[ -n "${dict['prefix']}" ]] && [[ "${bool['prefix_check']}" -eq 1 ]]
     then
         if [[ -d "${dict['prefix']}" ]]
@@ -18230,6 +18228,11 @@ ${dict['py_maj_min_ver']}"
     if [[ "${dict['pip']}" -eq 1 ]]
     then
         case "${dict['py_version']}" in
+            '3.11.'*)
+                dict['pip_version']='22.3'
+                dict['setuptools_version']='65.5.0'
+                dict['wheel_version']='0.37.1'
+                ;;
             '3.10.'*)
                 dict['pip_version']='22.3'
                 dict['setuptools_version']='65.5.0'
@@ -18436,7 +18439,6 @@ koopa_r_configure_environ() {
         'harfbuzz'
         'icu4c'
         'imagemagick'
-        'jpeg'
         'lapack'
         'libgit2'
         'libjpeg-turbo'
@@ -18684,7 +18686,6 @@ koopa_r_configure_ldpaths() {
         'hdf5'
         'icu4c'
         'imagemagick'
-        'jpeg'
         'lapack'
         'libgit2'
         'libiconv'
@@ -18785,6 +18786,7 @@ koopa_r_configure_makeconf() {
     [[ -x "${app['pkg_config']}" ]] || return 1
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+    dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
@@ -18794,6 +18796,7 @@ koopa_r_configure_makeconf() {
         "${dict['bzip2']}" \
         "${dict['icu4c']}" \
         "${dict['libiconv']}" \
+        "${dict['libjpeg']}" \
         "${dict['pcre2']}" \
         "${dict['r_prefix']}" \
         "${dict['zlib']}"
@@ -18801,13 +18804,15 @@ koopa_r_configure_makeconf() {
     koopa_assert_is_file "${dict['file']}"
     koopa_add_to_pkg_config_path \
         "${dict['icu4c']}/lib/pkgconfig" \
+        "${dict['libjpeg']}/lib/pkgconfig" \
         "${dict['pcre2']}/lib/pkgconfig" \
         "${dict['zlib']}/lib/pkgconfig"
     libs=(
         "$("${app['pkg_config']}" --libs \
-            'libpcre2-8' \
             'icu-i18n' \
             'icu-uc' \
+            'libjpeg' \
+            'libpcre2-8' \
             'zlib' \
         )"
         "-L${dict['bzip2']}/lib"
@@ -18941,7 +18946,6 @@ koopa_r_configure_makevars() {
             'harfbuzz'
             'icu4c'
             'imagemagick'
-            'jpeg'
             'lapack'
             'libgit2'
             'libjpeg-turbo'
