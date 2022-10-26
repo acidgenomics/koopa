@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add support for legacy python version, e.g. 3.10.8.
+# FIXME Allow pass-in as '--python=EXE'.
+
 main() {
     # """
     # Install a Python package as a virtual environment application.
@@ -39,6 +42,8 @@ main() {
         koopa_major_minor_version "${dict['py_version']}" \
     )"
     koopa_print_env
+    # FIXME Need to add support for legacy Python version (e.g. 3.10.8).
+    # FIXME This is required for latch and pytaglib.
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
         "${dict['pkg_name']}==${dict['version']}"

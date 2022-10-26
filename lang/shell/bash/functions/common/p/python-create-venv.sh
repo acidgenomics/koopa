@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to allow the user to specify which Python, which allows us
+# to build pins against legacy 3.10.8 release.
+
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
