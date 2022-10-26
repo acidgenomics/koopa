@@ -1056,12 +1056,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-24",
+    "date": "2022-10-26",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "73e99ebbfcf16f9c62ff7f75bfff0a75b83a8765"
+    "version": "0ec2b458f57181dab2f3e60125b13446be5aa3a1"
   },
   "du-dust": {
     "aliases": {
@@ -1995,16 +1995,17 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-24",
+    "date": "2022-10-26",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
+    "notes": ["Currently failing with Python 3.11.0."],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.6.2"
+    "version": "2.6.3"
   },
   "less": {
     "bin": ["less"],
@@ -2653,12 +2654,12 @@
       "pkg-config"
     ],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-10-26",
     "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python"],
     "homebrew": true,
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.7.2"
+    "version": "0.8.0"
   },
   "nettle": {
     "bin": [],
@@ -3173,6 +3174,7 @@
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
+    "notes": ["Failing to install with Python 3.11.0."],
     "version": "1.5.0"
   },
   "pytest": {
@@ -3224,7 +3226,6 @@
       "ipython",
       "isort",
       "latch",
-      "nghttp2",
       "pipx",
       "poetry",
       "py-spy",
@@ -3247,10 +3248,10 @@
       "glib",
       "google-cloud-sdk",
       "htop",
-      "subversion",
       "nghttp2",
       "neovim",
       "sra-tools",
+      "subversion",
       "proj",
       "gdal",
       "r",
