@@ -298,6 +298,7 @@ __koopa_complete() {
                         'pytaglib'
                         'pytest'
                         'python'
+                        'python3.10'
                         'r'
                         'r-devel'
                         'r-koopa'
