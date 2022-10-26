@@ -3,7 +3,7 @@
 koopa_which_function() {
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2022-04-29.
+    # @note Updated 2022-10-26.
     # """
     local dict
     koopa_assert_has_args_eq "$#" 1
@@ -16,7 +16,9 @@ koopa_which_function() {
         koopa_print "${dict['input_key']}"
         return 0
     fi
-    dict['key']="${dict['input_key']//-/_}"
+    dict['key']="${dict['input_key']}"
+    dict['key']="${dict['key']//-/_}"
+    dict['key']="${dict['key']//\./}"
     dict['os_id']="$(koopa_os_id)"
     if koopa_is_function "koopa_${dict['os_id']}_${dict['key']}"
     then
