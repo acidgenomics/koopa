@@ -3206,7 +3206,7 @@
       "zlib"
     ],
     "homebrew": true,
-    "man1": ["python3.1", "python3.11.1"],
+    "man1": ["python.1", "python3.1", "python3.11.1"],
     "outdated": true,
     "reverse_dependencies": [
       "meson",
@@ -3278,7 +3278,7 @@
       "zlib"
     ],
     "homebrew": true,
-    "man1": ["python3.1", "python3.11.1"],
+    "man1": ["python3.10.1"],
     "outdated": true,
     "reverse_dependencies": ["latch", "pytaglib"],
     "url": ["https://www.python.org/downloads/"],
