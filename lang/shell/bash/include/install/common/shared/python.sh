@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to link 'python3.1' and 'python.1' in man.
 # FIXME Python 3.11.0 is creating a weird pip3.10 binary.
 # Consider removing this in an update.
 
