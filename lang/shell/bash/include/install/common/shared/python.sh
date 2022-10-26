@@ -1,45 +1,17 @@
 #!/usr/bin/env bash
 
-# FIXME Python 3.11.0 is not configuring ssl module correctly on macOS.
-#
-# Here are links to differences in configure script between 3.10 and 3.11:
-# - https://github.com/python/cpython/blob/3.10/configure#L17844
-# - https://github.com/python/cpython/blob/3.11/configure#L23194
-#
-# This is correct on Linux, erroring on macOS...
-# checking whether OpenSSL provides required ssl module APIs... no
-# checking whether OpenSSL provides required hashlib module APIs... no
-#
-# We're seeing ssl detection failure on macOS. Works on Linux though.
-# MODULE__SSL_STATE = "missing"
-#
-# > WARNING: pip is configured with locations that require TLS/SSL,
-# > however the ssl module in Python is not available.
-# > "Can't connect to HTTPS URL because the SSL module is not available.
-#
-# >>> import ssl
-# Traceback (most recent call last):
-#   File "<stdin>", line 1, in <module>
-#   File "/opt/koopa/app/python/3.11.0/libexec/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 100, in <module>
-#     import _ssl             # if we can't import it, let the error propagate
-#     ^^^^^^^^^^^
-# ModuleNotFoundError: No module named '_ssl'
-
 main() {
     # """
     # Install Python.
     # @note Updated 2022-10-26.
     #
-    # Python includes '/usr/local' in '-I' and '-L' compilation arguments by
-    # default. We should work on restricting this in a future build.
-    #
-    # Check config with:
-    # > ldd /opt/koopa/bin/python3
-    #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
     # versioned Python formulae. 'make install' can overwrite or masquerade the
     # python3 binary.
+    #
+    # Python includes '/usr/local' in '-I' and '-L' compilation arguments by
+    # default. We should work on restricting this in a future build.
     #
     # To customize g++ path, specify 'CXX' environment variable
     # or use '--with-cxx-main=/usr/bin/g++'.
@@ -47,8 +19,6 @@ main() {
     # Enabling LTO on Linux makes 'libpython3.*.a' unusable for anyone whose
     # GCC install does not match exactly (major and minor version).
     # https://github.com/orgs/Homebrew/discussions/3734
-    #
-    # Consider adding a system check for zlib in a future update.
     #
     # See also:
     # - https://devguide.python.org/
@@ -135,14 +105,11 @@ ${dict['file']}"
         "--prefix=${dict['prefix']}"
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
-        # FIXME '--enable-optimizations'
+        '--enable-optimizations'
         '--with-computed-gotos'
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install' # or 'upgrade'.
         "--with-openssl=${dict['openssl']}"
-        # FIXME This currently sets the rpath incorrectly:
-        # ld: unknown option: -rpath=/opt/koopa/app/openssl3/3.0.5/lib
-        # > '--with-openssl-rpath=auto'
         '--with-readline=editline'
         '--with-system-expat'
         '--with-system-ffi'
@@ -156,10 +123,9 @@ ${dict['file']}"
         conf_args+=(
             "--enable-framework=${dict['libexec']}"
             "--with-dtrace=${app['dtrace']}"
-            # FIXME '--with-lto'
+            '--with-lto'
         )
-        # Override the auto-detection of libmpdec, which assumes a universal
-        # build. This is currently an inreplace due to:
+        # Override auto-detection of libmpdec, which assumes a universal build.
         # https://github.com/python/cpython/issues/98557.
         dict['arch']="$(koopa_arch)"
         case "${dict['arch']}" in
@@ -179,22 +145,15 @@ ${dict['file']}"
             --pattern='libmpdec_machine=universal' \
             --replacement="libmpdec_machine=${dict['decimal_arch']}" \
             'configure'
-        # https://github.com/python/cpython/issues/98673
-        # FIXME Can we just define this in config?
-        # > ac_cv_working_openssl_ssl=yes
-        # > koopa_find_and_replace_in_file \
-        # >     --fixed \
-        # >     --pattern='ac_cv_working_openssl_ssl=no' \
-        # >     --replacement='ac_cv_working_openssl_ssl=yes' \
-        # >     'configure'
     else
         conf_args+=('--enable-shared')
     fi
     conf_args+=(
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
-        # NOTE This is defined in the MacPorts recipe.
+        # This is defined in the MacPorts recipe.
         # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
         # Avoid OpenSSL checks that are problematic for Python 3.11.0.
+        # https://github.com/python/cpython/issues/98673
         'ac_cv_working_openssl_hashlib=yes'
         'ac_cv_working_openssl_ssl=yes'
         'py_cv_module__tkinter=disabled'
@@ -241,10 +200,10 @@ ${dict['file']}"
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
     koopa_alert 'Checking module integrity.'
-    # FIXME Check _hashlib, _ssl ?
     "${app['python']}" -c 'import _ctypes'
     "${app['python']}" -c 'import _decimal'
     "${app['python']}" -c 'import _gdbm'
+    "${app['python']}" -c 'import hashlib'
     "${app['python']}" -c 'import pyexpat'
     "${app['python']}" -c 'import sqlite3'
     "${app['python']}" -c 'import ssl'
