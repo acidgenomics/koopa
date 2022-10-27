@@ -3186,6 +3186,10 @@
     "man1": [],
     "version": "7.1.2"
   },
+  "python": {
+    "date": "2022-10-27",
+    "version": "3.11.0"
+  },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
