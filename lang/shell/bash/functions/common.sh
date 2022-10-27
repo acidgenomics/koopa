@@ -13620,16 +13620,17 @@ koopa_install_pytest() {
         "$@"
 }
 
-koopa_install_python() {
-    koopa_install_app \
-        --name='python' \
-        "$@"
-}
-
 koopa_install_python310() {
     koopa_install_app \
         --installer='python' \
         --name='python3.10' \
+        "$@"
+}
+
+koopa_install_python311() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.11' \
         "$@"
 }
 
@@ -16813,6 +16814,13 @@ koopa_locate_python310() {
     koopa_locate_app \
         --app-name='python3.10' \
         --bin-name='python3.10' \
+        "$@"
+}
+
+koopa_locate_python311() {
+    koopa_locate_app \
+        --app-name='python3.11' \
+        --bin-name='python3.11' \
         "$@"
 }
 
@@ -24636,15 +24644,15 @@ koopa_uninstall_pytest() {
         "$@"
 }
 
-koopa_uninstall_python() {
-    koopa_uninstall_app \
-        --name='python' \
-        "$@"
-}
-
 koopa_uninstall_python310() {
     koopa_uninstall_app \
         --name='python3.10' \
+        "$@"
+}
+
+koopa_uninstall_python311() {
+    koopa_uninstall_app \
+        --name='python3.11' \
         "$@"
 }
 
