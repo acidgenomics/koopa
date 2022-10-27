@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Rather than direct '--python' input here, support '--python-version'
+# instead. This is simpler. In this case, call the corresponding locator
+# function.
+
 main() {
     # """
     # Install a Python package as a virtual environment application.
