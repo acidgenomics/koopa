@@ -3187,14 +3187,14 @@
     "version": "7.1.2"
   },
   "python": {
-    "date": "2022-10-27",
-    "version": "3.11.0"
+    "date": "2022-10-28",
+    "version": "3.10.0"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-10-26",
+    "date": "2022-10-28",
     "dependencies": [
       "bzip2",
       "expat",
@@ -3212,32 +3212,6 @@
     "homebrew": true,
     "man1": ["python3.10.1"],
     "outdated": true,
-    "reverse_dependencies": ["latch", "pytaglib"],
-    "url": ["https://www.python.org/"],
-    "version": "3.10.8"
-  },
-  "python3.11": {
-    "bin": ["python", "python3", "python3.11", "python3.11-config"],
-    "build_dependencies": ["make", "pkg-config"],
-    "conservative": true,
-    "date": "2022-10-27",
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "gdbm",
-      "libedit",
-      "libffi",
-      "mpdecimal",
-      "ncurses",
-      "openssl3",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
-    "homebrew": true,
-    "man1": ["python.1", "python3.1", "python3.11.1"],
-    "outdated": true,
     "reverse_dependencies": [
       "meson",
       "ninja",
@@ -3253,6 +3227,7 @@
       "httpie",
       "ipython",
       "isort",
+      "latch",
       "pipx",
       "poetry",
       "py-spy",
@@ -3260,6 +3235,7 @@
       "pyflakes",
       "pygments",
       "pylint",
+      "pytaglib",
       "pytest",
       "radian",
       "ranger-fm",
@@ -3285,6 +3261,32 @@
       "node",
       "llvm"
     ],
+    "url": ["https://www.python.org/"],
+    "version": "3.10.8"
+  },
+  "python3.11": {
+    "bin": ["python", "python3", "python3.11", "python3.11-config"],
+    "build_dependencies": ["make", "pkg-config"],
+    "conservative": true,
+    "date": "2022-10-28",
+    "dependencies": [
+      "bzip2",
+      "expat",
+      "gdbm",
+      "libedit",
+      "libffi",
+      "mpdecimal",
+      "ncurses",
+      "openssl3",
+      "sqlite",
+      "unzip",
+      "xz",
+      "zlib"
+    ],
+    "homebrew": true,
+    "man1": ["python.1", "python3.1", "python3.11.1"],
+    "outdated": true,
+    "reverse_dependencies": [],
     "url": ["https://www.python.org/"],
     "version": "3.11.0"
   },
