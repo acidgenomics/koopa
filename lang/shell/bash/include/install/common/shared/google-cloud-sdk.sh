@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Should we pin this to Python 3.9 instead?
 # FIXME This currently doesn't work with Python 3.11.0 on macOS.
 # FIXME This approach is currently failing on Linux.
 # Seeing error message: gcloud failed to load: No module named '_sqlite3'.
