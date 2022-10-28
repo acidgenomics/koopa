@@ -21,6 +21,7 @@ koopa_install_python310() {
         koopa_ln 'python3.10' 'python3'
         koopa_ln 'python3.10' 'python'
         koopa_alert "Linking 'python' in '${dict['man1_prefix']}'."
+        koopa_cd "${dict['man1_prefix']}"
         koopa_ln 'python3.10.1' 'python3.1'
         koopa_ln 'python3.10.1' 'python.1'
         koopa_alert "Linking 'python' in '${dict['opt_prefix']}'."
