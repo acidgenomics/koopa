@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-koopa_uninstall_python() {
+koopa_uninstall_python311() {
     koopa_uninstall_app \
-        --name='python' \
+        --name='python3.11' \
         "$@"
 }

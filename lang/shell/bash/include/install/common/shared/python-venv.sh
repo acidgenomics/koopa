@@ -3,18 +3,16 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-10-26.
+    # @note Updated 2022-10-27.
     # """
     local app bin_name bin_names dict man1_name man1_names pos
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['cut']="$(koopa_locate_cut)"
     [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['py_maj_ver']=''
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     pos=()
@@ -22,12 +20,12 @@ main() {
     do
         case "$1" in
             # Key value pairs --------------------------------------------------
-            '--python='*)
-                app['python']="${1#*=}"
+            '--python-version='*)
+                dict['py_maj_ver']="${1#*=}"
                 shift 1
                 ;;
-            '--python')
-                app['python']="${2:?}"
+            '--python-version')
+                dict['py_maj_ver']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -40,6 +38,22 @@ main() {
                 ;;
         esac
     done
+    if [[ -n "${dict['py_maj_ver']}" ]]
+    then
+        # e.g. '3.11' to '311'.
+        dict['py_maj_ver_2']="$( \
+            koopa_gsub \
+                --fixed \
+                --pattern='.'  \
+                --replacement='' \
+                "${dict['py_maj_ver']}" \
+        )"
+        dict['locate_python']="koopa_locate_python${dict['py_maj_ver_2']}"
+        koopa_assert_is_function "${dict['locate_python']}"
+        app['python']="$("${dict['locate_python']}")"
+    else
+        app['python']="$(koopa_locate_python)"
+    fi
     [[ -x "${app['python']}" ]] || return 1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_no_args "$#"

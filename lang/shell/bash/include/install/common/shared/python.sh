@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to link 'python3.1' and 'python.1' in man.
-# FIXME Python 3.11.0 is creating a weird pip3.10 binary.
-# Consider removing this in an update.
-
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-10-26.
+    # @note Updated 2022-10-28.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -196,20 +192,11 @@ ${dict['file']}"
     fi
     app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
-    # Ensure 'python' symlink exists (for latest version only). Otherwise, some
-    # programs, such as GATK can break due to lack of correct 'python' binary
-    # in PATH.
-    dict['current_version']="$(koopa_app_json_version "${dict['name']}")"
-    (
-        [[ "${dict['version']}" == "${dict['current_version']}" ]] || return 0
-        koopa_cd "${dict['prefix']}/bin"
-        koopa_ln \
-            "${dict['name']}${dict['maj_min_ver']}" \
-            "${dict['name']}${dict['maj_ver']}"
-        koopa_ln \
-            "${dict['name']}${dict['maj_min_ver']}" \
-            "${dict['name']}"
-    )
+    case "${dict['version']}" in
+        '3.11.'*)
+            koopa_rm "${dict['prefix']}/bin/pip3.10"
+            ;;
+    esac
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
     koopa_alert 'Checking module integrity.'
