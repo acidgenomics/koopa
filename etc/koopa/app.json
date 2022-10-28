@@ -3187,7 +3187,9 @@
     "version": "7.1.2"
   },
   "python": {
+    "bin": ["python", "python3"],
     "date": "2022-10-28",
+    "man1": ["python.1", "python3.1"],
     "version": "3.10.0"
   },
   "python3.10": {
