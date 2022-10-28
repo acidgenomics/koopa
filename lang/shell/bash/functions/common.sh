@@ -13620,16 +13620,36 @@ koopa_install_pytest() {
         "$@"
 }
 
-koopa_install_python() {
-    koopa_install_app \
-        --name='python' \
-        "$@"
-}
-
 koopa_install_python310() {
+    local dict
+    declare -A dict=(
+        ['app_prefix']="$(koopa_app_prefix)"
+        ['bin_prefix']="$(koopa_bin_prefix)"
+        ['opt_prefix']="$(koopa_opt_prefix)"
+    )
     koopa_install_app \
         --installer='python' \
         --name='python3.10' \
+        "$@"
+    (
+        koopa_alert "Linking 'python' in '${dict['app_prefix']}'."
+        koopa_cd "${dict['app_prefix']}"
+        koopa_ln 'python3.10' 'python'
+        koopa_alert "Linking 'python' and 'python3' in '${dict['bin_prefix']}'."
+        koopa_cd "${dict['bin_prefix']}"
+        koopa_ln 'python3.10' 'python3'
+        koopa_ln 'python3.10' 'python'
+        koopa_alert "Linking 'python' in '${dict['opt_prefix']}'."
+        koopa_cd "${dict['opt_prefix']}"
+        koopa_ln 'python3.10' 'python'
+    )
+    return 0
+}
+
+koopa_install_python311() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.11' \
         "$@"
 }
 
@@ -16813,6 +16833,13 @@ koopa_locate_python310() {
     koopa_locate_app \
         --app-name='python3.10' \
         --bin-name='python3.10' \
+        "$@"
+}
+
+koopa_locate_python311() {
+    koopa_locate_app \
+        --app-name='python3.11' \
+        --bin-name='python3.11' \
         "$@"
 }
 
@@ -24636,15 +24663,28 @@ koopa_uninstall_pytest() {
         "$@"
 }
 
-koopa_uninstall_python() {
-    koopa_uninstall_app \
-        --name='python' \
-        "$@"
-}
-
 koopa_uninstall_python310() {
+    local dict
+    declare -A dict=(
+        ['app_prefix']="$(koopa_app_prefix)"
+        ['bin_prefix']="$(koopa_bin_prefix)"
+        ['opt_prefix']="$(koopa_opt_prefix)"
+    )
     koopa_uninstall_app \
         --name='python3.10' \
+        "$@"
+    koopa_alert "Unlinking 'python' and 'python3'."
+    koopa_rm  \
+        "${dict['app_prefix']}/python" \
+        "${dict['bin_prefix']}/python" \
+        "${dict['bin_prefix']}/python3" \
+        "${dict['opt_prefix']}/python"
+    return 0
+}
+
+koopa_uninstall_python311() {
+    koopa_uninstall_app \
+        --name='python3.11' \
         "$@"
 }
 
