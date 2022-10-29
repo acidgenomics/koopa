@@ -469,12 +469,7 @@ quote=01:warning=01;35"
 
 koopa_activate_google_cloud_sdk() {
     local python
-    if koopa_is_macos
-    then
-        python="$(koopa_opt_prefix)/python/bin/python3"
-    else
-        python='/usr/bin/python3'
-    fi
+    python="$(koopa_bin_prefix)/python3.10"
     [ -x "$python" ] || return 0
     CLOUDSDK_PYTHON="$python"
     export CLOUDSDK_PYTHON
