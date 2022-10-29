@@ -13625,6 +13625,7 @@ koopa_install_python310() {
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['bin_prefix']="$(koopa_bin_prefix)"
+        ['man1_prefix']="$(koopa_man1_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"
     )
     koopa_install_app \
@@ -13635,10 +13636,14 @@ koopa_install_python310() {
         koopa_alert "Linking 'python' in '${dict['app_prefix']}'."
         koopa_cd "${dict['app_prefix']}"
         koopa_ln 'python3.10' 'python'
-        koopa_alert "Linking 'python' and 'python3' in '${dict['bin_prefix']}'."
+        koopa_alert "Linking 'python' in '${dict['bin_prefix']}'."
         koopa_cd "${dict['bin_prefix']}"
         koopa_ln 'python3.10' 'python3'
         koopa_ln 'python3.10' 'python'
+        koopa_alert "Linking 'python' in '${dict['man1_prefix']}'."
+        koopa_cd "${dict['man1_prefix']}"
+        koopa_ln 'python3.10.1' 'python3.1'
+        koopa_ln 'python3.10.1' 'python.1'
         koopa_alert "Linking 'python' in '${dict['opt_prefix']}'."
         koopa_cd "${dict['opt_prefix']}"
         koopa_ln 'python3.10' 'python'
@@ -17327,6 +17332,11 @@ koopa_make_build_string() {
 
 koopa_man_prefix() {
     koopa_print "$(koopa_koopa_prefix)/share/man"
+    return 0
+}
+
+koopa_man1_prefix() {
+    koopa_print "$(koopa_man_prefix)/man1"
     return 0
 }
 
