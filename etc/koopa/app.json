@@ -1467,11 +1467,11 @@
     "bin": ["glances"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-29",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
-    "version": "3.2.7"
+    "version": "3.3.0"
   },
   "glib": {
     "bin": [],
@@ -3190,7 +3190,7 @@
     "bin": ["python", "python3"],
     "date": "2022-10-28",
     "man1": ["python.1", "python3.1"],
-    "version": "3.10.0"
+    "version": "3.10.8"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
@@ -3622,12 +3622,12 @@
     "bin": ["ruff"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-17",
+    "date": "2022-10-29",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
     "outdated": true,
-    "version": "0.0.79"
+    "version": "0.0.88"
   },
   "rust": {
     "bin": [
@@ -4396,12 +4396,12 @@
     "bin": ["yq"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-19",
+    "date": "2022-10-29",
     "dependencies": ["go"],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.28.2"
+    "version": "4.29.1"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
