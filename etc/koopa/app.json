@@ -1467,11 +1467,11 @@
     "bin": ["glances"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-10-29",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
-    "version": "3.2.7"
+    "version": "3.3.0"
   },
   "glib": {
     "bin": [],
@@ -3187,8 +3187,10 @@
     "version": "7.1.2"
   },
   "python": {
+    "bin": ["python", "python3"],
     "date": "2022-10-28",
-    "version": "3.10.0"
+    "man1": ["python.1", "python3.1"],
+    "version": "3.10.8"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
@@ -3265,7 +3267,7 @@
     "version": "3.10.8"
   },
   "python3.11": {
-    "bin": ["python", "python3", "python3.11", "python3.11-config"],
+    "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-10-28",
@@ -3284,7 +3286,7 @@
       "zlib"
     ],
     "homebrew": true,
-    "man1": ["python.1", "python3.1", "python3.11.1"],
+    "man1": ["python3.11.1"],
     "outdated": true,
     "reverse_dependencies": [],
     "url": ["https://www.python.org/"],
@@ -3620,12 +3622,12 @@
     "bin": ["ruff"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-17",
+    "date": "2022-10-29",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
     "outdated": true,
-    "version": "0.0.79"
+    "version": "0.0.88"
   },
   "rust": {
     "bin": [
@@ -4089,7 +4091,7 @@
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-12",
+    "date": "2022-10-29",
     "dependencies": [],
     "homebrew": true,
     "man1": [
@@ -4103,7 +4105,7 @@
       "xxd.1"
     ],
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.0350"
+    "version": "9.0.0800"
   },
   "visidata": {
     "bin": ["vd", "visidata"],
@@ -4394,12 +4396,12 @@
     "bin": ["yq"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-19",
+    "date": "2022-10-29",
     "dependencies": ["go"],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.28.2"
+    "version": "4.29.1"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
