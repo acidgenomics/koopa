@@ -1380,7 +1380,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": ["gdal-config.1"],
-    "outdated": false,
+    "outdated": true,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
     "version": "3.5.2"
@@ -3778,6 +3778,7 @@
     "homebrew": false,
     "large": true,
     "man1": [],
+    "outdated": true,
     "version": "7.16.0"
   },
   "sox": {
