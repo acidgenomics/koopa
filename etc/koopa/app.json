@@ -1006,6 +1006,17 @@
     "url": ["https://github.com/dandavison/delta/"],
     "version": "0.14.0"
   },
+  "diff-so-fancy": {
+    "bin": ["diff-so-fancy"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-09-01",
+    "dependencies": [],
+    "homebrew": true,
+    "man1": [],
+    "url": ["https://github.com/so-fancy/diff-so-fancy/"],
+    "version": "1.4.3"
+  },
   "difftastic": {
     "bin": ["difft"],
     "build_dependencies": [],

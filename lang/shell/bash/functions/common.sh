@@ -12443,6 +12443,12 @@ koopa_install_delta() {
         "$@"
 }
 
+koopa_install_diff_so_fancy() {
+    koopa_install_app \
+        --name='diff-so-fancy' \
+        "$@"
+}
+
 koopa_install_difftastic() {
     koopa_install_app \
         --name='difftastic' \
@@ -23662,6 +23668,12 @@ koopa_uninstall_deeptools() {
 koopa_uninstall_delta() {
     koopa_uninstall_app \
         --name='delta' \
+        "$@"
+}
+
+koopa_uninstall_diff_so_fancy() {
+    koopa_uninstall_app \
+        --name='diff-so-fancy' \
         "$@"
 }
 
