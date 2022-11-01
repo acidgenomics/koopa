@@ -3296,7 +3296,7 @@
     "bin": [],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": false,
-    "date": "2022-09-28",
+    "date": "2022-11-01",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -3367,7 +3367,7 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.2.1"
+    "version": "4.2.2"
   },
   "r-devel": {
     "aliases": {
