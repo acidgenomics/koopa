@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-10-19.
+    # Updated 2022-11-01.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -134,6 +134,7 @@ __koopa_complete() {
                         'curl'
                         'deeptools'
                         'delta'
+                        'diff-so-fancy'
                         'difftastic'
                         'dotfiles'
                         'du-dust'
