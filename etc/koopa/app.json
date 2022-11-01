@@ -2876,7 +2876,7 @@
       "apr-util",
       "libevent",
       "libgit2",
-      "libssh",
+      "libssh2",
       "libzip",
       "git",
       "nghttp2",
