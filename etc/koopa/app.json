@@ -1213,6 +1213,7 @@
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "outdated": true,
     "version": "8.4.0"
   },
   "ffmpeg": {
@@ -2381,7 +2382,7 @@
     "homebrew": true,
     "large": true,
     "man1": [],
-    "outdated": false,
+    "outdated": true,
     "url": ["https://releases.llvm.org/"],
     "version": "15.0.3"
   },
