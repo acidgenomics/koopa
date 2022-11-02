@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Add install support for micromamba.
 ** TODO Improve pinning of desired Bioconductor version, e.g. 3.16.
 ** TODO Pruning of all old versions should refer to the 'app.json' file.
 ** TODO Rework top-level 'os' directory.
