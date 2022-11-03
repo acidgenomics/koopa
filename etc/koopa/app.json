@@ -2487,6 +2487,13 @@
     "url": ["https://ftp.gnu.org/gnu/make/"],
     "version": "4.3"
   },
+  "mamba": {
+    "bin": ["micromamba"],
+    "build_dependencies": ["cmake"],
+    "date": "2022-11-03",
+    "dependencies": [],
+    "version": "2022.11.01"
+  },
   "man-db": {
     "bin": ["gman"],
     "build_dependencies": [],
