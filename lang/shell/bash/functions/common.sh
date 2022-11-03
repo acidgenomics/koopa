@@ -13312,6 +13312,12 @@ koopa_install_make() {
         "$@"
 }
 
+koopa_install_mamba() {
+    koopa_install_app \
+        --name='mamba' \
+        "$@"
+}
+
 koopa_install_man_db() {
     koopa_install_app \
         --name='man-db' \
@@ -24370,6 +24376,12 @@ koopa_uninstall_m4() {
 koopa_uninstall_make() {
     koopa_uninstall_app \
         --name='make' \
+        "$@"
+}
+
+koopa_uninstall_mamba() {
+    koopa_uninstall_app \
+        --name='mamba' \
         "$@"
 }
 
