@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust (via rustup).
-    # @note Updated 2022-09-24.
+    # @note Updated 2022-11-03.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -22,7 +22,8 @@ main() {
     dict['rustup_home']="${dict['tmp_prefix']}"
     CARGO_HOME="${dict['cargo_home']}"
     RUSTUP_HOME="${dict['rustup_home']}"
-    export CARGO_HOME RUSTUP_HOME
+    RUSTUP_INIT_SKIP_PATH_CHECK='yes'
+    export CARGO_HOME RUSTUP_HOME RUSTUP_INIT_SKIP_PATH_CHECK
     koopa_mkdir "${dict['rustup_home']}"
     dict['url']='https://sh.rustup.rs'
     dict['file']='rustup.sh'
@@ -33,6 +34,8 @@ main() {
         --no-modify-path
     app['rustup']="${dict['tmp_prefix']}/bin/rustup"
     koopa_assert_is_installed "${app['rustup']}"
+    koopa_add_to_path_start "$(koopa_realpath "${dict['tmp_prefix']}/bin")"
+    koopa_print_env
     "${app['rustup']}" install "${dict['version']}"
     "${app['rustup']}" default "${dict['version']}"
     dict['toolchain']="$( \
