@@ -1209,12 +1209,12 @@
     "bin": ["fd"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-11-03",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
     "outdated": true,
-    "version": "8.4.0"
+    "version": "8.5.2"
   },
   "ffmpeg": {
     "bin": ["ffmpeg", "ffprobe"],
@@ -2007,7 +2007,7 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-31",
+    "date": "2022-11-03",
     "dependencies": ["python3.10"],
     "homebrew": false,
     "man1": [],
@@ -2017,7 +2017,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.6.4"
+    "version": "2.6.5"
   },
   "less": {
     "bin": ["less"],
