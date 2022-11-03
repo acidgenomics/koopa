@@ -13204,6 +13204,12 @@ koopa_install_libpng() {
         "$@"
 }
 
+koopa_install_libsolv() {
+    koopa_install_app \
+        --name='libsolv' \
+        "$@"
+}
+
 koopa_install_libssh2() {
     koopa_install_app \
         --name='libssh2' \
@@ -24274,6 +24280,12 @@ koopa_uninstall_libpipeline() {
 koopa_uninstall_libpng() {
     koopa_uninstall_app \
         --name='libpng' \
+        "$@"
+}
+
+koopa_uninstall_libsolv() {
+    koopa_uninstall_app \
+        --name='libsolv' \
         "$@"
 }
 

@@ -1,5 +1,28 @@
 #!/usr/bin/env bash
 
+# FIXME Need to provide support for yaml-cpp.
+# CMake Error at libmamba/CMakeLists.txt:428 (find_package):
+#  Could not find a package configuration file provided by "yaml-cpp" with any
+#  of the following names:
+#
+#    yaml-cppConfig.cmake
+#    yaml-cpp-config.cmake
+#
+#  Add the installation prefix of "yaml-cpp" to CMAKE_PREFIX_PATH or set
+#  "yaml-cpp_DIR" to a directory containing one of the above files.  If
+#  "yaml-cpp" provides a separate development package or SDK, be sure it has
+#  been installed.
+
+# FIXME Need to address libsolv path issues.
+# // Path to a library.
+# LIBSOLVEXT_LIBRARIES:FILEPATH=LIBSOLVEXT_LIBRARIES-NOTFOUND
+#
+# // Path to a library.
+# LIBSOLV_LIBRARIES:FILEPATH=LIBSOLV_LIBRARIES-NOTFOUND
+#
+# // The directory containing a CMake configuration file for yaml-cpp.
+# yaml-cpp_DIR:PATH=yaml-cpp_DIR-NOTFOUND
+
 main() {
     # """
     # Install micromamba.
@@ -16,9 +39,10 @@ main() {
     )
     deps=(
         'curl'
-        'libarchive' # FIXME
-        'libsodium' # FIXME
-        'libsolv' # FIXME
+        'libarchive'
+        # > 'libsodium' # FIXME
+        'libsolv'
+        'openssl3'
         'python'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
@@ -32,10 +56,15 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
+        ['libarchive']="$(koopa_app_prefix 'libarchive')"
         ['name']='mamba'
+        ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    koopa_assert_is_dir \
+        "${dict['libarchive']}" \
+        "${dict['openssl']}"
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
 tags/${dict['file']}"
@@ -52,9 +81,12 @@ tags/${dict['file']}"
         '-DBUILD_MICROMAMBA=ON'
         '-DBUILD_SHARED=ON'
         '-DMICROMAMBA_LINKAGE=DYNAMIC'
+        "-DLibArchive_INCLUDE_DIR=${dict['libarchive']}/include"
+        "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
         "-DPython3_EXECUTABLE=${app['python']}"
     )
-    "${app['cmake']}" -S .. "${cmake_args[@]}"
+    koopa_dl "CMake args" "${cmake_args[*]}"
+    "${app['cmake']}" -LH -S .. "${cmake_args[@]}"
     "${app['make']}"
     "${app['make']}" test
     "${app['make']}" install

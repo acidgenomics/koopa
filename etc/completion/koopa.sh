@@ -212,6 +212,7 @@ __koopa_complete() {
                         'lapack'
                         'latch'
                         'lesspipe'
+                        'libarchive' # FIXME
                         'libassuan'
                         'libedit'
                         'libev'
@@ -227,6 +228,8 @@ __koopa_complete() {
                         'libluv'
                         'libpipeline'
                         'libpng'
+                        'libsodium' # FIXME
+                        'libsolv' # FIXME
                         'libssh2'
                         'libtasn1'
                         'libtermkey'
