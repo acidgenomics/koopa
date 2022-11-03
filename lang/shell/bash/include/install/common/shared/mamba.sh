@@ -34,9 +34,7 @@ main() {
     # - 'environment-dev.yml' files
     # """
     local app build_deps cmake_args deps dict
-    build_deps=(
-        'ninja'
-    )
+    build_deps=('ninja')
     deps=(
         'curl'
         'libarchive'
@@ -44,6 +42,7 @@ main() {
         'libsolv'
         'openssl3'
         'python'
+        'yaml-cpp'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -57,13 +56,16 @@ main() {
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['libarchive']="$(koopa_app_prefix 'libarchive')"
+        ['libsolv']="$(koopa_app_prefix 'libsolv')"
         ['name']='mamba'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     koopa_assert_is_dir \
         "${dict['libarchive']}" \
+        "${dict['libsolv']}" \
         "${dict['openssl']}"
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
@@ -73,6 +75,7 @@ tags/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
+    # FIXME Consider setting CMAKE_PREFIX_PATH here to include yaml-cpp.
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DBUILD_LIBMAMBA=ON'
@@ -82,8 +85,13 @@ tags/${dict['file']}"
         '-DBUILD_SHARED=ON'
         '-DMICROMAMBA_LINKAGE=DYNAMIC'
         "-DLibArchive_INCLUDE_DIR=${dict['libarchive']}/include"
+        "-DLIBSOLVEXT_LIBRARIES=${dict['libsolv']}/lib/
+libsolvext.${dict['shared_ext']}"
+        "-DLIBSOLV_LIBRARIES=${dict['libsolv']}/lib/\
+libsolv.${dict['shared_ext']}"
         "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
         "-DPython3_EXECUTABLE=${app['python']}"
+        # FIXME "-Dyaml-cpp_DIR:PATH=yaml-cpp_DIR-NOTFOUND"
     )
     koopa_dl "CMake args" "${cmake_args[*]}"
     "${app['cmake']}" -LH -S .. "${cmake_args[@]}"
