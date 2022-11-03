@@ -3683,13 +3683,13 @@
     ],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-22",
+    "date": "2022-11-03",
     "dependencies": [],
     "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.64.0"
+    "version": "1.65.0"
   },
   "salmon": {
     "bin": ["salmon"],
