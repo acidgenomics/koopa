@@ -2041,6 +2041,15 @@
     "url": ["https://github.com/wofr06/lesspipe/"],
     "version": "2.06"
   },
+  "libarchive": {
+    "build_dependencies": ["make", "pkg-config"],
+    "conservative": true,
+    "date": "2022-11-03",
+    "dependencies": ["FIXME"],
+    "reverse_dependencies": ["mamba"],
+    "url": ["https://www.libarchive.org/"],
+    "version": "3.6.1"
+  },
   "libassuan": {
     "bin": [],
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
@@ -2247,6 +2256,15 @@
     "man1": [],
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
     "version": "1.6.38"
+  },
+  "libsolv": {
+    "bin": [],
+    "build_dependencies": ["cmake", "pkg-config"],
+    "conservative": true,
+    "dependencies": [],
+    "man1": [],
+    "reverse_dependencies": ["mamba"],
+    "version": "0.7.22"
   },
   "libssh2": {
     "bin": [],
