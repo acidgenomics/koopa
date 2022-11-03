@@ -13102,6 +13102,12 @@ koopa_install_lesspipe() {
         "$@"
 }
 
+koopa_install_libarchive() {
+    koopa_install_app \
+        --name='libarchive' \
+        "$@"
+}
+
 koopa_install_libassuan() {
     koopa_install_app \
         --name='libassuan' \
@@ -24166,6 +24172,12 @@ koopa_uninstall_less() {
 koopa_uninstall_lesspipe() {
     koopa_uninstall_app \
         --name='lesspipe' \
+        "$@"
+}
+
+koopa_uninstall_libarchive() {
+    koopa_uninstall_app \
+        --name='libarchive' \
         "$@"
 }
 
