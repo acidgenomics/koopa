@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting these issues:
-# mamba-2022.11.01/libmamba/include/mamba/core/fetch.hpp:12:10: fatal error: 'archive.h' file not found
-#include <archive.h>
-
 # FIXME Now hitting this issue:
 # 2:10: fatal error: 'nlohmann/json.hpp' file not found
 #include "nlohmann/json.hpp"
 
 # FIXME Need to include termcolor
 # fatal error: 'termcolor/termcolor.hpp' file not found
-
-# FIXME This is detecting wrong on macOS argh...
-# -- Found CURL: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libcurl.tbd (found version "7.79.1")
-# -- Found LibArchive: /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib/libarchive.tbd (found version "3.6.1")
 
 main() {
     # """
