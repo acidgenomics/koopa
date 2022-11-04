@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-10-06.
+    # @note Updated 2022-11-04.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -34,7 +34,10 @@ __koopa_posix_header() {
     case "${KOOPA_ACTIVATE:-0}" in
         '0')
             unalias -a
-            PATH="${KOOPA_PREFIX}/bin:/usr/bin:/bin"
+            PATH="/usr/bin:/bin"
+            # FIXME This puts koopa bin into install_app_subshell PATH, which
+            # we don't want. Need to rethink.
+            # > PATH="${KOOPA_PREFIX}/bin:${PATH}"
             export PATH
             ;;
         '1')

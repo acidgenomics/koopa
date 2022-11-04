@@ -285,8 +285,6 @@ ${dict['version2']}"
                     [[ -x "${app['tee']}" ]] || return 1
                     # Configure 'PATH' string.
                     path_arr=(
-                        # > "$(koopa_bin_prefix)"
-                        # > "$(koopa_bootstrap_bin_prefix)"
                         '/usr/bin'
                         '/bin'
                     )
