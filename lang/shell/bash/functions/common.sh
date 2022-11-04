@@ -11721,6 +11721,8 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         export KOOPA_INSTALL_VERSION="${dict['version']}"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
+        PATH='/usr/bin:/bin'
+        export PATH
         "${dict['installer_fun']}" "$@"
         return 0
     )
@@ -13895,6 +13897,12 @@ koopa_install_snakemake() {
 koopa_install_sox() {
     koopa_install_app \
         --name='sox' \
+        "$@"
+}
+
+koopa_install_spdlog() {
+    koopa_install_app \
+        --name='spdlog' \
         "$@"
 }
 
@@ -24941,6 +24949,12 @@ koopa_uninstall_snakemake() {
 koopa_uninstall_sox() {
     koopa_uninstall_app \
         --name='sox' \
+        "$@"
+}
+
+koopa_uninstall_spdlog() {
+    koopa_uninstall_app \
+        --name='spdlog' \
         "$@"
 }
 
