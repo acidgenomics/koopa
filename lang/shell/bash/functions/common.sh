@@ -12717,6 +12717,12 @@ koopa_install_google_cloud_sdk() {
         "$@"
 }
 
+koopa_install_googletest() {
+    koopa_install_app \
+        --name='googletest' \
+        "$@"
+}
+
 koopa_install_gperf() {
     koopa_install_app \
         --name='gperf' \
@@ -13607,6 +13613,12 @@ koopa_install_proj() {
 koopa_install_py_spy() {
     koopa_install_app \
         --name='py-spy' \
+        "$@"
+}
+
+koopa_install_pybind11() {
+    koopa_install_app \
+        --name='pybind11' \
         "$@"
 }
 
@@ -23991,6 +24003,12 @@ koopa_uninstall_google_cloud_sdk() {
         "$@"
 }
 
+koopa_uninstall_googletest() {
+    koopa_uninstall_app \
+        --name='googletest' \
+        "$@"
+}
+
 koopa_uninstall_gperf() {
     koopa_uninstall_app \
         --name='gperf' \
@@ -24714,6 +24732,12 @@ koopa_uninstall_proj() {
 koopa_uninstall_py_spy() {
     koopa_uninstall_app \
         --name='py_spy' \
+        "$@"
+}
+
+koopa_uninstall_pybind11() {
+    koopa_uninstall_app \
+        --name='pybind11' \
         "$@"
 }
 
