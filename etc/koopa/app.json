@@ -1572,6 +1572,15 @@
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
     "version": "402.0.0"
   },
+  "googletest": {
+    "bin": [],
+    "build_dependencies": ["cmake"],
+    "date": "2022-11-04",
+    "dependencies": [],
+    "reverse_dependencies": ["mamba"],
+    "url": ["https://github.com/google/googletest/"],
+    "version": "1.12.1"
+  },
   "gperf": {
     "bin": [],
     "build_dependencies": [],
@@ -3183,6 +3192,16 @@
     "homebrew": true,
     "man1": [],
     "version": "0.3.14"
+  },
+  "pybind11": {
+    "bin": [],
+    "build_dependencies": ["cmake"],
+    "conservative": true,
+    "date": "2022-11-04",
+    "man1": [],
+    "reverse_dependencies": ["mamba"],
+    "url": ["https://pybind11.readthedocs.io/"],
+    "version": "2.10.1"
   },
   "pycodestyle": {
     "bin": ["pycodestyle"],
