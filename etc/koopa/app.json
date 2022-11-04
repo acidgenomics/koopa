@@ -469,11 +469,11 @@
     "bin": ["broot"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-13",
+    "date": "2022-11-04",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "1.16.1"
+    "version": "1.16.2"
   },
   "brotli": {
     "bin": [],
@@ -3896,6 +3896,14 @@
     "url": ["https://github.com/SpaceVim/SpaceVim/"],
     "version": "4baafa275025f71102eb747fdc636285a96a7082"
   },
+  "spdlog": {
+    "bin": [],
+    "build_dependencies": ["cmake", "pkg-config"],
+    "date": "2022-11-04",
+    "man1": [],
+    "reverse_dependencies": ["mamba"],
+    "version": "1.10.0"
+  },
   "sqlite": {
     "bin": ["sqlite3"],
     "build_dependencies": [],
@@ -4028,11 +4036,11 @@
     "bin": ["tldr"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-02",
+    "date": "2022-11-04",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "1.6.0"
+    "version": "1.6.1"
   },
   "texinfo": {
     "bin": [
