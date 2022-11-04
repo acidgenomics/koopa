@@ -12577,6 +12577,12 @@ koopa_install_fltk() {
         "$@"
 }
 
+koopa_install_fmt() {
+    koopa_install_app \
+        --name='fmt' \
+        "$@"
+}
+
 koopa_install_fontconfig() {
     koopa_install_app \
         --name='fontconfig' \
@@ -13772,6 +13778,12 @@ koopa_install_rename() {
         "$@"
 }
 
+koopa_install_reproc() {
+    koopa_install_app \
+        --name='reproc' \
+        "$@"
+}
+
 koopa_install_ripgrep_all() {
     koopa_install_app \
         --name='ripgrep-all' \
@@ -13985,6 +13997,12 @@ koopa_install_tealdeer() {
 koopa_install_texinfo() {
     koopa_install_app \
         --name='texinfo' \
+        "$@"
+}
+
+koopa_install_tl_expected() {
+    koopa_install_app \
+        --name='tl-expected' \
         "$@"
 }
 
@@ -14209,6 +14227,12 @@ koopa_install_xxhash() {
 koopa_install_xz() {
     koopa_install_app \
         --name='xz' \
+        "$@"
+}
+
+koopa_install_yaml_cpp() {
+    koopa_install_app \
+        --name='yaml-cpp' \
         "$@"
 }
 
@@ -23821,6 +23845,12 @@ koopa_uninstall_fltk() {
         "$@"
 }
 
+koopa_uninstall_fmt() {
+    koopa_uninstall_app \
+        --name='fmt' \
+        "$@"
+}
+
 koopa_uninstall_fontconfig() {
     koopa_uninstall_app \
         --name='fontconfig' \
@@ -24794,6 +24824,12 @@ koopa_uninstall_rename() {
         "$@"
 }
 
+koopa_uninstall_reproc() {
+    koopa_uninstall_app \
+        --name='reproc' \
+        "$@"
+}
+
 koopa_uninstall_ripgrep_all() {
     koopa_uninstall_app \
         --name='ripgrep-all' \
@@ -24991,6 +25027,12 @@ koopa_uninstall_tealdeer() {
 koopa_uninstall_texinfo() {
     koopa_uninstall_app \
         --name='texinfo' \
+        "$@"
+}
+
+koopa_uninstall_tl_expected() {
+    koopa_uninstall_app \
+        --name='tl-expected' \
         "$@"
 }
 
@@ -25215,6 +25257,12 @@ koopa_uninstall_xxhash() {
 koopa_uninstall_xz() {
     koopa_uninstall_app \
         --name='xz' \
+        "$@"
+}
+
+koopa_uninstall_yaml_cpp() {
+    koopa_uninstall_app \
+        --name='yaml-cpp' \
         "$@"
 }
 
