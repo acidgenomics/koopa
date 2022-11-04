@@ -229,7 +229,7 @@ __koopa_complete() {
                         'libluv'
                         'libpipeline'
                         'libpng'
-                        'libsodium' # FIXME
+                        # > 'libsodium' # FIXME
                         'libsolv'
                         'libssh2'
                         'libtasn1'
@@ -335,6 +335,7 @@ __koopa_complete() {
                         'snakefmt'
                         'snakemake'
                         'sox'
+                        'spdlog'
                         'sqlite'
                         'sra-tools'
                         'star'
