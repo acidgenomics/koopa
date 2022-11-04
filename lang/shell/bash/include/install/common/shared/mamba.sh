@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add support for pybind11.
+# By not providing "Findpybind11.cmake" in CMAKE_MODULE_PATH this project has
+#  asked CMake to find a package configuration file provided by "pybind11",
+#  but CMake did not find one.
+
 main() {
     # """
     # Install micromamba.
@@ -22,6 +27,7 @@ main() {
         'libsolv'
         'openssl3'
         'python'
+        'pybind11' # FIXME
         'reproc'
         'spdlog'
         'tl-expected'
@@ -47,6 +53,7 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['reproc']="$(koopa_app_prefix 'reproc')"
         ['shared_ext']="$(koopa_shared_ext)"
+        ['spdlog']="$(koopa_app_prefix 'spdlog')"
         ['tl-expected']="$(koopa_app_prefix 'tl-expected')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['yaml-cpp']="$(koopa_app_prefix 'yaml-cpp')"
@@ -57,6 +64,7 @@ main() {
         "${dict['libsolv']}" \
         "${dict['openssl']}" \
         "${dict['reproc']}" \
+        "${dict['spdlog']}" \
         "${dict['tl-expected']}" \
         "${dict['yaml-cpp']}"
     dict['file']="${dict['version']}.tar.gz"
@@ -85,9 +93,7 @@ libsolv.${dict['shared_ext']}"
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
         "-Dreproc_DIR=${dict['reproc']}/lib/cmake/reproc"
         "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
-        # FIXME Need to support spdlog
-        # > // The directory containing a CMake configuration file for spdlog.
-        # > spdlog_DIR:PATH=spdlog_DIR-NOTFOUND
+        "-Dspdlog_DIR=${dict['spdlog']}/lib/cmake/spdlog"
         "-Dtl-expected_DIR=${dict['tl-expected']}/share/cmake/tl-expected"
         "-Dyaml-cpp_DIR=${dict['yaml-cpp']}/share/cmake/yaml-cpp"
     )
