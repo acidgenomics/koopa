@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-11-03.
+    # Updated 2022-11-04.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -155,6 +155,7 @@ __koopa_complete() {
                         'flake8'
                         'flex'
                         'fltk'
+                        'fmt'
                         'fontconfig'
                         'freetype'
                         'fribidi'
@@ -212,7 +213,7 @@ __koopa_complete() {
                         'lapack'
                         'latch'
                         'lesspipe'
-                        'libarchive' # FIXME
+                        'libarchive'
                         'libassuan'
                         'libedit'
                         'libev'
@@ -229,7 +230,7 @@ __koopa_complete() {
                         'libpipeline'
                         'libpng'
                         'libsodium' # FIXME
-                        'libsolv' # FIXME
+                        'libsolv'
                         'libssh2'
                         'libtasn1'
                         'libtermkey'
@@ -313,6 +314,7 @@ __koopa_complete() {
                         'rbenv'
                         'readline'
                         'rename'
+                        'reproc'
                         'ripgrep'
                         'ripgrep-all'
                         'rmate'
@@ -346,6 +348,7 @@ __koopa_complete() {
                         'tcl-tk'
                         'tealdeer'
                         'texinfo'
+                        'tl-expected'
                         'tmux'
                         'tokei'
                         'tree'
@@ -379,6 +382,7 @@ __koopa_complete() {
                         'xsv'
                         'xxhash'
                         'xz'
+                        'yaml-cpp'
                         'yarn'
                         'yt-dlp'
                         'zellij'
