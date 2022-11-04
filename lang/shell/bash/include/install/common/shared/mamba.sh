@@ -23,9 +23,7 @@ main() {
     # - https://man.archlinux.org/man/extra/cmake/cmake-env-variables.7.en
     # """
     local app build_deps cmake_args deps dict
-    # FIXME This causes different things to happen with Cmake args...
-    # koopa_add_to_path_start '/opt/koopa/bin' # FIXME
-    build_deps=('cmake' 'ninja')
+    build_deps=('ninja')
     deps=(
         'curl'
         'fmt'
