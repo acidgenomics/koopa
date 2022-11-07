@@ -2788,7 +2788,7 @@
     "bin": ["node", "npm", "npx"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-01",
+    "date": "2022-11-07",
     "dependencies": [],
     "homebrew": true,
     "lts": true,
@@ -2802,7 +2802,7 @@
       "yarn"
     ],
     "url": ["https://nodejs.org/"],
-    "version": "18.12.0"
+    "version": "18.12.1"
   },
   "npth": {
     "bin": [],
