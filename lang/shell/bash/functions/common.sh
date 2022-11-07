@@ -11721,6 +11721,8 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         export KOOPA_INSTALL_VERSION="${dict['version']}"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
+        PATH='/usr/bin:/bin'
+        export PATH
         "${dict['installer_fun']}" "$@"
         return 0
     )
@@ -12577,6 +12579,12 @@ koopa_install_fltk() {
         "$@"
 }
 
+koopa_install_fmt() {
+    koopa_install_app \
+        --name='fmt' \
+        "$@"
+}
+
 koopa_install_fontconfig() {
     koopa_install_app \
         --name='fontconfig' \
@@ -12706,6 +12714,12 @@ koopa_install_go() {
 koopa_install_google_cloud_sdk() {
     koopa_install_app \
         --name='google-cloud-sdk' \
+        "$@"
+}
+
+koopa_install_googletest() {
+    koopa_install_app \
+        --name='googletest' \
         "$@"
 }
 
@@ -13102,6 +13116,12 @@ koopa_install_lesspipe() {
         "$@"
 }
 
+koopa_install_libarchive() {
+    koopa_install_app \
+        --name='libarchive' \
+        "$@"
+}
+
 koopa_install_libassuan() {
     koopa_install_app \
         --name='libassuan' \
@@ -13195,6 +13215,12 @@ koopa_install_libpipeline() {
 koopa_install_libpng() {
     koopa_install_app \
         --name='libpng' \
+        "$@"
+}
+
+koopa_install_libsolv() {
+    koopa_install_app \
+        --name='libsolv' \
         "$@"
 }
 
@@ -13312,6 +13338,12 @@ koopa_install_make() {
         "$@"
 }
 
+koopa_install_mamba() {
+    koopa_install_app \
+        --name='mamba' \
+        "$@"
+}
+
 koopa_install_man_db() {
     koopa_install_app \
         --name='man-db' \
@@ -13423,6 +13455,12 @@ koopa_install_nim() {
 koopa_install_ninja() {
     koopa_install_app \
         --name='ninja' \
+        "$@"
+}
+
+koopa_install_nlohmann_json() {
+    koopa_install_app \
+        --name='nlohmann-json' \
         "$@"
 }
 
@@ -13581,6 +13619,12 @@ koopa_install_proj() {
 koopa_install_py_spy() {
     koopa_install_app \
         --name='py-spy' \
+        "$@"
+}
+
+koopa_install_pybind11() {
+    koopa_install_app \
+        --name='pybind11' \
         "$@"
 }
 
@@ -13754,6 +13798,12 @@ koopa_install_rename() {
         "$@"
 }
 
+koopa_install_reproc() {
+    koopa_install_app \
+        --name='reproc' \
+        "$@"
+}
+
 koopa_install_ripgrep_all() {
     koopa_install_app \
         --name='ripgrep-all' \
@@ -13868,6 +13918,12 @@ koopa_install_sox() {
         "$@"
 }
 
+koopa_install_spdlog() {
+    koopa_install_app \
+        --name='spdlog' \
+        "$@"
+}
+
 koopa_install_sqlite() {
     koopa_install_app \
         --name='sqlite' \
@@ -13964,9 +14020,21 @@ koopa_install_tealdeer() {
         "$@"
 }
 
+koopa_install_termcolor() {
+    koopa_install_app \
+        --name='termcolor' \
+        "$@"
+}
+
 koopa_install_texinfo() {
     koopa_install_app \
         --name='texinfo' \
+        "$@"
+}
+
+koopa_install_tl_expected() {
+    koopa_install_app \
+        --name='tl-expected' \
         "$@"
 }
 
@@ -14191,6 +14259,12 @@ koopa_install_xxhash() {
 koopa_install_xz() {
     koopa_install_app \
         --name='xz' \
+        "$@"
+}
+
+koopa_install_yaml_cpp() {
+    koopa_install_app \
+        --name='yaml-cpp' \
         "$@"
 }
 
@@ -23803,6 +23877,12 @@ koopa_uninstall_fltk() {
         "$@"
 }
 
+koopa_uninstall_fmt() {
+    koopa_uninstall_app \
+        --name='fmt' \
+        "$@"
+}
+
 koopa_uninstall_fontconfig() {
     koopa_uninstall_app \
         --name='fontconfig' \
@@ -23932,6 +24012,12 @@ koopa_uninstall_go() {
 koopa_uninstall_google_cloud_sdk() {
     koopa_uninstall_app \
         --name='google-cloud-sdk' \
+        "$@"
+}
+
+koopa_uninstall_googletest() {
+    koopa_uninstall_app \
+        --name='googletest' \
         "$@"
 }
 
@@ -24163,6 +24249,12 @@ koopa_uninstall_lesspipe() {
         "$@"
 }
 
+koopa_uninstall_libarchive() {
+    koopa_uninstall_app \
+        --name='libarchive' \
+        "$@"
+}
+
 koopa_uninstall_libassuan() {
     koopa_uninstall_app \
         --name='libassuan' \
@@ -24256,6 +24348,12 @@ koopa_uninstall_libpipeline() {
 koopa_uninstall_libpng() {
     koopa_uninstall_app \
         --name='libpng' \
+        "$@"
+}
+
+koopa_uninstall_libsolv() {
+    koopa_uninstall_app \
+        --name='libsolv' \
         "$@"
 }
 
@@ -24373,6 +24471,12 @@ koopa_uninstall_make() {
         "$@"
 }
 
+koopa_uninstall_mamba() {
+    koopa_uninstall_app \
+        --name='mamba' \
+        "$@"
+}
+
 koopa_uninstall_man_db() {
     koopa_uninstall_app \
         --name='man-db' \
@@ -24484,6 +24588,12 @@ koopa_uninstall_nim() {
 koopa_uninstall_ninja() {
     koopa_uninstall_app \
         --name='ninja' \
+        "$@"
+}
+
+koopa_uninstall_nlohmann_json() {
+    koopa_uninstall_app \
+        --name='nlohmann-json' \
         "$@"
 }
 
@@ -24643,6 +24753,12 @@ koopa_uninstall_py_spy() {
         "$@"
 }
 
+koopa_uninstall_pybind11() {
+    koopa_uninstall_app \
+        --name='pybind11' \
+        "$@"
+}
+
 koopa_uninstall_pycodestyle() {
     koopa_uninstall_app \
         --name='pycodestyle' \
@@ -24755,6 +24871,12 @@ koopa_uninstall_readline() {
 koopa_uninstall_rename() {
     koopa_uninstall_app \
         --name='rename' \
+        "$@"
+}
+
+koopa_uninstall_reproc() {
+    koopa_uninstall_app \
+        --name='reproc' \
         "$@"
 }
 
@@ -24872,6 +24994,12 @@ koopa_uninstall_sox() {
         "$@"
 }
 
+koopa_uninstall_spdlog() {
+    koopa_uninstall_app \
+        --name='spdlog' \
+        "$@"
+}
+
 koopa_uninstall_sqlite() {
     koopa_uninstall_app \
         --name='sqlite' \
@@ -24952,9 +25080,21 @@ koopa_uninstall_tealdeer() {
         "$@"
 }
 
+koopa_uninstall_termcolor() {
+    koopa_uninstall_app \
+        --name='termcolor' \
+        "$@"
+}
+
 koopa_uninstall_texinfo() {
     koopa_uninstall_app \
         --name='texinfo' \
+        "$@"
+}
+
+koopa_uninstall_tl_expected() {
+    koopa_uninstall_app \
+        --name='tl-expected' \
         "$@"
 }
 
@@ -25179,6 +25319,12 @@ koopa_uninstall_xxhash() {
 koopa_uninstall_xz() {
     koopa_uninstall_app \
         --name='xz' \
+        "$@"
+}
+
+koopa_uninstall_yaml_cpp() {
+    koopa_uninstall_app \
+        --name='yaml-cpp' \
         "$@"
 }
 

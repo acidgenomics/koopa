@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-11-01.
+    # Updated 2022-11-04.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -155,6 +155,7 @@ __koopa_complete() {
                         'flake8'
                         'flex'
                         'fltk'
+                        'fmt'
                         'fontconfig'
                         'freetype'
                         'fribidi'
@@ -177,6 +178,7 @@ __koopa_complete() {
                         'gnutls'
                         'go'
                         'google-cloud-sdk'
+                        'googletest'
                         'gperf'
                         'graphviz'
                         'grep'
@@ -212,6 +214,7 @@ __koopa_complete() {
                         'lapack'
                         'latch'
                         'lesspipe'
+                        'libarchive'
                         'libassuan'
                         'libedit'
                         'libev'
@@ -227,6 +230,8 @@ __koopa_complete() {
                         'libluv'
                         'libpipeline'
                         'libpng'
+                        # > 'libsodium' # FIXME
+                        'libsolv'
                         'libssh2'
                         'libtasn1'
                         'libtermkey'
@@ -246,6 +251,7 @@ __koopa_complete() {
                         'lzo'
                         'm4'
                         'make'
+                        'mamba'
                         'man-db'
                         'markdownlint-cli'
                         'mcfly'
@@ -265,6 +271,7 @@ __koopa_complete() {
                         'nghttp2'
                         'nim'
                         'ninja'
+                        'nlohmann-json'
                         'nmap'
                         'node'
                         'npth'
@@ -291,6 +298,7 @@ __koopa_complete() {
                         'procs'
                         'proj'
                         'py-spy'
+                        'pybind11'
                         'pycodestyle'
                         'pyenv'
                         'pyflakes'
@@ -309,6 +317,7 @@ __koopa_complete() {
                         'rbenv'
                         'readline'
                         'rename'
+                        'reproc'
                         'ripgrep'
                         'ripgrep-all'
                         'rmate'
@@ -329,6 +338,7 @@ __koopa_complete() {
                         'snakefmt'
                         'snakemake'
                         'sox'
+                        'spdlog'
                         'sqlite'
                         'sra-tools'
                         'star'
@@ -341,7 +351,9 @@ __koopa_complete() {
                         'tar'
                         'tcl-tk'
                         'tealdeer'
+                        'termcolor'
                         'texinfo'
+                        'tl-expected'
                         'tmux'
                         'tokei'
                         'tree'
@@ -375,6 +387,7 @@ __koopa_complete() {
                         'xsv'
                         'xxhash'
                         'xz'
+                        'yaml-cpp'
                         'yarn'
                         'yt-dlp'
                         'zellij'

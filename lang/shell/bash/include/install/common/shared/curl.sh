@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Likely need to fix this on macOS:
+# checking if libraries can be versioned... no
+# configure: WARNING: You need an ld version supporting the --version-script option
+
 main() {
     # """
     # Install cURL.
