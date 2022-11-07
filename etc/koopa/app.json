@@ -581,12 +581,12 @@
     "bin": ["cheat"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-27",
+    "date": "2022-11-07",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/cheat/cheat/"],
-    "version": "4.3.3"
+    "version": "4.4.0"
   },
   "chemacs": {
     "bin": [],
