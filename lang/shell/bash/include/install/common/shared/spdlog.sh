@@ -33,11 +33,14 @@ archive/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DCMAKE_INSTALL_INCLUDEDIR=include'
+        '-DCMAKE_INSTALL_LIBDIR=lib'
         '-DSPDLOG_BUILD_BENCH=OFF'
         '-DSPDLOG_BUILD_SHARED=ON'
         '-DSPDLOG_BUILD_TESTS=OFF'
         '-DSPDLOG_FMT_EXTERNAL=ON'
-        '-Dpkg_config_libdir=lib'
+        # This is mutually exclusive with 'SPDLOG_FMT_EXTERNAL'.
+        # > '-DSPDLOG_FMT_EXTERNAL_HO=ON'
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
     )
     koopa_print_env
