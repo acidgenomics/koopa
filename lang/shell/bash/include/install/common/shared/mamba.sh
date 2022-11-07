@@ -30,7 +30,7 @@ main() {
     deps=(
         'curl'
         'fmt'
-        'googletest'
+        # > 'googletest'
         'libarchive'
         'libsolv'
         'nlohmann-json'
@@ -56,7 +56,7 @@ main() {
     declare -A dict=(
         ['curl']="$(koopa_app_prefix 'curl')"
         ['fmt']="$(koopa_app_prefix 'fmt')"
-        ['googletest']="$(koopa_app_prefix 'googletest')"
+        # > ['googletest']="$(koopa_app_prefix 'googletest')"
         ['jobs']="$(koopa_cpu_count)"
         ['libarchive']="$(koopa_app_prefix 'libarchive')"
         ['libsolv']="$(koopa_app_prefix 'libsolv')"
@@ -74,7 +74,6 @@ main() {
     koopa_assert_is_dir \
         "${dict['curl']}" \
         "${dict['fmt']}" \
-        "${dict['googletest']}" \
         "${dict['libarchive']}" \
         "${dict['libsolv']}" \
         "${dict['openssl']}" \
@@ -100,17 +99,17 @@ tags/${dict['file']}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-G' 'Ninja'
         # Mamba build settings -------------------------------------------------
+        '-DBUILD_SHARED=ON'
         '-DBUILD_LIBMAMBA=ON'
         '-DBUILD_LIBMAMBAPY=ON'
         '-DBUILD_LIBMAMBA_TESTS=OFF'
-        '-DBUILD_MAMBA_PACKAGE=ON'
-        '-DBUILD_MICROMAMBA=ON'
-        '-DBUILD_SHARED=ON'
-        '-DMICROMAMBA_LINKAGE=DYNAMIC'
+        # FIXME '-DBUILD_MAMBA_PACKAGE=ON'
+        # FIXME '-DBUILD_MICROMAMBA=ON'
+        # FIXME '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
-        "-DGTest_DIR=${dict['googletest']}/lib/cmake/GTest"
+        # > "-DGTest_DIR=${dict['googletest']}/lib/cmake/GTest"
         "-DLibArchive_INCLUDE_DIR=${dict['libarchive']}/include"
         "-DLibArchive_LIBRARY=${dict['libarchive']}/lib/\
 libarchive.${dict['shared_ext']}"
