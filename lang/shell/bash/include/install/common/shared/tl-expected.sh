@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME This is failing to build on Ubuntu 22.
+
 main() {
     # """
     # Install TartanLlama expected (tl-expected).
-    # @note Updated 2022-11-04.
+    # @note Updated 2022-11-07.
     #
     # @seealso
     # - https://github.com/TartanLlama/expected
@@ -29,6 +31,7 @@ refs/tags/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DEXPECTED_ENABLE_TESTS=OFF'
     )
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
