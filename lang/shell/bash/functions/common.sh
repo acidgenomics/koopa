@@ -13458,6 +13458,12 @@ koopa_install_ninja() {
         "$@"
 }
 
+koopa_install_nlohmann_json() {
+    koopa_install_app \
+        --name='nlohmann-json' \
+        "$@"
+}
+
 koopa_install_nmap() {
     koopa_install_app \
         --name='nmap' \
@@ -14011,6 +14017,12 @@ koopa_install_tcl_tk() {
 koopa_install_tealdeer() {
     koopa_install_app \
         --name='tealdeer' \
+        "$@"
+}
+
+koopa_install_termcolor() {
+    koopa_install_app \
+        --name='termcolor' \
         "$@"
 }
 
@@ -24579,6 +24591,12 @@ koopa_uninstall_ninja() {
         "$@"
 }
 
+koopa_uninstall_nlohmann_json() {
+    koopa_uninstall_app \
+        --name='nlohmann-json' \
+        "$@"
+}
+
 koopa_uninstall_nmap() {
     koopa_uninstall_app \
         --name='nmap' \
@@ -25059,6 +25077,12 @@ koopa_uninstall_tcl_tk() {
 koopa_uninstall_tealdeer() {
     koopa_uninstall_app \
         --name='tealdeer' \
+        "$@"
+}
+
+koopa_uninstall_termcolor() {
+    koopa_uninstall_app \
+        --name='termcolor' \
         "$@"
 }
 
