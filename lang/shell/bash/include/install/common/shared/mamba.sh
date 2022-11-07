@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to define the architecture for macOS?
-# [100%] Linking CXX shared library libmamba.dylib
-# Undefined symbols for architecture x86_64:
-
-# FIXME This works on Linux but not macOS with clang...use GCC?
-
 main() {
     # """
     # Install micromamba.
@@ -33,7 +27,6 @@ main() {
         'fmt'
         'googletest'
         'libarchive'
-        # > 'libsodium' # FIXME Need to include?
         'libsolv'
         'nlohmann-json'
         'openssl3'
@@ -102,15 +95,13 @@ tags/${dict['file']}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-G' 'Ninja'
         # Mamba build settings -------------------------------------------------
-        '-DBUILD_SHARED=ON'
-        # > '-DBUILD_STATIC=OFF'
-        # > '-DBUILD_STATIC_DEPS=OFF'
         '-DBUILD_LIBMAMBA=ON'
-        # > '-DBUILD_LIBMAMBAPY=ON'
-        # > '-DBUILD_LIBMAMBA_TESTS=ON'
-        # > '-DBUILD_MAMBA_PACKAGE=ON'
-        # > '-DBUILD_MICROMAMBA=ON'
-        # > '-DMICROMAMBA_LINKAGE=DYNAMIC'
+        '-DBUILD_LIBMAMBAPY=ON'
+        '-DBUILD_LIBMAMBA_TESTS=ON'
+        '-DBUILD_MAMBA_PACKAGE=ON'
+        '-DBUILD_MICROMAMBA=ON'
+        '-DBUILD_SHARED=ON'
+        '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
