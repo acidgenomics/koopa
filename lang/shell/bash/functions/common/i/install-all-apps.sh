@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-10-18.
+    # @note Updated 2022-11-07.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -342,6 +342,22 @@ koopa_install_all_apps() {
             )
         fi
     fi
+
+    # Build mamba (experimental).
+    apps+=(
+        'fmt'
+        'googletest'
+        'libarchive'
+        'libsolv'
+        'nlohmann-json'
+        'pybind11'
+        'reproc'
+        'spdlog'
+        'termcolor'
+        'tl-expected'
+        'yaml-cpp'
+        # > 'mamba'
+    )
     koopa_add_to_path_start "$(koopa_bootstrap_bin_prefix)"
     for app_name in "${apps[@]}"
     do
