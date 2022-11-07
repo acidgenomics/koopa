@@ -4,6 +4,8 @@
 # [100%] Linking CXX shared library libmamba.dylib
 # Undefined symbols for architecture x86_64:
 
+# FIXME This works on Linux but not macOS with clang...use GCC?
+
 main() {
     # """
     # Install micromamba.
@@ -22,7 +24,10 @@ main() {
     # - https://github.com/conda-forge/conda-libmamba-solver-feedstock/
     # """
     local app build_deps cmake_args deps dict
-    build_deps=('ninja')
+    build_deps=(
+        'gcc'
+        'ninja'
+    )
     deps=(
         'curl'
         'fmt'
@@ -44,9 +49,11 @@ main() {
     koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
+        ['gcc']="$(koopa_locate_gcc)"
         ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
+    [[ -x "${app['gcc']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['curl']="$(koopa_app_prefix 'curl')"
@@ -84,6 +91,7 @@ tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    export CC="${app['gcc']}"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_BUILD_TYPE=Release'
@@ -92,9 +100,8 @@ tags/${dict['file']}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        # > FIXME -G "Ninja"
+        '-G' 'Ninja'
         # Mamba build settings -------------------------------------------------
-        '-DBUILD_BINDINGS=OFF'
         '-DBUILD_SHARED=ON'
         # > '-DBUILD_STATIC=OFF'
         # > '-DBUILD_STATIC_DEPS=OFF'
