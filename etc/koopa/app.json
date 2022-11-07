@@ -2768,6 +2768,10 @@
     "man1": [],
     "version": "1.11.1"
   },
+  "nlohmann-json": {
+    "date": "2022-11-05",
+    "version": "3.11.2"
+  },
   "nmap": {
     "bin": ["nmap"],
     "build_dependencies": [],
@@ -4060,6 +4064,14 @@
     "homebrew": true,
     "man1": [],
     "version": "1.6.1"
+  },
+  "termcolor": {
+    "date": "2022-11-05",
+    "version": "2.1.0",
+    "url": [
+      "https://termcolor.readthedocs.io/",
+      "https://github.com/ikalnytskyi/termcolor/"
+    ]
   },
   "texinfo": {
     "bin": [

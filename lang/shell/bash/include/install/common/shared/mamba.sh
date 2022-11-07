@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting this issue:
-# 2:10: fatal error: 'nlohmann/json.hpp' file not found
-#include "nlohmann/json.hpp"
-
-# FIXME Need to include termcolor
-# fatal error: 'termcolor/termcolor.hpp' file not found
+# FIXME Need to define the architecture for macOS?
+# [100%] Linking CXX shared library libmamba.dylib
+# Undefined symbols for architecture x86_64:
 
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2022-11-04.
+    # @note Updated 2022-11-07.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' here to include yaml-cpp.
     #
@@ -29,13 +26,15 @@ main() {
         'fmt'
         'googletest'
         'libarchive'
-        # > 'libsodium'
+        # > 'libsodium' # FIXME Need to include?
         'libsolv'
+        'nlohmann-json'
         'openssl3'
-        'python'
         'pybind11'
+        'python'
         'reproc'
         'spdlog'
+        'termcolor'
         'tl-expected'
         'yaml-cpp'
     )
@@ -43,11 +42,9 @@ main() {
     koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
-        ['make']="$(koopa_locate_make)"
         ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['curl']="$(koopa_app_prefix 'curl')"
@@ -85,8 +82,6 @@ tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_mkdir 'build'
-    koopa_cd 'build'
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_BUILD_TYPE=Release'
@@ -129,13 +124,12 @@ libsolv.${dict['shared_ext']}"
     koopa_print_env
     koopa_dl "CMake args" "${cmake_args[*]}"
     "${app['cmake']}" -LH \
-        -S .. \
-        -B . \
+        -S . \
+        -B 'build' \
         "${cmake_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" test
-    "${app['make']}" install
-    # > python3 -m pip install -e ../libmambapy/ --no-deps
-    # > pytest ./micromamba/tests/
+    "${app['cmake']}" \
+        --build 'build' \
+        --parallel "${dict['jobs']}"
+    "${app['cmake']}" --install 'build'
     return 0
 }
