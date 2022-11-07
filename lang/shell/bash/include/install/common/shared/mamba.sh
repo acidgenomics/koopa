@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME There's a CMake Python location issue on macOS:
+# -- Found Python3: /opt/koopa/app/python3.10/3.10.8/libexec/Python.framework/Versions/3.10/bin/python3.10 (found version "3.10.8")
+# [...]
+# -- Found Python: /Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10 (found version "3.10.8")
+
 main() {
     # """
     # Install micromamba.
