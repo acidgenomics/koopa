@@ -104,7 +104,7 @@ tags/${dict['file']}"
         '-DBUILD_LIBMAMBAPY=ON'
         '-DBUILD_LIBMAMBA_TESTS=OFF'
         # FIXME '-DBUILD_MAMBA_PACKAGE=ON'
-        # FIXME '-DBUILD_MICROMAMBA=ON'
+        '-DBUILD_MICROMAMBA=ON'
         # FIXME '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
