@@ -5,6 +5,10 @@
 # [...]
 # -- Found Python: /Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10 (found version "3.10.8")
 
+# FIXME We're hitting a 'CLI.hpp' linkage error when building micromamba.
+# /tmp/koopa-1000-20221107-083526-IYn1fbXYCS/mamba-2022.11.01/micromamba/src/common_options.hpp:12:10: fatal error: CLI/CLI.hpp: No such file or directory
+#    12 | #include <CLI/CLI.hpp>
+
 main() {
     # """
     # Install micromamba.
