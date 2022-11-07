@@ -9,6 +9,10 @@
 # /tmp/koopa-1000-20221107-083526-IYn1fbXYCS/mamba-2022.11.01/micromamba/src/common_options.hpp:12:10: fatal error: CLI/CLI.hpp: No such file or directory
 #    12 | #include <CLI/CLI.hpp>
 
+# FIXME Consider splitting this out into separate build steps.
+# FIXME Use this later?
+# > "-Dlibmamba_DIR=${dict['prefix']}/share/cmake/libmamba"
+
 main() {
     # """
     # Install micromamba.
@@ -127,8 +131,6 @@ libsolv.${dict['shared_ext']}"
         # Needed for 'libmambapy/CMakeLists.txt'.
         "-DPython_EXECUTABLE=${app['python']}"
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
-        # FIXME Consider splitting this out into separate build steps.
-        "-Dlibmamba_DIR=${dict['prefix']}/share/cmake/libmamba"
         "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
         "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
         "-Dreproc_DIR=${dict['reproc']}/lib/cmake/reproc"
