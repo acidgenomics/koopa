@@ -102,7 +102,7 @@ tags/${dict['file']}"
         # Mamba build settings -------------------------------------------------
         '-DBUILD_LIBMAMBA=ON'
         '-DBUILD_LIBMAMBAPY=ON'
-        '-DBUILD_LIBMAMBA_TESTS=ON'
+        '-DBUILD_LIBMAMBA_TESTS=OFF'
         '-DBUILD_MAMBA_PACKAGE=ON'
         '-DBUILD_MICROMAMBA=ON'
         '-DBUILD_SHARED=ON'
@@ -119,7 +119,10 @@ libsolvext.${dict['shared_ext']}"
         "-DLIBSOLV_LIBRARIES=${dict['libsolv']}/lib/\
 libsolv.${dict['shared_ext']}"
         "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
+        # Needed for 'libmamba/CMakeLists.txt'.
         "-DPython3_EXECUTABLE=${app['python']}"
+        # Needed for 'libmambapy/CMakeLists.txt'.
+        "-DPython_EXECUTABLE=${app['python']}"
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
         "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
         "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
