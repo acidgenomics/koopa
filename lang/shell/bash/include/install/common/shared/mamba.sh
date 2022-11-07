@@ -28,7 +28,7 @@ main() {
     # """
     local app build_deps cmake_args deps dict
     build_deps=(
-        'gcc'
+        # > 'gcc'
         'ninja'
     )
     deps=(
@@ -55,7 +55,7 @@ main() {
         ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['gcc']}" ]] || return 1
+    # > [[ -x "${app['gcc']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['curl']="$(koopa_app_prefix 'curl')"
@@ -107,9 +107,9 @@ tags/${dict['file']}"
         '-DBUILD_LIBMAMBA=ON'
         '-DBUILD_LIBMAMBAPY=ON'
         '-DBUILD_LIBMAMBA_TESTS=OFF'
-        # FIXME '-DBUILD_MAMBA_PACKAGE=ON'
+        '-DBUILD_MAMBA_PACKAGE=ON'
         '-DBUILD_MICROMAMBA=ON'
-        # FIXME '-DMICROMAMBA_LINKAGE=DYNAMIC'
+        '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
@@ -127,13 +127,13 @@ libsolv.${dict['shared_ext']}"
         # Needed for 'libmambapy/CMakeLists.txt'.
         "-DPython_EXECUTABLE=${app['python']}"
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
+        "-Dlibmamba_DIR=${dict['prefix']}/share/cmake/libmamba"
         "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
         "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
         "-Dreproc_DIR=${dict['reproc']}/lib/cmake/reproc"
         "-Dspdlog_DIR=${dict['spdlog']}/lib/cmake/spdlog"
         "-Dtl-expected_DIR=${dict['tl-expected']}/share/cmake/tl-expected"
         "-Dyaml-cpp_DIR=${dict['yaml-cpp']}/share/cmake/yaml-cpp"
-        # FIXME "-Dlibmamba_DIR=FIXME"
     )
     koopa_print_env
     koopa_dl "CMake args" "${cmake_args[*]}"
@@ -145,7 +145,5 @@ libsolv.${dict['shared_ext']}"
         --build 'build' \
         --parallel "${dict['jobs']}"
     "${app['cmake']}" --install 'build'
-    # FIXME Use this?
-    # > ninja install $NJOBS
     return 0
 }
