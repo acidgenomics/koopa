@@ -3925,7 +3925,7 @@
     "date": "2022-11-04",
     "man1": [],
     "reverse_dependencies": ["mamba"],
-    "version": "1.10.0"
+    "version": "1.11.0"
   },
   "sqlite": {
     "bin": ["sqlite3"],
