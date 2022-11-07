@@ -3,7 +3,7 @@
 koopa_install_app_subshell() {
     # """
     # Install an application in a hardened subshell.
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-11-04.
     # """
     local dict pos
     declare -A dict=(
@@ -107,6 +107,8 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         # shellcheck source=/dev/null
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
+        PATH='/usr/bin:/bin'
+        export PATH
         "${dict['installer_fun']}" "$@"
         return 0
     )
