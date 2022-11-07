@@ -1,34 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting a linker issue on Ubuntu 22.
-# [1592/1593] CXX obj/test/cctest/cctest.test_util.o
-# [1593/1593] LINK cctest
-# if [ ! -r node ] || [ ! -L node ]; then ln -fs out/Release/node node; fi
-# ninja -C out/Release
-# ninja: Entering directory `out/Release'
-# ninja: no work to do.
-# if [ ! -r node ] || [ ! -L node ]; then ln -fs out/Release/node node; fi
-# /opt/koopa/app/python3.10/3.10.8/bin/python3.10 tools/install.py install '' '/opt/koopa/app/node/18.12.0'
-# installing /opt/koopa/app/node/18.12.0/bin/node
-# installing /opt/koopa/app/node/18.12.0/lib/libnode.so.108
-# Traceback (most recent call last):
-#   File "/tmp/koopa-1000-20221107-091211-MIVlWAQEyC/node-v18.12.0/tools/install.py", line 351, in <module>
-#     run(sys.argv[:])
-#   File "/tmp/koopa-1000-20221107-091211-MIVlWAQEyC/node-v18.12.0/tools/install.py", line 342, in run
-#     files(install)
-#   File "/tmp/koopa-1000-20221107-091211-MIVlWAQEyC/node-v18.12.0/tools/install.py", line 179, in files
-#     action([output_prefix + output_lib], variables.get('libdir') + '/' + output_lib)
-#   File "/tmp/koopa-1000-20221107-091211-MIVlWAQEyC/node-v18.12.0/tools/install.py", line 77, in install
-#     try_copy(path, dst)
-#   File "/tmp/koopa-1000-20221107-091211-MIVlWAQEyC/node-v18.12.0/tools/install.py", line 67, in try_copy
-#     return shutil.copy2(source_path, target_path)
-#   File "/opt/koopa/app/python3.10/3.10.8/lib/python3.10/shutil.py", line 434, in copy2
-#     copyfile(src, dst, follow_symlinks=follow_symlinks)
-#   File "/opt/koopa/app/python3.10/3.10.8/lib/python3.10/shutil.py", line 254, in copyfile
-#     with open(src, 'rb') as fsrc:
-# FileNotFoundError: [Errno 2] No such file or directory: 'out/Release/libnode.so.108'
-# gmake: *** [Makefile:189: install] Error 1
-
 main() {
     # """
     # Install Node.js.
@@ -37,6 +8,7 @@ main() {
     # Inclusion of shared brotli currently causes the installer to error.
     #
     # @seealso
+    # - https://github.com/nodejs/release#release-schedule
     # - https://github.com/nodejs/node/blob/main/BUILDING.md
     # - https://github.com/nodejs/node/blob/main/doc/contributing/
     #     building-node-with-ninja.md
