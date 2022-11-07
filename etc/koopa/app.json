@@ -2523,6 +2523,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake"],
+    "check": false,
     "date": "2022-11-03",
     "dependencies": ["libarchive", "libsolv", "reproc", "FIXME"],
     "version": "2022.11.01"
