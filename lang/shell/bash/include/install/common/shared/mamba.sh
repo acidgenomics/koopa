@@ -127,6 +127,7 @@ libsolv.${dict['shared_ext']}"
         # Needed for 'libmambapy/CMakeLists.txt'.
         "-DPython_EXECUTABLE=${app['python']}"
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
+        # FIXME Consider splitting this out into separate build steps.
         "-Dlibmamba_DIR=${dict['prefix']}/share/cmake/libmamba"
         "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
         "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
