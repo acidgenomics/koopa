@@ -710,7 +710,6 @@
       "salmon",
       "sambamba",
       "samtools",
-      "snakefmt",
       "snakemake",
       "star",
       "vina",
@@ -3551,6 +3550,7 @@
       "ranger-fm",
       "ruff",
       "scons",
+      "snakefmt",
       "vulture",
       "yt-dlp",
       "vim",
@@ -4101,7 +4101,7 @@
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-11-08",
-    "dependencies": ["conda"],
+    "dependencies": ["python"],
     "homebrew": false,
     "large": true,
     "man1": [],
@@ -4207,12 +4207,16 @@
     "bin": ["STAR"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-01-15",
+    "date": "2022-11-08",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "version": "2.7.10a"
+    "url": [
+      "https://github.com/alexdobin/STAR/",
+      "https://bioconda.github.io/recipes/star/README.html"
+    ],
+    "version": "2.7.10b"
   },
   "starship": {
     "bin": ["starship"],
@@ -4222,6 +4226,7 @@
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
     "version": "1.11.0"
   },
   "stow": {
@@ -4250,12 +4255,12 @@
     "bin": ["swig"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-08",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["http://www.swig.org/"],
-    "version": "4.0.2"
+    "version": "4.1.0"
   },
   "taglib": {
     "bin": [],
