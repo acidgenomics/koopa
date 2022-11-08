@@ -28,13 +28,13 @@ main() {
         # > '--enable-maintainer-mode'
         "--prefix=${dict['prefix']}"
         '--disable-dependency-tracking'
+        '--disable-silent-rules'
     )
     case "${dict['name']}" in
         'libgpg-error')
             # NOTE: gpg-error-config is deprecated upstream.
             # https://dev.gnupg.org/T5683
             conf_args+=(
-                '--disable-silent-rules'
                 '--enable-install-gpg-error-config'
             )
             ;;
