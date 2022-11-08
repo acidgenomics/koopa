@@ -1571,25 +1571,30 @@
   },
   "git": {
     "bin": ["git"],
-    "build_dependencies": [],
+    "build_dependencies": ["autoconf", "make"],
     "conservative": true,
-    "date": "2022-09-29",
-    "dependencies": [],
+    "date": "2022-11-08",
+    "dependencies": ["zlib", "gettext", "openssl3", "curl"],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.37.3"
+    "version": "2.38.1"
   },
   "glances": {
     "bin": ["glances"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-29",
+    "date": "2022-11-08",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
-    "version": "3.3.0"
+    "outdated": false,
+    "url": [
+      "https://github.com/nicolargo/glances/",
+      "https://pypi.org/project/Glances/"
+    ],
+    "version": "3.3.0.4"
   },
   "glib": {
     "bin": [],
@@ -1599,8 +1604,12 @@
     "dependencies": ["zlib", "gettext", "libffi", "pcre"],
     "homebrew": true,
     "man1": [],
-    "url": ["https://gitlab.gnome.org/GNOME/glib/"],
-    "version": "2.74.0"
+    "outdated": false,
+    "url": [
+      "https://docs.gtk.org/glib/",
+      "https://gitlab.gnome.org/GNOME/glib/"
+    ],
+    "version": "2.74.1"
   },
   "gmp": {
     "bin": [],
@@ -1610,6 +1619,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://gmplib.org/"],
     "version": "6.2.1"
   },
@@ -1617,7 +1627,7 @@
     "bin": [],
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-11-08",
     "dependencies": [
       "zlib",
       "bzip2",
@@ -1634,8 +1644,9 @@
     ],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "2.3.7"
+    "version": "2.3.8"
   },
   "gnutls": {
     "bin": [],
@@ -2273,12 +2284,12 @@
     "bin": [],
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://gnupg.org/download/"],
-    "version": "1.45"
+    "version": "1.46"
   },
   "libiconv": {
     "bin": [],
@@ -2320,12 +2331,13 @@
     "bin": [],
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
     "conservative": true,
-    "date": "2022-09-29",
+    "date": "2022-11-08",
     "dependencies": ["libgpg-error"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.6.1"
+    "version": "1.6.2"
   },
   "liblinear": {
     "bin": [],
