@@ -581,6 +581,7 @@
     "homebrew": true,
     "man1": [],
     "outdated": false,
+    "reverse_dependencies": ["fontconfig", "freetype"],
     "url": [
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
@@ -595,6 +596,7 @@
     "dependencies": [],
     "homebrew": false,
     "man1": [],
+    "outdated": true,
     "platform": "linux",
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation"
@@ -609,6 +611,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://github.com/cheat/cheat/"],
     "version": "4.4.0"
   },
@@ -620,6 +623,7 @@
     "dependencies": [],
     "homebrew": false,
     "man1": [],
+    "outdated": false,
     "url": ["https://github.com/plexus/chemacs2/"],
     "version": "d722459287566e8c91ae077bf3d65966ebece190"
   },
@@ -631,6 +635,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://www.chezmoi.io/"],
     "version": "2.26.0"
   },
@@ -643,6 +648,7 @@
     "dependencies": [],
     "homebrew": false,
     "man1": [],
+    "outdated": false,
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
     "version": "92543c4a7acc6550265d90f91cceb4481a448248"
   },
@@ -650,12 +656,13 @@
     "bin": ["cmake"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-29",
+    "date": "2022-11-08",
     "dependencies": ["ncurses", "openssl3"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.24.1"
+    "version": "3.24.3"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -991,19 +998,19 @@
     "dependencies": [],
     "homebrew": false,
     "man1": [],
-    "url": ["https://github.com/shenwei356/csvtk"],
+    "url": ["https://github.com/shenwei356/csvtk/"],
     "version": "0.25.0"
   },
   "curl": {
     "bin": ["curl", "curl-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-28",
+    "date": "2022-11-08",
     "dependencies": ["ca-certificates"],
     "homebrew": true,
     "man1": ["curl.1", "curl-config.1"],
     "url": ["https://curl.haxx.se/"],
-    "version": "7.85.0"
+    "version": "7.86.0"
   },
   "deeptools": {
     "bin": ["deeptools"],
@@ -1014,6 +1021,10 @@
     "homebrew": false,
     "large": true,
     "man1": [],
+    "url": [
+      "https://deeptools.readthedocs.io/",
+      "https://github.com/deeptools/deepTools/"
+    ],
     "version": "3.5.1"
   },
   "delta": {
@@ -1049,6 +1060,7 @@
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://github.com/Wilfred/difftastic/"],
     "version": "0.37.0"
   },
   "docker-credential-pass": {
@@ -1058,13 +1070,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "platform": "linux",
     "url": ["https://github.com/docker/docker-credential-helpers/"],
-    "version": "0.6.4"
+    "version": "0.7.0"
   },
   "dog": {
     "bin": ["dog"],
@@ -1074,6 +1086,7 @@
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://github.com/ogham/dog/"],
     "version": "0.1.0"
   },
   "doom-emacs": {
@@ -1084,6 +1097,7 @@
     "dependencies": [],
     "homebrew": false,
     "man1": [],
+    "outdated": true,
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "version": "42e5763782fdc1aabb9f2624d468248d6978abe2"
   },
@@ -1095,6 +1109,7 @@
     "dependencies": [],
     "homebrew": false,
     "man1": [],
+    "outdated": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
     "version": "0ec2b458f57181dab2f3e60125b13446be5aa3a1"
   },
@@ -1109,6 +1124,7 @@
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
@@ -1123,6 +1139,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
@@ -1137,6 +1154,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": true,
     "platform": "linux",
     "url": ["https://fedorahosted.org/elfutils/"],
     "version": "0.187"
@@ -1149,6 +1167,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
+    "outdated": false,
     "url": ["https://www.gnu.org/software/emacs/"],
     "version": "28.2"
   },
@@ -1156,13 +1175,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": false,
     "large": true,
     "man1": [],
     "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
-    "version": "107"
+    "version": "108"
   },
   "entrez-direct": {
     "bin": ["efetch", "esearch"],
@@ -1172,6 +1191,7 @@
     "dependencies": ["conda"],
     "homebrew": false,
     "man1": [],
+    "url": ["https://bioconda.github.io/recipes/entrez-direct/README.html"],
     "version": "16.2"
   },
   "exa": {
@@ -1182,27 +1202,29 @@
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://github.com/ogham/exa/"],
     "version": "0.10.1"
   },
   "exiftool": {
     "bin": ["exiftool"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-11-08",
     "dependencies": ["perl"],
     "homebrew": true,
     "man1": ["exiftool.1"],
     "url": ["https://exiftool.org/"],
-    "version": "12.42"
+    "version": "12.50"
   },
   "expat": {
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-29",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "reverse_dependencies": [
       "apr-util",
       "fontconfig",
@@ -1213,7 +1235,7 @@
       "udunits"
     ],
     "url": ["https://libexpat.github.io/"],
-    "version": "2.4.9"
+    "version": "2.5.0"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1224,6 +1246,7 @@
     "homebrew": false,
     "large": true,
     "man1": [],
+    "url": ["https://github.com/s-andrews/FastQC/"],
     "version": "0.11.9"
   },
   "fd-find": {
@@ -1238,6 +1261,7 @@
     "homebrew": true,
     "man1": [],
     "outdated": true,
+    "url": ["https://github.com/sharkdp/fd/"],
     "version": "8.5.2"
   },
   "ffmpeg": {
@@ -1248,6 +1272,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": ["ffmpeg.1", "ffprobe.1"],
+    "outdated": false,
     "url": ["https://ffmpeg.org/"],
     "version": "5.1.2"
   },
@@ -1255,12 +1280,16 @@
     "bin": ["ffq"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-05-05",
+    "date": "2022-11-08",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "version": "0.2.1"
+    "url": [
+      "https://github.com/pachterlab/ffq/",
+      "https://bioconda.github.io/recipes/ffq/README.html"
+    ],
+    "version": "0.3.0"
   },
   "findutils": {
     "bin": ["gfind", "glocate", "gupdatedb", "gxargs"],
@@ -1270,6 +1299,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": ["gfind.1", "glocate.1", "gupdatedb.1", "gxargs.1"],
+    "outdated": false,
     "url": ["https://www.gnu.org/software/findutils/"],
     "version": "4.9.0"
   },
@@ -1281,6 +1311,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": ["fish.1"],
+    "outdated": false,
     "url": [
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
@@ -1291,12 +1322,13 @@
     "bin": ["flac"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-29",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": ["flac.1"],
+    "outdated": false,
     "url": ["https://xiph.org/flac/"],
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "flake8": {
     "bin": ["flake8"],
@@ -1306,6 +1338,8 @@
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
+    "url": ["https://flake8.pycqa.org/", "https://github.com/PyCQA/flake8/"],
     "version": "5.0.4"
   },
   "flex": {
@@ -1316,6 +1350,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://github.com/westes/flex/"],
     "version": "2.6.4"
   },
@@ -1327,25 +1362,31 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
+    "reverse_dependencies": ["freetype"],
     "url": ["https://www.fltk.org/"],
     "version": "1.3.8"
   },
   "fmt": {
     "build_dependencies": ["cmake"],
+    "date": "2022-11-08",
+    "outdated": false,
     "reverse_dependencies": ["mamba"],
-    "url": ["https://fmt.dev/"],
+    "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
     "version": "9.1.0"
   },
   "fontconfig": {
     "bin": [],
-    "build_dependencies": [],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-08-29",
-    "dependencies": [],
+    "date": "2022-11-08",
+    "dependencies": ["gperf", "freetype", "libxml2"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
+    "reverse_dependencies": ["cairo", "graphviz", "imagemagick", "r"],
     "url": ["https://www.freedesktop.org/wiki/Software/fontconfig/"],
-    "version": "2.14.0"
+    "version": "2.14.1"
   },
   "freetype": {
     "bin": [],
@@ -1355,6 +1396,16 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
+    "reverse_dependencies": [
+      "cairo",
+      "fltk",
+      "fontconfig",
+      "graphviz",
+      "harfbuzz",
+      "imagemagick",
+      "r"
+    ],
     "url": ["https://www.freetype.org/"],
     "version": "2.12.1"
   },
@@ -1366,6 +1417,8 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
+    "reverse_dependencies": ["r"],
     "url": ["https://github.com/fribidi/fribidi/"],
     "version": "1.0.12"
   },
@@ -1377,6 +1430,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": ["fzf.1"],
+    "outdated": false,
     "url": ["https://github.com/junegunn/fzf/"],
     "version": "0.34.0"
   },
@@ -1389,6 +1443,7 @@
     "homebrew": false,
     "large": true,
     "man1": [],
+    "outdated": false,
     "url": "https://gatk.broadinstitute.org/",
     "version": "4.3.0.0"
   },
@@ -1396,12 +1451,13 @@
     "bin": ["awk", "gawk"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": ["awk.1", "gawk.1"],
+    "outdated": false,
     "url": ["https://ftp.gnu.org/gnu/gawk/"],
-    "version": "5.1.1"
+    "version": "5.2.0"
   },
   "gcc": {
     "bin": ["gfortran"],
@@ -1411,6 +1467,8 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
+    "reverse_dependencies": ["hdf5", "lapack", "r", "r-devel"],
     "url": ["https://gcc.gnu.org/"],
     "version": "12.2.0"
   },
@@ -1435,6 +1493,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": true,
     "url": ["https://www.gnu.org/software/gdbm/"],
     "version": "1.23"
   },
@@ -1446,6 +1505,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": true,
     "url": ["https://github.com/libgeos/geos/"],
     "version": "3.11.0"
   },
@@ -1453,12 +1513,27 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "reverse_dependencies": [
+      "cairo",
+      "elfutils",
+      "flex",
+      "gawk",
+      "git",
+      "glib",
+      "harfbuzz",
+      "jq",
+      "neovim",
+      "r",
+      "r-devel",
+      "texinfo",
+      "wget"
+    ],
     "url": ["https://www.gnu.org/software/gettext/"],
-    "version": "0.21"
+    "version": "0.21.1"
   },
   "gffutils": {
     "bin": ["gffutils-cli"],
@@ -1469,7 +1544,8 @@
     "homebrew": false,
     "large": true,
     "man1": [],
-    "version": "0.11.0"
+    "url": ["https://github.com/daler/gffutils/"],
+    "version": "0.11.1"
   },
   "gget": {
     "bin": ["gget"],
@@ -1625,6 +1701,7 @@
     "dependencies": ["openjdk"],
     "homebrew": true,
     "man1": [],
+    "reverse_dependencies": ["fontconfig"],
     "url": ["https://www.graphviz.org/"],
     "version": "6.0.1"
   },
@@ -1931,6 +2008,7 @@
       "magick.1",
       "magick-script.1"
     ],
+    "reverse_dependencies": ["fontconfig"],
     "url": ["https://imagemagick.org/"],
     "version": "7.1.0-49"
   },
@@ -3100,7 +3178,7 @@
       "ptardiff.1",
       "ptargrep.1"
     ],
-    "reverse_dependencies": ["ack"],
+    "reverse_dependencies": ["ack", "exiftool"],
     "url": ["https://www.perl.org/get.html"],
     "version": "5.36.0"
   },
