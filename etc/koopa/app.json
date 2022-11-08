@@ -574,17 +574,18 @@
   },
   "cairo": {
     "bin": [],
-    "build_dependencies": [],
+    "build_dependencies": ["pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": [
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.17.6"
+    "version": "1.17.4"
   },
   "cellranger": {
     "bin": [],
