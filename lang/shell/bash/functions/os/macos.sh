@@ -173,8 +173,8 @@ koopa_macos_create_dmg() {
 koopa_macos_disable_crashplan() {
     koopa_assert_has_no_args "$#"
     koopa_macos_disable_plist_file \
-        "${HOME:?}/Library/LaunchAgents/com.crashplan.engine.plist" \
-        '/Library/LaunchDaemons/com.crashplan.engine.plist'
+        "${HOME:?}/Library/LaunchAgents/com.code42.menubar.plist" \
+        '/Library/LaunchDaemons/com.code42.service.plist'
     return 0
 }
 
@@ -345,8 +345,8 @@ koopa_macos_download_macos() {
 koopa_macos_enable_crashplan() {
     koopa_assert_has_no_args "$#"
     koopa_macos_enable_plist_file \
-        "${HOME:?}/Library/LaunchAgents/com.crashplan.engine.plist" \
-        '/Library/LaunchDaemons/com.crashplan.engine.plist'
+        "${HOME:?}/Library/LaunchAgents/com.code42.menubar.plist" \
+        '/Library/LaunchDaemons/com.code42.service.plist'
     return 0
 }
 
