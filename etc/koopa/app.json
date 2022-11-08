@@ -1663,32 +1663,40 @@
     "bin": ["go"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-29",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "large": true,
     "man1": [],
-    "reverse_dependencies": ["apptainer"],
+    "reverse_dependencies": [
+      "apptainer",
+      "chezmoi",
+      "csvtk",
+      "fzf",
+      "gum",
+      "yq"
+    ],
     "url": ["https://golang.org/dl/"],
-    "version": "1.19.1"
+    "version": "1.19.3"
   },
   "google-cloud-sdk": {
     "bin": ["gcloud"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-19",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "402.0.0"
+    "version": "408.0.1"
   },
   "googletest": {
     "bin": [],
     "build_dependencies": ["cmake"],
     "date": "2022-11-04",
     "dependencies": [],
+    "outdated": false,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/google/googletest/"],
     "version": "1.12.1"
@@ -1701,6 +1709,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://www.gnu.org/software/gperf/"],
     "version": "3.1"
   },
@@ -1708,13 +1717,17 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-29",
+    "date": "2022-11-08",
     "dependencies": ["openjdk"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "reverse_dependencies": ["fontconfig"],
-    "url": ["https://www.graphviz.org/"],
-    "version": "6.0.1"
+    "url": [
+      "https://www.graphviz.org/",
+      "https://gitlab.com/graphviz/graphviz/"
+    ],
+    "version": "7.0.0"
   },
   "grep": {
     "bin": ["gegrep", "gfgrep", "ggrep"],
