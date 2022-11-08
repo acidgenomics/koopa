@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-10-05.
+    # @note Updated 2022-11-08.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -30,6 +30,14 @@ main() {
         '--disable-dependency-tracking'
     )
     case "${dict['name']}" in
+        'libgpg-error')
+            # NOTE: gpg-error-config is deprecated upstream.
+            # https://dev.gnupg.org/T5683
+            conf_args+=(
+                '--disable-silent-rules'
+                '--enable-install-gpg-error-config'
+            )
+            ;;
         'libassuan' | \
         'libgcrypt' | \
         'libksba')
