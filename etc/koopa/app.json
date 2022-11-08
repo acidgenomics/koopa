@@ -1755,12 +1755,16 @@
     "bin": ["gseapy"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-03",
+    "date": "2022-11-08",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "version": "0.13.0"
+    "url": [
+      "https://gseapy.readthedocs.io/",
+      "https://github.com/zqfang/GSEApy/"
+    ],
+    "version": "0.14.0"
   },
   "gsl": {
     "bin": [],
@@ -1791,12 +1795,12 @@
     "bin": ["gum"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-10-05",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.7.0"
+    "version": "0.8.0"
   },
   "gzip": {
     "bin": [
@@ -1844,20 +1848,21 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "url": ["https://github.com/hadolint/hadolint/"],
     "version": "2.10.0"
   },
   "harfbuzz": {
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-10-12",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": true,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "5.3.0"
+    "version": "5.3.1"
   },
   "haskell-ghcup": {
     "aliases": {
@@ -1871,7 +1876,10 @@
     "homebrew": true,
     "large": true,
     "man1": [],
-    "url": ["https://www.haskell.org/ghcup/"],
+    "url": [
+      "https://www.haskell.org/ghcup/",
+      "https://gitlab.haskell.org/haskell/ghcup-hs/"
+    ],
     "version": "0.1.18.0"
   },
   "haskell-stack": {
@@ -1883,7 +1891,10 @@
     "homebrew": true,
     "large": true,
     "man1": [],
-    "url": ["https://haskellstack.org/"],
+    "url": [
+      "https://haskellstack.org/",
+      "https://github.com/commercialhaskell/stack/"
+    ],
     "version": "2.9.1"
   },
   "hdf5": {
@@ -1930,6 +1941,7 @@
     "homebrew": false,
     "large": true,
     "man1": [],
+    "url": ["https://daehwankimlab.github.io/hisat2/"],
     "version": "2.2.1"
   },
   "htop": {
@@ -1952,6 +1964,11 @@
     "homebrew": false,
     "large": true,
     "man1": [],
+    "url": [
+      "https://htseq.readthedocs.io/",
+      "https://github.com/htseq/htseq/",
+      "https://bioconda.github.io/recipes/htseq/README.html"
+    ],
     "version": "2.0.2"
   },
   "httpie": {
@@ -1962,7 +1979,7 @@
     "homebrew": true,
     "large": false,
     "man1": [],
-    "url": ["https://httpie.io/"],
+    "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
     "version": "3.2.1"
   },
   "hyperfine": {
@@ -1973,6 +1990,7 @@
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://github.com/sharkdp/hyperfine/"],
     "version": "1.15.0"
   },
   "icu4c": {
@@ -1992,7 +2010,7 @@
     ],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [
@@ -2008,8 +2026,17 @@
       "pkgdata.1",
       "uconv.1"
     ],
-    "url": ["http://site.icu-project.org/"],
-    "version": "71.1"
+    "reverse_dependencies": [
+      "boost",
+      "harfbuzz",
+      "imagemagick",
+      "libxml2",
+      "node",
+      "r",
+      "r-devel"
+    ],
+    "url": ["https://icu.unicode.org/"],
+    "version": "72.1"
   },
   "imagemagick": {
     "bin": [
@@ -2021,7 +2048,7 @@
     ],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-29",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [
@@ -2032,19 +2059,20 @@
       "magick.1",
       "magick-script.1"
     ],
-    "reverse_dependencies": ["fontconfig"],
+    "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.0-49"
+    "version": "7.1.0-52"
   },
   "ipython": {
     "bin": ["ipython"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-29",
+    "date": "2022-11-08",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
-    "version": "8.5.0"
+    "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
+    "version": "8.6.0"
   },
   "isort": {
     "bin": ["isort"],
@@ -2054,6 +2082,7 @@
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://pycqa.github.io/isort/"],
     "version": "5.10.1"
   },
   "jemalloc": {
@@ -2064,7 +2093,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "url": ["http://jemalloc.net/"],
+    "url": ["http://jemalloc.net/", "https://github.com/jemalloc/jemalloc/"],
     "version": "5.3.0"
   },
   "jpeg": {
@@ -2107,11 +2136,15 @@
     "bin": ["jupyter-lab"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-07-21",
+    "date": "2022-11-08",
     "dependencies": ["conda"],
     "homebrew": false,
     "man1": [],
-    "version": "3.4.4"
+    "url": [
+      "https://jupyter.org/install/",
+      "https://pypi.org/project/jupyterlab/"
+    ],
+    "version": "3.5.0"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -2122,6 +2155,10 @@
     "homebrew": false,
     "large": true,
     "man1": [],
+    "url": [
+      "https://pachterlab.github.io/kallisto/",
+      "https://github.com/pachterlab/kallisto/"
+    ],
     "version": "0.48.0"
   },
   "lame": {
@@ -2154,7 +2191,6 @@
     "dependencies": ["python3.10"],
     "homebrew": false,
     "man1": [],
-    "notes": ["Currently failing with Python 3.11.0."],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
@@ -2188,7 +2224,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-03",
-    "dependencies": ["FIXME"],
+    "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "reverse_dependencies": ["mamba"],
     "url": ["https://www.libarchive.org/"],
     "version": "3.6.1"
@@ -2208,12 +2244,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://thrysoee.dk/editline/"],
-    "version": "20210910-3.1"
+    "version": "20221030-3.1"
   },
   "libev": {
     "bin": [],
@@ -2223,7 +2260,10 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "url": ["http://software.schmorp.de/pkg/libev.html"],
+    "url": [
+      "http://software.schmorp.de/pkg/libev.html",
+      "http://dist.schmorp.de/libev/"
+    ],
     "version": "4.33"
   },
   "libevent": {
@@ -2241,7 +2281,7 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-28",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
@@ -2256,7 +2296,7 @@
       "llvm"
     ],
     "url": ["https://sourceware.org/libffi/"],
-    "version": "3.4.3"
+    "version": "3.4.4"
   },
   "libgcrypt": {
     "bin": [],
@@ -2322,12 +2362,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/libidn/"],
-    "version": "2.3.3"
+    "version": "2.3.4"
   },
   "libjpeg-turbo": {
     "bin": [],
@@ -2337,7 +2377,10 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "url": ["https://www.libjpeg-turbo.org/"],
+    "url": [
+      "https://www.libjpeg-turbo.org/",
+      "https://sourceforge.net/projects/libjpeg-turbo/files/"
+    ],
     "version": "2.1.4"
   },
   "libksba": {
@@ -2387,7 +2430,10 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "url": ["https://libpipeline.nongnu.org/"],
+    "url": [
+      "https://libpipeline.nongnu.org/",
+      "https://gitlab.com/libpipeline/libpipeline/"
+    ],
     "version": "1.5.6"
   },
   "libpng": {
@@ -2408,6 +2454,7 @@
     "dependencies": [],
     "man1": [],
     "reverse_dependencies": ["mamba"],
+    "url": ["https://github.com/openSUSE/libsolv/"],
     "version": "0.7.22"
   },
   "libssh2": {
@@ -2473,12 +2520,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://www.gnu.org/software/libunistring/"],
-    "version": "1.0"
+    "version": "1.1"
   },
   "libuv": {
     "bin": [],
@@ -2509,12 +2556,12 @@
     "bin": ["xml2-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-29",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": ["xml2-config.1"],
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
-    "version": "2.10.2"
+    "version": "2.10.3"
   },
   "libzip": {
     "bin": [],
@@ -2552,14 +2599,14 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-28",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "platform": "linux",
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.13"
+    "version": "8.7.14"
   },
   "lsd": {
     "bin": ["lsd"],
@@ -2569,6 +2616,7 @@
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://github.com/Peltoche/lsd/"],
     "version": "0.23.1"
   },
   "lua": {
@@ -2613,7 +2661,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "url": ["https://lz4.github.io/lz4/"],
+    "url": ["https://lz4.github.io/lz4/", "https://github.com/lz4/lz4/"],
     "version": "1.9.4"
   },
   "lzo": {
@@ -2642,12 +2690,12 @@
     "bin": ["gmake"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-29",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": ["gmake.1"],
     "url": ["https://ftp.gnu.org/gnu/make/"],
-    "version": "4.3"
+    "version": "4.4"
   },
   "mamba": {
     "bin": ["micromamba"],
@@ -2661,12 +2709,15 @@
     "bin": ["gman"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-25",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": ["gman.1"],
-    "url": ["https://man-db.nongnu.org/"],
-    "version": "2.10.2"
+    "url": [
+      "https://man-db.nongnu.org/",
+      "https://gitlab.com/cjwatson/man-db/"
+    ],
+    "version": "2.11.0"
   },
   "markdownlint-cli": {
     "bin": ["markdownlint"],
@@ -2676,6 +2727,7 @@
     "dependencies": ["node"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://www.npmjs.com/package/markdownlint-cli"],
     "version": "0.32.2"
   },
   "mcfly": {
@@ -2686,17 +2738,19 @@
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://github.com/cantino/mcfly/"],
     "version": "0.6.1"
   },
   "mdcat": {
     "bin": ["mdcat"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-11-08",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "version": "0.28.0"
+    "url": ["https://github.com/lunaryorn/mdcat/"],
+    "version": "0.29.0"
   },
   "meson": {
     "bin": ["meson"],
@@ -2706,6 +2760,7 @@
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
+    "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
     "version": "0.64.0"
   },
   "mpc": {
@@ -2749,12 +2804,12 @@
     "build_dependencies": [],
     "check": false,
     "conservative": true,
-    "date": "2022-09-09",
+    "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "url": ["https://msgpack.org/"],
-    "version": "4.0.0"
+    "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
+    "version": "4.1.3"
   },
   "multiqc": {
     "bin": ["multiqc"],
