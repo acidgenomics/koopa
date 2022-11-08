@@ -3,11 +3,12 @@
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-09-28.
+    # @note Updated 2022-11-07.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
     # @seealso
+    # - https://github.com/nodejs/release#release-schedule
     # - https://github.com/nodejs/node/blob/main/BUILDING.md
     # - https://github.com/nodejs/node/blob/main/doc/contributing/
     #     building-node-with-ninja.md
@@ -61,6 +62,7 @@ main() {
         ['nghttp2']="$(koopa_app_prefix 'nghttp2')"
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
@@ -114,13 +116,23 @@ cacert.pem"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" --jobs="${dict['jobs']}"
-    # Need to fix installer path for 'libnode.so.93' on Ubuntu 22.
+    # Need to fix installer path for 'libnode.so' on Ubuntu 22.
     # https://github.com/nodejs/node/issues/30111
-    if koopa_is_linux && [[ -f 'out/Release/lib/libnode.so.93' ]]
+    if koopa_is_linux
     then
+        dict['libnode_file']="$( \
+            koopa_find \
+                --exclude='*.TOC' \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern="libnode.${dict['shared_ext']}.*" \
+                --prefix='out/Release/lib' \
+                --type='f' \
+        )"
+        dict['libnode_bn']="$(koopa_basename "${dict['libnode_file']}")"
         (
             koopa_cd 'out/Release'
-            koopa_ln 'lib/libnode.so.93' 'libnode.so.93'
+            koopa_ln "lib/${dict['libnode_bn']}" "${dict['libnode_bn']}"
         )
     fi
     "${app['make']}" install

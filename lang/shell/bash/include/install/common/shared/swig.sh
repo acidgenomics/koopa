@@ -2,12 +2,15 @@
 
 main() {
     # """
+    # Install swig.
+    # @note Updated 2022-11-08.
+    #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/swig.rb
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app 'zlib' 'pcre'
+    koopa_activate_app 'zlib' 'pcre2'
     declare -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1

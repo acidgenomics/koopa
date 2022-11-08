@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider symlinking '/usr/local/lib/R/site-library' to
+# '/usr/lib/R/site-library' on Linux.
+
 koopa_configure_r() {
     # """
     # Update R configuration.
