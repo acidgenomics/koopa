@@ -46,6 +46,7 @@ ${dict['file']}"
     export NUM_THREADS=56
     export USE_OPENMP=1
     koopa_print_env
+    # NOTE Need to deparallelize here, otherwise build will fail on macOS.
     "${app['make']}" VERBOSE=1 --jobs=1 \
         "CC=${app['gcc']}" \
         "FC=${app['gfortran']}" \
