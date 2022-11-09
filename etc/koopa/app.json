@@ -631,13 +631,13 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-10-31",
+    "date": "2022-11-09",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.26.0"
+    "version": "2.27.0"
   },
   "cloudbiolinux": {
     "bin": [],
