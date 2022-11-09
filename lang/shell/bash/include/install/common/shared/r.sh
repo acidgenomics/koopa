@@ -337,7 +337,7 @@ main() {
     )
     # Aqua framework is required to use R with RStudio on macOS. Currently
     # disabled due to build issues on macOS 13 with XCode CLT 14.
-    # > koopa_is_macos && conf_args+=('--with-aqua')
+    koopa_is_macos && conf_args+=('--without-aqua')
     if [[ "${dict['name']}" == 'r-devel' ]]
     then
         conf_args+=('--program-suffix=dev')
