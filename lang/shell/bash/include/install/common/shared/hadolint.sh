@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting this issue with hadolint 2.12.0:
+#
+# 2022-11-09 14:01:18.632683: [debug] Asking for a supported GHC version
+# 2022-11-09 14:01:18.632763: [debug] Resolving package entries
+# 2022-11-09 14:01:18.632814: [debug] Parsing the targets
+# 2022-11-09 14:01:18.634837: [error] Error parsing targets: The specified targets matched no packages.
+# Perhaps you need to run 'stack init'?
+
 main() {
     # """
     # Install hadolint.
