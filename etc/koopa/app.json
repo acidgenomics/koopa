@@ -412,7 +412,7 @@
     "version": "1.0"
   },
   "bioconda-utils": {
-    "bin": ["bioconda-utils"],
+    "bin": [],
     "build_dependencies": [],
     "conservaitve": false,
     "date": "2022-11-08",
@@ -420,6 +420,7 @@
     "homebrew": false,
     "large": true,
     "man1": [],
+    "notes": ["Adding bioconda-utils to bin currently causes app to error."],
     "url": ["https://github.com/bioconda/bioconda-utils/"],
     "version": "1.2.0"
   },

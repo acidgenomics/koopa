@@ -11,7 +11,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2022-09-19.
+    # @note Updated 2022-11-09.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -335,8 +335,9 @@ main() {
         "TAR=${conf_dict['tar']}"
         "YACC=${conf_dict['yacc']}"
     )
-    # This is required to use R with RStudio on macOS.
-    koopa_is_macos && conf_args+=('--with-aqua')
+    # Aqua framework is required to use R with RStudio on macOS. Currently
+    # disabled due to build issues on macOS 13 with XCode CLT 14.
+    # > koopa_is_macos && conf_args+=('--with-aqua')
     if [[ "${dict['name']}" == 'r-devel' ]]
     then
         conf_args+=('--program-suffix=dev')
