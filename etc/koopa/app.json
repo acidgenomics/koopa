@@ -1092,13 +1092,13 @@
     "bin": [],
     "build_dependencies": [],
     "check": false,
-    "date": "2022-09-16",
-    "dependencies": [],
+    "date": "2022-11-09",
+    "dependencies": ["chemacs", "emacs"],
     "homebrew": false,
     "man1": [],
     "outdated": true,
     "url": ["https://github.com/doomemacs/doomemacs/"],
-    "version": "42e5763782fdc1aabb9f2624d468248d6978abe2"
+    "version": "9d4d5b756a8598c4b5c842e9f1f33148af2af8fd"
   },
   "dotfiles": {
     "bin": [],
@@ -4136,13 +4136,13 @@
     "bin": [],
     "build_dependencies": [],
     "check": false,
-    "date": "2022-09-16",
-    "dependencies": [],
+    "date": "2022-11-09",
+    "dependencies": ["chemacs", "emacs"],
     "homebrew": false,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://github.com/syl20bnr/spacemacs/"],
-    "version": "9cdf97f87e89b3f5045da84e181057e82bfc13aa"
+    "version": "0acf65c4c5b15bcd05902d5aa981f5831476ae18"
   },
   "spacevim": {
     "bin": [],
