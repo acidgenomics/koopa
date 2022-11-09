@@ -10887,9 +10887,7 @@ koopa_install_all_apps() {
         'pkg-config'
         'make'
     )
-    koopa_is_linux && apps+=(
-        'attr'
-    )
+    koopa_is_linux && apps+=('attr')
     apps+=(
         'zlib'
         'patch'
@@ -11746,8 +11744,6 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         export KOOPA_INSTALL_VERSION="${dict['version']}"
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
-        PATH='/usr/bin:/bin'
-        export PATH
         "${dict['installer_fun']}" "$@"
         return 0
     )
@@ -12020,6 +12016,7 @@ ${dict['version2']}"
                     env_vars=(
                         "HOME=${HOME:?}"
                         'KOOPA_ACTIVATE=0'
+                        'KOOPA_INSTALL_APP_SUBSHELL=1'
                         "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
                         "LANG=${LANG:-}"
                         "LC_ALL=${LC_ALL:-}"

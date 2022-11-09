@@ -18,17 +18,13 @@ koopa_install_all_apps() {
         'pkg-config'
         'make'
     )
-    koopa_is_linux && apps+=(
-        'attr'
-    )
+    koopa_is_linux && apps+=('attr')
     apps+=(
         'zlib'
         'patch'
         'tar'
         'xz'
         'bzip2'
-        'unzip'
-        'zip'
         'm4'
         'gmp'
         'gperf'
@@ -38,6 +34,8 @@ koopa_install_all_apps() {
         'autoconf'
         'automake'
         'libtool'
+        'unzip'
+        'zip'
         'bison'
         'coreutils'
         'findutils'
