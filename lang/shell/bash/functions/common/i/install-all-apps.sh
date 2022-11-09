@@ -112,6 +112,7 @@ koopa_install_all_apps() {
         'harfbuzz'
         'gawk'
         'libuv'
+        # NOTE Consider moving conda down in order.
         'conda'
         'udunits'
         'r'
