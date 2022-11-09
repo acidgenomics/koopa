@@ -1844,12 +1844,12 @@
     "bin": ["hadolint"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-11-09",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/hadolint/hadolint/"],
-    "version": "2.10.0"
+    "version": "2.12.0"
   },
   "harfbuzz": {
     "bin": [],
