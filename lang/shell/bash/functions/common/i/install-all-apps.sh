@@ -53,6 +53,7 @@ koopa_install_all_apps() {
         'cmake'
         'zstd'
         'curl'
+        # NOTE This requires bootstrap on macOS.
         'bash'
         'git'
         'lapack'
