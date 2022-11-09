@@ -8,7 +8,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-10-25.
+    # @note Updated 2022-11-09.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
@@ -286,7 +286,9 @@ ${dict['version2']}"
                     # Configure 'PATH' string.
                     path_arr=(
                         '/usr/bin'
+                        '/usr/sbin'
                         '/bin'
+                        '/sbin'
                     )
                     # Configure 'PKG_CONFIG_PATH' string.
                     PKG_CONFIG_PATH=''
@@ -298,6 +300,7 @@ ${dict['version2']}"
                     env_vars=(
                         "HOME=${HOME:?}"
                         'KOOPA_ACTIVATE=0'
+                        'KOOPA_INSTALL_APP_SUBSHELL=1'
                         "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
                         "LANG=${LANG:-}"
                         "LC_ALL=${LC_ALL:-}"
