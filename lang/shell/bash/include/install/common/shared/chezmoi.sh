@@ -32,6 +32,7 @@ refs/tags/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     export GOPATH="${dict['gopath']}"
     dict['ldflags']="-X main.version=${dict['version']}"
+    koopa_print_env
     "${app['go']}" build \
         -ldflags "${dict['ldflags']}" \
         -o "${dict['prefix']}/bin/${dict['name']}"

@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-11-04.
+    # @note Updated 2022-11-09.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -34,9 +34,12 @@ __koopa_posix_header() {
     case "${KOOPA_ACTIVATE:-0}" in
         '0')
             unalias -a
-            PATH="/usr/bin:/bin"
-            PATH="${KOOPA_PREFIX}/bin:${PATH}"
-            export PATH
+            if [ "${KOOPA_INSTALL_APP_SUBSHELL:-0}" -eq 0 ]
+            then
+                PATH='/usr/bin:/bin'
+                PATH="${KOOPA_PREFIX}/bin:${PATH}"
+                export PATH
+            fi
             ;;
         '1')
             __koopa_activate_koopa || return 1
