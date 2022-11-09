@@ -83,7 +83,7 @@ koopa_install_all_apps() {
         'xorg-libxt'
         'xorg-libxrandr'
         'tcl-tk'
-        # FIXME Need to install 'libedit' before.
+        'libedit'
         'python3.10'
         'python3.11'
         'perl'
@@ -191,7 +191,6 @@ koopa_install_all_apps() {
     )
     koopa_is_linux && apps+=('elfutils')
     apps+=(
-        'libedit'
         'llvm'
         'go'
         'chezmoi'
