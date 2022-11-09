@@ -83,6 +83,7 @@ koopa_install_all_apps() {
         'xorg-libxt'
         'xorg-libxrandr'
         'tcl-tk'
+        # FIXME Need to install 'libedit' before.
         'python3.10'
         'python3.11'
         'perl'
