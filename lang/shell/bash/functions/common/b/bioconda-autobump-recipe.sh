@@ -3,7 +3,7 @@
 koopa_bioconda_autobump_recipe() {
     # """
     # Edit a Bioconda autobump recipe.
-    # @note Updated 2022-09-24.
+    # @note Updated 2022-11-09.
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
@@ -30,6 +30,7 @@ koopa_bioconda_autobump_recipe() {
             "origin/bump/${dict['branch']}"
         # Or create a new branch:
         # > "${app['git']}" checkout -B "$branch"
+        "${app['git']}" pull origin master
         koopa_mkdir "recipes/${dict['recipe']}"
         "${app['vim']}" "recipes/${dict['recipe']}/meta.yaml"
     )

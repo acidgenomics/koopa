@@ -3,7 +3,9 @@
 main() {
     # """
     # Install OpenBLAS.
-    # @note Updated 2022-08-16.
+    # @note Updated 2022-11-09.
+    #
+    # Attempting to make in parallel can cause installer to crash.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -16,13 +18,17 @@ main() {
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'gcc'
     declare -A app=(
+        ['gcc']="$(koopa_locate_gcc --realpath)"
+        ['gfortran']="$(koopa_locate_gfortran --realpath)"
         ['make']="$(koopa_locate_make)"
     )
+    [[ -x "${app['gcc']}" ]] || return 1
+    [[ -x "${app['gfortran']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='OpenBLAS'
-        ['jobs']="$(koopa_cpu_count)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
@@ -31,11 +37,29 @@ ${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    # Ensure target OS build version is consistency.
+    # > export MACOSX_DEPLOYMENT_TARGET='FIXME'
+    # > export TARGET='FIXME'
+    export DYNAMIC_ARCH=1
+    # Force a large 'NUM_THREADS' to support larger Macs with more cores
+    # available than our builder instance.
+    export NUM_THREADS=56
+    export USE_OPENMP=1
     koopa_print_env
-    "${app['make']}" \
-        --jobs="${dict['jobs']}" \
-        'FC=gfortran' \
+    # NOTE Need to deparallelize here, otherwise build will fail on macOS.
+    "${app['make']}" VERBOSE=1 --jobs=1 \
+        "CC=${app['gcc']}" \
+        "FC=${app['gfortran']}" \
         'libs' 'netlib' 'shared'
     "${app['make']}" "PREFIX=${dict['prefix']}" install
+    (
+        koopa_cd "${dict['prefix']}/lib"
+        koopa_ln \
+            "libopenblas.${dict['shared_ext']}" \
+            "libblas.${dict['shared_ext']}"
+        koopa_ln \
+            "libopenblas.${dict['shared_ext']}" \
+            "liblapack.${dict['shared_ext']}"
+    )
     return 0
 }
