@@ -107,8 +107,10 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         # shellcheck source=/dev/null
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
-        PATH='/usr/bin:/bin'
-        export PATH
+        # This is problematic with wrapper functions that call activation,
+        # such as automake.
+        # > PATH='/usr/bin:/bin'
+        # > export PATH
         "${dict['installer_fun']}" "$@"
         return 0
     )
