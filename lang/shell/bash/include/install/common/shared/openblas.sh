@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME This is now failing on macOS 13 with XCode 14.1...
-
 main() {
     # """
     # Install OpenBLAS.
-    # @note Updated 2022-08-16.
+    # @note Updated 2022-11-09.
+    #
+    # Attempting to make in parallel can cause installer to crash.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -27,8 +27,8 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='OpenBLAS'
-        # FIXME ['jobs']="$(koopa_cpu_count)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="v${dict['version']}.tar.gz"
@@ -37,27 +37,28 @@ ${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    # FIXME Need to optimize these...
-    # The build log has many warnings of macOS build version mismatches.
-    # > ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version
-    # Setting `DYNAMIC_ARCH` is broken with binutils 2.38.
-    # https://github.com/xianyi/OpenBLAS/issues/3708
-    # https://sourceware.org/bugzilla/show_bug.cgi?id=29435
-    # > ENV["DYNAMIC_ARCH"] = "1" if OS.mac?
-    # > ENV["USE_OPENMP"] = "1"
-    # Force a large NUM_THREADS to support larger Macs than the VMs that build the bottles
-    # > ENV["NUM_THREADS"] = "56"
-    # > ENV["TARGET"] = case Hardware.oldest_cpu
+    # Ensure target OS build version is consistency.
+    # > export MACOSX_DEPLOYMENT_TARGET='FIXME'
+    # > export TARGET='FIXME'
+    export DYNAMIC_ARCH=1
+    # Force a large 'NUM_THREADS' to support larger Macs with more cores
+    # available than our builder instance.
+    export NUM_THREADS=56
+    export USE_OPENMP=1
     koopa_print_env
-    # FIXME Is parallelization problematic?
-    # --jobs="${dict['jobs']}" \
     "${app['make']}" VERBOSE=1 --jobs=1 \
         "CC=${app['gcc']}" \
         "FC=${app['gfortran']}" \
         'libs' 'netlib' 'shared'
     "${app['make']}" "PREFIX=${dict['prefix']}" install
-    # FIXME Need to add these steps:
-    # > lib.install_symlink shared_library("libopenblas") => shared_library("libblas")
-    # > lib.install_symlink shared_library("libopenblas") => shared_library("liblapack")
+    (
+        koopa_cd "${dict['prefix']}/lib"
+        koopa_ln \
+            "libopenblas.${dict['shared_ext']}" \
+            "libblas.${dict['shared_ext']}"
+        koopa_ln \
+            "libopenblas.${dict['shared_ext']}" \
+            "liblapack.${dict['shared_ext']}"
+    )
     return 0
 }
