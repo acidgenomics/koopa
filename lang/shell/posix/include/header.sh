@@ -35,7 +35,9 @@ __koopa_posix_header() {
         '0')
             unalias -a
             PATH="/usr/bin:/bin"
-            PATH="${KOOPA_PREFIX}/bin:${PATH}"
+            # FIXME This puts koopa bin into PATH during 'install_app' calls,
+            # which we don't want. Need to rethink.
+            # > PATH="${KOOPA_PREFIX}/bin:${PATH}"
             export PATH
             ;;
         '1')
