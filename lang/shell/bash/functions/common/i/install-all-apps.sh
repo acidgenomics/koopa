@@ -18,9 +18,7 @@ koopa_install_all_apps() {
         'pkg-config'
         'make'
     )
-    koopa_is_linux && apps+=(
-        'attr'
-    )
+    koopa_is_linux && apps+=('attr')
     apps+=(
         'zlib'
         'patch'
