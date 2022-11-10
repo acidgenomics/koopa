@@ -16,6 +16,7 @@ main() {
     # - https://github.com/hadolint/hadolint
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     hadolint.rb
+    # - https://docs.haskellstack.org/en/stable/GUIDE/
     # - https://github.com/commercialhaskell/stack/issues/4408
     # """
     local app dict
@@ -38,12 +39,30 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
-    # FIXME Need to run something like this for hadolint 2.11.0, 2.12.0...
-    # May need to add "--resolver='nightly'" to the 'init' call.
-    # > "${app['stack']}" \
-    # >     --stack-root="${dict['stack_root']}" \
-    # >     --verbose \
-    # >     init --force
+    # FIXME Issues with lts-19.32 resolver:
+    #     colourista not found
+    #    - hadolint requires >=0
+    #language-docker version 10.4.3 found
+    #    - hadolint requires >=11.0.0 && <12
+    #spdx not found
+    #    - hadolint requires >=0
+    #Using package flags:
+    #    - hadolint: FlagName "static" = True
+    # NOTE Can use '--omit-packages' to exclude mismatching packages.
+    # https://www.stackage.org/lts-19.32
+    case "${dict['version']}" in
+        '2.11.'* | \
+        '2.12.'*)
+            "${app['stack']}" \
+                --stack-root="${dict['stack_root']}" \
+                --verbose \
+                init \
+                    --force \
+                    --omit-packages \
+                    --resolver 'nightly'
+                    # --resolver 'lts-19.32'
+            ;;
+    esac
     "${app['stack']}" \
         --jobs="${dict['jobs']}" \
         --stack-root="${dict['stack_root']}" \
