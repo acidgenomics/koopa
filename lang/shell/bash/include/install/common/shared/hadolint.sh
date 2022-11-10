@@ -16,11 +16,14 @@ main() {
     # - https://github.com/hadolint/hadolint
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     hadolint.rb
+    # - https://hackage.haskell.org/
     # - https://www.stackage.org/
     # - https://docs.haskellstack.org/en/stable/GUIDE/
     # - https://github.com/commercialhaskell/stack/issues/4408
     # - Last working stack config:
     #   https://github.com/hadolint/hadolint/blob/v2.10.0/stack.yaml
+    # - https://github.com/hadolint/hadolint/blob/master/.github/
+    #     workflows/haskell.yml
     # """
     local app dict stack_args
     koopa_activate_app --build-only 'haskell-stack'
@@ -62,11 +65,12 @@ flags: {}
 extra-package-dbs: []
 packages:
   - .
-resolver: nightly-2022-11-08
+# > resolver: nightly-2022-11-08  # ghc 2.4.5
+resolver: lts-19.32  # ghc 9.0.2
 extra-deps:
   - ShellCheck-0.8.0
-  - colourista-0.1.0.2
-  - language-docker-12.0.0
+  - colourista-0.1.0.1
+  - language-docker-11.0.0
   - spdx-1.0.0.3
   - hspec-2.10.6
   - hspec-core-2.10.6
