@@ -1851,7 +1851,7 @@
     "notes": ["2.11.0+ currently has build issues on macOS."],
     "outdated": true,
     "url": ["https://github.com/hadolint/hadolint/"],
-    "version": "2.10.0"
+    "version": "2.12.0"
   },
   "harfbuzz": {
     "bin": [],
