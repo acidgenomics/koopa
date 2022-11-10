@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this issue with hadolint 2.12.0:
-# 2022-11-09 14:01:18.632683: [debug] Asking for a supported GHC version
-# 2022-11-09 14:01:18.632763: [debug] Resolving package entries
-# 2022-11-09 14:01:18.632814: [debug] Parsing the targets
-# 2022-11-09 14:01:18.634837: [error] Error parsing targets: The specified targets matched no packages.
-# Perhaps you need to run 'stack init'?
-
 main() {
     # """
     # Install hadolint.
@@ -16,14 +9,18 @@ main() {
     # - https://github.com/hadolint/hadolint
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     hadolint.rb
+    # - https://docs.haskellstack.org/en/stable/GUIDE/
     # - https://hackage.haskell.org/
     # - https://www.stackage.org/
-    # - https://docs.haskellstack.org/en/stable/GUIDE/
     # - https://github.com/commercialhaskell/stack/issues/4408
     # - Last working stack config:
     #   https://github.com/hadolint/hadolint/blob/v2.10.0/stack.yaml
     # - https://github.com/hadolint/hadolint/blob/master/.github/
     #     workflows/haskell.yml
+    # - https://github.com/hadolint/hadolint/issues/899
+    # - Stack configuration removal:
+    #   https://github.com/hadolint/hadolint/commit/
+    #     12473f0317f35fb685c19caaac8a253d187a99c9
     # """
     local app dict stack_args
     koopa_activate_app --build-only 'haskell-stack'
