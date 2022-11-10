@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE Consider including 'expat', 'gdbm', and possibly 'zlib' here?
+# FIXME This is no longer building Perl documentation files.
 
 main() {
     # """
