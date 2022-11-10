@@ -5,6 +5,23 @@ main() {
     # Install hadolint.
     # @note Updated 2022-11-10.
     #
+    # @section Removal of 'stack.yaml' config in 2.11.0:
+    # Manual 'stack.yaml' configuration is required for 2.11.0, 2.12.0.
+    # Latest cabal configuration is here:
+    # - https://github.com/hadolint/hadolint/blob/master/hadolint.cabal
+    # Our current configuration is adapted from 2.10.0:
+    # - https://github.com/hadolint/hadolint/tree/v2.10.0
+    #
+    # @section Hackage dependency info:
+    # - https://hackage.haskell.org/package/ShellCheck
+    # - https://hackage.haskell.org/package/colourista
+    # - https://hackage.haskell.org/package/language-docker
+    # - https://hackage.haskell.org/package/spdx
+    # - https://hackage.haskell.org/package/hspec
+    # - https://hackage.haskell.org/package/hspec-core
+    # - https://hackage.haskell.org/package/hspec-discover
+    # - https://hackage.haskell.org/package/stm
+    #
     # @seealso
     # - https://github.com/hadolint/hadolint
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -43,20 +60,6 @@ archive/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
     dict['stack_yaml_file']='stack.yaml'
-    # Manual stack.yaml configuration is required for 2.11.0, 2.12.0.
-    # Hackage dependency info:
-    # - https://hackage.haskell.org/package/ShellCheck
-    # - https://hackage.haskell.org/package/colourista
-    # - https://hackage.haskell.org/package/language-docker
-    # - https://hackage.haskell.org/package/spdx
-    # - https://hackage.haskell.org/package/hspec
-    # - https://hackage.haskell.org/package/hspec-core
-    # - https://hackage.haskell.org/package/hspec-discover
-    # - https://hackage.haskell.org/package/stm
-    # Latest cabal configuration is here:
-    # - https://github.com/hadolint/hadolint/blob/master/hadolint.cabal
-    # This configuration is adapted from 2.10.0:
-    # - https://github.com/hadolint/hadolint/tree/v2.10.0
     read -r -d '' "dict[stack_yaml_string]" << END || true
 flags: {}
 extra-package-dbs: []
