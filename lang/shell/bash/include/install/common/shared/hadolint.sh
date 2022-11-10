@@ -43,10 +43,20 @@ archive/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
     dict['stack_yaml_file']='stack.yaml'
-    # This configuration is from hadolint 2.10.0.
-    # https://github.com/hadolint/hadolint/tree/v2.10.0
-    # Latest configuration is here:
-    # https://github.com/hadolint/hadolint/blob/master/hadolint.cabal
+    # Manual stack.yaml configuration is required for 2.11.0, 2.12.0.
+    # This configuration is adapted from hadolint 2.10.0 stack.yaml:
+    # - https://github.com/hadolint/hadolint/tree/v2.10.0
+    # Latest cabal configuration is here:
+    # - https://github.com/hadolint/hadolint/blob/master/hadolint.cabal
+    # Hackage dependency info:
+    # - https://hackage.haskell.org/package/ShellCheck
+    # - https://hackage.haskell.org/package/colourista
+    # - https://hackage.haskell.org/package/language-docker
+    # - https://hackage.haskell.org/package/spdx
+    # - https://hackage.haskell.org/package/hspec
+    # - https://hackage.haskell.org/package/hspec-core
+    # - https://hackage.haskell.org/package/hspec-discover
+    # - https://hackage.haskell.org/package/stm
     read -r -d '' "dict[stack_yaml_string]" << END || true
 flags: {}
 extra-package-dbs: []
@@ -55,13 +65,13 @@ packages:
 resolver: nightly-2022-11-08
 extra-deps:
   - ShellCheck-0.8.0
-  - colourista-0.1.0.1
-  - language-docker-11.0.0
-  - spdx-1.0.0.2
-  - hspec-2.9.4
-  - hspec-core-2.9.4
-  - hspec-discover-2.9.4
-  - stm-2.5.0.2
+  - colourista-0.1.0.2
+  - language-docker-12.0.0
+  - spdx-1.0.0.3
+  - hspec-2.10.6
+  - hspec-core-2.10.6
+  - hspec-discover-2.10.6
+  - stm-2.5.1.0
 ghc-options:
   "\$everything": -haddock
 END
