@@ -18,6 +18,8 @@ main() {
     #     hadolint.rb
     # - https://docs.haskellstack.org/en/stable/GUIDE/
     # - https://github.com/commercialhaskell/stack/issues/4408
+    # - Last working stack config:
+    #   https://github.com/hadolint/hadolint/blob/v2.10.0/stack.yaml
     # """
     local app dict
     koopa_activate_app --build-only 'haskell-stack'
@@ -49,7 +51,8 @@ archive/${dict['file']}"
     #Using package flags:
     #    - hadolint: FlagName "static" = True
     # NOTE Can use '--omit-packages' to exclude mismatching packages.
-    # https://www.stackage.org/lts-19.32
+    # https://www.stackage.org/
+    # FIXME Need to resolve empty 'packages: []' in stack.yaml.
     case "${dict['version']}" in
         '2.11.'* | \
         '2.12.'*)
@@ -59,8 +62,8 @@ archive/${dict['file']}"
                 init \
                     --force \
                     --omit-packages \
-                    --resolver 'nightly'
-                    # --resolver 'lts-19.32'
+                    --resolver='lts-19.32'
+                    # --resolver='nightly-2022-11-08'
             ;;
     esac
     "${app['stack']}" \
