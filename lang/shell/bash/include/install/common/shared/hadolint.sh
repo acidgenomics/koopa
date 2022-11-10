@@ -65,7 +65,7 @@ flags: {}
 extra-package-dbs: []
 packages:
   - .
-# > resolver: nightly-2022-11-08  # ghc 2.4.5
+# > resolver: nightly-2022-11-08  # ghc 9.2.4
 resolver: lts-19.32  # ghc 9.0.2
 extra-deps:
   - ShellCheck-0.8.0
