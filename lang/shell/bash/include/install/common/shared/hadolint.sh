@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME Hitting this issue with hadolint 2.12.0:
-#
 # 2022-11-09 14:01:18.632683: [debug] Asking for a supported GHC version
 # 2022-11-09 14:01:18.632763: [debug] Resolving package entries
 # 2022-11-09 14:01:18.632814: [debug] Parsing the targets
@@ -11,14 +10,15 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2022-07-15.
+    # @note Updated 2022-11-10.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     hadolint.rb
+    # - https://github.com/commercialhaskell/stack/issues/4408
     # """
-    local app dict install_args stack_args
+    local app dict
     koopa_activate_app --build-only 'haskell-stack'
     declare -A app=(
         ['stack']="$(koopa_locate_stack)"
@@ -37,12 +37,23 @@ archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    stack_args=(
-        "--jobs=${dict['jobs']}"
-        "--stack-root=${dict['stack_root']}"
-        '--verbose'
-    )
-    install_args=("--local-bin-path=${dict['prefix']}/bin")
-    "${app['stack']}" "${stack_args[@]}" install "${install_args[@]}"
+    koopa_print_env
+    # FIXME Need to run something like this for hadolint 2.11.0, 2.12.0...
+    # May need to add "--resolver='nightly'" to the 'init' call.
+    # > "${app['stack']}" \
+    # >     --stack-root="${dict['stack_root']}" \
+    # >     --verbose \
+    # >     init --force
+    "${app['stack']}" \
+        --jobs="${dict['jobs']}" \
+        --stack-root="${dict['stack_root']}" \
+        --verbose \
+        build
+    "${app['stack']}" \
+        --jobs="${dict['jobs']}" \
+        --stack-root="${dict['stack_root']}" \
+        --verbose \
+        install \
+            --local-bin-path="${dict['prefix']}/bin"
     return 0
 }
