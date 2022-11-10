@@ -47,10 +47,6 @@ archive/${dict['file']}"
     koopa_print_env
     dict['stack_yaml_file']='stack.yaml'
     # Manual stack.yaml configuration is required for 2.11.0, 2.12.0.
-    # This configuration is adapted from hadolint 2.10.0 stack.yaml:
-    # - https://github.com/hadolint/hadolint/tree/v2.10.0
-    # Latest cabal configuration is here:
-    # - https://github.com/hadolint/hadolint/blob/master/hadolint.cabal
     # Hackage dependency info:
     # - https://hackage.haskell.org/package/ShellCheck
     # - https://hackage.haskell.org/package/colourista
@@ -60,6 +56,10 @@ archive/${dict['file']}"
     # - https://hackage.haskell.org/package/hspec-core
     # - https://hackage.haskell.org/package/hspec-discover
     # - https://hackage.haskell.org/package/stm
+    # Latest cabal configuration is here:
+    # - https://github.com/hadolint/hadolint/blob/master/hadolint.cabal
+    # This configuration is adapted from 2.10.0:
+    # - https://github.com/hadolint/hadolint/tree/v2.10.0
     read -r -d '' "dict[stack_yaml_string]" << END || true
 flags: {}
 extra-package-dbs: []
