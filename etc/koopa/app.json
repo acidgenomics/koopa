@@ -2179,12 +2179,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-11-11",
     "dependencies": ["gcc"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://www.netlib.org/lapack/"],
-    "version": "3.10.1"
+    "version": "3.11.0"
   },
   "latch": {
     "bin": ["latch"],
