@@ -1212,7 +1212,7 @@
     "date": "2022-11-08",
     "dependencies": ["perl"],
     "homebrew": true,
-    "man1": ["exiftool.1"],
+    "man1": [],
     "url": ["https://exiftool.org/"],
     "version": "12.50"
   },
