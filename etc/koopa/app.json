@@ -2190,7 +2190,7 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-07",
+    "date": "2022-11-11",
     "dependencies": ["python3.10"],
     "homebrew": false,
     "man1": [],
@@ -2199,7 +2199,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.7.2"
+    "version": "2.8.0"
   },
   "less": {
     "bin": ["less"],
