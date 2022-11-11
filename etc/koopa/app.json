@@ -1476,14 +1476,14 @@
     "bin": ["gdal-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-28",
+    "date": "2022-11-11",
     "dependencies": [],
     "homebrew": true,
     "man1": ["gdal-config.1"],
-    "outdated": true,
+    "outdated": false,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
-    "version": "3.5.2"
+    "version": "3.6.0"
   },
   "gdbm": {
     "bin": [],
@@ -1556,6 +1556,7 @@
     "homebrew": false,
     "large": true,
     "man1": [],
+    "outdated": true,
     "version": "0.3.10"
   },
   "ghostscript": {
@@ -4778,18 +4779,18 @@
     "bin": ["yq"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-11-11",
     "dependencies": ["go"],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.29.2"
+    "version": "4.30.1"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-11-11",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
@@ -4797,7 +4798,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2022.10.4"
+    "version": "2022.11.11"
   },
   "zellij": {
     "bin": ["zellij"],
