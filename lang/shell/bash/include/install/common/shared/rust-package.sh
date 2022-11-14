@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-09-07.
+    # @note Updated 2022-11-14.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -66,9 +66,14 @@ main() {
             )
             ;;
         'du-dust')
-            # Currently outdated on crates.io.
             install_args+=(
                 '--git' 'https://github.com/bootandy/dust.git'
+                '--tag' "v${dict['version']}"
+            )
+            ;;
+        'fd-find')
+            install_args+=(
+                '--git' 'https://github.com/sharkdp/fd.git'
                 '--tag' "v${dict['version']}"
             )
             ;;
