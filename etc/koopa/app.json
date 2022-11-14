@@ -3934,12 +3934,13 @@
   },
   "ruby": {
     "bin": ["bundle", "bundler", "gem", "ruby"],
-    "build_dependencies": [],
+    "build_dependencies": ["pkg-config"],
     "conservative": true,
-    "date": "2022-08-30",
-    "dependencies": [],
+    "date": "2022-11-14",
+    "dependencies": ["openssl3", "readline", "zlib"],
     "homebrew": true,
     "man1": ["ruby.1"],
+    "outdated": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.1.2p20"
   },
