@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't building correctly on macOS Ventura...
+
 main() {
     # """
     # Install Ruby.
@@ -35,7 +37,21 @@ ${dict['maj_min_ver']}/${dict['file']}"
     # - https://github.com/rbenv/ruby-build/issues/156
     # - https://github.com/rbenv/ruby-build/issues/729
     # > export RUBY_CONFIGURE_OPTS='--disable-install-doc'
-    conf_args=("--prefix=${dict['prefix']}")
+    # FIXME May need to set a modified version of this for correct config
+    # (see '--with-opt-dir' argument).
+    # > paths = %w[libyaml openssl@1.1 readline].map { |f| Formula[f].opt_prefix }
+    conf_args=(
+        "--prefix=${dict['prefix']}"
+        '--disable-silent-rules'
+        '--enable-shared'
+        '--without-gmp'
+        # > FIXME --with-sitedir=#{HOMEBREW_PREFIX}/lib/ruby/site_ruby
+        # > FIXME --with-vendordir=#{HOMEBREW_PREFIX}/lib/ruby/vendor_ruby
+        # > FIXME --with-opt-dir=#{paths.join(":")}
+    )
+    koopa_is_macos && conf_args+=('--enable-dtrace')
+    # Correct MJIT_CC to not use superenv shim
+    # FIXME args << "MJIT_CC=/usr/bin/#{DevelopmentTools.default_compiler}"
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
