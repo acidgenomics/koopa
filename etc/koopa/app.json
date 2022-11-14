@@ -4460,7 +4460,7 @@
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-29",
+    "date": "2022-11-14",
     "dependencies": [],
     "homebrew": true,
     "man1": [
@@ -4473,8 +4473,9 @@
       "vimtutor.1",
       "xxd.1"
     ],
+    "outdated": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.0800"
+    "version": "9.0.0850"
   },
   "visidata": {
     "bin": ["vd", "visidata"],
