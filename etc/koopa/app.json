@@ -2145,7 +2145,7 @@
     "large": true,
     "man1": [],
     "notes": ["1.8.1 installer is currently failing on macOS."],
-    "outdated": false,
+    "outdated": true,
     "url": ["https://github.com/JuliaLang/julia/"],
     "version": "1.8.2"
   },
