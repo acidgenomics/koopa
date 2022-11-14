@@ -12,14 +12,12 @@ koopa_locate_shell() {
     #   '/usr/bin/qemu-aarch64' here, rather than the shell we want.
     #
     # @seealso
-    # - https://stackoverflow.com/questions/3327013
+    # - https://stackoverflow.com/questions/3327013/
     # - http://opensourceforgeeks.blogspot.com/2013/05/
     #     how-to-find-current-shell-in-linux.html
     # - https://superuser.com/questions/103309/
     # - https://unix.stackexchange.com/questions/87061/
     # - https://unix.stackexchange.com/questions/182590/
-    # - How to speed up lsof on macOS (prone to hangs with NFS):
-    #   https://apple.stackexchange.com/questions/81140/
     # """
     local proc_file pid shell
     shell="${KOOPA_SHELL:-}"
