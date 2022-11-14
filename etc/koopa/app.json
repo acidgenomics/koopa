@@ -1119,13 +1119,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-26",
+    "date": "2022-11-14",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "0ec2b458f57181dab2f3e60125b13446be5aa3a1"
+    "version": "80615f7c617217488123e53b486e2c093041dc00"
   },
   "du-dust": {
     "aliases": {
@@ -4138,13 +4138,13 @@
     "bin": [],
     "build_dependencies": [],
     "check": false,
-    "date": "2022-11-09",
+    "date": "2022-11-14",
     "dependencies": ["chemacs", "emacs"],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/syl20bnr/spacemacs/"],
-    "version": "0acf65c4c5b15bcd05902d5aa981f5831476ae18"
+    "version": "57a7a0e63c4aecf810b19ca3fd49e5ae1a838126"
   },
   "spacevim": {
     "bin": [],
