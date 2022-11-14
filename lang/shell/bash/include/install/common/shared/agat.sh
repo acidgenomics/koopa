@@ -1,13 +1,36 @@
 #!/usr/bin/env bash
 
-# FIXME This currently doesn't harden Perl correctly...
-# ❯ agat --version
-# Can't locate AGAT/AppEaser.pm in @INC (you may need to install the AGAT::AppEaser module) (@INC contains: /opt/koopa/app/perl/5.36.0/lib/site_perl/5.36.0/darwin-2level /opt/koopa/app/perl/5.36.0/lib/site_perl/5.36.0 /opt/koopa/app/perl/5.36.0/lib/5.36.0/darwin-2level /opt/koopa/app/perl/5.36.0/lib/5.36.0) at /opt/koopa/bin/agat line 8.
-# BEGIN failed--compilation aborted at /opt/koopa/bin/agat line 8.
-
 main() {
+    local app dict
+    declare -A app
+    app['patch']="$(koopa_locate_patch)"
+    [[ -x "${app['patch']}" ]] || return 1
+    declare -A dict
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     koopa_install_app_subshell \
         --installer='conda-env' \
         --name='agat' \
         "$@"
+    # Generated using 'diff -u agat agat-1 > agat.patch'.
+    dict['patch_file']='agat.patch'
+    read -r -d '' "dict[patch_string]" << END || true
+--- agat	2022-11-14 12:24:17
++++ agat-1	2022-11-14 13:15:20
+@@ -1,4 +1,5 @@
+-#!/usr/bin/env perl
++#!${dict['prefix']}/libexec/bin/perl -w
++use lib "${dict['prefix']}/libexec/lib/perl5";
+ use v5.24;
+ use warnings;
+ use experimental 'signatures';
+END
+    koopa_write_string \
+        --file="${dict['patch_file']}" \
+        --string="${dict['patch_string']}"
+    dict['patch_file']="$(koopa_realpath "${dict['patch_file']}")"
+    (
+        koopa_cd "${dict['prefix']}/libexec/bin"
+        "${app['patch']}" 'agat' "${dict['patch_file']}"
+    )
+    return 0
 }
