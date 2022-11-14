@@ -3,7 +3,7 @@
 koopa_locate_shell() {
     # """
     # Locate the current shell executable.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-11-14.
     #
     # Detection issues with qemu ARM emulation on x86:
     # - The 'ps' approach will return correct shell for ARM running via
@@ -18,6 +18,8 @@ koopa_locate_shell() {
     # - https://superuser.com/questions/103309/
     # - https://unix.stackexchange.com/questions/87061/
     # - https://unix.stackexchange.com/questions/182590/
+    # - How to speed up lsof on macOS (prone to hangs with NFS):
+    #   https://apple.stackexchange.com/questions/81140/
     # """
     local proc_file pid shell
     shell="${KOOPA_SHELL:-}"
@@ -27,30 +29,15 @@ koopa_locate_shell() {
         return 0
     fi
     pid="${$}"
-    if koopa_is_linux
+    proc_file="/proc/${pid}/exe"
+    if [ -x "$proc_file" ] && ! koopa_is_qemu
     then
-        proc_file="/proc/${pid}/exe"
-        if [ -x "$proc_file" ] && ! koopa_is_qemu
-        then
-            shell="$(koopa_realpath "$proc_file")"
-        elif koopa_is_installed 'ps'
-        then
-            shell="$( \
-                ps -p "$pid" -o 'comm=' \
-                | sed 's/^-//' \
-            )"
-        fi
-    elif koopa_is_macos
+        shell="$(koopa_realpath "$proc_file")"
+    elif koopa_is_installed 'ps'
     then
         shell="$( \
-            lsof \
-                -a \
-                -F 'n' \
-                -d 'txt' \
-                -p "$pid" \
-                2>/dev/null \
-            | sed -n '3p' \
-            | sed 's/^n//' \
+            ps -p "$pid" -o 'comm=' \
+            | sed 's/^-//' \
         )"
     fi
     # Fallback support for detection failure inside of some subprocesses.
