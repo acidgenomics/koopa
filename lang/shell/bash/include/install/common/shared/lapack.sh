@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LAPACK.
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-11-11.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
@@ -24,6 +24,12 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    # Temporary fix for 3.11.0 download link.
+    case "${dict['version']}" in
+        '3.11.0')
+            dict['version']='3.11'
+            ;;
+    esac
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/Reference-LAPACK/${dict['name']}/archive/\
 refs/tags/${dict['file']}"

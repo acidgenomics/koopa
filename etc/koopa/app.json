@@ -10,6 +10,18 @@
     "url": ["https://beyondgrep.com/"],
     "version": "3.6.0"
   },
+  "agat": {
+    "bin": ["agat"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-11-14",
+    "dependencies": ["conda"],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "url": ["https://github.com/NBISweden/AGAT/"],
+    "version": "1.0.0"
+  },
   "anaconda": {
     "bin": [],
     "build_dependencies": [],
@@ -27,13 +39,14 @@
     "bin": ["airflow"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-24",
+    "date": "2022-11-14",
     "dependencies": ["python"],
     "homebrew": false,
     "large": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.4.2"
+    "version": "2.4.3"
   },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
@@ -632,13 +645,13 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-11-09",
+    "date": "2022-11-14",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.27.0"
+    "version": "2.27.1"
   },
   "cloudbiolinux": {
     "bin": [],
@@ -1056,12 +1069,13 @@
     "bin": ["difft"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-17",
+    "date": "2022-11-14",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.37.0"
+    "version": "0.38.0"
   },
   "docker-credential-pass": {
     "aliases": {
@@ -1256,13 +1270,13 @@
     "bin": ["fd"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-03",
+    "date": "2022-11-14",
     "dependencies": ["rust"],
     "homebrew": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://github.com/sharkdp/fd/"],
-    "version": "8.5.2"
+    "version": "8.5.3"
   },
   "ffmpeg": {
     "bin": ["ffmpeg", "ffprobe"],
@@ -2179,12 +2193,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2022-11-11",
     "dependencies": ["gcc"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://www.netlib.org/lapack/"],
-    "version": "3.10.1"
+    "version": "3.11.0"
   },
   "latch": {
     "bin": ["latch"],
@@ -2894,12 +2909,13 @@
       "pkg-config"
     ],
     "conservative": false,
-    "date": "2022-10-26",
+    "date": "2022-11-14",
     "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python"],
     "homebrew": true,
     "man1": ["nvim.1"],
+    "outdated": false,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.8.0"
+    "version": "0.8.1"
   },
   "nettle": {
     "bin": [],
@@ -3931,13 +3947,13 @@
     "bin": ["ruff"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-11-14",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.108"
+    "version": "0.0.117"
   },
   "rust": {
     "bin": [
@@ -4458,7 +4474,7 @@
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-29",
+    "date": "2022-11-14",
     "dependencies": [],
     "homebrew": true,
     "man1": [
@@ -4471,8 +4487,9 @@
       "vimtutor.1",
       "xxd.1"
     ],
+    "outdated": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.0800"
+    "version": "9.0.0850"
   },
   "visidata": {
     "bin": ["vd", "visidata"],
@@ -4779,12 +4796,13 @@
     "bin": ["yq"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-11",
+    "date": "2022-11-14",
     "dependencies": ["go"],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.30.1"
+    "version": "4.30.2"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],

@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-11-04.
+    # Updated 2022-11-14.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -81,6 +81,7 @@ __koopa_complete() {
                 'uninstall')
                     args=(
                         'ack'
+                        'agat'
                         'anaconda'
                         'apache-airflow'
                         'apache-spark'
