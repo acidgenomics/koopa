@@ -2746,6 +2746,7 @@ koopa_bioconda_autobump_recipe() {
         "${app['git']}" checkout \
             -B "${dict['branch']}" \
             "origin/bump/${dict['branch']}"
+        "${app['git']}" pull origin master
         koopa_mkdir "recipes/${dict['recipe']}"
         "${app['vim']}" "recipes/${dict['recipe']}/meta.yaml"
     )
@@ -10876,6 +10877,12 @@ koopa_install_ack() {
         "$@"
 }
 
+koopa_install_agat() {
+    koopa_install_app \
+        --name='agat' \
+        "$@"
+}
+
 koopa_install_all_apps() {
     local app app_name apps koopa push_apps
     koopa_assert_has_no_args "$#"
@@ -10894,8 +10901,6 @@ koopa_install_all_apps() {
         'tar'
         'xz'
         'bzip2'
-        'unzip'
-        'zip'
         'm4'
         'gmp'
         'gperf'
@@ -10905,6 +10910,8 @@ koopa_install_all_apps() {
         'autoconf'
         'automake'
         'libtool'
+        'unzip'
+        'zip'
         'bison'
         'coreutils'
         'findutils'
@@ -10951,6 +10958,7 @@ koopa_install_all_apps() {
         'xorg-libxt'
         'xorg-libxrandr'
         'tcl-tk'
+        'libedit'
         'python3.10'
         'python3.11'
         'perl'
@@ -11057,7 +11065,6 @@ koopa_install_all_apps() {
     )
     koopa_is_linux && apps+=('elfutils')
     apps+=(
-        'libedit'
         'llvm'
         'go'
         'chezmoi'
@@ -12006,7 +12013,9 @@ ${dict['version2']}"
                     [[ -x "${app['tee']}" ]] || return 1
                     path_arr=(
                         '/usr/bin'
+                        '/usr/sbin'
                         '/bin'
+                        '/sbin'
                     )
                     PKG_CONFIG_PATH=''
                     if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
@@ -23249,6 +23258,12 @@ koopa_trim_ws() {
 koopa_uninstall_ack() {
     koopa_uninstall_app \
         --name='ack' \
+        "$@"
+}
+
+koopa_uninstall_agat() {
+    koopa_uninstall_app \
+        --name='agat' \
         "$@"
 }
 
