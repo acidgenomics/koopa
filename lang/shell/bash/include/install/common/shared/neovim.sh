@@ -4,7 +4,7 @@
 main() {
     # """
     # Install Neovim.
-    # @note Updated 2022-09-11.
+    # @note Updated 2022-11-14.
     #
     # Homebrew is currently required for this to build on macOS.
     #
@@ -90,7 +90,8 @@ archive/${dict['file']}"
         --file='local.mk' \
         --string="${dict['local_mk']}"
     koopa_print_env
-    "${app['make']}" distclean
+    # NOTE This step doesn't work for 0.8.1 on macOS.
+    # > "${app['make']}" distclean
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0

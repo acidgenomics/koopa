@@ -2895,12 +2895,13 @@
       "pkg-config"
     ],
     "conservative": false,
-    "date": "2022-10-26",
+    "date": "2022-11-14",
     "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python"],
     "homebrew": true,
     "man1": ["nvim.1"],
+    "outdated": false,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.8.0"
+    "version": "0.8.1"
   },
   "nettle": {
     "bin": [],
