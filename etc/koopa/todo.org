@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Define 'koopa_owner' function.
+    Only allow app installs when current user matches owner.
 ** TODO Consider adding '--trace' to make commands.
 ** TODO Add install support for micromamba.
 ** TODO Improve pinning of desired Bioconductor version, e.g. 3.16.
