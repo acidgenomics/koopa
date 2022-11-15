@@ -1,6 +1,12 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO 'koopa install r-packages' needs to be 'koopa install system r-packages'.
+** TODO apptainer, aspera-connect, lmod, and docker-credential-pass aren't showing up in Linux system checks.
+** TODO Ensure hadolint install cleans up ghcup.
+    hadolint \~/.ghcup/tmp
+    ensure this gets cleaned up...don't waste disk space.
+    can we move this?
 ** TODO Disable Ubuntu MOTD spam.
     sudo pro config set apt_news=false
     /etc/default/motd-news
