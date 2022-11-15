@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME 2.39 is failing to build on Linux.
-# Error seems to be at Makefile:1004...
-
-# FIXME Hitting this autoconf issue with m4 argh...
-# configure.ac:34: error: Please use exactly Autoconf 2.69 instead of 2.71.
-
-# FIXME 'make distclean' doesn't work.
-
 main() {
     # """
     # Install binutils.
@@ -36,21 +28,17 @@ main() {
     # - https://salsa.debian.org/toolchain-team/binutils/-/tree/master/debian
     # """
     local build_deps deps install_args
-    build_deps=(
-        'autoconf'
-        'automake'
-        'bison'
-        'flex'
-    )
-    deps=(
-        'zlib'
-        'texinfo'
-    )
+    build_deps=('bison' 'flex')
+    deps=('zlib' 'texinfo')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     install_args=(
         # > -D '--disable-gprofng'
+        # > -D '--disable-multilib'
+        # > -D '--disable-nls'
         # > -D '--disable-plugins'
+        # > -D '--disable-static'
+        # > -D '--disable-werror'
         # > -D '--enable-64-bit-bfd'
         # > -D '--enable-default-execstack=no'
         # > -D '--enable-deterministic-archives'
@@ -61,22 +49,9 @@ main() {
         # > -D '--with-system-zlib'
         -D '--disable-debug'
         -D '--disable-dependency-tracking'
-        -D '--disable-multilib'
-        -D '--disable-nls'
-        -D '--disable-static'
-        -D '--disable-werror'
+        # Gold is required for LLVM.
         -D '--enable-gold'
-        -D '--enable-targets=all'
-        # NOTE This will run autoconf.
-        # > -D '--enable-maintainer-mode'
     )
-    # > if koopa_is_linux
-    # > then
-    # >     dict['arch']="$(koopa_arch)"
-    # >     install_args+=(
-    # >         -D "--target=${dict['arch']}-unknown-linux-gnu"
-    # >     )
-    # > fi
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='binutils' \
