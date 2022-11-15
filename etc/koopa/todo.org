@@ -1,6 +1,15 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Disable Ubuntu MOTD spam.
+    sudo pro config set apt_news=false
+    /etc/default/motd-news
+    Switch 'ENABLED=1' to 'ENABLED=0'.
+    See also:
+    - https://ubuntu.com/legal/motd
+    - https://bugs.launchpad.net/ubuntu/+source/ubuntu-meta/+bug/1930914
+    - https://bugs.launchpad.net/ubuntu/+source/ubuntu-advantage-tools/+bug/1993006
+    - https://www.reddit.com/r/linux/comments/yh6xwc/ubuntu_devs_tease_rlinux_via_apt_news_of_the_day/
 ** TODO Define 'koopa_owner' function.
     Only allow app installs when current user matches owner.
 ** TODO Consider adding '--trace' to make commands.

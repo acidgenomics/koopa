@@ -1,16 +1,10 @@
 #!/usr/bin/env bash
 # koopa nolint=line-width
 
-# FIXME Now seeing this warning for neovim 0.8.1 on macOS:
-# > CMake Warning:
-# >   Manually-specified variables were not used by the project:
-# >     ZLIB_INCLUDE_DIR
-# >     ZLIB_LIBRARY
-
 main() {
     # """
     # Install Neovim.
-    # @note Updated 2022-11-14.
+    # @note Updated 2022-11-15.
     #
     # Homebrew is currently required for this to build on macOS.
     #
@@ -38,8 +32,8 @@ main() {
     local app build_deps deps dict
     koopa_assert_has_no_args "$#"
     build_deps=(
-        'autoconf'
-        'automake'
+        # > 'autoconf'
+        # > 'automake'
         'cmake'
         'libtool'
         'ninja'
@@ -70,7 +64,7 @@ main() {
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     read -r -d '' "dict[local_mk]" << END || true
-CMAKE_BUILD_TYPE := RelWithDebInfo
+CMAKE_BUILD_TYPE := Release
 DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON
 CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
 CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
@@ -96,8 +90,7 @@ archive/${dict['file']}"
         --file='local.mk' \
         --string="${dict['local_mk']}"
     koopa_print_env
-    # NOTE This step doesn't work for 0.8.1 on macOS.
-    # > "${app['make']}" distclean
+    koopa_is_linux && koopa_add_to_path_start "$(koopa_bin_prefix)"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0

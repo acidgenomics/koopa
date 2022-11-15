@@ -949,13 +949,13 @@ koopa_alias_glances() {
     local color_mode
     color_mode="$(koopa_color_mode)"
     case "$color_mode" in
-        'dark')
-            glances "$@"
-            ;;
         'light')
-            glances --light --theme-white "$@"
+            set -- '--theme-white' "$@"
             ;;
     esac
+    glances \
+        --config "${HOME}/.config/glances/glances.conf" \
+        "$@"
     return 0
 }
 
