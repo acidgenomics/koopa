@@ -4215,13 +4215,13 @@
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-11-15",
     "dependencies": [],
     "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.0"
+    "version": "3.0.1"
   },
   "star": {
     "bin": ["STAR"],
