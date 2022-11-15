@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME 2.39 is failing to build on Linux.
+#
 # NOTE Hitting this cryptic error with 2.39 on Ubuntu 22:
 # # checking for bison... bison
 # # checking for bison 3.0.4 or newer... 3.8.2, bad
@@ -7,6 +9,9 @@
 
 main() {
     # """
+    # Install binutils.
+    # @note Updated 2022-11-15.
+    #
     # Potentially include:
     # * '--disable-nls'
     # * '--disable-werror'
@@ -23,6 +28,8 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     binutils.rb
     # - https://git.alpinelinux.org/aports/tree/main/binutils/APKBUILD
+    # - https://www.linuxfromscratch.org/lfs/view/development/
+    #     chapter08/binutils.html
     # """
     koopa_activate_app --build-only 'bison' 'flex'
     koopa_activate_app 'zlib' 'texinfo'
@@ -31,5 +38,12 @@ main() {
         --name='binutils' \
         -D '--disable-debug' \
         -D '--disable-dependency-tracking' \
+        -D '--disable-gold' \
+        -D '--disable-nls' \
+        -D '--disable-plugins' \
+        -D '--disable-werror' \
+        -D '--enable-64-bit-bfd' \
+        -D '--enable-interwork' \
+        -D '--enable-multilib' \
         "$@"
 }
