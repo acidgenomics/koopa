@@ -3,7 +3,7 @@
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-09-08.
+    # @note Updated 2022-11-15.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -91,7 +91,14 @@ main() {
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    case "${dict['name']}" in
+        'binutils')
+            "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}" clean all
+            ;;
+        *)
+            "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+            ;;
+    esac
     # > "${app['make']}" check || true
     "${app['make']}" install
     return 0
