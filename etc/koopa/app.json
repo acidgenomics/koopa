@@ -408,10 +408,9 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "notes": ["2.39 has build issues on Ubuntu 22."],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
-    "version": "2.38"
+    "version": "2.39"
   },
   "bioawk": {
     "bin": ["bioawk"],
