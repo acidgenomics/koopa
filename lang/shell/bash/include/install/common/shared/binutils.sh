@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME 2.39 is failing to build on Linux.
-#
-# NOTE Hitting this cryptic error with 2.39 on Ubuntu 22:
-# # checking for bison... bison
-# # checking for bison 3.0.4 or newer... 3.8.2, bad
-# # configure: error: Building gprofng requires bison 3.0.4 or later.
 
 main() {
     # """
@@ -53,10 +48,6 @@ main() {
         #-D '--with-system-zlib'
         -D '--enable-targets=all'
     )
-    if koopa_is_linux
-    then
-        koopa_add_to_path_start "$(koopa_bin_prefix)"
-    fi
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='binutils' \
