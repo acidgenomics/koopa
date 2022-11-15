@@ -61,13 +61,13 @@ main() {
         -D '--enable-gold'
         -D '--without-debuginfod'
     )
+    # Required to avoid unwanted flex/lex error on Ubuntu 22.
+    # - https://lists.gnu.org/archive/html/bug-binutils/2016-01/msg00076.html
+    # - https://github.com/westes/flex/issues/154
+    # - https://news.ycombinator.com/item?id=20269105
     if koopa_is_linux
     then
-        # Required to avoid unwanted lex error on Linux.
-        # https://lists.gnu.org/archive/html/bug-binutils/2016-01/msg00076.html
-        install_args+=(
-            -D 'LEX=touch lex.yy.c'
-        )
+        install_args+=(-D 'LEX=touch lex.yy.c')
     fi
     koopa_install_app_subshell \
         --installer='gnu-app' \
