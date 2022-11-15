@@ -427,14 +427,14 @@
     "bin": [],
     "build_dependencies": [],
     "conservaitve": false,
-    "date": "2022-11-08",
+    "date": "2022-11-15",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "notes": ["Adding bioconda-utils to bin currently causes app to error."],
     "url": ["https://github.com/bioconda/bioconda-utils/"],
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   "bison": {
     "bin": [],
