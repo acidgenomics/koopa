@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# NOTE 2.39 is failing to build on Linux.
+# FIXME 2.39 is failing to build on Linux.
+# Error seems to be at Makefile:1004...
 
 main() {
     # """
