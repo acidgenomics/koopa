@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-# FIXME Consider installing latest stable version of GHC.
+# FIXME Need to rework target prefix handling...cabal is annoying with this.
+# Symlinking 'hadolint' to '/Users/mike/.cabal/bin/hadolint'
+# FIXME Can we increase verbosity?
+
+# FIXME Rework using sandbox approach:
+# cabal sandbox init                   # Initialise the sandbox
+# $ cabal install --only-dependencies    # Install dependencies into the sandbox
+# $ cabal build                          # Build your package inside the sandbox
 
 main() {
     # """
@@ -42,8 +49,11 @@ main() {
     # - Stack configuration removal:
     #   https://github.com/hadolint/hadolint/commit/
     #     12473f0317f35fb685c19caaac8a253d187a99c9
+    # - https://cabal.readthedocs.io/en/3.2/installing-packages.html
     # """
-    local app dict
+    local app build_deps dict
+    build_deps=('git' 'pkg-config')
+    koopa_activate_app --build-only "${build_deps[@]}"
     declare -A app=(
         ['cabal']="$(koopa_locate_cabal)"
         ['ghcup']="$(koopa_locate_ghcup)"
@@ -51,16 +61,17 @@ main() {
     [[ -x "${app['cabal']}" ]] || return 1
     [[ -x "${app['ghcup']}" ]] || return 1
     declare -A dict=(
-        ['ghc_prefix']="$(koopa_init_dir 'ghc')"
         ['ghc_version']='9.0.2'
         ['jobs']="$(koopa_cpu_count)"
         ['name']='hadolint'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    dict['ghc_prefix']="$(koopa_init_dir "ghc-${dict['ghc_version']}")"
     "${app['ghcup']}" install \
-        ghc "${dict['ghc_version']}" \
+        'ghc' "${dict['ghc_version']}" \
             --isolate "${dict['ghc_prefix']}"
+    koopa_assert_is_dir "${dict['ghc_prefix']}/bin"
     koopa_add_to_path_start "${dict['ghc_prefix']}/bin"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
@@ -69,12 +80,17 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
-    cabal configure \
+    "${app['cabal']}" update
+    "${app['cabal']}" configure \
         --jobs="${dict['jobs']}" \
-        --prefix="${dict['prefix']}"
-    cabal build
-    cabal install \
+        --verbose
+    "${app['cabal']}" build \
         --jobs="${dict['jobs']}" \
-        --prefix="${dict['prefix']}"
+        --verbose
+    "${app['cabal']}" install \
+        --install-method='copy' \
+        --installdir="${dict['prefix']}" \
+        --jobs="${dict['jobs']}" \
+        --verbose
     return 0
 }
