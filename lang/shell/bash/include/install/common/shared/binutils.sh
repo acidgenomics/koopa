@@ -31,26 +31,30 @@ main() {
     # - https://www.linuxfromscratch.org/lfs/view/development/
     #     chapter08/binutils.html
     # """
+    local install_args
     koopa_activate_app --build-only 'bison' 'flex'
     koopa_activate_app 'zlib' 'texinfo'
+    install_args=(
+        #-D '--disable-debug'
+        #-D '--disable-dependency-tracking'
+        #-D '--disable-gold'
+        #-D '--disable-gprofng'
+        #-D '--disable-multilib'
+        #-D '--disable-nls'
+        #-D '--disable-plugins'
+        #-D '--disable-werror'
+        #-D '--enable-64-bit-bfd'
+        #-D '--enable-default-execstack=no'
+        #-D '--enable-deterministic-archives'
+        #-D '--enable-ld=default'
+        #-D '--enable-relro'
+        #-D '--with-mmap'
+        #-D '--with-pic'
+        -D '--with-system-zlib'
+    )
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='binutils' \
-        -D '--disable-debug' \
-        -D '--disable-dependency-tracking' \
-        -D '--disable-gold' \
-        -D '--disable-gprofng' \
-        -D '--disable-multilib' \
-        -D '--disable-nls' \
-        -D '--disable-plugins' \
-        -D '--disable-werror' \
-        -D '--enable-64-bit-bfd' \
-        -D '--enable-default-execstack=no' \
-        -D '--enable-deterministic-archives' \
-        -D '--enable-ld=default' \
-        -D '--enable-relro' \
-        -D '--with-mmap' \
-        -D '--with-pic' \
-        -D '--with-system-zlib' \
+        "${install_args[@]}" \
         "$@"
 }
