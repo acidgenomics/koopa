@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME 2.39 is failing to build on Linux.
+# NOTE 2.39 is failing to build on Linux.
 
 main() {
     # """
@@ -30,22 +30,22 @@ main() {
     koopa_activate_app --build-only 'bison' 'flex'
     koopa_activate_app 'zlib' 'texinfo'
     install_args=(
-        #-D '--disable-debug'
-        #-D '--disable-dependency-tracking'
-        #-D '--disable-gold'
-        #-D '--disable-gprofng'
-        #-D '--disable-multilib'
-        #-D '--disable-nls'
-        #-D '--disable-plugins'
-        #-D '--disable-werror'
-        #-D '--enable-64-bit-bfd'
-        #-D '--enable-default-execstack=no'
-        #-D '--enable-deterministic-archives'
-        #-D '--enable-ld=default'
-        #-D '--enable-relro'
-        #-D '--with-mmap'
-        #-D '--with-pic'
-        #-D '--with-system-zlib'
+        # > -D '--disable-gprofng'
+        # > -D '--disable-multilib'
+        # > -D '--disable-nls'
+        # > -D '--disable-plugins'
+        # > -D '--disable-werror'
+        # > -D '--enable-64-bit-bfd'
+        # > -D '--enable-default-execstack=no'
+        # > -D '--enable-deterministic-archives'
+        # > -D '--enable-ld=default'
+        # > -D '--enable-relro'
+        # > -D '--with-mmap'
+        # > -D '--with-pic'
+        # > -D '--with-system-zlib'
+        -D '--disable-debug'
+        -D '--disable-dependency-tracking'
+        -D '--enable-gold'
         -D '--enable-targets=all'
     )
     koopa_install_app_subshell \
