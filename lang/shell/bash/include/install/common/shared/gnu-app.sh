@@ -94,7 +94,7 @@ main() {
     # Ensure we deparallize any problematic programs (e.g. binutils).
     case "${dict['name']}" in
         'binutils')
-            dict['jobs']=1
+            koopa_is_linux && dict['jobs']=1
             ;;
     esac
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
