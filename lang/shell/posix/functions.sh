@@ -1796,30 +1796,15 @@ koopa_locate_shell() {
         return 0
     fi
     pid="${$}"
-    if koopa_is_linux
+    proc_file="/proc/${pid}/exe"
+    if [ -x "$proc_file" ] && ! koopa_is_qemu
     then
-        proc_file="/proc/${pid}/exe"
-        if [ -x "$proc_file" ] && ! koopa_is_qemu
-        then
-            shell="$(koopa_realpath "$proc_file")"
-        elif koopa_is_installed 'ps'
-        then
-            shell="$( \
-                ps -p "$pid" -o 'comm=' \
-                | sed 's/^-//' \
-            )"
-        fi
-    elif koopa_is_macos
+        shell="$(koopa_realpath "$proc_file")"
+    elif koopa_is_installed 'ps'
     then
         shell="$( \
-            lsof \
-                -a \
-                -F 'n' \
-                -d 'txt' \
-                -p "$pid" \
-                2>/dev/null \
-            | sed -n '3p' \
-            | sed 's/^n//' \
+            ps -p "$pid" -o 'comm=' \
+            | sed 's/^-//' \
         )"
     fi
     if [ -z "$shell" ]
