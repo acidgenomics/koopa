@@ -11164,6 +11164,7 @@ koopa_install_all_apps() {
             'haskell-cabal'
             'hadolint'
             'pandoc'
+            'agat'
             'anaconda'
             'bioconda-utils'
             'bamtools'
@@ -11534,6 +11535,7 @@ koopa_install_all_binary_apps() {
     if [[ "${dict['large']}" -eq 1 ]]
     then
         apps+=(
+            'agat'
             'anaconda'
             'apache-airflow'
             'apache-spark'
