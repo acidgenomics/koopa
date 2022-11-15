@@ -402,7 +402,6 @@
   "binutils": {
     "bin": [],
     "build_dependencies": [],
-    "check": false,
     "conservative": false,
     "date": "2022-11-15",
     "dependencies": [],
