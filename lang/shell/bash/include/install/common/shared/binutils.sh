@@ -28,7 +28,6 @@ main() {
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     install_args=(
-        # > -D '--disable-gprofng'
         # > -D '--disable-multilib'
         # > -D '--disable-nls'
         # > -D '--disable-plugins'
@@ -46,7 +45,10 @@ main() {
         # > -D '--with-system-zlib'
         -D '--disable-debug'
         -D '--disable-dependency-tracking'
-        -D '--enable-gold' # for llvm.
+        # gprofng currently has a weird bison detection issue on Linux.
+        -D '--disable-gprofng'
+        # gold is required for llvm.
+        -D '--enable-gold'
         -D '--without-debuginfod'
     )
     if koopa_is_linux
