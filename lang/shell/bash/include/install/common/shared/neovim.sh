@@ -64,7 +64,7 @@ main() {
         'automake'
         'cmake'
         'libtool'
-        'ninja'
+        # > 'ninja'
         'pkg-config'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
@@ -118,11 +118,7 @@ archive/${dict['file']}"
         --file='local.mk' \
         --string="${dict['local_mk']}"
     koopa_print_env
-    # NOTE This step doesn't work for 0.8.1 on macOS.
-    if koopa_is_linux
-    then
-        "${app['make']}" distclean
-    fi
+    # FIXME Hitting issues with msgpack-build cmake paths.
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
