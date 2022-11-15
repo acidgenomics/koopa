@@ -2931,6 +2931,7 @@
     "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python"],
     "homebrew": true,
     "man1": ["nvim.1"],
+    "notes": ["FIXME 0.8.1 doesn't build on Ubuntu."],
     "outdated": false,
     "url": ["https://github.com/neovim/neovim/"],
     "version": "0.8.1"
