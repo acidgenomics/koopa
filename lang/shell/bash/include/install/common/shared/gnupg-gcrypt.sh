@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to simplify this, splitting back out into separate installers.
+
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2022-11-08.
+    # @note Updated 2022-11-15.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -163,10 +165,40 @@ tar.${dict['compress_ext']}"
     koopa_extract "${dict['tar_file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
+
+    case "${dict['name']}" in
+        'gnupg')
+            # May only need to apply this to 2.3.8.
+            gnupg_patch_dirmngr
+            ;;
+    esac
+
+
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
+    return 0
+}
+
+gnupg_patch_dirmngr() {
+    # """
+    # Fix an issue causing build failure if OpenLDAP is not installed.
+    # @note Updated 2022-11-15.
+    #
+    # @seealso
+    # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/gnupg.html
+    # - https://gitlab.com/goeb/gnupg-static/-/commit/
+    #     42665e459192e3ee1bb6461ae2d4336d8f1f023c
+    # """
+    local app
+    declare -A app
+    app['sed']="$(koopa_locate_sed)"
+    [[ -x "${app['sed']}" ]] || return 1
+    "${app['sed']}" \
+        -e '/ks_ldap_free_state/i #if USE_LDAP' \
+        -e '/ks_get_state =/a #endif' \
+        -i 'dirmngr/server.c'
     return 0
 }
