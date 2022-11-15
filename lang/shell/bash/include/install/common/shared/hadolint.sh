@@ -80,6 +80,7 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
+    # NOTE Can use 'v2-*' commands here instead.
     "${app['cabal']}" update
     "${app['cabal']}" configure \
         --jobs="${dict['jobs']}" \
