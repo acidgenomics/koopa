@@ -16176,6 +16176,13 @@ koopa_locate_bzip2() {
         "$@"
 }
 
+koopa_locate_cabal() {
+    koopa_locate_app \
+        --app-name='haskell-cabal' \
+        --bin-name='cabal' \
+        "$@"
+}
+
 koopa_locate_cargo() {
     koopa_locate_app \
         --app-name='rust' \
