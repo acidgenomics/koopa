@@ -59,6 +59,7 @@ main() {
         -D '--disable-dependency-tracking'
         # Gold is required for LLVM.
         -D '--enable-gold'
+        -D '--without-debuginfod'
     )
     koopa_install_app_subshell \
         --installer='gnu-app' \
