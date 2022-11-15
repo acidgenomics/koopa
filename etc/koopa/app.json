@@ -1857,9 +1857,14 @@
   },
   "hadolint": {
     "bin": ["hadolint"],
-    "build_dependencies": ["haskell-cabal", "haskell-ghcup"],
+    "build_dependencies": [
+      "git",
+      "haskell-cabal",
+      "haskell-ghcup",
+      "pkg-config"
+    ],
     "conservative": false,
-    "date": "2022-11-09",
+    "date": "2022-11-15",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
