@@ -2,6 +2,7 @@
 #+STARTUP: content
 * High priority
 ** TODO Disable Ubuntu MOTD spam.
+    sudo pro config set apt_news=false
     /etc/default/motd-news
     Switch 'ENABLED=1' to 'ENABLED=0'.
     See also:
