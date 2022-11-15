@@ -64,8 +64,9 @@ main() {
     if koopa_is_linux
     then
         # Required to avoid unwanted lex error on Linux.
+        # https://lists.gnu.org/archive/html/bug-binutils/2016-01/msg00076.html
         install_args+=(
-            -D 'LEX="touch lex.yy.c"'
+            -D 'LEX=touch lex.yy.c'
         )
     fi
     koopa_install_app_subshell \
