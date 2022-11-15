@@ -17,7 +17,6 @@ koopa_alias_glances() {
     esac
     glances \
         --config "${HOME}/.config/glances/glances.conf" \
-        --percpu \
         "$@"
     return 0
 }
