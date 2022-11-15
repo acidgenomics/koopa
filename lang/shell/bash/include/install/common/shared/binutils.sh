@@ -3,6 +3,11 @@
 # FIXME 2.39 is failing to build on Linux.
 # Error seems to be at Makefile:1004...
 
+# FIXME Hitting this autoconf issue with m4 argh...
+# configure.ac:34: error: Please use exactly Autoconf 2.69 instead of 2.71.
+
+# FIXME 'make distclean' doesn't work.
+
 main() {
     # """
     # Install binutils.
@@ -62,14 +67,16 @@ main() {
         -D '--disable-werror'
         -D '--enable-gold'
         -D '--enable-targets=all'
+        # NOTE This will run autoconf.
+        # > -D '--enable-maintainer-mode'
     )
-    if koopa_is_linux
-    then
-        dict['arch']="$(koopa_arch)"
-        install_args+=(
-            -D "--target=${dict['arch']}-unknown-linux-gnu"
-        )
-    fi
+    # > if koopa_is_linux
+    # > then
+    # >     dict['arch']="$(koopa_arch)"
+    # >     install_args+=(
+    # >         -D "--target=${dict['arch']}-unknown-linux-gnu"
+    # >     )
+    # > fi
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='binutils' \

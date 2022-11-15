@@ -93,8 +93,14 @@ main() {
     ./configure "${conf_args[@]}"
     case "${dict['name']}" in
         'binutils')
-            ./autogen.sh
-            "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}" clean all
+            # FIXME This requires autoconf 2.69...argh.
+            # https://earthly.dev/blog/autoconf/
+            # > aclocal
+            # > autoconf
+            # > automake --add-missing
+            # FIXME distclean approach doesn't work...rethink argh.
+            "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}" distclean
+            "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}" all
             ;;
         *)
             "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
