@@ -53,6 +53,12 @@ main() {
         -D '--enable-targets=all'
         -D '--with-system-zlib'
     )
+    if koopa_is_linux
+    then
+        install_args+=(
+            -D 'PWD_COMMAND=/usr/bin/pwd'
+        )
+    fi
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='binutils' \
