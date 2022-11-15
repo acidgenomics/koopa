@@ -13,17 +13,11 @@ main() {
     # Install binutils.
     # @note Updated 2022-11-15.
     #
-    # Potentially include:
-    # * '--disable-nls'
-    # * '--disable-werror'
-    # * '--enable-64-bit-bfd'
-    # * '--enable-deterministic-archives'
-    # * '--enable-gold'
-    # * '--enable-interwork'
-    # * '--enable-multilib'
-    # * '--enable-plugins'
-    # * '--enable-targets=all'
-    # * '--with-system-zlib'
+    # @section Flex / Lex configuration on Ubuntu 22:
+    # - https://lists.gnu.org/archive/html/bug-binutils/2016-01/msg00076.html
+    # - https://github.com/westes/flex/issues/154
+    # - https://news.ycombinator.com/item?id=20269105
+    # - https://sourceware.org/legacy-ml/binutils/2004-05/msg00339.html
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -50,23 +44,21 @@ main() {
         # > -D '--enable-64-bit-bfd'
         # > -D '--enable-default-execstack=no'
         # > -D '--enable-deterministic-archives'
+        # > -D '--enable-interwork'
         # > -D '--enable-ld=default'
         # > -D '--enable-relro'
+        # > -D '--enable-targets=all'
         # > -D '--with-mmap'
         # > -D '--with-pic'
         # > -D '--with-system-zlib'
         -D '--disable-debug'
         -D '--disable-dependency-tracking'
-        # Gold is required for LLVM.
-        -D '--enable-gold'
+        -D '--enable-gold' # for llvm.
         -D '--without-debuginfod'
     )
-    # Required to avoid unwanted flex/lex error on Ubuntu 22.
-    # - https://lists.gnu.org/archive/html/bug-binutils/2016-01/msg00076.html
-    # - https://github.com/westes/flex/issues/154
-    # - https://news.ycombinator.com/item?id=20269105
     if koopa_is_linux
     then
+        # FIXME Can we just define 'LEX=flex'? Does that work?
         install_args+=(-D 'LEX=touch lex.yy.c')
     fi
     koopa_install_app_subshell \
