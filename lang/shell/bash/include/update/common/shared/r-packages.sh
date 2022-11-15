@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to install into system R instead of koopa R...
+
 main() {
     # """
     # Update R packages.
