@@ -50,6 +50,13 @@ main() {
         -D '--enable-gold'
         -D '--enable-targets=all'
     )
+    if koopa_is_linux
+    then
+        dict['arch']="$(koopa_arch)"
+        install_args+=(
+            -D "--target=${dict['arch']}-unknown-linux-gnu"
+        )
+    fi
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='binutils' \
