@@ -12820,6 +12820,12 @@ koopa_install_harfbuzz() {
         "$@"
 }
 
+koopa_install_haskell_cabal() {
+    koopa_install_app \
+        --name='haskell-cabal' \
+        "$@"
+}
+
 koopa_install_haskell_ghcup() {
     koopa_install_app \
         --name='haskell-ghcup' \
@@ -16453,6 +16459,13 @@ koopa_locate_gfortran() {
     koopa_locate_app \
         --app-name='gcc' \
         --bin-name='gfortran' \
+        "$@"
+}
+
+koopa_locate_ghcup() {
+    koopa_locate_app \
+        --app-name='haskell-ghcup' \
+        --bin-name='ghcup' \
         "$@"
 }
 
@@ -24121,6 +24134,12 @@ koopa_uninstall_hadolint() {
 koopa_uninstall_harfbuzz() {
     koopa_uninstall_app \
         --name='harfbuzz' \
+        "$@"
+}
+
+koopa_uninstall_haskell_cabal() {
+    koopa_uninstall_app \
+        --name='haskell-cabal' \
         "$@"
 }
 

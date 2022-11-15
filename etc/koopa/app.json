@@ -1881,6 +1881,20 @@
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "5.3.1"
   },
+  "haskell-cabal": {
+    "aliases": {
+      "homebrew": "cabal-install"
+    },
+    "bin": ["cabal"],
+    "build_dependencies": ["haskell-ghcup"],
+    "date": "2022-11-15",
+    "dependencies": [],
+    "homebrew": true,
+    "large": true,
+    "man1": [],
+    "url": ["https://www.haskell.org/cabal/"],
+    "version": "3.8.1.0"
+  },
   "haskell-ghcup": {
     "aliases": {
       "homebrew": "ghcup"
