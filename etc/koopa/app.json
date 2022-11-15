@@ -4220,8 +4220,9 @@
     "homebrew": true,
     "large": true,
     "man1": [],
+    "outdated": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.1"
+    "version": "3.0.0"
   },
   "star": {
     "bin": ["STAR"],
