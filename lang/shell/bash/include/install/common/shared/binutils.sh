@@ -50,6 +50,7 @@ main() {
         #-D '--enable-relro'
         #-D '--with-mmap'
         #-D '--with-pic'
+        -D '--enable-targets=all'
         -D '--with-system-zlib'
     )
     koopa_install_app_subshell \
