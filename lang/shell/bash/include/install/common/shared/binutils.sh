@@ -39,12 +39,18 @@ main() {
         -D '--disable-debug' \
         -D '--disable-dependency-tracking' \
         -D '--disable-gold' \
+        -D '--disable-gprofng' \
+        -D '--disable-multilib' \
         -D '--disable-nls' \
-        -D '--disable-pgo-build' \
         -D '--disable-plugins' \
         -D '--disable-werror' \
         -D '--enable-64-bit-bfd' \
-        -D '--enable-interwork' \
-        -D '--enable-multilib' \
+        -D '--enable-default-execstack=no' \
+        -D '--enable-deterministic-archives' \
+        -D '--enable-ld=default' \
+        -D '--enable-relro' \
+        -D '--with-mmap' \
+        -D '--with-pic' \
+        -D '--with-system-zlib' \
         "$@"
 }
