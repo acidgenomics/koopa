@@ -99,8 +99,8 @@ main() {
             # > autoconf
             # > automake --add-missing
             # FIXME distclean approach doesn't work...rethink argh.
-            "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}" clean
-            "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}" all
+            "${app['make']}" VERBOSE=1 --jobs=1 clean
+            "${app['make']}" VERBOSE=1 --jobs=1 all
             ;;
         *)
             "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
