@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # koopa nolint=line-width
 
+# FIXME Does setting 'CMAKE_PREFIX_PATH' help here?
+
 # FIXME Now seeing this warning for neovim 0.8.1 on macOS:
 # > CMake Warning:
 # >   Manually-specified variables were not used by the project:
