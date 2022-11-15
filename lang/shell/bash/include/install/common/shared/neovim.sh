@@ -92,6 +92,10 @@ main() {
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     read -r -d '' "dict[local_mk]" << END || true
+# FIXME Does this help?
+# https://gist.github.com/anthonybrown/9519da7bef3810318b5184ade0505f84
+CMAKE_VERBOSE_MAKEFILE=ON
+
 CMAKE_BUILD_TYPE := Release
 DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON
 CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
