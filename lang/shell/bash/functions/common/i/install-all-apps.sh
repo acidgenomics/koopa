@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-11-07.
+    # @note Updated 2022-11-15.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -294,6 +294,7 @@ koopa_install_all_apps() {
         apps+=(
             'haskell-ghcup'
             'haskell-stack'
+            'haskell-cabal'
             'hadolint'
             'pandoc'
             'anaconda'
