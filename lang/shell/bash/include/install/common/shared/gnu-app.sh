@@ -91,21 +91,13 @@ main() {
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
+    # Ensure we deparallize any problematic programs (e.g. binutils).
     case "${dict['name']}" in
         'binutils')
-            # FIXME This requires autoconf 2.69...argh.
-            # https://earthly.dev/blog/autoconf/
-            # > aclocal
-            # > autoconf
-            # > automake --add-missing
-            # FIXME distclean approach doesn't work...rethink argh.
-            "${app['make']}" VERBOSE=1 --jobs=1 clean
-            "${app['make']}" VERBOSE=1 --jobs=1 all
-            ;;
-        *)
-            "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+            dict['jobs']=1
             ;;
     esac
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # > "${app['make']}" check || true
     "${app['make']}" install
     return 0
