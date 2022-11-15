@@ -93,6 +93,7 @@ main() {
     ./configure "${conf_args[@]}"
     case "${dict['name']}" in
         'binutils')
+            ./autogen.sh
             "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}" clean all
             ;;
         *)
