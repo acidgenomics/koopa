@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# # FIXME Need to improve flex handling:
-# checking for flex... flex
-# configure: error: cannot find output from flex; giving up
-
-# FIXME Need to rework this:
-# checking for libdebuginfod >= 0.179... no
-# configure: WARNING: libdebuginfod is missing or unusable; some features may be unavailable.
-
 main() {
     # """
     # Install binutils.
@@ -15,9 +7,10 @@ main() {
     #
     # @section Flex / Lex configuration on Ubuntu 22:
     # - https://lists.gnu.org/archive/html/bug-binutils/2016-01/msg00076.html
+    # - https://sourceware.org/legacy-ml/binutils/2004-05/msg00339.html
+    # - https://gcc.gnu.org/legacy-ml/gcc-help/2014-04/msg00082.html
     # - https://github.com/westes/flex/issues/154
     # - https://news.ycombinator.com/item?id=20269105
-    # - https://sourceware.org/legacy-ml/binutils/2004-05/msg00339.html
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -58,8 +51,10 @@ main() {
     )
     if koopa_is_linux
     then
-        # FIXME Can we just define 'LEX=flex'? Does that work?
-        install_args+=(-D 'LEX=touch lex.yy.c')
+        install_args+=(
+            # > -D 'LEX=flex'
+            -D 'LEX=touch lex.yy.c'
+        )
     fi
     koopa_install_app_subshell \
         --installer='gnu-app' \
