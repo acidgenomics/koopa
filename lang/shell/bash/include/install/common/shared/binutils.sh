@@ -50,13 +50,16 @@ main() {
         #-D '--enable-relro'
         #-D '--with-mmap'
         #-D '--with-pic'
-        -D '--enable-targets=all'
         -D '--with-system-zlib'
     )
-    if koopa_is_linux
+    if koopa_is_macos
     then
         install_args+=(
-            -D 'PWD_COMMAND=/usr/bin/pwd'
+            -D '--enable-targets=all'
+        )
+    else
+        install_args+=(
+            -D '--enable-targets=all-build'
         )
     fi
     koopa_install_app_subshell \
