@@ -61,6 +61,13 @@ main() {
         -D '--enable-gold'
         -D '--without-debuginfod'
     )
+    if koopa_is_linux
+    then
+        # Required to avoid unwanted lex error on Linux.
+        install_args+=(
+            -D 'LEX="touch lex.yy.c"'
+        )
+    fi
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='binutils' \
