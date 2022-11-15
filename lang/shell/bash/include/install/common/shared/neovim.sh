@@ -123,6 +123,7 @@ archive/${dict['file']}"
         --file='local.mk' \
         --string="${dict['local_mk']}"
     koopa_print_env
+    koopa_is_linux && koopa_add_to_path_start "$(koopa_bin_prefix)"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
