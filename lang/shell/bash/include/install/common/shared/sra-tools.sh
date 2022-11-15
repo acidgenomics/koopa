@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Seeing build error with 3.0.1.
+# [ 37%] Built target ngs-doc_javadoc
+# /bin/sh: line 0: cd: /private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20221115-172023-4egoHaUTpl/sra-tools-build/obj/ngs/ngs-java/javadoc/ngs-doc: No such file or directory
+
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2022-09-29.
+    # @note Updated 2022-11-15.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
