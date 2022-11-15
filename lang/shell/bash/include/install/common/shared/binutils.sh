@@ -50,17 +50,12 @@ main() {
         #-D '--enable-relro'
         #-D '--with-mmap'
         #-D '--with-pic'
-        -D '--with-system-zlib'
+        #-D '--with-system-zlib'
+        -D '--enable-targets=all'
     )
-    if koopa_is_macos
+    if koopa_is_linux
     then
-        install_args+=(
-            -D '--enable-targets=all'
-        )
-    else
-        install_args+=(
-            -D '--enable-targets=all-build'
-        )
+        koopa_add_to_path_start "$(koopa_bin_prefix)"
     fi
     koopa_install_app_subshell \
         --installer='gnu-app' \
