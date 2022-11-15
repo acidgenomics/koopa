@@ -1515,13 +1515,13 @@
     "bin": ["geos-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-11-14",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://github.com/libgeos/geos/"],
-    "version": "3.11.0"
+    "version": "3.11.1"
   },
   "gettext": {
     "bin": [],
@@ -1857,7 +1857,7 @@
   },
   "hadolint": {
     "bin": ["hadolint"],
-    "build_dependencies": [],
+    "build_dependencies": ["haskell-cabal", "haskell-ghcup"],
     "conservative": false,
     "date": "2022-11-09",
     "dependencies": [],
@@ -1880,6 +1880,20 @@
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "5.3.1"
+  },
+  "haskell-cabal": {
+    "aliases": {
+      "homebrew": "cabal-install"
+    },
+    "bin": ["cabal"],
+    "build_dependencies": ["haskell-ghcup"],
+    "date": "2022-11-15",
+    "dependencies": [],
+    "homebrew": true,
+    "large": true,
+    "man1": [],
+    "url": ["https://www.haskell.org/cabal/"],
+    "version": "3.8.1.0"
   },
   "haskell-ghcup": {
     "aliases": {
@@ -2145,7 +2159,7 @@
     "large": true,
     "man1": [],
     "notes": ["1.8.1 installer is currently failing on macOS."],
-    "outdated": false,
+    "outdated": true,
     "url": ["https://github.com/JuliaLang/julia/"],
     "version": "1.8.2"
   },
@@ -3934,12 +3948,13 @@
   },
   "ruby": {
     "bin": ["bundle", "bundler", "gem", "ruby"],
-    "build_dependencies": [],
+    "build_dependencies": ["pkg-config"],
     "conservative": true,
-    "date": "2022-08-30",
-    "dependencies": [],
+    "date": "2022-11-14",
+    "dependencies": ["openssl3", "readline", "zlib"],
     "homebrew": true,
     "man1": ["ruby.1"],
+    "outdated": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.1.2p20"
   },
@@ -4796,13 +4811,13 @@
     "bin": ["yq"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2022-11-15",
     "dependencies": ["go"],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.30.2"
+    "version": "4.30.4"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],

@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-11-14.
+    # Updated 2022-11-15.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -191,6 +191,7 @@ __koopa_complete() {
                         'gzip'
                         'hadolint'
                         'harfbuzz'
+                        'haskell-cabal'
                         'haskell-ghcup'
                         'haskell-stack'
                         'hdf5'
