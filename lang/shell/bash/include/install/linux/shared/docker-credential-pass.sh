@@ -22,8 +22,6 @@ main() {
 download/v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_chmod '0775' "${dict['file']}"
-    koopa_mkdir "${dict['prefix']}/bin"
-    koopa_sys_set_permissions --recursive "${dict['prefix']}"
-    koopa_cp --target-directory="${dict['prefix']}/bin" "${dict['file']}"
+    koopa_cp "${dict['file']}" "${dict['prefix']}/bin/${dict['name']}"
     return 0
 }
