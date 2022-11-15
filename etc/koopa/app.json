@@ -1080,10 +1080,10 @@
     "aliases": {
       "homebrew": "docker-credential-helper"
     },
-    "bin": [],
+    "bin": ["docker-credential-pass"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-11-15",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
