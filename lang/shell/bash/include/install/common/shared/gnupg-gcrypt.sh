@@ -131,6 +131,7 @@ tar.${dict['compress_ext']}"
     then
         if [[ "${dict['import_gpg_keys']}" -eq 1 ]]
         then
+            koopa_warn 'FIXME HELLO THERE'
             # Can use the last 4 elements per key in the '--rev-keys' call.
             gpg_keys=(
                 # Expired legacy keys:
