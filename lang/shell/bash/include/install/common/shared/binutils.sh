@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# # FIXME Need to improve flex handling:
+# checking for flex... flex
+# configure: error: cannot find output from flex; giving up
+
+# FIXME Need to rework this:
+# checking for libdebuginfod >= 0.179... no
+# configure: WARNING: libdebuginfod is missing or unusable; some features may be unavailable.
+
 main() {
     # """
     # Install binutils.
