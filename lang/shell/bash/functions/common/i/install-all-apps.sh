@@ -297,6 +297,7 @@ koopa_install_all_apps() {
             'haskell-cabal'
             'hadolint'
             'pandoc'
+            'agat'
             'anaconda'
             'bioconda-utils'
             'bamtools'
