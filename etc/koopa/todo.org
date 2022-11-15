@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO 'koopa install r-packages' needs to be 'koopa install system r-packages'.
 ** TODO apptainer and lmod aren't showing up in Linux system checks.
 ** TODO Ensure hadolint install cleans up ghcup.
     hadolint \~/.ghcup/tmp
