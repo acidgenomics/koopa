@@ -2,7 +2,7 @@
 #+STARTUP: content
 * High priority
 ** TODO 'koopa install r-packages' needs to be 'koopa install system r-packages'.
-** TODO apptainer and lmod aren't showing up in Linux system checks.
+** TODO apptainer, aspera-connect, lmod, and docker-credential-pass aren't showing up in Linux system checks.
 ** TODO Ensure hadolint install cleans up ghcup.
     hadolint \~/.ghcup/tmp
     ensure this gets cleaned up...don't waste disk space.
