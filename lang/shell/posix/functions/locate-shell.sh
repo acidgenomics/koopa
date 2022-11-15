@@ -3,7 +3,7 @@
 koopa_locate_shell() {
     # """
     # Locate the current shell executable.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-11-14.
     #
     # Detection issues with qemu ARM emulation on x86:
     # - The 'ps' approach will return correct shell for ARM running via
@@ -12,7 +12,7 @@ koopa_locate_shell() {
     #   '/usr/bin/qemu-aarch64' here, rather than the shell we want.
     #
     # @seealso
-    # - https://stackoverflow.com/questions/3327013
+    # - https://stackoverflow.com/questions/3327013/
     # - http://opensourceforgeeks.blogspot.com/2013/05/
     #     how-to-find-current-shell-in-linux.html
     # - https://superuser.com/questions/103309/
@@ -27,30 +27,15 @@ koopa_locate_shell() {
         return 0
     fi
     pid="${$}"
-    if koopa_is_linux
+    proc_file="/proc/${pid}/exe"
+    if [ -x "$proc_file" ] && ! koopa_is_qemu
     then
-        proc_file="/proc/${pid}/exe"
-        if [ -x "$proc_file" ] && ! koopa_is_qemu
-        then
-            shell="$(koopa_realpath "$proc_file")"
-        elif koopa_is_installed 'ps'
-        then
-            shell="$( \
-                ps -p "$pid" -o 'comm=' \
-                | sed 's/^-//' \
-            )"
-        fi
-    elif koopa_is_macos
+        shell="$(koopa_realpath "$proc_file")"
+    elif koopa_is_installed 'ps'
     then
         shell="$( \
-            lsof \
-                -a \
-                -F 'n' \
-                -d 'txt' \
-                -p "$pid" \
-                2>/dev/null \
-            | sed -n '3p' \
-            | sed 's/^n//' \
+            ps -p "$pid" -o 'comm=' \
+            | sed 's/^-//' \
         )"
     fi
     # Fallback support for detection failure inside of some subprocesses.
