@@ -27,10 +27,22 @@ main() {
     # - https://www.linuxfromscratch.org/lfs/view/development/
     #     chapter08/binutils.html
     # - https://docs.pwntools.com/en/stable/install/binutils.html
+    # - https://tracker.debian.org/pkg/binutils
+    # - https://salsa.debian.org/toolchain-team/binutils/-/tree/master/debian
     # """
-    local install_args
-    koopa_activate_app --build-only 'bison' 'flex'
-    koopa_activate_app 'zlib' 'texinfo'
+    local build_deps deps install_args
+    build_deps=(
+        'autoconf'
+        'automake'
+        'bison'
+        'flex'
+    )
+    deps=(
+        'zlib'
+        'texinfo'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     install_args=(
         # > -D '--disable-gprofng'
         # > -D '--disable-plugins'
