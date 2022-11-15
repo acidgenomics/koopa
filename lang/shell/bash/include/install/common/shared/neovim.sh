@@ -60,13 +60,13 @@ main() {
     local app build_deps deps dict
     koopa_assert_has_no_args "$#"
     build_deps=(
-        'autoconf'
-        'automake'
+        # > 'autoconf'
+        # > 'automake'
         'cmake'
         'libtool'
-        # > 'ninja'
         'pkg-config'
     )
+    koopa_is_macos && build_deps+=('ninja')
     koopa_activate_app --build-only "${build_deps[@]}"
     deps=(
         'm4'
@@ -118,7 +118,6 @@ archive/${dict['file']}"
         --file='local.mk' \
         --string="${dict['local_mk']}"
     koopa_print_env
-    # FIXME Hitting issues with msgpack-build cmake paths.
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
