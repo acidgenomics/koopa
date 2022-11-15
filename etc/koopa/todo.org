@@ -1,7 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
-** TODO apptainer isn't showing up in Linux system checks.
+** TODO apptainer and lmod aren't showing up in Linux system checks.
 ** TODO Ensure hadolint install cleans up ghcup.
     hadolint \~/.ghcup/tmp
     ensure this gets cleaned up...don't waste disk space.
