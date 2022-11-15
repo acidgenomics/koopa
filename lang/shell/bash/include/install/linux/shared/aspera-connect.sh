@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Aspera Connect.
-    # @note Updated 2022-03-28.
+    # @note Updated 2022-11-15.
     #
     # Script install target is currently hard-coded in IBM's install script.
     #
@@ -21,8 +21,10 @@ main() {
     )
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['file']="${dict['name']}_${dict['version']}_${dict['platform']}.tar.gz"
-    dict['url']="https://d3gcli72yxqn2z.cloudfront.net/connect_latest/\
-v${dict['maj_ver']}/bin/${dict['file']}"
+    dict['url']="https://d3gcli72yxqn2z.cloudfront.net/downloads/connect/\
+latest/bin/${dict['file']}"
+    # > dict['url']="https://ak-delivery04-mul.dhe.ibm.com/sar/CMA/OSA/\
+# > 0av3y/0/${dict['file']}"
     dict['script']="${dict['file']//.tar.gz/.sh}"
     dict['script_target']="${dict['aspera_user_prefix']}/connect"
     koopa_download "${dict['url']}" "${dict['file']}"
