@@ -92,10 +92,6 @@ main() {
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     read -r -d '' "dict[local_mk]" << END || true
-# FIXME Does this help?
-# https://gist.github.com/anthonybrown/9519da7bef3810318b5184ade0505f84
-CMAKE_VERBOSE_MAKEFILE=ON
-
 CMAKE_BUILD_TYPE := Release
 DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON
 CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
@@ -111,6 +107,11 @@ CMAKE_EXTRA_FLAGS += "-DLibIntl_INCLUDE_DIR=${dict['gettext']}/include"
 CMAKE_EXTRA_FLAGS += "-DLibIntl_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}"
 CMAKE_EXTRA_FLAGS += "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
 CMAKE_EXTRA_FLAGS += "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+
+# FIXME Does this help?
+# https://gist.github.com/anthonybrown/9519da7bef3810318b5184ade0505f84
+CMAKE_VERBOSE_MAKEFILE=ON
+CMAKE_EXTRA_FLAGS += "-DCMAKE_VERBOSE_MAKEFILE=ON"
 END
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
