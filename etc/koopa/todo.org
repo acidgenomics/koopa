@@ -1,6 +1,10 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Ensure hadolint install cleans up ghcup.
+    hadolint \~/.ghcup/tmp
+    ensure this gets cleaned up...don't waste disk space.
+    can we move this?
 ** TODO Disable Ubuntu MOTD spam.
     sudo pro config set apt_news=false
     /etc/default/motd-news
