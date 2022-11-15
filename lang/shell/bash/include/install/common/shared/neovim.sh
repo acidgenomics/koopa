@@ -1,34 +1,6 @@
 #!/usr/bin/env bash
 # koopa nolint=line-width
 
-# FIXME Does setting 'CMAKE_PREFIX_PATH' help here?
-
-# FIXME Now seeing this warning for neovim 0.8.1 on macOS:
-# > CMake Warning:
-# >   Manually-specified variables were not used by the project:
-# >     ZLIB_INCLUDE_DIR
-# >     ZLIB_LIBRARY
-
-# FIXME neovim is failing on Ubuntu 22.
-# [30/121] cd /tmp/koopa-1000-20221115-155103-4m3oRzGMs8/neovim-0.8.1/.deps/build/downloads/libvterm && /opt/koopa/app/cmake/3.24.3/bin/cmake -DPREFIX=/tmp/koopa-1000-20221115-155103-4m3oRzGMs8/neovim-0.8.1/.deps/build -DDOWNLOAD_DIR=/tmp/koopa-1000-20221115-155103-4m3oRzGMs8/neovim-0.8.1/.deps/build/downloads/libvterm -DURL=https://www.leonerd.org.uk/code/libvterm/libvterm-0.3.tar.gz -DEXPECTED_SHA256=61eb0d6628c52bdf02900dfd4468aa86a1a7125228bab8a67328981887483358 -DTARGET=libvterm -DUSE_EXISTING_SRC_DIR=OFF -P /tmp/koopa-1000-20221115-155103-4m3oRzGMs8/neovim-0.8.1/cmake.deps/cmake/DownloadAndExtractFile.cmake && /opt/koopa/app/cmake/3.24.3/bin/cmake -E touch /tmp/koopa-1000-20221115-155103-4m3oRzGMs8/neovim-0.8.1/.deps/build/src/libvterm-stamp/libvterm-download
-# -- file: /tmp/koopa-1000-20221115-155103-4m3oRzGMs8/neovim-0.8.1/.deps/build/downloads/libvterm/libvterm-0.3.tar.gz
-# -- downloading...
-#        src='https://www.leonerd.org.uk/code/libvterm/libvterm-0.3.tar.gz'
-#        dst='/tmp/koopa-1000-20221115-155103-4m3oRzGMs8/neovim-0.8.1/.deps/build/downloads/libvterm/libvterm-0.3.tar.gz'
-#        timeout='none'
-# -- downloading... done
-# -- extracting...
-#      src='/tmp/koopa-1000-20221115-155103-4m3oRzGMs8/neovim-0.8.1/.deps/build/downloads/libvterm/libvterm-0.3.tar.gz'
-#      dst='/tmp/koopa-1000-20221115-155103-4m3oRzGMs8/neovim-0.8.1/.deps/build/src/libvterm'
-# -- extracting... [tar xfz]
-# -- extracting... [analysis]
-# -- extracting... [rename]
-# -- extracting... [clean binary dir]
-# -- extracting... [clean up]
-# -- extracting... done
-# ninja: build stopped: subcommand failed.
-# gmake: *** [Makefile:101: deps] Error 1
-
 main() {
     # """
     # Install Neovim.
@@ -64,9 +36,9 @@ main() {
         # > 'automake'
         'cmake'
         'libtool'
+        'ninja'
         'pkg-config'
     )
-    koopa_is_macos && build_deps+=('ninja')
     koopa_activate_app --build-only "${build_deps[@]}"
     deps=(
         'm4'
@@ -107,11 +79,6 @@ CMAKE_EXTRA_FLAGS += "-DLibIntl_INCLUDE_DIR=${dict['gettext']}/include"
 CMAKE_EXTRA_FLAGS += "-DLibIntl_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}"
 CMAKE_EXTRA_FLAGS += "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
 CMAKE_EXTRA_FLAGS += "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-
-# FIXME Does this help?
-# https://gist.github.com/anthonybrown/9519da7bef3810318b5184ade0505f84
-CMAKE_VERBOSE_MAKEFILE=ON
-CMAKE_EXTRA_FLAGS += "-DCMAKE_VERBOSE_MAKEFILE=ON"
 END
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
