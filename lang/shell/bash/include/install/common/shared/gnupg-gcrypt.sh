@@ -18,7 +18,7 @@ main() {
         ['check_key']=1
         ['compress_ext']='bz2'
         ['gcrypt_url']="$(koopa_gcrypt_url)"
-        ['import_gpg_keys']="${KOOPA_INSTALL_IMPORT_GPG_KEYS:-0}"
+        ['import_gpg_keys']=0
         ['jobs']="$(koopa_cpu_count)"
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -37,6 +37,7 @@ main() {
             conf_args+=(
                 '--enable-install-gpg-error-config'
             )
+            dict['import_gpg_keys']=1
             ;;
         'libassuan' | \
         'libgcrypt' | \
@@ -131,7 +132,6 @@ tar.${dict['compress_ext']}"
     then
         if [[ "${dict['import_gpg_keys']}" -eq 1 ]]
         then
-            koopa_warn 'FIXME HELLO THERE'
             # Can use the last 4 elements per key in the '--rev-keys' call.
             gpg_keys=(
                 # Expired legacy keys:
