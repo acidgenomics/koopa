@@ -232,7 +232,7 @@
     "bin": ["aws"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-11-16",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
@@ -240,7 +240,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.8.9"
+    "version": "2.8.12"
   },
   "azure-cli": {
     "bin": ["az"],
