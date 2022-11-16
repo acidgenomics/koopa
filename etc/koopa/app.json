@@ -232,7 +232,7 @@
     "bin": ["aws"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-11-16",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
@@ -240,7 +240,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.8.9"
+    "version": "2.8.12"
   },
   "azure-cli": {
     "bin": ["az"],
@@ -1118,13 +1118,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2022-11-16",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "80615f7c617217488123e53b486e2c093041dc00"
+    "version": "1cefc0559470ce02d8c13bc639c7de4d9101b7c7"
   },
   "du-dust": {
     "aliases": {
@@ -2613,7 +2613,7 @@
     "bin": [],
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "conservative": false,
-    "date": "2022-10-18",
+    "date": "2022-11-16",
     "dependencies": [
       "zlib",
       "libedit",
@@ -2626,9 +2626,9 @@
     "homebrew": true,
     "large": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://releases.llvm.org/"],
-    "version": "15.0.3"
+    "version": "15.0.5"
   },
   "lmod": {
     "bin": [],
