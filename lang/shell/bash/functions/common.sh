@@ -1890,6 +1890,7 @@ koopa_aws_ec2_suspend() {
         esac
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']:-}"
+    koopa_alert "Suspending EC2 instance '${dict['id']}'."
     "${app['aws']}" --profile="${dict['profile']}" \
         ec2 stop-instances --instance-id "${dict['id']}" \
         >/dev/null
@@ -10989,6 +10990,7 @@ koopa_install_all_apps() {
         'libuv'
         'conda'
         'udunits'
+        'gzip'
         'r'
         'apr'
         'apr-util'
@@ -11029,7 +11031,6 @@ koopa_install_all_apps() {
         'grep'
         'groff'
         'gsl'
-        'gzip'
         'oniguruma'
         'jq'
         'less'

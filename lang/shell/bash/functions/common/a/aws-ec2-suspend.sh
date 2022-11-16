@@ -3,7 +3,7 @@
 koopa_aws_ec2_suspend() {
     # """
     # Suspend current AWS EC2 instance.
-    # @note Updated 2022-03-21.
+    # @note Updated 2022-11-16.
     # """
     local app dict
     declare -A app=(
@@ -34,6 +34,7 @@ koopa_aws_ec2_suspend() {
         esac
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']:-}"
+    koopa_alert "Suspending EC2 instance '${dict['id']}'."
     "${app['aws']}" --profile="${dict['profile']}" \
         ec2 stop-instances --instance-id "${dict['id']}" \
         >/dev/null

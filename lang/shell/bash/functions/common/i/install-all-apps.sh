@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-11-15.
+    # @note Updated 2022-11-16.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -115,6 +115,7 @@ koopa_install_all_apps() {
         # NOTE Consider moving conda down in order.
         'conda'
         'udunits'
+        'gzip'
         'r'
         'apr'
         'apr-util'
@@ -156,7 +157,6 @@ koopa_install_all_apps() {
         'grep'
         'groff'
         'gsl'
-        'gzip'
         'oniguruma'
         'jq'
         'less'
