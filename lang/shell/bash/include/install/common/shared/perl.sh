@@ -6,12 +6,20 @@
 main() {
     # """
     # Install Perl.
-    # @note Updated 2022-06-21.
+    # @note Updated 2022-11-16.
+    #
+    # @section Regarding parallel build failures on Ubunutu:
+    # make can error at this step when running in parallel.
+    # # Updating 'mktables.lst'
+    # - https://www.nntp.perl.org/group/perl.perl5.porters/2016/
+    #     09/msg239501.html
+    # - https://github.com/Perl/perl5/issues/17541
     #
     # @seealso
     # - https://www.cpan.org/src/
     # - https://metacpan.org/pod/distribution/perl/INSTALL
     # - https://perlmaven.com/how-to-build-perl-from-source-code
+    #
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -25,6 +33,8 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    # Deparallelize on Linux to avoid error at "Updating 'mktables.lst'".
+    koopa_is_linux && dict['jobs']=1
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     # All Perl 5 releases are currently organized under '5.0'.
     dict['src_maj_min_ver']="$(koopa_major_version "${dict['version']}").0"
