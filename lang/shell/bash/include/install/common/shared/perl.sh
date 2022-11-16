@@ -6,7 +6,7 @@
 main() {
     # """
     # Install Perl.
-    # @note Updated 2022-06-21.
+    # @note Updated 2022-11-16.
     #
     # @section Regarding parallel build failures on Ubunutu:
     # make can error at this step when running in parallel.
@@ -33,6 +33,8 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    # Deparallelize on Linux to avoid error at "Updating 'mktables.lst'".
+    koopa_is_linux && dict['jobs']=1
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     # All Perl 5 releases are currently organized under '5.0'.
     dict['src_maj_min_ver']="$(koopa_major_version "${dict['version']}").0"
@@ -43,8 +45,6 @@ ${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
     ./Configure -des -Dprefix="${dict['prefix']}"
-    # Deparallelize on Linux to avoid error at "Updating 'mktables.lst'".
-    koopa_is_linux && dict['jobs']=1
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # The installer will warn when you skip this step.
     # > "${app['make']}" test
