@@ -11101,6 +11101,7 @@ koopa_install_all_apps() {
         'radian'
         'ranger-fm'
         'ruff'
+        'visidata'
         'yt-dlp'
         'openssh'
         'c-ares'
@@ -11169,11 +11170,11 @@ koopa_install_all_apps() {
     if ! koopa_is_aarch64
     then
         apps+=(
-            'haskell-ghcup'
-            'haskell-stack'
-            'haskell-cabal'
-            'hadolint'
-            'pandoc'
+            'haskell-ghcup' # FIXME arm support?
+            'haskell-stack' # FIXME arm support?
+            'haskell-cabal' # FIXME arm support?
+            'hadolint' # FIXME arm support?
+            'pandoc' # FIXME arm support?
             'agat'
             'anaconda'
             'bioconda-utils'
@@ -11204,7 +11205,6 @@ koopa_install_all_apps() {
             'snakefmt'
             'snakemake'
             'star'
-            'visidata'
         )
     fi
     if koopa_is_linux
