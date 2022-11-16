@@ -289,6 +289,7 @@ koopa_install_all_apps() {
         'csvkit'
         'csvtk'
         'vulture'
+        'diff-so-fancy'
     )
     if ! koopa_is_aarch64
     then
@@ -300,6 +301,8 @@ koopa_install_all_apps() {
             'pandoc' # FIXME arm support?
             'agat'
             'anaconda'
+            'autodock'
+            'autodock-vina'
             'bioconda-utils'
             'bamtools'
             'bedtools'
@@ -310,6 +313,7 @@ koopa_install_all_apps() {
             'entrez-direct'
             'fastqc'
             'ffq'
+            'fq'
             'gatk'
             'gffutils'
             'gget'
@@ -320,6 +324,7 @@ koopa_install_all_apps() {
             'jupyterlab'
             'kallisto'
             'multiqc'
+            'nanopolish'
             'nextflow'
             'openbb'
             'salmon'
