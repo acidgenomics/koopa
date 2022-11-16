@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2022-10-19.
+    # @note Updated 2022-11-16.
     #
     # Be sure to excluded nested directories that may exist in libexec bin, such
     # as 'bin/scripts' for bowtie2.
@@ -11,6 +11,7 @@ main() {
     # Consider adding man1 support for relevant apps (e.g. hisat2).
     # """
     local app bin_names create_args dict pos
+    koopa_assert_is_not_aarch64
     declare -A app=(
         ['cut']="$(koopa_locate_cut)"
         ['jq']="$(koopa_locate_jq)"

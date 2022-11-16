@@ -1521,6 +1521,15 @@ koopa_assert_is_nonzero_file() {
     return 0
 }
 
+koopa_assert_is_not_aarch64() {
+    koopa_assert_has_no_args "$#"
+    if koopa_is_aarch64
+    then
+        koopa_stop 'ARM (aarch64) is not supported.'
+    fi
+    return 0
+}
+
 koopa_assert_is_not_dir() {
     local arg
     koopa_assert_has_args "$#"
@@ -12624,6 +12633,12 @@ koopa_install_fmt() {
 koopa_install_fontconfig() {
     koopa_install_app \
         --name='fontconfig' \
+        "$@"
+}
+
+koopa_install_fq() {
+    koopa_install_app \
+        --name='fq' \
         "$@"
 }
 
@@ -23948,6 +23963,12 @@ koopa_uninstall_fmt() {
 koopa_uninstall_fontconfig() {
     koopa_uninstall_app \
         --name='fontconfig' \
+        "$@"
+}
+
+koopa_uninstall_fq() {
+    koopa_uninstall_app \
+        --name='fq' \
         "$@"
 }
 
