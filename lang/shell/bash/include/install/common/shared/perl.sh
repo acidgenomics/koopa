@@ -3,6 +3,14 @@
 # NOTE Consider including 'expat', 'gdbm', and possibly 'zlib' here?
 # FIXME This is no longer building Perl documentation files.
 
+# FIXME Build is now failing on Ubuntu 22.
+# Compiling Perl properties
+# Creating Perl synonyms
+# Writing tables
+# Making pod file
+# Making test script
+# Updating 'mktables.lst'
+
 main() {
     # """
     # Install Perl.
