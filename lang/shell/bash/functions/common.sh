@@ -7353,6 +7353,21 @@ koopa_entab() {
     return 0
 }
 
+koopa_eol_lf() {
+    local app file
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    declare -A app
+    app['perl']="$(koopa_locate_perl)"
+    [[ -x "${app['perl']}" ]] || return 1
+    for file in "$@"
+    do
+        koopa_alert "Setting EOL as LF in '${file}'."
+        "${app['perl']}" -pi -e 's/\r\n/\n/g' "$file"
+        "${app['perl']}" -pi -e 's/\r/\n/g' "$file"
+    done
+}
+
 koopa_exec_dir() {
     local file prefix
     koopa_assert_has_args "$#"
