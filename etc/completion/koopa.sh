@@ -578,6 +578,7 @@ __koopa_complete() {
                         'aws')
                             args=(
                                 'batch'
+                                'codecommit'
                                 'ec2'
                                 's3'
                             )
@@ -703,6 +704,11 @@ __koopa_complete() {
                                     args=(
                                         'fetch-and-run'
                                         'list-jobs'
+                                    )
+                                    ;;
+                                'codecommit')
+                                    args=(
+                                        'list-repositories'
                                     )
                                     ;;
                                 'ec2')
