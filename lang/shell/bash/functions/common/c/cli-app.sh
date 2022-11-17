@@ -3,7 +3,7 @@
 koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-09-29.
+    # @note Updated 2022-11-17.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -25,6 +25,17 @@ koopa_cli_app() {
                     case "${3:-}" in
                         'fetch-and-run' | \
                         'list-jobs')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                'codecommit')
+                    case "${3:-}" in
+                        'list-repositories')
                             dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;

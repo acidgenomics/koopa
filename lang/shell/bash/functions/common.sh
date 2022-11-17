@@ -1855,6 +1855,24 @@ koopa_aws_batch_list_jobs() {
     return 0
 }
 
+koopa_aws_codecommit_list_repositories() {
+    local app dict
+    declare -A app=(
+        ['aws']="$(koopa_locate_aws)"
+        ['jq']="$(koopa_locate_jq)"
+    )
+    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    declare -A dict
+    dict['string']="$( \
+        "${app['aws']}" codecommit list-repositories \
+            | "${app['jq']}" --raw-output '.repositories[].repositoryName' \
+    )"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
+    return 0
+}
+
 koopa_aws_ec2_instance_id() {
     local app
     declare -A app
@@ -3776,6 +3794,17 @@ koopa_cli_app() {
                     case "${3:-}" in
                         'fetch-and-run' | \
                         'list-jobs')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                'codecommit')
+                    case "${3:-}" in
+                        'list-repositories')
                             dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
