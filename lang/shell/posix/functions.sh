@@ -488,10 +488,6 @@ koopa_activate_homebrew() {
     export HOMEBREW_NO_AUTO_UPDATE=1
     export HOMEBREW_NO_ENV_HINTS=1
     export HOMEBREW_PREFIX="$prefix"
-    if koopa_is_macos
-    then
-        export HOMEBREW_CASK_OPTS='--no-quarantine'
-    fi
     return 0
 }
 
