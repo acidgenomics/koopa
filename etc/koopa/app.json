@@ -1454,13 +1454,13 @@
     "bin": ["fzf"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-11-11",
+    "date": "2022-11-18",
     "dependencies": [],
     "homebrew": true,
     "man1": ["fzf.1"],
     "outdated": false,
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.35.0"
+    "version": "0.35.1"
   },
   "gatk": {
     "bin": ["gatk"],
