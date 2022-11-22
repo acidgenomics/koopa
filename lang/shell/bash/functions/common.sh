@@ -13390,6 +13390,12 @@ koopa_install_libzip() {
         "$@"
 }
 
+koopa_install_llama() {
+    koopa_install_app \
+        --name='llama' \
+        "$@"
+}
+
 koopa_install_llvm() {
     koopa_install_app \
         --name='llvm' \
@@ -24552,6 +24558,12 @@ koopa_uninstall_libxml2() {
 koopa_uninstall_libzip() {
     koopa_uninstall_app \
         --name='libzip' \
+        "$@"
+}
+
+koopa_uninstall_llama() {
+    koopa_uninstall_app \
+        --name='llama' \
         "$@"
 }
 
