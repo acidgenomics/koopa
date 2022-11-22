@@ -1401,6 +1401,21 @@
     "url": ["https://www.freedesktop.org/wiki/Software/fontconfig/"],
     "version": "2.14.1"
   },
+  "fq": {
+    "bin": ["fq"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-11-16",
+    "dependencies": ["conda"],
+    "homebrew": false,
+    "large": true,
+    "man1": [],
+    "url": [
+      "https://github.com/stjude-rust-labs/fq/",
+      "https://bioconda.github.io/recipes/fq/README.html"
+    ],
+    "version": "0.9.1"
+  },
   "freetype": {
     "bin": [],
     "build_dependencies": [],
@@ -1439,13 +1454,13 @@
     "bin": ["fzf"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-11-11",
+    "date": "2022-11-18",
     "dependencies": [],
     "homebrew": true,
     "man1": ["fzf.1"],
     "outdated": false,
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.35.0"
+    "version": "0.35.1"
   },
   "gatk": {
     "bin": ["gatk"],
@@ -2608,6 +2623,18 @@
     "man1": [],
     "url": ["https://libzip.org/"],
     "version": "1.9.2"
+  },
+  "llama": {
+    "bin": ["llama"],
+    "build_dependencies": ["go"],
+    "conservative": false,
+    "date": "2022-11-22",
+    "dependencies": [],
+    "homebrew": true,
+    "man1": [],
+    "outdated": false,
+    "url": ["https://github.com/antonmedv/llama/"],
+    "version": "1.2.0"
   },
   "llvm": {
     "bin": [],

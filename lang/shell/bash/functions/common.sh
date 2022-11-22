@@ -1521,6 +1521,15 @@ koopa_assert_is_nonzero_file() {
     return 0
 }
 
+koopa_assert_is_not_aarch64() {
+    koopa_assert_has_no_args "$#"
+    if koopa_is_aarch64
+    then
+        koopa_stop 'ARM (aarch64) is not supported.'
+    fi
+    return 0
+}
+
 koopa_assert_is_not_dir() {
     local arg
     koopa_assert_has_args "$#"
@@ -1843,6 +1852,24 @@ koopa_aws_batch_list_jobs() {
                 --job-queue "${dict['job_queue']}" \
                 --job-status "$status"
     done
+    return 0
+}
+
+koopa_aws_codecommit_list_repositories() {
+    local app dict
+    declare -A app=(
+        ['aws']="$(koopa_locate_aws)"
+        ['jq']="$(koopa_locate_jq)"
+    )
+    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['jq']}" ]] || return 1
+    declare -A dict
+    dict['string']="$( \
+        "${app['aws']}" codecommit list-repositories \
+            | "${app['jq']}" --raw-output '.repositories[].repositoryName' \
+    )"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
     return 0
 }
 
@@ -3767,6 +3794,17 @@ koopa_cli_app() {
                     case "${3:-}" in
                         'fetch-and-run' | \
                         'list-jobs')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                'codecommit')
+                    case "${3:-}" in
+                        'list-repositories')
                             dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
@@ -7342,6 +7380,21 @@ koopa_entab() {
             -E -s "$file"
     done
     return 0
+}
+
+koopa_eol_lf() {
+    local app file
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    declare -A app
+    app['perl']="$(koopa_locate_perl)"
+    [[ -x "${app['perl']}" ]] || return 1
+    for file in "$@"
+    do
+        koopa_alert "Setting EOL as LF in '${file}'."
+        "${app['perl']}" -pi -e 's/\r\n/\n/g' "$file"
+        "${app['perl']}" -pi -e 's/\r/\n/g' "$file"
+    done
 }
 
 koopa_exec_dir() {
@@ -10991,6 +11044,7 @@ koopa_install_all_apps() {
         'conda'
         'udunits'
         'gzip'
+        'less'
         'r'
         'apr'
         'apr-util'
@@ -11033,7 +11087,6 @@ koopa_install_all_apps() {
         'gsl'
         'oniguruma'
         'jq'
-        'less'
         'lesspipe'
         'libidn'
         'libpipeline'
@@ -11092,6 +11145,7 @@ koopa_install_all_apps() {
         'radian'
         'ranger-fm'
         'ruff'
+        'visidata'
         'yt-dlp'
         'openssh'
         'c-ares'
@@ -11156,17 +11210,20 @@ koopa_install_all_apps() {
         'csvkit'
         'csvtk'
         'vulture'
+        'diff-so-fancy'
     )
     if ! koopa_is_aarch64
     then
         apps+=(
-            'haskell-ghcup'
-            'haskell-stack'
-            'haskell-cabal'
-            'hadolint'
-            'pandoc'
+            'haskell-ghcup' # FIXME arm support?
+            'haskell-stack' # FIXME arm support?
+            'haskell-cabal' # FIXME arm support?
+            'hadolint' # FIXME arm support?
+            'pandoc' # FIXME arm support?
             'agat'
             'anaconda'
+            'autodock'
+            'autodock-vina'
             'bioconda-utils'
             'bamtools'
             'bedtools'
@@ -11177,6 +11234,7 @@ koopa_install_all_apps() {
             'entrez-direct'
             'fastqc'
             'ffq'
+            'fq'
             'gatk'
             'gffutils'
             'gget'
@@ -11187,6 +11245,7 @@ koopa_install_all_apps() {
             'jupyterlab'
             'kallisto'
             'multiqc'
+            'nanopolish'
             'nextflow'
             'openbb'
             'salmon'
@@ -11195,7 +11254,6 @@ koopa_install_all_apps() {
             'snakefmt'
             'snakemake'
             'star'
-            'visidata'
         )
     fi
     if koopa_is_linux
@@ -12627,6 +12685,12 @@ koopa_install_fontconfig() {
         "$@"
 }
 
+koopa_install_fq() {
+    koopa_install_app \
+        --name='fq' \
+        "$@"
+}
+
 koopa_install_freetype() {
     koopa_install_app \
         --name='freetype' \
@@ -13323,6 +13387,12 @@ koopa_install_libxml2() {
 koopa_install_libzip() {
     koopa_install_app \
         --name='libzip' \
+        "$@"
+}
+
+koopa_install_llama() {
+    koopa_install_app \
+        --name='llama' \
         "$@"
 }
 
@@ -23951,6 +24021,12 @@ koopa_uninstall_fontconfig() {
         "$@"
 }
 
+koopa_uninstall_fq() {
+    koopa_uninstall_app \
+        --name='fq' \
+        "$@"
+}
+
 koopa_uninstall_freetype() {
     koopa_uninstall_app \
         --name='freetype' \
@@ -24482,6 +24558,12 @@ koopa_uninstall_libxml2() {
 koopa_uninstall_libzip() {
     koopa_uninstall_app \
         --name='libzip' \
+        "$@"
+}
+
+koopa_uninstall_llama() {
+    koopa_uninstall_app \
+        --name='llama' \
         "$@"
 }
 
