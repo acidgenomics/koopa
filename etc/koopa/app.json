@@ -1610,6 +1610,18 @@
     "url": ["https://git-scm.com/"],
     "version": "2.38.1"
   },
+  "git-lfs": {
+    "bin": ["git-lfs"],
+    "build_dependencies": ["go"],
+    "conservative": false,
+    "date": "2022-11-23",
+    "dependencies": [],
+    "homebrew": true,
+    "man1": [],
+    "outdated": false,
+    "url": ["https://git-lfs.github.com/"],
+    "version": "3.2.0"
+  },
   "glances": {
     "bin": ["glances"],
     "build_dependencies": [],

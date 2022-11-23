@@ -12769,6 +12769,12 @@ koopa_install_ghostscript() {
         "$@"
 }
 
+koopa_install_git_lfs() {
+    koopa_install_app \
+        --name='git-lfs' \
+        "$@"
+}
+
 koopa_install_git() {
     koopa_install_app \
         --name='git' \
@@ -24102,6 +24108,12 @@ koopa_uninstall_gget() {
 koopa_uninstall_ghostscript() {
     koopa_uninstall_app \
         --name='ghostscript' \
+        "$@"
+}
+
+koopa_uninstall_git_lfs() {
+    koopa_uninstall_app \
+        --name='git-lfs' \
         "$@"
 }
 
