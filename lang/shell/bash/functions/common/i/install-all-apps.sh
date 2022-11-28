@@ -112,8 +112,6 @@ koopa_install_all_apps() {
         'harfbuzz'
         'gawk'
         'libuv'
-        # NOTE Consider moving conda down in order.
-        'conda'
         'udunits'
         'gzip'
         'less'
@@ -300,6 +298,7 @@ koopa_install_all_apps() {
             'hadolint' # FIXME arm support?
             'pandoc' # FIXME arm support?
             'agat'
+            'conda'
             'anaconda'
             'autodock'
             'autodock-vina'
