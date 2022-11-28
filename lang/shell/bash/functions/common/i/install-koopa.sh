@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently erroring if user doesn't have a bashrc file but
-# wants to write koopa activation into it...resolve this.
 # FIXME default profile file on macOS should be zshrc, not bashrc...
 # we may be checking wrong shell config for that.
-# FIXME We can no longer pass '--non-interactive' through to koopa_install_app.
-# Need to think of a different approach here.
+# FIXME Usage of '--verbose' is erroring here.
 
 koopa_install_koopa() {
     # """
@@ -13,11 +10,11 @@ koopa_install_koopa() {
     # @note Updated 2022-11-28.
     # """
     local bool dict
-    # NOTE Consider requiring: 'cut', 'perl', 'tr'.
-    koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
-        'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
+    koopa_assert_is_installed \
+        'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' \
+        'mktemp' 'mv' 'perl' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
     declare -A bool=(
-        ['add_to_user_profile']=0
+        ['add_to_user_profile']=1
         ['interactive']=1
         ['passwordless_sudo']=0
         ['shared']=0
@@ -178,6 +175,7 @@ koopa_install_koopa() {
         fi
         koopa_is_linux && koopa_linux_update_etc_profile_d
     fi
+    # FIXME This should write to zshrc on macOS by default, not bashrc.
     if [[ "${bool['add_to_user_profile']}" -eq 1 ]]
     then
         koopa_add_to_user_profile
