@@ -8,7 +8,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-11-09.
+    # @note Updated 2022-11-28.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
@@ -273,6 +273,7 @@ ${dict['version2']}"
                     app['env']="$(koopa_locate_env --allow-system)"
                     app['tee']="$(koopa_locate_tee --allow-system)"
                     dict['bs_bin']="$(koopa_bootstrap_bin_prefix)"
+                    # FIXME Consider reworking this approach on macOS.
                     koopa_is_macos && koopa_assert_is_dir "${dict['bs_bin']}"
                     if [[ -d "${dict['bs_bin']}" ]]
                     then
