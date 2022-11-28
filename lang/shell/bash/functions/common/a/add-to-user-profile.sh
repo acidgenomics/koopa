@@ -3,7 +3,7 @@
 koopa_add_to_user_profile() {
     # """
     # Add koopa configuration to user profile.
-    # @note Updated 2021-11-11.
+    # @note Updated 2022-11-28.
     # """
     local dict
     koopa_assert_has_no_args "$#"

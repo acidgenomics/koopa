@@ -12084,6 +12084,7 @@ ${dict['version2']}"
                         "HOME=${HOME:?}"
                         'KOOPA_ACTIVATE=0'
                         'KOOPA_INSTALL_APP_SUBSHELL=1'
+                        "KOOPA_SHELL=${KOOPA_SHELL:-}"
                         "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
                         "LANG=${LANG:-}"
                         "LC_ALL=${LC_ALL:-}"
@@ -13023,10 +13024,11 @@ koopa_install_kallisto() {
 
 koopa_install_koopa() {
     local bool dict
-    koopa_assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
-        'mktemp' 'mv' 'readlink' 'rm' 'sed' 'tar' 'unzip'
+    koopa_assert_is_installed \
+        'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' \
+        'mktemp' 'mv' 'perl' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
     declare -A bool=(
-        ['add_to_user_profile']=0
+        ['add_to_user_profile']=1
         ['interactive']=1
         ['passwordless_sudo']=0
         ['shared']=0
