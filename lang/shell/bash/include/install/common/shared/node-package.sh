@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Node.js package using npm.
-    # @note Updated 2022-07-08.
+    # @note Updated 2022-11-23.
     #
     # @seealso
     # - npm help config
@@ -26,6 +26,7 @@ main() {
     )
     koopa_add_to_path_start "$(koopa_dirname "${app['node']}")"
     export NPM_CONFIG_PREFIX="${dict['prefix']}"
+    export NPM_CONFIG_UPDATE_NOTIFIER=false
     "${app['npm']}" install \
         --location='global' \
         --no-audit \

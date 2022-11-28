@@ -354,11 +354,10 @@ koopa_install_all_binary_apps() {
             'star'
         )
     fi
-    koopa_add_to_path_start "$(koopa_bootstrap_bin_prefix)"
-    PATH="${PATH:?}" "${app['koopa']}" install 'aws-cli'
+    "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do
-        PATH="${PATH:?}" "${app['koopa']}" install --binary "$app_name"
+        "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
