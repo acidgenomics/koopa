@@ -271,14 +271,9 @@ ${dict['version2']}"
                     local app env_vars path_arr
                     declare -A app
                     app['env']="$(koopa_locate_env --allow-system)"
-                    app['tee']="$(koopa_locate_tee --allow-system)"
-                    dict['bs_bin']="$(koopa_bootstrap_bin_prefix)"
-                    # FIXME Consider reworking this approach on macOS.
-                    # FIXME Consider installing to ~/.local/share/koopa/bootstrap?
-                    koopa_is_macos && koopa_assert_is_dir "${dict['bs_bin']}"
-                    if [[ -d "${dict['bs_bin']}" ]]
+                    if koopa_is_macos
                     then
-                        app['bash']="${dict['bs_bin']}/bash"
+                        app['bash']='/usr/local/bin/bash'
                     else
                         app['bash']='/bin/bash'
                     fi

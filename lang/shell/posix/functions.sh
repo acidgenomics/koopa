@@ -1110,10 +1110,6 @@ koopa_boolean_nounset() {
     return 0
 }
 
-koopa_bootstrap_bin_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/libexec/bootstrap/bin"
-}
-
 koopa_is_centos_like() {
     koopa_is_os_like 'centos'
 }
