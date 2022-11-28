@@ -15,7 +15,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-10-12.
+    # @note Updated 2022-11-28.
     #
     # @section Package library location:
     #
@@ -112,13 +112,11 @@ koopa_r_configure_environ() {
     [[ -x "${app['zip']}" ]] || return 1
     [[ ! -x "${app['lpr']}" ]] && app['lpr']='/usr/bin/lpr'
     [[ ! -x "${app['open']}" ]] && app['open']='/usr/bin/open'
-    dict['conda']="$(koopa_app_prefix 'conda')"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"
     dict['udunits2']="$(koopa_app_prefix 'udunits')"
     koopa_assert_is_dir \
-        "${dict['conda']}" \
         "${dict['r_prefix']}" \
         "${dict['udunits2']}"
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
@@ -274,8 +272,6 @@ koopa_r_configure_environ() {
     # reticulate
     # --------------------------------------------------------------------------
     lines+=(
-        # Ensure the default location of Miniconda is standardized.
-        "RETICULATE_MINICONDA_PATH=${dict['conda']}"
         # Default path to virtual environments.
         # Check with 'virtualenv_list()'.
         # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
