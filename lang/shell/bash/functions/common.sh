@@ -10945,8 +10945,8 @@ koopa_install_all_apps() {
     [[ -x "${app['koopa']}" ]] || return 1
     apps=()
     apps+=(
-        'pkg-config'
         'make'
+        'pkg-config'
     )
     koopa_is_linux && apps+=('attr')
     apps+=(
@@ -11284,14 +11284,13 @@ koopa_install_all_apps() {
         'tl-expected'
         'yaml-cpp'
     )
-    koopa_add_to_path_start "$(koopa_bootstrap_bin_prefix)"
     for app_name in "${apps[@]}"
     do
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
         koopa_alert "$prefix"
         [[ -d "$prefix" ]] && continue
-        PATH="${PATH:?}" "${app['koopa']}" install "$app_name"
+        "${app['koopa']}" install "$app_name"
         push_apps+=("$app_name")
     done
     if koopa_can_install_binary && \
@@ -11637,11 +11636,10 @@ koopa_install_all_binary_apps() {
             'star'
         )
     fi
-    koopa_add_to_path_start "$(koopa_bootstrap_bin_prefix)"
-    PATH="${PATH:?}" "${app['koopa']}" install 'aws-cli'
+    "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do
-        PATH="${PATH:?}" "${app['koopa']}" install --binary "$app_name"
+        "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
@@ -12062,12 +12060,9 @@ ${dict['version2']}"
                     local app env_vars path_arr
                     declare -A app
                     app['env']="$(koopa_locate_env --allow-system)"
-                    app['tee']="$(koopa_locate_tee --allow-system)"
-                    dict['bs_bin']="$(koopa_bootstrap_bin_prefix)"
-                    koopa_is_macos && koopa_assert_is_dir "${dict['bs_bin']}"
-                    if [[ -d "${dict['bs_bin']}" ]]
+                    if koopa_is_macos
                     then
-                        app['bash']="${dict['bs_bin']}/bash"
+                        app['bash']='/usr/local/bin/bash'
                     else
                         app['bash']='/bin/bash'
                     fi
@@ -12766,6 +12761,12 @@ koopa_install_gget() {
 koopa_install_ghostscript() {
     koopa_install_app \
         --name='ghostscript' \
+        "$@"
+}
+
+koopa_install_git_lfs() {
+    koopa_install_app \
+        --name='git-lfs' \
         "$@"
 }
 
@@ -16015,7 +16016,6 @@ koopa_locate_app() {
         ['app_name']=''
         ['bin_name']=''
         ['bin_prefix']="$(koopa_bin_prefix)"
-        ['bs_bin_prefix']="$(koopa_bootstrap_bin_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['system_bin_name']=''
     )
@@ -16107,11 +16107,6 @@ koopa_locate_app() {
     fi
     dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
 bin/${dict['bin_name']}"
-    if [[ ! -x "${dict['app']}" ]] && \
-        [[ -x "${dict['bs_bin_prefix']}/${dict['bin_name']}" ]]
-    then
-            dict['app']="${dict['bs_bin_prefix']}/${dict['system_bin_name']}"
-    fi
     if [[ ! -x "${dict['app']}" ]] && \
         [[ "${bool['allow_system']}" -eq 1 ]]
     then
@@ -24102,6 +24097,12 @@ koopa_uninstall_gget() {
 koopa_uninstall_ghostscript() {
     koopa_uninstall_app \
         --name='ghostscript' \
+        "$@"
+}
+
+koopa_uninstall_git_lfs() {
+    koopa_uninstall_app \
+        --name='git-lfs' \
         "$@"
 }
 
