@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't finding zshrc as expected during koopa install on macOS.
+# Need to rethink the handling here in koopa_shell_name subcall?
+
 koopa_find_user_profile() {
     # """
     # Find current user's shell profile configuration file.
