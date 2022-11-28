@@ -22379,7 +22379,7 @@ koopa_stat_modified() {
 }
 
 koopa_stat_user() {
-    koopa_stat '%U' "$@"
+    koopa_stat '%u' "$@"
 }
 
 koopa_stat() {
