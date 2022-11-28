@@ -10945,8 +10945,8 @@ koopa_install_all_apps() {
     [[ -x "${app['koopa']}" ]] || return 1
     apps=()
     apps+=(
-        'pkg-config'
         'make'
+        'pkg-config'
     )
     koopa_is_linux && apps+=('attr')
     apps+=(
