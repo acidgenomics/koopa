@@ -1197,6 +1197,15 @@ koopa_debian_os_codename() {
     return 0
 }
 
+koopa_default_shell_name() {
+    local shell str
+    shell="${SHELL:-sh}"
+    str="$(basename "$shell")"
+    [ -n "$str" ] || return 1
+    koopa_print "$str"
+    return 0
+}
+
 koopa_docker_prefix() {
     koopa_print "$(koopa_config_prefix)/docker"
     return 0
