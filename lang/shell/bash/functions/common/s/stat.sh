@@ -3,7 +3,7 @@
 koopa_stat() {
     # """
     # Display file or file system status.
-    # @note Updated 2022-08-30.
+    # @note Updated 2022-11-28.
     #
     # @examples
     # > koopa_stat '%A' '/tmp/'
@@ -18,7 +18,7 @@ koopa_stat() {
         ['format']="${1:?}"
     )
     shift 1
-    dict['out']="$("${app['stat']}" --format="${dict['format']}" "$@")"
+    dict['out']="$("${app['stat']}" -f "${dict['format']}" "$@")"
     [[ -n "${dict['out']}" ]] || return 1
     koopa_print "${dict['out']}"
     return 0
