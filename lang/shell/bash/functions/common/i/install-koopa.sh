@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Still hitting a weird directory exists error when attempting to modify
+# our zshrc file...
 # FIXME Usage of '--verbose' is erroring here.
 
 koopa_install_koopa() {
@@ -8,6 +10,7 @@ koopa_install_koopa() {
     # @note Updated 2022-11-28.
     # """
     local bool dict
+    set -x # FIXME
     koopa_assert_is_installed \
         'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'perl' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
@@ -177,6 +180,7 @@ koopa_install_koopa() {
     then
         koopa_add_to_user_profile
     fi
+    # FIXME Is this erroring out for clean install?
     koopa_fix_zsh_permissions
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     return 0
