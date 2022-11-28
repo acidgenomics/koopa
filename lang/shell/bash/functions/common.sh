@@ -14577,6 +14577,7 @@ koopa_is_defined_in_user_profile() {
     local file
     koopa_assert_has_no_args "$#"
     file="$(koopa_find_user_profile)"
+    [[ -f "$file" ]] || return 1
     koopa_file_detect_fixed --file="$file" --pattern='koopa'
 }
 
