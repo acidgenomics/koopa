@@ -365,13 +365,14 @@ koopa_install_all_apps() {
         'yaml-cpp'
         # > 'mamba'
     )
+    koopa_add_to_path_start '/usr/local/bin'
     for app_name in "${apps[@]}"
     do
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
         koopa_alert "$prefix"
         [[ -d "$prefix" ]] && continue
-        "${app['koopa']}" install "$app_name"
+        "${app['bash']}" "${app['koopa']}" install "$app_name"
         push_apps+=("$app_name")
     done
     if koopa_can_install_binary && \

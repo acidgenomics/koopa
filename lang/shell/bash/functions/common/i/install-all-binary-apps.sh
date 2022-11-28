@@ -354,10 +354,11 @@ koopa_install_all_binary_apps() {
             'star'
         )
     fi
+    koopa_add_to_path_start '/usr/local/bin'
     "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do
-        "${app['koopa']}" install --binary "$app_name"
+        "${app['bash']}" "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
