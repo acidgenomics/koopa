@@ -10,7 +10,7 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2022-08-13.
+    # @note Updated 2022-11-28.
     # """
     local bool dict
     # NOTE Consider requiring: 'cut', 'perl', 'tr'.
