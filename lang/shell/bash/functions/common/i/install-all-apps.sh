@@ -372,7 +372,7 @@ koopa_install_all_apps() {
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
         koopa_alert "$prefix"
         [[ -d "$prefix" ]] && continue
-        "${app['bash']}" "${app['koopa']}" install "$app_name"
+        "${app['koopa']}" install "$app_name"
         push_apps+=("$app_name")
     done
     if koopa_can_install_binary && \
