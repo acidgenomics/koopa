@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Still hitting a weird directory exists error when attempting to modify
-# our zshrc file...
-# FIXME Usage of '--verbose' is erroring here.
-
 koopa_install_koopa() {
     # """
     # Install koopa.
     # @note Updated 2022-11-28.
     # """
     local bool dict
-    set -x # FIXME
     koopa_assert_is_installed \
         'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'perl' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
@@ -19,7 +14,6 @@ koopa_install_koopa() {
         ['interactive']=1
         ['passwordless_sudo']=0
         ['shared']=0
-        ['test']=0
     )
     declare -A dict=(
         ['config_prefix']="$(koopa_config_prefix)"
@@ -74,16 +68,6 @@ koopa_install_koopa() {
                 ;;
             '--no-shared')
                 bool['shared']=0
-                shift 1
-                ;;
-            '--test' | \
-            '--verbose')
-                bool['test']=1
-                shift 1
-                ;;
-            '--no-test' | \
-            '--no-verbose')
-                bool['test']=0
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -174,13 +158,15 @@ koopa_install_koopa() {
         then
             koopa_enable_passwordless_sudo
         fi
-        koopa_is_linux && koopa_linux_update_etc_profile_d
+        if koopa_is_linux
+        then
+            koopa_linux_update_etc_profile_d
+        fi
     fi
     if [[ "${bool['add_to_user_profile']}" -eq 1 ]]
     then
         koopa_add_to_user_profile
     fi
-    # FIXME Is this erroring out for clean install?
     koopa_fix_zsh_permissions
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     return 0
