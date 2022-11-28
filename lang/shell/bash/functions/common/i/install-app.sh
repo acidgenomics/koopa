@@ -274,6 +274,7 @@ ${dict['version2']}"
                     app['tee']="$(koopa_locate_tee --allow-system)"
                     dict['bs_bin']="$(koopa_bootstrap_bin_prefix)"
                     # FIXME Consider reworking this approach on macOS.
+                    # FIXME Consider installing to ~/.local/share/koopa/bootstrap?
                     koopa_is_macos && koopa_assert_is_dir "${dict['bs_bin']}"
                     if [[ -d "${dict['bs_bin']}" ]]
                     then
