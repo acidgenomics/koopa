@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME default profile file on macOS should be zshrc, not bashrc...
-# we may be checking wrong shell config for that.
 # FIXME Usage of '--verbose' is erroring here.
 
 koopa_install_koopa() {
@@ -175,7 +173,6 @@ koopa_install_koopa() {
         fi
         koopa_is_linux && koopa_linux_update_etc_profile_d
     fi
-    # FIXME This should write to zshrc on macOS by default, not bashrc.
     if [[ "${bool['add_to_user_profile']}" -eq 1 ]]
     then
         koopa_add_to_user_profile
