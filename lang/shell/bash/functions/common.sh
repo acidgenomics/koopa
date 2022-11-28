@@ -8763,7 +8763,7 @@ koopa_fix_zsh_permissions() {
         dict['stat_user']="$( \
             koopa_stat_user "${dict['koopa_prefix']}/lang/shell/zsh" \
         )"
-        if [[ "${dict['stat_user']}" != 'root' ]]
+        if [[ "${dict['stat_user']}" != 0 ]]
         then
             koopa_chown --sudo 'root' \
                 "${dict['koopa_prefix']}/lang/shell/zsh" \
@@ -22386,7 +22386,7 @@ koopa_stat() {
         ['format']="${1:?}"
     )
     shift 1
-    dict['out']="$("${app['stat']}" -f "${dict['format']}" "$@")"
+    dict['out']="$("${app['stat']}" -c "${dict['format']}" "$@")"
     [[ -n "${dict['out']}" ]] || return 1
     koopa_print "${dict['out']}"
     return 0
