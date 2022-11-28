@@ -298,6 +298,7 @@ ${dict['version2']}"
                         "HOME=${HOME:?}"
                         'KOOPA_ACTIVATE=0'
                         'KOOPA_INSTALL_APP_SUBSHELL=1'
+                        "KOOPA_SHELL=${KOOPA_SHELL:-}"
                         "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
                         "LANG=${LANG:-}"
                         "LC_ALL=${LC_ALL:-}"
