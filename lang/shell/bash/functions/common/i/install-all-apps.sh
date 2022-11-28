@@ -365,6 +365,7 @@ koopa_install_all_apps() {
         'yaml-cpp'
         # > 'mamba'
     )
+    koopa_add_to_path_start '/usr/local/bin'
     for app_name in "${apps[@]}"
     do
         local prefix

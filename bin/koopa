@@ -69,12 +69,14 @@ __koopa_warn() { # {{{1
 main() {
     # """
     # Main koopa CLI function.
-    # @note Updated 2022-05-16.
+    # @note Updated 2022-11-28.
     # """
     # Check for Bash 4+.
     case "${BASH_VERSION:-}" in
         '1.'* | '2.'* | '3.'*)
-            __koopa_warn 'Bash 4+ is required.'
+            __koopa_warn \
+                'Bash 4+ is required.' \
+                "PATH: ${PATH:-}"
             return 1
             ;;
     esac
