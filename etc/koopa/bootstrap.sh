@@ -10,7 +10,7 @@ set -o nounset
 
 KOOPA_PREFIX="$(cd -- "$(dirname -- "$0")/../.." && pwd)"
 PREFIX="${KOOPA_PREFIX:?}/libexec/bootstrap"
-TMPDIR="${TMPDIR:-/tmp}"
+TMPDIR="$(mktemp -d)"
 
 # Restrict the system path.
 PATH='/usr/bin:/bin'
