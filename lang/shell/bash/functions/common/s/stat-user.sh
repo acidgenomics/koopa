@@ -2,12 +2,14 @@
 
 koopa_stat_user() {
     # """
-    # Get the current user (owner) of a file or directory.
-    # @note Updated 2021-11-16.
+    # Get the current user (owner) identifier of a file or directory.
+    # @note Updated 2022-11-28.
+    #
+    # Usage of '%U' isn't compatible with BSD.
     #
     # @examples
     # > koopa_stat_user '/tmp'
-    # # root
+    # # 501
     # """
-    koopa_stat '%U' "$@"
+    koopa_stat '%u' "$@"
 }
