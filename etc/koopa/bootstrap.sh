@@ -59,8 +59,9 @@ install_coreutils() {
 }
 
 main() {
-    rm -fr "${PREFIX:?}"
+    [ -x "${PREFIX:?}/bin/bash" ] && return 0
     printf "Installing bootstrap into '%s'.\n" "${PREFIX:?}"
+    # > rm -fr "${PREFIX:?}"
     # > install_coreutils
     install_bash
 }
