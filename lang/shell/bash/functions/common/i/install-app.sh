@@ -271,6 +271,7 @@ ${dict['version2']}"
                     local app env_vars path_arr
                     declare -A app
                     app['env']="$(koopa_locate_env --allow-system)"
+                    app['tee']="$(koopa_locate_tee --allow-system)"
                     if koopa_is_macos
                     then
                         app['bash']='/usr/local/bin/bash'

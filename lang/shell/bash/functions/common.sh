@@ -11284,6 +11284,7 @@ koopa_install_all_apps() {
         'tl-expected'
         'yaml-cpp'
     )
+    koopa_add_to_path_start '/usr/local/bin'
     for app_name in "${apps[@]}"
     do
         local prefix
@@ -11636,10 +11637,11 @@ koopa_install_all_binary_apps() {
             'star'
         )
     fi
+    koopa_add_to_path_start '/usr/local/bin'
     "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do
-        "${app['koopa']}" install --binary "$app_name"
+        "${app['bash']}" "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
@@ -12060,6 +12062,7 @@ ${dict['version2']}"
                     local app env_vars path_arr
                     declare -A app
                     app['env']="$(koopa_locate_env --allow-system)"
+                    app['tee']="$(koopa_locate_tee --allow-system)"
                     if koopa_is_macos
                     then
                         app['bash']='/usr/local/bin/bash'
