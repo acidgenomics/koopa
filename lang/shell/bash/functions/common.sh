@@ -8333,7 +8333,7 @@ koopa_find_user_profile() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        ['shell']="$(koopa_shell_name)"
+        ['shell']="$(koopa_default_shell_name)"
     )
     case "${dict['shell']}" in
         'bash')
@@ -12084,7 +12084,6 @@ ${dict['version2']}"
                         "HOME=${HOME:?}"
                         'KOOPA_ACTIVATE=0'
                         'KOOPA_INSTALL_APP_SUBSHELL=1'
-                        "KOOPA_SHELL=${KOOPA_SHELL:-}"
                         "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
                         "LANG=${LANG:-}"
                         "LC_ALL=${LC_ALL:-}"
