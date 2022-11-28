@@ -1707,7 +1707,7 @@
     "date": "2022-11-08",
     "dependencies": [],
     "homebrew": true,
-    "large": true,
+    "large": false,
     "man1": [],
     "reverse_dependencies": [
       "apptainer",
