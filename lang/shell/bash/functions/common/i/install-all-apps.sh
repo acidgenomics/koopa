@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-11-16.
+    # @note Updated 2022-11-28.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -15,8 +15,8 @@ koopa_install_all_apps() {
     [[ -x "${app['koopa']}" ]] || return 1
     apps=()
     apps+=(
-        'pkg-config'
         'make'
+        'pkg-config'
     )
     koopa_is_linux && apps+=('attr')
     apps+=(
