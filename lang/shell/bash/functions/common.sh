@@ -13023,6 +13023,7 @@ koopa_install_kallisto() {
 
 koopa_install_koopa() {
     local bool dict
+    set -x # FIXME
     koopa_assert_is_installed \
         'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'perl' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
