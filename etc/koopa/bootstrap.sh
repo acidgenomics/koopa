@@ -8,8 +8,7 @@
 set -o errexit
 set -o nounset
 
-KOOPA_PREFIX="$(cd -- "$(dirname -- "$0")/../.." && pwd)"
-PREFIX="${KOOPA_PREFIX:?}/libexec/bootstrap"
+PREFIX='/usr/local'
 TMPDIR="$(mktemp -d)"
 
 # Restrict the system path.
@@ -33,7 +32,7 @@ install_bash() {
     cd "${name}-${version}"
     ./configure --prefix="${PREFIX:?}"
     make --jobs="${JOBS:?}"
-    make install
+    sudo make install
     rm -fr "$tmp_dir"
     return 0
 }
@@ -54,7 +53,7 @@ install_coreutils() {
         --prefix="${PREFIX:?}" \
         --program-prefix='g'
     make --jobs="${JOBS:?}"
-    make install
+    sudo make install
     rm -fr "$tmp_dir"
     return 0
 }
