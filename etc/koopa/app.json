@@ -3102,7 +3102,7 @@
     "bin": ["openbb"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-07",
+    "date": "2022-11-29",
     "dependencies": ["anaconda"],
     "homebrew": false,
     "large": true,
@@ -3111,7 +3111,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "1.9.0"
+    "version": "2.0.0"
   },
   "openblas": {
     "bin": [],
@@ -3516,12 +3516,12 @@
     "bin": ["pylint"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-11-29",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.15.5"
+    "version": "2.15.7"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
