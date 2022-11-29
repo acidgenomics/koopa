@@ -3,7 +3,7 @@
 koopa_fix_zsh_permissions() {
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass.
-    # @note Updated 2022-07-26.
+    # @note Updated 2022-11-28.
     #
     # @seealso
     # - https://github.com/ohmyzsh/ohmyzsh/blob/master/oh-my-zsh.sh
@@ -19,7 +19,7 @@ koopa_fix_zsh_permissions() {
         dict['stat_user']="$( \
             koopa_stat_user "${dict['koopa_prefix']}/lang/shell/zsh" \
         )"
-        if [[ "${dict['stat_user']}" != 'root' ]]
+        if [[ "${dict['stat_user']}" != 0 ]]
         then
             koopa_chown --sudo 'root' \
                 "${dict['koopa_prefix']}/lang/shell/zsh" \
