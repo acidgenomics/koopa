@@ -2652,7 +2652,7 @@
     "bin": [],
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "conservative": false,
-    "date": "2022-11-16",
+    "date": "2022-11-29",
     "dependencies": [
       "zlib",
       "libedit",
@@ -2667,7 +2667,7 @@
     "man1": [],
     "outdated": false,
     "url": ["https://releases.llvm.org/"],
-    "version": "15.0.5"
+    "version": "15.0.6"
   },
   "lmod": {
     "bin": [],
