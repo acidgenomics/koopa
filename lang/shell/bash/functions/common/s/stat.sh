@@ -18,7 +18,7 @@ koopa_stat() {
         ['format']="${1:?}"
     )
     shift 1
-    dict['out']="$("${app['stat']}" -f "${dict['format']}" "$@")"
+    dict['out']="$("${app['stat']}" -c "${dict['format']}" "$@")"
     [[ -n "${dict['out']}" ]] || return 1
     koopa_print "${dict['out']}"
     return 0

@@ -8763,7 +8763,7 @@ koopa_fix_zsh_permissions() {
         dict['stat_user']="$( \
             koopa_stat_user "${dict['koopa_prefix']}/lang/shell/zsh" \
         )"
-        if [[ "${dict['stat_user']}" != 'root' ]]
+        if [[ "${dict['stat_user']}" != 0 ]]
         then
             koopa_chown --sudo 'root' \
                 "${dict['koopa_prefix']}/lang/shell/zsh" \
@@ -11041,7 +11041,6 @@ koopa_install_all_apps() {
         'harfbuzz'
         'gawk'
         'libuv'
-        'conda'
         'udunits'
         'gzip'
         'less'
@@ -11221,6 +11220,7 @@ koopa_install_all_apps() {
             'hadolint' # FIXME arm support?
             'pandoc' # FIXME arm support?
             'agat'
+            'conda'
             'anaconda'
             'autodock'
             'autodock-vina'
@@ -18640,13 +18640,11 @@ koopa_r_configure_environ() {
     [[ -x "${app['zip']}" ]] || return 1
     [[ ! -x "${app['lpr']}" ]] && app['lpr']='/usr/bin/lpr'
     [[ ! -x "${app['open']}" ]] && app['open']='/usr/bin/open'
-    dict['conda']="$(koopa_app_prefix 'conda')"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"
     dict['udunits2']="$(koopa_app_prefix 'udunits')"
     koopa_assert_is_dir \
-        "${dict['conda']}" \
         "${dict['r_prefix']}" \
         "${dict['udunits2']}"
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
@@ -18775,7 +18773,6 @@ koopa_r_configure_environ() {
         'R_REMOTES_UPGRADE=always'
     )
     lines+=(
-        "RETICULATE_MINICONDA_PATH=${dict['conda']}"
         "WORKON_HOME=\${HOME}/.virtualenvs"
     )
     lines+=(
@@ -22389,7 +22386,7 @@ koopa_stat() {
         ['format']="${1:?}"
     )
     shift 1
-    dict['out']="$("${app['stat']}" -f "${dict['format']}" "$@")"
+    dict['out']="$("${app['stat']}" -c "${dict['format']}" "$@")"
     [[ -n "${dict['out']}" ]] || return 1
     koopa_print "${dict['out']}"
     return 0
