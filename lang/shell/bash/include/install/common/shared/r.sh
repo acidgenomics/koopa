@@ -207,12 +207,14 @@ main() {
         "${dict['lapack']}" \
         "${dict['openjdk']}" \
         "${dict['tcl_tk']}"
-    if koopa_is_macos
-    then
-        dict['texbin']='/Library/TeX/texbin'
-        koopa_assert_is_dir "${dict['texbin']}"
-        koopa_add_to_path_start "${dict['texbin']}"
-    fi
+    # This step can error unless we have run
+    # 'koopa install system tex-packages', so disabling at the moment.
+    # > if koopa_is_macos
+    # > then
+    # >     dict['texbin']='/Library/TeX/texbin'
+    # >     koopa_assert_is_dir "${dict['texbin']}"
+    # >     koopa_add_to_path_start "${dict['texbin']}"
+    # > fi
     conf_dict['with_blas']="$( \
         "${app['pkg_config']}" --libs 'openblas' \
     )"
