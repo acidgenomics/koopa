@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Require 16 GB RAM and 8 cores to build this.
-
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2022-09-12.
+    # @note Updated 2022-11-30.
     #
     # Useful CMake linker variables:
     # - CMAKE_CXX_FLAGS
@@ -173,13 +171,9 @@ libncursesw.${dict['shared_ext']}"
         "-DLibEdit_INCLUDE_DIRS=${dict['libedit']}/include"
         "-DLibEdit_LIBRARIES=${dict['libedit']}/lib/\
 libedit.${dict['shared_ext']}"
-        # FIXME Can we remove duplication of these here?
         "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
-        # > "-DLIBXML2_INCLUDE_DIRS=${dict['libxml2']}/include"
         "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/\
 libxml2.${dict['shared_ext']}"
-        # > "-DLIBXML2_LIBRARIES=${dict['libxml2']}/lib/\
-# > libxml2.${dict['shared_ext']}"
         "-DPANEL_LIBRARIES=${dict['ncurses']}/lib/\
 libpanelw.${dict['shared_ext']}"
         "-DPERL_EXECUTABLE=${app['perl']}"
