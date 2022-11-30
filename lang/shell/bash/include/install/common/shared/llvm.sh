@@ -110,13 +110,15 @@ main() {
         # > 'pstl'
         'clang'
         'clang-tools-extra'
-        'flang'
+        # NOTE flang steps seems to be crashing on Ubuntu 22.
+        # > 'flang'
         'lld'
         'lldb'
         'mlir'
         'openmp'
         'polly'
     )
+    koopa_is_macos && projects+=('flang')
     runtimes=(
         # > 'compiler-rt'
         # > 'libc'
