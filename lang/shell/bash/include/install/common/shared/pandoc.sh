@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2022-08-11.
+    # @note Updated 2022-12-01.
     #
     # This may require system zlib to be installed currently.
     #
@@ -16,6 +16,7 @@ main() {
     # - https://github.com/commercialhaskell/stack/issues/342
     # """
     local app dict install_args stack_args
+    koopa_assert_is_not_aarch64
     koopa_activate_app --build-only 'haskell-stack'
     koopa_activate_app 'zlib'
     declare -A app=(
