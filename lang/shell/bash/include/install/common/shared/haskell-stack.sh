@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Haskell Stack.
-    # @note Updated 2022-09-19.
+    # @note Updated 2022-12-01.
     #
     # @section Required system dependencies:
     #
@@ -42,6 +42,7 @@ main() {
     #   https://github.com/haskell/ghcup-metadata/blob/master/ghcup-0.0.7.yaml
     # """
     local app dict stack_args
+    koopa_assert_is_not_aarch64
     koopa_assert_has_no_args "$#"
     declare -A app
     declare -A dict=(
