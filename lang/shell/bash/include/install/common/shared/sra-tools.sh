@@ -4,10 +4,24 @@
 # [ 37%] Built target ngs-doc_javadoc
 # /bin/sh: line 0: cd: /private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20221115-172023-4egoHaUTpl/sra-tools-build/obj/ngs/ngs-java/javadoc/ngs-doc: No such file or directory
 
+# FIXME Build is currently failing on Ubuntu 22 ARM.
+# [  0%] Built target ktst
+# [  0%] Building C object libs/align/CMakeFiles/ncbi-bam.dir/bam.c.o
+# In file included from /tmp/koopa-1000-20221201-161856-B0pQYf185z/ncbi-vdb-source/interfaces/kfs/file-v2.h:35,
+#                  from /tmp/koopa-1000-20221201-161856-B0pQYf185z/ncbi-vdb-source/interfaces/kfs/file.h:39,
+#                  from /tmp/koopa-1000-20221201-161856-B0pQYf185z/ncbi-vdb-source/libs/align/bam.c:32:
+# /tmp/koopa-1000-20221201-161856-B0pQYf185z/ncbi-vdb-source/interfaces/kfc/refcount.h:39:10: fatal error: atomic32.h: No such file or directory
+#    39 | #include <atomic32.h>
+#       |          ^~~~~~~~~~~~
+# compilation terminated.
+# gmake[2]: *** [libs/align/CMakeFiles/ncbi-bam.dir/build.make:76: libs/align/CMakeFiles/ncbi-bam.dir/bam.c.o] Error 1
+# gmake[1]: *** [CMakeFiles/Makefile2:1541: libs/align/CMakeFiles/ncbi-bam.dir/all] Error 2
+# gmake: *** [Makefile:146: all] Error 2
+
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2022-11-15.
+    # @note Updated 2022-12-01.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -26,6 +40,7 @@ main() {
     #     Formula/sratoolkit.rb
     # """
     local app deps dict shared_cmake_args
+    koopa_assert_is_not_aarch64
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'cmake'
     deps=()

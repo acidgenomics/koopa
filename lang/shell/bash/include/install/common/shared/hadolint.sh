@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2022-11-15.
+    # @note Updated 2022-12-01.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
@@ -12,6 +12,7 @@ main() {
     #     hadolint.rb
     # """
     local app build_deps dict
+    koopa_assert_is_not_aarch64
     build_deps=('git' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     declare -A app=(
