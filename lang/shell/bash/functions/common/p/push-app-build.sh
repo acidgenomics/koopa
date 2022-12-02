@@ -49,6 +49,8 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         dict2['remote_tar']="${dict['s3_bucket']}${dict2['s3_rel_path']}"
         koopa_alert "Pushing '${dict2['prefix']}' to '${dict2['remote_tar']}'."
         koopa_mkdir "${dict['tmp_dir']}/${dict2['name']}"
+        # FIXME GNU tar supports '--totals', which may be useful for progress.
+        # https://www.gnu.org/software/tar/manual/html_section/verbose.html
         "${app['tar']}" -Pczf "${dict2['local_tar']}" "${dict2['prefix']}/"
         "${app['aws']}" --profile="${dict['profile']}" \
             s3 cp "${dict2['local_tar']}" "${dict2['remote_tar']}"
