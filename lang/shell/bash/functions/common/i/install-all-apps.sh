@@ -3,16 +3,19 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-11-28.
+    # @note Updated 2022-12-05.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
     # """
-    local app app_name apps koopa push_apps
+    local app app_name apps bool push_apps
     koopa_assert_has_no_args "$#"
     declare -A app
     app['koopa']="$(koopa_locate_koopa)"
     [[ -x "${app['koopa']}" ]] || return 1
+    declare -A bool
+    bool['large']=0
+    koopa_has_large_system_disk && bool['large']=1
     apps=()
     apps+=(
         'make'
@@ -164,7 +167,6 @@ koopa_install_all_apps() {
         'lz4'
         'man-db'
         'neofetch'
-        'nim'
         'parallel'
         'password-store'
         'taglib'
@@ -190,13 +192,10 @@ koopa_install_all_apps() {
     )
     koopa_is_linux && apps+=('elfutils')
     apps+=(
-        'llvm'
         'go'
         'chezmoi'
         'fzf'
         'aws-cli'
-        'azure-cli'
-        'google-cloud-sdk'
         'autoflake'
         'black'
         'bpytop'
@@ -225,7 +224,6 @@ koopa_install_all_apps() {
         'nghttp2'
         'node'
         'rust'
-        'julia'
         'bat'
         'broot'
         'delta'
@@ -265,8 +263,6 @@ koopa_install_all_apps() {
         'pyenv'
         'rbenv'
         'dotfiles'
-        'ensembl-perl-api'
-        'sra-tools'
         'yarn'
         'asdf'
         'bfg'
@@ -282,73 +278,25 @@ koopa_install_all_apps() {
         # > 'tree-sitter'
         # > 'unibilium'
         'neovim'
-        'apache-airflow'
-        'apache-spark'
         'csvkit'
         'csvtk'
         'vulture'
         'diff-so-fancy'
     )
-    if ! koopa_is_aarch64
-    then
-        apps+=(
-            'haskell-ghcup' # FIXME arm support?
-            'haskell-stack' # FIXME arm support?
-            'haskell-cabal' # FIXME arm support?
-            'hadolint' # FIXME arm support?
-            'pandoc' # FIXME arm support?
-            'agat'
-            'conda'
-            'anaconda'
-            'autodock'
-            'autodock-vina'
-            'bioconda-utils'
-            'bamtools'
-            'bedtools'
-            'bioawk'
-            'bowtie2'
-            'bustools'
-            'deeptools'
-            'entrez-direct'
-            'fastqc'
-            'ffq'
-            'fq'
-            'gatk'
-            'gffutils'
-            'gget'
-            'ghostscript'
-            'gseapy'
-            'hisat2'
-            'htseq'
-            'jupyterlab'
-            'kallisto'
-            'multiqc'
-            'nanopolish'
-            'nextflow'
-            'openbb'
-            'salmon'
-            'sambamba'
-            'samtools'
-            'snakefmt'
-            'snakemake'
-            'star'
-        )
-    fi
     if koopa_is_linux
     then
         apps+=(
-            'apptainer'
-            'lmod'
+            'apptainer' # FIXME large.
+            'lmod' # FIXME large.
         )
         if ! koopa_is_aarch64
         then
             apps+=(
-                'aspera-connect'
+                'aspera-connect' # FIXME large.
                 'docker-credential-pass'
             )
         fi
     fi
-
     # Build mamba (experimental).
     apps+=(
         'fmt'
@@ -364,6 +312,65 @@ koopa_install_all_apps() {
         'yaml-cpp'
         # > 'mamba'
     )
+    if [[ "${bool['large']}" -eq 1 ]]
+    then
+        apps+=(
+            'apache-airflow'
+            'apache-spark'
+            'azure-cli'
+            'ensembl-perl-api'
+            'google-cloud-sdk'
+            'gseapy'
+            'haskell-ghcup'
+            'haskell-cabal'
+            'llvm'
+            'julia'
+            'nim'
+        )
+        if ! koopa_is_aarch64
+        then
+            apps+=(
+                'haskell-stack'
+                'hadolint'
+                'pandoc'
+                'agat'
+                'conda'
+                'anaconda'
+                'autodock'
+                'autodock-vina'
+                'bioconda-utils'
+                'bamtools'
+                'bedtools'
+                'bioawk'
+                'bowtie2'
+                'bustools'
+                'deeptools'
+                'entrez-direct'
+                'fastqc'
+                'ffq'
+                'fq'
+                'gatk'
+                'gffutils'
+                'gget'
+                'ghostscript'
+                'hisat2'
+                'htseq'
+                'jupyterlab'
+                'kallisto'
+                'multiqc'
+                'nanopolish'
+                'nextflow'
+                'openbb' # FIXME large.
+                'salmon'
+                'sambamba'
+                'samtools'
+                'snakefmt'
+                'snakemake'
+                'star'
+                'sra-tools'
+            )
+        fi
+    fi
     koopa_add_to_path_start '/usr/local/bin'
     for app_name in "${apps[@]}"
     do
