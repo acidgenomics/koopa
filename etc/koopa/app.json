@@ -39,14 +39,14 @@
     "bin": ["airflow"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2022-12-02",
     "dependencies": ["python"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "outdated": false,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.4.3"
+    "version": "2.5.0"
   },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
@@ -644,13 +644,13 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2022-12-05",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.27.1"
+    "version": "2.27.3"
   },
   "cloudbiolinux": {
     "bin": [],
@@ -1124,7 +1124,7 @@
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "d4ec0d174f884cc6e73470c1ab30be53a77f76ef"
+    "version": "e3a5c46b1f0aa286cb7dc703536314248398a284"
   },
   "du-dust": {
     "aliases": {
@@ -1993,6 +1993,17 @@
     "reverse_dependencies": ["armadillo"],
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.12.2"
+  },
+  "hexyl": {
+    "bin": ["hexyl"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-12-05",
+    "dependencies": ["rust"],
+    "homebrew": true,
+    "man1": [],
+    "url": ["https://github.com/sharkdp/hexyl/"],
+    "version": "0.11.0"
   },
   "hisat2": {
     "bin": ["hisat2"],
@@ -3516,12 +3527,12 @@
     "bin": ["pylint"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-29",
+    "date": "2022-12-05",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.15.7"
+    "version": "2.15.8"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4004,13 +4015,13 @@
     "bin": ["ruff"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2022-12-05",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.117"
+    "version": "0.0.158"
   },
   "rust": {
     "bin": [

@@ -3,23 +3,21 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-11-15.
+    # @note Updated 2022-12-05.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
     #
     # Need to install PCRE libraries before grep.
     # """
-    local app app_name apps dict
+    local app app_name apps bool
     koopa_assert_has_no_args "$#"
     declare -A app
     app['koopa']="$(koopa_locate_koopa)"
     [[ -x "${app['koopa']}" ]] || return 1
-    declare -A dict=(
-        ['blocks']="$(koopa_disk_512k_blocks '/')"
-        ['large']=0
-    )
-    [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
+    declare -A bool
+    bool['large']=0
+    koopa_has_large_system_disk && bool['large']=1
     apps=()
     # Priority -----------------------------------------------------------------
     koopa_is_linux && apps+=('attr')
@@ -127,7 +125,6 @@ koopa_install_all_binary_apps() {
         'gtop'
         'gum'
         'gzip'
-        'hadolint'
         'harfbuzz'
         'hdf5'
         'htop'
@@ -294,6 +291,14 @@ koopa_install_all_binary_apps() {
         'zoxide'
         'zsh'
     )
+    # Architecture-specific ----------------------------------------------------
+    if ! koopa_is_aarch64
+    then
+        apps+=(
+            'hadolint'
+            'pandoc'
+        )
+    fi
     # Platform-specific --------------------------------------------------------
     if koopa_is_linux
     then
@@ -307,52 +312,56 @@ koopa_install_all_binary_apps() {
         )
     fi
     # Large machines only ------------------------------------------------------
-    # NOTE Consider defining these in app.json.
-    if [[ "${dict['large']}" -eq 1 ]]
+    if [[ "${bool['large']}" -eq 1 ]]
     then
         apps+=(
-            'agat'
-            'anaconda'
             'apache-airflow'
             'apache-spark'
             'azure-cli'
-            'bamtools'
-            'bedtools'
-            'bioawk'
-            'bioconda-utils'
-            'bowtie2'
-            'bustools'
-            'deeptools'
             'ensembl-perl-api'
-            'fastqc'
-            'ffq'
-            'gatk'
-            'gffutils'
-            'gget'
             'go'
             'google-cloud-sdk'
             'gseapy'
             'haskell-cabal'
             'haskell-ghcup'
-            'haskell-stack'
-            'hisat2'
-            'htseq'
             'julia'
-            'kallisto'
             'llvm'
-            'multiqc'
-            'nextflow'
             'nim'
-            'openbb'
             'rust'
-            'salmon'
-            'sambamba'
-            'samtools'
-            'snakefmt'
-            'snakemake'
-            'sra-tools'
-            'star'
         )
+        if ! koopa_is_aarch64
+        then
+            apps+=(
+                'agat'
+                'anaconda'
+                'bamtools'
+                'bedtools'
+                'bioawk'
+                'bioconda-utils'
+                'bowtie2'
+                'bustools'
+                'deeptools'
+                'fastqc'
+                'ffq'
+                'gatk'
+                'gffutils'
+                'gget'
+                'haskell-stack'
+                'hisat2'
+                'htseq'
+                'kallisto'
+                'multiqc'
+                'nextflow'
+                'openbb'
+                'salmon'
+                'sambamba'
+                'samtools'
+                'snakefmt'
+                'snakemake'
+                'sra-tools'
+                'star'
+            )
+        fi
     fi
     koopa_add_to_path_start '/usr/local/bin'
     "${app['koopa']}" install 'aws-cli'

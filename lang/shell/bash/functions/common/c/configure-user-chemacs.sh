@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_configure_chemacs() {
+koopa_configure_user_chemacs() {
     # """
-    # Configure chemacs.
-    # @note Updated 2022-07-12.
+    # Configure chemacs for current user.
+    # @note Updated 2022-12-05.
     # """
     local dict
     koopa_assert_has_args_le "$#" 1
