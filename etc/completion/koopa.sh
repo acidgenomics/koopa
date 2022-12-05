@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-11-23.
+    # @note Updated 2022-12-05.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -62,10 +62,10 @@ __koopa_complete() {
                     ;;
                 'configure')
                     args=(
-                        # > 'julia'
-                        # > 'r'
-                        'chemacs'
-                        'dotfiles'
+                        'system'
+                        'user'
+                        # FIXME 'chemacs'
+                        # FIXME 'dotfiles'
                     )
                     ;;
                 'header')
@@ -480,6 +480,21 @@ __koopa_complete() {
             ;;
         '3')
             case "${COMP_WORDS[COMP_CWORD-2]}" in
+                'configure')
+                    case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        'system')
+                            args+=(
+                                'r'
+                            )
+                            ;;
+                        'user')
+                            args+=(
+                                'chemacs'
+                                'dotfiles'
+                            )
+                            ;;
+                        esac
+                    ;;
                 'install' | \
                 'reinstall' | \
                 'uninstall')
