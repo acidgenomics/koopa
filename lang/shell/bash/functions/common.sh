@@ -12946,6 +12946,12 @@ koopa_install_hdf5() {
         "$@"
 }
 
+koopa_install_hexyl() {
+    koopa_install_app \
+        --name='hexyl' \
+        "$@"
+}
+
 koopa_install_hisat2() {
     koopa_install_app \
         --name='hisat2' \
@@ -24275,6 +24281,12 @@ koopa_uninstall_haskell_stack() {
 koopa_uninstall_hdf5() {
     koopa_uninstall_app \
         --name='hdf5' \
+        "$@"
+}
+
+koopa_uninstall_hexyl() {
+    koopa_uninstall_app \
+        --name='hexyl' \
         "$@"
 }
 
