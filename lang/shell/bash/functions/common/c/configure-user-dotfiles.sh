@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_configure_dotfiles() {
+koopa_configure_user_dotfiles() {
     # """
-    # Configure dotfiles.
-    # @note Updated 2022-07-28.
+    # Configure dotfiles for current user.
+    # @note Updated 2022-12-05.
     #
     # This also configures chezmoi to use our koopa managed dotfiles repo.
     #
