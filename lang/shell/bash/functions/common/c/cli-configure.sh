@@ -3,18 +3,26 @@
 koopa_cli_configure() {
     # """
     # Parse user input to 'koopa configure'.
-    # @note Updated 2022-07-14.
+    # @note Updated 2022-12-05.
     #
     # @examples
     # > koopa_cli_configure 'julia' 'r'
     # """
-    local app
+    local app stem
+    stem='configure'
+    case "$1" in
+        'system' | \
+        'user')
+            stem="${stem}-${1}"
+            shift 1
+            ;;
+    esac
     koopa_assert_has_args "$#"
     for app in "$@"
     do
         local dict
         declare -A dict=(
-            ['key']="configure-${app}"
+            ['key']="${stem}-${app}"
         )
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
