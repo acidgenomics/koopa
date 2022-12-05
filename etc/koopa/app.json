@@ -644,13 +644,13 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2022-12-05",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.27.1"
+    "version": "2.27.3"
   },
   "cloudbiolinux": {
     "bin": [],
