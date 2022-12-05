@@ -1994,6 +1994,17 @@
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.12.2"
   },
+  "hexyl": {
+    "bin": ["hexyl"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-12-05",
+    "dependencies": ["rust"],
+    "homebrew": true,
+    "man1": [],
+    "url": ["https://github.com/sharkdp/hexyl/"],
+    "version": "0.11.0"
+  },
   "hisat2": {
     "bin": ["hisat2"],
     "build_dependencies": [],
@@ -3516,12 +3527,12 @@
     "bin": ["pylint"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-29",
+    "date": "2022-12-05",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.15.7"
+    "version": "2.15.8"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4004,13 +4015,13 @@
     "bin": ["ruff"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2022-12-05",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.117"
+    "version": "0.0.158"
   },
   "rust": {
     "bin": [
