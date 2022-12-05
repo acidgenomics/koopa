@@ -197,6 +197,7 @@ __koopa_complete() {
                         'haskell-ghcup'
                         'haskell-stack'
                         'hdf5'
+                        'hexyl'
                         'hisat2'
                         'htop'
                         'htseq'
