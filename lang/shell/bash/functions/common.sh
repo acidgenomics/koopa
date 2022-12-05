@@ -10124,6 +10124,17 @@ koopa_has_file_ext() {
     return 0
 }
 
+koopa_has_large_system_disk() {
+    local dict
+    koopa_assert_has_args_le "$#" 1
+    [[ "${KOOPA_BUILDER:-0}" -eq 1 ]] && return 0
+    declare -A dict
+    dict['disk']="${1:-/}"
+    dict['blocks']="$(koopa_disk_512k_blocks "${dict['disk']}")"
+    [[ "${dict['blocks']}" -ge 500000000 ]] && return 0
+    return 1
+}
+
 koopa_has_monorepo() {
     [[ -d "$(koopa_monorepo_prefix)" ]]
 }
@@ -10955,13 +10966,14 @@ koopa_install_agat() {
 }
 
 koopa_install_all_apps() {
-    local app app_name apps koopa push_apps
+    local app app_name apps bool push_apps
     koopa_assert_has_no_args "$#"
     declare -A app
     app['koopa']="$(koopa_locate_koopa)"
     [[ -x "${app['koopa']}" ]] || return 1
     declare -A bool
-    bool['large']='FIXME'
+    bool['large']=0
+    koopa_has_large_system_disk && bool['large']=1
     apps=()
     apps+=(
         'make'
@@ -11111,7 +11123,6 @@ koopa_install_all_apps() {
         'lz4'
         'man-db'
         'neofetch'
-        'nim'
         'parallel'
         'password-store'
         'taglib'
@@ -11137,13 +11148,10 @@ koopa_install_all_apps() {
     )
     koopa_is_linux && apps+=('elfutils')
     apps+=(
-        'llvm'
         'go'
         'chezmoi'
         'fzf'
         'aws-cli'
-        'azure-cli'
-        'google-cloud-sdk'
         'autoflake'
         'black'
         'bpytop'
@@ -11172,7 +11180,6 @@ koopa_install_all_apps() {
         'nghttp2'
         'node'
         'rust'
-        'julia'
         'bat'
         'broot'
         'delta'
@@ -11212,7 +11219,6 @@ koopa_install_all_apps() {
         'pyenv'
         'rbenv'
         'dotfiles'
-        'ensembl-perl-api'
         'yarn'
         'asdf'
         'bfg'
@@ -11222,69 +11228,21 @@ koopa_install_all_apps() {
         'nmap'
         'rmate'
         'neovim'
-        'apache-airflow'
-        'apache-spark'
         'csvkit'
         'csvtk'
         'vulture'
         'diff-so-fancy'
-        'haskell-ghcup'
-        'haskell-cabal'
     )
-    if ! koopa_is_aarch64
-    then
-        apps+=(
-            'haskell-stack'
-            'hadolint'
-            'pandoc'
-            'agat'
-            'conda'
-            'anaconda' # FIXME large
-            'autodock'
-            'autodock-vina'
-            'bioconda-utils'
-            'bamtools'
-            'bedtools'
-            'bioawk'
-            'bowtie2'
-            'bustools'
-            'deeptools'
-            'entrez-direct'
-            'fastqc'
-            'ffq'
-            'fq'
-            'gatk'
-            'gffutils'
-            'gget'
-            'ghostscript'
-            'gseapy'
-            'hisat2'
-            'htseq'
-            'jupyterlab'
-            'kallisto'
-            'multiqc'
-            'nanopolish'
-            'nextflow'
-            'openbb' # FIXME large.
-            'salmon'
-            'sambamba'
-            'samtools'
-            'snakefmt'
-            'snakemake'
-            'star'
-            'sra-tools'
-        )
-    fi
     if koopa_is_linux
     then
         apps+=(
-            'apptainer'
-            'lmod'
+            'apptainer' # FIXME large.
+            'lmod' # FIXME large.
         )
         if ! koopa_is_aarch64
         then
             apps+=(
-                'aspera-connect'
+                'aspera-connect' # FIXME large.
                 'docker-credential-pass'
             )
         fi
@@ -11302,6 +11260,65 @@ koopa_install_all_apps() {
         'tl-expected'
         'yaml-cpp'
     )
+    if [[ "${bool['large']}" -eq 1 ]]
+    then
+        apps+=(
+            'apache-airflow'
+            'apache-spark'
+            'azure-cli'
+            'ensembl-perl-api'
+            'google-cloud-sdk'
+            'gseapy'
+            'haskell-ghcup'
+            'haskell-cabal'
+            'llvm'
+            'julia'
+            'nim'
+        )
+        if ! koopa_is_aarch64
+        then
+            apps+=(
+                'haskell-stack'
+                'hadolint'
+                'pandoc'
+                'agat'
+                'conda'
+                'anaconda'
+                'autodock'
+                'autodock-vina'
+                'bioconda-utils'
+                'bamtools'
+                'bedtools'
+                'bioawk'
+                'bowtie2'
+                'bustools'
+                'deeptools'
+                'entrez-direct'
+                'fastqc'
+                'ffq'
+                'fq'
+                'gatk'
+                'gffutils'
+                'gget'
+                'ghostscript'
+                'hisat2'
+                'htseq'
+                'jupyterlab'
+                'kallisto'
+                'multiqc'
+                'nanopolish'
+                'nextflow'
+                'openbb' # FIXME large.
+                'salmon'
+                'sambamba'
+                'samtools'
+                'snakefmt'
+                'snakemake'
+                'star'
+                'sra-tools'
+            )
+        fi
+    fi
     koopa_add_to_path_start '/usr/local/bin'
     for app_name in "${apps[@]}"
     do
@@ -11324,16 +11341,14 @@ koopa_install_all_apps() {
 }
 
 koopa_install_all_binary_apps() {
-    local app app_name apps dict
+    local app app_name apps bool
     koopa_assert_has_no_args "$#"
     declare -A app
     app['koopa']="$(koopa_locate_koopa)"
     [[ -x "${app['koopa']}" ]] || return 1
-    declare -A dict=(
-        ['blocks']="$(koopa_disk_512k_blocks '/')"
-        ['large']=0
-    )
-    [[ "${dict['blocks']}" -ge 500000000 ]] && dict['large']=1
+    declare -A bool
+    bool['large']=0
+    koopa_has_large_system_disk && bool['large']=1
     apps=()
     koopa_is_linux && apps+=('attr')
     apps+=(
@@ -11615,7 +11630,7 @@ koopa_install_all_binary_apps() {
             'pinentry'
         )
     fi
-    if [[ "${dict['large']}" -eq 1 ]]
+    if [[ "${bool['large']}" -eq 1 ]]
     then
         apps+=(
             'apache-airflow'
