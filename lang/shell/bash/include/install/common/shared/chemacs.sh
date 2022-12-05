@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Chemacs2.
-    # @note Updated 2022-07-14.
+    # @note Updated 2022-12-05.
     # """
     local dict
     koopa_assert_has_no_args "$#"
@@ -16,6 +16,5 @@ main() {
         --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"
-    koopa_configure_chemacs "${dict['prefix']}"
     return 0
 }
