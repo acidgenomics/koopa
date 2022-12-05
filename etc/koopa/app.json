@@ -39,14 +39,14 @@
     "bin": ["airflow"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2022-12-02",
     "dependencies": ["python"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "outdated": false,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.4.3"
+    "version": "2.5.0"
   },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
