@@ -9,6 +9,8 @@ main() {
     # - https://github.com/gabime/spdlog/
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/spdlog.rb
     # - https://github.com/conda-forge/spdlog-feedstock
+    # - https://raw.githubusercontent.com/archlinux/svntogit-community/
+    #     packages/spdlog/trunk/PKGBUILD
     # """
     local app dict shared_cmake_args
     koopa_assert_has_no_args "$#"
@@ -37,10 +39,19 @@ archive/${dict['file']}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_INSTALL_INCLUDEDIR=include'
         '-DCMAKE_INSTALL_LIBDIR=lib'
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         '-DSPDLOG_BUILD_BENCH=OFF'
         '-DSPDLOG_BUILD_TESTS=ON'
         '-DSPDLOG_FMT_EXTERNAL=ON'
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
+        # FIXME Does adding these harden our build?
+        '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}" # FIXME Take out
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-Wno-dev'
     )
     koopa_print_env
     koopa_dl 'Shared CMake args' "${shared_cmake_args[*]}"

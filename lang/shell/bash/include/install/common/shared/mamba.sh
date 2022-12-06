@@ -48,6 +48,8 @@ main() {
     # - https://man.archlinux.org/man/extra/cmake/cmake-env-variables.7.en
     # - https://github.com/conda-forge/libmamba-feedstock/
     # - https://github.com/conda-forge/conda-libmamba-solver-feedstock/
+    # - https://github.com/Homebrew/brew/blob/3.6.14/Library/
+    #     Homebrew/formula.rb#L1539
     # """
     local app build_deps deps dict shared_cmake_args
     build_deps=(
@@ -66,7 +68,7 @@ main() {
         'pybind11'
         'python'
         'reproc'
-        # > 'spdlog'
+        'spdlog'
         'termcolor'
         'tl-expected'
         'yaml-cpp'
@@ -94,12 +96,11 @@ main() {
         ['pybind11']="$(koopa_app_prefix 'pybind11')"
         ['reproc']="$(koopa_app_prefix 'reproc')"
         ['shared_ext']="$(koopa_shared_ext)"
-        # > ['spdlog']="$(koopa_app_prefix 'spdlog')"
+        ['spdlog']="$(koopa_app_prefix 'spdlog')"
         ['tl-expected']="$(koopa_app_prefix 'tl-expected')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['yaml-cpp']="$(koopa_app_prefix 'yaml-cpp')"
     )
-    # > "${dict['spdlog']}" \
     koopa_assert_is_dir \
         "${dict['curl']}" \
         "${dict['fmt']}" \
@@ -108,6 +109,7 @@ main() {
         "${dict['openssl']}" \
         "${dict['pybind11']}" \
         "${dict['reproc']}" \
+        "${dict['spdlog']}" \
         "${dict['tl-expected']}" \
         "${dict['yaml-cpp']}"
     dict['file']="${dict['version']}.tar.gz"
@@ -118,6 +120,9 @@ tags/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     # > export CC="${app['gcc']}"
     shared_cmake_args=(
+        # FIXME Does this help?
+        "-DCMAKE_PREFIX_PATH=${dict['spdlog']}/lib/cmake/spdlog"
+
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
@@ -144,8 +149,10 @@ tags/${dict['file']}"
 #        "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
 #    )
     koopa_print_env
+    koopa_dl 'Shared CMake args' "${shared_cmake_args[*]}"
     # Step 1: build libmamba.
-    # > -Dspdlog_DIR="${dict['spdlog']}/lib/cmake/spdlog" \
+    # FIXME Our spdlog build from source here is erroring, where as the
+    # homebrew spdlog works correctly....argh.
     "${app['cmake']}" -LH \
         -S . \
         -B 'build-libmamba' \
@@ -166,7 +173,7 @@ libsolv.${dict['shared_ext']}" \
         -Dfmt_DIR="${dict['fmt']}/lib/cmake/fmt" \
         -Dreproc++_DIR="${dict['reproc']}/lib/cmake/reproc++" \
         -Dreproc_DIR="${dict['reproc']}/lib/cmake/reproc" \
-        -Dspdlog_DIR='/usr/local/opt/spdlog/lib/cmake/spdlog' \
+        -Dspdlog_DIR="${dict['spdlog']}/lib/cmake/spdlog" \
         -Dtl-expected_DIR="${dict['tl-expected']}/share/cmake/tl-expected" \
         -Dyaml-cpp_DIR="${dict['yaml-cpp']}/share/cmake/yaml-cpp"
     "${app['cmake']}" \
