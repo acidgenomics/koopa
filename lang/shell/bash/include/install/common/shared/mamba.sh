@@ -16,7 +16,7 @@
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2022-11-07.
+    # @note Updated 2022-12-06.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' here to include yaml-cpp.
     #
@@ -36,6 +36,7 @@ main() {
         'ninja'
     )
     deps=(
+        'cli11'
         'curl'
         'fmt'
         # > 'googletest'

@@ -652,6 +652,19 @@
     "url": ["https://www.chezmoi.io/"],
     "version": "2.27.3"
   },
+  "cli11": {
+    "bin": [],
+    "build_dependencies": ["cmake"],
+    "conservative": true,
+    "date": "2022-12-06",
+    "dependencies": [],
+    "homebrew": true,
+    "man1": [],
+    "outdated": false,
+    "reverse_dependencies": ["mamba"],
+    "url": ["https://github.com/CLIUtils/CLI11/"],
+    "version": "2.3.1"
+  },
   "cloudbiolinux": {
     "bin": [],
     "build_dependencies": [],
@@ -2787,7 +2800,7 @@
     "build_dependencies": ["cmake"],
     "check": false,
     "date": "2022-11-03",
-    "dependencies": ["libarchive", "libsolv", "reproc", "FIXME"],
+    "dependencies": ["cli11", "libarchive", "libsolv", "reproc", "FIXME"],
     "version": "2022.11.01"
   },
   "man-db": {
