@@ -3,11 +3,12 @@
 main() {
     # """
     # Install spdlog.
-    # @note Updated 2022-11-04.
+    # @note Updated 2022-12-06.
     #
     # @seealso
     # - https://github.com/gabime/spdlog/
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/spdlog.rb
+    # - https://github.com/conda-forge/spdlog-feedstock
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
@@ -15,6 +16,7 @@ main() {
     koopa_activate_app 'fmt'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
+        ['ctest']="$(koopa_locate_ctest)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
@@ -37,7 +39,7 @@ archive/${dict['file']}"
         '-DCMAKE_INSTALL_LIBDIR=lib'
         '-DSPDLOG_BUILD_BENCH=OFF'
         '-DSPDLOG_BUILD_SHARED=ON'
-        '-DSPDLOG_BUILD_TESTS=OFF'
+        '-DSPDLOG_BUILD_TESTS=ON'
         '-DSPDLOG_FMT_EXTERNAL=ON'
         # This is mutually exclusive with 'SPDLOG_FMT_EXTERNAL'.
         # > '-DSPDLOG_FMT_EXTERNAL_HO=ON'
@@ -52,6 +54,11 @@ archive/${dict['file']}"
     "${app['cmake']}" \
         --build 'build' \
         --parallel "${dict['jobs']}"
+    "${app['ctest']}" \
+        --parallel "${dict['jobs']}" \
+        --stop-on-failure \
+        --test-dir 'build' \
+        --verbose
     "${app['cmake']}" --install 'build'
     return 0
 }
