@@ -43,6 +43,9 @@ archive/${dict['file']}"
         '-DSPDLOG_BUILD_BENCH=OFF'
         '-DSPDLOG_BUILD_TESTS=ON'
         '-DSPDLOG_FMT_EXTERNAL=ON'
+
+        # FIXME Need to add this: -Dpkg_config_libdir=#{lib}
+
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
         # FIXME Does adding these harden our build?
         '-DCMAKE_BUILD_TYPE=Release'
@@ -51,9 +54,20 @@ archive/${dict['file']}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-Wno-dev'
+        # > '-Wno-dev'
     )
     koopa_print_env
+
+    # FIXME What does 'ENV.cxx11' from Homebrew do?
+    # https://github.com/Homebrew/legacy-homebrew/blob/73a2e7542aa5cf3d8b7bac5bdc5a8330cc1aee5a/Library/Homebrew/extend/ENV/std.rb#L283?
+
+    # FIXME Need a patching step, recommended by Homebrew.
+#    inreplace "include/spdlog/tweakme.h", "// #define SPDLOG_FMT_EXTERNAL", <<~EOS
+#      #ifndef SPDLOG_FMT_EXTERNAL
+#      #define SPDLOG_FMT_EXTERNAL
+#      #endif
+#    EOS
+
     koopa_dl 'Shared CMake args' "${shared_cmake_args[*]}"
     "${app['cmake']}" -LH \
         -S . \
