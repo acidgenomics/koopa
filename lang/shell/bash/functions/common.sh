@@ -11248,6 +11248,7 @@ koopa_install_all_apps() {
         fi
     fi
     apps+=(
+        'cli11'
         'fmt'
         'googletest'
         'libarchive'
@@ -11397,6 +11398,7 @@ koopa_install_all_binary_apps() {
         'cheat'
         'chemacs'
         'chezmoi'
+        'cli11'
         'cmake'
         'colorls'
         'conda'
@@ -11494,6 +11496,7 @@ koopa_install_all_binary_apps() {
         'lz4'
         'lzo'
         'make'
+        'mamba' # FIXME
         'man-db'
         'markdownlint-cli'
         'mcfly'

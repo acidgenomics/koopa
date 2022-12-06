@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-12-05.
+    # @note Updated 2022-12-06.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -76,6 +76,7 @@ koopa_install_all_binary_apps() {
         'cheat'
         'chemacs'
         'chezmoi'
+        'cli11'
         'cmake'
         'colorls'
         'conda'
@@ -173,6 +174,7 @@ koopa_install_all_binary_apps() {
         'lz4'
         'lzo'
         'make'
+        'mamba' # FIXME
         'man-db'
         'markdownlint-cli'
         'mcfly'

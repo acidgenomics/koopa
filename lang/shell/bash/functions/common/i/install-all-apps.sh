@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-12-05.
+    # @note Updated 2022-12-06.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -299,6 +299,7 @@ koopa_install_all_apps() {
     fi
     # Build mamba (experimental).
     apps+=(
+        'cli11'
         'fmt'
         'googletest'
         'libarchive'
@@ -310,7 +311,7 @@ koopa_install_all_apps() {
         'termcolor'
         'tl-expected'
         'yaml-cpp'
-        # > 'mamba'
+        # > 'mamba' # FIXME
     )
     if [[ "${bool['large']}" -eq 1 ]]
     then
