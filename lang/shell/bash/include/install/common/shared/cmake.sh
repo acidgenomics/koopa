@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Do we need to address missing fortran?
+# -- Looking for a Fortran compiler - NOTFOUND
+
 main() {
     # """
     # Install CMake.
