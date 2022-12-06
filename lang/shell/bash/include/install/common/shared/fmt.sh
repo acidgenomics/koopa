@@ -8,6 +8,7 @@ main() {
     # @seealso
     # - https://github.com/fmtlib/fmt
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/fmt.rb
+    # - https://github.com/conda-forge/fmt-feedstock
     # """
     local app dict shared_cmake_args
     koopa_assert_has_no_args "$#"
@@ -29,18 +30,24 @@ tags/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     shared_cmake_args=(
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-        # FIXME Does adding these harden our build?
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_INSTALL_LIBDIR=lib'
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DFMT_DOC=OFF'
+        '-DFMT_INSTALL=ON'
+        '-DFMT_PEDANTIC=ON'
+        '-DFMT_SYSTEM_HEADERS=ON'
+        '-DFMT_TEST=ON'
+        '-DFMT_WERROR=ON'
         '-Wno-dev'
     )
     koopa_print_env
+    # FIXME Consider using make here instead...
     koopa_dl 'Shared CMake args' "${shared_cmake_args[*]}"
     "${app['cmake']}" -LH \
         -S . \
