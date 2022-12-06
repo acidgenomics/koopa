@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME macOS failing at this build step:
+# > [83/106] Linking CXX shared library libmamba/libmamba.2.0.0.dylib
+# > FAILED: libmamba/libmamba.2.0.0.dylib
+
 # FIXME There's a CMake Python location issue on macOS:
 # -- Found Python3: /opt/koopa/app/python3.10/3.10.8/libexec/Python.framework/Versions/3.10/bin/python3.10 (found version "3.10.8")
 # [...]
 # -- Found Python: /Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10 (found version "3.10.8")
-
-# FIXME We're hitting a 'CLI.hpp' linkage error when building micromamba.
-# /tmp/koopa-1000-20221107-083526-IYn1fbXYCS/mamba-2022.11.01/micromamba/src/common_options.hpp:12:10: fatal error: CLI/CLI.hpp: No such file or directory
-#    12 | #include <CLI/CLI.hpp>
 
 # FIXME Consider splitting this out into separate build steps.
 # FIXME Use this later?
@@ -21,8 +21,8 @@ main() {
     # Consider setting 'CMAKE_PREFIX_PATH' here to include yaml-cpp.
     #
     # @seealso
-    # - https://mamba.readthedocs.io/en/latest/installation.html
     # - https://mamba.readthedocs.io/en/latest/developer_zone/build_locally.html
+    # - https://mamba.readthedocs.io/en/latest/installation.html
     # - https://github.com/mamba-org/mamba/blob/main/libmamba/CMakeLists.txt
     # - https://github.com/mamba-org/mamba/blob/main/libmamba/
     #     environment-dev.yml
@@ -30,7 +30,7 @@ main() {
     # - https://github.com/conda-forge/libmamba-feedstock/
     # - https://github.com/conda-forge/conda-libmamba-solver-feedstock/
     # """
-    local app build_deps cmake_args deps dict
+    local app build_deps deps dict shared_cmake_args
     build_deps=(
         # > 'gcc'
         'ninja'
@@ -98,7 +98,7 @@ tags/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     export CC="${app['gcc']}"
-    cmake_args=(
+    shared_cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
@@ -107,47 +107,53 @@ tags/${dict['file']}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-G' 'Ninja'
-        # Mamba build settings -------------------------------------------------
-        '-DBUILD_SHARED=ON'
-        '-DBUILD_LIBMAMBA=ON'
-        '-DBUILD_LIBMAMBAPY=ON'
-        '-DBUILD_LIBMAMBA_TESTS=OFF'
-        '-DBUILD_MAMBA_PACKAGE=ON'
-        '-DBUILD_MICROMAMBA=ON'
-        '-DMICROMAMBA_LINKAGE=DYNAMIC'
-        # Required dependencies ------------------------------------------------
-        "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
-        "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
-        # > "-DGTest_DIR=${dict['googletest']}/lib/cmake/GTest"
-        "-DLibArchive_INCLUDE_DIR=${dict['libarchive']}/include"
-        "-DLibArchive_LIBRARY=${dict['libarchive']}/lib/\
-libarchive.${dict['shared_ext']}"
-        "-DLIBSOLVEXT_LIBRARIES=${dict['libsolv']}/lib/\
-libsolvext.${dict['shared_ext']}"
-        "-DLIBSOLV_LIBRARIES=${dict['libsolv']}/lib/\
-libsolv.${dict['shared_ext']}"
-        "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
-        # Needed for 'libmamba/CMakeLists.txt'.
-        "-DPython3_EXECUTABLE=${app['python']}"
-        # Needed for 'libmambapy/CMakeLists.txt'.
-        "-DPython_EXECUTABLE=${app['python']}"
-        "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
-        "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
-        "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
-        "-Dreproc_DIR=${dict['reproc']}/lib/cmake/reproc"
-        "-Dspdlog_DIR=${dict['spdlog']}/lib/cmake/spdlog"
-        "-Dtl-expected_DIR=${dict['tl-expected']}/share/cmake/tl-expected"
-        "-Dyaml-cpp_DIR=${dict['yaml-cpp']}/share/cmake/yaml-cpp"
     )
+#    cmake_args=(
+#        # Mamba build settings -------------------------------------------------
+#        '-DBUILD_SHARED=ON'
+#        '-DBUILD_LIBMAMBA=ON'
+#        '-DBUILD_LIBMAMBAPY=ON'
+#        '-DBUILD_LIBMAMBA_TESTS=OFF'
+#        '-DBUILD_MAMBA_PACKAGE=ON'
+#        '-DBUILD_MICROMAMBA=ON'
+#        '-DMICROMAMBA_LINKAGE=DYNAMIC'
+#        # Required dependencies ------------------------------------------------
+#        "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
+#        "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
+#        # > "-DGTest_DIR=${dict['googletest']}/lib/cmake/GTest"
+#        # Needed for 'libmamba/CMakeLists.txt'.
+#        "-DPython3_EXECUTABLE=${app['python']}"
+#        # Needed for 'libmambapy/CMakeLists.txt'.
+#        "-DPython_EXECUTABLE=${app['python']}"
+#        "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
+#    )
     koopa_print_env
-    koopa_dl "CMake args" "${cmake_args[*]}"
+    # Step 1: build libmamba.
+    # FIXME This is having a linker issue.
+    # ld: symbol(s) not found for architecture x86_64
     "${app['cmake']}" -LH \
         -S . \
-        -B 'build' \
-        "${cmake_args[@]}"
+        -B 'build-libmamba' \
+        "${shared_cmake_args[@]}" \
+        -DBUILD_LIBMAMBA='ON' \
+        -DBUILD_SHARED='ON' \
+        -DLibArchive_INCLUDE_DIR="${dict['libarchive']}/include" \
+        -DLibArchive_LIBRARY="${dict['libarchive']}/lib/\
+libarchive.${dict['shared_ext']}" \
+        -DLIBSOLVEXT_LIBRARIES="${dict['libsolv']}/lib/\
+libsolvext.${dict['shared_ext']}" \
+        -DLIBSOLV_LIBRARIES="${dict['libsolv']}/lib/\
+libsolv.${dict['shared_ext']}" \
+        -DOPENSSL_ROOT_DIR="${dict['openssl']}" \
+        -Dfmt_DIR="${dict['fmt']}/lib/cmake/fmt" \
+        -Dreproc++_DIR="${dict['reproc']}/lib/cmake/reproc++" \
+        -Dreproc_DIR="${dict['reproc']}/lib/cmake/reproc" \
+        -Dspdlog_DIR="${dict['spdlog']}/lib/cmake/spdlog" \
+        -Dtl-expected_DIR="${dict['tl-expected']}/share/cmake/tl-expected" \
+        -Dyaml-cpp_DIR="${dict['yaml-cpp']}/share/cmake/yaml-cpp"
     "${app['cmake']}" \
-        --build 'build' \
+        --build 'build-libmamba' \
         --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'build'
+    "${app['cmake']}" --install 'build-libmamba'
     return 0
 }
