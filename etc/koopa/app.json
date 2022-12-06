@@ -679,7 +679,7 @@
     "version": "92543c4a7acc6550265d90f91cceb4481a448248"
   },
   "cmake": {
-    "bin": ["cmake"],
+    "bin": ["ccmake", "cmake", "cpack", "ctest"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-11-08",
@@ -688,7 +688,7 @@
     "man1": [],
     "outdated": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.24.3"
+    "version": "3.25.1"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -2796,7 +2796,7 @@
     "version": "4.4"
   },
   "mamba": {
-    "bin": ["micromamba"],
+    "bin": [],
     "build_dependencies": ["cmake"],
     "check": false,
     "date": "2022-11-03",

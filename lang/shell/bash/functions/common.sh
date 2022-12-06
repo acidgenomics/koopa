@@ -16391,6 +16391,13 @@ koopa_locate_cpan() {
         "$@"
 }
 
+koopa_locate_ctest() {
+    koopa_locate_app \
+        --app-name='cmake' \
+        --bin-name='ctest' \
+        "$@"
+}
+
 koopa_locate_curl() {
     koopa_locate_app \
         --app-name='curl' \
