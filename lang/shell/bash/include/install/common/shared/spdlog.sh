@@ -41,25 +41,23 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     shared_cmake_args=(
+        # > "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        # > '-Dpkg_config_libdir=lib'
+        # > '-Wno-dev'
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_INSTALL_INCLUDEDIR=include'
         '-DCMAKE_INSTALL_LIBDIR=lib'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DSPDLOG_BUILD_BENCH=OFF'
         '-DSPDLOG_BUILD_TESTS=ON'
         '-DSPDLOG_FMT_EXTERNAL=ON'
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
-        '-Dpkg_config_libdir=lib'
-        # > '-Wno-dev'
     )
     koopa_print_env
-    # FIXME What does 'ENV.cxx11' from Homebrew do?
-    # https://github.com/Homebrew/legacy-homebrew/blob/73a2e7542aa5cf3d8b7bac5bdc5a8330cc1aee5a/Library/Homebrew/extend/ENV/std.rb#L283?
     # Patch diff created with:
     # > diff -u 'tweakme.h' 'tweakme.h-1' > 'patch-tweakme.patch'
     "${app['cat']}" << END > 'patch-tweakme.patch'
