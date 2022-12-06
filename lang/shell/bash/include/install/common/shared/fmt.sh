@@ -15,8 +15,10 @@ main() {
     koopa_activate_app --build-only 'cmake'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
+        ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='fmt'
@@ -44,29 +46,27 @@ tags/${dict['file']}"
         '-DFMT_SYSTEM_HEADERS=ON'
         '-DFMT_TEST=ON'
         '-DFMT_WERROR=ON'
-        '-Wno-dev'
     )
     koopa_print_env
-    # FIXME Consider using make here instead...
     koopa_dl 'Shared CMake args' "${shared_cmake_args[*]}"
     "${app['cmake']}" -LH \
         -S . \
         -B 'build-shared' \
         "${shared_cmake_args[@]}" \
         -DBUILD_SHARED_LIBS='TRUE'
-    "${app['cmake']}" \
-        --build 'build-shared' \
-        --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'build-shared'
+    "${app['make']}" \
+        --directory='build-shared' \
+        --jobs="${dict['jobs']}" \
+        install
     "${app['cmake']}" -LH \
         -S . \
         -B 'build-static' \
         "${shared_cmake_args[@]}" \
         -DBUILD_SHARED_LIBS='FALSE'
-    "${app['cmake']}" \
-        --build 'build-static' \
-        --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'build-static'
+    "${app['make']}" \
+        --directory='build-static' \
+        --jobs="${dict['jobs']}" \
+        install
     koopa_assert_is_file "${dict['prefix']}/lib/libfmt.a"
     return 0
 }
