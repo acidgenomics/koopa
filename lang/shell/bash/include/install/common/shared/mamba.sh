@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME macOS failing at this build step:
-# > [83/106] Linking CXX shared library libmamba/libmamba.2.0.0.dylib
-# > FAILED: libmamba/libmamba.2.0.0.dylib
-
 # FIXME There's a CMake Python location issue on macOS:
 # -- Found Python3: /opt/koopa/app/python3.10/3.10.8/libexec/Python.framework/Versions/3.10/bin/python3.10 (found version "3.10.8")
 # [...]
@@ -12,6 +8,29 @@
 # FIXME Consider splitting this out into separate build steps.
 # FIXME Use this later?
 # > "-Dlibmamba_DIR=${dict['prefix']}/share/cmake/libmamba"
+
+# FIXME We seem to be hitting issues related to spdlog...
+# [100%] Linking CXX shared library libmamba.dylib
+# Undefined symbols for architecture x86_64:
+#   "spdlog::dump_backtrace()", referenced from:
+#       mamba::mamba_error::mamba_error(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, mamba::mamba_error_code) in error_handling.cpp.o
+#       mamba::mamba_error::mamba_error(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, mamba::mamba_error_code) in error_handling.cpp.o
+#       mamba::mamba_error::mamba_error(char const*, mamba::mamba_error_code) in error_handling.cpp.o
+#       mamba::mamba_error::mamba_error(char const*, mamba::mamba_error_code) in error_handling.cpp.o
+#       mamba::mamba_error::mamba_error(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, mamba::mamba_error_code, std::__1::any&&) in error_handling.cpp.o
+#       mamba::mamba_error::mamba_error(char const*, mamba::mamba_error_code, std::__1::any&&) in error_handling.cpp.o
+#       mamba::make_unexpected(char const*, mamba::mamba_error_code) in error_handling.cpp.o
+#       ...
+#   "spdlog::register_logger(std::__1::shared_ptr<spdlog::logger>)", referenced from:
+#       mamba::Context::Context() in context.cpp.o
+#   "spdlog::enable_backtrace(unsigned long)", referenced from:
+#       mamba::Configuration::load() in configuration.cpp.o
+#   "spdlog::disable_backtrace()", referenced from:
+#       mamba::Configuration::load() in configuration.cpp.o
+
+# FIXME macOS failing at this build step with our GCC:
+# > [83/106] Linking CXX shared library libmamba/libmamba.2.0.0.dylib
+# > FAILED: libmamba/libmamba.2.0.0.dylib
 
 main() {
     # """
@@ -56,7 +75,7 @@ main() {
     koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
-        ['gcc']="$(koopa_locate_gcc)"
+        # > ['gcc']="$(koopa_locate_gcc)"
         ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
@@ -97,7 +116,7 @@ tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    export CC="${app['gcc']}"
+    # > export CC="${app['gcc']}"
     shared_cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_BUILD_TYPE=Release'
@@ -106,7 +125,7 @@ tags/${dict['file']}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-G' 'Ninja'
+        # > '-G' 'Ninja'
     )
 #    cmake_args=(
 #        # Mamba build settings -------------------------------------------------
