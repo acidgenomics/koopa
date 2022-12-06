@@ -120,9 +120,6 @@ tags/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     # > export CC="${app['gcc']}"
     shared_cmake_args=(
-        # FIXME Does this help?
-        "-DCMAKE_PREFIX_PATH=${dict['spdlog']}/lib/cmake/spdlog"
-
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
