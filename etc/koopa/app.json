@@ -2800,7 +2800,14 @@
     "build_dependencies": ["cmake"],
     "check": false,
     "date": "2022-11-03",
-    "dependencies": ["cli11", "libarchive", "libsolv", "reproc", "FIXME"],
+    "dependencies": [
+      "cli11",
+      "libarchive",
+      "libsolv",
+      "reproc",
+      "spdlog",
+      "FIXME"
+    ],
     "version": "2022.11.01"
   },
   "man-db": {
@@ -4241,9 +4248,11 @@
   },
   "spdlog": {
     "bin": [],
-    "build_dependencies": ["cmake", "pkg-config"],
+    "build_dependencies": ["cmake", "patch", "pkg-config"],
+    "conservative": true,
     "date": "2022-11-04",
     "man1": [],
+    "outdated": false,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.11.0"
