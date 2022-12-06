@@ -240,7 +240,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.8.12"
+    "version": "2.9.4"
   },
   "azure-cli": {
     "bin": ["az"],
@@ -3754,7 +3754,7 @@
     "conservative": false,
     "build_dependencies": [],
     "check": false,
-    "date": "2022-11-08",
+    "date": "2022-12-05",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -3829,7 +3829,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "83316"
+    "version": "83405"
   },
   "r-gfortran": {
     "bin": [],
