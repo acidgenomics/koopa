@@ -12515,6 +12515,12 @@ koopa_install_chezmoi() {
         "$@"
 }
 
+koopa_install_cli11() {
+    koopa_install_app \
+        --name='cli11' \
+        "$@"
+}
+
 koopa_install_cmake() {
     koopa_install_app \
         --name='cmake' \
@@ -23852,6 +23858,12 @@ koopa_uninstall_chemacs() {
 koopa_uninstall_chezmoi() {
     koopa_uninstall_app \
         --name='chezmoi' \
+        "$@"
+}
+
+koopa_uninstall_cli11() {
+    koopa_uninstall_app \
+        --name='cli11' \
         "$@"
 }
 
