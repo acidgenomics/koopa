@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-11-09.
+    # @note Updated 2022-12-07.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -108,12 +108,16 @@ __koopa_activate_koopa() {
     fi
     case "$(koopa_shell_name)" in
         'zsh')
-            alias conda='koopa_alias_conda'
+            [ -x "${KOOPA_PREFIX}/bin/conda" ] && \
+                alias conda='koopa_alias_conda'
+            [ -x "${KOOPA_PREFIX}/bin/mamba" ] && \
+                alias mamba='koopa_alias_mamba'
             ;;
         *)
             koopa_activate_conda || return 1
             ;;
     esac
+    koopa_activate_micromamba || return 1
     # Previously included:
     # > "$(koopa_xdg_local_home)/bin"
     koopa_add_to_path_start \
@@ -122,8 +126,8 @@ __koopa_activate_koopa() {
     if ! koopa_is_subshell
     then
         koopa_add_config_link \
-            "$(koopa_koopa_prefix)" 'home' \
-            "$(koopa_koopa_prefix)/activate" 'activate' \
+            "$KOOPA_PREFIX" 'home' \
+            "${KOOPA_PREFIX}/activate" 'activate' \
             "$(koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
         koopa_activate_today_bucket || return 1
