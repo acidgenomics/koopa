@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2022-09-10.
+    # @note Updated 2022-12-07.
     #
     # @section curl:
     #
@@ -29,7 +29,7 @@ koopa_download() {
     declare -A bool=(
         ['decompress']=0
         ['extract']=0
-        ['progress']=0
+        ['progress']=1
     )
     declare -A dict=(
         ['engine']='curl'
