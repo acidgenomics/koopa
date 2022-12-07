@@ -3,7 +3,7 @@
 main() {
     # """
     # Install spdlog.
-    # @note Updated 2022-12-06.
+    # @note Updated 2022-12-07.
     #
     # @seealso
     # - https://github.com/gabime/spdlog/
@@ -94,20 +94,21 @@ END
         --test-dir 'build-shared' \
         --verbose
     "${app['cmake']}" --install 'build-shared'
-    "${app['cmake']}" -LH \
-        -S . \
-        -B 'build-static' \
-        "${shared_cmake_args[@]}" \
-        -DSPDLOG_BUILD_SHARED='OFF'
-    "${app['cmake']}" \
-        --build 'build-static' \
-        --parallel "${dict['jobs']}"
-    "${app['ctest']}" \
-        --parallel "${dict['jobs']}" \
-        --stop-on-failure \
-        --test-dir 'build-static' \
-        --verbose
-    "${app['cmake']}" --install 'build-static'
-    koopa_assert_is_file "${dict['prefix']}/lib/libspdlog.a"
+    # Static build isn't necessary, and can have build issues on Linux ARM.
+    # > "${app['cmake']}" -LH \
+    # >     -S . \
+    # >     -B 'build-static' \
+    # >     "${shared_cmake_args[@]}" \
+    # >     -DSPDLOG_BUILD_SHARED='OFF'
+    # > "${app['cmake']}" \
+    # >     --build 'build-static' \
+    # >     --parallel "${dict['jobs']}"
+    # > "${app['ctest']}" \
+    # >     --parallel "${dict['jobs']}" \
+    # >     --stop-on-failure \
+    # >     --test-dir 'build-static' \
+    # >     --verbose
+    # > "${app['cmake']}" --install 'build-static'
+    # > koopa_assert_is_file "${dict['prefix']}/lib/libspdlog.a"
     return 0
 }
