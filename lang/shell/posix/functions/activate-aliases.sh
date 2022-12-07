@@ -3,7 +3,7 @@
 koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-10-18.
+    # @note Updated 2022-12-07.
     # """
     local file
     koopa_activate_coreutils_aliases
@@ -22,6 +22,8 @@ koopa_activate_aliases() {
     alias c='clear'
     alias cls='koopa_alias_colorls'
     alias cm='chezmoi'
+    # Defining this conditionally in POSIX header instead.
+    # > alias conda='koopa_alias_mamba'
     alias d='clear; cd -; l'
     alias doom-emacs='koopa_doom_emacs'
     alias e='exit'
@@ -45,7 +47,8 @@ koopa_activate_aliases() {
     alias lh='l | head'
     alias ll='la -l'
     alias lt='l | tail'
-    alias mamba='koopa_alias_mamba'
+    # Defining this conditionally in POSIX header instead.
+    # > alias mamba='koopa_alias_mamba'
     alias nvim-fzf='koopa_alias_nvim_fzf'
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
     alias prelude-emacs='koopa_prelude_emacs'
