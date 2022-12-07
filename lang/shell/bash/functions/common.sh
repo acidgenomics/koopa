@@ -7196,7 +7196,7 @@ koopa_download() {
     declare -A bool=(
         ['decompress']=0
         ['extract']=0
-        ['progress']=0
+        ['progress']=1
     )
     declare -A dict=(
         ['engine']='curl'
@@ -11248,6 +11248,7 @@ koopa_install_all_apps() {
         fi
     fi
     apps+=(
+        'cli11'
         'fmt'
         'googletest'
         'libarchive'
@@ -11397,6 +11398,7 @@ koopa_install_all_binary_apps() {
         'cheat'
         'chemacs'
         'chezmoi'
+        'cli11'
         'cmake'
         'colorls'
         'conda'
@@ -11494,6 +11496,7 @@ koopa_install_all_binary_apps() {
         'lz4'
         'lzo'
         'make'
+        'mamba' # FIXME
         'man-db'
         'markdownlint-cli'
         'mcfly'
@@ -12512,6 +12515,12 @@ koopa_install_chemacs() {
 koopa_install_chezmoi() {
     koopa_install_app \
         --name='chezmoi' \
+        "$@"
+}
+
+koopa_install_cli11() {
+    koopa_install_app \
+        --name='cli11' \
         "$@"
 }
 
@@ -16379,6 +16388,13 @@ koopa_locate_cpan() {
     koopa_locate_app \
         --app-name='perl' \
         --bin-name='cpan' \
+        "$@"
+}
+
+koopa_locate_ctest() {
+    koopa_locate_app \
+        --app-name='cmake' \
+        --bin-name='ctest' \
         "$@"
 }
 
@@ -23852,6 +23868,12 @@ koopa_uninstall_chemacs() {
 koopa_uninstall_chezmoi() {
     koopa_uninstall_app \
         --name='chezmoi' \
+        "$@"
+}
+
+koopa_uninstall_cli11() {
+    koopa_uninstall_app \
+        --name='cli11' \
         "$@"
 }
 

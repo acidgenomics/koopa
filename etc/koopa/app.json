@@ -240,7 +240,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.8.12"
+    "version": "2.9.4"
   },
   "azure-cli": {
     "bin": ["az"],
@@ -652,6 +652,19 @@
     "url": ["https://www.chezmoi.io/"],
     "version": "2.27.3"
   },
+  "cli11": {
+    "bin": [],
+    "build_dependencies": ["cmake"],
+    "conservative": true,
+    "date": "2022-12-06",
+    "dependencies": [],
+    "homebrew": true,
+    "man1": [],
+    "outdated": false,
+    "reverse_dependencies": ["mamba"],
+    "url": ["https://github.com/CLIUtils/CLI11/"],
+    "version": "2.3.1"
+  },
   "cloudbiolinux": {
     "bin": [],
     "build_dependencies": [],
@@ -666,7 +679,7 @@
     "version": "92543c4a7acc6550265d90f91cceb4481a448248"
   },
   "cmake": {
-    "bin": ["cmake"],
+    "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-11-08",
@@ -675,7 +688,7 @@
     "man1": [],
     "outdated": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.24.3"
+    "version": "3.25.1"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -2785,9 +2798,30 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake"],
-    "check": false,
-    "date": "2022-11-03",
-    "dependencies": ["libarchive", "libsolv", "reproc", "FIXME"],
+    "conservative": true,
+    "date": "2022-12-07",
+    "dependencies": [
+      "cli11",
+      "curl",
+      "fmt",
+      "libarchive",
+      "libsolv",
+      "nlohmann-json",
+      "openssl3",
+      "pybind11",
+      "python",
+      "reproc",
+      "spdlog",
+      "termcolor",
+      "tl-expected",
+      "yaml-cpp"
+    ],
+    "man1": [],
+    "outdated": false,
+    "url": [
+      "https://mamba.readthedocs.io/",
+      "https://github.com/mamba-org/mamba"
+    ],
     "version": "2022.11.01"
   },
   "man-db": {
@@ -3412,12 +3446,12 @@
     "bin": ["prettier"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-23",
+    "date": "2022-12-07",
     "dependencies": ["node"],
     "homebrew": true,
     "man1": [],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "2.8.0"
+    "version": "2.8.1"
   },
   "procs": {
     "bin": ["procs"],
@@ -3754,7 +3788,7 @@
     "conservative": false,
     "build_dependencies": [],
     "check": false,
-    "date": "2022-11-08",
+    "date": "2022-12-05",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -3829,7 +3863,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "83316"
+    "version": "83405"
   },
   "r-gfortran": {
     "bin": [],
@@ -4228,9 +4262,11 @@
   },
   "spdlog": {
     "bin": [],
-    "build_dependencies": ["cmake", "pkg-config"],
+    "build_dependencies": ["cmake", "patch", "pkg-config"],
+    "conservative": true,
     "date": "2022-11-04",
     "man1": [],
+    "outdated": false,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.11.0"
