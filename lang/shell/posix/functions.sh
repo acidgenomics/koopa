@@ -276,7 +276,6 @@ koopa_activate_conda() {
         conda deactivate
     fi
     [ "$nounset" -eq 1 ] && set -o nounset
-    [ -z "${MAMBA_NO_BANNER:-}" ] && export MAMBA_NO_BANNER=1
     return 0
 }
 
