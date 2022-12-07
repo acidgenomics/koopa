@@ -4,9 +4,6 @@ koopa_activate_conda() {
     # """
     # Activate conda using 'activate' script.
     # @note Updated 2022-12-07.
-    #
-    # @seealso
-    # - https://github.com/mamba-org/mamba/issues/984
     # """
     local nounset prefix
     prefix="${1:-}"
@@ -27,7 +24,5 @@ koopa_activate_conda() {
         conda deactivate
     fi
     [ "$nounset" -eq 1 ] && set -o nounset
-    # Suppress mamba ASCII banner.
-    # > [ -z "${MAMBA_NO_BANNER:-}" ] && export MAMBA_NO_BANNER=1
     return 0
 }

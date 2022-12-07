@@ -127,7 +127,6 @@ koopa_activate_aliases() {
     alias lh='l | head'
     alias ll='la -l'
     alias lt='l | tail'
-    alias mamba='koopa_alias_mamba'
     alias nvim-fzf='koopa_alias_nvim_fzf'
     alias nvim-vanilla='koopa_alias_nvim_vanilla'
     alias prelude-emacs='koopa_prelude_emacs'
@@ -571,6 +570,14 @@ koopa_activate_mcfly() {
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$(mcfly init "$shell")"
     [ "$nounset" -eq 1 ] && set -o nounset
+    return 0
+}
+
+koopa_activate_micromamba() {
+    if [ -z "${MAMBA_ROOT_PREFIX:-}" ]
+    then
+        export MAMBA_ROOT_PREFIX="${HOME:?}/.mamba"
+    fi
     return 0
 }
 
