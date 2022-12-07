@@ -679,7 +679,7 @@
     "version": "92543c4a7acc6550265d90f91cceb4481a448248"
   },
   "cmake": {
-    "bin": ["ccmake", "cmake", "cpack", "ctest"],
+    "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-11-08",

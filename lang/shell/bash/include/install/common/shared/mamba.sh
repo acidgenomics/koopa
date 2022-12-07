@@ -8,6 +8,7 @@ main() {
     # Consider setting 'CMAKE_PREFIX_PATH' here to include yaml-cpp.
     #
     # @seealso
+    # - https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html
     # - https://mamba.readthedocs.io/en/latest/developer_zone/build_locally.html
     # - https://mamba.readthedocs.io/en/latest/installation.html
     # - https://github.com/mamba-org/mamba/blob/main/libmamba/CMakeLists.txt
