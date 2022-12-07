@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Switch this back to cmake install, rather than using make...
-
 main() {
     # """
     # Install fmt library.
-    # @note Updated 2022-12-06.
+    # @note Updated 2022-12-07.
     #
     # @seealso
     # - https://github.com/fmtlib/fmt
@@ -58,15 +56,16 @@ tags/${dict['file']}"
         --build 'build-shared' \
         --parallel "${dict['jobs']}"
     "${app['cmake']}" --install 'build-shared'
-    "${app['cmake']}" -LH \
-        -S . \
-        -B 'build-static' \
-        "${shared_cmake_args[@]}" \
-        -DBUILD_SHARED_LIBS='FALSE'
-    "${app['cmake']}" \
-        --build 'build-static' \
-        --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'build-static'
-    koopa_assert_is_file "${dict['prefix']}/lib/libfmt.a"
+    # Static build isn't necessary and can have build issues on Linux ARM.
+    # > "${app['cmake']}" -LH \
+    # >     -S . \
+    # >     -B 'build-static' \
+    # >     "${shared_cmake_args[@]}" \
+    # >     -DBUILD_SHARED_LIBS='FALSE'
+    # > "${app['cmake']}" \
+    # >     --build 'build-static' \
+    # >     --parallel "${dict['jobs']}"
+    # > "${app['cmake']}" --install 'build-static'
+    # > koopa_assert_is_file "${dict['prefix']}/lib/libfmt.a"
     return 0
 }
