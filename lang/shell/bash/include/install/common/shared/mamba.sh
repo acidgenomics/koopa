@@ -3,7 +3,7 @@
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2022-12-06.
+    # @note Updated 2022-12-07.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' here to include yaml-cpp.
     #
@@ -95,9 +95,9 @@ tags/${dict['file']}"
         # Mamba build settings -------------------------------------------------
         '-DBUILD_SHARED=ON'
         '-DBUILD_LIBMAMBA=ON'
-        '-DBUILD_LIBMAMBAPY=ON'
+        '-DBUILD_LIBMAMBAPY=OFF'
         '-DBUILD_LIBMAMBA_TESTS=OFF'
-        '-DBUILD_MAMBA_PACKAGE=ON'
+        '-DBUILD_MAMBA_PACKAGE=OFF'
         '-DBUILD_MICROMAMBA=ON'
         '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
@@ -114,7 +114,7 @@ libsolv.${dict['shared_ext']}" \
         # Needed for 'libmamba/CMakeLists.txt'.
         "-DPython3_EXECUTABLE=${app['python']}"
         # Needed for 'libmambapy/CMakeLists.txt'.
-        "-DPython_EXECUTABLE=${app['python']}"
+        # > "-DPython_EXECUTABLE=${app['python']}"
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
         "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
         "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
