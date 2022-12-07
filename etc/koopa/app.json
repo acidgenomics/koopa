@@ -2796,17 +2796,31 @@
     "version": "4.4"
   },
   "mamba": {
-    "bin": [],
+    "bin": ["micromamba"],
     "build_dependencies": ["cmake"],
-    "check": false,
-    "date": "2022-11-03",
+    "conservative": true,
+    "date": "2022-12-07",
     "dependencies": [
       "cli11",
+      "curl",
+      "fmt",
       "libarchive",
       "libsolv",
+      "nlohmann-json",
+      "openssl3",
+      "pybind11",
+      "python",
       "reproc",
       "spdlog",
-      "FIXME"
+      "termcolor",
+      "tl-expected",
+      "yaml-cpp"
+    ],
+    "man1": [],
+    "outdated": false,
+    "url": [
+      "https://mamba.readthedocs.io/",
+      "https://github.com/mamba-org/mamba"
     ],
     "version": "2022.11.01"
   },
