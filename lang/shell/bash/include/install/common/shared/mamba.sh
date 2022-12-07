@@ -1,44 +1,31 @@
 #!/usr/bin/env bash
 
-# FIXME There's a CMake Python location issue on macOS:
-# -- Found Python3: /opt/koopa/app/python3.10/3.10.8/libexec/Python.framework/Versions/3.10/bin/python3.10 (found version "3.10.8")
-# [...]
-# -- Found Python: /Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10 (found version "3.10.8")
-
-# FIXME We're hitting a 'CLI.hpp' linkage error when building micromamba.
-# /tmp/koopa-1000-20221107-083526-IYn1fbXYCS/mamba-2022.11.01/micromamba/src/common_options.hpp:12:10: fatal error: CLI/CLI.hpp: No such file or directory
-#    12 | #include <CLI/CLI.hpp>
-
-# FIXME Consider splitting this out into separate build steps.
-# FIXME Use this later?
-# > "-Dlibmamba_DIR=${dict['prefix']}/share/cmake/libmamba"
-
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2022-11-07.
+    # @note Updated 2022-12-07.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' here to include yaml-cpp.
     #
     # @seealso
-    # - https://mamba.readthedocs.io/en/latest/installation.html
+    # - https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html
     # - https://mamba.readthedocs.io/en/latest/developer_zone/build_locally.html
+    # - https://mamba.readthedocs.io/en/latest/installation.html
     # - https://github.com/mamba-org/mamba/blob/main/libmamba/CMakeLists.txt
     # - https://github.com/mamba-org/mamba/blob/main/libmamba/
     #     environment-dev.yml
     # - https://man.archlinux.org/man/extra/cmake/cmake-env-variables.7.en
     # - https://github.com/conda-forge/libmamba-feedstock/
     # - https://github.com/conda-forge/conda-libmamba-solver-feedstock/
+    # - https://github.com/Homebrew/brew/blob/3.6.14/Library/
+    #     Homebrew/formula.rb#L1539
     # """
     local app build_deps cmake_args deps dict
-    build_deps=(
-        # > 'gcc'
-        'ninja'
-    )
+    build_deps=('ninja')
     deps=(
+        'cli11'
         'curl'
         'fmt'
-        # > 'googletest'
         'libarchive'
         'libsolv'
         'nlohmann-json'
@@ -46,7 +33,8 @@ main() {
         'pybind11'
         'python'
         'reproc'
-        'spdlog'
+        # NOTE Enabling spdlog here currently causes a cryptic linker error.
+        # > 'spdlog'
         'termcolor'
         'tl-expected'
         'yaml-cpp'
@@ -55,16 +43,13 @@ main() {
     koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
-        ['gcc']="$(koopa_locate_gcc)"
         ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
-    # > [[ -x "${app['gcc']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['curl']="$(koopa_app_prefix 'curl')"
         ['fmt']="$(koopa_app_prefix 'fmt')"
-        # > ['googletest']="$(koopa_app_prefix 'googletest')"
         ['jobs']="$(koopa_cpu_count)"
         ['libarchive']="$(koopa_app_prefix 'libarchive')"
         ['libsolv']="$(koopa_app_prefix 'libsolv')"
@@ -96,40 +81,41 @@ tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    export CC="${app['gcc']}"
     cmake_args=(
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-G' 'Ninja'
+        # > -Wno-dev
         # Mamba build settings -------------------------------------------------
         '-DBUILD_SHARED=ON'
         '-DBUILD_LIBMAMBA=ON'
-        '-DBUILD_LIBMAMBAPY=ON'
+        '-DBUILD_LIBMAMBAPY=OFF'
         '-DBUILD_LIBMAMBA_TESTS=OFF'
-        '-DBUILD_MAMBA_PACKAGE=ON'
+        '-DBUILD_MAMBA_PACKAGE=OFF'
         '-DBUILD_MICROMAMBA=ON'
         '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
-        # > "-DGTest_DIR=${dict['googletest']}/lib/cmake/GTest"
-        "-DLibArchive_INCLUDE_DIR=${dict['libarchive']}/include"
+        "-DLibArchive_INCLUDE_DIR=${dict['libarchive']}/include" \
         "-DLibArchive_LIBRARY=${dict['libarchive']}/lib/\
-libarchive.${dict['shared_ext']}"
+libarchive.${dict['shared_ext']}" \
         "-DLIBSOLVEXT_LIBRARIES=${dict['libsolv']}/lib/\
-libsolvext.${dict['shared_ext']}"
+libsolvext.${dict['shared_ext']}" \
         "-DLIBSOLV_LIBRARIES=${dict['libsolv']}/lib/\
-libsolv.${dict['shared_ext']}"
+libsolv.${dict['shared_ext']}" \
         "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
         # Needed for 'libmamba/CMakeLists.txt'.
         "-DPython3_EXECUTABLE=${app['python']}"
         # Needed for 'libmambapy/CMakeLists.txt'.
-        "-DPython_EXECUTABLE=${app['python']}"
+        # > "-DPython_EXECUTABLE=${app['python']}"
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
         "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
         "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
@@ -139,7 +125,7 @@ libsolv.${dict['shared_ext']}"
         "-Dyaml-cpp_DIR=${dict['yaml-cpp']}/share/cmake/yaml-cpp"
     )
     koopa_print_env
-    koopa_dl "CMake args" "${cmake_args[*]}"
+    koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
         -S . \
         -B 'build' \
