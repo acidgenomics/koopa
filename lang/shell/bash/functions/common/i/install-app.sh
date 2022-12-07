@@ -4,6 +4,8 @@
 # - koopa_install_shared_app
 # - koopa_install_system_app
 # - koopa_install_user_app
+# FIXME Add an option, such as '--no-cleanup' to not delete the build in the
+# temporary directory. Potentially useful for debugging.
 
 koopa_install_app() {
     # """
