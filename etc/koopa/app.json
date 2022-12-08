@@ -3598,15 +3598,15 @@
   },
   "python": {
     "bin": ["python", "python3"],
-    "date": "2022-10-28",
+    "date": "2022-12-08",
     "man1": ["python.1", "python3.1"],
-    "version": "3.10.8"
+    "version": "3.10.9"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-10-28",
+    "date": "2022-12-08",
     "dependencies": [
       "bzip2",
       "expat",
@@ -3675,13 +3675,13 @@
       "llvm"
     ],
     "url": ["https://www.python.org/"],
-    "version": "3.10.8"
+    "version": "3.10.9"
   },
   "python3.11": {
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-10-28",
+    "date": "2022-12-08",
     "dependencies": [
       "bzip2",
       "expat",
@@ -3701,7 +3701,7 @@
     "outdated": true,
     "reverse_dependencies": [],
     "url": ["https://www.python.org/"],
-    "version": "3.11.0"
+    "version": "3.11.1"
   },
   "r": {
     "bin": [],
