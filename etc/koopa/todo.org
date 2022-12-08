@@ -1,7 +1,6 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
-** TODO Need to improve color configuration for bottom in light mode.
 ** TODO 'koopa install r-packages' needs to be 'koopa install system r-packages'.
 ** TODO apptainer, aspera-connect, lmod, and docker-credential-pass aren't showing up in Linux system checks.
 ** TODO Ensure hadolint install cleans up ghcup.
