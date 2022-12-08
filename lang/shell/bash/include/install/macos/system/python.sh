@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python framework binary.
-    # @note Updated 2022-10-18.
+    # @note Updated 2022-12-08.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -20,15 +20,11 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     case "${dict['macos_version']}" in
-        '11'* | \
-        '12'*)
-            dict['macos_string']='macos11'
-            ;;
         '10'*)
             dict['macos_string']='macosx10.9'
             ;;
         *)
-            koopa_stop "Unsupported macOS version: '${dict['macos_version']}'."
+            dict['macos_string']='macos11'
             ;;
     esac
     dict['major_version']="$(koopa_major_version "${dict['version']}")"
