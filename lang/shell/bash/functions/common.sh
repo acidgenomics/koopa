@@ -18545,15 +18545,11 @@ ${dict['py_maj_min_ver']}"
     if [[ "${dict['pip']}" -eq 1 ]]
     then
         case "${dict['py_version']}" in
-            '3.11.'*)
-                dict['pip_version']='22.3'
-                dict['setuptools_version']='65.5.0'
-                dict['wheel_version']='0.37.1'
-                ;;
+            '3.11.'* | \
             '3.10.'*)
-                dict['pip_version']='22.3'
-                dict['setuptools_version']='65.5.0'
-                dict['wheel_version']='0.37.1'
+                dict['pip_version']='22.3.1'
+                dict['setuptools_version']='65.6.3'
+                dict['wheel_version']='0.38.4'
                 ;;
             *)
                 koopa_stop "Unsupported Python: ${dict['py_version']}."
