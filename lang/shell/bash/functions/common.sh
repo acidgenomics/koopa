@@ -14044,6 +14044,12 @@ koopa_install_scons() {
         "$@"
 }
 
+koopa_install_sd() {
+    koopa_install_app \
+        --name='sd' \
+        "$@"
+}
+
 koopa_install_sed() {
     koopa_install_app \
         --name='sed' \
@@ -25173,6 +25179,12 @@ koopa_uninstall_samtools() {
 koopa_uninstall_scons() {
     koopa_uninstall_app \
         --name='scons' \
+        "$@"
+}
+
+koopa_uninstall_sd() {
+    koopa_uninstall_app \
+        --name='sd' \
         "$@"
 }
 
