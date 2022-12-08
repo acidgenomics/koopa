@@ -4138,6 +4138,17 @@
     "url": ["https://scons.org/", "https://pypi.org/project/SCons/"],
     "version": "4.4.0"
   },
+  "sd": {
+    "bin": ["sd"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2022-12-08",
+    "dependencies": ["rust"],
+    "homebrew": true,
+    "man1": [],
+    "url": ["https://github.com/chmln/sd/"],
+    "version": "0.7.6"
+  },
   "sed": {
     "aliases": {
       "homebrew": "gnu-sed"
