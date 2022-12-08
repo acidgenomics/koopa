@@ -92,6 +92,7 @@ __koopa_activate_koopa() {
     koopa_activate_color_mode || return 1
     koopa_activate_alacritty || return 1
     koopa_activate_bat || return 1
+    koopa_activate_bottom || return 1
     koopa_activate_delta || return 1
     koopa_activate_difftastic || return 1
     koopa_activate_dircolors || return 1
