@@ -3,7 +3,10 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-10-27.
+    # @note Updated 2022-12-09.
+    #
+    # @seealso
+    # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
     # """
     local app bin_name bin_names dict man1_name man1_names pos
     declare -A app
@@ -77,15 +80,32 @@ main() {
     dict['py_maj_min_ver']="$( \
         koopa_major_minor_version "${dict['py_version']}" \
     )"
+    dict['venv_cmd']="${dict['pkg_name']}==${dict['version']}"
+    # Overrides to install from GitHub, for package versions not on PyPi.
+    # FIXME Remove this override when Latch is updated on pip.
+    case "${dict['pkg_name']}" in
+        'latch')
+            case "${dict['version']}" in
+                '3.0.0')
+                    dict['venv_cmd']="${dict['pkg_name']} @ \
+git+https://github.com/latchbio/latch@${dict['version']}"
+                    ;;
+            esac
+            ;;
+    esac
     koopa_print_env
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
         --python="${app['python']}" \
-        "${dict['pkg_name']}==${dict['version']}"
+        "${dict['venv_cmd']}"
     dict['record_file']="${dict['libexec']}/lib/\
 python${dict['py_maj_min_ver']}/site-packages/\
 ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
-    koopa_assert_is_file "${dict['record_file']}"
+    if [[ ! -f "${dict['record_file']}" ]]
+    then
+        koopa_alert_note "No RECORD file at '${dict['record_file']}."
+        return 0
+    fi
     # Ensure we exclude any nested subdirectories in libexec bin, which is
     # known to happen with some conda recipes (e.g. bowtie2).
     readarray -t bin_names <<< "$( \
