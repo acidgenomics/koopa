@@ -101,21 +101,31 @@ git+https://github.com/latchbio/latch@${dict['version']}"
     dict['record_file']="${dict['libexec']}/lib/\
 python${dict['py_maj_min_ver']}/site-packages/\
 ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
-    if [[ ! -f "${dict['record_file']}" ]]
+    if [[ -f "${dict['record_file']}" ]]
     then
-        koopa_alert_note "No RECORD file at '${dict['record_file']}."
-        return 0
+        # Ensure we exclude any nested subdirectories in libexec bin, which is
+        # known to happen with some conda recipes (e.g. bowtie2).
+        readarray -t bin_names <<< "$( \
+            koopa_grep \
+                --file="${dict['record_file']}" \
+                --pattern='^\.\./\.\./\.\./bin/[^/]+,' \
+                --regex \
+            | "${app['cut']}" -d ',' -f '1' \
+            | "${app['cut']}" -d '/' -f '5' \
+        )"
+        readarray -t man1_names <<< "$( \
+            koopa_grep \
+                --file="${dict['record_file']}" \
+                --pattern='^\.\./\.\./\.\./share/man/man1/[^/]+,' \
+                --regex \
+            | "${app['cut']}" -d ',' -f '1' \
+            | "${app['cut']}" -d '/' -f '7' \
+        )"
+    else
+        koopa_alert_note "No record file at '${dict['record_file']}."
+        bin_names=("${dict['pkg_name']}")
+        man1_names=()
     fi
-    # Ensure we exclude any nested subdirectories in libexec bin, which is
-    # known to happen with some conda recipes (e.g. bowtie2).
-    readarray -t bin_names <<< "$( \
-        koopa_grep \
-            --file="${dict['record_file']}" \
-            --pattern='^\.\./\.\./\.\./bin/[^/]+,' \
-            --regex \
-        | "${app['cut']}" -d ',' -f '1' \
-        | "${app['cut']}" -d '/' -f '5' \
-    )"
     koopa_assert_is_array_non_empty "${bin_names[@]:-}"
     for bin_name in "${bin_names[@]}"
     do
@@ -123,14 +133,6 @@ ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
             "${dict['libexec']}/bin/${bin_name}" \
             "${dict['prefix']}/bin/${bin_name}"
     done
-    readarray -t man1_names <<< "$( \
-        koopa_grep \
-            --file="${dict['record_file']}" \
-            --pattern='^\.\./\.\./\.\./share/man/man1/[^/]+,' \
-            --regex \
-        | "${app['cut']}" -d ',' -f '1' \
-        | "${app['cut']}" -d '/' -f '7' \
-    )"
     if koopa_is_array_non_empty "${man1_names[@]:-}"
     then
         for man1_name in "${man1_names[@]}"
