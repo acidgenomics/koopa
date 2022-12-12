@@ -12366,6 +12366,12 @@ koopa_install_bamtools() {
         "$@"
 }
 
+koopa_install_bandwhich() {
+    koopa_install_app \
+        --name='bandwhich' \
+        "$@"
+}
+
 koopa_install_bash_language_server() {
     koopa_install_app \
         --name='bash-language-server' \
@@ -12443,6 +12449,12 @@ koopa_install_black() {
 koopa_install_boost() {
     koopa_install_app \
         --name='boost' \
+        "$@"
+}
+
+koopa_install_bottom() {
+    koopa_install_app \
+        --name='bottom' \
         "$@"
 }
 
@@ -12895,6 +12907,12 @@ koopa_install_graphviz() {
 koopa_install_grep() {
     koopa_install_app \
         --name='grep' \
+        "$@"
+}
+
+koopa_install_grex() {
+    koopa_install_app \
+        --name='grex' \
         "$@"
 }
 
@@ -14041,6 +14059,12 @@ koopa_install_samtools() {
 koopa_install_scons() {
     koopa_install_app \
         --name='scons' \
+        "$@"
+}
+
+koopa_install_sd() {
+    koopa_install_app \
+        --name='sd' \
         "$@"
 }
 
@@ -23717,6 +23741,12 @@ koopa_uninstall_bamtools() {
         "$@"
 }
 
+koopa_uninstall_bandwhich() {
+    koopa_uninstall_app \
+        --name='bandwhich' \
+        "$@"
+}
+
 koopa_uninstall_bash_language_server() {
     koopa_uninstall_app \
         --name='bash-language-server' \
@@ -23792,6 +23822,12 @@ koopa_uninstall_black() {
 koopa_uninstall_boost() {
     koopa_uninstall_app \
         --name='boost' \
+        "$@"
+}
+
+koopa_uninstall_bottom() {
+    koopa_uninstall_app \
+        --name='bottom' \
         "$@"
 }
 
@@ -24242,6 +24278,12 @@ koopa_uninstall_graphviz() {
 koopa_uninstall_grep() {
     koopa_uninstall_app \
         --name='grep' \
+        "$@"
+}
+
+koopa_uninstall_grex() {
+    koopa_uninstall_app \
+        --name='grex' \
         "$@"
 }
 
@@ -25173,6 +25215,12 @@ koopa_uninstall_samtools() {
 koopa_uninstall_scons() {
     koopa_uninstall_app \
         --name='scons' \
+        "$@"
+}
+
+koopa_uninstall_sd() {
+    koopa_uninstall_app \
+        --name='sd' \
         "$@"
 }
 
