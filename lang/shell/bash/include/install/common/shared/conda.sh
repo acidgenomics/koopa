@@ -105,6 +105,7 @@ ${dict['os_type2']}-${dict['arch2']}.sh"
             --name='base' \
             "conda==${dict['version']}"
     fi
+    "${app['conda']}" info --all
     "${app['conda']}" config --show
     return 0
 }
