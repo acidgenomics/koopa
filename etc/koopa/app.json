@@ -2199,12 +2199,12 @@
     "bin": ["isort"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-12-12",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "url": ["https://pycqa.github.io/isort/"],
-    "version": "5.10.1"
+    "version": "5.11.1"
   },
   "jemalloc": {
     "bin": [],
