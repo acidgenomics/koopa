@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2022-12-01.
+    # @note Updated 2022-12-12.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba
@@ -15,6 +15,7 @@ main() {
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
+        ['from_latest']=0
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_type']="$(koopa_os_type)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -77,6 +78,15 @@ main() {
     dict['script']="Miniconda${dict['py_major_version']}-\
 py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
 -${dict['arch2']}.sh"
+    # NOTE Temporary workaround for installing newer versions that aren't
+    # yet available at 'https://repo.anaconda.com/miniconda/'.
+    case "${dict['version']}" in
+        '22.11.1')
+            dict['script']="Miniconda${dict['py_major_version']}-latest-\
+${dict['os_type2']}-${dict['arch2']}.sh"
+            dict['from_latest']=1
+            ;;
+    esac
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
     unset -v PYTHONHOME PYTHONPATH
@@ -84,19 +94,18 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
     koopa_ln \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
-    # > app['conda']="${dict['prefix']}/bin/conda"
-    # > koopa_assert_is_installed "${app['conda']}"
-    # Optionally, install mamba into base environment.
-    # > [[ -x "${app['conda']}" ]] || return 1
-    # > case "${dict['version']}" in
-    # >     '4.12.0')
-    # >         dict['mamba_version']='0.25.0'
-    # >         ;;
-    # > esac
-    # > "${app['conda']}" install \
-    # >     --yes \
-    # >     --name='base' \
-    # >     --channel='conda-forge' \
-    # >     "mamba==${dict['mamba_version']}"
+    app['conda']="${dict['prefix']}/bin/conda"
+    koopa_assert_is_installed "${app['conda']}"
+    if [[ "${dict['from_latest']}" -eq 1 ]]
+    then
+        "${app['conda']}" install \
+            --yes \
+            --channel='conda-forge' \
+            --override-channels \
+            --name='base' \
+            "conda==${dict['version']}"
+    fi
+    "${app['conda']}" info --all
+    "${app['conda']}" config --show
     return 0
 }

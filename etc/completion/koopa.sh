@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2022-12-06.
+    # @note Updated 2022-12-08.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -64,8 +64,6 @@ __koopa_complete() {
                     args=(
                         'system'
                         'user'
-                        # FIXME 'chemacs'
-                        # FIXME 'dotfiles'
                     )
                     ;;
                 'header')
@@ -100,6 +98,7 @@ __koopa_complete() {
                         'aws-cli'
                         'azure-cli'
                         'bamtools'
+                        'bandwhich'
                         'bash'
                         'bash-language-server'
                         'bashcov'
@@ -113,6 +112,7 @@ __koopa_complete() {
                         'bison'
                         'black'
                         'boost'
+                        'bottom'
                         'bowtie2'
                         'bpytop'
                         'broot'
@@ -186,6 +186,7 @@ __koopa_complete() {
                         'gperf'
                         'graphviz'
                         'grep'
+                        'grex'
                         'groff'
                         'gseapy'
                         'gsl'
@@ -236,7 +237,6 @@ __koopa_complete() {
                         'libluv'
                         'libpipeline'
                         'libpng'
-                        # > 'libsodium' # FIXME
                         'libsolv'
                         'libssh2'
                         'libtasn1'
@@ -338,6 +338,7 @@ __koopa_complete() {
                         'sambamba'
                         'samtools'
                         'scons'
+                        'sd'
                         'sed'
                         'serf'
                         'shellcheck'
