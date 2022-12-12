@@ -14,7 +14,6 @@
 # - https://bioconda.github.io/#set-up-channels
 # """
 
-allow_other_channels: False
 always_yes: True
 auto_activate_base: False
 auto_update_conda: False
