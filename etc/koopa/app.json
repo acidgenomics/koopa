@@ -2199,12 +2199,12 @@
     "bin": ["isort"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-12-12",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "url": ["https://pycqa.github.io/isort/"],
-    "version": "5.10.1"
+    "version": "5.11.1"
   },
   "jemalloc": {
     "bin": [],
@@ -4263,14 +4263,14 @@
     "bin": ["snakemake"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-10-17",
+    "date": "2022-12-13",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "outdated": true,
     "url": ["https://github.com/snakemake/snakemake/"],
-    "version": "7.18.1"
+    "version": "7.19.0"
   },
   "sox": {
     "bin": ["sox"],
@@ -4974,12 +4974,12 @@
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
     "conservative": false,
-    "date": "2022-12-09",
+    "date": "2022-12-13",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.34.3"
+    "version": "0.34.4"
   },
   "zip": {
     "bin": ["zip"],
