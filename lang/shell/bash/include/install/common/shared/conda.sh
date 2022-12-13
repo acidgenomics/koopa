@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2022-12-12.
+    # @note Updated 2022-12-13.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba
