@@ -3,9 +3,12 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2022-12-12.
+    # @note Updated 2022-12-13.
     #
     # @seealso
+    # - https://www.anaconda.com/blog/conda-is-fast-now
+    # - https://www.anaconda.com/blog/a-faster-conda-for-a-growing-community
+    # - https://github.com/conda/conda-libmamba-solver
     # - https://github.com/mamba-org/mamba
     # """
     local app dict
