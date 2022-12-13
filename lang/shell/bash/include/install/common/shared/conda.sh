@@ -100,10 +100,11 @@ ${dict['os_type2']}-${dict['arch2']}.sh"
     if [[ "${dict['from_latest']}" -eq 1 ]]
     then
         "${app['conda']}" install \
-            --yes \
             --channel='conda-forge' \
-            --override-channels \
             --name='base' \
+            --override-channels \
+            --solver='classic' \
+            --yes \
             "conda==${dict['version']}" \
             "conda-libmamba-solver==${dict['libmamba_version']}"
     fi
