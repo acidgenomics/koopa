@@ -82,9 +82,10 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
     # yet available at 'https://repo.anaconda.com/miniconda/'.
     case "${dict['version']}" in
         '22.11.1')
+            dict['from_latest']=1
             dict['script']="Miniconda${dict['py_major_version']}-latest-\
 ${dict['os_type2']}-${dict['arch2']}.sh"
-            dict['from_latest']=1
+            dict['libmamba_version']='22.12.0'
             ;;
     esac
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
@@ -103,7 +104,8 @@ ${dict['os_type2']}-${dict['arch2']}.sh"
             --channel='conda-forge' \
             --override-channels \
             --name='base' \
-            "conda==${dict['version']}"
+            "conda==${dict['version']}" \
+            "conda-libmamba-solver==${dict['libmamba_version']}"
     fi
     "${app['conda']}" info --all
     "${app['conda']}" config --show
