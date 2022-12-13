@@ -1844,16 +1844,17 @@
     "bin": ["gseapy"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-12-13",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
+    "outdated": true,
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
     ],
-    "version": "0.14.0"
+    "version": "1.0.0"
   },
   "gsl": {
     "bin": [],
