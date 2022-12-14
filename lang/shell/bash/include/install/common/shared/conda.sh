@@ -93,7 +93,7 @@ ${dict['os_type2']}-${dict['arch2']}.sh"
     esac
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
-    unset -v PYTHONHOME PYTHONPATH
+    # > unset -v PYTHONHOME PYTHONPATH
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
     koopa_ln \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
