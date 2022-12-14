@@ -34,6 +34,7 @@ koopa_docker_tag() {
     fi
     koopa_alert "Tagging '${dict['image']}:${dict['source_tag']}' \
 as '${dict['dest_tag']}'."
+    # FIXME Need to remove or rework this interactive login approach.
     "${app['docker']}" login "${dict['server']}"
     "${app['docker']}" pull \
         "${dict['server']}/${dict['image']}:${dict['source_tag']}"
