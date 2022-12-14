@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden against /usr/local in PKG_CONFIG on Linux here.
 # FIXME Consider splitting these out to 3 apps:
 # - koopa_install_shared_app
 # - koopa_install_system_app
