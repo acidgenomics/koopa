@@ -274,6 +274,8 @@ ${dict['version2']}"
                     declare -A app
                     app['env']="$(koopa_locate_env --allow-system)"
                     app['tee']="$(koopa_locate_tee --allow-system)"
+                    # FIXME Rework this to use our system bash when available,
+                    # except when installing bash.
                     if koopa_is_macos
                     then
                         app['bash']='/usr/local/bin/bash'

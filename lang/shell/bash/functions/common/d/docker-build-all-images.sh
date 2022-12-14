@@ -79,7 +79,7 @@ koopa_docker_build_all_images() {
         koopa_docker_prune_all_images
     fi
     # FIXME Need to remove or rework this iteractive login approach.
-    "${app['docker']}" login
+    "${app['docker']}" login >/dev/null || return 1
     for repo in "${repos[@]}"
     do
         local build_file repo_name
