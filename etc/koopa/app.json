@@ -111,12 +111,12 @@
     "bin": ["asdf"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-12-14",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.10.2"
+    "version": "0.11.0"
   },
   "aspell": {
     "bin": ["aspell"],
