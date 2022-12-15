@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libarchive.
-    # @note Updated 2022-11-03.
+    # @note Updated 2022-12-15.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/
@@ -38,8 +38,8 @@ main() {
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
+        # > '--with-expat'
         "--prefix=${dict['prefix']}"
-        # > '--with-expat'      # best xar hashing option
         '--without-lzo2'
         '--without-nettle'
         '--without-openssl'
@@ -49,6 +49,11 @@ main() {
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
+    # Fix for breaking change introduced in 3.6.2.
+    koopa_find_and_replace_in_file \
+        --pattern='Requires.private: iconv' \
+        --replacement='# > Requires.private: iconv' \
+        'build/pkgconfig/libarchive.pc'
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
