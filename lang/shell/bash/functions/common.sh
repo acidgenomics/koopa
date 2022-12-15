@@ -6533,7 +6533,7 @@ koopa_docker_build_all_images() {
     then
         koopa_docker_prune_all_images
     fi
-    "${app['docker']}" login
+    "${app['docker']}" login >/dev/null || return 1
     for repo in "${repos[@]}"
     do
         local build_file repo_name
@@ -7125,7 +7125,7 @@ koopa_docker_tag() {
     fi
     koopa_alert "Tagging '${dict['image']}:${dict['source_tag']}' \
 as '${dict['dest_tag']}'."
-    "${app['docker']}" login "${dict['server']}"
+    "${app['docker']}" login "${dict['server']}" >/dev/null || return 1
     "${app['docker']}" pull \
         "${dict['server']}/${dict['image']}:${dict['source_tag']}"
     "${app['docker']}" tag \
@@ -11232,6 +11232,10 @@ koopa_install_all_apps() {
         'csvtk'
         'vulture'
         'diff-so-fancy'
+        'bottom'
+        'grex'
+        'hexyl'
+        'sd'
     )
     if koopa_is_linux
     then
@@ -11260,6 +11264,7 @@ koopa_install_all_apps() {
         'termcolor'
         'tl-expected'
         'yaml-cpp'
+        'mamba'
     )
     if [[ "${bool['large']}" -eq 1 ]]
     then
@@ -11309,7 +11314,7 @@ koopa_install_all_apps() {
                 'multiqc'
                 'nanopolish'
                 'nextflow'
-                'openbb' # FIXME large.
+                'openbb'
                 'salmon'
                 'sambamba'
                 'samtools'
@@ -11391,6 +11396,7 @@ koopa_install_all_binary_apps() {
         'bison'
         'black'
         'boost'
+        'bottom'
         'bpytop'
         'broot'
         'c-ares'
@@ -11443,6 +11449,7 @@ koopa_install_all_binary_apps() {
         'googletest'
         'gperf'
         'graphviz'
+        'grex'
         'groff'
         'gsl'
         'gtop'
@@ -11450,6 +11457,7 @@ koopa_install_all_binary_apps() {
         'gzip'
         'harfbuzz'
         'hdf5'
+        'hexyl'
         'htop'
         'httpie'
         'hyperfine'
@@ -11496,7 +11504,7 @@ koopa_install_all_binary_apps() {
         'lz4'
         'lzo'
         'make'
-        'mamba' # FIXME
+        'mamba'
         'man-db'
         'markdownlint-cli'
         'mcfly'
@@ -11559,6 +11567,7 @@ koopa_install_all_binary_apps() {
         'ruby'
         'ruff'
         'scons'
+        'sd'
         'serf'
         'shellcheck'
         'shunit2'

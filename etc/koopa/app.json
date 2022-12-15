@@ -111,12 +111,12 @@
     "bin": ["asdf"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2022-12-14",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.10.2"
+    "version": "0.11.0"
   },
   "aspell": {
     "bin": ["aspell"],
@@ -283,12 +283,12 @@
     "bin": ["bash"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2022-12-14",
     "dependencies": [],
     "homebrew": true,
     "man1": ["bash.1"],
     "url": ["https://www.gnu.org/software/bash/"],
-    "version": "5.2.9"
+    "version": "5.2.15"
   },
   "bash-language-server": {
     "bin": ["bash-language-server"],
@@ -520,12 +520,12 @@
     "bin": ["broot"],
     "build_dependencies": ["rust"],
     "conservative": false,
-    "date": "2022-12-12",
+    "date": "2022-12-15",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/Canop/broot/"],
-    "version": "1.17.0"
+    "version": "1.17.1"
   },
   "brotli": {
     "bin": [],
@@ -2835,7 +2835,7 @@
     "bin": ["micromamba"],
     "build_dependencies": ["cmake"],
     "conservative": true,
-    "date": "2022-12-07",
+    "date": "2022-12-15",
     "dependencies": [
       "cli11",
       "curl",
@@ -2858,7 +2858,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba"
     ],
-    "version": "2022.11.01"
+    "version": "1.1.0"
   },
   "man-db": {
     "bin": ["gman"],
