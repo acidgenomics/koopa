@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden against /usr/local in PKG_CONFIG on Linux here.
 # FIXME Consider splitting these out to 3 apps:
 # - koopa_install_shared_app
 # - koopa_install_system_app
 # - koopa_install_user_app
 # FIXME Add an option, such as '--no-cleanup' to not delete the build in the
 # temporary directory. Potentially useful for debugging.
+# FIXME If '--push' is set, ensure that the user can push to AWS before
+# attempting to build the app.
 
 koopa_install_app() {
     # """
@@ -274,6 +277,8 @@ ${dict['version2']}"
                     declare -A app
                     app['env']="$(koopa_locate_env --allow-system)"
                     app['tee']="$(koopa_locate_tee --allow-system)"
+                    # FIXME Rework this to use our system bash when available,
+                    # except when installing bash.
                     if koopa_is_macos
                     then
                         app['bash']='/usr/local/bin/bash'

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2022-12-07.
+    # @note Updated 2022-12-15.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' here to include yaml-cpp.
     #
@@ -75,12 +75,24 @@ main() {
         "${dict['spdlog']}" \
         "${dict['tl-expected']}" \
         "${dict['yaml-cpp']}"
-    dict['file']="${dict['version']}.tar.gz"
+
+    case "${dict['version']}" in
+        '1.1.0')
+            dict['date_tag']='2022.11.25'
+            ;;
+        '1.0.0')
+            dict['date_tag']='2022.11.01'
+            ;;
+        '0.27.0')
+            dict['date_tag']='2022.10.04'
+            ;;
+    esac
+    dict['file']="${dict['date_tag']}.tar.gz"
     dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
 tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    koopa_cd "${dict['name']}-${dict['date_tag']}"
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'

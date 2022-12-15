@@ -225,9 +225,10 @@ ${dict2['image']}/${dict2['tag']}"
         fi
         koopa_alert "Building '${dict2['source_image']}' Docker image."
         koopa_dl 'Build args' "${build_args[*]}"
+        # FIXME Need to either remove or rework this interactive login approach.
         "${app['docker']}" login "${dict['server']}" >/dev/null || return 1
         dict2['build_name']="$(koopa_basename "${dict2['image']}")"
-        # Ensure any previous build failres are removed.
+        # Ensure any previous build failures are removed.
         "${app['docker']}" buildx rm \
             "${dict2['build_name']}" \
             &>/dev/null \

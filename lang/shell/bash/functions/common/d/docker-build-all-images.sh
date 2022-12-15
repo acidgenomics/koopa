@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rethink this approach.
-# Currently breaking due to 'docker login' failures.
-
 koopa_docker_build_all_images() {
     # """
     # Build all Docker images.
@@ -81,7 +78,8 @@ koopa_docker_build_all_images() {
     then
         koopa_docker_prune_all_images
     fi
-    "${app['docker']}" login
+    # FIXME Need to remove or rework this iteractive login approach.
+    "${app['docker']}" login >/dev/null || return 1
     for repo in "${repos[@]}"
     do
         local build_file repo_name
