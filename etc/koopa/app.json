@@ -3069,12 +3069,12 @@
     "bin": ["nextflow"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-12-15",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "version": "22.10.0"
+    "version": "22.10.4"
   },
   "nghttp2": {
     "bin": [],
