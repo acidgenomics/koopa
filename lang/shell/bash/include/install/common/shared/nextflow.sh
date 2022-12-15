@@ -15,11 +15,7 @@ main() {
     # - https://get.nextflow.io/
     # - https://nextflow.io/releases/v${dict['version']}/nextflow
     # """
-    local app dict
-    declare -A app=(
-        ['bash']="$(koopa_locate_bash --allow-system)"
-    )
-    [[ -x "${app['bash']}" ]] || return 1
+    local dict
     declare -A dict=(
         ['openjdk']="$(koopa_app_prefix 'openjdk')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
