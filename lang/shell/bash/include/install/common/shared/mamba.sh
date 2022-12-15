@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Seeing this pkg-config issue on Ubuntu:
+# iconv required by libarchive not found
+
 main() {
     # """
     # Install micromamba.
