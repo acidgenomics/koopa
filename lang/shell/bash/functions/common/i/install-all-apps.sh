@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-12-06.
+    # @note Updated 2022-12-15.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -282,6 +282,10 @@ koopa_install_all_apps() {
         'csvtk'
         'vulture'
         'diff-so-fancy'
+        'bottom'
+        'grex'
+        'hexyl'
+        'sd'
     )
     if koopa_is_linux
     then
@@ -311,7 +315,7 @@ koopa_install_all_apps() {
         'termcolor'
         'tl-expected'
         'yaml-cpp'
-        # > 'mamba' # FIXME
+        'mamba'
     )
     if [[ "${bool['large']}" -eq 1 ]]
     then
@@ -361,7 +365,7 @@ koopa_install_all_apps() {
                 'multiqc'
                 'nanopolish'
                 'nextflow'
-                'openbb' # FIXME large.
+                'openbb'
                 'salmon'
                 'sambamba'
                 'samtools'
