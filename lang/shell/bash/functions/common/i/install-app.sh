@@ -7,6 +7,8 @@
 # - koopa_install_user_app
 # FIXME Add an option, such as '--no-cleanup' to not delete the build in the
 # temporary directory. Potentially useful for debugging.
+# FIXME If '--push' is set, ensure that the user can push to AWS before
+# attempting to build the app.
 
 koopa_install_app() {
     # """
