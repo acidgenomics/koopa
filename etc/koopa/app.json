@@ -2835,7 +2835,7 @@
     "bin": ["micromamba"],
     "build_dependencies": ["cmake"],
     "conservative": true,
-    "date": "2022-12-07",
+    "date": "2022-12-15",
     "dependencies": [
       "cli11",
       "curl",
@@ -2858,7 +2858,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba"
     ],
-    "version": "2022.11.01"
+    "version": "1.0.0"
   },
   "man-db": {
     "bin": ["gman"],
