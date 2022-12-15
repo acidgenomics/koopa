@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2022-12-06.
+    # @note Updated 2022-12-15.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -69,6 +69,7 @@ koopa_install_all_binary_apps() {
         'bison'
         'black'
         'boost'
+        'bottom'
         'bpytop'
         'broot'
         'c-ares'
@@ -121,6 +122,7 @@ koopa_install_all_binary_apps() {
         'googletest'
         'gperf'
         'graphviz'
+        'grex'
         'groff'
         'gsl'
         'gtop'
@@ -128,6 +130,7 @@ koopa_install_all_binary_apps() {
         'gzip'
         'harfbuzz'
         'hdf5'
+        'hexyl'
         'htop'
         'httpie'
         'hyperfine'
@@ -174,7 +177,7 @@ koopa_install_all_binary_apps() {
         'lz4'
         'lzo'
         'make'
-        'mamba' # FIXME
+        'mamba'
         'man-db'
         'markdownlint-cli'
         'mcfly'
@@ -237,6 +240,7 @@ koopa_install_all_binary_apps() {
         'ruby'
         'ruff'
         'scons'
+        'sd'
         'serf'
         'shellcheck'
         'shunit2'
