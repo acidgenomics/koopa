@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libarchive.
-    # @note Updated 2022-11-03.
+    # @note Updated 2022-12-15.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/
@@ -37,9 +37,14 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    # Fix for breaking change introduced in 3.6.2.
+    koopa_find_and_replace_in_file \
+        --pattern='Requires.private: @LIBSREQUIRED@' \
+        --replacement='' \
+        'build/pkgconfig/libarchive.pc.in'
     conf_args=(
+        # > '--with-expat'
         "--prefix=${dict['prefix']}"
-        # > '--with-expat'      # best xar hashing option
         '--without-lzo2'
         '--without-nettle'
         '--without-openssl'

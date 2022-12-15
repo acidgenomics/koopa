@@ -102,11 +102,11 @@ ${dict['os_type2']}-${dict['arch2']}.sh"
     koopa_assert_is_installed "${app['conda']}"
     if [[ "${dict['from_latest']}" -eq 1 ]]
     then
+        # NOTE Can add '--solver=classic' from 22.11.* onwards here.
         "${app['conda']}" install \
             --channel='conda-forge' \
             --name='base' \
             --override-channels \
-            --solver='classic' \
             --yes \
             "conda==${dict['version']}" \
             "conda-libmamba-solver==${dict['libmamba_version']}"
