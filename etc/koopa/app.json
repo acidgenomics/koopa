@@ -520,12 +520,12 @@
     "bin": ["broot"],
     "build_dependencies": ["rust"],
     "conservative": false,
-    "date": "2022-12-12",
+    "date": "2022-12-15",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/Canop/broot/"],
-    "version": "1.17.0"
+    "version": "1.17.1"
   },
   "brotli": {
     "bin": [],
