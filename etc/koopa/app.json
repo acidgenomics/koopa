@@ -2889,12 +2889,12 @@
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
     "conservative": false,
-    "date": "2022-12-12",
+    "date": "2022-12-16",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.7.0"
+    "version": "0.7.1"
   },
   "mdcat": {
     "bin": ["mdcat"],
