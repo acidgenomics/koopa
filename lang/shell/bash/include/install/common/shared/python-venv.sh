@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-12-09.
+    # @note Updated 2022-12-16.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -82,17 +82,16 @@ main() {
     )"
     dict['venv_cmd']="${dict['pkg_name']}==${dict['version']}"
     # Overrides to install from GitHub, for package versions not on PyPi.
-    # FIXME Remove this override when Latch is updated on pip.
-    case "${dict['pkg_name']}" in
-        'latch')
-            case "${dict['version']}" in
-                '3.0.0')
-                    dict['venv_cmd']="${dict['pkg_name']} @ \
-git+https://github.com/latchbio/latch@${dict['version']}"
-                    ;;
-            esac
-            ;;
-    esac
+# >     case "${dict['pkg_name']}" in
+# >         'latch')
+# >             case "${dict['version']}" in
+# >                 '3.0.0')
+# >                     dict['venv_cmd']="${dict['pkg_name']} @ \
+# > git+https://github.com/latchbio/latch@${dict['version']}"
+# >                     ;;
+# >             esac
+# >             ;;
+# >     esac
     koopa_print_env
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
