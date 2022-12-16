@@ -270,16 +270,17 @@ local({  # nolint
     ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
-    if (isTRUE(flag[["interactive"]])) {
-        if (isInstalled("AcidDevTools")) {
-            options(
-                "defaultPackages" = c(
-                    getOption("defaultPackages"),
-                    "AcidDevTools"
-                )
-            )
-        }
-    }
+    ## RStudio 2022.12.0+353 now messages about this, so disabling.
+    ## > if (isTRUE(flag[["interactive"]])) {
+    ## >     if (isInstalled("AcidDevTools")) {
+    ## >         options(
+    ## >             "defaultPackages" = c(
+    ## >                 getOption("defaultPackages"),
+    ## >                 "AcidDevTools"
+    ## >             )
+    ## >         )
+    ## >     }
+    ## > }
     ## Console and interface {{{2
     ## -------------------------------------------------------------------------
     options(

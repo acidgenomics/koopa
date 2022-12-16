@@ -216,7 +216,7 @@
     "version": "1.7.7"
   },
   "automake": {
-    "bin": [],
+    "bin": ["automake"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2022-08-29",
@@ -1541,14 +1541,14 @@
     "bin": ["gdal-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-11",
+    "date": "2022-12-15",
     "dependencies": [],
     "homebrew": true,
     "man1": ["gdal-config.1"],
     "outdated": false,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
-    "version": "3.6.0"
+    "version": "3.6.1"
   },
   "gdbm": {
     "bin": [],
@@ -2324,12 +2324,12 @@
     "bin": ["less"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-29",
+    "date": "2022-12-16",
     "dependencies": [],
     "homebrew": true,
     "man1": ["less.1"],
     "url": ["https://ftp.gnu.org/gnu/less/"],
-    "version": "608"
+    "version": "617"
   },
   "lesspipe": {
     "bin": ["lesspipe.sh"],
@@ -2889,12 +2889,12 @@
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
     "conservative": false,
-    "date": "2022-12-12",
+    "date": "2022-12-16",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.7.0"
+    "version": "0.7.1"
   },
   "mdcat": {
     "bin": ["mdcat"],
@@ -4108,14 +4108,14 @@
     ],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-03",
+    "date": "2022-12-15",
     "dependencies": [],
     "homebrew": true,
     "large": true,
     "man1": [],
     "reverse_dependencies": [],
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.65.0"
+    "version": "1.66.0"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -4347,16 +4347,16 @@
       "homebrew": "sratoolkit"
     },
     "bin": ["fasterq-dump", "vdb-config"],
-    "build_dependencies": [],
+    "build_dependencies": ["cmake"],
     "conservative": false,
-    "date": "2022-11-15",
-    "dependencies": [],
+    "date": "2022-12-16",
+    "dependencies": ["bison", "flex", "openjdk", "python"],
     "homebrew": true,
     "large": true,
     "man1": [],
     "outdated": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.0"
+    "version": "3.0.2"
   },
   "star": {
     "bin": ["STAR"],
