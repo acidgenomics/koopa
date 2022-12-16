@@ -4347,10 +4347,10 @@
       "homebrew": "sratoolkit"
     },
     "bin": ["fasterq-dump", "vdb-config"],
-    "build_dependencies": [],
+    "build_dependencies": ["cmake"],
     "conservative": false,
     "date": "2022-12-16",
-    "dependencies": [],
+    "dependencies": ["bison", "flex", "openjdk", "python"],
     "homebrew": true,
     "large": true,
     "man1": [],

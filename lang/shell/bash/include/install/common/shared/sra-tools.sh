@@ -1,17 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME These are no longer used for 3.0.2:
-#    HDF5_ROOT
-#    LIBXML2_INCLUDE_DIR
-#    LIBXML2_LIBRARY
-
-# FIXME Hitting this build error with 3.0.2:
-# [ 37%] Built target ngs-doc_javadoc
-# /bin/sh: line 0: cd: /private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20221216-153007-ktbomUaKZQ/sra-tools-build/obj/ngs/ngs-java/javadoc/ngs-doc: No such file or directory
-# make[2]: *** [ngs/ngs-java/CMakeFiles/ngs-doc-jar] Error 1
-# make[1]: *** [ngs/ngs-java/CMakeFiles/ngs-doc-jar.dir/all] Error 2
-# make: *** [all] Error 2
-
 main() {
     # """
     # Install SRA toolkit.
