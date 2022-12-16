@@ -4349,14 +4349,14 @@
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-15",
+    "date": "2022-12-16",
     "dependencies": [],
     "homebrew": true,
     "large": true,
     "man1": [],
     "outdated": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.0"
+    "version": "3.0.2"
   },
   "star": {
     "bin": ["STAR"],
