@@ -3,12 +3,16 @@
 main() {
     # """
     # Install less.
-    # @note Updated 2022-09-30.
+    # @note Updated 2022-12-16.
+    #
+    # Need to include autoconf and groff when building from GitHub.
     #
     # @seealso
+    # - https://www.greenwoodsoftware.com/less/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/less.rb
     # """
     local app conf_args dict
+    koopa_activate_app --build-only 'autoconf' 'groff'
     koopa_activate_app 'ncurses' 'pcre2'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
@@ -19,9 +23,9 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://www.greenwoodsoftware.com/\
-${dict['name']}/${dict['file']}"
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/gwsw/${dict['name']}/archive/refs/\
+tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
@@ -31,6 +35,7 @@ ${dict['name']}/${dict['file']}"
         '--with-regex=pcre2'
     )
     koopa_dl 'configure args' "${conf_args[*]}"
+    "${app['make']}" -f 'Makefile.aut' 'distfiles'
     ./configure "${conf_args[@]}"
     "${app['make']}" install
     return 0
