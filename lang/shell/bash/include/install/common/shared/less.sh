@@ -12,6 +12,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/less.rb
     # """
     local app conf_args dict
+    # This step is only needed when installing from GitHub.
     koopa_activate_app --build-only 'autoconf' 'groff'
     koopa_activate_app 'ncurses' 'pcre2'
     declare -A app=(
@@ -35,6 +36,7 @@ tags/${dict['file']}"
         '--with-regex=pcre2'
     )
     koopa_dl 'configure args' "${conf_args[*]}"
+    # This step is only needed when installing from GitHub.
     "${app['make']}" -f 'Makefile.aut' 'distfiles'
     ./configure "${conf_args[@]}"
     "${app['make']}" install
