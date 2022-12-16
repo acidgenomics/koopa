@@ -2324,12 +2324,12 @@
     "bin": ["less"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-29",
+    "date": "2022-12-16",
     "dependencies": [],
     "homebrew": true,
     "man1": ["less.1"],
     "url": ["https://ftp.gnu.org/gnu/less/"],
-    "version": "608"
+    "version": "617"
   },
   "lesspipe": {
     "bin": ["lesspipe.sh"],
