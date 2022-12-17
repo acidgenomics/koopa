@@ -1952,14 +1952,14 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2022-12-16",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": true,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "5.3.1"
+    "version": "6.0.0"
   },
   "haskell-cabal": {
     "aliases": {
