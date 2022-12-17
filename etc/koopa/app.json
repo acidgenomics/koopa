@@ -1997,7 +1997,7 @@
     "bin": ["stack"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-19",
+    "date": "2022-12-17",
     "dependencies": [],
     "homebrew": true,
     "large": true,
@@ -2006,7 +2006,7 @@
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "2.9.1"
+    "version": "2.9.3"
   },
   "hdf5": {
     "bin": [
@@ -2200,12 +2200,12 @@
     "bin": ["isort"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-12-14",
+    "date": "2022-12-17",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "url": ["https://pycqa.github.io/isort/"],
-    "version": "5.11.2"
+    "version": "5.11.3"
   },
   "jemalloc": {
     "bin": [],
@@ -4947,15 +4947,15 @@
   },
   "yq": {
     "bin": ["yq"],
-    "build_dependencies": [],
+    "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-11-28",
-    "dependencies": ["go"],
+    "date": "2022-12-17",
+    "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.30.5"
+    "version": "4.30.6"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
