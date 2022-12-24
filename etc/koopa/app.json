@@ -2911,12 +2911,12 @@
     "bin": ["meson"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-07",
+    "date": "2022-12-24",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "0.64.0"
+    "version": "1.0.0"
   },
   "mpc": {
     "aliases": {
