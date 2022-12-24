@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Currently seeing this in 'hugo version' return:
+# BuildDate=unknown
+
 main() {
     # """
     # Install hugo.
