@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Installer is now hanging on my MacBook.
+
 main() {
     # """
     # Install OpenBB terminal.
