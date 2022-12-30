@@ -1,6 +1,6 @@
 # """
 # Conda configuration.
-# @note Updated 2022-12-12.
+# @note Updated 2022-12-30.
 #
 # @seealso
 # - 'conda config --json --show' and 'conda config --json --show-sources'.
@@ -31,6 +31,6 @@ pkgs_dirs:
   - ~/.conda/pkgs
 report_errors: True
 show_channel_urls: True
-# For versions prior to 22.11.* release series, use "classic" here.
-solver: libmamba
+# Releases starting from 22.11.1 also support "libmamba" solver.
+solver: classic
 update_dependencies: False
