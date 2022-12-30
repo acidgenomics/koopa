@@ -3190,11 +3190,12 @@
     "bin": ["openbb"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-12-24",
+    "date": "2022-12-30",
     "dependencies": ["anaconda"],
     "homebrew": false,
     "large": true,
     "man1": [],
+    "outdated": false,
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
