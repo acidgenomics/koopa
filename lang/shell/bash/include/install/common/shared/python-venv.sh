@@ -73,7 +73,6 @@ main() {
             dict['pkg_name']='SCons'
             ;;
         *)
-            # > dict['pkg_name']="$(koopa_snake_case_simple "${dict['name']}")"
             dict['pkg_name']="${dict['name']}"
             ;;
     esac

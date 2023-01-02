@@ -668,13 +668,13 @@
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-12-24",
+    "date": "2023-01-02",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.28.0"
+    "version": "2.29.1"
   },
   "cli11": {
     "bin": [],
@@ -4969,7 +4969,7 @@
     "bin": ["yt-dlp"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-11",
+    "date": "2023-01-02",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
@@ -4977,7 +4977,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2022.11.11"
+    "version": "2023.01.02"
   },
   "zellij": {
     "bin": ["zellij"],
