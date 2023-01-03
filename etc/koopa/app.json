@@ -3190,14 +3190,12 @@
   "openbb": {
     "bin": ["openbb"],
     "build_dependencies": [],
-    "check": false,
     "conservative": false,
-    "date": "2022-12-30",
+    "date": "2023-01-03",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "notes": ["Installer is currently hanging due to poetry issue."],
     "outdated": false,
     "url": [
       "https://openbb.co/",
