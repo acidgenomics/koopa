@@ -85,7 +85,7 @@ set -euo pipefail
 
 main() {
     '${app['poetry_python']}' \\
-        '${dict['terminal_py_file']}' "$@"
+        '${dict['terminal_py_file']}' "\$@"
     return 0
 }
 
