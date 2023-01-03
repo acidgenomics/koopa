@@ -304,22 +304,6 @@ koopa_install_all_apps() {
             )
         fi
     fi
-    # Build mamba (experimental).
-    apps+=(
-        'cli11'
-        'fmt'
-        'googletest'
-        'libarchive'
-        'libsolv'
-        'nlohmann-json'
-        'pybind11'
-        'reproc'
-        'spdlog'
-        'termcolor'
-        'tl-expected'
-        'yaml-cpp'
-        'mamba'
-    )
     if [[ "${bool['large']}" -eq 1 ]]
     then
         apps+=(
@@ -379,6 +363,22 @@ koopa_install_all_apps() {
                 'sra-tools'
             )
         fi
+        # Build mamba (experimental).
+        apps+=(
+            'cli11'
+            'fmt'
+            'googletest'
+            'libarchive'
+            'libsolv'
+            'nlohmann-json'
+            'pybind11'
+            'reproc'
+            'spdlog'
+            'termcolor'
+            'tl-expected'
+            'yaml-cpp'
+            'mamba'
+        )
     fi
     koopa_add_to_path_start '/usr/local/bin'
     for app_name in "${apps[@]}"
