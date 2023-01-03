@@ -31,7 +31,7 @@
     "homebrew": false,
     "large": true,
     "man1": [],
-    "reverse_dependencies": ["openbb"],
+    "reverse_dependencies": [],
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2022.10"
   },
@@ -100,12 +100,12 @@
     "bin": [],
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-12-30",
     "dependencies": ["hdf5"],
     "homebrew": true,
     "man1": [],
     "url": ["http://arma.sourceforge.net/download.html"],
-    "version": "11.4.2"
+    "version": "11.4.3"
   },
   "asdf": {
     "bin": ["asdf"],
@@ -232,7 +232,7 @@
     "bin": ["aws"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-16",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
@@ -240,19 +240,19 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.9.4"
+    "version": "2.9.12"
   },
   "azure-cli": {
     "bin": ["az"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2022-12-30",
     "dependencies": ["python"],
     "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.42.0"
+    "version": "2.43.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -294,7 +294,7 @@
     "bin": ["bash-language-server"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-12-30",
     "dependencies": ["node"],
     "homebrew": true,
     "man1": [],
@@ -302,7 +302,7 @@
       "https://github.com/bash-lsp/bash-language-server/",
       "https://www.npmjs.com/package/bash-language-server/"
     ],
-    "version": "3.1.0"
+    "version": "4.1.3"
   },
   "bashcov": {
     "bin": ["bashcov"],
@@ -656,25 +656,25 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2022-12-30",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/plexus/chemacs2/"],
-    "version": "d722459287566e8c91ae077bf3d65966ebece190"
+    "version": "fb6301d1563c6cf88c8aac51ff8bcd4e06276139"
   },
   "chezmoi": {
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-12-24",
+    "date": "2023-01-02",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.28.0"
+    "version": "2.29.1"
   },
   "cli11": {
     "bin": [],
@@ -694,13 +694,13 @@
     "build_dependencies": [],
     "check": false,
     "conservative": false,
-    "date": "2022-10-11",
+    "date": "2022-12-30",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
-    "version": "92543c4a7acc6550265d90f91cceb4481a448248"
+    "version": "2e65f8f854ac43c78a5ff09ca4b98f28d1fb22de"
   },
   "cmake": {
     "bin": ["cmake", "cpack", "ctest"],
@@ -732,7 +732,7 @@
     "bin": ["conda"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-12-12",
+    "date": "2022-12-30",
     "dependencies": [],
     "homebrew": false,
     "reverse_dependencies": [
@@ -757,6 +757,7 @@
       "kallisto",
       "multiqc",
       "nextflow",
+      "openbb",
       "salmon",
       "sambamba",
       "samtools",
@@ -1616,13 +1617,13 @@
     "bin": ["gget"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-03",
+    "date": "2023-01-03",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "outdated": true,
-    "version": "0.3.10"
+    "version": "0.27.0"
   },
   "ghostscript": {
     "bin": ["gs"],
@@ -2316,7 +2317,7 @@
     "bin": ["latch"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-12-16",
+    "date": "2023-01-03",
     "dependencies": ["python3.10"],
     "homebrew": false,
     "man1": [],
@@ -2325,7 +2326,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.9.3"
+    "version": "2.9.4"
   },
   "less": {
     "bin": ["less"],
@@ -2707,13 +2708,13 @@
     "bin": ["llama"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-11-22",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/antonmedv/llama/"],
-    "version": "1.2.0"
+    "version": "1.4.0"
   },
   "llvm": {
     "bin": [],
@@ -2984,6 +2985,17 @@
     "man1": [],
     "version": "1.13"
   },
+  "nano": {
+    "bin": ["nano"],
+    "build_dependencies": ["pkg-config"],
+    "conservative": false,
+    "date": "2023-01-03",
+    "dependencies": ["gettext", "ncurses"],
+    "homebrew": true,
+    "large": false,
+    "man1": [],
+    "version": "7.1"
+  },
   "nanopolish": {
     "bin": ["nanopolish"],
     "build_dependencies": [],
@@ -3190,11 +3202,12 @@
     "bin": ["openbb"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-12-24",
-    "dependencies": ["anaconda"],
+    "date": "2023-01-03",
+    "dependencies": ["conda", "poetry"],
     "homebrew": false,
     "large": true,
     "man1": [],
+    "outdated": false,
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
@@ -3469,8 +3482,10 @@
     "date": "2022-12-12",
     "dependencies": ["python"],
     "homebrew": true,
+    "large": true,
     "man1": [],
     "outdated": true,
+    "reverse_dependencies": ["openbb"],
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
     "version": "1.3.1"
   },
@@ -3593,12 +3608,12 @@
     "bin": ["pygmentize"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
-    "version": "2.13.0"
+    "version": "2.14.0"
   },
   "pylint": {
     "bin": ["pylint"],
@@ -3641,9 +3656,9 @@
   },
   "python": {
     "bin": ["python", "python3"],
-    "date": "2022-12-08",
+    "date": "2023-01-03",
     "man1": ["python.1", "python3.1"],
-    "version": "3.10.9"
+    "version": "3.11.1"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
@@ -4968,7 +4983,7 @@
     "bin": ["yt-dlp"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-11",
+    "date": "2023-01-02",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
@@ -4976,7 +4991,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2022.11.11"
+    "version": "2023.01.02"
   },
   "zellij": {
     "bin": ["zellij"],

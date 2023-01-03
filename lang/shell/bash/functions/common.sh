@@ -13605,6 +13605,12 @@ koopa_install_multiqc() {
         "$@"
 }
 
+koopa_install_nano() {
+    koopa_install_app \
+        --name='nano' \
+        "$@"
+}
+
 koopa_install_nanopolish() {
     koopa_install_app \
         --name='nanopolish' \
@@ -24821,6 +24827,12 @@ koopa_uninstall_msgpack() {
 koopa_uninstall_multiqc() {
     koopa_uninstall_app \
         --name='multiqc' \
+        "$@"
+}
+
+koopa_uninstall_nano() {
+    koopa_uninstall_app \
+        --name='nano' \
         "$@"
 }
 
