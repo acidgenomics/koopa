@@ -2985,6 +2985,17 @@
     "man1": [],
     "version": "1.13"
   },
+  "nano": {
+    "bin": ["nano"],
+    "build_dependencies": ["pkg-config"],
+    "conservative": false,
+    "date": "2023-01-03",
+    "dependencies": ["gettext", "ncurses"],
+    "homebrew": true,
+    "large": false,
+    "man1": [],
+    "version": "7.1"
+  },
   "nanopolish": {
     "bin": ["nanopolish"],
     "build_dependencies": [],
