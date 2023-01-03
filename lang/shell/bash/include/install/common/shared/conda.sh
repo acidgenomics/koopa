@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2022-12-13.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
@@ -22,7 +22,7 @@ main() {
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_type']="$(koopa_os_type)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['py_version']="$(koopa_app_json_version 'python')"
+        ['py_version']="3.10"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['arch2']="${dict['arch']}"
@@ -61,15 +61,6 @@ main() {
         esac
     done
     dict['py_version']="$(koopa_major_minor_version "${dict['py_version']}")"
-    case "${dict['py_version']}" in
-        '3.7' | \
-        '3.8' | \
-        '3.9')
-            ;;
-        *)
-            dict['py_version']='3.9'
-            ;;
-    esac
     dict['py_major_version']="$(koopa_major_version "${dict['py_version']}")"
     dict['py_version2']="$( \
         koopa_gsub \
@@ -78,22 +69,29 @@ main() {
             --replacement='' \
             "$(koopa_major_minor_version "${dict['py_version']}")" \
     )"
-    dict['script']="Miniconda${dict['py_major_version']}-\
-py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
--${dict['arch2']}.sh"
-    # NOTE Temporary workaround for installing newer versions that aren't
-    # yet available at 'https://repo.anaconda.com/miniconda/'.
     case "${dict['version']}" in
         '22.11.1')
-            dict['from_latest']=1
-            dict['script']="Miniconda${dict['py_major_version']}-latest-\
-${dict['os_type2']}-${dict['arch2']}.sh"
-            dict['libmamba_version']='22.12.0'
+            dict['version2']="${dict['version']}-1"
+            ;;
+        *)
+            dict['version2']="${dict['version']}"
             ;;
     esac
+    dict['script']="Miniconda${dict['py_major_version']}-\
+py${dict['py_version2']}_${dict['version2']}-${dict['os_type2']}\
+-${dict['arch2']}.sh"
+# >     # NOTE Temporary workaround for installing newer versions that aren't
+# >     # yet available at 'https://repo.anaconda.com/miniconda/'.
+# >     case "${dict['version']}" in
+# >         '22.11.1')
+# >             dict['from_latest']=1
+# >             dict['script']="Miniconda${dict['py_major_version']}-latest-\
+# > ${dict['os_type2']}-${dict['arch2']}.sh"
+# >             dict['libmamba_version']='22.12.0'
+# >             ;;
+# >     esac
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
-    # > unset -v PYTHONHOME PYTHONPATH
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
     koopa_ln \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
@@ -111,6 +109,7 @@ ${dict['os_type2']}-${dict['arch2']}.sh"
             "conda==${dict['version']}" \
             "conda-libmamba-solver==${dict['libmamba_version']}"
     fi
+    "${app['conda']}" list
     "${app['conda']}" info --all
     "${app['conda']}" config --show
     return 0
