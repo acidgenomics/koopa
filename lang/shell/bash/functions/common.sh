@@ -11021,6 +11021,7 @@ koopa_install_all_apps() {
         'curl'
         'bash'
         'git'
+        'git-lfs'
         'lapack'
         'libffi'
         'libjpeg-turbo'
@@ -11241,6 +11242,8 @@ koopa_install_all_apps() {
         'grex'
         'hexyl'
         'sd'
+        'hugo'
+        'llama'
     )
     if koopa_is_linux
     then
@@ -11447,6 +11450,7 @@ koopa_install_all_binary_apps() {
         'geos'
         'ghostscript'
         'git'
+        'git-lfs'
         'glances'
         'glib'
         'gnupg'
@@ -11465,6 +11469,7 @@ koopa_install_all_binary_apps() {
         'hexyl'
         'htop'
         'httpie'
+        'hugo'
         'hyperfine'
         'icu4c'
         'imagemagick'
@@ -11503,6 +11508,7 @@ koopa_install_all_binary_apps() {
         'libuv'
         'libxml2'
         'libzip'
+        'llama'
         'lsd'
         'lua'
         'luarocks'
