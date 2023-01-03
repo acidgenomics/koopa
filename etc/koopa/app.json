@@ -31,7 +31,7 @@
     "homebrew": false,
     "large": true,
     "man1": [],
-    "reverse_dependencies": ["openbb"],
+    "reverse_dependencies": [],
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2022.10"
   },
@@ -757,6 +757,7 @@
       "kallisto",
       "multiqc",
       "nextflow",
+      "openbb",
       "salmon",
       "sambamba",
       "samtools",
@@ -3189,12 +3190,14 @@
   "openbb": {
     "bin": ["openbb"],
     "build_dependencies": [],
+    "check": false,
     "conservative": false,
     "date": "2022-12-30",
-    "dependencies": ["anaconda"],
+    "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
+    "notes": ["Installer is currently hanging due to poetry issue."],
     "outdated": false,
     "url": [
       "https://openbb.co/",
