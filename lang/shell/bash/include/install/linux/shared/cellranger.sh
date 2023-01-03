@@ -25,7 +25,7 @@ main() {
     koopa_mv "${dict['name']}-${dict['version']}" "${dict['libexec']}"
     (
         koopa_cd "${dict['prefix']}"
-        koopa_ln 'libexec/bin/cellranger' 'bin/cellranger'
+        koopa_ln 'libexec/bin' 'bin'
     )
     koopa_alert_note "Installation requires agreement to terms of service at: \
 'https://support.10xgenomics.com/single-cell-gene-expression/\
