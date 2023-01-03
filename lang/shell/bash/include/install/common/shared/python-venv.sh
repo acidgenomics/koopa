@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2022-12-16.
+    # @note Updated 2023-01-02.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -73,7 +73,7 @@ main() {
             dict['pkg_name']='SCons'
             ;;
         *)
-            dict['pkg_name']="$(koopa_snake_case_simple "${dict['name']}")"
+            dict['pkg_name']="${dict['name']}"
             ;;
     esac
     dict['py_version']="$(koopa_get_version "${app['python']}")"
