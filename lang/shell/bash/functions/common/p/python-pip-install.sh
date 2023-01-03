@@ -3,7 +3,7 @@
 koopa_python_pip_install() {
     # """
     # Internal pip install command.
-    # @note Updated 2022-10-19.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
@@ -13,13 +13,11 @@ koopa_python_pip_install() {
     # """
     local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['python']="$(koopa_locate_python)"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']=''
-    )
+    declare -A dict
+    dict['prefix']=''
     pos=()
     while (("$#"))
     do
@@ -58,6 +56,7 @@ koopa_python_pip_install() {
     install_args=(
         '--disable-pip-version-check'
         '--ignore-installed'
+        '--no-cache-dir'
         '--no-warn-script-location'
     )
     dl_args=(
