@@ -84,8 +84,8 @@ refs/tags/${dict['file']}"
 set -euo pipefail
 
 main() {
-    "${app['poetry_python']}" \\
-        "${dict['terminal_py_file']}" "$@"
+    '${app['poetry_python']}' \\
+        '${dict['terminal_py_file']}' "$@"
     return 0
 }
 
