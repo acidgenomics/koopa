@@ -13880,6 +13880,13 @@ koopa_install_pytest() {
 }
 
 koopa_install_python310() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.10' \
+        "$@"
+}
+
+koopa_install_python311() {
     local dict
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
@@ -13889,7 +13896,7 @@ koopa_install_python310() {
     )
     koopa_install_app \
         --installer='python' \
-        --name='python3.10' \
+        --name='python3.11' \
         "$@"
     (
         koopa_alert "Linking 'python' in '${dict['app_prefix']}'."
@@ -13908,13 +13915,6 @@ koopa_install_python310() {
         koopa_ln 'python3.10' 'python'
     )
     return 0
-}
-
-koopa_install_python311() {
-    koopa_install_app \
-        --installer='python' \
-        --name='python3.11' \
-        "$@"
 }
 
 koopa_install_r_devel() {
@@ -25103,6 +25103,12 @@ koopa_uninstall_pytest() {
 }
 
 koopa_uninstall_python310() {
+    koopa_uninstall_app \
+        --name='python3.10' \
+        "$@"
+}
+
+koopa_uninstall_python311() {
     local dict
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
@@ -25110,7 +25116,7 @@ koopa_uninstall_python310() {
         ['opt_prefix']="$(koopa_opt_prefix)"
     )
     koopa_uninstall_app \
-        --name='python3.10' \
+        --name='python3.11' \
         "$@"
     koopa_alert "Unlinking 'python' and 'python3'."
     koopa_rm  \
@@ -25119,12 +25125,6 @@ koopa_uninstall_python310() {
         "${dict['bin_prefix']}/python3" \
         "${dict['opt_prefix']}/python"
     return 0
-}
-
-koopa_uninstall_python311() {
-    koopa_uninstall_app \
-        --name='python3.11' \
-        "$@"
 }
 
 koopa_uninstall_r_devel() {
