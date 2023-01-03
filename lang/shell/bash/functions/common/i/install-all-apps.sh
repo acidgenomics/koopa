@@ -288,6 +288,8 @@ koopa_install_all_apps() {
         'grex'
         'hexyl'
         'sd'
+        'hugo'
+        'llama'
     )
     if koopa_is_linux
     then
