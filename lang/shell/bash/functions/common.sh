@@ -1012,6 +1012,10 @@ ${dict2['version']}"
         then
             koopa_assert_is_dir "${dict2['prefix']}"
         fi
+        if [[ -d "${dict2['prefix']}" ]]
+        then
+            dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
+        fi
         koopa_print "${dict2['prefix']}"
     done
     return 0
