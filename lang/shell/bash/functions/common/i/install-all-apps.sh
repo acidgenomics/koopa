@@ -179,7 +179,6 @@ koopa_install_all_apps() {
         'serf'
         'ruby'
         'subversion'
-        'r-devel'
         'shellcheck'
         'shunit2'
         'sox'
@@ -324,6 +323,7 @@ koopa_install_all_apps() {
     if [[ "${bool['large']}" -eq 1 ]]
     then
         apps+=(
+            'r-devel'
             'apache-airflow'
             'apache-spark'
             'azure-cli'

@@ -11139,7 +11139,6 @@ koopa_install_all_apps() {
         'serf'
         'ruby'
         'subversion'
-        'r-devel'
         'shellcheck'
         'shunit2'
         'sox'
@@ -11277,6 +11276,7 @@ koopa_install_all_apps() {
     if [[ "${bool['large']}" -eq 1 ]]
     then
         apps+=(
+            'r-devel'
             'apache-airflow'
             'apache-spark'
             'azure-cli'
@@ -11564,7 +11564,6 @@ koopa_install_all_binary_apps() {
         'python3.10'
         'python3.11'
         'r'
-        'r-devel'
         'radian'
         'ranger-fm'
         'rbenv'
@@ -11669,6 +11668,7 @@ koopa_install_all_binary_apps() {
             'julia'
             'llvm'
             'nim'
+            'r-devel'
             'rust'
         )
         if ! koopa_is_aarch64
