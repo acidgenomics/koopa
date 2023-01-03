@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework to use stable installer.
-# https://repo.anaconda.com/miniconda/Miniconda3-py39_22.11.1-1-MacOSX-x86_64.sh
-
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2022-12-30.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
@@ -25,7 +22,7 @@ main() {
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_type']="$(koopa_os_type)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['py_version']="$(koopa_app_json_version 'python')"
+        ['py_version']="3.10"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['arch2']="${dict['arch']}"
@@ -64,16 +61,6 @@ main() {
         esac
     done
     dict['py_version']="$(koopa_major_minor_version "${dict['py_version']}")"
-    case "${dict['py_version']}" in
-        '3.7' | \
-        '3.8' | \
-        '3.9' | \
-        '3.10')
-            ;;
-        *)
-            dict['py_version']='3.10'
-            ;;
-    esac
     dict['py_major_version']="$(koopa_major_version "${dict['py_version']}")"
     dict['py_version2']="$( \
         koopa_gsub \
