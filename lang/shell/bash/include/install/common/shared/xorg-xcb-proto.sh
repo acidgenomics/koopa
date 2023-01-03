@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME This is currently picking up wrong Python.
+
 main() {
     # """
     # Install xcb-proto.
-    # @note Updated 2022-10-05.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -14,8 +16,10 @@ main() {
     koopa_activate_app --build-only 'pkg-config'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
+        ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='xcb-proto'
@@ -31,7 +35,7 @@ proto/${dict['file']}"
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-silent-rules'
-        # > 'PYTHON=python3'
+        "PYTHON=${app['python']}"
     )
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"

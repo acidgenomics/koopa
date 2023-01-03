@@ -4983,7 +4983,7 @@
     "bin": ["yt-dlp"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2023-01-02",
+    "date": "2023-01-03",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
@@ -4991,7 +4991,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.01.02"
+    "version": "2023.1.2"
   },
   "zellij": {
     "bin": ["zellij"],
