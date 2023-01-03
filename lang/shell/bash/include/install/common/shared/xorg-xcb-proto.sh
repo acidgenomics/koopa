@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently picking up wrong Python.
-
 main() {
     # """
     # Install xcb-proto.
