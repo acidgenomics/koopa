@@ -683,6 +683,7 @@
     "date": "2022-12-06",
     "dependencies": [],
     "homebrew": true,
+    "large": true,
     "man1": [],
     "outdated": false,
     "reverse_dependencies": ["mamba"],
@@ -1422,6 +1423,7 @@
   "fmt": {
     "build_dependencies": ["cmake"],
     "date": "2022-11-08",
+    "large": true,
     "outdated": false,
     "reverse_dependencies": ["mamba"],
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
@@ -1776,6 +1778,7 @@
     "build_dependencies": ["cmake"],
     "date": "2022-11-04",
     "dependencies": [],
+    "large": true,
     "outdated": false,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/google/googletest/"],
@@ -2356,6 +2359,7 @@
     "conservative": true,
     "date": "2022-12-09",
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
+    "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://www.libarchive.org/"],
     "version": "3.6.2"
@@ -2583,6 +2587,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "dependencies": [],
+    "large": true,
     "man1": [],
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/openSUSE/libsolv/"],
@@ -3131,7 +3136,11 @@
     "version": "1.11.1"
   },
   "nlohmann-json": {
+    "bin": [],
     "date": "2022-11-05",
+    "large": true,
+    "man1": [],
+    "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/nlohmann/json/"],
     "version": "3.11.2"
   },
@@ -3563,6 +3572,7 @@
     "build_dependencies": ["cmake"],
     "conservative": true,
     "date": "2023-01-03",
+    "large": true,
     "man1": [],
     "reverse_dependencies": ["mamba"],
     "url": ["https://pybind11.readthedocs.io/"],
@@ -4015,6 +4025,7 @@
     "date": "2022-11-03",
     "dependencies": [],
     "homebrew": true,
+    "large": true,
     "man1": [],
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/DaanDeMeyer/reproc/"],
@@ -4334,6 +4345,7 @@
     "build_dependencies": ["cmake", "patch", "pkg-config"],
     "conservative": true,
     "date": "2022-11-04",
+    "large": true,
     "man1": [],
     "outdated": false,
     "reverse_dependencies": ["mamba"],
@@ -4487,6 +4499,8 @@
   },
   "termcolor": {
     "date": "2022-11-05",
+    "large": true,
+    "reverse_dependencies": ["mamba"],
     "version": "2.1.0",
     "url": [
       "https://termcolor.readthedocs.io/",
@@ -4521,6 +4535,7 @@
     "build_dependencies": ["cmake"],
     "conservative": true,
     "date": "2022-11-04",
+    "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/TartanLlama/expected/"],
     "version": "1.0.0"
@@ -4951,6 +4966,7 @@
     "build_dependencies": ["cmake", "make"],
     "conservative": true,
     "dependencies": [],
+    "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/jbeder/yaml-cpp/"],
     "version": "0.7.0"
