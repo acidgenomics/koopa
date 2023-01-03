@@ -37,6 +37,8 @@ main() {
     koopa_assert_is_dir "${dict['cargo_home']}"
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(
+        '--config' 'net.git-fetch-with-cli=true'
+        '--config' 'net.retry=5'
         '--jobs' "${dict['jobs']}"
         '--locked'
         '--root' "${dict['prefix']}"
@@ -59,6 +61,12 @@ main() {
     esac
     install_args+=("${dict['cargo_name']}")
     case "${dict['name']}" in
+        'broot')
+            install_args+=(
+                '--git' 'https://github.com/Canop/broot.git'
+                '--tag' "v${dict['version']}"
+            )
+            ;;
         'dog')
             install_args+=(
                 '--git' 'https://github.com/ogham/dog.git'
