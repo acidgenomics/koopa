@@ -1146,13 +1146,13 @@
     "bin": [],
     "build_dependencies": [],
     "check": false,
-    "date": "2022-11-09",
+    "date": "2023-01-03",
     "dependencies": ["chemacs", "emacs"],
     "homebrew": false,
     "man1": [],
     "outdated": true,
     "url": ["https://github.com/doomemacs/doomemacs/"],
-    "version": "9d4d5b756a8598c4b5c842e9f1f33148af2af8fd"
+    "version": "e96624926d724aff98e862221422cd7124a99c19"
   },
   "dotfiles": {
     "bin": [],
@@ -1203,14 +1203,14 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": true,
     "platform": "linux",
     "url": ["https://fedorahosted.org/elfutils/"],
-    "version": "0.187"
+    "version": "0.188"
   },
   "emacs": {
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
@@ -1387,13 +1387,13 @@
     "bin": ["flake8"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://flake8.pycqa.org/", "https://github.com/PyCQA/flake8/"],
-    "version": "5.0.4"
+    "version": "6.0.0"
   },
   "flex": {
     "bin": [],
@@ -1423,6 +1423,7 @@
   "fmt": {
     "build_dependencies": ["cmake"],
     "date": "2022-11-08",
+    "homebrew": true,
     "large": true,
     "outdated": false,
     "reverse_dependencies": ["mamba"],
@@ -1520,13 +1521,13 @@
     "bin": ["awk", "gawk"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": ["awk.1", "gawk.1"],
     "outdated": false,
     "url": ["https://ftp.gnu.org/gnu/gawk/"],
-    "version": "5.2.0"
+    "version": "5.2.1"
   },
   "gcc": {
     "bin": ["gfortran"],
@@ -1637,31 +1638,32 @@
     "homebrew": true,
     "outdated": true,
     "man1": ["gs.1"],
+    "notes": ["FIXME Need to update this to 10.0."],
     "version": "9.54.0"
   },
   "git": {
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": ["zlib", "gettext", "openssl3", "curl"],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.38.1"
+    "version": "2.39.0"
   },
   "git-lfs": {
     "bin": ["git-lfs"],
     "build_dependencies": ["go"],
     "conservative": false,
-    "date": "2022-11-23",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://git-lfs.github.com/"],
-    "version": "3.2.0"
+    "version": "3.3.0"
   },
   "glances": {
     "bin": ["glances"],
@@ -1682,7 +1684,7 @@
     "bin": [],
     "build_dependencies": ["meson", "ninja", "pkg-config", "python"],
     "conservative": true,
-    "date": "2022-10-12",
+    "date": "2023-01-03",
     "dependencies": ["zlib", "gettext", "libffi", "pcre"],
     "homebrew": true,
     "man1": [],
@@ -1691,7 +1693,7 @@
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/"
     ],
-    "version": "2.74.1"
+    "version": "2.74.4"
   },
   "gmp": {
     "bin": [],
@@ -1745,7 +1747,7 @@
     "bin": ["go"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "large": false,
@@ -1759,7 +1761,7 @@
       "yq"
     ],
     "url": ["https://golang.org/dl/"],
-    "version": "1.19.3"
+    "version": "1.19.4"
   },
   "google-cloud-sdk": {
     "bin": ["gcloud"],
@@ -1778,6 +1780,7 @@
     "build_dependencies": ["cmake"],
     "date": "2022-11-04",
     "dependencies": [],
+    "homebrew": true,
     "large": true,
     "outdated": false,
     "reverse_dependencies": ["mamba"],
@@ -1800,7 +1803,7 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": ["openjdk"],
     "homebrew": true,
     "man1": [],
@@ -1810,7 +1813,7 @@
       "https://www.graphviz.org/",
       "https://gitlab.com/graphviz/graphviz/"
     ],
-    "version": "7.0.0"
+    "version": "7.0.5"
   },
   "grep": {
     "bin": ["gegrep", "gfgrep", "ggrep"],
@@ -2015,13 +2018,12 @@
   },
   "hdf5": {
     "bin": [
-      "gif2h5",
-      "h52gif",
       "h5c++",
       "h5cc",
       "h5clear",
       "h5copy",
       "h5debug",
+      "h5delete",
       "h5diff",
       "h5dump",
       "h5fc",
@@ -2040,13 +2042,13 @@
     ],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-01-03",
     "dependencies": ["zlib", "gcc"],
     "homebrew": true,
     "man1": [],
     "reverse_dependencies": ["armadillo"],
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
-    "version": "1.12.2"
+    "version": "1.14.0"
   },
   "hexyl": {
     "bin": ["hexyl"],
@@ -2182,7 +2184,7 @@
     ],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [
@@ -2195,18 +2197,18 @@
     ],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.0-52"
+    "version": "7.1.0-57"
   },
   "ipython": {
     "bin": ["ipython"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
-    "version": "8.6.0"
+    "version": "8.7.0"
   },
   "isort": {
     "bin": ["isort"],
@@ -2269,15 +2271,12 @@
     "bin": ["jupyter-lab"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": ["conda"],
     "homebrew": false,
     "man1": [],
-    "url": [
-      "https://jupyter.org/install/",
-      "https://pypi.org/project/jupyterlab/"
-    ],
-    "version": "3.5.0"
+    "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
+    "version": "3.5.2"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -2340,8 +2339,8 @@
     "dependencies": [],
     "homebrew": true,
     "man1": ["less.1"],
-    "url": ["https://ftp.gnu.org/gnu/less/"],
-    "version": "617"
+    "url": ["https://github.com/gwsw/less/", "https://ftp.gnu.org/gnu/less/"],
+    "version": "619"
   },
   "lesspipe": {
     "bin": ["lesspipe.sh"],
