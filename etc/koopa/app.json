@@ -427,7 +427,7 @@
   "bioawk": {
     "bin": ["bioawk"],
     "build_dependencies": [],
-    "conservaitve": false,
+    "conservative": false,
     "date": "2019-10-26",
     "dependencies": ["conda"],
     "homebrew": false,
@@ -486,12 +486,12 @@
     "bin": ["btm"],
     "build_dependencies": ["rust"],
     "conservative": false,
-    "date": "2022-12-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/ClementTsang/bottom/"],
-    "version": "0.6.8"
+    "version": "0.7.0"
   },
   "bowtie2": {
     "bin": ["bowtie2"],
@@ -629,16 +629,16 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "platform": "linux",
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation"
     ],
-    "version": "7.0.0"
+    "version": "7.1.0"
   },
   "cheat": {
     "bin": ["cheat"],
@@ -1057,12 +1057,12 @@
     "bin": ["curl", "curl-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": ["ca-certificates"],
     "homebrew": true,
     "man1": ["curl.1", "curl-config.1"],
     "url": ["https://curl.haxx.se/"],
-    "version": "7.86.0"
+    "version": "7.87.0"
   },
   "deeptools": {
     "bin": ["deeptools"],
@@ -1091,7 +1091,7 @@
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/dandavison/delta/"],
-    "version": "0.14.0"
+    "version": "0.15.1"
   },
   "diff-so-fancy": {
     "bin": ["diff-so-fancy"],
