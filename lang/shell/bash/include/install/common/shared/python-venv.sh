@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2023-01-02.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -14,10 +14,12 @@ main() {
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['pip_cache_prefix']="$(koopa_init_dir 'pip-cache')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['py_maj_ver']=''
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    koopa_assert_is_dir "${dict['pip_cache_prefix']}"
     pos=()
     while (("$#"))
     do
@@ -92,6 +94,7 @@ main() {
 # >             esac
 # >             ;;
 # >     esac
+    export PIP_CACHE_DIR="${dict['pip_cache_prefix']}"
     koopa_print_env
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
