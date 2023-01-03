@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Need to resolve CA certificates issue.
-# Could not find a suitable TLS CA certificate bundle, invalid path: /opt/koopa/app/openbb/2.1.0/libexec/conda/lib/python3.9/site-packages/certifi/cacert.pem
-
 main() {
     # """
     # Install OpenBB terminal.
     # @note Updated 2023-01-03.
+    #
+    # This may error due to Little Snitch blocking on macOS.
     #
     # @seealso
     # - https://github.com/OpenBB-finance/OpenBBTerminal/blob/main/
@@ -18,13 +17,11 @@ main() {
     local app dict
     koopa_activate_app 'ca-certificates'
     declare -A app
-    app['cat']="$(koopa_locate_cat --allow-system)"
-    [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
         ['conda_prefix']="$(koopa_conda_prefix)"
         ['name']='OpenBBTerminal'
-        ['poetry_cache_dir']='poetry/cache'
+        ['poetry_cache_dir']="$(koopa_init_dir 'poetry-cache')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
@@ -34,55 +31,59 @@ main() {
     dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict['cacert']}"
     dict['libexec']="${dict['prefix']}/libexec"
-    dict['env_prefix']="${dict['libexec']}/conda"
-    dict['python_prefix']="${dict['libexec']}/python"
+    dict['conda_env_prefix']="${dict['libexec']}/conda"
+    dict['poetry_prefix']="${dict['libexec']}/poetry"
+    koopa_mkdir \
+        "${dict['conda_env_prefix']}" \
+        "${dict['poetry_prefix']}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/OpenBB-finance/${dict['name']}/archive/\
 refs/tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_mkdir \
-        "${dict['env_prefix']}" \
-        "${dict['poetry_cache_dir']}" \
-        "${dict['python_prefix']}"
-    dict['env_file']='build/conda/conda-3-9-env.yaml'
-    koopa_assert_is_file "${dict['env_file']}"
+    dict['conda_env_file']='build/conda/conda-3-9-env.yaml'
+    koopa_assert_is_file "${dict['conda_env_file']}"
+    export DEFAULT_CA_BUNDLE_PATH="${dict['cacert']}"
+    export PIP_REQUIRE_VIRTUALENV=false
+    koopa_print_env
     koopa_activate_conda "${dict['conda_prefix']}"
     conda env create \
         --force \
-        --file "${dict['env_file']}" \
-        --prefix "${dict['env_prefix']}"
-    app['poetry']="${dict['env_prefix']}/bin/poetry"
-    [[ -x "${app['poetry']}" ]] || return 1
-    conda activate "${dict['env_prefix']}"
-    export DEFAULT_CA_BUNDLE_PATH="${dict['cacert']}"
-    export PIP_REQUIRE_VIRTUALENV=false
-    export POETRY_CACHE_DIR="${dict['poetry_cache_dir']}"
-    # poetry 1.1.13 doesn't support '--no-cache'.
-    # This step may error due to Little Snitch blocking rule on macOS.
-    "${app['poetry']}" install --no-interaction --verbose
-    # > conda install --yes 'tensorflow'
+        --file "${dict['conda_env_file']}" \
+        --prefix "${dict['conda_env_prefix']}"
     koopa_conda_deactivate
-    koopa_cp ./* --target-directory="${dict['python_prefix']}"
+    app['poetry']="${dict['conda_env_prefix']}/bin/poetry"
+    [[ -x "${app['poetry']}" ]] || return 1
+    dict['poetry_config_file']='poetry.toml'
+    koopa_assert_is_not_file "${dict['poetry_config_file']}"
+    "${app['poetry']}" config \
+        cache-dir "${dict['poetry_cache_dir']}" --local
+    koopa_assert_is_file "${dict['poetry_config_file']}"
+    "${app['poetry']}" config --list
+    "${app['poetry']}" install -vvv --no-interaction
+    # > conda install --yes 'tensorflow'
+    koopa_rm "${dict['poetry_config_file']}"
+    koopa_cp ./* --target-directory="${dict['poetry_prefix']}"
+    koopa_assert_is_file \
+        "${dict['conda_env_prefix']}/bin/python3" \
+        "${dict['poetry_prefix']}/terminal.py"
     dict['bin_file']="${dict['prefix']}/bin/openbb"
-    # FIXME Rework using koopa_write_string'...
-    koopa_touch "${dict['bin_file']}"
-    "${app['cat']}" > "${dict['bin_file']}" << END
+    read -r -d '' "dict[bin_string]" << END || true
 #!/bin/sh
 set -euo pipefail
 
-SCRIPT_PATH="\$(readlink -f "\$0")"
-PREFIX="\$(cd -- "\$(dirname -- "\$SCRIPT_PATH")/.." && pwd)"
-
 main() {
-    "\${PREFIX}/libexec/conda/bin/python3" \
-        "\${PREFIX}/libexec/python/terminal.py"
+    "${dict['conda_env_prefix']}/bin/python3" \
+        "${dict['poetry_prefix']}/terminal.py"
     return 0
 }
 
 main "\$@"
 END
+    koopa_write_string \
+        --file="${dict['bin_file']}" \
+        --string="${dict['bin_string']}"
     koopa_chmod +x "${dict['bin_file']}"
     return 0
 }
