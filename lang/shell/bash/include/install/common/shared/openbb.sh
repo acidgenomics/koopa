@@ -1,23 +1,20 @@
 #!/usr/bin/env bash
 
-# FIXME Installer is now hanging on my MacBook.
-
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2022-11-16.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://github.com/OpenBB-finance/OpenBBTerminal/blob/main/
     #     openbb_terminal/README.md#anaconda--python
     # """
     local app dict
-    declare -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-    )
+    declare -A app
+    app['cat']="$(koopa_locate_cat --allow-system)"
     [[ -x "${app['cat']}" ]] || return 1
     declare -A dict=(
-        ['conda_prefix']="$(koopa_anaconda_prefix)"
+        ['conda_prefix']="$(koopa_conda_prefix)"
         ['name']='OpenBBTerminal'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -44,7 +41,11 @@ refs/tags/${dict['file']}"
         --prefix "${dict['env_prefix']}"
     conda activate "${dict['env_prefix']}"
     export PIP_REQUIRE_VIRTUALENV=false
-    poetry install
+    app['poetry']="${dict['env_prefix']}/bin/poetry"
+    [[ -x "${app['poetry']}" ]] || return 1
+    # FIXME This step is hanging on macOS.
+    # NOTE poetry 1.1.13 doesn't support '--no-cache'.
+    "${app['poetry']}" install --no-interaction --verbose
     # > conda install --yes 'tensorflow'
     koopa_conda_deactivate
     koopa_cp ./* --target-directory="${dict['python_prefix']}"
