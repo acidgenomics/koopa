@@ -735,6 +735,7 @@
     "date": "2022-12-30",
     "dependencies": [],
     "homebrew": false,
+    "large": true,
     "reverse_dependencies": [
       "autodock",
       "bamtools",
