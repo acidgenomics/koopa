@@ -65,6 +65,9 @@ main() {
     dict['libexec']="${dict['prefix']}/libexec"
     # NOTE Consider reworking the case-sensitivity edge case handling here.
     case "${dict['name']}" in
+        'azure-cli')
+            dict['pkg_name']='azure_cli'
+            ;;
         'glances')
             dict['pkg_name']='Glances'
             ;;
