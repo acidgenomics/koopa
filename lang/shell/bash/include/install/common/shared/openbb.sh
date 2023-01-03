@@ -42,7 +42,6 @@ refs/tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_rm 'tests' 'website'
     dict['conda_env_file']='build/conda/conda-3-9-env.yaml'
     koopa_assert_is_file "${dict['conda_env_file']}"
     export DEFAULT_CA_BUNDLE_PATH="${dict['cacert']}"
@@ -64,7 +63,10 @@ refs/tags/${dict['file']}"
     "${app['poetry']}" config --list
     "${app['poetry']}" install -vvv --no-interaction
     # > conda install --yes 'tensorflow'
-    koopa_rm "${dict['poetry_config_file']}"
+    koopa_rm \
+        "${dict['poetry_config_file']}" \
+        'tests' \
+        'website'
     koopa_cp ./* --target-directory="${dict['src_prefix']}"
     koopa_assert_is_file \
         "${dict['conda_env_prefix']}/bin/python3" \
