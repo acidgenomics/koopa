@@ -27,8 +27,5 @@ main() {
         koopa_cd "${dict['prefix']}"
         koopa_ln 'libexec/bin' 'bin'
     )
-    koopa_alert_note "Installation requires agreement to terms of service at: \
-'https://support.10xgenomics.com/single-cell-gene-expression/\
-software/downloads/latest'."
     return 0
 }
