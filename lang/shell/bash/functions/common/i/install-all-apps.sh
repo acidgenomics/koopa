@@ -50,6 +50,7 @@ koopa_install_all_apps() {
         'libunistring'
         'libxml2'
         'gettext'
+        'nano'
         'ca-certificates'
         'openssl1'
         'openssl3'
