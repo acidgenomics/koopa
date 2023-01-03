@@ -4073,13 +4073,13 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2022.07.2+576"
+    "version": "2022.12.0+353"
   },
   "rsync": {
     "bin": ["rsync"],
