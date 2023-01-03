@@ -21,7 +21,6 @@ main() {
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
         ['conda_prefix']="$(koopa_conda_prefix)"
         ['name']='OpenBBTerminal'
-        ['poetry_cache_dir']="$(koopa_init_dir 'poetry-cache')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
@@ -32,9 +31,11 @@ main() {
     koopa_assert_is_file "${dict['cacert']}"
     dict['libexec']="${dict['prefix']}/libexec"
     dict['conda_env_prefix']="${dict['libexec']}/conda"
+    dict['poetry_prefix']="${dict['libexec']}/poetry"
     dict['src_prefix']="${dict['libexec']}/openbb"
     koopa_mkdir \
         "${dict['conda_env_prefix']}" \
+        "${dict['poetry_prefix']}" \
         "${dict['src_prefix']}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/OpenBB-finance/${dict['name']}/archive/\
@@ -58,27 +59,33 @@ refs/tags/${dict['file']}"
     dict['poetry_config_file']='poetry.toml'
     koopa_assert_is_not_file "${dict['poetry_config_file']}"
     "${app['poetry']}" config \
-        cache-dir "${dict['poetry_cache_dir']}" --local
+        cache-dir "${dict['poetry_prefix']}" --local
     koopa_assert_is_file "${dict['poetry_config_file']}"
     "${app['poetry']}" config --list
     "${app['poetry']}" install -vvv --no-interaction
     # > conda install --yes 'tensorflow'
-    koopa_rm \
-        "${dict['poetry_config_file']}" \
-        'tests' \
-        'website'
+    koopa_rm 'tests' 'website'
     koopa_cp ./* --target-directory="${dict['src_prefix']}"
-    koopa_assert_is_file \
-        "${dict['conda_env_prefix']}/bin/python3" \
-        "${dict['src_prefix']}/terminal.py"
+    dict['poetry_venv_prefix']="$( \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict['poetry_prefix']}/virtualenvs" \
+            --type='d' \
+    )"
+    koopa_assert_is_dir "${dict['poetry_venv_prefix']}"
+    app['poetry_python']="${dict['poetry_venv_prefix']}/bin/python3"
+    koopa_assert_is_executable "${app['poetry_python']}"
+    dict['terminal_py_file']="${dict['src_prefix']}/terminal.py"
+    koopa_assert_is_file "${dict['terminal_py_file']}"
     dict['bin_file']="${dict['prefix']}/bin/openbb"
     read -r -d '' "dict[bin_string]" << END || true
 #!/bin/sh
 set -euo pipefail
 
 main() {
-    "${dict['conda_env_prefix']}/bin/python3" \
-        "${dict['src_prefix']}/terminal.py"
+    "${app['poetry_python']}" \\
+        "${dict['terminal_py_file']}" "$@"
     return 0
 }
 
