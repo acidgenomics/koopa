@@ -3910,6 +3910,7 @@
       "zstd"
     ],
     "homebrew": false,
+    "large": true,
     "man1": [],
     "outdated": false,
     "url": [
