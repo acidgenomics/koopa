@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libxcb.
-    # @note Updated 2022-10-05.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
@@ -19,8 +19,10 @@ main() {
         'xorg-libxdmcp'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
+        ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='libxcb'
@@ -43,6 +45,7 @@ main() {
         '--disable-silent-rules'
         '--enable-devel-docs=no'
         '--with-doxygen=no'
+        "PYTHON=${app['python']}"
     )
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
