@@ -18643,13 +18643,11 @@ koopa_python_deactivate_venv() {
 koopa_python_pip_install() {
     local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['python']="$(koopa_locate_python)"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']=''
-    )
+    declare -A dict
+    dict['prefix']=''
     pos=()
     while (("$#"))
     do
@@ -18685,6 +18683,7 @@ koopa_python_pip_install() {
     install_args=(
         '--disable-pip-version-check'
         '--ignore-installed'
+        '--no-cache-dir'
         '--no-warn-script-location'
     )
     dl_args=(
