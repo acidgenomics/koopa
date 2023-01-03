@@ -60,6 +60,7 @@ koopa_install_all_apps() {
         # NOTE This requires bootstrap on macOS.
         'bash'
         'git'
+        'git-lfs'
         'lapack'
         'libffi'
         'libjpeg-turbo'

@@ -115,6 +115,7 @@ koopa_install_all_binary_apps() {
         'geos'
         'ghostscript'
         'git'
+        'git-lfs'
         'glances'
         'glib'
         'gnupg'
