@@ -14,12 +14,12 @@ main() {
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['pip_cache_prefix']="$(koopa_init_dir 'pip-cache')"
+        ['pip_cache_dir']="$(koopa_init_dir 'pip-cache')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['py_maj_ver']=''
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    koopa_assert_is_dir "${dict['pip_cache_prefix']}"
+    koopa_assert_is_dir "${dict['pip_cache_dir']}"
     pos=()
     while (("$#"))
     do
@@ -94,7 +94,7 @@ main() {
 # >             esac
 # >             ;;
 # >     esac
-    export PIP_CACHE_DIR="${dict['pip_cache_prefix']}"
+    export PIP_CACHE_DIR="${dict['pip_cache_dir']}"
     koopa_print_env
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
