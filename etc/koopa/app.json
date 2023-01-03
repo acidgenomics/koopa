@@ -1763,13 +1763,13 @@
     "bin": ["gcloud"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
-    "dependencies": [],
+    "date": "2023-01-03",
+    "dependencies": ["python3.10"],
     "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "408.0.1"
+    "version": "412.0.0"
   },
   "googletest": {
     "bin": [],
@@ -3683,7 +3683,7 @@
     "homebrew": true,
     "man1": ["python3.10.1"],
     "outdated": true,
-    "reverse_dependencies": ["latch"],
+    "reverse_dependencies": ["google-cloud-sdk", "latch"],
     "url": ["https://www.python.org/"],
     "version": "3.10.9"
   },
@@ -3744,7 +3744,6 @@
       "xorg-xcb-proto",
       "xorg-libxcb",
       "glib",
-      "google-cloud-sdk",
       "htop",
       "nghttp2",
       "neovim",
