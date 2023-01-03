@@ -32,16 +32,17 @@ main() {
     koopa_assert_is_file "${dict['cacert']}"
     dict['libexec']="${dict['prefix']}/libexec"
     dict['conda_env_prefix']="${dict['libexec']}/conda"
-    dict['poetry_prefix']="${dict['libexec']}/poetry"
+    dict['src_prefix']="${dict['libexec']}/openbb"
     koopa_mkdir \
         "${dict['conda_env_prefix']}" \
-        "${dict['poetry_prefix']}"
+        "${dict['src_prefix']}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/OpenBB-finance/${dict['name']}/archive/\
 refs/tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    koopa_rm 'tests' 'website'
     dict['conda_env_file']='build/conda/conda-3-9-env.yaml'
     koopa_assert_is_file "${dict['conda_env_file']}"
     export DEFAULT_CA_BUNDLE_PATH="${dict['cacert']}"
@@ -64,10 +65,10 @@ refs/tags/${dict['file']}"
     "${app['poetry']}" install -vvv --no-interaction
     # > conda install --yes 'tensorflow'
     koopa_rm "${dict['poetry_config_file']}"
-    koopa_cp ./* --target-directory="${dict['poetry_prefix']}"
+    koopa_cp ./* --target-directory="${dict['src_prefix']}"
     koopa_assert_is_file \
         "${dict['conda_env_prefix']}/bin/python3" \
-        "${dict['poetry_prefix']}/terminal.py"
+        "${dict['src_prefix']}/terminal.py"
     dict['bin_file']="${dict['prefix']}/bin/openbb"
     read -r -d '' "dict[bin_string]" << END || true
 #!/bin/sh
@@ -75,7 +76,7 @@ set -euo pipefail
 
 main() {
     "${dict['conda_env_prefix']}/bin/python3" \
-        "${dict['poetry_prefix']}/terminal.py"
+        "${dict['src_prefix']}/terminal.py"
     return 0
 }
 
