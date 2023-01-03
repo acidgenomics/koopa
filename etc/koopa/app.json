@@ -626,7 +626,7 @@
     "version": "1.17.4"
   },
   "cellranger": {
-    "bin": [],
+    "bin": ["cellranger"],
     "build_dependencies": [],
     "conservative": false,
     "date": "2023-01-03",
@@ -1108,13 +1108,13 @@
     "bin": ["difft"],
     "build_dependencies": ["rust"],
     "conservative": false,
-    "date": "2022-12-24",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": false,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.39.0"
+    "version": "0.40.0"
   },
   "docker-credential-pass": {
     "aliases": {
