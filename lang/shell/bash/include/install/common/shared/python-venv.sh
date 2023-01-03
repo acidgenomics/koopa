@@ -14,12 +14,10 @@ main() {
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['pip_cache_dir']="$(koopa_init_dir 'pip-cache')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['py_maj_ver']=''
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    koopa_assert_is_dir "${dict['pip_cache_dir']}"
     pos=()
     while (("$#"))
     do
@@ -65,8 +63,10 @@ main() {
     dict['libexec']="${dict['prefix']}/libexec"
     # NOTE Consider reworking the case-sensitivity edge case handling here.
     case "${dict['name']}" in
-        'azure-cli')
-            dict['pkg_name']='azure_cli'
+        'apache-airflow' | \
+        'azure-cli' | \
+        'py-spy')
+            dict['pkg_name']="$(koopa_snake_case_simple "${dict['name']}")"
             ;;
         'glances')
             dict['pkg_name']='Glances'
@@ -97,7 +97,6 @@ main() {
 # >             esac
 # >             ;;
 # >     esac
-    export PIP_CACHE_DIR="${dict['pip_cache_dir']}"
     koopa_print_env
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
@@ -106,6 +105,7 @@ main() {
     dict['record_file']="${dict['libexec']}/lib/\
 python${dict['py_maj_min_ver']}/site-packages/\
 ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
+    koopa_assert_is_file "${dict['record_file']}"
     if [[ -f "${dict['record_file']}" ]]
     then
         # Ensure we exclude any nested subdirectories in libexec bin, which is
@@ -126,10 +126,10 @@ ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
             | "${app['cut']}" -d ',' -f '1' \
             | "${app['cut']}" -d '/' -f '7' \
         )"
-    else
-        koopa_alert_note "No record file at '${dict['record_file']}."
-        bin_names=("${dict['pkg_name']}")
-        man1_names=()
+# >     else
+# >         koopa_alert_note "No record file at '${dict['record_file']}."
+# >         bin_names=("${dict['pkg_name']}")
+# >         man1_names=()
     fi
     koopa_assert_is_array_non_empty "${bin_names[@]:-}"
     for bin_name in "${bin_names[@]}"
