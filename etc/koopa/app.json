@@ -3683,6 +3683,32 @@
     "homebrew": true,
     "man1": ["python3.10.1"],
     "outdated": true,
+    "reverse_dependencies": ["latch"],
+    "url": ["https://www.python.org/"],
+    "version": "3.10.9"
+  },
+  "python3.11": {
+    "bin": ["python3.11", "python3.11-config"],
+    "build_dependencies": ["make", "pkg-config"],
+    "conservative": true,
+    "date": "2022-12-08",
+    "dependencies": [
+      "bzip2",
+      "expat",
+      "gdbm",
+      "libedit",
+      "libffi",
+      "mpdecimal",
+      "ncurses",
+      "openssl3",
+      "sqlite",
+      "unzip",
+      "xz",
+      "zlib"
+    ],
+    "homebrew": true,
+    "man1": ["python3.11.1"],
+    "outdated": true,
     "reverse_dependencies": [
       "meson",
       "ninja",
@@ -3698,7 +3724,6 @@
       "httpie",
       "ipython",
       "isort",
-      "latch",
       "pipx",
       "poetry",
       "py-spy",
@@ -3733,32 +3758,6 @@
       "node",
       "llvm"
     ],
-    "url": ["https://www.python.org/"],
-    "version": "3.10.9"
-  },
-  "python3.11": {
-    "bin": ["python3.11", "python3.11-config"],
-    "build_dependencies": ["make", "pkg-config"],
-    "conservative": true,
-    "date": "2022-12-08",
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "gdbm",
-      "libedit",
-      "libffi",
-      "mpdecimal",
-      "ncurses",
-      "openssl3",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
-    "homebrew": true,
-    "man1": ["python3.11.1"],
-    "outdated": true,
-    "reverse_dependencies": [],
     "url": ["https://www.python.org/"],
     "version": "3.11.1"
   },
