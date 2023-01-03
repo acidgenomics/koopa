@@ -3743,7 +3743,6 @@
       "vim",
       "xorg-xcb-proto",
       "xorg-libxcb",
-      "xorg-libx11",
       "glib",
       "google-cloud-sdk",
       "htop",

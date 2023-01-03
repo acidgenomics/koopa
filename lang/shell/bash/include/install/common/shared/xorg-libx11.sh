@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libx11.
-    # @note Updated 2022-10-05.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
