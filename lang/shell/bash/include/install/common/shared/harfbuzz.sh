@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Consider adding support for:
+# NOTE Consider adding support for:
 # - cairo
 # - gobject-introspection
 # - graphite2
@@ -8,7 +8,7 @@
 main() {
     # """
     # Install HarfBuzz.
-    # @note Updated 2022-10-12.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://harfbuzz.github.io/building.html
@@ -66,10 +66,10 @@ archive/${dict['file']}"
         # Avoid 'lib64' inconsistency on Linux.
         '-Dlibdir=lib'
     )
-    "${app['meson']}" "${meson_args[@]}" build
+    "${app['meson']}" setup "${meson_args[@]}" 'build'
     # Alternate build approach using meson.
-    # > "${app['meson']}" compile -C build
-    # > "${app['meson']}" test -C build
+    # > "${app['meson']}" compile -C 'build'
+    # > "${app['meson']}" test -C 'build'
     # Using ninja instead, as it's faster.
     "${app['ninja']}" -j "${dict['jobs']}" -C 'build'
     # > "${app['ninja']}" test
