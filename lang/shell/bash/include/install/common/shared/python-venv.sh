@@ -65,7 +65,9 @@ main() {
     case "${dict['name']}" in
         'apache-airflow' | \
         'azure-cli' | \
-        'py-spy')
+        'py-spy' | \
+        'ranger-fm' | \
+        'yt-dlp')
             dict['pkg_name']="$(koopa_snake_case_simple "${dict['name']}")"
             ;;
         'glances')
