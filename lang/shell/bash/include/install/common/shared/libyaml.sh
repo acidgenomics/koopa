@@ -14,6 +14,7 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
+        'm4' \
         'autoconf' \
         'automake' \
         'libtool'
