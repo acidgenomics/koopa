@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-12-08.
+#' @note Updated 2023-01-03.
 #'
 #' @section Restarting R:
 #'
@@ -167,20 +167,20 @@ local({  # nolint
     }
     ## Package installation {{{2
     ## -------------------------------------------------------------------------
-    ## Using a versioned RStudio Package Manager (RSPM) CRAN snapshot on Linux
-    ## for increased reproducibility.
+    ## Using a versioned Posit Package Manager CRAN snapshot on Linux for
+    ## increased reproducibility.
     ##
-    ## Note that RSPM does not support binary packages for macOS.
+    ## Note that this approach does not support binary packages for macOS.
     ##
     ## See also:
-    ## - https://packagemanager.rstudio.com/
+    ## - https://packagemanager.posit.co/
     ## - https://mran.microsoft.com/
     ## - https://hub.docker.com/r/rocker/r-ver/dockerfile
     ##
     ## CRAN latest options:
     ## - https://cloud.r-project.org
-    ## - https://cran.rstudio.com
-    ## - https://packagemanager.rstudio.com/all/latest
+    ## - https://cran.posit.co
+    ## - https://packagemanager.posit.co/all/latest
     ##
     ## Can enable missing R binaries for Homebrew on macOS.
     ## See also:
@@ -191,22 +191,22 @@ local({  # nolint
     ##
     ## CRAN snapshots for previous Bioconductor releases:
     ## - Bioconductor 3.12 / R 4.0
-    ##   https://packagemanager.rstudio.com/cran/2020-10-28
+    ##   https://packagemanager.posit.co/cran/2020-10-28
     ## - Bioconductor 3.11 / R 4.0
-    ##   https://packagemanager.rstudio.com/cran/2020-04-30
+    ##   https://packagemanager.posit.co/cran/2020-04-30
     ##
     ## Alternatively, can use these CRAN latest mirrors:
     ## > repos[["CRAN"]] <-
     ## >     "https://cloud.r-project.org"
     ## > repos[["CRAN"]] <-
-    ## >     "https://cran.rstudio.com"
+    ## >     "https://cran.posit.co"
     ## > repos[["CRAN"]] <-
-    ## >     "https://packagemanager.rstudio.com/cran/latest"
+    ## >     "https://packagemanager.posit.co/cran/latest"
     ## > repos[["CRAN"]] <-
     ## >     "https://repo.miserver.it.umich.edu/cran"
-    snapshot <- "2022-11-30"
+    snapshot <- "2023-01-02"
     cran <- paste(
-        "https://packagemanager.rstudio.com",
+        "https://packagemanager.posit.co",
         "cran",
         snapshot,
         sep = "/"
@@ -235,7 +235,7 @@ local({  # nolint
             "jammy"
         )
         cran <- paste(
-            "https://packagemanager.rstudio.com",
+            "https://packagemanager.posit.co",
             "cran",
             "__linux__",
             distro,
@@ -259,7 +259,7 @@ local({  # nolint
     ## This is currently warning about new books repo, so disabled for now.
     ## > options(
     ## >    "BioC_mirror" =
-    ## >        "https://packagemanager.rstudio.com/bioconductor"
+    ## >        "https://packagemanager.posit.co/bioconductor"
     ## > )
     ## Always include our Acid Genomics repo.
     repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2023-01-02.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -63,6 +63,13 @@ main() {
     dict['libexec']="${dict['prefix']}/libexec"
     # NOTE Consider reworking the case-sensitivity edge case handling here.
     case "${dict['name']}" in
+        'apache-airflow' | \
+        'azure-cli' | \
+        'py-spy' | \
+        'ranger-fm' | \
+        'yt-dlp')
+            dict['pkg_name']="$(koopa_snake_case_simple "${dict['name']}")"
+            ;;
         'glances')
             dict['pkg_name']='Glances'
             ;;
@@ -100,6 +107,7 @@ main() {
     dict['record_file']="${dict['libexec']}/lib/\
 python${dict['py_maj_min_ver']}/site-packages/\
 ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
+    koopa_assert_is_file "${dict['record_file']}"
     if [[ -f "${dict['record_file']}" ]]
     then
         # Ensure we exclude any nested subdirectories in libexec bin, which is
@@ -120,10 +128,10 @@ ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
             | "${app['cut']}" -d ',' -f '1' \
             | "${app['cut']}" -d '/' -f '7' \
         )"
-    else
-        koopa_alert_note "No record file at '${dict['record_file']}."
-        bin_names=("${dict['pkg_name']}")
-        man1_names=()
+# >     else
+# >         koopa_alert_note "No record file at '${dict['record_file']}."
+# >         bin_names=("${dict['pkg_name']}")
+# >         man1_names=()
     fi
     koopa_assert_is_array_non_empty "${bin_names[@]:-}"
     for bin_name in "${bin_names[@]}"

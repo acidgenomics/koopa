@@ -60,7 +60,8 @@ main() {
         )
     fi
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
-    dict['url']="https://sourceware.org/elfutils/ftp/0.187/${dict['file']}"
+    dict['url']="https://sourceware.org/elfutils/ftp/\
+${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

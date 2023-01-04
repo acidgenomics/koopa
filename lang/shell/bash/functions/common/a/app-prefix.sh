@@ -3,13 +3,13 @@
 koopa_app_prefix() {
     # """
     # Application prefix.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-01-03.
     #
     # @examples
     # > koopa_app_prefix
     # # /opt/koopa/app
     # > koopa_app_prefix 'python' 'r'
-    # # /opt/koopa/app/python/3.10.6
+    # # /opt/koopa/app/python3.10/3.10.6
     # # /opt/koopa/app/r/4.2.1
     # """
     local dict pos
@@ -64,6 +64,10 @@ ${dict2['version']}"
         if [[ "${dict['allow_missing']}" -eq 0 ]]
         then
             koopa_assert_is_dir "${dict2['prefix']}"
+        fi
+        if [[ -d "${dict2['prefix']}" ]]
+        then
+            dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
         fi
         koopa_print "${dict2['prefix']}"
     done
