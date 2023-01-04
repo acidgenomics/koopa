@@ -2701,6 +2701,18 @@
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
     "version": "2.10.3"
   },
+  "libyaml": {
+    "bin": [],
+    "build_dependencies": [],
+    "check": false,
+    "conservative": true,
+    "date": "2023-01-04",
+    "dependencies": [],
+    "homebrew": true,
+    "man1": [],
+    "url": "https://github.com/yaml/libyaml/",
+    "version": "0.2.5"
+  },
   "libzip": {
     "bin": [],
     "build_dependencies": [],
