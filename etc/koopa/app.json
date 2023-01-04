@@ -4126,9 +4126,11 @@
     "dependencies": ["openssl3", "readline", "zlib"],
     "homebrew": true,
     "man1": ["ruby.1"],
-    "outdated": false,
+    "notes": ["jekyll doesn't currently work with ruby 3.2.0."],
+    "outdated": true,
+    "reverse_dependencies": ["bashcov", "colorls", "rmate", "ronn"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.2.0"
+    "version": "3.1.3"
   },
   "ruff": {
     "bin": ["ruff"],
@@ -4220,6 +4222,7 @@
     "date": "2023-01-04",
     "dependencies": ["python"],
     "homebrew": false,
+    "large": true,
     "man1": [],
     "url": [
       "https://github.com/plasma-umass/scalene/",

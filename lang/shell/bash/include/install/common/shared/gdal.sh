@@ -11,7 +11,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2022-09-28.
+    # @note Updated 2023-01-04.
     #
     # Use 'configure --help' for build options.
     #
@@ -48,6 +48,8 @@ main() {
         'openssl3' \
         'pcre2' \
         'sqlite' \
+        'zstd' \
+        'libjpeg-turbo' \
         'libtiff' \
         'proj' \
         'xz' \

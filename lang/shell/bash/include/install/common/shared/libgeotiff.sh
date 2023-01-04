@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Switch 'jpeg' to 'libjpeg-turbo'?
-
 main() {
     # """
     # Install libgeotiff.
-    # @note Updated 2022-06-13.
+    # @note Updated 2023-01-04.
     #
     # @seealso
     # - https://github.com/OSGeo/libgeotiff
@@ -14,10 +12,14 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'libtool' 'pkg-config'
+    koopa_activate_app --build-only \
+        'libtool' \
+        'pkg-config'
     koopa_activate_app \
         'curl' \
-        'jpeg' \
+        'zlib' \
+        'zstd' \
+        'libjpeg-turbo' \
         'libtiff' \
         'sqlite' \
         'proj'
