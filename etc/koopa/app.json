@@ -4392,9 +4392,10 @@
     "homebrew": true,
     "large": true,
     "man1": [],
+    "notes": ["ncbi-vdb is not yet tagged for 3.0.3."],
     "outdated": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.3"
+    "version": "3.0.2"
   },
   "star": {
     "bin": ["STAR"],
@@ -4959,12 +4960,12 @@
     "bin": ["xz"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": ["xz.1"],
     "url": ["https://tukaani.org/xz/"],
-    "version": "5.2.7"
+    "version": "5.4.0"
   },
   "yaml-cpp": {
     "bin": [],
@@ -4984,6 +4985,7 @@
     "dependencies": ["node"],
     "homebrew": true,
     "man1": [],
+    "notes": ["FIXME This is version pinned to classic stable."],
     "url": ["https://yarnpkg.com/"],
     "version": "1.22.19"
   },
