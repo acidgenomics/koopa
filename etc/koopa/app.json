@@ -4656,19 +4656,19 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "outdated": true,
     "url": ["https://juliastrings.github.io/utf8proc/"],
-    "version": "2.7.0"
+    "version": "2.8.0"
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [
@@ -4683,7 +4683,7 @@
     ],
     "outdated": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.0850"
+    "version": "9.0.1100"
   },
   "visidata": {
     "bin": ["vd", "visidata"],
@@ -4744,12 +4744,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libice/"],
-    "version": "1.0.10"
+    "version": "1.1.1"
   },
   "xorg-libpthread-stubs": {
     "aliases": {
@@ -4772,12 +4772,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm/"],
-    "version": "1.2.3"
+    "version": "1.2.4"
   },
   "xorg-libx11": {
     "aliases": {
@@ -4786,12 +4786,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/"],
-    "version": "1.8.1"
+    "version": "1.8.3"
   },
   "xorg-libxau": {
     "aliases": {
@@ -4800,12 +4800,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-30",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau/"],
-    "version": "1.0.10"
+    "version": "1.0.11"
   },
   "xorg-libxcb": {
     "aliases": {
@@ -4828,12 +4828,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxdmcp/"],
-    "version": "1.1.3"
+    "version": "1.1.4"
   },
   "xorg-libxext": {
     "aliases": {
@@ -4856,12 +4856,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrandr/"],
-    "version": "1.5.2"
+    "version": "1.5.3"
   },
   "xorg-libxrender": {
     "aliases": {
