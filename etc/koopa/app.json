@@ -2335,7 +2335,7 @@
     "bin": ["less"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-12-16",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": ["less.1"],
@@ -2358,6 +2358,7 @@
     "conservative": true,
     "date": "2022-12-09",
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
+    "homebrew": true,
     "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://www.libarchive.org/"],
@@ -2560,7 +2561,7 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
@@ -2568,29 +2569,31 @@
       "https://libpipeline.nongnu.org/",
       "https://gitlab.com/libpipeline/libpipeline/"
     ],
-    "version": "1.5.6"
+    "version": "1.5.7"
   },
   "libpng": {
     "bin": ["libpng-config", "libpng16-config"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-29",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
-    "version": "1.6.38"
+    "version": "1.6.39"
   },
   "libsolv": {
     "bin": [],
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
+    "date": "2022-01-03",
     "dependencies": [],
+    "homebrew": false,
     "large": true,
     "man1": [],
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/openSUSE/libsolv/"],
-    "version": "0.7.22"
+    "version": "0.7.23"
   },
   "libssh2": {
     "bin": [],
@@ -2630,7 +2633,7 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
@@ -2638,7 +2641,7 @@
       "https://download.osgeo.org/libtiff/",
       "https://libtiff.gitlab.io/libtiff/"
     ],
-    "version": "4.4.0"
+    "version": "4.5.0"
   },
   "libtool": {
     "bin": ["glibtool", "glibtoolize"],
@@ -2746,14 +2749,14 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "platform": "linux",
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.14"
+    "version": "8.7.15"
   },
   "lsd": {
     "bin": ["lsd"],
@@ -2877,7 +2880,7 @@
     "bin": ["gman"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": ["gman.1"],
@@ -2885,7 +2888,7 @@
       "https://man-db.nongnu.org/",
       "https://gitlab.com/cjwatson/man-db/"
     ],
-    "version": "2.11.0"
+    "version": "2.11.1"
   },
   "markdownlint-cli": {
     "bin": ["markdownlint"],
@@ -2913,12 +2916,12 @@
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "0.29.0"
+    "version": "0.30.3"
   },
   "meson": {
     "bin": ["meson"],
@@ -2938,12 +2941,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["http://www.multiprecision.org/mpc/"],
-    "version": "1.2.1"
+    "version": "1.3.1"
   },
   "mpdecimal": {
     "bin": [],
@@ -3029,7 +3032,7 @@
     ],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [
@@ -3046,7 +3049,7 @@
       "tset.1"
     ],
     "url": ["https://ftp.gnu.org/pub/gnu/ncurses/"],
-    "version": "6.3.20211021"
+    "version": "6.4"
   },
   "neofetch": {
     "bin": ["neofetch"],
@@ -3070,13 +3073,13 @@
       "pkg-config"
     ],
     "conservative": false,
-    "date": "2022-11-14",
+    "date": "2023-01-03",
     "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python"],
     "homebrew": true,
     "man1": ["nvim.1"],
     "outdated": false,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.8.1"
+    "version": "0.8.2"
   },
   "nettle": {
     "bin": [],
@@ -3104,24 +3107,24 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-09-29",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://nghttp2.org/"],
-    "version": "1.50.0"
+    "version": "1.51.0"
   },
   "nim": {
     "bin": ["nim"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-29",
+    "date": "2022-01-03",
     "dependencies": [],
     "homebrew": true,
     "large": true,
     "man1": [],
     "url": ["https://nim-lang.org/"],
-    "version": "1.6.8"
+    "version": "1.6.10"
   },
   "ninja": {
     "bin": ["ninja"],
@@ -3189,12 +3192,12 @@
     "bin": ["nu"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-30",
+    "date": "2023-01-03",
     "dependencies": ["openssl3", "rust"],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.70.0"
+    "version": "0.73.0"
   },
   "oniguruma": {
     "bin": [],
@@ -3352,12 +3355,12 @@
     "bin": ["parallel"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": ["parallel.1"],
     "url": ["https://www.gnu.org/software/parallel/"],
-    "version": "20221022"
+    "version": "20221222"
   },
   "password-store": {
     "aliases": {
@@ -3402,12 +3405,12 @@
     "bin": ["pcre2-config", "pcre2grep", "pcre2test"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"],
     "url": ["https://www.pcre.org/"],
-    "version": "10.40"
+    "version": "10.42"
   },
   "perl": {
     "bin": [
@@ -3466,12 +3469,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "url": ["https://cairographics.org/"],
-    "version": "0.40.0"
+    "url": ["https://www.pixman.org/"],
+    "version": "0.42.2"
   },
   "pkg-config": {
     "bin": ["pkg-config"],
