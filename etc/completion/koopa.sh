@@ -51,6 +51,7 @@ __koopa_complete() {
                         'ftp'
                         'git'
                         'gpg'
+                        'jekyll'
                         'kallisto'
                         'rnaeditingindexer'
                         'salmon'
