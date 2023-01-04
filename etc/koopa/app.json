@@ -4222,6 +4222,7 @@
     "date": "2023-01-04",
     "dependencies": ["python"],
     "homebrew": false,
+    "large": true,
     "man1": [],
     "url": [
       "https://github.com/plasma-umass/scalene/",

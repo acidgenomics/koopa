@@ -217,7 +217,6 @@ koopa_install_all_apps() {
         'radian'
         'ranger-fm'
         'ruff'
-        'scalene'
         'visidata'
         'yt-dlp'
         'openssh'
@@ -363,6 +362,7 @@ koopa_install_all_apps() {
                 'snakemake'
                 'star'
                 'sra-tools'
+                'scalene'
             )
         fi
         # Build mamba (experimental).
