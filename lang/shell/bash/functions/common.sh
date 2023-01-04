@@ -11177,7 +11177,6 @@ koopa_install_all_apps() {
         'radian'
         'ranger-fm'
         'ruff'
-        'scalene'
         'visidata'
         'yt-dlp'
         'openssh'
@@ -11317,6 +11316,7 @@ koopa_install_all_apps() {
                 'snakemake'
                 'star'
                 'sra-tools'
+                'scalene'
             )
         fi
         apps+=(
@@ -11571,7 +11571,6 @@ koopa_install_all_binary_apps() {
         'rsync'
         'ruby'
         'ruff'
-        'scalene'
         'scons'
         'sd'
         'serf'
@@ -11702,6 +11701,7 @@ koopa_install_all_binary_apps() {
                 'salmon'
                 'sambamba'
                 'samtools'
+                'scalene'
                 'snakefmt'
                 'snakemake'
                 'sra-tools'
