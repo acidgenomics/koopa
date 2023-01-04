@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-12-15.
+    # @note Updated 2023-01-04.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -177,6 +177,7 @@ koopa_install_all_apps() {
         'rsync'
         'scons'
         'serf'
+        'libyaml'
         'ruby'
         'subversion'
         'shellcheck'
