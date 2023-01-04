@@ -11137,6 +11137,7 @@ koopa_install_all_apps() {
         'rsync'
         'scons'
         'serf'
+        'libyaml'
         'ruby'
         'subversion'
         'shellcheck'
@@ -11176,6 +11177,7 @@ koopa_install_all_apps() {
         'radian'
         'ranger-fm'
         'ruff'
+        'scalene'
         'visidata'
         'yt-dlp'
         'openssh'
@@ -11502,6 +11504,7 @@ koopa_install_all_binary_apps() {
         'libunistring'
         'libuv'
         'libxml2'
+        'libyaml'
         'libzip'
         'llama'
         'lsd'
@@ -11568,6 +11571,7 @@ koopa_install_all_binary_apps() {
         'rsync'
         'ruby'
         'ruff'
+        'scalene'
         'scons'
         'sd'
         'serf'
@@ -14092,6 +14096,12 @@ koopa_install_sambamba() {
 koopa_install_samtools() {
     koopa_install_app \
         --name='samtools' \
+        "$@"
+}
+
+koopa_install_scalene() {
+    koopa_install_app \
+        --name='scalene' \
         "$@"
 }
 
@@ -25272,6 +25282,12 @@ koopa_uninstall_sambamba() {
 koopa_uninstall_samtools() {
     koopa_uninstall_app \
         --name='samtools' \
+        "$@"
+}
+
+koopa_uninstall_scalene() {
+    koopa_uninstall_app \
+        --name='scalene' \
         "$@"
 }
 

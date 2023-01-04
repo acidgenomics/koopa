@@ -217,6 +217,7 @@ koopa_install_all_apps() {
         'radian'
         'ranger-fm'
         'ruff'
+        'scalene'
         'visidata'
         'yt-dlp'
         'openssh'

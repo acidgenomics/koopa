@@ -233,6 +233,7 @@ koopa_install_all_binary_apps() {
         'rsync'
         'ruby'
         'ruff'
+        'scalene'
         'scons'
         'sd'
         'serf'

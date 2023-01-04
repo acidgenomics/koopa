@@ -4213,6 +4213,20 @@
     ],
     "version": "1.16.1"
   },
+  "scalene": {
+    "bin": ["scalene"],
+    "build_dependencies": [],
+    "conservative": false,
+    "date": "2023-01-04",
+    "dependencies": ["python"],
+    "homebrew": false,
+    "man1": [],
+    "url": [
+      "https://github.com/plasma-umass/scalene/",
+      "https://pypi.org/project/scalene/"
+    ],
+    "version": "1.5.18"
+  },
   "scons": {
     "bin": [],
     "build_dependencies": [],
