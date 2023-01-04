@@ -3584,12 +3584,15 @@
     "bin": ["pycodestyle"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-01",
+    "date": "2023-01-03",
     "dependencies": ["python"],
     "homebrew": true,
     "man1": [],
-    "url": ["https://pycodestyle.pycqa.org/"],
-    "version": "2.9.1"
+    "url": [
+      "https://pycodestyle.pycqa.org/",
+      "https://pypi.org/project/pycodestyle/"
+    ],
+    "version": "2.10.0"
   },
   "pyenv": {
     "bin": ["pyenv"],
@@ -3607,7 +3610,7 @@
     "bin": ["pyflakes"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
@@ -3615,7 +3618,7 @@
       "https://pypi.org/project/pyflakes/",
       "https://github.com/PyCQA/pyflakes/"
     ],
-    "version": "2.5.0"
+    "version": "3.0.1"
   },
   "pygments": {
     "bin": ["pygmentize"],
@@ -4013,12 +4016,12 @@
     "bin": ["rename"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-26",
+    "date": "2023-01-03",
     "dependencies": ["perl"],
     "homebrew": false,
     "man1": ["rename.1"],
     "url": ["https://metacpan.org/dist/File-Rename/"],
-    "version": "1.31"
+    "version": "2.00"
   },
   "reproc": {
     "bin": [],
@@ -4063,7 +4066,7 @@
     "dependencies": ["ruby"],
     "homebrew": true,
     "man1": [],
-    "url": ["https://github.com/textmate/rmate"],
+    "url": ["https://github.com/textmate/rmate/"],
     "version": "1.5.8"
   },
   "ronn": {
@@ -4107,25 +4110,25 @@
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["pkg-config"],
     "conservative": true,
-    "date": "2022-11-14",
+    "date": "2023-01-03",
     "dependencies": ["openssl3", "readline", "zlib"],
     "homebrew": true,
     "man1": ["ruby.1"],
     "outdated": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.1.2p20"
+    "version": "3.2.0"
   },
   "ruff": {
     "bin": ["ruff"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-12-05",
+    "date": "2023-01-03",
     "dependencies": ["python"],
     "homebrew": false,
     "man1": [],
     "outdated": false,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.158"
+    "version": "0.0.209"
   },
   "rust": {
     "bin": [
@@ -4252,12 +4255,12 @@
     "bin": ["shellcheck"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-08-30",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://github.com/koalaman/shellcheck/"],
-    "version": "0.8.0"
+    "version": "0.9.0"
   },
   "shiny-server": {
     "bin": [],
@@ -4286,13 +4289,13 @@
     "bin": ["snakefmt"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": ["python"],
     "homebrew": false,
     "large": true,
     "man1": [],
     "url": ["https://github.com/snakemake/snakefmt/"],
-    "version": "0.7.0"
+    "version": "0.8.0"
   },
   "snakemake": {
     "bin": ["snakemake"],
@@ -4358,7 +4361,7 @@
     "bin": ["sqlite3"],
     "build_dependencies": ["make", "pkg-config", "sed"],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": ["zlib", "readline"],
     "homebrew": true,
     "man1": ["sqlite3.1"],
@@ -4375,7 +4378,7 @@
       "r-devel"
     ],
     "url": ["https://www.sqlite.org/download.html"],
-    "version": "3.39.4"
+    "version": "3.40.1"
   },
   "sra-tools": {
     "aliases": {
@@ -4384,14 +4387,14 @@
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": ["cmake"],
     "conservative": false,
-    "date": "2022-12-16",
+    "date": "2023-01-03",
     "dependencies": ["bison", "flex", "openjdk", "python"],
     "homebrew": true,
     "large": true,
     "man1": [],
     "outdated": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.2"
+    "version": "3.0.3"
   },
   "star": {
     "bin": ["STAR"],
@@ -4445,12 +4448,12 @@
     "bin": ["swig"],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["http://www.swig.org/"],
-    "version": "4.1.0"
+    "version": "4.1.1"
   },
   "taglib": {
     "bin": [],
@@ -4481,12 +4484,12 @@
     "bin": [],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": [],
     "url": ["https://www.tcl-lang.org/"],
-    "version": "8.6.12"
+    "version": "8.6.13"
   },
   "tealdeer": {
     "bin": ["tldr"],
@@ -4520,7 +4523,7 @@
     ],
     "build_dependencies": [],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-01-03",
     "homebrew": true,
     "man1": [
       "pdftexi2dvi.1",
@@ -4531,7 +4534,7 @@
       "texindex.1"
     ],
     "url": ["https://ftp.gnu.org/gnu/texinfo/"],
-    "version": "6.8"
+    "version": "7.0.1"
   },
   "tl-expected": {
     "build_dependencies": ["cmake"],
@@ -4568,12 +4571,12 @@
     "bin": ["tree"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-09-30",
+    "date": "2023-01-03",
     "dependencies": [],
     "homebrew": true,
     "man1": ["tree.1"],
     "url": ["https://mama.indstate.edu/users/ice/tree/"],
-    "version": "2.0.4"
+    "version": "2.1.0"
   },
   "tree-sitter": {
     "bin": [],
