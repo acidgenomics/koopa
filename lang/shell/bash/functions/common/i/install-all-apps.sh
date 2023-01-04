@@ -72,6 +72,9 @@ koopa_install_all_apps() {
         'gdbm'
         'sqlite'
         'mpdecimal'
+        'libedit'
+        'python3.10'
+        'python3.11'
         'xorg-xorgproto'
         'xorg-xcb-proto'
         'xorg-libpthread-stubs'
@@ -87,9 +90,6 @@ koopa_install_all_apps() {
         'xorg-libxt'
         'xorg-libxrandr'
         'tcl-tk'
-        'libedit'
-        'python3.10'
-        'python3.11'
         'perl'
         'texinfo'
         'meson'
@@ -118,6 +118,7 @@ koopa_install_all_apps() {
         'libuv'
         'udunits'
         'gzip'
+        'groff'
         'less'
         'r'
         'apr'
@@ -158,7 +159,6 @@ koopa_install_all_apps() {
     apps+=(
         'gnupg'
         'grep'
-        'groff'
         'gsl'
         'oniguruma'
         'jq'
@@ -217,7 +217,6 @@ koopa_install_all_apps() {
         'radian'
         'ranger-fm'
         'ruff'
-        'scalene'
         'visidata'
         'yt-dlp'
         'openssh'
@@ -363,6 +362,7 @@ koopa_install_all_apps() {
                 'snakemake'
                 'star'
                 'sra-tools'
+                'scalene'
             )
         fi
         # Build mamba (experimental).
