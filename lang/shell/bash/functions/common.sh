@@ -1012,6 +1012,10 @@ ${dict2['version']}"
         then
             koopa_assert_is_dir "${dict2['prefix']}"
         fi
+        if [[ -d "${dict2['prefix']}" ]]
+        then
+            dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
+        fi
         koopa_print "${dict2['prefix']}"
     done
     return 0
@@ -11008,6 +11012,7 @@ koopa_install_all_apps() {
         'libunistring'
         'libxml2'
         'gettext'
+        'nano'
         'ca-certificates'
         'openssl1'
         'openssl3'
@@ -11134,7 +11139,6 @@ koopa_install_all_apps() {
         'serf'
         'ruby'
         'subversion'
-        'r-devel'
         'shellcheck'
         'shunit2'
         'sox'
@@ -11151,6 +11155,7 @@ koopa_install_all_apps() {
         'go'
         'chezmoi'
         'fzf'
+        'git-lfs'
         'aws-cli'
         'autoflake'
         'black'
@@ -11236,6 +11241,8 @@ koopa_install_all_apps() {
         'grex'
         'hexyl'
         'sd'
+        'hugo'
+        'llama'
     )
     if koopa_is_linux
     then
@@ -11251,24 +11258,10 @@ koopa_install_all_apps() {
             )
         fi
     fi
-    apps+=(
-        'cli11'
-        'fmt'
-        'googletest'
-        'libarchive'
-        'libsolv'
-        'nlohmann-json'
-        'pybind11'
-        'reproc'
-        'spdlog'
-        'termcolor'
-        'tl-expected'
-        'yaml-cpp'
-        'mamba'
-    )
     if [[ "${bool['large']}" -eq 1 ]]
     then
         apps+=(
+            'r-devel'
             'apache-airflow'
             'apache-spark'
             'azure-cli'
@@ -11324,6 +11317,21 @@ koopa_install_all_apps() {
                 'sra-tools'
             )
         fi
+        apps+=(
+            'cli11'
+            'fmt'
+            'googletest'
+            'libarchive'
+            'libsolv'
+            'nlohmann-json'
+            'pybind11'
+            'reproc'
+            'spdlog'
+            'termcolor'
+            'tl-expected'
+            'yaml-cpp'
+            'mamba'
+        )
     fi
     koopa_add_to_path_start '/usr/local/bin'
     for app_name in "${apps[@]}"
@@ -11404,7 +11412,6 @@ koopa_install_all_binary_apps() {
         'cheat'
         'chemacs'
         'chezmoi'
-        'cli11'
         'cmake'
         'colorls'
         'conda'
@@ -11430,7 +11437,6 @@ koopa_install_all_binary_apps() {
         'flake8'
         'flex'
         'fltk'
-        'fmt'
         'fontconfig'
         'freetype'
         'fribidi'
@@ -11442,11 +11448,11 @@ koopa_install_all_binary_apps() {
         'geos'
         'ghostscript'
         'git'
+        'git-lfs'
         'glances'
         'glib'
         'gnupg'
         'gnutls'
-        'googletest'
         'gperf'
         'graphviz'
         'grex'
@@ -11460,6 +11466,7 @@ koopa_install_all_binary_apps() {
         'hexyl'
         'htop'
         'httpie'
+        'hugo'
         'hyperfine'
         'icu4c'
         'imagemagick'
@@ -11474,7 +11481,6 @@ koopa_install_all_binary_apps() {
         'latch'
         'less'
         'lesspipe'
-        'libarchive'
         'libassuan'
         'libedit'
         'libev'
@@ -11489,7 +11495,6 @@ koopa_install_all_binary_apps() {
         'libksba'
         'libpipeline'
         'libpng'
-        'libsolv'
         'libssh2'
         'libtasn1'
         'libtiff'
@@ -11498,13 +11503,13 @@ koopa_install_all_binary_apps() {
         'libuv'
         'libxml2'
         'libzip'
+        'llama'
         'lsd'
         'lua'
         'luarocks'
         'lz4'
         'lzo'
         'make'
-        'mamba'
         'man-db'
         'markdownlint-cli'
         'mcfly'
@@ -11513,13 +11518,13 @@ koopa_install_all_binary_apps() {
         'mpc'
         'mpdecimal'
         'mpfr'
+        'nano'
         'ncurses'
         'neofetch'
         'neovim'
         'nettle'
         'nghttp2'
         'ninja'
-        'nlohmann-json'
         'nmap'
         'node'
         'npth'
@@ -11541,7 +11546,6 @@ koopa_install_all_binary_apps() {
         'procs'
         'proj'
         'py-spy'
-        'pybind11'
         'pycodestyle'
         'pyenv'
         'pyflakes'
@@ -11552,13 +11556,11 @@ koopa_install_all_binary_apps() {
         'python3.10'
         'python3.11'
         'r'
-        'r-devel'
         'radian'
         'ranger-fm'
         'rbenv'
         'readline'
         'rename'
-        'reproc'
         'ripgrep'
         'ripgrep-all'
         'rmate'
@@ -11572,7 +11574,6 @@ koopa_install_all_binary_apps() {
         'shellcheck'
         'shunit2'
         'sox'
-        'spdlog'
         'sqlite'
         'starship'
         'stow'
@@ -11582,9 +11583,7 @@ koopa_install_all_binary_apps() {
         'tar'
         'tcl-tk'
         'tealdeer'
-        'termcolor'
         'texinfo'
-        'tl-expected'
         'tmux'
         'tokei'
         'tree'
@@ -11615,7 +11614,6 @@ koopa_install_all_binary_apps() {
         'xsv'
         'xxhash'
         'xz'
-        'yaml-cpp'
         'yarn'
         'yq'
         'yt-dlp'
@@ -11648,16 +11646,30 @@ koopa_install_all_binary_apps() {
             'apache-airflow'
             'apache-spark'
             'azure-cli'
+            'cli11'
             'ensembl-perl-api'
+            'fmt'
             'go'
             'google-cloud-sdk'
+            'googletest'
             'gseapy'
             'haskell-cabal'
             'haskell-ghcup'
             'julia'
+            'libarchive'
+            'libsolv'
             'llvm'
+            'mamba'
             'nim'
+            'nlohmann-json'
+            'pybind11'
+            'r-devel'
+            'reproc'
             'rust'
+            'spdlog'
+            'termcolor'
+            'tl-expected'
+            'yaml-cpp'
         )
         if ! koopa_is_aarch64
         then
@@ -13473,6 +13485,12 @@ koopa_install_libxml2() {
         "$@"
 }
 
+koopa_install_libyaml() {
+    koopa_install_app \
+        --name='libyaml' \
+        "$@"
+}
+
 koopa_install_libzip() {
     koopa_install_app \
         --name='libzip' \
@@ -13878,6 +13896,13 @@ koopa_install_pytest() {
 }
 
 koopa_install_python310() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.10' \
+        "$@"
+}
+
+koopa_install_python311() {
     local dict
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
@@ -13887,32 +13912,25 @@ koopa_install_python310() {
     )
     koopa_install_app \
         --installer='python' \
-        --name='python3.10' \
+        --name='python3.11' \
         "$@"
     (
         koopa_alert "Linking 'python' in '${dict['app_prefix']}'."
         koopa_cd "${dict['app_prefix']}"
-        koopa_ln 'python3.10' 'python'
+        koopa_ln 'python3.11' 'python'
         koopa_alert "Linking 'python' in '${dict['bin_prefix']}'."
         koopa_cd "${dict['bin_prefix']}"
-        koopa_ln 'python3.10' 'python3'
-        koopa_ln 'python3.10' 'python'
+        koopa_ln 'python3.11' 'python3'
+        koopa_ln 'python3.11' 'python'
         koopa_alert "Linking 'python' in '${dict['man1_prefix']}'."
         koopa_cd "${dict['man1_prefix']}"
-        koopa_ln 'python3.10.1' 'python3.1'
-        koopa_ln 'python3.10.1' 'python.1'
+        koopa_ln 'python3.11.1' 'python3.1'
+        koopa_ln 'python3.11.1' 'python.1'
         koopa_alert "Linking 'python' in '${dict['opt_prefix']}'."
         koopa_cd "${dict['opt_prefix']}"
-        koopa_ln 'python3.10' 'python'
+        koopa_ln 'python3.11' 'python'
     )
     return 0
-}
-
-koopa_install_python311() {
-    koopa_install_app \
-        --installer='python' \
-        --name='python3.11' \
-        "$@"
 }
 
 koopa_install_r_devel() {
@@ -16254,6 +16272,13 @@ koopa_locate_autoreconf() {
     koopa_locate_app \
         --app-name='autoconf' \
         --bin-name='autoreconf' \
+        "$@"
+}
+
+koopa_locate_autoupdate() {
+    koopa_locate_app \
+        --app-name='autoconf' \
+        --bin-name='autoupdate' \
         "$@"
 }
 
@@ -18631,13 +18656,11 @@ koopa_python_deactivate_venv() {
 koopa_python_pip_install() {
     local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['python']="$(koopa_locate_python)"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']=''
-    )
+    declare -A dict
+    dict['prefix']=''
     pos=()
     while (("$#"))
     do
@@ -18673,6 +18696,7 @@ koopa_python_pip_install() {
     install_args=(
         '--disable-pip-version-check'
         '--ignore-installed'
+        '--no-cache-dir'
         '--no-warn-script-location'
     )
     dl_args=(
@@ -24698,6 +24722,12 @@ koopa_uninstall_libxml2() {
         "$@"
 }
 
+koopa_uninstall_libyaml() {
+    koopa_uninstall_app \
+        --name='libyaml' \
+        "$@"
+}
+
 koopa_uninstall_libzip() {
     koopa_uninstall_app \
         --name='libzip' \
@@ -25101,6 +25131,12 @@ koopa_uninstall_pytest() {
 }
 
 koopa_uninstall_python310() {
+    koopa_uninstall_app \
+        --name='python3.10' \
+        "$@"
+}
+
+koopa_uninstall_python311() {
     local dict
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
@@ -25108,7 +25144,7 @@ koopa_uninstall_python310() {
         ['opt_prefix']="$(koopa_opt_prefix)"
     )
     koopa_uninstall_app \
-        --name='python3.10' \
+        --name='python3.11' \
         "$@"
     koopa_alert "Unlinking 'python' and 'python3'."
     koopa_rm  \
@@ -25117,12 +25153,6 @@ koopa_uninstall_python310() {
         "${dict['bin_prefix']}/python3" \
         "${dict['opt_prefix']}/python"
     return 0
-}
-
-koopa_uninstall_python311() {
-    koopa_uninstall_app \
-        --name='python3.11' \
-        "$@"
 }
 
 koopa_uninstall_r_devel() {

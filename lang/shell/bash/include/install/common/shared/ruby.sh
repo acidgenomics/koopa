@@ -3,18 +3,18 @@
 main() {
     # """
     # Install Ruby.
-    # @note Updated 2022-11-14.
+    # @note Updated 2023-01-04.
     #
     # @seealso
     # - https://www.ruby-lang.org/en/downloads/
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
-    # NOTE Consider adding 'libyaml' here (recommended by Homebrew).
     deps=(
         'zlib'
         'openssl3'
         # > 'readline'
+        'libyaml'
     )
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app "${deps[@]}"

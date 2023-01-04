@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2022-11-14.
+    # @note Updated 2023-01-03.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -24,19 +24,21 @@ main() {
         'git' \
         'pkg-config' \
         'rust'
-    declare -A app=(
-        ['cargo']="$(koopa_locate_cargo)"
-    )
+    declare -A app
+    app['cargo']="$(koopa_locate_cargo)"
     [[ -x "${app['cargo']}" ]] || return 1
     declare -A dict=(
-        ['cargo_home']="${HOME:?}/.cargo"
+        ['cargo_home']="$(koopa_init_dir 'cargo')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    koopa_assert_is_dir "${dict['cargo_home']}"
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(
+        '--config' 'net.git-fetch-with-cli=true'
+        '--config' 'net.retry=5'
         '--jobs' "${dict['jobs']}"
         '--locked'
         '--root' "${dict['prefix']}"
@@ -59,6 +61,12 @@ main() {
     esac
     install_args+=("${dict['cargo_name']}")
     case "${dict['name']}" in
+        'broot')
+            install_args+=(
+                '--git' 'https://github.com/Canop/broot.git'
+                '--tag' "v${dict['version']}"
+            )
+            ;;
         'dog')
             install_args+=(
                 '--git' 'https://github.com/ogham/dog.git'
@@ -128,7 +136,6 @@ main() {
             install_args+=('--features' 'regex')
             ;;
     esac
-    dict['cargo_home']="$(koopa_init_dir "${dict['cargo_home']}")"
     export CARGO_HOME="${dict['cargo_home']}"
     koopa_print_env
     "${app['cargo']}" install "${install_args[@]}"
