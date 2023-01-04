@@ -11079,6 +11079,7 @@ koopa_install_all_apps() {
         'libuv'
         'udunits'
         'gzip'
+        'groff'
         'less'
         'r'
         'apr'
@@ -11118,7 +11119,6 @@ koopa_install_all_apps() {
     apps+=(
         'gnupg'
         'grep'
-        'groff'
         'gsl'
         'oniguruma'
         'jq'
