@@ -26,7 +26,7 @@ main() {
     koopa_activate_app \
         'curl' \
         'zstd' \
-        'libjpeg' \
+        'libjpeg-turbo' \
         'libtiff' \
         'python' \
         'sqlite'
