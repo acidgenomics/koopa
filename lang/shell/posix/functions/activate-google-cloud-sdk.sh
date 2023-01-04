@@ -3,7 +3,7 @@
 koopa_activate_google_cloud_sdk() {
     # """
     # Activate Google Cloud SDK.
-    # @note Updated 2022-10-29.
+    # @note Updated 2023-01-03.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install

@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2022-12-15.
+    # @note Updated 2023-01-04.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -50,6 +50,7 @@ koopa_install_all_apps() {
         'libunistring'
         'libxml2'
         'gettext'
+        'nano'
         'ca-certificates'
         'openssl1'
         'openssl3'
@@ -176,9 +177,9 @@ koopa_install_all_apps() {
         'rsync'
         'scons'
         'serf'
+        'libyaml'
         'ruby'
         'subversion'
-        'r-devel'
         'shellcheck'
         'shunit2'
         'sox'
@@ -195,6 +196,7 @@ koopa_install_all_apps() {
         'go'
         'chezmoi'
         'fzf'
+        'git-lfs'
         'aws-cli'
         'autoflake'
         'black'
@@ -286,6 +288,8 @@ koopa_install_all_apps() {
         'grex'
         'hexyl'
         'sd'
+        'hugo'
+        'llama'
     )
     if koopa_is_linux
     then
@@ -301,25 +305,10 @@ koopa_install_all_apps() {
             )
         fi
     fi
-    # Build mamba (experimental).
-    apps+=(
-        'cli11'
-        'fmt'
-        'googletest'
-        'libarchive'
-        'libsolv'
-        'nlohmann-json'
-        'pybind11'
-        'reproc'
-        'spdlog'
-        'termcolor'
-        'tl-expected'
-        'yaml-cpp'
-        'mamba'
-    )
     if [[ "${bool['large']}" -eq 1 ]]
     then
         apps+=(
+            'r-devel'
             'apache-airflow'
             'apache-spark'
             'azure-cli'
@@ -375,6 +364,22 @@ koopa_install_all_apps() {
                 'sra-tools'
             )
         fi
+        # Build mamba (experimental).
+        apps+=(
+            'cli11'
+            'fmt'
+            'googletest'
+            'libarchive'
+            'libsolv'
+            'nlohmann-json'
+            'pybind11'
+            'reproc'
+            'spdlog'
+            'termcolor'
+            'tl-expected'
+            'yaml-cpp'
+            'mamba'
+        )
     fi
     koopa_add_to_path_start '/usr/local/bin'
     for app_name in "${apps[@]}"
