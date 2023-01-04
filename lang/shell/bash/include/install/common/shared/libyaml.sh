@@ -11,6 +11,8 @@
 #       If this token and others are legitimate, please use m4_pattern_allow.
 #       See the Autoconf documentation.
 # autoreconf: error: /opt/koopa/app/autoconf/2.71/bin/autoconf failed with exit status: 1
+#
+# https://stackoverflow.com/questions/53636130/possibly-undefined-macro-ac-prog-libtool
 
 main() {
     # """
@@ -19,6 +21,9 @@ main() {
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libyaml.rb
+    # - https://www.gnu.org/software/automake/manual/html_node/
+    #     Macro-Search-Path.html
+    # - https://superuser.com/questions/565988/
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -47,7 +52,10 @@ archive/${dict['file']}"
     )
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
-    ./bootstrap
+    # https://superuser.com/questions/565988/autoconf-libtool-and-an-undefined-ac-prog-libtool
+    autoupdate --verbose # FIXME
+    ACLOCAL_PATH='/opt/koopa/app/libtool/2.4.7/share/aclocal' \
+        autoreconf -fvi # FIXME
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
