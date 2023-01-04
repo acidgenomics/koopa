@@ -16275,6 +16275,13 @@ koopa_locate_autoreconf() {
         "$@"
 }
 
+koopa_locate_autoupdate() {
+    koopa_locate_app \
+        --app-name='autoconf' \
+        --bin-name='autoupdate' \
+        "$@"
+}
+
 koopa_locate_awk() {
     koopa_locate_app \
         --app-name='gawk' \
