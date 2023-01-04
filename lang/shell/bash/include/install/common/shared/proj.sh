@@ -24,8 +24,9 @@ main() {
     # > fi
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
-        'zstd' \
         'curl' \
+        'zstd' \
+        'libjpeg' \
         'libtiff' \
         'python' \
         'sqlite'
