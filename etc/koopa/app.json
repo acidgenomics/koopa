@@ -1150,7 +1150,7 @@
     "dependencies": ["chemacs", "emacs"],
     "homebrew": false,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "version": "e96624926d724aff98e862221422cd7124a99c19"
   },
@@ -1207,7 +1207,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "platform": "linux",
     "url": ["https://fedorahosted.org/elfutils/"],
     "version": "0.188"
@@ -1550,7 +1550,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": ["gdal-config.1"],
-    "outdated": false,
+    "outdated": true,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
     "version": "3.6.1"
@@ -1563,7 +1563,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://www.gnu.org/software/gdbm/"],
     "version": "1.23"
   },
@@ -1621,13 +1621,13 @@
     "bin": ["gget"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2023-01-03",
+    "date": "2023-01-05",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "outdated": true,
-    "version": "0.27.0"
+    "outdated": false,
+    "version": "0.27.2"
   },
   "ghostscript": {
     "bin": ["gs"],
@@ -1857,7 +1857,7 @@
     "homebrew": false,
     "large": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
@@ -1951,8 +1951,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "notes": ["2.11.0+ currently has build issues on macOS."],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://github.com/hadolint/hadolint/"],
     "version": "2.12.0"
   },
@@ -1964,7 +1963,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "6.0.0"
@@ -2263,7 +2262,7 @@
     "homebrew": true,
     "large": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
     "version": "1.8.4"
   },
@@ -2420,7 +2419,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "reverse_dependencies": [
       "cairo",
       "glib",
@@ -3508,7 +3507,7 @@
     "homebrew": true,
     "large": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "reverse_dependencies": ["openbb"],
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
     "version": "1.3.1"
@@ -3709,7 +3708,7 @@
     ],
     "homebrew": true,
     "man1": ["python3.10.1"],
-    "outdated": true,
+    "outdated": false,
     "reverse_dependencies": ["google-cloud-sdk", "latch"],
     "url": ["https://www.python.org/"],
     "version": "3.10.9"
@@ -3735,7 +3734,7 @@
     ],
     "homebrew": true,
     "man1": ["python3.11.1"],
-    "outdated": true,
+    "outdated": false,
     "reverse_dependencies": [
       "meson",
       "ninja",
@@ -4187,17 +4186,17 @@
     "bin": ["sambamba"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2022-11-08",
+    "date": "2023-01-05",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": [
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
     ],
-    "version": "0.8.0"
+    "version": "0.8.2"
   },
   "samtools": {
     "bin": ["samtools"],
@@ -4366,13 +4365,13 @@
     "bin": [],
     "build_dependencies": [],
     "check": false,
-    "date": "2022-09-16",
+    "date": "2023-01-05",
     "dependencies": [],
     "homebrew": false,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://github.com/SpaceVim/SpaceVim/"],
-    "version": "4baafa275025f71102eb747fdc636285a96a7082"
+    "version": "9e80d9bbfad057cd8c056523ac18571083461ef0"
   },
   "spdlog": {
     "bin": [],
@@ -4449,6 +4448,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
     "version": "1.12.0"
   },
@@ -4460,6 +4460,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["https://www.gnu.org/software/stow/"],
     "version": "2.3.1"
   },
@@ -4471,6 +4472,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": ["svn.1"],
+    "outdated": false,
     "url": ["https://subversion.apache.org/"],
     "version": "1.14.2"
   },
@@ -4482,6 +4484,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
+    "outdated": false,
     "url": ["http://www.swig.org/"],
     "version": "4.1.1"
   },
@@ -4690,7 +4693,7 @@
     "dependencies": [],
     "homebrew": true,
     "man1": [],
-    "outdated": true,
+    "outdated": false,
     "url": ["https://juliastrings.github.io/utf8proc/"],
     "version": "2.8.0"
   },
