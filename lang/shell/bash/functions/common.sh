@@ -18470,7 +18470,7 @@ koopa_push_all_app_builds() {
     dict['opt_prefix']="$(koopa_opt_prefix)"
     readarray -t app_names <<< "$( \
         koopa_find \
-            --days-modified-within=2 \
+            --days-modified-within=7 \
             --min-depth=1 \
             --max-depth=1 \
             --prefix="${dict['opt_prefix']}" \
@@ -18536,6 +18536,7 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
             --verbose \
             --file="${dict2['local_tar']}" \
             "${dict2['prefix']}/"
+        koopa_alert "Copying to S3 at '${dict2['remote_tar']}'."
         "${app['aws']}" --profile="${dict['profile']}" \
             s3 cp "${dict2['local_tar']}" "${dict2['remote_tar']}"
     done
