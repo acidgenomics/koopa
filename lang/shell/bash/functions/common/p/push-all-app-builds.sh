@@ -12,7 +12,7 @@ koopa_push_all_app_builds() {
     dict['opt_prefix']="$(koopa_opt_prefix)"
     readarray -t app_names <<< "$( \
         koopa_find \
-            --days-modified-within=2 \
+            --days-modified-within=7 \
             --min-depth=1 \
             --max-depth=1 \
             --prefix="${dict['opt_prefix']}" \
