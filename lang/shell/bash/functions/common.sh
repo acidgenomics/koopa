@@ -11273,6 +11273,7 @@ koopa_install_all_apps() {
             'llvm'
             'julia'
             'nim'
+            'ghostscript'
         )
         if ! koopa_is_aarch64
         then
@@ -11299,7 +11300,6 @@ koopa_install_all_apps() {
                 'gatk'
                 'gffutils'
                 'gget'
-                'ghostscript'
                 'gseapy'
                 'hisat2'
                 'htseq'
@@ -11448,7 +11448,6 @@ koopa_install_all_binary_apps() {
         'gdal'
         'gdbm'
         'geos'
-        'ghostscript'
         'git'
         'git-lfs'
         'glances'
@@ -11652,6 +11651,7 @@ koopa_install_all_binary_apps() {
             'cli11'
             'ensembl-perl-api'
             'fmt'
+            'ghostscript'
             'go'
             'google-cloud-sdk'
             'googletest'
