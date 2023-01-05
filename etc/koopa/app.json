@@ -4200,12 +4200,12 @@
     "homebrew": false,
     "large": true,
     "man1": [],
-    "outdated": false,
+    "outdated": true,
     "url": [
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
     ],
-    "version": "0.8.2"
+    "version": "0.8.0"
   },
   "samtools": {
     "bin": ["samtools"],
