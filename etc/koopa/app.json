@@ -1635,6 +1635,7 @@
     "date": "2023-01-05",
     "dependencies": [],
     "homebrew": true,
+    "large": true,
     "man1": ["gs.1"],
     "outdated": true,
     "version": "10.0.0"
