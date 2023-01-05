@@ -50,12 +50,11 @@ releases/download/gs${dict['version2']}/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
+        # > '--with-system-libtiff'
         "--prefix=${dict['prefix']}"
         '--disable-compile-inits'
         '--disable-cups'
-        '--disable-dependency-tracking'
         '--disable-gtk'
-        '--with-system-libtiff'
         '--without-tesseract'
         '--without-x'
     )
