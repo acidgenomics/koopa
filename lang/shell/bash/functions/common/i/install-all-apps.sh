@@ -319,6 +319,7 @@ koopa_install_all_apps() {
             'llvm'
             'julia'
             'nim'
+            'ghostscript'
         )
         if ! koopa_is_aarch64
         then
@@ -345,7 +346,6 @@ koopa_install_all_apps() {
                 'gatk'
                 'gffutils'
                 'gget'
-                'ghostscript'
                 'gseapy'
                 'hisat2'
                 'htseq'
