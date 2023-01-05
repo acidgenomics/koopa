@@ -8,10 +8,12 @@
 # * EXPAT component has been detected, but is disabled with GDAL_USE_EXPAT=OFF
 # * OPENCL component has been detected, but is disabled with GDAL_USE_OPENCL=OFF
 
+# FIXME This is detecting Temurin 19 framework on macOS.
+
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-01-04.
+    # @note Updated 2023-01-05.
     #
     # Use 'configure --help' for build options.
     #
@@ -48,6 +50,7 @@ main() {
         'openssl3' \
         'pcre2' \
         'sqlite' \
+        'zlib' \
         'zstd' \
         'libjpeg-turbo' \
         'libtiff' \

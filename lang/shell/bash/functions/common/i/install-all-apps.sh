@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for '--no-push' flag.
+
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
@@ -314,12 +316,12 @@ koopa_install_all_apps() {
             'azure-cli'
             'ensembl-perl-api'
             'google-cloud-sdk'
-            'gseapy'
             'haskell-ghcup'
             'haskell-cabal'
             'llvm'
             'julia'
             'nim'
+            'ghostscript'
         )
         if ! koopa_is_aarch64
         then
@@ -327,8 +329,8 @@ koopa_install_all_apps() {
                 'haskell-stack'
                 'hadolint'
                 'pandoc'
-                'agat'
                 'conda'
+                'agat'
                 'anaconda'
                 'autodock'
                 'autodock-vina'
@@ -346,7 +348,7 @@ koopa_install_all_apps() {
                 'gatk'
                 'gffutils'
                 'gget'
-                'ghostscript'
+                'gseapy'
                 'hisat2'
                 'htseq'
                 'jupyterlab'

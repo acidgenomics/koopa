@@ -25,6 +25,7 @@ main() {
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'curl' \
+        'zlib' \
         'zstd' \
         'libjpeg-turbo' \
         'libtiff' \
