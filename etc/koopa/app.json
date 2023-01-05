@@ -190,6 +190,9 @@
     "version": "1.0"
   },
   "autodock-vina": {
+    "aliases": {
+      "conda": "vina"
+    },
     "bin": ["vina"],
     "build_dependencies": [],
     "conservative": false,
@@ -446,6 +449,7 @@
     "large": true,
     "man1": [],
     "notes": ["Adding bioconda-utils to bin currently causes app to error."],
+    "outdated": false,
     "url": ["https://github.com/bioconda/bioconda-utils/"],
     "version": "1.3.0"
   },
@@ -543,7 +547,7 @@
     "bin": ["bustools"],
     "build_dependencies": [],
     "conservative": false,
-    "date": "2021-06-25",
+    "date": "2022-01-05",
     "dependencies": ["conda"],
     "homebrew": false,
     "large": true,
@@ -552,7 +556,7 @@
       "https://bustools.github.io/",
       "https://github.com/BUStools/bustools/"
     ],
-    "version": "0.41.0"
+    "version": "0.42.0"
   },
   "bzip2": {
     "bin": [
@@ -1243,7 +1247,10 @@
     "dependencies": ["conda"],
     "homebrew": false,
     "man1": [],
-    "url": ["https://bioconda.github.io/recipes/entrez-direct/README.html"],
+    "url": [
+      "https://www.ncbi.nlm.nih.gov/home/tools/",
+      "https://bioconda.github.io/recipes/entrez-direct/README.html"
+    ],
     "version": "16.2"
   },
   "exa": {
@@ -1504,6 +1511,9 @@
     "version": "0.35.1"
   },
   "gatk": {
+    "aliases": {
+      "conda": "gatk4"
+    },
     "bin": ["gatk"],
     "build_dependencies": [],
     "conservative": false,
