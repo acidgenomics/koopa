@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Work on setting PKG_CONFIG_PATH during install calls to not include /usr/local.
+    Need to get system paths and then strip out /usr/local from the PATH string.
 ** TODO 'koopa install r-packages' needs to be 'koopa install system r-packages'.
 ** TODO apptainer, aspera-connect, lmod, and docker-credential-pass aren't showing up in Linux system checks.
 ** TODO Ensure hadolint install cleans up ghcup.
