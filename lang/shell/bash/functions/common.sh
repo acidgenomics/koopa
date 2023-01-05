@@ -4295,6 +4295,7 @@ koopa_cli_system() {
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
+        'push-all-app-builds' | \
         'push-app-build' | \
         'reload-shell' | \
         'roff' | \
@@ -18463,13 +18464,35 @@ koopa_public_ip_address() {
     return 0
 }
 
+koopa_push_all_app_builds() {
+    local app_names dict
+    declare -A dict
+    dict['opt_prefix']="$(koopa_opt_prefix)"
+    readarray -t app_names <<< "$( \
+        koopa_find \
+            --days-modified-within=2 \
+            --min-depth=1 \
+            --max-depth=1 \
+            --prefix="${dict['opt_prefix']}" \
+            --sort \
+            --type='l' \
+        | koopa_basename \
+    )"
+    if koopa_is_array_empty "${app_names[@]}"
+    then
+        koopa_stop 'No apps were built recently.'
+    fi
+    koopa_push_app_build "${app_names[@]}"
+    return 0
+}
+
 koopa_push_app_build() {
     local app dict name
     koopa_assert_has_args "$#"
     koopa_can_install_binary || return 1
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
-        ['tar']="$(koopa_locate_tar --allow-system)"
+        ['tar']="$(koopa_locate_tar)"
     )
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['tar']}" ]] || return 1
@@ -18490,6 +18513,11 @@ koopa_push_app_build() {
             koopa_realpath "${dict['opt_prefix']}/${dict2['name']}" \
         )"
         koopa_assert_is_dir "${dict2['prefix']}"
+        if [[ -f "${dict2['prefix']}/.koopa-binary" ]]
+        then
+            koopa_alert_note "'${dict2['name']}' was installed as a binary."
+            continue
+        fi
         dict2['version']="$(koopa_basename "${dict2['prefix']}")"
         dict2['local_tar']="${dict['tmp_dir']}/\
 ${dict2['name']}/${dict2['version']}.tar.gz"
@@ -18498,7 +18526,16 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         dict2['remote_tar']="${dict['s3_bucket']}${dict2['s3_rel_path']}"
         koopa_alert "Pushing '${dict2['prefix']}' to '${dict2['remote_tar']}'."
         koopa_mkdir "${dict['tmp_dir']}/${dict2['name']}"
-        "${app['tar']}" -Pczf "${dict2['local_tar']}" "${dict2['prefix']}/"
+        koopa_alert "Creating archive at '${dict2['local_tar']}'."
+        "${app['tar']}" \
+            --absolute-names \
+            --create \
+            --gzip \
+            --totals \
+            --verbose \
+            --verbose \
+            --file="${dict2['local_tar']}" \
+            "${dict2['prefix']}/"
         "${app['aws']}" --profile="${dict['profile']}" \
             s3 cp "${dict2['local_tar']}" "${dict2['remote_tar']}"
     done
