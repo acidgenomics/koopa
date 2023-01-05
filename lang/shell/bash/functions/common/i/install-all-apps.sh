@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for '--no-push' flag.
+
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
