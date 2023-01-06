@@ -115,6 +115,10 @@
     "version": "4.2.3.197"
   },
   "attr": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2022-08-29",
     "platform": "linux",
@@ -123,6 +127,7 @@
   },
   "autoconf": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "date": "2022-08-29",
@@ -218,6 +223,7 @@
   },
   "bash": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["bash"],
@@ -259,6 +265,7 @@
   },
   "bc": {
     "aliases": {
+      "debian": true,
       "fedora": true
       "homebrew": true
     },
@@ -342,6 +349,7 @@
   },
   "bison": {
     "aliases": {
+      "debian": "libbison-dev",
       "fedora": "bison-devel"
     },
     "conservative": true,
@@ -418,6 +426,7 @@
   },
   "bzip2": {
     "aliases": {
+      "debian": "libbz2-dev",
       "fedora": "bzip2-devel"
     },
     "bin": [
@@ -457,9 +466,12 @@
     "version": "1.18.1"
   },
   "ca-certificates": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2022-11-08",
-    "homebrew": true,
     "reverse_dependencies": ["openssl1", "openssl3", "curl", "node"],
     "url": ["https://curl.se/docs/caextract.html"],
     "version": "2022-10-11"
@@ -526,12 +538,13 @@
   },
   "cmake": {
     "aliases": {
-      "fedora": true
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
     },
     "bin": ["cmake", "cpack", "ctest"],
     "date": "2022-11-08",
     "dependencies": ["ncurses", "openssl3"],
-    "homebrew": true,
     "url": ["https://cmake.org/download/"],
     "version": "3.25.1"
   },
@@ -596,7 +609,9 @@
   },
   "coreutils": {
     "aliases": {
-      "fedora": "coreutils"
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
     },
     "bin": [
       "g[",
@@ -708,7 +723,6 @@
     ],
     "conservative": true,
     "date": "2022-08-29",
-    "homebrew": true,
     "man1": [
       "gb2sum.1",
       "gbase32.1",
@@ -859,13 +873,14 @@
   },
   "curl": {
     "aliases": {
-      "fedora": "libcurl-devel"
+      "debian": true,
+      "fedora": ["curl", "curl-minimal", "libcurl-devel"],
+      "homebrew": true
     },
     "bin": ["curl", "curl-config"],
     "conservative": true,
     "date": "2023-01-03",
     "dependencies": ["ca-certificates"],
-    "homebrew": true,
     "man1": ["curl.1", "curl-config.1"],
     "url": ["https://curl.haxx.se/"],
     "version": "7.87.0"
@@ -1072,6 +1087,7 @@
   },
   "findutils": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["gfind", "glocate", "gupdatedb", "gxargs"],
@@ -1228,6 +1244,7 @@
   },
   "gdal": {
     "aliases": {
+      "debian": "libgdal-dev",
       "fedora": "gdal-devel"
     },
     "bin": ["gdal-config"],
@@ -1249,6 +1266,7 @@
   },
   "geos": {
     "aliases": {
+      "debian": "libgeos-dev",
       "fedora": "geos-devel"
     },
     "bin": ["geos-config"],
@@ -1260,11 +1278,12 @@
   },
   "gettext": {
     "aliases": {
-      "fedora": true
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
     },
     "conservative": true,
     "date": "2022-11-08",
-    "homebrew": true,
     "reverse_dependencies": [
       "cairo",
       "elfutils",
@@ -1309,14 +1328,15 @@
   },
   "git": {
     "aliases": {
-      "fedora": true
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
     },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
     "conservative": true,
     "date": "2023-01-03",
     "dependencies": ["zlib", "gettext", "openssl3", "curl"],
-    "homebrew": true,
     "url": ["https://git-scm.com/"],
     "version": "2.39.0"
   },
@@ -1366,7 +1386,9 @@
   },
   "gnupg": {
     "aliases": {
-      "fedora": "gnupg2"
+      "debian": true,
+      "fedora": "gnupg2",
+      "homebrew": true
     },
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
     "conservative": true,
@@ -1385,7 +1407,6 @@
       "libksba",
       "npth"
     ],
-    "homebrew": true,
     "url": ["https://gnupg.org/download/"],
     "version": "2.3.8"
   },
@@ -1441,6 +1462,10 @@
     "version": "1.12.1"
   },
   "gperf": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2022-08-29",
     "homebrew": true,
@@ -1448,10 +1473,13 @@
     "version": "3.1"
   },
   "graphviz": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2023-01-03",
     "dependencies": ["openjdk"],
-    "homebrew": true,
     "reverse_dependencies": ["fontconfig"],
     "url": [
       "https://www.graphviz.org/",
@@ -1476,6 +1504,9 @@
     "version": "1.4.1"
   },
   "groff": {
+    "aliases": {
+      "debian": "groff-base"
+    },
     "bin": ["groff"],
     "date": "2022-08-30",
     "homebrew": true,
@@ -1676,6 +1707,9 @@
     "version": "2.2.1"
   },
   "htop": {
+    "aliases": {
+      "debian": true
+    },
     "bin": ["htop"],
     "date": "2022-08-30",
     "homebrew": true,
@@ -1765,6 +1799,10 @@
     "version": "72.1"
   },
   "imagemagick": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "bin": [
       "Magick++-config",
       "MagickCore-config",
@@ -1774,7 +1812,6 @@
     ],
     "conservative": true,
     "date": "2023-01-03",
-    "homebrew": true,
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -1819,6 +1856,7 @@
   },
   "jq": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["jq"],
@@ -1885,6 +1923,7 @@
   },
   "less": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["less"],
@@ -2521,11 +2560,12 @@
   },
   "nim": {
     "aliases": {
-      "fedora": "nim"
+      "debian": true
+      "fedora": true,
+      "homebrew": true
     },
     "bin": ["nim"],
     "date": "2022-01-03",
-    "homebrew": true,
     "large": true,
     "url": ["https://nim-lang.org/"],
     "version": "1.6.10"
@@ -2857,6 +2897,7 @@
   },
   "proj": {
     "aliases": {
+      "debian": "libproj-dev",
       "fedora": "proj-devel"
     },
     "bin": ["proj", "projinfo"],
@@ -3606,10 +3647,13 @@
     "version": "2.3.1"
   },
   "subversion": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "bin": ["svn"],
     "conservative": true,
     "date": "2022-08-30",
-    "homebrew": true,
     "man1": ["svn.1"],
     "url": ["https://subversion.apache.org/"],
     "version": "1.14.2"
@@ -3704,6 +3748,7 @@
   },
   "tmux": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["tmux"],
@@ -3723,6 +3768,7 @@
   },
   "tree": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["tree"],
@@ -3785,6 +3831,7 @@
   },
   "unzip": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
@@ -3806,6 +3853,7 @@
   },
   "vim": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
@@ -3825,6 +3873,9 @@
     "version": "9.0.1100"
   },
   "visidata": {
+    "aliases": {
+      "debian": true
+    },
     "bin": ["vd", "visidata"],
     "date": "2022-11-08",
     "dependencies": ["python"],
@@ -3845,11 +3896,12 @@
   },
   "wget": {
     "aliases": {
-      "fedora": true
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
     },
     "bin": ["wget"],
     "date": "2022-08-30",
-    "homebrew": true,
     "man1": ["wget.1"],
     "notes": ["wget2 is still considered alpha."],
     "url": ["https://www.gnu.org/software/wget/"],
@@ -4028,6 +4080,7 @@
   },
   "xz": {
     "aliases": {
+      "debian": "xz-utils",
       "fedora": "xz-devel"
     },
     "bin": ["xz"],
@@ -4084,6 +4137,7 @@
   },
   "zip": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["zip"],
@@ -4098,6 +4152,7 @@
   },
   "zlib": {
     "aliases": {
+      "debian": "zlib1g-dev",
       "fedora": "zlib-devel"
     },
     "conservative": true,
@@ -4117,6 +4172,7 @@
   },
   "zsh": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["zsh"],
