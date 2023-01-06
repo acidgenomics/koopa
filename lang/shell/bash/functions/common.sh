@@ -6917,7 +6917,7 @@ koopa_docker_prune_all_images() {
     "${app['docker']}" system prune --all --force || true
     "${app['docker']}" images
     koopa_alert 'Pruning Docker buildx.'
-    "${app['docker']}" buildx prune --all --force || true
+    "${app['docker']}" buildx prune --all --force --verbose || true
     "${app['docker']}" buildx ls
     return 0
 }
