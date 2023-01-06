@@ -89,7 +89,6 @@ main() {
         'mariadb-devel'
         'meson' # harfbuzz
         'mpfr-devel'
-        'ncurses-devel'
         'ncurses-devel' # zsh
         'openblas-devel'
         'openjpeg2-devel' # GDAL
