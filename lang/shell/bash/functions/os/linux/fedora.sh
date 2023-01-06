@@ -155,14 +155,6 @@ koopa_fedora_install_system_azure_cli() {
         "$@"
 }
 
-koopa_fedora_install_system_base() {
-    koopa_install_app \
-        --name='base' \
-        --platform='fedora' \
-        --system \
-        "$@"
-}
-
 koopa_fedora_install_system_google_cloud_sdk() {
     koopa_install_app \
         --name='google-cloud-sdk' \
