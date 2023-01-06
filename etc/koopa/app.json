@@ -1,9 +1,11 @@
 {
   "ack": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["ack"],
     "date": "2022-09-26",
     "dependencies": ["perl"],
-    "homebrew": true,
     "man1": ["ack.1"],
     "url": ["https://beyondgrep.com/"],
     "version": "3.6.0"
@@ -32,10 +34,12 @@
     "version": "2.5.0"
   },
   "apache-spark": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["pyspark", "sparkR"],
     "date": "2022-10-26",
     "dependencies": ["openjdk", "python", "r"],
-    "homebrew": true,
     "large": true,
     "url": ["https://spark.apache.org/"],
     "version": "3.3.1"
@@ -49,34 +53,36 @@
   },
   "apr-util": {
     "aliases": {
-      "fedora": "apr-util-devel"
+      "fedora": "apr-util-devel",
+      "homebrew": true
     },
     "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": ["apr", "expat", "openssl3"],
-    "homebrew": true,
     "url": ["https://apr.apache.org/"],
     "version": "1.6.1"
   },
   "apr": {
     "aliases": {
-      "fedora": "apr-devel"
+      "fedora": "apr-devel",
+      "homebrew": true
     },
     "build_dependencies": ["autoconf", "automake", "libtool", "make"],
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": ["sqlite"],
-    "homebrew": true,
     "reverse_dependencies": ["apr-util"],
     "url": ["https://apr.apache.org/"],
     "version": "1.7.0"
   },
   "armadillo": {
+    "aliases": {
+      "homebrew": "armadillo"
+    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-12-30",
     "dependencies": ["hdf5"],
-    "homebrew": true,
     "url": ["http://arma.sourceforge.net/download.html"],
     "version": "11.4.3"
   },
@@ -117,7 +123,7 @@
   },
   "autoconf": {
     "aliases": {
-      "fedora": "autoconf"
+      "fedora": true
     },
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
@@ -161,7 +167,7 @@
   },
   "automake": {
     "aliases": {
-      "fedora": "automake"
+      "fedora": true
     },
     "bin": ["automake"],
     "date": "2022-08-29",
@@ -212,7 +218,7 @@
   },
   "bash": {
     "aliases": {
-      "fedora": "bash"
+      "fedora": true
     },
     "bin": ["bash"],
     "conservative": true,
@@ -252,10 +258,13 @@
     "version": "0.22.1"
   },
   "bc": {
+    "aliases": {
+      "fedora": true
+      "homebrew": true
+    },
     "bin": ["bc"],
     "conservative": true,
     "date": "2022-08-30",
-    "homebrew": true,
     "man1": ["bc.1"],
     "url": ["https://ftp.gnu.org/gnu/bc/"],
     "version": "1.07.1"
@@ -463,7 +472,7 @@
     "conservative": true,
     "date": "2022-11-08",
     "homebrew": true,
-    "reverse_dependencies": ["fontconfig", "freetype"],
+    "reverse_dependencies": ["fontconfig", "freetype", "harfbuzz"],
     "url": [
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
@@ -516,6 +525,9 @@
     "version": "2e65f8f854ac43c78a5ff09ca4b98f28d1fb22de"
   },
   "cmake": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["cmake", "cpack", "ctest"],
     "date": "2022-11-08",
     "dependencies": ["ncurses", "openssl3"],
@@ -573,6 +585,9 @@
     "version": "22.11.1"
   },
   "convmv": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["convmv"],
     "date": "2022-09-26",
     "homebrew": true,
@@ -1056,6 +1071,9 @@
     "version": "0.3.0"
   },
   "findutils": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["gfind", "glocate", "gupdatedb", "gxargs"],
     "date": "2022-08-29",
     "homebrew": true,
@@ -1241,6 +1259,9 @@
     "version": "3.11.1"
   },
   "gettext": {
+    "aliases": {
+      "fedora": true
+    },
     "conservative": true,
     "date": "2022-11-08",
     "homebrew": true,
@@ -1287,6 +1308,9 @@
     "version": "10.0.0"
   },
   "git": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
     "conservative": true,
@@ -1794,6 +1818,9 @@
     "version": "9e"
   },
   "jq": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["jq"],
     "date": "2022-08-30",
     "homebrew": true,
@@ -1857,6 +1884,9 @@
     "version": "2.9.4"
   },
   "less": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["less"],
     "date": "2023-01-03",
     "homebrew": true,
@@ -2102,6 +2132,9 @@
     "version": "4.5.0"
   },
   "libtool": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["glibtool", "glibtoolize"],
     "date": "2022-08-29",
     "homebrew": true,
@@ -2134,6 +2167,9 @@
     "version": "0.1.4"
   },
   "libxml2": {
+    "aliases": {
+      "fedora": "libxml2-devel"
+    },
     "bin": ["xml2-config"],
     "conservative": true,
     "date": "2022-11-08",
@@ -2201,6 +2237,9 @@
     "version": "0.23.1"
   },
   "lua": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["lua", "luac"],
     "conservative": true,
     "date": "2022-08-30",
@@ -2250,6 +2289,9 @@
     "version": "1.4.19"
   },
   "make": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["gmake"],
     "date": "2022-11-08",
     "homebrew": true,
@@ -2286,6 +2328,9 @@
     "version": "1.1.0"
   },
   "man-db": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["gman"],
     "date": "2023-01-03",
     "homebrew": true,
@@ -2321,6 +2366,9 @@
     "version": "0.30.3"
   },
   "meson": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["meson"],
     "date": "2022-12-24",
     "dependencies": ["python"],
@@ -2680,6 +2728,7 @@
   },
   "patch": {
     "aliases": {
+      "fedora": true,
       "homebrew": "gpatch"
     },
     "bin": ["patch"],
@@ -3298,6 +3347,9 @@
     "version": "3.2.7"
   },
   "ruby": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["pkg-config"],
     "conservative": true,
@@ -3582,6 +3634,7 @@
   },
   "tar": {
     "aliases": {
+      "fedora": true,
       "homebrew": "gnu-tar"
     },
     "bin": ["gtar"],
@@ -3650,6 +3703,9 @@
     "version": "1.0.0"
   },
   "tmux": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["tmux"],
     "date": "2022-08-30",
     "homebrew": true,
@@ -3666,6 +3722,9 @@
     "version": "12.1.2"
   },
   "tree": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["tree"],
     "date": "2023-01-03",
     "homebrew": true,
@@ -3725,6 +3784,9 @@
     "version": "2.22"
   },
   "unzip": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
     "build_dependencies": ["make"],
     "conservative": true,
@@ -3743,6 +3805,9 @@
     "version": "2.8.0"
   },
   "vim": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "date": "2023-01-03",
     "homebrew": true,
@@ -3779,6 +3844,9 @@
     "version": "2.6"
   },
   "wget": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["wget"],
     "date": "2022-08-30",
     "homebrew": true,
@@ -3789,6 +3857,7 @@
   },
   "which": {
     "aliases": {
+      "fedora": true,
       "homebrew": "gnu-which"
     },
     "bin": ["gwhich"],
@@ -4014,6 +4083,9 @@
     "version": "0.34.4"
   },
   "zip": {
+    "aliases": {
+      "fedora": true
+    },
     "bin": ["zip"],
     "build_dependencies": ["make"],
     "conservative": true,
@@ -4045,7 +4117,7 @@
   },
   "zsh": {
     "aliases": {
-      "fedora": "zsh"
+      "fedora": true
     },
     "bin": ["zsh"],
     "date": "2022-09-26",
