@@ -79,7 +79,7 @@
   },
   "armadillo": {
     "aliases": {
-      "homebrew": "armadillo"
+      "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-12-30",
@@ -267,7 +267,7 @@
   "bc": {
     "aliases": {
       "debian": true,
-      "fedora": true
+      "fedora": true,
       "homebrew": true
     },
     "bin": ["bc"],
@@ -2616,7 +2616,7 @@
   },
   "nim": {
     "aliases": {
-      "debian": true
+      "debian": true,
       "fedora": true,
       "homebrew": true
     },
