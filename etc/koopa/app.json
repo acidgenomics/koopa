@@ -2823,6 +2823,7 @@
     "date": "2022-11-07",
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
+    "notes": ["Tracking the LTS release series."],
     "outdated": true,
     "reverse_dependencies": [
       "bash-language-server",
@@ -2893,6 +2894,7 @@
     "date": "2022-11-08",
     "lts": true,
     "man1": ["jar.1", "java.1", "javac.1"],
+    "notes": ["Tracking the LTS release series."],
     "reverse_dependencies": ["apache-spark", "bfg", "graphviz", "r"],
     "url": ["https://adoptium.net/"],
     "version": "17.0.5+8"

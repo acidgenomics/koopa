@@ -1250,7 +1250,11 @@ koopa_doom_emacs_prefix() {
 koopa_doom_emacs() {
     local prefix
     prefix="$(koopa_doom_emacs_prefix)"
-    [ -d "$prefix" ] || return 1
+    if [ ! -d "$prefix" ]
+    then
+        koopa_print "Doom Emacs is not installed at '${prefix}'."
+        return 1
+    fi
     koopa_emacs --with-profile 'doom' "$@"
     return 0
 }
@@ -1307,10 +1311,27 @@ koopa_emacs_prefix() {
 koopa_emacs() {
     local emacs prefix
     prefix="${HOME:?}/.emacs.d"
-    [ -f "${prefix}/chemacs.el" ] || return 1
-    emacs='emacs'
-    koopa_is_macos && emacs="$(koopa_macos_emacs)"
-    [ -e "$emacs" ] || return 1
+    if [ ! -L "$prefix" ]
+    then
+        koopa_print "Chemacs is not linked at '${prefix}'."
+        return 1
+    fi
+    if [ ! -f "${prefix}/chemacs.el" ]
+    then
+        koopa_print "Chemacs is not configured at '${prefix}'."
+        return 1
+    fi
+    if koopa_is_macos
+    then
+        emacs="$(koopa_macos_emacs)"
+    else
+        emacs="$(koopa_bin_prefix)/emacs"
+    fi
+    if [ ! -e "$emacs" ]
+    then
+        koopa_print "Emacs not installed at '${emacs}'."
+        return 1
+    fi
     if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]
     then
         TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
@@ -2126,7 +2147,11 @@ koopa_prelude_emacs_prefix() {
 koopa_prelude_emacs() {
     local prefix
     prefix="$(koopa_prelude_emacs_prefix)"
-    [ -d "$prefix" ] || return 1
+    if [ ! -d "$prefix" ]
+    then
+        koopa_print "Prelude Emacs is not installed at '${prefix}'."
+        return 1
+    fi
     koopa_emacs --with-profile 'prelude' "$@"
     return 0
 }
@@ -2235,7 +2260,11 @@ koopa_spacemacs_prefix() {
 koopa_spacemacs() {
     local prefix
     prefix="$(koopa_spacemacs_prefix)"
-    [ -d "$prefix" ] || return 1
+    if [ ! -d "$prefix" ]
+    then
+        koopa_print "Spacemacs is not installed at '${prefix}'."
+        return 1
+    fi
     koopa_emacs --with-profile 'spacemacs' "$@"
     return 0
 }
@@ -2257,8 +2286,17 @@ koopa_spacevim() {
         fi
     fi
     prefix="$(koopa_spacevim_prefix)"
+    if [ ! -d "$prefix" ]
+    then
+        koopa_print "SpaceVim is not installed at '${prefix}'."
+        return 1
+    fi
     vimrc="${prefix}/vimrc"
-    [ -f "$vimrc" ] || return 1
+    if [ ! -f "$vimrc" ]
+    then
+        koopa_print "No vimrc file at '${vimrc}'."
+        return 1
+    fi
     koopa_is_alias 'vim' && unalias 'vim'
     "$vim" -u "$vimrc" "$@"
 }
