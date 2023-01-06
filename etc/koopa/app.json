@@ -53,6 +53,7 @@
   },
   "apr-util": {
     "aliases": {
+      "debian": "libaprutil1-dev",
       "fedora": "apr-util-devel",
       "homebrew": true
     },
@@ -116,7 +117,7 @@
   },
   "attr": {
     "aliases": {
-      "debian": true,
+      "debian": ["attr", "libattr1-dev"],
       "homebrew": true
     },
     "conservative": true,
@@ -367,9 +368,21 @@
     "version": "22.12.0"
   },
   "boost": {
+    "aliases": {
+      "debian": [
+        "libboost-chrono-dev",
+        "libboost-date-time-dev",
+        "libboost-dev",
+        "libboost-filesystem-dev",
+        "libboost-iostreams-dev",
+        "libboost-program-options-dev",
+        "libboost-thread-dev",
+        "libboost-timer-dev"
+      ],
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2022-09-28",
-    "homebrew": true,
     "url": ["https://www.boost.org/"],
     "version": "1.80.0"
   },
@@ -406,10 +419,13 @@
     "version": "1.19.0"
   },
   "brotli": {
+    "aliases": {
+      "debian": "libbrotli-dev",
+      "homebrew": true
+    },
     "check": false,
     "conservative": true,
     "date": "2022-09-26",
-    "homebrew": true,
     "url": ["https://github.com/google/brotli/"],
     "version": "1.0.9"
   },
@@ -459,9 +475,12 @@
     "version": "1.0.8"
   },
   "c-ares": {
+    "aliases": {
+      "debian": "libc-ares-dev",
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2022-09-26",
-    "homebrew": true,
     "url": ["https://c-ares.org/"],
     "version": "1.18.1"
   },
@@ -478,12 +497,13 @@
   },
   "cairo": {
     "aliases": {
-      "fedora": "cairo-devel"
+      "debian": "libcairo2-dev",
+      "fedora": "cairo-devel",
+      "homebrew": true
     },
     "build_dependencies": ["pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
-    "homebrew": true,
     "reverse_dependencies": ["fontconfig", "freetype", "harfbuzz"],
     "url": [
       "https://cairographics.org/",
@@ -873,7 +893,7 @@
   },
   "curl": {
     "aliases": {
-      "debian": true,
+      "debian": ["curl", "libcurl4-openssl-dev"],
       "fedora": ["curl", "curl-minimal", "libcurl-devel"],
       "homebrew": true
     },
@@ -1153,6 +1173,7 @@
   },
   "fontconfig": {
     "aliases": {
+      "debian": "libfontconfig-dev",
       "fedora": "fontconfig-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
@@ -1177,6 +1198,7 @@
   },
   "freetype": {
     "aliases": {
+      "debian": "libfreetype-dev",
       "fedora": "freetype-devel"
     },
     "conservative": true,
@@ -1196,6 +1218,7 @@
   },
   "fribidi": {
     "aliases": {
+      "debian": "libfribidi-dev",
       "fedora": "fribidi-devel"
     },
     "conservative": true,
@@ -1361,13 +1384,14 @@
   },
   "glib": {
     "aliases": {
-      "fedora": "glib2-devel"
+      "debian": "libglib2.0-dev",
+      "fedora": "glib2-devel",
+      "homebrew": true
     },
     "build_dependencies": ["meson", "ninja", "pkg-config", "python"],
     "conservative": true,
     "date": "2023-01-03",
     "dependencies": ["zlib", "gettext", "libffi", "pcre"],
-    "homebrew": true,
     "url": [
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/"
@@ -1376,6 +1400,7 @@
   },
   "gmp": {
     "aliases": {
+      "debian": "libgmp-dev",
       "fedora": "gmp-devel"
     },
     "conservative": true,
@@ -1412,6 +1437,7 @@
   },
   "gnutls": {
     "aliases": {
+      "debian": "libgnutls-dev",
       "fedora": "gnutls-devel"
     },
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
@@ -1527,6 +1553,7 @@
   },
   "gsl": {
     "aliases": {
+      "debian": "libgsl-dev",
       "fedora": "gsl-devel"
     },
     "conservative": true,
@@ -1607,6 +1634,7 @@
   },
   "harfbuzz": {
     "aliases": {
+      "debian": "libharfbuzz-dev",
       "fedora": "harfbuzz-devel"
     },
     "conservative": true,
@@ -1657,7 +1685,9 @@
   },
   "hdf5": {
     "aliases": {
-      "fedora": "hdf5-devel"
+      "debian": "libhdf5-dev",
+      "fedora": "hdf5-devel",
+      "homebrew": true
     },
     "bin": [
       "h5c++",
@@ -1685,7 +1715,6 @@
     "conservative": true,
     "date": "2023-01-03",
     "dependencies": ["zlib", "gcc"],
-    "homebrew": true,
     "reverse_dependencies": ["armadillo"],
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.14.0"
@@ -1800,7 +1829,7 @@
   },
   "imagemagick": {
     "aliases": {
-      "debian": true,
+      "debian": ["imagemagick", "libmagick++-dev"],
       "homebrew": true
     },
     "bin": [
@@ -1903,10 +1932,13 @@
     "version": "3.100"
   },
   "lapack": {
+    "aliases": {
+      "debian": "liblapack-dev",
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2022-11-11",
     "dependencies": ["gcc"],
-    "homebrew": true,
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.11.0"
   },
@@ -1961,9 +1993,12 @@
     "version": "2.5.5"
   },
   "libedit": {
+    "aliases": {
+      "debian": "libedit-dev",
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2022-11-08",
-    "homebrew": true,
     "url": ["https://thrysoee.dk/editline/"],
     "version": "20221030-3.1"
   },
@@ -1979,21 +2014,23 @@
   },
   "libevent": {
     "aliases": {
-      "fedora": "libevent-devel"
+      "debian": "libevent-dev",
+      "fedora": "libevent-devel",
+      "homebrew": true
     },
     "conservative": true,
     "date": "2022-08-30",
-    "homebrew": true,
     "url": ["https://libevent.org/", "https://github.com/libevent/libevent/"],
     "version": "2.1.12"
   },
   "libffi": {
     "aliases": {
-      "fedora": "libffi-devel"
+      "debian": "libffi-dev",
+      "fedora": "libffi-devel",
+      "homebrew": true
     },
     "conservative": true,
     "date": "2022-11-08",
-    "homebrew": true,
     "reverse_dependencies": [
       "cairo",
       "glib",
@@ -2024,6 +2061,7 @@
   },
   "libgit2": {
     "aliases": {
+      "debian": "libgit2-dev",
       "fedora": "libgit2-devel"
     },
     "conservative": true,
@@ -2061,6 +2099,7 @@
   },
   "libjpeg-turbo": {
     "aliases": {
+      "debian": "libjpeg-dev",
       "fedora": "libjpeg-turbo-devel"
     },
     "conservative": true,
@@ -2114,12 +2153,12 @@
   },
   "libpng": {
     "aliases": {
+      "debian": "libpng-dev",
       "fedora": "libpng-devel"
     },
     "bin": ["libpng-config", "libpng16-config"],
     "conservative": true,
     "date": "2023-01-03",
-    "homebrew": true,
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
     "version": "1.6.39"
   },
@@ -2134,11 +2173,12 @@
   },
   "libssh2": {
     "aliases": {
-      "fedora": "libssh2-devel"
+      "debian": "libssh2-1-dev",
+      "fedora": "libssh2-devel",
+      "homebrew": true
     },
     "conservative": true,
     "date": "2022-08-29",
-    "homebrew": true,
     "url": ["https://www.libssh2.org/"],
     "version": "1.10.0"
   },
@@ -2159,11 +2199,12 @@
   },
   "libtiff": {
     "aliases": {
-      "fedora": "libtiff-devel"
+      "debian": "libtiff5-dev",
+      "fedora": "libtiff-devel",
+      "homebrew": true
     },
     "conservative": true,
     "date": "2023-01-03",
-    "homebrew": true,
     "url": [
       "https://download.osgeo.org/libtiff/",
       "https://libtiff.gitlab.io/libtiff/"
@@ -2172,6 +2213,7 @@
   },
   "libtool": {
     "aliases": {
+      "debian": ["libtool", "libtool-bin"],
       "fedora": true
     },
     "bin": ["glibtool", "glibtoolize"],
@@ -2207,12 +2249,13 @@
   },
   "libxml2": {
     "aliases": {
-      "fedora": "libxml2-devel"
+      "debian": "libxml2-dev",
+      "fedora": "libxml2-devel",
+      "homebrew": true
     },
     "bin": ["xml2-config"],
     "conservative": true,
     "date": "2022-11-08",
-    "homebrew": true,
     "man1": ["xml2-config.1"],
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
     "version": "2.10.3"
@@ -2242,7 +2285,9 @@
   },
   "llvm": {
     "aliases": {
-      "fedora": "llvm-devel"
+      "debian": "libclang-dev",
+      "fedora": "llvm-devel",
+      "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "date": "2022-11-29",
@@ -2255,7 +2300,6 @@
       "python",
       "swig"
     ],
-    "homebrew": true,
     "large": true,
     "url": ["https://releases.llvm.org/"],
     "version": "15.0.6"
@@ -2305,11 +2349,12 @@
   },
   "lz4": {
     "aliases": {
-      "fedora": "lz4-devel"
+      "debian": "liblz4-dev",
+      "fedora": "lz4-devel",
+      "homebrew": true
     },
     "conservative": true,
     "date": "2022-08-30",
-    "homebrew": true,
     "url": ["https://lz4.github.io/lz4/", "https://github.com/lz4/lz4/"],
     "version": "1.9.4"
   },
@@ -2368,6 +2413,7 @@
   },
   "man-db": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["gman"],
@@ -2406,6 +2452,7 @@
   },
   "meson": {
     "aliases": {
+      "debian": true,
       "fedora": true
     },
     "bin": ["meson"],
@@ -2417,6 +2464,7 @@
   },
   "mpc": {
     "aliases": {
+      "debian": "libmpc-dev",
       "fedora": "libmpc-devel",
       "homebrew": "libmpc"
     },
@@ -2436,11 +2484,12 @@
   },
   "mpfr": {
     "aliases": {
-      "fedora": "mpfr-devel"
+      "debian": "libmpfr-dev",
+      "fedora": "mpfr-devel",
+      "homebrew": true
     },
     "conservative": true,
     "date": "2022-08-29",
-    "homebrew": true,
     "url": ["https://www.mpfr.org/"],
     "version": "4.1.0"
   },
@@ -2460,6 +2509,9 @@
     "version": "1.13"
   },
   "nano": {
+    "aliases": {
+      "debian": true
+    },
     "bin": ["nano"],
     "build_dependencies": ["pkg-config"],
     "date": "2023-01-03",
@@ -2477,7 +2529,9 @@
   },
   "ncurses": {
     "aliases": {
-      "fedora": "ncurses-devel"
+      "debian": "libncurses-dev",
+      "fedora": "ncurses-devel",
+      "homebrew": true
     },
     "bin": [
       "captoinfo",
@@ -2495,7 +2549,6 @@
     ],
     "conservative": true,
     "date": "2023-01-03",
-    "homebrew": true,
     "man1": [
       "captoinfo.1",
       "clear.1",
@@ -2552,9 +2605,12 @@
     "version": "22.10.4"
   },
   "nghttp2": {
+    "aliases": {
+      "debian": "libnghttp2-dev",
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2023-01-03",
-    "homebrew": true,
     "url": ["https://nghttp2.org/"],
     "version": "1.51.0"
   },
@@ -2571,10 +2627,13 @@
     "version": "1.6.10"
   },
   "ninja": {
+    "aliases": {
+      "debian": "ninja-build",
+      "homebrew": true
+    },
     "bin": ["ninja"],
     "date": "2022-09-29",
     "dependencies": ["python"],
-    "homebrew": true,
     "url": ["https://ninja-build.org/", "https://pypi.org/project/ninja/"],
     "version": "1.11.1"
   },
@@ -2647,6 +2706,7 @@
   },
   "openblas": {
     "aliases": {
+      "debian": ["libblas-dev", "libopenblas-base", "libopenblas-dev"],
       "fedora": "openblas-devel"
     },
     "conservative": true,
@@ -2686,13 +2746,13 @@
     "conservative": true,
     "date": "2022-11-01",
     "dependencies": ["ca-certificates"],
-    "homebrew": true,
     "reverse_dependencies": ["dog"],
     "url": ["https://www.openssl.org/source/"],
     "version": "1.1.1s"
   },
   "openssl3": {
     "aliases": {
+      "debian": "libssl-dev",
       "fedora": "openssl3-devel",
       "homebrew": "openssl@3"
     },
@@ -2700,7 +2760,6 @@
     "conservative": true,
     "date": "2022-11-01",
     "dependencies": ["ca-certificates"],
-    "homebrew": true,
     "reverse_dependencies": [
       "cmake",
       "curl",
@@ -2740,17 +2799,23 @@
     "version": "21.8.0.0.0-1"
   },
   "pandoc": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "bin": ["pandoc"],
     "date": "2022-08-22",
-    "homebrew": true,
     "large": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
     "version": "2.19.2"
   },
   "parallel": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "bin": ["parallel"],
     "date": "2023-01-03",
-    "homebrew": true,
     "man1": ["parallel.1"],
     "url": ["https://www.gnu.org/software/parallel/"],
     "version": "20221222"
@@ -2780,29 +2845,35 @@
   },
   "pcre": {
     "aliases": {
-      "fedora": "pcre-devel"
+      "debian": "libpcre16-dev",
+      "fedora": "pcre-devel",
+      "homebrew": true
     },
     "bin": ["pcre-config", "pcregrep", "pcretest"],
     "conservative": true,
     "date": "2022-08-29",
-    "homebrew": true,
     "man1": ["pcre-config.1", "pcregrep.1", "pcretest.1"],
     "url": ["https://sourceforge.net/projects/pcre/"],
     "version": "8.45"
   },
   "pcre2": {
     "aliases": {
-      "fedora": "pcre2-devel"
+      "debian": "libpcre2-dev",
+      "fedora": "pcre2-devel",
+      "homebrew": true
     },
     "bin": ["pcre2-config", "pcre2grep", "pcre2test"],
     "conservative": true,
     "date": "2023-01-03",
-    "homebrew": true,
     "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"],
     "url": ["https://www.pcre.org/"],
     "version": "10.42"
   },
   "perl": {
+    "aliases": {
+      "debian": ["libperl-dev", "perl"],
+      "homebrew": true
+    },
     "bin": [
       "cpan",
       "perl",
@@ -2824,7 +2895,6 @@
     ],
     "conservative": true,
     "date": "2022-08-29",
-    "homebrew": true,
     "reverse_dependencies": ["ack", "exiftool"],
     "url": ["https://www.perl.org/get.html"],
     "version": "5.36.0"
@@ -2856,9 +2926,12 @@
     "version": "0.42.2"
   },
   "pkg-config": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "bin": ["pkg-config"],
     "date": "2022-08-29",
-    "homebrew": true,
     "man1": ["pkg-config.1"],
     "url": ["https://pkg-config.freedesktop.org/"],
     "version": "0.29.2"
@@ -3001,7 +3074,8 @@
   },
   "python": {
     "aliases": {
-      "fedora": "python3-devel"
+      "debian": ["python3", "python3-dev", "python3-venv"],
+      "fedora": ["python3", "python3-devel"]
     },
     "bin": ["python", "python3"],
     "date": "2023-01-03",
@@ -3311,11 +3385,12 @@
   },
   "readline": {
     "aliases": {
-      "fedora": "readline-devel"
+      "debian": "libreadline-dev",
+      "fedora": "readline-devel",
+      "homebrew": true
     },
     "conservative": true,
     "date": "2022-11-08",
-    "homebrew": true,
     "url": ["https://tiswww.cwru.edu/php/chet/readline/rltop.html"],
     "version": "8.2"
   },
@@ -3380,23 +3455,27 @@
     "version": "2022.12.0+353"
   },
   "rsync": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "bin": ["rsync"],
     "date": "2022-11-08",
-    "homebrew": true,
     "man1": ["rsync.1"],
     "url": ["https://download.samba.org/pub/rsync/src/"],
     "version": "3.2.7"
   },
   "ruby": {
     "aliases": {
-      "fedora": true
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
     },
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
     "dependencies": ["openssl3", "readline", "zlib"],
-    "homebrew": true,
     "man1": ["ruby.1"],
     "notes": ["jekyll doesn't currently work with ruby 3.2.0."],
     "outdated": true,
@@ -3505,10 +3584,12 @@
   },
   "serf": {
     "aliases": {
+      "debian": "libserf-dev",
       "homebrew": false
     },
     "conservative": true,
     "date": "2022-09-26",
+    "reverse_dependencies": ["subversion"],
     "url": ["https://serf.apache.org/"],
     "version": "1.3.9"
   },
@@ -3581,6 +3662,7 @@
   },
   "sqlite": {
     "aliases": {
+      "debian": "sqlite3",
       "fedora": "sqlite-devel"
     },
     "bin": ["sqlite3"],
@@ -3690,6 +3772,10 @@
     "version": "1.34"
   },
   "tcl-tk": {
+    "aliases": {
+      "debian": ["tcl-dev", "tcl8.6-dev", "tk-dev", "tk8.6-dev"],
+      "homebrew": true
+    },
     "conservative": true,
     "date": "2023-01-03",
     "homebrew": true,
@@ -3715,6 +3801,10 @@
     ]
   },
   "texinfo": {
+    "aliases": {
+      "debian": true,
+      "homebrew": true
+    },
     "bin": [
       "pdftexi2dvi",
       "pod2texi",
@@ -3725,7 +3815,6 @@
     ],
     "conservative": true,
     "date": "2023-01-03",
-    "homebrew": true,
     "man1": [
       "pdftexi2dvi.1",
       "pod2texi.1",
@@ -3800,6 +3889,7 @@
   },
   "udunits": {
     "aliases": {
+      "debian": "libudunits2-dev",
       "fedora": "udunits2-devel"
     },
     "bin": ["udunits2"],
@@ -4070,6 +4160,7 @@
   },
   "xxhash": {
     "aliases": {
+      "debian": "libxxhash-dev",
       "fedora": "xxhash-devel"
     },
     "conservative": true,
@@ -4152,7 +4243,7 @@
   },
   "zlib": {
     "aliases": {
-      "debian": "zlib1g-dev",
+      "debian": ["libz-dev", "zlib1g-dev"],
       "fedora": "zlib-devel"
     },
     "conservative": true,
@@ -4184,6 +4275,7 @@
   },
   "zstd": {
     "aliases": {
+      "debian": "libzstd-dev",
       "fedora": "libzstd-devel"
     },
     "bin": [
