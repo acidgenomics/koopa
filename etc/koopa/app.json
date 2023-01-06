@@ -88,18 +88,22 @@
     "version": "11.4.3"
   },
   "asdf": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["asdf"],
     "conservative": true,
     "date": "2022-12-14",
-    "homebrew": true,
     "url": ["https://github.com/asdf-vm/asdf/"],
     "version": "0.11.0"
   },
   "aspell": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["aspell"],
     "build_dependencies": ["make"],
     "date": "2022-08-30",
-    "homebrew": true,
     "man1": ["aspell.1"],
     "url": ["http://aspell.net/"],
     "version": "0.60.8"
@@ -110,7 +114,6 @@
     },
     "bin": ["ascp"],
     "date": "2022-11-08",
-    "homebrew": true,
     "platform": "linux",
     "url": ["https://www.ibm.com/aspera/connect/"],
     "version": "4.2.3.197"
@@ -186,7 +189,6 @@
     },
     "bin": ["aws"],
     "date": "2023-01-03",
-    "homebrew": true,
     "outdated": true,
     "url": [
       "https://aws.amazon.com/cli/",
@@ -195,10 +197,12 @@
     "version": "2.9.12"
   },
   "azure-cli": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["az"],
     "date": "2022-12-30",
     "dependencies": ["python"],
-    "homebrew": true,
     "large": true,
     "outdated": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
@@ -213,11 +217,13 @@
     "version": "2.5.2"
   },
   "bandwhich": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["grex"],
     "build_dependencies": ["rust"],
     "check": false,
     "date": "2022-12-08",
-    "homebrew": true,
     "notes": ["Current version has build issues related to Cargo lock."],
     "url": ["https://github.com/imsnif/bandwhich/"],
     "version": "0.20.0"
@@ -225,21 +231,23 @@
   "bash": {
     "aliases": {
       "debian": true,
-      "fedora": true
+      "fedora": true,
+      "homebrew": true
     },
     "bin": ["bash"],
     "conservative": true,
     "date": "2022-12-14",
-    "homebrew": true,
     "man1": ["bash.1"],
     "url": ["https://www.gnu.org/software/bash/"],
     "version": "5.2.15"
   },
   "bash-language-server": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["bash-language-server"],
     "date": "2022-12-30",
     "dependencies": ["node"],
-    "homebrew": true,
     "url": [
       "https://github.com/bash-lsp/bash-language-server/",
       "https://www.npmjs.com/package/bash-language-server/"
@@ -257,10 +265,12 @@
     "version": "1.8.2"
   },
   "bat": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["bat"],
     "build_dependencies": ["rust"],
     "date": "2022-09-12",
-    "homebrew": true,
     "url": ["https://github.com/sharkdp/bat"],
     "version": "0.22.1"
   },
@@ -317,17 +327,21 @@
     "version": "2.30.0"
   },
   "bfg": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["bfg"],
     "check": false,
     "date": "2022-09-22",
     "dependencies": ["openjdk"],
-    "homebrew": true,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
     "version": "1.14.0"
   },
   "binutils": {
+    "aliases": {
+      "homebrew": true
+    },
     "date": "2022-11-15",
-    "homebrew": true,
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
     "version": "2.39"
   },
@@ -351,19 +365,21 @@
   "bison": {
     "aliases": {
       "debian": "libbison-dev",
-      "fedora": "bison-devel"
+      "fedora": "bison-devel",
+      "homebrew": true
     },
     "conservative": true,
     "date": "2022-08-29",
-    "homebrew": true,
     "url": ["https://www.gnu.org/software/bison/"],
     "version": "3.8.2"
   },
   "black": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["black"],
     "date": "2022-12-09",
     "dependencies": ["python"],
-    "homebrew": true,
     "url": ["https://github.com/psf/black/"],
     "version": "22.12.0"
   },
@@ -387,10 +403,12 @@
     "version": "1.80.0"
   },
   "bottom": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["btm"],
     "build_dependencies": ["rust"],
     "date": "2023-01-03",
-    "homebrew": true,
     "url": ["https://github.com/ClementTsang/bottom/"],
     "version": "0.7.0"
   },
@@ -403,18 +421,22 @@
     "version": "2.5.0"
   },
   "bpytop": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["bpytop"],
     "date": "2022-09-26",
     "dependencies": ["python"],
-    "homebrew": true,
     "url": ["https://github.com/aristocratos/bpytop/"],
     "version": "1.0.68"
   },
   "broot": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
     "date": "2022-01-03",
-    "homebrew": true,
     "url": ["https://github.com/Canop/broot/"],
     "version": "1.19.0"
   },
@@ -443,7 +465,8 @@
   "bzip2": {
     "aliases": {
       "debian": "libbz2-dev",
-      "fedora": "bzip2-devel"
+      "fedora": "bzip2-devel",
+      "homebrew": true
     },
     "bin": [
       "bunzip2",
@@ -460,7 +483,6 @@
     ],
     "conservative": true,
     "date": "2022-09-26",
-    "homebrew": true,
     "man1": [
       "bzcmp.1",
       "bzdiff.1",
@@ -521,9 +543,11 @@
     "version": "7.1.0"
   },
   "cheat": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["cheat"],
     "date": "2022-11-07",
-    "homebrew": true,
     "url": ["https://github.com/cheat/cheat/"],
     "version": "4.4.0"
   },
@@ -533,18 +557,22 @@
     "version": "fb6301d1563c6cf88c8aac51ff8bcd4e06276139"
   },
   "chezmoi": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
     "date": "2023-01-02",
-    "homebrew": true,
     "url": ["https://www.chezmoi.io/"],
     "version": "2.29.1"
   },
   "cli11": {
+    "aliases": {
+      "homebrew": true
+    },
     "build_dependencies": ["cmake"],
     "conservative": true,
     "date": "2022-12-06",
-    "homebrew": true,
     "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/CLIUtils/CLI11/"],
@@ -619,11 +647,11 @@
   },
   "convmv": {
     "aliases": {
-      "fedora": true
+      "fedora": true,
+      "homebrew": true
     },
     "bin": ["convmv"],
     "date": "2022-09-26",
-    "homebrew": true,
     "url": "https://www.j3e.de/linux/convmv/",
     "version": "2.05"
   },
@@ -854,9 +882,11 @@
     "version": "9.1"
   },
   "cpufetch": {
+    "aliases": {
+      "homebrew": true
+    },
     "bin": ["cpufetch"],
     "date": "2022-08-30",
-    "homebrew": true,
     "man1": ["cpufetch.1"],
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
     "version": "1.02"
