@@ -6,7 +6,6 @@
     "bin": ["ack"],
     "date": "2022-09-26",
     "dependencies": ["perl"],
-    "man1": ["ack.1"],
     "url": ["https://beyondgrep.com/"],
     "version": "3.6.0"
   },
@@ -3592,7 +3591,6 @@
     "bin": ["rename"],
     "date": "2023-01-03",
     "dependencies": ["perl"],
-    "man1": ["rename.1"],
     "url": ["https://metacpan.org/dist/File-Rename/"],
     "version": "2.00"
   },
