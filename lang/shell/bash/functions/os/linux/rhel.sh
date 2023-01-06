@@ -2,6 +2,7 @@
 # shellcheck disable=all
 
 koopa_rhel_enable_epel() {
+    local rhel_version
     koopa_assert_has_no_args "$#"
     if koopa_fedora_dnf repolist \
         | koopa_str_detect_regex - --pattern='^epel'
@@ -9,15 +10,8 @@ koopa_rhel_enable_epel() {
         koopa_alert_success 'EPEL is already enabled.'
         return 0
     fi
+    rhel_version='9' # FIXME
     koopa_fedora_dnf_install "https://dl.fedoraproject.org/pub/\
-epel/epel-release-latest-8.noarch.rpm"
+epel/epel-release-latest-${rhel_version}.noarch.rpm"
     return 0
-}
-
-koopa_rhel_install_system_base() {
-    koopa_install_app \
-        --name='base' \
-        --platform='rhel' \
-        --system \
-        "$@"
 }

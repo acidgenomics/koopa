@@ -116,6 +116,9 @@
     "version": "2.5.1"
   },
   "autoconf": {
+    "aliases": {
+      "fedora": "autoconf"
+    },
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
@@ -157,6 +160,9 @@
     "version": "1.7.7"
   },
   "automake": {
+    "aliases": {
+      "fedora": "automake"
+    },
     "bin": ["automake"],
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/automake/"],
@@ -205,6 +211,9 @@
     "version": "0.20.0"
   },
   "bash": {
+    "aliases": {
+      "fedora": "bash"
+    },
     "bin": ["bash"],
     "conservative": true,
     "date": "2022-12-14",
@@ -571,6 +580,9 @@
     "version": "2.05"
   },
   "coreutils": {
+    "aliases": {
+      "fedora": "coreutils"
+    },
     "bin": [
       "g[",
       "gb2sum",
@@ -943,6 +955,9 @@
     "version": "0.188"
   },
   "emacs": {
+    "aliases": {
+      "fedora": "emacs"
+    },
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "date": "2022-09-12",
     "homebrew": true,
@@ -1194,6 +1209,9 @@
     "version": "12.2.0"
   },
   "gdal": {
+    "aliases": {
+      "fedora": "gdal-devel"
+    },
     "bin": ["gdal-config"],
     "conservative": true,
     "date": "2022-12-15",
@@ -1212,6 +1230,9 @@
     "version": "1.23"
   },
   "geos": {
+    "aliases": {
+      "fedora": "geos-devel"
+    },
     "bin": ["geos-config"],
     "conservative": true,
     "date": "2022-11-14",
@@ -1357,6 +1378,9 @@
     "version": "3.7.8"
   },
   "go": {
+    "aliases": {
+      "fedora": "golang"
+    },
     "bin": ["go"],
     "date": "2023-01-03",
     "homebrew": true,
@@ -2142,6 +2166,9 @@
     "version": "1.4.0"
   },
   "llvm": {
+    "aliases": {
+      "fedora": "llvm-devel"
+    },
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "date": "2022-11-29",
     "dependencies": [
@@ -2445,6 +2472,9 @@
     "version": "1.51.0"
   },
   "nim": {
+    "aliases": {
+      "fedora": "nim"
+    },
     "bin": ["nim"],
     "date": "2022-01-03",
     "homebrew": true,
@@ -2777,6 +2807,9 @@
     "version": "0.13.3"
   },
   "proj": {
+    "aliases": {
+      "fedora": "proj-devel"
+    },
     "bin": ["proj", "projinfo"],
     "conservative": true,
     "date": "2022-12-01",
@@ -2985,6 +3018,9 @@
     "version": "3.11.1"
   },
   "r": {
+    "aliases": {
+      "fedora": "R"
+    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-01",
     "dependencies": [
