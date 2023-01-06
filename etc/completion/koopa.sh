@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-01-05.
+    # @note Updated 2023-01-06.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -510,7 +510,6 @@ __koopa_complete() {
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'system')
                             args+=(
-                                'base'
                                 'homebrew'
                                 'homebrew-bundle'
                                 'tex-packages'

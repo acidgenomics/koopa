@@ -12,18 +12,6 @@ main() {
     local pkgs
     koopa_assert_has_no_args "$#"
     pkgs=(
-        # > 'coreutils'
-        # > 'emacs'
-        # > 'gdal-devel'
-        # > 'geos-devel'
-        # > 'golang'
-        # > 'llvm'
-        # > 'llvm-devel'
-        # > 'nim'
-        # > 'proj-devel'
-        'R'
-        'apr-devel' # subversion
-        'apr-util-devel' # subversion
         'autoconf'
         'automake'
         'bash'
