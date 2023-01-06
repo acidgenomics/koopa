@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Remove this installer file.
+
 main() {
     # """
     # Install Debian base system.
