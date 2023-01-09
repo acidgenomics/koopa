@@ -12216,6 +12216,12 @@ koopa_install_ffq() {
         "$@"
 }
 
+koopa_install_fgbio() {
+    koopa_install_app \
+        --name='fgbio' \
+        "$@"
+}
+
 koopa_install_findutils() {
     koopa_install_app \
         --name='findutils' \
@@ -23653,6 +23659,12 @@ koopa_uninstall_ffmpeg() {
 koopa_uninstall_ffq() {
     koopa_uninstall_app \
         --name='ffq' \
+        "$@"
+}
+
+koopa_uninstall_fgbio() {
+    koopa_uninstall_app \
+        --name='fgbio' \
         "$@"
 }
 

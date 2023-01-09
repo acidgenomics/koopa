@@ -623,6 +623,7 @@
       "entrez-direct",
       "fastqc",
       "ffq",
+      "fgbio",
       "gffutils",
       "gget",
       "gseapy",
@@ -1146,6 +1147,12 @@
       "https://bioconda.github.io/recipes/ffq/README.html"
     ],
     "version": "0.3.0"
+  },
+  "fgbio": {
+    "date": "2023-01-09",
+    "dependencies": ["conda"],
+    "large": true,
+    "version": "2.0.2"
   },
   "findutils": {
     "aliases": {
@@ -1999,8 +2006,9 @@
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
     "date": "2023-01-09",
     "large": true,
+    "outdated": true,
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.8.5"
+    "version": "1.8.4"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
