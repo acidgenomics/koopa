@@ -3,7 +3,7 @@
 koopa_spacevim() {
     # """
     # SpaceVim alias.
-    # @note Updated 2022-09-16.
+    # @note Updated 2023-01-06.
     # """
     local gvim prefix vim vimrc
     vim='vim'
@@ -16,8 +16,17 @@ koopa_spacevim() {
         fi
     fi
     prefix="$(koopa_spacevim_prefix)"
+    if [ ! -d "$prefix" ]
+    then
+        koopa_print "SpaceVim is not installed at '${prefix}'."
+        return 1
+    fi
     vimrc="${prefix}/vimrc"
-    [ -f "$vimrc" ] || return 1
+    if [ ! -f "$vimrc" ]
+    then
+        koopa_print "No vimrc file at '${vimrc}'."
+        return 1
+    fi
     koopa_is_alias 'vim' && unalias 'vim'
     "$vim" -u "$vimrc" "$@"
 }
