@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cpufetch.
-    # @note Updated 2022-04-08.
+    # @note Updated 2023-01-09.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -20,6 +20,16 @@ main() {
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/Dr-Noob/${dict['name']}/archive/refs/\
 tags/${dict['file']}"
+    # Need to fix build issue on macOS for 1.03.
+    # https://github.com/Dr-Noob/cpufetch/issues/168
+    case "${dict['version']}" in
+        '1.03')
+            dict['version']='2fc4896429c4605b57e5b4c1095657c28cb3a0c3'
+            dict['file']="${dict['version']}.tar.gz"
+            dict['url']="https://github.com/Dr-Noob/${dict['name']}/\
+archive/${dict['file']}"
+            ;;
+    esac
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"

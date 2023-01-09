@@ -885,10 +885,11 @@
       "homebrew": true
     },
     "bin": ["cpufetch"],
-    "date": "2022-08-30",
+    "date": "2023-01-09",
     "man1": ["cpufetch.1"],
+    "outdated": true,
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
-    "version": "1.02"
+    "version": "1.03"
   },
   "csvkit": {
     "bin": [
@@ -969,9 +970,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2023-01-03",
+    "date": "2023-01-09",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.40.0"
+    "version": "0.41.0"
   },
   "docker-credential-pass": {
     "aliases": {
@@ -1163,13 +1164,13 @@
       "homebrew": true
     },
     "bin": ["fish"],
-    "date": "2022-08-30",
+    "date": "2023-01-09",
     "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "3.5.1"
+    "version": "3.6.0"
   },
   "flac": {
     "aliases": {
@@ -1996,10 +1997,10 @@
     },
     "bin": ["julia"],
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
-    "date": "2022-12-24",
+    "date": "2023-01-09",
     "large": true,
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.8.4"
+    "version": "1.8.5"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
@@ -2577,10 +2578,10 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2022-09-26",
+    "date": "2023-01-09",
     "dependencies": ["node"],
     "url": ["https://www.npmjs.com/package/markdownlint-cli"],
-    "version": "0.32.2"
+    "version": "0.33.0"
   },
   "mcfly": {
     "aliases": {
@@ -2658,10 +2659,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2022-09-09",
+    "date": "2023-01-09",
     "dependencies": ["conda"],
     "large": true,
-    "version": "1.13"
+    "outdated": true,
+    "version": "1.14"
   },
   "nano": {
     "aliases": {
@@ -3137,10 +3139,10 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2022-12-07",
+    "date": "2023-01-09",
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "2.8.1"
+    "version": "2.8.2"
   },
   "procs": {
     "aliases": {
@@ -3243,10 +3245,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2022-12-24",
+    "date": "2023-01-09",
     "dependencies": ["python"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.15.9"
+    "version": "2.15.10"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4207,13 +4209,13 @@
       "homebrew": true
     },
     "bin": ["vulture"],
-    "date": "2022-09-26",
+    "date": "2023-01-09",
     "dependencies": ["python"],
     "url": [
       "https://github.com/jendrikseipp/vulture/",
       "https://pypi.org/project/vulture/"
     ],
-    "version": "2.6"
+    "version": "2.7"
   },
   "wget": {
     "aliases": {
@@ -4434,13 +4436,13 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-01-03",
+    "date": "2023-01-09",
     "dependencies": ["python"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.1.2"
+    "version": "2023.1.6"
   },
   "zellij": {
     "aliases": {
@@ -4485,9 +4487,9 @@
     },
     "bin": ["zoxide"],
     "build_dependencies": ["rust"],
-    "date": "2022-09-20",
+    "date": "2023-01-09",
     "url": ["https://github.com/ajeetdsouza/zoxide/"],
-    "version": "0.8.3"
+    "version": "0.9.0"
   },
   "zsh": {
     "aliases": {
