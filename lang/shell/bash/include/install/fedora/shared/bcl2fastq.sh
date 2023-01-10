@@ -24,7 +24,6 @@ main() {
     "${app['aws']}" --profile='acidgenomics' \
         s3 cp "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_fedora_install_from_rpm \
-        --prefix="${dict['prefix']}" "${dict['file2']}"
+    koopa_fedora_install_from_rpm --prefix="${dict['prefix']}" ./*.rpm
     return 0
 }
