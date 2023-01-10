@@ -499,13 +499,14 @@ koopa_activate_homebrew() {
     prefix="$(koopa_homebrew_prefix)"
     [ -d "$prefix" ] || return 0
     [ -x "${prefix}/bin/brew" ] || return 0
-    export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
-    export HOMEBREW_INSTALL_CLEANUP=1
-    export HOMEBREW_INSTALL_FROM_API=1
-    export HOMEBREW_NO_ANALYTICS=1
-    export HOMEBREW_NO_AUTO_UPDATE=1
-    export HOMEBREW_NO_ENV_HINTS=1
-    export HOMEBREW_PREFIX="$prefix"
+    [ -z "${HOMEBREW_CLEANUP_MAX_AGE_DAYS:-}" ] && \
+        export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
+    [ -z "${HOMEBREW_INSTALL_CLEANUP:-}" ] && \
+        export HOMEBREW_INSTALL_CLEANUP=1
+    [ -z "${HOMEBREW_NO_ANALYTICS:-}" ] && \
+        export HOMEBREW_NO_ANALYTICS=1
+    [ -z "${HOMEBREW_NO_ENV_HINTS:-}" ] && \
+        export HOMEBREW_NO_ENV_HINTS=1
     return 0
 }
 
@@ -1214,15 +1215,6 @@ koopa_cpu_count() {
     return 0
 }
 
-koopa_debian_os_codename() {
-    local x
-    koopa_is_installed 'lsb_release' || return 0
-    x="$(lsb_release -cs)"
-    [ -n "$x" ] || return 1
-    koopa_print "$x"
-    return 0
-}
-
 koopa_default_shell_name() {
     local shell str
     shell="${SHELL:-sh}"
@@ -1440,11 +1432,6 @@ koopa_export_pager() {
 
 koopa_expr() {
     expr "${1:?}" : "${2:?}" 1>/dev/null
-}
-
-koopa_fzf_prefix() {
-    koopa_print "$(koopa_opt_prefix)/fzf"
-    return 0
 }
 
 koopa_git_branch() {
@@ -1755,24 +1742,8 @@ koopa_is_remote() {
     [ -n "${SSH_CONNECTION:-}" ]
 }
 
-koopa_is_rhel_7_like() {
-    koopa_is_rhel_like && koopa_is_os_version 7
-}
-
-koopa_is_rhel_8_like() {
-    koopa_is_rhel_like && koopa_is_os_version 8
-}
-
-koopa_is_rhel_9_like() {
-    koopa_is_rhel_like && koopa_is_os_version 9
-}
-
 koopa_is_rhel_like() {
     koopa_is_os_like 'rhel'
-}
-
-koopa_is_rhel_ubi() {
-    [ -f '/etc/yum.repos.d/ubi.repo' ]
 }
 
 koopa_is_rhel() {
@@ -1912,76 +1883,6 @@ koopa_macos_julia_prefix() {
     koopa_print "$prefix"
 }
 
-koopa_macos_os_codename() {
-    local version x
-    version="$(koopa_macos_os_version)"
-    case "$version" in
-        '13.'*)
-            x='Mammoth'
-            ;;
-        '12.'*)
-            x='Monterey'
-            ;;
-        '11.'*)
-            x='Big Sur'
-            ;;
-        '10.15.'*)
-            x='Catalina'
-            ;;
-        '10.14.'*)
-            x='Mojave'
-            ;;
-        '10.13.'*)
-            x='High Sierra'
-            ;;
-        '10.12.'*)
-            x='Sierra'
-            ;;
-        '10.11.'*)
-            x='El Capitan'
-            ;;
-        '10.10.'*)
-            x='Yosmite'
-            ;;
-        '10.9.'*)
-            x='Mavericks'
-            ;;
-        '10.8.'*)
-            x='Mountain Lion'
-            ;;
-        '10.7.'*)
-            x='Lion'
-            ;;
-        '10.6.'*)
-            x='Snow Leopard'
-            ;;
-        '10.5.'*)
-            x='Leopard'
-            ;;
-        '10.4.'*)
-            x='Tiger'
-            ;;
-        '10.3.'*)
-            x='Panther'
-            ;;
-        '10.2.'*)
-            x='Jaguar'
-            ;;
-        '10.1.'*)
-            x='Puma'
-            ;;
-        '10.0.'*)
-            x='Cheetah'
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-    [ -n "$x" ] || return 1
-    koopa_print "$x"
-    return 0
-}
-
 koopa_macos_os_version() {
     local x
     x="$(sw_vers -productVersion)"
@@ -2067,19 +1968,6 @@ koopa_openjdk_prefix() {
 
 koopa_opt_prefix() {
     koopa_print "$(koopa_koopa_prefix)/opt"
-    return 0
-}
-
-koopa_os_codename() {
-    if koopa_is_debian_like
-    then
-        koopa_debian_os_codename
-    elif koopa_is_macos
-    then
-        koopa_macos_os_codename
-    else
-        return 1
-    fi
     return 0
 }
 
