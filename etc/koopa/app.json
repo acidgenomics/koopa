@@ -2624,7 +2624,7 @@
     "version": "1.0.0"
   },
   "misopy": {
-    "bin": ["misopy"],
+    "bin": ["miso"],
     "date": "2023-01-10",
     "dependencies": ["conda"],
     "large": true,
