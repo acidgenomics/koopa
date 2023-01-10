@@ -306,6 +306,7 @@
     "version": "0.1.6"
   },
   "bcl2fastq": {
+    "bin": ["bcl2fastq"],
     "check": false,
     "date": "2023-01-10",
     "platform": "linux",
