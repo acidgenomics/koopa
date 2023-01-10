@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to use S3 cp here.
+# s3://private.koopa.acidgenomics.com/installers/bcl2fastq/fedora/amd64/2.20.zip
+
 main() {
     # """
     # Install bcl2fastq binary from Fedora/RHEL RPM file.
-    # @note Updated 2022-04-08.
+    # @note Updated 2023-01-10.
     # """
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
         ['arch']="$(koopa_arch)"
-        ['installers_url']="$(koopa_koopa_installers_url)"
+        ['installers_url']="$(koopa_private_installers_url)"
         ['name']='bcl2fastq'
         ['platform']='linux'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

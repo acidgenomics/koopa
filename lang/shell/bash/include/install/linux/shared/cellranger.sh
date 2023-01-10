@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework to download via s3 instead.
+
 main() {
     # """
     # Install Cell Ranger.
@@ -12,7 +14,7 @@ main() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        ['installers_url']="$(koopa_koopa_installers_url)"
+        ['installers_url']="$(koopa_private_installers_url)"
         ['name']='cellranger'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

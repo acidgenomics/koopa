@@ -307,12 +307,12 @@
   },
   "bcl2fastq": {
     "check": false,
-    "date": "2022-09-26",
+    "date": "2023-01-10",
     "platform": "linux",
     "url": [
       "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html"
     ],
-    "version": "2.20.0.422"
+    "version": "2.20"
   },
   "bedtools": {
     "bin": ["bedtools"],
