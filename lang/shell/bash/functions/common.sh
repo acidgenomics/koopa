@@ -18240,10 +18240,13 @@ koopa_python_pip_install() {
     koopa_assert_has_args "$#"
     pkgs=("$@")
     install_args=(
+        '-vvv'
+        '--default-timeout=300'
         '--disable-pip-version-check'
         '--ignore-installed'
         '--no-cache-dir'
         '--no-warn-script-location'
+        '--progress-bar'
     )
     dl_args=(
         'Python' "${app['python']}"

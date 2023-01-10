@@ -56,7 +56,7 @@ koopa_macos_os_codename() {
             dict['string']='Leopard'
             ;;
         '10.4.'*)
-            dict['string'='Tiger'
+            dict['string']='Tiger'
             ;;
         '10.3.'*)
             dict['string']='Panther'
