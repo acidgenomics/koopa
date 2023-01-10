@@ -1137,10 +1137,6 @@ koopa_boolean_nounset() {
     return 0
 }
 
-koopa_is_centos_like() {
-    koopa_is_os_like 'centos'
-}
-
 koopa_color_mode() {
     local str
     str="${KOOPA_COLOR_MODE:-}"
@@ -1554,10 +1550,6 @@ koopa_hostname() {
     return 0
 }
 
-koopa_is_aarch64() {
-    [ "$(koopa_arch)" = 'aarch64' ]
-}
-
 koopa_is_alacritty() {
     [ -n "${ALACRITTY_SOCKET:-}" ]
 }
@@ -1573,62 +1565,6 @@ koopa_is_alias() {
         return 1
     done
     return 0
-}
-
-koopa_is_alpine() {
-    koopa_is_os 'alpine'
-}
-
-koopa_is_amzn() {
-    koopa_is_os 'amzn'
-}
-
-koopa_is_arch() {
-    koopa_is_os 'arch'
-}
-
-koopa_is_aws() {
-    koopa_is_host 'aws'
-}
-
-koopa_is_azure() {
-    koopa_is_host 'azure'
-}
-
-koopa_is_centos() {
-    koopa_is_os 'centos'
-}
-
-koopa_is_conda_active() {
-    [ -n "${CONDA_DEFAULT_ENV:-}" ]
-}
-
-koopa_is_conda_env_active() {
-    [ "${CONDA_SHLVL:-1}" -gt 1 ] && return 0
-    [ "${CONDA_DEFAULT_ENV:-base}" != 'base' ] && return 0
-    return 1
-}
-
-koopa_is_debian_like() {
-    koopa_is_os_like 'debian'
-}
-
-koopa_is_debian() {
-    koopa_is_os 'debian'
-}
-
-koopa_is_docker() {
-    [ "${KOOPA_IS_DOCKER:-0}" -eq 1 ] && return 0
-    [ -f '/.dockerenv' ] && return 0
-    return 1
-}
-
-koopa_is_fedora_like() {
-    koopa_is_os_like 'fedora'
-}
-
-koopa_is_fedora() {
-    koopa_is_os 'fedora'
 }
 
 koopa_is_git_repo_clean() {
@@ -1648,10 +1584,6 @@ koopa_is_git_repo() {
     koopa_is_git_repo_top_level '.' && return 0
     git rev-parse --git-dir >/dev/null 2>&1 || return 1
     return 0
-}
-
-koopa_is_host() {
-    [ "$(koopa_host_id)" = "${1:?}" ]
 }
 
 koopa_is_installed() {
@@ -1687,22 +1619,6 @@ koopa_is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
 }
 
-koopa_is_opensuse() {
-    koopa_is_os 'opensuse'
-}
-
-koopa_is_os_like() {
-    local grep file id
-    grep='grep'
-    id="${1:?}"
-    koopa_is_os "$id" && return 0
-    file='/etc/os-release'
-    [ -f "$file" ] || return 1
-    "$grep" 'ID=' "$file" | "$grep" -q "$id" && return 0
-    "$grep" 'ID_LIKE=' "$file" | "$grep" -q "$id" && return 0
-    return 1
-}
-
 koopa_is_os_version() {
     local file grep version
     file='/etc/os-release'
@@ -1734,32 +1650,8 @@ koopa_is_qemu() {
     return 1
 }
 
-koopa_is_raspbian() {
-    koopa_is_os 'raspbian'
-}
-
-koopa_is_remote() {
-    [ -n "${SSH_CONNECTION:-}" ]
-}
-
-koopa_is_rhel_like() {
-    koopa_is_os_like 'rhel'
-}
-
-koopa_is_rhel() {
-    koopa_is_os 'rhel'
-}
-
-koopa_is_rocky() {
-    koopa_is_os 'rocky'
-}
-
 koopa_is_root() {
     [ "$(koopa_user_id)" -eq 0 ]
-}
-
-koopa_is_rstudio() {
-    [ -n "${RSTUDIO:-}" ]
 }
 
 koopa_is_set_nounset() {
@@ -1774,21 +1666,9 @@ koopa_is_subshell() {
     [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
 }
 
-koopa_is_tmux() {
-    [ -n "${TMUX:-}" ]
-}
-
 koopa_is_tty() {
     koopa_is_installed 'tty' || return 1
     tty >/dev/null 2>&1 || false
-}
-
-koopa_is_ubuntu_like() {
-    koopa_is_os_like 'ubuntu'
-}
-
-koopa_is_ubuntu() {
-    koopa_is_os 'ubuntu'
 }
 
 koopa_julia_packages_prefix() {
