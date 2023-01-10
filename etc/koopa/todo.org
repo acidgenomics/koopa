@@ -8,7 +8,6 @@
     Need to get system paths and then strip out /usr/local from the PATH string.
 ** TODO 'koopa install r-packages' needs to be 'koopa install system r-packages'.
 ** TODO apptainer, aspera-connect, lmod, and docker-credential-pass aren't showing up in Linux system checks.
-** TODO Consider adding install support for arvados (linux).
 ** TODO Ensure hadolint install cleans up ghcup.
     hadolint \~/.ghcup/tmp
     ensure this gets cleaned up...don't waste disk space.

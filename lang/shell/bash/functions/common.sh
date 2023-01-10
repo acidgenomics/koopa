@@ -10798,6 +10798,7 @@ koopa_install_all_apps() {
                 'htseq'
                 'jupyterlab'
                 'kallisto'
+                'misopy'
                 'multiqc'
                 'nanopolish'
                 'nextflow'
@@ -11188,6 +11189,7 @@ koopa_install_all_binary_apps() {
                 'hisat2'
                 'htseq'
                 'kallisto'
+                'misopy'
                 'multiqc'
                 'nextflow'
                 'openbb'
@@ -11244,7 +11246,7 @@ koopa_install_app_from_binary_package() {
         ['binary_prefix']='/opt/koopa'
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_string']="$(koopa_os_string)"
-        ['s3_bucket']="s3://app.koopa.acidgenomics.com"
+        ['s3_bucket']="s3://private.koopa.acidgenomics.com/binaries"
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
@@ -15276,11 +15278,6 @@ koopa_kebab_case() {
     koopa_r_koopa 'cliKebabCase' "$@"
 }
 
-koopa_koopa_installers_url() {
-    koopa_assert_has_no_args "$#"
-    koopa_print "$(koopa_koopa_url)/installers"
-}
-
 koopa_local_ip_address() {
     local app str
     koopa_assert_has_no_args "$#"
@@ -18069,6 +18066,11 @@ koopa_print_yellow() {
     return 0
 }
 
+koopa_private_installers_url() {
+    koopa_assert_has_no_args "$#"
+    koopa_print 's3://private.koopa.acidgenomics.com/installers'
+}
+
 koopa_prune_apps() {
     if koopa_is_macos
     then
@@ -18137,7 +18139,7 @@ koopa_push_app_build() {
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['os_string']="$(koopa_os_string)"
         ['profile']='acidgenomics'
-        ['s3_bucket']='s3://app.koopa.acidgenomics.com'
+        ['s3_bucket']='s3://private.koopa.acidgenomics.com/binaries'
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
     for name in "$@"

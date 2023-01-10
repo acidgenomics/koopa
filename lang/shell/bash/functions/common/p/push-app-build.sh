@@ -3,7 +3,7 @@
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2023-01-05.
+    # @note Updated 2023-01-01.
     #
     # @examples
     # > koopa_push_app_build 'emacs' 'vim'
@@ -27,7 +27,7 @@ koopa_push_app_build() {
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['os_string']="$(koopa_os_string)"
         ['profile']='acidgenomics'
-        ['s3_bucket']='s3://app.koopa.acidgenomics.com'
+        ['s3_bucket']='s3://private.koopa.acidgenomics.com/binaries'
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
     # Attempt to avoid retry errors (default = 2) for CloudFront.
