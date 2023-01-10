@@ -310,6 +310,7 @@
     "check": false,
     "date": "2023-01-10",
     "platform": "linux",
+    "private": true,
     "url": [
       "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html"
     ],
@@ -537,6 +538,7 @@
     "bin": ["cellranger"],
     "date": "2023-01-03",
     "platform": "linux",
+    "private": true,
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation"
     ],
@@ -2886,6 +2888,17 @@
     "date": "2022-08-30",
     "url": ["https://github.com/kkos/oniguruma/"],
     "version": "6.9.8"
+  },
+  "ont-guppy": {
+    "arch": "x86_64",
+    "bin": ["guppy"],
+    "date": "2023-01-10",
+    "platform": "linux",
+    "private": true,
+    "url": [
+      "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
+    ],
+    "version": "6.4.2"
   },
   "openbb": {
     "bin": ["openbb"],
