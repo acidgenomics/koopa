@@ -353,6 +353,7 @@ koopa_install_all_binary_apps() {
                 'deeptools'
                 'fastqc'
                 'ffq'
+                'fgbio'
                 'gatk'
                 'gffutils'
                 'gget'
