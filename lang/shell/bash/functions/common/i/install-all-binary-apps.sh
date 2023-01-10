@@ -379,7 +379,7 @@ koopa_install_all_binary_apps() {
     "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do
-        "${app['bash']}" "${app['koopa']}" install --binary "$app_name"
+        "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
