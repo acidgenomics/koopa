@@ -360,7 +360,7 @@ koopa_install_all_binary_apps() {
                 'hisat2'
                 'htseq'
                 'kallisto'
-                'misopy'
+                # > 'misopy'
                 'multiqc'
                 'nextflow'
                 'openbb'
