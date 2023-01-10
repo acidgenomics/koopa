@@ -344,6 +344,7 @@ koopa_install_all_apps() {
                 'entrez-direct'
                 'fastqc'
                 'ffq'
+                'fgbio'
                 'fq'
                 'gatk'
                 'gffutils'
