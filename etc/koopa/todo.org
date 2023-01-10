@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO 'kdev' isn't working inside of koopa Debian docker build.
+    Actually this is working correctly, it's just not setting the prompt as expected.
+** TODO Add install support for Nanopore guppy caller.
 ** TODO Work on setting PKG_CONFIG_PATH during install calls to not include /usr/local.
     Need to get system paths and then strip out /usr/local from the PATH string.
 ** TODO 'koopa install r-packages' needs to be 'koopa install system r-packages'.

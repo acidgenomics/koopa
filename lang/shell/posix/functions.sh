@@ -499,13 +499,14 @@ koopa_activate_homebrew() {
     prefix="$(koopa_homebrew_prefix)"
     [ -d "$prefix" ] || return 0
     [ -x "${prefix}/bin/brew" ] || return 0
-    export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
-    export HOMEBREW_INSTALL_CLEANUP=1
-    export HOMEBREW_INSTALL_FROM_API=1
-    export HOMEBREW_NO_ANALYTICS=1
-    export HOMEBREW_NO_AUTO_UPDATE=1
-    export HOMEBREW_NO_ENV_HINTS=1
-    export HOMEBREW_PREFIX="$prefix"
+    [ -z "${HOMEBREW_CLEANUP_MAX_AGE_DAYS:-}" ] && \
+        export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
+    [ -z "${HOMEBREW_INSTALL_CLEANUP:-}" ] && \
+        export HOMEBREW_INSTALL_CLEANUP=1
+    [ -z "${HOMEBREW_NO_ANALYTICS:-}" ] && \
+        export HOMEBREW_NO_ANALYTICS=1
+    [ -z "${HOMEBREW_NO_ENV_HINTS:-}" ] && \
+        export HOMEBREW_NO_ENV_HINTS=1
     return 0
 }
 
@@ -1136,10 +1137,6 @@ koopa_boolean_nounset() {
     return 0
 }
 
-koopa_is_centos_like() {
-    koopa_is_os_like 'centos'
-}
-
 koopa_color_mode() {
     local str
     str="${KOOPA_COLOR_MODE:-}"
@@ -1211,15 +1208,6 @@ koopa_cpu_count() {
         num=1
     fi
     koopa_print "$num"
-    return 0
-}
-
-koopa_debian_os_codename() {
-    local x
-    koopa_is_installed 'lsb_release' || return 0
-    x="$(lsb_release -cs)"
-    [ -n "$x" ] || return 1
-    koopa_print "$x"
     return 0
 }
 
@@ -1442,11 +1430,6 @@ koopa_expr() {
     expr "${1:?}" : "${2:?}" 1>/dev/null
 }
 
-koopa_fzf_prefix() {
-    koopa_print "$(koopa_opt_prefix)/fzf"
-    return 0
-}
-
 koopa_git_branch() {
     local branch
     koopa_is_git_repo || return 0
@@ -1567,10 +1550,6 @@ koopa_hostname() {
     return 0
 }
 
-koopa_is_aarch64() {
-    [ "$(koopa_arch)" = 'aarch64' ]
-}
-
 koopa_is_alacritty() {
     [ -n "${ALACRITTY_SOCKET:-}" ]
 }
@@ -1586,62 +1565,6 @@ koopa_is_alias() {
         return 1
     done
     return 0
-}
-
-koopa_is_alpine() {
-    koopa_is_os 'alpine'
-}
-
-koopa_is_amzn() {
-    koopa_is_os 'amzn'
-}
-
-koopa_is_arch() {
-    koopa_is_os 'arch'
-}
-
-koopa_is_aws() {
-    koopa_is_host 'aws'
-}
-
-koopa_is_azure() {
-    koopa_is_host 'azure'
-}
-
-koopa_is_centos() {
-    koopa_is_os 'centos'
-}
-
-koopa_is_conda_active() {
-    [ -n "${CONDA_DEFAULT_ENV:-}" ]
-}
-
-koopa_is_conda_env_active() {
-    [ "${CONDA_SHLVL:-1}" -gt 1 ] && return 0
-    [ "${CONDA_DEFAULT_ENV:-base}" != 'base' ] && return 0
-    return 1
-}
-
-koopa_is_debian_like() {
-    koopa_is_os_like 'debian'
-}
-
-koopa_is_debian() {
-    koopa_is_os 'debian'
-}
-
-koopa_is_docker() {
-    [ "${KOOPA_IS_DOCKER:-0}" -eq 1 ] && return 0
-    [ -f '/.dockerenv' ] && return 0
-    return 1
-}
-
-koopa_is_fedora_like() {
-    koopa_is_os_like 'fedora'
-}
-
-koopa_is_fedora() {
-    koopa_is_os 'fedora'
 }
 
 koopa_is_git_repo_clean() {
@@ -1661,10 +1584,6 @@ koopa_is_git_repo() {
     koopa_is_git_repo_top_level '.' && return 0
     git rev-parse --git-dir >/dev/null 2>&1 || return 1
     return 0
-}
-
-koopa_is_host() {
-    [ "$(koopa_host_id)" = "${1:?}" ]
 }
 
 koopa_is_installed() {
@@ -1692,45 +1611,8 @@ koopa_is_linux() {
     [ "$(uname -s)" = 'Linux' ]
 }
 
-koopa_is_local_install() {
-    koopa_str_detect_posix "$(koopa_koopa_prefix)" "${HOME:?}"
-}
-
 koopa_is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
-}
-
-koopa_is_opensuse() {
-    koopa_is_os 'opensuse'
-}
-
-koopa_is_os_like() {
-    local grep file id
-    grep='grep'
-    id="${1:?}"
-    koopa_is_os "$id" && return 0
-    file='/etc/os-release'
-    [ -f "$file" ] || return 1
-    "$grep" 'ID=' "$file" | "$grep" -q "$id" && return 0
-    "$grep" 'ID_LIKE=' "$file" | "$grep" -q "$id" && return 0
-    return 1
-}
-
-koopa_is_os_version() {
-    local file grep version
-    file='/etc/os-release'
-    grep='grep'
-    version="${1:?}"
-    [ -f "$file" ] || return 1
-    "$grep" -q "VERSION_ID=\"${version}" "$file"
-}
-
-koopa_is_os() {
-    [ "$(koopa_os_id)" = "${1:?}" ]
-}
-
-koopa_is_python_venv_active() {
-    [ -n "${VIRTUAL_ENV:-}" ]
 }
 
 koopa_is_qemu() {
@@ -1747,64 +1629,16 @@ koopa_is_qemu() {
     return 1
 }
 
-koopa_is_raspbian() {
-    koopa_is_os 'raspbian'
-}
-
-koopa_is_remote() {
-    [ -n "${SSH_CONNECTION:-}" ]
-}
-
-koopa_is_rhel_7_like() {
-    koopa_is_rhel_like && koopa_is_os_version 7
-}
-
-koopa_is_rhel_8_like() {
-    koopa_is_rhel_like && koopa_is_os_version 8
-}
-
-koopa_is_rhel_9_like() {
-    koopa_is_rhel_like && koopa_is_os_version 9
-}
-
-koopa_is_rhel_like() {
-    koopa_is_os_like 'rhel'
-}
-
-koopa_is_rhel_ubi() {
-    [ -f '/etc/yum.repos.d/ubi.repo' ]
-}
-
-koopa_is_rhel() {
-    koopa_is_os 'rhel'
-}
-
-koopa_is_rocky() {
-    koopa_is_os 'rocky'
-}
-
 koopa_is_root() {
     [ "$(koopa_user_id)" -eq 0 ]
-}
-
-koopa_is_rstudio() {
-    [ -n "${RSTUDIO:-}" ]
 }
 
 koopa_is_set_nounset() {
     koopa_str_detect_posix "$(set +o)" 'set -o nounset'
 }
 
-koopa_is_shared_install() {
-    ! koopa_is_local_install
-}
-
 koopa_is_subshell() {
     [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
-}
-
-koopa_is_tmux() {
-    [ -n "${TMUX:-}" ]
 }
 
 koopa_is_tty() {
@@ -1812,12 +1646,8 @@ koopa_is_tty() {
     tty >/dev/null 2>&1 || false
 }
 
-koopa_is_ubuntu_like() {
-    koopa_is_os_like 'ubuntu'
-}
-
-koopa_is_ubuntu() {
-    koopa_is_os 'ubuntu'
+koopa_is_user_install() {
+    koopa_str_detect_posix "$(koopa_koopa_prefix)" "${HOME:?}"
 }
 
 koopa_julia_packages_prefix() {
@@ -1912,76 +1742,6 @@ koopa_macos_julia_prefix() {
     koopa_print "$prefix"
 }
 
-koopa_macos_os_codename() {
-    local version x
-    version="$(koopa_macos_os_version)"
-    case "$version" in
-        '13.'*)
-            x='Mammoth'
-            ;;
-        '12.'*)
-            x='Monterey'
-            ;;
-        '11.'*)
-            x='Big Sur'
-            ;;
-        '10.15.'*)
-            x='Catalina'
-            ;;
-        '10.14.'*)
-            x='Mojave'
-            ;;
-        '10.13.'*)
-            x='High Sierra'
-            ;;
-        '10.12.'*)
-            x='Sierra'
-            ;;
-        '10.11.'*)
-            x='El Capitan'
-            ;;
-        '10.10.'*)
-            x='Yosmite'
-            ;;
-        '10.9.'*)
-            x='Mavericks'
-            ;;
-        '10.8.'*)
-            x='Mountain Lion'
-            ;;
-        '10.7.'*)
-            x='Lion'
-            ;;
-        '10.6.'*)
-            x='Snow Leopard'
-            ;;
-        '10.5.'*)
-            x='Leopard'
-            ;;
-        '10.4.'*)
-            x='Tiger'
-            ;;
-        '10.3.'*)
-            x='Panther'
-            ;;
-        '10.2.'*)
-            x='Jaguar'
-            ;;
-        '10.1.'*)
-            x='Puma'
-            ;;
-        '10.0.'*)
-            x='Cheetah'
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-    [ -n "$x" ] || return 1
-    koopa_print "$x"
-    return 0
-}
-
 koopa_macos_os_version() {
     local x
     x="$(sw_vers -productVersion)"
@@ -2045,7 +1805,7 @@ koopa_make_prefix() {
     if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
     then
         prefix="$KOOPA_MAKE_PREFIX"
-    elif koopa_is_local_install
+    elif koopa_is_user_install
     then
         prefix="$(koopa_xdg_local_home)"
     else
@@ -2067,70 +1827,6 @@ koopa_openjdk_prefix() {
 
 koopa_opt_prefix() {
     koopa_print "$(koopa_koopa_prefix)/opt"
-    return 0
-}
-
-koopa_os_codename() {
-    if koopa_is_debian_like
-    then
-        koopa_debian_os_codename
-    elif koopa_is_macos
-    then
-        koopa_macos_os_codename
-    else
-        return 1
-    fi
-    return 0
-}
-
-koopa_os_id() {
-    local x
-    x="$( \
-        koopa_os_string \
-        | cut -d '-' -f '1' \
-    )"
-    [ -n "$x" ] || return 1
-    koopa_print "$x"
-    return 0
-}
-
-koopa_os_string() {
-    local id release_file string version
-    if koopa_is_macos
-    then
-        id='macos'
-        version="$(koopa_macos_os_version)"
-        version="$(koopa_major_version "$version")"
-    elif koopa_is_linux
-    then
-        release_file='/etc/os-release'
-        if [ -r "$release_file" ]
-        then
-            id="$( \
-                awk -F= '$1=="ID" { print $2 ;}' "$release_file" \
-                | tr -d '"' \
-            )"
-            version="$( \
-                awk -F= '$1=="VERSION_ID" { print $2 ;}' "$release_file" \
-                | tr -d '"'
-            )"
-            if [ -n "$version" ]
-            then
-                version="$(koopa_major_version "$version")"
-            else
-                version='rolling'
-            fi
-        else
-            id='linux'
-        fi
-    fi
-    [ -z "$id" ] && return 1
-    string="$id"
-    if [ -n "${version:-}" ]
-    then
-        string="${string}-${version}"
-    fi
-    koopa_print "$string"
     return 0
 }
 
