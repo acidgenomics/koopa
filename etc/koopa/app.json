@@ -2623,6 +2623,18 @@
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
     "version": "1.0.0"
   },
+  "misopy": {
+    "bin": ["misopy"],
+    "date": "2023-01-10",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "http://hollywood.mit.edu/burgelab/miso/",
+      "https://github.com/yarden/MISO/",
+      "https://bioconda.github.io/recipes/misopy/README.html"
+    ],
+    "version": "0.5.4"
+  },
   "mpc": {
     "aliases": {
       "debian": "libmpc-dev",
