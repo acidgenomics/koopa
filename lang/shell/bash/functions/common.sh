@@ -1878,9 +1878,9 @@ koopa_aws_codecommit_list_repositories() {
 }
 
 koopa_aws_ec2_instance_id() {
-    local app
+    local app str
     declare -A app
-    if koopa_is_ubuntu
+    if koopa_is_ubuntu_like
     then
         app['ec2_metadata']='/usr/bin/ec2metadata'
     else
@@ -14127,6 +14127,10 @@ koopa_ip_address() {
     return 0
 }
 
+koopa_is_aarch64() {
+    [[ "$(koopa_arch)" = 'aarch64' ]]
+}
+
 koopa_is_admin() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -14156,6 +14160,10 @@ koopa_is_admin() {
     return 1
 }
 
+koopa_is_alpine() {
+    koopa_is_os 'alpine'
+}
+
 koopa_is_anaconda() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -14169,6 +14177,10 @@ koopa_is_anaconda() {
     )
     [[ -x "${dict['prefix']}/bin/anaconda" ]] || return 1
     return 0
+}
+
+koopa_is_arch() {
+    koopa_is_os 'arch'
 }
 
 koopa_is_array_empty() {
@@ -14198,12 +14210,32 @@ koopa_is_broken_symlink() {
     return 0
 }
 
+koopa_is_conda_active() {
+    [[ -n "${CONDA_DEFAULT_ENV:-}" ]]
+}
+
+koopa_is_conda_env_active() {
+    [[ "${CONDA_SHLVL:-1}" -gt 1 ]] && return 0
+    [[ "${CONDA_DEFAULT_ENV:-base}" != 'base' ]] && return 0
+    return 1
+}
+
+koopa_is_debian_like() {
+    koopa_is_os_like 'debian'
+}
+
 koopa_is_defined_in_user_profile() {
     local file
     koopa_assert_has_no_args "$#"
     file="$(koopa_find_user_profile)"
     [[ -f "$file" ]] || return 1
     koopa_file_detect_fixed --file="$file" --pattern='koopa'
+}
+
+koopa_is_docker() {
+    [[ "${KOOPA_IS_DOCKER:-0}" -eq 1 ]] && return 0
+    [[ -f '/.dockerenv' ]] && return 0
+    return 1
 }
 
 koopa_is_doom_emacs_installed() {
@@ -14249,6 +14281,10 @@ koopa_is_export() {
         || return 1
     done
     return 0
+}
+
+koopa_is_fedora_like() {
+    koopa_is_os_like 'fedora'
 }
 
 koopa_is_file_system_case_sensitive() {
@@ -14375,6 +14411,28 @@ koopa_is_koopa_app() {
     return 0
 }
 
+koopa_is_opensuse() {
+    koopa_is_os 'opensuse'
+}
+
+koopa_is_os_like() {
+    local app dict
+    declare -A app dict
+    dict['id']="${1:?}"
+    koopa_is_os "${dict['id']}" && return 0
+    dict['file']='/etc/os-release'
+    [[ -f "${dict['file']}" ]] || return 1
+    app['grep']="$(koopa_locate_grep --allow-system)"
+    [[ -x "${app['grep']}" ]] || return 1
+    "${app['grep']}" 'ID=' "${dict['file']}" \
+        | "${app['grep']}" -q "${dict['id']}" \
+        && return 0
+    "${app['grep']}" 'ID_LIKE=' "${dict['file']}" \
+        | "${app['grep']}" -q "${dict['id']}" \
+        && return 0
+    return 1
+}
+
 koopa_is_powerful_machine() {
     local cores
     koopa_assert_has_no_args "$#"
@@ -14424,6 +14482,14 @@ koopa_is_recent() {
     return 0
 }
 
+koopa_is_rhel_like() {
+    koopa_is_os_like 'rhel'
+}
+
+koopa_is_rstudio() {
+    [[ -n "${RSTUDIO:-}" ]]
+}
+
 koopa_is_spacemacs_installed() {
     local init_file prefix
     koopa_assert_has_no_args "$#"
@@ -14446,6 +14512,10 @@ koopa_is_symlink() {
         return 1
     done
     return 0
+}
+
+koopa_is_ubuntu_like() {
+    koopa_is_os_like 'ubuntu'
 }
 
 koopa_is_url_active() {
