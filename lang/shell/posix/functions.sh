@@ -1611,16 +1611,8 @@ koopa_is_linux() {
     [ "$(uname -s)" = 'Linux' ]
 }
 
-koopa_is_local_install() {
-    koopa_str_detect_posix "$(koopa_koopa_prefix)" "${HOME:?}"
-}
-
 koopa_is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
-}
-
-koopa_is_python_venv_active() {
-    [ -n "${VIRTUAL_ENV:-}" ]
 }
 
 koopa_is_qemu() {
@@ -1645,10 +1637,6 @@ koopa_is_set_nounset() {
     koopa_str_detect_posix "$(set +o)" 'set -o nounset'
 }
 
-koopa_is_shared_install() {
-    ! koopa_is_local_install
-}
-
 koopa_is_subshell() {
     [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
 }
@@ -1656,6 +1644,10 @@ koopa_is_subshell() {
 koopa_is_tty() {
     koopa_is_installed 'tty' || return 1
     tty >/dev/null 2>&1 || false
+}
+
+koopa_is_user_install() {
+    koopa_str_detect_posix "$(koopa_koopa_prefix)" "${HOME:?}"
 }
 
 koopa_julia_packages_prefix() {
@@ -1813,7 +1805,7 @@ koopa_make_prefix() {
     if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
     then
         prefix="$KOOPA_MAKE_PREFIX"
-    elif koopa_is_local_install
+    elif koopa_is_user_install
     then
         prefix="$(koopa_xdg_local_home)"
     else
