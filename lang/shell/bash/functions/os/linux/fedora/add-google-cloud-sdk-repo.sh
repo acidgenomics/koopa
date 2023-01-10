@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need get RHEL version here automatically.
+
 koopa_fedora_add_google_cloud_sdk_repo() {
     # """
     # Add Google Cloud SDK repo.
@@ -18,7 +20,7 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
+        ['sudo']="$(koopa_locate_sudo --allow-system)"
         ['tee']="$(koopa_locate_tee --allow-system)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
@@ -38,6 +40,7 @@ koopa_fedora_add_google_cloud_sdk_repo() {
             ;;
     esac
     # NOTE May need to harden against unsupported RHEL 9 here.
+    # FIXME Need to get RHEL version here automatically.
     if koopa_is_fedora || koopa_is_rhel_8_like
     then
         dict['platform']='el8'
@@ -50,6 +53,7 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     dict['baseurl']="https://packages.cloud.google.com/yum/repos/\
 cloud-sdk-${dict['platform']}-${dict['arch']}"
     [[ -f "${dict['file']}" ]] && return 0
+    # FIXME Use our write_string string function instead.
     "${app['sudo']}" "${app['tee']}" "${dict['file']}" >/dev/null << END
 [google-cloud-sdk]
 name=Google Cloud SDK

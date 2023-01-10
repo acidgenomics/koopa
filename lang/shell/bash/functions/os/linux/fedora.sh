@@ -31,7 +31,7 @@ koopa_fedora_add_google_cloud_sdk_repo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
+        ['sudo']="$(koopa_locate_sudo --allow-system)"
         ['tee']="$(koopa_locate_tee --allow-system)"
     )
     [[ -x "${app['sudo']}" ]] || return 1
