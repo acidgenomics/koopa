@@ -35,7 +35,7 @@ main() {
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['framework_prefix']='/Library/Frameworks/R.framework'
-        ['os']="$(koopa_kebab_case_simple "$(koopa_os_codename)")"
+        ['os']="$(koopa_kebab_case_simple "$(koopa_macos_os_codename)")"
         ['url_stem']='https://cran.r-project.org/bin/macosx'
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
