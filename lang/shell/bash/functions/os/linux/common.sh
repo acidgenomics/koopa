@@ -741,7 +741,7 @@ koopa_linux_os_version() {
     )
     dict['string']="$( \
         "${app['awk']}" -F= \
-            "\$1=='${dict['key']}' { print \$2 ;}" \
+            "\$1==\"${dict['key']}\" { print \$2 ;}" \
             "${dict['file']}" \
         | "${app['tr']}" -d '"' \
     )"
