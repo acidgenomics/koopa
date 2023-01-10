@@ -7,7 +7,9 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    # FIXME Need to add an assertion that user has koopa private access.
+    # FIXME koopa_assert_has_private_access
+    # This is required for permissions fix at end of install script.
+    koopa_assert_is_admin
     declare -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
