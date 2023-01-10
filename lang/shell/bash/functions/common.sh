@@ -10798,6 +10798,7 @@ koopa_install_all_apps() {
                 'htseq'
                 'jupyterlab'
                 'kallisto'
+                'minimap2'
                 'multiqc'
                 'nanopolish'
                 'nextflow'
@@ -11188,6 +11189,7 @@ koopa_install_all_binary_apps() {
                 'hisat2'
                 'htseq'
                 'kallisto'
+                'minimap2'
                 'multiqc'
                 'nextflow'
                 'openbb'
@@ -13093,6 +13095,12 @@ koopa_install_mdcat() {
 koopa_install_meson() {
     koopa_install_app \
         --name='meson' \
+        "$@"
+}
+
+koopa_install_minimap2() {
+    koopa_install_app \
+        --name='minimap2' \
         "$@"
 }
 
@@ -24535,6 +24543,12 @@ koopa_uninstall_mdcat() {
 koopa_uninstall_meson() {
     koopa_uninstall_app \
         --name='meson' \
+        "$@"
+}
+
+koopa_uninstall_minimap2() {
+    koopa_uninstall_app \
+        --name='minimap2' \
         "$@"
 }
 

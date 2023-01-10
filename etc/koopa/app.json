@@ -2626,6 +2626,17 @@
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
     "version": "1.0.0"
   },
+  "minimap2": {
+    "bin": ["minimap2"],
+    "date": "2023-01-10",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "https://github.com/lh3/minimap2/",
+      "https://bioconda.github.io/recipes/minimap2/README.html"
+    ],
+    "version": "2.24"
+  },
   "misopy": {
     "bin": ["miso"],
     "check": false,
