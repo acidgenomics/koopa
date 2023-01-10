@@ -3,7 +3,7 @@
 koopa_debian_apt_add_wine_repo() {
     # """
     # Add WineHQ repo.
-    # @note Updated 2022-07-15.
+    # @note Updated 2023-01-10.
     #
     # - Debian:
     #   https://wiki.winehq.org/Debian
@@ -14,7 +14,7 @@ koopa_debian_apt_add_wine_repo() {
     koopa_debian_apt_add_wine_key
     koopa_debian_apt_add_repo \
         --component='main' \
-        --distribution="$(koopa_os_codename)" \
+        --distribution="$(koopa_debian_os_codename)" \
         --name='wine' \
         --url="https://dl.winehq.org/wine-builds/$(koopa_os_id)/"
     return 0

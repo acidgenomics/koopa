@@ -3,7 +3,7 @@
 koopa_debian_apt_enabled_repos() {
     # """
     # Get a list of enabled default apt repos.
-    # @note Updated 2022-05-18.
+    # @note Updated 2023-01-10.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -13,7 +13,7 @@ koopa_debian_apt_enabled_repos() {
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
         ['file']="$(koopa_debian_apt_sources_file)"
-        ['os']="$(koopa_os_codename)"
+        ['os']="$(koopa_debian_os_codename)"
     )
     dict['pattern']="^deb\s.+\s${dict['os']}\s.+$"
     dict['str']="$( \
