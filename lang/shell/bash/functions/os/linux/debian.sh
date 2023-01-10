@@ -6,7 +6,7 @@ koopa_debian_apt_add_azure_cli_repo() {
     koopa_debian_apt_add_microsoft_key
     koopa_debian_apt_add_repo \
         --component='main' \
-        --distribution="$(koopa_os_codename)" \
+        --distribution="$(koopa_debian_os_codename)" \
         --key-name='microsoft' \
         --name='azure-cli' \
         --url='https://packages.microsoft.com/repos/azure-cli/'
@@ -26,7 +26,7 @@ koopa_debian_apt_add_docker_repo() {
     koopa_debian_apt_add_docker_key
     koopa_debian_apt_add_repo \
         --component='stable' \
-        --distribution="$(koopa_os_codename)" \
+        --distribution="$(koopa_debian_os_codename)" \
         --name='docker' \
         --url="https://download.docker.com/linux/$(koopa_os_id)"
     return 0
@@ -126,7 +126,7 @@ koopa_debian_apt_add_llvm_repo() {
     declare -A dict=(
         ['component']='main'
         ['name']='llvm'
-        ['os']="$(koopa_os_codename)"
+        ['os']="$(koopa_debian_os_codename)"
         ['version']="${1:-}"
     )
     if [[ -z "${dict['version']}" ]]
@@ -183,7 +183,7 @@ koopa_debian_apt_add_r_repo() {
     koopa_assert_has_args_le "$#" 1
     declare -A dict=(
         ['name']='r'
-        ['os_codename']="$(koopa_os_codename)"
+        ['os_codename']="$(koopa_debian_os_codename)"
         ['version']="${1:-}"
     )
     if koopa_is_ubuntu_like
@@ -421,7 +421,7 @@ koopa_debian_apt_add_wine_repo() {
     koopa_debian_apt_add_wine_key
     koopa_debian_apt_add_repo \
         --component='main' \
-        --distribution="$(koopa_os_codename)" \
+        --distribution="$(koopa_debian_os_codename)" \
         --name='wine' \
         --url="https://dl.winehq.org/wine-builds/$(koopa_os_id)/"
     return 0
@@ -455,7 +455,7 @@ koopa_debian_apt_configure_sources() {
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        ['os_codename']="$(koopa_os_codename)"
+        ['os_codename']="$(koopa_debian_os_codename)"
         ['os_id']="$(koopa_os_id)"
         ['sources_list']="$(koopa_debian_apt_sources_file)"
         ['sources_list_d']="$(koopa_debian_apt_sources_prefix)"
@@ -631,7 +631,7 @@ koopa_debian_apt_enabled_repos() {
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
         ['file']="$(koopa_debian_apt_sources_file)"
-        ['os']="$(koopa_os_codename)"
+        ['os']="$(koopa_debian_os_codename)"
     )
     dict['pattern']="^deb\s.+\s${dict['os']}\s.+$"
     dict['str']="$( \
@@ -1042,6 +1042,12 @@ koopa_debian_locate_locale_gen() {
         "$@"
 }
 
+koopa_debian_locate_lsb_release() {
+    koopa_locate_app \
+        '/usr/bin/lsb_release' \
+        "$@"
+}
+
 koopa_debian_locate_service() {
     koopa_locate_app \
         '/usr/sbin/service' \
@@ -1064,6 +1070,17 @@ koopa_debian_locate_update_locale() {
     koopa_locate_app \
         '/usr/sbin/update-locale' \
         "$@"
+}
+
+koopa_debian_os_codename() {
+    local app dict
+    declare -A app dict
+    app['lsb_release']="$(koopa_locate_lsb_release)"
+    [[ -x "${app['lsb_release']}" ]] || return 1
+    dict['string']="$("${app['lsb_release']}" -cs)"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
+    return 0
 }
 
 koopa_debian_set_locale() {

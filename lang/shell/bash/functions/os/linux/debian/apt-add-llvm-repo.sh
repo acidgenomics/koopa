@@ -9,7 +9,7 @@ koopa_debian_apt_add_llvm_repo() {
     declare -A dict=(
         ['component']='main'
         ['name']='llvm'
-        ['os']="$(koopa_os_codename)"
+        ['os']="$(koopa_debian_os_codename)"
         ['version']="${1:-}"
     )
     if [[ -z "${dict['version']}" ]]
