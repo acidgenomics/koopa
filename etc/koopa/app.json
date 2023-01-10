@@ -2078,9 +2078,9 @@
       "homebrew": true
     },
     "bin": ["lesspipe.sh"],
-    "date": "2022-08-30",
+    "date": "2023-01-10",
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.06"
+    "version": "2.07"
   },
   "libarchive": {
     "aliases": {
