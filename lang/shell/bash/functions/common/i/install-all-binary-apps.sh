@@ -360,6 +360,7 @@ koopa_install_all_binary_apps() {
                 'hisat2'
                 'htseq'
                 'kallisto'
+                'minimap2'
                 # > 'misopy'
                 'multiqc'
                 'nextflow'

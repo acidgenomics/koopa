@@ -53,6 +53,7 @@ __koopa_complete() {
                         'gpg'
                         'jekyll'
                         'kallisto'
+                        'minimap2'
                         'rnaeditingindexer'
                         'salmon'
                         'sra'

@@ -353,6 +353,7 @@ koopa_install_all_apps() {
                 'htseq'
                 'jupyterlab'
                 'kallisto'
+                'minimap2'
                 # > 'misopy'
                 'multiqc'
                 'nanopolish'
