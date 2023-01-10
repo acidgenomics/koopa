@@ -16,6 +16,7 @@ main() {
         ['installers_url']="$(koopa_private_installers_url)"
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+        ['user']="$(koopa_user)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['version']}.zip"
@@ -25,6 +26,6 @@ ${dict['arch']}/${dict['file']}"
         s3 cp "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_fedora_install_from_rpm --prefix="${dict['prefix']}" ./*.rpm
-    koopa_sys_set_permissions --recursive "${dict['prefix']}"
+    koopa_chown --recursive --sudo "${dict['user']}" "${dict['prefix']}"
     return 0
 }
