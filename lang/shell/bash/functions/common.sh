@@ -13232,6 +13232,12 @@ koopa_install_oniguruma() {
         "$@"
 }
 
+koopa_install_ont_guppy() {
+    koopa_install_app \
+        --name='ont-guppy' \
+        "$@"
+}
+
 koopa_install_openbb() {
     koopa_install_app \
         --name='openbb' \
@@ -24660,6 +24666,12 @@ koopa_uninstall_nushell() {
 koopa_uninstall_oniguruma() {
     koopa_uninstall_app \
         --name='oniguruma' \
+        "$@"
+}
+
+koopa_uninstall_ont_guppy() {
+    koopa_uninstall_app \
+        --name='ont-guppy' \
         "$@"
 }
 
