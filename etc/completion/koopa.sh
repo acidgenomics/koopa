@@ -290,6 +290,7 @@ __koopa_complete() {
                         'npth'
                         'nushell'
                         'oniguruma'
+                        'ont-guppy'
                         'openbb'
                         'openblas'
                         'openjdk'
