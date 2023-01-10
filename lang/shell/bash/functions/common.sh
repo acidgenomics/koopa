@@ -13096,6 +13096,12 @@ koopa_install_meson() {
         "$@"
 }
 
+koopa_install_misopy() {
+    koopa_install_app \
+        --name='misopy' \
+        "$@"
+}
+
 koopa_install_mpc() {
     koopa_install_app \
         --name='mpc' \
@@ -24519,6 +24525,12 @@ koopa_uninstall_mdcat() {
 koopa_uninstall_meson() {
     koopa_uninstall_app \
         --name='meson' \
+        "$@"
+}
+
+koopa_uninstall_misopy() {
+    koopa_uninstall_app \
+        --name='misopy' \
         "$@"
 }
 
