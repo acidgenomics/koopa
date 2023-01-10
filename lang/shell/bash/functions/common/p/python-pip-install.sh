@@ -3,13 +3,14 @@
 koopa_python_pip_install() {
     # """
     # Internal pip install command.
-    # @note Updated 2023-01-03.
+    # @note Updated 2023-01-10.
     #
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # - https://github.com/pypa/pip/issues/3828
     # - https://github.com/pypa/pip/issues/8063
+    # - https://stackoverflow.com/a/43560499/3911732
     # """
     local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
@@ -54,6 +55,8 @@ koopa_python_pip_install() {
     pkgs=("$@")
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
+        '-vvv'
+        '--default-timeout=300'
         '--disable-pip-version-check'
         '--ignore-installed'
         '--no-cache-dir'
