@@ -2628,6 +2628,7 @@
   },
   "misopy": {
     "bin": ["miso"],
+    "check": false,
     "date": "2023-01-10",
     "dependencies": ["conda"],
     "large": true,
