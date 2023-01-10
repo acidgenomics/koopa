@@ -14445,6 +14445,10 @@ koopa_is_powerful_machine() {
     return 1
 }
 
+koopa_is_python_venv_active() {
+    [[ -n "${VIRTUAL_ENV:-}" ]]
+}
+
 koopa_is_r_package_installed() {
     local app dict pkg
     koopa_assert_has_args "$#"
@@ -14492,6 +14496,10 @@ koopa_is_rhel_like() {
 
 koopa_is_rstudio() {
     [[ -n "${RSTUDIO:-}" ]]
+}
+
+koopa_is_shared_install() {
+    ! koopa_is_user_install
 }
 
 koopa_is_spacemacs_installed() {
