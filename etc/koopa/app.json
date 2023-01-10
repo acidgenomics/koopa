@@ -2892,11 +2892,7 @@
   },
   "ont-guppy": {
     "arch": "x86_64",
-    "bin": [
-      "guppy_aligner",
-      "guppy_barcoder",
-      "guppy_basecaller"
-    ],
+    "bin": ["guppy_basecaller"],
     "date": "2023-01-10",
     "platform": "linux",
     "private": true,
