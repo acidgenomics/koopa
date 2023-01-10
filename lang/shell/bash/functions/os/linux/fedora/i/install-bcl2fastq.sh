@@ -5,4 +5,8 @@ koopa_fedora_install_bcl2fastq() {
         --name='bcl2fastq' \
         --platform='fedora' \
         "$@"
+    koopa_alert_note "Installation requires agreement to terms of service at: \
+'https://support.illumina.com/sequencing/sequencing_software/\
+bcl2fastq-conversion-software/downloads.html'."
+    return 0
 }

@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME s3://private.koopa.acidgenomics.com/installers/ont-guppy/linux/amd64/6.4.2-cpu.tar.gz
+
 main() {
     # """
-    # Install Cell Ranger.
+    # Install Oxford Nanopore guppy caller.
     # @note Updated 2023-01-10.
-    #
-    # Refdata is accessible here:
-    # https://support.10xgenomics.com/single-cell-gene-expression/
-    #     software/downloads/latest
     # """
     local app dict
     koopa_assert_has_no_args "$#"
