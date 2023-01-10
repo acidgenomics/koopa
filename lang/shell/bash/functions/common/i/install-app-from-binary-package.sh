@@ -3,7 +3,7 @@
 koopa_install_app_from_binary_package() {
     # """
     # Install app from pre-built binary package.
-    # @note Updated 2022-09-19.
+    # @note Updated 2023-01-10.
     #
     # @examples
     # > koopa_install_app_from_binary_package \
@@ -24,7 +24,7 @@ koopa_install_app_from_binary_package() {
         ['binary_prefix']='/opt/koopa'
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_string']="$(koopa_os_string)"
-        ['s3_bucket']="s3://app.koopa.acidgenomics.com"
+        ['s3_bucket']="s3://private.koopa.acidgenomics.com/binaries"
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]

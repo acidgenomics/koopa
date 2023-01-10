@@ -1878,9 +1878,9 @@ koopa_aws_codecommit_list_repositories() {
 }
 
 koopa_aws_ec2_instance_id() {
-    local app
+    local app str
     declare -A app
-    if koopa_is_ubuntu
+    if koopa_is_ubuntu_like
     then
         app['ec2_metadata']='/usr/bin/ec2metadata'
     else
@@ -10798,6 +10798,7 @@ koopa_install_all_apps() {
                 'htseq'
                 'jupyterlab'
                 'kallisto'
+                'misopy'
                 'multiqc'
                 'nanopolish'
                 'nextflow'
@@ -11188,6 +11189,7 @@ koopa_install_all_binary_apps() {
                 'hisat2'
                 'htseq'
                 'kallisto'
+                'misopy'
                 'multiqc'
                 'nextflow'
                 'openbb'
@@ -11244,7 +11246,7 @@ koopa_install_app_from_binary_package() {
         ['binary_prefix']='/opt/koopa'
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['os_string']="$(koopa_os_string)"
-        ['s3_bucket']="s3://app.koopa.acidgenomics.com"
+        ['s3_bucket']="s3://private.koopa.acidgenomics.com/binaries"
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
@@ -13096,6 +13098,12 @@ koopa_install_meson() {
         "$@"
 }
 
+koopa_install_misopy() {
+    koopa_install_app \
+        --name='misopy' \
+        "$@"
+}
+
 koopa_install_mpc() {
     koopa_install_app \
         --name='mpc' \
@@ -13222,6 +13230,15 @@ koopa_install_oniguruma() {
     koopa_install_app \
         --name='oniguruma' \
         "$@"
+}
+
+koopa_install_ont_guppy() {
+    koopa_install_app \
+        --name='ont-guppy' \
+        "$@"
+    koopa_alert_note "Installation requires agreement to terms of service at: \
+'https://nanoporetech.com/support/nanopore-sequencing-data-analysis'."
+    return 0
 }
 
 koopa_install_openbb() {
@@ -14127,6 +14144,10 @@ koopa_ip_address() {
     return 0
 }
 
+koopa_is_aarch64() {
+    [[ "$(koopa_arch)" = 'aarch64' ]]
+}
+
 koopa_is_admin() {
     local app dict
     koopa_assert_has_no_args "$#"
@@ -14156,6 +14177,10 @@ koopa_is_admin() {
     return 1
 }
 
+koopa_is_alpine() {
+    koopa_is_os 'alpine'
+}
+
 koopa_is_anaconda() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -14169,6 +14194,10 @@ koopa_is_anaconda() {
     )
     [[ -x "${dict['prefix']}/bin/anaconda" ]] || return 1
     return 0
+}
+
+koopa_is_arch() {
+    koopa_is_os 'arch'
 }
 
 koopa_is_array_empty() {
@@ -14198,12 +14227,32 @@ koopa_is_broken_symlink() {
     return 0
 }
 
+koopa_is_conda_active() {
+    [[ -n "${CONDA_DEFAULT_ENV:-}" ]]
+}
+
+koopa_is_conda_env_active() {
+    [[ "${CONDA_SHLVL:-1}" -gt 1 ]] && return 0
+    [[ "${CONDA_DEFAULT_ENV:-base}" != 'base' ]] && return 0
+    return 1
+}
+
+koopa_is_debian_like() {
+    koopa_is_os_like 'debian'
+}
+
 koopa_is_defined_in_user_profile() {
     local file
     koopa_assert_has_no_args "$#"
     file="$(koopa_find_user_profile)"
     [[ -f "$file" ]] || return 1
     koopa_file_detect_fixed --file="$file" --pattern='koopa'
+}
+
+koopa_is_docker() {
+    [[ "${KOOPA_IS_DOCKER:-0}" -eq 1 ]] && return 0
+    [[ -f '/.dockerenv' ]] && return 0
+    return 1
 }
 
 koopa_is_doom_emacs_installed() {
@@ -14249,6 +14298,10 @@ koopa_is_export() {
         || return 1
     done
     return 0
+}
+
+koopa_is_fedora_like() {
+    koopa_is_os_like 'fedora'
 }
 
 koopa_is_file_system_case_sensitive() {
@@ -14375,12 +14428,42 @@ koopa_is_koopa_app() {
     return 0
 }
 
+koopa_is_opensuse() {
+    koopa_is_os 'opensuse'
+}
+
+koopa_is_os_like() {
+    local app dict
+    declare -A app dict
+    dict['id']="${1:?}"
+    koopa_is_os "${dict['id']}" && return 0
+    dict['file']='/etc/os-release'
+    [[ -r "${dict['file']}" ]] || return 1
+    app['grep']="$(koopa_locate_grep --allow-system)"
+    [[ -x "${app['grep']}" ]] || return 1
+    "${app['grep']}" 'ID=' "${dict['file']}" \
+        | "${app['grep']}" -q "${dict['id']}" \
+        && return 0
+    "${app['grep']}" 'ID_LIKE=' "${dict['file']}" \
+        | "${app['grep']}" -q "${dict['id']}" \
+        && return 0
+    return 1
+}
+
+koopa_is_os() {
+    [[ "$(koopa_os_id)" = "${1:?}" ]]
+}
+
 koopa_is_powerful_machine() {
     local cores
     koopa_assert_has_no_args "$#"
     cores="$(koopa_cpu_count)"
     [[ "$cores" -ge 7 ]] && return 0
     return 1
+}
+
+koopa_is_python_venv_active() {
+    [[ -n "${VIRTUAL_ENV:-}" ]]
 }
 
 koopa_is_r_package_installed() {
@@ -14424,6 +14507,18 @@ koopa_is_recent() {
     return 0
 }
 
+koopa_is_rhel_like() {
+    koopa_is_os_like 'rhel'
+}
+
+koopa_is_rstudio() {
+    [[ -n "${RSTUDIO:-}" ]]
+}
+
+koopa_is_shared_install() {
+    ! koopa_is_user_install
+}
+
 koopa_is_spacemacs_installed() {
     local init_file prefix
     koopa_assert_has_no_args "$#"
@@ -14446,6 +14541,10 @@ koopa_is_symlink() {
         return 1
     done
     return 0
+}
+
+koopa_is_ubuntu_like() {
+    koopa_is_os_like 'ubuntu'
 }
 
 koopa_is_url_active() {
@@ -15186,11 +15285,6 @@ koopa_kebab_case_simple() {
 koopa_kebab_case() {
     koopa_assert_has_args "$#"
     koopa_r_koopa 'cliKebabCase' "$@"
-}
-
-koopa_koopa_installers_url() {
-    koopa_assert_has_no_args "$#"
-    koopa_print "$(koopa_koopa_url)/installers"
 }
 
 koopa_local_ip_address() {
@@ -15988,6 +16082,7 @@ koopa_locate_cut() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gcut' \
+        --system-bin-name='cut' \
         "$@"
 }
 
@@ -17655,6 +17750,71 @@ ${dict['msg']}${dict['suffix']}"
     return 0
 }
 
+koopa_os_id() {
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app dict
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    [[ -x "${app['cut']}" ]] || return 1
+    dict['string']="$( \
+        koopa_os_string \
+        | "${app['cut']}" -d '-' -f '1' \
+    )"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
+    return 0
+}
+
+koopa_os_string() {
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        dict['id']='macos'
+        dict['version']="$(koopa_macos_os_version)"
+        dict['version']="$(koopa_major_version "${dict['version']}")"
+    elif koopa_is_linux
+    then
+        app['awk']="$(koopa_locate_awk --allow-system)"
+        app['tr']="$(koopa_locate_tr --allow-system)"
+        [[ -x "${app['awk']}" ]] || return 1
+        [[ -x "${app['tr']}" ]] || return 1
+        dict['release_file']='/etc/os-release'
+        if [[ -r "${dict['release_file']}" ]]
+        then
+            dict['id']="$( \
+                "${app['awk']}" -F= \
+                    "\$1==\"ID\" { print \$2 ;}" \
+                    "${dict['release_file']}" \
+                | "${app['tr']}" -d '"' \
+            )"
+            dict['version']="$( \
+                "${app['awk']}" -F= \
+                    "\$1==\"VERSION_ID\" { print \$2 ;}" \
+                    "${dict['release_file']}" \
+                | "${app['tr']}" -d '"' \
+            )"
+            if [[ -n "${dict['version']}" ]]
+            then
+                dict['version']="$(koopa_major_version "${dict['version']}")"
+            else
+                dict['version']='rolling'
+            fi
+        else
+            dict['id']='linux'
+        fi
+    fi
+    [[ -n "${dict['id']}" ]] || return 1
+    dict['string']="${dict['id']}"
+    if [[ -n "${dict['version']:-}" ]]
+    then
+        dict['string']="${dict['string']}-${dict['version']}"
+    fi
+    koopa_print "${dict['string']}"
+    return 0
+}
+
 koopa_os_type() {
     local app str
     koopa_assert_has_no_args "$#"
@@ -17668,21 +17828,6 @@ koopa_os_type() {
         "${app['uname']}" -s \
         | "${app['tr']}" '[:upper:]' '[:lower:]' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
-koopa_os_version() {
-    local str
-    koopa_assert_has_no_args "$#"
-    if koopa_is_linux
-    then
-        str="$(koopa_linux_os_version)"
-    elif koopa_is_macos
-    then
-        str="$(koopa_macos_os_version)"
-    fi
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
     return 0
@@ -17931,6 +18076,11 @@ koopa_print_yellow() {
     return 0
 }
 
+koopa_private_installers_url() {
+    koopa_assert_has_no_args "$#"
+    koopa_print 's3://private.koopa.acidgenomics.com/installers'
+}
+
 koopa_prune_apps() {
     if koopa_is_macos
     then
@@ -17999,7 +18149,7 @@ koopa_push_app_build() {
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['os_string']="$(koopa_os_string)"
         ['profile']='acidgenomics'
-        ['s3_bucket']='s3://app.koopa.acidgenomics.com'
+        ['s3_bucket']='s3://private.koopa.acidgenomics.com/binaries'
         ['tmp_dir']="$(koopa_tmp_dir)"
     )
     for name in "$@"
@@ -18240,10 +18390,13 @@ koopa_python_pip_install() {
     koopa_assert_has_args "$#"
     pkgs=("$@")
     install_args=(
+        '-vvv'
+        '--default-timeout=300'
         '--disable-pip-version-check'
         '--ignore-installed'
         '--no-cache-dir'
         '--no-warn-script-location'
+        '--progress-bar=on'
     )
     dl_args=(
         'Python' "${app['python']}"
@@ -18815,6 +18968,7 @@ koopa_r_configure_makevars() {
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['lapack']="$(koopa_app_prefix 'lapack')"
     dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
+    dict['libpng']="$(koopa_app_prefix 'libpng')"
     dict['openblas']="$(koopa_app_prefix 'openblas')"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
@@ -18823,11 +18977,13 @@ koopa_r_configure_makevars() {
         "${dict['hdf5']}" \
         "${dict['lapack']}" \
         "${dict['libjpeg']}" \
+        "${dict['libpng']}" \
         "${dict['openblas']}" \
         "${dict['r_prefix']}"
     koopa_add_to_pkg_config_path \
         "${dict['lapack']}/lib/pkgconfig" \
         "${dict['libjpeg']}/lib/pkgconfig" \
+        "${dict['libpng']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     if koopa_is_macos
@@ -18937,11 +19093,13 @@ koopa_r_configure_makevars() {
         "-I${dict['bzip2']}/include"
         "-I${dict['hdf5']}/include"
         "-I${dict['libjpeg']}/include"
+        "-I${dict['libpng']}/include"
     )
     ldflags+=(
         "-L${dict['bzip2']}/lib"
         "-L${dict['hdf5']}/lib"
         "-L${dict['libjpeg']}/lib"
+        "-L${dict['libpng']}/lib"
     )
     if koopa_is_macos
     then
@@ -24382,6 +24540,12 @@ koopa_uninstall_meson() {
         "$@"
 }
 
+koopa_uninstall_misopy() {
+    koopa_uninstall_app \
+        --name='misopy' \
+        "$@"
+}
+
 koopa_uninstall_mpc() {
     koopa_uninstall_app \
         --name='mpc' \
@@ -24505,6 +24669,12 @@ koopa_uninstall_nushell() {
 koopa_uninstall_oniguruma() {
     koopa_uninstall_app \
         --name='oniguruma' \
+        "$@"
+}
+
+koopa_uninstall_ont_guppy() {
+    koopa_uninstall_app \
+        --name='ont-guppy' \
         "$@"
 }
 
