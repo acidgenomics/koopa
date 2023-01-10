@@ -14421,7 +14421,7 @@ koopa_is_os_like() {
     dict['id']="${1:?}"
     koopa_is_os "${dict['id']}" && return 0
     dict['file']='/etc/os-release'
-    [[ -f "${dict['file']}" ]] || return 1
+    [[ -r "${dict['file']}" ]] || return 1
     app['grep']="$(koopa_locate_grep --allow-system)"
     [[ -x "${app['grep']}" ]] || return 1
     "${app['grep']}" 'ID=' "${dict['file']}" \
@@ -14431,6 +14431,10 @@ koopa_is_os_like() {
         | "${app['grep']}" -q "${dict['id']}" \
         && return 0
     return 1
+}
+
+koopa_is_os() {
+    [[ "$(koopa_os_id)" = "${1:?}" ]]
 }
 
 koopa_is_powerful_machine() {
@@ -17725,6 +17729,71 @@ ${dict['msg']}${dict['suffix']}"
     return 0
 }
 
+koopa_os_id() {
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app dict
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    [[ -x "${app['cut']}" ]] || return 1
+    dict['string']="$( \
+        koopa_os_string \
+        | "${app['cut']}" -d '-' -f '1' \
+    )"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
+    return 0
+}
+
+koopa_os_string() {
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        dict['id']='macos'
+        dict['version']="$(koopa_macos_os_version)"
+        dict['version']="$(koopa_major_version "${dict['version']}")"
+    elif koopa_is_linux
+    then
+        app['awk']="$(koopa_locate_awk --allow-system)"
+        app['tr']="$(koopa_locate_tr --allow-system)"
+        [[ -x "${app['awk']}" ]] || return 1
+        [[ -x "${app['tr']}" ]] || return 1
+        dict['release_file']='/etc/os-release'
+        if [[ -r "${dict['release_file']}" ]]
+        then
+            dict['id']="$( \
+                "${app['awk']}" -F= \
+                    "\$1==\"ID\" { print \$2 ;}" \
+                    "${dict['release_file']}" \
+                | "${app['tr']}" -d '"' \
+            )"
+            dict['version']="$( \
+                "${app['awk']}" -F= \
+                    "\$1==\"VERSION_ID\" { print \$2 ;}" \
+                    "${dict['release_file']}" \
+                | "${app['tr']}" -d '"' \
+            )"
+            if [[ -n "${dict['version']}" ]]
+            then
+                dict['version']="$(koopa_major_version "${dict['version']}")"
+            else
+                dict['version']='rolling'
+            fi
+        else
+            dict['id']='linux'
+        fi
+    fi
+    [[ -n "${dict['id']}" ]] || return 1
+    dict['string']="${dict['id']}"
+    if [[ -n "${dict['version']:-}" ]]
+    then
+        dict['string']="${dict['string']}-${dict['version']}"
+    fi
+    koopa_print "${dict['string']}"
+    return 0
+}
+
 koopa_os_type() {
     local app str
     koopa_assert_has_no_args "$#"
@@ -17738,21 +17807,6 @@ koopa_os_type() {
         "${app['uname']}" -s \
         | "${app['tr']}" '[:upper:]' '[:lower:]' \
     )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
-koopa_os_version() {
-    local str
-    koopa_assert_has_no_args "$#"
-    if koopa_is_linux
-    then
-        str="$(koopa_linux_os_version)"
-    elif koopa_is_macos
-    then
-        str="$(koopa_macos_os_version)"
-    fi
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
     return 0

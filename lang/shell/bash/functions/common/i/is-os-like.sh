@@ -13,7 +13,7 @@ koopa_is_os_like() {
     dict['id']="${1:?}"
     koopa_is_os "${dict['id']}" && return 0
     dict['file']='/etc/os-release'
-    [[ -f "${dict['file']}" ]] || return 1
+    [[ -r "${dict['file']}" ]] || return 1
     app['grep']="$(koopa_locate_grep --allow-system)"
     [[ -x "${app['grep']}" ]] || return 1
     "${app['grep']}" 'ID=' "${dict['file']}" \
