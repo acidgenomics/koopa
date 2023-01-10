@@ -1619,10 +1619,6 @@ koopa_is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
 }
 
-koopa_is_os() {
-    [ "$(koopa_os_id)" = "${1:?}" ]
-}
-
 koopa_is_python_venv_active() {
     [ -n "${VIRTUAL_ENV:-}" ]
 }
@@ -1839,57 +1835,6 @@ koopa_openjdk_prefix() {
 
 koopa_opt_prefix() {
     koopa_print "$(koopa_koopa_prefix)/opt"
-    return 0
-}
-
-koopa_os_id() {
-    local x
-    x="$( \
-        koopa_os_string \
-        | cut -d '-' -f '1' \
-    )"
-    [ -n "$x" ] || return 1
-    koopa_print "$x"
-    return 0
-}
-
-koopa_os_string() {
-    local id release_file string version
-    if koopa_is_macos
-    then
-        id='macos'
-        version="$(koopa_macos_os_version)"
-        version="$(koopa_major_version "$version")"
-    elif koopa_is_linux
-    then
-        release_file='/etc/os-release'
-        if [ -r "$release_file" ]
-        then
-            id="$( \
-                awk -F= '$1=="ID" { print $2 ;}' "$release_file" \
-                | tr -d '"' \
-            )"
-            version="$( \
-                awk -F= '$1=="VERSION_ID" { print $2 ;}' "$release_file" \
-                | tr -d '"'
-            )"
-            if [ -n "$version" ]
-            then
-                version="$(koopa_major_version "$version")"
-            else
-                version='rolling'
-            fi
-        else
-            id='linux'
-        fi
-    fi
-    [ -z "$id" ] && return 1
-    string="$id"
-    if [ -n "${version:-}" ]
-    then
-        string="${string}-${version}"
-    fi
-    koopa_print "$string"
     return 0
 }
 
