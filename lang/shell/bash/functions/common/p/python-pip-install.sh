@@ -61,6 +61,7 @@ koopa_python_pip_install() {
         '--ignore-installed'
         '--no-cache-dir'
         '--no-warn-script-location'
+        '--progress-bar'
     )
     dl_args=(
         'Python' "${app['python']}"
