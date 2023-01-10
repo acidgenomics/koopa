@@ -32,7 +32,7 @@ main() {
     dict['version2']="$(koopa_kebab_case_simple "${dict['version2']}")"
     dict['file']="${dict['name']}${dict['maj_ver']}-v${dict['version2']}-\
 ${dict['platform']}-${dict['arch2']}.zip"
-    url="${dict['installers_url']}/${dict['name']}/rpm/${dict['file']}"
+    dict['url']="${dict['installers_url']}/${dict['name']}/rpm/${dict['file']}"
     dict['file2']="${dict['name']}${dict['maj_ver']}-v${dict['version']}-\
 ${dict['platform2']}-${dict['arch']}.rpm"
     koopa_download "${dict['url']}" "${dict['file']}"
