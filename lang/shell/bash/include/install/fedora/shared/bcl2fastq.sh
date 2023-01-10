@@ -19,11 +19,12 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['version']}.zip"
-# s3://private.koopa.acidgenomics.com/installers/bcl2fastq/fedora/amd64/2.20.zip
-    dict['url']="${dict['installers_url']}/${dict['name']}/fedora/${dict['arch']}/${dict['file']}"
+    dict['url']="${dict['installers_url']}/${dict['name']}/fedora/\
+${dict['arch']}/${dict['file']}"
     "${app['aws']}" --profile='acidgenomics' \
         s3 cp "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_fedora_install_from_rpm --prefix="${dict['prefix']}" ./*.rpm
+    koopa_sys_set_permissions --recursive "${dict['prefix']}"
     return 0
 }
