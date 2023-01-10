@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to use S3 cp here.
+# s3://private.koopa.acidgenomics.com/installers/bcl2fastq/src/2.20.tar.zip
+
 # NOTE Currently failing to install on Ubuntu 20:
 # ## include could not find load file:
 # ## CMakeFindDependencyMacro
@@ -21,7 +24,7 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
-        ['installers_url']="$(koopa_koopa_installers_url)"
+        ['installers_url']="$(koopa_private_installers_url)"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='bcl2fastq'
         ['platform']='linux-gnu'

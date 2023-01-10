@@ -306,13 +306,15 @@
     "version": "0.1.6"
   },
   "bcl2fastq": {
+    "bin": ["bcl2fastq"],
     "check": false,
-    "date": "2022-09-26",
+    "date": "2023-01-10",
     "platform": "linux",
+    "private": true,
     "url": [
       "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html"
     ],
-    "version": "2.20.0.422"
+    "version": "2.20"
   },
   "bedtools": {
     "bin": ["bedtools"],
@@ -536,6 +538,7 @@
     "bin": ["cellranger"],
     "date": "2023-01-03",
     "platform": "linux",
+    "private": true,
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation"
     ],
@@ -2052,14 +2055,14 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-01-03",
+    "date": "2023-01-10",
     "dependencies": ["python3.10"],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.9.4"
+    "version": "2.9.6"
   },
   "less": {
     "aliases": {
@@ -2078,9 +2081,9 @@
       "homebrew": true
     },
     "bin": ["lesspipe.sh"],
-    "date": "2022-08-30",
+    "date": "2023-01-10",
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.06"
+    "version": "2.07"
   },
   "libarchive": {
     "aliases": {
@@ -2623,6 +2626,18 @@
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
     "version": "1.0.0"
   },
+  "misopy": {
+    "bin": ["miso"],
+    "date": "2023-01-10",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "http://hollywood.mit.edu/burgelab/miso/",
+      "https://github.com/yarden/MISO/",
+      "https://bioconda.github.io/recipes/misopy/README.html"
+    ],
+    "version": "0.5.4"
+  },
   "mpc": {
     "aliases": {
       "debian": "libmpc-dev",
@@ -2873,6 +2888,21 @@
     "date": "2022-08-30",
     "url": ["https://github.com/kkos/oniguruma/"],
     "version": "6.9.8"
+  },
+  "ont-guppy": {
+    "arch": "x86_64",
+    "bin": [
+      "guppy_aligner",
+      "guppy_barcoder",
+      "guppy_basecaller"
+    ],
+    "date": "2023-01-10",
+    "platform": "linux",
+    "private": true,
+    "url": [
+      "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
+    ],
+    "version": "6.4.2"
   },
   "openbb": {
     "bin": ["openbb"],
@@ -3129,12 +3159,13 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2022-12-12",
+    "conservative": true,
+    "date": "2023-01-10",
     "dependencies": ["python"],
     "large": true,
     "reverse_dependencies": ["openbb"],
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.3.1"
+    "version": "1.3.2"
   },
   "prelude-emacs": {
     "check": false,
@@ -3223,10 +3254,10 @@
     },
     "bin": ["pyenv"],
     "conservative": true,
-    "date": "2022-12-24",
+    "date": "2023-01-10",
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv"],
-    "version": "2.3.9"
+    "version": "2.3.10"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -3688,21 +3719,20 @@
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["pkg-config"],
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-01-10",
     "dependencies": ["openssl3", "readline", "zlib"],
     "man1": ["ruby.1"],
     "notes": ["jekyll doesn't currently work with ruby 3.2.0."],
-    "outdated": true,
     "reverse_dependencies": ["bashcov", "colorls", "rmate", "ronn"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.1.3"
+    "version": "3.2.0"
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-01-03",
+    "date": "2023-01-10",
     "dependencies": ["python"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.209"
+    "version": "0.0.217"
   },
   "rust": {
     "aliases": {

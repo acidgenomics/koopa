@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2022-11-30.
+    # @note Updated 2023-01-10.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -66,6 +66,7 @@ koopa_r_configure_makevars() {
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['lapack']="$(koopa_app_prefix 'lapack')"
     dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
+    dict['libpng']="$(koopa_app_prefix 'libpng')"
     dict['openblas']="$(koopa_app_prefix 'openblas')"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
@@ -74,11 +75,13 @@ koopa_r_configure_makevars() {
         "${dict['hdf5']}" \
         "${dict['lapack']}" \
         "${dict['libjpeg']}" \
+        "${dict['libpng']}" \
         "${dict['openblas']}" \
         "${dict['r_prefix']}"
     koopa_add_to_pkg_config_path \
         "${dict['lapack']}/lib/pkgconfig" \
         "${dict['libjpeg']}/lib/pkgconfig" \
+        "${dict['libpng']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     if koopa_is_macos
@@ -201,11 +204,13 @@ koopa_r_configure_makevars() {
         "-I${dict['bzip2']}/include"
         "-I${dict['hdf5']}/include"
         "-I${dict['libjpeg']}/include"
+        "-I${dict['libpng']}/include"
     )
     ldflags+=(
         "-L${dict['bzip2']}/lib"
         "-L${dict['hdf5']}/lib"
         "-L${dict['libjpeg']}/lib"
+        "-L${dict['libpng']}/lib"
     )
     if koopa_is_macos
     then
