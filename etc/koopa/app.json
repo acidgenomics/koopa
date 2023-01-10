@@ -1006,9 +1006,9 @@
     "version": "e96624926d724aff98e862221422cd7124a99c19"
   },
   "dotfiles": {
-    "date": "2023-01-05",
+    "date": "2023-01-10",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "2f28e1411b7b95d9ebe3e7dd5bd1b321f3bd917c"
+    "version": "3984f95256f1cf07ab8cd1be67d8bf7acb19f1a8"
   },
   "du-dust": {
     "aliases": {
@@ -2628,6 +2628,7 @@
   },
   "misopy": {
     "bin": ["miso"],
+    "check": false,
     "date": "2023-01-10",
     "dependencies": ["conda"],
     "large": true,

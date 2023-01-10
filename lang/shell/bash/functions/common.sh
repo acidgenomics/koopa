@@ -10798,7 +10798,6 @@ koopa_install_all_apps() {
                 'htseq'
                 'jupyterlab'
                 'kallisto'
-                'misopy'
                 'multiqc'
                 'nanopolish'
                 'nextflow'
@@ -11189,7 +11188,6 @@ koopa_install_all_binary_apps() {
                 'hisat2'
                 'htseq'
                 'kallisto'
-                'misopy'
                 'multiqc'
                 'nextflow'
                 'openbb'
@@ -11208,7 +11206,7 @@ koopa_install_all_binary_apps() {
     "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do
-        "${app['bash']}" "${app['koopa']}" install --binary "$app_name"
+        "${app['koopa']}" install --binary "$app_name"
     done
     return 0
 }
