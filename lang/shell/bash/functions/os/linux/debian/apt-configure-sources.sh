@@ -3,7 +3,7 @@
 koopa_debian_apt_configure_sources() {
     # """
     # Configure apt sources.
-    # @note Updated 2022-08-29.
+    # @note Updated 2023-01-10.
     #
     # Look up currently enabled sources with:
     # > grep -Eq '^deb\s' '/etc/apt/sources.list'
@@ -88,7 +88,7 @@ koopa_debian_apt_configure_sources() {
     [[ -x "${app['head']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
     declare -A dict=(
-        ['os_codename']="$(koopa_os_codename)"
+        ['os_codename']="$(koopa_debian_os_codename)"
         ['os_id']="$(koopa_os_id)"
         ['sources_list']="$(koopa_debian_apt_sources_file)"
         ['sources_list_d']="$(koopa_debian_apt_sources_prefix)"

@@ -3,13 +3,13 @@
 koopa_debian_apt_add_r_repo() {
     # """
     # Add R apt repo.
-    # @note Updated 2022-08-24.
+    # @note Updated 2023-01-10.
     # """
     local dict
     koopa_assert_has_args_le "$#" 1
     declare -A dict=(
         ['name']='r'
-        ['os_codename']="$(koopa_os_codename)"
+        ['os_codename']="$(koopa_debian_os_codename)"
         ['version']="${1:-}"
     )
     if koopa_is_ubuntu_like
