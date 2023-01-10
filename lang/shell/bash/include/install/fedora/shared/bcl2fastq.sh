@@ -7,7 +7,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_can_install_binary || return 1
+    # FIXME Need to add an assertion that user has koopa private access.
     declare -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
