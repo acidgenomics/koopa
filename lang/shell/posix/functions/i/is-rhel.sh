@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Move this to bash library.
+
 koopa_is_rhel() {
     # """
     # Is the operating system RHEL?
