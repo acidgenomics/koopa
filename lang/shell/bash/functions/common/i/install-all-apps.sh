@@ -320,7 +320,7 @@ koopa_install_all_apps() {
             'haskell-cabal'
             'llvm'
             'julia'
-            'nim'
+            # > 'nim'
             'ghostscript'
         )
         if ! koopa_is_aarch64
@@ -334,7 +334,7 @@ koopa_install_all_apps() {
                 'anaconda'
                 'autodock'
                 'autodock-vina'
-                'bioconda-utils'
+                # > 'bioconda-utils'
                 'bamtools'
                 'bedtools'
                 'bioawk'
@@ -359,7 +359,7 @@ koopa_install_all_apps() {
                 'multiqc'
                 'nanopolish'
                 'nextflow'
-                'openbb'
+                # > 'openbb'
                 'salmon'
                 'sambamba'
                 'samtools'
