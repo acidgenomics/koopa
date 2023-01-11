@@ -2003,15 +2003,14 @@
   },
   "julia": {
     "aliases": {
-      "homebrew": true
+      "homebrew-cask": true
     },
     "bin": ["julia"],
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
-    "date": "2023-01-09",
+    "date": "2023-01-11",
     "large": true,
-    "outdated": true,
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.8.4"
+    "version": "1.8.5"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
@@ -3758,10 +3757,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2022-12-15",
+    "date": "2023-01-11",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.66.0"
+    "version": "1.66.1"
   },
   "salmon": {
     "bin": ["salmon"],
