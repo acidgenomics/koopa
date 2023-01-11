@@ -355,6 +355,7 @@
     "version": "1.0"
   },
   "bioconda-utils": {
+    "check": false,
     "conservaitve": false,
     "date": "2022-11-15",
     "dependencies": ["conda"],
@@ -2818,6 +2819,7 @@
       "homebrew": true
     },
     "bin": ["nim"],
+    "check": false,
     "date": "2022-01-03",
     "large": true,
     "url": ["https://nim-lang.org/"],
@@ -2913,6 +2915,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
+    "check": false,
     "date": "2023-01-03",
     "dependencies": ["conda", "poetry"],
     "large": true,
