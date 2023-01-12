@@ -1665,10 +1665,10 @@
     },
     "bin": ["gum"],
     "build_dependencies": ["go"],
-    "date": "2022-11-08",
+    "date": "2023-01-12",
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.8.0"
+    "version": "0.9.0"
   },
   "gzip": {
     "aliases": {
