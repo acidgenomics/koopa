@@ -2766,7 +2766,7 @@ koopa_bioconda_autobump_recipe() {
     [[ -x "${app['vim']}" ]] || return 1
     declare -A dict=(
         ['recipe']="${1:?}"
-        ['repo']="${HOME:?}/git/bioconda-recipes"
+        ['repo']="${HOME:?}/git/github/bioconda/bioconda-recipes"
     )
     dict['branch']="${dict['recipe']/-/_}"
     koopa_assert_is_dir "${dict['repo']}"
