@@ -93,6 +93,7 @@
     "bin": ["asdf"],
     "conservative": true,
     "date": "2022-12-14",
+    "outdated": true,
     "url": ["https://github.com/asdf-vm/asdf/"],
     "version": "0.11.0"
   },
