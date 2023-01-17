@@ -1868,8 +1868,8 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2022-12-24",
-    "version": "0.109.0"
+    "date": "2023-01-17",
+    "version": "0.110.0"
   },
   "hyperfine": {
     "aliases": {
