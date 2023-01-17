@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now seeing these build issues with 1.2.0:
-#
-#  Manually-specified variables were not used by the project:
-#    pybind11_DIR
-
-#  IMPORTED_LOCATION not set for imported target "BZip2::BZip2" configuration
-#  "Release".
-
-# https://github.com/samtools/htslib/issues/696
-
 main() {
     # """
     # Install micromamba.
@@ -43,7 +33,6 @@ main() {
         'libsolv'
         'nlohmann-json'
         'openssl3'
-        # > 'pybind11'
         'python'
         'reproc'
         # NOTE Enabling spdlog here currently causes a cryptic linker error.
@@ -70,7 +59,6 @@ main() {
         ['name']='mamba'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        # > ['pybind11']="$(koopa_app_prefix 'pybind11')"
         ['reproc']="$(koopa_app_prefix 'reproc')"
         ['shared_ext']="$(koopa_shared_ext)"
         ['spdlog']="$(koopa_app_prefix 'spdlog')"
@@ -132,10 +120,8 @@ tags/${dict['file']}"
         '-DBUILD_MICROMAMBA=ON'
         '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
-        "-DCMAKE_PREFIX_PATH=${dict['fmt']}:${dict['reproc']}:${dict['spdlog']}:${dict['tl_expected']}:${dict['yaml_cpp']}:${dict['zstd']}"
         "-DBZIP2_INCLUDE_DIR=${dict['bzip2']}/include"
         "-DBZIP2_LIBRARIES=${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
-        # This is also needed, otherwise CMake won't detect bzip2 correctly.
         "-DBZIP2_LIBRARY=${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
@@ -147,13 +133,9 @@ libsolvext.${dict['shared_ext']}"
         "-DLIBSOLV_LIBRARIES=${dict['libsolv']}/lib/\
 libsolv.${dict['shared_ext']}"
         "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
-        # Needed for 'libmamba/CMakeLists.txt'.
         "-DPython3_EXECUTABLE=${app['python']}"
-        # Needed for 'libmambapy/CMakeLists.txt'.
-        # > "-DPython_EXECUTABLE=${app['python']}"
-        # CMake configuration --------------------------------------------------
+        # Additional CMake configuration ---------------------------------------
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
-        # > "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
         "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
         "-Dreproc_DIR=${dict['reproc']}/lib/cmake/reproc"
         "-Dspdlog_DIR=${dict['spdlog']}/lib/cmake/spdlog"
