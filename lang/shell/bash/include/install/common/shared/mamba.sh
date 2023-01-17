@@ -3,9 +3,10 @@
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2022-12-15.
+    # @note Updated 2023-01-17.
     #
-    # Consider setting 'CMAKE_PREFIX_PATH' here to include yaml-cpp.
+    # Consider setting 'CMAKE_PREFIX_PATH' for CMake configuration.
+    # zstd requirement added in 1.2.0 release.
     #
     # @seealso
     # - https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html
@@ -38,6 +39,7 @@ main() {
         'termcolor'
         'tl-expected'
         'yaml-cpp'
+        'zstd'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -63,6 +65,7 @@ main() {
         ['tl-expected']="$(koopa_app_prefix 'tl-expected')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['yaml-cpp']="$(koopa_app_prefix 'yaml-cpp')"
+        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
         "${dict['curl']}" \
@@ -74,9 +77,12 @@ main() {
         "${dict['reproc']}" \
         "${dict['spdlog']}" \
         "${dict['tl-expected']}" \
-        "${dict['yaml-cpp']}"
-
+        "${dict['yaml-cpp']}" \
+        "${dict['zstd']}"
     case "${dict['version']}" in
+        '1.2.0')
+            dict['date_tag']='2023.01.16'
+            ;;
         '1.1.0')
             dict['date_tag']='2022.11.25'
             ;;
@@ -135,6 +141,7 @@ libsolv.${dict['shared_ext']}" \
         "-Dspdlog_DIR=${dict['spdlog']}/lib/cmake/spdlog"
         "-Dtl-expected_DIR=${dict['tl-expected']}/share/cmake/tl-expected"
         "-Dyaml-cpp_DIR=${dict['yaml-cpp']}/share/cmake/yaml-cpp"
+        "-Dzstd_DIR=${dict['zstd']}/share/cmake/zstd"
     )
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
