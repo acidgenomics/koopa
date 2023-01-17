@@ -46,6 +46,7 @@
   "apptainer": {
     "build_dependencies": ["go"],
     "date": "2022-11-08",
+    "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
     "version": "1.1.3"
@@ -114,6 +115,7 @@
     },
     "bin": ["ascp"],
     "date": "2022-11-08",
+    "large": true,
     "platform": "linux",
     "url": ["https://www.ibm.com/aspera/connect/"],
     "version": "4.2.3.197"
@@ -2456,6 +2458,7 @@
   "lmod": {
     "conservative": true,
     "date": "2023-01-03",
+    "large": true,
     "platform": "linux",
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
     "version": "8.7.15"

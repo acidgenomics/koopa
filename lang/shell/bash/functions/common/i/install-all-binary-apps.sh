@@ -300,11 +300,8 @@ koopa_install_all_binary_apps() {
     if koopa_is_linux
     then
         apps+=(
-            'apptainer'
-            'aspera-connect'
             'docker-credential-pass'
             'elfutils'
-            'lmod'
             'pinentry'
         )
     fi
@@ -375,6 +372,14 @@ koopa_install_all_binary_apps() {
                 'snakemake'
                 'sra-tools'
                 'star'
+            )
+        fi
+        if koopa_is_linux
+        then
+            apps+=(
+                'apptainer'
+                'aspera-connect'
+                'lmod'
             )
         fi
     fi
