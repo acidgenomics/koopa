@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing these build issues with 1.2.0:
+#
+#  Manually-specified variables were not used by the project:
+#    pybind11_DIR
+
+#  IMPORTED_LOCATION not set for imported target "BZip2::BZip2" configuration
+#  "Release".
+
+# https://github.com/samtools/htslib/issues/696
+
 main() {
     # """
     # Install micromamba.
@@ -16,8 +26,8 @@ main() {
     # - https://github.com/mamba-org/mamba/blob/main/libmamba/
     #     environment-dev.yml
     # - https://man.archlinux.org/man/extra/cmake/cmake-env-variables.7.en
-    # - https://github.com/conda-forge/libmamba-feedstock/
-    # - https://github.com/conda-forge/conda-libmamba-solver-feedstock/
+    # - https://github.com/conda-forge/mamba-feedstock/blob/main/
+    #     recipe/build_mamba.sh
     # - https://github.com/Homebrew/brew/blob/3.6.14/Library/
     #     Homebrew/formula.rb#L1539
     # """
@@ -33,7 +43,7 @@ main() {
         'libsolv'
         'nlohmann-json'
         'openssl3'
-        'pybind11'
+        # > 'pybind11'
         'python'
         'reproc'
         # NOTE Enabling spdlog here currently causes a cryptic linker error.
@@ -60,13 +70,13 @@ main() {
         ['name']='mamba'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['pybind11']="$(koopa_app_prefix 'pybind11')"
+        # > ['pybind11']="$(koopa_app_prefix 'pybind11')"
         ['reproc']="$(koopa_app_prefix 'reproc')"
         ['shared_ext']="$(koopa_shared_ext)"
         ['spdlog']="$(koopa_app_prefix 'spdlog')"
-        ['tl-expected']="$(koopa_app_prefix 'tl-expected')"
+        ['tl_expected']="$(koopa_app_prefix 'tl-expected')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['yaml-cpp']="$(koopa_app_prefix 'yaml-cpp')"
+        ['yaml_cpp']="$(koopa_app_prefix 'yaml-cpp')"
         ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
@@ -76,11 +86,10 @@ main() {
         "${dict['libarchive']}" \
         "${dict['libsolv']}" \
         "${dict['openssl']}" \
-        "${dict['pybind11']}" \
         "${dict['reproc']}" \
         "${dict['spdlog']}" \
-        "${dict['tl-expected']}" \
-        "${dict['yaml-cpp']}" \
+        "${dict['tl_expected']}" \
+        "${dict['yaml_cpp']}" \
         "${dict['zstd']}"
     case "${dict['version']}" in
         '1.2.0')
@@ -123,8 +132,11 @@ tags/${dict['file']}"
         '-DBUILD_MICROMAMBA=ON'
         '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
+        "-DCMAKE_PREFIX_PATH=${dict['fmt']}:${dict['reproc']}:${dict['spdlog']}:${dict['tl_expected']}:${dict['yaml_cpp']}:${dict['zstd']}"
         "-DBZIP2_INCLUDE_DIR=${dict['bzip2']}/include"
         "-DBZIP2_LIBRARIES=${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
+        # This is also needed, otherwise CMake won't detect bzip2 correctly.
+        "-DBZIP2_LIBRARY=${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
         "-DLibArchive_INCLUDE_DIR=${dict['libarchive']}/include" \
@@ -139,14 +151,15 @@ libsolv.${dict['shared_ext']}"
         "-DPython3_EXECUTABLE=${app['python']}"
         # Needed for 'libmambapy/CMakeLists.txt'.
         # > "-DPython_EXECUTABLE=${app['python']}"
+        # CMake configuration --------------------------------------------------
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
-        "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
+        # > "-Dpybind11_DIR=${dict['pybind11']}/share/cmake/pybind11"
         "-Dreproc++_DIR=${dict['reproc']}/lib/cmake/reproc++"
         "-Dreproc_DIR=${dict['reproc']}/lib/cmake/reproc"
         "-Dspdlog_DIR=${dict['spdlog']}/lib/cmake/spdlog"
-        "-Dtl-expected_DIR=${dict['tl-expected']}/share/cmake/tl-expected"
-        "-Dyaml-cpp_DIR=${dict['yaml-cpp']}/share/cmake/yaml-cpp"
-        "-Dzstd_DIR=${dict['zstd']}/share/cmake/zstd"
+        "-Dtl-expected_DIR=${dict['tl_expected']}/share/cmake/tl-expected"
+        "-Dyaml-cpp_DIR=${dict['yaml_cpp']}/share/cmake/yaml-cpp"
+        "-Dzstd_DIR=${dict['zstd']}/lib/cmake/zstd"
     )
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
