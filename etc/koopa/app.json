@@ -566,9 +566,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-01-02",
+    "date": "2023-01-17",
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.29.1"
+    "version": "2.29.2"
   },
   "cli11": {
     "aliases": {
@@ -976,9 +976,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2023-01-09",
+    "date": "2023-01-17",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.41.0"
+    "version": "0.42.0"
   },
   "docker-credential-pass": {
     "aliases": {
@@ -1298,10 +1298,10 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2022-11-18",
+    "date": "2023-01-17",
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.35.1"
+    "version": "0.36.0"
   },
   "gatk": {
     "aliases": {
@@ -1452,13 +1452,13 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2022-11-08",
+    "date": "2023-01-17",
     "dependencies": ["python"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "3.3.0.4"
+    "version": "3.3.1"
   },
   "glib": {
     "aliases": {
@@ -2056,14 +2056,14 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-01-10",
+    "date": "2023-01-17",
     "dependencies": ["python3.10"],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.9.6"
+    "version": "2.10.0"
   },
   "less": {
     "aliases": {
@@ -2548,7 +2548,7 @@
     "bin": ["micromamba"],
     "build_dependencies": ["cmake"],
     "conservative": true,
-    "date": "2022-12-15",
+    "date": "2023-01-17",
     "dependencies": [
       "cli11",
       "curl",
@@ -2570,7 +2570,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba"
     ],
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "man-db": {
     "aliases": {
@@ -3191,10 +3191,10 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2023-01-09",
+    "date": "2023-01-17",
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "2.8.2"
+    "version": "2.8.3"
   },
   "procs": {
     "aliases": {
@@ -3267,10 +3267,10 @@
     },
     "bin": ["pyenv"],
     "conservative": true,
-    "date": "2023-01-10",
+    "date": "2023-01-17",
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv"],
-    "version": "2.3.10"
+    "version": "2.3.11"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -3314,13 +3314,13 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2022-11-08",
+    "date": "2023-01-17",
     "dependencies": ["python"],
     "url": [
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.2.0"
+    "version": "7.2.1"
   },
   "python": {
     "aliases": {
@@ -4249,11 +4249,11 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2022-11-08",
+    "date": "2023-01-17",
     "dependencies": ["python"],
     "man1": ["vd.1", "visidata.1"],
     "url": ["https://github.com/saulpw/visidata/"],
-    "version": "2.10.2"
+    "version": "2.11"
   },
   "vulture": {
     "aliases": {
@@ -4478,9 +4478,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2022-12-17",
+    "date": "2023-01-17",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.30.6"
+    "version": "4.30.8"
   },
   "yt-dlp": {
     "aliases": {
