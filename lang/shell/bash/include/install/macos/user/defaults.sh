@@ -3,7 +3,7 @@
 main() {
     # """
     # Install macOS user defaults.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-01-11.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
@@ -47,7 +47,7 @@ main() {
     [[ -x "${app['lsregister']}" ]] || return 1
     [[ -x "${app['plistbuddy']}" ]] || return 1
     declare -A dict
-    dict['screenshots_dir']="${HOME}/Documents/screenshots"
+    dict['screenshots_dir']="${HOME}/Pictures/screenshots"
     koopa_alert_note "If you encounter permission errors when attempting to \
 write defaults, ensure that your terminal app has full disk access enabled." \
     'System Preferences > Security & Privacy > Privacy > Full Disk Access'

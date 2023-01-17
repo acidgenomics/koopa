@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This is currently blowing up disk space by caching package downloads
+# into ~/.conda/pkgs.
+
 main() {
     # """
     # Install a conda environment as an application.

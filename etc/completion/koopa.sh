@@ -268,6 +268,7 @@ __koopa_complete() {
                         'mcfly'
                         'mdcat'
                         'meson'
+                        'minimap2'
                         'misopy'
                         'mpc'
                         'mpdecimal'

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is currently wasting space at ~/.cabal.
+
 main() {
     # """
     # Install hadolint.

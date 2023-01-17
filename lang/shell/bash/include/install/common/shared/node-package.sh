@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can we chance the cache / clean up here better?
+
 main() {
     # """
     # Install Node.js package using npm.

@@ -2766,7 +2766,7 @@ koopa_bioconda_autobump_recipe() {
     [[ -x "${app['vim']}" ]] || return 1
     declare -A dict=(
         ['recipe']="${1:?}"
-        ['repo']="${HOME:?}/git/bioconda-recipes"
+        ['repo']="${HOME:?}/git/github/bioconda/bioconda-recipes"
     )
     dict['branch']="${dict['recipe']/-/_}"
     koopa_assert_is_dir "${dict['repo']}"
@@ -10765,7 +10765,6 @@ koopa_install_all_apps() {
             'haskell-cabal'
             'llvm'
             'julia'
-            'nim'
             'ghostscript'
         )
         if ! koopa_is_aarch64
@@ -10779,7 +10778,6 @@ koopa_install_all_apps() {
                 'anaconda'
                 'autodock'
                 'autodock-vina'
-                'bioconda-utils'
                 'bamtools'
                 'bedtools'
                 'bioawk'
@@ -10789,6 +10787,7 @@ koopa_install_all_apps() {
                 'entrez-direct'
                 'fastqc'
                 'ffq'
+                'fgbio'
                 'fq'
                 'gatk'
                 'gffutils'
@@ -10798,10 +10797,10 @@ koopa_install_all_apps() {
                 'htseq'
                 'jupyterlab'
                 'kallisto'
+                'minimap2'
                 'multiqc'
                 'nanopolish'
                 'nextflow'
-                'openbb'
                 'salmon'
                 'sambamba'
                 'samtools'
@@ -11156,7 +11155,6 @@ koopa_install_all_binary_apps() {
             'libsolv'
             'llvm'
             'mamba'
-            'nim'
             'nlohmann-json'
             'pybind11'
             'r-devel'
@@ -11175,12 +11173,12 @@ koopa_install_all_binary_apps() {
                 'bamtools'
                 'bedtools'
                 'bioawk'
-                'bioconda-utils'
                 'bowtie2'
                 'bustools'
                 'deeptools'
                 'fastqc'
                 'ffq'
+                'fgbio'
                 'gatk'
                 'gffutils'
                 'gget'
@@ -11188,9 +11186,9 @@ koopa_install_all_binary_apps() {
                 'hisat2'
                 'htseq'
                 'kallisto'
+                'minimap2'
                 'multiqc'
                 'nextflow'
-                'openbb'
                 'salmon'
                 'sambamba'
                 'samtools'
@@ -13093,6 +13091,12 @@ koopa_install_mdcat() {
 koopa_install_meson() {
     koopa_install_app \
         --name='meson' \
+        "$@"
+}
+
+koopa_install_minimap2() {
+    koopa_install_app \
+        --name='minimap2' \
         "$@"
 }
 
@@ -24535,6 +24539,12 @@ koopa_uninstall_mdcat() {
 koopa_uninstall_meson() {
     koopa_uninstall_app \
         --name='meson' \
+        "$@"
+}
+
+koopa_uninstall_minimap2() {
+    koopa_uninstall_app \
+        --name='minimap2' \
         "$@"
 }
 
