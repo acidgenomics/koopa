@@ -1533,7 +1533,6 @@
     },
     "bin": ["go"],
     "date": "2023-01-03",
-    "large": false,
     "reverse_dependencies": [
       "apptainer",
       "chezmoi",
@@ -1861,7 +1860,6 @@
     "bin": ["http", "https"],
     "date": "2022-10-18",
     "dependencies": ["python"],
-    "large": false,
     "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
     "version": "3.2.1"
   },
@@ -2712,7 +2710,6 @@
     "build_dependencies": ["pkg-config"],
     "date": "2023-01-03",
     "dependencies": ["gettext", "ncurses"],
-    "large": false,
     "version": "7.1"
   },
   "nanopolish": {
