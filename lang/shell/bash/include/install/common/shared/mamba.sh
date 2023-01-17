@@ -6,7 +6,7 @@ main() {
     # @note Updated 2023-01-17.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' for CMake configuration.
-    # zstd requirement added in 1.2.0 release.
+    # bzip2 and zstd requirement added in 1.2.0 release.
     #
     # @seealso
     # - https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html
@@ -24,6 +24,8 @@ main() {
     local app build_deps cmake_args deps dict
     build_deps=('ninja')
     deps=(
+        'bzip2'
+        'zstd'
         'cli11'
         'curl'
         'fmt'
@@ -39,7 +41,6 @@ main() {
         'termcolor'
         'tl-expected'
         'yaml-cpp'
-        'zstd'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -50,6 +51,7 @@ main() {
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
+        ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['curl']="$(koopa_app_prefix 'curl')"
         ['fmt']="$(koopa_app_prefix 'fmt')"
         ['jobs']="$(koopa_cpu_count)"
@@ -68,6 +70,7 @@ main() {
         ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
+        "${dict['bzip2']}" \
         "${dict['curl']}" \
         "${dict['fmt']}" \
         "${dict['libarchive']}" \
@@ -120,15 +123,17 @@ tags/${dict['file']}"
         '-DBUILD_MICROMAMBA=ON'
         '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
+        "-DBZIP2_INCLUDE_DIR=${dict['bzip2']}/include"
+        "-DBZIP2_LIBRARIES=${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
         "-DLibArchive_INCLUDE_DIR=${dict['libarchive']}/include" \
         "-DLibArchive_LIBRARY=${dict['libarchive']}/lib/\
-libarchive.${dict['shared_ext']}" \
+libarchive.${dict['shared_ext']}"
         "-DLIBSOLVEXT_LIBRARIES=${dict['libsolv']}/lib/\
-libsolvext.${dict['shared_ext']}" \
+libsolvext.${dict['shared_ext']}"
         "-DLIBSOLV_LIBRARIES=${dict['libsolv']}/lib/\
-libsolv.${dict['shared_ext']}" \
+libsolv.${dict['shared_ext']}"
         "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
         # Needed for 'libmamba/CMakeLists.txt'.
         "-DPython3_EXECUTABLE=${app['python']}"
