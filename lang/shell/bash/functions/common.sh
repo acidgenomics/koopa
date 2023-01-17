@@ -10740,16 +10740,9 @@ koopa_install_all_apps() {
     )
     if koopa_is_linux
     then
-        apps+=(
-            'apptainer' # FIXME large.
-            'lmod' # FIXME large.
-        )
         if ! koopa_is_aarch64
         then
-            apps+=(
-                'aspera-connect' # FIXME large.
-                'docker-credential-pass'
-            )
+            apps+=('docker-credential-pass')
         fi
     fi
     if [[ "${bool['large']}" -eq 1 ]]
@@ -10826,6 +10819,14 @@ koopa_install_all_apps() {
             'yaml-cpp'
             'mamba'
         )
+        if koopa_is_linux
+        then
+            apps+=(
+                'apptainer'
+                'aspera-connect'
+                'lmod'
+            )
+        fi
     fi
     koopa_add_to_path_start '/usr/local/bin'
     for app_name in "${apps[@]}"
@@ -11128,11 +11129,8 @@ koopa_install_all_binary_apps() {
     if koopa_is_linux
     then
         apps+=(
-            'apptainer'
-            'aspera-connect'
             'docker-credential-pass'
             'elfutils'
-            'lmod'
             'pinentry'
         )
     fi
@@ -11198,6 +11196,14 @@ koopa_install_all_binary_apps() {
                 'snakemake'
                 'sra-tools'
                 'star'
+            )
+        fi
+        if koopa_is_linux
+        then
+            apps+=(
+                'apptainer'
+                'aspera-connect'
+                'lmod'
             )
         fi
     fi
