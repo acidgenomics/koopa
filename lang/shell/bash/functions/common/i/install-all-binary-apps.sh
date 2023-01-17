@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2023-01-10.
+    # @note Updated 2023-01-17.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -84,6 +84,7 @@ koopa_install_all_binary_apps() {
         'csvkit'
         'csvtk'
         'delta'
+        'diff-so-fancy'
         'difftastic'
         'dog'
         'dotfiles'
@@ -116,6 +117,7 @@ koopa_install_all_binary_apps() {
         'glib'
         'gnupg'
         'gnutls'
+        'go'
         'gperf'
         'graphviz'
         'grex'
@@ -298,11 +300,8 @@ koopa_install_all_binary_apps() {
     if koopa_is_linux
     then
         apps+=(
-            'apptainer'
-            'aspera-connect'
             'docker-credential-pass'
             'elfutils'
-            'lmod'
             'pinentry'
         )
     fi
@@ -317,7 +316,6 @@ koopa_install_all_binary_apps() {
             'ensembl-perl-api'
             'fmt'
             'ghostscript'
-            'go'
             'google-cloud-sdk'
             'googletest'
             'gseapy'
@@ -374,6 +372,14 @@ koopa_install_all_binary_apps() {
                 'snakemake'
                 'sra-tools'
                 'star'
+            )
+        fi
+        if koopa_is_linux
+        then
+            apps+=(
+                'apptainer'
+                'aspera-connect'
+                'lmod'
             )
         fi
     fi
