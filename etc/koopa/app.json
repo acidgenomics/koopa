@@ -3745,6 +3745,7 @@
     "bin": ["ruff"],
     "date": "2023-01-10",
     "dependencies": ["python"],
+    "outdated": true,
     "url": ["https://pypi.org/project/ruff/"],
     "version": "0.0.217"
   },
