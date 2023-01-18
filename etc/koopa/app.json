@@ -422,6 +422,7 @@
     "date": "2022-11-08",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": ["https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"],
     "version": "2.5.0"
   },
