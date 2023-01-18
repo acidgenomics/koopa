@@ -10800,6 +10800,7 @@ koopa_install_all_apps() {
                 'snakefmt'
                 'snakemake'
                 'star'
+                'star-fusion'
                 'sra-tools'
                 'scalene'
             )
@@ -11196,6 +11197,7 @@ koopa_install_all_binary_apps() {
                 'snakemake'
                 'sra-tools'
                 'star'
+                'star-fusion'
             )
         fi
         if koopa_is_linux
@@ -13699,6 +13701,12 @@ koopa_install_sqlite() {
 koopa_install_sra_tools() {
     koopa_install_app \
         --name='sra-tools' \
+        "$@"
+}
+
+koopa_install_star_fusion() {
+    koopa_install_app \
+        --name='star-fusion' \
         "$@"
 }
 
@@ -25087,6 +25095,12 @@ koopa_uninstall_sqlite() {
 koopa_uninstall_sra_tools() {
     koopa_uninstall_app \
         --name='sra-tools' \
+        "$@"
+}
+
+koopa_uninstall_star_fusion() {
+    koopa_uninstall_app \
+        --name='star-fusion' \
         "$@"
 }
 

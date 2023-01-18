@@ -3981,6 +3981,18 @@
     ],
     "version": "2.7.10b"
   },
+  "star-fusion": {
+    "bin": ["STAR-Fusion"],
+    "date": "2023-01-18",
+    "dependencies": ["conda"],
+    "large": true,
+    "outdated": true,
+    "url": [
+      "https://github.com/STAR-Fusion/STAR-Fusion/",
+      "https://bioconda.github.io/recipes/star-fusion/README.html"
+    ],
+    "version": "1.11.1"
+  },
   "starship": {
     "aliases": {
       "homebrew": true
