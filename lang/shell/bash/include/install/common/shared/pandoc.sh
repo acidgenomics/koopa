@@ -1,32 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This doesn't seem to be working with either stack or cabal...
-# Do some package updates need to propagate first? Not sure...
-
-# FIXME Hitting this with cabal:
-# The package location 'pandoc-lua-engine' does not exist.
-# The package location 'pandoc-server' does not exist.
-# The package location 'pandoc-cli' does not exist.
-#
-# Refer to:
-# https://hackage.haskell.org/package/pandoc-cli
-# https://hackage.haskell.org/package/pandoc-lua-engine
-# https://hackage.haskell.org/package/pandoc-server
-#
-# FIXME May need to add CABAL_DIR to bin prefix or something...
-# https://stackoverflow.com/questions/14074639/cannot-locate-cabal-installed-packages
-
-# FIXME May need to include zlib here.
-
-# FIXME Do we need to change ghcup tmp to save disk space?
-# Currently goes to ~/.ghcup/tmp
-
 main() {
     # """
     # Install Pandoc.
     # @note Updated 2023-01-18.
-    #
-    # This may require system zlib to be installed currently.
     #
     # @seealso
     # - https://github.com/jgm/pandoc/blob/main/INSTALL.md
@@ -50,7 +27,8 @@ main() {
     [[ -x "${app['ghcup']}" ]] || return 1
     declare -A dict=(
         ['cabal_dir']="$(koopa_init_dir 'cabal')"
-        ['ghc_version']='9.2.3' # Try using 9.4.4 for 3.0 release.
+        # NOTE Update to 9.4.4 for pandoc 3.0 release.
+        ['ghc_version']='9.2.3'
         ['jobs']="$(koopa_cpu_count)"
         ['name']='pandoc'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -75,12 +53,6 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     koopa_print_env
     koopa_init_dir "${dict['prefix']}/bin"
     "${app['cabal']}" v2-update
-    # FIXME How to include zlib here?
-    # stack style:
-    # "--extra-include-dirs=${dict['zlib']}/include"
-    # "--extra-lib-dirs=${dict['zlib']}/lib"
-    # Here's some more info for cabal:
-    # https://github.com/haskell/cabal/issues/2997
     "${app['cabal']}" v2-install \
         --extra-include-dirs="${dict['zlib']}/include" \
         --extra-lib-dirs="${dict['zlib']}/lib" \
