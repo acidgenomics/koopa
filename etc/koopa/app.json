@@ -3043,7 +3043,7 @@
     "large": true,
     "outdated": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "2.19.2"
+    "version": "3.0"
   },
   "parallel": {
     "aliases": {
