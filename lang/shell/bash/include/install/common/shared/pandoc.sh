@@ -29,6 +29,7 @@ main() {
         ['cabal_dir']="$(koopa_init_dir 'cabal')"
         ['ghc_version']='9.4.4'
         ['jobs']="$(koopa_cpu_count)"
+        ['name']='pandoc'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
@@ -42,6 +43,12 @@ main() {
             --isolate "${dict['ghc_prefix']}"
     koopa_assert_is_dir "${dict['ghc_prefix']}/bin"
     koopa_add_to_path_start "${dict['ghc_prefix']}/bin"
+    dict['file']="${dict['version']}.tar.gz"
+    dict['url']="https://github.com/jgm/pandoc/archive/refs/\
+tags/${dict['file']}"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_extract "${dict['file']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
     koopa_init_dir "${dict['prefix']}/bin"
     "${app['cabal']}" v2-update
@@ -52,6 +59,6 @@ main() {
         --installdir="${dict['prefix']}/bin" \
         --jobs="${dict['jobs']}" \
         --verbose \
-        "pandoc-${dict['version']}"
+        'pandoc-cli'
     return 0
 }
