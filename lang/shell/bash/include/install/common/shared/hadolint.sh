@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2022-12-01.
+    # @note Updated 2023-01-19.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
@@ -27,7 +27,6 @@ main() {
         ['cabal_dir']="$(koopa_init_dir 'cabal')"
         ['ghc_version']='9.2.5'
         ['jobs']="$(koopa_cpu_count)"
-        ['name']='hadolint'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
@@ -39,12 +38,6 @@ main() {
             --isolate "${dict['ghc_prefix']}"
     koopa_assert_is_dir "${dict['ghc_prefix']}/bin"
     koopa_add_to_path_start "${dict['ghc_prefix']}/bin"
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
     koopa_init_dir "${dict['prefix']}/bin"
     "${app['cabal']}" v2-update
@@ -52,6 +45,7 @@ archive/${dict['file']}"
         --install-method='copy' \
         --installdir="${dict['prefix']}/bin" \
         --jobs="${dict['jobs']}" \
-        --verbose
+        --verbose \
+        "hadolint-${dict['version']}"
     return 0
 }
