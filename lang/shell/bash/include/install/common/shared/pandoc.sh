@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# NOTE pandoc 3.0 is currently failing to build with cabal on macOS:
+# NOTE pandoc 3.0 is currently failing to build with cabal or stack.
+# https://github.com/jgm/pandoc/issues/8560
 # https://github.com/Homebrew/homebrew-core/pull/120967
 
 main() {
