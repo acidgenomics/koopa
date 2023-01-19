@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE pandoc 3.0 is currently failing to build with cabal on macOS:
+# https://github.com/Homebrew/homebrew-core/pull/120967
+
 main() {
     # """
     # Install Pandoc.
