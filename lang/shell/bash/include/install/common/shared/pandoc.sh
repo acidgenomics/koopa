@@ -7,7 +7,7 @@
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-01-18.
+    # @note Updated 2023-01-19.
     #
     # @seealso
     # - https://github.com/jgm/pandoc/blob/main/INSTALL.md
@@ -31,8 +31,7 @@ main() {
     [[ -x "${app['ghcup']}" ]] || return 1
     declare -A dict=(
         ['cabal_dir']="$(koopa_init_dir 'cabal')"
-        # NOTE Update to 9.4.4 for pandoc 3.0 release.
-        ['ghc_version']='9.2.3'
+        ['ghc_version']='9.4.4'
         ['jobs']="$(koopa_cpu_count)"
         ['name']='pandoc'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -48,9 +47,9 @@ main() {
             --isolate "${dict['ghc_prefix']}"
     koopa_assert_is_dir "${dict['ghc_prefix']}/bin"
     koopa_add_to_path_start "${dict['ghc_prefix']}/bin"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://hackage.haskell.org/package/\
-${dict['name']}-${dict['version']}/${dict['file']}"
+    dict['file']="${dict['version']}.tar.gz"
+    dict['url']="https://github.com/jgm/pandoc/archive/refs/\
+tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
@@ -63,6 +62,7 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         --install-method='copy' \
         --installdir="${dict['prefix']}/bin" \
         --jobs="${dict['jobs']}" \
-        --verbose
+        --verbose \
+        'pandoc-cli'
     return 0
 }
