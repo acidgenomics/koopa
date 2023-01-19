@@ -619,6 +619,7 @@
     "conservative": true,
     "date": "2022-12-30",
     "large": true,
+    "outdated": true,
     "reverse_dependencies": [
       "autodock",
       "bamtools",
@@ -3032,10 +3033,10 @@
       "homebrew": true
     },
     "bin": ["pandoc"],
-    "date": "2022-08-22",
+    "date": "2023-01-18",
     "large": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "2.19.2"
+    "version": "3.0"
   },
   "parallel": {
     "aliases": {
