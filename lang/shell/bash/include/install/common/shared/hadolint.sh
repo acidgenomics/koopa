@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently wasting space at ~/.cabal.
-
 main() {
     # """
     # Install hadolint.
@@ -9,7 +7,7 @@ main() {
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
-    # - https://cabal.readthedocs.io/en/3.2/installing-packages.html
+    # - https://cabal.readthedocs.io/en/3.4/installing-packages.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     hadolint.rb
     # """
@@ -24,12 +22,15 @@ main() {
     [[ -x "${app['cabal']}" ]] || return 1
     [[ -x "${app['ghcup']}" ]] || return 1
     declare -A dict=(
+        ['cabal_dir']="$(koopa_init_dir 'cabal')"
         ['ghc_version']='9.0.2'
         ['jobs']="$(koopa_cpu_count)"
         ['name']='hadolint'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    # Avoid wasting space in '~/.cabal'.
+    export CABAL_DIR="${dict['cabal_dir']}"
     dict['ghc_prefix']="$(koopa_init_dir "ghc-${dict['ghc_version']}")"
     "${app['ghcup']}" install \
         'ghc' "${dict['ghc_version']}" \
