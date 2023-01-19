@@ -1034,12 +1034,12 @@
       "homebrew": true
     },
     "bin": ["editorconfig"],
-    "date": "2022-09-26",
+    "date": "2023-01-19",
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
     ],
-    "version": "0.12.5"
+    "version": "0.12.6"
   },
   "elfutils": {
     "aliases": {
@@ -3794,6 +3794,7 @@
     "date": "2023-01-05",
     "dependencies": ["conda"],
     "large": true,
+    "notes": ["0.8.2 is available but only 0.8.0 supports macOS."],
     "outdated": true,
     "url": [
       "https://github.com/biod/sambamba/",
