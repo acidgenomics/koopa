@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2023-01-03.
+    # @note Updated 2023-01-18.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
@@ -80,16 +80,15 @@ main() {
     dict['script']="Miniconda${dict['py_major_version']}-\
 py${dict['py_version2']}_${dict['version2']}-${dict['os_type2']}\
 -${dict['arch2']}.sh"
-# >     # NOTE Temporary workaround for installing newer versions that aren't
-# >     # yet available at 'https://repo.anaconda.com/miniconda/'.
-# >     case "${dict['version']}" in
-# >         '22.11.1')
-# >             dict['from_latest']=1
-# >             dict['script']="Miniconda${dict['py_major_version']}-latest-\
-# > ${dict['os_type2']}-${dict['arch2']}.sh"
-# >             dict['libmamba_version']='22.12.0'
-# >             ;;
-# >     esac
+    # Workaround for installing newer versions that aren't yet available
+    # at 'https://repo.anaconda.com/miniconda/'.
+    case "${dict['version']}" in
+        '23.1.0')
+            dict['from_latest']=1
+            dict['script']="Miniconda${dict['py_major_version']}-latest-\
+${dict['os_type2']}-${dict['arch2']}.sh"
+            ;;
+    esac
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
@@ -100,14 +99,13 @@ py${dict['py_version2']}_${dict['version2']}-${dict['os_type2']}\
     koopa_assert_is_installed "${app['conda']}"
     if [[ "${dict['from_latest']}" -eq 1 ]]
     then
-        # NOTE Can add '--solver=classic' from 22.11.* onwards here.
         "${app['conda']}" install \
             --channel='conda-forge' \
             --name='base' \
             --override-channels \
+            --solver='classic' \
             --yes \
-            "conda==${dict['version']}" \
-            "conda-libmamba-solver==${dict['libmamba_version']}"
+            "conda==${dict['version']}"
     fi
     "${app['conda']}" list
     "${app['conda']}" info --all
