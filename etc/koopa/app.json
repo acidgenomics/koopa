@@ -422,6 +422,7 @@
     "date": "2022-11-08",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": ["https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"],
     "version": "2.5.0"
   },
@@ -618,6 +619,7 @@
     "conservative": true,
     "date": "2022-12-30",
     "large": true,
+    "outdated": true,
     "reverse_dependencies": [
       "autodock",
       "bamtools",
@@ -1032,12 +1034,12 @@
       "homebrew": true
     },
     "bin": ["editorconfig"],
-    "date": "2022-09-26",
+    "date": "2023-01-19",
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
     ],
-    "version": "0.12.5"
+    "version": "0.12.6"
   },
   "elfutils": {
     "aliases": {
@@ -1756,13 +1758,13 @@
     },
     "bin": ["ghcup"],
     "build_dependencies": ["curl"],
-    "date": "2022-09-19",
+    "date": "2023-01-18",
     "large": true,
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://gitlab.haskell.org/haskell/ghcup-hs/"
     ],
-    "version": "0.1.18.0"
+    "version": "0.1.19.0"
   },
   "haskell-stack": {
     "aliases": {
@@ -1868,8 +1870,8 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2022-12-24",
-    "version": "0.109.0"
+    "date": "2023-01-17",
+    "version": "0.110.0"
   },
   "hyperfine": {
     "aliases": {
@@ -2919,14 +2921,14 @@
   "openbb": {
     "bin": ["openbb"],
     "check": false,
-    "date": "2023-01-03",
+    "date": "2023-01-19",
     "dependencies": ["conda", "poetry"],
     "large": true,
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "2.1.0"
+    "version": "2.2.0"
   },
   "openblas": {
     "aliases": {
@@ -3031,10 +3033,17 @@
       "homebrew": true
     },
     "bin": ["pandoc"],
-    "date": "2022-08-22",
+    "build_dependencies": [
+      "git",
+      "haskell-cabal",
+      "haskell-ghcup",
+      "pkg-config"
+    ],
+    "date": "2023-01-18",
     "large": true,
+    "outdated": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "2.19.2"
+    "version": "3.0"
   },
   "parallel": {
     "aliases": {
@@ -3744,6 +3753,7 @@
     "bin": ["ruff"],
     "date": "2023-01-10",
     "dependencies": ["python"],
+    "outdated": true,
     "url": ["https://pypi.org/project/ruff/"],
     "version": "0.0.217"
   },
@@ -3784,6 +3794,7 @@
     "date": "2023-01-05",
     "dependencies": ["conda"],
     "large": true,
+    "notes": ["0.8.2 is available but only 0.8.0 supports macOS."],
     "outdated": true,
     "url": [
       "https://github.com/biod/sambamba/",
@@ -3979,6 +3990,18 @@
       "https://bioconda.github.io/recipes/star/README.html"
     ],
     "version": "2.7.10b"
+  },
+  "star-fusion": {
+    "bin": ["STAR-Fusion"],
+    "date": "2023-01-18",
+    "dependencies": ["conda"],
+    "large": true,
+    "outdated": true,
+    "url": [
+      "https://github.com/STAR-Fusion/STAR-Fusion/",
+      "https://bioconda.github.io/recipes/star-fusion/README.html"
+    ],
+    "version": "1.11.1"
   },
   "starship": {
     "aliases": {

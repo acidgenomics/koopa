@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
-# FIXME Consider installing this into libexec...
+# NOTE Consider installing this into libexec.
 
 main() {
     # """
     # Install Haskell GHCup.
-    # @note Updated 2022-09-19.
+    # @note Updated 2023-01-19.
     #
     # @seealso
     # - https://www.haskell.org/ghcup/
+    # - https://github.com/haskell/ghcup-hs
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/ghcup.rb
-    # - https://gitlab.haskell.org/haskell/ghcup-hs/-/blob/master/scripts/
+    # - https://github.com/haskell/ghcup-hs/blob/master/scripts/
     #     bootstrap/bootstrap-haskell
     # """
     local dict
@@ -23,12 +24,12 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    dict['file']="${dict['name']}-v${dict['version']}.tar.bz2"
-    dict['url']="https://gitlab.haskell.org/haskell/ghcup-hs/-/archive/\
-v${dict['version']}/${dict['file']}"
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/haskell/ghcup-hs/archive/refs/\
+tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-v${dict['version']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     # > export BOOTSTRAP_HASKELL_INSTALL_HLS=1
     # > export BOOTSTRAP_HASKELL_INSTALL_STACK=1
     export BOOTSTRAP_HASKELL_CABAL_VERSION='recommended'
