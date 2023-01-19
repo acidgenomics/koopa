@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Homebrew formula uses cabal for install..consider switching.
-
-# FIXME Building of 3.0 is not currently supported by stack?
-#2023-01-18 19:43:10.008732: [debug] (SQL) SELECT "id" FROM "last_performed" WHERE _ROWID_=last_insert_rowid(); []
-#2023-01-18 19:43:10.009570: [debug] Not reading lock file
-#2023-01-18 19:43:10.294177: [debug] Loaded snapshot from third party: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/6.yaml
-#2023-01-18 19:43:10.492242: [error] /private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20230118-194308-kN3Rp05IsE/pandoc-3.0/pandoc-cli: getDirectoryContents:openDirStream: does not exist (No such file or directory)
-#
-# FIXME Consider using ghcup / ghc / cabal approach instead?
-# https://github.com/jgm/pandoc/blob/main/INSTALL.md
-
 main() {
     # """
     # Install Pandoc.
