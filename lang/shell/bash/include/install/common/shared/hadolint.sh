@@ -7,11 +7,11 @@ main() {
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
-    # - https://cabal.readthedocs.io/en/3.4/installing-packages.html
+    # - https://cabal.readthedocs.io/
+    # - https://cabal.readthedocs.io/en/stable/installing-packages.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     hadolint.rb
     # - https://github.com/hadolint/hadolint/issues/904
-    # - https://cabal.readthedocs.io/
     # """
     local app build_deps dict
     koopa_assert_is_not_aarch64

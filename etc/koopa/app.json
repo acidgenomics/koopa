@@ -1758,13 +1758,13 @@
     },
     "bin": ["ghcup"],
     "build_dependencies": ["curl"],
-    "date": "2022-09-19",
+    "date": "2023-01-18",
     "large": true,
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://gitlab.haskell.org/haskell/ghcup-hs/"
     ],
-    "version": "0.1.18.0"
+    "version": "0.1.19.0"
   },
   "haskell-stack": {
     "aliases": {
@@ -3033,10 +3033,17 @@
       "homebrew": true
     },
     "bin": ["pandoc"],
+    "build_dependencies": [
+      "git",
+      "haskell-cabal",
+      "haskell-ghcup",
+      "pkg-config"
+    ],
     "date": "2023-01-18",
     "large": true,
+    "outdated": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.0"
+    "version": "2.19.2"
   },
   "parallel": {
     "aliases": {
