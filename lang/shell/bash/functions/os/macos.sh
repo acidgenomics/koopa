@@ -669,6 +669,13 @@ koopa_macos_install_system_xcode_clt() {
         "$@"
 }
 
+koopa_macos_install_trash() {
+    koopa_install_app \
+        --name='trash' \
+        --platform='macos' \
+        "$@"
+}
+
 koopa_macos_install_user_defaults() {
     koopa_install_app \
         --name='defaults' \
@@ -1159,6 +1166,12 @@ koopa_macos_uninstall_system_xcode_clt() {
         --name='xcode-clt' \
         --platform='macos' \
         --system \
+        "$@"
+}
+
+koopa_macos_uninstall_trash() {
+    koopa_uninstall_app \
+        --name='trash' \
         "$@"
 }
 

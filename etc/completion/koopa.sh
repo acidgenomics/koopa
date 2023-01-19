@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-01-10.
+    # @note Updated 2023-01-19.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -428,6 +428,11 @@ __koopa_complete() {
                             'elfutils'
                             'lmod'
                             'pinentry'
+                        )
+                    elif koopa_is_macos
+                    then
+                        args+=(
+                            'trash'
                         )
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
