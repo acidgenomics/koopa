@@ -10,6 +10,8 @@ main() {
     # - https://cabal.readthedocs.io/en/3.4/installing-packages.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     hadolint.rb
+    # - https://github.com/hadolint/hadolint/issues/904
+    # - https://cabal.readthedocs.io/
     # """
     local app build_deps dict
     koopa_assert_is_not_aarch64
@@ -23,7 +25,7 @@ main() {
     [[ -x "${app['ghcup']}" ]] || return 1
     declare -A dict=(
         ['cabal_dir']="$(koopa_init_dir 'cabal')"
-        ['ghc_version']='9.0.2'
+        ['ghc_version']='9.2.5'
         ['jobs']="$(koopa_cpu_count)"
         ['name']='hadolint'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -45,15 +47,8 @@ archive/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
     koopa_init_dir "${dict['prefix']}/bin"
-    # NOTE Can use 'v2-*' commands here instead.
-    "${app['cabal']}" update
-    "${app['cabal']}" configure \
-        --jobs="${dict['jobs']}" \
-        --verbose
-    "${app['cabal']}" build \
-        --jobs="${dict['jobs']}" \
-        --verbose
-    "${app['cabal']}" install \
+    "${app['cabal']}" v2-update
+    "${app['cabal']}" v2-install \
         --install-method='copy' \
         --installdir="${dict['prefix']}/bin" \
         --jobs="${dict['jobs']}" \
