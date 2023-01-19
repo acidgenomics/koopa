@@ -2921,14 +2921,14 @@
   "openbb": {
     "bin": ["openbb"],
     "check": false,
-    "date": "2023-01-03",
+    "date": "2023-01-19",
     "dependencies": ["conda", "poetry"],
     "large": true,
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "2.1.0"
+    "version": "2.2.0"
   },
   "openblas": {
     "aliases": {
