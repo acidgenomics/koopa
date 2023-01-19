@@ -304,9 +304,9 @@ koopa_install_all_binary_apps() {
             'elfutils'
             'pinentry'
         )
-    elif koopa_is_macos
-    then
-        apps+=('trash')
+    # > elif koopa_is_macos
+    # > then
+    # >     apps+=('trash')
     fi
     # Large machines only ------------------------------------------------------
     if [[ "${bool['large']}" -eq 1 ]]

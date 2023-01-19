@@ -10744,9 +10744,6 @@ koopa_install_all_apps() {
         then
             apps+=('docker-credential-pass')
         fi
-    elif koopa_is_macos
-    then
-        apps+=('trash')
     fi
     if [[ "${bool['large']}" -eq 1 ]]
     then
@@ -11137,9 +11134,6 @@ koopa_install_all_binary_apps() {
             'elfutils'
             'pinentry'
         )
-    elif koopa_is_macos
-    then
-        apps+=('trash')
     fi
     if [[ "${bool['large']}" -eq 1 ]]
     then
