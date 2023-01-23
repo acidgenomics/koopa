@@ -2058,14 +2058,14 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-01-17",
+    "date": "2023-01-20",
     "dependencies": ["python3.10"],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.10.0"
+    "version": "2.10.1"
   },
   "less": {
     "aliases": {
@@ -3900,12 +3900,12 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2022-12-13",
+    "date": "2023-01-23",
     "dependencies": ["conda"],
     "large": true,
     "outdated": true,
     "url": ["https://github.com/snakemake/snakemake/"],
-    "version": "7.19.0"
+    "version": "7.20.0"
   },
   "sox": {
     "aliases": {
