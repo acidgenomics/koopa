@@ -569,9 +569,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-01-20",
+    "date": "2023-01-24",
     "url": ["https://www.chezmoi.io/"],
-    "version": "2.29.3"
+    "version": "2.29.4"
   },
   "cli11": {
     "aliases": {
