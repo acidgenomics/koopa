@@ -79,7 +79,7 @@ main() {
     "${app['cabal']}" v2-update
     "${app['cabal']}" v2-configure \
         --extra-include-dirs="${dict['zlib']}/include" \
-        --extra-lib-dirs="${dict['zlib']}/lib" \
+        --extra-lib-dirs="${dict['zlib']}/lib"
     "${app['cabal']}" v2-install \
         --install-method='copy' \
         --installdir="${dict['prefix']}/bin" \
