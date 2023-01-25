@@ -2864,11 +2864,10 @@
     },
     "bin": ["node", "npm", "npx"],
     "conservative": true,
-    "date": "2022-11-07",
+    "date": "2023-01-25",
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
-    "outdated": true,
     "reverse_dependencies": [
       "bash-language-server",
       "gtop",
@@ -2877,7 +2876,7 @@
       "yarn"
     ],
     "url": ["https://nodejs.org/"],
-    "version": "18.12.1"
+    "version": "18.13.0"
   },
   "npth": {
     "aliases": {

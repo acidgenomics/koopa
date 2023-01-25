@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME May need to bundle cabal directory, similar to pandoc.
+# FIXME Need to change ghcup prefix.
+# FIXME Consider setting cabal global store, similar to pandoc.
+
 main() {
     # """
     # Install hadolint.
