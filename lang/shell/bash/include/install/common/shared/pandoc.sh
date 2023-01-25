@@ -15,6 +15,13 @@
 # compiler at the preprocessing stage. In this case you can re-run configure
 # with the verbosity flag -v3 to see the error messages.
 
+# FIXME Need to create 'cabal.project.local' file instead I think.
+# https://github.com/haskell/cabal/issues/2997
+# Alternatively, can set extra-include-dir in our cabal config file?
+
+# Consider using C_INCLUDE_PATH ?
+# https://github.com/haskell/cabal/issues/2705#issue-93071062
+
 # FIXME Need to change ghcup prefix.
 # FIXME Consider just adjusting the cabal global store.
 # https://cabal.readthedocs.io/en/latest/nix-local-build.html
@@ -70,10 +77,10 @@ main() {
     koopa_init_dir "${dict['prefix']}/bin"
     koopa_print_env
     "${app['cabal']}" v2-update
-    # NOTE Consider version pinning pandoc-cli to 0.1 here.
-    "${app['cabal']}" v2-install \
+    "${app['cabal']}" v2-configure \
         --extra-include-dirs="${dict['zlib']}/include" \
         --extra-lib-dirs="${dict['zlib']}/lib" \
+    "${app['cabal']}" v2-install \
         --install-method='copy' \
         --installdir="${dict['prefix']}/bin" \
         --jobs="${dict['jobs']}" \
