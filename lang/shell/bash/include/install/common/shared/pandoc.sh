@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+# FIXME We're not location zlib correctly on Ubuntu...argh.
+# Error: cabal: Missing dependency on a foreign library:
+# * Missing (or bad) header file: zlib.h
+# * Missing (or bad) C library: z
+# This problem can usually be solved by installing the system package that
+# provides this library (you may need the "-dev" version). If the library is
+# already installed but in a non-standard location then you can use the flags
+# --extra-include-dirs= and --extra-lib-dirs= to specify where it is.If the
+# library file does exist, it may contain errors that are caught by the C
+# compiler at the preprocessing stage. In this case you can re-run configure
+# with the verbosity flag -v3 to see the error messages.
+# If the header file does exist, it may contain errors that are caught by the C
+# compiler at the preprocessing stage. In this case you can re-run configure
+# with the verbosity flag -v3 to see the error messages.
+
 # FIXME Need to change ghcup prefix.
 # FIXME Consider just adjusting the cabal global store.
 # https://cabal.readthedocs.io/en/latest/nix-local-build.html
