@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Need to change ghcup prefix.
+# FIXME Consider just adjusting the cabal global store.
+# https://cabal.readthedocs.io/en/latest/nix-local-build.html
+# configurable via global 'store-dir' option
+
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-01-20.
+    # @note Updated 2023-01-25.
     #
     # @seealso
     # - https://hackage.haskell.org/package/pandoc
@@ -27,7 +32,6 @@ main() {
     [[ -x "${app['cabal']}" ]] || return 1
     [[ -x "${app['ghcup']}" ]] || return 1
     declare -A dict=(
-        ['cabal_dir']="$(koopa_init_dir 'cabal')"
         ['ghc_version']='9.4.4'
         ['jobs']="$(koopa_cpu_count)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -40,7 +44,7 @@ main() {
             ;;
     esac
     koopa_assert_is_dir "${dict['zlib']}"
-    # Avoid wasting space in '~/.cabal'.
+    dict['cabal_dir']="$(koopa_init_dir "${dict['prefix']}/libexec/cabal")"
     export CABAL_DIR="${dict['cabal_dir']}"
     dict['ghc_prefix']="$(koopa_init_dir "ghc-${dict['ghc_version']}")"
     "${app['ghcup']}" install \
