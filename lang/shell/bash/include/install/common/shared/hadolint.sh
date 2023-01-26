@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2023-01-19.
+    # @note Updated 2023-01-26.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
@@ -26,22 +26,23 @@ main() {
     declare -A dict=(
         ['cabal_dir']="$(koopa_init_dir 'cabal')"
         ['ghc_version']='9.2.5'
+        ['ghcup_prefix']="$(koopa_init_dir 'ghcup')"
         ['jobs']="$(koopa_cpu_count)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    # Avoid wasting space in '~/.cabal'.
-    export CABAL_DIR="${dict['cabal_dir']}"
     dict['ghc_prefix']="$(koopa_init_dir "ghc-${dict['ghc_version']}")"
+    export CABAL_DIR="${dict['cabal_dir']}"
+    export GHCUP_INSTALL_BASE_PREFIX="${dict['ghcup_prefix']}"
+    koopa_print_env
     "${app['ghcup']}" install \
         'ghc' "${dict['ghc_version']}" \
             --isolate "${dict['ghc_prefix']}"
     koopa_assert_is_dir "${dict['ghc_prefix']}/bin"
     koopa_add_to_path_start "${dict['ghc_prefix']}/bin"
-    koopa_print_env
     koopa_init_dir "${dict['prefix']}/bin"
-    "${app['cabal']}" v2-update
-    "${app['cabal']}" v2-install \
+    "${app['cabal']}" update
+    "${app['cabal']}" install \
         --install-method='copy' \
         --installdir="${dict['prefix']}/bin" \
         --jobs="${dict['jobs']}" \
