@@ -52,7 +52,7 @@ main() {
     koopa_init_dir "${dict['prefix']}/bin"
     "${app['cabal']}" update
     dict['cabal_config_file']="${dict['cabal_dir']}/config"
-    koopa_assert_is_file "${dict['cabal_config']}"
+    koopa_assert_is_file "${dict['cabal_config_file']}"
     read -r -d '' "dict[cabal_config_string]" << END || true
 extra-include-dirs: ${dict['zlib']}/include
 extra-lib-dirs: ${dict['zlib']}/lib
