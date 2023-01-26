@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Consider installing this into libexec.
-
 main() {
     # """
     # Install Haskell GHCup.
-    # @note Updated 2023-01-19.
+    # @note Updated 2023-01-26.
     #
     # @seealso
     # - https://www.haskell.org/ghcup/
@@ -30,11 +28,12 @@ tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
+    # > export BOOTSTRAP_HASKELL_CABAL_VERSION='recommended'
+    # > export BOOTSTRAP_HASKELL_GHC_VERSION='recommended'
     # > export BOOTSTRAP_HASKELL_INSTALL_HLS=1
     # > export BOOTSTRAP_HASKELL_INSTALL_STACK=1
-    export BOOTSTRAP_HASKELL_CABAL_VERSION='recommended'
     export BOOTSTRAP_HASKELL_DOWNLOADER='curl'
-    export BOOTSTRAP_HASKELL_GHC_VERSION='recommended'
+    export BOOTSTRAP_HASKELL_MINIMAL=1
     export BOOTSTRAP_HASKELL_NONINTERACTIVE=1
     export BOOTSTRAP_HASKELL_NO_UPGRADE=1
     export BOOTSTRAP_HASKELL_VERBOSE=1
