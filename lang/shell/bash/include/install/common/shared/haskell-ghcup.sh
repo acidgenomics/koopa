@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Consider installing this into libexec.
+# FIXME Consider installing this without GHC bundled.
 
 main() {
     # """
