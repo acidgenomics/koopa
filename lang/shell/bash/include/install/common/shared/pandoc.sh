@@ -34,6 +34,7 @@ main() {
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     case "${dict['version']}" in
+        '3.0.1' | \
         '3.0')
             dict['cli_version']='0.1'
             ;;
