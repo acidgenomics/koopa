@@ -3039,11 +3039,11 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-01-18",
+    "date": "2023-01-26",
     "large": true,
     "outdated": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.0"
+    "version": "3.0.1"
   },
   "parallel": {
     "aliases": {
