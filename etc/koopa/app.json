@@ -136,6 +136,15 @@
       "debian": true,
       "fedora": true
     },
+    "bin": [
+      "autoconf",
+      "autoheader",
+      "autom4te",
+      "autoreconf",
+      "autoscan",
+      "autoupdate",
+      "ifnames"
+    ],
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
@@ -180,7 +189,7 @@
     "aliases": {
       "fedora": true
     },
-    "bin": ["automake"],
+    "bin": ["aclocal", "automake"],
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
