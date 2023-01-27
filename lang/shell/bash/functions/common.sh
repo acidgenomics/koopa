@@ -2750,7 +2750,9 @@ koopa_basename() {
     for arg in "$@"
     do
         [[ -n "$arg" ]] || return 1
-        koopa_print "${arg##*/}"
+        arg="${arg%%+(/)}"
+        arg="${arg##*/}"
+        koopa_print "$arg"
     done
     return 0
 }
