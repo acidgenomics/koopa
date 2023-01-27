@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is working for directories with a trailing slash...
-
 koopa_basename() {
     # """
     # Extract the file basename.
