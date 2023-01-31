@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to speed this function up, currently too slow.
+
 koopa_ln() {
     # """
     # Hardened version of coreutils ln (symbolic link generator).
