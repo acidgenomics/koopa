@@ -80,8 +80,8 @@ koopa_rsem_index() {
     dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
-    koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
     dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
     koopa_decompress \
         "${dict['genome_fasta_file']}" \
