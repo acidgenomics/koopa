@@ -22316,8 +22316,8 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating STAR index at '${dict['output_dir']}'."
+    dict['build_name']="$(koopa_basename "${dict['output_dir']}")"
     dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
     dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
     koopa_decompress \
@@ -22327,7 +22327,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         "${dict['gtf_file']}" \
         "${dict['tmp_gtf_file']}"
     index_args+=(
-        '--genomeDir' "${dict['output_dir']}/"
+        '--genomeDir' "${dict['build_name']}/"
         '--genomeFastaFiles' "${dict['tmp_genome_fasta_file']}"
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
@@ -22337,6 +22337,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     (
         koopa_cd "${dict['tmp_dir']}"
         "${app['star']}" "${index_args[@]}"
+        koopa_cp "${dict['build_name']}" "${dict['output_dir']}"
     )
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
