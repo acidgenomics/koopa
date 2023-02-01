@@ -13588,6 +13588,12 @@ koopa_install_ronn() {
         "$@"
 }
 
+koopa_install_rsem() {
+    koopa_install_app \
+        --name='rsem' \
+        "$@"
+}
+
 koopa_install_rsync() {
     koopa_install_app \
         --name='rsync' \
@@ -22161,7 +22167,7 @@ koopa_star_index() {
         ['genome_fasta_file']=''
         ['gtf_file']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=62
+        ['mem_gb_cutoff']=60
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
         ['tmp_dir']="$(koopa_tmp_dir)"
@@ -25015,6 +25021,12 @@ koopa_uninstall_rmate() {
 koopa_uninstall_ronn() {
     koopa_uninstall_app \
         --name='ronn' \
+        "$@"
+}
+
+koopa_uninstall_rsem() {
+    koopa_uninstall_app \
+        --name='rsem' \
         "$@"
 }
 
