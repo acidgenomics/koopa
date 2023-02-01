@@ -5442,6 +5442,7 @@ koopa_decompress() {
             [[ -z "${dict['target_file']}" ]] || return 1
             ;;
     esac
+    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
     case "${dict['source_file']}" in
         *'.bz2' | *'.gz' | *'.xz')
             case "${dict['source_file']}" in
