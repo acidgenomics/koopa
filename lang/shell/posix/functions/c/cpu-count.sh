@@ -3,7 +3,7 @@
 koopa_cpu_count() {
     # """
     # Return a usable number of CPU cores.
-    # @note Updated 2022-04-06.
+    # @note Updated 2023-02-01.
     # """
     local bin_prefix getconf nproc num sysctl
     [ "$#" -eq 0 ] || return 1
@@ -14,10 +14,10 @@ koopa_cpu_count() {
         return 0
     fi
     bin_prefix="$(koopa_bin_prefix)"
-    nproc="${bin_prefix}/nproc"
+    nproc="${bin_prefix}/gnproc"
     if [ -x "$nproc" ]
     then
-        num="$("$nproc")"
+        num="$("$nproc" --all)"
     elif koopa_is_macos
     then
         sysctl='/usr/sbin/sysctl'
