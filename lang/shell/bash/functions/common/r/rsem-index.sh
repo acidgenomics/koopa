@@ -94,10 +94,13 @@ koopa_rsem_index() {
         '--gtf' "${dict['tmp_gtf_file']}"
         '--num-threads' "${dict['threads']}"
         "${dict['tmp_genome_fasta_file']}"
-        "${dict['output_dir']}/rsem"
+        'rsem'
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    "${app['rsem_prepare_reference']}" "${index_args[@]}"
+    (
+        koopa_cd "${dict['output_dir']}"
+        "${app['rsem_prepare_reference']}" "${index_args[@]}"
+    )
     koopa_rm "${dict['tmp_dir']}"
     koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
