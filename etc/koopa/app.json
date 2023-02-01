@@ -3726,7 +3726,7 @@
     "version": "0.7.3"
   },
   "rsem": {
-    "bin": ["rsem"],
+    "bin": ["rsem-calculate-expression", "rsem-prepare-reference"],
     "date": "2023-02-01",
     "dependencies": ["conda"],
     "large": true,
