@@ -212,12 +212,12 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2022-12-30",
+    "date": "2023-01-31",
     "dependencies": ["python"],
     "large": true,
     "outdated": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.43.0"
+    "version": "2.44.1"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -1563,12 +1563,12 @@
     },
     "arch": "x86_64",
     "bin": ["gcloud"],
-    "date": "2023-01-03",
+    "date": "2023-01-31",
     "dependencies": ["python3.10"],
     "large": true,
     "outdated": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "412.0.0"
+    "version": "416.0.0"
   },
   "googletest": {
     "aliases": {
@@ -2930,14 +2930,14 @@
   "openbb": {
     "bin": ["openbb"],
     "check": false,
-    "date": "2023-01-19",
+    "date": "2023-01-31",
     "dependencies": ["conda", "poetry"],
     "large": true,
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "2.2.0"
+    "version": "2.3.0"
   },
   "openblas": {
     "aliases": {
