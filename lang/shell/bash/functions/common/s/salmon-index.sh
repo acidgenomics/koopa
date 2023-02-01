@@ -103,8 +103,6 @@ koopa_salmon_index() {
     koopa_assert_is_set \
         '--output-dir' "${dict['output_dir']}" \
         '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
-    # Currently seeing that decoy-aware transcriptome indexing uses about 20 GB
-    # of RAM with Homo sapiens GRCh38 GENCODE 41.
     [[ "${dict['decoys']}" -eq 1 ]] && dict['mem_gb_cutoff']=30
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
