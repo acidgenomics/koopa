@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_star_index() {
+koopa_rsem_index() {
     # """
     # Create a genome index for RSEM aligner.
     # @note Updated 2023-03-01.
@@ -81,16 +81,28 @@ koopa_star_index() {
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
-    dict['build_name']="$(koopa_basename "${dict['output_dir']}")"
+    dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+    koopa_decompress \
+        "${dict['genome_fasta_file']}" \
+        "${dict['tmp_genome_fasta_file']}"
+    dict['tmp_gtf_file']="$(koopa_tmp_file)"
+    koopa_decompress \
+        "${dict['gtf_file']}" \
+        "${dict['tmp_gtf_file']}"
     index_args+=(
-        '--gtf' "${dict['gtf_file']}"
-        '--num-threads' "${dict['jobs']}"
-        "${dict['genome_fasta_file']}"
-        "${dict['build_name']}"
+        '--gtf' "${dict['tmp_gtf_file']}"
+        '--num-threads' "${dict['threads']}"
+        "${dict['tmp_genome_fasta_file']}"
+        # FIXME Do we need to use the basename here rather than path?
+        "${dict['output_dir']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    "${app['rsem_prepare_reference']}" "${index_args[@]}"
+    "$app['rsem_prepare_reference']}" "${index_args[@]}"
     # FIXME Build in temporary directory and the copy to target.
+    koopa_rm \
+        "${dict['tmp_dir']}" \
+        "${dict['tmp_genome_fasta_file']}" \
+        "${dict['tmp_gtf_file']}"
     koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
 }
