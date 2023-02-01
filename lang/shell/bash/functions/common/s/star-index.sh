@@ -3,7 +3,7 @@
 koopa_star_index() {
     # """
     # Create a genome index for STAR aligner.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-02-01.
     #
     # Doesn't currently support compressed files as input.
     #
@@ -32,7 +32,7 @@ koopa_star_index() {
         # e.g. 'gencode.v39.annotation.gtf.gz'
         ['gtf_file']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=62
+        ['mem_gb_cutoff']=60
         # e.g. 'star-index'.
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
