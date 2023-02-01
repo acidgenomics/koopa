@@ -4297,6 +4297,8 @@ koopa_cli_system() {
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
+        'prune-app-binaries' | \
+        'prune-apps' | \
         'push-all-app-builds' | \
         'push-app-build' | \
         'reload-shell' | \
@@ -18100,12 +18102,12 @@ koopa_private_installers_url() {
     koopa_print 's3://private.koopa.acidgenomics.com/installers'
 }
 
+koopa_prune_app_binaries() {
+    koopa_r_koopa 'cliPruneAppBinaries' "$@"
+    return 0
+}
+
 koopa_prune_apps() {
-    if koopa_is_macos
-    then
-        koopa_alert_note 'App pruning not yet supported on macOS.'
-        return 0
-    fi
     koopa_r_koopa 'cliPruneApps' "$@"
     return 0
 }
