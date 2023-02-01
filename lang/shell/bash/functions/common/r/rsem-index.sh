@@ -1,41 +1,32 @@
 #!/usr/bin/env bash
 
-# FIXME Can rework to extract the FASTA and GTF into the tmp_dir instead.
-
 koopa_star_index() {
     # """
-    # Create a genome index for STAR aligner.
-    # @note Updated 2023-02-01.
-    #
-    # Doesn't currently support compressed files as input.
-    #
-    # Try using 'r5a.2xlarge' on AWS EC2.
+    # Create a genome index for RSEM aligner.
+    # @note Updated 2023-03-01.
     #
     # @seealso
-    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
-    #     ngsalign/star.py
-    # - https://github.com/nf-core/rnaseq/blob/master/modules/local/
-    #     star_genomegenerate.nf
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/rsem.py
     #
     # @examples
-    # > koopa_star_index \
+    # > koopa_rsem_index \
     # >     --genome-fasta-file='GRCh38.primary_assembly.genome.fa.gz' \
     # >     --gtf-file='gencode.v39.annotation.gtf.gz' \
-    # >     --output-dir='star-index'
+    # >     --output-dir='rsem-index'
     # """
     local app dict index_args
     declare -A app=(
-        ['star']="$(koopa_locate_star)"
+        ['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
     )
-    [[ -x "${app['star']}" ]] || return 1
+    [[ -x "${app['rsem_prepare_reference']}" ]] || return 1
     declare -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         ['genome_fasta_file']=''
         # e.g. 'gencode.v39.annotation.gtf.gz'
         ['gtf_file']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=60
-        # e.g. 'star-index'.
+        ['mem_gb_cutoff']=10
+        # e.g. 'rsem-index'.
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
         ['tmp_dir']="$(koopa_tmp_dir)"
@@ -81,8 +72,7 @@ koopa_star_index() {
         '--output-dir' "${dict['output_dir']}"
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "STAR 'genomeGenerate' mode requires \
-${dict['mem_gb_cutoff']} GB of RAM."
+        koopa_stop "RSEM requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_file \
         "${dict['genome_fasta_file']}" \
@@ -90,31 +80,17 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
-    dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
-    koopa_decompress \
-        "${dict['genome_fasta_file']}" \
-        "${dict['tmp_genome_fasta_file']}"
-    dict['tmp_gtf_file']="$(koopa_tmp_file)"
-    koopa_decompress \
-        "${dict['gtf_file']}" \
-        "${dict['tmp_gtf_file']}"
-    koopa_alert "Generating STAR index at '${dict['output_dir']}'."
+    koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
+    dict['build_name']="$(koopa_basename "${dict['output_dir']}")"
     index_args+=(
-        '--genomeDir' "${dict['output_dir']}/"
-        '--genomeFastaFiles' "${dict['tmp_genome_fasta_file']}"
-        '--runMode' 'genomeGenerate'
-        '--runThreadN' "${dict['threads']}"
-        '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
+        '--gtf' "${dict['gtf_file']}"
+        '--num-threads' "${dict['jobs']}"
+        "${dict['genome_fasta_file']}"
+        "${dict['build_name']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    (
-        koopa_cd "${dict['tmp_dir']}"
-        "${app['star']}" "${index_args[@]}"
-    )
-    koopa_rm \
-        "${dict['tmp_dir']}" \
-        "${dict['tmp_genome_fasta_file']}" \
-        "${dict['tmp_gtf_file']}"
-    koopa_alert_success "STAR index created at '${dict['output_dir']}'."
+    "${app['rsem_prepare_reference']}" "${index_args[@]}"
+    # FIXME Build in temporary directory and the copy to target.
+    koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
 }
