@@ -1190,10 +1190,10 @@ koopa_cpu_count() {
         return 0
     fi
     bin_prefix="$(koopa_bin_prefix)"
-    nproc="${bin_prefix}/nproc"
+    nproc="${bin_prefix}/gnproc"
     if [ -x "$nproc" ]
     then
-        num="$("$nproc")"
+        num="$("$nproc" --all)"
     elif koopa_is_macos
     then
         sysctl='/usr/sbin/sysctl'
