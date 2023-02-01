@@ -81,7 +81,7 @@ koopa_rsem_index() {
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
-    dict['build_name']="$(koopa_basename "${dict['output_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
     koopa_decompress \
         "${dict['genome_fasta_file']}" \
@@ -94,7 +94,7 @@ koopa_rsem_index() {
         '--gtf' "${dict['tmp_gtf_file']}"
         '--num-threads' "${dict['threads']}"
         "${dict['tmp_genome_fasta_file']}"
-        "${dict['output_dir']}"
+        "${dict['output_dir']}/rsem"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['rsem_prepare_reference']}" "${index_args[@]}"
