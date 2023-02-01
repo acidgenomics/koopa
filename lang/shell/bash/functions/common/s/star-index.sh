@@ -85,6 +85,8 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     koopa_assert_is_file \
         "${dict['genome_fasta_file']}" \
         "${dict['gtf_file']}"
+    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     koopa_alert "Generating STAR index at '${dict['output_dir']}'."
     index_args+=(
