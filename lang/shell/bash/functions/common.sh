@@ -22328,7 +22328,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         "${dict['gtf_file']}" \
         "${dict['tmp_gtf_file']}"
     index_args+=(
-        '--genomeDir' 'star'
+        '--genomeDir' "$(koopa_basename "${dict['output_dir']}")"
         '--genomeFastaFiles' "${dict['tmp_genome_fasta_file']}"
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
@@ -22336,7 +22336,8 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
-        koopa_cd "${dict['output_dir']}"
+        koopa_cd "$(koopa_dirname "${dict['output_dir']}")"
+        koopa_rm "${dict['output_dir']}"
         "${app['star']}" "${index_args[@]}"
         koopa_rm '_STARtmp'
     )
