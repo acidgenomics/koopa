@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Can rework to extract the FASTA and GTF into the tmp_dir instead.
-# FIXME Need to use full path of outputdir here...
-# FIXME Consider extracting the annotation files into _STARtmp folder?
-
 koopa_star_index() {
     # """
     # Create a genome index for STAR aligner.
@@ -113,11 +109,10 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     (
         koopa_cd "${dict['tmp_dir']}"
         "${app['star']}" "${index_args[@]}"
-        # FIXME Need to manually copy 'Log.out' file first here?
+        # FIXME Need to manually copy 'Log.out' file?
         koopa_cp "${dict['build_name']}" "${dict['output_dir']}"
     )
-    # FIXME Re-enable this after successful indexing.
-    # > koopa_rm "${dict['tmp_dir']}"
+    koopa_rm "${dict['tmp_dir']}"
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
 }
