@@ -338,6 +338,7 @@ __koopa_complete() {
                         'ripgrep-all'
                         'rmate'
                         'ronn'
+                        'rsem'
                         'rsync'
                         'ruby'
                         'ruby-packages'
@@ -626,6 +627,7 @@ __koopa_complete() {
                             )
                             ;;
                         'bowtie2' | \
+                        'rsem' | \
                         'star')
                             args=(
                                 'align'
