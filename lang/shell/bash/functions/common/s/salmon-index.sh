@@ -3,7 +3,7 @@
 koopa_salmon_index() {
     # """
     # Generate salmon index.
-    # @note Updated 2022-07-25.
+    # @note Updated 2023-02-01.
     #
     # @section GENCODE:
     #
