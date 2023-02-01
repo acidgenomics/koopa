@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-01-31.
+    # @note Updated 2023-02-01.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -54,6 +54,7 @@ __koopa_complete() {
                         'jekyll'
                         'kallisto'
                         'rnaeditingindexer'
+                        'rsem'
                         'salmon'
                         'sra'
                         'ssh'
@@ -337,6 +338,7 @@ __koopa_complete() {
                         'ripgrep-all'
                         'rmate'
                         'ronn'
+                        'rsem'
                         'rsync'
                         'ruby'
                         'ruby-packages'
@@ -625,6 +627,7 @@ __koopa_complete() {
                             )
                             ;;
                         'bowtie2' | \
+                        'rsem' | \
                         'star')
                             args=(
                                 'align'

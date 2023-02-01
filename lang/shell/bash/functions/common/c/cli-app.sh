@@ -3,7 +3,7 @@
 koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-11-17.
+    # @note Updated 2023-02-01.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -89,7 +89,8 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
-        'bowtie2')
+        'bowtie2' | \
+        'rsem')
             case "${2:-}" in
                 'align' | \
                 'index')
