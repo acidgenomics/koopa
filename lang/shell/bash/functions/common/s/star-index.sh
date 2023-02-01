@@ -95,10 +95,10 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     koopa_alert "Generating STAR index at '${dict['output_dir']}'."
     dict['build_name']="$(koopa_basename "${dict['output_dir']}")"
     dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
-    dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
     koopa_decompress \
         "${dict['genome_fasta_file']}" \
         "${dict['tmp_genome_fasta_file']}"
+    dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
     koopa_decompress \
         "${dict['gtf_file']}" \
         "${dict['tmp_gtf_file']}"
@@ -113,6 +113,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     (
         koopa_cd "${dict['tmp_dir']}"
         "${app['star']}" "${index_args[@]}"
+        # FIXME Need to manually copy 'Log.out' file first here?
         koopa_cp "${dict['build_name']}" "${dict['output_dir']}"
     )
     # FIXME Re-enable this after successful indexing.
