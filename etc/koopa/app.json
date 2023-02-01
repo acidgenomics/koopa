@@ -392,10 +392,10 @@
       "homebrew": true
     },
     "bin": ["black"],
-    "date": "2022-12-09",
+    "date": "2023-02-01",
     "dependencies": ["python"],
     "url": ["https://github.com/psf/black/"],
-    "version": "22.12.0"
+    "version": "23.1.0"
   },
   "boost": {
     "aliases": {
@@ -3318,10 +3318,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-01-09",
+    "date": "2023-02-01",
     "dependencies": ["python"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.15.10"
+    "version": "2.16.0"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
