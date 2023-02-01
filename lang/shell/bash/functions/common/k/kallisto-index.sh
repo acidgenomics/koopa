@@ -3,7 +3,7 @@
 koopa_kallisto_index() {
     # """
     # Generate kallisto index.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-02-01.
     #
     # @seealso
     # - kallisto index --help
@@ -20,6 +20,7 @@ koopa_kallisto_index() {
     )
     [[ -x "${app['kallisto']}" ]] || return 1
     declare -A dict=(
+        ['fasta_pattern']='\.(fa|fasta|fna)'
         ['kmer_size']=31
         ['mem_gb']="$(koopa_mem_gb)"
         ['mem_gb_cutoff']=14
@@ -67,7 +68,7 @@ koopa_kallisto_index() {
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
-        --pattern='\.fa(sta)?' \
+        --pattern="${dict['fasta_pattern']}" \
         --string="${dict['transcriptome_fasta_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
