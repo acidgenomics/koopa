@@ -16935,6 +16935,12 @@ koopa_locate_sed() {
         "$@"
 }
 
+koopa_locate_sh() {
+    koopa_locate_app \
+        '/bin/sh' \
+        "$@"
+}
+
 koopa_locate_shellcheck() {
     koopa_locate_app \
         --app-name='shellcheck' \
@@ -17296,6 +17302,36 @@ koopa_man_prefix() {
 
 koopa_man1_prefix() {
     koopa_print "$(koopa_man_prefix)/man1"
+    return 0
+}
+
+koopa_md5sum_check_parallel() {
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        ['md5sum']="$(koopa_locate_md5sum)"
+        ['sh']="$(koopa_locate_sh)"
+        ['xargs']="$(koopa_locate_xargs)"
+    )
+    [[ -x "${app['md5sum']}" ]] || return 1
+    [[ -x "${app['sh']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
+    declare -A dict=(
+        ['jobs']="$(koopa_cpu_count)"
+    )
+    koopa_find \
+        --max-depth=1 \
+        --min-depth=1 \
+        --pattern='*.md5' \
+        --prefix='.' \
+        --print0 \
+        --sort \
+        --type='f' \
+    | "${app['xargs']}" \
+        -0 \
+        -I {} \
+        -P "${dict['jobs']}" \
+            "${app['sh']}" -c "${app['md5sum']} -c {}"
     return 0
 }
 
