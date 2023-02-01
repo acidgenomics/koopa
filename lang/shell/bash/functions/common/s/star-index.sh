@@ -91,17 +91,15 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     koopa_alert "Generating STAR index at '${dict['output_dir']}'."
     index_args+=(
         '--genomeDir' "${dict['output_dir']}/"
+        '--genomeFastaFiles' "${dict['genome_fasta_file']}"
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
+        '--sjdbGTFfile' "${dict['gtf_file']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
         koopa_cd "${dict['tmp_dir']}"
-        "${app['star']}" "${index_args[@]}" \
-            --genomeFastaFiles \
-                <(koopa_decompress --stdout "${dict['genome_fasta_file']}") \
-            --sjdbGTFfile \
-                <(koopa_decompress --stdout "${dict['gtf_file']}")
+        "${app['star']}" "${index_args[@]}"
     )
     koopa_rm "${dict['tmp_dir']}"
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
