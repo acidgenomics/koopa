@@ -7,7 +7,7 @@ koopa_star_index() {
     #
     # Doesn't currently support compressed files as input.
     #
-    # Try using 'r5a.2xlarge' on AWS EC2.
+    # Try using 'r6a.2xlarge' on AWS EC2.
     #
     # @seealso
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
