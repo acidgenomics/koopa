@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Need to add light mode support for mcfly.
 ** TODO 'kdev' isn't working inside of koopa Debian docker build.
     Actually this is working correctly, it's just not setting the prompt as expected.
 ** TODO Add install support for Nanopore guppy caller.
