@@ -3864,7 +3864,8 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
-        'bowtie2')
+        'bowtie2' | \
+        'rsem')
             case "${2:-}" in
                 'align' | \
                 'index')
@@ -5442,6 +5443,7 @@ koopa_decompress() {
             [[ -z "${dict['target_file']}" ]] || return 1
             ;;
     esac
+    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
     case "${dict['source_file']}" in
         *'.bz2' | *'.gz' | *'.xz')
             case "${dict['source_file']}" in
@@ -10798,6 +10800,7 @@ koopa_install_all_apps() {
                 'multiqc'
                 'nanopolish'
                 'nextflow'
+                'rsem'
                 'salmon'
                 'sambamba'
                 'samtools'
@@ -11193,6 +11196,7 @@ koopa_install_all_binary_apps() {
                 'minimap2'
                 'multiqc'
                 'nextflow'
+                'rsem'
                 'salmon'
                 'sambamba'
                 'samtools'
@@ -13585,6 +13589,12 @@ koopa_install_rmate() {
 koopa_install_ronn() {
     koopa_install_app \
         --name='ronn' \
+        "$@"
+}
+
+koopa_install_rsem() {
+    koopa_install_app \
+        --name='rsem' \
         "$@"
 }
 
@@ -16871,6 +16881,13 @@ koopa_locate_rscript() {
         "$@"
 }
 
+koopa_locate_rsem_prepare_reference() {
+    koopa_locate_app \
+        --app-name='rsem' \
+        --bin-name='rsem-prepare-reference' \
+        "$@"
+}
+
 koopa_locate_rsync() {
     koopa_locate_app \
         --app-name='rsync' \
@@ -16932,6 +16949,12 @@ koopa_locate_sed() {
         --app-name='sed' \
         --bin-name='gsed' \
         --system-bin-name='sed' \
+        "$@"
+}
+
+koopa_locate_sh() {
+    koopa_locate_app \
+        '/bin/sh' \
         "$@"
 }
 
@@ -17296,6 +17319,36 @@ koopa_man_prefix() {
 
 koopa_man1_prefix() {
     koopa_print "$(koopa_man_prefix)/man1"
+    return 0
+}
+
+koopa_md5sum_check_parallel() {
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        ['md5sum']="$(koopa_locate_md5sum)"
+        ['sh']="$(koopa_locate_sh)"
+        ['xargs']="$(koopa_locate_xargs)"
+    )
+    [[ -x "${app['md5sum']}" ]] || return 1
+    [[ -x "${app['sh']}" ]] || return 1
+    [[ -x "${app['xargs']}" ]] || return 1
+    declare -A dict=(
+        ['jobs']="$(koopa_cpu_count)"
+    )
+    koopa_find \
+        --max-depth=1 \
+        --min-depth=1 \
+        --pattern='*.md5' \
+        --prefix='.' \
+        --print0 \
+        --sort \
+        --type='f' \
+    | "${app['xargs']}" \
+        -0 \
+        -I {} \
+        -P "${dict['jobs']}" \
+            "${app['sh']}" -c "${app['md5sum']} -c {}"
     return 0
 }
 
@@ -20046,6 +20099,94 @@ koopa_roff() {
     return 0
 }
 
+koopa_rsem_index() {
+    local app dict index_args
+    declare -A app=(
+        ['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
+    )
+    [[ -x "${app['rsem_prepare_reference']}" ]] || return 1
+    declare -A dict=(
+        ['genome_fasta_file']=''
+        ['gtf_file']=''
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=10
+        ['output_dir']=''
+        ['threads']="$(koopa_cpu_count)"
+        ['tmp_dir']="$(koopa_tmp_dir)"
+    )
+    index_args=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--genome-fasta-file='*)
+                dict['genome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--genome-fasta-file')
+                dict['genome_fasta_file']="${2:?}"
+                shift 2
+                ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "RSEM requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
+    koopa_assert_is_file \
+        "${dict['genome_fasta_file']}" \
+        "${dict['gtf_file']}"
+    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
+    dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
+    koopa_decompress \
+        "${dict['genome_fasta_file']}" \
+        "${dict['tmp_genome_fasta_file']}"
+    dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
+    koopa_decompress \
+        "${dict['gtf_file']}" \
+        "${dict['tmp_gtf_file']}"
+    index_args+=(
+        '--gtf' "${dict['tmp_gtf_file']}"
+        '--num-threads' "${dict['threads']}"
+        "${dict['tmp_genome_fasta_file']}"
+        'rsem'
+    )
+    koopa_dl 'Index args' "${index_args[*]}"
+    (
+        koopa_cd "${dict['output_dir']}"
+        "${app['rsem_prepare_reference']}" "${index_args[@]}"
+    )
+    koopa_rm "${dict['tmp_dir']}"
+    koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
+    return 0
+}
+
 koopa_rsync_ignore() {
     local dict rsync_args
     koopa_assert_has_args "$#"
@@ -22125,7 +22266,7 @@ koopa_star_index() {
         ['genome_fasta_file']=''
         ['gtf_file']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=62
+        ['mem_gb_cutoff']=60
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
         ['tmp_dir']="$(koopa_tmp_dir)"
@@ -22175,21 +22316,32 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     koopa_assert_is_file \
         "${dict['genome_fasta_file']}" \
         "${dict['gtf_file']}"
+    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating STAR index at '${dict['output_dir']}'."
+    dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
+    koopa_decompress \
+        "${dict['genome_fasta_file']}" \
+        "${dict['tmp_genome_fasta_file']}"
+    dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
+    koopa_decompress \
+        "${dict['gtf_file']}" \
+        "${dict['tmp_gtf_file']}"
     index_args+=(
-        '--genomeDir' "${dict['output_dir']}/"
+        '--genomeDir' "$(koopa_basename "${dict['output_dir']}")"
+        '--genomeFastaFiles' "${dict['tmp_genome_fasta_file']}"
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
+        '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
-        koopa_cd "${dict['tmp_dir']}"
-        "${app['star']}" "${index_args[@]}" \
-            --genomeFastaFiles \
-                <(koopa_decompress --stdout "${dict['genome_fasta_file']}") \
-            --sjdbGTFfile \
-                <(koopa_decompress --stdout "${dict['gtf_file']}")
+        koopa_cd "$(koopa_dirname "${dict['output_dir']}")"
+        koopa_rm "${dict['output_dir']}"
+        "${app['star']}" "${index_args[@]}"
+        koopa_rm '_STARtmp'
     )
     koopa_rm "${dict['tmp_dir']}"
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
@@ -24979,6 +25131,12 @@ koopa_uninstall_rmate() {
 koopa_uninstall_ronn() {
     koopa_uninstall_app \
         --name='ronn' \
+        "$@"
+}
+
+koopa_uninstall_rsem() {
+    koopa_uninstall_app \
+        --name='rsem' \
         "$@"
 }
 

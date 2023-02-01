@@ -3,7 +3,7 @@
 koopa_decompress() {
     # """
     # Decompress a compressed file.
-    # @note Updated 2022-07-27.
+    # @note Updated 2023-02-01.
     #
     # This function currently allows uncompressed files to pass through.
     #
@@ -77,6 +77,7 @@ koopa_decompress() {
             [[ -z "${dict['target_file']}" ]] || return 1
             ;;
     esac
+    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
     case "${dict['source_file']}" in
         *'.bz2' | *'.gz' | *'.xz')
             case "${dict['source_file']}" in
