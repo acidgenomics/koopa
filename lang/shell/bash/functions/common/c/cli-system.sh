@@ -3,7 +3,7 @@
 koopa_cli_system() {
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2023-01-05.
+    # @note Updated 2023-01-31.
     # """
     local dict
     declare -A dict=(
@@ -66,6 +66,8 @@ koopa_cli_system() {
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
+        'prune-app-binaries' | \
+        'prune-apps' | \
         'push-all-app-builds' | \
         'push-app-build' | \
         'reload-shell' | \
