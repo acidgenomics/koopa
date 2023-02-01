@@ -20160,11 +20160,12 @@ koopa_rsem_index() {
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
-    dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+    dict['build_name']="$(koopa_basename "${dict['output_dir']}")"
+    dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
     koopa_decompress \
         "${dict['genome_fasta_file']}" \
         "${dict['tmp_genome_fasta_file']}"
-    dict['tmp_gtf_file']="$(koopa_tmp_file)"
+    dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
     koopa_decompress \
         "${dict['gtf_file']}" \
         "${dict['tmp_gtf_file']}"
@@ -20175,11 +20176,8 @@ koopa_rsem_index() {
         "${dict['output_dir']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    "$app['rsem_prepare_reference']}" "${index_args[@]}"
-    koopa_rm \
-        "${dict['tmp_dir']}" \
-        "${dict['tmp_genome_fasta_file']}" \
-        "${dict['tmp_gtf_file']}"
+    "${app['rsem_prepare_reference']}" "${index_args[@]}"
+    koopa_rm "${dict['tmp_dir']}"
     koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
 }
@@ -22319,10 +22317,10 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     koopa_alert "Generating STAR index at '${dict['output_dir']}'."
     dict['build_name']="$(koopa_basename "${dict['output_dir']}")"
     dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
-    dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
     koopa_decompress \
         "${dict['genome_fasta_file']}" \
         "${dict['tmp_genome_fasta_file']}"
+    dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
     koopa_decompress \
         "${dict['gtf_file']}" \
         "${dict['tmp_gtf_file']}"
