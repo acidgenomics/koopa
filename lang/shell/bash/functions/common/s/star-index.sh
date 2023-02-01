@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Can rework to extract the FASTA and GTF into the tmp_dir instead.
+# FIXME Need to use full path of outputdir here...
+# FIXME Consider extracting the annotation files into _STARtmp folder?
 
 koopa_star_index() {
     # """
@@ -90,15 +92,16 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
-    dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Generating STAR index at '${dict['output_dir']}'."
+    dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
+    dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
     koopa_decompress \
         "${dict['genome_fasta_file']}" \
         "${dict['tmp_genome_fasta_file']}"
-    dict['tmp_gtf_file']="$(koopa_tmp_file)"
     koopa_decompress \
         "${dict['gtf_file']}" \
         "${dict['tmp_gtf_file']}"
-    koopa_alert "Generating STAR index at '${dict['output_dir']}'."
     index_args+=(
         '--genomeDir' "${dict['output_dir']}/"
         '--genomeFastaFiles' "${dict['tmp_genome_fasta_file']}"
@@ -111,10 +114,8 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         koopa_cd "${dict['tmp_dir']}"
         "${app['star']}" "${index_args[@]}"
     )
-    koopa_rm \
-        "${dict['tmp_dir']}" \
-        "${dict['tmp_genome_fasta_file']}" \
-        "${dict['tmp_gtf_file']}"
+    # FIXME Re-enable this after successful indexing.
+    # > koopa_rm "${dict['tmp_dir']}"
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
 }
