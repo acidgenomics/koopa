@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-01-19.
+    # @note Updated 2023-01-31.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -459,6 +459,8 @@ __koopa_complete() {
                         'log'
                         'os-string'
                         'prefix'
+                        'prune-app-binaries'
+                        'prune-apps'
                         'push-all-app-builds'
                         'push-app-build'
                         'reload-shell'
