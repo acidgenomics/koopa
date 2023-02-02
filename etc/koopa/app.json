@@ -2929,7 +2929,6 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "check": false,
     "date": "2023-02-02",
     "dependencies": ["conda", "poetry"],
     "large": true,
