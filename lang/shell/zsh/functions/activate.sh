@@ -167,13 +167,9 @@ koopa_activate_zsh_prompt() {
 koopa_activate_zsh_reverse_search() {
     # """
     # Activate reverse search using Ctrl+R in Zsh.
-    # @note Updated 2022-01-21.
+    # @note Updated 2023-02-01.
+    #
+    # > bindkey '^R' 'history-incremental-search-backward'
     # """
-    if koopa_is_installed 'mcfly'
-    then
-        koopa_activate_mcfly
-    else
-        bindkey '^R' 'history-incremental-search-backward'
-    fi
-    return 0
+    koopa_activate_mcfly
 }

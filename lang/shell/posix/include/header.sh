@@ -100,7 +100,6 @@ __koopa_activate_koopa() {
     koopa_activate_gcc_colors || return 1
     koopa_activate_kitty || return 1
     koopa_activate_lesspipe || return 1
-    koopa_activate_mcfly || return 1
     koopa_activate_secrets || return 1
     koopa_activate_ssh_key || return 1
     koopa_activate_tealdeer || return 1
