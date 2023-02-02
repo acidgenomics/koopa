@@ -555,7 +555,7 @@ koopa_activate_lesspipe() {
 }
 
 koopa_activate_mcfly() {
-    local nounset shell
+    local color_mode nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     [ -x "$(koopa_bin_prefix)/mcfly" ] || return 0
     koopa_is_root && return 0
@@ -568,6 +568,8 @@ koopa_activate_mcfly() {
             return 0
             ;;
     esac
+    color_mode="$(koopa_color_mode)"
+    [ "$color_mode" = 'light' ] && export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
         'emacs' | \
         'vim')
@@ -580,13 +582,6 @@ koopa_activate_mcfly() {
     export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
-    if koopa_is_macos
-    then
-        if koopa_macos_is_light_mode
-        then
-            export MCFLY_LIGHT=true
-        fi
-    fi
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$(mcfly init "$shell")"

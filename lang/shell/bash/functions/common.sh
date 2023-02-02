@@ -14761,6 +14761,7 @@ koopa_kallisto_index() {
     )
     [[ -x "${app['kallisto']}" ]] || return 1
     declare -A dict=(
+        ['fasta_pattern']='\.(fa|fasta|fna)'
         ['kmer_size']=31
         ['mem_gb']="$(koopa_mem_gb)"
         ['mem_gb_cutoff']=14
@@ -14804,7 +14805,7 @@ koopa_kallisto_index() {
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_assert_is_matching_regex \
-        --pattern='\.fa(sta)?' \
+        --pattern="${dict['fasta_pattern']}" \
         --string="${dict['transcriptome_fasta_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
@@ -20438,7 +20439,7 @@ koopa_salmon_index() {
     [[ -x "${app['salmon']}" ]] || return 1
     declare -A dict=(
         ['decoys']=1
-        ['fasta_pattern']='\.fa(sta)?'
+        ['fasta_pattern']='\.(fa|fasta|fna)'
         ['gencode']=0
         ['genome_fasta_file']=''
         ['kmer_length']=31
