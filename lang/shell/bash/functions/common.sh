@@ -18694,6 +18694,7 @@ koopa_r_configure_environ() {
         "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
         "UDUNITS2_LIBS=${dict['udunits2']}/lib"
     )
+    lines+=("VROOM_CONNECTION_SIZE=524288")
     if koopa_is_fedora_like
     then
         dict['oracle_ver']="$(koopa_app_json_version 'oracle-instant-client')"
