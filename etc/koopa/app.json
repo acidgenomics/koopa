@@ -3924,7 +3924,7 @@
     "large": true,
     "outdated": true,
     "url": ["https://github.com/snakemake/snakemake/"],
-    "version": "7.21.0"
+    "version": "7.20.0"
   },
   "sox": {
     "aliases": {
