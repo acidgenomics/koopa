@@ -451,9 +451,9 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2022-01-03",
+    "date": "2022-02-03",
     "url": ["https://github.com/Canop/broot/"],
-    "version": "1.19.0"
+    "version": "1.20.0"
   },
   "brotli": {
     "aliases": {
@@ -990,9 +990,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2023-01-17",
+    "date": "2023-02-03",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.42.0"
+    "version": "0.43.0"
   },
   "docker-credential-pass": {
     "aliases": {
@@ -2561,7 +2561,7 @@
     "bin": ["micromamba"],
     "build_dependencies": ["cmake"],
     "conservative": true,
-    "date": "2023-01-17",
+    "date": "2023-02-03",
     "dependencies": [
       "cli11",
       "curl",
@@ -2583,7 +2583,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba"
     ],
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   "man-db": {
     "aliases": {
@@ -3314,10 +3314,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-02-01",
+    "date": "2023-02-03",
     "dependencies": ["python"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.16.0"
+    "version": "2.16.1"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
