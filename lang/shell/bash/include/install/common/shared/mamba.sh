@@ -3,7 +3,7 @@
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2023-01-17.
+    # @note Updated 2023-02-03.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' for CMake configuration.
     # bzip2 and zstd requirement added in 1.2.0 release.
@@ -80,6 +80,9 @@ main() {
         "${dict['yaml_cpp']}" \
         "${dict['zstd']}"
     case "${dict['version']}" in
+        '1.3.0')
+            dict['date_tag']='2023.02.03'
+            ;;
         '1.2.0')
             dict['date_tag']='2023.01.16'
             ;;
