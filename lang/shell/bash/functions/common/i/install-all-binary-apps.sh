@@ -366,7 +366,7 @@ koopa_install_all_binary_apps() {
                 # > 'misopy'
                 'multiqc'
                 'nextflow'
-                # > 'openbb'
+                'openbb'
                 'rsem'
                 'salmon'
                 'sambamba'
