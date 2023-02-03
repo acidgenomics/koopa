@@ -2028,11 +2028,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2023-02-02",
+    "date": "2023-02-03",
     "dependencies": ["conda"],
     "large": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "3.6.0"
+    "version": "3.6.1"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3919,12 +3919,12 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-01-23",
+    "date": "2023-02-03",
     "dependencies": ["conda"],
     "large": true,
     "outdated": true,
     "url": ["https://github.com/snakemake/snakemake/"],
-    "version": "7.20.0"
+    "version": "7.21.0"
   },
   "sox": {
     "aliases": {
