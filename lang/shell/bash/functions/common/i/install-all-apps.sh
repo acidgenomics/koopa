@@ -355,7 +355,7 @@ koopa_install_all_apps() {
                 'multiqc'
                 'nanopolish'
                 'nextflow'
-                # > 'openbb'
+                'openbb'
                 'rsem'
                 'salmon'
                 'sambamba'
