@@ -990,9 +990,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2023-02-03",
+    "date": "2023-02-06",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.43.0"
+    "version": "0.43.1"
   },
   "docker-credential-pass": {
     "aliases": {
@@ -1850,10 +1850,10 @@
       "homebrew": true
     },
     "bin": ["htop"],
-    "date": "2022-08-30",
+    "date": "2023-02-06",
     "man1": ["htop.1"],
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
-    "version": "3.2.1"
+    "version": "3.2.2"
   },
   "htseq": {
     "bin": ["htseq-count"],
