@@ -15888,7 +15888,7 @@ bin/${dict['bin_name']}"
     [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
     koopa_stop \
         "Failed to locate '${dict['bin_name']}'." \
-        "Run 'koopa install '${dict['app_name']}' to resolve."
+        "Run 'koopa install ${dict['app_name']}' to resolve."
 }
 
 koopa_locate_ascp() {
