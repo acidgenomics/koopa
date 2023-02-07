@@ -2068,14 +2068,14 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-01-20",
+    "date": "2023-02-07",
     "dependencies": ["python3.10"],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.11.2"
+    "version": "2.12.0"
   },
   "less": {
     "aliases": {
