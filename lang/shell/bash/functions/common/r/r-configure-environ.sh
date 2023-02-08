@@ -15,7 +15,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2022-11-28.
+    # @note Updated 2023-02-03.
     #
     # @section Package library location:
     #
@@ -300,6 +300,14 @@ koopa_r_configure_environ() {
         "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
         "UDUNITS2_LIBS=${dict['udunits2']}/lib"
     )
+    # vroom
+    # --------------------------------------------------------------------------
+    # Default connection size of 131072 is often too small. Increasing by 4x.
+    # See also:
+    # - https://github.com/tidyverse/vroom/issues/364
+    # - https://community.rstudio.com/t/
+    #     vroom-connection-size-needs-increasing/34560/6
+    lines+=("VROOM_CONNECTION_SIZE=524288")
     if koopa_is_fedora_like
     then
         dict['oracle_ver']="$(koopa_app_json_version 'oracle-instant-client')"

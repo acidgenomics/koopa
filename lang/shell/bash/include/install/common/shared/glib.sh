@@ -44,6 +44,7 @@ ${dict['maj_min_ver']}/${dict['file']}"
         # Avoid 'lib64' inconsistency on Linux.
         '-Dlibdir=lib'
     )
+    koopa_dl 'meson args' "${meson_args[*]}"
     "${app['meson']}" "${meson_args[@]}" ..
     "${app['ninja']}" -v
     "${app['ninja']}" install -v
