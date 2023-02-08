@@ -3,21 +3,18 @@
 main() {
     # """
     # Install Cairo.
-    # @note Updated 2022-11-08.
+    # @note Updated 2023-02-08.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
     # - https://github.com/archlinux/svntogit-packages/blob/master/cairo/
     #     trunk/PKGBUILD
     # """
-    local app build_deps conf_args deps dict
+    local app build_deps deps dict meson_args
     koopa_assert_has_no_args "$#"
     build_deps=(
-        # > 'autoconf'
-        # > 'automake'
-        # > 'gettext'
-        # > 'gtk-doc'
-        # > 'libtool'
+        'meson'
+        'ninja'
         'pkg-config'
     )
     deps=(
@@ -45,9 +42,11 @@ main() {
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     declare -A app=(
-        ['make']="$(koopa_locate_make)"
+        ['meson']="$(koopa_locate_meson)"
+        ['ninja']="$(koopa_locate_ninja)"
     )
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['meson']}" ]] || return 1
+    [[ -x "${app['ninja']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='cairo'
@@ -59,33 +58,18 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    # Consider adding support for:
-    # * '--enable-qt'
-    # * '--enable-xml'
-    conf_args=(
-        "--prefix=${dict['prefix']}"
-        '--disable-dependency-tracking'
-        '--disable-valgrind'
-        '--enable-gobject'
-        '--enable-svg'
-        '--enable-tee'
-        '--enable-xcb'
-        '--enable-xlib'
-        '--enable-xlib-xcb'
-        '--enable-xlib-xrender'
-    )
-    if koopa_is_macos
-    then
-        conf_args+=('--enable-quartz-image')
-    fi
+    koopa_mkdir 'build'
+    koopa_cd 'build'
     koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    # NOTE Need GtkDoc to run autogen.
-    # https://wiki.gnome.org/DocumentationProject/GtkDoc
-    # > ./autogen.sh
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    meson_args=(
+        "--prefix=${dict['prefix']}"
+        '--buildtype=release'
+        # Avoid 'lib64' inconsistency on Linux.
+        '-Dlibdir=lib'
+    )
+    koopa_dl 'meson args' "${meson_args[*]}"
+    "${app['meson']}" "${meson_args[@]}" ..
+    "${app['ninja']}" -v
+    "${app['ninja']}" install -v
     return 0
 }
