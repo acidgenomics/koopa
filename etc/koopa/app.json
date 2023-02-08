@@ -3706,10 +3706,10 @@
   },
   "rename": {
     "bin": ["rename"],
-    "date": "2023-01-03",
+    "date": "2023-02-08",
     "dependencies": ["perl"],
     "url": ["https://metacpan.org/dist/File-Rename/"],
-    "version": "2.00"
+    "version": "2.01"
   },
   "reproc": {
     "aliases": {
@@ -3804,21 +3804,21 @@
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["pkg-config"],
     "conservative": true,
-    "date": "2023-01-10",
+    "date": "2023-02-08",
     "dependencies": ["openssl3", "readline", "zlib"],
     "man1": ["ruby.1"],
     "notes": ["jekyll doesn't currently work with ruby 3.2.0."],
     "reverse_dependencies": ["bashcov", "colorls", "rmate", "ronn"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.2.0"
+    "version": "3.2.1"
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-01-10",
+    "date": "2023-02-08",
     "dependencies": ["python"],
     "outdated": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.217"
+    "version": "0.0.243"
   },
   "rust": {
     "aliases": {
@@ -3854,16 +3854,15 @@
   },
   "sambamba": {
     "bin": ["sambamba"],
-    "date": "2023-01-05",
+    "date": "2023-02-08",
     "dependencies": ["conda"],
     "large": true,
     "notes": ["0.8.2 is available but only 0.8.0 supports macOS."],
-    "outdated": true,
     "url": [
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
     ],
-    "version": "0.8.0"
+    "version": "1.0"
   },
   "samtools": {
     "bin": ["samtools"],
@@ -3879,14 +3878,14 @@
   "scalene": {
     "arch": "x86_64",
     "bin": ["scalene"],
-    "date": "2023-01-04",
+    "date": "2023-02-08",
     "dependencies": ["python"],
     "large": true,
     "url": [
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
     ],
-    "version": "1.5.18"
+    "version": "1.5.19"
   },
   "scons": {
     "aliases": {
@@ -3939,10 +3938,10 @@
     "version": "0.9.0"
   },
   "shiny-server": {
-    "date": "2022-11-08",
+    "date": "2023-02-08",
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/shiny/download-server/"],
-    "version": "1.5.19.995"
+    "version": "1.5.20.1002"
   },
   "shunit2": {
     "aliases": {
@@ -3955,20 +3954,22 @@
   },
   "snakefmt": {
     "bin": ["snakefmt"],
-    "date": "2023-01-03",
+    "date": "2023-02-08",
     "dependencies": ["python"],
     "large": true,
     "url": ["https://github.com/snakemake/snakefmt/"],
-    "version": "0.8.0"
+    "version": "0.8.1"
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-02-03",
+    "date": "2023-02-08",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
-    "url": ["https://github.com/snakemake/snakemake/"],
-    "version": "7.20.0"
+    "url": [
+      "https://bioconda.github.io/recipes/snakemake/README.html",
+      "https://github.com/snakemake/snakemake/"
+    ],
+    "version": "7.21.0"
   },
   "sox": {
     "aliases": {
@@ -4153,11 +4154,11 @@
     "date": "2022-11-05",
     "large": true,
     "reverse_dependencies": ["mamba"],
-    "version": "2.1.0",
     "url": [
       "https://termcolor.readthedocs.io/",
       "https://github.com/ikalnytskyi/termcolor/"
-    ]
+    ],
+    "version": "2.1.0"
   },
   "texinfo": {
     "aliases": {
@@ -4173,7 +4174,7 @@
       "texindex"
     ],
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-02-08",
     "man1": [
       "pdftexi2dvi.1",
       "pod2texi.1",
@@ -4183,7 +4184,7 @@
       "texindex.1"
     ],
     "url": ["https://ftp.gnu.org/gnu/texinfo/"],
-    "version": "7.0.1"
+    "version": "7.0.2"
   },
   "tl-expected": {
     "build_dependencies": ["cmake"],
@@ -4274,7 +4275,7 @@
     "bin": ["udunits2"],
     "conservative": true,
     "date": "2022-08-30",
-    "url": ["https://www.unidata.ucar.edu/downloads/udunits/"],
+    "url": ["https://www.unidata.ucar.edu/software/udunits/"],
     "version": "2.2.28"
   },
   "unibilium": {
@@ -4329,7 +4330,7 @@
       "homebrew": true
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
-    "date": "2023-01-03",
+    "date": "2023-02-08",
     "man1": [
       "ex.1",
       "rview.1",
@@ -4341,7 +4342,7 @@
       "xxd.1"
     ],
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.1100"
+    "version": "9.0.1250"
   },
   "visidata": {
     "aliases": {
@@ -4547,10 +4548,10 @@
     },
     "bin": ["xz"],
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-02-08",
     "man1": ["xz.1"],
     "url": ["https://tukaani.org/xz/"],
-    "version": "5.4.0"
+    "version": "5.4.1"
   },
   "yaml-cpp": {
     "build_dependencies": ["cmake", "make"],
