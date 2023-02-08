@@ -3,7 +3,7 @@
 main() {
     # """
     # Install googletest.
-    # @note Updated 2022-11-04.
+    # @note Updated 2023-02-08.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/
@@ -22,11 +22,12 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    dict['file']="release-${dict['version']}.tar.gz"
-    dict['url']="https://github.com/google/googletest/archive/${dict['file']}"
+    dict['file']="v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/google/googletest/archive/refs/\
+tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-release-${dict['version']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DBUILD_GMOCK=ON'
