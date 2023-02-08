@@ -551,12 +551,14 @@
     "build_dependencies": ["pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
+    "dependencies": ["FIXME"],
+    "outdated": true,
     "reverse_dependencies": ["fontconfig", "freetype", "harfbuzz"],
     "url": [
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.17.8"
+    "version": "1.17.4"
   },
   "cellranger": {
     "bin": ["cellranger"],
@@ -1133,7 +1135,8 @@
       "perl",
       "python",
       "subversion",
-      "udunits"
+      "udunits",
+      "cairo"
     ],
     "url": ["https://libexpat.github.io/"],
     "version": "2.5.0"
