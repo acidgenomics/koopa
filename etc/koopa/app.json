@@ -2983,6 +2983,7 @@
     "conservative": true,
     "date": "2022-11-01",
     "dependencies": ["ca-certificates"],
+    "outdated": true,
     "reverse_dependencies": ["dog"],
     "url": ["https://www.openssl.org/source/"],
     "version": "1.1.1s"
@@ -2997,6 +2998,7 @@
     "conservative": true,
     "date": "2022-11-01",
     "dependencies": ["ca-certificates"],
+    "outdated": true,
     "reverse_dependencies": [
       "cmake",
       "curl",
