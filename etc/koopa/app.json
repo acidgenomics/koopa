@@ -458,12 +458,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2022-02-03",
+    "date": "2022-02-08",
     "url": [
       "https://crates.io/crates/broot",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.20.0"
+    "version": "1.20.1"
   },
   "brotli": {
     "aliases": {
@@ -3015,7 +3015,7 @@
       "https://www.openssh.com/",
       "https://www.openssh.com/portable.html"
     ],
-    "version": "9.2"
+    "version": "9.2p1"
   },
   "openssl1": {
     "aliases": {
