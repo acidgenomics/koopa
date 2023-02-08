@@ -107,6 +107,7 @@ GB of RAM."
         '--runThreadN' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
+    # FIXME May need to decompress the files first, rather than using stdin.
     "${app['star']}" "${align_args[@]}" \
         --readFilesIn \
             <(koopa_decompress --stdout "${dict['fastq_file']}")

@@ -1,10 +1,13 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
-** TODO Need to add light mode support for mcfly.
-** TODO 'kdev' isn't working inside of koopa Debian docker build.
-    Actually this is working correctly, it's just not setting the prompt as expected.
-** TODO Add install support for Nanopore guppy caller.
+** TODO Need to ensure our build scripts don't dump temporary files.
+    - `~/.cabal`
+    - `~/.cache`
+    - `~/.cargo`
+    - `~/.conda`
+    - `~/.npm`
+** TODO 'kdev' isn't setting prompt correctly inside Debian docker build.
 ** TODO Work on setting PKG_CONFIG_PATH during install calls to not include /usr/local.
     Need to get system paths and then strip out /usr/local from the PATH string.
 ** TODO 'koopa install r-packages' needs to be 'koopa install system r-packages'.
