@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Consider bundling quarto pandoc (on macOS):
+# /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools
+
 # NOTE RStudio PATH is now inconsistent with R due to breaking changes in
 # internal 'SessionPath.cpp'.
 #
