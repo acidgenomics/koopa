@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework our meson handling:
-# Configuring cairo-trace using configuration
-# Run-time dependency expat found: NO (tried pkgconfig, framework and cmake)
-# Looking for a fallback subproject for the dependency expat
+# NOTE Latest version only supports meson / ninja and drops support for
+# GNU make with configure script.
 
 main() {
     # """
