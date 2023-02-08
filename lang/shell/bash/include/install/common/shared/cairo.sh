@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework our meson handling:
+# Configuring cairo-trace using configuration
+# Run-time dependency expat found: NO (tried pkgconfig, framework and cmake)
+# Looking for a fallback subproject for the dependency expat
+
 main() {
     # """
     # Install Cairo.
@@ -10,11 +15,11 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/master/cairo/
     #     trunk/PKGBUILD
     # """
-    local app build_deps deps dict meson_args
+    local app build_deps conf_args deps dict
     koopa_assert_has_no_args "$#"
     build_deps=(
-        'meson'
-        'ninja'
+        # > 'meson'
+        # > 'ninja'
         'pkg-config'
     )
     deps=(
@@ -38,15 +43,18 @@ main() {
         'xorg-libx11'
         'xorg-libxext'
         'xorg-libxrender'
+        'expat'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     declare -A app=(
-        ['meson']="$(koopa_locate_meson)"
-        ['ninja']="$(koopa_locate_ninja)"
+        # > ['meson']="$(koopa_locate_meson)"
+        # > ['ninja']="$(koopa_locate_ninja)"
+        ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app['meson']}" ]] || return 1
-    [[ -x "${app['ninja']}" ]] || return 1
+    # > [[ -x "${app['meson']}" ]] || return 1
+    # > [[ -x "${app['ninja']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='cairo'
@@ -58,18 +66,39 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_mkdir 'build'
-    koopa_cd 'build'
+    # > koopa_mkdir 'build'
+    # > koopa_cd 'build'
     koopa_print_env
-    meson_args=(
+    conf_args=(
         "--prefix=${dict['prefix']}"
-        '--buildtype=release'
-        # Avoid 'lib64' inconsistency on Linux.
-        '-Dlibdir=lib'
+        '--disable-dependency-tracking'
+        '--disable-valgrind'
+        '--enable-gobject'
+        '--enable-svg'
+        '--enable-tee'
+        '--enable-xcb'
+        '--enable-xlib'
+        '--enable-xlib-xcb'
+        '--enable-xlib-xrender'
     )
-    koopa_dl 'meson args' "${meson_args[*]}"
-    "${app['meson']}" "${meson_args[@]}" ..
-    "${app['ninja']}" -v
-    "${app['ninja']}" install -v
+    if koopa_is_macos
+    then
+        conf_args+=('--enable-quartz-image')
+    fi
+    # > meson_args=(
+    # >     "--prefix=${dict['prefix']}"
+    # >     '--buildtype=release'
+    # >     # Avoid 'lib64' inconsistency on Linux.
+    # >     '-Dlibdir=lib'
+    # > )
+    # > koopa_dl 'meson args' "${meson_args[*]}"
+    # > "${app['meson']}" "${meson_args[@]}" ..
+    # > "${app['ninja']}" -v
+    # > "${app['ninja']}" install -v
+    koopa_dl 'configure args' "${conf_args[*]}"
+    ./configure --help
+    ./configure "${conf_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }
