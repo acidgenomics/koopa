@@ -10800,6 +10800,7 @@ koopa_install_all_apps() {
                 'multiqc'
                 'nanopolish'
                 'nextflow'
+                'openbb'
                 'rsem'
                 'salmon'
                 'sambamba'
@@ -11196,6 +11197,7 @@ koopa_install_all_binary_apps() {
                 'minimap2'
                 'multiqc'
                 'nextflow'
+                'openbb'
                 'rsem'
                 'salmon'
                 'sambamba'
@@ -15886,7 +15888,7 @@ bin/${dict['bin_name']}"
     [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
     koopa_stop \
         "Failed to locate '${dict['bin_name']}'." \
-        "Run 'koopa install '${dict['app_name']}' to resolve."
+        "Run 'koopa install ${dict['app_name']}' to resolve."
 }
 
 koopa_locate_ascp() {
@@ -18692,6 +18694,7 @@ koopa_r_configure_environ() {
         "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
         "UDUNITS2_LIBS=${dict['udunits2']}/lib"
     )
+    lines+=("VROOM_CONNECTION_SIZE=524288")
     if koopa_is_fedora_like
     then
         dict['oracle_ver']="$(koopa_app_json_version 'oracle-instant-client')"
