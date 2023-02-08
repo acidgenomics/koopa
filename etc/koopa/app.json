@@ -2730,10 +2730,10 @@
     "build_dependencies": ["cmake"],
     "check": false,
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-02-08",
     "dependencies": ["zlib", "boost"],
     "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
-    "version": "4.1.3"
+    "version": "5.0.0"
   },
   "multiqc": {
     "bin": ["multiqc"],
@@ -2741,6 +2741,7 @@
     "dependencies": ["conda"],
     "large": true,
     "outdated": true,
+    "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
     "version": "1.14"
   },
   "nano": {
@@ -2750,15 +2751,17 @@
     },
     "bin": ["nano"],
     "build_dependencies": ["pkg-config"],
-    "date": "2023-01-03",
+    "date": "2023-02-08",
     "dependencies": ["gettext", "ncurses"],
-    "version": "7.1"
+    "url": ["https://www.nano-editor.org/"],
+    "version": "7.2"
   },
   "nanopolish": {
     "bin": ["nanopolish"],
     "date": "2022-10-11",
     "dependencies": ["conda"],
     "large": true,
+    "url": ["https://bioconda.github.io/recipes/nanopolish/README.html"],
     "version": "0.14.0"
   },
   "ncurses": {
@@ -2822,11 +2825,11 @@
       "ninja",
       "pkg-config"
     ],
-    "date": "2023-01-03",
+    "date": "2023-02-08",
     "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python"],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.8.2"
+    "version": "0.8.3"
   },
   "nettle": {
     "aliases": {
@@ -2842,6 +2845,7 @@
     "date": "2022-12-15",
     "dependencies": ["conda"],
     "large": true,
+    "url": ["https://bioconda.github.io/recipes/nextflow/README.html"],
     "version": "22.10.4"
   },
   "nghttp2": {
@@ -2909,7 +2913,7 @@
     },
     "bin": ["node", "npm", "npx"],
     "conservative": true,
-    "date": "2023-01-25",
+    "date": "2023-02-08",
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
@@ -2921,7 +2925,7 @@
       "yarn"
     ],
     "url": ["https://nodejs.org/"],
-    "version": "18.13.0"
+    "version": "18.14.0"
   },
   "npth": {
     "aliases": {
@@ -2938,10 +2942,10 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "date": "2023-01-03",
+    "date": "2023-02-08",
     "dependencies": ["openssl3", "rust"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.73.0"
+    "version": "0.75.0"
   },
   "oniguruma": {
     "aliases": {
@@ -2990,26 +2994,25 @@
     },
     "bin": ["jar", "java", "javac"],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-02-08",
     "lts": true,
     "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
     "reverse_dependencies": ["apache-spark", "bfg", "graphviz", "r"],
     "url": ["https://adoptium.net/"],
-    "version": "17.0.5+8"
+    "version": "17.0.6+10"
   },
   "openssh": {
     "aliases": {
       "homebrew": true
     },
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-02-08",
     "url": [
       "https://www.openssh.com/",
-      "https://www.openssh.com/portable.html",
-      "https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/"
+      "https://www.openssh.com/portable.html"
     ],
-    "version": "9.1p1"
+    "version": "9.2"
   },
   "openssl1": {
     "aliases": {
@@ -3096,10 +3099,10 @@
       "homebrew": true
     },
     "bin": ["parallel"],
-    "date": "2023-01-03",
+    "date": "2023-02-08",
     "man1": ["parallel.1"],
     "url": ["https://www.gnu.org/software/parallel/"],
-    "version": "20221222"
+    "version": "20230122"
   },
   "password-store": {
     "aliases": {
@@ -3119,7 +3122,7 @@
     "bin": ["patch"],
     "date": "2022-08-29",
     "man1": ["patch.1"],
-    "url": ["ftp://ftp.gnu.org/gnu/patch/"],
+    "url": ["https://ftp.gnu.org/gnu/patch/"],
     "version": "2.7.6"
   },
   "pcre": {
@@ -3145,7 +3148,10 @@
     "conservative": true,
     "date": "2023-01-03",
     "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"],
-    "url": ["https://www.pcre.org/"],
+    "url": [
+      "https://github.com/PCRE2Project/pcre2/releases",
+      "https://www.pcre.org/"
+    ],
     "version": "10.42"
   },
   "perl": {
@@ -3207,7 +3213,7 @@
     },
     "conservative": true,
     "date": "2023-01-03",
-    "url": ["https://www.pixman.org/"],
+    "url": ["http://www.pixman.org/", "https://cairographics.org/releases/"],
     "version": "0.42.2"
   },
   "pkg-config": {
@@ -3371,6 +3377,7 @@
     "date": "2023-01-17",
     "dependencies": ["python"],
     "url": [
+      "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
@@ -3647,17 +3654,17 @@
     "date": "2022-09-26",
     "platform": "macos",
     "system": true,
-    "url": ["https://mac.r-project.org/"],
+    "url": ["https://mac.r-project.org/tools/"],
     "version": "8.2"
   },
   "r-openmp": {
     "check": false,
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2023-02-08",
     "platform": "macos",
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
-    "version": "13.0.0"
+    "version": "14.0.6"
   },
   "radian": {
     "bin": ["radian"],
