@@ -76,7 +76,7 @@ archive/${dict['file']}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DOPENSSL_INCLUDE_DIR=${dict['openssl']}/include"
-        "-DOPENSSL_LIBRARIES=${dict['openssl']}/lib/libssl.${dict['shared_ext']}"
+        "-DOPENSSL_LIBRARIES=${dict['openssl']}/lib/libcrypto.${dict['shared_ext']}"
         "-DPCRE_INCLUDE_DIR=${dict['pcre']}/include"
         "-DPCRE_LIBRARY=${dict['pcre']}/lib/libpcre.${dict['shared_ext']}"
         '-DUSE_BUNDLED_ZLIB=OFF'
