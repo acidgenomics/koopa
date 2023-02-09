@@ -1,26 +1,5 @@
 #!/usr/bin/env bash
 
-# https://github.com/libgit2/libgit2/issues/6371
-# -DCMAKE_SYSTEM_PREFIX_PATH="/path/to/openssl"
-# -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=1
-
-# list(APPEND LIBGIT2_SYSTEM_INCLUDES ${OPENSSL_INCLUDE_DIR})
-# list(APPEND LIBGIT2_SYSTEM_LIBS ${OPENSSL_LIBRARIES})
-# list(APPEND LIBGIT2_PC_LIBS ${OPENSSL_LDFLAGS})
-
-# FIXME Still seeing an openssl header linkage issue with 1.5.1 on Ubuntu.
-#
-# /tmp/koopa-1000-20230209-120524-dBwL22zWjB/libgit2-1.5.1/src/util/hash/openssl.h:14:11: fatal error: openssl/sha.h: No such file or directory
-#   14 | # include <openssl/sha.h>
-#      |           ^~~~~~~~~~~~~~~
-# compilation terminated.
-# gmake[2]: *** [src/cli/CMakeFiles/git2_cli.dir/build.make:118: src/cli/CMakeFiles/git2_cli.dir/cmd_hash_object.c.o] Error 1
-# gmake[2]: *** Waiting for unfinished jobs....
-# gmake[2]: *** [src/cli/CMakeFiles/git2_cli.dir/build.make:104: src/cli/CMakeFiles/git2_cli.dir/cmd_clone.c.o] Error 1
-# [ 98%] Built target libgit2package
-# gmake[1]: *** [CMakeFiles/Makefile2:323: src/cli/CMakeFiles/git2_cli.dir/all] Error 2
-# gmake: *** [Makefile:136: all] Error 2
-
 main() {
     # """
     # Install libgit2.
