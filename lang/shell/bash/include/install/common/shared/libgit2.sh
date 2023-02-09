@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# https://github.com/libgit2/libgit2/issues/6371
+# -DCMAKE_SYSTEM_PREFIX_PATH="/path/to/openssl"
+# -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=1
+
+# list(APPEND LIBGIT2_SYSTEM_INCLUDES ${OPENSSL_INCLUDE_DIR})
+# list(APPEND LIBGIT2_SYSTEM_LIBS ${OPENSSL_LIBRARIES})
+# list(APPEND LIBGIT2_PC_LIBS ${OPENSSL_LDFLAGS})
+
 # FIXME Still seeing an openssl header linkage issue with 1.5.1 on Ubuntu.
 #
 # /tmp/koopa-1000-20230209-120524-dBwL22zWjB/libgit2-1.5.1/src/util/hash/openssl.h:14:11: fatal error: openssl/sha.h: No such file or directory
@@ -61,18 +69,19 @@ archive/${dict['file']}"
     cmake_args=(
         '-DBUILD_TESTS=OFF'
         '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DUSE_BUNDLED_ZLIB=OFF'
-        '-DUSE_SSH=YES'
-        "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
+        "-DOPENSSL_INCLUDE_DIR=${dict['openssl']}/include"
+        "-DOPENSSL_LIBRARIES=${dict['openssl']}/lib/libssl.${dict['shared_ext']}"
         "-DPCRE_INCLUDE_DIR=${dict['pcre']}/include"
         "-DPCRE_LIBRARY=${dict['pcre']}/lib/libpcre.${dict['shared_ext']}"
+        '-DUSE_BUNDLED_ZLIB=OFF'
+        '-DUSE_SSH=YES'
+        '-DUSE_THREADS=ON'
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
