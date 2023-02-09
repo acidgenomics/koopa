@@ -70,12 +70,12 @@ archive/${dict['file']}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DUSE_BUNDLED_ZLIB=OFF'
         '-DUSE_SSH=YES'
+        "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
         "-DPCRE_INCLUDE_DIR=${dict['pcre']}/include"
         "-DPCRE_LIBRARY=${dict['pcre']}/lib/libpcre.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
-    # > koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
