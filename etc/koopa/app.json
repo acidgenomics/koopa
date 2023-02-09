@@ -2229,11 +2229,11 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2023-02-08",
-    "notes": ["1.5.0 fails to build on Ubuntu."],
+    "date": "2023-02-09",
+    "notes": ["1.5.+ releases fail to build on Ubuntu."],
     "outdated": true,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.5.1"
+    "version": "1.4.5"
   },
   "libgpg-error": {
     "aliases": {
