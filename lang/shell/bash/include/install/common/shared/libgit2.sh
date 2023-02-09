@@ -1,11 +1,22 @@
 #!/usr/bin/env bash
 
-# NOTE 1.5.0 has OpenSSL header include linkage issues on Ubuntu 22.
+# FIXME Still seeing an openssl header linkage issue with 1.5.1 on Ubuntu.
+#
+# /tmp/koopa-1000-20230209-120524-dBwL22zWjB/libgit2-1.5.1/src/util/hash/openssl.h:14:11: fatal error: openssl/sha.h: No such file or directory
+#   14 | # include <openssl/sha.h>
+#      |           ^~~~~~~~~~~~~~~
+# compilation terminated.
+# gmake[2]: *** [src/cli/CMakeFiles/git2_cli.dir/build.make:118: src/cli/CMakeFiles/git2_cli.dir/cmd_hash_object.c.o] Error 1
+# gmake[2]: *** Waiting for unfinished jobs....
+# gmake[2]: *** [src/cli/CMakeFiles/git2_cli.dir/build.make:104: src/cli/CMakeFiles/git2_cli.dir/cmd_clone.c.o] Error 1
+# [ 98%] Built target libgit2package
+# gmake[1]: *** [CMakeFiles/Makefile2:323: src/cli/CMakeFiles/git2_cli.dir/all] Error 2
+# gmake: *** [Makefile:136: all] Error 2
 
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-02-09.
     #
     # @seealso
     # - https://libgit2.org/docs/guides/build-and-link/
