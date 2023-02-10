@@ -99,27 +99,6 @@ main() {
                 '--rev' "${dict['commit']}"
             )
             ;;
-        # > 'exa')
-        # >     # Current 0.10.1 crate on crates.io fails with Rust 1.61.
-        # >     install_args+=(
-        # >         '--git' 'https://github.com/ogham/exa.git'
-        # >         '--tag' "v${dict['version']}"
-        # >     )
-        # >     ;;
-        # > 'fd-find')
-        # >     # Currently outdated on crates.io.
-        # >     install_args+=(
-        # >         '--git' 'https://github.com/sharkdp/fd.git'
-        # >         '--tag' "v${dict['version']}"
-        # >     )
-        # >     ;;
-        # > 'mcfly')
-        # >     # Currently only available on GitHub.
-        # >     install_args+=(
-        # >         '--git' 'https://github.com/cantino/mcfly.git'
-        # >         '--tag' "v${dict['version']}"
-        # >     )
-        # >     ;;
         *)
             # Packages available on crates.io.
             install_args+=('--version' "${dict['version']}")
