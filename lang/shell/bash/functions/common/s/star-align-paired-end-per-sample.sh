@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider requiring 60 GB of RAM here.
+
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
