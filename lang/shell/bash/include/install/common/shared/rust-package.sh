@@ -44,17 +44,6 @@ main() {
         '--root' "${dict['prefix']}"
         '--verbose'
     )
-    # Enable OpenSSL for specific apps. Note that usage of OpenSSL 3 currently
-    # results in build issues.
-    case "${dict['name']}" in
-        'dog' | \
-        'mdcat')
-            koopa_activate_app 'openssl1'
-            dict['openssl']="$(koopa_app_prefix 'openssl1')"
-            export OPENSSL_DIR="${dict['openssl']}"
-            koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
-            ;;
-    esac
     # Edge case handling of name variants on crates.io.
     case "${dict['name']}" in
         'delta')
