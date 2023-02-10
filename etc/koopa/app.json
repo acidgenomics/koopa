@@ -1023,6 +1023,7 @@
     "bin": ["dog"],
     "build_dependencies": ["rust"],
     "date": "2022-09-26",
+    "dependencies": ["openssl1"],
     "url": ["https://github.com/ogham/dog/"],
     "version": "0.1.0"
   },
@@ -2655,6 +2656,7 @@
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
     "date": "2023-02-08",
+    "dependencies": ["openssl1"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
     "version": "1.0.0"
   },
@@ -3025,7 +3027,7 @@
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["ca-certificates"],
-    "reverse_dependencies": ["dog"],
+    "reverse_dependencies": ["dog", "mdcat"],
     "url": ["https://www.openssl.org/source/"],
     "version": "1.1.1t"
   },
