@@ -5272,7 +5272,7 @@ koopa_current_ensembl_version() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     str="$( \
-        koopa_parse_url 'ftp://ftp.ensembl.org/pub/current_README' \
+        koopa_parse_url 'ftp://ftp.ensembl.org/pub/README' \
         | "${app['sed']}" -n '3p' \
         | "${app['cut']}" -d ' ' -f '3' \
     )"
