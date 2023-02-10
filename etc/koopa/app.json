@@ -3090,11 +3090,11 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-01-26",
+    "date": "2023-02-10",
     "large": true,
     "outdated": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.0.1"
+    "version": "3.1"
   },
   "parallel": {
     "aliases": {
@@ -3839,10 +3839,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-01-11",
+    "date": "2023-02-10",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.67.0"
+    "version": "1.67.1"
   },
   "salmon": {
     "bin": ["salmon"],

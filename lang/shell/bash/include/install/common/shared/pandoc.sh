@@ -26,6 +26,7 @@ main() {
     [[ -x "${app['cabal']}" ]] || return 1
     [[ -x "${app['ghcup']}" ]] || return 1
     declare -A dict=(
+        ['cabal_dir']="$(koopa_init_dir 'cabal')"
         ['ghc_version']='9.4.4'
         ['ghcup_prefix']="$(koopa_init_dir 'ghcup')"
         ['jobs']="$(koopa_cpu_count)"
@@ -34,13 +35,14 @@ main() {
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     case "${dict['version']}" in
-        '3.0.1' | \
-        '3.0')
+        '3.1.'* | '3.1' | \
+        '3.0.'* | '3.0')
             dict['cli_version']='0.1'
             ;;
     esac
     koopa_assert_is_dir "${dict['zlib']}"
-    dict['cabal_dir']="$(koopa_init_dir "${dict['prefix']}/libexec/cabal")"
+    # NOTE We may need to bundle this with pandoc for jekyll to work correctly.
+    # > dict['cabal_dir']="$(koopa_init_dir "${dict['prefix']}/libexec/cabal")"
     dict['ghc_prefix']="$(koopa_init_dir "ghc-${dict['ghc_version']}")"
     export CABAL_DIR="${dict['cabal_dir']}"
     export GHCUP_INSTALL_BASE_PREFIX="${dict['ghcup_prefix']}"
