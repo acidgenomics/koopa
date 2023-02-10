@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=all
 
-koopa_debian_apt_add_azure_cli_repo() {
-    koopa_assert_has_no_args "$#"
-    koopa_debian_apt_add_microsoft_key
-    koopa_debian_apt_add_repo \
-        --component='main' \
-        --distribution="$(koopa_debian_os_codename)" \
-        --key-name='microsoft' \
-        --name='azure-cli' \
-        --url='https://packages.microsoft.com/repos/azure-cli/'
-    return 0
-}
-
 koopa_debian_apt_add_docker_key() {
     koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_key \
@@ -29,26 +17,6 @@ koopa_debian_apt_add_docker_repo() {
         --distribution="$(koopa_debian_os_codename)" \
         --name='docker' \
         --url="https://download.docker.com/linux/$(koopa_os_id)"
-    return 0
-}
-
-koopa_debian_apt_add_google_cloud_key() {
-    koopa_assert_has_no_args "$#"
-    koopa_debian_apt_add_key \
-        --name='google-cloud' \
-        --url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
-    return 0
-}
-
-koopa_debian_apt_add_google_cloud_sdk_repo() {
-    koopa_assert_has_no_args "$#"
-    koopa_debian_apt_add_google_cloud_key
-    koopa_debian_apt_add_repo \
-        --component='main' \
-        --distribution='cloud-sdk' \
-        --key-name='google-cloud' \
-        --name='google-cloud-sdk' \
-        --url='https://packages.cloud.google.com/apt'
     return 0
 }
 
@@ -110,38 +78,6 @@ koopa_debian_apt_add_key() {
             >/dev/null 2>&1 \
         || true
     koopa_assert_is_file "${dict['file']}"
-    return 0
-}
-
-koopa_debian_apt_add_llvm_key() {
-    koopa_assert_has_no_args "$#"
-    koopa_debian_apt_add_key \
-        --name='llvm' \
-        --url='https://apt.llvm.org/llvm-snapshot.gpg.key'
-    return 0
-}
-
-koopa_debian_apt_add_llvm_repo() {
-    koopa_assert_has_args_le "$#" 1
-    declare -A dict=(
-        ['component']='main'
-        ['name']='llvm'
-        ['os']="$(koopa_debian_os_codename)"
-        ['version']="${1:-}"
-    )
-    if [[ -z "${dict['version']}" ]]
-    then
-        dict['version']="$(koopa_app_json_version "${dict['name']}")"
-    fi
-    dict['url']="http://apt.llvm.org/${dict['os']}/"
-    dict['version2']="$(koopa_major_version "${dict['version']}")"
-    dict['distribution']="llvm-toolchain-${dict['os']}-${dict['version2']}"
-    koopa_debian_apt_add_llvm_key
-    koopa_debian_apt_add_repo \
-        --component="${dict['component']}" \
-        --distribution="${dict['distribution']}" \
-        --name="${dict['name']}" \
-        --url="${dict['url']}"
     return 0
 }
 
@@ -847,14 +783,6 @@ koopa_debian_install_from_deb() {
     return 0
 }
 
-koopa_debian_install_system_azure_cli() {
-    koopa_install_app \
-        --name='azure-cli' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
 koopa_debian_install_system_builder_base() {
     local app
     declare -A app=(
@@ -932,30 +860,6 @@ END
 koopa_debian_install_system_docker() {
     koopa_install_app \
         --name='docker' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_install_system_google_cloud_sdk() {
-    koopa_install_app \
-        --name='google-cloud-sdk' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_install_system_llvm() {
-    koopa_install_app \
-        --name='llvm' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_install_system_pandoc() {
-    koopa_install_app \
-        --name='pandoc' \
         --platform='debian' \
         --system \
         "$@"
@@ -1153,41 +1057,9 @@ koopa_debian_uninstall_shiny_server() {
         "$@"
 }
 
-koopa_debian_uninstall_system_azure_cli() {
-    koopa_uninstall_app \
-        --name='azure-cli' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
 koopa_debian_uninstall_system_docker() {
     koopa_uninstall_app \
         --name='docker' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_system_google_cloud_sdk() {
-    koopa_uninstall_app \
-        --name='google-cloud-sdk' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_system_llvm() {
-    koopa_uninstall_app \
-        --name='llvm' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-koopa_debian_uninstall_system_pandoc() {
-    koopa_uninstall_app \
-        --name='pandoc' \
         --platform='debian' \
         --system \
         "$@"

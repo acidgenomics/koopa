@@ -538,8 +538,6 @@ __koopa_complete() {
                                 if koopa_is_debian_like || koopa_is_fedora_like
                                 then
                                     args+=(
-                                        'azure-cli'
-                                        'google-cloud-sdk'
                                         'rstudio-server'
                                         'shiny-server'
                                     )
@@ -549,8 +547,6 @@ __koopa_complete() {
                                     args+=(
                                         'builder-base'
                                         'docker'
-                                        'llvm'
-                                        'pandoc'
                                         'r'
                                     )
                                 elif koopa_is_fedora_like
