@@ -3,7 +3,7 @@
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2023-02-03.
+    # @note Updated 2023-02-10.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' for CMake configuration.
     # bzip2 and zstd requirement added in 1.2.0 release.
@@ -79,29 +79,12 @@ main() {
         "${dict['tl_expected']}" \
         "${dict['yaml_cpp']}" \
         "${dict['zstd']}"
-    case "${dict['version']}" in
-        '1.3.0')
-            dict['date_tag']='2023.02.03'
-            ;;
-        '1.2.0')
-            dict['date_tag']='2023.01.16'
-            ;;
-        '1.1.0')
-            dict['date_tag']='2022.11.25'
-            ;;
-        '1.0.0')
-            dict['date_tag']='2022.11.01'
-            ;;
-        '0.27.0')
-            dict['date_tag']='2022.10.04'
-            ;;
-    esac
-    dict['file']="${dict['date_tag']}.tar.gz"
+    dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
 tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['date_tag']}"
+    koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
