@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE 1.5.0 has OpenSSL header include linkage issues on Ubuntu 22.
-
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-02-09.
     #
     # @seealso
     # - https://libgit2.org/docs/guides/build-and-link/
@@ -50,21 +48,24 @@ archive/${dict['file']}"
     cmake_args=(
         '-DBUILD_TESTS=OFF'
         '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DUSE_BUNDLED_ZLIB=OFF'
-        '-DUSE_SSH=YES'
+        # > "-DOPENSSL_CMD=${dict['openssl']}/bin/openssl"
+        "-DOPENSSL_DIR=${dict['openssl']}"
+        "-DOPENSSL_INCLUDE_DIR=${dict['openssl']}/include"
+        "-DOPENSSL_LIBRARIES=${dict['openssl']}/lib/libcrypto.${dict['shared_ext']}"
         "-DPCRE_INCLUDE_DIR=${dict['pcre']}/include"
         "-DPCRE_LIBRARY=${dict['pcre']}/lib/libpcre.${dict['shared_ext']}"
+        '-DUSE_BUNDLED_ZLIB=OFF'
+        '-DUSE_SSH=YES'
+        '-DUSE_THREADS=ON'
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
-    # > koopa_add_rpath_to_ldflags "${dict['openssl']}/lib"
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \

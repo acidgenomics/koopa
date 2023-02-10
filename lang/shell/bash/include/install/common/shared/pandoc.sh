@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-01-26.
+    # @note Updated 2023-02-10.
     #
     # @seealso
     # - https://hackage.haskell.org/package/pandoc
@@ -26,6 +26,7 @@ main() {
     [[ -x "${app['cabal']}" ]] || return 1
     [[ -x "${app['ghcup']}" ]] || return 1
     declare -A dict=(
+        ['cabal_dir']="$(koopa_init_dir 'cabal')"
         ['ghc_version']='9.4.4'
         ['ghcup_prefix']="$(koopa_init_dir 'ghcup')"
         ['jobs']="$(koopa_cpu_count)"
@@ -34,13 +35,17 @@ main() {
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     case "${dict['version']}" in
-        '3.0.1' | \
-        '3.0')
+        '3.1.'* | '3.1' | \
+        '3.0.'* | '3.0')
             dict['cli_version']='0.1'
             ;;
     esac
     koopa_assert_is_dir "${dict['zlib']}"
-    dict['cabal_dir']="$(koopa_init_dir "${dict['prefix']}/libexec/cabal")"
+    # NOTE R pkgdown will fail unless we keep track of this in store:
+    # cabal/store/ghc-*/pndc-*-*/share/data/abbreviations
+    dict['cabal_store_dir']="$(\
+        koopa_init_dir "${dict['prefix']}/libexec/cabal/store" \
+    )"
     dict['ghc_prefix']="$(koopa_init_dir "ghc-${dict['ghc_version']}")"
     export CABAL_DIR="${dict['cabal_dir']}"
     export GHCUP_INSTALL_BASE_PREFIX="${dict['ghcup_prefix']}"
@@ -57,6 +62,7 @@ main() {
     read -r -d '' "dict[cabal_config_string]" << END || true
 extra-include-dirs: ${dict['zlib']}/include
 extra-lib-dirs: ${dict['zlib']}/lib
+store-dir: ${dict['cabal_store_dir']}
 END
     koopa_append_string \
         --file="${dict['cabal_config_file']}" \
