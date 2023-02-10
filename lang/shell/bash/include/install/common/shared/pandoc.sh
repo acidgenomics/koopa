@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-01-26.
+    # @note Updated 2023-02-10.
     #
     # @seealso
     # - https://hackage.haskell.org/package/pandoc
@@ -41,8 +41,11 @@ main() {
             ;;
     esac
     koopa_assert_is_dir "${dict['zlib']}"
-    # NOTE We may need to bundle this with pandoc for jekyll to work correctly.
-    # > dict['cabal_dir']="$(koopa_init_dir "${dict['prefix']}/libexec/cabal")"
+    # NOTE R pkgdown will fail unless we keep track of this in store:
+    # cabal/store/ghc-*/pndc-*-*/share/data/abbreviations
+    dict['cabal_store_dir']="$(\
+        koopa_init_dir "${dict['prefix']}/libexec/cabal/store" \
+    )"
     dict['ghc_prefix']="$(koopa_init_dir "ghc-${dict['ghc_version']}")"
     export CABAL_DIR="${dict['cabal_dir']}"
     export GHCUP_INSTALL_BASE_PREFIX="${dict['ghcup_prefix']}"
@@ -59,6 +62,7 @@ main() {
     read -r -d '' "dict[cabal_config_string]" << END || true
 extra-include-dirs: ${dict['zlib']}/include
 extra-lib-dirs: ${dict['zlib']}/lib
+store-dir: ${dict['cabal_store_dir']}
 END
     koopa_append_string \
         --file="${dict['cabal_config_file']}" \
