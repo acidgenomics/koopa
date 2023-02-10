@@ -44,7 +44,8 @@ main() {
         '--root' "${dict['prefix']}"
         '--verbose'
     )
-    # Enable OpenSSL for specific apps.
+    # Enable OpenSSL for specific apps. Note that usage of OpenSSL 3 currently
+    # results in build issues.
     case "${dict['name']}" in
         'dog' | \
         'mdcat')
