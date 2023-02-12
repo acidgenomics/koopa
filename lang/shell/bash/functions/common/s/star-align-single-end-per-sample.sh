@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider requiring 60 GB of RAM here.
-
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
-    # @note Updated 2022-03-25.
+    # @note Updated 2022-02-12.
     #
     # @examples
     # > koopa_star_align_single_end_per_sample \
@@ -28,7 +26,7 @@ koopa_star_align_single_end_per_sample() {
         # e.g. 'star-index'.
         ['index_dir']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
+        ['mem_gb_cutoff']=60
         # e.g. 'star'.
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
