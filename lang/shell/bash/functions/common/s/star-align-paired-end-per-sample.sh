@@ -1,6 +1,36 @@
 #!/usr/bin/env bash
 
-# FIXME Consider requiring 60 GB of RAM here.
+# FIXME Look into adding support for strandedness here.
+#
+# if strandedness == "unstranded" and not srna:
+#     cmd += " --outSAMstrandField intronMotif "
+# if not srna:
+#     cmd += " --quantMode TranscriptomeSAM "
+
+# FIXME Consider setting additional options here, to match bcbio.
+# cmd = ("{star_path} --genomeDir {ref_file} --readFilesIn {fastq_files} "
+#        "--runThreadN {num_cores} --outFileNamePrefix {tx_out_prefix} "
+#        "--outReadsUnmapped Fastx --outFilterMultimapNmax {max_hits} "
+#        "--outStd BAM_Unsorted {srna_opts} "
+#        "--limitOutSJcollapsed 2000000 "
+#        "--outSAMtype BAM Unsorted "
+#        "--outSAMmapqUnique 60 "
+#        "--outSAMunmapped Within --outSAMattributes %s " % " ".join(ALIGN_TAGS))
+# cmd += (" --chimSegmentMin 12 --chimJunctionOverhangMin 12 "
+#     "--chimScoreDropMax 30 --chimSegmentReadGapMax 5 "
+#     "--chimScoreSeparation 5 ")
+# cmd += "--chimOutType WithinBAM "
+
+# FIXME Consider this additional workflow step:
+# cmd = ("{star_path} --genomeDir {ref_file} --readFilesIn {fastq_files} "
+#     "--runThreadN {num_cores} --outFileNamePrefix {tx_out_prefix} "
+#     "--outReadsUnmapped Fastx --outFilterMultimapNmax {max_hits} "
+#     "--outStd BAM_Unsorted {srna_opts} "
+#     "--limitOutSJcollapsed 2000000 "
+#     "{sjflag} "
+#     "--outSAMtype BAM Unsorted "
+#     "--outSAMmapqUnique 60 "
+#     "--outSAMunmapped Within --outSAMattributes %s " % " ".join(ALIGN_TAGS))
 
 koopa_star_align_paired_end_per_sample() {
     # """
@@ -44,7 +74,7 @@ koopa_star_align_paired_end_per_sample() {
         # e.g. 'star-index'.
         ['index_dir']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
+        ['mem_gb_cutoff']=60
         # e.g. 'star'.
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
