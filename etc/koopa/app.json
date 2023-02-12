@@ -590,9 +590,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-02-06",
+    "date": "2023-02-12",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.30.0"
+    "version": "2.30.1"
   },
   "cli11": {
     "aliases": {
@@ -1766,10 +1766,10 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2022-12-16",
+    "date": "2023-02-12",
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "6.0.0"
+    "version": "7.0.0"
   },
   "haskell-cabal": {
     "aliases": {
