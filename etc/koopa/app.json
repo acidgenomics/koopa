@@ -670,6 +670,7 @@
       "samtools",
       "snakemake",
       "star",
+      "subread",
       "vina",
       "visidata"
     ],
@@ -4090,6 +4091,16 @@
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/stow/"],
     "version": "2.3.1"
+  },
+  "subread": {
+    "bin": ["featureCounts"],
+    "date": "2023-02-11",
+    "dependencies": ["conda"],
+    "large": true,
+    "notes": ["2.0.3 is available on conda but for Linux only."],
+    "outdated": true,
+    "url": ["https://subread.sourceforge.net/"],
+    "version": "2.0.1"
   },
   "subversion": {
     "aliases": {
