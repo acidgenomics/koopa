@@ -13744,6 +13744,12 @@ koopa_install_stow() {
         "$@"
 }
 
+koopa_install_subread() {
+    koopa_install_app \
+        --name='subread' \
+        "$@"
+}
+
 koopa_install_subversion() {
     koopa_install_app \
         --name='subversion' \
@@ -25285,6 +25291,12 @@ koopa_uninstall_starship() {
 koopa_uninstall_stow() {
     koopa_uninstall_app \
         --name='stow' \
+        "$@"
+}
+
+koopa_uninstall_subread() {
+    koopa_uninstall_app \
+        --name='subread' \
         "$@"
 }
 
