@@ -4576,7 +4576,7 @@
     "aliases": {
       "homebrew": true
     },
-    "bin": ["black"],
+    "bin": ["yapf"],
     "date": "2023-02-13",
     "dependencies": ["python3.11"],
     "url": [
