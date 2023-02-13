@@ -2,7 +2,7 @@
 
 koopa_locate_python() {
     koopa_locate_app \
-        --app-name='python' \
-        --bin-name='python3' \
+        --app-name='python3.11' \
+        --bin-name='python3.11' \
         "$@"
 }

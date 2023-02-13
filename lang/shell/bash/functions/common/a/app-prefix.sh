@@ -8,7 +8,7 @@ koopa_app_prefix() {
     # @examples
     # > koopa_app_prefix
     # # /opt/koopa/app
-    # > koopa_app_prefix 'python' 'r'
+    # > koopa_app_prefix 'python3.10' 'r'
     # # /opt/koopa/app/python3.10/3.10.6
     # # /opt/koopa/app/r/4.2.1
     # """
