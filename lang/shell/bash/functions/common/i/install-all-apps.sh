@@ -5,7 +5,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-02-01.
+    # @note Updated 2023-02-13.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -198,6 +198,7 @@ koopa_install_all_apps() {
         'go'
         'chezmoi'
         'fzf'
+        'gh'
         'git-lfs'
         'aws-cli'
         'autoflake'
@@ -220,6 +221,7 @@ koopa_install_all_apps() {
         'ranger-fm'
         'ruff'
         'visidata'
+        'yapf'
         'yt-dlp'
         'openssh'
         'c-ares'
@@ -364,6 +366,7 @@ koopa_install_all_apps() {
                 'snakemake'
                 'star'
                 'star-fusion'
+                'subread'
                 'sra-tools'
                 'scalene'
             )

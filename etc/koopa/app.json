@@ -27,7 +27,7 @@
   "apache-airflow": {
     "bin": ["airflow"],
     "date": "2023-02-08",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "large": true,
     "url": ["https://airflow.apache.org/"],
     "version": "2.5.1"
@@ -38,7 +38,7 @@
     },
     "bin": ["pyspark", "sparkR"],
     "date": "2022-10-26",
-    "dependencies": ["openjdk", "python", "r"],
+    "dependencies": ["openjdk", "python3.11", "r"],
     "large": true,
     "url": ["https://spark.apache.org/"],
     "version": "3.3.1"
@@ -181,7 +181,7 @@
   "autoflake": {
     "bin": ["autoflake"],
     "date": "2023-02-08",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake"
@@ -216,7 +216,7 @@
     },
     "bin": ["az"],
     "date": "2023-02-08",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "large": true,
     "outdated": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
@@ -397,7 +397,7 @@
     },
     "bin": ["black"],
     "date": "2023-02-01",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
     "version": "23.1.0"
   },
@@ -445,7 +445,7 @@
     },
     "bin": ["bpytop"],
     "date": "2022-09-26",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/bpytop/",
       "https://github.com/aristocratos/bpytop/"
@@ -590,9 +590,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-02-06",
+    "date": "2023-02-12",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.30.0"
+    "version": "2.30.1"
   },
   "cli11": {
     "aliases": {
@@ -670,6 +670,7 @@
       "samtools",
       "snakemake",
       "star",
+      "subread",
       "vina",
       "visidata"
     ],
@@ -941,7 +942,7 @@
       "sql2csv"
     ],
     "date": "2023-02-08",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "homebrew": true,
     "url": ["https://csvkit.readthedocs.io/"],
     "version": "1.1.0"
@@ -1035,9 +1036,9 @@
     "version": "e96624926d724aff98e862221422cd7124a99c19"
   },
   "dotfiles": {
-    "date": "2023-02-02",
+    "date": "2023-02-10",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "4a8c0f52bd7f9d4c55e832ac13f722c57bdf31be"
+    "version": "c2e41c03382f7fb93854f85fec0e7900a2eeef60"
   },
   "du-dust": {
     "aliases": {
@@ -1134,7 +1135,7 @@
       "fontconfig",
       "graphviz",
       "perl",
-      "python",
+      "python3.11",
       "subversion",
       "udunits",
       "cairo"
@@ -1229,7 +1230,7 @@
     },
     "bin": ["flake8"],
     "date": "2023-01-03",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/flake8/",
       "https://flake8.pycqa.org/",
@@ -1445,6 +1446,16 @@
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.2"
   },
+  "gh": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["gh"],
+    "build_dependencies": ["go"],
+    "date": "2023-02-13",
+    "url": ["https://github.com/cli/cli/"],
+    "version": "2.23.0"
+  },
   "ghostscript": {
     "aliases": {
       "homebrew": true
@@ -1487,7 +1498,7 @@
     },
     "bin": ["glances"],
     "date": "2023-02-08",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
@@ -1500,7 +1511,7 @@
       "fedora": "glib2-devel",
       "homebrew": true
     },
-    "build_dependencies": ["meson", "ninja", "pkg-config", "python"],
+    "build_dependencies": ["meson", "ninja", "pkg-config", "python3.11"],
     "conservative": true,
     "date": "2023-01-03",
     "dependencies": ["zlib", "gettext", "libffi", "pcre"],
@@ -1567,14 +1578,6 @@
     },
     "bin": ["go"],
     "date": "2023-02-08",
-    "reverse_dependencies": [
-      "apptainer",
-      "chezmoi",
-      "csvtk",
-      "fzf",
-      "gum",
-      "yq"
-    ],
     "url": ["https://golang.org/dl/"],
     "version": "1.20"
   },
@@ -1765,10 +1768,10 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2022-12-16",
+    "date": "2023-02-12",
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "6.0.0"
+    "version": "7.0.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -1896,7 +1899,7 @@
     },
     "bin": ["http", "https"],
     "date": "2022-10-18",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
     "version": "3.2.1"
   },
@@ -1995,7 +1998,7 @@
     },
     "bin": ["ipython"],
     "date": "2023-02-08",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
     "version": "8.9.0"
   },
@@ -2005,7 +2008,7 @@
     },
     "bin": ["isort"],
     "date": "2023-01-30",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/isort/",
       "https://pycqa.github.io/isort/"
@@ -2195,7 +2198,7 @@
       "cairo",
       "glib",
       "harfbuzz",
-      "python",
+      "python3.11",
       "r",
       "r-devel",
       "llvm"
@@ -2229,12 +2232,14 @@
       "fedora": "libgit2-devel",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2023-02-09",
+    "dependencies": ["zlib", "pcre", "openssl3", "libssh2"],
     "notes": ["1.5.+ releases fail to build on Ubuntu."],
     "outdated": true,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.4.5"
+    "version": "1.5.1"
   },
   "libgpg-error": {
     "aliases": {
@@ -2488,7 +2493,7 @@
       "libffi",
       "libxml2",
       "ncurses",
-      "python",
+      "python3.11",
       "swig",
       "binutils"
     ],
@@ -2600,7 +2605,7 @@
       "nlohmann-json",
       "openssl3",
       "pybind11",
-      "python",
+      "python3.11",
       "reproc",
       "spdlog",
       "termcolor",
@@ -2656,7 +2661,7 @@
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
     "date": "2023-02-08",
-    "dependencies": ["openssl1"],
+    "dependencies": ["openssl3"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
     "version": "1.0.0"
   },
@@ -2668,7 +2673,7 @@
     },
     "bin": ["meson"],
     "date": "2022-12-24",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
     "version": "1.0.0"
   },
@@ -2831,7 +2836,7 @@
       "pkg-config"
     ],
     "date": "2023-02-08",
-    "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python"],
+    "dependencies": ["m4", "zlib", "gettext", "libiconv", "ncurses", "python3.11"],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
     "version": "0.8.3"
@@ -2892,7 +2897,7 @@
     },
     "bin": ["ninja"],
     "date": "2022-09-29",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://ninja-build.org/", "https://pypi.org/project/ninja/"],
     "version": "1.11.1"
   },
@@ -3027,7 +3032,7 @@
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["ca-certificates"],
-    "reverse_dependencies": ["dog", "mdcat"],
+    "reverse_dependencies": ["dog"],
     "url": ["https://www.openssl.org/source/"],
     "version": "1.1.1t"
   },
@@ -3059,6 +3064,7 @@
       "subversion",
       "imagemagick",
       "gdal",
+      "mdcat",
       "nushell",
       "python3.10",
       "python3.11",
@@ -3208,7 +3214,7 @@
     "bin": ["pipx"],
     "conservative": true,
     "date": "2022-09-26",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://github.com/pypa/pipx/"],
     "version": "1.1.0"
   },
@@ -3239,7 +3245,7 @@
     "bin": ["poetry"],
     "conservative": true,
     "date": "2023-01-10",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "large": true,
     "reverse_dependencies": ["openbb"],
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
@@ -3300,7 +3306,7 @@
     },
     "bin": ["py-spy"],
     "date": "2022-09-30",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://github.com/benfred/py-spy/"],
     "version": "0.3.14"
   },
@@ -3319,7 +3325,7 @@
     },
     "bin": ["pycodestyle"],
     "date": "2023-01-03",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://pycodestyle.pycqa.org/",
       "https://pypi.org/project/pycodestyle/"
@@ -3340,7 +3346,7 @@
   "pyflakes": {
     "bin": ["pyflakes"],
     "date": "2023-01-03",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pyflakes/",
       "https://github.com/PyCQA/pyflakes/"
@@ -3353,7 +3359,7 @@
     },
     "bin": ["pygmentize"],
     "date": "2023-01-03",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
     "version": "2.14.0"
   },
@@ -3363,7 +3369,7 @@
     },
     "bin": ["pylint"],
     "date": "2023-02-03",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
     "version": "2.16.1"
   },
@@ -3380,23 +3386,13 @@
   "pytest": {
     "bin": ["pytest"],
     "date": "2023-01-17",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
     "version": "7.2.1"
-  },
-  "python": {
-    "aliases": {
-      "debian": ["python3", "python3-dev", "python3-venv"],
-      "fedora": ["python3", "python3-devel"]
-    },
-    "bin": ["python", "python3"],
-    "date": "2023-01-03",
-    "man1": ["python.1", "python3.1"],
-    "version": "3.11.1"
   },
   "python3.10": {
     "aliases": {
@@ -3405,7 +3401,7 @@
     "bin": ["python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-12-08",
+    "date": "2023-02-13",
     "dependencies": [
       "bzip2",
       "expat",
@@ -3423,7 +3419,7 @@
     "man1": ["python3.10.1"],
     "reverse_dependencies": ["google-cloud-sdk", "latch"],
     "url": ["https://www.python.org/"],
-    "version": "3.10.9"
+    "version": "3.10.10"
   },
   "python3.11": {
     "aliases": {
@@ -3432,7 +3428,7 @@
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-12-08",
+    "date": "2023-02-13",
     "dependencies": [
       "bzip2",
       "expat",
@@ -3478,6 +3474,7 @@
       "scons",
       "snakefmt",
       "vulture",
+      "yapf",
       "yt-dlp",
       "vim",
       "xorg-xcb-proto",
@@ -3496,7 +3493,7 @@
       "llvm"
     ],
     "url": ["https://www.python.org/"],
-    "version": "3.11.1"
+    "version": "3.11.2"
   },
   "r": {
     "aliases": {
@@ -3545,7 +3542,7 @@
       "pcre2",
       "pixman",
       "proj",
-      "python",
+      "python3.11",
       "readline",
       "sed",
       "sqlite",
@@ -3619,7 +3616,7 @@
       "pcre2",
       "pixman",
       "proj",
-      "python",
+      "python3.11",
       "readline",
       "sed",
       "sqlite",
@@ -3674,7 +3671,7 @@
   "radian": {
     "bin": ["radian"],
     "date": "2022-10-18",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://github.com/randy3k/radian/"],
     "version": "0.6.4"
   },
@@ -3684,7 +3681,7 @@
     },
     "bin": ["ranger"],
     "date": "2022-09-26",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://github.com/ranger/ranger/"],
     "version": "1.9.3"
   },
@@ -3820,7 +3817,7 @@
   "ruff": {
     "bin": ["ruff"],
     "date": "2023-02-08",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "outdated": true,
     "url": ["https://pypi.org/project/ruff/"],
     "version": "0.0.243"
@@ -3884,7 +3881,7 @@
     "arch": "x86_64",
     "bin": ["scalene"],
     "date": "2023-02-08",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/plasma-umass/scalene/",
@@ -3898,7 +3895,7 @@
     },
     "conservative": true,
     "date": "2022-08-30",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": ["https://scons.org/", "https://pypi.org/project/SCons/"],
     "version": "4.4.0"
   },
@@ -3960,7 +3957,7 @@
   "snakefmt": {
     "bin": ["snakefmt"],
     "date": "2023-02-08",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "large": true,
     "url": ["https://github.com/snakemake/snakefmt/"],
     "version": "0.8.1"
@@ -4026,7 +4023,7 @@
       "libgeotiff",
       "proj",
       "gdal",
-      "python",
+      "python3.11",
       "subversion",
       "r",
       "r-devel"
@@ -4042,7 +4039,7 @@
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": ["cmake"],
     "date": "2023-01-03",
-    "dependencies": ["bison", "flex", "openjdk", "python"],
+    "dependencies": ["bison", "flex", "openjdk", "python3.11"],
     "large": true,
     "notes": ["ncbi-vdb is not yet tagged for 3.0.3."],
     "outdated": true,
@@ -4090,6 +4087,15 @@
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/stow/"],
     "version": "2.3.1"
+  },
+  "subread": {
+    "bin": ["featureCounts"],
+    "date": "2023-02-13",
+    "dependencies": ["conda"],
+    "large": true,
+    "outdated": true,
+    "url": ["https://subread.sourceforge.net/"],
+    "version": "2.0.3"
   },
   "subversion": {
     "aliases": {
@@ -4355,7 +4361,7 @@
     },
     "bin": ["vd", "visidata"],
     "date": "2023-01-17",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "man1": ["vd.1", "visidata.1"],
     "url": ["https://github.com/saulpw/visidata/"],
     "version": "2.11"
@@ -4366,7 +4372,7 @@
     },
     "bin": ["vulture"],
     "date": "2023-01-09",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://github.com/jendrikseipp/vulture/",
       "https://pypi.org/project/vulture/"
@@ -4566,6 +4572,19 @@
     "url": ["https://github.com/jbeder/yaml-cpp/"],
     "version": "0.7.0"
   },
+  "yapf": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["black"],
+    "date": "2023-02-13",
+    "dependencies": ["python3.11"],
+    "url": [
+      "https://pypi.org/project/yapf/",
+      "https://github.com/google/yapf/"
+    ],
+    "version": "0.32.0"
+  },
   "yarn": {
     "aliases": {
       "homebrew": true
@@ -4593,7 +4612,7 @@
     },
     "bin": ["yt-dlp"],
     "date": "2023-01-09",
-    "dependencies": ["python"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"

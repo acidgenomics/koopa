@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-02-01.
+    # @note Updated 2023-02-13.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -175,6 +175,7 @@ __koopa_complete() {
                         'gettext'
                         'gffutils'
                         'gget'
+                        'gh'
                         'ghostscript'
                         'git'
                         'git-lfs'
@@ -363,6 +364,7 @@ __koopa_complete() {
                         'star'
                         'starship'
                         'stow'
+                        'subread'
                         'subversion'
                         'swig'
                         'system'
@@ -407,6 +409,7 @@ __koopa_complete() {
                         'xxhash'
                         'xz'
                         'yaml-cpp'
+                        'yapf'
                         'yarn'
                         'yt-dlp'
                         'zellij'

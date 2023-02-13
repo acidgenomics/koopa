@@ -45,7 +45,7 @@ main() {
         'libffi'
         'libxml2'
         'ncurses'
-        'python'
+        'python3.11'
         'swig'
     )
     if koopa_is_linux
@@ -65,7 +65,7 @@ main() {
         ['ninja']="$(koopa_locate_ninja)"
         ['perl']="$(koopa_locate_perl --realpath)"
         ['pkg_config']="$(koopa_locate_pkg_config --realpath)"
-        ['python']="$(koopa_locate_python --realpath)"
+        ['python']="$(koopa_locate_python311 --realpath)"
         ['swig']="$(koopa_locate_swig --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
@@ -82,7 +82,7 @@ main() {
         ['name']='llvm-project'
         ['ncurses']="$(koopa_app_prefix 'ncurses')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['python']="$(koopa_app_prefix 'python')"
+        ['python']="$(koopa_app_prefix 'python3.11')"
         ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
