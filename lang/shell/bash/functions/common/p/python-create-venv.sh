@@ -3,7 +3,7 @@
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2022-12-08.
+    # @note Updated 2023-02-13.
     #
     # In the future, consider adding support for 'requirements.txt' input.
     #
@@ -18,12 +18,9 @@ koopa_python_create_venv() {
     local app dict pkgs pos venv_args
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    declare -A app=(
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
-    # This helps improve path definition in 'pyvenv.cfg' output file.
-    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         ['name']=''
         ['pip']=1

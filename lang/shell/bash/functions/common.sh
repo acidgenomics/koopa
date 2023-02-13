@@ -3207,7 +3207,7 @@ koopa_brew_upgrade_brews() {
             case "$brew" in
                 'gcc' | \
                 'gpg' | \
-                'python@3.9' | \
+                'python@3.11' | \
                 'vim')
                     "${app['brew']}" link --overwrite "$brew" || true
                     ;;
@@ -13468,21 +13468,16 @@ koopa_install_python311() {
         --name='python3.11' \
         "$@"
     (
-        koopa_alert "Linking 'python' in '${dict['app_prefix']}'."
-        koopa_cd "${dict['app_prefix']}"
-        koopa_ln 'python3.11' 'python'
-        koopa_alert "Linking 'python' in '${dict['bin_prefix']}'."
         koopa_cd "${dict['bin_prefix']}"
         koopa_ln 'python3.11' 'python3'
         koopa_ln 'python3.11' 'python'
-        koopa_alert "Linking 'python' in '${dict['man1_prefix']}'."
         koopa_cd "${dict['man1_prefix']}"
         koopa_ln 'python3.11.1' 'python3.1'
         koopa_ln 'python3.11.1' 'python.1'
-        koopa_alert "Linking 'python' in '${dict['opt_prefix']}'."
-        koopa_cd "${dict['opt_prefix']}"
-        koopa_ln 'python3.11' 'python'
     )
+    koopa_rm \
+        "${dict['app_prefix']}/python" \
+        "${dict['opt_prefix']}/python"
     return 0
 }
 
@@ -15999,13 +15994,6 @@ koopa_locate_bowtie2() {
         "$@"
 }
 
-koopa_locate_bpytop() {
-    koopa_locate_app \
-        --app-name='python-packages' \
-        --bin-name='bpytop' \
-        "$@"
-}
-
 koopa_locate_brew() {
     koopa_locate_app \
         "$(koopa_homebrew_prefix)/Homebrew/bin/brew" \
@@ -16820,13 +16808,6 @@ koopa_locate_pylint() {
     koopa_locate_app \
         --app-name='pylint' \
         --bin-name='pylint' \
-        "$@"
-}
-
-koopa_locate_python() {
-    koopa_locate_app \
-        --app-name='python' \
-        --bin-name='python3' \
         "$@"
 }
 
@@ -18318,11 +18299,9 @@ koopa_python_create_venv() {
     local app dict pkgs pos venv_args
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    declare -A app=(
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
-    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         ['name']=''
         ['pip']=1
@@ -18454,7 +18433,7 @@ koopa_python_pip_install() {
     local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
     declare -A app
-    app['python']="$(koopa_locate_python)"
+    app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict
     dict['prefix']=''
@@ -18521,10 +18500,8 @@ koopa_python_pip_install() {
 koopa_python_system_packages_prefix() {
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['python']="${1:-}"
-    )
-    [[ -z "${app['python']}" ]] && app['python']="$(koopa_locate_python)"
+    declare -A app
+    app['python']="${1:?}"
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict
     dict['prefix']="$( \
@@ -18631,7 +18608,7 @@ koopa_r_configure_environ() {
         'pcre'
         'pcre2'
         'proj'
-        'python'
+        'python3.11'
         'readline'
         'sqlite'
         'xz'
@@ -18879,7 +18856,7 @@ koopa_r_configure_ldpaths() {
         'pcre'
         'pcre2'
         'proj'
-        'python'
+        'python3.11'
         'readline'
         'sqlite'
         'xz'
@@ -19144,7 +19121,7 @@ koopa_r_configure_makevars() {
             'pcre'
             'pcre2'
             'proj'
-            'python'
+            'python3.11'
             'readline'
             'sqlite'
             'xz'
@@ -25082,7 +25059,6 @@ koopa_uninstall_python311() {
     koopa_uninstall_app \
         --name='python3.11' \
         "$@"
-    koopa_alert "Unlinking 'python' and 'python3'."
     koopa_rm  \
         "${dict['app_prefix']}/python" \
         "${dict['bin_prefix']}/python" \
@@ -25964,7 +25940,7 @@ koopa_validate_json() {
     declare -A app
     declare -A dict
     koopa_assert_has_args_eq "$#" 1
-    app['python']="$(koopa_locate_python)"
+    app['python']="$(koopa_locate_python311)"
     dict['file']="${1:?}"
     "${app['python']}" -m 'json.tool' "${dict['file']}" >/dev/null
 }

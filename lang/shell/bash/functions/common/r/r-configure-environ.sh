@@ -184,7 +184,7 @@ koopa_r_configure_environ() {
         'pcre'
         'pcre2'
         'proj'
-        'python'
+        'python3.11'
         'readline'
         'sqlite'
         'xz'

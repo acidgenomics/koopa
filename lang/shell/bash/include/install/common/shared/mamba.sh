@@ -33,7 +33,7 @@ main() {
         'libsolv'
         'nlohmann-json'
         'openssl3'
-        'python'
+        'python3.11'
         'reproc'
         # NOTE Enabling spdlog here currently causes a cryptic linker error.
         # > 'spdlog'
@@ -45,7 +45,7 @@ main() {
     koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
-        ['python']="$(koopa_locate_python --realpath)"
+        ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1

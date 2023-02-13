@@ -10,7 +10,6 @@ koopa_uninstall_python311() {
     koopa_uninstall_app \
         --name='python3.11' \
         "$@"
-    koopa_alert "Unlinking 'python' and 'python3'."
     koopa_rm  \
         "${dict['app_prefix']}/python" \
         "${dict['bin_prefix']}/python" \

@@ -3,14 +3,12 @@
 koopa_python_system_packages_prefix() {
     # """
     # Python system site packages library prefix.
-    # @note Updated 2022-01-31.
+    # @note Updated 2023-02-13.
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['python']="${1:-}"
-    )
-    [[ -z "${app['python']}" ]] && app['python']="$(koopa_locate_python)"
+    declare -A app
+    app['python']="${1:?}"
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict
     dict['prefix']="$( \

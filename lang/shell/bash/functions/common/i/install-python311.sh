@@ -13,11 +13,9 @@ koopa_install_python311() {
         --name='python3.11' \
         "$@"
     (
-        koopa_alert "Linking 'python' in '${dict['bin_prefix']}'."
         koopa_cd "${dict['bin_prefix']}"
         koopa_ln 'python3.11' 'python3'
         koopa_ln 'python3.11' 'python'
-        koopa_alert "Linking 'python' in '${dict['man1_prefix']}'."
         koopa_cd "${dict['man1_prefix']}"
         koopa_ln 'python3.11.1' 'python3.1'
         koopa_ln 'python3.11.1' 'python.1'

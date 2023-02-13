@@ -79,7 +79,7 @@ koopa_r_configure_ldpaths() {
         'pcre'
         'pcre2'
         'proj'
-        'python'
+        'python3.11'
         'readline'
         'sqlite'
         'xz'
