@@ -6,7 +6,7 @@ koopa_cli_uninstall() {
     # @note Updated 2022-02-15.
     #
     # @seealso
-    # > koopa_cli_uninstall 'python'
+    # > koopa_cli_uninstall 'python3.10'
     # """
     local app
     [[ "$#" -eq 0 ]] && set -- 'koopa'

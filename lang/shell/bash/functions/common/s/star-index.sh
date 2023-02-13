@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 
+# FIXME Need to consider ALT contigs here.
+# Can we handle this dynamically? Refer to bcbio-nextgen for inspiration.
+# https://github.com/alexdobin/STAR/issues/39
+# https://github.com/chapmanb/cloudbiolinux/tree/master/ggd-recipes/hg38-noalt
+# https://gatk.broadinstitute.org/hc/en-us/articles/360037498992--How-to-Map-reads-to-a-reference-with-alternate-contigs-like-GRCH38
+# https://groups.google.com/g/rna-star/c/mo1QZ-7QPkc
+# https://groups.google.com/g/rna-star/c/rVzRipcCLIA/m/6e2d3pBkx-wJ
+
 koopa_star_index() {
     # """
     # Create a genome index for STAR aligner.
-    # @note Updated 2023-02-01.
+    # @note Updated 2023-02-12.
     #
     # Doesn't currently support compressed files as input.
     #
@@ -104,6 +112,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
         '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
+        '--sjdbOverhang' '99'
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
