@@ -21947,8 +21947,12 @@ GB of RAM."
         '--genomeDir' "${dict['index_dir']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
+        '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
+        '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
         '--runMode' 'alignReads'
+        '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
+        '--twopassMode' 'Basic'
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}" \
@@ -22157,7 +22161,10 @@ GB of RAM."
         '--genomeDir' "${dict['index_dir']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
+        '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
+        '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
         '--runMode' 'alignReads'
+        '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
@@ -22343,7 +22350,6 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
         '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
-        '--sjdbOverhang' '99'
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
