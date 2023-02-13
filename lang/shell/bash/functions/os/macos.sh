@@ -622,6 +622,7 @@ koopa_macos_install_system_defaults() {
 
 koopa_macos_install_system_python() {
     koopa_install_app \
+        --installer='python' \
         --name='python3.11' \
         --no-prefix-check \
         --platform='macos' \
