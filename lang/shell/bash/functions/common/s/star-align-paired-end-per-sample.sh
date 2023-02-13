@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Consider outputting transcript-level BAMs by default too.
+# With --quantMode TranscriptomeSAM option STAR will output alignments translated into tran-
+# script coordinates in the Aligned.toTranscriptome.out.bam file
+
 # FIXME Look into adding support for strandedness here.
 #
 # if strandedness == "unstranded" and not srna:
@@ -35,18 +39,17 @@
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-02-13.
     #
     # @seealso
-    # - https://hbctraining.github.io/Intro-to-rnaseq-hpc-O2/lessons/
-    #     03_alignment.html
+    # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
+    # - https://github.com/nf-core/rnaseq/blob/master/modules/nf-core/
+    #     star/align/main.nf
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/ngsalign/
     #     star.py
-    # - https://github.com/nf-core/rnaseq/blob/master/modules/local/
-    #     star_align.nf
-    # - https://github.com/nf-core/rnaseq/blob/master/subworkflows/local/
-    #     align_star.nf
     # - https://www.biostars.org/p/243683/
+    # - https://github.com/hbctraining/Intro-to-rnaseq-hpc-O2/blob/
+    #     master/lessons/03_alignment.md
     #
     # @examples
     # > koopa_star_align_paired_end_per_sample \
@@ -172,12 +175,18 @@ GB of RAM."
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
+        # Can retain unsorted BAM with:
+        # > '--outSAMtype' 'BAM' 'Unsorted' 'SortedByCoordinate'
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
+        '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
+        # This is the recommended default, to ensure RSEM compatibility.
+        '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
         '--runMode' 'alignReads'
+        '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
+        '--twopassMode' 'Basic'
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    # FIXME May need to decompress the files first, rather than using stdin.
     "${app['star']}" "${align_args[@]}" \
         --readFilesIn \
             <(koopa_decompress --stdout "${dict['fastq_r1_file']}") \
