@@ -3400,9 +3400,9 @@
       "fedora": ["python3", "python3-devel"]
     },
     "bin": ["python", "python3"],
-    "date": "2023-01-03",
+    "date": "2023-02-13",
     "man1": ["python.1", "python3.1"],
-    "version": "3.11.1"
+    "version": "3.11.2"
   },
   "python3.10": {
     "aliases": {
