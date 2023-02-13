@@ -3,7 +3,7 @@
 main() {
     # """
     # Install ninja.
-    # @note Updated 2022-09-30.
+    # @note Updated 2023-02-13.
     #
     # @seealso
     # - https://github.com/ninja-build/ninja
@@ -11,9 +11,8 @@ main() {
     # """
     local app dict
     koopa_activate_app --build-only 'python3.11'
-    declare -A app=(
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['name']='ninja'
