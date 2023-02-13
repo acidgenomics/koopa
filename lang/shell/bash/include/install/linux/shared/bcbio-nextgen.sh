@@ -25,9 +25,8 @@ main() {
     local app dict install_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'bzip2'
-    declare -A app=(
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

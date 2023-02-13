@@ -6,7 +6,7 @@ koopa_cli_install() {
     # @note Updated 2022-10-05.
     #
     # @examples
-    # > koopa_cli_install --binary --reinstall --verbose 'python' 'tmux'
+    # > koopa_cli_install --binary --reinstall --verbose 'python3.10' 'tmux'
     # > koopa_cli_install user 'doom-emacs' 'spacemacs'
     # """
     local app dict flags pos stem

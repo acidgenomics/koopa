@@ -3207,7 +3207,7 @@ koopa_brew_upgrade_brews() {
             case "$brew" in
                 'gcc' | \
                 'gpg' | \
-                'python@3.9' | \
+                'python@3.11' | \
                 'vim')
                     "${app['brew']}" link --overwrite "$brew" || true
                     ;;
@@ -5272,7 +5272,7 @@ koopa_current_ensembl_version() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     str="$( \
-        koopa_parse_url 'ftp://ftp.ensembl.org/pub/current_README' \
+        koopa_parse_url 'ftp://ftp.ensembl.org/pub/README' \
         | "${app['sed']}" -n '3p' \
         | "${app['cut']}" -d ' ' -f '3' \
     )"
@@ -10655,6 +10655,7 @@ koopa_install_all_apps() {
         'go'
         'chezmoi'
         'fzf'
+        'gh'
         'git-lfs'
         'aws-cli'
         'autoflake'
@@ -10677,6 +10678,7 @@ koopa_install_all_apps() {
         'ranger-fm'
         'ruff'
         'visidata'
+        'yapf'
         'yt-dlp'
         'openssh'
         'c-ares'
@@ -10809,6 +10811,7 @@ koopa_install_all_apps() {
                 'snakemake'
                 'star'
                 'star-fusion'
+                'subread'
                 'sra-tools'
                 'scalene'
             )
@@ -10951,6 +10954,7 @@ koopa_install_all_binary_apps() {
         'gdal'
         'gdbm'
         'geos'
+        'gh'
         'git'
         'git-lfs'
         'glances'
@@ -11120,6 +11124,7 @@ koopa_install_all_binary_apps() {
         'xsv'
         'xxhash'
         'xz'
+        'yapf'
         'yarn'
         'yq'
         'yt-dlp'
@@ -11208,6 +11213,7 @@ koopa_install_all_binary_apps() {
                 'sra-tools'
                 'star'
                 'star-fusion'
+                'subread'
             )
         fi
         if koopa_is_linux
@@ -12367,6 +12373,12 @@ koopa_install_gget() {
         "$@"
 }
 
+koopa_install_gh() {
+    koopa_install_app \
+        --name='gh' \
+        "$@"
+}
+
 koopa_install_ghostscript() {
     koopa_install_app \
         --name='ghostscript' \
@@ -13456,21 +13468,16 @@ koopa_install_python311() {
         --name='python3.11' \
         "$@"
     (
-        koopa_alert "Linking 'python' in '${dict['app_prefix']}'."
-        koopa_cd "${dict['app_prefix']}"
-        koopa_ln 'python3.11' 'python'
-        koopa_alert "Linking 'python' in '${dict['bin_prefix']}'."
         koopa_cd "${dict['bin_prefix']}"
         koopa_ln 'python3.11' 'python3'
         koopa_ln 'python3.11' 'python'
-        koopa_alert "Linking 'python' in '${dict['man1_prefix']}'."
         koopa_cd "${dict['man1_prefix']}"
         koopa_ln 'python3.11.1' 'python3.1'
         koopa_ln 'python3.11.1' 'python.1'
-        koopa_alert "Linking 'python' in '${dict['opt_prefix']}'."
-        koopa_cd "${dict['opt_prefix']}"
-        koopa_ln 'python3.11' 'python'
     )
+    koopa_rm \
+        "${dict['app_prefix']}/python" \
+        "${dict['opt_prefix']}/python"
     return 0
 }
 
@@ -13741,6 +13748,12 @@ koopa_install_starship() {
 koopa_install_stow() {
     koopa_install_app \
         --name='stow' \
+        "$@"
+}
+
+koopa_install_subread() {
+    koopa_install_app \
+        --name='subread' \
         "$@"
 }
 
@@ -14055,6 +14068,12 @@ koopa_install_xz() {
 koopa_install_yaml_cpp() {
     koopa_install_app \
         --name='yaml-cpp' \
+        "$@"
+}
+
+koopa_install_yapf() {
+    koopa_install_app \
+        --name='yapf' \
         "$@"
 }
 
@@ -15975,13 +15994,6 @@ koopa_locate_bowtie2() {
         "$@"
 }
 
-koopa_locate_bpytop() {
-    koopa_locate_app \
-        --app-name='python-packages' \
-        --bin-name='bpytop' \
-        "$@"
-}
-
 koopa_locate_brew() {
     koopa_locate_app \
         "$(koopa_homebrew_prefix)/Homebrew/bin/brew" \
@@ -16796,13 +16808,6 @@ koopa_locate_pylint() {
     koopa_locate_app \
         --app-name='pylint' \
         --bin-name='pylint' \
-        "$@"
-}
-
-koopa_locate_python() {
-    koopa_locate_app \
-        --app-name='python' \
-        --bin-name='python3' \
         "$@"
 }
 
@@ -18294,11 +18299,9 @@ koopa_python_create_venv() {
     local app dict pkgs pos venv_args
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    declare -A app=(
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
-    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         ['name']=''
         ['pip']=1
@@ -18429,10 +18432,7 @@ koopa_python_deactivate_venv() {
 koopa_python_pip_install() {
     local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
-    declare -A app
-    app['python']="$(koopa_locate_python)"
-    [[ -x "${app['python']}" ]] || return 1
-    declare -A dict
+    declare -A app dict
     dict['prefix']=''
     pos=()
     while (("$#"))
@@ -18463,6 +18463,9 @@ koopa_python_pip_install() {
                 ;;
         esac
     done
+    [[ -z "${app['python']}" ]] && \
+        app['python']="$(koopa_locate_python311 --realpath)"
+    [[ -x "${app['python']}" ]] || return 1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     pkgs=("$@")
@@ -18497,12 +18500,9 @@ koopa_python_pip_install() {
 koopa_python_system_packages_prefix() {
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['python']="${1:-}"
-    )
-    [[ -z "${app['python']}" ]] && app['python']="$(koopa_locate_python)"
+    declare -A app dict
+    app['python']="${1:?}"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict
     dict['prefix']="$( \
         "${app['python']}" -c 'import site; print(site.getsitepackages()[0])' \
     )"
@@ -18607,7 +18607,7 @@ koopa_r_configure_environ() {
         'pcre'
         'pcre2'
         'proj'
-        'python'
+        'python3.11'
         'readline'
         'sqlite'
         'xz'
@@ -18855,7 +18855,7 @@ koopa_r_configure_ldpaths() {
         'pcre'
         'pcre2'
         'proj'
-        'python'
+        'python3.11'
         'readline'
         'sqlite'
         'xz'
@@ -19120,7 +19120,7 @@ koopa_r_configure_makevars() {
             'pcre'
             'pcre2'
             'proj'
-            'python'
+            'python3.11'
             'readline'
             'sqlite'
             'xz'
@@ -21847,7 +21847,7 @@ koopa_star_align_paired_end_per_sample() {
         ['fastq_r2_tail']=''
         ['index_dir']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
+        ['mem_gb_cutoff']=60
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
     )
@@ -22079,7 +22079,7 @@ koopa_star_align_single_end_per_sample() {
         ['fastq_tail']=''
         ['index_dir']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
+        ['mem_gb_cutoff']=60
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
     )
@@ -22339,6 +22339,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
         '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
+        '--sjdbOverhang' '99'
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
@@ -24129,6 +24130,12 @@ koopa_uninstall_gget() {
         "$@"
 }
 
+koopa_uninstall_gh() {
+    koopa_uninstall_app \
+        --name='gh' \
+        "$@"
+}
+
 koopa_uninstall_ghostscript() {
     koopa_uninstall_app \
         --name='ghostscript' \
@@ -25051,7 +25058,6 @@ koopa_uninstall_python311() {
     koopa_uninstall_app \
         --name='python3.11' \
         "$@"
-    koopa_alert "Unlinking 'python' and 'python3'."
     koopa_rm  \
         "${dict['app_prefix']}/python" \
         "${dict['bin_prefix']}/python" \
@@ -25285,6 +25291,12 @@ koopa_uninstall_starship() {
 koopa_uninstall_stow() {
     koopa_uninstall_app \
         --name='stow' \
+        "$@"
+}
+
+koopa_uninstall_subread() {
+    koopa_uninstall_app \
+        --name='subread' \
         "$@"
 }
 
@@ -25583,6 +25595,12 @@ koopa_uninstall_xz() {
 koopa_uninstall_yaml_cpp() {
     koopa_uninstall_app \
         --name='yaml-cpp' \
+        "$@"
+}
+
+koopa_uninstall_yapf() {
+    koopa_uninstall_app \
+        --name='yapf' \
         "$@"
 }
 
@@ -25921,7 +25939,7 @@ koopa_validate_json() {
     declare -A app
     declare -A dict
     koopa_assert_has_args_eq "$#" 1
-    app['python']="$(koopa_locate_python)"
+    app['python']="$(koopa_locate_python311)"
     dict['file']="${1:?}"
     "${app['python']}" -m 'json.tool' "${dict['file']}" >/dev/null
 }

@@ -11,9 +11,8 @@ main() {
     # """
     local app b2_args bootstrap_args dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['python']="$(koopa_locate_python)"
-    )
+    declare -A app
+    app['python']="$(koopa_locate_python_311)"
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"

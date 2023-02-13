@@ -10,7 +10,7 @@ main() {
     # - https://github.com/ninja-build/ninja/wiki
     # """
     local app dict
-    koopa_activate_app --build-only 'python'
+    koopa_activate_app --build-only 'python3.11'
     declare -A app=(
         ['python']="$(koopa_locate_python)"
     )

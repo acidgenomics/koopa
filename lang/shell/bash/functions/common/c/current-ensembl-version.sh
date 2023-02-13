@@ -3,7 +3,7 @@
 koopa_current_ensembl_version() {
     # """
     # Current Ensembl version.
-    # @note Updated 2022-02-25.
+    # @note Updated 2023-02-10.
     #
     # @examples
     # > koopa_current_ensembl_version
@@ -18,7 +18,7 @@ koopa_current_ensembl_version() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     str="$( \
-        koopa_parse_url 'ftp://ftp.ensembl.org/pub/current_README' \
+        koopa_parse_url 'ftp://ftp.ensembl.org/pub/README' \
         | "${app['sed']}" -n '3p' \
         | "${app['cut']}" -d ' ' -f '3' \
     )"

@@ -13,14 +13,13 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app 'ncurses' 'python'
+    koopa_activate_app 'ncurses' 'python3.11'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python)"
+        ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='vim'
@@ -28,7 +27,7 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['vim_rpath']="${dict['prefix']}/lib"
-    dict['python']="$(koopa_app_prefix 'python')"
+    dict['python']="$(koopa_app_prefix 'python3.11')"
     app['python_config']="${app['python']}-config"
     koopa_assert_is_installed "${app['python']}" "${app['python_config']}"
     dict['python_config_dir']="$("${app['python_config']}" --configdir)"

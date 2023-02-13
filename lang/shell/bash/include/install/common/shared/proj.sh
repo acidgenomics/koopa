@@ -29,7 +29,7 @@ main() {
         'zstd' \
         'libjpeg-turbo' \
         'libtiff' \
-        'python' \
+        'python3.11' \
         'sqlite'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"

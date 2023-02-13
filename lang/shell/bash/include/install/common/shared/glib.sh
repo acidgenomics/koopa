@@ -11,7 +11,7 @@ main() {
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/glib2.html
     # """
     local app build_deps deps meson_args dict
-    build_deps=('cmake' 'meson' 'ninja' 'pkg-config' 'python')
+    build_deps=('cmake' 'meson' 'ninja' 'pkg-config' 'python3.11')
     deps=('zlib')
     koopa_is_macos && deps+=('gettext')
     deps+=('libffi' 'pcre2')

@@ -39,7 +39,7 @@ main() {
         'icu4c'
         'libuv'
         'openssl3'
-        'python'
+        'python3.11'
         'c-ares'
         'nghttp2'
         # > 'brotli'
@@ -48,7 +48,7 @@ main() {
     koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python --realpath)"
+        ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
