@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Should we pin this to Python 3.9 instead?
-# FIXME This currently doesn't work with Python 3.11.0 on macOS.
-# FIXME This approach is currently failing on Linux.
-# Seeing error message: gcloud failed to load: No module named '_sqlite3'.
-# FIXME Setting CLOUDSDK_PYTHON='/usr/bin/python3' works, but this shouldn't
-# be required to fix this...
-
 main() {
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2022-06-13.
+    # @note Updated 2023-02-13.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install
@@ -18,7 +11,7 @@ main() {
     #     Casks/google-cloud-sdk.rb
     # """
     local dict
-    koopa_activate_app --build-only 'python'
+    koopa_activate_app --build-only 'python3.10'
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
