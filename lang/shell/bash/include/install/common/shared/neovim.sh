@@ -46,7 +46,7 @@ main() {
         'gettext'
         'libiconv'
         'ncurses'
-        'python'
+        'python3.11'
     )
     koopa_activate_app "${deps[@]}"
     declare -A app=(

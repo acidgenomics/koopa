@@ -12,7 +12,7 @@ main() {
         'automake'
     koopa_activate_app \
         'ncurses' \
-        'python'
+        'python3.11'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
     )

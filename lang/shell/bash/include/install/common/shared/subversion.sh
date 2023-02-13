@@ -26,7 +26,7 @@ main() {
         'apr-util' \
         'openssl3' \
         'perl' \
-        'python' \
+        'python3.11' \
         'ruby' \
         'serf' \
         'sqlite'
