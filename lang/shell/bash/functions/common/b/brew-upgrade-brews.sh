@@ -30,7 +30,7 @@ koopa_brew_upgrade_brews() {
             case "$brew" in
                 'gcc' | \
                 'gpg' | \
-                'python@3.9' | \
+                'python@3.11' | \
                 'vim')
                     "${app['brew']}" link --overwrite "$brew" || true
                     ;;
