@@ -3,7 +3,7 @@
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
-    # @note Updated 2022-02-12.
+    # @note Updated 2022-02-13.
     #
     # @examples
     # > koopa_star_align_single_end_per_sample \
@@ -103,11 +103,13 @@ GB of RAM."
         '--genomeDir' "${dict['index_dir']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
+        '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
+        '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
         '--runMode' 'alignReads'
+        '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    # FIXME May need to decompress the files first, rather than using stdin.
     "${app['star']}" "${align_args[@]}" \
         --readFilesIn \
             <(koopa_decompress --stdout "${dict['fastq_file']}")
