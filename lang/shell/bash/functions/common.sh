@@ -10655,6 +10655,7 @@ koopa_install_all_apps() {
         'go'
         'chezmoi'
         'fzf'
+        'gh'
         'git-lfs'
         'aws-cli'
         'autoflake'
@@ -10677,6 +10678,7 @@ koopa_install_all_apps() {
         'ranger-fm'
         'ruff'
         'visidata'
+        'yapf'
         'yt-dlp'
         'openssh'
         'c-ares'
@@ -10809,6 +10811,7 @@ koopa_install_all_apps() {
                 'snakemake'
                 'star'
                 'star-fusion'
+                'subread'
                 'sra-tools'
                 'scalene'
             )
@@ -10951,6 +10954,7 @@ koopa_install_all_binary_apps() {
         'gdal'
         'gdbm'
         'geos'
+        'gh'
         'git'
         'git-lfs'
         'glances'
@@ -11120,6 +11124,7 @@ koopa_install_all_binary_apps() {
         'xsv'
         'xxhash'
         'xz'
+        'yapf'
         'yarn'
         'yq'
         'yt-dlp'
@@ -11208,6 +11213,7 @@ koopa_install_all_binary_apps() {
                 'sra-tools'
                 'star'
                 'star-fusion'
+                'subread'
             )
         fi
         if koopa_is_linux
@@ -12364,6 +12370,12 @@ koopa_install_gffutils() {
 koopa_install_gget() {
     koopa_install_app \
         --name='gget' \
+        "$@"
+}
+
+koopa_install_gh() {
+    koopa_install_app \
+        --name='gh' \
         "$@"
 }
 
@@ -14061,6 +14073,12 @@ koopa_install_xz() {
 koopa_install_yaml_cpp() {
     koopa_install_app \
         --name='yaml-cpp' \
+        "$@"
+}
+
+koopa_install_yapf() {
+    koopa_install_app \
+        --name='yapf' \
         "$@"
 }
 
@@ -21853,7 +21871,7 @@ koopa_star_align_paired_end_per_sample() {
         ['fastq_r2_tail']=''
         ['index_dir']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
+        ['mem_gb_cutoff']=60
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
     )
@@ -22085,7 +22103,7 @@ koopa_star_align_single_end_per_sample() {
         ['fastq_tail']=''
         ['index_dir']=''
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
+        ['mem_gb_cutoff']=60
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
     )
@@ -22345,6 +22363,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
         '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
+        '--sjdbOverhang' '99'
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
@@ -24135,6 +24154,12 @@ koopa_uninstall_gget() {
         "$@"
 }
 
+koopa_uninstall_gh() {
+    koopa_uninstall_app \
+        --name='gh' \
+        "$@"
+}
+
 koopa_uninstall_ghostscript() {
     koopa_uninstall_app \
         --name='ghostscript' \
@@ -25595,6 +25620,12 @@ koopa_uninstall_xz() {
 koopa_uninstall_yaml_cpp() {
     koopa_uninstall_app \
         --name='yaml-cpp' \
+        "$@"
+}
+
+koopa_uninstall_yapf() {
+    koopa_uninstall_app \
+        --name='yapf' \
         "$@"
 }
 
