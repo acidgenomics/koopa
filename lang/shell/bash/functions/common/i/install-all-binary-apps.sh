@@ -111,6 +111,7 @@ koopa_install_all_binary_apps() {
         'gdal'
         'gdbm'
         'geos'
+        'gh'
         'git'
         'git-lfs'
         'glances'
@@ -280,6 +281,7 @@ koopa_install_all_binary_apps() {
         'xsv'
         'xxhash'
         'xz'
+        'yapf'
         'yarn'
         'yq'
         'yt-dlp'
@@ -377,6 +379,7 @@ koopa_install_all_binary_apps() {
                 'sra-tools'
                 'star'
                 'star-fusion'
+                'subread'
             )
         fi
         if koopa_is_linux

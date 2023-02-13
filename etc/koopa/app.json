@@ -1446,6 +1446,16 @@
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.2"
   },
+  "gh": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["gh"],
+    "build_dependencies": ["go"],
+    "date": "2023-02-13",
+    "url": ["https://github.com/cli/cli/"],
+    "version": "2.23.0"
+  },
   "ghostscript": {
     "aliases": {
       "homebrew": true
@@ -1568,14 +1578,6 @@
     },
     "bin": ["go"],
     "date": "2023-02-08",
-    "reverse_dependencies": [
-      "apptainer",
-      "chezmoi",
-      "csvtk",
-      "fzf",
-      "gum",
-      "yq"
-    ],
     "url": ["https://golang.org/dl/"],
     "version": "1.20"
   },
@@ -3479,6 +3481,7 @@
       "scons",
       "snakefmt",
       "vulture",
+      "yapf",
       "yt-dlp",
       "vim",
       "xorg-xcb-proto",
@@ -4575,6 +4578,19 @@
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/jbeder/yaml-cpp/"],
     "version": "0.7.0"
+  },
+  "yapf": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["black"],
+    "date": "2023-02-13",
+    "dependencies": ["python"],
+    "url": [
+      "https://pypi.org/project/yapf/",
+      "https://github.com/google/yapf/"
+    ],
+    "version": "0.32.0"
   },
   "yarn": {
     "aliases": {
