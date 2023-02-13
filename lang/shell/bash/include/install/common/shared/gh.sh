@@ -18,6 +18,7 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['gopath']="$(koopa_init_dir 'go')"
+        ['jobs']="$(koopa_cpu_count)"
         ['name']='cli'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -32,10 +33,13 @@ refs/tags/${dict['file']}"
     export GOPATH="${dict['gopath']}"
     export GO_LDFLAGS='-s -w -X main.updaterEnabled=cli/cli'
     koopa_print_env
-    "${app['make']}" 'bin/gh' 'manpages'
+    "${app['make']}" \
+        VERBOSE=1 \
+        --jobs="${dict['jobs']}" \
+        'bin/gh' 'manpages'
     koopa_cp \
         --target-directory="${dict['prefix']}" \
-        'bin' 'man'
+        'bin' 'share'
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }
