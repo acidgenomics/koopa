@@ -70,10 +70,6 @@ koopa/ascii-turtle.txt"
         app['uname']="$(koopa_locate_uname --allow-system)"
         [[ -x "${app['uname']}" ]] || return 1
         dict['os']="$("${app['uname']}" --all)"
-        # Alternate approach using Python:
-        # > app['python']="$(koopa_locate_python)"
-        # > [[ -x "${app['python']}" ]] || return 1
-        # > dict['os']="$("${app['python']}" -mplatform)"
     fi
     info+=(
         ''

@@ -6,7 +6,7 @@ koopa_app_json_revdeps() {
     # @note Updated 2022-10-18.
     #
     # @examples
-    # > koopa_app_json_revdeps 'python'
+    # > koopa_app_json_revdeps 'python3.11'
     # """
     local app_name
     koopa_assert_has_args "$#"
