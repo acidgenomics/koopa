@@ -18432,10 +18432,7 @@ koopa_python_deactivate_venv() {
 koopa_python_pip_install() {
     local app dict dl_args pkgs pos
     koopa_assert_has_args "$#"
-    declare -A app
-    app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
-    declare -A dict
+    declare -A app dict
     dict['prefix']=''
     pos=()
     while (("$#"))
@@ -18466,6 +18463,9 @@ koopa_python_pip_install() {
                 ;;
         esac
     done
+    [[ -z "${app['python']}" ]] && \
+        app['python']="$(koopa_locate_python311 --realpath)"
+    [[ -x "${app['python']}" ]] || return 1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     pkgs=("$@")
@@ -18500,10 +18500,9 @@ koopa_python_pip_install() {
 koopa_python_system_packages_prefix() {
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    declare -A app dict
     app['python']="${1:?}"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict
     dict['prefix']="$( \
         "${app['python']}" -c 'import site; print(site.getsitepackages()[0])' \
     )"
