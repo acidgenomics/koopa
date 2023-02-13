@@ -13,7 +13,7 @@ main() {
     app['cut']="$(koopa_locate_cut)"
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
-        ['locate_python']='koopa_locate_python_311'
+        ['locate_python']='koopa_locate_python311'
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['py_maj_ver']=''
