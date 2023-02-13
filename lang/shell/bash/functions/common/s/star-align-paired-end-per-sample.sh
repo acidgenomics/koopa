@@ -139,11 +139,8 @@ GB of RAM."
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
-        # Can retain unsorted BAM with:
-        # > '--outSAMtype' 'BAM' 'Unsorted' 'SortedByCoordinate'
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
-        # This is the recommended default, to ensure RSEM compatibility.
         '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
