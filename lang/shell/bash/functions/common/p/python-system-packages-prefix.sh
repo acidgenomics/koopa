@@ -7,10 +7,9 @@ koopa_python_system_packages_prefix() {
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    declare -A app dict
     app['python']="${1:?}"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict
     dict['prefix']="$( \
         "${app['python']}" -c 'import site; print(site.getsitepackages()[0])' \
     )"
