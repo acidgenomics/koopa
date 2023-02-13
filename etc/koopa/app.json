@@ -2232,12 +2232,14 @@
       "fedora": "libgit2-devel",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2023-02-09",
+    "dependencies": ["zlib", "pcre", "openssl3", "libssh2"],
     "notes": ["1.5.+ releases fail to build on Ubuntu."],
     "outdated": true,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.4.5"
+    "version": "1.5.1"
   },
   "libgpg-error": {
     "aliases": {
