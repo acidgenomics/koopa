@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2023-02-09.
+    # @note Updated 2023-02-13.
     #
     # @seealso
     # - https://libgit2.org/docs/guides/build-and-link/
@@ -27,6 +27,7 @@ main() {
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
+        ['libssh2']="$(koopa_app_prefix 'libssh2')"
         ['name']='libgit2'
         ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['pcre']="$(koopa_app_prefix 'pcre')"
@@ -36,6 +37,7 @@ main() {
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
     koopa_assert_is_dir \
+        "${dict['libssh2']}" \
         "${dict['openssl']}" \
         "${dict['pcre']}" \
         "${dict['zlib']}"
@@ -54,15 +56,17 @@ archive/${dict['file']}"
         "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        # > "-DOPENSSL_CMD=${dict['openssl']}/bin/openssl"
-        "-DOPENSSL_DIR=${dict['openssl']}"
+        "-DLIBSSH2_INCLUDE_DIR=${dict['libssh2']}/include"
+        "-DLIBSSH2_LIBRARY=${dict['libssh2']}/lib/libssh2.${dict['shared_ext']}"
+        # NOTE Use 'OPENSSL_LIBRARIES' here instead?
+        "-DOPENSSL_CRYPTO_LIBRARY=${dict['openssl']}/lib/\
+libcrypto.${dict['shared_ext']}"
         "-DOPENSSL_INCLUDE_DIR=${dict['openssl']}/include"
-        "-DOPENSSL_LIBRARIES=${dict['openssl']}/lib/libcrypto.${dict['shared_ext']}"
+        "-DOPENSSL_SSL_LIBRARY=${dict['openssl']}/lib/\
+libssl.${dict['shared_ext']}"
         "-DPCRE_INCLUDE_DIR=${dict['pcre']}/include"
         "-DPCRE_LIBRARY=${dict['pcre']}/lib/libpcre.${dict['shared_ext']}"
-        '-DUSE_BUNDLED_ZLIB=OFF'
-        '-DUSE_SSH=YES'
-        '-DUSE_THREADS=ON'
+        '-DUSE_SSH=ON'
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
