@@ -48,7 +48,6 @@ archive/${dict['file']}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DPCRE_INCLUDE_DIR=${dict['pcre']}/include"
@@ -59,6 +58,7 @@ archive/${dict['file']}"
     if koopa_is_macos
     then
         cmake_args+=(
+            "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
             '-DUSE_HTTPS=ON'
             '-DUSE_SSH=ON'
             "-DLIBSSH2_INCLUDE_DIR=${dict['libssh2']}/include"
