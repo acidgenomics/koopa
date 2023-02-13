@@ -13497,8 +13497,12 @@ koopa_install_r_koopa() {
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['rscript']}" ]] || return 1
     "${app['rscript']}" -e " \
+        options(
+            error = quote(quit(status = 1L)),
+            warn = 1L
+        ); \
         if (!requireNamespace('BiocManager', quietly = TRUE)) { ; \
-            install.packages('BiocManager') ; \
+            install.packages('BiocManager'); \
         } ; \
         install.packages(
             pkgs = 'koopa',
