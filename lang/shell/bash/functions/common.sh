@@ -7228,6 +7228,41 @@ at '${dict['output_file']}'."
     return 0
 }
 
+koopa_fasta_has_alt_contigs() {
+    local dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict=(
+        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+        ['file']="${1:?}"
+        ['is_tmp']=0
+    )
+    koopa_assert_is_file "${dict['file']}"
+    if koopa_file_detect_regex \
+        --file="${dict['file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        dict['is_tmp']=1
+        dict['tmp_file']="$(koopa_tmp_file)"
+        koopa_decompress "${dict['file']}" "${dict['tmp_file']}"
+        dict['file']="${dict['tmp_file']}"
+    fi
+    if koopa_file_detect_fixed \
+        --file="${dict['file']}" \
+        --pattern=' ALT_' \
+    || koopa_file_detect_fixed \
+        --file="${dict['file']}" \
+        --pattern=' alternate locus group ' \
+    || koopa_file_detect_fixed \
+        --file="${dict['file']}" \
+        --pattern=' rl:alt-scaffold '
+    then
+        [[ "${dict['is_tmp']}" -eq 1 ]] && koopa_rm "${dict['file']}"
+        return 0
+    fi
+    [[ "${dict['is_tmp']}" -eq 1 ]] && koopa_rm "${dict['file']}"
+    return 1
+}
+
 koopa_fastq_detect_quality_score() {
     local app file
     koopa_assert_has_args "$#"
