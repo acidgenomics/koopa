@@ -17,7 +17,6 @@ koopa_fasta_has_alt_contigs() {
     # > rg '^[^\s]+_alt\s' GCA_000001405.15_GRCh38_full_analysis_set.fna
     # > rg ' rl:alt-scaffold ' GCA_000001405.15_GRCh38_full_analysis_set.fna
     #
-    #
     # @seealso
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
     #     heterogeneity/chromhacks.py#L75
