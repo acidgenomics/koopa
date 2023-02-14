@@ -192,7 +192,7 @@
     "aliases": {
       "fedora": true
     },
-    "bin": ["aclocal", "automake"],
+    "bin": ["aclocal", "aclocal-1.16", "automake", "automake-1.16"],
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
