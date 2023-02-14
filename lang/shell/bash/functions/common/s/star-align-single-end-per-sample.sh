@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for automatic pushing to AWS S3.
+
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
