@@ -3,11 +3,11 @@
 koopa_debian_os_codename() {
     # """
     # Debian operating system codename.
-    # @note Updated 2022-01-10.
+    # @note Updated 2023-02-14.
     # """
     local app dict
     declare -A app dict
-    app['lsb_release']="$(koopa_locate_lsb_release)"
+    app['lsb_release']="$(koopa_debian_locate_lsb_release)"
     [[ -x "${app['lsb_release']}" ]] || return 1
     dict['string']="$("${app['lsb_release']}" -cs)"
     [[ -n "${dict['string']}" ]] || return 1
