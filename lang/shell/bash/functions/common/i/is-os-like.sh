@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Move this back to POSIX library.
+
 koopa_is_os_like() {
     # """
     # Does the current operating system match an expected distribution?

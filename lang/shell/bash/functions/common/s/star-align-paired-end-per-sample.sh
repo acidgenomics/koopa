@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing this on our EC2 instance...
+# WARNING: nothing to sort - no output alignments
+# FIXME Need to set memory parameter for sorting.
+
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2023-02-13.
+    # @note Updated 2023-02-14.
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
@@ -136,21 +140,30 @@ GB of RAM."
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
+    dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
+    koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
+to '${dict['tmp_fastq_r1_file']}"
+    koopa_decompress "${dict['fastq_r1_file']}" "${dict['tmp_fastq_r1_file']}"
+    koopa_alert "Decompressing '${dict['fastq_r2_file']}' \
+to '${dict['tmp_fastq_r2_file']}"
+    koopa_decompress "${dict['fastq_r2_file']}" "${dict['tmp_fastq_r2_file']}"
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
+        '--limitBAMsortRAM' "${dict['mem_gb']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
-        '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
-        '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
+        '--quantMode' 'TranscriptomeSAM'
+        '--readFilesIn' \
+            "${dict['tmp_fastq_r1_file']}" \
+            "${dict['tmp_fastq_r2_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
         '--twopassMode' 'Basic'
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app['star']}" "${align_args[@]}" \
-        --readFilesIn \
-            <(koopa_decompress --stdout "${dict['fastq_r1_file']}") \
-            <(koopa_decompress --stdout "${dict['fastq_r2_file']}")
+    "${app['star']}" "${align_args[@]}"
+    koopa_rm "${dict['tmp_fastq_r1_file']}" "${dict['tmp_fastq_r2_file']}"
     return 0
 }
