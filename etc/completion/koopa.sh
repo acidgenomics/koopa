@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2207
 
+# FIXME Our OS-specific checks are no longer accessible in POSIX function
+# library. Need to migrate these back here so completion works as expected.
+
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
