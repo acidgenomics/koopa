@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Move this back to POSIX library.
+
 koopa_is_ubuntu_like() {
     # """
     # Is the operating system Ubuntu-like?
