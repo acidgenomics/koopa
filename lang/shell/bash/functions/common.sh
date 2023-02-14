@@ -21960,6 +21960,7 @@ koopa_star_align_paired_end_per_sample() {
         koopa_stop "STAR 'alignReads' mode requires ${dict['mem_gb_cutoff']} \
 GB of RAM."
     fi
+    dict['limit_bam_sort_ram']=$(( dict['mem_gb'] * 1000000000 ))
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
@@ -21989,7 +21990,7 @@ to '${dict['tmp_fastq_r2_file']}"
     koopa_decompress "${dict['fastq_r2_file']}" "${dict['tmp_fastq_r2_file']}"
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
-        '--limitBAMsortRAM' "${dict['mem_gb']}"
+        '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
@@ -22003,7 +22004,10 @@ to '${dict['tmp_fastq_r2_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm "${dict['tmp_fastq_r1_file']}" "${dict['tmp_fastq_r2_file']}"
+    koopa_rm \
+        "${dict['output_dir']}/_STARtmp" \
+        "${dict['tmp_fastq_r1_file']}" \
+        "${dict['tmp_fastq_r2_file']}"
     return 0
 }
 
@@ -22187,6 +22191,7 @@ koopa_star_align_single_end_per_sample() {
         koopa_stop "STAR 'alignReads' mode requires ${dict['mem_gb_cutoff']} \
 GB of RAM."
     fi
+    dict['limit_bam_sort_ram']=$(( dict['mem_gb'] * 1000000000 ))
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
@@ -22208,7 +22213,7 @@ to '${dict['tmp_fastq_file']}"
     koopa_decompress "${dict['fastq_file']}" "${dict['tmp_fastq_file']}"
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
-        '--limitBAMsortRAM' "${dict['mem_gb']}"
+        '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
@@ -22219,7 +22224,9 @@ to '${dict['tmp_fastq_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm "${dict['tmp_fastq_file']}"
+    koopa_rm \
+        "${dict['output_dir']}/_STARtmp" \
+        "${dict['tmp_fastq_file']}"
     return 0
 }
 
