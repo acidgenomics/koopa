@@ -35,11 +35,10 @@ main() {
     koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
-        ['python']="$(koopa_locate_python)"
+        ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    app['python']="$(koopa_realpath "${app['python']}")"
     declare -A dict=(
         ['base_url']='https://github.com/ncbi'
         ['openjdk']="$(koopa_app_prefix 'openjdk')"

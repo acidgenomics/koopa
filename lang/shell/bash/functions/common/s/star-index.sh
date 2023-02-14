@@ -7,6 +7,11 @@
 # https://gatk.broadinstitute.org/hc/en-us/articles/360037498992--How-to-Map-reads-to-a-reference-with-alternate-contigs-like-GRCH38
 # https://groups.google.com/g/rna-star/c/mo1QZ-7QPkc
 # https://groups.google.com/g/rna-star/c/rVzRipcCLIA/m/6e2d3pBkx-wJ
+#
+# FIXME bcbio chromhacks is_alt
+# look for "_alt" in genome -- check Ensembl for example.
+#
+# NOTE Refer to '--limitGenomeGenerateRAM' for memory limit optimization.
 
 koopa_star_index() {
     # """
@@ -112,7 +117,6 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
         '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
-        '--sjdbOverhang' '99'
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
