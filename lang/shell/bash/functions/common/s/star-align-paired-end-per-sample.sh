@@ -1,52 +1,19 @@
 #!/usr/bin/env bash
 
-# FIXME Look into adding support for strandedness here.
-#
-# if strandedness == "unstranded" and not srna:
-#     cmd += " --outSAMstrandField intronMotif "
-# if not srna:
-#     cmd += " --quantMode TranscriptomeSAM "
-
-# FIXME Consider setting additional options here, to match bcbio.
-# cmd = ("{star_path} --genomeDir {ref_file} --readFilesIn {fastq_files} "
-#        "--runThreadN {num_cores} --outFileNamePrefix {tx_out_prefix} "
-#        "--outReadsUnmapped Fastx --outFilterMultimapNmax {max_hits} "
-#        "--outStd BAM_Unsorted {srna_opts} "
-#        "--limitOutSJcollapsed 2000000 "
-#        "--outSAMtype BAM Unsorted "
-#        "--outSAMmapqUnique 60 "
-#        "--outSAMunmapped Within --outSAMattributes %s " % " ".join(ALIGN_TAGS))
-# cmd += (" --chimSegmentMin 12 --chimJunctionOverhangMin 12 "
-#     "--chimScoreDropMax 30 --chimSegmentReadGapMax 5 "
-#     "--chimScoreSeparation 5 ")
-# cmd += "--chimOutType WithinBAM "
-
-# FIXME Consider this additional workflow step:
-# cmd = ("{star_path} --genomeDir {ref_file} --readFilesIn {fastq_files} "
-#     "--runThreadN {num_cores} --outFileNamePrefix {tx_out_prefix} "
-#     "--outReadsUnmapped Fastx --outFilterMultimapNmax {max_hits} "
-#     "--outStd BAM_Unsorted {srna_opts} "
-#     "--limitOutSJcollapsed 2000000 "
-#     "{sjflag} "
-#     "--outSAMtype BAM Unsorted "
-#     "--outSAMmapqUnique 60 "
-#     "--outSAMunmapped Within --outSAMattributes %s " % " ".join(ALIGN_TAGS))
-
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-02-13.
     #
     # @seealso
-    # - https://hbctraining.github.io/Intro-to-rnaseq-hpc-O2/lessons/
-    #     03_alignment.html
+    # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
+    # - https://github.com/nf-core/rnaseq/blob/master/modules/nf-core/
+    #     star/align/main.nf
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/ngsalign/
     #     star.py
-    # - https://github.com/nf-core/rnaseq/blob/master/modules/local/
-    #     star_align.nf
-    # - https://github.com/nf-core/rnaseq/blob/master/subworkflows/local/
-    #     align_star.nf
     # - https://www.biostars.org/p/243683/
+    # - https://github.com/hbctraining/Intro-to-rnaseq-hpc-O2/blob/
+    #     master/lessons/03_alignment.md
     #
     # @examples
     # > koopa_star_align_paired_end_per_sample \
@@ -173,11 +140,14 @@ GB of RAM."
         '--genomeDir' "${dict['index_dir']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
+        '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
+        '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
         '--runMode' 'alignReads'
+        '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
+        '--twopassMode' 'Basic'
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    # FIXME May need to decompress the files first, rather than using stdin.
     "${app['star']}" "${align_args[@]}" \
         --readFilesIn \
             <(koopa_decompress --stdout "${dict['fastq_r1_file']}") \

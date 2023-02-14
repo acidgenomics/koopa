@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2023-01-03.
+    # @note Updated 2023-02-13.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -13,6 +13,7 @@ main() {
     app['cut']="$(koopa_locate_cut)"
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
+        ['locate_python']='koopa_locate_python311'
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['py_maj_ver']=''
@@ -52,11 +53,9 @@ main() {
                 "${dict['py_maj_ver']}" \
         )"
         dict['locate_python']="koopa_locate_python${dict['py_maj_ver_2']}"
-        koopa_assert_is_function "${dict['locate_python']}"
-        app['python']="$("${dict['locate_python']}")"
-    else
-        app['python']="$(koopa_locate_python)"
     fi
+    koopa_assert_is_function "${dict['locate_python']}"
+    app['python']="$("${dict['locate_python']}" --realpath)"
     [[ -x "${app['python']}" ]] || return 1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_no_args "$#"
