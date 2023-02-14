@@ -3,7 +3,7 @@
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
-    # @note Updated 2022-02-13.
+    # @note Updated 2022-02-14.
     #
     # @examples
     # > koopa_star_align_single_end_per_sample \
@@ -99,19 +99,21 @@ GB of RAM."
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    dict['tmp_fastq_file']="$(koopa_tmp_file)"
+    koopa_decompress "${dict['fastq_file']}" "${dict['tmp_fastq_file']}"
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
+        '--limitBAMsortRAM' "${dict['mem_gb']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
-        '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
-        '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
+        '--quantMode' 'TranscriptomeSAM'
+        '--readFilesIn' "${dict['tmp_fastq_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app['star']}" "${align_args[@]}" \
-        --readFilesIn \
-            <(koopa_decompress --stdout "${dict['fastq_file']}")
+    "${app['star']}" "${align_args[@]}"
+    koopa_rm "${dict['tmp_fastq_file']}"
     return 0
 }
