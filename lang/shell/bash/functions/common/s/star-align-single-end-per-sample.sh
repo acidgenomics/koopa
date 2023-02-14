@@ -100,6 +100,7 @@ GB of RAM."
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     dict['tmp_fastq_file']="$(koopa_tmp_file)"
+    koopa_alert "'${dict['fastq_file']}' -> '${dict['tmp_fastq_file']}"
     koopa_decompress "${dict['fastq_file']}" "${dict['tmp_fastq_file']}"
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
