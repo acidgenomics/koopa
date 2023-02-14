@@ -7228,6 +7228,42 @@ at '${dict['output_file']}'."
     return 0
 }
 
+koopa_fasta_has_alt_contigs() {
+    local dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict=(
+        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+        ['file']="${1:?}"
+        ['is_tmp_file']=0
+        ['status']=1
+    )
+    koopa_assert_is_file "${dict['file']}"
+    if koopa_str_detect_regex \
+        --string="${dict['file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        dict['is_tmp_file']=1
+        dict['tmp_file']="$(koopa_tmp_file)"
+        koopa_decompress "${dict['file']}" "${dict['tmp_file']}"
+    else
+        dict['tmp_file']="${dict['file']}"
+    fi
+    if koopa_file_detect_fixed \
+        --file="${dict['tmp_file']}" \
+        --pattern=' ALT_' \
+    || koopa_file_detect_fixed \
+        --file="${dict['tmp_file']}" \
+        --pattern=' alternate locus group ' \
+    || koopa_file_detect_fixed \
+        --file="${dict['tmp_file']}" \
+        --pattern=' rl:alt-scaffold '
+    then
+        dict['status']=0
+    fi
+    [[ "${dict['is_tmp_file']}" -eq 1 ]] && koopa_rm "${dict['tmp_file']}"
+    return "${dict['status']}"
+}
+
 koopa_fastq_detect_quality_score() {
     local app file
     koopa_assert_has_args "$#"
@@ -22278,13 +22314,15 @@ koopa_star_index() {
     )
     [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
+        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
         ['genome_fasta_file']=''
         ['gtf_file']=''
+        ['is_tmp_genome_fasta_file']=0
+        ['is_tmp_gtf_file']=0
         ['mem_gb']="$(koopa_mem_gb)"
         ['mem_gb_cutoff']=60
         ['output_dir']=''
         ['threads']="$(koopa_cpu_count)"
-        ['tmp_dir']="$(koopa_tmp_dir)"
     )
     index_args=()
     while (("$#"))
@@ -22336,14 +22374,34 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating STAR index at '${dict['output_dir']}'."
-    dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
-    koopa_decompress \
-        "${dict['genome_fasta_file']}" \
-        "${dict['tmp_genome_fasta_file']}"
-    dict['tmp_gtf_file']="${dict['tmp_dir']}/annotation.gtf"
-    koopa_decompress \
-        "${dict['gtf_file']}" \
-        "${dict['tmp_gtf_file']}"
+    if koopa_str_detect_regex \
+        --string="${dict['genome_fasta_file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        dict['is_tmp_genome_fasta_file']=1
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        koopa_decompress \
+            "${dict['genome_fasta_file']}" \
+            "${dict['tmp_genome_fasta_file']}"
+    else
+        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+    fi
+    if koopa_str_detect_regex \
+        --string="${dict['gtf_file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        dict['is_tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        koopa_decompress \
+            "${dict['gtf_file']}" \
+            "${dict['tmp_gtf_file']}"
+    else
+        dict['tmp_gtf_file']="${dict['gtf_file']}"
+    fi
+    if koopa_fasta_has_alt_contigs "${dict['tmp_genome_fasta_file']}"
+    then
+        koopa_warn "'${dict['genome_fasta_file']}' contains ALT contigs."
+    fi
     index_args+=(
         '--genomeDir' "$(koopa_basename "${dict['output_dir']}")"
         '--genomeFastaFiles' "${dict['tmp_genome_fasta_file']}"
@@ -22358,7 +22416,10 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         "${app['star']}" "${index_args[@]}"
         koopa_rm '_STARtmp'
     )
-    koopa_rm "${dict['tmp_dir']}"
+    [[ "${dict['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
+        koopa_rm "${dict['tmp_genome_fasta_file']}"
+    [[ "${dict['is_tmp_gtf_file']}" -eq 1 ]] && \
+        koopa_rm "${dict['tmp_gtf_file']}"
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
 }
