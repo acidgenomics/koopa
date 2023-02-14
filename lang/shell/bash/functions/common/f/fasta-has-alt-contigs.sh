@@ -36,20 +36,35 @@ koopa_fasta_has_alt_contigs() {
     # """
     local dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict
-    dict['file']="${1:?}"
+    declare -A dict=(
+        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+        ['file']="${1:?}"
+        ['is_tmp_file']=0
+        ['status']=1
+    )
     koopa_assert_is_file "${dict['file']}"
+    if koopa_str_detect_regex \
+        --string="${dict['file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        dict['is_tmp_file']=1
+        dict['tmp_file']="$(koopa_tmp_file)"
+        koopa_decompress "${dict['file']}" "${dict['tmp_file']}"
+    else
+        dict['tmp_file']="${dict['file']}"
+    fi
     if koopa_file_detect_fixed \
-        --file="${dict['file']}" \
+        --file="${dict['tmp_file']}" \
         --pattern=' ALT_' \
     || koopa_file_detect_fixed \
-        --file="${dict['file']}" \
+        --file="${dict['tmp_file']}" \
         --pattern=' alternate locus group ' \
     || koopa_file_detect_fixed \
-        --file="${dict['file']}" \
+        --file="${dict['tmp_file']}" \
         --pattern=' rl:alt-scaffold '
     then
-        return 0
+        dict['status']=0
     fi
-    return 1
+    [[ "${dict['is_tmp_file']}" -eq 1 ]] && koopa_rm "${dict['tmp_file']}"
+    return "${dict['status']}"
 }
