@@ -21979,22 +21979,31 @@ GB of RAM."
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
+    dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
+    koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
+to '${dict['tmp_fastq_r1_file']}"
+    koopa_decompress "${dict['fastq_r1_file']}" "${dict['tmp_fastq_r1_file']}"
+    koopa_alert "Decompressing '${dict['fastq_r2_file']}' \
+to '${dict['tmp_fastq_r2_file']}"
+    koopa_decompress "${dict['fastq_r2_file']}" "${dict['tmp_fastq_r2_file']}"
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
+        '--limitBAMsortRAM' "${dict['mem_gb']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
-        '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
-        '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
+        '--quantMode' 'TranscriptomeSAM'
+        '--readFilesIn' \
+            "${dict['tmp_fastq_r1_file']}" \
+            "${dict['tmp_fastq_r2_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
         '--twopassMode' 'Basic'
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app['star']}" "${align_args[@]}" \
-        --readFilesIn \
-            <(koopa_decompress --stdout "${dict['fastq_r1_file']}") \
-            <(koopa_decompress --stdout "${dict['fastq_r2_file']}")
+    "${app['star']}" "${align_args[@]}"
+    koopa_rm "${dict['tmp_fastq_r1_file']}" "${dict['tmp_fastq_r2_file']}"
     return 0
 }
 
@@ -22193,20 +22202,24 @@ GB of RAM."
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    dict['tmp_fastq_file']="$(koopa_tmp_file)"
+    koopa_alert "Decompressing '${dict['fastq_file']}' \
+to '${dict['tmp_fastq_file']}"
+    koopa_decompress "${dict['fastq_file']}" "${dict['tmp_fastq_file']}"
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
+        '--limitBAMsortRAM' "${dict['mem_gb']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
-        '--quantMode' 'TranscriptomeSAM' 'GeneCounts'
-        '--quantTranscriptomeBan' 'IndelSoftclipSingleend'
+        '--quantMode' 'TranscriptomeSAM'
+        '--readFilesIn' "${dict['tmp_fastq_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app['star']}" "${align_args[@]}" \
-        --readFilesIn \
-            <(koopa_decompress --stdout "${dict['fastq_file']}")
+    "${app['star']}" "${align_args[@]}"
+    koopa_rm "${dict['tmp_fastq_file']}"
     return 0
 }
 
