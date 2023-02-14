@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# NOTE Here's an example ALT contig match:
+# ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_full_analysis_set.fna.gz
+# > rg '^[^\s]+_alt\s' GCA_000001405.15_GRCh38_full_analysis_set.fna
+# > rg ' rl:alt-scaffold ' GCA_000001405.15_GRCh38_full_analysis_set.fna
+
+# NOTE These checks fail with current RefSeq:
+# rg -i ' ALT_' 'GCF_000001405.40_GRCh38.p14_genomic.fna'
+# rg -i ' alternate locus group ' 'GCF_000001405.40_GRCh38.p14_genomic.fna'
+
 # FIXME Need to consider ALT contigs here.
 # Can we handle this dynamically? Refer to bcbio-nextgen for inspiration.
 # https://github.com/alexdobin/STAR/issues/39
