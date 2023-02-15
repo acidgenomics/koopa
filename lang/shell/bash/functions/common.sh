@@ -1749,10 +1749,9 @@ koopa_aws_batch_fetch_and_run() {
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['file']="$(koopa_tmp_file)"
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['url']="${BATCH_FILE_URL:?}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     case "${dict['url']}" in
         'ftp://'* | \
         'http://'*)
@@ -1779,11 +1778,10 @@ koopa_aws_batch_list_jobs() {
     [[ -x "${app['aws']}" ]] || return 1
     local -A dict=(
         ['account_id']="${AWS_BATCH_ACCOUNT_ID:-}"
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['queue']="${AWS_BATCH_QUEUE:-}"
         ['region']="${AWS_BATCH_REGION:-}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
@@ -1825,10 +1823,10 @@ koopa_aws_batch_list_jobs() {
         esac
     done
     koopa_assert_is_set \
-        '--account-id or AWS_BATCH_ACCOUNT_ID' "${dict['account_id']:-}" \
-        '--queue or AWS_BATCH_QUEUE' "${dict['queue']:-}" \
-        '--region or AWS_BATCH_REGION' "${dict['region']:-}" \
-        '--profile or AWS_PROFILE' "${dict['profile']:-}"
+        '--account-id or AWS_BATCH_ACCOUNT_ID' "${dict['account_id']}" \
+        '--queue or AWS_BATCH_QUEUE' "${dict['queue']}" \
+        '--region or AWS_BATCH_REGION' "${dict['region']}" \
+        '--profile or AWS_PROFILE' "${dict['profile']}"
     koopa_h1 "Checking AWS Batch job status for '${dict['profile']}' profile."
     job_queue_array=(
         'arn'
@@ -1901,9 +1899,8 @@ koopa_aws_ec2_suspend() {
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['id']="$(koopa_aws_ec2_instance_id)"
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
@@ -1920,7 +1917,7 @@ koopa_aws_ec2_suspend() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']:-}"
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     koopa_alert "Suspending EC2 instance '${dict['id']}'."
     "${app['aws']}" --profile="${dict['profile']}" \
         ec2 stop-instances --instance-id "${dict['id']}" \
@@ -1936,9 +1933,8 @@ koopa_aws_ec2_terminate() {
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['id']="$(koopa_aws_ec2_instance_id)"
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
@@ -1955,7 +1951,7 @@ koopa_aws_ec2_terminate() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']:-}"
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     "${app['aws']}" --profile="${dict['profile']}" \
         ec2 terminate-instances --instance-id "${dict['id']}" \
         >/dev/null
@@ -1972,11 +1968,10 @@ koopa_aws_s3_cp_regex() {
     declare -A dict=(
         ['bucket_pattern']='^s3://.+/$'
         ['pattern']=''
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['source_prefix']=''
         ['target_prefix']=''
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
@@ -2148,10 +2143,9 @@ koopa_aws_s3_find() {
         ['exclude']=0
         ['include']=0
         ['prefix']=''
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['recursive']=0
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     exclude_arr=()
     include_arr=()
     while (("$#"))
@@ -2375,11 +2369,10 @@ koopa_aws_s3_ls() {
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
         ['prefix']=''
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['recursive']=0
         ['type']=''
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     ls_args=()
     while (("$#"))
     do
@@ -2535,9 +2528,8 @@ koopa_aws_s3_mv_to_parent() {
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['prefix']=''
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
@@ -2563,8 +2555,8 @@ koopa_aws_s3_mv_to_parent() {
         esac
     done
     koopa_assert_is_set \
-        '--profile or AWS_PROFILE' "${dict['profile']:-}"
-        '--prefix' "${dict['prefix']:-}"
+        '--profile or AWS_PROFILE' "${dict['profile']}"
+        '--prefix' "${dict['prefix']}"
     koopa_assert_is_matching_regex \
         --pattern='^s3://.+/$' \
         --string="${dict['prefix']}"
@@ -2604,9 +2596,8 @@ koopa_aws_s3_sync() {
     )
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     exclude_patterns=(
         '*.Rproj/*'
         '*.swp'
@@ -14703,9 +14694,8 @@ koopa_jekyll_deploy_to_aws() {
         ['bucket_prefix']=''
         ['distribution_id']=''
         ['local_prefix']='_site'
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
@@ -21885,6 +21875,8 @@ koopa_star_align_paired_end_per_sample() {
     )
     [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
+        ['aws_bucket']=''
+        ['aws_profile']=''
         ['fastq_r1_file']=''
         ['fastq_r1_tail']=''
         ['fastq_r2_file']=''
@@ -21899,6 +21891,22 @@ koopa_star_align_paired_end_per_sample() {
     while (("$#"))
     do
         case "$1" in
+            '--aws-bucket='*)
+                dict['aws_bucket']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-bucket')
+                dict['aws_bucket']="${2:?}"
+                shift 2
+                ;;
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-r1-file='*)
                 dict['fastq_r1_file']="${1#*=}"
                 shift 1
@@ -21975,15 +21983,16 @@ GB of RAM."
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict['id']="${dict['fastq_r1_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
+    dict['sample_id']="${dict['fastq_r1_bn']}"
+    dict['sample_output_dir']="${dict['output_dir']}/${dict['sample_id']}"
+    if [[ -d "${dict['sample_output_dir']}" ]]
     then
-        koopa_alert_note "Skipping '${dict['id']}'."
+        koopa_alert_note "Skipping '${dict['sample_id']}'."
         return 0
     fi
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    dict['sample_output_dir']="$(koopa_init_dir "${dict['sample_output_dir']}")"
+    koopa_alert "Quantifying '${dict['sample_id']}' \
+in '${dict['sample_output_dir']}'."
     dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
     dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
     koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
@@ -21995,7 +22004,7 @@ to '${dict['tmp_fastq_r2_file']}"
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
-        '--outFileNamePrefix' "${dict['output_dir']}/"
+        '--outFileNamePrefix' "${dict['sample_output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
         '--readFilesIn' \
@@ -22009,9 +22018,26 @@ to '${dict['tmp_fastq_r2_file']}"
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     koopa_rm \
-        "${dict['output_dir']}/_STARtmp" \
+        "${dict['sample_output_dir']}/_STARtmp" \
         "${dict['tmp_fastq_r1_file']}" \
         "${dict['tmp_fastq_r2_file']}"
+    if [[ -n "${dict['aws_bucket']}" ]]
+    then
+        app['aws']="$(koopa_locate_aws)"
+        [[ -x "${app['aws']}" ]] || return 1
+        dict['output_bn']="$(koopa_basename "${dict['output_dir']}")"
+        dict['aws_target_dir']="${dict['aws_bucket']}/\
+${dict['output_bn']}/${dict['sample_id']}"
+        koopa_alert "Syncing '${dict['sample_id']}' \
+to '${dict['aws_target_dir']}'."
+        "${app['aws']}" --profile="${dict['aws_profile']}" \
+            s3 sync \
+                "${dict['sample_output_dir']}/" \
+                "${dict['aws_target_dir']}/"
+        koopa_alert "Emptying '${dict['sample_output_dir']}'."
+        koopa_rm "${dict['sample_output_dir']}"
+        koopa_mkdir "${dict['sample_output_dir']}"
+    fi
     return 0
 }
 
@@ -22019,6 +22045,8 @@ koopa_star_align_paired_end() {
     local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
     declare -A dict=(
+        ['aws_bucket']=''
+        ['aws_profile']="${AWS_PROFILE:-default}"
         ['fastq_dir']=''
         ['fastq_r1_tail']=''
         ['fastq_r2_tail']=''
@@ -22029,6 +22057,22 @@ koopa_star_align_paired_end() {
     while (("$#"))
     do
         case "$1" in
+            '--aws-bucket='*)
+                dict['aws_bucket']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-bucket')
+                dict['aws_bucket']="${2:?}"
+                shift 2
+                ;;
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -22074,6 +22118,12 @@ koopa_star_align_paired_end() {
                 ;;
         esac
     done
+    if [[ -n "${dict['aws_bucket']}" ]]
+    then
+        dict['aws_bucket']="$( \
+            koopa_strip_trailing_slash "${dict['aws_bucket']}" \
+        )"
+    fi
     koopa_assert_is_set \
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
@@ -22117,6 +22167,8 @@ koopa_star_align_paired_end() {
         fastq_r2_file="${fastq_r1_file/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         koopa_star_align_paired_end_per_sample \
+            --aws-bucket="${dict['aws_bucket']}" \
+            --aws-profile="${dict['aws_profile']}" \
             --fastq-r1-file="$fastq_r1_file" \
             --fastq-r1-tail="${dict['fastq_r1_tail']}" \
             --fastq-r2-file="$fastq_r2_file" \
@@ -22238,6 +22290,8 @@ koopa_star_align_single_end() {
     local dict fastq_file fastq_files
     koopa_assert_has_args "$#"
     declare -A dict=(
+        ['aws_bucket']=''
+        ['aws_profile']="${AWS_PROFILE:-default}"
         ['fastq_dir']=''
         ['fastq_tail']=''
         ['index_dir']=''
@@ -22247,6 +22301,22 @@ koopa_star_align_single_end() {
     while (("$#"))
     do
         case "$1" in
+            '--aws-bucket='*)
+                dict['aws_bucket']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-bucket')
+                dict['aws_bucket']="${2:?}"
+                shift 2
+                ;;
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -22284,6 +22354,12 @@ koopa_star_align_single_end() {
                 ;;
         esac
     done
+    if [[ -n "${dict['aws_bucket']}" ]]
+    then
+        dict['aws_bucket']="$( \
+            koopa_strip_trailing_slash "${dict['aws_bucket']}" \
+        )"
+    fi
     koopa_assert_is_set \
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-tail' "${dict['fastq_tail']}" \
@@ -22322,6 +22398,8 @@ koopa_star_align_single_end() {
     for fastq_file in "${fastq_files[@]}"
     do
         koopa_star_align_single_end_per_sample \
+            --aws-bucket="${dict['aws_bucket']}" \
+            --aws-profile="${dict['aws_profile']}" \
             --fastq-file="$fastq_file" \
             --fastq-tail="${dict['fastq_tail']}" \
             --index-dir="${dict['index_dir']}" \

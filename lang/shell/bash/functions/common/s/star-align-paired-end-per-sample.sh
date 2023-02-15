@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 # FIXME Add support for automatic pushing to AWS S3.
+# FIXME How to deal with folder handling after sync when aws-bucket is defined?
 
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2023-02-14.
+    # @note Updated 2023-02-15.
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
@@ -32,6 +33,8 @@ koopa_star_align_paired_end_per_sample() {
     )
     [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
+        ['aws_bucket']=''
+        ['aws_profile']=''
         # e.g. 'sample1_R1_001.fastq.gz'.
         ['fastq_r1_file']=''
         # e.g. '_R1_001.fastq.gz'.
@@ -53,6 +56,22 @@ koopa_star_align_paired_end_per_sample() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--aws-bucket='*)
+                dict['aws_bucket']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-bucket')
+                dict['aws_bucket']="${2:?}"
+                shift 2
+                ;;
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-r1-file='*)
                 dict['fastq_r1_file']="${1#*=}"
                 shift 1
@@ -130,15 +149,16 @@ GB of RAM."
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict['id']="${dict['fastq_r1_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
+    dict['sample_id']="${dict['fastq_r1_bn']}"
+    dict['sample_output_dir']="${dict['output_dir']}/${dict['sample_id']}"
+    if [[ -d "${dict['sample_output_dir']}" ]]
     then
-        koopa_alert_note "Skipping '${dict['id']}'."
+        koopa_alert_note "Skipping '${dict['sample_id']}'."
         return 0
     fi
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    dict['sample_output_dir']="$(koopa_init_dir "${dict['sample_output_dir']}")"
+    koopa_alert "Quantifying '${dict['sample_id']}' \
+in '${dict['sample_output_dir']}'."
     dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
     dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
     koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
@@ -150,7 +170,7 @@ to '${dict['tmp_fastq_r2_file']}"
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
-        '--outFileNamePrefix' "${dict['output_dir']}/"
+        '--outFileNamePrefix' "${dict['sample_output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
         '--readFilesIn' \
@@ -164,8 +184,25 @@ to '${dict['tmp_fastq_r2_file']}"
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     koopa_rm \
-        "${dict['output_dir']}/_STARtmp" \
+        "${dict['sample_output_dir']}/_STARtmp" \
         "${dict['tmp_fastq_r1_file']}" \
         "${dict['tmp_fastq_r2_file']}"
+    if [[ -n "${dict['aws_bucket']}" ]]
+    then
+        app['aws']="$(koopa_locate_aws)"
+        [[ -x "${app['aws']}" ]] || return 1
+        dict['output_bn']="$(koopa_basename "${dict['output_dir']}")"
+        dict['aws_target_dir']="${dict['aws_bucket']}/\
+${dict['output_bn']}/${dict['sample_id']}"
+        koopa_alert "Syncing '${dict['sample_id']}' \
+to '${dict['aws_target_dir']}'."
+        "${app['aws']}" --profile="${dict['aws_profile']}" \
+            s3 sync \
+                "${dict['sample_output_dir']}/" \
+                "${dict['aws_target_dir']}/"
+        koopa_alert "Emptying '${dict['sample_output_dir']}'."
+        koopa_rm "${dict['sample_output_dir']}"
+        koopa_mkdir "${dict['sample_output_dir']}"
+    fi
     return 0
 }
