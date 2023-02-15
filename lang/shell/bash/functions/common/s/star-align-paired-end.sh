@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for AWS S3 URI index-dir.
+
 koopa_star_align_paired_end() {
     # """
     # Run STAR aligner on multiple paired-end FASTQs in a directory.
