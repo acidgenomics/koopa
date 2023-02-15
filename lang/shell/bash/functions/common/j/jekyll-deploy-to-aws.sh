@@ -17,9 +17,8 @@ koopa_jekyll_deploy_to_aws() {
         ['bucket_prefix']=''
         ['distribution_id']=''
         ['local_prefix']='_site'
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
