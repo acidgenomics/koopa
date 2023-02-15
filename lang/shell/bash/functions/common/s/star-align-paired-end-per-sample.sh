@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for AWS S3 URI FASTQ input.
+
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
