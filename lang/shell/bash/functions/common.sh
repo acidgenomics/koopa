@@ -21870,9 +21870,8 @@ koopa_ssh_key_info() {
 
 koopa_star_align_paired_end_per_sample() {
     local align_args app dict
-    declare -A app=(
-        ['star']="$(koopa_locate_star)"
-    )
+    declare -A app
+    app['star']="$(koopa_locate_star)"
     [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
         ['aws_profile']=''
@@ -22153,13 +22152,12 @@ koopa_star_align_paired_end() {
         dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
+        dict2['sample_id']="${dict2['sample_id']/${dict2['fastq_r1_tail']}/}"
         koopa_star_align_paired_end_per_sample \
             --aws-profile="${dict['aws_profile']}" \
             --aws-s3-uri="${dict['aws_s3_uri']}" \
             --fastq-r1-file="${dict2['fastq_r1_file']}" \
-            --fastq-r1-tail="${dict['fastq_r1_tail']}" \
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
-            --fastq-r2-tail="${dict['fastq_r2_tail']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict['output_dir']}/${dict2['sample_id']}"
     done

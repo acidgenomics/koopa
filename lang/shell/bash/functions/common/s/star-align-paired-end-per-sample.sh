@@ -25,9 +25,8 @@ koopa_star_align_paired_end_per_sample() {
     # >     --output-dir='star'
     # """
     local align_args app dict
-    declare -A app=(
-        ['star']="$(koopa_locate_star)"
-    )
+    declare -A app
+    app['star']="$(koopa_locate_star)"
     [[ -x "${app['star']}" ]] || return 1
     declare -A dict=(
         # e.g. 'default'
