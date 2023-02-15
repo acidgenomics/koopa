@@ -3,10 +3,11 @@
 koopa_star_align_paired_end() {
     # """
     # Run STAR aligner on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-02-15.
     #
     # @examples
     # > koopa_star_align_paired_end \
+    # >     --aws-bucket='s3://bioinfo/rnaseq' \
     # >     --fastq-dir='fastq' \
     # >     --fastq-r1-tail='_R1_001.fastq.gz' \
     # >     --fastq-r2-tail='_R2_001.fastq.gz' \
@@ -16,6 +17,8 @@ koopa_star_align_paired_end() {
     local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
     declare -A dict=(
+        ['aws_bucket']=''
+        ['aws_profile']="${AWS_PROFILE:-default}"
         # e.g. 'fastq'.
         ['fastq_dir']=''
         # e.g. '_R1_001.fastq.gz'.
@@ -32,6 +35,22 @@ koopa_star_align_paired_end() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--aws-bucket='*)
+                dict['aws_bucket']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-bucket')
+                dict['aws_bucket']="${2:?}"
+                shift 2
+                ;;
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -78,6 +97,12 @@ koopa_star_align_paired_end() {
                 ;;
         esac
     done
+    if [[ -n "${dict['aws_bucket']}" ]]
+    then
+        dict['aws_bucket']="$( \
+            koopa_strip_trailing_slash "${dict['aws_bucket']}" \
+        )"
+    fi
     koopa_assert_is_set \
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
@@ -121,6 +146,8 @@ koopa_star_align_paired_end() {
         fastq_r2_file="${fastq_r1_file/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         koopa_star_align_paired_end_per_sample \
+            --aws-bucket="${dict['aws_bucket']}" \
+            --aws-profile="${dict['aws_profile']}" \
             --fastq-r1-file="$fastq_r1_file" \
             --fastq-r1-tail="${dict['fastq_r1_tail']}" \
             --fastq-r2-file="$fastq_r2_file" \
