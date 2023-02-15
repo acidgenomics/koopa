@@ -22152,7 +22152,7 @@ koopa_star_align_paired_end() {
         dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
-        dict2['sample_id']="${dict2['sample_id']/${dict2['fastq_r1_tail']}/}"
+        dict2['sample_id']="${dict2['sample_id']/${dict['fastq_r1_tail']}/}"
         koopa_star_align_paired_end_per_sample \
             --aws-profile="${dict['aws_profile']}" \
             --aws-s3-uri="${dict['aws_s3_uri']}" \
