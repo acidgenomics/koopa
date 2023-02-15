@@ -2986,14 +2986,14 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-02-02",
+    "date": "2023-02-15",
     "dependencies": ["conda", "poetry"],
     "large": true,
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "2.3.1"
+    "version": "2.4.0"
   },
   "openblas": {
     "aliases": {
@@ -3345,10 +3345,10 @@
     },
     "bin": ["pyenv"],
     "conservative": true,
-    "date": "2023-01-30",
+    "date": "2023-02-15",
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv"],
-    "version": "2.3.12"
+    "version": "2.3.13"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
