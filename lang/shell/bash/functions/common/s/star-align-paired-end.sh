@@ -7,7 +7,6 @@ koopa_star_align_paired_end() {
     #
     # @examples
     # > koopa_star_align_paired_end \
-    # >     --aws-bucket='s3://bioinfo/rnaseq' \
     # >     --fastq-dir='fastq' \
     # >     --fastq-r1-tail='_R1_001.fastq.gz' \
     # >     --fastq-r2-tail='_R2_001.fastq.gz' \
@@ -17,8 +16,8 @@ koopa_star_align_paired_end() {
     local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
     declare -A dict=(
-        ['aws_bucket']=''
         ['aws_profile']="${AWS_PROFILE:-default}"
+        ['aws_s3_uri']=''
         # e.g. 'fastq'.
         ['fastq_dir']=''
         # e.g. '_R1_001.fastq.gz'.
@@ -28,21 +27,13 @@ koopa_star_align_paired_end() {
         # e.g. 'star-index'.
         ['index_dir']=''
         ['mode']='paired-end'
-        # e.g. 'star'.
+        # e.g. 'star', or AWS S3 URI.
         ['output_dir']=''
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--aws-bucket='*)
-                dict['aws_bucket']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-bucket')
-                dict['aws_bucket']="${2:?}"
-                shift 2
-                ;;
             '--aws-profile='*)
                 dict['aws_profile']="${1#*=}"
                 shift 1
@@ -97,12 +88,6 @@ koopa_star_align_paired_end() {
                 ;;
         esac
     done
-    if [[ -n "${dict['aws_bucket']}" ]]
-    then
-        dict['aws_bucket']="$( \
-            koopa_strip_trailing_slash "${dict['aws_bucket']}" \
-        )"
-    fi
     koopa_assert_is_set \
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
@@ -112,7 +97,17 @@ koopa_star_align_paired_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    if koopa_str_detect_fixed \
+        --pattern='s3://' \
+        --string="${dict['output_dir']}"
+    then
+        dict['aws_s3_uri']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']='_tmp_koopa_star_align_aws'
+    else
+        dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    fi
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
         'Mode' "${dict['mode']}" \
@@ -121,6 +116,11 @@ koopa_star_align_paired_end() {
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
+
+    if [[ -n "${dict['aws_s3_uri']}" ]]
+    then
+        koopa_dl 'AWS S3 URI' "${dict['aws_s3_uri']}"
+    fi
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -142,19 +142,23 @@ koopa_star_align_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
-        local fastq_r2_file
-        fastq_r2_file="${fastq_r1_file/\
+        local dict2
+        declare -A dict2
+        dict2['fastq_r1_file']="$fastq_r1_file"
+        dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
+        dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
         koopa_star_align_paired_end_per_sample \
-            --aws-bucket="${dict['aws_bucket']}" \
             --aws-profile="${dict['aws_profile']}" \
-            --fastq-r1-file="$fastq_r1_file" \
+            --aws-s3-uri="${dict['aws_s3_uri']}" \
+            --fastq-r1-file="${dict2['fastq_r1_file']}" \
             --fastq-r1-tail="${dict['fastq_r1_tail']}" \
-            --fastq-r2-file="$fastq_r2_file" \
+            --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --fastq-r2-tail="${dict['fastq_r2_tail']}" \
             --index-dir="${dict['index_dir']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict['output_dir']}/${dict2['sample_id']}"
     done
+    [[ -n "${dict['aws_s3_uri']}" ]] && koopa_rm "${dict['output_dir']}"
     koopa_alert_success 'STAR alignment was successful.'
     return 0
 }
