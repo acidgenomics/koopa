@@ -12,11 +12,10 @@ koopa_aws_batch_list_jobs() {
     [[ -x "${app['aws']}" ]] || return 1
     local -A dict=(
         ['account_id']="${AWS_BATCH_ACCOUNT_ID:-}"
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['queue']="${AWS_BATCH_QUEUE:-}"
         ['region']="${AWS_BATCH_REGION:-}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
@@ -60,10 +59,10 @@ koopa_aws_batch_list_jobs() {
         esac
     done
     koopa_assert_is_set \
-        '--account-id or AWS_BATCH_ACCOUNT_ID' "${dict['account_id']:-}" \
-        '--queue or AWS_BATCH_QUEUE' "${dict['queue']:-}" \
-        '--region or AWS_BATCH_REGION' "${dict['region']:-}" \
-        '--profile or AWS_PROFILE' "${dict['profile']:-}"
+        '--account-id or AWS_BATCH_ACCOUNT_ID' "${dict['account_id']}" \
+        '--queue or AWS_BATCH_QUEUE' "${dict['queue']}" \
+        '--region or AWS_BATCH_REGION' "${dict['region']}" \
+        '--profile or AWS_PROFILE' "${dict['profile']}"
     koopa_h1 "Checking AWS Batch job status for '${dict['profile']}' profile."
     job_queue_array=(
         'arn'
