@@ -96,9 +96,13 @@ koopa_star_align_paired_end() {
         '--fastq-r2-tail' "${dict['fastq_r1_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
+    # FIXME Rework this to support S3 URIs.
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    # FIXME Alternatively, support a compressed archive and decompress on the
+    # fly here.
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    # FIXME Make this a function: 'koopa_is_aws_s3_uri'.
     if koopa_str_detect_fixed \
         --pattern='s3://' \
         --string="${dict['output_dir']}"
