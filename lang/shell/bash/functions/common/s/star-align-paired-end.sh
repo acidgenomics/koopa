@@ -113,7 +113,7 @@ koopa_star_align_paired_end() {
         dict['aws_s3_uri']="$( \
             koopa_strip_trailing_slash "${dict['output_dir']}" \
         )"
-        dict['output_dir']='_tmp_koopa_star_align_aws'
+        dict['output_dir']="tmp-koopa-$(koopa_random_string)"
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
