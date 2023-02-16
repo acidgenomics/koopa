@@ -170,7 +170,7 @@ to '${dict['tmp_fastq_r2_file']}"
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     koopa_rm \
-        "${dict['output_dir']}/_STARtmp" \
+        "${dict['output_dir']}/_STAR"* \
         "${dict['tmp_fastq_r1_file']}" \
         "${dict['tmp_fastq_r2_file']}"
     if [[ -n "${dict['aws_s3_uri']}" ]]
