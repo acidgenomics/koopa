@@ -120,7 +120,7 @@ to '${dict['tmp_fastq_file']}"
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     koopa_rm \
-        "${dict['output_dir']}/_STARtmp" \
+        "${dict['output_dir']}/_STAR"* \
         "${dict['tmp_fastq_file']}"
     return 0
 }
