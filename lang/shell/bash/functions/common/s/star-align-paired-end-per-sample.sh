@@ -143,7 +143,7 @@ GB of RAM."
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
-    koopa_alert "Quantifying  '${dict['fastq_r1_bn']}' and \
+    koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
     dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
     dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
