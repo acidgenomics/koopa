@@ -147,9 +147,13 @@ GB of RAM."
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
     dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
     dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
+    # FIXME Decompress into temporary inside working directory instead.
+    # Use 'koopa_random_string' to generate a random file basename.
     koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
 to '${dict['tmp_fastq_r1_file']}"
     koopa_decompress "${dict['fastq_r1_file']}" "${dict['tmp_fastq_r1_file']}"
+    # FIXME Decompress into temporary inside working directory instead.
+    # Use 'koopa_random_string' to generate a random file basename.
     koopa_alert "Decompressing '${dict['fastq_r2_file']}' \
 to '${dict['tmp_fastq_r2_file']}"
     koopa_decompress "${dict['fastq_r2_file']}" "${dict['tmp_fastq_r2_file']}"

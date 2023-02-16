@@ -19622,6 +19622,29 @@ koopa_r_version() {
     return 0
 }
 
+koopa_random_string() {
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        ['head']="$(koopa_locate_head --allow-system)"
+        ['md5sum']="$(koopa_locate_md5sum --allow-system)"
+    )
+    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['md5sum']}" ]] || return 1
+    declare -A dict=(
+        ['length']=10
+        ['seed']="${RANDOM:?}"
+    )
+    dict['str']="$( \
+        koopa_print "${dict['seed']}" \
+        | "${app['md5sum']}" \
+        | "${app['head']}" -c "${dict['length']}" \
+    )"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
+    return 0
+}
+
 koopa_read_prompt_yn() {
     local dict
     koopa_assert_has_args_eq "$#" 2
@@ -21978,7 +22001,7 @@ GB of RAM."
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
-    koopa_alert "Quantifying  '${dict['fastq_r1_bn']}' and \
+    koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
     dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
     dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
@@ -22005,7 +22028,7 @@ to '${dict['tmp_fastq_r2_file']}"
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     koopa_rm \
-        "${dict['output_dir']}/_STARtmp" \
+        "${dict['output_dir']}/_STAR"* \
         "${dict['tmp_fastq_r1_file']}" \
         "${dict['tmp_fastq_r2_file']}"
     if [[ -n "${dict['aws_s3_uri']}" ]]
@@ -22269,7 +22292,7 @@ to '${dict['tmp_fastq_file']}"
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     koopa_rm \
-        "${dict['output_dir']}/_STARtmp" \
+        "${dict['output_dir']}/_STAR"* \
         "${dict['tmp_fastq_file']}"
     return 0
 }
