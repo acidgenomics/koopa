@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 # FIXME Add support for AWS S3 URI index-dir.
+#   For the index dir, need to copy and extract to a standardized file path.
+#   To do this, we need to update 'koopa_extract' with this functionality.
+# FIXME Add support for finding and downloading FASTQs direct from S3.
 
 koopa_star_align_paired_end() {
     # """
