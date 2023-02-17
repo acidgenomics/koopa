@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to only use JSON parsing from s3api.
+
 koopa_aws_s3_find() {
     # """
     # Find files in an AWS S3 bucket.
