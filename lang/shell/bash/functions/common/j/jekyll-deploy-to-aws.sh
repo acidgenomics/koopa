@@ -3,7 +3,7 @@
 koopa_jekyll_deploy_to_aws() {
     # """
     # Deploy Jekyll website to AWS S3 and CloudFront.
-    # @note Updated 2022-03-11.
+    # @note Updated 2023-02-17.
     # """
     local app dict
     koopa_assert_has_args "$#"
@@ -15,8 +15,9 @@ koopa_jekyll_deploy_to_aws() {
     [[ -x "${app['bundle']}" ]] || return 1
     declare -A dict=(
         ['bucket_prefix']=''
+        ['bundle_prefix']="$(koopa_ruby_gem_user_install_prefix)"
         ['distribution_id']=''
-        ['local_prefix']='_site'
+        ['local_prefix']="${1:-}"
         ['profile']="${AWS_PROFILE:-default}"
     )
     while (("$#"))
@@ -39,6 +40,14 @@ koopa_jekyll_deploy_to_aws() {
                 dict['distribution_id']="${2:?}"
                 shift 2
                 ;;
+            '--local-prefix='*)
+                dict['local_prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--local-prefix')
+                dict['local_prefix']="${2:?}"
+                shift 2
+                ;;
             '--profile='*)
                 dict['profile']="${1#*=}"
                 shift 1
@@ -57,18 +66,29 @@ koopa_jekyll_deploy_to_aws() {
         '--bucket' "${dict['bucket_prefix']:-}" \
         '--distribution-id' "${dict['distribution_id']:-}" \
         '--profile' "${dict['profile']:-}"
+    [[ -z "${dict['local_prefix']}" ]] && dict['local_prefix']="${PWD:?}"
+    koopa_assert_is_dir "${dict['local_prefix']}"
+    dict['local_prefix']="$( \
+        koopa_realpath "${dict['local_prefix']}" \
+    )"
     dict['bucket_prefix']="$( \
         koopa_strip_trailing_slash "${dict['bucket_prefix']}" \
     )"
-    dict['local_prefix']="$( \
-        koopa_strip_trailing_slash "${dict['local_prefix']}" \
-    )"
-    koopa_assert_is_file 'Gemfile'
-    [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
-    "${app['bundle']}" install
-    "${app['bundle']}" exec jekyll build
+    koopa_alert "Deploying '${dict['local_prefix']}' \
+to '${dict['bucket_prefix']}."
+    (
+        koopa_cd "${dict['local_prefix']}"
+        koopa_assert_is_file 'Gemfile'
+        "${app['bundle']}" config set --local path "${dict['bundle_prefix']}"
+        if [[ -f 'Gemfile.lock' ]]
+        then
+            "${app['bundle']}" update --bundler
+        fi
+        "${app['bundle']}" install
+        "${app['bundle']}" exec jekyll build
+    )
     koopa_aws_s3_sync --profile="${dict['profile']}" \
-        "${dict['local_prefix']}/" \
+        "${dict['local_prefix']}/_site/" \
         "${dict['bucket_prefix']}/"
     # Using 'yes' here to avoid pager invocation.
     koopa_alert "Invalidating CloudFront cache at '${dict['distribution_id']}'."
@@ -79,6 +99,5 @@ koopa_jekyll_deploy_to_aws() {
             --distribution-id="${dict['distribution_id']}" \
             --paths='/*' \
             >/dev/null
-    [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
     return 0
 }

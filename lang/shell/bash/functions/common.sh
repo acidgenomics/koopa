@@ -14692,8 +14692,9 @@ koopa_jekyll_deploy_to_aws() {
     [[ -x "${app['bundle']}" ]] || return 1
     declare -A dict=(
         ['bucket_prefix']=''
+        ['bundle_prefix']="$(koopa_ruby_gem_user_install_prefix)"
         ['distribution_id']=''
-        ['local_prefix']='_site'
+        ['local_prefix']="${1:-}"
         ['profile']="${AWS_PROFILE:-default}"
     )
     while (("$#"))
@@ -14715,6 +14716,14 @@ koopa_jekyll_deploy_to_aws() {
                 dict['distribution_id']="${2:?}"
                 shift 2
                 ;;
+            '--local-prefix='*)
+                dict['local_prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--local-prefix')
+                dict['local_prefix']="${2:?}"
+                shift 2
+                ;;
             '--profile='*)
                 dict['profile']="${1#*=}"
                 shift 1
@@ -14732,18 +14741,29 @@ koopa_jekyll_deploy_to_aws() {
         '--bucket' "${dict['bucket_prefix']:-}" \
         '--distribution-id' "${dict['distribution_id']:-}" \
         '--profile' "${dict['profile']:-}"
+    [[ -z "${dict['local_prefix']}" ]] && dict['local_prefix']="${PWD:?}"
+    koopa_assert_is_dir "${dict['local_prefix']}"
+    dict['local_prefix']="$( \
+        koopa_realpath "${dict['local_prefix']}" \
+    )"
     dict['bucket_prefix']="$( \
         koopa_strip_trailing_slash "${dict['bucket_prefix']}" \
     )"
-    dict['local_prefix']="$( \
-        koopa_strip_trailing_slash "${dict['local_prefix']}" \
-    )"
-    koopa_assert_is_file 'Gemfile'
-    [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
-    "${app['bundle']}" install
-    "${app['bundle']}" exec jekyll build
+    koopa_alert "Deploying '${dict['local_prefix']}' \
+to '${dict['bucket_prefix']}."
+    (
+        koopa_cd "${dict['local_prefix']}"
+        koopa_assert_is_file 'Gemfile'
+        "${app['bundle']}" config set --local path "${dict['bundle_prefix']}"
+        if [[ -f 'Gemfile.lock' ]]
+        then
+            "${app['bundle']}" update --bundler
+        fi
+        "${app['bundle']}" install
+        "${app['bundle']}" exec jekyll build
+    )
     koopa_aws_s3_sync --profile="${dict['profile']}" \
-        "${dict['local_prefix']}/" \
+        "${dict['local_prefix']}/_site/" \
         "${dict['bucket_prefix']}/"
     koopa_alert "Invalidating CloudFront cache at '${dict['distribution_id']}'."
     "${app['aws']}" --profile="${dict['profile']}" \
@@ -14751,7 +14771,6 @@ koopa_jekyll_deploy_to_aws() {
             --distribution-id="${dict['distribution_id']}" \
             --paths='/*' \
             >/dev/null
-    [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
     return 0
 }
 
@@ -14763,6 +14782,7 @@ koopa_jekyll_serve() {
     )
     [[ -x "${app['bundle']}" ]] || return 1
     declare -A dict=(
+        ['bundle_prefix']="$(koopa_ruby_gem_user_install_prefix)"
         ['prefix']="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
@@ -14771,6 +14791,7 @@ koopa_jekyll_serve() {
     (
         koopa_cd "${dict['prefix']}"
         koopa_assert_is_file 'Gemfile'
+        "${app['bundle']}" config set --local path "${dict['bundle_prefix']}"
         if [[ -f 'Gemfile.lock' ]]
         then
             "${app['bundle']}" update --bundler
@@ -20369,6 +20390,17 @@ koopa_rsync() {
     rsync_args+=("${dict['source_dir']}/" "${dict['target_dir']}/")
     koopa_dl 'rsync args' "${rsync_args[*]}"
     "${app['rsync']}" "${rsync_args[@]}"
+    return 0
+}
+
+koopa_ruby_gem_user_install_prefix() {
+    local app dict
+    declare -A app dict
+    app['ruby']="$(koopa_locate_ruby)"
+    [[ -x "${app['ruby']}" ]] || return 1
+    dict['str']="$("${app['ruby']}" -r rubygems -e 'puts Gem.user_dir')"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
