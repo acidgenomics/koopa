@@ -14692,7 +14692,7 @@ koopa_jekyll_deploy_to_aws() {
     [[ -x "${app['bundle']}" ]] || return 1
     declare -A dict=(
         ['bucket_prefix']=''
-        ['bundle_prefix']="$(koopa_ruby_gem_user_install_prefix)"
+        ['bundle_prefix']="$(koopa_xdg_data_home)/gem"
         ['distribution_id']=''
         ['local_prefix']="${1:-}"
         ['profile']="${AWS_PROFILE:-default}"
@@ -14755,12 +14755,10 @@ to '${dict['bucket_prefix']}."
         koopa_cd "${dict['local_prefix']}"
         koopa_assert_is_file 'Gemfile'
         "${app['bundle']}" config set --local path "${dict['bundle_prefix']}"
-        if [[ -f 'Gemfile.lock' ]]
-        then
-            "${app['bundle']}" update --bundler
-        fi
+        [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
         "${app['bundle']}" install
         "${app['bundle']}" exec jekyll build
+        koopa_rm 'Gemfile.lock'
     )
     koopa_aws_s3_sync --profile="${dict['profile']}" \
         "${dict['local_prefix']}/_site/" \
@@ -14777,12 +14775,11 @@ to '${dict['bucket_prefix']}."
 koopa_jekyll_serve() {
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['bundle']="$(koopa_locate_bundle)"
-    )
+    declare -A app
+    app['bundle']="$(koopa_locate_bundle)"
     [[ -x "${app['bundle']}" ]] || return 1
     declare -A dict=(
-        ['bundle_prefix']="$(koopa_ruby_gem_user_install_prefix)"
+        ['bundle_prefix']="$(koopa_xdg_data_home)/gem"
         ['prefix']="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
@@ -14792,12 +14789,10 @@ koopa_jekyll_serve() {
         koopa_cd "${dict['prefix']}"
         koopa_assert_is_file 'Gemfile'
         "${app['bundle']}" config set --local path "${dict['bundle_prefix']}"
-        if [[ -f 'Gemfile.lock' ]]
-        then
-            "${app['bundle']}" update --bundler
-        fi
+        [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
         "${app['bundle']}" install
         "${app['bundle']}" exec jekyll serve
+        koopa_rm 'Gemfile.lock'
     )
     return 0
 }
