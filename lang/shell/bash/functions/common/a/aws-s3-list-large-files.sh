@@ -89,6 +89,7 @@ koopa_aws_s3_list_large_files() {
     )"
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
     dict['awk_string']="NR<=${dict['num']} {print \$1}"
+    # FIXME Specify that we want json from 'list-object-versions'.
     dict['str']="$( \
         "${app['aws']}" --profile="${dict['profile']}" \
             s3api list-object-versions \
