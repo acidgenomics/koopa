@@ -3,7 +3,7 @@
 koopa_jekyll_serve() {
     # """
     # Render Jekyll website.
-    # Updated 2021-12-08.
+    # Updated 2023-02-17.
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -12,6 +12,7 @@ koopa_jekyll_serve() {
     )
     [[ -x "${app['bundle']}" ]] || return 1
     declare -A dict=(
+        ['bundle_prefix']="$(koopa_ruby_gem_user_install_prefix)"
         ['prefix']="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
@@ -20,6 +21,7 @@ koopa_jekyll_serve() {
     (
         koopa_cd "${dict['prefix']}"
         koopa_assert_is_file 'Gemfile'
+        "${app['bundle']}" config set --local path "${dict['bundle_prefix']}"
         if [[ -f 'Gemfile.lock' ]]
         then
             "${app['bundle']}" update --bundler
