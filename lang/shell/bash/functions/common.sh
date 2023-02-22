@@ -13383,6 +13383,12 @@ koopa_install_perl() {
         "$@"
 }
 
+koopa_install_picard() {
+    koopa_install_app \
+        --name='picard' \
+        "$@"
+}
+
 koopa_install_pipx() {
     koopa_install_app \
         --name='pipx' \
@@ -25154,6 +25160,12 @@ koopa_uninstall_pcre2() {
 koopa_uninstall_perl() {
     koopa_uninstall_app \
         --name='perl' \
+        "$@"
+}
+
+koopa_uninstall_picard() {
+    koopa_uninstall_app \
+        --name='picard' \
         "$@"
 }
 

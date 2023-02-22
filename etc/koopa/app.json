@@ -664,6 +664,7 @@
       "multiqc",
       "nextflow",
       "openbb",
+      "picard",
       "rsem",
       "salmon",
       "sambamba",
@@ -3205,6 +3206,19 @@
     "reverse_dependencies": ["ack", "exiftool"],
     "url": ["https://www.perl.org/get.html"],
     "version": "5.36.0"
+  },
+  "picard": {
+    "bin": ["picard"],
+    "date": "2023-02-22",
+    "dependencies": ["conda"],
+    "large": true,
+    "outdated": true,
+    "url": [
+      "https://bioconda.github.io/recipes/picard/README.html",
+      "https://broadinstitute.github.io/picard/",
+      "https://github.com/broadinstitute/picard/"
+    ],
+    "version": "2.27.5"
   },
   "pinentry": {
     "aliases": {
