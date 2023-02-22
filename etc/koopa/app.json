@@ -202,13 +202,13 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2023-02-08",
+    "date": "2023-02-22",
     "outdated": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.9.21"
+    "version": "2.10.1"
   },
   "azure-cli": {
     "aliases": {
@@ -458,12 +458,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2022-02-08",
+    "date": "2022-02-22",
     "url": [
       "https://crates.io/crates/broot",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.20.1"
+    "version": "1.20.2"
   },
   "brotli": {
     "aliases": {
@@ -1769,6 +1769,7 @@
     },
     "conservative": true,
     "date": "2023-02-12",
+    "outdated": true,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "7.0.0"
@@ -2099,14 +2100,14 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-02-09",
+    "date": "2023-02-22",
     "dependencies": ["python3.10"],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.12.1"
+    "version": "2.13.5"
   },
   "less": {
     "aliases": {
@@ -2960,10 +2961,11 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "date": "2023-02-08",
-    "dependencies": ["openssl3", "rust"],
+    "build_dependencies": ["rust"],
+    "date": "2023-02-22",
+    "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.75.0"
+    "version": "0.76.0"
   },
   "oniguruma": {
     "aliases": {
@@ -2990,6 +2992,7 @@
     "date": "2023-02-15",
     "dependencies": ["conda", "poetry"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
@@ -3879,6 +3882,7 @@
     "date": "2022-04-07",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
@@ -3972,14 +3976,15 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-02-08",
+    "date": "2023-02-22",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
     ],
-    "version": "7.21.0"
+    "version": "7.22.0"
   },
   "sox": {
     "aliases": {
@@ -4610,9 +4615,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-01-17",
+    "date": "2023-02-22",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.30.8"
+    "version": "4.31.1"
   },
   "yt-dlp": {
     "aliases": {
